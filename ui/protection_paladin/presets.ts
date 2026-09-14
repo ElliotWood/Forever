@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -52,14 +52,14 @@ export const APLP5Prot = PresetUtils.makePresetAPLRotation('P5 Prot', APLP5ProtJ
 export const APLBasicProt = PresetUtils.makePresetAPLRotation('Basic Prot', APLBasicProtectionJson);
 
 export const APLPresets = {
-	[Phase.Phase1]: [],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [APLBasicProt, APLP5Prot],
-	[Phase.Phase5]: [APLP5Prot, APLP5Prot],
+	[ClassicPhase.Phase1]: [],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [APLBasicProt, APLP5Prot],
+	[ClassicPhase.Phase5]: [APLP5Prot, APLP5Prot],
 };
 
-export const DefaultAPL = APLPresets[Phase.Phase5][0];
+export const DefaultAPL = APLPresets[ClassicPhase.Phase5][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent presets
@@ -83,14 +83,14 @@ export const P5ProtTalents = {
 };
 
 export const TalentPresets = {
-	[Phase.Phase1]: [],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [P4ProtTalents],
-	[Phase.Phase5]: [P5ProtTalents],
+	[ClassicPhase.Phase1]: [],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [P4ProtTalents],
+	[ClassicPhase.Phase5]: [P5ProtTalents],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase5][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase5][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options

@@ -1,6 +1,6 @@
 import * as BuffDebuffInputs from '../core/components/inputs/buffs_debuffs';
 import * as OtherInputs from '../core/components/other_inputs.js';
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
 import { Class, Faction, PartyBuffs, PseudoStat, Race, Spec, Stat, Target } from '../core/proto/common.js';
@@ -79,17 +79,17 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 		),
 
 		// Default consumes settings.
-		consumes: Presets.DefaultConsumes[Phase.Phase1],
+		consumes: Presets.DefaultConsumes[ClassicPhase.Phase1],
 		// Default talents.
 		talents: Presets.DefaultTalents.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
-		other: Presets.OtherDefaults[Phase.Phase1],
+		other: Presets.OtherDefaults[ClassicPhase.Phase1],
 		// Default raid/party buffs settings.
-		raidBuffs: Presets.DefaultRaidBuffs[Phase.Phase1],
+		raidBuffs: Presets.DefaultRaidBuffs[ClassicPhase.Phase1],
 		partyBuffs: PartyBuffs.create({}),
-		individualBuffs: Presets.DefaultIndividualBuffs[Phase.Phase1],
-		debuffs: Presets.DefaultDebuffs[Phase.Phase1],
+		individualBuffs: Presets.DefaultIndividualBuffs[ClassicPhase.Phase1],
+		debuffs: Presets.DefaultDebuffs[ClassicPhase.Phase1],
 	},
 
 	playerInputs: {
@@ -116,11 +116,11 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [...Presets.TalentPresets[Phase.Phase2]],
+		talents: [...Presets.TalentPresets[ClassicPhase.Phase2]],
 		// Preset rotations that the user can quickly select.
-		rotations: [...Presets.APLPresets[Phase.Phase2]],
+		rotations: [...Presets.APLPresets[ClassicPhase.Phase2]],
 		// Preset gear configurations that the user can quickly select.
-		gear: [...Presets.GearPresets[Phase.Phase2]],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase2]],
 		builds: [Presets.PresetBuildBackstab, Presets.PresetBuildSinisterStrike, Presets.PresetBuildIEA, Presets.PresetBuildMutilate],
 	},
 
@@ -142,7 +142,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 
 			talents: Presets.DefaultTalentsAssassin.data,
 			specOptions: Presets.DefaultOptions,
-			consumes: Presets.DefaultConsumes[Phase.Phase1],
+			consumes: Presets.DefaultConsumes[ClassicPhase.Phase1],
 			defaultFactionRaces: {
 				[Faction.Unknown]: Race.RaceUnknown,
 				[Faction.Alliance]: Race.RaceHuman,
@@ -166,7 +166,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 
 			talents: Presets.DefaultTalentsCombat.data,
 			specOptions: Presets.DefaultOptions,
-			consumes: Presets.DefaultConsumes[Phase.Phase1],
+			consumes: Presets.DefaultConsumes[ClassicPhase.Phase1],
 			defaultFactionRaces: {
 				[Faction.Unknown]: Race.RaceUnknown,
 				[Faction.Alliance]: Race.RaceHuman,

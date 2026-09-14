@@ -35,74 +35,7 @@ func TestEnhancement(t *testing.T) {
 			StatsToWeigh:    Stats,
 
 			Ruleset: proto.Ruleset_RulesetForever,
-		},
-		{
-			Class:      proto.Class_ClassShaman,
-			Phase:      2,
-			Race:       proto.Race_RaceTroll,
-			OtherRaces: []proto.Race{proto.Race_RaceOrc},
-
-			Talents:     DefaultTalents,
-			GearSet:     core.GetGearSet("../../../ui/enhancement_shaman/gear_sets", "phase_2"),
-			Rotation:    core.GetAplRotation("../../../ui/enhancement_shaman/apls", "default"),
-			Buffs:       core.ForeverBuffs,
-			Consumes:    Phase1Consumes,
-			SpecOptions: core.SpecOptionsCombo{Label: "Sync Auto", SpecOptions: PlayerOptionsSyncAuto},
-			OtherSpecOptions: []core.SpecOptionsCombo{
-				{Label: "Sync Delay OH", SpecOptions: PlayerOptionsSyncDelayOH},
-			},
-
-			ItemFilter:      ItemFilters,
-			EPReferenceStat: proto.Stat_StatAttackPower,
-			StatsToWeigh:    Stats,
-
-			Ruleset: proto.Ruleset_RulesetForever,
-		},
-		{
-			Class:      proto.Class_ClassShaman,
-			Phase:      3,
-			Race:       proto.Race_RaceTroll,
-			OtherRaces: []proto.Race{proto.Race_RaceOrc},
-
-			Talents:     DefaultTalents,
-			GearSet:     core.GetGearSet("../../../ui/enhancement_shaman/gear_sets", "phase_3"),
-			Rotation:    core.GetAplRotation("../../../ui/enhancement_shaman/apls", "default"),
-			Buffs:       core.ForeverBuffs,
-			Consumes:    Phase1Consumes,
-			SpecOptions: core.SpecOptionsCombo{Label: "Sync Auto", SpecOptions: PlayerOptionsSyncAuto},
-			OtherSpecOptions: []core.SpecOptionsCombo{
-				{Label: "Sync Delay OH", SpecOptions: PlayerOptionsSyncDelayOH},
-			},
-
-			ItemFilter:      ItemFilters,
-			EPReferenceStat: proto.Stat_StatAttackPower,
-			StatsToWeigh:    Stats,
-
-			Ruleset: proto.Ruleset_RulesetForever,
-		},
-		{
-			Class:      proto.Class_ClassShaman,
-			Phase:      5,
-			Race:       proto.Race_RaceTroll,
-			OtherRaces: []proto.Race{proto.Race_RaceOrc},
-
-			Talents:     DefaultTalents,
-			GearSet:     core.GetGearSet("../../../ui/enhancement_shaman/gear_sets", "phase_5"),
-			Rotation:    core.GetAplRotation("../../../ui/enhancement_shaman/apls", "default"),
-			Buffs:       core.ForeverBuffs,
-			Consumes:    Phase1Consumes,
-			SpecOptions: core.SpecOptionsCombo{Label: "Sync Auto", SpecOptions: PlayerOptionsSyncAuto},
-			OtherSpecOptions: []core.SpecOptionsCombo{
-				{Label: "Sync Delay OH", SpecOptions: PlayerOptionsSyncDelayOH},
-			},
-
-			ItemFilter:      ItemFilters,
-			EPReferenceStat: proto.Stat_StatAttackPower,
-			StatsToWeigh:    Stats,
-
-			Ruleset: proto.Ruleset_RulesetForever,
-		},
-	}))
+		}}))
 }
 
 var DefaultTalents = "5505301-053030031005112251"

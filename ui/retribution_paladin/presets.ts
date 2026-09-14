@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -47,14 +47,14 @@ export const DefaultGear = GearBlank;
 export const APLBasicRet = PresetUtils.makePresetAPLRotation('Basic Ret', APLBasicRetJson);
 
 export const APLPresets = {
-	[Phase.Phase1]: [],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [APLBasicRet],
-	[Phase.Phase5]: [],
+	[ClassicPhase.Phase1]: [],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [APLBasicRet],
+	[ClassicPhase.Phase5]: [],
 };
 
-export const DefaultAPL = APLPresets[Phase.Phase4][0];
+export const DefaultAPL = APLPresets[ClassicPhase.Phase4][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent presets
@@ -67,13 +67,13 @@ export const P4RetTalents = PresetUtils.makePresetTalents('P4/P5 Ret', SavedTale
 
 
 export const TalentPresets = {
-	[Phase.Phase1]: [],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [P4RetTalents],
+	[ClassicPhase.Phase1]: [],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [P4RetTalents],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase4][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase4][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options

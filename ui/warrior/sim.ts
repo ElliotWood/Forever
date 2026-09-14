@@ -1,7 +1,7 @@
 import * as BuffDebuffInputs from '../core/components/inputs/buffs_debuffs';
 import * as WarriorInputs from '../core/components/inputs/warrior_inputs';
 import * as OtherInputs from '../core/components/other_inputs';
-import { Phase } from '../core/constants/other';
+import { ClassicPhase } from '../core/constants/other';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui';
 import { Player } from '../core/player';
 import { Class, Faction, HandType, ItemSlot, PartyBuffs, PseudoStat, Race, Spec, Stat } from '../core/proto/common';
@@ -110,17 +110,17 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarrior, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [...Presets.TalentPresets[Phase.Phase1]],
+		talents: [...Presets.TalentPresets[ClassicPhase.Phase1]],
 		// Preset rotations that the user can quickly select.
-		rotations: [...Presets.APLPresets[Phase.Phase1]],
+		rotations: [...Presets.APLPresets[ClassicPhase.Phase1]],
 		// Preset gear configurations that the user can quickly select.
 		gear: [
-			...Presets.GearPresets[Phase.Phase6],
-			...Presets.GearPresets[Phase.Phase5],
-			...Presets.GearPresets[Phase.Phase4],
-			...Presets.GearPresets[Phase.Phase3],
-			...Presets.GearPresets[Phase.Phase2],
-			...Presets.GearPresets[Phase.Phase1],
+			...Presets.GearPresets[ClassicPhase.Phase6],
+			...Presets.GearPresets[ClassicPhase.Phase5],
+			...Presets.GearPresets[ClassicPhase.Phase4],
+			...Presets.GearPresets[ClassicPhase.Phase3],
+			...Presets.GearPresets[ClassicPhase.Phase2],
+			...Presets.GearPresets[ClassicPhase.Phase1],
 		],
 		// Preset builds that the user can quickly select.
 		builds: [],

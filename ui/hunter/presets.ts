@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -47,7 +47,7 @@ export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearP1BIS = PresetUtils.makePresetGear('P1 BiS', P1BISGear);
 
 export const GearPresets = {
-	[Phase.Phase1]: [GearP0BIS, GearP1BIS],
+	[ClassicPhase.Phase1]: [GearP0BIS, GearP1BIS],
 };
 
 export const DefaultGear = GearP0BIS;
@@ -59,10 +59,10 @@ export const DefaultGear = GearP0BIS;
 export const APLP1 = PresetUtils.makePresetAPLRotation('Marksmanship', P1APL);
 
 export const APLPresets = {
-	[Phase.Phase1]: [APLP1],
+	[ClassicPhase.Phase1]: [APLP1],
 };
 
-export const DefaultAPL = APLPresets[Phase.Phase1][0];
+export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -74,10 +74,10 @@ export const DefaultAPL = APLPresets[Phase.Phase1][0];
 export const TalentsP1 = PresetUtils.makePresetTalents('Marksmanship', SavedTalents.create({ talentsString: '5023000501-0050550501503051' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [TalentsP1],
+	[ClassicPhase.Phase1]: [TalentsP1],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase1][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options

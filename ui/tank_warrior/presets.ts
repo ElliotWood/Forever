@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -36,7 +36,7 @@ export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearP1BIS = PresetUtils.makePresetGear('P1 BiS', P1BISGear);
 
 export const GearPresets = {
-	[Phase.Phase1]: [GearP0BIS, GearP1BIS],
+	[ClassicPhase.Phase1]: [GearP0BIS, GearP1BIS],
 };
 
 export const DefaultGear = GearP0BIS;
@@ -49,10 +49,10 @@ export const AplReck = PresetUtils.makePresetAPLRotation('DPS (With Reck)', APLR
 export const APLNoReck = PresetUtils.makePresetAPLRotation('DPS (No Reck)', APLNoReckJSON);
 
 export const APLPresets = {
-	[Phase.Phase1]: [APLNoReck, AplReck],
+	[ClassicPhase.Phase1]: [APLNoReck, AplReck],
 };
 
-export const DefaultAPL = APLPresets[Phase.Phase1][0];
+export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -64,10 +64,10 @@ export const DefaultAPL = APLPresets[Phase.Phase1][0];
 export const TalentsP1Prot = PresetUtils.makePresetTalents('Protection', SavedTalents.create({ talentsString: '31--5525312333000105351' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [TalentsP1Prot],
+	[ClassicPhase.Phase1]: [TalentsP1Prot],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase1][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 export const PresetBuildTanky = PresetUtils.makePresetBuild('Tanky', { gear: DefaultGear, talents: TalentsP1Prot, rotation: DefaultAPL });
 

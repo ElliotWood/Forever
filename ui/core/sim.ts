@@ -55,7 +55,7 @@ export class Sim {
 	private readonly workerPool: WorkerPool;
 
 	private iterations = 3000;
-	private phase: number = OtherConstants.CURRENT_PHASE;
+	private phase: number = OtherConstants.CURRENT_CLASSIC_PHASE;
 	private faction: Faction = Faction.Alliance;
 	private fixedRngSeed = 0;
 	private filters: DatabaseFilters = Sim.defaultFilters();
@@ -684,7 +684,7 @@ export class Sim {
 	fromProto(eventID: EventID, proto: SimSettingsProto) {
 		TypedEvent.freezeAllAndDo(() => {
 			this.setIterations(eventID, proto.iterations || 3000);
-			this.setPhase(eventID, proto.phase || OtherConstants.CURRENT_PHASE);
+			this.setPhase(eventID, proto.phase || OtherConstants.CURRENT_CLASSIC_PHASE);
 			this.setFixedRngSeed(eventID, Number(proto.fixedRngSeed));
 			this.setShowDamageMetrics(eventID, proto.showDamageMetrics);
 			this.setShowThreatMetrics(eventID, proto.showThreatMetrics);
@@ -720,7 +720,7 @@ export class Sim {
 			eventID,
 			SimSettingsProto.create({
 				iterations: 3000,
-				phase: OtherConstants.CURRENT_PHASE,
+				phase: OtherConstants.CURRENT_CLASSIC_PHASE,
 				faction: Faction.Alliance,
 				showDamageMetrics: !isHealingSim,
 				showThreatMetrics: isTankSim,

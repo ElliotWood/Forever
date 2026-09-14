@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -43,15 +43,15 @@ export const GearPhase3 = PresetUtils.makePresetGear('Phase 3', Phase3GearJSON);
 export const GearPhase5 = PresetUtils.makePresetGear('Phase 5', Phase5GearJSON);
 
 export const GearPresets = {
-	[Phase.Phase1]: [GearPhase1],
-	[Phase.Phase2]: [GearPhase2],
-	[Phase.Phase3]: [GearPhase3],
-	[Phase.Phase4]: [],
-	[Phase.Phase5]: [GearPhase5],
-	[Phase.Phase6]: [],
+	[ClassicPhase.Phase1]: [GearPhase1],
+	[ClassicPhase.Phase2]: [GearPhase2],
+	[ClassicPhase.Phase3]: [GearPhase3],
+	[ClassicPhase.Phase4]: [],
+	[ClassicPhase.Phase5]: [GearPhase5],
+	[ClassicPhase.Phase6]: [],
 };
 
-export const DefaultGear = GearPresets[Phase.Phase1][0];
+export const DefaultGear = GearPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 APL Presets
@@ -60,15 +60,15 @@ export const DefaultGear = GearPresets[Phase.Phase1][0];
 export const APLDefault = PresetUtils.makePresetAPLRotation('Default', DefaultAPLJSON);
 
 export const APLPresets = {
-	[Phase.Phase1]: [APLDefault],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [],
-	[Phase.Phase5]: [],
-	[Phase.Phase6]: [],
+	[ClassicPhase.Phase1]: [APLDefault],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [],
+	[ClassicPhase.Phase5]: [],
+	[ClassicPhase.Phase6]: [],
 };
 
-export const DefaultAPL = APLPresets[Phase.Phase1][0];
+export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -77,15 +77,15 @@ export const DefaultAPL = APLPresets[Phase.Phase1][0];
 export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '5505301-053030031005112251' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [TalentsLevel60],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [],
-	[Phase.Phase5]: [],
-	[Phase.Phase6]: [],
+	[ClassicPhase.Phase1]: [TalentsLevel60],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [],
+	[ClassicPhase.Phase5]: [],
+	[ClassicPhase.Phase6]: [],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase1][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options

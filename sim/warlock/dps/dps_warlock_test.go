@@ -20,7 +20,7 @@ func TestWarlockDemonicPact(t *testing.T) {
 			Race:  proto.Race_RaceOrc,
 
 			Talents:     TalentsDemonicPact,
-			GearSet:     core.GetGearSet("../../../ui/warlock/gear_sets", "mc"),
+			GearSet:     core.GetGearSet("../../../ui/warlock/gear_sets", "prebis"),
 			Rotation:    core.GetAplRotation("../../../ui/warlock/apls/", "forever_pact"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Consumes,
@@ -43,7 +43,7 @@ func TestWarlockAffliction(t *testing.T) {
 			Race:  proto.Race_RaceOrc,
 
 			Talents:     TalentsAffliction,
-			GearSet:     core.GetGearSet("../../../ui/warlock/gear_sets", "mc"),
+			GearSet:     core.GetGearSet("../../../ui/warlock/gear_sets", "prebis"),
 			Rotation:    core.GetAplRotation("../../../ui/warlock/apls/", "forever_affliction"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Consumes,
@@ -66,7 +66,7 @@ func TestWarlockDSRuin(t *testing.T) {
 			Race:  proto.Race_RaceOrc,
 
 			Talents:     TalentsDSRuin,
-			GearSet:     core.GetGearSet("../../../ui/warlock/gear_sets", "mc"),
+			GearSet:     core.GetGearSet("../../../ui/warlock/gear_sets", "prebis"),
 			Rotation:    core.GetAplRotation("../../../ui/warlock/apls/", "forever_ds_ruin"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Consumes,

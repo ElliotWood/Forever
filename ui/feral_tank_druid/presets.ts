@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	Consumes,
@@ -25,15 +25,15 @@ import BlankGear from './gear_sets/blank.gear.json';
 export const GearBlank = PresetUtils.makePresetGear('Blank', BlankGear);
 
 export const GearPresets = {
-  [Phase.Phase1]: [
+  [ClassicPhase.Phase1]: [
     GearBlank,
   ],
-  [Phase.Phase2]: [
+  [ClassicPhase.Phase2]: [
   ]
 };
 
 // TODO: Add Phase 2 preset and pull from map
-export const DefaultGear = GearPresets[Phase.Phase1][0];
+export const DefaultGear = GearPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 APL Presets
@@ -48,10 +48,10 @@ export const DefaultRotation = DruidRotation.create({
 export const DefaultAPL = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
 export const APLPresets = {
-  [Phase.Phase1]: [
+  [ClassicPhase.Phase1]: [
     DefaultAPL,
   ],
-  [Phase.Phase2]: [
+  [ClassicPhase.Phase2]: [
   ]
 };
 
@@ -70,15 +70,15 @@ export const StandardTalents = {
 };
 
 export const TalentPresets = {
-  [Phase.Phase1]: [
+  [ClassicPhase.Phase1]: [
     StandardTalents,
   ],
-  [Phase.Phase2]: [
+  [ClassicPhase.Phase2]: [
   ]
 };
 
 // TODO: Add Phase 2 preset and pull from map
-export const DefaultTalents = TalentPresets[Phase.Phase1][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options

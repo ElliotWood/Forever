@@ -1,6 +1,6 @@
 import * as OtherInputs from '../core/components/other_inputs.js';
 import { SPELL_HIT_RATING_PER_HIT_CHANCE } from '../core/constants/mechanics';
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
 import { Class, Faction, PartyBuffs, PseudoStat, Race, Spec, Stat } from '../core/proto/common.js';
@@ -112,9 +112,9 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecMage, {
 	},
 
 	presets: {
-		rotations: [...Presets.APLPresets[Phase.Phase1]],
-		talents: [...Presets.TalentPresets[Phase.Phase1]],
-		gear: [...Presets.GearPresets[Phase.Phase1]],
+		rotations: [...Presets.APLPresets[ClassicPhase.Phase1]],
+		talents: [...Presets.TalentPresets[ClassicPhase.Phase1]],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase1]],
 	},
 
 	autoRotation: player => {

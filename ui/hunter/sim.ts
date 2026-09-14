@@ -1,7 +1,7 @@
 import * as BuffDebuffInputs from '../core/components/inputs/buffs_debuffs';
 import * as ConsumablesInputs from '../core/components/inputs/consumables.js';
 import * as OtherInputs from '../core/components/other_inputs.js';
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
 import { PartyBuffs, PseudoStat, Spec, Stat } from '../core/proto/common.js';
@@ -138,11 +138,11 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHunter, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [...Presets.TalentPresets[Phase.Phase1]],
+		talents: [...Presets.TalentPresets[ClassicPhase.Phase1]],
 		// Preset rotations that the user can quickly select.
-		rotations: [...Presets.APLPresets[Phase.Phase1]],
+		rotations: [...Presets.APLPresets[ClassicPhase.Phase1]],
 		// Preset gear configurations that the user can quickly select.
-		gear: [...Presets.GearPresets[Phase.Phase1]],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase1]],
 	},
 
 	autoRotation: player => {
@@ -199,10 +199,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHunter, {
 		// 	defaultGear: {
 		// 		[Faction.Unknown]: {},
 		// 		[Faction.Alliance]: {
-		// 			1: Presets.GearPresets[Phase.Phase1][0].gear,
+		// 			1: Presets.GearPresets[ClassicPhase.Phase1][0].gear,
 		// 		},
 		// 		[Faction.Horde]: {
-		// 			1: Presets.GearPresets[Phase.Phase1][0].gear,
+		// 			1: Presets.GearPresets[ClassicPhase.Phase1][0].gear,
 		// 		},
 		// 	},
 		// },
@@ -222,10 +222,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHunter, {
 		// 	defaultGear: {
 		// 		[Faction.Unknown]: {},
 		// 		[Faction.Alliance]: {
-		// 			1: Presets.GearPresets[Phase.Phase1][1].gear,
+		// 			1: Presets.GearPresets[ClassicPhase.Phase1][1].gear,
 		// 		},
 		// 		[Faction.Horde]: {
-		// 			1: Presets.GearPresets[Phase.Phase1][1].gear,
+		// 			1: Presets.GearPresets[ClassicPhase.Phase1][1].gear,
 		// 		},
 		// 	},
 		// },
@@ -245,10 +245,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHunter, {
 		// 	defaultGear: {
 		// 		[Faction.Unknown]: {},
 		// 		[Faction.Alliance]: {
-		// 			1: Presets.GearPresets[Phase.Phase1][2].gear,
+		// 			1: Presets.GearPresets[ClassicPhase.Phase1][2].gear,
 		// 		},
 		// 		[Faction.Horde]: {
-		// 			1: Presets.GearPresets[Phase.Phase1][2].gear,
+		// 			1: Presets.GearPresets[ClassicPhase.Phase1][2].gear,
 		// 		},
 		// 	},
 		// },
