@@ -1,7 +1,10 @@
 # nodejs modules
 node_modules
 ui/core/index.ts
+# The sim pages' index.html is generated from ui/index_template.html; the best in slot
+# page's is written by hand and has to be kept.
 ui/*/index.html
+!ui/bis/index.html
 .dirstamp
 
 # IDE folders
