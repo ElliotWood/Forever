@@ -68,8 +68,8 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0.15953
-  weights: 0
-  weights: 4.45566
+  weights: 0.04659
+  weights: 4.47154
   weights: 0
   weights: 0
   weights: 0
@@ -99,15 +99,15 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-CenarionRaiment"
  value: {
-  dps: 478.66668
-  tps: 339.85334
+  dps: 482.99017
+  tps: 342.92302
  }
 }
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 553.39654
-  tps: 392.91154
+  dps: 557.89107
+  tps: 396.10266
  }
 }
 dps_results: {
@@ -120,22 +120,22 @@ dps_results: {
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-FieldMarshal'sSanctuary"
  value: {
-  dps: 599.01683
-  tps: 425.30195
+  dps: 599.0437
+  tps: 425.32102
  }
 }
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 553.39654
-  tps: 392.91154
+  dps: 557.89107
+  tps: 396.10266
  }
 }
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-StormrageRaiment"
  value: {
-  dps: 477.48686
-  tps: 339.01567
+  dps: 485.86887
+  tps: 344.9669
  }
 }
 dps_results: {
@@ -148,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-Warlord'sSanctuary"
  value: {
-  dps: 599.01683
-  tps: 425.30195
+  dps: 599.0437
+  tps: 425.32102
  }
 }
 dps_results: {

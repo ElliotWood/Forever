@@ -64,12 +64,12 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 1.21683
-  weights: 0.36096
+  weights: 2.85767
   weights: 0
   weights: 0
   weights: 0.09927
-  weights: 0
-  weights: 2.49652
+  weights: 1.21683
+  weights: 2.85767
   weights: 0
   weights: 0
   weights: 0
@@ -99,8 +99,8 @@ stat_weights_results: {
 dps_results: {
  key: "TestRetribution-Phase5-AllItems-Avenger'sBattlegear"
  value: {
-  dps: 478.69917
-  tps: 454.63587
+  dps: 483.2325
+  tps: 458.71587
  }
 }
 dps_results: {
@@ -113,15 +113,15 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-Phase5-AllItems-FieldMarshal'sAegis"
  value: {
-  dps: 468.81434
-  tps: 445.73829
+  dps: 470.92071
+  tps: 447.63402
  }
 }
 dps_results: {
  key: "TestRetribution-Phase5-AllItems-Freethinker'sArmor"
  value: {
-  dps: 376.64656
-  tps: 362.57584
+  dps: 377.03819
+  tps: 362.92831
  }
 }
 dps_results: {
@@ -141,15 +141,15 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-Phase5-AllItems-LieutenantCommander'sRedoubt"
  value: {
-  dps: 425.65174
-  tps: 406.62205
+  dps: 425.98986
+  tps: 406.92635
  }
 }
 dps_results: {
  key: "TestRetribution-Phase5-AllItems-RedemptionArmor"
  value: {
-  dps: 430.77835
-  tps: 411.44274
+  dps: 446.61341
+  tps: 425.69429
  }
 }
 dps_results: {
