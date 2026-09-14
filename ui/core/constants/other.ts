@@ -21,6 +21,15 @@ export enum Phase {
 
 export const CURRENT_PHASE = Phase.Launch;
 
+// The tiers are named, not numbered, so they need labels of their own rather than
+// 'Phase ' plus the enum value.
+export const phaseNames: Record<Phase, string> = {
+	[Phase.Launch]: 'Launch',
+	[Phase.Tier1]: 'Tier 1',
+	[Phase.Tier2]: 'Tier 2',
+	[Phase.Tier3]: 'Tier 3',
+};
+
 // Classic Era's six content tiers, Molten Core through Naxxramas. Separate from the
 // Forever tiers above because it means something different: it is when an item became
 // available in Classic, which is the only availability the item database carries. Gear

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 
+import { phaseNames } from '../constants/other.js';
 import { getLaunchedSimsForClass, LaunchStatus, raidSimStatus, simLaunchStatuses } from '../launched_sims.js';
 import { Class, Spec } from '../proto/common.js';
 import {
@@ -244,7 +245,7 @@ export class SimTitleDropdown extends Component {
 					<>Not Yet Supported</>
 				) : (
 					<>
-						Phase {phase}
+						{phaseNames[phase]}
 						{status != LaunchStatus.Launched && <> - {LaunchStatus[status]}</>}
 					</>
 				)}
