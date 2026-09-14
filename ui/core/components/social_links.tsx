@@ -1,5 +1,6 @@
 import tippy from 'tippy.js';
 
+import { SITE_REPO_URL } from '../constants/other.js';
 import { Component } from './component';
 
 export class SocialLinks extends Component {
@@ -15,7 +16,7 @@ export class SocialLinks extends Component {
 
 	static buildGitHubLink(): Element {
 		const anchor = (
-			<a href="https://github.com/wowsims/classic" target="_blank" className="github-link link-alt" dataset={{ tippyContent: 'Contribute on GitHub' }}>
+			<a href={SITE_REPO_URL} target="_blank" className="github-link link-alt" dataset={{ tippyContent: 'Contribute on GitHub' }}>
 				<i className="fab fa-github fa-lg" />
 			</a>
 		);

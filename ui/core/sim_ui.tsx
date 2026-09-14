@@ -7,7 +7,7 @@ import { SimTab } from './components/sim_tab.js';
 import { SimTitleDropdown } from './components/sim_title_dropdown.js';
 import { SocialLinks } from './components/social_links.jsx';
 import Toast from './components/toast';
-import { SITE_VERSION } from './constants/other.js';
+import { SITE_REPO, SITE_REPO_URL, SITE_VERSION } from './constants/other.js';
 import { LaunchStatus, SimStatus } from './launched_sims.js';
 import { ErrorOutcomeType } from './proto/api';
 import { Spec } from './proto/common.js';
@@ -310,13 +310,13 @@ export abstract class SimUI extends Component {
 			const hash = this.hashCode(errorStr);
 			const link = this.toLink();
 			const rngSeed = this.sim.getLastUsedRngSeed();
-			fetch('https://api.github.com/search/issues?q=is:issue+is:open+repo:wowsims/classic+' + hash)
+			fetch(`https://api.github.com/search/issues?q=is:issue+is:open+repo:${SITE_REPO}+` + hash)
 				.then(resp => {
 					resp.json().then(issues => {
 						if (issues.total_count > 0) {
 							window.open(issues.items[0].html_url, '_blank');
 						} else {
-							const base_url = 'https://github.com/wowsims/classic/issues/new?assignees=&labels=&title=Crash%20Report%20';
+							const base_url = `${SITE_REPO_URL}/issues/new?assignees=&labels=&title=Crash%20Report%20`;
 							const base = `${base_url}${hash}&body=`;
 							const maxBodyLength = URLMAXLEN - base.length;
 							let issueBody = encodeURIComponent(`Link:\n${link}\n\nRNG Seed: ${rngSeed}\n\n${errorStr}`);
