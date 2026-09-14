@@ -1,6 +1,6 @@
 import { ref } from 'tsx-vanilla';
 
-import { SPEC_DIRECTORY } from '../constants/other.js';
+import { SITE_VERSION, SPEC_DIRECTORY } from '../constants/other.js';
 import { Ruleset } from '../proto/api.js';
 import { SimUI } from '../sim_ui.js';
 import { BaseModal } from './base_modal.jsx';
@@ -175,6 +175,7 @@ export class FeedbackMenu extends BaseModal {
 			'### Diagnostics',
 			'',
 			`- Sim: ${this.simName()}`,
+			`- Version: ${SITE_VERSION}`,
 			`- Ruleset: ${this.simUI.sim.getRuleset() == Ruleset.RulesetForever ? 'Forever' : 'Classic'}`,
 			`- Url: ${window.location.href}`,
 			`- Viewport: ${window.innerWidth}x${window.innerHeight}`,
