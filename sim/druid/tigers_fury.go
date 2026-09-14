@@ -33,7 +33,10 @@ func (druid *Druid) registerTigersFurySpell() {
 		},
 	})
 
-	energyMetrics := druid.NewEnergyMetrics(actionID)
+	// Tagged so it does not collide with the metrics the 30 energy cost registers under
+	// the same action. Two resource metrics sharing an id and type are indistinguishable
+	// in the resources tab, and the concurrency combiner folds them into one.
+	energyMetrics := druid.NewEnergyMetrics(actionID.WithTag(1))
 
 	spell := druid.RegisterSpell(Cat, core.SpellConfig{
 		ActionID: actionID,

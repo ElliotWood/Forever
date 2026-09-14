@@ -33,17 +33,10 @@
 			.navbar-brand-container {
 				display: flex;
 
-				.wowsims-logo {
-					width: 6rem;
-					margin-right: var(--spacer-3);
-				}
-
-				.wowsims-title {
-					@extend .display-1;
-					@extend .fw-bold;
-					color: $brand;
-					margin: 0;
-					line-height: 1;
+				.forever-logo {
+					width: 22rem;
+					max-width: 100%;
+					height: auto;
 				}
 			}
 
@@ -53,11 +46,6 @@
 				align-items: flex-end;
 				justify-content: flex-end;
 			}
-		}
-
-		.expansion-title {
-			color: $brand;
-			margin: 0;
 		}
 	}
 
@@ -125,8 +113,10 @@
 			}
 
 			.sim-links-container {
-				margin-left: calc(var(--spacer-3) * -1);
-				margin-right: calc(var(--spacer-3) * -1);
+				// Bleeds the links out to the container edge, so it has to cancel the
+				// container's own padding exactly or the page scrolls sideways.
+				margin-left: calc(var(--container-padding) * -1);
+				margin-right: calc(var(--container-padding) * -1);
 
 				.sim-links {
 					margin-bottom: 0 !important;
@@ -169,8 +159,8 @@
 					justify-content: space-between;
 					align-items: flex-end;
 
-					.wowsims-logo {
-						width: 48px;
+					.forever-logo {
+						width: 11rem;
 					}
 				}
 			}
