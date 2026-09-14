@@ -21,7 +21,9 @@ import {
 } from '../core/proto/common';
 import { Mage_Options as MageOptions, Mage_Options_ArmorType as ArmorType } from '../core/proto/mage';
 import { SavedTalents } from '../core/proto/ui';
-import P1APL from './apls/p1.apl.json';
+import ArcaneAPL from './apls/forever_arcane.apl.json';
+import FireAPL from './apls/forever_fire.apl.json';
+import FrostAPL from './apls/forever_frost.apl.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
 import P1BISGear from './gear_sets/p1.bis.gear.json';
 
@@ -42,10 +44,12 @@ export const DefaultGear = GearP0BIS;
 //                                 APL Presets
 ///////////////////////////////////////////////////////////////////////////
 
-export const APLP1DPS = PresetUtils.makePresetAPLRotation('DPS', P1APL);
+export const APLFrost = PresetUtils.makePresetAPLRotation('Frost', FrostAPL);
+export const APLArcane = PresetUtils.makePresetAPLRotation('Arcane', ArcaneAPL);
+export const APLFire = PresetUtils.makePresetAPLRotation('Fire', FireAPL);
 
 export const APLPresets = {
-	[Phase.Phase1]: [APLP1DPS],
+	[Phase.Phase1]: [APLFrost, APLArcane, APLFire],
 };
 
 export const DefaultAPL = APLPresets[Phase.Phase1][0];
@@ -57,10 +61,12 @@ export const DefaultAPL = APLPresets[Phase.Phase1][0];
 // Default talents. Uses the wowhead calculator format, make the talents on
 // https://wowhead.com/classic/talent-calc and copy the numbers in the url.
 
-export const TalentsP1DPS = PresetUtils.makePresetTalents('Frost DPS', SavedTalents.create({ talentsString: '230205021002--05353203102351001' }));
+export const TalentsP1Frost = PresetUtils.makePresetTalents('Frost DPS', SavedTalents.create({ talentsString: '0502050030003--0555000331000301241' }));
+export const TalentsP1Arcane = PresetUtils.makePresetTalents('Arcane DPS', SavedTalents.create({ talentsString: '050215003100311531-235003202003-' }));
+export const TalentsP1Fire = PresetUtils.makePresetTalents('Fire DPS', SavedTalents.create({ talentsString: '0502252000003-2350031130133151-' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [TalentsP1DPS],
+	[Phase.Phase1]: [TalentsP1Frost, TalentsP1Arcane, TalentsP1Fire],
 };
 
 export const DefaultTalents = TalentPresets[Phase.Phase1][0];
@@ -105,10 +111,10 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 	warchiefsBlessing: true,
 });
 
+// Improved Scorch and Winter's Chill only help the mage that applied them in Forever, so they
+// are no longer raid debuffs anyone else supplies.
 export const DefaultDebuffs = Debuffs.create({
-	improvedScorch: true,
 	judgementOfWisdom: true,
-	wintersChill: true,
 });
 
 export const OtherDefaults = {

@@ -14,6 +14,7 @@ const (
 
 const (
 	SpellCode_MageNone int32 = iota
+	SpellCode_MageArcaneBlast
 	SpellCode_MageArcaneExplosion
 	SpellCode_MageArcaneMissiles
 	SpellCode_MageArcaneMissilesTick
@@ -22,11 +23,13 @@ const (
 	SpellCode_MageFireBlast
 	SpellCode_MageFlamestrike
 	SpellCode_MageFrostbolt
+	SpellCode_MageIceLance
 	SpellCode_MageIgnite
+	SpellCode_MagePyroblast
 	SpellCode_MageScorch
 )
 
-var TalentTreeSizes = [3]int{16, 16, 17}
+var TalentTreeSizes = [3]int{18, 16, 19}
 
 func RegisterMage() {
 	core.RegisterAgentFactory(
@@ -53,32 +56,39 @@ type Mage struct {
 
 	activeBarrier *core.Aura
 
+	ArcaneBlast             *core.Spell
 	ArcaneExplosion         []*core.Spell
 	ArcaneMissiles          []*core.Spell
 	ArcaneMissilesTickSpell []*core.Spell
 	BlastWave               []*core.Spell
 	Blizzard                []*core.Spell
-	Counterspell			*core.Spell
-	Evocation				*core.Spell
+	Counterspell            *core.Spell
+	Evocation               *core.Spell
 	Fireball                []*core.Spell
 	FireBlast               []*core.Spell
 	Flamestrike             []*core.Spell
 	Frostbolt               []*core.Spell
 	IceBarrier              []*core.Spell
+	IceLance                *core.Spell
 	Ignite                  *core.Spell
-	igniteTick		 		*core.Spell
+	igniteTick              *core.Spell
 	ManaGem                 []*core.Spell
 	PresenceOfMind          *core.Spell
 	Pyroblast               []*core.Spell
 	Scorch                  []*core.Spell
 
-	ArcanePowerAura     *core.Aura
-	ClearcastingAura    *core.Aura
-	CombustionAura      *core.Aura
-	IceArmorAura        *core.Aura
-	IceBarrierAuras     []*core.Aura
-	ImprovedScorchAuras core.AuraArray
-	MageArmorAura       *core.Aura
+	ArcaneBlastAura    *core.Aura
+	ArcanePowerAura    *core.Aura
+	ClearcastingAura   *core.Aura
+	CombustionAura     *core.Aura
+	FingersOfFrostAura *core.Aura
+	HotStreakAura      *core.Aura
+	IceArmorAura       *core.Aura
+	IceBarrierAuras    []*core.Aura
+	ImprovedScorchAura *core.Aura
+	MageArmorAura      *core.Aura
+	MissileBarrageAura *core.Aura
+	WintersChillAura   *core.Aura
 }
 
 // Agent is a generic way to access underlying mage on any of the agents.
@@ -95,16 +105,20 @@ func (mage *Mage) GetMage() *Mage {
 }
 
 func (mage *Mage) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
+	// Arcane Brilliance has never been a talent, so the Forever trees don't change what the mage
+	// hands the rest of the raid. Improved Scorch and Winter's Chill are personal now, see talents.go.
 	raidBuffs.ArcaneBrilliance = true
 }
 func (mage *Mage) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
 }
 
 func (mage *Mage) Initialize() {
+	mage.registerArcaneBlastSpell()
 	mage.registerArcaneMissilesSpell()
 	mage.registerFireballSpell()
 	mage.registerFireBlastSpell()
 	mage.registerFrostboltSpell()
+	mage.registerIceLanceSpell()
 	mage.registerPyroblastSpell()
 	mage.registerScorchSpell()
 

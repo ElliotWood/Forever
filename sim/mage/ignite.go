@@ -50,13 +50,16 @@ func (mage *Mage) applyIgnite() {
 		},
 	})
 
+	// Dots can crit under the Forever ruleset, but Ignite's damage is already a share of a critical
+	// strike that has had the crit multiplier applied to it, so letting the ticks roll again would
+	// pay out the same crit twice.
 	mage.igniteTick = mage.RegisterSpell(core.SpellConfig{
 		SpellCode:   SpellCode_MageIgnite,
 		ActionID:    core.ActionID{SpellID: 12654},
 		SpellSchool: core.SpellSchoolFire,
 		DefenseType: core.DefenseTypeMagic,
 		ProcMask:    core.ProcMaskSpellProc,
-		Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell | SpellFlagMage,
+		Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell | core.SpellFlagNoPeriodicCrit | SpellFlagMage,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,

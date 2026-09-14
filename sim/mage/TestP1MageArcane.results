@@ -1,0 +1,231 @@
+character_stats_results: {
+ key: "TestP1MageArcane-Phase1-CharacterStats-Default"
+ value: {
+  final_stats: 177.1
+  final_stats: 184
+  final_stats: 313.4325
+  final_stats: 356.73
+  final_stats: 241.5
+  final_stats: 348
+  final_stats: 0
+  final_stats: 40
+  final_stats: 233
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 45.25
+  final_stats: 2
+  final_stats: 31.19306
+  final_stats: 0
+  final_stats: 16
+  final_stats: 897.1
+  final_stats: 0
+  final_stats: 16.2
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 6283.95
+  final_stats: 0
+  final_stats: 0
+  final_stats: 897
+  final_stats: 440
+  final_stats: 0
+  final_stats: 5
+  final_stats: 0
+  final_stats: 3.2
+  final_stats: 5
+  final_stats: 0
+  final_stats: 4624.325
+  final_stats: 32
+  final_stats: 75
+  final_stats: 85
+  final_stats: 65
+  final_stats: 65
+  final_stats: 384
+  final_stats: 0
+  final_stats: 65
+  final_stats: 0
+ }
+}
+stat_weights_results: {
+ key: "TestP1MageArcane-Phase1-StatWeights-Default"
+ value: {
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 1.05209
+  weights: 0
+  weights: 0.31283
+  weights: 0.31283
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 5.46834
+  weights: 2.42945
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-ArcanistRegalia"
+ value: {
+  dps: 414.23795
+  tps: 268.84186
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-Champion'sArcanum"
+ value: {
+  dps: 394.03724
+  tps: 294.68288
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-EnigmaVestments"
+ value: {
+  dps: 476.41441
+  tps: 353.21155
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-FieldMarshal'sRegalia"
+ value: {
+  dps: 421.10631
+  tps: 313.72663
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-FrostfireRegalia"
+ value: {
+  dps: 514.97124
+  tps: 331.96164
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-Illusionist'sAttire"
+ value: {
+  dps: 385.77314
+  tps: 288.94434
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 326.17692
+  tps: 247.12454
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-LieutenantCommander'sArcanum"
+ value: {
+  dps: 394.03724
+  tps: 294.68288
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-NetherwindRegalia"
+ value: {
+  dps: 448.03645
+  tps: 328.67551
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-Sorcerer'sRegalia"
+ value: {
+  dps: 391.949
+  tps: 293.3307
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-AllItems-Warlord'sRegalia"
+ value: {
+  dps: 421.10631
+  tps: 313.72663
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-Average-Default"
+ value: {
+  dps: 348.86885
+  tps: 262.4422
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-Settings-Troll-p0.bis-DPS-forever_arcane-FullBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 453.26873
+  tps: 707.98362
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-Settings-Troll-p0.bis-DPS-forever_arcane-FullBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 453.26873
+  tps: 336.82289
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-Settings-Troll-p0.bis-DPS-forever_arcane-FullBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 620.10754
+  tps: 463.4243
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-Settings-Troll-p0.bis-DPS-forever_arcane-NoBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 235.64372
+  tps: 426.5131
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-Settings-Troll-p0.bis-DPS-forever_arcane-NoBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 235.64372
+  tps: 178.02873
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-Settings-Troll-p0.bis-DPS-forever_arcane-NoBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 399.23167
+  tps: 300.51311
+ }
+}
+dps_results: {
+ key: "TestP1MageArcane-Phase1-SwitchInFrontOfTarget-Default"
+ value: {
+  dps: 369.88296
+  tps: 277.70361
+ }
+}
