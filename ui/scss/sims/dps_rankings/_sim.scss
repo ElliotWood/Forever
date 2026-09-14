@@ -1,0 +1,4 @@
+// Set color variables which control the site theme.
+.dps-rankings-ui {
+	@include theme-color($brand, 0.9, '#{$site-base}assets/img/classic.jpg');
+}

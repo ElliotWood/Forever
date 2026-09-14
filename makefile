@@ -34,6 +34,7 @@ HTML_INDECIES := ui/balance_druid/index.html \
 				 ui/warrior/index.html \
 				 ui/tank_warrior/index.html \
 				 ui/raid/index.html \
+				 ui/dps_rankings/index.html \
 				 ui/detailed_results/index.html
 
 $(OUT_DIR)/.dirstamp: \
@@ -90,9 +91,13 @@ ui/core/proto/api.ts: proto/*.proto node_modules
 	npx protoc --ts_out ui/core/proto --proto_path proto proto/test.proto
 	npx protoc --ts_out ui/core/proto --proto_path proto proto/ui.proto
 
+# Pages whose directory name doesn't spell their title. Everything else falls back to
+# 'WoW Forever <Dir Name> Simulator' below.
+ui/dps_rankings/index.html: page_title := WoW Forever DPS Rankings
+
 ui/%/index.html: ui/index_template.html
 	$(eval title := $(shell echo $(shell basename $(@D)) | sed -r 's/(^|_)([a-z])/\U \2/g' | cut -c 2-))
-	cat ui/index_template.html | sed -e 's/@@TITLE@@/WoW Forever $(title) Simulator/g' -e 's/@@SPEC@@/$(shell basename $(@D))/g' -e 's|@@BASE@@|$(SITE_BASE)|g' > $@
+	cat ui/index_template.html | sed -e 's/@@TITLE@@/$(or $(page_title),WoW Forever $(title) Simulator)/g' -e 's/@@SPEC@@/$(shell basename $(@D))/g' -e 's|@@BASE@@|$(SITE_BASE)|g' > $@
 
 package-lock.json:
 	npm install
