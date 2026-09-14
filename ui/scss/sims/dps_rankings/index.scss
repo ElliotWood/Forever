@@ -1,0 +1,6 @@
+@import '../../core/individual_sim_ui/common';
+// The page's own layout uses Bootstrap's breakpoint mixins, which `common` doesn't pull
+// in because a theme partial on its own has no need for them.
+@import 'bootstrap/scss/mixins';
+@import './sim';
+@import './dps_rankings';

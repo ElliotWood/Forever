@@ -9,13 +9,12 @@ import { RaidSimPreset } from '../../core/individual_sim_ui.js';
 import { MAX_PARTY_SIZE, Party } from '../../core/party.js';
 import { Player } from '../../core/player.js';
 import { Player as PlayerProto } from '../../core/proto/api.js';
-import { Class, EquipmentSpec, Faction, Profession, Spec } from '../../core/proto/common.js';
-import { BalanceDruid_Options as BalanceDruidOptions } from '../../core/proto/druid.js';
-import { cssClassForClass, isTankSpec, newUnitReference, playerToSpec, specToClass } from '../../core/proto_utils/utils.js';
+import { Class, Faction, Spec } from '../../core/proto/common.js';
+import { cssClassForClass, playerToSpec, specToClass } from '../../core/proto_utils/utils.js';
 import { Raid } from '../../core/raid.js';
 import { EventID, TypedEvent } from '../../core/typed_event.js';
 import { formatDeltaTextElem, getEnumValues } from '../../core/utils.js';
-import { playerPresets, specSimFactories } from '../presets.js';
+import { applyNewPlayerAssignments, newPlayerFromPreset, playerPresets, specSimFactories } from '../presets.js';
 import { RaidSimUI } from './raid_sim_ui';
 
 const NEW_PLAYER = -1;
@@ -142,10 +141,6 @@ export class RaidPicker extends Component {
 
 	getCurrentFaction(): Faction {
 		return this.raid.sim.getFaction();
-	}
-
-	getCurrentPhase(): number {
-		return this.raid.sim.getPhase();
 	}
 
 	getPlayerPicker(raidIndex: number): PlayerPicker {
@@ -659,20 +654,6 @@ class PlayerEditorModal<SpecType extends Spec> extends BaseModal {
 	}
 }
 
-// Every preset's gear is keyed by the phase it was authored for, and most only carry
-// one. Asking for a phase a preset has no entry for used to hand lookupEquipmentSpec an
-// undefined spec, which throws inside the promise and leaves the player naked - the raid
-// sim then runs a raid of unequipped characters. Take the best phase at or below the one
-// asked for instead, and failing that the earliest the preset has.
-function gearForPhase(byPhase: Record<number, EquipmentSpec>, phase: number): EquipmentSpec | null {
-	const phases = Object.keys(byPhase)
-		.map(k => parseInt(k))
-		.sort((a, b) => a - b);
-	if (!phases.length) return null;
-	const atOrBelow = phases.filter(p => p <= phase);
-	return byPhase[atOrBelow.length ? atOrBelow[atOrBelow.length - 1] : phases[0]];
-}
-
 class NewPlayerPicker extends Component {
 	readonly raidPicker: RaidPicker;
 
@@ -744,47 +725,6 @@ class NewPlayerPicker extends Component {
 	}
 
 	private makePlayer(eventID: EventID, preset: RaidSimPreset<any>): Player<any> {
-		const newPlayer = new Player(preset.spec, this.raidPicker.raid.sim);
-		newPlayer.applySharedDefaults(eventID);
-		newPlayer.setRace(eventID, preset.defaultFactionRaces[this.raidPicker.getCurrentFaction()]);
-		newPlayer.setTalentsString(eventID, preset.talents.talentsString);
-		newPlayer.setSpecOptions(eventID, preset.specOptions);
-		newPlayer.setConsumes(eventID, preset.consumes);
-		newPlayer.setName(eventID, preset.defaultName);
-		newPlayer.setProfession1(eventID, preset.otherDefaults?.profession1 || Profession.Engineering);
-		newPlayer.setProfession2(eventID, preset.otherDefaults?.profession2 || Profession.Enchanting);
-		newPlayer.setDistanceFromTarget(eventID, preset.otherDefaults?.distanceFromTarget || 0);
-
-		// Need to wait because the gear might not be loaded yet.
-		this.raidPicker.raid.sim.waitForInit().then(() => {
-			const gear = gearForPhase(preset.defaultGear[this.raidPicker.getCurrentFaction()], this.raidPicker.getCurrentPhase());
-			if (gear) {
-				newPlayer.setGear(eventID, this.raidPicker.raid.sim.db.lookupEquipmentSpec(gear));
-			}
-		});
-
-		return newPlayer;
-	}
-}
-
-function applyNewPlayerAssignments(eventID: EventID, newPlayer: Player<any>, raid: Raid) {
-	if (isTankSpec(newPlayer.spec)) {
-		const tanks = raid.getTanks();
-		const emptyIdx = tanks.findIndex(tank => raid.getPlayerFromUnitReference(tank) == null);
-		if (emptyIdx == -1) {
-			if (tanks.length < 3) {
-				raid.setTanks(eventID, tanks.concat([newPlayer.makeUnitReference()]));
-			}
-		} else {
-			tanks[emptyIdx] = newPlayer.makeUnitReference();
-			raid.setTanks(eventID, tanks);
-		}
-	}
-
-	// Spec-specific assignments. For most cases, default to buffing self.
-	if (newPlayer.spec == Spec.SpecBalanceDruid) {
-		const newOptions = newPlayer.getSpecOptions() as BalanceDruidOptions;
-		newOptions.innervateTarget = newUnitReference(newPlayer.getRaidIndex());
-		newPlayer.setSpecOptions(eventID, newOptions);
+		return newPlayerFromPreset(eventID, this.raidPicker.raid.sim, preset);
 	}
 }

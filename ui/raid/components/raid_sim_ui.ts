@@ -5,14 +5,12 @@ import { addRaidSimAction, RaidSimResultsManager, ReferenceData } from '../../co
 import { raidSimStatus } from '../../core/launched_sims.js';
 import { Player } from '../../core/player.js';
 import { Raid as RaidProto } from '../../core/proto/api.js';
-import { Class, Encounter as EncounterProto, TristateEffect } from '../../core/proto/common.js';
-import { Blessings } from '../../core/proto/paladin.js';
+import { Class, Encounter as EncounterProto } from '../../core/proto/common.js';
 import { BlessingsAssignments, RaidSimSettings } from '../../core/proto/ui.js';
-import { playerToSpec } from '../../core/proto_utils/utils.js';
 import { Sim } from '../../core/sim.js';
 import { SimUI } from '../../core/sim_ui.jsx';
 import { EventID, TypedEvent } from '../../core/typed_event.js';
-import { implementedSpecs } from '../presets.js';
+import { applyBlessings } from '../presets.js';
 import { BlessingsPicker } from './blessings_picker.js';
 import { RaidJsonExporter } from './exporters';
 import { RaidJsonImporter, RaidWCLImporter } from './importers';
@@ -135,30 +133,7 @@ export class RaidSimUI extends SimUI {
 	}
 
 	private modifyRaidProto(raidProto: RaidProto) {
-		// Apply blessings.
-		const numPaladins = this.getClassCount(Class.ClassPaladin);
-		const blessingsAssignments = this.blessingsPicker!.getAssignments();
-		implementedSpecs.forEach(spec => {
-			const playerProtos = raidProto.parties
-				.map(party => party.players.filter(player => player.class != Class.ClassUnknown && playerToSpec(player) == spec))
-				.flat();
-
-			blessingsAssignments.paladins.forEach((paladin, i) => {
-				if (i >= numPaladins) {
-					return;
-				}
-
-				if (paladin.blessings[spec] == Blessings.BlessingOfKings) {
-					playerProtos.forEach(playerProto => (playerProto.buffs!.blessingOfKings = true));
-				} else if (paladin.blessings[spec] == Blessings.BlessingOfMight) {
-					playerProtos.forEach(playerProto => (playerProto.buffs!.blessingOfMight = TristateEffect.TristateEffectImproved));
-				} else if (paladin.blessings[spec] == Blessings.BlessingOfWisdom) {
-					playerProtos.forEach(playerProto => (playerProto.buffs!.blessingOfWisdom = TristateEffect.TristateEffectImproved));
-				} else if (paladin.blessings[spec] == Blessings.BlessingOfSanctuary) {
-					playerProtos.forEach(playerProto => (playerProto.buffs!.blessingOfSanctuary = true));
-				}
-			});
-		});
+		applyBlessings(raidProto, this.blessingsPicker!.getAssignments(), this.getClassCount(Class.ClassPaladin));
 	}
 
 	getCurrentData(): ReferenceData | null {
