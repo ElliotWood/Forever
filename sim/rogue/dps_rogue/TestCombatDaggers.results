@@ -181,84 +181,84 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-No Poisons-combat_backstab-FullBuffs-P1-Consumes-LongMultiTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
   dps: 362.83503
   tps: 257.61287
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-No Poisons-combat_backstab-FullBuffs-P1-Consumes-LongSingleTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
   dps: 306.74193
   tps: 217.78677
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-No Poisons-combat_backstab-FullBuffs-P1-Consumes-ShortSingleTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
   dps: 391.62974
   tps: 278.05711
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-No Poisons-combat_backstab-NoBuffs-P1-Consumes-LongMultiTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
   dps: 168.38502
   tps: 119.55336
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-No Poisons-combat_backstab-NoBuffs-P1-Consumes-LongSingleTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
   dps: 144.57239
   tps: 102.6464
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-No Poisons-combat_backstab-NoBuffs-P1-Consumes-ShortSingleTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Human-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
   dps: 187.00122
   tps: 132.77087
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-No Poisons-combat_backstab-FullBuffs-P1-Consumes-LongMultiTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
   dps: 368.82046
   tps: 261.86252
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-No Poisons-combat_backstab-FullBuffs-P1-Consumes-LongSingleTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
   dps: 309.557
   tps: 219.78547
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-No Poisons-combat_backstab-FullBuffs-P1-Consumes-ShortSingleTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
   dps: 397.21636
   tps: 282.02361
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-No Poisons-combat_backstab-NoBuffs-P1-Consumes-LongMultiTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
   dps: 171.22374
   tps: 121.56885
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-No Poisons-combat_backstab-NoBuffs-P1-Consumes-LongSingleTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
   dps: 146.64463
   tps: 104.11769
  }
 }
 dps_results: {
- key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-No Poisons-combat_backstab-NoBuffs-P1-Consumes-ShortSingleTarget"
+ key: "TestCombatDaggers-Phase5-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
   dps: 189.11889
   tps: 134.27441
