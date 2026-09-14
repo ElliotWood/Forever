@@ -83,7 +83,9 @@ func MultiSchoolShouldUseArmor(spell *Spell, target *Unit) bool {
 
 func (at *AttackTable) GetArmorDamageModifier() float64 {
 	armorPenRating := at.Attacker.stats[stats.ArmorPenetration]
-	defenderArmor := max(at.Defender.Armor()*(1-at.Attacker.PseudoStats.ArmorIgnorePercent)-armorPenRating, 0.0)
+	// The share the attacker ignores comes off first, then the flat rating.
+	ignoredArmor := at.Defender.Armor() * at.Attacker.PseudoStats.ArmorIgnorePercent
+	defenderArmor := max(at.Defender.Armor()-ignoredArmor-armorPenRating, 0.0)
 	return 1 - defenderArmor/(defenderArmor+400+85*float64(at.Attacker.Level))
 }
 
