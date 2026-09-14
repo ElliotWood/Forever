@@ -238,7 +238,8 @@
           [
             2
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "naturesGrace",
@@ -808,7 +809,8 @@
           [
             0.5
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "tranquilSpirit",
@@ -931,7 +933,8 @@
             7,
             43
           ]
-        ]
+        ],
+        "notSimulated": true
       }
     ]
   }

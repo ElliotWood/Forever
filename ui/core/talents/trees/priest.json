@@ -209,7 +209,8 @@
             4,
             15
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "improvedManaBurn",
@@ -287,7 +288,8 @@
             2,
             1
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "divineAegis",
@@ -317,7 +319,8 @@
             5,
             12
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "powerInfusion",
@@ -507,7 +510,8 @@
             330,
             387
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "litanyOfLight",
@@ -530,7 +534,8 @@
           [
             10
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "spiritOfRedemption",
@@ -855,7 +860,8 @@
             40,
             30
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "darkness",

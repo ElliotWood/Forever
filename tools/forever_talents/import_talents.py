@@ -15,11 +15,13 @@
 
 import json
 import os
+import re
 import sys
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 OVERRIDE_DIR = os.path.join(os.path.dirname(__file__), 'overrides')
 TREE_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'ui', 'core', 'talents', 'trees')
+SIM_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'sim')
 
 # Talents that didn't exist in Classic have no spell id to give the picker. They carry their
 # name, icon and tooltip through to the tree json instead, and the picker draws those.
@@ -49,6 +51,26 @@ def load_class(class_name):
 	return data
 
 
+def simulated_talents(class_name):
+	"""Field names the class's Go package actually reads.
+
+	A talent the sim never looks at still draws a box the player can spend points in, and
+	since the tooltips landed it describes an effect that isn't modelled. Rather than keep
+	a hand-written list in step with the code, read it back off the source: anything whose
+	Go field name appears nowhere outside the generated protobuf is not simulated.
+	"""
+	seen = set()
+	class_dir = os.path.join(SIM_DIR, class_name)
+	for root, _, files in os.walk(class_dir):
+		if os.sep + 'proto' + os.sep in root + os.sep:
+			continue
+		for name in files:
+			if not name.endswith('.go') or name.startswith('_'):
+				continue
+			with open(os.path.join(root, name)) as f:
+				seen.update(re.findall(r'\b([A-Z][A-Za-z0-9_]*)\b', f.read()))
+	return seen
+
 def sorted_talents(tree):
 	return sorted(tree['talents'], key=lambda talent: (talent['row'], talent['col']))
 
@@ -66,7 +88,7 @@ def spell_ids(talent, existing):
 	return [PLACEHOLDER_SPELL_ID] * talent['maxRank']
 
 
-def build_tree_json(data, existing_by_tree):
+def build_tree_json(data, existing_by_tree, simulated):
 	trees = []
 	for tree in sorted(data['trees'], key=lambda t: t['order']):
 		existing = existing_by_tree.get(tree['name'], {})
@@ -101,6 +123,8 @@ def build_tree_json(data, existing_by_tree):
 					entry['description'] = talent['description']
 				if talent.get('ranks'):
 					entry['ranks'] = talent['ranks']
+				if entry['fieldName'][0].upper() + entry['fieldName'][1:] not in simulated:
+					entry['notSimulated'] = True
 
 			talents.append(entry)
 
@@ -191,7 +215,7 @@ def main():
 					existing_by_tree[tree['name']][talent['name']] = by_field[field_name]
 
 	existing_by_tree['backgroundUrl'] = backgrounds
-	trees = build_tree_json(data, existing_by_tree)
+	trees = build_tree_json(data, existing_by_tree, simulated_talents(class_name))
 
 	if write:
 		with open(tree_path, 'w') as f:

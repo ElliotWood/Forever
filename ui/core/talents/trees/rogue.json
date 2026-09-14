@@ -703,7 +703,8 @@
             2,
             "s"
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "heightenedSenses",

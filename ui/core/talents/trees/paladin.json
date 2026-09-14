@@ -125,7 +125,8 @@
           [
             6
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "reverence",
@@ -303,7 +304,8 @@
             75,
             1
           ]
-        ]
+        ],
+        "notSimulated": true
       }
     ]
   },
@@ -400,7 +402,8 @@
             15,
             45
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "improvedRighteousFury",
