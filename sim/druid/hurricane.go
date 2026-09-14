@@ -31,6 +31,7 @@ func (druid *Druid) registerHurricaneSpell() {
 			SpellCode:   SpellCode_DruidHurricane,
 			ActionID:    core.ActionID{SpellID: rank.spellID},
 			SpellSchool: core.SpellSchoolNature,
+			DefenseType: core.DefenseTypeMagic,
 			ProcMask:    core.ProcMaskSpellDamage,
 			Flags:       core.SpellFlagChanneled | core.SpellFlagBinary | core.SpellFlagAPL,
 
