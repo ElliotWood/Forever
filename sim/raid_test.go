@@ -73,6 +73,56 @@ func TestSparseRaid(t *testing.T) {
 }
 */
 
+// A raid with a gap in it used to take the whole sim down. Empty party slots come back
+// as a UnitMetrics with none of its distribution metrics set, and the concurrency
+// combiner read straight through those nil pointers - so any raid that was not packed
+// from slot zero crashed on combine, which is every raid anyone actually builds.
+func TestCombineHandlesEmptyRaidSlots(t *testing.T) {
+	// What the sim returns for a slot nobody is standing in: a name and nothing else.
+	emptySlot := func() *proto.UnitMetrics { return &proto.UnitMetrics{} }
+
+	player := func(dps float64) *proto.UnitMetrics {
+		dist := func() *proto.DistributionMetrics {
+			return &proto.DistributionMetrics{Avg: dps, Hist: map[int32]int32{}, AggregatorData: &proto.AggregatorData{N: 1}}
+		}
+		return &proto.UnitMetrics{
+			Name: "Warrior", Dps: dist(), Dpasp: dist(), Threat: dist(),
+			Dtps: dist(), Tmi: dist(), Hps: dist(), Tto: dist(),
+		}
+	}
+
+	result := func(dps float64) *proto.RaidSimResult {
+		return &proto.RaidSimResult{
+			RaidMetrics: &proto.RaidMetrics{
+				Dps: &proto.DistributionMetrics{Avg: dps * 2, Hist: map[int32]int32{}, AggregatorData: &proto.AggregatorData{N: 1}},
+				Hps: &proto.DistributionMetrics{Hist: map[int32]int32{}, AggregatorData: &proto.AggregatorData{}},
+				Parties: []*proto.PartyMetrics{
+					{
+						Dps:     &proto.DistributionMetrics{Avg: dps * 2, Hist: map[int32]int32{}, AggregatorData: &proto.AggregatorData{N: 1}},
+						Hps:     &proto.DistributionMetrics{Hist: map[int32]int32{}, AggregatorData: &proto.AggregatorData{}},
+						Players: []*proto.UnitMetrics{player(dps), emptySlot(), emptySlot(), player(dps)},
+					},
+				},
+			},
+			EncounterMetrics: &proto.EncounterMetrics{Targets: []*proto.UnitMetrics{}},
+			IterationsDone:   10,
+		}
+	}
+
+	combined := core.CombineConcurrentSimResults([]*proto.RaidSimResult{result(100), result(200)}, false)
+
+	players := combined.RaidMetrics.Parties[0].Players
+	if len(players) != 4 {
+		t.Fatalf("expected 4 slots back, got %d", len(players))
+	}
+	if got := players[0].Dps.Avg; got != 150 {
+		t.Errorf("expected the occupied slot to average 150 dps, got %v", got)
+	}
+	if players[1].Dps != nil {
+		t.Errorf("expected the empty slot to stay empty, got %v", players[1].Dps)
+	}
+}
+
 func TestBasicRaid(t *testing.T) {
 	t.Skip()
 	rsr := &proto.RaidSimRequest{
