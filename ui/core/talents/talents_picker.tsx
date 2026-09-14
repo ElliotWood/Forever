@@ -366,6 +366,10 @@ class TalentPicker<TalentsProto> extends Component {
 			this.rootElem.style.backgroundImage = `url('${talentIconUrl(this.config.icon ?? UNKNOWN_TALENT_ICON)}')`;
 		}
 
+		if (this.config.notSimulated) {
+			this.rootElem.classList.add('talent-picker-not-simulated');
+		}
+
 		this.pointsDisplay = document.createElement('span');
 		this.pointsDisplay.classList.add('talent-picker-points');
 		this.rootElem.appendChild(this.pointsDisplay);
@@ -563,6 +567,7 @@ class TalentPicker<TalentsProto> extends Component {
 					Rank {numPoints}/{this.config.maxPoints}
 				</span>
 				{text && <p className="talent-picker-tooltip-description">{text}</p>}
+				{this.config.notSimulated && <p className="talent-picker-tooltip-unsimulated">Not simulated yet - points spent here do not affect results.</p>}
 			</div>
 		);
 
@@ -636,6 +641,9 @@ export type TalentConfig<TalentsProto> = {
 	name?: string;
 	icon?: string;
 	description?: string;
+	// True when the sim's Go package never reads this talent, so spending points in it
+	// changes nothing. Computed by tools/forever_talents/import_talents.py from the source.
+	notSimulated?: boolean;
 	// Values substituted into the description's {n} placeholders, one row per rank. Strings
 	// occur where a placeholder carries text rather than a number, e.g. a plural suffix.
 	ranks?: Array<Array<number | string>>;

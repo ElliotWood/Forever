@@ -803,7 +803,8 @@
           [
             100
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "lightningReflexes",

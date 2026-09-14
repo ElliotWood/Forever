@@ -152,7 +152,8 @@
             40,
             80
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "twoHandedWeaponSpecialization",
@@ -444,7 +445,8 @@
             6,
             20
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "boundlessRage",
@@ -804,7 +806,8 @@
         "description": "Your Charge ability is now usable while in Defensive Stance.",
         "ranks": [
           []
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "improvedShieldWall",
