@@ -204,7 +204,6 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) (bool, time.Duration) {
 	nextEnergy := curEnergy + core.EnergyPerTick
 	nextTick := cat.NextEnergyTickAt()
 	timeToNextTick := nextTick - sim.CurrentTime
-	isClearcast := cat.ClearcastingAura.IsActive()
 	numShiftsToOom := cat.numShiftsRemaining()
 	fightDur := sim.GetRemainingDuration()
 	shredCost := cat.Shred.DefaultCast.Cost
@@ -218,9 +217,7 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) (bool, time.Duration) {
 
 	var nextAbility *druid.DruidSpell
 
-	if isClearcast {
-		nextAbility = cat.Shred
-	} else if (curCp >= rotation.MinCombosForRip || canRipTrick) && cat.canRip(sim, canRipTrick) {
+	if (curCp >= rotation.MinCombosForRip || canRipTrick) && cat.canRip(sim, canRipTrick) {
 		nextAbility = cat.Rip
 	} else if canShredTrick {
 		nextAbility = cat.Shred

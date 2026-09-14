@@ -106,15 +106,6 @@ func (action *APLActionCatOptimalRotationAction) IsReady(sim *core.Simulation) b
 func (action *APLActionCatOptimalRotationAction) Execute(sim *core.Simulation) {
 	cat := action.cat
 
-	// If a melee swing resulted in an Omen or Wild Strikes proc, then schedule the
-	// next player decision based on latency.
-	if cat.Talents.OmenOfClarity && cat.ClearcastingAura.RemainingDuration(sim) == cat.ClearcastingAura.Duration {
-		// Kick gcd loop, also need to account for any gcd 'left'
-		// otherwise it breaks gcd logic
-		kickTime := max(cat.NextGCDAt(), sim.CurrentTime+cat.latency)
-		cat.NextRotationAction(sim, kickTime)
-	}
-
 	if cat.GCD.IsReady(sim) && (cat.rotationAction == nil || sim.CurrentTime >= cat.rotationAction.NextActionAt) {
 		cat.OnGCDReady(sim)
 	}

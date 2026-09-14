@@ -65,7 +65,7 @@ export const DefaultAPL = APLPresets[Phase.Phase1][0];
 //                                 Talent Presets
 ///////////////////////////////////////////////////////////////////////////
 
-export const TalentsP1Balance = PresetUtils.makePresetTalents('Balance', SavedTalents.create({ talentsString: '5000550012551251--5005031' }));
+export const TalentsP1Balance = PresetUtils.makePresetTalents('Balance', SavedTalents.create({ talentsString: '50322201515001351--505302' }));
 
 export const TalentPresets = {
 	[Phase.Phase1]: [TalentsP1Balance],

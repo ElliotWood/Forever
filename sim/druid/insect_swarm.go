@@ -15,6 +15,10 @@ var InsectSwarmManaCost = [InsectSwarmRanks + 1]float64{0, 45, 85, 100, 140, 160
 var InsectSwarmLevel = [InsectSwarmRanks + 1]int{0, 20, 30, 40, 50, 60}
 
 func (druid *Druid) registerInsectSwarmSpell() {
+	if !druid.Talents.InsectSwarm {
+		return
+	}
+
 	druid.InsectSwarm = make([]*DruidSpell, InsectSwarmRanks+1)
 
 	druid.InsectSwarmAuras = druid.NewEnemyAuraArray(core.InsectSwarmAura)
@@ -36,7 +40,7 @@ func (druid *Druid) registerInsectSwarmSpell() {
 				SpellSchool: core.SpellSchoolNature,
 				DefenseType: core.DefenseTypeMagic,
 				ProcMask:    core.ProcMaskSpellDamage,
-				Flags:       SpellFlagOmen | core.SpellFlagAPL | core.SpellFlagBinary,
+				Flags:       core.SpellFlagAPL | core.SpellFlagBinary,
 
 				ManaCost: core.ManaCostOptions{
 					FlatCost: manaCost,

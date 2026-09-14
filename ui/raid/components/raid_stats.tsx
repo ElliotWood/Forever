@@ -208,6 +208,14 @@ function playerClass<T extends Class>(clazz: T, extraCondition?: (player: Player
 		},
 	};
 }
+function playerSpec<T extends Spec>(spec: T, extraCondition?: (player: Player<T>) => boolean): PlayerProvider {
+	return {
+		class: specToClass[spec],
+		condition: (player: Player<any>): boolean => {
+			return player.isSpec(spec) && (!extraCondition || extraCondition(player));
+		},
+	};
+}
 function playerClassAndTalentInternal<T extends Class>(
 	clazz: T,
 	talentName: keyof SpecTalents<ClassSpecs<T>>,
@@ -256,13 +264,6 @@ function playerSpecAndTalentInternal<T extends Spec>(
 }
 function playerSpecAndTalent<T extends Spec>(spec: T, talentName: keyof SpecTalents<T>, extraCondition?: (player: Player<T>) => boolean): PlayerProvider {
 	return playerSpecAndTalentInternal(spec, talentName, false, extraCondition);
-}
-function playerSpecAndMissingTalent<T extends Spec>(
-	spec: T,
-	talentName: keyof SpecTalents<T>,
-	extraCondition?: (player: Player<T>) => boolean,
-): PlayerProvider {
-	return playerSpecAndTalentInternal(spec, talentName, true, extraCondition);
 }
 
 function raidBuff(buffName: keyof RaidBuffs): RaidProvider {
@@ -333,12 +334,7 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 						{
 							label: 'Improved Gift of the Wild',
 							actionId: ActionId.fromSpellId(17051),
-							playerData: playerClassAndTalent(Class.ClassDruid, 'improvedMarkOfTheWild'),
-						},
-						{
-							label: 'Gift of the Wild',
-							actionId: ActionId.fromSpellId(48470),
-							playerData: playerClassAndMissingTalent(Class.ClassDruid, 'improvedMarkOfTheWild'),
+							playerData: playerClass(Class.ClassDruid),
 						},
 					],
 				},
@@ -655,20 +651,7 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 						{
 							label: 'Improved Demoralizing Roar',
 							actionId: ActionId.fromSpellId(16862),
-							playerData: playerSpecAndTalent(
-								Spec.SpecFeralTankDruid,
-								'feralAggression',
-								player => player.getSimpleRotation().maintainDemoralizingRoar,
-							),
-						},
-						{
-							label: 'Demoralizing Roar',
-							actionId: ActionId.fromSpellId(9898),
-							playerData: playerSpecAndMissingTalent(
-								Spec.SpecFeralTankDruid,
-								'feralAggression',
-								player => player.getSimpleRotation().maintainDemoralizingRoar,
-							),
+							playerData: playerSpec(Spec.SpecFeralTankDruid, player => player.getSimpleRotation().maintainDemoralizingRoar),
 						},
 						// {
 						// 	label: 'Improved Curse of Weakness',

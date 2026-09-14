@@ -42,14 +42,16 @@ func (druid *Druid) newWrathSpellConfig(rank int) core.SpellConfig {
 		SpellSchool: core.SpellSchoolNature,
 		DefenseType: core.DefenseTypeMagic,
 		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagOmen | core.SpellFlagAPL | core.SpellFlagResetAttackSwing,
+		Flags:       core.SpellFlagAPL | core.SpellFlagResetAttackSwing,
 
 		RequiredLevel: level,
 		Rank:          rank,
 		MissileSpeed:  20,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost:   manaCost,
+			FlatCost: manaCost,
+			// TODO: Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
+			Multiplier: 100 - 10*druid.Talents.ImprovedWrath,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

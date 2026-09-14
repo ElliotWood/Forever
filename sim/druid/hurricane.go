@@ -28,10 +28,11 @@ func (druid *Druid) registerHurricaneSpell() {
 
 		damage := rank.damage + float64(min(druid.Level, rank.scaleLevel)-rank.level)*rank.scale
 		spell := druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{
+			SpellCode:   SpellCode_DruidHurricane,
 			ActionID:    core.ActionID{SpellID: rank.spellID},
 			SpellSchool: core.SpellSchoolNature,
 			ProcMask:    core.ProcMaskSpellDamage,
-			Flags:       SpellFlagOmen | core.SpellFlagChanneled | core.SpellFlagBinary | core.SpellFlagAPL,
+			Flags:       core.SpellFlagChanneled | core.SpellFlagBinary | core.SpellFlagAPL,
 
 			RequiredLevel: int(rank.level),
 			Rank:          i + 1,

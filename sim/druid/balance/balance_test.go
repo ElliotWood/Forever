@@ -30,11 +30,13 @@ func TestP1Balance(t *testing.T) {
 			ItemFilter:      ItemFilters,
 			EPReferenceStat: proto.Stat_StatSpellPower,
 			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
 		},
 	}))
 }
 
-var P1Talents = "5000550012551251--5005031"
+var P1Talents = "50322201515001351--505302"
 
 var P1Consumes = core.ConsumesCombo{
 	Label: "P1-Consumes",
