@@ -135,6 +135,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 		})
 
 		paladin.aurasSoR = append(paladin.aurasSoR, aura)
+		paladin.registerSealProc(aura, procSpell)
 
 		paladin.sealOfRighteousness = paladin.RegisterSpell(core.SpellConfig{
 			ActionID:    aura.ActionID,

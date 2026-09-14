@@ -26,6 +26,7 @@ const (
 	SpellCode_PaladinHolyShieldProc
 	SpellCode_PaladinLayOnHands
 	SpellCode_PaladinHammerOfWrath
+	SpellCode_PaladinHolyStrike
 )
 
 type SealJudgeCode uint8
@@ -59,6 +60,11 @@ type Paladin struct {
 	spellsJoR        []*core.Spell
 	spellsJoC        []*core.Spell
 	spellsJotC       []*core.Spell
+
+	// The on-hit proc each seal aura owns, for Twist of Light to bank.
+	sealProcs    map[*core.Aura]*core.Spell
+	sealEcho     *core.Spell
+	sealEchoAura *core.Aura
 
 	// Active abilities and shared cooldowns that are externally manipulated.
 	exorcism       []*core.Spell
@@ -97,6 +103,8 @@ func (paladin *Paladin) Initialize() {
 	paladin.registerRighteousFury()
 	// Judgement and Seals
 	paladin.registerJudgement()
+	paladin.registerSwiftJudgement()
+	paladin.registerTwistOfLight()
 
 	paladin.registerSealOfRighteousness()
 	paladin.registerSealOfCommand()
@@ -112,6 +120,8 @@ func (paladin *Paladin) Initialize() {
 
 	// Active abilities
 	paladin.registerForbearance()
+	paladin.registerHolyStrike()
+	paladin.registerTemplarsBulwark()
 	paladin.registerConsecration()
 	paladin.registerHolyShock()
 	paladin.registerExorcism()
@@ -130,6 +140,7 @@ func (paladin *Paladin) Initialize() {
 func (paladin *Paladin) Reset(_ *core.Simulation) {
 	paladin.ResetCurrentPaladinAura()
 	paladin.ResetPrimarySeal(paladin.Options.PrimarySeal)
+	paladin.sealEcho = nil
 }
 
 // maybe need to add stat dependencies
@@ -204,6 +215,7 @@ func (paladin *Paladin) getPrimarySealSpell(primarySeal proto.PaladinSeal) *core
 
 func (paladin *Paladin) applySeal(newSeal *core.Aura, sealSpell *core.Spell, judgement *core.Spell, sim *core.Simulation) {
 	if paladin.currentSeal != nil {
+		paladin.bankSealEcho(sim, newSeal)
 		paladin.currentSeal.Deactivate(sim)
 	}
 
