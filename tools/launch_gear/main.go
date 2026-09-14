@@ -1,10 +1,11 @@
 // Builds launch-tier gear sets for the specs that have none.
 //
 // Forever launches with no raids, so the pool is everything obtainable without one:
-// dungeons, quests, crafting, reputation, world drops. Items whose only sources are
-// Classic raid zones are excluded. Within that pool each slot takes the item with the
-// highest EP against the weights in specs.go, which are stated there rather than derived,
-// because the specs this runs for have no gear to derive them from.
+// dungeons, quests, crafting, reputation, world drops. Raid loot is excluded, by phase
+// for the raid-release phases and by source for the rest. Within that pool each slot
+// takes the item with the highest EP against the weights in specs.go, which are stated
+// there rather than derived, because the specs this runs for have no gear to derive
+// them from.
 //
 //	go run --tags=with_db ./tools/launch_gear -spec retribution_paladin
 package main
@@ -22,20 +23,37 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-// Classic raid zones. An item that only drops here does not exist at Forever launch.
+// Classic's phases 4, 5 and 6 were raid releases - Zul'Gurub, Ahn'Qiraj and
+// Naxxramas - so nothing first available in them exists at Forever launch. Phases 1
+// to 3 brought the dungeons, the quest and crafted gear, the reputation rewards and
+// the PvP sets alongside their raids, so those are filtered by source instead.
+const lastNonRaidPhase = 3
+
+// The three raid zones inside phases 1-3.
 var raidZones = map[int32]bool{
 	2717: true, // Molten Core
 	2677: true, // Blackwing Lair
 	2159: true, // Onyxia's Lair
-	1977: true, // Zul'Gurub
-	3429: true, // Ruins of Ahn'Qiraj
-	3428: true, // Temple of Ahn'Qiraj
-	3456: true, // Naxxramas
+}
+
+// Turn-ins gated behind those raids. Quest sources carry no zone, so they have to be
+// named: these are the Onyxia head and Ragnaros/Nefarian drop turn-ins.
+var raidQuests = map[int32]bool{
+	7493: true, // The Great Masquerade (Onyxia, Alliance)
+	7497: true, // For The Horde! (Onyxia, Horde)
+	7783: true, // Thunderaan the Windseeker
+	7848: true, // Examine the Vessel (Nefarian)
 }
 
 func obtainableAtLaunch(item *proto.UIItem) bool {
+	if item.Phase > lastNonRaidPhase {
+		return false
+	}
 	for _, source := range item.Sources {
 		if drop := source.GetDrop(); drop != nil && raidZones[drop.ZoneId] {
+			continue
+		}
+		if quest := source.GetQuest(); quest != nil && raidQuests[quest.Id] {
 			continue
 		}
 		return true
