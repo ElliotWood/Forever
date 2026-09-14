@@ -12,10 +12,19 @@ import (
 func applyRaceEffects(agent Agent) {
 	character := agent.GetCharacter()
 
+	// Forever drops every +10 resistance racial and turns the weapon skill racials into
+	// critical strike while that weapon is held. Races also pick up a new passive each.
+	forever := character.Env.IsForever()
+
 	switch character.Race {
 	case proto.Race_RaceDwarf:
-		character.AddStat(stats.FrostResistance, 10)
-		character.GunSpecializationAura()
+		if forever {
+			character.AddWeaponSpecializationCrit(1, proto.WeaponType_WeaponTypeMace)
+			character.beastSlayingAura(1.05)
+		} else {
+			character.AddStat(stats.FrostResistance, 10)
+			character.GunSpecializationAura()
+		}
 
 		actionID := ActionID{SpellID: 20594}
 
@@ -52,18 +61,35 @@ func applyRaceEffects(agent Agent) {
 			},
 		})
 	case proto.Race_RaceGnome:
-		character.AddStat(stats.ArcaneResistance, 10)
-		character.MultiplyStat(stats.Intellect, 1.05)
+		if forever {
+			// Expansive Mind raises the resource pool itself now rather than Intellect.
+			// Only the mana half is modelled; rage and energy have no max stat here.
+			character.MultiplyStat(stats.Mana, 1.05)
+		} else {
+			character.AddStat(stats.ArcaneResistance, 10)
+			character.MultiplyStat(stats.Intellect, 1.05)
+		}
 	case proto.Race_RaceHuman:
 		character.MultiplyStat(stats.Spirit, 1.05)
-		character.SwordSpecializationAura()
-		character.MaceSpecializationAura()
+		if forever {
+			// Mace Specialization moved to the Dwarves.
+			character.AddWeaponSpecializationCrit(2, proto.WeaponType_WeaponTypeSword)
+		} else {
+			character.SwordSpecializationAura()
+			character.MaceSpecializationAura()
+		}
 	case proto.Race_RaceNightElf:
-		character.AddStat(stats.NatureResistance, 10)
+		if !forever {
+			character.AddStat(stats.NatureResistance, 10)
+		}
 		character.AddStat(stats.Dodge, 1)
 		// TODO: Shadowmeld?
 	case proto.Race_RaceOrc:
-		character.AxeSpecializationAura()
+		if forever {
+			character.AddWeaponSpecializationCrit(1, proto.WeaponType_WeaponTypeAxe)
+		} else {
+			character.AxeSpecializationAura()
+		}
 
 		if character.Class == proto.Class_ClassHunter || character.Class == proto.Class_ClassWarlock {
 			// Command Damage dealt by Hunter and Warlock pets increased by 5%
@@ -114,37 +140,56 @@ func applyRaceEffects(agent Agent) {
 			Type:  CooldownTypeDPS,
 		})
 	case proto.Race_RaceTauren:
-		character.AddStat(stats.NatureResistance, 10)
 		character.MultiplyStat(stats.Health, 1.05)
+		if forever {
+			// Endurance carries a point of hit alongside the health.
+			character.AddStat(stats.MeleeHit, 1*MeleeHitRatingPerHitChance)
+			character.AddStat(stats.SpellHit, 1*SpellHitRatingPerHitChance)
+		} else {
+			character.AddStat(stats.NatureResistance, 10)
+		}
 	case proto.Race_RaceTroll:
+		// The Troll weapon specializations have no published Forever crit value, so they
+		// keep their weapon skill until one exists.
 		character.BowSpecializationAura()
 		character.ThrownSpecializationAura()
 
-		// Beast Slaying (+5% damage to beasts)
-		character.Env.RegisterPostFinalizeEffect(func() {
-			for _, t := range character.Env.Encounter.Targets {
-				if t.MobType == proto.MobType_MobTypeBeast {
-					for _, at := range character.AttackTables[t.UnitIndex] {
-						at.DamageDealtMultiplier *= 1.05
-						at.CritMultiplier *= 1.05
-					}
-				}
-			}
-		})
+		character.beastSlayingAura(1.05)
 
 		// Berserking
 		berserkingTimer := character.NewTimer()
-		// Baseline cooldown
-		makeBerserkingCooldown(character, 0, berserkingTimer)
-		// Hard-coded percentage cooldown options
-		makeBerserkingCooldown(character, .1, berserkingTimer)
-		makeBerserkingCooldown(character, .15, berserkingTimer)
-		makeBerserkingCooldown(character, .2, berserkingTimer)
-		makeBerserkingCooldown(character, .25, berserkingTimer)
-		makeBerserkingCooldown(character, .3, berserkingTimer)
+		if forever {
+			// Berserking is a flat 10% now instead of scaling up as health drops.
+			makeBerserkingCooldown(character, .1, berserkingTimer)
+		} else {
+			// Baseline cooldown
+			makeBerserkingCooldown(character, 0, berserkingTimer)
+			// Hard-coded percentage cooldown options
+			makeBerserkingCooldown(character, .1, berserkingTimer)
+			makeBerserkingCooldown(character, .15, berserkingTimer)
+			makeBerserkingCooldown(character, .2, berserkingTimer)
+			makeBerserkingCooldown(character, .25, berserkingTimer)
+			makeBerserkingCooldown(character, .3, berserkingTimer)
+		}
 	case proto.Race_RaceUndead:
-		character.AddStat(stats.ShadowResistance, 10)
+		if !forever {
+			character.AddStat(stats.ShadowResistance, 10)
+		}
 	}
+}
+
+// Troll Beast Slaying, and Dwarf Big Game Hunter under Forever.
+func (character *Character) beastSlayingAura(multiplier float64) {
+	character.Env.RegisterPostFinalizeEffect(func() {
+		for _, t := range character.Env.Encounter.Targets {
+			if t.MobType == proto.MobType_MobTypeBeast {
+				for _, at := range character.AttackTables[t.UnitIndex] {
+					at.DamageDealtMultiplier *= multiplier
+					at.CritMultiplier *= multiplier
+				}
+			}
+		}
+	})
 }
 
 // If customPercentage is 0, use the baseline Berserking calculations from health missing
