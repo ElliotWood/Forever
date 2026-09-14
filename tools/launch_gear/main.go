@@ -1,11 +1,10 @@
 // Builds launch-tier gear sets for the specs that have none.
 //
-// Forever launches with no raids, so the pool is everything obtainable without one:
-// dungeons, quests, crafting, reputation, world drops. Raid loot is excluded, by phase
-// for the raid-release phases and by source for the rest. Within that pool each slot
-// takes the item with the highest EP against the weights in specs.go, which are stated
-// there rather than derived, because the specs this runs for have no gear to derive
-// them from.
+// The item database is generated with everything past launch already filtered out (see
+// tools/database/launch_content.go), so the pool here is simply every item the spec can
+// wear. Within it each slot takes the item with the highest EP against the weights in
+// specs.go, which are stated there rather than derived, because the specs this runs for
+// have no gear to derive them from.
 //
 //	go run --tags=with_db ./tools/launch_gear -spec retribution_paladin
 package main
@@ -22,41 +21,6 @@ import (
 	"github.com/wowsims/classic/sim/core/proto"
 	"github.com/wowsims/classic/sim/core/stats"
 )
-
-// Classic's phases 4, 5 and 6 were raid releases - Zul'Gurub, Ahn'Qiraj and
-// Naxxramas - so nothing first available in them exists at Forever launch. Phases 1
-// to 3 brought the dungeons, the quest and crafted gear, the reputation rewards and
-// the PvP sets alongside their raids, so those are filtered by source instead.
-const lastNonRaidPhase = 3
-
-// The three raid zones inside phases 1-3.
-var raidZones = map[int32]bool{
-	2717: true, // Molten Core
-	2677: true, // Blackwing Lair
-	2159: true, // Onyxia's Lair
-}
-
-// Onyxia's loot and the head turn-ins for her, Ragnaros and Nefarian carry no source
-// record at all, so neither the zone nor the quest check can see them. Item level can:
-// among items with no source and a phase of 3 or lower, everything from 71 up is one of
-// those - Onyxia's drops at 71 and 72, her turn-in rewards at 74, the Benediction and
-// Rhok'delar quest chains at 75, Sulfuras at 80, the Nefarian turn-ins at 83 - and
-// nothing sits between 66 and 70. Below that it is world drops, PvP sets, librams and
-// dungeon loot, all of which do exist at launch.
-const maxSourcelessIlvl = 66
-
-func obtainableAtLaunch(item *proto.UIItem) bool {
-	if item.Phase > lastNonRaidPhase {
-		return false
-	}
-	for _, source := range item.Sources {
-		if drop := source.GetDrop(); drop != nil && raidZones[drop.ZoneId] {
-			continue
-		}
-		return true
-	}
-	return len(item.Sources) == 0 && item.Ilvl <= maxSourcelessIlvl
-}
 
 type slot struct {
 	name  string
@@ -104,7 +68,7 @@ func main() {
 
 	pool := []*proto.UIItem{}
 	for _, item := range db.Items {
-		if !spec.allows(item) || !obtainableAtLaunch(item) {
+		if !spec.allows(item) {
 			continue
 		}
 		pool = append(pool, item)

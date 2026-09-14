@@ -161,6 +161,16 @@ func main() {
 
 	db.MergeItems(database.ItemOverrides)
 	db.MergeEnchants(database.EnchantOverrides)
+
+	// Has to happen before ApplyGlobalFilters, which cuts content by phase, and before the
+	// leftovers db is cloned out of the result - otherwise everything still looks like
+	// phase 1 and nothing past launch is caught.
+	for _, item := range db.Items {
+		if item.Phase == 1 {
+			item.Phase = GetPhaseData(item)
+		}
+	}
+
 	ApplyGlobalFilters(db)
 	AttachFactionInformation(db, wagoItems)
 	AttachItemSetIDs(db, wagoItems)
@@ -194,11 +204,6 @@ func main() {
 			if _, exists := db.RandomSuffixes[randomSuffixID]; !exists {
 				db.RandomSuffixes[randomSuffixID] = wowheadDB.RandomSuffixes[strconv.Itoa(int(randomSuffixID))].ToProto()
 			}
-		}
-
-		// Populate phase data
-		if item.Phase == 1 {
-			item.Phase = GetPhaseData(item)
 		}
 
 		// Tier and Dungeon 2 Set items don't all have class restrictions
@@ -238,6 +243,10 @@ func main() {
 // Filters out entities which shouldn't be included anywhere.
 func ApplyGlobalFilters(db *database.WowDatabase) {
 	db.Items = core.FilterMap(db.Items, func(_ int32, item *proto.UIItem) bool {
+		if !database.ObtainableAtLaunch(item) {
+			return false
+		}
+
 		if _, ok := database.ItemDenyList[item.Id]; ok {
 			return false
 		}
@@ -448,9 +457,12 @@ func GetAllRotationSpellIds() map[string][]int32 {
 			Equipment: &proto.EquipmentSpec{},
 		}, &proto.Player_Hunter{Hunter: &proto.Hunter{Options: &proto.Hunter_Options{}}}), nil, nil, nil)},
 		{Name: "mage", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
-			Class:         proto.Class_ClassMage,
-			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: "2352342212231531-5532323123233121-25221213122351351",
+			Class:     proto.Class_ClassMage,
+			Equipment: &proto.EquipmentSpec{},
+			// Every talent at max, so each talent-gated spell registers and its icon makes
+			// it into the database. Not a legal build, and it has to be regenerated from
+			// ui/core/talents/trees/mage.json whenever the tree changes shape.
+			TalentsString: "255225223122311531-2352333132133151-2555323331321331251",
 		}, &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{}}}), nil, nil, nil)},
 		{Name: "shadow", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:     proto.Class_ClassPriest,
