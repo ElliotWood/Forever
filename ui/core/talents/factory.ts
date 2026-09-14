@@ -59,8 +59,19 @@ export function playerTalentStringToProto<SpecType extends Spec>(spec: Spec, tal
 export function talentStringToProto<TalentsProto>(proto: TalentsProto, talentString: string, talentsConfig: TalentsConfig<TalentsProto>): TalentsProto {
 	talentString.split('-').forEach((treeString, treeIdx) => {
 		const treeConfig = talentsConfig[treeIdx];
+		// A talent string written against a different shape of tree runs off the end of it.
+		// Forever's trees are not Classic's, so any string from before they changed - a stale
+		// preset, or one a player pastes in from a Classic build - is longer than the tree it
+		// is being read into. Dropping the points that have nowhere to go loses nothing that
+		// could have been applied, where indexing past the end throws and takes the page down.
+		if (!treeConfig) {
+			return;
+		}
 		[...treeString].forEach((talentString, i) => {
 			const talentConfig = treeConfig.talents[i];
+			if (!talentConfig) {
+				return;
+			}
 			const points = parseInt(talentString);
 			if (talentConfig.fieldName) {
 				if (talentConfig.maxPoints == 1) {
