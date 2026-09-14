@@ -32,6 +32,9 @@ func TestP1Hunter(t *testing.T) {
 			StatsToWeigh:    Stats,
 
 			Ruleset: proto.Ruleset_RulesetForever,
+
+			// Ranged abilities won't cast inside MinRangedAttackDistance.
+			DistanceFromTarget: 30,
 		},
 	}))
 }

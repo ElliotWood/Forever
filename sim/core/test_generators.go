@@ -418,6 +418,11 @@ type CharacterSuiteConfig struct {
 	Cooldowns *proto.Cooldowns
 
 	Ruleset proto.Ruleset
+
+	// Distance the player stands from the target. Defaults to melee range; ranged
+	// specs have to set it past MinRangedAttackDistance or none of their abilities
+	// will pass their cast conditions.
+	DistanceFromTarget float64
 }
 
 func withRuleset(options *proto.SimOptions, ruleset proto.Ruleset) *proto.SimOptions {
@@ -445,6 +450,7 @@ func FullCharacterTestSuiteGenerator(configs []CharacterSuiteConfig) []TestGener
 		allRotations := append(config.OtherRotations, config.Rotation)
 		allConsumeOptions := append(config.OtherConsumes, config.Consumes)
 		simOptions := withRuleset(DefaultSimTestOptions, config.Ruleset)
+		distanceFromTarget := TernaryFloat64(config.DistanceFromTarget > 0, config.DistanceFromTarget, 5)
 
 		defaultPlayer := WithSpec(
 			&proto.Player{
@@ -458,7 +464,7 @@ func FullCharacterTestSuiteGenerator(configs []CharacterSuiteConfig) []TestGener
 				Rotation:      config.Rotation.Rotation,
 
 				InFrontOfTarget:    config.InFrontOfTarget,
-				DistanceFromTarget: 5,
+				DistanceFromTarget: distanceFromTarget,
 				ReactionTimeMs:     150,
 				ChannelClipDelayMs: 50,
 			},
