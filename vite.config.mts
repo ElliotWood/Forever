@@ -1,5 +1,6 @@
 /** @type {import('vite').UserConfig} */
 
+import { execFileSync } from 'child_process';
 import fs from 'fs';
 import glob from 'glob';
 import { IncomingMessage, ServerResponse } from 'http';
@@ -16,6 +17,24 @@ export const OUT_DIR = path.join(__dirname, 'dist', 'classic');
 // TypeScript through import.meta.env.BASE_URL, the stylesheets through $site-base, and
 // the page templates through the makefile.
 export const SITE_BASE = process.env.SITE_BASE || '/classic/';
+
+// The version the UI shows, so a user can say which build they are looking at. Taken from
+// git rather than hand-maintained: the newest tag plus the commits since it, or the bare
+// commit when the fork has no tags yet, with '-dirty' appended for an uncommitted build.
+// Builds from outside a git checkout - a source tarball, a Docker image that only copies
+// the tree - have nothing to read, so they fall back to 'unknown' instead of failing.
+export const SITE_VERSION = (() => {
+	try {
+		return execFileSync('git', ['describe', '--tags', '--always', '--dirty'], {
+			cwd: __dirname,
+			encoding: 'utf-8',
+			stdio: ['ignore', 'pipe', 'ignore'],
+		}).trim();
+	} catch {
+		// Not a git checkout, or no git on PATH.
+		return 'unknown';
+	}
+})();
 
 function serveExternalAssets() {
 	const workerMappings = {
@@ -96,6 +115,9 @@ export const getBaseConfig = ({ command, mode }: ConfigEnv) =>
 	({
 		base: SITE_BASE,
 		root: path.join(__dirname, 'ui'),
+		define: {
+			__SITE_VERSION__: JSON.stringify(SITE_VERSION),
+		},
 		build: {
 			outDir: OUT_DIR,
 			minify: mode === 'development' ? false : 'terser',

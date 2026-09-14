@@ -7,6 +7,7 @@ import { SimTab } from './components/sim_tab.js';
 import { SimTitleDropdown } from './components/sim_title_dropdown.js';
 import { SocialLinks } from './components/social_links.jsx';
 import Toast from './components/toast';
+import { SITE_VERSION } from './constants/other.js';
 import { LaunchStatus, SimStatus } from './launched_sims.js';
 import { ErrorOutcomeType } from './proto/api';
 import { Spec } from './proto/common.js';
@@ -77,7 +78,10 @@ export abstract class SimUI extends Component {
 								<div className="sim-sidebar-actions within-raid-sim-hide" />
 								<div className="sim-sidebar-results within-raid-sim-hide" />
 								<div className="sim-sidebar-stats" />
-								<div className="sim-sidebar-socials" />
+								<div className="sim-sidebar-footer">
+									<div className="sim-sidebar-socials" />
+									<div className="sim-sidebar-version" />
+								</div>
 							</div>
 						</aside>
 						<div className="sim-content container-fluid" />
@@ -178,6 +182,9 @@ export abstract class SimUI extends Component {
 		socialsContainer.appendChild(SocialLinks.buildDiscordLink());
 		socialsContainer.appendChild(SocialLinks.buildGitHubLink());
 		socialsContainer.appendChild(SocialLinks.buildPatreonLink());
+
+		const versionContainer = this.rootElem.querySelector('.sim-sidebar-version') as HTMLElement;
+		versionContainer.textContent = `WoW Forever sim ${SITE_VERSION}`;
 
 		this.simTabContentsContainer = this.rootElem.querySelector('.sim-main.tab-content') as HTMLElement;
 
