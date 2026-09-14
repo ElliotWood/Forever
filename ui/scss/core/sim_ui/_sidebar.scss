@@ -78,6 +78,13 @@
 				margin-right: var(--spacer-3);
 			}
 		}
+
+		.sim-sidebar-version {
+			margin-top: var(--spacer-1);
+			text-align: center;
+			font-size: 0.75rem;
+			opacity: 0.65;
+		}
 	}
 
 	.warning-zone {

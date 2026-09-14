@@ -55,6 +55,11 @@ export const REPO_NAME = 'classic';
 // Everything that used to hard-code '/classic/' goes through this.
 export const SITE_BASE = import.meta.env.BASE_URL;
 
+// Which build of the sim this is. Vite fills it from `git describe` so nobody has to
+// remember to bump a number, which means it is a tag once the fork starts cutting them
+// and a commit until then. The sidebar shows it so a bug report can name the build.
+export const SITE_VERSION = __SITE_VERSION__;
+
 // Get 'elemental_shaman', the pathname part after the repo name
 const pathnameParts = window.location.pathname.split('/');
 const repoPartIdx = pathnameParts.findIndex(part => part == REPO_NAME);
