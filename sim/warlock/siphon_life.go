@@ -22,6 +22,7 @@ func (warlock *Warlock) getSiphonLifeBaseConfig(rank int) core.SpellConfig {
 	baseDamage *= 1 + warlock.shadowMasteryBonus()
 
 	return core.SpellConfig{
+		SpellCode:     SpellCode_WarlockSiphonLife,
 		ActionID:      actionID,
 		SpellSchool:   core.SpellSchoolShadow,
 		DefenseType:   core.DefenseTypeMagic,

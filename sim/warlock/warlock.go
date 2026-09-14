@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{17, 17, 16}
+var TalentTreeSizes = [3]int{17, 19, 16}
 
 const (
 	WarlockFlagAffliction  = core.SpellFlagAgentReserved1
@@ -20,19 +20,22 @@ const (
 const (
 	SpellCode_WarlockNone int32 = iota
 
+	SpellCode_WarlockBaneOfAgony
+	SpellCode_WarlockBaneOfDoom
 	SpellCode_WarlockConflagrate
 	SpellCode_WarlockCorruption
-	SpellCode_WarlockCurseOfAgony
-	SpellCode_WarlockCurseOfDoom
 	SpellCode_WarlockDeathCoil
 	SpellCode_WarlockDemonicSacrifice
+	SpellCode_WarlockDrainHope
 	SpellCode_WarlockDrainLife
 	SpellCode_WarlockDrainSoul
 	SpellCode_WarlockImmolate
+	SpellCode_WarlockIncinerate
 	SpellCode_WarlockLifeTap
 	SpellCode_WarlockSearingPain
 	SpellCode_WarlockShadowBolt
 	SpellCode_WarlockShadowburn
+	SpellCode_WarlockSiphonLife
 	SpellCode_WarlockSoulFire
 )
 
@@ -41,21 +44,23 @@ type Warlock struct {
 	Talents *proto.WarlockTalents
 	Options *proto.WarlockOptions
 
-	BasePets   []*WarlockPet
-	ActivePet  *WarlockPet
-	Felhunter  *WarlockPet
-	Imp        *WarlockPet
-	Succubus   *WarlockPet
-	Voidwalker *WarlockPet
+	BasePets      []*WarlockPet
+	ActivePet     *WarlockPet
+	SacrificedPet *WarlockPet
+	Felhunter     *WarlockPet
+	Imp           *WarlockPet
+	Succubus      *WarlockPet
+	Voidwalker    *WarlockPet
 
 	// Doomguard *DoomguardPet
 	// Infernal  *InfernalPet
 
 	Conflagrate []*core.Spell
 	Corruption  []*core.Spell
-	DarkPact    *core.Spell
+	DrainHope   *core.Spell
 	DrainSoul   []*core.Spell
 	Immolate    []*core.Spell
+	Incinerate  *core.Spell
 	LifeTap     []*core.Spell
 	SearingPain []*core.Spell
 	ShadowBolt  []*core.Spell
@@ -77,9 +82,13 @@ type Warlock struct {
 	CurseOfWeaknessAuras     core.AuraArray
 	CurseOfTongues           *core.Spell
 	CurseOfTonguesAuras      core.AuraArray
-	CurseOfAgony             []*core.Spell
-	CurseOfDoom              *core.Spell
 	AmplifyCurse             *core.Spell
+
+	ActiveBaneAura   core.AuraArray
+	BaneOfAgony      []*core.Spell
+	BaneOfDoom       *core.Spell
+	BaneOfHavoc      *core.Spell
+	BaneOfHavocAuras core.AuraArray
 
 	// Track all DoT spells for effecrs that add multipliers based on active effects
 	DoTSpells         []*core.Spell
@@ -87,6 +96,8 @@ type Warlock struct {
 	SummonDemonSpells []*core.Spell
 
 	AmplifyCurseAura        *core.Aura
+	DecimationAura          *core.Aura
+	DemonicSacrificeAuras   map[*WarlockPet]*core.Aura
 	ImprovedShadowBoltAuras core.AuraArray
 	SoulLinkAura            *core.Aura
 	MasterDemonologistAura  *core.Aura
@@ -111,20 +122,22 @@ func (warlock *Warlock) Initialize() {
 	warlock.registerDrainSoulSpell()
 	warlock.registerConflagrateSpell()
 	warlock.registerSiphonLifeSpell()
-	warlock.registerDarkPactSpell()
 	warlock.registerSearingPainSpell()
 	// warlock.registerInfernoSpell()
 	// warlock.registerBlackBook()
 	warlock.registerDrainLifeSpell()
 	warlock.registerRainOfFireSpell()
 	warlock.registerDeathCoilSpell()
+	warlock.registerIncinerateSpell()
+	warlock.registerDrainHopeSpell()
 
 	warlock.registerCurseOfElementsSpell()
 	warlock.registerCurseOfShadowSpell()
 	warlock.registerCurseOfRecklessnessSpell()
-	warlock.registerCurseOfAgonySpell()
+	warlock.registerBaneOfAgonySpell()
 	warlock.registerAmplifyCurseSpell()
-	warlock.registerCurseOfDoomSpell()
+	warlock.registerBaneOfDoomSpell()
+	warlock.registerBaneOfHavocSpell()
 	warlock.registerSummonDemon()
 
 	warlock.registerPetAbilities()
@@ -151,7 +164,13 @@ func (warlock *Warlock) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
 
 func (warlock *Warlock) Reset(sim *core.Simulation) {
 	warlock.setDefaultActivePet()
+	warlock.SacrificedPet = nil
+	if pet := warlock.petFromSummon(warlock.Options.Sacrifice); pet != nil && warlock.DemonicSacrificeAuras != nil {
+		warlock.DemonicSacrificeAuras[pet].Activate(sim)
+		warlock.SacrificedPet = pet
+	}
 	warlock.ActiveCurseAura = make([]*core.Aura, len(sim.Environment.AllUnits))
+	warlock.ActiveBaneAura = make([]*core.Aura, len(sim.Environment.AllUnits))
 
 	// warlock.ItemSwap.SwapItems(sim, []proto.ItemSlot{proto.ItemSlot_ItemSlotMainHand,
 	// 	proto.ItemSlot_ItemSlotOffHand, proto.ItemSlot_ItemSlotRanged}, false)

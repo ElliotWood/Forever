@@ -8,6 +8,7 @@ import {
 } from '../../proto/warlock.js';
 import { ActionId } from '../../proto_utils/action_id.js';
 import { WarlockSpecs } from '../../proto_utils/utils.js';
+import { TypedEvent } from '../../typed_event.js';
 import * as InputHelpers from '../input_helpers.js';
 
 export const ArmorInput = <SpecType extends WarlockSpecs>() =>
@@ -55,6 +56,20 @@ export const PetInput = <SpecType extends WarlockSpecs>() =>
 			{ actionId: () => ActionId.fromSpellId(691), value: Summon.Felhunter },
 		],
 		changeEmitter: (player: Player<SpecType>) => player.changeEmitter,
+	});
+
+export const SacrificeInput = <SpecType extends WarlockSpecs>() =>
+	InputHelpers.makeSpecOptionsEnumIconInput<SpecType, Summon>({
+		fieldName: 'sacrifice',
+		values: [
+			{ value: Summon.NoSummon, tooltip: 'No Sacrifice' },
+			{ actionId: () => ActionId.fromSpellId(18791), value: Summon.Imp },
+			{ actionId: () => ActionId.fromSpellId(18792), value: Summon.Voidwalker },
+			{ actionId: () => ActionId.fromSpellId(18789), value: Summon.Succubus },
+			{ actionId: () => ActionId.fromSpellId(18790), value: Summon.Felhunter },
+		],
+		showWhen: player => player.getTalents().demonicSacrifice,
+		changeEmitter: (player: Player<SpecType>) => TypedEvent.onAny([player.changeEmitter, player.talentsChangeEmitter]),
 	});
 
 export const ImpFireboltRank = <SpecType extends WarlockSpecs>() =>

@@ -12,7 +12,7 @@ const DrainSoulRanks = 4
 func (warlock *Warlock) getDrainSoulBaseConfig(rank int) core.SpellConfig {
 	baseNumTicks := int32(5)
 	numTicks := baseNumTicks
-	tickLength := time.Second * 3
+	tickLength := warlock.drainTickLength(time.Second * 3)
 
 	spellId := [DrainSoulRanks + 1]int32{0, 1120, 8288, 8289, 11675}[rank]
 	spellCoeff := [DrainSoulRanks + 1]float64{0, 0.063, 0.1, 0.1, 0.1}[rank]
@@ -55,7 +55,9 @@ func (warlock *Warlock) getDrainSoulBaseConfig(rank int) core.SpellConfig {
 				dot.Snapshot(target, baseDamage, isRollover)
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+				result := dot.CalcSnapshotDamage(sim, target, dot.OutcomeTick)
+				result.Damage *= warlock.improvedDrainsMultiplier(sim, target)
+				dot.Spell.DealPeriodicDamage(sim, result)
 			},
 		},
 

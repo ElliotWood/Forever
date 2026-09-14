@@ -20,7 +20,8 @@ type WarlockPet struct {
 	primaryAbility   *core.Spell
 	secondaryAbility *core.Spell
 
-	SoulLinkAura *core.Aura
+	SoulLinkAura     *core.Aura
+	DemonicBrandAura *core.Aura
 
 	LifeTapManaMetrics *core.ResourceMetrics
 
@@ -34,17 +35,22 @@ type PetConfig struct {
 	AutoAttacks   core.AutoAttackOptions
 }
 
-func (warlock *Warlock) setDefaultActivePet() {
-	switch warlock.Options.Summon {
+func (warlock *Warlock) petFromSummon(summon proto.WarlockOptions_Summon) *WarlockPet {
+	switch summon {
 	case proto.WarlockOptions_Imp:
-		warlock.ActivePet = warlock.Imp
+		return warlock.Imp
 	case proto.WarlockOptions_Felhunter:
-		warlock.ActivePet = warlock.Felhunter
+		return warlock.Felhunter
 	case proto.WarlockOptions_Succubus:
-		warlock.ActivePet = warlock.Succubus
+		return warlock.Succubus
 	case proto.WarlockOptions_Voidwalker:
-		warlock.ActivePet = warlock.Voidwalker
+		return warlock.Voidwalker
 	}
+	return nil
+}
+
+func (warlock *Warlock) setDefaultActivePet() {
+	warlock.ActivePet = warlock.petFromSummon(warlock.Options.Summon)
 }
 
 func (warlock *Warlock) changeActivePet(sim *core.Simulation, newPet *WarlockPet, isSacrifice bool) {
@@ -110,7 +116,6 @@ func (warlock *Warlock) makePet(cfg PetConfig, enabledOnStart bool) *WarlockPet 
 
 		// Imps generally don't melee
 		wp.EnableAutoAttacks(wp, cfg.AutoAttacks)
-		wp.AutoAttacks.MHConfig().DamageMultiplier *= 1.0 + 0.04*float64(warlock.Talents.UnholyPower)
 	}
 
 	core.ApplyPetConsumeEffects(&wp.Character, warlock.Consumes)

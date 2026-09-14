@@ -181,8 +181,7 @@ export const IsbSpriests = {
 	setValue: (eventID: EventID, player: Player<any>, newValue: number) => {
 		player.setIsbSpriests(eventID, newValue);
 	},
-	showWhen: (player: Player<any>) =>
-		player.getRaid()?.getDebuffs().improvedShadowBolt === true || (player as Player<Spec.SpecWarlock>)?.getTalents().improvedShadowBolt > 0,
+	showWhen: (player: Player<any>) => player.getRaid()?.getDebuffs().improvedShadowBolt === true,
 };
 
 export const IsbConfig = {

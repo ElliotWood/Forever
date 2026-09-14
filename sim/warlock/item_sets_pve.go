@@ -171,7 +171,7 @@ var ItemSetPlagueheartRaiment = core.NewItemSet(core.ItemSet{
 						spell.ThreatMultiplier *= 0.75
 					}
 
-					for _, spell := range warlock.CurseOfAgony {
+					for _, spell := range warlock.BaneOfAgony {
 						spell.ThreatMultiplier *= 0.75
 					}
 

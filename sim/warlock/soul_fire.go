@@ -52,7 +52,7 @@ func (warlock *Warlock) getSoulFireBaseConfig(rank int) core.SpellConfig {
 
 	config.Cast.CD = core.Cooldown{
 		Timer:    warlock.NewTimer(),
-		Duration: time.Minute,
+		Duration: time.Duration(float64(time.Minute) * (1 - 0.45*float64(warlock.Talents.Decimation))),
 	}
 
 	return config

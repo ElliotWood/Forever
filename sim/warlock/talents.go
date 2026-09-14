@@ -14,15 +14,21 @@ func (warlock *Warlock) ApplyTalents() {
 
 	// Affliction
 	warlock.applySuppression()
+	warlock.applyMalediction()
+	warlock.applyPandemic()
+	warlock.applyMalevolence()
 	warlock.applyNightfall()
 	warlock.applyShadowMastery()
 
 	// Demonology
 	warlock.applyDemonicEmbrace()
-	warlock.applyFelIntellect()
+	warlock.applyUnholyPower()
+	warlock.applyFelVitality()
 	warlock.registerFelDominationCD()
-	warlock.applyFelStamina()
 	warlock.applyMasterSummoner()
+	warlock.applyDecimation()
+	warlock.applyDemonicBrand()
+	warlock.applyDemonicKnowledge()
 	warlock.applyMasterDemonologist()
 	warlock.applyDemonicSacrifice()
 	warlock.applySoulLink()
@@ -31,9 +37,10 @@ func (warlock *Warlock) ApplyTalents() {
 	warlock.applyImprovedShadowBolt()
 	warlock.applyCataclysm()
 	warlock.applyBane()
-	warlock.applyDevastation()
 	warlock.applyRuin()
-	warlock.applyEmberstorm()
+	warlock.applyAgonizingFlames()
+	warlock.applyFireAndBrimstone()
+	warlock.applyShadowAndFlame()
 }
 
 func (warlock *Warlock) applyWeaponImbue() {
@@ -65,7 +72,7 @@ func (warlock *Warlock) applyFirestone() {
 	// TODO: Test PPM
 	ppm := warlock.AutoAttacks.NewPPMManager(8, core.ProcMaskMelee)
 
-	firestoneMulti := 1.0 + float64(warlock.Talents.ImprovedFirestone)*0.15
+	firestoneMulti := 1.0
 
 	if level >= 56 {
 		warlock.AddStat(stats.FirePower, 21*firestoneMulti)
@@ -139,9 +146,77 @@ func (warlock *Warlock) applySuppression() {
 	}
 
 	points := float64(warlock.Talents.Suppression)
+	warlock.AddStat(stats.SpellHit, points*core.SpellHitRatingPerHitChance)
+	warlock.AddStat(stats.MeleeHit, points*core.MeleeHitRatingPerHitChance)
+	warlock.PseudoStats.ThreatMultiplier *= 1 - 0.04*points
+}
+
+func (warlock *Warlock) applyMalediction() {
+	if warlock.Talents.Malediction == 0 {
+		return
+	}
+
+	points := float64(warlock.Talents.Malediction)
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.Flags.Matches(WarlockFlagAffliction) {
-			spell.BonusHitRating += 2 * points * core.CritRatingPerCritChance
+		if isWarlockSpell(spell) && (len(spell.Dots()) > 0 || spell.AOEDot() != nil) {
+			spell.PeriodicDamageMultiplierAdditive += 0.01 * points
+		}
+	})
+}
+
+// Drain Life and Drain Soul deal 2% more per other Affliction effect on the target (up to 3), tripled on targets below 20%
+func (warlock *Warlock) improvedDrainsMultiplier(sim *core.Simulation, target *core.Unit) float64 {
+	if warlock.Talents.ImprovedDrains == 0 {
+		return 1
+	}
+
+	effects := 0
+	for _, spell := range warlock.DoTSpells {
+		if spell.Flags.Matches(WarlockFlagAffliction) && spell.Dot(target).IsActive() {
+			effects++
+		}
+	}
+	for _, spell := range warlock.DebuffSpells {
+		if spell.Flags.Matches(WarlockFlagAffliction) && spell.RelatedAuras[0].Get(target).IsActive() {
+			effects++
+		}
+	}
+
+	bonus := 0.02 * float64(warlock.Talents.ImprovedDrains) * float64(min(effects, 3))
+	if sim.IsExecutePhase20() {
+		bonus *= 3
+	}
+
+	return 1 + bonus
+}
+
+func (warlock *Warlock) drainTickLength(baseTickLength time.Duration) time.Duration {
+	return time.Duration(float64(baseTickLength) / (1 + 0.17*float64(warlock.Talents.SoulSiphon)))
+}
+
+func (warlock *Warlock) applyPandemic() {
+	if warlock.Talents.Pandemic == 0 {
+		return
+	}
+
+	affectedSpellCodes := []int32{SpellCode_WarlockCorruption, SpellCode_WarlockBaneOfAgony, SpellCode_WarlockBaneOfDoom, SpellCode_WarlockDrainSoul, SpellCode_WarlockDrainLife, SpellCode_WarlockSiphonLife, SpellCode_WarlockDrainHope}
+	bonus := 0.33 * float64(warlock.Talents.Pandemic)
+	warlock.OnSpellRegistered(func(spell *core.Spell) {
+		if slices.Contains(affectedSpellCodes, spell.SpellCode) {
+			spell.CritDamageBonus += bonus
+		}
+	})
+}
+
+func (warlock *Warlock) applyMalevolence() {
+	if warlock.Talents.Malevolence == 0 {
+		return
+	}
+
+	points := float64(warlock.Talents.Malevolence)
+	warlock.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.SpellSchool.Matches(core.SpellSchoolShadow) && isWarlockSpell(spell) {
+			spell.BonusCritRating += points * core.SpellCritRatingPerCritChance
 		}
 	})
 }
@@ -173,12 +248,13 @@ func (warlock *Warlock) applyNightfall() {
 		},
 	})
 
+	affectedSpellCodes := []int32{SpellCode_WarlockCorruption, SpellCode_WarlockDrainLife, SpellCode_WarlockDrainSoul}
 	procChance := 0.02 * float64(warlock.Talents.Nightfall)
 
 	core.MakePermanent(warlock.RegisterAura(core.Aura{
 		Label: "Nightfall Hidden Aura",
 		OnPeriodicDamageDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if (spell.SpellCode == SpellCode_WarlockCorruption || spell.SpellCode == SpellCode_WarlockDrainLife) && sim.Proc(procChance, "Nightfall") {
+			if slices.Contains(affectedSpellCodes, spell.SpellCode) && sim.Proc(procChance, "Nightfall") {
 				shadowTranceAura.Activate(sim)
 			}
 		},
@@ -192,7 +268,7 @@ func (warlock *Warlock) applyShadowMastery() {
 
 	// These spells have their base damage modded instead
 	// Apply Aura: Modifies Spell Effectiveness (8)
-	excludedSpellCodes := []int32{SpellCode_WarlockCurseOfAgony, SpellCode_WarlockDeathCoil, SpellCode_WarlockDrainLife, SpellCode_WarlockDrainSoul}
+	excludedSpellCodes := []int32{SpellCode_WarlockBaneOfAgony, SpellCode_WarlockDeathCoil, SpellCode_WarlockDrainLife, SpellCode_WarlockDrainSoul}
 
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
 		// Shadow Mastery applies a base damage modifier to all dots / channeled spells instead
@@ -203,7 +279,7 @@ func (warlock *Warlock) applyShadowMastery() {
 }
 
 func (warlock *Warlock) shadowMasteryBonus() float64 {
-	return .02 * float64(warlock.Talents.ShadowMastery)
+	return .01 * float64(warlock.Talents.ShadowMastery)
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -215,30 +291,30 @@ func (warlock *Warlock) applyDemonicEmbrace() {
 		return
 	}
 
-	points := float64(warlock.Talents.DemonicEmbrace)
-	warlock.MultiplyStat(stats.Stamina, 1+.03*(points))
-	warlock.MultiplyStat(stats.Spirit, 1-.01*(points))
+	warlock.MultiplyStat(stats.Stamina, 1+.03*float64(warlock.Talents.DemonicEmbrace))
 }
 
-func (warlock *Warlock) applyFelIntellect() {
-	if warlock.Talents.FelIntellect == 0 {
+func (warlock *Warlock) applyUnholyPower() {
+	if warlock.Talents.UnholyPower == 0 {
 		return
 	}
 
-	multiplier := 1 + 0.03*float64(warlock.Talents.FelIntellect)
+	multiplier := 1 + 0.02*float64(warlock.Talents.UnholyPower)
 	for _, pet := range warlock.BasePets {
-		pet.MultiplyStat(stats.Mana, multiplier)
+		pet.PseudoStats.DamageDealtMultiplier *= multiplier
 	}
 }
 
-func (warlock *Warlock) applyFelStamina() {
-	if warlock.Talents.FelStamina == 0 {
+func (warlock *Warlock) applyFelVitality() {
+	if warlock.Talents.FelVitality == 0 {
 		return
 	}
 
-	multiplier := 1 + 0.03*float64(warlock.Talents.FelStamina)
+	multiplier := 1 + 0.05*float64(warlock.Talents.FelVitality)
+	warlock.MultiplyStat(stats.Mana, multiplier)
 	for _, pet := range warlock.BasePets {
 		pet.MultiplyStat(stats.Health, multiplier)
+		pet.MultiplyStat(stats.Mana, multiplier)
 	}
 }
 
@@ -272,6 +348,110 @@ func (warlock *Warlock) applyMasterSummoner() {
 	})
 }
 
+func (warlock *Warlock) applyDecimation() {
+	if warlock.Talents.Decimation == 0 {
+		return
+	}
+
+	points := float64(warlock.Talents.Decimation)
+	damageMultiplier := 1 + 0.03*points
+	castTimeReduction := 0.2 * points
+
+	warlock.DecimationAura = warlock.RegisterAura(core.Aura{
+		Label:    "Decimation",
+		ActionID: core.ActionID{SpellID: 63165},
+		Duration: time.Second * 10,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.DamageDealtMultiplier *= damageMultiplier
+			for _, spell := range warlock.SoulFire {
+				spell.CastTimeMultiplier -= castTimeReduction
+			}
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.DamageDealtMultiplier /= damageMultiplier
+			for _, spell := range warlock.SoulFire {
+				spell.CastTimeMultiplier += castTimeReduction
+			}
+		},
+	})
+
+	affectedSpellCodes := []int32{SpellCode_WarlockShadowBolt, SpellCode_WarlockSearingPain}
+	core.MakePermanent(warlock.RegisterAura(core.Aura{
+		Label: "Decimation Trigger",
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if result.Landed() && sim.IsExecutePhase35() && slices.Contains(affectedSpellCodes, spell.SpellCode) {
+				warlock.DecimationAura.Activate(sim)
+			}
+		},
+	}))
+}
+
+func (warlock *Warlock) applyDemonicBrand() {
+	if warlock.Talents.DemonicBrand == 0 {
+		return
+	}
+
+	points := float64(warlock.Talents.DemonicBrand)
+	actionID := core.ActionID{SpellID: 18821}
+
+	warlock.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.SpellCode == SpellCode_WarlockSearingPain {
+			spell.ThreatMultiplier *= 1 - 0.17*points
+		}
+	})
+
+	for _, pet := range warlock.BasePets {
+		brandSpell := pet.RegisterSpell(core.SpellConfig{
+			ActionID:    actionID,
+			SpellSchool: core.SpellSchoolShadow,
+			DefenseType: core.DefenseTypeMagic,
+			ProcMask:    core.ProcMaskEmpty,
+			Flags:       core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+
+			DamageMultiplier: 1,
+			ThreatMultiplier: 3,
+
+			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+				// TODO: Level 60 values
+				spell.CalcAndDealDamage(sim, target, sim.Roll(39, 42), spell.OutcomeMagicHit)
+			},
+		})
+
+		pet.DemonicBrandAura = pet.RegisterAura(core.Aura{
+			Label:     "Demonic Brand",
+			ActionID:  actionID,
+			Duration:  time.Second * 10,
+			MaxStacks: 2,
+			OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+				if result.Landed() && spell.ProcMask.Matches(core.ProcMaskMelee) {
+					brandSpell.Cast(sim, result.Target)
+					aura.RemoveStack(sim)
+				}
+			},
+		})
+	}
+
+	core.MakePermanent(warlock.RegisterAura(core.Aura{
+		Label: "Demonic Brand Trigger",
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if result.Landed() && spell.SpellCode == SpellCode_WarlockSearingPain && warlock.ActivePet != nil {
+				brandAura := warlock.ActivePet.DemonicBrandAura
+				brandAura.Activate(sim)
+				brandAura.SetStacks(sim, brandAura.MaxStacks)
+			}
+		},
+	}))
+}
+
+func (warlock *Warlock) applyDemonicKnowledge() {
+	if warlock.Talents.DemonicKnowledge == 0 {
+		return
+	}
+
+	// TODO: Beta will show whether the 33% of level is per rank or the full value
+	warlock.AddStat(stats.SpellPower, 0.33*float64(warlock.Talents.DemonicKnowledge)*float64(warlock.Level))
+}
+
 func (warlock *Warlock) applyMasterDemonologist() {
 	if warlock.Talents.MasterDemonologist == 0 {
 		return
@@ -280,18 +460,16 @@ func (warlock *Warlock) applyMasterDemonologist() {
 	points := float64(warlock.Talents.MasterDemonologist)
 	damageDealtMultiplier := 1 + 0.02*points
 	damageTakenMultiplier := 1 - 0.02*points
-	threatMultiplier := 1 + -0.04*points
-	bonusResistance := 2 * points
 
 	impConfig := core.Aura{
 		Label:    "Master Demonologist (Imp)",
 		ActionID: core.ActionID{SpellID: 23825, Tag: 1},
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.PseudoStats.ThreatMultiplier *= threatMultiplier
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= damageDealtMultiplier
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.PseudoStats.ThreatMultiplier /= threatMultiplier
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] /= damageDealtMultiplier
 		},
 	}
 
@@ -312,10 +490,10 @@ func (warlock *Warlock) applyMasterDemonologist() {
 		ActionID: core.ActionID{SpellID: 23825, Tag: 3},
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.PseudoStats.DamageDealtMultiplier *= damageDealtMultiplier
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= damageDealtMultiplier
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.PseudoStats.DamageDealtMultiplier /= damageDealtMultiplier
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= damageDealtMultiplier
 		},
 	}
 
@@ -324,10 +502,14 @@ func (warlock *Warlock) applyMasterDemonologist() {
 		ActionID: core.ActionID{SpellID: 23825, Tag: 4},
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.AddResistancesDynamic(sim, bonusResistance)
+			for school := stats.SchoolIndexArcane; school <= stats.SchoolIndexShadow; school++ {
+				aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[school] *= damageTakenMultiplier
+			}
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.AddResistancesDynamic(sim, -bonusResistance)
+			for school := stats.SchoolIndexArcane; school <= stats.SchoolIndexShadow; school++ {
+				aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[school] /= damageTakenMultiplier
+			}
 		},
 	}
 
@@ -454,11 +636,24 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		return
 	}
 
+	duration := time.Hour * 2
+
 	impAura := warlock.GetOrRegisterAura(core.Aura{
+		Label:    "Touch of Shadow",
+		ActionID: core.ActionID{SpellID: 18791},
+		Duration: duration,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= 1.15
+		},
+	})
+
+	succubusAura := warlock.GetOrRegisterAura(core.Aura{
 		Label:    "Burning Wish",
 		ActionID: core.ActionID{SpellID: 18789},
-		Duration: 30 * time.Minute,
-
+		Duration: duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= 1.15
 		},
@@ -468,17 +663,17 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 	})
 
 	var vwPa *core.PendingAction
-	healthMetric := warlock.NewHealthMetrics(core.ActionID{SpellID: 18790})
+	manaMetric := warlock.NewManaMetrics(core.ActionID{SpellID: 18792})
 	voidwalkerAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Fel Stamina",
-		ActionID: core.ActionID{SpellID: 18790},
-		Duration: 30 * time.Minute,
+		Label:    "Fel Energy",
+		ActionID: core.ActionID{SpellID: 18792},
+		Duration: duration,
 
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			vwPa = core.NewPeriodicAction(sim, core.PeriodicActionOptions{
 				Period: time.Second * 4,
 				OnAction: func(s *core.Simulation) {
-					warlock.GainHealth(sim, warlock.MaxHealth()*0.03, healthMetric)
+					warlock.AddMana(sim, warlock.MaxMana()*0.02, manaMetric)
 				},
 			})
 			sim.AddPendingAction(vwPa)
@@ -488,30 +683,18 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		},
 	})
 
-	succubusAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Touch of Shadow",
-		ActionID: core.ActionID{SpellID: 18791},
-		Duration: 30 * time.Minute,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= 1.15
-		},
-	})
-
 	var fhPa *core.PendingAction
-	manaMetric := warlock.NewManaMetrics(core.ActionID{SpellID: 18792})
+	healthMetric := warlock.NewHealthMetrics(core.ActionID{SpellID: 18790})
 	felhunterAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Fel Energy",
-		ActionID: core.ActionID{SpellID: 18792},
-		Duration: 30 * time.Minute,
+		Label:    "Fel Stamina",
+		ActionID: core.ActionID{SpellID: 18790},
+		Duration: duration,
 
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			fhPa = core.NewPeriodicAction(sim, core.PeriodicActionOptions{
 				Period: time.Second * 4,
 				OnAction: func(s *core.Simulation) {
-					warlock.AddMana(sim, warlock.MaxMana()*0.02, manaMetric)
+					warlock.GainHealth(sim, warlock.MaxHealth()*0.03, healthMetric)
 				},
 			})
 			sim.AddPendingAction(fhPa)
@@ -521,15 +704,24 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		},
 	})
 
-	dsAuras := []*core.Aura{felhunterAura, impAura, succubusAura, voidwalkerAura}
+	warlock.DemonicSacrificeAuras = map[*WarlockPet]*core.Aura{
+		warlock.Felhunter:  felhunterAura,
+		warlock.Imp:        impAura,
+		warlock.Succubus:   succubusAura,
+		warlock.Voidwalker: voidwalkerAura,
+	}
 	for _, pet := range warlock.BasePets {
-		oldOnPetEnable := pet.OnPetEnable
-		pet.OnPetEnable = func(sim *core.Simulation) {
-			oldOnPetEnable(sim)
-			for _, dsAura := range dsAuras {
+		pet.ApplyOnPetEnable(func(sim *core.Simulation) {
+			// With Demonic Pact only resummoning the sacrificed demon ends the effect
+			if warlock.Talents.DemonicPact && pet != warlock.SacrificedPet {
+				return
+			}
+
+			for _, dsAura := range warlock.DemonicSacrificeAuras {
 				dsAura.Deactivate(sim)
 			}
-		}
+			warlock.SacrificedPet = nil
+		})
 	}
 
 	warlock.GetOrRegisterSpell(core.SpellConfig{
@@ -543,17 +735,12 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			switch warlock.ActivePet {
-			case warlock.Felhunter:
-				felhunterAura.Activate(sim)
-			case warlock.Imp:
-				impAura.Activate(sim)
-			case warlock.Succubus:
-				succubusAura.Activate(sim)
-			case warlock.Voidwalker:
-				voidwalkerAura.Activate(sim)
+			for _, dsAura := range warlock.DemonicSacrificeAuras {
+				dsAura.Deactivate(sim)
 			}
+			warlock.DemonicSacrificeAuras[warlock.ActivePet].Activate(sim)
 
+			warlock.SacrificedPet = warlock.ActivePet
 			warlock.changeActivePet(sim, nil, true)
 		},
 	})
@@ -568,24 +755,35 @@ func (warlock *Warlock) applyImprovedShadowBolt() {
 		return
 	}
 
+	damageMultiplier := 1 + 0.04*float64(warlock.Talents.ImprovedShadowBolt)
+
 	warlock.ImprovedShadowBoltAuras = warlock.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
-		return core.ImprovedShadowBoltAura(unit, warlock.Talents.ImprovedShadowBolt)
+		return unit.RegisterAura(core.Aura{
+			Label:    "Improved Shadow Bolt-" + warlock.Label,
+			ActionID: core.ActionID{SpellID: 17800},
+			Duration: time.Second * 12,
+		})
 	})
 
-	affectedSpellCodes := []int32{SpellCode_WarlockShadowBolt}
+	// Only the warlock's own shadow damage benefits, so this can't go through the target's school multiplier
+	for _, target := range warlock.Env.Encounter.TargetUnits {
+		target.AddDynamicDamageTakenModifier(func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if spell.Unit == &warlock.Unit && spell.SpellSchool.Matches(core.SpellSchoolShadow) && warlock.ImprovedShadowBoltAuras.Get(result.Target).IsActive() {
+				result.Damage *= damageMultiplier
+			}
+		})
+	}
+
 	core.MakePermanent(warlock.RegisterAura(core.Aura{
 		Label: "ISB Trigger",
 		OnInit: func(aura *core.Aura, sim *core.Simulation) {
 			for _, spell := range warlock.ShadowBolt {
 				spell.RelatedAuras = []core.AuraArray{warlock.ImprovedShadowBoltAuras}
 			}
-			warlock.DebuffSpells = append(warlock.DebuffSpells, warlock.ShadowBolt...)
 		},
 		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if result.Landed() && result.DidCrit() && slices.Contains(affectedSpellCodes, spell.SpellCode) {
-				isbAura := warlock.ImprovedShadowBoltAuras.Get(result.Target)
-				isbAura.Activate(sim)
-				isbAura.SetStacks(sim, isbAura.MaxStacks)
+			if result.DidCrit() && spell.SpellCode == SpellCode_WarlockShadowBolt {
+				warlock.ImprovedShadowBoltAuras.Get(result.Target).Activate(sim)
 			}
 		},
 	}))
@@ -598,7 +796,7 @@ func (warlock *Warlock) applyCataclysm() {
 
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.Flags.Matches(WarlockFlagDestruction) && spell.Cost != nil {
-			spell.Cost.Multiplier -= warlock.Talents.Cataclysm
+			spell.Cost.Multiplier -= 3 * warlock.Talents.Cataclysm
 		}
 	})
 }
@@ -610,7 +808,7 @@ func (warlock *Warlock) applyBane() {
 
 	points := time.Duration(warlock.Talents.Bane)
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.SpellCode == SpellCode_WarlockShadowBolt || spell.SpellCode == SpellCode_WarlockImmolate {
+		if spell.SpellCode == SpellCode_WarlockShadowBolt || spell.SpellCode == SpellCode_WarlockImmolate || spell.SpellCode == SpellCode_WarlockIncinerate {
 			spell.DefaultCast.CastTime -= time.Millisecond * 100 * points
 		} else if spell.SpellCode == SpellCode_WarlockSoulFire {
 			spell.DefaultCast.CastTime -= time.Millisecond * 400 * points
@@ -618,43 +816,92 @@ func (warlock *Warlock) applyBane() {
 	})
 }
 
-func (warlock *Warlock) applyDevastation() {
-	if warlock.Talents.Devastation == 0 {
-		return
-	}
-
-	points := float64(warlock.Talents.Devastation)
-	warlock.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.Flags.Matches(WarlockFlagDestruction) {
-			spell.BonusCritRating += points * core.CritRatingPerCritChance
-		}
-	})
-}
-
-func (warlock *Warlock) improvedImmolateBonus() float64 {
-	return 0.05 * float64(warlock.Talents.ImprovedImmolate)
-}
-
 func (warlock *Warlock) applyRuin() {
-	if !warlock.Talents.Ruin {
+	if warlock.Talents.Ruin == 0 {
 		return
 	}
+
+	bonus := 0.2 * float64(warlock.Talents.Ruin)
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.Flags.Matches(WarlockFlagDestruction) {
-			spell.CritDamageBonus += 1
+			spell.CritDamageBonus += bonus
 		}
 	})
 }
 
-func (warlock *Warlock) applyEmberstorm() {
-	if warlock.Talents.Emberstorm == 0 {
+func (warlock *Warlock) applyAgonizingFlames() {
+	if warlock.Talents.AgonizingFlames == 0 {
 		return
 	}
 
-	points := float64(warlock.Talents.Emberstorm)
+	points := float64(warlock.Talents.AgonizingFlames)
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.SpellSchool.Matches(core.SpellSchoolFire) && isWarlockSpell(spell) {
-			spell.DamageMultiplierAdditive += 0.02 * points
+		if spell.Flags.Matches(WarlockFlagDestruction) {
+			spell.DamageMultiplierAdditive += 0.03 * points
+		}
+		if spell.SpellCode == SpellCode_WarlockSearingPain {
+			spell.BonusCritRating += 3 * points * core.SpellCritRatingPerCritChance
 		}
 	})
+}
+
+func (warlock *Warlock) applyFireAndBrimstone() {
+	if warlock.Talents.FireAndBrimstone == 0 {
+		return
+	}
+
+	points := float64(warlock.Talents.FireAndBrimstone)
+	warlock.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.SpellCode == SpellCode_WarlockConflagrate {
+			spell.BonusCritRating += 8 * points * core.SpellCritRatingPerCritChance
+		}
+	})
+}
+
+func (warlock *Warlock) applyShadowAndFlame() {
+	if warlock.Talents.ShadowAndFlame == 0 {
+		return
+	}
+
+	multiplier := 1 + 0.02*float64(warlock.Talents.ShadowAndFlame)
+
+	shadowAura := warlock.RegisterAura(core.Aura{
+		Label:    "Shadow and Flame (Shadow)",
+		ActionID: core.ActionID{SpellID: 30288, Tag: 1},
+		Duration: time.Second * 20,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= multiplier
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= multiplier
+		},
+	})
+
+	fireAura := warlock.RegisterAura(core.Aura{
+		Label:    "Shadow and Flame (Fire)",
+		ActionID: core.ActionID{SpellID: 30288, Tag: 2},
+		Duration: time.Second * 20,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= multiplier
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] /= multiplier
+		},
+	})
+
+	core.MakePermanent(warlock.RegisterAura(core.Aura{
+		Label: "Shadow and Flame Trigger",
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if !result.Landed() {
+				return
+			}
+
+			switch spell.SpellCode {
+			case SpellCode_WarlockConflagrate:
+				shadowAura.Activate(sim)
+			case SpellCode_WarlockShadowburn:
+				fireAura.Activate(sim)
+			}
+		},
+	}))
 }

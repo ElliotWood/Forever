@@ -4,6 +4,18 @@
     "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/302.jpg",
     "talents": [
       {
+        "fieldName": "improvedLifeTap",
+        "location": {
+          "rowIdx": 0,
+          "colIdx": 0
+        },
+        "spellIds": [
+          18182,
+          18183
+        ],
+        "maxPoints": 2
+      },
+      {
         "fieldName": "suppression",
         "location": {
           "rowIdx": 0,
@@ -34,20 +46,22 @@
         "maxPoints": 5
       },
       {
-        "fieldName": "improvedCurseOfWeakness",
+        "fieldName": "malediction",
         "location": {
           "rowIdx": 1,
           "colIdx": 0
         },
         "spellIds": [
-          18179,
-          18180,
-          18181
+          32477,
+          32483,
+          32484,
+          32485,
+          32486
         ],
-        "maxPoints": 3
+        "maxPoints": 5
       },
       {
-        "fieldName": "improvedDrainSoul",
+        "fieldName": "soulHarvesting",
         "location": {
           "rowIdx": 1,
           "colIdx": 1
@@ -59,44 +73,29 @@
         "maxPoints": 2
       },
       {
-        "fieldName": "improvedLifeTap",
+        "fieldName": "improvedDrains",
         "location": {
           "rowIdx": 1,
           "colIdx": 2
         },
         "spellIds": [
-          18182,
-          18183
-        ],
-        "maxPoints": 2
-      },
-      {
-        "fieldName": "improvedDrainLife",
-        "location": {
-          "rowIdx": 1,
-          "colIdx": 3
-        },
-        "spellIds": [
           17804,
           17805,
-          17806,
-          17807,
-          17808
+          17806
         ],
-        "maxPoints": 5
+        "maxPoints": 3
       },
       {
-        "fieldName": "improvedCurseOfAgony",
+        "fieldName": "improvedBaneOfAgony",
         "location": {
           "rowIdx": 2,
           "colIdx": 0
         },
         "spellIds": [
           18827,
-          18829,
-          18830
+          18829
         ],
-        "maxPoints": 3
+        "maxPoints": 2
       },
       {
         "fieldName": "felConcentration",
@@ -107,11 +106,9 @@
         "spellIds": [
           17783,
           17784,
-          17785,
-          17786,
-          17787
+          17785
         ],
-        "maxPoints": 5
+        "maxPoints": 3
       },
       {
         "fieldName": "amplifyCurse",
@@ -125,16 +122,32 @@
         "maxPoints": 1
       },
       {
-        "fieldName": "grimReach",
+        "fieldName": "pandemic",
+        "location": {
+          "rowIdx": 2,
+          "colIdx": 3
+        },
+        "spellIds": [
+          58435,
+          58436,
+          58437
+        ],
+        "maxPoints": 3
+      },
+      {
+        "fieldName": "malevolence",
         "location": {
           "rowIdx": 3,
           "colIdx": 0
         },
         "spellIds": [
-          18218,
-          18219
+          18271,
+          18272,
+          18273,
+          18274,
+          18275
         ],
-        "maxPoints": 2
+        "maxPoints": 5
       },
       {
         "fieldName": "nightfall",
@@ -149,16 +162,19 @@
         "maxPoints": 2
       },
       {
-        "fieldName": "improvedDrainMana",
+        "fieldName": "curseOfExhaustion",
         "location": {
           "rowIdx": 3,
-          "colIdx": 3
+          "colIdx": 2
         },
         "spellIds": [
-          17864,
-          18393
+          18223
         ],
-        "maxPoints": 2
+        "maxPoints": 1,
+        "prereqLocation": {
+          "rowIdx": 2,
+          "colIdx": 2
+        }
       },
       {
         "fieldName": "siphonLife",
@@ -172,37 +188,17 @@
         "maxPoints": 1
       },
       {
-        "fieldName": "curseOfExhaustion",
+        "fieldName": "soulSiphon",
         "location": {
           "rowIdx": 4,
           "colIdx": 2
         },
         "spellIds": [
-          18223
+          17864,
+          18393,
+          18394
         ],
-        "maxPoints": 1,
-        "prereqLocation": {
-          "rowIdx": 2,
-          "colIdx": 2
-        }
-      },
-      {
-        "fieldName": "improvedCurseOfExhaustion",
-        "location": {
-          "rowIdx": 4,
-          "colIdx": 3
-        },
-        "spellIds": [
-          18310,
-          18311,
-          18312,
-          18313
-        ],
-        "maxPoints": 4,
-        "prereqLocation": {
-          "rowIdx": 4,
-          "colIdx": 2
-        }
+        "maxPoints": 3
       },
       {
         "fieldName": "shadowMastery",
@@ -224,7 +220,7 @@
         }
       },
       {
-        "fieldName": "darkPact",
+        "fieldName": "drainHope",
         "location": {
           "rowIdx": 6,
           "colIdx": 1
@@ -241,14 +237,14 @@
     "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/303.jpg",
     "talents": [
       {
-        "fieldName": "improvedHealthstone",
+        "fieldName": "improvedHealthFunnel",
         "location": {
           "rowIdx": 0,
           "colIdx": 0
         },
         "spellIds": [
-          18692,
-          18693
+          18703,
+          18704
         ],
         "maxPoints": 2
       },
@@ -281,14 +277,29 @@
         "maxPoints": 5
       },
       {
-        "fieldName": "improvedHealthFunnel",
+        "fieldName": "unholyPower",
+        "location": {
+          "rowIdx": 0,
+          "colIdx": 3
+        },
+        "spellIds": [
+          18769,
+          18770,
+          18771,
+          18772,
+          18773
+        ],
+        "maxPoints": 5
+      },
+      {
+        "fieldName": "demonicAegis",
         "location": {
           "rowIdx": 1,
           "colIdx": 0
         },
         "spellIds": [
-          18703,
-          18704
+          30143,
+          30144
         ],
         "maxPoints": 2
       },
@@ -306,7 +317,7 @@
         "maxPoints": 3
       },
       {
-        "fieldName": "felIntellect",
+        "fieldName": "felVitality",
         "location": {
           "rowIdx": 1,
           "colIdx": 2
@@ -314,11 +325,21 @@
         "spellIds": [
           18731,
           18743,
-          18744,
-          18745,
-          18746
+          18744
         ],
-        "maxPoints": 5
+        "maxPoints": 3
+      },
+      {
+        "fieldName": "demonicEnergies",
+        "location": {
+          "rowIdx": 1,
+          "colIdx": 3
+        },
+        "spellIds": [
+          18748,
+          18749
+        ],
+        "maxPoints": 2
       },
       {
         "fieldName": "improvedSayaad",
@@ -334,76 +355,9 @@
         "maxPoints": 3
       },
       {
-        "fieldName": "felDomination",
-        "location": {
-          "rowIdx": 2,
-          "colIdx": 1
-        },
-        "spellIds": [
-          18708
-        ],
-        "maxPoints": 1
-      },
-      {
-        "fieldName": "felStamina",
-        "location": {
-          "rowIdx": 2,
-          "colIdx": 2
-        },
-        "spellIds": [
-          18748
-        ],
-        "maxPoints": 5
-      },
-      {
-        "fieldName": "masterSummoner",
-        "location": {
-          "rowIdx": 3,
-          "colIdx": 1
-        },
-        "spellIds": [
-          18709,
-          18710
-        ],
-        "maxPoints": 2,
-        "prereqLocation": {
-          "rowIdx": 2,
-          "colIdx": 1
-        }
-      },
-      {
-        "fieldName": "unholyPower",
-        "location": {
-          "rowIdx": 3,
-          "colIdx": 2
-        },
-        "spellIds": [
-          18769,
-          18770,
-          18771,
-          18772,
-          18773
-        ],
-        "maxPoints": 5
-      },
-      {
-        "fieldName": "improvedSubjugateDemon",
-        "location": {
-          "rowIdx": 4,
-          "colIdx": 0
-        },
-        "spellIds": [
-          18821,
-          18823,
-          18824,
-          18825
-        ],
-        "maxPoints": 5
-      },
-      {
         "fieldName": "demonicSacrifice",
         "location": {
-          "rowIdx": 4,
+          "rowIdx": 2,
           "colIdx": 1
         },
         "spellIds": [
@@ -412,16 +366,93 @@
         "maxPoints": 1
       },
       {
-        "fieldName": "improvedFirestone",
+        "fieldName": "masterSummoner",
         "location": {
-          "rowIdx": 4,
-          "colIdx": 3
+          "rowIdx": 2,
+          "colIdx": 2
         },
         "spellIds": [
-          18767,
-          18768
+          18709,
+          18710
         ],
         "maxPoints": 2
+      },
+      {
+        "fieldName": "decimation",
+        "location": {
+          "rowIdx": 3,
+          "colIdx": 0
+        },
+        "spellIds": [
+          63156,
+          63158
+        ],
+        "maxPoints": 2
+      },
+      {
+        "fieldName": "felDomination",
+        "location": {
+          "rowIdx": 3,
+          "colIdx": 1
+        },
+        "spellIds": [
+          18708
+        ],
+        "maxPoints": 1
+      },
+      {
+        "fieldName": "demonicBrand",
+        "location": {
+          "rowIdx": 3,
+          "colIdx": 2
+        },
+        "spellIds": [
+          18821,
+          18822,
+          18823
+        ],
+        "maxPoints": 3
+      },
+      {
+        "fieldName": "improvedFelhunter",
+        "location": {
+          "rowIdx": 4,
+          "colIdx": 0
+        },
+        "spellIds": [
+          54037,
+          54038,
+          54039
+        ],
+        "maxPoints": 3
+      },
+      {
+        "fieldName": "soulLink",
+        "location": {
+          "rowIdx": 4,
+          "colIdx": 1
+        },
+        "spellIds": [
+          19028
+        ],
+        "maxPoints": 1,
+        "prereqLocation": {
+          "rowIdx": 2,
+          "colIdx": 1
+        }
+      },
+      {
+        "fieldName": "demonicKnowledge",
+        "location": {
+          "rowIdx": 4,
+          "colIdx": 2
+        },
+        "spellIds": [
+          35691,
+          35692,
+          35693
+        ],
+        "maxPoints": 3
       },
       {
         "fieldName": "masterDemonologist",
@@ -436,38 +467,22 @@
           23824,
           23825
         ],
-        "maxPoints": 5,
-        "prereqLocation": {
-          "rowIdx": 3,
-          "colIdx": 2
-        }
+        "maxPoints": 5
       },
       {
-        "fieldName": "soulLink",
+        "fieldName": "demonicPact",
         "location": {
           "rowIdx": 6,
           "colIdx": 1
         },
         "spellIds": [
-          19028
+          47236
         ],
         "maxPoints": 1,
         "prereqLocation": {
           "rowIdx": 4,
           "colIdx": 1
         }
-      },
-      {
-        "fieldName": "improvedSpellstone",
-        "location": {
-          "rowIdx": 6,
-          "colIdx": 2
-        },
-        "spellIds": [
-          18774,
-          18775
-        ],
-        "maxPoints": 2
       }
     ]
   },
@@ -475,6 +490,18 @@
     "name": "Destruction",
     "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/301.jpg",
     "talents": [
+      {
+        "fieldName": "destructiveReach",
+        "location": {
+          "rowIdx": 0,
+          "colIdx": 0
+        },
+        "spellIds": [
+          17917,
+          17918
+        ],
+        "maxPoints": 2
+      },
       {
         "fieldName": "improvedShadowBolt",
         "location": {
@@ -491,25 +518,10 @@
         "maxPoints": 5
       },
       {
-        "fieldName": "cataclysm",
+        "fieldName": "bane",
         "location": {
           "rowIdx": 0,
           "colIdx": 2
-        },
-        "spellIds": [
-          17778,
-          17779,
-          17780,
-          17781,
-          17782
-        ],
-        "maxPoints": 5
-      },
-      {
-        "fieldName": "bane",
-        "location": {
-          "rowIdx": 1,
-          "colIdx": 1
         },
         "spellIds": [
           17788,
@@ -519,6 +531,34 @@
           17792
         ],
         "maxPoints": 5
+      },
+      {
+        "fieldName": "moltenSkin",
+        "location": {
+          "rowIdx": 1,
+          "colIdx": 0
+        },
+        "spellIds": [
+          63349,
+          63350,
+          63351,
+          63352,
+          63353
+        ],
+        "maxPoints": 5
+      },
+      {
+        "fieldName": "cataclysm",
+        "location": {
+          "rowIdx": 1,
+          "colIdx": 1
+        },
+        "spellIds": [
+          17778,
+          17779,
+          17780
+        ],
+        "maxPoints": 3
       },
       {
         "fieldName": "aftermath",
@@ -536,40 +576,17 @@
         "maxPoints": 5
       },
       {
-        "fieldName": "improvedFirebolt",
-        "location": {
-          "rowIdx": 2,
-          "colIdx": 0
-        },
-        "spellIds": [
-          18126,
-          18127
-        ],
-        "maxPoints": 2
-      },
-      {
-        "fieldName": "improvedLashOfPain",
+        "fieldName": "ruin",
         "location": {
           "rowIdx": 2,
           "colIdx": 1
         },
         "spellIds": [
-          18128
-        ],
-        "maxPoints": 2
-      },
-      {
-        "fieldName": "devastation",
-        "location": {
-          "rowIdx": 2,
-          "colIdx": 2
-        },
-        "spellIds": [
-          18130,
-          18131,
-          18132,
-          18133,
-          18134
+          17959,
+          59738,
+          59739,
+          59740,
+          59741
         ],
         "maxPoints": 5
       },
@@ -592,36 +609,38 @@
         },
         "spellIds": [
           18135,
-          18136
+          18136,
+          18137
         ],
-        "maxPoints": 2
+        "maxPoints": 3
       },
       {
-        "fieldName": "destructiveReach",
+        "fieldName": "agonizingFlames",
         "location": {
           "rowIdx": 3,
           "colIdx": 1
         },
         "spellIds": [
-          17917,
-          17918
-        ],
-        "maxPoints": 2
-      },
-      {
-        "fieldName": "improvedSearingPain",
-        "location": {
-          "rowIdx": 3,
-          "colIdx": 3
-        },
-        "spellIds": [
           17927,
           17929,
-          17930,
-          17931,
-          17932
+          17930
         ],
-        "maxPoints": 5
+        "maxPoints": 3
+      },
+      {
+        "fieldName": "conflagrate",
+        "location": {
+          "rowIdx": 3,
+          "colIdx": 2
+        },
+        "spellIds": [
+          17962
+        ],
+        "maxPoints": 1,
+        "prereqLocation": {
+          "rowIdx": 1,
+          "colIdx": 2
+        }
       },
       {
         "fieldName": "pyroclasm",
@@ -640,64 +659,54 @@
         }
       },
       {
-        "fieldName": "improvedImmolate",
+        "fieldName": "baneOfHavoc",
         "location": {
           "rowIdx": 4,
           "colIdx": 1
         },
         "spellIds": [
-          17815,
-          17833,
-          17834,
-          17835,
-          17836
+          80240
         ],
-        "maxPoints": 5
+        "maxPoints": 1
       },
       {
-        "fieldName": "ruin",
+        "fieldName": "fireAndBrimstone",
         "location": {
           "rowIdx": 4,
           "colIdx": 2
         },
         "spellIds": [
-          17959
+          47266,
+          47267,
+          47268
         ],
-        "maxPoints": 1,
-        "prereqLocation": {
-          "rowIdx": 2,
-          "colIdx": 2
-        }
+        "maxPoints": 3
       },
       {
-        "fieldName": "emberstorm",
+        "fieldName": "shadowAndFlame",
         "location": {
           "rowIdx": 5,
-          "colIdx": 2
+          "colIdx": 1
         },
         "spellIds": [
-          17954,
-          17955,
-          17956,
-          17957,
-          17958
+          30288,
+          30289,
+          30290,
+          30291,
+          30292
         ],
         "maxPoints": 5
       },
       {
-        "fieldName": "conflagrate",
+        "fieldName": "incinerate",
         "location": {
           "rowIdx": 6,
           "colIdx": 1
         },
         "spellIds": [
-          17962
+          29722
         ],
-        "maxPoints": 1,
-        "prereqLocation": {
-          "rowIdx": 4,
-          "colIdx": 1
-        }
+        "maxPoints": 1
       }
     ]
   }

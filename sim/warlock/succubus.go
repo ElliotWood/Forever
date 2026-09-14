@@ -134,11 +134,11 @@ func (wp *WarlockPet) registerSuccubusLashOfPainSpell() {
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    wp.NewTimer(),
-				Duration: time.Second * (12 - time.Duration(3*wp.owner.Talents.ImprovedLashOfPain)),
+				Duration: time.Second * 12,
 			},
 		},
 
-		DamageMultiplier: wp.AutoAttacks.MHConfig().DamageMultiplier,
+		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
 		BonusCoefficient: spellCoeff,
 
