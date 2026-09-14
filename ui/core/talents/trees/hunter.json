@@ -43,7 +43,18 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Focused Fire",
+        "icon": "inv_weapon_crossbow_10",
+        "description": "Increases all damage you deal by {0}% while your pet is active.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
       },
       {
         "fieldName": "improvedAspectOfTheMonkey",
@@ -146,7 +157,17 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Summon Hawk",
+        "icon": "ability_hunter_animalhandler",
+        "description": "Command a hawk to dive-bomb your targeted enemy, dealing {0} Physical damage and continuing its assault for {1} sec. Only {2} hawks can be active at once. Summon Hawk shares its cooldown with Arcane Shot.",
+        "ranks": [
+          [
+            53,
+            18,
+            2
+          ]
+        ]
       },
       {
         "fieldName": "spiritBond",
@@ -323,7 +344,21 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Rapid Killing",
+        "description": "Reduces the cooldown on your Rapid Fire ability by {0} min. In addition, when you kill a non-trivial enemy or it dies while afflicted by your Serpent Sting, you gain Rapid Killing, increasing the damage of your next shot ability within {1} sec by {2}%.",
+        "ranks": [
+          [
+            1,
+            20,
+            10
+          ],
+          [
+            1,
+            20,
+            10
+          ]
+        ]
       },
       {
         "fieldName": "improvedArcaneShot",
@@ -349,7 +384,15 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Lone Wolf",
+        "icon": "ability_mount_whitedirewolf",
+        "description": "You deal {0}% increased damage with all attacks while you do not have an active pet.",
+        "ranks": [
+          [
+            20
+          ]
+        ]
       },
       {
         "fieldName": "trueshotAura",
@@ -395,7 +438,22 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Rapid Recuperation",
+        "icon": "ability_hunter_rapidregeneration",
+        "description": "Hitting a target with your Serpent Sting ability grants you {0}% and consuming Rapid Killing grants you {1}% of your Mana regeneration while casting for the next {2} sec.",
+        "ranks": [
+          [
+            25,
+            50,
+            15
+          ],
+          [
+            25,
+            50,
+            15
+          ]
+        ]
       },
       {
         "fieldName": "barrage",
@@ -449,7 +507,14 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Sniper Shot",
+        "description": "A steady snipe that increases ranged damage by {0}.",
+        "ranks": [
+          [
+            160
+          ]
+        ]
       }
     ]
   },
@@ -605,7 +670,31 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Predator's Edge",
+        "description": "Increases your melee critical strike damage by {0}% and your offhand weapon damage by {1}%.",
+        "ranks": [
+          [
+            6,
+            10
+          ],
+          [
+            12,
+            20
+          ],
+          [
+            18,
+            30
+          ],
+          [
+            24,
+            40
+          ],
+          [
+            30,
+            50
+          ]
+        ]
       },
       {
         "fieldName": "counterattack",
@@ -632,7 +721,24 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Resourcefulness",
+        "icon": "ability_hunter_resourcefulness",
+        "description": "Reduces the mana cost of your Trap abilities and melee abilities by {0}%. In addition, your critical strikes have a {1}% chance to allow {2}% of your Mana regeneration to continue while casting for {3} sec.",
+        "ranks": [
+          [
+            30,
+            30,
+            50,
+            30
+          ],
+          [
+            30,
+            30,
+            50,
+            30
+          ]
+        ]
       },
       {
         "fieldName": "exposePrey",
@@ -644,7 +750,20 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Expose Prey",
+        "icon": "ability_hunter_swiftstrike",
+        "description": "Your attacks against targets with Hunter's Mark have a {0}% chance to activate your Mongoose Bite for {1} sec.",
+        "ranks": [
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ]
       },
       {
         "fieldName": "survivalistsDiscipline",
@@ -656,7 +775,17 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Survivalist's Discipline",
+        "description": "Reduces the cooldown of your Trap and Deterrence abilities by {0}%.",
+        "ranks": [
+          [
+            20
+          ],
+          [
+            40
+          ]
+        ]
       },
       {
         "fieldName": "striderKick",
@@ -667,7 +796,14 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Strider Kick",
+        "description": "A powerful kick that deals {0}% melee weapon damage.",
+        "ranks": [
+          [
+            100
+          ]
+        ]
       },
       {
         "fieldName": "lightningReflexes",
@@ -697,7 +833,15 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Lacerating Strikes",
+        "description": "Your Mongoose Bite also causes the target to bleed for damage over {0} sec equal to {1}% of the damage done by Mongoose Bite.",
+        "ranks": [
+          [
+            21,
+            40
+          ]
+        ]
       }
     ]
   }

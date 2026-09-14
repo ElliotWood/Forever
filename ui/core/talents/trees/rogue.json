@@ -184,7 +184,18 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Mutilate",
+        "icon": "ability_rogue_deadlybrew",
+        "description": "Instantly attacks with both weapons for {0}% weapon damage plus an additional {1} with each weapon. Damage increased by {2}% against Poisoned targets. Awards {3} Combo Points.",
+        "ranks": [
+          [
+            75,
+            13,
+            20,
+            2
+          ]
+        ]
       },
       {
         "fieldName": "improvedKidneyShot",
@@ -227,7 +238,26 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Venom",
+        "icon": "inv_sword_31",
+        "description": "Finishing move that increases the damage of your Poisons by {0}% and your chance to apply Poisons by {1}%. Lasts longer per combo point: {2} point: {3} seconds {4} points: {5} seconds {6} points: {7} seconds {8} points: {9} seconds {10} points: {11} seconds",
+        "ranks": [
+          [
+            30,
+            10,
+            1,
+            9,
+            2,
+            12,
+            3,
+            15,
+            4,
+            18,
+            5,
+            21
+          ]
+        ]
       }
     ]
   },
@@ -286,7 +316,27 @@
           0,
           0
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Puncturing Wounds",
+        "icon": "ability_backstab",
+        "description": "Increases the critical strike chance of your Backstab by {0}% and your Mutilate by {1}%, and gives Backstab a {2}% chance to add an additional Combo Point.",
+        "ranks": [
+          [
+            10,
+            5,
+            15
+          ],
+          [
+            10,
+            5,
+            15
+          ],
+          [
+            10,
+            5,
+            15
+          ]
+        ]
       },
       {
         "fieldName": "deflection",
@@ -378,7 +428,15 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Restless Blades",
+        "icon": "ability_rogue_restlessblades",
+        "description": "Your damaging finishing moves reduce the remaining cooldown of your Adrenaline Rush, Blade Flurry, Evasion, Sprint, and Vanish abilities by {0} sec per combo point.",
+        "ranks": [
+          [
+            2
+          ]
+        ]
       },
       {
         "fieldName": "dualWieldSpecialization",
@@ -423,7 +481,37 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Hack and Slash",
+        "icon": "inv_sword_27",
+        "description": "Gives your melee weapon attacks a benefit depending on the weapon. Axe/Sword: Your successful melee attacks have a {0}% chance to trigger an extra attack on the target. Dagger/Fist: Increases your critical strike chance by {1}%. Mace: Your attacks ignore {2}% of your target's armor.",
+        "ranks": [
+          [
+            1,
+            1,
+            3
+          ],
+          [
+            1,
+            1,
+            3
+          ],
+          [
+            1,
+            1,
+            3
+          ],
+          [
+            1,
+            1,
+            3
+          ],
+          [
+            1,
+            1,
+            3
+          ]
+        ]
       },
       {
         "fieldName": "weaponExpertise",
@@ -600,7 +688,22 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Improved Distract",
+        "icon": "ability_rogue_distract",
+        "description": "Increases the radius of your Distract ability by {0} yds, and further reduces the Stealth detection of distracted enemies as though they were an additional {1} level{2} lower.",
+        "ranks": [
+          [
+            3,
+            1,
+            ""
+          ],
+          [
+            6,
+            2,
+            "s"
+          ]
+        ]
       },
       {
         "fieldName": "heightenedSenses",
@@ -693,7 +796,32 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Quietus",
+        "icon": "ability_rogue_garrote",
+        "description": "Your Sinister Strike, Ghostly Strike, and Hemorrhage abilities cause {0}% more damage against targets below {1}% health.",
+        "ranks": [
+          [
+            2,
+            35
+          ],
+          [
+            4,
+            70
+          ],
+          [
+            6,
+            105
+          ],
+          [
+            8,
+            140
+          ],
+          [
+            10,
+            175
+          ]
+        ]
       },
       {
         "fieldName": "cutthroat",
@@ -708,7 +836,32 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Cutthroat",
+        "icon": "classicon_rogue",
+        "description": "Your Backstab has a {0}% chance to cause your next Ambush within {1} sec to not require Stealth.",
+        "ranks": [
+          [
+            3,
+            10
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            3,
+            10
+          ],
+          [
+            3,
+            10
+          ]
+        ]
       },
       {
         "fieldName": "thousandCuts",
@@ -723,7 +876,17 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Thousand Cuts",
+        "icon": "ability_rogue_rupture",
+        "description": "When your Rupture ability deals periodic damage, the Energy cost of your next Hemorrhage or Backstab ability within {0} sec is reduced by {1}, stacking up to {2} times.",
+        "ranks": [
+          [
+            10,
+            3,
+            5
+          ]
+        ]
       }
     ]
   }

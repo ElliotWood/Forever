@@ -69,7 +69,26 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Improved Tactical Mastery",
+        "description": "Tactical Mastery lets you retain up to an additional {0} Rage when you change stances.",
+        "ranks": [
+          [
+            3
+          ],
+          [
+            6
+          ],
+          [
+            9
+          ],
+          [
+            12
+          ],
+          [
+            15
+          ]
+        ]
       },
       {
         "fieldName": "improvedOverpower",
@@ -124,7 +143,16 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Spearing Strike",
+        "icon": "inv_spear_01",
+        "description": "A brutal attack that deals {0}% weapon damage. Deals an additional {1}% weapon damage against Giants, Dragonkin, and mounted targets. Mounted targets are dismounted.",
+        "ranks": [
+          [
+            40,
+            80
+          ]
+        ]
       },
       {
         "fieldName": "twoHandedWeaponSpecialization",
@@ -166,7 +194,37 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Bloodthrill",
+        "icon": "inv_sword_01",
+        "description": "Your melee attacks against targets afflicted by your Rend have a {0}% chance to activate your Overpower ability for {1} attack on your current target. Lasts {2} sec.",
+        "ranks": [
+          [
+            2,
+            1,
+            6
+          ],
+          [
+            4,
+            1,
+            6
+          ],
+          [
+            6,
+            1,
+            6
+          ],
+          [
+            8,
+            1,
+            6
+          ],
+          [
+            10,
+            1,
+            6
+          ]
+        ]
       },
       {
         "fieldName": "sweepingStrikes",
@@ -192,7 +250,36 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Weaponmaster",
+        "description": "Gives your melee weapon attacks a benefit depending on the weapon. Axe/Polearm: Increases your critical strike chance by {0}%. Mace/Staff: Your attacks ignore {1}% of your target's armor. Sword: Your successful melee attacks have a {2}% chance to trigger an extra attack on the target.",
+        "ranks": [
+          [
+            1,
+            3,
+            1
+          ],
+          [
+            1,
+            3,
+            1
+          ],
+          [
+            1,
+            3,
+            1
+          ],
+          [
+            1,
+            3,
+            1
+          ],
+          [
+            1,
+            3,
+            1
+          ]
+        ]
       },
       {
         "fieldName": "improvedSlam",
@@ -338,7 +425,26 @@
           0,
           0
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Blood Crazed",
+        "description": "Regenerates {0}% of your total Health over {1} sec after being the victim of a critical strike, dealing damage with Bloodthirst, or suffering more than {2}% of your maximum Health from a single attack.",
+        "ranks": [
+          [
+            1,
+            6,
+            20
+          ],
+          [
+            1,
+            6,
+            20
+          ],
+          [
+            1,
+            6,
+            20
+          ]
+        ]
       },
       {
         "fieldName": "boundlessRage",
@@ -351,7 +457,21 @@
           0,
           0
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Boundless Rage",
+        "icon": "ability_warrior_intensifyrage",
+        "description": "Increases your maximum Rage by {0}.",
+        "ranks": [
+          [
+            10
+          ],
+          [
+            20
+          ],
+          [
+            30
+          ]
+        ]
       },
       {
         "fieldName": "dualWieldSpecialization",
@@ -377,7 +497,15 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Raging Blows",
+        "icon": "ability_whirlwind",
+        "description": "Causes your Whirlwind to also strike with your off-hand weapon, and reduces the Rage cost of your Cleave ability by {0}.",
+        "ranks": [
+          [
+            2
+          ]
+        ]
       },
       {
         "fieldName": "enrage",
@@ -593,7 +721,20 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Master of Defense",
+        "icon": "ability_warrior_shieldguard",
+        "description": "Grants you a {0}% chance to generate {1} Rage when you Dodge or Parry while a shield is equipped.",
+        "ranks": [
+          [
+            50,
+            5
+          ],
+          [
+            100,
+            10
+          ]
+        ]
       },
       {
         "fieldName": "improvedRevenge",
@@ -658,7 +799,12 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Vanguard",
+        "description": "Your Charge ability is now usable while in Defensive Stance.",
+        "ranks": [
+          []
+        ]
       },
       {
         "fieldName": "improvedShieldWall",
@@ -708,7 +854,27 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Vitality",
+        "icon": "inv_helmet_21",
+        "description": "Increases your Stamina and Strength by {0}%.",
+        "ranks": [
+          [
+            2
+          ],
+          [
+            4
+          ],
+          [
+            6
+          ],
+          [
+            8
+          ],
+          [
+            10
+          ]
+        ]
       },
       {
         "fieldName": "focusedRage",
@@ -721,7 +887,21 @@
           0,
           0
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Focused Rage",
+        "icon": "ability_warrior_focusedrage",
+        "description": "Reduces the Rage cost of your offensive abilities by {0}.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ]
+        ]
       },
       {
         "fieldName": "bastion",
@@ -736,7 +916,27 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Bastion",
+        "icon": "inv_shield_04",
+        "description": "Increases all damage you deal by {0}% while a shield is equipped.",
+        "ranks": [
+          [
+            2
+          ],
+          [
+            4
+          ],
+          [
+            6
+          ],
+          [
+            8
+          ],
+          [
+            10
+          ]
+        ]
       },
       {
         "fieldName": "shieldSlam",
