@@ -425,6 +425,7 @@ type PseudoStats struct {
 	DisableDWMissPenalty bool    // Used by Heroic Strike and Cleave
 	IncreasedMissChance  float64 // Insect Swarm and Scorpid Sting
 	DodgeReduction       float64 // Target dodge reduction effects e.g. "reduces its target's chance to Dodge by X%"
+	ArmorIgnorePercent   float64 // Effects worded "your attacks ignore X% of your target's armor"
 
 	ThreatMultiplier float64 // Modulates the threat generated. Affected by things like salv.
 
