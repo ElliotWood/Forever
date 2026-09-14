@@ -144,7 +144,6 @@ export const DefaultDebuffs = Debuffs.create({
 	faerieFire: true,
 	improvedScorch: true,
 	judgementOfWisdom: true,
-	shadowWeaving: true,
 	sunderArmor: true,
 });
 
