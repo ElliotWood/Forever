@@ -1,23 +1,47 @@
-Welcome to the WoW Classic simulator! If you have questions or are thinking about contributing, [join our discord](https://discord.gg/jJMPr9JWwx "https://discord.gg/jJMPr9JWwx") to chat!
+# WoW: Forever sim
 
-The primary goal of this project is to provide a framework that makes it easy to build a DPS sim for any class/spec, with a polished UI and accurate results. Each community will have ownership / responsibility over their portion of the sim, to ensure accuracy and that their community is represented. By having all the individual sims on the same engine, we can also have a combined 'raid sim' for testing raid compositions.
+A fork of [wowsims/classic](https://github.com/wowsims/classic) being converted from WoW Classic Era to **World of Warcraft: Forever**, the Classic+ game announced at BlizzCon 2026.
 
-This project is licensed with MIT license. We request that anyone using this software in their own project to make sure there is a user visible link back to the original project.
+Everything the original project does still works. What this fork adds is a second set of engine rules behind a switch, a replacement talent tree for all nine classes, and the race changes. The switch is what makes the conversion reviewable: every rule can be turned off to show exactly what it was worth.
 
-[Live sims can be found here.](https://wowsims.github.io/classic "https://wowsims.github.io/classic")
+This project is licensed with MIT license, inherited from the upstream project. As upstream requests, keep a user visible link back to [wowsims/classic](https://github.com/wowsims/classic) in anything built on this.
 
-[Support our devs via Patreon.](https://www.patreon.com/wowsims)
+## What is different from Classic
 
-# Downloading Sim
+`SimOptions.ruleset` picks the rules. `RulesetClassic` is the wire default, so an unset field behaves exactly as upstream does and every golden result still matches; the UI defaults to `RulesetForever`. Each rule below is gated on that switch, and each landed with a before-and-after check proving the Classic numbers did not move.
 
-Links for latest Sim build:
-- [Windows Sim](https://github.com/wowsims/classic/releases/latest/download/wowsimclassic-windows.exe.zip)
-- [MacOS Sim](https://github.com/wowsims/classic/releases/latest/download/wowsimclassic-amd64-darwin.zip)
-- [Linux Sim](https://github.com/wowsims/classic/releases/latest/download/wowsimclassic-amd64-linux.zip)
+| Rule | What changed |
+| --- | --- |
+| Periodic critical strikes | Spell dots and bleeds roll for crits, against the caster's crit chance at the time of the tick |
+| Unified hit and critical strike | One hit stat and one crit stat from gear, covering melee, ranged, spells, poisons and traps |
+| Bonus healing on gear | Also grants spell damage, at a third of the healing value |
+| Racials | Resistance racials removed, weapon skill racials pay crit instead, several races reshaped |
+| Races | The Skyborne, plus six new race and class pairings |
 
-Then unzip the downloaded file, then open the unzipped file to open the sim in your browser!
+Talent trees are **not** switchable. All nine classes carry their Forever tree under both rulesets, because there is only one talent proto and the field numbers are positional. Running under `RulesetClassic` therefore gives you Classic engine rules with Forever talents, which is useful for isolating a rule change and is not a faithful Classic character.
 
-Alternatively, you can choose from a specific relase on the [Releases](https://github.com/wowsims/classic/releases) page and click the suitable link under "Assets"
+## Where the talent data comes from
+
+`tools/forever_talents/` vendors the trees, with provenance and the import script. Read [its README](tools/forever_talents/README.md) before trusting a number: the BlizzCon stream only ever showed rank 1 of any talent, so **58 of 469 talents have per-rank scaling that was extrapolated rather than observed**, and talents with no Classic equivalent carry a placeholder spell id and show the wrong tooltip.
+
+    tools/forever_talents/import_talents.py --unranked   # what is still guesswork
+    tools/forever_talents/import_talents.py warlock --write
+
+The tree json and the proto message have to stay in the same order — `FillTalentsProto` maps the nth character of a talent string to proto field number n — so the importer emits both together.
+
+## Known gaps
+
+Worth knowing before reading any number out of this sim:
+
+- **The item database is still the Classic one.** Forever is re-itemising onto hit, crit, expertise and spell damage on caster weapons, and none of those numbers are published. The unified stat rule has far less gear to act on than it eventually will.
+- **Three specs are simulated naked.** Retribution Paladin, Protection Paladin and Warden Shaman point at a gear set containing zero items. This is inherited from upstream, which never authored a real set for any of them. Feral Druid and Tank Warrior fill 8 of 17 slots.
+- **Two rotations do not exercise their spec.** The Tank Warrior preset runs the Fury rotation, and the Feral preset never casts Rip or Rake, so the periodic crit rule cannot reach it.
+- **Weapon skill is still priced at full Classic value.** Forever caps it lower per item, which would offset the racial change that costs Combat sword rogues ~9%.
+
+## Running it
+
+There are no published builds for this fork and the deploy workflow does not run here — build and host it locally with the instructions below. Upstream's releases and [live sims](https://wowsims.github.io/classic) are Classic Era and do not include any of this.
+
 # Local Dev Installation
 
 This project has dependencies on Go >=1.21, protobuf-compiler and the corresponding Go plugins, and node >= 14.0.
@@ -35,7 +59,7 @@ echo 'export GOPATH=$HOME/go' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$GOPATH/bin' >> $HOME/.bashrc
 source $HOME/.bashrc
 
-cd classic
+cd forever
 
 # Install protobuf compiler and Go plugins
 sudo apt update && sudo apt upgrade
@@ -54,8 +78,8 @@ npm install
 ## Docker
 Alternatively, install Docker and your workflow will look something like this:
 ```sh
-git clone https://github.com/wowsims/classic.git
-cd classic
+git clone https://github.com/ElliotWood/forever.git
+cd forever
 
 # Build the docker image and install npm dependencies (only need to run these once).
 docker build --tag wowsims-classic .
@@ -157,6 +181,15 @@ make wowsimclassic
 make items
 ```
 
+# Converting a class to Forever
+
+The nine classes are already converted; this is the shape of it if a tree needs revisiting.
+
+1. Regenerate the tree and the proto message together with `tools/forever_talents/import_talents.py $CLASS --write`, then `make proto`. They have to stay in the same order or every saved talent string breaks.
+2. Implement the talents in `sim/$CLASS/talents.go`. A talent that fed a `RaidBuffs` or `Debuffs` field other classes read went baseline in Forever; a self-only stat passive was deleted outright.
+3. Gate anything that changes existing Classic behaviour on `sim.IsForever()` or `character.Env.IsForever()`, and prove Classic did not move: run the spec under `RulesetClassic` before and after, and diff the DPS and TPS.
+4. `make test && make update-tests`, then `./node_modules/.bin/tsc --noEmit` — use the pinned binary, not `npx tsc`, which resolves a TypeScript the repo's tsconfig rejects.
+
 # Adding a Sim
 So you want to make a new sim for your class/spec! The basic steps are as follows:
  - [Create the proto interface between sim and UI.](#create-the-proto-interface-between-sim-and-ui)
@@ -211,4 +244,4 @@ Don't touch the raid sim until the individual sim is ready for launch; anything 
  - Update `ui/raid/presets.ts` to include a constructor factory in the `specSimFactories` variable and add configurations for new Players in the `playerPresets` variable.
 
 # Deployment
-Thanks to the workflow defined in `.github/workflows/deploy.yml`, pushes to `master` automatically build and deploy a new site so there's nothing to do here. Sit back and appreciate your new sim!
+`.github/workflows/deploy.yml` is inherited from upstream and deploys on pushes to `master` there. Actions do not run on this fork, so there is no site to deploy to and no published build — host it locally with `make host`.
