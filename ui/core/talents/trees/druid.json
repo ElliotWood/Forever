@@ -111,7 +111,16 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Nature's Splendor",
+        "description": "Increases the duration of your Moonfire and Rejuvenation spells by {0} sec, your Regrowth spell by {1} sec, and your Insect Swarm spell by {2} sec.",
+        "ranks": [
+          [
+            3,
+            6,
+            2
+          ]
+        ]
       },
       {
         "fieldName": "balanceOfNature",
@@ -126,7 +135,42 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Balance of Nature",
+        "icon": "ability_druid_balanceofpower",
+        "description": "Each time you cast a Nature spell, your next Arcane damage spell within {0} sec deals {1}% increased damage. Each time you cast an Arcane spell, your next Nature damage spell within {2} sec deals {3}% increased damage.",
+        "ranks": [
+          [
+            10,
+            1,
+            10,
+            1
+          ],
+          [
+            10,
+            1,
+            10,
+            1
+          ],
+          [
+            10,
+            1,
+            10,
+            1
+          ],
+          [
+            10,
+            1,
+            10,
+            1
+          ],
+          [
+            10,
+            1,
+            10,
+            1
+          ]
+        ]
       },
       {
         "fieldName": "insectSwarm",
@@ -183,7 +227,18 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Overgrowth",
+        "icon": "inv_misc_herb_15",
+        "description": "Increases the maximum number of targets you may have affected by Entangling Roots by {0}.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ]
+        ]
       },
       {
         "fieldName": "naturesGrace",
@@ -207,7 +262,30 @@
           0,
           0
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Eclipse",
+        "icon": "ability_druid_eclipse",
+        "description": "Your Wrath spell reduces the cast time of your next {0} Starfire spells by {1} sec. Stores up to {2} charges. Lasts {3} sec.",
+        "ranks": [
+          [
+            2,
+            0.17,
+            4,
+            15
+          ],
+          [
+            2,
+            0.17,
+            4,
+            15
+          ],
+          [
+            2,
+            0.17,
+            4,
+            15
+          ]
+        ]
       },
       {
         "fieldName": "moonfury",
@@ -372,7 +450,24 @@
           0,
           0
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Shredding Attacks",
+        "icon": "spell_shadow_vampiricaura",
+        "description": "Reduces the Energy cost of your Shred ability by {0} and reduces the Rage cost of your Lacerate ability by {1}.",
+        "ranks": [
+          [
+            6,
+            1
+          ],
+          [
+            12,
+            2
+          ],
+          [
+            18,
+            3
+          ]
+        ]
       },
       {
         "fieldName": "mangle",
@@ -387,7 +482,15 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Mangle",
+        "description": "Mangle the target for {0}% normal damage plus {1}.",
+        "ranks": [
+          [
+            100,
+            26
+          ]
+        ]
       },
       {
         "fieldName": "predatoryStrikes",
@@ -452,7 +555,20 @@
           0,
           0
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "King of the Jungle",
+        "description": "Tiger's Fury now instantly grants you {0} Energy.",
+        "ranks": [
+          [
+            20
+          ],
+          [
+            40
+          ],
+          [
+            60
+          ]
+        ]
       },
       {
         "fieldName": "naturalReaction",
@@ -467,7 +583,37 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Natural Reaction",
+        "icon": "ability_bullrush",
+        "description": "Increases your dodge chance by {0}%, and gives you a {1}% chance to gain {2} Rage each time you dodge.",
+        "ranks": [
+          [
+            1,
+            20,
+            5
+          ],
+          [
+            1,
+            20,
+            5
+          ],
+          [
+            1,
+            20,
+            5
+          ],
+          [
+            1,
+            20,
+            5
+          ],
+          [
+            1,
+            20,
+            5
+          ]
+        ]
       },
       {
         "fieldName": "rendAndTear",
@@ -501,7 +647,17 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Berserk",
+        "icon": "ability_druid_berserk",
+        "description": "Causes your Mangle ability to strike up to {0} targets, removes its cooldown, and increases the critical strike chance of your Combo Point-generating abilities by {1}%. Clears and grants immunity to Fear effects for the duration. Lasts {2} sec.",
+        "ranks": [
+          [
+            3,
+            100,
+            15
+          ]
+        ]
       }
     ]
   },
@@ -552,7 +708,32 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Naturalist",
+        "icon": "spell_nature_healingtouch",
+        "description": "Reduces the cast time of your Healing Touch spell by {0} sec and increases all damage you deal by {1}%.",
+        "ranks": [
+          [
+            0.1,
+            1
+          ],
+          [
+            0.1,
+            1
+          ],
+          [
+            0.1,
+            1
+          ],
+          [
+            0.1,
+            1
+          ],
+          [
+            0.1,
+            1
+          ]
+        ]
       },
       {
         "fieldName": "subtlety",
@@ -619,7 +800,15 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Gift of the Earthmother",
+        "icon": "spell_nature_spiritarmor",
+        "description": "Reduces the global cooldown by {0} seconds on your Rejuvenation, Swiftmend, and Wild Growth spells.",
+        "ranks": [
+          [
+            0.5
+          ]
+        ]
       },
       {
         "fieldName": "tranquilSpirit",
@@ -732,7 +921,17 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Wild Growth",
+        "icon": "ability_druid_flourish",
+        "description": "Heals the target and their party for {0} over {1} sec. Party members must be within {2} yards of target. The amount healed is applied quickly at first, and slows down as Wild Growth reaches its full duration.",
+        "ranks": [
+          [
+            285,
+            7,
+            43
+          ]
+        ]
       }
     ]
   }
