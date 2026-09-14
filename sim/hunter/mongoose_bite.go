@@ -40,14 +40,18 @@ func (hunter *Hunter) getMongooseBiteConfig(rank int) core.SpellConfig {
 			return hunter.DistanceFromTarget <= core.MaxMeleeAttackDistance && hunter.DefensiveState.IsActive()
 		},
 
-		BonusCritRating:  float64(hunter.Talents.SavageStrikes) * 10 * core.CritRatingPerCritChance,
+		BonusCritRating:  float64(hunter.Talents.SavageStrikes) * 2 * core.CritRatingPerCritChance,
 		CritDamageBonus:  hunter.mortalShots(),
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			hunter.DefensiveState.Deactivate(sim)
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+
+			if hunter.LaceratingStrikes != nil && result.Landed() {
+				hunter.procLaceratingStrikes(sim, result)
+			}
 		},
 	}
 
