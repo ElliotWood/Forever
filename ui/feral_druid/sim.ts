@@ -137,7 +137,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecFeralDruid, {
 		talents: [...Presets.TalentPresets[ClassicPhase.Phase4]],
 		rotations: [...Presets.APLPresets[ClassicPhase.Phase4]],
 		// Preset gear configurations that the user can quickly select.
-		gear: [...Presets.GearPresets[ClassicPhase.Phase4]],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase2]],
 	},
 
 	autoRotation: player => {

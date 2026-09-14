@@ -111,7 +111,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecBalanceDruid, {
 	presets: {
 		talents: [...Presets.TalentPresets[ClassicPhase.Phase1]],
 		rotations: [...Presets.APLPresets[ClassicPhase.Phase1]],
-		gear: [...Presets.GearPresets[ClassicPhase.Phase5]],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase2]],
 	},
 
 	autoRotation: player => {

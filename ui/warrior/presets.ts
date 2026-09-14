@@ -28,10 +28,6 @@ import APLReckJSON from './apls/dps_reck.apl.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
 import Phase1Gear from './gear_sets/phase_1.gear.json';
 import Phase2Gear from './gear_sets/phase_2.gear.json';
-import Phase3Gear from './gear_sets/phase_3.gear.json';
-import Phase4Gear from './gear_sets/phase_4.gear.json';
-import Phase5Gear from './gear_sets/phase_5.gear.json';
-import Phase6Gear from './gear_sets/phase_6.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -44,18 +40,10 @@ import Phase6Gear from './gear_sets/phase_6.gear.json';
 export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearPhase1 = PresetUtils.makePresetGear('P1 BiS', Phase1Gear);
 export const GearPhase2 = PresetUtils.makePresetGear('P2 BiS', Phase2Gear);
-export const GearPhase3 = PresetUtils.makePresetGear('P3 BiS', Phase3Gear);
-export const GearPhase4 = PresetUtils.makePresetGear('P4 BiS', Phase4Gear);
-export const GearPhase5 = PresetUtils.makePresetGear('P5 BiS', Phase5Gear);
-export const GearPhase6 = PresetUtils.makePresetGear('P6 BiS', Phase6Gear);
 
 export const GearPresets = {
 	[ClassicPhase.Phase1]: [GearPhase1, GearP0BIS],
 	[ClassicPhase.Phase2]: [GearPhase2],
-	[ClassicPhase.Phase3]: [GearPhase3],
-	[ClassicPhase.Phase4]: [GearPhase4],
-	[ClassicPhase.Phase5]: [GearPhase5],
-	[ClassicPhase.Phase6]: [GearPhase6],
 };
 
 export const DefaultGear = GearP0BIS;

@@ -28,8 +28,6 @@ import DefaultAPLJSON from './apls/default.apl.json';
 import LaunchGearJSON from './gear_sets/launch.gear.json';
 import Phase1GearJSON from './gear_sets/phase_1.gear.json';
 import Phase2GearJSON from './gear_sets/phase_2.gear.json';
-import Phase3GearJSON from './gear_sets/phase_3.gear.json';
-import Phase5GearJSON from './gear_sets/phase_5.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -41,15 +39,11 @@ import Phase5GearJSON from './gear_sets/phase_5.gear.json';
 export const GearLaunch = PresetUtils.makePresetGear('Launch', LaunchGearJSON);
 export const GearPhase1 = PresetUtils.makePresetGear('Phase 1', Phase1GearJSON);
 export const GearPhase2 = PresetUtils.makePresetGear('Phase 2', Phase2GearJSON);
-export const GearPhase3 = PresetUtils.makePresetGear('Phase 3', Phase3GearJSON);
-export const GearPhase5 = PresetUtils.makePresetGear('Phase 5', Phase5GearJSON);
 
 export const GearPresets = {
 	[ClassicPhase.Phase1]: [GearLaunch, GearPhase1],
 	[ClassicPhase.Phase2]: [GearPhase2],
-	[ClassicPhase.Phase3]: [GearPhase3],
 	[ClassicPhase.Phase4]: [],
-	[ClassicPhase.Phase5]: [GearPhase5],
 	[ClassicPhase.Phase6]: [],
 };
 

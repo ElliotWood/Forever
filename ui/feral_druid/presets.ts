@@ -28,10 +28,6 @@ import SimpleVaelAPL from './apls/simple_vael.apl.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
 import P2BISGear from './gear_sets/p2.bis.gear.json';
 import P2PreBISGear from './gear_sets/p2.pre-bis.gear.json';
-import P3BISGear from './gear_sets/p3.bis.gear.json';
-import P4BISGear from './gear_sets/p4.bis.gear.json';
-import P5BISGear from './gear_sets/p5.bis.gear.json';
-import P6BISGear from './gear_sets/p6.bis.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -44,13 +40,9 @@ import P6BISGear from './gear_sets/p6.bis.gear.json';
 export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearP2PreBIS = PresetUtils.makePresetGear('P2 Pre-BiS', P2PreBISGear);
 export const GearP2BIS = PresetUtils.makePresetGear('P2 BiS', P2BISGear);
-export const GearP3BIS = PresetUtils.makePresetGear('P3 BiS', P3BISGear)
-export const GearP4BIS = PresetUtils.makePresetGear('P4 BiS', P4BISGear)
-export const GearP5BIS = PresetUtils.makePresetGear('P5 BiS', P5BISGear)
-export const GearP6BIS = PresetUtils.makePresetGear('P6 BiS', P6BISGear)
 
 export const GearPresets = {
-	[ClassicPhase.Phase4]: [GearP0BIS, GearP2PreBIS, GearP2BIS, GearP3BIS, GearP4BIS, GearP5BIS, GearP6BIS],
+	[ClassicPhase.Phase2]: [GearP0BIS, GearP2PreBIS, GearP2BIS],
 };
 
 export const DefaultGear = GearP0BIS;

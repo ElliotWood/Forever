@@ -140,14 +140,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecEnhancementShaman, {
 			...Presets.APLPresets[ClassicPhase.Phase2],
 			...Presets.APLPresets[ClassicPhase.Phase1],
 		],
-		gear: [
-			...Presets.GearPresets[ClassicPhase.Phase6],
-			...Presets.GearPresets[ClassicPhase.Phase5],
-			...Presets.GearPresets[ClassicPhase.Phase4],
-			...Presets.GearPresets[ClassicPhase.Phase3],
-			...Presets.GearPresets[ClassicPhase.Phase2],
-			...Presets.GearPresets[ClassicPhase.Phase1],
-		],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase2], ...Presets.GearPresets[ClassicPhase.Phase1]],
 	},
 
 	autoRotation: (): APLRotation => {
