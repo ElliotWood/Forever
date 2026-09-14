@@ -1,4 +1,4 @@
-import tippy from 'tippy.js';
+import tippy, { Instance as TippyInstance } from 'tippy.js';
 import { ref } from 'tsx-vanilla';
 
 import { Component } from '../components/component.js';
@@ -11,6 +11,12 @@ import { ActionId } from '../proto_utils/action_id.js';
 import { getSpecIcon } from '../proto_utils/utils.js';
 import { TypedEvent } from '../typed_event.js';
 import { isRightClick, sum } from '../utils.js';
+
+// Talents Forever added have no spell id, so their icon is addressed by name instead of
+// resolved through Wowhead. Some are not datamined yet and fall back to the client's own
+// placeholder rather than drawing nothing.
+const UNKNOWN_TALENT_ICON = 'inv_misc_questionmark';
+const talentIconUrl = (icon: string) => `https://wow.zamimg.com/images/wow/icons/large/${icon}.jpg`;
 
 export interface TalentsPickerConfig<TalentsProto> extends InputConfig<Player<Spec>, string> {
 	klass: Class;
@@ -337,6 +343,7 @@ class TalentPicker<TalentsProto> extends Component {
 	private readonly pointsDisplay: HTMLElement;
 
 	private longTouchTimer?: number;
+	private localTooltip?: TippyInstance;
 	private childReqs: TalentReqArrow[];
 	private zIdx: number;
 	parentReq: TalentReqArrow | null;
@@ -354,6 +361,10 @@ class TalentPicker<TalentsProto> extends Component {
 
 		this.rootElem.dataset.maxPoints = String(this.config.maxPoints);
 		this.rootElem.dataset.whtticon = 'false';
+
+		if (this.config.name) {
+			this.rootElem.style.backgroundImage = `url('${talentIconUrl(this.config.icon ?? UNKNOWN_TALENT_ICON)}')`;
+		}
 
 		this.pointsDisplay = document.createElement('span');
 		this.pointsDisplay.classList.add('talent-picker-points');
@@ -526,6 +537,39 @@ class TalentPicker<TalentsProto> extends Component {
 					actionId.setWowheadHref(this.rootElem as HTMLAnchorElement);
 					this.rootElem.style.backgroundImage = `url('${actionId.iconUrl}')`;
 				});
+		} else {
+			this.updateLocalTooltip(newPoints);
+		}
+	}
+
+	// Stands in for the Wowhead tooltip on talents that have no spell id, built from the
+	// name and description the tree json carries. Rank values are substituted into the
+	// {n} placeholders so the numbers track the points actually spent.
+	private updateLocalTooltip(numPoints: number) {
+		const { name, description, ranks } = this.config;
+		if (!name && !description) return;
+
+		const rank = Math.max(0, numPoints - 1);
+		const values = ranks?.[rank] ?? ranks?.[0] ?? [];
+		const text = (description ?? '').replace(/\{(\d+)\}/g, (placeholder, idx) => {
+			const value = values[Number(idx)];
+			return value == undefined ? placeholder : String(value);
+		});
+
+		const content = (
+			<div className="talent-picker-tooltip">
+				{name && <span className="talent-picker-tooltip-name">{name}</span>}
+				<span className="talent-picker-tooltip-rank">
+					Rank {numPoints}/{this.config.maxPoints}
+				</span>
+				{text && <p className="talent-picker-tooltip-description">{text}</p>}
+			</div>
+		);
+
+		if (this.localTooltip) {
+			this.localTooltip.setContent(content);
+		} else {
+			this.localTooltip = tippy(this.rootElem, { content });
 		}
 	}
 
@@ -586,6 +630,15 @@ export type TalentConfig<TalentsProto> = {
 	spellIds: Array<number>;
 
 	maxPoints: number;
+
+	// Presentation for talents with no spell ID, which Wowhead cannot describe or draw.
+	// Populated by tools/forever_talents/import_talents.py from the datamined talent data.
+	name?: string;
+	icon?: string;
+	description?: string;
+	// Values substituted into the description's {n} placeholders, one row per rank. Strings
+	// occur where a placeholder carries text rather than a number, e.g. a plural suffix.
+	ranks?: Array<Array<number | string>>;
 };
 
 export function newTalentsConfig<TalentsProto>(talents: TalentsConfig<TalentsProto>): TalentsConfig<TalentsProto> {

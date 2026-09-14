@@ -16,7 +16,26 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Power in Light",
+        "description": "Your Smite and Penance spells deal {0}% increased damage to targets afflicted with your Holy Fire.",
+        "ranks": [
+          [
+            2
+          ],
+          [
+            4
+          ],
+          [
+            6
+          ],
+          [
+            8
+          ],
+          [
+            10
+          ]
+        ]
       },
       {
         "fieldName": "wandSpecialization",
@@ -181,7 +200,16 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Soul Warding",
+        "icon": "spell_holy_pureofheart",
+        "description": "Reduces the cooldown on your Power Word: Shield spell by {0} sec and reduces its mana cost by {1}%.",
+        "ranks": [
+          [
+            4,
+            15
+          ]
+        ]
       },
       {
         "fieldName": "improvedManaBurn",
@@ -204,7 +232,18 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Penance",
+        "icon": "spell_holy_penance",
+        "description": "Launches a volley of holy light at the target, causing {0} Holy damage to an enemy, or {1} healing to an ally, instantly and every {2} sec for {3} sec.",
+        "ranks": [
+          [
+            93,
+            223,
+            1,
+            2
+          ]
+        ]
       },
       {
         "fieldName": "renewedHope",
@@ -223,7 +262,32 @@
           0,
           0
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Renewed Hope",
+        "icon": "spell_holy_holyprotection",
+        "description": "Your heals from Flash Heal, Binding Heal, Lesser Heal, Heal, Greater Heal, and Penance gain {0}% increased critical strike chance when cast on targets with Weakened Soul, and reduce the remaining duration of Weakened Soul on their target by {1} sec.",
+        "ranks": [
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ]
       },
       {
         "fieldName": "divineAegis",
@@ -236,7 +300,24 @@
           0,
           0
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Divine Aegis",
+        "icon": "spell_holy_devineaegis",
+        "description": "Your critical heals create a protective shield on the target, absorbing {0}% of the amount healed. Lasts {1} sec.",
+        "ranks": [
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            12
+          ],
+          [
+            5,
+            12
+          ]
+        ]
       },
       {
         "fieldName": "powerInfusion",
@@ -417,7 +498,16 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Binding Heal",
+        "icon": "spell_holy_blindingheal",
+        "description": "Heals a friendly target and the caster for {0} to {1}.",
+        "ranks": [
+          [
+            330,
+            387
+          ]
+        ]
       },
       {
         "fieldName": "litanyOfLight",
@@ -429,7 +519,18 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Litany of Light",
+        "icon": "inv_scroll_07",
+        "description": "When you cast a healing spell, gain Mana equal to {0}% of the base cost of the spell if your previous heal was a different spell.",
+        "ranks": [
+          [
+            5
+          ],
+          [
+            10
+          ]
+        ]
       },
       {
         "fieldName": "spiritOfRedemption",
@@ -485,7 +586,18 @@
         "spellIds": [
           0
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Prayer of Mending",
+        "icon": "spell_holy_prayerofmendingtga",
+        "description": "Places a spell on the target that heals them for {0} the next time they take damage or receive non-periodic healing. When the heal occurs, Prayer of Mending jumps to a party or raid member within {1} yards. Jumps up to {2} times and lasts {3} sec after each jump. This spell can only be placed on one target at a time per caster.",
+        "ranks": [
+          [
+            231,
+            20,
+            5,
+            30
+          ]
+        ]
       }
     ]
   },
@@ -630,7 +742,22 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Improved Mind Flay",
+        "icon": "spell_shadow_soulleech_2",
+        "description": "Your Mind Flay now deals {0}% more damage, gains {1} yards increased range, but slows the target's movement speed by {2}%.",
+        "ranks": [
+          [
+            10,
+            5,
+            35
+          ],
+          [
+            10,
+            5,
+            35
+          ]
+        ]
       },
       {
         "fieldName": "improvedFade",
@@ -691,7 +818,19 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Devouring Contagion",
+        "description": "Reduces the mana cost of your Devouring Plague by {0}%. Targets that die while Devouring Plague is active spreads it, jumping to a nearby enemy within {1} yards for the remaining duration.",
+        "ranks": [
+          [
+            25,
+            5
+          ],
+          [
+            50,
+            10
+          ]
+        ]
       },
       {
         "fieldName": "earlyDemise",
@@ -703,7 +842,20 @@
           0,
           0
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Early Demise",
+        "icon": "spell_shadow_demonicfortitude",
+        "description": "Increases Shadow Word: Death's critical strike chance on targets at or below {0}% health by {1}%.",
+        "ranks": [
+          [
+            20,
+            15
+          ],
+          [
+            40,
+            30
+          ]
+        ]
       },
       {
         "fieldName": "darkness",

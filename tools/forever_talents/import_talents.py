@@ -21,9 +21,8 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 OVERRIDE_DIR = os.path.join(os.path.dirname(__file__), 'overrides')
 TREE_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'ui', 'core', 'talents', 'trees')
 
-# Placeholder icons for talents that didn't exist in Classic, so the picker has something to
-# draw. These are ids from later expansions and show the wrong tooltip until the beta client
-# is datamined.
+# Talents that didn't exist in Classic have no spell id to give the picker. They carry their
+# name, icon and tooltip through to the tree json instead, and the picker draws those.
 PLACEHOLDER_SPELL_ID = 0
 
 
@@ -88,6 +87,21 @@ def build_tree_json(data, existing_by_tree):
 
 			entry['spellIds'] = spell_ids(talent, existing)
 			entry['maxPoints'] = talent['maxRank']
+
+			# Nothing on Wowhead to link or draw for a talent Forever added, so carry the
+			# datamined presentation through and let the picker render it locally.
+			if not any(entry['spellIds']):
+				entry['name'] = talent['name']
+				# An icon sourced from 'crop' is the name of the screenshot the tooltip was
+				# read from, not a real icon, so there is nothing to point at yet. Leaving it
+				# out lets the picker draw its own placeholder.
+				if talent.get('icon') and talent.get('iconSource') != 'crop':
+					entry['icon'] = talent['icon']
+				if talent.get('description'):
+					entry['description'] = talent['description']
+				if talent.get('ranks'):
+					entry['ranks'] = talent['ranks']
+
 			talents.append(entry)
 
 		trees.append({
