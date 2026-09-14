@@ -138,6 +138,7 @@ func (paladin *Paladin) registerSealOfCommand() {
 		})
 
 		paladin.aurasSoC = append(paladin.aurasSoC, aura)
+		paladin.registerSealProc(aura, procSpell)
 
 		paladin.sealOfCommand = paladin.RegisterSpell(core.SpellConfig{
 			ActionID:    aura.ActionID,

@@ -6,6 +6,7 @@
 		{ "action": { "castSpell": { "spellId": { "itemId": 18641 } } }, "doAtValue": { "const": { "val": "-1s" } } }
 	],
 	"priorityList": [
+		{ "action": { "autocastOtherCooldowns": {} } },
 		{
 			"action": {
 				"condition": { "cmp": { "op": "OpLt", "lhs": { "currentHealthPercent": {} }, "rhs": { "const": { "val": "10%" } } } },
@@ -30,6 +31,7 @@
 				"castPaladinPrimarySeal": {}
 			}
 		},
+		{ "action": { "castSpell": { "spellId": { "spellId": 13953 } } } },
 		{ "action": { "castSpell": { "spellId": { "spellId": 20928, "rank": 3 } } } }
 	]
 }
