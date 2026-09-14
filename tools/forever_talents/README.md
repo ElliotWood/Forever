@@ -24,6 +24,24 @@ This is pre-beta data and it shows. Read it with the caveats:
 
 Replace `data/` with the datamined trees once the beta client is out and rerun the importer.
 
+## Talents whose per-rank scaling is guesswork
+
+60 of the 469 talents, the ones carrying `ranksSource: "manual"`, list rank 1's numbers again
+for every other rank. The extra points are not free in game, so whatever the sim does with
+them is invented: implementing them flat makes points 2+ inert, implementing them linearly
+assumes a scale nobody observed. Either way it is a guess, and the classes were converted
+before this was measured, so they do not all guess the same way.
+
+	tools/forever_talents/import_talents.py --unranked
+
+prints the list, per class. The importer also warns on stderr about the class it is importing,
+so regenerating a tree after the beta datamine shows immediately whether the gap has closed.
+
+The count by class today is Warlock 11, Druid 8, Hunter 8, Paladin 8, Warrior 6, Mage 5,
+Priest 5, Shaman 5, Rogue 4. These are the first thing to re-check against the beta client,
+because a five rank talent read from one rank is the largest single source of error in the
+data.
+
 ## Regenerating a class
 
 	tools/forever_talents/import_talents.py warlock            # print the proto message
