@@ -6,6 +6,7 @@ import { SimUI } from '../sim_ui';
 import { isLocal } from '../utils';
 import { Component } from './component';
 import { Exporter } from './exporter';
+import { FeedbackMenu } from './feedback_menu';
 import { Importer } from './importer';
 import { SettingsMenu } from './settings_menu';
 import { SimTab } from './sim_tab';
@@ -39,6 +40,7 @@ export class SimHeader extends Component {
 		this.addRulesetLabel();
 		this.knownIssuesLink = this.addKnownIssuesLink();
 		this.addBugReportLink();
+		this.addFeedbackLink();
 		this.addDownloadBinaryLink();
 		this.addSimOptionsLink();
 		this.addSocialLinks();
@@ -189,6 +191,17 @@ export class SimHeader extends Component {
 			parent: this.simToolbar,
 			icon: 'fas fa-bug fa-lg',
 			tooltip: 'Report a bug or<br>Request a feature',
+		});
+	}
+
+	private addFeedbackLink() {
+		const feedbackMenu = new FeedbackMenu(this.simUI.rootElem, this.simUI);
+		this.addToolbarLink({
+			parent: this.simToolbar,
+			icon: 'fas fa-comment-dots fa-lg',
+			tooltip: 'Send feedback with<br>a screenshot',
+			classes: 'feedback',
+			onclick: () => feedbackMenu.open(),
 		});
 	}
 
