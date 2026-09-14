@@ -4,6 +4,8 @@ import { ref } from 'tsx-vanilla';
 import { BaseModal } from '../../core/components/base_modal.jsx';
 import { Component } from '../../core/components/component.js';
 import { EnumPicker } from '../../core/components/enum_picker.js';
+import Toast from '../../core/components/toast.jsx';
+import { RaidSimPreset } from '../../core/individual_sim_ui.js';
 import { MAX_PARTY_SIZE, Party } from '../../core/party.js';
 import { Player } from '../../core/player.js';
 import { Player as PlayerProto } from '../../core/proto/api.js';
@@ -148,6 +150,19 @@ export class RaidPicker extends Component {
 
 	getPlayerPicker(raidIndex: number): PlayerPicker {
 		return this.partyPickers[Math.floor(raidIndex / MAX_PARTY_SIZE)].playerPickers[raidIndex % MAX_PARTY_SIZE];
+	}
+
+	// The first slot inside the active party count that has nobody in it, so a tap on a class
+	// icon lands somewhere the raid will actually simulate. Null when the raid is full.
+	firstEmptyPlayerPicker(): PlayerPicker | null {
+		const numActiveParties = this.raidSimUI.sim.raid.getNumActiveParties();
+		for (const partyPicker of this.partyPickers.slice(0, numActiveParties)) {
+			const empty = partyPicker.playerPickers.find(playerPicker => playerPicker.player == null);
+			if (empty) {
+				return empty;
+			}
+		}
+		return null;
 	}
 
 	getPlayerPickers(): Array<PlayerPicker> {
@@ -705,33 +720,50 @@ class NewPlayerPicker extends Component {
 						event.dataTransfer!.setData('text/plain', '');
 						event.dataTransfer!.dropEffect = 'copy';
 
-						const newPlayer = new Player(matchingPreset.spec, this.raidPicker.raid.sim);
-						newPlayer.applySharedDefaults(eventID);
-						newPlayer.setRace(eventID, matchingPreset.defaultFactionRaces[this.raidPicker.getCurrentFaction()]);
-						newPlayer.setTalentsString(eventID, matchingPreset.talents.talentsString);
-						newPlayer.setSpecOptions(eventID, matchingPreset.specOptions);
-						newPlayer.setConsumes(eventID, matchingPreset.consumes);
-						newPlayer.setName(eventID, matchingPreset.defaultName);
-						newPlayer.setProfession1(eventID, matchingPreset.otherDefaults?.profession1 || Profession.Engineering);
-						newPlayer.setProfession2(eventID, matchingPreset.otherDefaults?.profession2 || Profession.Enchanting);
-						newPlayer.setDistanceFromTarget(eventID, matchingPreset.otherDefaults?.distanceFromTarget || 0);
+						this.raidPicker.setDragPlayer(this.makePlayer(eventID, matchingPreset), NEW_PLAYER, DragType.New);
+					});
+				};
 
-						// Need to wait because the gear might not be loaded yet.
-						this.raidPicker.raid.sim.waitForInit().then(() => {
-							const gear = gearForPhase(
-								matchingPreset.defaultGear[this.raidPicker.getCurrentFaction()],
-								this.raidPicker.getCurrentPhase(),
-							);
-							if (gear) {
-								newPlayer.setGear(eventID, this.raidPicker.raid.sim.db.lookupEquipmentSpec(gear));
-							}
-						});
+				// Dragging is the only way to fill the raid on a desktop, and touch devices
+				// never fire a drag at all, so a tap has to do the same thing. Goes into the
+				// first free slot, which is where someone dragging would put it anyway.
+				presetElem.onclick = () => {
+					const emptyPicker = this.raidPicker.firstEmptyPlayerPicker();
+					if (!emptyPicker) {
+						new Toast({ variant: 'warning', body: 'The raid is full.' });
+						return;
+					}
 
-						this.raidPicker.setDragPlayer(newPlayer, NEW_PLAYER, DragType.New);
+					const eventID = TypedEvent.nextEventID();
+					TypedEvent.freezeAllAndDo(() => {
+						emptyPicker.setPlayer(eventID, this.makePlayer(eventID, matchingPreset), DragType.New);
 					});
 				};
 			});
 		});
+	}
+
+	private makePlayer(eventID: EventID, preset: RaidSimPreset<any>): Player<any> {
+		const newPlayer = new Player(preset.spec, this.raidPicker.raid.sim);
+		newPlayer.applySharedDefaults(eventID);
+		newPlayer.setRace(eventID, preset.defaultFactionRaces[this.raidPicker.getCurrentFaction()]);
+		newPlayer.setTalentsString(eventID, preset.talents.talentsString);
+		newPlayer.setSpecOptions(eventID, preset.specOptions);
+		newPlayer.setConsumes(eventID, preset.consumes);
+		newPlayer.setName(eventID, preset.defaultName);
+		newPlayer.setProfession1(eventID, preset.otherDefaults?.profession1 || Profession.Engineering);
+		newPlayer.setProfession2(eventID, preset.otherDefaults?.profession2 || Profession.Enchanting);
+		newPlayer.setDistanceFromTarget(eventID, preset.otherDefaults?.distanceFromTarget || 0);
+
+		// Need to wait because the gear might not be loaded yet.
+		this.raidPicker.raid.sim.waitForInit().then(() => {
+			const gear = gearForPhase(preset.defaultGear[this.raidPicker.getCurrentFaction()], this.raidPicker.getCurrentPhase());
+			if (gear) {
+				newPlayer.setGear(eventID, this.raidPicker.raid.sim.db.lookupEquipmentSpec(gear));
+			}
+		});
+
+		return newPlayer;
 	}
 }
 

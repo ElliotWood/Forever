@@ -19,7 +19,7 @@ export type SimStatus = {
 
 export const raidSimStatus: SimStatus = {
 	phase: Phase.Launch,
-	status: LaunchStatus.Unlaunched,
+	status: LaunchStatus.Alpha,
 };
 
 // This list controls which links are shown in the top-left dropdown menu.
