@@ -141,8 +141,6 @@ func (warrior *Warrior) registerWeaponmasterExtraAttack(procMask core.ProcMask, 
 }
 
 // Bloodthrill hands out Overpower charges off the back of Rend instead of waiting for a dodge.
-// TODO: only rank 1 was shown and the data repeats its 2% for every rank, so the per point
-// scaling is assumed.
 func (warrior *Warrior) applyBloodthrill() {
 	if warrior.Talents.Bloodthrill == 0 {
 		return
