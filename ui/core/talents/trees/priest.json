@@ -4,17 +4,17 @@
     "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/201.jpg",
     "talents": [
       {
-        "fieldName": "unbreakableWill",
+        "fieldName": "powerInLight",
         "location": {
           "rowIdx": 0,
-          "colIdx": 1
+          "colIdx": 0
         },
         "spellIds": [
-          14522,
-          14788,
-          14789,
-          14790,
-          14791
+          0,
+          0,
+          0,
+          0,
+          0
         ],
         "maxPoints": 5
       },
@@ -22,7 +22,7 @@
         "fieldName": "wandSpecialization",
         "location": {
           "rowIdx": 0,
-          "colIdx": 2
+          "colIdx": 1
         },
         "spellIds": [
           14524,
@@ -30,6 +30,21 @@
           14526,
           14527,
           14528
+        ],
+        "maxPoints": 2
+      },
+      {
+        "fieldName": "twinDisciplines",
+        "location": {
+          "rowIdx": 0,
+          "colIdx": 2
+        },
+        "spellIds": [
+          14898,
+          15349,
+          15354,
+          15355,
+          15356
         ],
         "maxPoints": 5
       },
@@ -46,19 +61,20 @@
           14786,
           14787
         ],
-        "maxPoints": 5
+        "maxPoints": 3
       },
       {
-        "fieldName": "improvedPowerWordFortitude",
+        "fieldName": "holyPrecision",
         "location": {
           "rowIdx": 1,
           "colIdx": 1
         },
         "spellIds": [
-          14749,
-          14767
+          16180,
+          16196,
+          16198
         ],
-        "maxPoints": 2
+        "maxPoints": 3
       },
       {
         "fieldName": "improvedPowerWordShield",
@@ -86,6 +102,21 @@
         "maxPoints": 2
       },
       {
+        "fieldName": "mentalAgility",
+        "location": {
+          "rowIdx": 2,
+          "colIdx": 0
+        },
+        "spellIds": [
+          14520,
+          14780,
+          14781,
+          14782,
+          14783
+        ],
+        "maxPoints": 3
+      },
+      {
         "fieldName": "innerFocus",
         "location": {
           "rowIdx": 2,
@@ -100,7 +131,7 @@
         "fieldName": "meditation",
         "location": {
           "rowIdx": 2,
-          "colIdx": 2
+          "colIdx": 3
         },
         "spellIds": [
           14521,
@@ -123,19 +154,34 @@
         "maxPoints": 3
       },
       {
-        "fieldName": "mentalAgility",
+        "fieldName": "mentalStrength",
         "location": {
           "rowIdx": 3,
           "colIdx": 1
         },
         "spellIds": [
-          14520,
-          14780,
-          14781,
-          14782,
-          14783
+          18551,
+          18552,
+          18553,
+          18554,
+          18555
         ],
         "maxPoints": 5
+      },
+      {
+        "fieldName": "soulWarding",
+        "location": {
+          "rowIdx": 3,
+          "colIdx": 2
+        },
+        "prereqLocation": {
+          "rowIdx": 1,
+          "colIdx": 2
+        },
+        "spellIds": [
+          0
+        ],
+        "maxPoints": 1
       },
       {
         "fieldName": "improvedManaBurn",
@@ -150,49 +196,47 @@
         "maxPoints": 2
       },
       {
-        "fieldName": "mentalStrength",
+        "fieldName": "penance",
         "location": {
           "rowIdx": 4,
           "colIdx": 1
         },
         "spellIds": [
-          18551,
-          18552,
-          18553,
-          18554,
-          18555
+          0
         ],
-        "maxPoints": 5
+        "maxPoints": 1
       },
       {
-        "fieldName": "divineSpirit",
+        "fieldName": "renewedHope",
         "location": {
           "rowIdx": 4,
           "colIdx": 2
         },
-        "spellIds": [
-          14752
-        ],
-        "maxPoints": 1,
         "prereqLocation": {
-          "rowIdx": 2,
+          "rowIdx": 3,
           "colIdx": 2
-        }
+        },
+        "spellIds": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "maxPoints": 5
       },
       {
-        "fieldName": "forceOfWill",
+        "fieldName": "divineAegis",
         "location": {
           "rowIdx": 5,
           "colIdx": 2
         },
         "spellIds": [
-          18544,
-          18547,
-          18548,
-          18549,
-          18550
+          0,
+          0,
+          0
         ],
-        "maxPoints": 5
+        "maxPoints": 3
       },
       {
         "fieldName": "powerInfusion",
@@ -200,14 +244,14 @@
           "rowIdx": 6,
           "colIdx": 1
         },
-        "spellIds": [
-          10060
-        ],
-        "maxPoints": 1,
         "prereqLocation": {
           "rowIdx": 4,
           "colIdx": 1
-        }
+        },
+        "spellIds": [
+          10060
+        ],
+        "maxPoints": 1
       }
     ]
   },
@@ -216,16 +260,17 @@
     "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/202.jpg",
     "talents": [
       {
-        "fieldName": "healingFocus",
+        "fieldName": "twilightFocus",
         "location": {
           "rowIdx": 0,
           "colIdx": 0
         },
         "spellIds": [
-          14913,
-          15012
+          16918,
+          16919,
+          16920
         ],
-        "maxPoints": 2
+        "maxPoints": 3
       },
       {
         "fieldName": "improvedRenew",
@@ -353,25 +398,36 @@
           "rowIdx": 3,
           "colIdx": 2
         },
+        "prereqLocation": {
+          "rowIdx": 1,
+          "colIdx": 2
+        },
         "spellIds": [
           14909,
           15017
         ],
-        "maxPoints": 2,
-        "prereqLocation": {
-          "rowIdx": 1,
-          "colIdx": 2
-        }
+        "maxPoints": 2
       },
       {
-        "fieldName": "improvedPrayerOfHealing",
+        "fieldName": "bindingHeal",
+        "location": {
+          "rowIdx": 3,
+          "colIdx": 3
+        },
+        "spellIds": [
+          0
+        ],
+        "maxPoints": 1
+      },
+      {
+        "fieldName": "litanyOfLight",
         "location": {
           "rowIdx": 4,
           "colIdx": 0
         },
         "spellIds": [
-          14911,
-          15018
+          0,
+          0
         ],
         "maxPoints": 2
       },
@@ -414,41 +470,39 @@
           15355,
           15356
         ],
-        "maxPoints": 5
+        "maxPoints": 3
       },
       {
-        "fieldName": "lightwell",
+        "fieldName": "prayerOfMending",
         "location": {
           "rowIdx": 6,
           "colIdx": 1
         },
-        "spellIds": [
-          724
-        ],
-        "maxPoints": 1,
         "prereqLocation": {
           "rowIdx": 4,
           "colIdx": 1
-        }
+        },
+        "spellIds": [
+          0
+        ],
+        "maxPoints": 1
       }
     ]
   },
   {
-    "name": "Shadow",
-    "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/203.jpg",
+    "name": "Shadow Magic",
+    "backgroundUrl": "",
     "talents": [
       {
-        "fieldName": "spiritTap",
+        "fieldName": "shadowFocus",
         "location": {
           "rowIdx": 0,
-          "colIdx": 1
+          "colIdx": 0
         },
         "spellIds": [
-          15270,
-          15335,
-          15336,
-          15337,
-          15338
+          15260,
+          15327,
+          15328
         ],
         "maxPoints": 5
       },
@@ -456,7 +510,7 @@
         "fieldName": "blackout",
         "location": {
           "rowIdx": 0,
-          "colIdx": 2
+          "colIdx": 1
         },
         "spellIds": [
           15268,
@@ -464,6 +518,21 @@
           15324,
           15325,
           15326
+        ],
+        "maxPoints": 5
+      },
+      {
+        "fieldName": "spiritTap",
+        "location": {
+          "rowIdx": 0,
+          "colIdx": 2
+        },
+        "spellIds": [
+          15270,
+          15335,
+          15336,
+          15337,
+          15338
         ],
         "maxPoints": 5
       },
@@ -484,7 +553,7 @@
         "fieldName": "improvedShadowWordPain",
         "location": {
           "rowIdx": 1,
-          "colIdx": 1
+          "colIdx": 2
         },
         "spellIds": [
           15275,
@@ -493,27 +562,15 @@
         "maxPoints": 2
       },
       {
-        "fieldName": "shadowFocus",
+        "fieldName": "shadowReach",
         "location": {
           "rowIdx": 1,
-          "colIdx": 2
+          "colIdx": 3
         },
         "spellIds": [
-          15260,
-          15327,
-          15328
-        ],
-        "maxPoints": 5
-      },
-      {
-        "fieldName": "improvedPsychicScream",
-        "location": {
-          "rowIdx": 2,
-          "colIdx": 0
-        },
-        "spellIds": [
-          15392,
-          15448
+          17322,
+          17323,
+          17325
         ],
         "maxPoints": 2
       },
@@ -521,7 +578,7 @@
         "fieldName": "improvedMindBlast",
         "location": {
           "rowIdx": 2,
-          "colIdx": 1
+          "colIdx": 0
         },
         "spellIds": [
           15273,
@@ -531,6 +588,22 @@
           15316
         ],
         "maxPoints": 5
+      },
+      {
+        "fieldName": "improvedPsychicScream",
+        "location": {
+          "rowIdx": 2,
+          "colIdx": 1
+        },
+        "prereqLocation": {
+          "rowIdx": 0,
+          "colIdx": 1
+        },
+        "spellIds": [
+          15392,
+          15448
+        ],
+        "maxPoints": 2
       },
       {
         "fieldName": "mindFlay",
@@ -544,10 +617,26 @@
         "maxPoints": 1
       },
       {
+        "fieldName": "improvedMindFlay",
+        "location": {
+          "rowIdx": 2,
+          "colIdx": 3
+        },
+        "prereqLocation": {
+          "rowIdx": 2,
+          "colIdx": 2
+        },
+        "spellIds": [
+          0,
+          0
+        ],
+        "maxPoints": 2
+      },
+      {
         "fieldName": "improvedFade",
         "location": {
           "rowIdx": 3,
-          "colIdx": 1
+          "colIdx": 0
         },
         "spellIds": [
           15274,
@@ -556,23 +645,21 @@
         "maxPoints": 2
       },
       {
-        "fieldName": "shadowReach",
+        "fieldName": "vampiricEmbrace",
         "location": {
           "rowIdx": 3,
-          "colIdx": 2
+          "colIdx": 1
         },
         "spellIds": [
-          17322,
-          17323,
-          17325
+          15286
         ],
-        "maxPoints": 3
+        "maxPoints": 1
       },
       {
         "fieldName": "shadowWeaving",
         "location": {
           "rowIdx": 3,
-          "colIdx": 3
+          "colIdx": 2
         },
         "spellIds": [
           15257,
@@ -581,7 +668,7 @@
           15333,
           15334
         ],
-        "maxPoints": 5
+        "maxPoints": 3
       },
       {
         "fieldName": "silence",
@@ -592,38 +679,31 @@
         "spellIds": [
           15487
         ],
-        "maxPoints": 1,
-        "prereqLocation": {
-          "rowIdx": 2,
-          "colIdx": 0
-        }
-      },
-      {
-        "fieldName": "vampiricEmbrace",
-        "location": {
-          "rowIdx": 4,
-          "colIdx": 1
-        },
-        "spellIds": [
-          15286
-        ],
         "maxPoints": 1
       },
       {
-        "fieldName": "improvedVampiricEmbrace",
+        "fieldName": "devouringContagion",
         "location": {
           "rowIdx": 4,
           "colIdx": 2
         },
         "spellIds": [
-          27839,
-          27840
+          0,
+          0
         ],
-        "maxPoints": 2,
-        "prereqLocation": {
-          "rowIdx": 4,
-          "colIdx": 1
-        }
+        "maxPoints": 2
+      },
+      {
+        "fieldName": "earlyDemise",
+        "location": {
+          "rowIdx": 5,
+          "colIdx": 0
+        },
+        "spellIds": [
+          0,
+          0
+        ],
+        "maxPoints": 2
       },
       {
         "fieldName": "darkness",
@@ -646,14 +726,14 @@
           "rowIdx": 6,
           "colIdx": 1
         },
+        "prereqLocation": {
+          "rowIdx": 3,
+          "colIdx": 1
+        },
         "spellIds": [
           15473
         ],
-        "maxPoints": 1,
-        "prereqLocation": {
-          "rowIdx": 4,
-          "colIdx": 1
-        }
+        "maxPoints": 1
       }
     ]
   }

@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{15, 16, 16}
+var TalentTreeSizes = [3]int{18, 17, 18}
 
 const (
 	SpellFlagPriest = core.SpellFlagAgentReserved1
@@ -20,8 +20,10 @@ const (
 	SpellCode_PriestGreaterHeal
 	SpellCode_PriestHeal
 	SpellCode_PriestHolyFire
+	SpellCode_PriestHolyNova
 	SpellCode_PriestMindBlast
 	SpellCode_PriestMindFlay
+	SpellCode_PriestPenance
 	SpellCode_PriestShadowWordPain
 	SpellCode_PriestSmite
 	SpellCode_PriestStarshards
@@ -34,33 +36,37 @@ type Priest struct {
 
 	Latency float64
 
-	CircleOfHealing   *core.Spell
-	DevouringPlague   []*core.Spell
-	EmpoweredRenew    *core.Spell
-	FlashHeal         []*core.Spell
-	GreaterHeal       []*core.Spell
-	HolyFire          []*core.Spell
-	InnerFocus        *core.Spell
-	MindBlast         []*core.Spell
-	MindFlay          [][]*core.Spell // 1 entry for each tick for each rank
-	PowerWordShield   []*core.Spell
-	PrayerOfHealing   []*core.Spell
-	PrayerOfMending   *core.Spell
-	Renew             []*core.Spell
-	Shadowform        *core.Spell
-	ShadowWeavingProc *core.Spell
-	ShadowWordPain    []*core.Spell
-	Smite             []*core.Spell
-	Starshards        [][]*core.Spell
-	VampiricEmbrace   *core.Spell
+	CircleOfHealing *core.Spell
+	DevouringPlague []*core.Spell
+	EmpoweredRenew  *core.Spell
+	FlashHeal       []*core.Spell
+	GreaterHeal     []*core.Spell
+	HolyFire        []*core.Spell
+	HolyNova        *core.Spell
+	InnerFocus      *core.Spell
+	MindBlast       []*core.Spell
+	MindFlay        [][]*core.Spell // 1 entry for each tick for each rank
+	Penance         *core.Spell
+	PowerWordShield []*core.Spell
+	PrayerOfHealing []*core.Spell
+	PrayerOfMending *core.Spell
+	Renew           []*core.Spell
+	Shadowform      *core.Spell
+	ShadowWordPain  []*core.Spell
+	Smite           []*core.Spell
+	Starshards      [][]*core.Spell
+	VampiricEmbrace *core.Spell
 
-	InnerFocusAura *core.Aura
-	ShadowformAura *core.Aura
-	SpiritTapAura  *core.Aura
+	InnerFocusAura    *core.Aura
+	SearingLightAura  *core.Aura
+	ShadowformAura    *core.Aura
+	ShadowWeavingAura *core.Aura
+	SpiritTapAura     *core.Aura
 
-	ShadowWeavingAuras   core.AuraArray
 	VampiricEmbraceAuras core.AuraArray
 	WeakenedSouls        core.AuraArray
+
+	shadowWeavingProcChance float64
 
 	ProcPrayerOfMending core.ApplySpellResults
 }
@@ -70,12 +76,12 @@ func (priest *Priest) GetCharacter() *core.Character {
 }
 
 func (priest *Priest) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
+	// Divine Spirit and Improved Power Word: Fortitude are gone from the Forever trees. Both are
+	// raid buffs the rest of the raid is built around, so they are assumed to have become baseline.
+	// TODO: beta will confirm whether they were made baseline or removed outright.
 	raidBuffs.ShadowProtection = true
 	raidBuffs.DivineSpirit = true
-	raidBuffs.PowerWordFortitude = max(
-		raidBuffs.PowerWordFortitude,
-		core.MakeTristateValue(true, priest.Talents.ImprovedPowerWordFortitude == 2),
-	)
+	raidBuffs.PowerWordFortitude = proto.TristateEffect_TristateEffectImproved
 }
 
 func (priest *Priest) AddPartyBuffs(_ *proto.PartyBuffs) {
@@ -93,6 +99,8 @@ func (priest *Priest) Initialize() {
 	}
 	priest.registerSmiteSpell()
 	priest.registerHolyFire()
+	priest.registerHolyNovaSpell()
+	priest.registerPenanceSpell()
 
 	priest.registerPowerInfusionCD()
 }

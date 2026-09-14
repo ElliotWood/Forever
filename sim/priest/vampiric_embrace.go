@@ -13,11 +13,11 @@ func (priest *Priest) registerVampiricEmbraceSpell() {
 
 	actionID := core.ActionID{SpellID: 15286}
 	manaCost := 40.0
-	duration := time.Minute * 1
+	duration := time.Second * 30
 
 	partyPlayers := priest.Env.Raid.GetPlayerParty(&priest.Unit).Players
 	healthMetrics := priest.NewHealthMetrics(actionID)
-	healthReturnedMultuplier := 0.05 + 0.05*float64(priest.Talents.ImprovedVampiricEmbrace)
+	healthReturnedMultuplier := 0.20
 
 	priest.VampiricEmbraceAuras = priest.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return target.GetOrRegisterAura(core.Aura{

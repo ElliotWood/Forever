@@ -6,6 +6,7 @@ import (
 	_ "github.com/wowsims/classic/sim/common" // imported to get caster sets included.
 	"github.com/wowsims/classic/sim/core"
 	"github.com/wowsims/classic/sim/core/proto"
+	googleProto "google.golang.org/protobuf/proto"
 )
 
 func init() {
@@ -23,18 +24,35 @@ func TestP1Shadow(t *testing.T) {
 			Talents:     P1Talents,
 			GearSet:     core.GetGearSet("../../../ui/shadow_priest/gear_sets", "p0.bis"),
 			Rotation:    core.GetAplRotation("../../../ui/shadow_priest/apls", "p1"),
-			Buffs:       core.FullBuffs,
+			Buffs:       ForeverBuffs,
 			Consumes:    P1Consumes,
 			SpecOptions: core.SpecOptionsCombo{Label: "Basic", SpecOptions: PlayerOptionsBasic},
 
 			ItemFilter:      ItemFilters,
 			EPReferenceStat: proto.Stat_StatSpellPower,
 			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
 		},
 	}))
 }
 
-var P1Talents = "0512301302--5002504103501251"
+var P1Talents = "005300231303--505120501201300051"
+
+// The raid debuff version of Shadow Weaving is a Classic mechanic, in Forever it buffs the priest instead.
+var ForeverDebuffs = func() *proto.Debuffs {
+	debuffs := googleProto.Clone(core.FullDebuffs).(*proto.Debuffs)
+	debuffs.ShadowWeaving = false
+	return debuffs
+}()
+
+var ForeverBuffs = core.BuffsCombo{
+	Label:   "FullBuffs",
+	Debuffs: ForeverDebuffs,
+	Party:   core.FullPartyBuffs,
+	Player:  core.FullIndividualBuffs,
+	Raid:    core.FullRaidBuffs,
+}
 
 var P1Consumes = core.ConsumesCombo{
 	Label: "P1-Consumes",

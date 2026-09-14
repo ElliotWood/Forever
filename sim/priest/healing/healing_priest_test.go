@@ -72,8 +72,8 @@ func init() {
 // 	}))
 // }
 
-var DiscTalents = "0503203130300512301313231251-2351010303"
-var HolyTalents = "05032031103-234051032002152530004311051"
+var DiscTalents = "005003231305101531-00505003032"
+var HolyTalents = "0050032313001-03505103030121531"
 
 var FullConsumes = &proto.Consumes{
 	Flask: proto.Flask_FlaskUnknown,
