@@ -47,7 +47,7 @@ export const GearPresets = {
 	[ClassicPhase.Phase5]: [GearP0BIS, GearP1BIS, GearP2BIS, GearP3BIS, GearP4BIS, GearP5BIS],
 };
 
-export const DefaultGear = GearP5BIS;
+export const DefaultGear = GearP0BIS;
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 APL Presets

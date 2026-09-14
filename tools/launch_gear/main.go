@@ -36,14 +36,14 @@ var raidZones = map[int32]bool{
 	2159: true, // Onyxia's Lair
 }
 
-// Turn-ins gated behind those raids. Quest sources carry no zone, so they have to be
-// named: these are the Onyxia head and Ragnaros/Nefarian drop turn-ins.
-var raidQuests = map[int32]bool{
-	7493: true, // The Great Masquerade (Onyxia, Alliance)
-	7497: true, // For The Horde! (Onyxia, Horde)
-	7783: true, // Thunderaan the Windseeker
-	7848: true, // Examine the Vessel (Nefarian)
-}
+// Onyxia's loot and the head turn-ins for her, Ragnaros and Nefarian carry no source
+// record at all, so neither the zone nor the quest check can see them. Item level can:
+// among items with no source and a phase of 3 or lower, everything from 71 up is one of
+// those - Onyxia's drops at 71 and 72, her turn-in rewards at 74, the Benediction and
+// Rhok'delar quest chains at 75, Sulfuras at 80, the Nefarian turn-ins at 83 - and
+// nothing sits between 66 and 70. Below that it is world drops, PvP sets, librams and
+// dungeon loot, all of which do exist at launch.
+const maxSourcelessIlvl = 66
 
 func obtainableAtLaunch(item *proto.UIItem) bool {
 	if item.Phase > lastNonRaidPhase {
@@ -53,13 +53,9 @@ func obtainableAtLaunch(item *proto.UIItem) bool {
 		if drop := source.GetDrop(); drop != nil && raidZones[drop.ZoneId] {
 			continue
 		}
-		if quest := source.GetQuest(); quest != nil && raidQuests[quest.Id] {
-			continue
-		}
 		return true
 	}
-	// No source listed at all means a world drop or vendor item.
-	return len(item.Sources) == 0
+	return len(item.Sources) == 0 && item.Ilvl <= maxSourcelessIlvl
 }
 
 type slot struct {

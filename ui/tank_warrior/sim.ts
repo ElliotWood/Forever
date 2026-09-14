@@ -162,8 +162,12 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecTankWarrior, {
 			},
 			defaultGear: {
 				[Faction.Unknown]: {},
-				[Faction.Alliance]: {},
-				[Faction.Horde]: {},
+				[Faction.Alliance]: {
+					1: Presets.DefaultGear.gear,
+				},
+				[Faction.Horde]: {
+					1: Presets.DefaultGear.gear,
+				},
 			},
 		},
 	],

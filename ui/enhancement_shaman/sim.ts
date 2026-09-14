@@ -156,10 +156,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecEnhancementShaman, {
 
 	raidSimPresets: [
 		{
-			spec: Spec.SpecBalanceDruid,
-			tooltip: specNames[Spec.SpecBalanceDruid],
-			defaultName: 'Balance',
-			iconUrl: getSpecIcon(Class.ClassDruid, 0),
+			spec: Spec.SpecEnhancementShaman,
+			tooltip: specNames[Spec.SpecEnhancementShaman],
+			defaultName: 'Enhancement',
+			iconUrl: getSpecIcon(Class.ClassShaman, 1),
 
 			talents: Presets.DefaultTalents.data,
 			specOptions: Presets.DefaultOptions,
@@ -167,8 +167,8 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecEnhancementShaman, {
 			otherDefaults: Presets.OtherDefaults,
 			defaultFactionRaces: {
 				[Faction.Unknown]: Race.RaceUnknown,
-				[Faction.Alliance]: Race.RaceNightElf,
-				[Faction.Horde]: Race.RaceTauren,
+				[Faction.Alliance]: Race.RaceDwarf,
+				[Faction.Horde]: Race.RaceOrc,
 			},
 			defaultGear: {
 				[Faction.Unknown]: {},

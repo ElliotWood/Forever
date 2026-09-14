@@ -85,8 +85,13 @@ export class RaidPicker extends Component {
 			},
 		});
 
-		const latestPhaseWithAllPresets = Math.min(
-			...playerPresets.map(preset => Math.max(...Object.keys(preset.defaultGear[Faction.Alliance]).map(k => parseInt(k)))),
+		// A preset with no default gear for the faction contributes Math.max() of nothing,
+		// which is -Infinity, and Array(-Infinity) throws before the raid picker has drawn
+		// a single party slot. Floor it at one phase so a missing gear set costs that
+		// preset its phases rather than costing the page everything below this line.
+		const latestPhaseWithAllPresets = Math.max(
+			1,
+			Math.min(...playerPresets.map(preset => Math.max(1, ...Object.keys(preset.defaultGear[Faction.Alliance]).map(k => parseInt(k))))),
 		);
 		new EnumPicker<NewPlayerPicker>(raidControls, this.newPlayerPicker, {
 			id: 'raid-picker-gear',
