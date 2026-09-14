@@ -16,12 +16,14 @@ func (mage *Mage) ApplyTalents() {
 
 func (mage *Mage) applyArcaneTalents() {
 	mage.applyArcaneConcentration()
+	mage.applyMissileBarrage()
 	mage.registerPresenceOfMindCD()
 	mage.registerArcanePowerCD()
 
 	// Arcane Subtlety
 	if mage.Talents.ArcaneSubtlety > 0 {
-		threatMultiplier := 1 - .20*float64(mage.Talents.ArcaneSubtlety)
+		threatMultiplier := 1 - .15*float64(mage.Talents.ArcaneSubtlety)
+		mage.AddStat(stats.SpellPenetration, 8*float64(mage.Talents.ArcaneSubtlety))
 		mage.OnSpellRegistered(func(spell *core.Spell) {
 			if spell.SpellSchool.Matches(core.SpellSchoolArcane) && spell.Flags.Matches(SpellFlagMage) {
 				spell.ThreatMultiplier *= threatMultiplier
@@ -31,7 +33,7 @@ func (mage *Mage) applyArcaneTalents() {
 
 	// Arcane Focus
 	if mage.Talents.ArcaneFocus > 0 {
-		bonusHit := 2 * float64(mage.Talents.ArcaneFocus) * core.SpellHitRatingPerHitChance
+		bonusHit := 1 * float64(mage.Talents.ArcaneFocus) * core.SpellHitRatingPerHitChance
 		mage.OnSpellRegistered(func(spell *core.Spell) {
 			if spell.SpellSchool.Matches(core.SpellSchoolArcane) && spell.Flags.Matches(SpellFlagMage) {
 				spell.BonusHitRating += bonusHit
@@ -41,15 +43,38 @@ func (mage *Mage) applyArcaneTalents() {
 
 	// Magic Absorption
 	if mage.Talents.MagicAbsorption > 0 {
-		magicAbsorptionBonus := 2 * float64(mage.Talents.MagicAbsorption)
+		magicAbsorptionBonus := 5 * float64(mage.Talents.MagicAbsorption)
 		mage.AddResistances(magicAbsorptionBonus)
 	}
 
-	// Arcane Meditation
-	mage.PseudoStats.SpiritRegenRateCasting += 0.05 * float64(mage.Talents.ArcaneMeditation)
+	// Arcane Resilience
+	if mage.Talents.ArcaneResilience > 0 {
+		mage.AddStatDependency(stats.Intellect, stats.Armor, .25*float64(mage.Talents.ArcaneResilience))
+	}
 
+	// Arcane Impact
+	if mage.Talents.ArcaneImpact > 0 {
+		bonusCrit := 2 * float64(mage.Talents.ArcaneImpact) * core.SpellCritRatingPerCritChance
+		mage.OnSpellRegistered(func(spell *core.Spell) {
+			if spell.SpellSchool.Matches(core.SpellSchoolArcane) && spell.Flags.Matches(SpellFlagMage) {
+				spell.BonusCritRating += bonusCrit
+			}
+		})
+	}
+
+	// Arcane Meditation
+	mage.PseudoStats.SpiritRegenRateCasting += []float64{0, .17, .34, .51}[mage.Talents.ArcaneMeditation]
+
+	// Arcane Mind
 	if mage.Talents.ArcaneMind > 0 {
-		mage.MultiplyStat(stats.Mana, 1.0+0.02*float64(mage.Talents.ArcaneMind))
+		critBonus := .20 * float64(mage.Talents.ArcaneMind)
+
+		mage.MultiplyStat(stats.Intellect, 1.0+0.02*float64(mage.Talents.ArcaneMind))
+		mage.OnSpellRegistered(func(spell *core.Spell) {
+			if spell.SpellSchool.Matches(core.SpellSchoolArcane) && spell.Flags.Matches(SpellFlagMage) {
+				spell.CritDamageBonus += critBonus
+			}
+		})
 	}
 
 	// Arcane Instability
@@ -70,12 +95,24 @@ func (mage *Mage) applyFireTalents() {
 	mage.applyIgnite()
 	mage.applyImprovedScorch()
 	mage.applyMasterOfElements()
+	mage.applyHotStreak()
 
 	mage.registerCombustionCD()
 
+	// Incineration
+	if mage.Talents.Incineration > 0 {
+		bonusCrit := 2 * float64(mage.Talents.Incineration) * core.SpellCritRatingPerCritChance
+		affectedSpellCodes := []int32{SpellCode_MageArcaneBlast, SpellCode_MageFireBlast, SpellCode_MageIceLance, SpellCode_MageScorch}
+		mage.OnSpellRegistered(func(spell *core.Spell) {
+			if slices.Contains(affectedSpellCodes, spell.SpellCode) {
+				spell.BonusCritRating += bonusCrit
+			}
+		})
+	}
+
 	// Burning Soul
 	if mage.Talents.BurningSoul > 0 {
-		threatMultiplier := 1 - .15*float64(mage.Talents.BurningSoul)
+		threatMultiplier := 1 - .10*float64(mage.Talents.BurningSoul)
 		mage.OnSpellRegistered(func(spell *core.Spell) {
 			if spell.SpellSchool.Matches(core.SpellSchoolFire) && spell.Flags.Matches(SpellFlagMage) {
 				spell.ThreatMultiplier *= threatMultiplier
@@ -108,11 +145,12 @@ func (mage *Mage) applyFireTalents() {
 func (mage *Mage) applyFrostTalents() {
 	mage.registerColdSnapCD()
 	mage.registerIceBarrierSpell()
+	mage.applyFingersOfFrost()
 	mage.applyWintersChill()
 
 	// Elemental Precision
 	if mage.Talents.ElementalPrecision > 0 {
-		bonusHit := 2 * float64(mage.Talents.ElementalPrecision) * core.SpellHitRatingPerHitChance
+		bonusHit := 1 * float64(mage.Talents.ElementalPrecision) * core.SpellHitRatingPerHitChance
 
 		mage.OnSpellRegistered(func(spell *core.Spell) {
 			if spell.Flags.Matches(SpellFlagMage) && (spell.SpellSchool.Matches(core.SpellSchoolFire) || spell.SpellSchool.Matches(core.SpellSchoolFrost)) {
@@ -207,6 +245,65 @@ func (mage *Mage) applyArcaneConcentration() {
 
 			if sim.Proc(procChance, "Arcane Concentration") {
 				mage.ClearcastingAura.Activate(sim)
+			}
+		},
+	})
+}
+
+// Arcane Blast feeds Missile Barrage at twice the rate of the other nukes, so the two of them
+// are the backbone of the Forever arcane rotation.
+func (mage *Mage) applyMissileBarrage() {
+	if !mage.Talents.MissileBarrage {
+		return
+	}
+
+	var arcaneMissiles []*core.Spell
+	mage.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.SpellCode == SpellCode_MageArcaneMissiles {
+			arcaneMissiles = append(arcaneMissiles, spell)
+		}
+	})
+
+	mage.MissileBarrageAura = mage.RegisterAura(core.Aura{
+		Label:    "Missile Barrage",
+		ActionID: core.ActionID{SpellID: 44404},
+		Duration: time.Second * 15,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			for _, spell := range arcaneMissiles {
+				spell.Cost.Multiplier -= 100
+			}
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			for _, spell := range arcaneMissiles {
+				spell.Cost.Multiplier += 100
+			}
+		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			if spell.SpellCode == SpellCode_MageArcaneMissiles {
+				aura.Deactivate(sim)
+			}
+		},
+	})
+
+	mage.RegisterAura(core.Aura{
+		Label:    "Missile Barrage Trigger",
+		Duration: core.NeverExpires,
+		OnReset: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Activate(sim)
+		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			procChance := 0.0
+			switch spell.SpellCode {
+			case SpellCode_MageArcaneBlast:
+				procChance = .40
+			case SpellCode_MageFireball, SpellCode_MageFrostbolt:
+				procChance = .20
+			default:
+				return
+			}
+
+			if sim.Proc(procChance, "Missile Barrage") {
+				mage.MissileBarrageAura.Activate(sim)
 			}
 		},
 	})
@@ -333,13 +430,22 @@ func (mage *Mage) registerArcanePowerCD() {
 	})
 }
 
+// The raid debuff version of Improved Scorch is a Classic mechanic, in Forever the fire
+// vulnerability only raises the damage the mage who stacked it deals.
 func (mage *Mage) applyImprovedScorch() {
 	if mage.Talents.ImprovedScorch == 0 {
 		return
 	}
 
-	mage.ImprovedScorchAuras = mage.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
-		return core.ImprovedScorchAura(unit)
+	mage.ImprovedScorchAura = mage.RegisterAura(core.Aura{
+		Label:     "Improved Scorch",
+		ActionID:  core.ActionID{SpellID: 12873},
+		Duration:  time.Second * 30,
+		MaxStacks: 5,
+		OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] /= 1 + .03*float64(oldStacks)
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= 1 + .03*float64(newStacks)
+		},
 	})
 }
 
@@ -358,7 +464,7 @@ func (mage *Mage) applyMasterOfElements() {
 			aura.Activate(sim)
 		},
 		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if spell.ProcMask.Matches(core.ProcMaskMeleeOrRanged) {
+			if !spell.SpellSchool.Matches(core.SpellSchoolFire | core.SpellSchoolFrost) {
 				return
 			}
 			if spell.CurCast.Cost == 0 {
@@ -370,6 +476,55 @@ func (mage *Mage) applyMasterOfElements() {
 		},
 	})
 }
+
+// Hot Streak shaves cast time off Pyroblast rather than making it instant, so the stacks are
+// worth holding. Frostfire Bolt is named in the tooltip but has no Classic spell to attach to.
+func (mage *Mage) applyHotStreak() {
+	if !mage.Talents.HotStreak {
+		return
+	}
+
+	triggerSpellCodes := []int32{SpellCode_MageFireball, SpellCode_MageFireBlast, SpellCode_MageScorch}
+
+	var pyroblasts []*core.Spell
+	mage.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.SpellCode == SpellCode_MagePyroblast {
+			pyroblasts = append(pyroblasts, spell)
+		}
+	})
+
+	mage.HotStreakAura = mage.RegisterAura(core.Aura{
+		Label:     "Hot Streak",
+		ActionID:  core.ActionID{SpellID: 44445},
+		Duration:  time.Second * 15,
+		MaxStacks: 3,
+		OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
+			castTimeMultiplier := .25 * float64(newStacks-oldStacks)
+			for _, spell := range pyroblasts {
+				spell.CastTimeMultiplier -= castTimeMultiplier
+			}
+		},
+	})
+
+	mage.RegisterAura(core.Aura{
+		Label:    "Hot Streak Trigger",
+		Duration: core.NeverExpires,
+		OnReset: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Activate(sim)
+		},
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if !result.DidCrit() || !slices.Contains(triggerSpellCodes, spell.SpellCode) {
+				return
+			}
+
+			mage.HotStreakAura.Activate(sim)
+			mage.HotStreakAura.AddStack(sim)
+		},
+	})
+}
+
+// Number of non-periodic fire crits Combustion lasts for, up from 3 in Classic.
+const CombustionCrits = 4
 
 func (mage *Mage) registerCombustionCD() {
 	if !mage.Talents.Combustion {
@@ -411,12 +566,11 @@ func (mage *Mage) registerCombustionCD() {
 			}
 		},
 		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if !result.Landed() || numCrits >= 3 || !spell.SpellSchool.Matches(core.SpellSchoolFire) || !spell.Flags.Matches(SpellFlagMage) {
+			if !result.Landed() || numCrits >= CombustionCrits || !spell.SpellSchool.Matches(core.SpellSchoolFire) || !spell.Flags.Matches(SpellFlagMage) {
 				return
 			}
 
-			// Ignite, Living Bomb explosions, and Fire Blast with Overheart don't consume crit stacks
-			// To Do: Classic - I don't believe ignite can crit so can probably remove this check?
+			// Ignite never consumes a crit stack, its damage isn't a cast of its own.
 			if spell.SpellCode == SpellCode_MageIgnite {
 				return
 			}
@@ -426,7 +580,7 @@ func (mage *Mage) registerCombustionCD() {
 
 			if result.DidCrit() {
 				numCrits++
-				if numCrits == 3 {
+				if numCrits == CombustionCrits {
 					aura.Deactivate(sim)
 				}
 			}
@@ -490,20 +644,111 @@ func (mage *Mage) registerColdSnapCD() {
 	})
 }
 
+// Raid bosses can't be chilled or frozen, so Fingers of Frost is the only thing that gets
+// Shatter and the Ice Lance bonus going on one. Shatter is folded in here because the two
+// talents only ever fire together.
+func (mage *Mage) applyFingersOfFrost() {
+	if mage.Talents.FingersOfFrost == 0 {
+		return
+	}
+
+	// TODO: both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
+	procChance := .15
+	// TODO: the Shatter tooltip was captured at rank 3, so every rank gets the same 50%.
+	shatterCrit := core.TernaryFloat64(mage.Talents.Shatter > 0, 50, 0) * core.SpellCritRatingPerCritChance
+
+	var affectedSpells []*core.Spell
+	mage.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.Flags.Matches(SpellFlagMage) {
+			affectedSpells = append(affectedSpells, spell)
+		}
+	})
+
+	mage.FingersOfFrostAura = mage.RegisterAura(core.Aura{
+		Label:    "Fingers of Frost",
+		ActionID: core.ActionID{SpellID: 44543},
+		Duration: time.Second * 15,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			for _, spell := range affectedSpells {
+				spell.BonusCritRating += shatterCrit
+			}
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			for _, spell := range affectedSpells {
+				spell.BonusCritRating -= shatterCrit
+			}
+		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			if !spell.Flags.Matches(SpellFlagMage) || !spell.ProcMask.Matches(core.ProcMaskSpellDamage) {
+				return
+			}
+
+			// Chill effects land while the mage is already part way through the next cast, so a
+			// spell that started before the proc isn't the "next spell cast" it grants.
+			if sim.CurrentTime-spell.CurCast.CastTime < aura.StartedAt() {
+				return
+			}
+
+			// OnCastComplete runs after the damage is rolled, so the consuming cast keeps the bonus.
+			aura.Deactivate(sim)
+		},
+	})
+
+	mage.RegisterAura(core.Aura{
+		Label:    "Fingers of Frost Trigger",
+		Duration: core.NeverExpires,
+		OnReset: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Activate(sim)
+		},
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if !result.Landed() || !spell.Flags.Matches(SpellFlagChillSpell) {
+				return
+			}
+
+			if sim.Proc(procChance, "Fingers of Frost") {
+				mage.FingersOfFrostAura.Activate(sim)
+			}
+		},
+	})
+}
+
+// IsTargetFrozen reports whether the mage's next spell is treated as hitting a frozen target.
+func (mage *Mage) IsTargetFrozen() bool {
+	return mage.FingersOfFrostAura != nil && mage.FingersOfFrostAura.IsActive()
+}
+
+// The raid debuff version of Winter's Chill is a Classic mechanic, in Forever it's a single
+// stack that only helps the mage's own Frostbolt and Ice Lance.
 func (mage *Mage) applyWintersChill() {
 	if mage.Talents.WintersChill == 0 {
 		return
 	}
 
-	procChance := float64(mage.Talents.WintersChill) * 0.2
+	procChance := .20 * float64(mage.Talents.WintersChill)
+	bonusCrit := 2.0 * core.SpellCritRatingPerCritChance
+	affectedSpellCodes := []int32{SpellCode_MageFrostbolt, SpellCode_MageIceLance}
 
-	wcAuras := mage.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.WintersChillAura(target)
-	})
-	mage.Env.RegisterPreFinalizeEffect(func() {
-		for _, spell := range mage.GetSpellsMatchingSchool(core.SpellSchoolFrost) {
-			spell.RelatedAuras = append(spell.RelatedAuras, wcAuras)
+	var affectedSpells []*core.Spell
+	mage.OnSpellRegistered(func(spell *core.Spell) {
+		if slices.Contains(affectedSpellCodes, spell.SpellCode) {
+			affectedSpells = append(affectedSpells, spell)
 		}
+	})
+
+	mage.WintersChillAura = mage.RegisterAura(core.Aura{
+		Label:    "Winter's Chill",
+		ActionID: core.ActionID{SpellID: 28593},
+		Duration: time.Second * 15,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			for _, spell := range affectedSpells {
+				spell.BonusCritRating += bonusCrit
+			}
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			for _, spell := range affectedSpells {
+				spell.BonusCritRating -= bonusCrit
+			}
+		},
 	})
 
 	mage.RegisterAura(core.Aura{
@@ -518,11 +763,7 @@ func (mage *Mage) applyWintersChill() {
 			}
 
 			if sim.Proc(procChance, "Winters Chill") {
-				aura := wcAuras.Get(result.Target)
-				aura.Activate(sim)
-				if aura.IsActive() {
-					aura.AddStack(sim)
-				}
+				mage.WintersChillAura.Activate(sim)
 			}
 		},
 	})

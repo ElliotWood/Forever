@@ -1,0 +1,231 @@
+character_stats_results: {
+ key: "TestP1MageFire-Phase1-CharacterStats-Default"
+ value: {
+  final_stats: 177.1
+  final_stats: 184
+  final_stats: 313.4325
+  final_stats: 324.3
+  final_stats: 241.5
+  final_stats: 348
+  final_stats: 0
+  final_stats: 40
+  final_stats: 233
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 45.25
+  final_stats: 2
+  final_stats: 30.64824
+  final_stats: 0
+  final_stats: 16
+  final_stats: 897.1
+  final_stats: 0
+  final_stats: 16.2
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 5797.5
+  final_stats: 0
+  final_stats: 0
+  final_stats: 1059.15
+  final_stats: 440
+  final_stats: 0
+  final_stats: 5
+  final_stats: 0
+  final_stats: 3.2
+  final_stats: 5
+  final_stats: 0
+  final_stats: 4624.325
+  final_stats: 37
+  final_stats: 80
+  final_stats: 90
+  final_stats: 70
+  final_stats: 70
+  final_stats: 384
+  final_stats: 0
+  final_stats: 65
+  final_stats: 0
+ }
+}
+stat_weights_results: {
+ key: "TestP1MageFire-Phase1-StatWeights-Default"
+ value: {
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 2.03567
+  weights: 0
+  weights: 0.71823
+  weights: 0
+  weights: 0.71823
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 10.78821
+  weights: 12.72181
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-ArcanistRegalia"
+ value: {
+  dps: 996.47988
+  tps: 624.07706
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-Champion'sArcanum"
+ value: {
+  dps: 996.68166
+  tps: 718.02656
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-EnigmaVestments"
+ value: {
+  dps: 1159.07278
+  tps: 832.23339
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-FieldMarshal'sRegalia"
+ value: {
+  dps: 1054.8188
+  tps: 758.97944
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-FrostfireRegalia"
+ value: {
+  dps: 1295.0219
+  tps: 797.4996
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-Illusionist'sAttire"
+ value: {
+  dps: 901.5935
+  tps: 651.03531
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 781.19888
+  tps: 566.95888
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-LieutenantCommander'sArcanum"
+ value: {
+  dps: 996.68166
+  tps: 718.02656
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-NetherwindRegalia"
+ value: {
+  dps: 1067.38438
+  tps: 754.36537
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-Sorcerer'sRegalia"
+ value: {
+  dps: 957.28346
+  tps: 690.45098
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-AllItems-Warlord'sRegalia"
+ value: {
+  dps: 1054.8188
+  tps: 758.97944
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-Average-Default"
+ value: {
+  dps: 859.14642
+  tps: 621.70258
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-FullBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 885.56029
+  tps: 1015.40732
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-FullBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 885.56029
+  tps: 639.66796
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-FullBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 974.22878
+  tps: 700.86936
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-NoBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 357.54311
+  tps: 512.77305
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-NoBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 357.54311
+  tps: 263.40482
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-NoBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 596.74375
+  tps: 432.44966
+ }
+}
+dps_results: {
+ key: "TestP1MageFire-Phase1-SwitchInFrontOfTarget-Default"
+ value: {
+  dps: 883.78686
+  tps: 638.53599
+ }
+}

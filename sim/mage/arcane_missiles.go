@@ -39,6 +39,9 @@ func (mage *Mage) getArcaneMissilesSpellConfig(rank int) core.SpellConfig {
 
 	numTicks := castTime
 	tickLength := time.Second
+	// Missile Barrage keeps the missile count and fires them every 0.5 sec instead, which is the
+	// same thing as halving the channel.
+	barrageTickLength := time.Millisecond * 500
 
 	tickSpell := mage.getArcaneMissilesTickSpell(rank)
 	mage.ArcaneMissilesTickSpell[rank] = tickSpell
@@ -77,6 +80,8 @@ func (mage *Mage) getArcaneMissilesSpellConfig(rank int) core.SpellConfig {
 						dot.TickCount++
 						dot.TickOnce(sim)
 					}
+
+					mage.spendArcaneBlastStacks(sim)
 				},
 			},
 			NumberOfTicks: numTicks,
@@ -87,7 +92,10 @@ func (mage *Mage) getArcaneMissilesSpellConfig(rank int) core.SpellConfig {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.Dot(target).Apply(sim)
+			dot := spell.Dot(target)
+			dot.TickLength = core.TernaryDuration(mage.MissileBarrageAura.IsActive(), barrageTickLength, tickLength)
+			dot.RecomputeAuraDuration()
+			dot.Apply(sim)
 		},
 		ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
 			return tickSpell.CalcDamage(sim, target, baseTickDamage, spell.OutcomeExpectedMagicHitAndCrit)

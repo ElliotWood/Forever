@@ -36,7 +36,8 @@ func (mage *Mage) newFireBlastSpellConfig(rank int, cdTimer *core.Timer) core.Sp
 	manaCost := FireBlastManaCost[rank]
 	level := FireBlastLevel[rank]
 
-	cooldown := time.Second * 8
+	// TODO: only rank 1 of Wake of Fire was shown, so mage.json copies its 1 sec into rank 2.
+	cooldown := time.Second*8 - []time.Duration{0, time.Second, time.Second}[mage.Talents.WakeOfFire]
 	flags := SpellFlagMage | core.SpellFlagAPL
 
 	return core.SpellConfig{
@@ -59,11 +60,9 @@ func (mage *Mage) newFireBlastSpellConfig(rank int, cdTimer *core.Timer) core.Sp
 			},
 			CD: core.Cooldown{
 				Timer:    cdTimer,
-				Duration: cooldown - time.Millisecond*500*time.Duration(mage.Talents.ImprovedFireBlast),
+				Duration: cooldown,
 			},
 		},
-
-		BonusCritRating: 2 * float64(mage.Talents.Incinerate) * core.SpellCritRatingPerCritChance,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
