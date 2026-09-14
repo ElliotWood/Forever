@@ -40,7 +40,7 @@ character_stats_results: {
   final_stats: 60
   final_stats: 60
   final_stats: 60
-  final_stats: 70
+  final_stats: 60
   final_stats: 384
   final_stats: 0
   final_stats: 65
@@ -190,43 +190,43 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 762.52508
-  tps: 846.80499
+  dps: 768.96581
+  tps: 852.60164
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 762.52508
-  tps: 694.29919
+  dps: 768.96581
+  tps: 700.09585
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 739.15378
-  tps: 671.12229
+  dps: 745.94403
+  tps: 677.23352
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 469.8267
-  tps: 549.02496
+  dps: 474.18443
+  tps: 552.94692
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 469.8267
-  tps: 429.15307
+  dps: 474.18443
+  tps: 433.07503
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 508.90549
-  tps: 458.69533
+  dps: 516.04972
+  tps: 465.12514
  }
 }
 dps_results: {

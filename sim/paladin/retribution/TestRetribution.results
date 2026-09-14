@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-Phase5-AllItems-BattlegearofEternalJustice"
  value: {
-  dps: 392.19544
-  tps: 363.90287
+  dps: 370.84447
+  tps: 344.67755
  }
 }
 dps_results: {
