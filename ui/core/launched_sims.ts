@@ -88,6 +88,10 @@ export const simLaunchStatuses: Record<Spec, SimStatus> = {
 		phase: Phase.Launch,
 		status: LaunchStatus.Alpha,
 	},
+	[Spec.SpecSmitePriest]: {
+		phase: Phase.Launch,
+		status: LaunchStatus.Alpha,
+	},
 	[Spec.SpecWarlock]: {
 		phase: Phase.Launch,
 		status: LaunchStatus.Alpha,

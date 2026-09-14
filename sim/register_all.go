@@ -21,6 +21,7 @@ import (
 	// "github.com/wowsims/classic/sim/paladin/retribution"
 	// healingPriest "github.com/wowsims/classic/sim/priest/healing"
 	"github.com/wowsims/classic/sim/priest/shadow"
+	"github.com/wowsims/classic/sim/priest/smite"
 
 	// restoShaman "github.com/wowsims/classic/sim/shaman/restoration"
 	dpsWarlock "github.com/wowsims/classic/sim/warlock/dps"
@@ -48,6 +49,7 @@ func RegisterAll() {
 	mage.RegisterMage()
 	// healingPriest.RegisterHealingPriest()
 	shadow.RegisterShadowPriest()
+	smite.RegisterSmitePriest()
 	dpsrogue.RegisterDpsRogue()
 	dpsWarrior.RegisterDpsWarrior()
 	tankWarrior.RegisterTankWarrior()

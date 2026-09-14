@@ -58,6 +58,7 @@ export class SimTitleDropdown extends Component {
 		[Spec.SpecRetributionPaladin]: 'Retribution',
 		[Spec.SpecHealingPriest]: 'Healing',
 		[Spec.SpecShadowPriest]: 'Shadow',
+		[Spec.SpecSmitePriest]: 'Smite',
 		[Spec.SpecWarlock]: 'DPS',
 		[Spec.SpecWarrior]: 'DPS',
 		[Spec.SpecTankWarrior]: 'Tank',

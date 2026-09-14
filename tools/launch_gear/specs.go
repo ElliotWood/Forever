@@ -122,6 +122,7 @@ var (
 	plate   = proto.ArmorType_ArmorTypePlate
 	mail    = proto.ArmorType_ArmorTypeMail
 	leather = proto.ArmorType_ArmorTypeLeather
+	cloth   = proto.ArmorType_ArmorTypeCloth
 )
 
 func w(pairs map[stats.Stat]float64) stats.Stats {
@@ -172,6 +173,15 @@ var specs = map[string]spec{
 		weapons:     []proto.WeaponType{proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeDagger, proto.WeaponType_WeaponTypeFist},
 		weaponDpsEP: 12.0, dualWield: true, weights: w(map[stats.Stat]float64{stats.AttackPower: 0.5, stats.Strength: 1, stats.Agility: 0.9, stats.MeleeCrit: 12,
 			stats.MeleeHit: 14, stats.SpellPower: 0.2, stats.Intellect: 0.1, stats.Stamina: 0.1}),
+	},
+	// A holy caster. Spirit is worth more here than to the other casters, because
+	// Forever's Spiritual Guidance turns it into spell damage as well as regen.
+	"smite_priest": {
+		class: proto.Class_ClassPriest, armor: cloth,
+		weapons:     []proto.WeaponType{proto.WeaponType_WeaponTypeDagger, proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff},
+		allowTwoHnd: true,
+		weaponDpsEP: 0.0, weights: w(map[stats.Stat]float64{stats.SpellPower: 1, stats.SpellHit: 14, stats.SpellCrit: 10,
+			stats.Intellect: 0.35, stats.Spirit: 0.25, stats.MP5: 0.4, stats.Stamina: 0.05}),
 	},
 	"leather_placeholder": {class: proto.Class_ClassRogue, armor: leather},
 }
