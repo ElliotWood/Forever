@@ -42,7 +42,8 @@ func (paladin *Paladin) registerHolyShock() {
 			SpellCode: SpellCode_PaladinHolyShock,
 
 			ManaCost: core.ManaCostOptions{
-				FlatCost: rank.manaCost,
+				FlatCost:   rank.manaCost,
+				Multiplier: paladin.benediction(),
 			},
 
 			Cast: core.CastConfig{
@@ -58,6 +59,9 @@ func (paladin *Paladin) registerHolyShock() {
 			DamageMultiplier: 1,
 			ThreatMultiplier: 1,
 			BonusCoefficient: 0.429,
+
+			// Holy Power is worth an extra 2% crit per point on Holy Shock specifically.
+			BonusCritRating: 2 * float64(paladin.Talents.HolyPower) * core.SpellCritRatingPerCritChance,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				baseDamage := sim.Roll(rank.minDamage, rank.maxDamage)

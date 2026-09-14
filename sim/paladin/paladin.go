@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{14, 15, 15}
+var TalentTreeSizes = [3]int{18, 16, 18}
 
 const (
 	SpellFlag_Forbearance = core.SpellFlagAgentReserved1
@@ -47,11 +47,12 @@ type Paladin struct {
 	primaryPaladinAura proto.PaladinAura
 	currentPaladinAura *core.Aura
 
-	currentSeal  *core.Aura
-	allSealAuras [][]*core.Aura
-	aurasSoR     []*core.Aura
-	aurasSoC     []*core.Aura
-	aurasSotC    []*core.Aura
+	currentSeal      *core.Aura
+	currentSealSpell *core.Spell
+	allSealAuras     [][]*core.Aura
+	aurasSoR         []*core.Aura
+	aurasSoC         []*core.Aura
+	aurasSotC        []*core.Aura
 
 	currentJudgement *core.Spell
 	allJudgeSpells   [][]*core.Spell
@@ -168,6 +169,7 @@ func (paladin *Paladin) has2hEquipped() bool {
 
 func (paladin *Paladin) ResetPrimarySeal(primarySeal proto.PaladinSeal) {
 	paladin.currentSeal = nil
+	paladin.currentSealSpell = nil
 	paladin.primarySeal = paladin.getPrimarySealSpell(primarySeal)
 }
 
@@ -200,12 +202,13 @@ func (paladin *Paladin) getPrimarySealSpell(primarySeal proto.PaladinSeal) *core
 	}
 }
 
-func (paladin *Paladin) applySeal(newSeal *core.Aura, judgement *core.Spell, sim *core.Simulation) {
+func (paladin *Paladin) applySeal(newSeal *core.Aura, sealSpell *core.Spell, judgement *core.Spell, sim *core.Simulation) {
 	if paladin.currentSeal != nil {
 		paladin.currentSeal.Deactivate(sim)
 	}
 
 	paladin.currentSeal = newSeal
+	paladin.currentSealSpell = sealSpell
 	paladin.currentJudgement = judgement
 	paladin.currentSeal.Activate(sim)
 }

@@ -29,11 +29,13 @@ func TestProtection(t *testing.T) {
 			ItemFilter:      ItemFilters,
 			EPReferenceStat: proto.Stat_StatAttackPower,
 			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
 		},
 	}))
 }
 
-var Phase4ProtTalents = "-053020335001551-0500535"
+var Phase4ProtTalents = "052003003-5530513321301501"
 
 var Phase4Consumes = core.ConsumesCombo{
 	Label: "P4-Consumes",

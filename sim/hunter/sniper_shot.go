@@ -7,35 +7,32 @@ import (
 	"github.com/wowsims/classic/sim/core/proto"
 )
 
-func (hunter *Hunter) getAimedShotConfig(rank int, timer *core.Timer) core.SpellConfig {
-	spellId := [7]int32{0, 19434, 20900, 20901, 20902, 20903, 20904}[rank]
-	baseDamage := [7]float64{0, 70, 125, 200, 330, 460, 600}[rank]
-	manaCost := [7]float64{0, 75, 115, 160, 210, 260, 310}[rank]
-	level := [7]int{0, 0, 28, 36, 44, 52, 60}[rank]
+// The tooltip only gives the flat damage bonus, so Sniper Shot is built like the Steady Shot its
+// wording points at: a 1.5 sec shot with no cooldown and a 110 mana cost.
+func (hunter *Hunter) registerSniperShotSpell() {
+	if !hunter.Talents.SniperShot {
+		return
+	}
 
-	return core.SpellConfig{
-		SpellCode:     SpellCode_HunterAimedShot,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolPhysical,
-		DefenseType:   core.DefenseTypeRanged,
-		ProcMask:      core.ProcMaskRangedSpecial,
-		Flags:         core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagShot,
-		CastType:      proto.CastType_CastTypeRanged,
-		Rank:          rank,
-		RequiredLevel: level,
-		MissileSpeed:  24,
+	flatDamageBonus := 160.0
+
+	hunter.SniperShot = hunter.RegisterSpell(core.SpellConfig{
+		SpellCode:    SpellCode_HunterSniperShot,
+		ActionID:     core.ActionID{SpellID: 56641},
+		SpellSchool:  core.SpellSchoolPhysical,
+		DefenseType:  core.DefenseTypeRanged,
+		ProcMask:     core.ProcMaskRangedSpecial,
+		Flags:        core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagShot,
+		CastType:     proto.CastType_CastTypeRanged,
+		MissileSpeed: 24,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: manaCost,
+			FlatCost: 110,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD:      core.GCDDefault,
-				CastTime: time.Millisecond * 3500,
-			},
-			CD: core.Cooldown{
-				Timer:    timer,
-				Duration: time.Second * 6,
+				CastTime: time.Millisecond * 1500,
 			},
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
 				cast.CastTime = spell.CastTime()
@@ -59,7 +56,7 @@ func (hunter *Hunter) getAimedShotConfig(rank int, timer *core.Timer) core.Spell
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := hunter.AutoAttacks.Ranged().CalculateNormalizedWeaponDamage(sim, spell.RangedAttackPower(target, false)) +
 				hunter.AmmoDamageBonus +
-				baseDamage
+				flatDamageBonus
 
 			result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeRangedHitAndCrit)
 			hunter.Unit.AutoAttacks.EnableAutoSwing(sim)
@@ -67,19 +64,5 @@ func (hunter *Hunter) getAimedShotConfig(rank int, timer *core.Timer) core.Spell
 				spell.DealDamage(sim, result)
 			})
 		},
-	}
-}
-
-// Aimed Shot is no longer a talent, Barrage still buffs it so it is assumed to be baseline now.
-// TODO: assumed baseline, beta will confirm
-func (hunter *Hunter) registerAimedShotSpell(timer *core.Timer) {
-	maxRank := 6
-
-	for i := 1; i <= maxRank; i++ {
-		config := hunter.getAimedShotConfig(i, timer)
-
-		if config.RequiredLevel <= int(hunter.Level) {
-			hunter.AimedShot = hunter.GetOrRegisterSpell(config)
-		}
-	}
+	})
 }

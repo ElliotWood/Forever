@@ -9,7 +9,7 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{16, 14, 16}
+var TalentTreeSizes = [3]int{16, 16, 18}
 
 const (
 	SpellFlagShot   = core.SpellFlagAgentReserved1
@@ -25,6 +25,8 @@ const (
 	SpellCode_HunterAimedShot
 	SpellCode_HunterArcaneShot
 	SpellCode_HunterMultiShot
+	SpellCode_HunterSniperShot
+	SpellCode_HunterSummonHawk
 
 	// Strikes
 	SpellCode_HunterRaptorStrike
@@ -39,6 +41,7 @@ const (
 	SpellCode_HunterImmolationTrap
 
 	// Other
+	SpellCode_HunterLaceratingStrikes
 	SpellCode_HunterMongooseBite
 	SpellCode_HunterWingClip
 	SpellCode_HunterVolley
@@ -86,22 +89,25 @@ type Hunter struct {
 	curQueueAura       *core.Aura
 	curQueuedAutoSpell *core.Spell
 
-	AimedShot       *core.Spell
-	ArcaneShot      *core.Spell
-	ExplosiveTrap   *core.Spell
-	ImmolationTrap  *core.Spell
-	FreezingTrap    *core.Spell
-	KillCommand     *core.Spell
-	MultiShot       *core.Spell
-	RapidFire       *core.Spell
-	RaptorStrike    *core.Spell
-	RaptorStrikeHit *core.Spell
-	MongooseBite    *core.Spell
-	ScorpidSting    *core.Spell
-	SerpentSting    *core.Spell
-	SilencingShot   *core.Spell
-	Volley          *core.Spell
-	WingClip        *core.Spell
+	AimedShot         *core.Spell
+	ArcaneShot        *core.Spell
+	ExplosiveTrap     *core.Spell
+	ImmolationTrap    *core.Spell
+	FreezingTrap      *core.Spell
+	KillCommand       *core.Spell
+	LaceratingStrikes *core.Spell
+	MultiShot         *core.Spell
+	RapidFire         *core.Spell
+	RaptorStrike      *core.Spell
+	RaptorStrikeHit   *core.Spell
+	MongooseBite      *core.Spell
+	ScorpidSting      *core.Spell
+	SerpentSting      *core.Spell
+	SilencingShot     *core.Spell
+	SniperShot        *core.Spell
+	SummonHawk        *core.Spell
+	Volley            *core.Spell
+	WingClip          *core.Spell
 
 	Shots       []*core.Spell
 	Strikes     []*core.Spell
@@ -113,6 +119,7 @@ type Hunter struct {
 
 	RapidFireAura       *core.Aura
 	BestialWrathPetAura *core.Aura
+	IntimidationPetAura *core.Aura
 }
 
 func (hunter *Hunter) GetCharacter() *core.Character {
@@ -155,10 +162,13 @@ func (hunter *Hunter) Initialize() {
 
 	hunter.registerArcaneShotSpell(arcaneShotTimer)
 	hunter.registerAimedShotSpell(arcaneShotTimer)
+	hunter.registerSummonHawkSpell(arcaneShotTimer)
 	hunter.registerMultiShotSpell(multiShotTimer)
+	hunter.registerSniperShotSpell()
 
 	hunter.registerRaptorStrikeSpell()
 	hunter.registerMongooseBiteSpell()
+	hunter.registerLaceratingStrikesSpell()
 	hunter.registerWingClipSpell()
 	hunter.registerVolleySpell()
 

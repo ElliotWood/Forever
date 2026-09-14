@@ -26,7 +26,7 @@ func (paladin *Paladin) registerHolyShield() {
 	}
 
 	numCharges := int32(4)
-	blockBonus := 30.0 * core.BlockRatingPerBlockChance
+	blockBonus := 20.0 * core.BlockRatingPerBlockChance
 
 	for i, values := range HolyShieldValues {
 		rank := i + 1
@@ -87,7 +87,8 @@ func (paladin *Paladin) registerHolyShield() {
 			RequiredLevel: int(level),
 			Rank:          rank,
 			ManaCost: core.ManaCostOptions{
-				FlatCost: manaCost,
+				FlatCost:   manaCost,
+				Multiplier: paladin.benediction(),
 			},
 			Cast: core.CastConfig{
 				DefaultCast: core.Cast{

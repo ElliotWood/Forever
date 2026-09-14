@@ -56,8 +56,6 @@ func (mage *Mage) getScorchConfig(rank int) core.SpellConfig {
 			},
 		},
 
-		BonusCritRating: 2 * float64(mage.Talents.Incinerate) * core.SpellCritRatingPerCritChance,
-
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
 		BonusCoefficient: spellCoeff,
@@ -67,12 +65,9 @@ func (mage *Mage) getScorchConfig(rank int) core.SpellConfig {
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
 
 			if sim.RandomFloat("Improved Scorch") < debuffProcChance {
-				aura := mage.ImprovedScorchAuras.Get(target)
-				aura.Activate(sim)
-				aura.AddStack(sim)
+				mage.ImprovedScorchAura.Activate(sim)
+				mage.ImprovedScorchAura.AddStack(sim)
 			}
 		},
-
-		RelatedAuras: []core.AuraArray{mage.ImprovedScorchAuras},
 	}
 }

@@ -1,0 +1,9 @@
+{
+	"type": "TypeAPL",
+	"priorityList": [
+	{"action":{"autocastOtherCooldowns":{}}},
+	{"action":{"condition":{"cmp":{"op":"OpEq","lhs":{"auraNumStacks":{"auraId":{"spellId":44445}}},"rhs":{"const":{"val":"3"}}}},"castSpell":{"spellId":{"spellId":18809,"rank":8}}}},
+	{"action":{"condition":{"or":{"vals":[{"cmp":{"op":"OpLt","lhs":{"auraNumStacks":{"auraId":{"spellId":12873}}},"rhs":{"const":{"val":"5"}}}},{"cmp":{"op":"OpLe","lhs":{"auraRemainingTime":{"auraId":{"spellId":12873}}},"rhs":{"const":{"val":"5s"}}}}]}},"castSpell":{"spellId":{"spellId":10207,"rank":7}}}},
+	{"action":{"castSpell":{"spellId":{"spellId":25306,"rank":12}}}}
+	]
+}

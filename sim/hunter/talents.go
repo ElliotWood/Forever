@@ -12,29 +12,33 @@ func (hunter *Hunter) ApplyTalents() {
 	if hunter.pet != nil {
 		hunter.applyFrenzy()
 		hunter.registerBestialWrathCD()
+		hunter.registerIntimidationCD()
 
-		hunter.pet.AddStat(stats.MeleeCrit, core.CritRatingPerCritChance*3*float64(hunter.Talents.Ferocity))
-		hunter.pet.AddStat(stats.SpellCrit, core.SpellCritRatingPerCritChance*3*float64(hunter.Talents.Ferocity))
+		hunter.pet.AddStat(stats.MeleeCrit, core.CritRatingPerCritChance*2*float64(hunter.Talents.Ferocity))
+		hunter.pet.AddStat(stats.SpellCrit, core.SpellCritRatingPerCritChance*2*float64(hunter.Talents.Ferocity))
 
-		hunter.pet.PseudoStats.DamageDealtMultiplier *= 1 + 0.04*float64(hunter.Talents.UnleashedFury)
+		hunter.pet.PseudoStats.DamageDealtMultiplier *= 1 + 0.03*float64(hunter.Talents.UnleashedFury)
 
 		if hunter.Talents.EnduranceTraining > 0 {
 			hunter.pet.MultiplyStat(stats.Health, 1+(0.03*float64(hunter.Talents.EnduranceTraining)))
 		}
+
+		if hunter.Talents.FocusedFire > 0 {
+			hunter.PseudoStats.DamageDealtMultiplier *= 1 + 0.01*float64(hunter.Talents.FocusedFire)
+		}
+	} else if hunter.Talents.LoneWolf {
+		hunter.PseudoStats.DamageDealtMultiplier *= 1.2
 	}
 
-	if hunter.Talents.MonsterSlaying+hunter.Talents.HumanoidSlaying > 0 {
+	if hunter.Talents.ImprovedTracking > 0 {
+		// Everything a raid encounter can be is trackable apart from Mechanical.
+		multiplier := 1 + 0.01*float64(hunter.Talents.ImprovedTracking)
 		hunter.Env.RegisterPostFinalizeEffect(func() {
 			for _, t := range hunter.Env.Encounter.Targets {
 				switch t.MobType {
-				case proto.MobType_MobTypeHumanoid:
-					multiplier := []float64{1, 1.01, 1.02, 1.03}[hunter.Talents.HumanoidSlaying]
-					for _, at := range hunter.AttackTables[t.UnitIndex] {
-						at.DamageDealtMultiplier *= multiplier
-						at.CritMultiplier *= multiplier
-					}
-				case proto.MobType_MobTypeBeast, proto.MobType_MobTypeGiant, proto.MobType_MobTypeDragonkin:
-					multiplier := []float64{1, 1.01, 1.02, 1.03}[hunter.Talents.MonsterSlaying]
+				case proto.MobType_MobTypeBeast, proto.MobType_MobTypeDemon, proto.MobType_MobTypeDragonkin,
+					proto.MobType_MobTypeElemental, proto.MobType_MobTypeGiant, proto.MobType_MobTypeHumanoid,
+					proto.MobType_MobTypeUndead:
 					for _, at := range hunter.AttackTables[t.UnitIndex] {
 						at.DamageDealtMultiplier *= multiplier
 						at.CritMultiplier *= multiplier
@@ -45,6 +49,8 @@ func (hunter *Hunter) ApplyTalents() {
 	}
 
 	if hunter.Talents.BestialDiscipline > 0 {
+		hunter.PseudoStats.SpiritRegenRateCasting += 0.25 * float64(hunter.Talents.BestialDiscipline)
+
 		core.MakePermanent(hunter.RegisterAura(core.Aura{
 			Label: "Bestial Discipline",
 			OnInit: func(aura *core.Aura, sim *core.Simulation) {
@@ -58,16 +64,16 @@ func (hunter *Hunter) ApplyTalents() {
 	hunter.AddStat(stats.MeleeHit, float64(hunter.Talents.Surefooted)*1*core.MeleeHitRatingPerHitChance)
 	hunter.AddStat(stats.SpellHit, float64(hunter.Talents.Surefooted)*1*core.SpellHitRatingPerHitChance)
 
-	hunter.AddStat(stats.MeleeCrit, float64(hunter.Talents.KillerInstinct)*1*core.CritRatingPerCritChance)
+	hunter.AddStat(stats.MeleeCrit, float64(hunter.Talents.LethalAttacks)*1*core.CritRatingPerCritChance)
 
-	if hunter.Talents.LethalShots > 0 {
-		lethalBonus := 1 * float64(hunter.Talents.LethalShots) * core.CritRatingPerCritChance
-		hunter.OnSpellRegistered(func(spell *core.Spell) {
-			if spell.Flags.Matches(SpellFlagShot) {
-				spell.BonusCritRating += lethalBonus
-			}
-		})
-		hunter.AutoAttacks.RangedConfig().BonusCritRating += lethalBonus
+	hunter.AddStat(stats.Parry, 2*float64(hunter.Talents.Deflection))
+
+	if hunter.Talents.CarefulAim > 0 {
+		// The tooltip only says Attack Power, but melee and ranged attack power are separate stats
+		// here and every other attack power buff feeds both, so Careful Aim does too.
+		apPerInt := 0.2 * float64(hunter.Talents.CarefulAim)
+		hunter.AddStatDependency(stats.Intellect, stats.AttackPower, apPerInt)
+		hunter.AddStatDependency(stats.Intellect, stats.RangedAttackPower, apPerInt)
 	}
 
 	if hunter.Talents.RangedWeaponSpecialization > 0 {
@@ -84,13 +90,18 @@ func (hunter *Hunter) ApplyTalents() {
 	}
 
 	if hunter.Talents.LightningReflexes > 0 {
-		agiBonus := 0.03 * float64(hunter.Talents.LightningReflexes)
+		agiBonus := 0.02 * float64(hunter.Talents.LightningReflexes)
 		hunter.MultiplyStat(stats.Agility, 1.0+agiBonus)
 	}
 
 	hunter.applyEfficiency()
-	hunter.applyTrapMastery()
+	hunter.applyResourcefulness()
+	hunter.applySurvivalTactics()
 	hunter.applyCleverTraps()
+	hunter.applySurvivalistsDiscipline()
+	hunter.applyPredatorsEdge()
+	hunter.applyRapidRecuperation()
+	hunter.applyExposePrey()
 }
 
 func (hunter *Hunter) applyFrenzy() {
@@ -168,18 +179,72 @@ func (hunter *Hunter) registerBestialWrathCD() {
 	})
 }
 
+// Bosses are immune to the stun, but the pet's next attack still gets the crit bonus, so
+// Intimidation is worth pressing on cooldown.
+func (hunter *Hunter) registerIntimidationCD() {
+	if !hunter.Talents.Intimidation {
+		return
+	}
+
+	actionID := core.ActionID{SpellID: 19577}
+	bonusCrit := 100.0 * core.CritRatingPerCritChance
+
+	hunter.IntimidationPetAura = hunter.pet.RegisterAura(core.Aura{
+		Label:    "Intimidation",
+		ActionID: actionID,
+		Duration: time.Second * 10,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Unit.AddStatDynamic(sim, stats.MeleeCrit, bonusCrit)
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Unit.AddStatDynamic(sim, stats.MeleeCrit, -bonusCrit)
+		},
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if result.Landed() {
+				aura.Deactivate(sim)
+			}
+		},
+	})
+
+	intimidation := hunter.RegisterSpell(core.SpellConfig{
+		ActionID: actionID,
+		Flags:    core.SpellFlagAPL,
+
+		ManaCost: core.ManaCostOptions{
+			BaseCost: 0.03,
+		},
+
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer: hunter.NewTimer(),
+				// The tooltip gives no cooldown, this is the Classic one.
+				Duration: time.Minute,
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			hunter.IntimidationPetAura.Activate(sim)
+		},
+	})
+
+	hunter.AddMajorCooldown(core.MajorCooldown{
+		Spell: intimidation,
+		Type:  core.CooldownTypeDPS,
+	})
+}
+
 func (hunter *Hunter) mortalShots() float64 {
 	return 0.06 * float64(hunter.Talents.MortalShots)
 }
 
-func (hunter *Hunter) applyTrapMastery() {
-	if hunter.Talents.TrapMastery == 0 {
+func (hunter *Hunter) applySurvivalTactics() {
+	if hunter.Talents.SurvivalTactics == 0 {
 		return
 	}
 
 	hunter.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.Flags.Matches(SpellFlagTrap) {
-			spell.BonusHitRating += 5 * float64(hunter.Talents.TrapMastery)
+			spell.BonusHitRating += 5 * float64(hunter.Talents.SurvivalTactics)
 		}
 	})
 }
@@ -196,11 +261,127 @@ func (hunter *Hunter) applyCleverTraps() {
 	})
 }
 
-func (hunter *Hunter) applyEfficiency() {
+func (hunter *Hunter) applySurvivalistsDiscipline() {
+	if hunter.Talents.SurvivalistsDiscipline == 0 {
+		return
+	}
+
+	multiplier := 1 - 0.2*float64(hunter.Talents.SurvivalistsDiscipline)
+
 	hunter.OnSpellRegistered(func(spell *core.Spell) {
-		// applies to Stings, Shots, and Volley
-		if spell.Cost != nil && spell.Flags.Matches(SpellFlagSting|SpellFlagShot) || spell.SpellCode == SpellCode_HunterVolley {
-			spell.Cost.Multiplier -= 2 * hunter.Talents.Efficiency
+		if spell.Flags.Matches(SpellFlagTrap) {
+			spell.CD.Duration = time.Duration(float64(spell.CD.Duration) * multiplier)
 		}
 	})
+}
+
+func (hunter *Hunter) applyEfficiency() {
+	if hunter.Talents.Efficiency == 0 {
+		return
+	}
+
+	hunter.OnSpellRegistered(func(spell *core.Spell) {
+		// applies to Shots, Stings and melee abilities
+		if spell.Cost == nil {
+			return
+		}
+		if spell.Flags.Matches(SpellFlagSting|SpellFlagShot) || spell.ProcMask.Matches(core.ProcMaskMeleeSpecial) {
+			spell.Cost.Multiplier -= 3 * hunter.Talents.Efficiency
+		}
+	})
+}
+
+func (hunter *Hunter) applyResourcefulness() {
+	if hunter.Talents.Resourcefulness == 0 {
+		return
+	}
+
+	// TODO: only rank 1 was observed, the cost reduction and the proc chance are assumed to scale per rank.
+	costReduction := 30 * hunter.Talents.Resourcefulness
+	procChance := 0.3 * float64(hunter.Talents.Resourcefulness)
+
+	hunter.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.Cost == nil {
+			return
+		}
+		if spell.Flags.Matches(SpellFlagTrap) || spell.ProcMask.Matches(core.ProcMaskMeleeSpecial) {
+			spell.Cost.Multiplier -= costReduction
+		}
+	})
+
+	procAura := hunter.RegisterAura(core.Aura{
+		Label:    "Resourcefulness",
+		ActionID: core.ActionID{SpellID: 34491},
+		Duration: time.Second * 30,
+	}).AttachAdditivePseudoStatBuff(&hunter.PseudoStats.SpiritRegenRateCasting, 0.5)
+
+	core.MakePermanent(hunter.RegisterAura(core.Aura{
+		Label: "Resourcefulness Trigger",
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if result.DidCrit() && sim.Proc(procChance, "Resourcefulness") {
+				procAura.Activate(sim)
+			}
+		},
+	}))
+}
+
+func (hunter *Hunter) applyPredatorsEdge() {
+	if hunter.Talents.PredatorsEdge == 0 {
+		return
+	}
+
+	critDamageBonus := 0.06 * float64(hunter.Talents.PredatorsEdge)
+	ohMultiplier := 1 + 0.1*float64(hunter.Talents.PredatorsEdge)
+
+	hunter.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.DefenseType == core.DefenseTypeMelee {
+			spell.CritDamageBonus += critDamageBonus
+		}
+		if spell.ProcMask.Matches(core.ProcMaskMeleeOH) && spell.BonusCoefficient > 0 {
+			spell.DamageMultiplier *= ohMultiplier
+		}
+	})
+}
+
+// Only the Serpent Sting half is modelled, nothing dies mid fight to hand out Rapid Killing.
+func (hunter *Hunter) applyRapidRecuperation() {
+	if hunter.Talents.RapidRecuperation == 0 {
+		return
+	}
+
+	// TODO: only rank 1 was observed, the regeneration is assumed to scale per rank.
+	procAura := hunter.RegisterAura(core.Aura{
+		Label:    "Rapid Recuperation",
+		ActionID: core.ActionID{SpellID: 53232},
+		Duration: time.Second * 15,
+	}).AttachAdditivePseudoStatBuff(&hunter.PseudoStats.SpiritRegenRateCasting, 0.25*float64(hunter.Talents.RapidRecuperation))
+
+	core.MakePermanent(hunter.RegisterAura(core.Aura{
+		Label: "Rapid Recuperation Trigger",
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if spell.SpellCode == SpellCode_HunterSerpentSting && result.Landed() {
+				procAura.Activate(sim)
+			}
+		},
+	}))
+}
+
+func (hunter *Hunter) applyExposePrey() {
+	if hunter.Talents.ExposePrey == 0 {
+		return
+	}
+
+	procChance := 0.05 * float64(hunter.Talents.ExposePrey)
+
+	core.MakePermanent(hunter.RegisterAura(core.Aura{
+		Label: "Expose Prey",
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if !result.Landed() || !result.Target.HasActiveAuraWithTag(core.HuntersMarkAuraTag) {
+				return
+			}
+			if sim.Proc(procChance, "Expose Prey") {
+				hunter.DefensiveState.Activate(sim)
+			}
+		},
+	}))
 }

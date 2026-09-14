@@ -352,22 +352,10 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 					label: 'Armor',
 					effects: [
 						{
+							// TODO: assumed baseline, beta will confirm.
 							label: 'Improved Devotion Aura',
 							actionId: ActionId.fromSpellId(20140),
-							playerData: playerClassAndTalent(
-								Class.ClassPaladin,
-								'improvedDevotionAura',
-								player => player.getSpecOptions().aura == PaladinAura.DevotionAura,
-							),
-						},
-						{
-							label: 'Devotion Aura',
-							actionId: ActionId.fromSpellId(48942),
-							playerData: playerClassAndMissingTalent(
-								Class.ClassPaladin,
-								'improvedDevotionAura',
-								player => player.getSpecOptions().aura == PaladinAura.DevotionAura,
-							),
+							playerData: playerClass(Class.ClassPaladin, player => player.getSpecOptions().aura == PaladinAura.DevotionAura),
 						},
 						{
 							label: 'Scroll of Protection',
@@ -453,18 +441,8 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 						{
 							label: 'Improved Battle Shout',
 							actionId: ActionId.fromSpellId(12861),
-							playerData: playerClassAndTalent(
+							playerData: playerClass(
 								Class.ClassWarrior,
-								'improvedBattleShout',
-								player => player.getSpecOptions().shout == WarriorShout.WarriorShoutBattle,
-							),
-						},
-						{
-							label: 'Battle Shout',
-							actionId: ActionId.fromSpellId(47436),
-							playerData: playerClassAndMissingTalent(
-								Class.ClassWarrior,
-								'improvedBattleShout',
 								player => player.getSpecOptions().shout == WarriorShout.WarriorShoutBattle,
 							),
 						},
@@ -494,14 +472,10 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 					label: 'MP5',
 					effects: [
 						{
+							// TODO: assumed baseline, beta will confirm.
 							label: 'Improved Blessing of Wisdom',
 							actionId: ActionId.fromSpellId(20245),
-							playerData: playerClassAndTalent(Class.ClassPaladin, 'improvedBlessingOfWisdom'),
-						},
-						{
-							label: 'Blessing of Wisdom',
-							actionId: ActionId.fromSpellId(48938),
-							playerData: playerClassAndMissingTalent(Class.ClassPaladin, 'improvedBlessingOfWisdom'),
+							playerData: playerClass(Class.ClassPaladin),
 						},
 					],
 				},
@@ -641,12 +615,7 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 						{
 							label: 'Improved Demoralizing Shout',
 							actionId: ActionId.fromSpellId(12879),
-							playerData: playerClassAndTalent(Class.ClassWarrior, 'improvedDemoralizingShout'),
-						},
-						{
-							label: 'Demoralizing Shout',
-							actionId: ActionId.fromSpellId(11556),
-							playerData: playerClassAndMissingTalent(Class.ClassWarrior, 'improvedDemoralizingShout'),
+							playerData: playerClass(Class.ClassWarrior),
 						},
 						{
 							label: 'Improved Demoralizing Roar',
