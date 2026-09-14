@@ -175,14 +175,74 @@ func applyRaceEffects(agent Agent) {
 		if !forever {
 			character.AddStat(stats.ShadowResistance, 10)
 		}
+	case proto.Race_RaceSkyborneHighOrder, proto.Race_RaceSkyborneWindshaper:
+		// Wind Blessed
+		character.PseudoStats.MeleeSpeedMultiplier *= 1.01
+		character.PseudoStats.RangedSpeedMultiplier *= 1.01
+		character.PseudoStats.CastSpeedMultiplier *= 1.01
+
+		// Elemental Insight
+		character.mobTypeDamageAura(proto.MobType_MobTypeElemental, 1.05)
+
+		if character.Race == proto.Race_RaceSkyborneWindshaper {
+			character.registerWindshaper()
+		}
+		// The High Order racial is a health and mana regeneration cooldown, which does
+		// nothing the sim measures, so it is left out.
 	}
+}
+
+// Windshaper, the Horde half of the Skyborne. The Alliance half gets a regen cooldown
+// in its place.
+func (character *Character) registerWindshaper() {
+	actionID := ActionID{SpellID: 460530}
+
+	var attackPower, spellPower float64
+	aura := character.RegisterAura(Aura{
+		Label:    "Windshaper",
+		ActionID: actionID,
+		Duration: time.Second * 15,
+		OnGain: func(aura *Aura, sim *Simulation) {
+			attackPower = character.GetStat(stats.AttackPower) * 0.1
+			spellPower = character.GetStat(stats.SpellPower) * 0.1
+			character.AddStatDynamic(sim, stats.AttackPower, attackPower)
+			character.AddStatDynamic(sim, stats.SpellPower, spellPower)
+		},
+		OnExpire: func(aura *Aura, sim *Simulation) {
+			character.AddStatDynamic(sim, stats.AttackPower, -attackPower)
+			character.AddStatDynamic(sim, stats.SpellPower, -spellPower)
+		},
+	})
+
+	spell := character.RegisterSpell(SpellConfig{
+		ActionID: actionID,
+		Flags:    SpellFlagNoOnCastComplete,
+		Cast: CastConfig{
+			CD: Cooldown{
+				Timer:    character.NewTimer(),
+				Duration: time.Minute * 3,
+			},
+		},
+		ApplyEffects: func(sim *Simulation, _ *Unit, _ *Spell) {
+			aura.Activate(sim)
+		},
+	})
+
+	character.AddMajorCooldown(MajorCooldown{
+		Spell: spell,
+		Type:  CooldownTypeDPS,
+	})
 }
 
 // Troll Beast Slaying, and Dwarf Big Game Hunter under Forever.
 func (character *Character) beastSlayingAura(multiplier float64) {
+	character.mobTypeDamageAura(proto.MobType_MobTypeBeast, multiplier)
+}
+
+func (character *Character) mobTypeDamageAura(mobType proto.MobType, multiplier float64) {
 	character.Env.RegisterPostFinalizeEffect(func() {
 		for _, t := range character.Env.Encounter.Targets {
-			if t.MobType == proto.MobType_MobTypeBeast {
+			if t.MobType == mobType {
 				for _, at := range character.AttackTables[t.UnitIndex] {
 					at.DamageDealtMultiplier *= multiplier
 					at.CritMultiplier *= multiplier
@@ -294,9 +354,9 @@ func makeBerserkingCooldown(character *Character, customPercentage float64, time
 }
 
 func (character *Character) GetFaction() proto.Faction {
-	if slices.Contains([]proto.Race{proto.Race_RaceHuman, proto.Race_RaceDwarf, proto.Race_RaceGnome, proto.Race_RaceNightElf}, character.Race) {
+	if slices.Contains([]proto.Race{proto.Race_RaceHuman, proto.Race_RaceDwarf, proto.Race_RaceGnome, proto.Race_RaceNightElf, proto.Race_RaceSkyborneHighOrder}, character.Race) {
 		return proto.Faction_Alliance
-	} else if slices.Contains([]proto.Race{proto.Race_RaceOrc, proto.Race_RaceTroll, proto.Race_RaceTauren, proto.Race_RaceUndead}, character.Race) {
+	} else if slices.Contains([]proto.Race{proto.Race_RaceOrc, proto.Race_RaceTroll, proto.Race_RaceTauren, proto.Race_RaceUndead, proto.Race_RaceSkyborneWindshaper}, character.Race) {
 		return proto.Faction_Horde
 	} else {
 		return proto.Faction_Unknown
