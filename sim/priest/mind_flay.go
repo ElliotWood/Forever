@@ -75,7 +75,8 @@ func (priest *Priest) newMindFlaySpellConfig(rank int, tickIdx int32) core.Spell
 			},
 		},
 
-		DamageMultiplier: 1,
+		// TODO: only rank 1 of Improved Mind Flay was shown, beta will confirm the rank 2 value
+		DamageMultiplier: 1 + 0.1*float64(priest.Talents.ImprovedMindFlay),
 		ThreatMultiplier: 1,
 
 		Dot: core.DotConfig{
@@ -97,7 +98,7 @@ func (priest *Priest) newMindFlaySpellConfig(rank int, tickIdx int32) core.Spell
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			result := spell.CalcOutcome(sim, target, spell.OutcomeMagicHit)
 			if result.Landed() {
-				priest.AddShadowWeavingStack(sim, target)
+				priest.AddShadowWeavingStack(sim)
 				spell.Dot(target).Apply(sim)
 			}
 			spell.DealOutcome(sim, result)

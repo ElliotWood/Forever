@@ -384,14 +384,10 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 					label: 'Stamina',
 					effects: [
 						{
+							// Improved Power Word: Fortitude is gone from the Forever trees and is assumed to be baseline.
 							label: 'Improved Power Word Fortitude',
 							actionId: ActionId.fromSpellId(14767),
-							playerData: playerClassAndTalent(Class.ClassPriest, 'improvedPowerWordFortitude'),
-						},
-						{
-							label: 'Power Word Fortitude',
-							actionId: ActionId.fromSpellId(48161),
-							playerData: playerClassAndMissingTalent(Class.ClassPriest, 'improvedPowerWordFortitude'),
+							playerData: playerClass(Class.ClassPriest),
 						},
 						{
 							label: 'Scroll of Stamina',

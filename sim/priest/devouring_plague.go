@@ -50,8 +50,10 @@ func (priest *Priest) getDevouringPlagueConfig(rank int, cdTimer *core.Timer) co
 		Rank:          rank,
 		RequiredLevel: level,
 
+		// TODO: only rank 1 of Devouring Contagion was shown, beta will confirm the rank 2 value
 		ManaCost: core.ManaCostOptions{
-			FlatCost: manaCost,
+			FlatCost:   manaCost,
+			Multiplier: 100 - 25*priest.Talents.DevouringContagion,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -86,7 +88,7 @@ func (priest *Priest) getDevouringPlagueConfig(rank int, cdTimer *core.Timer) co
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			result := spell.CalcOutcome(sim, target, spell.OutcomeMagicHitNoHitCounter)
 			if result.Landed() {
-				priest.AddShadowWeavingStack(sim, target)
+				priest.AddShadowWeavingStack(sim)
 				spell.Dot(target).Apply(sim)
 			}
 			spell.DealOutcome(sim, result)
