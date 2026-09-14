@@ -3,31 +3,32 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5
         with:
           go-version: 1.23.x
 
       - name: Install Protoc
-        uses: arduino/setup-protoc@v1
+        uses: arduino/setup-protoc@v3
         with:
-          version: 3.x
+          version: '25.x'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Protoc Go plugin
         run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '19'
+          node-version: '20'
 
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v4
 
       - name: Build 🔧
         run: |
@@ -37,12 +38,25 @@ jobs:
         run: |
           make test
 
-      - name: Deploy for Cloudflare 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+      # The pages link their assets as /classic/..., so classic has to sit at the site
+      # root rather than being the root itself. dist is that root.
+      - name: Add root redirect
+        run: cp deploy/_redirects dist/_redirects
+
+      # pages deploy expects the project to exist. Creating it is idempotent in effect
+      # rather than in fact - it fails once the project is there - so the failure is
+      # ignored and the deploy below is what actually has to succeed.
+      - name: Ensure the Pages project exists
+        continue-on-error: true
+        uses: cloudflare/wrangler-action@v3
         with:
-            repository-name: wowsims/pages-deploy
-            branch: main
-            folder: dist/classic
-            target-folder: classic
-            single-commit: true
-            token: ${{ secrets.DEPLOY_REPO_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages project create forever-sim --production-branch=master
+
+      - name: Deploy to Cloudflare Pages 🚀
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=forever-sim --branch=master

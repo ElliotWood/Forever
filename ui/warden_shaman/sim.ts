@@ -197,10 +197,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWardenShaman, {
 
 	raidSimPresets: [
 		{
-			spec: Spec.SpecBalanceDruid,
-			tooltip: specNames[Spec.SpecBalanceDruid],
-			defaultName: 'Balance',
-			iconUrl: getSpecIcon(Class.ClassDruid, 0),
+			spec: Spec.SpecWardenShaman,
+			tooltip: specNames[Spec.SpecWardenShaman],
+			defaultName: 'Warden',
+			iconUrl: getSpecIcon(Class.ClassShaman, 1),
 
 			talents: Presets.DefaultTalents.data,
 			specOptions: Presets.DefaultOptions,
@@ -208,13 +208,17 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWardenShaman, {
 			otherDefaults: Presets.OtherDefaults,
 			defaultFactionRaces: {
 				[Faction.Unknown]: Race.RaceUnknown,
-				[Faction.Alliance]: Race.RaceNightElf,
-				[Faction.Horde]: Race.RaceTauren,
+				[Faction.Alliance]: Race.RaceDwarf,
+				[Faction.Horde]: Race.RaceOrc,
 			},
 			defaultGear: {
 				[Faction.Unknown]: {},
-				[Faction.Alliance]: {},
-				[Faction.Horde]: {},
+				[Faction.Alliance]: {
+					1: Presets.DefaultGear.gear,
+				},
+				[Faction.Horde]: {
+					1: Presets.DefaultGear.gear,
+				},
 			},
 		},
 	],

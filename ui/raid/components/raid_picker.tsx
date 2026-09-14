@@ -7,7 +7,7 @@ import { EnumPicker } from '../../core/components/enum_picker.js';
 import { MAX_PARTY_SIZE, Party } from '../../core/party.js';
 import { Player } from '../../core/player.js';
 import { Player as PlayerProto } from '../../core/proto/api.js';
-import { Class, Faction, Profession, Spec } from '../../core/proto/common.js';
+import { Class, EquipmentSpec, Faction, Profession, Spec } from '../../core/proto/common.js';
 import { BalanceDruid_Options as BalanceDruidOptions } from '../../core/proto/druid.js';
 import { cssClassForClass, isTankSpec, newUnitReference, playerToSpec, specToClass } from '../../core/proto_utils/utils.js';
 import { Raid } from '../../core/raid.js';
@@ -85,8 +85,13 @@ export class RaidPicker extends Component {
 			},
 		});
 
-		const latestPhaseWithAllPresets = Math.min(
-			...playerPresets.map(preset => Math.max(...Object.keys(preset.defaultGear[Faction.Alliance]).map(k => parseInt(k)))),
+		// A preset with no default gear for the faction contributes Math.max() of nothing,
+		// which is -Infinity, and Array(-Infinity) throws before the raid picker has drawn
+		// a single party slot. Floor it at one phase so a missing gear set costs that
+		// preset its phases rather than costing the page everything below this line.
+		const latestPhaseWithAllPresets = Math.max(
+			1,
+			Math.min(...playerPresets.map(preset => Math.max(1, ...Object.keys(preset.defaultGear[Faction.Alliance]).map(k => parseInt(k))))),
 		);
 		new EnumPicker<NewPlayerPicker>(raidControls, this.newPlayerPicker, {
 			id: 'raid-picker-gear',
@@ -639,6 +644,20 @@ class PlayerEditorModal<SpecType extends Spec> extends BaseModal {
 	}
 }
 
+// Every preset's gear is keyed by the phase it was authored for, and most only carry
+// one. Asking for a phase a preset has no entry for used to hand lookupEquipmentSpec an
+// undefined spec, which throws inside the promise and leaves the player naked - the raid
+// sim then runs a raid of unequipped characters. Take the best phase at or below the one
+// asked for instead, and failing that the earliest the preset has.
+function gearForPhase(byPhase: Record<number, EquipmentSpec>, phase: number): EquipmentSpec | null {
+	const phases = Object.keys(byPhase)
+		.map(k => parseInt(k))
+		.sort((a, b) => a - b);
+	if (!phases.length) return null;
+	const atOrBelow = phases.filter(p => p <= phase);
+	return byPhase[atOrBelow.length ? atOrBelow[atOrBelow.length - 1] : phases[0]];
+}
+
 class NewPlayerPicker extends Component {
 	readonly raidPicker: RaidPicker;
 
@@ -699,12 +718,13 @@ class NewPlayerPicker extends Component {
 
 						// Need to wait because the gear might not be loaded yet.
 						this.raidPicker.raid.sim.waitForInit().then(() => {
-							newPlayer.setGear(
-								eventID,
-								this.raidPicker.raid.sim.db.lookupEquipmentSpec(
-									matchingPreset.defaultGear[this.raidPicker.getCurrentFaction()][this.raidPicker.getCurrentPhase()],
-								),
+							const gear = gearForPhase(
+								matchingPreset.defaultGear[this.raidPicker.getCurrentFaction()],
+								this.raidPicker.getCurrentPhase(),
 							);
+							if (gear) {
+								newPlayer.setGear(eventID, this.raidPicker.raid.sim.db.lookupEquipmentSpec(gear));
+							}
 						});
 
 						this.raidPicker.setDragPlayer(newPlayer, NEW_PLAYER, DragType.New);
