@@ -86,10 +86,12 @@ var TalentsDemonicPact = "2-0055003231101001351-0550005003"
 var TalentsAffliction = "2325002013500135--0550105003"
 var TalentsDSRuin = "23250020133-0320003201-0550105003"
 
-// The raid debuff version of ISB is a Classic mechanic, in Forever it's personal to each warlock.
+// Improved Shadow Bolt and Shadow Weaving are raid debuffs in Classic. In Forever both are
+// personal to the caster, so nobody supplies them to the raid.
 var ForeverDebuffs = func() *proto.Debuffs {
 	debuffs := googleProto.Clone(core.FullDebuffs).(*proto.Debuffs)
 	debuffs.ImprovedShadowBolt = false
+	debuffs.ShadowWeaving = false
 	return debuffs
 }()
 
