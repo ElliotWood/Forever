@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-GarmentsoftheOracle"
  value: {
-  dps: 776.18798
-  tps: 704.25285
+  dps: 764.00225
+  tps: 695.9765
  }
 }
 dps_results: {
@@ -153,13 +153,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestP1Shadow-Phase1-AllItems-VestmentsofFaith"
- value: {
-  dps: 738.542
-  tps: 670.25471
- }
-}
-dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofProphecy"
  value: {
   dps: 700.7216
@@ -169,8 +162,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofTranscendence"
  value: {
-  dps: 722.54706
-  tps: 655.86233
+  dps: 751.19278
+  tps: 682.57485
  }
 }
 dps_results: {

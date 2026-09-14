@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestP1TankWarrior-Phase1-AllItems-BattlegearofWrath"
  value: {
-  dps: 672.8432
-  tps: 1229.28674
+  dps: 710.42802
+  tps: 1290.31554
  }
 }
 dps_results: {
@@ -127,15 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestP1TankWarrior-Phase1-AllItems-Conqueror'sBattlegear"
  value: {
-  dps: 746.6545
-  tps: 1346.15271
- }
-}
-dps_results: {
- key: "TestP1TankWarrior-Phase1-AllItems-Dreadnaught'sBattlegear"
- value: {
-  dps: 719.33187
-  tps: 1301.39212
+  dps: 741.6662
+  tps: 1339.01646
  }
 }
 dps_results: {

@@ -132,13 +132,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestP1Hunter-Phase1-AllItems-CryptstalkerArmor"
- value: {
-  dps: 1133.21977
-  tps: 964.92038
- }
-}
-dps_results: {
  key: "TestP1Hunter-Phase1-AllItems-DevilsaurEye-19991"
  value: {
   dps: 860.67632
@@ -155,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Hunter-Phase1-AllItems-DragonstalkerArmor"
  value: {
-  dps: 932.84179
-  tps: 756.90428
+  dps: 883.39915
+  tps: 708.9471
  }
 }
 dps_results: {
@@ -232,8 +225,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Hunter-Phase1-AllItems-Striker'sGarb"
  value: {
-  dps: 910.46805
-  tps: 735.95384
+  dps: 864.19562
+  tps: 689.62934
  }
 }
 dps_results: {

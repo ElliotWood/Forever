@@ -120,8 +120,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 726.01866
-  tps: 505.94459
+  dps: 709.07891
+  tps: 496.7022
  }
 }
 dps_results: {
@@ -129,13 +129,6 @@ dps_results: {
  value: {
   dps: 633.1488
   tps: 444.11643
- }
-}
-dps_results: {
- key: "TestEnhancement-Phase1-AllItems-TheEarthshatterer"
- value: {
-  dps: 607.01101
-  tps: 429.33196
  }
 }
 dps_results: {
@@ -148,8 +141,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 647.65592
-  tps: 452.8265
+  dps: 716.99811
+  tps: 501.63994
  }
 }
 dps_results: {
