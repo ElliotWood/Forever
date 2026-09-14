@@ -108,9 +108,7 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	improvedShadowBolt: true,
 	judgementOfWisdom: true,
-	wintersChill: true,
 });
 
 export const OtherDefaults = {

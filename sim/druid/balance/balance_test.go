@@ -23,7 +23,7 @@ func TestP1Balance(t *testing.T) {
 			Talents:     P1Talents,
 			GearSet:     core.GetGearSet("../../../ui/balance_druid/gear_sets", "p0.bis"),
 			Rotation:    core.GetAplRotation("../../../ui/balance_druid/apls", "p1"),
-			Buffs:       core.FullBuffs,
+			Buffs:       core.ForeverBuffs,
 			Consumes:    P1Consumes,
 			SpecOptions: core.SpecOptionsCombo{Label: "Default", SpecOptions: PlayerOptionsAdaptive},
 

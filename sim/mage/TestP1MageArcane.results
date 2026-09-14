@@ -176,8 +176,8 @@ dps_results: {
 dps_results: {
  key: "TestP1MageArcane-Phase1-Average-Default"
  value: {
-  dps: 348.86885
-  tps: 262.4422
+  dps: 348.8692
+  tps: 262.44244
  }
 }
 dps_results: {

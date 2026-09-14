@@ -23,7 +23,7 @@ func TestRetribution(t *testing.T) {
 			GearSet:        core.GetGearSet("../../../ui/retribution_paladin/gear_sets", "blank"),
 			Rotation:       core.GetAplRotation("../../../ui/retribution_paladin/apls", "basic_ret"),
 			OtherRotations: []core.RotationCombo{core.GetAplRotation("../../../ui/retribution_paladin/apls", "basic_ret")},
-			Buffs:          core.FullBuffs,
+			Buffs:          core.ForeverBuffs,
 			Consumes:       Phase5Consumes,
 			SpecOptions:    core.SpecOptionsCombo{Label: "P5 Seal of Righteousness Ret", SpecOptions: PlayerOptionsSealofRighteousness},
 
