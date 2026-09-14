@@ -22,7 +22,7 @@ func TestProtection(t *testing.T) {
 			Talents:     Phase4ProtTalents,
 			GearSet:     core.GetGearSet("../../../ui/protection_paladin/gear_sets", "blank"),
 			Rotation:    core.GetAplRotation("../../../ui/protection_paladin/apls", "basic_prot"),
-			Buffs:       core.FullBuffs,
+			Buffs:       core.ForeverBuffs,
 			Consumes:    Phase4Consumes,
 			SpecOptions: core.SpecOptionsCombo{Label: "Basic Prot Rotation", SpecOptions: PlayerOptionsSealofRighteousness},
 

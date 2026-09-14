@@ -147,7 +147,6 @@ export const DefaultDebuffs = Debuffs.create({
 	// Improved Hunter's Mark is gone from the Forever trees, assumed baseline rather than removed.
 	// TODO: assumed baseline, beta will confirm
 	huntersMark: TristateEffect.TristateEffectImproved,
-	improvedScorch: true,
 	judgementOfWisdom: true,
 	stormstrike: false,
 	sunderArmor: true,

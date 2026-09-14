@@ -23,7 +23,7 @@ func TestP1Hunter(t *testing.T) {
 			Talents:     P1Talents,
 			GearSet:     core.GetGearSet("../../ui/hunter/gear_sets", "p0.bis"),
 			Rotation:    core.GetAplRotation("../../ui/hunter/apls", "p1"),
-			Buffs:       core.FullBuffs,
+			Buffs:       core.ForeverBuffs,
 			Consumes:    P1Consumes,
 			SpecOptions: core.SpecOptionsCombo{Label: "Hunter", SpecOptions: P1PlayerOptions},
 

@@ -135,7 +135,6 @@ export const DefaultDebuffs = Debuffs.create({
 	sunderArmor: true,
 	judgementOfWisdom: true,
 	judgementOfTheCrusader: TristateEffect.TristateEffectImproved,
-	improvedScorch: true,
 });
 
 export const OtherDefaults = {

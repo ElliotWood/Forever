@@ -50,8 +50,8 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestAssassinationMutilate-Phase5-StatWeights-Default"
  value: {
-  weights: 0.3289
-  weights: 0.62708
+  weights: 0.32886
+  weights: 0.62704
   weights: 0
   weights: 0
   weights: 0
@@ -67,9 +67,9 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.26
-  weights: 7.71183
-  weights: 3.6947
+  weights: 0.25997
+  weights: 7.68335
+  weights: 3.56801
   weights: 0
   weights: 0
   weights: 0
@@ -99,57 +99,57 @@ stat_weights_results: {
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-BloodfangArmor"
  value: {
-  dps: 887.80267
-  tps: 630.3399
+  dps: 888.27051
+  tps: 630.67206
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-BonescytheArmor"
  value: {
-  dps: 943.6391
-  tps: 668.13213
+  dps: 943.72714
+  tps: 668.19464
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-Champion'sGuard"
  value: {
-  dps: 825.74053
-  tps: 586.27578
+  dps: 825.75593
+  tps: 586.28671
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-DarkmantleArmor"
  value: {
-  dps: 881.24208
-  tps: 625.68188
+  dps: 881.41787
+  tps: 625.80669
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-Deathdealer'sEmbrace"
  value: {
-  dps: 889.19032
-  tps: 631.32513
+  dps: 889.80792
+  tps: 631.76362
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-EmblemsofVeiledShadows"
  value: {
-  dps: 842.52651
-  tps: 598.19382
+  dps: 842.56205
+  tps: 598.21906
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-FieldMarshal'sVestments"
  value: {
-  dps: 858.37713
-  tps: 609.44776
+  dps: 858.30527
+  tps: 609.39674
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-LieutenantCommander'sGuard"
  value: {
-  dps: 825.74053
-  tps: 586.27578
+  dps: 825.75593
+  tps: 586.28671
  }
 }
 dps_results: {
@@ -162,22 +162,22 @@ dps_results: {
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-NightslayerArmor"
  value: {
-  dps: 839.46986
-  tps: 596.0236
+  dps: 838.75193
+  tps: 595.51387
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-AllItems-Warlord'sVestments"
  value: {
-  dps: 858.37713
-  tps: 609.44776
+  dps: 858.30527
+  tps: 609.39674
  }
 }
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-Average-Default"
  value: {
-  dps: 838.1327
-  tps: 595.07421
+  dps: 838.13383
+  tps: 595.07502
  }
 }
 dps_results: {
@@ -267,7 +267,7 @@ dps_results: {
 dps_results: {
  key: "TestAssassinationMutilate-Phase5-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 655.63465
-  tps: 465.5006
+  dps: 655.63417
+  tps: 465.50026
  }
 }

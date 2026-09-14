@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.13668
+  weights: 0.12538
   weights: 0
-  weights: 0.5191
-  weights: 0
-  weights: 0
+  weights: 0.4655
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.5191
   weights: 0
-  weights: 6.14726
-  weights: 6.79492
+  weights: 0
+  weights: 0.4655
+  weights: 0
+  weights: 5.73599
+  weights: 6.08759
   weights: 0
   weights: 0
   weights: 0
@@ -99,113 +99,113 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-Champion'sInvestiture"
  value: {
-  dps: 835.93783
-  tps: 759.80939
+  dps: 751.14714
+  tps: 683.49777
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-Champion'sRaiment"
  value: {
-  dps: 827.24103
-  tps: 753.51692
+  dps: 743.35256
+  tps: 678.01729
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-Confessor'sRaiment"
  value: {
-  dps: 807.83152
-  tps: 734.79508
+  dps: 726.01995
+  tps: 661.16466
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-FieldMarshal'sRaiment"
  value: {
-  dps: 872.00993
-  tps: 793.33539
+  dps: 783.60627
+  tps: 713.7721
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-GarmentsoftheOracle"
  value: {
-  dps: 870.3939
-  tps: 789.03817
+  dps: 781.8982
+  tps: 709.39204
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 744.16642
-  tps: 678.95785
+  dps: 668.80392
+  tps: 611.13161
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-LieutenantCommander'sInvestiture"
  value: {
-  dps: 835.93783
-  tps: 759.80939
+  dps: 751.14714
+  tps: 683.49777
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-LieutenantCommander'sRaiment"
  value: {
-  dps: 827.24103
-  tps: 753.51692
+  dps: 743.35256
+  tps: 678.01729
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofFaith"
  value: {
-  dps: 746.01162
-  tps: 676.97736
+  dps: 670.4463
+  tps: 608.96858
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofProphecy"
  value: {
-  dps: 769.55809
-  tps: 698.17152
+  dps: 691.60489
+  tps: 628.01364
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofTranscendence"
  value: {
-  dps: 759.64814
-  tps: 689.2533
+  dps: 682.64627
+  tps: 619.95162
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-Warlord'sRaiment"
  value: {
-  dps: 872.00993
-  tps: 793.33539
+  dps: 783.60627
+  tps: 713.7721
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Average-Default"
  value: {
-  dps: 869.87328
-  tps: 791.68795
+  dps: 779.48105
+  tps: 710.33495
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 856.62304
-  tps: 931.49315
+  dps: 769.14374
+  tps: 852.76179
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 856.62304
-  tps: 778.98735
+  dps: 769.14374
+  tps: 700.25599
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 819.62919
-  tps: 743.55016
+  dps: 747.6
+  tps: 678.72389
  }
 }
 dps_results: {
@@ -232,22 +232,22 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 862.47393
-  tps: 956.22635
+  dps: 775.04154
+  tps: 877.5372
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 862.47393
-  tps: 785.22653
+  dps: 775.04154
+  tps: 706.53738
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 838.68036
-  tps: 760.83524
+  dps: 765.01777
+  tps: 694.53891
  }
 }
 dps_results: {
@@ -274,7 +274,7 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 862.47393
-  tps: 785.22653
+  dps: 775.04154
+  tps: 706.53738
  }
 }
