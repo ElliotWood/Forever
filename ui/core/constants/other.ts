@@ -1,5 +1,10 @@
 import { Stat } from '../proto/common';
 
+// These are Classic Era's six content tiers, from Molten Core through Naxxramas, and the
+// gear sets and encounters are named against them. Forever runs its own roadmap - Barrow
+// Deeps and Hyjal Summit rather than BWL and Naxx - so a preset labelled Phase5 means
+// Classic's fifth tier, not Forever's. Renaming these has to wait for Forever tiers that
+// actually have gear behind them.
 export enum Phase {
 	Phase1 = 1,
 	Phase2,
