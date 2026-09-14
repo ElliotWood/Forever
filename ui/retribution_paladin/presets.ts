@@ -25,6 +25,7 @@ import { PaladinAura, PaladinOptions as RetributionPaladinOptions, PaladinSeal }
 import { SavedTalents } from '../core/proto/ui.js';
 import APLBasicRetJson from './apls/basic_ret.apl.json';
 import BlankGear from './gear_sets/blank.gear.json';
+import LaunchGearJSON from './gear_sets/launch.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -34,11 +35,14 @@ import BlankGear from './gear_sets/blank.gear.json';
 //                                 Gear Presets
 ///////////////////////////////////////////////////////////////////////////
 
+export const GearLaunch = PresetUtils.makePresetGear('Launch', LaunchGearJSON);
 export const GearBlank = PresetUtils.makePresetGear('Blank', BlankGear);
 
-export const GearPresets = {};
+export const GearPresets = {
+	[ClassicPhase.Phase1]: [GearLaunch],
+};
 
-export const DefaultGear = GearBlank;
+export const DefaultGear = GearPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 APL Presets
