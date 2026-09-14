@@ -26,10 +26,10 @@ func (druid *Druid) registerShredSpell() {
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
 		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagOmen | SpellFlagBuilder,
+		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagBuilder,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost:   60 - 6*float64(druid.Talents.ImprovedShred),
+			Cost:   60 - 6*float64(druid.Talents.ShreddingAttacks),
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{

@@ -70,7 +70,7 @@ func (priest *Priest) getMindBlastBaseConfig(rank int, cdTimer *core.Timer) core
 			result := spell.CalcDamage(sim, target, sim.Roll(baseDamageLow, baseDamageHigh), spell.OutcomeMagicHitAndCrit)
 
 			if result.Landed() {
-				priest.AddShadowWeavingStack(sim, target)
+				priest.AddShadowWeavingStack(sim)
 			}
 			spell.DealDamage(sim, result)
 		},

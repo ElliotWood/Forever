@@ -11,21 +11,23 @@ import (
 func (priest *Priest) ApplyTalents() {
 	// Discipline
 	priest.registerInnerFocus()
+	priest.applyPowerInLight()
+	priest.applyTwinDisciplines()
+	priest.applyHolyPrecision()
 	priest.applyMentalAgility()
-	priest.applyForceOfWill()
 
 	if priest.Talents.SilentResolve > 0 {
-		priest.PseudoStats.ThreatMultiplier *= 1 - (.04 * float64(priest.Talents.SilentResolve))
+		priest.OnSpellRegistered(func(spell *core.Spell) {
+			if spell.Flags.Matches(SpellFlagPriest) && spell.SpellSchool.Matches(core.SpellSchoolHoly) {
+				spell.ThreatMultiplier *= 1 - .1*float64(priest.Talents.SilentResolve)
+			}
+		})
 	}
 
-	if priest.Talents.ImprovedPowerWordFortitude > 0 {
-		priest.MultiplyStat(stats.Stamina, 1.0+.15*float64(priest.Talents.ImprovedPowerWordFortitude))
-	}
-
-	priest.PseudoStats.SpiritRegenRateCasting = []float64{0.0, 0.17, 0.33, 0.5}[priest.Talents.Meditation]
+	priest.PseudoStats.SpiritRegenRateCasting = []float64{0.0, 0.17, 0.34, 0.51}[priest.Talents.Meditation]
 
 	if priest.Talents.MentalStrength > 0 {
-		priest.MultiplyStat(stats.Intellect, 1.0+0.02*float64(priest.Talents.MentalStrength))
+		priest.MultiplyStat(stats.Intellect, 1.0+0.03*float64(priest.Talents.MentalStrength))
 	}
 
 	// Holy
@@ -35,11 +37,13 @@ func (priest *Priest) ApplyTalents() {
 
 	priest.PseudoStats.SchoolDamageTakenMultiplier.MultiplyMagicSchools(1 - 0.02*float64(priest.Talents.SpellWarding))
 
+	// TODO: only rank 1 was shown, beta will confirm that the two halves scale at 5% and 1% per point
 	if priest.Talents.SpiritualGuidance > 0 {
-		priest.AddStatDependency(stats.Spirit, stats.SpellPower, 0.05*float64(priest.Talents.SpiritualGuidance))
+		priest.AddStatDependency(stats.Spirit, stats.HealingPower, 0.05*float64(priest.Talents.SpiritualGuidance))
+		priest.AddStatDependency(stats.Spirit, stats.SpellDamage, 0.01*float64(priest.Talents.SpiritualGuidance))
 	}
 
-	// Shadow
+	// Shadow Magic
 	priest.registerVampiricEmbraceSpell()
 	priest.registerShadowform()
 	priest.applySpiritTap()
@@ -49,27 +53,73 @@ func (priest *Priest) ApplyTalents() {
 	priest.applyDarkness()
 }
 
+// Smite and Penance hit harder while the target is burning from this priest's Holy Fire.
+// TODO: only rank 1 was shown, beta will confirm the 2% per point
+func (priest *Priest) applyPowerInLight() {
+	if priest.Talents.PowerInLight == 0 {
+		return
+	}
+
+	multiplier := 1 + 0.02*float64(priest.Talents.PowerInLight)
+	affectedSpellCodes := []int32{SpellCode_PriestSmite, SpellCode_PriestPenance}
+
+	for _, target := range priest.Env.Encounter.TargetUnits {
+		target.AddDynamicDamageTakenModifier(func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if spell.Unit == &priest.Unit && slices.Contains(affectedSpellCodes, spell.SpellCode) && priest.hasActiveHolyFire(result.Target) {
+				result.Damage *= multiplier
+			}
+		})
+	}
+}
+
+func (priest *Priest) hasActiveHolyFire(target *core.Unit) bool {
+	for _, spell := range priest.HolyFire {
+		if spell != nil && spell.Dot(target).IsActive() {
+			return true
+		}
+	}
+	return false
+}
+
+func (priest *Priest) applyTwinDisciplines() {
+	if priest.Talents.TwinDisciplines == 0 {
+		return
+	}
+
+	points := float64(priest.Talents.TwinDisciplines)
+	priest.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.Flags.Matches(SpellFlagPriest) && spell.DefaultCast.CastTime == 0 {
+			spell.DamageMultiplierAdditive += 0.01 * points
+		}
+	})
+}
+
+func (priest *Priest) applyHolyPrecision() {
+	if priest.Talents.HolyPrecision == 0 {
+		return
+	}
+
+	bonusHit := 6 * float64(priest.Talents.HolyPrecision) * core.SpellHitRatingPerHitChance
+	priest.OnSpellRegistered(func(spell *core.Spell) {
+		if spell.Flags.Matches(SpellFlagPriest) && spell.SpellSchool.Matches(core.SpellSchoolHoly) {
+			spell.BonusHitRating += bonusHit
+		}
+	})
+}
+
 func (priest *Priest) applyMentalAgility() {
 	if priest.Talents.MentalAgility == 0 {
 		return
 	}
 
+	affectedSpellCodes := []int32{SpellCode_PriestSmite, SpellCode_PriestHolyFire}
 	priest.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.Cost != nil && spell.Flags.Matches(SpellFlagPriest) && spell.DefaultCast.CastTime == 0 {
-			spell.Cost.Multiplier -= 2 * priest.Talents.MentalAgility
+		if spell.Cost == nil || !spell.Flags.Matches(SpellFlagPriest) {
+			return
 		}
-	})
-}
 
-func (priest *Priest) applyForceOfWill() {
-	if priest.Talents.ForceOfWill == 0 {
-		return
-	}
-
-	priest.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.Flags.Matches(SpellFlagPriest) {
-			spell.DamageMultiplierAdditive += 0.01 * float64(priest.Talents.ForceOfWill)
-			spell.BonusCritRating += 1 * float64(priest.Talents.ForceOfWill) * core.CritRatingPerCritChance
+		if spell.DefaultCast.CastTime == 0 || slices.Contains(affectedSpellCodes, spell.SpellCode) {
+			spell.Cost.Multiplier -= 3 * priest.Talents.MentalAgility
 		}
 	})
 }
@@ -113,16 +163,45 @@ func (priest *Priest) applyInspiration() {
 	})
 }
 
+// Searing Light now buffs every Holy spell and lets Holy Fire ticks refund the next Holy Nova.
 func (priest *Priest) applySearingLight() {
 	if priest.Talents.SearingLight == 0 {
 		return
 	}
 
-	priest.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.SpellCode == SpellCode_PriestSmite || spell.SpellCode == SpellCode_PriestHolyFire {
-			spell.DamageMultiplierAdditive += 0.05 * float64(priest.Talents.SearingLight)
-		}
+	points := float64(priest.Talents.SearingLight)
+	priest.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexHoly] *= 1 + 0.02*points
+
+	priest.SearingLightAura = priest.RegisterAura(core.Aura{
+		Label:    "Searing Light",
+		ActionID: core.ActionID{SpellID: 14909},
+		Duration: core.NeverExpires,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			if priest.HolyNova != nil {
+				priest.HolyNova.Cost.Multiplier -= 100
+			}
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			if priest.HolyNova != nil {
+				priest.HolyNova.Cost.Multiplier += 100
+			}
+		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			if spell.SpellCode == SpellCode_PriestHolyNova {
+				aura.Deactivate(sim)
+			}
+		},
 	})
+
+	procChance := 0.05 * points
+	core.MakePermanent(priest.RegisterAura(core.Aura{
+		Label: "Searing Light Trigger",
+		OnPeriodicDamageDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if spell.SpellCode == SpellCode_PriestHolyFire && sim.Proc(procChance, "Searing Light") {
+				priest.SearingLightAura.Activate(sim)
+			}
+		},
+	}))
 }
 
 func (priest *Priest) applySpiritTap() {
@@ -154,8 +233,8 @@ func (priest *Priest) applyShadowAffinity() {
 	}
 
 	priest.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.Flags.Matches(SpellFlagPriest) || spell.SpellSchool.Matches(core.SpellSchoolShadow) {
-			spell.ThreatMultiplier *= 1 - 0.08*float64(priest.Talents.ShadowAffinity)
+		if spell.Flags.Matches(SpellFlagPriest) && spell.SpellSchool.Matches(core.SpellSchoolShadow) {
+			spell.ThreatMultiplier *= 1 - 0.1*float64(priest.Talents.ShadowAffinity)
 		}
 	})
 }
@@ -165,50 +244,41 @@ func (priest *Priest) applyShadowFocus() {
 		return
 	}
 
-	bonusHit := 2 * float64(priest.Talents.ShadowFocus) * core.SpellHitRatingPerHitChance
+	bonusHit := 1 * float64(priest.Talents.ShadowFocus) * core.SpellHitRatingPerHitChance
 	priest.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.Flags.Matches(SpellFlagPriest) || spell.SpellSchool.Matches(core.SpellSchoolShadow) {
+		if spell.Flags.Matches(SpellFlagPriest) && spell.SpellSchool.Matches(core.SpellSchoolShadow) {
 			spell.BonusHitRating += bonusHit
 		}
 	})
 }
 
+// The raid debuff version of Shadow Weaving is a Classic mechanic, in Forever it buffs the priest instead.
 func (priest *Priest) applyShadowWeaving() {
 	if priest.Talents.ShadowWeaving == 0 {
 		return
 	}
 
-	priest.ShadowWeavingAuras = priest.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
-		return core.ShadowWeavingAura(unit, int(priest.Talents.ShadowWeaving))
-	})
+	priest.shadowWeavingProcChance = 0.33 * float64(priest.Talents.ShadowWeaving)
 
-	procChance := 0.2 * float64(priest.Talents.ShadowWeaving)
-
-	priest.ShadowWeavingProc = priest.GetOrRegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: core.ShadowWeavingSpellIDs[int(priest.Talents.ShadowWeaving)]},
-		Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagNoMetrics,
-		SpellSchool: core.SpellSchoolShadow,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMagicHit)
-			if !result.Landed() {
-				return
-			}
-
-			if procChance == 1.0 || sim.RollWithLabel(0, 1, "ShadowWeaving") < procChance {
-				priest.ShadowWeavingAuras.Get(target).Activate(sim)
-				priest.ShadowWeavingAuras.Get(target).AddStack(sim)
-			}
+	priest.ShadowWeavingAura = priest.RegisterAura(core.Aura{
+		Label:     "Shadow Weaving",
+		ActionID:  core.ActionID{SpellID: core.ShadowWeavingSpellIDs[int(priest.Talents.ShadowWeaving)]},
+		Duration:  time.Second * 15,
+		MaxStacks: 5,
+		OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= 1 + 0.02*float64(oldStacks)
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1 + 0.02*float64(newStacks)
 		},
 	})
 }
 
-func (priest *Priest) AddShadowWeavingStack(sim *core.Simulation, target *core.Unit) {
-	if priest.ShadowWeavingProc == nil {
+func (priest *Priest) AddShadowWeavingStack(sim *core.Simulation) {
+	if priest.ShadowWeavingAura == nil || !sim.Proc(priest.shadowWeavingProcChance, "Shadow Weaving") {
 		return
 	}
 
-	priest.ShadowWeavingProc.Cast(sim, target)
+	priest.ShadowWeavingAura.Activate(sim)
+	priest.ShadowWeavingAura.AddStack(sim)
 }
 
 func (priest *Priest) applyDarkness() {
@@ -324,17 +394,31 @@ func (priest *Priest) registerShadowform() {
 
 	actionID := core.ActionID{SpellID: 15473}
 
-	//To Do: Add physical damage resistance
-
+	// The mana discount is the biggest single change in the tree and only the demo tooltip backs it up.
+	// TODO: beta will confirm the 50%.
 	priest.ShadowformAura = priest.RegisterAura(core.Aura{
 		Label:    "Shadowform",
 		ActionID: actionID,
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.10
+			aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexPhysical] *= 0.85
+			for _, spell := range priest.shadowformSpells() {
+				spell.CritDamageBonus += 1
+				if spell.Cost != nil {
+					spell.Cost.Multiplier -= 50
+				}
+			}
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= 1.15
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= 1.10
+			aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexPhysical] /= 0.85
+			for _, spell := range priest.shadowformSpells() {
+				spell.CritDamageBonus -= 1
+				if spell.Cost != nil {
+					spell.Cost.Multiplier += 50
+				}
+			}
 		},
 		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
 			if spell.SpellSchool.Matches(core.SpellSchoolHoly) {
@@ -356,5 +440,11 @@ func (priest *Priest) registerShadowform() {
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
 			priest.ShadowformAura.Activate(sim)
 		},
+	})
+}
+
+func (priest *Priest) shadowformSpells() []*core.Spell {
+	return core.FilterSlice(priest.Spellbook, func(spell *core.Spell) bool {
+		return spell.Flags.Matches(SpellFlagPriest) && spell.SpellSchool.Matches(core.SpellSchoolShadow)
 	})
 }

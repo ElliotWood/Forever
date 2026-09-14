@@ -40,7 +40,7 @@ func (druid *Druid) registerSwipeBearSpell() {
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
 		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       SpellFlagOmen | core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		Rank:          rank,
 		RequiredLevel: level,
@@ -56,8 +56,9 @@ func (druid *Druid) registerSwipeBearSpell() {
 			IgnoreHaste: true,
 		},
 
-		DamageMultiplier: 1 + 0.1*float64(druid.Talents.SavageFury),
-		ThreatMultiplier: SwipeThreatMultiplier,
+		DamageMultiplierAdditive: 1 + 0.05*float64(druid.Talents.SavageFury) + 0.1*float64(druid.Talents.FeralInstinct),
+		DamageMultiplier:         1,
+		ThreatMultiplier:         SwipeThreatMultiplier,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			for idx := range results {

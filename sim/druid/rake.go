@@ -64,7 +64,7 @@ func (druid *Druid) newRakeSpellConfig(rakeRank RakeRankInfo) core.SpellConfig {
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
 		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagIgnoreResists | core.SpellFlagBinary | core.SpellFlagAPL | SpellFlagOmen | SpellFlagBuilder,
+		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagIgnoreResists | core.SpellFlagBinary | core.SpellFlagAPL | SpellFlagBuilder,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   energyCost,
@@ -77,7 +77,7 @@ func (druid *Druid) newRakeSpellConfig(rakeRank RakeRankInfo) core.SpellConfig {
 			IgnoreHaste: true,
 		},
 
-		DamageMultiplierAdditive: 1 + 0.1*float64(druid.Talents.SavageFury),
+		DamageMultiplierAdditive: 1 + 0.05*float64(druid.Talents.SavageFury),
 		DamageMultiplier:         1,
 		ThreatMultiplier:         1,
 

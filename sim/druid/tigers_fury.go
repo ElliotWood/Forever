@@ -33,6 +33,8 @@ func (druid *Druid) registerTigersFurySpell() {
 		},
 	})
 
+	energyMetrics := druid.NewEnergyMetrics(actionID)
+
 	spell := druid.RegisterSpell(Cat, core.SpellConfig{
 		ActionID: actionID,
 		Flags:    core.SpellFlagAPL,
@@ -48,6 +50,10 @@ func (druid *Druid) registerTigersFurySpell() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			if druid.Talents.KingOfTheJungle > 0 {
+				druid.AddEnergy(sim, 20*float64(druid.Talents.KingOfTheJungle), energyMetrics)
+			}
+
 			druid.TigersFuryAura.Activate(sim)
 		},
 	})

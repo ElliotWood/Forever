@@ -52,7 +52,7 @@ func (druid *Druid) GetCatWeapon() core.Weapon {
 func (druid *Druid) GetFormShiftStats() stats.Stats {
 	s := stats.Stats{
 		stats.AttackPower: float64(druid.Talents.PredatoryStrikes) * 0.5 * float64(druid.Level),
-		stats.MeleeCrit:   float64(druid.Talents.SharpenedClaws) * 2 * core.CritRatingPerCritChance,
+		stats.MeleeCrit:   float64(druid.Talents.SharpenedClaws) * 3 * core.CritRatingPerCritChance,
 	}
 	/*
 		if weapon := druid.GetMHWeapon(); weapon != nil {
@@ -96,7 +96,7 @@ func (druid *Druid) registerCatFormSpell() {
 
 	var hotwDep *stats.StatDependency
 	if druid.Talents.HeartOfTheWild > 0 {
-		hotwDep = druid.NewDynamicMultiplyStat(stats.Strength, 1.0+0.04*float64(druid.Talents.HeartOfTheWild))
+		hotwDep = druid.NewDynamicMultiplyStat(stats.Strength, 1.0+0.02*float64(druid.Talents.HeartOfTheWild))
 	}
 
 	clawWeapon := druid.GetCatWeapon()
@@ -118,7 +118,6 @@ func (druid *Druid) registerCatFormSpell() {
 			druid.AutoAttacks.SetMH(clawWeapon)
 
 			druid.PseudoStats.ThreatMultiplier *= 0.71
-			druid.AddStatDynamic(sim, stats.Dodge, 2*float64(druid.Talents.FelineSwiftness))
 			druid.SetShapeshift(aura)
 
 			predBonus = druid.GetDynamicPredStrikeStats()
@@ -149,7 +148,6 @@ func (druid *Druid) registerCatFormSpell() {
 			druid.lastCatFormExitAt = sim.CurrentTime
 
 			druid.PseudoStats.ThreatMultiplier /= 0.71
-			druid.AddStatDynamic(sim, stats.Dodge, -2*float64(druid.Talents.FelineSwiftness))
 			druid.SetShapeshift(nil)
 
 			druid.AddStatsDynamic(sim, predBonus.Invert())
@@ -172,8 +170,6 @@ func (druid *Druid) registerCatFormSpell() {
 	})
 
 	energyMetrics := druid.NewEnergyMetrics(actionID)
-
-	furorProcChance := 0.2 * float64(druid.Talents.Furor)
 
 	hasWolfheadBonus := false
 	if head := druid.Equipment.Head(); head != nil && (head.ID == WolfsheadHelm) {
@@ -206,10 +202,7 @@ func (druid *Druid) registerCatFormSpell() {
 				druid.CancelShapeshift(sim)
 				spell.Cost.Multiplier += 100
 			} else {
-				maxShiftEnergy := core.TernaryFloat64(sim.RandomFloat("Furor") < furorProcChance, 40, 0)
-				if sim.IsForever() {
-					maxShiftEnergy = druid.furorShiftEnergy(sim)
-				}
+				maxShiftEnergy := druid.furorShiftEnergy(sim)
 				maxShiftEnergy = core.TernaryFloat64(hasWolfheadBonus, maxShiftEnergy+20, maxShiftEnergy)
 				energyDelta := maxShiftEnergy - druid.CurrentEnergy()
 

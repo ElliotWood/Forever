@@ -9,12 +9,9 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-const (
-	SpellFlagOmen    = core.SpellFlagAgentReserved1
-	SpellFlagBuilder = core.SpellFlagAgentReserved2
-)
+const SpellFlagBuilder = core.SpellFlagAgentReserved1
 
-var TalentTreeSizes = [3]int{16, 16, 15}
+var TalentTreeSizes = [3]int{17, 19, 16}
 
 const (
 	SpellCode_DruidNone int32 = iota
@@ -23,7 +20,9 @@ const (
 	SpellCode_DruidFaerieFire
 	SpellCode_DruidFaerieFireFeral
 	SpellCode_DruidFerociousBite
+	SpellCode_DruidHurricane
 	SpellCode_DruidInsectSwarm
+	SpellCode_DruidMangle
 	SpellCode_DruidMoonfire
 	SpellCode_DruidRake
 	SpellCode_DruidRip
@@ -49,6 +48,7 @@ type Druid struct {
 	ReplaceBearMHFunc core.ReplaceMHSwing
 
 	Barkskin             *DruidSpell
+	Berserk              *DruidSpell
 	DemoralizingRoar     *DruidSpell
 	Enrage               *DruidSpell
 	FaerieFire           *DruidSpell
@@ -60,6 +60,7 @@ type Druid struct {
 	Innervate            *DruidSpell
 	InsectSwarm          []*DruidSpell
 	Languish             *DruidSpell
+	MangleCat            *DruidSpell
 	Maul                 *DruidSpell
 	MaulQueueSpell       *DruidSpell
 	Moonfire             []*DruidSpell
@@ -81,8 +82,8 @@ type Druid struct {
 	BearFormAura             *core.Aura
 	BerserkAura              *core.Aura
 	CatFormAura              *core.Aura
-	ClearcastingAura         *core.Aura
 	DemoralizingRoarAuras    core.AuraArray
+	EclipseAura              *core.Aura
 	EnrageAura               *core.Aura
 	FaerieFireAuras          core.AuraArray
 	FrenziedRegenerationAura *core.Aura
@@ -91,8 +92,6 @@ type Druid struct {
 	MaulQueueAura            *core.Aura
 	MoonkinFormAura          *core.Aura
 	NaturesGraceHasteAura    *core.Aura
-	NaturesGraceProcAura     *core.Aura
-	PredatoryInstinctsAura   *core.Aura
 	TigersFuryAura           *core.Aura
 
 	BleedCategories core.ExclusiveCategoryArray
@@ -114,8 +113,9 @@ func (druid *Druid) GetCharacter() *core.Character {
 }
 
 func (druid *Druid) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
-	if (raidBuffs.GiftOfTheWild == proto.TristateEffect_TristateEffectRegular) && (druid.Talents.ImprovedMarkOfTheWild > 0) {
-		druid.AddStats(core.BuffSpellValues[core.MarkOfTheWild].Multiply(0.07 * float64(druid.Talents.ImprovedMarkOfTheWild)))
+	// TODO: Improved Mark of the Wild is gone from the tree and is assumed to be baseline, beta will confirm.
+	if raidBuffs.GiftOfTheWild == proto.TristateEffect_TristateEffectRegular {
+		raidBuffs.GiftOfTheWild = proto.TristateEffect_TristateEffectImproved
 	}
 
 	// TODO: These should really be aura attached to the actual forms
@@ -184,6 +184,7 @@ func (druid *Druid) RegisterFeralCatSpells() {
 	// druid.registerBearFormSpell()
 	// druid.registerEnrageSpell()
 	druid.registerFerociousBiteSpell()
+	druid.registerMangleCatSpell()
 	// druid.registerMangleBearSpell()
 	// druid.registerMaulSpell()
 	druid.registerRakeSpell()
@@ -192,6 +193,7 @@ func (druid *Druid) RegisterFeralCatSpells() {
 	druid.registerClawSpell()
 	// druid.registerSwipeBearSpell()
 	druid.registerTigersFurySpell()
+	druid.registerBerserkCD()
 }
 
 // TODO: Classic feral tank
