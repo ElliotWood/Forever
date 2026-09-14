@@ -1,6 +1,8 @@
 package druid
 
 import (
+	"time"
+
 	"github.com/wowsims/classic/sim/common/guardians"
 	"github.com/wowsims/classic/sim/core"
 	"github.com/wowsims/classic/sim/core/proto"
@@ -88,6 +90,7 @@ type Druid struct {
 	InsectSwarmAuras         core.AuraArray
 	MaulQueueAura            *core.Aura
 	MoonkinFormAura          *core.Aura
+	NaturesGraceHasteAura    *core.Aura
 	NaturesGraceProcAura     *core.Aura
 	PredatoryInstinctsAura   *core.Aura
 	TigersFuryAura           *core.Aura
@@ -96,6 +99,10 @@ type Druid struct {
 
 	form         DruidForm
 	disabledMCDs []*core.MajorCooldown
+
+	// Energy carried out of Cat Form, for the Forever version of Furor.
+	lastCatFormEnergy float64
+	lastCatFormExitAt time.Duration
 }
 
 type SelfBuffs struct {

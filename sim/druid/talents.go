@@ -97,16 +97,61 @@ func (druid *Druid) applyNaturesGrace() {
 		},
 	})
 
+	// The GCD isn't affected by haste in Classic, so it's shortened by hand to match
+	hasteMultiplier := 1.1
+	hastedSpells := []*DruidSpell{}
+	gcdReduction := core.GCDDefault - max(core.GCDMin, time.Duration(float64(core.GCDDefault)/hasteMultiplier))
+
+	druid.NaturesGraceHasteAura = druid.RegisterAura(core.Aura{
+		Label:    "Natures Grace Haste",
+		ActionID: core.ActionID{SpellID: 16886},
+		Duration: time.Second * 3,
+		OnInit: func(aura *core.Aura, sim *core.Simulation) {
+			hastedSpells = core.FilterSlice(druid.DruidSpells, func(ds *DruidSpell) bool {
+				return ds.DefaultCast.CastTime > 0 && ds.DefaultCast.GCD == core.GCDDefault
+			})
+		},
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			druid.MultiplyCastSpeed(hasteMultiplier)
+
+			for _, spell := range hastedSpells {
+				spell.DefaultCast.GCD -= gcdReduction
+			}
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			druid.MultiplyCastSpeed(1 / hasteMultiplier)
+
+			for _, spell := range hastedSpells {
+				spell.DefaultCast.GCD += gcdReduction
+			}
+		},
+	})
+
 	core.MakePermanent(druid.RegisterAura(core.Aura{
 		Label: "Natures Grace",
 		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			// Spells with travel times have their own implementation because the proc occurs as the cast finishes
 			if spell.MissileSpeed == 0 && spell.ProcMask.Matches(core.ProcMaskSpellDamage) && result.DidCrit() {
-				druid.NaturesGraceProcAura.Activate(sim)
-				druid.NaturesGraceProcAura.SetStacks(sim, druid.NaturesGraceProcAura.MaxStacks)
+				druid.procNaturesGrace(sim)
 			}
 		},
 	}))
+}
+
+// Forever replaces the cast time reduction on the next cast with a short haste buff,
+// which also shortens the GCD.
+func (druid *Druid) procNaturesGrace(sim *core.Simulation) {
+	if druid.NaturesGraceProcAura == nil {
+		return
+	}
+
+	if sim.IsForever() {
+		druid.NaturesGraceHasteAura.Activate(sim)
+		return
+	}
+
+	druid.NaturesGraceProcAura.Activate(sim)
+	druid.NaturesGraceProcAura.SetStacks(sim, druid.NaturesGraceProcAura.MaxStacks)
 }
 
 // func (druid *Druid) registerNaturesSwiftnessCD() {

@@ -67,9 +67,8 @@ func (druid *Druid) newWrathSpellConfig(rank int) core.SpellConfig {
 			result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
 
 			// NG procs when the cast finishes
-			if result.DidCrit() && druid.NaturesGraceProcAura != nil {
-				druid.NaturesGraceProcAura.Activate(sim)
-				druid.NaturesGraceProcAura.SetStacks(sim, druid.NaturesGraceProcAura.MaxStacks)
+			if result.DidCrit() {
+				druid.procNaturesGrace(sim)
 			}
 
 			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
