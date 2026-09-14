@@ -167,14 +167,14 @@
           "rowIdx": 3,
           "colIdx": 2
         },
-        "spellIds": [
-          18223
-        ],
-        "maxPoints": 1,
         "prereqLocation": {
           "rowIdx": 2,
           "colIdx": 2
-        }
+        },
+        "spellIds": [
+          18223
+        ],
+        "maxPoints": 1
       },
       {
         "fieldName": "siphonLife",
@@ -204,7 +204,7 @@
         "fieldName": "shadowMastery",
         "location": {
           "rowIdx": 5,
-          "colIdx": 1
+          "colIdx": 2
         },
         "spellIds": [
           18271,
@@ -213,16 +213,16 @@
           18274,
           18275
         ],
-        "maxPoints": 5,
-        "prereqLocation": {
-          "rowIdx": 4,
-          "colIdx": 1
-        }
+        "maxPoints": 5
       },
       {
         "fieldName": "drainHope",
         "location": {
           "rowIdx": 6,
+          "colIdx": 1
+        },
+        "prereqLocation": {
+          "rowIdx": 4,
           "colIdx": 1
         },
         "spellIds": [
@@ -393,7 +393,11 @@
         "fieldName": "felDomination",
         "location": {
           "rowIdx": 3,
-          "colIdx": 1
+          "colIdx": 2
+        },
+        "prereqLocation": {
+          "rowIdx": 2,
+          "colIdx": 2
         },
         "spellIds": [
           18708
@@ -404,7 +408,7 @@
         "fieldName": "demonicBrand",
         "location": {
           "rowIdx": 3,
-          "colIdx": 2
+          "colIdx": 3
         },
         "spellIds": [
           18821,
@@ -432,14 +436,14 @@
           "rowIdx": 4,
           "colIdx": 1
         },
-        "spellIds": [
-          19028
-        ],
-        "maxPoints": 1,
         "prereqLocation": {
           "rowIdx": 2,
           "colIdx": 1
-        }
+        },
+        "spellIds": [
+          19028
+        ],
+        "maxPoints": 1
       },
       {
         "fieldName": "demonicKnowledge",
@@ -475,14 +479,14 @@
           "rowIdx": 6,
           "colIdx": 1
         },
-        "spellIds": [
-          47236
-        ],
-        "maxPoints": 1,
         "prereqLocation": {
           "rowIdx": 4,
           "colIdx": 1
-        }
+        },
+        "spellIds": [
+          47236
+        ],
+        "maxPoints": 1
       }
     ]
   },
@@ -594,7 +598,7 @@
         "fieldName": "shadowburn",
         "location": {
           "rowIdx": 2,
-          "colIdx": 3
+          "colIdx": 2
         },
         "spellIds": [
           17877
@@ -636,11 +640,7 @@
         "spellIds": [
           17962
         ],
-        "maxPoints": 1,
-        "prereqLocation": {
-          "rowIdx": 1,
-          "colIdx": 2
-        }
+        "maxPoints": 1
       },
       {
         "fieldName": "pyroclasm",
@@ -648,15 +648,15 @@
           "rowIdx": 4,
           "colIdx": 0
         },
+        "prereqLocation": {
+          "rowIdx": 3,
+          "colIdx": 0
+        },
         "spellIds": [
           18096,
           18073
         ],
-        "maxPoints": 2,
-        "prereqLocation": {
-          "rowIdx": 3,
-          "colIdx": 0
-        }
+        "maxPoints": 2
       },
       {
         "fieldName": "baneOfHavoc",
@@ -675,6 +675,10 @@
           "rowIdx": 4,
           "colIdx": 2
         },
+        "prereqLocation": {
+          "rowIdx": 3,
+          "colIdx": 2
+        },
         "spellIds": [
           47266,
           47267,
@@ -686,7 +690,7 @@
         "fieldName": "shadowAndFlame",
         "location": {
           "rowIdx": 5,
-          "colIdx": 1
+          "colIdx": 2
         },
         "spellIds": [
           30288,
@@ -701,6 +705,10 @@
         "fieldName": "incinerate",
         "location": {
           "rowIdx": 6,
+          "colIdx": 1
+        },
+        "prereqLocation": {
+          "rowIdx": 4,
           "colIdx": 1
         },
         "spellIds": [
