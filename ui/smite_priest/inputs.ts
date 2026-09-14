@@ -1,0 +1,15 @@
+import * as InputHelpers from '../core/components/input_helpers.js';
+import { Spec } from '../core/proto/common.js';
+import { SmitePriest_Options_Armor as Armor } from '../core/proto/priest.js';
+import { ActionId } from '../core/proto_utils/action_id.js';
+
+// Configuration for spec-specific UI elements on the settings tab.
+// These don't need to be in a separate file but it keeps things cleaner.
+
+export const ArmorInput = InputHelpers.makeSpecOptionsEnumIconInput<Spec.SpecSmitePriest, Armor>({
+	fieldName: 'armor',
+	values: [
+		{ value: Armor.NoArmor, tooltip: 'No Inner Fire' },
+		{ actionId: () => ActionId.fromSpellId(10952), value: Armor.InnerFire },
+	],
+});

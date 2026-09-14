@@ -1,0 +1,280 @@
+character_stats_results: {
+ key: "TestSmitePriest-Phase1-CharacterStats-Default"
+ value: {
+  final_stats: 175.95
+  final_stats: 180.55
+  final_stats: 495.9375
+  final_stats: 427.1675
+  final_stats: 246.1
+  final_stats: 579
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 55.25
+  final_stats: 4
+  final_stats: 31.97641
+  final_stats: 0
+  final_stats: 0
+  final_stats: 895.95
+  final_stats: 4
+  final_stats: 19
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 7503.5125
+  final_stats: 0
+  final_stats: 0
+  final_stats: 1130.1
+  final_stats: 440
+  final_stats: 0
+  final_stats: 5
+  final_stats: 0
+  final_stats: 3
+  final_stats: 5
+  final_stats: 0
+  final_stats: 6476.375
+  final_stats: 27
+  final_stats: 76
+  final_stats: 60
+  final_stats: 60
+  final_stats: 60
+  final_stats: 384
+  final_stats: 0
+  final_stats: 35
+  final_stats: 0
+ }
+}
+stat_weights_results: {
+ key: "TestSmitePriest-Phase1-StatWeights-Default"
+ value: {
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.27322
+  weights: 0.24112
+  weights: 0.38247
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.38247
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 1.96347
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-Champion'sInvestiture"
+ value: {
+  dps: 474.18434
+  tps: 346.21246
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-Champion'sRaiment"
+ value: {
+  dps: 452.42756
+  tps: 330.83522
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-Confessor'sRaiment"
+ value: {
+  dps: 489.83749
+  tps: 357.35158
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-FieldMarshal'sRaiment"
+ value: {
+  dps: 504.48217
+  tps: 367.50453
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-GarmentsoftheOracle"
+ value: {
+  dps: 523.7564
+  tps: 381.37015
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 384.7536
+  tps: 283.34053
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-LieutenantCommander'sInvestiture"
+ value: {
+  dps: 474.18434
+  tps: 346.21246
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-LieutenantCommander'sRaiment"
+ value: {
+  dps: 452.42756
+  tps: 330.83522
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-VestmentsofFaith"
+ value: {
+  dps: 539.19773
+  tps: 392.6855
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-VestmentsofProphecy"
+ value: {
+  dps: 485.4405
+  tps: 354.76536
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-VestmentsofTranscendence"
+ value: {
+  dps: 495.1298
+  tps: 361.48887
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-AllItems-Warlord'sRaiment"
+ value: {
+  dps: 504.48217
+  tps: 367.50453
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Average-Default"
+ value: {
+  dps: 486.45006
+  tps: 354.7689
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-FullBuffs-Launch-Consumes-LongMultiTarget"
+ value: {
+  dps: 560.14517
+  tps: 682.29344
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-FullBuffs-Launch-Consumes-LongSingleTarget"
+ value: {
+  dps: 560.14517
+  tps: 406.61121
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-FullBuffs-Launch-Consumes-ShortSingleTarget"
+ value: {
+  dps: 691.07049
+  tps: 505.8656
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-NoBuffs-Launch-Consumes-LongMultiTarget"
+ value: {
+  dps: 249.30578
+  tps: 355.26087
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-NoBuffs-Launch-Consumes-LongSingleTarget"
+ value: {
+  dps: 249.30578
+  tps: 183.55139
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-NoBuffs-Launch-Consumes-ShortSingleTarget"
+ value: {
+  dps: 456.87878
+  tps: 334.99891
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-FullBuffs-Launch-Consumes-LongMultiTarget"
+ value: {
+  dps: 487.53893
+  tps: 625.37241
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-FullBuffs-Launch-Consumes-LongSingleTarget"
+ value: {
+  dps: 487.53893
+  tps: 355.48201
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-FullBuffs-Launch-Consumes-ShortSingleTarget"
+ value: {
+  dps: 632.82463
+  tps: 465.0935
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-NoBuffs-Launch-Consumes-LongMultiTarget"
+ value: {
+  dps: 250.24772
+  tps: 355.92023
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-NoBuffs-Launch-Consumes-LongSingleTarget"
+ value: {
+  dps: 250.24772
+  tps: 184.21074
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-NoBuffs-Launch-Consumes-ShortSingleTarget"
+ value: {
+  dps: 456.85291
+  tps: 334.9808
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-Phase1-SwitchInFrontOfTarget-Default"
+ value: {
+  dps: 487.53893
+  tps: 355.48201
+ }
+}

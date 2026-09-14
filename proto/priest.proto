@@ -85,6 +85,24 @@ message ShadowPriest {
 	Options options = 3;
 }
 
+// Forever's holy damage build: Smite and Holy Fire carried by Power in Light and
+// Searing Light, rather than Shadowform and dots.
+message SmitePriest {
+	message Rotation {
+	}
+
+	message Options {
+		enum Armor {
+			NoArmor = 0;
+			InnerFire = 1;
+		}
+
+		Armor armor = 1;
+		UnitReference power_infusion_target = 2;
+	}
+	Options options = 3;
+}
+
 message HealingPriest {
 	message Rotation {
 	}

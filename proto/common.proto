@@ -3,7 +3,7 @@ package proto;
 
 option go_package = "./proto";
 
-// NextIndex: 23
+// NextIndex: 24
 enum Spec {
 	SpecBalanceDruid = 0;
 	SpecFeralDruid = 12;
@@ -21,6 +21,7 @@ enum Spec {
 	SpecRogue = 7;
 	SpecHealingPriest = 17;
 	SpecShadowPriest = 4;
+	SpecSmitePriest = 22;
 	SpecWarlock = 5;
 	SpecWarrior = 6;
 	SpecTankWarrior = 11;
