@@ -1,6 +1,7 @@
 import tippy, { ReferenceElement as TippyReferenceElement } from 'tippy.js';
 import { ref } from 'tsx-vanilla';
 
+import { Ruleset } from '../proto/api';
 import { SimUI } from '../sim_ui';
 import { isLocal } from '../utils';
 import { Component } from './component';
@@ -36,6 +37,7 @@ export class SimHeader extends Component {
 		this.simToolbar = this.rootElem.querySelector('.sim-toolbar') as HTMLElement;
 
 		this.knownIssuesContent = (<ul className="text-start ps-3 mb-0"></ul>) as HTMLUListElement;
+		this.addRulesetLabel();
 		this.knownIssuesLink = this.addKnownIssuesLink();
 		this.addBugReportLink();
 		this.addFeedbackLink();
@@ -136,6 +138,32 @@ export class SimHeader extends Component {
 				});
 		}
 		return linkRef.value!;
+	}
+
+	// The sim can run either ruleset, and which one is active changes the numbers, so it
+	// belongs somewhere the user cannot miss it rather than only in the options modal.
+	private addRulesetLabel() {
+		const labelRef = ref<HTMLSpanElement>();
+
+		this.simToolbar.appendChild(
+			<div className="sim-toolbar-item">
+				<span ref={labelRef} className="ruleset-label"></span>
+			</div>,
+		);
+
+		const label = labelRef.value!;
+		const updateLabel = () => {
+			const isForever = this.simUI.sim.getRuleset() == Ruleset.RulesetForever;
+			label.textContent = isForever ? 'Forever Rules' : 'Classic Era Rules';
+			label.classList.toggle('text-brand', isForever);
+		};
+		updateLabel();
+		this.simUI.sim.rulesetChangeEmitter.on(updateLabel);
+
+		tippy(label, {
+			content: 'The ruleset being simulated. Change it under Sim Options.',
+			placement: 'bottom',
+		});
 	}
 
 	private addKnownIssuesLink() {

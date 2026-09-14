@@ -98,6 +98,13 @@
 			transition: var(--link-transition);
 		}
 
+		// Sits on the same baseline as the toolbar's links, which get their alignment from
+		// the padding the nav links carry.
+		.ruleset-label {
+			margin-top: $nav-link-padding-y;
+			margin-bottom: $nav-link-padding-y;
+		}
+
 		.sim-toolbar-socials {
 			margin-top: calc($nav-link-padding-y / 2);
 			margin-bottom: calc($nav-link-padding-y / 2);

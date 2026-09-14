@@ -21,6 +21,7 @@ import {
 import { BalanceDruid_Options as BalanceDruidOptions } from '../core/proto/druid.js';
 import { SavedTalents } from '../core/proto/ui.js';
 import Balance from './apls/balance.apl.json';
+import LaunchAPL from './apls/launch.apl.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
 import P1BISGear from './gear_sets/p1.bis.gear.json';
 import P2BISGear from './gear_sets/p2.bis.gear.json';
@@ -54,9 +55,10 @@ export const DefaultGear = GearP0BIS;
 ///////////////////////////////////////////////////////////////////////////
 
 // export const APLP1Balance = PresetUtils.makePresetAPLRotation('Balance', P1APL);
+export const APLLaunch = PresetUtils.makePresetAPLRotation('Launch', LaunchAPL);
 export const DefaultBalance = PresetUtils.makePresetAPLRotation('Default Balance', Balance);
 export const APLPresets = {
-	[ClassicPhase.Phase1]: [DefaultBalance],
+	[ClassicPhase.Phase1]: [APLLaunch, DefaultBalance],
 };
 
 export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
