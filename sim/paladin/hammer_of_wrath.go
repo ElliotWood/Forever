@@ -26,6 +26,12 @@ func (paladin *Paladin) registerHammerOfWrath() {
 		Duration: time.Second * 6,
 	}
 
+	// TODO: Both ranks of Instrument of Law read 0.5 sec in the tooltip data.
+	castTime := time.Second
+	if paladin.Talents.InstrumentOfLaw > 0 {
+		castTime -= time.Millisecond * 500
+	}
+
 	for i, rank := range ranks {
 		rank := rank
 		if paladin.Level < rank.level {
@@ -45,12 +51,13 @@ func (paladin *Paladin) registerHammerOfWrath() {
 			SpellCode:     SpellCode_PaladinHammerOfWrath,
 
 			ManaCost: core.ManaCostOptions{
-				FlatCost: rank.manaCost,
+				FlatCost:   rank.manaCost,
+				Multiplier: paladin.holyConduit(),
 			},
 			Cast: core.CastConfig{
 				DefaultCast: core.Cast{
 					GCD:      time.Second,
-					CastTime: time.Second,
+					CastTime: castTime,
 				},
 				IgnoreHaste: true,
 				CD:          cd,

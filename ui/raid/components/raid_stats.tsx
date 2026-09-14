@@ -352,22 +352,10 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 					label: 'Armor',
 					effects: [
 						{
+							// TODO: assumed baseline, beta will confirm.
 							label: 'Improved Devotion Aura',
 							actionId: ActionId.fromSpellId(20140),
-							playerData: playerClassAndTalent(
-								Class.ClassPaladin,
-								'improvedDevotionAura',
-								player => player.getSpecOptions().aura == PaladinAura.DevotionAura,
-							),
-						},
-						{
-							label: 'Devotion Aura',
-							actionId: ActionId.fromSpellId(48942),
-							playerData: playerClassAndMissingTalent(
-								Class.ClassPaladin,
-								'improvedDevotionAura',
-								player => player.getSpecOptions().aura == PaladinAura.DevotionAura,
-							),
+							playerData: playerClass(Class.ClassPaladin, player => player.getSpecOptions().aura == PaladinAura.DevotionAura),
 						},
 						{
 							label: 'Scroll of Protection',
@@ -494,14 +482,10 @@ const RAID_STATS_OPTIONS: RaidStatsOptions = {
 					label: 'MP5',
 					effects: [
 						{
+							// TODO: assumed baseline, beta will confirm.
 							label: 'Improved Blessing of Wisdom',
 							actionId: ActionId.fromSpellId(20245),
-							playerData: playerClassAndTalent(Class.ClassPaladin, 'improvedBlessingOfWisdom'),
-						},
-						{
-							label: 'Blessing of Wisdom',
-							actionId: ActionId.fromSpellId(48938),
-							playerData: playerClassAndMissingTalent(Class.ClassPaladin, 'improvedBlessingOfWisdom'),
+							playerData: playerClass(Class.ClassPaladin),
 						},
 					],
 				},

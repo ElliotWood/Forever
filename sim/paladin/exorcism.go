@@ -46,7 +46,8 @@ func (paladin *Paladin) registerExorcism() {
 
 			SpellCode: SpellCode_PaladinExorcism,
 			ManaCost: core.ManaCostOptions{
-				FlatCost: rank.manaCost,
+				FlatCost:   rank.manaCost,
+				Multiplier: paladin.holyConduit(),
 			},
 
 			Cast: core.CastConfig{
@@ -55,7 +56,7 @@ func (paladin *Paladin) registerExorcism() {
 				},
 				CD: core.Cooldown{
 					Timer:    paladin.NewTimer(),
-					Duration: time.Second * 15,
+					Duration: paladin.purifyingPower(time.Second * 15),
 				},
 			},
 
@@ -64,7 +65,7 @@ func (paladin *Paladin) registerExorcism() {
 
 			BonusCoefficient: 0.429,
 
-			ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool { 
+			ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 				return target.MobType == proto.MobType_MobTypeDemon || target.MobType == proto.MobType_MobTypeUndead
 			},
 
