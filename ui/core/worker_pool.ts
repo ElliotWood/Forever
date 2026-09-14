@@ -1,5 +1,5 @@
 import { SimRequest, WorkerReceiveMessage, WorkerSendMessage } from '../worker/types';
-import { REPO_NAME } from './constants/other.js';
+import { SITE_BASE } from './constants/other.js';
 import {
 	AbortRequest,
 	AbortResponse,
@@ -23,7 +23,7 @@ import {
 import { SimSignals } from './sim_signal_manager';
 import { noop } from './utils';
 
-const SIM_WORKER_URL = `/${REPO_NAME}/sim_worker.js`;
+const SIM_WORKER_URL = `${SITE_BASE}sim_worker.js`;
 export type WorkerProgressCallback = (progressMetrics: ProgressMetrics) => void;
 
 /**

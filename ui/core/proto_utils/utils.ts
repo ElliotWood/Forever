@@ -1,4 +1,4 @@
-import { REPO_NAME } from '../constants/other.js';
+import { SITE_BASE } from '../constants/other.js';
 import { Player } from '../player.js';
 import { Player as PlayerProto, ResourceType } from '../proto/api.js';
 import {
@@ -267,7 +267,7 @@ export const titleIcons: Record<Spec, string> = {
 	[Spec.SpecTankWarrior]: 'https://wow.zamimg.com/images/wow/icons/large/ability_warrior_defensivestance.jpg',
 };
 
-export const raidSimIcon = '/classic/assets/img/raid_icon.png';
+export const raidSimIcon = `${SITE_BASE}assets/img/raid_icon.png`;
 export const raidSimLabel = 'Full Raid Sim';
 
 // Converts '1231321-12313123-0' to [40, 21, 0].
@@ -315,14 +315,14 @@ export function getTalentTreeIcon(spec: Spec, talentsString: string, size: IconS
 }
 
 // Gets the URL for the individual sim corresponding to the given spec.
-const specSiteUrlTemplate = new URL(`${window.location.protocol}//${window.location.host}/${REPO_NAME}/SPEC/`);
+const specSiteUrlTemplate = new URL(`${window.location.protocol}//${window.location.host}${SITE_BASE}SPEC/`);
 export function getSpecSiteUrl(spec: Spec): string {
 	let specString = Spec[spec]; // Returns 'SpecBalanceDruid' for BalanceDruid.
 	specString = specString.substring('Spec'.length); // 'BalanceDruid'
 	specString = camelToSnakeCase(specString); // 'balance_druid'
 	return specSiteUrlTemplate.toString().replace('SPEC', specString);
 }
-export const raidSimSiteUrl = new URL(`${window.location.protocol}//${window.location.host}/${REPO_NAME}/raid/`).toString();
+export const raidSimSiteUrl = new URL(`${window.location.protocol}//${window.location.host}${SITE_BASE}raid/`).toString();
 
 export function cssClassForClass(klass: Class): string {
 	return classNames[klass].toLowerCase().replace(/\s/g, '-');

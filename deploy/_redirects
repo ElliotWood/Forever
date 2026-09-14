@@ -1,3 +1,0 @@
-# The sim pages reference their assets from /classic, so the site is published with
-# that directory at the root. Send anyone landing on the bare domain to it.
-/  /classic/  302

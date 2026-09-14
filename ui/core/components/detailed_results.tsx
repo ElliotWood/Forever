@@ -1,4 +1,4 @@
-import { REPO_NAME } from '../constants/other';
+import { SITE_BASE } from '../constants/other';
 import { DetailedResultsUpdate, SimRun, SimRunData } from '../proto/ui';
 import { SimResult } from '../proto_utils/sim_result';
 import { SimUI } from '../sim_ui';
@@ -405,7 +405,7 @@ export class EmbeddedDetailedResults extends DetailedResults {
 
 		this.rootElem.prepend(newTabBtn);
 
-		const url = new URL(`${window.location.protocol}//${window.location.host}/${REPO_NAME}/detailed_results/index.html`);
+		const url = new URL(`${window.location.protocol}//${window.location.host}${SITE_BASE}detailed_results/index.html`);
 		url.searchParams.append('cssClass', simUI.cssClass);
 
 		if (simUI.isIndividualSim()) {

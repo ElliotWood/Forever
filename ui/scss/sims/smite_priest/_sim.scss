@@ -3,6 +3,6 @@
 	@include theme-color(
 		$priest,
 		.95,
-		'/classic/assets/img/smite_priest_background.jpg'
+		'#{$site-base}assets/img/smite_priest_background.jpg'
 	);
 }

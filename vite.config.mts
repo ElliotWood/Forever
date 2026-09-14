@@ -10,6 +10,13 @@ import { checker } from 'vite-plugin-checker';
 export const BASE_PATH = path.resolve(__dirname, 'ui');
 export const OUT_DIR = path.join(__dirname, 'dist', 'classic');
 
+// Where the site will be served from, with a trailing slash. Defaults to how wowsims
+// publishes it; override with SITE_BASE to hang it off a path, e.g. a Github project
+// page at /<repo>/classic/. Everything that needs the prefix reads it from here: the
+// TypeScript through import.meta.env.BASE_URL, the stylesheets through $site-base, and
+// the page templates through the makefile.
+export const SITE_BASE = process.env.SITE_BASE || '/classic/';
+
 function serveExternalAssets() {
 	const workerMappings = {
 		'/classic/sim_worker.js': '/classic/local_worker.js',
@@ -87,7 +94,7 @@ function determineContentType(filePath: string) {
 
 export const getBaseConfig = ({ command, mode }: ConfigEnv) =>
 	({
-		base: '/classic/',
+		base: SITE_BASE,
 		root: path.join(__dirname, 'ui'),
 		build: {
 			outDir: OUT_DIR,
@@ -111,6 +118,13 @@ export default defineConfig(({ command, mode }) => {
 		],
 		esbuild: {
 			jsxInject: "import { element, fragment } from 'tsx-vanilla';",
+		},
+		css: {
+			preprocessorOptions: {
+				scss: {
+					additionalData: `$site-base: '${SITE_BASE}';`,
+				},
+			},
 		},
 		build: {
 			...baseConfig.build,
