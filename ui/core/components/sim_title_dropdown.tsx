@@ -98,13 +98,15 @@ export class SimTitleDropdown extends Component {
 	}
 
 	private buildDropdown() {
-		// TODO Classic
-		// if (raidSimStatus >= LaunchStatus.Alpha) {
-		// 	// Add the raid sim to the top of the dropdown
-		// 	let raidListItem = document.createElement('li');
-		// 	raidListItem.appendChild(this.buildRaidLink());
-		// 	this.dropdownMenu?.appendChild(raidListItem);
-		// }
+		// Compares the status rather than the object it sits on, which is what kept this
+		// commented out: raidSimStatus is a {phase, status} pair and never ordered against
+		// a LaunchStatus.
+		if (raidSimStatus.status >= LaunchStatus.Alpha) {
+			// Add the raid sim to the top of the dropdown
+			const raidListItem = document.createElement('li');
+			raidListItem.appendChild(this.buildRaidLink());
+			this.dropdownMenu?.appendChild(raidListItem);
+		}
 
 		naturalClassOrder.forEach(classIndex => {
 			const listItem = document.createElement('li');

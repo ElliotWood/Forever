@@ -1,0 +1,179 @@
+.dps-rankings-ui {
+	.dps-rankings-container {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		gap: var(--gap-width);
+		min-height: 100vh;
+		padding-top: var(--container-padding);
+		padding-bottom: var(--container-padding);
+	}
+
+	.dps-rankings-header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: var(--spacer-3);
+
+		.dps-rankings-logo {
+			width: 16rem;
+			max-width: 100%;
+			height: auto;
+		}
+
+		.dps-rankings-socials {
+			display: flex;
+			align-items: center;
+			gap: var(--spacer-3);
+		}
+	}
+
+	.dps-rankings-main {
+		display: flex;
+		flex-direction: column;
+		gap: var(--gap-width);
+	}
+
+	.dps-rankings-title {
+		margin: 0;
+		font-weight: bold;
+	}
+
+	.dps-rankings-lead {
+		max-width: 60rem;
+		margin: 0;
+	}
+
+	.dps-rankings-notes-block {
+		max-width: 60rem;
+
+		.dps-rankings-notes-list {
+			margin: 0;
+			padding-left: var(--spacer-4);
+
+			li:not(:last-child) {
+				margin-bottom: var(--spacer-2);
+			}
+		}
+	}
+
+	.dps-rankings-controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--spacer-3);
+
+		// Pickers fill their container in the sidebar they were built for. Here the
+		// control sits in a row next to the button, so it only wants its own width.
+		.dps-rankings-iterations-picker {
+			width: auto;
+			justify-content: flex-start;
+			margin-bottom: 0;
+		}
+
+		.dps-rankings-iterations-note {
+			color: var(--bs-gray-400);
+		}
+	}
+
+	.dps-rankings-status {
+		display: flex;
+		align-items: center;
+		gap: var(--spacer-3);
+
+		// The shared loader is sized for a sidebar it has to itself.
+		.dps-rankings-loader {
+			width: 1.5rem;
+			height: 1.5rem;
+			border-width: 4px;
+			border-top-width: 4px;
+		}
+	}
+
+	.dps-rankings-table {
+		.dps-rankings-rank-cell {
+			color: var(--bs-gray-400);
+			text-align: right;
+		}
+
+		.dps-rankings-spec-cell {
+			text-align: left;
+
+			// Only wrap when the screen is too narrow to hold the name, otherwise the
+			// share column takes all the width and every row is two or three lines tall.
+			@include media-breakpoint-up(md) {
+				white-space: nowrap;
+			}
+		}
+
+		.dps-rankings-dps-cell {
+			white-space: nowrap;
+		}
+
+		// Left to itself every column shrinks to its content, which leaves the bar as a
+		// stub on a wide screen. This one takes whatever is left over instead.
+		.dps-rankings-share-cell {
+			width: 100%;
+		}
+
+		.dps-rankings-spec-names {
+			display: inline-flex;
+			flex-direction: column;
+			vertical-align: middle;
+
+			.dps-rankings-class-name {
+				font-size: 0.75rem;
+				color: var(--bs-gray-400);
+			}
+
+			.dps-rankings-spec-name {
+				font-weight: bold;
+			}
+		}
+
+		.dps-rankings-share {
+			display: flex;
+			align-items: center;
+			gap: var(--spacer-2);
+		}
+
+		.dps-rankings-share-bar {
+			position: relative;
+			flex: 1;
+			min-width: 2.5rem;
+			height: 0.75rem;
+			background-color: color-mix(in srgb, var(--bs-white) 5%, transparent);
+		}
+
+		.dps-rankings-share-bar-fill {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: var(--percentage);
+			height: 100%;
+		}
+
+		.dps-rankings-share-percent {
+			width: 5ch;
+			flex-shrink: 0;
+			text-align: right;
+		}
+	}
+
+	.dps-rankings-footer {
+		margin-top: auto;
+		color: var(--bs-gray-500);
+	}
+}
+
+@include media-breakpoint-down(md) {
+	.dps-rankings-ui {
+		.dps-rankings-header {
+			.dps-rankings-logo {
+				width: 11rem;
+			}
+		}
+	}
+}
