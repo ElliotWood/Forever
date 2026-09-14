@@ -24,6 +24,7 @@ import {
 import { SavedTalents } from '../core/proto/ui.js';
 import { TankWarrior_Options as TankWarriorOptions, WarriorShout, WarriorStance } from '../core/proto/warrior.js';
 import APLNoReckJSON from './apls/dps_no_reck.apl.json';
+import APLProtectionJSON from './apls/protection.apl.json';
 import APLReckJSON from './apls/dps_reck.apl.json';
 import LaunchGearJSON from './gear_sets/launch.gear.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
@@ -47,11 +48,12 @@ export const DefaultGear = GearPresets[ClassicPhase.Phase1][0];
 //                                 APL Presets
 ///////////////////////////////////////////////////////////////////////////
 
+export const APLProtection = PresetUtils.makePresetAPLRotation('Protection', APLProtectionJSON);
 export const AplReck = PresetUtils.makePresetAPLRotation('DPS (With Reck)', APLReckJSON);
 export const APLNoReck = PresetUtils.makePresetAPLRotation('DPS (No Reck)', APLNoReckJSON);
 
 export const APLPresets = {
-	[ClassicPhase.Phase1]: [APLNoReck, AplReck],
+	[ClassicPhase.Phase1]: [APLProtection, APLNoReck, AplReck],
 };
 
 export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
