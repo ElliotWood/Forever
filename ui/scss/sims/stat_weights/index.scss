@@ -1,0 +1,8 @@
+@import '../../core/individual_sim_ui/common';
+
+// Neither emits any CSS of its own; they are what media-breakpoint-down() needs, and the
+// page template already links the core stylesheet that carries the components.
+@import 'bootstrap/scss/maps';
+@import 'bootstrap/scss/mixins';
+
+@import './sim';

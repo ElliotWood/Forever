@@ -1,0 +1,158 @@
+// Set color variables which control the site theme. This page spans every spec, so it
+// takes the brand color the raid sim uses rather than any one class color.
+.stat-weights-sim-ui {
+	@include theme-color($brand, 0.9, '#{$site-base}assets/img/classic.jpg');
+
+	// ContentBlock lays its body out as a gapped column, so the paragraphs inside one do
+	// not need margins of their own on top of that.
+	#stat-weights-tab {
+		display: flex;
+		flex-direction: column;
+		gap: var(--section-spacer);
+	}
+
+	.stat-weights-about {
+		p {
+			margin-bottom: 0;
+		}
+
+		.stat-weights-missing {
+			color: var(--bs-gray-500);
+		}
+	}
+
+	.stat-weights-options {
+		margin-bottom: var(--block-spacer);
+	}
+
+	.stat-weights-show-all {
+		align-self: flex-end;
+	}
+
+	// The table is wider than a phone and, with all stats shown, wider than a desktop, so
+	// it scrolls inside its own box instead of pushing the page sideways.
+	.stat-weights-table-container {
+		max-width: 100%;
+		overflow-x: auto;
+	}
+
+	.stat-weights-table {
+		border-collapse: separate;
+		border-spacing: 0;
+		white-space: nowrap;
+
+		th,
+		td {
+			padding: var(--table-cell-padding);
+		}
+
+		thead th {
+			border-bottom: var(--border-default);
+			font-weight: normal;
+		}
+
+		tbody {
+			tr:nth-child(even) {
+				--stat-weights-row-bg: var(--bs-table-row-even-bg);
+			}
+
+			tr:nth-child(odd) {
+				--stat-weights-row-bg: var(--bs-table-row-odd-bg);
+			}
+
+			tr {
+				background-color: var(--stat-weights-row-bg);
+			}
+		}
+
+		// Keeps the spec visible while the stat columns scroll under it.
+		.stat-weights-spec-cell {
+			position: sticky;
+			left: 0;
+			z-index: 1;
+			background-color: var(--stat-weights-row-bg, var(--bs-body-bg));
+			border-right: var(--border-default);
+			font-weight: normal;
+			text-align: left;
+		}
+
+		.stat-weights-value-cell {
+			text-align: right;
+		}
+
+		.stat-weights-reference-cell {
+			color: var(--bs-gray-500);
+		}
+	}
+
+	.stat-weights-run {
+		margin-right: var(--spacer-2);
+	}
+
+	.stat-weights-spec-name {
+		font-weight: bold;
+	}
+
+	.stat-weights-status {
+		display: inline-block;
+		margin-left: var(--spacer-2);
+		min-width: 3rem;
+		color: var(--bs-gray-500);
+		font-size: 0.625rem;
+	}
+
+	.stat-weights-running {
+		.stat-weights-status {
+			color: var(--bs-primary);
+		}
+	}
+
+	.stat-weights-failed {
+		.stat-weights-status {
+			color: var(--bs-danger);
+		}
+	}
+
+	// The spec's strongest stat for the metric on screen.
+	.stat-weights-best {
+		color: var(--bs-primary);
+		font-weight: bold;
+	}
+
+	// Smaller than its own 90% confidence interval, so not distinguishable from zero.
+	.stat-weights-noise {
+		color: var(--bs-gray-600);
+	}
+
+	// A stat this spec's sim never asks to have weighed, which is not the same as a weight
+	// that came back at zero.
+	.stat-weights-not-weighed {
+		color: var(--bs-gray-700);
+	}
+
+	// On a phone the frozen spec column would otherwise eat over half the width and leave
+	// nothing to compare, so the run button drops under the spec name and the name wraps.
+	@include media-breakpoint-down(sm) {
+		.stat-weights-table {
+			.stat-weights-spec-cell {
+				max-width: 8rem;
+				white-space: normal;
+			}
+
+			th,
+			td {
+				padding: var(--spacer-1);
+			}
+		}
+
+		.stat-weights-run {
+			display: block;
+			margin-right: 0;
+			margin-bottom: var(--spacer-1);
+		}
+
+		.stat-weights-status {
+			margin-left: var(--spacer-1);
+		}
+	}
+}
