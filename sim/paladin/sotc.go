@@ -31,7 +31,9 @@ func (paladin *Paladin) registerSealOfTheCrusader() {
 		{level: 52, spellID: 20308, manaCost: 160, scaleLevel: 60, ap: 306, scale: 2.4, judge: judge{spellID: 20303, bonus: 140}},
 	}
 
-	improvedSotC := []float64{1, 1.05, 1.1, 1.15}[paladin.Talents.ImprovedSealOfTheCrusader]
+	// TODO: assumed baseline, beta will confirm - Improved Seal of the Crusader is gone from the
+	// tree and the raid reads the improved Judgement of the Crusader through Debuffs either way.
+	const improvedSotC = 1.15
 
 	var libramAp, libramBonus float64
 	if paladin.Ranged().ID == LibramOfFervor {
@@ -100,8 +102,8 @@ func (paladin *Paladin) registerSealOfTheCrusader() {
 				},
 			},
 
-			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-				paladin.applySeal(aura, judgeSpell, sim)
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+				paladin.applySeal(aura, spell, judgeSpell, sim)
 			},
 		})
 

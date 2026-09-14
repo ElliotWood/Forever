@@ -41,7 +41,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 		{level: 58, spellID: 20293, manaCost: 200, scaleLevel: 60, proc: proc{spellID: 25713, value: 1786, scale: 47, coeff: 0.1}, judge: judge{spellID: 20286, minDamage: 162, maxDamage: 178, scale: 4.1, coeff: 0.5}},
 	}
 
-	improvedSoR := paladin.improvedSoR()
+	improvedSeals := paladin.improvedSeals()
 
 	for i, rank := range ranks {
 		rank := rank
@@ -54,7 +54,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 		 * two different SpellIDs depending on a paladin's casted spell or melee swing.
 		 *
 		 * (Judgement of Righteousness):
-		 *   - Deals flat damage that is affected by Improved SoR talent, and
+		 *   - Deals flat damage that is affected by the Improved Seals talent, and
 		 *     has a spellpower scaling that is unaffected by that talent.
 		 *   - Targets magic defense and rolls to hit and crit.
 		 *
@@ -84,7 +84,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 			BonusCoefficient: rank.judge.coeff,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				baseDamage := sim.Roll(minDamage, maxDamage) * improvedSoR
+				baseDamage := sim.Roll(minDamage, maxDamage) * improvedSeals
 				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
 			},
 		})
@@ -114,7 +114,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				// effectively scales with coeff x 2, and damage dealt multipliers affect half the damage taken bonus
-				baseDamage := damage*improvedSoR + spell.BonusCoefficient*(spell.GetBonusDamage(target)+target.GetSchoolBonusDamageTaken(spell))
+				baseDamage := damage*improvedSeals + spell.BonusCoefficient*(spell.GetBonusDamage(target)+target.GetSchoolBonusDamageTaken(spell))
 				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialCritOnly)
 			},
 		})
@@ -154,8 +154,8 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 				},
 			},
 
-			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-				paladin.applySeal(aura, judgeSpell, sim)
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+				paladin.applySeal(aura, spell, judgeSpell, sim)
 			},
 		})
 

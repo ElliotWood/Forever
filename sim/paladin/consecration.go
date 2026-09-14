@@ -7,11 +7,9 @@ import (
 	"github.com/wowsims/classic/sim/core"
 )
 
+// TODO: assumed baseline, beta will confirm - Consecration is no longer a talent and the
+// Forever tree builds on top of it through Consecrated Ground and Holy Conduit.
 func (paladin *Paladin) registerConsecration() {
-	if !paladin.Talents.Consecration {
-		return
-	}
-
 	ranks := []struct {
 		level    int32
 		spellID  int32
@@ -48,7 +46,8 @@ func (paladin *Paladin) registerConsecration() {
 
 			SpellCode: SpellCode_PaladinConsecration,
 			ManaCost: core.ManaCostOptions{
-				FlatCost: rank.manaCost,
+				FlatCost:   rank.manaCost,
+				Multiplier: paladin.benediction() * paladin.holyConduit() / 100,
 			},
 			Cast: core.CastConfig{
 				DefaultCast: core.Cast{

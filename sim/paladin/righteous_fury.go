@@ -10,14 +10,14 @@ func (paladin *Paladin) registerRighteousFury() {
 	}
 	actionID := core.ActionID{SpellID: 25780}
 
-	// Improved Righteous Fury is multiplicative.
-	rfThreatMultiplier := 1.6 * (1 + []float64{0.0, 0.16, 0.33, 0.5}[paladin.Talents.ImprovedRighteousFury])
-
 	paladin.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.SpellSchool.Matches(core.SpellSchoolHoly) {
-			spell.ThreatMultiplier *= rfThreatMultiplier
+			spell.ThreatMultiplier *= 1.6
 		}
 	})
+
+	// Improved Righteous Fury no longer adds threat, it cuts damage taken while Righteous Fury is up.
+	paladin.PseudoStats.DamageTakenMultiplier *= 1 - 0.02*float64(paladin.Talents.ImprovedRighteousFury)
 
 	rfAura := core.MakePermanent(&core.Aura{Label: "Righteous Fury", ActionID: actionID})
 	paladin.RegisterAura(*rfAura)

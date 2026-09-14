@@ -63,7 +63,7 @@ export const DefaultAPL = APLPresets[Phase.Phase4][0];
 // Default talents. Uses the wowhead calculator format, make the talents on
 // https://wowhead.com/classic/talent-calc and copy the numbers in the url.
 
-export const P4RetTalents = PresetUtils.makePresetTalents('P4/P5 Ret', SavedTalents.create({ talentsString: '500501-503-52230351200315' }));
+export const P4RetTalents = PresetUtils.makePresetTalents('P4/P5 Ret', SavedTalents.create({ talentsString: '0550030022001--052251310002330321' }));
 
 
 export const TalentPresets = {

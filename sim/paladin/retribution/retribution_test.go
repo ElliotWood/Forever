@@ -30,11 +30,13 @@ func TestRetribution(t *testing.T) {
 			ItemFilter:      ItemFilters,
 			EPReferenceStat: proto.Stat_StatAttackPower,
 			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
 		},
 	}))
 }
 
-var Phase45RetTalents = "500501-503-52230351200315"
+var Phase45RetTalents = "0550030022001--052251310002330321"
 
 var Phase1Consumes = core.ConsumesCombo{
 	Label: "P1-Consumes",

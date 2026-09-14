@@ -49,6 +49,8 @@ func (paladin *Paladin) registerSealOfCommand() {
 		{level: 60, spellID: 20920, manaCost: 210, scaleLevel: 60, proc: proc{spellID: 20947}, judge: judge{spellID: 20966, minDamage: 339, maxDamage: 373, scale: 6.1}},
 	}
 
+	improvedSeals := paladin.improvedSeals()
+
 	ppmm := paladin.AutoAttacks.NewPPMManager(7, core.ProcMaskMelee)
 
 	icd := core.Cooldown{
@@ -78,7 +80,7 @@ func (paladin *Paladin) registerSealOfCommand() {
 			BonusCoefficient: 0.429,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				baseDamage := sim.Roll(minDamage, maxDamage) * 0.5 // unless stunned
+				baseDamage := sim.Roll(minDamage, maxDamage) * 0.5 * improvedSeals // unless stunned
 
 				// Seal of Command requires this spell to act as its intermediary dummy,
 				// rolling on the spell hit table. If it succeeds, the actual Judgement of Command rolls on the
@@ -99,7 +101,7 @@ func (paladin *Paladin) registerSealOfCommand() {
 			ProcMask:    core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeProc | core.ProcMaskMeleeDamageProc,
 			Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagNotAProc,
 
-			DamageMultiplier: 0.7 * paladin.getWeaponSpecializationModifier(),
+			DamageMultiplier: 0.7 * improvedSeals * paladin.getWeaponSpecializationModifier(),
 			ThreatMultiplier: 1,
 
 			BonusCoefficient: 0.29,
@@ -155,8 +157,8 @@ func (paladin *Paladin) registerSealOfCommand() {
 				},
 			},
 
-			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-				paladin.applySeal(aura, judgeSpell, sim)
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+				paladin.applySeal(aura, spell, judgeSpell, sim)
 			},
 		})
 
