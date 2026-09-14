@@ -21,7 +21,7 @@ func TestElemental(t *testing.T) {
 			OtherRaces: []proto.Race{proto.Race_RaceOrc},
 
 			Talents:     DefaultTalents,
-			GearSet:     core.GetGearSet("../../../ui/elemental_shaman/gear_sets", "phase_1"),
+			GearSet:     core.GetGearSet("../../../ui/elemental_shaman/gear_sets", "launch"),
 			Rotation:    core.GetAplRotation("../../../ui/elemental_shaman/apls", "default"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Phase1Consumes,

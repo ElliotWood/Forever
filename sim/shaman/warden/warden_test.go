@@ -20,7 +20,7 @@ func TestWardenShaman(t *testing.T) {
 			OtherRaces: []proto.Race{proto.Race_RaceOrc},
 
 			Talents:     DefaultTalents,
-			GearSet:     core.GetGearSet("../../../ui/warden_shaman/gear_sets", "blank"),
+			GearSet:     core.GetGearSet("../../../ui/warden_shaman/gear_sets", "launch"),
 			Rotation:    core.GetAplRotation("../../../ui/warden_shaman/apls", "default"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Phase1Consumes,

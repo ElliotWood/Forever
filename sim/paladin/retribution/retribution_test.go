@@ -20,7 +20,7 @@ func TestRetribution(t *testing.T) {
 			OtherRaces: []proto.Race{proto.Race_RaceDwarf},
 
 			Talents:        Phase45RetTalents,
-			GearSet:        core.GetGearSet("../../../ui/retribution_paladin/gear_sets", "blank"),
+			GearSet:        core.GetGearSet("../../../ui/retribution_paladin/gear_sets", "launch"),
 			Rotation:       core.GetAplRotation("../../../ui/retribution_paladin/apls", "basic_ret"),
 			OtherRotations: []core.RotationCombo{core.GetAplRotation("../../../ui/retribution_paladin/apls", "basic_ret")},
 			Buffs:          core.ForeverBuffs,

@@ -21,7 +21,7 @@ func TestP1TankWarrior(t *testing.T) {
 			OtherRaces: []proto.Race{proto.Race_RaceHuman},
 
 			Talents:  P1Talents,
-			GearSet:  core.GetGearSet("../../../ui/tank_warrior/gear_sets", "p0.bis"),
+			GearSet:  core.GetGearSet("../../../ui/tank_warrior/gear_sets", "launch"),
 			Rotation: core.GetAplRotation("../../../ui/warrior/apls", "dps_reck"),
 			OtherRotations: []core.RotationCombo{
 				core.GetAplRotation("../../../ui/warrior/apls", "dps_no_reck"),
