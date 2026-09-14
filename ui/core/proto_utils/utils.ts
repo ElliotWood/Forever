@@ -119,6 +119,11 @@ export type ClassSpecs<T extends Class> = T extends Class.ClassDruid
 
 export const NUM_SPECS = getEnumValues(Spec).length;
 
+// Spec values are sparse - there are gaps where specs were removed - so the highest one
+// is larger than the count of them. Anything indexed by spec has to be sized by this and
+// not by NUM_SPECS, or the entries past the count are holes rather than values.
+export const MAX_SPEC_INDEX = Math.max(...(getEnumValues(Spec) as Array<number>));
+
 // The order in which specs should be presented, when it matters.
 // Currently this is only used for the order of the paladin blessings UI.
 export const naturalSpecOrder: Array<Spec> = [
@@ -1664,7 +1669,7 @@ export function makeBlankBlessingsAssignments(numPaladins: number): BlessingsAss
 	for (let i = 0; i < numPaladins; i++) {
 		assignments.paladins.push(
 			BlessingsAssignment.create({
-				blessings: new Array(NUM_SPECS).fill(Blessings.BlessingUnknown),
+				blessings: new Array(MAX_SPEC_INDEX + 1).fill(Blessings.BlessingUnknown),
 			}),
 		);
 	}
