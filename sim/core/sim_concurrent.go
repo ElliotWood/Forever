@@ -67,6 +67,11 @@ func (rsrc *raidSimResultCombiner) newDistMetrics() *proto.DistributionMetrics {
 }
 
 func (rsrc *raidSimResultCombiner) newUnitMetrics(baseUnit *proto.UnitMetrics) *proto.UnitMetrics {
+	// Mirror an empty slot back as an empty slot rather than inventing metrics for it.
+	if baseUnit.Dps == nil {
+		return &proto.UnitMetrics{Name: baseUnit.Name, UnitIndex: baseUnit.UnitIndex}
+	}
+
 	newUm := &proto.UnitMetrics{
 		Name:      baseUnit.Name,
 		UnitIndex: baseUnit.UnitIndex,
@@ -246,6 +251,13 @@ func (rsrc *raidSimResultCombiner) addResourceMetrics(unit *proto.UnitMetrics, a
 }
 
 func (rsrc *raidSimResultCombiner) combineUnitMetrics(base *proto.UnitMetrics, add *proto.UnitMetrics, isLast bool, weight float64) {
+	// An empty raid slot still produces a UnitMetrics, but with none of its distribution
+	// metrics set. There is nothing in it to add, and reading through those nil pointers
+	// took down every raid sim run with a gap anywhere in the roster.
+	if add.Dps == nil {
+		return
+	}
+
 	rsrc.combineDistMetrics(base.Dps, add.Dps, isLast, weight)
 	rsrc.combineDistMetrics(base.Dpasp, add.Dpasp, isLast, weight)
 	rsrc.combineDistMetrics(base.Threat, add.Threat, isLast, weight)
