@@ -9,7 +9,6 @@ import (
 
 const (
 	FireRuby              = 20036
-	MindQuickeningGem     = 19339
 	HazzarahsCharmOfMagic = 19959
 	JewelOfKajaro         = 19601
 )
@@ -134,45 +133,6 @@ func init() {
 			OnInit: func(aura *core.Aura, sim *core.Simulation) {
 				mage.Counterspell.CD.Duration -= time.Second * 2
 			},
-		})
-	})
-
-	// https://www.wowhead.com/classic/item=19339/mind-quickening-gem
-	// Use: Quickens the mind, increasing the Mage's casting speed of non-channeled spells by 33% for 20 sec. (2 Min Cooldown)
-	core.NewItemEffect(MindQuickeningGem, func(agent core.Agent) {
-		mage := agent.(MageAgent).GetMage()
-
-		actionID := core.ActionID{ItemID: MindQuickeningGem}
-		duration := time.Second * 20
-
-		buffAura := mage.RegisterAura(core.Aura{
-			ActionID: actionID,
-			Label:    "Mind Quickening",
-			Duration: duration,
-		}).AttachMultiplyCastSpeed(&mage.Unit, 1.33)
-
-		spell := mage.RegisterSpell(core.SpellConfig{
-			ActionID: actionID,
-			Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagOffensiveEquipment,
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    mage.NewTimer(),
-					Duration: time.Minute * 5,
-				},
-				SharedCD: core.Cooldown{
-					Timer:    mage.GetOffensiveTrinketCD(),
-					Duration: duration,
-				},
-			},
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				buffAura.Activate(sim)
-			},
-		})
-
-		mage.AddMajorCooldown(core.MajorCooldown{
-			Spell:    spell,
-			Priority: core.CooldownPriorityBloodlust,
-			Type:     core.CooldownTypeDPS,
 		})
 	})
 
