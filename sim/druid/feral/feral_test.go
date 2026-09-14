@@ -34,11 +34,13 @@ func TestP1Feral(t *testing.T) {
 			ItemFilter:      ItemFilters,
 			EPReferenceStat: proto.Stat_StatAttackPower,
 			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
 		},
 	}))
 }
 
-var P1Talents = "500005301-5500020323202151-15"
+var P1Talents = "-5521002023132213051-05503"
 
 var PlayerOptionsMonoCat = &proto.Player_FeralDruid{
 	FeralDruid: &proto.FeralDruid{

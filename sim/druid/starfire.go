@@ -41,13 +41,13 @@ func (druid *Druid) newStarfireSpellConfig(rank int) core.SpellConfig {
 		SpellSchool: core.SpellSchoolArcane,
 		DefenseType: core.DefenseTypeMagic,
 		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagOmen | core.SpellFlagAPL | core.SpellFlagResetAttackSwing,
+		Flags:       core.SpellFlagAPL | core.SpellFlagResetAttackSwing,
 
 		RequiredLevel: level,
 		Rank:          rank,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: manaCost * (1 - 0.03*float64(druid.Talents.Moonglow)),
+			FlatCost: manaCost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

@@ -23,7 +23,8 @@ func (druid *Druid) registerFaerieFireSpell() {
 		return core.FaerieFireAura(target)
 	})
 
-	if druid.InForm(Cat|Bear) && druid.Talents.FaerieFireFeral {
+	// TODO: The feral version's talent is gone from the tree and is assumed to be baseline, beta will confirm.
+	if druid.InForm(Cat | Bear) {
 		spellCode = SpellCode_DruidFaerieFireFeral
 		actionID = core.ActionID{SpellID: 17392}
 		manaCostOptions = core.ManaCostOptions{}

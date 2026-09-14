@@ -15,7 +15,7 @@ func (druid *Druid) registerClawSpell() {
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
 		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagOmen | SpellFlagBuilder,
+		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagBuilder,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   45 - 1*float64(druid.Talents.Ferocity),
@@ -28,7 +28,7 @@ func (druid *Druid) registerClawSpell() {
 			IgnoreHaste: true,
 		},
 
-		DamageMultiplierAdditive: 1 + 0.1*float64(druid.Talents.SavageFury),
+		DamageMultiplierAdditive: 1 + 0.05*float64(druid.Talents.SavageFury),
 		DamageMultiplier:         1,
 		ThreatMultiplier:         1,
 		BonusCoefficient:         1,

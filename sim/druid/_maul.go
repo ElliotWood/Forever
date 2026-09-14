@@ -18,29 +18,24 @@ func (druid *Druid) registerMaulSpell() {
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
 		ProcMask:    core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeMHAuto,
-		Flags:       SpellFlagOmen | core.SpellFlagMeleeMetrics | core.SpellFlagIncludeTargetBonusDamage | core.SpellFlagNoOnCastComplete,
+		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagIncludeTargetBonusDamage | core.SpellFlagNoOnCastComplete,
 
 		RageCost: core.RageCostOptions{
 			Cost:   rageCost,
 			Refund: 0.8,
 		},
 
-		DamageMultiplier: 1 + 0.1*float64(druid.Talents.SavageFury),
+		DamageMultiplier: 1 + 0.05*float64(druid.Talents.SavageFury),
 		ThreatMultiplier: 1,
 		FlatThreatBonus:  424,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			// Need to specially deactivate CC here in case maul is cast simultaneously with another spell.
-			if druid.ClearcastingAura != nil {
-				druid.ClearcastingAura.Deactivate(sim)
-			}
-
 			modifier := 1.0
 			if druid.BleedCategories.Get(target).AnyActive() {
 				modifier += .3
 			}
 			if druid.AssumeBleedActive || druid.Rip.Dot(target).IsActive() || druid.Rake.Dot(target).IsActive() || druid.Lacerate.Dot(target).IsActive() {
-				modifier *= 1.0 + (0.04 * float64(druid.Talents.RendAndTear))
+				modifier *= 1.0 + (0.02 * float64(druid.Talents.RendAndTear))
 			}
 
 			baseDamage := flatBaseDamage +
