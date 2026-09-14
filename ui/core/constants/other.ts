@@ -1,16 +1,21 @@
 import { Stat } from '../proto/common';
 
-// Forever's content tiers. Forever launches with no raids at all - the original 1-60
-// content plus three new zones and nine new dungeons - and opens its first two raids five
-// weeks later. This is what a sim's tier means.
+// Forever's content tiers. The game is set after Warcraft III Reforged: Forsaken Kingdom
+// and *before* Molten Core, so it launches with no raids at all - the original 1-60 content
+// plus three new zones and nine new dungeons - and opens its first raids five weeks later.
+// That placement is why the launch gear sets contain no raid loot: at this point in the
+// timeline there is none to have.
 export enum Phase {
 	// 4 November 2026. No raids.
 	Launch = 1,
-	// 9 December 2026. Barrow Deeps (10 player), Hyjal Summit (20 player).
+	// 9 December 2026. Barrow Deeps (10 player), Hyjal Summit (20 player) and Onyxia's
+	// Lair returning at 40 - Forever raids at all three sizes, not only the small ones.
 	Tier1,
 	// Spring 2027. Two more raids, a 10 and a 20.
 	Tier2,
-	// Summer 2027. A returning raid alongside another new one.
+	// Summer 2027. An iconic raid returns alongside another new one. Which one has not
+	// been named; Forever's timeline sits before Molten Core, so that is the direction of
+	// travel rather than a confirmed raid.
 	Tier3,
 }
 
