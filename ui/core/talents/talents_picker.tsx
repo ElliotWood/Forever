@@ -519,23 +519,26 @@ class TalentPicker<TalentsProto> extends Component {
 		}
 
 		const spellId = this.getSpellIdForPoints(newPoints);
-		ActionId.fromSpellId(spellId)
-			.fill()
-			.then(actionId => {
-				actionId.setWowheadHref(this.rootElem as HTMLAnchorElement);
-				this.rootElem.style.backgroundImage = `url('${actionId.iconUrl}')`;
-			});
+		if (spellId) {
+			ActionId.fromSpellId(spellId)
+				.fill()
+				.then(actionId => {
+					actionId.setWowheadHref(this.rootElem as HTMLAnchorElement);
+					this.rootElem.style.backgroundImage = `url('${actionId.iconUrl}')`;
+				});
+		}
 	}
 
+	// Returns 0 for a talent with no spell ID. Forever's new talents do not have one:
+	// they are new abilities, so there is nothing on Wowhead to point at and no icon to
+	// fetch. The caller skips the lookup rather than treating it as an error - throwing
+	// here took the whole talents picker down, and with it the Rotation and Results tabs
+	// of every class that has one.
 	getSpellIdForPoints(numPoints: number): number {
 		// 0-indexed rank of talent
 		const rank = Math.max(0, numPoints - 1);
 
-		if (this.config.spellIds[rank]) {
-			return this.config.spellIds[rank];
-		} else {
-			throw new Error(`No rank ${numPoints} for talent ${String(this.config.fieldName)}`);
-		}
+		return this.config.spellIds[rank] ?? 0;
 	}
 
 	update() {
