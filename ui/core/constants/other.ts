@@ -49,6 +49,12 @@ export const CURRENT_CLASSIC_PHASE = ClassicPhase.Phase6;
 // Github pages serves our site under the /classic directory
 export const REPO_NAME = 'classic';
 
+// Where the site is rooted, with a trailing slash. Vite fills this from its `base`, so
+// it follows wherever the site is actually published: '/classic/' by default, and
+// something like '/Forever/classic/' when it is a project page hanging off a repo name.
+// Everything that used to hard-code '/classic/' goes through this.
+export const SITE_BASE = import.meta.env.BASE_URL;
+
 // Get 'elemental_shaman', the pathname part after the repo name
 const pathnameParts = window.location.pathname.split('/');
 const repoPartIdx = pathnameParts.findIndex(part => part == REPO_NAME);

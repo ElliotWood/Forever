@@ -1,11 +1,11 @@
 @font-face {
 	font-family: SimDefaultFont;
-	src: url(/classic/assets/fonts/PlusJakartaSans-Regular.woff2);
+	src: url(#{$site-base}assets/fonts/PlusJakartaSans-Regular.woff2);
 }
 
 @font-face {
 	font-family: SimDefaultFont;
-	src: url(/classic/assets/fonts/PlusJakartaSans-Bold.woff2);
+	src: url(#{$site-base}assets/fonts/PlusJakartaSans-Bold.woff2);
 	font-weight: bold;
 }
 

@@ -7,6 +7,12 @@ ASSETS := $(patsubst assets/%,$(OUT_DIR)/assets/%,$(ASSETS_INPUT))
 rwildcard = $(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 GOROOT := $(shell go env GOROOT)
 UI_SRC := $(shell find ui -name '*.ts' -o -name '*.tsx' -o -name '*.scss' -o -name '*.html')
+# Where the site gets served from, with a trailing slash. Matches vite.config.mts and is
+# overridden the same way, so a project page can be built with
+# SITE_BASE=/<repo>/classic/ make dist/classic/.dirstamp
+SITE_BASE ?= /classic/
+export SITE_BASE
+
 HTML_INDECIES := ui/balance_druid/index.html \
 				 ui/feral_druid/index.html \
 				 ui/feral_tank_druid/index.html \
@@ -86,7 +92,7 @@ ui/core/proto/api.ts: proto/*.proto node_modules
 
 ui/%/index.html: ui/index_template.html
 	$(eval title := $(shell echo $(shell basename $(@D)) | sed -r 's/(^|_)([a-z])/\U \2/g' | cut -c 2-))
-	cat ui/index_template.html | sed -e 's/@@TITLE@@/Classic $(title) Simulator/g' -e 's/@@SPEC@@/$(shell basename $(@D))/g' > $@
+	cat ui/index_template.html | sed -e 's/@@TITLE@@/Classic $(title) Simulator/g' -e 's/@@SPEC@@/$(shell basename $(@D))/g' -e 's|@@BASE@@|$(SITE_BASE)|g' > $@
 
 package-lock.json:
 	npm install
@@ -104,7 +110,7 @@ $(OUT_DIR)/%/index.html: ui/index_template.html $(OUT_DIR)/assets
 	$(eval title := $(shell echo $(shell basename $(@D)) | sed -r 's/(^|_)([a-z])/\U \2/g' | cut -c 2-))
 	echo $(title)
 	mkdir -p $(@D)
-	cat ui/index_template.html | sed -e 's/@@TITLE@@/CLASSIC $(title) Simulator/g' -e 's/@@SPEC@@/$(shell basename $(@D))/g' > $@
+	cat ui/index_template.html | sed -e 's/@@TITLE@@/CLASSIC $(title) Simulator/g' -e 's/@@SPEC@@/$(shell basename $(@D))/g' -e 's|@@BASE@@|$(SITE_BASE)|g' > $@
 
 .PHONY: wasm
 wasm: $(OUT_DIR)/lib.wasm

@@ -4,10 +4,35 @@ on:
     branches:
       - master
   workflow_dispatch:
+
+# Upstream deploys to wowsims/pages-deploy with a token forks do not have, so this
+# publishes to the repository's own Github Pages instead.
+#
+# The site is served from a subdirectory (/classic), and on a project page that sits
+# under the repository name as well, so the prefix is a build input rather than
+# something hard-coded. SITE_BASE defaults to /classic/ everywhere - the makefile, the
+# vite config and the TypeScript all read it from one place - which is exactly what
+# upstream serves, so nothing here changes their build. Set the SITE_BASE repository
+# variable to override it; otherwise it is derived from the repository name.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
       - name: Install Go
         uses: actions/setup-go@v5
         with:
@@ -27,36 +52,31 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Checkout 🛎️
-        uses: actions/checkout@v4
+      - name: Resolve the site base
+        id: base
+        run: echo "value=${SITE_BASE:-/${{ github.event.repository.name }}/classic/}" >> "$GITHUB_OUTPUT"
+        env:
+          SITE_BASE: ${{ vars.SITE_BASE }}
 
       - name: Build 🔧
-        run: |
-          make dist/classic/.dirstamp
+        run: make dist/classic/.dirstamp
+        env:
+          SITE_BASE: ${{ steps.base.outputs.value }}
 
       - name: Test
-        run: |
-          make test
+        run: make test
 
-      # The pages link their assets as /classic/..., so classic has to sit at the site
-      # root rather than being the root itself. dist is that root.
-      - name: Add root redirect
-        run: cp deploy/_redirects dist/_redirects
+      - name: Add the root redirect
+        run: cp deploy/root_index.html dist/index.html
 
-      # pages deploy expects the project to exist. Creating it is idempotent in effect
-      # rather than in fact - it fails once the project is there - so the failure is
-      # ignored and the deploy below is what actually has to succeed.
-      - name: Ensure the Pages project exists
-        continue-on-error: true
-        uses: cloudflare/wrangler-action@v3
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages project create forever-sim --production-branch=master
+          path: dist
 
-      - name: Deploy to Cloudflare Pages 🚀
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=forever-sim --branch=master
+      - name: Deploy to Github Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v4
