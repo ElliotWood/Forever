@@ -1,5 +1,6 @@
 import { BalanceDruidSimUI } from '../balance_druid/sim.js';
 import { IndividualSimUI, IndividualSimUIConfig, RaidSimPreset } from '../core/individual_sim_ui.js';
+import { LaunchStatus, simLaunchStatuses } from '../core/launched_sims.js';
 import { getSpecConfig, Player } from '../core/player.js';
 import { Raid as RaidProto } from '../core/proto/api.js';
 import { Class, EquipmentSpec, Profession, Spec, TristateEffect } from '../core/proto/common.js';
@@ -53,7 +54,12 @@ export const specSimFactories: Record<Spec, (parentElem: HTMLElement, player: Pl
 	[Spec.SpecWarlock]: (parentElem: HTMLElement, player: Player<any>) => new WarlockSimUI(parentElem, player),
 };
 
+// Every spec registers raid presets, including the five with no Go implementation behind
+// them. Offering those in the picker is a trap: the sim has no agent factory for them, so
+// adding one does not simulate badly, it fails the whole raid with "No agent factory for
+// type". Only offer what the sim can actually run.
 export const playerPresets: Array<RaidSimPreset<any>> = naturalSpecOrder
+	.filter(spec => simLaunchStatuses[spec].status != LaunchStatus.Unlaunched)
 	.map(getSpecConfig)
 	.map(config => {
 		const indSimUiConfig = config as IndividualSimUIConfig<any>;
