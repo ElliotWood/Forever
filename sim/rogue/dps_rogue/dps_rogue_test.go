@@ -24,7 +24,7 @@ func TestCombatSinisterStrike(t *testing.T) {
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Phase1Consumes,
 			Phase:       5,
-			SpecOptions: core.SpecOptionsCombo{Label: "No Poisons", SpecOptions: DefaultRogue},
+			SpecOptions: core.SpecOptionsCombo{Label: "Windfury MH", SpecOptions: DefaultRogue},
 
 			ItemFilter:      ItemFilters,
 			EPReferenceStat: proto.Stat_StatAttackPower,
@@ -48,7 +48,7 @@ func TestCombatDaggers(t *testing.T) {
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Phase1Consumes,
 			Phase:       5,
-			SpecOptions: core.SpecOptionsCombo{Label: "No Poisons", SpecOptions: DefaultRogue},
+			SpecOptions: core.SpecOptionsCombo{Label: "Windfury MH", SpecOptions: DefaultRogue},
 
 			ItemFilter:      ItemFilters,
 			EPReferenceStat: proto.Stat_StatAttackPower,
@@ -116,6 +116,8 @@ var Stats = []proto.Stat{
 	proto.Stat_StatMeleeCrit,
 }
 
+// Combat runs Windfury on the main hand and a poison off hand; the Assassination combo
+// below is the one that poisons both.
 var Phase1Consumes = core.ConsumesCombo{
 	Label: "P1-Consumes",
 	Consumes: &proto.Consumes{

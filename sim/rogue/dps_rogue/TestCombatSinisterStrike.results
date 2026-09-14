@@ -181,84 +181,84 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-FullBuffs-P1-Consumes-LongMultiTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
   dps: 375.91722
   tps: 266.90122
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-FullBuffs-P1-Consumes-LongSingleTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
   dps: 308.64592
   tps: 219.1386
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-FullBuffs-P1-Consumes-ShortSingleTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
   dps: 375.39197
   tps: 266.5283
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-NoBuffs-P1-Consumes-LongMultiTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
   dps: 164.32081
   tps: 116.66777
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-NoBuffs-P1-Consumes-LongSingleTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
   dps: 137.0711
   tps: 97.32048
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-NoBuffs-P1-Consumes-ShortSingleTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
   dps: 166.62125
   tps: 118.30109
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-FullBuffs-P1-Consumes-LongMultiTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
   dps: 367.97701
   tps: 261.26368
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-FullBuffs-P1-Consumes-LongSingleTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
   dps: 303.53925
   tps: 215.51287
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-FullBuffs-P1-Consumes-ShortSingleTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
   dps: 366.83568
   tps: 260.45333
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-NoBuffs-P1-Consumes-LongMultiTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
   dps: 160.06147
   tps: 113.64364
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-NoBuffs-P1-Consumes-LongSingleTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
   dps: 135.02398
   tps: 95.86703
  }
 }
 dps_results: {
- key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-No Poisons-combat_sinister_strike-NoBuffs-P1-Consumes-ShortSingleTarget"
+ key: "TestCombatSinisterStrike-Phase5-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
   dps: 161.64073
   tps: 114.76492
