@@ -421,15 +421,15 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 644.46688
-  tps: 441.63726
+  dps: 647.75137
+  tps: 443.08029
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-TheEarthshatterer"
  value: {
-  dps: 612.55385
-  tps: 420.35494
+  dps: 624.43753
+  tps: 425.58137
  }
 }
 dps_results: {
@@ -442,8 +442,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 667.73437
-  tps: 455.39425
+  dps: 669.81902
+  tps: 456.32282
  }
 }
 dps_results: {
@@ -666,15 +666,15 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase2-AllItems-TheEarthfury"
  value: {
-  dps: 651.77122
-  tps: 445.84505
+  dps: 655.17879
+  tps: 447.34474
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase2-AllItems-TheEarthshatterer"
  value: {
-  dps: 625.1973
-  tps: 429.07792
+  dps: 637.56912
+  tps: 434.61459
  }
 }
 dps_results: {
@@ -687,8 +687,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase2-AllItems-TheTenStorms"
  value: {
-  dps: 672.63669
-  tps: 458.52171
+  dps: 674.78858
+  tps: 459.49211
  }
 }
 dps_results: {
@@ -911,15 +911,15 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase3-AllItems-TheEarthfury"
  value: {
-  dps: 665.86617
-  tps: 456.54858
+  dps: 669.21331
+  tps: 458.03591
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase3-AllItems-TheEarthshatterer"
  value: {
-  dps: 633.32573
-  tps: 434.43799
+  dps: 645.28025
+  tps: 439.65294
  }
 }
 dps_results: {
@@ -932,8 +932,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase3-AllItems-TheTenStorms"
  value: {
-  dps: 690.98836
-  tps: 471.64054
+  dps: 693.12303
+  tps: 472.60505
  }
 }
 dps_results: {
@@ -1156,15 +1156,15 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase5-AllItems-TheEarthfury"
  value: {
-  dps: 680.9459
-  tps: 467.25326
+  dps: 684.3757
+  tps: 468.79663
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase5-AllItems-TheEarthshatterer"
  value: {
-  dps: 659.28441
-  tps: 453.39773
+  dps: 671.33054
+  tps: 458.73834
  }
 }
 dps_results: {
@@ -1177,8 +1177,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase5-AllItems-TheTenStorms"
  value: {
-  dps: 703.58792
-  tps: 481.37343
+  dps: 705.65381
+  tps: 482.30245
  }
 }
 dps_results: {

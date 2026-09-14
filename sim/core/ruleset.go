@@ -27,6 +27,17 @@ func (dot *Dot) critCheck(sim *Simulation, target *Unit, attackTable *AttackTabl
 	return dot.Spell.MagicCritCheck(sim, target)
 }
 
+// Bonus healing on Forever gear carries a damage component with it, so that healing
+// gear is not dead weight outside a raid. Hide of the Wild reads 42 healing and 14
+// damage, which is the only published pair, so a third is the rate used here. It feeds
+// SpellDamage rather than SpellPower because the damage half does not heal.
+const ForeverHealingToSpellDamage = 1.0 / 3.0
+
+func (character *Character) addHealingSpellDamage(equipStats stats.Stats) stats.Stats {
+	equipStats[stats.SpellDamage] += equipStats[stats.HealingPower] * ForeverHealingToSpellDamage
+	return equipStats
+}
+
 // Forever pays out hit and critical strike from gear against every kind of attack
 // rather than splitting them into a melee and a spell pool. Attribute conversions are
 // untouched: only the hit and crit an item spells out become universal.

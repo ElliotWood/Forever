@@ -99,8 +99,8 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-CenarionRaiment"
  value: {
-  dps: 482.99017
-  tps: 342.92302
+  dps: 484.40992
+  tps: 343.93104
  }
 }
 dps_results: {
@@ -134,8 +134,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-StormrageRaiment"
  value: {
-  dps: 485.86887
-  tps: 344.9669
+  dps: 489.84315
+  tps: 347.78864
  }
 }
 dps_results: {

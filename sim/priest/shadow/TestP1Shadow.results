@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-Confessor'sRaiment"
  value: {
-  dps: 719.37189
-  tps: 655.1814
+  dps: 733.1815
+  tps: 667.61006
  }
 }
 dps_results: {
@@ -155,22 +155,22 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofFaith"
  value: {
-  dps: 663.51563
-  tps: 602.73098
+  dps: 738.542
+  tps: 670.25471
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofProphecy"
  value: {
-  dps: 684.5969
-  tps: 621.70645
+  dps: 700.7216
+  tps: 636.21868
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofTranscendence"
  value: {
-  dps: 675.67923
-  tps: 613.68129
+  dps: 722.54706
+  tps: 655.86233
  }
 }
 dps_results: {

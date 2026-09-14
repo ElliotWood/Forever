@@ -254,6 +254,7 @@ func (character *Character) applyEquipment() {
 	equipStats := character.EquipStats()
 	if character.Env.IsForever() {
 		equipStats = character.unifyEquipHitAndCrit(equipStats)
+		equipStats = character.addHealingSpellDamage(equipStats)
 	}
 	character.AddStats(equipStats)
 	character.equipStatsApplied = true
