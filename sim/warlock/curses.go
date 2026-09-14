@@ -7,23 +7,23 @@ import (
 	"github.com/wowsims/classic/sim/core"
 )
 
-const CurseOfAgonyRanks = 6
+const BaneOfAgonyRanks = 6
 
-func (warlock *Warlock) getCurseOfAgonyBaseConfig(rank int) core.SpellConfig {
+func (warlock *Warlock) getBaneOfAgonyBaseConfig(rank int) core.SpellConfig {
 	numTicks := int32(12)
 	tickLength := time.Second * 2
 
-	spellId := [CurseOfAgonyRanks + 1]int32{0, 980, 1014, 6217, 11711, 11712, 11713}[rank]
-	spellCoeff := [CurseOfAgonyRanks + 1]float64{0, .046, .077, .083, .083, .083, .083}[rank]
-	baseDamage := [CurseOfAgonyRanks + 1]float64{0, 7, 15, 27, 42, 65, 87}[rank] * (1 + .03*float64(warlock.Talents.ImprovedCurseOfAgony))
-	manaCost := [CurseOfAgonyRanks + 1]float64{0, 25, 50, 90, 130, 170, 215}[rank]
-	level := [CurseOfAgonyRanks + 1]int{0, 8, 18, 28, 38, 48, 58}[rank]
+	spellId := [BaneOfAgonyRanks + 1]int32{0, 980, 1014, 6217, 11711, 11712, 11713}[rank]
+	spellCoeff := [BaneOfAgonyRanks + 1]float64{0, .046, .077, .083, .083, .083, .083}[rank]
+	baseDamage := [BaneOfAgonyRanks + 1]float64{0, 7, 15, 27, 42, 65, 87}[rank] * (1 + .05*float64(warlock.Talents.ImprovedBaneOfAgony))
+	manaCost := [BaneOfAgonyRanks + 1]float64{0, 25, 50, 90, 130, 170, 215}[rank]
+	level := [BaneOfAgonyRanks + 1]int{0, 8, 18, 28, 38, 48, 58}[rank]
 
 	baseDamage *= 1 + warlock.shadowMasteryBonus()
 	snapshotBaseDmgNoBonus := 0.0
 
 	return core.SpellConfig{
-		SpellCode:     SpellCode_WarlockCurseOfAgony,
+		SpellCode:     SpellCode_WarlockBaneOfAgony,
 		ActionID:      core.ActionID{SpellID: spellId},
 		SpellSchool:   core.SpellSchoolShadow,
 		DefenseType:   core.DefenseTypeMagic,
@@ -49,7 +49,7 @@ func (warlock *Warlock) getCurseOfAgonyBaseConfig(rank int) core.SpellConfig {
 
 		Dot: core.DotConfig{
 			Aura: core.Aura{
-				Label: "CurseofAgony-" + warlock.Label + strconv.Itoa(rank),
+				Label: "BaneofAgony-" + warlock.Label + strconv.Itoa(rank),
 			},
 			NumberOfTicks:    numTicks,
 			TickLength:       tickLength,
@@ -63,7 +63,7 @@ func (warlock *Warlock) getCurseOfAgonyBaseConfig(rank int) core.SpellConfig {
 					warlock.AmplifyCurseAura.Deactivate(sim)
 				}
 
-				// CoA starts with 50% base damage, but bonus from spell power is not changed.
+				// BoA starts with 50% base damage, but bonus from spell power is not changed.
 				// Every 4 ticks this base damage is added again, resulting in 150% base damage for the last 4 ticks
 				snapshotBaseDmgNoBonus = baseDmg * 0.5
 
@@ -71,7 +71,7 @@ func (warlock *Warlock) getCurseOfAgonyBaseConfig(rank int) core.SpellConfig {
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
-				if dot.TickCount%4 == 0 { // CoA ramp up
+				if dot.TickCount%4 == 0 { // BoA ramp up
 					dot.SnapshotBaseDamage += snapshotBaseDmgNoBonus
 				}
 			},
@@ -82,25 +82,25 @@ func (warlock *Warlock) getCurseOfAgonyBaseConfig(rank int) core.SpellConfig {
 			if result.Landed() {
 				dot := spell.Dot(target)
 
-				if activeCurse := warlock.ActiveCurseAura.Get(target); activeCurse != nil && activeCurse != dot.Aura {
-					activeCurse.Deactivate(sim)
+				if activeBane := warlock.ActiveBaneAura.Get(target); activeBane != nil && activeBane != dot.Aura {
+					activeBane.Deactivate(sim)
 				}
 
 				dot.Apply(sim)
-				warlock.ActiveCurseAura[target.UnitIndex] = dot.Aura
+				warlock.ActiveBaneAura[target.UnitIndex] = dot.Aura
 			}
 			spell.DealOutcome(sim, result)
 		},
 	}
 }
 
-func (warlock *Warlock) registerCurseOfAgonySpell() {
-	warlock.CurseOfAgony = make([]*core.Spell, 0)
-	for rank := 1; rank <= CurseOfAgonyRanks; rank++ {
-		config := warlock.getCurseOfAgonyBaseConfig(rank)
+func (warlock *Warlock) registerBaneOfAgonySpell() {
+	warlock.BaneOfAgony = make([]*core.Spell, 0)
+	for rank := 1; rank <= BaneOfAgonyRanks; rank++ {
+		config := warlock.getBaneOfAgonyBaseConfig(rank)
 
 		if config.RequiredLevel <= int(warlock.Level) {
-			warlock.CurseOfAgony = append(warlock.CurseOfAgony, warlock.GetOrRegisterSpell(config))
+			warlock.BaneOfAgony = append(warlock.BaneOfAgony, warlock.GetOrRegisterSpell(config))
 		}
 	}
 }
@@ -319,13 +319,13 @@ func (warlock *Warlock) registerAmplifyCurseSpell() {
 	})
 }
 
-func (warlock *Warlock) registerCurseOfDoomSpell() {
+func (warlock *Warlock) registerBaneOfDoomSpell() {
 	if warlock.Level < 60 {
 		return
 	}
 
-	warlock.CurseOfDoom = warlock.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_WarlockCurseOfDoom,
+	warlock.BaneOfDoom = warlock.RegisterSpell(core.SpellConfig{
+		SpellCode:   SpellCode_WarlockBaneOfDoom,
 		ActionID:    core.ActionID{SpellID: 603},
 		SpellSchool: core.SpellSchoolShadow,
 		DefenseType: core.DefenseTypeMagic,
@@ -350,13 +350,13 @@ func (warlock *Warlock) registerCurseOfDoomSpell() {
 		CritDamageBonus: 0,
 
 		DamageMultiplier: 1,
-		ThreatMultiplier: 1 - 0.1*float64(warlock.Talents.ImprovedDrainSoul),
+		ThreatMultiplier: 1,
 		FlatThreatBonus:  160,
 		BonusCoefficient: 1,
 
 		Dot: core.DotConfig{
 			Aura: core.Aura{
-				Label: "CurseofDoom",
+				Label: "BaneofDoom",
 			},
 			NumberOfTicks: 1,
 			TickLength:    time.Minute,
@@ -372,13 +372,61 @@ func (warlock *Warlock) registerCurseOfDoomSpell() {
 			result := spell.CalcOutcome(sim, target, spell.OutcomeMagicHitNoHitCounter)
 			if result.Landed() {
 				dot := spell.Dot(target)
-				if activeCurse := warlock.ActiveCurseAura.Get(target); activeCurse != nil && activeCurse != dot.Aura {
-					activeCurse.Deactivate(sim)
+				if activeBane := warlock.ActiveBaneAura.Get(target); activeBane != nil && activeBane != dot.Aura {
+					activeBane.Deactivate(sim)
 				}
 
 				dot.Apply(sim)
-				warlock.ActiveCurseAura[target.UnitIndex] = dot.Aura
+				warlock.ActiveBaneAura[target.UnitIndex] = dot.Aura
 			}
 		},
+	})
+}
+
+func (warlock *Warlock) registerBaneOfHavocSpell() {
+	if !warlock.Talents.BaneOfHavoc {
+		return
+	}
+
+	actionID := core.ActionID{SpellID: 80240}
+
+	warlock.BaneOfHavocAuras = warlock.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
+		return unit.RegisterAura(core.Aura{
+			Label:    "Bane of Havoc-" + warlock.Label,
+			ActionID: actionID,
+			Duration: time.Minute * 5,
+		})
+	})
+
+	// Only marks the target for now, the 15% damage copy needs a second target to matter
+	warlock.BaneOfHavoc = warlock.RegisterSpell(core.SpellConfig{
+		ActionID:    actionID,
+		SpellSchool: core.SpellSchoolShadow,
+		ProcMask:    core.ProcMaskEmpty,
+		Flags:       core.SpellFlagAPL | WarlockFlagDestruction,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: 300,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: core.GCDDefault,
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcOutcome(sim, target, spell.OutcomeMagicHitNoHitCounter)
+			if result.Landed() {
+				aura := warlock.BaneOfHavocAuras.Get(target)
+				if activeBane := warlock.ActiveBaneAura.Get(target); activeBane != nil && activeBane != aura {
+					activeBane.Deactivate(sim)
+				}
+
+				warlock.ActiveBaneAura[target.UnitIndex] = aura
+				aura.Activate(sim)
+			}
+		},
+
+		RelatedAuras: []core.AuraArray{warlock.BaneOfHavocAuras},
 	})
 }

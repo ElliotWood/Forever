@@ -28,7 +28,9 @@ import {
 	WarlockOptions_WeaponImbue as WarlockWeaponImbue,
 } from '../core/proto/warlock.js';
 // apls
-import BasicRotation from './apls/rotation.apl.json';
+import AfflictionApl from './apls/forever_affliction.apl.json';
+import DSRuinApl from './apls/forever_ds_ruin.apl.json';
+import DemonicPactApl from './apls/forever_pact.apl.json';
 // gear
 import BlankGear from './gear_sets/blank.gear.json';
 import MCGear from './gear_sets/mc.gear.json';
@@ -55,11 +57,13 @@ export const DefaultGear = GearPreBis;
 ///////////////////////////////////////////////////////////////////////////
 
 // P1
-export const RotationSB = PresetUtils.makePresetAPLRotation('Destruction', BasicRotation);
+export const RotationDemonicPact = PresetUtils.makePresetAPLRotation('Demonic Pact', DemonicPactApl);
+export const RotationAffliction = PresetUtils.makePresetAPLRotation('Affliction', AfflictionApl);
+export const RotationDSRuin = PresetUtils.makePresetAPLRotation('DS/Ruin', DSRuinApl);
 
-export const APLPresets = [RotationSB];
+export const APLPresets = [RotationDemonicPact, RotationAffliction, RotationDSRuin];
 
-export const DefaultAPL = RotationSB;
+export const DefaultAPL = RotationDSRuin;
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -68,17 +72,22 @@ export const DefaultAPL = RotationSB;
 // Default talents. Uses the wowhead calculator format, make the talents on
 // https://wowhead.com/classic/talent-calc and copy the numbers in the url.
 
-export const TalentsSMRuid = {
-	name: 'SM/Ruin',
-	data: SavedTalents.create({ talentsString: '5502203112201105--52500051020001' }),
+export const TalentsDemonicPact = {
+	name: 'Demonic Pact',
+	data: SavedTalents.create({ talentsString: '2-0055003231101001351-0550005003' }),
+};
+
+export const TalentsAffliction = {
+	name: 'Affliction',
+	data: SavedTalents.create({ talentsString: '2325002013500135--0550105003' }),
 };
 
 export const TalentsDSRuin = {
 	name: 'DS/Ruin',
-	data: SavedTalents.create({ talentsString: '25002-2050300152201-52500051020001' }),
+	data: SavedTalents.create({ talentsString: '23250020133-0320003201-0550105003' }),
 };
 
-export const TalentPresets = [TalentsSMRuid, TalentsDSRuin];
+export const TalentPresets = [TalentsDemonicPact, TalentsAffliction, TalentsDSRuin];
 
 export const DefaultTalents = TalentsDSRuin;
 
@@ -88,7 +97,7 @@ export const DefaultTalents = TalentsDSRuin;
 
 export const DefaultOptions = WarlockOptions.create({
 	armor: Armor.DemonArmor,
-	summon: Summon.Succubus,
+	summon: Summon.Imp,
 	weaponImbue: WarlockWeaponImbue.NoWeaponImbue,
 });
 
@@ -135,7 +144,6 @@ export const DefaultDebuffs = Debuffs.create({
 	faerieFire: true,
 	improvedScorch: true,
 	judgementOfWisdom: true,
-	shadowWeaving: true,
 	sunderArmor: true,
 });
 

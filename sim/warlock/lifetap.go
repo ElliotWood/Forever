@@ -18,6 +18,7 @@ func (warlock *Warlock) getLifeTapBaseConfig(rank int) core.SpellConfig {
 	level := [LifeTapRanks + 1]int{0, 6, 16, 26, 36, 46, 56}[rank]
 
 	actionID := core.ActionID{SpellID: spellId}
+	petManaShare := 0.5 * float64(warlock.Talents.DemonicEnergies)
 
 	manaMetrics := warlock.NewManaMetrics(actionID)
 	for _, pet := range warlock.BasePets {
@@ -54,6 +55,10 @@ func (warlock *Warlock) getLifeTapBaseConfig(rank int) core.SpellConfig {
 			}
 
 			warlock.AddMana(sim, restore, manaMetrics)
+
+			if petManaShare > 0 && warlock.ActivePet != nil {
+				warlock.ActivePet.AddMana(sim, restore*petManaShare, warlock.ActivePet.LifeTapManaMetrics)
+			}
 		},
 	}
 }

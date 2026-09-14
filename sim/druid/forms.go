@@ -145,6 +145,9 @@ func (druid *Druid) registerCatFormSpell() {
 
 			druid.AutoAttacks.SetMH(druid.WeaponFromMainHand())
 
+			druid.lastCatFormEnergy = druid.CurrentEnergy()
+			druid.lastCatFormExitAt = sim.CurrentTime
+
 			druid.PseudoStats.ThreatMultiplier /= 0.71
 			druid.AddStatDynamic(sim, stats.Dodge, -2*float64(druid.Talents.FelineSwiftness))
 			druid.SetShapeshift(nil)
@@ -204,6 +207,9 @@ func (druid *Druid) registerCatFormSpell() {
 				spell.Cost.Multiplier += 100
 			} else {
 				maxShiftEnergy := core.TernaryFloat64(sim.RandomFloat("Furor") < furorProcChance, 40, 0)
+				if sim.IsForever() {
+					maxShiftEnergy = druid.furorShiftEnergy(sim)
+				}
 				maxShiftEnergy = core.TernaryFloat64(hasWolfheadBonus, maxShiftEnergy+20, maxShiftEnergy)
 				energyDelta := maxShiftEnergy - druid.CurrentEnergy()
 
@@ -217,6 +223,26 @@ func (druid *Druid) registerCatFormSpell() {
 			}
 		},
 	})
+}
+
+// Forever reworks powershifting: instead of a chance at a flat 40 energy, shifting
+// into Cat Form carries over a share of the energy you left the form with, plus a
+// small amount for every second spent out of form.
+// TODO: Beta will show whether the carryover share and the out of form regen both
+// scale per rank, linear scaling is assumed here.
+func (druid *Druid) furorShiftEnergy(sim *core.Simulation) float64 {
+	if druid.Talents.Furor == 0 {
+		return 0
+	}
+
+	points := float64(druid.Talents.Furor)
+	carryOver := druid.lastCatFormEnergy * 0.2 * points
+	outOfForm := 0.0
+	if druid.lastCatFormExitAt > 0 {
+		outOfForm = min(20, 2*(sim.CurrentTime-druid.lastCatFormExitAt).Seconds())
+	}
+
+	return min(druid.MaxEnergy(), carryOver+outOfForm)
 }
 
 // func (druid *Druid) registerBearFormSpell() {

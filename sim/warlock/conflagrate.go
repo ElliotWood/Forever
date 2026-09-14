@@ -16,6 +16,7 @@ func (warlock *Warlock) getConflagrateConfig(rank int) core.SpellConfig {
 	level := [ConflagrateRanks + 1]int{0, 0, 48, 54, 60}[rank]
 
 	spCoeff := 0.429
+	keepImmolateChance := 0.2 * float64(warlock.Talents.ShadowAndFlame)
 
 	return core.SpellConfig{
 		SpellCode:     SpellCode_WarlockConflagrate,
@@ -53,7 +54,7 @@ func (warlock *Warlock) getConflagrateConfig(rank int) core.SpellConfig {
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
 
 			immoSpell := warlock.getActiveImmolateSpell(target)
-			if immoSpell != nil {
+			if immoSpell != nil && !sim.Proc(keepImmolateChance, "Shadow and Flame") {
 				immoSpell.Dot(target).Deactivate(sim)
 			}
 		},

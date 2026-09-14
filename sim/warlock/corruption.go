@@ -41,8 +41,9 @@ func (warlock *Warlock) getCorruptionConfig(rank int) core.SpellConfig {
 
 		CritDamageBonus: 0,
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
+		DamageMultiplierAdditive: 1 + 0.02*float64(warlock.Talents.ImprovedCorruption),
+		DamageMultiplier:         1,
+		ThreatMultiplier:         1,
 
 		Dot: core.DotConfig{
 			Aura: core.Aura{

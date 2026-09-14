@@ -95,7 +95,13 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarlock, {
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.
-	playerIconInputs: [WarlockInputs.PetInput(), WarlockInputs.ImpFireboltRank(), WarlockInputs.ArmorInput(), WarlockInputs.WeaponImbueInput()],
+	playerIconInputs: [
+		WarlockInputs.PetInput(),
+		WarlockInputs.ImpFireboltRank(),
+		WarlockInputs.SacrificeInput(),
+		WarlockInputs.ArmorInput(),
+		WarlockInputs.WeaponImbueInput(),
+	],
 
 	// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
 	includeBuffDebuffInputs: [
