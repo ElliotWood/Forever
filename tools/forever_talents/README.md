@@ -26,7 +26,7 @@ Replace `data/` with the datamined trees once the beta client is out and rerun t
 
 ## Talents whose per-rank scaling is guesswork
 
-60 of the 469 talents, the ones carrying `ranksSource: "manual"`, list rank 1's numbers again
+58 of the 469 talents, most of them carrying `ranksSource: "manual"`, list rank 1's numbers again
 for every other rank. The extra points are not free in game, so whatever the sim does with
 them is invented: implementing them flat makes points 2+ inert, implementing them linearly
 assumes a scale nobody observed. Either way it is a guess, and the classes were converted
@@ -37,10 +37,17 @@ before this was measured, so they do not all guess the same way.
 prints the list, per class. The importer also warns on stderr about the class it is importing,
 so regenerating a tree after the beta datamine shows immediately whether the gap has closed.
 
-The count by class today is Warlock 11, Druid 8, Hunter 8, Paladin 8, Warrior 6, Mage 5,
-Priest 5, Shaman 5, Rogue 4. These are the first thing to re-check against the beta client,
+The count by class today is Warlock 11, Druid 8, Hunter 8, Paladin 8, Mage 5, Priest 5,
+Shaman 5, Rogue 4, Warrior 4. These are the first thing to re-check against the beta client,
 because a five rank talent read from one rank is the largest single source of error in the
 data.
+
+Some of them can be closed before the beta. The write-ups that went up after BlizzCon quote
+full rank lists for talents the stream only showed at rank 1, and where one of those agrees
+with what the sim already assumed it is worth recording: put the ranks in `overrides/` with
+the source in `reason`, and the talent drops off the list above. Bloodthrill and Dual Wield
+Specialization went that way. Treat a single write-up as corroboration of an assumption, not
+as a datamine, and leave the rest alone until there is a client to read.
 
 ## Regenerating a class
 
