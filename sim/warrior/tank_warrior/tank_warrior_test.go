@@ -20,14 +20,17 @@ func TestP1TankWarrior(t *testing.T) {
 			Race:       proto.Race_RaceOrc,
 			OtherRaces: []proto.Race{proto.Race_RaceHuman},
 
-			Talents:  P1Talents,
-			GearSet:  core.GetGearSet("../../../ui/tank_warrior/gear_sets", "launch"),
-			Rotation: core.GetAplRotation("../../../ui/tank_warrior/apls", "protection"),
+			Talents:     P1Talents,
+			GearSet:     core.GetGearSet("../../../ui/tank_warrior/gear_sets", "launch"),
+			Rotation:    core.GetAplRotation("../../../ui/tank_warrior/apls", "protection"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    P1Consumes,
 			SpecOptions: core.SpecOptionsCombo{Label: "Protection", SpecOptions: PlayerOptionsBasic},
 
-			ItemFilter:      ItemFilters,
+			ItemFilter: ItemFilters,
+			// Without this the boss never attacks, so nothing the spec does in response to
+			// being hit can fire and the damage taken metrics are all zero.
+			IsTank:          true,
 			EPReferenceStat: proto.Stat_StatAttackPower,
 			StatsToWeigh:    Stats,
 

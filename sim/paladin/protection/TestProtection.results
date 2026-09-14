@@ -50,48 +50,48 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestProtection-Phase1-StatWeights-Default"
  value: {
-  weights: 0.45415
-  weights: 0.32607
+  weights: 0.47179
+  weights: 0.43906
   weights: 0
-  weights: 0.21549
+  weights: 0.12323
   weights: 0
-  weights: 0.2232
-  weights: 0
-  weights: 0
-  weights: 0
-  weights: 0.1834
+  weights: 0.23405
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.9485
-  weights: 5.37812
-  weights: 0
-  weights: 0
-  weights: 0.16319
-  weights: 0.9485
-  weights: 5.37812
+  weights: 0.19401
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.00766
+  weights: 1.14189
+  weights: 5.64714
   weights: 0
   weights: 0
+  weights: 0.16953
+  weights: 1.14189
+  weights: 5.64714
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.00174
   weights: 0
   weights: 0
   weights: 0
   weights: 0
+  weights: 0.42039
+  weights: 1.62728
   weights: 0
-  weights: 0
-  weights: 0
-  weights: 0
-  weights: 0
+  weights: -1.23606
+  weights: -0.05235
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.0744
+  weights: 0
+  weights: 0
+  weights: 0.07802
   weights: 0
   weights: 0
  }
@@ -155,8 +155,9 @@ dps_results: {
 dps_results: {
  key: "TestProtection-Phase1-Average-Default"
  value: {
-  dps: 684.47465
-  tps: 907.97114
+  dps: 740.19234
+  tps: 984.21164
+  dtps: 715.53737
  }
 }
 dps_results: {
@@ -246,7 +247,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 595.91804
-  tps: 792.64777
+  dps: 660.35706
+  tps: 880.58842
+  dtps: 763.21343
  }
 }

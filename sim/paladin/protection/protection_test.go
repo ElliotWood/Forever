@@ -26,7 +26,10 @@ func TestProtection(t *testing.T) {
 			Consumes:    Phase4Consumes,
 			SpecOptions: core.SpecOptionsCombo{Label: "Basic Prot Rotation", SpecOptions: PlayerOptionsSealofRighteousness},
 
-			ItemFilter:      ItemFilters,
+			ItemFilter: ItemFilters,
+			// Without this the boss never attacks, so nothing the spec does in response to
+			// being hit can fire and the damage taken metrics are all zero.
+			IsTank:          true,
 			EPReferenceStat: proto.Stat_StatAttackPower,
 			StatsToWeigh:    Stats,
 
