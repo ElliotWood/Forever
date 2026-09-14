@@ -129,29 +129,3 @@ var ItemSetBattlegearOfEternalJustice = core.NewItemSet(core.ItemSet{
 		},
 	},
 })
-
-///////////////////////////////////////////////////////////////////////////
-//                            Classic Phase 6 Item Sets - Naxx
-///////////////////////////////////////////////////////////////////////////
-
-var ItemSetRedemptionArmor = core.NewItemSet(core.ItemSet{
-	Name: "Redemption Armor",
-	Bonuses: map[int32]core.ApplyEffect{
-		// Increases the amount healed by your Judgement of Light by 20.
-		2: func(agent core.Agent) {
-			// Nothing to do
-		},
-		// Reduces cooldown on your Lay on Hands by 12 min.
-		4: func(agent core.Agent) {
-			// Nothing to do
-		},
-		// Your Flash of Light and Holy Light spells have a chance to imbue your target with Holy Power.
-		6: func(agent core.Agent) {
-			// Nothing to do
-		},
-		// Your Cleanse spell also heals the target for 200.
-		8: func(agent core.Agent) {
-			// Nothing to do
-		},
-	},
-})

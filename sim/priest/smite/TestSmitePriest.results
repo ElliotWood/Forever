@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-GarmentsoftheOracle"
  value: {
-  dps: 519.40861
-  tps: 378.28737
+  dps: 487.6371
+  tps: 355.61956
  }
 }
 dps_results: {
@@ -153,13 +153,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestSmitePriest-Phase1-AllItems-VestmentsofFaith"
- value: {
-  dps: 539.19773
-  tps: 392.6855
- }
-}
-dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-VestmentsofProphecy"
  value: {
   dps: 485.4405
@@ -169,8 +162,8 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-VestmentsofTranscendence"
  value: {
-  dps: 495.1298
-  tps: 361.48887
+  dps: 500.88309
+  tps: 365.18675
  }
 }
 dps_results: {

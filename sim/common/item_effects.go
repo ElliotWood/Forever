@@ -127,30 +127,9 @@ const (
 	DarkmoonCardBlueDragon     = 19288
 	DarkmoonCardMaelstrom      = 19289
 	TheLobotomizer             = 19324
-	TheUntamedBlade            = 19334
-	DrakeTalonCleaver          = 19353
 	RuneOfTheDawn              = 19812
-	HalberdOfSmiting           = 19874
-	ZulianSlicer               = 19901
-	JekliksCrusher             = 19918
-	TigulesHarpoon             = 19946
-	NatPaglesBrokenReel        = 19947
-	ZandalariHeroBadge         = 19948
-	ZandalariHeroMedallion     = 19949
-	ZandalariHeroCharm         = 19950
-	GrileksGrinder             = 19961
-	GrileksCarver              = 19962
-	PitchforkOfMadness         = 19963
-	EmeraldDragonfang          = 20578
-	Earthstrike                = 21180
-	WrathOfCenarius            = 21190
-	EyeOfMoam                  = 21473
-	ScarabBrooch               = 21625
-	BadgeOfTheSwarmguard       = 21670
-	KalimdorsRevenge           = 21679
 	DraconicInfusedEmblem      = 22268
 	HeartOfWyrmthalak          = 22321
-	TalismanOfAscendance       = 22678
 	GauntletsOfUndeadSlaying   = 23078
 	HandwrapsOfUndeadSlaying   = 23081
 	HandguardsOfUndeadSlaying  = 23082
@@ -165,8 +144,6 @@ const (
 	WristwrapsOfUndeadSlaying  = 23093
 	MarkOfTheChampionPhys      = 23206
 	MarkOfTheChampionSpell     = 23207
-	MisplacedServoArm          = 23221
-	JomGabbar                  = 23570
 )
 
 func init() {
@@ -835,11 +812,6 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/classic/item=19353/drake-talon-cleaver
-	// Chance on hit: Delivers a fatal wound for 240 damage.
-	// Original proc rate 1.0 increased to approximately 1.60 in SoD phase 5
-	itemhelpers.CreateWeaponCoHProcDamage(DrakeTalonCleaver, "Drake Talon Cleaver", 1.0, 467167, core.SpellSchoolPhysical, 240, 0, 0.0, core.DefenseTypeMelee) // TBD confirm 1 ppm in SoD
-
 	// https://www.wowhead.com/classic/item=19170/ebon-hand
 	// Chance on hit: Sends a shadowy bolt at the enemy causing 125 to 275 Shadow damage.
 	// TODO: Proc rate assumed and needs testing
@@ -885,11 +857,6 @@ func init() {
 	// Chance on hit: Blasts a target for 45 Nature damage.
 	// 1.4 PPM from Armaments Discord - assumed same as horde Glacial Dagger
 	itemhelpers.CreateWeaponCoHProcDamage(ElectrifiedDagger, "Electrified Dagger", 1.4, 23592, core.SpellSchoolNature, 45, 0, 0, core.DefenseTypeMagic)
-
-	// https://www.wowhead.com/classic/item=20578/emerald-dragonfang
-	// Chance on hit: Blasts the enemy with acid for 87 to 105 Nature damage.
-	// Chance on Hit Assumed: 1 PPM
-	itemhelpers.CreateWeaponCoHProcDamage(EmeraldDragonfang, "Emerald Dragonfang", 1.0, 24993, core.SpellSchoolNature, 87, 18, 0, core.DefenseTypeMagic)
 
 	// https://www.wowhead.com/classic/item=17112/empyrean-demolisher
 	// Chance on hit: Increases your attack speed by 20% for 10 sec.
@@ -1293,14 +1260,6 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/classic/item=19962/grileks-carver
-	// +117 Attack Power when fighting Dragonkin.
-	core.NewMobTypeAttackPowerEffect(GrileksCarver, []proto.MobType{proto.MobType_MobTypeDragonkin}, 117)
-
-	// https://www.wowhead.com/classic/item=19961/grileks-grinder
-	// +48 Attack Power when fighting Dragonkin.
-	core.NewMobTypeAttackPowerEffect(GrileksGrinder, []proto.MobType{proto.MobType_MobTypeDragonkin}, 48)
-
 	// https://www.wowhead.com/classic/item=9651/gryphon-riders-stormhammer
 	itemhelpers.CreateWeaponCoHProcDamage(GryphonRidersStormhammer, "Gryphon Rider's Stormhammer", 1.0, 18081, core.SpellSchoolNature, 91, 34, 0, core.DefenseTypeMagic)
 
@@ -1383,10 +1342,6 @@ func init() {
 
 	// https://www.wowhead.com/classic/item=2164/gut-ripper
 	itemhelpers.CreateWeaponCoHProcDamage(GutRipper, "Gut Ripper", 1.0, 18107, core.SpellSchoolPhysical, 95, 26, 0, core.DefenseTypeMelee)
-
-	// https://www.wowhead.com/classic/item=19874/halberd-of-smiting
-	// Equip: Chance to decapitate the target on a melee swing, causing 452 to 676 damage.
-	itemhelpers.CreateWeaponEquipProcDamage(HalberdOfSmiting, "Halberd of Smiting", 2.1, 467819, core.SpellSchoolPhysical, 452, 224, 0.0, core.DefenseTypeMelee) // Works as phantom strike
 
 	// https://www.wowhead.com/classic/item=15814/hameyas-slayer
 	// Chance on hit: Wounds the target causing them to bleed for 80 damage over 30 sec.
@@ -1535,16 +1490,8 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/classic/item=19918/jekliks-crusher
-	// Chance on hit: Wounds the target for 200 to 220 damage.
-	// Original proc rate 4.0 lowered to 1.5 in SoD phase 5
-	itemhelpers.CreateWeaponCoHProcDamage(JekliksCrusher, "Jeklik's Crusher", 4.0, 467642, core.SpellSchoolPhysical, 200, 20, 0.0, core.DefenseTypeMelee)
-
 	// https://www.wowhead.com/classic/item=17054/joonhos-mercy
 	itemhelpers.CreateWeaponCoHProcDamage(JoonhosMercy, "Joonho's Mercy", 1.0, 20883, core.SpellSchoolArcane, 70, 0, 0, core.DefenseTypeMagic)
-
-	// https://www.wowhead.com/classic/item=21679/kalimdors-revenge
-	itemhelpers.CreateWeaponCoHProcDamage(KalimdorsRevenge, "Kalimdor's Revenge", 1.25, 26415, core.SpellSchoolNature, 239, 38, 0, core.DefenseTypeMagic) // TODO Update PPM/scaling from PTR
 
 	// https://www.wowhead.com/classic/item=12582/keris-of-zulserak
 	// Chance on hit: Inflicts numbing pain that deals 10 Nature damage every 2 sec and increases time between target's attacks by 10% for 10 sec.
@@ -1707,52 +1654,6 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/classic/item=23221/misplaced-servo-arm
-	// Equip: Chance to discharge electricity causing 100 to 150 Nature damage to your target.
-	// If dual-wielding, your other weapon can proc the Misplaced Servo Arm when it strikes as well.
-	// Chance-on-hit for the other weapon is determined by it's base weapon speed, set to 2PPM.
-	// Same interaction when dual-wielding two Misplaced Servo Arms, one melee from one Arm has a chance to proc both Arms.
-
-	core.NewItemEffect(MisplacedServoArm, func(agent core.Agent) {
-		character := agent.GetCharacter()
-		actionID := core.ActionID{SpellID: 29150}
-		label := "Electric Discharge Trigger"
-		ppm := 2.0
-		procMask := character.GetProcMaskForItem(MisplacedServoArm)
-		if procMask == core.ProcMaskMelee {
-			ppm = 4.0
-		}
-		ppmm := character.AutoAttacks.NewPPMManager(ppm, core.ProcMaskMelee)
-
-		procSpell := character.GetOrRegisterSpell(core.SpellConfig{
-			ActionID:    actionID,
-			SpellSchool: core.SpellSchoolNature,
-			DefenseType: core.DefenseTypeMagic,
-			ProcMask:    core.ProcMaskEmpty,
-			Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell,
-
-			DamageMultiplier: 1,
-			ThreatMultiplier: 1,
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				spell.CalcAndDealDamage(sim, target, sim.Roll(100, 150), spell.OutcomeMagicHitAndCrit)
-			},
-		})
-
-		core.MakeProcTriggerAura(&character.Unit, core.ProcTrigger{
-			Name:              label,
-			Callback:          core.CallbackOnSpellHitDealt,
-			Outcome:           core.OutcomeLanded,
-			ProcMask:          core.ProcMaskMelee,
-			SpellFlagsExclude: core.SpellFlagSuppressEquipProcs,
-			Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				if ppmm.Proc(sim, spell.ProcMask, label) {
-					procSpell.Cast(sim, result.Target)
-				}
-			},
-		})
-	})
-
 	// https://www.wowhead.com/classic/item=1982/nightblade
 	itemhelpers.CreateWeaponCoHProcDamage(Nightblade, "Nightblade", 1.0, 18211, core.SpellSchoolShadow, 125, 150, 0, core.DefenseTypeMagic)
 
@@ -1807,10 +1708,6 @@ func init() {
 	// https://www.wowhead.com/classic/item=18816/perditions-blade
 	// Chance on hit: Blasts a target for 40 to 56 Fire damage.
 	itemhelpers.CreateWeaponCoHProcDamage(PerditionsBlade, "Perdition's Blade", 2.8, 23267, core.SpellSchoolFire, 40, 56, 0, core.DefenseTypeMagic)
-
-	// https://www.wowhead.com/classic/item=19963/pitchfork-of-madness
-	// +117 Attack Power when fighting Demons.
-	core.NewMobTypeAttackPowerEffect(PitchforkOfMadness, []proto.MobType{proto.MobType_MobTypeDemon}, 117)
 
 	// https://www.wowhead.com/classic/item=18348/quelserrar
 	// Chance on hit: When active, grants the wielder 13 defense and 300 armor for 10 sec.
@@ -2366,24 +2263,6 @@ func init() {
 	// https://www.wowhead.com/classic/item=13060/the-needler
 	itemhelpers.CreateWeaponCoHProcDamage(TheNeedler, "The Needler", 3.0, 13060, core.SpellSchoolPhysical, 75, 0, 0, core.DefenseTypeMelee)
 
-	// https://www.wowhead.com/classic/item=19334/the-untamed-blade
-	// Chance on hit: Increases Strength by 300 for 8 sec.
-	// Estimated based on data from WoW Armaments Discord
-	// Original proc rate 1.0 lowered to approximately 0.55 in SoD phase 5
-	itemhelpers.CreateWeaponProcAura(TheUntamedBlade, "The Untamed Blade", 1.0, func(character *core.Character) *core.Aura {
-		return character.RegisterAura(core.Aura{
-			ActionID: core.ActionID{SpellID: 23719},
-			Label:    "Untamed Fury",
-			Duration: time.Second * 8,
-			OnGain: func(aura *core.Aura, sim *core.Simulation) {
-				aura.Unit.AddStatsDynamic(sim, stats.Stats{stats.Strength: 300})
-			},
-			OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-				aura.Unit.AddStatsDynamic(sim, stats.Stats{stats.Strength: -300})
-			},
-		})
-	})
-
 	// https://www.wowhead.com/classic/item=17705/thrash-blade
 	itemhelpers.CreateWeaponProcSpell(ThrashBlade, "Thrash Blade", 1.0, func(character *core.Character) *core.Spell {
 		return character.GetOrRegisterSpell(core.SpellConfig{
@@ -2505,10 +2384,6 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/classic/item=19946/tigules-harpoon
-	// +60 Attack Power when fighting Beasts.
-	core.NewMobTypeAttackPowerEffect(TigulesHarpoon, []proto.MobType{proto.MobType_MobTypeBeast}, 60)
-
 	// https://www.wowhead.com/classic/item=13183/venomspitter
 	// Chance on hit: Poisons target for 7 Nature damage every 2 sec for 30 sec.
 	// TODO: Proc rate assumed and needs testing
@@ -2610,10 +2485,6 @@ func init() {
 			},
 		})
 	})
-
-	// https://www.wowhead.com/classic/item=19901/zulian-slicer
-	// Chance on hit: Slices the enemy for 72 to 96 Nature damage.
-	itemhelpers.CreateWeaponCoHProcDamage(ZulianSlicer, "Zulian Slicer", 1.2, 467738, core.SpellSchoolNature, 72, 24, 0.35, core.DefenseTypeMelee)
 
 	///////////////////////////////////////////////////////////////////////////
 	//                                 Trinkets
@@ -2761,10 +2632,6 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/classic/item=21180/earthstrike
-	// Use: Increases your melee and ranged attack power by 280.  Effect lasts for 20 sec. (2 Min Cooldown)
-	core.NewSimpleStatOffensiveTrinketEffect(Earthstrike, stats.Stats{stats.AttackPower: 280, stats.RangedAttackPower: 280}, time.Second*20, time.Second*120)
-
 	// https://www.wowhead.com/classic/item=18815/essence-of-the-pure-flame
 	// Equip: When struck in combat inflicts 13 Fire damage to the attacker.
 	core.NewItemEffect(EssenceOfThePureFlame, func(agent core.Agent) {
@@ -2795,10 +2662,6 @@ func init() {
 			},
 		})
 	})
-
-	// https://www.wowhead.com/classic/item=21473/eye-of-moam
-	// Use: Increases damage done by magical spells and effects by up to 50, and decreases the magical resistances of your spell targets by 100 for 30 sec. (3 Min Cooldown)
-	core.NewSimpleStatOffensiveTrinketEffect(EyeOfMoam, stats.Stats{stats.SpellDamage: 50, stats.SpellPenetration: 100}, time.Second*30, time.Minute*3)
 
 	core.NewItemEffect(HandOfJustice, func(agent core.Agent) {
 		character := agent.GetCharacter()
@@ -2858,61 +2721,6 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/classic/item=23570/jom-gabbar
-	// Use: Increases attack power by 65 and an additional 65 every 2 sec.  Lasts 20 sec. (2 Min Cooldown)
-	core.NewItemEffect(JomGabbar, func(agent core.Agent) {
-		character := agent.GetCharacter()
-		actionID := core.ActionID{SpellID: 29602}
-		duration := time.Second * 20
-		bonusPerStack := stats.Stats{
-			stats.AttackPower:       65,
-			stats.RangedAttackPower: 65,
-		}
-
-		jomGabbarAura := character.GetOrRegisterAura(core.Aura{
-			Label:     "Jom Gabbar",
-			ActionID:  actionID,
-			Duration:  duration,
-			MaxStacks: 10,
-			OnGain: func(aura *core.Aura, sim *core.Simulation) {
-				core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-					Period:          time.Second * 2,
-					NumTicks:        10,
-					Priority:        core.ActionPriorityAuto,
-					TickImmediately: true,
-					OnAction: func(sim *core.Simulation) {
-						aura.AddStack(sim)
-					},
-				})
-			},
-			OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
-				bonusStats := bonusPerStack.Multiply(float64(newStacks - oldStacks))
-				character.AddStatsDynamic(sim, bonusStats)
-			},
-		})
-		spell := character.RegisterSpell(core.SpellConfig{
-			ActionID: actionID,
-			Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagOffensiveEquipment,
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute * 2,
-				},
-				SharedCD: core.Cooldown{
-					Timer:    character.GetOffensiveTrinketCD(),
-					Duration: duration,
-				},
-			},
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				jomGabbarAura.Activate(sim)
-			},
-		})
-		character.AddMajorCooldown(core.MajorCooldown{
-			Type:  core.CooldownTypeDPS,
-			Spell: spell,
-		})
-	})
-
 	// https://www.wowhead.com/classic/item=17774/mark-of-the-chosen
 	core.NewItemEffect(MarkOfTheChosen, func(agent core.Agent) {
 		character := agent.GetCharacter()
@@ -2953,70 +2761,9 @@ func init() {
 		}))
 	})
 
-	// https://www.wowhead.com/classic/item=19947/nat-pagles-broken-reel
-	core.NewSimpleStatOffensiveTrinketEffect(NatPaglesBrokenReel, stats.Stats{
-		stats.SpellHit: 10 * core.SpellHitRatingPerHitChance,
-		stats.MeleeHit: 10 * core.MeleeHitRatingPerHitChance,
-	}, time.Second*15, time.Second*90)
-
 	// https://www.wowhead.com/classic/item=19812/rune-of-the-dawn
 	// Equip: Increases damage done to Undead by magical spells and effects by up to 48.
 	core.NewMobTypeSpellPowerEffect(RuneOfTheDawn, []proto.MobType{proto.MobType_MobTypeUndead}, 48)
-
-	// https://www.wowhead.com/classic/item=21625/scarab-brooch
-	core.NewItemEffect(ScarabBrooch, func(agent core.Agent) {
-		character := agent.GetCharacter()
-		actionID := core.ActionID{ItemID: ScarabBrooch}
-
-		shieldSpell := character.GetOrRegisterSpell(core.SpellConfig{
-			ActionID:    core.ActionID{SpellID: 26470},
-			SpellSchool: core.SpellSchoolNature,
-			ProcMask:    core.ProcMaskSpellHealing,
-			Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell | core.SpellFlagHelpful,
-
-			DamageMultiplier: 1,
-			ThreatMultiplier: 1,
-
-			Shield: core.ShieldConfig{
-				Aura: core.Aura{
-					Label:    "Scarab Brooch Shield",
-					Duration: time.Second * 30,
-				},
-			},
-		})
-
-		activeAura := core.MakeProcTriggerAura(&character.Unit, core.ProcTrigger{
-			Name:     "Persistent Shield",
-			Callback: core.CallbackOnHealDealt,
-			Duration: time.Second * 30,
-			Handler: func(sim *core.Simulation, _ *core.Spell, result *core.SpellResult) {
-				shieldSpell.Shield(result.Target).Apply(sim, result.Damage*0.15)
-			},
-		})
-
-		spell := character.GetOrRegisterSpell(core.SpellConfig{
-			ActionID:    actionID,
-			SpellSchool: core.SpellSchoolPhysical,
-			ProcMask:    core.ProcMaskEmpty,
-			Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagOffensiveEquipment,
-
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute * 3,
-				},
-			},
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				activeAura.Activate(sim)
-			},
-		})
-
-		character.AddMajorCooldown(core.MajorCooldown{
-			Type:  core.CooldownTypeDPS,
-			Spell: spell,
-		})
-	})
 
 	// https://www.wowhead.com/classic/item=11819/second-wind
 	// Use: Restores 30 mana every 1 sec for 10 sec. (15 Min Cooldown)
@@ -3095,67 +2842,6 @@ func init() {
 	// Equip: +81 Attack Power when fighting Undead.
 	core.NewMobTypeAttackPowerEffect(SealOfTheDawn, []proto.MobType{proto.MobType_MobTypeUndead}, 81)
 
-	// https://www.wowhead.com/classic/item=237283/talisman-of-ascendance
-	// Use: Your next 5 damage or healing spells cast within 20 seconds will grant a bonus of up to 40 damage and up to 75 healing, stacking up to 5 times.
-	// Expires after 6 damage or healing spells or 20 seconds, whichever occurs first. (50 Sec Cooldown)
-	core.NewItemEffect(TalismanOfAscendance, func(agent core.Agent) {
-		character := agent.GetCharacter()
-
-		actionID := core.ActionID{ItemID: TalismanOfAscendance}
-		duration := time.Second * 20
-		bonusPerStack := stats.Stats{
-			stats.SpellDamage:  40,
-			stats.HealingPower: 75,
-		}
-
-		buffAura := character.GetOrRegisterAura(core.Aura{
-			ActionID:  actionID,
-			Label:     "Ascendance",
-			Duration:  duration,
-			MaxStacks: 5,
-			OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
-				bonusStats := bonusPerStack.Multiply(float64(newStacks - oldStacks))
-				character.AddStatsDynamic(sim, bonusStats)
-			},
-			OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-				if !spell.ProcMask.Matches(core.ProcMaskSpellDamage | core.ProcMaskSpellHealing) {
-					return
-				}
-
-				if aura.GetStacks() == 5 {
-					aura.Deactivate(sim)
-				} else {
-					aura.AddStack(sim)
-				}
-			},
-		})
-
-		cdSpell := character.GetOrRegisterSpell(core.SpellConfig{
-			ActionID: actionID,
-			Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagOffensiveEquipment,
-
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute,
-				},
-				SharedCD: core.Cooldown{
-					Timer:    character.GetOffensiveTrinketCD(),
-					Duration: duration,
-				},
-			},
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				buffAura.Activate(sim)
-			},
-		})
-
-		character.AddMajorCooldown(core.MajorCooldown{
-			Spell: cdSpell,
-			Type:  core.CooldownTypeDPS,
-		})
-	})
-
 	// https://www.wowhead.com/classic/item=23078/gauntlets-of-undead-slaying
 	// +60 Attack Power when fighting Undead.
 	core.NewMobTypeAttackPowerEffect(GauntletsOfUndeadSlaying, []proto.MobType{proto.MobType_MobTypeUndead}, 60)
@@ -3207,170 +2893,6 @@ func init() {
 	// https://www.wowhead.com/classic/item=18820/talisman-of-ephemeral-power
 	// Use: Increases damage and healing done by magical spells and effects by up to 175 for 15 sec. (1 Min, 30 Sec Cooldown)
 	core.NewSimpleStatOffensiveTrinketEffect(TalismanOfEphemeralPower, stats.Stats{stats.SpellPower: 175}, time.Second*15, time.Second*90)
-
-	// https://www.wowhead.com/classic/item=19948/zandalarian-hero-badge
-	// Increases your armor by 2000 and defense skill by 30 for 20 sec.
-	// Every time you take melee or ranged damage, this bonus is reduced by 200 armor and 3 defense.
-	core.NewItemEffect(ZandalariHeroBadge, func(agent core.Agent) {
-		character := agent.GetCharacter()
-
-		actionID := core.ActionID{ItemID: ZandalariHeroBadge}
-		duration := time.Second * 20
-		bonusPerStack := stats.Stats{
-			stats.Armor:   200,
-			stats.Defense: 3,
-		}
-
-		buffAura := character.GetOrRegisterAura(core.Aura{
-			Label:     "Fragile Armor",
-			ActionID:  actionID,
-			Duration:  duration,
-			MaxStacks: 10,
-			OnGain: func(aura *core.Aura, sim *core.Simulation) {
-				aura.SetStacks(sim, aura.MaxStacks)
-			},
-			OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
-				bonusStats := bonusPerStack.Multiply(float64(newStacks - oldStacks))
-				character.AddStatsDynamic(sim, bonusStats)
-			},
-			OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				if spell.ProcMask.Matches(core.ProcMaskMeleeOrRanged) && result.Landed() {
-					aura.RemoveStack(sim)
-				}
-			},
-		})
-
-		cdSpell := character.GetOrRegisterSpell(core.SpellConfig{
-			ActionID: actionID,
-			Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagOffensiveEquipment,
-
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute * 2,
-				},
-			},
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				buffAura.Activate(sim)
-			},
-		})
-
-		character.AddMajorCooldown(core.MajorCooldown{
-			Spell: cdSpell,
-			Type:  core.CooldownTypeSurvival,
-		})
-	})
-
-	// https://www.wowhead.com/classic/item=19950/zandalarian-hero-charm
-	// Increases your spell damage by up to 204 and your healing by up to 408 for 20 sec.
-	// Every time you cast a spell, the bonus is reduced by 17 spell damage and 34 healing.
-	core.NewItemEffect(ZandalariHeroCharm, func(agent core.Agent) {
-		character := agent.GetCharacter()
-
-		actionID := core.ActionID{ItemID: ZandalariHeroCharm}
-		duration := time.Second * 20
-		bonusPerStack := stats.Stats{
-			stats.SpellDamage:  17,
-			stats.HealingPower: 34,
-		}
-
-		buffAura := character.GetOrRegisterAura(core.Aura{
-			ActionID:  actionID,
-			Label:     "Unstable Power",
-			Duration:  duration,
-			MaxStacks: 12,
-			OnGain: func(aura *core.Aura, sim *core.Simulation) {
-				aura.SetStacks(sim, aura.MaxStacks)
-			},
-			OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
-				bonusStats := bonusPerStack.Multiply(float64(newStacks - oldStacks))
-				character.AddStatsDynamic(sim, bonusStats)
-			},
-			OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-				if !spell.ProcMask.Matches(core.ProcMaskSpellDamage) {
-					return
-				}
-				aura.RemoveStack(sim)
-			},
-		})
-
-		cdSpell := character.GetOrRegisterSpell(core.SpellConfig{
-			ActionID: actionID,
-			Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagOffensiveEquipment,
-
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute * 2,
-				},
-				SharedCD: core.Cooldown{
-					Timer:    character.GetOffensiveTrinketCD(),
-					Duration: duration,
-				},
-			},
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				buffAura.Activate(sim)
-			},
-		})
-
-		character.AddMajorCooldown(core.MajorCooldown{
-			Spell: cdSpell,
-			Type:  core.CooldownTypeDPS,
-		})
-	})
-
-	// https://www.wowhead.com/classic/item=19949/zandalarian-hero-medallion
-	core.NewItemEffect(ZandalariHeroMedallion, func(agent core.Agent) {
-		character := agent.GetCharacter()
-
-		actionID := core.ActionID{ItemID: ZandalariHeroMedallion}
-		duration := time.Second * 20
-
-		buffAura := character.GetOrRegisterAura(core.Aura{
-			ActionID:  actionID,
-			Label:     "Restless Strength",
-			Duration:  duration,
-			MaxStacks: 20,
-			OnGain: func(aura *core.Aura, sim *core.Simulation) {
-				aura.SetStacks(sim, aura.MaxStacks)
-			},
-			OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
-				character.PseudoStats.BonusPhysicalDamage += 2 * float64(newStacks-oldStacks)
-			},
-			OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				if result.Landed() && spell.ProcMask.Matches(core.ProcMaskMeleeOrRanged) {
-					aura.RemoveStack(sim)
-				}
-			},
-		})
-
-		cdSpell := character.GetOrRegisterSpell(core.SpellConfig{
-			ActionID: actionID,
-			Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagOffensiveEquipment,
-
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute * 2,
-				},
-				SharedCD: core.Cooldown{
-					Timer:    character.GetOffensiveTrinketCD(),
-					Duration: duration,
-				},
-			},
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				buffAura.Activate(sim)
-			},
-		})
-
-		character.AddMajorCooldown(core.MajorCooldown{
-			Spell: cdSpell,
-			Type:  core.CooldownTypeDPS,
-		})
-	})
 
 	///////////////////////////////////////////////////////////////////////////
 	//                                 Other
@@ -3529,88 +3051,6 @@ func init() {
 			Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 				flamestrikeSpell.Cast(sim, spell.Unit)
 			},
-		})
-	})
-
-	// https://www.wowhead.com/classic/item=21190/wrath-of-cenarius
-	// Gives a chance when your harmful spells land to increase the damage of your spells and effects by 132 for 10 sec.
-	// (Proc chance: 5%)
-	core.NewItemEffect(WrathOfCenarius, func(agent core.Agent) {
-		character := agent.GetCharacter()
-		buffAura := character.RegisterAura(core.Aura{
-			ActionID: core.ActionID{SpellID: 25906},
-			Label:    "Spell Blasting",
-			Duration: time.Second * 10,
-			OnGain: func(aura *core.Aura, sim *core.Simulation) {
-				character.AddStatDynamic(sim, stats.SpellDamage, 132)
-			},
-			OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-				character.AddStatDynamic(sim, stats.SpellDamage, -132)
-			},
-		})
-
-		core.MakeProcTriggerAura(&agent.GetCharacter().Unit, core.ProcTrigger{
-			Name:       "Spell Blasting Trigger",
-			Callback:   core.CallbackOnSpellHitDealt,
-			Outcome:    core.OutcomeLanded,
-			ProcMask:   core.ProcMaskSpellDamage,
-			ProcChance: 0.05,
-			Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				buffAura.Activate(sim)
-			},
-		})
-	})
-
-	// https://www.wowhead.com/classic/item=21670/badge-of-the-swarmguard
-	// Use: Chance on melee or ranged attack to grant 200 armor pen stacks up to 6 times.  Lasts 30 sec. (3 Min Cooldown)
-	core.NewItemEffect(BadgeOfTheSwarmguard, func(agent core.Agent) {
-		character := agent.GetCharacter()
-
-		procAura := character.RegisterAura(core.Aura{
-			Label:     "Insight of the Qiraji",
-			ActionID:  core.ActionID{SpellID: 26481},
-			Duration:  core.NeverExpires,
-			MaxStacks: 6,
-			OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
-				character.AddStatDynamic(sim, stats.ArmorPenetration, 200*float64(newStacks-oldStacks))
-			},
-		})
-
-		auraLabel := "Badge of the Swarmguard"
-		actionID := core.ActionID{ItemID: BadgeOfTheSwarmguard}
-		trinketAura := core.MakeProcTriggerAura(&character.Unit, core.ProcTrigger{
-			Name:              auraLabel,
-			ActionID:          actionID,
-			Duration:          time.Second * 30,
-			Callback:          core.CallbackOnSpellHitDealt,
-			Outcome:           core.OutcomeLanded,
-			ProcMask:          core.ProcMaskMeleeOrRanged,
-			SpellFlagsExclude: core.SpellFlagSuppressEquipProcs,
-			PPM:               10.0,
-			Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-				procAura.Activate(sim)
-				procAura.AddStack(sim)
-			},
-		})
-
-		spell := character.RegisterSpell(core.SpellConfig{
-			ActionID: actionID,
-			Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagOffensiveEquipment,
-
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute * 3,
-				},
-			},
-			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-				trinketAura.Activate(sim)
-			},
-		})
-
-		character.AddMajorCooldown(core.MajorCooldown{
-			Spell: spell,
-			Type:  core.CooldownTypeDPS,
 		})
 	})
 

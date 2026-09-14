@@ -99,15 +99,8 @@ stat_weights_results: {
 dps_results: {
  key: "TestAssassinationMutilate-Phase1-AllItems-BloodfangArmor"
  value: {
-  dps: 906.04525
-  tps: 643.29213
- }
-}
-dps_results: {
- key: "TestAssassinationMutilate-Phase1-AllItems-BonescytheArmor"
- value: {
-  dps: 970.31275
-  tps: 687.05383
+  dps: 865.50972
+  tps: 614.5119
  }
 }
 dps_results: {
@@ -127,8 +120,8 @@ dps_results: {
 dps_results: {
  key: "TestAssassinationMutilate-Phase1-AllItems-Deathdealer'sEmbrace"
  value: {
-  dps: 907.98808
-  tps: 644.67154
+  dps: 866.53884
+  tps: 615.24258
  }
 }
 dps_results: {
@@ -155,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestAssassinationMutilate-Phase1-AllItems-Madcap'sOutfit"
  value: {
-  dps: 863.23871
-  tps: 612.89948
+  dps: 852.04217
+  tps: 604.94994
  }
 }
 dps_results: {

@@ -99,15 +99,8 @@ stat_weights_results: {
 dps_results: {
  key: "TestCombatDaggers-Phase1-AllItems-BloodfangArmor"
  value: {
-  dps: 1031.1401
-  tps: 732.10947
- }
-}
-dps_results: {
- key: "TestCombatDaggers-Phase1-AllItems-BonescytheArmor"
- value: {
-  dps: 1133.68762
-  tps: 785.86903
+  dps: 983.65859
+  tps: 698.3976
  }
 }
 dps_results: {
@@ -127,8 +120,8 @@ dps_results: {
 dps_results: {
  key: "TestCombatDaggers-Phase1-AllItems-Deathdealer'sEmbrace"
  value: {
-  dps: 1037.47797
-  tps: 736.60936
+  dps: 990.5698
+  tps: 703.30456
  }
 }
 dps_results: {
@@ -155,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestCombatDaggers-Phase1-AllItems-Madcap'sOutfit"
  value: {
-  dps: 976.05825
-  tps: 693.00136
+  dps: 976.12886
+  tps: 693.05149
  }
 }
 dps_results: {

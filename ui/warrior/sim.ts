@@ -114,14 +114,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarrior, {
 		// Preset rotations that the user can quickly select.
 		rotations: [...Presets.APLPresets[ClassicPhase.Phase1]],
 		// Preset gear configurations that the user can quickly select.
-		gear: [
-			...Presets.GearPresets[ClassicPhase.Phase6],
-			...Presets.GearPresets[ClassicPhase.Phase5],
-			...Presets.GearPresets[ClassicPhase.Phase4],
-			...Presets.GearPresets[ClassicPhase.Phase3],
-			...Presets.GearPresets[ClassicPhase.Phase2],
-			...Presets.GearPresets[ClassicPhase.Phase1],
-		],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase2], ...Presets.GearPresets[ClassicPhase.Phase1]],
 		// Preset builds that the user can quickly select.
 		builds: [],
 	},

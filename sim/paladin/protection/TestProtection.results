@@ -99,8 +99,8 @@ stat_weights_results: {
 dps_results: {
  key: "TestProtection-Phase1-AllItems-Avenger'sBattlegear"
  value: {
-  dps: 540.3095
-  tps: 659.97154
+  dps: 507.69862
+  tps: 614.02994
  }
 }
 dps_results: {
@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-Phase1-AllItems-JudgementArmor"
  value: {
-  dps: 497.17798
-  tps: 618.98457
+  dps: 496.48307
+  tps: 607.90126
  }
 }
 dps_results: {
@@ -143,13 +143,6 @@ dps_results: {
  value: {
   dps: 484.58818
   tps: 591.87922
- }
-}
-dps_results: {
- key: "TestProtection-Phase1-AllItems-RedemptionArmor"
- value: {
-  dps: 476.21912
-  tps: 598.4233
  }
 }
 dps_results: {

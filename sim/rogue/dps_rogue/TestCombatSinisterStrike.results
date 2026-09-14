@@ -99,15 +99,8 @@ stat_weights_results: {
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-BloodfangArmor"
  value: {
-  dps: 972.51321
-  tps: 690.48438
- }
-}
-dps_results: {
- key: "TestCombatSinisterStrike-Phase1-AllItems-BonescytheArmor"
- value: {
-  dps: 1084.43463
-  tps: 750.08701
+  dps: 913.59433
+  tps: 648.65198
  }
 }
 dps_results: {
@@ -127,8 +120,8 @@ dps_results: {
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Deathdealer'sEmbrace"
  value: {
-  dps: 984.33225
-  tps: 698.8759
+  dps: 925.96676
+  tps: 657.4364
  }
 }
 dps_results: {
@@ -155,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Madcap'sOutfit"
  value: {
-  dps: 911.35698
-  tps: 647.06346
+  dps: 907.15699
+  tps: 644.08146
  }
 }
 dps_results: {

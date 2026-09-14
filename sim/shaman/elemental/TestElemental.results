@@ -120,8 +120,8 @@ dps_results: {
 dps_results: {
  key: "TestElemental-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 633.03196
-  tps: 494.15634
+  dps: 591.90009
+  tps: 462.30747
  }
 }
 dps_results: {
@@ -129,13 +129,6 @@ dps_results: {
  value: {
   dps: 546.3536
   tps: 429.46125
- }
-}
-dps_results: {
- key: "TestElemental-Phase1-AllItems-TheEarthshatterer"
- value: {
-  dps: 594.22861
-  tps: 466.98596
  }
 }
 dps_results: {
@@ -148,8 +141,8 @@ dps_results: {
 dps_results: {
  key: "TestElemental-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 592.48401
-  tps: 464.6335
+  dps: 588.93185
+  tps: 461.15818
  }
 }
 dps_results: {

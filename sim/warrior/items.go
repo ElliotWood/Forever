@@ -10,7 +10,6 @@ import (
 const (
 	MarshalsPlateGauntlets = 16484
 	GeneralsPlateGauntlets = 16548
-	LifegivingGem          = 19341
 	RageOfMugamba          = 19577
 	GrileksCharmOfMight    = 19951
 	DiamondFlask           = 20130
@@ -99,47 +98,6 @@ func init() {
 			OnInit: func(aura *core.Aura, sim *core.Simulation) {
 				warrior.Hamstring.Cost.FlatModifier -= 2
 			},
-		})
-	})
-
-	core.NewItemEffect(LifegivingGem, func(agent core.Agent) {
-		warrior := agent.(WarriorAgent).GetWarrior()
-		actionID := core.ActionID{ItemID: LifegivingGem}
-		healthMetrics := warrior.NewHealthMetrics(actionID)
-
-		var bonusHealth float64
-		lifegivingGemAura := warrior.RegisterAura(core.Aura{
-			Label:    "Gift of Life",
-			ActionID: core.ActionID{SpellID: 23725},
-			Duration: time.Second * 20,
-			OnGain: func(aura *core.Aura, sim *core.Simulation) {
-				bonusHealth = warrior.MaxHealth() * 0.15
-				warrior.AddStatsDynamic(sim, stats.Stats{stats.Health: bonusHealth})
-				warrior.GainHealth(sim, bonusHealth, healthMetrics)
-			},
-			OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-				warrior.AddStatsDynamic(sim, stats.Stats{stats.Health: -bonusHealth})
-			},
-		})
-
-		lifegivingGemSpell := warrior.RegisterSpell(AnyStance, core.SpellConfig{
-			ActionID: actionID,
-
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    warrior.NewTimer(),
-					Duration: time.Minute * 5,
-				},
-			},
-
-			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-				lifegivingGemAura.Activate(sim)
-			},
-		})
-
-		warrior.AddMajorCooldown(core.MajorCooldown{
-			Spell: lifegivingGemSpell.Spell,
-			Type:  core.CooldownTypeSurvival,
 		})
 	})
 

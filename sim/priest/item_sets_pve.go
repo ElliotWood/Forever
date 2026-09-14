@@ -1,8 +1,6 @@
 package priest
 
 import (
-	"time"
-
 	"github.com/wowsims/classic/sim/core"
 	"github.com/wowsims/classic/sim/core/stats"
 )
@@ -90,44 +88,6 @@ var ItemSetGarmentsOfTheOracle = core.NewItemSet(core.ItemSet{
 		// Increases the duration of your Renew spell by 3 sec.
 		5: func(agent core.Agent) {
 			// Nothing to do
-		},
-	},
-})
-
-///////////////////////////////////////////////////////////////////////////
-//                            Classic Phase 6 Item Sets - Naxx
-///////////////////////////////////////////////////////////////////////////
-
-var ItemSetVestmentsOfFaith = core.NewItemSet(core.ItemSet{
-	Name: "Vestments of Faith",
-	Bonuses: map[int32]core.ApplyEffect{
-		// Reduces the mana cost of your Renew spell by 12%.
-		2: func(agent core.Agent) {
-			// Nothing to do
-		},
-		// On Greater Heal critical hits, your target will gain Armor of Faith, absorbing up to 500 damage.
-		4: func(agent core.Agent) {
-			// Nothing to do
-		},
-		// Reduces the threat from your healing spells.
-		6: func(agent core.Agent) {
-			// Nothing to do
-		},
-		// Each spell you cast can trigger an Epiphany, increasing your mana regeneration by 24 for 30 sec.
-		8: func(agent core.Agent) {
-			c := agent.GetCharacter()
-
-			procAura := c.NewTemporaryStatsAura("Epiphany", core.ActionID{SpellID: 28802}, stats.Stats{stats.MP5: 24}, time.Second*30)
-			core.MakeProcTriggerAura(&c.Unit, core.ProcTrigger{
-				Name:       "Item - Epiphany Proc (Spell Cast)",
-				Callback:   core.CallbackOnCastComplete,
-				ProcMask:   core.ProcMaskSpellDamage,
-				SpellFlags:   core.SpellFlagHelpful,
-				ProcChance: 0.05,
-				Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
-					procAura.Activate(sim)
-				},
-			})
 		},
 	},
 })

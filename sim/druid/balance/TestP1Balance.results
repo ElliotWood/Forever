@@ -134,8 +134,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-StormrageRaiment"
  value: {
-  dps: 611.1585
-  tps: 445.51381
+  dps: 577.56125
+  tps: 423.18294
  }
 }
 dps_results: {

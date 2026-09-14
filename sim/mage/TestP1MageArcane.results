@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestP1MageArcane-Phase1-AllItems-EnigmaVestments"
  value: {
-  dps: 704.50245
-  tps: 517.13679
+  dps: 633.72519
+  tps: 467.36163
  }
 }
 dps_results: {
@@ -122,13 +122,6 @@ dps_results: {
  value: {
   dps: 663.28647
   tps: 487.92682
- }
-}
-dps_results: {
- key: "TestP1MageArcane-Phase1-AllItems-FrostfireRegalia"
- value: {
-  dps: 778.78619
-  tps: 490.41354
  }
 }
 dps_results: {
@@ -155,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestP1MageArcane-Phase1-AllItems-NetherwindRegalia"
  value: {
-  dps: 659.02032
-  tps: 471.46506
+  dps: 614.76505
+  tps: 453.70621
  }
 }
 dps_results: {

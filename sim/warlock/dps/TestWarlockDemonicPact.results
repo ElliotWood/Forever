@@ -120,8 +120,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Doomcaller'sAttire"
  value: {
-  dps: 1062.25452
-  tps: 944.2687
+  dps: 990.17328
+  tps: 879.87558
  }
 }
 dps_results: {
@@ -162,22 +162,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-NemesisRaiment"
  value: {
-  dps: 1032.32407
-  tps: 800.76058
- }
-}
-dps_results: {
- key: "TestWarlockDemonicPact-Phase1-AllItems-PlagueheartRaiment"
- value: {
-  dps: 1166.74513
-  tps: 984.13988
- }
-}
-dps_results: {
- key: "TestWarlockDemonicPact-Phase1-AllItems-TheBlackBook-19337"
- value: {
-  dps: 986.74262
-  tps: 860.07403
+  dps: 992.6397
+  tps: 883.18869
  }
 }
 dps_results: {
