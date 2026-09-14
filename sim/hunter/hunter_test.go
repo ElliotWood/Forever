@@ -30,11 +30,13 @@ func TestP1Hunter(t *testing.T) {
 			ItemFilter:      ItemFilters,
 			EPReferenceStat: proto.Stat_StatAttackPower,
 			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
 		},
 	}))
 }
 
-var P1Talents = "-05451002503051-33400023023"
+var P1Talents = "5023000501-0050550501503051"
 
 var P1Consumes = core.ConsumesCombo{
 	Label: "P1-Consumes",

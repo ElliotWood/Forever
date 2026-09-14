@@ -40,7 +40,8 @@ func (hunter *Hunter) getSerpentStingConfig(rank int) core.SpellConfig {
 			return hunter.DistanceFromTarget >= core.MinRangedAttackDistance
 		},
 
-		DamageMultiplier: 1 + 0.02*float64(hunter.Talents.ImprovedSerpentSting),
+		// TODO: only rank 1 of Improved Stings was observed, the damage bonus is assumed to scale per rank.
+		DamageMultiplier: 1 + 0.06*float64(hunter.Talents.ImprovedStings),
 		ThreatMultiplier: 1,
 
 		Dot: core.DotConfig{

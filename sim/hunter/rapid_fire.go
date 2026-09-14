@@ -12,7 +12,8 @@ func (hunter *Hunter) registerRapidFire() {
 	}
 
 	actionID := core.ActionID{SpellID: 3045}
-	cooldown := time.Minute * 5
+	// TODO: only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per rank.
+	cooldown := time.Minute*5 - time.Minute*time.Duration(hunter.Talents.RapidKilling)
 
 	hunter.RapidFireAura = hunter.RegisterAura(core.Aura{
 		Label:    "Rapid Fire",

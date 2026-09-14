@@ -3,12 +3,13 @@ package hunter
 import (
 	"strconv"
 	"time"
+
 	"github.com/wowsims/classic/sim/core"
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-// Utility function to create an Improved Hawk Aura
-func (hunter *Hunter) createImprovedHawkAura(auraLabel string, actionID core.ActionID) *core.Aura {
+// Utility function to create the Deadly Aspects haste aura
+func (hunter *Hunter) createDeadlyAspectsAura(auraLabel string, actionID core.ActionID) *core.Aura {
 	bonusMultiplier := 1.3
 	return hunter.GetOrRegisterAura(core.Aura{
 		Label:    auraLabel,
@@ -47,8 +48,9 @@ func (hunter *Hunter) getMaxHawkRank() int {
 }
 
 func (hunter *Hunter) getAspectOfTheHawkSpellConfig(rank int) core.SpellConfig {
-	var impHawkAura *core.Aura
-	improvedHawkProcChance := 0.01 * float64(hunter.Talents.ImprovedAspectOfTheHawk)
+	var deadlyAspectsAura *core.Aura
+	// TODO: only rank 1 was observed, the proc chance is assumed to scale per rank.
+	deadlyAspectsProcChance := 0.02 * float64(hunter.Talents.DeadlyAspects)
 
 	spellIds := [8]int32{0, 13165, 14318, 14319, 14320, 14321, 14322, 25296}
 	levels := [8]int{0, 10, 18, 28, 38, 48, 58, 60}
@@ -56,8 +58,8 @@ func (hunter *Hunter) getAspectOfTheHawkSpellConfig(rank int) core.SpellConfig {
 	spellId := spellIds[rank]
 	level := levels[rank]
 
-	if hunter.Talents.ImprovedAspectOfTheHawk > 0 {
-		impHawkAura = hunter.createImprovedHawkAura(
+	if hunter.Talents.DeadlyAspects > 0 {
+		deadlyAspectsAura = hunter.createDeadlyAspectsAura(
 			"Quick Shots",
 			core.ActionID{SpellID: 6150},
 		)
@@ -67,26 +69,26 @@ func (hunter *Hunter) getAspectOfTheHawkSpellConfig(rank int) core.SpellConfig {
 
 	actionID := core.ActionID{SpellID: spellId}
 	aspectOfTheHawkAura := hunter.GetOrRegisterAura(core.Aura{
-		Label:    "Aspect of the Hawk"+strconv.Itoa(rank),
+		Label:    "Aspect of the Hawk" + strconv.Itoa(rank),
 		ActionID: actionID,
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.AddStatDynamic(sim, stats.RangedAttackPower, rap * hunter.AspectOfTheHawkAPMultiplier)
+			aura.Unit.AddStatDynamic(sim, stats.RangedAttackPower, rap*hunter.AspectOfTheHawkAPMultiplier)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.AddStatDynamic(sim, stats.RangedAttackPower, -rap * hunter.AspectOfTheHawkAPMultiplier)
+			aura.Unit.AddStatDynamic(sim, stats.RangedAttackPower, -rap*hunter.AspectOfTheHawkAPMultiplier)
 		},
 		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if !spell.ProcMask.Matches(core.ProcMaskRangedAuto) {
 				return
 			}
 
-			if impHawkAura != nil && sim.Proc(improvedHawkProcChance, "Imp Aspect of the Hawk") {
-				impHawkAura.Activate(sim)
+			if deadlyAspectsAura != nil && sim.Proc(deadlyAspectsProcChance, "Deadly Aspects") {
+				deadlyAspectsAura.Activate(sim)
 			}
 		},
 	})
-	
+
 	aspectOfTheHawkAura.NewExclusiveEffect("Aspect", true, core.ExclusiveEffect{})
 
 	return core.SpellConfig{
