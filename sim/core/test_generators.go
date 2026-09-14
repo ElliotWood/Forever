@@ -485,7 +485,8 @@ func FullCharacterTestSuiteGenerator(configs []CharacterSuiteConfig) []TestGener
 					generator: &SingleCharacterStatsTestGenerator{
 						Name: "Default",
 						Request: &proto.ComputeStatsRequest{
-							Raid: defaultRaid,
+							Raid:    defaultRaid,
+							Ruleset: config.Ruleset,
 						},
 					},
 				},

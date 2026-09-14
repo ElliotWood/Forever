@@ -19,8 +19,8 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 1144.7
-  final_stats: 4
-  final_stats: 27.905
+  final_stats: 5
+  final_stats: 29.905
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -63,8 +63,8 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 3.51224
-  weights: 2.28116
+  weights: 3.5149
+  weights: 2.29804
   weights: 0
   weights: 0
   weights: 0
@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 274.16945
-  tps: 197.05982
+  dps: 276.4982
+  tps: 198.69343
  }
 }
 dps_results: {
@@ -120,15 +120,15 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-FieldMarshal'sSanctuary"
  value: {
-  dps: 277.71624
-  tps: 199.54009
+  dps: 285.2593
+  tps: 204.76845
  }
 }
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 274.16945
-  tps: 197.05982
+  dps: 276.4982
+  tps: 198.69343
  }
 }
 dps_results: {
@@ -148,15 +148,15 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-Warlord'sSanctuary"
  value: {
-  dps: 277.71624
-  tps: 199.54009
+  dps: 285.2593
+  tps: 204.76845
  }
 }
 dps_results: {
  key: "TestP1Balance-Phase1-Average-Default"
  value: {
-  dps: 292.39109
-  tps: 209.75539
+  dps: 292.43058
+  tps: 209.79488
  }
 }
 dps_results: {
