@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	Consumes,
@@ -44,7 +44,7 @@ export const GearP5BIS = PresetUtils.makePresetGear('P5 BiS', P5BISGear);
 
 
 export const GearPresets = {
-	[Phase.Phase5]: [GearP0BIS, GearP1BIS, GearP2BIS, GearP3BIS, GearP4BIS, GearP5BIS],
+	[ClassicPhase.Phase5]: [GearP0BIS, GearP1BIS, GearP2BIS, GearP3BIS, GearP4BIS, GearP5BIS],
 };
 
 export const DefaultGear = GearP5BIS;
@@ -56,10 +56,10 @@ export const DefaultGear = GearP5BIS;
 // export const APLP1Balance = PresetUtils.makePresetAPLRotation('Balance', P1APL);
 export const DefaultBalance = PresetUtils.makePresetAPLRotation('Default Balance', Balance);
 export const APLPresets = {
-	[Phase.Phase1]: [DefaultBalance],
+	[ClassicPhase.Phase1]: [DefaultBalance],
 };
 
-export const DefaultAPL = APLPresets[Phase.Phase1][0];
+export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -68,10 +68,10 @@ export const DefaultAPL = APLPresets[Phase.Phase1][0];
 export const TalentsP1Balance = PresetUtils.makePresetTalents('Balance', SavedTalents.create({ talentsString: '50322201515001351--505302' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [TalentsP1Balance],
+	[ClassicPhase.Phase1]: [TalentsP1Balance],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase1][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options

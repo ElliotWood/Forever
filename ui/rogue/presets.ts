@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -52,8 +52,8 @@ export const GearSinisterStrikeP1BiS = PresetUtils.makePresetGear('Sinister Stri
 export const GearSinisterStrikeP2BiS = PresetUtils.makePresetGear('Sinister Strike P2 BiS', SinisterStrikeGearP2BiS);
 
 export const GearPresets = {
-	[Phase.Phase1]: [GearBackstabPreBiS, GearSinisterStrikePreBiS, GearBackstabP1BiS, GearSinisterStrikeP1BiS],
-	[Phase.Phase2]: [GearBackstabPreBiS, GearSinisterStrikePreBiS, GearBackstabP2BiS, GearSinisterStrikeP2BiS],
+	[ClassicPhase.Phase1]: [GearBackstabPreBiS, GearSinisterStrikePreBiS, GearBackstabP1BiS, GearSinisterStrikeP1BiS],
+	[ClassicPhase.Phase2]: [GearBackstabPreBiS, GearSinisterStrikePreBiS, GearBackstabP2BiS, GearSinisterStrikeP2BiS],
 };
 
 export const DefaultGear = GearSinisterStrikePreBiS;
@@ -70,8 +70,8 @@ export const ROTATION_PRESET_SINISTER_STRIKE_IEA = PresetUtils.makePresetAPLRota
 export const ROTATION_PRESET_MUTILATE = PresetUtils.makePresetAPLRotation('Mutilate', MutilateAPL, {});
 
 export const APLPresets = {
-	[Phase.Phase1]: [ROTATION_PRESET_BACKSTAB, ROTATION_PRESET_SINISTER_STRIKE, ROTATION_PRESET_BACKSTAB_SWEATY, ROTATION_PRESET_SINISTER_STRIKE_SWEATY, ROTATION_PRESET_SINISTER_STRIKE_IEA, ROTATION_PRESET_MUTILATE],
-	[Phase.Phase2]: [ROTATION_PRESET_BACKSTAB, ROTATION_PRESET_SINISTER_STRIKE, ROTATION_PRESET_BACKSTAB_SWEATY, ROTATION_PRESET_SINISTER_STRIKE_SWEATY, ROTATION_PRESET_SINISTER_STRIKE_IEA, ROTATION_PRESET_MUTILATE],
+	[ClassicPhase.Phase1]: [ROTATION_PRESET_BACKSTAB, ROTATION_PRESET_SINISTER_STRIKE, ROTATION_PRESET_BACKSTAB_SWEATY, ROTATION_PRESET_SINISTER_STRIKE_SWEATY, ROTATION_PRESET_SINISTER_STRIKE_IEA, ROTATION_PRESET_MUTILATE],
+	[ClassicPhase.Phase2]: [ROTATION_PRESET_BACKSTAB, ROTATION_PRESET_SINISTER_STRIKE, ROTATION_PRESET_BACKSTAB_SWEATY, ROTATION_PRESET_SINISTER_STRIKE_SWEATY, ROTATION_PRESET_SINISTER_STRIKE_IEA, ROTATION_PRESET_MUTILATE],
 };
 
 //Need to add main hand equip logic or talent/rotation logic to map to Auto APL
@@ -80,10 +80,10 @@ export const DefaultAPLs: Record<number, PresetUtils.PresetRotation> = {
 	[1]: ROTATION_PRESET_BACKSTAB,
 };
 
-export const DefaultAPLBackstab = APLPresets[Phase.Phase2][0];
-export const DefaultAPLSinisterStrike = APLPresets[Phase.Phase2][1];
-export const DefaultAPLIEA = APLPresets[Phase.Phase2][4];
-export const DefaultAPLMutilate = APLPresets[Phase.Phase2][5];
+export const DefaultAPLBackstab = APLPresets[ClassicPhase.Phase2][0];
+export const DefaultAPLSinisterStrike = APLPresets[ClassicPhase.Phase2][1];
+export const DefaultAPLIEA = APLPresets[ClassicPhase.Phase2][4];
+export const DefaultAPLMutilate = APLPresets[ClassicPhase.Phase2][5];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -103,18 +103,18 @@ export const CombatSinisterStrikeIEATalents = PresetUtils.makePresetTalents('Imp
 export const AssassinationMutilateTalents = PresetUtils.makePresetTalents('Mutilate', SavedTalents.create({ talentsString: '00530310551021051-302303202004' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [CombatBackstabTalents, CombatSinisterStrikeTalents, CombatSinisterStrikeIEATalents, AssassinationMutilateTalents],
-	[Phase.Phase2]: [CombatBackstabTalents, CombatSinisterStrikeTalents, CombatSinisterStrikeIEATalents, AssassinationMutilateTalents],
+	[ClassicPhase.Phase1]: [CombatBackstabTalents, CombatSinisterStrikeTalents, CombatSinisterStrikeIEATalents, AssassinationMutilateTalents],
+	[ClassicPhase.Phase2]: [CombatBackstabTalents, CombatSinisterStrikeTalents, CombatSinisterStrikeIEATalents, AssassinationMutilateTalents],
 };
 
-export const DefaultTalentsAssassin = TalentPresets[Phase.Phase2][0];
-export const DefaultTalentsCombat = TalentPresets[Phase.Phase2][0];
-export const DefaultTalentsSubtlety = TalentPresets[Phase.Phase2][0];
+export const DefaultTalentsAssassin = TalentPresets[ClassicPhase.Phase2][0];
+export const DefaultTalentsCombat = TalentPresets[ClassicPhase.Phase2][0];
+export const DefaultTalentsSubtlety = TalentPresets[ClassicPhase.Phase2][0];
 
-export const DefaultTalentsBackstab = TalentPresets[Phase.Phase2][0];
-export const DefaultTalentsSinisterStrike = TalentPresets[Phase.Phase2][1];
-export const DefaultTalentsIEA = TalentPresets[Phase.Phase2][2];
-export const DefaultTalentsMutilate = TalentPresets[Phase.Phase2][3];
+export const DefaultTalentsBackstab = TalentPresets[ClassicPhase.Phase2][0];
+export const DefaultTalentsSinisterStrike = TalentPresets[ClassicPhase.Phase2][1];
+export const DefaultTalentsIEA = TalentPresets[ClassicPhase.Phase2][2];
+export const DefaultTalentsMutilate = TalentPresets[ClassicPhase.Phase2][3];
 
 export const DefaultTalents = DefaultTalentsSinisterStrike;
 
@@ -168,7 +168,7 @@ export const P1Consumes = Consumes.create({
 });
 
 export const DefaultConsumes = {
-	[Phase.Phase1]: P1Consumes,
+	[ClassicPhase.Phase1]: P1Consumes,
 };
 
 export const P1RaidBuffs = RaidBuffs.create({
@@ -183,7 +183,7 @@ export const P1RaidBuffs = RaidBuffs.create({
 });
 
 export const DefaultRaidBuffs = {
-	[Phase.Phase1]: P1RaidBuffs,
+	[ClassicPhase.Phase1]: P1RaidBuffs,
 };
 
 export const P1IndividualBuffs = IndividualBuffs.create({
@@ -199,7 +199,7 @@ export const P1IndividualBuffs = IndividualBuffs.create({
 });
 
 export const DefaultIndividualBuffs = {
-	[Phase.Phase1]: P1IndividualBuffs,
+	[ClassicPhase.Phase1]: P1IndividualBuffs,
 };
 
 export const P1DefaultDebuffs = Debuffs.create({
@@ -209,7 +209,7 @@ export const P1DefaultDebuffs = Debuffs.create({
 });
 
 export const DefaultDebuffs = {
-	[Phase.Phase1]: P1DefaultDebuffs,
+	[ClassicPhase.Phase1]: P1DefaultDebuffs,
 };
 
 export const P1OtherDefaults = {
@@ -218,5 +218,5 @@ export const P1OtherDefaults = {
 };
 
 export const OtherDefaults = {
-	[Phase.Phase1]: P1OtherDefaults,
+	[ClassicPhase.Phase1]: P1OtherDefaults,
 };

@@ -1,7 +1,7 @@
 import * as BuffDebuffInputs from '../core/components/inputs/buffs_debuffs';
 import * as ConsumesInputs from '../core/components/inputs/consumables';
 import * as OtherInputs from '../core/components/other_inputs.js';
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
 import { APLRotation } from '../core/proto/apl.js';
@@ -166,28 +166,28 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWardenShaman, {
 
 	presets: {
 		talents: [
-			...Presets.TalentPresets[Phase.Phase6],
-			...Presets.TalentPresets[Phase.Phase5],
-			...Presets.TalentPresets[Phase.Phase4],
-			...Presets.TalentPresets[Phase.Phase3],
-			...Presets.TalentPresets[Phase.Phase2],
-			...Presets.TalentPresets[Phase.Phase1],
+			...Presets.TalentPresets[ClassicPhase.Phase6],
+			...Presets.TalentPresets[ClassicPhase.Phase5],
+			...Presets.TalentPresets[ClassicPhase.Phase4],
+			...Presets.TalentPresets[ClassicPhase.Phase3],
+			...Presets.TalentPresets[ClassicPhase.Phase2],
+			...Presets.TalentPresets[ClassicPhase.Phase1],
 		],
 		rotations: [
-			...Presets.APLPresets[Phase.Phase6],
-			...Presets.APLPresets[Phase.Phase5],
-			...Presets.APLPresets[Phase.Phase4],
-			...Presets.APLPresets[Phase.Phase3],
-			...Presets.APLPresets[Phase.Phase2],
-			...Presets.APLPresets[Phase.Phase1],
+			...Presets.APLPresets[ClassicPhase.Phase6],
+			...Presets.APLPresets[ClassicPhase.Phase5],
+			...Presets.APLPresets[ClassicPhase.Phase4],
+			...Presets.APLPresets[ClassicPhase.Phase3],
+			...Presets.APLPresets[ClassicPhase.Phase2],
+			...Presets.APLPresets[ClassicPhase.Phase1],
 		],
 		gear: [
-			...Presets.GearPresets[Phase.Phase6],
-			...Presets.GearPresets[Phase.Phase5],
-			...Presets.GearPresets[Phase.Phase4],
-			...Presets.GearPresets[Phase.Phase3],
-			...Presets.GearPresets[Phase.Phase2],
-			...Presets.GearPresets[Phase.Phase1],
+			...Presets.GearPresets[ClassicPhase.Phase6],
+			...Presets.GearPresets[ClassicPhase.Phase5],
+			...Presets.GearPresets[ClassicPhase.Phase4],
+			...Presets.GearPresets[ClassicPhase.Phase3],
+			...Presets.GearPresets[ClassicPhase.Phase2],
+			...Presets.GearPresets[ClassicPhase.Phase1],
 		],
 	},
 

@@ -23,7 +23,7 @@ func TestCombatSinisterStrike(t *testing.T) {
 			Rotation:    core.GetAplRotation("../../../ui/rogue/apls", "combat_sinister_strike"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Phase1Consumes,
-			Phase:       5,
+			Phase:       1,
 			SpecOptions: core.SpecOptionsCombo{Label: "Windfury MH", SpecOptions: DefaultRogue},
 
 			ItemFilter:      ItemFilters,
@@ -47,7 +47,7 @@ func TestCombatDaggers(t *testing.T) {
 			Rotation:    core.GetAplRotation("../../../ui/rogue/apls", "combat_backstab"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Phase1Consumes,
-			Phase:       5,
+			Phase:       1,
 			SpecOptions: core.SpecOptionsCombo{Label: "Windfury MH", SpecOptions: DefaultRogue},
 
 			ItemFilter:      ItemFilters,
@@ -71,7 +71,7 @@ func TestAssassinationMutilate(t *testing.T) {
 			Rotation:    core.GetAplRotation("../../../ui/rogue/apls", "forever_mutilate"),
 			Buffs:       core.ForeverBuffs,
 			Consumes:    Phase1PoisonConsumes,
-			Phase:       5,
+			Phase:       1,
 			SpecOptions: core.SpecOptionsCombo{Label: "Poisons", SpecOptions: DefaultRogue},
 
 			ItemFilter:      ItemFilters,

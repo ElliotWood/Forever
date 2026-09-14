@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -50,12 +50,12 @@ export const GearPhase5 = PresetUtils.makePresetGear('P5 BiS', Phase5Gear);
 export const GearPhase6 = PresetUtils.makePresetGear('P6 BiS', Phase6Gear);
 
 export const GearPresets = {
-	[Phase.Phase1]: [GearPhase1, GearP0BIS],
-	[Phase.Phase2]: [GearPhase2],
-	[Phase.Phase3]: [GearPhase3],
-	[Phase.Phase4]: [GearPhase4],
-	[Phase.Phase5]: [GearPhase5],
-	[Phase.Phase6]: [GearPhase6],
+	[ClassicPhase.Phase1]: [GearPhase1, GearP0BIS],
+	[ClassicPhase.Phase2]: [GearPhase2],
+	[ClassicPhase.Phase3]: [GearPhase3],
+	[ClassicPhase.Phase4]: [GearPhase4],
+	[ClassicPhase.Phase5]: [GearPhase5],
+	[ClassicPhase.Phase6]: [GearPhase6],
 };
 
 export const DefaultGear = GearP0BIS;
@@ -68,10 +68,10 @@ export const AplReck = PresetUtils.makePresetAPLRotation('DPS (With Reck)', APLR
 export const APLNoReck = PresetUtils.makePresetAPLRotation('DPS (No Reck)', APLNoReckJSON);
 
 export const APLPresets = {
-	[Phase.Phase1]: [APLNoReck, AplReck],
+	[ClassicPhase.Phase1]: [APLNoReck, AplReck],
 };
 
-export const DefaultAPLs = [APLPresets[Phase.Phase1][0]];
+export const DefaultAPLs = [APLPresets[ClassicPhase.Phase1][0]];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -83,10 +83,10 @@ export const DefaultAPLs = [APLPresets[Phase.Phase1][0]];
 export const TalentsP1DPS = PresetUtils.makePresetTalents('DPS', SavedTalents.create({ talentsString: '303050130-050520035150310051' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [TalentsP1DPS],
+	[ClassicPhase.Phase1]: [TalentsP1DPS],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase1][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options Presets

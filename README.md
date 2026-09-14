@@ -33,11 +33,10 @@ The tree json and the proto message have to stay in the same order — `FillTale
 
 Worth knowing before reading any number out of this sim:
 
-- **The item database is still the Classic one.** Forever is re-itemising onto hit, crit, expertise and spell damage on caster weapons, and none of those numbers are published. The unified stat rule has far less gear to act on than it eventually will.
-- **Three specs are simulated naked.** Retribution Paladin, Protection Paladin and Warden Shaman point at a gear set containing zero items. This is inherited from upstream, which never authored a real set for any of them. Feral Druid and Tank Warrior fill 8 of 17 slots.
-- **Two rotations do not exercise their spec.** The Tank Warrior preset runs the Fury rotation, and the Feral preset never casts Rip or Rake, so the periodic crit rule cannot reach it.
-- **The phases are Classic's, not Forever's.** `Phase1` through `Phase6` are Classic Era's content tiers — the encounters are Blackwing Lair and Naxxramas, and the Phase 6 gear sets are Naxxramas items. Forever has its own roadmap that does not line up with them: it launches 4 November 2026, its first two raids, the 10 player Barrow Deeps and the 20 player Hyjal Summit, arrive 9 December, and about five new raids are scheduled through mid 2027. A preset labelled P5 means Classic's fifth tier, not Forever's.
-- **Raid sizes change too.** Forever's raids are 10 and 20 player where Classic's were 40, so the full raid buff set the tests assume is more generous than a Forever raid would actually field.
+- **Tiers are Forever's; the gear in them is not.** `Phase.Launch` through `Phase.Tier3` follow the real roadmap, and every preset sits at `Launch` because that is the only tier Forever has until 9 December 2026. The items themselves are still Classic's — Forever's re-itemisation onto hit, crit, expertise and caster-weapon spell damage has no published numbers — so each preset wears the closest Classic equivalent. The separate `ClassicPhase` enum carries what the database actually knows: when an item became available in Classic.
+- **Elemental and Enhancement still wear Molten Core gear.** They are the only two specs with no pre-raid set authored, so their launch preset is the closest thing that exists. Every other spec now uses a genuine pre-raid set.
+- **Three specs are simulated naked.** Retribution Paladin, Protection Paladin and Warden Shaman point at a gear set containing zero items, inherited from upstream, which never authored one for any of them. Tank Warrior and Feral Druid fill 8 of 17 slots, and the Tank Warrior set has no weapon and no shield — which is why it runs a Fury rotation rather than a protection one.
+- **Raid sizes change too.** Forever's raids are 10 and 20 player where Classic's were 40, so the full raid buff set the tests assume is more generous than a Forever raid would field.
 - **Weapon skill is still priced at full Classic value.** Forever caps it lower per item, which would offset the racial change that costs Combat sword rogues ~9%.
 
 ## Running it

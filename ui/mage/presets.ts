@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other';
+import { ClassicPhase } from '../core/constants/other';
 import * as PresetUtils from '../core/preset_utils';
 import {
 	Conjured,
@@ -35,7 +35,7 @@ export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearP1BIS = PresetUtils.makePresetGear('P1 BiS', P1BISGear);
 
 export const GearPresets = {
-	[Phase.Phase1]: [GearP0BIS, GearP1BIS],
+	[ClassicPhase.Phase1]: [GearP0BIS, GearP1BIS],
 };
 
 export const DefaultGear = GearP0BIS;
@@ -49,10 +49,10 @@ export const APLArcane = PresetUtils.makePresetAPLRotation('Arcane', ArcaneAPL);
 export const APLFire = PresetUtils.makePresetAPLRotation('Fire', FireAPL);
 
 export const APLPresets = {
-	[Phase.Phase1]: [APLFrost, APLArcane, APLFire],
+	[ClassicPhase.Phase1]: [APLFrost, APLArcane, APLFire],
 };
 
-export const DefaultAPL = APLPresets[Phase.Phase1][0];
+export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -66,10 +66,10 @@ export const TalentsP1Arcane = PresetUtils.makePresetTalents('Arcane DPS', Saved
 export const TalentsP1Fire = PresetUtils.makePresetTalents('Fire DPS', SavedTalents.create({ talentsString: '0502252000003-2350031130133151-' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [TalentsP1Frost, TalentsP1Arcane, TalentsP1Fire],
+	[ClassicPhase.Phase1]: [TalentsP1Frost, TalentsP1Arcane, TalentsP1Fire],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase1][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options

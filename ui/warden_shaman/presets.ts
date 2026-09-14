@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -40,12 +40,12 @@ import BlankGear from './gear_sets/blank.gear.json';
 export const GearBlank = PresetUtils.makePresetGear('Blank', BlankGear);
 
 export const GearPresets = {
-	[Phase.Phase1]: [GearBlank],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [],
-	[Phase.Phase5]: [],
-	[Phase.Phase6]: [],
+	[ClassicPhase.Phase1]: [GearBlank],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [],
+	[ClassicPhase.Phase5]: [],
+	[ClassicPhase.Phase6]: [],
 };
 
 export const DefaultGear = GearBlank;
@@ -57,15 +57,15 @@ export const DefaultGear = GearBlank;
 export const APLDefault = PresetUtils.makePresetAPLRotation('Default', DefaultAPLJSON);
 
 export const APLPresets = {
-	[Phase.Phase1]: [APLDefault],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [],
-	[Phase.Phase5]: [],
-	[Phase.Phase6]: [],
+	[ClassicPhase.Phase1]: [APLDefault],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [],
+	[ClassicPhase.Phase5]: [],
+	[ClassicPhase.Phase6]: [],
 };
 
-export const DefaultAPL = APLPresets[Phase.Phase1][0];
+export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -74,15 +74,15 @@ export const DefaultAPL = APLPresets[Phase.Phase1][0];
 export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '3535001-0502303313551102' }));
 
 export const TalentPresets = {
-	[Phase.Phase1]: [TalentsLevel60],
-	[Phase.Phase2]: [],
-	[Phase.Phase3]: [],
-	[Phase.Phase4]: [],
-	[Phase.Phase5]: [],
-	[Phase.Phase6]: [],
+	[ClassicPhase.Phase1]: [TalentsLevel60],
+	[ClassicPhase.Phase2]: [],
+	[ClassicPhase.Phase3]: [],
+	[ClassicPhase.Phase4]: [],
+	[ClassicPhase.Phase5]: [],
+	[ClassicPhase.Phase6]: [],
 };
 
-export const DefaultTalents = TalentPresets[Phase.Phase1][0];
+export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Options

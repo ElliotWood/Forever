@@ -1,6 +1,6 @@
 import * as BuffDebuffInputs from '../core/components/inputs/buffs_debuffs';
 import * as OtherInputs from '../core/components/other_inputs.js';
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
 import { APLRotation_Type as APLRotationType } from '../core/proto/apl.js';
@@ -134,10 +134,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecFeralDruid, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [...Presets.TalentPresets[Phase.Phase4]],
-		rotations: [...Presets.APLPresets[Phase.Phase4]],
+		talents: [...Presets.TalentPresets[ClassicPhase.Phase4]],
+		rotations: [...Presets.APLPresets[ClassicPhase.Phase4]],
 		// Preset gear configurations that the user can quickly select.
-		gear: [...Presets.GearPresets[Phase.Phase4]],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase4]],
 	},
 
 	autoRotation: player => {

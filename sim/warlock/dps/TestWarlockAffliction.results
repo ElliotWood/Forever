@@ -3,31 +3,31 @@ character_stats_results: {
  value: {
   final_stats: 195.5
   final_stats: 194.35
-  final_stats: 486.68
-  final_stats: 342.7
-  final_stats: 272.55
-  final_stats: 496
+  final_stats: 386.17
+  final_stats: 318.55
+  final_stats: 258.75
+  final_stats: 366
   final_stats: 0
   final_stats: 40
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 161
-  final_stats: 41.25
-  final_stats: 3
-  final_stats: 32.35455
+  final_stats: 199
+  final_stats: 45.25
+  final_stats: 4
+  final_stats: 29.95608
   final_stats: 0
   final_stats: 0
   final_stats: 915.5
-  final_stats: 3
-  final_stats: 28.7175
+  final_stats: 4
+  final_stats: 26.7175
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 6233.5
+  final_stats: 5871.25
   final_stats: 0
   final_stats: 0
-  final_stats: 1974.7
+  final_stats: 1877.7
   final_stats: 440
   final_stats: 0
   final_stats: 5
@@ -35,15 +35,15 @@ character_stats_results: {
   final_stats: 11.7175
   final_stats: 5
   final_stats: 0
-  final_stats: 6400.8
-  final_stats: 43
-  final_stats: 75
-  final_stats: 76
+  final_stats: 5395.7
+  final_stats: 27
+  final_stats: 65
   final_stats: 60
-  final_stats: 85
+  final_stats: 60
+  final_stats: 75
   final_stats: 384
   final_stats: 0
-  final_stats: 65
+  final_stats: 35
   final_stats: 0
  }
 }
@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.7025
+  weights: -0.0611
   weights: 0
-  weights: -0.27021
-  weights: 0
-  weights: 0
+  weights: 0.47049
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 5.73357
-  weights: 8.22592
+  weights: 0
+  weights: 0
+  weights: 7.35301
+  weights: 6.9627
   weights: 0
   weights: 0
   weights: 0
@@ -99,147 +99,147 @@ stat_weights_results: {
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Champion'sDreadgear"
  value: {
-  dps: 1012.71571
-  tps: 813.61077
+  dps: 902.70099
+  tps: 715.1889
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-DeathmistRaiment"
  value: {
-  dps: 968.84595
-  tps: 773.66248
+  dps: 896.4585
+  tps: 709.06322
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Demoniac'sThreads"
  value: {
-  dps: 983.00375
-  tps: 788.16015
+  dps: 909.73651
+  tps: 721.86663
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Doomcaller'sAttire"
  value: {
-  dps: 1090.3693
-  tps: 875.99088
+  dps: 988.83768
+  tps: 785.31023
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-FelheartRaiment"
  value: {
-  dps: 984.64534
-  tps: 780.24073
+  dps: 918.63929
+  tps: 720.78388
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-FieldMarshal'sThreads"
  value: {
-  dps: 1030.24666
-  tps: 828.74262
+  dps: 941.69717
+  tps: 749.01936
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Hazza'rah'sCharmofDestruction-19957"
  value: {
-  dps: 1014.04757
-  tps: 816.22497
+  dps: 902.17407
+  tps: 715.29101
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 865.00125
-  tps: 682.31824
+  dps: 785.02231
+  tps: 611.15976
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-LieutenantCommander'sDreadgear"
  value: {
-  dps: 1012.71571
-  tps: 813.61077
+  dps: 902.70099
+  tps: 715.1889
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-NemesisRaiment"
  value: {
-  dps: 1052.67906
-  tps: 752.4806
+  dps: 952.12906
+  tps: 675.2002
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-PlagueheartRaiment"
  value: {
-  dps: 1140.33621
-  tps: 851.47587
+  dps: 1075.75964
+  tps: 797.39285
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-TheBlackBook-19337"
  value: {
-  dps: 1008.93923
-  tps: 796.68242
+  dps: 911.06357
+  tps: 709.74456
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Warlord'sThreads"
  value: {
-  dps: 1030.24666
-  tps: 828.74262
+  dps: 941.69717
+  tps: 749.01936
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Average-Default"
  value: {
-  dps: 1033.71432
-  tps: 831.15327
+  dps: 921.58581
+  tps: 731.40018
  }
 }
 dps_results: {
- key: "TestWarlockAffliction-Phase1-Settings-Orc-mc-Affliction Warlock-forever_affliction-FullBuffs-Consumes-LongMultiTarget"
+ key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 1016.98382
-  tps: 1782.53872
+  dps: 911.00451
+  tps: 1668.39794
  }
 }
 dps_results: {
- key: "TestWarlockAffliction-Phase1-Settings-Orc-mc-Affliction Warlock-forever_affliction-FullBuffs-Consumes-LongSingleTarget"
+ key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 1016.98382
-  tps: 817.9769
+  dps: 911.00451
+  tps: 723.14113
  }
 }
 dps_results: {
- key: "TestWarlockAffliction-Phase1-Settings-Orc-mc-Affliction Warlock-forever_affliction-FullBuffs-Consumes-ShortSingleTarget"
+ key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 1078.69224
-  tps: 854.02047
+  dps: 951.69674
+  tps: 742.55874
  }
 }
 dps_results: {
- key: "TestWarlockAffliction-Phase1-Settings-Orc-mc-Affliction Warlock-forever_affliction-NoBuffs-Consumes-LongMultiTarget"
+ key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 616.85036
-  tps: 1577.79462
+  dps: 536.69625
+  tps: 1486.63789
  }
 }
 dps_results: {
- key: "TestWarlockAffliction-Phase1-Settings-Orc-mc-Affliction Warlock-forever_affliction-NoBuffs-Consumes-LongSingleTarget"
+ key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 616.85036
-  tps: 551.10457
+  dps: 536.69625
+  tps: 478.86478
  }
 }
 dps_results: {
- key: "TestWarlockAffliction-Phase1-Settings-Orc-mc-Affliction Warlock-forever_affliction-NoBuffs-Consumes-ShortSingleTarget"
+ key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 637.07698
-  tps: 559.80852
+  dps: 554.31841
+  tps: 485.33955
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 1016.98382
-  tps: 817.9769
+  dps: 911.00451
+  tps: 723.14113
  }
 }

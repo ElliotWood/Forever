@@ -15,7 +15,7 @@ func TestProtection(t *testing.T) {
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
 		{
 			Class:      proto.Class_ClassPaladin,
-			Phase:      4,
+			Phase:      1,
 			Race:       proto.Race_RaceHuman,
 			OtherRaces: []proto.Race{proto.Race_RaceDwarf},
 

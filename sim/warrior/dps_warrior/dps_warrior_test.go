@@ -21,7 +21,7 @@ func TestP1DPSWarrior(t *testing.T) {
 			OtherRaces: []proto.Race{proto.Race_RaceHuman},
 
 			Talents:  P1Talents,
-			GearSet:  core.GetGearSet("../../../ui/warrior/gear_sets", "phase_1"),
+			GearSet:  core.GetGearSet("../../../ui/warrior/gear_sets", "p0.bis"),
 			Rotation: core.GetAplRotation("../../../ui/warrior/apls", "dps_reck"),
 			OtherRotations: []core.RotationCombo{
 				core.GetAplRotation("../../../ui/warrior/apls", "dps_no_reck"),

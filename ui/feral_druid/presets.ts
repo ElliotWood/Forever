@@ -1,4 +1,4 @@
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
 	AgilityElixir,
@@ -48,7 +48,7 @@ export const GearP5BIS = PresetUtils.makePresetGear('P5 BiS', P5BISGear)
 export const GearP6BIS = PresetUtils.makePresetGear('P6 BiS', P6BISGear)
 
 export const GearPresets = {
-	[Phase.Phase4]: [GearP2PreBIS, GearP2BIS, GearP3BIS, GearP4BIS, GearP5BIS, GearP6BIS],
+	[ClassicPhase.Phase4]: [GearP2PreBIS, GearP2BIS, GearP3BIS, GearP4BIS, GearP5BIS, GearP6BIS],
 };
 
 export const DefaultGear = GearP4BIS;
@@ -61,7 +61,7 @@ export const APLFeral = PresetUtils.makePresetAPLRotation('Feral', FeralAPL);
 export const APLSimpleVael = PresetUtils.makePresetAPLRotation('Simple Vaelastrasz', SimpleVaelAPL);
 
 export const APLPresets = {
-	[Phase.Phase4]: [APLFeral, APLSimpleVael],
+	[ClassicPhase.Phase4]: [APLFeral, APLSimpleVael],
 };
 
 export const DefaultAPL = APLFeral;
@@ -83,7 +83,7 @@ export const SIMPLE_ROTATION_DEFAULT = PresetUtils.makePresetSimpleRotation('Sim
 export const TalentsFeral = PresetUtils.makePresetTalents('Feral', SavedTalents.create({ talentsString: '-5521002023132213051-05503' }));
 
 export const TalentPresets = {
-	[Phase.Phase4]: [TalentsFeral],
+	[ClassicPhase.Phase4]: [TalentsFeral],
 };
 
 export const DefaultTalents = TalentsFeral;

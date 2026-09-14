@@ -1,7 +1,7 @@
 import * as BuffDebuffInputs from '../core/components/inputs/buffs_debuffs';
 import * as ConsumablesInputs from '../core/components/inputs/consumables.js';
 import * as OtherInputs from '../core/components/other_inputs.js';
-import { Phase } from '../core/constants/other.js';
+import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
 import { Class, Faction, ItemSlot, Race, Spec, Stat } from '../core/proto/common.js';
@@ -109,9 +109,9 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecBalanceDruid, {
 	},
 
 	presets: {
-		talents: [...Presets.TalentPresets[Phase.Phase1]],
-		rotations: [...Presets.APLPresets[Phase.Phase1]],
-		gear: [...Presets.GearPresets[Phase.Phase5]],
+		talents: [...Presets.TalentPresets[ClassicPhase.Phase1]],
+		rotations: [...Presets.APLPresets[ClassicPhase.Phase1]],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase5]],
 	},
 
 	autoRotation: player => {
