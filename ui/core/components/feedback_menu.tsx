@@ -1,6 +1,6 @@
 import { ref } from 'tsx-vanilla';
 
-import { SITE_VERSION, SPEC_DIRECTORY } from '../constants/other.js';
+import { SITE_REPO_URL, SITE_VERSION, SPEC_DIRECTORY } from '../constants/other.js';
 import { Ruleset } from '../proto/api.js';
 import { SimUI } from '../sim_ui.js';
 import { BaseModal } from './base_modal.jsx';
@@ -9,7 +9,7 @@ import Toast from './toast.jsx';
 // Feedback becomes a Github issue on the Forever repo. The site is static, so there is no
 // server to post to and no token we could ship without publishing it to the world: instead
 // we prefill Github's own issue composer and let the reporter press submit.
-const ISSUE_URL = 'https://github.com/ElliotWood/Forever/issues/new';
+const ISSUE_URL = `${SITE_REPO_URL}/issues/new`;
 
 // Github truncates very long issue urls, so leave room for the diagnostics and the url itself.
 const MAX_DESCRIPTION_LENGTH = 5000;

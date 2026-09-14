@@ -18,6 +18,12 @@ export const OUT_DIR = path.join(__dirname, 'dist', 'classic');
 // the page templates through the makefile.
 export const SITE_BASE = process.env.SITE_BASE || '/classic/';
 
+// The Github repository the UI points at for source, issues, crash reports and releases.
+// Defaults to upstream so a build from wowsims/classic is unchanged; a fork overrides it
+// with SITE_REPO=<owner>/<repo>. Read it through SITE_REPO in core/constants/other.ts for
+// TypeScript, and through the @@REPO@@ placeholder for the hand-written homepage.
+export const SITE_REPO = process.env.SITE_REPO || 'wowsims/classic';
+
 // The version the UI shows, so a user can say which build they are looking at. Taken from
 // git rather than hand-maintained: the newest tag plus the commits since it, or the bare
 // commit when the fork has no tags yet, with '-dirty' appended for an uncommitted build.
@@ -117,6 +123,7 @@ export const getBaseConfig = ({ command, mode }: ConfigEnv) =>
 		root: path.join(__dirname, 'ui'),
 		define: {
 			__SITE_VERSION__: JSON.stringify(SITE_VERSION),
+			__SITE_REPO__: JSON.stringify(SITE_REPO),
 		},
 		build: {
 			outDir: OUT_DIR,
@@ -131,6 +138,13 @@ export default defineConfig(({ command, mode }) => {
 	return {
 		...baseConfig,
 		plugins: [
+			// The homepage is hand-written rather than generated from ui/index_template.html,
+			// so it cannot pick the repository up through the makefile the way the sim pages
+			// pick up @@BASE@@. Substitute it here instead.
+			{
+				name: 'site-repo-html',
+				transformIndexHtml: (html: string) => html.replaceAll('@@REPO@@', SITE_REPO),
+			},
 			serveExternalAssets(),
 			checker({
 				root: path.resolve(__dirname, 'ui'),

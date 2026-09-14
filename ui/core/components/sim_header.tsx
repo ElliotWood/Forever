@@ -1,6 +1,7 @@
 import tippy, { ReferenceElement as TippyReferenceElement } from 'tippy.js';
 import { ref } from 'tsx-vanilla';
 
+import { SITE_REPO_URL } from '../constants/other.js';
 import { Ruleset } from '../proto/api';
 import { SimUI } from '../sim_ui';
 import { isLocal } from '../utils';
@@ -187,7 +188,7 @@ export class SimHeader extends Component {
 
 	private addBugReportLink() {
 		this.addToolbarLink({
-			href: 'https://github.com/wowsims/classic/issues/new/choose',
+			href: `${SITE_REPO_URL}/issues/new/choose`,
 			parent: this.simToolbar,
 			icon: 'fas fa-bug fa-lg',
 			tooltip: 'Report a bug or<br>Request a feature',
@@ -206,7 +207,7 @@ export class SimHeader extends Component {
 	}
 
 	private addDownloadBinaryLink() {
-		const href = 'https://github.com/wowsims/classic/releases';
+		const href = `${SITE_REPO_URL}/releases`;
 		const icon = 'fas fa-gauge-high fa-lg';
 		const parent = this.simToolbar;
 

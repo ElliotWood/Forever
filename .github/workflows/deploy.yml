@@ -58,10 +58,17 @@ jobs:
         env:
           SITE_BASE: ${{ vars.SITE_BASE }}
 
+      - name: Resolve the site repository
+        id: repo
+        run: echo "value=${SITE_REPO:-${{ github.repository }}}" >> "$GITHUB_OUTPUT"
+        env:
+          SITE_REPO: ${{ vars.SITE_REPO }}
+
       - name: Build 🔧
         run: make dist/classic/.dirstamp
         env:
           SITE_BASE: ${{ steps.base.outputs.value }}
+          SITE_REPO: ${{ steps.repo.outputs.value }}
 
       - name: Test
         run: make test

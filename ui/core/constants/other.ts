@@ -60,6 +60,12 @@ export const SITE_BASE = import.meta.env.BASE_URL;
 // and a commit until then. The sidebar shows it so a bug report can name the build.
 export const SITE_VERSION = __SITE_VERSION__;
 
+// The Github repository this build points at, as '<owner>/<repo>'. Defaults to upstream so
+// a wowsims build is unchanged, and a fork sets SITE_REPO at build time. Everything that
+// links to source, issues, crash reports or releases goes through these two.
+export const SITE_REPO = __SITE_REPO__;
+export const SITE_REPO_URL = `https://github.com/${SITE_REPO}`;
+
 // Get 'elemental_shaman', the pathname part after the repo name
 const pathnameParts = window.location.pathname.split('/');
 const repoPartIdx = pathnameParts.findIndex(part => part == REPO_NAME);

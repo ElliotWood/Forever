@@ -13,6 +13,12 @@ UI_SRC := $(shell find ui -name '*.ts' -o -name '*.tsx' -o -name '*.scss' -o -na
 SITE_BASE ?= /classic/
 export SITE_BASE
 
+# The Github repository the UI links to for source, issues, crash reports and releases.
+# Defaults to upstream, so a wowsims build is unchanged; a fork overrides it, e.g.
+# SITE_REPO=ElliotWood/Forever make dist/classic/.dirstamp
+SITE_REPO ?= wowsims/classic
+export SITE_REPO
+
 HTML_INDECIES := ui/balance_druid/index.html \
 				 ui/feral_druid/index.html \
 				 ui/feral_tank_druid/index.html \
