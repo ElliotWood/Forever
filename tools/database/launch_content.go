@@ -18,17 +18,17 @@ var postLaunchZones = map[int32]bool{
 	2677: true, // Blackwing Lair
 }
 
-// Nefarian's head turn-ins carry no source record at all, so the zone check cannot see
-// them. Item level can: among items with no source and a phase of 3 or lower, the only
-// ones above 80 are the Master Dragonslayer's Orb, Medallion and Ring, all rewards for
-// handing in his head. Everything at or below it is launch content - Onyxia's own drops at
-// 71 and 72, her turn-in rewards at 74, the Benediction and Rhok'delar chains at 75 and
-// Sulfuras at 80, none of which have a source record either.
-const maxSourcelessIlvl = 80
+// Neither the phase nor the zone check can see two groups of items. The Ahn'Qiraj and
+// Naxxramas tier sets reach the database through the quests that turn their tokens in, so
+// they carry a quest source and a phase of 1. Nefarian's head turn-ins carry no source
+// record at all. Item level separates both from everything at launch: Sulfuras at 80 is
+// the highest thing Molten Core or Onyxia gives up, and above it sit only the tier 2.5
+// sets at 81, the Master Dragonslayer's rewards at 83 and the tier 3 sets from 86 to 92.
+const maxLaunchIlvl = 80
 
 // ObtainableAtLaunch reports whether an item exists in Forever at launch.
 func ObtainableAtLaunch(item *proto.UIItem) bool {
-	if item.Phase > lastLaunchPhase {
+	if item.Phase > lastLaunchPhase || item.Ilvl > maxLaunchIlvl {
 		return false
 	}
 	for _, source := range item.Sources {
@@ -37,5 +37,5 @@ func ObtainableAtLaunch(item *proto.UIItem) bool {
 		}
 		return true
 	}
-	return len(item.Sources) == 0 && item.Ilvl <= maxSourcelessIlvl
+	return len(item.Sources) == 0
 }
