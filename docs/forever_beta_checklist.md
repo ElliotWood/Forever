@@ -133,7 +133,7 @@ Warrior, the only class with concrete changes reported:
 
 Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
 
-## Talents the sim does not read (17)
+## Talents the sim does not read (18)
 
 These are in the trees and the picker marks them as not simulated; spending points in them changes nothing. Most are utility or PvP talents the Classic sim never modelled either. They are listed so the beta pass can confirm none of them turned into something a raid rotation cares about.
 
@@ -144,6 +144,7 @@ These are in the trees and the picker marks them as not simulated; spending poin
 - Paladin / Holy: Voice of Truth
 - Paladin / Holy: Light's Vigil
 - Paladin / Protection: Improved Seal of Fury
+- Priest / Discipline: Wand Specialization (the sim has no wand attacks at all, so a shadow build's two points here are idle)
 - Priest / Discipline: Soul Warding
 - Priest / Discipline: Renewed Hope
 - Priest / Discipline: Divine Aegis

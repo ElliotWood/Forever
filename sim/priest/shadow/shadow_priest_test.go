@@ -36,7 +36,8 @@ func TestP1Shadow(t *testing.T) {
 	}))
 }
 
-var P1Talents = "005300231303--505120501201300051"
+// The community build the rankings page runs, so the golden measures what is ranked.
+var P1Talents = "0253000311--550022501201302251"
 
 var P1Consumes = core.ConsumesCombo{
 	Label: "P1-Consumes",
