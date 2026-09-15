@@ -129,7 +129,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecMage, {
 			defaultName: 'Arcane',
 			iconUrl: getSpecIcon(Class.ClassMage, 0),
 
-			talents: Presets.DefaultTalents.data,
+			talents: Presets.TalentsArcane.data,
 			specOptions: Presets.DefaultOptions,
 			consumes: Presets.DefaultConsumes,
 			otherDefaults: Presets.OtherDefaults,
@@ -154,7 +154,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecMage, {
 			defaultName: 'Fire',
 			iconUrl: getSpecIcon(Class.ClassMage, 1),
 
-			talents: Presets.DefaultTalents.data,
+			talents: Presets.TalentsFire.data,
 			specOptions: Presets.DefaultOptions,
 			consumes: Presets.DefaultConsumes,
 			otherDefaults: Presets.OtherDefaults,
@@ -179,7 +179,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecMage, {
 			defaultName: 'Frost',
 			iconUrl: getSpecIcon(Class.ClassMage, 2),
 
-			talents: Presets.DefaultTalents.data,
+			talents: Presets.TalentsFrost.data,
 			specOptions: Presets.DefaultOptions,
 			consumes: Presets.DefaultConsumes,
 			otherDefaults: Presets.OtherDefaults,
