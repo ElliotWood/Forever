@@ -99,6 +99,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Rule | Source | Here |
 |---|---|---|
 | Malice and Precision also add spell crit/hit, since poisons roll against spell stats. | Tooltip | `sim/rogue/talents.go` |
+| Venom rescales a Deadly Poison that is already ticking, not just the stacks applied while it is up. | Tooltip | `sim/rogue/poisons.go` |
 
 ## Shaman
 

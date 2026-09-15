@@ -124,11 +124,19 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 		builds: [Presets.PresetBuildBackstab, Presets.PresetBuildSinisterStrike, Presets.PresetBuildIEA, Presets.PresetBuildMutilate],
 	},
 
-	// Daggers run Backstab, or Mutilate when the build has it; anything else runs Sinister
-	// Strike.
+	// Daggers run Backstab, or Mutilate when the build has it; Hemorrhage takes over from
+	// Backstab when it is talented, since it costs less and carries the Rupture debuff.
+	// Anything else runs Sinister Strike.
 	autoRotation: player => {
+		const talents = player.getTalents();
 		if (player.getEquippedItem(ItemSlot.ItemSlotMainHand)?._item.weaponType == WeaponType.WeaponTypeDagger) {
-			return (player.getTalents().mutilate ? Presets.ROTATION_PRESET_MUTILATE : Presets.ROTATION_PRESET_BACKSTAB).rotation.rotation!;
+			if (talents.mutilate) {
+				return Presets.ROTATION_PRESET_MUTILATE.rotation.rotation!;
+			}
+			if (talents.hemorrhage) {
+				return Presets.ROTATION_PRESET_HEMORRHAGE.rotation.rotation!;
+			}
+			return Presets.ROTATION_PRESET_BACKSTAB.rotation.rotation!;
 		}
 		return Presets.ROTATION_PRESET_SINISTER_STRIKE.rotation.rotation!;
 	},

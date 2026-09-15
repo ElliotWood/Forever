@@ -55,11 +55,23 @@ func (rogue *Rogue) getPoisonDamageMultiplier() float64 {
 	return []float64{1, 1.04, 1.08, 1.12, 1.16, 1.2}[rogue.Talents.VilePoisons]
 }
 
-// Venom lands after the poisons are registered, so the spells are scaled directly.
+// Venom lands after the poisons are registered, so the spells are scaled directly. A
+// Deadly Poison that is already on the target snapshotted its multiplier when its first
+// stack went up and holds it for as long as the stacks keep being refreshed, so the
+// running dots are rescaled too, or Venom would miss the poison it is named for.
+//
+// TODO: The tooltip doesn't say whether Venom reaches a Deadly Poison that is already on
+// the target or only the stacks applied while it is up. Beta will confirm.
 func (rogue *Rogue) multiplyPoisonDamage(multiplier float64) {
 	for _, spell := range rogue.Spellbook {
 		if spell.Flags.Matches(SpellFlagRoguePoison) {
 			spell.DamageMultiplier *= multiplier
+		}
+	}
+
+	for _, target := range rogue.Env.Encounter.TargetUnits {
+		if dot := rogue.deadlyPoisonTick.Dot(target); dot.IsActive() {
+			dot.SnapshotAttackerMultiplier *= multiplier
 		}
 	}
 }
