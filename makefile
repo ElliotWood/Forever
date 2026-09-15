@@ -40,6 +40,7 @@ HTML_INDECIES := ui/balance_druid/index.html \
 				 ui/warrior/index.html \
 				 ui/tank_warrior/index.html \
 				 ui/raid/index.html \
+				 ui/bis/index.html \
 				 ui/dps_rankings/index.html \
 				 ui/stat_weights/index.html \
 				 ui/detailed_results/index.html
@@ -100,6 +101,7 @@ ui/core/proto/api.ts: proto/*.proto node_modules
 
 # Pages whose directory name doesn't spell their title. Everything else falls back to
 # 'WoW Forever <Dir Name> Simulator' below.
+ui/bis/index.html: page_title := WoW Forever Best in Slot
 ui/dps_rankings/index.html: page_title := WoW Forever DPS Rankings
 ui/stat_weights/index.html: page_title := WoW Forever Stat Weights
 

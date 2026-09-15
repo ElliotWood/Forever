@@ -1,5 +1,6 @@
 import { ref } from 'tsx-vanilla';
 
+import { SITE_BASE } from '../core/constants/other';
 import { setItemQualityCssClass } from '../core/css_utils';
 import { Class, ItemRandomSuffix, Spec } from '../core/proto/common';
 import { UIItem as Item } from '../core/proto/ui';
@@ -101,7 +102,9 @@ export class BisPage {
 	private randomSuffix: (id: number) => ItemRandomSuffix | undefined = () => undefined;
 	private spec: Spec;
 
-	constructor(container: HTMLElement) {
+	// The page's index.html is generated from the shared template like every other page,
+	// so the markup lives here rather than in a hand-written file the build would overwrite.
+	constructor(parentElem: HTMLElement) {
 		this.spec = this.specFromHash() ?? bisSpecs[0];
 		this.resultsElem = (<div className="bis-results">{loadingMessage('Loading the item database…')}</div>) as HTMLElement;
 
@@ -109,22 +112,73 @@ export class BisPage {
 		const byClass = new Map<Class, Array<Spec>>();
 		bisSpecs.forEach(spec => byClass.set(specToClass[spec], (byClass.get(specToClass[spec]) ?? []).concat(spec)));
 
-		container.appendChild(
-			<>
-				<label className="bis-spec-picker">
-					<span className="bis-spec-picker-label">Spec</span>
-					<select ref={selectRef} className="form-select">
-						{Array.from(byClass.entries()).map(([playerClass, specs]) => (
-							<optgroup label={classNames[playerClass]}>
-								{specs.map(spec => (
-									<option value={String(spec)}>{specNames[spec]}</option>
-								))}
-							</optgroup>
-						))}
-					</select>
-				</label>
-				{this.resultsElem}
-			</>,
+		parentElem.appendChild(
+			<div id="bis-page">
+				<header className="bis-header">
+					<div className="container bis-header-container">
+						<a href={SITE_BASE} className="bis-home-link">
+							<img className="forever-logo" src={`${SITE_BASE}assets/img/forever_logo.png`} alt="World of Warcraft: Forever" />
+						</a>
+						<div className="bis-title-block">
+							<h1 className="bis-title">Best in Slot</h1>
+							<p className="bis-subtitle">The highest-EP item in every slot, for each spec the sim has launched.</p>
+						</div>
+					</div>
+				</header>
+				<main className="container bis-content">
+					<section className="content-block bis-provenance">
+						<div className="content-block-header">
+							<h2 className="content-block-title">Read this first</h2>
+						</div>
+						<div className="content-block-body">
+							<p>
+								<strong>Where the EP weights come from.</strong> Every spec ships a set of default EP weights in its sim, and its gear picker
+								sorts items by them. This page uses those same weights, so a pick here is the item that sits at the top of that spec's gear
+								picker for that slot. <strong>The simulator does not run on this page.</strong> Nothing here is derived live: these weights were
+								worked out for each spec and then written down, so treat them as a well-kept starting point rather than an answer computed for
+								your character. For weights derived from the sim against your own gear, talents and encounter, open a spec's sim and press{' '}
+								<em>Stat Weights</em>.
+							</p>
+							<p>
+								<strong>Which specs are here.</strong> Only specs the sim has launched. Restoration Druid, Restoration Shaman, Holy Paladin and
+								Healing Priest are not implemented, and neither is Feral Tank Druid, so they have no EP weights and are absent rather than
+								guessed at.
+							</p>
+							<p>
+								<strong>What the item pool is.</strong> Forever launch content only: Onyxia and Molten Core, alongside the dungeon, crafted,
+								reputation and PvP gear available at launch. There is no Blackwing Lair, Zul'Gurub, Ahn'Qiraj or Naxxramas gear in the database
+								this ranks, so nothing from those raids can appear.
+							</p>
+							<p>
+								<strong>What EP cannot see.</strong> An EP score reads an item's stat line and its weapon damage, and nothing else. Set bonuses,
+								on-use and proc effects, weapon skill and weapon specialisation talents, resistance requirements and stat caps are all invisible
+								to it. That is why the rankings favour raw stats, and why a dagger can out-rank a sword for a warrior here in a way it would not
+								in a raid.
+							</p>
+						</div>
+					</section>
+					<section className="content-block bis-gear-block">
+						<div className="content-block-header">
+							<h2 className="content-block-title">Gear</h2>
+						</div>
+						<div className="content-block-body">
+							<label className="bis-spec-picker">
+								<span className="bis-spec-picker-label">Spec</span>
+								<select ref={selectRef} className="form-select">
+									{Array.from(byClass.entries()).map(([playerClass, specs]) => (
+										<optgroup label={classNames[playerClass]}>
+											{specs.map(spec => (
+												<option value={String(spec)}>{specNames[spec]}</option>
+											))}
+										</optgroup>
+									))}
+								</select>
+							</label>
+							{this.resultsElem}
+						</div>
+					</section>
+				</main>
+			</div>,
 		);
 
 		this.selectElem = selectRef.value!;
