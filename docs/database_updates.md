@@ -61,3 +61,18 @@ This involves performing several commands to update the multiple sources of item
 4. Finally run `make items` to regenerate the database.
 
 You should now also run tests because they could have changed if existing items were changed, then you're ready to commit everything.
+
+## Refreshing for Forever
+
+Every scraper reads Wowhead's Classic Era database by default. Wowhead also runs a Forever
+database at wowhead.com/forever, which will carry the beta client's items and spells once it
+is datamined. Pass `-wowhead=forever` to point the scrapers at it:
+
+1. `go run ./tools/database/gen_db -outDir=assets -wowhead=forever -gen=wowhead-gearplannerdb`
+2. `go run ./tools/database/gen_db -outDir=assets -wowhead=forever -gen=wowhead-items -minid=<first new id> -maxid=<last new id>`
+   (delete existing rows in that range from `wowhead_item_tooltips.csv` first if they should be re-read)
+3. `go run ./tools/database/gen_db -outDir=assets -wowhead=forever -gen=wowhead-spells -minid=... -maxid=...`
+4. `go run ./tools/database/gen_db -outDir=assets -wowhead=forever -gen=atlasloot`, if AtlasLoot has Forever data by then; otherwise the Classic source data stands and the new dungeons' items arrive without a source until it does.
+5. `make items`, then review `tools/database/launch_content.go`: it filters the Classic database to what Forever has at launch by phase, zone and item level, and new Forever items (the nine dungeons, the four zones) will carry no Classic phase, so check they come through rather than being filtered out.
+
+The Wago DB2 export is pinned to a Classic build id and is not covered by the flag.
