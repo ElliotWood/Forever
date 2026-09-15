@@ -25,8 +25,8 @@ func (rogue *Rogue) registerBackstabSpell() {
 		[]float64{1, 1.05, 1.1}[rogue.Talents.Opportunity] *
 		[]float64{1, 1.02, 1.04, 1.06}[rogue.Talents.Aggression]
 
-	// TODO: Only rank 1 of Puncturing Wounds was seen, the extra combo point chance is
-	// assumed to scale linearly. Beta will confirm.
+	// TODO: Only rank 1 of Puncturing Wounds was seen, so both the extra combo point chance here
+	// and the crit chance below are assumed to scale linearly. Beta will confirm.
 	extraComboPointChance := 0.15 * float64(rogue.Talents.PuncturingWounds)
 	cpMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 13866})
 

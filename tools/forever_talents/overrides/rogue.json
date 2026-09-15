@@ -39,7 +39,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; the per-rank values are a linear extrapolation of that one tooltip and match the scaling the sim applies, and the community talent calculator is rebuilt from the same footage, so it corroborates them rather than confirming them",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -65,7 +65,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; the per-rank values are a linear extrapolation of that one tooltip and match the scaling the sim applies, and the community talent calculator is rebuilt from the same footage, so it corroborates them rather than confirming them",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -101,7 +101,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; the per-rank values are a linear extrapolation of that one tooltip and match the scaling the sim applies, and the community talent calculator is rebuilt from the same footage, so it corroborates them rather than confirming them",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -120,6 +120,68 @@
         ]
       },
       "reason": "the datamined pass stored whole sentences where the per-rank values belong, which is the wrong shape for the picker; rank 2's '1.5 min' is written as 90 sec so both ranks read in the same unit",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "cutthroat",
+      "tree": "subtlety",
+      "set": {
+        "ranks": [
+          [
+            3,
+            10
+          ],
+          [
+            6,
+            10
+          ],
+          [
+            9,
+            10
+          ],
+          [
+            12,
+            10
+          ],
+          [
+            15,
+            10
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so all five ranks displayed 3% while the sim rolled 3% per point; the proc chance is extrapolated linearly to match the sim, and the 10 sec duration is held at rank 1 because a duration has no scaling to read",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "quietus",
+      "tree": "subtlety",
+      "set": {
+        "ranks": [
+          [
+            2,
+            35
+          ],
+          [
+            4,
+            35
+          ],
+          [
+            6,
+            35
+          ],
+          [
+            8,
+            35
+          ],
+          [
+            10,
+            35
+          ]
+        ]
+      },
+      "reason": "the health threshold was extrapolated along with the damage bonus, which reads \u201cbelow 175% health\u201d at rank 5; the sim holds the threshold at rank 1\u2019s 35% because it cannot scale, and the tree now reads the same",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     }
