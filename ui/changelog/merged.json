@@ -1,5 +1,11 @@
 [
 	{
+		"number": 125,
+		"title": "chore: drop the upstream project's name and patreon from the site",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/125"
+	},
+	{
 		"number": 124,
 		"title": "chore: say plainly that this is not wowsims, and list what the sim cannot do",
 		"mergedAt": "2026-09-15",
