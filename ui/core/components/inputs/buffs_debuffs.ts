@@ -1,3 +1,4 @@
+import { Ruleset } from '../../proto/api';
 import { Faction, SaygesFortune, Stat } from '../../proto/common';
 import { ActionId } from '../../proto_utils/action_id';
 import {
@@ -466,10 +467,14 @@ export const MeleeHitDebuff = withLabel(
 	'Insect Swarm',
 );
 
+// Forever's Improved Shadow Bolt and Stormstrike only raise the damage their own caster
+// deals, so there is nothing another raid member can hand out; the sim ignores both under
+// that ruleset and the panel stops offering them.
 export const SpellISBDebuff = withLabel(
 	makeBooleanDebuffInput({
 		actionId: () => ActionId.fromSpellId(17803),
 		fieldName: 'improvedShadowBolt',
+		showWhen: player => player.sim.getRuleset() == Ruleset.RulesetClassic,
 	}),
 	'Improved Shadow Bolt',
 );
@@ -494,6 +499,7 @@ export const SpellStormstrikeDebuff = withLabel(
 	makeBooleanDebuffInput({
 		actionId: () => ActionId.fromSpellId(17364),
 		fieldName: 'stormstrike',
+		showWhen: player => player.sim.getRuleset() == Ruleset.RulesetClassic,
 	}),
 	'Stormstrike',
 );

@@ -144,7 +144,7 @@ export function makeBooleanDebuffInput<SpecType extends Spec>(
 			getValue: (player: Player<SpecType>) => player.getRaid()!.getDebuffs(),
 			setValue: (eventID: EventID, player: Player<SpecType>, newVal: Debuffs) => player.getRaid()!.setDebuffs(eventID, newVal),
 			changeEmitter: (player: Player<SpecType>) =>
-				TypedEvent.onAny([player.getRaid()!.debuffsChangeEmitter, player.raceChangeEmitter]),
+				TypedEvent.onAny([player.getRaid()!.debuffsChangeEmitter, player.raceChangeEmitter, player.sim.rulesetChangeEmitter]),
 		},
 		config.actionId,
 		config.fieldName,
