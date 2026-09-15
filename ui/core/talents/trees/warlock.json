@@ -90,7 +90,23 @@
           18213,
           18372
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Soul Harvesting",
+        "icon": "inv_elemental_primal_shadow",
+        "description": "You gain Soul Harvest for {0} sec if a victim is killed while afflicted with your Drain Soul. Soul Harvest allows your Mana to regenerate at {1}% of normal speed while you are casting spells, and grants a {2}% increase to your Mana regeneration.",
+        "ranks": [
+          [
+            10,
+            50,
+            50
+          ],
+          [
+            10,
+            50,
+            50
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "improvedDrains",
@@ -103,7 +119,30 @@
           17805,
           17806
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Improved Drains",
+        "icon": "spell_shadow_haunting",
+        "description": "Increases the damage done or health drained by your Drain Life and Drain Soul spells by {0}% per each of your other Affliction effects active on the target, up to a maximum increase of {1}%. When your Drain Soul damages targets below {2}% health, this bonus is tripled. Additionally, your Drain Life range is extended by {3} yards.",
+        "ranks": [
+          [
+            2,
+            6,
+            20,
+            3
+          ],
+          [
+            2,
+            6,
+            20,
+            3
+          ],
+          [
+            2,
+            6,
+            20,
+            3
+          ]
+        ]
       },
       {
         "fieldName": "improvedBaneOfAgony",
@@ -115,7 +154,18 @@
           18827,
           18829
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Improved Bane of Agony",
+        "icon": "spell_shadow_curseofsargeras",
+        "description": "Increases the damage done by your Bane of Agony by {0}%.",
+        "ranks": [
+          [
+            5
+          ],
+          [
+            10
+          ]
+        ]
       },
       {
         "fieldName": "felConcentration",
@@ -181,7 +231,27 @@
           18274,
           18275
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Malevolence",
+        "icon": "spell_shadow_focusedpower",
+        "description": "Increases the critical effect chance of your Shadow spells by {0}%.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ]
       },
       {
         "fieldName": "nightfall",
@@ -232,7 +302,24 @@
           18393,
           18394
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Soul Siphon",
+        "icon": "spell_shadow_lifedrain02",
+        "description": "Increases the rate at which your Drain Life and Drain Soul deal damage by {0}%, but reduces your healing from Drain Life by {1}%.",
+        "ranks": [
+          [
+            17,
+            10
+          ],
+          [
+            34,
+            20
+          ],
+          [
+            51,
+            30
+          ]
+        ]
       },
       {
         "fieldName": "shadowMastery",
@@ -262,7 +349,18 @@
         "spellIds": [
           18220
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Drain Hope",
+        "icon": "spell_shadow_darkritual",
+        "description": "Drains all hope from the target, dealing {0} Shadow damage every {1} sec and increasing all other Shadow damage over time you deal to that target by {2}%. Lasts {3} sec.",
+        "ranks": [
+          [
+            52,
+            1,
+            10,
+            6
+          ]
+        ]
       }
     ]
   },
@@ -373,7 +471,33 @@
           18822,
           18823
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Demonic Brand",
+        "icon": "spell_shadow_enslavedemon",
+        "description": "Your Searing Pain generates {0}% less threat and brands the target for {1} sec. Your pet's next {2} attacks against the target generate high threat and deal {3} to {4} Fire or Shadow damage based on the pet.",
+        "ranks": [
+          [
+            17,
+            10,
+            2,
+            39,
+            42
+          ],
+          [
+            17,
+            10,
+            2,
+            39,
+            42
+          ],
+          [
+            17,
+            10,
+            2,
+            39,
+            42
+          ]
+        ]
       },
       {
         "fieldName": "felVitality",
@@ -386,7 +510,24 @@
           18743,
           18744
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Fel Vitality",
+        "icon": "spell_shadow_demonictactics",
+        "description": "Increases the maximum health and Mana of your Imp, Voidwalker, Succubus, Incubus, and Felhunter by {0}%, and increases your maximum Mana by {1}%.",
+        "ranks": [
+          [
+            5,
+            5
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            15,
+            15
+          ]
+        ]
       },
       {
         "fieldName": "improvedSayaad",
@@ -480,7 +621,20 @@
           18748,
           18749
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Demonic Energies",
+        "icon": "spell_shadow_antishadow",
+        "description": "You heal your pet for {0}% of all spell damage you deal. When you gain Mana from Life Tap, your summoned demon gains {1}% of the Mana you gain.",
+        "ranks": [
+          [
+            8,
+            50
+          ],
+          [
+            16,
+            100
+          ]
+        ]
       },
       {
         "fieldName": "improvedFelhunter",
@@ -892,7 +1046,24 @@
           17929,
           17930
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Agonizing Flames",
+        "icon": "spell_fire_soulburn",
+        "description": "Increases the critical strike chance of your Searing Pain spell by {0}% and the damage done by all your Destruction spells by {1}%.",
+        "ranks": [
+          [
+            3,
+            3
+          ],
+          [
+            6,
+            6
+          ],
+          [
+            9,
+            9
+          ]
+        ]
       },
       {
         "fieldName": "incinerate",

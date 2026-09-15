@@ -31,7 +31,27 @@
           12399,
           12400
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Genesis",
+        "icon": "spell_fire_immolation",
+        "description": "Increases the periodic damage and healing done by your spells and abilities by {0}%.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ]
       },
       {
         "fieldName": "moonglow",
@@ -71,7 +91,18 @@
           18459,
           18460
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Nature's Majesty",
+        "icon": "inv_staff_01",
+        "description": "Increases your critical strike chance with spells and melee attacks by {0}%.",
+        "ranks": [
+          [
+            2
+          ],
+          [
+            4
+          ]
+        ]
       },
       {
         "fieldName": "naturesReach",
@@ -361,7 +392,20 @@
           17002,
           24866
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Feral Swiftness",
+        "icon": "spell_nature_spiritwolf",
+        "description": "Increases your movement speed while in Cat Form by {0}%, and increases your chance to Dodge by {1}%.",
+        "ranks": [
+          [
+            15,
+            2
+          ],
+          [
+            30,
+            4
+          ]
+        ]
       },
       {
         "fieldName": "feralInstinct",
@@ -534,7 +578,18 @@
           16493,
           16494
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Predatory Instincts",
+        "icon": "ability_druid_predatoryinstincts",
+        "description": "Increases the critical strike damage bonus of your melee abilities by {0}%.",
+        "ranks": [
+          [
+            10
+          ],
+          [
+            20
+          ]
+        ]
       },
       {
         "fieldName": "leaderOfThePack",
@@ -636,7 +691,27 @@
           19619,
           19620
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Rend and Tear",
+        "icon": "ability_druid_primalagression",
+        "description": "Increases damage done by your melee abilities on Bleeding targets by {0}%.",
+        "ranks": [
+          [
+            2
+          ],
+          [
+            4
+          ],
+          [
+            6
+          ],
+          [
+            8
+          ],
+          [
+            10
+          ]
+        ]
       },
       {
         "fieldName": "berserk",
@@ -880,7 +955,21 @@
           16839,
           16840
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Living Spirit",
+        "icon": "spell_nature_giftofthewaterspirit",
+        "description": "Increases your Spirit by {0}%.",
+        "ranks": [
+          [
+            5
+          ],
+          [
+            10
+          ],
+          [
+            15
+          ]
+        ]
       },
       {
         "fieldName": "improvedTranquility",
