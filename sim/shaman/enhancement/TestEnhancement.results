@@ -162,84 +162,84 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Auto-default-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 39.10155
+  dps: 39.26455
   tps: 207.22498
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Auto-default-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 39.10155
+  dps: 39.26455
   tps: 10.36125
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Auto-default-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 39.76734
+  dps: 40.0513
   tps: 17.64251
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Auto-default-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 26.49535
+  dps: 26.58655
   tps: 207.22498
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Auto-default-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 26.49535
+  dps: 26.58655
   tps: 10.36125
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Auto-default-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 29.08075
+  dps: 29.23825
   tps: 17.64251
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Delay OH-default-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 39.10155
+  dps: 39.26455
   tps: 207.22498
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Delay OH-default-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 39.10155
+  dps: 39.26455
   tps: 10.36125
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Delay OH-default-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 39.76734
+  dps: 40.0513
   tps: 17.64251
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Delay OH-default-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 26.49535
+  dps: 26.58655
   tps: 207.22498
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Delay OH-default-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 26.49535
+  dps: 26.58655
   tps: 10.36125
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Settings-Orc-launch-Sync Delay OH-default-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 29.08075
+  dps: 29.23825
   tps: 17.64251
  }
 }
