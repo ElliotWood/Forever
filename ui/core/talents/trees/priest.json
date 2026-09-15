@@ -610,7 +610,7 @@
   },
   {
     "name": "Shadow Magic",
-    "backgroundUrl": "",
+    "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/203.jpg",
     "talents": [
       {
         "fieldName": "shadowFocus",
