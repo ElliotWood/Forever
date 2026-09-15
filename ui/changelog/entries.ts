@@ -288,6 +288,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Mage: Ignite paid the same crit twice',
+				prs: [114],
+				changed:
+					"Ignite's ticks re-applied the Improved Scorch stacks and Curse of Elements that the critical strike had already carried, and a crit landing after the dot had ticked restarted it with the old damage still in the pool, so the talent paid out 62% of the crit it lit instead of 40%. Fingers of Frost handed the Shatter crit to the Frostbolt already half cast without spending the charge on it. Arcane Missiles stopped at rank 7 because its registration loop predated the AQ ranks, and the arcane rotation now holds three Arcane Blast stacks before spending them. Mana gems no longer spend the shared conjured cooldown on the smallest gem.",
+				effect: 'Fire -7.6%, Frost -4.0%, Arcane +8.9% on a two minute fight; the three mage builds land within 90 DPS of each other instead of 300.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Season of Discovery leftovers removed',
 				prs: [82, 83, 67],
 				changed:

@@ -41,10 +41,11 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/hunter/talents.go:353` — only rank 1 was observed, the regeneration is assumed to scale per rank.
 - `sim/hunter/talents.go:375` — only rank 1 of Expose Prey was observed, the proc chance is assumed to scale per rank.
 
-## Mage (2)
+## Mage (3)
 
 - `sim/mage/fire_blast.go:39` — only rank 1 of Wake of Fire was shown, so mage.json copies its 1 sec into rank 2.
 - `sim/mage/talents.go:655` — both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
+- `sim/mage/talents.go:669` — a cast already in progress when a chill lands is held out of Fingers of Frost, so it neither takes the Shatter crit nor spends the charge. Beta will confirm which cast the charge belongs to.
 
 ## Paladin (19)
 
