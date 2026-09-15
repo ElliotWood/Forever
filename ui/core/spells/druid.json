@@ -1,97 +1,632 @@
 {
-	"16880": {
-		"ability": "Nature's Grace",
-		"file": "sim/druid/talents.go",
+	"100": {
+		"ability": "Charge",
+		"file": "sim/druid/hurricane.go",
 		"source": "unreviewed"
+	},
+	"1079": {
+		"ability": "Rip",
+		"file": "sim/druid/rip.go",
+		"source": "unreviewed"
+	},
+	"1180": {
+		"ability": "Daggers",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"134": {
+		"ability": "Fire Shield",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"1495": {
+		"ability": "Mongoose Bite",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"16880": {
+		"ability": "Balance of Nature",
+		"assumptions": [
+			"Only rank 1 was seen; the 1% is assumed to scale linearly, to 5% at 5 points.",
+			"The 10 sec window is the same for both schools and does not grow with rank."
+		],
+		"file": "sim/druid/talents.go",
+		"note": "16880 is Classic's Nature's Grace, and the Forever talent tree still hands that same id to Nature's Grace, so both halves of Balance of Nature currently render as a second Nature's Grace; Forever's own id for the talent has never been published.",
+		"source": "assumed",
+		"tooltip": "10 sec\nAfter you cast a Nature damage spell your next Arcane damage spell deals 1% more damage per point of Balance of Nature, and after an Arcane damage spell your next Nature damage spell does the same. Lasts 10 sec."
 	},
 	"16886": {
 		"ability": "Nature's Grace",
 		"file": "sim/druid/talents.go",
+		"note": "Forever's talent text reads 10% spellcasting speed and global cooldown for 3 sec on any non-periodic spell crit, where Classic's 16886 is a flat cast time cut on the next cast; the id lends the right name and icon but the wrong words, and the global cooldown is shortened by hand because Classic never hastes it.",
+		"source": "forever",
+		"tooltip": "3 sec\nAfter any of your spells lands a critical strike, your casting speed increases by 10% and your global cooldown shortens by the same 10%, for 3 sec."
+	},
+	"16914": {
+		"ability": "Hurricane",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"17056": {
+		"ability": "Furor",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"17058": {
+		"ability": "Furor",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"17059": {
+		"ability": "Furor",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"17060": {
+		"ability": "Furor",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"17061": {
+		"ability": "Furor",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"1735": {
+		"ability": "Demoralizing Roar",
+		"file": "sim/druid/demoralizing_roar.go",
 		"source": "unreviewed"
 	},
 	"17392": {
 		"ability": "Faerie Fire (Feral)",
+		"assumptions": [
+			"Faerie Fire (Feral) is available with no talent spent - its talent is gone from the Forever tree and the version is assumed to have become baseline rather than been deleted.",
+			"The 505 armor, the 40 sec duration and the 6 sec cooldown are Classic's, assumed unchanged."
+		],
 		"file": "sim/druid/faerie_fire.go",
+		"note": "Also registered as a debuff in sim/core/debuffs.go, which is where the 505 armor lives.",
+		"source": "assumed",
+		"tooltip": "Melee Range\nInstant\n6 sec cooldown\nDecreases the armor of the target by 505 for 40 sec and stops it stealthing or turning invisible. Usable in Cat Form and Bear Form, and costs no mana."
+	},
+	"17401": {
+		"ability": "Hurricane",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"17402": {
+		"ability": "Hurricane",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"1822": {
+		"ability": "Rake",
+		"file": "sim/druid/rake.go",
+		"source": "unreviewed"
+	},
+	"1823": {
+		"ability": "Rake",
+		"file": "sim/druid/rake.go",
+		"source": "unreviewed"
+	},
+	"1824": {
+		"ability": "Rake",
+		"file": "sim/druid/rake.go",
+		"source": "unreviewed"
+	},
+	"22568": {
+		"ability": "Ferocious Bite",
+		"file": "sim/druid/ferocious_bite.go",
 		"source": "unreviewed"
 	},
 	"22812": {
 		"ability": "Barkskin",
 		"file": "sim/druid/barkskin.go",
+		"note": "Untouched since the fork: 20% less damage taken for 12 sec on a 1 min cooldown, and the file is only reached by a druid who starts in Bear Form.",
+		"source": "classic"
+	},
+	"22827": {
+		"ability": "Ferocious Bite",
+		"file": "sim/druid/ferocious_bite.go",
+		"source": "unreviewed"
+	},
+	"22828": {
+		"ability": "Ferocious Bite",
+		"file": "sim/druid/ferocious_bite.go",
+		"source": "unreviewed"
+	},
+	"22829": {
+		"ability": "Ferocious Bite",
+		"file": "sim/druid/ferocious_bite.go",
+		"source": "unreviewed"
+	},
+	"22842": {
+		"ability": "Frenzied Regeneration",
+		"file": "sim/druid/frenzied_regeneration.go",
+		"source": "unreviewed"
+	},
+	"22895": {
+		"ability": "Frenzied Regeneration",
+		"file": "sim/druid/frenzied_regeneration.go",
+		"source": "unreviewed"
+	},
+	"22896": {
+		"ability": "Frenzied Regeneration",
+		"file": "sim/druid/frenzied_regeneration.go",
 		"source": "unreviewed"
 	},
 	"24858": {
 		"ability": "Moonkin Form",
 		"file": "sim/druid/forms.go",
+		"note": "Forever's tooltip keeps only the armor and the party crit aura; Classic's Moonfire lines and the periodic crit clause are gone, periodic crits now being a rule for every class rather than a gift of the form.",
+		"source": "forever",
+		"tooltip": "35% of base mana\nInstant\nShapeshift into Moonkin Form, increasing your armor contribution from items by 360% and giving every party member within 45 yards 3% more critical strike chance, exclusive with Leader of the Pack. The form grants no spell damage and no Moonfire bonus."
+	},
+	"24974": {
+		"ability": "Insect Swarm",
+		"file": "sim/druid/insect_swarm.go",
+		"source": "unreviewed"
+	},
+	"24975": {
+		"ability": "Insect Swarm",
+		"file": "sim/druid/insect_swarm.go",
+		"source": "unreviewed"
+	},
+	"24976": {
+		"ability": "Insect Swarm",
+		"file": "sim/druid/insect_swarm.go",
+		"source": "unreviewed"
+	},
+	"25298": {
+		"ability": "Starfire",
+		"file": "sim/druid/starfire.go",
 		"source": "unreviewed"
 	},
 	"26107": {
 		"ability": "Symbols of Unending Life Finisher Bonus",
 		"file": "sim/druid/item_sets_pve.go",
+		"note": "Untouched since the fork - the 3 piece refunds 30 Energy when Ferocious Bite or Rip fails to land.",
+		"source": "classic"
+	},
+	"2912": {
+		"ability": "Starfire",
+		"file": "sim/druid/starfire.go",
+		"source": "unreviewed"
+	},
+	"31018": {
+		"ability": "Ferocious Bite",
+		"file": "sim/druid/ferocious_bite.go",
 		"source": "unreviewed"
 	},
 	"33876": {
-		"ability": "spell 33876",
+		"ability": "Mangle (Cat)",
+		"assumptions": [
+			"The 45 Energy cost is Classic Mangle (Cat)'s; the Forever tooltip gave the damage and the form and nothing else.",
+			"Mangle (Cat) has no cooldown of its own."
+		],
 		"file": "sim/druid/mangle.go",
-		"source": "unreviewed"
+		"note": "Forever's Mangle has no published spell id, so the sim carries the Burning Crusade Mangle (Cat) id, which the Classic database does not hold at all - the site can render neither a name nor an icon for it. Berserk widens the strike to 3 targets.",
+		"source": "assumed",
+		"tooltip": "45 Energy\nMelee Range\nInstant\nMangle the target for 100% weapon damage plus 26, and award 1 combo point. Requires Cat Form."
 	},
 	"33878": {
-		"ability": "spell 33878",
+		"ability": "Mangle (Bear)",
+		"assumptions": [
+			"The 15 Rage cost, the 6 sec cooldown and the 1.5x threat are Classic Mangle (Bear)'s; the Forever tooltip gave only the damage and the form."
+		],
 		"file": "sim/druid/mangle.go",
-		"source": "unreviewed"
+		"note": "Forever's Mangle has no published spell id, so the sim carries the Burning Crusade Mangle (Bear) id, which the Classic database does not hold - neither name nor icon renders. While Berserk is up the cooldown is lifted and the strike hits 3 targets.",
+		"source": "assumed",
+		"tooltip": "15 Rage\nMelee Range\nInstant\n6 sec cooldown\nMangle the target for 100% weapon damage plus 26, and cause a high amount of threat. Requires Bear Form."
 	},
 	"37117": {
-		"ability": "spell 37117",
+		"ability": "Primal Fury",
+		"assumptions": [
+			"Both ranks of the published text read 50%; the sim reads the chance per point, so rank 2 procs every crit.",
+			"The Cat Form half is Forever's own text, not Classic's Blood Frenzy, which is gone from the tree; only its rank 2 value is a guess."
+		],
 		"file": "sim/druid/talents.go",
+		"foreverId": 16958,
+		"note": "The Forever talent tree carries Classic's own Primal Fury ids 16958 and 16961, which the Classic database holds, but the sim tags the proc with the Burning Crusade 37117, which it does not - so the Rage and the combo point arrive unnamed in the metrics.",
+		"source": "assumed",
+		"tooltip": "Gives you a 50% chance per point to gain an additional 5 Rage any time you get a critical strike in Bear Form or Dire Bear Form, and your non-periodic critical strikes from Cat Form abilities that generate combo points the same chance to add an additional combo point."
+	},
+	"40": {
+		"ability": "spell 40",
+		"file": "sim/druid/hurricane.go",
 		"source": "unreviewed"
 	},
 	"414644": {
 		"ability": "Lacerate",
+		"assumptions": [
+			"Shredding Attacks naming Lacerate is the only evidence the Forever bear has the ability; no tooltip for it has been seen.",
+			"The 10 Rage cost, the 20% weapon damage per stack, the 5 stack cap and the 3.33x threat are Season of Discovery's.",
+			"Shredding Attacks cuts 1 Rage per point, which its Forever tooltip does give."
+		],
 		"file": "sim/druid/lacerate.go",
-		"source": "unreviewed"
+		"note": "414644 is the Season of Discovery Lacerate, the only level 60 tuning of the ability that exists; the bleed it applies is 414647.",
+		"source": "assumed",
+		"tooltip": "10 Rage\nMelee Range\nInstant\nLacerate the enemy for 20% weapon damage for each stack of Lacerate on it, and apply another stack of the bleed, up to 5. Causes a high amount of threat. Requires Bear Form."
 	},
 	"414647": {
 		"ability": "Lacerate",
+		"assumptions": [
+			"The 29.8 damage per tick per stack and the 15 sec over 5 ticks are Season of Discovery's Lacerate; no Forever tooltip has been seen.",
+			"The bleed re-snapshots when a stack is added, so every stack ticks at the attack power the last application saw."
+		],
 		"file": "sim/druid/lacerate.go",
+		"note": "The periodic half of Lacerate; 414644 is the strike the bear casts and owns the ability.",
+		"source": "assumed",
+		"tooltip": "Bleeds the target for 30 damage every 3 sec for each stack of Lacerate on it, over 15 sec."
+	},
+	"46": {
+		"ability": "spell 46",
+		"file": "sim/druid/hurricane.go",
 		"source": "unreviewed"
 	},
 	"48518": {
-		"ability": "spell 48518",
+		"ability": "Eclipse",
+		"assumptions": [
+			"Only rank 1's 0.17 sec was seen; the sim scales it per point to 0.51 sec at 3 points.",
+			"The 2 charges per Wrath, the 4 charge cap and the 15 sec duration are the same at every rank."
+		],
 		"file": "sim/druid/talents.go",
+		"note": "Forever's Eclipse has no published spell id; the sim carries Wrath of the Lich King's 48518, which the Classic database does not hold, so the buff renders without a name or an icon.",
+		"source": "assumed",
+		"tooltip": "15 sec\nEach Wrath you cast banks 2 Eclipse charges, up to 4. Each Starfire spends one charge and is cast 0.17 sec faster per point of Eclipse. Lasts 15 sec."
+	},
+	"50": {
+		"ability": "Zone Recall (OLD)",
+		"file": "sim/druid/hurricane.go",
 		"source": "unreviewed"
 	},
 	"50334": {
-		"ability": "spell 50334",
+		"ability": "Berserk",
+		"assumptions": [
+			"The 3 min cooldown is Classic Berserk's; the Forever tooltip showed none.",
+			"Berserk costs no Energy and no Rage.",
+			"The Fear clear and the immunity to Fear the tooltip grants are not modelled, nothing in a raid encounter reads them."
+		],
 		"file": "sim/druid/berserk.go",
+		"note": "Forever's Berserk has no published spell id; the sim carries Wrath of the Lich King's 50334, which the Classic database does not hold, so the cooldown renders without a name or an icon. The 3 targets, the 100% crit and the 15 sec are the talent's own published text.",
+		"source": "assumed",
+		"tooltip": "Instant\n3 min cooldown\nYour Mangle strikes up to 3 targets and loses its cooldown, and your combo point generating abilities gain 100% critical strike chance. Lasts 15 sec."
+	},
+	"5176": {
+		"ability": "Wrath",
+		"file": "sim/druid/wrath.go",
+		"source": "unreviewed"
+	},
+	"5177": {
+		"ability": "Wrath",
+		"file": "sim/druid/wrath.go",
+		"source": "unreviewed"
+	},
+	"5178": {
+		"ability": "Wrath",
+		"file": "sim/druid/wrath.go",
+		"source": "unreviewed"
+	},
+	"5179": {
+		"ability": "Wrath",
+		"file": "sim/druid/wrath.go",
+		"source": "unreviewed"
+	},
+	"5180": {
+		"ability": "Wrath",
+		"file": "sim/druid/wrath.go",
+		"source": "unreviewed"
+	},
+	"5217": {
+		"ability": "Tiger's Fury",
+		"file": "sim/druid/tigers_fury.go",
+		"source": "unreviewed"
+	},
+	"5221": {
+		"ability": "Shred",
+		"file": "sim/druid/shred.go",
 		"source": "unreviewed"
 	},
 	"5229": {
 		"ability": "Enrage",
 		"file": "sim/druid/enrage.go",
+		"note": "Upstream's disabled Wrath of the Lich King version was restored with Classic Era's numbers - 20 Rage over 10 sec for 27% less armor on a 1 min cooldown - and King of the Jungle's damage bonus dropped, because Forever's King of the Jungle is Tiger's Fury's Energy instead.",
+		"source": "classic"
+	},
+	"5570": {
+		"ability": "Insect Swarm",
+		"file": "sim/druid/insect_swarm.go",
+		"source": "unreviewed"
+	},
+	"56": {
+		"ability": "Stun",
+		"file": "sim/druid/hurricane.go",
 		"source": "unreviewed"
 	},
 	"57878": {
-		"ability": "spell 57878",
+		"ability": "Natural Reaction",
+		"assumptions": [
+			"Only rank 1 was seen; the 1% dodge is assumed to scale linearly, to 5% at 5 points.",
+			"Every rank of the published text reads the same 20% chance for 5 Rage, so the sim holds the proc at 20% and it does not grow past rank 1.",
+			"The Rage half fires only in Bear Form, while the dodge is carried in every form."
+		],
 		"file": "sim/druid/talents.go",
+		"note": "Forever's Natural Reaction has no published spell id; the sim tags the Rage with Wrath of the Lich King's 57878, which the Classic database does not hold, so the gain shows up unnamed in the resources tab.",
+		"source": "assumed",
+		"tooltip": "Increases your dodge chance by 1% per point, and gives you a 20% chance to gain 5 Rage each time you dodge."
+	},
+	"60": {
+		"ability": "Long bow shot (TEST)",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"66": {
+		"ability": "Lesser Invisibility",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"6780": {
+		"ability": "Wrath",
+		"file": "sim/druid/wrath.go",
+		"source": "unreviewed"
+	},
+	"6793": {
+		"ability": "Tiger's Fury",
+		"file": "sim/druid/tigers_fury.go",
+		"source": "unreviewed"
+	},
+	"6807": {
+		"ability": "Maul",
+		"file": "sim/druid/maul.go",
+		"source": "unreviewed"
+	},
+	"6808": {
+		"ability": "Maul",
+		"file": "sim/druid/maul.go",
+		"source": "unreviewed"
+	},
+	"6809": {
+		"ability": "Maul",
+		"file": "sim/druid/maul.go",
+		"source": "unreviewed"
+	},
+	"70": {
+		"ability": "spell 70",
+		"file": "sim/druid/hurricane.go",
 		"source": "unreviewed"
 	},
 	"768": {
 		"ability": "Cat Form",
 		"file": "sim/druid/forms.go",
+		"note": "The form's own numbers are Classic's - 2 attack power per level, 0.71x threat, 55% of base mana less 10% per point of Natural Shapeshifter; the Energy a shift grants is Furor's, and Forever reworked the talent, not the form.",
+		"source": "classic"
+	},
+	"769": {
+		"ability": "Swipe",
+		"file": "sim/druid/swipe.go",
+		"source": "unreviewed"
+	},
+	"779": {
+		"ability": "Swipe",
+		"file": "sim/druid/swipe.go",
+		"source": "unreviewed"
+	},
+	"780": {
+		"ability": "Swipe",
+		"file": "sim/druid/swipe.go",
+		"source": "unreviewed"
+	},
+	"880": {
+		"ability": "Moonfire",
+		"file": "sim/druid/hurricane.go",
+		"source": "unreviewed"
+	},
+	"8905": {
+		"ability": "Wrath",
+		"file": "sim/druid/wrath.go",
+		"source": "unreviewed"
+	},
+	"8921": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"8924": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"8925": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"8926": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"8927": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"8928": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"8929": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"8949": {
+		"ability": "Starfire",
+		"file": "sim/druid/starfire.go",
+		"source": "unreviewed"
+	},
+	"8950": {
+		"ability": "Starfire",
+		"file": "sim/druid/starfire.go",
+		"source": "unreviewed"
+	},
+	"8951": {
+		"ability": "Starfire",
+		"file": "sim/druid/starfire.go",
+		"source": "unreviewed"
+	},
+	"8972": {
+		"ability": "Maul",
+		"file": "sim/druid/maul.go",
+		"source": "unreviewed"
+	},
+	"8992": {
+		"ability": "Shred",
+		"file": "sim/druid/shred.go",
+		"source": "unreviewed"
+	},
+	"9490": {
+		"ability": "Demoralizing Roar",
+		"file": "sim/druid/demoralizing_roar.go",
+		"source": "unreviewed"
+	},
+	"9492": {
+		"ability": "Rip",
+		"file": "sim/druid/rip.go",
+		"source": "unreviewed"
+	},
+	"9493": {
+		"ability": "Rip",
+		"file": "sim/druid/rip.go",
 		"source": "unreviewed"
 	},
 	"9634": {
 		"ability": "Dire Bear Form",
+		"assumptions": [
+			"The 1240 flat health stands in for Classic's +25% Stamina and no published Forever source gives it.",
+			"The 180 attack power is 3 per level and the 360% item armor is Classic's, both assumed unchanged.",
+			"Bear Form keeps Classic's half of Furor, a 20% chance per point at 10 Rage on the shift, while Cat Form gets Forever's Energy carryover."
+		],
 		"file": "sim/druid/forms.go",
+		"note": "Forever moves Feral Instinct onto Swipe, so the form's threat is the flat 1.3x it carries here; Classic's tooltip promises 25% Stamina where this gives flat health.",
+		"source": "assumed",
+		"tooltip": "55% of base mana\nInstant\nShapeshift into dire bear form, increasing melee attack power by 180, health by 1240, armor contribution from items by 360% and threat caused by 30%. Rage replaces mana while the form lasts."
+	},
+	"9745": {
+		"ability": "Maul",
+		"file": "sim/druid/maul.go",
+		"source": "unreviewed"
+	},
+	"9747": {
+		"ability": "Demoralizing Roar",
+		"file": "sim/druid/demoralizing_roar.go",
+		"source": "unreviewed"
+	},
+	"9752": {
+		"ability": "Rip",
+		"file": "sim/druid/rip.go",
+		"source": "unreviewed"
+	},
+	"9754": {
+		"ability": "Swipe",
+		"file": "sim/druid/swipe.go",
+		"source": "unreviewed"
+	},
+	"9829": {
+		"ability": "Shred",
+		"file": "sim/druid/shred.go",
+		"source": "unreviewed"
+	},
+	"9830": {
+		"ability": "Shred",
+		"file": "sim/druid/shred.go",
+		"source": "unreviewed"
+	},
+	"9833": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"9834": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"9835": {
+		"ability": "Moonfire",
+		"file": "sim/druid/moonfire.go",
+		"source": "unreviewed"
+	},
+	"9845": {
+		"ability": "Tiger's Fury",
+		"file": "sim/druid/tigers_fury.go",
+		"source": "unreviewed"
+	},
+	"9846": {
+		"ability": "Tiger's Fury",
+		"file": "sim/druid/tigers_fury.go",
 		"source": "unreviewed"
 	},
 	"9850": {
 		"ability": "Claw",
 		"file": "sim/druid/claw.go",
+		"note": "Rank 6's 115 bonus damage and 45 Energy less 1 per point of Ferocity are Classic's; only Savage Fury's per point value changed, and that belongs to the talent.",
+		"source": "classic"
+	},
+	"9875": {
+		"ability": "Starfire",
+		"file": "sim/druid/starfire.go",
+		"source": "unreviewed"
+	},
+	"9876": {
+		"ability": "Starfire",
+		"file": "sim/druid/starfire.go",
+		"source": "unreviewed"
+	},
+	"9880": {
+		"ability": "Maul",
+		"file": "sim/druid/maul.go",
+		"source": "unreviewed"
+	},
+	"9881": {
+		"ability": "Maul",
+		"file": "sim/druid/maul.go",
+		"source": "unreviewed"
+	},
+	"9894": {
+		"ability": "Rip",
+		"file": "sim/druid/rip.go",
+		"source": "unreviewed"
+	},
+	"9896": {
+		"ability": "Rip",
+		"file": "sim/druid/rip.go",
+		"source": "unreviewed"
+	},
+	"99": {
+		"ability": "Demoralizing Roar",
+		"file": "sim/druid/demoralizing_roar.go",
+		"source": "unreviewed"
+	},
+	"9904": {
+		"ability": "Rake",
+		"file": "sim/druid/rake.go",
 		"source": "unreviewed"
 	},
 	"9907": {
 		"ability": "Faerie Fire",
 		"file": "sim/druid/faerie_fire.go",
+		"note": "115 mana, 505 armor for 40 sec, all Classic's; the feral version on 17392 is the half Forever touched, by dropping its talent.",
+		"source": "classic"
+	},
+	"9908": {
+		"ability": "Swipe",
+		"file": "sim/druid/swipe.go",
+		"source": "unreviewed"
+	},
+	"9912": {
+		"ability": "Wrath",
+		"file": "sim/druid/wrath.go",
 		"source": "unreviewed"
 	}
 }

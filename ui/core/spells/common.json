@@ -300,9 +300,10 @@
 		"source": "unreviewed"
 	},
 	"21919": {
-		"ability": "Thrash",
+		"ability": "Extra Attacks (Main Hand) tracker",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"note": "Borrowed id: the database name is Thrash, but the sim uses 21919 purely to label the permanent aura that counts stored extra attacks from every source (also sim/core/attack.go lines 170, 774 and 780, where the comment says '// Thrash ID'). Nothing Forever changed, but the Classic name does not describe what is registered.",
+		"source": "classic"
 	},
 	"21970": {
 		"ability": "Mark of the Chosen Effect",
@@ -312,7 +313,8 @@
 	"21992": {
 		"ability": "Thunderfury",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"note": "20% attack speed reduction on the target for 12 sec; unchanged from upstream Classic.",
+		"source": "classic"
 	},
 	"22639": {
 		"ability": "Eskhandar's Rake",
@@ -367,7 +369,8 @@
 	"27419": {
 		"ability": "Warrior's Resolve",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"source": "unreviewed"
+		"note": "Battlegear of Heroism 4 piece heal proc; the sim rolls 88 to 133 where the Classic tooltip says 88 to 132, a one point upstream rounding, not a Forever change.",
+		"source": "classic"
 	},
 	"27498": {
 		"ability": "Crusader's Wrath",
@@ -387,17 +390,20 @@
 	"27781": {
 		"ability": "Nature's Bounty",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"source": "unreviewed"
+		"note": "Untouched since the fork; the id is shared with sim/common/item_sets/dungeon_set_1.go, which owns the entry in common.json, so this row should be dropped when the druid manifest is merged.",
+		"source": "classic"
 	},
 	"27785": {
 		"ability": "Hunter Armor Energize",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"source": "unreviewed"
+		"note": "Beastmaster Armor's 4 piece bonus (4% of normal ranged attacks restore 200 mana), Classic's and untouched by Forever; the id is absent from db.json, so the mana gain shows in the log without a name or icon.",
+		"source": "classic"
 	},
 	"27787": {
 		"ability": "Rogue Armor Energize",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"source": "unreviewed"
+		"note": "Darkmantle Armor 4pc, 35 Energy at 1 PPM on white melee hits, unchanged from Classic (the Classic tooltip's 'Requires Paladin' line is a Wowhead artefact).",
+		"source": "classic"
 	},
 	"27860": {
 		"ability": "Engulfing Shadows",

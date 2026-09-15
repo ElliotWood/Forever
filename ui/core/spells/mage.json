@@ -1,102 +1,597 @@
 {
+	"10": {
+		"ability": "Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"10148": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"10149": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"10150": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"10151": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"10179": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"10180": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"10181": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"10185": {
+		"ability": "Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"10186": {
+		"ability": "Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"10187": {
+		"ability": "Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"10197": {
+		"ability": "Fire Blast",
+		"file": "sim/mage/fire_blast.go",
+		"source": "unreviewed"
+	},
+	"10199": {
+		"ability": "Fire Blast",
+		"file": "sim/mage/fire_blast.go",
+		"source": "unreviewed"
+	},
+	"10201": {
+		"ability": "Arcane Explosion",
+		"file": "sim/mage/arcane_explosion.go",
+		"source": "unreviewed"
+	},
+	"10202": {
+		"ability": "Arcane Explosion",
+		"file": "sim/mage/arcane_explosion.go",
+		"source": "unreviewed"
+	},
+	"10205": {
+		"ability": "Scorch",
+		"file": "sim/mage/scorch.go",
+		"source": "unreviewed"
+	},
+	"10206": {
+		"ability": "Scorch",
+		"file": "sim/mage/scorch.go",
+		"source": "unreviewed"
+	},
+	"10207": {
+		"ability": "Scorch",
+		"file": "sim/mage/scorch.go",
+		"source": "unreviewed"
+	},
+	"10211": {
+		"ability": "Arcane Missiles",
+		"file": "sim/mage/arcane_missiles.go",
+		"source": "unreviewed"
+	},
+	"10212": {
+		"ability": "Arcane Missiles",
+		"file": "sim/mage/arcane_missiles.go",
+		"source": "unreviewed"
+	},
+	"10215": {
+		"ability": "Flamestrike",
+		"file": "sim/mage/flamestrike.go",
+		"source": "unreviewed"
+	},
+	"10216": {
+		"ability": "Flamestrike",
+		"file": "sim/mage/flamestrike.go",
+		"source": "unreviewed"
+	},
+	"10219": {
+		"ability": "Ice Armor",
+		"file": "sim/mage/armors.go",
+		"source": "unreviewed"
+	},
+	"10220": {
+		"ability": "Ice Armor",
+		"file": "sim/mage/armors.go",
+		"source": "unreviewed"
+	},
+	"11113": {
+		"ability": "Blast Wave",
+		"file": "sim/mage/blast_wave.go",
+		"source": "unreviewed"
+	},
 	"11129": {
 		"ability": "Combustion",
 		"file": "sim/mage/talents.go",
+		"note": "Forever's Combustion runs for 4 fire crits where Classic's 11129 tooltip says 3; the 3 minute cooldown is Classic's, because the Forever tooltip carries none.",
+		"source": "forever",
+		"tooltip": "Instant\n3 min cooldown\nWhen activated, each of your Fire damage spell hits increases your critical strike chance with Fire spells by 10%.\nLasts until you have dealt 4 non-periodic critical strikes with Fire spells."
+	},
+	"11185": {
+		"ability": "Improved Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"11366": {
+		"ability": "Pyroblast",
+		"file": "sim/mage/pyroblast.go",
+		"source": "unreviewed"
+	},
+	"11426": {
+		"ability": "Ice Barrier",
+		"file": "sim/mage/ice_barrier.go",
+		"source": "unreviewed"
+	},
+	"116": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
 		"source": "unreviewed"
 	},
 	"12042": {
 		"ability": "Arcane Power",
 		"file": "sim/mage/talents.go",
-		"source": "unreviewed"
+		"note": "registerArcanePowerCD is unchanged from Classic and the Forever talent data prints the same 15 sec, +30% damage, +30% mana cost and 3 min cooldown.",
+		"source": "classic"
 	},
 	"12043": {
 		"ability": "Presence of Mind",
 		"file": "sim/mage/talents.go",
-		"source": "unreviewed"
+		"note": "registerPresenceOfMindCD is unchanged from Classic - 3 min cooldown, the next cast instant - and the Forever talent data prints the same text.",
+		"source": "classic"
 	},
 	"12051": {
 		"ability": "Evocation",
 		"file": "sim/mage/evocation.go",
-		"source": "unreviewed"
+		"note": "sim/mage/evocation.go is byte identical to the pre-Forever file: 8 sec channel, 8 min cooldown, 15x Spirit regen.",
+		"source": "classic"
 	},
 	"12472": {
 		"ability": "Cold Snap",
 		"file": "sim/mage/talents.go",
+		"note": "registerColdSnapCD is unchanged - a 10 min cooldown that finishes the cooldown on every other Frost spell - and the Forever talent text says the same.",
+		"source": "classic"
+	},
+	"12487": {
+		"ability": "Improved Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"12488": {
+		"ability": "Improved Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"12505": {
+		"ability": "Pyroblast",
+		"file": "sim/mage/pyroblast.go",
+		"source": "unreviewed"
+	},
+	"12522": {
+		"ability": "Pyroblast",
+		"file": "sim/mage/pyroblast.go",
+		"source": "unreviewed"
+	},
+	"12523": {
+		"ability": "Pyroblast",
+		"file": "sim/mage/pyroblast.go",
+		"source": "unreviewed"
+	},
+	"12524": {
+		"ability": "Pyroblast",
+		"file": "sim/mage/pyroblast.go",
+		"source": "unreviewed"
+	},
+	"12525": {
+		"ability": "Pyroblast",
+		"file": "sim/mage/pyroblast.go",
+		"source": "unreviewed"
+	},
+	"12526": {
+		"ability": "Pyroblast",
+		"file": "sim/mage/pyroblast.go",
 		"source": "unreviewed"
 	},
 	"12577": {
 		"ability": "Arcane Concentration",
 		"file": "sim/mage/talents.go",
-		"source": "unreviewed"
+		"note": "2% Clearcasting chance per point, unchanged from Classic and matching the Forever talent data's 2/4/6/8/10.",
+		"source": "classic"
 	},
 	"12654": {
 		"ability": "Ignite",
 		"file": "sim/mage/ignite.go",
+		"note": "The 8% per point and the 4 sec are Classic's, but under the Forever ruleset every other dot can crit and this one is deliberately held out, and the ticks carry SpellFlagIgnoreModifiers so the crit's multipliers are not paid twice; the id is used twice in the file, once for the applying spell and once for the tick.",
+		"source": "forever",
+		"tooltip": "Periodic\nYour critical strikes with Fire damage spells burn the target for an extra 8% of the strike's damage per talent point, 40% at 5/5, in two ticks over 4 sec.\nThe burn pays out exactly that share: it cannot critically strike, it does not take your damage multipliers a second time, and a fresh crit rolls the damage still owed into the new burn instead of restarting it."
+	},
+	"13018": {
+		"ability": "Blast Wave",
+		"file": "sim/mage/blast_wave.go",
+		"source": "unreviewed"
+	},
+	"13019": {
+		"ability": "Blast Wave",
+		"file": "sim/mage/blast_wave.go",
+		"source": "unreviewed"
+	},
+	"13020": {
+		"ability": "Blast Wave",
+		"file": "sim/mage/blast_wave.go",
+		"source": "unreviewed"
+	},
+	"13021": {
+		"ability": "Blast Wave",
+		"file": "sim/mage/blast_wave.go",
+		"source": "unreviewed"
+	},
+	"13031": {
+		"ability": "Ice Barrier",
+		"file": "sim/mage/ice_barrier.go",
+		"source": "unreviewed"
+	},
+	"13032": {
+		"ability": "Ice Barrier",
+		"file": "sim/mage/ice_barrier.go",
+		"source": "unreviewed"
+	},
+	"13033": {
+		"ability": "Ice Barrier",
+		"file": "sim/mage/ice_barrier.go",
+		"source": "unreviewed"
+	},
+	"133": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"143": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"1449": {
+		"ability": "Arcane Explosion",
+		"file": "sim/mage/arcane_explosion.go",
+		"source": "unreviewed"
+	},
+	"145": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"18809": {
+		"ability": "Pyroblast",
+		"file": "sim/mage/pyroblast.go",
+		"source": "unreviewed"
+	},
+	"205": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"2120": {
+		"ability": "Flamestrike",
+		"file": "sim/mage/flamestrike.go",
+		"source": "unreviewed"
+	},
+	"2121": {
+		"ability": "Flamestrike",
+		"file": "sim/mage/flamestrike.go",
+		"source": "unreviewed"
+	},
+	"2136": {
+		"ability": "Fire Blast",
+		"file": "sim/mage/fire_blast.go",
+		"source": "unreviewed"
+	},
+	"2137": {
+		"ability": "Fire Blast",
+		"file": "sim/mage/fire_blast.go",
+		"source": "unreviewed"
+	},
+	"2138": {
+		"ability": "Fire Blast",
+		"file": "sim/mage/fire_blast.go",
 		"source": "unreviewed"
 	},
 	"2139": {
 		"ability": "Counterspell",
 		"file": "sim/mage/counterspell.go",
-		"source": "unreviewed"
+		"note": "sim/mage/counterspell.go has not been touched since the fork - 100 mana, instant, 30 sec cooldown - and it is registered only so the T1 4pc has something to extend, so Classic's tooltip is correct.",
+		"source": "classic"
 	},
 	"22008": {
 		"ability": "Netherwind Focus",
 		"file": "sim/mage/item_sets_pve.go",
+		"note": "Netherwind Regalia 8pc, untouched by the fork; Blackwing Lair is not in Forever's launch content, so the eighth piece cannot actually be equipped.",
+		"source": "classic"
+	},
+	"22782": {
+		"ability": "Mage Armor",
+		"file": "sim/mage/armors.go",
+		"source": "unreviewed"
+	},
+	"22783": {
+		"ability": "Mage Armor",
+		"file": "sim/mage/armors.go",
 		"source": "unreviewed"
 	},
 	"23545": {
 		"ability": "Subtlety",
 		"file": "sim/mage/item_sets_pve.go",
-		"source": "unreviewed"
+		"note": "Arcanist Regalia 8pc threat reduction, untouched by the fork.",
+		"source": "classic"
 	},
 	"24389": {
 		"ability": "Chaos Fire",
 		"file": "sim/mage/items.go",
-		"source": "unreviewed"
+		"note": "Fire Ruby's use effect, untouched by the fork; only Mind Quickening Gem was removed from this file, for cut content.",
+		"source": "classic"
 	},
 	"24491": {
 		"ability": "Improved Flamestrike",
 		"file": "sim/mage/item_sets_pve.go",
-		"source": "unreviewed"
+		"note": "Illusionist's Attire 5pc, half a second off Flamestrike's cast, untouched by the fork.",
+		"source": "classic"
 	},
 	"24544": {
 		"ability": "Arcane Potency",
 		"file": "sim/mage/items.go",
+		"note": "Hazzarah's Charm of Magic's use effect, untouched; the Classic name belongs to the trinket buff, not to the later mage talent of the same name.",
+		"source": "classic"
+	},
+	"25304": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"25306": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"25345": {
+		"ability": "Arcane Missiles",
+		"file": "sim/mage/arcane_missiles.go",
 		"source": "unreviewed"
 	},
 	"26129": {
 		"ability": "Enigma's Answer",
 		"file": "sim/mage/item_sets_pve.go",
-		"source": "unreviewed"
+		"note": "Enigma Vestments 5pc, +5% spell hit for 20 sec after a resist, untouched by the fork.",
+		"source": "classic"
 	},
 	"29076": {
 		"ability": "Master of Elements",
 		"file": "sim/mage/talents.go",
+		"note": "10/20/30% of base mana refunded on a Fire or Frost crit, the same numbers as Classic and as the Forever talent data; the fork only corrected a school filter that had been refunding every school.",
+		"source": "classic"
+	},
+	"2948": {
+		"ability": "Scorch",
+		"file": "sim/mage/scorch.go",
 		"source": "unreviewed"
 	},
 	"30451": {
-		"ability": "spell 30451",
+		"ability": "Arcane Blast",
+		"assumptions": [
+			"435 to 505 base damage at level 60. The demo tooltip only showed 95 to 104, which is a rank 1, so the level 60 roll was picked to give the same damage per cast second as the level 60 Frostbolt.",
+			"Spell power coefficient 0.714, inferred from a 2.5 sec cast rather than from any Forever figure.",
+			"240 mana at level 60; no Forever cost was published.",
+			"2.5 sec cast time; no Forever cast time was published."
+		],
 		"file": "sim/mage/arcane_blast.go",
-		"source": "unreviewed"
+		"note": "Arcane Blast is a later expansion spell, so the Classic database has no entry for 30451 at all and the site can render neither name, icon nor tooltip; the 10%, 175%, 4 stacks and 8 sec do come from the Forever talent data, the damage does not.",
+		"source": "assumed",
+		"tooltip": "240 Mana\n2.5 sec cast\nBlasts the target for 435 to 505 Arcane damage.\nEach cast increases the damage of all your other spells by 10% and the mana cost of Arcane Blast by 175%, stacking up to 4 times. Lasts 8 sec or until any other damage spell is cast."
 	},
 	"30455": {
-		"ability": "spell 30455",
+		"ability": "Ice Lance",
+		"assumptions": [
+			"115 to 133 base damage at level 60. The demo tooltip read 28 to 33, a rank 1, so this keeps Ice Lance at roughly a fifth of the level 60 Frostbolt it is cast alongside.",
+			"Spell power coefficient 0.143; no Forever scaling was published.",
+			"160 mana at level 60; no Forever cost was published."
+		],
 		"file": "sim/mage/ice_lance.go",
+		"note": "Ice Lance is a later expansion spell, so the Classic database has no entry for 30455 and the site renders nothing for it; the 300% frozen bonus is Forever's published number, the level 60 damage is not.",
+		"source": "assumed",
+		"tooltip": "160 Mana\nInstant\nDeals 115 to 133 Frost damage to an enemy target.\nDeals 300% increased damage to a frozen target, which against a raid boss means one held by Fingers of Frost."
+	},
+	"3140": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
 		"source": "unreviewed"
 	},
 	"44404": {
-		"ability": "spell 44404",
+		"ability": "Missile Barrage",
+		"assumptions": [
+			"The Missile Barrage buff lasts 15 sec. The Forever tooltip gives the proc chances and the effect but never says how long the buff sits there waiting to be spent."
+		],
 		"file": "sim/mage/talents.go",
-		"source": "unreviewed"
+		"note": "Missile Barrage is a later expansion spell, so the Classic database has no entry for 44404 and the site renders nothing; Forever's tooltip also names Frostfire Bolt, which has no Classic spell to attach to, so only Fireball and Frostbolt feed it here.",
+		"source": "assumed",
+		"tooltip": "Your Arcane Blast has a 40% chance, and your Fireball and Frostbolt a 20% chance, to grant Missile Barrage.\nYour next Arcane Missiles costs no mana and fires a missile every 0.5 sec instead of every second, halving the channel. Lasts 15 sec."
 	},
 	"44445": {
-		"ability": "spell 44445",
+		"ability": "Hot Streak",
 		"file": "sim/mage/talents.go",
-		"source": "unreviewed"
+		"note": "Hot Streak is a later expansion spell, so the Classic database has no entry for 44445 and the site renders nothing; the 15 sec, 25% and 3 stacks are all Forever's published numbers, and Frostfire Bolt, which the Forever tooltip also names, has no Classic spell so it cannot grant a stack here.",
+		"source": "forever",
+		"tooltip": "Your non-periodic critical strikes with Fireball, Fire Blast and Scorch grant Hot Streak for 15 sec.\nEach stack reduces the cast time of Pyroblast by 25%, stacking up to 3 times."
 	},
 	"44543": {
-		"ability": "spell 44543",
+		"ability": "Fingers of Frost",
+		"assumptions": [
+			"Rank 2 procs at 15%, the same as rank 1. The demo tooltip read 15% on both ranks, so a second point currently buys nothing - and the shipped talent data disagrees, printing 30% for rank 2.",
+			"A cast already in progress when the chill lands is not the 'next spell cast': it takes neither the Shatter crit nor the charge, and the cast after it takes both."
+		],
 		"file": "sim/mage/talents.go",
+		"note": "Fingers of Frost is a later expansion spell, so the Classic database has no entry for 44543 and the site renders nothing; Shatter's crit bonus is folded into this aura because a raid boss can never be chilled or frozen by anything else, and the talent's rank 2 id 44544 is never used.",
+		"source": "assumed",
+		"tooltip": "Your Chill effects have a 15% chance to grant Fingers of Frost, which treats your next spell cast as though the target were frozen. Lasts 15 sec.\nWhile it is up your spells gain Shatter's critical strike chance, 10% per point of Shatter, and Ice Lance deals its frozen damage."
+	},
+	"5143": {
+		"ability": "Arcane Missiles",
+		"file": "sim/mage/arcane_missiles.go",
+		"source": "unreviewed"
+	},
+	"5144": {
+		"ability": "Arcane Missiles",
+		"file": "sim/mage/arcane_missiles.go",
+		"source": "unreviewed"
+	},
+	"5145": {
+		"ability": "Arcane Missiles",
+		"file": "sim/mage/arcane_missiles.go",
+		"source": "unreviewed"
+	},
+	"6117": {
+		"ability": "Mage Armor",
+		"file": "sim/mage/armors.go",
+		"source": "unreviewed"
+	},
+	"6141": {
+		"ability": "Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"7301": {
+		"ability": "Frost Armor",
+		"file": "sim/mage/armors.go",
+		"source": "unreviewed"
+	},
+	"7320": {
+		"ability": "Ice Armor",
+		"file": "sim/mage/armors.go",
+		"source": "unreviewed"
+	},
+	"7322": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"837": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"8400": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"8401": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"8402": {
+		"ability": "Fireball",
+		"file": "sim/mage/fireball.go",
+		"source": "unreviewed"
+	},
+	"8406": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"8407": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"8408": {
+		"ability": "Frostbolt",
+		"file": "sim/mage/frostbolt.go",
+		"source": "unreviewed"
+	},
+	"8412": {
+		"ability": "Fire Blast",
+		"file": "sim/mage/fire_blast.go",
+		"source": "unreviewed"
+	},
+	"8413": {
+		"ability": "Fire Blast",
+		"file": "sim/mage/fire_blast.go",
+		"source": "unreviewed"
+	},
+	"8416": {
+		"ability": "Arcane Missiles",
+		"file": "sim/mage/arcane_missiles.go",
+		"source": "unreviewed"
+	},
+	"8417": {
+		"ability": "Arcane Missiles",
+		"file": "sim/mage/arcane_missiles.go",
+		"source": "unreviewed"
+	},
+	"8422": {
+		"ability": "Flamestrike",
+		"file": "sim/mage/flamestrike.go",
+		"source": "unreviewed"
+	},
+	"8423": {
+		"ability": "Flamestrike",
+		"file": "sim/mage/flamestrike.go",
+		"source": "unreviewed"
+	},
+	"8427": {
+		"ability": "Blizzard",
+		"file": "sim/mage/blizzard.go",
+		"source": "unreviewed"
+	},
+	"8437": {
+		"ability": "Arcane Explosion",
+		"file": "sim/mage/arcane_explosion.go",
+		"source": "unreviewed"
+	},
+	"8438": {
+		"ability": "Arcane Explosion",
+		"file": "sim/mage/arcane_explosion.go",
+		"source": "unreviewed"
+	},
+	"8439": {
+		"ability": "Arcane Explosion",
+		"file": "sim/mage/arcane_explosion.go",
+		"source": "unreviewed"
+	},
+	"8444": {
+		"ability": "Scorch",
+		"file": "sim/mage/scorch.go",
+		"source": "unreviewed"
+	},
+	"8445": {
+		"ability": "Scorch",
+		"file": "sim/mage/scorch.go",
+		"source": "unreviewed"
+	},
+	"8446": {
+		"ability": "Scorch",
+		"file": "sim/mage/scorch.go",
 		"source": "unreviewed"
 	}
 }

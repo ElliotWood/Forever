@@ -30,7 +30,11 @@ import (
 
 // Raised by hand when an id is deliberately left undeclared, never by a tool. Every entry
 // needs a reason, because an undeclared id is an ability the site describes wrongly.
-const unreviewedSpellBudget = 314
+const unreviewedSpellBudget = 770
+
+// Registration sites whose id the walk cannot read from the source. Each one is an ability
+// the manifest cannot cover, so this only ever falls.
+const unresolvedSpellSiteBudget = 19
 
 type spellSource struct {
 	Ability     string   `json:"ability"`
@@ -53,20 +57,32 @@ var validSpellSources = map[string]bool{
 	"unreviewed": true,
 }
 
-// Every SpellID literal the sim registers, by id, with the files that use it. Reading the
-// syntax tree rather than grepping keeps ids in comments and in strings out of the count.
-func registeredSpellIDs(t *testing.T) map[int][]string {
+// Every spell id the sim registers, by id, with the files that use it, plus the
+// registration sites whose id could not be read from the source.
+//
+// Reading the syntax tree rather than grepping keeps ids in comments out of the count, but
+// it also has to follow how the ids are actually written. Only a minority are a literal in
+// the ActionID; the ranked abilities build theirs from a table, either a local one indexed
+// by rank (`spellId := [7]int32{0, 19434, ...}[rank]`), a package level one indexed by
+// level (`map[int32]int32{60: 24248, ...}[druid.Level]`), or a rank struct passed in
+// (`ActionID{SpellID: ripRank.id}` against `var ripRanks = []RipRankInfo{{id: 1079, ...}}`).
+// A walk that only reads literals silently misses every rank of Shred, Rip, Moonfire and
+// Tiger's Fury, which is most of what Forever changed about the druid.
+func registeredSpellIDs(t *testing.T) (map[int][]string, []string) {
 	t.Helper()
 
 	ids := map[int]map[string]bool{}
+	var unresolved []string
 	fset := token.NewFileSet()
 
+	// One package at a time, because a rank table and the spell that reads it live in the
+	// same package but rarely in the same file.
+	packages := map[string][]string{}
 	err := filepath.WalkDir("..", func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 		if entry.IsDir() {
-			// sim/ is the whole of the simulator; nothing outside it registers a spell.
 			if !strings.HasPrefix(filepath.ToSlash(path), "../sim") && path != ".." {
 				return fs.SkipDir
 			}
@@ -75,47 +91,208 @@ func registeredSpellIDs(t *testing.T) map[int][]string {
 		if !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
 			return nil
 		}
-
-		file, err := parser.ParseFile(fset, path, nil, 0)
-		if err != nil {
-			return fmt.Errorf("%s: %w", path, err)
-		}
-		rel := strings.TrimPrefix(filepath.ToSlash(path), "../")
-
-		ast.Inspect(file, func(node ast.Node) bool {
-			lit, ok := node.(*ast.CompositeLit)
-			if !ok || !isActionID(lit.Type) {
-				return true
-			}
-			for _, elt := range lit.Elts {
-				kv, ok := elt.(*ast.KeyValueExpr)
-				if !ok {
-					continue
-				}
-				key, ok := kv.Key.(*ast.Ident)
-				if !ok || key.Name != "SpellID" {
-					continue
-				}
-				value, ok := kv.Value.(*ast.BasicLit)
-				if !ok || value.Kind != token.INT {
-					continue
-				}
-				id, err := strconv.Atoi(value.Value)
-				// A zero id is the empty action, which names nothing and needs no entry.
-				if err != nil || id == 0 {
-					continue
-				}
-				if ids[id] == nil {
-					ids[id] = map[string]bool{}
-				}
-				ids[id][rel] = true
-			}
-			return true
-		})
+		dir := filepath.Dir(path)
+		packages[dir] = append(packages[dir], path)
 		return nil
 	})
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	for _, paths := range packages {
+		files := map[string]*ast.File{}
+		for _, path := range paths {
+			file, err := parser.ParseFile(fset, path, nil, 0)
+			if err != nil {
+				t.Fatalf("%s: %v", path, err)
+			}
+			files[path] = file
+		}
+
+		// Package level tables, which is where the ranked abilities keep their ids.
+		globals := map[string]ast.Expr{}
+		for _, file := range files {
+			for _, decl := range file.Decls {
+				gen, ok := decl.(*ast.GenDecl)
+				if !ok || (gen.Tok != token.VAR && gen.Tok != token.CONST) {
+					continue
+				}
+				for _, spec := range gen.Specs {
+					value, ok := spec.(*ast.ValueSpec)
+					if !ok {
+						continue
+					}
+					for i, name := range value.Names {
+						if i < len(value.Values) {
+							globals[name.Name] = value.Values[i]
+						}
+					}
+				}
+			}
+		}
+
+		// type name -> field name -> that field's own type, so `rank.judge.spellID` can be
+		// followed one hop at a time instead of guessing which struct owns `spellID`.
+		structFields := map[string]map[string]string{}
+		for _, file := range files {
+			for _, decl := range file.Decls {
+				gen, ok := decl.(*ast.GenDecl)
+				if !ok || gen.Tok != token.TYPE {
+					continue
+				}
+				for _, spec := range gen.Specs {
+					typeSpec, ok := spec.(*ast.TypeSpec)
+					if !ok {
+						continue
+					}
+					structType, ok := typeSpec.Type.(*ast.StructType)
+					if !ok || structType.Fields == nil {
+						continue
+					}
+					for _, field := range structType.Fields.List {
+						for _, name := range field.Names {
+							if structFields[typeSpec.Name.Name] == nil {
+								structFields[typeSpec.Name.Name] = map[string]string{}
+							}
+							structFields[typeSpec.Name.Name][name.Name] = typeName(field.Type)
+						}
+					}
+				}
+			}
+		}
+
+		// type name -> field name -> the ids that field is ever given in this package. A
+		// table of anonymous structs has no type name to file under, so it is filed under
+		// the name of the variable holding it, which is what the loop over it reads.
+		fields := map[string]map[string][]int{}
+		tableNames := map[*ast.CompositeLit]string{}
+		for _, file := range files {
+			ast.Inspect(file, func(node ast.Node) bool {
+				switch stmt := node.(type) {
+				case *ast.AssignStmt:
+					for i, target := range stmt.Lhs {
+						name, ok := target.(*ast.Ident)
+						if !ok || i >= len(stmt.Rhs) {
+							continue
+						}
+						if lit, ok := stmt.Rhs[i].(*ast.CompositeLit); ok {
+							tableNames[lit] = name.Name
+						}
+					}
+				case *ast.ValueSpec:
+					for i, name := range stmt.Names {
+						if i < len(stmt.Values) {
+							if lit, ok := stmt.Values[i].(*ast.CompositeLit); ok {
+								tableNames[lit] = name.Name
+							}
+						}
+					}
+				}
+				return true
+			})
+			ast.Inspect(file, func(node ast.Node) bool {
+				lit, ok := node.(*ast.CompositeLit)
+				if !ok {
+					return true
+				}
+				name := typeName(lit.Type)
+				if name == "" {
+					name = tableNames[lit]
+				}
+				if name == "" {
+					return true
+				}
+				// A table of rank structs elides the element type, so the fields sit one
+				// level below the only literal that still names the type.
+				elements := []*ast.CompositeLit{lit}
+				for _, elt := range lit.Elts {
+					if inner, ok := elt.(*ast.CompositeLit); ok && inner.Type == nil {
+						elements = append(elements, inner)
+					}
+				}
+				for _, element := range elements {
+					for _, elt := range element.Elts {
+						kv, ok := elt.(*ast.KeyValueExpr)
+						if !ok {
+							continue
+						}
+						key, ok := kv.Key.(*ast.Ident)
+						if !ok {
+							continue
+						}
+						if id, ok := intLiteral(kv.Value); ok {
+							if fields[name] == nil {
+								fields[name] = map[string][]int{}
+							}
+							fields[name][key.Name] = append(fields[name][key.Name], id)
+						}
+					}
+				}
+				return true
+			})
+		}
+
+		for path, file := range files {
+			rel := strings.TrimPrefix(filepath.ToSlash(path), "../")
+
+			// Each function carries its own bindings, so gather them before reading its
+			// ActionIDs; anything declared at package level is read with none.
+			scopes := []struct {
+				body   ast.Node
+				locals map[string]ast.Expr
+			}{}
+			for _, decl := range file.Decls {
+				if fn, ok := decl.(*ast.FuncDecl); ok && fn.Body != nil {
+					scopes = append(scopes, struct {
+						body   ast.Node
+						locals map[string]ast.Expr
+					}{fn.Body, localBindings(fn)})
+					continue
+				}
+				scopes = append(scopes, struct {
+					body   ast.Node
+					locals map[string]ast.Expr
+				}{decl, map[string]ast.Expr{}})
+			}
+
+			for _, scope := range scopes {
+				locals := scope.locals
+
+				ast.Inspect(scope.body, func(inner ast.Node) bool {
+					lit, ok := inner.(*ast.CompositeLit)
+					if !ok || !isActionID(lit.Type) {
+						return true
+					}
+					for _, elt := range lit.Elts {
+						kv, ok := elt.(*ast.KeyValueExpr)
+						if !ok {
+							continue
+						}
+						key, ok := kv.Key.(*ast.Ident)
+						if !ok || key.Name != "SpellID" {
+							continue
+						}
+
+						found := resolveSpellID(kv.Value, locals, globals, fields, structFields, 0)
+						if len(found) == 0 {
+							unresolved = append(unresolved, fmt.Sprintf("%s:%d", rel, fset.Position(kv.Pos()).Line))
+							continue
+						}
+						for _, id := range found {
+							// A zero id is the empty action, which names nothing.
+							if id == 0 {
+								continue
+							}
+							if ids[id] == nil {
+								ids[id] = map[string]bool{}
+							}
+							ids[id][rel] = true
+						}
+					}
+					return true
+				})
+			}
+		}
 	}
 
 	out := map[int][]string{}
@@ -125,7 +302,242 @@ func registeredSpellIDs(t *testing.T) map[int][]string {
 		}
 		sort.Strings(out[id])
 	}
-	return out
+	sort.Strings(unresolved)
+	return out, unresolved
+}
+
+// The ids a single `SpellID:` value can stand for, in the shapes the sim uses. A name can
+// stand for another name, so this follows bindings rather than looking only one step back.
+func resolveSpellID(expr ast.Expr, locals, globals map[string]ast.Expr, fields map[string]map[string][]int, structFields map[string]map[string]string, depth int) []int {
+	if depth > 4 {
+		return nil
+	}
+	if id, ok := intLiteral(expr); ok {
+		return []int{id}
+	}
+
+	// A table written in place, either indexed here or handed straight over.
+	if found := intsInComposites(expr); len(found) > 0 {
+		return found
+	}
+
+	// The two arms of a phase switch are both real ids.
+	if call, ok := expr.(*ast.CallExpr); ok && strings.Contains(typeName(call.Fun), "Ternary") {
+		var found []int
+		for _, arg := range call.Args {
+			if id, ok := intLiteral(arg); ok {
+				found = append(found, id)
+			}
+		}
+		if len(found) > 0 {
+			return found
+		}
+	}
+
+	// A name bound to such a table, in the function or at package level.
+	if root := rootIdent(expr); root != nil {
+		for _, scope := range []map[string]ast.Expr{locals, globals} {
+			bound, ok := scope[root.Name]
+			if !ok || bound == expr {
+				continue
+			}
+			if found := resolveSpellID(bound, locals, globals, fields, structFields, depth+1); len(found) > 0 {
+				return found
+			}
+		}
+	}
+
+	// A field of a rank struct, matched on the struct's type name so that an unrelated
+	// `id` field elsewhere in the package cannot answer for it. The qualifier can itself be
+	// a field, as in `rank.judge.spellID`, so the chain is walked from the root down.
+	if selector, ok := expr.(*ast.SelectorExpr); ok {
+		var chain []string
+		for node := ast.Expr(selector); ; {
+			sel, ok := node.(*ast.SelectorExpr)
+			if !ok {
+				break
+			}
+			chain = append([]string{sel.Sel.Name}, chain...)
+			node = sel.X
+		}
+		if root := rootIdent(selector.X); root != nil && len(chain) > 0 {
+			field := chain[len(chain)-1]
+
+			current := localTypeName(locals, root.Name)
+			for _, hop := range chain[:len(chain)-1] {
+				current = structFields[current][hop]
+			}
+			if found, ok := fields[current][field]; ok {
+				return found
+			}
+
+			// A table declared inside the function has no type this can follow, so fall
+			// back to the names in the expression itself: the field's own qualifier, then
+			// the table the root was ranged over.
+			candidates := []string{root.Name}
+			if len(chain) > 1 {
+				candidates = append([]string{chain[len(chain)-2]}, candidates...)
+			}
+			for _, bound := range []ast.Expr{locals[root.Name], globals[root.Name]} {
+				if ident := rootIdent(bound); ident != nil {
+					candidates = append(candidates, ident.Name)
+				}
+			}
+			for _, candidate := range candidates {
+				if found, ok := fields[candidate][field]; ok {
+					return found
+				}
+			}
+		}
+	}
+	return nil
+}
+
+// Int literals inside any composite the expression carries, restricted to the int typed
+// ones so that a damage or mana table sitting beside the id table is not read as ids.
+func intsInComposites(expr ast.Expr) []int {
+	var found []int
+	ast.Inspect(expr, func(node ast.Node) bool {
+		lit, ok := node.(*ast.CompositeLit)
+		if !ok || !isIntTyped(lit.Type) {
+			return true
+		}
+		for _, elt := range lit.Elts {
+			value := elt
+			if kv, ok := elt.(*ast.KeyValueExpr); ok {
+				value = kv.Value
+			}
+			if id, ok := intLiteral(value); ok {
+				found = append(found, id)
+			}
+		}
+		return true
+	})
+	return found
+}
+
+func intLiteral(expr ast.Expr) (int, bool) {
+	switch node := expr.(type) {
+	case *ast.ParenExpr:
+		return intLiteral(node.X)
+	case *ast.CallExpr:
+		// `int32(20662)` is as much a literal as `20662` for this purpose.
+		if len(node.Args) == 1 && isIntName(typeName(node.Fun)) {
+			return intLiteral(node.Args[0])
+		}
+	case *ast.BasicLit:
+		if node.Kind == token.INT {
+			id, err := strconv.Atoi(node.Value)
+			return id, err == nil
+		}
+	}
+	return 0, false
+}
+
+func rootIdent(expr ast.Expr) *ast.Ident {
+	for {
+		switch node := expr.(type) {
+		case *ast.Ident:
+			return node
+		case *ast.IndexExpr:
+			expr = node.X
+		case *ast.SelectorExpr:
+			expr = node.X
+		case *ast.CallExpr:
+			expr = node.Fun
+		case *ast.ParenExpr:
+			expr = node.X
+		default:
+			return nil
+		}
+	}
+}
+
+// Every name the function binds, whether by parameter or by assignment, so that a
+// `SpellID:` naming one of them can be followed back to what it holds.
+func localBindings(scope *ast.FuncDecl) map[string]ast.Expr {
+	locals := map[string]ast.Expr{}
+
+	if scope.Recv != nil {
+		bindNames(locals, scope.Recv.List)
+	}
+	if scope.Type.Params != nil {
+		bindNames(locals, scope.Type.Params.List)
+	}
+
+	ast.Inspect(scope.Body, func(node ast.Node) bool {
+		switch stmt := node.(type) {
+		case *ast.AssignStmt:
+			for i, target := range stmt.Lhs {
+				name, ok := target.(*ast.Ident)
+				if !ok || i >= len(stmt.Rhs) {
+					continue
+				}
+				locals[name.Name] = stmt.Rhs[i]
+			}
+		case *ast.RangeStmt:
+			// The loop variable stands for an element, and an element of a table of ids is
+			// an id, so binding it to the table itself resolves to the right set.
+			if name, ok := stmt.Value.(*ast.Ident); ok {
+				locals[name.Name] = stmt.X
+			}
+		}
+		return true
+	})
+	return locals
+}
+
+// A parameter holds its declared type rather than a value, which is what the rank struct
+// lookup needs; the type is stashed under the name so both live in one map.
+func bindNames(locals map[string]ast.Expr, list []*ast.Field) {
+	for _, field := range list {
+		for _, name := range field.Names {
+			locals[name.Name] = &ast.CompositeLit{Type: field.Type}
+		}
+	}
+}
+
+func localTypeName(locals map[string]ast.Expr, name string) string {
+	bound, ok := locals[name]
+	if !ok {
+		return ""
+	}
+	lit, ok := bound.(*ast.CompositeLit)
+	if !ok {
+		return ""
+	}
+	return typeName(lit.Type)
+}
+
+func typeName(expr ast.Expr) string {
+	switch node := expr.(type) {
+	case *ast.Ident:
+		return node.Name
+	case *ast.StarExpr:
+		return typeName(node.X)
+	case *ast.ArrayType:
+		return typeName(node.Elt)
+	case *ast.SelectorExpr:
+		return node.Sel.Name
+	}
+	return ""
+}
+
+func isIntTyped(expr ast.Expr) bool {
+	switch node := expr.(type) {
+	case *ast.ArrayType:
+		return isIntName(typeName(node.Elt))
+	case *ast.MapType:
+		return isIntName(typeName(node.Value))
+	case nil:
+		// An element of an enclosing typed composite, which was already checked.
+		return true
+	}
+	return false
+}
+
+func isIntName(name string) bool {
+	return name == "int32" || name == "int" || name == "int64"
 }
 
 func isActionID(expr ast.Expr) bool {
@@ -179,7 +591,7 @@ func loadSpellSources(t *testing.T) map[int]spellSource {
 }
 
 func TestEveryRegisteredSpellSaysWhereItsNumbersCameFrom(t *testing.T) {
-	registered := registeredSpellIDs(t)
+	registered, _ := registeredSpellIDs(t)
 	sources := loadSpellSources(t)
 
 	if len(registered) == 0 {
@@ -256,5 +668,21 @@ func TestUnreviewedSpellsOnlyShrink(t *testing.T) {
 	}
 	if len(unreviewed) < unreviewedSpellBudget {
 		t.Errorf("only %d spells are unreviewed, lower unreviewedSpellBudget to %d", len(unreviewed), len(unreviewed))
+	}
+}
+
+// A site the walk cannot read is worse than a missing entry, because nothing downstream
+// knows the ability exists. Better to name them than to report coverage that is not there.
+func TestEverySpellRegistrationResolvesToAnID(t *testing.T) {
+	_, unresolved := registeredSpellIDs(t)
+
+	if len(unresolved) > unresolvedSpellSiteBudget {
+		for _, site := range unresolved {
+			t.Errorf("%s: the spell id here cannot be read from the source, so the manifest cannot cover it", site)
+		}
+		t.Errorf("%d unreadable registration sites, the budget is %d", len(unresolved), unresolvedSpellSiteBudget)
+	}
+	if len(unresolved) < unresolvedSpellSiteBudget {
+		t.Errorf("only %d sites are unreadable, lower unresolvedSpellSiteBudget to %d", len(unresolved), len(unresolved))
 	}
 }
