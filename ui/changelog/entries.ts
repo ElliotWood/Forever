@@ -242,6 +242,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Rogue: a rotation for the Hemorrhage build',
+				prs: [111],
+				changed:
+					'The auto rotation only knew Mutilate, Backstab and Sinister Strike, so a Subtlety build that had spent fifteen points on Hemorrhage never cast it, and Rupture was in no rogue rotation at all, leaving Serrated Blades and Thousand Cuts reading off a debuff nobody applied. Hemorrhage gets its own list with Rupture and a Vanish-Premeditation-Ambush opener. Venom now reaches a Deadly Poison that is already ticking, and the Assassination list finishes at four combo points instead of letting nine a fight fall off the cap.',
+				effect: 'Subtlety Hemo 582 to 709 DPS and Assassination Mutilate 638 to 696 on a two minute fight; Combat was measured against the same changes and kept its rotation.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Season of Discovery leftovers removed',
 				prs: [82, 83, 67],
 				changed:
