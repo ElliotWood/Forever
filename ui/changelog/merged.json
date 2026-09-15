@@ -1,9 +1,39 @@
 [
 	{
+		"number": 116,
+		"title": "fix(druid): make lacerate the bear's rage dump and finish moonkin form",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/116"
+	},
+	{
+		"number": 115,
+		"title": "fix(warlock): keep Decimation and Demonic Knowledge inside their tooltips",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/115"
+	},
+	{
+		"number": 114,
+		"title": "fix(mage): stop ignite double paying and give arcane its rank 8 missiles",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/114"
+	},
+	{
 		"number": 113,
 		"title": "fix(priest): give the smite build power infusion and hold power in light up",
 		"mergedAt": "2026-09-15",
 		"url": "https://github.com/ElliotWood/Forever/pull/113"
+	},
+	{
+		"number": 112,
+		"title": "fix(shaman): give enhancement back its rotation and its off-hand imbue",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/112"
+	},
+	{
+		"number": 111,
+		"title": "fix(rogue): audit of the three ranked rogue builds",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/111"
 	},
 	{
 		"number": 110,
