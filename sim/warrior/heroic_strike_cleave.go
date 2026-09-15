@@ -31,7 +31,7 @@ func (warrior *Warrior) registerHeroicStrikeSpell(realismICD *core.Cooldown) {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := flatDamageBonus + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
-			result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			result := warrior.calcQueuedSwing(sim, spell, target, baseDamage)
 
 			if !result.Landed() {
 				spell.IssueRefund(sim)
@@ -78,7 +78,7 @@ func (warrior *Warrior) registerCleaveSpell(realismICD *core.Cooldown) {
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			for idx := range results {
 				baseDamage := flatDamageBonus + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
-				results[idx] = spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+				results[idx] = warrior.calcQueuedSwing(sim, spell, target, baseDamage)
 				target = sim.Environment.NextTargetUnit(target)
 			}
 
@@ -108,12 +108,10 @@ func (warrior *Warrior) makeQueueSpellsAndAura(srcSpell *WarriorSpell, realismIC
 			if warrior.curQueueAura != nil {
 				warrior.curQueueAura.Deactivate(sim)
 			}
-			warrior.PseudoStats.DisableDWMissPenalty = true
 			warrior.curQueueAura = aura
 			warrior.curQueuedAutoSpell = srcSpell
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.PseudoStats.DisableDWMissPenalty = false
 			warrior.curQueueAura = nil
 			warrior.curQueuedAutoSpell = nil
 		},
@@ -147,6 +145,16 @@ func (warrior *Warrior) makeQueueSpellsAndAura(srcSpell *WarriorSpell, realismIC
 	})
 
 	return queueSpell
+}
+
+// Heroic Strike and Cleave replace the main hand swing but roll on the special attack table,
+// so they skip the dual wield miss penalty. The penalty flag is character wide, so it is only
+// lifted for the swing itself: an off-hand auto that lands while the queue is up still pays it.
+func (warrior *Warrior) calcQueuedSwing(sim *core.Simulation, spell *core.Spell, target *core.Unit, baseDamage float64) *core.SpellResult {
+	warrior.PseudoStats.DisableDWMissPenalty = true
+	result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+	warrior.PseudoStats.DisableDWMissPenalty = false
+	return result
 }
 
 func (warrior *Warrior) TryHSOrCleave(sim *core.Simulation, mhSwingSpell *core.Spell) *core.Spell {
