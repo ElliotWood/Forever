@@ -21,6 +21,8 @@ type spec struct {
 	usesShield  bool
 	allowTwoHnd bool
 	dualWield   bool
+	// Ranged slot types the class can equip; empty allows anything.
+	ranged []proto.RangedWeaponType
 	// Weapon damage is most of a melee weapon's value and none of a caster's.
 	weaponDpsEP float64
 	weights     stats.Stats
@@ -31,6 +33,17 @@ func (s spec) allows(item *proto.UIItem) bool {
 		found := false
 		for _, c := range item.ClassAllowlist {
 			if c == s.class {
+				found = true
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	if item.Type == proto.ItemType_ItemTypeRanged && len(s.ranged) > 0 {
+		found := false
+		for _, r := range s.ranged {
+			if item.RangedWeaponType == r {
 				found = true
 			}
 		}
@@ -176,6 +189,15 @@ var specs = map[string]spec{
 		allowTwoHnd: true,
 		weaponDpsEP: 0.0, weights: w(map[stats.Stat]float64{stats.SpellPower: 1, stats.SpellHit: 14, stats.SpellCrit: 10,
 			stats.Intellect: 0.35, stats.Spirit: 0.25, stats.MP5: 0.4, stats.Stamina: 0.05}),
+	},
+	// A bear's weapon only contributes its stats, the paws do the swinging. Stamina and
+	// armor keep the bear up, Agility is crit, dodge and armor at once; the rest is threat.
+	"feral_tank_druid": {
+		class: proto.Class_ClassDruid, armor: leather, allowTwoHnd: true,
+		weapons:     []proto.WeaponType{proto.WeaponType_WeaponTypeDagger, proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff, proto.WeaponType_WeaponTypePolearm},
+		ranged:      []proto.RangedWeaponType{proto.RangedWeaponType_RangedWeaponTypeIdol},
+		weaponDpsEP: 0.0, weights: w(map[stats.Stat]float64{stats.Stamina: 1, stats.Agility: 0.9, stats.Strength: 0.8, stats.AttackPower: 0.4,
+			stats.FeralAttackPower: 0.4, stats.MeleeCrit: 10, stats.MeleeHit: 12, stats.Defense: 0.6, stats.Dodge: 10, stats.Armor: 0.03}),
 	},
 	"leather_placeholder": {class: proto.Class_ClassRogue, armor: leather},
 }

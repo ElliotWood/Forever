@@ -7,35 +7,22 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
+// Generates 20 Rage over 10 sec, but reduces base armor by 27% while it lasts.
 func (druid *Druid) registerEnrageSpell() {
 	actionID := core.ActionID{SpellID: 5229}
 	rageMetrics := druid.NewRageMetrics(actionID)
 
-	instantRage := []float64{20, 24, 27, 30}[druid.Talents.Intensity]
-
-	dmgBonus := 0.05 * float64(druid.Talents.KingOfTheJungle)
-
-	t10_4p := druid.HasSetBonus(ItemSetLasherweaveBattlegear, 4)
+	armorMultiplier := 1 - 0.27
 
 	druid.EnrageAura = druid.RegisterAura(core.Aura{
-		Label:    "Enrage Aura",
+		Label:    "Enrage",
 		ActionID: actionID,
-		Duration: 10 * time.Second,
+		Duration: time.Second * 10,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			druid.PseudoStats.DamageDealtMultiplier *= 1.0 + dmgBonus
-			if !t10_4p {
-				druid.ApplyDynamicEquipScaling(sim, stats.Armor, 0.84)
-			} else {
-				druid.PseudoStats.DamageTakenMultiplier *= 0.88
-			}
+			druid.ApplyDynamicEquipScaling(sim, stats.Armor, armorMultiplier)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			druid.PseudoStats.DamageDealtMultiplier /= 1.0 + dmgBonus
-			if !t10_4p {
-				druid.RemoveDynamicEquipScaling(sim, stats.Armor, 0.84)
-			} else {
-				druid.PseudoStats.DamageTakenMultiplier /= 0.88
-			}
+			druid.RemoveDynamicEquipScaling(sim, stats.Armor, armorMultiplier)
 		},
 	})
 
@@ -52,14 +39,12 @@ func (druid *Druid) registerEnrageSpell() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			druid.AddRage(sim, instantRage, rageMetrics)
-
 			core.StartPeriodicAction(sim, core.PeriodicActionOptions{
 				NumTicks: 10,
-				Period:   time.Second * 1,
+				Period:   time.Second,
 				OnAction: func(sim *core.Simulation) {
 					if druid.EnrageAura.IsActive() {
-						druid.AddRage(sim, 1, rageMetrics)
+						druid.AddRage(sim, 2, rageMetrics)
 					}
 				},
 			})

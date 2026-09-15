@@ -3,7 +3,7 @@ import * as OtherInputs from '../core/components/other_inputs.js';
 import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
-import { Class, Debuffs, Faction, IndividualBuffs, PartyBuffs, PseudoStat, Race, RaidBuffs, Spec, Stat, TristateEffect } from '../core/proto/common.js';
+import { Class, Faction, PartyBuffs, PseudoStat, Race, Spec, Stat } from '../core/proto/common.js';
 import { Stats } from '../core/proto_utils/stats.js';
 import { getSpecIcon, specNames } from '../core/proto_utils/utils.js';
 import * as DruidInputs from './inputs.js';
@@ -78,37 +78,19 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecFeralTankDruid, {
 		),
 		// Default consumes settings.
 		consumes: Presets.DefaultConsumes,
-		// Default rotation settings.
-		simpleRotation: Presets.DefaultRotation,
 		// Default talents.
 		talents: Presets.DefaultTalents.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
-		raidBuffs: RaidBuffs.create({
-			powerWordFortitude: TristateEffect.TristateEffectImproved,
-			shadowProtection: true,
-			giftOfTheWild: TristateEffect.TristateEffectImproved,
-			thorns: TristateEffect.TristateEffectImproved,
-			strengthOfEarthTotem: TristateEffect.TristateEffectRegular,
-			battleShout: TristateEffect.TristateEffectImproved,
-			moonkinAura: true,
-		}),
+		raidBuffs: Presets.DefaultRaidBuffs,
 		partyBuffs: PartyBuffs.create({}),
-		individualBuffs: IndividualBuffs.create({
-			blessingOfKings: true,
-			blessingOfMight: TristateEffect.TristateEffectImproved,
-		}),
-		debuffs: Debuffs.create({
-			faerieFire: true,
-			exposeArmor: TristateEffect.TristateEffectImproved,
-		}),
+		individualBuffs: Presets.DefaultIndividualBuffs,
+		debuffs: Presets.DefaultDebuffs,
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.
 	playerIconInputs: [],
-	// Inputs to include in the 'Rotation' section on the settings tab.
-	rotationInputs: DruidInputs.FeralTankDruidRotationConfig,
 	// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
 	includeBuffDebuffInputs: [BuffDebuffInputs.SpellCritBuff, BuffDebuffInputs.SpellISBDebuff],
 	excludeBuffDebuffInputs: [],
@@ -133,11 +115,11 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecFeralTankDruid, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [...Presets.TalentPresets[ClassicPhase.Phase2], ...Presets.TalentPresets[ClassicPhase.Phase1]],
+		talents: [...Presets.TalentPresets[ClassicPhase.Phase1]],
 		// Preset rotations that the user can quickly select.
-		rotations: [...Presets.APLPresets[ClassicPhase.Phase2], ...Presets.APLPresets[ClassicPhase.Phase1]],
+		rotations: [...Presets.APLPresets[ClassicPhase.Phase1]],
 		// Preset gear configurations that the user can quickly select.
-		gear: [...Presets.GearPresets[ClassicPhase.Phase2], ...Presets.GearPresets[ClassicPhase.Phase1]],
+		gear: [...Presets.GearPresets[ClassicPhase.Phase1]],
 	},
 
 	autoRotation: player => {
