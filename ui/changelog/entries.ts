@@ -223,6 +223,13 @@ export const sections: Array<Section> = [
 				effect: 'Several specs moved by a large fraction of their DPS; these were bugs in the shipped presets, not Forever changes.',
 			},
 			{
+				title: 'Warlock rotations by build',
+				prs: [100],
+				changed:
+					'Demonic Pact runs with the Imp sacrificed, a Succubus out and Soul Link up; DS/Ruin summons its own Imp before sacrificing; every warlock keeps Immolate up, curses when nobody else has, and drinks when mana allows. Shadow and Flame has its own rotation. One raid preset per tree carries the pet setup each rotation expects, and the community builds are preset builds.',
+				effect: 'Demonic Pact +41%, Deep Affliction +13%, DS/Ruin Pandemic +3%, Shadow and Flame +4% at two minutes; more at five, where Life Tap was a tenth of the fight.',
+			},
+			{
 				title: 'Season of Discovery leftovers removed',
 				prs: [82, 83, 67],
 				changed:

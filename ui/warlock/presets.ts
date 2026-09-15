@@ -31,6 +31,7 @@ import {
 import AfflictionApl from './apls/forever_affliction.apl.json';
 import DSRuinApl from './apls/forever_ds_ruin.apl.json';
 import DemonicPactApl from './apls/forever_pact.apl.json';
+import ShadowAndFlameApl from './apls/forever_shadow_and_flame.apl.json';
 // gear
 import BlankGear from './gear_sets/blank.gear.json';
 import MCGear from './gear_sets/mc.gear.json';
@@ -56,8 +57,9 @@ export const DefaultGear = GearPreBis;
 export const RotationDemonicPact = PresetUtils.makePresetAPLRotation('Demonic Pact', DemonicPactApl);
 export const RotationAffliction = PresetUtils.makePresetAPLRotation('Affliction', AfflictionApl);
 export const RotationDSRuin = PresetUtils.makePresetAPLRotation('DS/Ruin', DSRuinApl);
+export const RotationShadowAndFlame = PresetUtils.makePresetAPLRotation('Shadow and Flame', ShadowAndFlameApl);
 
-export const APLPresets = [RotationDemonicPact, RotationAffliction, RotationDSRuin];
+export const APLPresets = [RotationDemonicPact, RotationAffliction, RotationDSRuin, RotationShadowAndFlame];
 
 export const DefaultAPL = RotationDSRuin;
 
@@ -122,6 +124,23 @@ export const DefaultOptions = WarlockOptions.create({
 	weaponImbue: WarlockWeaponImbue.NoWeaponImbue,
 });
 
+// Without pet talents the Succubus out-damages the Imp, so the Affliction builds run one; a
+// sacrificing rotation summons and sacrifices its own Imp whatever pet is set.
+export const AfflictionOptions = WarlockOptions.create({
+	armor: Armor.DemonArmor,
+	summon: Summon.Succubus,
+	weaponImbue: WarlockWeaponImbue.NoWeaponImbue,
+});
+
+// Demonic Pact keeps the sacrifice when another demon is out: Imp for Touch of Shadow, Succubus
+// for Master Demonologist's shadow damage and Soul Link.
+export const DemonicPactOptions = WarlockOptions.create({
+	armor: Armor.DemonArmor,
+	summon: Summon.Succubus,
+	sacrifice: Summon.Imp,
+	weaponImbue: WarlockWeaponImbue.NoWeaponImbue,
+});
+
 export const DefaultConsumes = Consumes.create({
 	alcohol: Alcohol.AlcoholRumseyRumBlackLabel,
 	defaultPotion: Potions.MajorManaPotion,
@@ -159,6 +178,32 @@ export const DefaultDebuffs = Debuffs.create({
 	faerieFire: true,
 	judgementOfWisdom: true,
 	sunderArmor: true,
+});
+
+///////////////////////////////////////////////////////////////////////////
+//                                 Builds
+///////////////////////////////////////////////////////////////////////////
+
+// The community builds with the pet setup and rotation each one is measured with.
+export const BuildDemonicPact = PresetUtils.makePresetBuild('Demonic Pact 2/31/18', {
+	talents: TalentsPactOptimised,
+	rotation: RotationDemonicPact,
+	options: DemonicPactOptions,
+});
+export const BuildDeepAffliction = PresetUtils.makePresetBuild('Deep Affliction 35/0/16', {
+	talents: TalentsDeepAffliction,
+	rotation: RotationAffliction,
+	options: AfflictionOptions,
+});
+export const BuildDSRuinPandemic = PresetUtils.makePresetBuild('DS/Ruin Pandemic 24/11/16', {
+	talents: TalentsDSRuinPandemic,
+	rotation: RotationDSRuin,
+	options: DefaultOptions,
+});
+export const BuildShadowAndFlame = PresetUtils.makePresetBuild('Shadow and Flame 17/11/23', {
+	talents: TalentsShadowAndFlame,
+	rotation: RotationShadowAndFlame,
+	options: DefaultOptions,
 });
 
 export const OtherDefaults = {
