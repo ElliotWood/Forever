@@ -3,7 +3,7 @@ import * as OtherInputs from '../core/components/other_inputs.js';
 import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
-import { Class, Faction, PartyBuffs, PseudoStat, Race, Spec, Stat, Target } from '../core/proto/common.js';
+import { Class, Faction, ItemSlot, PartyBuffs, PseudoStat, Race, Spec, Stat, Target, WeaponType } from '../core/proto/common.js';
 import { Stats } from '../core/proto_utils/stats.js';
 import { getSpecIcon } from '../core/proto_utils/utils.js';
 import * as Presets from './presets.js';
@@ -124,13 +124,13 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 		builds: [Presets.PresetBuildBackstab, Presets.PresetBuildSinisterStrike, Presets.PresetBuildIEA, Presets.PresetBuildMutilate],
 	},
 
+	// Daggers run Backstab, or Mutilate when the build has it; anything else runs Sinister
+	// Strike.
 	autoRotation: player => {
-		// Try to find a rotation by hand rune
-		const preset = Presets.DefaultAPLs[0];
-
-		if (preset) return preset.rotation.rotation!;
-
-		throw new Error('Auto rotation is not supported for your level / hand rune combination. Please select an APL manually.');
+		if (player.getEquippedItem(ItemSlot.ItemSlotMainHand)?._item.weaponType == WeaponType.WeaponTypeDagger) {
+			return (player.getTalents().mutilate ? Presets.ROTATION_PRESET_MUTILATE : Presets.ROTATION_PRESET_BACKSTAB).rotation.rotation!;
+		}
+		return Presets.ROTATION_PRESET_SINISTER_STRIKE.rotation.rotation!;
 	},
 
 	raidSimPresets: [
@@ -151,10 +151,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 			defaultGear: {
 				[Faction.Unknown]: {},
 				[Faction.Alliance]: {
-					1: Presets.DefaultGear.gear,
+					1: Presets.GearBackstabPreBiS.gear,
 				},
 				[Faction.Horde]: {
-					1: Presets.DefaultGear.gear,
+					1: Presets.GearBackstabPreBiS.gear,
 				},
 			},
 		},

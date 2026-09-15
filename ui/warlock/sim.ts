@@ -58,23 +58,21 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarlock, {
 		gear: Presets.DefaultGear.gear,
 
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Stats.fromMap(
-			{
-				[Stat.StatMana]: 0.01,
-				[Stat.StatIntellect]: 0.23,
-				[Stat.StatSpirit]: 0.0,
-				[Stat.StatMP5]: 0.14,
-				[Stat.StatSpellPower]: 1,
-				[Stat.StatSpellDamage]: 1,
-				[Stat.StatFirePower]: 0.1,
-				[Stat.StatShadowPower]: 0.9,
-				[Stat.StatSpellHit]: 12.79,
-				[Stat.StatSpellCrit]: 7.92,
-				[Stat.StatSpellHaste]: 7.83,
-				[Stat.StatStamina]: 0.01,
-				[Stat.StatFireResistance]: 0.0,
-			},
-		),
+		epWeights: Stats.fromMap({
+			[Stat.StatMana]: 0.01,
+			[Stat.StatIntellect]: 0.23,
+			[Stat.StatSpirit]: 0.0,
+			[Stat.StatMP5]: 0.14,
+			[Stat.StatSpellPower]: 1,
+			[Stat.StatSpellDamage]: 1,
+			[Stat.StatFirePower]: 0.1,
+			[Stat.StatShadowPower]: 0.9,
+			[Stat.StatSpellHit]: 12.79,
+			[Stat.StatSpellCrit]: 7.92,
+			[Stat.StatSpellHaste]: 7.83,
+			[Stat.StatStamina]: 0.01,
+			[Stat.StatFireResistance]: 0.0,
+		}),
 		// Default consumes settings.
 		consumes: Presets.DefaultConsumes,
 		// Default talents.
@@ -141,8 +139,14 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarlock, {
 		gear: Presets.GearPresets,
 	},
 
-	autoRotation: _player => {
-		return Presets.DefaultAPL.rotation.rotation!;
+	// DS/Ruin is a rotation for a sacrificed pet, whatever tree the rest of the points sit
+	// in; otherwise the tree the build is deepest in picks the rotation.
+	autoRotation: player => {
+		const talents = player.getTalents();
+		if (talents.demonicSacrifice && talents.ruin) {
+			return Presets.RotationDSRuin.rotation.rotation!;
+		}
+		return [Presets.RotationAffliction, Presets.RotationDemonicPact, Presets.RotationDSRuin][player.getTalentTree()].rotation.rotation!;
 	},
 
 	raidSimPresets: [
