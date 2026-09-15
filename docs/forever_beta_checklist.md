@@ -114,6 +114,20 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/warrior/talents.go:403` — only rank 1 was shown, beta will confirm the 2% per point.
 - `sim/warrior/talents.go:412` — only rank 1 was shown, beta will confirm the 1 Rage per point.
 
+## Baseline ability changes
+
+Forever also changes abilities that are not talents. None of their tooltips were shown at BlizzCon; what follows comes from the panel and the coverage of it, so every line is a claim to check against the beta spellbook rather than a number to confirm.
+
+Warrior, the only class with concrete changes reported:
+
+- Slam no longer resets the swing timer — modelled in `sim/warrior/slam.go`.
+- Thunder Clap can be used in Defensive Stance — modelled in `sim/warrior/thunder_clap.go`. The shipped protection rotation does not cast it, so no numbers move until an APL does.
+- Improved Shield Wall shortens the cooldown instead of lengthening the duration — modelled in `sim/warrior/shield_wall.go`.
+- Tactical Mastery is baseline, with Improved Tactical Mastery on top — modelled in `sim/warrior/stances.go`.
+- Victory Rush is baseline — not modelled. It needs a killing blow, which a boss encounter never gives before the fight ends.
+
+Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
+
 ## Talents the sim does not read (17)
 
 These are in the trees and the picker marks them as not simulated; spending points in them changes nothing. Most are utility or PvP talents the Classic sim never modelled either. They are listed so the beta pass can confirm none of them turned into something a raid rotation cares about.
