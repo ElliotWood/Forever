@@ -50,7 +50,8 @@
           14527,
           14528
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "notSimulated": true
       },
       {
         "fieldName": "twinDisciplines",
