@@ -117,8 +117,9 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecMage, {
 		gear: [...Presets.GearPresets[ClassicPhase.Phase1]],
 	},
 
+	// One rotation per tree, so a build gets the spells it took talents for.
 	autoRotation: player => {
-		return Presets.DefaultAPL.rotation.rotation!;
+		return [Presets.APLArcane, Presets.APLFire, Presets.APLFrost][player.getTalentTree()].rotation.rotation!;
 	},
 
 	raidSimPresets: [

@@ -1,22 +1,30 @@
 <!doctype html>
 <html>
 	<head>
-		<title>WoW Forever Best in Slot</title>
+		<title>WoW Forever Bis Simulator</title>
 		<meta charset="utf-8" />
 
-		<link rel="icon" href="../assets/favicon_io/favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="/classic/assets/favicon_io/favicon.ico" type="image/x-icon" />
 
-		<meta name="description" content="Best in slot gear for World of Warcraft®: Forever, ranked by each sim's own EP weights." />
+		<meta name="description" content="Simulations for World of Warcraft®: Forever." />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<link rel="preload" href="../assets/database/db.json" as="fetch" crossorigin="anonymous" />
-		<link rel="stylesheet" href="../scss/bis/index.scss" />
+		<link rel="preload" href="/classic/assets/database/db.json" as="fetch" crossorigin="anonymous" />
+		<link rel="stylesheet" href="../scss/core/individual_sim_ui/index.scss" />
+		<link rel="stylesheet" href="../scss/sims/bis/index.scss" />
 		<link
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
 			integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
 			crossorigin="anonymous"
 			referrerpolicy="no-referrer" />
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"
+			integrity="sha512-qzgd5cYSZcosqpzpn7zF2ZId8f/8CHmFKZ8j7mU4OUXTNRd5g+ZHBPsgKEwoqxCtdQvExE5LprwwPAgoicguNg=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"></script>
 
 		<!-- Load the top-level ui/index.ts -->
 		<script src="../index.ts" type="module"></script>
@@ -35,63 +43,12 @@
 	</head>
 
 	<body id="bootstrap-overrides">
-		<div id="bis-page">
-			<header class="bis-header">
-				<div class="container bis-header-container">
-					<a href="../" class="bis-home-link">
-						<img class="forever-logo" src="../assets/img/forever_logo.png" alt="World of Warcraft: Forever" />
-					</a>
-					<div class="bis-title-block">
-						<h1 class="bis-title">Best in Slot</h1>
-						<p class="bis-subtitle">The highest-EP item in every slot, for each spec the sim has launched.</p>
-					</div>
-				</div>
-			</header>
-			<main class="container bis-content">
-				<section class="content-block bis-provenance">
-					<div class="content-block-header">
-						<h2 class="content-block-title">Read this first</h2>
-					</div>
-					<div class="content-block-body">
-						<p>
-							<strong>Where the EP weights come from.</strong> Every spec ships a set of default EP weights in its sim, and its gear picker
-							sorts items by them. This page uses those same weights, so a pick here is the item that sits at the top of that spec's gear
-							picker for that slot. <strong>The simulator does not run on this page.</strong> Nothing here is derived live: these weights were
-							worked out for each spec and then written down, so treat them as a well-kept starting point rather than an answer computed for
-							your character. For weights derived from the sim against your own gear, talents and encounter, open a spec's sim and press
-							<em>Stat Weights</em>.
-						</p>
-						<p>
-							<strong>Which specs are here.</strong> Only specs the sim has launched. Restoration Druid, Restoration Shaman, Holy Paladin and
-							Healing Priest are not implemented, and neither is Feral Tank Druid, so they have no EP weights and are absent rather than
-							guessed at.
-						</p>
-						<p>
-							<strong>What the item pool is.</strong> Forever launch content only: Onyxia and Molten Core, alongside the dungeon, crafted,
-							reputation and PvP gear available at launch. There is no Blackwing Lair, Zul'Gurub, Ahn'Qiraj or Naxxramas gear in the database
-							this ranks, so nothing from those raids can appear.
-						</p>
-						<p>
-							<strong>What EP cannot see.</strong> An EP score reads an item's stat line and its weapon damage, and nothing else. Set bonuses,
-							on-use and proc effects, weapon skill and weapon specialisation talents, resistance requirements and stat caps are all invisible
-							to it. That is why the rankings favour raw stats, and why a dagger can out-rank a sword for a warrior here in a way it would not
-							in a raid.
-						</p>
-					</div>
-				</section>
-				<section class="content-block bis-gear-block">
-					<div class="content-block-header">
-						<h2 class="content-block-title">Gear</h2>
-					</div>
-					<div class="content-block-body" id="bis-gear"></div>
-				</section>
-			</main>
-		</div>
-
 		<!-- Load wowhead scripts after done loading everything else -->
 		<script>
 			const whTooltips = { colorLinks: true };
 		</script>
 		<script src="https://wow.zamimg.com/js/tooltips.js"></script>
+		<!--<script>const aowow_tooltips = {colorlinks: true}</script>
+		<script type="text/javascript" src="https://wotlk.evowow.com/static/widgets/power.js"></script>-->
 	</body>
 </html>
