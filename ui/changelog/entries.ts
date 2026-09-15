@@ -188,6 +188,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Two hunter talents stop promising a scaling they never had',
+				prs: [134],
+				changed:
+					'#126 put per-rank numbers into the trees on the understanding that the sim already scaled with points, and for the hunter the tree was the side that overreached. Deadly Aspects read a 2/4/6/8/10% chance of +30/60/90/120/150% attack speed for 12/24/36/48/60 sec where the sim scales only the chance, as the Classic Improved Aspect of the Hawk it is built from does; the tree now scales the chance alone. Rapid Recuperation read 15/30 sec where the sim holds the window at 15, the way Resourcefulness and Expose Prey hold theirs. The other five stamped hunter talents were checked rank by rank and already agreed. None is confirmed: only rank 1 was shown on the demo, so the beta checklist keeps them and gains one.',
+				effect: 'No simulated number moves; the talent picker stops showing a five point Deadly Aspects as +150% attack speed for a minute.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Tests that pin the trees together',
 				prs: [68],
 				changed:
