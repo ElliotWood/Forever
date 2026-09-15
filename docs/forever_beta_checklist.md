@@ -13,23 +13,25 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 5. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
 6. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
 
-## Druid (15)
+## Druid (17)
 
 - `sim/druid/berserk.go:16` — The tooltip didn't show a cooldown, the 3 minutes are taken from the Classic Berserk.
 - `sim/druid/demoralizing_roar.go:24` — assumed baseline, beta will confirm - Feral Aggression is gone from the tree, so the attack power reduction is taken at full strength like the warrior's Demoralizing Shout.
 - `sim/druid/druid.go:122` — Improved Mark of the Wild is gone from the tree and is assumed to be baseline, beta will confirm.
 - `sim/druid/faerie_fire.go:26` — The feral version's talent is gone from the tree and is assumed to be baseline, beta will confirm.
-- `sim/druid/forms.go:223` — Beta will show whether the carryover share and the out of form regen both scale per rank, linear scaling is assumed here.
+- `sim/druid/forms.go:223` — Only rank 1 of Furor was seen and the demo repeated it at every rank, which would leave four of the five points doing nothing. The Energy carryover, the out of form regen and its cap are all assumed to scale linearly, and the tree carries that assumption rather than an observation.
+- `sim/druid/forms.go:342` — Only rank 1 of Furor's Bear shift was seen, a 20% chance at 10 Rage. Classic scaled the chance 20% per point for a flat 10 Rage and the tree now reads that.
 - `sim/druid/lacerate.go:16` — assumed from Season of Discovery, beta will confirm the cost, the damage and the threat. Shredding Attacks names Lacerate, so the bear has it, but no tooltip for it has been seen.
 - `sim/druid/mangle.go:17` — Only the tooltip was seen, the Energy cost is taken from the Classic Mangle (Cat).
 - `sim/druid/mangle.go:71` — Only the tooltip was seen, the Rage cost, the 6 sec cooldown and the threat are taken from the Classic Mangle (Bear).
-- `sim/druid/talents.go:175` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:301` — Only rank 1 was seen, the cast time reduction is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:448` — Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:451` — Every rank reads the same 20% chance for 5 Rage, so the proc doesn't grow past rank 1. Beta will confirm.
-- `sim/druid/talents.go:514` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:175` — Only rank 1 of Balance of Nature was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:301` — Only rank 1 of Eclipse was seen at 0.17 sec and the reduction is assumed to scale linearly, so rank 3 is 0.51 sec rather than the round half second the community talent calculator rounded it to.
+- `sim/druid/talents.go:404` — Only rank 1 of Primal Fury was seen at 50%. Classic's Primal Fury and the Blood Frenzy folded into it both went from half the time to every time at rank 2, which is how both halves are read here.
+- `sim/druid/talents.go:453` — Only rank 1 of Natural Reaction was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:456` — Only rank 1 of Natural Reaction's Rage proc was seen at 20%, the tree's 20/40/60/80/100 comes from the community talent calculator rather than from a tooltip, and at 5/5 it makes the Rage certain on every dodge.
+- `sim/druid/talents.go:522` — Only rank 1 of Naturalist was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
 - `sim/druid/tigers_fury.go:45` — Tiger's Fury is given Wrath's shape (no Energy cost, 30 sec cooldown) because King of the Jungle is Wrath's talent word for word and Classic's costless-to-spam Tiger's Fury would let it mint Energy; the +40 damage is Classic's rank 4. Beta will confirm the cooldown, the cost and the damage bonus.
-- `sim/druid/wrath.go:53` — Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
+- `sim/druid/wrath.go:53` — Only rank 1 of Improved Wrath was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
 
 ## Hunter (8)
 
