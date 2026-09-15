@@ -297,7 +297,8 @@ func (hunter *Hunter) applyResourcefulness() {
 		return
 	}
 
-	// TODO: only rank 1 was observed, the cost reduction and the proc chance are assumed to scale per rank.
+	// TODO: only rank 1 was observed, the cost reduction and the proc chance are assumed to scale
+	// per rank. The 50% regeneration and the 30 sec window do not, which is what the tree reads.
 	costReduction := 30 * hunter.Talents.Resourcefulness
 	procChance := 0.3 * float64(hunter.Talents.Resourcefulness)
 
@@ -350,7 +351,9 @@ func (hunter *Hunter) applyRapidRecuperation() {
 		return
 	}
 
-	// TODO: only rank 1 was observed, the regeneration is assumed to scale per rank.
+	// TODO: only rank 1 was observed, the regeneration is assumed to scale per rank. The 15 sec
+	// window is held at both ranks: a duration read off a single tooltip is not extrapolated, and
+	// Resourcefulness and Expose Prey keep theirs flat for the same reason.
 	procAura := hunter.RegisterAura(core.Aura{
 		Label:    "Rapid Recuperation",
 		ActionID: core.ActionID{SpellID: 53232},
@@ -372,7 +375,8 @@ func (hunter *Hunter) applyExposePrey() {
 		return
 	}
 
-	// TODO: only rank 1 was observed, the proc chance is assumed to scale per rank.
+	// TODO: only rank 1 of Expose Prey was observed, the proc chance is assumed to scale per
+	// rank. The 5 sec window does not, which is what the tree reads.
 	procChance := 0.05 * float64(hunter.Talents.ExposePrey)
 
 	core.MakePermanent(hunter.RegisterAura(core.Aura{

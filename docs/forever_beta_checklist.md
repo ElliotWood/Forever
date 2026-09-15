@@ -31,15 +31,16 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/druid/tigers_fury.go:45` — Tiger's Fury is given Wrath's shape (no Energy cost, 30 sec cooldown) because King of the Jungle is Wrath's talent word for word and Classic's costless-to-spam Tiger's Fury would let it mint Energy; the +40 damage is Classic's rank 4. Beta will confirm the cooldown, the cost and the damage bonus.
 - `sim/druid/wrath.go:53` — Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
 
-## Hunter (8)
+## Hunter (9)
 
 - `sim/hunter/aimed_shot.go:74` — assumed baseline, beta will confirm
-- `sim/hunter/aspects.go:52` — only rank 1 was observed, the proc chance is assumed to scale per rank.
-- `sim/hunter/rapid_fire.go:15` — only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per rank.
-- `sim/hunter/serpent_sting.go:43` — only rank 1 of Improved Stings was observed, the damage bonus is assumed to scale per rank.
-- `sim/hunter/talents.go:300` — only rank 1 was observed, the cost reduction and the proc chance are assumed to scale per rank.
-- `sim/hunter/talents.go:353` — only rank 1 was observed, the regeneration is assumed to scale per rank.
-- `sim/hunter/talents.go:375` — only rank 1 of Expose Prey was observed, the proc chance is assumed to scale per rank.
+- `sim/hunter/aspects.go:13` — Only rank 1 of Deadly Aspects was observed. The 30% attack speed for 12 sec is held at every rank, as in the Classic Improved Aspect of the Hawk this talent is built from, where the proc chance is the only slot the points buy.
+- `sim/hunter/aspects.go:55` — only rank 1 was observed, the proc chance is the one slot of Deadly Aspects assumed to scale per rank.
+- `sim/hunter/rapid_fire.go:15` — only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per rank. The buff a kill grants is not modelled, so nothing checks the 40 sec window or the 20% damage the tree reads at rank 2.
+- `sim/hunter/serpent_sting.go:43` — only rank 1 of Improved Stings was observed, the damage bonus is assumed to scale per rank. The Viper Sting cooldown and the Scorpid Sting duration are not modelled, so nothing checks the rest of what the tree reads.
+- `sim/hunter/talents.go:300` — only rank 1 was observed, the cost reduction and the proc chance of Resourcefulness are assumed to scale per rank. The 50% regeneration and the 30 sec window do not, which is what the tree reads.
+- `sim/hunter/talents.go:354` — only rank 1 was observed, the Rapid Recuperation regeneration is assumed to scale per rank. The 15 sec window is held at both ranks: a duration read off a single tooltip is not extrapolated.
+- `sim/hunter/talents.go:378` — only rank 1 of Expose Prey was observed, the proc chance is assumed to scale per rank. The 5 sec window does not, which is what the tree reads.
 - `sim/core/buffs.go`, `BattleShoutAura` and `BlessingOfMightAura` — both grant melee attack power only, as in Classic. If Forever lets either reach ranged attack power every ranked hunter gains 10% to 12%.
 
 ## Mage (4)
@@ -156,7 +157,7 @@ Warrior, the only class with concrete changes reported:
 - Slam no longer resets the swing timer — modelled in `sim/warrior/slam.go`.
 - Thunder Clap can be used in Defensive Stance — modelled in `sim/warrior/thunder_clap.go`, and the protection rotation casts it on cooldown.
 - Improved Shield Wall shortens the cooldown instead of lengthening the duration — modelled in `sim/warrior/shield_wall.go`.
-- Tactical Mastery is baseline, with Improved Tactical Mastery on top — modelled in `sim/warrior/stances.go`.
+- `sim/warrior/stances.go:41` — Tactical Mastery is baseline with Improved Tactical Mastery on top, but the baseline was never shown a number, so only the talent's own 3 Rage per point is modelled and an untalented warrior keeps nothing across a stance change. Beta will show what the baseline retains.
 - Victory Rush is baseline — not modelled. It needs a killing blow, which a boss encounter never gives before the fight ends.
 
 Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.

@@ -188,10 +188,18 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Two hunter talents stop promising a scaling they never had',
+				prs: [134],
+				changed:
+					'#126 put per-rank numbers into the trees on the understanding that the sim already scaled with points, and for the hunter the tree was the side that overreached. Deadly Aspects read a 2/4/6/8/10% chance of +30/60/90/120/150% attack speed for 12/24/36/48/60 sec where the sim scales only the chance, as the Classic Improved Aspect of the Hawk it is built from does; the tree now scales the chance alone. Rapid Recuperation read 15/30 sec where the sim holds the window at 15, the way Resourcefulness and Expose Prey hold theirs. The other five stamped hunter talents were checked rank by rank and already agreed. None is confirmed: only rank 1 was shown on the demo, so the beta checklist keeps them and gains one.',
+				effect: 'No simulated number moves; the talent picker stops showing a five point Deadly Aspects as +150% attack speed for a minute.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Fingers of Frost pays for its second point, Shatter shows all five ranks',
 				prs: [136],
 				changed:
-					"The same #126 assumption that caught the paladins caught the mage twice. Fingers of Frost proced on 15% of chills at either rank where the tree reads 15%/30%, so the second point did nothing; it is read per point now. Shatter has run to five ranks since the trees were corrected, but its rank table stopped at three, so 4/5 and 5/5 showed no number in the picker; it reads 10/20/30/40/50, which is what the sim already applied. Neither is confirmed - the demo showed Fingers of Frost only at rank 1 and Shatter only at Rank 3/3, where it read 50% - so the beta checklist keeps both.",
+					'The same #126 assumption that caught the paladins caught the mage twice. Fingers of Frost proced on 15% of chills at either rank where the tree reads 15%/30%, so the second point did nothing; it is read per point now. Shatter has run to five ranks since the trees were corrected, but its rank table stopped at three, so 4/5 and 5/5 showed no number in the picker; it reads 10/20/30/40/50, which is what the sim already applied. Neither is confirmed - the demo showed Fingers of Frost only at rank 1 and Shatter only at Rank 3/3, where it read 50% - so the beta checklist keeps both.',
 				effect: 'Frost 528 to 559 DPS on the ranked build, from twice as many Fingers of Frost procs and the Ice Lances they pay for. Arcane and fire are unchanged.',
 				sources: [communityTalents],
 			},
