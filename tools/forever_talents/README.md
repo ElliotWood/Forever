@@ -24,6 +24,47 @@ This is pre-beta data and it shows. Read it with the caveats:
 
 Replace `data/` with the datamined trees once the beta client is out and rerun the importer.
 
+## Beta day
+
+The trees the sim runs on have moved on from `data/` by hand where the published trees
+disagreed with it (talent positions, Blood Craze's name, Improved Fireball and Shatter's
+five ranks in the mage tree), so the datamine is compared against the trees rather than
+against `data/`, and `docs/forever_beta_checklist.md` lists every number the sim built on
+a rank 1 tooltip. The pass is:
+
+1. Export the trees from the beta client in the `data/<class>.json` schema, one file per
+   class, into a directory. A tree json in the `ui/core/talents/trees` layout works too,
+   with `--tree-schema`. If the export carries spell ids, put them in a `spellIds` list per
+   talent and they are compared as well; the BlizzCon data has none.
+2. Run the diff:
+
+	tools/forever_talents/diff_trees.py beta/               # every class in the directory
+	tools/forever_talents/diff_trees.py beta/warrior.json   # one class
+	tools/forever_talents/diff_trees.py beta/ --json        # for anything that wants to read it
+
+   It reports, per class and per talent, what the export changes against the sim: talents
+   added, removed or renamed (matched by field name, then by name, then by position),
+   positions, rank counts, spell ids and prerequisites that moved, and tooltips whose wording
+   or numbers changed, with the numbers of every rank shown side by side so a rank 1
+   extrapolation turns into a confirmed value or a corrected one. Under each changed talent
+   it lists the checklist lines whose `TODO` names the talent, reads its field or sits in a
+   file named after it, and for a talent with no checklist line, the sim files that read it.
+   The exit code is 1 when anything changed, so it can gate.
+3. Work the report: open the checklist lines it names, fix the numbers that moved, delete
+   the `TODO`s, then regenerate the affected `.results` with `make test && make update-tests`.
+   The class footer counts the checklist lines the diff could not tie to a changed talent;
+   those are the "assumed baseline" items and still need the pass by hand.
+4. Regenerate the trees and protos from the new data with the importer and rerun
+   `go test ./sim/ -run TestTalentTrees`. Regenerating from `data/` as it stands today would
+   undo the hand fixes above, which is what the diff of the vendored data shows:
+
+	tools/forever_talents/diff_trees.py --apply-overrides
+
+   reports exactly those (fourteen positions, one rename, one added talent and one rank
+   count) and nothing else. `--apply-overrides` applies `overrides/` to the dataset the way
+   the importer does and is only for checking the vendored data; without it the two warrior
+   rank lists that `overrides/` corrects also show up. Leave it off for a datamine.
+
 ## Talents whose per-rank scaling is guesswork
 
 58 of the 469 talents, most of them carrying `ranksSource: "manual"`, list rank 1's numbers again
