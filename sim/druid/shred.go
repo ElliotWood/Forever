@@ -43,8 +43,10 @@ func (druid *Druid) registerShredSpell() {
 		},
 
 		DamageMultiplier: damageMultiplier,
-		ThreatMultiplier: 1,
-		BonusCoefficient: 1,
+		// Savage Fury names Shred under Forever, where Classic's did not.
+		DamageMultiplierAdditive: 1 + 0.05*float64(druid.Talents.SavageFury),
+		ThreatMultiplier:         1,
+		BonusCoefficient:         1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := flatDamageBonus + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))

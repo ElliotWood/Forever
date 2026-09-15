@@ -49,7 +49,7 @@ func (shaman *Shaman) registerLavaBurstSpell() {
 			},
 		},
 
-		DamageMultiplier: 1,
+		DamageMultiplier: shaman.callOfFlameMultiplier(),
 		ThreatMultiplier: 1,
 		BonusCoefficient: spellCoeff,
 
