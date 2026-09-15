@@ -1,5 +1,11 @@
 [
 	{
+		"number": 105,
+		"title": "fix(druid): give the cat tiger's fury as its energy engine and drop rake",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/105"
+	},
+	{
 		"number": 104,
 		"title": "feat(changelog): list every merged pull request, refreshed by ci on each merge",
 		"mergedAt": "2026-09-15",
