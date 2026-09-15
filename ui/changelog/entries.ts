@@ -250,6 +250,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Bear tank: Lacerate instead of Swipe',
+				prs: [116],
+				changed:
+					"The bear spent its spare rage on Swipe, which returns eight damage and twenty-six threat per rage against Lacerate's seventy-one and one hundred and fifty-two, so Lacerate takes the rage dump. The cat's Claw line no longer fires at the Energy where Shred has just gone out of reach, Furor's out of form Energy scales with rank like the rest of the talent, and Moonkin Form finally grants its armor.",
+				effect: 'Bear Tank +20% DPS and +35% threat, Feral Cat +1%, on a two minute fight.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Season of Discovery leftovers removed',
 				prs: [82, 83, 67],
 				changed:
