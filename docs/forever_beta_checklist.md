@@ -68,13 +68,16 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/paladin/templars_bulwark.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it shares the 5 minutes of the two Forbearance abilities Sacred Duty shortens alongside it.
 - `sim/paladin/templars_bulwark.go:36` — Both ranks of Sacred Duty read 30 sec, the second is assumed to scale linearly.
 
-## Priest (8)
+## Priest (11)
 
 - `sim/priest/devouring_plague.go:53` — only rank 1 of Devouring Contagion was shown, beta will confirm the rank 2 value
 - `sim/priest/holy_nova.go:13` — beta will confirm the higher ranks and the mana cost.
-- `sim/priest/mind_flay.go:78` — only rank 1 of Improved Mind Flay was shown, beta will confirm the rank 2 value
+- `sim/priest/mind_flay.go:81` — only rank 1 of Improved Mind Flay was shown, beta will confirm the rank 2 value
 - `sim/priest/penance.go:18` — beta will confirm the cost, the cooldown and the level 60 damage.
+- `sim/priest/power_infusion.go:10` — let the option pick a raid member once buffing another player is modelled.
+- `sim/priest/power_infusion.go:25` — beta will confirm the cost and the cooldown.
 - `sim/priest/priest.go:81` — beta will confirm whether they were made baseline or removed outright.
+- `sim/priest/priest.go:97` — beta will confirm that Devouring Plague is no longer race locked.
 - `sim/priest/talents.go:40` — only rank 1 was shown, beta will confirm that the two halves scale at 5% and 1% per point
 - `sim/priest/talents.go:57` — only rank 1 was shown, beta will confirm the 2% per point
 - `sim/priest/talents.go:398` — beta will confirm the 50%.
@@ -138,7 +141,7 @@ Warrior, the only class with concrete changes reported:
 
 Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
 
-## Talents the sim does not read (24)
+## Talents the sim does not read (26)
 
 These are in the trees and the picker marks them as not simulated; spending points in them changes nothing. Most are utility or PvP talents the Classic sim never modelled either. They are listed so the beta pass can confirm none of them turned into something a raid rotation cares about.
 
@@ -155,8 +158,10 @@ These are in the trees and the picker marks them as not simulated; spending poin
 - Priest / Discipline: Renewed Hope
 - Priest / Discipline: Divine Aegis
 - Priest / Holy: Binding Heal
+- Priest / Holy: Twilight Focus (the sim never interrupts a cast, so pushback resistance has nothing to resist)
 - Priest / Holy: Litany of Light
-- Priest / Shadow Magic: Early Demise
+- Priest / Shadow Magic: Early Demise (Shadow Word: Death is not in the spellbook at all)
+- Priest / Shadow Magic: Spirit Tap (it needs a kill, and nothing dies in a raid encounter; the Smite build spends three points here)
 - Rogue / Subtlety: Improved Distract
 - Shaman / Restoration: Riptide
 - Warlock / Demonology: Demonic Aegis

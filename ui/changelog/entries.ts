@@ -264,6 +264,14 @@ export const sections: Array<Section> = [
 				effect: 'Marksmanship +14 DPS at two minutes and +22 at five, Beast Mastery +2 and +7, Survival +2 and +10; the Marksmanship hunter spends 25 fewer seconds out of mana on a five minute fight.',
 			},
 			{
+				title: 'Priest: Power Infusion returns, and Power in Light stays up',
+				prs: [113],
+				changed:
+					"Power Infusion, the thirty-one point talent the Smite build spends its deepest point on, was commented out of the sim entirely. It is cast again. Holy Fire is now recast as its dot runs out rather than after it has dropped, so Power in Light no longer falls off for five seconds in every fifteen, Inner Focus goes on Smite instead of Penance, and Shadow Word: Pain and a downranked Smite fill the gaps a five minute fight opens. Devouring Plague registered only its first five ranks and was locked to the Undead, so the shadow rotation's Devouring Plague line did nothing at all for the ranked Dwarf.",
+				effect: 'Smite +7.1% at two minutes and +5.6% at five; Shadow +0.3% and +0.4%.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Rogue: a rotation for the Hemorrhage build',
 				prs: [111],
 				changed:

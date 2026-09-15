@@ -83,6 +83,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Shadow Weaving buffs the priest, not the target. | Panel | `sim/priest/talents.go` |
 | Divine Spirit and Improved Power Word: Fortitude are gone from the trees; assumed baseline raid buffs. | Tree | `sim/priest/priest.go` |
 | Mind Flay base damage per tick from the rank 1 tooltip (119 vs 75), other ranks by ratio. | *demo* | `sim/priest/mind_flay.go` |
+| Devouring Plague is castable by every race, not just the Undead: Devouring Contagion sits in the Shadow tree and does nothing otherwise. | Tree | `sim/priest/priest.go` |
 
 ## Mage
 
