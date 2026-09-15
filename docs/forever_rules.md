@@ -61,6 +61,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Improved Mark of the Wild and the feral Faerie Fire talent are gone; assumed baseline. | Tree | `sim/druid/druid.go`, `faerie_fire.go` |
 | Feral Aggression is gone; Demoralizing Roar's attack power reduction is assumed baseline at full strength. | Tree | `sim/druid/demoralizing_roar.go` |
 | Ferocity also cuts the Rage cost of Mangle. | Tooltip | `sim/druid/mangle.go` |
+| Moonkin Form grants 360% more armor from items and the party crit aura, and nothing else: no spell damage and no Moonfire bonus. | Tooltip | `sim/druid/forms.go` |
 | Feral Instinct is Swipe damage, not Bear Form threat; Bear Form's threat is the flat 1.3x. | Tooltip | `sim/druid/swipe.go`, `forms.go` |
 | Natural Reaction also gives a 20% chance at 5 Rage on every dodge. | *demo* | `sim/druid/talents.go` |
 | Mangle (Bear): 100% weapon damage plus 26; Berserk lifts its cooldown and widens it to 3 targets. | *demo* | `sim/druid/mangle.go`, `berserk.go` |

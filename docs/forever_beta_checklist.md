@@ -12,7 +12,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 4. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
 5. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
 
-## Druid (16)
+## Druid (15)
 
 - `sim/druid/berserk.go:16` — The tooltip didn't show a cooldown, the 3 minutes are taken from the Classic Berserk.
 - `sim/druid/demoralizing_roar.go:24` — assumed baseline, beta will confirm - Feral Aggression is gone from the tree, so the attack power reduction is taken at full strength like the warrior's Demoralizing Shout.
@@ -24,10 +24,9 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/druid/mangle.go:71` — Only the tooltip was seen, the Rage cost, the 6 sec cooldown and the threat are taken from the Classic Mangle (Bear).
 - `sim/druid/talents.go:175` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
 - `sim/druid/talents.go:301` — Only rank 1 was seen, the cast time reduction is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:388` — Only rank 1 was seen, both amounts are assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:449` — Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:452` — Every rank reads the same 20% chance for 5 Rage, so the proc doesn't grow past rank 1. Beta will confirm.
-- `sim/druid/talents.go:515` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:448` — Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:451` — Every rank reads the same 20% chance for 5 Rage, so the proc doesn't grow past rank 1. Beta will confirm.
+- `sim/druid/talents.go:514` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
 - `sim/druid/tigers_fury.go:45` — Tiger's Fury is given Wrath's shape (no Energy cost, 30 sec cooldown) because King of the Jungle is Wrath's talent word for word and Classic's costless-to-spam Tiger's Fury would let it mint Energy; the +40 damage is Classic's rank 4. Beta will confirm the cooldown, the cost and the damage bonus.
 - `sim/druid/wrath.go:53` — Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
 
