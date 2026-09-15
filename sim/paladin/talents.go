@@ -207,7 +207,8 @@ func (paladin *Paladin) applyCrusade() {
 	multiplier := 1 + 0.01*float64(paladin.Talents.Crusade)
 	paladin.PseudoStats.DamageDealtMultiplier *= multiplier
 
-	// The same bonus again, but only against Demon and Undead targets.
+	// The same bonus again, but only against Demon and Undead targets. It is damage dealt and
+	// nothing else, so the crit multiplier is left alone.
 	paladin.Env.RegisterPostFinalizeEffect(func() {
 		for _, target := range paladin.Env.Encounter.Targets {
 			if target.MobType != proto.MobType_MobTypeDemon && target.MobType != proto.MobType_MobTypeUndead {
@@ -215,7 +216,6 @@ func (paladin *Paladin) applyCrusade() {
 			}
 			for _, at := range paladin.AttackTables[target.UnitIndex] {
 				at.DamageDealtMultiplier *= multiplier
-				at.CritMultiplier *= multiplier
 			}
 		}
 	})
