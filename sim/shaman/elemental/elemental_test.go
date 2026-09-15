@@ -35,7 +35,55 @@ func TestElemental(t *testing.T) {
 		}}))
 }
 
+// Elemental 31/6/14 and Stormcaller 28/23/0 from ui/elemental_shaman/presets.ts, the builds
+// the rankings page runs. Stormcaller has no Lava Burst and leans on the enhancement tree.
+func TestForeverElemental(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class: proto.Class_ClassShaman,
+			Phase: 1,
+			Race:  proto.Race_RaceOrc,
+
+			Talents:     ElementalTalents,
+			GearSet:     core.GetGearSet("../../../ui/elemental_shaman/gear_sets", "launch"),
+			Rotation:    core.GetAplRotation("../../../ui/elemental_shaman/apls", "default"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    Phase1Consumes,
+			SpecOptions: core.SpecOptionsCombo{Label: "Adaptive", SpecOptions: PlayerOptionsAdaptive},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatSpellPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		}}))
+}
+
+func TestForeverStormcaller(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class: proto.Class_ClassShaman,
+			Phase: 1,
+			Race:  proto.Race_RaceOrc,
+
+			Talents:     StormcallerTalents,
+			GearSet:     core.GetGearSet("../../../ui/elemental_shaman/gear_sets", "launch"),
+			Rotation:    core.GetAplRotation("../../../ui/elemental_shaman/apls", "default"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    Phase1Consumes,
+			SpecOptions: core.SpecOptionsCombo{Label: "Adaptive", SpecOptions: PlayerOptionsAdaptive},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatSpellPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		}}))
+}
+
 var DefaultTalents = "5505301500103031--503352001"
+var ElementalTalents = "2505301500123031-0500001-053050001"
+var StormcallerTalents = "050433150010303-055030030004102"
 
 var PlayerOptionsAdaptive = &proto.Player_ElementalShaman{
 	ElementalShaman: &proto.ElementalShaman{
