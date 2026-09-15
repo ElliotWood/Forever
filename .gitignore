@@ -1,7 +1,8 @@
 # nodejs modules
 node_modules
 ui/core/index.ts
-# Every page's index.html is generated from ui/index_template.html.
+# The pages are rendered from ui/index_template.html by vite (tools/vite/spec_pages.mts);
+# older checkouts still hold the copies the makefile used to generate.
 ui/*/index.html
 .dirstamp
 
