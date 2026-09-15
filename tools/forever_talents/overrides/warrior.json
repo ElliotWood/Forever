@@ -54,7 +54,33 @@
       "talent": "bloodthrill",
       "tree": "arms",
       "set": {
-        "ranks": [[2, 1, 6], [4, 1, 6], [6, 1, 6], [8, 1, 6], [10, 1, 6]]
+        "ranks": [
+          [
+            2,
+            1,
+            6
+          ],
+          [
+            4,
+            1,
+            6
+          ],
+          [
+            6,
+            1,
+            6
+          ],
+          [
+            8,
+            1,
+            6
+          ],
+          [
+            10,
+            1,
+            6
+          ]
+        ]
       },
       "reason": "per rank proc chance corroborated as 2/4/6/8/10% by the Forever write-ups published after BlizzCon; only rank 1 was shown on camera",
       "by": "data-audit",
@@ -64,11 +90,73 @@
       "talent": "dual-wield-specialization",
       "tree": "fury",
       "set": {
-        "ranks": [[5, 20, 2], [10, 40, 4], [15, 60, 6], [20, 80, 8], [25, 100, 10]]
+        "ranks": [
+          [
+            5,
+            20,
+            2
+          ],
+          [
+            10,
+            40,
+            4
+          ],
+          [
+            15,
+            60,
+            6
+          ],
+          [
+            20,
+            80,
+            8
+          ],
+          [
+            25,
+            100,
+            10
+          ]
+        ]
       },
       "reason": "off-hand damage corroborated as 5/10/15/20/25% by the Forever write-ups published after BlizzCon; Rage generation and hit chance still follow the same slope and are unconfirmed",
       "by": "data-audit",
       "at": "2026-09-14T00:00:00Z"
+    },
+    {
+      "talent": "weaponmaster",
+      "tree": "arms",
+      "set": {
+        "ranks": [
+          [
+            1,
+            3,
+            1
+          ],
+          [
+            2,
+            6,
+            2
+          ],
+          [
+            3,
+            9,
+            3
+          ],
+          [
+            4,
+            12,
+            4
+          ],
+          [
+            5,
+            15,
+            5
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
     }
   ]
 }

@@ -59,6 +59,80 @@
       "reason": "audit 2026-09-13 decision 2: every crop of this cell shows Rank 3/3, so the 50% is the rank-3 value. The pipeline now refuses to extrapolate from a rank > 0 reading (ranks are copies of the observed rank-3 value, ranksSource manual, ranksObserved [3]) instead of the old 50/100/150 = 150% critical strike chance. Ranks 1 and 2 stay unknown until a rank-0 crop of this cell exists.",
       "by": "data-audit",
       "at": "2026-09-13T00:00:00Z"
+    },
+    {
+      "talent": "improved-fireball",
+      "tree": "fire",
+      "add": {
+        "name": "Improved Fireball",
+        "row": 0,
+        "col": 2,
+        "maxRank": 5,
+        "icon": "spell_fire_flamebolt",
+        "iconSource": "classic",
+        "description": "Reduces the casting time of your Fireball spell by {0} sec.",
+        "ranks": [
+          [
+            0.1
+          ],
+          [
+            0.2
+          ],
+          [
+            0.3
+          ],
+          [
+            0.4
+          ],
+          [
+            0.5
+          ]
+        ]
+      },
+      "reason": "the datamined pass has no entry for it; taken from the community talent calculator's source, which places it at Fire r0c2 with five ranks",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "shatter",
+      "tree": "frost",
+      "set": {
+        "ranks": [
+          [
+            10
+          ],
+          [
+            20
+          ],
+          [
+            30
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "fingers-of-frost",
+      "tree": "frost",
+      "set": {
+        "ranks": [
+          [
+            15,
+            1,
+            15
+          ],
+          [
+            30,
+            1,
+            15
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
     }
   ]
 }

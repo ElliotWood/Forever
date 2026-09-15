@@ -81,6 +81,174 @@
       "reason": "audit 2026-09-13 decision 1: the crop was re-taken from the merged mkv at stream t=20800.0 with headroom. The tooltip carries no name line at all in the footage; the talent is named by its own 'Feral Charge (Cat)' block, and '5 Rage' was the Bear-form rage cost. Both clauses are now in the description. maxRank 1 is unverified: the crop has no 'Rank x/y' line.",
       "by": "data-audit",
       "at": "2026-09-13T00:00:00Z"
+    },
+    {
+      "talent": "improved-wrath",
+      "tree": "balance",
+      "set": {
+        "ranks": [
+          [
+            0.1,
+            10
+          ],
+          [
+            0.2,
+            20
+          ],
+          [
+            0.3,
+            30
+          ],
+          [
+            0.4,
+            40
+          ],
+          [
+            0.5,
+            50
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "balance-of-nature",
+      "tree": "balance",
+      "set": {
+        "ranks": [
+          [
+            10,
+            1,
+            10,
+            1
+          ],
+          [
+            10,
+            2,
+            10,
+            2
+          ],
+          [
+            10,
+            3,
+            10,
+            3
+          ],
+          [
+            10,
+            4,
+            10,
+            4
+          ],
+          [
+            10,
+            5,
+            10,
+            5
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "eclipse",
+      "tree": "balance",
+      "set": {
+        "ranks": [
+          [
+            2,
+            0.17,
+            4,
+            15
+          ],
+          [
+            2,
+            0.34,
+            4,
+            15
+          ],
+          [
+            2,
+            0.5,
+            4,
+            15
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "natural-reaction",
+      "tree": "feral combat",
+      "set": {
+        "ranks": [
+          [
+            1,
+            20,
+            5
+          ],
+          [
+            2,
+            40,
+            5
+          ],
+          [
+            3,
+            60,
+            5
+          ],
+          [
+            4,
+            80,
+            5
+          ],
+          [
+            5,
+            100,
+            5
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "naturalist",
+      "tree": "restoration",
+      "set": {
+        "ranks": [
+          [
+            0.1,
+            1
+          ],
+          [
+            0.2,
+            2
+          ],
+          [
+            0.3,
+            3
+          ],
+          [
+            0.4,
+            4
+          ],
+          [
+            0.5,
+            5
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
     }
   ]
 }

@@ -21,6 +21,107 @@
       "reason": "audit 2026-09-13: reader error (PUNCT); corrected against data/review/rogue/subtlety/initiative.png",
       "by": "data-audit",
       "at": "2026-09-13T00:00:00Z"
+    },
+    {
+      "talent": "improved-expose-armor",
+      "tree": "assassination",
+      "set": {
+        "ranks": [
+          [
+            5,
+            1,
+            5
+          ],
+          [
+            10,
+            1,
+            5
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "puncturing-wounds",
+      "tree": "combat",
+      "set": {
+        "ranks": [
+          [
+            10,
+            5,
+            15
+          ],
+          [
+            20,
+            10,
+            30
+          ],
+          [
+            30,
+            15,
+            45
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "hack-and-slash",
+      "tree": "combat",
+      "set": {
+        "ranks": [
+          [
+            1,
+            1,
+            3
+          ],
+          [
+            2,
+            2,
+            6
+          ],
+          [
+            3,
+            3,
+            9
+          ],
+          [
+            4,
+            4,
+            12
+          ],
+          [
+            5,
+            5,
+            15
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "elusiveness",
+      "tree": "subtlety",
+      "set": {
+        "description": "Reduces the cooldown of your Vanish and Blind abilities by {0} sec.",
+        "ranks": [
+          [
+            45
+          ],
+          [
+            90
+          ]
+        ]
+      },
+      "reason": "the datamined pass stored whole sentences where the per-rank values belong, which is the wrong shape for the picker; rank 2's '1.5 min' is written as 90 sec so both ranks read in the same unit",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
     }
   ]
 }

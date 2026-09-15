@@ -61,6 +61,128 @@
       "reason": "audit 2026-09-13: reader error (CAP-I); corrected against data/review/paladin/retribution/seal-of-command.png",
       "by": "data-audit",
       "at": "2026-09-13T00:00:00Z"
+    },
+    {
+      "talent": "infusion-of-light",
+      "tree": "holy",
+      "set": {
+        "ranks": [
+          [
+            15,
+            0.5
+          ],
+          [
+            15,
+            1
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "shield-specialization",
+      "tree": "protection",
+      "set": {
+        "ranks": [
+          [
+            10,
+            33,
+            6,
+            3
+          ],
+          [
+            20,
+            66,
+            6,
+            3
+          ],
+          [
+            30,
+            100,
+            6,
+            3
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "sacred-duty",
+      "tree": "protection",
+      "set": {
+        "ranks": [
+          [
+            2,
+            30
+          ],
+          [
+            4,
+            60
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "iron-creed",
+      "tree": "protection",
+      "set": {
+        "ranks": [
+          [
+            5,
+            2,
+            6
+          ],
+          [
+            10,
+            4,
+            6
+          ],
+          [
+            15,
+            6,
+            6
+          ],
+          [
+            20,
+            8,
+            6
+          ],
+          [
+            25,
+            10,
+            6
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "instrument-of-law",
+      "tree": "retribution",
+      "set": {
+        "ranks": [
+          [
+            0.5,
+            10
+          ],
+          [
+            1,
+            20
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
     }
   ]
 }

@@ -53,10 +53,19 @@ def apply_overrides(data, override_path):
 		overrides = json.load(f)['overrides']
 
 	by_id = {talent['id']: talent for tree in data['trees'] for talent in tree['talents']}
+	by_tree = {tree['name'].lower(): tree for tree in data['trees']}
 	for override in overrides:
 		talent = by_id.get(override['talent'])
 		if talent is None:
-			continue
+			# A talent the datamined pass missed entirely. 'add' carries the whole entry so
+			# it survives a regenerated dataset, which would otherwise drop it again.
+			entry = override.get('add')
+			tree = by_tree.get(str(override.get('tree', '')).lower())
+			if entry is None or tree is None:
+				continue
+			talent = dict(entry, id=override['talent'])
+			tree['talents'].append(talent)
+			by_id[talent['id']] = talent
 		talent.update(override.get('set', {}))
 		for key in override.get('unset', []):
 			talent.pop(key, None)
@@ -81,12 +90,6 @@ def database_spells():
 	"""What the sim's database would call and draw for each spell id it knows."""
 	with open(DB_PATH) as f:
 		return {spell['id']: (spell['name'], spell.get('icon')) for spell in json.load(f)['spellIcons']}
-
-
-def same_talent(left, right):
-	"""Whether two talent names are the same name, ignoring case and punctuation."""
-	strip = lambda name: re.sub(r'[^a-z0-9]', '', (name or '').lower())
-	return strip(left) == strip(right)
 
 
 def simulated_talents(class_name):
@@ -216,20 +219,17 @@ def refresh_presentation(class_name, data, crops_from):
 	for tree in trees:
 		for entry in tree['talents']:
 			talent = by_field.get(entry['fieldName'])
-			# Being in the database is not enough to let Wowhead describe a talent. Where a
-			# Forever talent had no Classic spell ids of its own, generation gave it the ids
-			# of whichever Classic talent the dataset matched it to by description, so the
-			# database names and draws that other talent instead: a druid's Genesis read
-			# "Fire Power", and Malevolence and Shadow Mastery both read "Shadow Mastery".
-			# The id may only speak for the talent when it is the same talent under the same
-			# name; anything else is presented from the dataset, as a new talent is.
-			first_id = next((spell_id for spell_id in entry['spellIds'] if spell_id), None)
-			db_name, db_icon = known_spells.get(first_id, (None, None))
-			if db_name is not None and (talent is None or same_talent(db_name, talent['name'])):
-				continue
+			# The Classic database is never authoritative about a Forever talent. It named
+			# the wrong talent outright where a new one had borrowed Classic spell ids, and
+			# matching names are no safer: Improved Revenge is called the same thing in both
+			# and Forever turned its stun into damage, so the database described an effect
+			# the sim does not have. Every talent the datamined set knows is presented from
+			# it, and only a talent the set has never heard of falls back to the database.
 			if talent is None:
 				unmatched.append(entry['fieldName'])
 				continue
+			first_id = next((spell_id for spell_id in entry['spellIds'] if spell_id), None)
+			_, db_icon = known_spells.get(first_id, (None, None))
 			add_presentation(entry, class_name, talent, simulated, crops_from, fallback_icon=db_icon)
 			refreshed += 1
 
