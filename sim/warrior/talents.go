@@ -201,6 +201,9 @@ func (warrior *Warrior) applyUnbridledWrath() {
 	})
 }
 
+// TODO: every rank of the tooltip reads the same 5% damage, 20% Rage and 2% hit. The damage is
+// Classic's per point value, so all three are read per point. Beta will confirm the Rage and
+// the hit, which are the largest single source of a dual wielding Fury build's Rage income.
 func (warrior *Warrior) applyDualWieldSpecialization() {
 	points := warrior.Talents.DualWieldSpecialization
 	if points == 0 {

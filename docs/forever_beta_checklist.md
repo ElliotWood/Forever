@@ -108,17 +108,18 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 
 - `sim/warlock/talents.go:451` — Beta will show whether the 33% of level is per rank or the full value
 
-## Warrior (9)
+## Warrior (10)
 
 - `sim/warrior/demoralizing_shout.go:15` — assumed baseline, beta will confirm
 - `sim/warrior/shield_wall.go:29` — only rank 1 was shown, beta will confirm that rank 2 is another 5.5 minutes.
 - `sim/warrior/shouts.go:55` — assumed baseline, beta will confirm
 - `sim/warrior/talents.go:76` — only rank 1 was shown, beta will confirm the 1% crit / 3% armor / 1% extra attack per point.
 - `sim/warrior/talents.go:175` — only rank 1 was shown, beta will confirm the 12% per point.
-- `sim/warrior/talents.go:366` — only rank 1 was shown, beta will confirm that rank 2 doubles both the chance and the rage.
-- `sim/warrior/talents.go:392` — only rank 1 was shown, beta will confirm the 2% per point.
-- `sim/warrior/talents.go:403` — only rank 1 was shown, beta will confirm the 2% per point.
-- `sim/warrior/talents.go:412` — only rank 1 was shown, beta will confirm the 1 Rage per point.
+- `sim/warrior/talents.go:204` — every rank of Dual Wield Specialization reads the same 5% damage, 20% Rage and 2% hit; the damage is Classic's per point value, so all three are read per point. Beta will confirm the Rage and the hit, which together are the largest single source of a dual wielding Fury build's Rage income.
+- `sim/warrior/talents.go:369` — only rank 1 was shown, beta will confirm that rank 2 doubles both the chance and the rage.
+- `sim/warrior/talents.go:395` — only rank 1 was shown, beta will confirm the 2% per point.
+- `sim/warrior/talents.go:406` — only rank 1 was shown, beta will confirm the 2% per point.
+- `sim/warrior/talents.go:415` — only rank 1 was shown, beta will confirm the 1 Rage per point.
 
 ## Baseline ability changes
 
@@ -127,14 +128,14 @@ Forever also changes abilities that are not talents. None of their tooltips were
 Warrior, the only class with concrete changes reported:
 
 - Slam no longer resets the swing timer — modelled in `sim/warrior/slam.go`.
-- Thunder Clap can be used in Defensive Stance — modelled in `sim/warrior/thunder_clap.go`. The shipped protection rotation does not cast it, so no numbers move until an APL does.
+- Thunder Clap can be used in Defensive Stance — modelled in `sim/warrior/thunder_clap.go`, and the protection rotation casts it on cooldown.
 - Improved Shield Wall shortens the cooldown instead of lengthening the duration — modelled in `sim/warrior/shield_wall.go`.
 - Tactical Mastery is baseline, with Improved Tactical Mastery on top — modelled in `sim/warrior/stances.go`.
 - Victory Rush is baseline — not modelled. It needs a killing blow, which a boss encounter never gives before the fight ends.
 
 Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
 
-## Talents the sim does not read (23)
+## Talents the sim does not read (24)
 
 These are in the trees and the picker marks them as not simulated; spending points in them changes nothing. Most are utility or PvP talents the Classic sim never modelled either. They are listed so the beta pass can confirm none of them turned into something a raid rotation cares about.
 
@@ -160,4 +161,5 @@ These are in the trees and the picker marks them as not simulated; spending poin
 - Warlock / Destruction: Molten Skin
 - Warrior / Arms: Spearing Strike
 - Warrior / Fury: Blood Craze
+- Warrior / Protection: Concussion Blow (a stun, and a raid boss is immune)
 - Warrior / Protection: Vanguard
