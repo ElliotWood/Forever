@@ -122,18 +122,19 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/warlock/talents.go:356` — Both ranks of Decimation read the same numbers, so the 3% damage, 20% cast time and 45% Soul Fire cooldown are read per point as the surrounding talents are. Beta will confirm.
 - `sim/warlock/talents.go:464` — Beta will show whether the 33% of level is per rank or the full value
 
-## Warrior (10)
+## Warrior (11)
 
 - `sim/warrior/demoralizing_shout.go:15` — assumed baseline, beta will confirm
-- `sim/warrior/shield_wall.go:29` — only rank 1 was shown, beta will confirm that rank 2 is another 5.5 minutes.
+- `sim/warrior/shield_wall.go:29` — only rank 1 was shown, beta will confirm that rank 2 is another 5.5 minutes. The tree now lists the 11 min the sim takes off the cooldown at rank 2 instead of repeating rank 1's 5.5.
 - `sim/warrior/shouts.go:55` — assumed baseline, beta will confirm
-- `sim/warrior/talents.go:76` — only rank 1 was shown, beta will confirm the 1% crit / 3% armor / 1% extra attack per point.
-- `sim/warrior/talents.go:175` — only rank 1 was shown, beta will confirm the 12% per point.
-- `sim/warrior/talents.go:204` — every rank of Dual Wield Specialization reads the same 5% damage, 20% Rage and 2% hit; the damage is Classic's per point value, so all three are read per point. Beta will confirm the Rage and the hit, which together are the largest single source of a dual wielding Fury build's Rage income.
-- `sim/warrior/talents.go:369` — only rank 1 was shown, beta will confirm that rank 2 doubles both the chance and the rage.
-- `sim/warrior/talents.go:395` — only rank 1 was shown, beta will confirm the 2% per point.
-- `sim/warrior/talents.go:406` — only rank 1 was shown, beta will confirm the 2% per point.
-- `sim/warrior/talents.go:415` — only rank 1 was shown, beta will confirm the 1 Rage per point.
+- `sim/warrior/talents.go:76` — only rank 1 of Weaponmaster was shown. The 1% crit / 3% armor / 1% extra attack per point the tree lists comes from the community talent calculator, which is rebuilt from the same rank 1 tooltip, so it agrees with the sim without confirming it.
+- `sim/warrior/talents.go:177` — only rank 1 of Unbridled Wrath was shown, beta will confirm the 12% per point. The tree now lists 12/24/36/48/60% instead of repeating rank 1 at every rank.
+- `sim/warrior/talents.go:206` — every rank of Dual Wield Specialization reads the same 5% damage, 20% Rage and 2% hit; the damage is Classic's per point value, so all three are read per point. Beta will confirm the Rage and the hit, which together are the largest single source of a dual wielding Fury build's Rage income.
+- `sim/warrior/talents.go:234` — only rank 1 of Enrage was shown at a 30% chance. Read per point the chance passes 100% at 4/5, so the sim caps it and the fifth point buys nothing; the tree reads 30/60/90/100/100 to match. Classic ranked the damage and left the chance flat, so it offers no slope for the half Forever put the ranks on. Beta will confirm the chance at each rank.
+- `sim/warrior/talents.go:376` — only rank 1 was shown, beta will confirm that rank 2 doubles both the chance and the rage.
+- `sim/warrior/talents.go:402` — only rank 1 was shown, beta will confirm the 2% per point.
+- `sim/warrior/talents.go:413` — only rank 1 was shown, beta will confirm the 2% per point.
+- `sim/warrior/talents.go:422` — only rank 1 was shown, beta will confirm the 1 Rage per point.
 
 ## Talent icons still standing in (3)
 
