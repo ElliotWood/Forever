@@ -1,7 +1,7 @@
 [
   {
     "name": "Elemental Combat",
-    "backgroundUrl": "",
+    "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/261.jpg",
     "talents": [
       {
         "fieldName": "convection",
@@ -176,7 +176,21 @@
           30678,
           30679
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Lightning Overload",
+        "icon": "spell_nature_lightningoverload",
+        "description": "Gives your Lightning Bolt and Chain Lightning spells a {0}% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat.",
+        "ranks": [
+          [
+            3
+          ],
+          [
+            6
+          ],
+          [
+            9
+          ]
+        ]
       },
       {
         "fieldName": "earthbound",
@@ -219,7 +233,17 @@
         "spellIds": [
           51505
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Lava Burst",
+        "icon": "spell_shaman_lavaburst",
+        "description": "You hurl molten lava at the target, dealing {0} to {1} Fire damage. If your Flame Shock is on the target, Lava Burst deals {2}% increased damage.",
+        "ranks": [
+          [
+            158,
+            187,
+            20
+          ]
+        ]
       }
     ]
   },
@@ -292,7 +316,21 @@
           51884,
           51885
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Mental Dexterity",
+        "icon": "spell_nature_mentalquickness",
+        "description": "Increases your Attack Power by an amount equal to {0}% of your Intellect.",
+        "ranks": [
+          [
+            33
+          ],
+          [
+            66
+          ],
+          [
+            99
+          ]
+        ]
       },
       {
         "fieldName": "improvedGhostWolf",
@@ -340,7 +378,15 @@
         "spellIds": [
           43338
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Shamanistic Focus",
+        "icon": "spell_nature_elementalabsorption",
+        "description": "Reduces the mana cost of your Shock and Lightning Shield spells by {0}%.",
+        "ranks": [
+          [
+            45
+          ]
+        ]
       },
       {
         "fieldName": "anticipation",
@@ -439,7 +485,24 @@
           51521,
           51522
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Improved Stormstrike",
+        "icon": "spell_shaman_improvedstormstrike",
+        "description": "When you Stormstrike, you have a {0}% chance to gain {1}% mana regeneration while casting spells for {2} sec, and Stormstrike's cooldown has a {3}% chance to reset each time you Dodge or Parry.",
+        "ranks": [
+          [
+            50,
+            50,
+            15,
+            50
+          ],
+          [
+            50,
+            50,
+            15,
+            50
+          ]
+        ]
       },
       {
         "fieldName": "maelstromWeapon",
@@ -454,7 +517,37 @@
           51531,
           51532
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Maelstrom Weapon",
+        "icon": "spell_shaman_maelstromweapon",
+        "description": "When you deal damage with a melee attack, you have a chance to reduce the cast time and Mana cost of your next Lightning Bolt spell by {0}%. Stacks up to {1} times. Lasts {2} sec.",
+        "ranks": [
+          [
+            4,
+            5,
+            30
+          ],
+          [
+            4,
+            5,
+            30
+          ],
+          [
+            4,
+            5,
+            30
+          ],
+          [
+            4,
+            5,
+            30
+          ],
+          [
+            4,
+            5,
+            30
+          ]
+        ]
       },
       {
         "fieldName": "rageOfTheFarseer",
@@ -469,7 +562,16 @@
         "spellIds": [
           2825
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Rage of the Farseer",
+        "icon": "spell_nature_bloodlust",
+        "description": "Increases your melee attack speed and spell casting speed by {0}% for {1} sec.",
+        "ranks": [
+          [
+            30,
+            25
+          ]
+        ]
       }
     ]
   },
@@ -597,7 +699,17 @@
         "spellIds": [
           52127
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Water Shield",
+        "icon": "ability_shaman_watershield",
+        "description": "The caster is surrounded by {0} globes of water. When a spell, melee, or ranged attack hits the caster or when one of the caster's healing spells gets a critical result, {1}% of maximum mana is restored to the caster, expending one water globe. Only one globe will activate every few seconds. Lasts {2} min. Only one Elemental Shield can be active on the Shaman at any one time.",
+        "ranks": [
+          [
+            3,
+            2,
+            10
+          ]
+        ]
       },
       {
         "fieldName": "totemicFocus",
@@ -692,7 +804,20 @@
         "spellIds": [
           61295
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Riptide",
+        "iconUrl": "assets/img/talents/shaman/riptide.png",
+        "description": "Heals a friendly target for {0} to {1}, an additional {2} over {3} sec, and increases the effectiveness of your Chain Heal casts directly on that target by {4}%.",
+        "ranks": [
+          [
+            479,
+            528,
+            499,
+            15,
+            25
+          ]
+        ],
+        "notSimulated": true
       }
     ]
   }

@@ -103,3 +103,27 @@ order invalidates every saved talent string, so regenerate both together and rer
 Spell ids for talents that already exist in the tree json are preserved, so regenerating
 doesn't churn the icons. New talents that have no Classic equivalent get a placeholder and
 show the wrong tooltip until the beta ids are known.
+
+The trees have since been corrected by hand (talent positions in four classes, a renamed
+talent or two), so a full `--write` no longer round-trips: it would reorder fields and
+invalidate every saved talent string. Diff the tree json before committing one.
+
+### Icons and tooltips for the talents the database cannot name
+
+A talent whose spell ids are not in `assets/database/db.json` (Forever added it, or its id
+belongs to a later expansion) cannot be linked, named or drawn from Wowhead's Classic data.
+The tree json carries its presentation instead, and the picker draws that: `name`,
+`description` and `ranks` for the tooltip, and one of
+
+- `icon`, a Wowhead icon name the dataset matched the video frame to (the mirror under
+  `assets/img/wowhead` picks it up on the next `go run ./tools/icons`), or
+- `iconUrl`, a 36 px crop of the demo video frame copied to `assets/img/talents/<class>/`,
+  for the icons that are genuinely new to Forever and exist nowhere else yet.
+
+`--presentation` refreshes exactly those fields in place and touches nothing else:
+
+	tools/forever_talents/import_talents.py warlock --presentation --crops ../wow-forever-talent-calc
+
+`--crops` points at a checkout of the dataset's repository, where the crops live under
+`data/review/`. Without it a crop already in the tree keeps its place. When the beta client
+is datamined, the real icon names replace the crops the same way.

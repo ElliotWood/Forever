@@ -358,7 +358,8 @@
             20,
             10
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/hunter/rapid-killing.png"
       },
       {
         "fieldName": "improvedArcaneShot",
@@ -514,7 +515,8 @@
           [
             160
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/hunter/sniper-shot.png"
       }
     ]
   },
@@ -694,7 +696,8 @@
             30,
             50
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/hunter/predators-edge.png"
       },
       {
         "fieldName": "counterattack",
@@ -785,7 +788,8 @@
           [
             40
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/hunter/survivalists-discipline.png"
       },
       {
         "fieldName": "striderKick",
@@ -804,7 +808,8 @@
             100
           ]
         ],
-        "notSimulated": true
+        "notSimulated": true,
+        "iconUrl": "assets/img/talents/hunter/strider-kick.png"
       },
       {
         "fieldName": "lightningReflexes",
@@ -842,7 +847,8 @@
             21,
             40
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/hunter/lacerating-strikes.png"
       }
     ]
   }

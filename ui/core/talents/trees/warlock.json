@@ -58,7 +58,27 @@
           32485,
           32486
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Malediction",
+        "icon": "spell_shadow_curseofachimonde",
+        "description": "Increases all periodic damage done by your Warlock spells by {0}%.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ]
       },
       {
         "fieldName": "soulHarvesting",
@@ -132,7 +152,21 @@
           58436,
           58437
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Pandemic",
+        "icon": "spell_shadow_unstableaffliction_1",
+        "description": "Increases the critical strike damage bonus of your Corruption, Bane of Agony, Bane of Doom, Drain Soul, Drain Life, Siphon Life, and Drain Hope spells by {0}%.",
+        "ranks": [
+          [
+            33
+          ],
+          [
+            66
+          ],
+          [
+            99
+          ]
+        ]
       },
       {
         "fieldName": "malevolence",
@@ -301,7 +335,19 @@
           30143,
           30144
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Demonic Aegis",
+        "iconUrl": "assets/img/talents/warlock/demonic-aegis.png",
+        "description": "Increases the effectiveness of your Demon Skin and Demon Armor spells by {0}%.",
+        "ranks": [
+          [
+            15
+          ],
+          [
+            30
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "improvedVoidwalker",
@@ -388,7 +434,26 @@
           63156,
           63158
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Decimation",
+        "iconUrl": "assets/img/talents/warlock/decimation.png",
+        "description": "Reduces the cooldown of your Soul Fire spell by {0}%. When you cast Shadow Bolt or Searing Pain on an enemy below {1}% health, they deal {2}% increased damage, and for the next {3} sec your Soul Fire spell has its cast time reduced by {4}% and costs no Soul Shards.",
+        "ranks": [
+          [
+            45,
+            35,
+            3,
+            10,
+            20
+          ],
+          [
+            45,
+            35,
+            3,
+            10,
+            20
+          ]
+        ]
       },
       {
         "fieldName": "felDomination",
@@ -428,7 +493,25 @@
           54038,
           54039
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Improved Felhunter",
+        "icon": "spell_shadow_summonfelhunter",
+        "description": "Increases the Attack Power reduction of your Felhunter's Tainted Blood, the healing of its Devour Magic, and the detection level of its Paranoia by {0}%, and reduces the cooldown of its Spell Lock by {1} sec.",
+        "ranks": [
+          [
+            10,
+            2
+          ],
+          [
+            10,
+            2
+          ],
+          [
+            10,
+            2
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "soulLink",
@@ -456,7 +539,21 @@
           35692,
           35693
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Demonic Knowledge",
+        "icon": "spell_shadow_improvedvampiricembrace",
+        "description": "Increases your spell damage and healing by up to {0}% of your level while you have a summoned Demon pet active.",
+        "ranks": [
+          [
+            33
+          ],
+          [
+            66
+          ],
+          [
+            99
+          ]
+        ]
       },
       {
         "fieldName": "masterDemonologist",
@@ -486,7 +583,13 @@
         "spellIds": [
           47236
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Demonic Pact",
+        "iconUrl": "assets/img/talents/warlock/demonic-pact.png",
+        "description": "Your Demonic Sacrifice effect is no longer cancelled by summoning a different Demon pet. Resummoning the sacrificed pet will still cancel the effect.",
+        "ranks": [
+          []
+        ]
       }
     ]
   },
@@ -549,7 +652,28 @@
           63352,
           63353
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Molten Skin",
+        "icon": "ability_mage_moltenarmor",
+        "description": "Reduces all damage taken by {0}%.",
+        "ranks": [
+          [
+            2
+          ],
+          [
+            4
+          ],
+          [
+            6
+          ],
+          [
+            8
+          ],
+          [
+            10
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "cataclysm",
@@ -631,7 +755,52 @@
           30291,
           30292
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Shadow and Flame",
+        "icon": "spell_fire_playingwithfire",
+        "description": "Hitting an enemy with Conflagrate increases all Shadow damage you deal by {0}% for {1} sec. and hitting an enemy with Shadowburn increases all Fire damage you deal by {2}% for {3} sec. In addition, Conflagrate has a {4}% chance not to consume Immolate, and Shadowburn has a {5}% chance to instantly refund a Soul Shard.",
+        "ranks": [
+          [
+            2,
+            20,
+            2,
+            20,
+            20,
+            20
+          ],
+          [
+            2,
+            20,
+            2,
+            20,
+            20,
+            20
+          ],
+          [
+            2,
+            20,
+            2,
+            20,
+            20,
+            20
+          ],
+          [
+            2,
+            20,
+            2,
+            20,
+            20,
+            20
+          ],
+          [
+            2,
+            20,
+            2,
+            20,
+            20,
+            20
+          ]
+        ]
       },
       {
         "fieldName": "conflagrate",
@@ -669,7 +838,17 @@
         "spellIds": [
           80240
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Bane of Havoc",
+        "icon": "ability_warlock_baneofhavoc",
+        "description": "Afflicts the target for {0} min, causing {1}% of all damage done by the Warlock to other targets to also be dealt to the cursed target. Bane of Havoc is limited to {2} target, and only one Bane per Warlock can be active on any one target.",
+        "ranks": [
+          [
+            5,
+            15,
+            1
+          ]
+        ]
       },
       {
         "fieldName": "fireAndBrimstone",
@@ -686,7 +865,21 @@
           47267,
           47268
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Fire and Brimstone",
+        "icon": "spell_fire_meteorstorm",
+        "description": "Increases the critical strike chance of your Conflagrate spell by {0}%.",
+        "ranks": [
+          [
+            8
+          ],
+          [
+            16
+          ],
+          [
+            24
+          ]
+        ]
       },
       {
         "fieldName": "agonizingFlames",
@@ -714,7 +907,17 @@
         "spellIds": [
           29722
         ],
-        "maxPoints": 1
+        "maxPoints": 1,
+        "name": "Incinerate",
+        "icon": "spell_fire_burnout",
+        "description": "Deals {0} to {1} Fire damage to your target and an additional {2}% damage if the target is afflicted by Immolate.",
+        "ranks": [
+          [
+            125,
+            140,
+            25
+          ]
+        ]
       }
     ]
   }

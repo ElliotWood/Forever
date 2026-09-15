@@ -35,7 +35,8 @@
           [
             10
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/priest/power-in-light.png"
       },
       {
         "fieldName": "wandSpecialization",
@@ -609,7 +610,7 @@
   },
   {
     "name": "Shadow Magic",
-    "backgroundUrl": "",
+    "backgroundUrl": "https://wow.zamimg.com/images/wow/talents/backgrounds/classic/203.jpg",
     "talents": [
       {
         "fieldName": "shadowFocus",
@@ -836,7 +837,8 @@
             50,
             10
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/priest/devouring-contagion.png"
       },
       {
         "fieldName": "earlyDemise",

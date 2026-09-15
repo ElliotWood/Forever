@@ -10,18 +10,27 @@
 # Usage:
 #   tools/forever_talents/import_talents.py warlock            # print the proto message
 #   tools/forever_talents/import_talents.py warlock --write    # also rewrite the tree json
+#   tools/forever_talents/import_talents.py warlock --presentation --crops ../wow-forever-talent-calc
+#                                                              # refresh only the names, icons and
+#                                                                descriptions of the talents the
+#                                                                database cannot name; copy the
+#                                                                video icon crops
 #   tools/forever_talents/import_talents.py --unranked         # list talents whose per-rank
 #                                                                scaling isn't known for any class
 
 import json
 import os
 import re
+import shutil
 import sys
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 OVERRIDE_DIR = os.path.join(os.path.dirname(__file__), 'overrides')
 TREE_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'ui', 'core', 'talents', 'trees')
 SIM_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'sim')
+DB_PATH = os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'database', 'db.json')
+# Icon crops for talents whose icon is new to Forever, relative to the site root.
+CROP_DIR = os.path.join('assets', 'img', 'talents')
 
 # Talents that didn't exist in Classic have no spell id to give the picker. They carry their
 # name, icon and tooltip through to the tree json instead, and the picker draws those.
@@ -57,6 +66,12 @@ def load_class(class_name):
 		data = json.load(f)
 
 	return apply_overrides(data, os.path.join(OVERRIDE_DIR, class_name + '.json'))
+
+
+def database_spell_ids():
+	"""Spell ids the sim's database knows, and so can name, link and draw an icon for."""
+	with open(DB_PATH) as f:
+		return {spell['id'] for spell in json.load(f)['spellIcons']}
 
 
 def simulated_talents(class_name):
@@ -96,7 +111,7 @@ def spell_ids(talent, existing):
 	return [PLACEHOLDER_SPELL_ID] * talent['maxRank']
 
 
-def build_tree_json(data, existing_by_tree, simulated):
+def build_tree_json(data, existing_by_tree, simulated, known_spells, crops_from=None):
 	trees = []
 	for tree in sorted(data['trees'], key=lambda t: t['order']):
 		existing = existing_by_tree.get(tree['name'], {})
@@ -118,21 +133,8 @@ def build_tree_json(data, existing_by_tree, simulated):
 			entry['spellIds'] = spell_ids(talent, existing)
 			entry['maxPoints'] = talent['maxRank']
 
-			# Nothing on Wowhead to link or draw for a talent Forever added, so carry the
-			# datamined presentation through and let the picker render it locally.
-			if not any(entry['spellIds']):
-				entry['name'] = talent['name']
-				# An icon sourced from 'crop' is the name of the screenshot the tooltip was
-				# read from, not a real icon, so there is nothing to point at yet. Leaving it
-				# out lets the picker draw its own placeholder.
-				if talent.get('icon') and talent.get('iconSource') != 'crop':
-					entry['icon'] = talent['icon']
-				if talent.get('description'):
-					entry['description'] = talent['description']
-				if talent.get('ranks'):
-					entry['ranks'] = talent['ranks']
-				if entry['fieldName'][0].upper() + entry['fieldName'][1:] not in simulated:
-					entry['notSimulated'] = True
+			if not any(spell_id in known_spells for spell_id in entry['spellIds']):
+				add_presentation(entry, data['class'], talent, simulated, crops_from)
 
 			talents.append(entry)
 
@@ -143,6 +145,80 @@ def build_tree_json(data, existing_by_tree, simulated):
 		})
 
 	return trees
+
+
+# A talent the database cannot name has nothing to link or draw: either Forever added it
+# (spell id 0) or it came from a later expansion whose id the Classic database does not
+# carry. Carry the datamined presentation through and let the picker render it locally.
+def add_presentation(entry, class_name, talent, simulated, crops_from):
+	entry['name'] = talent['name']
+	if talent.get('iconSource') == 'crop':
+		# A genuinely new icon: the only picture of it is the crop of the demo video frame,
+		# which the picker draws from the site's own assets.
+		crop = copy_icon_crop(class_name, talent, crops_from)
+		if crop:
+			entry['iconUrl'] = crop
+	elif talent.get('icon'):
+		entry['icon'] = talent['icon']
+	if talent.get('description'):
+		entry['description'] = talent['description']
+	if talent.get('ranks'):
+		entry['ranks'] = talent['ranks']
+	if entry['fieldName'][0].upper() + entry['fieldName'][1:] not in simulated:
+		entry['notSimulated'] = True
+
+
+def refresh_presentation(class_name, data, crops_from):
+	"""Rewrites only the presentation of the tree json's unnamed talents, in place.
+
+	The trees have been corrected by hand since they were generated (talent positions,
+	a renamed talent or two), so regenerating them would reorder fields and invalidate
+	every saved talent string. This keeps order, locations and spell ids as they are.
+	"""
+	tree_path = os.path.join(TREE_DIR, class_name + '.json')
+	with open(tree_path) as f:
+		trees = json.load(f)
+
+	by_field = {camel_case(talent['id']): talent for tree in data['trees'] for talent in tree['talents']}
+	# The proto field was named before the dataset settled on the talent's name.
+	by_field['bloodCraze'] = by_field.get('bloodCrazed')
+	known_spells = database_spell_ids()
+	simulated = simulated_talents(class_name)
+	refreshed, unmatched = 0, []
+	for tree in trees:
+		for entry in tree['talents']:
+			if any(spell_id in known_spells for spell_id in entry['spellIds']):
+				continue
+			talent = by_field.get(entry['fieldName'])
+			if talent is None:
+				unmatched.append(entry['fieldName'])
+				continue
+			add_presentation(entry, class_name, talent, simulated, crops_from)
+			refreshed += 1
+
+	with open(tree_path, 'w') as f:
+		json.dump(trees, f, indent=2)
+		f.write('\n')
+	print('%s: refreshed %d talents' % (class_name, refreshed))
+	for field_name in unmatched:
+		sys.stderr.write('\t%s is not in the dataset under that name; left as is\n' % field_name)
+
+
+def copy_icon_crop(class_name, talent, crops_from):
+	"""Copies the talent's icon crop out of the source dataset and returns its site path.
+
+	Without a dataset to copy from, a crop already in the tree keeps its place.
+	"""
+	target = os.path.join(CROP_DIR, class_name, talent['id'] + '.png')
+	repo_target = os.path.join(os.path.dirname(__file__), '..', '..', target)
+	if crops_from and talent.get('iconCrop'):
+		source = os.path.join(crops_from, talent['iconCrop'])
+		if os.path.exists(source):
+			os.makedirs(os.path.dirname(repo_target), exist_ok=True)
+			shutil.copyfile(source, repo_target)
+	if os.path.exists(repo_target):
+		return target.replace(os.sep, '/')
+	return None
 
 
 def build_proto(data):
@@ -200,7 +276,12 @@ def main():
 
 	class_name = sys.argv[1]
 	write = '--write' in sys.argv
+	crops_from = sys.argv[sys.argv.index('--crops') + 1] if '--crops' in sys.argv else None
 	data = load_class(class_name)
+
+	if '--presentation' in sys.argv:
+		refresh_presentation(class_name, data, crops_from)
+		return
 
 	tree_path = os.path.join(TREE_DIR, class_name + '.json')
 	existing_by_tree = {}
@@ -223,7 +304,7 @@ def main():
 					existing_by_tree[tree['name']][talent['name']] = by_field[field_name]
 
 	existing_by_tree['backgroundUrl'] = backgrounds
-	trees = build_tree_json(data, existing_by_tree, simulated_talents(class_name))
+	trees = build_tree_json(data, existing_by_tree, simulated_talents(class_name), database_spell_ids(), crops_from)
 
 	if write:
 		with open(tree_path, 'w') as f:
