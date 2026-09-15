@@ -361,6 +361,13 @@ export const sections: Array<Section> = [
 				effect: 'A raid can be built out of the community builds without editing talents by hand.',
 			},
 			{
+				title: 'The damage table comes off the homepage',
+				prs: [124],
+				changed:
+					"The sim team's answer to remove, hide or reframe was hide, with a reason the reframe could not meet: a table built from tooltips inherits every tooltip that is wrong, and there are dozens of those, so it is not a self-check but a table wrong in places nobody can see. The page stays at its URL for catching the sim doing something obviously wrong and is marked not to be indexed, but nothing on the site links to it any more.",
+				effect: 'No number the sim cannot back is offered to anyone who did not go looking for it.',
+			},
+			{
 				title: 'Best in slot and stat weights',
 				prs: [55, 56, 72, 79],
 				changed: "A best in slot page from each spec's EP weights over the launch pool, and a page comparing stat weights across specs.",
