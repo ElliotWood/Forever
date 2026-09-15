@@ -280,6 +280,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Enhancement shaman: a rotation, and an off-hand that works',
+				prs: [112],
+				changed:
+					"The enhancement priority list asked whether Strength of Earth Totem was up using the wrong rank's aura, so the shaman re-dropped it every global until it ran out of mana and never reached Stormstrike or Earth Shock; the totem lines now read how long each totem has left. Windfury Totem, which shared the air slot with Grace of Air and buffed nothing, is gone. The off-hand weapon imbue was never read at all, Windfury's extra attacks always came from the main hand, and Elemental Weapons was applied twice to Windfury's bonus attack power.",
+				effect: 'The ranked Enhancement 16/35/0 build goes from 473 to 724 DPS at two minutes and from 458 to 699 at five, and is no longer the lowest non-tank.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Season of Discovery leftovers removed',
 				prs: [82, 83, 67],
 				changed:

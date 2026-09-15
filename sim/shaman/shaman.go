@@ -49,6 +49,9 @@ func (shaman *Shaman) getImbueProcMask(imbue proto.WeaponImbue) core.ProcMask {
 	if shaman.HasMHWeapon() && shaman.Consumes.MainHandImbue == imbue {
 		mask |= core.ProcMaskMeleeMH
 	}
+	if shaman.HasOHWeapon() && shaman.Consumes.OffHandImbue == imbue {
+		mask |= core.ProcMaskMeleeOH
+	}
 	return mask
 }
 

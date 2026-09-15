@@ -95,7 +95,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/rogue/talents.go:350` — Only rank 1 was seen and the damage bonus is assumed to scale linearly. The tooltip data extrapolates the health threshold along with it, which it cannot be, so rank 1's 35% is used for every rank. Beta will confirm.
 - `sim/rogue/venom.go:47` — The tooltip showed no Energy cost, the 25 matches the other Rogue finishers.
 
-## Shaman (12)
+## Shaman (13)
 
 - `sim/shaman/air_totems.go:50` — The sim won't respect the value of a totem dropped via the APL. It uses hard-coded values from buffs.go bonusDamage := WindfuryTotemBonusDamage[rank]
 - `sim/shaman/lava_burst.go:11` — Only the damage range and the Flame Shock bonus were on the tooltip. The cast time, cooldown, mana cost and coefficient are taken from the spell of the same name, beta will confirm them.
@@ -109,6 +109,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/shaman/totems.go:9` — Assumed baseline rather than deleted, beta will confirm it.
 - `sim/shaman/water_shield.go:18` — "Only one globe will activate every few seconds", the tooltip never said how long.
 - `sim/shaman/water_totems.go:115` — The sim won't respect the value of a totem dropped via the APL. It uses hard-coded values from buffs.go manaRestoreBase := ManaSpringTotemManaRestore[rank]
+- `sim/shaman/windfury_weapon.go:78` — Classic lets both weapons carry the imbue and gives the extra attacks to the hand that procced, beta will confirm that Forever kept both halves of that.
 
 ## Warlock (1)
 
