@@ -1,5 +1,11 @@
 [
 	{
+		"number": 104,
+		"title": "feat(changelog): list every merged pull request, refreshed by ci on each merge",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/104"
+	},
+	{
 		"number": 103,
 		"title": "feat(talents): draw the talents the database cannot name from the dataset",
 		"mergedAt": "2026-09-15",
