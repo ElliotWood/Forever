@@ -60,7 +60,9 @@ func (paladin *Paladin) registerHolyShock() {
 			ThreatMultiplier: 1,
 			BonusCoefficient: 0.429,
 
-			// Holy Power is worth an extra 2% crit per point on Holy Shock specifically.
+			// Holy Power is worth an extra 2% crit per point on Holy Shock specifically. It stacks
+			// on top of the 1% per point every spell gets in ApplyTalents, which is how Holy Shock
+			// reaches the 3% per point the tree reads for it.
 			BonusCritRating: 2 * float64(paladin.Talents.HolyPower) * core.SpellCritRatingPerCritChance,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
