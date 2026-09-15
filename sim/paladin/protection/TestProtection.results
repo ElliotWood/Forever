@@ -3,7 +3,7 @@ character_stats_results: {
  value: {
   final_stats: 402.93
   final_stats: 125.4
-  final_stats: 474.606
+  final_stats: 483.912
   final_stats: 209.352
   final_stats: 151.305
   final_stats: 241
@@ -35,7 +35,7 @@ character_stats_results: {
   final_stats: 7.84524
   final_stats: 5.8
   final_stats: 0
-  final_stats: 5947.06
+  final_stats: 6040.12
   final_stats: 27
   final_stats: 60
   final_stats: 60
@@ -50,48 +50,48 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestProtection-Phase1-StatWeights-Default"
  value: {
-  weights: 0.21618
-  weights: 0.04754
+  weights: 0.21604
+  weights: 0.03178
   weights: 0
-  weights: 0.29149
+  weights: 0.23931
   weights: 0
-  weights: 0.17964
-  weights: 0
-  weights: 0
-  weights: 0
-  weights: 0.14956
+  weights: 0.18458
   weights: 0
   weights: 0
   weights: 0
-  weights: 1.11407
-  weights: 3.60781
-  weights: 0
-  weights: 0
-  weights: 0.08933
-  weights: 1.11407
-  weights: 3.60781
+  weights: 0.15471
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.02269
+  weights: 1.35509
+  weights: 3.59396
+  weights: 0
+  weights: 0
+  weights: 0.08927
+  weights: 1.35509
+  weights: 3.59396
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.01453
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.18497
-  weights: 1.55766
+  weights: -0.11722
+  weights: 2.24917
   weights: 0
-  weights: 0.1478
-  weights: 0.89208
-  weights: 0
-  weights: 0
+  weights: -0.02461
+  weights: 0.70317
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.05988
+  weights: 0
+  weights: 0
+  weights: 0.06153
   weights: 0
   weights: 0
  }
@@ -155,9 +155,9 @@ dps_results: {
 dps_results: {
  key: "TestProtection-Phase1-Average-Default"
  value: {
-  dps: 418.45314
-  tps: 556.99357
-  dtps: 736.54688
+  dps: 425.2599
+  tps: 570.80028
+  dtps: 735.87747
  }
 }
 dps_results: {
@@ -247,8 +247,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 375.37382
-  tps: 506.34429
-  dtps: 780.95065
+  dps: 383.7063
+  tps: 523.11422
+  dtps: 778.93443
  }
 }

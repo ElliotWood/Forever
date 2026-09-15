@@ -180,6 +180,14 @@ export const sections: Array<Section> = [
 				effect: 'The rankings and the spec pages simulate the builds people are actually discussing.',
 			},
 			{
+				title: 'Three paladin talents scale with the points spent on them',
+				prs: [132],
+				changed:
+					"#126 put per-rank numbers into the trees on the understanding that the sim already scaled with points, and three paladin talents did not. Sacred Duty gave 2% Stamina at both ranks where the tree reads 2%/4%, Shield Specialization absorbed 10% and returned mana on 33% of blocks at every rank where the tree reads 10/20/30% and 33/66/100%, and Instrument of Law shaved half a second off Hammer of Wrath and 10% threat at both ranks where the tree reads 0.5/1 sec and 10%/20%. All three read the tree's numbers now. None is confirmed: only rank 1 was shown on the demo, so the beta checklist keeps them.",
+				effect: 'Protection 418 to 425 DPS and 557 to 571 threat on the ranked build; retribution 624 to 626 DPS and 584 to 521 threat, an instant Hammer of Wrath for twice the threat reduction.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Tests that pin the trees together',
 				prs: [68],
 				changed:
