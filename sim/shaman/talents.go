@@ -14,7 +14,6 @@ func (shaman *Shaman) ApplyTalents() {
 	// Elemental Talents
 	shaman.applyConcussion()
 	shaman.applyElementalWarding()
-	shaman.applyCallOfFlame()
 	shaman.applyElementalDevastation()
 	shaman.applyElementalFocus()
 	shaman.applyElementalFury()
@@ -125,24 +124,9 @@ func (shaman *Shaman) applyElementalWarding() {
 	}
 }
 
-// The fire totems apply this themselves so that it lands on their base damage.
+// The affected spells apply this themselves so that it lands on their base damage.
 func (shaman *Shaman) callOfFlameMultiplier() float64 {
 	return 1 + .05*float64(shaman.Talents.CallOfFlame)
-}
-
-func (shaman *Shaman) applyCallOfFlame() {
-	if shaman.Talents.CallOfFlame == 0 {
-		return
-	}
-
-	affectedSpellCodes := []int32{SpellCode_ShamanFlameShock, SpellCode_ShamanLavaBurst}
-	multiplier := shaman.callOfFlameMultiplier()
-
-	shaman.OnSpellRegistered(func(spell *core.Spell) {
-		if slices.Contains(affectedSpellCodes, spell.SpellCode) {
-			spell.DamageMultiplier *= multiplier
-		}
-	})
 }
 
 func (shaman *Shaman) shamanisticFocusReduction() int32 {
