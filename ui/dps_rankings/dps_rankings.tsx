@@ -27,7 +27,7 @@ import { MAX_NUM_PARTIES } from '../core/raid.js';
 import { Sim, SimError } from '../core/sim.js';
 import { EventID, TypedEvent } from '../core/typed_event.js';
 import { formatToNumber, formatToPercent } from '../core/utils.js';
-import { applyBlessings, applyNewPlayerAssignments, newPlayerFromPreset, playerPresets } from '../raid/presets.js';
+import { applyBlessings, applyNewPlayerAssignments, communityBuilds, newPlayerFromPreset, playerPresets, RaidBuild } from '../raid/presets.js';
 
 // Twenty-six players over a two minute encounter, so this is not free: measured at about
 // forty seconds from opening the page to the table appearing, on four cores. The run has
@@ -38,44 +38,8 @@ const DEFAULT_ITERATIONS = 1000;
 
 const isLaunched = (spec: Spec) => simLaunchStatuses[spec].status != LaunchStatus.Unlaunched;
 
-// The community builds are the talent presets named with their point split, the same ones
-// the landing page links to under each class.
-const communityBuildRegex = /\d+\/\d+\/\d+$/;
-
-// A raid slot is a build, not a spec: the point of the table is to see how the Forever
-// talents shake out against each other, and a spec's builds differ in exactly that. Each
-// build sits on its spec's raid preset - gear, consumes, race, rotation - with only the
-// talents and the name swapped, so two builds of one spec differ by talents alone. Specs
-// that ship one raid preset per tree (hunter, rogue) hand a build the preset for its own
-// main tree. A launched spec with no community build keeps its raid preset as it is, named
-// with its point split like the others, so nothing the sim can run drops out of the table.
-type Build = {
-	preset: RaidSimPreset<any>;
-	name: string;
-	talentsString: string;
-};
-
-const rankedBuilds = (): Array<Build> =>
-	[...new Set(playerPresets.map(preset => preset.spec))].filter(isLaunched).flatMap(spec => {
-		const config = getSpecConfig(spec) as IndividualSimUIConfig<any>;
-		const raidPresets = config.raidSimPresets;
-		const builds = config.presets.talents
-			.filter(talents => communityBuildRegex.test(talents.name))
-			.map(talents => {
-				const talentsString = talents.data.talentsString;
-				const preset =
-					raidPresets.find(raidPreset => getTalentTree(raidPreset.talents.talentsString) == getTalentTree(talentsString)) || raidPresets[0];
-				return { preset, name: talents.name, talentsString };
-			});
-		if (builds.length > 0) {
-			return builds;
-		}
-		const talentsString = raidPresets[0].talents.talentsString;
-		return [{ preset: raidPresets[0], name: `${raidPresets[0].defaultName} ${getTalentTreePoints(talentsString).join('/')}`, talentsString }];
-	});
-
 type Ranking = {
-	build: Build;
+	build: RaidBuild;
 	dps: number;
 };
 
@@ -100,7 +64,7 @@ function strongestOf<T extends object>(buffs: Array<T>): T {
 export class DpsRankings extends Component {
 	readonly sim: Sim;
 
-	private readonly builds: Array<Build>;
+	private readonly builds: Array<RaidBuild>;
 	private readonly runButton: HTMLButtonElement;
 	private readonly statusElem: HTMLElement;
 	private readonly resultsElem: HTMLElement;
@@ -111,7 +75,7 @@ export class DpsRankings extends Component {
 	constructor(parentElem: HTMLElement) {
 		super(parentElem, 'dps-rankings-ui');
 		this.sim = new Sim();
-		this.builds = rankedBuilds();
+		this.builds = communityBuilds();
 
 		const runButtonRef = ref<HTMLButtonElement>();
 		const statusRef = ref<HTMLDivElement>();

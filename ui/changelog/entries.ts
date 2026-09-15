@@ -347,6 +347,13 @@ export const sections: Array<Section> = [
 				effect: 'The page reads as what it has always been used for, a self-check, rather than a balance claim.',
 			},
 			{
+				title: 'The raid builder offers every build',
+				prs: [121],
+				changed:
+					"The picker at the top of the raid tab offered one icon per spec, so the only way into a raid was a spec's own default build and the twenty-six community builds the damage table ranks could not be put in one. It now offers all twenty-six, grouped by class, each dropping a player with that build's talents and name. Both pages read the same list, so neither can drift from the other. The mage's three raid presets also all carried the same talents, which are Frost's, so dragging in a Fire or Arcane mage gave a Frost one and the three could not be told apart.",
+				effect: 'A raid can be built out of the community builds without editing talents by hand.',
+			},
+			{
 				title: 'Best in slot and stat weights',
 				prs: [55, 56, 72, 79],
 				changed: "A best in slot page from each spec's EP weights over the launch pool, and a page comparing stat weights across specs.",

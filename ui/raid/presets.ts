@@ -7,7 +7,7 @@ import { Class, EquipmentSpec, Profession, Spec, TristateEffect } from '../core/
 import { BalanceDruid_Options as BalanceDruidOptions } from '../core/proto/druid.js';
 import { Blessings } from '../core/proto/paladin.js';
 import { BlessingsAssignments } from '../core/proto/ui.js';
-import { isTankSpec, naturalSpecOrder, newUnitReference, playerToSpec } from '../core/proto_utils/utils.js';
+import { getTalentTree, getTalentTreePoints, isTankSpec, naturalSpecOrder, newUnitReference, playerToSpec } from '../core/proto_utils/utils.js';
 import { Raid } from '../core/raid.js';
 import { Sim } from '../core/sim.js';
 import { EventID } from '../core/typed_event.js';
@@ -67,6 +67,44 @@ export const playerPresets: Array<RaidSimPreset<any>> = naturalSpecOrder
 
 export const implementedSpecs: Array<Spec> = [...new Set(playerPresets.map(preset => preset.spec))];
 
+// The community builds are the talent presets named with their point split, the same ones
+// the landing page links to under each class and the sim page's own dropdown lists.
+const communityBuildRegex = /\d+\/\d+\/\d+$/;
+
+// A raid slot is a build, not a spec. A spec's community builds differ from each other in
+// exactly the thing Forever changed, its talents, so offering only the spec's raid preset
+// hides most of what there is to simulate. Each build sits on its spec's raid preset -
+// gear, consumes, race, rotation - with the talents and the name swapped, so two builds of
+// one spec differ by talents alone. Specs shipping one raid preset per tree (hunter, rogue)
+// hand a build the preset for its own main tree. A launched spec with no community build
+// keeps its raid preset as it is, named with its point split like the others, so nothing
+// the sim can run drops out.
+export type RaidBuild = {
+	preset: RaidSimPreset<any>;
+	name: string;
+	talentsString: string;
+};
+
+// One list, so the raid picker and the damage table cannot drift apart: both call this.
+export const communityBuilds = (): Array<RaidBuild> =>
+	implementedSpecs.flatMap(spec => {
+		const config = getSpecConfig(spec) as IndividualSimUIConfig<any>;
+		const raidPresets = config.raidSimPresets;
+		const builds = config.presets.talents
+			.filter(talents => communityBuildRegex.test(talents.name))
+			.map(talents => {
+				const talentsString = talents.data.talentsString;
+				const preset =
+					raidPresets.find(raidPreset => getTalentTree(raidPreset.talents.talentsString) == getTalentTree(talentsString)) || raidPresets[0];
+				return { preset, name: talents.name, talentsString };
+			});
+		if (builds.length > 0) {
+			return builds;
+		}
+		const talentsString = raidPresets[0].talents.talentsString;
+		return [{ preset: raidPresets[0], name: `${raidPresets[0].defaultName} ${getTalentTreePoints(talentsString).join('/')}`, talentsString }];
+	});
+
 // Every preset's gear is keyed by the phase it was authored for, and most only carry
 // one. Asking for a phase a preset has no entry for used to hand lookupEquipmentSpec an
 // undefined spec, which throws inside the promise and leaves the player naked - the raid
@@ -83,14 +121,14 @@ function gearForPhase(byPhase: Record<number, EquipmentSpec>, phase: number): Eq
 
 // Builds the player the raid picker drops into a slot. Anything that fills a raid from
 // presets goes through here, so every page gets the same build for a given spec.
-export function newPlayerFromPreset(eventID: EventID, sim: Sim, preset: RaidSimPreset<any>): Player<any> {
+export function newPlayerFromPreset(eventID: EventID, sim: Sim, preset: RaidSimPreset<any>, build?: RaidBuild): Player<any> {
 	const newPlayer = new Player(preset.spec, sim);
 	newPlayer.applySharedDefaults(eventID);
 	newPlayer.setRace(eventID, preset.defaultFactionRaces[sim.getFaction()]);
-	newPlayer.setTalentsString(eventID, preset.talents.talentsString);
+	newPlayer.setTalentsString(eventID, build?.talentsString ?? preset.talents.talentsString);
 	newPlayer.setSpecOptions(eventID, preset.specOptions);
 	newPlayer.setConsumes(eventID, preset.consumes);
-	newPlayer.setName(eventID, preset.defaultName);
+	newPlayer.setName(eventID, build?.name ?? preset.defaultName);
 	newPlayer.setProfession1(eventID, preset.otherDefaults?.profession1 || Profession.Engineering);
 	newPlayer.setProfession2(eventID, preset.otherDefaults?.profession2 || Profession.Enchanting);
 	newPlayer.setDistanceFromTarget(eventID, preset.otherDefaults?.distanceFromTarget || 0);
