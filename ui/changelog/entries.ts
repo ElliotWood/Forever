@@ -188,6 +188,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Warlock talents stop scaling past the top of their scale',
+				prs: [137],
+				changed:
+					"The warlock carried ten of #126's per-rank stamps and the two worst divergences were not among them. Shadow and Flame read its 20% chance not to consume Immolate per point, so at 5/5 Conflagrate never consumed Immolate, and Decimation cut Soul Fire's minute cooldown by 45% per point, so 2/2 left six seconds. Both read flat in the tree and are flat now. The other way round, the per-rank pass had scaled slots that are not magnitudes - Improved Drains' execute threshold, Decimation's window, Demonic Brand's duration, stacks and damage, Improved Shadow Bolt's debuff length and Aftermath's Daze, which reached a certain Daze and a 250% slow at 5/5 - and those go back to rank 1's value, which is what the sim has always applied. Only rank 1 of every warlock talent was ever displayed, so the beta checklist keeps all of them and grows from four entries to twelve.",
+				effect: 'Shadow and Flame 671.5 to 670.2 DPS on the ranked build; no preset rotation casts Soul Fire, so Decimation does not move the other three. Four of the ten stamped talents turn out to have no implementation in the sim at all.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Tests that pin the trees together',
 				prs: [68],
 				changed:
