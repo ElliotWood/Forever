@@ -220,8 +220,10 @@ func (druid *Druid) registerCatFormSpell() {
 // Forever reworks powershifting: instead of a chance at a flat 40 energy, shifting
 // into Cat Form carries over a share of the energy you left the form with, plus a
 // small amount for every second spent out of form.
-// TODO: Beta will show whether the carryover share and the out of form regen both
-// scale per rank, linear scaling is assumed here.
+// TODO: Only rank 1 was seen and the demo repeated it at every rank, which would leave four
+// of the five points doing nothing. The carryover share, the out of form regen and its cap are
+// all assumed to scale linearly, and the tree carries that assumption rather than an observation.
+// Beta will confirm.
 func (druid *Druid) furorShiftEnergy(sim *core.Simulation) float64 {
 	if druid.Talents.Furor == 0 {
 		return 0
@@ -337,6 +339,8 @@ func (druid *Druid) registerBearFormSpell() {
 	rageMetrics := druid.NewRageMetrics(actionID)
 
 	// The Bear half of Furor is the Classic one, a chance at 10 Rage on the shift.
+	// TODO: Only rank 1's 20% was seen. Classic scaled the chance 20% per point for a flat 10 Rage,
+	// which is what the tree now reads. Beta will confirm Forever kept it.
 	furorProcChance := 0.2 * float64(druid.Talents.Furor)
 
 	druid.BearForm = druid.RegisterSpell(Any, core.SpellConfig{

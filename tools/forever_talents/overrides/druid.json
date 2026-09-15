@@ -109,7 +109,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value; per-rank values taken from the community talent calculator, which is rebuilt from the same BlizzCon footage and corroborates the assumption rather than confirming it. Audited 2026-09-15 against sim/druid: the sim already takes 0.1 sec and 10% of the mana cost off Wrath per point, so the two agree.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -150,7 +150,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value; per-rank values taken from the community talent calculator, which is rebuilt from the same BlizzCon footage and corroborates the assumption rather than confirming it. Audited 2026-09-15 against sim/druid: the sim already applies 1% per point over a flat 10 sec window, so the two agree.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -173,13 +173,13 @@
           ],
           [
             2,
-            0.5,
+            0.51,
             4,
             15
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value; per-rank values taken from the community talent calculator, which is rebuilt from the same BlizzCon footage and corroborates the assumption rather than confirming it. Audited 2026-09-15 against sim/druid: the calculator read rank 3 as 0.5 sec while keeping rank 2 at twice rank 1, so the top rank was rounded rather than measured; the table now carries the 0.51 sec that three ranks of 0.17 make and that the sim applies.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -215,7 +215,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value; per-rank values taken from the community talent calculator, which is rebuilt from the same BlizzCon footage and corroborates the assumption rather than confirming it. Audited 2026-09-15 against sim/druid: the dodge half already scaled with points but the Rage proc was a flat 20% at every rank, so a 5/5 druid was shown 100% and got 20%; the sim now scales the proc to match, which makes the Rage certain at 5/5.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -246,7 +246,74 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value; per-rank values taken from the community talent calculator, which is rebuilt from the same BlizzCon footage and corroborates the assumption rather than confirming it. Audited 2026-09-15 against sim/druid: the sim already applies 1% damage per point, so the two agree.",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "primal-fury",
+      "tree": "feral combat",
+      "set": {
+        "ranks": [
+          [
+            50,
+            5,
+            50
+          ],
+          [
+            100,
+            5,
+            100
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1 and rank 2 was a copy of it, which left both halves of a two point talent inert past the first point. Forever folds Classic's Blood Frenzy into Primal Fury and both Classic talents went from a 50% chance to a certainty at rank 2, which is what the sim applies, so the table is brought up to match. Only rank 1 is observed; beta will confirm.",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "furor",
+      "tree": "restoration",
+      "set": {
+        "ranks": [
+          [
+            20,
+            10,
+            20,
+            2,
+            20
+          ],
+          [
+            40,
+            10,
+            40,
+            4,
+            40
+          ],
+          [
+            60,
+            10,
+            60,
+            6,
+            60
+          ],
+          [
+            80,
+            10,
+            80,
+            8,
+            80
+          ],
+          [
+            100,
+            10,
+            100,
+            10,
+            100
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1 and every rank repeated it, which would make points 2-5 inert in the talent the powershifting rotation is built on. Classic's Furor scales its shift proc 20% per point, and the sim scales the chance, the Energy carryover, the out of form regen and its cap the same way, so the table is brought up to what the sim applies. The 10 Rage of the Bear shift is flat in Classic and stays flat here. Only rank 1 is observed; beta will confirm.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     }

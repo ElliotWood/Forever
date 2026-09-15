@@ -13,23 +13,25 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 5. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
 6. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
 
-## Druid (15)
+## Druid (17)
 
 - `sim/druid/berserk.go:16` — The tooltip didn't show a cooldown, the 3 minutes are taken from the Classic Berserk.
 - `sim/druid/demoralizing_roar.go:24` — assumed baseline, beta will confirm - Feral Aggression is gone from the tree, so the attack power reduction is taken at full strength like the warrior's Demoralizing Shout.
 - `sim/druid/druid.go:122` — Improved Mark of the Wild is gone from the tree and is assumed to be baseline, beta will confirm.
 - `sim/druid/faerie_fire.go:26` — The feral version's talent is gone from the tree and is assumed to be baseline, beta will confirm.
-- `sim/druid/forms.go:223` — Beta will show whether the carryover share and the out of form regen both scale per rank, linear scaling is assumed here.
+- `sim/druid/forms.go:223` — Only rank 1 of Furor was seen and the demo repeated it at every rank, which would leave four of the five points doing nothing. The Energy carryover, the out of form regen and its cap are all assumed to scale linearly, and the tree carries that assumption rather than an observation.
+- `sim/druid/forms.go:342` — Only rank 1 of Furor's Bear shift was seen, a 20% chance at 10 Rage. Classic scaled the chance 20% per point for a flat 10 Rage and the tree now reads that.
 - `sim/druid/lacerate.go:16` — assumed from Season of Discovery, beta will confirm the cost, the damage and the threat. Shredding Attacks names Lacerate, so the bear has it, but no tooltip for it has been seen.
 - `sim/druid/mangle.go:17` — Only the tooltip was seen, the Energy cost is taken from the Classic Mangle (Cat).
 - `sim/druid/mangle.go:71` — Only the tooltip was seen, the Rage cost, the 6 sec cooldown and the threat are taken from the Classic Mangle (Bear).
-- `sim/druid/talents.go:175` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:301` — Only rank 1 was seen, the cast time reduction is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:448` — Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:451` — Every rank reads the same 20% chance for 5 Rage, so the proc doesn't grow past rank 1. Beta will confirm.
-- `sim/druid/talents.go:514` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:175` — Only rank 1 of Balance of Nature was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:301` — Only rank 1 of Eclipse was seen at 0.17 sec and the reduction is assumed to scale linearly, so rank 3 is 0.51 sec rather than the round half second the community talent calculator rounded it to.
+- `sim/druid/talents.go:404` — Only rank 1 of Primal Fury was seen at 50%. Classic's Primal Fury and the Blood Frenzy folded into it both went from half the time to every time at rank 2, which is how both halves are read here.
+- `sim/druid/talents.go:453` — Only rank 1 of Natural Reaction was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:456` — Only rank 1 of Natural Reaction's Rage proc was seen at 20%, the tree's 20/40/60/80/100 comes from the community talent calculator rather than from a tooltip, and at 5/5 it makes the Rage certain on every dodge.
+- `sim/druid/talents.go:522` — Only rank 1 of Naturalist was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
 - `sim/druid/tigers_fury.go:45` — Tiger's Fury is given Wrath's shape (no Energy cost, 30 sec cooldown) because King of the Jungle is Wrath's talent word for word and Classic's costless-to-spam Tiger's Fury would let it mint Energy; the +40 damage is Classic's rank 4. Beta will confirm the cooldown, the cost and the damage bonus.
-- `sim/druid/wrath.go:53` — Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
+- `sim/druid/wrath.go:53` — Only rank 1 of Improved Wrath was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
 
 ## Hunter (9)
 
@@ -49,29 +51,32 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/mage/talents.go:655` — both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
 - `sim/mage/talents.go:669` — a cast already in progress when a chill lands is held out of Fingers of Frost, so it neither takes the Shatter crit nor spends the charge. Beta will confirm which cast the charge belongs to.
 
-## Paladin (21)
+## Paladin (22)
 
 - `sim/paladin/consecration.go:10` — assumed baseline, beta will confirm - Consecration is no longer a talent and the Forever tree builds on top of it through Consecrated Ground and Holy Conduit.
 - `sim/paladin/hammer_of_wrath.go:29` — Only rank 1 of Instrument of Law was seen at 0.5 sec, the full second the tree reads at rank 2 comes from the community talent calculator rather than from a tooltip.
 - `sim/paladin/holy_shield.go:18` — Only rank 1 was seen at 110, up from Classic's 65. The other ranks are scaled by the same ratio until the beta shows them.
 - `sim/paladin/holy_strike.go:15` — assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat damage is taken from the published tooltip rather than from the game. Forever's own spell id for Holy Strike is 17143, which the item database does not carry, so the sim keeps Classic's unused 13953.
 - `sim/paladin/holy_strike.go:26` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
-- `sim/paladin/holy_strike.go:38` — Every rank of Iron Creed reads the same 5% threat, the rest are assumed to scale linearly.
-- `sim/paladin/holy_strike.go:91` — Every rank of Iron Creed reads the same 2% for 6 sec, the rest are assumed to scale linearly.
+- `sim/paladin/holy_strike.go:38` — Only rank 1 of Iron Creed's threat was seen at 5%, the 5% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/holy_strike.go:91` — Only rank 1 of Iron Creed's damage reduction was seen at 2%, the 2% per rank the tree reads comes from the community talent calculator rather than from a tooltip. The 6 seconds is flat at every rank.
 - `sim/paladin/sotc.go:34` — assumed baseline, beta will confirm - Improved Seal of the Crusader is gone from the tree and the raid reads the improved Judgement of the Crusader through Debuffs either way.
 - `sim/paladin/swift_judgement.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it is given a minute, long enough that it buys one extra Judgement rather than a second rotation.
 - `sim/paladin/talents.go:19` — Only rank 1 of Divine Precision was seen, ranks 2 and 3 are extrapolated from it.
-- `sim/paladin/talents.go:34` — Only rank 1 of Sacred Duty was seen, the 2% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
-- `sim/paladin/talents.go:38` — Only rank 1 of Shield Specialization's absorb was seen, the 10% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
-- `sim/paladin/talents.go:44` — Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are a large chunk of a Forever paladin's spell power.
-- `sim/paladin/talents.go:86` — Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing.
-- `sim/paladin/talents.go:167` — Only rank 1's 33% chance was seen, the tree's 33/66/100 comes from the community talent calculator rather than from a tooltip. The 6% of maximum mana does not scale.
-- `sim/paladin/talents.go:228` — Every rank reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing.
-- `sim/paladin/talents.go:261` — The self buff reads 1% at every rank. The 42 attack power the target loses is not modelled, nothing in the sim reads an enemy's attack power.
-- `sim/paladin/talents.go:298` — The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration, which is not modelled here - everything standing in it gets the bonus.
-- `sim/paladin/talents.go:334` — Only rank 1's 10% was seen, the tree's second rank comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/talents.go:33` — Only rank 1 of Holy Power was seen, ranks 2 to 5 are extrapolated from it. The talent is split across two files: every spell gets 1% crit per point here and Holy Shock picks up another 2% per point in `holy_shock.go`, which together are the 3% per point the tree reads for it. Confirm both halves, and keep them in step if either moves.
+- `sim/paladin/talents.go:37` — Only rank 1 of Sacred Duty was seen, the 2% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/talents.go:41` — Only rank 1 of Shield Specialization's absorb was seen, the 10% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/talents.go:47` — Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are a large chunk of a Forever paladin's spell power.
+- `sim/paladin/talents.go:89` — Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing. The tree says the same thing, so the picker and the sim agree; neither has a source, because the generator could not line Classic's Redoubt up against Forever's wording and copied rank 1 into ranks 2 to 5.
+- `sim/paladin/talents.go:170` — Only rank 1's 33% chance was seen, the tree's 33/66/100 comes from the community talent calculator rather than from a tooltip. The 6% of maximum mana does not scale.
+- `sim/paladin/talents.go:231` — Every rank of Vengeance reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing. The tree says the same thing; as with Redoubt the generator copied rank 1 into the later ranks rather than extrapolating.
+- `sim/paladin/talents.go:264` — The Vindication self buff reads 1% at every rank, and so does the tree, again from a copied rank 1. The 42 attack power the target loses is not modelled, nothing in the sim reads an enemy's attack power.
+- `sim/paladin/talents.go:301` — The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration, which is not modelled here - everything standing in it gets the bonus.
+- `sim/paladin/talents.go:337` — Only rank 1's 10% was seen, the tree's second rank comes from the community talent calculator rather than from a tooltip.
 - `sim/paladin/templars_bulwark.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it shares the 5 minutes of the two Forbearance abilities Sacred Duty shortens alongside it.
 - `sim/paladin/templars_bulwark.go:36` — Only rank 1 of Sacred Duty was seen at 30 sec, the tree's second rank comes from the community talent calculator rather than from a tooltip.
+
+Infusion of Light is not on that list because there is nothing to check against: the sim has no Holy Light for it to shorten, so it is one of the talents below that the sim never reads. Its rank 2 half second still came from the community talent calculator, so the beta pass should read the tooltip for it rather than treating the tree as settled.
 
 ## Priest (11)
 
