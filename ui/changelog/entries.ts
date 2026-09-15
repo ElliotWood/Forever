@@ -312,6 +312,13 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Talents stop borrowing each other\u2019s tooltips',
+				prs: [122],
+				changed:
+					"Reported in the Forever Discord: the warlock tree showed Shadow Mastery twice. Where a Forever talent had no Classic spell ids of its own, the tree generator gave it the ids of whichever Classic talent the dataset had matched it to by description, and the sim then let the database name, draw and link that other talent instead. Forty-two talents across all nine classes were affected: Malevolence read as Shadow Mastery, the druid's Genesis read as Fire Power, Spirit Weapons read as Parry. Each now carries its own name, description and per-rank numbers from the datamined set, and the generator only trusts a spell id when the database agrees it is the same talent.",
+				effect: 'Every talent names itself. No talent string, position or simulated number changes.',
+			},
+			{
 				title: 'Season of Discovery leftovers removed',
 				prs: [82, 83, 67],
 				changed:
