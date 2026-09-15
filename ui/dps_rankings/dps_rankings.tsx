@@ -283,7 +283,15 @@ export class DpsRankings extends Component {
 			this.sim.setIterations(eventID, DEFAULT_ITERATIONS);
 
 			this.sim.raid.setBuffs(eventID, strongestOf(specDefaults.map(defaults => defaults.raidBuffs)));
-			this.sim.raid.setDebuffs(eventID, strongestOf(specDefaults.map(defaults => defaults.debuffs)));
+			// Every spec's defaults describe the curses somebody else is keeping up, and none of
+			// them asks for Curse of Shadow, so the union had Curse of Elements and not its twin.
+			// This raid has four warlocks in it, so both curses are up.
+			const debuffs = strongestOf(specDefaults.map(defaults => defaults.debuffs));
+			if (this.builds.some(build => specToClass[build.preset.spec] == Class.ClassWarlock)) {
+				debuffs.curseOfElements = true;
+				debuffs.curseOfShadow = true;
+			}
+			this.sim.raid.setDebuffs(eventID, debuffs);
 			const partyBuffs = strongestOf(specDefaults.map(defaults => defaults.partyBuffs));
 			this.sim.raid.getParties().forEach(party => party.setBuffs(eventID, partyBuffs));
 
