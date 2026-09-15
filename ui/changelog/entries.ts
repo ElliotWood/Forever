@@ -242,6 +242,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Warlock: Decimation stops boosting everything',
+				prs: [115],
+				changed:
+					"Decimation multiplied the warlock's whole damage output below 35% health, where the tooltip gives the bonus to the Shadow Bolt and Searing Pain that trigger it, and Demonic Knowledge paid its spell damage out with no demon summoned. The four rotations also start a dot refresh while the dot is still ticking instead of after it falls off.",
+				effect: 'Demonic Pact -0.5%, Deep Affliction +0.7%, DS/Ruin Pandemic +0.7%, Shadow and Flame +0.6% on a two minute fight; Immolate and Corruption uptime up by a fifth and a twentieth.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Warrior: the off-hand misses again, and arms strikes',
 				prs: [108],
 				changed:

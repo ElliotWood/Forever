@@ -353,22 +353,33 @@ func (warlock *Warlock) applyDecimation() {
 		return
 	}
 
+	// TODO: Both ranks of Decimation read the same numbers, so the per point scaling is a guess
 	points := float64(warlock.Talents.Decimation)
-	damageMultiplier := 1 + 0.03*points
+	damageBonus := 0.03 * points
 	castTimeReduction := 0.2 * points
+
+	// The damage half of the tooltip is about the two spells that trigger it, not about
+	// everything the warlock casts; only the Soul Fire half carries the ten second window.
+	decimationSpells := func() []*core.Spell {
+		return append(append([]*core.Spell{}, warlock.ShadowBolt...), warlock.SearingPain...)
+	}
 
 	warlock.DecimationAura = warlock.RegisterAura(core.Aura{
 		Label:    "Decimation",
 		ActionID: core.ActionID{SpellID: 63165},
 		Duration: time.Second * 10,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			warlock.PseudoStats.DamageDealtMultiplier *= damageMultiplier
+			for _, spell := range decimationSpells() {
+				spell.DamageMultiplierAdditive += damageBonus
+			}
 			for _, spell := range warlock.SoulFire {
 				spell.CastTimeMultiplier -= castTimeReduction
 			}
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warlock.PseudoStats.DamageDealtMultiplier /= damageMultiplier
+			for _, spell := range decimationSpells() {
+				spell.DamageMultiplierAdditive -= damageBonus
+			}
 			for _, spell := range warlock.SoulFire {
 				spell.CastTimeMultiplier += castTimeReduction
 			}
@@ -448,8 +459,31 @@ func (warlock *Warlock) applyDemonicKnowledge() {
 		return
 	}
 
+	// The tooltip only pays the bonus out while a demon is active, so it rides on the pet
+	// rather than sitting on the character sheet.
 	// TODO: Beta will show whether the 33% of level is per rank or the full value
-	warlock.AddStat(stats.SpellPower, 0.33*float64(warlock.Talents.DemonicKnowledge)*float64(warlock.Level))
+	bonus := 0.33 * float64(warlock.Talents.DemonicKnowledge) * float64(warlock.Level)
+
+	demonicKnowledgeAura := warlock.RegisterAura(core.Aura{
+		Label:    "Demonic Knowledge",
+		ActionID: core.ActionID{SpellID: 35696},
+		Duration: core.NeverExpires,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.AddStatDynamic(sim, stats.SpellPower, bonus)
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.AddStatDynamic(sim, stats.SpellPower, -bonus)
+		},
+	})
+
+	for _, pet := range warlock.BasePets {
+		pet.ApplyOnPetEnable(func(sim *core.Simulation) {
+			demonicKnowledgeAura.Activate(sim)
+		})
+		pet.ApplyOnPetDisable(func(sim *core.Simulation, isSacrifice bool) {
+			demonicKnowledgeAura.Deactivate(sim)
+		})
+	}
 }
 
 func (warlock *Warlock) applyMasterDemonologist() {
