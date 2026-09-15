@@ -16,7 +16,52 @@
           19555,
           19556
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Deadly Aspects",
+        "icon": "spell_nature_ravenform",
+        "description": "While Aspect of the Hawk is active, all normal ranged attacks have a {0}% chance of increasing ranged attack speed by {1}% for {2} sec. While Aspect of the Beast is active, all melee auto attacks have a {3}% chance of increasing melee attack speed by {4}% for {5} sec.",
+        "ranks": [
+          [
+            2,
+            30,
+            12,
+            2,
+            30,
+            12
+          ],
+          [
+            2,
+            30,
+            12,
+            2,
+            30,
+            12
+          ],
+          [
+            2,
+            30,
+            12,
+            2,
+            30,
+            12
+          ],
+          [
+            2,
+            30,
+            12,
+            2,
+            30,
+            12
+          ],
+          [
+            2,
+            30,
+            12,
+            2,
+            30,
+            12
+          ]
+        ]
       },
       {
         "fieldName": "enduranceTraining",
@@ -289,7 +334,27 @@
           30905,
           30906
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Careful Aim",
+        "icon": "ability_hunter_zenarchery",
+        "description": "Increases your Attack Power by {0}% of your Intellect.",
+        "ranks": [
+          [
+            20
+          ],
+          [
+            40
+          ],
+          [
+            60
+          ],
+          [
+            80
+          ],
+          [
+            100
+          ]
+        ]
       },
       {
         "fieldName": "improvedStings",
@@ -302,7 +367,27 @@
           19465,
           19466
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Improved Stings",
+        "icon": "ability_hunter_quickshot",
+        "description": "Increased the damage of your Serpent Sting ability by {0}%, reduces the cooldown of your Viper Sting ability by {1} sec, and increases the duration of your Scorpid Sting ability by {2} sec.",
+        "ranks": [
+          [
+            6,
+            2,
+            15
+          ],
+          [
+            6,
+            2,
+            15
+          ],
+          [
+            6,
+            2,
+            15
+          ]
+        ]
       },
       {
         "fieldName": "efficiency",
@@ -332,7 +417,27 @@
           19430,
           19431
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Lethal Attacks",
+        "icon": "ability_searingarrow",
+        "description": "Increases your critical strike chance with all attacks by {0}%.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ]
       },
       {
         "fieldName": "rapidKilling",
@@ -537,7 +642,27 @@
           19152,
           19153
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Improved Tracking",
+        "icon": "inv_misc_head_dragon_black",
+        "description": "While tracking Beasts, Demons, Dragonkin, Elementals, Giants, Humanoids, or Undead, all damage you deal to the tracked creature type is increased by {0}%.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ]
       },
       {
         "fieldName": "deflection",
@@ -657,7 +782,18 @@
           19376,
           19377
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Survival Tactics",
+        "icon": "ability_ensnare",
+        "description": "Increases your chance to hit with your Trap and Feign Death abilities by {0}%.",
+        "ranks": [
+          [
+            5
+          ],
+          [
+            10
+          ]
+        ]
       },
       {
         "fieldName": "predatorsEdge",

@@ -421,7 +421,8 @@ func (priest *Priest) registerShadowform() {
 			}
 		},
 		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-			if spell.SpellSchool.Matches(core.SpellSchoolHoly) {
+			// The form only blocks healing; Smite and Holy Fire stay castable inside it.
+			if spell.SpellSchool.Matches(core.SpellSchoolHoly) && spell.Flags.Matches(core.SpellFlagHelpful) {
 				aura.Deactivate(sim)
 			}
 		},

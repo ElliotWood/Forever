@@ -91,7 +91,11 @@ func (priest *Priest) Initialize() {
 	priest.registerMindBlast()
 	priest.registerMindFlay()
 	priest.registerShadowWordPainSpell()
-	if priest.GetCharacter().Race == proto.Race_RaceUndead {
+	// Devouring Plague is an Undead racial in Classic, but Forever gives every priest
+	// Devouring Contagion in the Shadow tree, a talent that does nothing at all unless the
+	// spell is castable, so it is treated as baseline here.
+	// TODO: beta will confirm that the spell is no longer race locked.
+	if priest.Env.IsForever() || priest.GetCharacter().Race == proto.Race_RaceUndead {
 		priest.registerDevouringPlagueSpell()
 	}
 	if priest.GetCharacter().Race == proto.Race_RaceNightElf {

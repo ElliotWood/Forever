@@ -32,7 +32,7 @@ export class IndividualPawnEPExporter<SpecType extends Spec> extends IndividualE
 		});
 
 		return (
-			`( Pawn: v1: "${specNames[player.spec]} WoWSims Weights": Class=${classNames.get(player.getClass())},` +
+			`( Pawn: v1: "${specNames[player.spec]} Forever Sim Weights": Class=${classNames.get(player.getClass())},` +
 			Object.keys(namesToWeights)
 				.map(statName => `${statName}=${namesToWeights[statName].toFixed(3)}`)
 				.join(',') +

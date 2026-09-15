@@ -26,6 +26,7 @@ import BackstabSweatyAPL from './apls/combat_backstab_sweaty.apl.json';
 import SinisterStrikeAPL from './apls/combat_sinister_strike.apl.json';
 import SinisterStrikeSweatyAPL from './apls/combat_sinister_strike_sweaty.apl.json';
 import SinisterStrikeIEAAPL from './apls/combat_sinister_strike_iea.apl.json';
+import HemorrhageAPL from './apls/forever_hemorrhage.apl.json';
 import MutilateAPL from './apls/forever_mutilate.apl.json';
 import BlankGear from './gear_sets/blank.gear.json';
 import BackstabGearLaunch from './gear_sets/backstab_launch.gear.json';
@@ -86,6 +87,7 @@ export const ROTATION_PRESET_BACKSTAB_SWEATY = PresetUtils.makePresetAPLRotation
 export const ROTATION_PRESET_SINISTER_STRIKE_SWEATY = PresetUtils.makePresetAPLRotation('Sinister Strike (Sweaty)', SinisterStrikeSweatyAPL, {});
 export const ROTATION_PRESET_SINISTER_STRIKE_IEA = PresetUtils.makePresetAPLRotation('Improved Expose Armor (SS)', SinisterStrikeIEAAPL, {});
 export const ROTATION_PRESET_MUTILATE = PresetUtils.makePresetAPLRotation('Mutilate', MutilateAPL, {});
+export const ROTATION_PRESET_HEMORRHAGE = PresetUtils.makePresetAPLRotation('Hemorrhage', HemorrhageAPL, {});
 
 export const APLPresets = {
 	[ClassicPhase.Phase1]: [
@@ -95,6 +97,7 @@ export const APLPresets = {
 		ROTATION_PRESET_SINISTER_STRIKE_SWEATY,
 		ROTATION_PRESET_SINISTER_STRIKE_IEA,
 		ROTATION_PRESET_MUTILATE,
+		ROTATION_PRESET_HEMORRHAGE,
 	],
 	[ClassicPhase.Phase2]: [
 		ROTATION_PRESET_BACKSTAB,
@@ -103,6 +106,7 @@ export const APLPresets = {
 		ROTATION_PRESET_SINISTER_STRIKE_SWEATY,
 		ROTATION_PRESET_SINISTER_STRIKE_IEA,
 		ROTATION_PRESET_MUTILATE,
+		ROTATION_PRESET_HEMORRHAGE,
 	],
 };
 

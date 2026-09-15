@@ -43,7 +43,33 @@
           16769,
           16770
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Improved Channeling",
+        "icon": "spell_nature_starfall",
+        "description": "Gives you a {0}% chance to avoid interruption caused by damage while channeling Arcane Missiles and a {1}% chance while casting Arcane Blast.",
+        "ranks": [
+          [
+            20,
+            14
+          ],
+          [
+            40,
+            28
+          ],
+          [
+            60,
+            42
+          ],
+          [
+            80,
+            56
+          ],
+          [
+            100,
+            70
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "arcaneSubtlety",
@@ -108,7 +134,19 @@
           11100,
           12353
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Arcane Geometry",
+        "icon": "spell_fire_flare",
+        "description": "Increases the range of your Arcane spells by {0} yards.",
+        "ranks": [
+          [
+            3
+          ],
+          [
+            6
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "arcaneImpact",
@@ -121,7 +159,21 @@
           12467,
           12469
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Arcane Impact",
+        "icon": "spell_nature_wispsplode",
+        "description": "Increases the critical strike chance of your Arcane spells by {0}%.",
+        "ranks": [
+          [
+            2
+          ],
+          [
+            4
+          ],
+          [
+            6
+          ]
+        ]
       },
       {
         "fieldName": "arcaneBlast",
@@ -157,7 +209,21 @@
           11252,
           12605
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Arcane Shielding",
+        "icon": "spell_shadow_detectlesserinvisibility",
+        "description": "Decreases the Mana lost per point of damage taken when your Mana Shield spell is active by {0}% and increases the resistances granted by your Mage Armor spell by {1}%.",
+        "ranks": [
+          [
+            17,
+            25
+          ],
+          [
+            34,
+            50
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "improvedCounterspell",
@@ -281,7 +347,22 @@
           11078,
           11080
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Wake of Fire",
+        "icon": "spell_fire_fireball",
+        "description": "Reduces the cooldown of your Fire Blast spell by {0} sec. Killing a non-trivial target increases the critical strike chance of your next Fire Blast cast within {1} sec by {2}%.",
+        "ranks": [
+          [
+            1,
+            20,
+            25
+          ],
+          [
+            1,
+            20,
+            25
+          ]
+        ]
       },
       {
         "fieldName": "incineration",
@@ -293,7 +374,21 @@
           18459,
           18460
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Incineration",
+        "icon": "spell_fire_flameshock",
+        "description": "Increases the critical strike chance of your Fire Blast, Ice Lance, Arcane Blast, and Scorch spells by {0}%.",
+        "ranks": [
+          [
+            2
+          ],
+          [
+            4
+          ],
+          [
+            6
+          ]
+        ]
       },
       {
         "fieldName": "improvedFireball",
@@ -335,7 +430,19 @@
           11078,
           11080
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Flame Throwing",
+        "icon": "spell_fire_flare",
+        "description": "Increases the range of your Fire spells by {0} yards.",
+        "ranks": [
+          [
+            3
+          ],
+          [
+            6
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "impact",

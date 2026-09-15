@@ -83,9 +83,34 @@ func TestAssassinationMutilate(t *testing.T) {
 	}))
 }
 
+func TestSubtletyHemorrhage(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class:      proto.Class_ClassRogue,
+			Race:       proto.Race_RaceHuman,
+			OtherRaces: []proto.Race{proto.Race_RaceOrc},
+
+			Talents:     SubtletyHemorrhageTalents,
+			GearSet:     core.GetGearSet("../../../ui/rogue/gear_sets", "combat_backstab_prebis"),
+			Rotation:    core.GetAplRotation("../../../ui/rogue/apls", "forever_hemorrhage"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    Phase1PoisonConsumes,
+			Phase:       1,
+			SpecOptions: core.SpecOptionsCombo{Label: "Poisons", SpecOptions: DefaultRogue},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatAttackPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		},
+	}))
+}
+
 var CombatSwordsTalents = "00530310501-32003311201515231"
 var CombatDaggersTalents = "005302005-30230320201515231-102"
 var AssassinationMutilateTalents = "00530310551021051-302303202004"
+var SubtletyHemorrhageTalents = "125320101--5320003310013211551"
 
 var DefaultRogue = &proto.Player_Rogue{
 	Rogue: &proto.Rogue{

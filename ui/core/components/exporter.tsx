@@ -42,7 +42,7 @@ export abstract class Exporter extends BaseModal {
 			const downloadButton = downloadBtnRef.value!;
 			downloadButton.addEventListener('click', _event => {
 				const data = this.textElem.textContent!;
-				downloadString(data, 'wowsims.json');
+				downloadString(data, 'forever-sim.json');
 			});
 		}
 	}

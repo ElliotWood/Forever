@@ -57,10 +57,41 @@
 			display: flex;
 			flex-direction: column;
 
-			.wowsims-info {
+			.site-info {
 				@extend .fs-4;
 				width: 75%;
 				margin: 0;
+			}
+
+			// A qualifier on the paragraph above it: smaller and quieter than the welcome,
+			// but on the page rather than buried a click away.
+			.site-info-limits {
+				width: 75%;
+				margin: var(--spacer-2) 0 0;
+				padding-left: var(--spacer-4);
+				font-size: 1rem;
+				color: var(--bs-gray-400);
+
+				li + li {
+					margin-top: var(--spacer-1);
+				}
+
+				a {
+					color: var(--bs-gray-200);
+					text-decoration: underline;
+				}
+			}
+
+			.site-info-caveat {
+				width: 75%;
+				margin: var(--spacer-3) 0 0;
+				font-size: 1rem;
+				color: var(--bs-gray-400);
+
+				a {
+					color: var(--bs-gray-200);
+					text-decoration: underline;
+				}
 			}
 		}
 
@@ -107,7 +138,9 @@
 	#homepage {
 		.homepage-content-container {
 			.info-container {
-				.wowsims-info {
+				.site-info,
+				.site-info-caveat,
+				.site-info-limits {
 					width: 100%;
 				}
 			}

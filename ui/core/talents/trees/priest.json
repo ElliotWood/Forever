@@ -67,7 +67,27 @@
           15355,
           15356
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "name": "Twin Disciplines",
+        "icon": "spell_nature_moonglow",
+        "description": "Increases the damage and healing of your instant cast spells by {0}%.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
+            5
+          ]
+        ]
       },
       {
         "fieldName": "silentResolve",
@@ -95,7 +115,21 @@
           16196,
           16198
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Holy Precision",
+        "icon": "spell_holy_divineillumination",
+        "description": "Increases your chance to hit with Holy spells by {0}%.",
+        "ranks": [
+          [
+            6
+          ],
+          [
+            12
+          ],
+          [
+            18
+          ]
+        ]
       },
       {
         "fieldName": "improvedPowerWordShield",
@@ -356,7 +390,22 @@
           16919,
           16920
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "notSimulated": true,
+        "name": "Twilight Focus",
+        "icon": "spell_nature_stranglevines",
+        "description": "Gives you a {0}% chance to avoid interruption caused by damage while casting any spell.",
+        "ranks": [
+          [
+            23
+          ],
+          [
+            46
+          ],
+          [
+            69
+          ]
+        ]
       },
       {
         "fieldName": "improvedRenew",
@@ -653,7 +702,8 @@
           15337,
           15338
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "notSimulated": true
       },
       {
         "fieldName": "shadowAffinity",

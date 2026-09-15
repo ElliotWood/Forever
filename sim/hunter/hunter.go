@@ -79,9 +79,8 @@ type Hunter struct {
 
 	pet *HunterPet
 
-	AmmoDPS                   float64
-	AmmoDamageBonus           float64
-	NormalizedAmmoDamageBonus float64
+	AmmoDPS         float64
+	AmmoDamageBonus float64
 
 	// Miscellaneous set bonuses that require extra logic inside of spells
 	AspectOfTheHawkAPMultiplier float64
@@ -228,7 +227,6 @@ func NewHunter(character *core.Character, options *proto.Player) *Hunter {
 			hunter.AmmoDPS = 20.5
 		}
 		hunter.AmmoDamageBonus = hunter.AmmoDPS * rangedWeapon.SwingSpeed
-		hunter.NormalizedAmmoDamageBonus = hunter.AmmoDPS * 2.8
 
 		// Quiver
 		switch hunter.Options.QuiverBonus {

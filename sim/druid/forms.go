@@ -231,7 +231,7 @@ func (druid *Druid) furorShiftEnergy(sim *core.Simulation) float64 {
 	carryOver := druid.lastCatFormEnergy * 0.2 * points
 	outOfForm := 0.0
 	if druid.lastCatFormExitAt > 0 {
-		outOfForm = min(20, 2*(sim.CurrentTime-druid.lastCatFormExitAt).Seconds())
+		outOfForm = min(20*points, 2*points*(sim.CurrentTime-druid.lastCatFormExitAt).Seconds())
 	}
 
 	return min(druid.MaxEnergy(), carryOver+outOfForm)
@@ -401,11 +401,11 @@ func (druid *Druid) manageCooldownsEnabled() {
 	}
 }
 
-// https://www.wowhead.com/classic/spell=24858/moonkin-form
-// - Moonfire costs 50% less mana and deals 50% more damage over time
-// - Sunfire costs 50% less mana and deals 50% more damage over time
-// - Your periodic damage spells can deal critical periodic damage (handled in individual dot snapshots)
-// - You gain (2 * Level) spell damage
+// Moonkin Form: 360% more armor from items, and 3% critical strike chance for the party,
+// which the raid buff carries. Periodic crits are the Forever rule for every class, not
+// something the form grants.
+const MoonkinFormArmorMultiplier = 4.6
+
 func (druid *Druid) registerMoonkinFormSpell() {
 	if !druid.Talents.MoonkinForm {
 		return
@@ -414,17 +414,20 @@ func (druid *Druid) registerMoonkinFormSpell() {
 	actionID := core.ActionID{SpellID: 24858}
 
 	druid.MoonkinFormAura = druid.RegisterAura(core.Aura{
-		Label:    "Moonkin Form",
-		ActionID: actionID,
-		Duration: core.NeverExpires,
+		Label:      "Moonkin Form",
+		ActionID:   actionID,
+		Duration:   core.NeverExpires,
+		BuildPhase: core.Ternary(druid.StartingForm.Matches(Moonkin), core.CharacterBuildPhaseBase, core.CharacterBuildPhaseNone),
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			if !druid.Env.MeasuringStats && druid.form != Humanoid {
 				druid.CancelShapeshift(sim)
 			}
 			druid.form = Moonkin
+			druid.ApplyDynamicEquipScaling(sim, stats.Armor, MoonkinFormArmorMultiplier)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
 			druid.form = Humanoid
+			druid.RemoveDynamicEquipScaling(sim, stats.Armor, MoonkinFormArmorMultiplier)
 		},
 	})
 

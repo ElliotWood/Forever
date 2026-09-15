@@ -10,11 +10,11 @@ import { MAX_PARTY_SIZE, Party } from '../../core/party.js';
 import { Player } from '../../core/player.js';
 import { Player as PlayerProto } from '../../core/proto/api.js';
 import { Class, Faction, Spec } from '../../core/proto/common.js';
-import { cssClassForClass, playerToSpec, specToClass } from '../../core/proto_utils/utils.js';
+import { classNames, cssClassForClass, playerToSpec, specToClass } from '../../core/proto_utils/utils.js';
 import { Raid } from '../../core/raid.js';
 import { EventID, TypedEvent } from '../../core/typed_event.js';
 import { formatDeltaTextElem, getEnumValues } from '../../core/utils.js';
-import { applyNewPlayerAssignments, newPlayerFromPreset, playerPresets, specSimFactories } from '../presets.js';
+import { applyNewPlayerAssignments, communityBuilds, newPlayerFromPreset, playerPresets, RaidBuild, specSimFactories } from '../presets.js';
 import { RaidSimUI } from './raid_sim_ui';
 
 const NEW_PLAYER = -1;
@@ -661,13 +661,15 @@ class NewPlayerPicker extends Component {
 		super(parent, 'new-player-picker-root');
 		this.raidPicker = raidPicker;
 
+		const builds = communityBuilds();
+
 		getEnumValues(Class).forEach(wowClass => {
 			if (wowClass == Class.ClassUnknown) {
 				return;
 			}
 
-			const matchingPresets = playerPresets.filter(preset => specToClass[preset.spec] == wowClass);
-			if (matchingPresets.length == 0) {
+			const matchingBuilds = builds.filter(build => specToClass[build.preset.spec] == wowClass);
+			if (matchingBuilds.length == 0) {
 				return;
 			}
 
@@ -675,19 +677,20 @@ class NewPlayerPicker extends Component {
 			classPresetsContainer.classList.add('class-presets-container', `bg-${cssClassForClass(wowClass as Class)}-dampened`);
 			this.rootElem.appendChild(classPresetsContainer);
 
-			matchingPresets.forEach(matchingPreset => {
-				const presetElemFragment = document.createElement('fragment');
-				presetElemFragment.innerHTML = `
+			matchingBuilds.forEach(matchingBuild => {
+				const matchingPreset = matchingBuild.preset;
+				// The tooltip names the build, because a class now offers several icons that
+				// differ only by talents. It names the class rather than the preset's own
+				// tooltip: one raid preset serves several builds, so the preset's spec label
+				// contradicts the build it is carrying ("Arcane Mage - Fire 0/35/16").
+				const presetElem = (
 					<a
 						href="javascript:void(0)"
-						role="button"
-						draggable="true"
-						data-tippy-content="${matchingPreset.tooltip}"
-					>
-						<img class="preset-picker-icon player-icon" src="${matchingPreset.iconUrl}"/>
+						draggable={true}
+						attributes={{ role: 'button', 'data-tippy-content': `${classNames[wowClass as Class]} - ${matchingBuild.name}` }}>
+						<img className="preset-picker-icon player-icon" src={matchingPreset.iconUrl} />
 					</a>
-				`;
-				const presetElem = presetElemFragment.children[0] as HTMLElement;
+				) as HTMLElement;
 				classPresetsContainer.appendChild(presetElem);
 
 				tippy(presetElem);
@@ -701,7 +704,7 @@ class NewPlayerPicker extends Component {
 						event.dataTransfer!.setData('text/plain', '');
 						event.dataTransfer!.dropEffect = 'copy';
 
-						this.raidPicker.setDragPlayer(this.makePlayer(eventID, matchingPreset), NEW_PLAYER, DragType.New);
+						this.raidPicker.setDragPlayer(this.makePlayer(eventID, matchingBuild), NEW_PLAYER, DragType.New);
 					});
 				};
 
@@ -717,14 +720,14 @@ class NewPlayerPicker extends Component {
 
 					const eventID = TypedEvent.nextEventID();
 					TypedEvent.freezeAllAndDo(() => {
-						emptyPicker.setPlayer(eventID, this.makePlayer(eventID, matchingPreset), DragType.New);
+						emptyPicker.setPlayer(eventID, this.makePlayer(eventID, matchingBuild), DragType.New);
 					});
 				};
 			});
 		});
 	}
 
-	private makePlayer(eventID: EventID, preset: RaidSimPreset<any>): Player<any> {
-		return newPlayerFromPreset(eventID, this.raidPicker.raid.sim, preset);
+	private makePlayer(eventID: EventID, build: RaidBuild): Player<any> {
+		return newPlayerFromPreset(eventID, this.raidPicker.raid.sim, build.preset, build);
 	}
 }

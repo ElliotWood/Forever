@@ -1,5 +1,107 @@
 [
 	{
+		"number": 125,
+		"title": "chore: drop the upstream project's name and patreon from the site",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/125"
+	},
+	{
+		"number": 124,
+		"title": "chore: say plainly that this is not wowsims, and list what the sim cannot do",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/124"
+	},
+	{
+		"number": 123,
+		"title": "docs(rankings): name the scaling the tooltips never showed, and the level 30 beta",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/123"
+	},
+	{
+		"number": 122,
+		"title": "fix(talents): stop new forever talents borrowing another talent's tooltip",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/122"
+	},
+	{
+		"number": 121,
+		"title": "fix(raid): offer every community build in the raid picker",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/121"
+	},
+	{
+		"number": 120,
+		"title": "fix(rankings): say what the damage table is, and stop it reading as a ranking",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/120"
+	},
+	{
+		"number": 119,
+		"title": "fix(ui): list the community builds in the sim title dropdown",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/119"
+	},
+	{
+		"number": 118,
+		"title": "docs(checklist): ask the beta whether battle shout and blessing of might reach ranged attack power",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/118"
+	},
+	{
+		"number": 117,
+		"title": "ci(changelog): queue the merged pull request job and retry its push",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/117"
+	},
+	{
+		"number": 116,
+		"title": "fix(druid): make lacerate the bear's rage dump and finish moonkin form",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/116"
+	},
+	{
+		"number": 115,
+		"title": "fix(warlock): keep Decimation and Demonic Knowledge inside their tooltips",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/115"
+	},
+	{
+		"number": 114,
+		"title": "fix(mage): stop ignite double paying and give arcane its rank 8 missiles",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/114"
+	},
+	{
+		"number": 113,
+		"title": "fix(priest): give the smite build power infusion and hold power in light up",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/113"
+	},
+	{
+		"number": 112,
+		"title": "fix(shaman): give enhancement back its rotation and its off-hand imbue",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/112"
+	},
+	{
+		"number": 111,
+		"title": "fix(rogue): audit of the three ranked rogue builds",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/111"
+	},
+	{
+		"number": 110,
+		"title": "fix(hunter): bite with the cat, hold Serpent Sting for mana, fix Volley's crit bonus",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/110"
+	},
+	{
+		"number": 109,
+		"title": "fix(paladin): hold holy strike to its tooltip and let judgement pay its talents",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/109"
+	},
+	{
 		"number": 108,
 		"title": "fix(warrior): stop the heroic strike queue from unmissing the off-hand",
 		"mergedAt": "2026-09-15",

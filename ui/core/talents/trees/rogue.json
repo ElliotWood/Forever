@@ -639,7 +639,19 @@
           14082,
           14083
         ],
-        "maxPoints": 2
+        "maxPoints": 2,
+        "name": "Dirty Tricks",
+        "icon": "ability_sap",
+        "description": "Reduces the Energy cost of your Sap and Blind abilities by {0}%.",
+        "ranks": [
+          [
+            25
+          ],
+          [
+            50
+          ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "improvedAmbush",

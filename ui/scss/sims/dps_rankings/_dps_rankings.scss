@@ -46,6 +46,30 @@
 		margin: 0;
 	}
 
+	.dps-rankings-provenance-block {
+		max-width: 60rem;
+		padding: var(--spacer-3);
+		border: 1px solid var(--bs-warning);
+		border-left-width: 4px;
+		border-radius: var(--border-radius);
+		background: rgba(var(--bs-warning-rgb), 0.08);
+
+		.dps-rankings-provenance-title {
+			margin: 0 0 var(--spacer-2);
+			font-size: 1.1rem;
+			font-weight: bold;
+			color: var(--bs-warning);
+		}
+
+		.dps-rankings-provenance-body {
+			margin: 0 0 var(--spacer-2);
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
 	.dps-rankings-notes-block {
 		max-width: 60rem;
 
@@ -93,11 +117,6 @@
 	}
 
 	.dps-rankings-table {
-		.dps-rankings-rank-cell {
-			color: var(--bs-gray-400);
-			text-align: right;
-		}
-
 		.dps-rankings-spec-cell {
 			text-align: left;
 

@@ -11,11 +11,13 @@ func (paladin *Paladin) registerJudgement() {
 	// It rolls on the spell hit table and can only miss or hit.
 	// Individual seals have their own effects that this spell triggers,
 	// that are handled in the implementations of the seal auras.
+	// It is still a cast the paladin makes, and Sanctified Judgement and Swift Judgement both
+	// listen for it through OnCastComplete, so it must not carry SpellFlagNoOnCastComplete.
 	paladin.judgement = paladin.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: 20271},
 		SpellSchool: core.SpellSchoolHoly,
 		ProcMask:    core.ProcMaskEmpty,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell | core.SpellFlagCastTimeNoGCD,
+		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPassiveSpell | core.SpellFlagCastTimeNoGCD,
 
 		ManaCost: core.ManaCostOptions{
 			BaseCost:   0.06,

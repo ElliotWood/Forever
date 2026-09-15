@@ -258,7 +258,6 @@ export class SimHeader extends Component {
 
 		this.addDiscordLink(container);
 		this.addGitHubLink(container);
-		this.addPatreonLink(container);
 	}
 
 	private addDiscordLink(container: HTMLElement) {
@@ -267,10 +266,6 @@ export class SimHeader extends Component {
 
 	private addGitHubLink(container: HTMLElement) {
 		container.appendChild(<div className="sim-toolbar-item">{SocialLinks.buildGitHubLink()}</div>);
-	}
-
-	private addPatreonLink(container: HTMLElement) {
-		container.appendChild(<div className="sim-toolbar-item">{SocialLinks.buildPatreonLink()}</div>);
 	}
 
 	protected customRootElement(): HTMLElement {

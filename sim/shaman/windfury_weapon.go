@@ -47,7 +47,7 @@ func (shaman *Shaman) newWindfuryImbueSpell(isMH bool) *core.Spell {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			mAP := spell.MeleeAttackPower(target) + bonusAP*ewMultiplier*ewMultiplier
+			mAP := spell.MeleeAttackPower(target) + bonusAP*ewMultiplier
 			baseDamage := weaponDamageFunc(sim, mAP)
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 		},
@@ -73,17 +73,23 @@ func (shaman *Shaman) RegisterWindfuryImbue(procMask core.ProcMask) {
 		shaman.OffHand().TempEnchant = enchantId
 	}
 
-	var proc = 0.2
-	if procMask == core.ProcMaskMelee {
-		proc = 0.36
-	}
+	// Each imbued weapon rolls for itself; the internal cooldown is what keeps the
+	// two hands from procing on top of each other.
+	// TODO: Classic lets both weapons carry the imbue and gives the extra attacks to the
+	// hand that procced, beta will confirm that Forever kept both halves of that.
+	const proc = 0.2
 
 	icd := core.Cooldown{
 		Timer:    shaman.NewTimer(),
 		Duration: icdDuration,
 	}
 
-	shaman.WindfuryWeaponMH = shaman.newWindfuryImbueSpell(true)
+	if procMask.Matches(core.ProcMaskMeleeMH) {
+		shaman.WindfuryWeaponMH = shaman.newWindfuryImbueSpell(true)
+	}
+	if procMask.Matches(core.ProcMaskMeleeOH) {
+		shaman.WindfuryWeaponOH = shaman.newWindfuryImbueSpell(false)
+	}
 
 	aura := shaman.RegisterAura(core.Aura{
 		Label:    "Windfury Imbue",
@@ -100,13 +106,22 @@ func (shaman *Shaman) RegisterWindfuryImbue(procMask core.ProcMask) {
 				return
 			}
 
+			// The extra attacks come from the weapon that procced.
+			extraAttack := shaman.WindfuryWeaponMH
+			if spell.ProcMask.Matches(core.ProcMaskMeleeOH) {
+				extraAttack = shaman.WindfuryWeaponOH
+			}
+			if extraAttack == nil {
+				return
+			}
+
 			if sim.RandomFloat("Windfury Imbue") < proc {
 				icd.Use(sim)
 
 				// TODO: Vanilla uses two extra attacks but SoD replaced this with yellow hits
 				// This needs to be refactored
-				shaman.WindfuryWeaponMH.Cast(sim, result.Target)
-				shaman.WindfuryWeaponMH.Cast(sim, result.Target)
+				extraAttack.Cast(sim, result.Target)
+				extraAttack.Cast(sim, result.Target)
 			}
 		},
 	})

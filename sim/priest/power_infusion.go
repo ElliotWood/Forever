@@ -1,52 +1,46 @@
 package priest
 
-// "time"
+import (
+	"github.com/wowsims/classic/sim/core"
+)
 
-// "github.com/wowsims/classic/sim/core"
-
+// Power Infusion is the thirty-one point Discipline talent and the reason the Smite build
+// goes that deep, so the priest casts it on itself. The proto still carries a target option
+// for the healing specs, which the sim has no way to act on yet.
+// TODO: let the option pick a raid member once buffing another player is modelled.
 func (priest *Priest) registerPowerInfusionCD() {
 	if !priest.Talents.PowerInfusion {
 		return
 	}
 
-	// actionID := core.ActionID{SpellID: 10060, Tag: priest.Index}
+	actionID := core.ActionID{SpellID: 10060, Tag: priest.Index}
+	powerInfusionAura := core.PowerInfusionAura(&priest.Unit, actionID.Tag)
 
-	// powerInfusionTarget := priest.GetUnit(priest.SelfBuffs.PowerInfusionTarget)
-	// if powerInfusionTarget == nil {
-	// 	return
-	// }
-	// powerInfusionAura := core.PowerInfusionAura(powerInfusionTarget, actionID.Tag)
+	piSpell := priest.RegisterSpell(core.SpellConfig{
+		ActionID: actionID,
+		Flags:    SpellFlagPriest | core.SpellFlagHelpful | core.SpellFlagAPL,
 
-	// piSpell := priest.RegisterSpell(core.SpellConfig{
-	// 	ActionID: actionID,
-	// 	Flags:    SpellFlagPriest | core.SpellFlagHelpful,
+		// The demo tooltip showed neither a mana cost nor a cooldown, both are taken from
+		// the spell of the same name.
+		// TODO: beta will confirm the cost and the cooldown.
+		ManaCost: core.ManaCostOptions{
+			BaseCost: 0.16,
+		},
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    priest.NewTimer(),
+				Duration: core.PowerInfusionCD,
+			},
+		},
 
-	// 	ManaCost: core.ManaCostOptions{
-	// 		BaseCost: 0.16,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		CD: core.Cooldown{
-	// 			Timer:    priest.NewTimer(),
-	// 			Duration: time.Duration(float64(core.PowerInfusionCD)),
-	// 		},
-	// 	},
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			powerInfusionAura.Activate(sim)
+		},
+	})
 
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		powerInfusionAura.Activate(sim)
-	// 	},
-	// })
-
-	// priest.AddMajorCooldown(core.MajorCooldown{
-	// 	Spell:    piSpell,
-	// 	Priority: core.CooldownPriorityBloodlust,
-	// 	Type:     core.CooldownTypeMana,
-	// 	ShouldActivate: func(sim *core.Simulation, character *core.Character) bool {
-	// 		// How can we determine the target will be able to continue casting
-	// 		// 	for the next 15s at 20% reduced mana cost? Arbitrary value until then.
-	// 		//if powerInfusionTarget.CurrentMana() < 3000 {
-	// 		//	return false
-	// 		//}
-	// 		return !powerInfusionTarget.HasActiveAura("Bloodlust-" + core.BloodlustActionID.WithTag(-1).String())
-	// 	},
-	// })
+	priest.AddMajorCooldown(core.MajorCooldown{
+		Spell:    piSpell,
+		Priority: core.CooldownPriorityDefault,
+		Type:     core.CooldownTypeDPS,
+	})
 }

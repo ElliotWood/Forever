@@ -27,7 +27,7 @@ import { MAX_NUM_PARTIES } from '../core/raid.js';
 import { Sim, SimError } from '../core/sim.js';
 import { EventID, TypedEvent } from '../core/typed_event.js';
 import { formatToNumber, formatToPercent } from '../core/utils.js';
-import { applyBlessings, applyNewPlayerAssignments, newPlayerFromPreset, playerPresets } from '../raid/presets.js';
+import { applyBlessings, applyNewPlayerAssignments, communityBuilds, newPlayerFromPreset, playerPresets, RaidBuild } from '../raid/presets.js';
 
 // Twenty-six players over a two minute encounter, so this is not free: measured at about
 // forty seconds from opening the page to the table appearing, on four cores. The run has
@@ -38,44 +38,8 @@ const DEFAULT_ITERATIONS = 1000;
 
 const isLaunched = (spec: Spec) => simLaunchStatuses[spec].status != LaunchStatus.Unlaunched;
 
-// The community builds are the talent presets named with their point split, the same ones
-// the landing page links to under each class.
-const communityBuildRegex = /\d+\/\d+\/\d+$/;
-
-// A raid slot is a build, not a spec: the point of the table is to see how the Forever
-// talents shake out against each other, and a spec's builds differ in exactly that. Each
-// build sits on its spec's raid preset - gear, consumes, race, rotation - with only the
-// talents and the name swapped, so two builds of one spec differ by talents alone. Specs
-// that ship one raid preset per tree (hunter, rogue) hand a build the preset for its own
-// main tree. A launched spec with no community build keeps its raid preset as it is, named
-// with its point split like the others, so nothing the sim can run drops out of the table.
-type Build = {
-	preset: RaidSimPreset<any>;
-	name: string;
-	talentsString: string;
-};
-
-const rankedBuilds = (): Array<Build> =>
-	[...new Set(playerPresets.map(preset => preset.spec))].filter(isLaunched).flatMap(spec => {
-		const config = getSpecConfig(spec) as IndividualSimUIConfig<any>;
-		const raidPresets = config.raidSimPresets;
-		const builds = config.presets.talents
-			.filter(talents => communityBuildRegex.test(talents.name))
-			.map(talents => {
-				const talentsString = talents.data.talentsString;
-				const preset =
-					raidPresets.find(raidPreset => getTalentTree(raidPreset.talents.talentsString) == getTalentTree(talentsString)) || raidPresets[0];
-				return { preset, name: talents.name, talentsString };
-			});
-		if (builds.length > 0) {
-			return builds;
-		}
-		const talentsString = raidPresets[0].talents.talentsString;
-		return [{ preset: raidPresets[0], name: `${raidPresets[0].defaultName} ${getTalentTreePoints(talentsString).join('/')}`, talentsString }];
-	});
-
 type Ranking = {
-	build: Build;
+	build: RaidBuild;
 	dps: number;
 };
 
@@ -100,7 +64,7 @@ function strongestOf<T extends object>(buffs: Array<T>): T {
 export class DpsRankings extends Component {
 	readonly sim: Sim;
 
-	private readonly builds: Array<Build>;
+	private readonly builds: Array<RaidBuild>;
 	private readonly runButton: HTMLButtonElement;
 	private readonly statusElem: HTMLElement;
 	private readonly resultsElem: HTMLElement;
@@ -111,7 +75,7 @@ export class DpsRankings extends Component {
 	constructor(parentElem: HTMLElement) {
 		super(parentElem, 'dps-rankings-ui');
 		this.sim = new Sim();
-		this.builds = rankedBuilds();
+		this.builds = communityBuilds();
 
 		const runButtonRef = ref<HTMLButtonElement>();
 		const statusRef = ref<HTMLDivElement>();
@@ -119,6 +83,7 @@ export class DpsRankings extends Component {
 		const iterationsRef = ref<HTMLSpanElement>();
 		const controlsRef = ref<HTMLDivElement>();
 		const socialsRef = ref<HTMLDivElement>();
+		const provenanceRef = ref<HTMLDivElement>();
 		const notesRef = ref<HTMLDivElement>();
 
 		this.rootElem.appendChild(
@@ -132,11 +97,12 @@ export class DpsRankings extends Component {
 						<div ref={socialsRef} className="dps-rankings-socials" />
 					</header>
 					<main className="dps-rankings-main">
-						<h1 className="dps-rankings-title">DPS Rankings</h1>
+						<h1 className="dps-rankings-title">Damage comparison</h1>
 						<p className="dps-rankings-lead fs-5">
-							Every community build of every launched spec in one raid, damage only, highest first. One run, one encounter, one set of buffs, so
-							the numbers can sit in the same table.
+							Every community build of every launched spec in one raid, damage only. One run, one encounter, one set of buffs, so the numbers can
+							sit in the same table. It is here to find bugs in this sim, not to say which spec is stronger in Forever.
 						</p>
+						<div ref={provenanceRef} className="dps-rankings-provenance" />
 						<div ref={notesRef} className="dps-rankings-notes" />
 						<div className="dps-rankings-controls">
 							<button ref={runButtonRef} className="btn btn-primary dps-rankings-run">
@@ -161,8 +127,8 @@ export class DpsRankings extends Component {
 		const socials = socialsRef.value!;
 		socials.appendChild(SocialLinks.buildDiscordLink());
 		socials.appendChild(SocialLinks.buildGitHubLink());
-		socials.appendChild(SocialLinks.buildPatreonLink());
 
+		this.buildProvenance(provenanceRef.value!);
 		this.buildNotes(notesRef.value!);
 
 		new NumberPicker(controlsRef.value!, this.sim, {
@@ -187,6 +153,44 @@ export class DpsRankings extends Component {
 			this.buildRaid();
 			this.run();
 		});
+	}
+
+	// Where the numbers come from matters more than how the raid was assembled, so it goes
+	// above the fold rather than into the notes below. Nothing in Forever has been measured
+	// in a client: every talent here was read off a BlizzCon demo tooltip, and the values
+	// the demo never showed are assumptions this sim writes down rather than hides.
+	private buildProvenance(parentElem: HTMLElement) {
+		parentElem.appendChild(
+			<div className="dps-rankings-provenance-block">
+				<h2 className="dps-rankings-provenance-title">These numbers are provisional</h2>
+				<p className="dps-rankings-provenance-body">
+					Forever has no beta client yet. Every talent, rank and coefficient in this sim was read off a BlizzCon 2026 demo tooltip, and the demo
+					mostly showed rank 1, so the rest is assumed - linear unless a tooltip said otherwise. Those assumptions are counted and listed in the{' '}
+					<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer">
+						beta re-verification checklist
+					</a>
+					, one line each, and every one of them can move a number in this table.
+				</p>
+				<p className="dps-rankings-provenance-body">
+					This is an unofficial fork, not the official Forever sim, and the table is a self-check: run every build under identical conditions and a
+					build the sim is getting wrong stands out. That is what it has been for. It is how the feral cat was found stuck at 398 with eight gear
+					slots empty, the enhancement shaman re-dropping one totem until it ran out of mana, and the retribution paladin carrying a Holy Strike
+					invented at nearly three times its published damage. Each of those is now fixed and written up in the{' '}
+					<a href={`${SITE_BASE}changelog/`}>changelog</a>.
+				</p>
+				<p className="dps-rankings-provenance-body">
+					There is a second limit under the first one, and the beta will not lift it. A tooltip gives a spell's damage at one level; what a sim needs
+					is how that damage is built out of attack power, spell power and weapon speed. None of those relationships was published, so where Forever
+					has not changed a spell this sim assumes Classic's, and where it has, the coefficient is inferred from the one number the demo showed. The
+					beta is capped at level 30, so it will not settle the level 60 ranks or the scaling either. Both are the sort of thing only the live client
+					or the people building the game can answer.
+				</p>
+				<p className="dps-rankings-provenance-body">
+					So: do not pick a main off this table, and do not quote it as a Forever balance claim. It is a place to catch the sim getting something
+					obviously wrong, and nothing more than that until there is real data to check it against.
+				</p>
+			</div>,
+		);
 	}
 
 	// The caveats belong on the page, not in a commit message: a ranking that doesn't say
@@ -223,15 +227,29 @@ export class DpsRankings extends Component {
 					shared defaults, not per-build optimised gear or rotations, and some specs' presets are better tuned than others.
 				</li>
 				<li>
-					Absent, because there is nothing to put in the raid: <strong>{unimplemented}</strong> have no working sim yet
-					{withoutPreset ? (
+					{unimplemented || withoutPreset ? (
 						<>
-							, and the raid sim has no preset build for <strong>{withoutPreset}</strong>
+							Absent, because there is nothing to put in the raid:{' '}
+							{unimplemented ? (
+								<>
+									<strong>{unimplemented}</strong> have no working sim yet
+								</>
+							) : (
+								''
+							)}
+							{unimplemented && withoutPreset ? ', and ' : ''}
+							{withoutPreset ? (
+								<>
+									the raid sim has no preset build for <strong>{withoutPreset}</strong>
+								</>
+							) : (
+								''
+							)}
+							. The raid is therefore missing its healers, and the tank specs that are present are measured on damage alone.
 						</>
 					) : (
-						''
+						'Every launched spec has a build in the raid. The raid is still missing its healers, and the tank specs that are present are measured on damage alone.'
 					)}
-					. The raid is therefore missing its healers, and the tank specs that are present are ranked on damage alone.
 				</li>
 				<li>
 					Every build wears its spec's <strong>Launch</strong> gear set: the best pre-raid gear in the launch item pool, picked by that spec's own
@@ -243,7 +261,7 @@ export class DpsRankings extends Component {
 					nobody in the raid is casting them. <strong>No world buffs</strong>: they do not work inside Forever raids.
 				</li>
 				<li>
-					Every run is a fresh simulation in your browser at the iteration count below. Fewer iterations means a noisier ranking; raise it if two
+					Every run is a fresh simulation in your browser at the iteration count below. Fewer iterations means a noisier comparison; raise it if two
 					specs are close.
 				</li>
 			</ul>,
@@ -347,25 +365,23 @@ export class DpsRankings extends Component {
 			<table className="metrics-table dps-rankings-table">
 				<thead>
 					<tr className="metrics-table-header-row">
-						<th className="metrics-table-header-cell dps-rankings-rank-cell">#</th>
 						<th className="metrics-table-header-cell dps-rankings-spec-cell">Build</th>
 						<th className="metrics-table-header-cell dps-rankings-dps-cell">DPS</th>
 						<th className="metrics-table-header-cell dps-rankings-share-cell">Share of top</th>
 					</tr>
 				</thead>
-				<tbody className="metrics-table-body">{rankings.map((ranking, index) => this.buildRow(ranking, index + 1, topDps))}</tbody>
+				<tbody className="metrics-table-body">{rankings.map(ranking => this.buildRow(ranking, topDps))}</tbody>
 			</table>,
 		);
 	}
 
-	private buildRow(ranking: Ranking, rank: number, topDps: number): Element {
+	private buildRow(ranking: Ranking, topDps: number): Element {
 		const spec = ranking.build.preset.spec;
 		const classColor = cssClassForClass(specToClass[spec]);
 		const share = (ranking.dps / topDps) * 100;
 
 		return (
 			<tr className="dps-rankings-row">
-				<td className="dps-rankings-rank-cell">{rank}</td>
 				<td className="dps-rankings-spec-cell">
 					<img className="metrics-action-icon" src={titleIcons[spec]} alt="" />
 					<span className="dps-rankings-spec-names">

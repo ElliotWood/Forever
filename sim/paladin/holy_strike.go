@@ -8,23 +8,29 @@ import (
 
 // Holy Strike is new in Forever and has no Classic ability behind it, but three talents hang off
 // it - Improved Holy Strike shortens its cooldown, Iron Creed sharpens its threat and Sacred
-// Arbiter its damage - so none of them mean anything until it exists. The talents describe an
-// instant weapon strike dealt as Holy damage on a short cooldown, and that is what it is modelled
-// as. The only hard numbers are the 75 mana and the melee range on Classic's unused spell 13953,
-// which is also where the name and the icon come from.
-// TODO: assumed baseline, beta will confirm - the 110% weapon damage and the 6 second cooldown
-// are both guesses.
-const holyStrikeWeaponDamage = 1.1
+// Arbiter its damage. The published tooltip reads 20 mana, melee range, instant, a 12 second
+// cooldown, and 40% weapon damage plus 36 to 46 Holy damage. Classic's unused spell 13953 lends
+// the name and the icon; Forever's own id for it is 17143, which nothing in the database knows
+// about yet.
+// TODO: assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat
+// damage is taken from the published tooltip rather than from the game.
+const (
+	holyStrikeWeaponDamage = 0.4
+	holyStrikeMinDamage    = 36.0
+	holyStrikeMaxDamage    = 46.0
+	holyStrikeManaCost     = 20.0
+	holyStrikeCooldown     = time.Second * 12
+)
 
 func (paladin *Paladin) registerHolyStrike() {
 	// TODO: Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is
 	// assumed to scale linearly.
-	cooldown := time.Second*6 - time.Second*time.Duration(paladin.Talents.ImprovedHolyStrike)
+	cooldown := holyStrikeCooldown - time.Second*time.Duration(paladin.Talents.ImprovedHolyStrike)
 
 	// Sacred Arbiter also refreshes the paladin's Judgement effects. Judgement of the Crusader
 	// is the only Judgement that leaves anything behind, and it already refreshes off every
 	// melee attack the paladin lands, so that half of the talent needs nothing here.
-	damageMultiplier := holyStrikeWeaponDamage * paladin.getWeaponSpecializationModifier()
+	damageMultiplier := paladin.getWeaponSpecializationModifier()
 	if paladin.Talents.SacredArbiter {
 		damageMultiplier *= 1.1
 	}
@@ -44,7 +50,7 @@ func (paladin *Paladin) registerHolyStrike() {
 		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost:   75,
+			FlatCost:   holyStrikeManaCost,
 			Multiplier: paladin.benediction(),
 		},
 		Cast: core.CastConfig{
@@ -66,7 +72,10 @@ func (paladin *Paladin) registerHolyStrike() {
 				ironCreedAura.Activate(sim)
 			}
 
-			baseDamage := spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			// A share of weapon damage, so it takes the normalized swing the way every other
+			// percentage-of-weapon strike in the sim does.
+			baseDamage := holyStrikeWeaponDamage*spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)) +
+				sim.Roll(holyStrikeMinDamage, holyStrikeMaxDamage)
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})

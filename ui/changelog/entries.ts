@@ -242,12 +242,81 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Warlock: Decimation stops boosting everything',
+				prs: [115],
+				changed:
+					"Decimation multiplied the warlock's whole damage output below 35% health, where the tooltip gives the bonus to the Shadow Bolt and Searing Pain that trigger it, and Demonic Knowledge paid its spell damage out with no demon summoned. The four rotations also start a dot refresh while the dot is still ticking instead of after it falls off.",
+				effect: 'Demonic Pact -0.5%, Deep Affliction +0.7%, DS/Ruin Pandemic +0.7%, Shadow and Flame +0.6% on a two minute fight; Immolate and Corruption uptime up by a fifth and a twentieth.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Warrior: the off-hand misses again, and arms strikes',
 				prs: [108],
 				changed:
 					"Queuing Heroic Strike lifted the dual wield miss penalty for the whole character instead of for the queued swing, so a Fury build's off-hand auto attacks almost never missed. The DPS priority list had no Mortal Strike line, so the ranked Arms build ran a Fury rotation, and Protection never cast Thunder Clap even though Forever allows it in Defensive Stance.",
 				effect: 'Fury -1.5%, Arms +5.2%, Protection +1.8% DPS and +4.9% threat on a two minute fight.',
 				sources: [communityTalents],
+			},
+			{
+				title: 'Paladin: Holy Strike on its tooltip, Judgement paying its talents',
+				prs: [109],
+				changed:
+					"Holy Strike was guessed at 110% weapon damage on a six second cooldown, and it was 40% of the retribution paladin's damage; the published tooltip is 40% weapon damage plus 36 to 46 Holy damage on a twelve second cooldown for 20 mana. Judgement no longer suppresses cast triggers, so Sanctified Judgement refunds mana and Swift Judgement's free cast stops being permanent. Retribution twists Seal of Command into Righteousness rather than the other way round, drinks its own potion and rune, casts Hammer of Wrath in the execute window, and fills spare globals with Consecration.",
+				effect: 'Retribution goes from 780 to 679 DPS on a two minute fight and protection from 331 to 284, the rotation work giving back about half of what the ability correction took.',
+			},
+			{
+				title: 'Hunter: the cat bites, Serpent Sting waits for mana',
+				prs: [110],
+				changed:
+					"The pet's Bite was gated behind a focus income no pet can reach, so the cat only clawed; Serpent Sting was refreshed with a third of the dot still running and is the hunter's worst shot per point of mana, so it now waits until the dot is nearly gone and is skipped under thirty percent mana. Volley's crit bonus folded Mortal Shots in as a multiplier, and Lethal Attacks missed spell crit.",
+				effect: 'Marksmanship +14 DPS at two minutes and +22 at five, Beast Mastery +2 and +7, Survival +2 and +10; the Marksmanship hunter spends 25 fewer seconds out of mana on a five minute fight.',
+			},
+			{
+				title: 'Priest: Power Infusion returns, and Power in Light stays up',
+				prs: [113],
+				changed:
+					"Power Infusion, the thirty-one point talent the Smite build spends its deepest point on, was commented out of the sim entirely. It is cast again. Holy Fire is now recast as its dot runs out rather than after it has dropped, so Power in Light no longer falls off for five seconds in every fifteen, Inner Focus goes on Smite instead of Penance, and Shadow Word: Pain and a downranked Smite fill the gaps a five minute fight opens. Devouring Plague registered only its first five ranks and was locked to the Undead, so the shadow rotation's Devouring Plague line did nothing at all for the ranked Dwarf.",
+				effect: 'Smite +7.1% at two minutes and +5.6% at five; Shadow +0.3% and +0.4%.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'Rogue: a rotation for the Hemorrhage build',
+				prs: [111],
+				changed:
+					'The auto rotation only knew Mutilate, Backstab and Sinister Strike, so a Subtlety build that had spent fifteen points on Hemorrhage never cast it, and Rupture was in no rogue rotation at all, leaving Serrated Blades and Thousand Cuts reading off a debuff nobody applied. Hemorrhage gets its own list with Rupture and a Vanish-Premeditation-Ambush opener. Venom now reaches a Deadly Poison that is already ticking, and the Assassination list finishes at four combo points instead of letting nine a fight fall off the cap.',
+				effect: 'Subtlety Hemo 582 to 709 DPS and Assassination Mutilate 638 to 696 on a two minute fight; Combat was measured against the same changes and kept its rotation.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'Enhancement shaman: a rotation, and an off-hand that works',
+				prs: [112],
+				changed:
+					"The enhancement priority list asked whether Strength of Earth Totem was up using the wrong rank's aura, so the shaman re-dropped it every global until it ran out of mana and never reached Stormstrike or Earth Shock; the totem lines now read how long each totem has left. Windfury Totem, which shared the air slot with Grace of Air and buffed nothing, is gone. The off-hand weapon imbue was never read at all, Windfury's extra attacks always came from the main hand, and Elemental Weapons was applied twice to Windfury's bonus attack power.",
+				effect: 'The ranked Enhancement 16/35/0 build goes from 473 to 724 DPS at two minutes and from 458 to 699 at five, and is no longer the lowest non-tank.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'Mage: Ignite paid the same crit twice',
+				prs: [114],
+				changed:
+					"Ignite's ticks re-applied the Improved Scorch stacks and Curse of Elements that the critical strike had already carried, and a crit landing after the dot had ticked restarted it with the old damage still in the pool, so the talent paid out 62% of the crit it lit instead of 40%. Fingers of Frost handed the Shatter crit to the Frostbolt already half cast without spending the charge on it. Arcane Missiles stopped at rank 7 because its registration loop predated the AQ ranks, and the arcane rotation now holds three Arcane Blast stacks before spending them. Mana gems no longer spend the shared conjured cooldown on the smallest gem.",
+				effect: 'Fire -7.6%, Frost -4.0%, Arcane +8.9% on a two minute fight; the three mage builds land within 90 DPS of each other instead of 300.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'Bear tank: Lacerate instead of Swipe',
+				prs: [116],
+				changed:
+					"The bear spent its spare rage on Swipe, which returns eight damage and twenty-six threat per rage against Lacerate's seventy-one and one hundred and fifty-two, so Lacerate takes the rage dump. The cat's Claw line no longer fires at the Energy where Shred has just gone out of reach, Furor's out of form Energy scales with rank like the rest of the talent, and Moonkin Form finally grants its armor.",
+				effect: 'Bear Tank +20% DPS and +35% threat, Feral Cat +1%, on a two minute fight.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'Talents stop borrowing each other\u2019s tooltips',
+				prs: [122],
+				changed:
+					"Reported in the Forever Discord: the warlock tree showed Shadow Mastery twice. Where a Forever talent had no Classic spell ids of its own, the tree generator gave it the ids of whichever Classic talent the dataset had matched it to by description, and the sim then let the database name, draw and link that other talent instead. Forty-two talents across all nine classes were affected: Malevolence read as Shadow Mastery, the druid's Genesis read as Fire Power, Spirit Weapons read as Parry. Each now carries its own name, description and per-rank numbers from the datamined set, and the generator only trusts a spell id when the database agrees it is the same talent.",
+				effect: 'Every talent names itself. No talent string, position or simulated number changes.',
 			},
 			{
 				title: 'Season of Discovery leftovers removed',
@@ -276,6 +345,34 @@ export const sections: Array<Section> = [
 				changed:
 					'Every ranked build wears a Launch set: the best pre-raid gear in the launch item pool by its own stat weights, built by one tool for all sixteen specs, raid drops and faction-locked items left out. Before, rogues ranked in Pre-BiS, casters in thin Classic sets and the cat in eight Wildheart pieces and nine empty slots.',
 				effect: 'The rankings compare specs rather than gear tiers; casters and the cat moved most.',
+			},
+			{
+				title: 'The damage table says what it is',
+				prs: [120],
+				changed:
+					'Raised in the Forever Discord: a public ranking advertises results nothing has proven, on a fork still being written. The page carried six notes on how the raid was assembled and not one on where the numbers came from. It is called Damage comparison now, the rank column is gone, and a block above the table says there is no beta client, that every talent was read off a demo tooltip at mostly rank 1, that the rest is assumed and counted in the beta checklist, and that the table is here to find bugs in this sim. The URL is unchanged.',
+				effect: 'The page reads as what it has always been used for, a self-check, rather than a balance claim.',
+			},
+			{
+				title: 'The raid builder offers every build',
+				prs: [121],
+				changed:
+					"The picker at the top of the raid tab offered one icon per spec, so the only way into a raid was a spec's own default build and the twenty-six community builds the damage table ranks could not be put in one. It now offers all twenty-six, grouped by class, each dropping a player with that build's talents and name. Both pages read the same list, so neither can drift from the other. The mage's three raid presets also all carried the same talents, which are Frost's, so dragging in a Fire or Arcane mage gave a Frost one and the three could not be told apart.",
+				effect: 'A raid can be built out of the community builds without editing talents by hand.',
+			},
+			{
+				title: 'The damage table comes off the homepage',
+				prs: [124],
+				changed:
+					"The site called itself WoWSims - Forever in its title, its homepage and the label above every sim, which is a claim it has no right to make: it is one person's fork and the WoWSims team neither builds nor reviews it. It is Forever Sim (unofficial) now, the homepage says plainly that it is not WoWSims and not affiliated, and the Patreon link is labelled as theirs. The homepage also lists what the sim cannot do yet, including the one the sim team raised: datamined and demo tooltips are wrong often enough that a value can be read correctly and still be wrong. The damage table comes off the homepage with it and is marked not to be indexed, though it stays at its URL.",
+				effect: 'Nobody arrives thinking this is the official sim, and the limits are on the front page rather than buried.',
+			},
+			{
+				title: 'The upstream project\u2019s name and Patreon come off the site',
+				prs: [125],
+				changed:
+					"The Patreon button in every header pointed at the upstream project's page, and their name was still in the homepage copy, the toast titles, the exported stat weight labels and the default export filename. The Patreon link and its component are gone, nothing on the site solicits money for anyone, and the homepage introduces itself as an unofficial personal sim without borrowing a name to do it. The GitHub link also defaulted to the upstream repository in a local build, which is now this fork. The MIT licence keeps the original copyright, as it must.",
+				effect: 'Nothing on the site trades on a name or a donation page that is not its own.',
 			},
 			{
 				title: 'Best in slot and stat weights',

@@ -61,6 +61,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Improved Mark of the Wild and the feral Faerie Fire talent are gone; assumed baseline. | Tree | `sim/druid/druid.go`, `faerie_fire.go` |
 | Feral Aggression is gone; Demoralizing Roar's attack power reduction is assumed baseline at full strength. | Tree | `sim/druid/demoralizing_roar.go` |
 | Ferocity also cuts the Rage cost of Mangle. | Tooltip | `sim/druid/mangle.go` |
+| Moonkin Form grants 360% more armor from items and the party crit aura, and nothing else: no spell damage and no Moonfire bonus. | Tooltip | `sim/druid/forms.go` |
 | Feral Instinct is Swipe damage, not Bear Form threat; Bear Form's threat is the flat 1.3x. | Tooltip | `sim/druid/swipe.go`, `forms.go` |
 | Natural Reaction also gives a 20% chance at 5 Rage on every dodge. | *demo* | `sim/druid/talents.go` |
 | Mangle (Bear): 100% weapon damage plus 26; Berserk lifts its cooldown and widens it to 3 targets. | *demo* | `sim/druid/mangle.go`, `berserk.go` |
@@ -74,6 +75,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Redoubt triggers on any landed melee hit taken (was on being crit); Reckoning also has a smaller chance to fire on a block. | *demo* | `sim/paladin/talents.go` |
 | Holy Shield block damage 110/161/220 (rank 1 ratio). | *demo* | `sim/paladin/holy_shield.go` |
 | New abilities: Holy Strike (and its three dependent talents), Swift Judgement, Templar's Bulwark, Twist of Light; Consecrated Ground and Holy Conduit build on Consecration. | Tree, *demo* | `sim/paladin/holy_strike.go`, `swift_judgement.go`, `templars_bulwark.go`, `twist_of_light.go`, `consecration.go` |
+| Holy Strike: instant, 20 mana, 12 sec cooldown, 40% weapon damage plus 36 to 46 Holy damage. | Published tooltip | `sim/paladin/holy_strike.go` |
 
 ## Priest
 
@@ -82,6 +84,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Shadow Weaving buffs the priest, not the target. | Panel | `sim/priest/talents.go` |
 | Divine Spirit and Improved Power Word: Fortitude are gone from the trees; assumed baseline raid buffs. | Tree | `sim/priest/priest.go` |
 | Mind Flay base damage per tick from the rank 1 tooltip (119 vs 75), other ranks by ratio. | *demo* | `sim/priest/mind_flay.go` |
+| Devouring Plague is castable by every race, not just the Undead: Devouring Contagion sits in the Shadow tree and does nothing otherwise. | Tree | `sim/priest/priest.go` |
 
 ## Mage
 
@@ -89,6 +92,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 |---|---|---|
 | Improved Scorch's fire vulnerability is personal to the mage who stacked it. Winter's Chill is a single personal stack for Frostbolt and Ice Lance. | Panel | `sim/mage/talents.go` |
 | Ignite is excluded from periodic crits (it is already a share of a crit). | Design | `sim/mage/ignite.go` |
+| Ignite pays out exactly 40% of the crit that lit it: the ticks skip the mage's and the target's damage multipliers, which the crit already carried, and a second crit rolls the damage still owed into the new dot instead of restarting it. | Design | `sim/mage/ignite.go` |
 | Pyroblast dot damage from the rank 1 tooltip (76 vs 56), other ranks by ratio. Improved Fireball added to the tree. | *demo* | `sim/mage/pyroblast.go`, tree |
 | Arcane rotation rebuilt around the Forever arcane talents (Arcane Impact, Arcane Shielding, ...). | Tree | `sim/mage/talents.go` |
 
@@ -97,6 +101,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Rule | Source | Here |
 |---|---|---|
 | Malice and Precision also add spell crit/hit, since poisons roll against spell stats. | Tooltip | `sim/rogue/talents.go` |
+| Venom rescales a Deadly Poison that is already ticking, not just the stacks applied while it is up. | Tooltip | `sim/rogue/poisons.go` |
 
 ## Shaman
 
@@ -112,6 +117,8 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Rule | Source | Here |
 |---|---|---|
 | Bane split into separate Shadow Bolt / Immolate reductions; Nightfall, Demonic Sacrifice and Pandemic per the Forever tree. | Tree, *demo* | `sim/warlock/talents.go` |
+| Demonic Knowledge only pays its spell damage out while a demon is active. | Tooltip | `sim/warlock/talents.go` |
+| Decimation's damage bonus belongs to Shadow Bolt and Searing Pain, the spells that trigger it; only the Soul Fire cast time carries the ten second window. | Tooltip | `sim/warlock/talents.go` |
 
 ## Hunter
 

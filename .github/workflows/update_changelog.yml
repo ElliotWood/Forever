@@ -9,6 +9,12 @@ on:
     branches: [master]
   workflow_dispatch:
 
+# Several pull requests can close at once, and each run commits to master. Without a queue they
+# race and every loser is rejected as a non fast forward.
+concurrency:
+  group: update-changelog
+  cancel-in-progress: false
+
 jobs:
   merged-pull-requests:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
@@ -42,4 +48,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "chore(changelog): record merged pull requests"
-          git push
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "push rejected, rebasing on master (attempt $attempt)"
+            git pull --rebase origin master
+          done
+          echo "could not push after five attempts"
+          exit 1

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 
+import { getCommunityBuilds } from '../community_builds.js';
 import { phaseNames } from '../constants/other.js';
 import { getLaunchedSimsForClass, LaunchStatus, raidSimStatus, simLaunchStatuses } from '../launched_sims.js';
 import { Class, Spec } from '../proto/common.js';
@@ -70,30 +71,20 @@ export class SimTitleDropdown extends Component {
 		const rootLink = this.buildRootSimLink(rootLinkArgs);
 
 		if (config.noDropdown) {
-			this.rootElem.innerHTML = rootLink.outerHTML;
+			this.rootElem.appendChild(rootLink);
 			return;
 		}
 
-		this.rootElem.innerHTML = `
-      <div class="dropdown sim-link-dropdown">
-        ${rootLink.outerHTML}
-        <ul class="dropdown-menu"></ul>
-      </div>
-    `;
+		const dropdownMenu = (<ul className="dropdown-menu"></ul>) as HTMLElement;
+		this.rootElem.appendChild(
+			<div className="dropdown sim-link-dropdown">
+				{rootLink}
+				{dropdownMenu}
+			</div>,
+		);
 
-		this.dropdownMenu = this.rootElem.getElementsByClassName('dropdown-menu')[0] as HTMLElement;
+		this.dropdownMenu = dropdownMenu;
 		this.buildDropdown();
-
-		// Prevent Bootstrap from closing the menu instead of opening class menus
-		this.dropdownMenu.addEventListener('click', event => {
-			const target = event.target as HTMLElement;
-			const link = target.closest('a:not([href="javascript:void(0)"]');
-
-			if (!link) {
-				event.stopPropagation();
-				event.preventDefault();
-			}
-		});
 	}
 
 	private buildDropdown() {
@@ -102,53 +93,39 @@ export class SimTitleDropdown extends Component {
 		// a LaunchStatus.
 		if (raidSimStatus.status >= LaunchStatus.Alpha) {
 			// Add the raid sim to the top of the dropdown
-			const raidListItem = document.createElement('li');
-			raidListItem.appendChild(this.buildRaidLink());
-			this.dropdownMenu?.appendChild(raidListItem);
+			this.dropdownMenu?.appendChild(<li>{this.buildRaidLink()}</li>);
 		}
 
 		naturalClassOrder.forEach(classIndex => {
-			const listItem = document.createElement('li');
 			const sims = getLaunchedSimsForClass(classIndex);
+			if (!sims.length) return;
 
-			if (sims.length == 1) {
-				// The class only has one listed sim so make a direct link to the sim
-				listItem.appendChild(this.buildClassLink(classIndex));
-				this.dropdownMenu?.appendChild(listItem);
-			} else if (sims.length > 1) {
-				// Add the class to the dropdown with an additional spec dropdown
-				listItem.appendChild(this.buildClassDropdown(classIndex));
-				this.dropdownMenu?.appendChild(listItem);
-			}
+			// A class with a single sim and no builds to list under it is linked directly.
+			// Anything else - several specs, or builds - gets a dropdown of its own.
+			const directLink = sims.length == 1 && !getCommunityBuilds(sims[0]).length;
+			const link = directLink ? this.buildClassLink(classIndex, false) : this.buildClassDropdown(classIndex);
+			this.dropdownMenu?.appendChild(<li>{link}</li>);
 		});
 	}
 
-	private buildClassDropdown(classIndex: Class) {
-		const sims = getLaunchedSimsForClass(classIndex);
-		const dropdownFragment = document.createElement('fragment');
-		const dropdownMenu = document.createElement('ul');
-		dropdownMenu.classList.add('dropdown-menu');
+	private buildClassDropdown(classIndex: Class): Element {
+		const dropdownMenu = (<ul className="dropdown-menu"></ul>) as HTMLElement;
 
-		// Generate the class link to act as a dropdown toggle for the spec dropdown
-		const classLink = this.buildClassLink(classIndex);
-
-		// Generate links for a class's specs
-		sims.forEach(specIndex => {
-			const listItem = document.createElement('li');
-			const link = this.buildSpecLink(specIndex);
-
-			listItem.appendChild(link);
-			dropdownMenu.appendChild(listItem);
+		// Each of the class's specs, and under each spec the community builds the landing
+		// page lists for it.
+		getLaunchedSimsForClass(classIndex).forEach(specIndex => {
+			dropdownMenu.appendChild(<li>{this.buildSpecLink(specIndex)}</li>);
+			getCommunityBuilds(specIndex).forEach(build => {
+				dropdownMenu.appendChild(<li>{this.buildBuildLink(specIndex, build)}</li>);
+			});
 		});
 
-		dropdownFragment.innerHTML = `
-			<div class="dropend sim-link-dropdown">
-				${classLink.outerHTML}
-				${dropdownMenu.outerHTML}
+		return (
+			<div className="dropend sim-link-dropdown">
+				{this.buildClassLink(classIndex, true)}
+				{dropdownMenu}
 			</div>
-    	`;
-
-		return dropdownFragment.children[0] as HTMLElement;
+		);
 	}
 
 	private buildRootSimLink(data: SpecOptions | RaidOptions): Element {
@@ -164,12 +141,19 @@ export class SimTitleDropdown extends Component {
 			else label = classNames[classIndex];
 		}
 
+		// Each class in this menu opens a menu of its own, so this one has to stay open
+		// while that happens. Bootstrap otherwise closes a menu on any click it sees,
+		// including a click on something inside it; autoClose outside leaves that to
+		// clicks that land elsewhere.
 		return (
-			<a href="javascript:void(0)" className={clsx('sim-link', this.getContextualKlass(data))} dataset={{ bsToggle: 'dropdown', bsTrigger: 'click' }}>
+			<a
+				href="javascript:void(0)"
+				className={clsx('sim-link', this.getContextualKlass(data))}
+				dataset={{ bsToggle: 'dropdown', bsTrigger: 'click', bsAutoClose: 'outside' }}>
 				<div className="sim-link-content">
 					<img src={this.getSimIconPath(data)} className="sim-link-icon" />
 					<div className="d-flex flex-column">
-						<span className="sim-link-label text-white">WoWSims - Forever</span>
+						<span className="sim-link-label text-white">Forever Sim (unofficial)</span>
 						<span className="sim-link-title">{label}</span>
 						{this.launchStatusLabel(data)}
 					</div>
@@ -178,42 +162,34 @@ export class SimTitleDropdown extends Component {
 		);
 	}
 
-	private buildRaidLink(): HTMLElement {
-		const textKlass = this.getContextualKlass({ type: 'Raid' });
-		const iconPath = this.getSimIconPath({ type: 'Raid' });
-		const label = raidSimLabel;
-
-		const fragment = document.createElement('fragment');
-		fragment.innerHTML = `
-      <a href="${raidSimSiteUrl}" class="sim-link ${textKlass}">
-        <div class="sim-link-content">
-          <img src="${iconPath}" class="sim-link-icon">
-          <div class="d-flex flex-column">
-            <span class="sim-link-title">${label}</span>
-            ${this.launchStatusLabel({ type: 'Raid' })}
-          </div>
-        </div>
-      </a>
-    `;
-
-		return fragment.children[0] as HTMLElement;
+	private buildRaidLink(): Element {
+		return (
+			<a href={raidSimSiteUrl} className={clsx('sim-link', this.getContextualKlass({ type: 'Raid' }))}>
+				<div className="sim-link-content">
+					<img src={this.getSimIconPath({ type: 'Raid' })} className="sim-link-icon" />
+					<div className="d-flex flex-column">
+						<span className="sim-link-title">{raidSimLabel}</span>
+						{this.launchStatusLabel({ type: 'Raid' })}
+					</div>
+				</div>
+			</a>
+		);
 	}
 
-	private buildClassLink(classIndex: Class): Element {
+	private buildClassLink(classIndex: Class, isDropdownToggle: boolean): Element {
 		const specIndexes = getLaunchedSimsForClass(classIndex);
-		const hasSpecSims = specIndexes.length > 1;
-		const href = hasSpecSims ? 'javascript:void(0)' : getSpecSiteUrl(specIndexes[0]);
+		const href = isDropdownToggle ? 'javascript:void(0)' : getSpecSiteUrl(specIndexes[0]);
 
 		return (
 			<a
 				href={href}
 				className={clsx('sim-link', this.getContextualKlass({ type: 'Class', index: classIndex }))}
-				dataset={hasSpecSims ? { bsToggle: 'dropdown' } : {}}>
+				dataset={isDropdownToggle ? { bsToggle: 'dropdown' } : {}}>
 				<div className="sim-link-content">
 					<img src={this.getSimIconPath({ type: 'Class', index: classIndex })} className="sim-link-icon" />
 					<div className="d-flex flex-column">
 						<span className="sim-link-title">{classNames[classIndex]}</span>
-						{!hasSpecSims && this.launchStatusLabel({ type: 'Spec', index: specIndexes[0] })}
+						{!isDropdownToggle && this.launchStatusLabel({ type: 'Spec', index: specIndexes[0] })}
 					</div>
 				</div>
 			</a>
@@ -231,6 +207,25 @@ export class SimTitleDropdown extends Component {
 						<span className="sim-link-label">{classNames[specToClass[specIndex]]}</span>
 						<span className="sim-link-title">{this.specLabels[specIndex]}</span>
 						{this.launchStatusLabel({ type: 'Spec', index: specIndex })}
+					</div>
+				</div>
+			</a>
+		);
+	}
+
+	// A community build listed under its spec, linking to that spec's sim with the build
+	// applied. The same link the landing page lists, down to the ?build= name.
+	private buildBuildLink(specIndex: Spec, build: string): Element {
+		const href = `${getSpecSiteUrl(specIndex)}?build=${encodeURIComponent(build)}`;
+
+		return (
+			<a href={href} className={clsx('sim-link', 'sim-link-build', this.getContextualKlass({ type: 'Spec', index: specIndex }))}>
+				<div className="sim-link-content">
+					<img src={this.getSimIconPath({ type: 'Spec', index: specIndex })} className="sim-link-icon" />
+					<div className="d-flex flex-column">
+						<span className="sim-link-label">{this.specLabels[specIndex]}</span>
+						<span className="sim-link-title">{build}</span>
+						<span className="launch-status-label text-brand">Community build</span>
 					</div>
 				</div>
 			</a>

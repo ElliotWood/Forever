@@ -1409,6 +1409,9 @@ var BattleShoutSpellId = [BattleShoutRanks + 1]int32{0, 6673, 5242, 6192, 11549,
 var BattleShoutBaseAP = [BattleShoutRanks + 1]float64{0, 20, 40, 57, 93, 138, 193, 232}
 var BattleShoutLevel = [BattleShoutRanks + 1]int{0, 1, 12, 22, 32, 42, 52, 60}
 
+// TODO: Beta will confirm whether Battle Shout and Blessing of Might stay melee only. In Classic
+// neither raises ranged attack power (Trueshot Aura does), and the hunter audit measured the
+// gap at 10% to 12% of every ranked hunter's damage if Forever has changed that.
 func BattleShoutAura(unit *Unit, impBattleShout int32, boomingVoicePts int32, has3pcWrath bool) *Aura {
 	rank := TernaryInt32(IncludeAQ, 7, 6)
 	spellId := BattleShoutSpellId[rank]
@@ -1452,6 +1455,9 @@ func TrueshotAura(unit *Unit) *Aura {
 	return aura
 }
 
+// TODO: Beta will confirm whether Battle Shout and Blessing of Might stay melee only. In Classic
+// neither raises ranged attack power (Trueshot Aura does), and the hunter audit measured the
+// gap at 10% to 12% of every ranked hunter's damage if Forever has changed that.
 func BlessingOfMightAura(unit *Unit, impBomPts int32) *Aura {
 	spellID := TernaryInt32(IncludeAQ, 25291, 19838)
 

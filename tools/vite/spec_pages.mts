@@ -23,19 +23,24 @@ const TEMPLATE_NAME = 'index_template.html';
 
 // Pages whose directory name doesn't spell their title. Everything else falls back to
 // 'WoW Forever <Dir Name> Simulator'.
+// Pages kept off the homepage and out of search. The damage table is a self-check for
+// the sim, not a claim about Forever, and a table built from tooltips inherits every
+// tooltip that is wrong; it stays at its URL for anyone checking the sim.
+const unlistedPages = new Set(['dps_rankings']);
+
 const pageTitles: Record<string, string> = {
-	bis: 'WoW Forever Best in Slot',
-	changelog: 'What changed for WoW Forever',
-	dps_rankings: 'WoW Forever DPS Rankings',
-	stat_weights: 'WoW Forever Stat Weights',
+	bis: 'Best in Slot - Forever Sim (unofficial)',
+	changelog: 'Changelog - Forever Sim (unofficial)',
+	dps_rankings: 'Damage comparison - Forever Sim (unofficial)',
+	stat_weights: 'Stat Weights - Forever Sim (unofficial)',
 };
 
 const titleFor = (name: string) =>
 	pageTitles[name] ??
-	`WoW Forever ${name
+	`${name
 		.split('_')
 		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(' ')} Simulator`;
+		.join(' ')} - Forever Sim (unofficial)`;
 
 export function discoverSpecPages(uiRoot: string): SpecPage[] {
 	const pages: SpecPage[] = [];
@@ -62,6 +67,7 @@ export function renderSpecPage(template: string, page: SpecPage, siteBase: strin
 	return (
 		template
 			.replaceAll('@@TITLE@@', page.title)
+			.replaceAll('@@ROBOTS@@', unlistedPages.has(page.name) ? '<meta name="robots" content="noindex" />' : '')
 			.replaceAll('@@SPEC@@', page.name)
 			.replaceAll('@@BASE@@', siteBase)
 			// '../scss/...' and '../index.ts' are relative to ui/, i.e. the vite root.

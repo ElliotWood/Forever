@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>WoWSims - Forever</title>
+		<title>Forever Sim (unofficial)</title>
 		<meta charset="utf-8" />
 
 		<link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon" />
@@ -56,10 +56,6 @@
 								<a href="https://github.com/@@REPO@@" target="_blank" class="nav-link link-alt">
 									<p class="m-0"><i class="github-link fab fa-github fa-2x"></i>&nbsp;</p>
 								</a>
-								<a href="https://patreon.com/wowsims" target="_blank" class="nav-link link-alt">
-									<i class="patreon-link fab fa-patreon fa-2x me-2"></i>
-									<span class="fs-4 d-md-none d-lg-block">Support our devs</span>
-								</a>
 							</div>
 						</div>
 					</nav>
@@ -68,10 +64,46 @@
 			<main>
 				<div class="container homepage-content-container">
 					<div class="info-container">
-						<p class="wowsims-info">
-							Welcome to WoWSims - Forever! This is a community-driven project to provide class and raid simulations for World of Warcraft®:
-							Forever, the Classic+ relaunch announced at BlizzCon 2026. It is a fork of wowsims/classic, carrying Forever's talent trees, races
-							and ruleset through every sim.
+						<p class="site-info">
+							An unofficial, personal sim for World of Warcraft®: Forever, the Classic+ relaunch announced at BlizzCon 2026. It carries Forever's
+							talent trees, races and ruleset through every spec.
+						</p>
+						<p class="site-info-caveat">
+							<strong>Unaffiliated with any official or community sim project.</strong> Nobody else builds, reviews or contributes to it, an
+							official Forever sim will not be this one, and every bug here is mine.
+						</p>
+						<p class="site-info-caveat">
+							It is also worth being plain about what it cannot do yet. Every one of these can move a number, and some can move it a long way:
+						</p>
+						<ul class="site-info-caveat site-info-limits">
+							<li>
+								There is no beta client. Every talent, rank and coefficient was read off a BlizzCon 2026 demo tooltip or a datamined set built
+								from one.
+							</li>
+							<li>
+								The demo mostly showed rank 1. Every other rank is assumed, linear unless a tooltip said otherwise, counted line by line in the
+								<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer"
+									>beta re-verification checklist</a
+								>.
+							</li>
+							<li>
+								A tooltip gives one number at one level and says nothing about how it is built out of attack power, spell power and weapon
+								speed. Where Forever has not changed a spell this fork assumes Classic's scaling; where it has, the coefficient is inferred from
+								a single value.
+							</li>
+							<li>
+								Datamined and demo tooltips are themselves wrong often enough to matter, so a value can be read correctly and still be wrong.
+								Nothing here has been checked against client data, which is what a sim really wants.
+							</li>
+							<li>The beta is capped at level 30, so it will settle neither the level 60 ranks nor the scaling.</li>
+							<li>
+								No healing sim runs, and the tank specs that exist are measured on damage alone. Rotations are hand-written priority lists, not
+								solved ones.
+							</li>
+						</ul>
+						<p class="site-info-caveat">
+							Treat every number these sims produce as provisional, and as a way to catch the sim doing something obviously wrong rather than as a
+							statement about Forever.
 						</p>
 					</div>
 					<div class="sim-links-container">
@@ -81,15 +113,6 @@
 									<img src="assets/img/raid_icon.png" class="sim-link-icon" />
 									<div class="d-flex flex-column">
 										<span class="sim-link-title">Full Raid Sim</span>
-										<span class="launch-status-label text-brand">Launch - Alpha</span>
-									</div>
-								</div>
-							</a>
-							<a href="dps_rankings/" class="sim-link raid-sim-link text-white">
-								<div class="sim-link-content">
-									<img src="assets/img/WoW-Simulator-Icon.png" class="sim-link-icon" />
-									<div class="d-flex flex-column">
-										<span class="sim-link-title">DPS Rankings</span>
 										<span class="launch-status-label text-brand">Launch - Alpha</span>
 									</div>
 								</div>
@@ -435,9 +458,7 @@
 									<li>
 										<a href="shadow_priest/" class="sim-link text-priest">
 											<div class="sim-link-content">
-												<img
-													src="assets/img/wowhead/icons/large/spell_shadow_shadowwordpain.jpg"
-													class="sim-link-icon" />
+												<img src="assets/img/wowhead/icons/large/spell_shadow_shadowwordpain.jpg" class="sim-link-icon" />
 												<div class="d-flex flex-column">
 													<span class="sim-link-label">Priest</span>
 													<span class="sim-link-title">Shadow</span>
@@ -449,9 +470,7 @@
 									<li>
 										<a href="shadow_priest/?build=Shadow%2015%2F0%2F36" class="sim-link sim-link-build text-priest">
 											<div class="sim-link-content">
-												<img
-													src="assets/img/wowhead/icons/large/spell_shadow_shadowwordpain.jpg"
-													class="sim-link-icon" />
+												<img src="assets/img/wowhead/icons/large/spell_shadow_shadowwordpain.jpg" class="sim-link-icon" />
 												<div class="d-flex flex-column">
 													<span class="sim-link-label">Shadow</span>
 													<span class="sim-link-title">Shadow 15/0/36</span>
@@ -767,9 +786,7 @@
 									<li>
 										<a href="tank_warrior/" class="sim-link text-warrior">
 											<div class="sim-link-content">
-												<img
-													src="assets/img/wowhead/icons/large/ability_warrior_defensivestance.jpg"
-													class="sim-link-icon" />
+												<img src="assets/img/wowhead/icons/large/ability_warrior_defensivestance.jpg" class="sim-link-icon" />
 												<div class="d-flex flex-column">
 													<span class="sim-link-label">Warrior</span>
 													<span class="sim-link-title">Tank</span>
@@ -781,9 +798,7 @@
 									<li>
 										<a href="tank_warrior/?build=Protection%201%2F0%2F50" class="sim-link sim-link-build text-warrior">
 											<div class="sim-link-content">
-												<img
-													src="assets/img/wowhead/icons/large/ability_warrior_defensivestance.jpg"
-													class="sim-link-icon" />
+												<img src="assets/img/wowhead/icons/large/ability_warrior_defensivestance.jpg" class="sim-link-icon" />
 												<div class="d-flex flex-column">
 													<span class="sim-link-label">Tank</span>
 													<span class="sim-link-title">Protection 1/0/50</span>
