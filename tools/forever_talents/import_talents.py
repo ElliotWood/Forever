@@ -33,22 +33,30 @@ def camel_case(talent_id):
 	return head + ''.join(part.title() for part in rest)
 
 
+def apply_overrides(data, override_path):
+	if not os.path.exists(override_path):
+		return data
+
+	with open(override_path) as f:
+		overrides = json.load(f)['overrides']
+
+	by_id = {talent['id']: talent for tree in data['trees'] for talent in tree['talents']}
+	for override in overrides:
+		talent = by_id.get(override['talent'])
+		if talent is None:
+			continue
+		talent.update(override.get('set', {}))
+		for key in override.get('unset', []):
+			talent.pop(key, None)
+
+	return data
+
+
 def load_class(class_name):
 	with open(os.path.join(DATA_DIR, class_name + '.json')) as f:
 		data = json.load(f)
 
-	override_path = os.path.join(OVERRIDE_DIR, class_name + '.json')
-	if os.path.exists(override_path):
-		with open(override_path) as f:
-			overrides = json.load(f)['overrides']
-
-		by_id = {talent['id']: talent for tree in data['trees'] for talent in tree['talents']}
-		for override in overrides:
-			talent = by_id.get(override['talent'])
-			if talent is not None:
-				talent.update(override.get('set', {}))
-
-	return data
+	return apply_overrides(data, os.path.join(OVERRIDE_DIR, class_name + '.json'))
 
 
 def simulated_talents(class_name):
