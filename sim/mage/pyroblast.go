@@ -11,7 +11,11 @@ const PyroblastRanks = 8
 
 var PyroblastSpellId = [PyroblastRanks + 1]int32{0, 11366, 12505, 12522, 12523, 12524, 12525, 12526, 18809}
 var PyroblastBaseDamage = [PyroblastRanks + 1][]float64{{0}, {148, 195}, {184, 241}, {270, 343}, {341, 431}, {427, 536}, {510, 639}, {625, 776}, {716, 890}}
-var PyroblastDotDamage = [PyroblastRanks + 1]float64{0, 56, 72, 96, 124, 156, 188, 228, 268}
+
+// TODO: Only rank 1 of the periodic damage was seen, 76 up from Classic's 56. The other ranks are
+// scaled by the same ratio until the beta shows them. The direct damage moved from 148-195 to
+// 155-185, the same average, so it is left alone.
+var PyroblastDotDamage = [PyroblastRanks + 1]float64{0, 76, 98, 130, 168, 212, 255, 309, 364}
 var PyroblastManaCost = [PyroblastRanks + 1]float64{0, 125, 150, 195, 240, 285, 335, 385, 440}
 var PyroblastLevel = [PyroblastRanks + 1]int{0, 20, 24, 30, 36, 42, 48, 54, 60}
 

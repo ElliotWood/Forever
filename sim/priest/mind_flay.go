@@ -12,7 +12,10 @@ const MindFlayTicks = 3
 
 var MindFlaySpellId = [MindFlayRanks + 1]int32{0, 15407, 17311, 17312, 17313, 17314, 18807}
 var MindFlayTickSpellId = [MindFlayRanks + 1]int32{0, 16568, 7378, 17316, 17317, 17318, 18808}
-var MindFlayBaseDamage = [MindFlayRanks + 1]float64{0, 75, 126, 186, 261, 330, 426}
+
+// TODO: Only rank 1 was seen at 119, up from Classic's 75. The other ranks are scaled by the
+// same ratio until the beta shows them.
+var MindFlayBaseDamage = [MindFlayRanks + 1]float64{0, 119, 200, 295, 414, 524, 676}
 var MindFlayManaCost = [MindFlayRanks + 1]float64{0, 45, 70, 100, 135, 165, 205}
 var MindFlayLevel = [MindFlayRanks + 1]int{0, 20, 28, 36, 44, 52, 60}
 
