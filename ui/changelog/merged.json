@@ -1,5 +1,11 @@
 [
 	{
+		"number": 124,
+		"title": "chore: say plainly that this is not wowsims, and list what the sim cannot do",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/124"
+	},
+	{
 		"number": 123,
 		"title": "docs(rankings): name the scaling the tooltips never showed, and the level 30 beta",
 		"mergedAt": "2026-09-15",
