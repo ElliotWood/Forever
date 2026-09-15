@@ -235,13 +235,8 @@ export const DefaultRaidBuffs = {
 export const P1IndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfMight: TristateEffect.TristateEffectImproved,
-	fengusFerocity: true,
-	rallyingCryOfTheDragonslayer: true,
 	//saygesFortune: SaygesFortune.SaygesDamage,
-	slipkiksSavvy: true,
-	songflowerSerenade: true,
 	spiritOfZandalar: false,
-	warchiefsBlessing: true,
 });
 
 export const DefaultIndividualBuffs = {

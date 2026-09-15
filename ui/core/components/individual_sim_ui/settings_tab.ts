@@ -2,6 +2,7 @@ import * as Tooltips from '../../constants/tooltips';
 import { Encounter } from '../../encounter';
 import { IndividualSimUI, InputSection } from '../../individual_sim_ui';
 import { Player } from '../../player';
+import { Ruleset } from '../../proto/api';
 import { Consumes, Debuffs, HealingModel, IndividualBuffs, ItemSwap, PartyBuffs, Profession, RaidBuffs, Spec } from '../../proto/common';
 import { SavedEncounter, SavedSettings } from '../../proto/ui';
 import { professionNames, raceNames } from '../../proto_utils/names';
@@ -270,6 +271,15 @@ export class SettingsTab extends SimTab {
 		const contentBlock = new ContentBlock(this.column3, 'world-buffs-settings', {
 			header: { title: 'World Buffs', tooltip: Tooltips.WORLD_BUFFS_SECTION },
 		});
+
+		// World buffs do not work in Forever raids, so the section is only offered under Classic
+		// rules. The engine ignores them under Forever as well, so a saved setting cannot sneak
+		// them back in.
+		const showForRuleset = () => {
+			contentBlock.rootElem.hidden = this.simUI.sim.getRuleset() != Ruleset.RulesetClassic;
+		};
+		showForRuleset();
+		this.simUI.sim.rulesetChangeEmitter.on(showForRuleset);
 
 		const saygesOptions = relevantStatOptions(BuffDebuffInputs.SAYGES_CONFIG, this.simUI);
 		new IconEnumPicker(contentBlock.bodyElement, this.simUI.player, BuffDebuffInputs.SaygesDarkFortune(saygesOptions));

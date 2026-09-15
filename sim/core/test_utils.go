@@ -152,11 +152,20 @@ var FullBuffs = BuffsCombo{
 	Raid:    FullRaidBuffs,
 }
 
+// World buffs do not work inside Forever raids, so the Forever player buffs are the
+// blessings alone. The engine ignores world buffs under the ruleset in any case.
+var ForeverIndividualBuffs = &proto.IndividualBuffs{
+	BlessingOfKings:     true,
+	BlessingOfMight:     proto.TristateEffect_TristateEffectImproved,
+	BlessingOfSanctuary: true,
+	BlessingOfWisdom:    proto.TristateEffect_TristateEffectImproved,
+}
+
 var ForeverBuffs = BuffsCombo{
 	Label:   "FullBuffs",
 	Debuffs: ForeverDebuffs,
 	Party:   FullPartyBuffs,
-	Player:  FullIndividualBuffs,
+	Player:  ForeverIndividualBuffs,
 	Raid:    FullRaidBuffs,
 }
 

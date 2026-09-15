@@ -11,7 +11,6 @@ import {
 	Potions,
 	Profession,
 	RaidBuffs,
-	SaygesFortune,
 	SpellPowerBuff,
 	TristateEffect,
 	WeaponImbue,
@@ -58,10 +57,7 @@ export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 // that scale Smite. Power in Light and Searing Light are the two that make the build:
 // the first pays for keeping Holy Fire on the target, the second pays for casting it.
 // Divine Fury is what makes Smite castable at all.
-export const TalentsLaunch = PresetUtils.makePresetTalents(
-	'Smite',
-	SavedTalents.create({ talentsString: '515330031305001001-30505113002' }),
-);
+export const TalentsLaunch = PresetUtils.makePresetTalents('Smite', SavedTalents.create({ talentsString: '515330031305001001-30505113002' }));
 
 export const TalentsSmite = PresetUtils.makePresetTalents('Smite 31/17/3', SavedTalents.create({ talentsString: '515030031305001031-00505023002-003' }));
 
@@ -101,11 +97,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	rallyingCryOfTheDragonslayer: true,
-	saygesFortune: SaygesFortune.SaygesDamage,
-	slipkiksSavvy: true,
-	songflowerSerenade: true,
-	warchiefsBlessing: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({

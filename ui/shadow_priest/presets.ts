@@ -11,7 +11,6 @@ import {
 	Potions,
 	Profession,
 	RaidBuffs,
-	SaygesFortune,
 	ShadowPowerBuff,
 	SpellPowerBuff,
 	TristateEffect,
@@ -101,11 +100,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	rallyingCryOfTheDragonslayer: true,
-	saygesFortune: SaygesFortune.SaygesDamage,
-	slipkiksSavvy: true,
-	songflowerSerenade: true,
-	warchiefsBlessing: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({

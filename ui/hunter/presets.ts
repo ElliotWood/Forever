@@ -17,7 +17,6 @@ import {
 	Race,
 	RaidBuffs,
 	SapperExplosive,
-	SaygesFortune,
 	SpellPowerBuff,
 	StrengthBuff,
 	TristateEffect,
@@ -136,10 +135,7 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
 	fengusFerocity: false,
 	moldarsMoxie: false,
-	rallyingCryOfTheDragonslayer: true,
-	saygesFortune: SaygesFortune.SaygesDamage,
 	slipkiksSavvy: false,
-	songflowerSerenade: true,
 	spiritOfZandalar: false,
 	warchiefsBlessing: false,
 });

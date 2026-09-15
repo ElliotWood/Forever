@@ -20,6 +20,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Improved Shadow Bolt lasts a flat 12 s (not consumed per charge). | Published talent text | `sim/warlock/talents.go` |
 | Stormstrike's Nature vulnerability lasts its full duration instead of being consumed by Nature hits. | Tooltip | `sim/core/debuffs.go` |
 | Skinning: +5% damage to Beasts and Dragonkin. Mining: +5% health. | Panel (only professions with figures) | `sim/core/professions.go` |
+| World buffs (Rallying Cry, Songflower, Darkmoon Faire, Warchief's Blessing, Dire Maul tribute, Spirit of Zandalar) do not work inside raids; the engine ignores them and the picker hides them. | Demo report, 13 September | `sim/core/buffs.go`, `settings_tab.ts` |
 
 ## Racials
 

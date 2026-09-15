@@ -10,7 +10,7 @@ import { IndividualSimUIConfig, RaidSimPreset } from '../core/individual_sim_ui.
 import { LaunchStatus, simLaunchStatuses } from '../core/launched_sims.js';
 import { getSpecConfig } from '../core/player.js';
 import { ErrorOutcomeType, ProgressMetrics, Raid as RaidProto } from '../core/proto/api.js';
-import { Class, IndividualBuffs, Spec } from '../core/proto/common.js';
+import { Class, Spec } from '../core/proto/common.js';
 import { SimResult } from '../core/proto_utils/sim_result.js';
 import { MAX_PARTY_SIZE } from '../core/party.js';
 import {
@@ -95,26 +95,6 @@ function strongestOf<T extends object>(buffs: Array<T>): T {
 		}),
 	);
 	return merged as T;
-}
-
-// World buffs are per-player, so a raid assembled from presets has none - but every
-// spec's own sim turns them on by default, and they are worth far more to the physical
-// specs than to the casters. Leaving them off would quietly push melee down the table,
-// so give everyone the same union of the world buffs the specs ask for. The rest of
-// IndividualBuffs stays empty on purpose: blessings belong to the paladins in the raid,
-// and innervates and power infusions have to be cast by somebody who is in it.
-function worldBuffsFor(specDefaults: Array<IndividualSimUIConfig<any>['defaults']>): IndividualBuffs {
-	const union = strongestOf(specDefaults.map(defaults => defaults.individualBuffs));
-	return IndividualBuffs.create({
-		rallyingCryOfTheDragonslayer: union.rallyingCryOfTheDragonslayer,
-		saygesFortune: union.saygesFortune,
-		spiritOfZandalar: union.spiritOfZandalar,
-		songflowerSerenade: union.songflowerSerenade,
-		warchiefsBlessing: union.warchiefsBlessing,
-		fengusFerocity: union.fengusFerocity,
-		moldarsMoxie: union.moldarsMoxie,
-		slipkiksSavvy: union.slipkiksSavvy,
-	});
 }
 
 export class DpsRankings extends Component {
@@ -254,9 +234,9 @@ export class DpsRankings extends Component {
 					. The raid is therefore missing its healers, and the tank specs that are present are ranked on damage alone.
 				</li>
 				<li>
-					Raid buffs, party buffs, debuffs and world buffs are the strongest of what each launched spec's own sim assumes by default, given to
-					everyone alike, so nobody is missing a buff it expects. Blessings come from the paladins actually in the raid; innervates and power
-					infusions are off, because nobody in the raid is casting them.
+					Raid buffs, party buffs and debuffs are the strongest of what each launched spec's own sim assumes by default, given to everyone alike, so
+					nobody is missing a buff it expects. Blessings come from the paladins actually in the raid; innervates and power infusions are off, because
+					nobody in the raid is casting them. <strong>No world buffs</strong>: they do not work inside Forever raids.
 				</li>
 				<li>
 					Every run is a fresh simulation in your browser at the iteration count below. Fewer iterations means a noisier ranking; raise it if two
@@ -295,12 +275,10 @@ export class DpsRankings extends Component {
 			const partyBuffs = strongestOf(specDefaults.map(defaults => defaults.partyBuffs));
 			this.sim.raid.getParties().forEach(party => party.setBuffs(eventID, partyBuffs));
 
-			const worldBuffs = worldBuffsFor(specDefaults);
 			this.builds.forEach((build, index) => {
 				const player = newPlayerFromPreset(eventID, this.sim, build.preset);
 				player.setTalentsString(eventID, build.talentsString);
 				player.setName(eventID, build.name);
-				player.setBuffs(eventID, worldBuffs);
 				this.sim.raid.setPlayer(eventID, index, player);
 				applyNewPlayerAssignments(eventID, player, this.sim.raid);
 			});

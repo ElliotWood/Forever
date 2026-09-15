@@ -43,7 +43,6 @@ export const GearPhase2 = PresetUtils.makePresetGear('Phase 2', Phase2GearJSON);
 export const GearPresets = {
 	[ClassicPhase.Phase1]: [GearLaunch, GearPhase1],
 	[ClassicPhase.Phase2]: [GearPhase2],
-
 };
 
 export const DefaultGear = GearPresets[ClassicPhase.Phase1][0];
@@ -61,7 +60,6 @@ export const APLPresets = {
 	[ClassicPhase.Phase4]: [],
 	[ClassicPhase.Phase5]: [],
 	[ClassicPhase.Phase6]: [],
-
 };
 
 export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
@@ -72,8 +70,14 @@ export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '5505301500103031--503352001' }));
 
-export const TalentsElemental = PresetUtils.makePresetTalents('Elemental 31/6/14', SavedTalents.create({ talentsString: '2505301500123031-0500001-053050001' }));
-export const TalentsStormcaller = PresetUtils.makePresetTalents('Stormcaller 28/23/0', SavedTalents.create({ talentsString: '050433150010303-055030030004102' }));
+export const TalentsElemental = PresetUtils.makePresetTalents(
+	'Elemental 31/6/14',
+	SavedTalents.create({ talentsString: '2505301500123031-0500001-053050001' }),
+);
+export const TalentsStormcaller = PresetUtils.makePresetTalents(
+	'Stormcaller 28/23/0',
+	SavedTalents.create({ talentsString: '050433150010303-055030030004102' }),
+);
 
 export const TalentPresets = {
 	[ClassicPhase.Phase1]: [TalentsLevel60, TalentsElemental, TalentsStormcaller],
@@ -118,14 +122,8 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	fengusFerocity: true,
-	moldarsMoxie: true,
-	rallyingCryOfTheDragonslayer: true,
 	// saygesFortune: SaygesFortune.SaygesDamage,
-	slipkiksSavvy: true,
-	songflowerSerenade: true,
 	// spiritOfZandalar: true,
-	warchiefsBlessing: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
