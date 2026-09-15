@@ -8,9 +8,10 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 
 1. Re-export the talent trees from the beta client (the community calculators rebuild from it) and diff against `ui/core/talents/trees/*.json`: talent set, grid positions, rank counts and prerequisite arrows. `go test ./sim/ -run TestTalentTreesMatchTheirProtos` then pins the trees, protos and `TalentTreeSizes` together, and `-run TestPresetBuildsAreLegal` checks every shipped build still fits.
 2. Work through the class sections below against the beta tooltips.
-3. Re-check the racials against the beta spellbook, in particular the two figures still missing: the cooldown and cost reduction of the gnome's Eureka!, and whether any racial cooldown differs from the three minutes assumed where none was published.
-4. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
-5. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
+3. The beta is capped at level 30, so it settles neither the level 60 ranks nor the coefficients. A tooltip gives one number at one level; what the sim needs is how that number is built out of attack power, spell power and weapon speed, and none of those relationships was published. Where Forever has not changed a spell this fork assumes Classic's scaling, and where it has, the coefficient is inferred from the single value the demo showed. Both want the live client or an answer from the people building the game, not the beta.
+4. Re-check the racials against the beta spellbook, in particular the two figures still missing: the cooldown and cost reduction of the gnome's Eureka!, and whether any racial cooldown differs from the three minutes assumed where none was published.
+5. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
+6. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
 
 ## Druid (15)
 
