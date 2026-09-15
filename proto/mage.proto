@@ -27,41 +27,42 @@ message MageTalents {
 	// Fire
 	int32 wake_of_fire = 19;
 	int32 incineration = 20;
-	int32 ignite = 21;
-	int32 flame_throwing = 22;
-	int32 impact = 23;
-	int32 burning_soul = 24;
-	int32 improved_flamestrike = 25;
-	bool pyroblast = 26;
-	int32 improved_scorch = 27;
-	int32 improved_fire_ward = 28;
-	bool hot_streak = 29;
-	int32 master_of_elements = 30;
-	int32 critical_mass = 31;
-	bool blast_wave = 32;
-	int32 fire_power = 33;
-	bool combustion = 34;
+	int32 improved_fireball = 21;
+	int32 ignite = 22;
+	int32 flame_throwing = 23;
+	int32 impact = 24;
+	int32 burning_soul = 25;
+	int32 improved_flamestrike = 26;
+	bool pyroblast = 27;
+	int32 improved_scorch = 28;
+	int32 improved_fire_ward = 29;
+	bool hot_streak = 30;
+	int32 master_of_elements = 31;
+	int32 critical_mass = 32;
+	bool blast_wave = 33;
+	int32 fire_power = 34;
+	bool combustion = 35;
 
 	// Frost
-	int32 frost_warding = 35;
-	int32 improved_frostbolt = 36;
-	int32 elemental_precision = 37;
-	int32 ice_shards = 38;
-	int32 permafrost = 39;
-	int32 improved_frost_nova = 40;
-	int32 frostbite = 41;
-	int32 piercing_ice = 42;
-	int32 frost_channeling = 43;
-	bool ice_lance = 44;
-	int32 improved_blizzard = 45;
-	int32 arctic_reach = 46;
-	bool ice_block = 47;
-	int32 shatter = 48;
-	int32 improved_cone_of_cold = 49;
-	bool cold_snap = 50;
-	int32 fingers_of_frost = 51;
-	int32 winters_chill = 52;
-	bool ice_barrier = 53;
+	int32 frost_warding = 36;
+	int32 improved_frostbolt = 37;
+	int32 elemental_precision = 38;
+	int32 ice_shards = 39;
+	int32 permafrost = 40;
+	int32 improved_frost_nova = 41;
+	int32 frostbite = 42;
+	int32 piercing_ice = 43;
+	int32 frost_channeling = 44;
+	bool ice_lance = 45;
+	int32 improved_blizzard = 46;
+	int32 arctic_reach = 47;
+	bool ice_block = 48;
+	int32 shatter = 49;
+	int32 improved_cone_of_cold = 50;
+	bool cold_snap = 51;
+	int32 fingers_of_frost = 52;
+	int32 winters_chill = 53;
+	bool ice_barrier = 54;
 }
 
 message Mage {

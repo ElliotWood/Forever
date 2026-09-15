@@ -654,8 +654,7 @@ func (mage *Mage) applyFingersOfFrost() {
 
 	// TODO: both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
 	procChance := .15
-	// TODO: the Shatter tooltip was captured at rank 3, so every rank gets the same 50%.
-	shatterCrit := core.TernaryFloat64(mage.Talents.Shatter > 0, 50, 0) * core.SpellCritRatingPerCritChance
+	shatterCrit := 10 * float64(mage.Talents.Shatter) * core.SpellCritRatingPerCritChance
 
 	var affectedSpells []*core.Spell
 	mage.OnSpellRegistered(func(spell *core.Spell) {
