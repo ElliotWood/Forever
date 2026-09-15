@@ -279,7 +279,7 @@
       {
         "fieldName": "lethalAttacks",
         "location": {
-          "rowIdx": 0,
+          "rowIdx": 1,
           "colIdx": 2
         },
         "spellIds": [
@@ -322,7 +322,7 @@
       {
         "fieldName": "carefulAim",
         "location": {
-          "rowIdx": 1,
+          "rowIdx": 0,
           "colIdx": 2
         },
         "spellIds": [

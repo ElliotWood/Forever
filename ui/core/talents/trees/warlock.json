@@ -320,7 +320,7 @@
         "fieldName": "felVitality",
         "location": {
           "rowIdx": 1,
-          "colIdx": 2
+          "colIdx": 3
         },
         "spellIds": [
           18731,
@@ -332,7 +332,7 @@
       {
         "fieldName": "demonicEnergies",
         "location": {
-          "rowIdx": 1,
+          "rowIdx": 3,
           "colIdx": 3
         },
         "spellIds": [
@@ -407,8 +407,8 @@
       {
         "fieldName": "demonicBrand",
         "location": {
-          "rowIdx": 3,
-          "colIdx": 3
+          "rowIdx": 1,
+          "colIdx": 2
         },
         "spellIds": [
           18821,
@@ -524,7 +524,7 @@
       {
         "fieldName": "bane",
         "location": {
-          "rowIdx": 0,
+          "rowIdx": 1,
           "colIdx": 2
         },
         "spellIds": [
@@ -567,7 +567,7 @@
       {
         "fieldName": "aftermath",
         "location": {
-          "rowIdx": 1,
+          "rowIdx": 0,
           "colIdx": 2
         },
         "spellIds": [
@@ -621,8 +621,8 @@
       {
         "fieldName": "agonizingFlames",
         "location": {
-          "rowIdx": 3,
-          "colIdx": 1
+          "rowIdx": 5,
+          "colIdx": 2
         },
         "spellIds": [
           17927,
@@ -689,8 +689,8 @@
       {
         "fieldName": "shadowAndFlame",
         "location": {
-          "rowIdx": 5,
-          "colIdx": 2
+          "rowIdx": 3,
+          "colIdx": 1
         },
         "spellIds": [
           30288,

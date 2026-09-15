@@ -178,7 +178,7 @@
       {
         "fieldName": "mutilate",
         "location": {
-          "rowIdx": 4,
+          "rowIdx": 6,
           "colIdx": 1
         },
         "spellIds": [
@@ -195,7 +195,11 @@
             20,
             2
           ]
-        ]
+        ],
+        "prereqLocation": {
+          "rowIdx": 4,
+          "colIdx": 1
+        }
       },
       {
         "fieldName": "improvedKidneyShot",
@@ -228,10 +232,6 @@
       {
         "fieldName": "venom",
         "location": {
-          "rowIdx": 6,
-          "colIdx": 1
-        },
-        "prereqLocation": {
           "rowIdx": 4,
           "colIdx": 1
         },

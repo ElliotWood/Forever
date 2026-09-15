@@ -30,7 +30,7 @@ message WarriorTalents {
 	int32 unbridled_wrath = 21;
 	int32 improved_cleave = 22;
 	bool piercing_howl = 23;
-	int32 blood_crazed = 24;
+	int32 blood_craze = 24;
 	int32 boundless_rage = 25;
 	int32 dual_wield_specialization = 26;
 	bool raging_blows = 27;
