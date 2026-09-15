@@ -89,6 +89,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 |---|---|---|
 | Improved Scorch's fire vulnerability is personal to the mage who stacked it. Winter's Chill is a single personal stack for Frostbolt and Ice Lance. | Panel | `sim/mage/talents.go` |
 | Ignite is excluded from periodic crits (it is already a share of a crit). | Design | `sim/mage/ignite.go` |
+| Ignite pays out exactly 40% of the crit that lit it: the ticks skip the mage's and the target's damage multipliers, which the crit already carried, and a second crit rolls the damage still owed into the new dot instead of restarting it. | Design | `sim/mage/ignite.go` |
 | Pyroblast dot damage from the rank 1 tooltip (76 vs 56), other ranks by ratio. Improved Fireball added to the tree. | *demo* | `sim/mage/pyroblast.go`, tree |
 | Arcane rotation rebuilt around the Forever arcane talents (Arcane Impact, Arcane Shielding, ...). | Tree | `sim/mage/talents.go` |
 

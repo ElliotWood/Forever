@@ -663,6 +663,13 @@ func (mage *Mage) applyFingersOfFrost() {
 		}
 	})
 
+	// Chill effects land while the mage is already part way through the next cast. That cast is
+	// not the "next spell cast" the talent grants, so it is held out of the Shatter bonus and
+	// doesn't spend the charge either; the cast after it gets both.
+	// TODO: the demo tooltip only says "your next 1 spell cast", beta will confirm whether a cast
+	// already in progress when the chill lands counts as that one.
+	var inFlight *core.Spell
+
 	mage.FingersOfFrostAura = mage.RegisterAura(core.Aura{
 		Label:    "Fingers of Frost",
 		ActionID: core.ActionID{SpellID: 44543},
@@ -671,8 +678,24 @@ func (mage *Mage) applyFingersOfFrost() {
 			for _, spell := range affectedSpells {
 				spell.BonusCritRating += shatterCrit
 			}
+
+			inFlight = nil
+			if mage.IsCasting(sim) {
+				for _, spell := range affectedSpells {
+					if spell.ActionID.SameAction(mage.Hardcast.ActionID) {
+						spell.BonusCritRating -= shatterCrit
+						inFlight = spell
+						break
+					}
+				}
+			}
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			if inFlight != nil {
+				inFlight.BonusCritRating += shatterCrit
+				inFlight = nil
+			}
+
 			for _, spell := range affectedSpells {
 				spell.BonusCritRating -= shatterCrit
 			}
@@ -682,9 +705,9 @@ func (mage *Mage) applyFingersOfFrost() {
 				return
 			}
 
-			// Chill effects land while the mage is already part way through the next cast, so a
-			// spell that started before the proc isn't the "next spell cast" it grants.
-			if sim.CurrentTime-spell.CurCast.CastTime < aura.StartedAt() {
+			if spell == inFlight {
+				spell.BonusCritRating += shatterCrit
+				inFlight = nil
 				return
 			}
 
