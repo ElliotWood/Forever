@@ -39,7 +39,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHealingPriest, {
 		// Default consumes settings.
 		consumes: Presets.DefaultConsumes,
 		// Default talents.
-		talents: Presets.DiscTalents.data,
+		talents: Presets.TalentsDisciplineHealer.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -65,7 +65,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHealingPriest, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [Presets.DiscTalents, Presets.HolyTalents, Presets.TalentsDisciplineHealer, Presets.TalentsHolyHealer],
+		talents: [Presets.TalentsDisciplineHealer, Presets.TalentsHolyHealer],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_DISC, Presets.ROTATION_PRESET_HOLY],
 		// Preset gear configurations that the user can quickly select.
@@ -88,7 +88,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHealingPriest, {
 			defaultName: 'Discipline',
 			iconUrl: getSpecIcon(Class.ClassPriest, 0),
 
-			talents: Presets.DiscTalents.data,
+			talents: Presets.TalentsDisciplineHealer.data,
 			specOptions: Presets.DefaultOptions,
 			consumes: Presets.DefaultConsumes,
 			defaultFactionRaces: {
@@ -112,7 +112,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHealingPriest, {
 			defaultName: 'Holy',
 			iconUrl: getSpecIcon(Class.ClassPriest, 1),
 
-			talents: Presets.HolyTalents.data,
+			talents: Presets.TalentsHolyHealer.data,
 			specOptions: Presets.DefaultOptions,
 			consumes: Presets.DefaultConsumes,
 			defaultFactionRaces: {
