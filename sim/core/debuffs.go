@@ -63,7 +63,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		MakePermanent(CurseOfShadowAura(target))
 	}
 
-	if debuffs.ImprovedScorch && targetIdx == 0 {
+	if debuffs.ImprovedScorch && targetIdx == 0 && !target.Env.IsForever() {
 		aura := ImprovedScorchAura(target)
 		SchedulePeriodicDebuffApplication(aura, PeriodicActionOptions{
 			Period:          time.Millisecond * 1500,
@@ -79,7 +79,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		}, raid)
 	}
 
-	if debuffs.WintersChill && targetIdx == 0 {
+	if debuffs.WintersChill && targetIdx == 0 && !target.Env.IsForever() {
 		aura := WintersChillAura(target)
 		SchedulePeriodicDebuffApplication(aura, PeriodicActionOptions{
 			Period:          time.Millisecond * 1500,
