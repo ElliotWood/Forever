@@ -28,6 +28,9 @@ func (paladin *Paladin) ApplyTalents() {
 	paladin.MultiplyStat(stats.Intellect, 1.0+0.02*float64(paladin.Talents.DivineIntellect))
 	paladin.AddStat(stats.Defense, 4*float64(paladin.Talents.Anticipation))
 	paladin.AddStat(stats.Parry, 1*float64(paladin.Talents.Deflection))
+	// Holy Power gives every spell 1% crit per point here; Holy Shock's larger share is the
+	// extra 2% per point added on the spell itself, see holy_shock.go.
+	// TODO: Only rank 1 of Holy Power was seen, ranks 2 to 5 are extrapolated from it.
 	paladin.AddStat(stats.SpellCrit, float64(paladin.Talents.HolyPower)*core.SpellCritRatingPerCritChance)
 	paladin.PseudoStats.SpiritRegenRateCasting += 0.1 * float64(paladin.Talents.Reverence)
 

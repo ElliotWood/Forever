@@ -35,8 +35,8 @@ func (paladin *Paladin) registerHolyStrike() {
 		damageMultiplier *= 1.1
 	}
 
-	// TODO: Every rank of Iron Creed reads the same 5% threat, the rest are assumed to scale
-	// linearly.
+	// TODO: Only rank 1 of Iron Creed's threat was seen at 5%, the 5% per rank the tree reads
+	// comes from the community talent calculator rather than from a tooltip.
 	threatMultiplier := 1 + 0.05*float64(paladin.Talents.IronCreed)
 
 	ironCreedAura := paladin.registerIronCreedAura()
@@ -88,8 +88,9 @@ func (paladin *Paladin) registerIronCreedAura() *core.Aura {
 		return nil
 	}
 
-	// TODO: Every rank of Iron Creed reads the same 2% for 6 sec, the rest are assumed to scale
-	// linearly.
+	// TODO: Only rank 1 of Iron Creed's damage reduction was seen at 2%, the 2% per rank the
+	// tree reads comes from the community talent calculator rather than from a tooltip. The
+	// 6 seconds is flat at every rank.
 	damageTaken := 1 - 0.02*float64(paladin.Talents.IronCreed)
 
 	return paladin.RegisterAura(core.Aura{
