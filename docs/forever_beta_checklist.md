@@ -77,7 +77,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/priest/talents.go:57` — only rank 1 was shown, beta will confirm the 2% per point
 - `sim/priest/talents.go:398` — beta will confirm the 50%.
 
-## Rogue (9)
+## Rogue (10)
 
 - `sim/rogue/backstab.go:28` — Only rank 1 of Puncturing Wounds was seen, the extra combo point chance is assumed to scale linearly. Beta will confirm.
 - `sim/rogue/expose_armor.go:11` — assumed baseline, beta will confirm. The raid reads this debuff, so the Classic 2/2 armor value is treated as baseline rather than deleted.
@@ -85,6 +85,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/rogue/hack_and_slash.go:14` — Only rank 1 was seen, all three effects are assumed to scale linearly. Beta will confirm.
 - `sim/rogue/mutilate.go:43` — The tooltip showed no Energy cost, the 60 is taken from the Classic Mutilate.
 - `sim/rogue/mutilate.go:55` — The tooltip didn't repeat the Classic dagger requirement, it's assumed to still apply.
+- `sim/rogue/poisons.go:63` — The tooltip doesn't say whether Venom reaches a Deadly Poison that is already on the target or only the stacks applied while it is up. Beta will confirm.
 - `sim/rogue/talents.go:273` — Only rank 1 was seen, the proc chance is assumed to scale linearly. Beta will confirm.
 - `sim/rogue/talents.go:350` — Only rank 1 was seen and the damage bonus is assumed to scale linearly. The tooltip data extrapolates the health threshold along with it, which it cannot be, so rank 1's 35% is used for every rank. Beta will confirm.
 - `sim/rogue/venom.go:47` — The tooltip showed no Energy cost, the 25 matches the other Rogue finishers.
