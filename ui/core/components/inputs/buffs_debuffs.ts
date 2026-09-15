@@ -468,9 +468,11 @@ export const MeleeHitDebuff = withLabel(
 	'Insect Swarm',
 );
 
-// Forever's Improved Shadow Bolt and Stormstrike only raise the damage their own caster
-// deals, so there is nothing another raid member can hand out; the sim ignores both under
-// that ruleset and the panel stops offering them.
+// Four vulnerabilities only raise the damage their own caster deals in Forever, so there is
+// nothing another raid member can hand out; the sim ignores them under that ruleset and the
+// panel stops offering them. Improved Scorch and Winter's Chill belong to the same rule as
+// Improved Shadow Bolt and Stormstrike, per the panel: the fire vulnerability is personal to
+// the mage who stacked it, and Winter's Chill is a single personal stack.
 export const SpellISBDebuff = withLabel(
 	makeBooleanDebuffInput({
 		actionId: () => ActionId.fromSpellId(17803),
@@ -484,6 +486,7 @@ export const SpellScorchDebuff = withLabel(
 	makeBooleanDebuffInput({
 		actionId: () => ActionId.fromSpellId(12873),
 		fieldName: 'improvedScorch',
+		showWhen: player => player.sim.getRuleset() == Ruleset.RulesetClassic,
 	}),
 	'Scorch',
 );
@@ -492,6 +495,7 @@ export const SpellWintersChillDebuff = withLabel(
 	makeBooleanDebuffInput({
 		actionId: () => ActionId.fromSpellId(28595),
 		fieldName: 'wintersChill',
+		showWhen: player => player.sim.getRuleset() == Ruleset.RulesetClassic,
 	}),
 	"Winter's Chill",
 );
