@@ -31,14 +31,15 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/druid/tigers_fury.go:45` — Tiger's Fury is given Wrath's shape (no Energy cost, 30 sec cooldown) because King of the Jungle is Wrath's talent word for word and Classic's costless-to-spam Tiger's Fury would let it mint Energy; the +40 damage is Classic's rank 4. Beta will confirm the cooldown, the cost and the damage bonus.
 - `sim/druid/wrath.go:53` — Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
 
-## Hunter (6)
+## Hunter (7)
 
 - `sim/hunter/aimed_shot.go:74` — assumed baseline, beta will confirm
 - `sim/hunter/aspects.go:52` — only rank 1 was observed, the proc chance is assumed to scale per rank.
 - `sim/hunter/rapid_fire.go:15` — only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per rank.
 - `sim/hunter/serpent_sting.go:43` — only rank 1 of Improved Stings was observed, the damage bonus is assumed to scale per rank.
-- `sim/hunter/talents.go:299` — only rank 1 was observed, the cost reduction and the proc chance are assumed to scale per rank.
-- `sim/hunter/talents.go:352` — only rank 1 was observed, the regeneration is assumed to scale per rank.
+- `sim/hunter/talents.go:300` — only rank 1 was observed, the cost reduction and the proc chance are assumed to scale per rank.
+- `sim/hunter/talents.go:353` — only rank 1 was observed, the regeneration is assumed to scale per rank.
+- `sim/hunter/talents.go:375` — only rank 1 of Expose Prey was observed, the proc chance is assumed to scale per rank.
 
 ## Mage (3)
 
@@ -46,34 +47,38 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/mage/talents.go:655` — both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
 - `sim/mage/talents.go:669` — a cast already in progress when a chill lands is held out of Fingers of Frost, so it neither takes the Shatter crit nor spends the charge. Beta will confirm which cast the charge belongs to.
 
-## Paladin (18)
+## Paladin (19)
 
 - `sim/paladin/consecration.go:10` — assumed baseline, beta will confirm - Consecration is no longer a talent and the Forever tree builds on top of it through Consecrated Ground and Holy Conduit.
 - `sim/paladin/hammer_of_wrath.go:29` — Both ranks of Instrument of Law read 0.5 sec in the tooltip data.
-- `sim/paladin/holy_strike.go:15` — assumed baseline, beta will confirm - the 110% weapon damage and the 6 second cooldown are both guesses.
-- `sim/paladin/holy_strike.go:20` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
-- `sim/paladin/holy_strike.go:32` — Every rank of Iron Creed reads the same 5% threat, the rest are assumed to scale linearly.
-- `sim/paladin/holy_strike.go:82` — Every rank of Iron Creed reads the same 2% for 6 sec, the rest are assumed to scale linearly.
+- `sim/paladin/holy_shield.go:18` — Only rank 1 was seen at 110, up from Classic's 65. The other ranks are scaled by the same ratio until the beta shows them.
+- `sim/paladin/holy_strike.go:15` — assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat damage is taken from the published tooltip rather than from the game. Forever's own spell id for Holy Strike is 17143, which the item database does not carry, so the sim keeps Classic's unused 13953.
+- `sim/paladin/holy_strike.go:26` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
+- `sim/paladin/holy_strike.go:38` — Every rank of Iron Creed reads the same 5% threat, the rest are assumed to scale linearly.
+- `sim/paladin/holy_strike.go:89` — Every rank of Iron Creed reads the same 2% for 6 sec, the rest are assumed to scale linearly.
 - `sim/paladin/sotc.go:34` — assumed baseline, beta will confirm - Improved Seal of the Crusader is gone from the tree and the raid reads the improved Judgement of the Crusader through Debuffs either way.
 - `sim/paladin/swift_judgement.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it is given a minute, long enough that it buys one extra Judgement rather than a second rotation.
-- `sim/paladin/talents.go:18` — Only rank 1 of Divine Precision was seen, ranks 2 and 3 are extrapolated from it.
-- `sim/paladin/talents.go:45` — Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are a large chunk of a Forever paladin's spell power.
-- `sim/paladin/talents.go:87` — Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing.
-- `sim/paladin/talents.go:168` — The mana return reads 33% for 6% of maximum mana at every rank.
-- `sim/paladin/talents.go:228` — Every rank reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing.
-- `sim/paladin/talents.go:261` — The self buff reads 1% at every rank. The 42 attack power the target loses is not modelled, nothing in the sim reads an enemy's attack power.
-- `sim/paladin/talents.go:298` — The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration, which is not modelled here - everything standing in it gets the bonus.
-- `sim/paladin/talents.go:334` — Both ranks read 10% in the tooltip data.
+- `sim/paladin/talents.go:19` — Only rank 1 of Divine Precision was seen, ranks 2 and 3 are extrapolated from it.
+- `sim/paladin/talents.go:46` — Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are a large chunk of a Forever paladin's spell power.
+- `sim/paladin/talents.go:88` — Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing.
+- `sim/paladin/talents.go:169` — The mana return reads 33% for 6% of maximum mana at every rank.
+- `sim/paladin/talents.go:229` — Every rank reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing.
+- `sim/paladin/talents.go:262` — The self buff reads 1% at every rank. The 42 attack power the target loses is not modelled, nothing in the sim reads an enemy's attack power.
+- `sim/paladin/talents.go:299` — The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration, which is not modelled here - everything standing in it gets the bonus.
+- `sim/paladin/talents.go:335` — Both ranks read 10% in the tooltip data.
 - `sim/paladin/templars_bulwark.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it shares the 5 minutes of the two Forbearance abilities Sacred Duty shortens alongside it.
 - `sim/paladin/templars_bulwark.go:36` — Both ranks of Sacred Duty read 30 sec, the second is assumed to scale linearly.
 
-## Priest (8)
+## Priest (11)
 
 - `sim/priest/devouring_plague.go:53` — only rank 1 of Devouring Contagion was shown, beta will confirm the rank 2 value
 - `sim/priest/holy_nova.go:13` — beta will confirm the higher ranks and the mana cost.
-- `sim/priest/mind_flay.go:78` — only rank 1 of Improved Mind Flay was shown, beta will confirm the rank 2 value
+- `sim/priest/mind_flay.go:81` — only rank 1 of Improved Mind Flay was shown, beta will confirm the rank 2 value
 - `sim/priest/penance.go:18` — beta will confirm the cost, the cooldown and the level 60 damage.
+- `sim/priest/power_infusion.go:10` — let the option pick a raid member once buffing another player is modelled.
+- `sim/priest/power_infusion.go:25` — beta will confirm the cost and the cooldown.
 - `sim/priest/priest.go:81` — beta will confirm whether they were made baseline or removed outright.
+- `sim/priest/priest.go:97` — beta will confirm that Devouring Plague is no longer race locked.
 - `sim/priest/talents.go:40` — only rank 1 was shown, beta will confirm that the two halves scale at 5% and 1% per point
 - `sim/priest/talents.go:57` — only rank 1 was shown, beta will confirm the 2% per point
 - `sim/priest/talents.go:398` — beta will confirm the 50%.
@@ -136,7 +141,7 @@ Warrior, the only class with concrete changes reported:
 
 Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
 
-## Talents the sim does not read (24)
+## Talents the sim does not read (26)
 
 These are in the trees and the picker marks them as not simulated; spending points in them changes nothing. Most are utility or PvP talents the Classic sim never modelled either. They are listed so the beta pass can confirm none of them turned into something a raid rotation cares about.
 
@@ -153,8 +158,10 @@ These are in the trees and the picker marks them as not simulated; spending poin
 - Priest / Discipline: Renewed Hope
 - Priest / Discipline: Divine Aegis
 - Priest / Holy: Binding Heal
+- Priest / Holy: Twilight Focus (the sim never interrupts a cast, so pushback resistance has nothing to resist)
 - Priest / Holy: Litany of Light
-- Priest / Shadow Magic: Early Demise
+- Priest / Shadow Magic: Early Demise (Shadow Word: Death is not in the spellbook at all)
+- Priest / Shadow Magic: Spirit Tap (it needs a kill, and nothing dies in a raid encounter; the Smite build spends three points here)
 - Rogue / Subtlety: Improved Distract
 - Shaman / Restoration: Riptide
 - Warlock / Demonology: Demonic Aegis
