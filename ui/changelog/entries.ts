@@ -188,6 +188,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Four druid talents where the tree and the sim disagreed',
+				prs: [135],
+				changed:
+					"The same audit as #132, run over the druid. Natural Reaction rolled a flat 20% chance at 5 Rage on a dodge at every rank where the tree reads 20/40/60/80/100% and its own dodge half already scaled, so the proc scales now. Three tables went the other way, because repeating rank 1 would have left the extra points inert: Furor now reads 20/40/60/80/100% for its shift chance, Energy carryover and cap and 2/4/6/8/10 Energy per second out of form, Primal Fury reads 50%/100% on both halves, and Eclipse's third rank reads the 0.51 sec that three ranks of 0.17 make rather than a rounded half second. None is confirmed - only rank 1 was shown on the demo - so the beta checklist keeps all four and gains two entries.",
+				effect: 'The tank build gets Rage on every dodge instead of one in five: 739.6 to 740.8 DPS and 2250 to 2257 threat, with dodge worth far more to it than before. Balance and feral are unchanged.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Tests that pin the trees together',
 				prs: [68],
 				changed:
