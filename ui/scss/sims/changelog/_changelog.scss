@@ -1,0 +1,123 @@
+#changelog-page {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+
+	.changelog-header {
+		border-bottom: $border-default;
+		background: var(--bs-black-alpha-30);
+	}
+
+	.changelog-header-container {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--gap-width);
+		padding-top: calc(var(--container-padding) / 2);
+		padding-bottom: calc(var(--container-padding) / 2);
+	}
+
+	.changelog-home-link {
+		display: block;
+
+		.forever-logo {
+			width: 14rem;
+			max-width: 100%;
+			height: auto;
+		}
+	}
+
+	.changelog-title {
+		margin: 0;
+		font-size: var(--h3-font-size);
+	}
+
+	.changelog-subtitle {
+		margin: 0;
+		max-width: 70ch;
+		color: var(--bs-body-color);
+		opacity: 0.75;
+	}
+
+	.changelog-content {
+		display: flex;
+		flex-direction: column;
+		gap: var(--section-spacer);
+		padding-top: var(--container-padding);
+		padding-bottom: var(--container-padding);
+	}
+
+	.changelog-provenance,
+	.changelog-section {
+		.content-block-body {
+			display: flex;
+			flex-direction: column;
+			gap: var(--block-spacer);
+			max-width: 80ch;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		strong {
+			color: var(--bs-brand);
+		}
+	}
+
+	.changelog-section-intro {
+		opacity: 0.75;
+	}
+
+	.changelog-entry {
+		padding-top: var(--block-spacer);
+		border-top: $border-default;
+	}
+
+	.changelog-entry-title {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: var(--gap-width-sm) var(--gap-width);
+		margin: 0 0 var(--gap-width-sm);
+		font-size: var(--h5-font-size);
+	}
+
+	.changelog-entry-prs {
+		display: inline-flex;
+		flex-wrap: wrap;
+		gap: var(--gap-width-sm);
+		font-size: var(--font-size-sm);
+		font-weight: normal;
+	}
+
+	.changelog-entry-body {
+		display: grid;
+		grid-template-columns: max-content 1fr;
+		gap: var(--gap-width-sm) var(--gap-width);
+		margin: 0;
+
+		dt {
+			font-weight: bold;
+			opacity: 0.75;
+			white-space: nowrap;
+		}
+
+		dd {
+			margin: 0;
+		}
+
+		@include media-breakpoint-down(sm) {
+			grid-template-columns: 1fr;
+
+			dt {
+				margin-top: var(--gap-width-sm);
+			}
+		}
+	}
+
+	.changelog-sources {
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+}

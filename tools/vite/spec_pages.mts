@@ -25,6 +25,7 @@ const TEMPLATE_NAME = 'index_template.html';
 // 'WoW Forever <Dir Name> Simulator'.
 const pageTitles: Record<string, string> = {
 	bis: 'WoW Forever Best in Slot',
+	changelog: 'What changed for WoW Forever',
 	dps_rankings: 'WoW Forever DPS Rankings',
 	stat_weights: 'WoW Forever Stat Weights',
 };
