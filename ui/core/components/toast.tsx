@@ -25,7 +25,7 @@ class Toast {
 		const { title, variant, autoShow = true, canClose = true, body, additionalClasses, container, ...bootstrapOptions } = options || {};
 		this.container = container || document.getElementById('toastContainer')!;
 		this.additionalClasses = additionalClasses;
-		this.title = title || 'WoWSims';
+		this.title = title || 'Forever Sim';
 		this.variant = variant || 'info';
 		this.body = body;
 		this.canClose = canClose;

@@ -181,7 +181,6 @@ export abstract class SimUI extends Component {
 		const socialsContainer = this.rootElem.querySelector('.sim-sidebar-socials') as HTMLElement;
 		socialsContainer.appendChild(SocialLinks.buildDiscordLink());
 		socialsContainer.appendChild(SocialLinks.buildGitHubLink());
-		socialsContainer.appendChild(SocialLinks.buildPatreonLink());
 
 		const versionContainer = this.rootElem.querySelector('.sim-sidebar-version') as HTMLElement;
 		versionContainer.textContent = `WoW Forever sim ${SITE_VERSION}`;

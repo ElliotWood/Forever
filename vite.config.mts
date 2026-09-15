@@ -12,18 +12,20 @@ import { specPages } from './tools/vite/spec_pages.mjs';
 export const BASE_PATH = path.resolve(__dirname, 'ui');
 export const OUT_DIR = path.join(__dirname, 'dist', 'classic');
 
-// Where the site will be served from, with a trailing slash. Defaults to how wowsims
-// publishes it; override with SITE_BASE to hang it off a path, e.g. a Github project
+// Where the site will be served from, with a trailing slash. Defaults to serving from the
+// root; override with SITE_BASE to hang it off a path, e.g. a Github project
 // page at /<repo>/classic/. Everything that needs the prefix reads it from here: the
 // TypeScript through import.meta.env.BASE_URL, the stylesheets through $site-base, and
 // the page template through the specPages plugin.
 export const SITE_BASE = process.env.SITE_BASE || '/classic/';
 
 // The Github repository the UI points at for source, issues, crash reports and releases.
-// Defaults to upstream so a build from wowsims/classic is unchanged; a fork overrides it
-// with SITE_REPO=<owner>/<repo>. Read it through SITE_REPO in core/constants/other.ts for
-// TypeScript, and through the @@REPO@@ placeholder for the hand-written homepage.
-export const SITE_REPO = process.env.SITE_REPO || 'wowsims/classic';
+// Defaults to this fork; the deploy workflow passes the repository it is running in, and a
+// local build or another fork overrides it
+// with SITE_REPO=<owner>/<repo>; the deploy workflow passes the repository it is running
+// in. Read it through SITE_REPO in core/constants/other.ts for TypeScript, and through the
+// @@REPO@@ placeholder for the hand-written homepage.
+export const SITE_REPO = process.env.SITE_REPO || 'ElliotWood/Forever';
 
 // The version the UI shows, so a user can say which build they are looking at. Taken from
 // git rather than hand-maintained: the newest tag plus the commits since it, or the bare

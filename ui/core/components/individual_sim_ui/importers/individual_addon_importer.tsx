@@ -12,7 +12,7 @@ export class IndividualAddonImporter<SpecType extends Spec> extends IndividualIm
 				<p>
 					Import settings from the{' '}
 					<a href="https://www.curseforge.com/wow/addons/wowsimsexporter" target="_blank">
-						WoWSims Exporter In-Game Addon
+						in-game exporter addon
 					</a>
 					.
 				</p>
