@@ -263,7 +263,6 @@ export const sections: Array<Section> = [
 					"The pet's Bite was gated behind a focus income no pet can reach, so the cat only clawed; Serpent Sting was refreshed with a third of the dot still running and is the hunter's worst shot per point of mana, so it now waits until the dot is nearly gone and is skipped under thirty percent mana. Volley's crit bonus folded Mortal Shots in as a multiplier, and Lethal Attacks missed spell crit.",
 				effect: 'Marksmanship +14 DPS at two minutes and +22 at five, Beast Mastery +2 and +7, Survival +2 and +10; the Marksmanship hunter spends 25 fewer seconds out of mana on a five minute fight.',
 			},
-			{},
 			{
 				title: 'Rogue: a rotation for the Hemorrhage build',
 				prs: [111],
