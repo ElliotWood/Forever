@@ -153,7 +153,7 @@ Warrior, the only class with concrete changes reported:
 - Slam no longer resets the swing timer — modelled in `sim/warrior/slam.go`.
 - Thunder Clap can be used in Defensive Stance — modelled in `sim/warrior/thunder_clap.go`, and the protection rotation casts it on cooldown.
 - Improved Shield Wall shortens the cooldown instead of lengthening the duration — modelled in `sim/warrior/shield_wall.go`.
-- Tactical Mastery is baseline, with Improved Tactical Mastery on top — modelled in `sim/warrior/stances.go`.
+- `sim/warrior/stances.go:41` — Tactical Mastery is baseline with Improved Tactical Mastery on top, but the baseline was never shown a number, so only the talent's own 3 Rage per point is modelled and an untalented warrior keeps nothing across a stance change. Beta will show what the baseline retains.
 - Victory Rush is baseline — not modelled. It needs a killing blow, which a boss encounter never gives before the fight ends.
 
 Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
