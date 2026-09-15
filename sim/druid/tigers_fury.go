@@ -38,17 +38,26 @@ func (druid *Druid) registerTigersFurySpell() {
 	// in the resources tab, and the concurrency combiner folds them into one.
 	energyMetrics := druid.NewEnergyMetrics(actionID.WithTag(1))
 
+	// Forever's King of the Jungle reads "Tiger's Fury now instantly grants you Energy", the
+	// Wrath talent word for word, and Wrath's Tiger's Fury had no Energy cost and a 30 second
+	// cooldown. Classic's (30 Energy, no cooldown) would let the talent mint Energy, so the
+	// Wrath shape is assumed. The +40 damage is Classic's rank 4.
+	// TODO: Beta will confirm the cooldown, the cost and the damage bonus.
+	forever := druid.Env.IsForever()
+	energyCost := core.TernaryFloat64(forever, 0, 30)
+	cooldown := core.TernaryDuration(forever, 30*time.Second, time.Second)
+
 	spell := druid.RegisterSpell(Cat, core.SpellConfig{
 		ActionID: actionID,
 		Flags:    core.SpellFlagAPL,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost: 30,
+			Cost: energyCost,
 		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    druid.NewTimer(),
-				Duration: time.Second,
+				Duration: cooldown,
 			},
 		},
 

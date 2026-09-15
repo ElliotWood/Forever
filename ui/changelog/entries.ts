@@ -234,6 +234,14 @@ export const sections: Array<Section> = [
 				effect: 'Demonic Pact +41%, Deep Affliction +13%, DS/Ruin Pandemic +3%, Shadow and Flame +4% at two minutes; more at five, where Life Tap was a tenth of the fight.',
 			},
 			{
+				title: "Feral cat: Tiger's Fury as the energy engine",
+				prs: [105],
+				changed:
+					"Tiger's Fury takes Wrath's shape (no Energy cost, 30 sec cooldown) so King of the Jungle's 60 Energy is a cooldown rather than something to spam, the cat rotation casts it on cooldown, and Rake is dropped: it cost two fifths of the cat's Energy for a twentieth of its damage.",
+				effect: "The ranked Feral Cat build goes from 393 to 478 DPS on a two minute fight, still the lowest of the melee, because Forever's Furor no longer hands out 40 Energy per shift.",
+				sources: [communityTalents],
+			},
+			{
 				title: 'Season of Discovery leftovers removed',
 				prs: [82, 83, 67],
 				changed:
