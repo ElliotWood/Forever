@@ -105,7 +105,6 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 	saygesFortune: SaygesFortune.SaygesDamage,
 	slipkiksSavvy: true,
 	songflowerSerenade: true,
-	spiritOfZandalar: true,
 	warchiefsBlessing: true,
 });
 
