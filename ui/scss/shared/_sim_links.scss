@@ -37,6 +37,23 @@
 	}
 }
 
+// A build listed under its spec: the same row, drawn smaller and set in from the edge.
+.sim-link-build {
+	.sim-link-content {
+		padding-block: var(--spacer-1);
+		padding-left: var(--spacer-4);
+
+		.sim-link-icon {
+			width: 2rem;
+			height: 2rem;
+		}
+
+		.sim-link-title {
+			font-size: 1rem;
+		}
+	}
+}
+
 .sim-link-dropdown {
 	.dropdown-menu {
 		background: rgba(0, 0, 0, 0.5);

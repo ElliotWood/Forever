@@ -298,6 +298,8 @@ export abstract class IndividualSimUI<SpecType extends Spec> extends SimUI {
 			}
 			window.location.hash = '';
 
+			this.applyBuildFromUrl(initEventID);
+
 			this.player.setName(initEventID, 'Player');
 
 			// This needs to go last so it doesn't re-store things as they are initialized.
@@ -397,6 +399,29 @@ export abstract class IndividualSimUI<SpecType extends Spec> extends SimUI {
 				}),
 			);
 		});
+	}
+
+	// The landing page links straight to a build, e.g. mage/?build=Fire%200%2F35%2F16, naming
+	// one of this spec's talent presets. It is applied on top of whatever else loaded and
+	// then dropped from the address, the same way the hash is, so a refresh keeps the
+	// player's later edits rather than snapping back to the preset.
+	private applyBuildFromUrl(eventID: EventID) {
+		const url = new URL(window.location.href);
+		const build = url.searchParams.get('build');
+		if (build == null) {
+			return;
+		}
+
+		const wanted = build.trim().toLowerCase();
+		const preset = this.individualConfig.presets.talents.find(preset => preset.name.trim().toLowerCase() == wanted);
+		if (preset) {
+			this.player.setTalentsString(eventID, preset.data.talentsString);
+		} else {
+			console.warn(`No talent preset named "${build}"`);
+		}
+
+		url.searchParams.delete('build');
+		window.history.replaceState(null, '', url);
 	}
 
 	applyDefaults(eventID: EventID) {
