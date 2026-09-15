@@ -24,6 +24,7 @@ import { SavedTalents } from '../core/proto/ui.js';
 import { Warrior_Options as WarriorOptions, WarriorShout, WarriorStance } from '../core/proto/warrior.js';
 import APLNoReckJSON from './apls/dps_no_reck.apl.json';
 import APLReckJSON from './apls/dps_reck.apl.json';
+import LaunchGearJSON from './gear_sets/launch.gear.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
 import Phase1Gear from './gear_sets/phase_1.gear.json';
 import Phase2Gear from './gear_sets/phase_2.gear.json';
@@ -36,12 +37,13 @@ import Phase2Gear from './gear_sets/phase_2.gear.json';
 //                                 Gear Presets
 ///////////////////////////////////////////////////////////////////////////
 
+export const GearLaunch = PresetUtils.makePresetGear('Launch', LaunchGearJSON);
 export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearPhase1 = PresetUtils.makePresetGear('P1 BiS', Phase1Gear);
 export const GearPhase2 = PresetUtils.makePresetGear('P2 BiS', Phase2Gear);
 
 export const GearPresets = {
-	[ClassicPhase.Phase1]: [GearPhase1, GearP0BIS],
+	[ClassicPhase.Phase1]: [GearLaunch, GearPhase1, GearP0BIS],
 	[ClassicPhase.Phase2]: [GearPhase2],
 };
 

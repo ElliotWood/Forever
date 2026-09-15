@@ -21,6 +21,7 @@ import { BalanceDruid_Options as BalanceDruidOptions } from '../core/proto/druid
 import { SavedTalents } from '../core/proto/ui.js';
 import Balance from './apls/balance.apl.json';
 import LaunchAPL from './apls/launch.apl.json';
+import LaunchGearJSON from './gear_sets/launch.gear.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
 import P1BISGear from './gear_sets/p1.bis.gear.json';
 import P2BISGear from './gear_sets/p2.bis.gear.json';
@@ -32,12 +33,13 @@ import P2BISGear from './gear_sets/p2.bis.gear.json';
 //                                 Gear Presets
 ///////////////////////////////////////////////////////////////////////////
 
+export const GearLaunch = PresetUtils.makePresetGear('Launch', LaunchGearJSON);
 export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearP1BIS = PresetUtils.makePresetGear('P1 BiS', P1BISGear);
 export const GearP2BIS = PresetUtils.makePresetGear('P2 BiS', P2BISGear);
 
 export const GearPresets = {
-	[ClassicPhase.Phase2]: [GearP0BIS, GearP1BIS, GearP2BIS],
+	[ClassicPhase.Phase2]: [GearLaunch, GearP0BIS, GearP1BIS, GearP2BIS],
 };
 
 export const DefaultGear = GearP0BIS;

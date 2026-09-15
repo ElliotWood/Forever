@@ -33,6 +33,7 @@ import DSRuinApl from './apls/forever_ds_ruin.apl.json';
 import DemonicPactApl from './apls/forever_pact.apl.json';
 import ShadowAndFlameApl from './apls/forever_shadow_and_flame.apl.json';
 // gear
+import LaunchGearJSON from './gear_sets/launch.gear.json';
 import BlankGear from './gear_sets/blank.gear.json';
 import MCGear from './gear_sets/mc.gear.json';
 import PreBisGear from './gear_sets/prebis.gear.json';
@@ -41,11 +42,12 @@ import PreBisGear from './gear_sets/prebis.gear.json';
 //                                 Gear Presets
 ///////////////////////////////////////////////////////////////////////////
 
+export const GearLaunch = PresetUtils.makePresetGear('Launch', LaunchGearJSON);
 export const GearBlank = PresetUtils.makePresetGear('Blank', BlankGear);
 export const GearPreBis = PresetUtils.makePresetGear('Pre-BIS', PreBisGear);
 export const GearMC = PresetUtils.makePresetGear('MC', MCGear);
 
-export const GearPresets = [GearBlank, GearPreBis, GearMC];
+export const GearPresets = [GearBlank, GearLaunch, GearPreBis, GearMC];
 
 export const DefaultGear = GearPreBis;
 

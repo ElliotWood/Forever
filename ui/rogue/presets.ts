@@ -28,6 +28,8 @@ import SinisterStrikeSweatyAPL from './apls/combat_sinister_strike_sweaty.apl.js
 import SinisterStrikeIEAAPL from './apls/combat_sinister_strike_iea.apl.json';
 import MutilateAPL from './apls/forever_mutilate.apl.json';
 import BlankGear from './gear_sets/blank.gear.json';
+import BackstabGearLaunch from './gear_sets/backstab_launch.gear.json';
+import SinisterStrikeGearLaunch from './gear_sets/sinister_strike_launch.gear.json';
 import BackstabGearPreBiS from './gear_sets/combat_backstab_prebis.gear.json';
 import SinisterStrikeGearPreBiS from './gear_sets/combat_sinister_strike_prebis.gear.json';
 import BackstabGearP1BiS from './gear_sets/combat_backstab_p1_bis.gear.json';
@@ -44,6 +46,8 @@ import SinisterStrikeGearP2BiS from './gear_sets/combat_sinister_strike_p2_bis.g
 ///////////////////////////////////////////////////////////////////////////
 
 export const GearBlank = PresetUtils.makePresetGear('Blank', BlankGear);
+export const GearBackstabLaunch = PresetUtils.makePresetGear('Backstab Launch', BackstabGearLaunch);
+export const GearSinisterStrikeLaunch = PresetUtils.makePresetGear('Sinister Strike Launch', SinisterStrikeGearLaunch);
 export const GearBackstabPreBiS = PresetUtils.makePresetGear('Backstab Pre-BiS', BackstabGearPreBiS);
 export const GearSinisterStrikePreBiS = PresetUtils.makePresetGear('Sinister Strike Pre-BiS', SinisterStrikeGearPreBiS);
 export const GearBackstabP1BiS = PresetUtils.makePresetGear('Backstab P1 BiS', BackstabGearP1BiS);
@@ -52,8 +56,22 @@ export const GearSinisterStrikeP1BiS = PresetUtils.makePresetGear('Sinister Stri
 export const GearSinisterStrikeP2BiS = PresetUtils.makePresetGear('Sinister Strike P2 BiS', SinisterStrikeGearP2BiS);
 
 export const GearPresets = {
-	[ClassicPhase.Phase1]: [GearBackstabPreBiS, GearSinisterStrikePreBiS, GearBackstabP1BiS, GearSinisterStrikeP1BiS],
-	[ClassicPhase.Phase2]: [GearBackstabPreBiS, GearSinisterStrikePreBiS, GearBackstabP2BiS, GearSinisterStrikeP2BiS],
+	[ClassicPhase.Phase1]: [
+		GearBackstabLaunch,
+		GearSinisterStrikeLaunch,
+		GearBackstabPreBiS,
+		GearSinisterStrikePreBiS,
+		GearBackstabP1BiS,
+		GearSinisterStrikeP1BiS,
+	],
+	[ClassicPhase.Phase2]: [
+		GearBackstabLaunch,
+		GearSinisterStrikeLaunch,
+		GearBackstabPreBiS,
+		GearSinisterStrikePreBiS,
+		GearBackstabP2BiS,
+		GearSinisterStrikeP2BiS,
+	],
 };
 
 export const DefaultGear = GearSinisterStrikePreBiS;
