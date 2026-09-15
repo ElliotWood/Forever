@@ -186,7 +186,7 @@
         "fieldName": "bloodthrill",
         "location": {
           "rowIdx": 4,
-          "colIdx": 0
+          "colIdx": 2
         },
         "spellIds": [
           0,
@@ -242,7 +242,7 @@
         "fieldName": "weaponmaster",
         "location": {
           "rowIdx": 4,
-          "colIdx": 2
+          "colIdx": 0
         },
         "spellIds": [
           0,
@@ -416,7 +416,7 @@
         "maxPoints": 1
       },
       {
-        "fieldName": "bloodCrazed",
+        "fieldName": "bloodCraze",
         "location": {
           "rowIdx": 2,
           "colIdx": 2
