@@ -207,9 +207,8 @@ func applyRaceEffects(agent Agent) {
 	}
 }
 
-// Elune's Light, the night elf's Forever racial cooldown.
-// TODO: the tooltip gives the 10% and the 15 seconds but no cooldown, so it shares
-// Berserking's three minutes until the beta says otherwise.
+// Elune's Light, the night elf's Forever racial cooldown: 10% critical strike for 15
+// seconds on a three minute cooldown.
 func (character *Character) registerElunesLight() {
 	actionID := ActionID{SpellID: 460520}
 
