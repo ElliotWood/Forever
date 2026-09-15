@@ -156,7 +156,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarlock, {
 	},
 
 	// One preset per tree, so a raid or the rankings page gives each build the pet setup its
-	// rotation expects: the Affliction preset also serves DS/Ruin, which summons its own Imp.
+	// rotation expects: the Affliction preset also serves DS/Ruin, which summons its own Succubus.
 	raidSimPresets: [
 		{
 			spec: Spec.SpecWarlock,
