@@ -4,8 +4,9 @@ import * as OtherInputs from '../core/components/other_inputs.js';
 import { ClassicPhase } from '../core/constants/other.js';
 import { IndividualSimUI, registerSpecConfig } from '../core/individual_sim_ui.js';
 import { Player } from '../core/player.js';
-import { PartyBuffs, PseudoStat, Spec, Stat } from '../core/proto/common.js';
+import { Class, Faction, PartyBuffs, PseudoStat, Race, Spec, Stat } from '../core/proto/common.js';
 import { Stats } from '../core/proto_utils/stats.js';
+import { getSpecIcon } from '../core/proto_utils/utils.js';
 import * as HunterInputs from './inputs.js';
 import * as Presets from './presets.js';
 
@@ -181,77 +182,81 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHunter, {
 	},
 
 	raidSimPresets: [
-		// Raid sim presets dont work very well with SoD specs between phases
-		// and we dont support raid sim atm so just comment this out
-		// {
-		// 	spec: Spec.SpecHunter,
-		// 	tooltip: 'Beast Mastery Hunter',
-		// 	defaultName: 'Beast Mastery',
-		// 	iconUrl: getSpecIcon(Class.ClassHunter, 0),
-		// 	talents: Presets.DefaultTalentsBeastMastery.data,
-		// 	specOptions: Presets.BMDefaultOptions,
-		// 	consumes: Presets.DefaultConsumes,
-		// 	defaultFactionRaces: {
-		// 		[Faction.Unknown]: Race.RaceUnknown,
-		// 		[Faction.Alliance]: Race.RaceNightElf,
-		// 		[Faction.Horde]: Race.RaceOrc,
-		// 	},
-		// 	defaultGear: {
-		// 		[Faction.Unknown]: {},
-		// 		[Faction.Alliance]: {
-		// 			1: Presets.GearPresets[ClassicPhase.Phase1][0].gear,
-		// 		},
-		// 		[Faction.Horde]: {
-		// 			1: Presets.GearPresets[ClassicPhase.Phase1][0].gear,
-		// 		},
-		// 	},
-		// },
-		// {
-		// 	spec: Spec.SpecHunter,
-		// 	tooltip: 'Marksmanship Hunter',
-		// 	defaultName: 'Marksmanship',
-		// 	iconUrl: getSpecIcon(Class.ClassHunter, 1),
-		// 	talents: Presets.DefaultTalentsMarksman.data,
-		// 	specOptions: Presets.DefaultOptions,
-		// 	consumes: Presets.DefaultConsumes,
-		// 	defaultFactionRaces: {
-		// 		[Faction.Unknown]: Race.RaceUnknown,
-		// 		[Faction.Alliance]: Race.RaceNightElf,
-		// 		[Faction.Horde]: Race.RaceOrc,
-		// 	},
-		// 	defaultGear: {
-		// 		[Faction.Unknown]: {},
-		// 		[Faction.Alliance]: {
-		// 			1: Presets.GearPresets[ClassicPhase.Phase1][1].gear,
-		// 		},
-		// 		[Faction.Horde]: {
-		// 			1: Presets.GearPresets[ClassicPhase.Phase1][1].gear,
-		// 		},
-		// 	},
-		// },
-		// {
-		// 	spec: Spec.SpecHunter,
-		// 	tooltip: 'Survival Hunter',
-		// 	defaultName: 'Survival',
-		// 	iconUrl: getSpecIcon(Class.ClassHunter, 2),
-		// 	talents: Presets.DefaultTalentsSurvival.data,
-		// 	specOptions: Presets.DefaultOptions,
-		// 	consumes: Presets.DefaultConsumes,
-		// 	defaultFactionRaces: {
-		// 		[Faction.Unknown]: Race.RaceUnknown,
-		// 		[Faction.Alliance]: Race.RaceNightElf,
-		// 		[Faction.Horde]: Race.RaceOrc,
-		// 	},
-		// 	defaultGear: {
-		// 		[Faction.Unknown]: {},
-		// 		[Faction.Alliance]: {
-		// 			1: Presets.GearPresets[ClassicPhase.Phase1][2].gear,
-		// 		},
-		// 		[Faction.Horde]: {
-		// 			1: Presets.GearPresets[ClassicPhase.Phase1][2].gear,
-		// 		},
-		// 	},
-		// },
+		{
+			spec: Spec.SpecHunter,
+			tooltip: 'Beast Mastery Hunter',
+			defaultName: 'Beast Mastery',
+			iconUrl: getSpecIcon(Class.ClassHunter, 0),
+
+			talents: Presets.TalentsBeastMastery.data,
+			specOptions: Presets.DefaultOptions,
+			consumes: Presets.DefaultConsumes,
+			otherDefaults: Presets.OtherDefaults,
+			defaultFactionRaces: {
+				[Faction.Unknown]: Race.RaceUnknown,
+				[Faction.Alliance]: Race.RaceNightElf,
+				[Faction.Horde]: Race.RaceOrc,
+			},
+			defaultGear: {
+				[Faction.Unknown]: {},
+				[Faction.Alliance]: {
+					1: Presets.DefaultGear.gear,
+				},
+				[Faction.Horde]: {
+					1: Presets.DefaultGear.gear,
+				},
+			},
+		},
+		{
+			spec: Spec.SpecHunter,
+			tooltip: 'Marksmanship Hunter',
+			defaultName: 'Marksmanship',
+			iconUrl: getSpecIcon(Class.ClassHunter, 1),
+
+			talents: Presets.TalentsP1.data,
+			specOptions: Presets.DefaultOptions,
+			consumes: Presets.DefaultConsumes,
+			otherDefaults: Presets.OtherDefaults,
+			defaultFactionRaces: {
+				[Faction.Unknown]: Race.RaceUnknown,
+				[Faction.Alliance]: Race.RaceNightElf,
+				[Faction.Horde]: Race.RaceOrc,
+			},
+			defaultGear: {
+				[Faction.Unknown]: {},
+				[Faction.Alliance]: {
+					1: Presets.DefaultGear.gear,
+				},
+				[Faction.Horde]: {
+					1: Presets.DefaultGear.gear,
+				},
+			},
+		},
+		{
+			spec: Spec.SpecHunter,
+			tooltip: 'Survival Hunter',
+			defaultName: 'Survival',
+			iconUrl: getSpecIcon(Class.ClassHunter, 2),
+
+			talents: Presets.TalentsSurvival.data,
+			specOptions: Presets.DefaultOptions,
+			consumes: Presets.DefaultConsumes,
+			otherDefaults: Presets.OtherDefaults,
+			defaultFactionRaces: {
+				[Faction.Unknown]: Race.RaceUnknown,
+				[Faction.Alliance]: Race.RaceNightElf,
+				[Faction.Horde]: Race.RaceOrc,
+			},
+			defaultGear: {
+				[Faction.Unknown]: {},
+				[Faction.Alliance]: {
+					1: Presets.DefaultGear.gear,
+				},
+				[Faction.Horde]: {
+					1: Presets.DefaultGear.gear,
+				},
+			},
+		},
 	],
 });
 

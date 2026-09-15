@@ -1,6 +1,6 @@
 import { SITE_BASE } from '../constants/other.js';
 import { Player } from '../player.js';
-import { Player as PlayerProto, ResourceType } from '../proto/api.js';
+import { Player as PlayerProto, ResourceType, Ruleset } from '../proto/api.js';
 import {
 	ArmorType,
 	Class,
@@ -1113,6 +1113,11 @@ export const specToEligibleRaces: Record<Spec, Array<Race>> = {
 const dualWieldClasses: Array<Class> = [Class.ClassHunter, Class.ClassRogue, Class.ClassWarrior];
 
 export function canDualWield(player: Player<Spec>): boolean {
+	// Forever gives the shaman dual wield outright, and the enhancement sim already swings
+	// both weapons; the gear picker was the only thing still refusing the off hand.
+	if (player.getClass() == Class.ClassShaman) {
+		return player.sim.getRuleset() == Ruleset.RulesetForever;
+	}
 	return dualWieldClasses.includes(player.getClass());
 }
 
