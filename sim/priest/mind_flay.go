@@ -49,7 +49,7 @@ func (priest *Priest) newMindFlaySpellConfig(rank int, tickIdx int32) core.Spell
 	}
 
 	spellId := MindFlaySpellId[rank]
-	baseDamage := MindFlayBaseDamage[rank] / float64(ticks)
+	baseDamage := MindFlayBaseDamage[rank] / float64(MindFlayTicks)
 	manaCost := MindFlayManaCost[rank]
 	level := MindFlayLevel[rank]
 
@@ -108,9 +108,7 @@ func (priest *Priest) newMindFlaySpellConfig(rank int, tickIdx int32) core.Spell
 		},
 
 		ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
-			baseDamage := baseDamage / MindFlayTicks
-			result := spell.CalcPeriodicDamage(sim, target, baseDamage, spell.OutcomeExpectedMagicAlwaysHit)
-			return result
+			return spell.CalcPeriodicDamage(sim, target, baseDamage, spell.OutcomeExpectedMagicAlwaysHit)
 		},
 	}
 }

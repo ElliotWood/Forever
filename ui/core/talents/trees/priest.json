@@ -356,7 +356,8 @@
           16919,
           16920
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "notSimulated": true
       },
       {
         "fieldName": "improvedRenew",
@@ -653,7 +654,8 @@
           15337,
           15338
         ],
-        "maxPoints": 5
+        "maxPoints": 5,
+        "notSimulated": true
       },
       {
         "fieldName": "shadowAffinity",
