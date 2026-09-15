@@ -42,7 +42,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Slam no longer resets the swing timer. | Panel | `sim/warrior/slam.go` |
 | Thunder Clap usable in Defensive Stance. | Panel | `sim/warrior/thunder_clap.go` |
 | Improved Shield Wall shortens the cooldown instead of extending the duration. | Tooltip | `sim/warrior/shield_wall.go` |
-| Tactical Mastery is baseline; Improved Tactical Mastery adds on top. | Tooltip | `sim/warrior/stances.go` |
+| Tactical Mastery is baseline; Improved Tactical Mastery adds on top. | Tooltip | Not modelled. `sim/warrior/stances.go` keeps only the talent's own 3 Rage per point, because the baseline retention was never shown a number. |
 | Enrage: any damage taken has a chance to grant a flat +2% Physical damage (was crit-only, scaled per point). | *demo* | `sim/warrior/talents.go` |
 | Improved Cleave discounts Rage instead of adding damage. | *demo* | `sim/warrior/heroic_strike_cleave.go` |
 | Improved Battle Shout and Improved Demoralizing Shout are gone from the tree; assumed baseline. Booming Voice only widens the radius. | Tree | `sim/warrior/shouts.go`, `demoralizing_shout.go` |
