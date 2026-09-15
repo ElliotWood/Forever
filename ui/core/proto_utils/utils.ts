@@ -283,21 +283,16 @@ export function getTalentTree(talentsString: string): number {
 	return maxIndex(points) || 0;
 }
 
-enum IconSizes {
-	Small = 'small',
-	Medium = 'medium',
-	Large = 'large',
-}
-
-// Returns the icon for a given spec
-export function getSpecIcon(klass: Class, specNumber: number, size: IconSizes = IconSizes.Medium): string {
+// Returns the icon for a given spec. The mirror holds one size per icon; every place that
+// shows these sizes them in CSS.
+export function getSpecIcon(klass: Class, specNumber: number): string {
 	const fileName = talentTreeIcons[klass][specNumber];
 
-	return `${WOWHEAD_IMAGES}icons/${size}/${fileName}`;
+	return `${WOWHEAD_IMAGES}icons/large/${fileName}`;
 }
 
 // Returns the icon for a given spec based on talent point allocation.
-export function getTalentTreeIcon(spec: Spec, talentsString: string, size: IconSizes = IconSizes.Medium): string {
+export function getTalentTreeIcon(spec: Spec, talentsString: string): string {
 	let specNumber = getTalentTree(talentsString);
 
 	// Cat Druid is being considered a "4th spec"
@@ -305,7 +300,7 @@ export function getTalentTreeIcon(spec: Spec, talentsString: string, size: IconS
 
 	const fileName = talentTreeIcons[specToClass[spec]][specNumber];
 
-	return `${WOWHEAD_IMAGES}icons/${size}/${fileName}`;
+	return `${WOWHEAD_IMAGES}icons/large/${fileName}`;
 }
 
 // Gets the URL for the individual sim corresponding to the given spec.

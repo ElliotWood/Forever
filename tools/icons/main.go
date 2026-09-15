@@ -5,7 +5,8 @@
 // The set is derived from what the UI can show: every icon named in the database and its
 // inputs, the talent trees (icons, tree backgrounds, and the icons of talent spells the
 // database does not carry, resolved through Wowhead's tooltip endpoint the same way the UI
-// does), and every image path the UI source references under WOWHEAD_IMAGES.
+// does), and every image the UI source references: paths under WOWHEAD_IMAGES and the bare
+// icon file names of the talent tree icon tables.
 //
 // Only missing files are downloaded, so re-running after a database refresh is cheap:
 //
@@ -49,8 +50,10 @@ func remoteUrl(localPath string) string {
 }
 
 var (
-	iconFieldRegex  = regexp.MustCompile(`\\?"icon\\?":\\?"([A-Za-z0-9_\-]+)\\?"`)
-	uiImageRegex    = regexp.MustCompile(`WOWHEAD_IMAGES\}([A-Za-z0-9_./\-]+\.(?:jpg|png|gif))`)
+	iconFieldRegex = regexp.MustCompile(`\\?"icon\\?":\\?"([A-Za-z0-9_\-]+)\\?"`)
+	uiImageRegex   = regexp.MustCompile(`WOWHEAD_IMAGES\}([A-Za-z0-9_./\-]+\.(?:jpg|png|gif))`)
+	// Icon file names the UI holds without a path (the talent tree icon tables), all large.
+	bareIconRegex   = regexp.MustCompile(`'([a-z0-9_]+)\.jpg'`)
 	htmlImageRegex  = regexp.MustCompile(`assets/img/wowhead/([A-Za-z0-9_./\-]+\.(?:jpg|png|gif))`)
 	zamimgWowPrefix = zamimg + "wow/"
 )
@@ -130,8 +133,12 @@ func main() {
 		}
 		switch filepath.Ext(path) {
 		case ".ts", ".tsx":
-			for _, match := range uiImageRegex.FindAllStringSubmatch(readFile(path), -1) {
+			source := readFile(path)
+			for _, match := range uiImageRegex.FindAllStringSubmatch(source, -1) {
 				images[match[1]] = true
+			}
+			for _, match := range bareIconRegex.FindAllStringSubmatch(source, -1) {
+				images.addIcon(match[1])
 			}
 		case ".html":
 			for _, match := range htmlImageRegex.FindAllStringSubmatch(readFile(path), -1) {
