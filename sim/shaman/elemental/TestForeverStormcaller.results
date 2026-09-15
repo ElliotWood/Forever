@@ -1,0 +1,210 @@
+character_stats_results: {
+ key: "TestForeverStormcaller-Phase1-CharacterStats-Default"
+ value: {
+  final_stats: 206
+  final_stats: 156
+  final_stats: 413
+  final_stats: 286
+  final_stats: 177
+  final_stats: 566.8
+  final_stats: 0
+  final_stats: 40
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 39.25
+  final_stats: 3
+  final_stats: 24.1334
+  final_stats: 0
+  final_stats: 0
+  final_stats: 1225.14
+  final_stats: 3
+  final_stats: 26.6248
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 5530
+  final_stats: 0
+  final_stats: 0
+  final_stats: 3018
+  final_stats: 140
+  final_stats: 0
+  final_stats: 5
+  final_stats: 0
+  final_stats: 9.6248
+  final_stats: 5
+  final_stats: 0
+  final_stats: 5230
+  final_stats: 27
+  final_stats: 70
+  final_stats: 60
+  final_stats: 60
+  final_stats: 60
+  final_stats: 384
+  final_stats: 0
+  final_stats: 35
+  final_stats: 0
+ }
+}
+stat_weights_results: {
+ key: "TestForeverStormcaller-Phase1-StatWeights-Default"
+ value: {
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.28592
+  weights: 0
+  weights: 0.44168
+  weights: 0
+  weights: 0.11029
+  weights: 0
+  weights: 0
+  weights: 0.32545
+  weights: 0
+  weights: 0
+  weights: 4.27386
+  weights: 3.65092
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-AllItems-Champion'sEarthshaker"
+ value: {
+  dps: 395.18154
+  tps: 357.58361
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-AllItems-Champion'sStormcaller"
+ value: {
+  dps: 404.90735
+  tps: 365.74126
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-AllItems-GiftoftheGatheringStorm"
+ value: {
+  dps: 423.81876
+  tps: 382.81339
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-AllItems-Stormcaller'sGarb"
+ value: {
+  dps: 437.86623
+  tps: 395.27921
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-AllItems-TheEarthfury"
+ value: {
+  dps: 404.1416
+  tps: 366.44773
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-AllItems-TheFiveThunders"
+ value: {
+  dps: 410.07082
+  tps: 370.62242
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-AllItems-TheTenStorms"
+ value: {
+  dps: 431.80887
+  tps: 389.22883
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-AllItems-Warlord'sEarthshaker"
+ value: {
+  dps: 434.84153
+  tps: 392.77843
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-Average-Default"
+ value: {
+  dps: 436.22602
+  tps: 392.84263
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 997.55167
+  tps: 760.25157
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 424.47768
+  tps: 381.75261
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 548.56761
+  tps: 516.76657
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 722.51694
+  tps: 547.83629
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 320.42965
+  tps: 286.75089
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 499.31348
+  tps: 470.38194
+ }
+}
+dps_results: {
+ key: "TestForeverStormcaller-Phase1-SwitchInFrontOfTarget-Default"
+ value: {
+  dps: 431.30831
+  tps: 388.73602
+ }
+}
