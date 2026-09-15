@@ -2,6 +2,8 @@ package sim
 
 import (
 	"encoding/json"
+	"html"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -128,6 +130,8 @@ func TestTalentTreesMatchTheirProtos(t *testing.T) {
 }
 
 var talentsStringRegex = regexp.MustCompile(`talentsString: '([0-9-]*)'`)
+var presetNameRegex = regexp.MustCompile(`makePresetTalents\(\s*'([^']+)'`)
+var buildLinkRegex = regexp.MustCompile(`href="([a-z_]+)/\?build=([^"]+)"`)
 
 // Every build the UI ships has to be one a player could actually click together:
 // no talent past its rank cap, five points spent above every row a point sits in,
@@ -196,5 +200,50 @@ func checkBuild(t *testing.T, dir string, trees []talentTree, build string) {
 	}
 	if total > 51 {
 		t.Errorf("%s %q: %d points", dir, build, total)
+	}
+}
+
+// The landing page links each community build straight to its spec by name, and the
+// spec page looks that name up in its talent presets when it loads. A link naming a
+// preset that is not there opens the page on its defaults with a warning in the console
+// and nothing else, so the two are kept in step here.
+func TestLandingPageBuildLinksNamePresets(t *testing.T) {
+	page, err := os.ReadFile(filepath.Join("..", "ui", "index.html"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	presets := make(map[string]map[string]bool)
+	for _, class := range talentClasses {
+		for _, dir := range class.specDirs {
+			data, err := os.ReadFile(filepath.Join("..", "ui", dir, "presets.ts"))
+			if err != nil {
+				t.Fatalf("%s: %v", dir, err)
+			}
+			presets[dir] = make(map[string]bool)
+			for _, match := range presetNameRegex.FindAllStringSubmatch(string(data), -1) {
+				presets[dir][match[1]] = true
+			}
+		}
+	}
+
+	links := buildLinkRegex.FindAllStringSubmatch(string(page), -1)
+	if len(links) == 0 {
+		t.Fatal("no build links on the landing page")
+	}
+	for _, link := range links {
+		dir := link[1]
+		name, err := url.QueryUnescape(html.UnescapeString(link[2]))
+		if err != nil {
+			t.Errorf("%s: %v", link[0], err)
+			continue
+		}
+		if _, ok := presets[dir]; !ok {
+			t.Errorf("landing page links %s, which is not a spec with talent presets", dir)
+			continue
+		}
+		if !presets[dir][name] {
+			t.Errorf("landing page links %s to a build named %q, which its presets do not have", dir, name)
+		}
 	}
 }
