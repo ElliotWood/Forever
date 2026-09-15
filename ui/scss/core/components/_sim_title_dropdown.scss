@@ -45,4 +45,12 @@
 			padding-right: var(--gap-width);
 		}
 	}
+
+	// A build sits under its spec, so it starts in from the edge the spec starts at. Said
+	// again here because the rule above is as specific and would otherwise line the two up.
+	.sim-link-build {
+		.sim-link-content {
+			padding-left: calc(var(--gap-width) + var(--spacer-4));
+		}
+	}
 }
