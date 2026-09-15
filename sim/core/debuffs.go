@@ -32,7 +32,10 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		}
 	}
 
-	if debuffs.ImprovedShadowBolt && targetIdx == 0 {
+	// Forever's Improved Shadow Bolt and Stormstrike only raise the damage their own
+	// caster deals, so another raid member running one is worth nothing here. The
+	// warlock and the shaman apply their own in sim/warlock and sim/shaman.
+	if debuffs.ImprovedShadowBolt && targetIdx == 0 && !target.Env.IsForever() {
 		ExternalIsbCaster(debuffs, target)
 	}
 
@@ -92,7 +95,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		}, raid)
 	}
 
-	if debuffs.Stormstrike && targetIdx == 0 {
+	if debuffs.Stormstrike && targetIdx == 0 && !target.Env.IsForever() {
 		ExternalStormstrikeCaster(debuffs, target)
 	}
 

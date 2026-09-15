@@ -55,16 +55,16 @@ stat_weights_results: {
   weights: 0
   weights: 3.65039
   weights: 0
-  weights: 0.77177
+  weights: 0.77178
   weights: 0
-  weights: 0.77177
+  weights: 0.77178
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 21.27206
-  weights: 15.4235
+  weights: 15.42324
   weights: 0
   weights: 0
   weights: 0
@@ -169,8 +169,8 @@ dps_results: {
 dps_results: {
  key: "TestP1MageFire-Phase1-Average-Default"
  value: {
-  dps: 920.15958
-  tps: 940.87149
+  dps: 920.16099
+  tps: 940.8729
  }
 }
 dps_results: {

@@ -155,8 +155,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Feral-Phase1-Average-Default"
  value: {
-  dps: 538.70518
-  tps: 407.1762
+  dps: 538.70534
+  tps: 407.17632
  }
 }
 dps_results: {
@@ -666,7 +666,7 @@ dps_results: {
 dps_results: {
  key: "TestP1Feral-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 426.88135
-  tps: 326.133
+  dps: 426.88815
+  tps: 326.13783
  }
 }

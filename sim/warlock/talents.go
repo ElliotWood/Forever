@@ -755,13 +755,17 @@ func (warlock *Warlock) applyImprovedShadowBolt() {
 		return
 	}
 
-	damageMultiplier := 1 + 0.04*float64(warlock.Talents.ImprovedShadowBolt)
+	points := float64(warlock.Talents.ImprovedShadowBolt)
+	damageMultiplier := 1 + 0.04*points
+	// The duration scales with the talent the same way the damage does, 12 seconds a
+	// point, so at five points it outlasts almost any gap between Shadow Bolt crits.
+	duration := time.Duration(points) * 12 * time.Second
 
 	warlock.ImprovedShadowBoltAuras = warlock.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
 		return unit.RegisterAura(core.Aura{
 			Label:    "Improved Shadow Bolt-" + warlock.Label,
 			ActionID: core.ActionID{SpellID: 17800},
-			Duration: time.Second * 12,
+			Duration: duration,
 		})
 	})
 
