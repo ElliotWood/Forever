@@ -25,8 +25,6 @@ import (
 	"sort"
 	"strings"
 	"sync"
-
-	"github.com/wowsims/classic/tools"
 )
 
 const zamimg = "https://wow.zamimg.com/images/"
@@ -75,9 +73,19 @@ func (s imageSet) addIcon(name string) {
 
 // Every "icon" field anywhere in the file, whether it is JSON or a CSV of JSON tooltips.
 func (s imageSet) addIconFields(filePath string) {
-	for _, match := range iconFieldRegex.FindAllStringSubmatch(tools.ReadFile(filePath), -1) {
+	for _, match := range iconFieldRegex.FindAllStringSubmatch(readFile(filePath), -1) {
 		s.addIcon(match[1])
 	}
+}
+
+// The tools package is not imported for its helpers because it pulls in the sim, and with it
+// the generated protos, which the Update Icons workflow has no reason to build.
+func readFile(filePath string) string {
+	b, err := os.ReadFile(filePath)
+	if err != nil {
+		log.Fatalf("Failed to open %s: %s", filePath, err)
+	}
+	return string(b)
 }
 
 func main() {
@@ -95,7 +103,7 @@ func main() {
 	trees, _ := filepath.Glob(filepath.Join(*treesDir, "*.json"))
 	for _, treeFile := range trees {
 		var classTrees []talentTree
-		if err := json.Unmarshal([]byte(tools.ReadFile(treeFile)), &classTrees); err != nil {
+		if err := json.Unmarshal([]byte(readFile(treeFile)), &classTrees); err != nil {
 			log.Fatalf("Failed to parse %s: %s", treeFile, err)
 		}
 		for _, tree := range classTrees {
@@ -122,11 +130,11 @@ func main() {
 		}
 		switch filepath.Ext(path) {
 		case ".ts", ".tsx":
-			for _, match := range uiImageRegex.FindAllStringSubmatch(tools.ReadFile(path), -1) {
+			for _, match := range uiImageRegex.FindAllStringSubmatch(readFile(path), -1) {
 				images[match[1]] = true
 			}
 		case ".html":
-			for _, match := range htmlImageRegex.FindAllStringSubmatch(tools.ReadFile(path), -1) {
+			for _, match := range htmlImageRegex.FindAllStringSubmatch(readFile(path), -1) {
 				images[match[1]] = true
 			}
 		}
@@ -156,7 +164,7 @@ func databaseSpellIds() map[int32]bool {
 			Id int32 `json:"id"`
 		} `json:"spellIcons"`
 	}
-	if err := json.Unmarshal([]byte(tools.ReadFile(*dbFile)), &db); err != nil {
+	if err := json.Unmarshal([]byte(readFile(*dbFile)), &db); err != nil {
 		log.Fatalf("Failed to parse %s: %s", *dbFile, err)
 	}
 	ids := make(map[int32]bool, len(db.SpellIcons))
@@ -169,62 +177,45 @@ func databaseSpellIds() map[int32]bool {
 // The UI asks Wowhead for spells the database lacks (ui/core/proto_utils/database.ts), so
 // the icons it ends up displaying for them come from the same endpoint.
 func tooltipIcons(spellIds []int32) []string {
-	tooltips := tools.ReadWebMultiMap(spellIds, func(spellId int32) string {
-		return fmt.Sprintf("https://nether.wowhead.com/classic/tooltip/spell/%d?lvl=60", spellId)
-	})
-
 	var icons []string
-	for spellId, body := range tooltips {
+	var mu sync.Mutex
+	parallel(len(spellIds), func(i int) {
+		spellId := spellIds[i]
+		body, err := get(fmt.Sprintf("https://nether.wowhead.com/classic/tooltip/spell/%d?lvl=60", spellId))
 		var tooltip struct {
 			Icon string `json:"icon"`
 		}
-		if err := json.Unmarshal([]byte(body), &tooltip); err != nil || tooltip.Icon == "" {
-			log.Printf("No tooltip icon for spell %d", spellId)
-			continue
+		if err == nil {
+			err = json.Unmarshal(body, &tooltip)
 		}
+		if err != nil || tooltip.Icon == "" {
+			log.Printf("No tooltip icon for spell %d", spellId)
+			return
+		}
+		mu.Lock()
 		icons = append(icons, tooltip.Icon)
-	}
+		mu.Unlock()
+	})
 	return icons
 }
 
 func download(localPaths []string) []string {
 	var failed []string
 	var mu sync.Mutex
-	var wg sync.WaitGroup
-	queue := make(chan string)
-
-	for i := 0; i < *numWorkers; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			for localPath := range queue {
-				if err := fetch(remoteUrl(localPath), filepath.Join(*outDir, localPath)); err != nil {
-					log.Printf("%s: %s", localPath, err)
-					mu.Lock()
-					failed = append(failed, localPath)
-					mu.Unlock()
-				}
-			}
-		}()
-	}
-	for _, localPath := range localPaths {
-		queue <- localPath
-	}
-	close(queue)
-	wg.Wait()
+	parallel(len(localPaths), func(i int) {
+		localPath := localPaths[i]
+		if err := fetch(remoteUrl(localPath), filepath.Join(*outDir, localPath)); err != nil {
+			log.Printf("%s: %s", localPath, err)
+			mu.Lock()
+			failed = append(failed, localPath)
+			mu.Unlock()
+		}
+	})
 	return failed
 }
 
 func fetch(url string, filePath string) error {
-	resp, err := http.Get(url)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("%s returned %s", url, resp.Status)
-	}
-	body, err := io.ReadAll(resp.Body)
+	body, err := get(url)
 	if err != nil {
 		return err
 	}
@@ -232,4 +223,36 @@ func fetch(url string, filePath string) error {
 		return err
 	}
 	return os.WriteFile(filePath, body, 0644)
+}
+
+func get(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("%s returned %s", url, resp.Status)
+	}
+	return io.ReadAll(resp.Body)
+}
+
+// Runs fn for every index in [0, n) on numWorkers goroutines.
+func parallel(n int, fn func(i int)) {
+	var wg sync.WaitGroup
+	queue := make(chan int)
+	for w := 0; w < *numWorkers; w++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for i := range queue {
+				fn(i)
+			}
+		}()
+	}
+	for i := 0; i < n; i++ {
+		queue <- i
+	}
+	close(queue)
+	wg.Wait()
 }
