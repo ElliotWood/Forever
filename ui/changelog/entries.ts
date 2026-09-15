@@ -188,6 +188,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'The rogue picker stops promising two things the sim never rolled',
+				prs: [138],
+				changed:
+					"Cutthroat read a flat 3% chance at all five ranks because the datamined pass copied rank 1 into the rest, while the sim has always rolled 3% per point, so a 5/5 rogue was told 3% and got 15%; the tree scales the chance now and keeps the 10 sec duration. Quietus extrapolated its execute threshold along with its damage, so the picker offered 'targets below 175% health' at 5/5, where the sim holds rank 1's 35% because a threshold cannot scale. The three stamped rogue overrides were checked against the code and their numbers hold, but the calculator they were checked against is rebuilt from the same demo footage, so the reasons say extrapolated rather than confirmed.",
+				effect: 'No simulated number moves, every rogue result is unchanged. What the picker shows is now what the sim rolls.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Tests that pin the trees together',
 				prs: [68],
 				changed:
