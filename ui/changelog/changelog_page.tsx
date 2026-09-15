@@ -1,5 +1,15 @@
 import { SITE_BASE, SITE_REPO_URL } from '../core/constants/other';
 import { Entry, sections, Source } from './entries';
+// Every pull request merged into master, kept current by the Update Changelog workflow.
+import merged from './merged.json';
+
+type MergedPullRequest = {
+	number: number;
+	title: string;
+	mergedAt: string;
+	url: string;
+};
+const mergedPullRequests = merged as Array<MergedPullRequest>;
 
 const prLink = (pr: number) => (
 	<a className="changelog-pr" href={`${SITE_REPO_URL}/pull/${pr}`} target="_blank" rel="noreferrer">
@@ -12,6 +22,18 @@ const sourceLink = (source: Source) => (
 		<a href={source.url} target="_blank" rel="noreferrer">
 			{source.label}
 		</a>
+	</li>
+);
+
+const mergedRow = (pull: MergedPullRequest) => (
+	<li className="changelog-merged-row">
+		<a className="changelog-pr" href={pull.url} target="_blank" rel="noreferrer">
+			#{pull.number}
+		</a>
+		<span className="changelog-merged-title">{pull.title}</span>
+		<time className="changelog-merged-date" dateTime={pull.mergedAt}>
+			{pull.mergedAt}
+		</time>
 	</li>
 );
 
@@ -95,6 +117,18 @@ export class ChangelogPage {
 							</div>
 						</section>
 					))}
+					<section className="content-block changelog-section changelog-merged">
+						<div className="content-block-header">
+							<h2 className="content-block-title">Every merged pull request ({mergedPullRequests.length})</h2>
+						</div>
+						<div className="content-block-body">
+							<p className="changelog-section-intro">
+								The sections above are written by hand and group the work by what it did. This list is the raw record, newest first, refreshed
+								by the build every time a pull request is merged.
+							</p>
+							<ol className="changelog-merged-list">{mergedPullRequests.map(mergedRow)}</ol>
+						</div>
+					</section>
 				</main>
 			</div>,
 		);
