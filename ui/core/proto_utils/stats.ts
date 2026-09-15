@@ -3,7 +3,9 @@ import { getEnumValues } from '../utils.js';
 import { getClassStatName, pseudoStatNames } from './names.js';
 
 const STATS_LEN = getEnumValues(Stat).length;
-const PSEUDOSTATS_LEN = getEnumValues(PseudoStat).length;
+// The enum has gaps, so the array is sized by its highest value rather than how many
+// values there are, or the later pseudo stats fall off the end and read as undefined.
+const PSEUDOSTATS_LEN = Math.max(...(getEnumValues(PseudoStat) as Array<number>)) + 1;
 
 export class UnitStat {
 	private readonly stat: Stat | null;
