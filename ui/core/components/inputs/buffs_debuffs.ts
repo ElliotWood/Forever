@@ -18,6 +18,7 @@ import { IconPicker, IconPickerDirection } from '../icon_picker';
 import * as InputHelpers from '../input_helpers';
 import { MultiIconPicker } from '../multi_icon_picker';
 import { ItemStatOption, PickerStatOptions } from './stat_options';
+import { WOWHEAD_IMAGES } from '../../constants/other';
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 RAID BUFFS
@@ -346,7 +347,7 @@ export const SaygesDarkFortune = (inputs: ItemStatOption<SaygesFortune>[]) =>
 	makeEnumIndividualBuffInput({
 		direction: IconPickerDirection.Horizontal,
 		values: [
-			{ iconUrl: 'https://wow.zamimg.com/images/wow/icons/large/inv_misc_orb_02.jpg', value: SaygesFortune.SaygesUnknown, text: `Sayge's Dark Fortune` },
+			{ iconUrl: `${WOWHEAD_IMAGES}icons/large/inv_misc_orb_02.jpg`, value: SaygesFortune.SaygesUnknown, text: `Sayge's Dark Fortune` },
 			...inputs.map(input => input.config),
 		],
 		fieldName: 'saygesFortune',

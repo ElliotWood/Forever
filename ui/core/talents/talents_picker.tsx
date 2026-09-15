@@ -11,12 +11,15 @@ import { ActionId } from '../proto_utils/action_id.js';
 import { getSpecIcon } from '../proto_utils/utils.js';
 import { TypedEvent } from '../typed_event.js';
 import { isRightClick, sum } from '../utils.js';
+import { WOWHEAD_IMAGES } from '../constants/other';
 
 // Talents Forever added have no spell id, so their icon is addressed by name instead of
 // resolved through Wowhead. Some are not datamined yet and fall back to the client's own
 // placeholder rather than drawing nothing.
 const UNKNOWN_TALENT_ICON = 'inv_misc_questionmark';
-const talentIconUrl = (icon: string) => `https://wow.zamimg.com/images/wow/icons/large/${icon}.jpg`;
+const talentIconUrl = (icon: string) => `${WOWHEAD_IMAGES}icons/large/${icon}.jpg`;
+// The tree files still name their backgrounds by Wowhead URL; the mirror keeps the same layout.
+const treeBackgroundUrl = (url: string) => url.replace('https://wow.zamimg.com/images/wow/', WOWHEAD_IMAGES);
 
 export interface TalentsPickerConfig<TalentsProto> extends InputConfig<Player<Spec>, string> {
 	klass: Class;
@@ -206,7 +209,7 @@ class TalentTreePicker<TalentsProto> extends Component {
 		this.pointsElem = this.rootElem.querySelector('.talent-tree-points') as HTMLElement;
 
 		const background = this.rootElem.querySelector('.talent-tree-background') as HTMLElement;
-		background.style.backgroundImage = `url('${config.backgroundUrl}')`;
+		background.style.backgroundImage = `url('${treeBackgroundUrl(config.backgroundUrl)}')`;
 
 		const main = this.rootElem.querySelector('.talent-tree-main') as HTMLElement;
 		main.style.gridTemplateRows = `repeat(${this.picker.numRows}, 1fr)`;

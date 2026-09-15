@@ -1,4 +1,4 @@
-import { SITE_BASE } from '../constants/other.js';
+import { SITE_BASE, WOWHEAD_IMAGES } from '../constants/other.js';
 import { Player } from '../player.js';
 import { Player as PlayerProto, ResourceType, Ruleset } from '../proto/api.js';
 import {
@@ -228,37 +228,37 @@ export const talentTreeIcons: Record<Class, Array<string>> = {
 
 export const classIcons: Record<Class, string> = {
 	[Class.ClassUnknown]: '',
-	[Class.ClassDruid]: 'https://wow.zamimg.com/images/wow/icons/large/class_druid.jpg',
-	[Class.ClassHunter]: 'https://wow.zamimg.com/images/wow/icons/large/class_hunter.jpg',
-	[Class.ClassMage]: 'https://wow.zamimg.com/images/wow/icons/large/class_mage.jpg',
-	[Class.ClassPaladin]: 'https://wow.zamimg.com/images/wow/icons/large/class_paladin.jpg',
-	[Class.ClassPriest]: 'https://wow.zamimg.com/images/wow/icons/large/class_priest.jpg',
-	[Class.ClassRogue]: 'https://wow.zamimg.com/images/wow/icons/large/class_rogue.jpg',
-	[Class.ClassShaman]: 'https://wow.zamimg.com/images/wow/icons/large/class_shaman.jpg',
-	[Class.ClassWarlock]: 'https://wow.zamimg.com/images/wow/icons/large/class_warlock.jpg',
-	[Class.ClassWarrior]: 'https://wow.zamimg.com/images/wow/icons/large/class_warrior.jpg',
+	[Class.ClassDruid]: `${WOWHEAD_IMAGES}icons/large/class_druid.jpg`,
+	[Class.ClassHunter]: `${WOWHEAD_IMAGES}icons/large/class_hunter.jpg`,
+	[Class.ClassMage]: `${WOWHEAD_IMAGES}icons/large/class_mage.jpg`,
+	[Class.ClassPaladin]: `${WOWHEAD_IMAGES}icons/large/class_paladin.jpg`,
+	[Class.ClassPriest]: `${WOWHEAD_IMAGES}icons/large/class_priest.jpg`,
+	[Class.ClassRogue]: `${WOWHEAD_IMAGES}icons/large/class_rogue.jpg`,
+	[Class.ClassShaman]: `${WOWHEAD_IMAGES}icons/large/class_shaman.jpg`,
+	[Class.ClassWarlock]: `${WOWHEAD_IMAGES}icons/large/class_warlock.jpg`,
+	[Class.ClassWarrior]: `${WOWHEAD_IMAGES}icons/large/class_warrior.jpg`,
 };
 
 export const titleIcons: Record<Spec, string> = {
-	[Spec.SpecBalanceDruid]: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_starfall.jpg',
-	[Spec.SpecFeralDruid]: 'https://wow.zamimg.com/images/wow/icons/large/ability_druid_catform.jpg',
-	[Spec.SpecFeralTankDruid]: 'https://wow.zamimg.com/images/wow/icons/large/ability_racial_bearform.jpg',
-	[Spec.SpecRestorationDruid]: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_healingtouch.jpg',
-	[Spec.SpecElementalShaman]: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_lightning.jpg',
-	[Spec.SpecEnhancementShaman]: 'https://wow.zamimg.com/images/wow/icons/large/ability_shaman_stormstrike.jpg',
-	[Spec.SpecRestorationShaman]: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_magicimmunity.jpg',
-	[Spec.SpecHunter]: 'https://wow.zamimg.com/images/wow/icons/large/class_hunter.jpg',
-	[Spec.SpecMage]: 'https://wow.zamimg.com/images/wow/icons/large/class_mage.jpg',
-	[Spec.SpecRogue]: 'https://wow.zamimg.com/images/wow/icons/large/class_rogue.jpg',
-	[Spec.SpecHolyPaladin]: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_holybolt.jpg',
-	[Spec.SpecProtectionPaladin]: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_devotionaura.jpg',
-	[Spec.SpecRetributionPaladin]: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_auraoflight.jpg',
-	[Spec.SpecHealingPriest]: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_guardianspirit.jpg',
-	[Spec.SpecShadowPriest]: 'https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg',
-	[Spec.SpecSmitePriest]: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_holysmite.jpg',
-	[Spec.SpecWarlock]: 'https://wow.zamimg.com/images/wow/icons/large/class_warlock.jpg',
-	[Spec.SpecWarrior]: 'https://wow.zamimg.com/images/wow/icons/large/class_warrior.jpg',
-	[Spec.SpecTankWarrior]: 'https://wow.zamimg.com/images/wow/icons/large/ability_warrior_defensivestance.jpg',
+	[Spec.SpecBalanceDruid]: `${WOWHEAD_IMAGES}icons/large/spell_nature_starfall.jpg`,
+	[Spec.SpecFeralDruid]: `${WOWHEAD_IMAGES}icons/large/ability_druid_catform.jpg`,
+	[Spec.SpecFeralTankDruid]: `${WOWHEAD_IMAGES}icons/large/ability_racial_bearform.jpg`,
+	[Spec.SpecRestorationDruid]: `${WOWHEAD_IMAGES}icons/large/spell_nature_healingtouch.jpg`,
+	[Spec.SpecElementalShaman]: `${WOWHEAD_IMAGES}icons/large/spell_nature_lightning.jpg`,
+	[Spec.SpecEnhancementShaman]: `${WOWHEAD_IMAGES}icons/large/ability_shaman_stormstrike.jpg`,
+	[Spec.SpecRestorationShaman]: `${WOWHEAD_IMAGES}icons/large/spell_nature_magicimmunity.jpg`,
+	[Spec.SpecHunter]: `${WOWHEAD_IMAGES}icons/large/class_hunter.jpg`,
+	[Spec.SpecMage]: `${WOWHEAD_IMAGES}icons/large/class_mage.jpg`,
+	[Spec.SpecRogue]: `${WOWHEAD_IMAGES}icons/large/class_rogue.jpg`,
+	[Spec.SpecHolyPaladin]: `${WOWHEAD_IMAGES}icons/large/spell_holy_holybolt.jpg`,
+	[Spec.SpecProtectionPaladin]: `${WOWHEAD_IMAGES}icons/large/spell_holy_devotionaura.jpg`,
+	[Spec.SpecRetributionPaladin]: `${WOWHEAD_IMAGES}icons/large/spell_holy_auraoflight.jpg`,
+	[Spec.SpecHealingPriest]: `${WOWHEAD_IMAGES}icons/large/spell_holy_guardianspirit.jpg`,
+	[Spec.SpecShadowPriest]: `${WOWHEAD_IMAGES}icons/large/spell_shadow_shadowwordpain.jpg`,
+	[Spec.SpecSmitePriest]: `${WOWHEAD_IMAGES}icons/large/spell_holy_holysmite.jpg`,
+	[Spec.SpecWarlock]: `${WOWHEAD_IMAGES}icons/large/class_warlock.jpg`,
+	[Spec.SpecWarrior]: `${WOWHEAD_IMAGES}icons/large/class_warrior.jpg`,
+	[Spec.SpecTankWarrior]: `${WOWHEAD_IMAGES}icons/large/ability_warrior_defensivestance.jpg`,
 };
 
 export const raidSimIcon = `${SITE_BASE}assets/img/raid_icon.png`;
@@ -283,21 +283,16 @@ export function getTalentTree(talentsString: string): number {
 	return maxIndex(points) || 0;
 }
 
-enum IconSizes {
-	Small = 'small',
-	Medium = 'medium',
-	Large = 'large',
-}
-
-// Returns the icon for a given spec
-export function getSpecIcon(klass: Class, specNumber: number, size: IconSizes = IconSizes.Medium): string {
+// Returns the icon for a given spec. The mirror holds one size per icon; every place that
+// shows these sizes them in CSS.
+export function getSpecIcon(klass: Class, specNumber: number): string {
 	const fileName = talentTreeIcons[klass][specNumber];
 
-	return `https://wow.zamimg.com/images/wow/icons/${size}/${fileName}`;
+	return `${WOWHEAD_IMAGES}icons/large/${fileName}`;
 }
 
 // Returns the icon for a given spec based on talent point allocation.
-export function getTalentTreeIcon(spec: Spec, talentsString: string, size: IconSizes = IconSizes.Medium): string {
+export function getTalentTreeIcon(spec: Spec, talentsString: string): string {
 	let specNumber = getTalentTree(talentsString);
 
 	// Cat Druid is being considered a "4th spec"
@@ -305,7 +300,7 @@ export function getTalentTreeIcon(spec: Spec, talentsString: string, size: IconS
 
 	const fileName = talentTreeIcons[specToClass[spec]][specNumber];
 
-	return `https://wow.zamimg.com/images/wow/icons/${size}/${fileName}`;
+	return `${WOWHEAD_IMAGES}icons/large/${fileName}`;
 }
 
 // Gets the URL for the individual sim corresponding to the given spec.

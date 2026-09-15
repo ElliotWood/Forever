@@ -1,6 +1,6 @@
 import { ref } from 'tsx-vanilla';
 
-import { SITE_BASE } from '../core/constants/other';
+import { SITE_BASE, WOWHEAD_IMAGES } from '../core/constants/other';
 import { setItemQualityCssClass } from '../core/css_utils';
 import { Class, ItemRandomSuffix, Spec } from '../core/proto/common';
 import { UIItem as Item } from '../core/proto/ui';
@@ -14,7 +14,7 @@ import { bisSpecs, loadSpecConfig } from './specs';
 
 export const specSlug = (spec: Spec): string => specNames[spec].toLowerCase().replace(/[^a-z]+/g, '-');
 
-const iconUrl = (item: Item): string => `https://wow.zamimg.com/images/wow/icons/large/${item.icon}.jpg`;
+const iconUrl = (item: Item): string => `${WOWHEAD_IMAGES}icons/large/${item.icon}.jpg`;
 
 // Rounding first keeps an item worth nothing but its unique penalty off the page as -0.0.
 const formatEP = (ep: number): string => (Math.round(ep * 10) / 10).toFixed(1);
