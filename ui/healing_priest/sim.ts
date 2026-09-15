@@ -65,7 +65,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHealingPriest, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [Presets.DiscTalents, Presets.HolyTalents],
+		talents: [Presets.DiscTalents, Presets.HolyTalents, Presets.TalentsDisciplineHealer, Presets.TalentsHolyHealer],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_DISC, Presets.ROTATION_PRESET_HOLY],
 		// Preset gear configurations that the user can quickly select.

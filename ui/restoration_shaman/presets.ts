@@ -25,6 +25,8 @@ export const RaidHealingTalents = {
 	}),
 };
 
+export const TalentsRestoration = PresetUtils.makePresetTalents('Restoration 0/3/48', SavedTalents.create({ talentsString: '-003-5532503315513151' }));
+
 export const DefaultOptions = RestorationShamanOptions.create({
 	earthShieldPPM: 0,
 });

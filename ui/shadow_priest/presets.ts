@@ -62,8 +62,10 @@ export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 export const TalentsP1Shadow = PresetUtils.makePresetTalents('Shadow', SavedTalents.create({ talentsString: '005300231303--505120501201300051' }));
 
+export const TalentsShadow = PresetUtils.makePresetTalents('Shadow 15/0/36', SavedTalents.create({ talentsString: '0253000311--550022501201302251' }));
+
 export const TalentPresets = {
-	[ClassicPhase.Phase1]: [TalentsP1Shadow],
+	[ClassicPhase.Phase1]: [TalentsP1Shadow, TalentsShadow],
 };
 
 export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];

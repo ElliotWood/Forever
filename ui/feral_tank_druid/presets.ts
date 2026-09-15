@@ -69,9 +69,12 @@ export const StandardTalents = {
 	}),
 };
 
+export const TalentsBearTank = PresetUtils.makePresetTalents('Bear Tank 0/31/20', SavedTalents.create({ talentsString: '-5003232120132010501-0550325' }));
+
 export const TalentPresets = {
   [ClassicPhase.Phase1]: [
     StandardTalents,
+    TalentsBearTank,
   ],
   [ClassicPhase.Phase2]: [
   ]

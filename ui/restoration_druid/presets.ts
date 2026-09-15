@@ -25,6 +25,8 @@ export const ThiccRestoTalents = {
 	}),
 };
 
+export const TalentsRestoration = PresetUtils.makePresetTalents('Restoration 10/0/41', SavedTalents.create({ talentsString: '05302--5053035153113051' }));
+
 export const DefaultOptions = RestorationDruidOptions.create({
 	innervateTarget: UnitReference.create(),
 });

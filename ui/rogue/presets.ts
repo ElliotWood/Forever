@@ -102,9 +102,13 @@ export const CombatSinisterStrikeTalents = PresetUtils.makePresetTalents('Sinist
 export const CombatSinisterStrikeIEATalents = PresetUtils.makePresetTalents('Improved Expose Armor (SS)', SavedTalents.create({ talentsString: '005303125-32003311201515131' }));
 export const AssassinationMutilateTalents = PresetUtils.makePresetTalents('Mutilate', SavedTalents.create({ talentsString: '00530310551021051-302303202004' }));
 
+export const TalentsCombatDualWield = PresetUtils.makePresetTalents('Combat Dual-Wield 15/33/3', SavedTalents.create({ talentsString: '1053231-22530300001515231-012' }));
+export const TalentsAssassinationMutilate = PresetUtils.makePresetTalents('Assassination Mutilate 31/20/0', SavedTalents.create({ talentsString: '02532010531201051-225303000005' }));
+export const TalentsSubtletyHemo = PresetUtils.makePresetTalents('Subtlety Hemo 15/0/36', SavedTalents.create({ talentsString: '125320101--5320003310013211551' }));
+
 export const TalentPresets = {
-	[ClassicPhase.Phase1]: [CombatBackstabTalents, CombatSinisterStrikeTalents, CombatSinisterStrikeIEATalents, AssassinationMutilateTalents],
-	[ClassicPhase.Phase2]: [CombatBackstabTalents, CombatSinisterStrikeTalents, CombatSinisterStrikeIEATalents, AssassinationMutilateTalents],
+	[ClassicPhase.Phase1]: [CombatBackstabTalents, CombatSinisterStrikeTalents, CombatSinisterStrikeIEATalents, AssassinationMutilateTalents, TalentsCombatDualWield, TalentsAssassinationMutilate, TalentsSubtletyHemo],
+	[ClassicPhase.Phase2]: [CombatBackstabTalents, CombatSinisterStrikeTalents, CombatSinisterStrikeIEATalents, AssassinationMutilateTalents, TalentsCombatDualWield, TalentsAssassinationMutilate, TalentsSubtletyHemo],
 };
 
 export const DefaultTalentsAssassin = TalentPresets[ClassicPhase.Phase2][0];

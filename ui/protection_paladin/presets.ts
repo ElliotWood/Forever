@@ -86,12 +86,14 @@ export const P5ProtTalents = {
 	}),
 };
 
+export const TalentsProtection = PresetUtils.makePresetTalents('Protection 0/45/6', SavedTalents.create({ talentsString: '-5532513321301551-15' }));
+
 export const TalentPresets = {
 	[ClassicPhase.Phase1]: [],
 	[ClassicPhase.Phase2]: [],
 	[ClassicPhase.Phase3]: [],
 	[ClassicPhase.Phase4]: [P4ProtTalents],
-	[ClassicPhase.Phase5]: [P5ProtTalents],
+	[ClassicPhase.Phase5]: [P5ProtTalents, TalentsProtection],
 };
 
 export const DefaultTalents = TalentPresets[ClassicPhase.Phase5][0];

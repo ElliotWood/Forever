@@ -72,8 +72,11 @@ export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '5505301500103031--503352001' }));
 
+export const TalentsElemental = PresetUtils.makePresetTalents('Elemental 31/6/14', SavedTalents.create({ talentsString: '2505301500123031-0500001-053050001' }));
+export const TalentsStormcaller = PresetUtils.makePresetTalents('Stormcaller 28/23/0', SavedTalents.create({ talentsString: '050433150010303-055030030004102' }));
+
 export const TalentPresets = {
-	[ClassicPhase.Phase1]: [TalentsLevel60],
+	[ClassicPhase.Phase1]: [TalentsLevel60, TalentsElemental, TalentsStormcaller],
 	[ClassicPhase.Phase2]: [],
 	[ClassicPhase.Phase3]: [],
 	[ClassicPhase.Phase4]: [],

@@ -68,7 +68,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRestorationDruid, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [Presets.CelestialFocusTalents, Presets.ThiccRestoTalents],
+		talents: [Presets.CelestialFocusTalents, Presets.ThiccRestoTalents, Presets.TalentsRestoration],
 		rotations: [],
 		// Preset gear configurations that the user can quickly select.
 		gear: [Presets.DefaultGear],

@@ -70,11 +70,13 @@ export const DefaultAPL = APLPresets[ClassicPhase.Phase4][0];
 export const P4RetTalents = PresetUtils.makePresetTalents('P4/P5 Ret', SavedTalents.create({ talentsString: '0550030022001--052251310002330321' }));
 
 
+export const TalentsRetribution = PresetUtils.makePresetTalents('Retribution 10/0/41', SavedTalents.create({ talentsString: '250003--552250312012331321' }));
+
 export const TalentPresets = {
 	[ClassicPhase.Phase1]: [],
 	[ClassicPhase.Phase2]: [],
 	[ClassicPhase.Phase3]: [],
-	[ClassicPhase.Phase4]: [P4RetTalents],
+	[ClassicPhase.Phase4]: [P4RetTalents, TalentsRetribution],
 };
 
 export const DefaultTalents = TalentPresets[ClassicPhase.Phase4][0];

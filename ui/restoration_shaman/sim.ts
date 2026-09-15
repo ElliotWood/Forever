@@ -84,7 +84,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRestorationShaman, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [Presets.RaidHealingTalents, Presets.TankHealingTalents],
+		talents: [Presets.RaidHealingTalents, Presets.TankHealingTalents, Presets.TalentsRestoration],
 		rotations: [],
 		// Preset gear configurations that the user can quickly select.
 		gear: [Presets.DefaultGear],

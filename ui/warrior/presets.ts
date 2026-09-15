@@ -70,8 +70,11 @@ export const DefaultAPLs = [APLPresets[ClassicPhase.Phase1][0]];
 
 export const TalentsP1DPS = PresetUtils.makePresetTalents('DPS', SavedTalents.create({ talentsString: '303050130-050520035150310051' }));
 
+export const TalentsFury = PresetUtils.makePresetTalents('Fury 17/34/0', SavedTalents.create({ talentsString: '30305213-550501015050010051' }));
+export const TalentsArms = PresetUtils.makePresetTalents('Arms 39/12/0', SavedTalents.create({ talentsString: '32305213132515201-5502' }));
+
 export const TalentPresets = {
-	[ClassicPhase.Phase1]: [TalentsP1DPS],
+	[ClassicPhase.Phase1]: [TalentsP1DPS, TalentsFury, TalentsArms],
 };
 
 export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];

@@ -67,8 +67,10 @@ export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 export const TalentsP1Prot = PresetUtils.makePresetTalents('Protection', SavedTalents.create({ talentsString: '31--5525312333000105351' }));
 
+export const TalentsProtection = PresetUtils.makePresetTalents('Protection 1/0/50', SavedTalents.create({ talentsString: '1--5525312333012105351' }));
+
 export const TalentPresets = {
-	[ClassicPhase.Phase1]: [TalentsP1Prot],
+	[ClassicPhase.Phase1]: [TalentsP1Prot, TalentsProtection],
 };
 
 export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
