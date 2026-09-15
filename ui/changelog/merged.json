@@ -1,5 +1,11 @@
 [
 	{
+		"number": 113,
+		"title": "fix(priest): give the smite build power infusion and hold power in light up",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/113"
+	},
+	{
 		"number": 110,
 		"title": "fix(hunter): bite with the cat, hold Serpent Sting for mana, fix Volley's crit bonus",
 		"mergedAt": "2026-09-15",
