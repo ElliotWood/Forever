@@ -1,0 +1,282 @@
+{
+	"10060": {
+		"ability": "Power Infusion",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"10293": {
+		"ability": "Devotion Aura",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"10301": {
+		"ability": "Retribution Aura",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"10408": {
+		"ability": "Stoneskin Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"11374": {
+		"ability": "Gift of Arthas",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11597": {
+		"ability": "Sunder Armor",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11708": {
+		"ability": "Curse of Weakness",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11717": {
+		"ability": "Curse of Recklessness",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11722": {
+		"ability": "Curse of the Elements",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"1191": {
+		"ability": "Frostbolt",
+		"file": "sim/core/consumes.go",
+		"source": "unreviewed"
+	},
+	"12873": {
+		"ability": "Improved Scorch",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"1382": {
+		"ability": "Shadow Bolt",
+		"file": "sim/core/consumes.go",
+		"source": "unreviewed"
+	},
+	"14325": {
+		"ability": "Hunter's Mark",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"15235": {
+		"ability": "Crystal Yield",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"15363": {
+		"ability": "Inspiration",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"15366": {
+		"ability": "Songflower Serenade",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"15851": {
+		"ability": "Dragonbreath Chili",
+		"file": "sim/core/consumes.go",
+		"source": "unreviewed"
+	},
+	"15852": {
+		"ability": "Dragonbreath Chili",
+		"file": "sim/core/consumes.go",
+		"source": "unreviewed"
+	},
+	"16190": {
+		"ability": "Mana Tide Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"16321": {
+		"ability": "Juju Escape",
+		"file": "sim/core/consumes.go",
+		"source": "unreviewed"
+	},
+	"16322": {
+		"ability": "Juju Flurry",
+		"file": "sim/core/consumes.go",
+		"source": "unreviewed"
+	},
+	"16609": {
+		"ability": "Warchief's Blessing",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"17364": {
+		"ability": "Stormstrike",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"17800": {
+		"ability": "Shadow Vulnerability",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"17937": {
+		"ability": "Curse of Shadow",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"20217": {
+		"ability": "Blessing of Kings",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"20218": {
+		"ability": "Sanctity Aura",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"20271": {
+		"ability": "Judgement",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"20355": {
+		"ability": "Judgement of Wisdom",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"20572": {
+		"ability": "Blood Fury",
+		"file": "sim/core/racials.go",
+		"source": "unreviewed"
+	},
+	"20594": {
+		"ability": "Stoneform",
+		"file": "sim/core/racials.go",
+		"source": "unreviewed"
+	},
+	"20906": {
+		"ability": "Trueshot Aura",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"22817": {
+		"ability": "Fengus' Ferocity",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"22818": {
+		"ability": "Mol'dar's Moxie",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"22820": {
+		"ability": "Slip'kik's Savvy",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"22888": {
+		"ability": "Rallying Cry of the Dragonslayer",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"23060": {
+		"ability": "Battle Squawk",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"23577": {
+		"ability": "Expose Weakness",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"24425": {
+		"ability": "Spirit of Zandalar",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"24977": {
+		"ability": "Insect Swarm",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"26016": {
+		"ability": "Vindication",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"26297": {
+		"ability": "Berserking",
+		"file": "sim/core/racials.go",
+		"source": "unreviewed"
+	},
+	"28142": {
+		"ability": "Power of the Guardian",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"28143": {
+		"ability": "Power of the Guardian",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"28144": {
+		"ability": "Power of the Guardian",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"28145": {
+		"ability": "Power of the Guardian",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"2825": {
+		"ability": "spell 2825",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"28593": {
+		"ability": "Winter's Chill",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"29166": {
+		"ability": "Innervate",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"3043": {
+		"ability": "Scorpid Sting",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"34917": {
+		"ability": "spell 34917",
+		"file": "sim/core/mana.go",
+		"source": "unreviewed"
+	},
+	"409828": {
+		"ability": "spell 409828",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"460520": {
+		"ability": "spell 460520",
+		"file": "sim/core/racials.go",
+		"source": "unreviewed"
+	},
+	"460530": {
+		"ability": "spell 460530",
+		"file": "sim/core/racials.go",
+		"source": "unreviewed"
+	},
+	"9898": {
+		"ability": "Demoralizing Roar",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"9910": {
+		"ability": "Thorns",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	}
+}

@@ -1,0 +1,487 @@
+{
+	"12686": {
+		"ability": "Enrage",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"13318": {
+		"ability": "Rend",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"13494": {
+		"ability": "Haste",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"13526": {
+		"ability": "Corrosive Poison",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"13532": {
+		"ability": "Thunder Clap",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"13533": {
+		"ability": "Haste",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"13889": {
+		"ability": "Minor Speed",
+		"file": "sim/common/enchant_effects.go",
+		"source": "unreviewed"
+	},
+	"13897": {
+		"ability": "Fiery Weapon",
+		"file": "sim/common/enchant_effects.go",
+		"source": "unreviewed"
+	},
+	"15494": {
+		"ability": "Fury of Forgewright",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"15600": {
+		"ability": "Hand of Justice",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"15602": {
+		"ability": "Lord General's Sword",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"15604": {
+		"ability": "Second Wind",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16406": {
+		"ability": "Rend",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16413": {
+		"ability": "Fireball",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16414": {
+		"ability": "Drain Life",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16528": {
+		"ability": "Numbing Pain",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16551": {
+		"ability": "Felstriker",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16596": {
+		"ability": "Flames of Shahram",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16597": {
+		"ability": "Curse of Shahram",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16598": {
+		"ability": "Will of Shahram",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16599": {
+		"ability": "Blessing of Shahram",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16600": {
+		"ability": "Might of Shahram",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16601": {
+		"ability": "Fist of Shahram",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16898": {
+		"ability": "Blaze",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16916": {
+		"ability": "Strength of the Champion",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16927": {
+		"ability": "Chilled",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"16928": {
+		"ability": "Armor Shatter",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17152": {
+		"ability": "Destiny",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17196": {
+		"ability": "Seeping Willow",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17315": {
+		"ability": "Puncture Armor",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17330": {
+		"ability": "Poison",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17331": {
+		"ability": "Fang of the Crystal Spider",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17333": {
+		"ability": "Spider's Kiss",
+		"file": "sim/common/item_sets/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"17352": {
+		"ability": "Argent Avenger",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17484": {
+		"ability": "Skullforge Brand",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17504": {
+		"ability": "Rend",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17505": {
+		"ability": "Curse of Timmy",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17511": {
+		"ability": "Poison",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"17625": {
+		"ability": "Unholy Aura",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18082": {
+		"ability": "Fireball",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18203": {
+		"ability": "Poison",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18289": {
+		"ability": "Creeping Mold",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18633": {
+		"ability": "Weakening Disease",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18652": {
+		"ability": "Siphon Health",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18656": {
+		"ability": "Corruption",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18796": {
+		"ability": "Fireball",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18797": {
+		"ability": "Flurry Axe",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18803": {
+		"ability": "Focus",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18817": {
+		"ability": "Drain Life",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18818": {
+		"ability": "Flamestrike",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"18979": {
+		"ability": "Lightning",
+		"file": "sim/common/item_sets/crafted.go",
+		"source": "unreviewed"
+	},
+	"18980": {
+		"ability": "Lightning",
+		"file": "sim/common/item_sets/crafted.go",
+		"source": "unreviewed"
+	},
+	"19755": {
+		"ability": "Frightalon",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"20004": {
+		"ability": "Life Steal",
+		"file": "sim/common/enchant_effects.go",
+		"source": "unreviewed"
+	},
+	"20007": {
+		"ability": "Holy Strength",
+		"file": "sim/common/enchant_effects.go",
+		"source": "unreviewed"
+	},
+	"21142": {
+		"ability": "Immolation",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"21153": {
+		"ability": "Bonereaver's Edge",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"21159": {
+		"ability": "Fireball",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"21162": {
+		"ability": "Fireball",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"21165": {
+		"ability": "Haste",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"21919": {
+		"ability": "Thrash",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"21970": {
+		"ability": "Mark of the Chosen Effect",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"21992": {
+		"ability": "Thunderfury",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"22639": {
+		"ability": "Eskhandar's Rake",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"22640": {
+		"ability": "Eskhandar's Rage",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"23266": {
+		"ability": "Fiery Aura",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"23605": {
+		"ability": "Spell Vulnerability",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"23686": {
+		"ability": "Lightning Strike",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"23688": {
+		"ability": "Aura of the Blue Dragon",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"23689": {
+		"ability": "Heroism",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"23863": {
+		"ability": "Revitalize",
+		"file": "sim/common/item_sets/crafted.go",
+		"source": "unreviewed"
+	},
+	"23864": {
+		"ability": "Revitalize",
+		"file": "sim/common/item_sets/crafted.go",
+		"source": "unreviewed"
+	},
+	"24388": {
+		"ability": "Brain Damage",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"27419": {
+		"ability": "Warrior's Resolve",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "unreviewed"
+	},
+	"27498": {
+		"ability": "Crusader's Wrath",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "unreviewed"
+	},
+	"27656": {
+		"ability": "Flame Lash",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"27774": {
+		"ability": "The Furious Storm",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "unreviewed"
+	},
+	"27781": {
+		"ability": "Nature's Bounty",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "unreviewed"
+	},
+	"27785": {
+		"ability": "Hunter Armor Energize",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "unreviewed"
+	},
+	"27787": {
+		"ability": "Rogue Armor Energize",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "unreviewed"
+	},
+	"27860": {
+		"ability": "Engulfing Shadows",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"29638": {
+		"ability": "Searing Arrow",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"433801": {
+		"ability": "spell 433801",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"461151": {
+		"ability": "spell 461151",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"461152": {
+		"ability": "spell 461152",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"461682": {
+		"ability": "spell 461682",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"461683": {
+		"ability": "spell 461683",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"461686": {
+		"ability": "spell 461686",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"463105": {
+		"ability": "spell 463105",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"463946": {
+		"ability": "spell 463946",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"6296": {
+		"ability": "Enchant: Fiery Blaze",
+		"file": "sim/common/enchant_effects.go",
+		"source": "unreviewed"
+	},
+	"7712": {
+		"ability": "Fire Strike",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"8191": {
+		"ability": "Zeal",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"9057": {
+		"ability": "Firebolt",
+		"file": "sim/common/item_sets/crafted.go",
+		"source": "unreviewed"
+	},
+	"9591": {
+		"ability": "Acid Spit",
+		"file": "sim/common/guardians/emerald_dragon_whelp.go",
+		"source": "unreviewed"
+	},
+	"9632": {
+		"ability": "Bladestorm",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"9633": {
+		"ability": "Whirlwind",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	}
+}

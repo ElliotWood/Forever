@@ -1,0 +1,47 @@
+{
+	"16188": {
+		"ability": "Nature's Swiftness",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"16246": {
+		"ability": "Clearcasting",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"22804": {
+		"ability": "Shaman Shock Crit Bonus",
+		"file": "sim/shaman/item_sets_pvp.go",
+		"source": "unreviewed"
+	},
+	"26121": {
+		"ability": "Stormcaller's Wrath",
+		"file": "sim/shaman/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"27775": {
+		"ability": "The Furious Storm",
+		"file": "sim/shaman/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"51505": {
+		"ability": "spell 51505",
+		"file": "sim/shaman/lava_burst.go",
+		"source": "unreviewed"
+	},
+	"51521": {
+		"ability": "spell 51521",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"51530": {
+		"ability": "spell 51530",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"52127": {
+		"ability": "spell 52127",
+		"file": "sim/shaman/water_shield.go",
+		"source": "unreviewed"
+	}
+}

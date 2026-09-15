@@ -1,0 +1,132 @@
+{
+	"12292": {
+		"ability": "Sweeping Strikes",
+		"file": "sim/warrior/sweeping_strikes.go",
+		"source": "unreviewed"
+	},
+	"12296": {
+		"ability": "Anger Management",
+		"file": "sim/warrior/talents.go",
+		"source": "unreviewed"
+	},
+	"12328": {
+		"ability": "Death Wish",
+		"file": "sim/warrior/talents.go",
+		"source": "unreviewed"
+	},
+	"12723": {
+		"ability": "Sweeping Strikes",
+		"file": "sim/warrior/sweeping_strikes.go",
+		"source": "unreviewed"
+	},
+	"12727": {
+		"ability": "Shield Specialization",
+		"file": "sim/warrior/talents.go",
+		"source": "unreviewed"
+	},
+	"12815": {
+		"ability": "Sword Specialization",
+		"file": "sim/warrior/talents.go",
+		"source": "unreviewed"
+	},
+	"12964": {
+		"ability": "Unbridled Wrath",
+		"file": "sim/warrior/talents.go",
+		"source": "unreviewed"
+	},
+	"12975": {
+		"ability": "Last Stand",
+		"file": "sim/warrior/talents.go",
+		"source": "unreviewed"
+	},
+	"13048": {
+		"ability": "Enrage",
+		"file": "sim/warrior/talents.go",
+		"source": "unreviewed"
+	},
+	"1680": {
+		"ability": "Whirlwind",
+		"file": "sim/warrior/whirlwind.go",
+		"source": "unreviewed"
+	},
+	"1719": {
+		"ability": "Recklessness",
+		"file": "sim/warrior/recklessness.go",
+		"source": "unreviewed"
+	},
+	"18499": {
+		"ability": "Berserker Rage",
+		"file": "sim/warrior/berserker_rage.go",
+		"source": "unreviewed"
+	},
+	"21838": {
+		"ability": "Battlegear of Might",
+		"file": "sim/warrior/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"21887": {
+		"ability": "Warrior's Wrath",
+		"file": "sim/warrior/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"23548": {
+		"ability": "Parry",
+		"file": "sim/warrior/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"23894": {
+		"ability": "Bloodthirst",
+		"file": "sim/warrior/bloodthirst.go",
+		"source": "unreviewed"
+	},
+	"24427": {
+		"ability": "Diamond Flask",
+		"file": "sim/warrior/items.go",
+		"source": "unreviewed"
+	},
+	"2457": {
+		"ability": "Battle Stance",
+		"file": "sim/warrior/stances.go",
+		"source": "unreviewed"
+	},
+	"2458": {
+		"ability": "Berserker Stance",
+		"file": "sim/warrior/stances.go",
+		"source": "unreviewed"
+	},
+	"2565": {
+		"ability": "Shield Block",
+		"file": "sim/warrior/shield_block.go",
+		"source": "unreviewed"
+	},
+	"26654": {
+		"ability": "Sweeping Strikes",
+		"file": "sim/warrior/sweeping_strikes.go",
+		"source": "unreviewed"
+	},
+	"2687": {
+		"ability": "Bloodrage",
+		"file": "sim/warrior/bloodrage.go",
+		"source": "unreviewed"
+	},
+	"56638": {
+		"ability": "spell 56638",
+		"file": "sim/warrior/talents.go",
+		"source": "unreviewed"
+	},
+	"6554": {
+		"ability": "Pummel",
+		"file": "sim/warrior/pummel.go",
+		"source": "unreviewed"
+	},
+	"71": {
+		"ability": "Defensive Stance",
+		"file": "sim/warrior/stances.go",
+		"source": "unreviewed"
+	},
+	"871": {
+		"ability": "Shield Wall",
+		"file": "sim/warrior/shield_wall.go",
+		"source": "unreviewed"
+	}
+}

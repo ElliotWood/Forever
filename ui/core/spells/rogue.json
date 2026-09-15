@@ -1,0 +1,137 @@
+{
+	"13219": {
+		"ability": "Wound Poison",
+		"file": "sim/rogue/poisons.go",
+		"source": "unreviewed"
+	},
+	"1329": {
+		"ability": "Mutilate",
+		"file": "sim/rogue/mutilate.go",
+		"source": "unreviewed"
+	},
+	"13750": {
+		"ability": "Adrenaline Rush",
+		"file": "sim/rogue/talents.go",
+		"source": "unreviewed"
+	},
+	"13866": {
+		"ability": "Improved Backstab",
+		"file": "sim/rogue/backstab.go",
+		"source": "unreviewed"
+	},
+	"13877": {
+		"ability": "Blade Flurry",
+		"file": "sim/rogue/talents.go",
+		"source": "unreviewed"
+	},
+	"13964": {
+		"ability": "Sword Specialization",
+		"file": "sim/rogue/hack_and_slash.go",
+		"source": "unreviewed"
+	},
+	"13980": {
+		"ability": "Initiative",
+		"file": "sim/rogue/talents.go",
+		"source": "unreviewed"
+	},
+	"14161": {
+		"ability": "Ruthlessness",
+		"file": "sim/rogue/talents.go",
+		"source": "unreviewed"
+	},
+	"14169": {
+		"ability": "Improved Expose Armor",
+		"file": "sim/rogue/expose_armor.go",
+		"source": "unreviewed"
+	},
+	"14177": {
+		"ability": "Cold Blood",
+		"file": "sim/rogue/talents.go",
+		"source": "unreviewed"
+	},
+	"14179": {
+		"ability": "Relentless Strikes",
+		"file": "sim/rogue/talents.go",
+		"source": "unreviewed"
+	},
+	"14183": {
+		"ability": "Premeditation",
+		"file": "sim/rogue/premeditation.go",
+		"source": "unreviewed"
+	},
+	"14185": {
+		"ability": "Preparation",
+		"file": "sim/rogue/preparation.go",
+		"source": "unreviewed"
+	},
+	"14195": {
+		"ability": "Seal Fate",
+		"file": "sim/rogue/talents.go",
+		"source": "unreviewed"
+	},
+	"14251": {
+		"ability": "Riposte",
+		"file": "sim/rogue/riposte.go",
+		"source": "unreviewed"
+	},
+	"14278": {
+		"ability": "Ghostly Strike",
+		"file": "sim/rogue/ghostly_strike.go",
+		"source": "unreviewed"
+	},
+	"1787": {
+		"ability": "Stealth",
+		"file": "sim/rogue/stealth.go",
+		"source": "unreviewed"
+	},
+	"1856": {
+		"ability": "Vanish",
+		"file": "sim/rogue/vanish.go",
+		"source": "unreviewed"
+	},
+	"1966": {
+		"ability": "Feint",
+		"file": "sim/rogue/feint.go",
+		"source": "unreviewed"
+	},
+	"22482": {
+		"ability": "Blade Flurry",
+		"file": "sim/rogue/talents.go",
+		"source": "unreviewed"
+	},
+	"23580": {
+		"ability": "Bloodfang",
+		"file": "sim/rogue/items_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"23581": {
+		"ability": "Bloodfang",
+		"file": "sim/rogue/items_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"23582": {
+		"ability": "Clean Escape",
+		"file": "sim/rogue/items_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"24532": {
+		"ability": "Burst of Energy",
+		"file": "sim/rogue/items.go",
+		"source": "unreviewed"
+	},
+	"32645": {
+		"ability": "spell 32645",
+		"file": "sim/rogue/venom.go",
+		"source": "unreviewed"
+	},
+	"457437": {
+		"ability": "Vanish",
+		"file": "sim/rogue/vanish.go",
+		"source": "unreviewed"
+	},
+	"5277": {
+		"ability": "Evasion",
+		"file": "sim/rogue/evasion.go",
+		"source": "unreviewed"
+	}
+}

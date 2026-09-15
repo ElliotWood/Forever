@@ -1,0 +1,37 @@
+{
+	"14751": {
+		"ability": "Inner Focus",
+		"file": "sim/priest/talents.go",
+		"source": "unreviewed"
+	},
+	"14909": {
+		"ability": "Searing Light",
+		"file": "sim/priest/talents.go",
+		"source": "unreviewed"
+	},
+	"15237": {
+		"ability": "Holy Nova",
+		"file": "sim/priest/holy_nova.go",
+		"source": "unreviewed"
+	},
+	"15286": {
+		"ability": "Vampiric Embrace",
+		"file": "sim/priest/vampiric_embrace.go",
+		"source": "unreviewed"
+	},
+	"15473": {
+		"ability": "Shadowform",
+		"file": "sim/priest/talents.go",
+		"source": "unreviewed"
+	},
+	"23455": {
+		"ability": "Holy Nova",
+		"file": "sim/priest/holy_nova.go",
+		"source": "unreviewed"
+	},
+	"47540": {
+		"ability": "spell 47540",
+		"file": "sim/priest/penance.go",
+		"source": "unreviewed"
+	}
+}

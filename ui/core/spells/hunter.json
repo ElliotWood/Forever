@@ -1,0 +1,67 @@
+{
+	"131894": {
+		"ability": "spell 131894",
+		"file": "sim/hunter/summon_hawk.go",
+		"source": "unreviewed"
+	},
+	"19574": {
+		"ability": "Bestial Wrath",
+		"file": "sim/hunter/talents.go",
+		"source": "unreviewed"
+	},
+	"19577": {
+		"ability": "Intimidation",
+		"file": "sim/hunter/talents.go",
+		"source": "unreviewed"
+	},
+	"19625": {
+		"ability": "Frenzy",
+		"file": "sim/hunter/talents.go",
+		"source": "unreviewed"
+	},
+	"24352": {
+		"ability": "Devilsaur Fury",
+		"file": "sim/hunter/items.go",
+		"source": "unreviewed"
+	},
+	"24353": {
+		"ability": "Primal Instinct",
+		"file": "sim/hunter/items.go",
+		"source": "unreviewed"
+	},
+	"3045": {
+		"ability": "Rapid Fire",
+		"file": "sim/hunter/rapid_fire.go",
+		"source": "unreviewed"
+	},
+	"34491": {
+		"ability": "spell 34491",
+		"file": "sim/hunter/talents.go",
+		"source": "unreviewed"
+	},
+	"409510": {
+		"ability": "Freezing Trap",
+		"file": "sim/hunter/freezing_trap.go",
+		"source": "unreviewed"
+	},
+	"5302": {
+		"ability": "Defensive State",
+		"file": "sim/hunter/mongoose_bite.go",
+		"source": "unreviewed"
+	},
+	"53232": {
+		"ability": "spell 53232",
+		"file": "sim/hunter/talents.go",
+		"source": "unreviewed"
+	},
+	"56641": {
+		"ability": "spell 56641",
+		"file": "sim/hunter/sniper_shot.go",
+		"source": "unreviewed"
+	},
+	"6150": {
+		"ability": "Quick Shots",
+		"file": "sim/hunter/aspects.go",
+		"source": "unreviewed"
+	}
+}

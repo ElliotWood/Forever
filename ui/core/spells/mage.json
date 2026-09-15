@@ -1,0 +1,102 @@
+{
+	"11129": {
+		"ability": "Combustion",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	},
+	"12042": {
+		"ability": "Arcane Power",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	},
+	"12043": {
+		"ability": "Presence of Mind",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	},
+	"12051": {
+		"ability": "Evocation",
+		"file": "sim/mage/evocation.go",
+		"source": "unreviewed"
+	},
+	"12472": {
+		"ability": "Cold Snap",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	},
+	"12577": {
+		"ability": "Arcane Concentration",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	},
+	"12654": {
+		"ability": "Ignite",
+		"file": "sim/mage/ignite.go",
+		"source": "unreviewed"
+	},
+	"2139": {
+		"ability": "Counterspell",
+		"file": "sim/mage/counterspell.go",
+		"source": "unreviewed"
+	},
+	"22008": {
+		"ability": "Netherwind Focus",
+		"file": "sim/mage/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"23545": {
+		"ability": "Subtlety",
+		"file": "sim/mage/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"24389": {
+		"ability": "Chaos Fire",
+		"file": "sim/mage/items.go",
+		"source": "unreviewed"
+	},
+	"24491": {
+		"ability": "Improved Flamestrike",
+		"file": "sim/mage/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"24544": {
+		"ability": "Arcane Potency",
+		"file": "sim/mage/items.go",
+		"source": "unreviewed"
+	},
+	"26129": {
+		"ability": "Enigma's Answer",
+		"file": "sim/mage/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"29076": {
+		"ability": "Master of Elements",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	},
+	"30451": {
+		"ability": "spell 30451",
+		"file": "sim/mage/arcane_blast.go",
+		"source": "unreviewed"
+	},
+	"30455": {
+		"ability": "spell 30455",
+		"file": "sim/mage/ice_lance.go",
+		"source": "unreviewed"
+	},
+	"44404": {
+		"ability": "spell 44404",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	},
+	"44445": {
+		"ability": "spell 44445",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	},
+	"44543": {
+		"ability": "spell 44543",
+		"file": "sim/mage/talents.go",
+		"source": "unreviewed"
+	}
+}

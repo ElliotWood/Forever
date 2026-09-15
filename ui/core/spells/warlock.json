@@ -1,0 +1,107 @@
+{
+	"11704": {
+		"ability": "Drain Mana",
+		"file": "sim/warlock/drain_hope.go",
+		"source": "unreviewed"
+	},
+	"17941": {
+		"ability": "Shadow Trance",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"18288": {
+		"ability": "Amplify Curse",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"18708": {
+		"ability": "Fel Domination",
+		"file": "sim/warlock/fel_domination.go",
+		"source": "unreviewed"
+	},
+	"18788": {
+		"ability": "Demonic Sacrifice",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"18789": {
+		"ability": "Burning Wish",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"18790": {
+		"ability": "Fel Stamina",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"18791": {
+		"ability": "Touch of Shadow",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"18792": {
+		"ability": "Fel Energy",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"18821": {
+		"ability": "Improved Subjugate Demon",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"19028": {
+		"ability": "Soul Link",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"23825": {
+		"ability": "Master Demonologist",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"29722": {
+		"ability": "spell 29722",
+		"file": "sim/warlock/incinerate.go",
+		"source": "unreviewed"
+	},
+	"30288": {
+		"ability": "spell 30288",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"603": {
+		"ability": "Curse of Doom",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"63165": {
+		"ability": "spell 63165",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"688": {
+		"ability": "Summon Imp",
+		"file": "sim/warlock/summon_demon.go",
+		"source": "unreviewed"
+	},
+	"691": {
+		"ability": "Summon Felhunter",
+		"file": "sim/warlock/summon_demon.go",
+		"source": "unreviewed"
+	},
+	"697": {
+		"ability": "Summon Voidwalker",
+		"file": "sim/warlock/summon_demon.go",
+		"source": "unreviewed"
+	},
+	"712": {
+		"ability": "Summon Succubus",
+		"file": "sim/warlock/summon_demon.go",
+		"source": "unreviewed"
+	},
+	"80240": {
+		"ability": "spell 80240",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	}
+}

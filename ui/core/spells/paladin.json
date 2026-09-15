@@ -1,0 +1,77 @@
+{
+	"13953": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"source": "unreviewed"
+	},
+	"20059": {
+		"ability": "Vengeance",
+		"file": "sim/paladin/talents.go",
+		"source": "unreviewed"
+	},
+	"20134": {
+		"ability": "Redoubt",
+		"file": "sim/paladin/talents.go",
+		"source": "unreviewed"
+	},
+	"20148": {
+		"ability": "Shield Specialization",
+		"file": "sim/paladin/talents.go",
+		"source": "unreviewed"
+	},
+	"20178": {
+		"ability": "Reckoning",
+		"file": "sim/paladin/talents.go",
+		"source": "unreviewed"
+	},
+	"20216": {
+		"ability": "Divine Favor",
+		"file": "sim/paladin/divine_favor.go",
+		"source": "unreviewed"
+	},
+	"25771": {
+		"ability": "Forbearance",
+		"file": "sim/paladin/forbearance.go",
+		"source": "unreviewed"
+	},
+	"25780": {
+		"ability": "Righteous Fury",
+		"file": "sim/paladin/righteous_fury.go",
+		"source": "unreviewed"
+	},
+	"26021": {
+		"ability": "Vindication",
+		"file": "sim/paladin/talents.go",
+		"source": "unreviewed"
+	},
+	"26573": {
+		"ability": "Consecration",
+		"file": "sim/paladin/talents.go",
+		"source": "unreviewed"
+	},
+	"31850": {
+		"ability": "spell 31850",
+		"file": "sim/paladin/holy_strike.go",
+		"source": "unreviewed"
+	},
+	"31876": {
+		"ability": "spell 31876",
+		"file": "sim/paladin/talents.go",
+		"source": "unreviewed"
+	},
+	"53601": {
+		"ability": "spell 53601",
+		"file": "sim/paladin/templars_bulwark.go",
+		"source": "unreviewed"
+	},
+	"53671": {
+		"ability": "spell 53671",
+		"file": "sim/paladin/swift_judgement.go",
+		"source": "unreviewed"
+	},
+	"77485": {
+		"ability": "spell 77485",
+		"file": "sim/paladin/twist_of_light.go",
+		"source": "unreviewed"
+	}
+}

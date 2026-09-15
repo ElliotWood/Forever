@@ -1,0 +1,97 @@
+{
+	"16880": {
+		"ability": "Nature's Grace",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"16886": {
+		"ability": "Nature's Grace",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"17392": {
+		"ability": "Faerie Fire (Feral)",
+		"file": "sim/druid/faerie_fire.go",
+		"source": "unreviewed"
+	},
+	"22812": {
+		"ability": "Barkskin",
+		"file": "sim/druid/barkskin.go",
+		"source": "unreviewed"
+	},
+	"24858": {
+		"ability": "Moonkin Form",
+		"file": "sim/druid/forms.go",
+		"source": "unreviewed"
+	},
+	"26107": {
+		"ability": "Symbols of Unending Life Finisher Bonus",
+		"file": "sim/druid/item_sets_pve.go",
+		"source": "unreviewed"
+	},
+	"33876": {
+		"ability": "spell 33876",
+		"file": "sim/druid/mangle.go",
+		"source": "unreviewed"
+	},
+	"33878": {
+		"ability": "spell 33878",
+		"file": "sim/druid/mangle.go",
+		"source": "unreviewed"
+	},
+	"37117": {
+		"ability": "spell 37117",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"414644": {
+		"ability": "Lacerate",
+		"file": "sim/druid/lacerate.go",
+		"source": "unreviewed"
+	},
+	"414647": {
+		"ability": "Lacerate",
+		"file": "sim/druid/lacerate.go",
+		"source": "unreviewed"
+	},
+	"48518": {
+		"ability": "spell 48518",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"50334": {
+		"ability": "spell 50334",
+		"file": "sim/druid/berserk.go",
+		"source": "unreviewed"
+	},
+	"5229": {
+		"ability": "Enrage",
+		"file": "sim/druid/enrage.go",
+		"source": "unreviewed"
+	},
+	"57878": {
+		"ability": "spell 57878",
+		"file": "sim/druid/talents.go",
+		"source": "unreviewed"
+	},
+	"768": {
+		"ability": "Cat Form",
+		"file": "sim/druid/forms.go",
+		"source": "unreviewed"
+	},
+	"9634": {
+		"ability": "Dire Bear Form",
+		"file": "sim/druid/forms.go",
+		"source": "unreviewed"
+	},
+	"9850": {
+		"ability": "Claw",
+		"file": "sim/druid/claw.go",
+		"source": "unreviewed"
+	},
+	"9907": {
+		"ability": "Faerie Fire",
+		"file": "sim/druid/faerie_fire.go",
+		"source": "unreviewed"
+	}
+}
