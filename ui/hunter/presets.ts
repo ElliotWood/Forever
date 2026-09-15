@@ -73,8 +73,12 @@ export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 export const TalentsP1 = PresetUtils.makePresetTalents('Marksmanship', SavedTalents.create({ talentsString: '5023000501-0050550501503051' }));
 
+export const TalentsBeastMastery = PresetUtils.makePresetTalents('Beast Mastery 35/16/0', SavedTalents.create({ talentsString: '5520001505121251-0050551' }));
+export const TalentsMarksmanship = PresetUtils.makePresetTalents('Marksmanship 0/39/12', SavedTalents.create({ talentsString: '-3050552301503151-50024001' }));
+export const TalentsSurvival = PresetUtils.makePresetTalents('Survival 0/15/36', SavedTalents.create({ talentsString: '-005055-550230031051220151' }));
+
 export const TalentPresets = {
-	[ClassicPhase.Phase1]: [TalentsP1],
+	[ClassicPhase.Phase1]: [TalentsP1, TalentsBeastMastery, TalentsMarksmanship, TalentsSurvival],
 };
 
 export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];

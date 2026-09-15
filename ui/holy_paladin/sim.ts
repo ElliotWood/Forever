@@ -86,7 +86,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecHolyPaladin, {
 
 	presets: {
 		// Preset talents that the user can quickly select.
-		talents: [Presets.StandardTalents],
+		talents: [Presets.StandardTalents, Presets.TalentsHolyHealer],
 		rotations: [],
 		// Preset gear configurations that the user can quickly select.
 		gear: [Presets.DefaultGear],

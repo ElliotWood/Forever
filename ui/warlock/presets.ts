@@ -87,7 +87,12 @@ export const TalentsDSRuin = {
 	data: SavedTalents.create({ talentsString: '233500201332-0340000301-0500155' }),
 };
 
-export const TalentPresets = [TalentsDemonicPact, TalentsAffliction, TalentsDSRuin];
+export const TalentsPactOptimised = PresetUtils.makePresetTalents('Demonic Pact 2/31/18', SavedTalents.create({ talentsString: '113-0005003321220211351-0500055' }));
+export const TalentsDeepAffliction = PresetUtils.makePresetTalents('Deep Affliction 35/0/16', SavedTalents.create({ talentsString: '2535002013521105--05000551' }));
+export const TalentsDSRuinPandemic = PresetUtils.makePresetTalents('DS/Ruin Pandemic 24/11/16', SavedTalents.create({ talentsString: '25220010135201-0025000301-05000551' }));
+export const TalentsShadowAndFlame = PresetUtils.makePresetTalents('Shadow and Flame 17/11/23', SavedTalents.create({ talentsString: '25502100002-0025000301-0520355102' }));
+
+export const TalentPresets = [TalentsDemonicPact, TalentsAffliction, TalentsDSRuin, TalentsPactOptimised, TalentsDeepAffliction, TalentsDSRuinPandemic, TalentsShadowAndFlame];
 
 export const DefaultTalents = TalentsDSRuin;
 

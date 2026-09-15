@@ -63,8 +63,10 @@ export const TalentsLaunch = PresetUtils.makePresetTalents(
 	SavedTalents.create({ talentsString: '515330031305001001-30505113002' }),
 );
 
+export const TalentsSmite = PresetUtils.makePresetTalents('Smite 31/17/3', SavedTalents.create({ talentsString: '515030031305001031-00505023002-003' }));
+
 export const TalentPresets = {
-	[ClassicPhase.Phase1]: [TalentsLaunch],
+	[ClassicPhase.Phase1]: [TalentsLaunch, TalentsSmite],
 };
 
 export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
