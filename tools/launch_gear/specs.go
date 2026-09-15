@@ -148,12 +148,6 @@ var specs = map[string]spec{
 		weaponDpsEP: 8.0, weights: w(map[stats.Stat]float64{stats.Strength: 1, stats.AttackPower: 0.5, stats.MeleeCrit: 10, stats.MeleeHit: 12,
 			stats.SpellPower: 0.4, stats.Intellect: 0.2, stats.Stamina: 0.4, stats.Defense: 0.5, stats.BlockValue: 0.3, stats.Armor: 0.02}),
 	},
-	"warden_shaman": {
-		class: proto.Class_ClassShaman, armor: mail, usesShield: true,
-		weapons:     []proto.WeaponType{proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeDagger, proto.WeaponType_WeaponTypeFist},
-		weaponDpsEP: 8.0, weights: w(map[stats.Stat]float64{stats.Strength: 1, stats.AttackPower: 0.5, stats.Agility: 0.6, stats.MeleeCrit: 10,
-			stats.MeleeHit: 12, stats.SpellPower: 0.3, stats.Intellect: 0.2, stats.Stamina: 0.4, stats.Defense: 0.5, stats.Armor: 0.02}),
-	},
 	"tank_warrior": {
 		class: proto.Class_ClassWarrior, armor: plate, usesShield: true,
 		weapons:     []proto.WeaponType{proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeSword, proto.WeaponType_WeaponTypeDagger, proto.WeaponType_WeaponTypeFist},

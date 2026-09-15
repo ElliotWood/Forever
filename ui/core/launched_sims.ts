@@ -52,12 +52,6 @@ export const simLaunchStatuses: Record<Spec, SimStatus> = {
 		phase: Phase.Launch,
 		status: LaunchStatus.Unlaunched,
 	},
-	// The tank shaman is a Season of Discovery spec that came along with the upstream sim.
-	// Forever has no such spec, so it is kept out of the picker, the rankings and the site.
-	[Spec.SpecWardenShaman]: {
-		phase: Phase.Launch,
-		status: LaunchStatus.Unlaunched,
-	},
 	[Spec.SpecHunter]: {
 		phase: Phase.Launch,
 		status: LaunchStatus.Alpha,

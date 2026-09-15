@@ -63,7 +63,7 @@ var talentClasses = []talentClass{
 	{"paladin", paladin.TalentTreeSizes, (&proto.PaladinTalents{}).ProtoReflect(), []string{"holy_paladin", "protection_paladin", "retribution_paladin"}},
 	{"priest", priest.TalentTreeSizes, (&proto.PriestTalents{}).ProtoReflect(), []string{"healing_priest", "shadow_priest", "smite_priest"}},
 	{"rogue", rogue.TalentTreeSizes, (&proto.RogueTalents{}).ProtoReflect(), []string{"rogue"}},
-	{"shaman", shaman.TalentTreeSizes, (&proto.ShamanTalents{}).ProtoReflect(), []string{"elemental_shaman", "enhancement_shaman", "restoration_shaman", "warden_shaman"}},
+	{"shaman", shaman.TalentTreeSizes, (&proto.ShamanTalents{}).ProtoReflect(), []string{"elemental_shaman", "enhancement_shaman", "restoration_shaman"}},
 	{"warlock", warlock.TalentTreeSizes, (&proto.WarlockTalents{}).ProtoReflect(), []string{"warlock"}},
 	{"warrior", warrior.TalentTreeSizes, (&proto.WarriorTalents{}).ProtoReflect(), []string{"tank_warrior", "warrior"}},
 }
