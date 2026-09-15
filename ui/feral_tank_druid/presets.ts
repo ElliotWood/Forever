@@ -62,18 +62,10 @@ export const APLPresets = {
 // Default talents. Uses the wowhead calculator format, make the talents on
 // https://wowhead.com/classic/talent-calc and copy the numbers in the url.
 
-export const StandardTalents = {
-	name: 'Standard',
-	data: SavedTalents.create({
-		talentsString: '-503232132322010353120300313511-20350001',
-	}),
-};
-
 export const TalentsBearTank = PresetUtils.makePresetTalents('Bear Tank 0/31/20', SavedTalents.create({ talentsString: '-5003232120132010501-0550325' }));
 
 export const TalentPresets = {
   [ClassicPhase.Phase1]: [
-    StandardTalents,
     TalentsBearTank,
   ],
   [ClassicPhase.Phase2]: [

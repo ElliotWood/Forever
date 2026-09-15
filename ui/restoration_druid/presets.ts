@@ -12,19 +12,6 @@ export const DefaultGear = PresetUtils.makePresetGear('Blank', BlankGear);
 
 // Default talents. Uses the wowhead calculator format, make the talents on
 // https://wowhead.com/classic/talent-calc and copy the numbers in the url.
-export const CelestialFocusTalents = {
-	name: 'Celestial Focus',
-	data: SavedTalents.create({
-		talentsString: '05320031103--230023312131502331050313051',
-	}),
-};
-export const ThiccRestoTalents = {
-	name: 'Thicc Resto',
-	data: SavedTalents.create({
-		talentsString: '05320001--230023312331502531053313051',
-	}),
-};
-
 export const TalentsRestoration = PresetUtils.makePresetTalents('Restoration 10/0/41', SavedTalents.create({ talentsString: '05302--5053035153113051' }));
 
 export const DefaultOptions = RestorationDruidOptions.create({

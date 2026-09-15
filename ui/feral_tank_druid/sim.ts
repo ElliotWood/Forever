@@ -151,7 +151,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecFeralTankDruid, {
 			defaultName: 'Bear',
 			iconUrl: getSpecIcon(Class.ClassDruid, 1),
 
-			talents: Presets.StandardTalents.data,
+			talents: Presets.TalentsBearTank.data,
 			specOptions: Presets.DefaultOptions,
 			consumes: Presets.DefaultConsumes,
 			defaultFactionRaces: {
