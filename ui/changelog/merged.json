@@ -1,0 +1,590 @@
+[
+	{
+		"number": 103,
+		"title": "feat(talents): draw the talents the database cannot name from the dataset",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/103"
+	},
+	{
+		"number": 102,
+		"title": "shadow priest test measures the ranked 15/0/36 build",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/102"
+	},
+	{
+		"number": 101,
+		"title": "fix(ui): serve wowhead images from the site instead of wow.zamimg.com",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/101"
+	},
+	{
+		"number": 100,
+		"title": "warlock rotations use what each community build pays for",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/100"
+	},
+	{
+		"number": 99,
+		"title": "druid: bring the feral tank back as a launched spec",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/99"
+	},
+	{
+		"number": 98,
+		"title": "balance: spend eclipse charges on starfire",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/98"
+	},
+	{
+		"number": 97,
+		"title": "elemental: keep chain lightning for clearcasting and spare mana",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/97"
+	},
+	{
+		"number": 96,
+		"title": "mage: retune the forever rotations around mana and the frost filler",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/96"
+	},
+	{
+		"number": 95,
+		"title": "feat(tools): mirror wowhead images into assets",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/95"
+	},
+	{
+		"number": 94,
+		"title": "add a changelog of what changed for forever, linked from the homepage",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/94"
+	},
+	{
+		"number": 93,
+		"title": "tools(forever_talents): diff a talent export against the trees the sim runs on",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/93"
+	},
+	{
+		"number": 92,
+		"title": "tools: let the database scrapers read wowhead's forever database",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/92"
+	},
+	{
+		"number": 91,
+		"title": "world buffs do not work in forever raids",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/91"
+	},
+	{
+		"number": 90,
+		"title": "docs: put world buffs on the beta checklist",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/90"
+	},
+	{
+		"number": 89,
+		"title": "drop spirit of zandalar from the default buffs",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/89"
+	},
+	{
+		"number": 88,
+		"title": "rankings: keep both warlock curses up when the raid has warlocks",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/88"
+	},
+	{
+		"number": 87,
+		"title": "rankings: say plainly that the builds share one raid",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/87"
+	},
+	{
+		"number": 86,
+		"title": "build: generate the sim pages in vite instead of sed-ing them into the tree",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/86"
+	},
+	{
+		"number": 85,
+		"title": "ci: shard the pull request tests and open every page before merging",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/85"
+	},
+	{
+		"number": 84,
+		"title": "docs: write up where upstream wowsims is heading and the forever rules",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/84"
+	},
+	{
+		"number": 83,
+		"title": "remove the season of discovery warden shaman",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/83"
+	},
+	{
+		"number": 82,
+		"title": "retire the season of discovery warden shaman from the site",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/82"
+	},
+	{
+		"number": 81,
+		"title": "label rankings rows by spec and build alone",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/81"
+	},
+	{
+		"number": 80,
+		"title": "keep the smoke test's own output readable",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/80"
+	},
+	{
+		"number": 79,
+		"title": "build the best in slot page's markup from typescript",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/79"
+	},
+	{
+		"number": 78,
+		"title": "pick the auto rotation from the build's talents",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/78"
+	},
+	{
+		"number": 77,
+		"title": "let thunder clap be cast in defensive stance, and list the baseline changes",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/77"
+	},
+	{
+		"number": 76,
+		"title": "open every page in a browser before deploying",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/76"
+	},
+	{
+		"number": 75,
+		"title": "model the forever profession passives that have published numbers",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/75"
+	},
+	{
+		"number": 74,
+		"title": "rank every community build, not one preset per spec",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/74"
+	},
+	{
+		"number": 73,
+		"title": "bring the talent numbers in line with the published tooltips",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/73"
+	},
+	{
+		"number": 72,
+		"title": "Fix three things the stat weights, gear picker and rankings page got wrong",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/72"
+	},
+	{
+		"number": 71,
+		"title": "List the community builds under their classes on the landing page",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/71"
+	},
+	{
+		"number": 70,
+		"title": "Write down everything the beta has to confirm",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/70"
+	},
+	{
+		"number": 69,
+		"title": "Stop offering the personal debuffs on the raid panel under Forever",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/69"
+	},
+	{
+		"number": 68,
+		"title": "Test that the talent trees, their protos and the shipped builds agree",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/68"
+	},
+	{
+		"number": 67,
+		"title": "Retire the Classic builds the healing and bear specs still carried",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/67"
+	},
+	{
+		"number": 66,
+		"title": "Put Improved Shadow Bolt back on a flat twelve seconds",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/66"
+	},
+	{
+		"number": 65,
+		"title": "Keep the personal debuffs personal",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/65"
+	},
+	{
+		"number": 64,
+		"title": "Stop the healing specs crashing before the encounter loads",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/64"
+	},
+	{
+		"number": 63,
+		"title": "Add the community talent builds to every spec",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/63"
+	},
+	{
+		"number": 62,
+		"title": "Keep the talent trees in reading order",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/62"
+	},
+	{
+		"number": 61,
+		"title": "Draw the warlock builds against the tree Forever actually has",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/61"
+	},
+	{
+		"number": 60,
+		"title": "Put the talents where the published trees put them",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/60"
+	},
+	{
+		"number": 59,
+		"title": "Bring the racials in line with the published Forever set",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/59"
+	},
+	{
+		"number": 58,
+		"title": "Give the mage back Improved Fireball and Shatter's five ranks",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/58"
+	},
+	{
+		"number": 57,
+		"title": "parameterise the GitHub repository the UI points at",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/57"
+	},
+	{
+		"number": 56,
+		"title": "add a stat weights comparison page",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/56"
+	},
+	{
+		"number": 55,
+		"title": "add a best in slot page",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/55"
+	},
+	{
+		"number": 54,
+		"title": "add a DPS rankings page",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/54"
+	},
+	{
+		"number": 53,
+		"title": "stop a stale talent string taking the page down",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/53"
+	},
+	{
+		"number": 52,
+		"title": "put the raid sim in the sim navigator",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/52"
+	},
+	{
+		"number": 51,
+		"title": "make the raid sim reachable and usable on a touch screen",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/51"
+	},
+	{
+		"number": 50,
+		"title": "let the tank tests be tanked",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/50"
+	},
+	{
+		"number": 49,
+		"title": "give the feral rotation its bleeds back",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/49"
+	},
+	{
+		"number": 48,
+		"title": "mark the talents the sim does not read",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/48"
+	},
+	{
+		"number": 47,
+		"title": "implement the paladin's Forever talents",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/47"
+	},
+	{
+		"number": 46,
+		"title": "cut everything past Forever's launch content",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/46"
+	},
+	{
+		"number": 45,
+		"title": "open every class on the homepage the same way",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/45"
+	},
+	{
+		"number": 44,
+		"title": "draw and describe the talents Forever added",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/44"
+	},
+	{
+		"number": 43,
+		"title": "default new sessions to Forever rules",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/43"
+	},
+	{
+		"number": 42,
+		"title": "update feral golden results for the shipped rotation",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/42"
+	},
+	{
+		"number": 41,
+		"title": "put the Forever lockup on the homepage masthead",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/41"
+	},
+	{
+		"number": 40,
+		"title": "let people report sim problems from inside the sim",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/40"
+	},
+	{
+		"number": 39,
+		"title": "say Forever in the UI and show which ruleset is running",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/39"
+	},
+	{
+		"number": 38,
+		"title": "rebuild the landing page around Forever's spec list",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/38"
+	},
+	{
+		"number": 37,
+		"title": "stop the arcane mage burning its mana on arcane blast stacks",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/37"
+	},
+	{
+		"number": 36,
+		"title": "give the balance druid a rotation that casts more than one spell",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/36"
+	},
+	{
+		"number": 35,
+		"title": "give the protection warrior a protection rotation",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/35"
+	},
+	{
+		"number": 34,
+		"title": "make the site prefix a build input and publish to github pages",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/34"
+	},
+	{
+		"number": 33,
+		"title": "stop empty raid slots crashing the concurrency combiner",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/33"
+	},
+	{
+		"number": 32,
+		"title": "make the raid sim usable, and publish the fork",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/32"
+	},
+	{
+		"number": 31,
+		"title": "add the smite priest",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/31"
+	},
+	{
+		"number": 30,
+		"title": "stop the talents picker throwing on Forever's new talents",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/30"
+	},
+	{
+		"number": 29,
+		"title": "add onyxia as the one tier 1 encounter we can actually build",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/29"
+	},
+	{
+		"number": 28,
+		"title": "surface the launch gear in the UI, and keep raid loot out of it",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/28"
+	},
+	{
+		"number": 27,
+		"title": "Correct the raid roster and say where Forever sits on the timeline",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/27"
+	},
+	{
+		"number": 26,
+		"title": "Put clothes on the specs that were fighting naked",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/26"
+	},
+	{
+		"number": 25,
+		"title": "Put the sim on Forever's tiers instead of Classic's",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/25"
+	},
+	{
+		"number": 24,
+		"title": "Give the feral preset a rotation, and stop calling the rogue poisonless",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/24"
+	},
+	{
+		"number": 23,
+		"title": "Say that the phases are Classic's and not Forever's",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/23"
+	},
+	{
+		"number": 22,
+		"title": "Say what this fork is in the readme",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/22"
+	},
+	{
+		"number": 21,
+		"title": "Add the Skyborne and the six new race and class pairings",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/21"
+	},
+	{
+		"number": 20,
+		"title": "Rework the racials the way Forever reworked them",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/20"
+	},
+	{
+		"number": 19,
+		"title": "Give bonus healing on gear a damage component",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/19"
+	},
+	{
+		"number": 18,
+		"title": "Pay out hit and crit from gear against every kind of attack",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/18"
+	},
+	{
+		"number": 17,
+		"title": "Record the rank scaling the write-ups confirm for two warrior talents",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/17"
+	},
+	{
+		"number": 16,
+		"title": "Roll periodic crits per tick so every dot can crit",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/16"
+	},
+	{
+		"number": 15,
+		"title": "Stop handing out raid debuffs nobody casts any more",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/15"
+	},
+	{
+		"number": 14,
+		"title": "Stand hunters far enough away to use their bow in tests",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/14"
+	},
+	{
+		"number": 13,
+		"title": "rogue: forever talent trees, mutilate, venom, hack and slash",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/13"
+	},
+	{
+		"number": 12,
+		"title": "mage: forever talent trees, arcane blast, hot streak, ice lance",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/12"
+	},
+	{
+		"number": 11,
+		"title": "hunter: forever talent trees, sniper shot, summon hawk, lone wolf",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/11"
+	},
+	{
+		"number": 10,
+		"title": "warrior: forever talent trees, weaponmaster, bloodthrill, bastion",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/10"
+	},
+	{
+		"number": 9,
+		"title": "Report talents whose per-rank scaling isn't known",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/9"
+	},
+	{
+		"number": 8,
+		"title": "paladin: forever talent trees, improved seals, crusade, sanctified judgement",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/8"
+	},
+	{
+		"number": 7,
+		"title": "Bring master up to date: talent data, Priest, Druid and Shaman",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/7"
+	},
+	{
+		"number": 1,
+		"title": "Add a Forever ruleset alongside Classic, and convert the Warlock to it",
+		"mergedAt": "2026-09-14",
+		"url": "https://github.com/ElliotWood/Forever/pull/1"
+	}
+]

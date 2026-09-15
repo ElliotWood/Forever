@@ -120,4 +120,40 @@
 		margin: 0;
 		padding-left: 1.25rem;
 	}
+
+	.changelog-merged .content-block-body {
+		max-width: none;
+	}
+
+	.changelog-merged-list {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.changelog-merged-row {
+		display: grid;
+		grid-template-columns: 4rem 1fr max-content;
+		gap: var(--gap-width-sm) var(--gap-width);
+		padding: calc(var(--gap-width-sm) / 2) 0;
+		border-top: $border-default;
+		font-size: var(--font-size-sm);
+
+		&:first-child {
+			border-top: none;
+		}
+
+		@include media-breakpoint-down(sm) {
+			grid-template-columns: 4rem 1fr;
+
+			.changelog-merged-date {
+				grid-column: 2;
+			}
+		}
+	}
+
+	.changelog-merged-date {
+		opacity: 0.75;
+		font-variant-numeric: tabular-nums;
+	}
 }
