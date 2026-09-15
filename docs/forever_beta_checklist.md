@@ -31,38 +31,40 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/druid/tigers_fury.go:45` — Tiger's Fury is given Wrath's shape (no Energy cost, 30 sec cooldown) because King of the Jungle is Wrath's talent word for word and Classic's costless-to-spam Tiger's Fury would let it mint Energy; the +40 damage is Classic's rank 4. Beta will confirm the cooldown, the cost and the damage bonus.
 - `sim/druid/wrath.go:53` — Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
 
-## Hunter (6)
+## Hunter (7)
 
 - `sim/hunter/aimed_shot.go:74` — assumed baseline, beta will confirm
 - `sim/hunter/aspects.go:52` — only rank 1 was observed, the proc chance is assumed to scale per rank.
 - `sim/hunter/rapid_fire.go:15` — only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per rank.
 - `sim/hunter/serpent_sting.go:43` — only rank 1 of Improved Stings was observed, the damage bonus is assumed to scale per rank.
-- `sim/hunter/talents.go:299` — only rank 1 was observed, the cost reduction and the proc chance are assumed to scale per rank.
-- `sim/hunter/talents.go:352` — only rank 1 was observed, the regeneration is assumed to scale per rank.
+- `sim/hunter/talents.go:300` — only rank 1 was observed, the cost reduction and the proc chance are assumed to scale per rank.
+- `sim/hunter/talents.go:353` — only rank 1 was observed, the regeneration is assumed to scale per rank.
+- `sim/hunter/talents.go:375` — only rank 1 of Expose Prey was observed, the proc chance is assumed to scale per rank.
 
 ## Mage (2)
 
 - `sim/mage/fire_blast.go:39` — only rank 1 of Wake of Fire was shown, so mage.json copies its 1 sec into rank 2.
 - `sim/mage/talents.go:655` — both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
 
-## Paladin (18)
+## Paladin (19)
 
 - `sim/paladin/consecration.go:10` — assumed baseline, beta will confirm - Consecration is no longer a talent and the Forever tree builds on top of it through Consecrated Ground and Holy Conduit.
 - `sim/paladin/hammer_of_wrath.go:29` — Both ranks of Instrument of Law read 0.5 sec in the tooltip data.
-- `sim/paladin/holy_strike.go:15` — assumed baseline, beta will confirm - the 110% weapon damage and the 6 second cooldown are both guesses.
-- `sim/paladin/holy_strike.go:20` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
-- `sim/paladin/holy_strike.go:32` — Every rank of Iron Creed reads the same 5% threat, the rest are assumed to scale linearly.
-- `sim/paladin/holy_strike.go:82` — Every rank of Iron Creed reads the same 2% for 6 sec, the rest are assumed to scale linearly.
+- `sim/paladin/holy_shield.go:18` — Only rank 1 was seen at 110, up from Classic's 65. The other ranks are scaled by the same ratio until the beta shows them.
+- `sim/paladin/holy_strike.go:15` — assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat damage is taken from the published tooltip rather than from the game. Forever's own spell id for Holy Strike is 17143, which the item database does not carry, so the sim keeps Classic's unused 13953.
+- `sim/paladin/holy_strike.go:26` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
+- `sim/paladin/holy_strike.go:38` — Every rank of Iron Creed reads the same 5% threat, the rest are assumed to scale linearly.
+- `sim/paladin/holy_strike.go:89` — Every rank of Iron Creed reads the same 2% for 6 sec, the rest are assumed to scale linearly.
 - `sim/paladin/sotc.go:34` — assumed baseline, beta will confirm - Improved Seal of the Crusader is gone from the tree and the raid reads the improved Judgement of the Crusader through Debuffs either way.
 - `sim/paladin/swift_judgement.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it is given a minute, long enough that it buys one extra Judgement rather than a second rotation.
-- `sim/paladin/talents.go:18` — Only rank 1 of Divine Precision was seen, ranks 2 and 3 are extrapolated from it.
-- `sim/paladin/talents.go:45` — Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are a large chunk of a Forever paladin's spell power.
-- `sim/paladin/talents.go:87` — Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing.
-- `sim/paladin/talents.go:168` — The mana return reads 33% for 6% of maximum mana at every rank.
-- `sim/paladin/talents.go:228` — Every rank reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing.
-- `sim/paladin/talents.go:261` — The self buff reads 1% at every rank. The 42 attack power the target loses is not modelled, nothing in the sim reads an enemy's attack power.
-- `sim/paladin/talents.go:298` — The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration, which is not modelled here - everything standing in it gets the bonus.
-- `sim/paladin/talents.go:334` — Both ranks read 10% in the tooltip data.
+- `sim/paladin/talents.go:19` — Only rank 1 of Divine Precision was seen, ranks 2 and 3 are extrapolated from it.
+- `sim/paladin/talents.go:46` — Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are a large chunk of a Forever paladin's spell power.
+- `sim/paladin/talents.go:88` — Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing.
+- `sim/paladin/talents.go:169` — The mana return reads 33% for 6% of maximum mana at every rank.
+- `sim/paladin/talents.go:229` — Every rank reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing.
+- `sim/paladin/talents.go:262` — The self buff reads 1% at every rank. The 42 attack power the target loses is not modelled, nothing in the sim reads an enemy's attack power.
+- `sim/paladin/talents.go:299` — The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration, which is not modelled here - everything standing in it gets the bonus.
+- `sim/paladin/talents.go:335` — Both ranks read 10% in the tooltip data.
 - `sim/paladin/templars_bulwark.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it shares the 5 minutes of the two Forbearance abilities Sacred Duty shortens alongside it.
 - `sim/paladin/templars_bulwark.go:36` — Both ranks of Sacred Duty read 30 sec, the second is assumed to scale linearly.
 
@@ -109,17 +111,18 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 
 - `sim/warlock/talents.go:451` — Beta will show whether the 33% of level is per rank or the full value
 
-## Warrior (9)
+## Warrior (10)
 
 - `sim/warrior/demoralizing_shout.go:15` — assumed baseline, beta will confirm
 - `sim/warrior/shield_wall.go:29` — only rank 1 was shown, beta will confirm that rank 2 is another 5.5 minutes.
 - `sim/warrior/shouts.go:55` — assumed baseline, beta will confirm
 - `sim/warrior/talents.go:76` — only rank 1 was shown, beta will confirm the 1% crit / 3% armor / 1% extra attack per point.
 - `sim/warrior/talents.go:175` — only rank 1 was shown, beta will confirm the 12% per point.
-- `sim/warrior/talents.go:366` — only rank 1 was shown, beta will confirm that rank 2 doubles both the chance and the rage.
-- `sim/warrior/talents.go:392` — only rank 1 was shown, beta will confirm the 2% per point.
-- `sim/warrior/talents.go:403` — only rank 1 was shown, beta will confirm the 2% per point.
-- `sim/warrior/talents.go:412` — only rank 1 was shown, beta will confirm the 1 Rage per point.
+- `sim/warrior/talents.go:204` — every rank of Dual Wield Specialization reads the same 5% damage, 20% Rage and 2% hit; the damage is Classic's per point value, so all three are read per point. Beta will confirm the Rage and the hit, which together are the largest single source of a dual wielding Fury build's Rage income.
+- `sim/warrior/talents.go:369` — only rank 1 was shown, beta will confirm that rank 2 doubles both the chance and the rage.
+- `sim/warrior/talents.go:395` — only rank 1 was shown, beta will confirm the 2% per point.
+- `sim/warrior/talents.go:406` — only rank 1 was shown, beta will confirm the 2% per point.
+- `sim/warrior/talents.go:415` — only rank 1 was shown, beta will confirm the 1 Rage per point.
 
 ## Baseline ability changes
 
@@ -128,14 +131,14 @@ Forever also changes abilities that are not talents. None of their tooltips were
 Warrior, the only class with concrete changes reported:
 
 - Slam no longer resets the swing timer — modelled in `sim/warrior/slam.go`.
-- Thunder Clap can be used in Defensive Stance — modelled in `sim/warrior/thunder_clap.go`. The shipped protection rotation does not cast it, so no numbers move until an APL does.
+- Thunder Clap can be used in Defensive Stance — modelled in `sim/warrior/thunder_clap.go`, and the protection rotation casts it on cooldown.
 - Improved Shield Wall shortens the cooldown instead of lengthening the duration — modelled in `sim/warrior/shield_wall.go`.
 - Tactical Mastery is baseline, with Improved Tactical Mastery on top — modelled in `sim/warrior/stances.go`.
 - Victory Rush is baseline — not modelled. It needs a killing blow, which a boss encounter never gives before the fight ends.
 
 Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
 
-## Talents the sim does not read (23)
+## Talents the sim does not read (24)
 
 These are in the trees and the picker marks them as not simulated; spending points in them changes nothing. Most are utility or PvP talents the Classic sim never modelled either. They are listed so the beta pass can confirm none of them turned into something a raid rotation cares about.
 
@@ -161,4 +164,5 @@ These are in the trees and the picker marks them as not simulated; spending poin
 - Warlock / Destruction: Molten Skin
 - Warrior / Arms: Spearing Strike
 - Warrior / Fury: Blood Craze
+- Warrior / Protection: Concussion Blow (a stun, and a raid boss is immune)
 - Warrior / Protection: Vanguard

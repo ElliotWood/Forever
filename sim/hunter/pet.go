@@ -63,7 +63,7 @@ func (hunter *Hunter) NewHunterPet() *HunterPet {
 
 	baseMinDamage = 18.17 * attackSpeed
 	baseMaxDamage = 27.66 * attackSpeed
-	
+
 	hunterPetBaseStats = stats.Stats{
 		stats.Strength:  136,
 		stats.Agility:   100,
@@ -222,15 +222,10 @@ var PetConfigs = map[proto.Hunter_Options_PetType]PetConfig{
 		Armor:  1.00,
 		Damage: 1.10,
 
+		// Bite is worth more per Focus than Claw, so it goes on cooldown and Claw fills in.
 		CustomRotation: func(sim *core.Simulation, hp *HunterPet, tryCast func(*core.Spell) bool) {
-			if hp.specialAbility.CD.IsReady(sim) && hp.CurrentFocusPerSecond() > hp.focusDump.Cost.BaseCost/1.6 {
-				if !tryCast(hp.specialAbility) && hp.GCD.IsReady(sim) {
-					hp.WaitUntil(sim, sim.CurrentTime+time.Millisecond*500)
-				}
-			} else {
-				if !tryCast(hp.focusDump) && hp.GCD.IsReady(sim) {
-					hp.WaitUntil(sim, sim.CurrentTime+time.Millisecond*500)
-				}
+			if !tryCast(hp.specialAbility) && !tryCast(hp.focusDump) && hp.GCD.IsReady(sim) {
+				hp.WaitUntil(sim, sim.CurrentTime+time.Millisecond*500)
 			}
 		},
 	},
