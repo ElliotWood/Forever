@@ -26,7 +26,7 @@ const TEMPLATE_NAME = 'index_template.html';
 const pageTitles: Record<string, string> = {
 	bis: 'WoW Forever Best in Slot',
 	changelog: 'What changed for WoW Forever',
-	dps_rankings: 'WoW Forever DPS Rankings',
+	dps_rankings: 'WoW Forever damage comparison',
 	stat_weights: 'WoW Forever Stat Weights',
 };
 
