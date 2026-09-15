@@ -9,7 +9,8 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 1. Re-export the talent trees from the beta client (the community calculators rebuild from it) and diff against `ui/core/talents/trees/*.json`: talent set, grid positions, rank counts and prerequisite arrows. `go test ./sim/ -run TestTalentTreesMatchTheirProtos` then pins the trees, protos and `TalentTreeSizes` together, and `-run TestPresetBuildsAreLegal` checks every shipped build still fits.
 2. Work through the class sections below against the beta tooltips.
 3. Re-check the racials against the beta spellbook, in particular the two figures still missing: the cooldown and cost reduction of the gnome's Eureka!, and whether any racial cooldown differs from the three minutes assumed where none was published.
-4. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
+4. Check what world buffs Forever keeps. The defaults assume Rallying Cry, Songflower, Darkmoon Faire, Warchief's Blessing and the Dire Maul tribute buffs; Spirit of Zandalar is off because Zul'Gurub is not launch content. The rankings move by a third with and without them, so this is the single largest unknown in the table.
+5. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
 
 ## Druid (11)
 
