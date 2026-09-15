@@ -12,6 +12,16 @@ import (
 	"github.com/wowsims/classic/sim/core/proto"
 )
 
+// Which of Wowhead's game databases the scrapers read: "classic" for Classic Era,
+// "forever" once wowhead.com/forever carries the beta client's data. It selects the host
+// path of every tooltip and gear planner request and the gear planner table names.
+var WowheadGame = "classic"
+
+// WowheadUrl builds a nether.wowhead.com URL under the selected game's path.
+func WowheadUrl(path string) string {
+	return "https://nether.wowhead.com/" + WowheadGame + path
+}
+
 // Example db input file: https://nether.wowhead.com/classic/data/gear-planner?dv=100
 
 func ParseWowheadDB(dbContents string) WowheadDatabase {
@@ -40,7 +50,7 @@ func ParseWowheadDB(dbContents string) WowheadDatabase {
 
 		commaIdx := strings.Index(dbPart, ",")
 		dbContents := dbPart[commaIdx+1:]
-		if dbName == "wow.gearPlanner.classic.item" {
+		if dbName == "wow.gearPlanner."+WowheadGame+".item" {
 			standardized, err := hujson.Standardize([]byte(dbContents)) // Removes invalid JSON, such as trailing commas
 			if err != nil {
 				log.Fatalf("Failed to standardize json %s\n\n%s\n\n%s", err, dbContents[0:30], dbContents[len(dbContents)-30:])
@@ -52,7 +62,7 @@ func ParseWowheadDB(dbContents string) WowheadDatabase {
 			}
 		}
 
-		if dbName == "wow.gearPlanner.classic.randomEnchant" {
+		if dbName == "wow.gearPlanner."+WowheadGame+".randomEnchant" {
 			standardized, err := hujson.Standardize([]byte(dbContents)) // Removes invalid JSON, such as trailing commas
 			if err != nil {
 				log.Fatalf("Failed to standardize json %s\n\n%s\n\n%s", err, dbContents[0:30], dbContents[len(dbContents)-30:])

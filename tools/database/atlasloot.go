@@ -337,7 +337,7 @@ func readZoneData(db *WowDatabase) {
 	zoneTM := &WowheadTooltipManager{
 		TooltipManager{
 			FilePath:   "",
-			UrlPattern: "https://nether.wowhead.com/classic/tooltip/zone/%s",
+			UrlPattern: WowheadUrl("/tooltip/zone/%s"),
 		},
 	}
 	zoneTooltips := zoneTM.FetchFromWeb(zoneIDStrs)

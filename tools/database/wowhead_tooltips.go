@@ -28,7 +28,7 @@ func NewWowheadItemTooltipManager(filePath string) *WowheadTooltipManager {
 	return &WowheadTooltipManager{
 		TooltipManager{
 			FilePath:   filePath,
-			UrlPattern: "https://nether.wowhead.com/classic/tooltip/item/%s?lvl=60",
+			UrlPattern: WowheadUrl("/tooltip/item/%s?lvl=60"),
 		},
 	}
 }
@@ -37,7 +37,7 @@ func NewWowheadSpellTooltipManager(filePath string) *WowheadTooltipManager {
 	return &WowheadTooltipManager{
 		TooltipManager{
 			FilePath:   filePath,
-			UrlPattern: "https://nether.wowhead.com/classic/tooltip/spell/%s",
+			UrlPattern: WowheadUrl("/tooltip/spell/%s"),
 		},
 	}
 }
@@ -713,10 +713,13 @@ func (item WowheadItemResponse) ToItemProto() *proto.UIItem {
 	return itemProto
 }
 
-var itemSetNameRegex = regexp.MustCompile(`<a href="/classic/item-set=-?([0-9]+)/(.*)" class="q">([^<]+)<`)
+// The set link in a tooltip carries the game's path, so the pattern follows WowheadGame.
+func itemSetNameRegex() *regexp.Regexp {
+	return regexp.MustCompile(`<a href="/` + WowheadGame + `/item-set=-?([0-9]+)/(.*)" class="q">([^<]+)<`)
+}
 
 func (item WowheadItemResponse) GetItemSetID() int {
-	idStr := item.GetTooltipRegexString(itemSetNameRegex, 1)
+	idStr := item.GetTooltipRegexString(itemSetNameRegex(), 1)
 	id, _ := strconv.Atoi(idStr)
 	return id
 
@@ -732,7 +735,7 @@ func (item WowheadItemResponse) GetItemSetID() int {
 }
 
 func (item WowheadItemResponse) GetItemSetName() string {
-	return item.GetTooltipRegexString(itemSetNameRegex, 3)
+	return item.GetTooltipRegexString(itemSetNameRegex(), 3)
 
 	// // Strip out the 10/25 man prefixes from set names
 	// withoutTier := strings.TrimPrefix(strings.TrimPrefix(strings.TrimPrefix(strings.TrimPrefix(strings.TrimPrefix(original, "Heroes' "), "Valorous "), "Conqueror's "), "Triumphant "), "Sanctified ")

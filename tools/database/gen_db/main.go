@@ -34,10 +34,12 @@ var exactId = flag.Int("id", 0, "ID to scan for")
 var minId = flag.Int("minid", 1, "Minimum ID to scan for")
 var maxId = flag.Int("maxid", 31000, "Maximum ID to scan for")
 var outDir = flag.String("outDir", "assets", "Path to output directory for writing generated .go files.")
+var wowheadGame = flag.String("wowhead", "classic", "Wowhead game database the scrapers read: 'classic' or 'forever'")
 var genAsset = flag.String("gen", "", "Asset to generate. Valid values are 'db', 'atlasloot', 'wowhead-items', 'wowhead-spells', 'wowhead-itemdb', 'wotlk-items', and 'wago-db2-items'")
 
 func main() {
 	flag.Parse()
+	database.WowheadGame = *wowheadGame
 
 	if *exactId != 0 {
 		minId = exactId
@@ -62,7 +64,7 @@ func main() {
 		database.NewWowheadSpellTooltipManager(fmt.Sprintf("%s/wowhead_spell_tooltips.csv", inputsDir)).Fetch(int32(*minId), int32(*maxId), []string{})
 		return
 	} else if *genAsset == "wowhead-gearplannerdb" {
-		tools.WriteFile(fmt.Sprintf("%s/wowhead_gearplannerdb.txt", inputsDir), tools.ReadWebRequired("https://nether.wowhead.com/classic/data/gear-planner?dv=100"))
+		tools.WriteFile(fmt.Sprintf("%s/wowhead_gearplannerdb.txt", inputsDir), tools.ReadWebRequired(database.WowheadUrl("/data/gear-planner?dv=100")))
 		return
 	} else if *genAsset == "wago-db2-items" {
 		tools.WriteFile(fmt.Sprintf("%s/wago_db2_items.csv", inputsDir), tools.ReadWebRequired("https://wago.tools/db2/ItemSparse/csv?build=1.15.3.55646"))
