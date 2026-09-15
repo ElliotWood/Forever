@@ -176,30 +176,34 @@
         "maxPoints": 2
       },
       {
-        "fieldName": "mutilate",
+        "fieldName": "venom",
         "location": {
-          "rowIdx": 6,
+          "rowIdx": 4,
           "colIdx": 1
         },
         "spellIds": [
           0
         ],
         "maxPoints": 1,
-        "name": "Mutilate",
-        "icon": "ability_rogue_deadlybrew",
-        "description": "Instantly attacks with both weapons for {0}% weapon damage plus an additional {1} with each weapon. Damage increased by {2}% against Poisoned targets. Awards {3} Combo Points.",
+        "name": "Venom",
+        "icon": "inv_sword_31",
+        "description": "Finishing move that increases the damage of your Poisons by {0}% and your chance to apply Poisons by {1}%. Lasts longer per combo point: {2} point: {3} seconds {4} points: {5} seconds {6} points: {7} seconds {8} points: {9} seconds {10} points: {11} seconds",
         "ranks": [
           [
-            75,
-            13,
-            20,
-            2
+            30,
+            10,
+            1,
+            9,
+            2,
+            12,
+            3,
+            15,
+            4,
+            18,
+            5,
+            21
           ]
-        ],
-        "prereqLocation": {
-          "rowIdx": 4,
-          "colIdx": 1
-        }
+        ]
       },
       {
         "fieldName": "improvedKidneyShot",
@@ -230,34 +234,30 @@
         "maxPoints": 5
       },
       {
-        "fieldName": "venom",
+        "fieldName": "mutilate",
         "location": {
-          "rowIdx": 4,
+          "rowIdx": 6,
           "colIdx": 1
         },
         "spellIds": [
           0
         ],
         "maxPoints": 1,
-        "name": "Venom",
-        "icon": "inv_sword_31",
-        "description": "Finishing move that increases the damage of your Poisons by {0}% and your chance to apply Poisons by {1}%. Lasts longer per combo point: {2} point: {3} seconds {4} points: {5} seconds {6} points: {7} seconds {8} points: {9} seconds {10} points: {11} seconds",
+        "name": "Mutilate",
+        "icon": "ability_rogue_deadlybrew",
+        "description": "Instantly attacks with both weapons for {0}% weapon damage plus an additional {1} with each weapon. Damage increased by {2}% against Poisoned targets. Awards {3} Combo Points.",
         "ranks": [
           [
-            30,
-            10,
-            1,
-            9,
-            2,
-            12,
-            3,
-            15,
-            4,
-            18,
-            5,
-            21
+            75,
+            13,
+            20,
+            2
           ]
-        ]
+        ],
+        "prereqLocation": {
+          "rowIdx": 4,
+          "colIdx": 1
+        }
       }
     ]
   },

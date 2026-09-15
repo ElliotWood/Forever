@@ -18,10 +18,10 @@ message RogueTalents {
 	bool cold_blood = 11;
 	int32 improved_poisons = 12;
 	int32 vigor = 13;
-	bool mutilate = 14;
+	bool venom = 14;
 	int32 improved_kidney_shot = 15;
 	int32 seal_fate = 16;
-	bool venom = 17;
+	bool mutilate = 17;
 
 	// Combat
 	int32 improved_eviscerate = 18;
