@@ -2,11 +2,12 @@
 
 import { execFileSync } from 'child_process';
 import fs from 'fs';
-import glob from 'glob';
 import { IncomingMessage, ServerResponse } from 'http';
 import path from 'path';
 import { ConfigEnv, defineConfig, PluginOption, UserConfigExport } from 'vite';
 import { checker } from 'vite-plugin-checker';
+
+import { specPages } from './tools/vite/spec_pages.mjs';
 
 export const BASE_PATH = path.resolve(__dirname, 'ui');
 export const OUT_DIR = path.join(__dirname, 'dist', 'classic');
@@ -15,7 +16,7 @@ export const OUT_DIR = path.join(__dirname, 'dist', 'classic');
 // publishes it; override with SITE_BASE to hang it off a path, e.g. a Github project
 // page at /<repo>/classic/. Everything that needs the prefix reads it from here: the
 // TypeScript through import.meta.env.BASE_URL, the stylesheets through $site-base, and
-// the page templates through the makefile.
+// the page template through the specPages plugin.
 export const SITE_BASE = process.env.SITE_BASE || '/classic/';
 
 // The Github repository the UI points at for source, issues, crash reports and releases.
@@ -131,7 +132,7 @@ export const getBaseConfig = ({ command, mode }: ConfigEnv) =>
 			sourcemap: command === 'serve' ? 'inline' : false,
 			target: ['es2020'],
 		},
-	} satisfies Partial<UserConfigExport>);
+	}) satisfies Partial<UserConfigExport>;
 
 export default defineConfig(({ command, mode }) => {
 	const baseConfig = getBaseConfig({ command, mode });
@@ -139,12 +140,12 @@ export default defineConfig(({ command, mode }) => {
 		...baseConfig,
 		plugins: [
 			// The homepage is hand-written rather than generated from ui/index_template.html,
-			// so it cannot pick the repository up through the makefile the way the sim pages
-			// pick up @@BASE@@. Substitute it here instead.
+			// so substitute its repository placeholder here.
 			{
 				name: 'site-repo-html',
 				transformIndexHtml: (html: string) => html.replaceAll('@@REPO@@', SITE_REPO),
 			},
+			specPages(BASE_PATH, SITE_BASE),
 			serveExternalAssets(),
 			checker({
 				root: path.resolve(__dirname, 'ui'),
@@ -165,13 +166,9 @@ export default defineConfig(({ command, mode }) => {
 		build: {
 			...baseConfig.build,
 			rollupOptions: {
+				// The per-page entries are added by the specPages plugin.
 				input: {
-					...glob.sync(path.resolve(BASE_PATH, '**/index.html').replace(/\\/g, '/')).reduce<Record<string, string>>((acc, cur) => {
-						const name = path.relative(__dirname, cur);
-						acc[name] = cur;
-						return acc;
-					}, {}),
-					// Add shared.scss as a separate entry if needed or handle it separately
+					'ui/index.html': path.resolve(BASE_PATH, 'index.html'),
 				},
 				output: {
 					assetFileNames: () => 'bundle/[name]-[hash].style.css',

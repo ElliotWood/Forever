@@ -19,31 +19,6 @@ export SITE_BASE
 SITE_REPO ?= wowsims/classic
 export SITE_REPO
 
-HTML_INDECIES := ui/balance_druid/index.html \
-				 ui/feral_druid/index.html \
-				 ui/feral_tank_druid/index.html \
-				 ui/restoration_druid/index.html \
-				 ui/elemental_shaman/index.html \
-				 ui/enhancement_shaman/index.html \
-				 ui/restoration_shaman/index.html \
-				 ui/hunter/index.html \
-				 ui/mage/index.html \
-				 ui/rogue/index.html \
-				 ui/holy_paladin/index.html \
-				 ui/protection_paladin/index.html \
-				 ui/retribution_paladin/index.html \
-				 ui/healing_priest/index.html \
-				 ui/shadow_priest/index.html \
-				 ui/smite_priest/index.html \
-				 ui/warlock/index.html \
-				 ui/warrior/index.html \
-				 ui/tank_warrior/index.html \
-				 ui/raid/index.html \
-				 ui/bis/index.html \
-				 ui/dps_rankings/index.html \
-				 ui/stat_weights/index.html \
-				 ui/detailed_results/index.html
-
 $(OUT_DIR)/.dirstamp: \
   $(OUT_DIR)/lib.wasm \
   ui/core/proto/api.ts \
@@ -53,7 +28,6 @@ $(OUT_DIR)/.dirstamp: \
 
 $(OUT_DIR)/bundle/.dirstamp: \
   $(UI_SRC) \
-  $(HTML_INDECIES) \
   vite.config.mts \
   vite.build-workers.ts \
   node_modules \
@@ -84,8 +58,7 @@ clean:
 	  binary_dist \
 	  ui/core/index.ts \
 	  ui/core/proto/*.ts \
-	  node_modules \
-	  $(HTML_INDECIES)
+	  node_modules
 	find . -name "*.results.tmp" -type f -delete
 
 .PHONY: copydb
@@ -98,16 +71,6 @@ ui/core/proto/api.ts: proto/*.proto node_modules
 	npx protoc --ts_out ui/core/proto --proto_path proto proto/test.proto
 	npx protoc --ts_out ui/core/proto --proto_path proto proto/ui.proto
 
-# Pages whose directory name doesn't spell their title. Everything else falls back to
-# 'WoW Forever <Dir Name> Simulator' below.
-ui/bis/index.html: page_title := WoW Forever Best in Slot
-ui/dps_rankings/index.html: page_title := WoW Forever DPS Rankings
-ui/stat_weights/index.html: page_title := WoW Forever Stat Weights
-
-ui/%/index.html: ui/index_template.html
-	$(eval title := $(shell echo $(shell basename $(@D)) | sed -r 's/(^|_)([a-z])/\U \2/g' | cut -c 2-))
-	cat ui/index_template.html | sed -e 's/@@TITLE@@/$(or $(page_title),WoW Forever $(title) Simulator)/g' -e 's/@@SPEC@@/$(shell basename $(@D))/g' -e 's|@@BASE@@|$(SITE_BASE)|g' > $@
-
 package-lock.json:
 	npm install
 
@@ -118,13 +81,6 @@ node_modules: package-lock.json
 .PHONY: host_%
 host_%: $(OUT_DIR) node_modules
 	npx http-server $(OUT_DIR)/..
-
-# Generic rule for building index.html for any class directory
-$(OUT_DIR)/%/index.html: ui/index_template.html $(OUT_DIR)/assets
-	$(eval title := $(shell echo $(shell basename $(@D)) | sed -r 's/(^|_)([a-z])/\U \2/g' | cut -c 2-))
-	echo $(title)
-	mkdir -p $(@D)
-	cat ui/index_template.html | sed -e 's/@@TITLE@@/WoW Forever $(title) Simulator/g' -e 's/@@SPEC@@/$(shell basename $(@D))/g' -e 's|@@BASE@@|$(SITE_BASE)|g' > $@
 
 .PHONY: wasm
 wasm: $(OUT_DIR)/lib.wasm
