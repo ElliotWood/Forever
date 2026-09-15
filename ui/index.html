@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		<title>WoWSims - Forever</title>
+		<title>Forever Sim (unofficial)</title>
 		<meta charset="utf-8" />
 
 		<link rel="icon" href="assets/favicon_io/favicon.ico" type="image/x-icon" />
@@ -58,7 +58,7 @@
 								</a>
 								<a href="https://patreon.com/wowsims" target="_blank" class="nav-link link-alt">
 									<i class="patreon-link fab fa-patreon fa-2x me-2"></i>
-									<span class="fs-4 d-md-none d-lg-block">Support our devs</span>
+									<span class="fs-4 d-md-none d-lg-block">Support WoWSims</span>
 								</a>
 							</div>
 						</div>
@@ -69,16 +69,47 @@
 				<div class="container homepage-content-container">
 					<div class="info-container">
 						<p class="wowsims-info">
-							Welcome to WoWSims - Forever! This is a community-driven project to provide class and raid simulations for World of Warcraft®:
-							Forever, the Classic+ relaunch announced at BlizzCon 2026. It is an unofficial fork of wowsims/classic, not the official Forever
-							sim, carrying Forever's talent trees, races and ruleset through every sim.
+							An unofficial sim for World of Warcraft®: Forever, the Classic+ relaunch announced at BlizzCon 2026. It is a personal fork of
+							<a href="https://github.com/wowsims/classic" target="_blank" rel="noreferrer">wowsims/classic</a>, carrying Forever's talent trees,
+							races and ruleset through every sim.
 						</p>
 						<p class="wowsims-info-caveat">
-							Forever has no beta client yet, so every talent, rank and coefficient here was read off a BlizzCon 2026 demo tooltip, and the demo
-							mostly showed rank 1. The rest is assumed, counted line by line in the
-							<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer"
-								>beta re-verification checklist</a
-							>. Treat every number these sims produce as provisional.
+							<strong>This is not WoWSims and is not affiliated with them.</strong> The WoWSims team does not build, review or contribute to this
+							fork, and an official Forever sim, if there is one, will be theirs and not this. Bugs here are mine. The upstream project is owed
+							the credit for everything underneath the Forever changes, and the Patreon link above is theirs, not this fork's.
+						</p>
+						<p class="wowsims-info-caveat">
+							It is also worth being plain about what it cannot do yet. Every one of these can move a number, and some can move it a long way:
+						</p>
+						<ul class="wowsims-info-caveat wowsims-info-limits">
+							<li>
+								There is no beta client. Every talent, rank and coefficient was read off a BlizzCon 2026 demo tooltip or a datamined set built
+								from one.
+							</li>
+							<li>
+								The demo mostly showed rank 1. Every other rank is assumed, linear unless a tooltip said otherwise, counted line by line in the
+								<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer"
+									>beta re-verification checklist</a
+								>.
+							</li>
+							<li>
+								A tooltip gives one number at one level and says nothing about how it is built out of attack power, spell power and weapon
+								speed. Where Forever has not changed a spell this fork assumes Classic's scaling; where it has, the coefficient is inferred from
+								a single value.
+							</li>
+							<li>
+								Datamined and demo tooltips are themselves wrong often enough to matter, so a value can be read correctly and still be wrong.
+								Nothing here has been checked against client data, which is what a sim really wants.
+							</li>
+							<li>The beta is capped at level 30, so it will settle neither the level 60 ranks nor the scaling.</li>
+							<li>
+								No healing sim runs, and the tank specs that exist are measured on damage alone. Rotations are hand-written priority lists, not
+								solved ones.
+							</li>
+						</ul>
+						<p class="wowsims-info-caveat">
+							Treat every number these sims produce as provisional, and as a way to catch the sim doing something obviously wrong rather than as a
+							statement about Forever.
 						</p>
 					</div>
 					<div class="sim-links-container">

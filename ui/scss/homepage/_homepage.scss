@@ -65,6 +65,23 @@
 
 			// A qualifier on the paragraph above it: smaller and quieter than the welcome,
 			// but on the page rather than buried a click away.
+			.wowsims-info-limits {
+				width: 75%;
+				margin: var(--spacer-2) 0 0;
+				padding-left: var(--spacer-4);
+				font-size: 1rem;
+				color: var(--bs-gray-400);
+
+				li + li {
+					margin-top: var(--spacer-1);
+				}
+
+				a {
+					color: var(--bs-gray-200);
+					text-decoration: underline;
+				}
+			}
+
 			.wowsims-info-caveat {
 				width: 75%;
 				margin: var(--spacer-3) 0 0;
@@ -122,7 +139,8 @@
 		.homepage-content-container {
 			.info-container {
 				.wowsims-info,
-				.wowsims-info-caveat {
+				.wowsims-info-caveat,
+				.wowsims-info-limits {
 					width: 100%;
 				}
 			}

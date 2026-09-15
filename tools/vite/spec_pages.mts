@@ -29,18 +29,18 @@ const TEMPLATE_NAME = 'index_template.html';
 const unlistedPages = new Set(['dps_rankings']);
 
 const pageTitles: Record<string, string> = {
-	bis: 'WoW Forever Best in Slot',
-	changelog: 'What changed for WoW Forever',
-	dps_rankings: 'WoW Forever damage comparison',
-	stat_weights: 'WoW Forever Stat Weights',
+	bis: 'Best in Slot - Forever Sim (unofficial)',
+	changelog: 'Changelog - Forever Sim (unofficial)',
+	dps_rankings: 'Damage comparison - Forever Sim (unofficial)',
+	stat_weights: 'Stat Weights - Forever Sim (unofficial)',
 };
 
 const titleFor = (name: string) =>
 	pageTitles[name] ??
-	`WoW Forever ${name
+	`${name
 		.split('_')
 		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-		.join(' ')} Simulator`;
+		.join(' ')} - Forever Sim (unofficial)`;
 
 export function discoverSpecPages(uiRoot: string): SpecPage[] {
 	const pages: SpecPage[] = [];

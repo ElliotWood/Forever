@@ -364,8 +364,8 @@ export const sections: Array<Section> = [
 				title: 'The damage table comes off the homepage',
 				prs: [124],
 				changed:
-					"The sim team's answer to remove, hide or reframe was hide, with a reason the reframe could not meet: a table built from tooltips inherits every tooltip that is wrong, and there are dozens of those, so it is not a self-check but a table wrong in places nobody can see. The page stays at its URL for catching the sim doing something obviously wrong and is marked not to be indexed, but nothing on the site links to it any more.",
-				effect: 'No number the sim cannot back is offered to anyone who did not go looking for it.',
+					"The site called itself WoWSims - Forever in its title, its homepage and the label above every sim, which is a claim it has no right to make: it is one person's fork and the WoWSims team neither builds nor reviews it. It is Forever Sim (unofficial) now, the homepage says plainly that it is not WoWSims and not affiliated, and the Patreon link is labelled as theirs. The homepage also lists what the sim cannot do yet, including the one the sim team raised: datamined and demo tooltips are wrong often enough that a value can be read correctly and still be wrong. The damage table comes off the homepage with it and is marked not to be indexed, though it stays at its URL.",
+				effect: 'Nobody arrives thinking this is the official sim, and the limits are on the front page rather than buried.',
 			},
 			{
 				title: 'Best in slot and stat weights',
