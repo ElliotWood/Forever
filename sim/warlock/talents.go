@@ -672,19 +672,9 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 
 	duration := time.Hour * 2
 
+	// Each demon leaves behind its own blessing, and the pairing is easy to get backwards: the Imp
+	// leaves fire damage, the Succubus shadow damage, the Voidwalker health and the Felhunter mana.
 	impAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Touch of Shadow",
-		ActionID: core.ActionID{SpellID: 18791},
-		Duration: duration,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= 1.15
-		},
-	})
-
-	succubusAura := warlock.GetOrRegisterAura(core.Aura{
 		Label:    "Burning Wish",
 		ActionID: core.ActionID{SpellID: 18789},
 		Duration: duration,
@@ -696,18 +686,30 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		},
 	})
 
+	succubusAura := warlock.GetOrRegisterAura(core.Aura{
+		Label:    "Touch of Shadow",
+		ActionID: core.ActionID{SpellID: 18791},
+		Duration: duration,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] /= 1.15
+		},
+	})
+
 	var vwPa *core.PendingAction
-	manaMetric := warlock.NewManaMetrics(core.ActionID{SpellID: 18792})
+	healthMetric := warlock.NewHealthMetrics(core.ActionID{SpellID: 18790})
 	voidwalkerAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Fel Energy",
-		ActionID: core.ActionID{SpellID: 18792},
+		Label:    "Fel Stamina",
+		ActionID: core.ActionID{SpellID: 18790},
 		Duration: duration,
 
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			vwPa = core.NewPeriodicAction(sim, core.PeriodicActionOptions{
 				Period: time.Second * 4,
 				OnAction: func(s *core.Simulation) {
-					warlock.AddMana(sim, warlock.MaxMana()*0.02, manaMetric)
+					warlock.GainHealth(sim, warlock.MaxHealth()*0.03, healthMetric)
 				},
 			})
 			sim.AddPendingAction(vwPa)
@@ -718,17 +720,17 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 	})
 
 	var fhPa *core.PendingAction
-	healthMetric := warlock.NewHealthMetrics(core.ActionID{SpellID: 18790})
+	manaMetric := warlock.NewManaMetrics(core.ActionID{SpellID: 18792})
 	felhunterAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Fel Stamina",
-		ActionID: core.ActionID{SpellID: 18790},
+		Label:    "Fel Energy",
+		ActionID: core.ActionID{SpellID: 18792},
 		Duration: duration,
 
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			fhPa = core.NewPeriodicAction(sim, core.PeriodicActionOptions{
 				Period: time.Second * 4,
 				OnAction: func(s *core.Simulation) {
-					warlock.GainHealth(sim, warlock.MaxHealth()*0.03, healthMetric)
+					warlock.AddMana(sim, warlock.MaxMana()*0.02, manaMetric)
 				},
 			})
 			sim.AddPendingAction(fhPa)

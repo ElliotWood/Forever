@@ -115,7 +115,7 @@ var DefaultPactWarlock = &proto.Player_Warlock{
 		Options: &proto.WarlockOptions{
 			Armor:       proto.WarlockOptions_DemonArmor,
 			Summon:      proto.WarlockOptions_Succubus,
-			Sacrifice:   proto.WarlockOptions_Imp,
+			Sacrifice:   proto.WarlockOptions_Felhunter,
 			WeaponImbue: proto.WarlockOptions_NoWeaponImbue,
 		},
 	},
