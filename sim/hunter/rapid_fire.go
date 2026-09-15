@@ -12,7 +12,9 @@ func (hunter *Hunter) registerRapidFire() {
 	}
 
 	actionID := core.ActionID{SpellID: 3045}
-	// TODO: only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per rank.
+	// TODO: only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per
+	// rank. The buff a kill grants is not modelled, so nothing here checks the 40 sec window or
+	// the 20% damage the tree reads at rank 2.
 	cooldown := time.Minute*5 - time.Minute*time.Duration(hunter.Talents.RapidKilling)
 
 	hunter.RapidFireAura = hunter.RegisterAura(core.Aura{
