@@ -74,6 +74,7 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Redoubt triggers on any landed melee hit taken (was on being crit); Reckoning also has a smaller chance to fire on a block. | *demo* | `sim/paladin/talents.go` |
 | Holy Shield block damage 110/161/220 (rank 1 ratio). | *demo* | `sim/paladin/holy_shield.go` |
 | New abilities: Holy Strike (and its three dependent talents), Swift Judgement, Templar's Bulwark, Twist of Light; Consecrated Ground and Holy Conduit build on Consecration. | Tree, *demo* | `sim/paladin/holy_strike.go`, `swift_judgement.go`, `templars_bulwark.go`, `twist_of_light.go`, `consecration.go` |
+| Holy Strike: instant, 20 mana, 12 sec cooldown, 40% weapon damage plus 36 to 46 Holy damage. | Published tooltip | `sim/paladin/holy_strike.go` |
 
 ## Priest
 

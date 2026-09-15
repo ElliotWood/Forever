@@ -250,6 +250,20 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Paladin: Holy Strike on its tooltip, Judgement paying its talents',
+				prs: [109],
+				changed:
+					"Holy Strike was guessed at 110% weapon damage on a six second cooldown, and it was 40% of the retribution paladin's damage; the published tooltip is 40% weapon damage plus 36 to 46 Holy damage on a twelve second cooldown for 20 mana. Judgement no longer suppresses cast triggers, so Sanctified Judgement refunds mana and Swift Judgement's free cast stops being permanent. Retribution twists Seal of Command into Righteousness rather than the other way round, drinks its own potion and rune, casts Hammer of Wrath in the execute window, and fills spare globals with Consecration.",
+				effect: 'Retribution goes from 780 to 679 DPS on a two minute fight and protection from 331 to 284, the rotation work giving back about half of what the ability correction took.',
+			},
+			{
+				title: 'Hunter: the cat bites, Serpent Sting waits for mana',
+				prs: [110],
+				changed:
+					"The pet's Bite was gated behind a focus income no pet can reach, so the cat only clawed; Serpent Sting was refreshed with a third of the dot still running and is the hunter's worst shot per point of mana, so it now waits until the dot is nearly gone and is skipped under thirty percent mana. Volley's crit bonus folded Mortal Shots in as a multiplier, and Lethal Attacks missed spell crit.",
+				effect: 'Marksmanship +14 DPS at two minutes and +22 at five, Beast Mastery +2 and +7, Survival +2 and +10; the Marksmanship hunter spends 25 fewer seconds out of mana on a five minute fight.',
+			},
+			{
 				title: 'Priest: Power Infusion returns, and Power in Light stays up',
 				prs: [113],
 				changed:
