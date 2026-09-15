@@ -120,7 +120,8 @@
             6,
             2
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/druid/natures-splendor.png"
       },
       {
         "fieldName": "balanceOfNature",
@@ -491,7 +492,8 @@
             100,
             26
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/druid/mangle.png"
       },
       {
         "fieldName": "predatoryStrikes",
@@ -569,7 +571,8 @@
           [
             60
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/druid/king-of-the-jungle.png"
       },
       {
         "fieldName": "naturalReaction",

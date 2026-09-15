@@ -5,13 +5,13 @@ import { Component } from '../components/component.js';
 import { CopyButton } from '../components/copy_button.js';
 import { Input, InputConfig } from '../components/input.js';
 import { MAX_TALENT_POINTS } from '../constants/mechanics';
+import { SITE_BASE, WOWHEAD_IMAGES } from '../constants/other';
 import { Player } from '../player.js';
 import { Class, Spec } from '../proto/common.js';
 import { ActionId } from '../proto_utils/action_id.js';
 import { getSpecIcon } from '../proto_utils/utils.js';
 import { TypedEvent } from '../typed_event.js';
 import { isRightClick, sum } from '../utils.js';
-import { WOWHEAD_IMAGES } from '../constants/other';
 
 // Talents Forever added have no spell id, so their icon is addressed by name instead of
 // resolved through Wowhead. Some are not datamined yet and fall back to the client's own
@@ -365,8 +365,9 @@ class TalentPicker<TalentsProto> extends Component {
 		this.rootElem.dataset.maxPoints = String(this.config.maxPoints);
 		this.rootElem.dataset.whtticon = 'false';
 
-		if (this.config.name) {
-			this.rootElem.style.backgroundImage = `url('${talentIconUrl(this.config.icon ?? UNKNOWN_TALENT_ICON)}')`;
+		const localIcon = this.localIconUrl();
+		if (localIcon) {
+			this.rootElem.style.backgroundImage = `url('${localIcon}')`;
 		}
 
 		if (this.config.notSimulated) {
@@ -536,8 +537,11 @@ class TalentPicker<TalentsProto> extends Component {
 			this.rootElem.classList.remove('talent-full');
 		}
 
+		// A talent the tree json describes itself is drawn from that: its spell id, if it has
+		// one, belongs to a later expansion the Classic database and Wowhead's Classic pages
+		// do not know, so a lookup would come back empty.
 		const spellId = this.getSpellIdForPoints(newPoints);
-		if (spellId) {
+		if (spellId && !this.config.name) {
 			ActionId.fromSpellId(spellId)
 				.fill()
 				.then(actionId => {
@@ -547,6 +551,14 @@ class TalentPicker<TalentsProto> extends Component {
 		} else {
 			this.updateLocalTooltip(newPoints);
 		}
+	}
+
+	// The icon for a talent the tree json describes itself: a crop of the demo video frame
+	// under the site's assets when the icon is new to Forever, otherwise a Wowhead icon name.
+	private localIconUrl(): string | undefined {
+		if (this.config.iconUrl) return `${SITE_BASE}${this.config.iconUrl}`;
+		if (this.config.name) return talentIconUrl(this.config.icon ?? UNKNOWN_TALENT_ICON);
+		return undefined;
 	}
 
 	// Stands in for the Wowhead tooltip on talents that have no spell id, built from the
@@ -643,6 +655,7 @@ export type TalentConfig<TalentsProto> = {
 	// Populated by tools/forever_talents/import_talents.py from the datamined talent data.
 	name?: string;
 	icon?: string;
+	iconUrl?: string;
 	description?: string;
 	// True when the sim's Go package never reads this talent, so spending points in it
 	// changes nothing. Computed by tools/forever_talents/import_talents.py from the source.

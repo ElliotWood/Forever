@@ -35,7 +35,8 @@
           [
             10
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/priest/power-in-light.png"
       },
       {
         "fieldName": "wandSpecialization",
@@ -836,7 +837,8 @@
             50,
             10
           ]
-        ]
+        ],
+        "iconUrl": "assets/img/talents/priest/devouring-contagion.png"
       },
       {
         "fieldName": "earlyDemise",
