@@ -978,11 +978,16 @@ export class Player<SpecType extends Spec> {
 
 	enableHealing() {
 		this.healingEnabled = true;
-		const hm = this.getHealingModel();
-		if (hm.cadenceSeconds === 0 || hm.hps === 0) {
-			this.setDefaultHealingParams(hm);
-			this.setHealingModel(0, hm);
-		}
+		// The boss these defaults are read off arrives with the preset database, and the
+		// healing specs turn healing on while they are being constructed, which is before
+		// it has. Waiting means the page gets built instead of taking the exception.
+		this.sim.waitForInit().then(() => {
+			const hm = this.getHealingModel();
+			if (hm.cadenceSeconds === 0 || hm.hps === 0) {
+				this.setDefaultHealingParams(hm);
+				this.setHealingModel(0, hm);
+			}
+		});
 	}
 
 	getHealingModel(): HealingModel {
@@ -996,7 +1001,7 @@ export class Player<SpecType extends Spec> {
 		// Make a defensive copy
 		this.healingModel = HealingModel.clone(newHealingModel);
 		// If we have enabled healing model and try to set 0s cadence or 0 incoming HPS, then set intelligent defaults instead based on boss parameters.
-		if (this.healingEnabled) {
+		if (this.healingEnabled && this.sim.encounter.targets?.length) {
 			this.setDefaultHealingParams(this.healingModel);
 		}
 		this.healingModelChangeEmitter.emit(eventID);
