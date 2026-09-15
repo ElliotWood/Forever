@@ -14,9 +14,9 @@ import { Class, IndividualBuffs, Spec } from '../core/proto/common.js';
 import { SimResult } from '../core/proto_utils/sim_result.js';
 import { MAX_PARTY_SIZE } from '../core/party.js';
 import {
-	classNames,
 	cssClassForClass,
 	getTalentTree,
+	getTalentTreePoints,
 	makeDefaultBlessings,
 	naturalSpecOrder,
 	specNames,
@@ -47,8 +47,8 @@ const communityBuildRegex = /\d+\/\d+\/\d+$/;
 // build sits on its spec's raid preset - gear, consumes, race, rotation - with only the
 // talents and the name swapped, so two builds of one spec differ by talents alone. Specs
 // that ship one raid preset per tree (hunter, rogue) hand a build the preset for its own
-// main tree. A launched spec with no community build keeps its raid preset as it is, so
-// nothing the sim can run drops out of the table.
+// main tree. A launched spec with no community build keeps its raid preset as it is, named
+// with its point split like the others, so nothing the sim can run drops out of the table.
 type Build = {
 	preset: RaidSimPreset<any>;
 	name: string;
@@ -67,7 +67,11 @@ const rankedBuilds = (): Array<Build> =>
 					raidPresets.find(raidPreset => getTalentTree(raidPreset.talents.talentsString) == getTalentTree(talentsString)) || raidPresets[0];
 				return { preset, name: talents.name, talentsString };
 			});
-		return builds.length > 0 ? builds : [{ preset: raidPresets[0], name: raidPresets[0].defaultName, talentsString: raidPresets[0].talents.talentsString }];
+		if (builds.length > 0) {
+			return builds;
+		}
+		const talentsString = raidPresets[0].talents.talentsString;
+		return [{ preset: raidPresets[0], name: `${raidPresets[0].defaultName} ${getTalentTreePoints(talentsString).join('/')}`, talentsString }];
 	});
 
 type Ranking = {
@@ -375,9 +379,7 @@ export class DpsRankings extends Component {
 				<td className="dps-rankings-spec-cell">
 					<img className="metrics-action-icon" src={titleIcons[spec]} alt="" />
 					<span className="dps-rankings-spec-names">
-						<span className="dps-rankings-class-name">
-							{classNames[specToClass[spec]]} - {specNames[spec]}
-						</span>
+						<span className="dps-rankings-class-name">{specNames[spec]}</span>
 						<span className={`dps-rankings-spec-name text-${classColor}`}>{ranking.build.name}</span>
 					</span>
 				</td>
