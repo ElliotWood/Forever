@@ -242,6 +242,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Warrior: the off-hand misses again, and arms strikes',
+				prs: [108],
+				changed:
+					"Queuing Heroic Strike lifted the dual wield miss penalty for the whole character instead of for the queued swing, so a Fury build's off-hand auto attacks almost never missed. The DPS priority list had no Mortal Strike line, so the ranked Arms build ran a Fury rotation, and Protection never cast Thunder Clap even though Forever allows it in Defensive Stance.",
+				effect: 'Fury -1.5%, Arms +5.2%, Protection +1.8% DPS and +4.9% threat on a two minute fight.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Paladin: Holy Strike on its tooltip, Judgement paying its talents',
 				prs: [109],
 				changed:
