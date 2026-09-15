@@ -11,7 +11,6 @@ const specModules: Partial<Record<Spec, () => Promise<unknown>>> = {
 	[Spec.SpecFeralDruid]: () => import('../feral_druid/sim'),
 	[Spec.SpecElementalShaman]: () => import('../elemental_shaman/sim'),
 	[Spec.SpecEnhancementShaman]: () => import('../enhancement_shaman/sim'),
-	[Spec.SpecWardenShaman]: () => import('../warden_shaman/sim'),
 	[Spec.SpecHunter]: () => import('../hunter/sim'),
 	[Spec.SpecMage]: () => import('../mage/sim'),
 	[Spec.SpecRogue]: () => import('../rogue/sim'),

@@ -70,9 +70,6 @@ import {
 	RestorationShaman_Options as RestorationShamanOptions,
 	RestorationShaman_Rotation as RestorationShamanRotation,
 	ShamanTalents,
-	WardenShaman,
-	WardenShaman_Options as WardenShamanOptions,
-	WardenShaman_Rotation as WardenShamanRotation,
 } from '../proto/shaman.js';
 import { BlessingsAssignment, BlessingsAssignments, UIEnchant as Enchant, UIItem as Item } from '../proto/ui.js';
 import { TankWarlock, Warlock, WarlockOptions, WarlockRotation, WarlockTalents } from '../proto/warlock.js';
@@ -93,7 +90,7 @@ export type MageSpecs = Spec.SpecMage;
 export type PaladinSpecs = Spec.SpecHolyPaladin | Spec.SpecRetributionPaladin | Spec.SpecProtectionPaladin;
 export type PriestSpecs = Spec.SpecHealingPriest | Spec.SpecShadowPriest | Spec.SpecSmitePriest;
 export type RogueSpecs = Spec.SpecRogue;
-export type ShamanSpecs = Spec.SpecElementalShaman | Spec.SpecEnhancementShaman | Spec.SpecRestorationShaman | Spec.SpecWardenShaman;
+export type ShamanSpecs = Spec.SpecElementalShaman | Spec.SpecEnhancementShaman | Spec.SpecRestorationShaman;
 export type WarlockSpecs = Spec.SpecWarlock;
 export type WarriorSpecs = Spec.SpecWarrior | Spec.SpecTankWarrior;
 
@@ -143,7 +140,6 @@ export const naturalSpecOrder: Array<Spec> = [
 	Spec.SpecElementalShaman,
 	Spec.SpecEnhancementShaman,
 	Spec.SpecRestorationShaman,
-	Spec.SpecWardenShaman,
 	Spec.SpecWarlock,
 	Spec.SpecWarrior,
 	Spec.SpecTankWarrior,
@@ -169,7 +165,6 @@ export const specNames: Record<Spec, string> = {
 	[Spec.SpecElementalShaman]: 'Elemental Shaman',
 	[Spec.SpecEnhancementShaman]: 'Enhancement Shaman',
 	[Spec.SpecRestorationShaman]: 'Restoration Shaman',
-	[Spec.SpecWardenShaman]: 'Warden Shaman',
 	[Spec.SpecHunter]: 'Hunter',
 	[Spec.SpecMage]: 'Mage',
 	[Spec.SpecRogue]: 'Rogue',
@@ -252,7 +247,6 @@ export const titleIcons: Record<Spec, string> = {
 	[Spec.SpecElementalShaman]: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_lightning.jpg',
 	[Spec.SpecEnhancementShaman]: 'https://wow.zamimg.com/images/wow/icons/large/ability_shaman_stormstrike.jpg',
 	[Spec.SpecRestorationShaman]: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_magicimmunity.jpg',
-	[Spec.SpecWardenShaman]: 'https://wow.zamimg.com/images/wow/icons/large/spell_shaman_lavaflow.jpg',
 	[Spec.SpecHunter]: 'https://wow.zamimg.com/images/wow/icons/large/class_hunter.jpg',
 	[Spec.SpecMage]: 'https://wow.zamimg.com/images/wow/icons/large/class_mage.jpg',
 	[Spec.SpecRogue]: 'https://wow.zamimg.com/images/wow/icons/large/class_rogue.jpg',
@@ -368,8 +362,6 @@ export type SpecRotation<T extends Spec> = T extends Spec.SpecBalanceDruid
 	? EnhancementShamanRotation
 	: T extends Spec.SpecRestorationShaman
 	? RestorationShamanRotation
-	: T extends Spec.SpecWardenShaman
-	? WardenShamanRotation
 	: T extends Spec.SpecHunter
 	? HunterRotation
 	: T extends Spec.SpecMage
@@ -419,8 +411,6 @@ export type SpecTalents<T extends Spec> = T extends Spec.SpecBalanceDruid
 	: T extends Spec.SpecEnhancementShaman
 	? ShamanTalents
 	: T extends Spec.SpecRestorationShaman
-	? ShamanTalents
-	: T extends Spec.SpecWardenShaman
 	? ShamanTalents
 	: T extends Spec.SpecHunter
 	? HunterTalents
@@ -481,8 +471,6 @@ export type SpecOptions<T extends Spec> = T extends Spec.SpecBalanceDruid
 	? EnhancementShamanOptions
 	: T extends Spec.SpecRestorationShaman
 	? RestorationShamanOptions
-	: T extends Spec.SpecWardenShaman
-	? WardenShamanOptions
 	: T extends Spec.SpecHunter
 	? HunterOptions
 	: T extends Spec.SpecMage
@@ -517,7 +505,6 @@ export type SpecProtoUnion =
 	| ElementalShaman
 	| EnhancementShaman
 	| RestorationShaman
-	| WardenShaman
 	| Hunter
 	| Mage
 	| Rogue
@@ -544,8 +531,6 @@ export type SpecProto<T extends Spec> = T extends Spec.SpecBalanceDruid
 	? EnhancementShaman
 	: T extends Spec.SpecRestorationShaman
 	? RestorationShaman
-	: T extends Spec.SpecWardenShaman
-	? WardenShaman
 	: T extends Spec.SpecHunter
 	? Hunter
 	: T extends Spec.SpecMage
@@ -748,27 +733,6 @@ export const specTypeFunctions: Record<Spec, SpecTypeFunctions<any>> = {
 			player.spec.oneofKind == 'restorationShaman'
 				? player.spec.restorationShaman.options || RestorationShamanOptions.create()
 				: RestorationShamanOptions.create(),
-	},
-	[Spec.SpecWardenShaman]: {
-		rotationCreate: () => WardenShamanRotation.create(),
-		rotationEquals: (a, b) => WardenShamanRotation.equals(a as WardenShamanRotation, b as WardenShamanRotation),
-		rotationCopy: a => WardenShamanRotation.clone(a as WardenShamanRotation),
-		rotationToJson: a => WardenShamanRotation.toJson(a as WardenShamanRotation),
-		rotationFromJson: obj => WardenShamanRotation.fromJson(obj),
-
-		talentsCreate: () => ShamanTalents.create(),
-		talentsEquals: (a, b) => ShamanTalents.equals(a as ShamanTalents, b as ShamanTalents),
-		talentsCopy: a => ShamanTalents.clone(a as ShamanTalents),
-		talentsToJson: a => ShamanTalents.toJson(a as ShamanTalents),
-		talentsFromJson: obj => ShamanTalents.fromJson(obj),
-
-		optionsCreate: () => WardenShamanOptions.create(),
-		optionsEquals: (a, b) => WardenShamanOptions.equals(a as WardenShamanOptions, b as WardenShamanOptions),
-		optionsCopy: a => WardenShamanOptions.clone(a as WardenShamanOptions),
-		optionsToJson: a => WardenShamanOptions.toJson(a as WardenShamanOptions),
-		optionsFromJson: obj => WardenShamanOptions.fromJson(obj),
-		optionsFromPlayer: player =>
-			player.spec.oneofKind == 'wardenShaman' ? player.spec.wardenShaman.options || WardenShamanOptions.create() : WardenShamanOptions.create(),
 	},
 	[Spec.SpecHunter]: {
 		rotationCreate: () => HunterRotation.create(),
@@ -1064,7 +1028,6 @@ export const specToClass: Record<Spec, Class> = {
 	[Spec.SpecElementalShaman]: Class.ClassShaman,
 	[Spec.SpecEnhancementShaman]: Class.ClassShaman,
 	[Spec.SpecRestorationShaman]: Class.ClassShaman,
-	[Spec.SpecWardenShaman]: Class.ClassShaman,
 	[Spec.SpecWarlock]: Class.ClassWarlock,
 	[Spec.SpecWarrior]: Class.ClassWarrior,
 	[Spec.SpecTankWarrior]: Class.ClassWarrior,
@@ -1083,7 +1046,17 @@ const priestRaces = [Race.RaceTroll, Race.RaceDwarf, Race.RaceHuman, Race.RaceNi
 const rogueRaces = [Race.RaceDwarf, Race.RaceGnome, Race.RaceHuman, Race.RaceNightElf, Race.RaceOrc, Race.RaceTroll, Race.RaceUndead, ...skyborne];
 const shamanRaces = [Race.RaceOrc, Race.RaceTroll, Race.RaceTauren, Race.RaceDwarf, Race.RaceSkyborneWindshaper];
 const warlockRaces = [Race.RaceGnome, Race.RaceHuman, Race.RaceOrc, Race.RaceUndead, Race.RaceTroll];
-const warriorRaces = [Race.RaceDwarf, Race.RaceGnome, Race.RaceHuman, Race.RaceNightElf, Race.RaceOrc, Race.RaceTauren, Race.RaceTroll, Race.RaceUndead, ...skyborne];
+const warriorRaces = [
+	Race.RaceDwarf,
+	Race.RaceGnome,
+	Race.RaceHuman,
+	Race.RaceNightElf,
+	Race.RaceOrc,
+	Race.RaceTauren,
+	Race.RaceTroll,
+	Race.RaceUndead,
+	...skyborne,
+];
 
 export const specToEligibleRaces: Record<Spec, Array<Race>> = {
 	[Spec.SpecBalanceDruid]: druidRaces,
@@ -1093,7 +1066,6 @@ export const specToEligibleRaces: Record<Spec, Array<Race>> = {
 	[Spec.SpecElementalShaman]: shamanRaces,
 	[Spec.SpecEnhancementShaman]: shamanRaces,
 	[Spec.SpecRestorationShaman]: shamanRaces,
-	[Spec.SpecWardenShaman]: shamanRaces,
 	[Spec.SpecHunter]: hunterRaces,
 	[Spec.SpecMage]: mageRaces,
 	[Spec.SpecHolyPaladin]: paladinRaces,
@@ -1121,12 +1093,7 @@ export function canDualWield(player: Player<Spec>): boolean {
 	return dualWieldClasses.includes(player.getClass());
 }
 
-const tankSpecs: Array<Spec> = [
-	Spec.SpecFeralTankDruid,
-	Spec.SpecProtectionPaladin,
-	Spec.SpecTankWarrior,
-	Spec.SpecWardenShaman,
-];
+const tankSpecs: Array<Spec> = [Spec.SpecFeralTankDruid, Spec.SpecProtectionPaladin, Spec.SpecTankWarrior];
 
 export function isTankSpec(spec: Spec): boolean {
 	return tankSpecs.includes(spec);
@@ -1163,7 +1130,6 @@ export const specToLocalStorageKey: Record<Spec, string> = {
 	[Spec.SpecElementalShaman]: '__classic_elemental_shaman',
 	[Spec.SpecEnhancementShaman]: '__classic_enhacement_shaman',
 	[Spec.SpecRestorationShaman]: '__classic_restoration_shaman',
-	[Spec.SpecWardenShaman]: '__classic_warden_shaman',
 	[Spec.SpecHunter]: '__classic_hunter',
 	[Spec.SpecMage]: '__classic_mage',
 	[Spec.SpecHolyPaladin]: '__classic_holy_paladin',
@@ -1236,14 +1202,6 @@ export function withSpecProto<SpecType extends Spec>(spec: Spec, player: PlayerP
 				oneofKind: 'restorationShaman',
 				restorationShaman: RestorationShaman.create({
 					options: specOptions as RestorationShamanOptions,
-				}),
-			};
-			return copy;
-		case Spec.SpecWardenShaman:
-			copy.spec = {
-				oneofKind: 'wardenShaman',
-				wardenShaman: WardenShaman.create({
-					options: specOptions as WardenShamanOptions,
 				}),
 			};
 			return copy;
@@ -1719,7 +1677,6 @@ export function makeDefaultBlessings(numPaladins: number): BlessingsAssignments 
 		{ spec: Spec.SpecElementalShaman, blessings: [] },
 		{ spec: Spec.SpecEnhancementShaman, blessings: [] },
 		{ spec: Spec.SpecRestorationShaman, blessings: [] },
-		{ spec: Spec.SpecWardenShaman, blessings: [] },
 		{ spec: Spec.SpecWarlock, blessings: [Blessings.BlessingOfWisdom, Blessings.BlessingOfKings] },
 		{ spec: Spec.SpecWarrior, blessings: [Blessings.BlessingOfKings, Blessings.BlessingOfMight] },
 		{ spec: Spec.SpecTankWarrior, blessings: [Blessings.BlessingOfKings, Blessings.BlessingOfMight, Blessings.BlessingOfSanctuary] },
