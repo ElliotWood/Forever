@@ -51,6 +51,188 @@
       "reason": "audit 2026-09-13: reader error (PCT); corrected against data/review/hunter/survival/clever-traps.png",
       "by": "data-audit",
       "at": "2026-09-13T00:00:00Z"
+    },
+    {
+      "talent": "deadly-aspects",
+      "tree": "beast mastery",
+      "set": {
+        "ranks": [
+          [
+            2,
+            30,
+            12,
+            2,
+            30,
+            12
+          ],
+          [
+            4,
+            60,
+            24,
+            4,
+            60,
+            24
+          ],
+          [
+            6,
+            90,
+            36,
+            6,
+            90,
+            36
+          ],
+          [
+            8,
+            120,
+            48,
+            8,
+            120,
+            48
+          ],
+          [
+            10,
+            150,
+            60,
+            10,
+            150,
+            60
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "improved-mend-pet",
+      "tree": "beast mastery",
+      "set": {
+        "ranks": [
+          [
+            15,
+            1,
+            10
+          ],
+          [
+            30,
+            1,
+            20
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "improved-stings",
+      "tree": "marksmanship",
+      "set": {
+        "ranks": [
+          [
+            6,
+            2,
+            15
+          ],
+          [
+            12,
+            4,
+            30
+          ],
+          [
+            18,
+            6,
+            45
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "rapid-killing",
+      "tree": "marksmanship",
+      "set": {
+        "ranks": [
+          [
+            1,
+            20,
+            10
+          ],
+          [
+            2,
+            40,
+            20
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "rapid-recuperation",
+      "tree": "marksmanship",
+      "set": {
+        "ranks": [
+          [
+            25,
+            50,
+            15
+          ],
+          [
+            50,
+            100,
+            30
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "resourcefulness",
+      "tree": "survival",
+      "set": {
+        "ranks": [
+          [
+            30,
+            30,
+            50,
+            30
+          ],
+          [
+            60,
+            60,
+            50,
+            30
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "expose-prey",
+      "tree": "survival",
+      "set": {
+        "ranks": [
+          [
+            5,
+            5
+          ],
+          [
+            10,
+            5
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
     }
   ]
 }

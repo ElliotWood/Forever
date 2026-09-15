@@ -76,11 +76,137 @@
       "talent": "improved-ghost-wolf",
       "tree": "enhancement",
       "set": {
-        "ranks": [[1.0], [2]]
+        "ranks": [
+          [
+            1.0
+          ],
+          [
+            2
+          ]
+        ]
       },
       "reason": "audit 2026-09-13 decision 3: the crop reads '1.0 sec', not '1 sec'; the reader merge now carries the decimal through, so ranks[0] is 1.0.",
       "by": "data-audit",
       "at": "2026-09-13T00:00:00Z"
+    },
+    {
+      "talent": "improved-fire-nova",
+      "tree": "elemental combat",
+      "set": {
+        "ranks": [
+          [
+            10,
+            2
+          ],
+          [
+            20,
+            4
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "elemental-alacrity",
+      "tree": "elemental combat",
+      "set": {
+        "ranks": [
+          [
+            0.17
+          ],
+          [
+            0.34
+          ],
+          [
+            0.51
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "improved-stormstrike",
+      "tree": "enhancement",
+      "set": {
+        "ranks": [
+          [
+            50,
+            50,
+            15,
+            50
+          ],
+          [
+            100,
+            100,
+            30,
+            100
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "maelstrom-weapon",
+      "tree": "enhancement",
+      "set": {
+        "ranks": [
+          [
+            4,
+            5,
+            30
+          ],
+          [
+            8,
+            10,
+            60
+          ],
+          [
+            12,
+            15,
+            90
+          ],
+          [
+            16,
+            20,
+            120
+          ],
+          [
+            20,
+            25,
+            150
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "improved-reincarnation",
+      "tree": "restoration",
+      "set": {
+        "ranks": [
+          [
+            10,
+            2,
+            10
+          ],
+          [
+            20,
+            4,
+            20
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
     }
   ]
 }
