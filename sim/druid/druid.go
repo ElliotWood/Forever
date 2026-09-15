@@ -22,12 +22,15 @@ const (
 	SpellCode_DruidFerociousBite
 	SpellCode_DruidHurricane
 	SpellCode_DruidInsectSwarm
+	SpellCode_DruidLacerate
 	SpellCode_DruidMangle
+	SpellCode_DruidMaul
 	SpellCode_DruidMoonfire
 	SpellCode_DruidRake
 	SpellCode_DruidRip
 	SpellCode_DruidShred
 	SpellCode_DruidStarfire
+	SpellCode_DruidSwipe
 	SpellCode_DruidWrath
 )
 
@@ -59,7 +62,10 @@ type Druid struct {
 	Hurricane            []*DruidSpell
 	Innervate            *DruidSpell
 	InsectSwarm          []*DruidSpell
+	Lacerate             *DruidSpell
+	LacerateBleed        *DruidSpell
 	Languish             *DruidSpell
+	MangleBear           *DruidSpell
 	MangleCat            *DruidSpell
 	Maul                 *DruidSpell
 	MaulQueueSpell       *DruidSpell
@@ -128,9 +134,9 @@ func (druid *Druid) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
 	}
 }
 
-// func (druid *Druid) TryMaul(sim *core.Simulation, mhSwingSpell *core.Spell) *core.Spell {
-// 	return druid.MaulReplaceMH(sim, mhSwingSpell)
-// }
+func (druid *Druid) TryMaul(sim *core.Simulation, mhSwingSpell *core.Spell) *core.Spell {
+	return druid.MaulReplaceMH(sim, mhSwingSpell)
+}
 
 func (druid *Druid) RegisterSpell(formMask DruidForm, config core.SpellConfig) *DruidSpell {
 	prev := config.ExtraCastCondition
@@ -196,19 +202,17 @@ func (druid *Druid) RegisterFeralCatSpells() {
 	druid.registerBerserkCD()
 }
 
-// TODO: Classic feral tank
 func (druid *Druid) RegisterFeralTankSpells() {
-	// druid.registerBarkskinCD()
-	// druid.registerBerserkCD()
-	// druid.registerBearFormSpell()
-	// druid.registerDemoralizingRoarSpell()
-	// druid.registerEnrageSpell()
-	// druid.registerFrenziedRegenerationCD()
-	// druid.registerMangleBearSpell()
-	// druid.registerMaulSpell()
-	// druid.registerRakeSpell()
-	// druid.registerRipSpell()
-	// druid.registerSwipeBearSpell()
+	druid.registerBearFormSpell()
+	druid.registerBarkskinCD()
+	druid.registerBerserkCD()
+	druid.registerDemoralizingRoarSpell()
+	druid.registerEnrageSpell()
+	druid.registerFrenziedRegenerationCD()
+	druid.registerLacerateSpell()
+	druid.registerMangleBearSpell()
+	druid.registerMaulSpell()
+	druid.registerSwipeBearSpell()
 }
 
 func (druid *Druid) Reset(_ *core.Simulation) {

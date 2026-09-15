@@ -19,7 +19,7 @@ func (druid *Druid) registerSwipeBearSpell() {
 		25: 2,
 		40: 3,
 		50: 4,
-		60: 6,
+		60: 5,
 	}[druid.Level]
 
 	level := SwipeLevel[rank]
@@ -36,6 +36,7 @@ func (druid *Druid) registerSwipeBearSpell() {
 	}
 
 	druid.SwipeBear = druid.RegisterSpell(Bear, core.SpellConfig{
+		SpellCode:   SpellCode_DruidSwipe,
 		ActionID:    core.ActionID{SpellID: spellID},
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
@@ -46,7 +47,7 @@ func (druid *Druid) registerSwipeBearSpell() {
 		RequiredLevel: level,
 
 		RageCost: core.RageCostOptions{
-			Cost: 20 - float64(druid.Talents.Ferocity),
+			Cost: rageCost,
 		},
 
 		Cast: core.CastConfig{

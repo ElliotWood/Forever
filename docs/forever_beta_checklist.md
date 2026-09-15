@@ -12,18 +12,22 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 4. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
 5. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
 
-## Druid (11)
+## Druid (15)
 
 - `sim/druid/berserk.go:16` — The tooltip didn't show a cooldown, the 3 minutes are taken from the Classic Berserk.
-- `sim/druid/druid.go:116` — Improved Mark of the Wild is gone from the tree and is assumed to be baseline, beta will confirm.
+- `sim/druid/demoralizing_roar.go:24` — assumed baseline, beta will confirm - Feral Aggression is gone from the tree, so the attack power reduction is taken at full strength like the warrior's Demoralizing Shout.
+- `sim/druid/druid.go:122` — Improved Mark of the Wild is gone from the tree and is assumed to be baseline, beta will confirm.
 - `sim/druid/faerie_fire.go:26` — The feral version's talent is gone from the tree and is assumed to be baseline, beta will confirm.
-- `sim/druid/forms.go:224` — Beta will show whether the carryover share and the out of form regen both scale per rank, linear scaling is assumed here.
+- `sim/druid/forms.go:223` — Beta will show whether the carryover share and the out of form regen both scale per rank, linear scaling is assumed here.
+- `sim/druid/lacerate.go:16` — assumed from Season of Discovery, beta will confirm the cost, the damage and the threat. Shredding Attacks names Lacerate, so the bear has it, but no tooltip for it has been seen.
 - `sim/druid/mangle.go:17` — Only the tooltip was seen, the Energy cost is taken from the Classic Mangle (Cat).
-- `sim/druid/talents.go:180` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:306` — Only rank 1 was seen, the cast time reduction is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:391` — Only rank 1 was seen, both amounts are assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:448` — Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
-- `sim/druid/talents.go:501` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
+- `sim/druid/mangle.go:71` — Only the tooltip was seen, the Rage cost, the 6 sec cooldown and the threat are taken from the Classic Mangle (Bear).
+- `sim/druid/talents.go:175` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:301` — Only rank 1 was seen, the cast time reduction is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:388` — Only rank 1 was seen, both amounts are assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:449` — Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
+- `sim/druid/talents.go:452` — Every rank reads the same 20% chance for 5 Rage, so the proc doesn't grow past rank 1. Beta will confirm.
+- `sim/druid/talents.go:515` — Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
 - `sim/druid/wrath.go:53` — Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
 
 ## Hunter (6)
