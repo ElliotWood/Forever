@@ -31,17 +31,15 @@ func (paladin *Paladin) ApplyTalents() {
 	paladin.AddStat(stats.SpellCrit, float64(paladin.Talents.HolyPower)*core.SpellCritRatingPerCritChance)
 	paladin.PseudoStats.SpiritRegenRateCasting += 0.1 * float64(paladin.Talents.Reverence)
 
-	// Sacred Duty reads 2% at every rank in the tooltip data, so only the first point does anything.
-	if paladin.Talents.SacredDuty > 0 {
-		paladin.MultiplyStat(stats.Stamina, 1.02)
-	}
+	// TODO: Only rank 1 of Sacred Duty was seen, the 2% per rank the tree reads comes from the
+	// community talent calculator rather than from a tooltip.
+	paladin.MultiplyStat(stats.Stamina, 1.0+0.02*float64(paladin.Talents.SacredDuty))
 
-	// Same story for Shield Specialization's absorb, every rank absorbs an extra 10%.
+	// TODO: Only rank 1 of Shield Specialization's absorb was seen, the 10% per rank the tree
+	// reads comes from the community talent calculator rather than from a tooltip.
 	// NOTE: Total SBV will be inflated until
 	// https://github.com/wowsims/sod/issues/1025 gets resolved.
-	if paladin.Talents.ShieldSpecialization > 0 {
-		paladin.PseudoStats.BlockValueMultiplier += 0.1
-	}
+	paladin.PseudoStats.BlockValueMultiplier += 0.1 * float64(paladin.Talents.ShieldSpecialization)
 
 	// TODO: Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are
 	// a large chunk of a Forever paladin's spell power.
@@ -166,13 +164,14 @@ func (paladin *Paladin) applyShieldSpecialization() {
 		Duration: time.Second * 3,
 	}
 
-	// TODO: The mana return reads 33% for 6% of maximum mana at every rank.
+	// TODO: Only rank 1's 33% chance was seen, the tree's 33/66/100 comes from the community
+	// talent calculator rather than from a tooltip. The 6% of maximum mana does not scale.
 	core.MakeProcTriggerAura(&paladin.Unit, core.ProcTrigger{
 		Name:       "Shield Specialization Trigger",
 		Callback:   core.CallbackOnSpellHitTaken,
 		Outcome:    core.OutcomeBlock,
 		ProcMask:   core.ProcMaskMelee,
-		ProcChance: 0.33,
+		ProcChance: []float64{0, 0.33, 0.66, 1}[paladin.Talents.ShieldSpecialization],
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if !icd.IsReady(sim) {
 				return
@@ -332,8 +331,9 @@ func (paladin *Paladin) applyInstrumentOfLaw() {
 		return
 	}
 
-	// TODO: Both ranks read 10% in the tooltip data.
-	paladin.PseudoStats.ThreatMultiplier *= 0.9
+	// TODO: Only rank 1's 10% was seen, the tree's second rank comes from the community talent
+	// calculator rather than from a tooltip.
+	paladin.PseudoStats.ThreatMultiplier *= 1 - 0.1*float64(paladin.Talents.InstrumentOfLaw)
 }
 
 // Sanctified Judgement refunds part of the mana spent on the seal that Judgement consumes.

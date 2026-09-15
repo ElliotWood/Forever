@@ -26,11 +26,9 @@ func (paladin *Paladin) registerHammerOfWrath() {
 		Duration: time.Second * 6,
 	}
 
-	// TODO: Both ranks of Instrument of Law read 0.5 sec in the tooltip data.
-	castTime := time.Second
-	if paladin.Talents.InstrumentOfLaw > 0 {
-		castTime -= time.Millisecond * 500
-	}
+	// TODO: Only rank 1 of Instrument of Law was seen at 0.5 sec, the full second the tree reads
+	// at rank 2 comes from the community talent calculator rather than from a tooltip.
+	castTime := time.Second - time.Millisecond*500*time.Duration(paladin.Talents.InstrumentOfLaw)
 
 	for i, rank := range ranks {
 		rank := rank

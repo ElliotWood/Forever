@@ -33,7 +33,8 @@ func (paladin *Paladin) registerTemplarsBulwark() {
 		},
 	})
 
-	// TODO: Both ranks of Sacred Duty read 30 sec, the second is assumed to scale linearly.
+	// TODO: Only rank 1 of Sacred Duty was seen at 30 sec, the tree's second rank comes from the
+	// community talent calculator rather than from a tooltip.
 	cooldown := time.Minute*5 - time.Second*30*time.Duration(paladin.Talents.SacredDuty)
 
 	bulwark := paladin.RegisterSpell(core.SpellConfig{
