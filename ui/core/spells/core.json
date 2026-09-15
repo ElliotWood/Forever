@@ -1,0 +1,507 @@
+{
+	"10060": {
+		"ability": "Power Infusion",
+		"file": "sim/core/buffs.go",
+		"note": "Raid-buff approximation only (20% magic damage for 15 sec on a 3 min cooldown); the priest's own cast in sim/priest/power_infusion.go is commented out, so nothing Forever changed reaches this registration.",
+		"source": "classic"
+	},
+	"10293": {
+		"ability": "Devotion Aura",
+		"file": "sim/core/buffs.go",
+		"note": "735 bonus armor, +12.5% per point of Improved Devotion Aura, straight from upstream Classic; no Forever source touches the paladin auras.",
+		"source": "classic"
+	},
+	"10301": {
+		"ability": "Retribution Aura",
+		"file": "sim/core/buffs.go",
+		"note": "20 Holy damage per melee hit taken, +25% per point of Improved Retribution Aura, unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"10408": {
+		"ability": "Stoneskin Totem",
+		"file": "sim/core/buffs.go",
+		"note": "30 melee damage taken reduction, +10% per point of Guardian Totems; untouched by Forever, but the OnExpire handler adds the reduction again instead of removing it (latent because the aura is permanent).",
+		"source": "classic"
+	},
+	"10442": {
+		"ability": "Strength of Earth Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"10608": {
+		"ability": "Windfury Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"10610": {
+		"ability": "Windfury Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"10627": {
+		"ability": "Grace of Air Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"11198": {
+		"ability": "Expose Armor",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11374": {
+		"ability": "Gift of Arthas",
+		"file": "sim/core/debuffs.go",
+		"note": "+8 physical damage taken for 3 min, unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"11549": {
+		"ability": "Battle Shout",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"11550": {
+		"ability": "Battle Shout",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"11551": {
+		"ability": "Battle Shout",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"11554": {
+		"ability": "Demoralizing Shout",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11555": {
+		"ability": "Demoralizing Shout",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11556": {
+		"ability": "Demoralizing Shout",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11597": {
+		"ability": "Sunder Armor",
+		"file": "sim/core/debuffs.go",
+		"note": "450 armor per stack to 5 stacks for 30 sec, unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"1160": {
+		"ability": "Demoralizing Shout",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"11708": {
+		"ability": "Curse of Weakness",
+		"file": "sim/core/debuffs.go",
+		"note": "-31 physical damage, scaled 6%/13%/20% by Improved Curse of Weakness, for 2 min; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"11717": {
+		"ability": "Curse of Recklessness",
+		"file": "sim/core/debuffs.go",
+		"note": "-640 armor and +90 attack power on the target for 2 min, unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"11722": {
+		"ability": "Curse of the Elements",
+		"file": "sim/core/debuffs.go",
+		"note": "+10% Fire and Frost damage taken and -75 Fire and Frost resistance for 5 min; the warlock curses are not in any published Forever change.",
+		"source": "classic"
+	},
+	"1191": {
+		"ability": "Frostbolt (Frost Oil proc)",
+		"file": "sim/core/consumes.go",
+		"note": "Frost Oil's 10% proc really does cast Frostbolt 1191 for 33 to 38, so the Classic name and icon are the right ones.",
+		"source": "classic"
+	},
+	"12873": {
+		"ability": "Improved Scorch",
+		"file": "sim/core/debuffs.go",
+		"note": "Forever makes the fire vulnerability personal to the mage who stacked it (docs/forever_rules.md, panel), and the live Forever version is sim/mage/talents.go applyImprovedScorch; sim/core/debuffs.go still registers the Classic raid-wide target debuff with no IsForever() gate and the UI still offers the checkbox under Forever, which is a bug.",
+		"source": "forever",
+		"tooltip": "Passive\nYour Scorch has a 33% chance per point to increase the Fire damage you deal to the target by 3% for 30 sec. Stacks up to 5 times, for 15% at full stacks.\nThe bonus is yours alone; it no longer raises the Fire damage the rest of the raid deals."
+	},
+	"1382": {
+		"ability": "Shadow Bolt (Shadow Oil proc)",
+		"file": "sim/core/consumes.go",
+		"note": "Shadow Oil's 15% proc really does cast Shadow Bolt 1382 for 52 to 61, so the Classic name and icon are the right ones.",
+		"source": "classic"
+	},
+	"14325": {
+		"ability": "Hunter's Mark",
+		"file": "sim/core/debuffs.go",
+		"note": "110 ranged attack power against the target, +3% per point of Improved Hunter's Mark, for 2 min; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"15235": {
+		"ability": "Crystal Yield",
+		"file": "sim/core/debuffs.go",
+		"note": "-200 armor for 2 min from the Crystal Force questline item, unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"15257": {
+		"ability": "Shadow Weaving",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"15331": {
+		"ability": "Shadow Weaving",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"15332": {
+		"ability": "Shadow Weaving",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"15333": {
+		"ability": "Shadow Weaving",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"15334": {
+		"ability": "Shadow Weaving",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"15363": {
+		"ability": "Inspiration",
+		"file": "sim/core/buffs.go",
+		"note": "Forever did not touch it, but upstream still carries a 'TODO: Classic' here and models it as 3%/7%/10% physical damage taken reduction rather than Classic's armor increase, so the Classic tooltip and the sim already disagree on the mechanic.",
+		"source": "classic"
+	},
+	"15366": {
+		"ability": "Songflower Serenade",
+		"file": "sim/core/buffs.go",
+		"note": "+15 to all five attributes and +5% crit, unchanged; Forever raids ignore world buffs entirely, so under that ruleset the buff is never applied and the picker hides it.",
+		"source": "classic"
+	},
+	"15851": {
+		"ability": "Dragonbreath Chili (proc)",
+		"file": "sim/core/consumes.go",
+		"note": "The 60 damage fire breath the chili procs; 15852 is the aura that carries it. Unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"15852": {
+		"ability": "Dragonbreath Chili",
+		"file": "sim/core/consumes.go",
+		"note": "The eater's aura: a 5% chance on melee hit, 10 sec internal cooldown, to breathe the 15851 fire. Unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"16190": {
+		"ability": "Mana Tide Totem",
+		"file": "sim/core/buffs.go",
+		"note": "290 mana per tick, four ticks over 12 sec, 5 min cooldown; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"16321": {
+		"ability": "Juju Escape",
+		"file": "sim/core/consumes.go",
+		"note": "+5% dodge for 10 sec on a 1 min cooldown, unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"16322": {
+		"ability": "Juju Flurry",
+		"file": "sim/core/consumes.go",
+		"note": "+3% melee speed for 20 sec with the vanilla bug that divides auto-attack damage by the same 3%; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"16609": {
+		"ability": "Warchief's Blessing",
+		"file": "sim/core/buffs.go",
+		"note": "+15% melee speed, 300 health and 10 MP5, unchanged; Forever raids ignore world buffs, so under that ruleset it is never applied.",
+		"source": "classic"
+	},
+	"17364": {
+		"ability": "Stormstrike",
+		"file": "sim/core/debuffs.go",
+		"note": "Forever makes Stormstrike personal and stops Nature hits eating the charges (docs/forever_rules.md, panel and tooltip); the live Forever aura is registered in sim/shaman/stormstrike.go, and this core StormstrikeAura is the Classic raid-wide two-charge version, reached only when the ruleset is Classic.",
+		"source": "forever",
+		"tooltip": "21% of base mana\nMelee Range\nInstant\n20 sec cooldown\nInstantly attack with your main hand weapon. For the next 12 sec, the Nature damage you deal to that target is increased by 20%.\nThe vulnerability lasts its full duration instead of being consumed by Nature hits, and it raises only your own damage."
+	},
+	"17800": {
+		"ability": "Improved Shadow Bolt (Shadow Vulnerability)",
+		"file": "sim/core/debuffs.go",
+		"note": "Forever's Improved Shadow Bolt is personal and lasts a flat 12 sec (docs/forever_rules.md, published talent text); the live version is sim/warlock/talents.go applyImprovedShadowBolt, and this core aura plus its external-warlock approximation is the Classic four-charge raid debuff, gated off under Forever in applyDebuffEffects.",
+		"source": "forever",
+		"tooltip": "Passive\nYour Shadow Bolt critical strikes increase the Shadow damage you deal to that target by 4% per point, to 20% at five points, for 12 sec.\nThe window is a flat 12 sec and is not spent by your hits, and the bonus is yours alone rather than the raid's."
+	},
+	"17937": {
+		"ability": "Curse of Shadow",
+		"file": "sim/core/debuffs.go",
+		"note": "+10% Arcane and Shadow damage taken and -75 Arcane and Shadow resistance for 5 min; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"19838": {
+		"ability": "Blessing of Might",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"20217": {
+		"ability": "Blessing of Kings",
+		"file": "sim/core/buffs.go",
+		"note": "+10% to all five attributes, Alliance only, unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"20218": {
+		"ability": "Sanctity Aura",
+		"file": "sim/core/buffs.go",
+		"note": "+10% Holy damage dealt, Alliance only, unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"20271": {
+		"ability": "Judgement of Light",
+		"file": "sim/core/debuffs.go",
+		"note": "Name mismatch inherited from upstream: the database calls 20271 'Judgement', the cast, while the sim labels the aura 'Judgement of Light'. It is also dead in two ways - applyDebuffEffects never calls JudgementOfLightAura even though proto.Debuffs.JudgementOfLight and the UI checkbox exist, and the aura body has no effect, so ticking Judgement of Light changes nothing.",
+		"source": "classic"
+	},
+	"20355": {
+		"ability": "Judgement of Wisdom",
+		"file": "sim/core/debuffs.go",
+		"note": "50% chance on a landed direct attack to return 59 mana, 10 sec; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"20572": {
+		"ability": "Blood Fury",
+		"file": "sim/core/racials.go",
+		"note": "Forever's Blood Fury reads 10% off the orc's whole attack power and pays the same 10% in spell power, with no healing penalty (docs/forever_rules.md racials table, racials guide and demo); the 15 sec duration and the 2 min cooldown are Classic's and were not reported as changed.",
+		"source": "forever",
+		"tooltip": "Instant\n2 min cooldown\nIncreases your attack power and spell power by 10% for 15 sec."
+	},
+	"20594": {
+		"ability": "Stoneform",
+		"file": "sim/core/racials.go",
+		"note": "The published Forever racial set still gives the dwarf Stoneform, and the commit that aligned the racials to that list left it alone: +10% armor for 8 sec on a 3 min cooldown, as in Classic.",
+		"source": "classic"
+	},
+	"20906": {
+		"ability": "Trueshot Aura",
+		"file": "sim/core/buffs.go",
+		"note": "100 attack power, paid into both the melee and the ranged pool here; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"22817": {
+		"ability": "Fengus' Ferocity",
+		"file": "sim/core/buffs.go",
+		"note": "+200 melee and ranged attack power, unchanged; Forever raids ignore the Dire Maul tribute buffs, so under that ruleset it is never applied.",
+		"source": "classic"
+	},
+	"22818": {
+		"ability": "Mol'dar's Moxie",
+		"file": "sim/core/buffs.go",
+		"note": "+15% Stamina, unchanged; Forever raids ignore the Dire Maul tribute buffs, so under that ruleset it is never applied.",
+		"source": "classic"
+	},
+	"22820": {
+		"ability": "Slip'kik's Savvy",
+		"file": "sim/core/buffs.go",
+		"note": "+3% spell crit, unchanged; Forever raids ignore the Dire Maul tribute buffs, so under that ruleset it is never applied.",
+		"source": "classic"
+	},
+	"22888": {
+		"ability": "Rallying Cry of the Dragonslayer",
+		"file": "sim/core/buffs.go",
+		"note": "+10% spell crit, +5% melee crit and 140 attack power, unchanged; Forever raids ignore world buffs, so under that ruleset it is never applied.",
+		"source": "classic"
+	},
+	"23060": {
+		"ability": "Battle Squawk",
+		"file": "sim/core/buffs.go",
+		"note": "5% melee speed per stack to 5 stacks for 4 min; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"23577": {
+		"ability": "Expose Weakness",
+		"file": "sim/core/debuffs.go",
+		"note": "450 ranged attack power for the whole raid against that target for 7 sec; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"23737": {
+		"ability": "Sayge's Dark Fortune of Stamina",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"24425": {
+		"ability": "Spirit of Zandalar",
+		"file": "sim/core/buffs.go",
+		"note": "+15% to all five attributes and 10% move speed, unchanged; Forever raids ignore world buffs, so under that ruleset it is never applied.",
+		"source": "classic"
+	},
+	"24977": {
+		"ability": "Insect Swarm",
+		"file": "sim/core/debuffs.go",
+		"note": "+2% chance for the target's attacks to miss, 12 sec; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"25289": {
+		"ability": "Battle Shout",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"25291": {
+		"ability": "Blessing of Might",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"25359": {
+		"ability": "Grace of Air Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"25361": {
+		"ability": "Strength of Earth Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"26016": {
+		"ability": "Vindication",
+		"file": "sim/core/debuffs.go",
+		"note": "Dead code: core's VindicationAura registers a 10 sec aura with no effect at all and has no caller anywhere in the sim - the paladin runs its own Vindication in sim/paladin/talents.go - so this id is never resolved by the UI.",
+		"source": "classic"
+	},
+	"26297": {
+		"ability": "Berserking",
+		"file": "sim/core/racials.go",
+		"note": "Forever's Berserking is a flat 10% instead of scaling from 10% to 30% as health drops (racials guide, commit 'rework the racials the way Forever reworked them'); the 10 sec duration, the 3 min cooldown and the resource costs are Classic's. Mana users are implemented as a 10% cast-time and swing-time cut, i.e. 11.1% haste, while rage and energy users get a flat 10% attack speed.",
+		"source": "forever",
+		"tooltip": "7% of base mana, 5 Rage or 10 Energy\nInstant\n3 min cooldown\nIncreases your attack and casting speed by 10% for 10 sec."
+	},
+	"28142": {
+		"ability": "Atiesh, Greatstaff of the Guardian (mage)",
+		"file": "sim/core/buffs.go",
+		"note": "+2% spell crit to the party per mage Atiesh; one of four ids that share the database name 'Power of the Guardian' (28143 spell power, 28144 healing, 28145 MP5). Unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"28143": {
+		"ability": "Atiesh, Greatstaff of the Guardian (warlock)",
+		"file": "sim/core/buffs.go",
+		"note": "+33 spell power to the party per warlock Atiesh; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"28144": {
+		"ability": "Atiesh, Greatstaff of the Guardian (priest)",
+		"file": "sim/core/buffs.go",
+		"note": "+62 healing power to the party per priest Atiesh; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"28145": {
+		"ability": "Atiesh, Greatstaff of the Guardian (druid)",
+		"file": "sim/core/buffs.go",
+		"note": "+11 MP5 to the party per druid Atiesh; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"28593": {
+		"ability": "Winter's Chill",
+		"file": "sim/core/debuffs.go",
+		"note": "Forever turns Winter's Chill into one personal stack for the mage's own Frostbolt and Ice Lance (docs/forever_rules.md, panel); the live version is sim/mage/talents.go applyWintersChill. sim/core/debuffs.go still registers the Classic five-stack +10% frost crit taken raid debuff with no IsForever() gate and the UI still offers it under Forever, which is a bug; the UI's own checkbox also draws its icon from 28595 rather than the 28593 the sim registers.",
+		"source": "forever",
+		"tooltip": "Passive\nYour Frost damage has a 20% chance per point to grant Winter's Chill, increasing the critical strike chance of your own Frostbolt and Ice Lance by 2% for 15 sec.\nA single stack, and it helps only the mage who procced it."
+	},
+	"29166": {
+		"ability": "Innervate",
+		"file": "sim/core/buffs.go",
+		"note": "Five times spirit regen with full regen while casting for 20 sec, 6 min cooldown; unchanged from upstream Classic.",
+		"source": "classic"
+	},
+	"3043": {
+		"ability": "Scorpid Sting",
+		"file": "sim/core/debuffs.go",
+		"note": "The aura is registered for 20 sec when the debuff is ticked but carries no effect at all, so the checkbox changes nothing; that gap is upstream Classic's, not Forever's.",
+		"source": "classic"
+	},
+	"34917": {
+		"ability": "Vampiric Touch (mana metrics filter)",
+		"file": "sim/core/mana.go",
+		"note": "Not a registration: doneIteration skips resource metrics tagged 34917 so Vampiric Touch mana threat can be charged to the priest instead. The id has no Classic database entry (Vampiric Touch is a Burning Crusade spell) and nothing in this sim ever creates a metric with it, so the guard is dead.",
+		"source": "classic"
+	},
+	"409828": {
+		"ability": "Mangle (bleed vulnerability)",
+		"file": "sim/core/debuffs.go",
+		"note": "A Season of Discovery id that the Classic database does not carry. The aura is a 30% bleed damage taken increase for 1 min, but its only caller is sim/core/exclusive_effect_test.go - the druid's Mangle registers 33876 and 33878 and never applies it - so no bleed amplification reaches the sim and the UI never resolves this id.",
+		"source": "classic"
+	},
+	"460520": {
+		"ability": "Elune's Light",
+		"file": "sim/core/racials.go",
+		"foreverId": 460520,
+		"note": "A Forever-only night elf racial; 460520 is Forever's own id and the Classic database cannot name or draw it, so the UI has to render this entry itself. Magnitude and duration come from the racials guide, and docs/forever_rules.md records the 3 min cooldown as confirmed by search.",
+		"source": "forever",
+		"tooltip": "Instant\n3 min cooldown\nIncreases your critical strike chance with spells and attacks by 10% for 15 sec."
+	},
+	"460530": {
+		"ability": "Windshaper",
+		"assumptions": [
+			"The 10% attack power and spell power is taken from the Skyborne first look and matched to Blood Fury; check the figure in the beta spellbook.",
+			"The 15 second duration is assumed from Blood Fury; no Windshaper duration was published.",
+			"The 3 minute cooldown is the default this fork gives racials with no published cooldown (beta checklist, 'How to run the pass' item 4)."
+		],
+		"file": "sim/core/racials.go",
+		"foreverId": 460530,
+		"note": "A Forever-only racial for the Horde half of the Skyborne; 460530 is Forever's own id and the Classic database cannot name or draw it. The Skyborne first look described the racial but published no figures, so every number here is read across from Blood Fury.",
+		"source": "assumed",
+		"tooltip": "Instant\n3 min cooldown\nIncreases your attack power and spell power by 10% for 15 sec."
+	},
+	"5242": {
+		"ability": "Battle Shout",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"6190": {
+		"ability": "Demoralizing Shout",
+		"file": "sim/core/debuffs.go",
+		"source": "unreviewed"
+	},
+	"6192": {
+		"ability": "Battle Shout",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"6673": {
+		"ability": "Battle Shout",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"8075": {
+		"ability": "Strength of Earth Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"8160": {
+		"ability": "Strength of Earth Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"8161": {
+		"ability": "Strength of Earth Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"8516": {
+		"ability": "Windfury Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"8835": {
+		"ability": "Grace of Air Totem",
+		"file": "sim/core/buffs.go",
+		"source": "unreviewed"
+	},
+	"9898": {
+		"ability": "Demoralizing Roar",
+		"file": "sim/core/debuffs.go",
+		"note": "138 attack power reduction, +8% per point of Improved Demoralizing Roar, for 30 sec. Forever's change to the druid's own Demoralizing Roar lives in sim/druid/demoralizing_roar.go; this core copy is the external-druid approximation and carries Classic's numbers.",
+		"source": "classic"
+	},
+	"9910": {
+		"ability": "Thorns",
+		"file": "sim/core/buffs.go",
+		"note": "18 Nature damage per melee hit taken, +25% per point of Brambles; unchanged from upstream Classic.",
+		"source": "classic"
+	}
+}

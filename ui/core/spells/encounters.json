@@ -1,0 +1,17 @@
+{
+	"23513": {
+		"ability": "Essence of the Red",
+		"file": "sim/encounters/blackwing_lair.go",
+		"source": "unreviewed"
+	},
+	"28131": {
+		"ability": "Enrage",
+		"file": "sim/encounters/naxxramas/patchwerk10_ai.go",
+		"source": "unreviewed"
+	},
+	"59192": {
+		"ability": "spell 59192",
+		"file": "sim/encounters/naxxramas/patchwerk10_ai.go",
+		"source": "unreviewed"
+	}
+}

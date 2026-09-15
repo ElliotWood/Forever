@@ -1,0 +1,379 @@
+{
+	"11197": {
+		"ability": "Expose Armor",
+		"file": "sim/rogue/expose_armor.go",
+		"source": "unreviewed"
+	},
+	"11268": {
+		"ability": "Ambush",
+		"file": "sim/rogue/ambush.go",
+		"source": "unreviewed"
+	},
+	"11269": {
+		"ability": "Ambush",
+		"file": "sim/rogue/ambush.go",
+		"source": "unreviewed"
+	},
+	"11273": {
+		"ability": "Rupture",
+		"file": "sim/rogue/rupture.go",
+		"source": "unreviewed"
+	},
+	"11275": {
+		"ability": "Rupture",
+		"file": "sim/rogue/rupture.go",
+		"source": "unreviewed"
+	},
+	"11279": {
+		"ability": "Backstab",
+		"file": "sim/rogue/backstab.go",
+		"source": "unreviewed"
+	},
+	"11289": {
+		"ability": "Garrote",
+		"file": "sim/rogue/garrote.go",
+		"source": "unreviewed"
+	},
+	"11290": {
+		"ability": "Garrote",
+		"file": "sim/rogue/garrote.go",
+		"source": "unreviewed"
+	},
+	"11293": {
+		"ability": "Sinister Strike",
+		"file": "sim/rogue/sinister_strike.go",
+		"source": "unreviewed"
+	},
+	"11294": {
+		"ability": "Sinister Strike",
+		"file": "sim/rogue/sinister_strike.go",
+		"source": "unreviewed"
+	},
+	"11299": {
+		"ability": "Eviscerate",
+		"file": "sim/rogue/eviscerate.go",
+		"source": "unreviewed"
+	},
+	"11338": {
+		"ability": "Instant Poison IV",
+		"file": "sim/rogue/poisons.go",
+		"source": "unreviewed"
+	},
+	"11340": {
+		"ability": "Instant Poison VI",
+		"file": "sim/rogue/poisons.go",
+		"source": "unreviewed"
+	},
+	"11355": {
+		"ability": "Deadly Poison III",
+		"file": "sim/rogue/poisons.go",
+		"source": "unreviewed"
+	},
+	"13219": {
+		"ability": "Wound Poison",
+		"file": "sim/rogue/poisons.go",
+		"note": "The 5 stack, 15 sec debuff is Classic's; the healing reduction has no effect because the sim does not model incoming healing, and the registration always carries rank 1's id 13219 even at level 60 (rank 4 is 13227).",
+		"source": "classic"
+	},
+	"1329": {
+		"ability": "Mutilate",
+		"assumptions": [
+			"60 Energy cost - the Forever tooltip showed no cost, so Classic Mutilate's 60 is used",
+			"Requires a Dagger in both the main hand and the off hand - the Forever tooltip did not repeat the requirement",
+			"The 13 flat damage per weapon does not scale with level or rank (only one rank was seen)"
+		],
+		"file": "sim/rogue/mutilate.go",
+		"note": "Forever's Mutilate is a new Assassination talent with its own numbers (75% weapon damage plus 13, observed on the BlizzCon demo); Classic's unused spell 1329 lends only the name, and its icon (ability_rogue_shadowstrikes) is not the one Forever shows (ability_rogue_deadlybrew).",
+		"source": "assumed",
+		"tooltip": "60 Energy\nMelee Range\nInstant\nInstantly attacks with both weapons for 75% weapon damage plus an additional 13 with each weapon. Damage is increased by 20% against Poisoned targets. Awards 2 combo points.\nRequires Daggers in both hands."
+	},
+	"13750": {
+		"ability": "Adrenaline Rush",
+		"file": "sim/rogue/talents.go",
+		"note": "Forever's demo tooltip reads '100% Energy regeneration for 15 sec', word for word Classic's, and the sim keeps Classic's 5 min cooldown.",
+		"source": "classic"
+	},
+	"13866": {
+		"ability": "Puncturing Wounds",
+		"assumptions": [
+			"Rank 2 and rank 3 Backstab crit are 20% and 30% (only rank 1's 10% was seen)",
+			"Rank 2 and rank 3 Mutilate crit are 10% and 15%",
+			"The extra combo point chance scales linearly: 15%/30%/45%"
+		],
+		"file": "sim/rogue/backstab.go",
+		"note": "Forever replaced Combat's Improved Backstab with Puncturing Wounds and published no spell id for it (the talent tree carries a placeholder 0), so the sim borrows Classic's Improved Backstab id 13866 for the extra combo point metric and the UI shows the wrong talent name and text.",
+		"source": "assumed",
+		"tooltip": "Talent, 3 ranks\nIncreases the critical strike chance of your Backstab by 10% per rank and of your Mutilate by 5% per rank, and gives Backstab a 15% chance per rank to add an additional Combo Point."
+	},
+	"13877": {
+		"ability": "Blade Flurry",
+		"file": "sim/rogue/talents.go",
+		"note": "Forever's demo tooltip is Classic's (20% melee attack speed, one extra nearby target, 15 sec) and the sim keeps Classic's 25 Energy and 2 min cooldown; only Restless Blades, from outside the spell, shortens it.",
+		"source": "classic"
+	},
+	"13964": {
+		"ability": "Hack and Slash",
+		"assumptions": [
+			"All three effects scale linearly from rank 1, reaching 5% extra attack, 5% crit and 15% armor ignored at rank 5 (only rank 1 was seen)",
+			"The extra attack keeps Classic Sword Specialization's 200 ms internal cooldown",
+			"A rogue holding two qualifying weapon types gets both halves of the talent"
+		],
+		"file": "sim/rogue/hack_and_slash.go",
+		"note": "Hack and Slash folds Classic's four weapon specialization talents into one and has no published spell id (the tree carries a placeholder 0), so the extra attack is logged under Classic's Sword Specialization id 13964 and the UI names it that.",
+		"source": "assumed",
+		"tooltip": "Talent, 5 ranks\nGives your melee weapon attacks a benefit depending on the weapon.\nAxe/Sword: your successful melee attacks have a 1% chance per rank to trigger an extra attack on the target.\nDagger/Fist: increases your critical strike chance by 1% per rank.\nMace: your attacks ignore 3% of your target's armor per rank."
+	},
+	"13980": {
+		"ability": "Initiative",
+		"assumptions": [
+			"Rank 2 is 66% and rank 3 is 99% - only rank 1's 33% was seen, and the beta may round these to 65% and 100%"
+		],
+		"file": "sim/rogue/talents.go",
+		"note": "Forever raised rank 1 from Classic's 25% to 33%, so the Classic tooltip for 13980 (rank 3, 75%) is wrong; Cheap Shot is not simulated, so the sim proc only fires on Ambush and Garrote.",
+		"source": "assumed",
+		"tooltip": "Talent, 3 ranks\nGives you a 33% chance per rank to add an additional combo point to your target when using your Ambush, Garrote, or Cheap Shot ability."
+	},
+	"14161": {
+		"ability": "Ruthlessness",
+		"file": "sim/rogue/talents.go",
+		"note": "The demo tooltip's rank 1 is Classic's 20% per point, and the Forever talent data copies Classic's 20/40/60 ranks.",
+		"source": "classic"
+	},
+	"14169": {
+		"ability": "Improved Expose Armor",
+		"assumptions": [
+			"Rank 2 discounts 10 Energy - only rank 1's 5 was seen",
+			"The combo point refund stays 1 and still needs a full 5 point spend at rank 2",
+			"Expose Armor's armor reduction is now baseline at Classic's 2/2 value (1.5x the per-combo-point armor), rather than having been cut with the talent's old effect"
+		],
+		"file": "sim/rogue/expose_armor.go",
+		"note": "The talent keeps its name but not its effect: it no longer scales Expose Armor's armor reduction, so Classic's tooltip for 14169 ('increases the armor reduced by 50%') no longer describes it.",
+		"source": "assumed",
+		"tooltip": "Talent, 2 ranks\nReduces the Energy cost of your Expose Armor ability by 5 per rank, and refunds 1 Combo Point when Expose Armor is cast with 5 Combo Points."
+	},
+	"14177": {
+		"ability": "Cold Blood",
+		"file": "sim/rogue/talents.go",
+		"note": "The demo tooltip adds Mutilate to the list Classic's tooltip gives; the sim actually hands the buff to every combo point builder, so Ghostly Strike and Hemorrhage can also consume it.",
+		"source": "forever",
+		"tooltip": "Instant\n3 min cooldown\nWhen activated, increases the critical strike chance of your next Sinister Strike, Backstab, Ambush, Eviscerate, or Mutilate by 100%."
+	},
+	"14179": {
+		"ability": "Relentless Strikes",
+		"file": "sim/rogue/talents.go",
+		"note": "The demo tooltip reads 20% per combo point for 25 Energy, the same as Classic.",
+		"source": "classic"
+	},
+	"14183": {
+		"ability": "Premeditation",
+		"file": "sim/rogue/premeditation.go",
+		"note": "Forever widened the window from Classic's 10 sec to 20 sec (demo tooltip); the sim grants the 2 combo points and keeps Classic's 2 min cooldown but does not model the window expiring.",
+		"source": "forever",
+		"tooltip": "20 yd range\nInstant\n2 min cooldown\nRequires Stealth\nAdds 2 Combo Points to your target. You must add to or use those combo points within 20 sec or the combo points are lost."
+	},
+	"14185": {
+		"ability": "Preparation",
+		"file": "sim/rogue/preparation.go",
+		"note": "Forever's tooltip is Classic's word for word, 10 min cooldown; note the sim only resets Cold Blood, Shadowstep and Vanish, not Evasion.",
+		"source": "classic"
+	},
+	"14195": {
+		"ability": "Seal Fate",
+		"file": "sim/rogue/talents.go",
+		"note": "The demo tooltip's rank 1 is Classic's 20% per point and the Forever data copies Classic's 20/40/60/80/100 ranks; the 500 ms internal cooldown is Classic's.",
+		"source": "classic"
+	},
+	"14251": {
+		"ability": "Riposte",
+		"file": "sim/rogue/riposte.go",
+		"note": "The demo tooltip reads 150% weapon damage and a 6 sec disarm, the same as Classic, and the sim keeps Classic's 10 Energy and 6 sec cooldown.",
+		"source": "classic"
+	},
+	"14278": {
+		"ability": "Ghostly Strike",
+		"file": "sim/rogue/ghostly_strike.go",
+		"note": "Forever added the dagger-only 180% weapon damage to Classic's flat 125% (demo tooltip); the cost, the cooldown, the dodge and the duration are unchanged, and Quietus now raises its damage below 35% target health.",
+		"source": "forever",
+		"tooltip": "40 Energy\nMelee Range\nInstant\n20 sec cooldown\nA strike that deals 125% (180% if a Dagger is equipped in your Main Hand) weapon damage and increases your chance to dodge by 15% for 7 sec. Awards 1 combo point."
+	},
+	"17348": {
+		"ability": "Hemorrhage",
+		"file": "sim/rogue/hemorrhage.go",
+		"source": "unreviewed"
+	},
+	"1759": {
+		"ability": "Sinister Strike",
+		"file": "sim/rogue/sinister_strike.go",
+		"source": "unreviewed"
+	},
+	"1787": {
+		"ability": "Stealth",
+		"file": "sim/rogue/stealth.go",
+		"note": "The aura is a marker with no effect and Forever only changed Camouflage, which shortens Stealth's cooldown, not Stealth itself.",
+		"source": "classic"
+	},
+	"1856": {
+		"ability": "Vanish",
+		"file": "sim/rogue/vanish.go",
+		"note": "5 min cooldown less 45 sec per point of Elusiveness, exactly as in Classic; the Forever talent data copies Elusiveness's Classic ranks, and Restless Blades and the Nightslayer 3pc shorten the cooldown from outside the spell.",
+		"source": "classic"
+	},
+	"1943": {
+		"ability": "Rupture",
+		"file": "sim/rogue/rupture.go",
+		"source": "unreviewed"
+	},
+	"1966": {
+		"ability": "Feint",
+		"file": "sim/rogue/feint.go",
+		"note": "20 Energy, 10 sec cooldown, threat only; Forever left Feint alone and the Bloodfang 5pc threat bonus that would touch it is a no-op in the sim.",
+		"source": "classic"
+	},
+	"22482": {
+		"ability": "Blade Flurry (extra strike)",
+		"file": "sim/rogue/talents.go",
+		"note": "The off-target copy of each melee hit while Blade Flurry is up; the mechanic is Classic's and Forever left Blade Flurry alone.",
+		"source": "classic"
+	},
+	"23580": {
+		"ability": "Bloodfang (heal over time)",
+		"file": "sim/rogue/items_sets_pve.go",
+		"note": "Bloodfang Armor 8pc, 50 health a second for 6 seconds, exactly the Classic set bonus; the set survived the cut to Forever's launch item database unchanged.",
+		"source": "classic"
+	},
+	"23581": {
+		"ability": "Bloodfang (damage proc)",
+		"file": "sim/rogue/items_sets_pve.go",
+		"note": "Bloodfang Armor 8pc, 283 to 317 damage at 1 PPM, exactly the Classic set bonus.",
+		"source": "classic"
+	},
+	"23582": {
+		"ability": "Clean Escape",
+		"file": "sim/rogue/items_sets_pve.go",
+		"note": "Nightslayer Armor 8pc, heals 500 when Vanish is used, exactly the Classic set bonus.",
+		"source": "classic"
+	},
+	"24532": {
+		"ability": "Burst of Energy",
+		"file": "sim/rogue/items.go",
+		"note": "The on-use of Renataki's Charm of Trickery (item 19954), 60 Energy on a 3 min cooldown, unchanged from Classic.",
+		"source": "classic"
+	},
+	"2590": {
+		"ability": "Backstab",
+		"file": "sim/rogue/backstab.go",
+		"source": "unreviewed"
+	},
+	"2823": {
+		"ability": "Deadly Poison",
+		"file": "sim/rogue/poisons.go",
+		"source": "unreviewed"
+	},
+	"2824": {
+		"ability": "Deadly Poison II",
+		"file": "sim/rogue/poisons.go",
+		"source": "unreviewed"
+	},
+	"32645": {
+		"ability": "Venom",
+		"assumptions": [
+			"25 Energy cost - the Forever tooltip showed no cost, so it is set to match the other rogue finishers",
+			"Venom rescales a Deadly Poison that is already ticking on the target, not only the stacks applied while it is up"
+		],
+		"file": "sim/rogue/venom.go",
+		"note": "Venom is a new Assassination finisher with no published spell id, and the id the sim borrows for its icon, 32645 (Burning Crusade's Envenom), is not in the Classic spell database at all, so the UI currently has neither a name nor an icon for it.",
+		"source": "assumed",
+		"tooltip": "25 Energy\nInstant\nFinishing move that increases the damage of your Poisons by 30% and your chance to apply Poisons by 10%. Lasts longer per combo point:\n1 point: 9 seconds\n2 points: 12 seconds\n3 points: 15 seconds\n4 points: 18 seconds\n5 points: 21 seconds"
+	},
+	"457437": {
+		"ability": "Vanish (stealth aura)",
+		"assumptions": [
+			"The aura's 10 sec duration is Classic Vanish's improved stealth window; the sim gives the aura no effect of its own"
+		],
+		"file": "sim/rogue/vanish.go",
+		"note": "Only the Vanish spell's id 1856 is Classic's; 457437 is a stand-in for the buff, and its Classic database entry ('reduces all Magic damage taken by 50% for 10 sec') describes an effect the sim never applies, so the UI must not show it.",
+		"source": "assumed",
+		"tooltip": "Instant\nAllows the rogue to vanish from sight, entering an improved stealth mode for 10 sec."
+	},
+	"5171": {
+		"ability": "Slice and Dice",
+		"file": "sim/rogue/slice_and_dice.go",
+		"source": "unreviewed"
+	},
+	"5277": {
+		"ability": "Evasion",
+		"file": "sim/rogue/evasion.go",
+		"note": "50% dodge for 15 sec on a 5 min cooldown, unchanged; Forever moved the cooldown reduction from Elusiveness to Endurance (30% per point), which is the talent's tooltip and not Evasion's.",
+		"source": "classic"
+	},
+	"6762": {
+		"ability": "Eviscerate",
+		"file": "sim/rogue/eviscerate.go",
+		"source": "unreviewed"
+	},
+	"6774": {
+		"ability": "Slice and Dice",
+		"file": "sim/rogue/slice_and_dice.go",
+		"source": "unreviewed"
+	},
+	"8621": {
+		"ability": "Sinister Strike",
+		"file": "sim/rogue/sinister_strike.go",
+		"source": "unreviewed"
+	},
+	"8624": {
+		"ability": "Eviscerate",
+		"file": "sim/rogue/eviscerate.go",
+		"source": "unreviewed"
+	},
+	"8631": {
+		"ability": "Garrote",
+		"file": "sim/rogue/garrote.go",
+		"source": "unreviewed"
+	},
+	"8633": {
+		"ability": "Garrote",
+		"file": "sim/rogue/garrote.go",
+		"source": "unreviewed"
+	},
+	"8640": {
+		"ability": "Rupture",
+		"file": "sim/rogue/rupture.go",
+		"source": "unreviewed"
+	},
+	"8647": {
+		"ability": "Expose Armor",
+		"file": "sim/rogue/expose_armor.go",
+		"source": "unreviewed"
+	},
+	"8650": {
+		"ability": "Expose Armor",
+		"file": "sim/rogue/expose_armor.go",
+		"source": "unreviewed"
+	},
+	"8676": {
+		"ability": "Ambush",
+		"file": "sim/rogue/ambush.go",
+		"source": "unreviewed"
+	},
+	"8679": {
+		"ability": "Instant Poison",
+		"file": "sim/rogue/poisons.go",
+		"source": "unreviewed"
+	},
+	"8688": {
+		"ability": "Instant Poison III",
+		"file": "sim/rogue/poisons.go",
+		"source": "unreviewed"
+	},
+	"8721": {
+		"ability": "Backstab",
+		"file": "sim/rogue/backstab.go",
+		"source": "unreviewed"
+	},
+	"8725": {
+		"ability": "Ambush",
+		"file": "sim/rogue/ambush.go",
+		"source": "unreviewed"
+	}
+}

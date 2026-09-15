@@ -1,0 +1,352 @@
+{
+	"1004": {
+		"ability": "Smite",
+		"file": "sim/priest/smite.go",
+		"source": "unreviewed"
+	},
+	"10797": {
+		"ability": "Starshards",
+		"file": "sim/priest/starshards.go",
+		"source": "unreviewed"
+	},
+	"10892": {
+		"ability": "Shadow Word: Pain",
+		"file": "sim/priest/shadow_word_pain.go",
+		"source": "unreviewed"
+	},
+	"10893": {
+		"ability": "Shadow Word: Pain",
+		"file": "sim/priest/shadow_word_pain.go",
+		"source": "unreviewed"
+	},
+	"10894": {
+		"ability": "Shadow Word: Pain",
+		"file": "sim/priest/shadow_word_pain.go",
+		"source": "unreviewed"
+	},
+	"10933": {
+		"ability": "Smite",
+		"file": "sim/priest/smite.go",
+		"source": "unreviewed"
+	},
+	"10934": {
+		"ability": "Smite",
+		"file": "sim/priest/smite.go",
+		"source": "unreviewed"
+	},
+	"10945": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"10946": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"10947": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"14751": {
+		"ability": "Inner Focus",
+		"file": "sim/priest/talents.go",
+		"note": "Forever's demo tooltip is word for word Classic's 14751 and the sim matches it exactly: 100% off the next priest spell, +25% critical effect chance, 3 min cooldown.",
+		"source": "classic"
+	},
+	"14909": {
+		"ability": "Searing Light",
+		"assumptions": [
+			"Rank 2 of Searing Light gives 4% Holy damage and a 10% proc chance: only rank 1 (2% and 5%) was read off the demo tooltip and rank 2 is a linear extrapolation (tools/forever_talents/data/priest.json records ranksSource \"extrapolated\" for this talent).",
+			"The free Holy Nova is consumed by the next Holy Nova cast only, and does not expire on its own."
+		],
+		"file": "sim/priest/talents.go",
+		"note": "Classic's 14909 reads \"Increases the damage of your Smite and Holy Fire spells by 5%\", a different effect on a different set of spells, so the Classic tooltip must not be shown for a Forever priest.",
+		"source": "assumed",
+		"tooltip": "Passive\nIncreases your Holy damage done by 2%/4%, and gives a 5%/10% chance each time your Holy Fire spell deals periodic damage for your next Holy Nova to cost no Mana."
+	},
+	"14914": {
+		"ability": "Holy Fire",
+		"file": "sim/priest/holy_fire.go",
+		"source": "unreviewed"
+	},
+	"15237": {
+		"ability": "Holy Nova",
+		"assumptions": [
+			"Holy Nova costs 22% of base mana, 303 at level 60: the demo tooltip showed no cost at all and Classic's rank 1 costs 185.",
+			"Only rank 1 of Holy Nova exists, so a level 60 Forever priest casts a 30 to 35 damage nova - no higher rank was shown on the demo and none is registered.",
+			"The 10 yard damage and healing radii are the demo tooltip's and are not modelled: every encounter target is hit and every party member is healed regardless of distance."
+		],
+		"file": "sim/priest/holy_nova.go",
+		"note": "Classic's 15237 rank 1 is 29 to 34 damage and 54 to 63 healing for 185 mana; the Forever demo tooltip raised both figures, so the Classic tooltip disagrees with the sim. The healing half is dealt through 23455.",
+		"source": "assumed",
+		"tooltip": "303 Mana\nInstant\nCauses an explosion of holy light around the caster, causing 30 to 35 Holy damage to all enemy targets within 10 yards and healing all party members within 10 yards for 64 to 73. These effects cause no threat."
+	},
+	"15261": {
+		"ability": "Holy Fire",
+		"file": "sim/priest/holy_fire.go",
+		"source": "unreviewed"
+	},
+	"15262": {
+		"ability": "Holy Fire",
+		"file": "sim/priest/holy_fire.go",
+		"source": "unreviewed"
+	},
+	"15263": {
+		"ability": "Holy Fire",
+		"file": "sim/priest/holy_fire.go",
+		"source": "unreviewed"
+	},
+	"15264": {
+		"ability": "Holy Fire",
+		"file": "sim/priest/holy_fire.go",
+		"source": "unreviewed"
+	},
+	"15265": {
+		"ability": "Holy Fire",
+		"file": "sim/priest/holy_fire.go",
+		"source": "unreviewed"
+	},
+	"15266": {
+		"ability": "Holy Fire",
+		"file": "sim/priest/holy_fire.go",
+		"source": "unreviewed"
+	},
+	"15267": {
+		"ability": "Holy Fire",
+		"file": "sim/priest/holy_fire.go",
+		"source": "unreviewed"
+	},
+	"15270": {
+		"ability": "Spirit Tap",
+		"file": "sim/priest/talents.go",
+		"source": "unreviewed"
+	},
+	"15286": {
+		"ability": "Vampiric Embrace",
+		"file": "sim/priest/vampiric_embrace.go",
+		"note": "Only the duration changed - Classic's 15286 lasts 1 min, Forever's demo tooltip says 30 sec - and Classic's talent tree reached 20% healing only with Improved Vampiric Embrace, a talent Forever removed; the sim does not model Classic's 10 sec cooldown, and the tree's extra Spirit Tap interaction cannot be simulated because nothing dies in a raid encounter.",
+		"source": "forever",
+		"tooltip": "40 Mana\n30 yd range\nInstant\nAfflicts your target with Shadow energy that causes all party members to be healed for 20% of any Shadow spell damage you deal for 30 sec."
+	},
+	"15335": {
+		"ability": "Spirit Tap",
+		"file": "sim/priest/talents.go",
+		"source": "unreviewed"
+	},
+	"15336": {
+		"ability": "Spirit Tap",
+		"file": "sim/priest/talents.go",
+		"source": "unreviewed"
+	},
+	"15337": {
+		"ability": "Spirit Tap",
+		"file": "sim/priest/talents.go",
+		"source": "unreviewed"
+	},
+	"15338": {
+		"ability": "Spirit Tap",
+		"file": "sim/priest/talents.go",
+		"source": "unreviewed"
+	},
+	"15407": {
+		"ability": "Mind Flay",
+		"file": "sim/priest/mind_flay.go",
+		"source": "unreviewed"
+	},
+	"15473": {
+		"ability": "Shadowform",
+		"file": "sim/priest/talents.go",
+		"note": "Classic's 15473 is +15% Shadow damage, -15% Physical damage taken and no Holy spells at all; the mana discount and the crit damage bonus are new, the damage bonus dropped to 10%, and the form now blocks only healing so Smite and Holy Fire stay castable. The sim charges nothing to cast it where Classic's tooltip says 40% of base mana.",
+		"source": "forever",
+		"tooltip": "Instant\nAssume Shadowform, increasing your Shadow damage by 10%, reducing the Mana cost of all Shadow spells by 50%, increasing the critical strike damage bonus of your Shadow spells by 100%, and reducing Physical damage taken by you by 15%. However, you may not cast healing spells while in this form."
+	},
+	"17311": {
+		"ability": "Mind Flay",
+		"file": "sim/priest/mind_flay.go",
+		"source": "unreviewed"
+	},
+	"17312": {
+		"ability": "Mind Flay",
+		"file": "sim/priest/mind_flay.go",
+		"source": "unreviewed"
+	},
+	"17313": {
+		"ability": "Mind Flay",
+		"file": "sim/priest/mind_flay.go",
+		"source": "unreviewed"
+	},
+	"17314": {
+		"ability": "Mind Flay",
+		"file": "sim/priest/mind_flay.go",
+		"source": "unreviewed"
+	},
+	"18807": {
+		"ability": "Mind Flay",
+		"file": "sim/priest/mind_flay.go",
+		"source": "unreviewed"
+	},
+	"19276": {
+		"ability": "Devouring Plague",
+		"file": "sim/priest/devouring_plague.go",
+		"source": "unreviewed"
+	},
+	"19277": {
+		"ability": "Devouring Plague",
+		"file": "sim/priest/devouring_plague.go",
+		"source": "unreviewed"
+	},
+	"19278": {
+		"ability": "Devouring Plague",
+		"file": "sim/priest/devouring_plague.go",
+		"source": "unreviewed"
+	},
+	"19279": {
+		"ability": "Devouring Plague",
+		"file": "sim/priest/devouring_plague.go",
+		"source": "unreviewed"
+	},
+	"19280": {
+		"ability": "Devouring Plague",
+		"file": "sim/priest/devouring_plague.go",
+		"source": "unreviewed"
+	},
+	"19296": {
+		"ability": "Starshards",
+		"file": "sim/priest/starshards.go",
+		"source": "unreviewed"
+	},
+	"19299": {
+		"ability": "Starshards",
+		"file": "sim/priest/starshards.go",
+		"source": "unreviewed"
+	},
+	"19302": {
+		"ability": "Starshards",
+		"file": "sim/priest/starshards.go",
+		"source": "unreviewed"
+	},
+	"19303": {
+		"ability": "Starshards",
+		"file": "sim/priest/starshards.go",
+		"source": "unreviewed"
+	},
+	"19304": {
+		"ability": "Starshards",
+		"file": "sim/priest/starshards.go",
+		"source": "unreviewed"
+	},
+	"19305": {
+		"ability": "Starshards",
+		"file": "sim/priest/starshards.go",
+		"source": "unreviewed"
+	},
+	"23455": {
+		"ability": "Holy Nova (healing)",
+		"file": "sim/priest/holy_nova.go",
+		"note": "The healing half of Holy Nova; 15237 owns the cast, the mana cost and the damage, and Wowhead's Classic entry for 23455 has a name and an icon but no effect text at all.",
+		"source": "forever",
+		"tooltip": "Instant\nHeals all party members within 10 yards for 64 to 73. This effect causes no threat."
+	},
+	"2767": {
+		"ability": "Shadow Word: Pain",
+		"file": "sim/priest/shadow_word_pain.go",
+		"source": "unreviewed"
+	},
+	"2944": {
+		"ability": "Devouring Plague",
+		"file": "sim/priest/devouring_plague.go",
+		"source": "unreviewed"
+	},
+	"47540": {
+		"ability": "Penance",
+		"assumptions": [
+			"Penance costs 16% of base mana, 220 at level 60: the demo tooltip showed no cost and this is Wrath's Penance cost.",
+			"Penance has a 10 sec cooldown: the demo tooltip showed no cooldown and this is Wrath's Penance cooldown.",
+			"Each of the three bolts deals 93 Holy damage at level 60: 93 is the rank 1 figure read off the demo tooltip and no level 60 rank was ever shown.",
+			"The three bolts are spread evenly over the 2 sec channel, every 0.67 sec, instead of landing at 0, 1 and 2 sec, so the first bolt is late and the damage is slightly back loaded.",
+			"The healing half of Penance, 223 to an ally on the demo tooltip, is not simulated at all.",
+			"The 0.268 spell power coefficient per bolt is Wrath's and was never published for Forever."
+		],
+		"file": "sim/priest/penance.go",
+		"note": "Penance is a new Forever Discipline talent and Forever has published no id for it (ui/core/talents/trees/priest.json carries spellId 0), so the sim borrows Wrath's 47540, an id the Classic database does not contain at all - the site renders neither name nor tooltip for it.",
+		"source": "assumed",
+		"tooltip": "220 Mana\nChannelled over 2 sec\n10 sec cooldown\nLaunches a volley of holy light at the target, causing 93 Holy damage to an enemy instantly and every 1 sec for 2 sec."
+	},
+	"585": {
+		"ability": "Smite",
+		"file": "sim/priest/smite.go",
+		"source": "unreviewed"
+	},
+	"589": {
+		"ability": "Shadow Word: Pain",
+		"file": "sim/priest/shadow_word_pain.go",
+		"source": "unreviewed"
+	},
+	"591": {
+		"ability": "Smite",
+		"file": "sim/priest/smite.go",
+		"source": "unreviewed"
+	},
+	"594": {
+		"ability": "Shadow Word: Pain",
+		"file": "sim/priest/shadow_word_pain.go",
+		"source": "unreviewed"
+	},
+	"598": {
+		"ability": "Smite",
+		"file": "sim/priest/smite.go",
+		"source": "unreviewed"
+	},
+	"6060": {
+		"ability": "Smite",
+		"file": "sim/priest/smite.go",
+		"source": "unreviewed"
+	},
+	"8092": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"8102": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"8103": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"8104": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"8105": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"8106": {
+		"ability": "Mind Blast",
+		"file": "sim/priest/mind_blast.go",
+		"source": "unreviewed"
+	},
+	"970": {
+		"ability": "Shadow Word: Pain",
+		"file": "sim/priest/shadow_word_pain.go",
+		"source": "unreviewed"
+	},
+	"984": {
+		"ability": "Smite",
+		"file": "sim/priest/smite.go",
+		"source": "unreviewed"
+	},
+	"992": {
+		"ability": "Shadow Word: Pain",
+		"file": "sim/priest/shadow_word_pain.go",
+		"source": "unreviewed"
+	}
+}

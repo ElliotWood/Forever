@@ -1,0 +1,517 @@
+{
+	"13165": {
+		"ability": "Aspect of the Hawk",
+		"file": "sim/hunter/aspects.go",
+		"source": "unreviewed"
+	},
+	"131894": {
+		"ability": "Summon Hawk",
+		"assumptions": [
+			"The assault ticks for the dive bomb's own 53 damage every 3 sec (6 ticks); the tooltip gives neither the interval nor the per-tick damage.",
+			"190 mana, the cost of the rank 8 Arcane Shot it displaces; the tooltip gives no cost.",
+			"6 sec cooldown, Arcane Shot's base, which it shares; Improved Arcane Shot does not shorten it.",
+			"Only one hawk at a time is modelled, although the tooltip allows two.",
+			"The published 53 is the demo's level 30 number, used unchanged at level 60 with no attack power scaling."
+		],
+		"file": "sim/hunter/summon_hawk.go",
+		"note": "Forever-only talent spell with no published id, so the sim borrows 131894 (A Murder of Crows, Mists of Pandaria); neither the Classic database nor the sim's own db.json carries it, so the site can render no name, icon or tooltip.",
+		"source": "assumed",
+		"tooltip": "190 Mana\nRanged\nInstant\n6 sec cooldown\nCommand a hawk to dive-bomb your target for 53 Physical damage, then keep up the assault for 53 damage every 3 sec over 18 sec. Shares its cooldown with Arcane Shot."
+	},
+	"13549": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"13550": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"13551": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"13552": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"13553": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"13554": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"13555": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"14260": {
+		"ability": "Raptor Strike",
+		"file": "sim/hunter/raptor_strike.go",
+		"source": "unreviewed"
+	},
+	"14261": {
+		"ability": "Raptor Strike",
+		"file": "sim/hunter/raptor_strike.go",
+		"source": "unreviewed"
+	},
+	"14262": {
+		"ability": "Raptor Strike",
+		"file": "sim/hunter/raptor_strike.go",
+		"source": "unreviewed"
+	},
+	"14263": {
+		"ability": "Raptor Strike",
+		"file": "sim/hunter/raptor_strike.go",
+		"source": "unreviewed"
+	},
+	"14264": {
+		"ability": "Raptor Strike",
+		"file": "sim/hunter/raptor_strike.go",
+		"source": "unreviewed"
+	},
+	"14265": {
+		"ability": "Raptor Strike",
+		"file": "sim/hunter/raptor_strike.go",
+		"source": "unreviewed"
+	},
+	"14266": {
+		"ability": "Raptor Strike",
+		"file": "sim/hunter/raptor_strike.go",
+		"source": "unreviewed"
+	},
+	"14267": {
+		"ability": "Wing Clip",
+		"file": "sim/hunter/wing_clip.go",
+		"source": "unreviewed"
+	},
+	"14268": {
+		"ability": "Wing Clip",
+		"file": "sim/hunter/wing_clip.go",
+		"source": "unreviewed"
+	},
+	"14269": {
+		"ability": "Mongoose Bite",
+		"file": "sim/hunter/mongoose_bite.go",
+		"source": "unreviewed"
+	},
+	"14270": {
+		"ability": "Mongoose Bite",
+		"file": "sim/hunter/mongoose_bite.go",
+		"source": "unreviewed"
+	},
+	"14271": {
+		"ability": "Mongoose Bite",
+		"file": "sim/hunter/mongoose_bite.go",
+		"source": "unreviewed"
+	},
+	"14281": {
+		"ability": "Arcane Shot",
+		"file": "sim/hunter/arcane_shot.go",
+		"source": "unreviewed"
+	},
+	"14282": {
+		"ability": "Arcane Shot",
+		"file": "sim/hunter/arcane_shot.go",
+		"source": "unreviewed"
+	},
+	"14283": {
+		"ability": "Arcane Shot",
+		"file": "sim/hunter/arcane_shot.go",
+		"source": "unreviewed"
+	},
+	"14284": {
+		"ability": "Arcane Shot",
+		"file": "sim/hunter/arcane_shot.go",
+		"source": "unreviewed"
+	},
+	"14285": {
+		"ability": "Arcane Shot",
+		"file": "sim/hunter/arcane_shot.go",
+		"source": "unreviewed"
+	},
+	"14286": {
+		"ability": "Arcane Shot",
+		"file": "sim/hunter/arcane_shot.go",
+		"source": "unreviewed"
+	},
+	"14287": {
+		"ability": "Arcane Shot",
+		"file": "sim/hunter/arcane_shot.go",
+		"source": "unreviewed"
+	},
+	"14288": {
+		"ability": "Multi-Shot",
+		"file": "sim/hunter/multi_shot.go",
+		"source": "unreviewed"
+	},
+	"14289": {
+		"ability": "Multi-Shot",
+		"file": "sim/hunter/multi_shot.go",
+		"source": "unreviewed"
+	},
+	"14290": {
+		"ability": "Multi-Shot",
+		"file": "sim/hunter/multi_shot.go",
+		"source": "unreviewed"
+	},
+	"14294": {
+		"ability": "Volley",
+		"file": "sim/hunter/volley.go",
+		"source": "unreviewed"
+	},
+	"14295": {
+		"ability": "Volley",
+		"file": "sim/hunter/volley.go",
+		"source": "unreviewed"
+	},
+	"14318": {
+		"ability": "Aspect of the Hawk",
+		"file": "sim/hunter/aspects.go",
+		"source": "unreviewed"
+	},
+	"14319": {
+		"ability": "Aspect of the Hawk",
+		"file": "sim/hunter/aspects.go",
+		"source": "unreviewed"
+	},
+	"14320": {
+		"ability": "Aspect of the Hawk",
+		"file": "sim/hunter/aspects.go",
+		"source": "unreviewed"
+	},
+	"14321": {
+		"ability": "Aspect of the Hawk",
+		"file": "sim/hunter/aspects.go",
+		"source": "unreviewed"
+	},
+	"14322": {
+		"ability": "Aspect of the Hawk",
+		"file": "sim/hunter/aspects.go",
+		"source": "unreviewed"
+	},
+	"1510": {
+		"ability": "Volley",
+		"file": "sim/hunter/volley.go",
+		"source": "unreviewed"
+	},
+	"16830": {
+		"ability": "Claw",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"16832": {
+		"ability": "Claw",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"17257": {
+		"ability": "Bite",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"17259": {
+		"ability": "Bite",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"17260": {
+		"ability": "Bite",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"17261": {
+		"ability": "Bite",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"19434": {
+		"ability": "Aimed Shot",
+		"file": "sim/hunter/aimed_shot.go",
+		"source": "unreviewed"
+	},
+	"19574": {
+		"ability": "Bestial Wrath",
+		"file": "sim/hunter/talents.go",
+		"note": "Forever's published talent text ('50% additional damage for 18 sec') is Classic's word for word, and the 2 min cooldown and 12% base mana cost are untouched upstream numbers, so Wowhead's Classic tooltip is still right.",
+		"source": "classic"
+	},
+	"19577": {
+		"ability": "Intimidation",
+		"assumptions": [
+			"1 min cooldown, taken from Classic; the Forever tooltip gives none.",
+			"3% of base mana, Classic's cost; the Forever tooltip gives none.",
+			"The pet has 10 sec to land the buffed attack; the window is not published.",
+			"Only the crit half is modelled, because a raid boss is immune to the 3 sec stun."
+		],
+		"file": "sim/hunter/talents.go",
+		"note": "Forever's Intimidation adds 100% critical strike chance to the pet's next attack, which Classic's 19577 tooltip does not mention; because 19577 is in the database the talent picker also still shows the Classic text.",
+		"source": "assumed",
+		"tooltip": "3% of base mana\nInstant\n1 min cooldown\nCommand your pet to Stun the target for 3 sec on its next successful attack, which also gains 100% increased critical strike chance. Generates high threat."
+	},
+	"19625": {
+		"ability": "Frenzy",
+		"file": "sim/hunter/talents.go",
+		"note": "Forever's Frenzy text (20% per point for a 30% attack speed increase for 8 sec after a critical strike) is Classic's; the sim reuses the rank 5 talent id for the pet's proc buff, as upstream did.",
+		"source": "classic"
+	},
+	"1978": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"20900": {
+		"ability": "Aimed Shot",
+		"file": "sim/hunter/aimed_shot.go",
+		"source": "unreviewed"
+	},
+	"20901": {
+		"ability": "Aimed Shot",
+		"file": "sim/hunter/aimed_shot.go",
+		"source": "unreviewed"
+	},
+	"20902": {
+		"ability": "Aimed Shot",
+		"file": "sim/hunter/aimed_shot.go",
+		"source": "unreviewed"
+	},
+	"20903": {
+		"ability": "Aimed Shot",
+		"file": "sim/hunter/aimed_shot.go",
+		"source": "unreviewed"
+	},
+	"20904": {
+		"ability": "Aimed Shot",
+		"file": "sim/hunter/aimed_shot.go",
+		"source": "unreviewed"
+	},
+	"24352": {
+		"ability": "Devilsaur Fury",
+		"file": "sim/hunter/items.go",
+		"note": "Classic's Devilsaur Eye use effect (150 attack power and 2% hit for 20 sec, 2 min cooldown), untouched by Forever; the id is absent from the cut-down db.json, so the site draws no name or icon for it even though Wowhead's Classic tooltip resolves.",
+		"source": "classic"
+	},
+	"24353": {
+		"ability": "Primal Instinct",
+		"file": "sim/hunter/items.go",
+		"note": "Classic's Devilsaur Tooth use effect (the pet's next Claw, Bite or special is a guaranteed crit), untouched by Forever; the sim gives the same id to the pet aura and to the hunter's tracking aura, and the id is absent from db.json so no name or icon is drawn.",
+		"source": "classic"
+	},
+	"24580": {
+		"ability": "Screech",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"24581": {
+		"ability": "Screech",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"24582": {
+		"ability": "Screech",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"24583": {
+		"ability": "Scorpid Poison",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"24586": {
+		"ability": "Scorpid Poison",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"24587": {
+		"ability": "Scorpid Poison",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"25009": {
+		"ability": "Lightning Breath",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"25011": {
+		"ability": "Lightning Breath",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"25012": {
+		"ability": "Lightning Breath",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"25294": {
+		"ability": "Multi-Shot",
+		"file": "sim/hunter/multi_shot.go",
+		"source": "unreviewed"
+	},
+	"25295": {
+		"ability": "Serpent Sting",
+		"file": "sim/hunter/serpent_sting.go",
+		"source": "unreviewed"
+	},
+	"25296": {
+		"ability": "Aspect of the Hawk",
+		"file": "sim/hunter/aspects.go",
+		"source": "unreviewed"
+	},
+	"2643": {
+		"ability": "Multi-Shot",
+		"file": "sim/hunter/multi_shot.go",
+		"source": "unreviewed"
+	},
+	"2973": {
+		"ability": "Raptor Strike",
+		"file": "sim/hunter/raptor_strike.go",
+		"source": "unreviewed"
+	},
+	"2974": {
+		"ability": "Wing Clip",
+		"file": "sim/hunter/wing_clip.go",
+		"source": "unreviewed"
+	},
+	"3009": {
+		"ability": "Claw",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"3010": {
+		"ability": "Claw",
+		"file": "sim/hunter/pet_abilities.go",
+		"source": "unreviewed"
+	},
+	"3044": {
+		"ability": "Arcane Shot",
+		"file": "sim/hunter/arcane_shot.go",
+		"source": "unreviewed"
+	},
+	"3045": {
+		"ability": "Rapid Fire",
+		"assumptions": [
+			"Rapid Killing cuts 1 min per point: only rank 1's 1 min was published and the sim scales it to 2 min at rank 2, while the talent tooltip still reads 1 min at both ranks.",
+			"Rapid Killing's other half, 10% more damage on the next shot after a kill, is not modelled because nothing dies mid fight."
+		],
+		"file": "sim/hunter/rapid_fire.go",
+		"note": "Rapid Fire's own numbers are Classic's and unchanged; what makes the id Forever's is Rapid Killing, a new talent whose per-rank cooldown reduction is a guess (sim/hunter/rapid_fire.go:15 on the beta checklist).",
+		"source": "assumed",
+		"tooltip": "100 Mana\nInstant\n5 min cooldown\nIncreases your ranged attack speed by 40% for 15 sec. Rapid Killing shortens the cooldown by 1 min per point."
+	},
+	"34491": {
+		"ability": "Resourcefulness",
+		"assumptions": [
+			"The 30% proc chance is rank 1's; the sim doubles it to 60% at rank 2, while the talent tooltip still reads 30%.",
+			"The 30% mana cost cut on Trap and melee abilities is likewise doubled to 60% at rank 2 in the sim.",
+			"The 50% regeneration and the 30 sec duration are taken not to scale per rank.",
+			"The sim lets any critical strike arm the proc, including the pet's owner-side hits and trap ticks."
+		],
+		"file": "sim/hunter/talents.go",
+		"note": "Forever-only talent with no published spell id, so the sim borrows 34491; the Classic database and db.json both lack it, so the buff shows no name, icon or tooltip.",
+		"source": "assumed",
+		"tooltip": "30 sec duration\n50% of your Mana regeneration continues while casting. Your critical strikes have a 30% chance per point to grant it."
+	},
+	"409510": {
+		"ability": "Freezing Trap",
+		"file": "sim/hunter/freezing_trap.go",
+		"note": "Forever leaves Freezing Trap itself alone (its Clever Traps keeps Classic's 15/30%), and the sim registers it with an empty effect since a raid boss cannot be trapped; only the new trap talents change its cost and cooldown.",
+		"source": "classic"
+	},
+	"409521": {
+		"ability": "Immolation Trap",
+		"file": "sim/hunter/immolation_trap.go",
+		"source": "unreviewed"
+	},
+	"409524": {
+		"ability": "Immolation Trap",
+		"file": "sim/hunter/immolation_trap.go",
+		"source": "unreviewed"
+	},
+	"409526": {
+		"ability": "Immolation Trap",
+		"file": "sim/hunter/immolation_trap.go",
+		"source": "unreviewed"
+	},
+	"409528": {
+		"ability": "Immolation Trap",
+		"file": "sim/hunter/immolation_trap.go",
+		"source": "unreviewed"
+	},
+	"409530": {
+		"ability": "Immolation Trap",
+		"file": "sim/hunter/immolation_trap.go",
+		"source": "unreviewed"
+	},
+	"409532": {
+		"ability": "Explosive Trap",
+		"file": "sim/hunter/explosive_trap.go",
+		"source": "unreviewed"
+	},
+	"409534": {
+		"ability": "Explosive Trap",
+		"file": "sim/hunter/explosive_trap.go",
+		"source": "unreviewed"
+	},
+	"409535": {
+		"ability": "Explosive Trap",
+		"file": "sim/hunter/explosive_trap.go",
+		"source": "unreviewed"
+	},
+	"5302": {
+		"ability": "Defensive State",
+		"assumptions": [
+			"The 5 sec window is Expose Prey's published duration; Forever's own name and id for the state are unknown.",
+			"Whether Forever still grants the state on a dodge, as Classic does, is unconfirmed.",
+			"Expose Prey's 5% chance per point to grant it is rank 1's, doubled to 10% at rank 2 by the sim."
+		],
+		"file": "sim/hunter/mongoose_bite.go",
+		"note": "Classic's dodge-driven Defensive State is reused for Forever's Expose Prey proc, which is the only thing that actually enables Mongoose Bite here: the aura's own dodge trigger can never fire, because an aura's OnSpellHitTaken is only dispatched while the aura is already active.",
+		"source": "assumed",
+		"tooltip": "5 sec duration\nYour Mongoose Bite is active."
+	},
+	"53232": {
+		"ability": "Rapid Recuperation",
+		"assumptions": [
+			"25% per point: only rank 1's 25% was published and the sim doubles it to 50% at rank 2, while the talent tooltip still reads 25%.",
+			"Only the Serpent Sting half is modelled; the 50% for consuming Rapid Killing needs a kill, which a raid encounter never gives."
+		],
+		"file": "sim/hunter/talents.go",
+		"note": "Forever-only talent with no published spell id, so the sim borrows 53232 (Wrath's Rapid Recuperation); neither the Classic database nor db.json carries it, so the buff shows no name, icon or tooltip.",
+		"source": "assumed",
+		"tooltip": "15 sec duration\n25% of your Mana regeneration continues while casting."
+	},
+	"56641": {
+		"ability": "Sniper Shot",
+		"assumptions": [
+			"1.5 sec cast time, taken from Steady Shot, whose wording Sniper Shot echoes.",
+			"110 mana, Steady Shot's cost; the tooltip gives none.",
+			"No cooldown, again Steady Shot's shape.",
+			"The shot is normalized ranged weapon damage plus ammo plus the published 160, with full attack power scaling.",
+			"The published 160 is the demo's level 30 number, used unchanged at level 60."
+		],
+		"file": "sim/hunter/sniper_shot.go",
+		"note": "Forever-only talent spell with no published id, so the sim borrows 56641 (Wrath's Steady Shot); it is in neither the Classic database nor db.json, so the site shows no name, icon or tooltip even though the shipped P1 hunter APL casts it.",
+		"source": "assumed",
+		"tooltip": "110 Mana\n8-35 yd range\n1.5 sec cast\nA steady snipe that deals ranged weapon damage plus 160."
+	},
+	"6150": {
+		"ability": "Quick Shots",
+		"assumptions": [
+			"The buff keeps Classic's name, Quick Shots; Forever's Deadly Aspects tooltip names no buff.",
+			"The 2% chance per point on normal ranged attacks is rank 1's, assumed to scale linearly to 10% at rank 5.",
+			"Deadly Aspects' other half, a matching 30% melee haste proc under Aspect of the Beast, is not modelled."
+		],
+		"file": "sim/hunter/aspects.go",
+		"note": "The 30% for 12 sec is confirmed by Forever's Deadly Aspects tooltip, but the talent granting it is no longer Improved Aspect of the Hawk, and 6150 is missing from db.json so the site draws no name or icon.",
+		"source": "assumed",
+		"tooltip": "12 sec duration\nIncreases ranged attack speed by 30%."
+	}
+}

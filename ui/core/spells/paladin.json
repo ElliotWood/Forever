@@ -1,0 +1,439 @@
+{
+	"1": {
+		"ability": "Word of Recall (OLD)",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"10310": {
+		"ability": "Lay on Hands",
+		"file": "sim/paladin/lay_on_hands.go",
+		"source": "unreviewed"
+	},
+	"110": {
+		"ability": "Spell Deflection (NYI)",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"13953": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"foreverId": 17143,
+		"note": "Forever's own id 17143 is not in the item database, so Classic's unused 13953 lends the name and the icon.",
+		"source": "forever",
+		"tooltip": "20 Mana\nMelee Range\nInstant\n12 sec cooldown\nDeals 40% weapon damage plus 36 to 46 Holy damage."
+	},
+	"14": {
+		"ability": "Mana Drain",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"150": {
+		"ability": "spell 150",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"161": {
+		"ability": "spell 161",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"19": {
+		"ability": "SWORDSPECIAL (DND)",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"195": {
+		"ability": "spell 195",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"20059": {
+		"ability": "Vengeance",
+		"file": "sim/paladin/talents.go",
+		"note": "Forever rebuilt Vengeance as a 5 stack buff worth 1% a stack for 30 sec, where Classic gave a flat 3% a point for 8 sec, and all three ranks read the same so points 2 and 3 add nothing.",
+		"source": "forever",
+		"tooltip": "Landing a critical strike increases your Physical and Holy damage dealt by 1% for 30 sec.\nStacks up to 5 times."
+	},
+	"20134": {
+		"ability": "Redoubt",
+		"file": "sim/paladin/talents.go",
+		"note": "Forever moved the trigger from being crit to any melee attack that lands, and every rank reads the same 10% for 6%, so points 2 to 5 add nothing.",
+		"source": "forever",
+		"tooltip": "Damaging melee attacks against you have a 10% chance to increase your chance to block by 6%.\nLasts 10 sec or 5 blocks."
+	},
+	"20148": {
+		"ability": "Shield Specialization",
+		"assumptions": [
+			"Rank 1's 10% absorb is used for all three ranks, so points 2 and 3 currently do nothing; ui/core/talents/trees/paladin.json reads 10/20/30%.",
+			"Rank 1's 33% chance for the mana return is used for all three ranks; ui/core/talents/trees/paladin.json reads 33/66/100%.",
+			"The 6% of maximum mana and the 3 second internal cooldown are rank 1's numbers, assumed flat across all three ranks."
+		],
+		"file": "sim/paladin/talents.go",
+		"note": "Forever bolted the mana return on block onto Classic's shield absorb, and the sim applies rank 1's numbers at every rank.",
+		"source": "assumed",
+		"tooltip": "Increases the amount of damage absorbed by your shield by 10%, and gives your blocks a 33% chance to restore 6% of your maximum Mana.\nMay only occur once every 3 sec."
+	},
+	"20178": {
+		"ability": "Reckoning",
+		"file": "sim/paladin/talents.go",
+		"note": "The crit half is Classic's 20% a point; Forever added the smaller 8% a point chance to fire off a block.",
+		"source": "forever",
+		"tooltip": "Gives you an 8% chance per talent point to gain an extra attack after blocking a melee attack, and a 20% chance per talent point to gain an extra attack after being the victim of a non-periodic critical strike."
+	},
+	"20187": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20188": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20216": {
+		"ability": "Divine Favor",
+		"file": "sim/paladin/divine_favor.go",
+		"note": "sim/paladin/divine_favor.go is byte for byte upstream wowsims/classic - the 2 minute cooldown and the guaranteed crit are Classic's, and the sim spends it on Holy Shock only because Flash of Light and Holy Light are not modelled.",
+		"source": "classic"
+	},
+	"20280": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20281": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20282": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20283": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20284": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20285": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20286": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20300": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20301": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20302": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20303": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20424": {
+		"ability": "Seal of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20467": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20911": {
+		"ability": "Blessing of Sanctuary",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"20912": {
+		"ability": "Blessing of Sanctuary",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"20913": {
+		"ability": "Blessing of Sanctuary",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"20914": {
+		"ability": "Blessing of Sanctuary",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"note": "Dead code: BlessingOfSanctuaryAura and its caller in applyBuffEffects are both commented out behind a 'TODO: Classic', so the sim never registers this id and the UI never resolves it.",
+		"source": "classic"
+	},
+	"20925": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"20927": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"20928": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"20944": {
+		"ability": "Seal of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20945": {
+		"ability": "Seal of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20946": {
+		"ability": "Seal of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20947": {
+		"ability": "Seal of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20955": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"20956": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"20957": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"20963": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20964": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20965": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"20966": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"21": {
+		"ability": "spell 21",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"21183": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"220": {
+		"ability": "spell 220",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"24": {
+		"ability": "Major Heal Self (TEST)",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"240": {
+		"ability": "spell 240",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"25713": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"25735": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"25736": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"25737": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"25738": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"25739": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"25740": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"25742": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/soc.go",
+		"source": "unreviewed"
+	},
+	"25771": {
+		"ability": "Forbearance",
+		"file": "sim/paladin/forbearance.go",
+		"note": "sim/paladin/forbearance.go is byte for byte upstream wowsims/classic; Forever's new Templar's Bulwark applies the same 1 minute Forbearance that Divine Shield and Divine Protection do.",
+		"source": "classic"
+	},
+	"25780": {
+		"ability": "Righteous Fury",
+		"file": "sim/paladin/righteous_fury.go",
+		"note": "The aura still multiplies Holy threat by 1.6 exactly as in Classic; what Forever changed is the Improved Righteous Fury talent, which now cuts damage taken by 2% a point instead of raising that 1.6.",
+		"source": "classic"
+	},
+	"26021": {
+		"ability": "Vindication",
+		"assumptions": [
+			"The sim fires Vindication on every melee attack that lands; the tooltip says 'a chance' and never gives one, and the code still carries a TODO for the proc mask and chance.",
+			"The self buff reads 1% at every rank, so points 2 and 3 add nothing.",
+			"The 42 attack power the target loses is not modelled at all, because nothing in the sim reads an enemy's attack power."
+		],
+		"file": "sim/paladin/talents.go",
+		"note": "Forever added the 1% self attack power buff on top of Classic's attack power debuff, and the sim keeps the buff and drops the debuff.",
+		"source": "assumed",
+		"tooltip": "Your damaging melee attacks have a chance to reduce the target's Attack Power by 42 and to increase your Attack Power by 1% for 30 sec."
+	},
+	"26573": {
+		"ability": "Consecration",
+		"assumptions": [
+			"Consecration is assumed to be baseline for every paladin: it is no longer a talent in the Forever tree, which builds on it through Consecrated Ground and Holy Conduit, but no spellbook has been seen.",
+			"The rank damage table, the 8 second cooldown and the 0.042 coefficient are Classic's and are assumed unchanged; only the mana cost moved, because Holy Conduit now discounts it 20% a point.",
+			"Consecrated Ground's buff is modelled as 5% Holy damage a point for 8 sec from the cast, and the tooltip's cap of the first 4 enemies a point to enter the Consecration is not modelled."
+		],
+		"file": "sim/paladin/talents.go",
+		"note": "26573 is Consecration rank 1, and sim/paladin/talents.go:305 also hangs the Forever talent Consecrated Ground's buff aura on it, so Wowhead's Classic entry names Consecration and describes neither the Forever spell nor the talent buff.",
+		"source": "assumed",
+		"tooltip": "135 Mana\nInstant\n8 sec cooldown\nConsecrates the land beneath the Paladin, doing 64 Holy damage over 8 sec to enemies who enter the area."
+	},
+	"28": {
+		"ability": "spell 28",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"2800": {
+		"ability": "Lay on Hands",
+		"file": "sim/paladin/lay_on_hands.go",
+		"source": "unreviewed"
+	},
+	"30": {
+		"ability": "spell 30",
+		"file": "sim/paladin/holy_shield.go",
+		"source": "unreviewed"
+	},
+	"31850": {
+		"ability": "Iron Creed",
+		"assumptions": [
+			"Only rank 1's 5% threat was seen; ranks 2 to 5 are assumed to scale linearly to 25%.",
+			"Only rank 1's 2% damage taken was seen; ranks 2 to 5 are assumed to scale linearly to 10%, with the 6 second duration flat at every rank.",
+			"The damage reduction is assumed to need Righteous Fury active; the sim registers no aura at all when it is off."
+		],
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Iron Creed is new in Forever and has no spell of its own in the database, so Ardent Defender's id 31850 stands in for the buff and Classic's data answers to it with nothing at all.",
+		"source": "assumed",
+		"tooltip": "Increases the threat generated by your Holy Strike ability by 5% per talent point.\nWhile Righteous Fury is active, Holy Strike also reduces your damage taken by 2% per talent point for 6 sec."
+	},
+	"31876": {
+		"ability": "Sanctified Judgement",
+		"file": "sim/paladin/talents.go",
+		"note": "31876 is the Burning Crusade Sanctified Judgement, which Classic's database does not carry, so nothing resolves for it and the sim uses it only to label the mana the talent returns.",
+		"source": "forever",
+		"tooltip": "Gives your Judgement ability a 33% chance per talent point to return 20% per talent point of the Mana cost of the judged seal."
+	},
+	"35": {
+		"ability": "Teleport Elwynn",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"39": {
+		"ability": "spell 39",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"49": {
+		"ability": "Healing Touch (TEST)",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"source": "unreviewed"
+	},
+	"53601": {
+		"ability": "Templar's Bulwark",
+		"assumptions": [
+			"The tooltip carries no cooldown; the 5 minutes is assumed from the two Forbearance abilities Sacred Duty shortens alongside it.",
+			"Both ranks of Sacred Duty read 30 sec off the cooldown, so rank 2 is assumed to be another 30 sec.",
+			"The sim has no absorb model, so the shield is modelled as damage taken dropping to 1% for the whole 8 seconds rather than as a pool that can be spent early."
+		],
+		"file": "sim/paladin/templars_bulwark.go",
+		"note": "Templar's Bulwark is new in Forever and borrows Sacred Shield's id 53601, the paladin absorb the tooltip describes, which Classic's database does not carry.",
+		"source": "assumed",
+		"tooltip": "Instant\n5 min cooldown\nGrants you an absorb shield equal to 100% of your maximum health for 8 sec.\nApplies Forbearance for 1 min. Cannot be cast while Forbearance is active."
+	},
+	"53671": {
+		"ability": "Swift Judgement",
+		"assumptions": [
+			"The tooltip carries no cooldown; the 1 minute is assumed, long enough that it buys one extra Judgement rather than a second rotation."
+		],
+		"file": "sim/paladin/swift_judgement.go",
+		"note": "Swift Judgement is new in Forever and borrows Judgements of the Pure's id 53671, which Classic's database does not carry.",
+		"source": "assumed",
+		"tooltip": "Instant\n1 min cooldown\nFinishes the remaining cooldown on your Judgement ability and reduces the Mana cost of your next Judgement by 100%."
+	},
+	"633": {
+		"ability": "Lay on Hands",
+		"file": "sim/paladin/lay_on_hands.go",
+		"source": "unreviewed"
+	},
+	"77485": {
+		"ability": "Twist of Light",
+		"file": "sim/paladin/twist_of_light.go",
+		"note": "Twist of Light is new in Forever and borrows Echo of Light's id 77485, which Classic's database does not carry; only Seal of Righteousness and Seal of Command bank an Echo here, because the other two seals are not in the sim and Seal of the Crusader has no on-hit proc to echo.",
+		"source": "forever",
+		"tooltip": "When you replace your Seal of Command, Seal of Righteousness, Seal of Fury, or Seal of Justice with a different Seal, gain an Echo.\nYour next melee attack applies the replaced Seal's effects, consuming the Echo."
+	}
+}

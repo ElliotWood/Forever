@@ -1,0 +1,619 @@
+{
+	"10391": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"10392": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"10412": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"source": "unreviewed"
+	},
+	"10413": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"source": "unreviewed"
+	},
+	"10414": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"source": "unreviewed"
+	},
+	"10431": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"10432": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"10435": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10436": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10437": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10438": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10447": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"source": "unreviewed"
+	},
+	"10448": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"source": "unreviewed"
+	},
+	"10456": {
+		"ability": "Frostbrand Weapon",
+		"file": "sim/shaman/frostbrand_weapon.go",
+		"source": "unreviewed"
+	},
+	"10460": {
+		"ability": "Healing Stream",
+		"file": "sim/shaman/water_totems.go",
+		"source": "unreviewed"
+	},
+	"10461": {
+		"ability": "Healing Stream",
+		"file": "sim/shaman/water_totems.go",
+		"source": "unreviewed"
+	},
+	"10472": {
+		"ability": "Frost Shock",
+		"file": "sim/shaman/frost_shock.go",
+		"source": "unreviewed"
+	},
+	"10473": {
+		"ability": "Frost Shock",
+		"file": "sim/shaman/frost_shock.go",
+		"source": "unreviewed"
+	},
+	"10486": {
+		"ability": "Windfury Weapon",
+		"file": "sim/shaman/windfury_weapon.go",
+		"source": "unreviewed"
+	},
+	"10579": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10580": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10581": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10585": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10586": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10587": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"10605": {
+		"ability": "Chain Lightning",
+		"file": "sim/shaman/chain_lightning.go",
+		"source": "unreviewed"
+	},
+	"10607": {
+		"ability": "Windfury Totem Effect",
+		"file": "sim/shaman/air_totems.go",
+		"source": "unreviewed"
+	},
+	"10611": {
+		"ability": "Windfury Totem Effect",
+		"file": "sim/shaman/air_totems.go",
+		"source": "unreviewed"
+	},
+	"11306": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"11307": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"11314": {
+		"ability": "Fire Nova Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"11315": {
+		"ability": "Fire Nova Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"15207": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"15208": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"1535": {
+		"ability": "Fire Nova Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"16188": {
+		"ability": "Nature's Swiftness",
+		"file": "sim/shaman/talents.go",
+		"note": "registerNaturesSwiftnessCD is byte-for-byte the upstream wowsims/classic code (3 min cooldown, next Nature cast under 10 sec becomes instant) and the Forever tree carries the same 10 sec rank value, so Wowhead's Classic tooltip for 16188 is still correct.",
+		"source": "classic"
+	},
+	"16246": {
+		"ability": "Clearcasting (Elemental Focus)",
+		"file": "sim/shaman/talents.go",
+		"note": "applyElementalFocus is unchanged from upstream (10% chance, one charge, 100% cost off the next damaging Shaman spell, 15 sec) and the Forever tree's Elemental Focus rank values are still 10 and 100, so Classic's tooltip stands.",
+		"source": "classic"
+	},
+	"16257": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"16277": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"16278": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"16279": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"16280": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"16339": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"source": "unreviewed"
+	},
+	"16341": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"source": "unreviewed"
+	},
+	"16342": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"source": "unreviewed"
+	},
+	"16355": {
+		"ability": "Frostbrand Weapon",
+		"file": "sim/shaman/frostbrand_weapon.go",
+		"source": "unreviewed"
+	},
+	"16356": {
+		"ability": "Frostbrand Weapon",
+		"file": "sim/shaman/frostbrand_weapon.go",
+		"source": "unreviewed"
+	},
+	"16362": {
+		"ability": "Windfury Weapon",
+		"file": "sim/shaman/windfury_weapon.go",
+		"source": "unreviewed"
+	},
+	"22804": {
+		"ability": "Shaman Shock Crit Bonus",
+		"file": "sim/shaman/item_sets_pvp.go",
+		"note": "The Champion's/Warlord's 4-piece bonus; sim/shaman/item_sets_pvp.go is untouched relative to the upstream merge base and still grants exactly the 2% shock crit the Classic tooltip describes.",
+		"source": "classic"
+	},
+	"26121": {
+		"ability": "Stormcaller's Wrath",
+		"file": "sim/shaman/item_sets_pve.go",
+		"note": "The Stormcaller's Garb 3-piece proc; the only Forever change to item_sets_pve.go was deleting the cut Earthshatterer set, and this bonus still gives the 50 Nature spell damage for 8 sec that Classic's tooltip says.",
+		"source": "classic"
+	},
+	"26363": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"26364": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"26365": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"26366": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"26367": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"26369": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"26370": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"27775": {
+		"ability": "The Furious Storm",
+		"file": "sim/shaman/item_sets_pve.go",
+		"note": "The Five Thunders 4-piece proc; unchanged from upstream and still 95 spell damage and healing for 10 sec at a 4% chance on cast, exactly as Classic's tooltip reads.",
+		"source": "classic"
+	},
+	"2825": {
+		"ability": "Bloodlust",
+		"file": "sim/shaman/talents.go",
+		"note": "Dead code: registerBloodlustCD and BloodlustAura are commented out in full, because no shaman in Classic or Forever has Bloodlust. The id has no Classic database entry because 2825 is the Burning Crusade spell; nothing in the sim ever emits it.",
+		"source": "classic"
+	},
+	"2860": {
+		"ability": "Chain Lightning",
+		"file": "sim/shaman/chain_lightning.go",
+		"source": "unreviewed"
+	},
+	"29177": {
+		"ability": "Elemental Devastation",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"29178": {
+		"ability": "Elemental Devastation",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"29228": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"source": "unreviewed"
+	},
+	"30165": {
+		"ability": "Elemental Devastation",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
+	"324": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"325": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"3599": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"3606": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"403": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"421": {
+		"ability": "Chain Lightning",
+		"file": "sim/shaman/chain_lightning.go",
+		"source": "unreviewed"
+	},
+	"51505": {
+		"ability": "Lava Burst",
+		"assumptions": [
+			"The 2 sec cast time is a guess, taken from the later-expansion spell of the same name.",
+			"The 8 sec cooldown is a guess, taken from the later-expansion spell of the same name.",
+			"The 10% of base mana cost is a guess, taken from the later-expansion spell of the same name.",
+			"The 0.5714 spell power coefficient is a guess, taken from the later-expansion spell of the same name.",
+			"Call of Flame is assumed to raise Lava Burst by 5% per point, as the Forever tooltip names Lava Burst but gives no figure."
+		],
+		"file": "sim/shaman/lava_burst.go",
+		"note": "A new Forever Elemental talent spell; 51505 is the later-expansion Lava Burst id, which the Classic database has no row for, so the site shows no name and no tooltip. Only the damage range and the Flame Shock bonus were on the demo tooltip.",
+		"source": "assumed",
+		"tooltip": "10% of base mana\n2 sec cast\n8 sec cooldown\nYou hurl molten lava at the target, dealing 158 to 187 Fire damage. If your Flame Shock is on the target, Lava Burst deals 20% increased damage."
+	},
+	"51521": {
+		"ability": "Improved Stormstrike",
+		"assumptions": [
+			"Rank 2 doubles the 50% proc chance to 100%; only rank 1 was on the demo tooltip.",
+			"Rank 2 doubles the 50% dodge/parry reset chance to 100%.",
+			"Rank 2 doubles the 50% while-casting mana regeneration to 100%.",
+			"The 15 sec buff duration is assumed to be the same at both ranks.",
+			"The proc is rolled when the Stormstrike cast completes rather than when it lands; confirm a dodged or parried Stormstrike still procs it."
+		],
+		"file": "sim/shaman/talents.go",
+		"note": "A new Forever Enhancement talent; 51521 is the later-expansion Improved Stormstrike id and the Classic database has no row for it, so nothing renders. The sim tags the buff with rank 1's id (51521) even at rank 2, whose own id is 51522.",
+		"source": "assumed",
+		"tooltip": "15 sec duration\nWhen you Stormstrike, you have a 50% chance to gain 50% mana regeneration while casting spells for 15 sec, and Stormstrike's cooldown has a 50% chance to reset each time you Dodge or Parry."
+	},
+	"51530": {
+		"ability": "Maelstrom Weapon",
+		"assumptions": [
+			"The proc rate is 2 procs per minute per talent point (10 PPM at 5/5); no proc rate was ever published.",
+			"Ranks 2 to 5 scale the 4% per stack linearly to 8%, 12%, 16% and 20%, so 5/5 at 5 stacks is a free instant Lightning Bolt; only rank 1 was on the demo tooltip.",
+			"The stack is spent only by Lightning Bolt (Chain Lightning is not reduced), and the whole stack is consumed by one cast."
+		],
+		"file": "sim/shaman/talents.go",
+		"note": "A new Forever Enhancement talent; 51530 is the later-expansion Maelstrom Weapon id and the Classic database has no row for it, so nothing renders. The talent has five ranks (51528-51532) but the sim tags the stacking buff with 51530 at every rank.",
+		"source": "assumed",
+		"tooltip": "30 sec duration\nWhen you deal damage with a melee attack, you have a chance to reduce the cast time and Mana cost of your next Lightning Bolt spell by 4%. Stacks up to 5 times."
+	},
+	"52127": {
+		"ability": "Water Shield",
+		"assumptions": [
+			"The 6% of base mana cost is a guess; the demo tooltip showed no cost.",
+			"The 3.5 sec between globes is a guess: the tooltip only said \"only one globe will activate every few seconds\", so Lightning Shield's internal cooldown was borrowed."
+		],
+		"file": "sim/shaman/water_shield.go",
+		"note": "A new Forever Restoration talent spell; 52127 is the later-expansion Water Shield id and the Classic database has no row for it, so the site shows no name and no tooltip. The 3 globes, the 2% of maximum mana and the 10 min duration are the published figures.",
+		"source": "assumed",
+		"tooltip": "6% of base mana\nInstant\nThe caster is surrounded by 3 globes of water. When a spell, melee, or ranged attack hits the caster or when one of the caster's healing spells gets a critical result, 2% of maximum mana is restored to the caster, expending one water globe. Only one globe will activate every 3.5 sec. Lasts 10 min. Only one Elemental Shield can be active on the Shaman at any one time."
+	},
+	"529": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"548": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"5672": {
+		"ability": "Healing Stream",
+		"file": "sim/shaman/water_totems.go",
+		"source": "unreviewed"
+	},
+	"6041": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"6350": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"6351": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"6352": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"6363": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"6364": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"6365": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"6371": {
+		"ability": "Healing Stream",
+		"file": "sim/shaman/water_totems.go",
+		"source": "unreviewed"
+	},
+	"6372": {
+		"ability": "Healing Stream",
+		"file": "sim/shaman/water_totems.go",
+		"source": "unreviewed"
+	},
+	"8024": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"source": "unreviewed"
+	},
+	"8027": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"source": "unreviewed"
+	},
+	"8030": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"source": "unreviewed"
+	},
+	"8033": {
+		"ability": "Frostbrand Weapon",
+		"file": "sim/shaman/frostbrand_weapon.go",
+		"source": "unreviewed"
+	},
+	"8038": {
+		"ability": "Frostbrand Weapon",
+		"file": "sim/shaman/frostbrand_weapon.go",
+		"source": "unreviewed"
+	},
+	"8042": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"source": "unreviewed"
+	},
+	"8044": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"source": "unreviewed"
+	},
+	"8045": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"source": "unreviewed"
+	},
+	"8046": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"source": "unreviewed"
+	},
+	"8050": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"source": "unreviewed"
+	},
+	"8052": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"source": "unreviewed"
+	},
+	"8053": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"source": "unreviewed"
+	},
+	"8056": {
+		"ability": "Frost Shock",
+		"file": "sim/shaman/frost_shock.go",
+		"source": "unreviewed"
+	},
+	"8058": {
+		"ability": "Frost Shock",
+		"file": "sim/shaman/frost_shock.go",
+		"source": "unreviewed"
+	},
+	"8134": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"8187": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"8190": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"8232": {
+		"ability": "Windfury Weapon",
+		"file": "sim/shaman/windfury_weapon.go",
+		"source": "unreviewed"
+	},
+	"8235": {
+		"ability": "Windfury Weapon",
+		"file": "sim/shaman/windfury_weapon.go",
+		"source": "unreviewed"
+	},
+	"8349": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"8498": {
+		"ability": "Fire Nova Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"8499": {
+		"ability": "Fire Nova Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"8502": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"8503": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"source": "unreviewed"
+	},
+	"8514": {
+		"ability": "Windfury Totem Effect",
+		"file": "sim/shaman/air_totems.go",
+		"source": "unreviewed"
+	},
+	"905": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	},
+	"915": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"930": {
+		"ability": "Chain Lightning",
+		"file": "sim/shaman/chain_lightning.go",
+		"source": "unreviewed"
+	},
+	"943": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"source": "unreviewed"
+	},
+	"945": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"source": "unreviewed"
+	}
+}

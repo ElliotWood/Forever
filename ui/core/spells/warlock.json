@@ -1,0 +1,711 @@
+{
+	"1014": {
+		"ability": "Curse of Agony",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"1088": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"1094": {
+		"ability": "Immolate",
+		"file": "sim/warlock/immolate.go",
+		"source": "unreviewed"
+	},
+	"1106": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"1120": {
+		"ability": "Drain Soul",
+		"file": "sim/warlock/drain_soul.go",
+		"source": "unreviewed"
+	},
+	"11659": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"11660": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"11661": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"11665": {
+		"ability": "Immolate",
+		"file": "sim/warlock/immolate.go",
+		"source": "unreviewed"
+	},
+	"11667": {
+		"ability": "Immolate",
+		"file": "sim/warlock/immolate.go",
+		"source": "unreviewed"
+	},
+	"11668": {
+		"ability": "Immolate",
+		"file": "sim/warlock/immolate.go",
+		"source": "unreviewed"
+	},
+	"11671": {
+		"ability": "Corruption",
+		"file": "sim/warlock/corruption.go",
+		"source": "unreviewed"
+	},
+	"11672": {
+		"ability": "Corruption",
+		"file": "sim/warlock/corruption.go",
+		"source": "unreviewed"
+	},
+	"11675": {
+		"ability": "Drain Soul",
+		"file": "sim/warlock/drain_soul.go",
+		"source": "unreviewed"
+	},
+	"11677": {
+		"ability": "Rain of Fire",
+		"file": "sim/warlock/rain_of_fire.go",
+		"source": "unreviewed"
+	},
+	"11678": {
+		"ability": "Rain of Fire",
+		"file": "sim/warlock/rain_of_fire.go",
+		"source": "unreviewed"
+	},
+	"11687": {
+		"ability": "Life Tap",
+		"file": "sim/warlock/lifetap.go",
+		"source": "unreviewed"
+	},
+	"11688": {
+		"ability": "Life Tap",
+		"file": "sim/warlock/lifetap.go",
+		"source": "unreviewed"
+	},
+	"11689": {
+		"ability": "Life Tap",
+		"file": "sim/warlock/lifetap.go",
+		"source": "unreviewed"
+	},
+	"11699": {
+		"ability": "Drain Life",
+		"file": "sim/warlock/drain_life.go",
+		"source": "unreviewed"
+	},
+	"11700": {
+		"ability": "Drain Life",
+		"file": "sim/warlock/drain_life.go",
+		"source": "unreviewed"
+	},
+	"11704": {
+		"ability": "Drain Hope",
+		"assumptions": [
+			"Each tick is 90 Shadow damage at level 60 - the demo tooltip was a low-level rank and the file says the level 60 values are not datamined",
+			"Drain Hope channels 6 sec in six one-second ticks",
+			"Drain Hope costs 320 mana",
+			"Each tick takes 10% of spell power",
+			"The warlock's other Shadow dots on the drained target tick for 10% more, and the bonus applies to dots only, not to direct Shadow damage"
+		],
+		"file": "sim/warlock/drain_hope.go",
+		"note": "Drain Hope is a new Forever Affliction talent spell with no id of its own in the Classic database, so the sim borrows Classic's Drain Mana (11704) for the name and the drain icon; the talent tree separately borrows Dark Pact's 18220 for the tree slot.",
+		"source": "assumed",
+		"tooltip": "320 Mana\nChannelled, 6 sec\nDrains the target's hope, causing 90 Shadow damage every 1 sec for 6 sec. While the channel lasts, your other Shadow damage over time effects on that target deal 10% more damage."
+	},
+	"11711": {
+		"ability": "Curse of Agony",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"11712": {
+		"ability": "Curse of Agony",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"11713": {
+		"ability": "Curse of Agony",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"11721": {
+		"ability": "Curse of the Elements",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"11733": {
+		"ability": "Demon Armor",
+		"file": "sim/warlock/armors.go",
+		"source": "unreviewed"
+	},
+	"11734": {
+		"ability": "Demon Armor",
+		"file": "sim/warlock/armors.go",
+		"source": "unreviewed"
+	},
+	"11735": {
+		"ability": "Demon Armor",
+		"file": "sim/warlock/armors.go",
+		"source": "unreviewed"
+	},
+	"11762": {
+		"ability": "Firebolt",
+		"file": "sim/warlock/imp.go",
+		"source": "unreviewed"
+	},
+	"11763": {
+		"ability": "Firebolt",
+		"file": "sim/warlock/imp.go",
+		"source": "unreviewed"
+	},
+	"11778": {
+		"ability": "Lash of Pain",
+		"file": "sim/warlock/succubus.go",
+		"source": "unreviewed"
+	},
+	"11779": {
+		"ability": "Lash of Pain",
+		"file": "sim/warlock/succubus.go",
+		"source": "unreviewed"
+	},
+	"11780": {
+		"ability": "Lash of Pain",
+		"file": "sim/warlock/succubus.go",
+		"source": "unreviewed"
+	},
+	"1454": {
+		"ability": "Life Tap",
+		"file": "sim/warlock/lifetap.go",
+		"source": "unreviewed"
+	},
+	"1455": {
+		"ability": "Life Tap",
+		"file": "sim/warlock/lifetap.go",
+		"source": "unreviewed"
+	},
+	"1456": {
+		"ability": "Life Tap",
+		"file": "sim/warlock/lifetap.go",
+		"source": "unreviewed"
+	},
+	"1490": {
+		"ability": "Curse of the Elements",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"172": {
+		"ability": "Corruption",
+		"file": "sim/warlock/corruption.go",
+		"source": "unreviewed"
+	},
+	"17862": {
+		"ability": "Curse of Shadow",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"17877": {
+		"ability": "Shadowburn",
+		"file": "sim/warlock/shadowburn.go",
+		"source": "unreviewed"
+	},
+	"17919": {
+		"ability": "Searing Pain",
+		"file": "sim/warlock/searing_pain.go",
+		"source": "unreviewed"
+	},
+	"17920": {
+		"ability": "Searing Pain",
+		"file": "sim/warlock/searing_pain.go",
+		"source": "unreviewed"
+	},
+	"17921": {
+		"ability": "Searing Pain",
+		"file": "sim/warlock/searing_pain.go",
+		"source": "unreviewed"
+	},
+	"17922": {
+		"ability": "Searing Pain",
+		"file": "sim/warlock/searing_pain.go",
+		"source": "unreviewed"
+	},
+	"17923": {
+		"ability": "Searing Pain",
+		"file": "sim/warlock/searing_pain.go",
+		"source": "unreviewed"
+	},
+	"17924": {
+		"ability": "Soul Fire",
+		"file": "sim/warlock/soul_fire.go",
+		"source": "unreviewed"
+	},
+	"17925": {
+		"ability": "Death Coil",
+		"file": "sim/warlock/death_coil.go",
+		"source": "unreviewed"
+	},
+	"17926": {
+		"ability": "Death Coil",
+		"file": "sim/warlock/death_coil.go",
+		"source": "unreviewed"
+	},
+	"17941": {
+		"ability": "Shadow Trance (Nightfall)",
+		"assumptions": [
+			"Nightfall can proc from Drain Soul ticks as well as Corruption and Drain Life - Classic's Nightfall reads Corruption and Drain Life only, and the Forever tree ships no description for the talent",
+			"Nightfall's proc chance is still 2% per point",
+			"Shadow Trance still lasts 10 sec and is spent by one instant Shadow Bolt"
+		],
+		"file": "sim/warlock/talents.go",
+		"note": "The buff itself is Classic's Shadow Trance untouched; only the list of dots that can trigger it was widened in the Forever commit, which is why the id cannot be left on Wowhead's tooltip unremarked.",
+		"source": "assumed",
+		"tooltip": "10 sec\nYour next Shadow Bolt is instant cast. Nightfall has a 2% chance per point to trigger from each tick of your Corruption, Drain Life and Drain Soul."
+	},
+	"17962": {
+		"ability": "Conflagrate",
+		"file": "sim/warlock/conflagrate.go",
+		"source": "unreviewed"
+	},
+	"18265": {
+		"ability": "Siphon Life",
+		"file": "sim/warlock/siphon_life.go",
+		"source": "unreviewed"
+	},
+	"18288": {
+		"ability": "Amplify Curse",
+		"file": "sim/warlock/curses.go",
+		"note": "Byte-identical to the fork point - 3 min cooldown, a 30 sec window, +50% to the next Bane of Agony - so only the name of the spell it amplifies moved with the curse/bane split.",
+		"source": "classic"
+	},
+	"18708": {
+		"ability": "Fel Domination",
+		"file": "sim/warlock/fel_domination.go",
+		"note": "fel_domination.go is byte-identical to the fork point: 15 min cooldown, a 15 sec window, 5.5 sec off the next demon summon's cast and 50% off its cost.",
+		"source": "classic"
+	},
+	"18788": {
+		"ability": "Demonic Sacrifice",
+		"assumptions": [
+			"Sacrificing the Imp gives the 15% Shadow damage buff and the Succubus the 15% Fire damage buff - Classic and upstream wowsims have these two the other way round and nothing published for Forever says they were swapped",
+			"Sacrificing the Voidwalker restores mana and the Felhunter restores health - again inverted from Classic",
+			"The damage buffs are still 15% and the regeneration still 2% of maximum mana / 3% of maximum health every 4 sec",
+			"The buff lasts the whole encounter (modelled as 2 hours) rather than Classic's 30 min"
+		],
+		"file": "sim/warlock/talents.go",
+		"note": "Demonic Sacrifice's own tooltip is the one place the pet to buff mapping is written down, and this fork's mapping is inverted from Classic on all four demons, so Wowhead's text would tell a player to sacrifice the wrong demon for the sim's numbers.",
+		"source": "assumed",
+		"tooltip": "Instant\nSacrifices your summoned demon for the rest of the encounter. Imp: your Shadow damage is increased by 15%. Succubus: your Fire damage is increased by 15%. Voidwalker: you gain 2% of your maximum mana every 4 sec. Felhunter: you regain 3% of your maximum health every 4 sec. Summoning a demon ends the effect, unless you have Demonic Pact, which only ends it when the sacrificed demon is resummoned."
+	},
+	"18789": {
+		"ability": "Burning Wish",
+		"file": "sim/warlock/talents.go",
+		"note": "The buff is untouched at +15% Fire damage; only which demon grants it changed (the Succubus here, the Imp in Classic), which is recorded on Demonic Sacrifice, id 18788.",
+		"source": "classic"
+	},
+	"18790": {
+		"ability": "Fel Stamina",
+		"file": "sim/warlock/talents.go",
+		"note": "The buff is untouched at 3% of maximum health every 4 sec; only which demon grants it changed (the Felhunter here, the Voidwalker in Classic), recorded on 18788.",
+		"source": "classic"
+	},
+	"18791": {
+		"ability": "Touch of Shadow",
+		"file": "sim/warlock/talents.go",
+		"note": "The buff is untouched at +15% Shadow damage; only which demon grants it changed (the Imp here, the Succubus in Classic), recorded on 18788.",
+		"source": "classic"
+	},
+	"18792": {
+		"ability": "Fel Energy",
+		"file": "sim/warlock/talents.go",
+		"note": "The buff is untouched at 2% of maximum mana every 4 sec; only which demon grants it changed (the Voidwalker here, the Felhunter in Classic), recorded on 18788.",
+		"source": "classic"
+	},
+	"18821": {
+		"ability": "Demonic Brand",
+		"assumptions": [
+			"Searing Pain's threat falls 17% per point",
+			"The brand lasts 10 sec and is spent over two of the demon's melee swings",
+			"The extra hit is 39 to 42 Shadow damage at level 60 - the file marks the level 60 values as not datamined",
+			"The extra hit carries three times normal threat and cannot miss or crit"
+		],
+		"file": "sim/warlock/talents.go",
+		"note": "Demonic Brand is a new Forever Demonology talent standing in the tree slot Classic used for Improved Enslave Demon, so it inherits that talent's ids 18821-18823 and the Classic database calls 18821 'Improved Subjugate Demon'.",
+		"source": "assumed",
+		"tooltip": "Passive\nYour Searing Pain generates 17% less threat per point (51% at 3/3). Every Searing Pain that lands also brands your demon for 10 sec, so that each of its next 2 melee hits deals an extra 39 to 42 Shadow damage at triple threat."
+	},
+	"18867": {
+		"ability": "Shadowburn",
+		"file": "sim/warlock/shadowburn.go",
+		"source": "unreviewed"
+	},
+	"18868": {
+		"ability": "Shadowburn",
+		"file": "sim/warlock/shadowburn.go",
+		"source": "unreviewed"
+	},
+	"18869": {
+		"ability": "Shadowburn",
+		"file": "sim/warlock/shadowburn.go",
+		"source": "unreviewed"
+	},
+	"18870": {
+		"ability": "Shadowburn",
+		"file": "sim/warlock/shadowburn.go",
+		"source": "unreviewed"
+	},
+	"18871": {
+		"ability": "Shadowburn",
+		"file": "sim/warlock/shadowburn.go",
+		"source": "unreviewed"
+	},
+	"18879": {
+		"ability": "Siphon Life",
+		"file": "sim/warlock/siphon_life.go",
+		"source": "unreviewed"
+	},
+	"18880": {
+		"ability": "Siphon Life",
+		"file": "sim/warlock/siphon_life.go",
+		"source": "unreviewed"
+	},
+	"18881": {
+		"ability": "Siphon Life",
+		"file": "sim/warlock/siphon_life.go",
+		"source": "unreviewed"
+	},
+	"18930": {
+		"ability": "Conflagrate",
+		"file": "sim/warlock/conflagrate.go",
+		"source": "unreviewed"
+	},
+	"18931": {
+		"ability": "Conflagrate",
+		"file": "sim/warlock/conflagrate.go",
+		"source": "unreviewed"
+	},
+	"18932": {
+		"ability": "Conflagrate",
+		"file": "sim/warlock/conflagrate.go",
+		"source": "unreviewed"
+	},
+	"19028": {
+		"ability": "Soul Link",
+		"file": "sim/warlock/talents.go",
+		"note": "Byte-identical to the fork point - 20% of base mana, +3% damage dealt and 30% less damage taken on both warlock and demon while the link holds.",
+		"source": "classic"
+	},
+	"23825": {
+		"ability": "Master Demonologist",
+		"assumptions": [
+			"The Imp branch is a Fire damage bonus rather than Classic's 4% per point threat reduction",
+			"The Felhunter branch is a magic damage reduction rather than Classic's 2 resistance per point",
+			"The Succubus branch raises Shadow damage only, not all damage as in Classic",
+			"Every branch is 2% per point, so 10% at 5/5",
+			"The aura rides on the demon, so a sacrificed demon takes it away"
+		],
+		"file": "sim/warlock/talents.go",
+		"note": "The Forever commit rebuilt Master Demonologist along its TBC lines with no comment, and the Forever tree ships no description for the talent, so every branch here is an inference.",
+		"source": "assumed",
+		"tooltip": "Passive\nWhile your demon is active, you and it both gain a bonus that depends on the demon. Imp: 2% more Fire damage per point. Voidwalker: 2% less damage taken per point. Succubus: 2% more Shadow damage per point. Felhunter: 2% less Arcane, Fire, Frost, Holy, Nature and Shadow damage taken per point."
+	},
+	"25307": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"25309": {
+		"ability": "Immolate",
+		"file": "sim/warlock/immolate.go",
+		"source": "unreviewed"
+	},
+	"25311": {
+		"ability": "Corruption",
+		"file": "sim/warlock/corruption.go",
+		"source": "unreviewed"
+	},
+	"2941": {
+		"ability": "Immolate",
+		"file": "sim/warlock/immolate.go",
+		"source": "unreviewed"
+	},
+	"29722": {
+		"ability": "Incinerate",
+		"assumptions": [
+			"Incinerate deals 380 to 440 at level 60 - the demo tooltip showed 125 to 140 at the level 30 beta cap and the higher ranks were never shown",
+			"Incinerate costs 300 mana",
+			"Incinerate has a 2.5 sec cast time",
+			"Incinerate takes 71.4% of spell power",
+			"Incinerate has only one rank at 60"
+		],
+		"file": "sim/warlock/incinerate.go",
+		"note": "29722 is TBC's Incinerate id, which the Forever tree also carries; the Classic database has no row for it at all, so the site currently renders neither name, icon nor tooltip.",
+		"source": "assumed",
+		"tooltip": "300 Mana\n2.5 sec cast\nDeals 380 to 440 Fire damage to the target, and 25% more if the target is afflicted by Immolate."
+	},
+	"30288": {
+		"ability": "Shadow and Flame",
+		"assumptions": [
+			"The 2% damage bonus is read per point, so 5/5 is 10%, although the demo tooltip reads 2% at every rank",
+			"The 20% chance not to consume Immolate is read per point, so at 5/5 Conflagrate never consumes Immolate",
+			"Both buffs last 20 sec and do not stack with themselves",
+			"Shadowburn's 20% chance to refund a Soul Shard is not modelled, the sim has no shard economy"
+		],
+		"file": "sim/warlock/talents.go",
+		"note": "30288 is the Forever tree's own rank 1 id for Shadow and Flame, carried over from TBC, and the Classic database has no row for it.",
+		"source": "assumed",
+		"tooltip": "Passive\nHitting an enemy with Conflagrate increases all your Shadow damage by 2% per point for 20 sec, and hitting an enemy with Shadowburn increases all your Fire damage by 2% per point for 20 sec. Conflagrate also has a 20% chance per point not to consume Immolate."
+	},
+	"3110": {
+		"ability": "Firebolt",
+		"file": "sim/warlock/imp.go",
+		"source": "unreviewed"
+	},
+	"348": {
+		"ability": "Immolate",
+		"file": "sim/warlock/immolate.go",
+		"source": "unreviewed"
+	},
+	"35696": {
+		"ability": "Demonic Knowledge",
+		"assumptions": [
+			"The 33% of level is per point, so 3/3 is 99% of level, and the beta has not settled whether it is instead the full value at every rank",
+			"The bonus is spell damage only and is paid out only while a demon is active",
+			"The bonus is computed from character level, not from the demon's level"
+		],
+		"file": "sim/warlock/talents.go",
+		"note": "35696 is TBC's Demonic Knowledge buff id while the Forever tree carries 35691-35693 for the talent's three ranks; neither id exists in the Classic database, so the site shows nothing.",
+		"source": "assumed",
+		"tooltip": "Passive\nWhile you have a demon active, your spell damage is increased by 33% of your level per point - 59 spell power at level 60 with 3/3. The bonus is lost the moment the demon is dismissed or sacrificed."
+	},
+	"5676": {
+		"ability": "Searing Pain",
+		"file": "sim/warlock/searing_pain.go",
+		"source": "unreviewed"
+	},
+	"5740": {
+		"ability": "Rain of Fire",
+		"file": "sim/warlock/rain_of_fire.go",
+		"source": "unreviewed"
+	},
+	"603": {
+		"ability": "Bane of Doom",
+		"assumptions": [
+			"Bane of Doom keeps Curse of Doom's 3200 damage, 300 mana cost and 1 min cooldown",
+			"Bane of Doom still takes 100% of spell power into its single tick",
+			"Banes (Agony, Doom, Havoc) share one slot per warlock and no longer conflict with Curses (Elements, Shadow, Recklessness, Weakness)"
+		],
+		"file": "sim/warlock/curses.go",
+		"note": "Forever renames Curse of Doom to Bane of Doom and moves it into the new Bane category, so the Classic database's name and tooltip both describe an ability that no longer exists.",
+		"source": "assumed",
+		"tooltip": "300 Mana\nInstant\n1 min cooldown\nCurses the target with impending doom, dealing 3200 Shadow damage after 1 min. Only one Bane per warlock can be active on a target, and a Bane no longer blocks a Curse."
+	},
+	"6217": {
+		"ability": "Curse of Agony",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"6219": {
+		"ability": "Rain of Fire",
+		"file": "sim/warlock/rain_of_fire.go",
+		"source": "unreviewed"
+	},
+	"6222": {
+		"ability": "Corruption",
+		"file": "sim/warlock/corruption.go",
+		"source": "unreviewed"
+	},
+	"6223": {
+		"ability": "Corruption",
+		"file": "sim/warlock/corruption.go",
+		"source": "unreviewed"
+	},
+	"63165": {
+		"ability": "Decimation",
+		"assumptions": [
+			"Both ranks read the same numbers on the demo tooltip, so the 3% damage, the 20% cast time and the 45% Soul Fire cooldown are all read per point - at 2/2 that is 90% off Soul Fire's minute cooldown",
+			"The damage bonus belongs to Shadow Bolt and Searing Pain themselves rather than to everything the warlock casts",
+			"The window is 10 sec and the health threshold 35%",
+			"Soul Fire's Soul Shard cost is not modelled"
+		],
+		"file": "sim/warlock/talents.go",
+		"foreverId": 63156,
+		"note": "The Forever tree carries 63156 and 63158 for Decimation's two ranks, so the aura's 63165 matches neither and looks like a transposition of 63156; neither id exists in the Classic database.",
+		"source": "assumed",
+		"tooltip": "Passive\nReduces the cooldown of your Soul Fire by 45% per point. When your Shadow Bolt or Searing Pain hits an enemy below 35% health, those two spells deal 3% more damage per point and, for the next 10 sec, Soul Fire's cast time is cut by 20% per point and it costs no Soul Shards."
+	},
+	"6353": {
+		"ability": "Soul Fire",
+		"file": "sim/warlock/soul_fire.go",
+		"source": "unreviewed"
+	},
+	"6789": {
+		"ability": "Death Coil",
+		"file": "sim/warlock/death_coil.go",
+		"source": "unreviewed"
+	},
+	"686": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"688": {
+		"ability": "Summon Imp",
+		"file": "sim/warlock/summon_demon.go",
+		"note": "summon_demon.go is byte-identical to the fork point and no Forever source touches the summons: 10 sec cast, full base mana, the active demon is dismissed when the cast starts.",
+		"source": "classic"
+	},
+	"689": {
+		"ability": "Drain Life",
+		"file": "sim/warlock/drain_life.go",
+		"source": "unreviewed"
+	},
+	"691": {
+		"ability": "Summon Felhunter",
+		"file": "sim/warlock/summon_demon.go",
+		"note": "Same unchanged registration as Summon Imp; Fel Domination and Master Summoner still shorten and discount it exactly as in Classic.",
+		"source": "classic"
+	},
+	"695": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"697": {
+		"ability": "Summon Voidwalker",
+		"file": "sim/warlock/summon_demon.go",
+		"note": "Same unchanged registration as Summon Imp.",
+		"source": "classic"
+	},
+	"699": {
+		"ability": "Drain Life",
+		"file": "sim/warlock/drain_life.go",
+		"source": "unreviewed"
+	},
+	"704": {
+		"ability": "Curse of Recklessness",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"705": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"706": {
+		"ability": "Demon Armor",
+		"file": "sim/warlock/armors.go",
+		"source": "unreviewed"
+	},
+	"707": {
+		"ability": "Immolate",
+		"file": "sim/warlock/immolate.go",
+		"source": "unreviewed"
+	},
+	"709": {
+		"ability": "Drain Life",
+		"file": "sim/warlock/drain_life.go",
+		"source": "unreviewed"
+	},
+	"712": {
+		"ability": "Summon Succubus",
+		"file": "sim/warlock/summon_demon.go",
+		"note": "Same unchanged registration as Summon Imp.",
+		"source": "classic"
+	},
+	"758": {
+		"ability": "Firestone Passive",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
+	"7641": {
+		"ability": "Shadow Bolt",
+		"file": "sim/warlock/shadowbolt.go",
+		"source": "unreviewed"
+	},
+	"7648": {
+		"ability": "Corruption",
+		"file": "sim/warlock/corruption.go",
+		"source": "unreviewed"
+	},
+	"7651": {
+		"ability": "Drain Life",
+		"file": "sim/warlock/drain_life.go",
+		"source": "unreviewed"
+	},
+	"7658": {
+		"ability": "Curse of Recklessness",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"7659": {
+		"ability": "Curse of Recklessness",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	},
+	"7799": {
+		"ability": "Firebolt",
+		"file": "sim/warlock/imp.go",
+		"source": "unreviewed"
+	},
+	"7800": {
+		"ability": "Firebolt",
+		"file": "sim/warlock/imp.go",
+		"source": "unreviewed"
+	},
+	"7801": {
+		"ability": "Firebolt",
+		"file": "sim/warlock/imp.go",
+		"source": "unreviewed"
+	},
+	"7802": {
+		"ability": "Firebolt",
+		"file": "sim/warlock/imp.go",
+		"source": "unreviewed"
+	},
+	"7814": {
+		"ability": "Lash of Pain",
+		"file": "sim/warlock/succubus.go",
+		"source": "unreviewed"
+	},
+	"7815": {
+		"ability": "Lash of Pain",
+		"file": "sim/warlock/succubus.go",
+		"source": "unreviewed"
+	},
+	"7816": {
+		"ability": "Lash of Pain",
+		"file": "sim/warlock/succubus.go",
+		"source": "unreviewed"
+	},
+	"80240": {
+		"ability": "Bane of Havoc",
+		"assumptions": [
+			"Bane of Havoc costs 300 mana - the demo tooltip carried no cost",
+			"Bane of Havoc is instant and off the global cooldown only in the usual sense, with no cooldown of its own",
+			"The 15% damage copy is not simulated: the sim only marks the target, so on a single target run the spell is pure mana and GCD loss"
+		],
+		"file": "sim/warlock/curses.go",
+		"note": "80240 is Forever's own id for Bane of Havoc, carried over from Cataclysm, and the Classic database has no row for it, so the site renders neither name nor icon nor tooltip.",
+		"source": "assumed",
+		"tooltip": "300 Mana\nInstant\nAfflicts the target for 5 min, causing 15% of all damage you deal to other targets to also be dealt to this one. Limited to 1 target, and only one Bane per warlock can be active on a target."
+	},
+	"8288": {
+		"ability": "Drain Soul",
+		"file": "sim/warlock/drain_soul.go",
+		"source": "unreviewed"
+	},
+	"8289": {
+		"ability": "Drain Soul",
+		"file": "sim/warlock/drain_soul.go",
+		"source": "unreviewed"
+	},
+	"980": {
+		"ability": "Curse of Agony",
+		"file": "sim/warlock/curses.go",
+		"source": "unreviewed"
+	}
+}
