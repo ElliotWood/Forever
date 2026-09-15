@@ -340,6 +340,13 @@ export const sections: Array<Section> = [
 				effect: 'The rankings compare specs rather than gear tiers; casters and the cat moved most.',
 			},
 			{
+				title: 'The damage table says what it is',
+				prs: [120],
+				changed:
+					'Raised in the Forever Discord: a public ranking advertises results nothing has proven, on a fork still being written. The page carried six notes on how the raid was assembled and not one on where the numbers came from. It is called Damage comparison now, the rank column is gone, and a block above the table says there is no beta client, that every talent was read off a demo tooltip at mostly rank 1, that the rest is assumed and counted in the beta checklist, and that the table is here to find bugs in this sim. The URL is unchanged.',
+				effect: 'The page reads as what it has always been used for, a self-check, rather than a balance claim.',
+			},
+			{
 				title: 'Best in slot and stat weights',
 				prs: [55, 56, 72, 79],
 				changed: "A best in slot page from each spec's EP weights over the launch pool, and a page comparing stat weights across specs.",
