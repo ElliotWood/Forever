@@ -1,5 +1,11 @@
 [
 	{
+		"number": 126,
+		"title": "fix(talents): let every talent describe itself instead of its classic ancestor",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/126"
+	},
+	{
 		"number": 125,
 		"title": "chore: drop the upstream project's name and patreon from the site",
 		"mergedAt": "2026-09-15",

@@ -125,10 +125,289 @@
     {
       "talent": "conflagrate",
       "tree": "destruction",
-      "unset": ["requires"],
+      "unset": [
+        "requires"
+      ],
       "reason": "audit 2026-09-13 decision 4: the arrow detector fired on a stripe of tree art. At 5x on 17-warlock-19140-median.png the segment between Shadowburn and Conflagrate shows no arrowhead, while the very next pair in the same column (Conflagrate -> Fire and Brimstone) shows an unmistakable filled triangle. Shadowburn is not a prerequisite.",
       "by": "data-audit",
       "at": "2026-09-13T00:00:00Z"
+    },
+    {
+      "talent": "improved-corruption",
+      "tree": "affliction",
+      "set": {
+        "ranks": [
+          [
+            0.4,
+            2
+          ],
+          [
+            0.8,
+            4
+          ],
+          [
+            1.2,
+            6
+          ],
+          [
+            1.6,
+            8
+          ],
+          [
+            2,
+            10
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "soul-harvesting",
+      "tree": "affliction",
+      "set": {
+        "ranks": [
+          [
+            10,
+            50,
+            50
+          ],
+          [
+            20,
+            100,
+            100
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "improved-drains",
+      "tree": "affliction",
+      "set": {
+        "ranks": [
+          [
+            2,
+            6,
+            20,
+            3
+          ],
+          [
+            4,
+            12,
+            40,
+            6
+          ],
+          [
+            6,
+            18,
+            60,
+            9
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "improved-health-funnel",
+      "tree": "demonology",
+      "set": {
+        "ranks": [
+          [
+            20,
+            15,
+            50
+          ],
+          [
+            40,
+            30,
+            100
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "demonic-brand",
+      "tree": "demonology",
+      "set": {
+        "ranks": [
+          [
+            17,
+            10,
+            2,
+            39,
+            42
+          ],
+          [
+            34,
+            20,
+            4,
+            78,
+            84
+          ],
+          [
+            51,
+            30,
+            6,
+            117,
+            126
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "decimation",
+      "tree": "demonology",
+      "set": {
+        "ranks": [
+          [
+            45,
+            35,
+            3,
+            10,
+            20
+          ],
+          [
+            90,
+            70,
+            6,
+            20,
+            40
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "improved-felhunter",
+      "tree": "demonology",
+      "set": {
+        "ranks": [
+          [
+            10,
+            2
+          ],
+          [
+            20,
+            4
+          ],
+          [
+            30,
+            6
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "improved-shadow-bolt",
+      "tree": "destruction",
+      "set": {
+        "ranks": [
+          [
+            4,
+            12
+          ],
+          [
+            8,
+            24
+          ],
+          [
+            12,
+            36
+          ],
+          [
+            16,
+            48
+          ],
+          [
+            20,
+            60
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "aftermath",
+      "tree": "destruction",
+      "set": {
+        "ranks": [
+          [
+            10,
+            20,
+            50,
+            5
+          ],
+          [
+            20,
+            40,
+            100,
+            10
+          ],
+          [
+            30,
+            60,
+            150,
+            15
+          ],
+          [
+            40,
+            80,
+            200,
+            20
+          ],
+          [
+            50,
+            100,
+            250,
+            25
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
+    },
+    {
+      "talent": "pyroclasm",
+      "tree": "destruction",
+      "set": {
+        "ranks": [
+          [
+            13,
+            3,
+            13,
+            3
+          ],
+          [
+            26,
+            6,
+            26,
+            6
+          ]
+        ]
+      },
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "by": "data-audit",
+      "at": "2026-09-15T00:00:00Z"
     }
   ]
 }

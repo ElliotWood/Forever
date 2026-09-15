@@ -375,6 +375,14 @@ export const sections: Array<Section> = [
 				effect: 'Nothing on the site trades on a name or a donation page that is not its own.',
 			},
 			{
+				title: 'Every talent describes itself, not its Classic ancestor',
+				prs: [126],
+				changed:
+					"Reported in the Forever Discord: Improved Revenge still read as a stun chance when Forever made it damage. The sim had it right at 20% a point; the tooltip was the Classic one, because a talent with no text of its own falls back to the Classic database and the two share a name. #122 only caught talents whose name had changed, so a same-name, changed-effect talent slipped through. The Classic database no longer describes any talent: all 470 carry their own name, text and per-rank numbers. Checked against the community talent calculator's source, 43 more were showing rank 1's number at every rank while the sim scaled with points, Improved Wrath reading 0.1 sec at five points where the sim gives 0.5.",
+				effect: 'Every tooltip now says what the sim actually does. No simulated number changes.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Best in slot and stat weights',
 				prs: [55, 56, 72, 79],
 				changed: "A best in slot page from each spec's EP weights over the launch pool, and a page comparing stat weights across specs.",
