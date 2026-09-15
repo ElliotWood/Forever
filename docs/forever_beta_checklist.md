@@ -48,29 +48,32 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/mage/talents.go:655` — both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
 - `sim/mage/talents.go:669` — a cast already in progress when a chill lands is held out of Fingers of Frost, so it neither takes the Shatter crit nor spends the charge. Beta will confirm which cast the charge belongs to.
 
-## Paladin (21)
+## Paladin (22)
 
 - `sim/paladin/consecration.go:10` — assumed baseline, beta will confirm - Consecration is no longer a talent and the Forever tree builds on top of it through Consecrated Ground and Holy Conduit.
 - `sim/paladin/hammer_of_wrath.go:29` — Only rank 1 of Instrument of Law was seen at 0.5 sec, the full second the tree reads at rank 2 comes from the community talent calculator rather than from a tooltip.
 - `sim/paladin/holy_shield.go:18` — Only rank 1 was seen at 110, up from Classic's 65. The other ranks are scaled by the same ratio until the beta shows them.
 - `sim/paladin/holy_strike.go:15` — assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat damage is taken from the published tooltip rather than from the game. Forever's own spell id for Holy Strike is 17143, which the item database does not carry, so the sim keeps Classic's unused 13953.
 - `sim/paladin/holy_strike.go:26` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
-- `sim/paladin/holy_strike.go:38` — Every rank of Iron Creed reads the same 5% threat, the rest are assumed to scale linearly.
-- `sim/paladin/holy_strike.go:91` — Every rank of Iron Creed reads the same 2% for 6 sec, the rest are assumed to scale linearly.
+- `sim/paladin/holy_strike.go:38` — Only rank 1 of Iron Creed's threat was seen at 5%, the 5% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/holy_strike.go:91` — Only rank 1 of Iron Creed's damage reduction was seen at 2%, the 2% per rank the tree reads comes from the community talent calculator rather than from a tooltip. The 6 seconds is flat at every rank.
 - `sim/paladin/sotc.go:34` — assumed baseline, beta will confirm - Improved Seal of the Crusader is gone from the tree and the raid reads the improved Judgement of the Crusader through Debuffs either way.
 - `sim/paladin/swift_judgement.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it is given a minute, long enough that it buys one extra Judgement rather than a second rotation.
 - `sim/paladin/talents.go:19` — Only rank 1 of Divine Precision was seen, ranks 2 and 3 are extrapolated from it.
-- `sim/paladin/talents.go:34` — Only rank 1 of Sacred Duty was seen, the 2% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
-- `sim/paladin/talents.go:38` — Only rank 1 of Shield Specialization's absorb was seen, the 10% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
-- `sim/paladin/talents.go:44` — Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are a large chunk of a Forever paladin's spell power.
-- `sim/paladin/talents.go:86` — Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing.
-- `sim/paladin/talents.go:167` — Only rank 1's 33% chance was seen, the tree's 33/66/100 comes from the community talent calculator rather than from a tooltip. The 6% of maximum mana does not scale.
-- `sim/paladin/talents.go:228` — Every rank reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing.
-- `sim/paladin/talents.go:261` — The self buff reads 1% at every rank. The 42 attack power the target loses is not modelled, nothing in the sim reads an enemy's attack power.
-- `sim/paladin/talents.go:298` — The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration, which is not modelled here - everything standing in it gets the bonus.
-- `sim/paladin/talents.go:334` — Only rank 1's 10% was seen, the tree's second rank comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/talents.go:33` — Only rank 1 of Holy Power was seen, ranks 2 to 5 are extrapolated from it. The talent is split across two files: every spell gets 1% crit per point here and Holy Shock picks up another 2% per point in `holy_shock.go`, which together are the 3% per point the tree reads for it. Confirm both halves, and keep them in step if either moves.
+- `sim/paladin/talents.go:37` — Only rank 1 of Sacred Duty was seen, the 2% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/talents.go:41` — Only rank 1 of Shield Specialization's absorb was seen, the 10% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/talents.go:47` — Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are a large chunk of a Forever paladin's spell power.
+- `sim/paladin/talents.go:89` — Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing. The tree says the same thing, so the picker and the sim agree; neither has a source, because the generator could not line Classic's Redoubt up against Forever's wording and copied rank 1 into ranks 2 to 5.
+- `sim/paladin/talents.go:170` — Only rank 1's 33% chance was seen, the tree's 33/66/100 comes from the community talent calculator rather than from a tooltip. The 6% of maximum mana does not scale.
+- `sim/paladin/talents.go:231` — Every rank of Vengeance reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing. The tree says the same thing; as with Redoubt the generator copied rank 1 into the later ranks rather than extrapolating.
+- `sim/paladin/talents.go:264` — The Vindication self buff reads 1% at every rank, and so does the tree, again from a copied rank 1. The 42 attack power the target loses is not modelled, nothing in the sim reads an enemy's attack power.
+- `sim/paladin/talents.go:301` — The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration, which is not modelled here - everything standing in it gets the bonus.
+- `sim/paladin/talents.go:337` — Only rank 1's 10% was seen, the tree's second rank comes from the community talent calculator rather than from a tooltip.
 - `sim/paladin/templars_bulwark.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it shares the 5 minutes of the two Forbearance abilities Sacred Duty shortens alongside it.
 - `sim/paladin/templars_bulwark.go:36` — Only rank 1 of Sacred Duty was seen at 30 sec, the tree's second rank comes from the community talent calculator rather than from a tooltip.
+
+Infusion of Light is not on that list because there is nothing to check against: the sim has no Holy Light for it to shorten, so it is one of the talents below that the sim never reads. Its rank 2 half second still came from the community talent calculator, so the beta pass should read the tooltip for it rather than treating the tree as settled.
 
 ## Priest (11)
 
