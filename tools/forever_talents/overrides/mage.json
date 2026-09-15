@@ -106,10 +106,16 @@
           ],
           [
             30
+          ],
+          [
+            40
+          ],
+          [
+            50
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: the tree carries this talent at five ranks (see the Improved Fireball override), so a three entry rank table left ranks 4 and 5 with no value to display. Per-rank values taken from the community talent calculator, 10% a point, which is what sim/mage/talents.go applies; no rank of it is observed, the one demo crop of this cell reads 50% at Rank 3/3, and docs/forever_beta_checklist.md keeps it",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -130,7 +136,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: the demo only showed rank 1, so both ranks displayed the same 15% while sim/mage/talents.go hardcoded 15% at either rank. Per-rank values taken from the community talent calculator, 15% a point, and the sim now reads the proc per point to match; rank 2 is not an observed number and docs/forever_beta_checklist.md keeps it",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     }
