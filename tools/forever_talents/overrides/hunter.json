@@ -67,39 +67,39 @@
           ],
           [
             4,
-            60,
-            24,
+            30,
+            12,
             4,
-            60,
-            24
+            30,
+            12
           ],
           [
             6,
-            90,
-            36,
+            30,
+            12,
             6,
-            90,
-            36
+            30,
+            12
           ],
           [
             8,
-            120,
-            48,
+            30,
+            12,
             8,
-            120,
-            48
+            30,
+            12
           ],
           [
             10,
-            150,
-            60,
+            30,
+            12,
             10,
-            150,
-            60
+            30,
+            12
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value; audit 2026-09-15 against sim/hunter/aspects.go: only the proc chance grows with points, as in the Classic Improved Aspect of the Hawk (talent 1382) this talent is built from. The earlier revision multiplied every slot by the rank, which promised +150% attack speed for 60 sec at 5/5 and left the picker reading a scaling the sim never applied. The 2% per rank is still extrapolated from the one observed tooltip.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -120,7 +120,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value; rank 2 is the community talent calculator's linear extrapolation of that tooltip, which is rebuilt from the same BlizzCon footage and so corroborates the assumption rather than confirming it. Mend Pet is not modelled, so the sim has nothing to check it against.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -146,7 +146,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value; ranks 2 and 3 are the community talent calculator's linear extrapolation of that tooltip, not a datamine. Audit 2026-09-15: the sim scales the Serpent Sting damage the same way, the Viper Sting cooldown and the Scorpid Sting duration are not modelled.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -167,7 +167,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value; rank 2 is the community talent calculator's linear extrapolation of that tooltip, not a datamine. Audit 2026-09-15: the sim takes the same second minute off Rapid Fire, but the buff a kill grants is not modelled, so nothing checks the doubled 40 sec window or the 20% damage.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -184,11 +184,11 @@
           [
             50,
             100,
-            30
+            15
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value; audit 2026-09-15 against sim/hunter/talents.go: the regeneration grows with points but the 15 sec window does not, and the earlier revision doubled it. A duration read off a single tooltip is not extrapolated, and Resourcefulness and Expose Prey, stamped in the same pass, keep theirs flat. The 50% at rank 2 is still extrapolated.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -211,7 +211,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value; rank 2 is the community talent calculator's linear extrapolation of that tooltip, not a datamine. Audit 2026-09-15: the sim applies the same 60% cost cut and 60% proc chance at rank 2 and keeps the 50% regeneration and the 30 sec window flat.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -230,7 +230,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value; rank 2 is the community talent calculator's linear extrapolation of that tooltip, not a datamine. Audit 2026-09-15: the sim applies the same 10% proc chance at rank 2 and keeps the 5 sec window flat.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     }
