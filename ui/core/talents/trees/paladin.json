@@ -95,7 +95,21 @@
           20225,
           20226
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Improved Seals",
+        "icon": "ability_thunderbolt",
+        "description": "Increases the damage done by your Seals and Judgements by {0}%.",
+        "ranks": [
+          [
+            5
+          ],
+          [
+            10
+          ],
+          [
+            15
+          ]
+        ]
       },
       {
         "fieldName": "unyieldingFaith",
@@ -252,7 +266,21 @@
           20192,
           20193
         ],
-        "maxPoints": 3
+        "maxPoints": 3,
+        "name": "Divine Precision",
+        "icon": "ability_rogue_ambush",
+        "description": "Increases your chance to hit with Holy spells by {0}%.",
+        "ranks": [
+          [
+            6
+          ],
+          [
+            12
+          ],
+          [
+            18
+          ]
+        ]
       },
       {
         "fieldName": "holyShock",

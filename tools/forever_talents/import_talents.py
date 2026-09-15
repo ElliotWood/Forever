@@ -29,6 +29,9 @@ OVERRIDE_DIR = os.path.join(os.path.dirname(__file__), 'overrides')
 TREE_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'ui', 'core', 'talents', 'trees')
 SIM_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'sim')
 DB_PATH = os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'database', 'db.json')
+# The icons the site serves itself. An icon the mirror does not hold would draw a broken
+# image, so a name that is not in here is no better than no name at all.
+ICON_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'assets', 'img', 'wowhead', 'icons', 'large')
 # Icon crops for talents whose icon is new to Forever, relative to the site root.
 CROP_DIR = os.path.join('assets', 'img', 'talents')
 
@@ -72,6 +75,18 @@ def database_spell_ids():
 	"""Spell ids the sim's database knows, and so can name, link and draw an icon for."""
 	with open(DB_PATH) as f:
 		return {spell['id'] for spell in json.load(f)['spellIcons']}
+
+
+def database_spells():
+	"""What the sim's database would call and draw for each spell id it knows."""
+	with open(DB_PATH) as f:
+		return {spell['id']: (spell['name'], spell.get('icon')) for spell in json.load(f)['spellIcons']}
+
+
+def same_talent(left, right):
+	"""Whether two talent names are the same name, ignoring case and punctuation."""
+	strip = lambda name: re.sub(r'[^a-z0-9]', '', (name or '').lower())
+	return strip(left) == strip(right)
 
 
 def simulated_talents(class_name):
@@ -150,7 +165,12 @@ def build_tree_json(data, existing_by_tree, simulated, known_spells, crops_from=
 # A talent the database cannot name has nothing to link or draw: either Forever added it
 # (spell id 0) or it came from a later expansion whose id the Classic database does not
 # carry. Carry the datamined presentation through and let the picker render it locally.
-def add_presentation(entry, class_name, talent, simulated, crops_from):
+def mirrored(icon):
+	"""Whether the site already serves this icon."""
+	return os.path.exists(os.path.join(ICON_DIR, icon + '.jpg'))
+
+
+def add_presentation(entry, class_name, talent, simulated, crops_from, fallback_icon=None):
 	entry['name'] = talent['name']
 	if talent.get('iconSource') == 'crop':
 		# A genuinely new icon: the only picture of it is the crop of the demo video frame,
@@ -158,7 +178,15 @@ def add_presentation(entry, class_name, talent, simulated, crops_from):
 		crop = copy_icon_crop(class_name, talent, crops_from)
 		if crop:
 			entry['iconUrl'] = crop
+		elif fallback_icon:
+			# No frame to cut this one from. Keep drawing whatever the talent already drew
+			# rather than fall through to the question mark; the name and the numbers below
+			# are still the talent's own, and only the picture is standing in.
+			entry['icon'] = fallback_icon
 	elif talent.get('icon'):
+		# A real Wowhead icon, even where the mirror has not been asked for it yet: naming it
+		# here is what puts it on the Update Icons workflow's list, and that job has the
+		# network access to fetch it. Only the crops above have no source left to fetch from.
 		entry['icon'] = talent['icon']
 	if talent.get('description'):
 		entry['description'] = talent['description']
@@ -182,18 +210,27 @@ def refresh_presentation(class_name, data, crops_from):
 	by_field = {camel_case(talent['id']): talent for tree in data['trees'] for talent in tree['talents']}
 	# The proto field was named before the dataset settled on the talent's name.
 	by_field['bloodCraze'] = by_field.get('bloodCrazed')
-	known_spells = database_spell_ids()
+	known_spells = database_spells()
 	simulated = simulated_talents(class_name)
 	refreshed, unmatched = 0, []
 	for tree in trees:
 		for entry in tree['talents']:
-			if any(spell_id in known_spells for spell_id in entry['spellIds']):
-				continue
 			talent = by_field.get(entry['fieldName'])
+			# Being in the database is not enough to let Wowhead describe a talent. Where a
+			# Forever talent had no Classic spell ids of its own, generation gave it the ids
+			# of whichever Classic talent the dataset matched it to by description, so the
+			# database names and draws that other talent instead: a druid's Genesis read
+			# "Fire Power", and Malevolence and Shadow Mastery both read "Shadow Mastery".
+			# The id may only speak for the talent when it is the same talent under the same
+			# name; anything else is presented from the dataset, as a new talent is.
+			first_id = next((spell_id for spell_id in entry['spellIds'] if spell_id), None)
+			db_name, db_icon = known_spells.get(first_id, (None, None))
+			if db_name is not None and (talent is None or same_talent(db_name, talent['name'])):
+				continue
 			if talent is None:
 				unmatched.append(entry['fieldName'])
 				continue
-			add_presentation(entry, class_name, talent, simulated, crops_from)
+			add_presentation(entry, class_name, talent, simulated, crops_from, fallback_icon=db_icon)
 			refreshed += 1
 
 	with open(tree_path, 'w') as f:

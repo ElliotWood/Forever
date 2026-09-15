@@ -132,6 +132,17 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/warrior/talents.go:406` — only rank 1 was shown, beta will confirm the 2% per point.
 - `sim/warrior/talents.go:415` — only rank 1 was shown, beta will confirm the 1 Rage per point.
 
+## Talent icons still standing in (3)
+
+Three talents draw an icon that is not their own. Their real icon was only ever seen in the
+demo video, and the frames it was cut from are gone, so they keep the icon of the Classic
+talent whose spell ids the tree carried. The name, description and per-rank numbers on each
+are the talent's own; only the picture is borrowed. Re-cut them from the beta client.
+
+- `arcaneGeometry` (mage, Arcane) draws Flame Throwing's icon.
+- `divinePrecision` (paladin, Holy) draws Precision's icon.
+- `twinDisciplines` (priest, Discipline) draws Spiritual Healing's icon.
+
 ## Baseline ability changes
 
 Forever also changes abilities that are not talents. None of their tooltips were shown at BlizzCon; what follows comes from the panel and the coverage of it, so every line is a claim to check against the beta spellbook rather than a number to confirm.
