@@ -38,7 +38,32 @@ func TestEnhancement(t *testing.T) {
 		}}))
 }
 
+// Enhancement 16/35/0 from ui/enhancement_shaman/presets.ts, the build the rankings page runs.
+func TestForeverEnhancement(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class: proto.Class_ClassShaman,
+			Phase: 1,
+			Race:  proto.Race_RaceDwarf,
+
+			Talents:     EnhancementTalents,
+			GearSet:     core.GetGearSet("../../../ui/enhancement_shaman/gear_sets", "launch"),
+			Rotation:    core.GetAplRotation("../../../ui/enhancement_shaman/apls", "default"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    Phase1Consumes,
+			SpecOptions: core.SpecOptionsCombo{Label: "Sync Auto", SpecOptions: PlayerOptionsSyncAuto},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatAttackPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		}}))
+}
+
 var DefaultTalents = "5505301-053030031005112251"
+
+var EnhancementTalents = "05023015-055030030205112251"
 
 var PlayerOptionsSyncDelayOH = &proto.Player_EnhancementShaman{
 	EnhancementShaman: &proto.EnhancementShaman{
@@ -72,6 +97,7 @@ var Phase1Consumes = core.ConsumesCombo{
 		Flask:             proto.Flask_FlaskOfSupremePower,
 		Food:              proto.Food_FoodBlessSunfruit,
 		MainHandImbue:     proto.WeaponImbue_WindfuryWeapon,
+		OffHandImbue:      proto.WeaponImbue_WindfuryWeapon,
 		SpellPowerBuff:    proto.SpellPowerBuff_GreaterArcaneElixir,
 		StrengthBuff:      proto.StrengthBuff_JujuPower,
 	},

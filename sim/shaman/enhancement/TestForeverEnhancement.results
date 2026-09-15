@@ -1,0 +1,210 @@
+character_stats_results: {
+ key: "TestForeverEnhancement-Phase1-CharacterStats-Default"
+ value: {
+  final_stats: 301.4
+  final_stats: 348.7
+  final_stats: 377.3
+  final_stats: 176.66
+  final_stats: 170.5
+  final_stats: 202.998
+  final_stats: 0
+  final_stats: 40
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 39.6
+  final_stats: 12
+  final_stats: 21.28555
+  final_stats: 0
+  final_stats: 0
+  final_stats: 1687.6934
+  final_stats: 12
+  final_stats: 37.41396
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 3889.9
+  final_stats: 0
+  final_stats: 0
+  final_stats: 2565.4
+  final_stats: 298
+  final_stats: 0
+  final_stats: 5
+  final_stats: 0
+  final_stats: 23.41396
+  final_stats: 6
+  final_stats: 0
+  final_stats: 4873
+  final_stats: 27
+  final_stats: 60
+  final_stats: 60
+  final_stats: 60
+  final_stats: 60
+  final_stats: 384
+  final_stats: 0
+  final_stats: 35
+  final_stats: 0
+ }
+}
+stat_weights_results: {
+ key: "TestForeverEnhancement-Phase1-StatWeights-Default"
+ value: {
+  weights: 0.42829
+  weights: 0.36353
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.25144
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.19468
+  weights: 9.01547
+  weights: 8.19085
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-AllItems-Champion'sEarthshaker"
+ value: {
+  dps: 694.16059
+  tps: 572.69058
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-AllItems-Champion'sStormcaller"
+ value: {
+  dps: 723.22555
+  tps: 597.81946
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-AllItems-GiftoftheGatheringStorm"
+ value: {
+  dps: 707.43379
+  tps: 588.7763
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-AllItems-Stormcaller'sGarb"
+ value: {
+  dps: 755.9141
+  tps: 620.08038
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-AllItems-TheEarthfury"
+ value: {
+  dps: 685.24229
+  tps: 571.45165
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-AllItems-TheFiveThunders"
+ value: {
+  dps: 704.02905
+  tps: 583.78124
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-AllItems-TheTenStorms"
+ value: {
+  dps: 756.41484
+  tps: 619.93668
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-AllItems-Warlord'sEarthshaker"
+ value: {
+  dps: 754.94969
+  tps: 624.81001
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-Average-Default"
+ value: {
+  dps: 767.46157
+  tps: 626.3774
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-FullBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 176.58771
+  tps: 394.36931
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-FullBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 160.56458
+  tps: 155.41524
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-FullBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 254.2842
+  tps: 274.44359
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 117.72185
+  tps: 303.75667
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 104.554
+  tps: 98.33985
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 198.80195
+  tps: 225.7272
+ }
+}
+dps_results: {
+ key: "TestForeverEnhancement-Phase1-SwitchInFrontOfTarget-Default"
+ value: {
+  dps: 579.54758
+  tps: 488.59756
+ }
+}
