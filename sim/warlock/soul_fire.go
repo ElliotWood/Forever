@@ -50,9 +50,16 @@ func (warlock *Warlock) getSoulFireBaseConfig(rank int) core.SpellConfig {
 		},
 	}
 
+	// TODO: Only rank 1 of Decimation was seen, so the 45% is held at both ranks rather than read
+	// per point, which would leave the second rank a six second cooldown.
+	cooldownReduction := 0.0
+	if warlock.Talents.Decimation > 0 {
+		cooldownReduction = 0.45
+	}
+
 	config.Cast.CD = core.Cooldown{
 		Timer:    warlock.NewTimer(),
-		Duration: time.Duration(float64(time.Minute) * (1 - 0.45*float64(warlock.Talents.Decimation))),
+		Duration: time.Duration(float64(time.Minute) * (1 - cooldownReduction)),
 	}
 
 	return config
