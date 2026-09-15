@@ -55,7 +55,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.15542
+  weights: 0.14897
   weights: 0
   weights: 0
   weights: 0
@@ -68,8 +68,8 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0.21491
-  weights: 14.39425
-  weights: 1.36581
+  weights: 14.35909
+  weights: 1.34349
   weights: 0
   weights: 0
   weights: 0
@@ -99,64 +99,64 @@ stat_weights_results: {
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 669.10711
-  tps: 468.75232
+  dps: 663.79265
+  tps: 465.03219
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 685.85335
-  tps: 480.56591
+  dps: 680.63996
+  tps: 476.91654
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 653.89087
-  tps: 453.84808
+  dps: 648.76374
+  tps: 450.25909
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 709.07891
-  tps: 496.7022
+  dps: 704.18156
+  tps: 493.27405
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 633.1488
-  tps: 444.11643
+  dps: 628.48688
+  tps: 440.85308
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 658.76763
-  tps: 461.00426
+  dps: 653.20882
+  tps: 457.1131
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 716.99811
-  tps: 501.63994
+  dps: 711.46974
+  tps: 497.77008
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 704.08676
-  tps: 492.52403
+  dps: 698.39044
+  tps: 488.53661
  }
 }
 dps_results: {
  key: "TestEnhancement-Phase1-Average-Default"
  value: {
-  dps: 728.38586
-  tps: 511.13854
+  dps: 723.3036
+  tps: 507.58096
  }
 }
 dps_results: {
@@ -330,7 +330,7 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 489.82249
-  tps: 342.66028
+  dps: 485.83071
+  tps: 339.86604
  }
 }

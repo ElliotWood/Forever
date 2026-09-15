@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.33466
+  weights: -0.27122
   weights: 0
-  weights: 0.3228
-  weights: 0
-  weights: 0
+  weights: 0.34204
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 10.08535
-  weights: 7.04445
+  weights: 0
+  weights: 0
+  weights: 10.20568
+  weights: 5.78106
   weights: 0
   weights: 0
   weights: 0
@@ -99,133 +99,133 @@ stat_weights_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Champion'sDreadgear"
  value: {
-  dps: 955.66579
-  tps: 855.26004
+  dps: 1007.51306
+  tps: 907.10731
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-DeathmistRaiment"
  value: {
-  dps: 949.47892
-  tps: 848.70743
+  dps: 1001.17792
+  tps: 900.40643
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Demoniac'sThreads"
  value: {
-  dps: 958.08804
-  tps: 859.00447
+  dps: 1017.50095
+  tps: 918.41739
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Doomcaller'sAttire"
  value: {
-  dps: 972.45434
-  tps: 873.50433
+  dps: 1030.61851
+  tps: 931.6685
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-FelheartRaiment"
  value: {
-  dps: 953.57813
-  tps: 843.97931
+  dps: 1006.00949
+  tps: 896.41068
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-FieldMarshal'sThreads"
  value: {
-  dps: 975.96201
-  tps: 875.25591
+  dps: 1034.05413
+  tps: 933.34802
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Hazza'rah'sCharmofDestruction-19957"
  value: {
-  dps: 950.34921
-  tps: 850.99362
+  dps: 1008.92139
+  tps: 909.5658
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 828.66875
-  tps: 727.29324
+  dps: 876.79032
+  tps: 775.4148
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-LieutenantCommander'sDreadgear"
  value: {
-  dps: 955.66579
-  tps: 855.26004
+  dps: 1007.51306
+  tps: 907.10731
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-NemesisRaiment"
  value: {
-  dps: 966.15041
-  tps: 866.85109
+  dps: 1023.56669
+  tps: 924.26737
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Warlord'sThreads"
  value: {
-  dps: 975.96201
-  tps: 875.25591
+  dps: 1034.05413
+  tps: 933.34802
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Average-Default"
  value: {
-  dps: 971.01983
-  tps: 870.22232
+  dps: 1025.43203
+  tps: 924.63452
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-FullBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 957.57579
-  tps: 1934.5031
+  dps: 1015.39723
+  tps: 1992.32454
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-FullBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 957.57579
-  tps: 858.31152
+  dps: 1015.39723
+  tps: 916.13296
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-FullBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 1008.78921
-  tps: 880.67456
+  dps: 1041.88512
+  tps: 913.77046
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-NoBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 566.28516
-  tps: 1730.99675
+  dps: 608.16206
+  tps: 1772.87365
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-NoBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 566.28516
-  tps: 569.66288
+  dps: 608.16206
+  tps: 611.53978
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-NoBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 585.98682
-  tps: 570.21414
+  dps: 601.6714
+  tps: 585.89872
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 957.57579
-  tps: 858.31152
+  dps: 1015.39723
+  tps: 916.13296
  }
 }

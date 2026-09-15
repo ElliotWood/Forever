@@ -11,9 +11,32 @@ func (shaman *Shaman) registerStormstrikeSpell() {
 		return
 	}
 
+	// Forever's Stormstrike raises only the Nature damage this shaman deals to the
+	// target, so it gets an aura of its own rather than the raid-wide debuff, which
+	// the Classic ruleset still uses.
+	forever := shaman.Env.IsForever()
+
 	stormStrikeAuras := shaman.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.StormstrikeAura(target)
+		if !forever {
+			return core.StormstrikeAura(target)
+		}
+
+		return target.RegisterAura(core.Aura{
+			Label:    "Stormstrike-" + shaman.Label,
+			ActionID: core.ActionID{SpellID: 17364},
+			Duration: time.Second * 12,
+		})
 	})
+
+	if forever {
+		for _, target := range shaman.Env.Encounter.TargetUnits {
+			target.AddDynamicDamageTakenModifier(func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+				if spell.Unit == &shaman.Unit && spell.SpellSchool.Matches(core.SpellSchoolNature) && stormStrikeAuras.Get(result.Target).IsActive() {
+					result.Damage *= 1.20
+				}
+			})
+		}
+	}
 
 	shaman.Stormstrike = shaman.RegisterSpell(core.SpellConfig{
 		SpellCode:   SpellCode_ShamanStormstrike,
@@ -44,11 +67,11 @@ func (shaman *Shaman) registerStormstrikeSpell() {
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 
 			if result.Landed() {
-				// Under Forever the charges are never spent, but the external caster in debuffs.go
-				// applies them the same way so keep the two consistent.
 				aura := stormStrikeAuras.Get(target)
 				aura.Activate(sim)
-				aura.SetStacks(sim, aura.MaxStacks)
+				if !forever {
+					aura.SetStacks(sim, aura.MaxStacks)
+				}
 			}
 		},
 	})
