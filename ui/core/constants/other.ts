@@ -55,6 +55,12 @@ export const REPO_NAME = 'classic';
 // Everything that used to hard-code '/classic/' goes through this.
 export const SITE_BASE = import.meta.env.BASE_URL;
 
+// Wowhead's icons and talent tree backgrounds, mirrored under assets/img/wowhead by
+// `go run ./tools/icons` (the Update Icons workflow), laid out as they are under
+// https://wow.zamimg.com/images/wow/. No page loads an image from that host directly:
+// some networks reject its TLS setup, which left every icon on the site broken.
+export const WOWHEAD_IMAGES = `${SITE_BASE}assets/img/wowhead/`;
+
 // Which build of the sim this is. Vite fills it from `git describe` so nobody has to
 // remember to bump a number, which means it is a tag once the fork starts cutting them
 // and a commit until then. The sidebar shows it so a bug report can name the build.

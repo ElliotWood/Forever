@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import tippy from 'tippy.js';
 import { ref } from 'tsx-vanilla';
 
-import { SortDirection } from '../../constants/other';
+import { SortDirection, WOWHEAD_IMAGES } from '../../constants/other';
 import { EP_TOOLTIP } from '../../constants/tooltips';
 import { setItemQualityCssClass } from '../../css_utils';
 import { IndividualSimUI } from '../../individual_sim_ui';
@@ -143,13 +143,12 @@ export default class ItemList<T extends ItemListType> {
 					</button>
 				</div>
 				<div className="selector-modal-list-labels">
-					{label === SelectorModalTabs.Items && <h6 className="ilvl-label interactive" onclick={sortByIlvl}>ILvl</h6>}
-					<h6 className="item-label">
-						{
-							label === SelectorModalTabs.Items ? "Item" :
-							label === SelectorModalTabs.Enchants ? "Enchant" : ""
-						}
-					</h6>
+					{label === SelectorModalTabs.Items && (
+						<h6 className="ilvl-label interactive" onclick={sortByIlvl}>
+							ILvl
+						</h6>
+					)}
+					<h6 className="item-label">{label === SelectorModalTabs.Items ? 'Item' : label === SelectorModalTabs.Enchants ? 'Enchant' : ''}</h6>
 					{label === SelectorModalTabs.Items && <h6 className="source-label">Source</h6>}
 					<h6 className="ep-label interactive" onclick={sortByEP}>
 						<span>EP</span>
@@ -434,9 +433,7 @@ export default class ItemList<T extends ItemListType> {
 					</a>
 				</div>
 				{this.label === SelectorModalTabs.Items && (
-					<div className="selector-modal-list-item-source-container">
-						{this.getSourceInfo(itemData.item as unknown as UIItem, this.player.sim)}
-					</div>
+					<div className="selector-modal-list-item-source-container">{this.getSourceInfo(itemData.item as unknown as UIItem, this.player.sim)}</div>
 				)}
 				{![ItemSlot.ItemSlotTrinket1, ItemSlot.ItemSlotTrinket2].includes(this.slot) && (
 					<div className="selector-modal-list-item-ep">
@@ -723,7 +720,7 @@ export default class ItemList<T extends ItemListType> {
 	}
 
 	private getDropSourceIcon(): Element {
-		return <img src="https://wow.zamimg.com/images/icons/boss.gif" className="item-source-icon-drop me-1" />;
+		return <img src={`${WOWHEAD_IMAGES}icons/boss.gif`} className="item-source-icon-drop me-1" />;
 	}
 
 	private getVendorSourceIcon(): Element {
@@ -735,14 +732,14 @@ export default class ItemList<T extends ItemListType> {
 	}
 
 	private getQuestSourceIcon(): Element {
-		return <img src="https://wow.zamimg.com/images/wow/icons/tiny/quest-start.gif" className="item-source-icon-quest" />;
+		return <img src={`${WOWHEAD_IMAGES}icons/tiny/quest-start.gif`} className="item-source-icon-quest" />;
 	}
 
 	private getAllianceSourceIcon(): Element {
-		return <img src="https://wow.zamimg.com/images/icons/alliance.png" className="item-source-icon-alliance" />;
+		return <img src={`${WOWHEAD_IMAGES}icons/alliance.png`} className="item-source-icon-alliance" />;
 	}
 
 	private getHordeSourceIcon(): Element {
-		return <img src="https://wow.zamimg.com/images/icons/horde.png" className="item-source-icon-horde" />;
+		return <img src={`${WOWHEAD_IMAGES}icons/horde.png`} className="item-source-icon-horde" />;
 	}
 }
