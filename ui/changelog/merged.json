@@ -1,5 +1,11 @@
 [
 	{
+		"number": 107,
+		"title": "docs(rankings): say that every build wears its launch set",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/107"
+	},
+	{
 		"number": 106,
 		"title": "feat(presets): put every ranked spec in launch gear",
 		"mergedAt": "2026-09-15",
