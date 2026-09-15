@@ -385,7 +385,6 @@ func (druid *Druid) applyThickHide() {
 		return
 	}
 
-	// TODO: Only rank 1 was seen, both amounts are assumed to scale linearly. Beta will confirm.
 	points := float64(druid.Talents.ThickHide)
 	armor := points*float64(druid.Level) + 0.67*points*druid.EquipStats()[stats.Defense]
 	if druid.StartingForm.Matches(Bear) {
