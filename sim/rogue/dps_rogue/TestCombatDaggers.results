@@ -218,43 +218,43 @@ dps_results: {
 dps_results: {
  key: "TestCombatDaggers-Phase1-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 368.82046
-  tps: 261.86252
+  dps: 367.74711
+  tps: 261.10045
  }
 }
 dps_results: {
  key: "TestCombatDaggers-Phase1-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 309.557
-  tps: 219.78547
+  dps: 308.87365
+  tps: 219.30029
  }
 }
 dps_results: {
  key: "TestCombatDaggers-Phase1-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 397.21636
-  tps: 282.02361
+  dps: 395.59152
+  tps: 280.86998
  }
 }
 dps_results: {
  key: "TestCombatDaggers-Phase1-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 171.22374
-  tps: 121.56885
+  dps: 170.26387
+  tps: 120.88734
  }
 }
 dps_results: {
  key: "TestCombatDaggers-Phase1-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 146.64463
-  tps: 104.11769
+  dps: 146.01787
+  tps: 103.67268
  }
 }
 dps_results: {
  key: "TestCombatDaggers-Phase1-Settings-Orc-combat_backstab_prebis-Windfury MH-combat_backstab-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 189.11889
-  tps: 134.27441
+  dps: 187.60107
+  tps: 133.19676
  }
 }
 dps_results: {

@@ -79,7 +79,9 @@ func applyRaceEffects(agent Agent) {
 			character.MaceSpecializationAura()
 		}
 	case proto.Race_RaceNightElf:
-		if !forever {
+		if forever {
+			character.registerElunesLight()
+		} else {
 			character.AddStat(stats.NatureResistance, 10)
 		}
 		character.AddStat(stats.Dodge, 1)
@@ -91,7 +93,9 @@ func applyRaceEffects(agent Agent) {
 			character.AxeSpecializationAura()
 		}
 
-		if character.Class == proto.Class_ClassHunter || character.Class == proto.Class_ClassWarlock {
+		// Command is gone under Forever; Shatter Curse takes its place in the Orc's four,
+		// and dispelling a curse is nothing the sim measures.
+		if !forever && (character.Class == proto.Class_ClassHunter || character.Class == proto.Class_ClassWarlock) {
 			// Command Damage dealt by Hunter and Warlock pets increased by 5%
 			for _, pet := range character.Pets {
 				if !pet.IsGuardian() {
@@ -102,19 +106,28 @@ func applyRaceEffects(agent Agent) {
 
 		// Blood Fury
 		actionID := ActionID{SpellID: 20572}
-		var bloodFuryAP float64
+		var bloodFuryAP, bloodFurySP float64
 		bloodFuryAura := character.RegisterAura(Aura{
 			Label:    "Blood Fury",
 			ActionID: actionID,
 			Duration: time.Second * 15,
 			// Tooltip is misleading; ap bonus is base AP plus AP from current strength, does not include +attackpower on items/buffs
 			OnGain: func(aura *Aura, sim *Simulation) {
-				bloodFuryAP = (character.GetBaseStats()[stats.AttackPower] + (character.GetStat(stats.Strength) * APPerStrength[character.Class]) + (character.GetStat(stats.Agility) * APPerAgility[character.Class])) * 0.25
+				if forever {
+					// Forever reads plainly off everything the orc has, and pays spell power
+					// on the same terms, so a caster orc gets something out of it at last.
+					bloodFuryAP = character.GetStat(stats.AttackPower) * 0.1
+					bloodFurySP = character.GetStat(stats.SpellPower) * 0.1
+				} else {
+					bloodFuryAP = (character.GetBaseStats()[stats.AttackPower] + (character.GetStat(stats.Strength) * APPerStrength[character.Class]) + (character.GetStat(stats.Agility) * APPerAgility[character.Class])) * 0.25
+				}
 				character.AddStatDynamic(sim, stats.AttackPower, bloodFuryAP)
+				character.AddStatDynamic(sim, stats.SpellPower, bloodFurySP)
 			},
 
 			OnExpire: func(aura *Aura, sim *Simulation) {
 				character.AddStatDynamic(sim, stats.AttackPower, -bloodFuryAP)
+				character.AddStatDynamic(sim, stats.SpellPower, -bloodFurySP)
 			},
 		})
 
@@ -149,10 +162,12 @@ func applyRaceEffects(agent Agent) {
 			character.AddStat(stats.NatureResistance, 10)
 		}
 	case proto.Race_RaceTroll:
-		// The Troll weapon specializations have no published Forever crit value, so they
-		// keep their weapon skill until one exists.
-		character.BowSpecializationAura()
-		character.ThrownSpecializationAura()
+		// Forever's troll has four racials and neither ranged weapon specialization is
+		// among them; Rapid Regeneration and Regeneration took their place.
+		if !forever {
+			character.BowSpecializationAura()
+			character.ThrownSpecializationAura()
+		}
 
 		character.beastSlayingAura(1.05)
 
@@ -190,6 +205,50 @@ func applyRaceEffects(agent Agent) {
 		// The High Order racial is a health and mana regeneration cooldown, which does
 		// nothing the sim measures, so it is left out.
 	}
+}
+
+// Elune's Light, the night elf's Forever racial cooldown.
+// TODO: the tooltip gives the 10% and the 15 seconds but no cooldown, so it shares
+// Berserking's three minutes until the beta says otherwise.
+func (character *Character) registerElunesLight() {
+	actionID := ActionID{SpellID: 460520}
+
+	aura := character.RegisterAura(Aura{
+		Label:    "Elune's Light",
+		ActionID: actionID,
+		Duration: time.Second * 15,
+		OnGain: func(aura *Aura, sim *Simulation) {
+			character.AddStatsDynamic(sim, stats.Stats{
+				stats.MeleeCrit: 10 * CritRatingPerCritChance,
+				stats.SpellCrit: 10 * SpellCritRatingPerCritChance,
+			})
+		},
+		OnExpire: func(aura *Aura, sim *Simulation) {
+			character.AddStatsDynamic(sim, stats.Stats{
+				stats.MeleeCrit: -10 * CritRatingPerCritChance,
+				stats.SpellCrit: -10 * SpellCritRatingPerCritChance,
+			})
+		},
+	})
+
+	spell := character.RegisterSpell(SpellConfig{
+		ActionID: actionID,
+		Flags:    SpellFlagNoOnCastComplete,
+		Cast: CastConfig{
+			CD: Cooldown{
+				Timer:    character.NewTimer(),
+				Duration: time.Minute * 3,
+			},
+		},
+		ApplyEffects: func(sim *Simulation, _ *Unit, _ *Spell) {
+			aura.Activate(sim)
+		},
+	})
+
+	character.AddMajorCooldown(MajorCooldown{
+		Spell: spell,
+		Type:  CooldownTypeDPS,
+	})
 }
 
 // Windshaper, the Horde half of the Skyborne. The Alliance half gets a regen cooldown
