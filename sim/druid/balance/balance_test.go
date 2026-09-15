@@ -36,7 +36,32 @@ func TestP1Balance(t *testing.T) {
 	}))
 }
 
+// Moonkin 38/0/13 from ui/balance_druid/presets.ts, the build the rankings page runs.
+func TestForeverMoonkin(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class: proto.Class_ClassDruid,
+			Phase: 1,
+			Race:  proto.Race_RaceNightElf,
+
+			Talents:     MoonkinTalents,
+			GearSet:     core.GetGearSet("../../../ui/balance_druid/gear_sets", "p0.bis"),
+			Rotation:    core.GetAplRotation("../../../ui/balance_druid/apls", "launch"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    P1Consumes,
+			SpecOptions: core.SpecOptionsCombo{Label: "Default", SpecOptions: PlayerOptionsAdaptive},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatSpellPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		},
+	}))
+}
+
 var P1Talents = "50322201515001351--505302"
+var MoonkinTalents = "50022201515501351--055003"
 
 var P1Consumes = core.ConsumesCombo{
 	Label: "P1-Consumes",
