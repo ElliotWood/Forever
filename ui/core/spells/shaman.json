@@ -24,6 +24,11 @@
 		"file": "sim/shaman/item_sets_pve.go",
 		"source": "unreviewed"
 	},
+	"2825": {
+		"ability": "spell 2825",
+		"file": "sim/shaman/talents.go",
+		"source": "unreviewed"
+	},
 	"51505": {
 		"ability": "spell 51505",
 		"file": "sim/shaman/lava_burst.go",

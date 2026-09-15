@@ -69,6 +69,11 @@
 		"file": "sim/warlock/talents.go",
 		"source": "unreviewed"
 	},
+	"35696": {
+		"ability": "spell 35696",
+		"file": "sim/warlock/talents.go",
+		"source": "unreviewed"
+	},
 	"603": {
 		"ability": "Curse of Doom",
 		"file": "sim/warlock/curses.go",

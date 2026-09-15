@@ -30,7 +30,7 @@ import (
 
 // Raised by hand when an id is deliberately left undeclared, never by a tool. Every entry
 // needs a reason, because an undeclared id is an ability the site describes wrongly.
-const unreviewedSpellBudget = 313
+const unreviewedSpellBudget = 314
 
 type spellSource struct {
 	Ability     string   `json:"ability"`

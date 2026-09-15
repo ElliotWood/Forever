@@ -229,11 +229,6 @@
 		"file": "sim/core/buffs.go",
 		"source": "unreviewed"
 	},
-	"2825": {
-		"ability": "spell 2825",
-		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
-	},
 	"28593": {
 		"ability": "Winter's Chill",
 		"file": "sim/core/debuffs.go",
