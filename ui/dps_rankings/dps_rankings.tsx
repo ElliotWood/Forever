@@ -233,9 +233,9 @@ export class DpsRankings extends Component {
 		notes.bodyElement.appendChild(
 			<ul className="dps-rankings-notes-list">
 				<li>
-					All {this.builds.length} builds across {specCount} specs are simulated <strong>together, in a single raid</strong>, sharing one encounter,
-					duration and set of buffs. Running each build on its own gives numbers that cannot honestly be put side by side, because each spec's own
-					defaults differ.
+					All {this.builds.length} builds are simulated <strong>together, as one {this.builds.length}-player raid</strong>: one run, one encounter,
+					one set of buffs, so every number in this table comes from the same fight. Those {this.builds.length} players span {specCount} specs.
+					Running each build on its own would give numbers that cannot honestly be put side by side, because each spec's own defaults differ.
 				</li>
 				<li>
 					Each player is a <strong>community talent build</strong> on its spec's raid preset - the gear, consumes and rotation the raid picker drops
