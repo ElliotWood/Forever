@@ -361,6 +361,13 @@ export const sections: Array<Section> = [
 				effect: 'A raid can be built out of the community builds without editing talents by hand.',
 			},
 			{
+				title: 'The damage table comes off the homepage',
+				prs: [124],
+				changed:
+					"The site called itself WoWSims - Forever in its title, its homepage and the label above every sim, which is a claim it has no right to make: it is one person's fork and the WoWSims team neither builds nor reviews it. It is Forever Sim (unofficial) now, the homepage says plainly that it is not WoWSims and not affiliated, and the Patreon link is labelled as theirs. The homepage also lists what the sim cannot do yet, including the one the sim team raised: datamined and demo tooltips are wrong often enough that a value can be read correctly and still be wrong. The damage table comes off the homepage with it and is marked not to be indexed, though it stays at its URL.",
+				effect: 'Nobody arrives thinking this is the official sim, and the limits are on the front page rather than buried.',
+			},
+			{
 				title: 'Best in slot and stat weights',
 				prs: [55, 56, 72, 79],
 				changed: "A best in slot page from each spec's EP weights over the launch pool, and a page comparing stat weights across specs.",
