@@ -64,6 +64,9 @@ func (shaman *Shaman) ApplyTalents() {
 
 	shaman.PseudoStats.SpiritRegenRateCasting += []float64{0, .17, .34, .51}[shaman.Talents.Mindfulness]
 
+	// Only the maximum health half is modelled, nothing in the sim dies and comes back.
+	// TODO: Only rank 1's 2% was seen, the 4% the tree reads at rank 2 comes from the community
+	// talent calculator rather than from a tooltip.
 	if shaman.Talents.ImprovedReincarnation > 0 {
 		shaman.MultiplyStat(stats.Health, 1+.02*float64(shaman.Talents.ImprovedReincarnation))
 	}
@@ -133,12 +136,14 @@ func (shaman *Shaman) shamanisticFocusReduction() int32 {
 	return core.TernaryInt32(shaman.Talents.ShamanisticFocus, 45, 0)
 }
 
-// TODO: Only rank 1 was seen, beta will confirm that the ranks stack to 0.51 sec.
+// TODO: Only rank 1's 0.17 sec was seen, the 0.34 and 0.51 the tree reads at ranks 2 and 3
+// come from the community talent calculator rather than from a tooltip.
 func (shaman *Shaman) elementalAlacrityReduction() time.Duration {
 	return time.Millisecond * 170 * time.Duration(shaman.Talents.ElementalAlacrity)
 }
 
-// TODO: Only rank 1 was seen, beta will confirm that rank 2 doubles both halves.
+// TODO: Only rank 1's 10% and 2 sec were seen, the doubled rank 2 the tree reads comes from
+// the community talent calculator rather than from a tooltip.
 func (shaman *Shaman) improvedFireNovaMultiplier() float64 {
 	return 1 + .1*float64(shaman.Talents.ImprovedFireNova)
 }
@@ -244,17 +249,21 @@ func (shaman *Shaman) applyElementalFury() {
 		return
 	}
 
-	// TODO: Only rank 1 was seen, beta will confirm that the ranks go up in steps of 20%.
+	// TODO: Only rank 1's 20% was seen, the steps up to 100% the tree reads come from the
+	// community talent calculator rather than from a tooltip.
 	critDamageBonus := .2 * float64(shaman.Talents.ElementalFury)
-	affectedSpellCodes := []int32{SpellCode_ShamanSearingTotem, SpellCode_ShamanMagmaTotem}
 
 	shaman.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.DefenseType != core.DefenseTypeMagic {
 			return
 		}
 
-		isElementalSpell := spell.Flags.Matches(SpellFlagShaman) && spell.SpellSchool.Matches(core.SpellSchoolFire|core.SpellSchoolFrost|core.SpellSchoolNature)
-		if isElementalSpell || slices.Contains(affectedSpellCodes, spell.SpellCode) {
+		// A totem's damage lands through a spell of its own, registered alongside the cast and
+		// carrying none of the shaman flag the talent's other spells have, so the totem flag is
+		// what keeps those in. Naming the totems by spell code instead had already missed Fire
+		// Nova Totem, and would miss the next totem added the same way.
+		isElementalSpell := spell.Flags.Matches(SpellFlagShaman|SpellFlagTotem) && spell.SpellSchool.Matches(core.SpellSchoolFire|core.SpellSchoolFrost|core.SpellSchoolNature)
+		if isElementalSpell {
 			spell.CritDamageBonus += critDamageBonus
 		}
 	})
@@ -408,12 +417,17 @@ func (shaman *Shaman) applyImprovedStormstrike() {
 		return
 	}
 
-	// TODO: Only rank 1 was seen, beta will confirm whether both chances really double at rank 2.
+	// TODO: Only rank 1's 50% was seen, the doubling to a certainty at rank 2 comes from the
+	// community talent calculator rather than from a tooltip, and a talent that makes two
+	// separate rolls certain is worth a second look on the beta.
 	points := float64(shaman.Talents.ImprovedStormstrike)
 	procChance := .5 * points
 	resetChance := .5 * points
 	regenRate := .5 * points
 
+	// TODO: The 15 sec window is rank 1's and is applied at both ranks. The community talent
+	// calculator reads 30 sec at rank 2, but it extrapolates every number in a tooltip and a
+	// buff whose duration grows with the talent would be unusual, so the tree reads 15 too.
 	focusAura := shaman.RegisterAura(core.Aura{
 		Label:    "Improved Stormstrike",
 		ActionID: core.ActionID{SpellID: 51521},
@@ -446,13 +460,17 @@ func (shaman *Shaman) applyMaelstromWeapon() {
 		return
 	}
 
-	// TODO: The tooltip never showed a proc rate and only rank 1 was seen, beta will confirm both.
-	// 2 PPM per point puts 5/5 at a full stack roughly every 30 sec.
+	// TODO: The tooltip never showed a proc rate and only rank 1's 4% was seen, beta will confirm
+	// both. 2 PPM per point puts 5/5 at a full stack roughly every 30 sec.
 	ppmm := shaman.AutoAttacks.NewPPMManager(2*float64(shaman.Talents.MaelstromWeapon), core.ProcMaskMelee)
 
 	castTimeReductionPerStack := .04 * float64(shaman.Talents.MaelstromWeapon)
 	costReductionPerStack := 4 * shaman.Talents.MaelstromWeapon
 
+	// TODO: The five stacks and the 30 sec are rank 1's and are applied at every rank. They are
+	// the shape of the talent rather than a per-rank number: five stacks of 4% per point reach
+	// exactly a free instant cast at 5/5, which the community talent calculator's extrapolated
+	// 25 stacks over 150 sec would overshoot several times over.
 	shaman.MaelstromWeaponAura = shaman.RegisterAura(core.Aura{
 		Label:     "Maelstrom Weapon",
 		ActionID:  core.ActionID{SpellID: 51530},
