@@ -188,6 +188,22 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Two hunter talents stop promising a scaling they never had',
+				prs: [134],
+				changed:
+					'#126 put per-rank numbers into the trees on the understanding that the sim already scaled with points, and for the hunter the tree was the side that overreached. Deadly Aspects read a 2/4/6/8/10% chance of +30/60/90/120/150% attack speed for 12/24/36/48/60 sec where the sim scales only the chance, as the Classic Improved Aspect of the Hawk it is built from does; the tree now scales the chance alone. Rapid Recuperation read 15/30 sec where the sim holds the window at 15, the way Resourcefulness and Expose Prey hold theirs. The other five stamped hunter talents were checked rank by rank and already agreed. None is confirmed: only rank 1 was shown on the demo, so the beta checklist keeps them and gains one.',
+				effect: 'No simulated number moves; the talent picker stops showing a five point Deadly Aspects as +150% attack speed for a minute.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'Four druid talents where the tree and the sim disagreed',
+				prs: [135],
+				changed:
+					"The same audit as #132, run over the druid. Natural Reaction rolled a flat 20% chance at 5 Rage on a dodge at every rank where the tree reads 20/40/60/80/100% and its own dodge half already scaled, so the proc scales now. Three tables went the other way, because repeating rank 1 would have left the extra points inert: Furor now reads 20/40/60/80/100% for its shift chance, Energy carryover and cap and 2/4/6/8/10 Energy per second out of form, Primal Fury reads 50%/100% on both halves, and Eclipse's third rank reads the 0.51 sec that three ranks of 0.17 make rather than a rounded half second. None is confirmed - only rank 1 was shown on the demo - so the beta checklist keeps all four and gains two entries.",
+				effect: 'The tank build gets Rage on every dodge instead of one in five: 739.6 to 740.8 DPS and 2250 to 2257 threat, with dodge worth far more to it than before. Balance and feral are unchanged.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Warlock talents stop scaling past the top of their scale',
 				prs: [137],
 				changed:

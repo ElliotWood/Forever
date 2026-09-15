@@ -40,7 +40,9 @@ func (hunter *Hunter) getSerpentStingConfig(rank int) core.SpellConfig {
 			return hunter.DistanceFromTarget >= core.MinRangedAttackDistance
 		},
 
-		// TODO: only rank 1 of Improved Stings was observed, the damage bonus is assumed to scale per rank.
+		// TODO: only rank 1 of Improved Stings was observed, the damage bonus is assumed to scale
+		// per rank. The Viper Sting cooldown and the Scorpid Sting duration are not modelled, so
+		// nothing here checks the rest of what the tree reads.
 		DamageMultiplier: 1 + 0.06*float64(hunter.Talents.ImprovedStings),
 		ThreatMultiplier: 1,
 

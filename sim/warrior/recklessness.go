@@ -7,7 +7,6 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-// Recklessness now increases critical strike chance by 50% (was 100%) and the duration is reduced to 12 seconds, but the cooldown is reduced to 5 minutes.
 func (warrior *Warrior) RegisterRecklessnessCD() {
 	if warrior.Level < 50 {
 		return
