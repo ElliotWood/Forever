@@ -298,7 +298,9 @@ func (druid *Druid) applyEclipse() {
 		return
 	}
 
-	// TODO: Only rank 1 was seen, the cast time reduction is assumed to scale linearly. Beta will confirm.
+	// TODO: Only rank 1's 0.17 sec was seen and the reduction is assumed to scale linearly, so
+	// rank 3 is 0.51 sec rather than the round half second the community talent calculator
+	// rounded it to. Beta will confirm.
 	castTimeReduction := time.Millisecond * 170 * time.Duration(druid.Talents.Eclipse)
 	const chargesPerWrath = 2
 
@@ -399,6 +401,9 @@ func (druid *Druid) applyPrimalFury() {
 		return
 	}
 
+	// TODO: Only rank 1's 50% was seen. Classic's Primal Fury and the Blood Frenzy folded into it
+	// both went from half the time to every time at rank 2, so both halves are read that way here
+	// and the tree follows. Beta will confirm.
 	procChance := []float64{0, 0.5, 1}[druid.Talents.PrimalFury]
 	actionID := core.ActionID{SpellID: 37117}
 	rageMetrics := druid.NewRageMetrics(actionID)
@@ -448,13 +453,16 @@ func (druid *Druid) applyNaturalReaction() {
 	// TODO: Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
 	druid.AddStat(stats.Dodge, float64(druid.Talents.NaturalReaction)*core.DodgeRatingPerDodgeChance)
 
-	// TODO: Every rank reads the same 20% chance for 5 Rage, so the proc doesn't grow past rank 1. Beta will confirm.
+	// TODO: Only rank 1's 20% chance was seen, the tree's 20/40/60/80/100 comes from the community
+	// talent calculator rather than from a tooltip, and at 5/5 it makes the Rage certain on every
+	// dodge. Beta will confirm.
+	procChance := 0.2 * float64(druid.Talents.NaturalReaction)
 	rageMetrics := druid.NewRageMetrics(core.ActionID{SpellID: 57878})
 
 	core.MakePermanent(druid.RegisterAura(core.Aura{
 		Label: "Natural Reaction",
 		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if druid.InForm(Bear) && result.Outcome.Matches(core.OutcomeDodge) && sim.Proc(0.2, "Natural Reaction") {
+			if druid.InForm(Bear) && result.Outcome.Matches(core.OutcomeDodge) && sim.Proc(procChance, "Natural Reaction") {
 				druid.AddRage(sim, 5, rageMetrics)
 			}
 		},
