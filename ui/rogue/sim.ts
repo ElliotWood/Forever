@@ -151,10 +151,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 			defaultGear: {
 				[Faction.Unknown]: {},
 				[Faction.Alliance]: {
-					1: Presets.GearBackstabPreBiS.gear,
+					1: Presets.GearBackstabLaunch.gear,
 				},
 				[Faction.Horde]: {
-					1: Presets.GearBackstabPreBiS.gear,
+					1: Presets.GearBackstabLaunch.gear,
 				},
 			},
 		},
@@ -175,10 +175,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecRogue, {
 			defaultGear: {
 				[Faction.Unknown]: {},
 				[Faction.Alliance]: {
-					1: Presets.DefaultGear.gear,
+					1: Presets.GearSinisterStrikeLaunch.gear,
 				},
 				[Faction.Horde]: {
-					1: Presets.DefaultGear.gear,
+					1: Presets.GearSinisterStrikeLaunch.gear,
 				},
 			},
 		},

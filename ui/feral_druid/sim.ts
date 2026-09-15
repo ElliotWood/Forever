@@ -16,9 +16,7 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecFeralDruid, {
 	cssClass: 'feral-druid-sim-ui',
 	cssScheme: 'druid',
 	// List any known bugs / issues here and they'll be shown on the site.
-	knownIssues: [
-		"The Enchant Gloves - Minor Haste enchant doesn't have its EP of 16.50 show up properly",
-	],
+	knownIssues: ["The Enchant Gloves - Minor Haste enchant doesn't have its EP of 16.50 show up properly"],
 	warnings: [],
 
 	// All stats for which EP should be calculated.
@@ -188,10 +186,10 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecFeralDruid, {
 			defaultGear: {
 				[Faction.Unknown]: {},
 				[Faction.Alliance]: {
-					1: Presets.DefaultGear.gear,
+					1: Presets.GearLaunch.gear,
 				},
 				[Faction.Horde]: {
-					1: Presets.DefaultGear.gear,
+					1: Presets.GearLaunch.gear,
 				},
 			},
 		},

@@ -23,6 +23,7 @@ import { SavedTalents } from '../core/proto/ui';
 import ArcaneAPL from './apls/forever_arcane.apl.json';
 import FireAPL from './apls/forever_fire.apl.json';
 import FrostAPL from './apls/forever_frost.apl.json';
+import LaunchGearJSON from './gear_sets/launch.gear.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
 import P1BISGear from './gear_sets/p1.bis.gear.json';
 
@@ -30,11 +31,12 @@ import P1BISGear from './gear_sets/p1.bis.gear.json';
 //                                 Gear Presets
 ///////////////////////////////////////////////////////////////////////////
 
+export const GearLaunch = PresetUtils.makePresetGear('Launch', LaunchGearJSON);
 export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearP1BIS = PresetUtils.makePresetGear('P1 BiS', P1BISGear);
 
 export const GearPresets = {
-	[ClassicPhase.Phase1]: [GearP0BIS, GearP1BIS],
+	[ClassicPhase.Phase1]: [GearLaunch, GearP0BIS, GearP1BIS],
 };
 
 export const DefaultGear = GearP0BIS;

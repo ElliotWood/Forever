@@ -147,14 +147,14 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarrior, {
 			defaultGear: {
 				[Faction.Unknown]: {},
 				[Faction.Alliance]: {
-					1: Presets.DefaultGear.gear,
-					2: Presets.DefaultGear.gear,
-					3: Presets.DefaultGear.gear,
+					1: Presets.GearLaunch.gear,
+					2: Presets.GearLaunch.gear,
+					3: Presets.GearLaunch.gear,
 				},
 				[Faction.Horde]: {
-					1: Presets.DefaultGear.gear,
-					2: Presets.DefaultGear.gear,
-					3: Presets.DefaultGear.gear,
+					1: Presets.GearLaunch.gear,
+					2: Presets.GearLaunch.gear,
+					3: Presets.GearLaunch.gear,
 				},
 			},
 		},
