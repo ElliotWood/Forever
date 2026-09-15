@@ -1,0 +1,210 @@
+character_stats_results: {
+ key: "TestForeverMoonkin-Phase1-CharacterStats-Default"
+ value: {
+  final_stats: 85.8
+  final_stats: 89.1
+  final_stats: 257.4
+  final_stats: 228.8
+  final_stats: 217.8
+  final_stats: 332
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 47.6
+  final_stats: 5
+  final_stats: 15.62096
+  final_stats: 0
+  final_stats: 0
+  final_stats: 763.6
+  final_stats: 5
+  final_stats: 14.355
+  final_stats: 0
+  final_stats: 0
+  final_stats: 0
+  final_stats: 4396
+  final_stats: 0
+  final_stats: 0
+  final_stats: 1119.2
+  final_stats: 100
+  final_stats: 0
+  final_stats: 5
+  final_stats: 0
+  final_stats: 6.355
+  final_stats: 5
+  final_stats: 0
+  final_stats: 3877
+  final_stats: 27
+  final_stats: 60
+  final_stats: 60
+  final_stats: 60
+  final_stats: 60
+  final_stats: 384
+  final_stats: 0
+  final_stats: 35
+  final_stats: 0
+ }
+}
+stat_weights_results: {
+ key: "TestForeverMoonkin-Phase1-StatWeights-Default"
+ value: {
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.03076
+  weights: 0
+  weights: 0.42835
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 4.55174
+  weights: 3.75833
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-AllItems-CenarionRaiment"
+ value: {
+  dps: 427.72681
+  tps: 445.2907
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-AllItems-Champion'sRefuge"
+ value: {
+  dps: 393.72603
+  tps: 411.46096
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-AllItems-FeralheartRaiment"
+ value: {
+  dps: 428.26275
+  tps: 447.75306
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-AllItems-FieldMarshal'sSanctuary"
+ value: {
+  dps: 410.28473
+  tps: 428.12291
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-AllItems-LieutenantCommander'sRefuge"
+ value: {
+  dps: 393.72603
+  tps: 411.46096
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-AllItems-StormrageRaiment"
+ value: {
+  dps: 402.34098
+  tps: 420.33649
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-AllItems-SymbolsofUnendingLife"
+ value: {
+  dps: 419.18049
+  tps: 436.93508
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-AllItems-Warlord'sSanctuary"
+ value: {
+  dps: 410.28473
+  tps: 428.12291
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-Average-Default"
+ value: {
+  dps: 390.81335
+  tps: 408.18581
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-FullBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 382.87759
+  tps: 725.28441
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-FullBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 382.87759
+  tps: 399.99793
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-FullBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 466.70622
+  tps: 488.99456
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-NoBuffs-P1-Consumes-LongMultiTarget"
+ value: {
+  dps: 225.92959
+  tps: 406.67642
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-NoBuffs-P1-Consumes-LongSingleTarget"
+ value: {
+  dps: 225.92959
+  tps: 234.96693
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-NoBuffs-P1-Consumes-ShortSingleTarget"
+ value: {
+  dps: 413.47405
+  tps: 428.65781
+ }
+}
+dps_results: {
+ key: "TestForeverMoonkin-Phase1-SwitchInFrontOfTarget-Default"
+ value: {
+  dps: 387.86811
+  tps: 405.36704
+ }
+}

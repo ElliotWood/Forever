@@ -1,21 +1,38 @@
 package druid
 
 import (
-	"time"
-
 	"github.com/wowsims/classic/sim/core"
 )
 
+const DemoralizingRoarRanks = 5
+
+var DemoralizingRoarSpellId = [DemoralizingRoarRanks + 1]int32{0, 99, 1735, 9490, 9747, 9898}
+var DemoralizingRoarLevel = [DemoralizingRoarRanks + 1]int{0, 10, 20, 30, 40, 50}
+
 func (druid *Druid) registerDemoralizingRoarSpell() {
+	rank := map[int32]int{
+		25: 2,
+		40: 4,
+		50: 5,
+		60: 5,
+	}[druid.Level]
+
 	druid.DemoralizingRoarAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.DemoralizingRoarAura(target, druid.Talents.FeralAggression)
+		// Feral Aggression is gone from the Forever tree. Tanks read the attack power
+		// reduction, so it is assumed to have become baseline at full strength rather
+		// than deleted, the same call the warrior makes for Improved Demoralizing Shout.
+		// TODO: assumed baseline, beta will confirm
+		return core.DemoralizingRoarAura(target, 5)
 	})
 
 	druid.DemoralizingRoar = druid.RegisterSpell(Bear, core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 48560},
+		ActionID:    core.ActionID{SpellID: DemoralizingRoarSpellId[rank]},
 		SpellSchool: core.SpellSchoolPhysical,
 		ProcMask:    core.ProcMaskEmpty,
 		Flags:       core.SpellFlagAPL,
+
+		Rank:          rank,
+		RequiredLevel: DemoralizingRoarLevel[rank],
 
 		RageCost: core.RageCostOptions{
 			Cost: 10,
@@ -28,7 +45,7 @@ func (druid *Druid) registerDemoralizingRoarSpell() {
 		},
 
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  62 * 2,
+		FlatThreatBonus:  2 * float64(DemoralizingRoarLevel[rank]),
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			for _, aoeTarget := range sim.Encounter.TargetUnits {
@@ -41,23 +58,4 @@ func (druid *Druid) registerDemoralizingRoarSpell() {
 
 		RelatedAuras: []core.AuraArray{druid.DemoralizingRoarAuras},
 	})
-}
-
-func (druid *Druid) ShouldDemoralizingRoar(sim *core.Simulation, filler bool, maintainOnly bool) bool {
-	if !druid.DemoralizingRoar.CanCast(sim, druid.CurrentTarget) {
-		return false
-	}
-
-	if filler {
-		return true
-	}
-
-	refreshWindow := time.Second * 2
-
-	if (druid.MangleBear != nil) && (!druid.MangleBear.IsReady(sim)) {
-		refreshWindow = druid.MangleBear.ReadyAt() - sim.CurrentTime + core.GCDDefault
-	}
-
-	return maintainOnly &&
-		druid.DemoralizingRoarAuras.Get(druid.CurrentTarget).ShouldRefreshExclusiveEffects(sim, refreshWindow)
 }

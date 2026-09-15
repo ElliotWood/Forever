@@ -66,11 +66,6 @@ func (druid *Druid) balanceSpells() []*DruidSpell {
 	)
 }
 
-func (druid *Druid) BearArmorMultiplier() float64 {
-	sotfMulti := 1.0 + 0.33/3.0
-	return 4.7 * sotfMulti
-}
-
 func (druid *Druid) applyGenesis() {
 	if druid.Talents.Genesis == 0 {
 		return
@@ -381,8 +376,10 @@ func (druid *Druid) applyFeralSwiftness() {
 	druid.AddStat(stats.Dodge, 2*float64(druid.Talents.FeralSwiftness)*core.DodgeRatingPerDodgeChance)
 }
 
-// Forever swaps the armor multiplier for flat base Armor from level and defense skill.
-// The sim's druids never leave their starting form, so the form requirement isn't modelled.
+// Forever swaps the armor multiplier for flat base Armor from level and defense skill,
+// and the form's own armor multiplier applies on top of it. The sim's druids never
+// leave their starting form, so the form requirement is read from that form and the
+// defense skill is the gear's when the talents are applied.
 func (druid *Druid) applyThickHide() {
 	if druid.Talents.ThickHide == 0 {
 		return
@@ -390,8 +387,11 @@ func (druid *Druid) applyThickHide() {
 
 	// TODO: Only rank 1 was seen, both amounts are assumed to scale linearly. Beta will confirm.
 	points := float64(druid.Talents.ThickHide)
-	druid.AddStat(stats.Armor, points*float64(druid.Level))
-	druid.AddStatDependency(stats.Defense, stats.Armor, 0.67*points)
+	armor := points*float64(druid.Level) + 0.67*points*druid.EquipStats()[stats.Defense]
+	if druid.StartingForm.Matches(Bear) {
+		armor *= BearFormArmorMultiplier
+	}
+	druid.AddStat(stats.Armor, armor)
 }
 
 // Forever folds the old Blood Frenzy combo point proc into Primal Fury.
@@ -440,6 +440,7 @@ func (druid *Druid) applyPredatoryInstincts() {
 	})
 }
 
+// Dodge chance, and a chance at Rage on every dodge.
 func (druid *Druid) applyNaturalReaction() {
 	if druid.Talents.NaturalReaction == 0 {
 		return
@@ -447,6 +448,18 @@ func (druid *Druid) applyNaturalReaction() {
 
 	// TODO: Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
 	druid.AddStat(stats.Dodge, float64(druid.Talents.NaturalReaction)*core.DodgeRatingPerDodgeChance)
+
+	// TODO: Every rank reads the same 20% chance for 5 Rage, so the proc doesn't grow past rank 1. Beta will confirm.
+	rageMetrics := druid.NewRageMetrics(core.ActionID{SpellID: 57878})
+
+	core.MakePermanent(druid.RegisterAura(core.Aura{
+		Label: "Natural Reaction",
+		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if druid.InForm(Bear) && result.Outcome.Matches(core.OutcomeDodge) && sim.Proc(0.2, "Natural Reaction") {
+				druid.AddRage(sim, 5, rageMetrics)
+			}
+		},
+	}))
 }
 
 func (druid *Druid) applyRendAndTear() {
@@ -468,7 +481,8 @@ func (druid *Druid) applyRendAndTear() {
 func (druid *Druid) IsBleeding(target *core.Unit) bool {
 	return druid.AssumeBleedActive ||
 		(druid.Rip != nil && druid.Rip.Dot(target).IsActive()) ||
-		(druid.Rake != nil && druid.Rake.Dot(target).IsActive())
+		(druid.Rake != nil && druid.Rake.Dot(target).IsActive()) ||
+		(druid.LacerateBleed != nil && druid.LacerateBleed.Dot(target).IsActive())
 }
 
 ///////////////////////////////////////////////////////////////////////////

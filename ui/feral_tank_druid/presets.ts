@@ -1,18 +1,27 @@
 import { ClassicPhase } from '../core/constants/other.js';
 import * as PresetUtils from '../core/preset_utils.js';
 import {
+	AgilityElixir,
+	Alcohol,
+	ArmorElixir,
+	AttackPowerBuff,
 	Consumes,
+	Debuffs,
 	Flask,
 	Food,
-	UnitReference
+	HealthElixir,
+	IndividualBuffs,
+	Potions,
+	RaidBuffs,
+	StrengthBuff,
+	TristateEffect,
+	UnitReference,
+	ZanzaBuff,
 } from '../core/proto/common.js';
-import {
-	FeralTankDruid_Options as DruidOptions,
-	FeralTankDruid_Rotation as DruidRotation,
-} from '../core/proto/druid.js';
+import { FeralTankDruid_Options as DruidOptions } from '../core/proto/druid.js';
 import { SavedTalents } from '../core/proto/ui.js';
-import DefaultApl from './apls/default.apl.json';
-import BlankGear from './gear_sets/blank.gear.json';
+import BearApl from './apls/bear.apl.json';
+import LaunchGearJSON from './gear_sets/launch.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -22,38 +31,25 @@ import BlankGear from './gear_sets/blank.gear.json';
 //                                 Gear Presets
 ///////////////////////////////////////////////////////////////////////////
 
-export const GearBlank = PresetUtils.makePresetGear('Blank', BlankGear);
+export const GearLaunch = PresetUtils.makePresetGear('Launch', LaunchGearJSON);
 
 export const GearPresets = {
-  [ClassicPhase.Phase1]: [
-    GearBlank,
-  ],
-  [ClassicPhase.Phase2]: [
-  ]
+	[ClassicPhase.Phase1]: [GearLaunch],
 };
 
-// TODO: Add Phase 2 preset and pull from map
 export const DefaultGear = GearPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 APL Presets
 ///////////////////////////////////////////////////////////////////////////
 
-export const DefaultRotation = DruidRotation.create({
-	maulRageThreshold: 25,
-	maintainDemoralizingRoar: true,
-	lacerateTime: 8.0,
-});
-
-export const DefaultAPL = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
+export const APLBear = PresetUtils.makePresetAPLRotation('Bear', BearApl);
 
 export const APLPresets = {
-  [ClassicPhase.Phase1]: [
-    DefaultAPL,
-  ],
-  [ClassicPhase.Phase2]: [
-  ]
+	[ClassicPhase.Phase1]: [APLBear],
 };
+
+export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
 //                                 Talent Presets
@@ -65,14 +61,9 @@ export const APLPresets = {
 export const TalentsBearTank = PresetUtils.makePresetTalents('Bear Tank 0/31/20', SavedTalents.create({ talentsString: '-5003232120132010501-0550325' }));
 
 export const TalentPresets = {
-  [ClassicPhase.Phase1]: [
-    TalentsBearTank,
-  ],
-  [ClassicPhase.Phase2]: [
-  ]
+	[ClassicPhase.Phase1]: [TalentsBearTank],
 };
 
-// TODO: Add Phase 2 preset and pull from map
 export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 ///////////////////////////////////////////////////////////////////////////
@@ -81,10 +72,45 @@ export const DefaultTalents = TalentPresets[ClassicPhase.Phase1][0];
 
 export const DefaultOptions = DruidOptions.create({
 	innervateTarget: UnitReference.create(),
-	startingRage: 20,
+	startingRage: 0,
 });
 
+// No weapon imbue: sharpening stones and Windfury do nothing for a bear's paws.
 export const DefaultConsumes = Consumes.create({
-	flask: Flask.FlaskUnknown,
-	food: Food.FoodUnknown,
+	agilityElixir: AgilityElixir.ElixirOfTheMongoose,
+	alcohol: Alcohol.AlcoholRumseyRumBlackLabel,
+	armorElixir: ArmorElixir.ElixirOfSuperiorDefense,
+	attackPowerBuff: AttackPowerBuff.JujuMight,
+	defaultPotion: Potions.GreaterStoneshieldPotion,
+	dragonBreathChili: true,
+	food: Food.FoodSmokedDesertDumpling,
+	flask: Flask.FlaskOfTheTitans,
+	healthElixir: HealthElixir.ElixirOfFortitude,
+	strengthBuff: StrengthBuff.JujuPower,
+	zanzaBuff: ZanzaBuff.ROIDS,
+});
+
+export const DefaultRaidBuffs = RaidBuffs.create({
+	battleShout: TristateEffect.TristateEffectImproved,
+	devotionAura: TristateEffect.TristateEffectRegular,
+	fireResistanceAura: true,
+	fireResistanceTotem: true,
+	giftOfTheWild: TristateEffect.TristateEffectImproved,
+	graceOfAirTotem: TristateEffect.TristateEffectImproved,
+	powerWordFortitude: TristateEffect.TristateEffectImproved,
+	strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
+	stoneskinTotem: TristateEffect.TristateEffectRegular,
+});
+
+export const DefaultIndividualBuffs = IndividualBuffs.create({
+	blessingOfKings: true,
+	blessingOfMight: TristateEffect.TristateEffectImproved,
+});
+
+export const DefaultDebuffs = Debuffs.create({
+	curseOfRecklessness: true,
+	exposeArmor: TristateEffect.TristateEffectImproved,
+	faerieFire: true,
+	giftOfArthas: true,
+	sunderArmor: true,
 });

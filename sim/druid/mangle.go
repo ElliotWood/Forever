@@ -65,3 +65,68 @@ func (druid *Druid) registerMangleCatSpell() {
 		},
 	})
 }
+
+// The Forever tooltip stops at the damage and the Bear Form requirement, so the cost, the
+// cooldown and the threat are those of the level 60 Mangle (Bear) of Season of Discovery.
+// TODO: Only the tooltip was seen, the Rage cost, the 6 sec cooldown and the threat are taken from the Classic Mangle (Bear).
+func (druid *Druid) registerMangleBearSpell() {
+	if !druid.Talents.Mangle {
+		return
+	}
+
+	flatDamageBonus := 26.0
+	results := make([]*core.SpellResult, min(MangleBerserkTargets, druid.Env.GetNumTargets()))
+
+	druid.MangleBear = druid.RegisterSpell(Bear, core.SpellConfig{
+		SpellCode:   SpellCode_DruidMangle,
+		ActionID:    core.ActionID{SpellID: 33878},
+		SpellSchool: core.SpellSchoolPhysical,
+		DefenseType: core.DefenseTypeMelee,
+		ProcMask:    core.ProcMaskMeleeMHSpecial,
+		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+
+		RageCost: core.RageCostOptions{
+			Cost:   15 - float64(druid.Talents.Ferocity),
+			Refund: 0.8,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: core.GCDDefault,
+			},
+			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    druid.NewTimer(),
+				Duration: time.Second * 6,
+			},
+		},
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1.5,
+		BonusCoefficient: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			numHits := 1
+			if druid.BerserkAura.IsActive() {
+				numHits = len(results)
+			}
+
+			for idx := 0; idx < numHits; idx++ {
+				baseDamage := flatDamageBonus + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+				results[idx] = spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+				target = sim.Environment.NextTargetUnit(target)
+			}
+
+			for idx := 0; idx < numHits; idx++ {
+				spell.DealDamage(sim, results[idx])
+			}
+
+			if !results[0].Landed() {
+				spell.IssueRefund(sim)
+			}
+
+			if druid.BerserkAura.IsActive() {
+				spell.CD.Reset()
+			}
+		},
+	})
+}

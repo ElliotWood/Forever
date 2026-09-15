@@ -82,9 +82,84 @@ func TestP1MageFire(t *testing.T) {
 	}))
 }
 
+// The community builds the rankings page runs, on the same raid preset as the P1 tests.
+func TestForeverMageArcane(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class: proto.Class_ClassMage,
+			Phase: 1,
+			Race:  proto.Race_RaceGnome,
+
+			Talents:     ForeverArcaneTalents,
+			GearSet:     core.GetGearSet("../../ui/mage/gear_sets", "p0.bis"),
+			Rotation:    core.GetAplRotation("../../ui/mage/apls", "forever_arcane"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    P1Consumes,
+			SpecOptions: core.SpecOptionsCombo{Label: "DPS", SpecOptions: PlayerOptions},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatSpellPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		},
+	}))
+}
+
+func TestForeverMageFire(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class: proto.Class_ClassMage,
+			Phase: 1,
+			Race:  proto.Race_RaceGnome,
+
+			Talents:     ForeverFireTalents,
+			GearSet:     core.GetGearSet("../../ui/mage/gear_sets", "p0.bis"),
+			Rotation:    core.GetAplRotation("../../ui/mage/apls", "forever_fire"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    P1Consumes,
+			SpecOptions: core.SpecOptionsCombo{Label: "DPS", SpecOptions: PlayerOptions},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatSpellPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		},
+	}))
+}
+
+func TestForeverMageFrost(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class: proto.Class_ClassMage,
+			Phase: 1,
+			Race:  proto.Race_RaceGnome,
+
+			Talents:     ForeverFrostTalents,
+			GearSet:     core.GetGearSet("../../ui/mage/gear_sets", "p0.bis"),
+			Rotation:    core.GetAplRotation("../../ui/mage/apls", "forever_frost"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    P1Consumes,
+			SpecOptions: core.SpecOptionsCombo{Label: "DPS", SpecOptions: PlayerOptions},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatSpellPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		},
+	}))
+}
+
 var P1FrostTalents = "0502050030003--055500033100050024"
 var P1ArcaneTalents = "050215003100311531-2305003202003-"
 var P1FireTalents = "0502252000003-23550000130133051-"
+
+// Arcane 35/0/16, Fire 0/35/16 and Frost 14/0/37 from ui/mage/presets.ts.
+var ForeverArcaneTalents = "055005023100311531--005500033"
+var ForeverFireTalents = "-03552020130133151-005500033"
+var ForeverFrostTalents = "050005013--0555003301001501251"
 
 var PlayerOptions = &proto.Player_Mage{
 	Mage: &proto.Mage{
