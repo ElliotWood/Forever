@@ -234,6 +234,10 @@ export class DpsRankings extends Component {
 					. The raid is therefore missing its healers, and the tank specs that are present are ranked on damage alone.
 				</li>
 				<li>
+					Every build wears its spec's <strong>Launch</strong> gear set: the best pre-raid gear in the launch item pool, picked by that spec's own
+					stat weights, with raid drops left out. Same tier, chosen the same way, so the table compares specs and not gear.
+				</li>
+				<li>
 					Raid buffs, party buffs and debuffs are the strongest of what each launched spec's own sim assumes by default, given to everyone alike, so
 					nobody is missing a buff it expects. Blessings come from the paladins actually in the raid; innervates and power infusions are off, because
 					nobody in the raid is casting them. <strong>No world buffs</strong>: they do not work inside Forever raids.

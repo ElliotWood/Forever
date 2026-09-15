@@ -263,6 +263,13 @@ export const sections: Array<Section> = [
 				effect: "The only page where every build's number comes from the same fight.",
 			},
 			{
+				title: 'Rankings in launch gear',
+				prs: [106],
+				changed:
+					'Every ranked build wears a Launch set: the best pre-raid gear in the launch item pool by its own stat weights, built by one tool for all sixteen specs, raid drops and faction-locked items left out. Before, rogues ranked in Pre-BiS, casters in thin Classic sets and the cat in eight Wildheart pieces and nine empty slots.',
+				effect: 'The rankings compare specs rather than gear tiers; casters and the cat moved most.',
+			},
+			{
 				title: 'Best in slot and stat weights',
 				prs: [55, 56, 72, 79],
 				changed: "A best in slot page from each spec's EP weights over the launch pool, and a page comparing stat weights across specs.",
