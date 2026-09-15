@@ -3,36 +3,78 @@ on:
   pull_request:
     branches:
       - master
+
+# The deploy workflow runs the same build, tests and page smoke test on master; this runs
+# them on every pull request so a red build is caught before it is merged. The Go tests are
+# sharded the way upstream shards them, since the golden tests take a few minutes in one job.
 jobs:
-  build-and-test:
+  build-ui:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5
         with:
           go-version: 1.23.x
 
       - name: Install Protoc
-        uses: arduino/setup-protoc@v1
+        uses: arduino/setup-protoc@v3
         with:
-          version: 3.x
+          version: '25.x'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Protoc Go plugin
         run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '19'
-
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+          node-version: '20'
+          cache: npm
 
       - name: Build 🔧
-        run: |
-          make dist/classic/.dirstamp
+        run: make dist/classic/.dirstamp
 
-      - name: Test
+      - name: Install a browser for the smoke test
+        run: npx playwright install --with-deps chromium
+
+      - name: Open every page
         run: |
-          make test
+          python3 -m http.server 8080 --directory dist >/dev/null 2>&1 &
+          SITE_URL=http://localhost:8080/classic/ node tools/smoke/check_pages.mjs
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.x
+
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: '25.x'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Protoc Go plugin
+        run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+
+      # sim/web embeds the built site through binary_dist; the stub stands in for it.
+      - name: Generate the protos and the dist stub
+        run: make sim/core/proto/api.pb.go binary_dist/dist.go
+
+      - name: Test (shard ${{ matrix.shard }})
+        run: |
+          go list ./sim/... | awk 'NR % 4 == ${{ matrix.shard }}' | xargs -r go test --tags=with_db
