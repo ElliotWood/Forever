@@ -188,6 +188,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Two shaman talents stop promising a scaling they never had',
+				prs: [140],
+				changed:
+					'#126 put per-rank numbers into the trees from a community talent calculator that extrapolates every number in a tooltip, and two shaman talents came out promising more than the talent gives. Maelstrom Weapon read 5 to 25 stacks lasting 30 to 150 sec where five stacks of 4% per point already reach a free instant Lightning Bolt at 5/5, and Improved Stormstrike read a 30 sec window at rank 2 where both ranks run 15 sec. Both tables now read what the sim applies, and only the per-point halves scale. The rest of the shaman tree already agreed. Elemental Fury also missed Fire Nova Totem entirely, where Searing and Magma Totem were named by hand.',
+				effect: 'The picker no longer shows shaman numbers the sim will not honour, and Fire Nova Totem crits for the full Elemental Fury bonus. No ranked build changes, none of the shipped rotations drops Fire Nova Totem.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Tests that pin the trees together',
 				prs: [68],
 				changed:
