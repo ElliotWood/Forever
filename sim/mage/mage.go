@@ -29,7 +29,7 @@ const (
 	SpellCode_MageScorch
 )
 
-var TalentTreeSizes = [3]int{18, 16, 19}
+var TalentTreeSizes = [3]int{18, 17, 19}
 
 func RegisterMage() {
 	core.RegisterAgentFactory(

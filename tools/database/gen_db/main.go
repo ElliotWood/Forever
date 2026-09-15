@@ -462,7 +462,7 @@ func GetAllRotationSpellIds() map[string][]int32 {
 			// Every talent at max, so each talent-gated spell registers and its icon makes
 			// it into the database. Not a legal build, and it has to be regenerated from
 			// ui/core/talents/trees/mage.json whenever the tree changes shape.
-			TalentsString: "255225223122311531-2352333132133151-2555323331321331251",
+			TalentsString: "255225223122311531-23552333132133151-2555323331321531251",
 		}, &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{}}}), nil, nil, nil)},
 		{Name: "shadow", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:     proto.Class_ClassPriest,

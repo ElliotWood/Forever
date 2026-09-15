@@ -82,9 +82,9 @@ func TestP1MageFire(t *testing.T) {
 	}))
 }
 
-var P1FrostTalents = "0502050030003--0555000331000301241"
-var P1ArcaneTalents = "050215003100311531-235003202003-"
-var P1FireTalents = "0502252000003-2350031130133151-"
+var P1FrostTalents = "0502050030003--055500033100050024"
+var P1ArcaneTalents = "050215003100311531-2305003202003-"
+var P1FireTalents = "0502252000003-23550000130133051-"
 
 var PlayerOptions = &proto.Player_Mage{
 	Mage: &proto.Mage{

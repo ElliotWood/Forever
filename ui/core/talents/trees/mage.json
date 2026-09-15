@@ -272,6 +272,21 @@
         "maxPoints": 3
       },
       {
+        "fieldName": "improvedFireball",
+        "location": {
+          "rowIdx": 0,
+          "colIdx": 2
+        },
+        "spellIds": [
+          11069,
+          12338,
+          12339,
+          12340,
+          12341
+        ],
+        "maxPoints": 5
+      },
+      {
         "fieldName": "ignite",
         "location": {
           "rowIdx": 1,
@@ -641,7 +656,7 @@
           12984,
           12985
         ],
-        "maxPoints": 3
+        "maxPoints": 5
       },
       {
         "fieldName": "improvedConeOfCold",
