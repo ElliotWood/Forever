@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+	"unicode"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
 
@@ -132,6 +133,8 @@ func TestTalentTreesMatchTheirProtos(t *testing.T) {
 var talentsStringRegex = regexp.MustCompile(`talentsString: '([0-9-]*)'`)
 var presetNameRegex = regexp.MustCompile(`makePresetTalents\(\s*'([^']+)'`)
 var buildLinkRegex = regexp.MustCompile(`href="([a-z_]+)/\?build=([^"]+)"`)
+var communityBuildRegex = regexp.MustCompile(`\[Spec\.Spec(\w+)\]:\s*\[([^\]]*)\]`)
+var quotedNameRegex = regexp.MustCompile(`'([^']*)'`)
 
 // Every build the UI ships has to be one a player could actually click together:
 // no talent past its rank cap, five points spent above every row a point sits in,
@@ -208,10 +211,57 @@ func checkBuild(t *testing.T, dir string, trees []talentTree, build string) {
 // preset that is not there opens the page on its defaults with a warning in the console
 // and nothing else, so the two are kept in step here.
 func TestLandingPageBuildLinksNamePresets(t *testing.T) {
-	page, err := os.ReadFile(filepath.Join("..", "ui", "index.html"))
-	if err != nil {
-		t.Fatal(err)
+	presets := loadPresetNames(t)
+
+	for dir, names := range landingPageBuilds(t) {
+		if _, ok := presets[dir]; !ok {
+			t.Errorf("landing page links %s, which is not a spec with talent presets", dir)
+			continue
+		}
+		for _, name := range names {
+			if !presets[dir][name] {
+				t.Errorf("landing page links %s to a build named %q, which its presets do not have", dir, name)
+			}
+		}
 	}
+}
+
+// The sim pages carry the same list in their class dropdown, so a player can reach the
+// community builds without going back to the landing page. ui/core cannot read the
+// presets to find them - every page bundles ui/core, and a spec's presets drag in that
+// whole sim - so ui/core/community_builds.ts writes the list out again, and nothing at
+// runtime notices when the two copies drift: the dropdown just quietly stops offering a
+// build, or offers one whose name no preset answers to and opens the sim on its
+// defaults.
+func TestSimTitleDropdownBuildsMatchLandingPage(t *testing.T) {
+	presets := loadPresetNames(t)
+	landing := landingPageBuilds(t)
+	dropdown := dropdownBuilds(t)
+
+	for dir := range presets {
+		if _, ok := dropdown[dir]; !ok {
+			t.Errorf("ui/core/community_builds.ts has no entry for %s", dir)
+		}
+	}
+
+	for dir, names := range dropdown {
+		if _, ok := presets[dir]; !ok {
+			t.Errorf("ui/core/community_builds.ts lists %s, which is not a spec with talent presets", dir)
+			continue
+		}
+		for _, name := range names {
+			if !presets[dir][name] {
+				t.Errorf("ui/core/community_builds.ts gives %s a build named %q, which its presets do not have", dir, name)
+			}
+		}
+		if got, want := strings.Join(names, ", "), strings.Join(landing[dir], ", "); got != want {
+			t.Errorf("%s: the dropdown lists [%s] but the landing page lists [%s]", dir, got, want)
+		}
+	}
+}
+
+func loadPresetNames(t *testing.T) map[string]map[string]bool {
+	t.Helper()
 
 	presets := make(map[string]map[string]bool)
 	for _, class := range talentClasses {
@@ -226,24 +276,69 @@ func TestLandingPageBuildLinksNamePresets(t *testing.T) {
 			}
 		}
 	}
+	return presets
+}
+
+// The builds the landing page lists, by spec directory and in the order it lists them.
+func landingPageBuilds(t *testing.T) map[string][]string {
+	t.Helper()
+
+	page, err := os.ReadFile(filepath.Join("..", "ui", "index.html"))
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	links := buildLinkRegex.FindAllStringSubmatch(string(page), -1)
 	if len(links) == 0 {
 		t.Fatal("no build links on the landing page")
 	}
+
+	builds := make(map[string][]string)
 	for _, link := range links {
-		dir := link[1]
 		name, err := url.QueryUnescape(html.UnescapeString(link[2]))
 		if err != nil {
 			t.Errorf("%s: %v", link[0], err)
 			continue
 		}
-		if _, ok := presets[dir]; !ok {
-			t.Errorf("landing page links %s, which is not a spec with talent presets", dir)
-			continue
-		}
-		if !presets[dir][name] {
-			t.Errorf("landing page links %s to a build named %q, which its presets do not have", dir, name)
-		}
+		builds[link[1]] = append(builds[link[1]], name)
 	}
+	return builds
+}
+
+// The same, as the sim pages' dropdown has them.
+func dropdownBuilds(t *testing.T) map[string][]string {
+	t.Helper()
+
+	data, err := os.ReadFile(filepath.Join("..", "ui", "core", "community_builds.ts"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	entries := communityBuildRegex.FindAllStringSubmatch(string(data), -1)
+	if len(entries) == 0 {
+		t.Fatal("no specs in ui/core/community_builds.ts")
+	}
+
+	builds := make(map[string][]string)
+	for _, entry := range entries {
+		names := []string{}
+		for _, name := range quotedNameRegex.FindAllStringSubmatch(entry[2], -1) {
+			names = append(names, name[1])
+		}
+		builds[specDirName(entry[1])] = names
+	}
+	return builds
+}
+
+// 'BalanceDruid' -> 'balance_druid', the directory the sim is built into and the one
+// getSpecSiteUrl points a build link at.
+func specDirName(spec string) string {
+	var dir strings.Builder
+	for i, r := range spec {
+		if i > 0 && unicode.IsUpper(r) {
+			dir.WriteRune('_')
+		}
+		dir.WriteRune(unicode.ToLower(r))
+	}
+	return dir.String()
 }
