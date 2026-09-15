@@ -104,9 +104,12 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/shaman/water_shield.go:18` — "Only one globe will activate every few seconds", the tooltip never said how long.
 - `sim/shaman/water_totems.go:115` — The sim won't respect the value of a totem dropped via the APL. It uses hard-coded values from buffs.go manaRestoreBase := ManaSpringTotemManaRestore[rank]
 
-## Warlock (1)
+## Warlock (4)
 
-- `sim/warlock/talents.go:451` — Beta will show whether the 33% of level is per rank or the full value
+- `sim/warlock/conflagrate.go:13` — The Forever tooltip puts Conflagrate rank 1 at 109 to 132, less than half Classic's 249 to 316, and Incinerate at 125 to 140 against the 380 to 440 used here. Neither spell's higher ranks were shown, so both keep their Classic tables.
+- `sim/warlock/shadowburn.go:12` — The Forever tooltip puts Shadowburn rank 1 at 102 to 111 rather than Classic's 91 to 104. The other five ranks were never shown, so the Classic table is kept.
+- `sim/warlock/talents.go:356` — Both ranks of Decimation read the same numbers, so the 3% damage, 20% cast time and 45% Soul Fire cooldown are read per point as the surrounding talents are. Beta will confirm.
+- `sim/warlock/talents.go:464` — Beta will show whether the 33% of level is per rank or the full value
 
 ## Warrior (10)
 

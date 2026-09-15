@@ -112,6 +112,8 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Rule | Source | Here |
 |---|---|---|
 | Bane split into separate Shadow Bolt / Immolate reductions; Nightfall, Demonic Sacrifice and Pandemic per the Forever tree. | Tree, *demo* | `sim/warlock/talents.go` |
+| Demonic Knowledge only pays its spell damage out while a demon is active. | Tooltip | `sim/warlock/talents.go` |
+| Decimation's damage bonus belongs to Shadow Bolt and Searing Pain, the spells that trigger it; only the Soul Fire cast time carries the ten second window. | Tooltip | `sim/warlock/talents.go` |
 
 ## Hunter
 
