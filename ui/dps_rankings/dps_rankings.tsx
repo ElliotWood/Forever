@@ -12,28 +12,66 @@ import { getSpecConfig } from '../core/player.js';
 import { ErrorOutcomeType, ProgressMetrics, Raid as RaidProto } from '../core/proto/api.js';
 import { Class, IndividualBuffs, Spec } from '../core/proto/common.js';
 import { SimResult } from '../core/proto_utils/sim_result.js';
-import { classNames, cssClassForClass, makeDefaultBlessings, naturalSpecOrder, specNames, specToClass, titleIcons } from '../core/proto_utils/utils.js';
+import { MAX_PARTY_SIZE } from '../core/party.js';
+import {
+	classNames,
+	cssClassForClass,
+	getTalentTree,
+	makeDefaultBlessings,
+	naturalSpecOrder,
+	specNames,
+	specToClass,
+	titleIcons,
+} from '../core/proto_utils/utils.js';
+import { MAX_NUM_PARTIES } from '../core/raid.js';
 import { Sim, SimError } from '../core/sim.js';
 import { EventID, TypedEvent } from '../core/typed_event.js';
 import { formatToNumber, formatToPercent } from '../core/utils.js';
 import { applyBlessings, applyNewPlayerAssignments, newPlayerFromPreset, playerPresets } from '../raid/presets.js';
 
-// Fourteen players over a two minute encounter, so this is not free: measured at about
-// twenty seconds from opening the page to the table appearing, on four cores. The run has
+// Twenty-six players over a two minute encounter, so this is not free: measured at about
+// forty seconds from opening the page to the table appearing, on four cores. The run has
 // to finish while someone is still looking at it, and at this count the noise on a single
-// spec is a few DPS - far under the gaps the ranking is showing. The picker raises it for
+// build is a few DPS - far under the gaps the ranking is showing. The picker raises it for
 // anyone who wants the error smaller than that.
 const DEFAULT_ITERATIONS = 1000;
 
 const isLaunched = (spec: Spec) => simLaunchStatuses[spec].status != LaunchStatus.Unlaunched;
 
-// One raid slot per spec. Several specs ship more than one raid preset - three mage
-// builds, two rogue builds - which differ only in name and icon, so the first one stands
-// for the spec the way it does in the raid picker's class menu.
-const rankedSpecs = (): Array<Spec> => [...new Set(playerPresets.map(preset => preset.spec))].filter(isLaunched);
+// The community builds are the talent presets named with their point split, the same ones
+// the landing page links to under each class.
+const communityBuildRegex = /\d+\/\d+\/\d+$/;
+
+// A raid slot is a build, not a spec: the point of the table is to see how the Forever
+// talents shake out against each other, and a spec's builds differ in exactly that. Each
+// build sits on its spec's raid preset - gear, consumes, race, rotation - with only the
+// talents and the name swapped, so two builds of one spec differ by talents alone. Specs
+// that ship one raid preset per tree (hunter, rogue) hand a build the preset for its own
+// main tree. A launched spec with no community build keeps its raid preset as it is, so
+// nothing the sim can run drops out of the table.
+type Build = {
+	preset: RaidSimPreset<any>;
+	name: string;
+	talentsString: string;
+};
+
+const rankedBuilds = (): Array<Build> =>
+	[...new Set(playerPresets.map(preset => preset.spec))].filter(isLaunched).flatMap(spec => {
+		const config = getSpecConfig(spec) as IndividualSimUIConfig<any>;
+		const raidPresets = config.raidSimPresets;
+		const builds = config.presets.talents
+			.filter(talents => communityBuildRegex.test(talents.name))
+			.map(talents => {
+				const talentsString = talents.data.talentsString;
+				const preset =
+					raidPresets.find(raidPreset => getTalentTree(raidPreset.talents.talentsString) == getTalentTree(talentsString)) || raidPresets[0];
+				return { preset, name: talents.name, talentsString };
+			});
+		return builds.length > 0 ? builds : [{ preset: raidPresets[0], name: raidPresets[0].defaultName, talentsString: raidPresets[0].talents.talentsString }];
+	});
 
 type Ranking = {
-	spec: Spec;
+	build: Build;
 	dps: number;
 };
 
@@ -78,7 +116,7 @@ function worldBuffsFor(specDefaults: Array<IndividualSimUIConfig<any>['defaults'
 export class DpsRankings extends Component {
 	readonly sim: Sim;
 
-	private readonly presets: Array<RaidSimPreset<any>>;
+	private readonly builds: Array<Build>;
 	private readonly runButton: HTMLButtonElement;
 	private readonly statusElem: HTMLElement;
 	private readonly resultsElem: HTMLElement;
@@ -89,7 +127,7 @@ export class DpsRankings extends Component {
 	constructor(parentElem: HTMLElement) {
 		super(parentElem, 'dps-rankings-ui');
 		this.sim = new Sim();
-		this.presets = rankedSpecs().map(spec => playerPresets.find(preset => preset.spec == spec)!);
+		this.builds = rankedBuilds();
 
 		const runButtonRef = ref<HTMLButtonElement>();
 		const statusRef = ref<HTMLDivElement>();
@@ -112,8 +150,8 @@ export class DpsRankings extends Component {
 					<main className="dps-rankings-main">
 						<h1 className="dps-rankings-title">DPS Rankings</h1>
 						<p className="dps-rankings-lead fs-5">
-							Every launched spec in one raid, damage only, highest first. One run, one encounter, one set of buffs, so the numbers can sit in the
-							same table.
+							Every community build of every launched spec in one raid, damage only, highest first. One run, one encounter, one set of buffs, so
+							the numbers can sit in the same table.
 						</p>
 						<div ref={notesRef} className="dps-rankings-notes" />
 						<div className="dps-rankings-controls">
@@ -183,23 +221,33 @@ export class DpsRankings extends Component {
 			.map(spec => specNames[spec])
 			.join(', ');
 
+		const specCount = new Set(this.builds.map(build => build.preset.spec)).size;
+
 		const notes = new ContentBlock(parentElem, 'dps-rankings-notes-block', {
 			header: { title: 'What these numbers are, and are not' },
 		});
 		notes.bodyElement.appendChild(
 			<ul className="dps-rankings-notes-list">
 				<li>
-					All {this.presets.length} specs are simulated <strong>together, in a single raid</strong>, sharing one encounter, duration and set of buffs.
-					Running each spec on its own gives numbers that cannot honestly be put side by side, because each spec's own defaults differ.
+					All {this.builds.length} builds across {specCount} specs are simulated <strong>together, in a single raid</strong>, sharing one encounter,
+					duration and set of buffs. Running each build on its own gives numbers that cannot honestly be put side by side, because each spec's own
+					defaults differ.
 				</li>
 				<li>
-					Each player is the <strong>raid sim's preset build</strong> for its spec - the same one the raid picker drops into a slot. Those are shared
-					defaults, not per-spec optimised gear, talents or rotations, and some specs' presets are better tuned than others.
+					Each player is a <strong>community talent build</strong> on its spec's raid preset - the gear, consumes and rotation the raid picker drops
+					into a slot, with the build's talents in place of the preset's. Two builds of one spec therefore differ by talents alone; the presets are
+					shared defaults, not per-build optimised gear or rotations, and some specs' presets are better tuned than others.
 				</li>
 				<li>
-					Absent, because there is nothing to put in the raid: <strong>{unimplemented}</strong> have no working sim yet, and the raid sim has no
-					preset build for <strong>{withoutPreset}</strong>. The raid is therefore missing its healers, and the tank specs that are present are ranked
-					on damage alone.
+					Absent, because there is nothing to put in the raid: <strong>{unimplemented}</strong> have no working sim yet
+					{withoutPreset ? (
+						<>
+							, and the raid sim has no preset build for <strong>{withoutPreset}</strong>
+						</>
+					) : (
+						''
+					)}
+					. The raid is therefore missing its healers, and the tank specs that are present are ranked on damage alone.
 				</li>
 				<li>
 					Raid buffs, party buffs, debuffs and world buffs are the strongest of what each launched spec's own sim assumes by default, given to
@@ -214,14 +262,17 @@ export class DpsRankings extends Component {
 		);
 	}
 
-	// Mirrors the raid sim's own defaults so a spec's number here means the same thing it
-	// would mean in the raid sim, then fills every slot from the launched presets.
+	// Mirrors the raid sim's own defaults so a build's number here means the same thing it
+	// would mean in the raid sim, then fills a slot per build. More builds than a five party
+	// raid holds, so open as many parties as they need.
 	private buildRaid() {
 		const eventID = TypedEvent.nextEventID();
-		const specDefaults = this.presets.map(preset => (getSpecConfig(preset.spec) as IndividualSimUIConfig<any>).defaults);
+		const specs = [...new Set(this.builds.map(build => build.preset.spec))];
+		const specDefaults = specs.map(spec => (getSpecConfig(spec) as IndividualSimUIConfig<any>).defaults);
+		const numActiveParties = Math.min(MAX_NUM_PARTIES, Math.ceil(this.builds.length / MAX_PARTY_SIZE));
 
 		TypedEvent.freezeAllAndDo(() => {
-			this.sim.raid.fromProto(eventID, RaidProto.create({ numActiveParties: 5 }));
+			this.sim.raid.fromProto(eventID, RaidProto.create({ numActiveParties }));
 			this.sim.encounter.applyDefaults(eventID);
 			this.sim.applyDefaults(eventID, true, true);
 			this.sim.setShowDamageMetrics(eventID, true);
@@ -233,8 +284,10 @@ export class DpsRankings extends Component {
 			this.sim.raid.getParties().forEach(party => party.setBuffs(eventID, partyBuffs));
 
 			const worldBuffs = worldBuffsFor(specDefaults);
-			this.presets.forEach((preset, index) => {
-				const player = newPlayerFromPreset(eventID, this.sim, preset);
+			this.builds.forEach((build, index) => {
+				const player = newPlayerFromPreset(eventID, this.sim, build.preset);
+				player.setTalentsString(eventID, build.talentsString);
+				player.setName(eventID, build.name);
 				player.setBuffs(eventID, worldBuffs);
 				this.sim.raid.setPlayer(eventID, index, player);
 				applyNewPlayerAssignments(eventID, player, this.sim.raid);
@@ -288,10 +341,10 @@ export class DpsRankings extends Component {
 	}
 
 	private setResults(result: SimResult) {
-		const bySpec = new Map<Spec, number>();
-		result.getPlayers().forEach(player => bySpec.set(player.spec, player.dps.avg));
-
-		const rankings: Array<Ranking> = this.presets.map(preset => ({ spec: preset.spec, dps: bySpec.get(preset.spec) || 0 })).sort((a, b) => b.dps - a.dps);
+		// Builds of one spec share it, so match each player back by its raid slot, not its spec.
+		const rankings: Array<Ranking> = this.builds
+			.map((build, index) => ({ build, dps: result.getPlayerWithRaidIndex(index)?.dps.avg || 0 }))
+			.sort((a, b) => b.dps - a.dps);
 		const topDps = rankings[0]?.dps || 1;
 
 		this.iterationsElem.textContent = `${formatToNumber(result.iterations)} iterations, ${formatToNumber(result.duration)}s encounter`;
@@ -301,7 +354,7 @@ export class DpsRankings extends Component {
 				<thead>
 					<tr className="metrics-table-header-row">
 						<th className="metrics-table-header-cell dps-rankings-rank-cell">#</th>
-						<th className="metrics-table-header-cell dps-rankings-spec-cell">Spec</th>
+						<th className="metrics-table-header-cell dps-rankings-spec-cell">Build</th>
 						<th className="metrics-table-header-cell dps-rankings-dps-cell">DPS</th>
 						<th className="metrics-table-header-cell dps-rankings-share-cell">Share of top</th>
 					</tr>
@@ -312,7 +365,7 @@ export class DpsRankings extends Component {
 	}
 
 	private buildRow(ranking: Ranking, rank: number, topDps: number): Element {
-		const spec = ranking.spec;
+		const spec = ranking.build.preset.spec;
 		const classColor = cssClassForClass(specToClass[spec]);
 		const share = (ranking.dps / topDps) * 100;
 
@@ -322,8 +375,10 @@ export class DpsRankings extends Component {
 				<td className="dps-rankings-spec-cell">
 					<img className="metrics-action-icon" src={titleIcons[spec]} alt="" />
 					<span className="dps-rankings-spec-names">
-						<span className="dps-rankings-class-name">{classNames[specToClass[spec]]}</span>
-						<span className={`dps-rankings-spec-name text-${classColor}`}>{specNames[spec]}</span>
+						<span className="dps-rankings-class-name">
+							{classNames[specToClass[spec]]} - {specNames[spec]}
+						</span>
+						<span className={`dps-rankings-spec-name text-${classColor}`}>{ranking.build.name}</span>
 					</span>
 				</td>
 				<td className="dps-rankings-dps-cell">{formatToNumber(ranking.dps, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}</td>
