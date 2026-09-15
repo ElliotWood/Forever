@@ -14,7 +14,6 @@ import {
 	Profession,
 	RaidBuffs,
 	SapperExplosive,
-	SaygesFortune,
 	Spec,
 	StrengthBuff,
 	TristateEffect,
@@ -120,11 +119,6 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfMight: TristateEffect.TristateEffectImproved,
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	fengusFerocity: true,
-	rallyingCryOfTheDragonslayer: true,
-	saygesFortune: SaygesFortune.SaygesDamage,
-	songflowerSerenade: true,
-	warchiefsBlessing: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({

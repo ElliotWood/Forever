@@ -11,7 +11,6 @@ import {
 	Potions,
 	Profession,
 	RaidBuffs,
-	SaygesFortune,
 	SpellPowerBuff,
 	TristateEffect,
 	UnitReference,
@@ -36,7 +35,6 @@ import P2BISGear from './gear_sets/p2.bis.gear.json';
 export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearP1BIS = PresetUtils.makePresetGear('P1 BiS', P1BISGear);
 export const GearP2BIS = PresetUtils.makePresetGear('P2 BiS', P2BISGear);
-
 
 export const GearPresets = {
 	[ClassicPhase.Phase2]: [GearP0BIS, GearP1BIS, GearP2BIS],
@@ -103,11 +101,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	rallyingCryOfTheDragonslayer: true,
-	saygesFortune: SaygesFortune.SaygesDamage,
-	slipkiksSavvy: true,
-	songflowerSerenade: true,
-	warchiefsBlessing: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({});

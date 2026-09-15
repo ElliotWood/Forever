@@ -17,14 +17,13 @@ import {
 	Potions,
 	Profession,
 	RaidBuffs,
-	SaygesFortune,
 	SpellPowerBuff,
 	StrengthBuff,
 	TristateEffect,
 	WeaponImbue,
 	ZanzaBuff,
 } from '../core/proto/common.js';
-import { Blessings, PaladinAura, PaladinOptions as ProtectionPaladinOptions,PaladinSeal } from '../core/proto/paladin.js';
+import { Blessings, PaladinAura, PaladinOptions as ProtectionPaladinOptions, PaladinSeal } from '../core/proto/paladin.js';
 import { SavedTalents } from '../core/proto/ui.js';
 import APLBasicProtectionJson from './apls/basic_prot.apl.json';
 import APLP5ProtJson from './apls/p5prot.apl.json';
@@ -132,12 +131,6 @@ export const DefaultConsumes = Consumes.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	fengusFerocity: true,
-	moldarsMoxie: true,
-	rallyingCryOfTheDragonslayer: true,
-	saygesFortune: SaygesFortune.SaygesDamage,
-	slipkiksSavvy: true,
-	songflowerSerenade: true,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({

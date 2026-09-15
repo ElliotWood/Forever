@@ -384,35 +384,10 @@ func applyBuffEffects(agent Agent, playerFaction proto.Faction, raidBuffs *proto
 		BattleSquawkAura(&character.Unit, numBattleSquawks)
 	}
 
-	// World Buffs
-	ApplyDragonslayerBuffs(&character.Unit, individualBuffs)
-
-	if individualBuffs.SpiritOfZandalar {
-		ApplySpiritOfZandalar(&character.Unit)
-	}
-
-	if individualBuffs.SongflowerSerenade {
-		ApplySongflowerSerenade(&character.Unit)
-	}
-
-	ApplyWarchiefsBuffs(&character.Unit, individualBuffs, isAlliance, isHorde)
-
-	// Dire Maul Buffs
-	if individualBuffs.FengusFerocity {
-		ApplyFengusFerocity(&character.Unit)
-	}
-
-	if individualBuffs.MoldarsMoxie {
-		ApplyMoldarsMoxie(&character.Unit)
-	}
-
-	if individualBuffs.SlipkiksSavvy {
-		ApplySlipkiksSavvy(&character.Unit)
-	}
-
-	// Darkmoon Faire Buffs
-	if individualBuffs.SaygesFortune != proto.SaygesFortune_SaygesUnknown {
-		ApplySaygesFortunes(character, individualBuffs.SaygesFortune)
+	// World Buffs. They do not work inside Forever raids, so under that ruleset they are
+	// ignored whatever the settings say.
+	if !character.Env.IsForever() {
+		applyWorldBuffs(character, individualBuffs, isAlliance, isHorde)
 	}
 
 	// TODO: Classic provide in APL?
@@ -446,6 +421,38 @@ func applyBuffEffects(agent Agent, playerFaction proto.Faction, raidBuffs *proto
 }
 
 // Applies buffs to pets.
+func applyWorldBuffs(character *Character, individualBuffs *proto.IndividualBuffs, isAlliance bool, isHorde bool) {
+	ApplyDragonslayerBuffs(&character.Unit, individualBuffs)
+
+	if individualBuffs.SpiritOfZandalar {
+		ApplySpiritOfZandalar(&character.Unit)
+	}
+
+	if individualBuffs.SongflowerSerenade {
+		ApplySongflowerSerenade(&character.Unit)
+	}
+
+	ApplyWarchiefsBuffs(&character.Unit, individualBuffs, isAlliance, isHorde)
+
+	// Dire Maul Buffs
+	if individualBuffs.FengusFerocity {
+		ApplyFengusFerocity(&character.Unit)
+	}
+
+	if individualBuffs.MoldarsMoxie {
+		ApplyMoldarsMoxie(&character.Unit)
+	}
+
+	if individualBuffs.SlipkiksSavvy {
+		ApplySlipkiksSavvy(&character.Unit)
+	}
+
+	// Darkmoon Faire Buffs
+	if individualBuffs.SaygesFortune != proto.SaygesFortune_SaygesUnknown {
+		ApplySaygesFortunes(character, individualBuffs.SaygesFortune)
+	}
+}
+
 func applyPetBuffEffects(petAgent PetAgent, playerFaction proto.Faction, raidBuffs *proto.RaidBuffs, partyBuffs *proto.PartyBuffs, individualBuffs *proto.IndividualBuffs) {
 	// Summoned pets, like Mage Water Elemental, aren't around to receive raid buffs.
 	// Also assume that applicable world buffs are applied to the starting pet only

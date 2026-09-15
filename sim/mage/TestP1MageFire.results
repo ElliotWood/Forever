@@ -1,11 +1,11 @@
 character_stats_results: {
  key: "TestP1MageFire-Phase1-CharacterStats-Default"
  value: {
-  final_stats: 177.1
-  final_stats: 184
-  final_stats: 313.4325
-  final_stats: 324.3
-  final_stats: 241.5
+  final_stats: 139
+  final_stats: 145
+  final_stats: 222
+  final_stats: 267
+  final_stats: 195
   final_stats: 348
   final_stats: 0
   final_stats: 40
@@ -13,29 +13,29 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 45.25
+  final_stats: 35.25
   final_stats: 2
-  final_stats: 30.64824
+  final_stats: 11.6856
   final_stats: 0
   final_stats: 16
-  final_stats: 897.1
+  final_stats: 519
   final_stats: 2
-  final_stats: 19.2
+  final_stats: 9.2
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 5797.5
+  final_stats: 4938
   final_stats: 0
   final_stats: 0
-  final_stats: 1059.15
-  final_stats: 440
+  final_stats: 952.5
+  final_stats: 100
   final_stats: 0
   final_stats: 5
   final_stats: 0
   final_stats: 3.2
   final_stats: 5
   final_stats: 0
-  final_stats: 4624.325
+  final_stats: 3410
   final_stats: 37
   final_stats: 80
   final_stats: 90
@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 3.67882
+  weights: 1.95453
   weights: 0
-  weights: 0.77178
+  weights: 0.45887
   weights: 0
-  weights: 0.77178
-  weights: 0
-  weights: 0
+  weights: 0.45887
   weights: 0
   weights: 0
   weights: 0
-  weights: 21.29206
-  weights: 15.50386
+  weights: 0
+  weights: 0
+  weights: 8.83162
+  weights: 10.22856
   weights: 0
   weights: 0
   weights: 0
@@ -99,99 +99,99 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-ArcanistRegalia"
  value: {
-  dps: 1080.8615
-  tps: 958.36636
+  dps: 643.68903
+  tps: 575.36323
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-Champion'sArcanum"
  value: {
-  dps: 1052.23502
-  tps: 1073.08568
+  dps: 624.31248
+  tps: 642.4035
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-EnigmaVestments"
  value: {
-  dps: 1035.6337
-  tps: 1055.51934
+  dps: 604.48893
+  tps: 622.11924
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-FieldMarshal'sRegalia"
  value: {
-  dps: 1117.70562
-  tps: 1138.46742
+  dps: 660.26102
+  tps: 677.9953
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-Illusionist'sAttire"
  value: {
-  dps: 962.4693
-  tps: 982.71053
+  dps: 547.03562
+  tps: 564.49643
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 830.62019
-  tps: 850.72459
+  dps: 492.39857
+  tps: 510.2862
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-LieutenantCommander'sArcanum"
  value: {
-  dps: 1052.23502
-  tps: 1073.08568
+  dps: 624.31248
+  tps: 642.4035
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-NetherwindRegalia"
  value: {
-  dps: 997.44752
-  tps: 1017.94408
+  dps: 585.62384
+  tps: 603.34109
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-Sorcerer'sRegalia"
  value: {
-  dps: 1037.77648
-  tps: 1058.57359
+  dps: 612.44527
+  tps: 630.29002
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-Warlord'sRegalia"
  value: {
-  dps: 1117.70562
-  tps: 1138.46742
+  dps: 660.26102
+  tps: 677.9953
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-Average-Default"
  value: {
-  dps: 924.0481
-  tps: 944.76001
+  dps: 548.02482
+  tps: 566.1373
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 917.46193
-  tps: 1308.83569
+  dps: 548.92006
+  tps: 898.92109
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 917.46193
-  tps: 937.03062
+  dps: 548.92006
+  tps: 566.42011
  }
 }
 dps_results: {
  key: "TestP1MageFire-Phase1-Settings-Troll-p0.bis-DPS-forever_fire-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 1050.86581
-  tps: 1070.69217
+  dps: 746.67091
+  tps: 764.89724
  }
 }
 dps_results: {
@@ -218,7 +218,7 @@ dps_results: {
 dps_results: {
  key: "TestP1MageFire-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 925.91406
-  tps: 945.9089
+  dps: 541.90237
+  tps: 559.41399
  }
 }
