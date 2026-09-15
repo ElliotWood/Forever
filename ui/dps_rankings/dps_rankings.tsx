@@ -180,8 +180,15 @@ export class DpsRankings extends Component {
 					<a href={`${SITE_BASE}changelog/`}>changelog</a>.
 				</p>
 				<p className="dps-rankings-provenance-body">
-					So: do not pick a main off this table, and do not quote it as a Forever balance claim. Come back when the beta is up and the checklist has
-					been worked through against a real client.
+					There is a second limit under the first one, and the beta will not lift it. A tooltip gives a spell's damage at one level; what a sim needs
+					is how that damage is built out of attack power, spell power and weapon speed. None of those relationships was published, so where Forever
+					has not changed a spell this sim assumes Classic's, and where it has, the coefficient is inferred from the one number the demo showed. The
+					beta is capped at level 30, so it will not settle the level 60 ranks or the scaling either. Both are the sort of thing only the live client
+					or the people building the game can answer.
+				</p>
+				<p className="dps-rankings-provenance-body">
+					So: do not pick a main off this table, and do not quote it as a Forever balance claim. It is a place to catch the sim getting something
+					obviously wrong, and nothing more than that until there is real data to check it against.
 				</p>
 			</div>,
 		);
