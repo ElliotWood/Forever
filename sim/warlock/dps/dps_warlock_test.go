@@ -81,9 +81,9 @@ func TestWarlockDSRuin(t *testing.T) {
 	}))
 }
 
-var TalentsDemonicPact = "203-0055003221201001351-0550005"
-var TalentsAffliction = "2435002013520135--0550005"
-var TalentsDSRuin = "233500201332-0340003001-0550105"
+var TalentsDemonicPact = "203-0055000321201201351-0500055"
+var TalentsAffliction = "2435002013520135--0500055"
+var TalentsDSRuin = "233500201332-0340000301-0500155"
 
 var DefaultPactWarlock = &proto.Player_Warlock{
 	Warlock: &proto.Warlock{

@@ -317,6 +317,19 @@
         "maxPoints": 3
       },
       {
+        "fieldName": "demonicBrand",
+        "location": {
+          "rowIdx": 1,
+          "colIdx": 2
+        },
+        "spellIds": [
+          18821,
+          18822,
+          18823
+        ],
+        "maxPoints": 3
+      },
+      {
         "fieldName": "felVitality",
         "location": {
           "rowIdx": 1,
@@ -328,18 +341,6 @@
           18744
         ],
         "maxPoints": 3
-      },
-      {
-        "fieldName": "demonicEnergies",
-        "location": {
-          "rowIdx": 3,
-          "colIdx": 3
-        },
-        "spellIds": [
-          18748,
-          18749
-        ],
-        "maxPoints": 2
       },
       {
         "fieldName": "improvedSayaad",
@@ -405,17 +406,16 @@
         "maxPoints": 1
       },
       {
-        "fieldName": "demonicBrand",
+        "fieldName": "demonicEnergies",
         "location": {
-          "rowIdx": 1,
-          "colIdx": 2
+          "rowIdx": 3,
+          "colIdx": 3
         },
         "spellIds": [
-          18821,
-          18822,
-          18823
+          18748,
+          18749
         ],
-        "maxPoints": 3
+        "maxPoints": 2
       },
       {
         "fieldName": "improvedFelhunter",
@@ -522,17 +522,17 @@
         "maxPoints": 5
       },
       {
-        "fieldName": "bane",
+        "fieldName": "aftermath",
         "location": {
-          "rowIdx": 1,
+          "rowIdx": 0,
           "colIdx": 2
         },
         "spellIds": [
-          17788,
-          17789,
-          17790,
-          17791,
-          17792
+          18119,
+          18120,
+          18121,
+          18122,
+          18123
         ],
         "maxPoints": 5
       },
@@ -565,17 +565,17 @@
         "maxPoints": 3
       },
       {
-        "fieldName": "aftermath",
+        "fieldName": "bane",
         "location": {
-          "rowIdx": 0,
+          "rowIdx": 1,
           "colIdx": 2
         },
         "spellIds": [
-          18119,
-          18120,
-          18121,
-          18122,
-          18123
+          17788,
+          17789,
+          17790,
+          17791,
+          17792
         ],
         "maxPoints": 5
       },
@@ -619,17 +619,19 @@
         "maxPoints": 3
       },
       {
-        "fieldName": "agonizingFlames",
+        "fieldName": "shadowAndFlame",
         "location": {
-          "rowIdx": 5,
-          "colIdx": 2
+          "rowIdx": 3,
+          "colIdx": 1
         },
         "spellIds": [
-          17927,
-          17929,
-          17930
+          30288,
+          30289,
+          30290,
+          30291,
+          30292
         ],
-        "maxPoints": 3
+        "maxPoints": 5
       },
       {
         "fieldName": "conflagrate",
@@ -687,19 +689,17 @@
         "maxPoints": 3
       },
       {
-        "fieldName": "shadowAndFlame",
+        "fieldName": "agonizingFlames",
         "location": {
-          "rowIdx": 3,
-          "colIdx": 1
+          "rowIdx": 5,
+          "colIdx": 2
         },
         "spellIds": [
-          30288,
-          30289,
-          30290,
-          30291,
-          30292
+          17927,
+          17929,
+          17930
         ],
-        "maxPoints": 5
+        "maxPoints": 3
       },
       {
         "fieldName": "incinerate",

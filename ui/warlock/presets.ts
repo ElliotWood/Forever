@@ -74,17 +74,17 @@ export const DefaultAPL = RotationDSRuin;
 
 export const TalentsDemonicPact = {
 	name: 'Demonic Pact',
-	data: SavedTalents.create({ talentsString: '203-0055003221201001351-0550005' }),
+	data: SavedTalents.create({ talentsString: '203-0055000321201201351-0500055' }),
 };
 
 export const TalentsAffliction = {
 	name: 'Affliction',
-	data: SavedTalents.create({ talentsString: '2435002013520135--0550005' }),
+	data: SavedTalents.create({ talentsString: '2435002013520135--0500055' }),
 };
 
 export const TalentsDSRuin = {
 	name: 'DS/Ruin',
-	data: SavedTalents.create({ talentsString: '233500201332-0340003001-0550105' }),
+	data: SavedTalents.create({ talentsString: '233500201332-0340000301-0500155' }),
 };
 
 export const TalentPresets = [TalentsDemonicPact, TalentsAffliction, TalentsDSRuin];
