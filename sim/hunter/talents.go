@@ -65,6 +65,7 @@ func (hunter *Hunter) ApplyTalents() {
 	hunter.AddStat(stats.SpellHit, float64(hunter.Talents.Surefooted)*1*core.SpellHitRatingPerHitChance)
 
 	hunter.AddStat(stats.MeleeCrit, float64(hunter.Talents.LethalAttacks)*1*core.CritRatingPerCritChance)
+	hunter.AddStat(stats.SpellCrit, float64(hunter.Talents.LethalAttacks)*1*core.SpellCritRatingPerCritChance)
 
 	hunter.AddStat(stats.Parry, 2*float64(hunter.Talents.Deflection))
 
@@ -371,6 +372,7 @@ func (hunter *Hunter) applyExposePrey() {
 		return
 	}
 
+	// TODO: only rank 1 was observed, the proc chance is assumed to scale per rank.
 	procChance := 0.05 * float64(hunter.Talents.ExposePrey)
 
 	core.MakePermanent(hunter.RegisterAura(core.Aura{
