@@ -1,5 +1,17 @@
 [
 	{
+		"number": 128,
+		"title": "keep improved scorch and winter's chill on the mage who cast them",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/128"
+	},
+	{
+		"number": 127,
+		"title": "make every ability say where its numbers came from",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/127"
+	},
+	{
 		"number": 126,
 		"title": "fix(talents): let every talent describe itself instead of its classic ancestor",
 		"mergedAt": "2026-09-15",
