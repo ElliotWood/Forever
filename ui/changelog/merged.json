@@ -1,5 +1,11 @@
 [
 	{
+		"number": 121,
+		"title": "fix(raid): offer every community build in the raid picker",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/121"
+	},
+	{
 		"number": 120,
 		"title": "fix(rankings): say what the damage table is, and stop it reading as a ranking",
 		"mergedAt": "2026-09-15",
