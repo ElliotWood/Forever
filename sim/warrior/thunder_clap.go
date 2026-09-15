@@ -11,7 +11,8 @@ func (warrior *Warrior) registerThunderClapSpell() {
 	baseDamage := 103.0
 	has5pcConq := warrior.HasSetBonus(ItemSetConquerorsBattleGear, 5)
 	attackSpeedReduction := core.TernaryInt32(has5pcConq, 15, 10)
-	stanceMask := BattleStance
+	// Forever lets Thunder Clap be used in Defensive Stance as well.
+	stanceMask := BattleStance | DefensiveStance
 
 	warrior.ThunderClapAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return core.ThunderClapAura(target, spellID, attackSpeedReduction)
