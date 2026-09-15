@@ -81,9 +81,34 @@ func TestWarlockDSRuin(t *testing.T) {
 	}))
 }
 
-var TalentsDemonicPact = "203-0055000321201201351-0500055"
-var TalentsAffliction = "2435002013520135--0500055"
-var TalentsDSRuin = "233500201332-0340000301-0500155"
+// The community builds the rankings page runs, so the goldens measure what is ranked.
+var TalentsDemonicPact = "113-0005003321220211351-0500055"
+var TalentsAffliction = "2535002013521105--05000551"
+var TalentsDSRuin = "25220010135201-0025000301-05000551"
+var TalentsShadowAndFlame = "25502100002-0025000301-0520355102"
+
+func TestWarlockShadowAndFlame(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		{
+			Class: proto.Class_ClassWarlock,
+			Phase: 1,
+			Race:  proto.Race_RaceOrc,
+
+			Talents:     TalentsShadowAndFlame,
+			GearSet:     core.GetGearSet("../../../ui/warlock/gear_sets", "prebis"),
+			Rotation:    core.GetAplRotation("../../../ui/warlock/apls/", "forever_shadow_and_flame"),
+			Buffs:       core.ForeverBuffs,
+			Consumes:    Consumes,
+			SpecOptions: core.SpecOptionsCombo{Label: "Shadow and Flame Warlock", SpecOptions: DefaultImpWarlock},
+
+			ItemFilter:      ItemFilters,
+			EPReferenceStat: proto.Stat_StatSpellPower,
+			StatsToWeigh:    Stats,
+
+			Ruleset: proto.Ruleset_RulesetForever,
+		},
+	}))
+}
 
 var DefaultPactWarlock = &proto.Player_Warlock{
 	Warlock: &proto.Warlock{

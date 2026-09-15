@@ -137,26 +137,84 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarlock, {
 		rotations: Presets.APLPresets,
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GearPresets,
+		builds: [Presets.BuildDemonicPact, Presets.BuildDeepAffliction, Presets.BuildDSRuinPandemic, Presets.BuildShadowAndFlame],
 	},
 
-	// DS/Ruin is a rotation for a sacrificed pet, whatever tree the rest of the points sit
-	// in; otherwise the tree the build is deepest in picks the rotation.
+	// Demonic Pact keeps a demon out beside the sacrifice, so it has its own rotation. DS/Ruin
+	// is a rotation for a sacrificed pet, whatever tree the rest of the points sit in, and
+	// Shadow and Flame adds Shadowburn on cooldown to it; otherwise the tree the build is
+	// deepest in picks the rotation.
 	autoRotation: player => {
 		const talents = player.getTalents();
+		if (talents.demonicPact) {
+			return Presets.RotationDemonicPact.rotation.rotation!;
+		}
 		if (talents.demonicSacrifice && talents.ruin) {
-			return Presets.RotationDSRuin.rotation.rotation!;
+			return (talents.shadowAndFlame ? Presets.RotationShadowAndFlame : Presets.RotationDSRuin).rotation.rotation!;
 		}
 		return [Presets.RotationAffliction, Presets.RotationDemonicPact, Presets.RotationDSRuin][player.getTalentTree()].rotation.rotation!;
 	},
 
+	// One preset per tree, so a raid or the rankings page gives each build the pet setup its
+	// rotation expects: the Affliction preset also serves DS/Ruin, which summons its own Imp.
 	raidSimPresets: [
 		{
 			spec: Spec.SpecWarlock,
-			tooltip: 'Destruction DPS',
+			tooltip: 'Affliction Warlock',
+			defaultName: 'Affliction',
+			iconUrl: getSpecIcon(Class.ClassWarlock, 0),
+
+			talents: Presets.DefaultTalents.data,
+			specOptions: Presets.AfflictionOptions,
+			consumes: Presets.DefaultConsumes,
+			defaultFactionRaces: {
+				[Faction.Unknown]: Race.RaceUnknown,
+				[Faction.Alliance]: Race.RaceHuman,
+				[Faction.Horde]: Race.RaceOrc,
+			},
+			defaultGear: {
+				[Faction.Unknown]: {},
+				[Faction.Alliance]: {
+					1: Presets.DefaultGear.gear,
+				},
+				[Faction.Horde]: {
+					1: Presets.DefaultGear.gear,
+				},
+			},
+			otherDefaults: Presets.OtherDefaults,
+		},
+		{
+			spec: Spec.SpecWarlock,
+			tooltip: 'Demonology Warlock',
+			defaultName: 'Demonology',
+			iconUrl: getSpecIcon(Class.ClassWarlock, 1),
+
+			talents: Presets.TalentsPactOptimised.data,
+			specOptions: Presets.DemonicPactOptions,
+			consumes: Presets.DefaultConsumes,
+			defaultFactionRaces: {
+				[Faction.Unknown]: Race.RaceUnknown,
+				[Faction.Alliance]: Race.RaceHuman,
+				[Faction.Horde]: Race.RaceOrc,
+			},
+			defaultGear: {
+				[Faction.Unknown]: {},
+				[Faction.Alliance]: {
+					1: Presets.DefaultGear.gear,
+				},
+				[Faction.Horde]: {
+					1: Presets.DefaultGear.gear,
+				},
+			},
+			otherDefaults: Presets.OtherDefaults,
+		},
+		{
+			spec: Spec.SpecWarlock,
+			tooltip: 'Destruction Warlock',
 			defaultName: 'Destruction',
 			iconUrl: getSpecIcon(Class.ClassWarlock, 2),
 
-			talents: Presets.DefaultTalents.data,
+			talents: Presets.TalentsShadowAndFlame.data,
 			specOptions: Presets.DefaultOptions,
 			consumes: Presets.DefaultConsumes,
 			defaultFactionRaces: {
