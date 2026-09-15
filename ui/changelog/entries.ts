@@ -368,6 +368,13 @@ export const sections: Array<Section> = [
 				effect: 'Nobody arrives thinking this is the official sim, and the limits are on the front page rather than buried.',
 			},
 			{
+				title: 'The upstream project\u2019s name and Patreon come off the site',
+				prs: [125],
+				changed:
+					"The Patreon button in every header pointed at the upstream project's page, and their name was still in the homepage copy, the toast titles, the exported stat weight labels and the default export filename. The Patreon link and its component are gone, nothing on the site solicits money for anyone, and the homepage introduces itself as an unofficial personal sim without borrowing a name to do it. The GitHub link also defaulted to the upstream repository in a local build, which is now this fork. The MIT licence keeps the original copyright, as it must.",
+				effect: 'Nothing on the site trades on a name or a donation page that is not its own.',
+			},
+			{
 				title: 'Best in slot and stat weights',
 				prs: [55, 56, 72, 79],
 				changed: "A best in slot page from each spec's EP weights over the launch pool, and a page comparing stat weights across specs.",
