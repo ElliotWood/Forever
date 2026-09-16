@@ -69,6 +69,12 @@ func (paladin *Paladin) registerHolyStrike() {
 
 		DamageMultiplier: damageMultiplier,
 		ThreatMultiplier: threatMultiplier,
+		// Holy damage, so spell power feeds it on top of the weapon share and the flat
+		// roll. 0.429 is the coefficient every other instant Holy paladin spell uses here
+		// - Exorcism, Hammer of Wrath and Holy Shock.
+		// TODO: beta will confirm. Reported by AdamRC as right "pretty sure", which the
+		// other three agreeing with it supports but does not settle.
+		BonusCoefficient: 0.429,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			if ironCreedAura != nil {
