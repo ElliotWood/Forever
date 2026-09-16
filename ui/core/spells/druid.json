@@ -564,8 +564,13 @@
 	},
 	"9846": {
 		"ability": "Tiger's Fury",
+		"assumptions": [
+			"Only the level 60 rank was seen; the lower ranks keep Classic’s flat damage until one is observed."
+		],
 		"file": "sim/druid/tigers_fury.go",
-		"source": "unreviewed"
+		"note": "Forever pays a share of Physical damage rather than Classic's flat +40, so it scales with the cat's weapon and attack power. Read off Soda's Druid, 13 September, via talentsforever.com; the same tooltip confirmed the 30 sec cooldown and no Energy cost the sim had assumed from Wrath.",
+		"source": "assumed",
+		"tooltip": "Instant\n30 sec cooldown\nRequires Cat Form\nIncreases Physical damage done by 15% for 6 sec."
 	},
 	"9850": {
 		"ability": "Claw",
