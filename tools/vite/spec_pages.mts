@@ -42,8 +42,35 @@ const titleFor = (name: string) =>
 		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
 		.join(' ')} - Forever Sim (unofficial)`;
 
+/**
+ * The specs with no Go implementation behind them, read from the launch statuses the raid
+ * sim already filters on so there is one list rather than two. A page for an unlaunched
+ * spec loads and then fails with "No agent factory" the moment anyone presses Simulate, so
+ * it must not be built at all.
+ */
+function unlaunchedSpecs(uiRoot: string): Set<string> {
+	const statuses = path.join(uiRoot, 'core', 'launched_sims.ts');
+	if (!fs.existsSync(statuses)) return new Set();
+
+	const source = fs.readFileSync(statuses, 'utf-8');
+	const unlaunched = new Set<string>();
+	for (const match of source.matchAll(/\[Spec\.Spec(\w+)\]:\s*\{[^}]*status:\s*LaunchStatus\.Unlaunched/g)) {
+		unlaunched.add(match[1]);
+	}
+	return unlaunched;
+}
+
+/** The spec a page registers, e.g. 'HolyPaladin' for ui/holy_paladin. */
+function specOf(uiRoot: string, name: string): string | null {
+	const simFile = path.join(uiRoot, name, 'sim.ts');
+	if (!fs.existsSync(simFile)) return null;
+	const match = fs.readFileSync(simFile, 'utf-8').match(/registerSpecConfig\(\s*Spec\.Spec(\w+)/);
+	return match ? match[1] : null;
+}
+
 export function discoverSpecPages(uiRoot: string): SpecPage[] {
 	const pages: SpecPage[] = [];
+	const unbuilt = unlaunchedSpecs(uiRoot);
 
 	for (const dir of fs.readdirSync(uiRoot, { withFileTypes: true })) {
 		if (!dir.isDirectory()) continue;
@@ -51,7 +78,12 @@ export function discoverSpecPages(uiRoot: string): SpecPage[] {
 		const name = dir.name;
 		const hasEntry = fs.existsSync(path.join(uiRoot, name, 'index.ts'));
 		const hasStyles = fs.existsSync(path.join(uiRoot, 'scss', 'sims', name, 'index.scss'));
-		if (hasEntry && hasStyles) pages.push({ name, title: titleFor(name), outPath: `${name}/index.html` });
+		if (!hasEntry || !hasStyles) continue;
+
+		const spec = specOf(uiRoot, name);
+		if (spec && unbuilt.has(spec)) continue;
+
+		pages.push({ name, title: titleFor(name), outPath: `${name}/index.html` });
 	}
 
 	return pages.sort((a, b) => a.outPath.localeCompare(b.outPath));
