@@ -652,10 +652,10 @@ func (mage *Mage) applyFingersOfFrost() {
 		return
 	}
 
-	// TODO: the demo only ever displayed rank 1, so the 15% is the only proc chance anyone has
-	// seen; it is read per point here, as the surrounding talents are, and the tree says 15%/30%.
-	// Beta will confirm whether the second point is worth anything.
-	procChance := .15 * float64(mage.Talents.FingersOfFrost)
+	// The beta tooltip for rank 2 settles what the demo could not: the proc chance does not
+	// scale. Both ranks give Chill effects a 15% chance; the second point buys a second
+	// charge, "treats your next 2 spells cast as if the target were Frozen".
+	procChance := core.TernaryFloat64(mage.Talents.FingersOfFrost > 0, .15, 0)
 	// TODO: no rank of Shatter has been read at the rank it belongs to. The single demo crop of
 	// the cell shows 50% at Rank 3/3, and the five ranks at 10% each come from the community
 	// talent calculator instead. Beta will confirm both the rank count and the step.
@@ -679,6 +679,9 @@ func (mage *Mage) applyFingersOfFrost() {
 		Label:    "Fingers of Frost",
 		ActionID: core.ActionID{SpellID: 44543},
 		Duration: time.Second * 15,
+		// One charge per point: rank 2 treats the next two spells as if the target were
+		// frozen rather than raising the proc chance.
+		MaxStacks: int32(mage.Talents.FingersOfFrost),
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			for _, spell := range affectedSpells {
 				spell.BonusCritRating += shatterCrit
@@ -716,8 +719,9 @@ func (mage *Mage) applyFingersOfFrost() {
 				return
 			}
 
-			// OnCastComplete runs after the damage is rolled, so the consuming cast keeps the bonus.
-			aura.Deactivate(sim)
+			// OnCastComplete runs after the damage is rolled, so the consuming cast keeps the
+			// bonus. Each cast spends one charge; the aura falls when the last one goes.
+			aura.RemoveStack(sim)
 		},
 	})
 
@@ -734,6 +738,7 @@ func (mage *Mage) applyFingersOfFrost() {
 
 			if sim.Proc(procChance, "Fingers of Frost") {
 				mage.FingersOfFrostAura.Activate(sim)
+				mage.FingersOfFrostAura.SetStacks(sim, mage.FingersOfFrostAura.MaxStacks)
 			}
 		},
 	})

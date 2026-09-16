@@ -50,7 +50,7 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestSubtletyHemorrhage-Phase1-StatWeights-Default"
  value: {
-  weights: 0.23087
+  weights: 0.23084
   weights: 0.4371
   weights: 0
   weights: 0
@@ -67,9 +67,9 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.20988
-  weights: 5.09213
-  weights: 4.72197
+  weights: 0.20985
+  weights: 5.07395
+  weights: 4.72387
   weights: 0
   weights: 0
   weights: 0
@@ -169,8 +169,8 @@ dps_results: {
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Average-Default"
  value: {
-  dps: 553.81159
-  tps: 393.20623
+  dps: 553.82349
+  tps: 393.21468
  }
 }
 dps_results: {

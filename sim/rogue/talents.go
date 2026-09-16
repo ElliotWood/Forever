@@ -189,7 +189,8 @@ func (rogue *Rogue) applyInitiative() {
 		return
 	}
 
-	procChance := 0.33 * float64(rogue.Talents.Initiative)
+	// The beta rounds rank 2 up to 67% rather than doubling rank 1's 33%.
+	procChance := []float64{0, 0.33, 0.67, 1.00}[rogue.Talents.Initiative]
 	cpMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 13980})
 
 	rogue.RegisterAura(core.Aura{
