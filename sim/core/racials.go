@@ -193,6 +193,14 @@ func applyRaceEffects(agent Agent) {
 			character.registerTouchOfTheGrave()
 		}
 	case proto.Race_RaceSkyborneHighOrder, proto.Race_RaceSkyborneWindshaper:
+		// The Skyborne are a Forever race, so under Classic rules they have no racials to
+		// grant. A saved setting can still name one - the race picker offers whatever the
+		// spec allows - and without this guard that saved race would carry Forever's haste
+		// and elemental damage into a Classic sim.
+		if !forever {
+			break
+		}
+
 		// Wind Blessed
 		character.PseudoStats.MeleeSpeedMultiplier *= 1.01
 		character.PseudoStats.RangedSpeedMultiplier *= 1.01
