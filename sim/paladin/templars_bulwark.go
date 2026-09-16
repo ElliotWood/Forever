@@ -8,8 +8,10 @@ import (
 
 // Templar's Bulwark is new in Forever and borrows Sacred Shield's spell id, the paladin absorb
 // the tooltip describes.
-// TODO: assumed baseline, beta will confirm - the tooltip carries no cooldown, so it shares the
-// 5 minutes of the two Forbearance abilities Sacred Duty shortens alongside it.
+// The 5 minute cooldown the sim assumed is confirmed: the BlizzCon "Paladin Class Change"
+// talent slide reads "110 Mana, Instant, 5 min cooldown", and the same tooltip appears in
+// Joardee's VOD. It applies Forbearance for 1 min, which is what sim/paladin/forbearance.go
+// already grants.
 func (paladin *Paladin) registerTemplarsBulwark() {
 	if !paladin.Talents.TemplarsBulwark {
 		return

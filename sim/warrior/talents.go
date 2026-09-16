@@ -373,14 +373,15 @@ func (warrior *Warrior) applyShieldSpecialization() {
 	})
 }
 
-// TODO: only rank 1 was shown, beta will confirm that rank 2 doubles both the chance and the rage.
+// Rank 2 doubles the chance and leaves the Rage alone: "Grants you a 100% chance to
+// generate 5 Rage when you Dodge or Parry while a shield is equipped."
 func (warrior *Warrior) applyMasterOfDefense() {
 	if warrior.Talents.MasterOfDefense == 0 || !warrior.PseudoStats.CanBlock {
 		return
 	}
 
 	procChance := min(0.5*float64(warrior.Talents.MasterOfDefense), 1)
-	rageGain := 5.0 * float64(warrior.Talents.MasterOfDefense)
+	rageGain := 5.0
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 12727, Tag: 1})
 
 	warrior.RegisterAura(core.Aura{

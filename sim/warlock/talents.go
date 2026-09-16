@@ -913,9 +913,10 @@ func (warlock *Warlock) applyShadowAndFlame() {
 		return
 	}
 
-	// TODO: Only rank 1 of Shadow and Flame was seen and every rank of the tree reads the same
-	// 2% for 20 sec, so the bonus is held at that value rather than read per point.
-	multiplier := 1.02
+	// 2% per point. The demo only ever showed rank 1, and the tree repeated its 2% at every
+	// rank, which is why this was held flat; the beta has since confirmed rank 4 at 8% and
+	// rank 5 at 10%, so the repeated text was the extractor's, not the game's.
+	multiplier := 1 + 0.02*float64(warlock.Talents.ShadowAndFlame)
 
 	shadowAura := warlock.RegisterAura(core.Aura{
 		Label:    "Shadow and Flame (Shadow)",
