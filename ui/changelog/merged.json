@@ -1,5 +1,11 @@
 [
 	{
+		"number": 158,
+		"title": "Write confirmed_talents.json with the line endings the repo uses",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/158"
+	},
+	{
 		"number": 157,
 		"title": "Improved Ghost Wolf rank 2 takes 3 sec off, not 2",
 		"mergedAt": "2026-09-16",
