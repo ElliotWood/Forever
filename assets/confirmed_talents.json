@@ -1,0 +1,1994 @@
+{
+ "_readme": "Confirmed talent rank values from talentsforever.com, kept so a test can check the sim has not drifted from an observation. Numbers only, in the order they appear in each rank tooltip. Regenerate with tools/refresh_confirmed_talents.mjs.",
+ "source": "talentsforever.com (CC BY 4.0)",
+ "generated": "2026-09-16",
+ "talents": {
+  "Warrior": {
+   "Deflection": [
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     4
+    ],
+    [
+     5
+    ]
+   ],
+   "Improved Overpower": [
+    [
+     25
+    ],
+    [
+     50
+    ]
+   ],
+   "Anger Management": [
+    [
+     1,
+     3,
+     30
+    ]
+   ],
+   "Spearing Strike": [
+    [
+     40,
+     80
+    ]
+   ],
+   "Sweeping Strikes": [
+    [
+     5
+    ]
+   ],
+   "Improved Hamstring": [
+    [
+     5,
+     5
+    ],
+    [
+     10,
+     5
+    ],
+    [
+     15,
+     5
+    ]
+   ],
+   "Mortal Strike": [
+    [
+     85,
+     50,
+     10
+    ]
+   ],
+   "Piercing Howl": [
+    [
+     50,
+     6
+    ]
+   ],
+   "Raging Blows": [
+    [
+     2
+    ]
+   ],
+   "Death Wish": [
+    [
+     20,
+     5,
+     30
+    ]
+   ],
+   "Improved Intercept": [
+    [
+     5
+    ],
+    [
+     10
+    ]
+   ],
+   "Improved Berserker Rage": [
+    [
+     5,
+     50
+    ],
+    [
+     10,
+     100
+    ]
+   ],
+   "Bloodthirst": [
+    [
+     35,
+     30,
+     10,
+     10
+    ]
+   ],
+   "Toughness": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ],
+    [
+     8
+    ],
+    [
+     10
+    ]
+   ],
+   "Last Stand": [
+    [
+     30,
+     20
+    ]
+   ],
+   "Master of Defense": [
+    [
+     50,
+     5
+    ],
+    [
+     100,
+     5
+    ]
+   ],
+   "Vanguard": [
+    []
+   ],
+   "Improved Shield Wall": [
+    [
+     5.5
+    ],
+    [
+     11
+    ]
+   ],
+   "Concussion Blow": [
+    [
+     5
+    ]
+   ],
+   "Improved Shield Bash": [
+    [
+     50,
+     3
+    ],
+    [
+     100,
+     3
+    ]
+   ],
+   "Shield Slam": [
+    [
+     421,
+     439,
+     50,
+     1
+    ]
+   ]
+  },
+  "Paladin": {
+   "Improved Holy Strike": [
+    [
+     1
+    ],
+    [
+     2
+    ]
+   ],
+   "Divine Strength": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ],
+    [
+     8
+    ],
+    [
+     10
+    ]
+   ],
+   "Divine Intellect": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ],
+    [
+     8
+    ],
+    [
+     10
+    ]
+   ],
+   "Voice of Truth": [
+    [
+     6
+    ]
+   ],
+   "Divine Favor": [
+    [
+     100
+    ]
+   ],
+   "Holy Shock": [
+    [
+     129,
+     139,
+     110,
+     118
+    ]
+   ],
+   "Light's Vigil": [
+    [
+     30,
+     315,
+     333,
+     175,
+     189,
+     75,
+     1
+    ]
+   ],
+   "Toughness": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ],
+    [
+     8
+    ],
+    [
+     10
+    ]
+   ],
+   "Improved Seal of Fury": [
+    [
+     38,
+     15,
+     45
+    ]
+   ],
+   "Sacred Duty": [
+    [
+     2,
+     30
+    ],
+    [
+     4,
+     60
+    ]
+   ],
+   "Swift Judgement": [
+    [
+     100
+    ]
+   ],
+   "Improved Hammer of Justice": [
+    [
+     5
+    ],
+    [
+     10
+    ],
+    [
+     15
+    ]
+   ],
+   "Templar's Bulwark": [
+    [
+     100,
+     8,
+     1
+    ]
+   ],
+   "Holy Shield": [
+    [
+     20,
+     10,
+     110,
+     20,
+     4
+    ]
+   ],
+   "Deflection": [
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     4
+    ],
+    [
+     5
+    ]
+   ],
+   "Improved Judgement": [
+    [
+     1
+    ],
+    [
+     2
+    ]
+   ],
+   "Holy Conduit": [
+    [
+     20
+    ],
+    [
+     40
+    ]
+   ],
+   "Vindication": [
+    [
+     42,
+     1,
+     30
+    ],
+    [
+     85,
+     2,
+     30
+    ],
+    [
+     127,
+     3,
+     30
+    ]
+   ],
+   "Seal of Command": [
+    [
+     70,
+     30,
+     68,
+     73,
+     137,
+     146
+    ]
+   ],
+   "Sacred Arbiter": [
+    [
+     10
+    ]
+   ],
+   "Repentance": [
+    [
+     6
+    ]
+   ],
+   "Instrument of Law": [
+    [
+     0.5,
+     10
+    ],
+    [
+     1,
+     20
+    ]
+   ],
+   "Twist of Light": [
+    []
+   ]
+  },
+  "Hunter": {
+   "Pathfinding": [
+    [
+     3
+    ],
+    [
+     6
+    ]
+   ],
+   "Improved Revive Pet": [
+    [
+     3,
+     20,
+     15
+    ],
+    [
+     6,
+     40,
+     30
+    ]
+   ],
+   "Bestial Swiftness": [
+    [
+     30
+    ]
+   ],
+   "Summon Hawk": [
+    [
+     53,
+     18,
+     2
+    ]
+   ],
+   "Spirit Bond": [
+    [
+     1,
+     10
+    ],
+    [
+     2,
+     10
+    ]
+   ],
+   "Intimidation": [
+    [
+     3,
+     100
+    ]
+   ],
+   "Frenzy": [
+    [
+     20,
+     30,
+     8
+    ],
+    [
+     40,
+     30,
+     8
+    ],
+    [
+     60,
+     30,
+     8
+    ],
+    [
+     80,
+     30,
+     8
+    ],
+    [
+     100,
+     30,
+     8
+    ]
+   ],
+   "Bestial Wrath": [
+    [
+     50,
+     18
+    ]
+   ],
+   "Hawk Eye": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ]
+   ],
+   "Improved Concussive Shot": [
+    [
+     4,
+     3
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     12,
+     3
+    ],
+    [
+     16,
+     3
+    ],
+    [
+     20,
+     3
+    ]
+   ],
+   "Lone Wolf": [
+    [
+     20
+    ]
+   ],
+   "Trueshot Aura": [
+    [
+     45,
+     30,
+     30
+    ]
+   ],
+   "Rapid Recuperation": [
+    [
+     25,
+     50,
+     15
+    ],
+    [
+     50,
+     100,
+     15
+    ]
+   ],
+   "Scatter Shot": [
+    [
+     50,
+     4
+    ]
+   ],
+   "Ranged Weapon Specialization": [
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     4
+    ],
+    [
+     5
+    ]
+   ],
+   "Sniper Shot": [
+    [
+     160
+    ]
+   ],
+   "Clever Traps": [
+    [
+     15,
+     15
+    ],
+    [
+     30,
+     30
+    ]
+   ],
+   "Deterrence": [
+    [
+     25,
+     10
+    ]
+   ],
+   "Counterattack": [
+    [
+     50,
+     13,
+     5
+    ]
+   ],
+   "Strider Kick": [
+    [
+     100
+    ]
+   ],
+   "Lacerating Strikes": [
+    [
+     21,
+     40
+    ]
+   ]
+  },
+  "Rogue": {
+   "Ruthlessness": [
+    [
+     20
+    ],
+    [
+     40
+    ],
+    [
+     60
+    ]
+   ],
+   "Improved Slice and Dice": [
+    [
+     15
+    ],
+    [
+     30
+    ],
+    [
+     45
+    ]
+   ],
+   "Relentless Strikes": [
+    [
+     20,
+     25
+    ]
+   ],
+   "Improved Expose Armor": [
+    [
+     5,
+     1,
+     5
+    ],
+    [
+     10,
+     2,
+     5
+    ]
+   ],
+   "Vile Poisons": [
+    [
+     4,
+     8
+    ],
+    [
+     8,
+     16
+    ],
+    [
+     12,
+     24
+    ],
+    [
+     16,
+     32
+    ],
+    [
+     20,
+     40
+    ]
+   ],
+   "Cold Blood": [
+    [
+     100
+    ]
+   ],
+   "Mutilate": [
+    [
+     75,
+     13,
+     20,
+     2
+    ]
+   ],
+   "Seal Fate": [
+    [
+     20
+    ],
+    [
+     40
+    ],
+    [
+     60
+    ],
+    [
+     80
+    ],
+    [
+     100
+    ]
+   ],
+   "Venom": [
+    [
+     30,
+     10,
+     1,
+     9,
+     2,
+     12,
+     3,
+     15,
+     4,
+     18,
+     5,
+     21
+    ]
+   ],
+   "Improved Eviscerate": [
+    [
+     7
+    ],
+    [
+     13
+    ],
+    [
+     20
+    ]
+   ],
+   "Improved Sinister Strike": [
+    [
+     3
+    ],
+    [
+     5
+    ]
+   ],
+   "Lightning Reflexes": [
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     4
+    ],
+    [
+     5
+    ]
+   ],
+   "Puncturing Wounds": [
+    [
+     10,
+     5,
+     15
+    ],
+    [
+     20,
+     10,
+     30
+    ],
+    [
+     30,
+     15,
+     45
+    ]
+   ],
+   "Riposte": [
+    [
+     150,
+     6
+    ]
+   ],
+   "Improved Sprint": [
+    [
+     50
+    ],
+    [
+     100
+    ]
+   ],
+   "Improved Kick": [
+    [
+     50,
+     2
+    ],
+    [
+     100,
+     2
+    ]
+   ],
+   "Restless Blades": [
+    [
+     2
+    ]
+   ],
+   "Blade Flurry": [
+    [
+     20,
+     15
+    ]
+   ],
+   "Adrenaline Rush": [
+    [
+     100,
+     15
+    ]
+   ],
+   "Camouflage": [
+    [
+     3,
+     2
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     9,
+     4
+    ],
+    [
+     12,
+     5
+    ],
+    [
+     15,
+     6
+    ]
+   ],
+   "Master of Deception": [
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ]
+   ],
+   "Opportunity": [
+    [
+     5
+    ],
+    [
+     10
+    ]
+   ],
+   "Elusiveness": [
+    [
+     45
+    ],
+    [
+     1.5
+    ]
+   ],
+   "Improved Ambush": [
+    [
+     15
+    ],
+    [
+     30
+    ],
+    [
+     45
+    ]
+   ],
+   "Initiative": [
+    [
+     33
+    ],
+    [
+     67
+    ],
+    [
+     100
+    ]
+   ],
+   "Ghostly Strike": [
+    [
+     125,
+     180,
+     15,
+     7,
+     1
+    ]
+   ],
+   "Heightened Senses": [
+    [
+     1,
+     2
+    ],
+    [
+     3,
+     4
+    ]
+   ],
+   "Premeditation": [
+    [
+     2,
+     20
+    ]
+   ],
+   "Preparation": [
+    []
+   ],
+   "Hemorrhage": [
+    [
+     100,
+     145,
+     15,
+     15,
+     1
+    ]
+   ],
+   "Thousand Cuts": [
+    [
+     10,
+     3,
+     5
+    ]
+   ]
+  },
+  "Priest": {
+   "Inner Focus": [
+    [
+     100,
+     25
+    ]
+   ],
+   "Soul Warding": [
+    [
+     4,
+     15
+    ]
+   ],
+   "Penance": [
+    [
+     96,
+     233,
+     1,
+     2
+    ]
+   ],
+   "Power Infusion": [
+    [
+     20,
+     15
+    ]
+   ],
+   "Improved Renew": [
+    [
+     5
+    ],
+    [
+     10
+    ],
+    [
+     15
+    ]
+   ],
+   "Holy Specialization": [
+    [
+     1
+    ],
+    [
+     2
+    ],
+    [
+     3
+    ],
+    [
+     4
+    ],
+    [
+     5
+    ]
+   ],
+   "Spell Warding": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ],
+    [
+     8
+    ],
+    [
+     10
+    ]
+   ],
+   "Divine Fury": [
+    [
+     0.1
+    ],
+    [
+     0.2
+    ],
+    [
+     0.3
+    ],
+    [
+     0.4
+    ],
+    [
+     0.5
+    ]
+   ],
+   "Holy Nova": [
+    [
+     31,
+     36,
+     10,
+     10,
+     68,
+     77
+    ]
+   ],
+   "Holy Reach": [
+    [
+     10
+    ],
+    [
+     20
+    ]
+   ],
+   "Binding Heal": [
+    [
+     346,
+     403
+    ]
+   ],
+   "Spirit of Redemption": [
+    [
+     15
+    ]
+   ],
+   "Prayer of Mending": [
+    [
+     247,
+     20,
+     5,
+     30
+    ]
+   ],
+   "Blackout": [
+    [
+     2,
+     3
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     6,
+     3
+    ],
+    [
+     8,
+     3
+    ],
+    [
+     10,
+     3
+    ]
+   ],
+   "Shadow Affinity": [
+    [
+     10
+    ],
+    [
+     20
+    ],
+    [
+     30
+    ]
+   ],
+   "Improved Shadow Word: Pain": [
+    [
+     3
+    ],
+    [
+     6
+    ]
+   ],
+   "Shadow Reach": [
+    [
+     10
+    ],
+    [
+     20
+    ]
+   ],
+   "Improved Mind Blast": [
+    [
+     0.5
+    ],
+    [
+     1
+    ],
+    [
+     1.5
+    ],
+    [
+     2
+    ],
+    [
+     2.5
+    ]
+   ],
+   "Improved Psychic Scream": [
+    [
+     2
+    ],
+    [
+     4
+    ]
+   ],
+   "Mind Flay": [
+    [
+     104,
+     3,
+     50
+    ]
+   ],
+   "Improved Mind Flay": [
+    [
+     10,
+     5,
+     35
+    ],
+    [
+     20,
+     10,
+     20
+    ]
+   ],
+   "Improved Fade": [
+    [
+     3
+    ],
+    [
+     6
+    ]
+   ],
+   "Vampiric Embrace": [
+    [
+     20,
+     30
+    ]
+   ],
+   "Silence": [
+    [
+     5,
+     3
+    ]
+   ],
+   "Devouring Contagion": [
+    [
+     25,
+     5
+    ],
+    [
+     50,
+     10
+    ]
+   ],
+   "Early Demise": [
+    [
+     20,
+     15
+    ],
+    [
+     20,
+     30
+    ]
+   ],
+   "Shadowform": [
+    [
+     10,
+     50,
+     100,
+     15
+    ]
+   ]
+  },
+  "Shaman": {
+   "Reverberation": [
+    [
+     0.2
+    ],
+    [
+     0.4
+    ],
+    [
+     0.6
+    ],
+    [
+     0.8
+    ],
+    [
+     1
+    ]
+   ],
+   "Elemental Focus": [
+    [
+     10,
+     100
+    ]
+   ],
+   "Call of Thunder": [
+    [
+     3
+    ]
+   ],
+   "Earthbound": [
+    [
+     5
+    ]
+   ],
+   "Lava Burst": [
+    [
+     158,
+     187,
+     20
+    ]
+   ],
+   "Earth's Grasp": [
+    [
+     25,
+     10
+    ],
+    [
+     50,
+     20
+    ]
+   ],
+   "Guardian Totems": [
+    [
+     10,
+     1
+    ],
+    [
+     20,
+     2
+    ]
+   ],
+   "Improved Lightning Shield": [
+    [
+     5
+    ],
+    [
+     10
+    ],
+    [
+     15
+    ]
+   ],
+   "Elemental Weapons": [
+    [
+     7,
+     13,
+     5
+    ],
+    [
+     14,
+     27,
+     10
+    ],
+    [
+     20,
+     40,
+     15
+    ]
+   ],
+   "Shamanistic Focus": [
+    [
+     45
+    ]
+   ],
+   "Stormstrike": [
+    [
+     20,
+     12
+    ]
+   ],
+   "Spirit Weapons": [
+    [
+     30,
+     30
+    ]
+   ],
+   "Mental Quickness": [
+    [
+     15
+    ],
+    [
+     30
+    ]
+   ],
+   "Rage of the Farseer": [
+    [
+     30,
+     25
+    ]
+   ],
+   "Improved Healing Wave": [
+    [
+     0.1
+    ],
+    [
+     0.2
+    ],
+    [
+     0.3
+    ],
+    [
+     0.4
+    ],
+    [
+     0.5
+    ]
+   ],
+   "Ancestral Healing": [
+    [
+     8,
+     15
+    ],
+    [
+     16,
+     15
+    ],
+    [
+     25,
+     15
+    ]
+   ],
+   "Water Shield": [
+    [
+     3,
+     2,
+     10
+    ]
+   ],
+   "Mana Tide Totem": [
+    [
+     5,
+     12,
+     88,
+     3,
+     30
+    ]
+   ],
+   "Nature's Swiftness": [
+    [
+     10
+    ]
+   ],
+   "Riptide": [
+    [
+     479,
+     528,
+     499,
+     15,
+     25
+    ]
+   ]
+  },
+  "Mage": {
+   "Wand Specialization": [
+    [
+     13
+    ],
+    [
+     25
+    ]
+   ],
+   "Arcane Concentration": [
+    [
+     2,
+     100
+    ],
+    [
+     4,
+     100
+    ],
+    [
+     6,
+     100
+    ],
+    [
+     8,
+     100
+    ],
+    [
+     10,
+     100
+    ]
+   ],
+   "Arcane Blast": [
+    [
+     95,
+     104,
+     10,
+     175,
+     4,
+     8
+    ]
+   ],
+   "Missile Barrage": [
+    [
+     40,
+     20,
+     50,
+     100,
+     0.5
+    ]
+   ],
+   "Presence of Mind": [
+    [
+     10
+    ]
+   ],
+   "Arcane Power": [
+    [
+     15,
+     30,
+     30
+    ]
+   ],
+   "Wake of Fire": [
+    [
+     1,
+     20,
+     25
+    ],
+    [
+     2,
+     20,
+     50
+    ]
+   ],
+   "Incineration": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ]
+   ],
+   "Ignite": [
+    [
+     8,
+     4
+    ],
+    [
+     16,
+     4
+    ],
+    [
+     24,
+     4
+    ],
+    [
+     32,
+     4
+    ],
+    [
+     40,
+     4
+    ]
+   ],
+   "Flame Throwing": [
+    [
+     3
+    ],
+    [
+     6
+    ]
+   ],
+   "Improved Flamestrike": [
+    [
+     5
+    ],
+    [
+     10
+    ],
+    [
+     15
+    ]
+   ],
+   "Pyroblast": [
+    [
+     155,
+     185,
+     76,
+     12
+    ]
+   ],
+   "Improved Fire Ward": [
+    [
+     10
+    ],
+    [
+     20
+    ]
+   ],
+   "Hot Streak": [
+    [
+     15,
+     25,
+     3
+    ]
+   ],
+   "Master of Elements": [
+    [
+     10
+    ],
+    [
+     20
+    ],
+    [
+     30
+    ]
+   ],
+   "Critical Mass": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ]
+   ],
+   "Blast Wave": [
+    [
+     160,
+     191,
+     50,
+     6
+    ]
+   ],
+   "Fire Power": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ],
+    [
+     8
+    ],
+    [
+     10
+    ]
+   ],
+   "Combustion": [
+    [
+     10,
+     4
+    ]
+   ],
+   "Improved Frostbolt": [
+    [
+     0.1
+    ],
+    [
+     0.2
+    ],
+    [
+     0.3
+    ],
+    [
+     0.4
+    ],
+    [
+     0.5
+    ]
+   ],
+   "Ice Shards": [
+    [
+     20
+    ],
+    [
+     40
+    ],
+    [
+     60
+    ],
+    [
+     80
+    ],
+    [
+     100
+    ]
+   ],
+   "Improved Frost Nova": [
+    [
+     2
+    ],
+    [
+     4
+    ]
+   ],
+   "Frostbite": [
+    [
+     5,
+     5
+    ],
+    [
+     10,
+     5
+    ],
+    [
+     15,
+     5
+    ]
+   ],
+   "Piercing Ice": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ]
+   ],
+   "Frost Channeling": [
+    [
+     5,
+     10
+    ],
+    [
+     10,
+     20
+    ],
+    [
+     15,
+     30
+    ]
+   ],
+   "Ice Lance": [
+    [
+     28,
+     33,
+     300
+    ]
+   ],
+   "Arctic Reach": [
+    [
+     10
+    ],
+    [
+     20
+    ]
+   ],
+   "Ice Block": [
+    [
+     10
+    ]
+   ],
+   "Cold Snap": [
+    []
+   ],
+   "Fingers of Frost": [
+    [
+     15,
+     1,
+     15
+    ],
+    [
+     15,
+     2,
+     15
+    ]
+   ],
+   "Ice Barrier": [
+    [
+     431,
+     1
+    ]
+   ]
+  },
+  "Warlock": {
+   "Improved Life Tap": [
+    [
+     10
+    ],
+    [
+     20
+    ]
+   ],
+   "Amplify Curse": [
+    [
+     50,
+     20,
+     30
+    ]
+   ],
+   "Curse of Exhaustion": [
+    [
+     30,
+     12
+    ]
+   ],
+   "Siphon Life": [
+    [
+     15,
+     3,
+     30
+    ]
+   ],
+   "Drain Hope": [
+    [
+     52,
+     1,
+     10,
+     6
+    ]
+   ],
+   "Improved Voidwalker": [
+    [
+     10
+    ],
+    [
+     20
+    ],
+    [
+     30
+    ]
+   ],
+   "Improved Sayaad": [
+    [
+     10,
+     10
+    ],
+    [
+     20,
+     20
+    ],
+    [
+     30,
+     30
+    ]
+   ],
+   "Demonic Sacrifice": [
+    [
+     2,
+     15,
+     2,
+     4,
+     15,
+     3,
+     4
+    ]
+   ],
+   "Master Summoner": [
+    [
+     2,
+     20
+    ],
+    [
+     4,
+     40
+    ]
+   ],
+   "Fel Domination": [
+    [
+     5.5,
+     50
+    ]
+   ],
+   "Soul Link": [
+    [
+     30,
+     3
+    ]
+   ],
+   "Demonic Pact": [
+    []
+   ],
+   "Shadowburn": [
+    [
+     102,
+     111,
+     8
+    ]
+   ],
+   "Conflagrate": [
+    [
+     109,
+     132
+    ]
+   ],
+   "Bane of Havoc": [
+    [
+     5,
+     15,
+     1
+    ]
+   ],
+   "Incinerate": [
+    [
+     125,
+     140,
+     25
+    ]
+   ]
+  },
+  "Druid": {
+   "Nature's Splendor": [
+    [
+     3,
+     6,
+     2
+    ]
+   ],
+   "Insect Swarm": [
+    [
+     2,
+     55,
+     12
+    ]
+   ],
+   "Nature's Grace": [
+    [
+     10,
+     3
+    ]
+   ],
+   "Moonkin Form": [
+    [
+     360,
+     45,
+     3
+    ]
+   ],
+   "Thick Hide": [
+    [
+     1,
+     0.67
+    ],
+    [
+     2,
+     1.33
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "Savage Fury": [
+    [
+     5
+    ],
+    [
+     10
+    ]
+   ],
+   "Feral Charge": [
+    [
+     4,
+     3
+    ]
+   ],
+   "Sharpened Claws": [
+    [
+     3
+    ],
+    [
+     6
+    ]
+   ],
+   "Mangle": [
+    [
+     100,
+     26
+    ]
+   ],
+   "Predatory Instincts": [
+    [
+     10
+    ],
+    [
+     20
+    ]
+   ],
+   "Leader of the Pack": [
+    [
+     45,
+     3
+    ]
+   ],
+   "Berserk": [
+    [
+     3,
+     100,
+     15
+    ]
+   ],
+   "Natural Shapeshifter": [
+    [
+     10
+    ],
+    [
+     20
+    ],
+    [
+     30
+    ]
+   ],
+   "Gift of the Earthmother": [
+    [
+     0.5
+    ]
+   ],
+   "Tranquil Spirit": [
+    [
+     2
+    ],
+    [
+     4
+    ],
+    [
+     6
+    ],
+    [
+     8
+    ],
+    [
+     10
+    ]
+   ],
+   "Improved Rejuvenation": [
+    [
+     5
+    ],
+    [
+     10
+    ],
+    [
+     15
+    ]
+   ],
+   "Swiftmend": [
+    []
+   ],
+   "Nature's Swiftness": [
+    []
+   ],
+   "Improved Regrowth": [
+    [
+     10
+    ],
+    [
+     20
+    ],
+    [
+     30
+    ],
+    [
+     40
+    ],
+    [
+     50
+    ]
+   ],
+   "Wild Growth": [
+    [
+     285,
+     7,
+     43
+    ]
+   ]
+  }
+ }
+}
