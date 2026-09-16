@@ -78,7 +78,8 @@ func (priest *Priest) newMindFlaySpellConfig(rank int, tickIdx int32) core.Spell
 			},
 		},
 
-		// TODO: only rank 1 of Improved Mind Flay was shown, beta will confirm the rank 2 value
+		// TODO: only rank 1 of Improved Mind Flay was seen at 10%, the 20% the tree reads at rank 2
+		// comes from the community talent calculator rather than from a tooltip.
 		DamageMultiplier: 1 + 0.1*float64(priest.Talents.ImprovedMindFlay),
 		ThreatMultiplier: 1,
 
