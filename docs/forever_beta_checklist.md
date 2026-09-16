@@ -52,15 +52,16 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/mage/talents.go:659` — Shatter's five ranks at 10% each are the community talent calculator's. The only demo crop of the cell reads 50% at Rank 3/3, which five ranks of 10% cannot produce at rank 3, so neither the rank count nor the step is confirmed. Beta will confirm both.
 - `sim/mage/talents.go:674` — a cast already in progress when a chill lands is held out of Fingers of Frost, so it neither takes the Shatter crit nor spends the charge. Beta will confirm which cast the charge belongs to.
 
-## Paladin (22)
+## Paladin (23)
 
 - `sim/paladin/consecration.go:10` — assumed baseline, beta will confirm - Consecration is no longer a talent and the Forever tree builds on top of it through Consecrated Ground and Holy Conduit.
 - `sim/paladin/hammer_of_wrath.go:29` — Only rank 1 of Instrument of Law was seen at 0.5 sec, the full second the tree reads at rank 2 comes from the community talent calculator rather than from a tooltip.
 - `sim/paladin/holy_shield.go:18` — Only rank 1 was seen at 110, up from Classic's 65. The other ranks are scaled by the same ratio until the beta shows them.
 - `sim/paladin/holy_strike.go:15` — assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat damage is taken from the published tooltip rather than from the game. Forever's own spell id for Holy Strike is 17143, which the item database does not carry, so the sim keeps Classic's unused 13953.
-- `sim/paladin/holy_strike.go:26` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
-- `sim/paladin/holy_strike.go:38` — Only rank 1 of Iron Creed's threat was seen at 5%, the 5% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
-- `sim/paladin/holy_strike.go:91` — Only rank 1 of Iron Creed's damage reduction was seen at 2%, the 2% per rank the tree reads comes from the community talent calculator rather than from a tooltip. The 6 seconds is flat at every rank.
+- `sim/paladin/holy_strike.go:17` — Holy damage on the melee hit table, so it rolls partial resists the way every other Holy ability here does. Whether a melee-table Holy strike actually partial resists is unknown; if it does not, it wants `SpellFlagIgnoreResists`. Raised by AdamRC from the demo, 16 September.
+- `sim/paladin/holy_strike.go:29` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
+- `sim/paladin/holy_strike.go:41` — Only rank 1 of Iron Creed's threat was seen at 5%, the 5% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
+- `sim/paladin/holy_strike.go:94` — Only rank 1 of Iron Creed's damage reduction was seen at 2%, the 2% per rank the tree reads comes from the community talent calculator rather than from a tooltip. The 6 seconds is flat at every rank.
 - `sim/paladin/sotc.go:34` — assumed baseline, beta will confirm - Improved Seal of the Crusader is gone from the tree and the raid reads the improved Judgement of the Crusader through Debuffs either way.
 - `sim/paladin/swift_judgement.go:11` — assumed baseline, beta will confirm - the tooltip carries no cooldown, so it is given a minute, long enough that it buys one extra Judgement rather than a second rotation.
 - `sim/paladin/talents.go:19` — Only rank 1 of Divine Precision was seen, ranks 2 and 3 are extrapolated from it.

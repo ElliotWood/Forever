@@ -14,6 +14,9 @@ import (
 // about yet.
 // TODO: assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat
 // damage is taken from the published tooltip rather than from the game.
+// TODO: beta will confirm - Holy damage on the melee hit table, so it rolls partial resists the
+// way every other Holy ability here does. Whether a melee-table Holy strike actually partial
+// resists is unknown; if it does not, it wants SpellFlagIgnoreResists.
 const (
 	holyStrikeWeaponDamage = 0.4
 	holyStrikeMinDamage    = 36.0
