@@ -110,17 +110,20 @@ The priest healing spellbook is commented out in `RegisterHealingSpells`, so Fla
 - `sim/rogue/talents.go:352` — Only rank 1 of Quietus was seen and the damage bonus is assumed to scale linearly. The health threshold cannot be extrapolated alongside it, so rank 1's 35% is used for every rank and the tree now reads the same. Beta will confirm.
 - `sim/rogue/venom.go:47` — The tooltip showed no Energy cost, the 25 matches the other Rogue finishers.
 
-## Shaman (13)
+## Shaman (16)
 
 - `sim/shaman/air_totems.go:50` — The sim won't respect the value of a totem dropped via the APL. It uses hard-coded values from buffs.go bonusDamage := WindfuryTotemBonusDamage[rank]
 - `sim/shaman/lava_burst.go:11` — Only the damage range and the Flame Shock bonus were on the tooltip. The cast time, cooldown, mana cost and coefficient are taken from the spell of the same name, beta will confirm them.
 - `sim/shaman/lightning_overload.go:25` — Only rank 1 was seen, beta will confirm that the ranks go up in steps of 3%.
-- `sim/shaman/talents.go:152` — Only rank 1 was seen, beta will confirm that the ranks stack to 0.51 sec.
-- `sim/shaman/talents.go:157` — Only rank 1 was seen, beta will confirm that rank 2 doubles both halves.
-- `sim/shaman/talents.go:263` — Only rank 1 was seen, beta will confirm that the ranks go up in steps of 20%.
-- `sim/shaman/talents.go:427` — Only rank 1 was seen, beta will confirm whether both chances really double at rank 2.
-- `sim/shaman/talents.go:465` — The tooltip never showed a proc rate and only rank 1 was seen, beta will confirm both.
-- `sim/shaman/talents.go:513` — The tooltip showed no cooldown, beta will confirm it. 3 minutes matches the other class cooldowns of this size.
+- `sim/shaman/talents.go:68` — Only rank 1 of Improved Reincarnation's 2% health was seen, the 4% the tree reads at rank 2 comes from the community talent calculator rather than from a tooltip.
+- `sim/shaman/talents.go:139` — Only rank 1 of Elemental Alacrity's 0.17 sec was seen, the 0.34 and 0.51 the tree reads come from the community talent calculator rather than from a tooltip.
+- `sim/shaman/talents.go:145` — Only rank 1 of Improved Fire Nova's 10% and 2 sec were seen, the doubled rank 2 the tree reads comes from the community talent calculator rather than from a tooltip.
+- `sim/shaman/talents.go:252` — Only rank 1 of Elemental Fury's 20% was seen, the steps up to 100% the tree reads come from the community talent calculator rather than from a tooltip.
+- `sim/shaman/talents.go:420` — Only rank 1 of Improved Stormstrike's 50% was seen, the doubling to a certainty at rank 2 comes from the community talent calculator rather than from a tooltip, and a talent that makes two separate rolls certain is worth a second look.
+- `sim/shaman/talents.go:428` — Improved Stormstrike's 15 sec window is rank 1's and is applied at both ranks. The community talent calculator reads 30 sec at rank 2, but it extrapolates every number in a tooltip and a buff whose duration grows with the talent would be unusual.
+- `sim/shaman/talents.go:463` — Maelstrom Weapon's tooltip never showed a proc rate and only rank 1's 4% was seen, beta will confirm both.
+- `sim/shaman/talents.go:470` — Maelstrom Weapon's five stacks and 30 sec are rank 1's and are applied at every rank, because five stacks of 4% per point reach exactly a free instant cast at 5/5 and the calculator's extrapolated 25 stacks over 150 sec overshoot it several times over.
+- `sim/shaman/talents.go:515` — The tooltip showed no cooldown, beta will confirm it. 3 minutes matches the other class cooldowns of this size.
 - `sim/shaman/totems.go:9` — Assumed baseline rather than deleted, beta will confirm it.
 - `sim/shaman/water_shield.go:18` — "Only one globe will activate every few seconds", the tooltip never said how long.
 - `sim/shaman/water_totems.go:115` — The sim won't respect the value of a totem dropped via the APL. It uses hard-coded values from buffs.go manaRestoreBase := ManaSpringTotemManaRestore[rank]
