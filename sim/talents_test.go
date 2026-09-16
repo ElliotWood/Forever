@@ -42,6 +42,14 @@ type talentNode struct {
 	Location  talentLocation  `json:"location"`
 	MaxPoints *int            `json:"maxPoints"`
 	Prereq    *talentLocation `json:"prereqLocation"`
+
+	// Read by TestConfirmedTalentRanksMatchTheSim, which fills the description's
+	// placeholders from each rank's values to compare against what the game shows. A rank
+	// holds numbers alongside the odd string, which is a pluralisation helper ("" or "s")
+	// rather than a value, so the entries stay raw and only the numbers are read.
+	Name        string              `json:"name"`
+	Description string              `json:"description"`
+	Ranks       [][]json.RawMessage `json:"ranks"`
 }
 
 type talentTree struct {
