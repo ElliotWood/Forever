@@ -1,5 +1,11 @@
 [
 	{
+		"number": 156,
+		"title": "Note that Season of Discovery is a weak source for Lacerate",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/156"
+	},
+	{
 		"number": 155,
 		"title": "Check the sim against every talent rank the beta has confirmed",
 		"mergedAt": "2026-09-16",
