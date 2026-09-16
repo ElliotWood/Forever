@@ -73,7 +73,9 @@ func (warrior *Warrior) applyTwoHandedWeaponSpecialization() {
 
 // Weaponmaster folds the four Classic weapon specialization talents into one talent that pays
 // out differently depending on what is equipped.
-// TODO: only rank 1 was shown, beta will confirm the 1% crit / 3% armor / 1% extra attack per point.
+// TODO: only rank 1 was shown. The 1% crit / 3% armor / 1% extra attack per point that the tree
+// now lists for every rank comes from the community talent calculator, which is rebuilt from the
+// same rank 1 tooltip, so it corroborates this reading rather than confirming it. Beta will settle it.
 func (warrior *Warrior) applyWeaponmaster() {
 	points := warrior.Talents.Weaponmaster
 	if points == 0 {
@@ -229,6 +231,11 @@ func (warrior *Warrior) applyDualWieldSpecialization() {
 
 // Forever turns Enrage into a chance to gain a flat 2% Physical damage buff from any damage
 // taken, where Classic only fired it on crits and scaled the buff with points.
+// TODO: only rank 1's 30% was shown. Read per point the chance passes 100% at 4/5, so the cap
+// below leaves the last point buying nothing, which says the slope is too steep rather than that
+// the talent ends in a certainty. Classic ranked the damage and left the chance flat at 20%, so
+// it offers no slope for the half Forever put the ranks on. Beta will confirm where the chance
+// lands at each rank.
 func (warrior *Warrior) applyEnrage() {
 	if warrior.Talents.Enrage == 0 {
 		return

@@ -228,6 +228,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'The warrior picker stops promising what the sim does not roll',
+				prs: [139],
+				changed:
+					"Three warrior talents described something the sim never applies. Unbridled Wrath and Improved Shield Wall repeated rank 1 at every rank, a 12% chance and 5.5 min, where the sim reads the 12% per point and takes another 5.5 min off the cooldown for the second point, so the picker showed points that buy nothing. Enrage promised 30/60/90/120/150%, a chance no roll can meet, extrapolated from Classic's Enrage where that scale is the damage bonus and the chance is flat at every rank; the tree now reads the capped 30/60/90/100/100 the sim rolls. Weaponmaster's numbers, the fourth checked, match the sim exactly. Nothing here is confirmed: only rank 1 was shown on the demo, so the beta checklist keeps all four and gains an entry for Enrage.",
+				effect: 'No simulated number moves. What the picker shows a warrior is what the sim does with the points.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Two shaman talents stop promising a scaling they never had',
 				prs: [140],
 				changed:
