@@ -12,6 +12,12 @@
 		"url": "https://github.com/ElliotWood/Forever/pull/142"
 	},
 	{
+		"number": 136,
+		"title": "read fingers of frost per point and give shatter five rank values",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/136"
+	},
+	{
 		"number": 135,
 		"title": "reconcile the druid talent tree's per-rank values with the sim",
 		"mergedAt": "2026-09-15",

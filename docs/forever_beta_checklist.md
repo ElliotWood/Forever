@@ -79,11 +79,11 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 
 Infusion of Light is not on that list because there is nothing to check against: the sim has no Holy Light for it to shorten, so it is one of the talents below that the sim never reads. Its rank 2 half second still came from the community talent calculator, so the beta pass should read the tooltip for it rather than treating the tree as settled.
 
-## Priest (11)
+## Priest (12)
 
 - `sim/priest/devouring_plague.go:53` — only rank 1 of Devouring Contagion was shown, beta will confirm the rank 2 value
 - `sim/priest/holy_nova.go:13` — beta will confirm the higher ranks and the mana cost.
-- `sim/priest/mind_flay.go:81` — only rank 1 of Improved Mind Flay was shown, beta will confirm the rank 2 value
+- `sim/priest/mind_flay.go:81` — Only rank 1 of Improved Mind Flay was seen at 10%, the 20% the tree reads at rank 2 comes from the community talent calculator rather than from a tooltip.
 - `sim/priest/penance.go:18` — beta will confirm the cost, the cooldown and the level 60 damage.
 - `sim/priest/power_infusion.go:10` — let the option pick a raid member once buffing another player is modelled.
 - `sim/priest/power_infusion.go:25` — beta will confirm the cost and the cooldown.
@@ -91,7 +91,10 @@ Infusion of Light is not on that list because there is nothing to check against:
 - `sim/priest/priest.go:97` — beta will confirm that Devouring Plague is no longer race locked.
 - `sim/priest/talents.go:40` — only rank 1 was shown, beta will confirm that the two halves scale at 5% and 1% per point
 - `sim/priest/talents.go:57` — only rank 1 was shown, beta will confirm the 2% per point
-- `sim/priest/talents.go:398` — beta will confirm the 50%.
+- `sim/priest/talents.go:167` — Only rank 1 of Searing Light was shown, so rank 2's 4% Holy damage and 10% Holy Nova refund chance are both extrapolated from it. Beta will confirm them.
+- `sim/priest/talents.go:400` — beta will confirm the 50%.
+
+The priest healing spellbook is commented out in `RegisterHealingSpells`, so Flash Heal, Greater Heal, Power Word: Shield, Prayer of Healing and Renew never reach a sim. Every talent whose only effect is on those spells is therefore unmeasurable at any rank, whatever the picker promises: Improved Power Word: Shield, Improved Renew, Improved Healing, Spiritual Healing and Inspiration. The commented code also predates the current trees and reads Improved Power Word: Shield at 5/10/15% against the tree's 7/14/21%, Spiritual Healing at 2/4/6% against the tree's 3/6/9%, and Silent Resolve's healing threat at 7/14/20% against the tree's 10/20/30%. Fix those alongside whatever brings the spellbook back rather than in isolation, or they come back wrong.
 
 ## Rogue (10)
 
@@ -175,7 +178,7 @@ Warrior, the only class with concrete changes reported:
 
 Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
 
-## Talents the sim does not read (26)
+## Talents the sim does not read (37)
 
 These are in the trees and the picker marks them as not simulated; spending points in them changes nothing. Most are utility or PvP talents the Classic sim never modelled either. They are listed so the beta pass can confirm none of them turned into something a raid rotation cares about.
 
@@ -188,14 +191,25 @@ These are in the trees and the picker marks them as not simulated; spending poin
 - Paladin / Holy: Infusion of Light
 - Paladin / Protection: Improved Seal of Fury
 - Priest / Discipline: Wand Specialization (the sim has no wand attacks at all, so a shadow build's two points here are idle)
+- Priest / Discipline: Martyrdom
+- Priest / Discipline: Improved Inner Fire (Inner Fire itself is not in the spellbook)
 - Priest / Discipline: Soul Warding
+- Priest / Discipline: Improved Mana Burn (Mana Burn is not in the spellbook, so neither rank does anything)
 - Priest / Discipline: Renewed Hope
 - Priest / Discipline: Divine Aegis
-- Priest / Holy: Binding Heal
 - Priest / Holy: Twilight Focus (the sim never interrupts a cast, so pushback resistance has nothing to resist)
+- Priest / Holy: Blessed Recovery (the Smite build spends two points here)
+- Priest / Holy: Holy Reach
+- Priest / Holy: Binding Heal
 - Priest / Holy: Litany of Light
-- Priest / Shadow Magic: Early Demise (Shadow Word: Death is not in the spellbook at all)
+- Priest / Holy: Spirit of Redemption
+- Priest / Shadow Magic: Blackout (a stun, and a raid boss is immune; the Shadow build spends five points here)
 - Priest / Shadow Magic: Spirit Tap (it needs a kill, and nothing dies in a raid encounter; the Smite build spends three points here)
+- Priest / Shadow Magic: Shadow Reach
+- Priest / Shadow Magic: Improved Psychic Scream
+- Priest / Shadow Magic: Improved Fade
+- Priest / Shadow Magic: Silence
+- Priest / Shadow Magic: Early Demise (Shadow Word: Death is not in the spellbook at all)
 - Rogue / Subtlety: Improved Distract
 - Shaman / Restoration: Riptide
 - Warlock / Demonology: Demonic Aegis

@@ -164,6 +164,8 @@ func (priest *Priest) applyInspiration() {
 }
 
 // Searing Light now buffs every Holy spell and lets Holy Fire ticks refund the next Holy Nova.
+// TODO: only rank 1 was shown, so both halves of rank 2 are extrapolated from it at 2% Holy
+// damage and 5% refund chance per point. Beta will confirm them.
 func (priest *Priest) applySearingLight() {
 	if priest.Talents.SearingLight == 0 {
 		return
