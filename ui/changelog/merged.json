@@ -1,5 +1,11 @@
 [
 	{
+		"number": 159,
+		"title": "Add a check that the deployed site serves this checkout's talent data",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/159"
+	},
+	{
 		"number": 158,
 		"title": "Write confirmed_talents.json with the line endings the repo uses",
 		"mergedAt": "2026-09-16",
