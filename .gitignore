@@ -50,3 +50,7 @@ wowsimsod*.h
 .vscode/launch.json
 /wowsimcli
 /wowsimcli*
+
+# Python bytecode from the talent import tooling.
+__pycache__/
+*.pyc
