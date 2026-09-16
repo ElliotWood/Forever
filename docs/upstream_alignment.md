@@ -95,3 +95,29 @@ generation (moving to vite here too, below).
   Undead Paladin. The race lists per class are worth a check against the beta client.
 - Campsite profession buffs are announced without numbers; the two profession passives with
   figures (Skinning, Mining) are the only ones modelled.
+
+## The inherited TODOs are open upstream too (checked 17 September)
+
+The sim carries 246 `TODO`s. Roughly 150 are Forever's own - "only rank 1 was seen", "the
+demo", "beta will confirm" - and nothing upstream can answer them. The rest came across
+with the fork, and it is tempting to assume upstream has since worked them out.
+
+It has not. A pass over 24 of them against `wowsims/classic` master found no value this
+fork is missing. The files carrying them are character-for-character identical to
+upstream, TODOs included: `sim/common/enchant_effects.go`, `sim/core/attack.go`,
+`spell_result.go`, `mana.go`, `energy.go`, `cast.go`, `spell.go`, `consumes.go`,
+`sim/encounters/blackwing_lair.go` and others. Every "Proc rate assumed and needs testing"
+in `sim/common/item_effects.go` reads the same on both sides, and upstream's own tracker
+still lists those rates as untested.
+
+Where the two differ, this fork is ahead rather than behind: it adds `ArmorIgnorePercent`
+handling, per-hand Windfury, and a real answer to upstream's `// TODO AQ <=` in Arcane
+Missiles. Upstream's extra item registrations are Season of Discovery and AQ content this
+fork deliberately omits, some of it carrying SoD-specific proc tuning that would be wrong
+to import.
+
+So the inherited TODOs are a shared open question, not a gap. Re-checking is cheap if
+upstream moves, but nothing is waiting there to be picked up today.
+
+One practical note for anyone repeating the comparison: this fork is CRLF and upstream is
+LF, so a naive diff reports every line as changed. Strip CR first.
