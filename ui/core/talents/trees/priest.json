@@ -46,10 +46,7 @@
         },
         "spellIds": [
           14524,
-          14525,
-          14526,
-          14527,
-          14528
+          14525
         ],
         "maxPoints": 2,
         "notSimulated": true,
@@ -72,11 +69,11 @@
           "colIdx": 2
         },
         "spellIds": [
-          14898,
-          15349,
-          15354,
-          15355,
-          15356
+          0,
+          0,
+          0,
+          0,
+          0
         ],
         "maxPoints": 5,
         "name": "Twin Disciplines",
@@ -109,9 +106,7 @@
         "spellIds": [
           14523,
           14784,
-          14785,
-          14786,
-          14787
+          14785
         ],
         "maxPoints": 3,
         "name": "Silent Resolve",
@@ -139,9 +134,9 @@
           "colIdx": 1
         },
         "spellIds": [
-          16180,
-          16196,
-          16198
+          0,
+          0,
+          0
         ],
         "maxPoints": 3,
         "name": "Holy Precision",
@@ -207,7 +202,7 @@
           ],
           [
             100,
-            40
+            20
           ]
         ],
         "notSimulated": true
@@ -221,9 +216,7 @@
         "spellIds": [
           14520,
           14780,
-          14781,
-          14782,
-          14783
+          14781
         ],
         "maxPoints": 3,
         "name": "Mental Agility",
@@ -281,10 +274,10 @@
             17
           ],
           [
-            34
+            33
           ],
           [
-            51
+            50
           ]
         ]
       },
@@ -418,8 +411,8 @@
         "description": "Launches a volley of holy light at the target, causing {0} Holy damage to an enemy, or {1} healing to an ally, instantly and every {2} sec for {3} sec.",
         "ranks": [
           [
-            93,
-            223,
+            96,
+            233,
             1,
             2
           ]
@@ -538,9 +531,9 @@
           "colIdx": 0
         },
         "spellIds": [
-          16918,
-          16919,
-          16920
+          0,
+          0,
+          0
         ],
         "maxPoints": 3,
         "notSimulated": true,
@@ -555,7 +548,7 @@
             46
           ],
           [
-            69
+            70
           ]
         ]
       },
@@ -706,12 +699,12 @@
         "description": "Causes an explosion of holy light around the caster, causing {0} to {1} Holy damage to all enemy targets within {2} yards and healing all party members within {3} yards for {4} to {5}. These effects cause no threat.",
         "ranks": [
           [
-            30,
-            35,
+            31,
+            36,
             10,
             10,
-            64,
-            73
+            68,
+            77
           ]
         ]
       },
@@ -868,11 +861,11 @@
         "maxPoints": 1,
         "name": "Binding Heal",
         "icon": "spell_holy_blindingheal",
-        "description": "Heals a friendly target and the caster for {0} to {1}.",
+        "description": "Heals a friendly target and the caster for {0} to {1}. Low threat.",
         "ranks": [
           [
-            330,
-            387
+            346,
+            403
           ]
         ],
         "notSimulated": true
@@ -945,19 +938,19 @@
           ],
           [
             10,
-            2
-          ],
-          [
-            15,
             3
           ],
           [
+            15,
+            5
+          ],
+          [
             20,
-            4
+            6
           ],
           [
             25,
-            5
+            8
           ]
         ]
       },
@@ -970,9 +963,7 @@
         "spellIds": [
           14898,
           15349,
-          15354,
-          15355,
-          15356
+          15354
         ],
         "maxPoints": 3,
         "name": "Spiritual Healing",
@@ -1009,7 +1000,7 @@
         "description": "Places a spell on the target that heals them for {0} the next time they take damage or receive non-periodic healing. When the heal occurs, Prayer of Mending jumps to a party or raid member within {1} yards. Jumps up to {2} times and lasts {3} sec after each jump. This spell can only be placed on one target at a time per caster.",
         "ranks": [
           [
-            231,
+            247,
             20,
             5,
             30
@@ -1031,7 +1022,9 @@
         "spellIds": [
           15260,
           15327,
-          15328
+          15328,
+          15329,
+          15330
         ],
         "maxPoints": 5,
         "name": "Shadow Focus",
@@ -1185,8 +1178,7 @@
         },
         "spellIds": [
           17322,
-          17323,
-          17325
+          17323
         ],
         "maxPoints": 2,
         "name": "Shadow Reach",
@@ -1280,7 +1272,7 @@
         "description": "Assault the target's mind with Shadow energy, causing {0} Shadow damage over {1} sec and slowing their movement speed by {2}%.",
         "ranks": [
           [
-            119,
+            104,
             3,
             50
           ]
@@ -1370,9 +1362,7 @@
         "spellIds": [
           15257,
           15331,
-          15332,
-          15333,
-          15334
+          15332
         ],
         "maxPoints": 3,
         "name": "Shadow Weaving",
@@ -1386,7 +1376,7 @@
             66
           ],
           [
-            99
+            100
           ]
         ]
       },
@@ -1456,7 +1446,7 @@
             15
           ],
           [
-            40,
+            20,
             30
           ]
         ],

@@ -297,10 +297,10 @@
             33
           ],
           [
-            66
+            67
           ],
           [
-            99
+            100
           ]
         ]
       },
@@ -311,11 +311,11 @@
           "colIdx": 0
         },
         "spellIds": [
-          18271,
-          18272,
-          18273,
-          18274,
-          18275
+          0,
+          0,
+          0,
+          0,
+          0
         ],
         "maxPoints": 5,
         "name": "Malevolence",
@@ -688,8 +688,8 @@
       {
         "fieldName": "demonicBrand",
         "location": {
-          "rowIdx": 1,
-          "colIdx": 2
+          "rowIdx": 3,
+          "colIdx": 3
         },
         "spellIds": [
           18821,
@@ -728,7 +728,7 @@
         "fieldName": "felVitality",
         "location": {
           "rowIdx": 1,
-          "colIdx": 3
+          "colIdx": 2
         },
         "spellIds": [
           18731,
@@ -892,7 +892,7 @@
       {
         "fieldName": "demonicEnergies",
         "location": {
-          "rowIdx": 3,
+          "rowIdx": 1,
           "colIdx": 3
         },
         "spellIds": [
@@ -992,7 +992,7 @@
             66
           ],
           [
-            99
+            100
           ]
         ]
       },
@@ -1140,7 +1140,7 @@
       {
         "fieldName": "aftermath",
         "location": {
-          "rowIdx": 0,
+          "rowIdx": 1,
           "colIdx": 2
         },
         "spellIds": [
@@ -1253,7 +1253,7 @@
       {
         "fieldName": "bane",
         "location": {
-          "rowIdx": 1,
+          "rowIdx": 0,
           "colIdx": 2
         },
         "spellIds": [
@@ -1377,8 +1377,8 @@
       {
         "fieldName": "shadowAndFlame",
         "location": {
-          "rowIdx": 3,
-          "colIdx": 1
+          "rowIdx": 5,
+          "colIdx": 2
         },
         "spellIds": [
           30288,
@@ -1401,36 +1401,36 @@
             20
           ],
           [
-            2,
+            4,
             20,
-            2,
+            4,
             20,
-            20,
-            20
+            40,
+            40
           ],
           [
-            2,
+            6,
             20,
-            2,
+            6,
             20,
-            20,
-            20
+            60,
+            60
           ],
           [
-            2,
+            8,
             20,
-            2,
+            8,
             20,
-            20,
-            20
+            80,
+            80
           ],
           [
-            2,
+            10,
             20,
-            2,
+            10,
             20,
-            20,
-            20
+            100,
+            100
           ]
         ]
       },
@@ -1533,18 +1533,18 @@
             8
           ],
           [
-            16
+            17
           ],
           [
-            24
+            25
           ]
         ]
       },
       {
         "fieldName": "agonizingFlames",
         "location": {
-          "rowIdx": 5,
-          "colIdx": 2
+          "rowIdx": 3,
+          "colIdx": 1
         },
         "spellIds": [
           17927,

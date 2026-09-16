@@ -85,10 +85,10 @@
             12
           ],
           [
-            24
+            23
           ],
           [
-            36
+            35
           ]
         ]
       },
@@ -260,9 +260,7 @@
         "spellIds": [
           12163,
           12711,
-          12712,
-          12713,
-          12714
+          12712
         ],
         "maxPoints": 3,
         "name": "Two-Handed Weapon Specialization",
@@ -307,7 +305,7 @@
         "fieldName": "weaponmaster",
         "location": {
           "rowIdx": 4,
-          "colIdx": 0
+          "colIdx": 2
         },
         "spellIds": [
           0,
@@ -371,7 +369,7 @@
         "fieldName": "bloodthrill",
         "location": {
           "rowIdx": 4,
-          "colIdx": 2
+          "colIdx": 0
         },
         "spellIds": [
           0,
@@ -420,10 +418,7 @@
         },
         "spellIds": [
           12862,
-          12330,
-          20497,
-          20498,
-          20499
+          12330
         ],
         "maxPoints": 2,
         "name": "Improved Slam",
@@ -628,22 +623,22 @@
             2
           ],
           [
-            12,
+            24,
             1,
             2
           ],
           [
-            12,
+            36,
             1,
             2
           ],
           [
-            12,
+            48,
             1,
             2
           ],
           [
-            12,
+            60,
             1,
             2
           ]
@@ -709,7 +704,7 @@
           0
         ],
         "maxPoints": 3,
-        "name": "Blood Crazed",
+        "name": "Blood Craze",
         "description": "Regenerates {0}% of your total Health over {1} sec after being the victim of a critical strike, dealing damage with Bloodthirst, or suffering more than {2}% of your maximum Health from a single attack.",
         "ranks": [
           [
@@ -718,12 +713,12 @@
             20
           ],
           [
-            1,
+            2,
             6,
             20
           ],
           [
-            1,
+            3,
             6,
             20
           ]
@@ -838,22 +833,22 @@
         "maxPoints": 5,
         "name": "Enrage",
         "icon": "spell_shadow_unholyfrenzy",
-        "description": "Gives you a {0}% chance to deal 2% increased Physical damage for 12 sec after being the victim of any damaging attack.",
+        "description": "Gives you a 30% chance to deal {0}% increased Physical damage for 12 sec after being the victim of any damaging attack.",
         "ranks": [
           [
-            30
+            2
           ],
           [
-            60
+            4
           ],
           [
-            90
+            6
           ],
           [
-            120
+            8
           ],
           [
-            150
+            10
           ]
         ]
       },
@@ -876,7 +871,7 @@
             3
           ],
           [
-            6
+            5
           ]
         ]
       },
@@ -1257,7 +1252,7 @@
           ],
           [
             100,
-            10
+            5
           ]
         ]
       },
@@ -1297,9 +1292,7 @@
         "spellIds": [
           12303,
           12788,
-          12789,
-          12791,
-          12792
+          12789
         ],
         "maxPoints": 3,
         "name": "Defiance",
@@ -1364,10 +1357,10 @@
             7
           ],
           [
-            14
+            13
           ],
           [
-            21
+            20
           ]
         ],
         "notSimulated": true
@@ -1409,7 +1402,7 @@
             5.5
           ],
           [
-            5.5
+            11
           ]
         ]
       },

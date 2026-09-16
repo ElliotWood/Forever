@@ -200,16 +200,18 @@
         "maxPoints": 2,
         "name": "Improved Expose Armor",
         "icon": "ability_warrior_riposte",
-        "description": "Reduces the Energy cost of your Expose Armor ability by {0}, and refunds {1} Combo Point when cast with {2} Combo Points.",
+        "description": "Reduces the Energy cost of your Expose Armor ability by {0}, and refunds {1} Combo Point{2} when cast with {3} Combo Points.",
         "ranks": [
           [
             5,
             1,
+            "",
             5
           ],
           [
             10,
-            1,
+            2,
+            "s",
             5
           ]
         ]
@@ -359,7 +361,8 @@
           "colIdx": 0
         },
         "spellIds": [
-          14983
+          14983,
+          0
         ],
         "maxPoints": 2,
         "name": "Vigor",
@@ -377,7 +380,7 @@
       {
         "fieldName": "venom",
         "location": {
-          "rowIdx": 4,
+          "rowIdx": 6,
           "colIdx": 1
         },
         "spellIds": [
@@ -402,7 +405,11 @@
             5,
             21
           ]
-        ]
+        ],
+        "prereqLocation": {
+          "rowIdx": 4,
+          "colIdx": 1
+        }
       },
       {
         "fieldName": "improvedKidneyShot",
@@ -412,8 +419,7 @@
         },
         "spellIds": [
           14174,
-          14175,
-          14176
+          14175
         ],
         "maxPoints": 2,
         "name": "Improved Kidney Shot",
@@ -467,7 +473,7 @@
       {
         "fieldName": "mutilate",
         "location": {
-          "rowIdx": 6,
+          "rowIdx": 4,
           "colIdx": 1
         },
         "spellIds": [
@@ -484,11 +490,7 @@
             20,
             2
           ]
-        ],
-        "prereqLocation": {
-          "rowIdx": 4,
-          "colIdx": 1
-        }
+        ]
       }
     ]
   },
@@ -623,9 +625,7 @@
         "spellIds": [
           13713,
           13853,
-          13854,
-          13855,
-          13856
+          13854
         ],
         "maxPoints": 3,
         "name": "Deflection",
@@ -652,9 +652,7 @@
         "spellIds": [
           13705,
           13832,
-          13843,
-          13844,
-          13845
+          13843
         ],
         "maxPoints": 3,
         "name": "Precision",
@@ -942,7 +940,11 @@
           [
             6
           ]
-        ]
+        ],
+        "prereqLocation": {
+          "rowIdx": 4,
+          "colIdx": 2
+        }
       },
       {
         "fieldName": "adrenalineRush",
@@ -1020,9 +1022,7 @@
         "spellIds": [
           13958,
           13970,
-          13971,
-          13972,
-          13973
+          13971
         ],
         "maxPoints": 3,
         "name": "Master of Deception",
@@ -1052,10 +1052,7 @@
         },
         "spellIds": [
           14057,
-          14072,
-          14073,
-          14074,
-          14075
+          14072
         ],
         "maxPoints": 2,
         "name": "Opportunity",
@@ -1093,7 +1090,7 @@
             66
           ],
           [
-            99
+            100
           ]
         ],
         "notSimulated": true
@@ -1128,8 +1125,8 @@
           "colIdx": 2
         },
         "spellIds": [
-          14082,
-          14083
+          0,
+          0
         ],
         "maxPoints": 2,
         "name": "Dirty Tricks",
@@ -1195,7 +1192,7 @@
             66
           ],
           [
-            99
+            100
           ]
         ]
       },
@@ -1271,7 +1268,7 @@
             2
           ],
           [
-            2,
+            3,
             "s",
             4
           ]
@@ -1312,15 +1309,18 @@
         "maxPoints": 3,
         "name": "Serrated Blades",
         "icon": "inv_sword_17",
-        "description": "Causes your attacks to ignore 3% of your target's Armor and increases the damage dealt by your Rupture ability by {0}%.",
+        "description": "Causes your attacks to ignore {0}% of your target's Armor and increases the damage dealt by your Rupture ability by {1}%.",
         "ranks": [
           [
+            3,
             10
           ],
           [
+            6,
             20
           ],
           [
+            9,
             30
           ]
         ]
@@ -1420,19 +1420,19 @@
           ],
           [
             4,
-            70
+            35
           ],
           [
             6,
-            105
+            35
           ],
           [
             8,
-            140
+            35
           ],
           [
             10,
-            175
+            35
           ]
         ]
       },
@@ -1459,19 +1459,19 @@
             10
           ],
           [
-            3,
+            6,
             10
           ],
           [
-            3,
+            9,
             10
           ],
           [
-            3,
+            12,
             10
           ],
           [
-            3,
+            15,
             10
           ]
         ]
