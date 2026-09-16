@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/wowsims/classic/sim/core"
+	"github.com/wowsims/classic/sim/core/stats"
 )
 
 func (druid *Druid) registerTigersFurySpell() {
@@ -21,15 +22,29 @@ func (druid *Druid) registerTigersFurySpell() {
 		60: 40.0,
 	}[druid.Level]
 
+	// Forever pays a share of Physical damage rather than Classic's flat amount, so it
+	// scales with the cat's weapon and attack power instead of fading as gear improves.
+	// Read off Soda's Druid on 13 September: "Increases Physical damage done by 15% for
+	// 6 sec", against Classic's "+40 damage to your melee attacks".
+	foreverMultiplier := 1.15
+
 	druid.TigersFuryAura = druid.RegisterAura(core.Aura{
 		Label:    "Tiger's Fury Aura",
 		ActionID: actionID,
 		Duration: 6 * time.Second,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			druid.PseudoStats.BonusPhysicalDamage += dmgBonus
+			if druid.Env.IsForever() {
+				druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= foreverMultiplier
+			} else {
+				druid.PseudoStats.BonusPhysicalDamage += dmgBonus
+			}
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			druid.PseudoStats.BonusPhysicalDamage -= dmgBonus
+			if druid.Env.IsForever() {
+				druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] /= foreverMultiplier
+			} else {
+				druid.PseudoStats.BonusPhysicalDamage -= dmgBonus
+			}
 		},
 	})
 
@@ -40,9 +55,8 @@ func (druid *Druid) registerTigersFurySpell() {
 
 	// Forever's King of the Jungle reads "Tiger's Fury now instantly grants you Energy", the
 	// Wrath talent word for word, and Wrath's Tiger's Fury had no Energy cost and a 30 second
-	// cooldown. Classic's (30 Energy, no cooldown) would let the talent mint Energy, so the
-	// Wrath shape is assumed. The +40 damage is Classic's rank 4.
-	// TODO: Beta will confirm the cooldown, the cost and the damage bonus.
+	// cooldown. Soda's Druid on 13 September confirmed both: the tooltip reads instant,
+	// 30 sec cooldown, no cost, and "Increases Physical damage done by 15% for 6 sec".
 	forever := druid.Env.IsForever()
 	energyCost := core.TernaryFloat64(forever, 0, 30)
 	cooldown := core.TernaryDuration(forever, 30*time.Second, time.Second)

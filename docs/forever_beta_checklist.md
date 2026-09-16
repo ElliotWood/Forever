@@ -13,7 +13,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 5. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
 6. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
 
-## Druid (17)
+## Druid (16)
 
 - `sim/druid/berserk.go:16` — The tooltip didn't show a cooldown, the 3 minutes are taken from the Classic Berserk.
 - `sim/druid/demoralizing_roar.go:24` — assumed baseline, beta will confirm - Feral Aggression is gone from the tree, so the attack power reduction is taken at full strength like the warrior's Demoralizing Shout.
@@ -30,7 +30,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/druid/talents.go:453` — Only rank 1 of Natural Reaction was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
 - `sim/druid/talents.go:456` — Only rank 1 of Natural Reaction's Rage proc was seen at 20%, the tree's 20/40/60/80/100 comes from the community talent calculator rather than from a tooltip, and at 5/5 it makes the Rage certain on every dodge.
 - `sim/druid/talents.go:522` — Only rank 1 of Naturalist was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
-- `sim/druid/tigers_fury.go:45` — Tiger's Fury is given Wrath's shape (no Energy cost, 30 sec cooldown) because King of the Jungle is Wrath's talent word for word and Classic's costless-to-spam Tiger's Fury would let it mint Energy; the +40 damage is Classic's rank 4. Beta will confirm the cooldown, the cost and the damage bonus.
+- `sim/druid/tigers_fury.go` — **resolved 16 September.** Soda's Druid on 13 September showed the tooltip: instant, 30 sec cooldown, no Energy cost, "Increases Physical damage done by 15% for 6 sec". The assumed Wrath shape was right about the cooldown and the cost, and wrong about the damage: Forever pays a share of Physical damage, not Classic's flat +40. Only the level 60 rank was seen, so the lower ranks keep the flat damage until one is observed.
 - `sim/druid/wrath.go:53` — Only rank 1 of Improved Wrath was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
 
 ## Hunter (9)
