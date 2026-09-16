@@ -152,8 +152,13 @@
 	},
 	"15407": {
 		"ability": "Mind Flay",
+		"assumptions": [
+			"Only rank 1’s 119 was seen; the higher ranks are scaled by the same ratio against Classic."
+		],
 		"file": "sim/priest/mind_flay.go",
-		"source": "unreviewed"
+		"note": "Forever raises the damage per tick from Classic’s 75 to 119 at rank 1. Read off the BlizzCon demo tooltip.",
+		"source": "assumed",
+		"tooltip": "45 Mana\n20 yd range\nChannelled\nAssault the target’s mind, causing 119 Shadow damage over 3 sec and slowing their movement."
 	},
 	"15473": {
 		"ability": "Shadowform",

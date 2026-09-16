@@ -184,18 +184,33 @@
 	},
 	"20925": {
 		"ability": "Holy Shield",
+		"assumptions": [
+			"Only rank 1 was seen at 110; ranks 2 and 3 are scaled by the same ratio against Classic until the beta shows them."
+		],
 		"file": "sim/paladin/holy_shield.go",
-		"source": "unreviewed"
+		"note": "Forever raises the block damage from Classic’s 65 to 110 at rank 1. Read off the BlizzCon demo; the higher ranks follow at the same ratio (161 and 220).",
+		"source": "assumed",
+		"tooltip": "150 Mana\nInstant\nBlocks 110 damage from each melee attack, and increases your chance to block."
 	},
 	"20927": {
 		"ability": "Holy Shield",
+		"assumptions": [
+			"Scaled from rank 1’s observed 110 by the Classic ratio; not seen directly."
+		],
 		"file": "sim/paladin/holy_shield.go",
-		"source": "unreviewed"
+		"note": "Rank 2 of the Forever Holy Shield. See spell 20925 for the source of the rank 1 figure this is scaled from.",
+		"source": "assumed",
+		"tooltip": "195 Mana\nInstant\nBlocks 161 damage from each melee attack, and increases your chance to block."
 	},
 	"20928": {
 		"ability": "Holy Shield",
+		"assumptions": [
+			"Scaled from rank 1’s observed 110 by the Classic ratio; not seen directly."
+		],
 		"file": "sim/paladin/holy_shield.go",
-		"source": "unreviewed"
+		"note": "Rank 3 of the Forever Holy Shield. See spell 20925 for the source of the rank 1 figure this is scaled from.",
+		"source": "assumed",
+		"tooltip": "240 Mana\nInstant\nBlocks 220 damage from each melee attack, and increases your chance to block."
 	},
 	"20944": {
 		"ability": "Seal of Command",
