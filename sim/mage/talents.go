@@ -652,8 +652,13 @@ func (mage *Mage) applyFingersOfFrost() {
 		return
 	}
 
-	// TODO: both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
-	procChance := .15
+	// TODO: the demo only ever displayed rank 1, so the 15% is the only proc chance anyone has
+	// seen; it is read per point here, as the surrounding talents are, and the tree says 15%/30%.
+	// Beta will confirm whether the second point is worth anything.
+	procChance := .15 * float64(mage.Talents.FingersOfFrost)
+	// TODO: no rank of Shatter has been read at the rank it belongs to. The single demo crop of
+	// the cell shows 50% at Rank 3/3, and the five ranks at 10% each come from the community
+	// talent calculator instead. Beta will confirm both the rank count and the step.
 	shatterCrit := 10 * float64(mage.Talents.Shatter) * core.SpellCritRatingPerCritChance
 
 	var affectedSpells []*core.Spell

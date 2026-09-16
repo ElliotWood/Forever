@@ -45,11 +45,12 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/hunter/talents.go:378` — only rank 1 of Expose Prey was observed, the proc chance is assumed to scale per rank. The 5 sec window does not, which is what the tree reads.
 - `sim/core/buffs.go`, `BattleShoutAura` and `BlessingOfMightAura` — both grant melee attack power only, as in Classic. If Forever lets either reach ranged attack power every ranked hunter gains 10% to 12%.
 
-## Mage (3)
+## Mage (4)
 
 - `sim/mage/fire_blast.go:39` — only rank 1 of Wake of Fire was shown, so mage.json copies its 1 sec into rank 2.
-- `sim/mage/talents.go:655` — both ranks read 15% on the demo tooltip, beta will confirm whether rank 2 is higher.
-- `sim/mage/talents.go:669` — a cast already in progress when a chill lands is held out of Fingers of Frost, so it neither takes the Shatter crit nor spends the charge. Beta will confirm which cast the charge belongs to.
+- `sim/mage/talents.go:655` — only rank 1 of Fingers of Frost was shown at 15%, so the extractor copied it into rank 2. The 15%/30% the tree reads is the community talent calculator's, and the sim takes the proc per point to match it. Beta will confirm whether the second point does anything.
+- `sim/mage/talents.go:659` — Shatter's five ranks at 10% each are the community talent calculator's. The only demo crop of the cell reads 50% at Rank 3/3, which five ranks of 10% cannot produce at rank 3, so neither the rank count nor the step is confirmed. Beta will confirm both.
+- `sim/mage/talents.go:674` — a cast already in progress when a chill lands is held out of Fingers of Frost, so it neither takes the Shatter crit nor spends the charge. Beta will confirm which cast the charge belongs to.
 
 ## Paladin (22)
 
