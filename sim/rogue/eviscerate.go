@@ -61,8 +61,10 @@ func (rogue *Rogue) registerEviscerate() {
 			return rogue.ComboPoints() > 0
 		},
 
+		// Ranks 2 and 3 were extrapolated from rank 1's 7% until the beta showed 13% and
+		// 20%, so the talent is slightly weaker than a straight multiple.
 		DamageMultiplier: 1 +
-			[]float64{0, 0.07, 0.14, 0.21}[rogue.Talents.ImprovedEviscerate] +
+			[]float64{0, 0.07, 0.13, 0.20}[rogue.Talents.ImprovedEviscerate] +
 			[]float64{0, 0.02, 0.04, 0.06}[rogue.Talents.Aggression],
 		ThreatMultiplier: 1,
 		BonusCoefficient: 1,
