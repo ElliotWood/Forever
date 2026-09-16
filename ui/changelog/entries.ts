@@ -204,6 +204,14 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Fingers of Frost pays for its second point, Shatter shows all five ranks',
+				prs: [136],
+				changed:
+					'The same #126 assumption that caught the paladins caught the mage twice. Fingers of Frost proced on 15% of chills at either rank where the tree reads 15%/30%, so the second point did nothing; it is read per point now. Shatter has run to five ranks since the trees were corrected, but its rank table stopped at three, so 4/5 and 5/5 showed no number in the picker; it reads 10/20/30/40/50, which is what the sim already applied. Neither is confirmed - the demo showed Fingers of Frost only at rank 1 and Shatter only at Rank 3/3, where it read 50% - so the beta checklist keeps both.',
+				effect: 'Frost 528 to 559 DPS on the ranked build, from twice as many Fingers of Frost procs and the Ice Lances they pay for. Arcane and fire are unchanged.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Two shaman talents stop promising a scaling they never had',
 				prs: [140],
 				changed:
