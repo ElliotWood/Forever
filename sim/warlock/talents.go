@@ -165,6 +165,9 @@ func (warlock *Warlock) applyMalediction() {
 }
 
 // Drain Life and Drain Soul deal 2% more per other Affliction effect on the target (up to 3), tripled on targets below 20%
+// TODO: Only rank 1 of Improved Drains was seen. The bonus and its cap are read per point, but the
+// 20% health the Drain Soul bonus triples below is held there at every rank: it is a threshold
+// rather than a magnitude, and read per point it would reach 60% health at 3/3.
 func (warlock *Warlock) improvedDrainsMultiplier(sim *core.Simulation, target *core.Unit) float64 {
 	if warlock.Talents.ImprovedDrains == 0 {
 		return 1
@@ -353,7 +356,13 @@ func (warlock *Warlock) applyDecimation() {
 		return
 	}
 
-	// TODO: Both ranks of Decimation read the same numbers, so the per point scaling is a guess
+	// TODO: Only rank 1 of Decimation was seen, so which halves grow with the second point is a
+	// guess. The damage bonus and the cast time reduction are read per point; the Soul Fire
+	// cooldown reduction in soul_fire.go, the 35% health threshold and the ten second window are
+	// held at rank 1's value, because per point the second rank would leave Soul Fire on a six
+	// second cooldown, open the window at 70% health and hold it for twenty seconds.
+	// The aura's 63165 names no Forever spell: the tree carries 63156 and 63158 for the two
+	// ranks, so it reads like a transposition of 63156. See ui/core/spells/warlock.json.
 	points := float64(warlock.Talents.Decimation)
 	damageBonus := 0.03 * points
 	castTimeReduction := 0.2 * points
@@ -402,6 +411,9 @@ func (warlock *Warlock) applyDemonicBrand() {
 		return
 	}
 
+	// TODO: Only rank 1 of Demonic Brand was seen. The Searing Pain threat reduction is read per
+	// point, but the ten second brand, the two pet attacks it arms and their 39 to 42 damage are
+	// held at rank 1's values, so the second and third points buy threat alone.
 	points := float64(warlock.Talents.DemonicBrand)
 	actionID := core.ActionID{SpellID: 18821}
 
@@ -791,6 +803,8 @@ func (warlock *Warlock) applyImprovedShadowBolt() {
 		return
 	}
 
+	// TODO: Only rank 1 of Improved Shadow Bolt was seen. The extra Shadow damage taken is read per
+	// point, the twelve seconds it lasts are held at rank 1's value rather than scaled with it.
 	damageMultiplier := 1 + 0.04*float64(warlock.Talents.ImprovedShadowBolt)
 
 	warlock.ImprovedShadowBoltAuras = warlock.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
@@ -899,7 +913,9 @@ func (warlock *Warlock) applyShadowAndFlame() {
 		return
 	}
 
-	multiplier := 1 + 0.02*float64(warlock.Talents.ShadowAndFlame)
+	// TODO: Only rank 1 of Shadow and Flame was seen and every rank of the tree reads the same
+	// 2% for 20 sec, so the bonus is held at that value rather than read per point.
+	multiplier := 1.02
 
 	shadowAura := warlock.RegisterAura(core.Aura{
 		Label:    "Shadow and Flame (Shadow)",
