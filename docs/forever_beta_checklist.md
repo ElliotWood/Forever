@@ -35,7 +35,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 
 ## Hunter (9)
 
-- `sim/hunter/aimed_shot.go:74` — assumed baseline, beta will confirm
+- `sim/hunter/aimed_shot.go` — assumed baseline, beta will confirm. Separately, the cast time may be shorter than Classic's 3.5 sec: Xaryu's Hunter showed a 2 sec cast on rank 3, and reaching that from a 3.5 base needs 75% ranged haste, which no talent grants. Probably a lower base under Forever, but one observation on a character of unknown gear does not settle the number — an unbuffed tooltip will.
 - `sim/hunter/aspects.go:13` — Only rank 1 of Deadly Aspects was observed. The 30% attack speed for 12 sec is held at every rank, as in the Classic Improved Aspect of the Hawk this talent is built from, where the proc chance is the only slot the points buy.
 - `sim/hunter/aspects.go:55` — only rank 1 was observed, the proc chance is the one slot of Deadly Aspects assumed to scale per rank.
 - `sim/hunter/rapid_fire.go:15` — only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per rank. The buff a kill grants is not modelled, so nothing checks the 40 sec window or the 20% damage the tree reads at rank 2.
