@@ -38,11 +38,16 @@ for (const [className, classData] of Object.entries(data.talents ?? {})) {
   }
 }
 
-fs.writeFileSync(OUT, JSON.stringify({
+// Written with CRLF to match the rest of the repository. Otherwise every run leaves the
+// file dirty on line endings alone, and a maintainer cannot tell a run that changed
+// nothing from one that brought in a new confirmation.
+const json = JSON.stringify({
   _readme: 'Confirmed talent rank values from talentsforever.com, kept so a test can check the sim has not drifted from an observation. Numbers only, in the order they appear in each rank tooltip. Regenerate with tools/refresh_confirmed_talents.mjs.',
   source: 'talentsforever.com (CC BY 4.0)',
   generated: data.generated,
   talents,
-}, null, 1) + '\n');
+}, null, 1) + '\n';
+
+fs.writeFileSync(OUT, json.replace(/\n/g, '\r\n'));
 
 console.log(`wrote ${count} confirmed talents, generated ${data.generated}`);
