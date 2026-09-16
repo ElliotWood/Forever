@@ -270,7 +270,9 @@ func (rogue *Rogue) applyCutthroat() {
 		return
 	}
 
-	// TODO: Only rank 1 was seen, the proc chance is assumed to scale linearly. Beta will confirm.
+	// TODO: Only rank 1's 3% was seen, and the data behind the tree copies it into every other
+	// rank rather than observing them, so the linear scaling here is an assumption. The 10 sec
+	// duration is held at rank 1 either way, a duration has no scaling to read. Beta will confirm.
 	procChance := 0.03 * float64(rogue.Talents.Cutthroat)
 
 	rogue.CutthroatAura = rogue.RegisterAura(core.Aura{
@@ -347,9 +349,9 @@ func (rogue *Rogue) quietusMultiplier(sim *core.Simulation) float64 {
 		return 1
 	}
 
-	// TODO: Only rank 1 was seen and the damage bonus is assumed to scale linearly. The
-	// tooltip data extrapolates the health threshold along with it, which it cannot be, so
-	// rank 1's 35% is used for every rank. Beta will confirm.
+	// TODO: Only rank 1 was seen and the damage bonus is assumed to scale linearly. The health
+	// threshold cannot be extrapolated alongside it, so rank 1's 35% is used for every rank and
+	// the tree now reads the same. Beta will confirm.
 	return 1 + 0.02*float64(rogue.Talents.Quietus)
 }
 

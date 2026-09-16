@@ -33,8 +33,9 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 
 	arpenPerCombo *= []float64{1, 1.25, 1.5}[exposeArmorBaselineRank]
 
-	// TODO: Only rank 1 was seen, the Energy discount is assumed to scale linearly while the
-	// refund and the 5 combo point trigger stay put. Beta will confirm.
+	// TODO: Only rank 1's 5 Energy was seen. The tree's second rank is a linear extrapolation of
+	// it rather than an observation, and the refund and the 5 combo point trigger stay put. Beta
+	// will confirm.
 	energyCost := 25.0 - 5*float64(rogue.Talents.ImprovedExposeArmor)
 	cpMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 14169})
 
