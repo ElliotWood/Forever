@@ -74,7 +74,7 @@ export const DefaultAPL = RotationDSRuin;
 
 export const TalentsDemonicPact = {
 	name: 'Demonic Pact',
-	data: SavedTalents.create({ talentsString: '203-0055000321201201351-0500055' }),
+	data: SavedTalents.create({ talentsString: '203-0055003221201001351-0550005' }),
 };
 
 export const TalentsAffliction = {
@@ -84,12 +84,12 @@ export const TalentsAffliction = {
 
 export const TalentsDSRuin = {
 	name: 'DS/Ruin',
-	data: SavedTalents.create({ talentsString: '233500201332-0340000301-0500155' }),
+	data: SavedTalents.create({ talentsString: '233500201332-0340003001-0550105' }),
 };
 
 export const TalentsPactOptimised = PresetUtils.makePresetTalents(
 	'Demonic Pact 2/31/18',
-	SavedTalents.create({ talentsString: '113-0005003321220211351-0500055' }),
+	SavedTalents.create({ talentsString: '113-0005003221220311351-0550005' }),
 );
 export const TalentsDeepAffliction = PresetUtils.makePresetTalents(
 	'Deep Affliction 35/0/16',
@@ -97,11 +97,11 @@ export const TalentsDeepAffliction = PresetUtils.makePresetTalents(
 );
 export const TalentsDSRuinPandemic = PresetUtils.makePresetTalents(
 	'DS/Ruin Pandemic 24/11/16',
-	SavedTalents.create({ talentsString: '25220010135201-0025000301-05000551' }),
+	SavedTalents.create({ talentsString: '25220010135201-0025003001-05500051' }),
 );
 export const TalentsShadowAndFlame = PresetUtils.makePresetTalents(
-	'Shadow and Flame 17/11/23',
-	SavedTalents.create({ talentsString: '25502100002-0025000301-0520355102' }),
+	'Shadow and Flame 13/11/27',
+	SavedTalents.create({ talentsString: '25501-0025003001-055035510010002' }),
 );
 
 export const TalentPresets = [
@@ -203,7 +203,7 @@ export const BuildDSRuinPandemic = PresetUtils.makePresetBuild('DS/Ruin Pandemic
 	rotation: RotationDSRuin,
 	options: DefaultOptions,
 });
-export const BuildShadowAndFlame = PresetUtils.makePresetBuild('Shadow and Flame 17/11/23', {
+export const BuildShadowAndFlame = PresetUtils.makePresetBuild('Shadow and Flame 13/11/27', {
 	talents: TalentsShadowAndFlame,
 	rotation: RotationShadowAndFlame,
 	options: DefaultOptions,

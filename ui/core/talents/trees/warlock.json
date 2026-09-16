@@ -686,45 +686,6 @@
         "notSimulated": true
       },
       {
-        "fieldName": "demonicBrand",
-        "location": {
-          "rowIdx": 3,
-          "colIdx": 3
-        },
-        "spellIds": [
-          18821,
-          18822,
-          18823
-        ],
-        "maxPoints": 3,
-        "name": "Demonic Brand",
-        "icon": "spell_shadow_enslavedemon",
-        "description": "Your Searing Pain generates {0}% less threat and brands the target for {1} sec. Your pet's next {2} attacks against the target generate high threat and deal {3} to {4} Fire or Shadow damage based on the pet.",
-        "ranks": [
-          [
-            17,
-            10,
-            2,
-            39,
-            42
-          ],
-          [
-            34,
-            10,
-            2,
-            39,
-            42
-          ],
-          [
-            51,
-            10,
-            2,
-            39,
-            42
-          ]
-        ]
-      },
-      {
         "fieldName": "felVitality",
         "location": {
           "rowIdx": 1,
@@ -751,6 +712,31 @@
           [
             15,
             15
+          ]
+        ]
+      },
+      {
+        "fieldName": "demonicEnergies",
+        "location": {
+          "rowIdx": 1,
+          "colIdx": 3
+        },
+        "spellIds": [
+          18748,
+          18749
+        ],
+        "maxPoints": 2,
+        "name": "Demonic Energies",
+        "icon": "spell_shadow_antishadow",
+        "description": "You heal your pet for {0}% of all spell damage you deal. When you gain Mana from Life Tap, your summoned demon gains {1}% of the Mana you gain.",
+        "ranks": [
+          [
+            8,
+            50
+          ],
+          [
+            16,
+            100
           ]
         ]
       },
@@ -890,27 +876,41 @@
         ]
       },
       {
-        "fieldName": "demonicEnergies",
+        "fieldName": "demonicBrand",
         "location": {
-          "rowIdx": 1,
+          "rowIdx": 3,
           "colIdx": 3
         },
         "spellIds": [
-          18748,
-          18749
+          18821,
+          18822,
+          18823
         ],
-        "maxPoints": 2,
-        "name": "Demonic Energies",
-        "icon": "spell_shadow_antishadow",
-        "description": "You heal your pet for {0}% of all spell damage you deal. When you gain Mana from Life Tap, your summoned demon gains {1}% of the Mana you gain.",
+        "maxPoints": 3,
+        "name": "Demonic Brand",
+        "icon": "spell_shadow_enslavedemon",
+        "description": "Your Searing Pain generates {0}% less threat and brands the target for {1} sec. Your pet's next {2} attacks against the target generate high threat and deal {3} to {4} Fire or Shadow damage based on the pet.",
         "ranks": [
           [
-            8,
-            50
+            17,
+            10,
+            2,
+            39,
+            42
           ],
           [
-            16,
-            100
+            34,
+            10,
+            2,
+            39,
+            42
+          ],
+          [
+            51,
+            10,
+            2,
+            39,
+            42
           ]
         ]
       },
@@ -1138,52 +1138,42 @@
         ]
       },
       {
-        "fieldName": "aftermath",
+        "fieldName": "bane",
         "location": {
-          "rowIdx": 1,
+          "rowIdx": 0,
           "colIdx": 2
         },
         "spellIds": [
-          18119,
-          18120,
-          18121,
-          18122,
-          18123
+          17788,
+          17789,
+          17790,
+          17791,
+          17792
         ],
         "maxPoints": 5,
-        "name": "Aftermath",
-        "icon": "spell_fire_fire",
-        "description": "Increases the initial damage of your Immolate spell by {0}% and your Conflagrate spell has a {1}% chance to Daze the target, reducing the target's movement speed by {2}% for {3} sec.",
+        "name": "Bane",
+        "icon": "spell_shadow_deathpact",
+        "description": "Reduces the casting time of your Shadow Bolt, Immolate, and Incinerate spells by {0} sec and your Soul Fire spell by {1} sec.",
         "ranks": [
           [
-            10,
-            20,
-            50,
-            5
+            0.1,
+            0.4
           ],
           [
-            20,
-            20,
-            50,
-            5
+            0.2,
+            0.8
           ],
           [
-            30,
-            20,
-            50,
-            5
+            0.3,
+            1.2
           ],
           [
-            40,
-            20,
-            50,
-            5
+            0.4,
+            1.6
           ],
           [
-            50,
-            20,
-            50,
-            5
+            0.5,
+            2
           ]
         ]
       },
@@ -1251,42 +1241,52 @@
         ]
       },
       {
-        "fieldName": "bane",
+        "fieldName": "aftermath",
         "location": {
-          "rowIdx": 0,
+          "rowIdx": 1,
           "colIdx": 2
         },
         "spellIds": [
-          17788,
-          17789,
-          17790,
-          17791,
-          17792
+          18119,
+          18120,
+          18121,
+          18122,
+          18123
         ],
         "maxPoints": 5,
-        "name": "Bane",
-        "icon": "spell_shadow_deathpact",
-        "description": "Reduces the casting time of your Shadow Bolt, Immolate, and Incinerate spells by {0} sec and your Soul Fire spell by {1} sec.",
+        "name": "Aftermath",
+        "icon": "spell_fire_fire",
+        "description": "Increases the initial damage of your Immolate spell by {0}% and your Conflagrate spell has a {1}% chance to Daze the target, reducing the target's movement speed by {2}% for {3} sec.",
         "ranks": [
           [
-            0.1,
-            0.4
+            10,
+            20,
+            50,
+            5
           ],
           [
-            0.2,
-            0.8
+            20,
+            20,
+            50,
+            5
           ],
           [
-            0.3,
-            1.2
+            30,
+            20,
+            50,
+            5
           ],
           [
-            0.4,
-            1.6
+            40,
+            20,
+            50,
+            5
           ],
           [
-            0.5,
-            2
+            50,
+            20,
+            50,
+            5
           ]
         ]
       },
@@ -1375,62 +1375,32 @@
         "notSimulated": true
       },
       {
-        "fieldName": "shadowAndFlame",
+        "fieldName": "agonizingFlames",
         "location": {
-          "rowIdx": 5,
-          "colIdx": 2
+          "rowIdx": 3,
+          "colIdx": 1
         },
         "spellIds": [
-          30288,
-          30289,
-          30290,
-          30291,
-          30292
+          17927,
+          17929,
+          17930
         ],
-        "maxPoints": 5,
-        "name": "Shadow and Flame",
-        "icon": "spell_fire_playingwithfire",
-        "description": "Hitting an enemy with Conflagrate increases all Shadow damage you deal by {0}% for {1} sec. and hitting an enemy with Shadowburn increases all Fire damage you deal by {2}% for {3} sec. In addition, Conflagrate has a {4}% chance not to consume Immolate, and Shadowburn has a {5}% chance to instantly refund a Soul Shard.",
+        "maxPoints": 3,
+        "name": "Agonizing Flames",
+        "icon": "spell_fire_soulburn",
+        "description": "Increases the critical strike chance of your Searing Pain spell by {0}% and the damage done by all your Destruction spells by {1}%.",
         "ranks": [
           [
-            2,
-            20,
-            2,
-            20,
-            20,
-            20
-          ],
-          [
-            4,
-            20,
-            4,
-            20,
-            40,
-            40
+            3,
+            3
           ],
           [
             6,
-            20,
-            6,
-            20,
-            60,
-            60
+            6
           ],
           [
-            8,
-            20,
-            8,
-            20,
-            80,
-            80
-          ],
-          [
-            10,
-            20,
-            10,
-            20,
-            100,
-            100
+            9,
+            9
           ]
         ]
       },
@@ -1541,32 +1511,62 @@
         ]
       },
       {
-        "fieldName": "agonizingFlames",
+        "fieldName": "shadowAndFlame",
         "location": {
-          "rowIdx": 3,
-          "colIdx": 1
+          "rowIdx": 5,
+          "colIdx": 2
         },
         "spellIds": [
-          17927,
-          17929,
-          17930
+          30288,
+          30289,
+          30290,
+          30291,
+          30292
         ],
-        "maxPoints": 3,
-        "name": "Agonizing Flames",
-        "icon": "spell_fire_soulburn",
-        "description": "Increases the critical strike chance of your Searing Pain spell by {0}% and the damage done by all your Destruction spells by {1}%.",
+        "maxPoints": 5,
+        "name": "Shadow and Flame",
+        "icon": "spell_fire_playingwithfire",
+        "description": "Hitting an enemy with Conflagrate increases all Shadow damage you deal by {0}% for {1} sec. and hitting an enemy with Shadowburn increases all Fire damage you deal by {2}% for {3} sec. In addition, Conflagrate has a {4}% chance not to consume Immolate, and Shadowburn has a {5}% chance to instantly refund a Soul Shard.",
         "ranks": [
           [
-            3,
-            3
+            2,
+            20,
+            2,
+            20,
+            20,
+            20
+          ],
+          [
+            4,
+            20,
+            4,
+            20,
+            40,
+            40
           ],
           [
             6,
-            6
+            20,
+            6,
+            20,
+            60,
+            60
           ],
           [
-            9,
-            9
+            8,
+            20,
+            8,
+            20,
+            80,
+            80
+          ],
+          [
+            10,
+            20,
+            10,
+            20,
+            100,
+            100
           ]
         ]
       },

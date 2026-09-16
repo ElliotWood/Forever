@@ -62,12 +62,12 @@ export const DefaultAPL = APLPresets[ClassicPhase.Phase1][0];
 // Default talents. Uses the wowhead calculator format, make the talents on
 // https://wowhead.com/classic/talent-calc and copy the numbers in the url.
 
-export const TalentsP1Frost = PresetUtils.makePresetTalents('Frost DPS', SavedTalents.create({ talentsString: '0502050030003--055500033100050024' }));
+export const TalentsP1Frost = PresetUtils.makePresetTalents('Frost DPS', SavedTalents.create({ talentsString: '0502050030003--055500033100030024' }));
 export const TalentsP1Arcane = PresetUtils.makePresetTalents('Arcane DPS', SavedTalents.create({ talentsString: '050215003100311531-2305003202003-' }));
 export const TalentsP1Fire = PresetUtils.makePresetTalents('Fire DPS', SavedTalents.create({ talentsString: '0502252000003-23550000130133051-' }));
 
 export const TalentsFire = PresetUtils.makePresetTalents('Fire 0/35/16', SavedTalents.create({ talentsString: '-03552020130133151-005500033' }));
-export const TalentsFrost = PresetUtils.makePresetTalents('Frost 14/0/37', SavedTalents.create({ talentsString: '050005013--0555003301001501251' }));
+export const TalentsFrost = PresetUtils.makePresetTalents('Frost 14/0/37', SavedTalents.create({ talentsString: '050005013--0555003301001301251' }));
 export const TalentsArcane = PresetUtils.makePresetTalents('Arcane 35/0/16', SavedTalents.create({ talentsString: '055005023100311531--005500033' }));
 
 export const TalentPresets = {

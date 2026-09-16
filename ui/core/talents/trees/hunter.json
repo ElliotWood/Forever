@@ -550,37 +550,37 @@
         "notSimulated": true
       },
       {
-        "fieldName": "carefulAim",
+        "fieldName": "lethalAttacks",
         "location": {
-          "rowIdx": 1,
+          "rowIdx": 0,
           "colIdx": 2
         },
         "spellIds": [
-          30902,
-          30903,
-          30904,
-          30905,
-          30906
+          19426,
+          19427,
+          19429,
+          19430,
+          19431
         ],
         "maxPoints": 5,
-        "name": "Careful Aim",
-        "icon": "ability_hunter_zenarchery",
-        "description": "Increases your Attack Power by {0}% of your Intellect.",
+        "name": "Lethal Attacks",
+        "icon": "ability_searingarrow",
+        "description": "Increases your critical strike chance with all attacks by {0}%.",
         "ranks": [
           [
-            20
+            1
           ],
           [
-            40
+            2
           ],
           [
-            60
+            3
           ],
           [
-            80
+            4
           ],
           [
-            100
+            5
           ]
         ]
       },
@@ -653,37 +653,37 @@
         ]
       },
       {
-        "fieldName": "lethalAttacks",
+        "fieldName": "carefulAim",
         "location": {
-          "rowIdx": 0,
+          "rowIdx": 1,
           "colIdx": 2
         },
         "spellIds": [
-          19426,
-          19427,
-          19429,
-          19430,
-          19431
+          30902,
+          30903,
+          30904,
+          30905,
+          30906
         ],
         "maxPoints": 5,
-        "name": "Lethal Attacks",
-        "icon": "ability_searingarrow",
-        "description": "Increases your critical strike chance with all attacks by {0}%.",
+        "name": "Careful Aim",
+        "icon": "ability_hunter_zenarchery",
+        "description": "Increases your Attack Power by {0}% of your Intellect.",
         "ranks": [
           [
-            1
+            20
           ],
           [
-            2
+            40
           ],
           [
-            3
+            60
           ],
           [
-            4
+            80
           ],
           [
-            5
+            100
           ]
         ]
       },

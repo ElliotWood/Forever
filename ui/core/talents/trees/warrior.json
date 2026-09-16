@@ -302,70 +302,6 @@
         ]
       },
       {
-        "fieldName": "weaponmaster",
-        "location": {
-          "rowIdx": 4,
-          "colIdx": 2
-        },
-        "spellIds": [
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "maxPoints": 5,
-        "name": "Weaponmaster",
-        "description": "Gives your melee weapon attacks a benefit depending on the weapon. Axe/Polearm: Increases your critical strike chance by {0}%. Mace/Staff: Your attacks ignore {1}% of your target's armor. Sword: Your successful melee attacks have a {2}% chance to trigger an extra attack on the target.",
-        "ranks": [
-          [
-            1,
-            3,
-            1
-          ],
-          [
-            2,
-            6,
-            2
-          ],
-          [
-            3,
-            9,
-            3
-          ],
-          [
-            4,
-            12,
-            4
-          ],
-          [
-            5,
-            15,
-            5
-          ]
-        ],
-        "iconUrl": "assets/img/talents/warrior/weaponmaster.png"
-      },
-      {
-        "fieldName": "sweepingStrikes",
-        "location": {
-          "rowIdx": 4,
-          "colIdx": 1
-        },
-        "spellIds": [
-          12292
-        ],
-        "maxPoints": 1,
-        "name": "Sweeping Strikes",
-        "icon": "ability_rogue_slicedice",
-        "description": "Your next {0} melee attacks strike an additional nearby opponent.",
-        "ranks": [
-          [
-            5
-          ]
-        ]
-      },
-      {
         "fieldName": "bloodthrill",
         "location": {
           "rowIdx": 4,
@@ -409,6 +345,70 @@
             6
           ]
         ]
+      },
+      {
+        "fieldName": "sweepingStrikes",
+        "location": {
+          "rowIdx": 4,
+          "colIdx": 1
+        },
+        "spellIds": [
+          12292
+        ],
+        "maxPoints": 1,
+        "name": "Sweeping Strikes",
+        "icon": "ability_rogue_slicedice",
+        "description": "Your next {0} melee attacks strike an additional nearby opponent.",
+        "ranks": [
+          [
+            5
+          ]
+        ]
+      },
+      {
+        "fieldName": "weaponmaster",
+        "location": {
+          "rowIdx": 4,
+          "colIdx": 2
+        },
+        "spellIds": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "maxPoints": 5,
+        "name": "Weaponmaster",
+        "description": "Gives your melee weapon attacks a benefit depending on the weapon. Axe/Polearm: Increases your critical strike chance by {0}%. Mace/Staff: Your attacks ignore {1}% of your target's armor. Sword: Your successful melee attacks have a {2}% chance to trigger an extra attack on the target.",
+        "ranks": [
+          [
+            1,
+            3,
+            1
+          ],
+          [
+            2,
+            6,
+            2
+          ],
+          [
+            3,
+            9,
+            3
+          ],
+          [
+            4,
+            12,
+            4
+          ],
+          [
+            5,
+            15,
+            5
+          ]
+        ],
+        "iconUrl": "assets/img/talents/warrior/weaponmaster.png"
       },
       {
         "fieldName": "improvedSlam",

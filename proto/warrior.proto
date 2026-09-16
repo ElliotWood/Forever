@@ -16,9 +16,9 @@ message WarriorTalents {
 	bool spearing_strike = 9;
 	int32 two_handed_weapon_specialization = 10;
 	int32 impale = 11;
-	int32 weaponmaster = 12;
+	int32 weaponmaster = 14;
 	bool sweeping_strikes = 13;
-	int32 bloodthrill = 14;
+	int32 bloodthrill = 12;
 	int32 improved_slam = 15;
 	int32 improved_hamstring = 16;
 	bool mortal_strike = 17;
