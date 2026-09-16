@@ -1,5 +1,59 @@
 [
 	{
+		"number": 143,
+		"title": "stop tracking python bytecode from the talent tooling",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/143"
+	},
+	{
+		"number": 142,
+		"title": "record the provenance behind the paladin per-rank talent values",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/142"
+	},
+	{
+		"number": 141,
+		"title": "record the provenance behind the priest per-rank talent values",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/141"
+	},
+	{
+		"number": 140,
+		"title": "correct two shaman rank tables and add fire nova totem to elemental fury",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/140"
+	},
+	{
+		"number": 139,
+		"title": "make the warrior talent picker show the scaling the sim applies",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/139"
+	},
+	{
+		"number": 138,
+		"title": "tell the picker what the sim rolls for cutthroat and quietus",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/138"
+	},
+	{
+		"number": 137,
+		"title": "stop shadow and flame and decimation running past the top of their scale",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/137"
+	},
+	{
+		"number": 136,
+		"title": "read fingers of frost per point and give shatter five rank values",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/136"
+	},
+	{
+		"number": 135,
+		"title": "reconcile the druid talent tree's per-rank values with the sim",
+		"mergedAt": "2026-09-15",
+		"url": "https://github.com/ElliotWood/Forever/pull/135"
+	},
+	{
 		"number": 134,
 		"title": "correct the deadly aspects and rapid recuperation rank tables",
 		"mergedAt": "2026-09-15",

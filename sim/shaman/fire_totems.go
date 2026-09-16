@@ -51,6 +51,7 @@ func (shaman *Shaman) newSearingTotemSpellConfig(rank int) core.SpellConfig {
 		SpellSchool: core.SpellSchoolFire,
 		DefenseType: core.DefenseTypeMagic,
 		ProcMask:    core.ProcMaskEmpty,
+		Flags:       SpellFlagTotem,
 
 		DamageMultiplier: shaman.callOfFlameMultiplier(),
 		BonusCoefficient: spellCoeff,
@@ -156,6 +157,7 @@ func (shaman *Shaman) newMagmaTotemSpellConfig(rank int) core.SpellConfig {
 		SpellSchool: core.SpellSchoolFire,
 		DefenseType: core.DefenseTypeMagic,
 		ProcMask:    core.ProcMaskEmpty,
+		Flags:       SpellFlagTotem,
 
 		DamageMultiplier: shaman.callOfFlameMultiplier(),
 		BonusCoefficient: spellCoeff,
@@ -260,6 +262,7 @@ func (shaman *Shaman) newFireNovaTotemSpellConfig(rank int) core.SpellConfig {
 		SpellSchool: core.SpellSchoolFire,
 		DefenseType: core.DefenseTypeMagic,
 		ProcMask:    core.ProcMaskEmpty,
+		Flags:       SpellFlagTotem,
 
 		DamageMultiplier: shaman.callOfFlameMultiplier() * shaman.improvedFireNovaMultiplier(),
 		BonusCoefficient: spellCoeff,

@@ -142,12 +142,12 @@
           [
             100,
             100,
-            30,
+            15,
             100
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value. Both chances double at rank 2, taken from the community talent calculator and matching the scaling the sim applies. The 15 sec window does not: the calculator extrapolates every number in a tooltip and a buff whose duration grows with the talent would be unusual, so it keeps rank 1's 15 sec as the sim does.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -163,27 +163,27 @@
           ],
           [
             8,
-            10,
-            60
+            5,
+            30
           ],
           [
             12,
-            15,
-            90
+            5,
+            30
           ],
           [
             16,
-            20,
-            120
+            5,
+            30
           ],
           [
             20,
-            25,
-            150
+            5,
+            30
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value. The reduction per stack scales, taken from the community talent calculator and matching the 4% per point the sim applies. The stack cap and the duration do not: five stacks of 4% per point is exactly a free instant cast at 5/5, and the calculator's extrapolated 25 stacks over 150 sec overshoots that several times over, so both keep rank 1's 5 and 30 sec as the sim does.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },

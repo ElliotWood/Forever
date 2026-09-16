@@ -180,7 +180,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The sim does not implement Soul Harvest at all, so the original stamp's claim that these ranks match the scaling the sim applies had nothing to check against.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -198,18 +198,18 @@
           [
             4,
             12,
-            40,
+            20,
             6
           ],
           [
             6,
             18,
-            60,
+            20,
             9
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The bonus per Affliction effect, its cap and the Drain Life range keep the calculator's scaling, which is the scaling sim/warlock/talents.go applies. The health threshold that triples the Drain Soul bonus is held at 20%: the sim reads a fixed execute phase there, and a threshold is not a per-rank magnitude - scaled it would triple the bonus below 60% health.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -230,7 +230,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The sim does not implement Improved Health Funnel at all, so the original stamp's claim that these ranks match the scaling the sim applies had nothing to check against.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -248,21 +248,21 @@
           ],
           [
             34,
-            20,
-            4,
-            78,
-            84
+            10,
+            2,
+            39,
+            42
           ],
           [
             51,
-            30,
-            6,
-            117,
-            126
+            10,
+            2,
+            39,
+            42
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The Searing Pain threat reduction keeps the calculator's scaling, which is the scaling sim/warlock/talents.go applies. The ten second brand, the two pet attacks it arms and their 39 to 42 damage are held at rank 1's values, the ones the sim uses: the importer does not extrapolate a duration slot, and nothing was seen to say the other two grow either.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -279,15 +279,15 @@
             20
           ],
           [
-            90,
-            70,
+            45,
+            35,
             6,
-            20,
+            10,
             40
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The damage bonus and the Soul Fire cast time reduction keep the calculator's scaling, which is the scaling sim/warlock/talents.go applies. The Soul Fire cooldown reduction, the health threshold and the ten second window are held at rank 1's values, as the sim holds them: scaled, 2/2 would leave Soul Fire on a six second cooldown, open the window at 70% health and hold it for twenty seconds.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -310,7 +310,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The sim does not implement Improved Felhunter at all, so the original stamp's claim that these ranks match the scaling the sim applies had nothing to check against.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -325,23 +325,23 @@
           ],
           [
             8,
-            24
+            12
           ],
           [
             12,
-            36
+            12
           ],
           [
             16,
-            48
+            12
           ],
           [
             20,
-            60
+            12
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The extra Shadow damage taken keeps the calculator's scaling, which is the scaling sim/warlock/talents.go applies. The debuff duration is held at the 12 sec the sim registers: the importer does not extrapolate a duration slot, and scaled it would run a full minute at 5/5.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -358,31 +358,31 @@
           ],
           [
             20,
-            40,
-            100,
-            10
+            20,
+            50,
+            5
           ],
           [
             30,
-            60,
-            150,
-            15
+            20,
+            50,
+            5
           ],
           [
             40,
-            80,
-            200,
-            20
+            20,
+            50,
+            5
           ],
           [
             50,
-            100,
-            250,
-            25
+            20,
+            50,
+            5
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The Immolate damage keeps the calculator's scaling, which is the scaling sim/warlock/immolate.go applies. The Daze chance, the slow and its duration are held at rank 1's values: scaled, 5/5 Dazes on every Conflagrate and slows by 250%, which cannot be right, and the sim models none of the three.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     },
@@ -405,7 +405,7 @@
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1\u2019s value while the sim scaled with points; per-rank values taken from the community talent calculator, which matches the scaling the sim already applies",
+      "reason": "audit 2026-09-15: only rank 1 was ever displayed, so the per-rank values came from the community talent calculator, which is rebuilt from the same demo tooltips and cannot confirm them. The sim does not implement Pyroclasm at all, so the original stamp's claim that these ranks match the scaling the sim applies had nothing to check against.",
       "by": "data-audit",
       "at": "2026-09-15T00:00:00Z"
     }

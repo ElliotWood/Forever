@@ -204,6 +204,46 @@ export const sections: Array<Section> = [
 				sources: [communityTalents],
 			},
 			{
+				title: 'Fingers of Frost pays for its second point, Shatter shows all five ranks',
+				prs: [136],
+				changed:
+					'The same #126 assumption that caught the paladins caught the mage twice. Fingers of Frost proced on 15% of chills at either rank where the tree reads 15%/30%, so the second point did nothing; it is read per point now. Shatter has run to five ranks since the trees were corrected, but its rank table stopped at three, so 4/5 and 5/5 showed no number in the picker; it reads 10/20/30/40/50, which is what the sim already applied. Neither is confirmed - the demo showed Fingers of Frost only at rank 1 and Shatter only at Rank 3/3, where it read 50% - so the beta checklist keeps both.',
+				effect: 'Frost 528 to 559 DPS on the ranked build, from twice as many Fingers of Frost procs and the Ice Lances they pay for. Arcane and fire are unchanged.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'Warlock talents stop scaling past the top of their scale',
+				prs: [137],
+				changed:
+					"The warlock carried ten of #126's per-rank stamps and the two worst divergences were not among them. Shadow and Flame read its 20% chance not to consume Immolate per point, so at 5/5 Conflagrate never consumed Immolate, and Decimation cut Soul Fire's minute cooldown by 45% per point, so 2/2 left six seconds. Both read flat in the tree and are flat now. The other way round, the per-rank pass had scaled slots that are not magnitudes - Improved Drains' execute threshold, Decimation's window, Demonic Brand's duration, stacks and damage, Improved Shadow Bolt's debuff length and Aftermath's Daze, which reached a certain Daze and a 250% slow at 5/5 - and those go back to rank 1's value, which is what the sim has always applied. Only rank 1 of every warlock talent was ever displayed, so the beta checklist keeps all of them and grows from four entries to twelve.",
+				effect: 'Shadow and Flame 671.5 to 670.2 DPS on the ranked build; no preset rotation casts Soul Fire, so Decimation does not move the other three. Four of the ten stamped talents turn out to have no implementation in the sim at all.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'The rogue picker stops promising two things the sim never rolled',
+				prs: [138],
+				changed:
+					"Cutthroat read a flat 3% chance at all five ranks because the datamined pass copied rank 1 into the rest, while the sim has always rolled 3% per point, so a 5/5 rogue was told 3% and got 15%; the tree scales the chance now and keeps the 10 sec duration. Quietus extrapolated its execute threshold along with its damage, so the picker offered 'targets below 175% health' at 5/5, where the sim holds rank 1's 35% because a threshold cannot scale. The three stamped rogue overrides were checked against the code and their numbers hold, but the calculator they were checked against is rebuilt from the same demo footage, so the reasons say extrapolated rather than confirmed.",
+				effect: 'No simulated number moves, every rogue result is unchanged. What the picker shows is now what the sim rolls.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'The warrior picker stops promising what the sim does not roll',
+				prs: [139],
+				changed:
+					"Three warrior talents described something the sim never applies. Unbridled Wrath and Improved Shield Wall repeated rank 1 at every rank, a 12% chance and 5.5 min, where the sim reads the 12% per point and takes another 5.5 min off the cooldown for the second point, so the picker showed points that buy nothing. Enrage promised 30/60/90/120/150%, a chance no roll can meet, extrapolated from Classic's Enrage where that scale is the damage bonus and the chance is flat at every rank; the tree now reads the capped 30/60/90/100/100 the sim rolls. Weaponmaster's numbers, the fourth checked, match the sim exactly. Nothing here is confirmed: only rank 1 was shown on the demo, so the beta checklist keeps all four and gains an entry for Enrage.",
+				effect: 'No simulated number moves. What the picker shows a warrior is what the sim does with the points.',
+				sources: [communityTalents],
+			},
+			{
+				title: 'Two shaman talents stop promising a scaling they never had',
+				prs: [140],
+				changed:
+					'#126 put per-rank numbers into the trees from a community talent calculator that extrapolates every number in a tooltip, and two shaman talents came out promising more than the talent gives. Maelstrom Weapon read 5 to 25 stacks lasting 30 to 150 sec where five stacks of 4% per point already reach a free instant Lightning Bolt at 5/5, and Improved Stormstrike read a 30 sec window at rank 2 where both ranks run 15 sec. Both tables now read what the sim applies, and only the per-point halves scale. The rest of the shaman tree already agreed. Elemental Fury also missed Fire Nova Totem entirely, where Searing and Magma Totem were named by hand.',
+				effect: 'The picker no longer shows shaman numbers the sim will not honour, and Fire Nova Totem crits for the full Elemental Fury bonus. No ranked build changes, none of the shipped rotations drops Fire Nova Totem.',
+				sources: [communityTalents],
+			},
+			{
 				title: 'Tests that pin the trees together',
 				prs: [68],
 				changed:
