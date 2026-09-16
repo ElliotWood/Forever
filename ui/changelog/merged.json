@@ -1,5 +1,11 @@
 [
 	{
+		"number": 162,
+		"title": "Fix two checklist entries that no longer point at what they describe",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/162"
+	},
+	{
 		"number": 161,
 		"title": "Say where Holy Shield, Mind Flay and Pyroblast got their Forever numbers",
 		"mergedAt": "2026-09-16",
