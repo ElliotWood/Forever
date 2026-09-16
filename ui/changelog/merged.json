@@ -1,5 +1,11 @@
 [
 	{
+		"number": 160,
+		"title": "Add a tool that reports what upstream confirms and the trees disagree with",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/160"
+	},
+	{
 		"number": 159,
 		"title": "Add a check that the deployed site serves this checkout's talent data",
 		"mergedAt": "2026-09-16",
