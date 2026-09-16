@@ -1,5 +1,11 @@
 [
 	{
+		"number": 150,
+		"title": "Tiger's Fury pays a share of Physical damage under Forever",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/150"
+	},
+	{
 		"number": 149,
 		"title": "Stop building pages for specs the sim cannot run",
 		"mergedAt": "2026-09-16",
