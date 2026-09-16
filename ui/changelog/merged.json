@@ -18,6 +18,12 @@
 		"url": "https://github.com/ElliotWood/Forever/pull/141"
 	},
 	{
+		"number": 137,
+		"title": "stop shadow and flame and decimation running past the top of their scale",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/137"
+	},
+	{
 		"number": 136,
 		"title": "read fingers of frost per point and give shatter five rank values",
 		"mergedAt": "2026-09-16",
