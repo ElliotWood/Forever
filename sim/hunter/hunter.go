@@ -159,8 +159,17 @@ func (hunter *Hunter) Initialize() {
 
 	hunter.registerSerpentStingSpell()
 
+	// Classic paired Aimed Shot's cooldown with Arcane Shot. Forever pairs it with
+	// Multi-Shot instead, which both tooltips state in so many words: "Aimed Shot shares
+	// its cooldown with Multi-Shot" and "Multi-Shot shares its cooldown with Aimed Shot"
+	// (Xaryu's and Savix's Hunters, 12 September).
+	aimedShotTimer := arcaneShotTimer
+	if hunter.Env.IsForever() {
+		aimedShotTimer = multiShotTimer
+	}
+
 	hunter.registerArcaneShotSpell(arcaneShotTimer)
-	hunter.registerAimedShotSpell(arcaneShotTimer)
+	hunter.registerAimedShotSpell(aimedShotTimer)
 	hunter.registerSummonHawkSpell(arcaneShotTimer)
 	hunter.registerMultiShotSpell(multiShotTimer)
 	hunter.registerSniperShotSpell()

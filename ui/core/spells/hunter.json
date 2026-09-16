@@ -367,8 +367,13 @@
 	},
 	"2643": {
 		"ability": "Multi-Shot",
+		"assumptions": [
+			"The 6 sec cooldown was read at level 38 and is applied to every rank; no level 60 tooltip has been seen."
+		],
 		"file": "sim/hunter/multi_shot.go",
-		"source": "unreviewed"
+		"note": "Forever cuts the cooldown from Classic's 10 sec to 6 and puts Multi-Shot on the same cooldown as Aimed Shot rather than its own. Both tooltips say so: 'Multi-Shot shares its cooldown with Aimed Shot' and the reverse on Aimed Shot. Read off Xaryu's Hunter, 12 September, via talentsforever.com.",
+		"source": "assumed",
+		"tooltip": "145 Mana\n8-35 yd range\n0.5 sec cast\n6 sec cooldown\nFires several missiles, hitting 3 targets. Multi-Shot shares its cooldown with Aimed Shot."
 	},
 	"2973": {
 		"ability": "Raptor Strike",
