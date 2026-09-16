@@ -189,6 +189,8 @@ func applyRaceEffects(agent Agent) {
 	case proto.Race_RaceUndead:
 		if !forever {
 			character.AddStat(stats.ShadowResistance, 10)
+		} else {
+			character.registerTouchOfTheGrave()
 		}
 	case proto.Race_RaceSkyborneHighOrder, proto.Race_RaceSkyborneWindshaper:
 		// Wind Blessed
@@ -205,6 +207,55 @@ func applyRaceEffects(agent Agent) {
 		// The High Order racial is a health and mana regeneration cooldown, which does
 		// nothing the sim measures, so it is left out.
 	}
+}
+
+// Touch of the Grave, the undead's Forever racial, which replaces Classic's Shadow
+// Resistance: spells and attacks have a 5% chance to drain health from the target, up to
+// 5% of the undead's own maximum health.
+// TODO: assumed baseline, beta will confirm - the tooltip's "up to 5% of your maximum
+// Health" is read as a roll between half and full, the way every other ranged damage
+// value in the sim is, and the drain is taken to be Shadow damage that can be resisted.
+// Whether it can crit, and whether it shares a cooldown between procs, are both unknown.
+func (character *Character) registerTouchOfTheGrave() {
+	actionID := ActionID{SpellID: 460540}
+	healthMetrics := character.NewHealthMetrics(actionID)
+
+	drain := character.RegisterSpell(SpellConfig{
+		ActionID:    actionID,
+		SpellSchool: SpellSchoolShadow,
+		DefenseType: DefenseTypeMagic,
+		ProcMask:    ProcMaskEmpty,
+		// The drain is a proc off another hit, so it must not feed the procs that spawned
+		// it or two undead attacks would chain into each other.
+		Flags: SpellFlagNoOnCastComplete | SpellFlagPassiveSpell,
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
+			maxHealth := character.MaxHealth()
+			result := spell.CalcAndDealDamage(sim, target, sim.Roll(maxHealth*0.025, maxHealth*0.05), spell.OutcomeMagicHit)
+
+			// Only the specs that track a health bar can be healed; for everyone else the
+			// drain is still damage, it just has nothing to return the health to.
+			if result.Landed() && character.HasHealthBar() {
+				character.GainHealth(sim, result.Damage, healthMetrics)
+			}
+		},
+	})
+
+	MakePermanent(character.RegisterAura(Aura{
+		Label:    "Touch of the Grave",
+		ActionID: actionID,
+		OnSpellHitDealt: func(_ *Aura, sim *Simulation, spell *Spell, result *SpellResult) {
+			if !result.Landed() || spell == drain {
+				return
+			}
+			if sim.RandomFloat("Touch of the Grave") < 0.05 {
+				drain.Cast(sim, result.Target)
+			}
+		},
+	}))
 }
 
 // Elune's Light, the night elf's Forever racial cooldown: 10% critical strike for 15
