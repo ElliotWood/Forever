@@ -38,6 +38,7 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, aura *core.Aura, stanceCD
 	actionID := aura.ActionID
 	// The tooltip reads as a bonus on top of a baseline Tactical Mastery, but the baseline
 	// retention was never shown, so only the talent's own 3 Rage per point is modelled.
+	// TODO: beta will show what an untalented warrior retains across a stance change.
 	maxRetainedRage := 3 * float64(warrior.Talents.ImprovedTacticalMastery)
 	rageMetrics := warrior.NewRageMetrics(actionID)
 
