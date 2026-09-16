@@ -82,10 +82,10 @@ func TestWarlockDSRuin(t *testing.T) {
 }
 
 // The community builds the rankings page runs, so the goldens measure what is ranked.
-var TalentsDemonicPact = "113-0005003321220211351-0500055"
-var TalentsAffliction = "2535002013521105--05000551"
-var TalentsDSRuin = "25220010135201-0025000301-05000551"
-var TalentsShadowAndFlame = "25502100002-0025000301-0520355102"
+var TalentsDemonicPact = "113-0005003221220311351-0550005"
+var TalentsAffliction = "2535002013521105--05500051"
+var TalentsDSRuin = "25220010135201-0025003001-05500051"
+var TalentsShadowAndFlame = "25501-0025003001-055035510010002"
 
 func TestWarlockShadowAndFlame(t *testing.T) {
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{

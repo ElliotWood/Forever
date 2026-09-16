@@ -130,9 +130,7 @@
         "spellIds": [
           19549,
           19550,
-          19551,
-          24386,
-          24387
+          19551
         ],
         "maxPoints": 3,
         "name": "Improved Aspect of the Monkey",
@@ -145,11 +143,11 @@
           ],
           [
             4,
-            100
+            50
           ],
           [
             6,
-            150
+            50
           ]
         ],
         "notSimulated": true
@@ -552,37 +550,37 @@
         "notSimulated": true
       },
       {
-        "fieldName": "carefulAim",
+        "fieldName": "lethalAttacks",
         "location": {
           "rowIdx": 0,
           "colIdx": 2
         },
         "spellIds": [
-          30902,
-          30903,
-          30904,
-          30905,
-          30906
+          19426,
+          19427,
+          19429,
+          19430,
+          19431
         ],
         "maxPoints": 5,
-        "name": "Careful Aim",
-        "icon": "ability_hunter_zenarchery",
-        "description": "Increases your Attack Power by {0}% of your Intellect.",
+        "name": "Lethal Attacks",
+        "icon": "ability_searingarrow",
+        "description": "Increases your critical strike chance with all attacks by {0}%.",
         "ranks": [
           [
-            20
+            1
           ],
           [
-            40
+            2
           ],
           [
-            60
+            3
           ],
           [
-            80
+            4
           ],
           [
-            100
+            5
           ]
         ]
       },
@@ -655,37 +653,37 @@
         ]
       },
       {
-        "fieldName": "lethalAttacks",
+        "fieldName": "carefulAim",
         "location": {
           "rowIdx": 1,
           "colIdx": 2
         },
         "spellIds": [
-          19426,
-          19427,
-          19429,
-          19430,
-          19431
+          30902,
+          30903,
+          30904,
+          30905,
+          30906
         ],
         "maxPoints": 5,
-        "name": "Lethal Attacks",
-        "icon": "ability_searingarrow",
-        "description": "Increases your critical strike chance with all attacks by {0}%.",
+        "name": "Careful Aim",
+        "icon": "ability_hunter_zenarchery",
+        "description": "Increases your Attack Power by {0}% of your Intellect.",
         "ranks": [
           [
-            1
+            20
           ],
           [
-            2
+            40
           ],
           [
-            3
+            60
           ],
           [
-            4
+            80
           ],
           [
-            5
+            100
           ]
         ]
       },
@@ -710,7 +708,7 @@
           ],
           [
             2,
-            40,
+            20,
             20
           ]
         ],
@@ -956,7 +954,7 @@
           "colIdx": 1
         },
         "spellIds": [
-          0
+          19434
         ],
         "maxPoints": 1,
         "name": "Sniper Shot",
@@ -1066,16 +1064,16 @@
             1
           ],
           [
-            1
+            2
           ],
           [
-            1
+            3
           ],
           [
-            1
+            4
           ],
           [
-            1
+            5
           ]
         ],
         "notSimulated": true
@@ -1147,9 +1145,7 @@
         "spellIds": [
           19228,
           19232,
-          19233,
-          19234,
-          19235
+          19233
         ],
         "maxPoints": 3,
         "name": "Improved Wing Clip",

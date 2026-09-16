@@ -216,7 +216,11 @@
           "colIdx": 2
         },
         "spellIds": [
-          16089
+          16089,
+          0,
+          0,
+          0,
+          0
         ],
         "maxPoints": 5,
         "name": "Elemental Fury",
@@ -304,11 +308,7 @@
           "colIdx": 2
         },
         "spellIds": [
-          16041,
-          16117,
-          16118,
-          16119,
-          16120
+          16041
         ],
         "maxPoints": 1,
         "name": "Call of Thunder",
@@ -635,7 +635,8 @@
         },
         "spellIds": [
           16261,
-          16290
+          16290,
+          16291
         ],
         "maxPoints": 3,
         "name": "Improved Lightning Shield",
@@ -714,9 +715,7 @@
         "spellIds": [
           16254,
           16271,
-          16272,
-          16273,
-          16274
+          16272
         ],
         "maxPoints": 3,
         "name": "Anticipation",
@@ -898,7 +897,7 @@
           ],
           [
             100,
-            100,
+            50,
             15,
             100
           ]
@@ -1208,9 +1207,7 @@
         "spellIds": [
           16181,
           16230,
-          16232,
-          16233,
-          16234
+          16232
         ],
         "maxPoints": 3,
         "name": "Healing Focus",

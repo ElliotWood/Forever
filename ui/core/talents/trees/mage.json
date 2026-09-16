@@ -123,7 +123,7 @@
             15
           ],
           [
-            16,
+            15,
             30
           ]
         ]
@@ -136,10 +136,7 @@
         },
         "spellIds": [
           29441,
-          29444,
-          29445,
-          29446,
-          29447
+          29444
         ],
         "maxPoints": 2,
         "name": "Magic Absorption",
@@ -198,7 +195,8 @@
           "colIdx": 3
         },
         "spellIds": [
-          28574
+          28574,
+          0
         ],
         "maxPoints": 2,
         "name": "Arcane Resilience",
@@ -333,7 +331,7 @@
             2
           ],
           [
-            2
+            4
           ]
         ],
         "notSimulated": true
@@ -533,9 +531,9 @@
             25
           ],
           [
-            1,
+            2,
             20,
-            25
+            50
           ]
         ]
       },
@@ -547,7 +545,8 @@
         },
         "spellIds": [
           18459,
-          18460
+          18460,
+          0
         ],
         "maxPoints": 3,
         "name": "Incineration",
@@ -581,7 +580,7 @@
         "maxPoints": 5,
         "name": "Improved Fireball",
         "icon": "spell_fire_flamebolt",
-        "description": "Reduces the casting time of your Fireball spell by {0} sec.",
+        "description": "Reduces the casting time of your Fireball and Frostfire Bolt spells by {0} sec.",
         "ranks": [
           [
             0.1
@@ -668,9 +667,7 @@
         "spellIds": [
           11103,
           12357,
-          12358,
-          12359,
-          12360
+          12358
         ],
         "maxPoints": 3,
         "name": "Impact",
@@ -696,7 +693,8 @@
         },
         "spellIds": [
           11083,
-          12351
+          12351,
+          0
         ],
         "maxPoints": 3,
         "name": "Burning Soul",
@@ -1053,7 +1051,9 @@
         "spellIds": [
           29438,
           29439,
-          29440
+          29440,
+          0,
+          0
         ],
         "maxPoints": 5,
         "name": "Elemental Precision",
@@ -1133,12 +1133,12 @@
             3
           ],
           [
-            11,
-            3
+            22,
+            6
           ],
           [
-            11,
-            3
+            33,
+            9
           ]
         ],
         "notSimulated": true
@@ -1296,7 +1296,7 @@
             30
           ],
           [
-            45
+            40
           ]
         ]
       },
@@ -1353,26 +1353,18 @@
         "spellIds": [
           11170,
           12982,
-          12983,
-          12984,
-          12985
+          12983
         ],
-        "maxPoints": 5,
+        "maxPoints": 3,
         "name": "Shatter",
         "icon": "spell_frost_frostshock",
         "description": "Increases the critical strike chance of all your spells against Frozen targets by {0}%.",
         "ranks": [
           [
-            10
+            17
           ],
           [
-            20
-          ],
-          [
-            30
-          ],
-          [
-            40
+            33
           ],
           [
             50
@@ -1471,22 +1463,27 @@
         "maxPoints": 5,
         "name": "Winter's Chill",
         "icon": "spell_frost_chillingblast",
-        "description": "Gives your frost damage spells a {0}% chance to apply the Winter's Chill effect, which increases the chance your Ice Lance and Frostbolt spells will critically hit the target by 2% for 15 sec. Stacks up to 1 times.",
+        "description": "Gives your frost damage spells a {0}% chance to apply the Winter's Chill effect, which increases the chance your Ice Lance and Frostbolt spells will critically hit the target by 2% for 15 sec. Stacks up to {1} times.",
         "ranks": [
           [
-            20
+            20,
+            1
           ],
           [
-            40
+            40,
+            2
           ],
           [
-            60
+            60,
+            3
           ],
           [
-            80
+            80,
+            4
           ],
           [
-            100
+            100,
+            5
           ]
         ]
       },
