@@ -449,15 +449,15 @@
 	"30288": {
 		"ability": "Shadow and Flame",
 		"assumptions": [
-			"The 2% damage bonus is read per point, so 5/5 is 10%, although the demo tooltip reads 2% at every rank",
-			"The 20% chance not to consume Immolate is read per point, so at 5/5 Conflagrate never consumes Immolate",
+			"Every rank of the tree reads the same 2% for 20 sec, so the damage bonus is held at 2% rather than read per point",
+			"Every rank also reads the same 20% chance not to consume Immolate, so the chance is held at 20% - read per point it would be certain at 5/5",
 			"Both buffs last 20 sec and do not stack with themselves",
 			"Shadowburn's 20% chance to refund a Soul Shard is not modelled, the sim has no shard economy"
 		],
 		"file": "sim/warlock/talents.go",
 		"note": "30288 is the Forever tree's own rank 1 id for Shadow and Flame, carried over from TBC, and the Classic database has no row for it.",
 		"source": "assumed",
-		"tooltip": "Passive\nHitting an enemy with Conflagrate increases all your Shadow damage by 2% per point for 20 sec, and hitting an enemy with Shadowburn increases all your Fire damage by 2% per point for 20 sec. Conflagrate also has a 20% chance per point not to consume Immolate."
+		"tooltip": "Passive\nHitting an enemy with Conflagrate increases all your Shadow damage by 2% for 20 sec, and hitting an enemy with Shadowburn increases all your Fire damage by 2% for 20 sec. Conflagrate also has a 20% chance not to consume Immolate."
 	},
 	"3110": {
 		"ability": "Firebolt",
@@ -526,16 +526,16 @@
 	"63165": {
 		"ability": "Decimation",
 		"assumptions": [
-			"Both ranks read the same numbers on the demo tooltip, so the 3% damage, the 20% cast time and the 45% Soul Fire cooldown are all read per point - at 2/2 that is 90% off Soul Fire's minute cooldown",
+			"Only rank 1 was displayed, so the 3% damage and the 20% cast time reduction are read per point while the 45% Soul Fire cooldown reduction is held at rank 1's value - read per point, 2/2 would leave Soul Fire on a six second cooldown",
 			"The damage bonus belongs to Shadow Bolt and Searing Pain themselves rather than to everything the warlock casts",
-			"The window is 10 sec and the health threshold 35%",
+			"The window is 10 sec and the health threshold 35% at both ranks",
 			"Soul Fire's Soul Shard cost is not modelled"
 		],
 		"file": "sim/warlock/talents.go",
 		"foreverId": 63156,
 		"note": "The Forever tree carries 63156 and 63158 for Decimation's two ranks, so the aura's 63165 matches neither and looks like a transposition of 63156; neither id exists in the Classic database.",
 		"source": "assumed",
-		"tooltip": "Passive\nReduces the cooldown of your Soul Fire by 45% per point. When your Shadow Bolt or Searing Pain hits an enemy below 35% health, those two spells deal 3% more damage per point and, for the next 10 sec, Soul Fire's cast time is cut by 20% per point and it costs no Soul Shards."
+		"tooltip": "Passive\nReduces the cooldown of your Soul Fire by 45%. When your Shadow Bolt or Searing Pain hits an enemy below 35% health, those two spells deal 3% more damage per point and, for the next 10 sec, Soul Fire's cast time is cut by 20% per point and it costs no Soul Shards."
 	},
 	"6353": {
 		"ability": "Soul Fire",
