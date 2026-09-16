@@ -96,17 +96,18 @@ Infusion of Light is not on that list because there is nothing to check against:
 
 The priest healing spellbook is commented out in `RegisterHealingSpells`, so Flash Heal, Greater Heal, Power Word: Shield, Prayer of Healing and Renew never reach a sim. Every talent whose only effect is on those spells is therefore unmeasurable at any rank, whatever the picker promises: Improved Power Word: Shield, Improved Renew, Improved Healing, Spiritual Healing and Inspiration. The commented code also predates the current trees and reads Improved Power Word: Shield at 5/10/15% against the tree's 7/14/21%, Spiritual Healing at 2/4/6% against the tree's 3/6/9%, and Silent Resolve's healing threat at 7/14/20% against the tree's 10/20/30%. Fix those alongside whatever brings the spellbook back rather than in isolation, or they come back wrong.
 
-## Rogue (10)
+## Rogue (11)
 
-- `sim/rogue/backstab.go:28` — Only rank 1 of Puncturing Wounds was seen, the extra combo point chance is assumed to scale linearly. Beta will confirm.
+- `sim/rogue/backstab.go:28` — Only rank 1 of Puncturing Wounds was seen, so both the extra combo point chance and the Backstab crit chance are assumed to scale linearly. Beta will confirm.
 - `sim/rogue/expose_armor.go:11` — assumed baseline, beta will confirm. The raid reads this debuff, so the Classic 2/2 armor value is treated as baseline rather than deleted.
-- `sim/rogue/expose_armor.go:36` — Only rank 1 was seen, the Energy discount is assumed to scale linearly while the refund and the 5 combo point trigger stay put. Beta will confirm.
-- `sim/rogue/hack_and_slash.go:14` — Only rank 1 was seen, all three effects are assumed to scale linearly. Beta will confirm.
+- `sim/rogue/expose_armor.go:36` — Only rank 1's 5 Energy was seen. The tree's second rank is a linear extrapolation of it rather than an observation, and the refund and the 5 combo point trigger stay put. Beta will confirm.
+- `sim/rogue/hack_and_slash.go:14` — Only rank 1 was seen, and the data behind the tree copies it into every other rank rather than observing them, so the linear scaling of all three effects is an assumption. Beta will confirm.
 - `sim/rogue/mutilate.go:43` — The tooltip showed no Energy cost, the 60 is taken from the Classic Mutilate.
 - `sim/rogue/mutilate.go:55` — The tooltip didn't repeat the Classic dagger requirement, it's assumed to still apply.
+- `sim/rogue/mutilate.go:59` — Only rank 1 of Puncturing Wounds was seen, the crit chance it gives Mutilate is assumed to scale linearly. Beta will confirm.
 - `sim/rogue/poisons.go:63` — The tooltip doesn't say whether Venom reaches a Deadly Poison that is already on the target or only the stacks applied while it is up. Beta will confirm.
-- `sim/rogue/talents.go:273` — Only rank 1 was seen, the proc chance is assumed to scale linearly. Beta will confirm.
-- `sim/rogue/talents.go:350` — Only rank 1 was seen and the damage bonus is assumed to scale linearly. The tooltip data extrapolates the health threshold along with it, which it cannot be, so rank 1's 35% is used for every rank. Beta will confirm.
+- `sim/rogue/talents.go:273` — Only rank 1 of Cutthroat's 3% was seen, and the data behind the tree copies it into every other rank rather than observing them, so the linear scaling is an assumption. The 10 sec duration is held at rank 1. Beta will confirm.
+- `sim/rogue/talents.go:352` — Only rank 1 of Quietus was seen and the damage bonus is assumed to scale linearly. The health threshold cannot be extrapolated alongside it, so rank 1's 35% is used for every rank and the tree now reads the same. Beta will confirm.
 - `sim/rogue/venom.go:47` — The tooltip showed no Energy cost, the 25 matches the other Rogue finishers.
 
 ## Shaman (16)
