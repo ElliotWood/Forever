@@ -62,7 +62,16 @@ for (const [className, classData] of Object.entries(upstream.talents ?? {})) {
       if (talent.complete === false) continue;
       confirmedTalents++;
 
-      const descriptions = Array.isArray(talent.desc) ? talent.desc : Object.values(talent.desc ?? {});
+      // desc is an array when every rank is known, and an object keyed by rank number
+      // when it is not - "1", "4", "5" for a five rank talent with two ranks unseen.
+      // Object.values() on that silently slides rank 4 into rank 2's place, so the keys
+      // are read and the gaps left empty.
+      const descriptions = Array.isArray(talent.desc)
+        ? talent.desc
+        : Object.entries(talent.desc ?? {}).reduce((out, [rank, text]) => {
+            out[Number(rank) - 1] = text;
+            return out;
+          }, []);
       const simRanks = sim[className.toLowerCase() + '|' + normalize(talent.name)];
       for (let rank = 0; rank < descriptions.length; rank++) {
         confirmedRanks++;
