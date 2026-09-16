@@ -1,5 +1,17 @@
 [
 	{
+		"number": 152,
+		"title": "Take four cooldowns from the demo tooltips instead of Classic",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/152"
+	},
+	{
+		"number": 151,
+		"title": "Aimed Shot shares Multi-Shot's cooldown, and Multi-Shot's is 6 sec",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/151"
+	},
+	{
 		"number": 150,
 		"title": "Tiger's Fury pays a share of Physical damage under Forever",
 		"mergedAt": "2026-09-16",
