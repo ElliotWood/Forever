@@ -1,5 +1,11 @@
 [
 	{
+		"number": 147,
+		"title": "Stop Skyborne racials leaking into a Classic sim",
+		"mergedAt": "2026-09-16",
+		"url": "https://github.com/ElliotWood/Forever/pull/147"
+	},
+	{
 		"number": 146,
 		"title": "Give the undead their Forever racial back (#145)",
 		"mergedAt": "2026-09-16",
