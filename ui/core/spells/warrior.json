@@ -311,13 +311,13 @@
 	"871": {
 		"ability": "Shield Wall",
 		"assumptions": [
-			"Improved Shield Wall rank 2 takes a second 5.5 min off, so 2/2 leaves a 19 min cooldown; only rank 1's 5.5 min was shown on the demo tooltip",
-			"Shield Wall's own 30 min base cooldown, 10 sec duration and 75% reduction are Classic's values, carried over because Forever never showed the spell"
+			"Improved Shield Wall rank 2 takes a second 5.5 min off, so 2/2 leaves a 4.5 min cooldown; only rank 1's 5.5 min was shown on the demo tooltip",
+			"The 60% reduction and 12 sec duration are in the observed tooltip but are not yet applied in the sim, which still uses Classic's 75% for 10 sec"
 		],
 		"file": "sim/warrior/shield_wall.go",
-		"note": "Forever's Improved Shield Wall cuts the cooldown instead of extending the duration, so the cooldown on this spell is now talent dependent and only rank 1 of that talent was ever shown.",
+		"note": "Forever's Improved Shield Wall cuts the cooldown instead of extending the duration, so the cooldown on this spell is now talent dependent and only rank 1 of that talent was ever shown. The untalented cooldown is 15 min rather than Classic's 30, read off Esfand's Warrior in \"Warriors Just Got a MASSIVE Rework\" at 11:49 via talentsforever.com.",
 		"source": "assumed",
-		"tooltip": "Instant\n30 min cooldown\nRequires Defensive Stance\nReduces the damage taken from melee attacks, ranged attacks and spells by 75% for 10 sec.\nImproved Shield Wall reduces the cooldown by 5.5 min per point."
+		"tooltip": "Instant\n15 min cooldown\nRequires Shields\nRequires Defensive Stance\nReduces the damage taken from all attacks by 60% for 12 sec.\nImproved Shield Wall reduces the cooldown by 5.5 min per point."
 	},
 	"9": {
 		"ability": "spell 9",

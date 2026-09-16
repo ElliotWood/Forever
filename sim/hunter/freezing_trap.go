@@ -24,7 +24,9 @@ func (hunter *Hunter) getFreezingTrapConfig(timer *core.Timer) core.SpellConfig 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    timer,
-				Duration: time.Second * 15,
+				// Forever doubles the shared trap cooldown to 30 sec. Seen on every trap tooltip
+				// from the demo streams (Savix, Xaryu and Soda, 12-13 September).
+				Duration: core.TernaryDuration(hunter.Env.IsForever(), time.Second*30, time.Second*15),
 			},
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,

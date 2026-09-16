@@ -42,8 +42,10 @@ func (hunter *Hunter) getMultiShotConfig(rank int, timer *core.Timer) core.Spell
 			},
 			IgnoreHaste: true, // Hunter GCD is locked at 1.5s
 			CD: core.Cooldown{
-				Timer:    timer,
-				Duration: time.Second * 10,
+				Timer: timer,
+				// Forever cuts the cooldown to 6 sec, the same one Aimed Shot is now on.
+				// Read off Xaryu's Hunter, 12 September.
+				Duration: core.TernaryDuration(hunter.Env.IsForever(), time.Second*6, time.Second*10),
 			},
 			CastTime: func(spell *core.Spell) time.Duration {
 				return time.Duration(float64(spell.DefaultCast.CastTime) / hunter.RangedSwingSpeed())

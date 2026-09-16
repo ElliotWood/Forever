@@ -426,8 +426,13 @@
 	},
 	"633": {
 		"ability": "Lay on Hands",
+		"assumptions": [
+			"Read at level 38; no level 60 tooltip has been seen, so the 20 min is applied to every rank."
+		],
 		"file": "sim/paladin/lay_on_hands.go",
-		"source": "unreviewed"
+		"note": "Forever cuts the cooldown from Classic's hour to 20 min. Read off Savix's Paladin, 12 September, via talentsforever.com.",
+		"source": "assumed",
+		"tooltip": "40 yd range\nInstant\n20 min cooldown\nHeals a friendly target for an amount equal to the Paladin’s maximum health and restores 250 of their mana."
 	},
 	"77485": {
 		"ability": "Twist of Light",
