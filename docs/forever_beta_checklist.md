@@ -125,12 +125,20 @@ The priest healing spellbook is commented out in `RegisterHealingSpells`, so Fla
 - `sim/shaman/water_totems.go:115` — The sim won't respect the value of a totem dropped via the APL. It uses hard-coded values from buffs.go manaRestoreBase := ManaSpringTotemManaRestore[rank]
 - `sim/shaman/windfury_weapon.go:78` — Classic lets both weapons carry the imbue and gives the extra attacks to the hand that procced, beta will confirm that Forever kept both halves of that.
 
-## Warlock (4)
+## Warlock (12)
 
 - `sim/warlock/conflagrate.go:13` — The Forever tooltip puts Conflagrate rank 1 at 109 to 132, less than half Classic's 249 to 316, and Incinerate at 125 to 140 against the 380 to 440 used here. Neither spell's higher ranks were shown, so both keep their Classic tables.
+- `sim/warlock/conflagrate.go:23` — Only rank 1 of Shadow and Flame was seen and every rank of the tree reads the same 20% chance not to consume Immolate, so the chance is held there. Read per point it would be certain at 5/5 and Conflagrate would stop consuming Immolate at all.
+- `sim/warlock/immolate.go:74` — Only rank 1 of Aftermath was seen. The initial Immolate damage is read per point; the Daze half is not modelled, and its chance, its slow and its duration are held at rank 1's values because per point 5/5 would Daze on every Conflagrate and slow by 250%.
 - `sim/warlock/shadowburn.go:12` — The Forever tooltip puts Shadowburn rank 1 at 102 to 111 rather than Classic's 91 to 104. The other five ranks were never shown, so the Classic table is kept.
-- `sim/warlock/talents.go:356` — Both ranks of Decimation read the same numbers, so the 3% damage, 20% cast time and 45% Soul Fire cooldown are read per point as the surrounding talents are. Beta will confirm.
-- `sim/warlock/talents.go:464` — Beta will show whether the 33% of level is per rank or the full value
+- `sim/warlock/soul_fire.go:53` — Only rank 1 of Decimation was seen, so the 45% Soul Fire cooldown reduction is held at both ranks. Read per point the second rank would leave Soul Fire on a six second cooldown.
+- `sim/warlock/talents.go:168` — Only rank 1 of Improved Drains was seen. The bonus per Affliction effect and its cap are read per point, the 20% health the Drain Soul bonus triples below is a threshold rather than a magnitude and is held there at every rank.
+- `sim/warlock/talents.go:359` — Only rank 1 of Decimation was seen. The 3% damage and the 20% cast time reduction are read per point, the health threshold and the ten second window are held at rank 1's values. The aura's 63165 names no Forever spell and looks like a transposition of the tree's 63156.
+- `sim/warlock/talents.go:414` — Only rank 1 of Demonic Brand was seen. The Searing Pain threat reduction is read per point, the ten second brand, the two pet attacks it arms and their 39 to 42 damage are held at rank 1's values, so points two and three buy threat alone.
+- `sim/warlock/talents.go:476` — Beta will show whether the 33% of level is per rank or the full value
+- `sim/warlock/talents.go:806` — Only rank 1 of Improved Shadow Bolt was seen. The extra Shadow damage taken is read per point, the twelve seconds it lasts are held at rank 1's value.
+- `sim/warlock/talents.go:916` — Only rank 1 of Shadow and Flame was seen and every rank of the tree reads the same 2% for 20 sec, so the damage bonus is held there rather than read per point.
+- `ui/core/talents/trees/warlock.json` — Soul Harvesting, Improved Health Funnel, Demonic Aegis, Improved Voidwalker, Improved Felhunter, Destructive Reach, Molten Skin, Pyroclasm, Fel Concentration and Intensity have no implementation in the sim, so nothing checks their per-rank values from the sim's side. Four of them carry per-rank values stamped as matching the scaling the sim applies, which the sim never applied.
 
 ## Warrior (10)
 

@@ -71,6 +71,10 @@ func (warlock *Warlock) getImmolateConfig(rank int) core.SpellConfig {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			// TODO: Only rank 1 of Aftermath was seen. The initial damage is read per point; the
+			// Daze half is not modelled at all, and its chance, its slow and its duration are held
+			// at rank 1's values in the tree because per point 5/5 would Daze on every Conflagrate
+			// and slow by 250%.
 			oldMultiplier := spell.DamageMultiplier
 			spell.DamageMultiplier *= 1 + 0.1*float64(warlock.Talents.Aftermath)
 			result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
