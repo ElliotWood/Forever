@@ -138,8 +138,13 @@
 	},
 	"11366": {
 		"ability": "Pyroblast",
+		"assumptions": [
+			"Only rank 1’s 76 periodic damage was seen; the higher ranks are scaled by the same ratio against Classic."
+		],
 		"file": "sim/mage/pyroblast.go",
-		"source": "unreviewed"
+		"note": "Forever raises the periodic damage from Classic’s 56 to 76 at rank 1. Read off the BlizzCon demo tooltip; the direct damage is unchanged.",
+		"source": "assumed",
+		"tooltip": "125 Mana\n35 yd range\n6 sec cast\nHurls an immense fiery boulder that causes Fire damage and burns the target for 76 Fire damage over 12 sec."
 	},
 	"11426": {
 		"ability": "Ice Barrier",
