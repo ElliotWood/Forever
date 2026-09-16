@@ -36,8 +36,10 @@ func (paladin *Paladin) registerLayOnHands() {
 				GCD: core.GCDDefault,
 			},
 			CD: core.Cooldown{
-				Timer:    paladin.NewTimer(),
-				Duration: time.Minute * 60,
+				Timer: paladin.NewTimer(),
+				// Forever cuts the cooldown from an hour to 20 min, read off Savix's
+				// Paladin, 12 September.
+				Duration: core.TernaryDuration(paladin.Env.IsForever(), time.Minute*20, time.Minute*60),
 			},
 		},
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

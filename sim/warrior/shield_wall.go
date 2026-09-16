@@ -8,9 +8,12 @@ import (
 
 // TODO: Classic Update
 func (warrior *Warrior) RegisterShieldWallCD() {
-	duration := time.Second * 10
+	// Forever trades strength for uptime: 60% for 12 sec against Classic's 75% for 10.
+	// Read off Esfand's Warrior in "Warriors Just Got a MASSIVE Rework" at 11:49.
+	forever := warrior.Env.IsForever()
+	duration := core.TernaryDuration(forever, time.Second*12, time.Second*10)
 	//This is the inverse of the tooltip since it is a damage TAKEN coefficient
-	damageTaken := 0.25
+	damageTaken := core.TernaryFloat64(forever, 0.40, 0.25)
 
 	actionID := core.ActionID{SpellID: 871}
 	swAura := warrior.RegisterAura(core.Aura{
@@ -27,7 +30,10 @@ func (warrior *Warrior) RegisterShieldWallCD() {
 
 	// Improved Shield Wall reduces the cooldown instead of extending the duration in Forever.
 	// TODO: only rank 1 was shown, beta will confirm that rank 2 is another 5.5 minutes.
-	cooldownDur := time.Minute*30 - time.Second*330*time.Duration(warrior.Talents.ImprovedShieldWall)
+	// Forever halves the untalented cooldown to 15 min, read off Esfand's Warrior in
+	// "Warriors Just Got a MASSIVE Rework" at 11:49.
+	baseCooldown := core.TernaryDuration(forever, time.Minute*15, time.Minute*30)
+	cooldownDur := baseCooldown - time.Second*330*time.Duration(warrior.Talents.ImprovedShieldWall)
 
 	swSpell := warrior.RegisterSpell(DefensiveStance, core.SpellConfig{
 		ActionID: actionID,

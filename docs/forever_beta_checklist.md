@@ -148,7 +148,7 @@ The priest healing spellbook is commented out in `RegisterHealingSpells`, so Fla
 ## Warrior (11)
 
 - `sim/warrior/demoralizing_shout.go:15` — assumed baseline, beta will confirm
-- `sim/warrior/shield_wall.go:29` — only rank 1 was shown, beta will confirm that rank 2 is another 5.5 minutes. The tree now lists the 11 min the sim takes off the cooldown at rank 2 instead of repeating rank 1's 5.5.
+- `sim/warrior/shield_wall.go` — only rank 1 of Improved Shield Wall was shown, beta will confirm that rank 2 is another 5.5 minutes. The spell's own numbers are no longer Classic's: Esfand's Warrior showed a 15 min cooldown reducing damage taken from all attacks by 60% for 12 sec, against Classic's 30 min, 75% and 10 sec. All three are applied under Forever.
 - `sim/warrior/shouts.go:55` — assumed baseline, beta will confirm
 - `sim/warrior/talents.go:76` — only rank 1 of Weaponmaster was shown. The 1% crit / 3% armor / 1% extra attack per point the tree lists comes from the community talent calculator, which is rebuilt from the same rank 1 tooltip, so it agrees with the sim without confirming it.
 - `sim/warrior/talents.go:177` — only rank 1 of Unbridled Wrath was shown, beta will confirm the 12% per point. The tree now lists 12/24/36/48/60% instead of repeating rank 1 at every rank.
