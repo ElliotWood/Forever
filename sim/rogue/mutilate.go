@@ -56,6 +56,8 @@ func (rogue *Rogue) registerMutilateSpell() {
 			return rogue.HasDagger(core.MainHand) && rogue.HasDagger(core.OffHand)
 		},
 
+		// TODO: Only rank 1 of Puncturing Wounds was seen, the crit chance it gives Mutilate is
+		// assumed to scale linearly. Beta will confirm.
 		BonusCritRating: 5 * core.CritRatingPerCritChance * float64(rogue.Talents.PuncturingWounds),
 
 		CritDamageBonus: rogue.lethality(),
