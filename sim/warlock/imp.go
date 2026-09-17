@@ -82,7 +82,8 @@ func (wp *WarlockPet) registerImpFireboltSpell() {
 	}
 
 	spellCoeff := [8]float64{0, .164, .314, .529, .571, .571, .571, .571}[rank]
-	baseDamage := [8][]float64{{0, 0}, {7, 10}, {14, 16}, {25, 29}, {36, 41}, {52, 59}, {72, 80}, {85, 96}}[rank]
+	// Beta client 1.60.1 values, about half of Classic's
+	baseDamage := [8][]float64{{0, 0}, {4, 5}, {7, 9}, {12, 14}, {18, 19}, {26, 28}, {36, 39}, {43, 48}}[rank]
 	spellId := [8]int32{0, 3110, 7799, 7800, 7801, 7802, 11762, 11763}[rank]
 	manaCost := [8]float64{0, 10, 20, 35, 50, 70, 95, 115}[rank]
 	level := [8]int{0, 1, 8, 18, 28, 38, 48, 58}[rank]

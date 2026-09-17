@@ -11,21 +11,29 @@ func (warlock *Warlock) registerIncinerateSpell() {
 		return
 	}
 
-	// Level 60 values aren't datamined yet, scaled up from the demo tooltip
-	baseDamage := []float64{380, 440}
+	// Beta client 1.60.1: three ranks, learned at 40 (412758), 50 (1293812) and 60 (1293813), 2.5 sec
+	// cast, 0.714 coefficient and 25% more damage on a target with Immolate. The highest rank the
+	// character's level allows is the one registered.
+	if warlock.Level < 40 {
+		return
+	}
+
+	spellID := map[int32]int32{40: 412758, 50: 1293812, 60: 1293813}[warlock.Level]
+	rank := map[int32]int{40: 1, 50: 2, 60: 3}[warlock.Level]
+	baseDamage := map[int32][]float64{40: {100, 114}, 50: {146, 168}, 60: {201, 233}}[warlock.Level]
+	manaCost := map[int32]float64{40: 205, 50: 265, 60: 325}[warlock.Level]
 	spellCoeff := 0.714
-	manaCost := 300.0
 	castTime := time.Millisecond * 2500
 
 	warlock.Incinerate = warlock.RegisterSpell(core.SpellConfig{
 		SpellCode:     SpellCode_WarlockIncinerate,
-		ActionID:      core.ActionID{SpellID: 29722},
+		ActionID:      core.ActionID{SpellID: spellID},
 		SpellSchool:   core.SpellSchoolFire,
 		DefenseType:   core.DefenseTypeMagic,
 		ProcMask:      core.ProcMaskSpellDamage,
 		Flags:         core.SpellFlagAPL | core.SpellFlagResetAttackSwing | WarlockFlagDestruction,
-		RequiredLevel: 60,
-		Rank:          1,
+		RequiredLevel: int(warlock.Level),
+		Rank:          rank,
 		MissileSpeed:  24,
 
 		ManaCost: core.ManaCostOptions{

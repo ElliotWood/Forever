@@ -22,7 +22,7 @@ func (shaman *Shaman) registerOverloadSpell(config core.SpellConfig) *core.Spell
 	return shaman.RegisterSpell(config)
 }
 
-// TODO: Only rank 1 was seen, beta will confirm that the ranks go up in steps of 3%.
+// 3, 7 and 10% are the beta client's talent curve.
 func (shaman *Shaman) lightningOverloadChance() float64 {
 	return []float64{0, .03, .07, .10}[shaman.Talents.LightningOverload]
 }

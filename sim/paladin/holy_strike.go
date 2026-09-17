@@ -6,28 +6,26 @@ import (
 	"github.com/wowsims/classic/sim/core"
 )
 
-// Holy Strike is new in Forever and has no Classic ability behind it, but three talents hang off
-// it - Improved Holy Strike shortens its cooldown, Iron Creed sharpens its threat and Sacred
-// Arbiter its damage. The published tooltip reads 20 mana, melee range, instant, a 12 second
-// cooldown, and 40% weapon damage plus 36 to 46 Holy damage. Classic's unused spell 13953 lends
-// the name and the icon; Forever's own id for it is 17143, which nothing in the database knows
-// about yet.
-// TODO: assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat
-// damage is taken from the published tooltip rather than from the game.
+// Holy Strike is new in Forever and baseline from level 6. Three talents hang off it - Improved Holy
+// Strike shortens its cooldown, Iron Creed sharpens its threat and Sacred Arbiter its damage.
+//
+// Beta client 1.60.1.69893 gives it eight ranks on ids Classic used for NPC spells. Each is a
+// normalized weapon strike plus a flat amount (effect 121) and a weapon damage percentage (effect 31),
+// with a 12 sec cooldown and the 0.429 coefficient the sim had guessed. The client multiplies the
+// flat amount by the percentage the same way it does Backstab's, so rank 8 is 40% of (weapon + 81 to
+// 105): about 32 to 42 on top of the weapon share, close to the 36 to 46 the BlizzCon tooltip showed.
+// Damage is each rank's at its max level.
 // TODO: beta will confirm - Holy damage on the melee hit table, so it rolls partial resists the
 // way every other Holy ability here does. Whether a melee-table Holy strike actually partial
 // resists is unknown; if it does not, it wants SpellFlagIgnoreResists.
-const (
-	holyStrikeWeaponDamage = 0.4
-	holyStrikeMinDamage    = 36.0
-	holyStrikeMaxDamage    = 46.0
-	holyStrikeManaCost     = 20.0
-	holyStrikeCooldown     = time.Second * 12
-)
+const holyStrikeCooldown = time.Second * 12
 
 func (paladin *Paladin) registerHolyStrike() {
 	// Rank 2 takes off 2 sec, so the linear reading was right. Confirmed on the beta.
-	cooldown := holyStrikeCooldown - time.Second*time.Duration(paladin.Talents.ImprovedHolyStrike)
+	cd := core.Cooldown{
+		Timer:    paladin.NewTimer(),
+		Duration: holyStrikeCooldown - time.Second*time.Duration(paladin.Talents.ImprovedHolyStrike),
+	}
 
 	// Sacred Arbiter also refreshes the paladin's Judgement effects. Judgement of the Crusader
 	// is the only Judgement that leaves anything behind, and it already refreshes off every
@@ -42,50 +40,71 @@ func (paladin *Paladin) registerHolyStrike() {
 
 	ironCreedAura := paladin.registerIronCreedAura()
 
-	paladin.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 13953},
-		SpellCode:   SpellCode_PaladinHolyStrike,
-		SpellSchool: core.SpellSchoolHoly,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+	ranks := []struct {
+		level     int32
+		manaCost  float64
+		weapon    float64
+		minDamage float64
+		maxDamage float64
+	}{
+		{level: 6, manaCost: 5, weapon: 0.25, minDamage: 11, maxDamage: 14},
+		{level: 12, manaCost: 9, weapon: 0.25, minDamage: 15, maxDamage: 20},
+		{level: 20, manaCost: 12, weapon: 0.30, minDamage: 17, maxDamage: 23},
+		{level: 28, manaCost: 14, weapon: 0.30, minDamage: 22, maxDamage: 29},
+		{level: 36, manaCost: 16, weapon: 0.35, minDamage: 32, maxDamage: 40},
+		{level: 44, manaCost: 17, weapon: 0.35, minDamage: 53, maxDamage: 68},
+		{level: 52, manaCost: 19, weapon: 0.40, minDamage: 73, maxDamage: 91},
+		{level: 60, manaCost: 20, weapon: 0.40, minDamage: 81, maxDamage: 105},
+	}
 
-		ManaCost: core.ManaCostOptions{
-			FlatCost:   holyStrikeManaCost,
-			Multiplier: paladin.benediction(),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+	for i, rank := range ranks {
+		rank := rank
+		spellID := []int32{679, 678, 1866, 680, 2495, 5569, 10332, 10333}[i]
+		if paladin.Level < rank.level {
+			break
+		}
+
+		paladin.RegisterSpell(core.SpellConfig{
+			ActionID:    core.ActionID{SpellID: spellID},
+			SpellCode:   SpellCode_PaladinHolyStrike,
+			SpellSchool: core.SpellSchoolHoly,
+			DefenseType: core.DefenseTypeMelee,
+			ProcMask:    core.ProcMaskMeleeMHSpecial,
+			Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+
+			RequiredLevel: int(rank.level),
+			Rank:          i + 1,
+
+			ManaCost: core.ManaCostOptions{
+				FlatCost:   rank.manaCost,
+				Multiplier: paladin.benediction(),
 			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    paladin.NewTimer(),
-				Duration: cooldown,
+			Cast: core.CastConfig{
+				DefaultCast: core.Cast{
+					GCD: core.GCDDefault,
+				},
+				IgnoreHaste: true,
+				CD:          cd,
 			},
-		},
 
-		DamageMultiplier: damageMultiplier,
-		ThreatMultiplier: threatMultiplier,
-		// Holy damage, so spell power feeds it on top of the weapon share and the flat
-		// roll. 0.429 is the coefficient every other instant Holy paladin spell uses here
-		// - Exorcism, Hammer of Wrath and Holy Shock.
-		// TODO: beta will confirm. Reported by AdamRC as right "pretty sure", which the
-		// other three agreeing with it supports but does not settle.
-		BonusCoefficient: 0.429,
+			DamageMultiplier: damageMultiplier,
+			ThreatMultiplier: threatMultiplier,
+			// Holy damage, so spell power feeds it on top of the weapon share and the flat roll.
+			BonusCoefficient: 0.429,
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			if ironCreedAura != nil {
-				ironCreedAura.Activate(sim)
-			}
+			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+				if ironCreedAura != nil {
+					ironCreedAura.Activate(sim)
+				}
 
-			// A share of weapon damage, so it takes the normalized swing the way every other
-			// percentage-of-weapon strike in the sim does.
-			baseDamage := holyStrikeWeaponDamage*spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)) +
-				sim.Roll(holyStrikeMinDamage, holyStrikeMaxDamage)
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-		},
-	})
+				// A share of weapon damage, so it takes the normalized swing the way every other
+				// percentage-of-weapon strike in the sim does.
+				baseDamage := rank.weapon * (spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)) +
+					sim.Roll(rank.minDamage, rank.maxDamage))
+				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+			},
+		})
+	}
 }
 
 // The half of Iron Creed that is not threat: Holy Strike shaves the damage the paladin takes,

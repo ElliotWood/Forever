@@ -11,7 +11,8 @@ func (warrior *Warrior) registerMortalStrikeSpell(cdTimer *core.Timer) {
 		return
 	}
 
-	bonusDamage := 85.0
+	// Rank 4 (21553) in the beta client, as in Classic. The talent tooltip's 85 is rank 1's (12294).
+	bonusDamage := 160.0
 	spellID := int32(21553)
 
 	warrior.MortalStrike = warrior.RegisterSpell(AnyStance, core.SpellConfig{

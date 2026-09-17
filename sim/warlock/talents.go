@@ -35,6 +35,7 @@ func (warlock *Warlock) ApplyTalents() {
 
 	// Destruction
 	warlock.applyImprovedShadowBolt()
+	warlock.applyMoltenSkin()
 	warlock.applyCataclysm()
 	warlock.applyBane()
 	warlock.applyRuin()
@@ -164,13 +165,15 @@ func (warlock *Warlock) applyMalediction() {
 	})
 }
 
-// Drain Life and Drain Soul deal 2% more per other Affliction effect on the target (up to 3), tripled on targets below 20%
-// TODO: Only rank 1 of Improved Drains was seen. The bonus and its cap are read per point, but the
-// 20% health the Drain Soul bonus triples below is held there at every rank: it is a threshold
-// rather than a magnitude, and read per point it would reach 60% health at 3/3.
+// Drain Life, Drain Soul and Wrack damage as the beta client's talents pay it. Improved Drains is a flat
+// 7/13/20%. Soul Siphon adds 4% per point for each of the warlock's other Affliction effects on the
+// target, counting up to three. The per-effect bonus and its cap used to be read into Improved Drains,
+// with a tripling below 20% health that neither talent has, and Soul Siphon was a faster drain with a
+// healing penalty; the client carries none of that.
 func (warlock *Warlock) improvedDrainsMultiplier(sim *core.Simulation, target *core.Unit) float64 {
-	if warlock.Talents.ImprovedDrains == 0 {
-		return 1
+	multiplier := 1 + []float64{0, 0.07, 0.13, 0.20}[warlock.Talents.ImprovedDrains]
+	if warlock.Talents.SoulSiphon == 0 {
+		return multiplier
 	}
 
 	effects := 0
@@ -185,19 +188,7 @@ func (warlock *Warlock) improvedDrainsMultiplier(sim *core.Simulation, target *c
 		}
 	}
 
-	bonus := 0.02 * float64(warlock.Talents.ImprovedDrains) * float64(min(effects, 3))
-	if sim.IsExecutePhase20() {
-		bonus *= 3
-	}
-
-	return 1 + bonus
-}
-
-func (warlock *Warlock) drainTickLength(baseTickLength time.Duration) time.Duration {
-	// 17/34/50, not the 17/34/51 that multiplying rank 1 gives. Rank 3's 50% is confirmed
-	// on the beta; rank 2's 34 is the tree's own reading.
-	rate := []float64{0, 0.17, 0.34, 0.50}[warlock.Talents.SoulSiphon]
-	return time.Duration(float64(baseTickLength) / (1 + rate))
+	return multiplier * (1 + 0.04*float64(warlock.Talents.SoulSiphon)*float64(min(effects, 3)))
 }
 
 func (warlock *Warlock) applyPandemic() {
@@ -254,7 +245,8 @@ func (warlock *Warlock) applyNightfall() {
 		},
 	})
 
-	affectedSpellCodes := []int32{SpellCode_WarlockCorruption, SpellCode_WarlockDrainLife, SpellCode_WarlockDrainSoul}
+	// The beta client adds Wrack to Corruption, Drain Life and Drain Soul
+	affectedSpellCodes := []int32{SpellCode_WarlockCorruption, SpellCode_WarlockDrainLife, SpellCode_WarlockDrainSoul, SpellCode_WarlockWrack}
 	procChance := 0.02 * float64(warlock.Talents.Nightfall)
 
 	core.MakePermanent(warlock.RegisterAura(core.Aura{
@@ -359,13 +351,9 @@ func (warlock *Warlock) applyDecimation() {
 		return
 	}
 
-	// TODO: Only rank 1 of Decimation was seen, so which halves grow with the second point is a
-	// guess. The damage bonus and the cast time reduction are read per point; the Soul Fire
-	// cooldown reduction in soul_fire.go, the 35% health threshold and the ten second window are
-	// held at rank 1's value, because per point the second rank would leave Soul Fire on a six
-	// second cooldown, open the window at 70% health and hold it for twenty seconds.
-	// The aura's 63165 names no Forever spell: the tree carries 63156 and 63158 for the two
-	// ranks, so it reads like a transposition of 63156. See ui/core/spells/warlock.json.
+	// Beta client 1.60.1 (talent 440870, buff 440873): the damage bonus (3/6%), the cast time reduction
+	// (20/40%) and the Soul Fire cooldown reduction in soul_fire.go (45/90%) all grow with the second
+	// point, while the 35% health threshold and the ten second buff are single values.
 	points := float64(warlock.Talents.Decimation)
 	damageBonus := 0.03 * points
 	castTimeReduction := 0.2 * points
@@ -378,7 +366,7 @@ func (warlock *Warlock) applyDecimation() {
 
 	warlock.DecimationAura = warlock.RegisterAura(core.Aura{
 		Label:    "Decimation",
-		ActionID: core.ActionID{SpellID: 63165},
+		ActionID: core.ActionID{SpellID: 440873},
 		Duration: time.Second * 10,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			for _, spell := range decimationSpells() {
@@ -414,15 +402,16 @@ func (warlock *Warlock) applyDemonicBrand() {
 		return
 	}
 
-	// TODO: Only rank 1 of Demonic Brand was seen. The Searing Pain threat reduction is read per
-	// point, but the ten second brand, the two pet attacks it arms and their 39 to 42 damage are
-	// held at rank 1's values, so the second and third points buy threat alone.
-	points := float64(warlock.Talents.DemonicBrand)
+	// Beta client 1.60.1 (talent 1293695): Searing Pain threat falls 17/33/50% and the brand arms 2/4/6 of
+	// the pet's attacks; the brand itself (1293696) lasts 10 sec at every rank.
+	// TODO: the client writes the pet hit as a $<minDam> to $<maxDam> formula that the exported tables
+	// do not carry, so the 39 to 42 from the BlizzCon tooltip is kept.
+	threatReduction := []float64{0, 0.17, 0.33, 0.50}[warlock.Talents.DemonicBrand]
 	actionID := core.ActionID{SpellID: 18821}
 
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.SpellCode == SpellCode_WarlockSearingPain {
-			spell.ThreatMultiplier *= 1 - 0.17*points
+			spell.ThreatMultiplier *= 1 - threatReduction
 		}
 	})
 
@@ -438,7 +427,6 @@ func (warlock *Warlock) applyDemonicBrand() {
 			ThreatMultiplier: 3,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				// TODO: Level 60 values
 				spell.CalcAndDealDamage(sim, target, sim.Roll(39, 42), spell.OutcomeMagicHit)
 			},
 		})
@@ -447,7 +435,7 @@ func (warlock *Warlock) applyDemonicBrand() {
 			Label:     "Demonic Brand",
 			ActionID:  actionID,
 			Duration:  time.Second * 10,
-			MaxStacks: 2,
+			MaxStacks: 2 * warlock.Talents.DemonicBrand,
 			OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 				if result.Landed() && spell.ProcMask.Matches(core.ProcMaskMelee) {
 					brandSpell.Cast(sim, result.Target)
@@ -476,9 +464,7 @@ func (warlock *Warlock) applyDemonicKnowledge() {
 
 	// The tooltip only pays the bonus out while a demon is active, so it rides on the pet
 	// rather than sitting on the character sheet.
-	// 33% of level per rank, reaching the full 100% at 3/3 rather than the 99% that
-	// multiplying rank 1 gives.
-	// TODO: beta will confirm. The rank 3 figure is the tree's rounding, not an observation.
+	// 33/67/100% of level, the beta client's curve for the talent (412732).
 	bonus := []float64{0, 0.33, 0.67, 1.00}[warlock.Talents.DemonicKnowledge] * float64(warlock.Level)
 
 	demonicKnowledgeAura := warlock.RegisterAura(core.Aura{
@@ -524,15 +510,16 @@ func (warlock *Warlock) applyMasterDemonologist() {
 		},
 	}
 
+	// Physical damage only, per the beta client's talent text (23785)
 	voidwalkerConfig := core.Aura{
 		Label:    "Master Demonologist (Voidwalker)",
 		ActionID: core.ActionID{SpellID: 23825, Tag: 2},
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.PseudoStats.DamageTakenMultiplier *= damageTakenMultiplier
+			aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexPhysical] *= damageTakenMultiplier
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.PseudoStats.DamageTakenMultiplier /= damageTakenMultiplier
+			aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexPhysical] /= damageTakenMultiplier
 		},
 	}
 
@@ -689,23 +676,13 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 
 	duration := time.Hour * 2
 
-	// Each demon leaves behind its own blessing, and the pairing is easy to get backwards: the Imp
-	// leaves fire damage, the Succubus shadow damage, the Voidwalker health and the Felhunter mana.
+	// Each demon leaves behind the opposing aspect, and the pairing is the reverse of Classic's. The
+	// beta client's talent text and its buffs agree: the Imp leaves Shadow damage (18789, now Burning
+	// Shadow, school mask 32), the Succubus Fire damage (18791, now Touch of Fire, mask 4), the
+	// Voidwalker mana (18792) and the Felhunter health (18790).
 	impAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Burning Wish",
+		Label:    "Burning Shadow",
 		ActionID: core.ActionID{SpellID: 18789},
-		Duration: duration,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= 1.15
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] /= 1.15
-		},
-	})
-
-	succubusAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Touch of Shadow",
-		ActionID: core.ActionID{SpellID: 18791},
 		Duration: duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
@@ -715,45 +692,57 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		},
 	})
 
-	var vwPa *core.PendingAction
-	healthMetric := warlock.NewHealthMetrics(core.ActionID{SpellID: 18790})
-	voidwalkerAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Fel Stamina",
-		ActionID: core.ActionID{SpellID: 18790},
+	succubusAura := warlock.GetOrRegisterAura(core.Aura{
+		Label:    "Touch of Fire",
+		ActionID: core.ActionID{SpellID: 18791},
 		Duration: duration,
-
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			vwPa = core.NewPeriodicAction(sim, core.PeriodicActionOptions{
-				Period: time.Second * 4,
-				OnAction: func(s *core.Simulation) {
-					warlock.GainHealth(sim, warlock.MaxHealth()*0.03, healthMetric)
-				},
-			})
-			sim.AddPendingAction(vwPa)
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= 1.15
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			vwPa.Cancel(sim)
+			warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] /= 1.15
 		},
 	})
 
 	var fhPa *core.PendingAction
-	manaMetric := warlock.NewManaMetrics(core.ActionID{SpellID: 18792})
+	healthMetric := warlock.NewHealthMetrics(core.ActionID{SpellID: 18790})
 	felhunterAura := warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Fel Energy",
-		ActionID: core.ActionID{SpellID: 18792},
+		Label:    "Fel Stamina",
+		ActionID: core.ActionID{SpellID: 18790},
 		Duration: duration,
 
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			fhPa = core.NewPeriodicAction(sim, core.PeriodicActionOptions{
 				Period: time.Second * 4,
 				OnAction: func(s *core.Simulation) {
-					warlock.AddMana(sim, warlock.MaxMana()*0.02, manaMetric)
+					warlock.GainHealth(sim, warlock.MaxHealth()*0.03, healthMetric)
 				},
 			})
 			sim.AddPendingAction(fhPa)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
 			fhPa.Cancel(sim)
+		},
+	})
+
+	var vwPa *core.PendingAction
+	manaMetric := warlock.NewManaMetrics(core.ActionID{SpellID: 18792})
+	voidwalkerAura := warlock.GetOrRegisterAura(core.Aura{
+		Label:    "Fel Energy",
+		ActionID: core.ActionID{SpellID: 18792},
+		Duration: duration,
+
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			vwPa = core.NewPeriodicAction(sim, core.PeriodicActionOptions{
+				Period: time.Second * 4,
+				OnAction: func(s *core.Simulation) {
+					warlock.AddMana(sim, warlock.MaxMana()*0.02, manaMetric)
+				},
+			})
+			sim.AddPendingAction(vwPa)
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			vwPa.Cancel(sim)
 		},
 	})
 
@@ -808,8 +797,7 @@ func (warlock *Warlock) applyImprovedShadowBolt() {
 		return
 	}
 
-	// TODO: Only rank 1 of Improved Shadow Bolt was seen. The extra Shadow damage taken is read per
-	// point, the twelve seconds it lasts are held at rank 1's value rather than scaled with it.
+	// 4% per point; the debuff (17794 in the beta client) lasts 12 sec at every rank.
 	damageMultiplier := 1 + 0.04*float64(warlock.Talents.ImprovedShadowBolt)
 
 	warlock.ImprovedShadowBoltAuras = warlock.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
@@ -844,14 +832,25 @@ func (warlock *Warlock) applyImprovedShadowBolt() {
 	}))
 }
 
+func (warlock *Warlock) applyMoltenSkin() {
+	if warlock.Talents.MoltenSkin == 0 {
+		return
+	}
+
+	// 2% less damage taken per point (beta client talent 1225220)
+	warlock.PseudoStats.DamageTakenMultiplier *= 1 - 0.02*float64(warlock.Talents.MoltenSkin)
+}
+
 func (warlock *Warlock) applyCataclysm() {
 	if warlock.Talents.Cataclysm == 0 {
 		return
 	}
 
+	// 3/6/10% in the beta client, not 9% at 3/3
+	reduction := []int32{0, 3, 6, 10}[warlock.Talents.Cataclysm]
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.Flags.Matches(WarlockFlagDestruction) && spell.Cost != nil {
-			spell.Cost.Multiplier -= 3 * warlock.Talents.Cataclysm
+			spell.Cost.Multiplier -= reduction
 		}
 	})
 }
@@ -889,13 +888,14 @@ func (warlock *Warlock) applyAgonizingFlames() {
 		return
 	}
 
-	points := float64(warlock.Talents.AgonizingFlames)
+	// 3/7/10% in the beta client, not 9% at 3/3
+	bonus := []float64{0, 3, 7, 10}[warlock.Talents.AgonizingFlames]
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.Flags.Matches(WarlockFlagDestruction) {
-			spell.DamageMultiplierAdditive += 0.03 * points
+			spell.DamageMultiplierAdditive += bonus / 100
 		}
 		if spell.SpellCode == SpellCode_WarlockSearingPain {
-			spell.BonusCritRating += 3 * points * core.SpellCritRatingPerCritChance
+			spell.BonusCritRating += bonus * core.SpellCritRatingPerCritChance
 		}
 	})
 }

@@ -9,16 +9,19 @@ import (
 )
 
 /**
-Instant Poison: 20% proc chance
-25: 22 +/- 3 damage, 8679 ID, 40 charges
-40: 50 +/- 6 damage, 8688 ID, 70 charges
-50: 76 +/- 9 damage, 11338 ID, 85 charges
-60: 130 =/- 18 damage, 11340 ID, 115 charges
+Forever beta client 1.60.1.69893. Proc chances are Classic's; charges are about 1.5x Classic's and
+still not modelled.
 
-Deadly Poison: 30% proc chance, 5 stacks
-40: 52 damage, 2824 ID, 75 charges
-50: 80 damage, 11355 ID, 90 charges
-60: 108 damage, 11356 ID, 105 charges (Rank 4, Rank 5 is by book)
+Instant Poison: 20% proc chance
+25: 13-17 damage, 8679 ID, 60 charges
+40: 29-37 damage, 8688 ID, 105 charges
+50: 45-57 damage, 11338 ID, 130 charges
+60: 76-100 damage, 11340 ID, 175 charges
+
+Deadly Poison: 30% proc chance, 5 stacks, damage per stack over 12 sec
+40: 36 damage, 2824 ID, 115 charges
+50: 56 damage, 11355 ID, 135 charges
+60: 92 damage, 25347 ID, 180 charges (Rank 5, by book)
 
 Wound Poison: 30% proc chance, 5 stacks
 25: x damage, x ID (none, first rank is level 32)
@@ -169,11 +172,12 @@ func (rogue *Rogue) registerInstantPoisonSpell() {
 }
 
 func (rogue *Rogue) registerDeadlyPoisonSpell() {
+	// Beta client 1.60.1.69893: about a third less a tick at every rank (rank 5 34 -> 23).
 	baseDamageTick := map[int32]float64{
-		25: 9,
-		40: 13,
-		50: 20,
-		60: core.TernaryFloat64(core.IncludeAQ, 34, 27),
+		25: 6,
+		40: 9,
+		50: 14,
+		60: core.TernaryFloat64(core.IncludeAQ, 23, 18),
 	}[rogue.Level]
 	spellID := map[int32]int32{
 		25: 2823,
@@ -251,18 +255,19 @@ func (rogue *Rogue) registerWoundPoisonSpell() {
 
 // Make a source based variant of Instant Poison
 func (rogue *Rogue) makeInstantPoison() *core.Spell {
+	// Beta client 1.60.1.69893: about a third less at every rank (rank 6 112-148 -> 76-100).
 	baseDamageByLevel := map[int32]float64{
-		25: 19,
-		40: 44,
-		50: 67,
-		60: 112,
+		25: 13,
+		40: 29,
+		50: 45,
+		60: 76,
 	}[rogue.Level]
 
 	damageVariance := map[int32]float64{
-		25: 6,
-		40: 12,
-		50: 18,
-		60: 36,
+		25: 4,
+		40: 8,
+		50: 12,
+		60: 24,
 	}[rogue.Level]
 
 	spellID := map[int32]int32{

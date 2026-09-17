@@ -11,8 +11,11 @@ const RainOfFireRanks = 4
 
 func (warlock *Warlock) getRainOfFireBaseConfig(rank int) core.SpellConfig {
 	spellId := [RainOfFireRanks + 1]int32{0, 5740, 6219, 11677, 11678}[rank]
+	// Beta client 1.60.1: each tick is now its own damage spell (1282380, 1282383, 1282384, 1282385)
+	// carrying the per tick damage and a 0.083 coefficient. The 0.03 on the channel's dummy effect is
+	// not the damage coefficient.
 	spellCoeff := [RainOfFireRanks + 1]float64{0, 0.083, 0.083, 0.083, 0.083}[rank]
-	baseDamage := [RainOfFireRanks + 1]float64{0, 42, 92, 155, 226}[rank]
+	baseDamage := [RainOfFireRanks + 1]float64{0, 40, 91, 149, 220}[rank]
 	manaCost := [RainOfFireRanks + 1]float64{0, 295, 605, 885, 1185}[rank]
 	level := [RainOfFireRanks + 1]int{0, 20, 34, 46, 58}[rank]
 

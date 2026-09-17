@@ -7,7 +7,8 @@ import (
 )
 
 // Templar's Bulwark is new in Forever and borrows Sacred Shield's spell id, the paladin absorb
-// the tooltip describes.
+// the tooltip describes; the beta client's own is 1311015, which confirms 110 mana, the 5 min
+// cooldown, 8 sec and an absorb of 100% of maximum health.
 // The 5 minute cooldown the sim assumed is confirmed: the BlizzCon "Paladin Class Change"
 // talent slide reads "110 Mana, Instant, 5 min cooldown", and the same tooltip appears in
 // Joardee's VOD. It applies Forbearance for 1 min, which is what sim/paladin/forbearance.go
@@ -35,13 +36,17 @@ func (paladin *Paladin) registerTemplarsBulwark() {
 		},
 	})
 
-	// TODO: Only rank 1 of Sacred Duty was seen at 30 sec, the tree's second rank comes from the
-	// community talent calculator rather than from a tooltip.
+	// Sacred Duty: 30 sec a rank, confirmed by the beta client's talent data.
 	cooldown := time.Minute*5 - time.Second*30*time.Duration(paladin.Talents.SacredDuty)
 
 	bulwark := paladin.RegisterSpell(core.SpellConfig{
 		ActionID: actionID,
 		Flags:    core.SpellFlagAPL | SpellFlag_Forbearance,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost:   110,
+			Multiplier: paladin.benediction(),
+		},
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

@@ -11,12 +11,12 @@ func (shaman *Shaman) registerWaterShieldSpell() {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 52127}
+	// Beta client (408510): three globes of 2% maximum mana, one every 3.5 sec at most (the aura's proc
+	// recovery, the same as Lightning Shield's), no mana cost and a 15 sec cooldown.
+	actionID := core.ActionID{SpellID: 408510}
 	manaMetrics := shaman.NewManaMetrics(actionID)
 	globes := int32(3)
 
-	// TODO: "Only one globe will activate every few seconds", the tooltip never said how long.
-	// Lightning Shield's ICD is used until beta shows otherwise.
 	icd := core.Cooldown{
 		Timer:    shaman.NewTimer(),
 		Duration: time.Millisecond * 3500,
@@ -64,12 +64,13 @@ func (shaman *Shaman) registerWaterShieldSpell() {
 		ProcMask:  core.ProcMaskEmpty,
 		Flags:     core.SpellFlagAPL | SpellFlagShaman,
 
-		ManaCost: core.ManaCostOptions{
-			BaseCost: .06,
-		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,
+			},
+			CD: core.Cooldown{
+				Timer:    shaman.NewTimer(),
+				Duration: time.Second * 15,
 			},
 		},
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {

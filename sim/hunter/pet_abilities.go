@@ -150,19 +150,20 @@ func (hp *HunterPet) newBite() *core.Spell {
 	})
 }
 
+// Beta client: every rank lower, and no more growth per level.
 func (hp *HunterPet) newLightningBreath() *core.Spell {
 	baseDamageMin := map[int32]float64{
-		25: 36,
-		40: 36,
-		50: 78,
-		60: 99,
+		25: 32,
+		40: 32,
+		50: 71,
+		60: 86,
 	}[hp.Owner.Level]
 
 	baseDamageMax := map[int32]float64{
-		25: 41,
-		40: 41,
-		50: 91,
-		60: 113,
+		25: 36,
+		40: 36,
+		50: 81,
+		60: 98,
 	}[hp.Owner.Level]
 
 	spellID := map[int32]int32{
@@ -201,19 +202,20 @@ func (hp *HunterPet) newLightningBreath() *core.Spell {
 	})
 }
 
+// Demoralizing Screech in the beta client: new damage, and a 10 sec cooldown Classic did not have.
 func (hp *HunterPet) newScreech() *core.Spell {
 	baseDamageMin := map[int32]float64{
-		25: 12,
-		40: 12,
-		50: 19,
-		60: 26,
+		25: 9,
+		40: 9,
+		50: 21,
+		60: 24,
 	}[hp.Owner.Level]
 
 	baseDamageMax := map[int32]float64{
-		25: 16,
-		40: 16,
-		50: 25,
-		60: 46,
+		25: 13,
+		40: 13,
+		50: 27,
+		60: 42,
 	}[hp.Owner.Level]
 
 	spellID := map[int32]int32{
@@ -239,6 +241,10 @@ func (hp *HunterPet) newScreech() *core.Spell {
 				GCD: PetGCD,
 			},
 			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    hp.NewTimer(),
+				Duration: time.Second * 10,
+			},
 		},
 
 		DamageMultiplier: 1,
@@ -299,11 +305,12 @@ func (hp *HunterPet) newScreech() *core.Spell {
 // }
 
 func (hp *HunterPet) newScorpidPoison() *core.Spell {
+	// Beta client: 2/4/5 a tick, down from 3/6/8.
 	baseDamageTick := map[int32]float64{
-		25: 3,
-		40: 6,
-		50: 6,
-		60: 8,
+		25: 2,
+		40: 4,
+		50: 4,
+		60: 5,
 	}[hp.Owner.Level]
 	spellID := map[int32]int32{
 		25: 24583,

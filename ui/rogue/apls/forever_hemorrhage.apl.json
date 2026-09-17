@@ -8,6 +8,6 @@
         {"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpGe","lhs":{"currentComboPoints":{}},"rhs":{"const":{"val":"4"}}}},{"not":{"val":{"dotIsActive":{"spellId":{"spellId":11275}}}}},{"cmp":{"op":"OpGt","lhs":{"remainingTime":{}},"rhs":{"const":{"val":"8"}}}}]}},"castSpell":{"spellId":{"spellId":11275}}}},
         {"action":{"condition":{"auraIsActive":{"auraId":{"spellId":6774,"rank":2}}},"autocastOtherCooldowns":{}}},
         {"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpGe","lhs":{"currentComboPoints":{}},"rhs":{"const":{"val":"4"}}}},{"or":{"vals":[{"auraIsActive":{"auraId":{"spellId":6774,"rank":2}}},{"cmp":{"op":"OpGe","lhs":{"currentEnergy":{}},"rhs":{"const":{"val":"79"}}}},{"cmp":{"op":"OpLt","lhs":{"remainingTime":{}},"rhs":{"const":{"val":"6"}}}}]}}]}},"castSpell":{"spellId":{"spellId":31016}}}},
-        {"action":{"castSpell":{"spellId":{"spellId":17348}}}}
+        {"action":{"castSpell":{"spellId":{"spellId":16511}}}}
     ]
 }

@@ -9,8 +9,9 @@ import (
 const MindBlastRanks = 9
 
 var MindBlastSpellId = [MindBlastRanks + 1]int32{0, 8092, 8102, 8103, 8104, 8105, 8106, 10945, 10946, 10947}
-var MindBlastBaseDamage = [MindBlastRanks + 1][]float64{{0}, {42, 46}, {76, 83}, {115, 124}, {174, 184}, {225, 239}, {279, 297}, {354, 375}, {437, 461}, {508, 537}}
-var MindBlastSpellCoef = [MindBlastRanks + 1]float64{0, .268, .364, .429, .429, .429, .429, .429, .429, .429}
+// Forever beta client 1.60.1.69893: lower at every rank, and ranks 1 and 2 lose their downranking penalty.
+var MindBlastBaseDamage = [MindBlastRanks + 1][]float64{{0}, {40, 44}, {69, 76}, {103, 110}, {154, 162}, {198, 210}, {259, 276}, {325, 344}, {406, 428}, {477, 504}}
+var MindBlastSpellCoef = [MindBlastRanks + 1]float64{0, .429, .429, .429, .429, .429, .429, .429, .429, .429}
 var MindBlastManaCost = [MindBlastRanks + 1]float64{0, 50, 80, 110, 150, 185, 225, 265, 310, 350}
 var MindBlastLevel = [MindBlastRanks + 1]int{0, 10, 16, 22, 28, 34, 40, 46, 52, 58}
 

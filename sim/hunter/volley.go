@@ -22,7 +22,8 @@ func (hunter *Hunter) registerVolleySpell() {
 
 func (hunter *Hunter) getVolleyConfig(rank int) core.SpellConfig {
 	spellId := [4]int32{0, 1510, 14294, 14295}[rank]
-	baseDamage := [4]float64{0, 50, 65, 80}[rank]
+	// Forever fires a separate damage spell each tick (1279721, 1279719, 1279715).
+	baseDamage := [4]float64{0, 70, 91, 112}[rank]
 	manaCost := [4]float64{0, 350, 420, 490}[rank]
 	level := [4]int{0, 40, 50, 58}[rank]
 
@@ -44,10 +45,6 @@ func (hunter *Hunter) getVolleyConfig(rank int) core.SpellConfig {
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,
 			},
-			CD: core.Cooldown{
-				Timer:    hunter.NewTimer(),
-				Duration: time.Second * 60,
-			},
 		},
 
 		Dot: core.DotConfig{
@@ -55,8 +52,10 @@ func (hunter *Hunter) getVolleyConfig(rank int) core.SpellConfig {
 			Aura: core.Aura{
 				Label: fmt.Sprintf("Volley (Rank %d)", rank),
 			},
-			NumberOfTicks:    6,
-			TickLength:       time.Second * 1,
+			NumberOfTicks: 6,
+			TickLength:    time.Second * 1,
+			// The tick spell has no coefficient and the channel's dummy effect carries .03, the
+			// same placeholder Blizzard and Rain of Fire carry, so Classic's .056 a tick stands.
 			BonusCoefficient: .056,
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
 				damage := baseDamage

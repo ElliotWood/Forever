@@ -23,6 +23,13 @@ func (druid *Druid) registerFrenziedRegenerationCD() {
 		return
 	}
 
+	// Beta client 1.60.1.69893: one rank (22842), and each point of Rage heals 1% of maximum health instead of a flat
+	// 10 / 15 / 20.
+	forever := druid.Env.IsForever()
+	if forever {
+		rank = 1
+	}
+
 	actionID := core.ActionID{SpellID: FrenziedRegenerationSpellId[rank]}
 	healthPerRage := FrenziedRegenerationHealthPerRage[rank]
 	healthMetrics := druid.NewHealthMetrics(actionID)
@@ -63,6 +70,9 @@ func (druid *Druid) registerFrenziedRegenerationCD() {
 
 					rageDumped := min(druid.CurrentRage(), 10.0)
 					druid.SpendRage(sim, rageDumped, rageMetrics)
+					if forever {
+						healthPerRage = 0.01 * druid.MaxHealth()
+					}
 					druid.GainHealth(sim, rageDumped*healthPerRage*druid.PseudoStats.HealingTakenMultiplier, healthMetrics)
 				},
 			})

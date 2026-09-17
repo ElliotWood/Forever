@@ -9,7 +9,7 @@ import (
 
 func (hunter *Hunter) getAimedShotConfig(rank int, timer *core.Timer) core.SpellConfig {
 	spellId := [7]int32{0, 19434, 20900, 20901, 20902, 20903, 20904}[rank]
-	baseDamage := [7]float64{0, 70, 125, 200, 330, 460, 600}[rank]
+	baseDamage := [7]float64{0, 20, 34, 55, 89, 125, 166}[rank]
 	manaCost := [7]float64{0, 75, 115, 160, 210, 260, 310}[rank]
 	level := [7]int{0, 0, 28, 36, 44, 52, 60}[rank]
 
@@ -30,8 +30,9 @@ func (hunter *Hunter) getAimedShotConfig(rank int, timer *core.Timer) core.Spell
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD:      core.GCDDefault,
-				CastTime: time.Millisecond * 3500,
+				GCD: core.GCDDefault,
+				// The client casts 2 sec, down from Classic's 3; the sim keeps its 0.5 sec shot wind-up on top.
+				CastTime: time.Millisecond * 2500,
 			},
 			CD: core.Cooldown{
 				Timer:    timer,
@@ -70,14 +71,9 @@ func (hunter *Hunter) getAimedShotConfig(rank int, timer *core.Timer) core.Spell
 	}
 }
 
-// Aimed Shot is no longer a talent, Barrage still buffs it so it is assumed to be baseline now.
-// TODO: assumed baseline, beta will confirm
-// TODO: the cast time may be shorter than Classic's 3.5 sec. Xaryu's Hunter showed a 2 sec
-// cast on rank 3 ("Xaryu Checks Out EVERY WoW Forever Class" at 56:24). The sim divides the
-// 3.5 base by ranged swing speed, and reaching 2 sec that way needs 75% ranged haste, which
-// no talent grants and gear at level 38 will not reach - so the base is probably lower under
-// Forever. One observation on a character of unknown gear is not enough to pick the number,
-// so the Classic base stands until the beta shows an unbuffed tooltip.
+// Aimed Shot is no longer a talent. The beta client (1.60.1.69893) keeps every rank on the hunter
+// with a 2 sec cast, down from 3, and a much smaller flat bonus (rank 6 600 -> 166); mana costs
+// and the 6 sec cooldown are Classic's.
 func (hunter *Hunter) registerAimedShotSpell(timer *core.Timer) {
 	maxRank := 6
 

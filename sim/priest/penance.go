@@ -13,15 +13,15 @@ func (priest *Priest) registerPenanceSpell() {
 		return
 	}
 
-	// The demo tooltip showed neither a mana cost nor a cooldown, both are taken from the
-	// spell of the same name.
-	// TODO: beta will confirm the cost, the cooldown and the level 60 damage.
-	baseDamage := 93.0
-	spellCoeff := 0.268
+	// Rank 4 (1316995), the level 60 rank in the Forever beta client 1.60.1.69893: 355 mana, a 12 sec
+	// cooldown and 131 Holy damage a bolt (1316993) at .285. Ranks 1-3 learn at 30, 40 and 50. The
+	// client's rank 3 bolt (180) is larger than rank 4's; the numbers are taken as they are.
+	baseDamage := 131.0
+	spellCoeff := 0.285
 
 	priest.Penance = priest.RegisterSpell(core.SpellConfig{
 		SpellCode:   SpellCode_PriestPenance,
-		ActionID:    core.ActionID{SpellID: 47540},
+		ActionID:    core.ActionID{SpellID: 1316995},
 		SpellSchool: core.SpellSchoolHoly,
 		DefenseType: core.DefenseTypeMagic,
 		ProcMask:    core.ProcMaskSpellDamage,
@@ -31,7 +31,7 @@ func (priest *Priest) registerPenanceSpell() {
 		Rank:          1,
 
 		ManaCost: core.ManaCostOptions{
-			BaseCost: 0.16,
+			FlatCost: 355,
 		},
 
 		Cast: core.CastConfig{
@@ -40,7 +40,7 @@ func (priest *Priest) registerPenanceSpell() {
 			},
 			CD: core.Cooldown{
 				Timer:    priest.NewTimer(),
-				Duration: time.Second * 10,
+				Duration: time.Second * 12,
 			},
 		},
 

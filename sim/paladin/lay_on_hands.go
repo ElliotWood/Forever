@@ -37,8 +37,8 @@ func (paladin *Paladin) registerLayOnHands() {
 			},
 			CD: core.Cooldown{
 				Timer: paladin.NewTimer(),
-				// Forever cuts the cooldown from an hour to 20 min, read off Savix's
-				// Paladin, 12 September.
+				// Forever cuts the cooldown from an hour to 20 min at every rank, which the
+				// beta client (1.60.1.69893) confirms.
 				Duration: core.TernaryDuration(paladin.Env.IsForever(), time.Minute*20, time.Minute*60),
 			},
 		},

@@ -9,11 +9,13 @@ import (
 
 const LightningShieldRanks = 7
 
+// Forever beta client values for the orb (the proc spell): lower damage from rank 2 up, and every rank carries the
+// full 0.267. Rank 7's 370 mana was missing from the table, which left it free.
 var LightningShieldSpellId = [LightningShieldRanks + 1]int32{0, 324, 325, 905, 945, 8134, 10431, 10432}
 var LightningShieldProcSpellId = [LightningShieldRanks + 1]int32{0, 26364, 26365, 26366, 26367, 26369, 26370, 26363}
-var LightningShieldBaseDamage = [LightningShieldRanks + 1]float64{0, 13, 29, 51, 80, 114, 154, 198}
-var LightningShieldSpellCoef = [LightningShieldRanks + 1]float64{0, .147, .227, .267, .267, .267, .267, .267}
-var LightningShieldManaCost = [LightningShieldRanks + 1]float64{0, 45, 80, 125, 180, 240, 305}
+var LightningShieldBaseDamage = [LightningShieldRanks + 1]float64{0, 13, 24, 40, 64, 96, 134, 178}
+var LightningShieldSpellCoef = [LightningShieldRanks + 1]float64{0, .267, .267, .267, .267, .267, .267, .267}
+var LightningShieldManaCost = [LightningShieldRanks + 1]float64{0, 45, 80, 125, 180, 240, 305, 370}
 var LightningShieldLevel = [LightningShieldRanks + 1]int{0, 8, 16, 24, 32, 40, 48, 56}
 
 func (shaman *Shaman) registerLightningShieldSpell() {
@@ -60,7 +62,7 @@ func (shaman *Shaman) registerNewLightningShieldSpell(rank int) {
 		},
 	})
 
-	// TODO: Does vanilla have an ICD?
+	// Both clients give the shield a 3.5 sec proc recovery.
 	icd := core.Cooldown{
 		Timer:    shaman.NewTimer(),
 		Duration: time.Millisecond * 3500,

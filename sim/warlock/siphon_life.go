@@ -11,7 +11,8 @@ const SiphonLifeRanks = 4
 
 func (warlock *Warlock) getSiphonLifeBaseConfig(rank int) core.SpellConfig {
 	spellId := [SiphonLifeRanks + 1]int32{0, 18265, 18879, 18880, 18881}[rank]
-	baseDamage := [SiphonLifeRanks + 1]float64{0, 15, 22, 33, 45}[rank]
+	// Beta client 1.60.1 values
+	baseDamage := [SiphonLifeRanks + 1]float64{0, 11, 19, 29, 41}[rank]
 	manaCost := [SiphonLifeRanks + 1]float64{0, 150, 205, 285, 365}[rank]
 	level := [SiphonLifeRanks + 1]int{0, 0, 38, 48, 58}[rank]
 

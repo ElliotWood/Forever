@@ -32,7 +32,7 @@
 			}
 		},
 		{ "action": { "castSpell": { "spellId": { "spellId": 24239, "rank": 3 } } } },
-		{ "action": { "castSpell": { "spellId": { "spellId": 13953 } } } },
+		{ "action": { "castSpell": { "spellId": { "spellId": 10333, "rank": 8 } } } },
 		{ "action": { "castSpell": { "spellId": { "spellId": 20928, "rank": 3 } } } }
 	]
 }

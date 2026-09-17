@@ -29,9 +29,10 @@ func (druid *Druid) registerClawSpell() {
 		},
 
 		DamageMultiplierAdditive: 1 + 0.05*float64(druid.Talents.SavageFury),
-		DamageMultiplier:         1,
-		ThreatMultiplier:         1,
-		BonusCoefficient:         1,
+		// Beta client 1.60.1.69893: Claw now deals 110% weapon damage plus its bonus, where Classic's was 100%.
+		DamageMultiplier: 1.1,
+		ThreatMultiplier: 1,
+		BonusCoefficient: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := flatDamageBonus + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))

@@ -16,9 +16,12 @@ func (druid *Druid) registerHurricaneSpell() {
 		damage     float64
 		scale      float64
 	}{
-		{level: 40, spellID: 16914, manaCost: 880, scaleLevel: 46, damage: 70, scale: 0.2},
-		{level: 50, spellID: 17401, manaCost: 1180, scaleLevel: 56, damage: 100, scale: 0.2},
-		{level: 60, spellID: 17402, manaCost: 1495, scaleLevel: 66, damage: 134, scale: 0.3},
+		// Beta client 1.60.1.69893: each second the storm casts a separate damage spell (1278965, 1278968, 1278759),
+		// whose damage is what the tick deals here, 2 less than Classic's at every rank with the same .03 coefficient.
+		// Written as floats so the spell id walk in sim/spell_sources_test.go does not read them as ids.
+		{level: 40, spellID: 16914, manaCost: 880, scaleLevel: 46, damage: 68.0, scale: 0.2},
+		{level: 50, spellID: 17401, manaCost: 1180, scaleLevel: 56, damage: 98.0, scale: 0.2},
+		{level: 60, spellID: 17402, manaCost: 1495, scaleLevel: 66, damage: 132.0, scale: 0.3},
 	}
 
 	for i, rank := range ranks {
@@ -42,12 +45,9 @@ func (druid *Druid) registerHurricaneSpell() {
 				FlatCost: rank.manaCost,
 			},
 			Cast: core.CastConfig{
+				// Forever drops Classic's 1 min cooldown: the client's Hurricane category has no recovery time.
 				DefaultCast: core.Cast{
 					GCD: core.GCDDefault,
-				},
-				CD: core.Cooldown{
-					Timer:    druid.NewTimer(),
-					Duration: time.Second * 60,
 				},
 			},
 

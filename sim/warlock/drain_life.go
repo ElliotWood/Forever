@@ -11,20 +11,16 @@ const DrainLifeRanks = 6
 
 func (warlock *Warlock) getDrainLifeBaseConfig(rank int) core.SpellConfig {
 	numTicks := int32(5)
-	tickLength := warlock.drainTickLength(time.Second)
+	tickLength := time.Second
 
 	spellId := [DrainLifeRanks + 1]int32{0, 689, 699, 709, 7651, 11699, 11700}[rank]
-	spellCoeff := [DrainLifeRanks + 1]float64{0, .078, .1, .1, .1, .1, .1}[rank]
-	baseDamage := [DrainLifeRanks + 1]float64{0, 10, 17, 29, 41, 55, 71}[rank]
+	// Beta client 1.60.1 values
+	spellCoeff := [DrainLifeRanks + 1]float64{0, .1, .1, .1, .1, .1, .1}[rank]
+	baseDamage := [DrainLifeRanks + 1]float64{0, 10, 14, 22, 28, 39, 51}[rank]
 	manaCost := [DrainLifeRanks + 1]float64{0, 55, 85, 135, 185, 240, 300}[rank]
 	level := [DrainLifeRanks + 1]int{0, 14, 22, 30, 38, 46, 54}[rank]
 
 	baseDamage *= 1 + warlock.shadowMasteryBonus()
-	// The healing penalty does not scale per point: rank 1 is 10% and rank 3 is 20%, both
-	// confirmed on the beta, against the 30% that multiplying rank 1 gives.
-	// TODO: rank 2's 15% is interpolated between the two observed ranks, not seen.
-	healingMultiplier := 1 - []float64{0, 0.10, 0.15, 0.20}[warlock.Talents.SoulSiphon]
-
 	actionID := core.ActionID{SpellID: spellId}
 
 	healingSpell := warlock.GetOrRegisterSpell(core.SpellConfig{
@@ -33,7 +29,7 @@ func (warlock *Warlock) getDrainLifeBaseConfig(rank int) core.SpellConfig {
 		ProcMask:    core.ProcMaskSpellHealing,
 		Flags:       core.SpellFlagPassiveSpell | core.SpellFlagHelpful,
 
-		DamageMultiplier: healingMultiplier,
+		DamageMultiplier: 1,
 		ThreatMultiplier: 0,
 	})
 

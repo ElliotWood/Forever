@@ -20,13 +20,10 @@ func (mage *Mage) applyArcaneTalents() {
 	mage.registerPresenceOfMindCD()
 	mage.registerArcanePowerCD()
 
-	// Arcane Subtlety
-	// TODO: the spell penetration may not double at rank 2. Only rank 1's 8 was observed,
-	// and the tree reads 15 at rank 2 against the 16 taken here, which no source has
-	// confirmed. The threat reduction's 15% per point matches the tree at both ranks.
+	// Arcane Subtlety, 8 and 15 spell penetration and 15% threat reduction per point in the beta client.
 	if mage.Talents.ArcaneSubtlety > 0 {
 		threatMultiplier := 1 - .15*float64(mage.Talents.ArcaneSubtlety)
-		mage.AddStat(stats.SpellPenetration, 8*float64(mage.Talents.ArcaneSubtlety))
+		mage.AddStat(stats.SpellPenetration, []float64{0, 8, 15}[mage.Talents.ArcaneSubtlety])
 		mage.OnSpellRegistered(func(spell *core.Spell) {
 			if spell.SpellSchool.Matches(core.SpellSchoolArcane) && spell.Flags.Matches(SpellFlagMage) {
 				spell.ThreatMultiplier *= threatMultiplier
@@ -750,15 +747,16 @@ func (mage *Mage) IsTargetFrozen() bool {
 	return mage.FingersOfFrostAura != nil && mage.FingersOfFrostAura.IsActive()
 }
 
-// The raid debuff version of Winter's Chill is a Classic mechanic, in Forever it's a single
-// stack that only helps the mage's own Frostbolt and Ice Lance.
+// The raid debuff version of Winter's Chill is a Classic mechanic, in Forever it only helps the
+// mage's own Frostbolt and Ice Lance. The beta client gives 2% crit a stack, stacking once per
+// talent point: "Stacks up to 5 times" at 5/5.
 func (mage *Mage) applyWintersChill() {
 	if mage.Talents.WintersChill == 0 {
 		return
 	}
 
 	procChance := .20 * float64(mage.Talents.WintersChill)
-	bonusCrit := 2.0 * core.SpellCritRatingPerCritChance
+	critPerStack := 2.0 * core.SpellCritRatingPerCritChance
 	affectedSpellCodes := []int32{SpellCode_MageFrostbolt, SpellCode_MageIceLance}
 
 	var affectedSpells []*core.Spell
@@ -770,16 +768,13 @@ func (mage *Mage) applyWintersChill() {
 
 	mage.WintersChillAura = mage.RegisterAura(core.Aura{
 		Label:    "Winter's Chill",
-		ActionID: core.ActionID{SpellID: 28593},
-		Duration: time.Second * 15,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+		ActionID:  core.ActionID{SpellID: 28593},
+		Duration:  time.Second * 15,
+		MaxStacks: int32(mage.Talents.WintersChill),
+		OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
+			bonusCrit := critPerStack * float64(newStacks-oldStacks)
 			for _, spell := range affectedSpells {
 				spell.BonusCritRating += bonusCrit
-			}
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			for _, spell := range affectedSpells {
-				spell.BonusCritRating -= bonusCrit
 			}
 		},
 	})
@@ -797,6 +792,7 @@ func (mage *Mage) applyWintersChill() {
 
 			if sim.Proc(procChance, "Winters Chill") {
 				mage.WintersChillAura.Activate(sim)
+				mage.WintersChillAura.AddStack(sim)
 			}
 		},
 	})

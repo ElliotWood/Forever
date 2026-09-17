@@ -2,90 +2,129 @@
 	"11197": {
 		"ability": "Expose Armor",
 		"file": "sim/rogue/expose_armor.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: more armor per combo point at every rank (rank 5 340 -> 450) and Improved Expose Armor no longer scales it, so 5 points take 2250 rather than Classic's talented 2550.",
+		"source": "forever",
+		"tooltip": "25 Energy\nMelee Range\nInstant\nFinishing move that exposes the target for 30 sec, reducing armor per combo point:\n1 point: 360 armor\n2 points: 720 armor\n3 points: 1080 armor\n4 points: 1440 armor\n5 points: 1800 armor"
 	},
 	"11268": {
 		"ability": "Ambush",
 		"file": "sim/rogue/ambush.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 250% weapon damage plus the flat bonus, 60 Energy, dagger only.",
+		"source": "classic"
 	},
 	"11269": {
 		"ability": "Ambush",
 		"file": "sim/rogue/ambush.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 250% weapon damage plus the flat bonus, 60 Energy, dagger only.",
+		"source": "classic"
 	},
 	"11273": {
 		"ability": "Rupture",
 		"file": "sim/rogue/rupture.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: every rank ticks for less (rank 6 60 + 8 a combo point -> 35 + 4.73 a tick). Cost, tick length and duration are Classic's. The attack power share is not in the client, so the sim keeps Classic's.",
+		"source": "forever",
+		"tooltip": "25 Energy\nMelee Range\nInstant\nFinishing move that causes damage over time, increased by your Attack Power. Lasts longer per combo point:\n1 point: 76 damage over 8 secs\n2 points: 110 damage over 10 secs\n3 points: 149 damage over 12 secs\n4 points: 195 damage over 14 secs\n5 points: 246 damage over 16 secs"
 	},
 	"11275": {
 		"ability": "Rupture",
 		"file": "sim/rogue/rupture.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: every rank ticks for less (rank 6 60 + 8 a combo point -> 35 + 4.73 a tick). Cost, tick length and duration are Classic's. The attack power share is not in the client, so the sim keeps Classic's.",
+		"source": "forever",
+		"tooltip": "25 Energy\nMelee Range\nInstant\nFinishing move that causes damage over time, increased by your Attack Power. Lasts longer per combo point:\n1 point: 159 damage over 8 secs\n2 points: 222 damage over 10 secs\n3 points: 295 damage over 12 secs\n4 points: 377 damage over 14 secs\n5 points: 469 damage over 16 secs"
 	},
 	"11279": {
 		"ability": "Backstab",
 		"file": "sim/rogue/backstab.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 150% weapon damage plus the flat bonus, 60 Energy, dagger only.",
+		"source": "classic"
 	},
 	"11289": {
 		"ability": "Garrote",
 		"file": "sim/rogue/garrote.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 6 ticks over 18 sec for the same damage, 50 Energy.",
+		"source": "classic"
 	},
 	"11290": {
 		"ability": "Garrote",
 		"file": "sim/rogue/garrote.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 6 ticks over 18 sec for the same damage, 50 Energy.",
+		"source": "classic"
 	},
 	"11293": {
 		"ability": "Sinister Strike",
 		"file": "sim/rogue/sinister_strike.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: flat weapon bonus, 45 Energy and normalized weapon damage are unchanged.",
+		"source": "classic"
 	},
 	"11294": {
 		"ability": "Sinister Strike",
 		"file": "sim/rogue/sinister_strike.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: flat weapon bonus, 45 Energy and normalized weapon damage are unchanged.",
+		"source": "classic"
 	},
 	"11299": {
 		"ability": "Eviscerate",
 		"file": "sim/rogue/eviscerate.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: damage per combo point, range and 35 Energy are unchanged. The sim had 77 a point at level 40 (rank 6) where both clients give 71.",
+		"source": "classic"
 	},
 	"11338": {
 		"ability": "Instant Poison IV",
 		"file": "sim/rogue/poisons.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: about a third less damage at every rank (rank 6 112-148 -> 76-100) and about 1.5x the charges, which the sim does not model. The 20% proc chance is Classic's.",
+		"source": "forever",
+		"tooltip": "3 sec cast\nCoats a weapon with poison that lasts for 30 minutes. Each strike has a 20% chance of poisoning the enemy which instantly inflicts 45 to 57 Nature damage. 130 charges."
 	},
 	"11340": {
 		"ability": "Instant Poison VI",
 		"file": "sim/rogue/poisons.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: about a third less damage at every rank (rank 6 112-148 -> 76-100) and about 1.5x the charges, which the sim does not model. The 20% proc chance is Classic's.",
+		"source": "forever",
+		"tooltip": "3 sec cast\nCoats a weapon with poison that lasts for 30 minutes. Each strike has a 20% chance of poisoning the enemy which instantly inflicts 76 to 100 Nature damage. 175 charges."
 	},
 	"11355": {
 		"ability": "Deadly Poison III",
 		"file": "sim/rogue/poisons.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: about a third less a tick at every rank (rank 5 34 -> 23 every 3 sec) and about 1.5x the charges, which the sim does not model. The 30% proc chance and 5 stacks are Classic's.",
+		"source": "forever",
+		"tooltip": "3 sec cast\nCoats a weapon with poison that lasts for 30 minutes. Each strike has a 30% chance of poisoning the enemy for 56 Nature damage over 12 sec. Stacks up to 5 times on a single target. 135 charges."
+	},
+	"1241582": {
+		"ability": "Mutilate",
+		"file": "sim/rogue/mutilate.go",
+		"note": "Beta client 1.60.1.69893: four ranks (1310707, 399956, 1241582, 1241584) adding 23/33/48/67 to each hand's weapon damage before the 75%, so rank 3 strikes for 75% of weapon damage plus 36. 60 Energy, 20% against poisoned targets and a dagger in both hands are confirmed. The demo's flat 13 is gone.",
+		"source": "forever",
+		"tooltip": "60 Energy\nMelee Range\nInstant\nInstantly attacks with both weapons for 75% weapon damage plus an additional 36 with each weapon. Damage increased by 20% against Poisoned targets. Awards 2 combo points.\nRequires Daggers"
+	},
+	"1241584": {
+		"ability": "Mutilate",
+		"file": "sim/rogue/mutilate.go",
+		"note": "Beta client 1.60.1.69893: four ranks (1310707, 399956, 1241582, 1241584) adding 23/33/48/67 to each hand's weapon damage before the 75%, so rank 4 strikes for 75% of weapon damage plus 50. 60 Energy, 20% against poisoned targets and a dagger in both hands are confirmed. The demo's flat 13 is gone.",
+		"source": "forever",
+		"tooltip": "60 Energy\nMelee Range\nInstant\nInstantly attacks with both weapons for 75% weapon damage plus an additional 50 with each weapon. Damage increased by 20% against Poisoned targets. Awards 2 combo points.\nRequires Daggers"
+	},
+	"1310703": {
+		"ability": "Venom",
+		"assumptions": [
+			"Venom rescales a Deadly Poison that is already ticking on the target, not only the stacks applied while it is up (the client stores a percent modifier and cannot say when it is read)"
+		],
+		"file": "sim/rogue/venom.go",
+		"note": "Beta client 1.60.1.69893: Venom is spell 1310703, 25 Energy plus combo points, 30% poison damage and 10% poison chance, 6 sec plus 3 sec a combo point.",
+		"source": "assumed",
+		"tooltip": "25 Energy\nInstant\nFinishing move that increases the damage of your Poisons by 30% and your chance to apply Poisons by 10%. Lasts longer per combo point:\n1 point: 9 seconds\n2 points: 12 seconds\n3 points: 15 seconds\n4 points: 18 seconds\n5 points: 21 seconds"
+	},
+	"1310707": {
+		"ability": "Mutilate",
+		"file": "sim/rogue/mutilate.go",
+		"note": "Beta client 1.60.1.69893: four ranks (1310707, 399956, 1241582, 1241584) adding 23/33/48/67 to each hand's weapon damage before the 75%, so rank 1 strikes for 75% of weapon damage plus 17. 60 Energy, 20% against poisoned targets and a dagger in both hands are confirmed. The demo's flat 13 is gone.",
+		"source": "forever",
+		"tooltip": "60 Energy\nMelee Range\nInstant\nInstantly attacks with both weapons for 75% weapon damage plus an additional 17 with each weapon. Damage increased by 20% against Poisoned targets. Awards 2 combo points.\nRequires Daggers"
 	},
 	"13219": {
 		"ability": "Wound Poison",
 		"file": "sim/rogue/poisons.go",
 		"note": "The 5 stack, 15 sec debuff is Classic's; the healing reduction has no effect because the sim does not model incoming healing, and the registration always carries rank 1's id 13219 even at level 60 (rank 4 is 13227).",
 		"source": "classic"
-	},
-	"1329": {
-		"ability": "Mutilate",
-		"assumptions": [
-			"60 Energy cost - the Forever tooltip showed no cost, so Classic Mutilate's 60 is used",
-			"Requires a Dagger in both the main hand and the off hand - the Forever tooltip did not repeat the requirement",
-			"The 13 flat damage per weapon does not scale with level or rank (only one rank was seen)"
-		],
-		"file": "sim/rogue/mutilate.go",
-		"note": "Forever's Mutilate is a new Assassination talent with its own numbers (75% weapon damage plus 13, observed on the BlizzCon demo); Classic's unused spell 1329 lends only the name, and its icon (ability_rogue_shadowstrikes) is not the one Forever shows (ability_rogue_deadlybrew).",
-		"source": "assumed",
-		"tooltip": "60 Energy\nMelee Range\nInstant\nInstantly attacks with both weapons for 75% weapon damage plus an additional 13 with each weapon. Damage is increased by 20% against Poisoned targets. Awards 2 combo points.\nRequires Daggers in both hands."
 	},
 	"13750": {
 		"ability": "Adrenaline Rush",
@@ -95,14 +134,9 @@
 	},
 	"13866": {
 		"ability": "Puncturing Wounds",
-		"assumptions": [
-			"Rank 2 and rank 3 Backstab crit are 20% and 30% (only rank 1's 10% was seen)",
-			"Rank 2 and rank 3 Mutilate crit are 10% and 15%",
-			"The extra combo point chance scales linearly: 15%/30%/45%"
-		],
 		"file": "sim/rogue/backstab.go",
-		"note": "Forever replaced Combat's Improved Backstab with Puncturing Wounds and published no spell id for it (the talent tree carries a placeholder 0), so the sim borrows Classic's Improved Backstab id 13866 for the extra combo point metric and the UI shows the wrong talent name and text.",
-		"source": "assumed",
+		"note": "Forever replaced Combat's Improved Backstab with Puncturing Wounds (beta client 1224716); the sim still borrows Classic's Improved Backstab id 13866 for the extra combo point metric. The beta client's curves are 10/20/30% Backstab crit, 5/10/15% Mutilate crit and 15/30/45% extra combo point chance.",
+		"source": "forever",
 		"tooltip": "Talent, 3 ranks\nIncreases the critical strike chance of your Backstab by 10% per rank and of your Mutilate by 5% per rank, and gives Backstab a 15% chance per rank to add an additional Combo Point."
 	},
 	"13877": {
@@ -114,24 +148,20 @@
 	"13964": {
 		"ability": "Hack and Slash",
 		"assumptions": [
-			"All three effects scale linearly from rank 1, reaching 5% extra attack, 5% crit and 15% armor ignored at rank 5 (only rank 1 was seen)",
 			"The extra attack keeps Classic Sword Specialization's 200 ms internal cooldown",
 			"A rogue holding two qualifying weapon types gets both halves of the talent"
 		],
 		"file": "sim/rogue/hack_and_slash.go",
-		"note": "Hack and Slash folds Classic's four weapon specialization talents into one and has no published spell id (the tree carries a placeholder 0), so the extra attack is logged under Classic's Sword Specialization id 13964 and the UI names it that.",
+		"note": "Hack and Slash folds Classic's four weapon specialization talents into one and has no published spell id (the tree carries a placeholder 0), so the extra attack is logged under Classic's Sword Specialization id 13964 and the UI names it that. The beta client (13960, curves 1-5 and 3-15) confirms the linear ranks.",
 		"source": "assumed",
 		"tooltip": "Talent, 5 ranks\nGives your melee weapon attacks a benefit depending on the weapon.\nAxe/Sword: your successful melee attacks have a 1% chance per rank to trigger an extra attack on the target.\nDagger/Fist: increases your critical strike chance by 1% per rank.\nMace: your attacks ignore 3% of your target's armor per rank."
 	},
 	"13980": {
 		"ability": "Initiative",
-		"assumptions": [
-			"Rank 2 is 66% and rank 3 is 99% - only rank 1's 33% was seen, and the beta may round these to 65% and 100%"
-		],
 		"file": "sim/rogue/talents.go",
-		"note": "Forever raised rank 1 from Classic's 25% to 33%, so the Classic tooltip for 13980 (rank 3, 75%) is wrong; Cheap Shot is not simulated, so the sim proc only fires on Ambush and Garrote.",
-		"source": "assumed",
-		"tooltip": "Talent, 3 ranks\nGives you a 33% chance per rank to add an additional combo point to your target when using your Ambush, Garrote, or Cheap Shot ability."
+		"note": "Forever raised Initiative to 33/67/100% (beta client curve), so the Classic tooltip for 13980 (rank 3, 75%) is wrong; Cheap Shot is not simulated, so the sim proc only fires on Ambush and Garrote.",
+		"source": "forever",
+		"tooltip": "Talent, 3 ranks\nGives you a 33/67/100% chance to add an additional combo point to your target when using your Ambush, Garrote, or Cheap Shot ability."
 	},
 	"14161": {
 		"ability": "Ruthlessness",
@@ -141,15 +171,10 @@
 	},
 	"14169": {
 		"ability": "Improved Expose Armor",
-		"assumptions": [
-			"Rank 2 discounts 10 Energy - only rank 1's 5 was seen",
-			"The combo point refund stays 1 and still needs a full 5 point spend at rank 2",
-			"Expose Armor's armor reduction is now baseline at Classic's 2/2 value (1.5x the per-combo-point armor), rather than having been cut with the talent's old effect"
-		],
 		"file": "sim/rogue/expose_armor.go",
-		"note": "The talent keeps its name but not its effect: it no longer scales Expose Armor's armor reduction, so Classic's tooltip for 14169 ('increases the armor reduced by 50%') no longer describes it.",
-		"source": "assumed",
-		"tooltip": "Talent, 2 ranks\nReduces the Energy cost of your Expose Armor ability by 5 per rank, and refunds 1 Combo Point when Expose Armor is cast with 5 Combo Points."
+		"note": "The talent keeps its name but not its effect (beta client 14168): it no longer scales Expose Armor's armor reduction, it takes 5 Energy off and refunds 1 combo point per rank on a 5 point Expose Armor. The sim borrows Classic's id 14169 for the refund metric.",
+		"source": "forever",
+		"tooltip": "Talent, 2 ranks\nReduces the Energy cost of your Expose Armor ability by 5 per rank, and refunds 1 Combo Point per rank when Expose Armor is cast with 5 Combo Points."
 	},
 	"14177": {
 		"ability": "Cold Blood",
@@ -196,15 +221,18 @@
 		"source": "forever",
 		"tooltip": "40 Energy\nMelee Range\nInstant\n20 sec cooldown\nA strike that deals 125% (180% if a Dagger is equipped in your Main Hand) weapon damage and increases your chance to dodge by 15% for 7 sec. Awards 1 combo point."
 	},
-	"17348": {
+	"16511": {
 		"ability": "Hemorrhage",
 		"file": "sim/rogue/hemorrhage.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: one rank (16511, level 30) replaces Classic's three, and ranks 2 and 3 (17347, 17348) are gone. It is normalized weapon damage now (Classic used plain weapon damage), 145% with a dagger, and its debuff is the Rupture bonus rather than Classic's physical damage taken.",
+		"source": "forever",
+		"tooltip": "35 Energy\nMelee Range\nInstant\nAn instant strike that deals 100% weapon damage (145% if a Dagger is equipped) and causes the target to take 15% increased Rupture damage from the Rogue. Lasts 15 sec. Awards 1 combo point."
 	},
 	"1759": {
 		"ability": "Sinister Strike",
 		"file": "sim/rogue/sinister_strike.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: flat weapon bonus, 45 Energy and normalized weapon damage are unchanged.",
+		"source": "classic"
 	},
 	"1787": {
 		"ability": "Stealth",
@@ -221,18 +249,21 @@
 	"1943": {
 		"ability": "Rupture",
 		"file": "sim/rogue/rupture.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: every rank ticks for less (rank 6 60 + 8 a combo point -> 35 + 4.73 a tick). Cost, tick length and duration are Classic's. The attack power share is not in the client, so the sim keeps Classic's.",
+		"source": "forever",
+		"tooltip": "25 Energy\nMelee Range\nInstant\nFinishing move that causes damage over time, increased by your Attack Power. Lasts longer per combo point:\n1 point: 25 damage over 8 secs\n2 points: 37 damage over 10 secs\n3 points: 51 damage over 12 secs\n4 points: 68 damage over 14 secs\n5 points: 87 damage over 16 secs"
 	},
 	"1966": {
 		"ability": "Feint",
 		"file": "sim/rogue/feint.go",
-		"note": "20 Energy, 10 sec cooldown, threat only; Forever left Feint alone and the Bloodfang 5pc threat bonus that would touch it is a no-op in the sim.",
-		"source": "classic"
+		"note": "Beta client 1.60.1.69893 keeps 20 Energy and the 10 sec cooldown but raises rank 1's threat reduction from 150 (plus 1 a level) to 750 (plus 5 a level). The sim has never modelled Feint's threat reduction, so the change does nothing here.",
+		"source": "forever",
+		"tooltip": "20 Energy\nMelee Range\nInstant\n10 sec cooldown\nPerforms a feint, causing no damage but lowering your threat by a small amount, making the enemy less likely to attack you."
 	},
 	"22482": {
 		"ability": "Blade Flurry (extra strike)",
 		"file": "sim/rogue/talents.go",
-		"note": "The off-target copy of each melee hit while Blade Flurry is up; the mechanic is Classic's and Forever left Blade Flurry alone.",
+		"note": "The off-target copy of each melee hit while Blade Flurry is up. Blade Flurry itself (13877) keeps 20% attack speed, 25 Energy and 2 min in the beta client, but 22482 is no longer in it; the client's own extra strike spell is 1226883.",
 		"source": "classic"
 	},
 	"23580": {
@@ -262,28 +293,29 @@
 	"2590": {
 		"ability": "Backstab",
 		"file": "sim/rogue/backstab.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 150% weapon damage plus the flat bonus, 60 Energy, dagger only.",
+		"source": "classic"
 	},
 	"2823": {
 		"ability": "Deadly Poison",
 		"file": "sim/rogue/poisons.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: about a third less a tick at every rank (rank 5 34 -> 23 every 3 sec) and about 1.5x the charges, which the sim does not model. The 30% proc chance and 5 stacks are Classic's.",
+		"source": "forever",
+		"tooltip": "3 sec cast\nCoats a weapon with poison that lasts for 30 minutes. Each strike has a 30% chance of poisoning the enemy for 24 Nature damage over 12 sec. Stacks up to 5 times on a single target. 90 charges."
 	},
 	"2824": {
 		"ability": "Deadly Poison II",
 		"file": "sim/rogue/poisons.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: about a third less a tick at every rank (rank 5 34 -> 23 every 3 sec) and about 1.5x the charges, which the sim does not model. The 30% proc chance and 5 stacks are Classic's.",
+		"source": "forever",
+		"tooltip": "3 sec cast\nCoats a weapon with poison that lasts for 30 minutes. Each strike has a 30% chance of poisoning the enemy for 36 Nature damage over 12 sec. Stacks up to 5 times on a single target. 115 charges."
 	},
-	"32645": {
-		"ability": "Venom",
-		"assumptions": [
-			"25 Energy cost - the Forever tooltip showed no cost, so it is set to match the other rogue finishers",
-			"Venom rescales a Deadly Poison that is already ticking on the target, not only the stacks applied while it is up"
-		],
-		"file": "sim/rogue/venom.go",
-		"note": "Venom is a new Assassination finisher with no published spell id, and the id the sim borrows for its icon, 32645 (Burning Crusade's Envenom), is not in the Classic spell database at all, so the UI currently has neither a name nor an icon for it.",
-		"source": "assumed",
-		"tooltip": "25 Energy\nInstant\nFinishing move that increases the damage of your Poisons by 30% and your chance to apply Poisons by 10%. Lasts longer per combo point:\n1 point: 9 seconds\n2 points: 12 seconds\n3 points: 15 seconds\n4 points: 18 seconds\n5 points: 21 seconds"
+	"399956": {
+		"ability": "Mutilate",
+		"file": "sim/rogue/mutilate.go",
+		"note": "Beta client 1.60.1.69893: four ranks (1310707, 399956, 1241582, 1241584) adding 23/33/48/67 to each hand's weapon damage before the 75%, so rank 2 strikes for 75% of weapon damage plus 25. 60 Energy, 20% against poisoned targets and a dagger in both hands are confirmed. The demo's flat 13 is gone.",
+		"source": "forever",
+		"tooltip": "60 Energy\nMelee Range\nInstant\nInstantly attacks with both weapons for 75% weapon damage plus an additional 25 with each weapon. Damage increased by 20% against Poisoned targets. Awards 2 combo points.\nRequires Daggers"
 	},
 	"457437": {
 		"ability": "Vanish (stealth aura)",
@@ -298,7 +330,8 @@
 	"5171": {
 		"ability": "Slice and Dice",
 		"file": "sim/rogue/slice_and_dice.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 keeps 20%/30% attack speed, 25 Energy and 6 sec plus 3 sec a combo point; only the aura type number changed.",
+		"source": "classic"
 	},
 	"5277": {
 		"ability": "Evasion",
@@ -309,71 +342,90 @@
 	"6762": {
 		"ability": "Eviscerate",
 		"file": "sim/rogue/eviscerate.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: damage per combo point, range and 35 Energy are unchanged. The sim had 77 a point at level 40 (rank 6) where both clients give 71.",
+		"source": "classic"
 	},
 	"6774": {
 		"ability": "Slice and Dice",
 		"file": "sim/rogue/slice_and_dice.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 keeps 20%/30% attack speed, 25 Energy and 6 sec plus 3 sec a combo point; only the aura type number changed.",
+		"source": "classic"
 	},
 	"8621": {
 		"ability": "Sinister Strike",
 		"file": "sim/rogue/sinister_strike.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: flat weapon bonus, 45 Energy and normalized weapon damage are unchanged.",
+		"source": "classic"
 	},
 	"8624": {
 		"ability": "Eviscerate",
 		"file": "sim/rogue/eviscerate.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: damage per combo point, range and 35 Energy are unchanged. The sim had 77 a point at level 40 (rank 6) where both clients give 71.",
+		"source": "classic"
 	},
 	"8631": {
 		"ability": "Garrote",
 		"file": "sim/rogue/garrote.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 6 ticks over 18 sec for the same damage, 50 Energy.",
+		"source": "classic"
 	},
 	"8633": {
 		"ability": "Garrote",
 		"file": "sim/rogue/garrote.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 6 ticks over 18 sec for the same damage, 50 Energy.",
+		"source": "classic"
 	},
 	"8640": {
 		"ability": "Rupture",
 		"file": "sim/rogue/rupture.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: every rank ticks for less (rank 6 60 + 8 a combo point -> 35 + 4.73 a tick). Cost, tick length and duration are Classic's. The attack power share is not in the client, so the sim keeps Classic's.",
+		"source": "forever",
+		"tooltip": "25 Energy\nMelee Range\nInstant\nFinishing move that causes damage over time, increased by your Attack Power. Lasts longer per combo point:\n1 point: 53 damage over 8 secs\n2 points: 79 damage over 10 secs\n3 points: 109 damage over 12 secs\n4 points: 143 damage over 14 secs\n5 points: 183 damage over 16 secs"
 	},
 	"8647": {
 		"ability": "Expose Armor",
 		"file": "sim/rogue/expose_armor.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: more armor per combo point at every rank (rank 5 340 -> 450) and Improved Expose Armor no longer scales it, so 5 points take 2250 rather than Classic's talented 2550.",
+		"source": "forever",
+		"tooltip": "25 Energy\nMelee Range\nInstant\nFinishing move that exposes the target for 30 sec, reducing armor per combo point:\n1 point: 90 armor\n2 points: 180 armor\n3 points: 270 armor\n4 points: 360 armor\n5 points: 450 armor"
 	},
 	"8650": {
 		"ability": "Expose Armor",
 		"file": "sim/rogue/expose_armor.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: more armor per combo point at every rank (rank 5 340 -> 450) and Improved Expose Armor no longer scales it, so 5 points take 2250 rather than Classic's talented 2550.",
+		"source": "forever",
+		"tooltip": "25 Energy\nMelee Range\nInstant\nFinishing move that exposes the target for 30 sec, reducing armor per combo point:\n1 point: 270 armor\n2 points: 540 armor\n3 points: 810 armor\n4 points: 1080 armor\n5 points: 1350 armor"
 	},
 	"8676": {
 		"ability": "Ambush",
 		"file": "sim/rogue/ambush.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 250% weapon damage plus the flat bonus, 60 Energy, dagger only.",
+		"source": "classic"
 	},
 	"8679": {
 		"ability": "Instant Poison",
 		"file": "sim/rogue/poisons.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: about a third less damage at every rank (rank 6 112-148 -> 76-100) and about 1.5x the charges, which the sim does not model. The 20% proc chance is Classic's.",
+		"source": "forever",
+		"tooltip": "3 sec cast\nCoats a weapon with poison that lasts for 30 minutes. Each strike has a 20% chance of poisoning the enemy which instantly inflicts 13 to 17 Nature damage. 60 charges."
 	},
 	"8688": {
 		"ability": "Instant Poison III",
 		"file": "sim/rogue/poisons.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893: about a third less damage at every rank (rank 6 112-148 -> 76-100) and about 1.5x the charges, which the sim does not model. The 20% proc chance is Classic's.",
+		"source": "forever",
+		"tooltip": "3 sec cast\nCoats a weapon with poison that lasts for 30 minutes. Each strike has a 20% chance of poisoning the enemy which instantly inflicts 29 to 37 Nature damage. 105 charges."
 	},
 	"8721": {
 		"ability": "Backstab",
 		"file": "sim/rogue/backstab.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 150% weapon damage plus the flat bonus, 60 Energy, dagger only.",
+		"source": "classic"
 	},
 	"8725": {
 		"ability": "Ambush",
 		"file": "sim/rogue/ambush.go",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1.69893 matches Classic Era: 250% weapon damage plus the flat bonus, 60 Energy, dagger only.",
+		"source": "classic"
 	}
 }

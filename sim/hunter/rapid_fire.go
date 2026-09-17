@@ -12,9 +12,8 @@ func (hunter *Hunter) registerRapidFire() {
 	}
 
 	actionID := core.ActionID{SpellID: 3045}
-	// TODO: only rank 1 of Rapid Killing was observed, the reduction is assumed to scale per
-	// rank. The buff a kill grants is not modelled, so nothing here checks the 40 sec window or
-	// the 20% damage the tree reads at rank 2.
+	// Rapid Killing takes 1 min off a rank (client curve 60000/120000 ms). The buff a kill grants
+	// (415407: 20% on the next Shot within 20 sec) is not modelled, nothing dies in a boss fight.
 	cooldown := time.Minute*5 - time.Minute*time.Duration(hunter.Talents.RapidKilling)
 
 	hunter.RapidFireAura = hunter.RegisterAura(core.Aura{
@@ -22,11 +21,12 @@ func (hunter *Hunter) registerRapidFire() {
 		ActionID: actionID,
 		Duration: time.Second * 15,
 
+		// Forever: ranged and melee attack speed, where Classic's was ranged only.
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.MultiplyRangedSpeed(sim, 1.4)
+			aura.Unit.MultiplyAttackSpeed(sim, 1.4)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			aura.Unit.MultiplyRangedSpeed(sim, 1/1.4)
+			aura.Unit.MultiplyAttackSpeed(sim, 1/1.4)
 		},
 	})
 

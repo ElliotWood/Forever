@@ -45,7 +45,7 @@ func (warlock *Warlock) registerFelDominationCD() {
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warlock.NewTimer(),
-				Duration: time.Minute * 15,
+				Duration: time.Minute * 5, // 15 min in Classic, 5 min in the beta client
 			},
 		},
 

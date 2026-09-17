@@ -18,11 +18,10 @@ func (druid *Druid) registerDemoralizingRoarSpell() {
 	}[druid.Level]
 
 	druid.DemoralizingRoarAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		// Feral Aggression is gone from the Forever tree. Tanks read the attack power
-		// reduction, so it is assumed to have become baseline at full strength rather
-		// than deleted, the same call the warrior makes for Improved Demoralizing Shout.
-		// TODO: assumed baseline, beta will confirm
-		return core.DemoralizingRoarAura(target, 5)
+		// Feral Aggression is gone from the Forever tree and more than folded in: the beta client's rank 5
+		// is 193 plus 1.4 a level, 204 at 60, where Classic's is 130 plus 1 a level. 204 is Classic's 138
+		// with six points of the old 8%, which is how the shared aura is asked for it.
+		return core.DemoralizingRoarAura(target, 6)
 	})
 
 	druid.DemoralizingRoar = druid.RegisterSpell(Bear, core.SpellConfig{

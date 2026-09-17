@@ -16,7 +16,7 @@ func (paladin *Paladin) ApplyTalents() {
 	paladin.AddStat(stats.MeleeCrit, float64(paladin.Talents.Conviction)*core.CritRatingPerCritChance)
 	// TODO: paladin.AddStat(stats.RangedCrit, float64(paladin.Talents.Conviction)*core.CritRatingPerCritChance)
 
-	// TODO: Only rank 1 of Divine Precision was seen, ranks 2 and 3 are extrapolated from it.
+	// Divine Precision: 6/12/18%, confirmed by the beta client's talent curve.
 	paladin.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexHoly] += 6 * float64(paladin.Talents.DivinePrecision) * core.SpellHitRatingPerHitChance
 
 	if paladin.Talents.Toughness > 0 {
@@ -30,22 +30,19 @@ func (paladin *Paladin) ApplyTalents() {
 	paladin.AddStat(stats.Parry, 1*float64(paladin.Talents.Deflection))
 	// Holy Power gives every spell 1% crit per point here; Holy Shock's larger share is the
 	// extra 2% per point added on the spell itself, see holy_shock.go.
-	// TODO: Only rank 1 of Holy Power was seen, ranks 2 to 5 are extrapolated from it.
+	// The beta client's curves are 1% a rank for every spell and 2% a rank more on Holy Shock.
 	paladin.AddStat(stats.SpellCrit, float64(paladin.Talents.HolyPower)*core.SpellCritRatingPerCritChance)
 	paladin.PseudoStats.SpiritRegenRateCasting += 0.1 * float64(paladin.Talents.Reverence)
 
-	// TODO: Only rank 1 of Sacred Duty was seen, the 2% per rank the tree reads comes from the
-	// community talent calculator rather than from a tooltip.
+	// Sacred Duty: 2% a rank, confirmed by the beta client.
 	paladin.MultiplyStat(stats.Stamina, 1.0+0.02*float64(paladin.Talents.SacredDuty))
 
-	// TODO: Only rank 1 of Shield Specialization's absorb was seen, the 10% per rank the tree
-	// reads comes from the community talent calculator rather than from a tooltip.
+	// Shield Specialization: 10% a rank, confirmed by the beta client.
 	// NOTE: Total SBV will be inflated until
 	// https://github.com/wowsims/sod/issues/1025 gets resolved.
 	paladin.PseudoStats.BlockValueMultiplier += 0.1 * float64(paladin.Talents.ShieldSpecialization)
 
-	// TODO: Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are
-	// a large chunk of a Forever paladin's spell power.
+	// Champion of the Light: 33/66/100%, confirmed by the beta client.
 	if paladin.Talents.ChampionOfTheLight > 0 {
 		paladin.AddStatDependency(stats.Intellect, stats.SpellPower, []float64{0, 0.33, 0.66, 1.00}[paladin.Talents.ChampionOfTheLight])
 	}
@@ -86,8 +83,11 @@ func (paladin *Paladin) applyRedoubt() {
 		return
 	}
 
-	// TODO: Every rank of Redoubt reads the same 10% chance for 6% block, so ranks 2-5 do nothing.
-	blockBonus := 6.0 * core.BlockRatingPerBlockChance
+	// Beta client 1.60.1.69893, talent curves: 6% block a rank and a 2% chance a rank, 10 sec or 5
+	// blocks. The trees had the block flat at 6% and the chance at 10% a rank. The chance is the
+	// curve on effect index 1, which the talent spell has no effect for; its rank 5 value is the
+	// 10% ProcChance the spell carries, the way a spell's own number is always the top rank's.
+	blockBonus := 6.0 * float64(paladin.Talents.Redoubt) * core.BlockRatingPerBlockChance
 
 	paladin.redoubtAura = paladin.RegisterAura(core.Aura{
 		Label:     "Redoubt",
@@ -113,7 +113,7 @@ func (paladin *Paladin) applyRedoubt() {
 		Callback:   core.CallbackOnSpellHitTaken,
 		Outcome:    core.OutcomeLanded,
 		ProcMask:   core.ProcMaskMelee,
-		ProcChance: 0.1,
+		ProcChance: 0.02 * float64(paladin.Talents.Redoubt),
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			paladin.redoubtAura.Activate(sim)
 			paladin.redoubtAura.SetStacks(sim, 5)
@@ -167,8 +167,7 @@ func (paladin *Paladin) applyShieldSpecialization() {
 		Duration: time.Second * 3,
 	}
 
-	// TODO: Only rank 1's 33% chance was seen, the tree's 33/66/100 comes from the community
-	// talent calculator rather than from a tooltip. The 6% of maximum mana does not scale.
+	// 33/66/100%, confirmed by the beta client. The 6% of maximum mana does not scale.
 	core.MakeProcTriggerAura(&paladin.Unit, core.ProcTrigger{
 		Name:       "Shield Specialization Trigger",
 		Callback:   core.CallbackOnSpellHitTaken,
@@ -228,14 +227,16 @@ func (paladin *Paladin) applyVengeance() {
 		return
 	}
 
-	// TODO: Every rank reads 1% per stack up to 5 stacks, so ranks 2 and 3 do nothing.
+	// Beta client 1.60.1.69893: 1% a stack per rank, up to 5 stacks, 30 sec (the trees had copied
+	// rank 1 into every rank).
+	perStack := 0.01 * float64(paladin.Talents.Vengeance)
 	procAura := paladin.RegisterAura(core.Aura{
 		Label:     "Vengeance Proc",
 		ActionID:  core.ActionID{SpellID: 20059},
 		Duration:  time.Second * 30,
 		MaxStacks: 5,
 		OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
-			multiplier := (1 + 0.01*float64(newStacks)) / (1 + 0.01*float64(oldStacks))
+			multiplier := (1 + perStack*float64(newStacks)) / (1 + perStack*float64(oldStacks))
 			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexHoly] *= multiplier
 			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= multiplier
 		},
@@ -261,9 +262,10 @@ func (paladin *Paladin) applyVindication() {
 		return
 	}
 
-	// TODO: The self buff reads 1% at every rank. The 42 attack power the target loses is not
-	// modelled, nothing in the sim reads an enemy's attack power.
-	attackPowerMultiplier := paladin.NewDynamicMultiplyStat(stats.AttackPower, 1.01)
+	// Beta client 1.60.1.69893: 1% attack power a rank for 30 sec, on every damaging melee attack that
+	// lands (100% proc chance). The attack power the target loses is not modelled, nothing in the sim
+	// reads an enemy's attack power.
+	attackPowerMultiplier := paladin.NewDynamicMultiplyStat(stats.AttackPower, 1+0.01*float64(paladin.Talents.Vindication))
 
 	vindicationAura := paladin.RegisterAura(core.Aura{
 		Label:    "Vindication Proc",
@@ -284,7 +286,6 @@ func (paladin *Paladin) applyVindication() {
 			aura.Activate(sim)
 		},
 		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			// TODO: Replace with actual proc mask / proc chance
 			if result.Landed() && spell.ProcMask.Matches(core.ProcMaskMelee) {
 				vindicationAura.Activate(sim)
 			}
@@ -298,8 +299,9 @@ func (paladin *Paladin) applyConsecratedGround() {
 		return
 	}
 
-	// TODO: The tooltip caps the bonus at the first 4 or 8 enemies to enter the Consecration,
-	// which is not modelled here - everything standing in it gets the bonus.
+	// The tooltip caps the bonus at the first 4 enemies to enter the Consecration (Consecration's
+	// $s3 in the beta client), which is not modelled: the buff sits on the paladin, so every
+	// target takes it. It only differs from the game on a pull of more than 4.
 	multiplier := 1 + 0.05*float64(paladin.Talents.ConsecratedGround)
 
 	buffAura := paladin.RegisterAura(core.Aura{
@@ -334,8 +336,7 @@ func (paladin *Paladin) applyInstrumentOfLaw() {
 		return
 	}
 
-	// TODO: Only rank 1's 10% was seen, the tree's second rank comes from the community talent
-	// calculator rather than from a tooltip.
+	// 10% a rank, confirmed by the beta client.
 	paladin.PseudoStats.ThreatMultiplier *= 1 - 0.1*float64(paladin.Talents.InstrumentOfLaw)
 }
 

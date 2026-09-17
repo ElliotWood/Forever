@@ -14,7 +14,7 @@ func (warrior *Warrior) RegisterShieldBlockCD() {
 	warrior.ShieldBlockAura = warrior.RegisterAura(core.Aura{
 		Label:     "Shield Block",
 		ActionID:  actionID,
-		Duration:  time.Second * 5,
+		Duration:  time.Second * 7, // 5 sec in Classic
 		MaxStacks: 1,
 
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {

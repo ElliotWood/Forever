@@ -23,7 +23,9 @@ func (druid *Druid) registerFaerieFireSpell() {
 		return core.FaerieFireAura(target)
 	})
 
-	// TODO: The feral version's talent is gone from the tree and is assumed to be baseline, beta will confirm.
+	// TODO: the beta client 1.60.1.69893 has no Faerie Fire (Feral): 16857 and 17390-17392 are gone from the
+	// spellbook and 17392 from the spell tables. The cat and the bear keep it because their rotations are built
+	// around it.
 	if druid.InForm(Cat | Bear) {
 		spellCode = SpellCode_DruidFaerieFireFeral
 		actionID = core.ActionID{SpellID: 17392}

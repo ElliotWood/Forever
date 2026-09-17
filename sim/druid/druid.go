@@ -119,7 +119,8 @@ func (druid *Druid) GetCharacter() *core.Character {
 }
 
 func (druid *Druid) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
-	// TODO: Improved Mark of the Wild is gone from the tree and is assumed to be baseline, beta will confirm.
+	// Improved Mark of the Wild is baseline: the beta client's Mark and Gift of the Wild give 385 armor, 16 stats and
+	// 27 resistances, Classic's 285 / 12 / 20 raised by 35%.
 	if raidBuffs.GiftOfTheWild == proto.TristateEffect_TristateEffectRegular {
 		raidBuffs.GiftOfTheWild = proto.TristateEffect_TristateEffectImproved
 	}

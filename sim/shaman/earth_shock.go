@@ -6,9 +6,10 @@ import (
 
 const EarthShockRanks = 7
 
+// Forever beta client values, scaled to level 60 like Lightning Bolt's. Every rank carries the full 0.386.
 var EarthShockSpellId = [EarthShockRanks + 1]int32{0, 8042, 8044, 8045, 8046, 10412, 10413, 10414}
-var EarthShockBaseDamage = [EarthShockRanks + 1][]float64{{0}, {19, 22}, {35, 38}, {65, 69}, {120, 129}, {233, 247}, {364, 387}, {517, 545}}
-var EarthShockSpellCoef = [EarthShockRanks + 1]float64{0, .154, .212, .299, .386, .386, .386, .386}
+var EarthShockBaseDamage = [EarthShockRanks + 1][]float64{{0}, {19, 22}, {35, 38}, {51, 56}, {83, 90}, {134, 143}, {206, 220}, {293, 309}}
+var EarthShockSpellCoef = [EarthShockRanks + 1]float64{0, .386, .386, .386, .386, .386, .386, .386}
 var EarthShockManaCost = [EarthShockRanks + 1]float64{0, 30, 50, 85, 145, 240, 345, 450}
 var EarthShockLevel = [EarthShockRanks + 1]int{0, 4, 8, 14, 24, 36, 48, 60}
 

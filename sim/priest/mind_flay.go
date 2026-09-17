@@ -13,9 +13,9 @@ const MindFlayTicks = 3
 var MindFlaySpellId = [MindFlayRanks + 1]int32{0, 15407, 17311, 17312, 17313, 17314, 18807}
 var MindFlayTickSpellId = [MindFlayRanks + 1]int32{0, 16568, 7378, 17316, 17317, 17318, 18808}
 
-// TODO: Only rank 1 was seen at 119, up from Classic's 75. The other ranks are scaled by the
-// same ratio until the beta shows them.
-var MindFlayBaseDamage = [MindFlayRanks + 1]float64{0, 119, 200, 295, 414, 524, 676}
+// Forever beta client 1.60.1.69893, the total over the three ticks. The demo's 119 at rank 1 is not the
+// client's 21 a tick; every rank is a little below Classic's.
+var MindFlayBaseDamage = [MindFlayRanks + 1]float64{0, 63, 102, 153, 225, 294, 390}
 var MindFlayManaCost = [MindFlayRanks + 1]float64{0, 45, 70, 100, 135, 165, 205}
 var MindFlayLevel = [MindFlayRanks + 1]int{0, 20, 28, 36, 44, 52, 60}
 
@@ -53,7 +53,7 @@ func (priest *Priest) newMindFlaySpellConfig(rank int, tickIdx int32) core.Spell
 	manaCost := MindFlayManaCost[rank]
 	level := MindFlayLevel[rank]
 
-	spellCoeff := 0.15 // classic penalty for mf having a slow effect
+	spellCoeff := 0.167 // per tick, the Forever beta client's (Classic's .15 carried a penalty for the slow)
 
 	tickLength := time.Second
 
@@ -78,8 +78,7 @@ func (priest *Priest) newMindFlaySpellConfig(rank int, tickIdx int32) core.Spell
 			},
 		},
 
-		// TODO: only rank 1 of Improved Mind Flay was seen at 10%, the 20% the tree reads at rank 2
-		// comes from the community talent calculator rather than from a tooltip.
+		// Improved Mind Flay, 10/20% in the beta client.
 		DamageMultiplier: 1 + 0.1*float64(priest.Talents.ImprovedMindFlay),
 		ThreatMultiplier: 1,
 

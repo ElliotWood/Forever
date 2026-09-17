@@ -53,7 +53,9 @@ func (warlock *Warlock) registerWrackSpell() {
 				dot.Snapshot(target, baseDamage, isRollover)
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+				result := dot.CalcSnapshotDamage(sim, target, dot.OutcomeTick)
+				result.Damage *= warlock.improvedDrainsMultiplier(sim, target)
+				dot.Spell.DealPeriodicDamage(sim, result)
 			},
 		},
 

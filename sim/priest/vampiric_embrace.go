@@ -13,7 +13,8 @@ func (priest *Priest) registerVampiricEmbraceSpell() {
 
 	actionID := core.ActionID{SpellID: 15286}
 	manaCost := 40.0
-	duration := time.Second * 30
+	duration := time.Second * 30 // 1 min in Classic
+	cooldown := time.Minute      // 10 sec in Classic
 
 	partyPlayers := priest.Env.Raid.GetPlayerParty(&priest.Unit).Players
 	healthMetrics := priest.NewHealthMetrics(actionID)
@@ -50,6 +51,10 @@ func (priest *Priest) registerVampiricEmbraceSpell() {
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,
+			},
+			CD: core.Cooldown{
+				Timer:    priest.NewTimer(),
+				Duration: cooldown,
 			},
 		},
 

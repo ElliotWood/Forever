@@ -16,9 +16,8 @@ import (
 
 // Utility function to create the Deadly Aspects haste aura
 func (hunter *Hunter) createDeadlyAspectsAura(auraLabel string, actionID core.ActionID) *core.Aura {
-	// TODO: only rank 1 of Deadly Aspects was observed. The 30% for 12 sec is held at every
-	// rank, as in the Classic Improved Aspect of the Hawk this talent is built from, where the
-	// proc chance is the only slot the points buy.
+	// Every rank of Deadly Aspects triggers the same Quick Shots (6150): 30% for 12 sec. The
+	// points buy only the proc chance.
 	bonusMultiplier := 1.3
 	return hunter.GetOrRegisterAura(core.Aura{
 		Label:    auraLabel,
@@ -35,7 +34,8 @@ func (hunter *Hunter) createDeadlyAspectsAura(auraLabel string, actionID core.Ac
 
 // Function to get the maximum attack power for Aspect of the Hawk based on rank
 func (hunter *Hunter) getMaxAspectOfTheHawkAttackPower(rank int) float64 {
-	attackPower := [8]float64{0, 20, 35, 50, 70, 90, 110, 120}
+	// Rank 6 is 55 in the beta client, down from 110, while ranks 5 and 7 are unchanged.
+	attackPower := [8]float64{0, 20, 35, 50, 70, 90, 55, 120}
 
 	if rank < 1 || rank > 7 {
 		return 0.0
@@ -58,8 +58,7 @@ func (hunter *Hunter) getMaxHawkRank() int {
 
 func (hunter *Hunter) getAspectOfTheHawkSpellConfig(rank int) core.SpellConfig {
 	var deadlyAspectsAura *core.Aura
-	// TODO: only rank 1 was observed, the proc chance is the one slot of Deadly Aspects assumed
-	// to scale per rank.
+	// Deadly Aspects: 2/4/6/8/10% (client curve).
 	deadlyAspectsProcChance := 0.02 * float64(hunter.Talents.DeadlyAspects)
 
 	spellIds := [8]int32{0, 13165, 14318, 14319, 14320, 14321, 14322, 25296}
