@@ -423,7 +423,7 @@
         "maxPoints": 2,
         "name": "Improved Slam",
         "icon": "ability_warrior_decisivestrike",
-        "description": "Reduces the global cooldown and cast time of your Slam ability by {0}.2 sec. In addition, Slam no longer interrupts your melee swing time.",
+        "description": "Reduces the global cooldown and cast time of your Slam ability by {0} sec. In addition, Slam no longer interrupts your melee swing time.",
         "ranks": [
           [
             0.25

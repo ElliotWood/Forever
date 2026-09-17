@@ -85,7 +85,7 @@ func (druid *Druid) applyMoonglow() {
 		return
 	}
 
-	multiplier := 3 * druid.Talents.Moonglow
+	multiplier := []int32{0, 8, 17, 25}[druid.Talents.Moonglow]
 
 	druid.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.Cost != nil && spell.Cost.CostType() == core.CostTypeMana {
@@ -346,7 +346,7 @@ func (druid *Druid) applyMoonfury() {
 		return
 	}
 
-	multiplier := 0.01 * float64(druid.Talents.Moonfury)
+	multiplier := 0.02 * float64(druid.Talents.Moonfury)
 
 	druid.RegisterAura(core.Aura{
 		Label: "Moonfury",
