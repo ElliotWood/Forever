@@ -24,7 +24,9 @@ func (priest *Priest) ApplyTalents() {
 		})
 	}
 
-	priest.PseudoStats.SpiritRegenRateCasting = []float64{0.0, 0.17, 0.34, 0.51}[priest.Talents.Meditation]
+	// 17/33/50, not the 17/34/51 that multiplying rank 1 gives. Both the tree and
+	// wowforevertalents read it this way; no beta tooltip past rank 1 has been seen.
+	priest.PseudoStats.SpiritRegenRateCasting = []float64{0.0, 0.17, 0.33, 0.50}[priest.Talents.Meditation]
 
 	if priest.Talents.MentalStrength > 0 {
 		priest.MultiplyStat(stats.Intellect, 1.0+0.03*float64(priest.Talents.MentalStrength))

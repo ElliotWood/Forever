@@ -194,7 +194,10 @@ func (warlock *Warlock) improvedDrainsMultiplier(sim *core.Simulation, target *c
 }
 
 func (warlock *Warlock) drainTickLength(baseTickLength time.Duration) time.Duration {
-	return time.Duration(float64(baseTickLength) / (1 + 0.17*float64(warlock.Talents.SoulSiphon)))
+	// 17/34/50, not the 17/34/51 that multiplying rank 1 gives. Rank 3's 50% is confirmed
+	// on the beta; rank 2's 34 is the tree's own reading.
+	rate := []float64{0, 0.17, 0.34, 0.50}[warlock.Talents.SoulSiphon]
+	return time.Duration(float64(baseTickLength) / (1 + rate))
 }
 
 func (warlock *Warlock) applyPandemic() {
