@@ -70,3 +70,24 @@ Their `update_items.yml` was dispatch-only and **never ran**. The real recipe is
   (Spell, SpellEffect, SpellMisc, SkillLineAbility, ChrRaces, ItemSparse...) can be added as a source.
 
 It does not regenerate `db.bin` or change sim rules. That remains review work.
+
+## Forever as of 17 Sep 2026 (verified)
+
+- **Beta started 17 Sep; launch is 4 Nov 2026.** Beta is capped at level 30.
+- **The beta client is already datamined.** wago.tools serves it under the existing `wow_classic_beta`
+  product as **1.60.1** (builds 69876 and 69893 on 16 Sep). Tables download directly, e.g.
+  `https://wago.tools/db2/Spell/csv?build=1.60.1.69893`. Compared with Classic Era 1.15.9, 432 Talent rows
+  changed and 49 ChrRaces rows were added: **real talent and race data exists now**, so the trees vendored from
+  the BlizzCon stream in `tools/forever_talents/` can be checked against the client.
+- **Wowhead has started:** a `/forever/` database, talent calculator, and "datamined from Forever beta client"
+  articles. Its gear-planner file (`nether.wowhead.com/forever/data/gear-planner`) already carries
+  `classicplus` sections.
+- **Item stats are deliberately hidden from datamining.** Blizzard (Aggrend, BlizzCon 2026 interview): items are
+  obfuscated and their stats are unknown until one drops on a server. Gear data will come from players' loot
+  uploads (Wowhead Looter) after launch, not from the client. Expect the gear planner to fill in over launch week.
+- Community datamine: daybreakforever.com/datamining (reads the beta client via wago.tools, flags what is new
+  versus Era/SoD, TBC Anniversary and Mists Classic).
+
+The watch workflow now also records the newest 1.60.x client build and opens a `data/forever-client` PR with a
+row-level diff of the sim's tables (Spell*, SkillLineAbility, ChrRaces, Talent, ItemSparse, ItemSet, enchants)
+whenever a new beta build lands.
