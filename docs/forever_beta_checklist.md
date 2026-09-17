@@ -225,3 +225,28 @@ These are in the trees and the picker marks them as not simulated; spending poin
 - Warrior / Fury: Blood Craze
 - Warrior / Protection: Concussion Blow (a stun, and a raid boss is immune)
 - Warrior / Protection: Vanguard
+
+## Item stats: the gear planner disagrees with the item database (found 17 September)
+
+`assets/db_inputs/wowhead_forever_gearplanner.txt`, the snapshot the data watcher takes
+from Wowhead's Forever gear planner, carries stats for 6,533 items. Comparing agility,
+strength, intellect, spirit, stamina and armor against `assets/database/db.json`:
+
+- 13,896 values compared on items both carry
+- **603 differ, across 482 items**, and 200 of those are item level 60 or higher
+- **19 of them appear in shipped gear sets**, mostly the PvP epics: Field Marshal's and
+  Marshal's Dragonhide pieces, Onyxia Tooth Pendant, Hammer of Bestial Fury
+
+The differences run both ways - 179 where only Wowhead carries a value, 190 where only the
+sim does - which argues against a Forever retune, since that would push one direction.
+Onyxia Tooth Pendant reads 12 agility and 9 stamina here against Wowhead's 7 and 8, which
+looks like two eras of the same item rather than a change.
+
+**Not acted on.** Nothing in the snapshot says which client version it was built from, and
+the sim's database came from a separate scrape, so neither side is obviously right. Taking
+Wowhead's numbers would change 19 items a player actually sims on a guess.
+
+What would settle it: an item tooltip read off the beta client for any of the 19, or a
+version marker on the gear planner payload. The scaling tables in the same snapshot all
+agree with the sim - base stat offsets for all ten races, spell crit per intellect for all
+seven casting classes - so the snapshot is not wrong in general.
