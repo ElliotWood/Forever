@@ -36,10 +36,13 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, aura *core.Aura, stanceCD
 		BerserkerStance: SpellCode_WarriorStanceBerserker,
 	}[stance]
 	actionID := aura.ActionID
-	// The tooltip reads as a bonus on top of a baseline Tactical Mastery, but the baseline
-	// retention was never shown, so only the talent's own 3 Rage per point is modelled.
-	// TODO: beta will show what an untalented warrior retains across a stance change.
-	maxRetainedRage := 3 * float64(warrior.Talents.ImprovedTacticalMastery)
+	// Tactical Mastery is a baseline passive in the Arms tab under Forever, not a talent,
+	// and keeps 10 Rage on its own; Improved Tactical Mastery adds 3 per point on top.
+	// Read off Soda's Warrior video: the level 38 spellbook lists it as a passive, and the
+	// note with it reads "keeps up to 10 Rage through a stance change by itself; the Arms
+	// talent adds up to 15 more".
+	baselineRetainedRage := core.TernaryFloat64(warrior.Env.IsForever(), 10, 0)
+	maxRetainedRage := baselineRetainedRage + 3*float64(warrior.Talents.ImprovedTacticalMastery)
 	rageMetrics := warrior.NewRageMetrics(actionID)
 
 	stanceSpell := warrior.RegisterSpell(AnyStance, core.SpellConfig{

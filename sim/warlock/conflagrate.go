@@ -20,13 +20,10 @@ func (warlock *Warlock) getConflagrateConfig(rank int) core.SpellConfig {
 
 	spCoeff := 0.429
 
-	// TODO: Only rank 1 of Shadow and Flame was seen and every rank of the tree reads the same
-	// 20%, so the chance is held at that value rather than read per point. Per point it would be
-	// certain at 5/5 and Conflagrate would stop consuming Immolate altogether.
-	keepImmolateChance := 0.0
-	if warlock.Talents.ShadowAndFlame > 0 {
-		keepImmolateChance = 0.2
-	}
+	// 20% per point, so at 5/5 Conflagrate stops consuming Immolate altogether. The demo
+	// only showed rank 1 and the tree repeated its 20% at every rank, which is why this was
+	// held flat; the beta has since confirmed 80% at rank 4 and 100% at rank 5.
+	keepImmolateChance := 0.2 * float64(warlock.Talents.ShadowAndFlame)
 
 	return core.SpellConfig{
 		SpellCode:     SpellCode_WarlockConflagrate,
