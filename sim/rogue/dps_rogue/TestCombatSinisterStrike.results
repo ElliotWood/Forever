@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-DarkmantleArmor"
  value: {
-  dps: 536.61769
-  tps: 380.99856
+  dps: 531.62024
+  tps: 377.45037
  }
 }
 dps_results: {

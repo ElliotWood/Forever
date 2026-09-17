@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-FeralheartRaiment"
  value: {
-  dps: 298.43831
-  tps: 315.14862
+  dps: 305.31983
+  tps: 321.15535
  }
 }
 dps_results: {

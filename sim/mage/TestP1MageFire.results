@@ -155,8 +155,8 @@ dps_results: {
 dps_results: {
  key: "TestP1MageFire-Phase1-AllItems-Sorcerer'sRegalia"
  value: {
-  dps: 539.43952
-  tps: 555.12961
+  dps: 544.6204
+  tps: 562.11985
  }
 }
 dps_results: {

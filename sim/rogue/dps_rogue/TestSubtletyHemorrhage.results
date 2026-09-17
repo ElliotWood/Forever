@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-DarkmantleArmor"
  value: {
-  dps: 485.91734
-  tps: 345.00131
+  dps: 475.17615
+  tps: 337.37506
  }
 }
 dps_results: {

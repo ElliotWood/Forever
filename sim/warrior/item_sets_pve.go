@@ -1,10 +1,10 @@
 package warrior
 
 import (
-	"slices"
-	"time"
 	"github.com/wowsims/classic/sim/core"
 	"github.com/wowsims/classic/sim/core/stats"
+	"slices"
+	"time"
 )
 
 ///////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ var ItemSetBattleGearOfMight = core.NewItemSet(core.ItemSet{
 var ItemSetBattleGearOfWrath = core.NewItemSet(core.ItemSet{
 	Name: "Battlegear of Wrath",
 	Bonuses: map[int32]core.ApplyEffect{
-		// Increases the attack power granted by Battle Shout by 30. 
+		// Increases the attack power granted by Battle Shout by 30.
 		3: func(agent core.Agent) {
 			// Managed in shouts.go
 		},
@@ -103,7 +103,7 @@ var ItemSetBattleGearOfWrath = core.NewItemSet(core.ItemSet{
 				Label: "Warrior's Wrath Trigger",
 				OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
 					if slices.Contains(affectedSpells, spell) {
-						if sim.Proc(0.2, "Warrior's Wrath Trigger"){
+						if sim.Proc(0.2, "Warrior's Wrath Trigger") {
 							warriorsWrathAura.Activate(sim)
 						}
 					}
@@ -119,7 +119,7 @@ var ItemSetBattleGearOfWrath = core.NewItemSet(core.ItemSet{
 				ActionID: actionID,
 				Label:    "Parry",
 				Duration: time.Second * 10,
-				OnGain: func(aura *core.Aura, sim *core.Simulation) {	
+				OnGain: func(aura *core.Aura, sim *core.Simulation) {
 					warrior.AddStatDynamic(sim, stats.Parry, 100*core.ParryRatingPerParryChance)
 				},
 				OnExpire: func(aura *core.Aura, sim *core.Simulation) {
@@ -180,11 +180,14 @@ var ItemSetBattlegearOfHeroism = core.NewItemSet(core.ItemSet{
 			c := agent.GetCharacter()
 			c.AddResistances(8)
 		},
-		// Chance on melee attack to heal you for 88 to 133
+		// Vitality: 15 health every 5 sec, which a boss fight never lets tick usefully.
+		3: func(_ core.Agent) {},
+		// Chance on melee attack to heal you for 88 to 132, and in Forever to return 10 Rage.
 		4: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			actionID := core.ActionID{SpellID: 27419}
-			healthMetrics := c.NewHealthMetrics(core.ActionID{SpellID: 27419})
+			actionID := core.ActionID{SpellID: 450587}
+			healthMetrics := c.NewHealthMetrics(core.ActionID{SpellID: 450589})
+			rageMetrics := c.NewRageMetrics(core.ActionID{SpellID: 450589})
 
 			core.MakeProcTriggerAura(&c.Unit, core.ProcTrigger{
 				ActionID: actionID,
@@ -193,23 +196,19 @@ var ItemSetBattlegearOfHeroism = core.NewItemSet(core.ItemSet{
 				Outcome:  core.OutcomeLanded,
 				ProcMask: core.ProcMaskMelee,
 				PPM:      1,
-				Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
+				Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 					c.GainHealth(sim, sim.Roll(88, 133), healthMetrics)
+					if c.HasRageBar() {
+						c.AddRage(sim, 10, rageMetrics)
+					}
 				},
 			})
 		},
-		// +40 Attack Power.
+		// Moment of Valor: breaks a Disarm when struck.
+		5: func(_ core.Agent) {},
+		// +20 Strength, where Classic gave +40 attack power.
 		6: func(agent core.Agent) {
-			c := agent.GetCharacter()
-			c.AddStats(stats.Stats{
-				stats.AttackPower:       40,
-				stats.RangedAttackPower: 40,
-			})
-		},
-		// +200 Armor.
-		8: func(agent core.Agent) {
-			c := agent.GetCharacter()
-			c.AddStat(stats.Armor, 200)
+			agent.GetCharacter().AddStat(stats.Strength, 20)
 		},
 	},
 })

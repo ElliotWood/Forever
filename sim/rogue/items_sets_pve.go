@@ -191,7 +191,10 @@ var ItemSetDarkmantleArmor = core.NewItemSet(core.ItemSet{
 			c := agent.GetCharacter()
 			c.AddResistances(8)
 		},
-		// Chance on melee attack to restore 35 energy.
+		// Vitality: 15 health every 5 sec. The sim has no health regen stat and a boss fight never
+		// idles, so there is nothing to apply.
+		3: func(_ core.Agent) {},
+		// Chance on melee attack to restore energy, cut from 35 to 20.
 		4: func(agent core.Agent) {
 			c := agent.GetCharacter()
 			actionID := core.ActionID{SpellID: 27787}
@@ -204,13 +207,15 @@ var ItemSetDarkmantleArmor = core.NewItemSet(core.ItemSet{
 				Outcome:  core.OutcomeLanded,
 				ProcMask: core.ProcMaskMeleeWhiteHit,
 				PPM:      1,
-				Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
+				Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 					if c.HasEnergyBar() {
-						c.AddEnergy(sim, 35, energyMetrics)
+						c.AddEnergy(sim, 20, energyMetrics)
 					}
 				},
 			})
 		},
+		// Crafted Shadows: breaks a Snare when struck.
+		5: func(_ core.Agent) {},
 		// +40 Attack Power.
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
@@ -218,11 +223,6 @@ var ItemSetDarkmantleArmor = core.NewItemSet(core.ItemSet{
 				stats.AttackPower:       40,
 				stats.RangedAttackPower: 40,
 			})
-		},
-		// +200 Armor.
-		8: func(agent core.Agent) {
-			c := agent.GetCharacter()
-			c.AddStat(stats.Armor, 200)
 		},
 	},
 })
