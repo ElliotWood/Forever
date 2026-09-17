@@ -6,6 +6,12 @@
 		"url": "https://github.com/ElliotWood/Forever/pull/186"
 	},
 	{
+		"number": 185,
+		"title": "Catch a talent whose Go is its tree's values scaled by a constant",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/185"
+	},
+	{
 		"number": 184,
 		"title": "talents: the beta client is the source of truth (values + structure)",
 		"mergedAt": "2026-09-17",
