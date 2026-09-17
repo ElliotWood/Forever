@@ -121,3 +121,21 @@ upstream moves, but nothing is waiting there to be picked up today.
 
 One practical note for anyone repeating the comparison: this fork is CRLF and upstream is
 LF, so a naive diff reports every line as changed. Strip CR first.
+
+## The three progress channels, and why only one raced (checked 17 September)
+
+CI panicked once with "send on closed channel" in `bulksim`. Three places close a
+`progress` channel, so the obvious question is whether the other two have the same bug.
+
+They do not, and the reason is worth writing down: `sim.go` and `sim_concurrent.go` both
+close theirs in a deferred block, and every send to it happens earlier in the same function
+body, so the two are ordered by construction. `bulksim.go` is the only one of the three
+that starts goroutines at all - five of them - and one was a reporter that outlived the
+function, still sending after the caller had closed the channel.
+
+The fix there needed a wait for the goroutine and an abortable send: `progress` is
+unbuffered, so waiting alone would have turned the panic into a hang on exactly the runs
+that used to crash.
+
+If a send is added to `sim.go` or `sim_concurrent.go` from inside a goroutine, that
+reasoning stops holding and those files need the same treatment.
