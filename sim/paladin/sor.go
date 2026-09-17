@@ -81,13 +81,15 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 			ProcMask:    core.ProcMaskSpellDamage,
 			Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagSuppressWeaponProcs | core.SpellFlagSuppressEquipProcs | core.SpellFlagBinary,
 
-			DamageMultiplier: 1,
+			// Improved Seals is a percent modifier (aura 108), so it scales the whole spell, spell
+			// power included. Multiplying the base roll by it left the coefficient's share out.
+			DamageMultiplier: improvedSeals,
 			ThreatMultiplier: 1,
 
 			BonusCoefficient: rank.judge.coeff,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				baseDamage := sim.Roll(minDamage, maxDamage) * improvedSeals
+				baseDamage := sim.Roll(minDamage, maxDamage)
 				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
 			},
 		})
@@ -110,14 +112,14 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 
 			//BonusCritRating: paladin.holyCrit(), // TODO to be tested, but unlikely
 
-			DamageMultiplier: paladin.getWeaponSpecializationModifier(),
+			DamageMultiplier: improvedSeals * paladin.getWeaponSpecializationModifier(),
 			ThreatMultiplier: 1,
 
 			BonusCoefficient: coeff,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				// effectively scales with coeff x 2, and damage dealt multipliers affect half the damage taken bonus
-				baseDamage := damage*improvedSeals + spell.BonusCoefficient*(spell.GetBonusDamage(target)+target.GetSchoolBonusDamageTaken(spell))
+				baseDamage := damage + spell.BonusCoefficient*(spell.GetBonusDamage(target)+target.GetSchoolBonusDamageTaken(spell))
 				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialCritOnly)
 			},
 		})
