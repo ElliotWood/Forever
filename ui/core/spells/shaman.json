@@ -1,402 +1,4 @@
 {
-	"10391": {
-		"ability": "Lightning Bolt",
-		"file": "sim/shaman/lightning_bolt.go",
-		"note": "Rank 7. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
-		"source": "forever",
-		"tooltip": "135 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 142 to 160 Nature damage."
-	},
-	"10392": {
-		"ability": "Lightning Bolt",
-		"file": "sim/shaman/lightning_bolt.go",
-		"note": "Rank 8. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
-		"source": "forever",
-		"tooltip": "160 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 157 to 177 Nature damage."
-	},
-	"10412": {
-		"ability": "Earth Shock",
-		"file": "sim/shaman/earth_shock.go",
-		"note": "Rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Every rank has the 0.386 coefficient; Classic Era gave ranks 1 to 3 less and dealt more damage from rank 3 up.",
-		"source": "forever",
-		"tooltip": "240 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 134 to 143 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat."
-	},
-	"10413": {
-		"ability": "Earth Shock",
-		"file": "sim/shaman/earth_shock.go",
-		"note": "Rank 6. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Every rank has the 0.386 coefficient; Classic Era gave ranks 1 to 3 less and dealt more damage from rank 3 up.",
-		"source": "forever",
-		"tooltip": "345 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 206 to 220 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat."
-	},
-	"10414": {
-		"ability": "Earth Shock",
-		"file": "sim/shaman/earth_shock.go",
-		"note": "Rank 7. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Every rank has the 0.386 coefficient; Classic Era gave ranks 1 to 3 less and dealt more damage from rank 3 up.",
-		"source": "forever",
-		"tooltip": "450 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 293 to 309 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat."
-	},
-	"10431": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 6. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Orb damage and the 0.267 coefficient at every rank come from the orb spell 26370; 3.5 sec between orbs in both clients.",
-		"source": "forever",
-		"tooltip": "305 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 134 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
-	},
-	"10432": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 7. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Orb damage and the 0.267 coefficient at every rank come from the orb spell 26363; 3.5 sec between orbs in both clients.",
-		"source": "forever",
-		"tooltip": "370 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 178 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
-	},
-	"10435": {
-		"ability": "Attack",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Searing Totem rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Damage unchanged from Classic; the coefficient falls from 0.083 to 0.017.",
-		"source": "forever",
-		"tooltip": "Searing Totem attack for 33 to 45 Fire damage."
-	},
-	"10436": {
-		"ability": "Attack",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Searing Totem rank 6. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Damage unchanged from Classic; the coefficient falls from 0.083 to 0.017.",
-		"source": "forever",
-		"tooltip": "Searing Totem attack for 40 to 54 Fire damage."
-	},
-	"10437": {
-		"ability": "Searing Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 5. The beta client keeps the summon's cost, duration and attack damage, so the Classic tooltip reads right; only the 1 sec totem global cooldown and the attack's coefficient (see its Attack id) changed.",
-		"source": "classic"
-	},
-	"10438": {
-		"ability": "Searing Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 6. The beta client keeps the summon's cost, duration and attack damage, so the Classic tooltip reads right; only the 1 sec totem global cooldown and the attack's coefficient (see its Attack id) changed.",
-		"source": "classic"
-	},
-	"10447": {
-		"ability": "Flame Shock",
-		"file": "sim/shaman/flame_shock.go",
-		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficients 0.214 on the hit and 0.1 per tick at every rank; the dot is stored as 21 per 3 sec tick.",
-		"source": "forever",
-		"tooltip": "250 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly sears the target with fire, causing 89 Fire damage immediately and 84 Fire damage over 12 sec."
-	},
-	"10448": {
-		"ability": "Flame Shock",
-		"file": "sim/shaman/flame_shock.go",
-		"note": "Rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficients 0.214 on the hit and 0.1 per tick at every rank; the dot is stored as 34 per 3 sec tick.",
-		"source": "forever",
-		"tooltip": "345 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly sears the target with fire, causing 137 Fire damage immediately and 136 Fire damage over 12 sec."
-	},
-	"10456": {
-		"ability": "Frostbrand Weapon",
-		"file": "sim/shaman/frostbrand_weapon.go",
-		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Frostbrand Attack's damage is lower (coefficient 0.1 unchanged); the enchant now lasts 1 hour. The sim casts rank 5 only.",
-		"source": "forever",
-		"tooltip": "Imbue the Shaman's weapon with frost. Each hit has a chance of causing 117 additional Frost damage and slowing the target's movement speed by 25% for 8 sec. Lasts 1 hour."
-	},
-	"10460": {
-		"ability": "Healing Stream",
-		"file": "sim/shaman/water_totems.go",
-		"note": "Healing Stream Totem rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Classic healed 12; the totem now lasts 5 min.",
-		"source": "forever",
-		"tooltip": "Heals group members within 20 yards for 9 every 2 sec."
-	},
-	"10461": {
-		"ability": "Healing Stream",
-		"file": "sim/shaman/water_totems.go",
-		"note": "Healing Stream Totem rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Classic healed 14; the totem now lasts 5 min.",
-		"source": "forever",
-		"tooltip": "Heals group members within 20 yards for 11 every 2 sec."
-	},
-	"10472": {
-		"ability": "Frost Shock",
-		"file": "sim/shaman/frost_shock.go",
-		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.386 as in Classic; the damage is lower.",
-		"source": "forever",
-		"tooltip": "325 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with frost, causing 190 to 201 Frost damage and slowing movement speed to 50% of normal. Lasts 8 sec. Causes a high amount of threat."
-	},
-	"10473": {
-		"ability": "Frost Shock",
-		"file": "sim/shaman/frost_shock.go",
-		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.386 as in Classic; the damage is lower.",
-		"source": "forever",
-		"tooltip": "430 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with frost, causing 278 to 295 Frost damage and slowing movement speed to 50% of normal. Lasts 8 sec. Causes a high amount of threat."
-	},
-	"10486": {
-		"ability": "Windfury Weapon",
-		"file": "sim/shaman/windfury_weapon.go",
-		"note": "Rank 3. The Windfury Weapon attack power spells and the 20% enchant proc read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
-		"source": "classic"
-	},
-	"10579": {
-		"ability": "Magma Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 2 pulse. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.033 as in Classic.",
-		"source": "forever",
-		"tooltip": "Deals 35 Fire damage to enemies within 8 yards."
-	},
-	"10580": {
-		"ability": "Magma Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 3 pulse. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.033 as in Classic.",
-		"source": "forever",
-		"tooltip": "Deals 52 Fire damage to enemies within 8 yards."
-	},
-	"10581": {
-		"ability": "Magma Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 4 pulse. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.033 as in Classic.",
-		"source": "forever",
-		"tooltip": "Deals 73 Fire damage to enemies within 8 yards."
-	},
-	"10585": {
-		"ability": "Magma Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 2. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Pulse damage lowered; the totem shares the 1 sec totem global cooldown.",
-		"source": "forever",
-		"tooltip": "360 Mana\nInstant\nSummons a Magma Totem with 5 health at the feet of the caster for 20 sec that causes 35 Fire damage to creatures within 8 yards every 2 seconds."
-	},
-	"10586": {
-		"ability": "Magma Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Pulse damage lowered; the totem shares the 1 sec totem global cooldown.",
-		"source": "forever",
-		"tooltip": "500 Mana\nInstant\nSummons a Magma Totem with 5 health at the feet of the caster for 20 sec that causes 52 Fire damage to creatures within 8 yards every 2 seconds."
-	},
-	"10587": {
-		"ability": "Magma Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Pulse damage lowered; the totem shares the 1 sec totem global cooldown.",
-		"source": "forever",
-		"tooltip": "650 Mana\nInstant\nSummons a Magma Totem with 5 health at the feet of the caster for 20 sec that causes 73 Fire damage to creatures within 8 yards every 2 seconds."
-	},
-	"10605": {
-		"ability": "Chain Lightning",
-		"file": "sim/shaman/chain_lightning.go",
-		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.571 (rank 3's 0.517 is as the client stores it); Classic Era had 0.714, a 2.5 sec cast and roughly four times the damage.",
-		"source": "forever",
-		"tooltip": "485 Mana\n30 yd range\n2 sec cast\n6 sec cooldown\nHurls a lightning bolt at the enemy, dealing 119 to 134 Nature damage and then jumping to additional nearby enemies. Each jump reduces the damage by 30%. Affects 3 total targets."
-	},
-	"1238299": {
-		"ability": "Lava Burst",
-		"file": "sim/shaman/lava_burst.go",
-		"note": "Rank 2, level 50. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.714.",
-		"source": "forever",
-		"tooltip": "230 Mana\n30 yd range\n2.5 sec cast\n10 sec cooldown\nYou hurl molten lava at the target, dealing 165 to 211 Fire damage. If your Flame Shock is on the target, Lava Burst deals 20% increased damage."
-	},
-	"1238300": {
-		"ability": "Lava Burst",
-		"file": "sim/shaman/lava_burst.go",
-		"note": "Rank 3, level 60. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.714. Call of Flame's 5% per point is the talent's own curve.",
-		"source": "forever",
-		"tooltip": "265 Mana\n30 yd range\n2.5 sec cast\n10 sec cooldown\nYou hurl molten lava at the target, dealing 192 to 248 Fire damage. If your Flame Shock is on the target, Lava Burst deals 20% increased damage."
-	},
-	"1238931": {
-		"ability": "Improved Stormstrike",
-		"file": "sim/shaman/talents.go",
-		"note": "The buff (1238931) is 50% while-casting regeneration for 15 sec at either rank; the talent curve (1223031) scales only the two chances, 50% and 100%. The proc is rolled when the Stormstrike cast completes.",
-		"source": "forever",
-		"tooltip": "15 sec duration\nWhen you Stormstrike, you have a 50% chance per point to gain 50% mana regeneration while casting spells for 15 sec, and Stormstrike's cooldown has a 50% chance per point to reset each time you Dodge or Parry."
-	},
-	"15207": {
-		"ability": "Lightning Bolt",
-		"file": "sim/shaman/lightning_bolt.go",
-		"note": "Rank 9. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
-		"source": "forever",
-		"tooltip": "190 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 172 to 194 Nature damage."
-	},
-	"15208": {
-		"ability": "Lightning Bolt",
-		"file": "sim/shaman/lightning_bolt.go",
-		"note": "Rank 10. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
-		"source": "forever",
-		"tooltip": "220 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 190 to 212 Nature damage."
-	},
-	"16188": {
-		"ability": "Nature's Swiftness",
-		"file": "sim/shaman/talents.go",
-		"note": "registerNaturesSwiftnessCD is byte-for-byte the upstream wowsims/classic code (3 min cooldown, next Nature cast under 10 sec becomes instant) and the Forever tree carries the same 10 sec rank value, so Wowhead's Classic tooltip for 16188 is still correct.",
-		"source": "classic"
-	},
-	"16246": {
-		"ability": "Clearcasting (Elemental Focus)",
-		"file": "sim/shaman/talents.go",
-		"note": "applyElementalFocus is unchanged from upstream (10% chance, one charge, 100% cost off the next damaging Shaman spell, 15 sec) and the Forever tree's Elemental Focus rank values are still 10 and 100, so Classic's tooltip stands.",
-		"source": "classic"
-	},
-	"16257": {
-		"ability": "Flurry",
-		"file": "sim/shaman/talents.go",
-		"note": "Rank 1. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
-		"source": "forever",
-		"tooltip": "Increases your attack speed by 5% for your next 3 swings."
-	},
-	"16277": {
-		"ability": "Flurry",
-		"file": "sim/shaman/talents.go",
-		"note": "Rank 2. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
-		"source": "forever",
-		"tooltip": "Increases your attack speed by 10% for your next 3 swings."
-	},
-	"16278": {
-		"ability": "Flurry",
-		"file": "sim/shaman/talents.go",
-		"note": "Rank 3. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
-		"source": "forever",
-		"tooltip": "Increases your attack speed by 15% for your next 3 swings."
-	},
-	"16279": {
-		"ability": "Flurry",
-		"file": "sim/shaman/talents.go",
-		"note": "Rank 4. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
-		"source": "forever",
-		"tooltip": "Increases your attack speed by 20% for your next 3 swings."
-	},
-	"16280": {
-		"ability": "Flurry",
-		"file": "sim/shaman/talents.go",
-		"note": "Rank 5. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
-		"source": "forever",
-		"tooltip": "Increases your attack speed by 25% for your next 3 swings."
-	},
-	"16339": {
-		"ability": "Flametongue Weapon",
-		"file": "sim/shaman/flametongue_weapon.go",
-		"note": "Rank 4. The Flametongue Weapon proc spells read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
-		"source": "classic"
-	},
-	"16341": {
-		"ability": "Flametongue Weapon",
-		"file": "sim/shaman/flametongue_weapon.go",
-		"note": "Rank 5. The Flametongue Weapon proc spells read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
-		"source": "classic"
-	},
-	"16342": {
-		"ability": "Flametongue Weapon",
-		"file": "sim/shaman/flametongue_weapon.go",
-		"note": "Rank 6. The Flametongue Weapon proc spells read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
-		"source": "classic"
-	},
-	"16355": {
-		"ability": "Frostbrand Weapon",
-		"file": "sim/shaman/frostbrand_weapon.go",
-		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Frostbrand Attack's damage is lower (coefficient 0.1 unchanged); the enchant now lasts 1 hour. The sim casts rank 5 only.",
-		"source": "forever",
-		"tooltip": "Imbue the Shaman's weapon with frost. Each hit has a chance of causing 159 additional Frost damage and slowing the target's movement speed by 25% for 8 sec. Lasts 1 hour."
-	},
-	"16356": {
-		"ability": "Frostbrand Weapon",
-		"file": "sim/shaman/frostbrand_weapon.go",
-		"note": "Rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Frostbrand Attack's damage is lower (coefficient 0.1 unchanged); the enchant now lasts 1 hour. The sim casts rank 5 only.",
-		"source": "forever",
-		"tooltip": "Imbue the Shaman's weapon with frost. Each hit has a chance of causing 169 additional Frost damage and slowing the target's movement speed by 25% for 8 sec. Lasts 1 hour."
-	},
-	"16362": {
-		"ability": "Windfury Weapon",
-		"file": "sim/shaman/windfury_weapon.go",
-		"note": "Rank 4. The Windfury Weapon attack power spells and the 20% enchant proc read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
-		"source": "classic"
-	},
-	"22804": {
-		"ability": "Shaman Shock Crit Bonus",
-		"file": "sim/shaman/item_sets_pvp.go",
-		"note": "The Champion's/Warlord's 4-piece bonus; sim/shaman/item_sets_pvp.go is untouched relative to the upstream merge base and still grants exactly the 2% shock crit the Classic tooltip describes.",
-		"source": "classic"
-	},
-	"26121": {
-		"ability": "Stormcaller's Wrath",
-		"file": "sim/shaman/item_sets_pve.go",
-		"note": "The Stormcaller's Garb 3-piece proc; the only Forever change to item_sets_pve.go was deleting the cut Earthshatterer set, and this bonus still gives the 50 Nature spell damage for 8 sec that Classic's tooltip says.",
-		"source": "classic"
-	},
-	"26363": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 7 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
-		"source": "forever",
-		"tooltip": "Strikes the attacker for 178 Nature damage."
-	},
-	"26364": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 1 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
-		"source": "forever",
-		"tooltip": "Strikes the attacker for 13 Nature damage."
-	},
-	"26365": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 2 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
-		"source": "forever",
-		"tooltip": "Strikes the attacker for 24 Nature damage."
-	},
-	"26366": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 3 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
-		"source": "forever",
-		"tooltip": "Strikes the attacker for 40 Nature damage."
-	},
-	"26367": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 4 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
-		"source": "forever",
-		"tooltip": "Strikes the attacker for 64 Nature damage."
-	},
-	"26369": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 5 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
-		"source": "forever",
-		"tooltip": "Strikes the attacker for 96 Nature damage."
-	},
-	"26370": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 6 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
-		"source": "forever",
-		"tooltip": "Strikes the attacker for 134 Nature damage."
-	},
-	"27775": {
-		"ability": "The Furious Storm",
-		"file": "sim/shaman/item_sets_pve.go",
-		"note": "The Five Thunders 4-piece proc; unchanged from upstream and still 95 spell damage and healing for 10 sec at a 4% chance on cast, exactly as Classic's tooltip reads.",
-		"source": "classic"
-	},
-	"2860": {
-		"ability": "Chain Lightning",
-		"file": "sim/shaman/chain_lightning.go",
-		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.517 (rank 3's 0.517 is as the client stores it); Classic Era had 0.714, a 2.5 sec cast and roughly four times the damage.",
-		"source": "forever",
-		"tooltip": "390 Mana\n30 yd range\n2 sec cast\n6 sec cooldown\nHurls a lightning bolt at the enemy, dealing 109 to 122 Nature damage and then jumping to additional nearby enemies. Each jump reduces the damage by 30%. Affects 3 total targets."
-	},
-	"29177": {
-		"ability": "Elemental Devastation",
-		"file": "sim/shaman/talents.go",
-		"note": "Rank 2. The beta client keeps 3% melee crit per point for 10 sec, as in Classic. It stores only the rank 1 buff (30165); 29177 and 29178 are gone, but the numbers they describe still apply.",
-		"source": "classic"
-	},
-	"29178": {
-		"ability": "Elemental Devastation",
-		"file": "sim/shaman/talents.go",
-		"note": "Rank 3. The beta client keeps 3% melee crit per point for 10 sec, as in Classic. It stores only the rank 1 buff (30165); 29177 and 29178 are gone, but the numbers they describe still apply.",
-		"source": "classic"
-	},
-	"29228": {
-		"ability": "Flame Shock",
-		"file": "sim/shaman/flame_shock.go",
-		"note": "Rank 6. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficients 0.214 on the hit and 0.1 per tick at every rank; the dot is stored as 44 per 3 sec tick.",
-		"source": "forever",
-		"tooltip": "410 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly sears the target with fire, causing 166 Fire damage immediately and 176 Fire damage over 12 sec."
-	},
-	"30165": {
-		"ability": "Elemental Devastation",
-		"file": "sim/shaman/talents.go",
-		"note": "Rank 1. The beta client keeps 3% melee crit per point for 10 sec, as in Classic. It stores only the rank 1 buff (30165); 29177 and 29178 are gone, but the numbers they describe still apply.",
-		"source": "classic"
-	},
 	"324": {
 		"ability": "Lightning Shield",
 		"file": "sim/shaman/lightning_shield.go",
@@ -411,19 +13,6 @@
 		"source": "forever",
 		"tooltip": "80 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 24 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
 	},
-	"3599": {
-		"ability": "Searing Totem",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 1. The beta client keeps the summon's cost, duration and attack damage, so the Classic tooltip reads right; only the 1 sec totem global cooldown and the attack's coefficient (see its Attack id) changed.",
-		"source": "classic"
-	},
-	"3606": {
-		"ability": "Attack",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Searing Totem rank 1. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Damage unchanged from Classic; the coefficient falls from 0.052 to 0.017.",
-		"source": "forever",
-		"tooltip": "Searing Totem attack for 9 to 11 Fire damage."
-	},
 	"403": {
 		"ability": "Lightning Bolt",
 		"file": "sim/shaman/lightning_bolt.go",
@@ -431,75 +20,12 @@
 		"source": "forever",
 		"tooltip": "15 Mana\n30 yd range\n1.5 sec cast\nCasts a bolt of lightning at the target for 15 to 17 Nature damage."
 	},
-	"408341": {
-		"ability": "Fire Nova",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 1. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408423; cost and level are the totem's.",
-		"source": "forever",
-		"tooltip": "95 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 51 to 60 Fire damage to nearby enemies."
-	},
-	"408342": {
-		"ability": "Fire Nova",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 2. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408424; cost and level are the totem's.",
-		"source": "forever",
-		"tooltip": "170 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 103 to 117 Fire damage to nearby enemies."
-	},
-	"408343": {
-		"ability": "Fire Nova",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 3. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408426; cost and level are the totem's.",
-		"source": "forever",
-		"tooltip": "280 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 182 to 206 Fire damage to nearby enemies."
-	},
-	"408344": {
-		"ability": "Fire Nova",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 4. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408427; cost and level are the totem's.",
-		"source": "forever",
-		"tooltip": "395 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 280 to 316 Fire damage to nearby enemies."
-	},
-	"408345": {
-		"ability": "Fire Nova",
-		"file": "sim/shaman/fire_totems.go",
-		"note": "Rank 5. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408428; cost and level are the totem's.",
-		"source": "forever",
-		"tooltip": "520 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 397 to 443 Fire damage to nearby enemies."
-	},
-	"408490": {
-		"ability": "Lava Burst",
-		"file": "sim/shaman/lava_burst.go",
-		"note": "Rank 1, taught by the talent at level 40. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.714.",
-		"source": "forever",
-		"tooltip": "165 Mana\n30 yd range\n2.5 sec cast\n10 sec cooldown\nYou hurl molten lava at the target, dealing 105 to 135 Fire damage. If your Flame Shock is on the target, Lava Burst deals 20% increased damage."
-	},
-	"408505": {
-		"ability": "Maelstrom Weapon",
-		"file": "sim/shaman/talents.go",
-		"note": "The stacking buff (408505, 30 sec) and the 5 stacks (408498) are the beta client's; 4/8/12/16/20% per stack is the talent curve. The client gives no proc rate, so the sim's 2 procs per minute per point is still a guess (see the TODO in talents.go).",
-		"source": "forever",
-		"tooltip": "30 sec duration\nWhen you deal damage with a melee attack, you have a chance to reduce the cast time and Mana cost of your next Lightning Bolt spell by 4% per talent point. Stacks up to 5 times."
-	},
-	"408510": {
-		"ability": "Water Shield",
-		"file": "sim/shaman/water_shield.go",
-		"note": "Beta client 408510: no mana cost, 15 sec cooldown, 3 charges, 3.5 sec proc recovery, 2% of maximum mana per globe (408511).",
-		"source": "forever",
-		"tooltip": "Instant\n15 sec cooldown\nThe caster is surrounded by 3 globes of water. When a spell, melee, or ranged attack hits the caster or when one of the caster's healing spells gets a critical result, 2% of maximum mana is restored to the caster, expending one water globe. Only one globe will activate every 3.5 sec. Lasts 10 min. Only one Elemental Shield can be active on the Shaman at any one time."
-	},
 	"421": {
 		"ability": "Chain Lightning",
 		"file": "sim/shaman/chain_lightning.go",
 		"note": "Rank 1. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.571 (rank 3's 0.517 is as the client stores it); Classic Era had 0.714, a 2.5 sec cast and roughly four times the damage.",
 		"source": "forever",
 		"tooltip": "225 Mana\n30 yd range\n2 sec cast\n6 sec cooldown\nHurls a lightning bolt at the enemy, dealing 85 to 97 Nature damage and then jumping to additional nearby enemies. Each jump reduces the damage by 30%. Affects 3 total targets."
-	},
-	"425336": {
-		"ability": "Rage of the Farseer",
-		"file": "sim/shaman/talents.go",
-		"note": "Beta client 425336: 30% melee haste and cast speed, 25 sec, 3 min cooldown.",
-		"source": "forever",
-		"tooltip": "Instant\n3 min cooldown\nIncreases your melee attack speed and spell casting speed by 30% for 25 sec."
 	},
 	"529": {
 		"ability": "Lightning Bolt",
@@ -514,6 +40,61 @@
 		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.554, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
 		"source": "forever",
 		"tooltip": "45 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 35 to 41 Nature damage."
+	},
+	"905": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Orb damage and the 0.267 coefficient at every rank come from the orb spell 26366; 3.5 sec between orbs in both clients.",
+		"source": "forever",
+		"tooltip": "125 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 40 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
+	},
+	"915": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
+		"source": "forever",
+		"tooltip": "60 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 49 to 57 Nature damage."
+	},
+	"930": {
+		"ability": "Chain Lightning",
+		"file": "sim/shaman/chain_lightning.go",
+		"note": "Rank 2. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.571 (rank 3's 0.517 is as the client stores it); Classic Era had 0.714, a 2.5 sec cast and roughly four times the damage.",
+		"source": "forever",
+		"tooltip": "305 Mana\n30 yd range\n2 sec cast\n6 sec cooldown\nHurls a lightning bolt at the enemy, dealing 97 to 109 Nature damage and then jumping to additional nearby enemies. Each jump reduces the damage by 30%. Affects 3 total targets."
+	},
+	"943": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"note": "Rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
+		"source": "forever",
+		"tooltip": "85 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 70 to 81 Nature damage."
+	},
+	"945": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Orb damage and the 0.267 coefficient at every rank come from the orb spell 26367; 3.5 sec between orbs in both clients.",
+		"source": "forever",
+		"tooltip": "180 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 64 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
+	},
+	"2860": {
+		"ability": "Chain Lightning",
+		"file": "sim/shaman/chain_lightning.go",
+		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.517 (rank 3's 0.517 is as the client stores it); Classic Era had 0.714, a 2.5 sec cast and roughly four times the damage.",
+		"source": "forever",
+		"tooltip": "390 Mana\n30 yd range\n2 sec cast\n6 sec cooldown\nHurls a lightning bolt at the enemy, dealing 109 to 122 Nature damage and then jumping to additional nearby enemies. Each jump reduces the damage by 30%. Affects 3 total targets."
+	},
+	"3599": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 1. The beta client keeps the summon's cost, duration and attack damage, so the Classic tooltip reads right; only the 1 sec totem global cooldown and the attack's coefficient (see its Attack id) changed.",
+		"source": "classic"
+	},
+	"3606": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Searing Totem rank 1. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Damage unchanged from Classic; the coefficient falls from 0.052 to 0.017.",
+		"source": "forever",
+		"tooltip": "Searing Totem attack for 9 to 11 Fire damage."
 	},
 	"5672": {
 		"ability": "Healing Stream",
@@ -710,39 +291,459 @@
 		"note": "Rank 2. The Windfury Weapon attack power spells and the 20% enchant proc read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
 		"source": "classic"
 	},
-	"905": {
-		"ability": "Lightning Shield",
-		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Orb damage and the 0.267 coefficient at every rank come from the orb spell 26366; 3.5 sec between orbs in both clients.",
-		"source": "forever",
-		"tooltip": "125 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 40 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
-	},
-	"915": {
+	"10391": {
 		"ability": "Lightning Bolt",
 		"file": "sim/shaman/lightning_bolt.go",
-		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
+		"note": "Rank 7. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
 		"source": "forever",
-		"tooltip": "60 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 49 to 57 Nature damage."
+		"tooltip": "135 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 142 to 160 Nature damage."
 	},
-	"930": {
+	"10392": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"note": "Rank 8. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
+		"source": "forever",
+		"tooltip": "160 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 157 to 177 Nature damage."
+	},
+	"10412": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"note": "Rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Every rank has the 0.386 coefficient; Classic Era gave ranks 1 to 3 less and dealt more damage from rank 3 up.",
+		"source": "forever",
+		"tooltip": "240 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 134 to 143 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat."
+	},
+	"10413": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"note": "Rank 6. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Every rank has the 0.386 coefficient; Classic Era gave ranks 1 to 3 less and dealt more damage from rank 3 up.",
+		"source": "forever",
+		"tooltip": "345 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 206 to 220 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat."
+	},
+	"10414": {
+		"ability": "Earth Shock",
+		"file": "sim/shaman/earth_shock.go",
+		"note": "Rank 7. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Every rank has the 0.386 coefficient; Classic Era gave ranks 1 to 3 less and dealt more damage from rank 3 up.",
+		"source": "forever",
+		"tooltip": "450 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 293 to 309 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat."
+	},
+	"10431": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 6. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Orb damage and the 0.267 coefficient at every rank come from the orb spell 26370; 3.5 sec between orbs in both clients.",
+		"source": "forever",
+		"tooltip": "305 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 134 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
+	},
+	"10432": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 7. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Orb damage and the 0.267 coefficient at every rank come from the orb spell 26363; 3.5 sec between orbs in both clients.",
+		"source": "forever",
+		"tooltip": "370 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 178 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
+	},
+	"10435": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Searing Totem rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Damage unchanged from Classic; the coefficient falls from 0.083 to 0.017.",
+		"source": "forever",
+		"tooltip": "Searing Totem attack for 33 to 45 Fire damage."
+	},
+	"10436": {
+		"ability": "Attack",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Searing Totem rank 6. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Damage unchanged from Classic; the coefficient falls from 0.083 to 0.017.",
+		"source": "forever",
+		"tooltip": "Searing Totem attack for 40 to 54 Fire damage."
+	},
+	"10437": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 5. The beta client keeps the summon's cost, duration and attack damage, so the Classic tooltip reads right; only the 1 sec totem global cooldown and the attack's coefficient (see its Attack id) changed.",
+		"source": "classic"
+	},
+	"10438": {
+		"ability": "Searing Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 6. The beta client keeps the summon's cost, duration and attack damage, so the Classic tooltip reads right; only the 1 sec totem global cooldown and the attack's coefficient (see its Attack id) changed.",
+		"source": "classic"
+	},
+	"10447": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficients 0.214 on the hit and 0.1 per tick at every rank; the dot is stored as 21 per 3 sec tick.",
+		"source": "forever",
+		"tooltip": "250 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly sears the target with fire, causing 89 Fire damage immediately and 84 Fire damage over 12 sec."
+	},
+	"10448": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"note": "Rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficients 0.214 on the hit and 0.1 per tick at every rank; the dot is stored as 34 per 3 sec tick.",
+		"source": "forever",
+		"tooltip": "345 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly sears the target with fire, causing 137 Fire damage immediately and 136 Fire damage over 12 sec."
+	},
+	"10456": {
+		"ability": "Frostbrand Weapon",
+		"file": "sim/shaman/frostbrand_weapon.go",
+		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Frostbrand Attack's damage is lower (coefficient 0.1 unchanged); the enchant now lasts 1 hour. The sim casts rank 5 only.",
+		"source": "forever",
+		"tooltip": "Imbue the Shaman's weapon with frost. Each hit has a chance of causing 117 additional Frost damage and slowing the target's movement speed by 25% for 8 sec. Lasts 1 hour."
+	},
+	"10460": {
+		"ability": "Healing Stream",
+		"file": "sim/shaman/water_totems.go",
+		"note": "Healing Stream Totem rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Classic healed 12; the totem now lasts 5 min.",
+		"source": "forever",
+		"tooltip": "Heals group members within 20 yards for 9 every 2 sec."
+	},
+	"10461": {
+		"ability": "Healing Stream",
+		"file": "sim/shaman/water_totems.go",
+		"note": "Healing Stream Totem rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Classic healed 14; the totem now lasts 5 min.",
+		"source": "forever",
+		"tooltip": "Heals group members within 20 yards for 11 every 2 sec."
+	},
+	"10472": {
+		"ability": "Frost Shock",
+		"file": "sim/shaman/frost_shock.go",
+		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.386 as in Classic; the damage is lower.",
+		"source": "forever",
+		"tooltip": "325 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with frost, causing 190 to 201 Frost damage and slowing movement speed to 50% of normal. Lasts 8 sec. Causes a high amount of threat."
+	},
+	"10473": {
+		"ability": "Frost Shock",
+		"file": "sim/shaman/frost_shock.go",
+		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.386 as in Classic; the damage is lower.",
+		"source": "forever",
+		"tooltip": "430 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with frost, causing 278 to 295 Frost damage and slowing movement speed to 50% of normal. Lasts 8 sec. Causes a high amount of threat."
+	},
+	"10486": {
+		"ability": "Windfury Weapon",
+		"file": "sim/shaman/windfury_weapon.go",
+		"note": "Rank 3. The Windfury Weapon attack power spells and the 20% enchant proc read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
+		"source": "classic"
+	},
+	"10579": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 2 pulse. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.033 as in Classic.",
+		"source": "forever",
+		"tooltip": "Deals 35 Fire damage to enemies within 8 yards."
+	},
+	"10580": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 3 pulse. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.033 as in Classic.",
+		"source": "forever",
+		"tooltip": "Deals 52 Fire damage to enemies within 8 yards."
+	},
+	"10581": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 4 pulse. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.033 as in Classic.",
+		"source": "forever",
+		"tooltip": "Deals 73 Fire damage to enemies within 8 yards."
+	},
+	"10585": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 2. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Pulse damage lowered; the totem shares the 1 sec totem global cooldown.",
+		"source": "forever",
+		"tooltip": "360 Mana\nInstant\nSummons a Magma Totem with 5 health at the feet of the caster for 20 sec that causes 35 Fire damage to creatures within 8 yards every 2 seconds."
+	},
+	"10586": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Pulse damage lowered; the totem shares the 1 sec totem global cooldown.",
+		"source": "forever",
+		"tooltip": "500 Mana\nInstant\nSummons a Magma Totem with 5 health at the feet of the caster for 20 sec that causes 52 Fire damage to creatures within 8 yards every 2 seconds."
+	},
+	"10587": {
+		"ability": "Magma Totem",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Pulse damage lowered; the totem shares the 1 sec totem global cooldown.",
+		"source": "forever",
+		"tooltip": "650 Mana\nInstant\nSummons a Magma Totem with 5 health at the feet of the caster for 20 sec that causes 73 Fire damage to creatures within 8 yards every 2 seconds."
+	},
+	"10605": {
 		"ability": "Chain Lightning",
 		"file": "sim/shaman/chain_lightning.go",
-		"note": "Rank 2. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.571 (rank 3's 0.517 is as the client stores it); Classic Era had 0.714, a 2.5 sec cast and roughly four times the damage.",
+		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.571 (rank 3's 0.517 is as the client stores it); Classic Era had 0.714, a 2.5 sec cast and roughly four times the damage.",
 		"source": "forever",
-		"tooltip": "305 Mana\n30 yd range\n2 sec cast\n6 sec cooldown\nHurls a lightning bolt at the enemy, dealing 97 to 109 Nature damage and then jumping to additional nearby enemies. Each jump reduces the damage by 30%. Affects 3 total targets."
+		"tooltip": "485 Mana\n30 yd range\n2 sec cast\n6 sec cooldown\nHurls a lightning bolt at the enemy, dealing 119 to 134 Nature damage and then jumping to additional nearby enemies. Each jump reduces the damage by 30%. Affects 3 total targets."
 	},
-	"943": {
+	"15207": {
 		"ability": "Lightning Bolt",
 		"file": "sim/shaman/lightning_bolt.go",
-		"note": "Rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
+		"note": "Rank 9. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
 		"source": "forever",
-		"tooltip": "85 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 70 to 81 Nature damage."
+		"tooltip": "190 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 172 to 194 Nature damage."
 	},
-	"945": {
+	"15208": {
+		"ability": "Lightning Bolt",
+		"file": "sim/shaman/lightning_bolt.go",
+		"note": "Rank 10. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Spell power coefficient 0.714; Classic Era had 0.857, a 3 sec cast from rank 4 up and about twice the damage at the upper ranks.",
+		"source": "forever",
+		"tooltip": "220 Mana\n30 yd range\n2.5 sec cast\nCasts a bolt of lightning at the target for 190 to 212 Nature damage."
+	},
+	"16188": {
+		"ability": "Nature's Swiftness",
+		"file": "sim/shaman/talents.go",
+		"note": "registerNaturesSwiftnessCD is byte-for-byte the upstream wowsims/classic code (3 min cooldown, next Nature cast under 10 sec becomes instant) and the Forever tree carries the same 10 sec rank value, so Wowhead's Classic tooltip for 16188 is still correct.",
+		"source": "classic"
+	},
+	"16246": {
+		"ability": "Clearcasting (Elemental Focus)",
+		"file": "sim/shaman/talents.go",
+		"note": "applyElementalFocus is unchanged from upstream (10% chance, one charge, 100% cost off the next damaging Shaman spell, 15 sec) and the Forever tree's Elemental Focus rank values are still 10 and 100, so Classic's tooltip stands.",
+		"source": "classic"
+	},
+	"16257": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"note": "Rank 1. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 5% for your next 3 swings."
+	},
+	"16277": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"note": "Rank 2. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 10% for your next 3 swings."
+	},
+	"16278": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"note": "Rank 3. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 15% for your next 3 swings."
+	},
+	"16279": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"note": "Rank 4. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 20% for your next 3 swings."
+	},
+	"16280": {
+		"ability": "Flurry",
+		"file": "sim/shaman/talents.go",
+		"note": "Rank 5. The beta client's Flurry talent is 5% per point (Classic: 10% to 30%), and only the rank 1 buff id 16257 still exists; the sim keeps one id per rank.",
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 25% for your next 3 swings."
+	},
+	"16339": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"note": "Rank 4. The Flametongue Weapon proc spells read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
+		"source": "classic"
+	},
+	"16341": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"note": "Rank 5. The Flametongue Weapon proc spells read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
+		"source": "classic"
+	},
+	"16342": {
+		"ability": "Flametongue Weapon",
+		"file": "sim/shaman/flametongue_weapon.go",
+		"note": "Rank 6. The Flametongue Weapon proc spells read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
+		"source": "classic"
+	},
+	"16355": {
+		"ability": "Frostbrand Weapon",
+		"file": "sim/shaman/frostbrand_weapon.go",
+		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Frostbrand Attack's damage is lower (coefficient 0.1 unchanged); the enchant now lasts 1 hour. The sim casts rank 5 only.",
+		"source": "forever",
+		"tooltip": "Imbue the Shaman's weapon with frost. Each hit has a chance of causing 159 additional Frost damage and slowing the target's movement speed by 25% for 8 sec. Lasts 1 hour."
+	},
+	"16356": {
+		"ability": "Frostbrand Weapon",
+		"file": "sim/shaman/frostbrand_weapon.go",
+		"note": "Rank 5. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Frostbrand Attack's damage is lower (coefficient 0.1 unchanged); the enchant now lasts 1 hour. The sim casts rank 5 only.",
+		"source": "forever",
+		"tooltip": "Imbue the Shaman's weapon with frost. Each hit has a chance of causing 169 additional Frost damage and slowing the target's movement speed by 25% for 8 sec. Lasts 1 hour."
+	},
+	"16362": {
+		"ability": "Windfury Weapon",
+		"file": "sim/shaman/windfury_weapon.go",
+		"note": "Rank 4. The Windfury Weapon attack power spells and the 20% enchant proc read the same in the beta client as in Classic Era, so the Classic tooltip stands (the beta enchant lasts 1 hour).",
+		"source": "classic"
+	},
+	"22804": {
+		"ability": "Shaman Shock Crit Bonus",
+		"file": "sim/shaman/item_sets_pvp.go",
+		"note": "The Champion's/Warlord's 4-piece bonus; sim/shaman/item_sets_pvp.go is untouched relative to the upstream merge base and still grants exactly the 2% shock crit the Classic tooltip describes.",
+		"source": "classic"
+	},
+	"26121": {
+		"ability": "Stormcaller's Wrath",
+		"file": "sim/shaman/item_sets_pve.go",
+		"note": "The Stormcaller's Garb 3-piece proc; the only Forever change to item_sets_pve.go was deleting the cut Earthshatterer set, and this bonus still gives the 50 Nature spell damage for 8 sec that Classic's tooltip says.",
+		"source": "classic"
+	},
+	"26363": {
 		"ability": "Lightning Shield",
 		"file": "sim/shaman/lightning_shield.go",
-		"note": "Rank 4. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Orb damage and the 0.267 coefficient at every rank come from the orb spell 26367; 3.5 sec between orbs in both clients.",
+		"note": "Rank 7 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
 		"source": "forever",
-		"tooltip": "180 Mana\nInstant\nThe caster is surrounded by 3 balls of lightning. When a spell, melee or ranged attack hits the caster, the attacker will be struck for 64 Nature damage. This expends one lightning ball. Only one ball will fire every few seconds. Lasts 10 min."
+		"tooltip": "Strikes the attacker for 178 Nature damage."
+	},
+	"26364": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 1 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
+		"source": "forever",
+		"tooltip": "Strikes the attacker for 13 Nature damage."
+	},
+	"26365": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 2 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
+		"source": "forever",
+		"tooltip": "Strikes the attacker for 24 Nature damage."
+	},
+	"26366": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 3 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
+		"source": "forever",
+		"tooltip": "Strikes the attacker for 40 Nature damage."
+	},
+	"26367": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 4 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
+		"source": "forever",
+		"tooltip": "Strikes the attacker for 64 Nature damage."
+	},
+	"26369": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 5 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
+		"source": "forever",
+		"tooltip": "Strikes the attacker for 96 Nature damage."
+	},
+	"26370": {
+		"ability": "Lightning Shield",
+		"file": "sim/shaman/lightning_shield.go",
+		"note": "Rank 6 orb. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.267.",
+		"source": "forever",
+		"tooltip": "Strikes the attacker for 134 Nature damage."
+	},
+	"27775": {
+		"ability": "The Furious Storm",
+		"file": "sim/shaman/item_sets_pve.go",
+		"source": "forever",
+		"tooltip": "Increases damage and healing done by magical spells and effects by up to 65 for 10 sec.",
+		"note": "The Five Thunders 4 piece and, in Forever, The Elements 5 piece. The beta client cuts the buff from 95 to 65 spell damage and healing; the 4% chance on cast is unchanged."
+	},
+	"29177": {
+		"ability": "Elemental Devastation",
+		"file": "sim/shaman/talents.go",
+		"note": "Rank 2. The beta client keeps 3% melee crit per point for 10 sec, as in Classic. It stores only the rank 1 buff (30165); 29177 and 29178 are gone, but the numbers they describe still apply.",
+		"source": "classic"
+	},
+	"29178": {
+		"ability": "Elemental Devastation",
+		"file": "sim/shaman/talents.go",
+		"note": "Rank 3. The beta client keeps 3% melee crit per point for 10 sec, as in Classic. It stores only the rank 1 buff (30165); 29177 and 29178 are gone, but the numbers they describe still apply.",
+		"source": "classic"
+	},
+	"29228": {
+		"ability": "Flame Shock",
+		"file": "sim/shaman/flame_shock.go",
+		"note": "Rank 6. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficients 0.214 on the hit and 0.1 per tick at every rank; the dot is stored as 44 per 3 sec tick.",
+		"source": "forever",
+		"tooltip": "410 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly sears the target with fire, causing 166 Fire damage immediately and 176 Fire damage over 12 sec."
+	},
+	"30165": {
+		"ability": "Elemental Devastation",
+		"file": "sim/shaman/talents.go",
+		"note": "Rank 1. The beta client keeps 3% melee crit per point for 10 sec, as in Classic. It stores only the rank 1 buff (30165); 29177 and 29178 are gone, but the numbers they describe still apply.",
+		"source": "classic"
+	},
+	"408341": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 1. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408423; cost and level are the totem's.",
+		"source": "forever",
+		"tooltip": "95 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 51 to 60 Fire damage to nearby enemies."
+	},
+	"408342": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 2. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408424; cost and level are the totem's.",
+		"source": "forever",
+		"tooltip": "170 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 103 to 117 Fire damage to nearby enemies."
+	},
+	"408343": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 3. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408426; cost and level are the totem's.",
+		"source": "forever",
+		"tooltip": "280 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 182 to 206 Fire damage to nearby enemies."
+	},
+	"408344": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 4. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408427; cost and level are the totem's.",
+		"source": "forever",
+		"tooltip": "395 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 280 to 316 Fire damage to nearby enemies."
+	},
+	"408345": {
+		"ability": "Fire Nova",
+		"file": "sim/shaman/fire_totems.go",
+		"note": "Rank 5. Forever removes Fire Nova Totem (its ids are absent from the beta client) and the spellbook teaches this nova instead. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. The damage and 0.214 coefficient come from the nova's damage spell 408428; cost and level are the totem's.",
+		"source": "forever",
+		"tooltip": "520 Mana\nInstant\n10 sec cooldown\nCauses a burst of flame around the caster, dealing 397 to 443 Fire damage to nearby enemies."
+	},
+	"408490": {
+		"ability": "Lava Burst",
+		"file": "sim/shaman/lava_burst.go",
+		"note": "Rank 1, taught by the talent at level 40. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.714.",
+		"source": "forever",
+		"tooltip": "165 Mana\n30 yd range\n2.5 sec cast\n10 sec cooldown\nYou hurl molten lava at the target, dealing 105 to 135 Fire damage. If your Flame Shock is on the target, Lava Burst deals 20% increased damage."
+	},
+	"408505": {
+		"ability": "Maelstrom Weapon",
+		"file": "sim/shaman/talents.go",
+		"note": "The stacking buff (408505, 30 sec) and the 5 stacks (408498) are the beta client's; 4/8/12/16/20% per stack is the talent curve. The client gives no proc rate, so the sim's 2 procs per minute per point is still a guess (see the TODO in talents.go).",
+		"source": "forever",
+		"tooltip": "30 sec duration\nWhen you deal damage with a melee attack, you have a chance to reduce the cast time and Mana cost of your next Lightning Bolt spell by 4% per talent point. Stacks up to 5 times."
+	},
+	"408510": {
+		"ability": "Water Shield",
+		"file": "sim/shaman/water_shield.go",
+		"note": "Beta client 408510: no mana cost, 15 sec cooldown, 3 charges, 3.5 sec proc recovery, 2% of maximum mana per globe (408511).",
+		"source": "forever",
+		"tooltip": "Instant\n15 sec cooldown\nThe caster is surrounded by 3 globes of water. When a spell, melee, or ranged attack hits the caster or when one of the caster's healing spells gets a critical result, 2% of maximum mana is restored to the caster, expending one water globe. Only one globe will activate every 3.5 sec. Lasts 10 min. Only one Elemental Shield can be active on the Shaman at any one time."
+	},
+	"425336": {
+		"ability": "Rage of the Farseer",
+		"file": "sim/shaman/talents.go",
+		"note": "Beta client 425336: 30% melee haste and cast speed, 25 sec, 3 min cooldown.",
+		"source": "forever",
+		"tooltip": "Instant\n3 min cooldown\nIncreases your melee attack speed and spell casting speed by 30% for 25 sec."
+	},
+	"1238299": {
+		"ability": "Lava Burst",
+		"file": "sim/shaman/lava_burst.go",
+		"note": "Rank 2, level 50. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.714.",
+		"source": "forever",
+		"tooltip": "230 Mana\n30 yd range\n2.5 sec cast\n10 sec cooldown\nYou hurl molten lava at the target, dealing 165 to 211 Fire damage. If your Flame Shock is on the target, Lava Burst deals 20% increased damage."
+	},
+	"1238300": {
+		"ability": "Lava Burst",
+		"file": "sim/shaman/lava_burst.go",
+		"note": "Rank 3, level 60. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Coefficient 0.714. Call of Flame's 5% per point is the talent's own curve.",
+		"source": "forever",
+		"tooltip": "265 Mana\n30 yd range\n2.5 sec cast\n10 sec cooldown\nYou hurl molten lava at the target, dealing 192 to 248 Fire damage. If your Flame Shock is on the target, Lava Burst deals 20% increased damage."
+	},
+	"1238931": {
+		"ability": "Improved Stormstrike",
+		"file": "sim/shaman/talents.go",
+		"note": "The buff (1238931) is 50% while-casting regeneration for 15 sec at either rank; the talent curve (1223031) scales only the two chances, 50% and 100%. The proc is rolled when the Stormstrike cast completes.",
+		"source": "forever",
+		"tooltip": "15 sec duration\nWhen you Stormstrike, you have a 50% chance per point to gain 50% mana regeneration while casting spells for 15 sec, and Stormstrike's cooldown has a 50% chance per point to reset each time you Dodge or Parry."
 	}
 }

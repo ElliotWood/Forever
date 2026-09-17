@@ -1,4 +1,39 @@
 {
+	"6296": {
+		"ability": "Enchant: Fiery Blaze",
+		"file": "sim/common/enchant_effects.go",
+		"source": "unreviewed"
+	},
+	"7712": {
+		"ability": "Fire Strike",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"8191": {
+		"ability": "Zeal",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"9057": {
+		"ability": "Firebolt",
+		"file": "sim/common/item_sets/crafted.go",
+		"source": "unreviewed"
+	},
+	"9591": {
+		"ability": "Acid Spit",
+		"file": "sim/common/guardians/emerald_dragon_whelp.go",
+		"source": "unreviewed"
+	},
+	"9632": {
+		"ability": "Bladestorm",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
+	"9633": {
+		"ability": "Whirlwind",
+		"file": "sim/common/item_effects.go",
+		"source": "unreviewed"
+	},
 	"12686": {
 		"ability": "Enrage",
 		"file": "sim/common/item_effects.go",
@@ -372,19 +407,16 @@
 		"note": "Battlegear of Heroism 4 piece heal proc; the sim rolls 88 to 133 where the Classic tooltip says 88 to 132, a one point upstream rounding, not a Forever change.",
 		"source": "classic"
 	},
-	"27498": {
+	"27499": {
 		"ability": "Crusader's Wrath",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases damage and healing done by magical spells and effects by up to 65 for 10 sec.",
+		"note": "Lightforge Armor 5 piece. The beta client cuts it from 95 to 65 spell power and moves it off 27498, which Forever no longer uses."
 	},
 	"27656": {
 		"ability": "Flame Lash",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
-	},
-	"27774": {
-		"ability": "The Furious Storm",
-		"file": "sim/common/item_sets/dungeon_set_1.go",
 		"source": "unreviewed"
 	},
 	"27781": {
@@ -402,8 +434,9 @@
 	"27787": {
 		"ability": "Rogue Armor Energize",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"note": "Darkmantle Armor 4pc, 35 Energy at 1 PPM on white melee hits, unchanged from Classic (the Classic tooltip's 'Requires Paladin' line is a Wowhead artefact).",
-		"source": "classic"
+		"note": "Shadowcraft Armor 5 piece in Forever, down from six, and cut from 35 Energy to 20.",
+		"source": "forever",
+		"tooltip": "Chance on melee attack to restore 20 Energy."
 	},
 	"27860": {
 		"ability": "Engulfing Shadows",
@@ -419,6 +452,69 @@
 		"ability": "spell 433801",
 		"file": "sim/common/item_effects.go",
 		"source": "unreviewed"
+	},
+	"450527": {
+		"ability": "Sudden Insight",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Your spellcasts have a 5% chance to restore 200 mana.",
+		"note": "Magister's Regalia 5 piece, new in Forever where the set used to stop at four bonuses."
+	},
+	"450576": {
+		"ability": "Sudden Insight",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Your spellcasts have a 5% chance to restore 200 mana.",
+		"note": "Vestments of the Devout 5 piece, new in Forever."
+	},
+	"450577": {
+		"ability": "Hunter Armor Energize",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Your melee and ranged autoattacks have a 5% chance to restore 200 mana.",
+		"note": "Beaststalker Armor 5 piece. Classic had it at six pieces, 4%, and ranged attacks only."
+	},
+	"450585": {
+		"ability": "Dark Reward",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Your spellcasts have a 5% chance to heal you for 270 to 330.",
+		"note": "Dreadmist Raiment 5 piece, new in Forever; the heal itself is 450583."
+	},
+	"450587": {
+		"ability": "Warrior's Resolve",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Chance on melee attack to heal you for 88 to 132 and generate 10 Rage.",
+		"note": "Battlegear of Valor 5 piece. Classic healed at six pieces (27419) and returned no Rage."
+	},
+	"450589": {
+		"ability": "Warrior's Resolve",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Heals you for 88 to 132 and generates 10 Rage.",
+		"note": "The heal and Rage 450587 triggers."
+	},
+	"450608": {
+		"ability": "Nature's Bounty",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Chance on spellcast to restore 200 mana, on melee attack to regenerate 20 Energy over 5 sec, and when struck to generate 10 Rage.",
+		"note": "Wildheart Raiment 5 piece. Classic's version sat at six pieces and gave 300 mana, 40 Energy or 10 Rage (27781). The client stores no proc chance, so Classic's 2% is kept."
+	},
+	"450625": {
+		"ability": "Crusader's Wrath",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Chance on melee autoattack and spellcast to increase your damage and healing done by magical spells and effects by up to 65 for 10 sec.",
+		"note": "Lightforge Armor 5 piece trigger; the buff is 27499. No proc chance in the client, so the 3 PPM the sim already used is kept."
+	},
+	"450626": {
+		"ability": "The Furious Storm",
+		"file": "sim/common/item_sets/dungeon_set_1.go",
+		"source": "forever",
+		"tooltip": "Chance on melee autoattack and spellcast to increase your damage and healing done by magical spells and effects by up to 65 for 10 sec.",
+		"note": "The Elements 5 piece trigger; the buff is 27775, which shaman.json owns. No proc chance in the client, so Classic's 4% is kept."
 	},
 	"461151": {
 		"ability": "spell 461151",
@@ -452,41 +548,6 @@
 	},
 	"463946": {
 		"ability": "spell 463946",
-		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
-	},
-	"6296": {
-		"ability": "Enchant: Fiery Blaze",
-		"file": "sim/common/enchant_effects.go",
-		"source": "unreviewed"
-	},
-	"7712": {
-		"ability": "Fire Strike",
-		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
-	},
-	"8191": {
-		"ability": "Zeal",
-		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
-	},
-	"9057": {
-		"ability": "Firebolt",
-		"file": "sim/common/item_sets/crafted.go",
-		"source": "unreviewed"
-	},
-	"9591": {
-		"ability": "Acid Spit",
-		"file": "sim/common/guardians/emerald_dragon_whelp.go",
-		"source": "unreviewed"
-	},
-	"9632": {
-		"ability": "Bladestorm",
-		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
-	},
-	"9633": {
-		"ability": "Whirlwind",
 		"file": "sim/common/item_effects.go",
 		"source": "unreviewed"
 	}
