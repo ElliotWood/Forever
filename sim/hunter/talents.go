@@ -193,7 +193,7 @@ func (hunter *Hunter) registerIntimidationCD() {
 	hunter.IntimidationPetAura = hunter.pet.RegisterAura(core.Aura{
 		Label:    "Intimidation",
 		ActionID: actionID,
-		Duration: time.Second * 10,
+		Duration: time.Second * 15,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			aura.Unit.AddStatDynamic(sim, stats.MeleeCrit, bonusCrit)
 		},
@@ -211,14 +211,14 @@ func (hunter *Hunter) registerIntimidationCD() {
 		ActionID: actionID,
 		Flags:    core.SpellFlagAPL,
 
+		// 8% of base mana and a 1 min cooldown in both clients (19577).
 		ManaCost: core.ManaCostOptions{
-			BaseCost: 0.03,
+			BaseCost: 0.08,
 		},
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer: hunter.NewTimer(),
-				// The tooltip gives no cooldown, this is the Classic one.
+				Timer:    hunter.NewTimer(),
 				Duration: time.Minute,
 			},
 		},
@@ -297,10 +297,10 @@ func (hunter *Hunter) applyResourcefulness() {
 		return
 	}
 
-	// TODO: only rank 1 was observed, the cost reduction and the proc chance are assumed to scale
-	// per rank. The 50% regeneration and the 30 sec window do not, which is what the tree reads.
+	// Client curves: 30/60% cost and a 50/100% proc chance. The buff (1242688) is 50% for 30 sec
+	// at both ranks.
 	costReduction := 30 * hunter.Talents.Resourcefulness
-	procChance := 0.3 * float64(hunter.Talents.Resourcefulness)
+	procChance := 0.5 * float64(hunter.Talents.Resourcefulness)
 
 	hunter.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.Cost == nil {
@@ -313,7 +313,7 @@ func (hunter *Hunter) applyResourcefulness() {
 
 	procAura := hunter.RegisterAura(core.Aura{
 		Label:    "Resourcefulness",
-		ActionID: core.ActionID{SpellID: 34491},
+		ActionID: core.ActionID{SpellID: 1242688},
 		Duration: time.Second * 30,
 	}).AttachAdditivePseudoStatBuff(&hunter.PseudoStats.SpiritRegenRateCasting, 0.5)
 
@@ -351,12 +351,10 @@ func (hunter *Hunter) applyRapidRecuperation() {
 		return
 	}
 
-	// TODO: only rank 1 was observed, the regeneration is assumed to scale per rank. The 15 sec
-	// window is held at both ranks: a duration read off a single tooltip is not extrapolated, and
-	// Resourcefulness and Expose Prey keep theirs flat for the same reason.
+	// Client curve 25/50% for Serpent Sting; the buff (1242512) lasts 15 sec at both ranks.
 	procAura := hunter.RegisterAura(core.Aura{
 		Label:    "Rapid Recuperation",
-		ActionID: core.ActionID{SpellID: 53232},
+		ActionID: core.ActionID{SpellID: 1242512},
 		Duration: time.Second * 15,
 	}).AttachAdditivePseudoStatBuff(&hunter.PseudoStats.SpiritRegenRateCasting, 0.25*float64(hunter.Talents.RapidRecuperation))
 
@@ -375,8 +373,7 @@ func (hunter *Hunter) applyExposePrey() {
 		return
 	}
 
-	// TODO: only rank 1 of Expose Prey was observed, the proc chance is assumed to scale per
-	// rank. The 5 sec window does not, which is what the tree reads.
+	// Client curve 5/10%; the Mongoose Bite window (1310726) is 5 sec at both ranks.
 	procChance := 0.05 * float64(hunter.Talents.ExposePrey)
 
 	core.MakePermanent(hunter.RegisterAura(core.Aura{

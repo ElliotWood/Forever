@@ -9,7 +9,8 @@ import (
 
 func (hunter *Hunter) getArcaneShotConfig(rank int, timer *core.Timer) core.SpellConfig {
 	spellId := [9]int32{0, 3044, 14281, 14282, 14283, 14284, 14285, 14286, 14287}[rank]
-	baseDamage := [9]float64{0, 13, 21, 33, 59, 83, 115, 145, 183}[rank]
+	baseDamage := [9]float64{0, 20, 26, 39, 65, 94, 134, 170, 217}[rank]
+	// The beta client carries no spell power coefficient on Arcane Shot at all; Classic's stand.
 	spellCoeff := [9]float64{0, .204, .3, .429, .429, .429, .429, .429, .429}[rank]
 	manaCost := [9]float64{0, 25, 35, 50, 80, 105, 135, 160, 190}[rank]
 	level := [9]int{0, 6, 12, 20, 28, 36, 44, 52, 60}[rank]

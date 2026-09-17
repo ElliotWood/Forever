@@ -104,6 +104,7 @@ type Hunter struct {
 	SerpentSting      *core.Spell
 	SilencingShot     *core.Spell
 	SniperShot        *core.Spell
+	StriderKick       *core.Spell
 	SummonHawk        *core.Spell
 	Volley            *core.Spell
 	WingClip          *core.Spell
@@ -178,6 +179,7 @@ func (hunter *Hunter) Initialize() {
 	hunter.registerMongooseBiteSpell()
 	hunter.registerLaceratingStrikesSpell()
 	hunter.registerWingClipSpell()
+	hunter.registerStriderKickSpell()
 	hunter.registerVolleySpell()
 
 	traps := hunter.NewTimer()

@@ -7,11 +7,12 @@ import (
 	"github.com/wowsims/classic/sim/core/proto"
 )
 
-func (hunter *Hunter) getMultiShotConfig(rank int, timer *core.Timer) core.SpellConfig {
-	spellId := [6]int32{0, 2643, 14288, 14289, 14290, 25294}[rank]
-	baseDamage := [6]float64{0, 0, 40, 80, 120, 150}[rank]
-	manaCost := [6]float64{0, 100, 140, 175, 210, 230}[rank]
-	level := [6]int{0, 18, 30, 42, 54, 60}[rank]
+// The beta client has one rank of Multi-Shot: no flat bonus and 13.9% of base mana. Ranks 2-5
+// are gone from the spellbook.
+func (hunter *Hunter) getMultiShotConfig(timer *core.Timer) core.SpellConfig {
+	spellId := int32(2643)
+	baseDamage := 0.0
+	level := 18
 
 	numHits := min(3, hunter.Env.GetNumTargets())
 	results := make([]*core.SpellResult, numHits)
@@ -24,16 +25,17 @@ func (hunter *Hunter) getMultiShotConfig(rank int, timer *core.Timer) core.Spell
 		ProcMask:      core.ProcMaskRangedSpecial,
 		Flags:         core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagShot,
 		CastType:      proto.CastType_CastTypeRanged,
-		Rank:          rank,
 		RequiredLevel: level,
 		MissileSpeed:  24,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: manaCost,
+			BaseCost: 0.139,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD:      core.GCDDefault,
+				GCD: core.GCDDefault,
+				// The client now shows the 0.5 sec itself, where Classic showed an instant and the sim
+				// added the shot wind-up; read as the same 0.5 sec rather than 0.5 on top of it.
 				CastTime: time.Millisecond * 500,
 			},
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
@@ -87,12 +89,9 @@ func (hunter *Hunter) getMultiShotConfig(rank int, timer *core.Timer) core.Spell
 }
 
 func (hunter *Hunter) registerMultiShotSpell(timer *core.Timer) {
-	maxRank := core.TernaryInt(core.IncludeAQ, 5, 4)
-	for rank := 1; rank <= maxRank; rank++ {
-		config := hunter.getMultiShotConfig(rank, timer)
+	config := hunter.getMultiShotConfig(timer)
 
-		if config.RequiredLevel <= int(hunter.Level) {
-			hunter.MultiShot = hunter.GetOrRegisterSpell(config)
-		}
+	if config.RequiredLevel <= int(hunter.Level) {
+		hunter.MultiShot = hunter.GetOrRegisterSpell(config)
 	}
 }

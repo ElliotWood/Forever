@@ -9,26 +9,39 @@ import (
 // Summon Hawk shares its cooldown with Arcane Shot, and Ferocity and Unleashed Fury buff hawks
 // the same way they buff pets.
 //
-// The tooltip gives the dive bomb damage and the 18 sec duration but no interval for the assault
-// that follows and no mana cost, so the hawk attacks every 3 sec and is charged the same as the
-// Arcane Shot it displaces. Only one hawk at a time is modelled, not the two the tooltip allows.
+// The beta client (1293241, 1293525-1293527) gives the dive bomb, 32/47/85/108 plus 5% of ranged
+// attack power, the mana cost and the 18 sec hawk (1293248). The hawk that stays is a guardian whose
+// swings the client does not describe, so the assault is modelled as the rank's dive bomb base damage
+// every 3 sec. Only one hawk at a time is modelled, not the two the tooltip allows.
 func (hunter *Hunter) registerSummonHawkSpell(timer *core.Timer) {
 	if !hunter.Talents.SummonHawk {
 		return
 	}
 
-	baseDamage := 53.0
+	rank := 1
+	switch {
+	case hunter.Level >= 60:
+		rank = 4
+	case hunter.Level >= 48:
+		rank = 3
+	case hunter.Level >= 36:
+		rank = 2
+	}
+	spellId := [5]int32{0, 1293241, 1293525, 1293526, 1293527}[rank]
+	baseDamage := [5]float64{0, 32, 47, 85, 108}[rank]
+	manaCost := [5]float64{0, 80, 105, 135, 190}[rank]
 
 	hunter.SummonHawk = hunter.RegisterSpell(core.SpellConfig{
 		SpellCode:   SpellCode_HunterSummonHawk,
-		ActionID:    core.ActionID{SpellID: 131894},
+		ActionID:    core.ActionID{SpellID: spellId},
+		Rank:        rank,
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
 		ProcMask:    core.ProcMaskEmpty,
 		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: 190,
+			FlatCost: manaCost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -61,7 +74,8 @@ func (hunter *Hunter) registerSummonHawkSpell(timer *core.Timer) {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+			damage := baseDamage + 0.05*spell.RangedAttackPower(target, false)
+			result := spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMeleeSpecialHitAndCrit)
 
 			if result.Landed() {
 				spell.Dot(target).Apply(sim)
