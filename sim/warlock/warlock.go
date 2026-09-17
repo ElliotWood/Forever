@@ -26,7 +26,7 @@ const (
 	SpellCode_WarlockCorruption
 	SpellCode_WarlockDeathCoil
 	SpellCode_WarlockDemonicSacrifice
-	SpellCode_WarlockDrainHope
+	SpellCode_WarlockWrack
 	SpellCode_WarlockDrainLife
 	SpellCode_WarlockDrainSoul
 	SpellCode_WarlockImmolate
@@ -57,7 +57,7 @@ type Warlock struct {
 
 	Conflagrate []*core.Spell
 	Corruption  []*core.Spell
-	DrainHope   *core.Spell
+	Wrack       *core.Spell
 	DrainSoul   []*core.Spell
 	Immolate    []*core.Spell
 	Incinerate  *core.Spell
@@ -129,7 +129,7 @@ func (warlock *Warlock) Initialize() {
 	warlock.registerRainOfFireSpell()
 	warlock.registerDeathCoilSpell()
 	warlock.registerIncinerateSpell()
-	warlock.registerDrainHopeSpell()
+	warlock.registerWrackSpell()
 
 	warlock.registerCurseOfElementsSpell()
 	warlock.registerCurseOfShadowSpell()

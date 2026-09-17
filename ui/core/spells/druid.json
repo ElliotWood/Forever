@@ -24,17 +24,6 @@
 		"file": "sim/druid/hurricane.go",
 		"source": "unreviewed"
 	},
-	"16880": {
-		"ability": "Balance of Nature",
-		"assumptions": [
-			"Only rank 1 was seen; the 1% is assumed to scale linearly, to 5% at 5 points.",
-			"The 10 sec window is the same for both schools and does not grow with rank."
-		],
-		"file": "sim/druid/talents.go",
-		"note": "16880 is Classic's Nature's Grace, and the Forever talent tree still hands that same id to Nature's Grace, so both halves of Balance of Nature currently render as a second Nature's Grace; Forever's own id for the talent has never been published.",
-		"source": "assumed",
-		"tooltip": "10 sec\nAfter you cast a Nature damage spell your next Arcane damage spell deals 1% more damage per point of Balance of Nature, and after an Arcane damage spell your next Nature damage spell does the same. Lasts 10 sec."
-	},
 	"16886": {
 		"ability": "Nature's Grace",
 		"file": "sim/druid/talents.go",

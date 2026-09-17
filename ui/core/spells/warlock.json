@@ -105,18 +105,11 @@
 		"source": "unreviewed"
 	},
 	"11704": {
-		"ability": "Drain Hope",
-		"assumptions": [
-			"Each tick is 90 Shadow damage at level 60 - the demo tooltip was a low-level rank and the file says the level 60 values are not datamined",
-			"Drain Hope channels 6 sec in six one-second ticks",
-			"Drain Hope costs 320 mana",
-			"Each tick takes 10% of spell power",
-			"The warlock's other Shadow dots on the drained target tick for 10% more, and the bonus applies to dots only, not to direct Shadow damage"
-		],
-		"file": "sim/warlock/drain_hope.go",
-		"note": "Drain Hope is a new Forever Affliction talent spell with no id of its own in the Classic database, so the sim borrows Classic's Drain Mana (11704) for the name and the drain icon; the talent tree separately borrows Dark Pact's 18220 for the tree slot.",
-		"source": "assumed",
-		"tooltip": "320 Mana\nChannelled, 6 sec\nDrains the target's hope, causing 90 Shadow damage every 1 sec for 6 sec. While the channel lasts, your other Shadow damage over time effects on that target deal 10% more damage."
+		"ability": "Wrack",
+		"file": "sim/warlock/wrack.go",
+		"note": "Wrack (Forever spell 1316697, formerly Drain Hope) has no id in the Classic database, so the sim borrows Classic's Drain Mana (11704) for the name and the drain icon. Values from the beta client (spell 1316697): 36 per tick, 0.143 coefficient, 200 mana.",
+		"source": "forever",
+		"tooltip": "200 Mana\nChannelled, 6 sec\nTears the target apart from within, dealing 36 Shadow damage every 1 sec and increasing the damage they take from your other Shadow damage over time effects by 10%. Lasts 6 sec."
 	},
 	"11711": {
 		"ability": "Curse of Agony",

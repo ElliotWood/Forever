@@ -21,7 +21,6 @@ func (warrior *Warrior) ApplyTalents() {
 	warrior.AddStat(stats.Parry, 1*float64(warrior.Talents.Deflection))
 	warrior.AddMaxRage(10 * float64(warrior.Talents.BoundlessRage))
 
-	warrior.applyVitality()
 	warrior.applyBastion()
 	warrior.applyFocusedRage()
 	warrior.applyAngerManagement()
@@ -398,17 +397,6 @@ func (warrior *Warrior) applyMasterOfDefense() {
 			}
 		},
 	})
-}
-
-// TODO: only rank 1 was shown, beta will confirm the 2% per point.
-func (warrior *Warrior) applyVitality() {
-	if warrior.Talents.Vitality == 0 {
-		return
-	}
-
-	multiplier := 1 + 0.02*float64(warrior.Talents.Vitality)
-	warrior.MultiplyStat(stats.Strength, multiplier)
-	warrior.MultiplyStat(stats.Stamina, multiplier)
 }
 
 // TODO: only rank 1 was shown, beta will confirm the 2% per point.

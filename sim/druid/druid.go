@@ -11,7 +11,7 @@ import (
 
 const SpellFlagBuilder = core.SpellFlagAgentReserved1
 
-var TalentTreeSizes = [3]int{17, 19, 16}
+var TalentTreeSizes = [3]int{16, 19, 16}
 
 const (
 	SpellCode_DruidNone int32 = iota

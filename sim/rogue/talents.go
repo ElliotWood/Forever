@@ -15,7 +15,6 @@ func (rogue *Rogue) ApplyTalents() {
 	rogue.applySealFate()
 	rogue.applyHackAndSlash()
 	rogue.applyWeaponExpertise()
-	rogue.applyRestlessBlades()
 	rogue.applyInitiative()
 	rogue.applySerratedBlades()
 	rogue.applyCutthroat()
@@ -229,40 +228,6 @@ func (rogue *Rogue) applySerratedBlades() {
 	}
 
 	rogue.PseudoStats.ArmorIgnorePercent += 0.03
-}
-
-// Restless Blades pulls the rogue's cooldowns in as combo points are spent on a damaging
-// finisher. Sprint isn't simulated, so only the other four are shortened.
-func (rogue *Rogue) applyRestlessBlades() {
-	if !rogue.Talents.RestlessBlades {
-		return
-	}
-
-	var timers []*core.Timer
-	rogue.RegisterAura(core.Aura{
-		Label: "Restless Blades",
-		OnInit: func(aura *core.Aura, sim *core.Simulation) {
-			for _, spell := range []*core.Spell{rogue.AdrenalineRush, rogue.BladeFlurry, rogue.Evasion, rogue.Vanish} {
-				if spell != nil {
-					timers = append(timers, spell.CD.Timer)
-				}
-			}
-		},
-	})
-
-	rogue.OnComboPointsSpent(func(sim *core.Simulation, spell *core.Spell, comboPoints int32) {
-		if spell.SpellCode != SpellCode_RogueEviscerate && spell.SpellCode != SpellCode_RogueRupture {
-			return
-		}
-
-		reduction := time.Duration(comboPoints) * time.Second * 2
-		for _, timer := range timers {
-			if !timer.IsReady(sim) {
-				timer.Set(max(sim.CurrentTime, timer.ReadyAt()-reduction))
-			}
-		}
-		rogue.UpdateMajorCooldowns()
-	})
 }
 
 // Cutthroat lets Ambush be used outside of Stealth for a short while after a Backstab.
@@ -498,5 +463,5 @@ func (rogue *Rogue) registerAdrenalineRushCD() {
 }
 
 func (rogue *Rogue) lethality() float64 {
-	return 0.06 * float64(rogue.Talents.Lethality)
+	return 0.04 * float64(rogue.Talents.Lethality)
 }

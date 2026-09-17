@@ -659,10 +659,8 @@ func (mage *Mage) applyFingersOfFrost() {
 	// scale. Both ranks give Chill effects a 15% chance; the second point buys a second
 	// charge, "treats your next 2 spells cast as if the target were Frozen".
 	procChance := core.TernaryFloat64(mage.Talents.FingersOfFrost > 0, .15, 0)
-	// TODO: no rank of Shatter has been read at the rank it belongs to. The single demo crop of
-	// the cell shows 50% at Rank 3/3, and the five ranks at 10% each come from the community
-	// talent calculator instead. Beta will confirm both the rank count and the step.
-	shatterCrit := 10 * float64(mage.Talents.Shatter) * core.SpellCritRatingPerCritChance
+	// Beta client 1.60.1: three ranks, 17/33/50%.
+	shatterCrit := []float64{0, 17, 33, 50}[mage.Talents.Shatter] * core.SpellCritRatingPerCritChance
 
 	var affectedSpells []*core.Spell
 	mage.OnSpellRegistered(func(spell *core.Spell) {

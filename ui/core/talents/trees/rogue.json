@@ -766,7 +766,7 @@
         "notSimulated": true
       },
       {
-        "fieldName": "restlessBlades",
+        "fieldName": "flawlessExecution",
         "location": {
           "rowIdx": 3,
           "colIdx": 1
@@ -775,12 +775,12 @@
           0
         ],
         "maxPoints": 1,
-        "name": "Restless Blades",
-        "icon": "ability_rogue_restlessblades",
-        "description": "Your damaging finishing moves reduce the remaining cooldown of your Adrenaline Rush, Blade Flurry, Evasion, Sprint, and Vanish abilities by {0} sec per combo point.",
+        "name": "Flawless Execution",
+        "icon": "inv_sword_35",
+        "description": "Reduces the Energy cost of your Eviscerate ability by {0}.",
         "ranks": [
           [
-            2
+            10
           ]
         ]
       },
@@ -940,11 +940,7 @@
           [
             6
           ]
-        ],
-        "prereqLocation": {
-          "rowIdx": 4,
-          "colIdx": 2
-        }
+        ]
       },
       {
         "fieldName": "adrenalineRush",

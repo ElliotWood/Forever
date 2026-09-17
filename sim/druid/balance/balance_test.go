@@ -60,8 +60,8 @@ func TestForeverMoonkin(t *testing.T) {
 	}))
 }
 
-var P1Talents = "50322201515001351--505302"
-var MoonkinTalents = "50022201515501351--055003"
+var P1Talents = "5532220115001351--505302"
+var MoonkinTalents = "5502220115501351--055003"
 
 var P1Consumes = core.ConsumesCombo{
 	Label: "P1-Consumes",

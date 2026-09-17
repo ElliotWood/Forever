@@ -411,7 +411,7 @@
         "maxPoints": 3,
         "name": "Elemental Alacrity",
         "icon": "spell_lightning_lightningbolt01",
-        "description": "Reduces the cast time of your Lightning Bolt, Chain Lightning, and Lava Burst spells by {0}.2 sec.",
+        "description": "Reduces the cast time of your Lightning Bolt, Chain Lightning, and Lava Burst spells by {0} sec.",
         "ranks": [
           [
             0.17
@@ -676,7 +676,7 @@
             5
           ],
           [
-            14,
+            13,
             27,
             10
           ],
@@ -1015,37 +1015,37 @@
         "notSimulated": true
       },
       {
-        "fieldName": "tidalMastery",
+        "fieldName": "totemicFocus",
         "location": {
           "rowIdx": 0,
           "colIdx": 2
         },
         "spellIds": [
-          16194,
-          16218,
-          16219,
-          16220,
-          16221
+          16173,
+          16222,
+          16223,
+          16224,
+          16225
         ],
         "maxPoints": 5,
-        "name": "Tidal Mastery",
-        "icon": "spell_nature_tranquility",
-        "description": "Increases the critical effect chance of your healing spells by {0}%.",
+        "name": "Totemic Focus",
+        "icon": "spell_nature_moonglow",
+        "description": "Reduces the Mana cost of your totems and any spells that summon or move them by {0}%.",
         "ranks": [
           [
-            1
-          ],
-          [
-            2
-          ],
-          [
-            3
-          ],
-          [
-            4
-          ],
-          [
             5
+          ],
+          [
+            10
+          ],
+          [
+            15
+          ],
+          [
+            20
+          ],
+          [
+            25
           ]
         ]
       },
@@ -1248,37 +1248,37 @@
         ]
       },
       {
-        "fieldName": "totemicFocus",
+        "fieldName": "tidalMastery",
         "location": {
           "rowIdx": 3,
           "colIdx": 0
         },
         "spellIds": [
-          16173,
-          16222,
-          16223,
-          16224,
-          16225
+          16194,
+          16218,
+          16219,
+          16220,
+          16221
         ],
         "maxPoints": 5,
-        "name": "Totemic Focus",
-        "icon": "spell_nature_moonglow",
-        "description": "Reduces the Mana cost of your totems and any spells that summon or move them by {0}%.",
+        "name": "Tidal Mastery",
+        "icon": "spell_nature_tranquility",
+        "description": "Increases the critical effect chance of your healing spells by {0}%.",
         "ranks": [
           [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
+          ],
+          [
+            4
+          ],
+          [
             5
-          ],
-          [
-            10
-          ],
-          [
-            15
-          ],
-          [
-            20
-          ],
-          [
-            25
           ]
         ]
       },

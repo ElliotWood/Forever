@@ -18,10 +18,10 @@ message RogueTalents {
 	bool cold_blood = 11;
 	int32 improved_poisons = 12;
 	int32 vigor = 13;
-	bool venom = 17;
+	bool mutilate = 14;
 	int32 improved_kidney_shot = 15;
 	int32 seal_fate = 16;
-	bool mutilate = 14;
+	bool venom = 17;
 
 	// Combat
 	int32 improved_eviscerate = 18;
@@ -34,7 +34,7 @@ message RogueTalents {
 	bool riposte = 25;
 	int32 improved_sprint = 26;
 	int32 improved_kick = 27;
-	bool restless_blades = 28;
+	bool flawless_execution = 28;
 	int32 dual_wield_specialization = 29;
 	bool blade_flurry = 30;
 	int32 hack_and_slash = 31;

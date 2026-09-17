@@ -1210,7 +1210,7 @@
         "maxPoints": 3,
         "name": "Piercing Ice",
         "icon": "spell_frost_frostbolt",
-        "description": "Increases the damage of Frost spells by {0}%.",
+        "description": "Increases the damage done by your Frost spells by {0}%.",
         "ranks": [
           [
             2

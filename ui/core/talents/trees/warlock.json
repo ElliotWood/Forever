@@ -465,25 +465,25 @@
         ]
       },
       {
-        "fieldName": "drainHope",
+        "fieldName": "wrack",
         "location": {
           "rowIdx": 6,
-          "colIdx": 1
-        },
-        "prereqLocation": {
-          "rowIdx": 4,
           "colIdx": 1
         },
         "spellIds": [
           18220
         ],
+        "prereqLocation": {
+          "rowIdx": 4,
+          "colIdx": 1
+        },
         "maxPoints": 1,
-        "name": "Drain Hope",
-        "icon": "spell_shadow_darkritual",
-        "description": "Drains all hope from the target, dealing {0} Shadow damage every {1} sec and increasing all other Shadow damage over time you deal to that target by {2}%. Lasts {3} sec.",
+        "name": "Wrack",
+        "icon": "ability_deathknight_hemorrhagicfever",
+        "description": "Tears the target apart from within, dealing {0} Shadow damage every {1} sec and increasing the damage they take from your other Shadow damage over time effects by {2}%. Lasts {3} sec.",
         "ranks": [
           [
-            52,
+            36,
             1,
             10,
             6

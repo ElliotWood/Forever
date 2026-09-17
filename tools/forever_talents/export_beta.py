@@ -37,8 +37,8 @@ CLASSES = ['druid', 'hunter', 'mage', 'paladin', 'priest', 'rogue', 'shaman', 'w
 TAB_X0 = [1020, 5020, 9080]
 Y0, STEP = 2130, 600
 
-# $s1 $m1 $S1 $M1, optionally with a divisor: $/1000;s1  ${$m1/1000}  ${$m1/-10}
-TOKEN = re.compile(r'\$/(-?\d+);([smSM])(\d)|\$\{\$([smSM])(\d)/(-?\d+)\}|\$([smSM])(\d)')
+# $s1 $m1 $S1 $M1, optionally with a divisor: $/1000;s1  ${$m1/1000}  ${$m1/-10}  ${$m1/1000}.1 (one decimal)
+TOKEN = re.compile(r'\$/(-?\d+);([smSM])(\d)|\$\{\$([smSM])(\d)/(-?\d+)\}(?:\.\d)?|\$([smSM])(\d)')
 
 
 def table(build, name, cache):
@@ -129,7 +129,7 @@ class Client:
 		text = TOKEN.sub(sub, text)
 		# Unmodelled tokens ($d, $o1, $16922d, ${...}) keep their meaning but lose their digits, or the diff
 		# would read a spell id as a tooltip number.
-		text = re.sub(r'\$\{[^}]*\}|\$(\d+)?([a-zA-Z])(\d)?', lambda m: '<%s%s>' % ('other spell ' if m.group(1) else '', m.group(2) if m.group(2) else 'formula'), text)
+		text = re.sub(r'\$\{[^}]*\}(?:\.\d)?|\$(?:/-?\d+;)?(\d+)?([a-zA-Z])(\d)?', lambda m: '<%s%s>' % ('other spell ' if m.group(1) else '', m.group(2) if m.group(2) else 'formula'), text)
 		text = re.sub(r'\s+', ' ', text).strip()
 		ranks = [[number(self.value(def_id, spell, e, r) / div) for e, div in slots] for r in range(1, max_rank + 1)]
 		return text, ranks

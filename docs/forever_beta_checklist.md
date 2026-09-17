@@ -21,24 +21,19 @@ with `node tools/data_watch/trait_curve.mjs "<talent name>"`. `SpellEffect.Effec
 holds only the max-rank value and is sometimes stale, so it is the wrong field for this.
 
 The method is sound - Ignite reads 8/16/24/32/40, Ruin 20..100 and Improved Life Tap 10/20,
-all matching the tree exactly. But on three talents the curve contradicts the **rank 1 value
-the beta actually displayed**, as captured in the talentsforever crawl:
+all matching the tree exactly. On three talents the curve disagreed with the rank 1 value in the
+talentsforever crawl:
 
-| Talent | Beta tooltip (rank 1) | Client curve | Tree today |
-|---|---|---|---|
-| Druid / Moonglow | 3% | 8 / 17 / 25 | 3 / 6 / 9 |
-| Druid / Moonfury | 1% | 2 / 4 / 6 / 8 / 10 | 1 / 2 / 3 / 4 / 5 |
-| Rogue / Lethality | 6% | 4 / 8 / 12 / 16 / 20 | 6 / 12 / 18 / 24 / 30 |
+| Talent | Crawl (rank 1) | Client curve, now in the sim |
+|---|---|---|
+| Druid / Moonglow | 3% | 8 / 17 / 25 |
+| Druid / Moonfury | 1% | 2 / 4 / 6 / 8 / 10 |
+| Rogue / Lethality | 6% | 4 / 8 / 12 / 16 / 20 |
 
-**Not acted on.** These are not an extrapolation being corrected by better data - the tree's
-rank 1 matches what the beta showed, and the curve disagrees with that observation. Two
-readings of the same build cannot both be right, and picking the curve would change three
-talents players sim on the assumption that the tooltip was misread. Each talent resolves to
-exactly one trait definition with one curve, so this is not a name collision.
-
-Worth noting the curve is not linear for Moonglow (8/17/25), which no extrapolation from 3%
-would produce, so it is real data rather than a scaled copy. What would settle it: a beta
-tooltip at rank 2 or higher for any of the three.
+**Resolved 17 September for the client.** The crawl's own data export says it was read off BlizzCon
+demo footage and Blizzard's slides, not the beta, so it is older than build 1.60.1.69893 rather than a
+second reading of it. `assets/confirmed_talents.json` is now generated from the beta client by
+`tools/forever_talents/apply_beta_tooltips.py`, and the Go reads the curves above.
 
 Beware two traps when reading these tables. A talent name shared across classes returns
 several curves - Deflection returns four - so check the definition count. And some effects
@@ -56,7 +51,6 @@ are stored in milliseconds or tenths, which is why Improved Stings appears twice
 - `sim/druid/lacerate.go:16` — assumed from Season of Discovery, beta will confirm the cost, the damage and the threat. Shredding Attacks names Lacerate, so the bear has it, but no tooltip for it has been seen: it is absent from the level 38 beta spellbook, which fits an ability learned later. Treat the Season of Discovery numbers as weaker than they look — Blizzard told Gamespot on 16 September that a lot of Season of Discovery "is likely not coming to a Forever game mode", so its tuning is a last resort rather than a related source.
 - `sim/druid/mangle.go:17` — Only the tooltip was seen, the Energy cost is taken from the Classic Mangle (Cat).
 - `sim/druid/mangle.go:71` — Only the tooltip was seen, the Rage cost, the 6 sec cooldown and the threat are taken from the Classic Mangle (Bear).
-- `sim/druid/talents.go:175` — Only rank 1 of Balance of Nature was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
 - `sim/druid/talents.go:301` — Only rank 1 of Eclipse was seen at 0.17 sec and the reduction is assumed to scale linearly, so rank 3 is 0.51 sec rather than the round half second the community talent calculator rounded it to.
 - `sim/druid/talents.go:404` — Only rank 1 of Primal Fury was seen at 50%. Classic's Primal Fury and the Blood Frenzy folded into it both went from half the time to every time at rank 2, which is how both halves are read here.
 - `sim/druid/talents.go:453` — Only rank 1 of Natural Reaction was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
@@ -81,7 +75,7 @@ are stored in milliseconds or tenths, which is why Improved Stings appears twice
 
 - `sim/mage/fire_blast.go:39` — only rank 1 of Wake of Fire was shown, so mage.json copies its 1 sec into rank 2.
 - `sim/mage/talents.go` — **resolved 17 September.** The beta tooltip for Fingers of Frost rank 2 settled what the demo could not: the proc chance does not scale, both ranks give Chill effects a 15% chance, and the second point buys a second charge ("treats your next 2 spells cast as if the target were Frozen"). The aura now carries a stack per point and spends one per cast. Frost lost 3.2%.
-- `sim/mage/talents.go:659` — Shatter's five ranks at 10% each are the community talent calculator's. The only demo crop of the cell reads 50% at Rank 3/3, which five ranks of 10% cannot produce at rank 3, so neither the rank count nor the step is confirmed. Beta will confirm both.
+- `sim/mage/talents.go` — **resolved 17 September.** Shatter is three ranks at 17/33/50% in the beta client.
 - `sim/mage/talents.go:674` — a cast already in progress when a chill lands is held out of Fingers of Frost, so it neither takes the Shatter crit nor spends the charge. Beta will confirm which cast the charge belongs to.
 
 ## Paladin (23)
