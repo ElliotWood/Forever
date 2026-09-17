@@ -10,16 +10,15 @@ import (
 
 var HolyShieldValues = []struct {
 	level    int32
-	spellID  int32
-	procID   int32
 	manaCost float64
 	damage   float64
 }{
-	// TODO: Only rank 1 was seen at 110, up from Classic's 65. The other ranks are scaled by
-	// the same ratio until the beta shows them.
-	{level: 30, spellID: 20925, procID: 20955, manaCost: 150, damage: 110},
-	{level: 50, spellID: 20927, procID: 20956, manaCost: 195, damage: 161},
-	{level: 60, spellID: 20928, procID: 20957, manaCost: 240, damage: 220},
+	// Beta client 1.60.1.69893: 110 / 153 / 221 (Classic 65 / 95 / 130), trained at 40 / 50 / 60 as in
+	// Classic. The proc ids are Classic's learn-spell dummies, kept only to give the damage its own
+	// metrics line; in the client the block damage comes from the aura itself.
+	{level: 40, manaCost: 150, damage: 110},
+	{level: 50, manaCost: 195, damage: 153},
+	{level: 60, manaCost: 240, damage: 221},
 }
 
 func (paladin *Paladin) registerHolyShield() {
@@ -27,14 +26,15 @@ func (paladin *Paladin) registerHolyShield() {
 		return
 	}
 
+	// 4 charges and 20% block (Classic 30%), from the beta client.
 	numCharges := int32(4)
 	blockBonus := 20.0 * core.BlockRatingPerBlockChance
 
 	for i, values := range HolyShieldValues {
 		rank := i + 1
 		level := values.level
-		spellID := values.spellID
-		procID := values.procID
+		spellID := []int32{20925, 20927, 20928}[i]
+		procID := []int32{20955, 20956, 20957}[i]
 		manaCost := values.manaCost
 		damage := values.damage
 
@@ -54,7 +54,7 @@ func (paladin *Paladin) registerHolyShield() {
 
 			DamageMultiplier: 1,
 			ThreatMultiplier: 1.2,
-			BonusCoefficient: 0.05,
+			BonusCoefficient: 0.08, // Classic 0.05
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				// Spell damage from Holy Shield can crit, but does not miss.

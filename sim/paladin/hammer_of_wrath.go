@@ -9,16 +9,17 @@ import (
 )
 
 func (paladin *Paladin) registerHammerOfWrath() {
+	// Beta client 1.60.1.69893, with each rank's growth to its max level folded in: rank 3 504-566
+	// (Classic's client reads 504-556) -> 473-523. Cost, cast, cooldown and the 0.429 are unchanged.
 	ranks := []struct {
 		level     int32
-		spellID   int32
 		minDamage float64
 		maxDamage float64
 		manaCost  float64
 	}{
-		{level: 44, spellID: 24275, manaCost: 295, minDamage: 316, maxDamage: 348},
-		{level: 52, spellID: 24274, manaCost: 360, minDamage: 412, maxDamage: 455},
-		{level: 60, spellID: 24239, manaCost: 425, minDamage: 504, maxDamage: 566},
+		{level: 44, manaCost: 295, minDamage: 285, maxDamage: 315},
+		{level: 52, manaCost: 360, minDamage: 382, maxDamage: 421},
+		{level: 60, manaCost: 425, minDamage: 473, maxDamage: 523},
 	}
 
 	cd := core.Cooldown{
@@ -26,18 +27,18 @@ func (paladin *Paladin) registerHammerOfWrath() {
 		Duration: time.Second * 6,
 	}
 
-	// TODO: Only rank 1 of Instrument of Law was seen at 0.5 sec, the full second the tree reads
-	// at rank 2 comes from the community talent calculator rather than from a tooltip.
+	// Instrument of Law: 0.5 sec a rank, confirmed by the beta client's talent data.
 	castTime := time.Second - time.Millisecond*500*time.Duration(paladin.Talents.InstrumentOfLaw)
 
 	for i, rank := range ranks {
 		rank := rank
+		spellID := []int32{24275, 24274, 24239}[i]
 		if paladin.Level < rank.level {
 			break
 		}
 
 		paladin.GetOrRegisterSpell(core.SpellConfig{
-			ActionID:    core.ActionID{SpellID: rank.spellID},
+			ActionID:    core.ActionID{SpellID: spellID},
 			SpellSchool: core.SpellSchoolHoly,
 			DefenseType: core.DefenseTypeRanged,
 			ProcMask:    core.ProcMaskRangedSpecial, // TODO to be tested

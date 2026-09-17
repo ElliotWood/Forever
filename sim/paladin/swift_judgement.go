@@ -6,10 +6,9 @@ import (
 	"github.com/wowsims/classic/sim/core"
 )
 
-// Swift Judgement is new in Forever and borrows Judgements of the Pure's spell id. It hands the
-// paladin a Judgement back and pays for it.
-// TODO: assumed baseline, beta will confirm - the tooltip carries no cooldown, so it is given a
-// minute, long enough that it buys one extra Judgement rather than a second rotation.
+// Swift Judgement is new in Forever and borrows Judgements of the Pure's spell id; the beta client's
+// own is 1310994. It hands the paladin a Judgement back and pays for it. The client confirms the
+// 1 min cooldown and the 100% cost reduction.
 func (paladin *Paladin) registerSwiftJudgement() {
 	if !paladin.Talents.SwiftJudgement {
 		return

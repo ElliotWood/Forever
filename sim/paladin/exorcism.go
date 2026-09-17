@@ -8,25 +8,27 @@ import (
 )
 
 func (paladin *Paladin) registerExorcism() {
+	// Beta client 1.60.1.69893: every rank hits a little softer (rank 6 505-563 -> 474-530); cost,
+	// cooldown, per level growth and the 0.429 coefficient are Classic's.
 	ranks := []struct {
 		level      int32
-		spellID    int32
 		manaCost   float64
 		scaleLevel int32
 		minDamage  float64
 		maxDamage  float64
 		scale      float64
 	}{
-		{level: 20, spellID: 879, manaCost: 85, scaleLevel: 25, minDamage: 84, maxDamage: 96, scale: 1.2},
-		{level: 28, spellID: 5614, manaCost: 135, scaleLevel: 33, minDamage: 152, maxDamage: 172, scale: 1.6},
-		{level: 36, spellID: 5615, manaCost: 180, scaleLevel: 41, minDamage: 217, maxDamage: 245, scale: 2.0},
-		{level: 44, spellID: 10312, manaCost: 235, scaleLevel: 49, minDamage: 304, maxDamage: 342, scale: 2.4},
-		{level: 52, spellID: 10313, manaCost: 285, scaleLevel: 57, minDamage: 393, maxDamage: 439, scale: 2.8},
-		{level: 60, spellID: 10314, manaCost: 345, scaleLevel: 60, minDamage: 505, maxDamage: 563, scale: 3.2},
+		{level: 20, manaCost: 85, scaleLevel: 25, minDamage: 73, maxDamage: 85, scale: 1.2},
+		{level: 28, manaCost: 135, scaleLevel: 33, minDamage: 132, maxDamage: 150, scale: 1.6},
+		{level: 36, manaCost: 180, scaleLevel: 41, minDamage: 189, maxDamage: 215, scale: 2.0},
+		{level: 44, manaCost: 235, scaleLevel: 49, minDamage: 273, maxDamage: 309, scale: 2.4},
+		{level: 52, manaCost: 285, scaleLevel: 57, minDamage: 362, maxDamage: 406, scale: 2.8},
+		{level: 60, manaCost: 345, scaleLevel: 60, minDamage: 474, maxDamage: 530, scale: 3.2},
 	}
 
 	for i, rank := range ranks {
 		rank := rank
+		spellID := []int32{879, 5614, 5615, 10312, 10313, 10314}[i]
 		if paladin.Level < rank.level {
 			break
 		}
@@ -35,7 +37,7 @@ func (paladin *Paladin) registerExorcism() {
 		maxDamage := rank.maxDamage + float64(min(paladin.Level, rank.scaleLevel)-rank.level)*rank.scale
 
 		spell := paladin.RegisterSpell(core.SpellConfig{
-			ActionID:    core.ActionID{SpellID: rank.spellID},
+			ActionID:    core.ActionID{SpellID: spellID},
 			SpellSchool: core.SpellSchoolHoly,
 			DefenseType: core.DefenseTypeMagic,
 			ProcMask:    core.ProcMaskSpellDamage,

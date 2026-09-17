@@ -23,16 +23,18 @@ func (paladin *Paladin) registerSealOfTheCrusader() {
 		scale      float64
 		judge      judge
 	}{
-		{level: 6, spellID: 21082, manaCost: 25, scaleLevel: 12, ap: 31, scale: 0.7, judge: judge{spellID: 21183, bonus: 20}},
-		{level: 12, spellID: 20162, manaCost: 40, scaleLevel: 20, ap: 51, scale: 1.1, judge: judge{spellID: 20188, bonus: 30}},
-		{level: 22, spellID: 20305, manaCost: 65, scaleLevel: 30, ap: 94, scale: 1.7, judge: judge{spellID: 20300, bonus: 50}},
-		{level: 32, spellID: 20306, manaCost: 90, scaleLevel: 40, ap: 145, scale: 2, judge: judge{spellID: 20301, bonus: 80}},
-		{level: 42, spellID: 20307, manaCost: 125, scaleLevel: 50, ap: 221, scale: 2.2, judge: judge{spellID: 20302, bonus: 110}},
-		{level: 52, spellID: 20308, manaCost: 160, scaleLevel: 60, ap: 306, scale: 2.4, judge: judge{spellID: 20303, bonus: 140}},
+		{level: 6, spellID: 21082, manaCost: 25, scaleLevel: 12, ap: 31, scale: 0.7, judge: judge{spellID: 21183, bonus: 23}},
+		{level: 12, spellID: 20162, manaCost: 40, scaleLevel: 20, ap: 51, scale: 1.1, judge: judge{spellID: 20188, bonus: 35}},
+		{level: 22, spellID: 20305, manaCost: 65, scaleLevel: 30, ap: 94, scale: 1.7, judge: judge{spellID: 20300, bonus: 58}},
+		{level: 32, spellID: 20306, manaCost: 90, scaleLevel: 40, ap: 145, scale: 2, judge: judge{spellID: 20301, bonus: 92}},
+		{level: 42, spellID: 20307, manaCost: 125, scaleLevel: 50, ap: 221, scale: 2.2, judge: judge{spellID: 20302, bonus: 127}},
+		{level: 52, spellID: 20308, manaCost: 160, scaleLevel: 60, ap: 306, scale: 2.4, judge: judge{spellID: 20303, bonus: 161}},
 	}
 
-	// TODO: assumed baseline, beta will confirm - Improved Seal of the Crusader is gone from the
-	// tree and the raid reads the improved Judgement of the Crusader through Debuffs either way.
+	// Beta client 1.60.1.69893: Improved Seal of the Crusader's 15% is baked into the judgement
+	// (rank 6 140 -> 161, which core.JudgementOfTheCrusaderAura builds as 140 x 1.15) but not into
+	// the seal, whose attack power is Classic's at every rank. The debuff also lasts 40 sec
+	// instead of 10, which core sets.
 	const improvedSotC = 1.15
 
 	var libramAp, libramBonus float64
@@ -73,12 +75,12 @@ func (paladin *Paladin) registerSealOfTheCrusader() {
 			OnGain: func(_ *core.Aura, sim *core.Simulation) {
 				paladin.MultiplyMeleeSpeed(sim, 1.4)
 				paladin.AutoAttacks.MHAuto().DamageMultiplier /= 1.4
-				paladin.AddStatDynamic(sim, stats.AttackPower, ap*improvedSotC+libramAp)
+				paladin.AddStatDynamic(sim, stats.AttackPower, ap+libramAp)
 			},
 			OnExpire: func(_ *core.Aura, sim *core.Simulation) {
 				paladin.MultiplyMeleeSpeed(sim, 1/1.4)
 				paladin.AutoAttacks.MHAuto().DamageMultiplier *= 1.4
-				paladin.AddStatDynamic(sim, stats.AttackPower, -ap*improvedSotC+libramAp)
+				paladin.AddStatDynamic(sim, stats.AttackPower, -(ap + libramAp))
 			},
 		})
 

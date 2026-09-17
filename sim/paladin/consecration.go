@@ -7,20 +7,26 @@ import (
 	"github.com/wowsims/classic/sim/core"
 )
 
-// TODO: assumed baseline, beta will confirm - Consecration is no longer a talent and the
-// Forever tree builds on top of it through Consecrated Ground and Holy Conduit.
+// Consecration is baseline in the beta client (1.60.1.69893): every paladin trains all five ranks, and
+// the Forever tree builds on top of it through Consecrated Ground and Holy Conduit.
+//
+// Each tick casts a separate damage spell (1280345-1280349) with two parts: a flat amount every enemy
+// in the area takes, and a larger amount with the spell power coefficient that only the first
+// $s3 = 4 enemies take. Classic's 48 a tick at 0.042 becomes 12 + 27 at 0.095 on the capped part.
 func (paladin *Paladin) registerConsecration() {
+	const cappedTargets = 4
+
 	ranks := []struct {
 		level    int32
-		spellID  int32
 		manaCost float64
-		damage   float64
+		damage   float64 // every enemy, per tick
+		capped   float64 // first 4 enemies, per tick, scales with spell power
 	}{
-		{level: 20, spellID: 26573, manaCost: 135, damage: 64 / 8},
-		{level: 30, spellID: 20116, manaCost: 235, damage: 120 / 8},
-		{level: 40, spellID: 20922, manaCost: 320, damage: 192 / 8},
-		{level: 50, spellID: 20923, manaCost: 435, damage: 280 / 8},
-		{level: 60, spellID: 20924, manaCost: 565, damage: 384 / 8},
+		{level: 20, manaCost: 135, damage: 2, capped: 4},
+		{level: 30, manaCost: 235, damage: 3, capped: 7},
+		{level: 40, manaCost: 320, damage: 6, capped: 11},
+		{level: 50, manaCost: 435, damage: 8, capped: 20},
+		{level: 60, manaCost: 565, damage: 12, capped: 27},
 	}
 
 	cd := core.Cooldown{
@@ -30,12 +36,13 @@ func (paladin *Paladin) registerConsecration() {
 
 	for i, rank := range ranks {
 		rank := rank
+		spellID := []int32{26573, 20116, 20922, 20923, 20924}[i]
 		if paladin.Level < rank.level {
 			break
 		}
 
 		paladin.RegisterSpell(core.SpellConfig{
-			ActionID:    core.ActionID{SpellID: rank.spellID},
+			ActionID:    core.ActionID{SpellID: spellID},
 			SpellSchool: core.SpellSchoolHoly,
 			DefenseType: core.DefenseTypeMagic,
 			ProcMask:    core.ProcMaskSpellDamage,
@@ -57,7 +64,6 @@ func (paladin *Paladin) registerConsecration() {
 			},
 			DamageMultiplier: 1,
 			ThreatMultiplier: 1,
-			BonusCoefficient: 0.042,
 			Dot: core.DotConfig{
 				IsAOE: true,
 				Aura: core.Aura{
@@ -66,16 +72,23 @@ func (paladin *Paladin) registerConsecration() {
 				NumberOfTicks: 8,
 				TickLength:    time.Second * 1,
 
-				BonusCoefficient: 0.042,
+				BonusCoefficient: 0.095,
 
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, rank.damage, isRollover)
+					dot.Snapshot(target, rank.damage+rank.capped, isRollover)
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 					// Consecration can miss, showing up as either a resist in logs or a
 					// silent failure (missing damage tick).
-					for _, aoeTarget := range sim.Encounter.TargetUnits {
-						dot.CalcAndDealPeriodicSnapshotDamage(sim, aoeTarget, dot.OutcomeMagicHitAndTick)
+					// ponytail: "first 4 to enter" is read as the first 4 targets in the encounter.
+					for j, aoeTarget := range sim.Encounter.TargetUnits {
+						if j < cappedTargets {
+							dot.CalcAndDealPeriodicSnapshotDamage(sim, aoeTarget, dot.OutcomeMagicHitAndTick)
+						} else {
+							// The flat part alone, which carries no coefficient; the spell's own
+							// BonusCoefficient stays zero so this does not pick one up.
+							dot.Spell.CalcAndDealDamage(sim, aoeTarget, rank.damage, dot.OutcomeMagicHitAndTick)
+						}
 					}
 				},
 			},

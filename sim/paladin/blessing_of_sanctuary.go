@@ -6,21 +6,21 @@ import (
 )
 
 func (paladin *Paladin) registerBlessingOfSanctuary() {
-	if paladin.Options.PersonalBlessing != proto.Blessings_BlessingOfSanctuary {
+	// The beta client (1.60.1.69893) has no Blessing of Sanctuary at all, nor its greater version.
+	if paladin.Options.PersonalBlessing != proto.Blessings_BlessingOfSanctuary || paladin.Env.IsForever() {
 		return
 	}
 
 	sanctuaryValues := []struct {
 		minLevel int32
 		maxLevel int32
-		spellID  int32
 		absorb   float64
 		damage   float64
 	}{
-		{minLevel: 1, maxLevel: 39, spellID: 20911, absorb: 10, damage: 14},
-		{minLevel: 40, maxLevel: 49, spellID: 20912, absorb: 14, damage: 21},
-		{minLevel: 50, maxLevel: 49, spellID: 20913, absorb: 19, damage: 28},
-		{minLevel: 60, maxLevel: 60, spellID: 20914, absorb: 24, damage: 35},
+		{minLevel: 1, maxLevel: 39, absorb: 10, damage: 14},
+		{minLevel: 40, maxLevel: 49, absorb: 14, damage: 21},
+		{minLevel: 50, maxLevel: 49, absorb: 19, damage: 28},
+		{minLevel: 60, maxLevel: 60, absorb: 24, damage: 35},
 	}
 
 	for i, values := range sanctuaryValues {
@@ -28,7 +28,7 @@ func (paladin *Paladin) registerBlessingOfSanctuary() {
 		if (values.minLevel <= paladin.Level) && (paladin.Level <= values.maxLevel) {
 
 			rank := i + 1
-			actionID := core.ActionID{SpellID: values.spellID}
+			actionID := core.ActionID{SpellID: []int32{20911, 20912, 20913, 20914}[i]}
 			damage := values.damage
 
 			sanctuaryProc := paladin.RegisterSpell(core.SpellConfig{
