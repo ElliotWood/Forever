@@ -1,5 +1,11 @@
 [
 	{
+		"number": 170,
+		"title": "Warn on the three talents that silently do nothing",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/170"
+	},
+	{
 		"number": 169,
 		"title": "Teach the scaling check to read rank tables",
 		"mergedAt": "2026-09-17",
