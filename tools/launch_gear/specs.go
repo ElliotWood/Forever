@@ -296,8 +296,16 @@ var specs = map[string]spec{
 	"warrior": {
 		class: proto.Class_ClassWarrior, twoHand: true, dualWield: true,
 		weapons:     []proto.WeaponType{axe, mace, sword},
-		mainHandDps: 11.92, offHandDps: 4.69, weights: w(map[stats.Stat]float64{stats.Strength: 2.51, stats.Agility: 1.86, stats.AttackPower: 1,
-			stats.MeleeHit: 28.67, stats.MeleeCrit: 25.1}),
+		mainHandDps: 11.92, offHandDps: 4.69, weights: warriorWeights,
+	},
+	// The warrior's two raid builds want different weapons, the way the rogue's do. Fury is
+	// the entry above and dual wields; Arms is a two hander spec - Two-Handed Weapon
+	// Specialization does nothing with a weapon in each hand, and without Dual Wield
+	// Specialization it carries the off hand's miss penalty for none of its damage.
+	"warrior_arms": {
+		class: proto.Class_ClassWarrior, dir: "warrior", set: "arms_launch", twoHand: true,
+		weapons:     []proto.WeaponType{axe, mace, sword},
+		mainHandDps: 11.92, weights: warriorWeights,
 	},
 	// The rogue's two raid builds want different weapons: Mutilate needs a dagger in each
 	// hand, Sinister Strike wants something slow and heavy. One set each, in the same
@@ -377,3 +385,8 @@ var specs = map[string]spec{
 
 var rogueWeights = w(map[stats.Stat]float64{stats.Agility: 2.38, stats.Strength: 1.26, stats.AttackPower: 1, stats.SpellCrit: 0.41,
 	stats.SpellHit: 0.94, stats.MeleeHit: 29.44, stats.MeleeCrit: 17.92})
+
+// Fury and Arms share these, the way the rogue's two builds share rogueWeights: what they
+// disagree about is the weapon, not what a point of Strength is worth.
+var warriorWeights = w(map[stats.Stat]float64{stats.Strength: 2.51, stats.Agility: 1.86, stats.AttackPower: 1,
+	stats.MeleeHit: 28.67, stats.MeleeCrit: 25.1})

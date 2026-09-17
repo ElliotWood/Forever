@@ -158,6 +158,38 @@ const SPEC_CONFIG = registerSpecConfig(Spec.SpecWarrior, {
 				},
 			},
 		},
+		// Arms gets its own entry so the raid picker and the damage comparison hand it a two
+		// hander. Both pick a preset by matching talent tree, and with only the Fury entry above
+		// the Arms build was dual wielding: no Dual Wield Specialization for the off hand's miss
+		// penalty, and Two-Handed Weapon Specialization doing nothing at all.
+		{
+			spec: Spec.SpecWarrior,
+			tooltip: 'Arms Warrior',
+			defaultName: 'Arms',
+			iconUrl: getSpecIcon(Class.ClassWarrior, 0),
+
+			talents: Presets.TalentsArms.data,
+			specOptions: Presets.DefaultOptions,
+			consumes: Presets.DefaultConsumes,
+			defaultFactionRaces: {
+				[Faction.Unknown]: Race.RaceUnknown,
+				[Faction.Alliance]: Race.RaceHuman,
+				[Faction.Horde]: Race.RaceOrc,
+			},
+			defaultGear: {
+				[Faction.Unknown]: {},
+				[Faction.Alliance]: {
+					1: Presets.GearArmsLaunch.gear,
+					2: Presets.GearArmsLaunch.gear,
+					3: Presets.GearArmsLaunch.gear,
+				},
+				[Faction.Horde]: {
+					1: Presets.GearArmsLaunch.gear,
+					2: Presets.GearArmsLaunch.gear,
+					3: Presets.GearArmsLaunch.gear,
+				},
+			},
+		},
 	],
 });
 
