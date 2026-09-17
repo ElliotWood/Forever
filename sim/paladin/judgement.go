@@ -35,13 +35,16 @@ func (paladin *Paladin) registerJudgement() {
 			return paladin.currentSeal.IsActive()
 		},
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, _ *core.Spell) {
-			paladin.castSpecificJudgement(sim, target, paladin.currentJudgement, paladin.currentSeal)
+			paladin.castSpecificJudgement(sim, target, paladin.currentJudgement)
 		},
 	})
 }
 
 // Helper Function For casting Judgement
-func (paladin *Paladin) castSpecificJudgement(sim *core.Simulation, target *core.Unit, judgementSpell *core.Spell, matchingSeal *core.Aura) {
+//
+// Forever's Judgement leaves the Seal up: 20271 reads "Unleash the energy of a Seal spell upon an
+// enemy. Does not consume the Seal.", where Classic's is the same sentence without the second half.
+// The seal aura still runs out on its own 30 sec.
+func (paladin *Paladin) castSpecificJudgement(sim *core.Simulation, target *core.Unit, judgementSpell *core.Spell) {
 	judgementSpell.Cast(sim, target)
-	matchingSeal.Deactivate(sim)
 }

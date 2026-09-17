@@ -77,12 +77,14 @@ func (paladin *Paladin) registerSealOfCommand() {
 			ProcMask:    core.ProcMaskMeleeMHSpecial,
 			Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
 
-			DamageMultiplier: paladin.getWeaponSpecializationModifier(),
+			// Improved Seals is a percent modifier, so it belongs on the whole spell rather than on
+			// the base roll, which left the coefficient's share of the damage out of it.
+			DamageMultiplier: improvedSeals * paladin.getWeaponSpecializationModifier(),
 			ThreatMultiplier: 1,
 			BonusCoefficient: 0.429,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				baseDamage := sim.Roll(minDamage, maxDamage) * 0.5 * improvedSeals // unless stunned
+				baseDamage := sim.Roll(minDamage, maxDamage) * 0.5 // unless stunned
 
 				// Seal of Command requires this spell to act as its intermediary dummy,
 				// rolling on the spell hit table. If it succeeds, the actual Judgement of Command rolls on the
