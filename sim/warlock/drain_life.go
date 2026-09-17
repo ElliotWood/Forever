@@ -20,7 +20,10 @@ func (warlock *Warlock) getDrainLifeBaseConfig(rank int) core.SpellConfig {
 	level := [DrainLifeRanks + 1]int{0, 14, 22, 30, 38, 46, 54}[rank]
 
 	baseDamage *= 1 + warlock.shadowMasteryBonus()
-	healingMultiplier := 1 - 0.1*float64(warlock.Talents.SoulSiphon)
+	// The healing penalty does not scale per point: rank 1 is 10% and rank 3 is 20%, both
+	// confirmed on the beta, against the 30% that multiplying rank 1 gives.
+	// TODO: rank 2's 15% is interpolated between the two observed ranks, not seen.
+	healingMultiplier := 1 - []float64{0, 0.10, 0.15, 0.20}[warlock.Talents.SoulSiphon]
 
 	actionID := core.ActionID{SpellID: spellId}
 
