@@ -9,8 +9,10 @@ import (
 const ShadowBoltRanks = 10
 
 func (warlock *Warlock) getShadowBoltBaseConfig(rank int) core.SpellConfig {
-	spellCoeff := [ShadowBoltRanks + 1]float64{0, .14, .299, .56, .857, .857, .857, .857, .857, .857, .857}[rank]
-	baseDamage := [ShadowBoltRanks + 1][]float64{{0}, {13, 18}, {26, 32}, {52, 61}, {92, 104}, {150, 170}, {213, 240}, {292, 327}, {373, 415}, {455, 507}, {482, 538}}[rank]
+	// Beta client 1.60.1: every rank's damage moved and the low ranks lost their downranking penalty.
+	// Damage is each rank's value at the level it stops scaling at (capped at 60), as the Classic table was.
+	spellCoeff := [ShadowBoltRanks + 1]float64{0, .486, .629, .8, .857, .857, .857, .857, .857, .857, .857}[rank]
+	baseDamage := [ShadowBoltRanks + 1][]float64{{0}, {12, 16}, {25, 31}, {41, 48}, {57, 64}, {79, 89}, {101, 113}, {140, 156}, {188, 210}, {237, 265}, {253, 283}}[rank]
 	spellId := [ShadowBoltRanks + 1]int32{0, 686, 695, 705, 1088, 1106, 7641, 11659, 11660, 11661, 25307}[rank]
 	manaCost := [ShadowBoltRanks + 1]float64{0, 25, 40, 70, 110, 160, 210, 265, 315, 370, 380}[rank]
 	level := [ShadowBoltRanks + 1]int{0, 1, 6, 12, 20, 28, 36, 44, 52, 60, 60}[rank]

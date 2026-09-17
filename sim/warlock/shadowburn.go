@@ -9,10 +9,10 @@ import (
 const ShadowburnRanks = 6
 
 func (warlock *Warlock) registerShadowBurnBaseConfig(rank int) core.SpellConfig {
-	// TODO: The Forever tooltip puts rank 1 at 102 to 111 rather than Classic's 91 to 104. The
-	// other five ranks were never shown, so the Classic table is kept until the beta lists them.
+	// Beta client 1.60.1 values for every rank. The BlizzCon tooltip's 102 to 111 for rank 1 is not
+	// what the client carries.
 	spellId := [ShadowburnRanks + 1]int32{0, 17877, 18867, 18868, 18869, 18870, 18871}[rank]
-	baseDamage := [ShadowburnRanks + 1][]float64{{0}, {91, 104}, {123, 140}, {196, 221}, {274, 307}, {365, 408}, {462, 514}}[rank]
+	baseDamage := [ShadowburnRanks + 1][]float64{{0}, {65, 74}, {81, 91}, {119, 133}, {147, 164}, {201, 224}, {259, 288}}[rank]
 	manaCost := [ShadowburnRanks + 1]float64{0, 105, 130, 190, 245, 305, 365}[rank]
 	level := [ShadowburnRanks + 1]int{0, 15, 24, 32, 40, 48, 56}[rank]
 

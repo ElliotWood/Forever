@@ -14,8 +14,9 @@ func (warlock *Warlock) getBaneOfAgonyBaseConfig(rank int) core.SpellConfig {
 	tickLength := time.Second * 2
 
 	spellId := [BaneOfAgonyRanks + 1]int32{0, 980, 1014, 6217, 11711, 11712, 11713}[rank]
-	spellCoeff := [BaneOfAgonyRanks + 1]float64{0, .046, .077, .083, .083, .083, .083}[rank]
-	baseDamage := [BaneOfAgonyRanks + 1]float64{0, 7, 15, 27, 42, 65, 87}[rank] * (1 + .05*float64(warlock.Talents.ImprovedBaneOfAgony))
+	// Beta client 1.60.1: 0.133 per tick at every rank, and the average tick roughly halved
+	spellCoeff := [BaneOfAgonyRanks + 1]float64{0, .133, .133, .133, .133, .133, .133}[rank]
+	baseDamage := [BaneOfAgonyRanks + 1]float64{0, 6, 10, 14, 21, 33, 46}[rank] * (1 + .05*float64(warlock.Talents.ImprovedBaneOfAgony))
 	manaCost := [BaneOfAgonyRanks + 1]float64{0, 25, 50, 90, 130, 170, 215}[rank]
 	level := [BaneOfAgonyRanks + 1]int{0, 8, 18, 28, 38, 48, 58}[rank]
 
@@ -173,25 +174,52 @@ func (warlock *Warlock) registerCurseOfElementsSpell() {
 		return
 	}
 
-	warlock.CurseOfElementsAuras = warlock.NewEnemyAuraArray(core.CurseOfElementsAura)
-
+	// Beta client 1.60.1: Curse of Shadow is gone from the spellbook and Curse of the Elements took it
+	// over, reducing every magic resistance and raising all magic damage taken (school mask 126 against
+	// Classic's Fire and Frost). Its ranks are new ids learned at 30, 40 and 50, the last at Classic's
+	// top rank values of 75 resistance and 10%. The raid debuffs in core only split that into Fire and
+	// Frost plus Shadow and Arcane, so the curse applies both; Nature and Holy are not covered.
 	spellID := map[int32]int32{
-		40: 1490,
-		50: 11721,
-		60: 11722,
+		40: 1311677,
+		50: 1311680,
+		60: 1311680,
 	}[playerLevel]
 
 	rank := map[int32]int{
-		40: 1,
-		50: 2,
-		60: 3,
+		40: 3,
+		50: 4,
+		60: 4,
 	}[playerLevel]
 
 	manaCost := map[int32]float64{
-		40: 100.0,
-		50: 150.0,
+		40: 150.0,
+		50: 200.0,
 		60: 200.0,
 	}[playerLevel]
+
+	elementsAuras := warlock.NewEnemyAuraArray(core.CurseOfElementsAura)
+	shadowAuras := warlock.NewEnemyAuraArray(core.CurseOfShadowAura)
+	warlock.CurseOfElementsAuras = warlock.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
+		debuffs := []*core.Aura{elementsAuras.Get(unit), shadowAuras.Get(unit)}
+		return unit.RegisterAura(core.Aura{
+			Label:    "Curse of the Elements-" + warlock.Label,
+			ActionID: core.ActionID{SpellID: spellID},
+			Duration: time.Minute * 5,
+			OnGain: func(aura *core.Aura, sim *core.Simulation) {
+				for _, debuff := range debuffs {
+					debuff.Activate(sim)
+				}
+			},
+			OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+				// A raid debuff made permanent by the encounter settings is not this curse's to remove
+				for _, debuff := range debuffs {
+					if debuff.Duration != core.NeverExpires {
+						debuff.Deactivate(sim)
+					}
+				}
+			},
+		})
+	})
 
 	warlock.CurseOfElements = warlock.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: spellID},
@@ -226,65 +254,6 @@ func (warlock *Warlock) registerCurseOfElementsSpell() {
 		},
 
 		RelatedAuras: []core.AuraArray{warlock.CurseOfElementsAuras},
-	})
-}
-
-func (warlock *Warlock) registerCurseOfShadowSpell() {
-	playerLevel := warlock.Level
-	if playerLevel < 50 {
-		return
-	}
-
-	warlock.CurseOfShadowAuras = warlock.NewEnemyAuraArray(core.CurseOfShadowAura)
-
-	spellID := map[int32]int32{
-		50: 17862,
-		60: 17937,
-	}[playerLevel]
-
-	rank := map[int32]int{
-		50: 1,
-		60: 2,
-	}[playerLevel]
-
-	manaCost := map[int32]float64{
-		50: 150.0,
-		60: 200.0,
-	}[playerLevel]
-
-	warlock.CurseOfShadow = warlock.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellSchool: core.SpellSchoolShadow,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       core.SpellFlagAPL | WarlockFlagAffliction,
-		Rank:        rank,
-
-		ManaCost: core.ManaCostOptions{
-			FlatCost: manaCost,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-		},
-
-		ThreatMultiplier: 1,
-		FlatThreatBonus:  156,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcOutcome(sim, target, spell.OutcomeMagicHitNoHitCounter)
-			if result.Landed() {
-				aura := warlock.CurseOfShadowAuras.Get(target)
-				if activeCurse := warlock.ActiveCurseAura.Get(target); activeCurse != nil && activeCurse != aura {
-					activeCurse.Deactivate(sim)
-				}
-
-				warlock.ActiveCurseAura[target.UnitIndex] = aura
-				warlock.ActiveCurseAura.Get(target).Activate(sim)
-			}
-		},
-
-		RelatedAuras: []core.AuraArray{warlock.CurseOfShadowAuras},
 	})
 }
 
@@ -352,7 +321,6 @@ func (warlock *Warlock) registerBaneOfDoomSpell() {
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
 		FlatThreatBonus:  160,
-		BonusCoefficient: 1,
 
 		Dot: core.DotConfig{
 			Aura: core.Aura{
@@ -360,8 +328,11 @@ func (warlock *Warlock) registerBaneOfDoomSpell() {
 			},
 			NumberOfTicks: 1,
 			TickLength:    time.Minute,
+			// Beta client 1.60.1: 1742 damage with a 4.0 spell power coefficient. Classic's 3200 carried
+			// no coefficient of its own, and the spell level 1 this file used to set never reached the dot.
+			BonusCoefficient: 4,
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-				dot.Snapshot(target, 3200, isRollover)
+				dot.Snapshot(target, 1742, isRollover)
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
@@ -405,8 +376,9 @@ func (warlock *Warlock) registerBaneOfHavocSpell() {
 		ProcMask:    core.ProcMaskEmpty,
 		Flags:       core.SpellFlagAPL | WarlockFlagDestruction,
 
+		// 5% of base mana in the beta client (1225228), not a flat 300
 		ManaCost: core.ManaCostOptions{
-			FlatCost: 300,
+			BaseCost: 0.05,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

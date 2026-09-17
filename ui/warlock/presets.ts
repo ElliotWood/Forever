@@ -127,20 +127,20 @@ export const DefaultOptions = WarlockOptions.create({
 });
 
 // Without pet talents the Succubus out-damages the Imp, so the Affliction builds run one; a
-// sacrificing rotation summons and sacrifices its own Succubus whatever pet is set.
+// sacrificing rotation summons and sacrifices its own Imp, which leaves Shadow damage in Forever.
 export const AfflictionOptions = WarlockOptions.create({
 	armor: Armor.DemonArmor,
 	summon: Summon.Succubus,
 	weaponImbue: WarlockWeaponImbue.NoWeaponImbue,
 });
 
-// Demonic Pact keeps the sacrifice when another demon is out, but Touch of Shadow costs the
-// Succubus, who is worth more alive than the shadow damage is worth having. The Succubus stays out
-// for Master Demonologist and Soul Link, and the Felhunter is sacrificed for the mana instead.
+// Demonic Pact keeps the sacrifice when another demon is out. The Succubus stays out for Master
+// Demonologist and Soul Link, and the Voidwalker is sacrificed for the mana, which Forever moved
+// from the Felhunter to the Voidwalker.
 export const DemonicPactOptions = WarlockOptions.create({
 	armor: Armor.DemonArmor,
 	summon: Summon.Succubus,
-	sacrifice: Summon.Felhunter,
+	sacrifice: Summon.Voidwalker,
 	weaponImbue: WarlockWeaponImbue.NoWeaponImbue,
 });
 

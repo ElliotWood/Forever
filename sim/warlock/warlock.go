@@ -74,8 +74,6 @@ type Warlock struct {
 	ActiveCurseAura          core.AuraArray
 	CurseOfElements          *core.Spell
 	CurseOfElementsAuras     core.AuraArray
-	CurseOfShadow            *core.Spell
-	CurseOfShadowAuras       core.AuraArray
 	CurseOfRecklessness      *core.Spell
 	CurseOfRecklessnessAuras core.AuraArray
 	CurseOfWeakness          *core.Spell
@@ -132,7 +130,6 @@ func (warlock *Warlock) Initialize() {
 	warlock.registerWrackSpell()
 
 	warlock.registerCurseOfElementsSpell()
-	warlock.registerCurseOfShadowSpell()
 	warlock.registerCurseOfRecklessnessSpell()
 	warlock.registerBaneOfAgonySpell()
 	warlock.registerAmplifyCurseSpell()

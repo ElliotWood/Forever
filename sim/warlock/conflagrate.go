@@ -6,17 +6,16 @@ import (
 	"github.com/wowsims/classic/sim/core"
 )
 
-const ConflagrateRanks = 4
+const ConflagrateRanks = 6
 
 func (warlock *Warlock) getConflagrateConfig(rank int) core.SpellConfig {
-	spellId := [ConflagrateRanks + 1]int32{0, 17962, 18930, 18931, 18932}[rank]
-	// TODO: The Forever tooltip puts rank 1 at 109 to 132, less than half Classic's 249 to 316,
-	// and Incinerate at 125 to 140. Neither spell's higher ranks were shown, so both keep their
-	// Classic tables until the beta lists them.
-	baseDamageMin := [ConflagrateRanks + 1]float64{0, 249, 319, 395, 447}[rank]
-	baseDamageMax := [ConflagrateRanks + 1]float64{0, 316, 400, 491, 557}[rank]
-	manaCost := [ConflagrateRanks + 1]float64{0, 165, 200, 230, 255}[rank]
-	level := [ConflagrateRanks + 1]int{0, 0, 48, 54, 60}[rank]
+	// Beta client 1.60.1: Forever adds two ranks below Classic's four (1293817 at 25, 1293818 at 32),
+	// which makes Classic's 17962 rank 3, and every rank does about half Classic's damage.
+	spellId := [ConflagrateRanks + 1]int32{0, 1293817, 1293818, 17962, 18930, 18931, 18932}[rank]
+	baseDamageMin := [ConflagrateRanks + 1]float64{0, 88, 113, 134, 179, 220, 251}[rank]
+	baseDamageMax := [ConflagrateRanks + 1]float64{0, 111, 142, 170, 222, 273, 313}[rank]
+	manaCost := [ConflagrateRanks + 1]float64{0, 100, 130, 165, 200, 230, 255}[rank]
+	level := [ConflagrateRanks + 1]int{0, 25, 32, 40, 48, 54, 60}[rank]
 
 	spCoeff := 0.429
 
