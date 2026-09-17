@@ -22,12 +22,52 @@ Talent trees are **not** switchable. All nine classes carry their Forever tree u
 
 ## Where the talent data comes from
 
-`tools/forever_talents/` vendors the trees, with provenance and the import script. Read [its README](tools/forever_talents/README.md) before trusting a number: the BlizzCon stream only ever showed rank 1 of any talent, so **58 of 469 talents have per-rank scaling that was extrapolated rather than observed**, and talents with no Classic equivalent carry a placeholder spell id and show the wrong tooltip.
+The trees started as a transcription of the BlizzCon 2026 stream (`tools/forever_talents/data/`, from
+[Deradon/wow-forever-talent-calc](https://github.com/Deradon/wow-forever-talent-calc)), which only ever showed rank 1.
+Since the beta client went out on 17 September 2026 **the beta client is the source of truth** for talent names,
+positions, prerequisites, rank counts and per-rank values. Where the two disagree, the client wins, including over
+the talentsforever.com crawl, which is also BlizzCon footage.
 
-    tools/forever_talents/import_talents.py --unranked   # what is still guesswork
-    tools/forever_talents/import_talents.py warlock --write
+### How the beta data is read
 
-The tree json and the proto message have to stay in the same order — `FillTalentsProto` maps the nth character of a talent string to proto field number n — so the importer emits both together.
+No client install or extraction is needed. [wago.tools](https://wago.tools) publishes every DB2 table of every build
+as CSV, so the whole pipeline is HTTP:
+
+1. **Find the build.** Forever's beta ships under the `wow_classic_beta` product as version `1.60.x`
+   (`https://wago.tools/api/builds`, sort by `created_at`; the list is not ordered). The first was `1.60.1.69893`.
+2. **Download the tables.** `https://wago.tools/db2/<Table>/csv?build=<build>`. Talents live in the retail-style
+   Trait tables: `TraitTree`, `TraitNode`, `TraitNodeEntry`, `TraitNodeXTraitNodeEntry`, `TraitDefinition`,
+   `TraitDefinitionEffectPoints`, `TraitEdge`, plus `CurvePoint`, `SpellName`, `Spell` and `SpellEffect`.
+   **Ignore `Talent` and `TalentTab`**: in the beta they are unchanged Classic Era leftovers.
+3. **Rebuild the trees.** One `TraitTree` per class holds all three tabs side by side on one canvas: tabs start at
+   `PosX` 1020 / 5020 / 9080, rows at `PosY` 2130 + 600 per row, columns 600 apart. A few nodes carry a stray extra
+   zero in a position, and where two nodes share a spell the newer node id is the live one. Prerequisites are
+   `TraitEdge` rows with `Type` other than 0. Tab names are not in the tables, so tabs are matched to the existing
+   trees by talent-name overlap.
+4. **Read per-rank values from curves, not tooltips.** `TraitDefinitionEffectPoints` gives each effect a `CurveID`,
+   and `CurvePoint(rank)` is that effect's value at that rank (verified on Ignite 8/16/24/32/40, Ruin, Improved Life
+   Tap). `SpellEffect.EffectBasePointsF` only holds one value and is sometimes stale.
+5. **Resolve the tooltip text.** `$s1`/`$m1` is effect 1's value, `$/1000;s1` and `${$m1/1000}` apply a divisor
+   (durations are stored in milliseconds, rage in tenths), and a trailing `.1` means one decimal place. Tokens that
+   point at other spells, formulas or durations are left as `<d>`, `<o>`, `<other spell s>` and never copied into
+   the trees as numbers.
+
+In practice:
+
+    tools/forever_talents/export_beta.py 1.60.1.69893 beta/     # trees in the data/<class>.json schema
+    tools/forever_talents/diff_trees.py beta/                   # what changed against the sim
+    tools/forever_talents/apply_beta_tooltips.py beta/          # tooltips, rank values, assets/confirmed_talents.json
+
+Structural changes (renames, removals, moves) are applied by hand because they renumber the talent protos, and
+`TestConfirmedTalentRanksMatchTheSim` and `TestGoTalentScalingMatchesTheTrees` then hold the trees and the Go to
+the client's numbers.
+
+**Watching for changes.** `.github/workflows/watch_wowhead_forever.yml` runs every 6 hours: it snapshots Wowhead's
+Forever gear-planner data and diffs the newest `1.60.x` client build's DB2 tables
+(`tools/data_watch/wago_db2_diff.py`), opening a `data-change` pull request when either moves.
+
+The tree json and the proto message have to stay in the same order: `FillTalentsProto` maps the nth character of a
+talent string to proto field number n. Changing the order invalidates saved talent strings.
 
 ## Known gaps
 
