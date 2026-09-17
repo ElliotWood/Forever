@@ -27,8 +27,10 @@ func (warlock *Warlock) applyDemonArmor() {
 		60: 15.0,
 	}[warlock.Level]
 
-	warlock.AddStat(stats.Armor, armor)
-	warlock.AddStat(stats.ShadowResistance, shadowRes)
+	// Demonic Aegis: 15% per point (beta client talent 1235316)
+	aegis := 1 + 0.15*float64(warlock.Talents.DemonicAegis)
+	warlock.AddStat(stats.Armor, armor*aegis)
+	warlock.AddStat(stats.ShadowResistance, shadowRes*aegis)
 
 	warlock.GetOrRegisterAura(core.Aura{
 		Label:    "Demon Armor",

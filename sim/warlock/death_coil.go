@@ -10,8 +10,9 @@ const DeathCoilRanks = 3
 
 func (warlock *Warlock) getDeathCoilBaseConfig(rank int) core.SpellConfig {
 	spellId := [DeathCoilRanks + 1]int32{0, 6789, 17925, 17926}[rank]
-	baseDamage := [DeathCoilRanks + 1]float64{0, 301, 375, 476}[rank]
-	manaCost := [DeathCoilRanks + 1]float64{0, 430, 495, 565}[rank]
+	// Beta client 1.60.1 values: slightly less damage, slightly more mana
+	baseDamage := [DeathCoilRanks + 1]float64{0, 285, 375, 460}[rank]
+	manaCost := [DeathCoilRanks + 1]float64{0, 435, 525, 600}[rank]
 	level := [DeathCoilRanks + 1]int{0, 42, 50, 58}[rank]
 	spellCoeff := 0.214
 

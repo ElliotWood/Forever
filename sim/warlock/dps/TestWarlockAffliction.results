@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 1.3029
+  weights: 1.0455
   weights: 0
-  weights: 0.66562
-  weights: 0
-  weights: 0
+  weights: 0.66745
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 6.50894
-  weights: 6.36011
+  weights: 0
+  weights: 0
+  weights: 5.01998
+  weights: 5.07247
   weights: 0
   weights: 0
   weights: 0
@@ -99,133 +99,133 @@ stat_weights_results: {
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Champion'sDreadgear"
  value: {
-  dps: 698.7314
-  tps: 529.6474
+  dps: 566.5232
+  tps: 426.46256
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-DeathmistRaiment"
  value: {
-  dps: 688.5575
-  tps: 520.41882
+  dps: 555.15881
+  tps: 416.3397
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Demoniac'sThreads"
  value: {
-  dps: 687.01353
-  tps: 520.51329
+  dps: 561.01364
+  tps: 422.42253
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Doomcaller'sAttire"
  value: {
-  dps: 706.77502
-  tps: 536.64195
+  dps: 578.70278
+  tps: 436.71726
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-FelheartRaiment"
  value: {
-  dps: 685.54497
-  tps: 512.04574
+  dps: 554.15983
+  tps: 409.49603
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-FieldMarshal'sThreads"
  value: {
-  dps: 723.95645
-  tps: 550.11455
+  dps: 594.40944
+  tps: 449.12715
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Hazza'rah'sCharmofDestruction-19957"
  value: {
-  dps: 683.32212
-  tps: 517.45101
+  dps: 558.83179
+  tps: 420.56879
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 603.86968
-  tps: 452.67871
+  dps: 472.139
+  tps: 349.85299
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-LieutenantCommander'sDreadgear"
  value: {
-  dps: 698.7314
-  tps: 529.6474
+  dps: 566.5232
+  tps: 426.46256
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-NemesisRaiment"
  value: {
-  dps: 698.52242
-  tps: 529.58466
+  dps: 572.50562
+  tps: 431.48231
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Warlord'sThreads"
  value: {
-  dps: 723.95645
-  tps: 550.11455
+  dps: 594.40944
+  tps: 449.12715
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Average-Default"
  value: {
-  dps: 699.48411
-  tps: 529.84849
+  dps: 572.14013
+  tps: 430.59224
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 692.74521
-  tps: 1512.37997
+  dps: 566.50302
+  tps: 1414.0809
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 692.74521
-  tps: 525.04891
+  dps: 566.50302
+  tps: 426.74984
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 705.55218
-  tps: 519.47772
+  dps: 575.20978
+  tps: 416.93901
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 589.86091
-  tps: 1511.6838
+  dps: 480.67442
+  tps: 1426.94522
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 589.86091
-  tps: 485.11676
+  dps: 480.67442
+  tps: 400.37817
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 580.22546
-  tps: 463.68801
+  dps: 471.09547
+  tps: 378.77775
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 692.74521
-  tps: 525.04891
+  dps: 566.50302
+  tps: 426.74984
  }
 }

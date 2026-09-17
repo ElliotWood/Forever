@@ -11,7 +11,8 @@ const SoulFireCastTime = time.Millisecond * 6000
 
 func (warlock *Warlock) getSoulFireBaseConfig(rank int) core.SpellConfig {
 	spellId := [SoulFireRanks + 1]int32{0, 6353, 17924}[rank]
-	baseDamage := [SoulFireRanks + 1][]float64{{0, 0}, {628, 789}, {715, 894}}[rank]
+	// Beta client 1.60.1 values
+	baseDamage := [SoulFireRanks + 1][]float64{{0, 0}, {344, 430}, {390, 487}}[rank]
 	manaCost := [SoulFireRanks + 1]float64{0, 305, 335}[rank]
 	level := [SoulFireRanks + 1]int{0, 48, 56}[rank]
 	spellCoeff := 1.0
@@ -50,12 +51,8 @@ func (warlock *Warlock) getSoulFireBaseConfig(rank int) core.SpellConfig {
 		},
 	}
 
-	// TODO: Only rank 1 of Decimation was seen, so the 45% is held at both ranks rather than read
-	// per point, which would leave the second rank a six second cooldown.
-	cooldownReduction := 0.0
-	if warlock.Talents.Decimation > 0 {
-		cooldownReduction = 0.45
-	}
+	// Decimation: 45% per point in the beta client, so 2/2 leaves Soul Fire a six second cooldown
+	cooldownReduction := 0.45 * float64(warlock.Talents.Decimation)
 
 	config.Cast.CD = core.Cooldown{
 		Timer:    warlock.NewTimer(),

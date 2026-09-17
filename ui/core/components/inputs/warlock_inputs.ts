@@ -64,9 +64,9 @@ export const SacrificeInput = <SpecType extends WarlockSpecs>() =>
 		values: [
 			{ value: Summon.NoSummon, tooltip: 'No Sacrifice' },
 			{ actionId: () => ActionId.fromSpellId(18789), value: Summon.Imp },
-			{ actionId: () => ActionId.fromSpellId(18790), value: Summon.Voidwalker },
+			{ actionId: () => ActionId.fromSpellId(18792), value: Summon.Voidwalker },
 			{ actionId: () => ActionId.fromSpellId(18791), value: Summon.Succubus },
-			{ actionId: () => ActionId.fromSpellId(18792), value: Summon.Felhunter },
+			{ actionId: () => ActionId.fromSpellId(18790), value: Summon.Felhunter },
 		],
 		showWhen: player => player.getTalents().demonicSacrifice,
 		changeEmitter: (player: Player<SpecType>) => TypedEvent.onAny([player.changeEmitter, player.talentsChangeEmitter]),

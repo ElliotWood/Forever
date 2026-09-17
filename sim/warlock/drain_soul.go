@@ -12,11 +12,12 @@ const DrainSoulRanks = 4
 func (warlock *Warlock) getDrainSoulBaseConfig(rank int) core.SpellConfig {
 	baseNumTicks := int32(5)
 	numTicks := baseNumTicks
-	tickLength := warlock.drainTickLength(time.Second * 3)
+	tickLength := time.Second * 3
 
 	spellId := [DrainSoulRanks + 1]int32{0, 1120, 8288, 8289, 11675}[rank]
-	spellCoeff := [DrainSoulRanks + 1]float64{0, 0.063, 0.1, 0.1, 0.1}[rank]
-	baseDamage := [DrainSoulRanks + 1]float64{0, 55, 155, 295, 455}[rank] / float64(baseNumTicks)
+	// Beta client 1.60.1 values; the damage table is the client's per tick value times five
+	spellCoeff := [DrainSoulRanks + 1]float64{0, 0.1, 0.1, 0.1, 0.1}[rank]
+	baseDamage := [DrainSoulRanks + 1]float64{0, 85, 170, 270, 420}[rank] / float64(baseNumTicks)
 	manaCost := [DrainSoulRanks + 1]float64{0, 55, 125, 210, 290}[rank]
 	level := [DrainSoulRanks + 1]int{0, 10, 24, 38, 52}[rank]
 
