@@ -21,9 +21,11 @@ func (shaman *Shaman) setActiveAirTotem(sim *core.Simulation, spell *core.Spell,
 
 const WindfuryTotemRanks = 3
 
+// The Windfury Totem Effect spells (8514, 10607, 10611) are gone from the beta client, so the trackable aura carries
+// the id of the buff the totem gives. The beta client lowers that buff's attack power to 95, 179 and 246.
 var WindfuryTotemSpellId = [WindfuryTotemRanks + 1]int32{0, 8512, 10613, 10614}
-var WindfuryBuffAuraId = [WindfuryTotemRanks + 1]int32{0, 8514, 10607, 10611}
-var WindfuryTotemBonusDamage = [WindfuryTotemRanks + 1]float64{0, 122, 229, 315}
+var WindfuryBuffAuraId = [WindfuryTotemRanks + 1]int32{0, 8516, 10608, 10610}
+var WindfuryTotemBonusDamage = [WindfuryTotemRanks + 1]float64{0, 95, 179, 246}
 var WindfuryTotemManaCost = [WindfuryTotemRanks + 1]float64{0, 115, 175, 250}
 var WindfuryTotemLevel = [WindfuryTotemRanks + 1]int{0, 32, 42, 52}
 
@@ -61,7 +63,7 @@ func (shaman *Shaman) newWindfuryTotemSpellConfig(rank int) core.SpellConfig {
 
 	periodicTriggerAura := shaman.RegisterAura(core.Aura{
 		Label:    fmt.Sprintf("Windfury Trigger Dummy (Rank %d)", rank),
-		Duration: time.Minute * 2,
+		Duration: totemDuration,
 		OnGain: func(_ *core.Aura, sim *core.Simulation) {
 			shaman.ActiveWindfuryTotemPeriodicAction = core.StartPeriodicAction(sim, core.PeriodicActionOptions{
 				Period:          time.Second * 5, // Totem refreshes every 5 seconds
@@ -114,7 +116,9 @@ func (shaman *Shaman) newGraceOfAirTotemSpellConfig(rank int) core.SpellConfig {
 	manaCost := GraceOfAirTotemManaCost[rank]
 	level := GraceOfAirTotemLevel[rank]
 
-	buffAura := core.GraceOfAirTotemAura(&shaman.Unit, enhancingTotemsMultiplier)
+	buffAura := core.GraceOfAirTotemAura(&shaman.Unit, graceOfAirMultiplier)
+	// The core aura lasts Classic's 2 min.
+	buffAura.Duration = totemDuration
 
 	spell := shaman.newTotemSpellConfig(manaCost, spellId)
 	spell.RequiredLevel = level

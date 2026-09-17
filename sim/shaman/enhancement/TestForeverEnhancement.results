@@ -1,8 +1,8 @@
 character_stats_results: {
  key: "TestForeverEnhancement-Phase1-CharacterStats-Default"
  value: {
-  final_stats: 301.4
-  final_stats: 348.7
+  final_stats: 262.9
+  final_stats: 349.8
   final_stats: 377.3
   final_stats: 176.66
   final_stats: 170.5
@@ -18,21 +18,21 @@ character_stats_results: {
   final_stats: 21.28555
   final_stats: 0
   final_stats: 0
-  final_stats: 1689.46
+  final_stats: 1612.46
   final_stats: 12
-  final_stats: 37.41396
+  final_stats: 37.46984
   final_stats: 0
   final_stats: 0
   final_stats: 0
   final_stats: 3889.9
   final_stats: 0
   final_stats: 0
-  final_stats: 2565.4
+  final_stats: 2567.6
   final_stats: 298
   final_stats: 0
   final_stats: 5
   final_stats: 0
-  final_stats: 23.41396
+  final_stats: 23.46984
   final_stats: 6
   final_stats: 0
   final_stats: 4873
@@ -50,16 +50,12 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestForeverEnhancement-Phase1-StatWeights-Default"
  value: {
-  weights: 0.42829
-  weights: 0.36378
+  weights: 0.47408
+  weights: 0.39989
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.25144
-  weights: 0
-  weights: 0
-  weights: 0
-  weights: 0
+  weights: 0.20632
   weights: 0
   weights: 0
   weights: 0
@@ -67,9 +63,13 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.19468
-  weights: 9.01908
-  weights: 8.19476
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.21549
+  weights: 5.80473
+  weights: 7.14939
   weights: 0
   weights: 0
   weights: 0
@@ -99,112 +99,112 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 694.57736
-  tps: 572.98232
+  dps: 655.62423
+  tps: 522.10584
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 723.67227
-  tps: 598.13216
+  dps: 682.04896
+  tps: 542.38943
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 707.81509
-  tps: 589.04321
+  dps: 645.14972
+  tps: 520.14578
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 756.28348
-  tps: 620.33895
+  dps: 719.03018
+  tps: 569.08603
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 685.79207
-  tps: 571.8365
+  dps: 636.23747
+  tps: 511.60987
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 704.50931
-  tps: 584.11742
+  dps: 657.91219
+  tps: 528.15672
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 756.83536
-  tps: 620.23104
+  dps: 718.32537
+  tps: 569.78091
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 755.46452
-  tps: 625.17039
+  dps: 707.48361
+  tps: 562.81243
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Average-Default"
  value: {
-  dps: 767.8056
-  tps: 626.61821
+  dps: 720.17364
+  tps: 567.07881
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 176.61467
-  tps: 394.38818
+  dps: 233.14325
+  tps: 443.56172
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 160.59154
-  tps: 155.43411
+  dps: 189.72313
+  tps: 165.59485
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 254.32963
-  tps: 274.4754
+  dps: 248.6903
+  tps: 242.46692
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 117.73418
-  tps: 303.7653
+  dps: 140.63845
+  tps: 316.65934
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 104.56634
-  tps: 98.34848
+  dps: 109.04898
+  tps: 97.7406
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 198.82215
-  tps: 225.74134
+  dps: 178.04439
+  tps: 182.91942
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 579.78408
-  tps: 488.76311
+  dps: 533.64809
+  tps: 432.66858
  }
 }
