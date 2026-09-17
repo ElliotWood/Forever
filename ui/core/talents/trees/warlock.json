@@ -470,6 +470,9 @@
           "rowIdx": 6,
           "colIdx": 1
         },
+        "spellIds": [
+          18220
+        ],
         "prereqLocation": {
           "rowIdx": 4,
           "colIdx": 1

@@ -771,6 +771,9 @@
           "rowIdx": 3,
           "colIdx": 1
         },
+        "spellIds": [
+          0
+        ],
         "maxPoints": 1,
         "name": "Flawless Execution",
         "icon": "inv_sword_35",
