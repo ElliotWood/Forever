@@ -11,26 +11,30 @@ func (paladin *Paladin) registerHolyShock() {
 		return
 	}
 
+	// Beta client 1.60.1.69893 adds a rank 1 at level 30 (1311606, damage spell 1311604), which
+	// renumbers Classic's three ranks 2-4, lowers their damage (rank 4 365-395 -> 334-362) and cuts
+	// the cooldown from 30 sec to 10. Costs and the 0.429 are Classic's.
 	ranks := []struct {
 		level     int32
-		spellID   int32
 		manaCost  float64
 		minDamage float64
 		maxDamage float64
 	}{
-		{level: 40, spellID: 20473, manaCost: 225, minDamage: 204, maxDamage: 220},
-		{level: 48, spellID: 20929, manaCost: 275, minDamage: 279, maxDamage: 301},
-		{level: 56, spellID: 20930, manaCost: 325, minDamage: 365, maxDamage: 395},
+		{level: 30, manaCost: 160, minDamage: 128, maxDamage: 140},
+		{level: 40, manaCost: 225, minDamage: 175, maxDamage: 189},
+		{level: 48, manaCost: 275, minDamage: 248, maxDamage: 268},
+		{level: 56, manaCost: 325, minDamage: 334, maxDamage: 362},
 	}
 
 	for i, rank := range ranks {
 		rank := rank
+		spellID := []int32{1311606, 20473, 20929, 20930}[i]
 		if paladin.Level < rank.level {
 			break
 		}
 
 		paladin.RegisterSpell(core.SpellConfig{
-			ActionID:    core.ActionID{SpellID: rank.spellID},
+			ActionID:    core.ActionID{SpellID: spellID},
 			SpellSchool: core.SpellSchoolHoly,
 			DefenseType: core.DefenseTypeMagic,
 			ProcMask:    core.ProcMaskSpellDamage,
@@ -52,7 +56,7 @@ func (paladin *Paladin) registerHolyShock() {
 				},
 				CD: core.Cooldown{
 					Timer:    paladin.NewTimer(),
-					Duration: time.Second * 30,
+					Duration: time.Second * 10,
 				},
 			},
 

@@ -34,6 +34,8 @@ func (paladin *Paladin) registerSealOfCommand() {
 		spellID int32
 	}
 
+	// Every rank's aura triggers the same proc, 20424, in both clients; 20944-20947 were Classic's
+	// learn-spell dummies and are gone from the beta client (1.60.1.69893). Nothing else moved.
 	ranks := []struct {
 		level      int32
 		spellID    int32
@@ -43,10 +45,10 @@ func (paladin *Paladin) registerSealOfCommand() {
 		judge      judge
 	}{
 		{level: 20, spellID: 20375, manaCost: 65, scaleLevel: 28, proc: proc{spellID: 20424}, judge: judge{spellID: 20467, minDamage: 93, maxDamage: 101, scale: 5.6}},
-		{level: 30, spellID: 20915, manaCost: 110, scaleLevel: 38, proc: proc{spellID: 20944}, judge: judge{spellID: 20963, minDamage: 146, maxDamage: 160, scale: 6.1}},
-		{level: 40, spellID: 20918, manaCost: 140, scaleLevel: 48, proc: proc{spellID: 20945}, judge: judge{spellID: 20964, minDamage: 204, maxDamage: 224, scale: 5.6}},
-		{level: 50, spellID: 20919, manaCost: 180, scaleLevel: 58, proc: proc{spellID: 20946}, judge: judge{spellID: 20965, minDamage: 261, maxDamage: 287, scale: 6.1}},
-		{level: 60, spellID: 20920, manaCost: 210, scaleLevel: 60, proc: proc{spellID: 20947}, judge: judge{spellID: 20966, minDamage: 339, maxDamage: 373, scale: 6.1}},
+		{level: 30, spellID: 20915, manaCost: 110, scaleLevel: 38, proc: proc{spellID: 20424}, judge: judge{spellID: 20963, minDamage: 146, maxDamage: 160, scale: 6.1}},
+		{level: 40, spellID: 20918, manaCost: 140, scaleLevel: 48, proc: proc{spellID: 20424}, judge: judge{spellID: 20964, minDamage: 204, maxDamage: 224, scale: 5.6}},
+		{level: 50, spellID: 20919, manaCost: 180, scaleLevel: 58, proc: proc{spellID: 20424}, judge: judge{spellID: 20965, minDamage: 261, maxDamage: 287, scale: 6.1}},
+		{level: 60, spellID: 20920, manaCost: 210, scaleLevel: 60, proc: proc{spellID: 20424}, judge: judge{spellID: 20966, minDamage: 339, maxDamage: 373, scale: 6.1}},
 	}
 
 	improvedSeals := paladin.improvedSeals()

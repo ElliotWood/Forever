@@ -34,7 +34,7 @@ const unreviewedSpellBudget = 673
 
 // Registration sites whose id the walk cannot read from the source. Each one is an ability
 // the manifest cannot cover, so this only ever falls.
-const unresolvedSpellSiteBudget = 19
+const unresolvedSpellSiteBudget = 15
 
 type spellSource struct {
 	Ability     string   `json:"ability"`
