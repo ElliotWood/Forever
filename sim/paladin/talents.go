@@ -47,7 +47,7 @@ func (paladin *Paladin) ApplyTalents() {
 	// TODO: Only rank 1 of Champion of the Light was seen, and the extrapolated ranks 2 and 3 are
 	// a large chunk of a Forever paladin's spell power.
 	if paladin.Talents.ChampionOfTheLight > 0 {
-		paladin.AddStatDependency(stats.Intellect, stats.SpellPower, 0.33*float64(paladin.Talents.ChampionOfTheLight))
+		paladin.AddStatDependency(stats.Intellect, stats.SpellPower, []float64{0, 0.33, 0.66, 1.00}[paladin.Talents.ChampionOfTheLight])
 	}
 
 	paladin.applyWeaponSpecialization()
@@ -347,7 +347,7 @@ func (paladin *Paladin) applySanctifiedJudgement() {
 
 	manaMetrics := paladin.NewManaMetrics(core.ActionID{SpellID: 31876})
 
-	procChance := 0.33 * float64(paladin.Talents.SanctifiedJudgement)
+	procChance := []float64{0, 0.33, 0.66, 1.00}[paladin.Talents.SanctifiedJudgement]
 	refund := 0.2 * float64(paladin.Talents.SanctifiedJudgement)
 
 	paladin.RegisterAura(core.Aura{

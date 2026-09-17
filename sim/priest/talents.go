@@ -38,6 +38,9 @@ func (priest *Priest) ApplyTalents() {
 	priest.PseudoStats.SchoolDamageTakenMultiplier.MultiplyMagicSchools(1 - 0.02*float64(priest.Talents.SpellWarding))
 
 	// TODO: only rank 1 was shown, beta will confirm that the two halves scale at 5% and 1% per point
+	// TODO: the damage half may not scale linearly. Only rank 1's 1% was observed, and the
+	// tree reads 1/3/5/6/8 against the 1/2/3/4/5 taken here, which no source has confirmed.
+	// The healing half's 5% per point matches the tree at every rank.
 	if priest.Talents.SpiritualGuidance > 0 {
 		priest.AddStatDependency(stats.Spirit, stats.HealingPower, 0.05*float64(priest.Talents.SpiritualGuidance))
 		priest.AddStatDependency(stats.Spirit, stats.SpellDamage, 0.01*float64(priest.Talents.SpiritualGuidance))
@@ -260,7 +263,7 @@ func (priest *Priest) applyShadowWeaving() {
 		return
 	}
 
-	priest.shadowWeavingProcChance = 0.33 * float64(priest.Talents.ShadowWeaving)
+	priest.shadowWeavingProcChance = []float64{0, 0.33, 0.66, 1.00}[priest.Talents.ShadowWeaving]
 
 	priest.ShadowWeavingAura = priest.RegisterAura(core.Aura{
 		Label:     "Shadow Weaving",
