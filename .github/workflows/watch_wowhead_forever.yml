@@ -1,0 +1,71 @@
+name: Watch Wowhead Forever data
+
+# Wowhead datamines the Forever client and republishes it as the gear planner's data file.
+# Nothing announces a change, so poll it: the file is byte-identical between fetches until the
+# data moves (checked 2026-09-17), which makes "did anything change" a plain file compare.
+#
+# On a change this opens (or updates) ONE pull request carrying the new snapshot and a readable
+# report of what moved. It deliberately does not regenerate db.bin or touch the sim: deciding what
+# a data change means for the rules is review work. Merging to master publishes Pages via deploy.yml.
+on:
+  schedule:
+    - cron: '17 */6 * * *'   # 4x a day; the file is ~5 MB, so be polite
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: watch-wowhead-forever
+  cancel-in-progress: false
+
+env:
+  SOURCE_URL: https://nether.wowhead.com/forever/data/gear-planner?dv=100
+  SNAPSHOT: assets/db_inputs/wowhead_forever_gearplanner.txt
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the current Forever data
+        run: |
+          curl -fsSL --retry 3 -A "wowsims-forever-data-watch (+https://github.com/${{ github.repository }})" \
+            "$SOURCE_URL" -o /tmp/new.txt
+          # A Cloudflare challenge or error page is HTML, not WH.setPageData - never commit that.
+          grep -q 'WH.setPageData("wow.gearPlanner.' /tmp/new.txt || { echo "::error::not a gear-planner payload"; head -c 300 /tmp/new.txt; exit 1; }
+
+      - name: Compare with the last snapshot
+        id: cmp
+        run: |
+          if [ -f "$SNAPSHOT" ] && cmp -s "$SNAPSHOT" /tmp/new.txt; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"; echo "No change."; exit 0
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          day=$(date -u +%Y-%m-%d); echo "day=$day" >> "$GITHUB_OUTPUT"
+          mkdir -p docs/data-changes "$(dirname "$SNAPSHOT")"
+          if [ -f "$SNAPSHOT" ]; then
+            python3 tools/data_watch/wowhead_diff.py "$SNAPSHOT" /tmp/new.txt > /tmp/report.md
+          else
+            echo "First snapshot - baseline for future diffs, nothing to compare against." > /tmp/report.md
+          fi
+          { echo "# Wowhead Forever data change, $day"; echo; echo "Source: $SOURCE_URL"; echo; cat /tmp/report.md; } > "docs/data-changes/$day.md"
+          cp /tmp/new.txt "$SNAPSHOT"
+          # PR bodies cap at 65536 chars; the full report is committed either way.
+          head -c 60000 "docs/data-changes/$day.md" > /tmp/body.md
+
+      - name: Open or update the data-change pull request
+        if: steps.cmp.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: data/wowhead-forever
+          delete-branch: true
+          add-paths: |
+            ${{ env.SNAPSHOT }}
+            docs/data-changes/*.md
+          commit-message: "data: Wowhead Forever data changed (${{ steps.cmp.outputs.day }})"
+          title: "Wowhead Forever data changed (${{ steps.cmp.outputs.day }})"
+          body-path: /tmp/body.md
+          labels: data-change
