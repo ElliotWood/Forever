@@ -1,5 +1,9 @@
 # Forever talents: per-rank values and tooltips vs beta client (17 Sep 2026)
 
+> **Checked 2026-09-17. Section 1 is a false alarm and about half of section 2 is wrong.**
+> The tree's `ranks` arrays ARE cumulative, so comparing their first row against the client's
+> max-rank value reports a difference that is not there. Verdict table at the end.
+
 Compared `tools/forever_talents` trees (the `description` + `ranks` each talent tooltip is built from) with the Forever
 beta client `1.60.1.69893` (wago.tools Trait tables) and Wowhead Forever tooltips.
 **Scope: tree data and tooltips only. The Go sim's own talent code was not checked.**
@@ -82,3 +86,48 @@ Pattern: most `extrapolated` and several `classic-prior` values are wrong. `clas
 - Wowhead renders the spell's base points, not rank values. Some tooltips show the max-rank number, others rank 1.
 - Talents whose values exist only in the rank curve show **0%** on Wowhead: Illumination, Reckoning, Enrage.
 - Use the client tables, not Wowhead tooltips, as the source of truth for talent numbers until Wowhead fixes this.
+
+## Verdict (checked 2026-09-17)
+
+Every claim below was re-read from the client curves with `tools/data_watch/trait_curve.mjs`
+and checked against the tree and the talentsforever crawl. **No values were changed.**
+
+### Section 1 is a false alarm
+
+The tree’s `ranks` arrays are cumulative, not per-point. Hack and Slash reads
+`[[1,1,3],[2,2,6],[3,3,9],[4,4,12],[5,5,15]]` — its rank 5 IS the 5/5/15 the client shows.
+The comparison took the tree’s **rank 1** row against the client’s **max rank** value, so every
+row in that table is the same arithmetic restated. Nothing to fix.
+
+### Section 2 is about half wrong
+
+| Talent | Tree max rank | Client curve max | Verdict |
+|---|---|---|---|
+| Warrior / Enrage | 10 | 10 | agree — report compared rank 1 |
+| Mage / Improved Blizzard | 40 | 40 | agree — report compared rank 1 |
+| Mage / Improved Counterspell | 4 | 4 | agree — report compared rank 1 |
+| Hunter / Entrapment | 5 | 5 | agree — report compared rank 1 |
+| Shaman / Improved Ghost Wolf | 3 | 3 | agree — report compared rank 1 |
+| Priest / Improved Mana Burn | 1 | 1.0 | agree — formatting only |
+| Druid / Moonglow | 3/6/9 | 8/17/25 | **real difference, not applied** |
+| Druid / Moonfury | 1..5 | 2..10 | **real difference, not applied** |
+| Rogue / Lethality | 6..30 | 4..20 | **real difference, not applied** |
+| Hunter / Improved Stings | 18,6,45 | 20,6,45 | **real difference, no rank 1 conflict** |
+
+Three of the four were **not applied** because the client curve contradicts the rank 1 value
+the beta actually displayed: the crawl records Moonglow at 3%, Moonfury at 1% and Lethality
+at 6%, which is what the tree already says. That is a conflict between two readings of the
+same build rather than better data correcting an extrapolation, so it needs a beta tooltip at
+rank 2 or higher to settle. Recorded in `forever_beta_checklist.md`.
+
+Improved Stings is the exception and the better candidate of the four: its curve reads
+6/13/20 and **agrees with the observed rank 1 of 6%**, diverging only on the ranks nobody saw
+(the tree extrapolates 12 and 18 where the client has 13 and 20). It was left alone only to
+keep this pass to one decision, and should be revisited first.
+
+### The method itself is sound
+
+Ignite (8/16/24/32/40), Ruin (20..100) and Improved Life Tap (10/20) all read back from the
+curves exactly as the tree has them. Two traps: a name shared across classes returns several
+curves (Deflection returns four), and some effects are stored in milliseconds or tenths, which
+is why Improved Stings appears twice, once as `2/4/6` and once as `2000/4000/6000`.

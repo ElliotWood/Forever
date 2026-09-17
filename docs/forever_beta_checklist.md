@@ -13,6 +13,38 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 5. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
 6. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
 
+## The client's rank curves disagree with the beta tooltips (open, 2026-09-17)
+
+The beta client stores per-rank talent values in a curve: `TraitDefinition` ->
+`TraitDefinitionEffectPoints` -> `CurvePoint`, where each point is (rank, value). Read one
+with `node tools/data_watch/trait_curve.mjs "<talent name>"`. `SpellEffect.EffectBasePointsF`
+holds only the max-rank value and is sometimes stale, so it is the wrong field for this.
+
+The method is sound - Ignite reads 8/16/24/32/40, Ruin 20..100 and Improved Life Tap 10/20,
+all matching the tree exactly. But on three talents the curve contradicts the **rank 1 value
+the beta actually displayed**, as captured in the talentsforever crawl:
+
+| Talent | Beta tooltip (rank 1) | Client curve | Tree today |
+|---|---|---|---|
+| Druid / Moonglow | 3% | 8 / 17 / 25 | 3 / 6 / 9 |
+| Druid / Moonfury | 1% | 2 / 4 / 6 / 8 / 10 | 1 / 2 / 3 / 4 / 5 |
+| Rogue / Lethality | 6% | 4 / 8 / 12 / 16 / 20 | 6 / 12 / 18 / 24 / 30 |
+
+**Not acted on.** These are not an extrapolation being corrected by better data - the tree's
+rank 1 matches what the beta showed, and the curve disagrees with that observation. Two
+readings of the same build cannot both be right, and picking the curve would change three
+talents players sim on the assumption that the tooltip was misread. Each talent resolves to
+exactly one trait definition with one curve, so this is not a name collision.
+
+Worth noting the curve is not linear for Moonglow (8/17/25), which no extrapolation from 3%
+would produce, so it is real data rather than a scaled copy. What would settle it: a beta
+tooltip at rank 2 or higher for any of the three.
+
+Beware two traps when reading these tables. A talent name shared across classes returns
+several curves - Deflection returns four - so check the definition count. And some effects
+are stored in milliseconds or tenths, which is why Improved Stings appears twice, once as
+`2/4/6` and once as `2000/4000/6000`.
+
 ## Druid (16)
 
 - `sim/druid/berserk.go:16` — The tooltip didn't show a cooldown, the 3 minutes are taken from the Classic Berserk.
