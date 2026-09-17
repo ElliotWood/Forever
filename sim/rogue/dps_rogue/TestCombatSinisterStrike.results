@@ -1,11 +1,11 @@
 character_stats_results: {
  key: "TestCombatSinisterStrike-Phase1-CharacterStats-Default"
  value: {
-  final_stats: 204.6
-  final_stats: 397.1
-  final_stats: 367.4
-  final_stats: 94.6
-  final_stats: 154.77
+  final_stats: 210.1
+  final_stats: 402.6
+  final_stats: 405.9
+  final_stats: 100.1
+  final_stats: 160.545
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -13,35 +13,35 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 39.6
+  final_stats: 48
   final_stats: 7
   final_stats: 17
   final_stats: 0
   final_stats: 0
-  final_stats: 1531.7
+  final_stats: 1262.7
   final_stats: 7
-  final_stats: 32.69995
+  final_stats: 32.8897
   final_stats: 0
   final_stats: 0
   final_stats: 2
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 2442.2
-  final_stats: 715.1
+  final_stats: 2588.2
+  final_stats: 670.6
   final_stats: 7
   final_stats: 5.28
   final_stats: 0
-  final_stats: 27.6799
+  final_stats: 28.0594
   final_stats: 11.28
   final_stats: 0
-  final_stats: 5017
-  final_stats: 27
+  final_stats: 5402
+  final_stats: 36
   final_stats: 60
   final_stats: 60
   final_stats: 60
   final_stats: 60
-  final_stats: 384
+  final_stats: 519
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -50,8 +50,8 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestCombatSinisterStrike-Phase1-StatWeights-Default"
  value: {
-  weights: 0.25118
-  weights: 0.43401
+  weights: 0.25169
+  weights: 0.41565
   weights: 0
   weights: 0
   weights: 0
@@ -67,9 +67,9 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.22835
-  weights: 5.83276
-  weights: 5.7702
+  weights: 0.2288
+  weights: 5.18638
+  weights: 5.08815
   weights: 0
   weights: 0
   weights: 0
@@ -99,168 +99,168 @@ stat_weights_results: {
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-BloodfangArmor"
  value: {
-  dps: 586.35281
-  tps: 416.3105
+  dps: 522.41953
+  tps: 370.91787
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Champion'sGuard"
  value: {
-  dps: 568.10434
-  tps: 403.35408
+  dps: 504.86442
+  tps: 358.45374
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-DarkmantleArmor"
  value: {
-  dps: 601.95344
-  tps: 427.38694
+  dps: 536.61769
+  tps: 380.99856
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Deathdealer'sEmbrace"
  value: {
-  dps: 579.36427
-  tps: 411.34863
+  dps: 516.66585
+  tps: 366.83276
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-EmblemsofVeiledShadows"
  value: {
-  dps: 570.83414
-  tps: 405.29224
+  dps: 508.83213
+  tps: 361.27081
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-FieldMarshal'sVestments"
  value: {
-  dps: 593.91399
-  tps: 421.67893
+  dps: 527.29395
+  tps: 374.37871
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-LieutenantCommander'sGuard"
  value: {
-  dps: 568.10434
-  tps: 403.35408
+  dps: 504.86442
+  tps: 358.45374
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Madcap'sOutfit"
  value: {
-  dps: 568.3339
-  tps: 403.51707
+  dps: 505.59823
+  tps: 358.97474
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-NightslayerArmor"
  value: {
-  dps: 582.00857
-  tps: 413.22609
+  dps: 516.8586
+  tps: 366.9696
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Warlord'sVestments"
  value: {
-  dps: 593.91399
-  tps: 421.67893
+  dps: 527.29395
+  tps: 374.37871
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Average-Default"
  value: {
-  dps: 568.59112
-  tps: 403.6997
+  dps: 506.35333
+  tps: 359.51086
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 253.86569
-  tps: 180.24464
+  dps: 231.69293
+  tps: 164.50198
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 213.3061
-  tps: 151.44733
+  dps: 195.33869
+  tps: 138.69047
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 279.35473
-  tps: 198.34186
+  dps: 256.39183
+  tps: 182.0382
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 157.54901
-  tps: 111.85979
+  dps: 157.49338
+  tps: 111.8203
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 132.78313
-  tps: 94.27602
+  dps: 132.7525
+  tps: 94.25427
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 177.07519
-  tps: 125.72339
+  dps: 176.94118
+  tps: 125.62824
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 248.82523
-  tps: 176.66591
+  dps: 231.12701
+  tps: 164.10018
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 207.82949
-  tps: 147.55894
+  dps: 193.99204
+  tps: 137.73435
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 266.53437
-  tps: 189.2394
+  dps: 248.04072
+  tps: 176.10891
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 156.08127
-  tps: 110.8177
+  dps: 156.00594
+  tps: 110.76422
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 131.5066
-  tps: 93.36968
+  dps: 131.46542
+  tps: 93.34045
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 169.36905
-  tps: 120.25203
+  dps: 169.20093
+  tps: 120.13266
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 455.06927
-  tps: 323.09918
+  dps: 405.88506
+  tps: 288.17839
  }
 }
