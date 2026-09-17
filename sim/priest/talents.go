@@ -39,13 +39,10 @@ func (priest *Priest) ApplyTalents() {
 
 	priest.PseudoStats.SchoolDamageTakenMultiplier.MultiplyMagicSchools(1 - 0.02*float64(priest.Talents.SpellWarding))
 
-	// TODO: only rank 1 was shown, beta will confirm that the two halves scale at 5% and 1% per point
-	// TODO: the damage half may not scale linearly. Only rank 1's 1% was observed, and the
-	// tree reads 1/3/5/6/8 against the 1/2/3/4/5 taken here, which no source has confirmed.
-	// The healing half's 5% per point matches the tree at every rank.
+	// The beta client's curves: healing 5% of Spirit per point, damage 1/3/5/6/8%.
 	if priest.Talents.SpiritualGuidance > 0 {
 		priest.AddStatDependency(stats.Spirit, stats.HealingPower, 0.05*float64(priest.Talents.SpiritualGuidance))
-		priest.AddStatDependency(stats.Spirit, stats.SpellDamage, 0.01*float64(priest.Talents.SpiritualGuidance))
+		priest.AddStatDependency(stats.Spirit, stats.SpellDamage, []float64{0, 0.01, 0.03, 0.05, 0.06, 0.08}[priest.Talents.SpiritualGuidance])
 	}
 
 	// Shadow Magic
@@ -58,8 +55,7 @@ func (priest *Priest) ApplyTalents() {
 	priest.applyDarkness()
 }
 
-// Smite and Penance hit harder while the target is burning from this priest's Holy Fire.
-// TODO: only rank 1 was shown, beta will confirm the 2% per point
+// Smite and Penance hit harder while the target is burning from this priest's Holy Fire, 2% per point.
 func (priest *Priest) applyPowerInLight() {
 	if priest.Talents.PowerInLight == 0 {
 		return
@@ -124,7 +120,7 @@ func (priest *Priest) applyMentalAgility() {
 		}
 
 		if spell.DefaultCast.CastTime == 0 || slices.Contains(affectedSpellCodes, spell.SpellCode) {
-			spell.Cost.Multiplier -= 3 * priest.Talents.MentalAgility
+			spell.Cost.Multiplier -= []int32{0, 3, 7, 10}[priest.Talents.MentalAgility]
 		}
 	})
 }
@@ -169,20 +165,20 @@ func (priest *Priest) applyInspiration() {
 }
 
 // Searing Light now buffs every Holy spell and lets Holy Fire ticks refund the next Holy Nova.
-// TODO: only rank 1 was shown, so both halves of rank 2 are extrapolated from it at 2% Holy
-// damage and 5% refund chance per point. Beta will confirm them.
+// The beta client reads 2/5% Holy damage and a 5/10% chance, and the free Holy Nova (Holy
+// Purpose, 1284536) lasts 10 sec.
 func (priest *Priest) applySearingLight() {
 	if priest.Talents.SearingLight == 0 {
 		return
 	}
 
 	points := float64(priest.Talents.SearingLight)
-	priest.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexHoly] *= 1 + 0.02*points
+	priest.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexHoly] *= []float64{1, 1.02, 1.05}[priest.Talents.SearingLight]
 
 	priest.SearingLightAura = priest.RegisterAura(core.Aura{
 		Label:    "Searing Light",
 		ActionID: core.ActionID{SpellID: 14909},
-		Duration: core.NeverExpires,
+		Duration: time.Second * 10,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			if priest.HolyNova != nil {
 				priest.HolyNova.Cost.Multiplier -= 100
@@ -265,7 +261,7 @@ func (priest *Priest) applyShadowWeaving() {
 		return
 	}
 
-	priest.shadowWeavingProcChance = []float64{0, 0.33, 0.66, 1.00}[priest.Talents.ShadowWeaving]
+	priest.shadowWeavingProcChance = []float64{0, 0.33, 0.67, 1.00}[priest.Talents.ShadowWeaving]
 
 	priest.ShadowWeavingAura = priest.RegisterAura(core.Aura{
 		Label:     "Shadow Weaving",
@@ -288,51 +284,14 @@ func (priest *Priest) AddShadowWeavingStack(sim *core.Simulation) {
 	priest.ShadowWeavingAura.AddStack(sim)
 }
 
+// Classic's Darkness raised the damage of five named Shadow spells. The Forever beta client's (15259)
+// raises all Shadow damage done, 2% per point.
 func (priest *Priest) applyDarkness() {
 	if priest.Talents.Darkness == 0 {
 		return
 	}
 
-	multiplier := 0.02 * float64(priest.Talents.Darkness)
-
-	priest.RegisterAura(core.Aura{
-		Label: "Darkness",
-		OnInit: func(aura *core.Aura, sim *core.Simulation) {
-			baseDamageAffectedSpells := core.FilterSlice(
-				core.Flatten(
-					[][]*core.Spell{
-						priest.MindBlast,
-						priest.DevouringPlague,
-					},
-				),
-				func(spell *core.Spell) bool { return spell != nil },
-			)
-
-			fullDamageAffectedSpells := core.FilterSlice(
-				core.Flatten(
-					[][]*core.Spell{
-						priest.ShadowWordPain,
-					},
-				),
-				func(spell *core.Spell) bool { return spell != nil },
-			)
-
-			for _, spells := range priest.MindFlay {
-				fullDamageAffectedSpells = append(
-					fullDamageAffectedSpells,
-					core.FilterSlice(spells, func(spell *core.Spell) bool { return spell != nil })...,
-				)
-			}
-
-			for _, spell := range baseDamageAffectedSpells {
-				spell.BaseDamageMultiplierAdditive += multiplier
-			}
-
-			for _, spell := range fullDamageAffectedSpells {
-				spell.DamageMultiplierAdditive += multiplier
-			}
-		},
-	})
+	priest.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1 + 0.02*float64(priest.Talents.Darkness)
 }
 
 func (priest *Priest) registerInnerFocus() {
@@ -401,8 +360,8 @@ func (priest *Priest) registerShadowform() {
 
 	actionID := core.ActionID{SpellID: 15473}
 
-	// The mana discount is the biggest single change in the tree and only the demo tooltip backs it up.
-	// TODO: beta will confirm the 50%.
+	// The beta client's 15473: +10% Shadow damage, -50% Shadow mana cost, +100% Shadow critical
+	// strike damage bonus, -15% Physical damage taken.
 	priest.ShadowformAura = priest.RegisterAura(core.Aura{
 		Label:    "Shadowform",
 		ActionID: actionID,

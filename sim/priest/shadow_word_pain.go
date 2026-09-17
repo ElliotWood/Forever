@@ -10,8 +10,9 @@ import (
 const ShadowWordPainRanks = 8
 
 var ShadowWordPainSpellId = [ShadowWordPainRanks + 1]int32{0, 589, 594, 970, 992, 2767, 10892, 10893, 10894}
-var ShadowWordPainBaseDamage = [ShadowWordPainRanks + 1]float64{0, 30, 66, 132, 234, 366, 510, 672, 852}
-var ShadowWordPainSpellCoef = [ShadowWordPainRanks + 1]float64{0, 0.067, 0.104, 0.154, 0.167, 0.167, 0.167, 0.167, 0.167} // per tick
+// Forever beta client 1.60.1.69893: less damage from rank 2 up, and .2 a tick at every rank.
+var ShadowWordPainBaseDamage = [ShadowWordPainRanks + 1]float64{0, 30, 60, 108, 180, 288, 426, 582, 762}
+var ShadowWordPainSpellCoef = [ShadowWordPainRanks + 1]float64{0, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2} // per tick
 var ShadowWordPainManaCost = [ShadowWordPainRanks + 1]float64{0, 25, 50, 95, 155, 230, 305, 385, 470}
 var ShadowWordPainLevel = [ShadowWordPainRanks + 1]int{0, 4, 10, 18, 26, 34, 42, 50, 58}
 

@@ -4,27 +4,42 @@ import (
 	"github.com/wowsims/classic/sim/core"
 )
 
+const HolyNovaRanks = 6
+
+// Forever beta client 1.60.1.69893. Every rank is a little below Classic's, at .107 for both halves.
+var HolyNovaSpellId = [HolyNovaRanks + 1]int32{0, 15237, 15430, 15431, 27799, 27800, 27801}
+var HolyNovaHealSpellId = [HolyNovaRanks + 1]int32{0, 23455, 23458, 23459, 27803, 27804, 27805}
+var HolyNovaBaseDamage = [HolyNovaRanks + 1][]float64{{0}, {26, 31}, {47, 56}, {73, 84}, {103, 118}, {139, 159}, {174, 200}}
+var HolyNovaBaseHealing = [HolyNovaRanks + 1][]float64{{0}, {49, 58}, {80, 90}, {111, 128}, {151, 176}, {225, 260}, {288, 334}}
+var HolyNovaManaCost = [HolyNovaRanks + 1]float64{0, 185, 290, 400, 520, 635, 750}
+var HolyNovaLevel = [HolyNovaRanks + 1]int{0, 20, 28, 36, 44, 52, 60}
+
+// Only the highest rank the priest knows is registered, since Searing Light's free cast is tied to one spell.
 func (priest *Priest) registerHolyNovaSpell() {
 	if !priest.Talents.HolyNova {
 		return
 	}
 
-	// Only the rank 1 tooltip was shown in the demo, so only rank 1 is registered.
-	// TODO: beta will confirm the higher ranks and the mana cost.
-	baseDamage := []float64{30, 35}
-	baseHealing := []float64{64, 73}
+	rank := 1
+	for rank < HolyNovaRanks && HolyNovaLevel[rank+1] <= int(priest.Level) {
+		rank++
+	}
+
+	baseDamage := HolyNovaBaseDamage[rank]
+	baseHealing := HolyNovaBaseHealing[rank]
+	spellCoeff := 0.107
 
 	partyPlayers := priest.Env.Raid.GetPlayerParty(&priest.Unit).Players
 
 	healSpell := priest.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 23455},
+		ActionID:    core.ActionID{SpellID: HolyNovaHealSpellId[rank]},
 		SpellSchool: core.SpellSchoolHoly,
 		ProcMask:    core.ProcMaskSpellHealing,
 		Flags:       core.SpellFlagHelpful | core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 0,
-		BonusCoefficient: 0.286,
+		BonusCoefficient: spellCoeff,
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 			for _, player := range partyPlayers {
@@ -35,17 +50,17 @@ func (priest *Priest) registerHolyNovaSpell() {
 
 	priest.HolyNova = priest.RegisterSpell(core.SpellConfig{
 		SpellCode:   SpellCode_PriestHolyNova,
-		ActionID:    core.ActionID{SpellID: 15237},
+		ActionID:    core.ActionID{SpellID: HolyNovaSpellId[rank]},
 		SpellSchool: core.SpellSchoolHoly,
 		DefenseType: core.DefenseTypeMagic,
 		ProcMask:    core.ProcMaskSpellDamage,
 		Flags:       SpellFlagPriest | core.SpellFlagAPL,
 
-		RequiredLevel: 20,
-		Rank:          1,
+		RequiredLevel: HolyNovaLevel[rank],
+		Rank:          rank,
 
 		ManaCost: core.ManaCostOptions{
-			BaseCost: 0.22,
+			FlatCost: HolyNovaManaCost[rank],
 		},
 
 		Cast: core.CastConfig{
@@ -56,7 +71,7 @@ func (priest *Priest) registerHolyNovaSpell() {
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 0,
-		BonusCoefficient: 0.143,
+		BonusCoefficient: spellCoeff,
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 			for _, aoeTarget := range sim.Encounter.TargetUnits {
