@@ -92,16 +92,16 @@
         "maxPoints": 3,
         "name": "Moonglow",
         "icon": "spell_nature_sentinal",
-        "description": "Reduces the Mana cost of your spells by {0}%.",
+        "description": "Reduces the Mana cost of your damaging spells by {0}%.",
         "ranks": [
           [
-            3
+            8
           ],
           [
-            6
+            17
           ],
           [
-            9
+            25
           ]
         ]
       },
@@ -164,7 +164,7 @@
         "maxPoints": 2,
         "name": "Nature's Reach",
         "icon": "spell_nature_naturetouchgrow",
-        "description": "Increases the range of your offensive Balance spells by {0}% and increases the chance for all your spells and attacks to hit by {1}%.",
+        "description": "Increases the range of your offensive Balance spells by {0}% and improves your chance to hit by {1}%.",
         "ranks": [
           [
             10,
@@ -190,18 +190,15 @@
         "maxPoints": 3,
         "name": "Improved Entangling Roots",
         "icon": "spell_nature_stranglevines",
-        "description": "Increases the damage done by your Entangling Roots spell by {0}%, and its victims can take up to {1}% more damage without interrupting the effect.",
+        "description": "Increases the damage done by your Entangling Roots spell by {0}%, and its victims can take up to {0}% more damage without interrupting the effect.",
         "ranks": [
           [
-            25,
             25
           ],
           [
-            50,
             50
           ],
           [
-            75,
             75
           ]
         ],
@@ -481,19 +478,19 @@
         "description": "Increases the damage done by your Arcane and Nature spells by {0}%.",
         "ranks": [
           [
-            1
-          ],
-          [
             2
-          ],
-          [
-            3
           ],
           [
             4
           ],
           [
-            5
+            6
+          ],
+          [
+            8
+          ],
+          [
+            10
           ]
         ]
       },
@@ -702,21 +699,18 @@
         "maxPoints": 3,
         "name": "Thick Hide",
         "icon": "inv_misc_pelt_bear_03",
-        "description": "While in Bear Form, Cat Form, Dire Bear Form, or Moonkin Form, you gain {0} additional base{1} Armor per level and another {2} base Armor for each point of defense skill beyond five times your level. This amount can be further increased by multipliers from those forms.",
+        "description": "While in Bear Form, Cat Form, Dire Bear Form, or Moonkin Form, you gain {0} additional base Armor per level and another {1}.2 base Armor for each point of defense skill beyond five times your level. This amount can be further increased by multipliers from those forms.",
         "ranks": [
           [
             1,
-            "",
             0.67
           ],
           [
             2,
-            "",
             1.33
           ],
           [
             3,
-            "",
             2
           ]
         ]
@@ -856,7 +850,7 @@
         "maxPoints": 3,
         "name": "Predatory Strikes",
         "icon": "ability_hunter_pet_cat",
-        "description": "Increases your melee Attack Power by {0}% of your level.",
+        "description": "Increases your melee Attack Power in Cat Form, Bear Form, and Dire Bear Form by {0}% of your level.",
         "ranks": [
           [
             50
@@ -886,16 +880,14 @@
         "maxPoints": 2,
         "name": "Primal Fury",
         "icon": "ability_racial_cannibalize",
-        "description": "Gives you a {0}% chance to gain an additional {1} Rage any time you get a critical strike while in Bear Form or Dire Bear Form. In addition, your non-periodic critical strikes from Cat Form abilities that generate Combo Points have a {2}% chance to add an additional Combo Point.",
+        "description": "Gives you a {0}% chance to gain an additional $/10;16959s1 Rage any time you get a critical strike while in Bear Form or Dire Bear Form. In addition, your non-periodic critical strikes from Cat Form abilities that generate Combo Points have a {1}% chance to add an additional Combo Point.",
         "ranks": [
           [
             50,
-            5,
             50
           ],
           [
             100,
-            5,
             100
           ]
         ]
@@ -1290,10 +1282,10 @@
             17
           ],
           [
-            34
+            33
           ],
           [
-            51
+            50
           ]
         ]
       },
@@ -1345,7 +1337,7 @@
         "maxPoints": 1,
         "name": "Gift of the Earthmother",
         "icon": "spell_nature_spiritarmor",
-        "description": "Reduces the global cooldown by {0} seconds on your Rejuvenation, Swiftmend, and Wild Growth spells.",
+        "description": "Reduces the global cooldown by {0}.1 seconds on your Rejuvenation, Swiftmend, and Wild Growth spells.",
         "ranks": [
           [
             0.5

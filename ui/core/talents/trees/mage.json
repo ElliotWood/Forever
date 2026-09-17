@@ -43,7 +43,7 @@
         "maxPoints": 5,
         "name": "Arcane Focus",
         "icon": "spell_holy_devotion",
-        "description": "Increases your chance to hit with your Arcane spells by {0}%.",
+        "description": "Improves your chance to hit with Arcane spells by {0}%.",
         "ranks": [
           [
             1
@@ -169,7 +169,7 @@
         "maxPoints": 5,
         "name": "Arcane Concentration",
         "icon": "spell_shadow_manaburn",
-        "description": "Gives you a {0}% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage spell by 100%.",
+        "description": "Gives you a {0}% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage spell by $/10;12536s1%.",
         "ranks": [
           [
             2
@@ -306,7 +306,7 @@
             25
           ],
           [
-            34,
+            33,
             50
           ]
         ],
@@ -360,10 +360,10 @@
             17
           ],
           [
-            34
+            33
           ],
           [
-            51
+            50
           ]
         ]
       },
@@ -402,11 +402,9 @@
         "maxPoints": 1,
         "name": "Presence of Mind",
         "icon": "spell_nature_enchantarmor",
-        "description": "When activated, your next Mage spell with a casting time less than {0} sec becomes an instant cast spell.",
+        "description": "When activated, your next Mage spell with a casting time less than 10 sec becomes an instant cast spell.",
         "ranks": [
-          [
-            10
-          ]
+          []
         ]
       },
       {
@@ -463,7 +461,7 @@
         "maxPoints": 3,
         "name": "Arcane Instability",
         "icon": "spell_shadow_teleport",
-        "description": "Increases the damage done by all your spells by {0}% and your critical strike chance with all attacks by {1}%.",
+        "description": "Increases the damage done by your spells by {0}% and your critical strike chance by {1}%.",
         "ranks": [
           [
             1,
@@ -707,11 +705,11 @@
             10
           ],
           [
-            46,
+            47,
             20
           ],
           [
-            69,
+            70,
             30
           ]
         ]
@@ -1059,7 +1057,7 @@
         "maxPoints": 5,
         "name": "Elemental Precision",
         "icon": "spell_ice_magicdamage",
-        "description": "Increases your chance to hit with Frost and Fire spells by {0}%.",
+        "description": "Improves your chance to hit with Frost and Fire spells by {0}%.",
         "ranks": [
           [
             1
@@ -1135,11 +1133,11 @@
           ],
           [
             22,
-            6
+            7
           ],
           [
             33,
-            9
+            10
           ]
         ],
         "notSimulated": true
@@ -1210,7 +1208,7 @@
         "maxPoints": 3,
         "name": "Piercing Ice",
         "icon": "spell_frost_frostbolt",
-        "description": "Increases the damage of Frost spells by {0}%.",
+        "description": "Increases the damage done by your Frost spells by {0}%.",
         "ranks": [
           [
             2
@@ -1265,11 +1263,10 @@
         "maxPoints": 1,
         "name": "Ice Lance",
         "icon": "spell_frost_frostblast",
-        "description": "Deals {0} to {1} Frost damage to an enemy target. Deals {2}% increased damage to Frozen targets.",
+        "description": "Deals {0} Frost damage to an enemy target. Deals {1}% increased damage to Frozen targets.",
         "ranks": [
           [
             28,
-            33,
             300
           ]
         ]
@@ -1392,10 +1389,10 @@
             12
           ],
           [
-            24
+            23
           ],
           [
-            36
+            35
           ]
         ],
         "notSimulated": true

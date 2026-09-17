@@ -380,7 +380,7 @@
         ],
         "maxPoints": 5,
         "name": "Weaponmaster",
-        "description": "Gives your melee weapon attacks a benefit depending on the weapon. Axe/Polearm: Increases your critical strike chance by {0}%. Mace/Staff: Your attacks ignore {1}% of your target's armor. Sword: Your successful melee attacks have a {2}% chance to trigger an extra attack on the target.",
+        "description": "Gives your melee weapon attacks a benefit depending on the weapon. |CFFFFFFFFAxe/Polearm: Increases your critical strike chance by {0}%. |CFFFFFFFFMace/Staff: Your attacks ignore {1}% of your target's armor. |CFFFFFFFFSword: Your successful melee attacks have a {2}% chance to trigger an extra attack on the target.",
         "ranks": [
           [
             1,
@@ -423,7 +423,7 @@
         "maxPoints": 2,
         "name": "Improved Slam",
         "icon": "ability_warrior_decisivestrike",
-        "description": "Reduces the global cooldown and cast time of your Slam ability by {0} sec. In addition, Slam no longer interrupts your melee swing time.",
+        "description": "Reduces the global cooldown and cast time of your Slam ability by {0}.2 sec. In addition, Slam no longer interrupts your melee swing time.",
         "ranks": [
           [
             0.25
@@ -544,7 +544,7 @@
         "maxPoints": 5,
         "name": "Cruelty",
         "icon": "ability_rogue_eviscerate",
-        "description": "Increases your chance to get a critical strike with melee attacks by {0}%.",
+        "description": "Improves your chance to get a critical strike with melee attacks by {0}%.",
         "ranks": [
           [
             1
@@ -889,7 +889,7 @@
         "maxPoints": 3,
         "name": "Precision",
         "icon": "ability_marksmanship",
-        "description": "Increases your chance to hit with all abilities and attacks by {0}%.",
+        "description": "Improves your chance to hit by {0}%.",
         "ranks": [
           [
             1
@@ -1396,7 +1396,7 @@
         "maxPoints": 2,
         "name": "Improved Shield Wall",
         "icon": "ability_warrior_shieldwall",
-        "description": "Reduces the cooldown of your Shield Wall ability by {0} min.",
+        "description": "Reduces the cooldown of your Shield Wall ability by {0}.1 min.",
         "ranks": [
           [
             5.5
@@ -1563,12 +1563,10 @@
         "maxPoints": 1,
         "name": "Shield Slam",
         "icon": "inv_shield_05",
-        "description": "Slam the target with your shield, causing {0} to {1} damage, increased by your Block Value, and has a {2}% chance of dispelling {3} magic effect on the target. Causes a very high amount of threat.",
+        "description": "Slam the target with your shield, causing {0} damage, increased by your Block Value, and has a 50% chance of dispelling {1} magic effect on the target. Causes a very high amount of threat.",
         "ranks": [
           [
-            421,
-            439,
-            50,
+            430,
             1
           ]
         ]

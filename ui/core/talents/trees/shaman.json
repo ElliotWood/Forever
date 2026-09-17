@@ -93,10 +93,10 @@
             3
           ],
           [
-            6
+            7
           ],
           [
-            9
+            10
           ]
         ]
       },
@@ -116,7 +116,7 @@
         "maxPoints": 5,
         "name": "Reverberation",
         "icon": "spell_frost_frostward",
-        "description": "Reduces the cooldown of your Shock spells by {0} sec.",
+        "description": "Reduces the cooldown of your Shock spells by {0}.1 sec.",
         "ranks": [
           [
             0.2
@@ -289,10 +289,10 @@
             23
           ],
           [
-            46
+            47
           ],
           [
-            69
+            70
           ]
         ],
         "notSimulated": true
@@ -341,7 +341,7 @@
           ],
           [
             6,
-            16
+            15
           ]
         ],
         "notSimulated": true
@@ -366,10 +366,10 @@
             3
           ],
           [
-            6
+            7
           ],
           [
-            9
+            10
           ]
         ]
       },
@@ -411,16 +411,16 @@
         "maxPoints": 3,
         "name": "Elemental Alacrity",
         "icon": "spell_lightning_lightningbolt01",
-        "description": "Reduces the cast time of your Lightning Bolt, Chain Lightning, and Lava Burst spells by {0} sec.",
+        "description": "Reduces the cast time of your Lightning Bolt, Chain Lightning, and Lava Burst spells by {0}.2 sec.",
         "ranks": [
           [
             0.17
           ],
           [
-            0.34
+            0.33
           ],
           [
-            0.51
+            0.5
           ]
         ]
       },
@@ -440,11 +440,10 @@
         "maxPoints": 1,
         "name": "Lava Burst",
         "icon": "spell_shaman_lavaburst",
-        "description": "You hurl molten lava at the target, dealing {0} to {1} Fire damage. If your Flame Shock is on the target, Lava Burst deals {2}% increased damage.",
+        "description": "You hurl molten lava at the target, dealing {0} Fire damage. If your Flame Shock is on the target, Lava Burst deals {1}% increased damage.",
         "ranks": [
           [
-            158,
-            187,
+            113,
             20
           ]
         ]
@@ -596,10 +595,10 @@
             33
           ],
           [
-            66
+            67
           ],
           [
-            99
+            100
           ]
         ]
       },
@@ -616,10 +615,10 @@
         "maxPoints": 2,
         "name": "Improved Ghost Wolf",
         "icon": "spell_nature_spiritwolf",
-        "description": "Reduces the cast time of your Ghost Wolf spell by {0} sec, and Ghost Wolf may be used indoors.",
+        "description": "Reduces the cast time of your Ghost Wolf spell by {0}.1 sec, and Ghost Wolf may be used indoors.",
         "ranks": [
           [
-            1.0
+            1
           ],
           [
             3
@@ -676,7 +675,7 @@
             5
           ],
           [
-            14,
+            13,
             27,
             10
           ],
@@ -994,7 +993,7 @@
         "maxPoints": 5,
         "name": "Improved Healing Wave",
         "icon": "spell_nature_magicimmunity",
-        "description": "Reduces the casting time of your Healing Wave spell by {0} sec.",
+        "description": "Reduces the casting time of your Healing Wave spell by {0}.1 sec.",
         "ranks": [
           [
             0.1
@@ -1069,10 +1068,10 @@
             17
           ],
           [
-            34
+            33
           ],
           [
-            51
+            50
           ]
         ]
       },
@@ -1119,7 +1118,7 @@
         "maxPoints": 5,
         "name": "Tidal Focus",
         "icon": "spell_frost_manarecharge",
-        "description": "Reduces the Mana cost of your healing spells by {0}% and increases your chance to hit with all spells and attacks by {1}%.",
+        "description": "Reduces the Mana cost of your healing spells by {0}% and improves your chance to hit by {1}%.",
         "ranks": [
           [
             1,
@@ -1218,10 +1217,10 @@
             23
           ],
           [
-            46
+            47
           ],
           [
-            69
+            70
           ]
         ],
         "notSimulated": true
@@ -1365,10 +1364,10 @@
             8
           ],
           [
-            16
+            17
           ],
           [
-            24
+            25
           ]
         ],
         "notSimulated": true
@@ -1385,11 +1384,9 @@
         "maxPoints": 1,
         "name": "Nature's Swiftness",
         "icon": "spell_nature_ravenform",
-        "description": "When activated, your next Nature spell with a casting time less than {0} sec becomes an instant cast spell.",
+        "description": "When activated, your next Nature spell with a casting time less than 10 sec. becomes an instant cast spell.",
         "ranks": [
-          [
-            10
-          ]
+          []
         ]
       },
       {

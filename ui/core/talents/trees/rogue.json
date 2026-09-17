@@ -239,19 +239,19 @@
         "description": "Increases the critical strike damage bonus of your Sinister Strike, Gouge, Backstab, Mutilate, Ghostly Strike, and Hemorrhage abilities by {0}%.",
         "ranks": [
           [
-            6
+            4
+          ],
+          [
+            8
           ],
           [
             12
           ],
           [
-            18
+            16
           ],
           [
-            24
-          ],
-          [
-            30
+            20
           ]
         ]
       },
@@ -470,21 +470,11 @@
         "maxPoints": 1,
         "name": "Venom",
         "icon": "inv_sword_31",
-        "description": "Finishing move that increases the damage of your Poisons by {0}% and your chance to apply Poisons by {1}%. Lasts longer per combo point: {2} point: {3} seconds {4} points: {5} seconds {6} points: {7} seconds {8} points: {9} seconds {10} points: {11} seconds",
+        "description": "Finishing move that increases the damage of your Poisons by {0}% and your chance to apply Poisons by {1}%. Lasts longer per combo point: 1 point : 9 seconds 2 points: 12 seconds 3 points: 15 seconds 4 points: 18 seconds 5 points: 21 seconds",
         "ranks": [
           [
             30,
-            10,
-            1,
-            9,
-            2,
-            12,
-            3,
-            15,
-            4,
-            18,
-            5,
-            21
+            10
           ]
         ],
         "prereqLocation": {
@@ -657,7 +647,7 @@
         "maxPoints": 3,
         "name": "Precision",
         "icon": "ability_marksmanship",
-        "description": "Increases your chance to hit with all attacks and Poisons by {0}%.",
+        "description": "Improves your chance to hit by {0}%.",
         "ranks": [
           [
             1
@@ -859,7 +849,7 @@
         "maxPoints": 5,
         "name": "Hack and Slash",
         "icon": "inv_sword_27",
-        "description": "Gives your melee weapon attacks a benefit depending on the weapon. Axe/Sword: Your successful melee attacks have a {0}% chance to trigger an extra attack on the target. Dagger/Fist: Increases your critical strike chance by {1}%. Mace: Your attacks ignore {2}% of your target's armor.",
+        "description": "Gives your melee weapon attacks a benefit depending on the weapon. |CFFFFFFFFAxe/Sword: Your successful melee attacks have a {0}% chance to trigger an extra attack on the target. |CFFFFFFFFDagger/Fist: Increases your critical strike chance by {1}%. |CFFFFFFFFMace: Your attacks ignore {2}% of your target's armor.",
         "ranks": [
           [
             1,
@@ -1087,7 +1077,7 @@
             33
           ],
           [
-            66
+            67
           ],
           [
             100
