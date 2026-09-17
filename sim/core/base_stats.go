@@ -51,8 +51,10 @@ var RaceOffsets = map[proto.Race]stats.Stats{
 		stats.Spirit:    0,
 		stats.Stamina:   -1,
 	},
-	// The Skyborne stat offsets have not been published. They sit at the class baseline
-	// until they are, rather than carrying an invented stat line.
+	// The Skyborne sit at the class baseline, which Wowhead's Forever gear planner
+	// confirms: races 95 and 96 in its baseStats.raceOffsets are zero for agility,
+	// strength, intellect, spirit and stamina alike, as the human's are. Snapshot in
+	// assets/db_inputs/wowhead_forever_gearplanner.txt.
 	proto.Race_RaceSkyborneHighOrder:  {},
 	proto.Race_RaceSkyborneWindshaper: {},
 	proto.Race_RaceUndead: {
