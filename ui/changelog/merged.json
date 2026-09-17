@@ -1,5 +1,11 @@
 [
 	{
+		"number": 167,
+		"title": "Retire three paladin TODOs the beta answered, and fix a drain range",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/167"
+	},
+	{
 		"number": 166,
 		"title": "Check the Go's per-point scaling against the talent trees",
 		"mergedAt": "2026-09-17",
