@@ -15,7 +15,10 @@ import urllib.request
 TABLES = [
     "SpellName", "Spell", "SpellEffect", "SpellMisc", "SpellLevels", "SpellCooldowns", "SpellDuration",
     "SpellCastTimes", "SpellAuraOptions", "SpellClassOptions", "SkillLineAbility", "ChrRaces", "ChrClasses",
-    "Talent", "TalentTab", "ItemSparse", "ItemSet", "SpellItemEnchantment",
+    # Forever's talent trees live in the retail-style Trait tables. Talent/TalentTab are Classic leftovers in
+    # the beta client (identical to Era apart from a blanked class id), so diffing them would mislead.
+    "TraitTree", "TraitNode", "TraitNodeEntry", "TraitDefinition", "TraitEdge", "TraitCond",
+    "ItemSparse", "ItemSet", "SpellItemEnchantment",
 ]
 SHOW = 25
 
