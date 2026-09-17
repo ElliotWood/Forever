@@ -276,8 +276,16 @@ func (b *bulkSimRunner) getRankedResults(signals simsignals.Signals, validCombos
 
 	reporterSignal := simsignals.CreateSignals()
 
+	// Triggering reporterSignal only asks the reporter to stop; it can already be past its
+	// check and about to send. The caller closes progress as soon as Run returns, so
+	// without waiting for the goroutine to actually finish that send lands on a closed
+	// channel and panics. Closed on the way out, waited for below.
+	reporterDone := make(chan struct{})
+	reporterStop := make(chan struct{})
+
 	// reporter for all sims combined.
 	go func() {
+		defer close(reporterDone)
 		for !signals.Abort.IsTriggered() && !reporterSignal.Abort.IsTriggered() {
 			complIters := atomic.LoadInt32(&totalCompletedIterations)
 			complSims := atomic.LoadInt32(&totalCompletedSims)
@@ -287,11 +295,17 @@ func (b *bulkSimRunner) getRankedResults(signals simsignals.Signals, validCombos
 				return
 			}
 
-			progress <- &proto.ProgressMetrics{
+			// Selected rather than sent outright: progress is unbuffered, so a send with
+			// nobody reading would block here and the wait below would never return.
+			select {
+			case progress <- &proto.ProgressMetrics{
 				TotalSims:           numCombinations,
 				CompletedSims:       complSims,
 				CompletedIterations: complIters,
 				TotalIterations:     int32(totalIterationsUpperBound),
+			}:
+			case <-reporterStop:
+				return
 			}
 			time.Sleep(time.Second)
 		}
@@ -337,6 +351,8 @@ func (b *bulkSimRunner) getRankedResults(signals simsignals.Signals, validCombos
 		result := <-results
 		if result.Result == nil || result.Result.Error != nil {
 			reporterSignal.Abort.Trigger() // cancel reporter
+			close(reporterStop)
+			<-reporterDone // and wait for it, so the caller can close progress
 			return nil, nil, result.Result.Error
 		}
 		if !result.Substitution.HasItemReplacements() {
@@ -345,6 +361,8 @@ func (b *bulkSimRunner) getRankedResults(signals simsignals.Signals, validCombos
 		rankedResults[i] = result
 	}
 	reporterSignal.Abort.Trigger() // cancel reporter
+	close(reporterStop)
+	<-reporterDone // and wait for it, so the caller can close progress
 
 	sort.Slice(rankedResults, func(i, j int) bool {
 		return rankedResults[i].Score() > rankedResults[j].Score()
