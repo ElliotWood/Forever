@@ -58,16 +58,16 @@ Their `update_items.yml` was dispatch-only and **never ran**. The real recipe is
 ## Inferred, not verified
 
 - Testing was organised mainly in class Discords and theorycrafting sheets; the repo names people, not sheets.
-- SoD shipped inside the `wow_classic_era` product, not a separate wago.tools product. Forever may differ; the
-  watcher raises an issue when a Forever product appears.
+- SoD shipped inside the `wow_classic_era` product, not a separate wago.tools product. (Forever's beta did the
+  same trick under `wow_classic_beta` - verified below.)
 
 ## What this fork already automates
 
 `.github/workflows/watch_wowhead_forever.yml`, every 6 hours:
 - snapshots the Wowhead Forever gear planner and opens a `data-change` PR with a readable diff
   (`docs/data-changes/`), and
-- opens one `forever-client-build` issue when wago.tools lists a Forever client, so raw DB2 tables
-  (Spell, SpellEffect, SpellMisc, SkillLineAbility, ChrRaces, ItemSparse...) can be added as a source.
+- records the newest Forever client build (1.60.x) on wago.tools and opens a `data/forever-client` PR with a
+  row-level diff of the sim's raw tables between builds.
 
 It does not regenerate `db.bin` or change sim rules. That remains review work.
 
