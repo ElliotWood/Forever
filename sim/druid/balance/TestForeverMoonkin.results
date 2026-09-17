@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 278.27838
-  tps: 293.51788
+  dps: 285.31993
+  tps: 300.55943
  }
 }
 dps_results: {
@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 278.27838
-  tps: 293.51788
+  dps: 285.31993
+  tps: 300.55943
  }
 }
 dps_results: {

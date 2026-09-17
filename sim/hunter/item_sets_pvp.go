@@ -13,19 +13,19 @@ import (
 var ItemSetLieutenantCommandersPursuit = core.NewItemSet(core.ItemSet{
 	Name: "Lieutenant Commander's Pursuit",
 	Bonuses: map[int32]core.ApplyEffect{
-		// Increases your chance to parry an attack by 1%.
+		// +20 Agility (14384), where Classic gave 1% parry.
 		2: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.Parry, 1*core.ParryRatingPerParryChance)
+			c.AddStat(stats.Agility, 20)
 		},
 		// Reduces the cooldown of your Concussive Shot by 1 sec.
 		4: func(agent core.Agent) {
 			// Nothing to do
 		},
-		// +15 Stamina.
+		// +20 Stamina (14467, was 15).
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.Stamina, 15)
+			c.AddStat(stats.Stamina, 20)
 		},
 	},
 })
@@ -34,19 +34,19 @@ var ItemSetLieutenantCommandersPursuit = core.NewItemSet(core.ItemSet{
 var ItemSetChampionsPursuit = core.NewItemSet(core.ItemSet{
 	Name: "Champion's Pursuit",
 	Bonuses: map[int32]core.ApplyEffect{
-		// Increases your chance to parry an attack by 1%.
+		// +20 Agility (14384), where Classic gave 1% parry.
 		2: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.Parry, 1*core.ParryRatingPerParryChance)
+			c.AddStat(stats.Agility, 20)
 		},
 		// Reduces the cooldown of your Concussive Shot by 1 sec.
 		4: func(agent core.Agent) {
 			// Nothing to do
 		},
-		// +15 Stamina.
+		// +20 Stamina (14467, was 15).
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.Stamina, 15)
+			c.AddStat(stats.Stamina, 20)
 		},
 	},
 })

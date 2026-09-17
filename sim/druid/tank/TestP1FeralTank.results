@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 367.42385
-  tps: 839.29828
+  dps: 361.26721
+  tps: 825.79621
  }
 }
 dps_results: {
@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 367.42385
-  tps: 839.29828
+  dps: 361.26721
+  tps: 825.79621
  }
 }
 dps_results: {

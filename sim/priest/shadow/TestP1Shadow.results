@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-Champion'sRaiment"
  value: {
-  dps: 578.15863
-  tps: 589.93254
+  dps: 574.92953
+  tps: 586.70344
  }
 }
 dps_results: {
@@ -134,8 +134,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 513.46175
-  tps: 525.19632
+  dps: 522.81803
+  tps: 534.5526
  }
 }
 dps_results: {
@@ -148,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-LieutenantCommander'sRaiment"
  value: {
-  dps: 578.15863
-  tps: 589.93254
+  dps: 574.92953
+  tps: 586.70344
  }
 }
 dps_results: {

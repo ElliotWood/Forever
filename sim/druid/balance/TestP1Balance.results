@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 283.50706
-  tps: 212.24438
+  dps: 290.45461
+  tps: 217.06889
  }
 }
 dps_results: {
@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 283.50706
-  tps: 212.24438
+  dps: 290.45461
+  tps: 217.06889
  }
 }
 dps_results: {

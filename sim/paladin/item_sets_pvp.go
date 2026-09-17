@@ -37,10 +37,14 @@ var ItemSetFieldMarshalsAegis = core.NewItemSet(core.ItemSet{
 		4: func(agent core.Agent) {
 			// Nothing to do
 		},
-		// Increases damage and healing done by magical spells and effects by up to 23.
+		// Increases healing done by up to 44 and damage done by up to 15 for all magical spells and
+		// effects (467550).
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.SpellPower, 23)
+			c.AddStats(stats.Stats{
+				stats.HealingPower: 44,
+				stats.SpellDamage:  15,
+			})
 		},
 	},
 })

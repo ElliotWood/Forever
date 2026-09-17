@@ -124,22 +124,32 @@ var ItemSetGreenDragonMail = core.NewItemSet(core.ItemSet{
 // https://www.wowhead.com/classic/item-set=321/imperial-plate
 var ItemSetImperialPlate = core.NewItemSet(core.ItemSet{
 	Name: "Imperial Plate",
+	// Rebuilt in Forever: 2/4/6 became 2/3/4/5/6 and every bonus changed (ItemSetSpell, beta client
+	// 1.60.1.69893). Classic's armour, attack power and stamina are all gone.
 	Bonuses: map[int32]core.ApplyEffect{
-		// +100 Armor.
+		// Increased Defense +7 (13385).
 		2: func(agent core.Agent) {
 			character := agent.GetCharacter()
-			character.AddStat(stats.Armor, 100)
+			character.AddStat(stats.Defense, 7)
 		},
-		// +28 Attack Power.
+		// Improves your chance to hit by 1% (1251990).
 		3: func(agent core.Agent) {
 			character := agent.GetCharacter()
-			character.AddStat(stats.AttackPower, 28)
-			character.AddStat(stats.RangedAttackPower, 28)
+			character.AddStat(stats.MeleeHit, 1*core.MeleeHitRatingPerHitChance)
+			character.AddStat(stats.SpellHit, 1*core.SpellHitRatingPerHitChance)
 		},
-		// +18 Stamina.
-		4: func(agent core.Agent) {
+		// Imperial March: movement speed cannot drop below 80%.
+		4: func(_ core.Agent) {},
+		// +20 Strength (1251984).
+		5: func(agent core.Agent) {
 			character := agent.GetCharacter()
-			character.AddStat(stats.Stamina, 18)
+			character.AddStat(stats.Strength, 20)
+		},
+		// Improves your chance to crit by 1% (1251991).
+		6: func(agent core.Agent) {
+			character := agent.GetCharacter()
+			character.AddStat(stats.MeleeCrit, 1*core.CritRatingPerCritChance)
+			character.AddStat(stats.SpellCrit, 1*core.SpellCritRatingPerCritChance)
 		},
 	},
 })

@@ -134,8 +134,8 @@ dps_results: {
 dps_results: {
  key: "TestForeverMageFire-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 354.00992
-  tps: 307.48459
+  dps: 366.43326
+  tps: 317.42327
  }
 }
 dps_results: {

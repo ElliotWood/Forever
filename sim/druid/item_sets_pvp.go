@@ -8,10 +8,14 @@ import (
 var ItemSetChampionsRefuge = core.NewItemSet(core.ItemSet{
 	Name: "Champion's Refuge",
 	Bonuses: map[int32]core.ApplyEffect{
-		// +40 Attack Power.
+		// Increases healing done by up to 44 and damage done by up to 15 for all magical spells and
+		// effects (467550).
 		2: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.AttackPower, 40)
+			c.AddStats(stats.Stats{
+				stats.HealingPower: 44,
+				stats.SpellDamage:  15,
+			})
 		},
 		// Increases your movement speed by 15% while in Bear, Cat, or Travel Form. Only active outdoors.
 		4: func(agent core.Agent) {
@@ -28,10 +32,14 @@ var ItemSetChampionsRefuge = core.NewItemSet(core.ItemSet{
 var ItemSetLieutenantCommandersRefuge = core.NewItemSet(core.ItemSet{
 	Name: "Lieutenant Commander's Refuge",
 	Bonuses: map[int32]core.ApplyEffect{
-		// +40 Attack Power.
+		// Increases healing done by up to 44 and damage done by up to 15 for all magical spells and
+		// effects (467550).
 		2: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.AttackPower, 40)
+			c.AddStats(stats.Stats{
+				stats.HealingPower: 44,
+				stats.SpellDamage:  15,
+			})
 		},
 		// Increases your movement speed by 15% while in Bear, Cat, or Travel Form. Only active outdoors.
 		4: func(agent core.Agent) {
