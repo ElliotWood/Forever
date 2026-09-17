@@ -50,6 +50,11 @@ type talentNode struct {
 	Name        string              `json:"name"`
 	Description string              `json:"description"`
 	Ranks       [][]json.RawMessage `json:"ranks"`
+
+	// The picker warns that points spent here do nothing. Read by
+	// TestUnsimulatedTalentsAreMarked, which checks the flag is on every talent the sim
+	// does not implement.
+	NotSimulated bool `json:"notSimulated"`
 }
 
 type talentTree struct {

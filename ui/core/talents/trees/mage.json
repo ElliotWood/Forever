@@ -683,7 +683,8 @@
           [
             9
           ]
-        ]
+        ],
+        "notSimulated": true
       },
       {
         "fieldName": "burningSoul",
@@ -1509,7 +1510,8 @@
             431,
             1
           ]
-        ]
+        ],
+        "notSimulated": true
       }
     ]
   }
