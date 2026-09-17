@@ -143,6 +143,28 @@ func TestTalentTreesMatchTheirProtos(t *testing.T) {
 	}
 }
 
+// No two talents may share a grid slot. The reading-order check above only notices a
+// collision when the duplicate happens to sort out of order, so a pair landing in the
+// same cell can otherwise pass silently. A wago.tools Trait-table export proposed exactly
+// that for warrior Protection (Bastion onto Vitality's cell); see
+// docs/talent-check-2026-09-17.md.
+func TestTalentsDoNotShareASlot(t *testing.T) {
+	for _, class := range talentClasses {
+		for _, tree := range loadTrees(t, class.name) {
+			seen := map[talentLocation]string{}
+			for _, talent := range tree.Talents {
+				if other, taken := seen[talent.Location]; taken {
+					t.Errorf("%s/%s: %s and %s both sit at row %d, col %d",
+						class.name, tree.Name, other, talent.FieldName,
+						talent.Location.RowIdx, talent.Location.ColIdx)
+					continue
+				}
+				seen[talent.Location] = talent.FieldName
+			}
+		}
+	}
+}
+
 var talentsStringRegex = regexp.MustCompile(`talentsString: '([0-9-]*)'`)
 var presetNameRegex = regexp.MustCompile(`makePresetTalents\(\s*'([^']+)'`)
 var buildLinkRegex = regexp.MustCompile(`href="([a-z_]+)/\?build=([^"]+)"`)

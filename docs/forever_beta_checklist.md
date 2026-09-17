@@ -58,6 +58,7 @@ The demo mostly showed rank 1 of each talent. Where a talent has more ranks than
 - `sim/paladin/hammer_of_wrath.go:29` — Only rank 1 of Instrument of Law was seen at 0.5 sec, the full second the tree reads at rank 2 comes from the community talent calculator rather than from a tooltip.
 - `sim/paladin/holy_shield.go:18` — Only rank 1 was seen at 110, up from Classic's 65. The other ranks are scaled by the same ratio until the beta shows them.
 - `sim/paladin/holy_strike.go:15` — assumed baseline, beta will confirm - only the level 60 rank is modelled, and the flat damage is taken from the published tooltip rather than from the game. Forever's own spell id for Holy Strike is 17143, which the item database does not carry, so the sim keeps Classic's unused 13953.
+  - Checked against the client's `SpellEffect` on 2026-09-17: spell 17143 is `Effect=58`, weapon damage plus a flat amount, which is the shape the sim models. **The 0.429 spell power coefficient is still unconfirmed and the client cannot settle it** - `Coefficient` is zero on all 42,449 rows in build 1.60.1.69893, so the column is simply not populated. Do not read that zero as "no coefficient". A beta tooltip or a damage log is still what is needed.
 - `sim/paladin/holy_strike.go:17` — Holy damage on the melee hit table, so it rolls partial resists the way every other Holy ability here does. Whether a melee-table Holy strike actually partial resists is unknown; if it does not, it wants `SpellFlagIgnoreResists`. Raised by AdamRC from the demo, 16 September.
 - `sim/paladin/holy_strike.go:29` — Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is assumed to scale linearly.
 - `sim/paladin/holy_strike.go:41` — Only rank 1 of Iron Creed's threat was seen at 5%, the 5% per rank the tree reads comes from the community talent calculator rather than from a tooltip.
@@ -250,3 +251,27 @@ What would settle it: an item tooltip read off the beta client for any of the 19
 version marker on the gear planner payload. The scaling tables in the same snapshot all
 agree with the sim - base stat offsets for all ten races, spell crit per intellect for all
 seven casting classes - so the snapshot is not wrong in general.
+
+**Settled 2026-09-17: the sim is right, no change needed.** `ItemSparse` from the beta
+client (wago.tools build 1.60.1.69893, the table `tools/data_watch/wago_db2_diff.py`
+already watches) carries the stat block for 2,316 of the sim's items. Onyxia Tooth
+Pendant - the clearest of the 19 - reads agility, stamina, fire resistance, hit and crit
+in the client, exactly the stats the sim gives it. The gear planner's 7/8 was the outlier.
+
+Reading that table takes care, and three passes were wrong before the fourth was right:
+
+- `StatPercentEditor` is an allocation budget, not the displayed value, so only *which*
+  stats an item carries can be compared, never the numbers.
+- The mod ids are the retail `ITEM_MOD_*` set: 45 is spell power (not 31), 38 attack
+  power, 31/32 generic hit and crit. Guessing 31 for spell power invented 821 retunes.
+- The resistance ids are 51 fire, 52 frost, 54 shadow, 55 nature, 56 arcane - pinned by
+  the items carrying them (Fiery Cloak, Icy Cloak, Ring of the Shadow, Dragonscale). An
+  off-by-one here turned every nature resist into a fake arcane one.
+- The client splits no hit/crit into melee and spell variants; the sim does, and picks by
+  item type. Fold the sim's back down before comparing.
+
+What is left after those corrections is ~350 items, and the ones checked are all the same
+known representation difference rather than a retune: Classic delivered weapon spell power
+through an equip effect, which does not live in `ItemSparse`. Grand Marshal's Mageblade
+holds its 72 spell power that way, Hammer of the Gathering Storm its 53. The script is
+`review/compare-itemsparse.mjs`.
