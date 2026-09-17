@@ -248,8 +248,7 @@
             40,
             80
           ]
-        ],
-        "notSimulated": true
+        ]
       },
       {
         "fieldName": "twoHandedWeaponSpecialization",
@@ -723,7 +722,6 @@
             20
           ]
         ],
-        "notSimulated": true,
         "iconUrl": "assets/img/talents/warrior/blood-crazed.png"
       },
       {

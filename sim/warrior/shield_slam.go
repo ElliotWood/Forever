@@ -11,12 +11,12 @@ func (warrior *Warrior) registerShieldSlamSpell() {
 		return
 	}
 
+	// Rank 4 in the beta client: 640-670 plus Block Value once. The 421-439 this used to carry is
+	// rank 1's, and the second Block Value and 15% of attack power were Season of Discovery's.
 	spellID := int32(23925)
-	damageLow := 421.0
-	damageHigh := 439.0
+	damageLow := 640.0
+	damageHigh := 670.0
 	threat := 254.0
-
-	apCoef := 0.15
 
 	warrior.ShieldSlam = warrior.RegisterSpell(AnyStance, core.SpellConfig{
 		SpellCode:   SpellCode_WarriorShieldSlam,
@@ -52,7 +52,7 @@ func (warrior *Warrior) registerShieldSlamSpell() {
 		BonusCoefficient: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			damage := sim.Roll(damageLow, damageHigh) + warrior.BlockValue()*2 + apCoef*spell.MeleeAttackPower(target)
+			damage := sim.Roll(damageLow, damageHigh) + warrior.BlockValue()
 			result := spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMeleeSpecialHitAndCrit)
 
 			if !result.Landed() {
