@@ -1,7 +1,6 @@
 package druid
 
 import (
-	"slices"
 	"time"
 
 	"github.com/wowsims/classic/sim/core"
@@ -25,7 +24,6 @@ func (druid *Druid) ApplyTalents() {
 	druid.applyNaturesMajesty()
 	druid.applyNaturesReach()
 	druid.applyNaturesSplendor()
-	druid.applyBalanceOfNature()
 	druid.applyVengeance()
 	druid.applyNaturesGrace()
 	druid.applyEclipse()
@@ -164,59 +162,6 @@ func (druid *Druid) applyNaturesSplendor() {
 			}
 		},
 	})
-}
-
-// Casting a spell of one school empowers the next damaging spell of the other.
-func (druid *Druid) applyBalanceOfNature() {
-	if druid.Talents.BalanceOfNature == 0 {
-		return
-	}
-
-	// TODO: Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
-	multiplier := 1 + 0.01*float64(druid.Talents.BalanceOfNature)
-	duration := time.Second * 10
-
-	arcaneAura := druid.RegisterAura(core.Aura{
-		Label:    "Balance of Nature (Arcane)",
-		ActionID: core.ActionID{SpellID: 16880, Tag: 1},
-		Duration: duration,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexArcane] *= multiplier
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexArcane] /= multiplier
-		},
-	})
-
-	natureAura := druid.RegisterAura(core.Aura{
-		Label:    "Balance of Nature (Nature)",
-		ActionID: core.ActionID{SpellID: 16880, Tag: 2},
-		Duration: duration,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexNature] *= multiplier
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexNature] /= multiplier
-		},
-	})
-
-	core.MakePermanent(druid.RegisterAura(core.Aura{
-		Label: "Balance of Nature",
-		// The cast that just went out is the one that spends the buff, so it's consumed after the damage is rolled.
-		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-			if !slices.Contains(balanceSpellCodes, spell.SpellCode) {
-				return
-			}
-
-			if spell.SpellSchool.Matches(core.SpellSchoolNature) {
-				natureAura.Deactivate(sim)
-				arcaneAura.Activate(sim)
-			} else if spell.SpellSchool.Matches(core.SpellSchoolArcane) {
-				arcaneAura.Deactivate(sim)
-				natureAura.Activate(sim)
-			}
-		},
-	}))
 }
 
 func (druid *Druid) applyVengeance() {

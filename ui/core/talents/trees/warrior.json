@@ -1451,72 +1451,10 @@
         "notSimulated": true
       },
       {
-        "fieldName": "vitality",
+        "fieldName": "bastion",
         "location": {
           "rowIdx": 4,
           "colIdx": 3
-        },
-        "spellIds": [
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        "maxPoints": 5,
-        "name": "Vitality",
-        "icon": "inv_helmet_21",
-        "description": "Increases your Stamina and Strength by {0}%.",
-        "ranks": [
-          [
-            2
-          ],
-          [
-            4
-          ],
-          [
-            6
-          ],
-          [
-            8
-          ],
-          [
-            10
-          ]
-        ]
-      },
-      {
-        "fieldName": "focusedRage",
-        "location": {
-          "rowIdx": 5,
-          "colIdx": 0
-        },
-        "spellIds": [
-          0,
-          0,
-          0
-        ],
-        "maxPoints": 3,
-        "name": "Focused Rage",
-        "icon": "ability_warrior_focusedrage",
-        "description": "Reduces the Rage cost of your offensive abilities by {0}.",
-        "ranks": [
-          [
-            1
-          ],
-          [
-            2
-          ],
-          [
-            3
-          ]
-        ]
-      },
-      {
-        "fieldName": "bastion",
-        "location": {
-          "rowIdx": 5,
-          "colIdx": 2
         },
         "spellIds": [
           0,
@@ -1544,6 +1482,33 @@
           ],
           [
             10
+          ]
+        ]
+      },
+      {
+        "fieldName": "focusedRage",
+        "location": {
+          "rowIdx": 5,
+          "colIdx": 2
+        },
+        "spellIds": [
+          0,
+          0,
+          0
+        ],
+        "maxPoints": 3,
+        "name": "Focused Rage",
+        "icon": "ability_warrior_focusedrage",
+        "description": "Reduces the Rage cost of your offensive abilities by {0}.",
+        "ranks": [
+          [
+            1
+          ],
+          [
+            2
+          ],
+          [
+            3
           ]
         ]
       },

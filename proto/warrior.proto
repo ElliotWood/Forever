@@ -16,9 +16,9 @@ message WarriorTalents {
 	bool spearing_strike = 9;
 	int32 two_handed_weapon_specialization = 10;
 	int32 impale = 11;
-	int32 weaponmaster = 14;
-	bool sweeping_strikes = 13;
 	int32 bloodthrill = 12;
+	bool sweeping_strikes = 13;
+	int32 weaponmaster = 14;
 	int32 improved_slam = 15;
 	int32 improved_hamstring = 16;
 	bool mortal_strike = 17;
@@ -59,10 +59,9 @@ message WarriorTalents {
 	int32 improved_shield_wall = 48;
 	bool concussion_blow = 49;
 	int32 improved_shield_bash = 50;
-	int32 vitality = 51;
+	int32 bastion = 51;
 	int32 focused_rage = 52;
-	int32 bastion = 53;
-	bool shield_slam = 54;
+	bool shield_slam = 53;
 }
 
 enum WarriorShout {

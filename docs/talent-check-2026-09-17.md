@@ -360,3 +360,17 @@ not disputed here — it is unverified either way, and the trees do not rely on 
 
 **Before acting on a future run of this tool**, confirm any position or prereq change against a second
 source. The guards that caught these: `TestTalentTreesMatchTheirProtos` and `TestPresetBuildsAreLegal`.
+
+## Verdict reversed (17 September, later)
+
+The rejection above rested on the talentsforever crawl being a reading of the beta. Its own data export says it
+was read off BlizzCon demo footage and Blizzard's slides, so it predates build 1.60.1.69893. The client has no
+trait node at all for Restless Blades, Drain Hope, Balance of Nature or Vitality, and Wowhead Forever lists
+Flawless Execution (1310711) and Wrack (1316697). Applied: the two renames, both removals, the shaman and warrior
+position changes and Aggression's dropped prerequisite. Presets that spent points in a removed talent moved them
+(Moonkin into Genesis, Protection warrior into Improved Disarm and Improved Shield Bash), and the Elemental preset
+spends its Restoration points in Totemic Focus, which now sits where Tidal Mastery was.
+
+Not applied: the hunter's Improved Serpent Sting. The node carries Classic's spell id 19464, a malformed PosY and
+the lowest node id in the tab, next to the newer Improved Stings that took over its effect; it reads as a node the
+client never deleted.

@@ -39,7 +39,7 @@ func TestP1TankWarrior(t *testing.T) {
 	}))
 }
 
-var P1Talents = "31--5525312333000105351"
+var P1Talents = "31--552531233330012531"
 
 var PlayerOptionsBasic = &proto.Player_TankWarrior{
 	TankWarrior: &proto.TankWarrior{
