@@ -152,3 +152,21 @@ Several abilities the search does not find by name are implemented under another
 Quickness is an `AddStat(stats.Dodge, 1)`, Axe Specialization is
 `AddWeaponSpecializationCrit`, Bane of Agony lives in `sim/warlock/curses.go`. Check for the
 effect before concluding an ability is missing.
+
+## The Legacy system and the priest race abilities (checked 17 September)
+
+Two more published datasets, neither of which the sim implements, both deliberately.
+
+**Legacy** is three account-wide trees of 20 perks bought with a point per challenge
+completed. None of the 20 touches a combat stat - they are rested experience, mount speed,
+profession skill-ups, reputation and vendor discounts. The one that comes closest,
+Adventure's "Talented", starts talent points at level 5 instead of 10, which changes
+nothing for a level 60 character who has all 51 either way.
+
+**Priest race abilities** are a per-race spell each, listed in the data as `class_racials`.
+Only Starshards is modelled, and `sim/priest/starshards.go` gates it to Night Elves, which
+is right. The other eleven are heals, crowd control, dispels, or retaliation that fires
+only when the priest is hit - Touch of Weakness and Shadowguard both damage an attacker, so
+they never trigger for a priest the sim never has attacked.
+
+If either dataset grows a combat number, these are the two places to re-check.
