@@ -1,5 +1,9 @@
 # Forever talent trees: vendored sim data vs beta client 1.60.1.69893
 
+> **Checked 2026-09-17: none of the seven structural differences below were applied.** An independent
+> source contradicts every one of them, and two would break shipped presets or collide two talents in one
+> slot. See "Verdict on the seven structural differences" at the end before acting on anything here.
+
 Vendored = `ui/core/talents/trees/*.json` in ElliotWood/Forever (the trees the sim runs on). Client = wago.tools DB2 export of build 1.60.1.69893: TraitTree/TraitNode/TraitNodeEntry/TraitDefinition/TraitEdge/TraitNodeGroup*/TraitCond, names from TraitDefinition.OverrideName_lang or SpellName.
 
 ## Key finding on the source tables
@@ -325,3 +329,34 @@ Vendored tree order: Arms, Fury, Protection. Client tabs left to right map to: A
 - **Focused Rage**: position (row,col 0-based): vendored (5,0), client (5,2); spell id: vendored 0, client 29787
 - **Bastion**: position (row,col 0-based): vendored (5,2), client (4,3); spell id: vendored 0, client 16538
 - ONLY VENDORED **Vitality** (row 4, col 3, 5 ranks)
+
+## Verdict on the seven structural differences (checked 2026-09-17)
+
+All seven were checked against the sim trees and against the independent talentsforever crawl
+(`C:/repo/forver/crawl/talentsforever/data.json`, 470 talents — the same count the sim vendors).
+**None were applied.** Each structural claim is contradicted by the crawl:
+
+| Claim in this report | Crawl says | Action |
+|---|---|---|
+| Shaman Tidal Mastery (0,2)->(3,0), Totemic Focus (3,0)->(0,2) | Tidal Mastery r0c2, Totemic Focus r3c0 — the vendored layout | not applied |
+| Warrior Focused Rage (5,0)->(5,2), Bastion (5,2)->(4,3) | Bastion at (4,3) collides with Vitality, which the crawl confirms at (4,3) | not applied |
+| Rogue Aggression prereq: client none | crawl records `req="Hack and Slash"` | not applied |
+| Druid Balance of Nature missing from client | present at r2c3 | not applied |
+| Warrior Vitality missing from client | present at r4c3 | not applied |
+| Rogue Restless Blades renamed to Flawless Execution | Restless Blades at r3c1 | not applied |
+| Warlock Drain Hope renamed to Wrack | Drain Hope at r6c1, req Siphon Life | not applied |
+| Hunter Improved Serpent Sting only in client | absent from the crawl | not applied (this report already called it a stale node) |
+
+Two further signals that the Trait-table reading is off rather than the trees:
+
+- Applying the shaman swap makes a shipped Elemental preset **illegal**: it spends 14 points in
+  Restoration, and Tidal Mastery at (3,0) needs 15 spent above it. `TestPresetBuildsAreLegal` catches this.
+- Applying the warrior swap puts **two talents in one slot** (Bastion and Vitality at (4,3)).
+
+The likely cause is the one this report already flags: several client nodes carry off-grid PosX/PosY
+that had to be rescaled, and where two nodes share a definition the higher id was kept. Those two
+heuristics can plausibly swap a pair of positions. The spell-id column is a different matter and is
+not disputed here — it is unverified either way, and the trees do not rely on it.
+
+**Before acting on a future run of this tool**, confirm any position or prereq change against a second
+source. The guards that caught these: `TestTalentTreesMatchTheirProtos` and `TestPresetBuildsAreLegal`.
