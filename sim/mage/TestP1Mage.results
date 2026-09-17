@@ -176,43 +176,43 @@ dps_results: {
 dps_results: {
  key: "TestP1Mage-Phase1-Settings-Gnome-p0.bis-DPS-forever_frost-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 559.89156
-  tps: 553.89031
+  dps: 564.01201
+  tps: 546.21741
  }
 }
 dps_results: {
  key: "TestP1Mage-Phase1-Settings-Gnome-p0.bis-DPS-forever_frost-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 559.89156
-  tps: 337.56267
+  dps: 564.01201
+  tps: 339.5739
  }
 }
 dps_results: {
  key: "TestP1Mage-Phase1-Settings-Gnome-p0.bis-DPS-forever_frost-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 547.1006
-  tps: 330.48815
+  dps: 553.34925
+  tps: 332.23319
  }
 }
 dps_results: {
  key: "TestP1Mage-Phase1-Settings-Gnome-p0.bis-DPS-forever_frost-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 481.59326
-  tps: 477.27523
+  dps: 490.62075
+  tps: 476.01363
  }
 }
 dps_results: {
  key: "TestP1Mage-Phase1-Settings-Gnome-p0.bis-DPS-forever_frost-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 481.59326
-  tps: 289.4244
+  dps: 490.62075
+  tps: 294.79678
  }
 }
 dps_results: {
  key: "TestP1Mage-Phase1-Settings-Gnome-p0.bis-DPS-forever_frost-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 483.83926
-  tps: 293.04838
+  dps: 489.21287
+  tps: 295.18743
  }
 }
 dps_results: {

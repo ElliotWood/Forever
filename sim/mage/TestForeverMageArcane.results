@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.07683
+  weights: 0.18155
   weights: 0
-  weights: 0.40981
-  weights: 0.29113
+  weights: 0.41375
+  weights: 0.29402
   weights: 0
-  weights: 0.11868
-  weights: 0
-  weights: 0
+  weights: 0.11973
   weights: 0
   weights: 0
-  weights: 5.87807
-  weights: 3.87884
+  weights: 0
+  weights: 0
+  weights: 5.57119
+  weights: 4.10389
   weights: 0
   weights: 0
   weights: 0
@@ -99,126 +99,126 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-ArcanistRegalia"
  value: {
-  dps: 535.89744
-  tps: 453.15126
+  dps: 542.33623
+  tps: 461.55206
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-Champion'sArcanum"
  value: {
-  dps: 543.10434
-  tps: 521.16714
+  dps: 545.62908
+  tps: 524.23698
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-EnigmaVestments"
  value: {
-  dps: 543.37774
-  tps: 521.45231
+  dps: 548.68596
+  tps: 524.54694
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-FieldMarshal'sRegalia"
  value: {
-  dps: 565.55476
-  tps: 543.89061
+  dps: 571.86734
+  tps: 547.65311
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-Illusionist'sAttire"
  value: {
-  dps: 519.41095
-  tps: 500.68088
+  dps: 522.64902
+  tps: 500.8908
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 452.02455
-  tps: 437.87638
+  dps: 454.53214
+  tps: 441.13909
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-LieutenantCommander'sArcanum"
  value: {
-  dps: 543.10434
-  tps: 521.16714
+  dps: 545.62908
+  tps: 524.23698
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-NetherwindRegalia"
  value: {
-  dps: 533.47567
-  tps: 514.17243
+  dps: 534.21142
+  tps: 513.58546
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-Sorcerer'sRegalia"
  value: {
-  dps: 521.7575
-  tps: 506.77528
+  dps: 528.43617
+  tps: 512.44119
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-Warlord'sRegalia"
  value: {
-  dps: 565.55476
-  tps: 543.89061
+  dps: 571.86734
+  tps: 547.65311
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-Average-Default"
  value: {
-  dps: 511.68643
-  tps: 487.60421
+  dps: 515.9292
+  tps: 492.06506
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-Settings-Gnome-p0.bis-DPS-forever_arcane-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 523.79413
-  tps: 910.93426
+  dps: 528.5881
+  tps: 910.3961
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-Settings-Gnome-p0.bis-DPS-forever_arcane-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 523.79413
-  tps: 518.09192
+  dps: 528.5881
+  tps: 526.49653
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-Settings-Gnome-p0.bis-DPS-forever_arcane-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 541.40111
-  tps: 551.77024
+  dps: 547.14412
+  tps: 556.51343
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-Settings-Gnome-p0.bis-DPS-forever_arcane-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 424.71915
-  tps: 619.23488
+  dps: 433.03832
+  tps: 626.26487
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-Settings-Gnome-p0.bis-DPS-forever_arcane-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 424.71915
-  tps: 395.66553
+  dps: 433.03832
+  tps: 402.55737
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-Settings-Gnome-p0.bis-DPS-forever_arcane-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 468.65463
-  tps: 472.72521
+  dps: 475.3451
+  tps: 478.43916
  }
 }
 dps_results: {
  key: "TestForeverMageArcane-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 512.20506
-  tps: 488.96509
+  dps: 515.34017
+  tps: 490.31693
  }
 }

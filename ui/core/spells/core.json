@@ -459,6 +459,17 @@
 		"source": "assumed",
 		"tooltip": "Passive\nYour spells and attacks have a 5% chance to drain Health from the target, up to 5% of your maximum Health."
 	},
+	"460550": {
+		"ability": "Eureka!",
+		"assumptions": [
+			"A warlock tooltip listed only the damage half, so whether the mana saving reaches every ability or only caster ones is unsettled; it is applied to whatever spends a charge."
+		],
+		"file": "sim/core/racials.go",
+		"foreverId": 460550,
+		"note": "A Forever-only gnome racial; 460550 is Forever’s own id and the Classic database cannot name or draw it. Both figures come from the racials guide, read from the demo.",
+		"source": "assumed",
+		"tooltip": "Instant\n2 min cooldown\nYour next 3 damaging or healing abilities cost 50% less Mana and do 10% more damage or healing."
+	},
 	"5242": {
 		"ability": "Battle Shout",
 		"file": "sim/core/buffs.go",
