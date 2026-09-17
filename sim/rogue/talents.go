@@ -220,14 +220,14 @@ func (rogue *Rogue) applyWeaponExpertise() {
 	rogue.AddStat(stats.Expertise, float64(rogue.Talents.WeaponExpertise)*core.ExpertiseRatingPerExpertiseChance)
 }
 
-// Serrated Blades ignores a share of the target's Armor rather than a flat amount, and the
-// share doesn't grow with the rank. The Rupture bonus lives on the spell itself.
+// Serrated Blades ignores a share of the target's Armor rather than a flat amount, 3% per
+// rank in the beta client. The Rupture bonus lives on the spell itself.
 func (rogue *Rogue) applySerratedBlades() {
 	if rogue.Talents.SerratedBlades == 0 {
 		return
 	}
 
-	rogue.PseudoStats.ArmorIgnorePercent += 0.03
+	rogue.PseudoStats.ArmorIgnorePercent += 0.03 * float64(rogue.Talents.SerratedBlades)
 }
 
 // Cutthroat lets Ambush be used outside of Stealth for a short while after a Backstab.
@@ -236,9 +236,7 @@ func (rogue *Rogue) applyCutthroat() {
 		return
 	}
 
-	// TODO: Only rank 1's 3% was seen, and the data behind the tree copies it into every other
-	// rank rather than observing them, so the linear scaling here is an assumption. The 10 sec
-	// duration is held at rank 1 either way, a duration has no scaling to read. Beta will confirm.
+	// 3% per rank, and a 10 sec window at every rank (beta client).
 	procChance := 0.03 * float64(rogue.Talents.Cutthroat)
 
 	rogue.CutthroatAura = rogue.RegisterAura(core.Aura{
@@ -315,9 +313,7 @@ func (rogue *Rogue) quietusMultiplier(sim *core.Simulation) float64 {
 		return 1
 	}
 
-	// TODO: Only rank 1 was seen and the damage bonus is assumed to scale linearly. The health
-	// threshold cannot be extrapolated alongside it, so rank 1's 35% is used for every rank and
-	// the tree now reads the same. Beta will confirm.
+	// 2% per rank, below 35% health at every rank (beta client).
 	return 1 + 0.02*float64(rogue.Talents.Quietus)
 }
 

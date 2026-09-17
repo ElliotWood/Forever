@@ -6,15 +6,31 @@ import (
 	"github.com/wowsims/classic/sim/core"
 )
 
-var MutilateActionID = core.ActionID{SpellID: 1329}
-
 func (rogue *Rogue) registerMutilateSpell() {
 	if !rogue.Talents.Mutilate {
 		return
 	}
 
+	// The beta client ranks Mutilate: 23, 33, 48 and 67 flat added to each hand's weapon damage
+	// before the 75%. Rank 1 is level 30, so level 25 borrows it.
+	flatDamage := map[int32]float64{
+		25: 23,
+		40: 33,
+		50: 48,
+		60: 67,
+	}[rogue.Level]
+
+	spellID := map[int32]int32{
+		25: 1310707,
+		40: 399956,
+		50: 1241582,
+		60: 1241584,
+	}[rogue.Level]
+
+	actionID := core.ActionID{SpellID: spellID}
+
 	rogue.mutilateOH = rogue.RegisterSpell(core.SpellConfig{
-		ActionID:    MutilateActionID.WithTag(2),
+		ActionID:    actionID.WithTag(2),
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
 		ProcMask:    core.ProcMaskMeleeOHSpecial,
@@ -27,20 +43,19 @@ func (rogue *Rogue) registerMutilateSpell() {
 		BonusCoefficient: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := rogue.mutilateDamage(target, rogue.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)))
+			baseDamage := rogue.mutilateDamage(target, flatDamage, rogue.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)))
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 		},
 	})
 
 	rogue.Mutilate = rogue.RegisterSpell(core.SpellConfig{
 		SpellCode:   SpellCode_RogueMutilate,
-		ActionID:    MutilateActionID,
+		ActionID:    actionID,
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: core.DefenseTypeMelee,
 		ProcMask:    core.ProcMaskMeleeMHSpecial,
 		Flags:       rogue.builderFlags(),
 
-		// TODO: The tooltip showed no Energy cost, the 60 is taken from the Classic Mutilate.
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   60,
 			Refund: 0.8,
@@ -52,12 +67,11 @@ func (rogue *Rogue) registerMutilateSpell() {
 			IgnoreHaste: true,
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			// TODO: The tooltip didn't repeat the Classic dagger requirement, it's assumed to still apply.
+			// Every rank, and both hand strikes, require a Dagger in the beta client.
 			return rogue.HasDagger(core.MainHand) && rogue.HasDagger(core.OffHand)
 		},
 
-		// TODO: Only rank 1 of Puncturing Wounds was seen, the crit chance it gives Mutilate is
-		// assumed to scale linearly. Beta will confirm.
+		// Puncturing Wounds gives 5% per rank (beta client).
 		BonusCritRating: 5 * core.CritRatingPerCritChance * float64(rogue.Talents.PuncturingWounds),
 
 		CritDamageBonus: rogue.lethality(),
@@ -70,7 +84,7 @@ func (rogue *Rogue) registerMutilateSpell() {
 			rogue.BreakStealth(sim)
 
 			// Cold Blood is spent on the main hand half, which is the larger of the two.
-			baseDamage := rogue.mutilateDamage(target, rogue.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)))
+			baseDamage := rogue.mutilateDamage(target, flatDamage, rogue.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)))
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			rogue.mutilateOH.Cast(sim, target)
 
@@ -83,10 +97,10 @@ func (rogue *Rogue) registerMutilateSpell() {
 	})
 }
 
-// Each half strikes for 75% weapon damage plus a flat bonus, and hits harder while one of
+// Each half strikes for 75% of weapon damage plus a flat bonus, and hits harder while one of
 // the rogue's lingering poisons is on the target.
-func (rogue *Rogue) mutilateDamage(target *core.Unit, weaponDamage float64) float64 {
-	baseDamage := 13 + 0.75*weaponDamage
+func (rogue *Rogue) mutilateDamage(target *core.Unit, flatDamage float64, weaponDamage float64) float64 {
+	baseDamage := 0.75 * (flatDamage + weaponDamage)
 	if rogue.isPoisoned(target) {
 		baseDamage *= 1.2
 	}

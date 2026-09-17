@@ -81,18 +81,20 @@ func (rogue *Rogue) registerRupture() {
 }
 
 func (rogue *Rogue) RuptureDamage(target *core.Unit, comboPoints int32) float64 {
+	// Beta client 1.60.1.69893 cut every rank's tick and its per combo point step (rank 6 60 + 8
+	// -> 35 + 4.73). The attack power share below is not in the client and stays Classic's.
 	baseTickDamage := map[int32]float64{
-		25: 8,
-		40: 18,
-		50: 27,
-		60: 60,
+		25: 5,
+		40: 11,
+		50: 16,
+		60: 35,
 	}[rogue.Level]
 
 	comboTickDamage := map[int32]float64{
-		25: 2,
-		40: 4,
-		50: 5,
-		60: 8,
+		25: 1.18,
+		40: 2.37,
+		50: 2.96,
+		60: 4.73,
 	}[rogue.Level]
 
 	return baseTickDamage + comboTickDamage*float64(comboPoints) +
