@@ -2663,6 +2663,11 @@ func init() {
 		})
 	})
 
+	// Forever halves it. Era's tooltip hardcodes "2% chance on melee hit" and SpellAuraOptions
+	// holds 2 for 15600; Forever's reads "${$h/3}% chance on Melee hit to gain $s1 extra attack.
+	// Attacks against Dwarves are $s2 times as likely", with the chance field at 3 and $s2 at 3.
+	// So the field is still a percent and the division is new: 1% here, 3% against a Dwarf, which
+	// a raid boss never is.
 	core.NewItemEffect(HandOfJustice, func(agent core.Agent) {
 		character := agent.GetCharacter()
 		if !character.AutoAttacks.AutoSwingMelee {
@@ -2684,7 +2689,7 @@ func init() {
 				if spell.Flags.Matches(core.SpellFlagSuppressEquipProcs) {
 					return
 				}
-				if result.Landed() && spell.ProcMask.Matches(core.ProcMaskMelee) && icd.IsReady(sim) && sim.Proc(0.02, "HandOfJustice") {
+				if result.Landed() && spell.ProcMask.Matches(core.ProcMaskMelee) && icd.IsReady(sim) && sim.Proc(0.01, "HandOfJustice") {
 					icd.Use(sim)
 					aura.Unit.AutoAttacks.ExtraMHAttackProc(sim, 1, core.ActionID{SpellID: 15600}, spell)
 				}
