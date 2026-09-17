@@ -20,7 +20,6 @@ func (warlock *Warlock) getDrainLifeBaseConfig(rank int) core.SpellConfig {
 	manaCost := [DrainLifeRanks + 1]float64{0, 55, 85, 135, 185, 240, 300}[rank]
 	level := [DrainLifeRanks + 1]int{0, 14, 22, 30, 38, 46, 54}[rank]
 
-	baseDamage *= 1 + warlock.shadowMasteryBonus()
 	actionID := core.ActionID{SpellID: spellId}
 
 	healingSpell := warlock.GetOrRegisterSpell(core.SpellConfig{

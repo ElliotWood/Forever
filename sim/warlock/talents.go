@@ -264,13 +264,17 @@ func (warlock *Warlock) applyShadowMastery() {
 		return
 	}
 
-	// These spells have their base damage modded instead
-	// Apply Aura: Modifies Spell Effectiveness (8)
-	excludedSpellCodes := []int32{SpellCode_WarlockBaneOfAgony, SpellCode_WarlockDeathCoil, SpellCode_WarlockDrainLife, SpellCode_WarlockDrainSoul}
-
+	// Classic's 18271 carries three modifiers: damage (op 0), periodic damage (op 22) and
+	// spell effectiveness (op 8), the last of which scales base points only. Four spells were
+	// singled out for that treatment, multiplying their own base damage and opting out of the
+	// spell multiplier. Forever dropped the op 8 effect: the beta client leaves 18271 with op 0
+	// and op 22, both Apply Aura: Add % Modifier, so every shadow spell takes it the same way.
+	//
+	// The split had also drifted. Siphon Life multiplied its base damage and was never in the
+	// exclusion list, so it took Shadow Mastery twice; Drain Soul was in the list but never
+	// multiplied anything, so it took none at all.
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
-		// Shadow Mastery applies a base damage modifier to all dots / channeled spells instead
-		if spell.SpellSchool.Matches(core.SpellSchoolShadow) && isWarlockSpell(spell) && !slices.Contains(excludedSpellCodes, spell.SpellCode) {
+		if spell.SpellSchool.Matches(core.SpellSchoolShadow) && isWarlockSpell(spell) {
 			spell.DamageMultiplierAdditive += warlock.shadowMasteryBonus()
 		}
 	})

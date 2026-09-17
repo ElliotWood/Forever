@@ -20,7 +20,6 @@ func (warlock *Warlock) getSiphonLifeBaseConfig(rank int) core.SpellConfig {
 	actionID := core.ActionID{SpellID: spellId}
 	healthMetrics := warlock.NewHealthMetrics(actionID)
 
-	baseDamage *= 1 + warlock.shadowMasteryBonus()
 
 	return core.SpellConfig{
 		SpellCode:     SpellCode_WarlockSiphonLife,
