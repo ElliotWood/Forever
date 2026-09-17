@@ -902,10 +902,12 @@ func (warlock *Warlock) applyFireAndBrimstone() {
 		return
 	}
 
-	points := float64(warlock.Talents.FireAndBrimstone)
+	// 8/17/25, not the 8/16/24 that multiplying rank 1 gives. Rank 3's 25% is confirmed on
+	// the beta; rank 2's 17 is the tree's own reading.
+	critBonus := []float64{0, 8, 17, 25}[warlock.Talents.FireAndBrimstone]
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
 		if spell.SpellCode == SpellCode_WarlockConflagrate {
-			spell.BonusCritRating += 8 * points * core.SpellCritRatingPerCritChance
+			spell.BonusCritRating += critBonus * core.SpellCritRatingPerCritChance
 		}
 	})
 }

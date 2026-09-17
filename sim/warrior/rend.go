@@ -21,7 +21,9 @@ func (warrior *Warrior) registerRendSpell() {
 
 	baseDamage := rend.damage
 
-	damageMultiplier := []float64{1, 1.12, 1.24, 1.36}[warrior.Talents.ImprovedRend]
+	// 12/23/35, not the 12/24/36 that multiplying rank 1 gives. Rank 3's 35% is confirmed
+	// on the beta and rank 2's 23 is what the tree reads.
+	damageMultiplier := []float64{1, 1.12, 1.23, 1.35}[warrior.Talents.ImprovedRend]
 
 	warrior.Rend = warrior.RegisterSpell(BattleStance|DefensiveStance, core.SpellConfig{
 		SpellCode:   SpellCode_WarriorRend,
