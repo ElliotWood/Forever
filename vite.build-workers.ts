@@ -22,8 +22,21 @@ const args = minimist(process.argv.slice(2), { boolean: ['watch'] });
 const buildWorkers = async () => {
 	const { stdout } = await execAsync('go env GOROOT');
 	const GO_ROOT = stdout.replace('\n', '');
-	const wasmExecutablePath = path.join(GO_ROOT, '/misc/wasm/wasm_exec.js');
-	const wasmFile = await fs.readFile(wasmExecutablePath, 'utf8');
+	// Go 1.24 moved wasm_exec.js from misc/wasm to lib/wasm. CI pins 1.23.x, so only a contributor
+	// on a newer toolchain hits this, and the failure reads as a missing file rather than a version.
+	const wasmExecutableCandidates = [path.join(GO_ROOT, '/lib/wasm/wasm_exec.js'), path.join(GO_ROOT, '/misc/wasm/wasm_exec.js')];
+	let wasmFile: string | undefined;
+	for (const candidate of wasmExecutableCandidates) {
+		try {
+			wasmFile = await fs.readFile(candidate, 'utf8');
+			break;
+		} catch {
+			// try the other layout
+		}
+	}
+	if (wasmFile === undefined) {
+		throw new Error(`wasm_exec.js not found under ${GO_ROOT}; looked in ${wasmExecutableCandidates.join(' and ')}`);
+	}
 
 	Object.entries(workers).forEach(async ([name, sourcePath]) => {
 		const baseConfig = getBaseConfig({ command: 'build', mode: 'production' });
