@@ -18,7 +18,7 @@ character_stats_results: {
   final_stats: 20.7616
   final_stats: 0
   final_stats: 0
-  final_stats: 1145.36
+  final_stats: 1148
   final_stats: 7
   final_stats: 23.6248
   final_stats: 0
@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.30063
+  weights: 0.36582
   weights: 0
-  weights: 0.43898
+  weights: 0.44325
   weights: 0
-  weights: 0.1018
-  weights: 0
-  weights: 0
-  weights: 0.33131
+  weights: 0.10165
   weights: 0
   weights: 0
-  weights: 5.10849
-  weights: 3.88346
+  weights: 0.33564
+  weights: 0
+  weights: 0
+  weights: 5.93539
+  weights: 3.68788
   weights: 0
   weights: 0
   weights: 0
@@ -99,112 +99,112 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 393.97035
-  tps: 354.80727
+  dps: 398.78832
+  tps: 358.19237
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 403.70989
-  tps: 362.96715
+  dps: 408.07008
+  tps: 366.21899
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 439.05356
-  tps: 393.28367
+  dps: 441.3935
+  tps: 394.30556
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 450.09164
-  tps: 403.25554
+  dps: 452.45984
+  tps: 403.66891
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 394.25976
-  tps: 355.79044
+  dps: 400.00187
+  tps: 360.08259
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 401.52834
-  tps: 361.56319
+  dps: 407.3732
+  tps: 365.94127
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 443.20436
-  tps: 397.12724
+  dps: 442.05197
+  tps: 393.58663
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 431.26678
-  tps: 387.45002
+  dps: 437.07831
+  tps: 391.81384
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Average-Default"
  value: {
-  dps: 455.27567
-  tps: 407.31759
+  dps: 456.93624
+  tps: 407.49083
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 1044.07098
-  tps: 782.38065
+  dps: 1040.92629
+  tps: 786.79859
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 441.14456
-  tps: 393.68707
+  dps: 444.57863
+  tps: 395.34183
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 560.9351
-  tps: 524.87622
+  dps: 562.35301
+  tps: 524.35996
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 741.28048
-  tps: 557.76661
+  dps: 747.48201
+  tps: 558.6155
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 332.34643
-  tps: 294.35561
+  dps: 332.45538
+  tps: 293.80787
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 514.59131
-  tps: 480.05468
+  dps: 515.11305
+  tps: 478.91444
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 449.43959
-  tps: 401.95479
+  dps: 451.22417
+  tps: 402.43283
  }
 }

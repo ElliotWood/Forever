@@ -29,7 +29,7 @@ func (shaman *Shaman) ApplyTalents() {
 	}
 
 	if shaman.Talents.MentalDexterity > 0 {
-		shaman.AddStatDependency(stats.Intellect, stats.AttackPower, .33*float64(shaman.Talents.MentalDexterity))
+		shaman.AddStatDependency(stats.Intellect, stats.AttackPower, []float64{0, .33, .67, 1.00}[shaman.Talents.MentalDexterity])
 	}
 
 	if shaman.Talents.MentalQuickness > 0 {
@@ -62,7 +62,7 @@ func (shaman *Shaman) ApplyTalents() {
 	shaman.registerNaturesSwiftnessCD()
 	// shaman.registerManaTideTotemCD()
 
-	shaman.PseudoStats.SpiritRegenRateCasting += []float64{0, .17, .34, .51}[shaman.Talents.Mindfulness]
+	shaman.PseudoStats.SpiritRegenRateCasting += []float64{0, .17, .33, .50}[shaman.Talents.Mindfulness]
 
 	// Only the maximum health half is modelled, nothing in the sim dies and comes back.
 	// TODO: Only rank 1's 2% was seen, the 4% the tree reads at rank 2 comes from the community
@@ -121,7 +121,7 @@ func (shaman *Shaman) applyElementalWarding() {
 		return
 	}
 
-	multiplier := 1 - .03*float64(shaman.Talents.ElementalWarding)
+	multiplier := 1 - []float64{0, .03, .07, .10}[shaman.Talents.ElementalWarding]
 	for _, school := range []stats.SchoolIndex{stats.SchoolIndexFire, stats.SchoolIndexFrost, stats.SchoolIndexNature} {
 		shaman.PseudoStats.SchoolDamageTakenMultiplier[school] *= multiplier
 	}

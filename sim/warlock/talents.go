@@ -479,7 +479,7 @@ func (warlock *Warlock) applyDemonicKnowledge() {
 	// 33% of level per rank, reaching the full 100% at 3/3 rather than the 99% that
 	// multiplying rank 1 gives.
 	// TODO: beta will confirm. The rank 3 figure is the tree's rounding, not an observation.
-	bonus := []float64{0, 0.33, 0.66, 1.00}[warlock.Talents.DemonicKnowledge] * float64(warlock.Level)
+	bonus := []float64{0, 0.33, 0.67, 1.00}[warlock.Talents.DemonicKnowledge] * float64(warlock.Level)
 
 	demonicKnowledgeAura := warlock.RegisterAura(core.Aura{
 		Label:    "Demonic Knowledge",

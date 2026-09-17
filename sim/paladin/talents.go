@@ -78,7 +78,7 @@ func (paladin *Paladin) holyConduit() int32 {
 
 // Purifying Power shortens the Exorcism and Holy Wrath cooldowns.
 func (paladin *Paladin) purifyingPower(duration time.Duration) time.Duration {
-	return time.Duration(float64(duration) * (1 - 0.17*float64(paladin.Talents.PurifyingPower)))
+	return time.Duration(float64(duration) * (1 - []float64{0, .17, .33}[paladin.Talents.PurifyingPower]))
 }
 
 func (paladin *Paladin) applyRedoubt() {
@@ -188,7 +188,7 @@ func (paladin *Paladin) applyShieldSpecialization() {
 func (paladin *Paladin) getWeaponSpecializationModifier() float64 {
 	handType := paladin.MainHand().HandType
 	if handType == proto.HandType_HandTypeMainHand || handType == proto.HandType_HandTypeOneHand {
-		return 1. + 0.03*float64(paladin.Talents.OneHandedWeaponSpecialization)
+		return 1. + []float64{0, .03, .07, .10}[paladin.Talents.OneHandedWeaponSpecialization]
 	} else if handType == proto.HandType_HandTypeTwoHand {
 		return 1. + 0.03*float64(paladin.Talents.TwoHandedWeaponSpecialization)
 	} else {

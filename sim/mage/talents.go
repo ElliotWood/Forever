@@ -66,7 +66,7 @@ func (mage *Mage) applyArcaneTalents() {
 	}
 
 	// Arcane Meditation
-	mage.PseudoStats.SpiritRegenRateCasting += []float64{0, .17, .34, .51}[mage.Talents.ArcaneMeditation]
+	mage.PseudoStats.SpiritRegenRateCasting += []float64{0, .17, .33, .50}[mage.Talents.ArcaneMeditation]
 
 	// Arcane Mind
 	if mage.Talents.ArcaneMind > 0 {

@@ -111,7 +111,7 @@
         "maxPoints": 2,
         "name": "Focused Fire",
         "icon": "inv_weapon_crossbow_10",
-        "description": "Increases all damage you deal by {0}% while your pet is active.",
+        "description": "Increases all damage you and your pet deal by {0}% while your pet is active.",
         "ranks": [
           [
             1
@@ -135,19 +135,16 @@
         "maxPoints": 3,
         "name": "Improved Aspect of the Monkey",
         "icon": "ability_hunter_aspectofthemonkey",
-        "description": "Increases the Dodge bonus of your Aspect of the Monkey by {0}%. Additionally, your pet gains {1}% of the effect of your Aspect of the Monkey ability.",
+        "description": "Increases the Dodge bonus of your Aspect of the Monkey by {0}%. Additionally, your pet gains 50% of the effect of your Aspect of the Monkey ability.",
         "ranks": [
           [
-            2,
-            50
+            2
           ],
           [
-            4,
-            50
+            4
           ],
           [
-            6,
-            50
+            6
           ]
         ],
         "notSimulated": true
@@ -880,10 +877,10 @@
             3
           ],
           [
-            6
+            7
           ],
           [
-            9
+            10
           ]
         ]
       },

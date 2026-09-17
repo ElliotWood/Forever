@@ -42,7 +42,7 @@
         "maxPoints": 5,
         "name": "Suppression",
         "icon": "spell_shadow_unsummonbuilding",
-        "description": "Increases your chance to hit with all spells and attacks by {0}% and reduces all threat you generate by {1}%.",
+        "description": "Improves your chance to hit by {0}% and reduces all threat you generate by {1}%.",
         "ranks": [
           [
             1,
@@ -183,25 +183,16 @@
         "maxPoints": 3,
         "name": "Improved Drains",
         "icon": "spell_shadow_haunting",
-        "description": "Increases the damage done or health drained by your Drain Life and Drain Soul spells by {0}% per each of your other Affliction effects active on the target, up to a maximum increase of {1}%. When your Drain Soul damages targets below {2}% health, this bonus is tripled. Additionally, your Drain Life range is extended by {3} yards.",
+        "description": "Increases health drained or damage done by your Drain Life, Drain Soul, and Wrack spells by {0}%.",
         "ranks": [
           [
-            2,
-            6,
-            20,
-            3
+            7
           ],
           [
-            4,
-            12,
-            20,
-            6
+            13
           ],
           [
-            6,
-            18,
-            20,
-            10
+            20
           ]
         ]
       },
@@ -242,16 +233,16 @@
         "maxPoints": 3,
         "name": "Fel Concentration",
         "icon": "spell_shadow_fingerofdeath",
-        "description": "Gives you a {0}% chance to avoid interruption caused by damage while channeling or casting your Drain Life, Drain Mana, or Drain Soul spells.",
+        "description": "Gives you a {0}% chance to avoid interruption caused by damage while channeling or casting your Drain Life, Drain Mana, Drain Soul, or Wrack spells.",
         "ranks": [
           [
             23
           ],
           [
-            46
+            47
           ],
           [
-            69
+            70
           ]
         ],
         "notSimulated": true
@@ -291,7 +282,7 @@
         "maxPoints": 3,
         "name": "Pandemic",
         "icon": "spell_shadow_unstableaffliction_1",
-        "description": "Increases the critical strike damage bonus of your Corruption, Bane of Agony, Bane of Doom, Drain Soul, Drain Life, Siphon Life, and Drain Hope spells by {0}%.",
+        "description": "Increases the critical strike damage bonus of your Corruption, Bane of Agony, Bane of Doom, Drain Soul, Drain Life, Siphon Life, and Wrack spells by {0}%.",
         "ranks": [
           [
             33
@@ -735,7 +726,7 @@
             50
           ],
           [
-            16,
+            15,
             100
           ]
         ]
@@ -983,13 +974,13 @@
         "maxPoints": 3,
         "name": "Demonic Knowledge",
         "icon": "spell_shadow_improvedvampiricembrace",
-        "description": "Increases your spell damage and healing by up to {0}% of your level while you have a summoned Demon pet active.",
+        "description": "Increases your spell damage and your Demon pet's spell damage by up to {0}% of your level while you have a summoned Demon pet active.",
         "ranks": [
           [
             33
           ],
           [
-            66
+            67
           ],
           [
             100
@@ -1012,7 +1003,7 @@
         "maxPoints": 5,
         "name": "Master Demonologist",
         "icon": "spell_shadow_shadowpact",
-        "description": "Grants both the Warlock and the summoned demon an effect as long as that demon is active. Imp - increases Fire damage done by {0}%. Voidwalker - Reduces Physical damage taken by {1}%. Succubus/Incubus - increases Shadow damage done by {2}%. Felhunter - Reduces Magic damage taken by {3}%.",
+        "description": "Grants both the Warlock and the summoned demon an effect as long as that demon is active. Imp - Increases Fire damage done by {0}%. Voidwalker - Reduces Physical damage taken by {1}%. Succubus/Incubus - Increases Shadow damage done by {2}%. Felhunter - Reduces Magic damage taken by {3}%.",
         "ranks": [
           [
             2,
@@ -1236,7 +1227,7 @@
             6
           ],
           [
-            9
+            10
           ]
         ]
       },
@@ -1366,10 +1357,10 @@
             23
           ],
           [
-            46
+            47
           ],
           [
-            69
+            70
           ]
         ],
         "notSimulated": true
@@ -1395,12 +1386,12 @@
             3
           ],
           [
-            6,
-            6
+            7,
+            7
           ],
           [
-            9,
-            9
+            10,
+            10
           ]
         ]
       },

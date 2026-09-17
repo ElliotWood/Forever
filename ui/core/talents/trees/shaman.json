@@ -93,10 +93,10 @@
             3
           ],
           [
-            6
+            7
           ],
           [
-            9
+            10
           ]
         ]
       },
@@ -289,10 +289,10 @@
             23
           ],
           [
-            46
+            47
           ],
           [
-            69
+            70
           ]
         ],
         "notSimulated": true
@@ -341,7 +341,7 @@
           ],
           [
             6,
-            16
+            15
           ]
         ],
         "notSimulated": true
@@ -366,10 +366,10 @@
             3
           ],
           [
-            6
+            7
           ],
           [
-            9
+            10
           ]
         ]
       },
@@ -411,16 +411,16 @@
         "maxPoints": 3,
         "name": "Elemental Alacrity",
         "icon": "spell_lightning_lightningbolt01",
-        "description": "Reduces the cast time of your Lightning Bolt, Chain Lightning, and Lava Burst spells by {0} sec.",
+        "description": "Reduces the cast time of your Lightning Bolt, Chain Lightning, and Lava Burst spells by {0}.2 sec.",
         "ranks": [
           [
             0.17
           ],
           [
-            0.34
+            0.33
           ],
           [
-            0.51
+            0.5
           ]
         ]
       },
@@ -596,10 +596,10 @@
             33
           ],
           [
-            66
+            67
           ],
           [
-            99
+            100
           ]
         ]
       },
@@ -1069,10 +1069,10 @@
             17
           ],
           [
-            34
+            33
           ],
           [
-            51
+            50
           ]
         ]
       },
@@ -1119,7 +1119,7 @@
         "maxPoints": 5,
         "name": "Tidal Focus",
         "icon": "spell_frost_manarecharge",
-        "description": "Reduces the Mana cost of your healing spells by {0}% and increases your chance to hit with all spells and attacks by {1}%.",
+        "description": "Reduces the Mana cost of your healing spells by {0}% and improves your chance to hit by {1}%.",
         "ranks": [
           [
             1,
@@ -1218,10 +1218,10 @@
             23
           ],
           [
-            46
+            47
           ],
           [
-            69
+            70
           ]
         ],
         "notSimulated": true
@@ -1365,10 +1365,10 @@
             8
           ],
           [
-            16
+            17
           ],
           [
-            24
+            25
           ]
         ],
         "notSimulated": true

@@ -58,7 +58,7 @@
             13
           ],
           [
-            26
+            25
           ]
         ]
       },
@@ -141,7 +141,7 @@
         "maxPoints": 3,
         "name": "Holy Precision",
         "icon": "spell_holy_divineillumination",
-        "description": "Increases your chance to hit with Holy spells by {0}%.",
+        "description": "Improves your chance to hit with Holy spells by {0}%.",
         "ranks": [
           [
             6
@@ -177,7 +177,7 @@
             14
           ],
           [
-            21
+            20
           ]
         ]
       },
@@ -227,10 +227,10 @@
             3
           ],
           [
-            6
+            7
           ],
           [
-            9
+            10
           ]
         ]
       },
@@ -385,7 +385,7 @@
         "maxPoints": 2,
         "name": "Improved Mana Burn",
         "icon": "spell_shadow_manaburn",
-        "description": "Reduces the casting time of your Mana Burn spell by {0} sec.",
+        "description": "Reduces the casting time of your Mana Burn spell by {0}.1 sec.",
         "ranks": [
           [
             0.5
@@ -545,7 +545,7 @@
             23
           ],
           [
-            46
+            47
           ],
           [
             70
@@ -844,7 +844,7 @@
             5
           ],
           [
-            4,
+            5,
             10
           ]
         ]
@@ -974,10 +974,10 @@
             3
           ],
           [
-            6
+            7
           ],
           [
-            9
+            10
           ]
         ]
       },
@@ -1030,7 +1030,7 @@
         "maxPoints": 5,
         "name": "Shadow Focus",
         "icon": "spell_shadow_burningspirit",
-        "description": "Increases your chance to hit with your Shadow spells by {0}%.",
+        "description": "Improves your chance to hit with Shadow spells by {0}%.",
         "ranks": [
           [
             1

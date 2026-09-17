@@ -70,7 +70,7 @@ func (hunter *Hunter) getVolleyConfig(rank int) core.SpellConfig {
 		},
 
 		CritDamageBonus:  hunter.mortalShots(),
-		DamageMultiplier: 1 + .03*float64(hunter.Talents.Barrage),
+		DamageMultiplier: 1 + []float64{0, .03, .07, .10}[hunter.Talents.Barrage],
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

@@ -239,19 +239,19 @@
         "description": "Increases the critical strike damage bonus of your Sinister Strike, Gouge, Backstab, Mutilate, Ghostly Strike, and Hemorrhage abilities by {0}%.",
         "ranks": [
           [
-            6
+            4
+          ],
+          [
+            8
           ],
           [
             12
           ],
           [
-            18
+            16
           ],
           [
-            24
-          ],
-          [
-            30
+            20
           ]
         ]
       },
@@ -657,7 +657,7 @@
         "maxPoints": 3,
         "name": "Precision",
         "icon": "ability_marksmanship",
-        "description": "Increases your chance to hit with all attacks and Poisons by {0}%.",
+        "description": "Improves your chance to hit by {0}%.",
         "ranks": [
           [
             1
@@ -859,7 +859,7 @@
         "maxPoints": 5,
         "name": "Hack and Slash",
         "icon": "inv_sword_27",
-        "description": "Gives your melee weapon attacks a benefit depending on the weapon. Axe/Sword: Your successful melee attacks have a {0}% chance to trigger an extra attack on the target. Dagger/Fist: Increases your critical strike chance by {1}%. Mace: Your attacks ignore {2}% of your target's armor.",
+        "description": "Gives your melee weapon attacks a benefit depending on the weapon. |CFFFFFFFFAxe/Sword: Your successful melee attacks have a {0}% chance to trigger an extra attack on the target. |CFFFFFFFFDagger/Fist: Increases your critical strike chance by {1}%. |CFFFFFFFFMace: Your attacks ignore {2}% of your target's armor.",
         "ranks": [
           [
             1,
@@ -1087,7 +1087,7 @@
             33
           ],
           [
-            66
+            67
           ],
           [
             100

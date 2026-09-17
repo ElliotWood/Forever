@@ -127,3 +127,17 @@ The tree json carries its presentation instead, and the picker draws that: `name
 `--crops` points at a checkout of the dataset's repository, where the crops live under
 `data/review/`. Without it a crop already in the tree keeps its place. When the beta client
 is datamined, the real icon names replace the crops the same way.
+
+## Beta client export (1.60.1, 17 Sep 2026)
+
+The beta client is out, so step 1 above is a script now:
+
+	tools/forever_talents/export_beta.py 1.60.1.69893 beta/     # data/<class>.json schema, from wago.tools
+	tools/forever_talents/diff_trees.py beta/
+	tools/forever_talents/apply_beta_tooltips.py beta/         # tooltips and rank numbers only
+
+Forever's trees are in the retail-style Trait tables, not Talent/TalentTab (those are unchanged Era copies in
+the beta). `apply_beta_tooltips.py` copies description and per-rank numbers into the trees and leaves
+structure alone; it skips any tooltip that still references a duration, another spell or a formula the
+exporter does not resolve, and lists those for a hand pass. Renames, removals and position changes are
+the Go and proto pass.
