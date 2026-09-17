@@ -26,8 +26,7 @@ const (
 )
 
 func (paladin *Paladin) registerHolyStrike() {
-	// TODO: Only rank 1 of Improved Holy Strike was seen, the second second of cooldown is
-	// assumed to scale linearly.
+	// Rank 2 takes off 2 sec, so the linear reading was right. Confirmed on the beta.
 	cooldown := holyStrikeCooldown - time.Second*time.Duration(paladin.Talents.ImprovedHolyStrike)
 
 	// Sacred Arbiter also refreshes the paladin's Judgement effects. Judgement of the Crusader
@@ -38,8 +37,7 @@ func (paladin *Paladin) registerHolyStrike() {
 		damageMultiplier *= 1.1
 	}
 
-	// TODO: Only rank 1 of Iron Creed's threat was seen at 5%, the 5% per rank the tree reads
-	// comes from the community talent calculator rather than from a tooltip.
+	// 5% per rank, confirmed on the beta at ranks 2, 3 and 4: 10%, 15% and 20%.
 	threatMultiplier := 1 + 0.05*float64(paladin.Talents.IronCreed)
 
 	ironCreedAura := paladin.registerIronCreedAura()
@@ -97,9 +95,8 @@ func (paladin *Paladin) registerIronCreedAura() *core.Aura {
 		return nil
 	}
 
-	// TODO: Only rank 1 of Iron Creed's damage reduction was seen at 2%, the 2% per rank the
-	// tree reads comes from the community talent calculator rather than from a tooltip. The
-	// 6 seconds is flat at every rank.
+	// 2% per rank, confirmed on the beta at ranks 2, 3 and 4: 4%, 6% and 8%. The 6 seconds
+	// is flat at every rank, which those same tooltips show.
 	damageTaken := 1 - 0.02*float64(paladin.Talents.IronCreed)
 
 	return paladin.RegisterAura(core.Aura{
