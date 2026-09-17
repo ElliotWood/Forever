@@ -401,12 +401,6 @@
 		"file": "sim/common/item_effects.go",
 		"source": "unreviewed"
 	},
-	"27419": {
-		"ability": "Warrior's Resolve",
-		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"note": "Battlegear of Heroism 4 piece heal proc; the sim rolls 88 to 133 where the Classic tooltip says 88 to 132, a one point upstream rounding, not a Forever change.",
-		"source": "classic"
-	},
 	"27499": {
 		"ability": "Crusader's Wrath",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
@@ -418,18 +412,6 @@
 		"ability": "Flame Lash",
 		"file": "sim/common/item_effects.go",
 		"source": "unreviewed"
-	},
-	"27781": {
-		"ability": "Nature's Bounty",
-		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"note": "Untouched since the fork; the id is shared with sim/common/item_sets/dungeon_set_1.go, which owns the entry in common.json, so this row should be dropped when the druid manifest is merged.",
-		"source": "classic"
-	},
-	"27785": {
-		"ability": "Hunter Armor Energize",
-		"file": "sim/common/item_sets/dungeon_set_1.go",
-		"note": "Beastmaster Armor's 4 piece bonus (4% of normal ranged attacks restore 200 mana), Classic's and untouched by Forever; the id is absent from db.json, so the mana gain shows in the log without a name or icon.",
-		"source": "classic"
 	},
 	"27787": {
 		"ability": "Rogue Armor Energize",
@@ -458,7 +440,7 @@
 		"file": "sim/common/item_sets/dungeon_set_1.go",
 		"source": "forever",
 		"tooltip": "Your spellcasts have a 5% chance to restore 200 mana.",
-		"note": "Magister's Regalia 5 piece, new in Forever where the set used to stop at four bonuses."
+		"note": "Magister's Regalia 5 piece and Sorcerer's Regalia 4 piece, new in Forever where both sets used to stop at four bonuses."
 	},
 	"450576": {
 		"ability": "Sudden Insight",
@@ -472,21 +454,21 @@
 		"file": "sim/common/item_sets/dungeon_set_1.go",
 		"source": "forever",
 		"tooltip": "Your melee and ranged autoattacks have a 5% chance to restore 200 mana.",
-		"note": "Beaststalker Armor 5 piece. Classic had it at six pieces, 4%, and ranged attacks only."
+		"note": "Beaststalker Armor 5 piece and Beastmaster Armor 4 piece. Classic had it at six and four pieces, 4%, and ranged attacks only."
 	},
 	"450585": {
 		"ability": "Dark Reward",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
 		"source": "forever",
 		"tooltip": "Your spellcasts have a 5% chance to heal you for 270 to 330.",
-		"note": "Dreadmist Raiment 5 piece, new in Forever; the heal itself is 450583."
+		"note": "Dreadmist Raiment 5 piece and Deathmist Raiment 4 piece, new in Forever; the heal itself is 450583."
 	},
 	"450587": {
 		"ability": "Warrior's Resolve",
 		"file": "sim/common/item_sets/dungeon_set_1.go",
 		"source": "forever",
 		"tooltip": "Chance on melee attack to heal you for 88 to 132 and generate 10 Rage.",
-		"note": "Battlegear of Valor 5 piece. Classic healed at six pieces (27419) and returned no Rage."
+		"note": "Battlegear of Valor 5 piece and Battlegear of Heroism 4 piece. Classic healed without returning Rage."
 	},
 	"450589": {
 		"ability": "Warrior's Resolve",
@@ -500,7 +482,7 @@
 		"file": "sim/common/item_sets/dungeon_set_1.go",
 		"source": "forever",
 		"tooltip": "Chance on spellcast to restore 200 mana, on melee attack to regenerate 20 Energy over 5 sec, and when struck to generate 10 Rage.",
-		"note": "Wildheart Raiment 5 piece. Classic's version sat at six pieces and gave 300 mana, 40 Energy or 10 Rage (27781). The client stores no proc chance, so Classic's 2% is kept."
+		"note": "Wildheart Raiment 5 piece and Feralheart Raiment 4 piece. Classic's version gave 300 mana, 40 Energy or 10 Rage (27781). The client stores no proc chance, so Classic's 2% is kept."
 	},
 	"450625": {
 		"ability": "Crusader's Wrath",
@@ -514,7 +496,7 @@
 		"file": "sim/common/item_sets/dungeon_set_1.go",
 		"source": "forever",
 		"tooltip": "Chance on melee autoattack and spellcast to increase your damage and healing done by magical spells and effects by up to 65 for 10 sec.",
-		"note": "The Elements 5 piece trigger; the buff is 27775, which shaman.json owns. No proc chance in the client, so Classic's 4% is kept."
+		"note": "The Elements 5 piece and The Five Thunders 4 piece; the buff is 27775, which shaman.json owns."
 	},
 	"461151": {
 		"ability": "spell 461151",

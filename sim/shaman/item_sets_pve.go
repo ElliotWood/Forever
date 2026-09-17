@@ -16,31 +16,37 @@ var ItemSetTheFiveThunders = core.NewItemSet(core.ItemSet{
 			c := agent.GetCharacter()
 			c.AddResistances(8)
 		},
-		// Chance on spell cast to increase your damage and healing by up to 95 for 10 sec.
+		// Restores 8 mana per 5 sec.
+		3: func(agent core.Agent) {
+			agent.GetCharacter().AddStat(stats.MP5, 8)
+		},
+		// Chance on spell cast to increase your damage and healing by up to 65 for 10 sec.
 		// (Proc chance: 4%)
 		4: func(agent core.Agent) {
 			c := agent.GetCharacter()
 
 			procAura := c.NewTemporaryStatsAura("The Furious Storm", core.ActionID{SpellID: 27775}, stats.Stats{stats.SpellPower: 65}, time.Second*10)
 			core.MakeProcTriggerAura(&c.Unit, core.ProcTrigger{
+				ActionID:   core.ActionID{SpellID: 450626},
 				Name:       "Item - The Furious Storm Proc (Spell Cast)",
 				Callback:   core.CallbackOnCastComplete,
 				ProcMask:   core.ProcMaskSpellDamage | core.ProcMaskSpellHealing,
 				ProcChance: 0.04,
-				Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
+				Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 					procAura.Activate(sim)
 				},
 			})
 		},
-		// Increases damage and healing done by magical spells and effects by up to 23.
+		// Electrocute: disarms an attacker.
+		5: func(_ core.Agent) {},
+		// Increases damage and healing done by magical spells and effects by up to 23. The 6 piece
+		// repeated the 2 piece's resistances instead, which no comment in the file ever claimed.
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddResistances(8)
-		},
-		// +200 Armor.
-		8: func(agent core.Agent) {
-			c := agent.GetCharacter()
-			c.AddStat(stats.Armor, 200)
+			c.AddStats(stats.Stats{
+				stats.SpellDamage:  23,
+				stats.HealingPower: 23,
+			})
 		},
 	},
 })

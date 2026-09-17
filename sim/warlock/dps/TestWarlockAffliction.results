@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-DeathmistRaiment"
  value: {
-  dps: 540.83023
-  tps: 416.88765
+  dps: 540.78084
+  tps: 415.76761
  }
 }
 dps_results: {

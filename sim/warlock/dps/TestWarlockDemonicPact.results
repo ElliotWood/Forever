@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-DeathmistRaiment"
  value: {
-  dps: 547.97442
-  tps: 491.80631
+  dps: 551.76551
+  tps: 494.80681
  }
 }
 dps_results: {

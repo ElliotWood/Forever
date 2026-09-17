@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-FeralheartRaiment"
  value: {
-  dps: 302.03905
-  tps: 225.68782
+  dps: 305.79424
+  tps: 227.65573
  }
 }
 dps_results: {

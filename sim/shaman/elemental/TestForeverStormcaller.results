@@ -134,8 +134,8 @@ dps_results: {
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 338.88987
-  tps: 319.02746
+  dps: 349.54822
+  tps: 329.09679
  }
 }
 dps_results: {
