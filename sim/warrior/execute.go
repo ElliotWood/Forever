@@ -20,7 +20,9 @@ func (warrior *Warrior) registerExecuteSpell() {
 		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPassiveSpell | SpellFlagOffensive,
 
 		RageCost: core.RageCostOptions{
-			Cost:   15 - []float64{0, 3, 6}[warrior.Talents.ImprovedExecute],
+			// Rank 2 takes 5 off, not the 6 that doubling rank 1 gives. Both the tree and
+			// wowforevertalents read it this way; no beta tooltip past rank 1 has been seen.
+			Cost:   15 - []float64{0, 3, 5}[warrior.Talents.ImprovedExecute],
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{

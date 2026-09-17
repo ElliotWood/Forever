@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.37436
-  weights: 0.6846
-  weights: 0.293
+  weights: 0.48265
+  weights: 0.43996
+  weights: 0.29177
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.27459
+  weights: 0.27334
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.68805
-  weights: 1.62495
+  weights: 0.51487
+  weights: 1.69803
   weights: 0
   weights: 0
   weights: 0
@@ -99,99 +99,99 @@ stat_weights_results: {
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-Champion'sInvestiture"
  value: {
-  dps: 384.61048
-  tps: 398.34324
+  dps: 384.09355
+  tps: 397.81648
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-Champion'sRaiment"
  value: {
-  dps: 363.9381
-  tps: 377.51845
+  dps: 363.95568
+  tps: 377.5016
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-Confessor'sRaiment"
  value: {
-  dps: 377.35806
-  tps: 391.07607
+  dps: 375.84369
+  tps: 389.55187
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-FieldMarshal'sRaiment"
  value: {
-  dps: 407.47057
-  tps: 421.26724
+  dps: 405.38835
+  tps: 419.14078
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-GarmentsoftheOracle"
  value: {
-  dps: 384.94234
-  tps: 398.59643
+  dps: 384.87344
+  tps: 398.50786
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 308.34051
-  tps: 321.7586
+  dps: 308.41712
+  tps: 321.84505
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-LieutenantCommander'sInvestiture"
  value: {
-  dps: 384.61048
-  tps: 398.34324
+  dps: 384.09355
+  tps: 397.81648
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-LieutenantCommander'sRaiment"
  value: {
-  dps: 363.9381
-  tps: 377.51845
+  dps: 363.95568
+  tps: 377.5016
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-VestmentsofProphecy"
  value: {
-  dps: 401.54386
-  tps: 415.89612
+  dps: 399.34616
+  tps: 413.67384
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-VestmentsofTranscendence"
  value: {
-  dps: 391.4833
-  tps: 405.35373
+  dps: 388.43694
+  tps: 402.26311
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-Warlord'sRaiment"
  value: {
-  dps: 407.47057
-  tps: 421.26724
+  dps: 405.38835
+  tps: 419.14078
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Average-Default"
  value: {
-  dps: 374.23228
-  tps: 387.73367
+  dps: 372.90681
+  tps: 386.38639
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-FullBuffs-Launch-Consumes-LongMultiTarget"
  value: {
-  dps: 427.50972
-  tps: 702.75488
+  dps: 427.43104
+  tps: 702.3812
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-FullBuffs-Launch-Consumes-LongSingleTarget"
  value: {
-  dps: 427.50972
-  tps: 441.27198
+  dps: 427.43104
+  tps: 441.17855
  }
 }
 dps_results: {
@@ -204,36 +204,36 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-NoBuffs-Launch-Consumes-LongMultiTarget"
  value: {
-  dps: 246.97295
-  tps: 427.71978
+  dps: 245.19504
+  tps: 425.94186
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-NoBuffs-Launch-Consumes-LongSingleTarget"
  value: {
-  dps: 246.97295
-  tps: 256.01029
+  dps: 245.19504
+  tps: 254.23238
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Dwarf-launch-Basic-launch-NoBuffs-Launch-Consumes-ShortSingleTarget"
  value: {
-  dps: 522.16713
-  tps: 537.35089
+  dps: 522.08301
+  tps: 537.26677
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-FullBuffs-Launch-Consumes-LongMultiTarget"
  value: {
-  dps: 375.22936
-  tps: 645.65619
+  dps: 372.13578
+  tps: 641.6776
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-FullBuffs-Launch-Consumes-LongSingleTarget"
  value: {
-  dps: 375.22936
-  tps: 388.7507
+  dps: 372.13578
+  tps: 385.61287
  }
 }
 dps_results: {
@@ -246,28 +246,28 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-NoBuffs-Launch-Consumes-LongMultiTarget"
  value: {
-  dps: 246.28524
-  tps: 427.03206
+  dps: 246.6814
+  tps: 427.42823
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-NoBuffs-Launch-Consumes-LongSingleTarget"
  value: {
-  dps: 246.28524
-  tps: 255.32258
+  dps: 246.6814
+  tps: 255.71874
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-Settings-Undead-launch-Basic-launch-NoBuffs-Launch-Consumes-ShortSingleTarget"
  value: {
-  dps: 527.15284
-  tps: 542.33659
+  dps: 526.95558
+  tps: 542.13934
  }
 }
 dps_results: {
  key: "TestSmitePriest-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 375.22936
-  tps: 388.7507
+  dps: 372.13578
+  tps: 385.61287
  }
 }
