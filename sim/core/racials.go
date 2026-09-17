@@ -65,6 +65,7 @@ func applyRaceEffects(agent Agent) {
 			// Expansive Mind raises the resource pool itself now rather than Intellect.
 			// Only the mana half is modelled; rage and energy have no max stat here.
 			character.MultiplyStat(stats.Mana, 1.05)
+			character.registerEureka()
 		} else {
 			character.AddStat(stats.ArcaneResistance, 10)
 			character.MultiplyStat(stats.Intellect, 1.05)
@@ -215,6 +216,80 @@ func applyRaceEffects(agent Agent) {
 		// The High Order racial is a health and mana regeneration cooldown, which does
 		// nothing the sim measures, so it is left out.
 	}
+}
+
+// Eureka!, the gnome's Forever racial cooldown: the next three damaging or healing
+// abilities cost 50% less mana and deal 10% more, on a two minute cooldown. Read from the
+// demo; the racials guide carries both figures.
+// TODO: beta will confirm. A warlock's tooltip listed only the damage half, so whether the
+// mana saving applies to every ability or only the caster ones is not settled; it is taken
+// here to apply to whatever the charge is spent on.
+func (character *Character) registerEureka() {
+	actionID := ActionID{SpellID: 460550}
+
+	var affected []*Spell
+	aura := character.RegisterAura(Aura{
+		Label:     "Eureka!",
+		ActionID:  actionID,
+		Duration:  time.Minute,
+		MaxStacks: 3,
+		OnInit: func(aura *Aura, sim *Simulation) {
+			// Anything that costs mana and deals damage is a candidate; a charge is spent
+			// by whichever of them is cast first.
+			for _, spell := range character.Spellbook {
+				if spell.Cost != nil && spell.ProcMask.Matches(ProcMaskSpellDamage) {
+					affected = append(affected, spell)
+				}
+			}
+		},
+		OnGain: func(aura *Aura, sim *Simulation) {
+			character.PseudoStats.DamageDealtMultiplier *= 1.1
+			for _, spell := range affected {
+				spell.Cost.Multiplier -= 50
+			}
+		},
+		OnExpire: func(aura *Aura, sim *Simulation) {
+			character.PseudoStats.DamageDealtMultiplier /= 1.1
+			for _, spell := range affected {
+				spell.Cost.Multiplier += 50
+			}
+		},
+		OnStacksChange: func(aura *Aura, sim *Simulation, _ int32, newStacks int32) {
+			if newStacks == 0 {
+				aura.Deactivate(sim)
+			}
+		},
+		OnCastComplete: func(aura *Aura, sim *Simulation, spell *Spell) {
+			// OnCastComplete runs after the cast that activated the aura, so the charge the
+			// activation itself would spend is not taken.
+			if aura.RemainingDuration(sim) == aura.Duration {
+				return
+			}
+			if aura.GetStacks() > 0 && spell.ProcMask.Matches(ProcMaskSpellDamage) {
+				aura.RemoveStack(sim)
+			}
+		},
+	})
+
+	spell := character.RegisterSpell(SpellConfig{
+		ActionID: actionID,
+		Flags:    SpellFlagNoOnCastComplete,
+		Cast: CastConfig{
+			CD: Cooldown{
+				Timer:    character.NewTimer(),
+				Duration: time.Minute * 2,
+			},
+		},
+		ApplyEffects: func(sim *Simulation, _ *Unit, _ *Spell) {
+			aura.Activate(sim)
+			aura.SetStacks(sim, aura.MaxStacks)
+		},
+	})
+
+	character.AddMajorCooldown(MajorCooldown{
+		Spell: spell,
+		Type:  CooldownTypeDPS,
+	})
 }
 
 // Touch of the Grave, the undead's Forever racial, which replaces Classic's Shadow
