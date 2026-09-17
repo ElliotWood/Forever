@@ -15,6 +15,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 concurrency:
   group: watch-wowhead-forever
@@ -29,6 +30,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Wowhead's file is a digest. The raw client tables (Spell, SpellEffect, SpellMisc, SkillLineAbility,
+      # ChrRaces, ItemSparse, Talent...) are published per build by wago.tools, but only once Blizzard ships
+      # a Forever client product. There was none on 2026-09-17. Raise one issue the day it appears.
+      - name: Has a Forever client build appeared on wago.tools?
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          found=$(curl -fsSL --retry 3 https://wago.tools/api/builds \
+            | jq -r 'to_entries[] | select(.key | test("forever|classic_?plus|wowf"; "i")) | "\(.key) \(.value[0].version) (\(.value[0].created_at))"')
+          [ -z "$found" ] && { echo "No Forever product on wago.tools yet."; exit 0; }
+          echo "$found"
+          if [ -z "$(gh issue list --label forever-client-build --state all --json number --jq '.[0].number')" ]; then
+            gh label create forever-client-build --color d93f0b --description "Forever client data on wago.tools" 2>/dev/null || true
+            printf 'wago.tools now lists a Forever client product:\n\n```\n%s\n```\n\nThe raw DB2 tables can now be pulled per build, e.g. `https://wago.tools/db2/SpellEffect/csv?product=<product>`. Time to add them as a source alongside Wowhead.\n' "$found" > /tmp/issue.md
+            gh issue create --title "Forever client build is on wago.tools" --label forever-client-build --body-file /tmp/issue.md
+          fi
 
       - name: Fetch the current Forever data
         run: |
