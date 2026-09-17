@@ -1,5 +1,17 @@
 [
 	{
+		"number": 201,
+		"title": "fix(core): rage conversion used XOR where it meant a square",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/201"
+	},
+	{
+		"number": 200,
+		"title": "fix(core): raid buffs and debuffs from the Forever beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/200"
+	},
+	{
 		"number": 199,
 		"title": "fix(core): don't panic on crit heals that have no DefenseType",
 		"mergedAt": "2026-09-17",
