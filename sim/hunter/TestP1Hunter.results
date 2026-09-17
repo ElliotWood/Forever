@@ -99,8 +99,8 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1Hunter-Phase1-AllItems-BeastmasterArmor"
  value: {
-  dps: 445.44882
-  tps: 354.10545
+  dps: 452.17656
+  tps: 360.95521
  }
 }
 dps_results: {

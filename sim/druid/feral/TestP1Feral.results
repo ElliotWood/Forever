@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Feral-Phase1-AllItems-FeralheartRaiment"
  value: {
-  dps: 401.2733
-  tps: 307.30113
+  dps: 398.54959
+  tps: 305.72374
  }
 }
 dps_results: {

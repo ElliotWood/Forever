@@ -99,8 +99,8 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-AllItems-BattlegearofHeroism"
  value: {
-  dps: 726.47832
-  tps: 674.40074
+  dps: 731.9414
+  tps: 685.95689
  }
 }
 dps_results: {

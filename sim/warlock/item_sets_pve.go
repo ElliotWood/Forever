@@ -15,16 +15,34 @@ var ItemSetDeathmistRaiment = core.NewItemSet(core.ItemSet{
 			c := agent.GetCharacter()
 			c.AddResistances(8)
 		},
-		// 4pc: When struck in combat has a chance of causing the attacker to flee in terror for 2 seconds.
+		// Restores 8 mana per 5 sec.
+		3: func(agent core.Agent) {
+			agent.GetCharacter().AddStat(stats.MP5, 8)
+		},
+		// Your spellcasts have a 5% chance to heal you for 270 to 330. Classic put the fear proc
+		// here, which the sim left unimplemented.
+		4: func(agent core.Agent) {
+			c := agent.GetCharacter()
+			actionID := core.ActionID{SpellID: 450585}
+			healthMetrics := c.NewHealthMetrics(actionID)
+
+			core.MakeProcTriggerAura(&c.Unit, core.ProcTrigger{
+				ActionID:   actionID,
+				Name:       "Dark Reward",
+				Callback:   core.CallbackOnCastComplete,
+				ProcMask:   core.ProcMaskSpellDamage | core.ProcMaskSpellHealing,
+				ProcChance: 0.05,
+				Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+					c.GainHealth(sim, sim.Roll(270, 331), healthMetrics)
+				},
+			})
+		},
+		// Corrupted Fear: the attacker flees when you are struck.
+		5: func(_ core.Agent) {},
 		// Increases damage and healing done by magical spells and effects by up to 23.
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
 			c.AddStat(stats.SpellPower, 23)
-		},
-		// +200 Armor.
-		8: func(agent core.Agent) {
-			c := agent.GetCharacter()
-			c.AddStat(stats.Armor, 200)
 		},
 	},
 })

@@ -155,8 +155,8 @@ dps_results: {
 dps_results: {
  key: "TestForeverMageArcane-Phase1-AllItems-Sorcerer'sRegalia"
  value: {
-  dps: 514.4175
-  tps: 517.84677
+  dps: 519.17943
+  tps: 530.08374
  }
 }
 dps_results: {

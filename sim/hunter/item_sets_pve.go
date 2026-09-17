@@ -1,11 +1,10 @@
 package hunter
 
 import (
-	"time"
 	"github.com/wowsims/classic/sim/core"
 	"github.com/wowsims/classic/sim/core/stats"
+	"time"
 )
-
 
 ///////////////////////////////////////////////////////////////////////////
 //                            Phase 1 Item Sets - Molten Core
@@ -85,7 +84,7 @@ var ItemSetDragonstalkersArmor = core.NewItemSet(core.ItemSet{
 		// (8) Set: You have a chance whenever you deal ranged damage to apply an Expose Weakness effect to the target. Expose Weakness increases the Ranged Attack Power of all attackers against that target by 450 for 7 sec.
 		8: func(agent core.Agent) {
 			hunter := agent.(HunterAgent).GetHunter()
-			
+
 			debuffAuras := hunter.NewEnemyAuraArray(core.ExposeWeaknessAura)
 
 			core.MakeProcTriggerAura(&hunter.Unit, core.ProcTrigger{
@@ -149,10 +148,15 @@ var ItemSetBeastmasterArmor = core.NewItemSet(core.ItemSet{
 			c := agent.GetCharacter()
 			c.AddResistances(8)
 		},
-		// Your normal ranged attacks have a 4% chance of restoring 200 mana.
+		// Restores 8 mana per 5 sec.
+		3: func(agent core.Agent) {
+			agent.GetCharacter().AddStat(stats.MP5, 8)
+		},
+		// Melee and ranged autoattacks have a 5% chance of restoring 200 mana. Classic had it
+		// ranged only, at 4%.
 		4: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			actionID := core.ActionID{SpellID: 27785}
+			actionID := core.ActionID{SpellID: 450577}
 			manaMetrics := c.NewManaMetrics(actionID)
 
 			core.MakeProcTriggerAura(&c.Unit, core.ProcTrigger{
@@ -161,14 +165,16 @@ var ItemSetBeastmasterArmor = core.NewItemSet(core.ItemSet{
 				Callback:   core.CallbackOnSpellHitDealt,
 				Outcome:    core.OutcomeLanded,
 				ProcMask:   core.ProcMaskWhiteHit,
-				ProcChance: 0.04,
-				Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
+				ProcChance: 0.05,
+				Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 					if c.HasManaBar() {
 						c.AddMana(sim, 200, manaMetrics)
 					}
 				},
 			})
 		},
+		// Beast Unleashed: breaks a Root when struck.
+		5: func(_ core.Agent) {},
 		// +40 Attack Power.
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
@@ -177,11 +183,6 @@ var ItemSetBeastmasterArmor = core.NewItemSet(core.ItemSet{
 				stats.RangedAttackPower: 40,
 			})
 		},
-		// +200 Armor.
-		8: func(agent core.Agent) {
-			c := agent.GetCharacter()
-			c.AddStat(stats.Armor, 200)
-		},
 	},
 })
 
@@ -189,7 +190,7 @@ var ItemSetBeastmasterArmor = core.NewItemSet(core.ItemSet{
 var ItemSetStrikersGarb = core.NewItemSet(core.ItemSet{
 	Name: "Striker's Garb",
 	Bonuses: map[int32]core.ApplyEffect{
-		// (3) Set : Reduces the cost of your Arcane Shots by 10%. 
+		// (3) Set : Reduces the cost of your Arcane Shots by 10%.
 		3: func(agent core.Agent) {
 			hunter := agent.(HunterAgent).GetHunter()
 			core.MakePermanent(hunter.RegisterAura(core.Aura{
@@ -201,7 +202,7 @@ var ItemSetStrikersGarb = core.NewItemSet(core.ItemSet{
 				},
 			}))
 		},
-		// (5) Set : Reduces the cooldown of your Rapid Fire ability by 2 minutes. 
+		// (5) Set : Reduces the cooldown of your Rapid Fire ability by 2 minutes.
 		5: func(agent core.Agent) {
 			hunter := agent.(HunterAgent).GetHunter()
 			core.MakePermanent(hunter.RegisterAura(core.Aura{

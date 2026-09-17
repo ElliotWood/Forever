@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestAssassinationMutilate-Phase1-AllItems-DarkmantleArmor"
  value: {
-  dps: 547.29537
-  tps: 388.57972
+  dps: 535.55546
+  tps: 380.24438
  }
 }
 dps_results: {
