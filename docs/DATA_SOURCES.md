@@ -76,9 +76,12 @@ It does not regenerate `db.bin` or change sim rules. That remains review work.
 - **Beta started 17 Sep; launch is 4 Nov 2026.** Beta is capped at level 30.
 - **The beta client is already datamined.** wago.tools serves it under the existing `wow_classic_beta`
   product as **1.60.1** (builds 69876 and 69893 on 16 Sep). Tables download directly, e.g.
-  `https://wago.tools/db2/Spell/csv?build=1.60.1.69893`. Compared with Classic Era 1.15.9, 432 Talent rows
-  changed and 49 ChrRaces rows were added: **real talent and race data exists now**, so the trees vendored from
-  the BlizzCon stream in `tools/forever_talents/` can be checked against the client.
+  `https://wago.tools/db2/Spell/csv?build=1.60.1.69893`. **Talent trees are in the retail-style Trait tables**
+  (TraitTree, TraitNode, TraitNodeEntry, TraitDefinition, TraitEdge, TraitCond): one tree per class, 469 talents.
+  The Classic `Talent`/`TalentTab` tables are leftovers, identical to Era apart from a blanked class id - do not
+  read talents from them. ChrRaces gained 49 rows.
+- **Vendored trees checked against the client on 17 Sep:** 461 of 470 talents match exactly (tree, row, column,
+  max rank, prerequisite). Discrepancies are listed in `docs/talent-check-2026-09-17.md`.
 - **Wowhead has started:** a `/forever/` database, talent calculator, and "datamined from Forever beta client"
   articles. Its gear-planner file (`nether.wowhead.com/forever/data/gear-planner`) already carries
   `classicplus` sections.
@@ -89,5 +92,5 @@ It does not regenerate `db.bin` or change sim rules. That remains review work.
   versus Era/SoD, TBC Anniversary and Mists Classic).
 
 The watch workflow now also records the newest 1.60.x client build and opens a `data/forever-client` PR with a
-row-level diff of the sim's tables (Spell*, SkillLineAbility, ChrRaces, Talent, ItemSparse, ItemSet, enchants)
+row-level diff of the sim's tables (Spell*, SkillLineAbility, ChrRaces, Trait*, ItemSparse, ItemSet, enchants)
 whenever a new beta build lands.
