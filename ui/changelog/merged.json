@@ -1,5 +1,11 @@
 [
 	{
+		"number": 176,
+		"title": "ops: watch Wowhead Forever data and open a PR when it changes",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/176"
+	},
+	{
 		"number": 175,
 		"title": "Stop the bulk sim reporter sending into a closed channel",
 		"mergedAt": "2026-09-17",
