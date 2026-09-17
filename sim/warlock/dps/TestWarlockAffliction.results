@@ -148,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 455.24764
-  tps: 347.87252
+  dps: 468.82662
+  tps: 359.33312
  }
 }
 dps_results: {

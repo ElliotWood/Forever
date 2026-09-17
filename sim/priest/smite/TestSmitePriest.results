@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-Champion'sRaiment"
  value: {
-  dps: 288.5444
-  tps: 301.89366
+  dps: 286.30528
+  tps: 299.65454
  }
 }
 dps_results: {
@@ -134,8 +134,8 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 239.07382
-  tps: 252.29032
+  dps: 245.39982
+  tps: 258.61633
  }
 }
 dps_results: {
@@ -148,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-Phase1-AllItems-LieutenantCommander'sRaiment"
  value: {
-  dps: 288.5444
-  tps: 301.89366
+  dps: 286.30528
+  tps: 299.65454
  }
 }
 dps_results: {

@@ -148,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 470.78308
-  tps: 417.24514
+  dps: 480.10983
+  tps: 426.30401
  }
 }
 dps_results: {

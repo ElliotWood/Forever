@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Hunter-Phase1-AllItems-Champion'sPursuit"
  value: {
-  dps: 414.96141
-  tps: 322.16547
+  dps: 421.5351
+  tps: 328.73915
  }
 }
 dps_results: {
@@ -197,8 +197,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Hunter-Phase1-AllItems-LieutenantCommander'sPursuit"
  value: {
-  dps: 414.96141
-  tps: 322.16547
+  dps: 421.5351
+  tps: 328.73915
  }
 }
 dps_results: {

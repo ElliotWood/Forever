@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-Phase1-AllItems-FieldMarshal'sAegis"
  value: {
-  dps: 716.63626
-  tps: 592.88879
+  dps: 714.08505
+  tps: 590.84783
  }
 }
 dps_results: {

@@ -8,19 +8,23 @@ import (
 var ItemSetChampionsRaiment = core.NewItemSet(core.ItemSet{
 	Name: "Champion's Raiment",
 	Bonuses: map[int32]core.ApplyEffect{
-		// Increases damage and healing done by magical spells and effects by up to 23.
+		// Increases healing done by up to 44 and damage done by up to 15 for all magical spells and
+		// effects (467550).
 		2: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.SpellPower, 23)
+			c.AddStats(stats.Stats{
+				stats.HealingPower: 44,
+				stats.SpellDamage:  15,
+			})
 		},
 		// Increases the duration of your Psychic Scream spell by 1 sec.
 		4: func(agent core.Agent) {
 			// Nothing to do
 		},
-		// +15 Stamina.
+		// +20 Stamina (14467, was 15).
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.Stamina, 15)
+			c.AddStat(stats.Stamina, 20)
 		},
 	},
 })
@@ -28,19 +32,23 @@ var ItemSetChampionsRaiment = core.NewItemSet(core.ItemSet{
 var ItemSetLieutenantCommandersRaiment = core.NewItemSet(core.ItemSet{
 	Name: "Lieutenant Commander's Raiment",
 	Bonuses: map[int32]core.ApplyEffect{
-		// Increases damage and healing done by magical spells and effects by up to 23.
+		// Increases healing done by up to 44 and damage done by up to 15 for all magical spells and
+		// effects (467550).
 		2: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.SpellPower, 23)
+			c.AddStats(stats.Stats{
+				stats.HealingPower: 44,
+				stats.SpellDamage:  15,
+			})
 		},
 		// Increases the duration of your Psychic Scream spell by 1 sec.
 		4: func(agent core.Agent) {
 			// Nothing to do
 		},
-		// +15 Stamina.
+		// +20 Stamina (14467, was 15).
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.Stamina, 15)
+			c.AddStat(stats.Stamina, 20)
 		},
 	},
 })

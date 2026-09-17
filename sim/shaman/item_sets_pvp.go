@@ -31,10 +31,10 @@ var ItemSetChampionsEarthshaker = core.NewItemSet(core.ItemSet{
 				},
 			})
 		},
-		// +15 Stamina.
+		// +20 Stamina (14467, was 15).
 		6: func(agent core.Agent) {
 			c := agent.GetCharacter()
-			c.AddStat(stats.Stamina, 15)
+			c.AddStat(stats.Stamina, 20)
 		},
 	},
 })

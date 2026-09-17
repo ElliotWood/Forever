@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-Phase1-AllItems-FieldMarshal'sAegis"
  value: {
-  dps: 389.68479
-  tps: 595.64528
+  dps: 387.57553
+  tps: 591.8337
  }
 }
 dps_results: {

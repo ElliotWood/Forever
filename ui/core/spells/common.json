@@ -532,5 +532,19 @@
 		"ability": "spell 463946",
 		"file": "sim/common/item_effects.go",
 		"source": "unreviewed"
+	},
+	"1299743": {
+		"ability": "Deathbone Surge",
+		"file": "sim/common/item_sets/item_sets_pve.go",
+		"source": "forever",
+		"tooltip": "Grants a chance when struck in combat to increase damage and healing done by magical spells and effects by up to 70 for 10 sec.",
+		"note": "Deathbone Guardian 3 piece, new in Forever. 15% chance, once a minute."
+	},
+	"1299746": {
+		"ability": "Deathbone Surge",
+		"file": "sim/common/item_sets/item_sets_pve.go",
+		"source": "forever",
+		"tooltip": "Increases damage and healing done by magical spells and effects by up to 70 for 10 sec.",
+		"note": "The buff 1299743 applies."
 	}
 }

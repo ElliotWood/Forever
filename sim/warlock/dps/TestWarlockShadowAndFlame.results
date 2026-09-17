@@ -148,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 379.13361
-  tps: 352.33993
+  dps: 387.97833
+  tps: 359.74778
  }
 }
 dps_results: {
