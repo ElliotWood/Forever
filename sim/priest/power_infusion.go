@@ -20,11 +20,9 @@ func (priest *Priest) registerPowerInfusionCD() {
 		ActionID: actionID,
 		Flags:    SpellFlagPriest | core.SpellFlagHelpful | core.SpellFlagAPL,
 
-		// The demo tooltip showed neither a mana cost nor a cooldown, both are taken from
-		// the spell of the same name.
-		// TODO: beta will confirm the cost and the cooldown.
+		// 20% of base mana and a 3 min cooldown in the Forever beta client, as in Classic.
 		ManaCost: core.ManaCostOptions{
-			BaseCost: 0.16,
+			BaseCost: 0.20,
 		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{

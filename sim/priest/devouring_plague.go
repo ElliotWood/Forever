@@ -10,7 +10,8 @@ import (
 const DevouringPlagueRanks = 6
 
 var DevouringPlagueSpellId = [DevouringPlagueRanks + 1]int32{0, 2944, 19276, 19277, 19278, 19279, 19280}
-var DevouringPlagueBaseDamage = [DevouringPlagueRanks + 1]float64{0, 152, 272, 400, 544, 712, 904}
+// Forever beta client 1.60.1.69893.
+var DevouringPlagueBaseDamage = [DevouringPlagueRanks + 1]float64{0, 128, 232, 344, 488, 656, 848}
 var DevouringPlagueManaCost = [DevouringPlagueRanks + 1]float64{0, 215, 350, 495, 645, 810, 985}
 var DevouringPlagueLevel = [DevouringPlagueRanks + 1]int{0, 20, 28, 36, 44, 52, 60}
 
@@ -37,7 +38,7 @@ func (priest *Priest) getDevouringPlagueConfig(rank int, cdTimer *core.Timer) co
 	manaCost := DevouringPlagueManaCost[rank]
 	level := DevouringPlagueLevel[rank]
 
-	spellCoeff := 0.063
+	spellCoeff := 0.1 // per tick
 
 	return core.SpellConfig{
 		SpellCode:   SpellCode_PriestDevouringPlague,
@@ -50,7 +51,7 @@ func (priest *Priest) getDevouringPlagueConfig(rank int, cdTimer *core.Timer) co
 		Rank:          rank,
 		RequiredLevel: level,
 
-		// TODO: only rank 1 of Devouring Contagion was shown, beta will confirm the rank 2 value
+		// Devouring Contagion, 25/50% in the beta client.
 		ManaCost: core.ManaCostOptions{
 			FlatCost:   manaCost,
 			Multiplier: 100 - 25*priest.Talents.DevouringContagion,
@@ -61,7 +62,7 @@ func (priest *Priest) getDevouringPlagueConfig(rank int, cdTimer *core.Timer) co
 			},
 			CD: core.Cooldown{
 				Timer:    cdTimer,
-				Duration: time.Minute * 3,
+				Duration: time.Minute, // 3 min in Classic
 			},
 		},
 
