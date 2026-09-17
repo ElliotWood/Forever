@@ -4,6 +4,8 @@ import { ResourceType } from '../proto/api';
 import { ActionID as ActionIdProto, ItemRandomSuffix, OtherAction } from '../proto/common';
 import { IconData, UIItem as Item } from '../proto/ui';
 import { buildWowheadTooltipDataset, WowheadTooltipItemParams, WowheadTooltipSpellParams } from '../wowhead';
+import tippy from 'tippy.js';
+
 import { Database } from './database';
 import { WOWHEAD_IMAGES } from '../constants/other';
 import { spellSource } from '../spells/index';
@@ -204,6 +206,23 @@ export class ActionId {
 	}
 
 	async setWowheadDataset(elem: HTMLElement, params?: Omit<WowheadTooltipItemParams, 'itemId'> | Omit<WowheadTooltipSpellParams, 'spellId'>) {
+		// An ability Forever changed is not the ability Wowhead's Classic database describes, and
+		// letting Wowhead's tooltip stand over it is what ui/core/spells was written to stop: the
+		// hover would quote Classic's damage for a spell the sim runs on Forever's. Where the
+		// manifest has a tooltip, show that and leave the Wowhead dataset off, so its script has
+		// nothing to attach to.
+		const source = this.spellId ? spellSource(this.spellId) : undefined;
+		if (elem && source?.tooltip && (source.source === 'forever' || source.source === 'assumed')) {
+			const unconfirmed = source.source === 'assumed' ? '\n\nSome numbers here are unconfirmed.' : '';
+			tippy(elem, {
+				content: `${source.ability}\n${source.tooltip}${unconfirmed}`,
+				ignoreAttributes: true,
+				allowHTML: false,
+				theme: 'forever',
+			});
+			return;
+		}
+
 		(this.itemId
 			? ActionId.makeItemTooltipData(this.itemId, params)
 			: ActionId.makeSpellTooltipData(this.spellIdTooltipOverride || this.spellId, params)

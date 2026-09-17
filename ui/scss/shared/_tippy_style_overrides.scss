@@ -26,3 +26,10 @@
 	color: var(--bs-tooltip-body-color);
 	padding: var(--bs-tooltip-body-padding-y) var(--bs-tooltip-body-padding-x);
 }
+
+// Abilities Forever changed carry their tooltip in ui/core/spells rather than Wowhead's
+// Classic entry, and that text is written as lines. Keep them.
+.tippy-box[data-theme~='forever'] .tippy-content {
+	white-space: pre-line;
+	text-align: left;
+}
