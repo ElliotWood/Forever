@@ -13,12 +13,11 @@ func (mage *Mage) registerArcaneBlastSpell() {
 		return
 	}
 
-	// Level 60 values aren't datamined yet. The demo tooltip reads 95 to 104, which matches a rank
-	// 1 of the spell, so these are picked to give the same damage per cast second as the level 60
-	// Frostbolt the mage already casts instead of being scaled straight off the tooltip.
-	baseDamage := []float64{435, 505}
+	// Beta client 1.60.1.69893: rank 5 (1239700), the level 60 rank of five. Forever gives it its own
+	// spell ids; 30451 is kept as the action id the APLs already name.
+	baseDamage := []float64{364, 424}
 	spellCoeff := .714
-	manaCost := 240.0
+	baseManaCost := .15
 	castTime := time.Millisecond * 2500
 
 	actionID := core.ActionID{SpellID: 30451}
@@ -73,7 +72,7 @@ func (mage *Mage) registerArcaneBlastSpell() {
 		Rank:          1,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: manaCost,
+			BaseCost: baseManaCost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

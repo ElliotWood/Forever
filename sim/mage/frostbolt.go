@@ -9,8 +9,10 @@ import (
 const FrostboltRanks = 11
 
 var FrostboltSpellId = [FrostboltRanks + 1]int32{0, 116, 205, 837, 7322, 8406, 8407, 8408, 10179, 10180, 10181, 25304}
-var FrostboltBaseDamage = [FrostboltRanks + 1][]float64{{0, 0}, {20, 22}, {33, 38}, {54, 61}, {78, 87}, {132, 144}, {180, 197}, {231, 251}, {301, 326}, {353, 383}, {440, 475}, {515, 555}}
-var FrostboltSpellCoeff = [FrostboltRanks + 1]float64{0, .163, .269, .463, .706, .814, .814, .814, .814, .814, .814, .814}
+// Beta client 1.60.1.69893: every rank from 3 up hits for less, and the low ranks lost their
+// downranking penalty.
+var FrostboltBaseDamage = [FrostboltRanks + 1][]float64{{0, 0}, {20, 22}, {33, 38}, {46, 53}, {61, 68}, {97, 105}, {134, 147}, {181, 197}, {243, 264}, {305, 332}, {382, 413}, {457, 493}}
+var FrostboltSpellCoeff = [FrostboltRanks + 1]float64{0, .407, .489, .597, .706, .814, .814, .814, .814, .814, .814, .814}
 var FrostboltCastTime = [FrostboltRanks + 1]int32{0, 1500, 1800, 2200, 2600, 3000, 3000, 3000, 3000, 3000, 3000, 3000}
 var FrostboltManaCost = [FrostboltRanks + 1]float64{0, 25, 35, 50, 65, 100, 130, 160, 195, 225, 260, 290}
 var FrostboltLevel = [FrostboltRanks + 1]int{0, 4, 8, 14, 20, 26, 32, 38, 44, 50, 56, 60}

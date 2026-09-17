@@ -9,8 +9,9 @@ import (
 const FireBlastRanks = 7
 
 var FireBlastSpellId = [FireBlastRanks + 1]int32{0, 2136, 2137, 2138, 8412, 8413, 10197, 10199}
-var FireBlastBaseDamage = [FireBlastRanks + 1][]float64{{0}, {27, 35}, {62, 76}, {107, 132}, {177, 211}, {246, 295}, {342, 405}, {446, 524}}
-var FireBlastSpellCoeff = [FireBlastRanks + 1]float64{0, .204, .332, .429, .429, .429, .429, .429}
+// Beta client 1.60.1.69893.
+var FireBlastBaseDamage = [FireBlastRanks + 1][]float64{{0}, {27, 35}, {57, 69}, {97, 117}, {157, 187}, {226, 268}, {316, 372}, {417, 489}}
+var FireBlastSpellCoeff = [FireBlastRanks + 1]float64{0, .429, .429, .429, .429, .429, .429, .429}
 var FireBlastManaCost = [FireBlastRanks + 1]float64{0, 40, 75, 115, 165, 220, 280, 340}
 var FireBlastLevel = [FireBlastRanks + 1]int{0, 6, 14, 22, 30, 38, 46, 54}
 
@@ -36,8 +37,8 @@ func (mage *Mage) newFireBlastSpellConfig(rank int, cdTimer *core.Timer) core.Sp
 	manaCost := FireBlastManaCost[rank]
 	level := FireBlastLevel[rank]
 
-	// TODO: only rank 1 of Wake of Fire was shown, so mage.json copies its 1 sec into rank 2.
-	cooldown := time.Second*8 - []time.Duration{0, time.Second, time.Second}[mage.Talents.WakeOfFire]
+	// Wake of Fire takes 1 and 2 sec off in the beta client.
+	cooldown := time.Second*8 - []time.Duration{0, time.Second, time.Second * 2}[mage.Talents.WakeOfFire]
 	flags := SpellFlagMage | core.SpellFlagAPL
 
 	return core.SpellConfig{

@@ -10,7 +10,10 @@ import (
 const BlizzardRanks = 6
 
 var BlizzardSpellId = [BlizzardRanks + 1]int32{0, 10, 6141, 8427, 10185, 10186, 10187}
-var BlizzardBaseDamage = [BlizzardRanks + 1]float64{0, 200, 352, 520, 720, 936, 1192}
+// Beta client 1.60.1.69893. Forever's Blizzard is an area trigger that casts a damage spell every
+// second (1279976 ... 1279949), 8 times; these are 8 times that spell's base. The coefficient below
+// is the damage spell's, per tick; the parent spell's dummy effect carries 0.03, which is not used.
+var BlizzardBaseDamage = [BlizzardRanks + 1]float64{0, 192, 336, 496, 696, 912, 1168}
 var BlizzardManaCost = [BlizzardRanks + 1]float64{0, 320, 520, 720, 935, 1160, 1400}
 var BlizzardLevel = [BlizzardRanks + 1]int{0, 20, 28, 36, 44, 52, 60}
 

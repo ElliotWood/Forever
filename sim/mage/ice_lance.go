@@ -12,9 +12,11 @@ func (mage *Mage) registerIceLanceSpell() {
 		return
 	}
 
-	// Level 60 values aren't datamined yet. The demo tooltip reads 28 to 33 for what is a rank 1,
-	// so these keep Ice Lance at roughly a fifth of the level 60 Frostbolt it is cast alongside.
-	baseDamage := []float64{115, 133}
+	// Beta client 1.60.1.69893: rank 6 (1240047), learned at 56 and grown to its level 60 value. The
+	// demo's 28 to 33 is the client's rank 1.
+	// TODO: the client's damage effect carries no spell power coefficient at all, like the few other
+	// spells whose coefficient moved off the effect row, so .143 is still a guess.
+	baseDamage := []float64{136, 161}
 	spellCoeff := .143
 	manaCost := 160.0
 
