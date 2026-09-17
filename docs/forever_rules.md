@@ -131,3 +131,24 @@ below is gated on `IsForever()` unless it says the class code is Forever-only.
 | Rule | Source | Here |
 |---|---|---|
 | Tier 1 opens 9 December 2026: Barrow Deeps (10), Hyjal Summit (20), Onyxia's Lair (40). Only Onyxia has a known encounter. Molten Core kept as a target. | BlizzCon, Wowhead overview | `sim/encounters/register_all.go` |
+
+## Published abilities the sim does not implement (checked 17 September)
+
+The 40 racial abilities and 37 class abilities talentsforever publishes were compared
+against `sim/`. Every one that changes a damage number is implemented. What is left out,
+and why:
+
+- **Aspect of the Beast** now adds 50 melee attack power as well as making you untrackable.
+  A hunter holds one aspect, and Aspect of the Hawk pays 120 ranged attack power at rank 7,
+  so nothing a ranged hunter does would pick Beast.
+- **Shadow Word: Death** is not modelled, and neither is the Early Demise talent that buffs
+  it, which is marked `notSimulated` in the tree so the picker says so.
+- **Seal of Fury**, **Victory Rush**, **Fear Ward**, **Totemic Projection**, **Call of the
+  Elements**, **Comprehend Scroll**, **Subjugate Demon**, **Incubus**, **Call Owl** and the
+  movement, profession and dispel racials: none of them move a damage number, or the sim
+  has no model for what they do (absorbs, self-healing, totem placement).
+
+Several abilities the search does not find by name are implemented under another one:
+Quickness is an `AddStat(stats.Dodge, 1)`, Axe Specialization is
+`AddWeaponSpecializationCrit`, Bane of Agony lives in `sim/warlock/curses.go`. Check for the
+effect before concluding an ability is missing.

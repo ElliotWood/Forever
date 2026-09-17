@@ -8,6 +8,12 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
+// Only Aspect of the Hawk is modelled. Forever changed Aspect of the Beast - rank 1 now
+// adds 50 melee attack power on top of making you untrackable, where Classic gave only the
+// untrackability - but a hunter holds one aspect at a time, and Hawk pays 120 ranged attack
+// power at rank 7 to Beast's 50 melee. Nothing a ranged hunter does would pick Beast, so
+// registering it would add a spell no rotation casts.
+
 // Utility function to create the Deadly Aspects haste aura
 func (hunter *Hunter) createDeadlyAspectsAura(auraLabel string, actionID core.ActionID) *core.Aura {
 	// TODO: only rank 1 of Deadly Aspects was observed. The 30% for 12 sec is held at every
