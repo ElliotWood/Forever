@@ -422,7 +422,7 @@ func JudgementOfWisdomAura(target *Unit) *Aura {
 		Label:    "Judgement of Wisdom",
 		ActionID: actionID,
 		Tag:      JudgementAuraTag,
-		Duration: time.Second * 10,
+		Duration: time.Second * 40,
 		OnSpellHitTaken: func(aura *Aura, sim *Simulation, spell *Spell, result *SpellResult) {
 			unit := spell.Unit
 			if !unit.HasManaBar() {
@@ -749,7 +749,7 @@ func faerieFireAuraInternal(target *Unit, label string, spellID int32) *Aura {
 }
 
 func CurseOfWeaknessAura(target *Unit, points int32) *Aura {
-	modDmgReduction := -31.0
+	modDmgReduction := -37.0
 
 	modDmgReduction *= []float64{1, 1.06, 1.13, 1.20}[points]
 	modDmgReduction = math.Floor(modDmgReduction)
@@ -830,7 +830,7 @@ func ExposeWeaknessAura(target *Unit) *Aura {
 }
 
 func DemoralizingRoarAura(target *Unit, points int32) *Aura {
-	baseAPReduction := 138.0
+	baseAPReduction := 204.0
 
 	aura := target.GetOrRegisterAura(Aura{
 		Label:    "DemoralizingRoar-" + strconv.Itoa(int(points)),
@@ -844,7 +844,7 @@ func DemoralizingRoarAura(target *Unit, points int32) *Aura {
 const DemoralizingShoutRanks = 5
 
 var DemoralizingShoutSpellId = [DemoralizingShoutRanks + 1]int32{0, 1160, 6190, 11554, 11555, 11556}
-var DemoralizingShoutBaseAP = [DemoralizingShoutRanks + 1]float64{0, 45, 56, 76, 111, 146}
+var DemoralizingShoutBaseAP = [DemoralizingShoutRanks + 1]float64{0, 63, 78, 106, 155, 204}
 var DemoralizingShoutLevel = [DemoralizingShoutRanks + 1]int{0, 14, 24, 34, 44, 54}
 
 func DemoralizingShoutAura(target *Unit, boomingVoicePts int32, impDemoShoutPts int32) *Aura {
@@ -855,7 +855,7 @@ func DemoralizingShoutAura(target *Unit, boomingVoicePts int32, impDemoShoutPts 
 	aura := target.GetOrRegisterAura(Aura{
 		Label:    "DemoralizingShout-" + strconv.Itoa(int(impDemoShoutPts)),
 		ActionID: ActionID{SpellID: spellId},
-		Duration: time.Duration(float64(time.Second*30) * (1 + 0.1*float64(boomingVoicePts))),
+		Duration: time.Second * 45,
 	})
 	apReductionEffect(aura, math.Floor(baseAPReduction*(1+0.08*float64(impDemoShoutPts))))
 	return aura
