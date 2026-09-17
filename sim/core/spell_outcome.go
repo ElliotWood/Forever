@@ -1004,6 +1004,11 @@ func (dot *Dot) OutcomeExpectedMagicSnapshotCrit(_ *Simulation, result *SpellRes
 func (spell *Spell) CritMultiplier(at *AttackTable) float64 {
 	switch spell.DefenseType {
 	case DefenseTypeNone:
+		// Heals aren't defended against, so they carry no DefenseType. Their crits are the
+		// same 150% as magic, so don't force every heal to declare a fake one.
+		if spell.Flags.Matches(SpellFlagHelpful) {
+			return 1 + (1.5*at.CritMultiplier-1)*spell.CritDamageBonus
+		}
 		panic(fmt.Sprintf("using CritMultiplier() for spellID %d which has no DefenseType", spell.SpellID))
 	case DefenseTypeMagic:
 		return 1 + (1.5*at.CritMultiplier-1)*spell.CritDamageBonus
