@@ -9,7 +9,9 @@ import (
 )
 
 func (hunter *Hunter) getExplosiveTrapConfig(rank int, timer *core.Timer) core.SpellConfig {
-	spellId := [4]int32{0, 409532, 409534, 409535}[rank]
+	// Classic and Forever ids; the 4095xx ids were Season of Discovery's and are not in the beta client.
+	// Damage, cost and levels are unchanged in the beta client, only the shared cooldown moved.
+	spellId := [4]int32{0, 13813, 14316, 14317}[rank]
 	dotDamage := [4]float64{0, 15, 24, 33}[rank]
 	minDamage := [4]float64{0, 104, 145, 208}[rank]
 	maxDamage := [4]float64{0, 135, 193, 265}[rank]
@@ -34,7 +36,7 @@ func (hunter *Hunter) getExplosiveTrapConfig(rank int, timer *core.Timer) core.S
 		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer:    timer,
+				Timer: timer,
 				// Forever doubles the shared trap cooldown to 30 sec. Seen on every trap tooltip
 				// from the demo streams (Savix, Xaryu and Soda, 12-13 September).
 				Duration: core.TernaryDuration(hunter.Env.IsForever(), time.Second*30, time.Second*15),

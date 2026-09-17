@@ -8,7 +8,7 @@ import (
 
 func (hunter *Hunter) getMongooseBiteConfig(rank int) core.SpellConfig {
 	spellId := [5]int32{0, 1495, 14269, 14270, 14271}[rank]
-	baseDamage := [5]float64{0, 25, 45, 75, 115}[rank]
+	baseDamage := [5]float64{0, 15, 22, 37, 57}[rank]
 	manaCost := [5]float64{0, 30, 40, 50, 65}[rank]
 	level := [5]int{0, 16, 30, 44, 58}[rank]
 
@@ -44,10 +44,13 @@ func (hunter *Hunter) getMongooseBiteConfig(rank int) core.SpellConfig {
 		CritDamageBonus:  hunter.mortalShots(),
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
+		BonusCoefficient: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			hunter.DefensiveState.Deactivate(sim)
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			// Forever: normalized melee weapon damage plus a smaller flat amount, where Classic dealt the flat amount alone.
+			damage := baseDamage + hunter.AutoAttacks.MH().CalculateNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+			result := spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 
 			if hunter.LaceratingStrikes != nil && result.Landed() {
 				hunter.procLaceratingStrikes(sim, result)

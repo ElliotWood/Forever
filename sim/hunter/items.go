@@ -108,7 +108,7 @@ func init() {
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				hunter.AimedShot.CD.Reset()
 				hunter.MultiShot.CD.Reset()
-				hunter.Volley.CD.Reset()
+				// Volley has no cooldown in Forever, so there is nothing of it to clear.
 				hunter.ArcaneShot.CD.Reset()
 			},
 		})

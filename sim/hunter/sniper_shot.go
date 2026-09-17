@@ -7,18 +7,26 @@ import (
 	"github.com/wowsims/classic/sim/core/proto"
 )
 
-// The tooltip only gives the flat damage bonus, so Sniper Shot is built like the Steady Shot its
-// wording points at: a 1.5 sec shot with no cooldown and a 110 mana cost.
+// Sniper Shot from the beta client (1310687, 1310785, 1310786): a 4 sec cast on a 15 sec cooldown
+// for 365 mana at every rank, adding 160/225/295 to a normalized weapon shot.
 func (hunter *Hunter) registerSniperShotSpell() {
 	if !hunter.Talents.SniperShot {
 		return
 	}
 
-	flatDamageBonus := 160.0
+	rank := 1
+	if hunter.Level >= 58 {
+		rank = 3
+	} else if hunter.Level >= 48 {
+		rank = 2
+	}
+	spellId := [4]int32{0, 1310687, 1310785, 1310786}[rank]
+	flatDamageBonus := [4]float64{0, 160, 225, 295}[rank]
 
 	hunter.SniperShot = hunter.RegisterSpell(core.SpellConfig{
 		SpellCode:    SpellCode_HunterSniperShot,
-		ActionID:     core.ActionID{SpellID: 56641},
+		ActionID:     core.ActionID{SpellID: spellId},
+		Rank:         rank,
 		SpellSchool:  core.SpellSchoolPhysical,
 		DefenseType:  core.DefenseTypeRanged,
 		ProcMask:     core.ProcMaskRangedSpecial,
@@ -27,12 +35,17 @@ func (hunter *Hunter) registerSniperShotSpell() {
 		MissileSpeed: 24,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: 110,
+			FlatCost: 365,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD:      core.GCDDefault,
-				CastTime: time.Millisecond * 1500,
+				GCD: core.GCDDefault,
+				// The client's 4 sec plus the sim's 0.5 sec shot wind-up, as for Aimed Shot.
+				CastTime: time.Millisecond * 4500,
+			},
+			CD: core.Cooldown{
+				Timer:    hunter.NewTimer(),
+				Duration: time.Second * 15,
 			},
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
 				cast.CastTime = spell.CastTime()

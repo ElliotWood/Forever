@@ -10,7 +10,7 @@ func (hunter *Hunter) getFreezingTrapConfig(timer *core.Timer) core.SpellConfig 
 
 	return core.SpellConfig{
 		SpellCode:     SpellCode_HunterFreezingTrap,
-		ActionID:      core.ActionID{SpellID: 409510},
+		ActionID:      core.ActionID{SpellID: 1499},
 		SpellSchool:   core.SpellSchoolFrost,
 		DefenseType:   core.DefenseTypeMagic,
 		ProcMask:      core.ProcMaskSpellDamage,
@@ -23,7 +23,7 @@ func (hunter *Hunter) getFreezingTrapConfig(timer *core.Timer) core.SpellConfig 
 		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer:    timer,
+				Timer: timer,
 				// Forever doubles the shared trap cooldown to 30 sec. Seen on every trap tooltip
 				// from the demo streams (Savix, Xaryu and Soda, 12-13 September).
 				Duration: core.TernaryDuration(hunter.Env.IsForever(), time.Second*30, time.Second*15),

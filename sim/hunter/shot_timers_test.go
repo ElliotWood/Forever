@@ -36,9 +36,9 @@ func TestAimedShotSharesMultiShotsCooldownUnderForever(t *testing.T) {
 			environment, _, _ := core.NewEnvironment(raid, core.MakeSingleTargetEncounter(0), tc.ruleset, false)
 			character := environment.Raid.Parties[0].Players[0].GetCharacter()
 
-			// The highest rank of each is the one the level 60 rotation casts.
+			// The highest rank of each is the one the level 60 rotation casts; Forever has one Multi-Shot.
 			aimed := character.GetSpell(core.ActionID{SpellID: 20904})
-			multi := character.GetSpell(core.ActionID{SpellID: 25294})
+			multi := character.GetSpell(core.ActionID{SpellID: 2643})
 			arcane := character.GetSpell(core.ActionID{SpellID: 14287})
 			if aimed == nil || multi == nil {
 				t.Fatal("Aimed Shot or Multi-Shot is not registered")

@@ -199,21 +199,21 @@
         "ranks": [
           [
             30,
-            30,
+            50,
             50,
             30
           ],
           [
             60,
-            60,
+            100,
             50,
             30
           ]
         ]
       },
-      "reason": "the demo only showed rank 1, so every rank displayed rank 1's value; rank 2 is the community talent calculator's linear extrapolation of that tooltip, not a datamine. Audit 2026-09-15: the sim applies the same 60% cost cut and 60% proc chance at rank 2 and keeps the 50% regeneration and the 30 sec window flat.",
-      "by": "data-audit",
-      "at": "2026-09-15T00:00:00Z"
+      "reason": "beta client 1.60.1.69893: the proc chance curve is 50/100 (440529 effect 2), not the demo's 30 extrapolated to 60; the cost cut is 30/60 and the buff (1242688) is 50% for 30 sec at both ranks.",
+      "by": "beta-pass",
+      "at": "2026-09-17T00:00:00Z"
     },
     {
       "talent": "expose-prey",
