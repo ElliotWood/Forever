@@ -243,10 +243,8 @@ func (druid *Druid) applyEclipse() {
 		return
 	}
 
-	// TODO: Only rank 1's 0.17 sec was seen and the reduction is assumed to scale linearly, so
-	// rank 3 is 0.51 sec rather than the round half second the community talent calculator
-	// rounded it to. Beta will confirm.
-	castTimeReduction := time.Millisecond * 170 * time.Duration(druid.Talents.Eclipse)
+	// The beta client's curve is 0.17 / 0.33 / 0.5 sec.
+	castTimeReduction := time.Millisecond * []time.Duration{0, 170, 330, 500}[druid.Talents.Eclipse]
 	const chargesPerWrath = 2
 
 	starfireSpells := []*DruidSpell{}
@@ -346,9 +344,7 @@ func (druid *Druid) applyPrimalFury() {
 		return
 	}
 
-	// TODO: Only rank 1's 50% was seen. Classic's Primal Fury and the Blood Frenzy folded into it
-	// both went from half the time to every time at rank 2, so both halves are read that way here
-	// and the tree follows. Beta will confirm.
+	// The beta client's curves are 50 / 100% for both halves, and the Rage is 16959's 5.
 	procChance := []float64{0, 0.5, 1}[druid.Talents.PrimalFury]
 	actionID := core.ActionID{SpellID: 37117}
 	rageMetrics := druid.NewRageMetrics(actionID)
@@ -395,12 +391,9 @@ func (druid *Druid) applyNaturalReaction() {
 		return
 	}
 
-	// TODO: Only rank 1 was seen, the dodge chance is assumed to scale linearly. Beta will confirm.
+	// The beta client's curves are 1-5% dodge and a 20-100% chance at the Rage.
 	druid.AddStat(stats.Dodge, float64(druid.Talents.NaturalReaction)*core.DodgeRatingPerDodgeChance)
 
-	// TODO: Only rank 1's 20% chance was seen, the tree's 20/40/60/80/100 comes from the community
-	// talent calculator rather than from a tooltip, and at 5/5 it makes the Rage certain on every
-	// dodge. Beta will confirm.
 	procChance := 0.2 * float64(druid.Talents.NaturalReaction)
 	rageMetrics := druid.NewRageMetrics(core.ActionID{SpellID: 57878})
 
@@ -464,7 +457,7 @@ func (druid *Druid) applyNaturalist() {
 		return
 	}
 
-	// TODO: Only rank 1 was seen, the damage bonus is assumed to scale linearly. Beta will confirm.
+	// The beta client's curve is 1-5%.
 	druid.PseudoStats.DamageDealtMultiplier *= 1 + 0.01*float64(druid.Talents.Naturalist)
 }
 

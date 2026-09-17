@@ -13,32 +13,33 @@ type RakeRankInfo struct {
 	dotTickDamage float64
 }
 
+// Beta client 1.60.1.69893: a little more damage at every rank (rank 4 58 plus 32 a tick -> 61 plus 34 a tick).
 var rakeSpells = []RakeRankInfo{
 	{
 		id:            1822,
 		level:         24,
-		initialDamage: 19.0,
-		dotTickDamage: 13.0,
+		initialDamage: 23.0,
+		dotTickDamage: 16.0,
 	},
 	{
 		id:            1823,
 		level:         34,
-		initialDamage: 28.0,
-		dotTickDamage: 19.0,
+		initialDamage: 31.0,
+		dotTickDamage: 21.0,
 	},
 	{
 
 		id:            1824,
 		level:         44,
-		initialDamage: 43.0,
-		dotTickDamage: 25.0,
+		initialDamage: 45.0,
+		dotTickDamage: 26.0,
 	},
 	{
 
 		id:            9904,
 		level:         54,
-		initialDamage: 58.0,
-		dotTickDamage: 32.0,
+		initialDamage: 61.0,
+		dotTickDamage: 34.0,
 	},
 }
 

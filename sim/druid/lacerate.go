@@ -8,12 +8,9 @@ import (
 
 const LacerateMaxStacks int32 = 5
 
-// Forever gives the bear Lacerate: Shredding Attacks in the Forever tree cuts its Rage
-// cost, and nothing else in the tree or the spellbook has been seen. The Classic era
-// never had it at 60, so the shape and the numbers here are the Season of Discovery
-// Lacerate, the only level 60 tuning of the ability there is: 10 Rage, 20% weapon damage
-// per stack on the hit, a bleed of 29.8 per tick per stack over 15 sec, and 3.33x threat.
-// TODO: assumed from Season of Discovery, beta will confirm the cost, the damage and the threat.
+// Forever trains Lacerate at 42, 50 and 58 (414644, 1235826, 1235827). Beta client 1.60.1.69893: 15 Rage, 10% weapon
+// damage per stack on the hit, and a bleed of 10 / 12 / 15 a tick per stack over 15 sec that no longer scales with
+// attack power. The client does not carry threat, so the 3.33x is still Season of Discovery's.
 func (druid *Druid) registerLacerateSpell() {
 	druid.registerLacerateBleedSpell()
 
@@ -28,7 +25,7 @@ func (druid *Druid) registerLacerateSpell() {
 		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
-			Cost:   10 - float64(druid.Talents.ShreddingAttacks),
+			Cost:   15 - float64(druid.Talents.ShreddingAttacks),
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -49,7 +46,7 @@ func (druid *Druid) registerLacerateSpell() {
 
 			for idx := 0; idx < numHits; idx++ {
 				stacks := min(druid.LacerateBleed.Dot(target).GetStacks()+1, LacerateMaxStacks)
-				baseDamage := spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) * 0.2 * float64(stacks)
+				baseDamage := spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) * 0.1 * float64(stacks)
 				results[idx] = spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
 				if results[idx].Landed() {
@@ -66,7 +63,12 @@ func (druid *Druid) registerLacerateSpell() {
 }
 
 func (druid *Druid) registerLacerateBleedSpell() {
-	tickDamage := 29.8312
+	tickDamage := 10.0
+	if druid.Level >= 58 {
+		tickDamage = 15
+	} else if druid.Level >= 50 {
+		tickDamage = 12
+	}
 
 	druid.LacerateBleed = druid.RegisterSpell(Bear, core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: 414647},

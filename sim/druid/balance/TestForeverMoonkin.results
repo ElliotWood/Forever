@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.50552
+  weights: -0.0223
   weights: 0
-  weights: 0.42905
-  weights: 0
-  weights: 0
+  weights: 0.47115
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 5.32064
-  weights: 3.93808
+  weights: 0
+  weights: 0
+  weights: 2.80004
+  weights: 2.78293
   weights: 0
   weights: 0
   weights: 0
@@ -99,112 +99,112 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-CenarionRaiment"
  value: {
-  dps: 440.76294
-  tps: 458.40837
+  dps: 294.76905
+  tps: 309.54212
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 406.84581
-  tps: 424.55124
+  dps: 280.11911
+  tps: 295.79128
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-FeralheartRaiment"
  value: {
-  dps: 439.6782
-  tps: 459.42624
+  dps: 296.37982
+  tps: 313.22537
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-FieldMarshal'sSanctuary"
  value: {
-  dps: 420.16307
-  tps: 437.94716
+  dps: 288.37255
+  tps: 303.88637
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 406.84581
-  tps: 424.55124
+  dps: 280.11911
+  tps: 295.79128
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-StormrageRaiment"
  value: {
-  dps: 414.07546
-  tps: 432.02672
+  dps: 274.75425
+  tps: 289.80266
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-SymbolsofUnendingLife"
  value: {
-  dps: 430.10047
-  tps: 447.80098
+  dps: 307.22633
+  tps: 322.74015
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-AllItems-Warlord'sSanctuary"
  value: {
-  dps: 420.16307
-  tps: 437.94716
+  dps: 288.37255
+  tps: 303.88637
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-Average-Default"
  value: {
-  dps: 400.88499
-  tps: 418.20323
+  dps: 290.39324
+  tps: 306.26489
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 390.80193
-  tps: 731.73376
+  dps: 284.26307
+  tps: 590.82322
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 390.80193
-  tps: 407.84852
+  dps: 284.26307
+  tps: 299.59107
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 464.3559
-  tps: 486.17716
+  dps: 356.1952
+  tps: 378.06563
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 231.69443
-  tps: 412.44126
+  dps: 177.93192
+  tps: 358.67874
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 231.69443
-  tps: 240.73178
+  dps: 177.93192
+  tps: 186.96926
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-Settings-NightElf-p0.bis-Default-launch-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 421.21632
-  tps: 436.40007
+  dps: 318.92349
+  tps: 334.10724
  }
 }
 dps_results: {
  key: "TestForeverMoonkin-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 397.43058
-  tps: 414.85084
+  dps: 287.90074
+  tps: 303.37296
  }
 }

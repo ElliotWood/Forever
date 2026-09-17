@@ -9,9 +9,12 @@ import (
 const WrathRanks = 8
 
 var WrathSpellId = [WrathRanks + 1]int32{0, 5176, 5177, 5178, 5179, 5180, 6780, 8905, 9912}
-var WrathBaseDamage = [WrathRanks + 1][]float64{{0}, {13, 16}, {28, 33}, {48, 57}, {69, 79}, {108, 123}, {148, 167}, {198, 221}, {248, 277}}
-var WrathSpellCoeff = [WrathRanks + 1]float64{0, 0.123, 0.231, 0.443, 0.571, 0.571, 0.571, 0.571, 0.571}
-var WrathManaCost = [WrathRanks + 1]float64{0, 20, 35, 55, 70, 100, 125, 155, 180}
+
+// Beta client 1.60.1.69893: a quarter of Classic's damage at every rank from 3 up, cheaper, and no downranking penalty on
+// ranks 1-2. Ranges are the client's base plus its per level growth up to the rank's max level.
+var WrathBaseDamage = [WrathRanks + 1][]float64{{0}, {10, 13}, {16, 19}, {21, 25}, {26, 31}, {31, 36}, {37, 42}, {46, 51}, {62, 69}}
+var WrathSpellCoeff = [WrathRanks + 1]float64{0, 0.429, 0.486, 0.571, 0.571, 0.571, 0.571, 0.571, 0.571}
+var WrathManaCost = [WrathRanks + 1]float64{0, 10, 20, 40, 50, 70, 80, 100, 120}
 var WrathCastTime = [WrathRanks + 1]int{0, 1500, 1700, 2000, 2000, 2000, 2000, 2000, 2000}
 var WrathLevel = [WrathRanks + 1]int{0, 1, 6, 14, 22, 30, 38, 46, 54}
 
@@ -50,7 +53,7 @@ func (druid *Druid) newWrathSpellConfig(rank int) core.SpellConfig {
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,
-			// TODO: Only rank 1 was seen, the mana cost reduction is assumed to scale linearly. Beta will confirm.
+			// Improved Wrath's beta client curves are 10-50% of the cost and 0.1-0.5 sec of the cast.
 			Multiplier: 100 - 10*druid.Talents.ImprovedWrath,
 		},
 		Cast: core.CastConfig{

@@ -7,7 +7,8 @@ import (
 	"github.com/wowsims/classic/sim/core/stats"
 )
 
-// Generates 20 Rage over 10 sec, but reduces base armor by 27% while it lasts.
+// Generates 20 Rage over 10 sec, but reduces base armor by 27% while it lasts. Forever adds 10 Rage up front
+// (beta client 1.60.1.69893, effect 1 of 5229).
 func (druid *Druid) registerEnrageSpell() {
 	actionID := core.ActionID{SpellID: 5229}
 	rageMetrics := druid.NewRageMetrics(actionID)
@@ -39,6 +40,10 @@ func (druid *Druid) registerEnrageSpell() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			if druid.Env.IsForever() {
+				druid.AddRage(sim, 10, rageMetrics)
+			}
+
 			core.StartPeriodicAction(sim, core.PeriodicActionOptions{
 				NumTicks: 10,
 				Period:   time.Second,

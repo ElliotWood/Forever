@@ -7,7 +7,8 @@ import (
 )
 
 func (druid *Druid) registerShredSpell() {
-	damageMultiplier := 2.25
+	// Beta client 1.60.1.69893: 155% weapon damage, down from Classic's 225%, with the same flat bonus per rank.
+	damageMultiplier := 1.55
 	flatDamageBonus := map[int32]float64{
 		25: 24,
 		40: 44,

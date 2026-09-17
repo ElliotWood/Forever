@@ -9,7 +9,10 @@ import (
 const StarfireRanks = 7
 
 var StarfireSpellId = [StarfireRanks + 1]int32{0, 2912, 8949, 8950, 8951, 9875, 9876, 25298}
-var StarfireBaseDamage = [StarfireRanks + 1][]float64{{0}, {95, 115}, {146, 177}, {212, 253}, {293, 348}, {378, 445}, {451, 531}, {496, 584}}
+
+// Beta client 1.60.1.69893: about 30% less damage at every rank from 2 up (rank 7 496-584 -> 350-412). Costs and the
+// 3.5 sec cast are Classic's.
+var StarfireBaseDamage = [StarfireRanks + 1][]float64{{0}, {79, 96}, {108, 130}, {140, 167}, {191, 226}, {257, 302}, {313, 370}, {350, 412}}
 var StarfireManaCost = [StarfireRanks + 1]float64{0, 95, 135, 180, 230, 275, 315, 340}
 var StarfireLevel = [StarfireRanks + 1]int{0, 20, 26, 34, 42, 50, 58, 60}
 

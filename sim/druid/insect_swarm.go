@@ -10,7 +10,10 @@ import (
 const InsectSwarmRanks = 5
 
 var InsectSwarmSpellId = [InsectSwarmRanks + 1]int32{0, 5570, 24974, 24975, 24976, 24977}
-var InsectSwarmBaseDamage = [InsectSwarmRanks + 1]float64{0, 66, 138, 174, 264, 324}
+
+// Beta client 1.60.1.69893: total over 12 sec, the client's tick times 6 (rank 5 54 -> 31 a tick). The .158 per tick
+// coefficient and the costs are Classic's.
+var InsectSwarmBaseDamage = [InsectSwarmRanks + 1]float64{0, 48, 90, 120, 150, 186}
 var InsectSwarmManaCost = [InsectSwarmRanks + 1]float64{0, 45, 85, 100, 140, 160}
 var InsectSwarmLevel = [InsectSwarmRanks + 1]int{0, 20, 30, 40, 50, 60}
 
