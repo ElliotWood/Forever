@@ -16,7 +16,7 @@ func (rogue *Rogue) registerHemorrhageSpell() {
 		return
 	}
 
-	spellID := int32(17348)
+	spellID := int32(16511)
 
 	actionID := core.ActionID{SpellID: spellID}
 
@@ -55,7 +55,8 @@ func (rogue *Rogue) registerHemorrhageSpell() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			rogue.BreakStealth(sim)
-			baseDamage := spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) * rogue.quietusMultiplier(sim)
+			// The beta client moved Hemorrhage from plain to normalized weapon damage.
+			baseDamage := spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)) * rogue.quietusMultiplier(sim)
 
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 

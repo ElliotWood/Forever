@@ -7,14 +7,12 @@ import (
 )
 
 // Improved Expose Armor no longer scales the armor reduction, it discounts the finisher
-// and hands a combo point back on a full spend.
-// TODO: assumed baseline, beta will confirm. The raid reads this debuff, so the Classic
-// 2/2 armor value is treated as baseline rather than deleted.
-const exposeArmorBaselineRank = 2
-
+// and hands combo points back on a full spend. The beta client raised the spell's own armor
+// per combo point instead (rank 5 340 -> 450, a little under Classic's talented 510), so no
+// talent multiplier is applied.
 func (rogue *Rogue) registerExposeArmorSpell() {
 	rogue.ExposeArmorAuras = rogue.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ExposeArmorAura(target, exposeArmorBaselineRank)
+		return core.ExposeArmorAura(target, 0)
 	})
 
 	spellID := map[int32]int32{
@@ -25,17 +23,14 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 	}[rogue.Level]
 
 	arpenPerCombo := map[int32]float64{
-		25: 80,
-		40: 210,
-		50: 275,
-		60: 340,
+		25: 90,
+		40: 270,
+		50: 360,
+		60: 450,
 	}[rogue.Level]
 
-	arpenPerCombo *= []float64{1, 1.25, 1.5}[exposeArmorBaselineRank]
-
-	// TODO: Only rank 1's 5 Energy was seen. The tree's second rank is a linear extrapolation of
-	// it rather than an observation, and the refund and the 5 combo point trigger stay put. Beta
-	// will confirm.
+	// Improved Expose Armor takes 5 Energy off and hands 1 combo point back per rank, on a 5
+	// point spend.
 	energyCost := 25.0 - 5*float64(rogue.Talents.ImprovedExposeArmor)
 	cpMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 14169})
 
@@ -92,7 +87,7 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 				eaAura.Activate(sim)
 				rogue.SpendComboPoints(sim, spell)
 				if rogue.Talents.ImprovedExposeArmor > 0 && comboPoints == 5 {
-					rogue.AddComboPoints(sim, 1, target, cpMetrics)
+					rogue.AddComboPoints(sim, rogue.Talents.ImprovedExposeArmor, target, cpMetrics)
 				}
 			} else {
 				spell.IssueRefund(sim)

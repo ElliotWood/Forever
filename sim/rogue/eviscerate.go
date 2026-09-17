@@ -16,7 +16,7 @@ func (rogue *Rogue) registerEviscerate() {
 
 	comboDamageBonus := map[int32]float64{
 		25: 31,
-		40: 77,
+		40: 71,
 		50: 110,
 		60: core.TernaryFloat64(core.IncludeAQ, 170, 151),
 	}[rogue.Level]
