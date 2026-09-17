@@ -11,9 +11,12 @@ const FlamestrikeRanks = 6
 
 var FlamestrikeSpellId = [FlamestrikeRanks + 1]int32{0, 2120, 2121, 8422, 8423, 10215, 10216}
 var FlamestrikeBaseDamage = [FlamestrikeRanks + 1][]float64{{0}, {55, 71}, {96, 123}, {159, 197}, {220, 272}, {294, 362}, {381, 466}}
-var FlamestrikeDotDamage = [FlamestrikeRanks + 1]float64{0, 48, 88, 140, 196, 264, 340}
-var FlamestrikeSpellCoeff = [FlamestrikeRanks + 1]float64{0, .134, .157, .157, .157, .157, .157}
-var FlamestrikeDotCoeff = [FlamestrikeRanks + 1]float64{0, .017, .02, .02, .02, .02, .02}
+// Beta client 1.60.1.69893. The burn is now an area trigger casting a damage spell every 2 sec
+// (1279983 ... 1279990), 4 times; the dot damage is 4 times that spell's base and the dot
+// coefficient is that spell's, per tick, up from Classic's .02.
+var FlamestrikeDotDamage = [FlamestrikeRanks + 1]float64{0, 44, 84, 132, 188, 256, 332}
+var FlamestrikeSpellCoeff = [FlamestrikeRanks + 1]float64{0, .157, .157, .157, .157, .157, .157}
+var FlamestrikeDotCoeff = [FlamestrikeRanks + 1]float64{0, .032, .032, .032, .032, .032, .032}
 var FlamestrikeManaCost = [FlamestrikeRanks + 1]float64{0, 195, 330, 490, 650, 815, 990}
 var FlamestrikeLevel = [FlamestrikeRanks + 1]int{0, 16, 24, 32, 40, 48, 56}
 

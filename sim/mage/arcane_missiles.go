@@ -10,8 +10,10 @@ import (
 const ArcaneMissilesRanks = 8
 
 var ArcaneMissilesSpellId = [ArcaneMissilesRanks + 1]int32{0, 5143, 5144, 5145, 8416, 8417, 10211, 10212, 25345}
-var ArcaneMissilesBaseTickDamage = [ArcaneMissilesRanks + 1]float64{0, 26, 38, 57, 86, 115, 153, 196, 230}
-var ArcaneMissilesSpellCoeff = [ArcaneMissilesRanks + 1]float64{0, .132, .204, .24, .24, .24, .24, .24, .24}
+// Beta client 1.60.1.69893, read off the missile each rank triggers (7268 ... 25346): less damage per
+// missile, but every rank scales at .286 per missile against Classic's .24.
+var ArcaneMissilesBaseTickDamage = [ArcaneMissilesRanks + 1]float64{0, 26, 33, 46, 69, 98, 134, 175, 209}
+var ArcaneMissilesSpellCoeff = [ArcaneMissilesRanks + 1]float64{0, .286, .286, .286, .286, .286, .286, .286, .286}
 var ArcaneMissilesCastTime = [ArcaneMissilesRanks + 1]int32{0, 3, 4, 5, 5, 5, 5, 5, 5}
 var ArcaneMissilesManaCost = [ArcaneMissilesRanks + 1]float64{0, 85, 140, 235, 320, 410, 500, 595, 655}
 var ArcaneMissilesLevel = [ArcaneMissilesRanks + 1]int{0, 8, 16, 24, 32, 40, 48, 56, 56}

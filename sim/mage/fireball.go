@@ -10,9 +10,13 @@ import (
 const FireballRanks = 12
 
 var FireballSpellId = [FireballRanks + 1]int32{0, 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306}
-var FireballBaseDamage = [FireballRanks + 1][]float64{{0}, {16, 25}, {34, 49}, {57, 77}, {89, 122}, {140, 189}, {207, 274}, {264, 345}, {328, 425}, {398, 512}, {488, 623}, {561, 715}, {596, 760}}
-var FireballDotDamage = [FireballRanks + 1]float64{0, 2, 3, 6, 12, 20, 28, 32, 40, 52, 60, 72, 76}
-var FireballSpellCoeff = [FireballRanks + 1]float64{0, .123, .271, .5, .793, 1, 1, 1, 1, 1, 1, 1, 1}
+// Beta client 1.60.1.69893. Damage is the client's base plus its per level growth up to the rank's
+// max level (capped at 60), the same way the Classic numbers were read. Forever lowered every rank
+// from 2 up and dropped the downranking penalty from the coefficients. The dot is the client's per
+// tick damage times its tick count; the sim spreads that total over 4 ticks at every rank.
+var FireballBaseDamage = [FireballRanks + 1][]float64{{0}, {16, 25}, {32, 47}, {48, 65}, {66, 91}, {98, 130}, {138, 183}, {171, 222}, {212, 275}, {271, 348}, {338, 431}, {397, 505}, {425, 541}}
+var FireballDotDamage = [FireballRanks + 1]float64{0, 2, 3, 6, 12, 16, 24, 24, 32, 40, 48, 56, 60}
+var FireballSpellCoeff = [FireballRanks + 1]float64{0, .429, .571, .714, .857, 1, 1, 1, 1, 1, 1, 1, 1}
 var FireballCastTime = [FireballRanks + 1]int32{0, 1500, 2000, 2500, 3000, 3500, 3500, 3500, 3500, 3500, 3500, 3500, 3500}
 var FireballManaCost = [FireballRanks + 1]float64{0, 30, 45, 65, 95, 140, 185, 220, 260, 305, 350, 395, 410}
 var FireballLevel = [FireballRanks + 1]int{0, 1, 6, 12, 18, 24, 30, 36, 42, 48, 54, 60, 60}
