@@ -250,3 +250,27 @@ What would settle it: an item tooltip read off the beta client for any of the 19
 version marker on the gear planner payload. The scaling tables in the same snapshot all
 agree with the sim - base stat offsets for all ten races, spell crit per intellect for all
 seven casting classes - so the snapshot is not wrong in general.
+
+**Settled 2026-09-17: the sim is right, no change needed.** `ItemSparse` from the beta
+client (wago.tools build 1.60.1.69893, the table `tools/data_watch/wago_db2_diff.py`
+already watches) carries the stat block for 2,316 of the sim's items. Onyxia Tooth
+Pendant - the clearest of the 19 - reads agility, stamina, fire resistance, hit and crit
+in the client, exactly the stats the sim gives it. The gear planner's 7/8 was the outlier.
+
+Reading that table takes care, and three passes were wrong before the fourth was right:
+
+- `StatPercentEditor` is an allocation budget, not the displayed value, so only *which*
+  stats an item carries can be compared, never the numbers.
+- The mod ids are the retail `ITEM_MOD_*` set: 45 is spell power (not 31), 38 attack
+  power, 31/32 generic hit and crit. Guessing 31 for spell power invented 821 retunes.
+- The resistance ids are 51 fire, 52 frost, 54 shadow, 55 nature, 56 arcane - pinned by
+  the items carrying them (Fiery Cloak, Icy Cloak, Ring of the Shadow, Dragonscale). An
+  off-by-one here turned every nature resist into a fake arcane one.
+- The client splits no hit/crit into melee and spell variants; the sim does, and picks by
+  item type. Fold the sim's back down before comparing.
+
+What is left after those corrections is ~350 items, and the ones checked are all the same
+known representation difference rather than a retune: Classic delivered weapon spell power
+through an equip effect, which does not live in `ItemSparse`. Grand Marshal's Mageblade
+holds its 72 spell power that way, Hammer of the Gathering Storm its 53. The script is
+`review/compare-itemsparse.mjs`.
