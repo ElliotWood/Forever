@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/wowsims/classic/sim/core"
+	"github.com/wowsims/classic/sim/core/stats"
 )
 
-// TODO: class barkskin physical reduction
 func (druid *Druid) registerBarkskinCD() {
 	if !druid.InForm(Bear) {
 		return
@@ -14,11 +14,12 @@ func (druid *Druid) registerBarkskinCD() {
 
 	actionId := core.ActionID{SpellID: 22812}
 
+	// Beta client 1.60.1.69893: 20% less Physical damage taken for 15 sec, no cost and no cast time penalty.
 	druid.BarkskinAura = druid.RegisterAura(core.Aura{
 		Label:    "Barkskin",
 		ActionID: actionId,
-		Duration: time.Second * 12,
-	}).AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.DamageTakenMultiplier, 0.8)
+		Duration: time.Second * 15,
+	}).AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexPhysical], 0.8)
 
 	druid.Barkskin = druid.RegisterSpell(Any, core.SpellConfig{
 		ActionID: actionId,

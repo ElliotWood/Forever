@@ -50,8 +50,8 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestP1FeralTank-Phase1-StatWeights-Default"
  value: {
-  weights: 0.48903
-  weights: 0.26225
+  weights: 0.51978
+  weights: 0.05758
   weights: 0
   weights: 0
   weights: 0
@@ -67,7 +67,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.24436
+  weights: 0.09446
   weights: 0
   weights: 0
   weights: 0
@@ -76,12 +76,12 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.00322
+  weights: -0.01909
   weights: 0
-  weights: -0.00968
+  weights: -0.59334
   weights: 0
   weights: 0
-  weights: -0.37187
+  weights: -1.12465
   weights: 0
   weights: 0
   weights: 0
@@ -99,156 +99,156 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-CenarionRaiment"
  value: {
-  dps: 506.89826
-  tps: 1459.40284
+  dps: 348.35367
+  tps: 801.12646
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 594.75044
-  tps: 1726.93366
+  dps: 426.84282
+  tps: 1007.19875
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-FeralheartRaiment"
  value: {
-  dps: 570.34812
-  tps: 1643.93519
+  dps: 397.34423
+  tps: 928.5142
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-FieldMarshal'sSanctuary"
  value: {
-  dps: 628.98591
-  tps: 1832.16977
+  dps: 451.24921
+  tps: 1069.69537
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 594.75044
-  tps: 1726.93366
+  dps: 426.84282
+  tps: 1007.19875
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-StormrageRaiment"
  value: {
-  dps: 579.78776
-  tps: 1682.07628
+  dps: 407.95712
+  tps: 961.60394
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-SymbolsofUnendingLife"
  value: {
-  dps: 608.69631
-  tps: 1763.00672
+  dps: 429.38084
+  tps: 1013.43658
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-Warlord'sSanctuary"
  value: {
-  dps: 628.98591
-  tps: 1832.16977
+  dps: 451.24921
+  tps: 1069.69537
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Average-Default"
  value: {
-  dps: 740.80647
-  tps: 2256.71655
-  dtps: 716.17929
+  dps: 591.46068
+  tps: 1585.32273
+  dtps: 716.67762
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-NightElf-launch-Default-bear-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 117.46889
-  tps: 298.94486
+  dps: 85.58339
+  tps: 237.45907
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-NightElf-launch-Default-bear-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 25.38347
-  tps: 58.4529
+  dps: 26.19682
+  tps: 56.07961
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-NightElf-launch-Default-bear-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 47.16537
-  tps: 93.90275
+  dps: 49.51321
+  tps: 100.08519
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-NightElf-launch-Default-bear-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 42.83387
-  tps: 176.78788
+  dps: 31.9452
+  tps: 190.38249
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-NightElf-launch-Default-bear-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 9.43543
-  tps: 27.19714
+  dps: 10.30739
+  tps: 30.17202
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-NightElf-launch-Default-bear-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 18.68745
-  tps: 45.01582
+  dps: 18.06028
+  tps: 47.97616
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-Tauren-launch-Default-bear-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 87.0074
-  tps: 225.17968
+  dps: 74.35919
+  tps: 210.41275
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-Tauren-launch-Default-bear-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 23.05182
-  tps: 54.46631
+  dps: 24.50094
+  tps: 52.77345
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-Tauren-launch-Default-bear-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 41.7906
-  tps: 83.39106
+  dps: 44.24892
+  tps: 89.83063
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-Tauren-launch-Default-bear-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 35.13311
-  tps: 152.41165
+  dps: 28.20939
+  tps: 179.9076
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-Tauren-launch-Default-bear-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 8.75713
-  tps: 25.63652
+  dps: 9.59861
+  tps: 28.7636
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Settings-Tauren-launch-Default-bear-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 15.82933
-  tps: 39.29665
+  dps: 15.12082
+  tps: 42.0984
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 639.89463
-  tps: 1955.02931
-  dtps: 799.04803
+  dps: 520.81776
+  tps: 1407.63051
+  dtps: 798.49548
  }
 }

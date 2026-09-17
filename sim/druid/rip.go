@@ -13,42 +13,44 @@ type RipRankInfo struct {
 	dmgTickPerCombo float64
 }
 
+// Beta client 1.60.1.69893: the per combo point damage moved at every rank and the base at ranks 4-6 (rank 6 17 +
+// 28 a point a tick -> 15 + 25.5). The client stores no attack power scaling, so the sim's is unchanged.
 var ripRanks = []RipRankInfo{
 	{
 		id:              1079,
 		level:           20,
 		dmgTickBase:     3.0,
-		dmgTickPerCombo: 4.0,
+		dmgTickPerCombo: 4.4,
 	},
 	{
 		id:              9492,
 		level:           28,
 		dmgTickBase:     4.0,
-		dmgTickPerCombo: 7.0,
+		dmgTickPerCombo: 7.2,
 	},
 	{
 		id:              9493,
 		level:           36,
 		dmgTickBase:     6.0,
-		dmgTickPerCombo: 9.0,
+		dmgTickPerCombo: 8.5,
 	},
 	{
 		id:              9752,
 		level:           44,
-		dmgTickBase:     9.0,
-		dmgTickPerCombo: 14.0,
+		dmgTickBase:     8.0,
+		dmgTickPerCombo: 12.7,
 	},
 	{
 		id:              9894,
 		level:           52,
-		dmgTickBase:     12.0,
-		dmgTickPerCombo: 20.0,
+		dmgTickBase:     11.0,
+		dmgTickPerCombo: 18.2,
 	},
 	{
 		id:              9896,
 		level:           60,
-		dmgTickBase:     17.0,
-		dmgTickPerCombo: 28.0,
+		dmgTickBase:     15.0,
+		dmgTickPerCombo: 25.5,
 	},
 }
 

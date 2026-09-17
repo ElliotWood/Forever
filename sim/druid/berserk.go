@@ -13,7 +13,7 @@ func (druid *Druid) registerBerserkCD() {
 
 	actionID := core.ActionID{SpellID: 50334}
 
-	// TODO: The tooltip didn't show a cooldown, the 3 minutes are taken from the Classic Berserk.
+	// The beta client's Berserk (417141) has a 3 min cooldown and lasts 15 sec.
 	builders := []*DruidSpell{}
 	druid.BerserkAura = druid.RegisterAura(core.Aura{
 		Label:    "Berserk",

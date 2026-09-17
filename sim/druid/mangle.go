@@ -14,7 +14,9 @@ func (druid *Druid) registerMangleCatSpell() {
 		return
 	}
 
-	// TODO: Only the tooltip was seen, the Energy cost is taken from the Classic Mangle (Cat).
+	// TODO: the beta client 1.60.1.69893 has no Mangle (Cat): the talent teaches only the Bear Mangle (407995 and
+	// its ranks), and Season of Discovery's cat version 407993 is gone from the spellbook. The cat keeps this
+	// Classic shaped Mangle because the feral rotation is built around it.
 	flatDamageBonus := 26.0
 	results := make([]*core.SpellResult, min(MangleBerserkTargets, druid.Env.GetNumTargets()))
 
@@ -66,15 +68,15 @@ func (druid *Druid) registerMangleCatSpell() {
 	})
 }
 
-// The Forever tooltip stops at the damage and the Bear Form requirement, so the cost, the
-// cooldown and the threat are those of the level 60 Mangle (Bear) of Season of Discovery.
-// TODO: Only the tooltip was seen, the Rage cost, the 6 sec cooldown and the threat are taken from the Classic Mangle (Bear).
+// Beta client 1.60.1.69893: Mangle is 20 Rage, a 6 sec cooldown, and 100% weapon damage plus a bonus that grows by
+// rank (407995, 1238069, 1238070, 1238073 at levels 25, 36, 48, 60). The client does not carry threat, so the 1.5x is
+// still Season of Discovery's.
 func (druid *Druid) registerMangleBearSpell() {
 	if !druid.Talents.Mangle {
 		return
 	}
 
-	flatDamageBonus := 26.0
+	flatDamageBonus := map[int32]float64{25: 26, 40: 38, 50: 59, 60: 77}[druid.Level]
 	results := make([]*core.SpellResult, min(MangleBerserkTargets, druid.Env.GetNumTargets()))
 
 	druid.MangleBear = druid.RegisterSpell(Bear, core.SpellConfig{
@@ -86,7 +88,7 @@ func (druid *Druid) registerMangleBearSpell() {
 		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
-			Cost:   15 - float64(druid.Talents.Ferocity),
+			Cost:   20 - float64(druid.Talents.Ferocity),
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
