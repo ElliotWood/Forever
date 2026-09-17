@@ -203,7 +203,7 @@ func (warlock *Warlock) applyPandemic() {
 	}
 
 	affectedSpellCodes := []int32{SpellCode_WarlockCorruption, SpellCode_WarlockBaneOfAgony, SpellCode_WarlockBaneOfDoom, SpellCode_WarlockDrainSoul, SpellCode_WarlockDrainLife, SpellCode_WarlockSiphonLife, SpellCode_WarlockDrainHope}
-	bonus := 0.33 * float64(warlock.Talents.Pandemic)
+	bonus := []float64{0, 0.33, 0.67, 1.00}[warlock.Talents.Pandemic]
 	warlock.OnSpellRegistered(func(spell *core.Spell) {
 		if slices.Contains(affectedSpellCodes, spell.SpellCode) {
 			spell.CritDamageBonus += bonus
@@ -473,8 +473,10 @@ func (warlock *Warlock) applyDemonicKnowledge() {
 
 	// The tooltip only pays the bonus out while a demon is active, so it rides on the pet
 	// rather than sitting on the character sheet.
-	// TODO: Beta will show whether the 33% of level is per rank or the full value
-	bonus := 0.33 * float64(warlock.Talents.DemonicKnowledge) * float64(warlock.Level)
+	// 33% of level per rank, reaching the full 100% at 3/3 rather than the 99% that
+	// multiplying rank 1 gives.
+	// TODO: beta will confirm. The rank 3 figure is the tree's rounding, not an observation.
+	bonus := []float64{0, 0.33, 0.66, 1.00}[warlock.Talents.DemonicKnowledge] * float64(warlock.Level)
 
 	demonicKnowledgeAura := warlock.RegisterAura(core.Aura{
 		Label:    "Demonic Knowledge",

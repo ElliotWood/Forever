@@ -21,6 +21,9 @@ func (mage *Mage) applyArcaneTalents() {
 	mage.registerArcanePowerCD()
 
 	// Arcane Subtlety
+	// TODO: the spell penetration may not double at rank 2. Only rank 1's 8 was observed,
+	// and the tree reads 15 at rank 2 against the 16 taken here, which no source has
+	// confirmed. The threat reduction's 15% per point matches the tree at both ranks.
 	if mage.Talents.ArcaneSubtlety > 0 {
 		threatMultiplier := 1 - .15*float64(mage.Talents.ArcaneSubtlety)
 		mage.AddStat(stats.SpellPenetration, 8*float64(mage.Talents.ArcaneSubtlety))
