@@ -9,10 +9,11 @@ func (warrior *Warrior) registerSunderArmorSpell() {
 
 	spellID := int32(11597)
 
-	spell_level := 58
+	// Forever gives Sunder Armor an explicit threat effect, 1013 at rank 5, where Classic's
+	// 2.25 x 2 x level (261) was server side.
+	threat := 1013.0
 
 	var canApplySunder bool
-
 
 	warrior.SunderArmor = warrior.RegisterSpell(AnyStance, core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: spellID},
@@ -43,7 +44,7 @@ func (warrior *Warrior) registerSunderArmorSpell() {
 		},
 
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  2.25 * 2 * float64(spell_level),
+		FlatThreatBonus:  threat,
 
 		RelatedAuras: []core.AuraArray{warrior.SunderArmorAuras},
 

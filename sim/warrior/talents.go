@@ -34,6 +34,7 @@ func (warrior *Warrior) ApplyTalents() {
 	warrior.applyFlurry()
 	warrior.applyShieldSpecialization()
 	warrior.applyMasterOfDefense()
+	warrior.applyBloodCraze()
 	warrior.registerDeathWishCD()
 	warrior.registerSweepingStrikesCD()
 	warrior.registerLastStandCD()
@@ -71,10 +72,8 @@ func (warrior *Warrior) applyTwoHandedWeaponSpecialization() {
 }
 
 // Weaponmaster folds the four Classic weapon specialization talents into one talent that pays
-// out differently depending on what is equipped.
-// TODO: only rank 1 was shown. The 1% crit / 3% armor / 1% extra attack per point that the tree
-// now lists for every rank comes from the community talent calculator, which is rebuilt from the
-// same rank 1 tooltip, so it corroborates this reading rather than confirming it. Beta will settle it.
+// out differently depending on what is equipped: 1% crit, 3% armor ignored and a 1% extra attack
+// chance per point, all three confirmed by the beta client's rank curves.
 func (warrior *Warrior) applyWeaponmaster() {
 	points := warrior.Talents.Weaponmaster
 	if points == 0 {
@@ -173,7 +172,7 @@ func (warrior *Warrior) applyBloodthrill() {
 	}))
 }
 
-// TODO: only rank 1 was shown, beta will confirm the 12% per point.
+// 12% per point, confirmed by the beta client's rank curve.
 func (warrior *Warrior) applyUnbridledWrath() {
 	if warrior.Talents.UnbridledWrath == 0 {
 		return
@@ -202,9 +201,8 @@ func (warrior *Warrior) applyUnbridledWrath() {
 	})
 }
 
-// TODO: every rank of the tooltip reads the same 5% damage, 20% Rage and 2% hit. The damage is
-// Classic's per point value, so all three are read per point. Beta will confirm the Rage and
-// the hit, which are the largest single source of a dual wielding Fury build's Rage income.
+// 5% off-hand damage, 20% off-hand Rage and 2% off-hand hit per point, confirmed by the beta
+// client's rank curves.
 func (warrior *Warrior) applyDualWieldSpecialization() {
 	points := warrior.Talents.DualWieldSpecialization
 	if points == 0 {
@@ -228,29 +226,26 @@ func (warrior *Warrior) applyDualWieldSpecialization() {
 	})
 }
 
-// Forever turns Enrage into a chance to gain a flat 2% Physical damage buff from any damage
-// taken, where Classic only fired it on crits and scaled the buff with points.
-// TODO: only rank 1's 30% was shown. Read per point the chance passes 100% at 4/5, so the cap
-// below leaves the last point buying nothing, which says the slope is too steep rather than that
-// the talent ends in a certainty. Classic ranked the damage and left the chance flat at 20%, so
-// it offers no slope for the half Forever put the ranks on. Beta will confirm where the chance
-// lands at each rank.
+// Forever turns Enrage into a chance to gain a Physical damage buff from any damage taken, where
+// Classic only fired it on crits. The beta client keeps the chance flat at 30% (12317's proc
+// chance) and ranks the damage, 2% per point (curve 2/4/6/8/10).
 func (warrior *Warrior) applyEnrage() {
 	if warrior.Talents.Enrage == 0 {
 		return
 	}
 
-	procChance := min(0.3*float64(warrior.Talents.Enrage), 1)
+	procChance := 0.3
+	damageMultiplier := 1 + 0.02*float64(warrior.Talents.Enrage)
 
 	warrior.EnrageAura = warrior.GetOrRegisterAura(core.Aura{
 		Label:    "Enrage",
 		ActionID: core.ActionID{SpellID: 13048},
 		Duration: time.Second * 12,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= 1.02
+			warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= damageMultiplier
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] /= 1.02
+			warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] /= damageMultiplier
 		},
 	})
 
@@ -399,7 +394,7 @@ func (warrior *Warrior) applyMasterOfDefense() {
 	})
 }
 
-// TODO: only rank 1 was shown, beta will confirm the 2% per point.
+// 2% per point, confirmed by the beta client's rank curve.
 func (warrior *Warrior) applyBastion() {
 	if warrior.Talents.Bastion == 0 || !warrior.PseudoStats.CanBlock {
 		return
@@ -408,7 +403,7 @@ func (warrior *Warrior) applyBastion() {
 	warrior.PseudoStats.DamageDealtMultiplier *= 1 + 0.02*float64(warrior.Talents.Bastion)
 }
 
-// TODO: only rank 1 was shown, beta will confirm the 1 Rage per point.
+// 1 Rage per point, confirmed by the beta client's rank curve.
 func (warrior *Warrior) applyFocusedRage() {
 	if warrior.Talents.FocusedRage == 0 {
 		return
@@ -501,7 +496,7 @@ func (warrior *Warrior) registerLastStandCD() {
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: time.Minute * 10,
+				Duration: time.Minute * 3, // 10 min in Classic
 			},
 		},
 
@@ -514,6 +509,59 @@ func (warrior *Warrior) registerLastStandCD() {
 		Spell: lastStandSpell.Spell,
 		Type:  core.CooldownTypeSurvival,
 	})
+}
+
+// Blood Craze heals 1% of maximum health per point over 6 sec (3 ticks) after being crit, dealing
+// damage with Bloodthirst, or taking more than 20% of maximum health in one hit. Beta client.
+func (warrior *Warrior) applyBloodCraze() {
+	if warrior.Talents.BloodCraze == 0 {
+		return
+	}
+
+	healthFraction := 0.01 * float64(warrior.Talents.BloodCraze)
+
+	bloodCraze := warrior.RegisterSpell(AnyStance, core.SpellConfig{
+		ActionID:    core.ActionID{SpellID: 16488},
+		SpellSchool: core.SpellSchoolPhysical,
+		ProcMask:    core.ProcMaskEmpty,
+		Flags:       core.SpellFlagIgnoreAttackerModifiers | core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell | core.SpellFlagHelpful,
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		Hot: core.DotConfig{
+			Aura: core.Aura{
+				Label: "Blood Craze",
+			},
+			SelfOnly:      true,
+			NumberOfTicks: 3,
+			TickLength:    time.Second * 2,
+			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, _ bool) {
+				dot.SnapshotBaseDamage = warrior.MaxHealth() * healthFraction / 3
+			},
+			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.CalcAndDealPeriodicSnapshotHealing(sim, target, dot.OutcomeTick)
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+			spell.SelfHot().Apply(sim)
+		},
+	})
+
+	core.MakePermanent(warrior.RegisterAura(core.Aura{
+		Label: "Blood Craze Trigger",
+		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if result.DidCrit() || result.Damage > 0.2*warrior.MaxHealth() {
+				bloodCraze.Cast(sim, &warrior.Unit)
+			}
+		},
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if spell.SpellCode == SpellCode_WarriorBloodthirst && result.Landed() && result.Damage > 0 {
+				bloodCraze.Cast(sim, &warrior.Unit)
+			}
+		},
+	}))
 }
 
 func (warrior *Warrior) impale() float64 {

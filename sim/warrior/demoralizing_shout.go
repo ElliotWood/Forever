@@ -9,10 +9,9 @@ func (warrior *Warrior) registerDemoralizingShoutSpell() {
 	actionId := core.DemoralizingShoutSpellId[rank]
 
 	warrior.DemoralizingShoutAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		// Improved Demoralizing Shout is gone from the Forever tree. Tanks read the attack power
-		// reduction, so it is assumed to have become baseline at full strength rather than
-		// deleted, and Forever's Booming Voice only widens the radius.
-		// TODO: assumed baseline, beta will confirm
+		// Improved Demoralizing Shout is gone from the Forever tree and is baseline at full strength:
+		// the beta client's rank 5 reduces attack power by 196, Classic's 140 plus 40%, for 45 sec.
+		// Forever's Booming Voice only widens the radius.
 		return core.DemoralizingShoutAura(target, 0, 5)
 	})
 
