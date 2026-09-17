@@ -21,7 +21,7 @@ var ItemSetTheFiveThunders = core.NewItemSet(core.ItemSet{
 		4: func(agent core.Agent) {
 			c := agent.GetCharacter()
 
-			procAura := c.NewTemporaryStatsAura("The Furious Storm", core.ActionID{SpellID: 27775}, stats.Stats{stats.SpellPower: 95}, time.Second*10)
+			procAura := c.NewTemporaryStatsAura("The Furious Storm", core.ActionID{SpellID: 27775}, stats.Stats{stats.SpellPower: 65}, time.Second*10)
 			core.MakeProcTriggerAura(&c.Unit, core.ProcTrigger{
 				Name:       "Item - The Furious Storm Proc (Spell Cast)",
 				Callback:   core.CallbackOnCastComplete,
