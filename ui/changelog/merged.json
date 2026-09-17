@@ -1,5 +1,11 @@
 [
 	{
+		"number": 178,
+		"title": "Record why only bulksim's progress channel raced",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/178"
+	},
+	{
 		"number": 177,
 		"title": "Wowhead Forever data changed (2026-09-17)",
 		"mergedAt": "2026-09-17",
