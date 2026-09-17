@@ -861,10 +861,11 @@
         "maxPoints": 1,
         "name": "Binding Heal",
         "icon": "spell_holy_blindingheal",
-        "description": "Heals a friendly target and the caster for {0}. Low threat.",
+        "description": "Heals a friendly target and the caster for {0} to {1}. Low threat.",
         "ranks": [
           [
-            247
+            346,
+            403
           ]
         ],
         "notSimulated": true
@@ -1413,7 +1414,7 @@
         ],
         "maxPoints": 2,
         "name": "Devouring Contagion",
-        "description": "Reduces the mana cost of your Devouring Plague by {0}%. Targets that die while Devouring Plague it is active spreads it, jumping to a nearby enemy within {1} yards for the remaining duration.",
+        "description": "Reduces the mana cost of your Devouring Plague by {0}%. Targets that die while Devouring Plague is active spreads it, jumping to a nearby enemy within {1} yards for the remaining duration.",
         "ranks": [
           [
             25,
@@ -1503,7 +1504,7 @@
         "maxPoints": 1,
         "name": "Shadowform",
         "icon": "spell_shadow_shadowform",
-        "description": "Assume Shadowform, increasing your Shadow damage by {0}%, reducing the Mana cost of all Shadow spells by {1}%, increasing the critical strike damage bonus of your Shadow spells by {2}%, and reducing Physical damage taken by you by {3}%. However, you may not cast healing spells while in this form.",
+        "description": "Assume Shadowform, increasing your Shadow damage by {0}%, reducing the Mana cost of all Shadow spells by {1}%, increasing the Critical strike damage bonus of your Shadow spells by {2}%, and reducing Physical damage taken by you by {3}%. However, you may not cast healing spells while in this form.",
         "ranks": [
           [
             10,

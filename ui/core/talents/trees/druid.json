@@ -699,18 +699,21 @@
         "maxPoints": 3,
         "name": "Thick Hide",
         "icon": "inv_misc_pelt_bear_03",
-        "description": "While in Bear Form, Cat Form, Dire Bear Form, or Moonkin Form, you gain {0} additional base Armor per level and another {1}.2 base Armor for each point of defense skill beyond five times your level. This amount can be further increased by multipliers from those forms.",
+        "description": "While in Bear Form, Cat Form, Dire Bear Form, or Moonkin Form, you gain {0} additional base{1} Armor per level and another {2} base Armor for each point of defense skill beyond five times your level. This amount can be further increased by multipliers from those forms.",
         "ranks": [
           [
             1,
+            "",
             0.67
           ],
           [
             2,
+            "",
             1.33
           ],
           [
             3,
+            "",
             2
           ]
         ]
@@ -1337,7 +1340,7 @@
         "maxPoints": 1,
         "name": "Gift of the Earthmother",
         "icon": "spell_nature_spiritarmor",
-        "description": "Reduces the global cooldown by {0}.1 seconds on your Rejuvenation, Swiftmend, and Wild Growth spells.",
+        "description": "Reduces the global cooldown by {0} seconds on your Rejuvenation, Swiftmend, and Wild Growth spells.",
         "ranks": [
           [
             0.5

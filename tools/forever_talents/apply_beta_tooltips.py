@@ -8,7 +8,7 @@
 #   tools/forever_talents/apply_beta_tooltips.py beta/ --dry-run
 #
 # A beta tooltip that still contains a token export_beta.py does not model (<d>, <o>, <other spell d>)
-# is skipped and listed, not copied: half a tooltip with a placeholder where a number was is worse than
+# is skipped and listed, not copied, and so is any talent already confirmed in game (assets/confirmed_talents.json): half a tooltip with a placeholder where a number was is worse than
 # the old number. The rank count must also match, or the numbers belong to a different talent shape.
 
 import argparse
@@ -25,6 +25,22 @@ def norm(name):
 	return re.sub(r'[^a-z0-9]', '', (name or '').lower())
 
 
+CONFIRMED = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'assets', 'confirmed_talents.json')
+
+
+def confirmed_names(class_name):
+	"""Talents talentsforever.com has read off the live beta tooltip. Those numbers are resolved in game
+	(level scaling, damage ranges, other spells' values) and beat anything read from the raw tables."""
+	if not os.path.exists(CONFIRMED):
+		return set()
+	with open(CONFIRMED) as f:
+		talents = json.load(f).get('talents', {})
+	for name, by_talent in talents.items():
+		if name.lower() == class_name.lower():
+			return {norm(t) for t in by_talent}
+	return set()
+
+
 def apply_class(beta_path, dry_run):
 	with open(beta_path) as f:
 		beta = json.load(f)
@@ -39,11 +55,15 @@ def apply_class(beta_path, dry_run):
 			by_field[camel_case(t['id'])] = t
 			by_name[norm(t['name'])] = t
 
+	confirmed = confirmed_names(class_name)
 	updated, unchanged, skipped = [], 0, []
 	for tree in trees:
 		for talent in tree['talents']:
 			b = by_field.get(talent['fieldName']) or by_name.get(norm(talent.get('name')))
 			label = f"{tree['name']} / {talent.get('name', talent['fieldName'])}"
+			if norm(talent.get('name')) in confirmed:
+				skipped.append((label, 'confirmed in game (assets/confirmed_talents.json) - that wins'))
+				continue
 			if b is None:
 				skipped.append((label, 'not in the beta client'))
 				continue

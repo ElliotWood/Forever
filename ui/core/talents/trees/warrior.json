@@ -1396,7 +1396,7 @@
         "maxPoints": 2,
         "name": "Improved Shield Wall",
         "icon": "ability_warrior_shieldwall",
-        "description": "Reduces the cooldown of your Shield Wall ability by {0}.1 min.",
+        "description": "Reduces the cooldown of your Shield Wall ability by {0} min.",
         "ranks": [
           [
             5.5
@@ -1563,10 +1563,12 @@
         "maxPoints": 1,
         "name": "Shield Slam",
         "icon": "inv_shield_05",
-        "description": "Slam the target with your shield, causing {0} damage, increased by your Block Value, and has a 50% chance of dispelling {1} magic effect on the target. Causes a very high amount of threat.",
+        "description": "Slam the target with your shield, causing {0} to {1} damage, increased by your Block Value, and has a {2}% chance of dispelling {3} magic effect on the target. Causes a very high amount of threat.",
         "ranks": [
           [
-            430,
+            421,
+            439,
+            50,
             1
           ]
         ]

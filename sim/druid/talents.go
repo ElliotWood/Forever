@@ -47,7 +47,7 @@ func (druid *Druid) ApplyTalents() {
 	druid.applySubtlety()
 	druid.applyLivingSpirit()
 
-	druid.PseudoStats.SpiritRegenRateCasting += .17 * float64(druid.Talents.Reflection)
+	druid.PseudoStats.SpiritRegenRateCasting += []float64{0, .17, .33, .50}[druid.Talents.Reflection]
 }
 
 // The Balance spells that the Arcane and Nature talents apply to.

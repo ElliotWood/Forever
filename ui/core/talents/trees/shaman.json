@@ -116,7 +116,7 @@
         "maxPoints": 5,
         "name": "Reverberation",
         "icon": "spell_frost_frostward",
-        "description": "Reduces the cooldown of your Shock spells by {0}.1 sec.",
+        "description": "Reduces the cooldown of your Shock spells by {0} sec.",
         "ranks": [
           [
             0.2
@@ -440,10 +440,11 @@
         "maxPoints": 1,
         "name": "Lava Burst",
         "icon": "spell_shaman_lavaburst",
-        "description": "You hurl molten lava at the target, dealing {0} Fire damage. If your Flame Shock is on the target, Lava Burst deals {1}% increased damage.",
+        "description": "You hurl molten lava at the target, dealing {0} to {1} Fire damage. If your Flame Shock is on the target, Lava Burst deals {2}% increased damage.",
         "ranks": [
           [
-            113,
+            158,
+            187,
             20
           ]
         ]
@@ -615,10 +616,10 @@
         "maxPoints": 2,
         "name": "Improved Ghost Wolf",
         "icon": "spell_nature_spiritwolf",
-        "description": "Reduces the cast time of your Ghost Wolf spell by {0}.1 sec, and Ghost Wolf may be used indoors.",
+        "description": "Reduces the cast time of your Ghost Wolf spell by {0} sec, and Ghost Wolf may be used indoors.",
         "ranks": [
           [
-            1
+            1.0
           ],
           [
             3
@@ -675,7 +676,7 @@
             5
           ],
           [
-            13,
+            14,
             27,
             10
           ],
@@ -993,7 +994,7 @@
         "maxPoints": 5,
         "name": "Improved Healing Wave",
         "icon": "spell_nature_magicimmunity",
-        "description": "Reduces the casting time of your Healing Wave spell by {0}.1 sec.",
+        "description": "Reduces the casting time of your Healing Wave spell by {0} sec.",
         "ranks": [
           [
             0.1
@@ -1384,9 +1385,11 @@
         "maxPoints": 1,
         "name": "Nature's Swiftness",
         "icon": "spell_nature_ravenform",
-        "description": "When activated, your next Nature spell with a casting time less than 10 sec. becomes an instant cast spell.",
+        "description": "When activated, your next Nature spell with a casting time less than {0} sec becomes an instant cast spell.",
         "ranks": [
-          []
+          [
+            10
+          ]
         ]
       },
       {

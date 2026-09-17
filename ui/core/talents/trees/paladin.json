@@ -1474,7 +1474,7 @@
         "maxPoints": 2,
         "name": "Instrument of Law",
         "icon": "spell_holy_divinepurpose",
-        "description": "Reduces the cast time of your Hammer of Wrath by {0}.1 sec, and reduces all threat you generate by {1}% while Righteous Fury is not active.",
+        "description": "Reduces the cast time of your Hammer of Wrath by {0} sec, and reduces all threat you generate by {1}% while Righteous Fury is not active.",
         "ranks": [
           [
             0.5,

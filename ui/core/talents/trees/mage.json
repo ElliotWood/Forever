@@ -169,7 +169,7 @@
         "maxPoints": 5,
         "name": "Arcane Concentration",
         "icon": "spell_shadow_manaburn",
-        "description": "Gives you a {0}% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage spell by $/10;12536s1%.",
+        "description": "Gives you a {0}% chance of entering a Clearcasting state after any damage spell hits a target. The Clearcasting state reduces the mana cost of your next damage spell by 100%.",
         "ranks": [
           [
             2
@@ -402,9 +402,11 @@
         "maxPoints": 1,
         "name": "Presence of Mind",
         "icon": "spell_nature_enchantarmor",
-        "description": "When activated, your next Mage spell with a casting time less than 10 sec becomes an instant cast spell.",
+        "description": "When activated, your next Mage spell with a casting time less than {0} sec becomes an instant cast spell.",
         "ranks": [
-          []
+          [
+            10
+          ]
         ]
       },
       {
@@ -1208,7 +1210,7 @@
         "maxPoints": 3,
         "name": "Piercing Ice",
         "icon": "spell_frost_frostbolt",
-        "description": "Increases the damage done by your Frost spells by {0}%.",
+        "description": "Increases the damage of Frost spells by {0}%.",
         "ranks": [
           [
             2
@@ -1263,10 +1265,11 @@
         "maxPoints": 1,
         "name": "Ice Lance",
         "icon": "spell_frost_frostblast",
-        "description": "Deals {0} Frost damage to an enemy target. Deals {1}% increased damage to Frozen targets.",
+        "description": "Deals {0} to {1} Frost damage to an enemy target. Deals {2}% increased damage to Frozen targets.",
         "ranks": [
           [
             28,
+            33,
             300
           ]
         ]

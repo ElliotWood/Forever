@@ -470,11 +470,21 @@
         "maxPoints": 1,
         "name": "Venom",
         "icon": "inv_sword_31",
-        "description": "Finishing move that increases the damage of your Poisons by {0}% and your chance to apply Poisons by {1}%. Lasts longer per combo point: 1 point : 9 seconds 2 points: 12 seconds 3 points: 15 seconds 4 points: 18 seconds 5 points: 21 seconds",
+        "description": "Finishing move that increases the damage of your Poisons by {0}% and your chance to apply Poisons by {1}%. Lasts longer per combo point: {2} point: {3} seconds {4} points: {5} seconds {6} points: {7} seconds {8} points: {9} seconds {10} points: {11} seconds",
         "ranks": [
           [
             30,
-            10
+            10,
+            1,
+            9,
+            2,
+            12,
+            3,
+            15,
+            4,
+            18,
+            5,
+            21
           ]
         ],
         "prereqLocation": {
