@@ -24,6 +24,7 @@ import { SavedTalents } from '../core/proto/ui.js';
 import { Warrior_Options as WarriorOptions, WarriorShout, WarriorStance } from '../core/proto/warrior.js';
 import APLNoReckJSON from './apls/dps_no_reck.apl.json';
 import APLReckJSON from './apls/dps_reck.apl.json';
+import ArmsLaunchGearJSON from './gear_sets/arms_launch.gear.json';
 import LaunchGearJSON from './gear_sets/launch.gear.json';
 import P0BISGear from './gear_sets/p0.bis.gear.json';
 import Phase1Gear from './gear_sets/phase_1.gear.json';
@@ -38,12 +39,16 @@ import Phase2Gear from './gear_sets/phase_2.gear.json';
 ///////////////////////////////////////////////////////////////////////////
 
 export const GearLaunch = PresetUtils.makePresetGear('Launch', LaunchGearJSON);
+// The Launch set above dual wields, which is Fury's. Arms wants a two hander: Two-Handed
+// Weapon Specialization does nothing with a weapon in each hand, and without Dual Wield
+// Specialization the off hand carries its miss penalty for none of its damage.
+export const GearArmsLaunch = PresetUtils.makePresetGear('Launch (Arms)', ArmsLaunchGearJSON);
 export const GearP0BIS = PresetUtils.makePresetGear('Pre-BiS', P0BISGear);
 export const GearPhase1 = PresetUtils.makePresetGear('P1 BiS', Phase1Gear);
 export const GearPhase2 = PresetUtils.makePresetGear('P2 BiS', Phase2Gear);
 
 export const GearPresets = {
-	[ClassicPhase.Phase1]: [GearLaunch, GearPhase1, GearP0BIS],
+	[ClassicPhase.Phase1]: [GearLaunch, GearArmsLaunch, GearPhase1, GearP0BIS],
 	[ClassicPhase.Phase2]: [GearPhase2],
 };
 
