@@ -220,9 +220,9 @@
 	"17364": {
 		"ability": "Stormstrike",
 		"file": "sim/core/debuffs.go",
-		"note": "Forever makes Stormstrike personal and stops Nature hits eating the charges (docs/forever_rules.md, panel and tooltip); the live Forever aura is registered in sim/shaman/stormstrike.go, and this core StormstrikeAura is the Classic raid-wide two-charge version, reached only when the ruleset is Classic.",
+		"note": "Forever makes Stormstrike personal; the live Forever aura is registered in sim/shaman/stormstrike.go, and this core StormstrikeAura is the Classic raid-wide two-charge version, reached only when the ruleset is Classic. The beta client (17364, build 1.60.1.69893) gives the Forever version an 8 sec cooldown, a flat 125 mana and one charge that the next Lightning Bolt, Chain Lightning or Earth Shock spends, replacing the demo-era reading of 12 sec of +20% to all Nature damage.",
 		"source": "forever",
-		"tooltip": "21% of base mana\nMelee Range\nInstant\n20 sec cooldown\nInstantly attack with your main hand weapon. For the next 12 sec, the Nature damage you deal to that target is increased by 20%.\nThe vulnerability lasts its full duration instead of being consumed by Nature hits, and it raises only your own damage."
+		"tooltip": "125 Mana\nMelee Range\nInstant\n8 sec cooldown\nInstantly strike for normal weapon damage and increase the damage you deal to the target with your next Lightning Bolt, Chain Lightning, or Earth Shock spell by 20% for 12 sec."
 	},
 	"17800": {
 		"ability": "Improved Shadow Bolt (Shadow Vulnerability)",

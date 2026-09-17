@@ -9,10 +9,12 @@ import (
 const ChainLightningRanks = 4
 const ChainLightningTargetCount = int32(3)
 
+// Forever beta client values, scaled to level 60 the same way as Lightning Bolt's. Rank 3's 0.517 is what the
+// client stores, against 0.571 on the ranks either side; it reads like a transposed digit but is kept as written.
 var ChainLightningSpellId = [ChainLightningRanks + 1]int32{0, 421, 930, 2860, 10605}
-var ChainLightningBaseDamage = [ChainLightningRanks + 1][]float64{{0}, {200, 227}, {288, 323}, {383, 430}, {505, 564}}
-var ChainLightningSpellCoef = [ChainLightningRanks + 1]float64{0, .714, .714, .714, .714}
-var ChainLightningManaCost = [ChainLightningRanks + 1]float64{0, 280, 380, 490, 605}
+var ChainLightningBaseDamage = [ChainLightningRanks + 1][]float64{{0}, {85, 97}, {97, 109}, {109, 122}, {119, 134}}
+var ChainLightningSpellCoef = [ChainLightningRanks + 1]float64{0, .571, .571, .517, .571}
+var ChainLightningManaCost = [ChainLightningRanks + 1]float64{0, 225, 305, 390, 485}
 var ChainLightningLevel = [ChainLightningRanks + 1]int{0, 32, 40, 48, 56}
 
 func (shaman *Shaman) registerChainLightningSpell() {
@@ -41,7 +43,7 @@ func (shaman *Shaman) newChainLightningSpellConfig(rank int, cdTimer *core.Timer
 	level := ChainLightningLevel[rank]
 
 	cooldown := time.Second * 6
-	castTime := time.Millisecond * 2500
+	castTime := time.Millisecond * 2000
 
 	shaman.ChainLightningBounceCoefficient = .70 // 30% reduction per bounce
 	targetCount := ChainLightningTargetCount

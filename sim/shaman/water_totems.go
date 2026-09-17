@@ -9,9 +9,10 @@ import (
 
 const HealingStreamTotemRanks = 5
 
+// Forever beta client values for the heal each tick.
 var HealingStreamTotemSpellId = [HealingStreamTotemRanks + 1]int32{0, 5394, 6375, 6377, 10462, 10463}
 var HealingStreamTotemHealId = [HealingStreamTotemRanks + 1]int32{0, 5672, 6371, 6372, 10460, 10461}
-var HealingStreamTotemBaseHealing = [HealingStreamTotemRanks + 1]float64{0, 6, 8, 10, 12, 14}
+var HealingStreamTotemBaseHealing = [HealingStreamTotemRanks + 1]float64{0, 5, 6, 7, 9, 11}
 var HealingStreamTotemSpellCoeff = [HealingStreamTotemRanks + 1]float64{0, .022, .022, .022, .022, .022}
 var HealingStreamTotemManaCost = [HealingStreamTotemRanks + 1]float64{0, 40, 50, 60, 70, 80}
 var HealingStreamTotemLevel = [HealingStreamTotemRanks + 1]int{0, 20, 30, 40, 50, 60}
@@ -41,7 +42,7 @@ func (shaman *Shaman) newHealingStreamTotemSpellConfig(rank int) core.SpellConfi
 	manaCost := HealingStreamTotemManaCost[rank]
 	level := HealingStreamTotemLevel[rank]
 
-	duration := time.Second * 60
+	duration := totemDuration
 	healInterval := time.Second * 2
 
 	config := shaman.newTotemSpellConfig(manaCost, spellId)
@@ -117,7 +118,7 @@ func (shaman *Shaman) newManaSpringTotemSpellConfig(rank int) core.SpellConfig {
 	manaCost := ManaSpringTotemManaCost[rank]
 	level := ManaSpringTotemLevel[rank]
 
-	duration := time.Second * 60
+	duration := totemDuration
 
 	spell := shaman.newTotemSpellConfig(manaCost, spellId)
 	spell.RequiredLevel = level

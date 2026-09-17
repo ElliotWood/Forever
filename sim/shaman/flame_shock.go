@@ -9,11 +9,13 @@ import (
 
 const FlameShockRanks = 6
 
+// Forever beta client values. The client stores the dot as damage per tick (7, 8, 14, 21, 34, 44) and the table
+// holds the four ticks' total; its 0.1 coefficient is per tick, which is how the dot config applies it.
 var FlameShockSpellId = [FlameShockRanks + 1]int32{0, 8050, 8052, 8053, 10447, 10448, 29228}
-var FlameShockBaseDamage = [FlameShockRanks + 1]float64{0, 25, 51, 95, 164, 245, 292}
-var FlameShockBaseDotDamage = [FlameShockRanks + 1]float64{0, 28, 48, 96, 168, 256, 320}
-var FlameShockBaseSpellCoef = [FlameShockRanks + 1]float64{0, .134, .198, .214, .214, .214, .214}
-var FlameShockDotSpellCoef = [FlameShockRanks + 1]float64{0, .063, .093, .1, .1, .1, .1}
+var FlameShockBaseDamage = [FlameShockRanks + 1]float64{0, 24, 38, 49, 89, 137, 166}
+var FlameShockBaseDotDamage = [FlameShockRanks + 1]float64{0, 28, 32, 56, 84, 136, 176}
+var FlameShockBaseSpellCoef = [FlameShockRanks + 1]float64{0, .214, .214, .214, .214, .214, .214}
+var FlameShockDotSpellCoef = [FlameShockRanks + 1]float64{0, .1, .1, .1, .1, .1, .1}
 var FlameShockManaCost = [FlameShockRanks + 1]float64{0, 55, 95, 160, 250, 345, 410}
 var FlameShockLevel = [FlameShockRanks + 1]int{0, 10, 18, 28, 40, 52, 60}
 

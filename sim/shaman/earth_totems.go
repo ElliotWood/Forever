@@ -1,8 +1,6 @@
 package shaman
 
 import (
-	"time"
-
 	"github.com/wowsims/classic/sim/core"
 )
 
@@ -34,9 +32,11 @@ func (shaman *Shaman) newStrengthOfEarthTotemSpellConfig(rank int) core.SpellCon
 	manaCost := StrengthOfEarthTotemManaCost[rank]
 	level := StrengthOfEarthTotemLevel[rank]
 
-	duration := time.Second * 120
+	duration := totemDuration
 
-	buffAura := core.StrengthOfEarthTotemAura(&shaman.Unit, enhancingTotemsMultiplier)
+	buffAura := core.StrengthOfEarthTotemAura(&shaman.Unit, strengthOfEarthMultiplier)
+	// The core aura lasts Classic's 2 min.
+	buffAura.Duration = duration
 
 	spell := shaman.newTotemSpellConfig(manaCost, spellId)
 	spell.RequiredLevel = level
@@ -78,7 +78,7 @@ func (shaman *Shaman) newStoneskinTotemSpellConfig(rank int) core.SpellConfig {
 	manaCost := StoneskinTotemManaCost[rank]
 	level := StoneskinTotemLevel[rank]
 
-	duration := time.Second * 120
+	duration := totemDuration
 
 	spell := shaman.newTotemSpellConfig(manaCost, spellId)
 	spell.RequiredLevel = level
@@ -95,7 +95,7 @@ func (shaman *Shaman) newStoneskinTotemSpellConfig(rank int) core.SpellConfig {
 func (shaman *Shaman) registerTremorTotemSpell() {
 	spellId := int32(8143)
 	manaCost := float64(60)
-	duration := time.Second * 120
+	duration := totemDuration
 	level := 18
 
 	spell := shaman.newTotemSpellConfig(manaCost, spellId)
