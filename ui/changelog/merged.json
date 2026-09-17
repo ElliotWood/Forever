@@ -1,5 +1,65 @@
 [
 	{
+		"number": 197,
+		"title": "beta pass: all nine classes' spells to Forever beta client values",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/197"
+	},
+	{
+		"number": 196,
+		"title": "hunter: spells and talents to the beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/196"
+	},
+	{
+		"number": 195,
+		"title": "warrior: spells and talents from the beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/195"
+	},
+	{
+		"number": 194,
+		"title": "rogue: spells and talents from the beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/194"
+	},
+	{
+		"number": 193,
+		"title": "paladin: spells and talents to the beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/193"
+	},
+	{
+		"number": 192,
+		"title": "druid: spells and talents from the beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/192"
+	},
+	{
+		"number": 191,
+		"title": "priest: spells and talents from the beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/191"
+	},
+	{
+		"number": 190,
+		"title": "warlock: spells and talents from the beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/190"
+	},
+	{
+		"number": 189,
+		"title": "Shaman: spell numbers from the Forever beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/189"
+	},
+	{
+		"number": 188,
+		"title": "mage: spells and talents to the beta client",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/188"
+	},
+	{
 		"number": 187,
 		"title": "tools: spell_client.py, spell numbers from the beta client",
 		"mergedAt": "2026-09-17",
