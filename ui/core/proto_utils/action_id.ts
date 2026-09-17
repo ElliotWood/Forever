@@ -6,6 +6,7 @@ import { IconData, UIItem as Item } from '../proto/ui';
 import { buildWowheadTooltipDataset, WowheadTooltipItemParams, WowheadTooltipSpellParams } from '../wowhead';
 import { Database } from './database';
 import { WOWHEAD_IMAGES } from '../constants/other';
+import { spellSource } from '../spells/index';
 
 // Used to filter action IDs by level
 export interface ActionIdConfig {
@@ -240,7 +241,10 @@ export class ActionId {
 
 		const tooltipData = await ActionId.getTooltipData(this);
 
-		const baseName = tooltipData['name'];
+		// Wowhead has no entry for an ability Forever invented, and its fetch resolves to a row
+		// with no name, which reaches the damage table as a blank line. The spell manifest knows
+		// what the sim calls every id it registers, so fall back to that.
+		const baseName: string = tooltipData['name'] || (this.spellId && spellSource(this.spellId)?.ability) || '';
 		let name = baseName;
 		switch (baseName) {
 			case 'Master Demonologist':

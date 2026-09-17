@@ -34,11 +34,22 @@ keyed by the spell id the sim registers.
 - `source` — one of:
   - `classic`, Forever did not change the ability, so Wowhead's tooltip describes it and the
     site keeps showing it.
-  - `forever`, Forever changed it and a published Forever source gave the numbers. The site
-    shows `tooltip` instead.
-  - `assumed`, Forever changed it or it is new, and at least one number is a guess. The site
-    shows `tooltip` and says the number is unconfirmed.
+  - `forever`, Forever changed it and a published Forever source gave the numbers. `tooltip`
+    is what should describe it.
+  - `assumed`, Forever changed it or it is new, and at least one number is a guess. As above,
+    and the number is unconfirmed.
   - `unreviewed`, not classified yet.
+
+## What the site reads, and what it does not
+
+`index.ts` loads these files in the browser and `ActionId.fill` takes `ability` as the name
+when Wowhead has none — which is every ability Forever invented, Lava Burst's Forever ranks
+and Spearing Strike among them. Those arrived in the damage table as a blank row until then.
+
+**`tooltip` is still not rendered.** The hover text on a `forever` or `assumed` ability is
+Wowhead's Classic entry, with Classic's numbers in it, which is the thing these files were
+written to stop. The data is here and the test keeps it true to the sim; what is missing is
+the hook into the tooltip markup.
 - `foreverId` — Forever's own spell id, when it is known and differs from the one the sim
   carries.
 - `tooltip` — required for `forever` and `assumed`, and rejected for `classic`. Written from
