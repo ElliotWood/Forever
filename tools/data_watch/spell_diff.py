@@ -1,8 +1,19 @@
-# Diff a list of spell ids between the Forever beta client and Classic Era.
-# Prints only the spells where something the sim cares about moved.
-import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'tools', 'data_watch'))
-from spell_client import Client, FOREVER, ERA
+#!/usr/bin/python
+
+# Diffs a list of spell ids between the Forever beta client and Classic Era, printing only the ones
+# where something the sim reads has moved: duration, cooldown, cast time, cost, or any effect's
+# value, coefficient, period or per-level scaling.
+#
+#   tools/data_watch/spell_diff.py 25289 25291 20906      # Battle Shout, Blessing of Might, Trueshot
+#
+# Written for the core buff audit, where the question is "did Forever change this at all", and
+# spell_client.py's per-spell output is too much to read one id at a time.
+
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from spell_client import ERA, FOREVER, Client
 
 def sig(s):
     if not s:
