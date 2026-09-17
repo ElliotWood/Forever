@@ -1,5 +1,11 @@
 [
 	{
+		"number": 168,
+		"title": "Four more talents where the top rank is rounded, not multiplied",
+		"mergedAt": "2026-09-17",
+		"url": "https://github.com/ElliotWood/Forever/pull/168"
+	},
+	{
 		"number": 167,
 		"title": "Retire three paladin TODOs the beta answered, and fix a drain range",
 		"mergedAt": "2026-09-17",
