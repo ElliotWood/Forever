@@ -63,20 +63,20 @@ var BuffSpellValues = map[BuffName]stats.Stats{
 		stats.NatureResistance: 60,
 	},
 	BattleShout: {
-		stats.AttackPower: TernaryFloat64(IncludeAQ, 232, 193),
+		stats.AttackPower: TernaryFloat64(IncludeAQ, 139, 111),
 	},
 	BlessingOfMight: {
-		stats.AttackPower: TernaryFloat64(IncludeAQ, 185, 155),
+		stats.AttackPower: TernaryFloat64(IncludeAQ, 133, 112),
 	},
 	BlessingOfWisdom: {
-		stats.MP5: TernaryFloat64(IncludeAQ, 33, 30),
+		stats.MP5: TernaryFloat64(IncludeAQ, 40, 36),
 	},
 	HornOfLordaeron: {
 		stats.Strength: TernaryFloat64(IncludeAQ, 89, 70.15),
 		stats.Agility:  TernaryFloat64(IncludeAQ, 89, 70.15),
 	},
 	BloodPact: {
-		stats.Stamina: 42,
+		stats.Stamina: 49,
 	},
 	CommandingShout: {
 		stats.Stamina: 42,
@@ -85,7 +85,7 @@ var BuffSpellValues = map[BuffName]stats.Stats{
 		stats.BonusArmor: 735,
 	},
 	GraceOfAir: {
-		stats.Agility: TernaryFloat64(IncludeAQ, 77, 67),
+		stats.Agility: TernaryFloat64(IncludeAQ, 89, 77),
 	},
 	FireResistanceAura: {
 		stats.FireResistance: 60,
@@ -103,23 +103,23 @@ var BuffSpellValues = map[BuffName]stats.Stats{
 		stats.MP5: 25,
 	},
 	MarkOfTheWild: {
-		stats.BonusArmor:       285,
-		stats.Stamina:          12,
-		stats.Agility:          12,
-		stats.Strength:         12,
-		stats.Intellect:        12,
-		stats.Spirit:           12,
-		stats.ArcaneResistance: 20,
-		stats.ShadowResistance: 20,
-		stats.NatureResistance: 20,
-		stats.FireResistance:   20,
-		stats.FrostResistance:  20,
+		stats.BonusArmor:       385,
+		stats.Stamina:          16,
+		stats.Agility:          16,
+		stats.Strength:         16,
+		stats.Intellect:        16,
+		stats.Spirit:           16,
+		stats.ArcaneResistance: 27,
+		stats.ShadowResistance: 27,
+		stats.NatureResistance: 27,
+		stats.FireResistance:   27,
+		stats.FrostResistance:  27,
 	},
 	NatureResistanceTotem: {
 		stats.NatureResistance: 60,
 	},
 	PowerWordFortitude: {
-		stats.Stamina: 54,
+		stats.Stamina: 70,
 	},
 	ShadowProtection: {
 		stats.ShadowResistance: 60,
@@ -128,7 +128,7 @@ var BuffSpellValues = map[BuffName]stats.Stats{
 		stats.ShadowResistance: 60,
 	},
 	StrengthOfEarth: {
-		stats.Strength: TernaryFloat64(IncludeAQ, 77, 61),
+		stats.Strength: TernaryFloat64(IncludeAQ, 53, 42),
 	},
 	ScrollOfAgility: {
 		stats.Agility: 17,
@@ -1406,7 +1406,7 @@ func GraceOfAirTotemAura(unit *Unit, multiplier float64) *Aura {
 const BattleShoutRanks = 7
 
 var BattleShoutSpellId = [BattleShoutRanks + 1]int32{0, 6673, 5242, 6192, 11549, 11550, 11551, 25289}
-var BattleShoutBaseAP = [BattleShoutRanks + 1]float64{0, 20, 40, 57, 93, 138, 193, 232}
+var BattleShoutBaseAP = [BattleShoutRanks + 1]float64{0, 9, 21, 33, 51, 78, 111, 139}
 var BattleShoutLevel = [BattleShoutRanks + 1]int{0, 1, 12, 22, 32, 42, 52, 60}
 
 // TODO: Beta will confirm whether Battle Shout and Blessing of Might stay melee only. In Classic
@@ -1436,8 +1436,8 @@ func BattleShoutAura(unit *Unit, impBattleShout int32, boomingVoicePts int32, ha
 }
 
 func TrueshotAura(unit *Unit) *Aura {
-	rangedAP := 100.0
-	meleeAP := 100.0
+	rangedAP := 50.0
+	meleeAP := 0.0
 
 	aura := MakePermanent(unit.RegisterAura(Aura{
 		Label:    "Trueshot Aura",
@@ -1612,7 +1612,7 @@ const WindfuryRanks = 3
 
 var (
 	WindfuryBuffSpellId = [WindfuryRanks + 1]int32{0, 8516, 10608, 10610}
-	WindfuryBuffBonusAP = [WindfuryRanks + 1]float64{0, 122, 229, 315}
+	WindfuryBuffBonusAP = [WindfuryRanks + 1]float64{0, 95, 179, 246}
 )
 
 func GetWindfuryAP(aura *Aura, rank int32) float64 {

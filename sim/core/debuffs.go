@@ -397,8 +397,8 @@ func ShadowWeavingAura(unit *Unit, rank int) *Aura {
 		Duration:  time.Second * 15,
 		MaxStacks: 5,
 		OnStacksChange: func(aura *Aura, sim *Simulation, oldStacks int32, newStacks int32) {
-			aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexShadow] /= 1.0 + 0.03*float64(oldStacks)
-			aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexShadow] *= 1.0 + 0.03*float64(newStacks)
+			aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexShadow] /= 1.0 + 0.02*float64(oldStacks)
+			aura.Unit.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexShadow] *= 1.0 + 0.02*float64(newStacks)
 		},
 	})
 }
@@ -697,7 +697,7 @@ func ExposeArmorAura(target *Unit, improvedEA int32) *Aura {
 }
 
 func CurseOfRecklessnessAura(target *Unit) *Aura {
-	arpen := float64(640)
+	arpen := float64(505)
 	ap := float64(90)
 
 	aura := target.GetOrRegisterAura(Aura{
@@ -771,7 +771,7 @@ func CurseOfWeaknessAura(target *Unit, points int32) *Aura {
 const HuntersMarkAuraTag = "HuntersMark"
 
 func HuntersMarkAura(target *Unit, points int32) *Aura {
-	bonus := 110.0
+	bonus := 71.0
 
 	bonus *= 1 + 0.03*float64(points)
 

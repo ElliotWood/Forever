@@ -1,11 +1,11 @@
 character_stats_results: {
  key: "TestForeverElemental-Phase1-CharacterStats-Default"
  value: {
-  final_stats: 197
-  final_stats: 156
-  final_stats: 318
-  final_stats: 240
-  final_stats: 172
+  final_stats: 174
+  final_stats: 175
+  final_stats: 353
+  final_stats: 245
+  final_stats: 177
   final_stats: 552
   final_stats: 0
   final_stats: 40
@@ -15,33 +15,33 @@ character_stats_results: {
   final_stats: 0
   final_stats: 39.25
   final_stats: 12
-  final_stats: 20.356
+  final_stats: 20.4405
   final_stats: 0
   final_stats: 0
-  final_stats: 884
+  final_stats: 621
   final_stats: 12
-  final_stats: 23.6248
+  final_stats: 24.59
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 4840
+  final_stats: 4915
   final_stats: 0
   final_stats: 0
-  final_stats: 1572
-  final_stats: 100
+  final_stats: 1745
+  final_stats: 50
   final_stats: 0
   final_stats: 5
   final_stats: 0
-  final_stats: 9.6248
+  final_stats: 10.59
   final_stats: 5
   final_stats: 0
-  final_stats: 4280
-  final_stats: 27
+  final_stats: 4630
+  final_stats: 36
   final_stats: 60
   final_stats: 60
   final_stats: 60
   final_stats: 60
-  final_stats: 384
+  final_stats: 519
   final_stats: 0
   final_stats: 35
   final_stats: 0
@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.15019
+  weights: 0.15071
   weights: 0
-  weights: 0.46836
+  weights: 0.46867
   weights: 0
-  weights: 0.15847
-  weights: 0
-  weights: 0
-  weights: 0.30392
+  weights: 0.15861
   weights: 0
   weights: 0
-  weights: 4.54924
-  weights: 3.17253
+  weights: 0.30409
+  weights: 0
+  weights: 0
+  weights: 4.61778
+  weights: 3.24424
   weights: 0
   weights: 0
   weights: 0
@@ -99,85 +99,85 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 344.94319
-  tps: 326.8313
+  dps: 344.98572
+  tps: 326.78315
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 351.27808
-  tps: 332.29152
+  dps: 350.63405
+  tps: 331.5837
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 390.00643
-  tps: 369.45366
+  dps: 390.37117
+  tps: 369.79112
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 407.30731
-  tps: 385.78268
+  dps: 407.23021
+  tps: 385.49791
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 333.21094
-  tps: 313.85129
+  dps: 332.90592
+  tps: 313.53583
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 351.61614
-  tps: 332.12546
+  dps: 351.54861
+  tps: 331.95853
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 395.33086
-  tps: 373.68443
+  dps: 395.78912
+  tps: 374.03827
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 372.61411
-  tps: 352.33618
+  dps: 373.1175
+  tps: 352.78345
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-Average-Default"
  value: {
-  dps: 409.24804
-  tps: 387.45116
+  dps: 409.27176
+  tps: 387.39605
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 1122.8226
-  tps: 819.35558
+  dps: 1118.66495
+  tps: 817.66606
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 399.62861
-  tps: 377.82974
+  dps: 400.80515
+  tps: 378.88754
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 431.81975
-  tps: 424.23814
+  dps: 433.49513
+  tps: 426.09429
  }
 }
 dps_results: {
@@ -204,7 +204,7 @@ dps_results: {
 dps_results: {
  key: "TestForeverElemental-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 405.62057
-  tps: 384.04487
+  dps: 405.89137
+  tps: 384.1808
  }
 }
