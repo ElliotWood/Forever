@@ -6,14 +6,8 @@
 	"TargetDirectory": "dbfilesclient",
 	"GameTablesOutDirectory": "../../assets/db_inputs/basestats",
 	"GameTables": [
-		"chancetomeleecrit",
-		"chancetomeleecritbase",
-		"chancetospellcrit",
-		"chancetospellcritbase",
 		"combatratings",
-		"octbasempbyclass",
-		"SpellScaling",
-		"ShieldBlockRegular"
+		"SpellScaling"
 	],
 	"Tables": [
 		"Spell",
@@ -27,6 +21,7 @@
 		"ItemReforge",
 		"ItemBonus",
 		"ItemEffect",
+		"ItemXItemEffect",
 		"ItemClass",
 		"SpellCategory",
 		"ItemExtendedCost",

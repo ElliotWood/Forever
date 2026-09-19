@@ -107,3 +107,14 @@ func RunOverrides(dbHelper *DBHelper, overridesFolder string) error {
 
 	return nil
 }
+
+// tableExists reports whether the extracted client database carries a table.
+// Which tables a build ships varies between clients, so loaders for optional
+// data check before querying instead of failing the whole generation run.
+func (helper *DBHelper) tableExists(name string) bool {
+	var found string
+	err := helper.db.QueryRow(
+		"SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?", name,
+	).Scan(&found)
+	return err == nil
+}

@@ -122,15 +122,15 @@ func LoadAndWriteRawItems(dbHelper *DBHelper, filter string, inputsDir string) (
 			s.OverallQualityID,
 			s.DmgVariance,
 			s.ItemLevel,
-			s.Field_1_15_3_55112_014 as StatValue,
+			s.StatPercentEditor as StatValue,
 			s.StatModifier_bonusStat as bonusStat,
-			s.StatPercentEditor as StatPercentEditor,
-			i.Resistances_0 as ArmorValue,
-			i.Resistances_2 as FireResistance,
-			i.Resistances_3 as NatureResistance,
-			i.Resistances_4 as FrostResistance,
-			i.Resistances_5 as ShadowResistance,
-			i.Resistances_6 as ArcaneResistance,
+			'[0,0,0,0,0,0,0,0,0,0]' as StatPercentEditor, -- socket penalty array: dropped by the client
+			0 as ArmorValue, -- Item.Resistances_*: dropped by the client; armor and the
+			0 as FireResistance, -- five resistances arrive as stat-array entries instead
+			0 as NatureResistance,
+			0 as FrostResistance,
+			0 as ShadowResistance,
+			0 as ArcaneResistance,
 			s.SocketType as SocketTypes,
 			s.Socket_match_enchantment_ID as SocketEnchantmentId,
 			s.Flags_0 as Flags_0,
@@ -145,10 +145,10 @@ func LoadAndWriteRawItems(dbHelper *DBHelper, filter string, inputsDir string) (
 			(
 				SELECT group_concat(-ench, ',')
 				FROM item_enchantment_template
-				WHERE entry = s.ItemRandomSuffixGroupID
+				WHERE entry = 0 -- ItemRandomSuffixGroupID: dropped by the client
 			) AS RandomSuffixOptions,
 			 s.StatPercentageOfSocket,
-			 s.StatModifier_bonusAmount,
+			 '[0,0,0,0,0,0,0,0,0,0]', -- StatModifier_bonusAmount: dropped; derived from StatAlloc
 			 i.ClassID,
 			 i.SubClassID,
 			 COALESCE(ind.Description_lang, ''),
@@ -223,7 +223,7 @@ func ScanItemStatEffects(rows *sql.Rows) (dbc.ItemStatEffect, error) {
 func LoadAndWriteItemStatEffects(dbHelper *DBHelper, inputsDir string) ([]dbc.ItemStatEffect, error) {
 	query := `SELECT ID,
 		CASE WHEN Effect_0 = 3 THEN 1 ELSE 0 END as EffectIsAura,
-		EffectPointsMin, EffectPointsMax, EffectArg FROM SpellItemEnchantment WHERE Effect_0 = 5 OR Effect_0 = 3`
+		EffectPointsMin, EffectPointsMin AS EffectPointsMax, EffectArg FROM SpellItemEnchantment WHERE Effect_0 = 5 OR Effect_0 = 3`
 	items, err := LoadRows(dbHelper.db, query, ScanItemStatEffects)
 	if err != nil {
 		return nil, fmt.Errorf("error in query load items")
@@ -435,9 +435,9 @@ func LoadAndWriteRawGems(dbHelper *DBHelper, inputsDir string) ([]dbc.Gem, error
 		s.Display_lang as Name,
 		i.IconFileDataID as FDID,
 		gp.'Type' as GemType,
-		sie.EffectPointsMax as StatList,
+		sie.EffectPointsMin as StatList, -- EffectPointsMax: dropped by the client
 		sie.EffectArg as StatBonus,
-		gp.Min_item_level MinItemLevel,
+		0 MinItemLevel, -- GemProperties.Min_item_level: dropped by the client
 		s.OverallQualityId Quality,
 		sie.Effect,
 		CASE
@@ -545,11 +545,11 @@ func LoadAndWriteRawEnchants(dbHelper *DBHelper, inputsDir string) ([]dbc.Enchan
 				WHEN sie.Effect_2 IN (1, 3) THEN sie.EffectArg_2
 				ELSE se.SpellID
 			END AS spellId,
-			COALESCE(ie.ParentItemID, 0) as ItemId,
+			COALESCE(ixie.ItemID, 0) as ItemId,
 			sie.RequiredSkillID as professionId,
 			sie.Effect as Effect,
 			sie.EffectPointsMin as EffectPoints,
-			group_concat(ese.EffectBasePoints+1) as SpellEffectPoints,
+			group_concat(CAST(ese.EffectBasePointsF AS INTEGER) + 1) as SpellEffectPoints, -- REAL in this layout; the parser wants ints
 			sie.EffectArg as EffectArgs,
 			CASE
 				WHEN sei.EquippedItemClass = 4 THEN false
@@ -568,10 +568,11 @@ func LoadAndWriteRawEnchants(dbHelper *DBHelper, inputsDir string) ([]dbc.Enchan
 			JOIN SpellName sn ON se.SpellID = sn.ID
 			JOIN SpellItemEnchantment sie ON se.EffectMiscValue_0 = sie.ID
 			LEFT JOIN ItemEffect ie ON se.SpellID = ie.SpellID
+			LEFT JOIN ItemXItemEffect ixie ON ixie.ItemEffectID = ie.ID
 			LEFT JOIN SpellEquippedItems sei ON se.SpellId = sei.SpellID
 			LEFT JOIN SkillLineAbility sla ON se.SpellID = sla.Spell
-			LEFT JOIN Item it ON ie.ParentItemId = it.ID
-			LEFT JOIN ItemSparse isp ON ie.ParentItemId = isp.ID
+			LEFT JOIN Item it ON ixie.ItemID = it.ID
+			LEFT JOIN ItemSparse isp ON ixie.ItemID = isp.ID
 			LEFT JOIN SpellEffect ese ON ese.SpellID = sie.ID
 			WHERE se.Effect = 53
 				AND (
@@ -731,11 +732,11 @@ func LoadAndWriteRawSpellEffects(dbHelper *DBHelper, inputsDir string) (map[int]
 		se.EffectAttributes,
 		se.EffectAura,
 		se.EffectAuraPeriod,
-		se.EffectBasePoints,
+		se.EffectBasePointsF,
 		se.EffectBonusCoefficient,
 		se.EffectChainAmplitude,
 		se.EffectChainTargets,
-		se.EffectDieSides,
+		0, -- EffectDieSides: dropped by the client; Variance carries the spread now
 		se.EffectItemType,
 		se.EffectMechanic,
 		se.EffectPointsPerResource,
@@ -752,7 +753,7 @@ func LoadAndWriteRawSpellEffects(dbHelper *DBHelper, inputsDir string) (map[int]
 		se.EffectSpellClassMask,
 		se.ImplicitTarget,
 		se.SpellID,
-		COALESCE(ss.Class, 0),
+		0, -- SpellScaling.Class: dropped by the client
 		COALESCE(sr1.RadiusMin, 0),
 		COALESCE(sr1.RadiusMax, 0),
 		COALESCE(sr2.RadiusMin, 0),
@@ -847,6 +848,17 @@ var RawRandomSuffixes []dbc.RandomSuffix
 var RawRandomSuffixesById map[int]dbc.RandomSuffix
 
 func LoadAndWriteRawRandomSuffixes(dbHelper *DBHelper, inputsDir string) ([]dbc.RandomSuffix, error) {
+	// ItemRandomSuffix is not shipped by every client. The Forever beta drops it
+	// outright -- the file is in the listfile but absent from the build's root --
+	// so there are no random suffixes to load. Write the empty file the rest of
+	// the pipeline expects rather than failing the whole run.
+	if !dbHelper.tableExists("ItemRandomSuffix") {
+		if err := dbc.WriteGzipFile(fmt.Sprintf("%s/dbc/random_suffix.json", inputsDir), []byte("[]")); err != nil {
+			panic(fmt.Sprintf("Error writing random suffixes %v", err))
+		}
+		return nil, nil
+	}
+
 	query := `
 	SELECT
 		COALESCE(-irs.ID, 0) AS ID,
@@ -956,7 +968,8 @@ func LoadAndWriteConsumables(dbHelper *DBHelper, inputsDir string) ([]dbc.Consum
 				(
 					SELECT group_concat(ie2.ID, ',')
 					FROM ItemEffect ie2
-					WHERE ie2.ParentItemID = i.ID
+					JOIN ItemXItemEffect ixie2 ON ixie2.ItemEffectID = ie2.ID
+					WHERE ixie2.ItemID = i.ID
 				) AS ItemEffects,
 				CASE
 					WHEN sp.Description_lang LIKE '%Counts as both a Battle%' THEN 0
@@ -969,7 +982,8 @@ func LoadAndWriteConsumables(dbHelper *DBHelper, inputsDir string) ([]dbc.Consum
 				COALESCE(ie.CategoryCoolDownMSec, 0) as CategoryCooldownDuration
 			FROM Item i
 			JOIN ItemSparse s ON i.ID = s.ID
-			LEFT JOIN ItemEffect ie ON i.ID = ie.ParentItemID
+			LEFT JOIN ItemXItemEffect ixie ON ixie.ItemID = i.ID
+			LEFT JOIN ItemEffect ie ON ie.ID = ixie.ItemEffectID
 			LEFT JOIN SpellCategory sc ON ie.SpellCategoryID = sc.ID
 			LEFT JOIN Spell sp ON ie.SpellID = sp.ID
 			LEFT JOIN SpellMisc sm ON ie.SpellId = sm.SpellID
@@ -1019,17 +1033,18 @@ func ScanItemEffect(rows *sql.Rows) (dbc.ItemEffect, error) {
 func LoadAndWriteItemEffects(dbHelper *DBHelper, inputsDir string) ([]dbc.ItemEffect, error) {
 	query := `
 	SELECT
-		ID,
-		LegacySlotIndex,
-		TriggerType,
-		Charges,
-		CoolDownMSec,
-		CategoryCoolDownMSec,
-		SpellCategoryID,
-		SpellID,
-		ChrSpecializationID,
-		ParentItemID
-	FROM ItemEffect
+		ie.ID,
+		ie.LegacySlotIndex,
+		ie.TriggerType,
+		ie.Charges,
+		ie.CoolDownMSec,
+		ie.CategoryCoolDownMSec,
+		ie.SpellCategoryID,
+		ie.SpellID,
+		ie.ChrSpecializationID,
+		COALESCE(ixie.ItemID, 0) AS ParentItemID
+	FROM ItemEffect ie
+	LEFT JOIN ItemXItemEffect ixie ON ixie.ItemEffectID = ie.ID
 	`
 
 	effects, err := LoadRows(dbHelper.db, query, ScanItemEffect)
@@ -1086,7 +1101,7 @@ func LoadTalents(dbHelper *DBHelper) ([]RawTalent, error) {
 	query := `
 SELECT
   t.TierID,
-  sn.Name_lang,
+  COALESCE(sn.Name_lang, '') AS Name_lang,
   t.ColumnIndex,
   tb.ClassMask,
   t.SpellRank,
@@ -1170,7 +1185,7 @@ SELECT
 	(
 		(ss.AuraDescription_lang != '' and ss.AuraDescription_lang is not null)
 	) AS HasBuff,
-	sn.Name_lang,
+	COALESCE(sn.Name_lang, '') AS Name_lang,
 	COALESCE(ss.NameSubtext_lang, "")
 FROM SpellMisc sm
 LEFT JOIN Spell ss ON ss.ID = sm.SpellID
@@ -1291,7 +1306,7 @@ func LoadAndWriteSpells(dbHelper *DBHelper, inputsDir string) ([]dbc.Spell, erro
 	COALESCE(sm.MinDuration, 0),
 	COALESCE(ss.MaxScalingLevel, 0),
 	COALESCE(ss.MinScalingLevel, 0),
-	COALESCE(ss.ScalesFromItemLevel, 0),
+	0, -- SpellScaling.ScalesFromItemLevel: dropped by the client
 	COALESCE(sl.SpellLevel, 0),
 	COALESCE(sl.BaseLevel, 0),
 	COALESCE(sl.MaxLevel, 0),
@@ -1316,7 +1331,7 @@ func LoadAndWriteSpells(dbHelper *DBHelper, inputsDir string) ([]dbc.Spell, erro
 	COALESCE(sei.EquippedItemClass, 0),
 	COALESCE(sei.EquippedItemInvTypes, 0),
 	COALESCE(sei.EquippedItemSubclass, 0),
-	COALESCE(ss.CastTimeMin, 0),
+	0, -- SpellScaling.CastTimeMin: dropped by the client
 	COALESCE(sco.SpellClassMask, ""),
 	COALESCE(sco.SpellClassSet, 0),
 	COALESCE(si.AuraInterruptFlags, ""),

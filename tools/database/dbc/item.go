@@ -182,11 +182,8 @@ func (item *Item) GetRandPropPoints(itemLevel int) int32 {
 func (item *Item) GetScaledStat(index int, itemLevel int) float64 {
 	//Todo check if overflow array
 
-	if itemLevel == item.ItemLevel {
-		// Maybe just return it?
-		return item.BonusAmountCalculated[index]
-	}
-
+	// This client ships no precomputed StatModifier_bonusAmount, so the allocation
+	// budget is the only source: 99.8% of stat slots carry a non-zero StatAlloc.
 	slotType := item.GetRandomSuffixType()
 	itemBudget := 0.0
 
@@ -202,8 +199,6 @@ func (item *Item) GetScaledStat(index int, itemLevel int) float64 {
 			//Not used right now in Cata
 			//socket_penalty := math.RoundNearby item.StatPercentageOfSocket[index] * SocketCost(itemLevel)
 			return rawValue - item.SocketModifier[index] // Todo: Could this be a calculated socket penalty?
-		} else {
-			return math.Floor(item.BonusAmountCalculated[index] * item.ApproximateScaleCoeff(item.ItemLevel, itemLevel))
 		}
 	}
 	return 0
