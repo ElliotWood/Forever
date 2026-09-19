@@ -72,40 +72,30 @@
 
 						<div class="site-cta">
 							<div class="site-cta-body">
-								<h2 class="site-cta-title">Playing the beta? Send one file.</h2>
+								<h2 class="site-cta-title">Playing the beta? Two files here are worth more than anything I can datamine.</h2>
 								<p class="site-cta-lede">
-									Blizzard tunes values <em>after</em> a build ships. Those hotfixes never reach a datamining site &mdash; they exist only in
-									the cache your own client downloads them into. It is the one source of Forever data nobody can look up.
+									This sim reads Blizzard's data tables, which say what an ability is <em>meant</em> to do. Your client holds two files
+									that say things the tables cannot, and between them they close the two largest gaps on this page.
 								</p>
-								<a class="site-cta-button" href="https://github.com/@@REPO@@/issues/new?template=hotfix_cache.md" target="_blank" rel="noreferrer">
-									<i class="fab fa-github"></i><span>Send your DBCache.bin</span>
+								<ul class="site-cta-files">
+									<li>
+										<strong><code>DBCache.bin</code> &mdash; what Blizzard changed after the build shipped.</strong> Hotfixes never
+										reach a datamining site, so a value here can be stale the moment it is tuned and there is no way to tell from the
+										outside. Carries no personal data; send it as it is.
+									</li>
+									<li>
+										<strong><code>DamageMeter.bin</code> &mdash; what the server actually paid out.</strong> Nothing here has been
+										checked against a running game, and Forever blocks addons from reading damage, so the client's own meter is the
+										only measurement there will be. It does carry character names, so it gets scrubbed in your browser first.
+									</li>
+								</ul>
+								<a class="site-cta-button" href="scrub/">
+									<i class="fas fa-upload"></i><span>Send a file</span>
 								</a>
-								<p class="site-cta-note">Contains no character name, account or realm. Read and discarded, never committed.</p>
+								<p class="site-cta-note">
+									Nothing is uploaded to this site. The scrubber runs in your browser and hands the file back for you to attach.
+								</p>
 							</div>
-							<details class="site-panel site-panel-inset">
-								<summary>Which file, and why yours differs from mine</summary>
-								<div class="site-panel-body">
-									<p>
-										<code>DBCache.bin</code>, in <code>World of Warcraft\_classic_beta_\Cache\ADB\enUS\</code>. Copy it out with the
-										game closed, or send the whole <code>enUS</code> folder.
-									</p>
-									<p>
-										<strong>It holds nothing about you.</strong> No character name, account, realm, Battle.net tag or IP &mdash; checked
-										byte by byte rather than assumed. It is NPC dialogue, item names and Blizzard's tuning rows, the same data everyone in
-										your region is served.
-									</p>
-									<p>
-										<strong>Yours is not mine.</strong> The client caches only the rows it has needed, so two players who have done
-										different things hold different subsets. Mine carries 42,871 and not one is a spell &mdash; a claim about this sim
-										resting on one machine that has mostly sat in a city.
-									</p>
-									<p>
-										<strong>A ten second check.</strong> In that folder, look at <code>Spell&lt;number&gt;.tmp</code>. At 4 bytes your
-										client has no spell hotfixes either. Bigger than that and something here is out of date and you are the only one who
-										can see it.
-									</p>
-								</div>
-							</details>
 						</div>
 
 						<details class="site-panel">

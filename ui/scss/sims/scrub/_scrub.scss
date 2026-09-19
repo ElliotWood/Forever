@@ -1,0 +1,122 @@
+.scrub-container {
+	max-width: 56rem;
+	padding-top: var(--spacer-4);
+	padding-bottom: var(--spacer-5);
+	color: var(--bs-gray-300);
+
+	h1 {
+		color: var(--bs-white);
+	}
+
+	h2 {
+		margin: 0 0 var(--spacer-2);
+		font-size: 1.15rem;
+		color: var(--bs-white);
+	}
+
+	p {
+		margin: 0 0 var(--spacer-2);
+	}
+
+	code {
+		word-break: break-all;
+	}
+}
+
+.scrub-lede {
+	font-size: 1.1rem;
+	color: var(--bs-gray-200);
+}
+
+// One card per file, so the two asks read as two choices rather than one wall.
+.scrub-file {
+	margin-top: var(--spacer-4);
+	padding: var(--spacer-3) var(--spacer-4);
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-radius: var(--bs-border-radius);
+	background: rgba(0, 0, 0, 0.2);
+}
+
+.scrub-warn {
+	color: var(--bs-gray-200);
+	border-left: 3px solid var(--bs-brand);
+	padding-left: var(--spacer-3);
+}
+
+.scrub-button {
+	display: inline-block;
+	margin-top: var(--spacer-2);
+	padding: 0.55rem 1.3rem;
+	border-radius: var(--bs-border-radius);
+	background: var(--bs-brand);
+	color: #1a1205;
+	font-weight: 600;
+	text-decoration: none;
+
+	&:hover,
+	&:focus-visible {
+		color: #1a1205;
+		filter: brightness(1.08);
+	}
+}
+
+.scrub-button-quiet {
+	background: transparent;
+	border: 1px solid var(--bs-brand);
+	color: var(--bs-white);
+
+	&:hover,
+	&:focus-visible {
+		color: var(--bs-white);
+		background: rgba(224, 163, 53, 0.15);
+	}
+}
+
+.scrub-drop {
+	display: block;
+	margin-top: var(--spacer-3);
+	padding: var(--spacer-4);
+	border: 2px dashed rgba(224, 163, 53, 0.55);
+	border-radius: var(--bs-border-radius);
+	text-align: center;
+	color: var(--bs-gray-200);
+	cursor: pointer;
+
+	input {
+		display: none;
+	}
+
+	&:hover {
+		border-color: var(--bs-brand);
+	}
+}
+
+.scrub-drop-over {
+	border-color: var(--bs-brand);
+	background: rgba(224, 163, 53, 0.1);
+}
+
+.scrub-summary {
+	margin: 0 0 var(--spacer-3);
+	padding: 0;
+	list-style: none;
+
+	li {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacer-3);
+		padding: var(--spacer-1) 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	}
+}
+
+.scrub-actor {
+	min-width: 12rem;
+	color: var(--bs-white);
+}
+
+.scrub-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--spacer-2);
+}

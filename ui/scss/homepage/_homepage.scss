@@ -192,6 +192,17 @@
 					color: var(--bs-gray-300);
 				}
 
+				.site-cta-files {
+					margin: var(--spacer-3) 0 0;
+					padding-left: var(--spacer-4);
+					font-size: 1rem;
+					color: var(--bs-gray-300);
+
+					li + li {
+						margin-top: var(--spacer-2);
+					}
+				}
+
 				.site-cta-note {
 					margin: var(--spacer-2) 0 0;
 					font-size: 0.875rem;
