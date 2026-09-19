@@ -138,53 +138,46 @@
 							statement about Forever.
 						</p>
 						<div class="site-info-cta">
-							<h2 class="site-info-cta-title">Playing the beta? Your numbers are worth more than mine.</h2>
+							<h2 class="site-info-cta-title">Playing the beta? Send one file.</h2>
 							<p>
-								Every value here was read out of the client's data tables. That settles what an ability <em>says</em> it does, and it cannot
-								settle what the server actually pays out. One measurement from a running game is worth more than another week of datamining,
-								and right now there are none.
+								Every number here comes out of the shipped build's data tables. Blizzard tunes values <em>after</em> a build ships, and those
+								hotfixes never reach a datamining site &mdash; they exist only in the cache your own client downloads them into. That cache is
+								the one source of Forever data nobody can look up.
 							</p>
-							<p class="site-info-cta-label">What helps, best first</p>
-							<ol class="site-info-cta-list">
-								<li>
-									<strong>A screenshot of Forever's own damage meter</strong> at the end of a fight, with your gear and talents.
-									Addons cannot read damage in Forever, so the client's meter is the only in-game source of it.
-								</li>
-								<li>
-									<strong>A combat log</strong> &mdash; <code>/combatlog</code>, then <code>Logs/WoWCombatLog.txt</code>. Only useful if your
-									client writes damage into it, which is the same restriction addons hit. If yours does, say so: that is a bigger deal than
-									any single parse.
-								</li>
-								<li>
-									<strong>A single-ability test.</strong> Cast one rank of one spell at a dummy twenty times and send the meter's total with
-									your spell power or attack power. That pins one coefficient exactly, which a whole fight cannot.
-								</li>
-							</ol>
-							<p class="site-info-cta-label">What it would settle</p>
-							<ul class="site-info-cta-list">
-								<li>
-									<strong>Downranking</strong>, the largest open question on this page. Two ranks of the same spell at a dummy, and the gap
-									between them answers it for every caster at once.
-								</li>
-								<li>
-									<strong>Proc rates</strong>, which the client mostly stores as unset. Twenty minutes of any weapon with a proc on it gives
-									a rate no table carries.
-								</li>
-								<li>
-									<strong>The 41 abilities</strong> still carrying a number the client does not settle, and anything where a tooltip in the
-									game disagrees with what this site shows.
-								</li>
-							</ul>
+							<p class="site-info-cta-label">The file</p>
+							<p>
+								<code>DBCache.bin</code>, in
+								<code>World of Warcraft\_classic_beta_\Cache\ADB\enUS\</code>. Copy it out while the game is closed and attach it below.
+								If it is easier, send the whole <code>enUS</code> folder.
+							</p>
+							<p class="site-info-cta-label">It holds nothing about you</p>
+							<p>
+								No character name, no account, no realm, no Battle.net tag, no IP. It is NPC dialogue, item names and Blizzard's tuning rows
+								&mdash; the same data everyone in your region is served. That has been checked byte by byte rather than assumed, and it is
+								why this is the file being asked for instead of a damage meter screenshot.
+							</p>
+							<p class="site-info-cta-label">Why yours is worth having when mine exists</p>
+							<p>
+								The client only caches the rows it has actually needed, so two players who have done different things hold different subsets.
+								Mine carries 42,871 of them and not one is a spell. As far as my client knows, no spell value in this sim is stale &mdash;
+								which is a claim resting on one machine that has mostly sat in a city.
+							</p>
+							<p class="site-info-cta-label">A ten second check before you bother</p>
+							<p>
+								In that same folder, look at <code>Spell&lt;number&gt;.tmp</code>. If it is 4 bytes, your client has no spell hotfixes either.
+								<strong>If it is bigger than that, something in this sim is out of date and you are the only one who can see it.</strong>
+								Either way the file is worth sending; that check just tells you whether to expect it to matter.
+							</p>
 							<p class="site-info-cta-actions">
-								<a class="site-info-cta-button" href="https://github.com/@@REPO@@/issues/new?template=dps_report.md" target="_blank" rel="noreferrer">
-									<i class="fab fa-github"></i>&nbsp; Send it as a GitHub issue
+								<a class="site-info-cta-button" href="https://github.com/@@REPO@@/issues/new?template=hotfix_cache.md" target="_blank" rel="noreferrer">
+									<i class="fab fa-github"></i>&nbsp; Attach it to a GitHub issue
 								</a>
 								<a class="site-info-cta-button" href="https://discord.gg/p3DgvmnDCS" target="_blank" rel="noreferrer">
-									<i class="fab fa-discord"></i>&nbsp; Or post it on Discord
+									<i class="fab fa-discord"></i>&nbsp; Or send it on Discord
 								</a>
 							</p>
 							<p class="site-info-cta-foot">
-								A partial report is still useful. Anything that moves a number gets credited in the
+								The files are read and thrown away, never committed to this repository. Anything that moves a number gets credited in the
 								<a href="changelog/">changelog</a>, the same as the bug reports already there.
 							</p>
 						</div>
