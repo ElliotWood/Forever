@@ -30,11 +30,11 @@ import (
 
 // Raised by hand when an id is deliberately left undeclared, never by a tool. Every entry
 // needs a reason, because an undeclared id is an ability the site describes wrongly.
-const unreviewedSpellBudget = 55
+const unreviewedSpellBudget = 50
 
 // Registration sites whose id the walk cannot read from the source. Each one is an ability
 // the manifest cannot cover, so this only ever falls.
-const unresolvedSpellSiteBudget = 15
+const unresolvedSpellSiteBudget = 14
 
 type spellSource struct {
 	Ability     string   `json:"ability"`

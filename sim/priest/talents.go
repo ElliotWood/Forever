@@ -264,8 +264,12 @@ func (priest *Priest) applyShadowWeaving() {
 	priest.shadowWeavingProcChance = []float64{0, 0.33, 0.67, 1.00}[priest.Talents.ShadowWeaving]
 
 	priest.ShadowWeavingAura = priest.RegisterAura(core.Aura{
-		Label:     "Shadow Weaving",
-		ActionID:  core.ActionID{SpellID: core.ShadowWeavingSpellIDs[int(priest.Talents.ShadowWeaving)]},
+		Label: "Shadow Weaving",
+		// The stacking buff is 15258 - aura 270 at 2 per stack, "increase the Shadow damage you
+		// deal". Reading the talent's own rank table here put Classic's 15331 and 15332 on it,
+		// two spells Forever deleted, so a two or three point priest wore an id with nothing
+		// behind it.
+		ActionID:  core.ActionID{SpellID: 15258},
 		Duration:  time.Second * 15,
 		MaxStacks: 5,
 		OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
