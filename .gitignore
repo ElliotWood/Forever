@@ -51,6 +51,12 @@ tools/db2tool/DBDCache/
 tools/db2tool/dbfilesclient/
 tools/db2tool/caches/
 
+# Per-client extraction settings, kept local. The default and ptr- ones are
+# tracked; era-, sod- and forever- are scratch for other client builds.
+tools/database/era-generator-settings.json
+tools/database/sod-generator-settings.json
+tools/database/forever-generator-settings.json
+
 # Client-extracted databases and caches. Output of `make db` from a local WoW
 # install, tens of MB each, and rebuildable - the same reason wowsims.db is here.
 tools/database/*.db
