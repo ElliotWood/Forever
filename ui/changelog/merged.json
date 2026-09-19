@@ -1,5 +1,11 @@
 [
 	{
+		"number": 231,
+		"title": "Ask beta players for in-game numbers",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/231"
+	},
+	{
 		"number": 230,
 		"title": "Stop applying the improved shout talent twice",
 		"mergedAt": "2026-09-19",
