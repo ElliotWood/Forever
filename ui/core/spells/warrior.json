@@ -185,11 +185,6 @@
 		"note": "The registration is Classic's exactly (15 sec, guaranteed crits, +20% damage taken, 30 min cooldown); the file's header comment claims a 50% crit / 12 sec / 5 min version that no Forever source mentions and that the code does not implement, and it predates the Forever fork.",
 		"source": "classic"
 	},
-	"18": {
-		"ability": "Heal Self (TEST)",
-		"file": "sim/warrior/rend.go",
-		"source": "unreviewed"
-	},
 	"18499": {
 		"ability": "Berserker Rage",
 		"file": "sim/warrior/berserker_rage.go",
@@ -297,11 +292,6 @@
 		"source": "forever",
 		"tooltip": "Instant\n1 min cooldown\nGenerates 10 Rage at the cost of health, and then generates an additional 10 Rage over 10 sec.\nImproved Bloodrage increases all of that Rage by 25% per point."
 	},
-	"5": {
-		"ability": "Death Touch",
-		"file": "sim/warrior/rend.go",
-		"source": "unreviewed"
-	},
 	"56638": {
 		"ability": "Bloodthrill",
 		"file": "sim/warrior/talents.go",
@@ -321,11 +311,6 @@
 		"note": "Classic's rank 2 Pummel unchanged: 10 Rage, 50 damage, 10 sec cooldown, Berserker Stance.",
 		"source": "classic"
 	},
-	"7": {
-		"ability": "Suicide",
-		"file": "sim/warrior/rend.go",
-		"source": "unreviewed"
-	},
 	"71": {
 		"ability": "Defensive Stance",
 		"file": "sim/warrior/stances.go",
@@ -344,10 +329,5 @@
 		"note": "Beta client 1.60.1.69893: 60% less damage taken for 12 sec on a 15 min cooldown (Classic 75%, 10 sec, 30 min). Improved Shield Wall's curve takes 5.5 / 11 min off.",
 		"source": "forever",
 		"tooltip": "Instant\n15 min cooldown\nRequires Shields\nRequires Defensive Stance\nReduces the damage taken from all attacks by 60% for 12 sec.\nImproved Shield Wall reduces the cooldown by 5.5 min per point."
-	},
-	"9": {
-		"ability": "spell 9",
-		"file": "sim/warrior/rend.go",
-		"source": "unreviewed"
 	}
 }

@@ -6,11 +6,6 @@
 		"source": "forever",
 		"tooltip": "30 Energy\nMelee Range\nInstant\nFinishing move that causes damage over time. Damage increases per combo point and by your Attack Power:\n1 point: 44.4 damage over 12 sec.\n2 points: 70.8 damage over 12 sec.\n3 points: 97.2 damage over 12 sec.\n4 points: 123.6 damage over 12 sec.\n5 points: 150 damage over 12 sec."
 	},
-	"1180": {
-		"ability": "Daggers",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
-	},
 	"1495": {
 		"ability": "Mongoose Bite",
 		"file": "sim/druid/hurricane.go",
@@ -251,11 +246,6 @@
 		"source": "forever",
 		"tooltip": "Gives you a 50% chance per point to gain an additional 5 Rage any time you get a critical strike while in Bear Form or Dire Bear Form. In addition, your non-periodic critical strikes from Cat Form abilities that generate Combo Points have a 50% chance per point to add an additional Combo Point."
 	},
-	"40": {
-		"ability": "spell 40",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
-	},
 	"414644": {
 		"ability": "Lacerate",
 		"assumptions": [
@@ -273,11 +263,6 @@
 		"source": "forever",
 		"tooltip": "Bleeds the target for 15 damage every 3 sec for each stack of Lacerate on it, over 15 sec."
 	},
-	"46": {
-		"ability": "spell 46",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
-	},
 	"48518": {
 		"ability": "Eclipse",
 		"file": "sim/druid/talents.go",
@@ -285,11 +270,6 @@
 		"note": "Beta client 1.60.1.69893: the talent curve is 0.17 / 0.33 / 0.5 sec and the charge aura (408255) holds 4 for 15 sec. The sim carries Wrath of the Lich King's 48518, which the Classic database does not hold, so the buff renders without a name or an icon.",
 		"source": "forever",
 		"tooltip": "15 sec\nYour Wrath spell reduces the cast time of your next 2 Starfire spells by 0.17 / 0.33 / 0.5 sec. Stores up to 4 charges."
-	},
-	"50": {
-		"ability": "Zone Recall (OLD)",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
 	},
 	"50334": {
 		"ability": "Berserk",
@@ -362,11 +342,6 @@
 		"source": "forever",
 		"tooltip": "45 Mana\nInstant\nThe enemy target is swarmed by insects, decreasing their chance to hit with attacks by 2% and causing 48 Nature damage over 12 sec."
 	},
-	"56": {
-		"ability": "Stun",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
-	},
 	"57878": {
 		"ability": "Natural Reaction",
 		"file": "sim/druid/talents.go",
@@ -374,16 +349,6 @@
 		"note": "Beta client 1.60.1.69893: curves 1-5% and 20-100%, and 417053 grants 5 Rage. The sim tags the Rage with Wrath of the Lich King's 57878, which the Classic database does not hold, so the gain shows up unnamed; the Rage half fires only in Bear Form.",
 		"source": "forever",
 		"tooltip": "Increases your dodge chance by 1% per point, and gives you a 20% chance per point to gain 5 Rage each time you dodge."
-	},
-	"60": {
-		"ability": "Long bow shot (TEST)",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
-	},
-	"66": {
-		"ability": "Lesser Invisibility",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
 	},
 	"6780": {
 		"ability": "Wrath",
@@ -440,11 +405,6 @@
 		"file": "sim/druid/swipe.go",
 		"note": "Beta client 1.60.1.69893: damage, 3 targets and the 20 Rage are Classic's.",
 		"source": "classic"
-	},
-	"880": {
-		"ability": "Moonfire",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
 	},
 	"8905": {
 		"ability": "Wrath",
