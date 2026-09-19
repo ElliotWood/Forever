@@ -1,5 +1,11 @@
 [
 	{
+		"number": 224,
+		"title": "Take seven weapon procs from the beta client",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/224"
+	},
+	{
 		"number": 223,
 		"title": "Classify the 41 abilities Forever left alone",
 		"mergedAt": "2026-09-19",
