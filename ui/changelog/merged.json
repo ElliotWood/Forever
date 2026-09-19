@@ -1,5 +1,11 @@
 [
 	{
+		"number": 242,
+		"title": "Curse of Recklessness no longer hands the target attack power",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/242"
+	},
+	{
 		"number": 241,
 		"title": "The totem buffs last 5 min in Forever, not 2",
 		"mergedAt": "2026-09-19",
