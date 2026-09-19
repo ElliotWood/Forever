@@ -112,9 +112,9 @@ export class ScrubPage {
 								<code>World of Warcraft\_classic_beta_\Cache\</code>
 							</p>
 							<p className="scrub-file-note scrub-hint">
-								<strong>Not there? That is normal.</strong> The client writes this file while you play and clears it between sessions, so an
-								empty folder means the meter has nothing in it yet rather than that you are in the wrong place. Log in, fight something, then
-								copy it out &mdash; ideally without closing the game first.
+								<strong>Not there while you are logged in? That is normal.</strong> The meter is only written to disk when it flushes, and it
+								flushes on logout. Fight something, log out to character select, and it appears. An empty folder mid-session means the meter has
+								not been written yet, not that you are in the wrong place.
 							</p>
 							<p className="scrub-file-note scrub-warn">
 								This one holds character names, yours and everyone you grouped with. They are taken out <strong>in your browser</strong> before
