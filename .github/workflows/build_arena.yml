@@ -18,7 +18,16 @@ on:
       - 'ui/core/spells/**'
       - 'tools/arena/**'
       - '.github/workflows/build_arena.yml'
+  # The talent search is hours of work, so it gets its own slot rather than riding on every
+  # push. Sunday morning UTC, and on demand.
+  schedule:
+    - cron: '0 4 * * 0'
   workflow_dispatch:
+    inputs:
+      optimise:
+        description: 'Search the talent trees as well (hours, not minutes)'
+        type: boolean
+        default: false
 
 # Each run commits to master, so two of them racing means the loser is rejected as a
 # non fast forward. Queued rather than cancelled: a cancelled run leaves the leaderboard
@@ -33,8 +42,9 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     # Several hundred runs at five thousand iterations each. The specs go in parallel, but
-    # rogue alone is most of it: nine gear sets times seven rotations.
-    timeout-minutes: 90
+    # rogue alone is most of it: nine gear sets times seven rotations. The talent search adds
+    # up to nine hundred runs per spec on top, which is why it does not run on every push.
+    timeout-minutes: 350
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -64,9 +74,12 @@ jobs:
       # Named packages rather than ./sim/... : sim/web is a server, has no arena entry, and
       # its presence in the pattern is what made the first run fail.
       - name: Run the arena
-        run: go test --tags=with_db -timeout 80m -run TestArena $(go list ./sim/... | grep -v '/sim/web')
+        run: go test --tags=with_db -timeout 340m -run TestArena $(go list ./sim/... | grep -v '/sim/web')
         env:
           ARENA_OUT: ${{ github.workspace }}/arena-out
+          # Empty on a push, set on the schedule and when asked for. An env var that is the
+          # empty string is the same as unset to the runner, which is what the flag checks.
+          ARENA_OPTIMISE: ${{ (github.event_name == 'schedule' || inputs.optimise) && '1' || '' }}
 
       - name: Merge and score
         run: go run ./tools/arena arena-out ui/arena/results.json

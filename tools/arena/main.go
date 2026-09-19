@@ -33,6 +33,7 @@ type rawResult struct {
 	Dps          float64            `json:"dps"`
 	Damage       map[string]float64 `json:"damage"`
 	WeaponDamage float64            `json:"weaponDamage"`
+	Optimised    bool               `json:"optimised"`
 }
 
 // Only the fields the scoring needs; the manifest carries more.
@@ -51,6 +52,10 @@ type build struct {
 	Rotation string             `json:"rotation"`
 	Dps      float64            `json:"dps"`
 	Rests    map[string]float64 `json:"rests"`
+	// Found by searching the talent trees rather than written down by a person.
+	Optimised bool `json:"optimised,omitempty"`
+	// Only carried when it is not the 51 a level 60 character has.
+	Points int `json:"points,omitempty"`
 }
 
 type output struct {
@@ -90,13 +95,15 @@ func main() {
 				continue
 			}
 			builds = append(builds, build{
-				Spec:     result.Spec,
-				Build:    result.Build,
-				Talents:  result.Talents,
-				Gear:     result.Gear,
-				Rotation: result.Rotation,
-				Dps:      result.Dps,
-				Rests:    compose(result, manifest),
+				Spec:      result.Spec,
+				Build:     result.Build,
+				Talents:   result.Talents,
+				Gear:      result.Gear,
+				Rotation:  result.Rotation,
+				Dps:       result.Dps,
+				Rests:     compose(result, manifest),
+				Optimised: result.Optimised,
+				Points:    shortOf51(result.Talents),
 			})
 		}
 	}
@@ -194,6 +201,25 @@ func commit() string {
 		return ""
 	}
 	return strings.TrimSpace(string(out))
+}
+
+// What the build spends, and zero when that is the 51 a level 60 character has - so the
+// page only has to check for a number rather than compare against a constant.
+//
+// Counted here rather than recorded by the runner, because it is a property of the talents
+// string and deriving it costs nothing, while carrying it would mean every result on disk
+// had to be regenerated to gain a field the string already contains.
+func shortOf51(talents string) int {
+	points := 0
+	for _, char := range talents {
+		if char >= '0' && char <= '9' {
+			points += int(char - '0')
+		}
+	}
+	if points == 51 {
+		return 0
+	}
+	return points
 }
 
 func countSpecs(builds []build) int {

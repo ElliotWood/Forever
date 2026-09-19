@@ -129,6 +129,32 @@
 		font-weight: 600;
 	}
 
+	// A build nobody wrote down. Marked rather than hidden: it is the most interesting row in
+	// the table and also the one carrying the most assumptions.
+	.arena-found {
+		align-self: flex-start;
+		margin-top: 2px;
+		padding: 0 0.4rem;
+		border: 1px solid var(--bs-brand);
+		border-radius: 999px;
+		color: var(--bs-brand);
+		font-size: 0.7rem;
+		cursor: help;
+	}
+
+	// Not a style of build, a defect in one. Red rather than gold: gold on this site means
+	// "unconfirmed", and this is not unconfirmed, it is wrong.
+	.arena-short {
+		align-self: flex-start;
+		margin-top: 2px;
+		padding: 0 0.4rem;
+		border: 1px solid #c1666b;
+		border-radius: 999px;
+		color: #c1666b;
+		font-size: 0.7rem;
+		cursor: help;
+	}
+
 	.arena-setup-cell {
 		font-size: 0.85rem;
 	}

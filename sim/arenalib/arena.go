@@ -40,10 +40,18 @@ import (
 // would be a race.
 const outDirEnv = "ARENA_OUT"
 
+// Searching the talent trees costs roughly a sim run per talent per step, so it is off by
+// default and belongs to the scheduled job rather than the one that runs on every push.
+const optimiseEnv = "ARENA_OPTIMISE"
+
+// Sim runs the talent search may spend per spec. The wall clock, not the answer, is what
+// this protects: the climb stops on its own when no single point move helps.
+const optimiseBudget = 900
+
 // Enough that two builds a few DPS apart are distinguishable, and the whole arena still
 // finishes inside a CI job. A single-player run is far cheaper than the rankings page's
 // 26-player one, so this buys more precision than that page does at a fraction of the cost.
-const iterations = 5000
+const iterations = int32(5000)
 
 // One row of the leaderboard: a build, what it did, and what its damage was made of.
 type Result struct {
@@ -58,6 +66,8 @@ type Result struct {
 	Damage map[string]float64 `json:"damage"`
 	// Damage from white swings, which have no spell id and no manifest entry to have.
 	WeaponDamage float64 `json:"weaponDamage"`
+	// Found by searching the talent trees rather than written down by a person.
+	Optimised bool `json:"optimised,omitempty"`
 }
 
 // What a spec needs to contribute. Everything here already exists in the spec's test file.
@@ -103,6 +113,16 @@ func Run(t *testing.T, spec Spec) {
 	}
 
 	talents := append(communityTalents(t, uiDir), spec.ExtraTalents...)
+	// A build the search found on some previous run is carried forward and re-simulated
+	// rather than inherited. Without this a push-triggered rebuild - which does not search -
+	// would quietly drop every optimised build the weekly one found; with it, the number is
+	// always produced by the sim as it stands today even when the search has not run since.
+	carried := previouslyOptimised(uiDir, spec.Dir)
+	talents = append(talents, carried...)
+	wasOptimised := map[string]bool{}
+	for _, build := range carried {
+		wasOptimised[build.Talents] = true
+	}
 	gearSets := namesIn(t, filepath.Join(uiDir, "gear_sets"), ".gear.json")
 	rotations := namesIn(t, filepath.Join(uiDir, "apls"), ".apl.json")
 	if len(talents) == 0 || len(gearSets) == 0 {
@@ -122,12 +142,51 @@ func Run(t *testing.T, spec Spec) {
 		}
 	}
 
+	for i := range results {
+		results[i].Optimised = wasOptimised[results[i].Talents]
+	}
 	sort.Slice(results, func(i, j int) bool { return results[i].Dps > results[j].Dps })
+
+	// The search starts from the best build found above rather than from an arbitrary one:
+	// a climb goes to the nearest peak, so where it starts is most of what it finds.
+	//
+	// On launch gear specifically, even when the spec has a better set on file. The
+	// leaderboard compares specs on launch gear because that is the one tier all of them
+	// have, and a build optimised against phase 2 gear would never appear in it - the one
+	// view most people read would be the one view missing the searched builds.
+	if os.Getenv(optimiseEnv) != "" {
+		top := results[0]
+		for _, result := range results {
+			if strings.Contains(result.Gear, "launch") {
+				top = result
+				break
+			}
+		}
+		found, runs, err := optimise(spec, uiDir, TalentBuild{Name: top.Build, Talents: top.Talents}, top.Gear, top.Rotation, optimiseBudget)
+		if err != nil {
+			t.Fatalf("%s: %s", spec.Dir, err)
+		}
+		if found.Talents != top.Talents && !hasTalents(results, found.Talents) {
+			row := run(spec, uiDir, found, top.Gear, top.Rotation)
+			row.Optimised = true
+			results = append(results, row)
+			sort.Slice(results, func(i, j int) bool { return results[i].Dps > results[j].Dps })
+			t.Logf("%s: %d runs of search moved %s from %.1f to %.1f dps (%s)",
+				spec.Dir, runs, top.Build, top.Dps, row.Dps, found.Talents)
+		} else {
+			t.Logf("%s: %d runs of search found nothing better than %s", spec.Dir, runs, top.Build)
+		}
+	}
+
 	write(t, filepath.Join(outDir, spec.Dir+".json"), results)
 	t.Logf("%s: %d builds, best %.1f dps", spec.Dir, len(results), results[0].Dps)
 }
 
 func run(spec Spec, uiDir string, talent TalentBuild, gear string, rotation string) Result {
+	return runAt(spec, uiDir, talent, gear, rotation, iterations)
+}
+
+func runAt(spec Spec, uiDir string, talent TalentBuild, gear string, rotation string, iterations int32) Result {
 	gearCombo := core.GetGearSet(filepath.Join(uiDir, "gear_sets"), gear)
 	rotationProto := &proto.APLRotation{}
 	if rotation != "" {
@@ -286,4 +345,49 @@ func write(t *testing.T, path string, results []Result) {
 	if err := os.WriteFile(path, encoded, 0o644); err != nil {
 		t.Fatal(err)
 	}
+}
+
+// Marks the carried-forward builds so the page can still label them, and keeps the search
+// from re-adding a build that is already in the table.
+func hasTalents(results []Result, talents string) bool {
+	for _, result := range results {
+		if result.Talents == talents {
+			return true
+		}
+	}
+	return false
+}
+
+// The optimised builds a previous run committed, read back out of the published file.
+//
+// Deliberately talents only. Carrying the DPS forward would leave a number describing a sim
+// that no longer exists sitting in a table of numbers that do, and there is no way to tell
+// them apart by looking.
+func previouslyOptimised(uiDir string, spec string) []TalentBuild {
+	path := filepath.Join(filepath.Dir(uiDir), "arena", "results.json")
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	var published struct {
+		Builds []struct {
+			Spec      string `json:"spec"`
+			Build     string `json:"build"`
+			Talents   string `json:"talents"`
+			Optimised bool   `json:"optimised"`
+		} `json:"builds"`
+	}
+	if json.Unmarshal(data, &published) != nil {
+		return nil
+	}
+
+	seen := map[string]bool{}
+	builds := []TalentBuild{}
+	for _, build := range published.Builds {
+		if build.Spec == spec && build.Optimised && !seen[build.Talents] {
+			seen[build.Talents] = true
+			builds = append(builds, TalentBuild{Name: build.Build, Talents: build.Talents})
+		}
+	}
+	return builds
 }

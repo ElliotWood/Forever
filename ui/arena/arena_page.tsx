@@ -47,6 +47,9 @@ type Build = {
 	rotation: string;
 	dps: number;
 	rests: Composition;
+	optimised?: boolean;
+	/** Only present when the build does not spend all 51 points. */
+	points?: number;
 };
 
 const builds = results.builds as Array<Build>;
@@ -67,6 +70,28 @@ const bestPerSpec = (): Array<Build> => {
 	}
 	return [...best.values()].sort((a, b) => b.dps - a.dps);
 };
+
+/**
+ * What the search was worth, per spec: the best searched build against the best build a
+ * person wrote down, on the same gear tier.
+ *
+ * The leaderboard is now searched builds top to bottom, which on its own hides the only
+ * question anyone actually has - was the community build already right? The gain is that
+ * answer, and for most specs it is not small.
+ */
+const searchGains = (): Map<string, number> => {
+	const gains = new Map<string, number>();
+	const launch = builds.filter(build => build.gear.includes('launch'));
+	for (const spec of new Set(launch.map(build => build.spec))) {
+		const mine = launch.filter(build => build.spec === spec);
+		const searched = mine.find(build => build.optimised);
+		const written = mine.find(build => !build.optimised);
+		if (searched && written && written.dps > 0) gains.set(spec, searched.dps / written.dps - 1);
+	}
+	return gains;
+};
+
+const gains = searchGains();
 
 const specName = (spec: string) => (SPECS[spec] !== undefined ? specNames[SPECS[spec]] : spec);
 
@@ -91,7 +116,8 @@ export class ArenaPage {
 							<p className="arena-subtitle">
 								Every talent build crossed with every gear set and every rotation this sim has on file: {String(builds.length)} builds across{' '}
 								{String(new Set(builds.map(b => b.spec)).size)} specs, each run on its own at {formatToNumber(results.iterations)} iterations
-								against the same target, with the same buffs and the same consumables. Nothing is simulated in your browser.
+								against the same target, with the same buffs and the same consumables, plus the builds a talent search found on top of those.
+								Nothing is simulated in your browser.
 							</p>
 						</div>
 					</div>
@@ -135,13 +161,34 @@ export class ArenaPage {
 							something different if a quarter of it is unconfirmed. Hover the bar for the breakdown.
 						</li>
 						<li>
-							<strong>Builds come from what is already here</strong> - the community talent builds on each spec's page, its gear sets and its
-							rotations. Nothing searches for a better build than the ones people have written down, so a spec with one rotation on file gets one
-							rotation ranked. That is a gap in the data, not a finding about the spec.
+							<strong>Gear and rotations come from what is already here</strong> - the sets and priority lists on each spec's page. Nothing
+							invents a better rotation than the ones people have written down, so a spec with one rotation on file gets one rotation ranked. That
+							is a gap in the data, not a finding about the spec.
+						</li>
+						<li>
+							<strong>Talents are searched, because they cannot be enumerated.</strong> A warrior has <strong>367,585,685,729,170,421</strong>{' '}
+							legal ways to spend 51 points - counted from the trees themselves, and that is generous, since it ignores the prerequisite arrows.
+							At a second a build that is eleven billion years, so "try every configuration" is not a big job, it is an impossible one. Instead
+							each spec's best known build is used as a starting point and improved one point at a time: price every point that could come out,
+							price every point that could go in, make the best trade, repeat until no single move helps. Rows marked{' '}
+							<span className="arena-found">found by search</span> came out of that, and hovering one shows its talent string.
+						</li>
+						<li>
+							<strong>What that does and does not promise.</strong> It finds the best build near the one it started from, not the best build that
+							exists - a different starting point could climb a different hill. It also only knows what this sim models: a talent flagged as
+							unimplemented is worth zero here, so the search will happily empty it, and that is a fact about the sim rather than advice. Every
+							build it reaches is checked against the game's own rules first - rank caps, row gates and prerequisites - so nothing in this table
+							is a build you could not actually spend.
+						</li>
+						<li>
+							<strong>A build that does not spend 51 points says so.</strong> One does: the mage Frost community build spends 49, so every Frost
+							number on this site has been two points short of a character. It is left as written rather than quietly corrected - it is somebody
+							else's build - but the searched row beside it shows what those two points are worth.
 						</li>
 						<li>
 							Tank specs are measured on damage alone and healing specs are absent, because damage is the only axis this table has. A protection
-							paladin at the bottom is not a bad tank.
+							paladin at the bottom is not a bad tank - and a searched tank build is a tank build with the mitigation optimised out of it, so read
+							those two rows as what the spec can do to a target dummy and nothing else.
 						</li>
 						<li>
 							Computed from sim <code>{results.commit ? results.commit.slice(0, 7) : 'unknown'}</code> on {generated.toISOString().slice(0, 10)}.{' '}
@@ -199,6 +246,25 @@ export class ArenaPage {
 					<span className="arena-build-names">
 						<span className="arena-spec-name">{specName(build.spec)}</span>
 						<span className={`arena-talents text-${classColor}`}>{build.build}</span>
+						{build.optimised ? (
+							<span
+								className="arena-found"
+								attributes={{ title: `${build.talents}\n\nSearched out from the best build anyone had written down for this spec.` }}>
+								found by search
+								{gains.has(build.spec)
+									? ` ${formatToPercent(gains.get(build.spec)! * 100, { maximumFractionDigits: 1, signDisplay: 'always' })}`
+									: ''}
+							</span>
+						) : (
+							<></>
+						)}
+						{build.points ? (
+							<span className="arena-short" attributes={{ title: 'This build does not spend every talent point a level 60 character has.' }}>
+								{String(build.points)} of 51 points
+							</span>
+						) : (
+							<></>
+						)}
 					</span>
 				</td>
 				<td className="arena-setup-cell">
