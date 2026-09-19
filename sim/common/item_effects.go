@@ -1107,50 +1107,10 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=14024/frightalon
-	// Chance on hit: Lowers all attributes of target by 10 for 1 min.
-	// TODO: Proc rate assumed and needs testing
-	core.NewItemEffect(Frightalon, func(agent core.Agent) {
-		character := agent.GetCharacter()
-		procMask := character.GetProcMaskForItem(Frightalon)
-
-		debuffAuraArray := character.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-			return target.GetOrRegisterAura(core.Aura{
-				ActionID: core.ActionID{SpellID: 19755},
-				Label:    "Frightalon",
-				Duration: time.Minute * 1,
-				OnGain: func(aura *core.Aura, sim *core.Simulation) {
-					aura.Unit.AddStatsDynamic(sim, stats.Stats{
-						stats.Agility:   -10,
-						stats.Intellect: -10,
-						stats.Stamina:   -10,
-						stats.Spirit:    -10,
-						stats.Strength:  -10,
-					})
-				},
-				OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-					aura.Unit.AddStatsDynamic(sim, stats.Stats{
-						stats.Agility:   10,
-						stats.Intellect: 10,
-						stats.Stamina:   10,
-						stats.Spirit:    10,
-						stats.Strength:  10,
-					})
-				},
-			})
-		})
-
-		core.MakeProcTriggerAura(&character.Unit, core.ProcTrigger{
-			Name:              "Frightalon Trigger",
-			Callback:          core.CallbackOnSpellHitDealt,
-			Outcome:           core.OutcomeLanded,
-			ProcMask:          procMask,
-			SpellFlagsExclude: core.SpellFlagSuppressWeaponProcs,
-			PPM:               1.0,
-			Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				debuffAuraArray.Get(result.Target).Activate(sim)
-			},
-		})
-	})
+	// Not modelled. Era's proc is "Lowers all attributes of target by 10 for 1 min" and the sim
+	// applied it as a stat debuff; the beta client's 19755 reads "Increase the duration of Fear
+	// effects applied to the target by 25%", which has nothing to do with damage and nothing the
+	// sim can spend. Leaving the old debuff in place would have been a straight invention.
 
 	// https://www.wowhead.com/classic/item=14531/frightskull-shaft
 	// Chance on hit: Deals 8 Shadow damage every 2 sec for 30 sec and lowers their Strength for the duration of the disease.
@@ -2775,45 +2735,10 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=13213/smolderwebs-eye
-	// Use: Poisons target for 20 Nature damage every 2 sec for 20 sec. (2 Min Cooldown)
-	core.NewItemEffect(SmolderwebsEye, func(agent core.Agent) {
-		character := agent.GetCharacter()
-		spell := character.RegisterSpell(core.SpellConfig{
-			ActionID:    core.ActionID{SpellID: 17330},
-			SpellSchool: core.SpellSchoolNature,
-			ProcMask:    core.ProcMaskEmpty,
-			Flags:       core.SpellFlagPoison | core.SpellFlagPureDot | core.SpellFlagNoOnCastComplete,
-			Cast: core.CastConfig{
-				CD: core.Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute * 2,
-				},
-			},
-			Dot: core.DotConfig{
-				NumberOfTicks: 10,
-				TickLength:    time.Second * 2,
-				Aura: core.Aura{
-					Label: "Poison (Smolderweb's Eye)",
-				},
-				OnSnapshot: func(_ *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 20, isRollover)
-				},
-				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-					dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
-				},
-			},
-			DamageMultiplier: 1,
-			ThreatMultiplier: 1,
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				spell.Dot(target).Apply(sim)
-			},
-		})
-
-		character.AddMajorCooldown(core.MajorCooldown{
-			Type:  core.CooldownTypeDPS,
-			Spell: spell,
-		})
-	})
+	// Not modelled. Era's use-effect is "Poisons target for 20 Nature damage every 2 sec for
+	// 20 sec" and the sim registered it as a DPS major cooldown; the beta client's 17330 reads
+	// "Web yourself to the ground, preventing jumping and negating the next Knockback effect
+	// taken", which is a self-debuff with no damage in it at all.
 
 	// https://www.wowhead.com/classic/item=13209/seal-of-the-dawn
 	// Equip: +81 Attack Power when fighting Undead.

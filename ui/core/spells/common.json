@@ -223,11 +223,6 @@
 		"tooltip": "Punctures target's armor lowering it by 100. Can be applied up to 3 times.",
 		"note": "Beta client 1.60.1 (spell 17315). Halved from Era's 200 a stack."
 	},
-	"17330": {
-		"ability": "Poison",
-		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
-	},
 	"17331": {
 		"ability": "Fang of the Crystal Spider",
 		"file": "sim/common/item_effects.go",
@@ -351,11 +346,6 @@
 		"file": "sim/common/item_sets/crafted.go",
 		"source": "classic",
 		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
-	},
-	"19755": {
-		"ability": "Frightalon",
-		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
 	},
 	"20004": {
 		"ability": "Life Steal",
