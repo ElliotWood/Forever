@@ -52,6 +52,9 @@ something in the sim is out of date.
 DamageMeter.bin, from World of Warcraft\_classic_beta_\Cache\ - the only record of what
 the server actually paid out, since addons cannot read damage in Forever.
 
+The file only appears once the meter flushes, and it flushes on logout. Fight
+something, log out to character select, and it will be there.
+
 It carries character names, yours and everyone you grouped with, so run it through the
 scrubber first: https://elliotwood.github.io/Forever/classic/scrub/
 
