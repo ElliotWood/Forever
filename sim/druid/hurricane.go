@@ -3,7 +3,7 @@ package druid
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var hurricaneRank = spellData.Hurricane.BySpellID(27012)

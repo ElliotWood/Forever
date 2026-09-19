@@ -8,7 +8,7 @@ import (
 	"math"
 	"strings"
 
-	"github.com/wowsims/tbc/tools/db2tool/wdc"
+	"github.com/wowsims/forever/tools/db2tool/wdc"
 	"zombiezen.com/go/sqlite"
 	"zombiezen.com/go/sqlite/sqlitex"
 )

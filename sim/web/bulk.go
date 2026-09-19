@@ -9,11 +9,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/bulk"
-	"github.com/wowsims/tbc/sim/core/proto"
-	reforgeoptimizer "github.com/wowsims/tbc/sim/core/reforge_optimizer"
-	"github.com/wowsims/tbc/sim/core/simsignals"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/bulk"
+	"github.com/wowsims/forever/sim/core/proto"
+	reforgeoptimizer "github.com/wowsims/forever/sim/core/reforge_optimizer"
+	"github.com/wowsims/forever/sim/core/simsignals"
 	googleProto "google.golang.org/protobuf/proto"
 )
 

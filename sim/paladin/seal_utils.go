@@ -1,5 +1,5 @@
 package paladin
 
-import "github.com/wowsims/tbc/sim/common/shared"
+import "github.com/wowsims/forever/sim/common/shared"
 
 type sealRankMap = shared.SpellDataTableOf[seal]

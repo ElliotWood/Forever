@@ -20,11 +20,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wowsims/tbc/tools/db2tool/config"
-	"github.com/wowsims/tbc/tools/db2tool/dbd"
-	"github.com/wowsims/tbc/tools/db2tool/sqlite"
-	"github.com/wowsims/tbc/tools/db2tool/tact"
-	"github.com/wowsims/tbc/tools/db2tool/wdc"
+	"github.com/wowsims/forever/tools/db2tool/config"
+	"github.com/wowsims/forever/tools/db2tool/dbd"
+	"github.com/wowsims/forever/tools/db2tool/sqlite"
+	"github.com/wowsims/forever/tools/db2tool/tact"
+	"github.com/wowsims/forever/tools/db2tool/wdc"
 )
 
 func main() {

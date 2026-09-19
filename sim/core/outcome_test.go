@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func TestCritChancesSeparateResilienceFromDefense(t *testing.T) {

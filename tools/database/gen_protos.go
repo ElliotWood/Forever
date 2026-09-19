@@ -10,7 +10,7 @@ import (
 	"text/template"
 	"unicode"
 
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 func convertTalentClassID(raw int) int {

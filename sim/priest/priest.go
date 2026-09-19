@@ -1,10 +1,10 @@
 package priest
 
 import (
-	"github.com/wowsims/tbc/sim/common/shared"
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 var TalentTreeSizes = [3]int{22, 21, 21}

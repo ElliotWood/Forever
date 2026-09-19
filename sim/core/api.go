@@ -2,9 +2,9 @@
 package core
 
 import (
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/simsignals"
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/simsignals"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 /**

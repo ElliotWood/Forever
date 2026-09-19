@@ -1,6 +1,6 @@
 package core
 
-import "github.com/wowsims/tbc/sim/core/stats"
+import "github.com/wowsims/forever/sim/core/stats"
 
 // This function should do 3 things:
 //  1. Set the Outcome of the hit effect.

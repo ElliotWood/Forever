@@ -3,7 +3,7 @@ package tooltip
 import (
 	"testing"
 
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 var db = dbc.GetDBC()

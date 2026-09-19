@@ -5,7 +5,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 type ResourceKey struct {

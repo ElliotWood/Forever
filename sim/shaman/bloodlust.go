@@ -1,7 +1,7 @@
 package shaman
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var bloodlustRank = spellData.Bloodlust.BySpellID(2825)

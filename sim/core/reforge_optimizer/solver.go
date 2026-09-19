@@ -6,9 +6,9 @@ import (
 	"math"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // solver.go implements solveModel + checkCaps (the cap-refinement loop) and the thin adapter

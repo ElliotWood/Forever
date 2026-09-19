@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 // EligibleWeaponType describes whether a weapon type can be used as a two-hand weapon.

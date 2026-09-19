@@ -1,9 +1,9 @@
 package elemental
 
 import (
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/shaman"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/shaman"
 )
 
 func RegisterElementalShaman() {

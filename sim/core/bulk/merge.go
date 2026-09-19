@@ -4,8 +4,8 @@ import (
 	"log"
 	"math"
 
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
 	googleProto "google.golang.org/protobuf/proto"
 )
 

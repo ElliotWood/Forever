@@ -10,11 +10,11 @@ import (
 	"strings"
 	"testing"
 
-	assetsdb "github.com/wowsims/tbc/assets/database"
-	"github.com/wowsims/tbc/sim"
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/stats"
+	assetsdb "github.com/wowsims/forever/assets/database"
+	"github.com/wowsims/forever/sim"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 	"google.golang.org/protobuf/encoding/protojson"
 	protopkg "google.golang.org/protobuf/proto"
 )

@@ -5,7 +5,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 type SpellResult struct {

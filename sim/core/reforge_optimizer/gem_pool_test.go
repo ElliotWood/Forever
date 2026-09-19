@@ -3,7 +3,7 @@ package reforgeoptimizer
 import (
 	"testing"
 
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func TestGemStatIsAllowed(t *testing.T) {

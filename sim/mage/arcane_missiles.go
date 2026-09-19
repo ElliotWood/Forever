@@ -3,7 +3,7 @@ package mage
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var arcaneMissilesRank = spellData.ArcaneMissiles.BySpellID(38699)

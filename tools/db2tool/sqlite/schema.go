@@ -14,7 +14,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/wowsims/tbc/tools/db2tool/dbd"
+	"github.com/wowsims/forever/tools/db2tool/dbd"
 	"zombiezen.com/go/sqlite"
 	"zombiezen.com/go/sqlite/sqlitex"
 )

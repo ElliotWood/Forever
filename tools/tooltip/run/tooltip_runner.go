@@ -5,8 +5,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/wowsims/tbc/tools/database/dbc"
-	"github.com/wowsims/tbc/tools/tooltip"
+	"github.com/wowsims/forever/tools/database/dbc"
+	"github.com/wowsims/forever/tools/tooltip"
 )
 
 // Sample program for testing

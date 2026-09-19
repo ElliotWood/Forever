@@ -1,6 +1,6 @@
 package dbc
 
-import "github.com/wowsims/tbc/sim/core/proto"
+import "github.com/wowsims/forever/sim/core/proto"
 
 type ItemStaticFlags0 uint32
 

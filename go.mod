@@ -1,4 +1,4 @@
-module github.com/wowsims/tbc
+module github.com/wowsims/forever
 
 go 1.25.0
 

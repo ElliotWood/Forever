@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 // Walks the chain of spells reachable through SpellEffect.EffectTriggerSpell, visiting each

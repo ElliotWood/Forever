@@ -1,7 +1,7 @@
 package hunter
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var arcaneShotRank = spellData.ArcaneShot.BySpellID(27019)

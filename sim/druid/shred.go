@@ -1,8 +1,8 @@
 package druid
 
 import (
-	"github.com/wowsims/tbc/sim/common/shared"
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var shredRank = spellData.Shred.BySpellID(27002)

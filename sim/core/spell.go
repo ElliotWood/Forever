@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 type OnApplyEffects func(aura *Aura, sim *Simulation, target *Unit, spell *Spell)

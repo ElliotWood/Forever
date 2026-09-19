@@ -13,13 +13,13 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"github.com/wowsims/tbc/sim"
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
-	_ "github.com/wowsims/tbc/sim/encounters" // Needed for preset encounters.
-	"github.com/wowsims/tbc/tools"
-	"github.com/wowsims/tbc/tools/database"
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/sim"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	_ "github.com/wowsims/forever/sim/encounters" // Needed for preset encounters.
+	"github.com/wowsims/forever/tools"
+	"github.com/wowsims/forever/tools/database"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 // To do a full re-scrape, delete the previous output file first.

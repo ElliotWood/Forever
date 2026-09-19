@@ -1,7 +1,7 @@
 package mage
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var arcaneExplosionRank = spellData.ArcaneExplosion.BySpellID(27082)

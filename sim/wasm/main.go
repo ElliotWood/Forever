@@ -9,12 +9,12 @@ import (
 	"runtime/debug"
 	"syscall/js"
 
-	"github.com/wowsims/tbc/sim"
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/bulk"
-	proto "github.com/wowsims/tbc/sim/core/proto"
-	reforgeoptimizer "github.com/wowsims/tbc/sim/core/reforge_optimizer"
-	"github.com/wowsims/tbc/sim/core/simsignals"
+	"github.com/wowsims/forever/sim"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/bulk"
+	proto "github.com/wowsims/forever/sim/core/proto"
+	reforgeoptimizer "github.com/wowsims/forever/sim/core/reforge_optimizer"
+	"github.com/wowsims/forever/sim/core/simsignals"
 	protojson "google.golang.org/protobuf/encoding/protojson"
 	googleProto "google.golang.org/protobuf/proto"
 )

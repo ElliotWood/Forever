@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 func parseIntArrayField(jsonStr string, expectedLen int) ([]int, error) {

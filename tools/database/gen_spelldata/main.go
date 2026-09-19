@@ -10,7 +10,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/wowsims/tbc/tools/database"
+	"github.com/wowsims/forever/tools/database"
 )
 
 var dbPath = flag.String("dbPath", "./tools/database/wowsims.db", "Location of the wowsims.db file produced by tools/db2tool")

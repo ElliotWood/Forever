@@ -3,8 +3,8 @@ package default_ai
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 // Default implementation of TargetAI which takes a list of abilities as input

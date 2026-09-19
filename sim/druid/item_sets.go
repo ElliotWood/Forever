@@ -3,8 +3,8 @@ package druid
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // PVP - S1, S2, S3, S4 Sets

@@ -1,8 +1,8 @@
 package warrior
 
 import (
-	"github.com/wowsims/tbc/sim/common/shared"
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 56).BySpellID(25203)

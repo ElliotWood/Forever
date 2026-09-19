@@ -3,7 +3,7 @@ package druid
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 func (druid *Druid) registerBarkskin() {

@@ -7,9 +7,9 @@ import (
 	"time"
 
 {{ end }}
-	"github.com/wowsims/tbc/sim/common/shared"
+	"github.com/wowsims/forever/sim/common/shared"
 {{- if .HasStacking }}
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 {{- end }}
 )
 
@@ -67,8 +67,8 @@ import (
 	"time"
 
 {{ end }}
-	"github.com/wowsims/tbc/sim/core"
- 	"github.com/wowsims/tbc/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+ 	"github.com/wowsims/forever/sim/common/shared"
 )
 
 func RegisterAllProcs() {
@@ -231,8 +231,8 @@ func RegisterAllProcs() {
 const TmplStrEnchant = `package tbc
 {{ if .HasEntries }}
 import (
-	"github.com/wowsims/tbc/sim/core"
- 	"github.com/wowsims/tbc/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+ 	"github.com/wowsims/forever/sim/common/shared"
 )
 {{- end }}
 

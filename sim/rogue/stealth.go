@@ -3,7 +3,7 @@ package rogue
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var stealthRank = spellData.Stealth.BySpellID(1784)

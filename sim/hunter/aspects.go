@@ -3,9 +3,9 @@ package hunter
 import (
 	"math"
 
-	"github.com/wowsims/tbc/sim/common/shared"
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 var aspectOfTheHawkRank = spellData.AspectOfTheHawk.BySpellID(27044)

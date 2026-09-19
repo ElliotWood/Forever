@@ -8,8 +8,8 @@ import (
 	"slices"
 	"text/template"
 
-	"github.com/wowsims/tbc/sim/core/bulk"
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/bulk"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 const bulkSimConstantsTSOutputPath = "ui/sim/bulk/constants_auto_gen.ts"

@@ -3,8 +3,8 @@ package druid
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/common/shared"
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var maulRank = shared.WithSpellDataFlatThreat(spellData.Maul, 344).BySpellID(26996)

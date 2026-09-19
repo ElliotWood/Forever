@@ -1,7 +1,7 @@
 package warlock
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var conflagrateRank = spellData.Conflagrate.BySpellID(30912)

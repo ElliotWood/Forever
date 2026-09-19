@@ -4,7 +4,7 @@ import (
 	"math"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 func searingTickCount(offset float64) int32 {

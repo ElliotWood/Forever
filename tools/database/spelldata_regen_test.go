@@ -13,13 +13,13 @@ import (
 	"os"
 	"testing"
 
-	"github.com/wowsims/tbc/sim/common/shared"
-	"github.com/wowsims/tbc/sim/druid"
-	"github.com/wowsims/tbc/sim/mage"
-	"github.com/wowsims/tbc/sim/paladin"
-	"github.com/wowsims/tbc/sim/priest"
-	"github.com/wowsims/tbc/sim/shaman"
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/druid"
+	"github.com/wowsims/forever/sim/mage"
+	"github.com/wowsims/forever/sim/paladin"
+	"github.com/wowsims/forever/sim/priest"
+	"github.com/wowsims/forever/sim/shaman"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 const (

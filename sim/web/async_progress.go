@@ -6,7 +6,7 @@ import (
 	"sync/atomic"
 
 	uuid "github.com/google/uuid"
-	proto "github.com/wowsims/tbc/sim/core/proto"
+	proto "github.com/wowsims/forever/sim/core/proto"
 )
 
 type asyncProgress struct {

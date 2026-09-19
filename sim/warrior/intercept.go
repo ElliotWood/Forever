@@ -3,7 +3,7 @@ package warrior
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var interceptRank = spellData.Intercept.BySpellID(25275)

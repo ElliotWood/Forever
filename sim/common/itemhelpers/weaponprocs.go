@@ -1,8 +1,8 @@
 package itemhelpers
 
 import (
-	"github.com/wowsims/tbc/sim/common/shared"
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 // Weapon proc helpers, ported from the SoD sim. Every helper rolls the proc on the weapon's own

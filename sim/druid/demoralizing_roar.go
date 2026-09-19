@@ -1,7 +1,7 @@
 package druid
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var demoralizingRoarRank = spellData.DemoralizingRoar.BySpellID(26998)

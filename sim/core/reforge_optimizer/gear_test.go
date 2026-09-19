@@ -5,9 +5,9 @@ package reforgeoptimizer
 import (
 	"testing"
 
-	"github.com/wowsims/tbc/sim"
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 // minimizeRegemsHarness builds a reforgeOptimizer wired for the minimizeRegems gem-swap tests:

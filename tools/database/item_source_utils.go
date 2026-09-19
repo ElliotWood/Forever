@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 func InferPhase(item *proto.UIItem) int32 {

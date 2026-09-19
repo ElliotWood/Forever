@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	worker "github.com/wowsims/tbc/ui/worker"
+	worker "github.com/wowsims/forever/ui/worker"
 )
 
 // repoRoot is this package's path back to the repository root, where package.json lives.

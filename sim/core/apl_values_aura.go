@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 func (rot *APLRotation) newValueAuraIsKnown(config *proto.APLValueAuraIsKnown, uuid *proto.UUID) APLValue {

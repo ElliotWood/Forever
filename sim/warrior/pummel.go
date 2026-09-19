@@ -1,7 +1,7 @@
 package warrior
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var pummelRank = spellData.Pummel.BySpellID(6554)

@@ -3,8 +3,8 @@ package dbc
 import (
 	"math"
 
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 const UPGRADE_SYSTEM_ACTIVE = false

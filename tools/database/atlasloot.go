@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/tools"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/tools"
 )
 
 func ReadAtlasLootData(dbHelper *DBHelper) *WowDatabase {

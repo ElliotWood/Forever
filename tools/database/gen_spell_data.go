@@ -12,7 +12,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 var rankSubtext = regexp.MustCompile(`^Rank (\d+)$`)
@@ -588,9 +588,9 @@ func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnum
 	if strings.Contains(body, "time.") {
 		std = append(std, `"time"`)
 	}
-	mod = append(mod, `"github.com/wowsims/tbc/sim/common/shared"`)
+	mod = append(mod, `"github.com/wowsims/forever/sim/common/shared"`)
 	if strings.Contains(body, "core.") {
-		mod = append(mod, `"github.com/wowsims/tbc/sim/core"`)
+		mod = append(mod, `"github.com/wowsims/forever/sim/core"`)
 	}
 	head.WriteString("import (\n")
 	for _, i := range std {

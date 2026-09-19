@@ -1,7 +1,7 @@
 package rogue
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var ambushRank = spellData.Ambush.BySpellID(27441)

@@ -9,7 +9,7 @@ package paladin
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 func (paladin *Paladin) registerDivineFavor() {

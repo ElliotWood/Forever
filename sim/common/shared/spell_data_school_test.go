@@ -3,7 +3,7 @@ package shared
 import (
 	"testing"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 // The generator emits a school by name and the client states it as a bit. Those only agree because

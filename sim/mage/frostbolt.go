@@ -1,7 +1,7 @@
 package mage
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 const frostboltCoefficient = 0.81400001049 // Per https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=exact%253A38697 Field: "BonusCoefficient"

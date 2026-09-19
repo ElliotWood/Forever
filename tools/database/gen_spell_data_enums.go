@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 // Where the aura and effect names live. They are Go constants rather than a client table, so the only

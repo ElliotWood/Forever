@@ -4,9 +4,9 @@ import (
 	"math"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 type EffectMap map[int]dbc.SpellEffect

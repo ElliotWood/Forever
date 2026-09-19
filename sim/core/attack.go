@@ -3,8 +3,8 @@ package core
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // ReplaceMHSwing is called right before a main hand auto attack fires.

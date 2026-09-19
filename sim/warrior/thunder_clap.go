@@ -1,7 +1,7 @@
 package warrior
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var thunderClapRank = spellData.ThunderClap.BySpellID(25264)

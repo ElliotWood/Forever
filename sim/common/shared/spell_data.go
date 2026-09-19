@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 // A rank's value, by shape. Only a periodic value has a tick schedule, so TickLength and

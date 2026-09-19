@@ -6,8 +6,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // ItemEffect represents an item effect in the game.

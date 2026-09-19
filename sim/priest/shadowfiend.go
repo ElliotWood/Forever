@@ -3,7 +3,7 @@ package priest
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var shadowfiendRank = spellData.Shadowfiend.BySpellID(34433)

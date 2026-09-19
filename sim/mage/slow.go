@@ -1,6 +1,6 @@
 package mage
 
-import "github.com/wowsims/tbc/sim/core"
+import "github.com/wowsims/forever/sim/core"
 
 func (mage *Mage) registerSlowSpell() {
 	if !mage.Talents.Slow {

@@ -1,12 +1,12 @@
 package encounters
 
 import (
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/stats"
-	battleformounthyjal "github.com/wowsims/tbc/sim/encounters/battle_for_mount_hyjal"
-	magtheridonslair "github.com/wowsims/tbc/sim/encounters/magtheridons_lair"
-	serpentshrinecavern "github.com/wowsims/tbc/sim/encounters/serpent_shrine_cavern"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
+	battleformounthyjal "github.com/wowsims/forever/sim/encounters/battle_for_mount_hyjal"
+	magtheridonslair "github.com/wowsims/forever/sim/encounters/magtheridons_lair"
+	serpentshrinecavern "github.com/wowsims/forever/sim/encounters/serpent_shrine_cavern"
 )
 
 func init() {

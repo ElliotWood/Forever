@@ -5,8 +5,8 @@ package shaman
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/common/shared"
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 // Not generated:

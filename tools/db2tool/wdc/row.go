@@ -10,7 +10,7 @@ import (
 	"math"
 	"slices"
 
-	"github.com/wowsims/tbc/tools/db2tool/dbd"
+	"github.com/wowsims/forever/tools/db2tool/dbd"
 )
 
 type colKind int

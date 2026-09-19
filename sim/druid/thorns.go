@@ -1,7 +1,7 @@
 package druid
 
 import (
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var thornsRank = spellData.Thorns.BySpellID(26992)

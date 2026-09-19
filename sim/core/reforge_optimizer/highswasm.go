@@ -17,7 +17,7 @@ import (
 
 	"github.com/tetratelabs/wazero"
 	"github.com/tetratelabs/wazero/api"
-	worker "github.com/wowsims/tbc/ui/worker"
+	worker "github.com/wowsims/forever/ui/worker"
 )
 
 const (

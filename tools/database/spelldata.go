@@ -8,7 +8,7 @@ import (
 	"slices"
 	"sync"
 
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 const RankLevel = 70

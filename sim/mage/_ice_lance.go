@@ -1,8 +1,8 @@
 package mage
 
 import (
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 func (mage *Mage) registerIceLanceSpell() {

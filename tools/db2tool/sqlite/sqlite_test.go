@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/wowsims/tbc/tools/db2tool/dbd"
-	"github.com/wowsims/tbc/tools/db2tool/wdc"
+	"github.com/wowsims/forever/tools/db2tool/dbd"
+	"github.com/wowsims/forever/tools/db2tool/wdc"
 	_ "modernc.org/sqlite"
 )
 

@@ -4,9 +4,9 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/wowsims/tbc/sim/core/proto"
-	"github.com/wowsims/tbc/sim/core/stats"
-	"github.com/wowsims/tbc/tools/database/dbc"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 // Allows you to ignore certain Spell Effects that the Sim does not support.

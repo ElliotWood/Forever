@@ -3,9 +3,9 @@ package enhancement
 import (
 	"testing"
 
-	"github.com/wowsims/tbc/sim/common" // imported to get item effects included.
-	"github.com/wowsims/tbc/sim/core"
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/common" // imported to get item effects included.
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 func init() {

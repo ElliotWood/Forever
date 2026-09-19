@@ -1,7 +1,7 @@
 package bulk
 
 import (
-	"github.com/wowsims/tbc/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 func shouldUseLegacyBulkSim(settings *proto.BulkSettings, highStageIterations int32, candidateCount int) bool {

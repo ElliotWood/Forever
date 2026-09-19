@@ -3,7 +3,7 @@ package druid
 import (
 	"time"
 
-	"github.com/wowsims/tbc/sim/core"
+	"github.com/wowsims/forever/sim/core"
 )
 
 // Enrage (Dire Bear Form): generates 2 Rage/sec for 10 sec (20 total),
