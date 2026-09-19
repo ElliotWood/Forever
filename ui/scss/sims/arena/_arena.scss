@@ -81,6 +81,77 @@
 		color: var(--bs-gray-500);
 	}
 
+	.arena-brackets {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacer-1);
+	}
+
+	.arena-bracket {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacer-1);
+		padding: 0.3rem 0.7rem;
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		border-radius: 999px;
+		background: transparent;
+		color: var(--bs-gray-300);
+		font: inherit;
+		font-size: 0.85rem;
+		cursor: pointer;
+
+		&:hover {
+			border-color: var(--bs-brand);
+			color: var(--bs-white);
+		}
+	}
+
+	// How many specs have any gear in the band. A bracket holding three of them is a much
+	// narrower comparison than one holding eleven, and that is worth seeing before clicking.
+	.arena-bracket-count {
+		color: var(--bs-gray-500);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.arena-bracket-on {
+		border-color: var(--bs-brand);
+		background: rgba(224, 163, 53, 0.15);
+		color: var(--bs-white);
+	}
+
+	.arena-spread {
+		margin: 0;
+		color: var(--bs-gray-500);
+		font-size: 0.9rem;
+
+		&:empty {
+			display: none;
+		}
+	}
+
+	// Says the rows are not wearing comparable gear, which is the one thing a ranking table
+	// has to admit out loud rather than leave to be worked out from a column.
+	.arena-spread-wide {
+		color: var(--bs-brand);
+	}
+
+	.arena-ilvl-cell {
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.arena-ilvl {
+		display: block;
+		color: var(--bs-gray-200);
+	}
+
+	.arena-slots {
+		display: block;
+		color: #c1666b;
+		font-size: 0.7rem;
+		cursor: help;
+	}
+
 	// Six columns is more than a phone fits, and the table is the page, so it is allowed to
 	// scroll sideways inside its own box rather than pushing the whole document wider.
 	.arena-table {

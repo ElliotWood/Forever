@@ -52,6 +52,11 @@ type build struct {
 	Rotation string             `json:"rotation"`
 	Dps      float64            `json:"dps"`
 	Rests    map[string]float64 `json:"rests"`
+	// Average item level of the gear set, and how many slots it actually fills. Both, because
+	// a set of eight items can average a respectable number while the character wearing it is
+	// missing half its slots.
+	Ilvl  float64 `json:"ilvl"`
+	Slots int     `json:"slots"`
 	// Found by searching the talent trees rather than written down by a person.
 	Optimised bool `json:"optimised,omitempty"`
 	// Only carried when it is not the 51 a level 60 character has.
@@ -74,6 +79,7 @@ func main() {
 	inDir, outPath := os.Args[1], os.Args[2]
 
 	manifest := loadManifest("ui/core/spells")
+	ilvls := loadItemLevels()
 	builds := []build{}
 
 	entries, err := os.ReadDir(inDir)
@@ -94,6 +100,7 @@ func main() {
 				fmt.Fprintf(os.Stderr, "skipping %s / %s / %s: no damage\n", result.Spec, result.Build, result.Gear)
 				continue
 			}
+			gearIlvl, slots := gearLevel(ilvls, result.Spec, result.Gear)
 			builds = append(builds, build{
 				Spec:      result.Spec,
 				Build:     result.Build,
@@ -104,6 +111,8 @@ func main() {
 				Rests:     compose(result, manifest),
 				Optimised: result.Optimised,
 				Points:    shortOf51(result.Talents),
+				Ilvl:      gearIlvl,
+				Slots:     slots,
 			})
 		}
 	}
@@ -220,6 +229,73 @@ func shortOf51(talents string) int {
 		return 0
 	}
 	return points
+}
+
+// Item levels, from the database the site already ships. Read here rather than recorded by
+// the runner so that adding this needed no re-simulation of anything.
+func loadItemLevels() map[int]int {
+	ilvls := map[int]int{}
+	for _, name := range []string{"db.json", "leftover_db.json"} {
+		var database struct {
+			Items []struct {
+				Id   int `json:"id"`
+				Ilvl int `json:"ilvl"`
+			} `json:"items"`
+		}
+		data, err := os.ReadFile(filepath.Join("assets", "database", name))
+		if err != nil {
+			continue
+		}
+		if json.Unmarshal(data, &database) != nil {
+			continue
+		}
+		for _, item := range database.Items {
+			if item.Ilvl > 0 {
+				ilvls[item.Id] = item.Ilvl
+			}
+		}
+	}
+	if len(ilvls) == 0 {
+		fail("no item levels in assets/database, so gear sets cannot be compared")
+	}
+	return ilvls
+}
+
+// The average item level of a gear set, and the number of slots it fills.
+//
+// Averaged over the items present rather than over seventeen slots: a set that leaves a slot
+// empty has not equipped a level zero item there, it has equipped nothing, and dividing by
+// slots nobody filled would understate the gear rather than describe it. The slot count is
+// reported alongside so an eight item set cannot pass itself off as a full one.
+func gearLevel(ilvls map[int]int, spec string, gear string) (float64, int) {
+	var set struct {
+		Items []struct {
+			Id int `json:"id"`
+		} `json:"items"`
+	}
+	data, err := os.ReadFile(filepath.Join("ui", spec, "gear_sets", gear+".gear.json"))
+	if err != nil {
+		return 0, 0
+	}
+	if json.Unmarshal(data, &set) != nil {
+		return 0, 0
+	}
+
+	total, known, slots := 0, 0, 0
+	for _, item := range set.Items {
+		if item.Id == 0 {
+			continue
+		}
+		slots++
+		if ilvl, ok := ilvls[item.Id]; ok {
+			total += ilvl
+			known++
+		}
+	}
+	if known == 0 {
+		return 0, slots
+	}
+	return float64(int(float64(total)/float64(known)*10+0.5)) / 10, slots
 }
 
 func countSpecs(builds []build) int {

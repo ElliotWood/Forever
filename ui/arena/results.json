@@ -1,6 +1,6 @@
 {
-	"commit": "628821db27817f66beebd1b71ba15ca5ff7e2392",
-	"generated": "2026-09-19T22:48:38Z",
+	"commit": "061a62728f28ebba01570f20a4db2932f5b1381c",
+	"generated": "2026-09-19T22:58:17Z",
 	"iterations": 5000,
 	"builds": [
 		{
@@ -17,7 +17,9 @@
 				"forever": 0.1117,
 				"measured": 0,
 				"unknown": 0.0084
-			}
+			},
+			"ilvl": 65.7,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -33,7 +35,9 @@
 				"forever": 0.1107,
 				"measured": 0,
 				"unknown": 0.0042
-			}
+			},
+			"ilvl": 64.7,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -50,6 +54,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.7,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -66,7 +72,9 @@
 				"forever": 0.1151,
 				"measured": 0,
 				"unknown": 0.0084
-			}
+			},
+			"ilvl": 65.7,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -82,7 +90,9 @@
 				"forever": 0.1141,
 				"measured": 0,
 				"unknown": 0.0042
-			}
+			},
+			"ilvl": 64.7,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -98,7 +108,9 @@
 				"forever": 0.1128,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.7,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -114,7 +126,9 @@
 				"forever": 0.1157,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.7,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -130,7 +144,9 @@
 				"forever": 0.1287,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60,
+			"slots": 17
 		},
 		{
 			"spec": "retribution_paladin",
@@ -147,6 +163,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 64.2,
+			"slots": 16,
 			"optimised": true
 		},
 		{
@@ -163,7 +181,9 @@
 				"forever": 0.1956,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 64.2,
+			"slots": 16
 		},
 		{
 			"spec": "warrior",
@@ -179,7 +199,9 @@
 				"forever": 0.1322,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -196,6 +218,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.1,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -212,7 +236,9 @@
 				"forever": 0.3393,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.3,
+			"slots": 15
 		},
 		{
 			"spec": "enhancement_shaman",
@@ -228,7 +254,9 @@
 				"forever": 0.3386,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.4,
+			"slots": 15
 		},
 		{
 			"spec": "enhancement_shaman",
@@ -245,6 +273,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 64.5,
+			"slots": 16,
 			"optimised": true
 		},
 		{
@@ -261,7 +291,9 @@
 				"forever": 0.1269,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 64.9,
+			"slots": 16
 		},
 		{
 			"spec": "warlock",
@@ -277,7 +309,9 @@
 				"forever": 0.862,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -293,7 +327,9 @@
 				"forever": 0.0131,
 				"measured": 0,
 				"unknown": 0.0095
-			}
+			},
+			"ilvl": 65.7,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -310,6 +346,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.1,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -326,7 +364,9 @@
 				"forever": 0.3342,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 64.5,
+			"slots": 16
 		},
 		{
 			"spec": "warlock",
@@ -342,7 +382,9 @@
 				"forever": 0.8643,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -359,6 +401,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.1,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -375,7 +419,9 @@
 				"forever": 0.8594,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -391,7 +437,9 @@
 				"forever": 0.0134,
 				"measured": 0,
 				"unknown": 0.0094
-			}
+			},
+			"ilvl": 65.7,
+			"slots": 17
 		},
 		{
 			"spec": "shadow_priest",
@@ -408,6 +456,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 63.8,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -424,7 +474,9 @@
 				"forever": 0.1306,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 64.9,
+			"slots": 16
 		},
 		{
 			"spec": "shadow_priest",
@@ -440,7 +492,9 @@
 				"forever": 0.9937,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 63.8,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -456,7 +510,9 @@
 				"forever": 0.0216,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 64.9,
+			"slots": 16
 		},
 		{
 			"spec": "warlock",
@@ -472,7 +528,9 @@
 				"forever": 0.8616,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -488,7 +546,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -505,6 +565,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.3,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -521,7 +583,9 @@
 				"forever": 0.8598,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -537,7 +601,9 @@
 				"forever": 0.022,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 64.9,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -554,6 +620,8 @@
 				"measured": 0,
 				"unknown": 0.3965
 			},
+			"ilvl": 67.6,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -570,7 +638,9 @@
 				"forever": 0.8577,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -586,7 +656,9 @@
 				"forever": 0.8574,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -602,7 +674,9 @@
 				"forever": 0.0185,
 				"measured": 0,
 				"unknown": 0.3848
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -618,7 +692,9 @@
 				"forever": 0.0185,
 				"measured": 0,
 				"unknown": 0.3842
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -634,7 +710,9 @@
 				"forever": 0.869,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -650,7 +728,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.3,
+			"slots": 17
 		},
 		{
 			"spec": "feral_tank_druid",
@@ -667,6 +747,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 70,
+			"slots": 16,
 			"optimised": true
 		},
 		{
@@ -683,7 +765,9 @@
 				"forever": 0.0116,
 				"measured": 0,
 				"unknown": 0.0808
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -699,7 +783,9 @@
 				"forever": 0.8554,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -715,7 +801,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -731,7 +819,9 @@
 				"forever": 0.0178,
 				"measured": 0,
 				"unknown": 0.3841
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -747,7 +837,9 @@
 				"forever": 0.0178,
 				"measured": 0,
 				"unknown": 0.3834
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -763,7 +855,9 @@
 				"forever": 0.8676,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "shadow_priest",
@@ -779,7 +873,9 @@
 				"forever": 0.9944,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -795,7 +891,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -811,7 +909,9 @@
 				"forever": 0.0174,
 				"measured": 0,
 				"unknown": 0.3869
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -827,7 +927,9 @@
 				"forever": 0.0175,
 				"measured": 0,
 				"unknown": 0.3861
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -843,7 +945,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -859,7 +963,9 @@
 				"forever": 0.0118,
 				"measured": 0,
 				"unknown": 0.082
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -875,7 +981,9 @@
 				"forever": 0.8655,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -891,7 +999,9 @@
 				"forever": 0.0118,
 				"measured": 0,
 				"unknown": 0.0812
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -907,7 +1017,9 @@
 				"forever": 0.8519,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -923,7 +1035,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -939,7 +1053,9 @@
 				"forever": 0.0139,
 				"measured": 0,
 				"unknown": 0.0044
-			}
+			},
+			"ilvl": 64.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -955,7 +1071,9 @@
 				"forever": 0.8514,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -971,7 +1089,9 @@
 				"forever": 0.0119,
 				"measured": 0,
 				"unknown": 0.0876
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -987,7 +1107,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1003,7 +1125,9 @@
 				"forever": 0.864,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1019,7 +1143,9 @@
 				"forever": 0.8495,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1035,7 +1161,9 @@
 				"forever": 0.012,
 				"measured": 0,
 				"unknown": 0.0879
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1051,7 +1179,9 @@
 				"forever": 0.8491,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -1068,6 +1198,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 67.9,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -1084,7 +1216,9 @@
 				"forever": 0.5473,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.7,
+			"slots": 15
 		},
 		{
 			"spec": "rogue",
@@ -1100,7 +1234,9 @@
 				"forever": 0.0121,
 				"measured": 0,
 				"unknown": 0.0867
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1116,7 +1252,9 @@
 				"forever": 0.0118,
 				"measured": 0,
 				"unknown": 0.0885
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "feral_druid",
@@ -1132,7 +1270,9 @@
 				"forever": 0.5505,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 57,
+			"slots": 15
 		},
 		{
 			"spec": "warrior",
@@ -1148,7 +1288,9 @@
 				"forever": 0.0142,
 				"measured": 0,
 				"unknown": 0.0044
-			}
+			},
+			"ilvl": 64.7,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -1165,6 +1307,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 59.3,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -1181,7 +1325,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.3,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -1197,7 +1343,9 @@
 				"forever": 0.0152,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1213,7 +1361,9 @@
 				"forever": 0.0119,
 				"measured": 0,
 				"unknown": 0.089
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1229,7 +1379,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1245,7 +1397,9 @@
 				"forever": 0.0119,
 				"measured": 0,
 				"unknown": 0.0875
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1261,7 +1415,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -1277,7 +1433,9 @@
 				"forever": 0.0154,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1293,7 +1451,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1309,7 +1469,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1325,7 +1487,9 @@
 				"forever": 0.0231,
 				"measured": 0,
 				"unknown": 0.3881
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1341,7 +1505,9 @@
 				"forever": 0.0231,
 				"measured": 0,
 				"unknown": 0.3886
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1357,7 +1523,9 @@
 				"forever": 0.8367,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -1373,7 +1541,9 @@
 				"forever": 0,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.9,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1389,7 +1559,9 @@
 				"forever": 0.0206,
 				"measured": 0,
 				"unknown": 0.091
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1405,7 +1577,9 @@
 				"forever": 0.0164,
 				"measured": 0,
 				"unknown": 0.0741
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1421,7 +1595,9 @@
 				"forever": 0.8394,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -1437,7 +1613,9 @@
 				"forever": 0.1783,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.3,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -1453,7 +1631,9 @@
 				"forever": 0.0265,
 				"measured": 0,
 				"unknown": 0.3655
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1469,7 +1649,9 @@
 				"forever": 0.0265,
 				"measured": 0,
 				"unknown": 0.3655
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1485,7 +1667,9 @@
 				"forever": 0.0208,
 				"measured": 0,
 				"unknown": 0.0914
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1501,7 +1685,9 @@
 				"forever": 0.0208,
 				"measured": 0,
 				"unknown": 0.0908
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1517,7 +1703,9 @@
 				"forever": 0.0198,
 				"measured": 0,
 				"unknown": 0.0931
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "feral_druid",
@@ -1534,6 +1722,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 67,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -1550,7 +1740,9 @@
 				"forever": 0.0166,
 				"measured": 0,
 				"unknown": 0.0749
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1566,7 +1758,9 @@
 				"forever": 0.0166,
 				"measured": 0,
 				"unknown": 0.0742
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1582,7 +1776,9 @@
 				"forever": 0.0166,
 				"measured": 0,
 				"unknown": 0.0817
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1598,7 +1794,9 @@
 				"forever": 0.0255,
 				"measured": 0,
 				"unknown": 0.3651
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1614,7 +1812,9 @@
 				"forever": 0.0255,
 				"measured": 0,
 				"unknown": 0.3651
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "feral_druid",
@@ -1630,7 +1830,9 @@
 				"forever": 0.5605,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1646,7 +1848,9 @@
 				"forever": 0.02,
 				"measured": 0,
 				"unknown": 0.0936
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1662,7 +1866,9 @@
 				"forever": 0.0195,
 				"measured": 0,
 				"unknown": 0.0938
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1678,7 +1884,9 @@
 				"forever": 0.0167,
 				"measured": 0,
 				"unknown": 0.0827
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1694,7 +1902,9 @@
 				"forever": 0.0167,
 				"measured": 0,
 				"unknown": 0.0822
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1710,7 +1920,9 @@
 				"forever": 0.02,
 				"measured": 0,
 				"unknown": 0.0929
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1726,7 +1938,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1742,7 +1956,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1758,7 +1974,9 @@
 				"forever": 0.0251,
 				"measured": 0,
 				"unknown": 0.3679
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1774,7 +1992,9 @@
 				"forever": 0.0251,
 				"measured": 0,
 				"unknown": 0.3679
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1790,7 +2010,9 @@
 				"forever": 0.0164,
 				"measured": 0,
 				"unknown": 0.0824
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1806,7 +2028,9 @@
 				"forever": 0.0197,
 				"measured": 0,
 				"unknown": 0.0943
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1822,7 +2046,9 @@
 				"forever": 0.8338,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "feral_druid",
@@ -1838,7 +2064,9 @@
 				"forever": 0.2558,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.7,
+			"slots": 15
 		},
 		{
 			"spec": "warlock",
@@ -1854,7 +2082,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1870,7 +2100,9 @@
 				"forever": 0.0197,
 				"measured": 0,
 				"unknown": 0.0935
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -1886,7 +2118,9 @@
 				"forever": 0,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.9,
+			"slots": 17
 		},
 		{
 			"spec": "feral_druid",
@@ -1902,7 +2136,9 @@
 				"forever": 0.2581,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 57,
+			"slots": 15
 		},
 		{
 			"spec": "rogue",
@@ -1918,7 +2154,9 @@
 				"forever": 0.0165,
 				"measured": 0,
 				"unknown": 0.0832
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -1934,7 +2172,9 @@
 				"forever": 0.0165,
 				"measured": 0,
 				"unknown": 0.0829
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1950,7 +2190,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1966,7 +2208,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1982,7 +2226,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -1998,7 +2244,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2014,7 +2262,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.5,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2030,7 +2280,9 @@
 				"forever": 0.8304,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2046,7 +2298,9 @@
 				"forever": 0.8455,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "feral_tank_druid",
@@ -2062,7 +2316,9 @@
 				"forever": 0.0605,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 70,
+			"slots": 16
 		},
 		{
 			"spec": "feral_druid",
@@ -2078,7 +2334,9 @@
 				"forever": 0.4266,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.7,
+			"slots": 15
 		},
 		{
 			"spec": "feral_druid",
@@ -2094,7 +2352,9 @@
 				"forever": 0.43,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 57,
+			"slots": 15
 		},
 		{
 			"spec": "hunter",
@@ -2110,7 +2370,9 @@
 				"forever": 0.3163,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.3,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -2126,7 +2388,9 @@
 				"forever": 0.2073,
 				"measured": 0,
 				"unknown": 0.1452
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2142,7 +2406,9 @@
 				"forever": 0.381,
 				"measured": 0,
 				"unknown": 0.0049
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2158,7 +2424,9 @@
 				"forever": 0.205,
 				"measured": 0,
 				"unknown": 0.1478
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -2175,6 +2443,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 63.6,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -2191,7 +2461,9 @@
 				"forever": 0.3847,
 				"measured": 0,
 				"unknown": 0.0052
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2207,7 +2479,9 @@
 				"forever": 0.3942,
 				"measured": 0,
 				"unknown": 0.0053
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2223,7 +2497,9 @@
 				"forever": 0.8407,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2239,7 +2515,9 @@
 				"forever": 0.8241,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -2255,7 +2533,9 @@
 				"forever": 0.367,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.9,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2271,7 +2551,9 @@
 				"forever": 0.8236,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2287,7 +2569,9 @@
 				"forever": 0.0176,
 				"measured": 0,
 				"unknown": 0.0969
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2303,7 +2587,9 @@
 				"forever": 0.2061,
 				"measured": 0,
 				"unknown": 0.1487
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2319,7 +2605,9 @@
 				"forever": 0.0259,
 				"measured": 0,
 				"unknown": 0.1
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2335,7 +2623,9 @@
 				"forever": 0.0291,
 				"measured": 0,
 				"unknown": 0.0762
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -2351,7 +2641,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2367,7 +2659,9 @@
 				"forever": 0.0331,
 				"measured": 0,
 				"unknown": 0.3676
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2383,7 +2677,9 @@
 				"forever": 0.0331,
 				"measured": 0,
 				"unknown": 0.3676
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2399,7 +2695,9 @@
 				"forever": 0.3845,
 				"measured": 0,
 				"unknown": 0.0052
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2415,7 +2713,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2431,7 +2731,9 @@
 				"forever": 0.0261,
 				"measured": 0,
 				"unknown": 0.0998
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2447,7 +2749,9 @@
 				"forever": 0.3973,
 				"measured": 0,
 				"unknown": 0.0052
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2463,7 +2767,9 @@
 				"forever": 0.0261,
 				"measured": 0,
 				"unknown": 0.0988
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2479,7 +2785,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2495,7 +2803,9 @@
 				"forever": 0.0294,
 				"measured": 0,
 				"unknown": 0.0769
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2511,7 +2821,9 @@
 				"forever": 0.0294,
 				"measured": 0,
 				"unknown": 0.0774
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2527,7 +2839,9 @@
 				"forever": 0.018,
 				"measured": 0,
 				"unknown": 0.0984
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2543,7 +2857,9 @@
 				"forever": 0.3858,
 				"measured": 0,
 				"unknown": 0.0052
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2559,7 +2875,9 @@
 				"forever": 0.018,
 				"measured": 0,
 				"unknown": 0.0973
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -2575,7 +2893,9 @@
 				"forever": 0.165,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 63.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2591,7 +2911,9 @@
 				"forever": 0.0282,
 				"measured": 0,
 				"unknown": 0.0779
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -2607,7 +2929,9 @@
 				"forever": 0.0162,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -2623,7 +2947,9 @@
 				"forever": 0.173,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -2639,7 +2965,9 @@
 				"forever": 0.0284,
 				"measured": 0,
 				"unknown": 0.0783
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2655,7 +2983,9 @@
 				"forever": 0.0283,
 				"measured": 0,
 				"unknown": 0.0788
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2671,7 +3001,9 @@
 				"forever": 0.0277,
 				"measured": 0,
 				"unknown": 0.0782
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -2687,7 +3019,9 @@
 				"forever": 0.2077,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.3,
+			"slots": 16
 		},
 		{
 			"spec": "protection_paladin",
@@ -2704,6 +3038,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 66.3,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -2720,7 +3056,9 @@
 				"forever": 0.028,
 				"measured": 0,
 				"unknown": 0.0785
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2736,7 +3074,9 @@
 				"forever": 0.0279,
 				"measured": 0,
 				"unknown": 0.079
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "warrior",
@@ -2752,7 +3092,9 @@
 				"forever": 0.0165,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60,
+			"slots": 17
 		},
 		{
 			"spec": "feral_druid",
@@ -2768,7 +3110,9 @@
 				"forever": 0.3157,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -2785,6 +3129,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 63.1,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -2801,7 +3147,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.3,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2817,7 +3165,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -2833,7 +3183,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "feral_druid",
@@ -2849,7 +3201,9 @@
 				"forever": 0.5263,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -2865,7 +3219,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2881,7 +3237,9 @@
 				"forever": 0.2101,
 				"measured": 0,
 				"unknown": 0.1548
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2897,7 +3255,9 @@
 				"forever": 0.014,
 				"measured": 0,
 				"unknown": 0.0056
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2913,7 +3273,9 @@
 				"forever": 0.0143,
 				"measured": 0,
 				"unknown": 0.0035
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2929,7 +3291,9 @@
 				"forever": 0.0143,
 				"measured": 0,
 				"unknown": 0.0034
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2945,7 +3309,9 @@
 				"forever": 0.0248,
 				"measured": 0,
 				"unknown": 0.0853
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2961,7 +3327,9 @@
 				"forever": 0.3876,
 				"measured": 0,
 				"unknown": 0.0058
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2977,7 +3345,9 @@
 				"forever": 0.0139,
 				"measured": 0,
 				"unknown": 0.0042
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -2993,7 +3363,9 @@
 				"forever": 0.0369,
 				"measured": 0,
 				"unknown": 0.0799
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "shadow_priest",
@@ -3009,7 +3381,9 @@
 				"forever": 0.9917,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66,
+			"slots": 8
 		},
 		{
 			"spec": "rogue",
@@ -3025,7 +3399,9 @@
 				"forever": 0.0251,
 				"measured": 0,
 				"unknown": 0.0858
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3041,7 +3417,9 @@
 				"forever": 0.014,
 				"measured": 0,
 				"unknown": 0.0036
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3057,7 +3435,9 @@
 				"forever": 0.0234,
 				"measured": 0,
 				"unknown": 0.3032
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3073,7 +3453,9 @@
 				"forever": 0.0234,
 				"measured": 0,
 				"unknown": 0.3032
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3089,7 +3471,9 @@
 				"forever": 0.0252,
 				"measured": 0,
 				"unknown": 0.085
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3105,7 +3489,9 @@
 				"forever": 0.014,
 				"measured": 0,
 				"unknown": 0.0036
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3121,7 +3507,9 @@
 				"forever": 0.037,
 				"measured": 0,
 				"unknown": 0.081
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3137,7 +3525,9 @@
 				"forever": 0.0371,
 				"measured": 0,
 				"unknown": 0.0803
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -3153,7 +3543,9 @@
 				"forever": 0.8103,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 63.1,
+			"slots": 17
 		},
 		{
 			"spec": "protection_paladin",
@@ -3169,7 +3561,9 @@
 				"forever": 0.3273,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3185,7 +3579,9 @@
 				"forever": 0.0137,
 				"measured": 0,
 				"unknown": 0.0041
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -3201,7 +3597,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3217,7 +3615,9 @@
 				"forever": 0.0217,
 				"measured": 0,
 				"unknown": 0.3023
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3233,7 +3633,9 @@
 				"forever": 0.0217,
 				"measured": 0,
 				"unknown": 0.3023
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3249,7 +3651,9 @@
 				"forever": 0.0139,
 				"measured": 0,
 				"unknown": 0.0038
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3265,7 +3669,9 @@
 				"forever": 0.0138,
 				"measured": 0,
 				"unknown": 0.0034
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -3281,7 +3687,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -3297,7 +3705,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "warlock",
@@ -3313,7 +3723,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60.4,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3329,7 +3741,9 @@
 				"forever": 0.0214,
 				"measured": 0,
 				"unknown": 0.3044
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3345,7 +3759,9 @@
 				"forever": 0.0214,
 				"measured": 0,
 				"unknown": 0.3044
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -3361,7 +3777,9 @@
 				"forever": 0.2915,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60,
+			"slots": 16
 		},
 		{
 			"spec": "mage",
@@ -3377,7 +3795,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.3,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -3393,7 +3813,9 @@
 				"forever": 0.2889,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 63.6,
+			"slots": 17
 		},
 		{
 			"spec": "protection_paladin",
@@ -3409,7 +3831,9 @@
 				"forever": 0.2382,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -3425,7 +3849,9 @@
 				"forever": 0.2014,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 63.6,
+			"slots": 17
 		},
 		{
 			"spec": "elemental_shaman",
@@ -3441,7 +3867,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.1,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -3457,7 +3885,9 @@
 				"forever": 0.4179,
 				"measured": 0,
 				"unknown": 0.0054
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3473,7 +3903,9 @@
 				"forever": 0.0251,
 				"measured": 0,
 				"unknown": 0.0039
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -3489,7 +3921,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.3,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -3505,7 +3939,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.3,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -3521,7 +3957,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3537,7 +3975,9 @@
 				"forever": 0.0254,
 				"measured": 0,
 				"unknown": 0.0038
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3553,7 +3993,9 @@
 				"forever": 0.0254,
 				"measured": 0,
 				"unknown": 0.0038
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "hunter",
@@ -3569,7 +4011,9 @@
 				"forever": 0.2163,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 60,
+			"slots": 16
 		},
 		{
 			"spec": "elemental_shaman",
@@ -3586,6 +4030,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 64.9,
+			"slots": 16,
 			"optimised": true
 		},
 		{
@@ -3602,7 +4048,9 @@
 				"forever": 0.0234,
 				"measured": 0,
 				"unknown": 0.004
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -3618,7 +4066,9 @@
 				"forever": 0.7929,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.2,
+			"slots": 15
 		},
 		{
 			"spec": "elemental_shaman",
@@ -3634,7 +4084,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.1,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -3650,7 +4102,9 @@
 				"forever": 0.0237,
 				"measured": 0,
 				"unknown": 0.0041
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3666,7 +4120,9 @@
 				"forever": 0.0236,
 				"measured": 0,
 				"unknown": 0.0039
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "elemental_shaman",
@@ -3682,7 +4138,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 64.9,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -3698,7 +4156,9 @@
 				"forever": 0.0231,
 				"measured": 0,
 				"unknown": 0.004
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3714,7 +4174,9 @@
 				"forever": 0.0285,
 				"measured": 0,
 				"unknown": 0.3027
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3730,7 +4192,9 @@
 				"forever": 0.0285,
 				"measured": 0,
 				"unknown": 0.3027
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3746,7 +4210,9 @@
 				"forever": 0.0233,
 				"measured": 0,
 				"unknown": 0.0039
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3762,7 +4228,9 @@
 				"forever": 0.0233,
 				"measured": 0,
 				"unknown": 0.0039
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -3778,7 +4246,9 @@
 				"forever": 0.796,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.1,
+			"slots": 16
 		},
 		{
 			"spec": "elemental_shaman",
@@ -3794,7 +4264,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 15
 		},
 		{
 			"spec": "elemental_shaman",
@@ -3810,7 +4282,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 15
 		},
 		{
 			"spec": "elemental_shaman",
@@ -3826,7 +4300,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 64.9,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -3842,7 +4318,9 @@
 				"forever": 0.0208,
 				"measured": 0,
 				"unknown": 0.0072
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -3858,7 +4336,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3874,7 +4354,9 @@
 				"forever": 0.0309,
 				"measured": 0,
 				"unknown": 0.0044
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "feral_druid",
@@ -3890,7 +4372,9 @@
 				"forever": 0.612,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.9,
+			"slots": 8
 		},
 		{
 			"spec": "rogue",
@@ -3906,7 +4390,9 @@
 				"forever": 0.0311,
 				"measured": 0,
 				"unknown": 0.0042
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3922,7 +4408,9 @@
 				"forever": 0.0311,
 				"measured": 0,
 				"unknown": 0.0041
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3938,7 +4426,9 @@
 				"forever": 0.0212,
 				"measured": 0,
 				"unknown": 0.0041
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -3954,7 +4444,9 @@
 				"forever": 0.0212,
 				"measured": 0,
 				"unknown": 0.0037
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -3971,6 +4463,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.1,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -3987,7 +4481,9 @@
 				"forever": 0.6146,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66,
+			"slots": 8
 		},
 		{
 			"spec": "mage",
@@ -4003,7 +4499,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -4020,6 +4518,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.3,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -4036,7 +4536,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.3,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -4052,7 +4554,9 @@
 				"forever": 0.9248,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 63.1,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -4069,6 +4573,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.1,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -4085,7 +4591,9 @@
 				"forever": 0.3416,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.9,
+			"slots": 8
 		},
 		{
 			"spec": "mage",
@@ -4101,7 +4609,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.1,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -4118,6 +4628,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 65.3,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -4134,7 +4646,9 @@
 				"forever": 0.5649,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.9,
+			"slots": 8
 		},
 		{
 			"spec": "feral_druid",
@@ -4150,7 +4664,9 @@
 				"forever": 0.3407,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66,
+			"slots": 8
 		},
 		{
 			"spec": "tank_warrior",
@@ -4166,7 +4682,9 @@
 				"forever": 0,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.9,
+			"slots": 8
 		},
 		{
 			"spec": "mage",
@@ -4182,7 +4700,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.3,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -4198,7 +4718,9 @@
 				"forever": 0.9073,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.2,
+			"slots": 15
 		},
 		{
 			"spec": "feral_druid",
@@ -4214,7 +4736,9 @@
 				"forever": 0.569,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66,
+			"slots": 8
 		},
 		{
 			"spec": "smite_priest",
@@ -4231,6 +4755,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 63.9,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -4247,7 +4773,9 @@
 				"forever": 0.9206,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.1,
+			"slots": 16
 		},
 		{
 			"spec": "smite_priest",
@@ -4263,7 +4791,9 @@
 				"forever": 0.8306,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 63.9,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -4279,7 +4809,9 @@
 				"forever": 0.9984,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 63.1,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -4295,7 +4827,9 @@
 				"forever": 0,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66,
+			"slots": 8
 		},
 		{
 			"spec": "tank_warrior",
@@ -4311,7 +4845,9 @@
 				"forever": 0,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.9,
+			"slots": 8
 		},
 		{
 			"spec": "rogue",
@@ -4327,7 +4863,9 @@
 				"forever": 0.0185,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4343,7 +4881,9 @@
 				"forever": 0.0185,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4359,7 +4899,9 @@
 				"forever": 0.0185,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4375,7 +4917,9 @@
 				"forever": 0.0185,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -4391,7 +4935,9 @@
 				"forever": 0.7967,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61,
+			"slots": 15
 		},
 		{
 			"spec": "rogue",
@@ -4407,7 +4953,9 @@
 				"forever": 0.0288,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4423,7 +4971,9 @@
 				"forever": 0.0288,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -4440,6 +4990,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 59.3,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -4456,7 +5008,9 @@
 				"forever": 0.0304,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4472,7 +5026,9 @@
 				"forever": 0.0304,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4488,7 +5044,9 @@
 				"forever": 0.0284,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4504,7 +5062,9 @@
 				"forever": 0.0284,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4520,7 +5080,9 @@
 				"forever": 0.0195,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -4536,7 +5098,9 @@
 				"forever": 0,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66,
+			"slots": 8
 		},
 		{
 			"spec": "rogue",
@@ -4552,7 +5116,9 @@
 				"forever": 0.0194,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4568,7 +5134,9 @@
 				"forever": 0.0194,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4584,7 +5152,9 @@
 				"forever": 0.0194,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -4600,7 +5170,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4616,7 +5188,9 @@
 				"forever": 0.0259,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4632,7 +5206,9 @@
 				"forever": 0.0259,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4648,7 +5224,9 @@
 				"forever": 0.0259,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4664,7 +5242,9 @@
 				"forever": 0.0259,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4680,7 +5260,9 @@
 				"forever": 0.0193,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4696,7 +5278,9 @@
 				"forever": 0.0193,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4712,7 +5296,9 @@
 				"forever": 0.0193,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4728,7 +5314,9 @@
 				"forever": 0.0193,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4744,7 +5332,9 @@
 				"forever": 0.0401,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4760,7 +5350,9 @@
 				"forever": 0.0423,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4776,7 +5368,9 @@
 				"forever": 0.0396,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -4792,7 +5386,9 @@
 				"forever": 0.9969,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.2,
+			"slots": 15
 		},
 		{
 			"spec": "rogue",
@@ -4808,7 +5404,9 @@
 				"forever": 0.0267,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4824,7 +5422,9 @@
 				"forever": 0.0267,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4840,7 +5440,9 @@
 				"forever": 0.0267,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4856,7 +5458,9 @@
 				"forever": 0.0267,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4872,7 +5476,9 @@
 				"forever": 0.0377,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4888,7 +5494,9 @@
 				"forever": 0.0377,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4904,7 +5512,9 @@
 				"forever": 0.0265,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4920,7 +5530,9 @@
 				"forever": 0.0265,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4936,7 +5548,9 @@
 				"forever": 0.0265,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -4952,7 +5566,9 @@
 				"forever": 0.0265,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -4968,7 +5584,9 @@
 				"forever": 1,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.3,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -4985,6 +5603,8 @@
 				"measured": 0,
 				"unknown": 0
 			},
+			"ilvl": 59.3,
+			"slots": 17,
 			"points": 49
 		},
 		{
@@ -5001,7 +5621,9 @@
 				"forever": 0.9974,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.1,
+			"slots": 16
 		},
 		{
 			"spec": "rogue",
@@ -5017,7 +5639,9 @@
 				"forever": 0.0523,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5033,7 +5657,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5049,7 +5675,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5065,7 +5693,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.1,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5081,7 +5711,9 @@
 				"forever": 0.031,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5097,7 +5729,9 @@
 				"forever": 0.034,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.6,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -5113,7 +5747,9 @@
 				"forever": 0.8895,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61,
+			"slots": 15
 		},
 		{
 			"spec": "rogue",
@@ -5129,7 +5765,9 @@
 				"forever": 0.0307,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 65.2,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5145,7 +5783,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5161,7 +5801,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5177,7 +5819,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5193,7 +5837,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5209,7 +5855,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5225,7 +5873,9 @@
 				"forever": 0.0207,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 67.7,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5241,7 +5891,9 @@
 				"forever": 0.0298,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5257,7 +5909,9 @@
 				"forever": 0.0297,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5273,7 +5927,9 @@
 				"forever": 0.0297,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5289,7 +5945,9 @@
 				"forever": 0.0297,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -5305,7 +5963,9 @@
 				"forever": 0.1327,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 59.9,
+			"slots": 8
 		},
 		{
 			"spec": "rogue",
@@ -5321,7 +5981,9 @@
 				"forever": 0.0406,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5337,7 +5999,9 @@
 				"forever": 0.0411,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5353,7 +6017,9 @@
 				"forever": 0.0411,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5369,7 +6035,9 @@
 				"forever": 0.0411,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5385,7 +6053,9 @@
 				"forever": 0.0411,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -5401,7 +6071,9 @@
 				"forever": 0.1503,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 66,
+			"slots": 8
 		},
 		{
 			"spec": "rogue",
@@ -5417,7 +6089,9 @@
 				"forever": 0.0319,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5433,7 +6107,9 @@
 				"forever": 0.0319,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -5449,7 +6125,9 @@
 				"forever": 0.0319,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61.3,
+			"slots": 17
 		},
 		{
 			"spec": "balance_druid",
@@ -5465,7 +6143,9 @@
 				"forever": 0.9963,
 				"measured": 0,
 				"unknown": 0
-			}
+			},
+			"ilvl": 61,
+			"slots": 15
 		}
 	]
 }

@@ -47,6 +47,9 @@ type Build = {
 	rotation: string;
 	dps: number;
 	rests: Composition;
+	/** Average item level of the gear set, and how many slots it fills. */
+	ilvl: number;
+	slots: number;
 	optimised?: boolean;
 	/** Only present when the build does not spend all 51 points. */
 	points?: number;
@@ -55,38 +58,39 @@ type Build = {
 const builds = results.builds as Array<Build>;
 
 /**
- * Best build per spec, on launch gear only.
+ * Best build per spec, out of whatever the item level filter has left.
  *
- * Not a detail. Specs ship different numbers of gear sets - balance druid has a phase 2 BiS
- * on file and smite priest has nothing but launch - so ranking each spec's best run across
- * all of them ranks how far ahead somebody wrote its gear, not the spec. Every spec has a
- * launch set, so that is the one tier they can all be compared on. The full arena below
- * still shows every set; it just does not pretend the resulting order means one thing.
+ * Specs ship different numbers of gear sets - balance druid has a phase 2 BiS on file and
+ * smite priest has nothing but launch - so ranking each spec's best run across all of them
+ * ranks how far ahead somebody wrote its gear rather than the spec. Filtering by item level
+ * is what makes the comparison mean something; the name on the gear file does not.
  */
-const bestPerSpec = (): Array<Build> => {
+const bestPerSpec = (from: Array<Build>): Array<Build> => {
 	const best = new Map<string, Build>();
-	for (const build of builds.filter(build => build.gear.includes('launch'))) {
+	for (const build of from) {
 		if (!best.has(build.spec)) best.set(build.spec, build);
 	}
 	return [...best.values()].sort((a, b) => b.dps - a.dps);
 };
 
 /**
- * What the search was worth, per spec: the best searched build against the best build a
- * person wrote down, on the same gear tier.
+ * What the search was worth, per spec.
  *
- * The leaderboard is now searched builds top to bottom, which on its own hides the only
- * question anyone actually has - was the community build already right? The gain is that
- * answer, and for most specs it is not small.
+ * The leaderboard is searched builds top to bottom, which on its own hides the only question
+ * anyone actually has - was the community build already right? The gain is that answer, and
+ * for most specs it is not small.
+ *
+ * Matched on the exact gear set and rotation the search ran against, not merely a similar
+ * one. A gain measured across two gear sets would be part talent search and part item level,
+ * which is the confusion this whole column exists to remove.
  */
 const searchGains = (): Map<string, number> => {
 	const gains = new Map<string, number>();
-	const launch = builds.filter(build => build.gear.includes('launch'));
-	for (const spec of new Set(launch.map(build => build.spec))) {
-		const mine = launch.filter(build => build.spec === spec);
-		const searched = mine.find(build => build.optimised);
-		const written = mine.find(build => !build.optimised);
-		if (searched && written && written.dps > 0) gains.set(spec, searched.dps / written.dps - 1);
+	for (const searched of builds.filter(build => build.optimised)) {
+		const written = builds.find(
+			build => !build.optimised && build.spec === searched.spec && build.gear === searched.gear && build.rotation === searched.rotation,
+		);
+		if (written && written.dps > 0) gains.set(searched.spec, searched.dps / written.dps - 1);
 	}
 	return gains;
 };
@@ -95,10 +99,33 @@ const gains = searchGains();
 
 const specName = (spec: string) => (SPECS[spec] !== undefined ? specNames[SPECS[spec]] : spec);
 
+/**
+ * Item level brackets, because "same gear tier" was doing work it could not support.
+ *
+ * The leaderboard used to compare every spec's launch set on the grounds that launch is the
+ * one tier they all have. They do all have one - and those sets run from item level 63.1 to
+ * 70.0, which is most of a tier of difference sitting inside a table claiming to compare
+ * specs. A balance druid's launch gear is seven levels below a feral tank's. So the gear is
+ * now a number on every row and a filter above them, and "launch" is just a file name again.
+ */
+const BRACKETS: Array<{ key: string; label: string; holds: (ilvl: number) => boolean }> = [
+	{ key: 'all', label: 'Any gear', holds: () => true },
+	{ key: 'low', label: 'Under 63', holds: ilvl => ilvl < 63 },
+	{ key: 'mid', label: '63 to 65', holds: ilvl => ilvl >= 63 && ilvl < 66 },
+	{ key: 'high', label: '66 to 68', holds: ilvl => ilvl >= 66 && ilvl < 69 },
+	{ key: 'top', label: '69 and up', holds: ilvl => ilvl >= 69 },
+];
+
+const specsIn = (bracket: (typeof BRACKETS)[number]) => new Set(builds.filter(b => bracket.holds(b.ilvl)).map(b => b.spec)).size;
+
 export class ArenaPage {
 	private readonly body: HTMLElement;
 	private readonly count: HTMLElement;
+	private readonly spread: HTMLElement;
 	private showAll = false;
+	// Defaults to the band covering the most specs, since a bracket holding three of them is
+	// a narrower comparison than it looks.
+	private bracket = BRACKETS.slice(1).reduce((best, b) => (specsIn(b) > specsIn(best) ? b : best), BRACKETS[1]);
 
 	constructor(parent: HTMLElement) {
 		const generated = new Date(results.generated);
@@ -126,8 +153,10 @@ export class ArenaPage {
 				<main className="container arena-content">
 					<div className="arena-controls">
 						{this.toggle()}
+						<div className="arena-brackets">{BRACKETS.map(bracket => this.bracketButton(bracket))}</div>
 						<p className="arena-count" />
 					</div>
+					<p className="arena-spread" />
 
 					<table className="metrics-table arena-table">
 						<thead>
@@ -135,6 +164,7 @@ export class ArenaPage {
 								<th className="metrics-table-header-cell arena-rank-cell">#</th>
 								<th className="metrics-table-header-cell arena-build-cell">Build</th>
 								<th className="metrics-table-header-cell arena-setup-cell">Gear and rotation</th>
+								<th className="metrics-table-header-cell arena-ilvl-cell">ilvl</th>
 								<th className="metrics-table-header-cell arena-dps-cell">DPS</th>
 								<th className="metrics-table-header-cell arena-share-cell">Share of top</th>
 								<th className="metrics-table-header-cell rests-cell">Rests on a guess</th>
@@ -150,10 +180,11 @@ export class ArenaPage {
 							putting everyone in one raid, which stops being possible at this count.
 						</li>
 						<li>
-							<strong>The leaderboard is launch gear only.</strong> Specs ship different numbers of gear sets - balance druid has a phase 2 BiS on
-							file, smite priest has nothing but launch - so taking each spec's best run across all of them would rank how far ahead somebody
-							wrote its gear rather than the spec. Launch is the one tier every spec has. Show every build to see the rest; that view is an
-							inventory of what has been simulated, not a like-for-like table.
+							<strong>Item level is the filter, not the file name.</strong> This table used to compare every spec on its "launch" gear set, on the
+							grounds that launch is the one tier they all have. They do all have one - and those sets run from item level 63.1 to 70.0, which is
+							most of a tier of difference sitting inside a table claiming to compare specs. A balance druid's launch gear is seven levels below a
+							feral tank's. So gear is a number on every row now and a bracket above them, and the line under the filter says how far apart the
+							rows you are looking at actually are.
 						</li>
 						<li>
 							<strong>Rests on a guess</strong> is what the build's damage is made of, not a verdict on it. Each ability is weighted by its share
@@ -207,6 +238,7 @@ export class ArenaPage {
 
 		this.body = parent.querySelector('.arena-body') as HTMLElement;
 		this.count = parent.querySelector('.arena-count') as HTMLElement;
+		this.spread = parent.querySelector('.arena-spread') as HTMLElement;
 		this.render();
 	}
 
@@ -224,12 +256,47 @@ export class ArenaPage {
 		return button;
 	}
 
+	private bracketButton(bracket: (typeof BRACKETS)[number]): Element {
+		const specs = bracket.key === 'all' ? new Set(builds.map(b => b.spec)).size : specsIn(bracket);
+		const button = (
+			<button className={`arena-bracket${bracket.key === this.bracket.key ? ' arena-bracket-on' : ''}`} type="button">
+				<span>{bracket.label}</span>
+				<span className="arena-bracket-count">{String(specs)}</span>
+			</button>
+		) as HTMLButtonElement;
+
+		button.addEventListener('click', () => {
+			this.bracket = bracket;
+			for (const other of document.querySelectorAll('.arena-bracket')) other.classList.remove('arena-bracket-on');
+			button.classList.add('arena-bracket-on');
+			this.render();
+		});
+		return button;
+	}
+
 	private render() {
-		const shown = this.showAll ? builds : bestPerSpec();
+		const inBracket = builds.filter(build => this.bracket.holds(build.ilvl));
+		const shown = this.showAll ? inBracket : bestPerSpec(inBracket);
 		const top = shown[0]?.dps || 1;
+
 		this.count.textContent = this.showAll
-			? `All ${builds.length} builds, best first - mixed gear tiers, so not a like-for-like ranking`
-			: `The best launch-gear build of each of ${shown.length} specs. ${builds.length} builds were run in total.`;
+			? `All ${shown.length} builds in this bracket, best first`
+			: `The best build of each of ${new Set(shown.map(b => b.spec)).size} spec${new Set(shown.map(b => b.spec)).size === 1 ? '' : 's'} in this bracket.`;
+
+		// The one thing a ranking table has to admit when it is not true: that the rows are not
+		// wearing comparable gear. Three item levels is about a fifth of a tier, and a spec can
+		// lose more than that to the gear alone.
+		const levels = shown.map(build => build.ilvl).filter(ilvl => ilvl > 0);
+		const low = Math.min(...levels);
+		const high = Math.max(...levels);
+		const wide = levels.length > 1 && high - low > 3;
+		this.spread.textContent = levels.length
+			? wide
+				? `These rows span item level ${low.toFixed(1)} to ${high.toFixed(1)}, so some of the gap between them is gear rather than spec.`
+				: `These rows span item level ${low.toFixed(1)} to ${high.toFixed(1)}.`
+			: '';
+		this.spread.classList.toggle('arena-spread-wide', wide);
+
 		this.body.replaceChildren(...shown.map((build, index) => this.row(build, index + 1, top)));
 	}
 
@@ -270,6 +337,16 @@ export class ArenaPage {
 				<td className="arena-setup-cell">
 					<span className="arena-setup">{build.gear}</span>
 					<span className="arena-setup arena-setup-quiet">{build.rotation || 'default rotation'}</span>
+				</td>
+				<td className="arena-ilvl-cell">
+					<span className="arena-ilvl">{build.ilvl ? build.ilvl.toFixed(1) : '?'}</span>
+					{build.slots && build.slots < 15 ? (
+						<span className="arena-slots" attributes={{ title: 'This gear set leaves slots empty, so the character is not fully equipped.' }}>
+							{String(build.slots)} slots
+						</span>
+					) : (
+						<></>
+					)}
 				</td>
 				<td className="arena-dps-cell">{formatToNumber(build.dps, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}</td>
 				<td className="arena-share-cell">
