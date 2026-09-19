@@ -23,7 +23,7 @@ describe('the item notice table', () => {
 	});
 
 	it('lists the tooltips a missing item effect carries', () => {
-		const container = noticeContainer(3475);
+		const container = noticeContainer(17182);
 		expect([...container.children].map(child => child.tagName.toLowerCase())).toEqual(['p', 'ul']);
 		const heading = container.querySelector('p')!;
 		expect(heading.className).toBe('font-bold');
