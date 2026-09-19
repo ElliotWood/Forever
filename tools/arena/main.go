@@ -1,0 +1,226 @@
+// Assembles the arena's per-spec output into the one file the site reads.
+//
+// Each spec's test writes its own builds, because `go test` runs packages concurrently and
+// a shared file would be a race. This merges them, scores each build against the evidence
+// manifest, and records which commit produced the numbers - which is the whole cache story:
+// the file is the cache, the commit is the key, and the workflow that runs the arena on push
+// is what invalidates it. Nothing has to notice that the sim changed, because the only thing
+// that ever writes this file is a run that happened after the change.
+//
+// Usage: go run ./tools/arena <arena-out-dir> <ui/arena/results.json>
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
+)
+
+// Mirrors sim/arenalib.Result. Duplicated rather than imported because that type lives in a
+// package the compiler only builds for tests.
+type rawResult struct {
+	Spec         string             `json:"spec"`
+	Talents      string             `json:"talents"`
+	Build        string             `json:"build"`
+	Gear         string             `json:"gear"`
+	Rotation     string             `json:"rotation"`
+	Dps          float64            `json:"dps"`
+	Damage       map[string]float64 `json:"damage"`
+	WeaponDamage float64            `json:"weaponDamage"`
+}
+
+// Only the fields the scoring needs; the manifest carries more.
+type spellSource struct {
+	Source   string          `json:"source"`
+	Measured json.RawMessage `json:"measured"`
+}
+
+// What the page renders. Damage is not carried through: a few hundred builds times their
+// spell breakdowns is megabytes, and the composition is the only part anyone reads.
+type build struct {
+	Spec     string             `json:"spec"`
+	Build    string             `json:"build"`
+	Talents  string             `json:"talents"`
+	Gear     string             `json:"gear"`
+	Rotation string             `json:"rotation"`
+	Dps      float64            `json:"dps"`
+	Rests    map[string]float64 `json:"rests"`
+}
+
+type output struct {
+	// Which sim produced these. A page can compare it against its own build and say so when
+	// the two have drifted apart.
+	Commit     string    `json:"commit"`
+	Generated  time.Time `json:"generated"`
+	Iterations int       `json:"iterations"`
+	Builds     []build   `json:"builds"`
+}
+
+func main() {
+	if len(os.Args) != 3 {
+		fail("usage: go run ./tools/arena <arena-out-dir> <out.json>")
+	}
+	inDir, outPath := os.Args[1], os.Args[2]
+
+	manifest := loadManifest("ui/core/spells")
+	builds := []build{}
+
+	entries, err := os.ReadDir(inDir)
+	if err != nil {
+		fail("%s: %s", inDir, err)
+	}
+	for _, entry := range entries {
+		if !strings.HasSuffix(entry.Name(), ".json") {
+			continue
+		}
+		var raw []rawResult
+		read(filepath.Join(inDir, entry.Name()), &raw)
+		for _, result := range raw {
+			// A build that produced no damage ran into something the sim could not do with it.
+			// Ranking it at zero would put it bottom of a leaderboard as though that were a
+			// finding about the build rather than about the run.
+			if result.Dps <= 0 {
+				fmt.Fprintf(os.Stderr, "skipping %s / %s / %s: no damage\n", result.Spec, result.Build, result.Gear)
+				continue
+			}
+			builds = append(builds, build{
+				Spec:     result.Spec,
+				Build:    result.Build,
+				Talents:  result.Talents,
+				Gear:     result.Gear,
+				Rotation: result.Rotation,
+				Dps:      result.Dps,
+				Rests:    compose(result, manifest),
+			})
+		}
+	}
+	if len(builds) == 0 {
+		fail("no builds in %s, so there is nothing to publish", inDir)
+	}
+
+	sort.Slice(builds, func(i, j int) bool { return builds[i].Dps > builds[j].Dps })
+
+	encoded, err := json.MarshalIndent(output{
+		Commit:     commit(),
+		Generated:  time.Now().UTC().Truncate(time.Second),
+		Iterations: 5000,
+		Builds:     builds,
+	}, "", "\t")
+	if err != nil {
+		fail("%s", err)
+	}
+	if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil {
+		fail("%s", err)
+	}
+	if err := os.WriteFile(outPath, append(encoded, '\n'), 0o644); err != nil {
+		fail("%s", err)
+	}
+	fmt.Printf("%d builds across %d specs -> %s\n", len(builds), countSpecs(builds), outPath)
+}
+
+// Share of the build's damage per evidence tier. The same composition the rankings page
+// computes in the browser, and deliberately the same shape: where a number came from is
+// reported, never collapsed into a score that would need weights nobody can defend.
+func compose(result rawResult, manifest map[int]spellSource) map[string]float64 {
+	rests := map[string]float64{"measured": 0, "forever": 0, "classic": 0, "core": 0, "assumed": 0, "unknown": 0}
+	total := result.WeaponDamage
+	rests["core"] = result.WeaponDamage
+
+	for id, damage := range result.Damage {
+		total += damage
+		rests[tierOf(id, manifest)] += damage
+	}
+	if total == 0 {
+		return rests
+	}
+	for tier := range rests {
+		rests[tier] = round(rests[tier] / total)
+	}
+	return rests
+}
+
+func tierOf(id string, manifest map[int]spellSource) string {
+	spellId, err := strconv.Atoi(id)
+	if err != nil || spellId == 0 {
+		return "unknown"
+	}
+	source, ok := manifest[spellId]
+	if !ok {
+		return "unknown"
+	}
+	if len(source.Measured) > 0 {
+		return "measured"
+	}
+	if source.Source == "unreviewed" || source.Source == "" {
+		return "unknown"
+	}
+	return source.Source
+}
+
+func loadManifest(dir string) map[int]spellSource {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		fail("%s: %s", dir, err)
+	}
+	manifest := map[int]spellSource{}
+	for _, entry := range entries {
+		if !strings.HasSuffix(entry.Name(), ".json") {
+			continue
+		}
+		var file map[string]spellSource
+		read(filepath.Join(dir, entry.Name()), &file)
+		for id, source := range file {
+			spellId, err := strconv.Atoi(id)
+			if err != nil {
+				fail("%s: %q is not a spell id", entry.Name(), id)
+			}
+			manifest[spellId] = source
+		}
+	}
+	return manifest
+}
+
+// The sim the numbers came from. Empty outside a checkout rather than fatal, so the merge
+// still works when somebody runs it by hand.
+func commit() string {
+	out, err := exec.Command("git", "rev-parse", "HEAD").Output()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+
+func countSpecs(builds []build) int {
+	specs := map[string]bool{}
+	for _, b := range builds {
+		specs[b.Spec] = true
+	}
+	return len(specs)
+}
+
+// Four decimal places: a hundredth of a percent, which is finer than anything the page
+// shows and keeps the committed file from churning on floating point noise.
+func round(value float64) float64 {
+	return float64(int64(value*10000+0.5)) / 10000
+}
+
+func read(path string, into any) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		fail("%s: %s", path, err)
+	}
+	if err := json.Unmarshal(data, into); err != nil {
+		fail("%s: %s", path, err)
+	}
+}
+
+func fail(format string, args ...any) {
+	fmt.Fprintf(os.Stderr, format+"\n", args...)
+	os.Exit(1)
+}

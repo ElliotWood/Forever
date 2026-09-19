@@ -1,0 +1,204 @@
+// The global .container is display:flex with no direction, so anything using it has to say
+// which way it runs.
+#arena-page {
+	.container {
+		flex-direction: column;
+	}
+
+	.arena-header {
+		border-bottom: $border-default;
+		background: var(--bs-black-alpha-30);
+	}
+
+	.arena-header-container {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--gap-width);
+		padding-top: calc(var(--container-padding) / 2);
+		padding-bottom: calc(var(--container-padding) / 2);
+	}
+
+	.arena-home-link {
+		display: block;
+
+		.forever-logo {
+			width: 12rem;
+			max-width: 100%;
+		}
+	}
+
+	// min-width:0 so a long word cannot push the flex item past the viewport.
+	.arena-title-block {
+		flex: 1 1 20rem;
+		min-width: 0;
+	}
+
+	.arena-title {
+		margin: 0;
+		font-size: 1.75rem;
+		color: var(--bs-white);
+	}
+
+	.arena-subtitle {
+		margin: var(--spacer-2) 0 0;
+		max-width: 52rem;
+		color: var(--bs-gray-400);
+	}
+
+	.arena-content {
+		gap: var(--spacer-3);
+		padding-top: var(--container-padding);
+		padding-bottom: var(--container-padding);
+		color: var(--bs-gray-300);
+	}
+
+	.arena-controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--spacer-2) var(--spacer-3);
+	}
+
+	.arena-toggle {
+		padding: 0.35rem 0.9rem;
+		border: 1px solid var(--bs-brand);
+		border-radius: 999px;
+		background: transparent;
+		color: var(--bs-white);
+		font: inherit;
+		font-size: 0.9rem;
+		cursor: pointer;
+
+		&:hover,
+		&:focus-visible {
+			background: rgba(224, 163, 53, 0.15);
+		}
+	}
+
+	.arena-count {
+		margin: 0;
+		color: var(--bs-gray-500);
+	}
+
+	// Six columns is more than a phone fits, and the table is the page, so it is allowed to
+	// scroll sideways inside its own box rather than pushing the whole document wider.
+	.arena-table {
+		display: block;
+		width: 100%;
+		overflow-x: auto;
+		border-collapse: collapse;
+
+		// The shared metrics-table centres its cells, which reads as a column of names drifting
+		// away from the icon beside them.
+		th,
+		td {
+			padding: var(--spacer-1) var(--spacer-2);
+			vertical-align: middle;
+			white-space: nowrap;
+			text-align: left;
+		}
+	}
+
+	.arena-rank-cell {
+		width: 3ch;
+		text-align: right;
+		color: var(--bs-gray-500);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.arena-build-cell {
+		.metrics-action-icon {
+			margin-right: var(--spacer-2);
+			vertical-align: middle;
+		}
+	}
+
+	.arena-build-names {
+		display: inline-flex;
+		flex-direction: column;
+		vertical-align: middle;
+	}
+
+	.arena-spec-name {
+		font-size: 0.75rem;
+		color: var(--bs-gray-400);
+	}
+
+	.arena-talents {
+		font-weight: 600;
+	}
+
+	.arena-setup-cell {
+		font-size: 0.85rem;
+	}
+
+	.arena-setup {
+		display: block;
+		color: var(--bs-gray-300);
+	}
+
+	.arena-setup-quiet {
+		color: var(--bs-gray-500);
+	}
+
+	.arena-dps-cell {
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+	}
+
+	// The one column allowed to take whatever is left, so the bars are long enough to read.
+	.arena-share-cell {
+		width: 100%;
+		min-width: 10rem;
+	}
+
+	.arena-share {
+		display: flex;
+		align-items: center;
+		gap: var(--spacer-2);
+	}
+
+	.arena-share-bar {
+		position: relative;
+		flex: 1;
+		min-width: 2.5rem;
+		height: 0.75rem;
+		background-color: color-mix(in srgb, var(--bs-white) 5%, transparent);
+	}
+
+	.arena-share-bar-fill {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: var(--percentage);
+		height: 100%;
+	}
+
+	.arena-share-percent {
+		width: 5ch;
+		flex-shrink: 0;
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.arena-row:nth-child(even) {
+		background: rgba(255, 255, 255, 0.03);
+	}
+
+	.arena-notes {
+		margin: var(--spacer-3) 0 0;
+		padding-left: var(--spacer-4);
+		max-width: 60rem;
+		color: var(--bs-gray-400);
+		font-size: 0.9rem;
+
+		li + li {
+			margin-top: var(--spacer-2);
+		}
+	}
+
+	.arena-stale {
+		color: var(--bs-brand);
+	}
+}

@@ -1,6 +1,7 @@
 package hunter
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common" // imported to get item effects included.
@@ -93,4 +94,17 @@ var Stats = []proto.Stat{
 	proto.Stat_StatRangedAttackPower,
 	proto.Stat_StatMeleeCrit,
 	proto.Stat_StatMeleeHit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:                "hunter",
+		Class:              proto.Class_ClassHunter,
+		Race:               proto.Race_RaceOrc,
+		SpecOptions:        P1PlayerOptions,
+		Consumes:           P1Consumes,
+		Buffs:              core.ForeverBuffs,
+		DistanceFromTarget: 30,
+	})
 }

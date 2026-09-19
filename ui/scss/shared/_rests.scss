@@ -1,0 +1,65 @@
+// Where a build's damage came from, as a composition rather than a score. Shared by the
+// live rankings page and the precomputed arena, so the two cannot drift apart visually
+// while claiming to mean the same thing. The colours match the evidence page: gold means
+// read the note, green means somebody watched it happen.
+
+.rests-cell {
+	white-space: nowrap;
+}
+
+.rests {
+	display: flex;
+	align-items: center;
+	gap: var(--spacer-2);
+}
+
+.rests-bar {
+	display: flex;
+	overflow: hidden;
+	width: 6rem;
+	height: 0.75rem;
+	border-radius: 2px;
+	background-color: color-mix(in srgb, var(--bs-white) 5%, transparent);
+}
+
+.rests-part {
+	width: var(--percentage);
+}
+
+.rests-measured {
+	background-color: #6dbf6d;
+}
+
+.rests-forever {
+	background-color: #4a7fb5;
+}
+
+.rests-classic {
+	background-color: #6c757d;
+}
+
+.rests-core {
+	background-color: #8a7f6d;
+}
+
+.rests-assumed {
+	background-color: var(--bs-brand);
+}
+
+// Not in the manifest at all, which is a different problem from a known guess and is
+// drawn as a gap rather than as a colour claiming to mean something.
+.rests-unknown {
+	background-color: color-mix(in srgb, var(--bs-white) 18%, transparent);
+}
+
+.rests-percent {
+	width: 5ch;
+	flex-shrink: 0;
+	text-align: right;
+	color: var(--bs-gray-400);
+}
+
+.rests-high {
+	color: var(--bs-brand);
+	font-weight: 600;
+}

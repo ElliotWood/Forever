@@ -1,6 +1,7 @@
 package feral
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common"
@@ -109,4 +110,16 @@ var Stats = []proto.Stat{
 	proto.Stat_StatAttackPower,
 	proto.Stat_StatMeleeCrit,
 	proto.Stat_StatMeleeHit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "feral_druid",
+		Class:       proto.Class_ClassDruid,
+		Race:        proto.Race_RaceTauren,
+		SpecOptions: PlayerOptionsMonoCat,
+		Consumes:    P1Consumes,
+		Buffs:       core.ForeverBuffs,
+	})
 }

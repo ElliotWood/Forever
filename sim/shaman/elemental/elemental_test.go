@@ -1,6 +1,7 @@
 package elemental
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common"
@@ -153,4 +154,17 @@ var Stats = []proto.Stat{
 	proto.Stat_StatFirePower,
 	proto.Stat_StatSpellHit,
 	proto.Stat_StatSpellCrit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:                "elemental_shaman",
+		Class:              proto.Class_ClassShaman,
+		Race:               proto.Race_RaceOrc,
+		SpecOptions:        PlayerOptionsAdaptive,
+		Consumes:           Phase1Consumes,
+		Buffs:              core.ForeverBuffs,
+		DistanceFromTarget: 30,
+	})
 }

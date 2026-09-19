@@ -3,6 +3,7 @@ package enhancement
 import (
 	"testing"
 
+	"github.com/wowsims/classic/sim/arenalib"
 	_ "github.com/wowsims/classic/sim/common" // imported to get item effects included.
 	"github.com/wowsims/classic/sim/core"
 	"github.com/wowsims/classic/sim/core/proto"
@@ -126,4 +127,16 @@ var Stats = []proto.Stat{
 	proto.Stat_StatMeleeHit,
 	proto.Stat_StatMeleeCrit,
 	proto.Stat_StatSpellPower,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "enhancement_shaman",
+		Class:       proto.Class_ClassShaman,
+		Race:        proto.Race_RaceDwarf,
+		SpecOptions: PlayerOptionsSyncAuto,
+		Consumes:    Phase1Consumes,
+		Buffs:       core.ForeverBuffs,
+	})
 }

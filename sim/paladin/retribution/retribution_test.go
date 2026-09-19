@@ -1,6 +1,7 @@
 package retribution
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	"github.com/wowsims/classic/sim/core"
@@ -122,4 +123,16 @@ var Stats = []proto.Stat{
 	proto.Stat_StatSpellPower,
 	proto.Stat_StatSpellHit,
 	proto.Stat_StatSpellCrit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "retribution_paladin",
+		Class:       proto.Class_ClassPaladin,
+		Race:        proto.Race_RaceHuman,
+		SpecOptions: PlayerOptionsSealofRighteousness,
+		Consumes:    Phase5Consumes,
+		Buffs:       core.ForeverBuffs,
+	})
 }

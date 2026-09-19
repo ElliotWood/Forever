@@ -1,6 +1,7 @@
 package protection
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	"github.com/wowsims/classic/sim/core"
@@ -119,4 +120,17 @@ var Stats = []proto.Stat{
 	proto.Stat_StatShadowResistance,
 	proto.Stat_StatFrostResistance,
 	proto.Stat_StatArcaneResistance,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "protection_paladin",
+		Class:       proto.Class_ClassPaladin,
+		Race:        proto.Race_RaceHuman,
+		SpecOptions: PlayerOptionsSealofRighteousness,
+		Consumes:    Phase4Consumes,
+		Buffs:       core.ForeverBuffs,
+		IsTank:      true,
+	})
 }

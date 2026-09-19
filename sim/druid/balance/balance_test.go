@@ -1,6 +1,7 @@
 package balance
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common" // imported to get caster sets included. (we use spellfire here)
@@ -101,4 +102,16 @@ var Stats = []proto.Stat{
 	proto.Stat_StatSpellPower,
 	proto.Stat_StatSpellHit,
 	proto.Stat_StatSpellCrit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "balance_druid",
+		Class:       proto.Class_ClassDruid,
+		Race:        proto.Race_RaceNightElf,
+		SpecOptions: PlayerOptionsAdaptive,
+		Consumes:    P1Consumes,
+		Buffs:       core.ForeverBuffs,
+	})
 }

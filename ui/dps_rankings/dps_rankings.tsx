@@ -28,7 +28,9 @@ import { Sim, SimError } from '../core/sim.js';
 import { EventID, TypedEvent } from '../core/typed_event.js';
 import { formatToNumber, formatToPercent } from '../core/utils.js';
 import { applyBlessings, applyNewPlayerAssignments, communityBuilds, newPlayerFromPreset, playerPresets, RaidBuild } from '../raid/presets.js';
-import { Composition, composition, TIER_LABELS, TIER_ORDER, unsettledShare } from './confidence.js';
+import { restsCell } from '../core/components/rests_cell.js';
+import { Composition } from '../core/spells/rests.js';
+import { composition } from './confidence.js';
 
 // Twenty-six players over a two minute encounter, so this is not free: measured at about
 // forty seconds from opening the page to the table appearing, on four cores. The run has
@@ -62,29 +64,6 @@ function strongestOf<T extends object>(buffs: Array<T>): T {
 	);
 	return merged as T;
 }
-
-// A stacked bar of where the damage came from, with the one number worth reading next to it.
-// Titled rather than tooltipped: this is a table of twenty-odd rows and a tippy on each cell
-// is twenty-odd instances to build for a hover nobody may make.
-const restsCell = (rests: Composition): Element => {
-	const unsettled = unsettledShare(rests);
-	const breakdown = TIER_ORDER.filter(tier => rests[tier] > 0)
-		.map(tier => `${formatToPercent(rests[tier] * 100, { maximumFractionDigits: 1 })} ${TIER_LABELS[tier]}`)
-		.join('\n');
-
-	return (
-		<div className="dps-rankings-rests" attributes={{ title: `Of this build's damage:\n${breakdown}` }}>
-			<div className="dps-rankings-rests-bar">
-				{TIER_ORDER.map(tier => (
-					<div className={`dps-rankings-rests-part dps-rankings-rests-${tier}`} style={{ '--percentage': formatToPercent(rests[tier] * 100) }} />
-				))}
-			</div>
-			<span className={clsx('dps-rankings-rests-percent', unsettled >= 0.05 && 'dps-rankings-rests-high')}>
-				{formatToPercent(unsettled * 100, { maximumFractionDigits: 1 })}
-			</span>
-		</div>
-	) as Element;
-};
 
 export class DpsRankings extends Component {
 	readonly sim: Sim;
@@ -406,7 +385,7 @@ export class DpsRankings extends Component {
 						<th className="metrics-table-header-cell dps-rankings-spec-cell">Build</th>
 						<th className="metrics-table-header-cell dps-rankings-dps-cell">DPS</th>
 						<th className="metrics-table-header-cell dps-rankings-share-cell">Share of top</th>
-						<th className="metrics-table-header-cell dps-rankings-rests-cell">Rests on a guess</th>
+						<th className="metrics-table-header-cell rests-cell">Rests on a guess</th>
 					</tr>
 				</thead>
 				<tbody className="metrics-table-body">{rankings.map(ranking => this.buildRow(ranking, topDps))}</tbody>
@@ -437,7 +416,7 @@ export class DpsRankings extends Component {
 						<span className="dps-rankings-share-percent">{formatToPercent(share, { maximumFractionDigits: 1 })}</span>
 					</div>
 				</td>
-				<td className="dps-rankings-rests-cell">{restsCell(ranking.rests)}</td>
+				<td className="rests-cell">{restsCell(ranking.rests)}</td>
 			</tr>
 		) as Element;
 	}

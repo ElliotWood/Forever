@@ -1,6 +1,7 @@
 package dpsrogue
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	"github.com/wowsims/classic/sim/core"
@@ -164,4 +165,16 @@ var Phase1PoisonConsumes = core.ConsumesCombo{
 		StrengthBuff:    proto.StrengthBuff_JujuPower,
 		AttackPowerBuff: proto.AttackPowerBuff_JujuMight,
 	},
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "rogue",
+		Class:       proto.Class_ClassRogue,
+		Race:        proto.Race_RaceHuman,
+		SpecOptions: DefaultRogue,
+		Consumes:    Phase1Consumes,
+		Buffs:       core.ForeverBuffs,
+	})
 }
