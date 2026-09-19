@@ -10,6 +10,9 @@ import (
 // https://www.wowhead.com/forever/spell=31842
 //
 // Reduces the mana cost of all spells by 50% for 15 sec.
+//
+// TODO: uncalled -- Forever drops the Divine Illumination talent; re-gate before wiring
+// back into registerTalentSpells.
 func (paladin *Paladin) registerDivineIllumination() {
 	actionId := core.ActionID{SpellID: 31842}
 	divineIlluminationAura := paladin.RegisterAura(core.Aura{

@@ -16,8 +16,8 @@ func (mage *Mage) ApplyTalents() {
 	mage.registerArcaneFocus()
 	//mage.registerImprovedArcaneMissiles()
 
-	// mage.registerWandSpecialization()
-	// mage.registerMagicAbsorption()
+	mage.registerWandSpecialization()
+	mage.registerMagicAbsorption()
 	mage.registerArcaneConcentration()
 
 	// mage.registerMagicAttunement()
@@ -25,7 +25,7 @@ func (mage *Mage) ApplyTalents() {
 	//mage.registerArcaneFortitude()
 
 	// mage.registerImprovedManaShield()
-	// mage.registerImprovedCounterspell()
+	mage.registerImprovedCounterspell()
 	mage.registerArcaneMeditation()
 
 	//mage.registerImprovedBlink()
@@ -34,18 +34,12 @@ func (mage *Mage) ApplyTalents() {
 	// mage.registerPrismaticCloak()
 	mage.registerArcaneInstability()
 
-	mage.registerEmpoweredArcaneMissiles()
-	mage.registerSpellPower()
-
-	mage.registerMindMastery()
-
 	//-------  FIRE  --------
 	mage.registerImprovedFireball()
-	// mage.registerImpact()
+	mage.registerImpact()
 
 	mage.registerIgnite()
-	// mage.registerFlameThrowing()
-	mage.registerImprovedFireBlast()
+	mage.registerFlameThrowing()
 
 	mage.registerIncineration()
 	mage.registerImprovedFlamestrike()
@@ -54,42 +48,48 @@ func (mage *Mage) ApplyTalents() {
 	// mage.registerMoltenShields()
 	mage.registerMasterOfElements()
 
-	mage.registerPlayingWithFire()
 	mage.registerCriticalMass()
 
 	// mage.registerBlazingSpeed()
 	mage.registerFirePower()
 
-	mage.registerPyromaniac()
-	mage.registerMoltenFury()
-
-	mage.registerEmpoweredFireball()
-
 	//------- FROST --------
-	// mage.registerFrostWarding()
+	mage.registerFrostWarding()
 	mage.registerImprovedFrostbolt()
 	mage.registerElementalPrecision()
 
 	mage.registerIceShards()
-	// mage.registerFrostbite()
+	mage.registerFrostbite()
 	mage.registerImprovedFrostNova()
-	// mage.registerPermafrost()
+	mage.registerPermafrost()
 
 	mage.registerPiercingIce()
-	// mage.registerImprovedBlizzard()
+	mage.registerImprovedBlizzard()
 
-	// mage.registerArcticReach()
+	mage.registerArcticReach()
 	mage.registerFrostChanneling()
-	// mage.registerShatter()
+	mage.registerShatter()
 
 	mage.registerImprovedConeOfCold()
 
-	mage.registerIceFloes()
 	mage.registerWinterChill()
 
-	mage.registerArcticWinds()
+	mage.registerIceBarrier()
 
-	mage.registerEmpoweredFrostbolt()
+	// Forever additions, not yet implemented.
+	mage.registerArcaneBlastTalent()
+	mage.registerArcaneGeometry()
+	mage.registerArcaneResilience()
+	mage.registerArcaneShielding()
+	mage.registerImprovedChanneling()
+	mage.registerMissileBarrage()
+	mage.registerPyroblastTalent()
+	mage.registerHotStreak()
+	mage.registerImprovedFireWard()
+	mage.registerWakeOfFire()
+	mage.registerFingersOfFrost()
+	mage.registerIceBlock()
+	mage.registerIceLance()
 }
 
 func (mage *Mage) registerArcaneSubtlety() {
@@ -118,7 +118,9 @@ func (mage *Mage) registerArcaneConcentration() {
 		return
 	}
 
-	bonusCrit := float64(mage.Talents.ArcanePotency) * 10 * core.SpellCritRatingPerCritPercent
+	// TODO: Forever drops Arcane Potency; the Clearcasting crit bonus it fed is pinned to
+	// 0 until we know whether the effect moved onto another talent.
+	bonusCrit := 0.0
 	var proccedAt time.Duration
 	var proccedSpell *core.Spell
 
@@ -225,44 +227,6 @@ func (mage *Mage) registerArcaneInstability() {
 
 }
 
-func (mage *Mage) registerEmpoweredArcaneMissiles() {
-	if mage.Talents.EmpoweredArcaneMissiles == 0 {
-		return
-	}
-
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellArcaneMissilesTick,
-		FloatValue: spellData.EmpoweredArcaneMissiles.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_BONUS_MULTIPLIER).FractionAt(mage.Talents.EmpoweredArcaneMissiles),
-		Kind:       core.SpellMod_BonusCoeffecient_Flat,
-	})
-
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellArcaneMissilesCast,
-		FloatValue: spellData.EmpoweredArcaneMissiles.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(mage.Talents.EmpoweredArcaneMissiles),
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-	})
-}
-
-func (mage *Mage) registerSpellPower() {
-	if mage.Talents.SpellPower == 0 {
-		return
-	}
-
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellsAll,
-		FloatValue: spellData.SpellPower.FractionAt(mage.Talents.SpellPower),
-		Kind:       core.SpellMod_CritMultiplier_Flat,
-	})
-}
-
-func (mage *Mage) registerMindMastery() {
-	if mage.Talents.MindMastery == 0 {
-		return
-	}
-
-	mage.AddStatDependency(stats.Intellect, stats.SpellDamage, spellData.MindMastery.FractionAt(mage.Talents.MindMastery))
-}
-
 // ------ FIRE TALENTS ------
 
 func (mage *Mage) registerImprovedFireball() {
@@ -347,18 +311,6 @@ func (mage *Mage) registerIgnite() {
 	mage.Ignite.Flags ^= core.SpellFlagNoOnCastComplete
 }
 
-func (mage *Mage) registerImprovedFireBlast() {
-	if mage.Talents.ImprovedFireBlast == 0 {
-		return
-	}
-
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask: MageSpellFireBlast,
-		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedFireBlast.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_COOLDOWN).ValueAt(mage.Talents.ImprovedFireBlast)),
-		Kind:      core.SpellMod_Cooldown_Flat,
-	})
-}
-
 func (mage *Mage) registerIncineration() {
 	if mage.Talents.Incineration == 0 {
 		return
@@ -417,18 +369,6 @@ func (mage *Mage) registerMasterOfElements() {
 	})
 }
 
-func (mage *Mage) registerPlayingWithFire() {
-	if mage.Talents.PlayingWithFire == 0 {
-		return
-	}
-
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellsAll,
-		FloatValue: spellData.PlayingWithFire.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 126).FractionAt(mage.Talents.PlayingWithFire),
-		Kind:       core.SpellMod_DamageDone_Pct,
-	})
-}
-
 func (mage *Mage) registerCriticalMass() {
 	if mage.Talents.CriticalMass == 0 {
 		return
@@ -450,59 +390,6 @@ func (mage *Mage) registerFirePower() {
 		School:     core.SpellSchoolFire,
 		FloatValue: spellData.FirePower.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(mage.Talents.FirePower),
 		Kind:       core.SpellMod_DamageDone_Flat,
-	})
-}
-
-func (mage *Mage) registerPyromaniac() {
-	if mage.Talents.Pyromaniac == 0 {
-		return
-	}
-
-	points := float64(mage.Talents.Pyromaniac)
-
-	mage.AddStaticMod(core.SpellModConfig{
-		School:     core.SpellSchoolFire,
-		FloatValue: 1 * points,
-		Kind:       core.SpellMod_BonusCrit_Percent,
-	})
-
-	mage.AddStaticMod(core.SpellModConfig{
-		School:     core.SpellSchoolFire,
-		FloatValue: -0.01 * points,
-		Kind:       core.SpellMod_PowerCost_Pct,
-	})
-}
-
-func (mage *Mage) registerMoltenFury() {
-	if mage.Talents.MoltenFury == 0 {
-		return
-	}
-
-	moltenFury := mage.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: .1 * float64(mage.Talents.MoltenFury),
-		ClassMask:  MageSpellsAll,
-	})
-
-	mage.RegisterResetEffect(func(sim *core.Simulation) {
-		moltenFury.Deactivate()
-		sim.RegisterExecutePhaseCallback(func(sim *core.Simulation, isExecute int32) {
-			if isExecute == 20 {
-				moltenFury.Activate()
-			}
-		})
-	})
-}
-
-func (mage *Mage) registerEmpoweredFireball() {
-	if mage.Talents.EmpoweredFireball == 0 {
-		return
-	}
-
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellFireball,
-		FloatValue: spellData.EmpoweredFireball.FractionAt(mage.Talents.EmpoweredFireball),
-		Kind:       core.SpellMod_BonusCoeffecient_Flat,
 	})
 }
 
@@ -604,18 +491,6 @@ func (mage *Mage) registerImprovedConeOfCold() {
 	})
 }
 
-func (mage *Mage) registerIceFloes() {
-	if mage.Talents.IceFloes == 0 {
-		return
-	}
-
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellColdSnap | MageSpellConeOfCold | MageSpellIceBarrier | MageSpellIceBlock,
-		FloatValue: spellData.IceFloes.MultiplierAt(mage.Talents.IceFloes),
-		Kind:       core.SpellMod_Cooldown_Multiplier,
-	})
-}
-
 func (mage *Mage) registerWinterChill() {
 	if mage.Talents.WintersChill == 0 {
 		return
@@ -647,32 +522,304 @@ func (mage *Mage) registerWinterChill() {
 	})
 }
 
-func (mage *Mage) registerArcticWinds() {
-	if mage.Talents.ArcticWinds == 0 {
+// registerWandSpecialization implements Wand Specialization, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerWandSpecialization() {
+	if mage.Talents.WandSpecialization == 0 {
 		return
 	}
 
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellFrost,
-		FloatValue: spellData.ArcticWinds.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 16).FractionAt(mage.Talents.ArcticWinds),
-		Kind:       core.SpellMod_DamageDone_Pct,
-	})
+	panic("To be implemented")
 }
 
-func (mage *Mage) registerEmpoweredFrostbolt() {
-	if mage.Talents.EmpoweredFrostbolt == 0 {
+// registerMagicAbsorption implements Magic Absorption, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerMagicAbsorption() {
+	if mage.Talents.MagicAbsorption == 0 {
 		return
 	}
 
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellFrostbolt,
-		FloatValue: spellData.EmpoweredFrostbolt.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_BONUS_MULTIPLIER).FractionAt(mage.Talents.EmpoweredFrostbolt),
-		Kind:       core.SpellMod_BonusCoeffecient_Flat,
-	})
+	panic("To be implemented")
+}
 
-	mage.AddStaticMod(core.SpellModConfig{
-		ClassMask:  MageSpellFrostbolt,
-		FloatValue: spellData.EmpoweredFrostbolt.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(mage.Talents.EmpoweredFrostbolt),
-		Kind:       core.SpellMod_BonusCrit_Percent,
-	})
+// registerImprovedCounterspell implements Improved Counterspell, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerImprovedCounterspell() {
+	if mage.Talents.ImprovedCounterspell == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImpact implements Impact, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerImpact() {
+	if mage.Talents.Impact == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerFlameThrowing implements Flame Throwing, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerFlameThrowing() {
+	if mage.Talents.FlameThrowing == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerFrostWarding implements Frost Warding, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerFrostWarding() {
+	if mage.Talents.FrostWarding == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerFrostbite implements Frostbite, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerFrostbite() {
+	if mage.Talents.Frostbite == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerPermafrost implements Permafrost, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerPermafrost() {
+	if mage.Talents.Permafrost == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedBlizzard implements Improved Blizzard, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerImprovedBlizzard() {
+	if mage.Talents.ImprovedBlizzard == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerArcticReach implements Arctic Reach, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerArcticReach() {
+	if mage.Talents.ArcticReach == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerShatter implements Shatter, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerShatter() {
+	if mage.Talents.Shatter == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerIceBarrier implements Ice Barrier, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerIceBarrier() {
+	if !mage.Talents.IceBarrier {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerArcaneGeometry implements Arcane Geometry, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerArcaneGeometry() {
+	if mage.Talents.ArcaneGeometry == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerArcaneResilience implements Arcane Resilience, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerArcaneResilience() {
+	if mage.Talents.ArcaneResilience == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerArcaneShielding implements Arcane Shielding, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerArcaneShielding() {
+	if mage.Talents.ArcaneShielding == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedChanneling implements Improved Channeling, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerImprovedChanneling() {
+	if mage.Talents.ImprovedChanneling == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerMissileBarrage implements Missile Barrage, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerMissileBarrage() {
+	if !mage.Talents.MissileBarrage {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerHotStreak implements Hot Streak, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerHotStreak() {
+	if !mage.Talents.HotStreak {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedFireWard implements Improved Fire Ward, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerImprovedFireWard() {
+	if mage.Talents.ImprovedFireWard == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerWakeOfFire implements Wake of Fire, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerWakeOfFire() {
+	if mage.Talents.WakeOfFire == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerFingersOfFrost implements Fingers of Frost, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerFingersOfFrost() {
+	if mage.Talents.FingersOfFrost == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerIceBlock implements Ice Block, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerIceBlock() {
+	if !mage.Talents.IceBlock {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerIceLance implements Ice Lance, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (mage *Mage) registerIceLance() {
+	if !mage.Talents.IceLance {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerArcaneBlastTalent implements the Forever talent gate for Arcane Blast.
+//
+// TODO: Forever makes Arcane Blast a talent; the baseline registration in
+// arcane_blast.go (registerArcaneBlastSpell, called unconditionally from
+// registerSpells) is untouched and should be gated on this field.
+func (mage *Mage) registerArcaneBlastTalent() {
+	if !mage.Talents.ArcaneBlast {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerPyroblastTalent implements the Forever talent gate for Pyroblast.
+//
+// TODO: Forever makes Pyroblast a talent; the baseline registration in
+// pyroblast.go (registerPyroblastSpell, called unconditionally from
+// registerSpells) is untouched and should be gated on this field.
+func (mage *Mage) registerPyroblastTalent() {
+	if !mage.Talents.Pyroblast {
+		return
+	}
+
+	panic("To be implemented")
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{21, 22, 21}
+var TalentTreeSizes = [3]int{17, 19, 16}
 
 type Warlock struct {
 	core.Character

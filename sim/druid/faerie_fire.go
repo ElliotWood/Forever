@@ -9,7 +9,9 @@ var faerieFireFeralRank = spellData.FaerieFireFeral.BySpellID(27011)
 
 func (druid *Druid) registerFaerieFireSpell() {
 	auras := druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.FaerieFireAura(target, float64(druid.Talents.ImprovedFaerieFire))
+		// TODO: Forever drops Improved Faerie Fire; untalented (0 points) until we know
+		// whether the effect moved onto another talent.
+		return core.FaerieFireAura(target, 0)
 	})
 
 	druid.FaerieFire = druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{
@@ -45,13 +47,13 @@ func (druid *Druid) registerFaerieFireSpell() {
 	})
 }
 
+// TODO: uncalled -- Forever drops the Faerie Fire (Feral) talent; re-gate before wiring
+// back into RegisterFeralCatSpells/RegisterFeralTankSpells.
 func (druid *Druid) registerFaerieFireFeralSpell() {
-	if !druid.Talents.FaerieFireFeral {
-		return
-	}
-
 	druid.FaerieFireAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.FaerieFireAura(target, float64(druid.Talents.ImprovedFaerieFire))
+		// TODO: Forever drops Improved Faerie Fire; untalented (0 points) until we know
+		// whether the effect moved onto another talent.
+		return core.FaerieFireAura(target, 0)
 	})
 
 	druid.FaerieFireFeral = druid.RegisterSpell(Cat|Bear, core.SpellConfig{

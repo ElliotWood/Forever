@@ -7,6 +7,10 @@ import (
 var shadowFuryRank = spellData.Shadowfury.BySpellID(30414)
 var shadowFuryCoeff = shadowFuryRank.Direct.BonusCoefficient()
 
+// TODO: uncalled -- Forever drops the Shadowfury talent that gated this spell, so
+// nothing calls this any more. Kept rather than deleted because "the talent is gone"
+// and "the spell is gone" are not the same claim, and the client data does not
+// distinguish them. Re-gate before wiring it back up.
 func (warlock *Warlock) registerShadowfury() {
 
 	warlock.Shadowfury = warlock.RegisterSpell(core.SpellConfig{

@@ -43,6 +43,8 @@ func (druid *Druid) registerDemoralizingRoarSpell() {
 
 func (druid *Druid) registerDemoralizingRoarAura() {
 	druid.DemoralizingRoarAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.DemoralizingRoarAura(target, druid.Talents.FeralAggression)
+		// TODO: Forever drops Feral Aggression; untalented (0 points) until we know
+		// whether the effect moved onto another talent.
+		return core.DemoralizingRoarAura(target, 0)
 	})
 }

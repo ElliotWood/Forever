@@ -607,7 +607,9 @@ func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
 	}
 
 	judgementOfTheCrusaderAuras := paladin.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ImprovedSealOfTheCrusaderAura(target, 1, paladin.Talents.ImprovedSealOfTheCrusader, flatBonus, percentBonus)
+		// TODO: Forever drops Improved Seal of the Crusader; untalented (0 points) until
+		// we know whether the effect moved onto another talent.
+		return core.ImprovedSealOfTheCrusaderAura(target, 1, 0, flatBonus, percentBonus)
 	})
 
 	paladin.JudgementAuras = append(paladin.JudgementAuras, judgementOfTheCrusaderAuras)

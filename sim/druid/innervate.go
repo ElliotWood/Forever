@@ -20,7 +20,9 @@ func (druid *Druid) registerInnervateCD() {
 
 	amount := 0.05
 	if innervateTarget == &druid.Unit {
-		amount = 0.2 + float64(druid.Talents.Dreamstate)*0.15
+		// TODO: Forever drops Dreamstate; untalented (self-cast base amount) until we
+		// know whether the effect moved onto another talent.
+		amount = 0.2
 	}
 
 	var innervateAura = core.InnervateAura(innervateTargetChar, amount, actionID.Tag)

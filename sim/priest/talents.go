@@ -8,24 +8,6 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-func (priest *Priest) applyForceOfWill() {
-	if priest.Talents.ForceOfWill == 0 {
-		return
-	}
-	// +1% damage per rank
-	priest.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ForceOfWill.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(priest.Talents.ForceOfWill),
-		ClassMask:  PriestSpellsAll,
-	})
-	// +1% crit per rank
-	priest.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.ForceOfWill.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(priest.Talents.ForceOfWill),
-		ClassMask:  PriestSpellsAll,
-	})
-}
-
 func (priest *Priest) applyPowerInfusion() {
 	if !priest.Talents.PowerInfusion {
 		return
@@ -59,29 +41,6 @@ func (priest *Priest) applyPowerInfusion() {
 		Priority: core.CooldownPriorityBloodlust,
 		Type:     core.CooldownTypeMana,
 	})
-}
-
-func (priest *Priest) applyFocusedPower() {
-	if priest.Talents.FocusedPower == 0 {
-		return
-	}
-	// +2% hit per rank (2 ranks = 4%)
-	priest.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusHit_Percent,
-		FloatValue: spellData.FocusedPower.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_RESIST_MISS_CHANCE).ValueAt(priest.Talents.FocusedPower),
-		ClassMask:  PriestSpellSmite | PriestSpellMindBlast,
-	})
-}
-
-func (priest *Priest) applyEnlightenment() {
-	if priest.Talents.Enlightenment == 0 {
-		return
-	}
-	// +1% per rank
-	multiplier := 1.0 + 0.01*float64(priest.Talents.Enlightenment)
-	priest.MultiplyStat(stats.Stamina, multiplier)
-	priest.MultiplyStat(stats.Intellect, multiplier)
-	priest.MultiplyStat(stats.Spirit, multiplier)
 }
 
 // Spirit of Redemption's passive half: +5% total Spirit. The on-death form is not modelled.
@@ -133,65 +92,6 @@ func (priest *Priest) applySearingLight() {
 	})
 }
 
-func (priest *Priest) applySurgeOfLight() {
-	if priest.Talents.SurgeOfLight == 0 {
-		return
-	}
-
-	// Dynamic mods activated by the aura
-	castTimeMod := priest.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CastTime_Pct,
-		FloatValue: -1.0, // -100% = instant cast
-		ClassMask:  PriestSpellSmite,
-	})
-	manaCostMod := priest.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: -1.0, // -100% = free
-		ClassMask:  PriestSpellSmite,
-	})
-	critMod := priest.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: -100.0, // unable to crit
-		ClassMask:  PriestSpellSmite,
-	})
-
-	solAura := priest.RegisterAura(core.Aura{
-		Label:    "Surge of Light",
-		ActionID: core.ActionID{SpellID: 33151},
-		Duration: 10 * time.Second,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			castTimeMod.Activate()
-			manaCostMod.Activate()
-			critMod.Activate()
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			castTimeMod.Deactivate()
-			manaCostMod.Deactivate()
-			critMod.Deactivate()
-		},
-		// Consumed on next Smite cast
-		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-			if spell.Matches(PriestSpellSmite) {
-				aura.Deactivate(sim)
-			}
-		},
-	})
-
-	// 25% proc chance at rank 1, 50% at rank 2
-	procChance := 0.25 * float64(priest.Talents.SurgeOfLight)
-
-	priest.MakeProcTriggerAura(core.ProcTrigger{
-		Name:            "Surge of Light Trigger",
-		ClassSpellsOnly: true,
-		Outcome:         core.OutcomeCrit,
-		ProcChance:      procChance,
-		Callback:        core.CallbackOnSpellHitDealt,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			solAura.Activate(sim)
-		},
-	})
-}
-
 func (priest *Priest) applySilentResolve() {
 	if priest.Talents.SilentResolve == 0 {
 		return
@@ -210,13 +110,6 @@ func (priest *Priest) applyHolyNova() {
 		return
 	}
 	HolyNovaRankMap.RegisterAll(priest.registerHolyNovaSpell)
-}
-
-func (priest *Priest) applyVampiricTouch() {
-	if !priest.Talents.VampiricTouch {
-		return
-	}
-	VampiricTouchRankMap.RegisterAll(priest.registerVampiricTouchSpell)
 }
 
 func (priest *Priest) applyMindFlay() {
@@ -351,18 +244,6 @@ func (priest *Priest) applyImprovedShadowWordPain() {
 	})
 }
 
-func (priest *Priest) applyFocusedMind() {
-	if priest.Talents.FocusedMind == 0 {
-		return
-	}
-
-	priest.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: -0.05 * float64(priest.Talents.FocusedMind),
-		ClassMask:  PriestSpellMindBlast | PriestSpellMindFlay,
-	})
-}
-
 func (priest *Priest) applyShadowAffinity() {
 	if priest.Talents.ShadowAffinity == 0 {
 		return
@@ -374,18 +255,6 @@ func (priest *Priest) applyShadowAffinity() {
 		Kind:       core.SpellMod_ThreatMultiplier_Pct,
 		FloatValue: threatReduction,
 		ClassMask:  PriestShadowSpells,
-	})
-}
-
-func (priest *Priest) applyShadowPower() {
-	if priest.Talents.ShadowPower == 0 {
-		return
-	}
-
-	priest.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.ShadowPower.ValueAt(priest.Talents.ShadowPower),
-		ClassMask:  PriestSpellMindBlast | PriestSpellShadowWordDeath,
 	})
 }
 
@@ -406,37 +275,6 @@ func (priest *Priest) applyShadowWeaving() {
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			swAuras.Get(result.Target).Activate(sim)
 			swAuras.Get(result.Target).AddStack(sim)
-		},
-	})
-}
-
-func (priest *Priest) applyMisery() {
-	if priest.Talents.Misery == 0 {
-		return
-	}
-
-	miseryAuras := priest.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.MiseryAura(target, priest.Talents.Misery)
-	})
-
-	priest.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Misery Trigger",
-		ClassSpellMask: PriestSpellShadowWordPain | PriestSpellVampiricTouch | PriestSpellMindFlay,
-		Outcome:        core.OutcomeLanded,
-		Callback:       core.CallbackOnSpellHitDealt,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			aura := miseryAuras.Get(result.Target)
-			dotDuration := spell.Dot(result.Target).RemainingDuration(sim)
-			currentRemaining := aura.RemainingDuration(sim)
-
-			if dotDuration > currentRemaining {
-				aura.Duration = dotDuration
-			} else {
-				aura.Duration = currentRemaining
-			}
-
-			aura.Activate(sim)
-
 		},
 	})
 }
@@ -494,7 +332,9 @@ func (priest *Priest) applyVampiricEmbrace() {
 		return
 	}
 
-	healPct := 0.15 + spellData.ImprovedVampiricEmbrace.FractionAt(priest.Talents.ImprovedVampiricEmbrace)
+	// TODO: Forever drops Improved Vampiric Embrace; base heal percent only until we know
+	// whether the bonus moved onto another talent.
+	healPct := 0.15
 	healthMetrics := priest.NewHealthMetrics(core.ActionID{SpellID: 15286})
 
 	veDebuffAuras := priest.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
@@ -542,4 +382,400 @@ func (priest *Priest) applyVampiricEmbrace() {
 
 		RelatedAuraArrays: veDebuffAuras.ToMap(),
 	})
+}
+
+// applyPowerInLight implements Power in Light, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyPowerInLight() {
+	if priest.Talents.PowerInLight == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyWandSpecialization implements Wand Specialization, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyWandSpecialization() {
+	if priest.Talents.WandSpecialization == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyTwinDisciplines implements Twin Disciplines, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyTwinDisciplines() {
+	if priest.Talents.TwinDisciplines == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyHolyPrecision implements Holy Precision, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyHolyPrecision() {
+	if priest.Talents.HolyPrecision == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedPowerWordShield implements Improved Power Word: Shield, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyImprovedPowerWordShield() {
+	if priest.Talents.ImprovedPowerWordShield == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyMartyrdom implements Martyrdom, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyMartyrdom() {
+	if priest.Talents.Martyrdom == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedInnerFire implements Improved Inner Fire, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyImprovedInnerFire() {
+	if priest.Talents.ImprovedInnerFire == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySoulWarding implements Soul Warding, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applySoulWarding() {
+	if !priest.Talents.SoulWarding {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedManaBurn implements Improved Mana Burn, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyImprovedManaBurn() {
+	if priest.Talents.ImprovedManaBurn == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyPenance implements Penance, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyPenance() {
+	if !priest.Talents.Penance {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyRenewedHope implements Renewed Hope, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyRenewedHope() {
+	if priest.Talents.RenewedHope == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyDivineAegis implements Divine Aegis, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyDivineAegis() {
+	if priest.Talents.DivineAegis == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyTwilightFocus implements Twilight Focus, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyTwilightFocus() {
+	if priest.Talents.TwilightFocus == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedRenew implements Improved Renew, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyImprovedRenew() {
+	if priest.Talents.ImprovedRenew == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyHolySpecialization implements Holy Specialization, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyHolySpecialization() {
+	if priest.Talents.HolySpecialization == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySpellWarding implements Spell Warding, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applySpellWarding() {
+	if priest.Talents.SpellWarding == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyBlessedRecovery implements Blessed Recovery, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyBlessedRecovery() {
+	if priest.Talents.BlessedRecovery == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyInspiration implements Inspiration, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyInspiration() {
+	if priest.Talents.Inspiration == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyHolyReach implements Holy Reach, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyHolyReach() {
+	if priest.Talents.HolyReach == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedHealing implements Improved Healing, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyImprovedHealing() {
+	if priest.Talents.ImprovedHealing == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyBindingHeal implements Binding Heal, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyBindingHeal() {
+	if !priest.Talents.BindingHeal {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyLitanyOfLight implements Litany of Light, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyLitanyOfLight() {
+	if priest.Talents.LitanyOfLight == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySpiritualHealing implements Spiritual Healing, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applySpiritualHealing() {
+	if priest.Talents.SpiritualHealing == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyPrayerOfMending implements Prayer of Mending, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyPrayerOfMending() {
+	if !priest.Talents.PrayerOfMending {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyBlackout implements Blackout, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyBlackout() {
+	if priest.Talents.Blackout == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySpiritTap implements Spirit Tap, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applySpiritTap() {
+	if priest.Talents.SpiritTap == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyShadowReach implements Shadow Reach, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyShadowReach() {
+	if priest.Talents.ShadowReach == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedPsychicScream implements Improved Psychic Scream, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyImprovedPsychicScream() {
+	if priest.Talents.ImprovedPsychicScream == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedMindFlay implements Improved Mind Flay, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyImprovedMindFlay() {
+	if priest.Talents.ImprovedMindFlay == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedFade implements Improved Fade, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyImprovedFade() {
+	if priest.Talents.ImprovedFade == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySilence implements Silence, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applySilence() {
+	if !priest.Talents.Silence {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyDevouringContagion implements Devouring Contagion, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyDevouringContagion() {
+	if priest.Talents.DevouringContagion == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyEarlyDemise implements Early Demise, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (priest *Priest) applyEarlyDemise() {
+	if priest.Talents.EarlyDemise == 0 {
+		return
+	}
+
+	panic("To be implemented")
 }

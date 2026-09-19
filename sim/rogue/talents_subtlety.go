@@ -32,20 +32,21 @@ func (rogue *Rogue) registerSubtletyTalents() {
 	rogue.registerDirtyDeeds()
 	rogue.registerHemorrhage()
 
-	// Tier 6
-	rogue.registerMasterOfSubtlety()
-	rogue.registerDeadliness()
-
 	// Tier 7
 	// Enveloping Shadows NYI
 	rogue.registerPremeditation()
 	// Cheat Death NYI
 
-	// Tier 8
-	rogue.registerSinisterCalling()
-
-	// Tier 9
-	rogue.registerShadowstep()
+	// Forever additions, not yet implemented.
+	rogue.registerCamouflage()
+	rogue.registerCutthroat()
+	rogue.registerDirtyTricks()
+	rogue.registerHeightenedSenses()
+	rogue.registerImprovedDistract()
+	rogue.registerMasterOfDeception()
+	rogue.registerQuietus()
+	rogue.registerSetup()
+	rogue.registerThousandCuts()
 }
 
 func (rogue *Rogue) registerOpportunity() {
@@ -284,28 +285,6 @@ func (rogue *Rogue) registerHemorrhage() {
 	})
 }
 
-func (rogue *Rogue) registerMasterOfSubtlety() {
-	if rogue.Talents.MasterOfSubtlety == 0 {
-		return
-	}
-	bonus := []float64{0, 0.04, 0.07, 0.1}[rogue.Talents.MasterOfSubtlety]
-	rogue.MasterOfSubtletyAura = rogue.GetOrRegisterAura(core.Aura{
-		Label:    "Master of Subtlety",
-		ActionID: core.ActionID{SpellID: 31223},
-		Duration: time.Second * 6,
-	}).AttachMultiplicativePseudoStatBuff(&rogue.PseudoStats.DamageDealtMultiplier, 1+bonus)
-
-	// Activated in stealth.go
-}
-
-func (rogue *Rogue) registerDeadliness() {
-	if rogue.Talents.Deadliness == 0 {
-		return
-	}
-
-	rogue.MultiplyStat(stats.AttackPower, spellData.Deadliness.MultiplierAt(rogue.Talents.Deadliness))
-}
-
 func (rogue *Rogue) registerPremeditation() {
 	if !rogue.Talents.Premeditation {
 		return
@@ -374,60 +353,110 @@ func (rogue *Rogue) registerPremeditation() {
 	})
 }
 
-func (rogue *Rogue) registerSinisterCalling() {
-	if rogue.Talents.SinisterCalling == 0 {
+// registerCamouflage implements Camouflage, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerCamouflage() {
+	if rogue.Talents.Camouflage == 0 {
 		return
 	}
 
-	rogue.MultiplyStat(stats.Agility, spellData.SinisterCalling.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 1).MultiplierAt(rogue.Talents.SinisterCalling))
-	rogue.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		ClassMask:  RogueSpellHemorrhage | RogueSpellBackstab,
-		FloatValue: spellData.SinisterCalling.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_EFFECT2).FractionAt(rogue.Talents.SinisterCalling),
-	})
+	panic("To be implemented")
 }
 
-func (rogue *Rogue) registerShadowstep() {
-	if !rogue.Talents.Shadowstep {
+// registerCutthroat implements Cutthroat, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerCutthroat() {
+	if rogue.Talents.Cutthroat == 0 {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 36554}
+	panic("To be implemented")
+}
 
-	rogue.ShadowstepAura = rogue.RegisterAura(core.Aura{
-		Label:    "Shadowstep",
-		ActionID: actionID,
-		Duration: time.Second * 10,
-		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if spell.ClassSpellMask&RogueSpellActives != 0 {
-				aura.Deactivate(sim)
-			}
-		},
-	}).AttachSpellMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		ClassMask:  RogueSpellActives,
-		FloatValue: 0.2,
-	})
+// registerDirtyTricks implements Dirty Tricks, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerDirtyTricks() {
+	if rogue.Talents.DirtyTricks == 0 {
+		return
+	}
 
-	rogue.Shadowstep = rogue.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		Flags:          core.SpellFlagAPL,
-		ClassSpellMask: RogueSpellShadowstep,
+	panic("To be implemented")
+}
 
-		Cast: core.CastConfig{
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    rogue.NewTimer(),
-				Duration: time.Second * 30,
-			},
-		},
-		EnergyCost: core.EnergyCostOptions{
-			Cost: 10,
-		},
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			// TODO: Teleport?
-			spell.RelatedSelfBuff.Activate(sim)
-		},
-		RelatedSelfBuff: rogue.ShadowstepAura,
-	})
+// registerHeightenedSenses implements Heightened Senses, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerHeightenedSenses() {
+	if rogue.Talents.HeightenedSenses == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedDistract implements Improved Distract, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerImprovedDistract() {
+	if rogue.Talents.ImprovedDistract == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerMasterOfDeception implements Master of Deception, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerMasterOfDeception() {
+	if rogue.Talents.MasterOfDeception == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerQuietus implements Quietus, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerQuietus() {
+	if rogue.Talents.Quietus == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerSetup implements Setup, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerSetup() {
+	if rogue.Talents.Setup == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerThousandCuts implements Thousand Cuts, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerThousandCuts() {
+	if !rogue.Talents.ThousandCuts {
+		return
+	}
+
+	panic("To be implemented")
 }

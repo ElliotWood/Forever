@@ -11,6 +11,10 @@ var uaRank = spellData.UnstableAffliction.BySpellID(30405)
 var uaTick = uaRank.Periodic.(shared.SpellDataPeriodic)
 var uaCoeff = uaTick.Coef
 
+// TODO: uncalled -- Forever drops the Unstable Affliction talent that gated this spell, so
+// nothing calls this any more. Kept rather than deleted because "the talent is gone"
+// and "the spell is gone" are not the same claim, and the client data does not
+// distinguish them. Re-gate before wiring it back up.
 func (warlock *Warlock) registerUnstableAffliction() {
 	warlock.UnstableAffliction = warlock.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: uaRank.SpellID},

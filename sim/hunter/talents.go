@@ -1,99 +1,79 @@
 package hunter
 
 import (
-	"slices"
 	"time"
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (hunter *Hunter) ApplyTalents() {
 	// Beast Mastery
-	hunter.registerImprovedAspectOfTheHawk()
 	hunter.registerEnduranceTraining()
 	hunter.registerFocusedFire()
 	hunter.registerUnleashedFury()
 	hunter.registerFerocity()
 	// Bestial Discipline handled in pet.go
-	hunter.registerAnimalHandler()
 	hunter.registerFrenzy()
-	hunter.registerFerociousInspiration()
 	hunter.registerBestialWrath()
-	hunter.registerSerpentsSwiftness()
-	hunter.registerTheBeastWithin()
 
 	// Marksmanship
-	hunter.registerLethalShots()
 	// Improved Hunter's Mark handled in hunters_mark.go
 	hunter.registerEfficiency()
-	hunter.registerGoForTheThroat()
 	hunter.registerImprovedArcaneShot()
 	hunter.registerAimedShot()
 	hunter.registerRapidKilling()
 	hunter.registerImprovedStings()
 	hunter.registerMortalShots()
 	hunter.registerBarrage()
-	hunter.registerCombatExperience()
 	hunter.registerRangedWeaponSpecialization()
 	hunter.registerCarefulAim()
 	// Trueshot Aura handled as a group buff in hunter.go
-	hunter.registerImprovedBarrage()
-	hunter.registerMasterMarksman()
 
 	// Survival
-	hunter.registerSlaying()
 	hunter.registerHawkEye()
 	hunter.registerSavageStrikes()
 	hunter.registerSurvivalist()
 	hunter.registerSurefooted()
-	hunter.registerSurvivalInstincts()
-	hunter.registerKillerInstinct()
 	hunter.registerResourcefulness()
 	hunter.registerLightningReflexes()
-	hunter.registerThrillOfTheHunt()
-	hunter.registerExposeWeakness()
-	hunter.registerMasterTactician()
-	hunter.registerReadiness()
+	// Readiness: Forever drops the talent; see registerReadiness
+
+	// Forever additions, not yet implemented.
+	hunter.registerDeadlyAspects()
+	hunter.registerImprovedAspectOfTheMonkey()
+	hunter.registerPathfinding()
+	hunter.registerImprovedRevivePet()
+	hunter.registerBestialSwiftness()
+	hunter.registerImprovedMendPet()
+	hunter.registerSummonHawk()
+	hunter.registerSpiritBond()
+	hunter.registerIntimidation()
+	hunter.registerImprovedConcussiveShot()
+	hunter.registerLethalAttacks()
+	hunter.registerLoneWolf()
+	hunter.registerImprovedSerpentSting()
+	hunter.registerRapidRecuperation()
+	hunter.registerScatterShot()
+	hunter.registerSniperShot()
+	hunter.registerImprovedTracking()
+	hunter.registerDeflection()
+	hunter.registerEntrapment()
+	hunter.registerImprovedWingClip()
+	hunter.registerCleverTraps()
+	hunter.registerDeterrence()
+	hunter.registerSurvivalTactics()
+	hunter.registerPredatorsEdge()
+	hunter.registerCounterattack()
+	hunter.registerExposePrey()
+	hunter.registerSurvivalistsDiscipline()
+	hunter.registerStriderKick()
+	hunter.registerLaceratingStrikes()
 
 	if hunter.Pet != nil {
 		hunter.Pet.ApplyTalents()
 	}
-}
-
-func (hunter *Hunter) registerImprovedAspectOfTheHawk() {
-	if hunter.Talents.ImprovedAspectOfTheHawk == 0 {
-		return
-	}
-
-	bonus := spellData.ImprovedAspectOfTheHawk.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).MultiplierAt(hunter.Talents.ImprovedAspectOfTheHawk)
-
-	quickShots := hunter.RegisterAura(core.Aura{
-		Label:    "Quick Shots",
-		ActionID: core.ActionID{SpellID: 6150},
-		Duration: time.Second * 12,
-	}).AttachMultiplyRangedHaste(bonus)
-
-	hunter.OnSpellRegistered(func(spell *core.Spell) {
-		if !spell.Matches(HunterSpellAspectOfTheHawk) {
-			return
-		}
-
-		spell.RelatedSelfBuff.AttachProcTrigger(core.ProcTrigger{
-			Name:            "Improved Aspect of the Hawk",
-			MetricsActionID: core.ActionID{SpellID: 19556},
-			Callback:        core.CallbackOnSpellHitDealt,
-			ProcMask:        core.ProcMaskRangedAuto,
-			Outcome:         core.OutcomeLanded,
-			ProcChance:      0.1,
-
-			Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				quickShots.Activate(sim)
-			},
-		})
-	})
 }
 
 func (hunter *Hunter) registerEnduranceTraining() {
@@ -142,18 +122,6 @@ func (hunter *Hunter) registerFerocity() {
 	})
 }
 
-func (hunter *Hunter) registerAnimalHandler() {
-	if hunter.Pet == nil || hunter.Talents.AnimalHandler == 0 {
-		return
-	}
-
-	hitPercent := spellData.AnimalHandler.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).ValueAt(hunter.Talents.AnimalHandler)
-	hunter.Pet.AddStats(stats.Stats{
-		stats.PhysicalHitPercent: hitPercent,
-		stats.SpellHitPercent:    hitPercent,
-	})
-}
-
 func (hunter *Hunter) registerFrenzy() {
 	if hunter.Pet == nil || hunter.Talents.Frenzy == 0 {
 		return
@@ -175,14 +143,6 @@ func (hunter *Hunter) registerFrenzy() {
 			frenzy.Activate(sim)
 		},
 	})
-}
-
-func (hunter *Hunter) registerFerociousInspiration() {
-	if hunter.Pet == nil || hunter.Talents.FerociousInspiration == 0 {
-		return
-	}
-
-	// TODO
 }
 
 func (hunter *Hunter) registerBestialWrath() {
@@ -234,43 +194,6 @@ func (hunter *Hunter) registerBestialWrath() {
 	})
 }
 
-func (hunter *Hunter) registerSerpentsSwiftness() {
-	if hunter.Pet == nil || hunter.Talents.SerpentsSwiftness == 0 {
-		return
-	}
-
-	hunter.PseudoStats.RangedSpeedMultiplier *= spellData.SerpentsSwiftness.Effect(shared.A_MOD_RANGED_HASTE, 0).MultiplierAt(hunter.Talents.SerpentsSwiftness)
-	hunter.Pet.PseudoStats.MeleeSpeedMultiplier *= 1 + 0.04*float64(hunter.Talents.SerpentsSwiftness)
-}
-
-func (hunter *Hunter) registerTheBeastWithin() {
-	if hunter.Pet == nil || !hunter.Talents.BestialWrath || !hunter.Talents.TheBeastWithin {
-		return
-	}
-
-	hunter.TheBeastWithinAura = hunter.RegisterAura(core.Aura{
-		Label:    "The Beast Within",
-		ActionID: core.ActionID{SpellID: 34471},
-		Duration: time.Second * 18,
-	}).AttachSpellMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct,
-		ClassMask:  HunterSpellsAll,
-		FloatValue: -0.2,
-	}).AttachMultiplicativePseudoStatBuff(
-		&hunter.PseudoStats.DamageDealtMultiplier, 1.1,
-	)
-
-	hunter.Pet.BestialWrathAura.AttachDependentAura(hunter.TheBeastWithinAura)
-}
-
-func (hunter *Hunter) registerLethalShots() {
-	if hunter.Talents.LethalShots == 0 {
-		return
-	}
-
-	hunter.AddStat(stats.RangedCritPercent, float64(hunter.Talents.LethalShots))
-}
-
 func (hunter *Hunter) registerEfficiency() {
 	if hunter.Talents.Efficiency == 0 {
 		return
@@ -280,27 +203,6 @@ func (hunter *Hunter) registerEfficiency() {
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
 		ClassMask:  HunterSpellsShotsAndStings,
 		FloatValue: -0.02 * float64(hunter.Talents.Efficiency),
-	})
-}
-
-func (hunter *Hunter) registerGoForTheThroat() {
-	if hunter.Pet == nil || hunter.Talents.GoForTheThroat == 0 {
-		return
-	}
-
-	amount := 25.0 * float64(hunter.Talents.GoForTheThroat)
-	metricsSpellID := []int32{0, 34952, 34953}
-	metrics := hunter.Pet.NewFocusMetrics(core.ActionID{SpellID: metricsSpellID[hunter.Talents.GoForTheThroat]})
-
-	hunter.MakeProcTriggerAura(core.ProcTrigger{
-		Name:     "Go for the Throat",
-		Callback: core.CallbackOnSpellHitDealt,
-		Outcome:  core.OutcomeCrit,
-		ProcMask: core.ProcMaskRanged,
-
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			hunter.Pet.AddFocus(sim, amount, metrics)
-		},
 	})
 }
 
@@ -406,15 +308,6 @@ func (hunter *Hunter) registerBarrage() {
 	})
 }
 
-func (hunter *Hunter) registerCombatExperience() {
-	if hunter.Talents.CombatExperience == 0 {
-		return
-	}
-
-	hunter.MultiplyStat(stats.Agility, spellData.CombatExperience.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 1).MultiplierAt(hunter.Talents.CombatExperience))
-	hunter.MultiplyStat(stats.Intellect, spellData.CombatExperience.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 3).MultiplierAt(hunter.Talents.CombatExperience))
-}
-
 func (hunter *Hunter) registerRangedWeaponSpecialization() {
 	if hunter.Talents.RangedWeaponSpecialization == 0 {
 		return
@@ -433,46 +326,6 @@ func (hunter *Hunter) registerCarefulAim() {
 	}
 
 	hunter.AddStatDependency(stats.Intellect, stats.RangedAttackPower, 0.15*float64(hunter.Talents.CarefulAim))
-}
-
-func (hunter *Hunter) registerImprovedBarrage() {
-	if hunter.Talents.ImprovedBarrage == 0 {
-		return
-	}
-
-	hunter.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ClassMask:  HunterSpellMultiShot,
-		FloatValue: spellData.ImprovedBarrage.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(hunter.Talents.ImprovedBarrage),
-	})
-}
-
-func (hunter *Hunter) registerMasterMarksman() {
-	if hunter.Talents.MasterMarksman == 0 {
-		return
-	}
-
-	hunter.MultiplyStat(stats.RangedAttackPower, spellData.MasterMarksman.MultiplierAt(hunter.Talents.MasterMarksman))
-}
-
-func (hunter *Hunter) registerSlaying() {
-	if hunter.Talents.MonsterSlaying == 0 && hunter.Talents.HumanoidSlaying == 0 {
-		return
-	}
-
-	var beastMultiplier float64 = spellData.MonsterSlaying.Effect(shared.A_MOD_DAMAGE_DONE_VERSUS, 19).MultiplierAt(hunter.Talents.MonsterSlaying)
-	var humanoidMultiplier float64 = spellData.HumanoidSlaying.Effect(shared.A_MOD_DAMAGE_DONE_VERSUS, 64).MultiplierAt(hunter.Talents.HumanoidSlaying)
-	hunter.Env.RegisterPostFinalizeEffect(func() {
-		for _, at := range hunter.AttackTables {
-			if at.Defender.MobType == proto.MobType_MobTypeHumanoid {
-				at.DamageDealtMultiplier *= humanoidMultiplier
-				at.CritMultiplier *= humanoidMultiplier
-			} else if slices.Contains([]proto.MobType{proto.MobType_MobTypeBeast, proto.MobType_MobTypeGiant, proto.MobType_MobTypeDragonkin}, at.Defender.MobType) {
-				at.DamageDealtMultiplier *= beastMultiplier
-				at.CritMultiplier *= beastMultiplier
-			}
-		}
-	})
 }
 
 func (hunter *Hunter) registerHawkEye() {
@@ -531,23 +384,6 @@ func (hunter *Hunter) registerSurefooted() {
 	hunter.AddStat(stats.PhysicalHitPercent, float64(hunter.Talents.Surefooted))
 }
 
-func (hunter *Hunter) registerSurvivalInstincts() {
-	if hunter.Talents.SurvivalInstincts == 0 {
-		return
-	}
-
-	hunter.MultiplyStat(stats.AttackPower, spellData.SurvivalInstincts.Effect(shared.A_MOD_ATTACK_POWER_PCT, 0).MultiplierAt(hunter.Talents.SurvivalInstincts))
-	hunter.MultiplyStat(stats.RangedAttackPower, spellData.SurvivalInstincts.Effect(shared.A_MOD_RANGED_ATTACK_POWER_PCT, 0).MultiplierAt(hunter.Talents.SurvivalInstincts))
-}
-
-func (hunter *Hunter) registerKillerInstinct() {
-	if hunter.Talents.KillerInstinct == 0 {
-		return
-	}
-
-	hunter.AddStat(stats.PhysicalCritPercent, float64(hunter.Talents.KillerInstinct))
-}
-
 func (hunter *Hunter) registerResourcefulness() {
 	if hunter.Talents.Resourcefulness == 0 {
 		return
@@ -568,84 +404,9 @@ func (hunter *Hunter) registerLightningReflexes() {
 	hunter.MultiplyStat(stats.Agility, spellData.LightningReflexes.MultiplierAt(hunter.Talents.LightningReflexes))
 }
 
-func (hunter *Hunter) registerThrillOfTheHunt() {
-	if hunter.Talents.ThrillOfTheHunt == 0 {
-		return
-	}
-
-	metrics := hunter.NewManaMetrics(core.ActionID{SpellID: 34720})
-
-	hunter.MakeProcTriggerAura(core.ProcTrigger{
-		Name:       "Thrill of the Hunt",
-		Callback:   core.CallbackOnSpellHitDealt,
-		ProcMask:   core.ProcMaskRangedSpecial,
-		Outcome:    core.OutcomeCrit,
-		ProcChance: float64(hunter.Talents.ThrillOfTheHunt) / 3,
-
-		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
-			return spell.CurCast.Cost > 0
-		},
-
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			hunter.AddMana(sim, spell.CurCast.Cost*0.4, metrics)
-		},
-	})
-}
-
-func (hunter *Hunter) registerExposeWeakness() {
-	if hunter.Talents.ExposeWeakness == 0 {
-		return
-	}
-
-	auraArray := hunter.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
-		return core.ExposeWeaknessAura(unit, func() float64 {
-			return hunter.GetStat(stats.Agility)
-		})
-	})
-
-	hunter.MakeProcTriggerAura(core.ProcTrigger{
-		Name:       "Expose Weakness",
-		Callback:   core.CallbackOnSpellHitDealt,
-		ProcMask:   core.ProcMaskRanged,
-		Outcome:    core.OutcomeCrit,
-		ProcChance: float64(hunter.Talents.ExposeWeakness) / 3,
-
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			aura := auraArray.Get(result.Target)
-			aura.Activate(sim)
-		},
-	})
-}
-
-func (hunter *Hunter) registerMasterTactician() {
-	if hunter.Talents.MasterTactician == 0 {
-		return
-	}
-
-	statBuff := hunter.NewTemporaryStatsAura(
-		"Master Tactician",
-		core.ActionID{SpellID: 34837},
-		stats.Stats{stats.PhysicalCritPercent: 2 * float64(hunter.Talents.MasterTactician)},
-		time.Second*8)
-
-	hunter.MakeProcTriggerAura(core.ProcTrigger{
-		Name:       "Master Tactician Trigger",
-		Callback:   core.CallbackOnSpellHitDealt,
-		ProcMask:   core.ProcMaskRanged,
-		Outcome:    core.OutcomeLanded,
-		ProcChance: 0.06,
-
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			statBuff.Activate(sim)
-		},
-	})
-}
-
+// TODO: uncalled -- Forever drops the Readiness talent; re-gate before wiring back
+// into ApplyTalents.
 func (hunter *Hunter) registerReadiness() {
-	if !hunter.Talents.Readiness {
-		return
-	}
-
 	hunter.Readiness = hunter.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: 23989},
 		SpellSchool:    core.SpellSchoolPhysical,
@@ -687,4 +448,352 @@ func (hunter *Hunter) registerReadiness() {
 			return !hunter.RapidFire.IsReady(sim)
 		},
 	})
+}
+
+// registerDeadlyAspects implements Deadly Aspects, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerDeadlyAspects() {
+	if hunter.Talents.DeadlyAspects == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedAspectOfTheMonkey implements Improved Aspect of the Monkey, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerImprovedAspectOfTheMonkey() {
+	if hunter.Talents.ImprovedAspectOfTheMonkey == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerPathfinding implements Pathfinding, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerPathfinding() {
+	if hunter.Talents.Pathfinding == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedRevivePet implements Improved Revive Pet, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerImprovedRevivePet() {
+	if hunter.Talents.ImprovedRevivePet == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerBestialSwiftness implements Bestial Swiftness, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerBestialSwiftness() {
+	if !hunter.Talents.BestialSwiftness {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedMendPet implements Improved Mend Pet, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerImprovedMendPet() {
+	if hunter.Talents.ImprovedMendPet == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerSummonHawk implements Summon Hawk, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerSummonHawk() {
+	if !hunter.Talents.SummonHawk {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerSpiritBond implements Spirit Bond, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerSpiritBond() {
+	if hunter.Talents.SpiritBond == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerIntimidation implements Intimidation, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerIntimidation() {
+	if !hunter.Talents.Intimidation {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedConcussiveShot implements Improved Concussive Shot, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerImprovedConcussiveShot() {
+	if hunter.Talents.ImprovedConcussiveShot == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerLethalAttacks implements Lethal Attacks, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerLethalAttacks() {
+	if hunter.Talents.LethalAttacks == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerLoneWolf implements Lone Wolf, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerLoneWolf() {
+	if !hunter.Talents.LoneWolf {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedSerpentSting implements Improved Serpent Sting, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerImprovedSerpentSting() {
+	if hunter.Talents.ImprovedSerpentSting == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerRapidRecuperation implements Rapid Recuperation, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerRapidRecuperation() {
+	if hunter.Talents.RapidRecuperation == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerScatterShot implements Scatter Shot, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerScatterShot() {
+	if !hunter.Talents.ScatterShot {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerSniperShot implements Sniper Shot, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerSniperShot() {
+	if !hunter.Talents.SniperShot {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedTracking implements Improved Tracking, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerImprovedTracking() {
+	if hunter.Talents.ImprovedTracking == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerDeflection implements Deflection, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerDeflection() {
+	if hunter.Talents.Deflection == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerEntrapment implements Entrapment, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerEntrapment() {
+	if hunter.Talents.Entrapment == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedWingClip implements Improved Wing Clip, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerImprovedWingClip() {
+	if hunter.Talents.ImprovedWingClip == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerCleverTraps implements Clever Traps, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerCleverTraps() {
+	if hunter.Talents.CleverTraps == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerDeterrence implements Deterrence, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerDeterrence() {
+	if !hunter.Talents.Deterrence {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerSurvivalTactics implements Survival Tactics, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerSurvivalTactics() {
+	if hunter.Talents.SurvivalTactics == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerPredatorsEdge implements Predator's Edge, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerPredatorsEdge() {
+	if hunter.Talents.PredatorsEdge == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerCounterattack implements Counterattack, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerCounterattack() {
+	if !hunter.Talents.Counterattack {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerExposePrey implements Expose Prey, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerExposePrey() {
+	if hunter.Talents.ExposePrey == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerSurvivalistsDiscipline implements Survivalist's Discipline, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerSurvivalistsDiscipline() {
+	if hunter.Talents.SurvivalistsDiscipline == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerStriderKick implements Strider Kick, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerStriderKick() {
+	if !hunter.Talents.StriderKick {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerLaceratingStrikes implements Lacerating Strikes, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (hunter *Hunter) registerLaceratingStrikes() {
+	if !hunter.Talents.LaceratingStrikes {
+		return
+	}
+
+	panic("To be implemented")
 }

@@ -13,48 +13,64 @@ func (warlock *Warlock) applyAfflictionTalents() {
 	warlock.applySuppression()
 	warlock.applyImprovedCorruption()
 	warlock.registerAmplifyCurse()
-	warlock.applyImprovedCurseOfAgony()
 	warlock.applyNightfall()
 	warlock.applyEmpoweredCorruption()
-	warlock.applyShadowEmbrace()
 	warlock.applyShadowMastery()
-	warlock.applyContagion()
-	warlock.applyUnstableAffliction()
+
+	// Forever additions, not yet implemented.
+	warlock.applySoulHarvesting()
+	warlock.applyImprovedDrains()
+	warlock.applyImprovedBaneOfAgony()
+	warlock.applyFelConcentration()
+	warlock.applyPandemic()
+	warlock.applyMalevolence()
+	warlock.applyCurseOfExhaustion()
+	warlock.applySiphonLife()
+	warlock.applyWrack()
 }
 
 func (warlock *Warlock) applyDemonologyTalents() {
 	warlock.appyImprovedImp()
 	warlock.applyDemonicEmbrace()
-	warlock.applyFelIntellect()
-	warlock.applyFelStamina()
 	warlock.applyImprovedSayaad()
 	warlock.applyUnholyPower()
 	warlock.applyDemonicSacrifice()
 	warlock.applyMasterDemonologist()
 	warlock.applySoulLink()
 	warlock.applyDemonicKnowledge()
-	warlock.applyDemonicTactics()
 
+	// Forever additions, not yet implemented.
+	warlock.applyImprovedHealthFunnel()
+	warlock.applyImprovedVoidwalker()
+	warlock.applyFelVitality()
+	warlock.applyDemonicEnergies()
+	warlock.applyMasterSummoner()
+	warlock.applyDecimation()
+	warlock.applyFelDomination()
+	warlock.applyDemonicBrand()
+	warlock.applyImprovedFelhunter()
+	warlock.applyDemonicPact()
 }
 
 func (warlock *Warlock) applyDestructionTalents() {
 	warlock.applyCataclysm()
 	warlock.applyBane()
-	warlock.applyImprovedFirebolt()
-	warlock.applyImprovedLashOfPain()
-	warlock.applyDevastation()
 	warlock.applyShadowburn()
 	warlock.applyImprovedShadowBolt()
 	warlock.applyDestructiveReach()
-	warlock.applyImprovedSearingPain()
-	warlock.applyImprovedImmolate()
 	warlock.applyRuin()
-	warlock.applyEmberstorm()
-	warlock.applyBacklash()
 	warlock.applyConflagrate()
-	warlock.applySoulLeech()
 	warlock.applyShadowAndFlame()
-	warlock.applyShadowfury()
+
+	// Forever additions, not yet implemented.
+	warlock.applyMoltenSkin()
+	warlock.applyAftermath()
+	warlock.applyIntensity()
+	warlock.applyAgonizingFlames()
+	warlock.applyPyroclasm()
+	warlock.applyBaneOfHavoc()
+	warlock.applyFireAndBrimstone()
+	warlock.applyIncinerate()
 }
 
 /*
@@ -138,19 +154,6 @@ func (warlock *Warlock) registerAmplifyCurse() {
 	})
 }
 
-func (warlock *Warlock) applyImprovedCurseOfAgony() {
-	if warlock.Talents.ImprovedCurseOfAgony == 0 {
-		return
-	}
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DotDamageDone_Pct,
-		FloatValue: spellData.ImprovedCurseOfAgony.FractionAt(warlock.Talents.ImprovedCurseOfAgony),
-		ClassMask:  WarlockSpellCurseOfAgony,
-	})
-
-}
-
 func (warlock *Warlock) applyNightfall() {
 	if warlock.Talents.Nightfall == 0 {
 		return
@@ -189,29 +192,16 @@ func (warlock *Warlock) applyEmpoweredCorruption() {
 		return
 	}
 
+	// TODO: this read Talents.EmpoweredCorruption, a talent Forever drops entirely, while
+	// the registrar's guard is ImprovedCorruption (kept) -- looks like a long-standing
+	// copy-paste bug. EmpoweredCorruption's spellData ladder is unrelated to
+	// ImprovedCorruption's rank count, so the bonus coefficient is unknown and pinned to 0
+	// until confirmed against the Forever tooltip.
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DotBonusCoeffecient_Flat,
-		FloatValue: spellData.EmpoweredCorruption.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_BONUS_MULTIPLIER).FractionAt(warlock.Talents.EmpoweredCorruption),
+		FloatValue: 0,
 		ClassMask:  WarlockSpellCorruption,
 	})
-}
-
-func (warlock *Warlock) applyShadowEmbrace() {
-	if warlock.Talents.ShadowEmbrace == 0 {
-		return
-	}
-
-	warlock.ShadowEmbraceAura = core.ShadowEmbraceAura(warlock.CurrentTarget, warlock.Talents.ShadowEmbrace)
-	warlock.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Shadow Embrace Trigger" + warlock.Label,
-		Callback:       core.CallbackOnSpellHitDealt,
-		Outcome:        core.OutcomeLanded,
-		ClassSpellMask: WarlockShadowEmbraceSpells,
-		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			warlock.ShadowEmbraceAura.Activate(sim)
-		},
-	})
-
 }
 
 func (warlock *Warlock) applyShadowMastery() {
@@ -224,24 +214,6 @@ func (warlock *Warlock) applyShadowMastery() {
 		FloatValue: spellData.ShadowMastery.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.ShadowMastery),
 		ClassMask:  WarlockShadowDamage,
 	})
-}
-
-func (warlock *Warlock) applyContagion() {
-	if warlock.Talents.Contagion == 0 {
-		return
-	}
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Contagion.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DOT).FractionAt(warlock.Talents.Contagion),
-		ClassMask:  WarlockContagionSpells,
-	})
-}
-
-func (warlock *Warlock) applyUnstableAffliction() {
-	if warlock.Talents.UnstableAffliction {
-		warlock.registerUnstableAffliction()
-	}
 }
 
 /*
@@ -275,18 +247,6 @@ func (warlock *Warlock) applyDemonicEmbrace() {
 	warlock.MultiplyStat(stats.Spirit, 1.0-(0.01)*float64(warlock.Talents.DemonicEmbrace))
 }
 
-func (warlock *Warlock) applyFelIntellect() {
-	if warlock.Talents.FelIntellect == 0 {
-		return
-	}
-
-	warlock.MultiplyStat(stats.Mana, 1.0+(0.01)*float64(warlock.Talents.FelIntellect))
-	for _, pet := range warlock.Pets {
-		pet.MultiplyStat(stats.Mana, 1+(0.05)*float64(warlock.Talents.FelIntellect))
-	}
-
-}
-
 func (warlock *Warlock) applyImprovedSayaad() {
 	if warlock.Talents.ImprovedSayaad == 0 || warlock.Options.SacrificeSummon {
 		return
@@ -298,18 +258,6 @@ func (warlock *Warlock) applyImprovedSayaad() {
 		FloatValue: 0.1 * float64(warlock.Talents.ImprovedSayaad),
 		ClassMask:  WarlockSpellSuccubusLashOfPain,
 	})
-}
-
-func (warlock *Warlock) applyFelStamina() {
-	if warlock.Talents.FelStamina == 0 {
-		return
-	}
-
-	warlock.MultiplyStat(stats.Health, spellData.FelStamina.Effect(shared.A_MOD_INCREASE_HEALTH_PERCENT, 0).MultiplierAt(warlock.Talents.FelStamina))
-	for _, pet := range warlock.Pets {
-		pet.MultiplyStat(stats.Health, 1+(0.05)*float64(warlock.Talents.FelStamina))
-	}
-
 }
 
 func (warlock *Warlock) applyUnholyPower() {
@@ -480,22 +428,6 @@ func (warlock *Warlock) updateDemonicKnowledge(sim *core.Simulation) {
 	warlock.AddStatDynamic(sim, stats.SpellDamage, bonus)
 }
 
-func (warlock *Warlock) applyDemonicTactics() {
-	if warlock.Talents.DemonicTactics == 0 {
-		return
-	}
-	points := float64(warlock.Talents.DemonicTactics)
-	warlock.AddStat(stats.SpellCritPercent, points)
-	warlock.AddStat(stats.PhysicalCritPercent, points)
-	warlock.AddStat(stats.RangedCritPercent, points)
-
-	for _, pet := range warlock.Pets {
-		pet.AddStat(stats.SpellCritPercent, points)
-		pet.AddStat(stats.PhysicalCritPercent, points)
-		pet.AddStat(stats.RangedCritPercent, points)
-	}
-}
-
 /*
 Destruction
 Skipped Talents:
@@ -538,51 +470,6 @@ func (warlock *Warlock) applyBane() {
 	})
 }
 
-func (warlock *Warlock) applyImprovedFirebolt() {
-	if warlock.Talents.ImprovedFirebolt == 0 {
-		return
-	}
-
-	for _, pet := range warlock.Pets {
-		if pet == warlock.Imp.GetPet() {
-			pet.AddStaticMod(core.SpellModConfig{
-				Kind:      core.SpellMod_CastTime_Flat,
-				TimeValue: time.Millisecond * time.Duration(-250*warlock.Talents.ImprovedFirebolt),
-				ClassMask: WarlockSpellImpFireBolt,
-			})
-		}
-	}
-
-}
-
-func (warlock *Warlock) applyImprovedLashOfPain() {
-	if warlock.Talents.ImprovedLashOfPain == 0 {
-		return
-	}
-
-	for _, pet := range warlock.Pets {
-		if pet == warlock.Succubus.GetPet() {
-			pet.AddStaticMod(core.SpellModConfig{
-				Kind:      core.SpellMod_Cooldown_Flat,
-				TimeValue: time.Second * time.Duration(-3*warlock.Talents.ImprovedLashOfPain),
-				ClassMask: WarlockSpellSuccubusLashOfPain,
-			})
-		}
-	}
-}
-
-func (warlock *Warlock) applyDevastation() {
-	if warlock.Talents.Devastation == 0 {
-		return
-	}
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: float64(warlock.Talents.Devastation),
-		ClassMask:  WarlockDestructionSpells,
-	})
-}
-
 func (warlock *Warlock) applyShadowburn() {
 	if !warlock.Talents.Shadowburn {
 		return
@@ -604,67 +491,18 @@ func (warlock *Warlock) applyDestructiveReach() {
 
 }
 
-func (warlock *Warlock) applyImprovedSearingPain() {
-	if warlock.Talents.ImprovedSearingPain == 0 {
-		return
-	}
-	critBonus := []float64{0, 4, 7, 10}[warlock.Talents.ImprovedSearingPain]
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: critBonus,
-		ClassMask:  WarlockSpellSearingPain,
-	})
-}
-
-func (warlock *Warlock) applyImprovedImmolate() {
-	if warlock.Talents.ImprovedImmolate == 0 {
-		return
-	}
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedImmolate.FractionAt(warlock.Talents.ImprovedImmolate),
-		ClassMask:  WarlockSpellImmolate,
-	})
-}
-
 func (warlock *Warlock) applyRuin() {
-	if !warlock.Talents.Ruin {
+	if warlock.Talents.Ruin == 0 {
 		return
 	}
 
+	// TODO: Forever expands Ruin from 1 rank to 5; the per-rank crit-multiplier bonus is
+	// unconfirmed, so it is pinned to 0 until the Forever tooltip is known.
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_CritMultiplier_Flat,
-		FloatValue: 1.0,
+		FloatValue: 0,
 		ClassMask:  WarlockDestructionSpells,
 	})
-}
-
-func (warlock *Warlock) applyEmberstorm() {
-	if warlock.Talents.Emberstorm == 0 {
-		return
-	}
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Emberstorm.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.Emberstorm),
-		ClassMask:  WarlockFireDamage,
-	})
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CastTime_Pct,
-		FloatValue: spellData.Emberstorm.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_CASTING_TIME).FractionAt(warlock.Talents.Emberstorm),
-		ClassMask:  WarlockSpellIncinerate,
-	})
-}
-
-func (warlock *Warlock) applyBacklash() {
-	if warlock.Talents.Backlash == 0 {
-		return
-	}
-
-	warlock.AddStat(stats.SpellCritPercent, float64(warlock.Talents.Backlash))
 }
 
 func (warlock *Warlock) applyConflagrate() {
@@ -673,22 +511,6 @@ func (warlock *Warlock) applyConflagrate() {
 	}
 
 	warlock.registerConflagrate()
-}
-
-func (warlock *Warlock) applySoulLeech() {
-	if warlock.Talents.SoulLeech == 0 {
-		return
-	}
-	healthMetric := warlock.NewHealthMetrics(core.ActionID{SpellID: 30296})
-	warlock.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Soul Leech",
-		ClassSpellMask: WarlockSoulLeechSpells,
-		Callback:       core.CallbackOnSpellHitDealt,
-		ProcChance:     spellData.SoulLeech.ProcChanceAt(warlock.Talents.SoulLeech),
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			warlock.GainHealth(sim, result.Damage*0.2*warlock.PseudoStats.SelfHealingMultiplier, healthMetric)
-		},
-	})
 }
 
 func (warlock *Warlock) applyShadowAndFlame() {
@@ -703,10 +525,326 @@ func (warlock *Warlock) applyShadowAndFlame() {
 	})
 }
 
-func (warlock *Warlock) applyShadowfury() {
-	if !warlock.Talents.Shadowfury {
+// applySoulHarvesting implements Soul Harvesting, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applySoulHarvesting() {
+	if warlock.Talents.SoulHarvesting == 0 {
 		return
 	}
 
-	warlock.registerShadowfury()
+	panic("To be implemented")
+}
+
+// applyImprovedDrains implements Improved Drains, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyImprovedDrains() {
+	if warlock.Talents.ImprovedDrains == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedBaneOfAgony implements Improved Bane of Agony, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyImprovedBaneOfAgony() {
+	if warlock.Talents.ImprovedBaneOfAgony == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyFelConcentration implements Fel Concentration, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyFelConcentration() {
+	if warlock.Talents.FelConcentration == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyPandemic implements Pandemic, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyPandemic() {
+	if warlock.Talents.Pandemic == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyMalevolence implements Malevolence, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyMalevolence() {
+	if warlock.Talents.Malevolence == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyCurseOfExhaustion implements Curse of Exhaustion, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyCurseOfExhaustion() {
+	if !warlock.Talents.CurseOfExhaustion {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySiphonLife implements Siphon Life, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applySiphonLife() {
+	if !warlock.Talents.SiphonLife {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyWrack implements Wrack, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyWrack() {
+	if !warlock.Talents.Wrack {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedHealthFunnel implements Improved Health Funnel, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyImprovedHealthFunnel() {
+	if warlock.Talents.ImprovedHealthFunnel == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedVoidwalker implements Improved Voidwalker, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyImprovedVoidwalker() {
+	if warlock.Talents.ImprovedVoidwalker == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyFelVitality implements Fel Vitality, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyFelVitality() {
+	if warlock.Talents.FelVitality == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyDemonicEnergies implements Demonic Energies, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyDemonicEnergies() {
+	if warlock.Talents.DemonicEnergies == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyMasterSummoner implements Master Summoner, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyMasterSummoner() {
+	if warlock.Talents.MasterSummoner == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyDecimation implements Decimation, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyDecimation() {
+	if warlock.Talents.Decimation == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyFelDomination implements Fel Domination, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyFelDomination() {
+	if !warlock.Talents.FelDomination {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyDemonicBrand implements Demonic Brand, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyDemonicBrand() {
+	if warlock.Talents.DemonicBrand == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedFelhunter implements Improved Felhunter, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyImprovedFelhunter() {
+	if warlock.Talents.ImprovedFelhunter == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyDemonicPact implements Demonic Pact, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyDemonicPact() {
+	if !warlock.Talents.DemonicPact {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyMoltenSkin implements Molten Skin, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyMoltenSkin() {
+	if warlock.Talents.MoltenSkin == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyAftermath implements Aftermath, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyAftermath() {
+	if warlock.Talents.Aftermath == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyIntensity implements Intensity, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyIntensity() {
+	if warlock.Talents.Intensity == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyAgonizingFlames implements Agonizing Flames, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyAgonizingFlames() {
+	if warlock.Talents.AgonizingFlames == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyPyroclasm implements Pyroclasm, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyPyroclasm() {
+	if warlock.Talents.Pyroclasm == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyBaneOfHavoc implements Bane of Havoc, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyBaneOfHavoc() {
+	if !warlock.Talents.BaneOfHavoc {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyFireAndBrimstone implements Fire and Brimstone, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyFireAndBrimstone() {
+	if warlock.Talents.FireAndBrimstone == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyIncinerate implements Incinerate, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (warlock *Warlock) applyIncinerate() {
+	if !warlock.Talents.Incinerate {
+		return
+	}
+
+	panic("To be implemented")
 }

@@ -48,7 +48,9 @@ func (paladin *Paladin) registerHolyShield(rankConfig shared.SpellData) {
 		},
 	})
 
-	maxStacks := []int32{4, 6, 8}[paladin.Talents.ImprovedHolyShield]
+	// TODO: Forever drops Improved Holy Shield; untalented (4 charges) until we know
+	// whether the effect moved onto another talent.
+	maxStacks := int32(4)
 
 	var holyShieldAura *core.Aura
 	holyShieldAura = paladin.RegisterAura(core.Aura{

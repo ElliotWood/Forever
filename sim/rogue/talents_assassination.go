@@ -38,17 +38,18 @@ func (rogue *Rogue) registerAssassinationTalents() {
 
 	// Tier 6
 	rogue.registerSealFate()
-	rogue.registerMasterPoisoner()
 
 	// Tier 7
 	// Vigor implemented in rogue.go
 	// Deadened Nerves NYI
 
-	// Tier 8
-	rogue.registerFindWeakness()
-
 	// Tier 9
 	rogue.registerMutilate()
+
+	// Forever additions, not yet implemented.
+	rogue.registerImprovedKidneyShot()
+	rogue.registerRemorselessAttacks()
+	rogue.registerVenom()
 }
 
 func (rogue *Rogue) registerImprovedEviscerate() {
@@ -206,57 +207,6 @@ func (rogue *Rogue) registerSealFate() {
 	})
 }
 
-func (rogue *Rogue) registerMasterPoisoner() {
-	if rogue.Talents.MasterPoisoner == 0 {
-		return
-	}
-
-	rogue.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusHit_Percent,
-		ClassMask:  RogueSpellPoisons,
-		FloatValue: spellData.MasterPoisoner.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_RESIST_MISS_CHANCE).ValueAt(rogue.Talents.MasterPoisoner),
-	})
-}
-
-func (rogue *Rogue) registerFindWeakness() {
-	if rogue.Talents.FindWeakness == 0 {
-		return
-	}
-
-	fwAura := rogue.GetOrRegisterAura(core.Aura{
-		Label:    "Find Weakness",
-		Duration: time.Second * 10,
-		ActionID: core.ActionID{SpellID: 31242},
-	}).AttachSpellMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		ClassMask:  RogueSpellsAll,
-		FloatValue: 0.02 * float64(rogue.Talents.FindWeakness),
-	})
-
-	rogue.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Find Weakness Trigger",
-		ActionID:       core.ActionID{SpellID: 31242},
-		ProcChance:     1,
-		Callback:       core.CallbackOnSpellHitDealt,
-		Outcome:        core.OutcomeLanded,
-		ClassSpellMask: RogueSpellFinisher,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			fwAura.Activate(sim)
-		},
-	})
-
-	rogue.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Find Weakness SnD Trigger",
-		ActionID:       core.ActionID{SpellID: 31242},
-		ProcChance:     1,
-		Callback:       core.CallbackOnCastComplete,
-		ClassSpellMask: RogueSpellSliceAndDice,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			fwAura.Activate(sim)
-		},
-	})
-}
-
 const MutilateSpellID int32 = 34413
 
 var mutilateRank = spellData.Mutilate.BySpellID(MutilateSpellID)
@@ -351,4 +301,40 @@ func (rogue *Rogue) newMutilateHitSpell(isMH bool) *core.Spell {
 			spell.DamageMultiplier = oldMultiplier
 		},
 	})
+}
+
+// registerImprovedKidneyShot implements Improved Kidney Shot, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerImprovedKidneyShot() {
+	if rogue.Talents.ImprovedKidneyShot == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerRemorselessAttacks implements Remorseless Attacks, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerRemorselessAttacks() {
+	if rogue.Talents.RemorselessAttacks == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerVenom implements Venom, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerVenom() {
+	if !rogue.Talents.Venom {
+		return
+	}
+
+	panic("To be implemented")
 }

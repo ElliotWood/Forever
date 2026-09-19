@@ -34,7 +34,8 @@ func (shaman *Shaman) newTotemSpellConfig(flatCost int32, spellID int32, spellMa
 
 func (shaman *Shaman) registerWindfuryTotemSpell() {
 	duration := time.Second * 120
-	value := 445 * (1 + 0.15*float64(shaman.Talents.ImprovedWeaponTotems))
+	// TODO: Forever drops Improved Weapon Totems; untalented Windfury Totem AP only.
+	value := 445.0
 
 	wfProcAura := shaman.NewTemporaryStatsAura("Windfury Totem Proc (Self)", core.ActionID{SpellID: 25584}, stats.Stats{stats.AttackPower: value}, time.Millisecond*1500)
 	wfProcAura.MaxStacks = 2
@@ -136,7 +137,8 @@ func (shaman *Shaman) registerWindfuryTotemSpell() {
 
 func (shaman *Shaman) registerStrengthOfEarthTotemSpell() {
 	duration := time.Second * 120
-	value := core.StrengthOfEarthTotemValue(shaman.Talents.EnhancingTotems, shaman.CouldHaveSetBonus(ItemSetCycloneHarness, 2))
+	// TODO: Forever drops Enhancing Totems; untalented Strength of Earth Totem value only.
+	value := core.StrengthOfEarthTotemValue(0, shaman.CouldHaveSetBonus(ItemSetCycloneHarness, 2))
 	config := shaman.newTotemSpellConfig(strengthOfEarthTotemRank.Cost, strengthOfEarthTotemRank.SpellID, SpellMaskBasicTotem, strengthOfEarthTotemRank.GCD)
 	buffAura := shaman.RegisterAura(core.Aura{
 		Label:    "Strength Of Earth Totem (Self)",
@@ -165,7 +167,8 @@ func (shaman *Shaman) registerStrengthOfEarthTotemSpell() {
 
 func (shaman *Shaman) registerGraceOfAirTotemSpell() {
 	duration := time.Second * 120
-	value := 77 * []float64{1, 1.08, 1.15}[shaman.Talents.EnhancingTotems]
+	// TODO: Forever drops Enhancing Totems; untalented Grace of Air Totem value only.
+	value := 77.0
 	config := shaman.newTotemSpellConfig(graceOfAirTotemRank.Cost, graceOfAirTotemRank.SpellID, SpellMaskBasicTotem, graceOfAirTotemRank.GCD)
 	buffAura := shaman.RegisterAura(core.Aura{
 		Label:    "Grace Of Air Totem (Self)",

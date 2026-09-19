@@ -6,11 +6,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
+// TODO: uncalled -- Forever drops the Icy Veins talent; re-gate before wiring back
+// into registerSpells.
 func (mage *Mage) registerIcyVeinsSpell() {
-	if !mage.Talents.IcyVeins {
-		return
-	}
-
 	mage.IcyVeinsAura = mage.RegisterAura(core.Aura{
 		Label:    "Icy Veins",
 		ActionID: core.ActionID{SpellID: 12472},

@@ -19,6 +19,9 @@ var AvengersShieldRankMap = spellData.AvengersShield
 //
 // Hurls a holy shield at the enemy, dealing Holy damage, dazing them and
 // then jumping to additional nearby enemies. Affects 3 total targets.
+//
+// TODO: uncalled -- Forever drops the Avenger's Shield talent; re-gate before wiring
+// back into registerTalentSpells.
 func (paladin *Paladin) registerAvengersShield(rankConfig shared.SpellData) {
 	paladin.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rankConfig.SpellID},

@@ -8,11 +8,9 @@ const dragonsBreathCoefficient = 0.1930000037
 
 var dragonsBreathRank = spellData.DragonsBreath.BySpellID(33043)
 
+// TODO: uncalled -- Forever drops the Dragon's Breath talent; re-gate before wiring
+// back into registerSpells.
 func (mage *Mage) registerDragonsBreathSpell() {
-	if !mage.Talents.DragonsBreath {
-		return
-	}
-
 	mage.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: dragonsBreathRank.SpellID},
 		SpellSchool:    dragonsBreathRank.SpellSchool,

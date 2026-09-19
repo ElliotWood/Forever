@@ -22,8 +22,10 @@ func (rogue *Rogue) registerRupture() {
 		ClassSpellMask: RogueSpellRupture,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost:          ruptureRank.Cost,
-			Refund:        spellData.QuickRecovery.Effect(shared.A_DUMMY, 0).FractionAt(rogue.Talents.QuickRecovery),
+			Cost: ruptureRank.Cost,
+			// TODO: Forever drops Quick Recovery; no energy refund until we know whether the
+			// effect moved onto another talent.
+			Refund:        0,
 			RefundMetrics: rogue.EnergyRefundMetrics,
 		},
 		Cast: core.CastConfig{

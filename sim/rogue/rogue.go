@@ -14,7 +14,7 @@ const (
 	SpellFlagSealFate = core.SpellFlagAgentReserved4
 )
 
-var TalentTreeSizes = [3]int{21, 24, 22}
+var TalentTreeSizes = [3]int{17, 17, 19}
 
 const RogueBleedTag = "RogueBleed"
 
@@ -183,8 +183,10 @@ func NewRogue(character *core.Character, options *proto.Player, talents string) 
 
 	maxEnergy := 100.0
 
-	if rogue.Talents.Vigor {
-		maxEnergy += 10
+	// TODO: Forever expands Vigor from 1 rank to 2; the per-rank max-energy bonus is
+	// unconfirmed, so it is pinned to 0 until the Forever tooltip is known.
+	if rogue.Talents.Vigor > 0 {
+		maxEnergy += 0
 	}
 	if rogue.HasPvpEnergy {
 		maxEnergy += 10

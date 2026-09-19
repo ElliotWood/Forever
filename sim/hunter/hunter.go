@@ -14,7 +14,7 @@ const (
 	QuiverHasteCategory        = "QuiverHaste"
 )
 
-var TalentTreeSizes = [3]int{21, 20, 24}
+var TalentTreeSizes = [3]int{16, 17, 18}
 
 type Hunter struct {
 	core.Character
@@ -95,10 +95,8 @@ func NewHunter(character *core.Character, options *proto.Player, hunterOptions *
 			raid.Debuffs.Screech = false
 		}
 
-		if hunter.Talents.ExposeWeakness > 0 {
-			raid.Debuffs.ExposeWeaknessHunterAgility = 0
-			raid.Debuffs.ExposeWeaknessUptime = 0
-		}
+		// TODO: Forever drops Expose Weakness; this hunter can no longer self-provide the
+		// debuff, so the raid.Debuffs fallback values are never cleared.
 	}
 
 	hunter.PseudoStats.CanParry = true

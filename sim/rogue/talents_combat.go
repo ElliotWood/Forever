@@ -3,9 +3,7 @@ package rogue
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -25,14 +23,10 @@ func (rogue *Rogue) registerCombatTalents() {
 
 	// Tier 4
 	// Improved Kick NYI
-	rogue.registerDaggerSpecialization()
 	rogue.registerDualWieldSpecialization()
 
 	// Tier 5
-	rogue.registerMaceSpecialization()
 	rogue.registerBladeFlurry()
-	rogue.registerSwordSpecialization()
-	rogue.registerFistWeaponSpecialization()
 
 	// Tier 6
 	// Blade Twisting NYI
@@ -40,15 +34,17 @@ func (rogue *Rogue) registerCombatTalents() {
 	rogue.registerAggression()
 
 	// Tier 7
-	rogue.registerVitality()
 	rogue.registerAdrenalineRush()
 	// Nerves of Steel NYI
 
-	// Tier 8
-	rogue.registerCombatPotency()
-
-	// Tier 9
-	rogue.registerSurpriseAttacks()
+	// Forever additions, not yet implemented.
+	rogue.registerDeflection()
+	rogue.registerEndurance()
+	rogue.registerFlawlessExecution()
+	rogue.registerHackAndSlash()
+	rogue.registerImprovedKick()
+	rogue.registerImprovedSprint()
+	rogue.registerRiposte()
 }
 
 func (rogue *Rogue) registerImprovedGouge() {
@@ -91,44 +87,6 @@ func (rogue *Rogue) registerPrecision() {
 	rogue.AddStat(stats.PhysicalHitPercent, float64(rogue.Talents.Precision))
 }
 
-func (rogue *Rogue) registerDaggerSpecialization() {
-	if rogue.Talents.DaggerSpecialization == 0 {
-		return
-	}
-
-	mhMod := rogue.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ProcMask:   core.ProcMaskMeleeMH,
-		FloatValue: spellData.DaggerSpecialization.ValueAt(rogue.Talents.DaggerSpecialization),
-	})
-	ohMod := rogue.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ProcMask:   core.ProcMaskMeleeOH,
-		FloatValue: spellData.DaggerSpecialization.ValueAt(rogue.Talents.DaggerSpecialization),
-	})
-
-	if rogue.HasDagger(true) {
-		mhMod.Activate()
-	}
-	if rogue.HasDagger(false) {
-		ohMod.Activate()
-	}
-
-	rogue.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		if rogue.HasDagger(true) {
-			mhMod.Activate()
-		} else {
-			mhMod.Deactivate()
-		}
-
-		if rogue.HasDagger(false) {
-			ohMod.Activate()
-		} else {
-			ohMod.Deactivate()
-		}
-	})
-}
-
 func (rogue *Rogue) registerDualWieldSpecialization() {
 	if rogue.Talents.DualWieldSpecialization == 0 {
 		return
@@ -138,46 +96,6 @@ func (rogue *Rogue) registerDualWieldSpecialization() {
 		Kind:       core.SpellMod_DamageDone_Flat,
 		ProcMask:   core.ProcMaskMeleeOH,
 		FloatValue: spellData.DualWieldSpecialization.FractionAt(rogue.Talents.DualWieldSpecialization),
-	})
-}
-
-func (rogue *Rogue) registerMaceSpecialization() {
-	if rogue.Talents.MaceSpecialization == 0 {
-		return
-	}
-
-	critDamage := spellData.MaceSpecialization.Effect(shared.A_MOD_CRIT_DAMAGE_BONUS, 1).FractionAt(rogue.Talents.MaceSpecialization)
-
-	mhMod := rogue.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CritMultiplier_Pct,
-		ProcMask:   core.ProcMaskMeleeMH,
-		FloatValue: critDamage,
-	})
-	ohMod := rogue.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CritMultiplier_Pct,
-		ProcMask:   core.ProcMaskMeleeOH,
-		FloatValue: critDamage,
-	})
-
-	if rogue.GetMHWeapon() != nil && rogue.GetMHWeapon().WeaponType == proto.WeaponType_WeaponTypeMace {
-		mhMod.Activate()
-	}
-	if rogue.GetOHWeapon() != nil && rogue.GetOHWeapon().WeaponType == proto.WeaponType_WeaponTypeMace {
-		ohMod.Activate()
-	}
-
-	rogue.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		if rogue.GetMHWeapon() != nil && rogue.GetMHWeapon().WeaponType == proto.WeaponType_WeaponTypeMace {
-			mhMod.Activate()
-		} else {
-			mhMod.Deactivate()
-		}
-
-		if rogue.GetOHWeapon() != nil && rogue.GetOHWeapon().WeaponType == proto.WeaponType_WeaponTypeMace {
-			ohMod.Activate()
-		} else {
-			ohMod.Deactivate()
-		}
 	})
 }
 
@@ -250,79 +168,6 @@ func (rogue *Rogue) registerBladeFlurry() {
 	})
 }
 
-func (rogue *Rogue) registerSwordSpecialization() {
-	if rogue.Talents.SwordSpecialization == 0 {
-		return
-	}
-
-	swordSpecDPM := func() *core.DynamicProcManager {
-		return rogue.NewFixedProcChanceManager(spellData.SwordSpecialization.FractionAt(rogue.Talents.SwordSpecialization), rogue.GetProcMaskForTypes(proto.WeaponType_WeaponTypeSword))
-	}
-
-	var swordSpecializationSpell *core.Spell
-	procTrigger := rogue.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Sword Spec Proc Trigger",
-		ActionID:           core.ActionID{SpellID: 13964},
-		Callback:           core.CallbackOnSpellHitDealt,
-		Outcome:            core.OutcomeLanded,
-		ICD:                time.Millisecond * 500,
-		TriggerImmediately: true,
-		DPM:                swordSpecDPM(),
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			rogue.AutoAttacks.MaybeReplaceMHSwing(sim, swordSpecializationSpell).Cast(sim, result.Target)
-		},
-	})
-
-	procTrigger.ApplyOnInit(func(aura *core.Aura, sim *core.Simulation) {
-		config := *rogue.AutoAttacks.MHConfig()
-		config.ActionID = config.ActionID.WithTag(12281)
-		config.Flags |= core.SpellFlagPassiveSpell
-		swordSpecializationSpell = rogue.GetOrRegisterSpell(config)
-	})
-
-	rogue.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		procTrigger.Dpm = swordSpecDPM()
-	})
-}
-
-func (rogue *Rogue) registerFistWeaponSpecialization() {
-	if rogue.Talents.FistWeaponSpecialization == 0 {
-		return
-	}
-
-	mhMod := rogue.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ProcMask:   core.ProcMaskMeleeMH,
-		FloatValue: spellData.FistWeaponSpecialization.ValueAt(rogue.Talents.FistWeaponSpecialization),
-	})
-	ohMod := rogue.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ProcMask:   core.ProcMaskMeleeOH,
-		FloatValue: spellData.FistWeaponSpecialization.ValueAt(rogue.Talents.FistWeaponSpecialization),
-	})
-
-	if rogue.GetMHWeapon() != nil && rogue.GetMHWeapon().WeaponType == proto.WeaponType_WeaponTypeFist {
-		mhMod.Activate()
-	}
-	if rogue.GetOHWeapon() != nil && rogue.GetOHWeapon().WeaponType == proto.WeaponType_WeaponTypeFist {
-		ohMod.Activate()
-	}
-
-	rogue.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		if rogue.GetMHWeapon() != nil && rogue.GetMHWeapon().WeaponType == proto.WeaponType_WeaponTypeFist {
-			mhMod.Activate()
-		} else {
-			mhMod.Deactivate()
-		}
-
-		if rogue.GetOHWeapon() != nil && rogue.GetOHWeapon().WeaponType == proto.WeaponType_WeaponTypeFist {
-			ohMod.Activate()
-		} else {
-			ohMod.Deactivate()
-		}
-	})
-}
-
 func (rogue *Rogue) registerWeaponExpertise() {
 	if rogue.Talents.WeaponExpertise == 0 {
 		return
@@ -341,15 +186,6 @@ func (rogue *Rogue) registerAggression() {
 		ClassMask:  RogueSpellSinisterStrike | RogueSpellBackstab | RogueSpellEviscerate,
 		FloatValue: spellData.Aggression.FractionAt(rogue.Talents.Aggression),
 	})
-}
-
-func (rogue *Rogue) registerVitality() {
-	if rogue.Talents.Vitality == 0 {
-		return
-	}
-
-	rogue.MultiplyStat(stats.Agility, spellData.Vitality.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 1).MultiplierAt(rogue.Talents.Vitality))
-	rogue.MultiplyStat(stats.Stamina, spellData.Vitality.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 2).MultiplierAt(rogue.Talents.Vitality))
 }
 
 func (rogue *Rogue) registerAdrenalineRush() {
@@ -397,46 +233,86 @@ func (rogue *Rogue) registerAdrenalineRush() {
 	})
 }
 
-func (rogue *Rogue) registerCombatPotency() {
-	if rogue.Talents.CombatPotency == 0 {
+// registerDeflection implements Deflection, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerDeflection() {
+	if rogue.Talents.Deflection == 0 {
 		return
 	}
 
-	potencyMetrics := rogue.NewEnergyMetrics(core.ActionID{SpellID: 35553})
-
-	rogue.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Combat Potency Trigger",
-		ActionID:           core.ActionID{SpellID: 35553},
-		ProcChance:         0.2,
-		Callback:           core.CallbackOnSpellHitDealt,
-		Outcome:            core.OutcomeLanded,
-		ProcMask:           core.ProcMaskMeleeOH,
-		TriggerImmediately: true,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			rogue.AddEnergy(sim, 3.0*float64(rogue.Talents.CombatPotency), potencyMetrics)
-		},
-	})
+	panic("To be implemented")
 }
 
-func (rogue *Rogue) registerSurpriseAttacks() {
-	if !rogue.Talents.SurpriseAttacks {
+// registerEndurance implements Endurance, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerEndurance() {
+	if rogue.Talents.Endurance == 0 {
 		return
 	}
 
-	rogue.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		ClassMask:  RogueSpellSinisterStrike | RogueSpellBackstab | RogueSpellShiv | RogueSpellGouge,
-		FloatValue: 0.1,
-	})
+	panic("To be implemented")
+}
 
-	rogue.AddStaticMod(core.SpellModConfig{
-		Kind:      core.SpellMod_Custom,
-		ClassMask: RogueSpellEviscerate | RogueSpellEnvenom | RogueSpellRupture | RogueSpellExposeArmor,
-		ApplyCustom: func(mod *core.SpellMod, spell *core.Spell) {
-			spell.Flags |= core.SpellFlagCannotBeDodged
-		},
-		RemoveCustom: func(mod *core.SpellMod, spell *core.Spell) {
-			spell.Flags &^= core.SpellFlagCannotBeDodged
-		},
-	})
+// registerFlawlessExecution implements Flawless Execution, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerFlawlessExecution() {
+	if !rogue.Talents.FlawlessExecution {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerHackAndSlash implements Hack and Slash, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerHackAndSlash() {
+	if rogue.Talents.HackAndSlash == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedKick implements Improved Kick, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerImprovedKick() {
+	if rogue.Talents.ImprovedKick == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedSprint implements Improved Sprint, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerImprovedSprint() {
+	if rogue.Talents.ImprovedSprint == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerRiposte implements Riposte, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (rogue *Rogue) registerRiposte() {
+	if !rogue.Talents.Riposte {
+		return
+	}
+
+	panic("To be implemented")
 }

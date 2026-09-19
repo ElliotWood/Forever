@@ -9,6 +9,10 @@ import (
 
 var VampiricTouchRankMap = spellData.VampiricTouch
 
+// TODO: uncalled -- Forever drops the Vampiric Touch talent that gated this spell, so
+// nothing calls this any more. Kept rather than deleted because "the talent is gone"
+// and "the spell is gone" are not the same claim, and the client data does not
+// distinguish them. Re-gate before wiring it back up.
 func (priest *Priest) registerVampiricTouchSpell(rank shared.SpellData) {
 	tick := rank.Periodic.(shared.SpellDataPeriodic)
 

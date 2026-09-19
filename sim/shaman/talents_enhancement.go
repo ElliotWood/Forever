@@ -5,27 +5,30 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (shaman *Shaman) ApplyEnhancementTalents() {
 	shaman.applyAncestralKnowledge()
-	shaman.applyDualWield()
-	shaman.applyDualWieldSpecialization()
 	shaman.applyElementalWeapons()
-	shaman.applyEnhancingTotems()
 	shaman.applyFlurry()
 	shaman.applyImprovedLightningShield()
-	shaman.applyImprovedWeaponTotems()
 	shaman.applyMentalQuickness()
 	shaman.applyShamanisticFocus()
-	shaman.applyShamanisticRage()
 	shaman.applySpiritWeapons()
 	shaman.applyStormstrike()
 	shaman.applyThunderingStrikes()
-	shaman.applyUnleashedRage()
-	shaman.applyWeaponMastery()
+
+	// Forever additions, not yet implemented.
+	shaman.applyEarthsGrasp()
+	shaman.applyGuardianTotems()
+	shaman.applyMentalDexterity()
+	shaman.applyImprovedGhostWolf()
+	shaman.applyAnticipation()
+	shaman.applyToughness()
+	shaman.applyImprovedStormstrike()
+	shaman.applyMaelstromWeapon()
+	shaman.applyRageOfTheFarseer()
 }
 
 func (shaman *Shaman) applyAncestralKnowledge() {
@@ -33,51 +36,6 @@ func (shaman *Shaman) applyAncestralKnowledge() {
 		return
 	}
 	shaman.MultiplyStat(stats.Mana, spellData.AncestralKnowledge.MultiplierAt(shaman.Talents.AncestralKnowledge))
-}
-
-func (shaman *Shaman) applyDualWield() {
-	if !shaman.Talents.DualWield {
-		return
-	}
-	// TODO ? Do we want to enforce that the user cannot equip 2 weapons in the gear planner if this talent is not picked ?
-}
-
-func (shaman *Shaman) applyDualWieldSpecialization() {
-	if shaman.Talents.DualWieldSpecialization == 0 {
-		return
-	}
-	value := spellData.DualWieldSpecialization.ValueAt(shaman.Talents.DualWieldSpecialization)
-	buffed := false
-	DWaura := shaman.RegisterAura(core.Aura{
-		Label:      "Dual Wield Specialization",
-		ActionID:   core.ActionID{SpellID: 30819},
-		BuildPhase: core.CharacterBuildPhaseTalents,
-		Duration:   core.NeverExpires,
-		OnGain: func(_ *core.Aura, sim *core.Simulation) {
-			//Can't use AttachStatBuff since it will activate in BuildPhaseTalent even when not dual wielding
-			if shaman.AutoAttacks.IsDualWielding && !buffed {
-				shaman.AddStatDynamic(sim, stats.PhysicalHitPercent, value)
-				buffed = true
-			}
-		},
-		OnExpire: func(_ *core.Aura, sim *core.Simulation) {
-			if buffed {
-				shaman.AddStatDynamic(sim, stats.PhysicalHitPercent, -value)
-				buffed = false
-			}
-		},
-	})
-
-	if shaman.AutoAttacks.IsDualWielding {
-		core.MakePermanent(DWaura)
-	}
-	shaman.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, _ proto.ItemSlot) {
-		if shaman.AutoAttacks.IsDualWielding {
-			DWaura.Activate(sim)
-		} else {
-			DWaura.Deactivate(sim)
-		}
-	})
 }
 
 func (shaman *Shaman) applyElementalWeapons() {
@@ -99,13 +57,6 @@ func (shaman *Shaman) applyElementalWeapons() {
 		FloatValue: 0.05 * float64(shaman.Talents.ElementalWeapons),
 		ClassMask:  SpellMaskFlametongueWeapon | SpellMaskFrostbrandWeapon,
 	})
-}
-
-func (shaman *Shaman) applyEnhancingTotems() {
-	if shaman.Talents.EnhancingTotems == 0 {
-		return
-	}
-	// In totems.go
 }
 
 func (shaman *Shaman) applyFlurry() {
@@ -162,18 +113,6 @@ func (shaman *Shaman) applyImprovedLightningShield() {
 	})
 }
 
-func (shaman *Shaman) applyImprovedWeaponTotems() {
-	if shaman.Talents.ImprovedWeaponTotems == 0 {
-		return
-	}
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedWeaponTotems.EffectAt(1).FractionAt(shaman.Talents.ImprovedWeaponTotems),
-		ClassMask:  SpellMaskFlametongueTotem,
-	})
-	// WF bonus in totems.go
-}
-
 func (shaman *Shaman) applyMentalQuickness() {
 	if shaman.Talents.MentalQuickness == 0 {
 		return
@@ -224,48 +163,6 @@ func (shaman *Shaman) applyShamanisticFocus() {
 	})
 }
 
-var shamanisticRageRank = spellData.ShamanisticRage.BySpellID(30823)
-
-func (shaman *Shaman) applyShamanisticRage() {
-	if !shaman.Talents.ShamanisticRage {
-		return
-	}
-	actionId := core.ActionID{SpellID: shamanisticRageRank.SpellID}
-	srManaMetric := shaman.NewManaMetrics(actionId)
-	shamRageAura := shaman.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Shamanistic Rage",
-		MetricsActionID:    actionId,
-		Duration:           time.Second * 15,
-		Callback:           core.CallbackOnSpellHitDealt,
-		ProcMask:           core.ProcMaskMeleeWhiteHit,
-		Outcome:            core.OutcomeLanded,
-		RequireDamageDealt: true,
-		DPM:                shaman.NewLegacyPPMManager(15.0, core.ProcMaskMeleeWhiteHit),
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			shaman.AddMana(sim, 0.3*shaman.GetAttackPowerValue(spell, result.Target), srManaMetric)
-		},
-	})
-
-	shaman.RegisterSpell(core.SpellConfig{
-		ActionID:       actionId,
-		SpellSchool:    core.SpellSchoolPhysical,
-		Flags:          SpellFlagInstant | core.SpellFlagAPL,
-		ClassSpellMask: SpellMaskShamanisticRage,
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: shamanisticRageRank.GCD,
-			},
-			CD: core.Cooldown{
-				Timer:    shaman.NewTimer(),
-				Duration: shamanisticRageRank.Cooldown,
-			},
-		},
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			shamRageAura.Activate(sim)
-		},
-	})
-}
-
 func (shaman *Shaman) applySpiritWeapons() {
 	if !shaman.Talents.SpiritWeapons {
 		return
@@ -291,33 +188,110 @@ func (shaman *Shaman) applyThunderingStrikes() {
 	})
 }
 
-func (shaman *Shaman) applyUnleashedRage() {
-	if shaman.Talents.UnleashedRage == 0 {
+// applyEarthsGrasp implements Earth's Grasp, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyEarthsGrasp() {
+	if shaman.Talents.EarthsGrasp == 0 {
 		return
 	}
 
-	unleashBuffAura := core.UnleashedRageAura(&shaman.Character, 1, shaman.Talents.UnleashedRage)
-
-	shaman.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Unleashed Rage Trigger",
-		Callback:           core.CallbackOnSpellHitDealt,
-		ProcMask:           core.ProcMaskMelee,
-		CanProcFromProcs:   true, // 30802, 30808-30811 carry the bit.
-		Outcome:            core.OutcomeCrit,
-		RequireDamageDealt: true,
-		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			unleashBuffAura.Activate(sim)
-		},
-	})
+	panic("To be implemented")
 }
 
-func (shaman *Shaman) applyWeaponMastery() {
-	if shaman.Talents.WeaponMastery == 0 {
+// applyGuardianTotems implements Guardian Totems, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyGuardianTotems() {
+	if shaman.Talents.GuardianTotems == 0 {
 		return
 	}
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.WeaponMastery.FractionAt(shaman.Talents.WeaponMastery),
-		ProcMask:   core.ProcMaskMelee,
-	})
+
+	panic("To be implemented")
+}
+
+// applyMentalDexterity implements Mental Dexterity, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyMentalDexterity() {
+	if shaman.Talents.MentalDexterity == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedGhostWolf implements Improved Ghost Wolf, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyImprovedGhostWolf() {
+	if shaman.Talents.ImprovedGhostWolf == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyAnticipation implements Anticipation, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyAnticipation() {
+	if shaman.Talents.Anticipation == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyToughness implements Toughness, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyToughness() {
+	if shaman.Talents.Toughness == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedStormstrike implements Improved Stormstrike, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyImprovedStormstrike() {
+	if shaman.Talents.ImprovedStormstrike == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyMaelstromWeapon implements Maelstrom Weapon, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyMaelstromWeapon() {
+	if shaman.Talents.MaelstromWeapon == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyRageOfTheFarseer implements Rage of the Farseer, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyRageOfTheFarseer() {
+	if !shaman.Talents.RageOfTheFarseer {
+		return
+	}
+
+	panic("To be implemented")
 }

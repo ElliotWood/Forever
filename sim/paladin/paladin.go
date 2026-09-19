@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{20, 22, 22}
+var TalentTreeSizes = [3]int{18, 16, 18}
 
 const JudgementAuraTag = "JudgementAura"
 

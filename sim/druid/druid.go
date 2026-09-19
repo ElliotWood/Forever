@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{21, 21, 20}
+var TalentTreeSizes = [3]int{16, 19, 16}
 
 type Druid struct {
 	core.Character
@@ -261,7 +261,7 @@ func (druid *Druid) RegisterFeralCatSpells() {
 	druid.registerRakeSpell()
 	druid.registerRipSpell()
 	druid.registerFerociousBiteSpell()
-	druid.registerFaerieFireFeralSpell()
+	// TODO: Forever drops Faerie Fire (Feral); see registerFaerieFireFeralSpell.
 	druid.registerShredSpell()
 	druid.registerTigersFurySpell()
 }
@@ -270,7 +270,7 @@ func (druid *Druid) RegisterFeralTankSpells() {
 	druid.registerBearFormSpell()
 	druid.registerBarkskin()
 	druid.registerDemoralizingRoarSpell()
-	druid.registerFaerieFireFeralSpell()
+	// TODO: Forever drops Faerie Fire (Feral); see registerFaerieFireFeralSpell.
 	druid.registerEnrageSpell()
 	druid.registerFrenziedRegenerationSpell()
 	druid.registerLacerateSpell()
@@ -306,9 +306,8 @@ func New(char *core.Character, form DruidForm, selfBuffs SelfBuffs, talents stri
 	// TBC: Druids have a -1.87% base dodge correction to match in-game values.
 	druid.PseudoStats.BaseDodgeChance -= 0.0187
 
-	if druid.Talents.ForceOfNature {
-		druid.registerTreants()
-	}
+	// TODO: Forever drops Force of Nature; the Treants are never enabled until we know
+	// whether the talent moved elsewhere.
 
 	return druid
 }

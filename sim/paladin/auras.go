@@ -43,7 +43,9 @@ func (paladin *Paladin) registerAuraSpell(aura *core.Aura, classSpellMask int64)
 // Improved Devotion Aura talent increases the armor bonus by up to 40%.
 // Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerDevotionAura() {
-	aura := core.DevotionAuraBuff(&paladin.Character, true, paladin.Talents.ImprovedDevotionAura)
+	// TODO: Forever drops Improved Devotion Aura; untalented (0 points) until we know
+	// whether the effect moved onto another talent.
+	aura := core.DevotionAuraBuff(&paladin.Character, true, 0)
 	paladin.registerAuraSpell(aura, SpellMaskDevotionAura)
 }
 
@@ -54,7 +56,9 @@ func (paladin *Paladin) registerDevotionAura() {
 // Improved Retribution Aura talent increases damage by up to 50%.
 // Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerRetributionAura() {
-	aura := core.RetributionAuraBuff(&paladin.Character, true, paladin.Talents.ImprovedRetributionAura)
+	// TODO: Forever drops Improved Retribution Aura; untalented (0 points) until we know
+	// whether the effect moved onto another talent.
+	aura := core.RetributionAuraBuff(&paladin.Character, true, 0)
 	paladin.registerAuraSpell(aura, SpellMaskRetributionAura)
 }
 
@@ -76,7 +80,9 @@ func (paladin *Paladin) registerSelfCastAura(label string, actionID core.ActionI
 // All party members within 30 yards lose 35% less casting or channeling time
 // when damaged. Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerConcentrationAura() {
-	aura := core.ConcentrationAura(&paladin.Character, true, paladin.Talents.ImprovedConcentrationAura)
+	// TODO: Forever drops Improved Concentration Aura; untalented (0 points) until we
+	// know whether the effect moved onto another talent.
+	aura := core.ConcentrationAura(&paladin.Character, true, 0)
 	paladin.registerAuraSpell(aura, SpellMaskConcentrationAura)
 }
 
@@ -116,7 +122,12 @@ func (paladin *Paladin) registerShadowResistanceAura() {
 // Increases Holy damage done by party members within 30 yards by 10%.
 // Improved Sanctity Aura talent adds a 1/2% bonus to all damage dealt.
 // Players may only have one Aura on them per Paladin at any one time.
+//
+// TODO: uncalled -- Forever drops the Sanctity Aura talent; re-gate before wiring
+// back into registerTalentSpells.
 func (paladin *Paladin) registerSanctityAura() {
-	aura := core.SanctityAuraBuff(&paladin.Character, true, paladin.Talents.ImprovedSanctityAura)
+	// TODO: Forever drops Improved Sanctity Aura; untalented (0 points) until we know
+	// whether the effect moved onto another talent.
+	aura := core.SanctityAuraBuff(&paladin.Character, true, 0)
 	paladin.registerAuraSpell(aura, SpellMaskSanctityAura)
 }

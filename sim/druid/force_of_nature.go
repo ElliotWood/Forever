@@ -14,11 +14,9 @@ func (druid *Druid) registerTreants() {
 	}
 }
 
+// TODO: uncalled -- Forever drops the Force of Nature talent; re-gate before wiring
+// back into Druid's construction (see druid.go).
 func (druid *Druid) registerForceOfNatureCD() {
-	if !druid.Talents.ForceOfNature {
-		return
-	}
-
 	forceOfNatureAura := druid.RegisterAura(core.Aura{
 		Label:    "Force of Nature",
 		ActionID: core.ActionID{SpellID: 33831},
