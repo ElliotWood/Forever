@@ -63,7 +63,8 @@ tools/database/*.db
 tools/db2tool/DBDCache.bak/
 tools/db2tool/dbfilesclient-era-new/
 
-# Spellbook page output and its scraped data; the scripts that build them are tracked.
-tools/spellbook/data/
-tools/spellbook/out/
+# The spellbook page builder and the Forever description tool. Both produce
+# published artifacts rather than anything the sim reads, so they stay local.
+tools/spellbook/
+tools/foreverdesc/
 __pycache__/
