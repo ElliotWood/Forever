@@ -277,7 +277,8 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(BaronCharrsSceptre, "Baron Charr's Sceptre", 1.0, 13442, core.SpellSchoolFire, 35, 0, 0, core.DefenseTypeMagic)
 
 	// https://www.wowhead.com/classic/item=14541/barovian-family-sword
-	// Chance on hit: Deals 30 Shadow damage every 3 sec for 15 sec. All damage done is then transferred to the caster.
+	// Beta client 1.60.1 (spell 18652): 49 a tick every 1 sec for 5 sec, 245 in all, up from
+	// Era's 30 a tick for 15 sec. Still transferred to the caster.
 	// TODO: Proc rate assumed and needs testing
 	itemhelpers.CreateWeaponProcSpell(BarovianFamilySword, "Barovian Family Sword", 0.5, func(character *core.Character) *core.Spell {
 		actionID := core.ActionID{SpellID: 18652}
@@ -299,13 +300,13 @@ func init() {
 
 			Dot: core.DotConfig{
 				NumberOfTicks: 5,
-				TickLength:    time.Second * 3,
+				TickLength:    time.Second * 1,
 				Aura: core.Aura{
 					Label: "Siphon Health (Barovian Family Sword)",
 				},
 				OnSnapshot: func(_ *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
 					enemyDamageTaken[target.UnitIndex] = 0
-					dot.Snapshot(target, 30, isRollover)
+					dot.Snapshot(target, 49, isRollover)
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 					result := dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
@@ -570,7 +571,7 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(BlackhandDoomsaw, "Blackhand Doomsaw", 0.4, 16549, core.SpellSchoolPhysical, 324, 216, 0, core.DefenseTypeMelee)
 
 	// https://www.wowhead.com/classic/item=17780/blade-of-eternal-darkness
-	// Equip: Chance on landing a damaging spell to deal 100 Shadow damage and restore 100 mana to you. (Proc chance: 10%)
+	// Beta client 1.60.1 (spell 27860): 112 Shadow damage and 104 mana, up from Era's 100 and 100.
 	core.NewItemEffect(BladeOfEternalDarkness, func(agent core.Agent) {
 		character := agent.GetCharacter()
 
@@ -587,8 +588,8 @@ func init() {
 			ThreatMultiplier: 1,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				spell.CalcAndDealDamage(sim, target, 100, spell.OutcomeAlwaysHit)
-				character.AddMana(sim, 100, manaMetrics)
+				spell.CalcAndDealDamage(sim, target, 112, spell.OutcomeAlwaysHit)
+				character.AddMana(sim, 104, manaMetrics)
 			},
 		})
 
@@ -822,7 +823,8 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(EbonHand, "Ebon Hand", 1.0, 18211, core.SpellSchoolShadow, 125, 150, 0, core.DefenseTypeMagic)
 
 	// https://www.wowhead.com/classic/item=14576/ebon-hilt-of-marduk
-	// Chance on hit: Corrupts the target, causing 210 damage over 3 sec.
+	// Beta client 1.60.1 (spell 18656): 28 a tick every 3 sec for 9 sec, 84 in all, well down
+	// from Era's 70 a tick for 3 sec.
 	// TODO: Proc rate assumed and needs testing
 	itemhelpers.CreateWeaponProcSpell(EbonHiltOfMarduk, "Ebon Hilt of Marduk", 1.0, func(character *core.Character) *core.Spell {
 		return character.RegisterSpell(core.SpellConfig{
@@ -836,11 +838,11 @@ func init() {
 				Aura: core.Aura{
 					Label: "Corruption (Ebon Hilt of Marduk)",
 				},
-				TickLength:    time.Second,
+				TickLength:    time.Second * 3,
 				NumberOfTicks: 3,
 
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 70, isRollover)
+					dot.Snapshot(target, 28, isRollover)
 				},
 
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
@@ -1113,7 +1115,9 @@ func init() {
 	// sim can spend. Leaving the old debuff in place would have been a straight invention.
 
 	// https://www.wowhead.com/classic/item=14531/frightskull-shaft
-	// Chance on hit: Deals 8 Shadow damage every 2 sec for 30 sec and lowers their Strength for the duration of the disease.
+	// Beta client 1.60.1 (spell 18633): 15 a tick every 2 sec for 14 sec, and the debuff is now
+	// attack power rather than Strength - Era's tooltip reads "lowers their Strength", Forever's
+	// reads "lowers their attack power by $s2", carried on aura 99 at -92 where Era used aura 29.
 	// TODO: Proc rate assumed and needs testing
 	itemhelpers.CreateWeaponProcSpell(FrightskullShaft, "Frightskull Shaft", 0.5, func(character *core.Character) *core.Spell {
 		return character.RegisterSpell(core.SpellConfig{
@@ -1124,19 +1128,19 @@ func init() {
 			Flags:       core.SpellFlagPureDot | core.SpellFlagDisease,
 
 			Dot: core.DotConfig{
-				NumberOfTicks: 15,
+				NumberOfTicks: 7,
 				TickLength:    time.Second * 2,
 				Aura: core.Aura{
 					Label: "Weakening Disease",
 					OnGain: func(aura *core.Aura, sim *core.Simulation) {
-						aura.Unit.AddStatDynamic(sim, stats.Strength, -50)
+						aura.Unit.AddStatDynamic(sim, stats.AttackPower, -92)
 					},
 					OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-						aura.Unit.AddStatDynamic(sim, stats.Strength, 50)
+						aura.Unit.AddStatDynamic(sim, stats.AttackPower, 92)
 					},
 				},
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 8, isRollover)
+					dot.Snapshot(target, 15, isRollover)
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 					dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
@@ -1192,7 +1196,8 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(GlacialBlade, "Glacial Blade", 1.4, 18398, core.SpellSchoolFrost, 45, 0, 0, core.DefenseTypeMagic)
 
 	// https://www.wowhead.com/classic/item=13983/gravestone-war-axe
-	// Chance on hit: Diseases target enemy for 55 Nature damage every 3 sec for 15 sec.
+	// Beta client 1.60.1 (spell 18289): 42 a tick every 3 sec for 12 sec, 168 in all, down from
+	// Era's 55 a tick for 15 sec.
 	// TODO: Proc rate assumed and needs testing
 	itemhelpers.CreateWeaponProcSpell(GravestoneWarAxe, "Gravestone War Axe", 0.5, func(character *core.Character) *core.Spell {
 		return character.RegisterSpell(core.SpellConfig{
@@ -1203,13 +1208,13 @@ func init() {
 			Flags:       core.SpellFlagDisease | core.SpellFlagPureDot,
 
 			Dot: core.DotConfig{
-				NumberOfTicks: 15,
+				NumberOfTicks: 4,
 				TickLength:    time.Second * 3,
 				Aura: core.Aura{
 					Label: "Creeping Mold",
 				},
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 55, isRollover)
+					dot.Snapshot(target, 42, isRollover)
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 					dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
@@ -1405,6 +1410,8 @@ func init() {
 	}) */
 
 	// https://www.wowhead.com/classic/item=11635/hookfang-shanker
+	// Beta client 1.60.1 (spell 13526): 13 a tick every 2 sec for 14 sec, 91 in all. Era is 7
+	// every 3 sec for 30 sec, 70 in all. The -50 armor alongside it is unchanged.
 	itemhelpers.CreateWeaponProcSpell(HookfangShanker, "Hookfang Shanker", 1.0, func(character *core.Character) *core.Spell {
 		return character.GetOrRegisterSpell(core.SpellConfig{
 			ActionID:         core.ActionID{SpellID: 13526},
@@ -1421,8 +1428,8 @@ func init() {
 				}
 			},
 			Dot: core.DotConfig{
-				NumberOfTicks: 10,
-				TickLength:    time.Second * 3,
+				NumberOfTicks: 7,
+				TickLength:    time.Second * 2,
 				Aura: core.Aura{
 					Label: "Corrosive Poison",
 					OnGain: func(aura *core.Aura, sim *core.Simulation) {
@@ -1433,7 +1440,7 @@ func init() {
 					},
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-					dot.Spell.CalcAndDealPeriodicDamage(sim, target, 7, dot.OutcomeTick)
+					dot.Spell.CalcAndDealPeriodicDamage(sim, target, 13, dot.OutcomeTick)
 				},
 			},
 		})
@@ -1459,7 +1466,8 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(JoonhosMercy, "Joonho's Mercy", 1.0, 20883, core.SpellSchoolArcane, 70, 0, 0, core.DefenseTypeMagic)
 
 	// https://www.wowhead.com/classic/item=12582/keris-of-zulserak
-	// Chance on hit: Inflicts numbing pain that deals 10 Nature damage every 2 sec and increases time between target's attacks by 10% for 10 sec.
+	// Beta client 1.60.1 (spell 16528): 10 a tick every 1 sec for 10 sec, where Era ticks every
+	// 2. The sim also had 8 a tick, which matches neither client - both say 10.
 	// 1 PPM assumed and needs testing
 	itemhelpers.CreateWeaponProcSpell(KerisOfZulSerak, "Keris of Zul'Serak", 1.0, func(character *core.Character) *core.Spell {
 		return character.GetOrRegisterSpell(core.SpellConfig{
@@ -1477,8 +1485,8 @@ func init() {
 				}
 			},
 			Dot: core.DotConfig{
-				NumberOfTicks: 5,
-				TickLength:    time.Second * 2,
+				NumberOfTicks: 10,
+				TickLength:    time.Second * 1,
 				Aura: core.Aura{
 					Label: "Numbing Pain",
 					OnGain: func(aura *core.Aura, sim *core.Simulation) {
@@ -1486,7 +1494,7 @@ func init() {
 					},
 				},
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 8, isRollover)
+					dot.Snapshot(target, 10, isRollover)
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 					dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
@@ -2143,6 +2151,8 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=9639/the-hand-of-antusul
+	// Beta client 1.60.1 (spell 13532): 42 damage a target, six times Era's 7. The -11%
+	// attack speed alongside it is unchanged; Forever only renumbered its aura.
 	itemhelpers.CreateWeaponProcSpell(TheHandOfAntusul, "The Hand of Antu'sul", 1.0, func(character *core.Character) *core.Spell {
 		debuffAuras := character.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
 			aura := unit.GetOrRegisterAura(core.Aura{
@@ -2165,7 +2175,7 @@ func init() {
 			ThreatMultiplier: 1,
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				for idx := range results {
-					results[idx] = spell.CalcDamage(sim, target, 7, spell.OutcomeMagicHitAndCrit)
+					results[idx] = spell.CalcDamage(sim, target, 42, spell.OutcomeMagicHitAndCrit)
 					target = character.Env.NextTargetUnit(target)
 				}
 				for _, result := range results {
@@ -2313,7 +2323,8 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=13183/venomspitter
-	// Chance on hit: Poisons target for 7 Nature damage every 2 sec for 30 sec.
+	// Beta client 1.60.1 (spell 18203): 7 a tick every 1 sec for 15 sec. Same damage a tick and
+	// the same 105 in all as Era, delivered in half the time.
 	// TODO: Proc rate assumed and needs testing
 	itemhelpers.CreateWeaponProcSpell(Venomspitter, "Venomspitter", 1.0, func(character *core.Character) *core.Spell {
 		return character.GetOrRegisterSpell(core.SpellConfig{
@@ -2326,7 +2337,7 @@ func init() {
 				Aura: core.Aura{
 					Label: "Poison (Venomspitter)",
 				},
-				TickLength:    time.Second * 2,
+				TickLength:    time.Second * 1,
 				NumberOfTicks: 15,
 
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
