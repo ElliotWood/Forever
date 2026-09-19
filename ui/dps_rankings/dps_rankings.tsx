@@ -125,7 +125,6 @@ export class DpsRankings extends Component {
 		this.iterationsElem = iterationsRef.value!;
 
 		const socials = socialsRef.value!;
-		socials.appendChild(SocialLinks.buildDiscordLink());
 		socials.appendChild(SocialLinks.buildGitHubLink());
 
 		this.buildProvenance(provenanceRef.value!);
