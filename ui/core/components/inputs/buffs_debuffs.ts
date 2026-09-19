@@ -509,10 +509,14 @@ export const SpellStormstrikeDebuff = withLabel(
 	'Stormstrike',
 );
 
+// The fourth of the vulnerabilities described above. Forever's Shadow Weaving raises the
+// Shadow damage the priest deals rather than the damage the target takes, so it is a
+// personal buff there and the priest applies its own.
 export const SpellShadowWeavingDebuff = withLabel(
 	makeBooleanDebuffInput({
 		actionId: () => ActionId.fromSpellId(15334),
 		fieldName: 'shadowWeaving',
+		showWhen: player => player.sim.getRuleset() == Ruleset.RulesetClassic,
 	}),
 	'Shadow Weaving',
 );
