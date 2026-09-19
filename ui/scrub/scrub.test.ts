@@ -21,8 +21,9 @@ function u32(value: number): number[] {
 }
 
 /** One actor record: name, class, then hits / spell / spell / damage and three unread words. */
-function record(name: string, className: string, hits: number, spellId: number, damage: number): number[] {
-	return [...str(name), ...str(className), ...u32(hits), ...u32(spellId), ...u32(spellId), ...u32(damage), ...u32(0), ...u32(0), ...u32(0)];
+/** kind, spell, spell, damage, unknown, hits, biggest - see scrub.ts for the layout. */
+function record(name: string, className: string, hits: number, spellId: number, damage: number, biggest = damage): number[] {
+	return [...str(name), ...str(className), ...u32(1), ...u32(spellId), ...u32(spellId), ...u32(damage), ...u32(0), ...u32(hits), ...u32(biggest)];
 }
 
 function file(...parts: number[][]): Uint8Array {
@@ -34,7 +35,7 @@ function file(...parts: number[][]): Uint8Array {
 	const bytes = file(record('Terry Oldman', 'WARRIOR', 3, 772, 120));
 	const records = readRecords(bytes);
 	assert.strictEqual(records.length, 1);
-	assert.deepStrictEqual(records[0], { name: 'Terry Oldman', className: 'WARRIOR', hits: 3, spellId: 772, spellAgain: 772, damage: 120 });
+	assert.deepStrictEqual(records[0], { name: 'Terry Oldman', className: 'WARRIOR', hits: 3, spellId: 772, spellAgain: 772, damage: 120, biggest: 120 });
 }
 
 // Mistake one: a name that also appears without a class after it must still go. The first
@@ -65,9 +66,9 @@ function file(...parts: number[][]): Uint8Array {
 // The damage survives the scrub, which is the entire point of sending the file.
 {
 	const bytes = file(record('Terry Oldman', 'WARRIOR', 87, 6603, 9121), record('Bary Oldman', 'PALADIN', 15, 78, 8258));
-	const before = readRecords(bytes).map(r => [r.hits, r.spellId, r.damage]);
+	const before = readRecords(bytes).map(r => [r.hits, r.spellId, r.damage, r.biggest]);
 	const { scrubbed, namesRemoved } = scrub(bytes);
-	const after = readRecords(scrubbed).map(r => [r.hits, r.spellId, r.damage]);
+	const after = readRecords(scrubbed).map(r => [r.hits, r.spellId, r.damage, r.biggest]);
 	assert.deepStrictEqual(after, before);
 	assert.strictEqual(namesRemoved, 2);
 }
@@ -77,7 +78,7 @@ function file(...parts: number[][]): Uint8Array {
 // records out before collecting names made the browser scrub 5 names where the Python tool
 // scrubs 24. The summary is filtered; the scrubbing never is.
 {
-	const junk = [...str('Geosculptor Yip'), ...str('PALADIN'), ...u32(248474), ...u32(1), ...u32(2), ...u32(3815178240), ...u32(0), ...u32(0), ...u32(0)];
+	const junk = [...str('Geosculptor Yip'), ...str('PALADIN'), ...u32(1), ...u32(1), ...u32(2), ...u32(3815178240), ...u32(0), ...u32(248474), ...u32(0)];
 	const bytes = file(record('Terry Oldman', 'WARRIOR', 1, 6603, 10), junk);
 	const records = readRecords(bytes);
 	assert.strictEqual(records.filter(plausible).length, 1, 'the nonsense record should not be summarised');

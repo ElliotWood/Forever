@@ -30,6 +30,7 @@ export type ActorRecord = {
 	spellId: number;
 	spellAgain: number;
 	damage: number;
+	biggest: number;
 };
 
 /**
@@ -75,15 +76,16 @@ export function readRecords(bytes: Uint8Array): ActorRecord[] {
 			const className = readString(view, bytes, name.next);
 			if (className && CLASS_TOKENS.has(className.text) && className.next + 28 <= bytes.length) {
 				const at = className.next;
-				const hits = view.getUint32(at, true);
 				const spellId = view.getUint32(at + 4, true);
 				const spellAgain = view.getUint32(at + 8, true);
 				const damage = view.getUint32(at + 12, true);
+				const hits = view.getUint32(at + 20, true);
+				const biggest = view.getUint32(at + 24, true);
 				// Pushed whatever the numbers look like. Filtering here is what made the browser
 				// port scrub 5 names where the Python tool scrubs 24: a record whose damage
 				// field reads as nonsense still has a real character name in front of it, and
 				// the name is the part that matters. plausible() below filters the summary.
-				out.push({ name: name.text, className: className.text, hits, spellId, damage, spellAgain });
+				out.push({ name: name.text, className: className.text, hits, spellId, damage, spellAgain, biggest });
 				i = at + 28;
 				continue;
 			}
