@@ -72,20 +72,32 @@ const haystack = (id: number, s: SpellSource) => `${id} ${s.ability} ${s.file} $
 // 996 rows means 996 icon lookups, and an icon the bundled database has never heard of goes
 // out to Wowhead for it. Firing those on load would be a thousand requests for the forty
 // rows anyone can actually see, so icons fill when they scroll into view.
+//
+// The href waits for the same moment, which is not an optimisation of the same kind: the
+// site loads Wowhead's tooltip script with colorLinks on, and that script walks every link
+// to a Wowhead URL and fetches it. A page that hands it 996 links at once is asking for 996
+// requests before anyone has scrolled, and most of them 404 because Wowhead has never heard
+// of an ability Forever invented.
 const iconsInView = new IntersectionObserver(
 	(entries, self) => {
 		for (const entry of entries) {
 			if (!entry.isIntersecting) continue;
 			self.unobserve(entry.target);
 			const elem = entry.target as HTMLAnchorElement;
-			ActionId.fromSpellId(Number(elem.dataset.spellId)).fillAndSet(elem, false, true);
+			const actionId = ActionId.fromSpellId(Number(elem.dataset.spellId));
+			// The link needs no lookup, so it must not wait behind one. Going through
+			// fillAndSet held the href until the icon request came back, and for an id Wowhead
+			// has never heard of that request is a slow 404 - which left rows with a working
+			// icon lookup pending and no link at all in the meantime.
+			actionId.setWowheadHref(elem);
+			actionId.fill().then(filled => filled.setBackground(elem));
 		}
 	},
 	{ rootMargin: '200px' },
 );
 
 export class EvidencePage {
-	private readonly rows: Array<{ elem: HTMLElement; tiers: Set<Tier>; text: string }> = [];
+	private readonly rows: Array<{ elem: HTMLElement; icon: HTMLAnchorElement; tiers: Set<Tier>; text: string }> = [];
 	private readonly count: HTMLElement;
 	private readonly search: HTMLInputElement;
 	private query = '';
@@ -185,6 +197,11 @@ export class EvidencePage {
 
 		this.count = parent.querySelector('.evidence-count') as HTMLElement;
 		this.search = parent.querySelector('.evidence-search') as HTMLInputElement;
+		// Observed only once the tree is in the document. Observing while the rows were still
+		// being built produced one callback per icon saying "not intersecting" - correct, since
+		// a detached element intersects nothing - and no second one when they were attached, so
+		// every icon below the first screenful stayed blank and unlinked.
+		for (const row of this.rows) iconsInView.observe(row.icon);
 		this.apply();
 	}
 
@@ -227,11 +244,7 @@ export class EvidencePage {
 		const tiers = new Set<Tier>([tier]);
 		if (s.measured) tiers.add('measured');
 
-		// The href needs no lookup, so it works before the icon has loaded and still works for
-		// the Forever-only ids Wowhead will never have a page for.
 		const icon = (<a className="evidence-icon" target="_blank" rel="noreferrer" dataset={{ spellId: String(id) }} />) as HTMLAnchorElement;
-		ActionId.fromSpellId(id).setWowheadHref(icon);
-		iconsInView.observe(icon);
 
 		const elem = (
 			<li className="evidence-row" dataset={{ spellSource: s.source }}>
@@ -265,7 +278,7 @@ export class EvidencePage {
 			</li>
 		) as HTMLElement;
 
-		this.rows.push({ elem, tiers, text: haystack(id, s) });
+		this.rows.push({ elem, icon, tiers, text: haystack(id, s) });
 		return elem;
 	}
 

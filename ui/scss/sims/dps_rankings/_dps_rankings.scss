@@ -174,6 +174,70 @@
 			height: 100%;
 		}
 
+		// Where the damage came from, as a composition rather than a score. The colours match
+		// the evidence page so the two read as one system: gold means read the note, green
+		// means somebody watched it happen.
+		.dps-rankings-rests-cell {
+			white-space: nowrap;
+		}
+
+		.dps-rankings-rests {
+			display: flex;
+			align-items: center;
+			gap: var(--spacer-2);
+		}
+
+		.dps-rankings-rests-bar {
+			display: flex;
+			overflow: hidden;
+			width: 6rem;
+			height: 0.75rem;
+			border-radius: 2px;
+			background-color: color-mix(in srgb, var(--bs-white) 5%, transparent);
+		}
+
+		.dps-rankings-rests-part {
+			width: var(--percentage);
+		}
+
+		.dps-rankings-rests-measured {
+			background-color: #6dbf6d;
+		}
+
+		.dps-rankings-rests-forever {
+			background-color: #4a7fb5;
+		}
+
+		.dps-rankings-rests-classic {
+			background-color: #6c757d;
+		}
+
+		.dps-rankings-rests-core {
+			background-color: #8a7f6d;
+		}
+
+		.dps-rankings-rests-assumed {
+			background-color: var(--bs-brand);
+		}
+
+		// Not in the manifest at all, which is a different problem from a known guess and is
+		// drawn as a gap rather than as a colour claiming to mean something.
+		.dps-rankings-rests-unknown {
+			background-color: color-mix(in srgb, var(--bs-white) 18%, transparent);
+		}
+
+		.dps-rankings-rests-percent {
+			width: 5ch;
+			flex-shrink: 0;
+			text-align: right;
+			color: var(--bs-gray-400);
+		}
+
+		.dps-rankings-rests-high {
+			color: var(--bs-brand);
+			font-weight: 600;
+		}
+
 		.dps-rankings-share-percent {
 			width: 5ch;
 			flex-shrink: 0;
