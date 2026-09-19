@@ -118,14 +118,17 @@ func (item *Item) ParseItemFlags(uiItem *proto.UIItem) {
 func (item *Item) GetStats(itemLevel int) *stats.Stats {
 	stats := &stats.Stats{}
 	for i, alloc := range item.BonusStat {
-		stat, success := MapBonusStatIndexToStat(alloc)
+		mapped, success := MapBonusStatIndexToStats(alloc)
 		if !success {
 			// Skip this stat then
 			continue
 		}
-		stats[stat] = item.GetScaledStat(i, itemLevel)
-		if stat == proto.Stat_StatArmorPenetration {
-			stats[stat] = math.Abs(stats[stat])
+		value := item.GetScaledStat(i, itemLevel)
+		for _, stat := range mapped {
+			stats[stat] = value
+			if stat == proto.Stat_StatArmorPenetration {
+				stats[stat] = math.Abs(stats[stat])
+			}
 		}
 	}
 
@@ -228,12 +231,14 @@ func (item *Item) GetGemBonus() stats.Stats {
 			continue
 		}
 		if !bonus.EffectIsAura {
-			stat, success := MapBonusStatIndexToStat(effectStat)
+			mapped, success := MapBonusStatIndexToStats(effectStat)
 			if !success {
 				return stats
 			}
 			value := bonus.EffectPointsMin[i]
-			stats[stat] = float64(value)
+			for _, stat := range mapped {
+				stats[stat] = float64(value)
+			}
 		} else {
 			// This socket bonus in an Aura, need to loop over the raw SpellEffect data
 			// effectStat is the SpellID

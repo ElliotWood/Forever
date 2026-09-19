@@ -1231,6 +1231,28 @@ const (
 	ITEM_MOD_SPELL_PENETRATION        = 47
 	ITEM_MOD_BLOCK_VALUE              = 48
 	ITEM_MOD_MAX                      = 49
+
+	// Indices above ITEM_MOD_MAX that the Forever client actually puts on items.
+	// 50-56 are standard (wowdev.wiki/Stat_Types); 50 is already handled below.
+	// 83+ has no upstream definition -- the canonical enum stops at 74 -- so these
+	// were identified from self-labelling test items and enchant rows in the client.
+	ITEM_MOD_EXTRA_ARMOR       = 50
+	ITEM_MOD_FIRE_RESISTANCE   = 51
+	ITEM_MOD_FROST_RESISTANCE  = 52
+	ITEM_MOD_HOLY_RESISTANCE   = 53
+	ITEM_MOD_SHADOW_RESISTANCE = 54
+	ITEM_MOD_NATURE_RESISTANCE = 55
+	ITEM_MOD_ARCANE_RESISTANCE = 56
+
+	ITEM_MOD_WEAPON_DAMAGE = 83
+	ITEM_MOD_HOLY_DAMAGE   = 84
+	ITEM_MOD_FIRE_DAMAGE   = 85
+	ITEM_MOD_NATURE_DAMAGE = 86
+	ITEM_MOD_FROST_DAMAGE  = 87
+	ITEM_MOD_SHADOW_DAMAGE = 88
+	ITEM_MOD_ARCANE_DAMAGE = 89
+
+	ITEM_MOD_ALL_RESISTANCES = 124
 )
 
 type Race int
