@@ -207,7 +207,9 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=13246/argent-avenger
-	// Chance on hit: Increases Attack Power against Undead by 200 for 10 sec.
+	// Beta client 1.60.1 (spell 17352): "Increases Attack Power by 100, and Attack Power against
+	// Undead by an additional 100 for 10 sec" - so it is now worth something against everything,
+	// where Era's 200 only counted against Undead. The client also carries 100 ranged attack power.
 	// 1 PPM from Armaments Discord
 	itemhelpers.CreateWeaponProcAura(ArgentAvenger, "Argent Avenger", 1.0, func(character *core.Character) *core.Aura {
 		matchingTargets := core.FilterSlice(
@@ -220,16 +222,18 @@ func init() {
 			Label:    "Argent Avenger",
 			Duration: time.Second * 10,
 			OnGain: func(aura *core.Aura, sim *core.Simulation) {
+				character.AddStatsDynamic(sim, stats.Stats{stats.AttackPower: 100, stats.RangedAttackPower: 100})
 				for _, target := range matchingTargets {
 					for _, at := range character.AttackTables[target.UnitIndex] {
-						at.BonusAttackPowerTaken += 200
+						at.BonusAttackPowerTaken += 100
 					}
 				}
 			},
 			OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+				character.AddStatsDynamic(sim, stats.Stats{stats.AttackPower: -100, stats.RangedAttackPower: -100})
 				for _, target := range matchingTargets {
 					for _, at := range character.AttackTables[target.UnitIndex] {
-						at.BonusAttackPowerTaken -= 200
+						at.BonusAttackPowerTaken -= 100
 					}
 				}
 			},
@@ -1867,30 +1871,11 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(SearingNeedle, "Searing Needle", 1.0, 16454, core.SpellSchoolFire, 60, 0, 0, core.DefenseTypeMagic)
 
 	// https://www.wowhead.com/classic/item=12969/seeping-willow
-	// Chance on hit: Lowers all stats by 20 and deals 20 Nature damage every 3 sec to all enemies within an 8 yard radius of the caster for 30 sec.
+	// Beta client 1.60.1 (spell 17196): "Deals 51 Nature damage every 2 sec to all enemies within
+	// an 8 yard radius of the caster for 10 sec" - 5 ticks for 255. Era's also lowered all stats
+	// by 20 and ran 20 a tick every 3 sec for 30 sec; the stat debuff is gone entirely.
 	// TODO: Proc rate assumed and needs testing
 	itemhelpers.CreateWeaponProcSpell(SeepingWillow, "Seeping Willow", 0.5, func(character *core.Character) *core.Spell {
-		stats := stats.Stats{
-			stats.Agility:   20,
-			stats.Intellect: 20,
-			stats.Stamina:   20,
-			stats.Spirit:    20,
-			stats.Strength:  20,
-		}
-		debuffAuras := character.NewEnemyAuraArray(func(unit *core.Unit) *core.Aura {
-			return unit.GetOrRegisterAura(core.Aura{
-				ActionID: core.ActionID{SpellID: 17196},
-				Label:    "Seeping Willow",
-				Duration: time.Second * 30,
-				OnGain: func(aura *core.Aura, sim *core.Simulation) {
-					unit.AddStatsDynamic(sim, stats.Multiply(-1))
-				},
-				OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-					unit.AddStatsDynamic(sim, stats)
-				},
-			})
-		})
-
 		return character.GetOrRegisterSpell(core.SpellConfig{
 			ActionID:    core.ActionID{SpellID: 17196},
 			SpellSchool: core.SpellSchoolNature,
@@ -1901,11 +1886,10 @@ func init() {
 				Aura: core.Aura{
 					Label: "Seeping Willow Poison",
 				},
-				NumberOfTicks: 10,
-				TickLength:    time.Second * 3,
+				NumberOfTicks: 5,
+				TickLength:    time.Second * 2,
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 20, isRollover)
-					debuffAuras.Get(target).Activate(sim)
+					dot.Snapshot(target, 51, isRollover)
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 					dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
@@ -2175,47 +2159,25 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(TeebusBlazingLongsword, "Teebu's Blazing Longsword", 1.0, 18086, core.SpellSchoolFire, 150, 0, 0, core.DefenseTypeMagic)
 
 	// https://www.wowhead.com/classic/item=13401/the-cruel-hand-of-timmy
-	// Chance on hit: Lowers all attributes of target by 15 for 1 min.
+	// Beta client 1.60.1 (spell 17505): "Steals 210 life from target enemy". Era's is "Lowers all
+	// attributes of target by 15 for 1 min", so this is a different ability rather than a retune -
+	// the attribute debuff is gone and it deals Shadow damage instead.
 	// 0.65 PPM from Armaments Discord
-	core.NewItemEffect(TheCruelHandOfTimmy, func(agent core.Agent) {
-		character := agent.GetCharacter()
-		procMask := character.GetProcMaskForItem(TheCruelHandOfTimmy)
+	itemhelpers.CreateWeaponProcSpell(TheCruelHandOfTimmy, "The Cruel Hand of Timmy", 0.65, func(character *core.Character) *core.Spell {
+		actionID := core.ActionID{SpellID: 17505}
+		healthMetrics := character.NewHealthMetrics(actionID)
 
-		debuffAuraArray := character.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-			return target.GetOrRegisterAura(core.Aura{
-				ActionID: core.ActionID{SpellID: 17505},
-				Label:    "Curse of Timmy",
-				Duration: time.Minute * 1,
-				OnGain: func(aura *core.Aura, sim *core.Simulation) {
-					aura.Unit.AddStatsDynamic(sim, stats.Stats{
-						stats.Agility:   -15,
-						stats.Intellect: -15,
-						stats.Stamina:   -15,
-						stats.Spirit:    -15,
-						stats.Strength:  -15,
-					})
-				},
-				OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-					aura.Unit.AddStatsDynamic(sim, stats.Stats{
-						stats.Agility:   15,
-						stats.Intellect: 15,
-						stats.Stamina:   15,
-						stats.Spirit:    15,
-						stats.Strength:  15,
-					})
-				},
-			})
-		})
-
-		core.MakeProcTriggerAura(&character.Unit, core.ProcTrigger{
-			Name:              "Curse of Timmy Trigger",
-			Callback:          core.CallbackOnSpellHitDealt,
-			Outcome:           core.OutcomeLanded,
-			ProcMask:          procMask,
-			SpellFlagsExclude: core.SpellFlagSuppressWeaponProcs,
-			PPM:               0.65,
-			Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				debuffAuraArray.Get(result.Target).Activate(sim)
+		return character.RegisterSpell(core.SpellConfig{
+			ActionID:         actionID,
+			SpellSchool:      core.SpellSchoolShadow,
+			DefenseType:      core.DefenseTypeMagic,
+			ProcMask:         core.ProcMaskEmpty,
+			BonusCoefficient: 0,
+			DamageMultiplier: 1,
+			ThreatMultiplier: 1,
+			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+				result := spell.CalcAndDealDamage(sim, target, 210, spell.OutcomeAlwaysHit)
+				character.GainHealth(sim, result.Damage, healthMetrics)
 			},
 		})
 	})
@@ -2473,7 +2435,8 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=11920/wraith-scythe
-	// Chance on hit: Steals 45 life from target enemy.
+	// Beta client 1.60.1 (spell 16414): steals 49 life, and the 0.3 spell power coefficient Era
+	// carried is gone.
 	itemhelpers.CreateWeaponProcSpell(WraithScythe, "Wraith Scythe", 1.0, func(character *core.Character) *core.Spell {
 		actionID := core.ActionID{SpellID: 16414}
 		healthMetrics := character.NewHealthMetrics(actionID)
@@ -2483,11 +2446,11 @@ func init() {
 			SpellSchool:      core.SpellSchoolShadow,
 			DefenseType:      core.DefenseTypeMagic,
 			ProcMask:         core.ProcMaskEmpty,
-			BonusCoefficient: 0.3,
+			BonusCoefficient: 0,
 			DamageMultiplier: 1,
 			ThreatMultiplier: 1,
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				result := spell.CalcAndDealDamage(sim, target, 45, spell.OutcomeAlwaysHit)
+				result := spell.CalcAndDealDamage(sim, target, 49, spell.OutcomeAlwaysHit)
 				character.GainHealth(sim, result.Damage, healthMetrics)
 			},
 		})
@@ -3004,7 +2967,8 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=1168/skullflame-shield
-	// Equip: When struck in combat has a 3% chance of stealing 35 life from target enemy. (Proc chance: 3%)
+	// Beta client 1.60.1 (spell 18817): steals 270 life, not Era's 35, and the spell power
+	// coefficient Era carried is gone.
 	// Equip: When struck in combat has a 1% chance of dealing 75 to 125 Fire damage to all targets around you. (Proc chance: 1%)
 	core.NewItemEffect(SkullflameShield, func(agent core.Agent) {
 		character := agent.GetCharacter()
@@ -3020,10 +2984,10 @@ func init() {
 
 			DamageMultiplier: 1,
 			ThreatMultiplier: 1,
-			BonusCoefficient: 1,
+			BonusCoefficient: 0,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				result := spell.CalcAndDealDamage(sim, target, 35, spell.OutcomeAlwaysHit)
+				result := spell.CalcAndDealDamage(sim, target, 270, spell.OutcomeAlwaysHit)
 				character.GainHealth(sim, result.Damage, healthMetrics)
 			},
 		})
