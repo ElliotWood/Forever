@@ -6,16 +6,17 @@ const ISSUE_URL = `${SITE_REPO_URL}/issues/new?template=hotfix_cache.md`;
 
 const totals = (records: ActorRecord[]) => {
 	const byActor = new Map<string, { className: string; damage: number; hits: number }>();
-	const bySpell = new Map<number, { damage: number; hits: number }>();
+	const bySpell = new Map<number, { damage: number; hits: number; biggest: number }>();
 	for (const record of records.filter(plausible)) {
 		const actor = byActor.get(record.name) ?? { className: record.className, damage: 0, hits: 0 };
 		actor.damage += record.damage;
 		actor.hits += record.hits;
 		byActor.set(record.name, actor);
 
-		const spell = bySpell.get(record.spellId) ?? { damage: 0, hits: 0 };
+		const spell = bySpell.get(record.spellId) ?? { damage: 0, hits: 0, biggest: 0 };
 		spell.damage += record.damage;
 		spell.hits += record.hits;
+		spell.biggest = Math.max(spell.biggest, record.biggest);
 		bySpell.set(record.spellId, spell);
 	}
 	return { byActor, bySpell };
@@ -245,7 +246,11 @@ export class ScrubPage {
 					{[...bySpell.entries()]
 						.sort((a, b) => b[1].damage - a[1].damage)
 						.map(([spellId, row]) =>
-							summaryRow(`spell ${spellId}`, [`${row.damage.toLocaleString()} damage`, `${row.hits.toLocaleString()} hits`]),
+							summaryRow(`spell ${spellId}`, [
+								`${row.damage.toLocaleString()} damage`,
+								`${row.hits.toLocaleString()} hits`,
+								`${row.biggest.toLocaleString()} biggest`,
+							]),
 						)}
 				</ul>
 			</div>

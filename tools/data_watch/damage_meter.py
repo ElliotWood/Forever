@@ -18,11 +18,20 @@
 #   char[]  name         actor: a player, a pet, or an NPC
 #   uint16  len
 #   char[]  class        WARRIOR, PALADIN, ... - players only, absent on NPCs
-#   uint32  hits
+#   uint32  kind         1 on every record seen; not a hit count, which is what it was first
+#                        read as - a single Earth Shock cast then reported as three hits
 #   uint32  spellID      6603 is Auto Attack; 772 Rend, 78 Heroic Strike all appear
 #   uint32  spellID      repeated, and every record seen so far has them equal
-#   uint32  damage
-#   uint32  x3           not identified; small, and one tracks overkill closely enough to guess
+#   uint32  damage       for this segment, not a running total
+#   uint32  ?            zero on every record seen
+#   uint32  hits         for this segment
+#   uint32  biggest      the largest single hit in it
+#
+# One record per actor per ability per segment, so a spell cast across several fights has
+# several records. Heroic Strike reads (25,1,25) (26,1,26) (49,2,26) (58,2,30): each is its
+# own fight, and the last column is the biggest hit in that fight. That last column is the
+# most useful one here - a single largest hit is directly comparable to the damage range in
+# the client's own tables, where a total is not.
 #
 # What this file is NOT safe to share as it stands. It carries the character names of the
 # player and of everyone they grouped with, which is why --scrub exists. Scrubbing replaces
@@ -68,7 +77,7 @@ def read_string(blob, i):
 
 
 def records(blob):
-	"""Every actor record, as (name offset, name, class, hits, spellID, damage)."""
+	"""Every actor record, as (name offset, name, class, hits, spellID, spellID, damage, biggest)."""
 	out = []
 	i = 0
 	while i < len(blob) - 4:
@@ -76,8 +85,8 @@ def records(blob):
 		if name and len(name) >= 3:
 			klass, after_class = read_string(blob, after_name)
 			if klass in CLASSES and after_class + 28 <= len(blob):
-				hits, spell, spell_again, damage = struct.unpack_from('<4I', blob, after_class)
-				out.append((i, name, klass, hits, spell, spell_again, damage))
+				_kind, spell, spell_again, damage, _unknown, hits, biggest = struct.unpack_from('<7I', blob, after_class)
+				out.append((i, name, klass, hits, spell, spell_again, damage, biggest))
 				i = after_class + 28
 				continue
 		i += 1
@@ -144,23 +153,24 @@ def main():
 		return
 
 	by_actor = collections.defaultdict(lambda: [0, 0])
-	by_spell = collections.defaultdict(lambda: [0, 0])
-	for _, name, klass, hits, spell, spell_again, damage in rows:
+	by_spell = collections.defaultdict(lambda: [0, 0, 0])
+	for _, name, klass, hits, spell, spell_again, damage, biggest in rows:
 		if spell != spell_again or not 0 < damage < 10_000_000 or hits > 10_000:
 			continue
 		by_actor[(name, klass)][0] += damage
 		by_actor[(name, klass)][1] += hits
 		by_spell[spell][0] += damage
 		by_spell[spell][1] += hits
+		by_spell[spell][2] = max(by_spell[spell][2], biggest)
 
 	print('\nby actor:')
 	for (name, klass), (damage, hits) in sorted(by_actor.items(), key=lambda kv: -kv[1][0]):
 		print(f'  {name:20} {klass:8} {damage:10,} damage  {hits:6,} hits')
 
 	print('\nby ability:')
-	for spell, (damage, hits) in sorted(by_spell.items(), key=lambda kv: -kv[1][0]):
+	for spell, (damage, hits, biggest) in sorted(by_spell.items(), key=lambda kv: -kv[1][0]):
 		per = damage / hits if hits else 0
-		print(f'  spell {spell:<8} {damage:10,} damage  {hits:6,} hits  {per:8.1f} average')
+		print(f'  spell {spell:<8} {damage:10,} damage  {hits:6,} hits  {per:8.1f} average  {biggest:6,} biggest')
 
 
 if __name__ == '__main__':
