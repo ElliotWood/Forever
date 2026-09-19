@@ -163,7 +163,7 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(AlcorsSunrazor, "Alcor's Sunrazor", 1.0, 18833, core.SpellSchoolFire, 75, 30, 0, core.DefenseTypeMagic)
 
 	//https://www.wowhead.com/classic/item=12798/annihilator
-	// Chance on hit: Reduces an enemy's armor by 200.  Stacks up to 3 times.
+	// Beta client 1.60.1 (spell 16928): 165 armor a stack, down from Era's 200. Still 3 stacks.
 	// 1 PPM from Armaments Discord but may be higher
 	itemhelpers.CreateWeaponProcSpell(Annihlator, "Annihlator", 1.0, func(character *core.Character) *core.Spell {
 		armorShatterAuras := character.NewEnemyAuraArray(ArmorShatterAuras)
@@ -604,7 +604,7 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=12777/blazing-rapier
-	// Chance on hit: Burns the enemy for 100 damage over 30 sec.
+	// Beta client 1.60.1 (spell 16898): 20 a tick every 3 sec, 200 over 30 sec. Era is 10 a tick.
 	// 1 PPM Assumed
 	itemhelpers.CreateWeaponProcSpell(BlazingRapier, "Blazing Rapier", 1.0, func(character *core.Character) *core.Spell {
 		return character.GetOrRegisterSpell(core.SpellConfig{
@@ -628,7 +628,7 @@ func init() {
 					Label: "Blaze",
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-					dot.Spell.CalcAndDealPeriodicDamage(sim, target, 10, dot.OutcomeTick)
+					dot.Spell.CalcAndDealPeriodicDamage(sim, target, 20, dot.OutcomeTick)
 				},
 			},
 		})
@@ -735,7 +735,7 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=2825/bow-of-searing-arrows
-	// Equip: Chance to strike your ranged target with a Searing Arrow for 18 to 26 Fire damage.
+	// Beta client 1.60.1 (spell 29638): 23 to 33 Fire damage, up from Era's 18 to 26.
 	itemhelpers.CreateWeaponProcSpell(BowOfSearingArrows, "Bow of Searing Arrows", 3.35, func(character *core.Character) *core.Spell {
 		return character.GetOrRegisterSpell(core.SpellConfig{
 			ActionID:    core.ActionID{SpellID: 29638},
@@ -747,7 +747,7 @@ func init() {
 			ThreatMultiplier: 1,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				dmg := sim.Roll(18, 26)
+				dmg := sim.Roll(23, 33)
 				spell.CalcAndDealDamage(sim, target, dmg, spell.OutcomeRangedCritOnly)
 			},
 		})
@@ -1815,7 +1815,7 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=13286/rivenspike
-	// Chance on hit: Punctures target's armor lowering it by 200. Can be applied up to 3 times.
+	// Beta client 1.60.1 (spell 17315): 100 armor a stack, halved from Era's 200. Still 3 stacks.
 	// 2 PPM - Armaments Discord has 1 PPM recorded before it could record refreshes.  Bashguuder with same effect is recorded at 2PPM so setting to match
 	itemhelpers.CreateWeaponProcSpell(Rivenspike, "Rivenspike", 2.0, func(character *core.Character) *core.Spell {
 		punctureArmorAuras := character.NewEnemyAuraArray(PunctureArmorAura)
@@ -1985,7 +1985,8 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(ShortswordOfVengeance, "Shortsword of Vengeance", 1.0, 13519, core.SpellSchoolHoly, 30, 0, 0, core.DefenseTypeMagic)
 
 	// https://www.wowhead.com/classic/item=13361/skullforge-reaver
-	// Equip: Drains target for 2 Shadow damage every 1 sec and transfers it to the caster. Lasts for 30 sec.
+	// Beta client 1.60.1 (spell 17484): 21 a tick every 1 sec for 10 sec, 210 in all. Era is 2 a
+	// tick for 30 sec, 60 in all.
 	// Estimated based on data from WoW Armaments Discord
 	itemhelpers.CreateWeaponProcSpell(SkullforgeReaver, "Skullforge Reaver", 1.7, func(character *core.Character) *core.Spell {
 		procMask := character.GetProcMaskForItem(SkullforgeReaver)
@@ -1998,13 +1999,13 @@ func init() {
 			ProcMask:    procMask,
 			Flags:       core.SpellFlagPureDot,
 			Dot: core.DotConfig{
-				NumberOfTicks: 30,
+				NumberOfTicks: 10,
 				TickLength:    time.Second,
 				Aura: core.Aura{
 					Label: "Skullforge Brand",
 				},
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 2, isRollover)
+					dot.Snapshot(target, 21, isRollover)
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 					result := dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
@@ -2432,7 +2433,8 @@ func init() {
 	itemhelpers.CreateWeaponCoHProcDamage(ViskagTheBloodletter, "Vis'kag the Bloodletter", 0.6, 21140, core.SpellSchoolPhysical, 240, 0, 0, core.DefenseTypeMelee)
 
 	// https://www.wowhead.com/classic/item=12792/volcanic-hammer
-	// Chance on hit: Hurls a fiery ball that causes 100 to 128 Fire damage and an additional 18 damage over 6 sec.
+	// Beta client 1.60.1 (spell 18082): 200 to 256 Fire damage and 12 a tick over 6 sec, both
+	// doubled from Era's 100 to 128 and 6 a tick.
 	// Assumed 1 PPM
 	itemhelpers.CreateWeaponProcSpell(VolcanicHammer, "Volcanic Hammer", 1.0, func(character *core.Character) *core.Spell {
 		return character.GetOrRegisterSpell(core.SpellConfig{
@@ -2452,7 +2454,7 @@ func init() {
 				NumberOfTicks: 3,
 
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 6, isRollover)
+					dot.Snapshot(target, 12, isRollover)
 				},
 
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
@@ -2461,7 +2463,7 @@ func init() {
 			},
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				dmg := sim.Roll(100, 128)
+				dmg := sim.Roll(200, 256)
 				result := spell.CalcAndDealDamage(sim, target, dmg, spell.OutcomeMagicHitAndCrit)
 				if result.Landed() {
 					spell.Dot(target).Apply(sim)
@@ -3038,7 +3040,8 @@ func init() {
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				for _, aoeTarget := range sim.Encounter.TargetUnits {
-					spell.CalcAndDealDamage(sim, aoeTarget, sim.Roll(75, 125), spell.OutcomeMagicHit)
+					// Beta client 1.60.1 (spell 18818): 90 to 140, up from Era's 75 to 125.
+					spell.CalcAndDealDamage(sim, aoeTarget, sim.Roll(90, 140), spell.OutcomeMagicHit)
 				}
 			},
 		})
@@ -3099,7 +3102,8 @@ func thornsArcaneDamageEffect(agent core.Agent, itemID int32, itemName string, d
 var minorArmorReductionEffectCategory = "MinorArmorReduction"
 
 func PunctureArmorAura(target *core.Unit) *core.Aura {
-	arpen := float64(200)
+	// Beta client 1.60.1 (spell 17315): 100, halved from Era's 200.
+	arpen := float64(100)
 
 	var effect *core.ExclusiveEffect
 	aura := target.GetOrRegisterAura(core.Aura{
@@ -3126,7 +3130,8 @@ func PunctureArmorAura(target *core.Unit) *core.Aura {
 }
 
 func ArmorShatterAuras(target *core.Unit) *core.Aura {
-	arpen := float64(200)
+	// Beta client 1.60.1 (spell 16928): 165, down from Era's 200.
+	arpen := float64(165)
 
 	var effect *core.ExclusiveEffect
 	aura := target.GetOrRegisterAura(core.Aura{

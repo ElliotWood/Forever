@@ -18,9 +18,11 @@
 		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"9057": {
-		"ability": "Firebolt",
+		"ability": "Firebolt (Volcanic Armor)",
 		"file": "sim/common/item_sets/crafted.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "30 to 50 Fire damage on a successful melee attack.",
+		"note": "Beta client 1.60.1 (spell 9057). Doubled from Era's 15 to 25."
 	},
 	"9591": {
 		"ability": "Acid Spit",
@@ -175,9 +177,11 @@
 		"source": "unreviewed"
 	},
 	"16898": {
-		"ability": "Blaze",
+		"ability": "Blaze (Blazing Rapier)",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Burns the enemy for 200 damage over 30 sec.",
+		"note": "Beta client 1.60.1 (spell 16898). 20 a tick every 3 sec, doubled from Era's 10."
 	},
 	"16916": {
 		"ability": "Strength of the Champion",
@@ -191,9 +195,11 @@
 		"source": "unreviewed"
 	},
 	"16928": {
-		"ability": "Armor Shatter",
+		"ability": "Armor Shatter (Annihilator)",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Reduces an enemy's armor by 165. Stacks up to 3 times.",
+		"note": "Beta client 1.60.1 (spell 16928). 165 a stack, down from Era's 200."
 	},
 	"17152": {
 		"ability": "Destiny",
@@ -207,9 +213,11 @@
 		"source": "unreviewed"
 	},
 	"17315": {
-		"ability": "Puncture Armor",
+		"ability": "Puncture Armor (Rivenspike)",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Punctures target's armor lowering it by 100. Can be applied up to 3 times.",
+		"note": "Beta client 1.60.1 (spell 17315). Halved from Era's 200 a stack."
 	},
 	"17330": {
 		"ability": "Poison",
@@ -235,7 +243,9 @@
 	"17484": {
 		"ability": "Skullforge Brand",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Drains target for 21 Shadow damage every 1 sec and transfers it to the caster. Lasts for 10 sec.",
+		"note": "Beta client 1.60.1 (spell 17484). 210 in all, up from Era's 2 a tick for 30 sec, 60 in all."
 	},
 	"17504": {
 		"ability": "Rend",
@@ -260,9 +270,11 @@
 		"source": "unreviewed"
 	},
 	"18082": {
-		"ability": "Fireball",
+		"ability": "Fireball (Volcanic Hammer)",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Hurls a fiery ball that causes 200 to 256 Fire damage and an additional 36 damage over 6 sec.",
+		"note": "Beta client 1.60.1 (spell 18082). Both halves doubled from Era's 100 to 128 and 6 a tick."
 	},
 	"18203": {
 		"ability": "Poison",
@@ -315,7 +327,9 @@
 	"18818": {
 		"ability": "Flamestrike",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "90 to 140 Fire damage to all nearby enemies.",
+		"note": "Beta client 1.60.1 (spell 18818). Up from Era's 75 to 125."
 	},
 	"18979": {
 		"ability": "Lightning",
@@ -481,7 +495,9 @@
 	"29638": {
 		"ability": "Searing Arrow",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Strikes your ranged target for 23 to 33 Fire damage.",
+		"note": "Beta client 1.60.1 (spell 29638). Up from Era's 18 to 26."
 	},
 	"433801": {
 		"ability": "Bladestorm Rank 1",
