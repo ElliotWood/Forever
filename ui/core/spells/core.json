@@ -150,30 +150,11 @@
 		"note": "-200 armor for 2 min from the Crystal Force questline item, unchanged from upstream Classic.",
 		"source": "classic"
 	},
-	"15257": {
-		"ability": "Shadow Weaving",
-		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
-	},
-	"15331": {
-		"ability": "Shadow Weaving",
-		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
-	},
-	"15332": {
-		"ability": "Shadow Weaving",
-		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
-	},
-	"15333": {
-		"ability": "Shadow Weaving",
-		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
-	},
 	"15334": {
-		"ability": "Shadow Weaving",
+		"ability": "Shadow Weaving (Classic raid debuff)",
 		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Classic only. Forever deleted 15331 to 15334 and made Shadow Weaving a buff on the priest instead; sim/core/debuffs.go applies this one only under the Classic ruleset. The Forever buff is 15258."
 	},
 	"15363": {
 		"ability": "Inspiration",

@@ -514,5 +514,13 @@
 		"note": "Beta client 1.60.1.69893: lower from rank 2 up (rank 8 852 -> 762 over 6 ticks) and .2 a tick at every rank (Classic .167, lower ranks less). Cost unchanged.",
 		"source": "forever",
 		"tooltip": "155 Mana\nInstant\nA word of darkness that causes 180 Shadow damage over 18 sec."
+	},
+	"15258": {
+		"ability": "Shadow Weaving",
+		"file": "sim/priest/talents.go",
+		"source": "forever",
+		"foreverId": 15258,
+		"tooltip": "Increases the Shadow damage you deal by 2% for 15 sec, stacking up to 5 times.",
+		"note": "Beta client 1.60.1 (spell 15258): aura 270 at 2 a stack, 15 sec. Era 15258 is \"Shadow Vulnerability\", aura 87 at 3, a damage taken debuff on the target - Forever turned it into a buff on the priest. The talent 15257 is a single spell whose three tree ranks only move the proc chance, 33/67/100%."
 	}
 }

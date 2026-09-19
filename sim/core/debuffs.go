@@ -43,7 +43,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	// target, so another raid member running one is worth nothing here - same as Improved
 	// Shadow Bolt above. The priest applies its own in sim/priest/talents.go.
 	if debuffs.ShadowWeaving && !target.Env.IsForever() {
-		aura := ShadowWeavingAura(target, 5)
+		aura := ShadowWeavingAura(target)
 		SchedulePeriodicDebuffApplication(aura, PeriodicActionOptions{
 			Period:          time.Millisecond * 1500,
 			NumTicks:        5,
@@ -390,13 +390,14 @@ func ImprovedShadowBoltAura(unit *Unit, rank int32) *Aura {
 	return aura
 }
 
-var ShadowWeavingSpellIDs = [6]int32{0, 15257, 15331, 15332, 15333, 15334}
-
-func ShadowWeavingAura(unit *Unit, rank int) *Aura {
-	spellId := ShadowWeavingSpellIDs[rank]
+// Classic's Shadow Weaving is five ranks, 15257 and 15331 to 15334, and the raid debuff is the
+// top one. Forever deleted 15331 to 15334 outright - the talent is a single spell, 15257, whose
+// three tree ranks only move the proc chance - so the rank table has no meaning there and this
+// aura is Classic only. The priest's own buff is 15258, in sim/priest/talents.go.
+func ShadowWeavingAura(unit *Unit) *Aura {
 	return unit.GetOrRegisterAura(Aura{
 		Label:     "Shadow Weaving",
-		ActionID:  ActionID{SpellID: spellId},
+		ActionID:  ActionID{SpellID: 15334},
 		Duration:  time.Second * 15,
 		MaxStacks: 5,
 		OnStacksChange: func(aura *Aura, sim *Simulation, oldStacks int32, newStacks int32) {
