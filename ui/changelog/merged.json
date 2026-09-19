@@ -1,5 +1,11 @@
 [
 	{
+		"number": 245,
+		"title": "Expose Armor is 450 a combo point, and the Firestone is a passive",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/245"
+	},
+	{
 		"number": 244,
 		"title": "The last of the item procs, and say what cannot be checked",
 		"mergedAt": "2026-09-19",
