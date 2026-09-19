@@ -93,6 +93,76 @@
 					text-decoration: underline;
 				}
 			}
+
+			// The one thing on this page asking for something back, so it is the one block
+			// that is not grey-on-grey. Sits below the limits deliberately: the ask only
+			// makes sense once you have read what is unconfirmed.
+			.site-info-cta {
+				width: 75%;
+				margin: var(--spacer-4) 0 0;
+				padding: var(--spacer-3) var(--spacer-4);
+				border: 1px solid var(--bs-brand);
+				border-radius: var(--bs-border-radius);
+				background: rgba(0, 0, 0, 0.25);
+				font-size: 1rem;
+				color: var(--bs-gray-300);
+
+				p {
+					margin: var(--spacer-2) 0 0;
+				}
+
+				a {
+					color: var(--bs-gray-200);
+					text-decoration: underline;
+				}
+
+				.site-info-cta-title {
+					margin: 0;
+					font-size: 1.25rem;
+					color: var(--bs-white);
+				}
+
+				.site-info-cta-label {
+					margin-top: var(--spacer-3);
+					color: var(--bs-white);
+					font-weight: 600;
+				}
+
+				.site-info-cta-list {
+					margin: var(--spacer-1) 0 0;
+					padding-left: var(--spacer-4);
+
+					li + li {
+						margin-top: var(--spacer-1);
+					}
+				}
+
+				.site-info-cta-actions {
+					display: flex;
+					flex-wrap: wrap;
+					gap: var(--spacer-2);
+					margin-top: var(--spacer-3);
+				}
+
+				.site-info-cta-button {
+					display: inline-block;
+					padding: var(--spacer-1) var(--spacer-3);
+					border: 1px solid var(--bs-brand);
+					border-radius: var(--bs-border-radius);
+					color: var(--bs-white);
+					text-decoration: none;
+
+					&:hover {
+						background: var(--bs-brand);
+						color: var(--bs-black);
+					}
+				}
+
+				.site-info-cta-foot {
+					margin-top: var(--spacer-3);
+					color: var(--bs-gray-400);
+				}
+			}
 		}
 
 		.sim-links-container {
@@ -140,6 +210,7 @@
 			.info-container {
 				.site-info,
 				.site-info-caveat,
+				.site-info-cta,
 				.site-info-limits {
 					width: 100%;
 				}

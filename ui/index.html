@@ -86,8 +86,8 @@
 						<ul class="site-info-caveat site-info-limits">
 							<li>
 								<strong>The client's tables, diffed against Classic Era.</strong> Every ability the sim registers is compared spell by spell
-								against both clients, and what Forever changed is recorded with the field it was read from. 586 abilities now carry the
-								client's numbers and 246 are confirmed unchanged from Classic; the rest are counted below.
+								against both clients, and what Forever changed is recorded with the field it was read from. 623 abilities now carry the
+								client's numbers and 288 are confirmed unchanged from Classic; the rest are counted below.
 							</li>
 							<li>
 								<strong>Hotfixes, which the static data does not carry.</strong> Blizzard tunes values after a build ships, and those changes
@@ -112,7 +112,7 @@
 						</p>
 						<ul class="site-info-caveat site-info-limits">
 							<li>
-								41 abilities still carry at least one number the client does not settle, and 143 have not been classified at all. Each is named
+								41 abilities still carry at least one number the client does not settle, and 45 have not been classified at all. Each is named
 								in the spell manifest and in the
 								<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer"
 									>beta re-verification checklist</a
@@ -137,6 +137,57 @@
 							Treat every number these sims produce as provisional, and as a way to catch the sim doing something obviously wrong rather than as a
 							statement about Forever.
 						</p>
+						<div class="site-info-cta">
+							<h2 class="site-info-cta-title">Playing the beta? Your numbers are worth more than mine.</h2>
+							<p>
+								Every value here was read out of the client's data tables. That settles what an ability <em>says</em> it does, and it cannot
+								settle what the server actually pays out. One measurement from a running game is worth more than another week of datamining,
+								and right now there are none.
+							</p>
+							<p class="site-info-cta-label">What helps, best first</p>
+							<ol class="site-info-cta-list">
+								<li>
+									<strong>A screenshot of Forever's own damage meter</strong> at the end of a fight, with your gear and talents.
+									Addons cannot read damage in Forever, so the client's meter is the only in-game source of it.
+								</li>
+								<li>
+									<strong>A combat log</strong> &mdash; <code>/combatlog</code>, then <code>Logs/WoWCombatLog.txt</code>. Only useful if your
+									client writes damage into it, which is the same restriction addons hit. If yours does, say so: that is a bigger deal than
+									any single parse.
+								</li>
+								<li>
+									<strong>A single-ability test.</strong> Cast one rank of one spell at a dummy twenty times and send the meter's total with
+									your spell power or attack power. That pins one coefficient exactly, which a whole fight cannot.
+								</li>
+							</ol>
+							<p class="site-info-cta-label">What it would settle</p>
+							<ul class="site-info-cta-list">
+								<li>
+									<strong>Downranking</strong>, the largest open question on this page. Two ranks of the same spell at a dummy, and the gap
+									between them answers it for every caster at once.
+								</li>
+								<li>
+									<strong>Proc rates</strong>, which the client mostly stores as unset. Twenty minutes of any weapon with a proc on it gives
+									a rate no table carries.
+								</li>
+								<li>
+									<strong>The 41 abilities</strong> still carrying a number the client does not settle, and anything where a tooltip in the
+									game disagrees with what this site shows.
+								</li>
+							</ul>
+							<p class="site-info-cta-actions">
+								<a class="site-info-cta-button" href="https://github.com/@@REPO@@/issues/new?template=dps_report.md" target="_blank" rel="noreferrer">
+									<i class="fab fa-github"></i>&nbsp; Send it as a GitHub issue
+								</a>
+								<a class="site-info-cta-button" href="https://discord.gg/p3DgvmnDCS" target="_blank" rel="noreferrer">
+									<i class="fab fa-discord"></i>&nbsp; Or post it on Discord
+								</a>
+							</p>
+							<p class="site-info-cta-foot">
+								A partial report is still useful. Anything that moves a number gets credited in the
+								<a href="changelog/">changelog</a>, the same as the bug reports already there.
+							</p>
+						</div>
 					</div>
 					<div class="sim-links-container">
 						<div class="sim-links">
