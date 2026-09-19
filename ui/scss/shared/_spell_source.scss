@@ -1,0 +1,34 @@
+// Where an ability's numbers came from, marked on the icon itself.
+//
+// The spell manifest classifies every ability the sim registers: read straight out of the
+// beta client, confirmed unchanged from Classic, or still carrying at least one assumption.
+// That was only visible by reading the repository, so on screen an ability nobody has
+// settled looked exactly like one taken from the client. For a site whose whole claim is
+// being plain about what is and is not known, that is the wrong way round.
+//
+// Only the unsettled ones are marked. Putting a badge on all three would mean four hundred
+// icons carrying a mark that says "this is fine", and the one that matters would disappear
+// into it. No dot means the number came from data; a dot means read the hover before
+// trusting it.
+//
+// The attribute is set on every icon regardless, in proto_utils/action_id.ts, so the other
+// tiers can be styled later without touching the TypeScript again.
+
+[data-spell-source='assumed'] {
+	position: relative;
+
+	&::after {
+		content: '';
+		position: absolute;
+		right: -2px;
+		bottom: -2px;
+		width: 0.5rem;
+		height: 0.5rem;
+		border: 1px solid rgba(0, 0, 0, 0.75);
+		border-radius: 50%;
+		background: var(--bs-brand);
+		// The icons sit in scrolling tables and timelines; the mark should never widen a row
+		// or intercept the click that opens the ability.
+		pointer-events: none;
+	}
+}
