@@ -1,14 +1,26 @@
 # Forever beta re-verification checklist
 
-Every number in the Forever ruleset that was read off a BlizzCon 2026 demo tooltip rather than game data, in one place, so the pass against the beta client is a checklist rather than an archaeology exercise.
+**The pass has happened.** This file was written before the beta client was datamined, when every number in the Forever ruleset came off a BlizzCon 2026 demo tooltip. Since 17 September the client has been the source: build `1.60.1.69913` on wago.tools, read against Classic Era `1.15.9.69722` and diffed spell by spell, with per-class write-ups in `docs/beta-pass/`. Most of what follows is history, kept because it records what each number used to rest on.
 
-The demo mostly showed rank 1 of each talent. Where a talent has more ranks than the demo displayed, the implementation assumes a scaling (linear unless the tooltip said otherwise) and says so in a `TODO` beside the number. This file lists those `TODO`s, gathered from `grep -rn TODO sim/` and grouped by class. When a value is confirmed, fix the number if it moved, delete the comment, and regenerate the affected `.results` files with `make test && make update-tests`.
+Where it stands, counted from `ui/core/spells/*.json`:
+
+| | |
+|---|---|
+| on the client's numbers | 586 |
+| unchanged from Classic, and checked | 246 |
+| at least one number still assumed | 41 |
+| not classified yet | 143 |
+
+Fourteen `Open` lines remain across the per-class passes, and 141 `TODO`s are left in `sim/`. Those are the live work; the class sections below are the trail that led to them.
+
+The demo mostly showed rank 1 of each talent, so where a talent had more ranks than the demo displayed, the implementation assumed a scaling and said so in a `TODO` beside the number. This file lists those `TODO`s, gathered from `grep -rn TODO sim/` and grouped by class. When a value is confirmed, fix the number if it moved, delete the comment, and regenerate the affected `.results` files with `make test && make update-tests`.
 
 ## How to run the pass
 
 1. Re-export the talent trees from the beta client (the community calculators rebuild from it) and diff against `ui/core/talents/trees/*.json`: talent set, grid positions, rank counts and prerequisite arrows. `go test ./sim/ -run TestTalentTreesMatchTheirProtos` then pins the trees, protos and `TalentTreeSizes` together, and `-run TestPresetBuildsAreLegal` checks every shipped build still fits.
 2. Work through the class sections below against the beta tooltips.
-3. The beta is capped at level 30, so it settles neither the level 60 ranks nor the coefficients. A tooltip gives one number at one level; what the sim needs is how that number is built out of attack power, spell power and weapon speed, and none of those relationships was published. Where Forever has not changed a spell this fork assumes Classic's scaling, and where it has, the coefficient is inferred from the single value the demo showed. Both want the live client or an answer from the people building the game, not the beta.
+3. ~~The beta is capped at level 30, so it settles neither the level 60 ranks nor the coefficients.~~ **Wrong, corrected 17 September.** The level cap limits what a beta tester can play, not what the client ships. `SpellEffect.EffectBonusCoefficient` is populated for 11,398 effects, and each rank's damage scales to level 60 through the client's own `EffectRealPointsPerLevel` and `SpellLevels`. Both are settled; see `docs/spell-data-2026-09-17.md`. What the client genuinely does not carry is the server's side of a fight: proc chances that read as unset, and rules like whether melee-table Holy damage partially resists.
+   The one reading still open is downranking. Era stored a reduced spell power coefficient on low ranks; Forever stores the full one on every rank from 3 up. Taken as written, a rank 4 Lightning Bolt does most of a rank 10 for a quarter of the mana, which is what the elemental rotation now does. Either Forever removed the penalty or it applies it somewhere the tables do not show, and the answer changes every caster in the sim.
 4. Re-check the racials against the beta spellbook, in particular whether any racial cooldown differs from the three minutes assumed where none was published. The gnome's Eureka! is no longer missing: the racials guide gives it a 2 min cooldown and 50% mana saving on the next three abilities, plus 10% more damage, and `sim/core/racials.go` now implements it. What is still open there is whether the mana saving reaches every ability or only caster ones, since a warlock's tooltip showed only the damage half.
 5. World buffs do not work inside Forever raids (reported 13 September from the demo; the sim ignores them under the Forever ruleset and hides the picker). Confirm on the beta client, and confirm whether the campsite buffs that replace them have combat numbers.
 6. Re-run the DPS sweep across every spec and compare with the numbers recorded in the pull request history; anything that moves more than its change explains is worth a second look.
@@ -199,6 +211,8 @@ are the talent's own; only the picture is borrowed. Re-cut them from the beta cl
 
 ## Baseline ability changes
 
+**Done, 17 September.** Every class's spellbook has been diffed against Classic Era with `tools/data_watch/spell_client.py --learned <class>`, and what changed is written up per class in `docs/beta-pass/`. The section below is what the panel said before that, kept because it is what each of these lines used to rest on.
+
 Forever also changes abilities that are not talents. None of their tooltips were shown at BlizzCon; what follows comes from the panel and the coverage of it, so every line is a claim to check against the beta spellbook rather than a number to confirm.
 
 Warrior, the only class with concrete changes reported:
@@ -209,7 +223,7 @@ Warrior, the only class with concrete changes reported:
 - `sim/warrior/stances.go:41` — Tactical Mastery is baseline with Improved Tactical Mastery on top, but the baseline was never shown a number, so only the talent's own 3 Rage per point is modelled and an untalented warrior keeps nothing across a stance change. Beta will show what the baseline retains.
 - Victory Rush is baseline — not modelled. It needs a killing blow, which a boss encounter never gives before the fight ends.
 
-Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.
+~~Other classes: the panel spoke of baseline changes across every class without listing them, and nothing more specific has been published. When the beta client is datamined, diff each class spellbook against Classic Era and add every changed ability here with the file that models it, or the reason it is left out.~~ **Done** — each class's "Spellbook diff" section in `docs/beta-pass/` lists what it found and what was left out.
 
 ## Talents the sim does not read (37)
 

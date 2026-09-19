@@ -157,19 +157,21 @@ export class DpsRankings extends Component {
 
 	// Where the numbers come from matters more than how the raid was assembled, so it goes
 	// above the fold rather than into the notes below. Nothing in Forever has been measured
-	// in a client: every talent here was read off a BlizzCon demo tooltip, and the values
-	// the demo never showed are assumptions this sim writes down rather than hides.
+	// in a client: the numbers now come from the datamined beta client, and the ones it does
+	// not settle are assumptions this sim writes down rather than hides.
 	private buildProvenance(parentElem: HTMLElement) {
 		parentElem.appendChild(
 			<div className="dps-rankings-provenance-block">
 				<h2 className="dps-rankings-provenance-title">These numbers are provisional</h2>
 				<p className="dps-rankings-provenance-body">
-					Forever has no beta client yet. Every talent, rank and coefficient in this sim was read off a BlizzCon 2026 demo tooltip, and the demo
-					mostly showed rank 1, so the rest is assumed - linear unless a tooltip said otherwise. Those assumptions are counted and listed in the{' '}
+					The beta client was datamined on 17 September, and the numbers here come from its own data tables rather than from BlizzCon tooltips:
+					build 1.60.1.69913, read against Classic Era and diffed spell by spell. Talent values come from the client's rank curves, coefficients
+					from the spell tables, and each rank is scaled to level 60 by the client's per-level points. 41 abilities still carry a number the
+					client does not settle and 143 have not been classified; they are listed one line each in the{' '}
 					<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer">
 						beta re-verification checklist
 					</a>
-					, one line each, and every one of them can move a number in this table.
+					, and every one of them can move a number in this table.
 				</p>
 				<p className="dps-rankings-provenance-body">
 					This is an unofficial fork, not the official Forever sim, and the table is a self-check: run every build under identical conditions and a
@@ -179,15 +181,16 @@ export class DpsRankings extends Component {
 					<a href={`${SITE_BASE}changelog/`}>changelog</a>.
 				</p>
 				<p className="dps-rankings-provenance-body">
-					There is a second limit under the first one, and the beta will not lift it. A tooltip gives a spell's damage at one level; what a sim needs
-					is how that damage is built out of attack power, spell power and weapon speed. None of those relationships was published, so where Forever
-					has not changed a spell this sim assumes Classic's, and where it has, the coefficient is inferred from the one number the demo showed. The
-					beta is capped at level 30, so it will not settle the level 60 ranks or the scaling either. Both are the sort of thing only the live client
-					or the people building the game can answer.
+					There is a second limit under the first one, and the client does not lift it. Downranking is the clearest case: the client carries the full
+					spell power coefficient on low ranks where Classic Era carried a reduced one, so read as written a rank 4 Lightning Bolt does most of a
+					rank 10 for a quarter of the mana, which is what the elemental rotation on this table does. Whether Forever removed that penalty or applies
+					it somewhere the data does not show changes every caster here. The same goes for proc chances the client leaves unset and for combat rules
+					that live on the server rather than in a table.
 				</p>
 				<p className="dps-rankings-provenance-body">
 					So: do not pick a main off this table, and do not quote it as a Forever balance claim. It is a place to catch the sim getting something
-					obviously wrong, and nothing more than that until there is real data to check it against.
+					obviously wrong, and it is still that even now the client has settled most of the inputs - a rotation nobody has tuned and a rule the data
+					does not carry will both show up here as a spec in the wrong place.
 				</p>
 			</div>,
 		);
