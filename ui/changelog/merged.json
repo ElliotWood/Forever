@@ -1,5 +1,11 @@
 [
 	{
+		"number": 230,
+		"title": "Stop applying the improved shout talent twice",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/230"
+	},
+	{
 		"number": 229,
 		"title": "Stop putting deleted spell ids on Shadow Weaving",
 		"mergedAt": "2026-09-19",
