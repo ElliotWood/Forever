@@ -1,5 +1,11 @@
 [
 	{
+		"number": 234,
+		"title": "Collapse the homepage and design the call to action properly",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/234"
+	},
+	{
 		"number": 233,
 		"title": "Remove the Discord link, it is not this project's",
 		"mergedAt": "2026-09-19",
