@@ -700,9 +700,12 @@ func ExposeArmorAura(target *Unit, improvedEA int32) *Aura {
 	return aura
 }
 
+// Forever dropped the attack power this used to hand the target. Era's tooltip reads
+// "increasing melee attack power by $s1 but reducing armor by $s2"; the beta client's reads
+// "reducing the target's armor by $s2" and nothing else, and $s1 is no longer referenced by
+// the text at all. So the downside is gone and only the armor comes off.
 func CurseOfRecklessnessAura(target *Unit) *Aura {
 	arpen := float64(505)
-	ap := float64(90)
 
 	aura := target.GetOrRegisterAura(Aura{
 		Label:    "Curse of Recklessness",
@@ -710,11 +713,9 @@ func CurseOfRecklessnessAura(target *Unit) *Aura {
 		Duration: time.Minute * 2,
 		OnGain: func(aura *Aura, sim *Simulation) {
 			aura.Unit.AddStatDynamic(sim, stats.Armor, -arpen)
-			aura.Unit.AddStatDynamic(sim, stats.AttackPower, ap)
 		},
 		OnExpire: func(aura *Aura, sim *Simulation) {
 			aura.Unit.AddStatDynamic(sim, stats.Armor, arpen)
-			aura.Unit.AddStatDynamic(sim, stats.AttackPower, -ap)
 		},
 	})
 	return aura

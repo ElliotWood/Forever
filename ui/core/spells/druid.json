@@ -7,9 +7,11 @@
 		"tooltip": "30 Energy\nMelee Range\nInstant\nFinishing move that causes damage over time. Damage increases per combo point and by your Attack Power:\n1 point: 44.4 damage over 12 sec.\n2 points: 70.8 damage over 12 sec.\n3 points: 97.2 damage over 12 sec.\n4 points: 123.6 damage over 12 sec.\n5 points: 150 damage over 12 sec."
 	},
 	"1495": {
-		"ability": "Mongoose Bite",
-		"file": "sim/druid/hurricane.go",
-		"source": "unreviewed"
+		"ability": "Mongoose Bite Rank 1",
+		"file": "sim/hunter/mongoose_bite.go",
+		"source": "forever",
+		"tooltip": "Counterattack the enemy for melee weapon damage plus 15. Can only be performed after you dodge.",
+		"note": "Beta client 1.60.1 (spell 1495). Forever changed it from a flat 25 damage to normalized weapon damage plus 15, effect type 121 where Era is 2. The sim already does this; the ranks are 15/22/37/57."
 	},
 	"16886": {
 		"ability": "Nature's Grace",
