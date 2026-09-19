@@ -204,6 +204,62 @@
 		background: rgba(224, 163, 53, 0.12);
 	}
 
+	.scrub-sent {
+		display: flex;
+		align-items: center;
+		gap: var(--spacer-2);
+		margin: var(--spacer-2) 0 0;
+		color: var(--bs-white);
+
+		i {
+			color: var(--bs-brand);
+		}
+
+		code {
+			overflow-wrap: anywhere;
+		}
+	}
+
+	// A button element rather than an anchor, so it needs the reset bootstrap gives links.
+	button.scrub-button {
+		border: 0;
+		font: inherit;
+		font-weight: 600;
+		cursor: pointer;
+
+		&:disabled {
+			opacity: 0.6;
+			cursor: default;
+			transform: none;
+		}
+	}
+
+	.scrub-note {
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacer-1);
+		margin-bottom: var(--spacer-2);
+		color: var(--bs-gray-300);
+
+		input {
+			width: 100%;
+			padding: 0.5rem 0.75rem;
+			border: 1px solid rgba(255, 255, 255, 0.18);
+			border-radius: var(--bs-border-radius);
+			background: rgba(0, 0, 0, 0.35);
+			color: var(--bs-white);
+
+			&:focus {
+				outline: none;
+				border-color: var(--bs-brand);
+			}
+		}
+	}
+
+	.scrub-result:empty {
+		display: none;
+	}
+
 	.scrub-report {
 		margin-top: var(--spacer-3);
 	}
