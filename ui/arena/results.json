@@ -1,6 +1,6 @@
 {
-	"commit": "1d0e129061b62e81332e5f9c22b36f31408a933a",
-	"generated": "2026-09-19T16:25:46Z",
+	"commit": "8737fc99709b4447facec48744ffc896f9ddcbd5",
+	"generated": "2026-09-19T17:00:40Z",
 	"iterations": 5000,
 	"builds": [
 		{
@@ -1288,7 +1288,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "backstab_launch",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 553.3987859535716,
 			"rests": {
 				"assumed": 0,
@@ -1304,7 +1304,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "backstab_launch",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 553.3987859535716,
 			"rests": {
 				"assumed": 0,
@@ -1544,7 +1544,7 @@
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
 			"gear": "launch",
-			"rotation": "forever_ds_ruin",
+			"rotation": "forever_shadow_and_flame",
 			"dps": 539.6348168660835,
 			"rests": {
 				"assumed": 0,
@@ -1560,7 +1560,7 @@
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
 			"gear": "launch",
-			"rotation": "forever_shadow_and_flame",
+			"rotation": "forever_ds_ruin",
 			"dps": 539.6348168660835,
 			"rests": {
 				"assumed": 0,
@@ -2168,7 +2168,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_backstab_prebis",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 502.293296162368,
 			"rests": {
 				"assumed": 0,
@@ -2184,7 +2184,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_backstab_prebis",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 502.293296162368,
 			"rests": {
 				"assumed": 0,
@@ -2984,7 +2984,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_backstab_p2_bis",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 441.83071382799346,
 			"rests": {
 				"assumed": 0,
@@ -3000,7 +3000,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_backstab_p2_bis",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 441.83071382799346,
 			"rests": {
 				"assumed": 0,
@@ -3064,7 +3064,7 @@
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
 			"gear": "prebis",
-			"rotation": "forever_shadow_and_flame",
+			"rotation": "forever_ds_ruin",
 			"dps": 436.8864324597585,
 			"rests": {
 				"assumed": 0,
@@ -3080,7 +3080,7 @@
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
 			"gear": "prebis",
-			"rotation": "forever_ds_ruin",
+			"rotation": "forever_shadow_and_flame",
 			"dps": 436.8864324597585,
 			"rests": {
 				"assumed": 0,
@@ -4088,7 +4088,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab",
+			"rotation": "forever_mutilate",
 			"dps": 291.17849142804357,
 			"rests": {
 				"assumed": 0,
@@ -4104,7 +4104,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "sinister_strike_launch",
-			"rotation": "forever_mutilate",
+			"rotation": "combat_backstab",
 			"dps": 291.17849142804357,
 			"rests": {
 				"assumed": 0,
@@ -4136,7 +4136,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_backstab_p2_bis",
-			"rotation": "forever_hemorrhage",
+			"rotation": "forever_mutilate",
 			"dps": 285.1148978331342,
 			"rests": {
 				"assumed": 0,
@@ -4152,7 +4152,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_backstab_p2_bis",
-			"rotation": "forever_mutilate",
+			"rotation": "forever_hemorrhage",
 			"dps": 285.1148978331342,
 			"rests": {
 				"assumed": 0,
@@ -4216,7 +4216,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_backstab_p1_bis",
-			"rotation": "forever_hemorrhage",
+			"rotation": "forever_mutilate",
 			"dps": 280.9269764599014,
 			"rests": {
 				"assumed": 0,
@@ -4232,7 +4232,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_backstab_p1_bis",
-			"rotation": "forever_mutilate",
+			"rotation": "forever_hemorrhage",
 			"dps": 280.9269764599014,
 			"rests": {
 				"assumed": 0,
@@ -4280,7 +4280,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "forever_hemorrhage",
+			"rotation": "combat_backstab",
 			"dps": 276.23151342625033,
 			"rests": {
 				"assumed": 0,
@@ -4296,7 +4296,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "combat_backstab",
+			"rotation": "forever_hemorrhage",
 			"dps": 276.23151342625033,
 			"rests": {
 				"assumed": 0,
@@ -4344,7 +4344,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 273.60523025824637,
 			"rests": {
 				"assumed": 0,
@@ -4392,7 +4392,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 273.60523025824637,
 			"rests": {
 				"assumed": 0,
@@ -4424,6 +4424,22 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 270.3798407133823,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9807,
+				"forever": 0.0193,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
 			"rotation": "forever_mutilate",
 			"dps": 270.3798407133823,
 			"rests": {
@@ -4441,22 +4457,6 @@
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_p1_bis",
 			"rotation": "combat_backstab",
-			"dps": 270.3798407133823,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9807,
-				"forever": 0.0193,
-				"measured": 0,
-				"unknown": 0
-			}
-		},
-		{
-			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3",
-			"talents": "1053231-22530300001515231-012",
-			"gear": "combat_sinister_strike_p1_bis",
-			"rotation": "forever_hemorrhage",
 			"dps": 270.3798407133823,
 			"rests": {
 				"assumed": 0,
@@ -4536,38 +4536,6 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "forever_hemorrhage",
-			"dps": 261.9801670565933,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9733,
-				"forever": 0.0267,
-				"measured": 0,
-				"unknown": 0
-			}
-		},
-		{
-			"spec": "rogue",
-			"build": "Assassination Mutilate 31/20/0",
-			"talents": "02532010531201051-225303000005",
-			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "forever_mutilate",
-			"dps": 261.9801670565933,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9733,
-				"forever": 0.0267,
-				"measured": 0,
-				"unknown": 0
-			}
-		},
-		{
-			"spec": "rogue",
-			"build": "Assassination Mutilate 31/20/0",
-			"talents": "02532010531201051-225303000005",
-			"gear": "combat_sinister_strike_p2_bis",
 			"rotation": "combat_backstab_sweaty",
 			"dps": 261.9801670565933,
 			"rests": {
@@ -4597,16 +4565,32 @@
 		},
 		{
 			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3",
-			"talents": "1053231-22530300001515231-012",
-			"gear": "combat_backstab_prebis",
-			"rotation": "forever_hemorrhage",
-			"dps": 260.84367830848913,
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "forever_mutilate",
+			"dps": 261.9801670565933,
 			"rests": {
 				"assumed": 0,
 				"classic": 0,
-				"core": 0.9623,
-				"forever": 0.0377,
+				"core": 0.9733,
+				"forever": 0.0267,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 261.9801670565933,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9733,
+				"forever": 0.0267,
 				"measured": 0,
 				"unknown": 0
 			}
@@ -4623,6 +4607,54 @@
 				"classic": 0,
 				"core": 0.9623,
 				"forever": 0.0377,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_hemorrhage",
+			"dps": 260.84367830848913,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9623,
+				"forever": 0.0377,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 256.57567989626335,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9735,
+				"forever": 0.0265,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_mutilate",
+			"dps": 256.57567989626335,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9735,
+				"forever": 0.0265,
 				"measured": 0,
 				"unknown": 0
 			}
@@ -4648,39 +4680,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_sinister_strike_p1_bis",
-			"rotation": "forever_mutilate",
-			"dps": 256.57567989626335,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9735,
-				"forever": 0.0265,
-				"measured": 0,
-				"unknown": 0
-			}
-		},
-		{
-			"spec": "rogue",
-			"build": "Assassination Mutilate 31/20/0",
-			"talents": "02532010531201051-225303000005",
-			"gear": "combat_sinister_strike_p1_bis",
 			"rotation": "combat_backstab_sweaty",
-			"dps": 256.57567989626335,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9735,
-				"forever": 0.0265,
-				"measured": 0,
-				"unknown": 0
-			}
-		},
-		{
-			"spec": "rogue",
-			"build": "Assassination Mutilate 31/20/0",
-			"talents": "02532010531201051-225303000005",
-			"gear": "combat_sinister_strike_p1_bis",
-			"rotation": "forever_hemorrhage",
 			"dps": 256.57567989626335,
 			"rests": {
 				"assumed": 0,
@@ -4776,7 +4776,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 245.14422753609387,
 			"rests": {
 				"assumed": 0,
@@ -4792,7 +4792,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 245.14422753609387,
 			"rests": {
 				"assumed": 0,
@@ -4888,7 +4888,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 234.18279786945274,
 			"rests": {
 				"assumed": 0,
@@ -4904,8 +4904,24 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 234.18279786945274,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_backstab",
+			"dps": 228.2513913568267,
 			"rests": {
 				"assumed": 0,
 				"classic": 0,
@@ -4937,22 +4953,6 @@
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_p1_bis",
 			"rotation": "combat_backstab_sweaty",
-			"dps": 228.2513913568267,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9793,
-				"forever": 0.0207,
-				"measured": 0,
-				"unknown": 0
-			}
-		},
-		{
-			"spec": "rogue",
-			"build": "Subtlety Hemo 15/0/36",
-			"talents": "125320101--5320003310013211551",
-			"gear": "combat_sinister_strike_p1_bis",
-			"rotation": "combat_backstab",
 			"dps": 228.2513913568267,
 			"rests": {
 				"assumed": 0,
@@ -4984,7 +4984,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "forever_hemorrhage",
+			"rotation": "forever_mutilate",
 			"dps": 225.70742202083576,
 			"rests": {
 				"assumed": 0,
@@ -5000,7 +5000,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "forever_mutilate",
+			"rotation": "forever_hemorrhage",
 			"dps": 225.70742202083576,
 			"rests": {
 				"assumed": 0,
@@ -5064,23 +5064,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "combat_backstab_sweaty",
-			"dps": 213.56610753389987,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9589,
-				"forever": 0.0411,
-				"measured": 0,
-				"unknown": 0
-			}
-		},
-		{
-			"spec": "rogue",
-			"build": "Assassination Mutilate 31/20/0",
-			"talents": "02532010531201051-225303000005",
-			"gear": "combat_sinister_strike_prebis",
-			"rotation": "combat_backstab",
+			"rotation": "forever_hemorrhage",
 			"dps": 213.56610753389987,
 			"rests": {
 				"assumed": 0,
@@ -5112,7 +5096,23 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "forever_hemorrhage",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 213.56610753389987,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9589,
+				"forever": 0.0411,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_backstab",
 			"dps": 213.56610753389987,
 			"rests": {
 				"assumed": 0,
@@ -5144,22 +5144,6 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "combat_backstab",
-			"dps": 189.4226502139269,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9681,
-				"forever": 0.0319,
-				"measured": 0,
-				"unknown": 0
-			}
-		},
-		{
-			"spec": "rogue",
-			"build": "Subtlety Hemo 15/0/36",
-			"talents": "125320101--5320003310013211551",
-			"gear": "combat_sinister_strike_prebis",
 			"rotation": "combat_backstab_sweaty",
 			"dps": 189.4226502139269,
 			"rests": {
@@ -5177,6 +5161,22 @@
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_prebis",
 			"rotation": "forever_mutilate",
+			"dps": 189.4226502139269,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9681,
+				"forever": 0.0319,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_backstab",
 			"dps": 189.4226502139269,
 			"rests": {
 				"assumed": 0,
