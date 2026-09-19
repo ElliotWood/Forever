@@ -46,8 +46,25 @@ jobs:
         with:
           go-version: 1.23.x
 
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          version: '25.x'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Protoc Go plugin
+        run: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+
+      # The protos are generated, not committed, and sim/web embeds the built site through
+      # binary_dist; the stub stands in for it. Without both, loading ./sim/... fails before
+      # a single build is simulated.
+      - name: Generate the protos and the dist stub
+        run: make sim/core/proto/api.pb.go binary_dist/dist.go
+
+      # Named packages rather than ./sim/... : sim/web is a server, has no arena entry, and
+      # its presence in the pattern is what made the first run fail.
       - name: Run the arena
-        run: go test --tags=with_db -timeout 80m -run TestArena ./sim/...
+        run: go test --tags=with_db -timeout 80m -run TestArena $(go list ./sim/... | grep -v '/sim/web')
         env:
           ARENA_OUT: ${{ github.workspace }}/arena-out
 
