@@ -7,7 +7,7 @@ import (
 )
 
 // Judgement
-// https://www.wowhead.com/tbc/spell=20271
+// https://www.wowhead.com/forever/spell=20271
 //
 // Unleashes the energy of a Seal to judge an enemy for 20 sec.
 // The effect depends on which Seal is active.

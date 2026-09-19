@@ -37,7 +37,7 @@ func (paladin *Paladin) registerAuraSpell(aura *core.Aura, classSpellMask int64)
 }
 
 // Devotion Aura
-// https://www.wowhead.com/tbc/spell=27149
+// https://www.wowhead.com/forever/spell=27149
 //
 // Gives 861 additional armor to party members within 30 yards.
 // Improved Devotion Aura talent increases the armor bonus by up to 40%.
@@ -48,7 +48,7 @@ func (paladin *Paladin) registerDevotionAura() {
 }
 
 // Retribution Aura
-// https://www.wowhead.com/tbc/spell=27150
+// https://www.wowhead.com/forever/spell=27150
 //
 // Causes 26 Holy damage to any creature that strikes a party member within 30 yards.
 // Improved Retribution Aura talent increases damage by up to 50%.
@@ -71,7 +71,7 @@ func (paladin *Paladin) registerSelfCastAura(label string, actionID core.ActionI
 }
 
 // Concentration Aura
-// https://www.wowhead.com/tbc/spell=19746
+// https://www.wowhead.com/forever/spell=19746
 //
 // All party members within 30 yards lose 35% less casting or channeling time
 // when damaged. Players may only have one Aura on them per Paladin at any one time.
@@ -81,7 +81,7 @@ func (paladin *Paladin) registerConcentrationAura() {
 }
 
 // Fire Resistance Aura
-// https://www.wowhead.com/tbc/spell=27153
+// https://www.wowhead.com/forever/spell=27153
 //
 // Gives 70 fire resistance to party members within 30 yards.
 // Players may only have one Aura on them per Paladin at any one time.
@@ -91,7 +91,7 @@ func (paladin *Paladin) registerFireResistanceAura() {
 }
 
 // Frost Resistance Aura
-// https://www.wowhead.com/tbc/spell=27152
+// https://www.wowhead.com/forever/spell=27152
 //
 // Gives 70 frost resistance to party members within 30 yards.
 // Players may only have one Aura on them per Paladin at any one time.
@@ -101,7 +101,7 @@ func (paladin *Paladin) registerFrostResistanceAura() {
 }
 
 // Shadow Resistance Aura
-// https://www.wowhead.com/tbc/spell=27151
+// https://www.wowhead.com/forever/spell=27151
 //
 // Gives 70 shadow resistance to party members within 30 yards.
 // Players may only have one Aura on them per Paladin at any one time.
@@ -111,7 +111,7 @@ func (paladin *Paladin) registerShadowResistanceAura() {
 }
 
 // Sanctity Aura (Talent)
-// https://www.wowhead.com/tbc/spell=20218
+// https://www.wowhead.com/forever/spell=20218
 //
 // Increases Holy damage done by party members within 30 yards by 10%.
 // Improved Sanctity Aura talent adds a 1/2% bonus to all damage dealt.

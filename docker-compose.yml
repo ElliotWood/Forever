@@ -1,4 +1,4 @@
-# Production deployment for the TBC sim.
+# Production deployment for the Forever sim.
 #
 #   docker compose up -d        # build + start
 #   ./upgrade.sh                # pull, rebuild, restart
@@ -16,7 +16,7 @@ services:
             context: .
             dockerfile: Dockerfile
             target: prod
-        image: wowsimtbc:local
+        image: wowsimforever:local
         restart: unless-stopped
         # The server exits cleanly on SIGINT (its only handled signal).
         stop_signal: SIGINT

@@ -6,4 +6,4 @@ labels: ''
 assignees: ''
 ---
 
-Links to [The Burning Crusade Wowhead](https://wowhead.com/tbc/items 'https://wowhead.com/tbc/items') for each item:
+Links to [Forever Wowhead](https://wowhead.com/forever/items 'https://wowhead.com/forever/items') for each item:

@@ -1,4 +1,0 @@
-package tbc
-
-func RegisterAllEnchants() {
-}

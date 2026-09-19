@@ -205,7 +205,7 @@ func (paladin *Paladin) applySeal(newSeal *core.Aura, sealSpell *core.Spell, jud
 }
 
 // Seal of Righteousness
-// https://www.wowhead.com/tbc/spell=21084
+// https://www.wowhead.com/forever/spell=21084
 //
 // Fills the Paladin with divine spirit for 30 sec, granting each melee attack
 // additional Holy damage. Only one Seal can be active on the Paladin at any one time.
@@ -351,7 +351,7 @@ func (paladin *Paladin) registerSealOfRighteousness(seal seal) {
 }
 
 // Seal of Light
-// https://www.wowhead.com/tbc/spell=20165
+// https://www.wowhead.com/forever/spell=20165
 //
 // Fills the Paladin with divine light for 30 sec, giving each melee attack
 // a chance to heal the Paladin. Only one Seal can be active on the Paladin
@@ -427,7 +427,7 @@ func (paladin *Paladin) registerSealOfLight(seal seal) {
 }
 
 // Seal of Wisdom
-// https://www.wowhead.com/tbc/spell=20166
+// https://www.wowhead.com/forever/spell=20166
 //
 // Fills the Paladin with divine wisdom for 30 sec, giving each melee attack
 // a chance to restore mana to the Paladin. Only one Seal can be active on
@@ -503,7 +503,7 @@ func (paladin *Paladin) registerSealOfWisdom(seal seal) {
 }
 
 // Seal of Justice
-// https://www.wowhead.com/tbc/spell=20164
+// https://www.wowhead.com/forever/spell=20164
 //
 // Fills the Paladin with the spirit of justice for 30 sec, giving each melee
 // attack a chance to stun the target for 2 sec. Only one Seal can be active
@@ -588,7 +588,7 @@ func (paladin *Paladin) registerSealOfJustice(seal seal) {
 }
 
 // Seal of the Crusader
-// https://www.wowhead.com/tbc/spell=21082
+// https://www.wowhead.com/forever/spell=21082
 //
 // Fills the Paladin with the spirit of a crusader for 30 sec, increasing
 // attack speed but reducing damage caused by each weapon hit. The
@@ -600,9 +600,9 @@ func (paladin *Paladin) registerSealOfJustice(seal seal) {
 func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
 	percentBonus := core.Ternary(paladin.CouldHaveSetBonus(ItemSetJusticarBattlegear, 2), 1.15, 1.0)
 	flatBonus := 0.0
-	if paladin.Ranged().ID == 23203 { //https://www.wowhead.com/tbc/item=23203/libram-of-fervor
+	if paladin.Ranged().ID == 23203 { //https://www.wowhead.com/forever/item=23203/libram-of-fervor
 		flatBonus += 33.0
-	} else if paladin.Ranged().ID == 27949 || paladin.Ranged().ID == 27983 { //https://www.wowhead.com/tbc/item=27949/libram-of-zeal
+	} else if paladin.Ranged().ID == 27949 || paladin.Ranged().ID == 27983 { //https://www.wowhead.com/forever/item=27949/libram-of-zeal
 		flatBonus += 47.0
 	}
 
@@ -664,7 +664,7 @@ func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
 }
 
 // Seal of Blood
-// https://www.wowhead.com/tbc/spell=31892
+// https://www.wowhead.com/forever/spell=31892
 //
 // All melee attacks deal additional Holy damage equal to 35% of normal weapon damage, but the Paladin loses health equal to 10% of the total damage inflicted.
 //
@@ -759,7 +759,7 @@ func (paladin *Paladin) registerSealOfBlood() {
 }
 
 // Seal of Vengeance
-// https://www.wowhead.com/tbc/spell=31801
+// https://www.wowhead.com/forever/spell=31801
 //
 // Fills the Paladin with holy power, granting each melee attack a chance to cause 150 Holy damage over 15 sec.
 // This effect can stack up to 5 times.
@@ -897,7 +897,7 @@ func (paladin *Paladin) registerSealOfVengeance() {
 }
 
 // Seal of Command
-// https://www.wowhead.com/tbc/spell=20375
+// https://www.wowhead.com/forever/spell=20375
 //
 // Gives the Paladin a chance to deal additional Holy damage equal to 70%
 // of normal weapon damage. Only one Seal can be active on the Paladin at

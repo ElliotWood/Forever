@@ -1,4 +1,4 @@
-package tbc
+package forever
 
 import (
 	"time"

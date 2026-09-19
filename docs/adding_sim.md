@@ -31,15 +31,15 @@ The UI and sim can be done in either order, but it is generally recommended to b
 No .html and no `makefile` rule are needed (they used to be; see
 [Sim pages are not files](adding_sim.md#sim-pages-are-not-real-files) if an older checkout left
 generated pages behind). `tools/vite/spec_pages.mts` generates the page for
-`/tbc/$CLASS/$SPEC/` from `ui/index_template.html`, in both `vite build` and the dev server. A
+`/forever/$CLASS/$SPEC/` from `ui/index_template.html`, in both `vite build` and the dev server. A
 directory is picked up as a sim page as soon as it holds `ui/specs/$CLASS/$SPEC/spec.ts` (or
 `spec.tsx`).
 
-When you're ready to try out the site, run `make host` and navigate to `http://localhost:8080/tbc/$SPEC`.
+When you're ready to try out the site, run `make host` and navigate to `http://localhost:8080/forever/$SPEC`.
 
 ### Sim pages are not "real" files
 
-Each sim is served at `/tbc/$CLASS/$SPEC/` and these pages used to be written into the repository.
+Each sim is served at `/forever/$CLASS/$SPEC/` and these pages used to be written into the repository.
 
 Vite serves those pages now (`tools/vite/spec_pages.mts`), in both `vite build` and the dev
 server, so there is nothing to generate or list. `ui/index_template.html` carries nothing

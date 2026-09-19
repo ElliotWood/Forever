@@ -14,12 +14,12 @@ describe('Button', () => {
 
 	it('renders an anchor when asked, keeping the button classes', () => {
 		render(
-			<Button as="a" href="https://wowhead.com/tbc/item=1" variant="link">
+			<Button as="a" href="https://wowhead.com/forever/item=1" variant="link">
 				Item
 			</Button>,
 		);
 		const link = screen.getByRole('link', { name: 'Item' });
-		expect(link.getAttribute('href')).toBe('https://wowhead.com/tbc/item=1');
+		expect(link.getAttribute('href')).toBe('https://wowhead.com/forever/item=1');
 		expect(link.className).toBe('ui-button-link');
 		expect(link.getAttribute('type')).toBeNull();
 	});
@@ -56,7 +56,7 @@ describe('Button', () => {
 
 	it('adds rel to a cross-origin link without being asked', () => {
 		render(
-			<Button as="a" href="https://www.wowhead.com/tbc/item=1" target="_blank">
+			<Button as="a" href="https://www.wowhead.com/forever/item=1" target="_blank">
 				Item
 			</Button>,
 		);
@@ -65,7 +65,7 @@ describe('Button', () => {
 
 	it('merges an explicit rel rather than replacing it, and does not duplicate', () => {
 		render(
-			<Button as="a" href="https://www.wowhead.com/tbc/item=1" rel="nofollow noopener">
+			<Button as="a" href="https://www.wowhead.com/forever/item=1" rel="nofollow noopener">
 				Item
 			</Button>,
 		);
@@ -76,7 +76,7 @@ describe('Button', () => {
 	it('leaves relative and non-http hrefs alone', () => {
 		render(
 			<>
-				<Button as="a" href="/tbc/warrior/arms/">
+				<Button as="a" href="/forever/warrior/arms/">
 					Arms
 				</Button>
 				<Button as="a" href="#gear-tab">

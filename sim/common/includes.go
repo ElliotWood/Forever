@@ -3,11 +3,11 @@ package common
 // Just import other directories, so importing common from elsewhere is enough.
 import (
 	_ "github.com/wowsims/forever/sim/common/classic"
-	"github.com/wowsims/forever/sim/common/tbc"
+	"github.com/wowsims/forever/sim/common/forever"
 )
 
 func RegisterAllEffects() {
-	tbc.RegisterAllOnUseCds()
-	tbc.RegisterAllProcs()
-	tbc.RegisterAllEnchants()
+	forever.RegisterAllOnUseCds()
+	forever.RegisterAllProcs()
+	forever.RegisterAllEnchants()
 }

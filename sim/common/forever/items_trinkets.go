@@ -1,4 +1,4 @@
-package tbc
+package forever
 
 import (
 	"time"
@@ -51,10 +51,10 @@ func init() {
 
 	// Summoning figurines. The generator skips a spell with a summon effect (type 28) outright,
 	// which also drops the stat buff the same spell carries. Only the buff is simulated.
-	shared.NewSimpleStatActive(24126) // Figurine - Living Ruby Serpent - https://www.wowhead.com/tbc/spell=31040
-	shared.NewSimpleStatActive(24128) // Figurine - Nightseye Panther - https://www.wowhead.com/tbc/spell=31047
-	shared.NewSimpleStatActive(35700) // Figurine - Crimson Serpent - https://www.wowhead.com/tbc/spell=46783
-	shared.NewSimpleStatActive(35702) // Figurine - Shadowsong Panther - https://www.wowhead.com/tbc/spell=46784
+	shared.NewSimpleStatActive(24126) // Figurine - Living Ruby Serpent - https://www.wowhead.com/forever/spell=31040
+	shared.NewSimpleStatActive(24128) // Figurine - Nightseye Panther - https://www.wowhead.com/forever/spell=31047
+	shared.NewSimpleStatActive(35700) // Figurine - Crimson Serpent - https://www.wowhead.com/forever/spell=46783
+	shared.NewSimpleStatActive(35702) // Figurine - Shadowsong Panther - https://www.wowhead.com/forever/spell=46784
 
 	// Jom Gabbar
 	// Use: Increases attack power by 65 and an additional 65 every 2 sec. Lasts 20 sec. (2 Min Cooldown)
@@ -278,7 +278,7 @@ func init() {
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				spell.WaitTravelTime(sim, func(s *core.Simulation) {
 					baseDamage := sim.Roll(694, 806)
-					// https://www.wowhead.com/tbc/item=28785/the-lightning-capacitor#comments
+					// https://www.wowhead.com/forever/item=28785/the-lightning-capacitor#comments
 					// It can crit, may need some testing
 					spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
 				})

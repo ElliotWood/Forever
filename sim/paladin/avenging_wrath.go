@@ -7,7 +7,7 @@ import (
 )
 
 // Avenging Wrath
-// https://www.wowhead.com/tbc/spell=31884
+// https://www.wowhead.com/forever/spell=31884
 //
 // Increases all damage caused by 30% for 20 sec.
 // Causes Forebearance, preventing the use of Divine Shield,

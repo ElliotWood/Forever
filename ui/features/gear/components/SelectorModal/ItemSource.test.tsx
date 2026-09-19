@@ -134,7 +134,7 @@ describe('ItemSource', () => {
 		const { getByRole, getByAltText } = mount(item);
 
 		expect(getByRole('link').getAttribute('href')).toBe(ActionId.makeQuestUrl(1));
-		expect(getByAltText('').getAttribute('src')).toBe('/tbc/assets/img/alliance.png');
+		expect(getByAltText('').getAttribute('src')).toBe('/forever/assets/img/alliance.png');
 	});
 
 	it('shows a horde icon for a quest available only to horde', () => {
@@ -145,7 +145,7 @@ describe('ItemSource', () => {
 		});
 		const { getByAltText } = mount(item);
 
-		expect(getByAltText('').getAttribute('src')).toBe('/tbc/assets/img/horde.png');
+		expect(getByAltText('').getAttribute('src')).toBe('/forever/assets/img/horde.png');
 	});
 
 	it('shows no faction icon for a quest with no faction restriction', () => {

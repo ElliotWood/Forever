@@ -77,7 +77,7 @@ jobs:
 
             - name: Build 🔧
               run: |
-                  make dist/tbc/.dirstamp
+                  make dist/forever/.dirstamp
 
     test:
         runs-on: ubuntu-latest

@@ -91,9 +91,10 @@ export type WowheadTooltipSpellParams = {
 const WOWHEAD_EXPANSIONS = {
 	5: 'tbc',
 	15: 'mop-classic',
+	16: 'forever',
 } as const;
 
-export const WOWHEAD_EXPANSION_ENV: keyof typeof WOWHEAD_EXPANSIONS = 5;
+export const WOWHEAD_EXPANSION_ENV: keyof typeof WOWHEAD_EXPANSIONS = 16;
 export const WOWHEAD_DOMAIN = WOWHEAD_EXPANSIONS[WOWHEAD_EXPANSION_ENV];
 
 export const buildWowheadTooltipDataset = async (options: WowheadTooltipItemParams | WowheadTooltipSpellParams) => {

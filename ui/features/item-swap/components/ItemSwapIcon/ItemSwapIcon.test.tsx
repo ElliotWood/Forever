@@ -92,7 +92,7 @@ describe('ItemSwapIcon', () => {
 
 		expect(view.container.querySelectorAll('[data-testid="icon-picker-root"]')).toHaveLength(SLOTS.length);
 		expect(icons(view.container).map(icon => icon.hasAttribute('data-active'))).toEqual([false, false, false, false]);
-		expect(icons(view.container)[0].style.backgroundImage).toContain('/tbc/assets/item_slots/mainhand.jpg');
+		expect(icons(view.container)[0].style.backgroundImage).toContain('/forever/assets/item_slots/mainhand.jpg');
 	});
 
 	it('marks a filled slot active and links it to the item, which is what the swap probe reads', () => {

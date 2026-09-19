@@ -15,7 +15,7 @@ func (paladin *Paladin) getConsecrationTimer() *core.Timer {
 var ConsecrationRankMap = spellData.Consecration
 
 // Consecration
-// https://www.wowhead.com/tbc/spell=26573
+// https://www.wowhead.com/forever/spell=26573
 //
 // Consecrates the land beneath the Paladin, doing X Holy damage over 8 sec to enemies who enter the area.
 func (paladin *Paladin) registerConsecration(rankConfig shared.SpellData) {

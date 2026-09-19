@@ -3,9 +3,9 @@
 ##############################################################################
 # build — heavy toolchain (Go + Node + protoc). Compiles the WASM, builds the
 # Vite client, embeds it into the Go binary, and produces a single fully-static
-# `wowsimtbc` executable. Used only to feed the `prod` stage below.
+# `wowsimforever` executable. Used only to feed the `prod` stage below.
 #
-#   docker build --target prod -t wowsimtbc .
+#   docker build --target prod -t wowsimforever .
 ##############################################################################
 FROM golang:1.25 AS build
 
@@ -44,7 +44,7 @@ RUN npm ci
 
 # Build everything: proto -> wasm + client bundle -> embed -> static server.
 COPY . .
-RUN make wowsimtbc
+RUN make wowsimforever
 
 ##############################################################################
 # prod — production runtime. Empty base image: only the static binary, no
@@ -58,11 +58,11 @@ FROM scratch AS prod
 # kernel only needs the numeric ids — the binary touches no files it must own.
 USER 10001:10001
 
-COPY --from=build /src/wowsimtbc /wowsimtbc
+COPY --from=build /src/wowsimforever /wowsimforever
 
 EXPOSE 8080
 
-ENTRYPOINT ["/wowsimtbc"]
+ENTRYPOINT ["/wowsimforever"]
 # --usefs=false  serve the embedded client (not from disk)
 # --launch=false don't try to open a browser
 # --nvc          skip the outbound GitHub version check (no egress / no CA certs)
@@ -71,12 +71,12 @@ CMD ["--usefs=false", "--launch=false", "--nvc", "--host=:8080"]
 
 ##############################################################################
 # dev — local development environment (live reload via air + Vite). This is
-# the DEFAULT target, so the existing `docker build -t wowsims-tbc .` workflow
+# the DEFAULT target, so the existing `docker build -t wowsims-forever .` workflow
 # in docs/installation.md is unchanged.
 ##############################################################################
 FROM golang:1.25 AS dev
 
-WORKDIR /tbc
+WORKDIR /forever
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 

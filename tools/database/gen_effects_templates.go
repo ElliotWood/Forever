@@ -1,6 +1,6 @@
 package database
 
-const TmplStrOnUse = `package tbc
+const TmplStrOnUse = `package forever
 
 import (
 {{- if .HasStacking }}
@@ -23,12 +23,12 @@ func RegisterAllOnUseCds() {
 	// Not simulated: {{.}}
 	{{- end}}
 	{{with index .Variants 0 -}}
-	// https://www.wowhead.com/tbc/spell={{.SpellID}}
+	// https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- else}}
 	{{- if .StackingOnUse}}
   	{{- with index .Variants 0}}
-	// {{ .Name }} - https://www.wowhead.com/tbc/spell={{.SpellID}}
+	// {{ .Name }} - https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	shared.NewStackingStatBonusCD(shared.StackingStatBonusCD{
 		Name:                  "{{ .StackingOnUse.Name }}",
@@ -48,11 +48,11 @@ func RegisterAllOnUseCds() {
 	})
 	{{- else if not .Supported}}
   	{{- with index .Variants 0}}
-	// shared.NewSimpleStatActive({{ .ID }}) // {{ .Name }} - https://www.wowhead.com/tbc/spell={{.SpellID}}
+	// shared.NewSimpleStatActive({{ .ID }}) // {{ .Name }} - https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- else}}
   	{{- with index .Variants 0}}
-	shared.NewSimpleStatActive({{ .ID }}) // {{ .Name }} - https://www.wowhead.com/tbc/spell={{.SpellID}}
+	shared.NewSimpleStatActive({{ .ID }}) // {{ .Name }} - https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- end}}
 	{{- end}}
@@ -60,7 +60,7 @@ func RegisterAllOnUseCds() {
 
 {{- end }}
 }`
-const TmplStrProc = `package tbc
+const TmplStrProc = `package forever
 
 import (
 {{- if .HasDamageIcd }}
@@ -81,7 +81,7 @@ func RegisterAllProcs() {
 	// Not simulated: {{.}}
 	{{- end}}
 	{{with index .Variants 0 -}}
-	// https://www.wowhead.com/tbc/spell={{.SpellID}}
+	// https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- else}}
 	{{if not .Supported}}
@@ -94,7 +94,7 @@ func RegisterAllProcs() {
 	// {{.}}
 	{{- end}}
 	{{with index .Variants 0 -}}
-	// https://www.wowhead.com/tbc/spell={{.SpellID}}
+	// https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- if .Supported}}
 		{{- if .Damage}}
@@ -228,7 +228,7 @@ func RegisterAllProcs() {
 {{- end }}
 }`
 
-const TmplStrEnchant = `package tbc
+const TmplStrEnchant = `package forever
 {{ if .HasEntries }}
 import (
 	"github.com/wowsims/forever/sim/core"
@@ -246,7 +246,7 @@ func RegisterAllEnchants() {
 	// Not simulated: {{.}}
 	{{- end}}
 	{{with index .Variants 0 -}}
-	// https://www.wowhead.com/tbc/spell={{.SpellID}}
+	// https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- else}}
 	{{if not .Supported}}
@@ -259,7 +259,7 @@ func RegisterAllEnchants() {
 	// {{.}}
 	{{- end}}
 	{{with index .Variants 0 -}}
-	// https://www.wowhead.com/tbc/spell={{.SpellID}}
+	// https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- if .Supported}}
 		shared.NewProcStatBonusEffect(shared.ProcStatBonusEffect{
@@ -315,7 +315,7 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		{{.ItemID}}, // {{ .Name }}
 		[
 			{{- range .Effects }}
-			"{{ jsString .Name }}", // {{.SpellID}} - https://www.wowhead.com/tbc/spell={{.SpellID}}
+			"{{ jsString .Name }}", // {{.SpellID}} - https://www.wowhead.com/forever/spell={{.SpellID}}
 			{{- end}}
 		]
 	],
@@ -328,7 +328,7 @@ export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 		{{.ItemID}}, // {{ .Name }}
 		[
 			{{- range .Effects }}
-			"{{ jsString .Name }}", // {{.SpellID}} - https://www.wowhead.com/tbc/spell={{.SpellID}}
+			"{{ jsString .Name }}", // {{.SpellID}} - https://www.wowhead.com/forever/spell={{.SpellID}}
 			{{- end}}
 		]
 	],

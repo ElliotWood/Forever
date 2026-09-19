@@ -1,7 +1,7 @@
 // The 17 spec pages are one constant page served at 17 URLs.
 //
 // `ui/index_template.html` carries nothing per-spec — no placeholders, and every asset
-// reference is root-absolute (`/tbc/...` once vite rewrites it) — so the build processes it
+// reference is root-absolute (`/forever/...` once vite rewrites it) — so the build processes it
 // ONCE as an ordinary html input and this plugin copies the processed result to
 // `<class>/<spec>/index.html` for every spec. Nothing per-spec is written into the source
 // tree; in dev the same file is served through `transformIndexHtml` for the same URLs.
@@ -69,7 +69,7 @@ export function specPages(uiRoot: string): Plugin {
 					return;
 				}
 				// This middleware runs before vite's `base` middleware, so the path still carries
-				// `/tbc/`; `transformIndexHtml` wants it stripped (that is what vite's own
+				// `/forever/`; `transformIndexHtml` wants it stripped (that is what vite's own
 				// `indexHtmlMiddleware` passes, and the html-proxy ids for the page's inline
 				// module scripts are keyed on it).
 				const url = pathname.slice(base.length - 1).replace(/\/$/, '/index.html');

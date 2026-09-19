@@ -306,7 +306,7 @@ func (spell *Spell) HealingCritCheck(sim *Simulation) bool {
 func (spell *Spell) ApplyPostOutcomeDamageModifiers(sim *Simulation, result *SpellResult, isPeriodic bool) {
 	result.PostOutcomeDamage = result.Damage
 
-	// TBC ANNI: Look into this
+	// TODO: Forever possibly has different rules
 	// if spell.Flags.Matches(SpellFlagAoE) {
 	// 	result.Damage *= sim.Encounter.AOECapMultiplier()
 	// }

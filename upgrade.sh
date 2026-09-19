@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Upgrade the TBC sim in place: pull latest source, rebuild the sim image, and
+# Upgrade the Forever sim in place: pull latest source, rebuild the sim image, and
 # restart the stack. The app is stateless, so there is nothing to back up — the
 # only persistent data is Caddy's certs in the caddy_data volume, which are left
 # untouched.

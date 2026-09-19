@@ -63,10 +63,11 @@ message {{$class}}Talents {
 }
 `
 
-const tsTemplateStr = `import { {{.ClassName}}Talents } from '../proto/{{.FileName}}.js';
-import { newTalentsConfig, TalentsConfig } from './talents_picker.js';
+const tsTemplateStr = `import { {{.ClassName}}Talents } from '@generated/proto/{{.FileName}}';
+
+import { newTalentsConfig, TalentsConfig } from './config';
 import {{.ClassName}}TalentJson from './trees/{{.FileName}}.json';
-{{- $class := .ClassName -}}
+
 export const {{.LowerCaseClassName}}TalentsConfig: TalentsConfig<{{.ClassName}}Talents> = newTalentsConfig({{.ClassName}}TalentJson);
 `
 

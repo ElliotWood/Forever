@@ -7,7 +7,7 @@ import (
 )
 
 // Forbearance
-// https://www.wowhead.com/tbc/spell=25771
+// https://www.wowhead.com/forever/spell=25771
 //
 // Cannot be made invulnerable by Divine Shield, Divine Protection, Blessing of Protection or be affected by Avenging Wrath.
 func (paladin *Paladin) registerForbearance() {

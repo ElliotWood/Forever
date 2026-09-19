@@ -16,7 +16,7 @@ func (paladin *Paladin) getExorcismTimer() *core.Timer {
 }
 
 // Exorcism
-// https://www.wowhead.com/tbc/spell=10314
+// https://www.wowhead.com/forever/spell=10314
 //
 // Causes X to Y Holy damage to an Undead or Demon target.
 func (paladin *Paladin) registerExorcism(rankConfig shared.SpellData) {

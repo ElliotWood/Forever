@@ -15,7 +15,7 @@ func (paladin *Paladin) getHammerOfWrathTimer() *core.Timer {
 var HammerOfWrathRankMap = spellData.HammerOfWrath
 
 // Hammer of Wrath
-// https://www.wowhead.com/tbc/spell=27180
+// https://www.wowhead.com/forever/spell=27180
 //
 // Hurls a hammer that strikes an enemy for Holy damage.
 // Only usable on enemies that have 20% or less health.

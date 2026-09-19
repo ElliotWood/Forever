@@ -1,4 +1,4 @@
-package tbc
+package forever
 
 import (
 	"time"
@@ -14,7 +14,7 @@ func init() {
 	// Felsteel Shield Spike
 	// EffectID: 2714, Proc SpellID: 29455
 	// Permanently attaches a felsteel spike to your shield that deals 26 to 38 damage to attackers whose melee attacks you block.
-	// https://www.wowhead.com/tbc/spell=29455
+	// https://www.wowhead.com/forever/spell=29455
 	shared.NewProcDamageEffect(shared.ProcDamageEffect{
 		EnchantID: 2714,
 		SpellID:   29455,

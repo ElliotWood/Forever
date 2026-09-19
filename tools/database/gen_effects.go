@@ -280,7 +280,7 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 		procGroups = append(procGroups, &grp)
 	}
 
-	GenerateEffectsFile(procGroups, "sim/common/tbc/enchants_auto_gen.go", TmplStrEnchant)
+	GenerateEffectsFile(procGroups, "sim/common/forever/enchants_auto_gen.go", TmplStrEnchant)
 }
 
 // Names the ignore-list rule that excluded an effect, for the comment emitted in the generated
@@ -455,8 +455,8 @@ func GenerateItemEffects(instance *dbc.DBC, db *WowDatabase, itemSources map[int
 		updateNames(grp.Entries)
 	}
 
-	GenerateEffectsFile(onUseGroups, "sim/common/tbc/stat_bonus_cds_auto_gen.go", TmplStrOnUse)
-	GenerateEffectsFile(procGroups, "sim/common/tbc/stat_bonus_procs_auto_gen.go", TmplStrProc)
+	GenerateEffectsFile(onUseGroups, "sim/common/forever/stat_bonus_cds_auto_gen.go", TmplStrOnUse)
+	GenerateEffectsFile(procGroups, "sim/common/forever/stat_bonus_procs_auto_gen.go", TmplStrProc)
 }
 
 func GenerateItemEffectRandomPropPoints(instance *dbc.DBC, db *WowDatabase) {

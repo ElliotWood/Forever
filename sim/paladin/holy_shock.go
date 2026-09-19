@@ -15,7 +15,7 @@ func (paladin *Paladin) getHolyShockTimer() *core.Timer {
 var HolyShockRankMap = spellData.HolyShock
 
 // Holy Shock
-// https://www.wowhead.com/tbc/spell=20473
+// https://www.wowhead.com/forever/spell=20473
 //
 // Blasts the target with Holy energy, causing X to Y Holy damage to an enemy,
 // or X*1.267 to Y*1.267 healing to an ally.

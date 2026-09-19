@@ -15,7 +15,7 @@ func (paladin *Paladin) getAvengersShieldTimer() *core.Timer {
 var AvengersShieldRankMap = spellData.AvengersShield
 
 // Avenger's Shield (Talent)
-// https://www.wowhead.com/tbc/spell=31935
+// https://www.wowhead.com/forever/spell=31935
 //
 // Hurls a holy shield at the enemy, dealing Holy damage, dazing them and
 // then jumping to additional nearby enemies. Affects 3 total targets.

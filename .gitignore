@@ -13,7 +13,7 @@ dist
 binary_dist
 sim/web/__debug_bin
 /wowsimcli*
-/wowsimtbc*
+/wowsimforever*
 
 # temporary files
 *.results.tmp
@@ -21,9 +21,9 @@ package.json.tmp
 .stylelintcache
 
 #.dockerignore
-/tbc/
+/forever/
 *.code-workspace
-wowsimtbc
+wowsimforever
 
 # old result file
 TestAPL.results
@@ -35,12 +35,12 @@ TestAPL.results
 tmp/
 
 # lib
-wowsimtbc*.so
-wowsimtbc*.dll
-wowsimtbc*.h
+wowsimforever*.so
+wowsimforever*.dll
+wowsimforever*.h
 wowsims.db
 assets/db_inputs/dbc/
-tbc.sln
+forever.sln
 
 # agents
 graphify-out

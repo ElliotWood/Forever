@@ -92,7 +92,7 @@ Adding one is three edits and no page:
    `--theme-color`/`--theme-color-foreground`, and a separate per-spec rule carries
    `--theme-background-image`. A new spec needs an entry in both halves (see `ui/STYLING.md`).
 
-`tools/vite/spec_pages.mts` globs `ui/specs/*/*/spec.ts(x)`, so the page at `/tbc/<class>/<spec>/`
+`tools/vite/spec_pages.mts` globs `ui/specs/*/*/spec.ts(x)`, so the page at `/forever/<class>/<spec>/`
 appears with no build-config edit and no html anywhere. Check the count with
 `/usr/bin/find ui/specs -name 'spec.ts' -o -name 'spec.tsx' | wc -l`; the golden harness covers the
 same set.

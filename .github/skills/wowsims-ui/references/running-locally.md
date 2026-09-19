@@ -19,13 +19,13 @@ copying a command out of here:
 **It cannot run sims.** The worker's backend fetch fails on localhost. Sims need the Go host.
 
 **It half-renders spec pages with ZERO console errors unless the worker bundles exist first.**
-`ui/sim/workers/worker_pool.ts` resolves the worker at `/tbc/sim_worker.js`, and the dev server has
-middleware that serves `/tbc/**` out of `dist/tbc/`. With no bundle there the probe simply hangs:
+`ui/sim/workers/worker_pool.ts` resolves the worker at `/forever/sim_worker.js`, and the dev server has
+middleware that serves `/forever/**` out of `dist/forever/`. With no bundle there the probe simply hangs:
 `waitForInit()` never resolves → `loadSettings` never runs → defaults are never applied → the page
 looks structurally fine and is empty of settings. Build them first:
 
 ```
-npx tsx vite.build-workers.mts     # → dist/tbc/{local,net,sim}_worker.js (+ highs.wasm)
+npx tsx vite.build-workers.mts     # → dist/forever/{local,net,sim}_worker.js (+ highs.wasm)
 ```
 
 A fresh worktree also needs the gitignored generated files before anything type-checks or builds —
@@ -33,30 +33,30 @@ see the last section of `verification.md`.
 
 Copying per-spec `ui/**/index.html` from a built checkout is **not** a step and has not been for a
 while: `tools/vite/spec_pages.mts` serves every spec URL itself from `ui/index_template.html`
-through `transformIndexHtml`, and 301s the bare `/tbc/<class>/<spec>` to the trailing-slash form the
+through `transformIndexHtml`, and 301s the bare `/forever/<class>/<spec>` to the trailing-slash form the
 way the production static host does. Only an _unknown_ spec URL falls through to vite's SPA
 fallback, which serves the landing page — so "I got the landing page" means the URL is not in
 `discoverSpecPages()`, i.e. there is no `ui/specs/<class>/<spec>/spec.ts(x)`.
 
 ## Running REAL sims
 
-The Go host serves `dist/tbc` from disk and answers the worker's sim requests natively — stats,
+The Go host serves `dist/forever` from disk and answers the worker's sim requests natively — stats,
 Simulate, reference swap and timeline tooltips all work.
 
 ```
 make binary_dist/dist.go          # stub package so ./sim/web compiles — no built checkout needed
-make wasm                         # dist/tbc/lib.wasm.gz (needs Go)
-npx tsx vite.build-workers.mts    # dist/tbc/*_worker.js
-npx vite build                    # dist/tbc bundle + the 17 per-spec index.html
-cp -r assets dist/tbc/assets      # `make` does this; a plain `vite build` does not
-make devserver                    # go build -o wowsimtbc ./sim/web
-./wowsimtbc --usefs=true --launch=false --host=":3333"
+make wasm                         # dist/forever/lib.wasm.gz (needs Go)
+npx tsx vite.build-workers.mts    # dist/forever/*_worker.js
+npx vite build                    # dist/forever bundle + the 17 per-spec index.html
+cp -r assets dist/forever/assets      # `make` does this; a plain `vite build` does not
+make devserver                    # go build -o wowsimforever ./sim/web
+./wowsimforever --usefs=true --launch=false --host=":3333"
 ```
 
-Then `http://localhost:3333/tbc/<class>/<spec>/`. `make rundevserver` runs the last two steps for
-you, and `make dist/tbc/.dirstamp` replaces the middle three (it also copies the assets).
+Then `http://localhost:3333/forever/<class>/<spec>/`. `make rundevserver` runs the last two steps for
+you, and `make dist/forever/.dirstamp` replaces the middle three (it also copies the assets).
 
-Without `dist/tbc/assets` the page half-renders with JSON parse errors from the DB fetch — that
+Without `dist/forever/assets` the page half-renders with JSON parse errors from the DB fetch — that
 error text is the signature of a missing asset copy, not of a broken database.
 
 Do not `rm -rf dist`. `vite build` restores the bundles only; the database and assets come from

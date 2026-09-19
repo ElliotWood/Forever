@@ -17,7 +17,7 @@ export const LANDING_CLASS_ORDER: Class[] = [
 ];
 
 // The furthest-along of the class's specs, which is what the pre-port page showed: every
-// multi-spec TBC class has at least one Alpha spec and was labelled Alpha, including the three
+// multi-spec Forever class has at least one Alpha spec and was labelled Alpha, including the three
 // that also carry an Unlaunched one.
 export const classLaunchStatus = (playerClass: PlayerClass<Class>): LaunchStatus =>
 	Object.values(playerClass.specs).reduce<LaunchStatus>((best, spec) => Math.max(best, spec.launch.status), LaunchStatus.Unlaunched);

@@ -134,7 +134,7 @@ func (druid *Druid) applyBalanceOfPower() {
 		BuildPhase: core.CharacterBuildPhaseTalents,
 		ActionID:   core.ActionID{SpellID: 33596},
 	}).AttachSpellMod(core.SpellModConfig{
-		// See https://www.wowhead.com/tbc/spell=33596/balance-of-power
+		// See https://www.wowhead.com/forever/spell=33596/balance-of-power
 		// Importantly does not seem to affect Insect Swarm
 		ClassMask:  DruidSpellWrath | DruidSpellStarfire | DruidSpellMoonfire,
 		Kind:       core.SpellMod_BonusHit_Percent,

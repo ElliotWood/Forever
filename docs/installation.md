@@ -17,7 +17,7 @@ echo 'export GOPATH=$HOME/go' >> $HOME/.bashrc
 echo 'export PATH=$PATH:$GOPATH/bin' >> $HOME/.bashrc
 source $HOME/.bashrc
 
-cd tbc
+cd forever
 
 # Install protobuf compiler and Go plugins
 sudo apt update && sudo apt upgrade
@@ -38,30 +38,30 @@ npm install
 Alternatively, install Docker and your workflow will look something like this:
 
 ```sh
-git clone https://github.com/wowsims/tbc-new.git
-cd tbc-new
+git clone https://github.com/wowsims/forever.git
+cd forever
 
 # Build the docker image and install npm dependencies (only need to run these once).
-docker build --tag wowsims-tbc .
-docker run --rm -v $(pwd):/tbc wowsims-tbc npm install
+docker build --tag wowsims-forever .
+docker run --rm -v $(pwd):/forever wowsims-forever npm install
 
-# Now you can run the commands as shown in the Commands sections, preceding everything with, "docker run --rm -it -p 8080:8080 -v $(pwd):/tbc wowsims-tbc".
+# Now you can run the commands as shown in the Commands sections, preceding everything with, "docker run --rm -it -p 8080:8080 -v $(pwd):/forever wowsims-forever".
 # For convenience, set these as aliases in your shell config (e.g. ~/.bashrc):
-alias TBC_CMD='docker run --rm -it -p 8080:8080 -v $(pwd):/tbc wowsims-tbc'
-alias TBC_WATCH_CMD='docker run --rm -it -p 8080:8080 -p 3333:3333 -p 5173:5173 -e WATCH=1 -v $(pwd):/tbc wowsims-tbc'
+alias FOREVER_CMD='docker run --rm -it -p 8080:8080 -v $(pwd):/forever wowsims-forever'
+alias FOREVER_WATCH_CMD='docker run --rm -it -p 8080:8080 -p 3333:3333 -p 5173:5173 -e WATCH=1 -v $(pwd):/forever wowsims-forever'
 
 # Generate protobuf files (required before first build)
-TBC_CMD make proto
+FOREVER_CMD make proto
 
 # ... do some coding on the sim ...
 
 # Run tests
-TBC_CMD make test
+FOREVER_CMD make test
 
 # ... do some coding on the UI ...
 
 # Host a local site
-TBC_CMD make host
+FOREVER_CMD make host
 ```
 
 ## Windows

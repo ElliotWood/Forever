@@ -7,7 +7,7 @@ import (
 )
 
 // Crusader Strike
-// https://www.wowhead.com/tbc/spell=35395
+// https://www.wowhead.com/forever/spell=35395
 //
 // An instant strike that causes 110% weapon damage and refreshes all Judgements on the target.
 func (paladin *Paladin) registerCrusaderStrike() {

@@ -18,7 +18,7 @@ export const PRERAID_PRESET = PresetUtils.makePresetGear('Pre-raid', PreraidGear
 export const DEFAULT_EP_PRESET = PresetUtils.makePresetEpWeightsFromJSON(DefaultEpJson);
 
 // Talent builds from wowhead's TBC guide. Uses the wowhead calculator format, make the talents on
-// https://www.wowhead.com/tbc/talent-calc and copy the numbers in the url.
+// https://www.wowhead.com/forever/talent-calc and copy the numbers in the url.
 export const CircleOfHealingTalents = PresetUtils.makePresetTalentsFromJSON(CircleOfHealingTalentsJson);
 
 export const DefaultOptions = HealerPriestOptions.create({

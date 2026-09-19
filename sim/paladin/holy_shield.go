@@ -18,7 +18,7 @@ func (paladin *Paladin) getHolyShieldTimer() *core.Timer {
 var HolyShieldRankMap = spellData.HolyShield
 
 // Holy Shield (Talent)
-// https://www.wowhead.com/tbc/spell=20925
+// https://www.wowhead.com/forever/spell=20925
 //
 // Increases chance to block by 30% for 10 sec, and deals Holy damage
 // for each attack blocked while active. Damage caused by Holy Shield causes

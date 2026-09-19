@@ -51,7 +51,7 @@ jobs:
 
             - name: Build 🔧
               run: |
-                  make dist/tbc/.dirstamp
+                  make dist/forever/.dirstamp
 
             - name: Update proto version file
               run: |
@@ -78,7 +78,7 @@ jobs:
               with:
                   repository-name: wowsims/pages-deploy
                   branch: main
-                  folder: dist/tbc
-                  target-folder: tbc
+                  folder: dist/forever
+                  target-folder: forever
                   single-commit: true
                   token: ${{ secrets.DEPLOY_REPO_TOKEN }}

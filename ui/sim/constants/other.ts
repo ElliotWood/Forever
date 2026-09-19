@@ -22,9 +22,9 @@ export enum LaunchStatus {
 
 export const CURRENT_API_VERSION: number = readMessageOption(ProtoVersion, 'proto.current_version_number')! as number;
 
-// Github pages serves our site under the /tbc directory (the repo itself is tbc-new)
-export const REPO_NAME = 'tbc';
-export const REPO_URL = `https://github.com/wowsims/${REPO_NAME}-new`;
+// Github pages serves our site under the /forever directory
+export const REPO_NAME = 'forever';
+export const REPO_URL = `https://github.com/wowsims/${REPO_NAME}`;
 export const REPO_RELEASES_URL = `${REPO_URL}/releases`;
 export const REPO_NEW_ISSUE_URL = `${REPO_URL}/issues/new`;
 export const REPO_CHOOSE_NEW_ISSUE_URL = `${REPO_NEW_ISSUE_URL}/choose`;
@@ -54,7 +54,7 @@ export function getSpecSitePath(classString: string, specString: string): string
 	return `/${REPO_NAME}/${classString}/${specString}/`;
 }
 
-export const LOCAL_STORAGE_PREFIX = '__tbc_new';
+export const LOCAL_STORAGE_PREFIX = '__forever';
 
 export enum SortDirection {
 	ASC,

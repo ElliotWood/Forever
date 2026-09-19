@@ -907,7 +907,7 @@ const petNameToActionId: Record<string, ActionId> = {
 	'Fire Spirit': ActionId.fromSpellId(138123),
 };
 
-// https://wowhead.com/tbc/hunter-pets
+// https://wowhead.com/forever/hunter-pets
 const petNameToIcon: Record<string, string> = {
 	Bat: 'https://wow.zamimg.com/images/wow/icons/medium/ability_hunter_pet_bat.jpg',
 	Bear: 'https://wow.zamimg.com/images/wow/icons/medium/ability_hunter_pet_bear.jpg',

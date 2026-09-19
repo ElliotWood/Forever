@@ -16,7 +16,7 @@ func (paladin *Paladin) registerHealingSpells() {
 var HolyLightRankMap = spellData.HolyLight
 
 // Holy Light
-// https://www.wowhead.com/tbc/spell=27136
+// https://www.wowhead.com/forever/spell=27136
 //
 // Heals a friendly target for a large amount.
 func (paladin *Paladin) registerHolyLight(rankConfig shared.SpellData) {
@@ -59,7 +59,7 @@ func (paladin *Paladin) registerHolyLight(rankConfig shared.SpellData) {
 var FlashOfLightRankMap = spellData.FlashOfLight
 
 // Flash of Light
-// https://www.wowhead.com/tbc/spell=27137
+// https://www.wowhead.com/forever/spell=27137
 //
 // Heals a friendly target for a small amount.
 func (paladin *Paladin) registerFlashOfLight(rankConfig shared.SpellData) {
@@ -102,7 +102,7 @@ func (paladin *Paladin) registerFlashOfLight(rankConfig shared.SpellData) {
 var LayOnHandsRankMap = spellData.LayOnHands
 
 // Lay on Hands
-// https://www.wowhead.com/tbc/spell=27154
+// https://www.wowhead.com/forever/spell=27154
 //
 // Heals a friendly target for an amount equal to the Paladin's maximum health
 // and restores mana to the target. Causes Forbearance for 1 min.

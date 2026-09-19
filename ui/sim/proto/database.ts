@@ -24,10 +24,10 @@ import { getEligibleEnchantSlots, getEligibleItemSlots } from './items';
 import { Stats } from './stats';
 import { WOWHEAD_DOMAIN, WOWHEAD_EXPANSION_ENV } from './wowhead';
 
-const dbUrlJson = '/tbc/assets/database/db.json';
-const dbUrlBin = '/tbc/assets/database/db.bin';
-const leftoversUrlJson = '/tbc/assets/database/leftover_db.json';
-const leftoversUrlBin = '/tbc/assets/database/leftover_db.bin';
+const dbUrlJson = '/forever/assets/database/db.json';
+const dbUrlBin = '/forever/assets/database/db.bin';
+const leftoversUrlJson = '/forever/assets/database/leftover_db.json';
+const leftoversUrlBin = '/forever/assets/database/leftover_db.bin';
 // When changing this value, don't forget to change the html <link> for preloading!
 const READ_JSON = true;
 const RANK_REGEX = /Rank ([0-9]+)/g;

@@ -1,7 +1,7 @@
 package paladin
 
 // Divine Favor
-// https://www.wowhead.com/tbc/spell=20216
+// https://www.wowhead.com/forever/spell=20216
 //
 // When activated, gives your next Flash of Light, Holy Light, or Holy Shock
 // spell a 100% critical strike chance.

@@ -16,7 +16,7 @@ func (paladin *Paladin) getHolyWrathTimer() *core.Timer {
 var HolyWrathRankMap = spellData.HolyWrath
 
 // Holy Wrath
-// https://www.wowhead.com/tbc/spell=2812/holy-wrath
+// https://www.wowhead.com/forever/spell=2812/holy-wrath
 //
 // Sends bolts of holy power in all directions, causing Holy damage
 // to all Undead and Demon targets within 20 yds.

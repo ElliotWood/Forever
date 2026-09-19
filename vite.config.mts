@@ -17,7 +17,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const BASE_PATH = path.resolve(__dirname, 'ui');
-export const OUT_DIR = path.join(__dirname, 'dist', 'tbc');
+export const OUT_DIR = path.join(__dirname, 'dist', 'forever');
 
 // The ui/ path aliases. Mirrored by `compilerOptions.paths` in tsconfig.json and by the
 // layering rules in .oxlintrc.json; shared with vite.harness.mts from here so the two vite
@@ -34,12 +34,12 @@ export const UI_ALIASES: Record<string, string> = {
 };
 
 function serveExternalAssets() {
-	const simWorker = process.env.WASM_WORKER ? '/tbc/sim_worker.js' : '/tbc/local_worker.js';
+	const simWorker = process.env.WASM_WORKER ? '/forever/sim_worker.js' : '/forever/local_worker.js';
 	const workerMappings = {
-		'/tbc/sim_worker.js': simWorker,
-		'/tbc/net_worker.js': '/tbc/net_worker.js',
-		'/tbc/lib.wasm.gz': '/tbc/lib.wasm.gz',
-		'/tbc/highs.wasm': '/tbc/highs.wasm',
+		'/forever/sim_worker.js': simWorker,
+		'/forever/net_worker.js': '/forever/net_worker.js',
+		'/forever/lib.wasm.gz': '/forever/lib.wasm.gz',
+		'/forever/highs.wasm': '/forever/highs.wasm',
 	};
 
 	return {
@@ -51,16 +51,16 @@ function serveExternalAssets() {
 
 				if (Object.keys(workerMappings).includes(pathname)) {
 					const targetPath = workerMappings[pathname as keyof typeof workerMappings];
-					const assetsPath = path.resolve(__dirname, './dist/tbc');
-					const requestedPath = path.join(assetsPath, targetPath.replace('/tbc/', ''));
+					const assetsPath = path.resolve(__dirname, './dist/forever');
+					const requestedPath = path.join(assetsPath, targetPath.replace('/forever/', ''));
 
 					serveFile(res, requestedPath);
 					return;
 				}
 
-				if (pathname.includes('/tbc/assets')) {
+				if (pathname.includes('/forever/assets')) {
 					const assetsPath = path.resolve(__dirname, './assets');
-					const assetRelativePath = pathname.split('/tbc/assets')[1];
+					const assetRelativePath = pathname.split('/forever/assets')[1];
 					const requestedPath = path.join(assetsPath, assetRelativePath);
 
 					serveFile(res, requestedPath);
@@ -114,7 +114,7 @@ function determineContentType(filePath: string) {
 
 export const getBaseConfig = ({ command, mode }: ConfigEnv) =>
 	({
-		base: '/tbc/',
+		base: '/forever/',
 		root: BASE_PATH,
 		resolve: {
 			alias: { ...UI_ALIASES },

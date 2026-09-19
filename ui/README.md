@@ -40,7 +40,7 @@ ui/
                      the top level rather than under app/. alias @i18n
   specs/<class>/<spec>/   spec data, presets. alias @specs. No html on disk: the one page at
                      ui/index_template.html is served (dev) and emitted (build) at every
-                     /tbc/<class>/<spec>/ by tools/vite/spec_pages.mts
+                     /forever/<class>/<spec>/ by tools/vite/spec_pages.mts
   styles/            the one CSS entry (style.css), theme/ (tokens + the 17 spec themes, split by
                      type: colors.css, spacing.css, breakpoints.css, typography.css, effects.css,
                      z-index.css, vars.css, specs.css, imported via index.css),
@@ -208,7 +208,7 @@ The `getEPDefaults` / `updateSoftCaps` callbacks receive `(…, player, ctx)` wh
 
 `ui/app/spec_entry.tsx` is the single page entry for every spec, referenced from
 `ui/index_template.html`. It derives the module key from `location.pathname`
-(`/tbc/<class>/<spec>/` → `../specs/<class>/<spec>/spec`), loads it from a lazy
+(`/forever/<class>/<spec>/` → `../specs/<class>/<spec>/spec`), loads it from a lazy
 `import.meta.glob('../specs/*/*/spec.{ts,tsx}')` — `.tsx` only for a spec module that carries real
 JSX, which today is **none of TBC's 17**. (Of the two pre-port `.tsx` spec files, mage/dps's carried
 no JSX at all and warlock/dps's only JSX was `appendChild(<p>)` / `(<></>) as HTMLElement`
@@ -250,7 +250,7 @@ All 17 specs are converted: there is no `sim.ts`, no per-spec `index.ts` and no
 The page itself is not one of the steps: there is no per-spec `index.html`, in the source tree or
 anywhere else. `ui/index_template.html` is the _one_ spec page, and `tools/vite/spec_pages.mts`
 (the `spec-pages` vite plugin) puts it at all 17 URLs — `configureServer` answers
-`/tbc/<class>/<spec>/` and `.../index.html` with it through `transformIndexHtml` in dev, and a
+`/forever/<class>/<spec>/` and `.../index.html` with it through `transformIndexHtml` in dev, and a
 `post` `generateBundle` takes the page vite already processed, drops its own output path from the
 bundle, and re-emits it as `<class>/<spec>/index.html` for every spec. Both halves discover the
 spec list from `ui/specs/*/*/spec.ts(x)` (`discoverSpecPages`) — the same glob `PAGE_INDECES` used
@@ -260,7 +260,7 @@ the spec module up from the URL. A new spec's page therefore appears with no bui
 Copying one page 17× is only sound because the page is constant: `ui/index_template.html` carries
 no `@@CLASS@@`/`@@SPEC@@` placeholders and every asset reference is root-absolute
 (`/styles/style.css`, `/app/spec_entry.tsx`, `/i18n/localization.ts`), so vite rewrites them all to
-`/tbc/...` and nothing in the built page depends on where it is served from. It is also the reason
+`/forever/...` and nothing in the built page depends on where it is served from. It is also the reason
 the 17 pages share one entry chunk (`bundle/spec_entry-<hash>.entry.js`, from the `spec_entry` key
 in `rollupOptions.input`) instead of the 17 near-identical ones the old per-page inputs produced.
 `ui/i18n/localization.ts`'s `extractClassAndSpecFromDataAttributes`
@@ -289,5 +289,5 @@ the importer and the target end up in different top-level `ui/` directories and 
 specifier otherwise.
 
 Then run the gates: `npm run type-check`, `npm run lint:js` (`npm run lint:js:fix` sorts the imports
-the move disturbed), `npm run fmt`, `npm run test:unit`, and `make dist/tbc/.dirstamp`, which is what
+the move disturbed), `npm run fmt`, `npm run test:unit`, and `make dist/forever/.dirstamp`, which is what
 CI builds — see `.github/skills/wowsims-ui/references/verification.md`.

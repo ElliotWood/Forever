@@ -36,9 +36,9 @@ func TestProtoVersioning(t *testing.T) {
 	// remote master, or to the commit named by PROTO_BASELINE_REF. The deploy workflow sets that to the master tip
 	// before the push it is testing: on master itself, master is the change under test and diffing against it finds
 	// nothing, which would fail every legitimate version bump.
-	against := "https://github.com/wowsims/tbc-new.git#branch=master,subdir=proto"
+	against := "https://github.com/wowsims/forever.git#branch=master,subdir=proto"
 	if baseline := os.Getenv("PROTO_BASELINE_REF"); baseline != "" {
-		against = "https://github.com/wowsims/tbc-new.git#ref=" + baseline + ",subdir=proto"
+		against = "https://github.com/wowsims/forever.git#ref=" + baseline + ",subdir=proto"
 	}
 	cmd := exec.Command("npx", "buf", "breaking", "--against", against)
 	cmd.Dir = "../../"

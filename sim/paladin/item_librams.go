@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	// https://www.wowhead.com/tbc/item=27484/libram-of-avengement
+	// https://www.wowhead.com/forever/item=27484/libram-of-avengement
 	// Your Judgement spells grant +53 melee and spell crit rating for 5s.
 	core.NewItemEffect(27484, func(agent core.Agent) {
 		paladin := agent.(PaladinAgent).GetPaladin()
@@ -35,7 +35,7 @@ func init() {
 		paladin.ItemSwap.RegisterProc(27484, aura)
 	})
 
-	// https://www.wowhead.com/tbc/item=22401/libram-of-hope
+	// https://www.wowhead.com/forever/item=22401/libram-of-hope
 	// Reduces the base mana cost of your Seal spells by 20.
 	core.NewItemEffect(22401, func(agent core.Agent) {
 		paladin := agent.(PaladinAgent).GetPaladin()
@@ -53,14 +53,14 @@ func init() {
 	})
 
 	LibramMap{
-		// https://www.wowhead.com/tbc/item=23203/libram-of-fervor
+		// https://www.wowhead.com/forever/item=23203/libram-of-fervor
 		// Increases the melee attack power bonus of your Seal of the Crusader by 48 and the Holy damage increase of your Judgement of the Crusader by 33.
 		{ItemID: 23203, AuraID: 28852, StatValue: 48, Label: "Libram of Fervor"},
 
 		// Increases the melee attack power bonus of your Seal of the Crusader by 68 and the Holy damage increase of your Judgement of the Crusader by 47.
-		// https://www.wowhead.com/tbc/item=27949/libram-of-zeal
+		// https://www.wowhead.com/forever/item=27949/libram-of-zeal
 		{ItemID: 27949, AuraID: 33557, StatValue: 68, Label: "Libram of Zeal"},
-		// https://www.wowhead.com/tbc/item=27983/libram-of-zeal
+		// https://www.wowhead.com/forever/item=27983/libram-of-zeal
 		{ItemID: 27983, AuraID: 33557, StatValue: 68, Label: "Libram of Zeal"},
 	}.RegisterAll(func(config LibramConfig) {
 		core.NewItemEffect(config.ItemID, func(agent core.Agent) {
@@ -95,7 +95,7 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/tbc/item=27917/libram-of-the-eternal-rest
+	// https://www.wowhead.com/forever/item=27917/libram-of-the-eternal-rest
 	// Increases the damage of your Consecration spell by up to 47.
 	core.NewItemEffect(27917, func(agent core.Agent) {
 		paladin := agent.(PaladinAgent).GetPaladin()
@@ -116,7 +116,7 @@ func init() {
 		paladin.ItemSwap.RegisterProc(27917, aura)
 	})
 
-	// https://www.wowhead.com/tbc/item=28065/libram-of-wracking
+	// https://www.wowhead.com/forever/item=28065/libram-of-wracking
 	// Increases the damage done by your Exorcism and Holy Wrath spells by up to 120.
 	core.NewItemEffect(28065, func(agent core.Agent) {
 		paladin := agent.(PaladinAgent).GetPaladin()
@@ -133,7 +133,7 @@ func init() {
 		paladin.ItemSwap.RegisterProc(28065, aura)
 	})
 
-	// https://www.wowhead.com/tbc/item=29388/libram-of-repentance
+	// https://www.wowhead.com/forever/item=29388/libram-of-repentance
 	// Increases your block rating by 42 while Holy Shield is active.
 	core.NewItemEffect(29388, func(agent core.Agent) {
 		paladin := agent.(PaladinAgent).GetPaladin()
@@ -164,7 +164,7 @@ func init() {
 		})
 	})
 
-	// https://www.wowhead.com/tbc/item=31033/libram-of-righteous-power
+	// https://www.wowhead.com/forever/item=31033/libram-of-righteous-power
 	// Increases the damage dealt by Crusader Strike by 36.
 	core.NewItemEffect(31033, func(agent core.Agent) {
 		paladin := agent.(PaladinAgent).GetPaladin()
@@ -181,7 +181,7 @@ func init() {
 		paladin.ItemSwap.RegisterProc(31033, aura)
 	})
 
-	// https://www.wowhead.com/tbc/item=33503/libram-of-divine-judgement
+	// https://www.wowhead.com/forever/item=33503/libram-of-divine-judgement
 	// Your Judgement of Command ability has a chance to grant 200 attack power for 10s.
 	core.NewItemEffect(33503, func(agent core.Agent) {
 		paladin := agent.(PaladinAgent).GetPaladin()
@@ -209,7 +209,7 @@ func init() {
 		paladin.ItemSwap.RegisterProc(33503, aura)
 	})
 
-	// https://www.wowhead.com/tbc/item=33504/libram-of-divine-purpose
+	// https://www.wowhead.com/forever/item=33504/libram-of-divine-purpose
 	// Increases the damage done by your Seal of Righteousness and Judgement of Righteousness abilities by up to 94.
 	core.NewItemEffect(33504, func(agent core.Agent) {
 		paladin := agent.(PaladinAgent).GetPaladin()
@@ -228,23 +228,23 @@ func init() {
 
 	LibramMap{
 		// Judgement grants resilience for 6s.
-		// https://www.wowhead.com/tbc/item=33936/gladiators-libram-of-fortitude
+		// https://www.wowhead.com/forever/item=33936/gladiators-libram-of-fortitude
 		{ItemID: 33936, AuraID: 43839, TriggerID: 43850, StatValue: 26, Label: "Gladiator's Libram of Fortitude", SpellMask: SpellMaskJudgement},
-		// https://www.wowhead.com/tbc/item=33937/merciless-gladiators-libram-of-fortitude
+		// https://www.wowhead.com/forever/item=33937/merciless-gladiators-libram-of-fortitude
 		{ItemID: 33937, AuraID: 43848, TriggerID: 43851, StatValue: 31, Label: "Merciless Gladiator's Libram of Fortitude", SpellMask: SpellMaskJudgement},
-		// https://www.wowhead.com/tbc/item=33938/vengeful-gladiators-libram-of-fortitude
+		// https://www.wowhead.com/forever/item=33938/vengeful-gladiators-libram-of-fortitude
 		{ItemID: 33938, AuraID: 43849, TriggerID: 43852, StatValue: 34, Label: "Vengeful Gladiator's Libram of Fortitude", SpellMask: SpellMaskJudgement},
-		// https://www.wowhead.com/tbc/item=35039/brutal-gladiators-libram-of-fortitude
+		// https://www.wowhead.com/forever/item=35039/brutal-gladiators-libram-of-fortitude
 		{ItemID: 35039, AuraID: 46089, TriggerID: 46091, StatValue: 39, Label: "Brutal Gladiator's Libram of Fortitude", SpellMask: SpellMaskJudgement},
 
 		// Holy Shield grants resilience for 6s.
-		// https://www.wowhead.com/tbc/item=33948/gladiators-libram-of-vengeance
+		// https://www.wowhead.com/forever/item=33948/gladiators-libram-of-vengeance
 		{ItemID: 33948, AuraID: 43839, TriggerID: 43854, StatValue: 26, Label: "Gladiator's Libram of Vengeance", SpellMask: SpellMaskHolyShield},
-		// https://www.wowhead.com/tbc/item=33949/merciless-gladiators-libram-of-vengeance
+		// https://www.wowhead.com/forever/item=33949/merciless-gladiators-libram-of-vengeance
 		{ItemID: 33949, AuraID: 43848, TriggerID: 43855, StatValue: 31, Label: "Merciless Gladiator's Libram of Vengeance", SpellMask: SpellMaskHolyShield},
-		// https://www.wowhead.com/tbc/item=33950/vengeful-gladiators-libram-of-vengeance
+		// https://www.wowhead.com/forever/item=33950/vengeful-gladiators-libram-of-vengeance
 		{ItemID: 33950, AuraID: 43849, TriggerID: 43856, StatValue: 34, Label: "Vengeful Gladiator's Libram of Vengeance", SpellMask: SpellMaskHolyShield},
-		// https://www.wowhead.com/tbc/item=35041/brutal-gladiators-libram-of-vengeance
+		// https://www.wowhead.com/forever/item=35041/brutal-gladiators-libram-of-vengeance
 		{ItemID: 35041, AuraID: 46089, TriggerID: 46095, StatValue: 39, Label: "Brutal Gladiator's Libram of Vengeance", SpellMask: SpellMaskHolyShield},
 	}.RegisterAll(func(config LibramConfig) {
 		core.NewItemEffect(config.ItemID, func(agent core.Agent) {

@@ -132,7 +132,7 @@ func (at *AttackTable) GetArmorDamageModifier(spell *Spell) float64 {
 	// Assume target > 80
 	armorConstant := float64(at.Attacker.Level)*467.5 - 22167.5
 	defenderArmor := at.Defender.Armor() - (at.Defender.Armor() * ignoreArmorFactor)
-	// TBC ANNI: Apply flat ArP
+	// TODO: Forever possibly has different rules as there is Armor Piercing Flat and % values
 	defenderArmor = max(defenderArmor-at.Attacker.stats[stats.ArmorPenetration], 0)
 	// Damage reduction from armor is capped at 75%.
 	return max(1-defenderArmor/(defenderArmor+armorConstant), 0.25)

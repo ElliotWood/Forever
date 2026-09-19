@@ -5,8 +5,8 @@ node_modules
 # Build artifacts — must be regenerated inside the image, never copied from host
 dist
 binary_dist
-wowsimtbc
-wowsimtbc-*
+wowsimforever
+wowsimforever-*
 *.so
 *.dll
 *.wasm

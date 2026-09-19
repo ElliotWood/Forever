@@ -61,7 +61,7 @@ export const P3_EP_PRESET = PresetUtils.makePresetEpWeights(
 );
 
 // Default talents. Uses the wowhead calculator format, make the talents on
-// https://www.wowhead.com/tbc/talent-calc/priest and copy the numbers in the url.
+// https://www.wowhead.com/forever/talent-calc/priest and copy the numbers in the url.
 export const StandardTalents = {
 	name: 'Shadow',
 	data: SavedTalents.create({

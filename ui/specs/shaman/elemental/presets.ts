@@ -61,7 +61,7 @@ export const EP_PRESET_DEFAULT = PresetUtils.makePresetEpWeights(
 	),
 );
 
-// https://wowhead.com/tbc/talent-calc and copy the numbers in the url.
+// https://wowhead.com/forever/talent-calc and copy the numbers in the url.
 export const StandardTalents = {
 	name: 'Default',
 	data: SavedTalents.create({
