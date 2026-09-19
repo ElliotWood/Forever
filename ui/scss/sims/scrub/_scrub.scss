@@ -1,122 +1,265 @@
-.scrub-container {
-	max-width: 56rem;
-	padding-top: var(--spacer-4);
-	padding-bottom: var(--spacer-5);
-	color: var(--bs-gray-300);
+// The global .container is display:flex, so anything using it has to say which way it
+// runs. Without this the two file cards became flex items in a row and pushed the page
+// 190px wider than a phone screen.
+#scrub-page {
+	.container {
+		flex-direction: column;
+	}
 
-	h1 {
+	.scrub-header {
+		border-bottom: $border-default;
+		background: var(--bs-black-alpha-30);
+	}
+
+	.scrub-header-container {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--gap-width);
+		padding-top: calc(var(--container-padding) / 2);
+		padding-bottom: calc(var(--container-padding) / 2);
+	}
+
+	.scrub-home-link {
+		display: block;
+
+		.forever-logo {
+			width: 12rem;
+			max-width: 100%;
+		}
+	}
+
+	// min-width:0 so a long word cannot push the flex item past the viewport.
+	.scrub-title-block {
+		flex: 1 1 20rem;
+		min-width: 0;
+	}
+
+	.scrub-title {
+		margin: 0;
+		font-size: 1.75rem;
 		color: var(--bs-white);
 	}
 
-	h2 {
-		margin: 0 0 var(--spacer-2);
+	.scrub-subtitle {
+		margin: var(--spacer-2) 0 0;
+		max-width: 46rem;
+		color: var(--bs-gray-400);
+	}
+
+	.scrub-content {
+		gap: var(--spacer-4);
+		padding-top: var(--container-padding);
+		padding-bottom: var(--container-padding);
+		color: var(--bs-gray-300);
+	}
+
+	// Two cards on a wide screen, stacked on a narrow one. minmax(0, 1fr) rather than 1fr,
+	// because a plain 1fr track refuses to shrink below its content and that is exactly how
+	// a long file path escapes the grid.
+	.scrub-files {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+		gap: var(--spacer-3);
+	}
+
+	.scrub-file,
+	.scrub-drop-section {
+		min-width: 0;
+		padding: var(--spacer-3) var(--spacer-4);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: var(--bs-border-radius);
+		background: rgba(0, 0, 0, 0.2);
+
+		p {
+			margin: 0 0 var(--spacer-2);
+		}
+	}
+
+	.scrub-file-title {
+		margin: 0;
 		font-size: 1.15rem;
 		color: var(--bs-white);
+
+		code {
+			color: inherit;
+			font-size: inherit;
+		}
 	}
 
-	p {
-		margin: 0 0 var(--spacer-2);
+	.scrub-file-sub {
+		margin-top: var(--spacer-1) !important;
+		color: var(--bs-brand);
+		font-size: 0.95rem;
 	}
 
-	code {
-		word-break: break-all;
+	// File paths are long, unbreakable and the most likely thing to blow out a phone
+	// layout, so they get their own block and are allowed to break anywhere.
+	.scrub-path code {
+		display: block;
+		padding: var(--spacer-1) var(--spacer-2);
+		border-radius: var(--bs-border-radius);
+		background: rgba(0, 0, 0, 0.35);
+		overflow-wrap: anywhere;
+		font-size: 0.85rem;
 	}
-}
 
-.scrub-lede {
-	font-size: 1.1rem;
-	color: var(--bs-gray-200);
-}
+	.scrub-file-note {
+		font-size: 0.9rem;
+		color: var(--bs-gray-400);
+	}
 
-// One card per file, so the two asks read as two choices rather than one wall.
-.scrub-file {
-	margin-top: var(--spacer-4);
-	padding: var(--spacer-3) var(--spacer-4);
-	border: 1px solid rgba(255, 255, 255, 0.14);
-	border-radius: var(--bs-border-radius);
-	background: rgba(0, 0, 0, 0.2);
-}
+	.scrub-warn {
+		padding-left: var(--spacer-3);
+		border-left: 3px solid var(--bs-brand);
+		color: var(--bs-gray-200);
+	}
 
-.scrub-warn {
-	color: var(--bs-gray-200);
-	border-left: 3px solid var(--bs-brand);
-	padding-left: var(--spacer-3);
-}
+	.scrub-message {
+		margin-top: var(--spacer-3);
+	}
 
-.scrub-button {
-	display: inline-block;
-	margin-top: var(--spacer-2);
-	padding: 0.55rem 1.3rem;
-	border-radius: var(--bs-border-radius);
-	background: var(--bs-brand);
-	color: #1a1205;
-	font-weight: 600;
-	text-decoration: none;
-
-	&:hover,
-	&:focus-visible {
+	.scrub-button {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: var(--spacer-2);
+		margin-top: var(--spacer-2);
+		padding: 0.6rem 1.4rem;
+		border-radius: var(--bs-border-radius);
+		background: var(--bs-brand);
 		color: #1a1205;
-		filter: brightness(1.08);
+		font-weight: 600;
+		text-decoration: none;
+		box-shadow: 0 2px 10px rgba(224, 163, 53, 0.25);
+		transition:
+			transform 0.12s ease,
+			filter 0.12s ease;
+
+		&:hover,
+		&:focus-visible {
+			color: #1a1205;
+			filter: brightness(1.08);
+			transform: translateY(-1px);
+		}
+
+		&:active {
+			transform: translateY(0);
+		}
 	}
-}
 
-.scrub-button-quiet {
-	background: transparent;
-	border: 1px solid var(--bs-brand);
-	color: var(--bs-white);
-
-	&:hover,
-	&:focus-visible {
+	.scrub-button-quiet {
+		background: transparent;
+		border: 1px solid var(--bs-brand);
 		color: var(--bs-white);
-		background: rgba(224, 163, 53, 0.15);
-	}
-}
+		box-shadow: none;
 
-.scrub-drop {
-	display: block;
-	margin-top: var(--spacer-3);
-	padding: var(--spacer-4);
-	border: 2px dashed rgba(224, 163, 53, 0.55);
-	border-radius: var(--bs-border-radius);
-	text-align: center;
-	color: var(--bs-gray-200);
-	cursor: pointer;
-
-	input {
-		display: none;
+		&:hover,
+		&:focus-visible {
+			color: var(--bs-white);
+			background: rgba(224, 163, 53, 0.15);
+		}
 	}
 
-	&:hover {
+	.scrub-drop {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--spacer-1);
+		margin-top: var(--spacer-3);
+		padding: var(--spacer-4) var(--spacer-3);
+		border: 2px dashed rgba(224, 163, 53, 0.55);
+		border-radius: var(--bs-border-radius);
+		text-align: center;
+		color: var(--bs-gray-200);
+		cursor: pointer;
+
+		input {
+			display: none;
+		}
+
+		i {
+			font-size: 1.5rem;
+			color: var(--bs-brand);
+		}
+
+		&:hover {
+			border-color: var(--bs-brand);
+			background: rgba(224, 163, 53, 0.06);
+		}
+	}
+
+	.scrub-drop-title {
+		font-weight: 600;
+		color: var(--bs-white);
+	}
+
+	.scrub-drop-hint {
+		font-size: 0.85rem;
+		color: var(--bs-gray-400);
+	}
+
+	.scrub-drop-over {
 		border-color: var(--bs-brand);
+		background: rgba(224, 163, 53, 0.12);
 	}
-}
 
-.scrub-drop-over {
-	border-color: var(--bs-brand);
-	background: rgba(224, 163, 53, 0.1);
-}
+	.scrub-report {
+		margin-top: var(--spacer-3);
+	}
 
-.scrub-summary {
-	margin: 0 0 var(--spacer-3);
-	padding: 0;
-	list-style: none;
+	.scrub-report-head {
+		font-size: 1.05rem;
+		color: var(--bs-gray-200);
+	}
 
-	li {
+	.scrub-report-note {
+		font-size: 0.9rem;
+		color: var(--bs-gray-400);
+	}
+
+	.scrub-actions {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--spacer-3);
+		gap: var(--spacer-2);
+	}
+
+	.scrub-summary {
+		margin: 0 0 var(--spacer-3);
+		padding: 0;
+		list-style: none;
+	}
+
+	// A row rather than a table: the label takes its own line on a phone and the figures
+	// sit under it, instead of a table forcing a sideways scroll.
+	.scrub-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacer-1) var(--spacer-3);
 		padding: var(--spacer-1) 0;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		font-variant-numeric: tabular-nums;
 	}
-}
 
-.scrub-actor {
-	min-width: 12rem;
-	color: var(--bs-white);
-}
+	.scrub-row-label {
+		flex: 1 1 100%;
+		min-width: 0;
+		overflow-wrap: anywhere;
+		color: var(--bs-white);
+	}
 
-.scrub-actions {
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--spacer-2);
+	.scrub-row-cell {
+		color: var(--bs-gray-400);
+		font-size: 0.9rem;
+	}
+
+	@include media-breakpoint-up(md) {
+		.scrub-row-label {
+			flex: 0 0 14rem;
+		}
+
+		.scrub-row-cell {
+			flex: 1 1 auto;
+		}
+	}
 }
