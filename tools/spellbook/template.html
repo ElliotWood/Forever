@@ -1,0 +1,1598 @@
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  color-scheme:dark light;
+  --bg:#0e1216; --surface:#161b21; --surface-2:#1c222a; --ink:#e7edf3; --ink-2:#c0cad4;
+  --muted:#8b98a4; --line:#2b333c; --line-soft:#222a32;
+  --rage:__ACCENT_D__; --rage-ink:__ACCENT_D2__; --rage-soft:__ACCENT_SOFT_D__;
+  __TREES_D__
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -18px rgba(0,0,0,.8);
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#e7eaed; --surface:#f8f9fb; --surface-2:#eef1f4; --ink:#12171b; --ink-2:#39424b;
+  --muted:#5f6b76; --line:#ccd4db; --line-soft:#dde3e9;
+  --rage:__ACCENT_L__; --rage-ink:__ACCENT_L__; --rage-soft:__ACCENT_SOFT_L__;
+  __TREES_L__
+  --shadow:0 1px 2px rgba(18,23,27,.08),0 8px 24px -16px rgba(18,23,27,.35);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:0 64px}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:.01em;margin:0;text-wrap:balance}
+a{color:var(--rage-ink)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--rage);outline-offset:2px;border-radius:3px}
+
+/* ---- masthead ---- */
+header.top{border-bottom:1px solid var(--line);background:var(--surface)}
+.top-in{max-width:1120px;margin:0 auto;padding-inline:16px;padding-block:22px 18px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px}
+h1{font-size:clamp(30px,6vw,46px);line-height:.95;text-transform:uppercase;letter-spacing:.005em}
+h1 .thin{font-weight:500;color:var(--muted);display:block;font-size:.42em;letter-spacing:.16em;
+  text-transform:uppercase;margin-bottom:6px}
+.stamp{font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.7;margin-left:auto;text-align:right}
+.stamp b{color:var(--ink-2);font-weight:600}
+
+/* ---- summary strip ---- */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:1px;
+  background:var(--line-soft);border:1px solid var(--line);margin-block:20px;border-radius:2px;overflow:hidden}
+.tile{background:var(--surface);padding:12px 14px}
+.tile .n{font-family:var(--display);font-size:30px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.tile .k{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-top:5px;font-weight:600}
+
+/* ---- tabs ---- */
+.tabs{display:flex;gap:2px;border-bottom:2px solid var(--line);margin-block:26px 0}
+.tabs button{background:none;border:0;padding:9px 16px 10px;cursor:pointer;font-family:var(--display);
+  font-size:17px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+  border-bottom:2px solid transparent;margin-bottom:-2px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--rage)}
+.tabs button:hover{color:var(--ink)}
+
+/* ---- controls ---- */
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding-block:16px 14px;
+  border-bottom:1px solid var(--line-soft)}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-right:2px}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:4px 9px;cursor:pointer;
+  font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.chip:hover{border-color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.chip .cnt{font-family:var(--mono);font-size:10.5px;opacity:.65}
+input[type="search"]{background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:6px 10px;min-width:180px;flex:1 1 180px;max-width:280px;color:var(--ink);font-size:13px}
+input[type="search"]::placeholder{color:var(--muted)}
+
+/* ---- chart ---- */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:2px;margin-block:20px;padding:16px 16px 12px}
+.panel h2{font-size:15px;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.panel .sub{color:var(--muted);font-size:12px;margin-top:3px}
+.chart-scroll{overflow-x:auto;margin-top:14px}
+.chart-scroll svg{display:block;min-width:560px;width:100%;height:auto}
+
+/* ---- ability list ---- */
+.list{margin-top:6px;border-top:1px solid var(--line-soft)}
+.fam{border-bottom:1px solid var(--line-soft)}
+.fam-head{display:grid;grid-template-columns:4px 34px minmax(0,1fr) auto 24px;gap:0 12px;align-items:center;
+  width:100%;background:none;border:0;padding:11px 8px 11px 0;cursor:pointer;text-align:left}
+.icon{width:34px;height:34px;border-radius:3px;border:1px solid var(--line);display:block;flex:none;
+  background:var(--surface-2);object-fit:cover}
+.icon.sm{width:24px;height:24px;border-radius:2px}
+.icon-btn{padding:0;border:0;background:none;cursor:zoom-in;line-height:0;border-radius:3px}
+.fam-head:hover{background:var(--surface-2)}
+.rail{align-self:stretch;border-radius:2px;background:var(--tree)}
+.fam-main{min-width:0}
+.fam-name{font-family:var(--display);font-size:19px;font-weight:600;line-height:1.15}
+.fam-sub{font-size:11.5px;color:var(--muted);margin-top:2px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.tree-tag{color:var(--tree);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:10px}
+.stats{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;padding-right:6px}
+.stat{font-family:var(--mono);font-size:11px;padding:2px 6px;border:1px solid var(--line);border-radius:2px;
+  background:var(--surface-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.stat.rage{color:var(--rage-ink);border-color:var(--rage-soft);background:var(--rage-soft)}
+.stat.chan{border-style:dashed}
+.stat.school{color:var(--rage-ink);border-color:var(--rage-soft)}
+.stat.race{color:var(--tree);border-color:var(--tree);background:transparent}
+.stat.sp{color:var(--rage-ink);border-color:var(--rage-soft);background:var(--rage-soft);cursor:help}
+.sp-note{margin-top:7px;font-size:12px;color:var(--ink)}
+.sp-note small{display:block;margin-top:2px;color:var(--muted);font-size:11px}
+.caret{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+  flex:none;color:var(--muted);border-radius:3px;transition:transform .16s ease,color .16s ease,background .16s ease}
+.caret svg{width:13px;height:13px;display:block}
+.fam-head:hover .caret{color:var(--rage-ink);background:var(--surface-2)}
+.fam-head:focus-visible .caret{color:var(--rage-ink)}
+.fam-head[aria-expanded="true"] .caret{transform:rotate(90deg);color:var(--rage-ink)}
+@media (prefers-reduced-motion:reduce){.caret{transition:none}}
+
+.ranks{padding:2px 8px 16px 18px}
+.rank{display:grid;grid-template-columns:24px 46px 58px minmax(0,1fr);gap:0 12px;padding:8px 0;
+  border-top:1px dashed var(--line-soft);align-items:baseline}
+.rank .icon{align-self:start;margin-top:2px}
+.fam.flash{animation:flash 1.4s ease-out}
+@keyframes flash{0%,40%{background:var(--rage-soft)}100%{background:transparent}}
+.rank .lv{font-family:var(--display);font-size:15px;font-weight:600;color:var(--tree);font-variant-numeric:tabular-nums}
+.rank .lv small{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.rank .sid{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.rank .body{min-width:0}
+.rank .desc{color:var(--ink-2);font-size:12.5px;max-width:68ch}
+.rank .row2{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.eff{margin-top:8px;overflow-x:auto}
+table.eff-t{border-collapse:collapse;font-family:var(--mono);font-size:10.5px;white-space:nowrap}
+table.eff-t th{text-align:left;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;
+  padding:2px 12px 3px 0;border-bottom:1px solid var(--line-soft);font-size:9.5px}
+table.eff-t td{padding:3px 12px 3px 0;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.tip table.eff-t{font-size:10px}
+.tip table.eff-t td.at-rank{color:var(--rage-ink);font-weight:600;background:var(--rage-soft);border-radius:2px}
+.tip table.eff-t th,.tip table.eff-t td{padding-right:9px}
+.empty{padding:34px 4px;color:var(--muted);text-align:center;font-size:13px}
+.tip .eff-t{margin-top:2px}
+.tip-note{font-size:10.5px;color:var(--muted);margin-top:6px;font-style:italic}
+
+/* ---- tooltip ---- */
+.tip{position:fixed;z-index:60;max-width:392px;background:var(--surface);border:1px solid var(--line);
+  border-radius:3px;box-shadow:var(--shadow);padding:11px 12px 12px;font-size:12px;line-height:1.45;
+  color:var(--ink-2)}
+.tip[hidden]{display:none}
+.tip-head{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;
+  padding-bottom:8px;border-bottom:1px solid var(--line-soft);margin-bottom:8px}
+.tip-name{font-family:var(--display);font-size:17px;font-weight:600;line-height:1.1;color:var(--ink)}
+.tip-meta{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px}
+.tip-desc{color:var(--ink-2)}
+.tip-links{margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft);display:grid;gap:4px}
+.tip-row{display:grid;grid-template-columns:62px minmax(0,1fr);gap:8px;align-items:baseline;font-size:11px}
+.tip-k{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tip-v{display:flex;flex-wrap:wrap;gap:4px}
+.xlink{font-family:var(--mono);font-size:10.5px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:2px;padding:1px 5px;cursor:pointer;color:var(--rage-ink)}
+.xlink:hover{border-color:var(--rage-ink)}
+.xlink.dead{color:var(--muted);cursor:default;border-style:dashed}
+.xlink.dead:hover{border-color:var(--line)}
+
+/* ---- talents ---- */
+.trees{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:18px;margin-top:20px}
+.tree{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:14px 14px 18px;
+  border-top:3px solid var(--tree)}
+.tree h3{font-size:19px;text-transform:uppercase;letter-spacing:.06em;color:var(--tree)}
+.tree .pts{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:14px}
+.grid{position:relative;display:grid;grid-template-columns:22px repeat(4,minmax(0,46px));
+  gap:16px 14px;justify-content:start;align-items:start}
+.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.gate{grid-column:1;font-family:var(--mono);font-size:10px;color:var(--muted);display:flex;
+  align-items:center;justify-content:flex-end;padding-right:6px;height:46px}
+.tal{position:relative;width:46px;height:46px;padding:0;border:2px solid var(--line);border-radius:4px;
+  background:var(--surface-2);cursor:pointer;line-height:0;display:block}
+.tal img{width:100%;height:100%;display:block;border-radius:2px}
+.tal:hover,.tal:focus-visible{border-color:var(--tree)}
+.tal.dep{border-color:var(--rage-ink)}
+.tal .badge{position:absolute;right:-5px;bottom:-6px;font-family:var(--mono);font-size:9.5px;
+  font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--line);
+  border-radius:2px;padding:0 3px;line-height:1.5}
+.tal.noicon{display:flex;align-items:center;justify-content:center}
+.tal.noicon::after{content:"?";font-family:var(--mono);font-size:15px;color:var(--muted);line-height:1}
+.tree-key{font-size:11px;color:var(--muted);margin-top:18px;display:grid;gap:3px}
+.stray{margin-top:18px;padding-top:12px;border-top:1px dashed var(--line)}
+.stray-lab{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:8px}
+.stray-row{display:flex;gap:14px;flex-wrap:wrap}
+.tal.locked{opacity:.34;border-style:dashed}
+.tal.locked img{filter:grayscale(1)}
+.tal.spent{border-color:var(--tree)}
+.tal.maxed{border-color:var(--rage-ink);box-shadow:0 0 0 1px var(--rage-ink)}
+.tal.maxed .badge{color:var(--rage-ink);border-color:var(--rage-ink)}
+.tal.spent .badge{color:var(--tree);border-color:var(--tree)}
+.calc{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:12px 14px;margin-top:18px;
+  background:var(--surface);border:1px solid var(--line);border-radius:2px}
+.calc .big{font-family:var(--display);font-size:26px;font-weight:700;line-height:1;
+  font-variant-numeric:tabular-nums}
+.calc .lab{font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.calc .spread{font-family:var(--mono);font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.calc .hint{font-size:11px;color:var(--muted);margin-left:auto}
+.calc button{background:var(--surface-2);border:1px solid var(--line);border-radius:2px;padding:5px 10px;
+  font-size:12px;cursor:pointer}
+.calc button:hover{border-color:var(--rage-ink);color:var(--rage-ink)}
+.tree .reset{float:right;background:none;border:0;color:var(--muted);font-size:10.5px;cursor:pointer;
+  text-transform:uppercase;letter-spacing:.08em}
+.tree .reset:hover{color:var(--rage-ink)}
+.tree .pts b{color:var(--tree);font-weight:600}
+
+/* ---- notes ---- */
+.notes{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+.notes h2{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-2);margin-bottom:8px}
+.notes ul{margin:0;padding-left:18px;display:grid;gap:5px;max-width:78ch}
+.notes code{font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:620px){
+  /* The masthead stacks rather than pushing the stamp to a far right edge. */
+  .top-in{gap:12px}
+  .stamp{margin-left:0;text-align:left}
+  .tiles{grid-template-columns:repeat(auto-fit,minmax(104px,1fr))}
+  .tile .n{font-size:24px}
+
+  /* Ability row: icon, name and chevron stay on one line; the chips drop to a
+     second line spanning from the icon across, which is why the chevron is its
+     own grid child rather than part of the chip group. */
+  .fam-head{grid-template-columns:4px 34px minmax(0,1fr) 24px;gap:0 10px}
+  .fam-main{grid-column:3}
+  .caret{grid-column:4;grid-row:1;width:22px;height:22px}
+  .stats{grid-column:2 / -1;grid-row:2;justify-content:flex-start;padding:7px 0 0}
+
+  /* Rank row: level beside the icon, id beneath it, description across. */
+  .rank{grid-template-columns:24px 46px minmax(0,1fr);gap:0 10px}
+  .rank .sid{grid-column:2;grid-row:2}
+  .rank .body{grid-column:3;grid-row:1 / span 2}
+
+  .chart-scroll svg{min-width:460px}
+  .tip{max-width:calc(100vw - 24px)}
+  .trees{gap:14px}
+  .tree{padding:12px 10px 16px}
+  .grid{grid-template-columns:20px repeat(4,minmax(0,1fr));gap:14px 8px}
+  .tal{width:100%;max-width:46px;height:auto;aspect-ratio:1}
+  .eff-t{font-size:10px}
+}
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <h1><span class="thin">WoW Classic Forever &middot; build 1.60.1.69876</span>__CLASS__ Spellbook</h1>
+    <div class="stamp">
+      parsed from <b>wowsims-forever.db</b><br>
+      product <b>wow_classic_beta</b> &middot; enUS<br>
+      <span id="stamp-counts"></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tiles" id="tiles"></div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-book" aria-selected="true" aria-controls="p-book">Spellbook</button>
+    <button role="tab" id="tab-tal" aria-selected="false" aria-controls="p-tal">Talent trees</button>
+  </div>
+
+  <section id="p-book" role="tabpanel" aria-labelledby="tab-book">
+    <div class="controls">
+      <div class="grp"><span class="lbl">Line</span><span id="f-tree"></span></div>
+      <div class="grp"><span class="lbl">__FORM_LABEL__</span><span id="f-form"></span></div>
+      <div class="grp">
+        <label class="lbl" for="q">Find</label>
+        <input type="search" id="q" placeholder="name or spell id&hellip;" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Ranks learned per level</h2>
+      <div class="sub">__CHART_SUB__</div>
+      <div class="chart-scroll"><div id="chart"></div></div>
+    </div>
+
+    <div class="list" id="list"></div>
+  </section>
+
+  <section id="p-tal" role="tabpanel" aria-labelledby="tab-tal" hidden>
+    <div class="trees" id="trees"></div>
+  </section>
+
+  <div class="notes">
+    <h2>Where these numbers come from</h2>
+    <ul id="notes-list"></ul>
+  </div>
+</div>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function(){
+"use strict";
+var D = JSON.parse(document.getElementById("data").textContent);
+var byId = {};
+D.abilities.forEach(function(a){ byId[a.id] = a; });
+
+var CFG = D.cfg;
+var TREES = CFG.trees;
+var TREE_VAR = {};
+TREES.forEach(function(t,i){ TREE_VAR[t] = "--t" + i; });
+var FORMS = CFG.forms;
+var POWER = {"-2":"health","0":"mana","1":"rage","2":"focus","3":"energy","4":"happiness"};
+function cost(a){
+  var unit = POWER[String(a.powerType)] || ("power " + a.powerType);
+  // A percentage of base mana is stored instead of a flat cost on some abilities
+  // (Judgement 6%, Multi-Shot 13.9%), which carry ManaCost 0.
+  if (!a.power && a.powerPct) return a.powerPct + "% base " + unit;
+  if (!a.power) return null;
+  return a.power + " " + unit;
+}
+
+var state = { tree:"All", form:"All", q:"" };
+
+function el(tag, cls, txt){
+  var n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (txt != null) n.textContent = txt;
+  return n;
+}
+function ms(v){
+  if (!v) return null;
+  if (v < 0) return "until cancelled";
+  if (v >= 60000) return (v/60000) + " min";
+  return (v % 1000 === 0 ? v/1000 : (v/1000).toFixed(1)) + "s";
+}
+
+/* ---------- summary tiles ---------- */
+var famCount = D.families.length;
+var withCast = D.abilities.filter(function(a){ return a.castTime || a.castWeapon; }).length;
+var tiles = [
+  [D.meta.abilities, "spell records"],
+  [famCount, "abilities"],
+  [D.talents.length, "talents"],
+  [withCast, "with a cast time"],
+  [D.abilities.filter(function(a){ return a.cd > 0; }).length, "with a cooldown"]
+];
+var tilesEl = document.getElementById("tiles");
+tiles.forEach(function(t){
+  var d = el("div","tile");
+  d.appendChild(el("div","n", String(t[0])));
+  d.appendChild(el("div","k", t[1]));
+  tilesEl.appendChild(d);
+});
+document.getElementById("stamp-counts").textContent =
+  D.meta.abilities + " spells · " + famCount + " abilities · " + D.talents.length + " talents";
+
+/* ---------- filter chips ---------- */
+function chips(host, values, key, counts){
+  host.innerHTML = "";
+  values.forEach(function(v){
+    var b = el("button","chip");
+    b.type = "button";
+    b.setAttribute("aria-pressed", state[key] === v ? "true" : "false");
+    if (TREE_VAR[v]) {
+      var dot = el("span","dot");
+      dot.style.color = "var(" + TREE_VAR[v] + ")";
+      b.appendChild(dot);
+    }
+    b.appendChild(el("span",null,v));
+    if (counts && counts[v] != null) b.appendChild(el("span","cnt", String(counts[v])));
+    b.addEventListener("click", function(){
+      state[key] = v;
+      chips(host, values, key, counts);
+      render();
+    });
+    host.appendChild(b);
+  });
+}
+var treeCounts = {All: famCount};
+TREES.forEach(function(t){
+  treeCounts[t] = D.families.filter(function(f){ return f.tree === t; }).length;
+});
+var formCounts = {All: famCount};
+FORMS.forEach(function(s){
+  formCounts[s] = D.families.filter(function(f){
+    return f.ranks.some(function(id){ return byId[id].stances.indexOf(s) >= 0; });
+  }).length;
+});
+formCounts["No mask"] = D.families.filter(function(f){
+  return f.ranks.every(function(id){ return byId[id].stances.length === 0; });
+}).length;
+
+chips(document.getElementById("f-tree"), ["All"].concat(TREES), "tree", treeCounts);
+chips(document.getElementById("f-form"), ["All"].concat(FORMS).concat(["No mask"]), "form", formCounts);
+
+document.getElementById("q").addEventListener("input", function(e){
+  state.q = e.target.value.trim().toLowerCase();
+  render();
+});
+
+/* ---------- filtering ---------- */
+function matches(f){
+  if (state.tree !== "All" && f.tree !== state.tree) return false;
+  if (state.form !== "All") {
+    var ok = state.form === "No mask"
+      ? f.ranks.every(function(id){ return byId[id].stances.length === 0; })
+      : f.ranks.some(function(id){ return byId[id].stances.indexOf(state.form) >= 0; });
+    if (!ok) return false;
+  }
+  if (state.q) {
+    var hit = f.name.toLowerCase().indexOf(state.q) >= 0 ||
+      f.ranks.some(function(id){ return String(id).indexOf(state.q) === 0; });
+    if (!hit) return false;
+  }
+  return true;
+}
+
+/* ---------- chart ---------- */
+var CHART_TREES = CFG.chartTrees;
+function drawChart(){
+  // A page whose lines carry no levels (the racials) has nothing to chart.
+  if (!CHART_TREES.length) {
+    var panel = document.getElementById("chart");
+    if (panel && panel.parentNode && panel.parentNode.parentNode) {
+      panel.parentNode.parentNode.hidden = true;
+    }
+    return;
+  }
+  var levels = [], i;
+  for (i = 1; i <= 60; i++) {
+    var slot = {lv:i, total:0};
+    CHART_TREES.forEach(function(t){ slot[t] = 0; });
+    levels.push(slot);
+  }
+  D.abilities.forEach(function(a){
+    if (CHART_TREES.indexOf(a.tree) < 0) return;
+    var lv = a.spellLevel;
+    if (lv < 1 || lv > 60) return;
+    levels[lv-1][a.tree]++;
+    levels[lv-1].total++;
+  });
+  var max = 0;
+  levels.forEach(function(d){ if (d.total > max) max = d.total; });
+
+  var W = 900, H = 210, padL = 26, padR = 8, padT = 12, padB = 26;
+  var iw = W - padL - padR, ih = H - padT - padB;
+  var bw = iw / 60;
+  var s = ['<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Ranks learned per character level, stacked by talent line">'];
+
+  var ticks = [], t;
+  for (t = 0; t <= max; t += (max > 8 ? 4 : 2)) ticks.push(t);
+  if (ticks[ticks.length-1] !== max) ticks.push(max);
+  ticks.forEach(function(v){
+    var y = padT + ih - (v/max)*ih;
+    s.push('<line x1="'+padL+'" y1="'+y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+y.toFixed(1)+
+      '" stroke="var(--line-soft)" stroke-width="1"/>');
+    s.push('<text x="'+(padL-6)+'" y="'+(y+3.5).toFixed(1)+'" text-anchor="end" font-size="9" ' +
+      'font-family="var(--mono)" fill="var(--muted)">'+v+'</text>');
+  });
+
+  levels.forEach(function(d){
+    var x = padL + (d.lv-1)*bw, y = padT + ih;
+    CHART_TREES.forEach(function(tr){
+      if (!d[tr]) return;
+      var h = (d[tr]/max)*ih;
+      y -= h;
+      s.push('<rect x="'+(x+0.7).toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+(bw-1.4).toFixed(1)+
+        '" height="'+h.toFixed(1)+'" fill="var('+TREE_VAR[tr]+')" opacity="0.9"><title>__TITLE__</title></rect>');
+    });
+  });
+
+  [1,10,20,30,40,50,60].forEach(function(lv){
+    var x = padL + (lv-0.5)*bw;
+    s.push('<text x="'+x.toFixed(1)+'" y="'+(H-9)+'" text-anchor="middle" font-size="9.5" ' +
+      'font-family="var(--mono)" fill="var(--muted)">'+lv+'</text>');
+  });
+  s.push('<text x="'+padL+'" y="'+(H-9)+'" font-size="9" font-family="var(--mono)" fill="var(--muted)" ' +
+    'text-anchor="start" opacity="0"></text>');
+  s.push('</svg>');
+
+  var legend = '<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--muted)">' +
+    CHART_TREES.map(function(tr){
+      return '<span style="display:inline-flex;align-items:center;gap:5px">' +
+        '<span style="width:9px;height:9px;background:var('+TREE_VAR[tr]+');border-radius:1px"></span>' + tr + '</span>';
+    }).join("") + '<span style="margin-left:auto;font-family:var(--mono)">peak ' + max + ' ranks at one level</span></div>';
+
+  document.getElementById("chart").innerHTML = s.join("") + legend;
+}
+
+/* ---------- icons ---------- */
+var ICONS = D.icons || {};
+function iconEl(a, small){
+  var img = document.createElement("img");
+  img.className = "icon" + (small ? " sm" : "");
+  img.alt = "";
+  img.loading = "lazy";
+  img.src = ICONS[a.icon] || "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+  img.title = a.icon || "";
+  return img;
+}
+
+/* ---------- tooltip ---------- */
+var tip = el("div","tip");
+tip.hidden = true;
+document.body.appendChild(tip);
+var tipTimer = null, tipFor = null;
+
+function hideTip(){ tip.hidden = true; tipFor = null; }
+function queueHide(){ clearTimeout(tipTimer); tipTimer = setTimeout(hideTip, 180); }
+function keepTip(){ clearTimeout(tipTimer); }
+tip.addEventListener("mouseenter", keepTip);
+tip.addEventListener("mouseleave", queueHide);
+
+function xlink(id, label){
+  var known = !!byId[id];
+  var b = el("button","xlink" + (known ? "" : " dead"), label);
+  b.type = "button";
+  if (known) {
+    b.addEventListener("click", function(e){ e.stopPropagation(); jumpTo(id); });
+  } else {
+    b.disabled = true;
+    b.title = "Not in this class's ability set";
+  }
+  return b;
+}
+function linkRow(key, nodes){
+  var r = el("div","tip-row");
+  r.appendChild(el("div","tip-k", key));
+  var v = el("div","tip-v");
+  nodes.forEach(function(n){ v.appendChild(n); });
+  r.appendChild(v);
+  return r;
+}
+function nameOf(id){
+  return byId[id] ? byId[id].name : (D.extern && D.extern[id]) || "";
+}
+
+function buildTip(a){
+  tip.innerHTML = "";
+  var head = el("div","tip-head");
+  head.appendChild(iconEl(a));
+  var h = el("div");
+  h.appendChild(el("div","tip-name", a.name));
+  h.appendChild(el("div","tip-meta", "#" + a.id + (a.rank ? " \u00b7 " + a.rank : "") +
+    (a.spellLevel ? " \u00b7 level " + a.spellLevel : "") + " \u00b7 " + a.tree));
+  head.appendChild(h);
+  tip.appendChild(head);
+
+  var text = a.desc || a.auraDesc;
+  tip.appendChild(el("div","tip-desc", text || "No description in the client database."));
+
+  var links = el("div","tip-links");
+  var any = false;
+  if (a.triggers && a.triggers.length) {
+    any = true;
+    links.appendChild(linkRow("triggers", a.triggers.map(function(id){
+      var n = nameOf(id);
+      return xlink(id, "#" + id + (n ? " " + n : ""));
+    })));
+  }
+  if (a.talent) {
+    any = true;
+    var t = a.talent;
+    links.appendChild(linkRow("talent", [el("span","xlink dead",
+      t.name + " \u00b7 " + t.tab + " tier " + (t.tier + 1) + " \u00b7 rank " + t.rank + "/" + t.maxRank)]));
+  }
+  if (a.siblings && a.siblings.length) {
+    any = true;
+    links.appendChild(linkRow("ranks", a.siblings.map(function(id){
+      var o = byId[id];
+      return xlink(id, o && o.rank ? o.rank.replace("Rank ", "R") : "#" + id);
+    })));
+  }
+  if (a.supercedes && byId[a.supercedes]) {
+    any = true;
+    links.appendChild(linkRow("supercedes", [xlink(a.supercedes, "#" + a.supercedes + " " + nameOf(a.supercedes))]));
+  }
+  if (any) tip.appendChild(links);
+
+  // SchoolMask is a mask; a combined school has a name of its own in the client.
+  tip.appendChild(el("div","tip-note",
+    "School: " + a.school + " \u2014 SpellMisc.SchoolMask " + a.schoolMask +
+    ((a.schoolBits && a.schoolBits.length > 1) ? " (" + a.schoolBits.join(" + ") + ")" : "") + "."));
+  // Most spells carry no race restriction at all; the ones that do are named from
+  // SkillLineAbility.RaceMasks, which is a per-row mask rather than a spell field.
+  if (a.races && a.races.length) {
+    tip.appendChild(el("div","tip-note",
+      "Races: " + a.races.join(", ") + " \u2014 from SkillLineAbility.RaceMasks. " +
+      "Every other spell on this page is open to all of the class's races."));
+  }
+  if (a.attrFlags && a.attrFlags.length) {
+    // Same shape as the proc-mask table below: the bit, its name, what it does.
+    tip.appendChild(el("div","tip-note", "Spell attributes set, from SpellMisc.Attributes:"));
+    var aw = el("div","eff");
+    var at = el("table","eff-t");
+    at.innerHTML = "<thead><tr><th>bit</th><th>flag</th><th>meaning</th></tr></thead>";
+    var ab = document.createElement("tbody");
+    a.attrFlags.forEach(function(name){
+      var info = (D.attrNames && D.attrNames[name]) || null;
+      var tr = document.createElement("tr");
+      [ info ? info.bit : "\u2014", name, info ? info.note : "" ].forEach(function(v){
+        var td = document.createElement("td");
+        td.textContent = String(v);
+        tr.appendChild(td);
+      });
+      ab.appendChild(tr);
+    });
+    at.appendChild(ab);
+    aw.appendChild(at);
+    tip.appendChild(aw);
+  }
+  // Channel: the client keeps the length in SpellDuration and the tick in
+  // EffectAuraPeriod, never in SpellCastTimes, so spell it out.
+  if (isChannel(a)) {
+    var selfCh = (a.attrFlags || []).indexOf("IS_SELF_CHANNELLED") >= 0;
+    var chTick = tickPeriod(a);
+    var chBits = [];
+    if (a.duration) chBits.push("lasts " + ms(a.duration));
+    if (chTick) chBits.push("ticks every " + ms(chTick));
+    tip.appendChild(el("div","tip-note",
+      (selfCh ? "Self-channelled" : "Channelled") + " \u2014 " +
+      (chBits.length ? chBits.join(", ") + ". " : "") +
+      "SpellCastTimes holds 0 for a channel, so the cast time is not the duration. " +
+      "Attributes[1] " + (selfCh ? "0x40 IS_SELF_CHANNELLED" : "0x4 IS_CHANNELLED") + "."));
+  }
+  // Whether the ticks themselves can crit, for abilities that actually tick.
+  var perTick = tickPeriod(a);
+  if (perTick) {
+    var ticksCrit = (a.attrFlags || []).indexOf("PERIODIC_CAN_CRIT") >= 0;
+    tip.appendChild(el("div","tip-note", ticksCrit
+      ? "Ticks can crit \u2014 Attributes[8] 0x200 SPELL_ATTR8_PERIODIC_CAN_CRIT is set."
+      : "Ticks cannot crit \u2014 Attributes[8] 0x200 SPELL_ATTR8_PERIODIC_CAN_CRIT is not set."));
+  }
+  if (a.procMask) {
+    // Spell out which bits are set, so it is clear what can and cannot trigger it
+    // - a periodic tick only procs when bit 18 or 21 is present.
+    tip.appendChild(el("div","tip-note",
+      "Procs on " + (a.procChance ? a.procChance + "% of " : "") +
+      "the following, from SpellAuraOptions.ProcTypeMask " + a.procMask +
+      (a.procMask2 ? " / " + a.procMask2 : "") + ":"));
+    var pw = el("div","eff");
+    var pt = el("table","eff-t");
+    pt.innerHTML = "<thead><tr><th>bit</th><th>flag</th><th>meaning</th></tr></thead>";
+    var pb = document.createElement("tbody");
+    // >>> rather than >>: the client stores 0x80000000 and the column is signed.
+    function bitRows(mask, word){
+      for (var b = 0; b < 32; b++) {
+        if (!((mask >>> b) & 1)) continue;
+        var info = (D.procNames && D.procNames[String(b)]) || null;
+        var tr = document.createElement("tr");
+        [word ? b + " (w2)" : b,
+         info ? info.name : "bit " + b,
+         info ? (info.note || "") : "not named in the repo's PROC_FLAG enum"
+        ].forEach(function(v){
+          var td = document.createElement("td");
+          td.textContent = String(v);
+          tr.appendChild(td);
+        });
+        pb.appendChild(tr);
+      }
+    }
+    bitRows(a.procMask, 0);
+    if (a.procMask2) bitRows(a.procMask2, 1);
+    pt.appendChild(pb);
+    pw.appendChild(pt);
+    tip.appendChild(pw);
+    // Three separate periodic bits, and they differ by direction: 18 and 21 are
+    // your own ticks, 19 is a periodic ticking on you. Saying only "periodic"
+    // would misread bit 19, which is the one this build actually uses.
+    var per = [];
+    if ((a.procMask >>> 18) & 1) per.push("your damaging periodic ticks");
+    if ((a.procMask >>> 21) & 1) per.push("your healing periodic ticks");
+    if ((a.procMask >>> 19) & 1) per.push("a periodic ticking on you");
+    var limits = [];
+    if (a.procIcd) limits.push(ms(a.procIcd) + " internal cooldown");
+    if (a.procCharges) limits.push(a.procCharges + " charge" + (a.procCharges === 1 ? "" : "s"));
+    if (a.procStacks) limits.push("stacks to " + a.procStacks);
+    if (limits.length) {
+      tip.appendChild(el("div","tip-note", "Proc limits: " + limits.join(", ") + "."));
+    } else {
+      tip.appendChild(el("div","tip-note",
+        "No internal cooldown \u2014 ProcCategoryRecovery is 0, so nothing rate-limits it beyond the chance."));
+    }
+    if (!(a.attrFlags || []).includes("CAN_PROC_FROM_PROCS")) {
+      tip.appendChild(el("div","tip-note",
+        "Cannot proc from another proc \u2014 ATTR_EX_3_CAN_PROC_FROM_PROCS is not set."));
+    }
+    tip.appendChild(el("div","tip-note", per.length
+      ? "Periodic: " + per.join(", ") + " can trigger this."
+      : "No periodic bit is set (18, 19 or 21), so no periodic tick can trigger this."));
+  } else if (a.procMask !== undefined && a.weaponClass === 2) {
+    tip.appendChild(el("div","tip-note",
+      "No proc mask \u2014 SpellAuraOptions has no row, so this is a flat passive " +
+      "rather than something that triggers on an attack."));
+  }
+  // What the proc actually casts. The client stores no link from a listener to its
+  // effect spell, so these are resolved at extraction time; see racials_extract.py.
+  if (a.procSpells && a.procSpells.length) {
+    a.procSpells.forEach(function(sp){
+      // A property table rather than prose: the proc spell is a second spell with its
+      // own school, crit rules and effects, and those read better lined up.
+      tip.appendChild(el("div","tip-note", "Procs this spell:"));
+      var iw = el("div","eff");
+      var it = el("table","eff-t");
+      it.innerHTML = "<thead><tr><th>field</th><th>value</th></tr></thead>";
+      var ib = document.createElement("tbody");
+      var ticks = sp.effects.some(function(e){ return e.per; });
+      [ ["spell", "#" + sp.id + " " + sp.name],
+        ["school", sp.school + " \u2014 SpellMisc.SchoolMask " + sp.schoolMask +
+          ((sp.schoolBits && sp.schoolBits.length > 1) ? " (" + sp.schoolBits.join(" + ") + ")" : "")],
+        ["duration", sp.duration ? ms(sp.duration) : "\u2014"],
+        ["direct crit", sp.cantCrit ? "no \u2014 ATTR_EX_2_CANT_CRIT" : "yes"],
+        ["tick crit", !ticks ? "\u2014 (no periodic effect)"
+          : (sp.periodicCanCrit ? "yes \u2014 PERIODIC_CAN_CRIT" : "no \u2014 PERIODIC_CAN_CRIT is not set")]
+      ].forEach(function(row){
+        var tr = document.createElement("tr");
+        row.forEach(function(v){
+          var td = document.createElement("td");
+          td.textContent = String(v);
+          tr.appendChild(td);
+        });
+        ib.appendChild(tr);
+      });
+      it.appendChild(ib); iw.appendChild(it); tip.appendChild(iw);
+      tip.appendChild(el("div","tip-note", "Its effects:"));
+      var pw = el("div","eff");
+      var pt = el("table","eff-t");
+      pt.innerHTML = "<thead><tr><th>#</th><th>effect</th><th>aura</th><th>base</th>" +
+        "<th>sp coef</th><th>period</th></tr></thead>";
+      var pb = document.createElement("tbody");
+      sp.effects.forEach(function(e){
+        var tr = document.createElement("tr");
+        [ e.i,
+          D.effectNames[String(e.e)] || e.e,
+          e.aura ? (D.auraNames[String(e.aura)] || e.aura) : "\u2014",
+          e.bp !== 0 ? Math.round(e.bp * 100) / 100 : "\u2014",
+          e.coef ? e.coef : "\u2014",
+          e.per ? ms(e.per) : "\u2014"
+        ].forEach(function(v){
+          var td = document.createElement("td");
+          td.textContent = String(v);
+          tr.appendChild(td);
+        });
+        pb.appendChild(tr);
+      });
+      pt.appendChild(pb); pw.appendChild(pt); tip.appendChild(pw);
+    });
+  }
+  if (a.sharesWith && a.sharesWith.length) {
+    tip.appendChild(el("div","tip-note",
+      "Shares its " + ms(a.cdCat) + " cooldown with " + a.sharesWith.join(", ") + "."));
+  }
+
+  // Talent-granted abilities carry the same trait curve as the talent tree.
+  if (a.rankValues && Object.keys(a.rankValues).length) {
+    var lines = Object.keys(a.rankValues).sort().map(function(k){
+      return "effect " + k + ": " + a.rankValues[k].join(" / ");
+    });
+    tip.appendChild(el("div","tip-note",
+      "Scales with talent rank — " + lines.join(", ") + "."));
+  }
+}
+
+function showTip(a, anchor){
+  if (tipFor === a.id && !tip.hidden) { keepTip(); return; }
+  tipFor = a.id;
+  buildTip(a);
+  tip.hidden = false;
+  placeTip(anchor);
+  keepTip();
+}
+// A second tooltip flavour that is not keyed to an ability id, for explaining one
+// number in place. Shares the element, the timers and the placement of the main one.
+function placeTip(anchor){
+  var r = anchor.getBoundingClientRect();
+  var w = tip.offsetWidth, hgt = tip.offsetHeight;
+  var left = Math.min(Math.max(8, r.left), window.innerWidth - w - 8);
+  var top = r.bottom + 8;
+  if (top + hgt > window.innerHeight - 8) top = Math.max(8, r.top - hgt - 8);
+  tip.style.left = left + "px";
+  tip.style.top = top + "px";
+}
+function showNote(build, anchor){
+  tipFor = null;
+  while (tip.firstChild) tip.removeChild(tip.firstChild);
+  build(tip);
+  tip.hidden = false;
+  placeTip(anchor);
+  keepTip();
+}
+function bindNote(node, build){
+  node.tabIndex = 0;
+  node.addEventListener("mouseenter", function(e){ e.stopPropagation(); showNote(build, node); });
+  node.addEventListener("mouseover", function(e){ e.stopPropagation(); });
+  node.addEventListener("mouseleave", queueHide);
+  node.addEventListener("focus", function(e){ e.stopPropagation(); showNote(build, node); });
+  node.addEventListener("blur", queueHide);
+}
+function bindTip(node, a){
+  node.addEventListener("mouseenter", function(){ showTip(a, node); });
+  node.addEventListener("mouseleave", queueHide);
+  node.addEventListener("focus", function(){ showTip(a, node); });
+  node.addEventListener("blur", queueHide);
+}
+document.addEventListener("keydown", function(e){ if (e.key === "Escape") hideTip(); });
+
+/* ---------- ability rows ---------- */
+function statChip(txt, cls){ return el("span","stat" + (cls ? " " + cls : ""), txt); }
+
+// Spell power scaling. EffectBonusCoefficient only carries a real coefficient on a
+// damage or heal effect of a non-physical spell: every physical ability in this build
+// stores a flat 1.0 on unrelated effect types (Taunt, Charge, Overpower), which is a
+// placeholder, not scaling. 492 of the 2210 spell rows across these pages scale.
+function spScaling(a){
+  if (a.school === "Physical") return null;
+  var direct = 0, periodic = 0, per = 0;
+  (a.effects || []).forEach(function(e){
+    var co = e.coef || 0;
+    if (!co) return;
+    if (e.aura === 3 || e.aura === 8) { periodic += co; if (e.per) per = e.per; }
+    else if (e.e === 2 || e.e === 10) { direct += co; }
+  });
+  if (!direct && !periodic) return null;
+  var ticks = (per && a.duration > 0) ? Math.round(a.duration / per) : 0;
+  return { direct: direct, periodic: periodic, per: per, ticks: ticks,
+           overTime: periodic * (ticks || 1) };
+}
+function pct(x){ return (Math.round(x * 1000) / 10) + "%"; }
+function spChip(a){
+  var sp = spScaling(a);
+  if (!sp) return null;
+  var txt;
+  if (sp.direct && sp.overTime) txt = "SP " + pct(sp.direct) + " + " + pct(sp.overTime) + " over time";
+  else if (sp.direct) txt = "SP " + pct(sp.direct);
+  else txt = "SP " + pct(sp.overTime) + " over time";
+  var chip = statChip(txt, "sp");
+  bindNote(chip, spFormula(a, sp));
+  return chip;
+}
+// The formula, built from the row's own numbers. The two derivations - cast/3.5 for a
+// direct hit, duration/15 for a periodic - are only asserted when they actually
+// reproduce the stored coefficient: instants and AoEs carry hand-set values instead
+// (Arcane Explosion stores 0.143, not the 0.429 the rule would give).
+function spFormula(a, sp){
+  var near = function(x, y){ return Math.abs(x - y) < 0.005; };
+  return function(box){
+    box.appendChild(el("div","tip-head", "Spell power \u2014 " + a.name + (a.rank ? " " + a.rank : "")));
+    if (sp.direct) {
+      box.appendChild(el("div","tip-note",
+        "Direct hit: damage = base roll + " + sp.direct.toFixed(3) + " \u00d7 spell power."));
+      if (a.castTime && near(sp.direct, Math.min(a.castTime / 1000 / 3.5, 1))) {
+        box.appendChild(el("div","tip-note",
+          sp.direct.toFixed(3) + " is the vanilla cast-time rule: " + (a.castTime / 1000) +
+          "s \u00f7 3.5" + (a.castTime >= 3500 ? ", capped at 1.0" : "") + "."));
+      } else {
+        box.appendChild(el("div","tip-note",
+          "The cast-time rule does not reproduce this one, so the client stores a hand-set value \u2014 " +
+          "usual for instants and area spells."));
+      }
+    }
+    if (sp.overTime) {
+      box.appendChild(el("div","tip-note",
+        "Each tick: damage = base roll + " + sp.periodic.toFixed(3) + " \u00d7 spell power" +
+        (sp.per ? ", every " + ms(sp.per) : "") + "."));
+      if (sp.ticks) {
+        box.appendChild(el("div","tip-note",
+          "Over the full duration: " + sp.ticks + " ticks \u00d7 " + sp.periodic.toFixed(3) +
+          " = " + sp.overTime.toFixed(3) + " \u00d7 spell power."));
+      }
+      if (sp.ticks && !sp.direct && a.duration > 0 && near(sp.overTime, a.duration / 1000 / 15)) {
+        box.appendChild(el("div","tip-note",
+          sp.overTime.toFixed(3) + " is the vanilla duration rule: " + (a.duration / 1000) + "s \u00f7 15."));
+      } else if (sp.direct) {
+        box.appendChild(el("div","tip-note",
+          "A hybrid spell splits one budget between the direct hit and the periodic, so neither " +
+          "half matches its rule on its own."));
+      }
+    }
+    box.appendChild(el("div","tip-note",
+      "Source: SpellEffect.EffectBonusCoefficient, per effect. This build stores the raw " +
+      "coefficient at every rank \u2014 no downranking penalty is baked in, unlike the TBC data, " +
+      "where Shadow Bolt rank 1 reads 0.140 against 0.486 here."));
+  };
+}
+// A channel stores 0 in SpellCastTimes, so it would otherwise read as instant.
+// The channel's length is the aura duration and its ticks are EffectAuraPeriod.
+function isChannel(a){
+  var f = a.attrFlags || [];
+  return f.indexOf("IS_CHANNELLED") >= 0 || f.indexOf("IS_SELF_CHANNELLED") >= 0;
+}
+function tickPeriod(a){
+  var p = 0;
+  (a.effects || []).forEach(function(e){ if (e.per && (!p || e.per < p)) p = e.per; });
+  return p;
+}
+// A cast time of 0 is instant and not worth a chip; a negative one in the client
+// means the cast is the ranged weapon's swing.
+function castChip(a){
+  if (isChannel(a)) {
+    return statChip(a.duration ? ms(a.duration) + " channel" : "channelled", "chan");
+  }
+  if (a.castWeapon) return statChip("ranged weapon speed");
+  if (a.castTime) return statChip(ms(a.castTime) + " cast");
+  return null;
+}
+// The spell's own cooldown and the category cooldown it shares are different
+// mechanics, and most abilities here use the shared one.
+var WEAPON_SUB = {0:"1H Axe",1:"2H Axe",2:"Bow",3:"Gun",4:"1H Mace",5:"2H Mace",6:"Polearm",
+  7:"1H Sword",8:"2H Sword",10:"Staff",13:"Fist",15:"Dagger",16:"Thrown",18:"Crossbow",19:"Wand"};
+function weaponGate(a){
+  if (a.weaponClass !== 2 || !a.weaponSub) return null;
+  var names = [];
+  for (var b = 0; b < 20; b++) if (a.weaponSub >> b & 1) names.push(WEAPON_SUB[b] || ("bit " + b));
+  return names.length ? names.join(" / ") : null;
+}
+function cooldownChips(a){
+  var out = [];
+  if (a.cdOwn) out.push(statChip(ms(a.cdOwn) + " cooldown"));
+  if (a.cdCat && a.cdCat !== a.cdOwn) {
+    out.push(statChip(ms(a.cdCat) + (a.sharesWith && a.sharesWith.length ? " shared" : " cooldown")));
+  }
+  return out;
+}
+
+function rankBlock(a){
+  var r = el("div","rank");
+  r.style.setProperty("--tree","var(" + TREE_VAR[a.tree] + ")");
+  r.appendChild(iconEl(a, true));
+  bindTip(r, a);
+
+  var lv = el("div","lv", a.spellLevel ? String(a.spellLevel) : "—");
+  lv.appendChild(el("small", null, a.spellLevel ? "level" : "no lvl"));
+  r.appendChild(lv);
+  r.appendChild(el("div","sid", "#" + a.id));
+
+  var body = el("div","body");
+  if (a.rank) {
+    var rk = el("div", null, a.rank);
+    rk.style.cssText = "font-weight:600;font-size:12px;margin-bottom:2px";
+    body.appendChild(rk);
+  }
+
+  var row = el("div","row2");
+  var c = cost(a);
+  if (c) row.appendChild(statChip(c, "rage"));
+  if (a.classes && a.classes.length) row.appendChild(statChip(a.classes.join(", ") + " only"));
+  var g = weaponGate(a);
+  if (g) row.appendChild(statChip(g + " equipped"));
+  var cc = castChip(a);
+  if (cc) row.appendChild(cc);
+  cooldownChips(a).forEach(function(chip){ row.appendChild(chip); });
+  row.appendChild(statChip(a.gcd ? "GCD " + ms(a.gcd) : "off GCD"));
+  if (a.duration) row.appendChild(statChip("lasts " + ms(a.duration)));
+  if (a.range) row.appendChild(statChip(a.range + " yd"));
+  if (a.stances.length) row.appendChild(statChip(a.stances.join(" / ") + CFG.formWord));
+  row.appendChild(statChip(a.school, a.school === "Physical" ? null : "school"));
+  if (a.races && a.races.length) row.appendChild(statChip(a.races.join(" / "), "race"));
+  var spc = spChip(a);
+  if (spc) row.appendChild(spc);
+  body.appendChild(row);
+
+  // Spell power in words, because the raw per-effect numbers below are per tick.
+  var spInfo = spScaling(a);
+  if (spInfo) {
+    var bits = [];
+    if (spInfo.direct) bits.push(pct(spInfo.direct) + " of spell power on the direct hit");
+    if (spInfo.overTime) {
+      bits.push(pct(spInfo.periodic) + " per tick" +
+        (spInfo.ticks ? " \u00d7 " + spInfo.ticks + " ticks = " + pct(spInfo.overTime) : "") +
+        " over the duration");
+    }
+    var note = el("div","sp-note", "Spell power: " + bits.join(", ") + ".");
+    var fits = Math.abs(spInfo.overTime && !spInfo.direct
+      ? spInfo.overTime - (a.duration > 0 ? a.duration / 1000 / 15 : -1)
+      : spInfo.direct - Math.min((a.castTime || 0) / 1000 / 3.5, 1)) < 0.005;
+    note.appendChild(el("small", null, fits
+      ? (spInfo.overTime && !spInfo.direct
+          ? " Vanilla duration/15 rule; the column stores the per-tick share. Hover for the formula."
+          : " Vanilla cast-time/3.5 rule, with no downranking penalty baked in. Hover for the formula.")
+      : " The cast-time and duration rules do not reproduce this one, so the client stores a hand-set value. Hover for the formula."));
+    body.appendChild(note);
+  }
+
+  var eff = a.effects.filter(function(e){ return e.e; });
+  if (eff.length) {
+    var wrap = el("div","eff");
+    var tb = el("table","eff-t");
+    // No spell-power column for a physical ability: the client stores a flat 1.0 there
+    // on aura, summon and create-item effects, which is a default rather than scaling,
+    // and no player melee ability in this build carries a real coefficient. The AP column
+    // is dropped outright - BonusCoefficientFromAP is set on 3 rows in the whole database,
+    // none of them on these pages.
+    var physical = a.school === "Physical";
+    tb.innerHTML = "<thead><tr><th>#</th><th>effect</th><th>aura</th><th>base</th>" +
+      (physical ? "" : "<th>sp coef</th>") + "<th>period</th><th>targets</th></tr></thead>";
+    var tbody = document.createElement("tbody");
+    eff.forEach(function(e){
+      var tr = document.createElement("tr");
+      [ e.i,
+        D.effectNames[String(e.e)] || e.e,
+        e.aura ? (D.auraNames[String(e.aura)] || e.aura) : "—",
+        e.bp !== 0 ? Math.round(e.bp * 100) / 100 : "—"
+      ].concat(physical ? [] : [e.coef ? e.coef : "—"]).concat([
+        e.per ? ms(e.per) : "—",
+        e.ct ? e.ct : "—"
+      ]).forEach(function(v){
+        var td = document.createElement("td");
+        td.textContent = String(v);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    tb.appendChild(tbody);
+    wrap.appendChild(tb);
+    body.appendChild(wrap);
+  }
+  r.appendChild(body);
+  return r;
+}
+
+function famRow(f){
+  var top = byId[f.ranks[f.ranks.length - 1]];
+  var first = byId[f.ranks[0]];
+  var wrap = el("div","fam");
+  wrap.style.setProperty("--tree","var(" + TREE_VAR[f.tree] + ")");
+
+  var head = el("button","fam-head");
+  head.type = "button";
+  head.setAttribute("aria-expanded","false");
+  head.appendChild(el("div","rail"));
+  head.appendChild(iconEl(top));
+  bindTip(head, top);
+
+  var main = el("div","fam-main");
+  main.appendChild(el("div","fam-name", f.name));
+  var sub = el("div","fam-sub");
+  sub.appendChild(el("span","tree-tag", f.tree));
+  if (f.variants > 1) {
+    // Several ids share one name and repeat the same rank numbers; each ladder is
+    // listed on its own rather than concatenated into one long false chain.
+    sub.appendChild(el("span", null, "ladder " + f.variant + " of " + f.variants));
+  }
+  if (f.ranks.length > 1) {
+    sub.appendChild(el("span", null, f.ranks.length + " ranks"));
+    if (first.spellLevel) sub.appendChild(el("span", null, "level " + first.spellLevel + "–" + top.spellLevel));
+  } else if (first.spellLevel) {
+    sub.appendChild(el("span", null, "level " + first.spellLevel));
+  }
+  var st = f.ranks.reduce(function(acc, id){
+    byId[id].stances.forEach(function(s){ if (acc.indexOf(s) < 0) acc.push(s); });
+    return acc;
+  }, []);
+  sub.appendChild(el("span", null, st.length ? st.join(" / ") + CFG.formWord : "no" + CFG.formWord + " mask"));
+  main.appendChild(sub);
+  head.appendChild(main);
+
+  var stats = el("div","stats");
+  var tc = cost(top);
+  if (tc) stats.appendChild(statChip(tc, "rage"));
+  if (top.classes && top.classes.length) stats.appendChild(statChip(top.classes.join(", ") + " only"));
+  // A race gate is a peer of the class gate, so it sits next to it. Ranks of one
+  // ability agree on the mask here, but union them rather than trusting rank 1 -
+  // and if any rank is unrestricted the ability as a whole is not gated.
+  var fr = [], allGated = true;
+  f.ranks.forEach(function(id){
+    var rr = byId[id] && byId[id].races;
+    if (!rr || !rr.length) { allGated = false; return; }
+    rr.forEach(function(x){ if (fr.indexOf(x) < 0) fr.push(x); });
+  });
+  if (allGated && fr.length) stats.appendChild(statChip(fr.join(" / "), "race"));
+  var tg = weaponGate(top);
+  if (tg) stats.appendChild(statChip(tg + " equipped"));
+  var hc = castChip(top);
+  if (hc) stats.appendChild(hc);
+  cooldownChips(top).forEach(function(chip){ stats.appendChild(chip); });
+  if (!top.gcd) stats.appendChild(statChip("off GCD"));
+  // Label the duration: beside "6s shared" a bare "10s" reads like another cooldown.
+  if (top.duration) stats.appendChild(statChip("lasts " + ms(top.duration)));
+  var caret = el("span","caret");
+  caret.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">' +
+    '<path d="M6 3.5 L10.5 8 L6 12.5" fill="none" stroke="currentColor" stroke-width="2" ' +
+    'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  head.appendChild(stats);
+  head.appendChild(caret);
+
+  var body = el("div","ranks");
+  body.hidden = true;
+  var built = false;
+  function expand(open){
+    if (!built) {
+      f.ranks.forEach(function(id){ body.appendChild(rankBlock(byId[id])); });
+      built = true;
+    }
+    head.setAttribute("aria-expanded", open ? "true" : "false");
+    body.hidden = !open;
+  }
+  head.addEventListener("click", function(){
+    expand(head.getAttribute("aria-expanded") !== "true");
+  });
+
+  wrap.appendChild(head);
+  wrap.appendChild(body);
+  wrap.expand = expand;
+  famEls[f.root] = wrap;
+  return wrap;
+}
+
+/* ---------- jumping between cross-linked spells ---------- */
+var famOf = {};
+D.families.forEach(function(f){
+  f.ranks.forEach(function(id){ famOf[id] = f; });
+});
+var famEls = {};
+
+function jumpTo(id){
+  var f = famOf[id];
+  if (!f) return;
+  hideTip();
+  setTab(true);
+  // Drop any filter that would hide the target, then re-render and reveal it.
+  if (state.tree !== "All" || state.form !== "All" || state.q) {
+    state.tree = "All"; state.form = "All"; state.q = "";
+    document.getElementById("q").value = "";
+    chips(document.getElementById("f-tree"), ["All"].concat(TREES), "tree", treeCounts);
+    chips(document.getElementById("f-form"), ["All"].concat(FORMS).concat(["No mask"]), "form", formCounts);
+    render();
+  }
+  var wrap = famEls[f.root];
+  if (!wrap) return;
+  wrap.expand(true);
+  wrap.scrollIntoView({block:"center", behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth"});
+  wrap.classList.remove("flash");
+  void wrap.offsetWidth;
+  wrap.classList.add("flash");
+}
+
+var listEl = document.getElementById("list");
+function render(){
+  var shown = D.families.filter(matches);
+  shown.sort(function(a,b){
+    var ta = TREES.indexOf(a.tree), tb = TREES.indexOf(b.tree);
+    if (ta !== tb) return ta - tb;
+    var la = byId[a.ranks[0]].spellLevel || 99, lb = byId[b.ranks[0]].spellLevel || 99;
+    if (la !== lb) return la - lb;
+    return a.name.localeCompare(b.name);
+  });
+  listEl.innerHTML = "";
+  famEls = {};
+  if (!shown.length) {
+    listEl.appendChild(el("div","empty","Nothing matches those filters."));
+    return;
+  }
+  var frag = document.createDocumentFragment();
+  shown.forEach(function(f){ frag.appendChild(famRow(f)); });
+  listEl.appendChild(frag);
+}
+
+/* ---------- talents ---------- */
+/* ---------- talent tooltip ---------- */
+function effName(c){ return D.effectNames[String(c)] || ("EFFECT_" + c); }
+function auraName(c){ return c ? (D.auraNames[String(c)] || ("AURA_" + c)) : "—"; }
+function num(v){
+  if (v === null || v === undefined) return "—";
+  return Math.round(v * 100) / 100;
+}
+
+function buildTalentTip(t){
+  tip.innerHTML = "";
+  var head = el("div","tip-head");
+  var img = document.createElement("img");
+  img.className = "icon";
+  img.alt = "";
+  img.src = ICONS[t.icon] || "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+  head.appendChild(img);
+  var h = el("div");
+  h.appendChild(el("div","tip-name", t.name));
+  h.appendChild(el("div","tip-meta", t.tab + " · tier " + (t.tier + 1) + " · " +
+    (t.tier * 5) + " pts · rank " + (spent[t.id] || 0) + "/" + t.maxRank +
+    " · #" + (t.nameFrom || t.ranks[0])));
+  head.appendChild(h);
+  tip.appendChild(head);
+  // The description is re-resolved per rank from the trait curve, so show the one
+  // for the rank currently selected (rank 1 before any point is spent).
+  var cur = spent[t.id] || 0;
+  var shown = t.desc;
+  if (t.descByRank && t.descByRank.length) {
+    shown = t.descByRank[Math.max(0, cur - 1)] || t.descByRank[0] || t.desc;
+  }
+  tip.appendChild(el("div","tip-desc", shown || "No description in the client database."));
+  if (t.descByRank && t.descByRank.length > 1) {
+    tip.appendChild(el("div","tip-note", cur > 0
+      ? "Shown at rank " + cur + " of " + t.maxRank + "."
+      : "Shown at rank 1; spend a point to see the higher ranks."));
+  }
+
+  // Effect rows, one column per talent rank. Most talents in this build ship only
+  // their first rank as a real spell, so the later columns are usually empty.
+  if (t.effects && t.effects.length) {
+    var wrap = el("div","eff");
+    var tb = el("table","eff-t");
+    var hd = "<thead><tr><th>#</th><th>effect</th><th>aura</th>";
+    for (var i = 0; i < t.maxRank; i++) hd += "<th>r" + (i + 1) + "</th>";
+    hd += "<th>period</th></tr></thead>";
+    tb.innerHTML = hd;
+    var tbody = document.createElement("tbody");
+    t.effects.forEach(function(e){
+      var tr = document.createElement("tr");
+      var cells = [e.i, effName(e.e), auraName(e.aura)];
+      var rankFrom = cells.length;
+      for (var i = 0; i < t.maxRank; i++) cells.push(num(e.bps[i]));
+      cells.push(e.per ? ms(e.per) : "—");
+      cells.forEach(function(v, ci){
+        var td = document.createElement("td");
+        td.textContent = String(v);
+        if (cur > 0 && ci === rankFrom + cur - 1) td.className = "at-rank";
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    tb.appendChild(tbody);
+    wrap.appendChild(tb);
+    tip.appendChild(wrap);
+
+    var fromCurve = t.effects.some(function(e){ return e.src === "curve"; });
+    if (fromCurve) {
+      tip.appendChild(el("div","tip-note",
+        "Per-rank values come from the talent's trait curve " +
+        "(TraitDefinitionEffectPoints \u2192 CurvePoint), not from one spell per rank."));
+    } else if (t.maxRank > 1) {
+      var withRows = t.effects.reduce(function(n, e){
+        return Math.max(n, e.bps.filter(function(v){ return v !== null && v !== undefined; }).length);
+      }, 0);
+      if (withRows < t.maxRank) {
+        tip.appendChild(el("div","tip-note",
+          "This talent has no trait curve, and only rank " + withRows + " of " + t.maxRank +
+          " carries spell rows, so the later ranks are blank."));
+      }
+    }
+  }
+
+  var links = el("div","tip-links"), any = false;
+  var trig = [];
+  (t.effects || []).forEach(function(e){
+    if (e.trig && trig.indexOf(e.trig) < 0) trig.push(e.trig);
+  });
+  if (trig.length) {
+    any = true;
+    links.appendChild(linkRow("triggers", trig.map(function(id){
+      var n = nameOf(id);
+      return xlink(id, "#" + id + (n ? " " + n : ""));
+    })));
+  }
+  if (t.prereq && t.prereq.length) {
+    var names = t.prereq.map(function(pid){
+      var o = D.talents.filter(function(x){ return x.id === pid; })[0];
+      return el("span","xlink dead", o ? o.name : "talent " + pid);
+    });
+    if (names.length) { any = true; links.appendChild(linkRow("requires", names)); }
+  }
+  if (any) tip.appendChild(links);
+}
+
+function showTalentTip(t, anchor){
+  if (tipFor === "t" + t.id && !tip.hidden) { keepTip(); return; }
+  tipFor = "t" + t.id;
+  buildTalentTip(t);
+  tip.hidden = false;
+  var r = anchor.getBoundingClientRect();
+  var w = tip.offsetWidth, hgt = tip.offsetHeight;
+  var left = Math.min(Math.max(8, r.left), window.innerWidth - w - 8);
+  var top = r.bottom + 8;
+  if (top + hgt > window.innerHeight - 8) top = Math.max(8, r.top - hgt - 8);
+  tip.style.left = left + "px";
+  tip.style.top = top + "px";
+  keepTip();
+}
+
+/* ---------- talent calculator ----------
+   Vanilla rules: 51 points at level 60; a tier opens once 5 x tier points are
+   already spent in that tree; a prerequisite must be at the rank Talent.PrereqRank
+   names (always its max, in this build's data). */
+var TOTAL_POINTS = 51;
+var spent = {};          // talent id -> points
+var talentNodes = {};    // talent id -> tile element
+var talentRedraws = [];  // per-tree arrow redraws, run when the tab is shown
+var treeOf = {};         // tab name -> its talents
+
+CFG.talentTabs.forEach(function(tab){
+  treeOf[tab] = D.talents.filter(function(t){ return t.tab === tab; });
+});
+
+function pointsIn(tab){
+  return treeOf[tab].reduce(function(n,t){ return n + (spent[t.id] || 0); }, 0);
+}
+function pointsBelowTier(tab, tier){
+  return treeOf[tab].reduce(function(n,t){
+    return n + (t.tier < tier ? (spent[t.id] || 0) : 0);
+  }, 0);
+}
+function totalSpent(){
+  return CFG.talentTabs.reduce(function(n,tab){ return n + pointsIn(tab); }, 0);
+}
+function prereqMet(t){
+  return (t.prereq || []).every(function(pid, i){
+    var need = (t.prereqRank && t.prereqRank[i]) || 1;
+    return (spent[pid] || 0) >= need;
+  });
+}
+// A layout is legal when some spending order could have produced it: every tier
+// holding points must have 5 x tier points sitting in the tiers beneath it.
+function legal(){
+  return CFG.talentTabs.every(function(tab){
+    return treeOf[tab].every(function(t){
+      if (!spent[t.id]) return true;
+      if (spent[t.id] > t.maxRank) return false;
+      if (pointsBelowTier(tab, t.tier) < t.tier * 5) return false;
+      return prereqMet(t);
+    });
+  });
+}
+function canSpend(t){
+  if (totalSpent() >= TOTAL_POINTS) return false;
+  if ((spent[t.id] || 0) >= t.maxRank) return false;
+  if (pointsBelowTier(t.tab, t.tier) < t.tier * 5) return false;
+  return prereqMet(t);
+}
+function canRemove(t){
+  if (!spent[t.id]) return false;
+  spent[t.id]--;
+  var ok = legal();
+  spent[t.id]++;
+  return ok;
+}
+function spend(t, delta){
+  if (delta > 0 && !canSpend(t)) return;
+  if (delta < 0 && !canRemove(t)) return;
+  spent[t.id] = (spent[t.id] || 0) + delta;
+  if (!spent[t.id]) delete spent[t.id];
+  refreshCalc();
+  saveBuild();
+  if (tipFor === "t" + t.id && !tip.hidden) buildTalentTip(t);
+}
+
+function buildCode(){
+  return CFG.talentTabs.map(function(tab){
+    return treeOf[tab].map(function(t){ return spent[t.id] || 0; }).join("");
+  }).join("-");
+}
+function applyCode(code){
+  var parts = String(code || "").split("-");
+  spent = {};
+  CFG.talentTabs.forEach(function(tab, i){
+    var digits = parts[i] || "";
+    treeOf[tab].forEach(function(t, j){
+      var n = parseInt(digits.charAt(j), 10);
+      if (n > 0) spent[t.id] = Math.min(n, t.maxRank);
+    });
+  });
+  if (!legal()) spent = {};
+}
+var STORE_KEY = "talents:" + CFG.className;
+function saveBuild(){
+  var code = buildCode();
+  try { localStorage.setItem(STORE_KEY, code); } catch (e) {}
+  try {
+    var empty = !/[1-9]/.test(code);
+    history.replaceState(null, "", empty ? location.pathname + location.search : "#" + code);
+  } catch (e) {}
+}
+function loadBuild(){
+  var code = (location.hash || "").slice(1);
+  if (!code) { try { code = localStorage.getItem(STORE_KEY) || ""; } catch (e) {} }
+  if (code) applyCode(code);
+}
+
+var calcTotal, calcSpread;
+function refreshCalc(){
+  var used = totalSpent();
+  if (calcTotal) calcTotal.textContent = used + " / " + TOTAL_POINTS;
+  if (calcSpread) {
+    calcSpread.textContent = CFG.talentTabs.map(function(tab){ return pointsIn(tab); }).join(" / ") +
+      "   " + CFG.talentTabs.join(" / ");
+  }
+  CFG.talentTabs.forEach(function(tab){
+    var head = document.getElementById("pts-" + tab.replace(/\W/g,""));
+    if (head) head.innerHTML = treeOf[tab].length + " talents · <b>" + pointsIn(tab) + "</b> points spent";
+  });
+  D.talents.forEach(function(t){
+    var node = talentNodes[t.id];
+    if (!node) return;
+    var cur = spent[t.id] || 0;
+    node.classList.toggle("spent", cur > 0 && cur < t.maxRank);
+    node.classList.toggle("maxed", cur > 0 && cur >= t.maxRank);
+    node.classList.toggle("locked", cur === 0 && !canSpend(t));
+    var badge = node.querySelector(".badge");
+    if (badge) badge.textContent = cur + "/" + t.maxRank;
+    node.setAttribute("aria-label", t.name + ", rank " + cur + " of " + t.maxRank);
+  });
+}
+
+function drawTalents(){
+  var host = document.getElementById("trees");
+  // No talent data: drop the tab rather than showing an empty panel.
+  if (!D.talents.length) {
+    document.getElementById("tab-tal").hidden = true;
+    document.querySelector(".tabs").hidden = true;
+    return;
+  }
+
+  var bar = el("div","calc");
+  var tot = el("div");
+  calcTotal = el("div","big", "0 / " + TOTAL_POINTS);
+  tot.appendChild(calcTotal);
+  tot.appendChild(el("div","lab","points spent"));
+  bar.appendChild(tot);
+  var spr = el("div");
+  calcSpread = el("div","spread","");
+  spr.appendChild(calcSpread);
+  spr.appendChild(el("div","lab","distribution"));
+  bar.appendChild(spr);
+  var reset = el("button", null, "Reset all");
+  reset.type = "button";
+  reset.addEventListener("click", function(){ spent = {}; refreshCalc(); saveBuild(); });
+  bar.appendChild(reset);
+  bar.appendChild(el("div","hint","Click a talent to add a point, right-click or shift-click to remove. The build is kept in the page address."));
+  host.parentNode.insertBefore(bar, host);
+
+  CFG.talentTabs.forEach(function(tab){
+    var rows = treeOf[tab].filter(function(t){ return !t.offGrid; });
+    var stray = treeOf[tab].filter(function(t){ return t.offGrid; });
+    if (!rows.length && !stray.length) return;
+    var box = el("div","tree");
+    box.style.setProperty("--tree","var(" + (TREE_VAR[tab] || "--t0") + ")");
+    var rst = el("button","reset","reset");
+    rst.type = "button";
+    rst.addEventListener("click", function(){
+      rows.forEach(function(t){ delete spent[t.id]; });
+      refreshCalc();
+      saveBuild();
+    });
+    box.appendChild(rst);
+    box.appendChild(el("h3", null, tab));
+    var pts = el("div","pts");
+    pts.id = "pts-" + tab.replace(/\W/g,"");
+    box.appendChild(pts);
+
+    var grid = el("div","grid");
+    var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("class","links");
+    svg.setAttribute("aria-hidden","true");
+    grid.appendChild(svg);
+
+    var maxTier = rows.reduce(function(m,t){ return Math.max(m, t.tier); }, 0);
+    for (var tier = 0; tier <= maxTier; tier++) {
+      var gate = el("div","gate", String(tier * 5));
+      gate.style.gridRow = String(tier + 1);
+      grid.appendChild(gate);
+    }
+    var nodes = {};
+    function talentTile(t, nodeMap){
+      var c = el("button","tal" + (ICONS[t.icon] ? "" : " noicon"));
+      c.type = "button";
+      if (ICONS[t.icon]) {
+        var im = document.createElement("img");
+        im.alt = "";
+        im.loading = "lazy";
+        im.src = ICONS[t.icon];
+        c.appendChild(im);
+      }
+      c.appendChild(el("span","badge", "0/" + t.maxRank));
+      function show(){
+        showTalentTip(t, c);
+        (t.prereq || []).forEach(function(pid){ if (nodeMap[pid]) nodeMap[pid].classList.add("dep"); });
+      }
+      function clear(){
+        queueHide();
+        (t.prereq || []).forEach(function(pid){ if (nodeMap[pid]) nodeMap[pid].classList.remove("dep"); });
+      }
+      c.addEventListener("mouseenter", show);
+      c.addEventListener("mouseleave", clear);
+      c.addEventListener("focus", show);
+      c.addEventListener("blur", clear);
+      c.addEventListener("click", function(e){
+        e.preventDefault();
+        spend(t, (e.shiftKey || e.ctrlKey || e.metaKey) ? -1 : 1);
+        show();
+      });
+      c.addEventListener("contextmenu", function(e){
+        e.preventDefault();
+        spend(t, -1);
+        show();
+      });
+      c.addEventListener("keydown", function(e){
+        if (e.key === "Backspace" || e.key === "Delete" || e.key === "-") {
+          e.preventDefault();
+          spend(t, -1);
+        } else if (e.key === "+" || e.key === "=") {
+          e.preventDefault();
+          spend(t, 1);
+        }
+      });
+      nodeMap[t.id] = c;
+      talentNodes[t.id] = c;
+      return c;
+    }
+    rows.forEach(function(t){
+      var c = talentTile(t, nodes);
+      c.style.gridRow = String(t.tier + 1);
+      c.style.gridColumn = String(t.col + 2);
+      grid.appendChild(c);
+    });
+    box.appendChild(grid);
+
+    // Three talents across the nine classes carry nonsense grid coordinates in this
+    // build, so they get no invented position - they are listed under the tree.
+    if (stray.length) {
+      var strayWrap = el("div","stray");
+      strayWrap.appendChild(el("div","stray-lab","Not placed on the grid in this build"));
+      var strayRow = el("div","stray-row");
+      stray.forEach(function(t){ strayRow.appendChild(talentTile(t, {})); });
+      strayWrap.appendChild(strayRow);
+      box.appendChild(strayWrap);
+    }
+
+    var key = el("div","tree-key");
+    key.innerHTML = "<span>Left column: points that must already be spent in this tree before the tier opens.</span>" +
+      "<span>Arrows run from a prerequisite to the talent it unlocks.</span>";
+    box.appendChild(key);
+    host.appendChild(box);
+
+    function links(){
+      var gb = grid.getBoundingClientRect();
+      svg.setAttribute("viewBox","0 0 " + gb.width + " " + gb.height);
+      svg.setAttribute("width", gb.width);
+      svg.setAttribute("height", gb.height);
+      var id = "ah-" + tab.replace(/\W/g,"");
+      var parts = ['<defs><marker id="' + id + '" markerWidth="6" markerHeight="6" refX="5" refY="3" ' +
+        'orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--tree)"/></marker></defs>'];
+      var mk = "url(#" + id + ")";
+      rows.forEach(function(t){
+        (t.prereq || []).forEach(function(pid){
+          var from = nodes[pid], to = nodes[t.id];
+          if (!from || !to) return;
+          var a = from.getBoundingClientRect(), b = to.getBoundingClientRect();
+          var ax = a.left - gb.left, ay = a.top - gb.top;
+          var bx = b.left - gb.left, by = b.top - gb.top;
+          var d;
+          if (Math.abs(ay - by) < 2) {
+            var y = ay + a.height/2;
+            d = ax < bx ? "M" + (ax + a.width + 2) + "," + y + " L" + (bx - 4) + "," + y
+                        : "M" + (ax - 2) + "," + y + " L" + (bx + b.width + 4) + "," + y;
+          } else {
+            var sx = ax + a.width/2, sy = ay + a.height + 2;
+            var tx = bx + b.width/2, ty = by - 4;
+            d = Math.abs(sx - tx) < 2
+              ? "M" + sx + "," + sy + " L" + tx + "," + ty
+              : "M" + sx + "," + sy + " L" + sx + "," + ((sy + ty)/2) +
+                " L" + tx + "," + ((sy + ty)/2) + " L" + tx + "," + ty;
+          }
+          parts.push('<path d="' + d + '" fill="none" stroke="var(--tree)" stroke-width="1.5" ' +
+            'stroke-opacity="0.8" marker-end="' + mk + '"/>');
+        });
+      });
+      svg.innerHTML = parts.join("");
+    }
+    // The panel is hidden when the page builds, so the grid measures 0x0 and the
+    // first draw would place nothing. Redraw on resize, on observed size changes,
+    // and explicitly when the talent tab is opened.
+    talentRedraws.push(links);
+    links();
+    if (window.ResizeObserver) new ResizeObserver(links).observe(grid);
+    window.addEventListener("resize", links);
+  });
+
+  loadBuild();
+  refreshCalc();
+}
+
+/* ---------- notes ---------- */
+var NOTES = CFG.notes;
+var nl = document.getElementById("notes-list");
+NOTES.forEach(function(n){
+  var li = document.createElement("li");
+  li.innerHTML = n;
+  nl.appendChild(li);
+});
+
+/* ---------- tabs ---------- */
+var tabBook = document.getElementById("tab-book"), tabTal = document.getElementById("tab-tal");
+var pBook = document.getElementById("p-book"), pTal = document.getElementById("p-tal");
+function setTab(book){
+  tabBook.setAttribute("aria-selected", book ? "true" : "false");
+  tabTal.setAttribute("aria-selected", book ? "false" : "true");
+  pBook.hidden = !book;
+  pTal.hidden = book;
+  if (!book) {
+    // Draw straight away rather than waiting on requestAnimationFrame, which does
+    // not fire while the document is hidden.
+    talentRedraws.forEach(function(fn){ fn(); });
+  }
+}
+tabBook.addEventListener("click", function(){ setTab(true); });
+tabTal.addEventListener("click", function(){ setTab(false); });
+
+drawChart();
+drawTalents();
+render();
+})();
+</script>

@@ -1,0 +1,36 @@
+{
+	"Settings": {
+		"BaseDir": "/mnt/c/Program Files/World of Warcraft",
+		"Product": "wow_classic_era"
+	},
+	"TargetDirectory": "dbfilesclient",
+	"GameTablesOutDirectory": "../../assets/db_inputs/basestats-era",
+	"GameTables": [],
+	"Tables": [
+		"Spell",
+		"SpellName",
+		"SpellEffect",
+		"SpellMisc",
+		"SpellPower",
+		"SpellLevels",
+		"SpellCooldowns",
+		"SpellCastTimes",
+		"SpellDuration",
+		"SpellAuraOptions",
+		"SpellClassOptions",
+		"SpellCategories",
+		"SpellEquippedItems",
+		"SpellRange",
+		"SpellRadius",
+		"SpellTargetRestrictions",
+		"SpellCastingRequirements",
+		"SkillLine",
+		"SkillLineAbility",
+		"SpellShapeshift",
+		"SpellScaling",
+		"Talent",
+		"TalentTab",
+		"SpellDescriptionVariables",
+		"SpellXDescriptionVariables"
+	]
+}

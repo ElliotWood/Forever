@@ -50,3 +50,14 @@ tools/db2tool/listfile.csv
 tools/db2tool/DBDCache/
 tools/db2tool/dbfilesclient/
 tools/db2tool/caches/
+
+# Client-extracted databases and caches. Output of `make db` from a local WoW
+# install, tens of MB each, and rebuildable - the same reason wowsims.db is here.
+tools/database/*.db
+tools/db2tool/DBDCache.bak/
+tools/db2tool/dbfilesclient-era-new/
+
+# Spellbook page output and its scraped data; the scripts that build them are tracked.
+tools/spellbook/data/
+tools/spellbook/out/
+__pycache__/
