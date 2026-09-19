@@ -394,7 +394,7 @@ func transformRawTalentsToConfigsForClass(rawTalents []RawTalent, classID int) (
 }
 
 func GenerateTalentJsonFromDB(dbHelper *DBHelper) error {
-	rawTalents, err := LoadTalents(dbHelper)
+	rawTalents, err := LoadTraitTalents(dbHelper)
 	if err != nil {
 		return fmt.Errorf("error loading talents: %w", err)
 	}
@@ -432,7 +432,7 @@ func GenerateProtos(dbcData *dbc.DBC, db *WowDatabase) {
 	}
 	defer helper.Close()
 
-	rawTalents, err := LoadTalents(helper)
+	rawTalents, err := LoadTraitTalents(helper)
 	if err != nil {
 		fmt.Printf("Error loading talents: %v\n", err)
 		return
