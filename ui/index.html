@@ -80,6 +80,34 @@
 							points. That is a different kind of source from a screenshot, and most of what used to be guessed no longer is.
 						</p>
 						<p class="site-info-caveat">
+							<strong>How a number gets in, and what is checked.</strong> Three things are settled from data and one is not, and it is worth
+							being plain about which is which:
+						</p>
+						<ul class="site-info-caveat site-info-limits">
+							<li>
+								<strong>The client's tables, diffed against Classic Era.</strong> Every ability the sim registers is compared spell by spell
+								against both clients, and what Forever changed is recorded with the field it was read from. 586 abilities now carry the
+								client's numbers and 246 are confirmed unchanged from Classic; the rest are counted below.
+							</li>
+							<li>
+								<strong>Hotfixes, which the static data does not carry.</strong> Blizzard tunes values after a build ships, and those changes
+								never reach a datamining site. The live client's own hotfix cache is read instead. Today it holds 11,800 changed rows, all of
+								them item data: the client's per-table caches show 1.3 MB of item hotfixes and a 4 byte stub for spells, so nothing in this
+								sim's spell data is stale from one.
+							</li>
+							<li>
+								<strong>Wording, not just values.</strong> A talent's rank curve says what its numbers are and not what it applies to, which is
+								how Improved Seals passed a value check while scaling only half of what it should. Every talent's text is diffed between the
+								two clients as well; 231 read differently in Forever.
+							</li>
+							<li>
+								<strong>Nothing has been checked against a running game.</strong> No combat log, no parse, no second implementation. Addons
+								cannot read damage in Forever, so the plan is the client's own damage meter on the beta: cast two ranks of the same spell at a
+								dummy, twice, and see whether the sim predicted the gap. Until that happens every number here is internally consistent and
+								externally unconfirmed.
+							</li>
+						</ul>
+						<p class="site-info-caveat">
 							What it still cannot do. Every one of these can move a number, and some can move it a long way:
 						</p>
 						<ul class="site-info-caveat site-info-limits">
