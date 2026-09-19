@@ -69,36 +69,40 @@
 							talent trees, races and ruleset through every spec.
 						</p>
 						<p class="site-info-caveat">
-							<strong>Unaffiliated with any official or community sim project.</strong> Nobody else builds, reviews or contributes to it, an
-							official Forever sim will not be this one, and every bug here is mine.
+							<strong>Unaffiliated with any official or community sim project.</strong> One person writes it, an official Forever sim will not be
+							this one, and every bug here is mine. Players do report them, and those reports are credited in the changelog.
 						</p>
 						<p class="site-info-caveat">
-							It is also worth being plain about what it cannot do yet. Every one of these can move a number, and some can move it a long way:
+							Since the beta client was datamined on 17 September, the numbers come from the client's own data tables rather than from BlizzCon
+							tooltips: build <code>1.60.1.69913</code> on wago.tools, read against Classic Era and diffed spell by spell. Talent values come
+							from the client's rank curves, spell power coefficients from
+							<code>SpellEffect.EffectBonusCoefficient</code>, and each rank's damage is scaled to level 60 by the client's own per-level
+							points. That is a different kind of source from a screenshot, and most of what used to be guessed no longer is.
+						</p>
+						<p class="site-info-caveat">
+							What it still cannot do. Every one of these can move a number, and some can move it a long way:
 						</p>
 						<ul class="site-info-caveat site-info-limits">
 							<li>
-								There is no beta client. Every talent, rank and coefficient was read off a BlizzCon 2026 demo tooltip or a datamined set built
-								from one.
-							</li>
-							<li>
-								The demo mostly showed rank 1. Every other rank is assumed, linear unless a tooltip said otherwise, counted line by line in the
+								41 abilities still carry at least one number the client does not settle, and 143 have not been classified at all. Each is named
+								in the spell manifest and in the
 								<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer"
 									>beta re-verification checklist</a
 								>.
 							</li>
 							<li>
-								A tooltip gives one number at one level and says nothing about how it is built out of attack power, spell power and weapon
-								speed. Where Forever has not changed a spell this fork assumes Classic's scaling; where it has, the coefficient is inferred from
-								a single value.
+								Downranking is unresolved, and it is the big one. The client carries the full spell power coefficient on low ranks where Classic
+								Era carried a reduced one. Read as written, a rank 4 Lightning Bolt does most of a rank 10 for a quarter of the mana, which is
+								what the elemental rotation currently does. Whether Forever removed the penalty or applies it somewhere the data does not show
+								changes every caster here.
 							</li>
 							<li>
-								Datamined and demo tooltips are themselves wrong often enough to matter, so a value can be read correctly and still be wrong.
-								Nothing here has been checked against client data, which is what a sim really wants.
+								The client stores what an ability does, not how the server runs it. Proc chances often read as unset, and rules like whether
+								melee-table Holy damage partially resists are not in any table.
 							</li>
-							<li>The beta is capped at level 30, so it will settle neither the level 60 ranks nor the scaling.</li>
 							<li>
 								No healing sim runs, and the tank specs that exist are measured on damage alone. Rotations are hand-written priority lists, not
-								solved ones.
+								solved ones, and nothing has re-tuned them around the cooldowns Forever changed.
 							</li>
 						</ul>
 						<p class="site-info-caveat">

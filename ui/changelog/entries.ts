@@ -1,7 +1,12 @@
 // What the fork changed to turn the Classic sim into a Forever sim, grouped by what a
 // reader would look for rather than by the order it happened. Every entry names the pull
 // requests that carried it and, where the change came from published Forever information,
-// the place it was read from. Numbers marked demo were read off BlizzCon 2026 tooltips.
+// the place it was read from.
+//
+// The first section is the break in the middle of this file's history. Everything under it
+// was read off BlizzCon 2026 demo tooltips, because that was all there was; since the beta
+// client was datamined on 17 September the numbers come from the client's own tables, and
+// the first section is largely a record of where the tooltips had it wrong.
 
 export type Source = {
 	label: string;
@@ -68,8 +73,119 @@ const upstream: Source = {
 	label: 'wowsims/classic, the Classic Era simulator this fork started from',
 	url: 'https://github.com/wowsims/classic',
 };
+const betaClient: Source = {
+	label: 'wago.tools: the Forever beta client data tables, build 1.60.1.69913',
+	url: 'https://wago.tools/db2/SpellEffect?build=1.60.1.69913',
+};
 
 export const sections: Array<Section> = [
+	{
+		title: 'The beta client',
+		intro: "Everything above this point was read off BlizzCon 2026 demo tooltips. On 17 September the beta client was datamined, and the numbers came from its own data tables instead: build 1.60.1.69913 on wago.tools, read against Classic Era 1.15.9.69722 and diffed spell by spell. What it found is below, and most of it is the fork having been wrong.",
+		entries: [
+			{
+				title: 'The client is the source now, not a screenshot',
+				prs: [180, 181, 182, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 214],
+				changed:
+					"Talent values come from the client's rank curves, spell power coefficients from SpellEffect.EffectBonusCoefficient, and each rank's damage is scaled to level 60 by the client's own per-level points. Every class's spellbook was diffed against Classic Era to catch abilities Forever changed without announcing. tools/data_watch/spell_client.py reads any of it on demand, and a watcher opens a pull request when the client build moves.",
+				effect:
+					"The checklist said the level 30 cap meant the beta would settle neither the level 60 ranks nor the coefficients. That was wrong: the cap limits what a tester can play, not what the client ships. 586 abilities now carry the client's numbers, 246 are confirmed unchanged from Classic, and 41 still hold a value the client does not settle.",
+				sources: [betaClient],
+			},
+			{
+				title: 'The raid buffs were still Classic’s',
+				prs: [200],
+				changed:
+					"sim/core never got a beta pass while the nine class passes ran, so every raid buff kept Classic Era's numbers. Battle Shout gave 232 attack power against Forever's 139, Blessing of Might 185 against 133, and Trueshot Aura 100 melee attack power that Forever's version does not grant at all. Windfury Totem, Strength of Earth, Grace of Air, Mark of the Wild, Shadow Weaving, Curse of Recklessness and Hunter's Mark were all out too.",
+				effect:
+					'Roughly 300 attack power every melee build was carrying and should not have been, while casters got none of it. Fury fell 10.8%, the rogues 9 to 11%, enhancement 8.1%, retribution 4.4%; every mage, elemental, moonkin and shadow priest moved less than half a percent. The melee half of the damage comparison had been about 11% too high against the caster half.',
+				sources: [betaClient],
+			},
+			{
+				title: 'Rage conversion used XOR where it meant a square',
+				prs: [201],
+				changed:
+					'GetRageConversion read `attacker_level^2`. In Go `^` is a bitwise XOR, not a power, so level 60 was treated as 60 XOR 2 = 62 and the conversion came out 198.37 instead of Classic’s 230.60. The under-45 branch had the same typo.',
+				effect:
+					'Every rage user generated 16.2% too much rage. Fury felt it hardest because the surplus went straight into Heroic Strike: 39.7 Heroic Strikes against 9.8 white main-hand swings, with 26 rage wasted out of 1876 generated. Fury fell another 3.5%, the bear tank 2.8%.',
+			},
+			{
+				title: 'Boss debuffs, and a misread in the warrior pass',
+				prs: [202],
+				changed:
+					"Demoralizing Shout 146 to 204 attack power and 30 to 45 seconds, Demoralizing Roar 138 to 204, Curse of Weakness -31 to -37, Judgement of Wisdom 10 to 40 seconds. The warrior pass had asked for Demoralizing Shout to go the other way, to 140, reading the client's -196 as Classic's 140 plus the talent's 40%. That compares the client's untalented base points against the sim's level-adjusted value; Era settles it, and the talent still multiplies on top.",
+				effect: 'Damage taken falls about 2.8% on all three tanks. Following the pass as written would have made the debuff 30% weaker instead of 40% stronger.',
+				sources: [betaClient],
+			},
+			{
+				title: 'Every item set Forever changed',
+				prs: [203, 206, 207],
+				changed:
+					"ItemSetSpell says 109 of 531 sets have different bonuses to Classic, and 38 of those are sets the sim implements. Dungeon sets 1 and 2 moved from 2/4/6/8 thresholds to 2/3/4/5/6, so a set pays out fully at six pieces instead of eight and the four piece is now a PvP break with nothing for a sim to do. Crusader's Wrath and The Furious Storm are 65 spell power where the sim had 95, and Rogue Armor Energize gives 20 energy where it had 35. The Scholomance and Stratholme sets, Imperial Plate, Ironweave, Spirit of Eskhandar and nine PvP sets moved with them.",
+				effect:
+					"No Launch gear set completes any of them, so the damage comparison does not move; this is for people simming their own gear. Three things fell out along the way: Wildheart Raiment was declared twice and which copy applied depended on package registration order, The Five Thunders' six piece was repeating its own two piece instead of granting spell damage, and Cadaverous Garb's five piece was adding 2 hit rating where its comment said 2%.",
+				sources: [betaClient],
+			},
+			{
+				title: 'Hand of Justice procs at 1%',
+				prs: [204],
+				changed:
+					"Era's tooltip hardcodes a 2% chance and the client holds 2. Forever's reads “${$h/3}% chance on Melee hit” with the chance field at 3, and adds that attacks against Dwarves are three times as likely. The field is still a percent, so the division is the new part.",
+				effect:
+					'A warrior loses about 1%. It is the only item proc Forever changed that any shipped gear set equips; the other 38 sit on items no preset uses. This one is a reading of a tooltip formula rather than a value in a column, so it is the change here most worth a second opinion.',
+				sources: [betaClient],
+			},
+			{
+				title: 'Arms was wearing Fury’s weapons',
+				prs: [208],
+				changed:
+					"A build takes its gear from the raid preset whose talent tree matches, and the warrior had one preset. So the Arms build in the damage comparison was handed Fury's dual-wield set: 70.92 off-hand swings at 124 damage each, against 32.37 main-hand at 396, and 26.46% of white hits missing. Arms has no Dual Wield Specialization to pay for that, and its Two-Handed Weapon Specialization was doing nothing at all. It now has its own two-handed Launch set, the way the rogue already had one set for Mutilate and another for Sinister Strike.",
+				effect:
+					'Arms gains 9% on identical buffs and rotation, and moves from twelfth to ninth. It does not close the gap to Fury, which is worth saying plainly: Fury generates 1470 melee rage to Arms’ 640, and that is Forever’s own Dual Wield Specialization doubling off-hand rage, confirmed in the client.',
+			},
+			{
+				title: 'Abilities describe themselves again',
+				prs: [209, 210],
+				changed:
+					"ui/core/spells carries a name and a tooltip for every ability the sim registers, written from the implementation's own numbers, and a test keeps it true. Nothing read it at runtime. Now the damage tables take the name from it when Wowhead has none, and abilities Forever changed show the manifest's tooltip instead of Wowhead's Classic entry.",
+				effect:
+					"Lava Burst was 17% of the elemental shaman's damage and arrived as a blank row, because Wowhead has never heard of Forever's spell id. Hovering Lightning Bolt quoted Classic's 265 mana and 3 second cast over a spell the sim runs at 220 and 2.5.",
+			},
+			{
+				title: 'Paladin: Improved Seals and Judgement',
+				prs: [211],
+				changed:
+					"Improved Seals is a percent modifier, so it scales a whole spell. The sim multiplied the base damage roll by it and left the spell power coefficient's share out, which meant a paladin got less of the talent the more spell power he carried. Forever also widened it from “your Seal of Righteousness and Judgement of Righteousness” to “your Seals and Judgements”. Judgement was also deactivating the seal on every cast, where Forever's tooltip says in as many words that it does not consume it.",
+				effect:
+					'Retribution gains 6.2%, 1.4% of it from the talent and 4.7% from the seal staying up; protection gains 1.8%. Both were reported by AdamRC in the Forever Discord.',
+				sources: [betaClient],
+			},
+			{
+				title: 'Warlock: Shadow Mastery, twice on one spell and never on another',
+				prs: [212],
+				changed:
+					"Classic's Shadow Mastery carries a spell effectiveness modifier that scales base points only, so four spells were singled out to multiply their own base damage and opt out of the spell multiplier. Forever dropped that effect, leaving two straight percent modifiers. The exclusion list had also drifted: Siphon Life multiplied its base damage and was never in it, so it took the talent twice, and Drain Soul was in the list but multiplied nothing, so it took none at all.",
+				effect:
+					'Affliction gains 0.3%. The gains and the Siphon Life loss nearly cancel, which is how a genuine double-count was worth almost nothing and stayed hidden. Found by sweeping for the shape of the paladin bug rather than by noticing it.',
+				sources: [betaClient],
+			},
+			{
+				title: 'A crash on crit heals',
+				prs: [199],
+				changed:
+					'Blood Craze is a heal over time and carries no DefenseType, because heals are not defended against. Under the Forever ruleset every dot can crit, so its first crit tick reached a panic meant to catch damage spells with no DefenseType. Helpful spells now take the 150% heal crit instead.',
+				effect: 'Any warrior with a point in Blood Craze took the whole simulation down with a stack trace.',
+			},
+			{
+				title: 'Reading the client, written down',
+				prs: [186, 187, 213],
+				changed:
+					'spell_client.py reads a spell as the sim needs it, spell_diff.py and set_diff.py diff ids and set bonuses between the two clients, and talent_text_diff.py compares talent wording with the numbers stripped out.',
+				effect:
+					'The last one exists because curves say what a talent’s values are and not what it applies to, which is how Improved Seals passed a value check while pointing at the wrong spells. 231 talents read differently in Forever.',
+			},
+		],
+	},
 	{
 		title: 'The rules of the game',
 		intro: 'Engine rules that apply whenever the sim runs under Forever Rules. Classic Era Rules are still there under Sim Options and leave every one of these off.',
@@ -414,7 +530,7 @@ export const sections: Array<Section> = [
 				title: 'The damage table says what it is',
 				prs: [120],
 				changed:
-					'Raised in the Forever Discord: a public ranking advertises results nothing has proven, on a fork still being written. The page carried six notes on how the raid was assembled and not one on where the numbers came from. It is called Damage comparison now, the rank column is gone, and a block above the table says there is no beta client, that every talent was read off a demo tooltip at mostly rank 1, that the rest is assumed and counted in the beta checklist, and that the table is here to find bugs in this sim. The URL is unchanged.',
+					'Raised in the Forever Discord: a public ranking advertises results nothing has proven, on a fork still being written. The page carried six notes on how the raid was assembled and not one on where the numbers came from. It is called Damage comparison now, the rank column is gone, and a block above the table says where the numbers came from and that the table is here to find bugs in this sim. The URL is unchanged. That block said there was no beta client, which was true when it was written; it now names the client build and what the client still does not settle.',
 				effect: 'The page reads as what it has always been used for, a self-check, rather than a balance claim.',
 			},
 			{
@@ -428,7 +544,7 @@ export const sections: Array<Section> = [
 				title: 'The damage table comes off the homepage',
 				prs: [124],
 				changed:
-					"The site called itself WoWSims - Forever in its title, its homepage and the label above every sim, which is a claim it has no right to make: it is one person's fork and the WoWSims team neither builds nor reviews it. It is Forever Sim (unofficial) now, the homepage says plainly that it is not WoWSims and not affiliated, and the Patreon link is labelled as theirs. The homepage also lists what the sim cannot do yet, including the one the sim team raised: datamined and demo tooltips are wrong often enough that a value can be read correctly and still be wrong. The damage table comes off the homepage with it and is marked not to be indexed, though it stays at its URL.",
+					"The site called itself WoWSims - Forever in its title, its homepage and the label above every sim, which is a claim it has no right to make: it is one person's fork and the WoWSims team neither builds nor reviews it. It is Forever Sim (unofficial) now, the homepage says plainly that it is not WoWSims and not affiliated, and the Patreon link is labelled as theirs. The homepage also lists what the sim cannot do yet, which at the time included the one the sim team raised: that datamined and demo tooltips are wrong often enough that a value can be read correctly and still be wrong. The beta client answered that one, and the list now carries what the client itself does not settle. The damage table comes off the homepage with it and is marked not to be indexed, though it stays at its URL.",
 				effect: 'Nobody arrives thinking this is the official sim, and the limits are on the front page rather than buried.',
 			},
 			{
