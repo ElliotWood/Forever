@@ -57,7 +57,9 @@ var battleShoutRank = spellData.BattleShout.BySpellID(2048)
 var commandingShoutRank = spellData.CommandingShout.BySpellID(469)
 
 func (warrior *Warrior) registerShouts() {
-	commandingPresenceMultiplier := spellData.CommandingPresence.MultiplierAt(warrior.Talents.CommandingPresence)
+	// TODO: Forever drops Commanding Presence. Neutral multiplier until we know whether
+	// the shout scaling moved to another talent.
+	commandingPresenceMultiplier := 1.0
 
 	warrior.registerDemoralizingShout()
 
