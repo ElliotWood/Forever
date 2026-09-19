@@ -66,115 +66,107 @@
 							talent trees, races and ruleset through every spec.
 						</p>
 						<p class="site-info-caveat">
-							<strong>Unaffiliated with any official or community sim project.</strong> One person writes it, an official Forever sim will not be
-							this one, and every bug here is mine. Players do report them, and those reports are credited in the changelog.
+							<strong>Unaffiliated with any official or community sim project.</strong> One person writes it, every bug here is mine, and every
+							number is provisional &mdash; useful for catching the sim doing something obviously wrong, not as a statement about Forever.
 						</p>
-						<p class="site-info-caveat">
-							Since the beta client was datamined on 17 September, the numbers come from the client's own data tables rather than from BlizzCon
-							tooltips: build <code>1.60.1.69913</code> on wago.tools, read against Classic Era and diffed spell by spell. Talent values come
-							from the client's rank curves, spell power coefficients from
-							<code>SpellEffect.EffectBonusCoefficient</code>, and each rank's damage is scaled to level 60 by the client's own per-level
-							points. That is a different kind of source from a screenshot, and most of what used to be guessed no longer is.
-						</p>
-						<p class="site-info-caveat">
-							<strong>How a number gets in, and what is checked.</strong> Three things are settled from data and one is not, and it is worth
-							being plain about which is which:
-						</p>
-						<ul class="site-info-caveat site-info-limits">
-							<li>
-								<strong>The client's tables, diffed against Classic Era.</strong> Every ability the sim registers is compared spell by spell
-								against both clients, and what Forever changed is recorded with the field it was read from. 623 abilities now carry the
-								client's numbers and 288 are confirmed unchanged from Classic; the rest are counted below.
-							</li>
-							<li>
-								<strong>Hotfixes, which the static data does not carry.</strong> Blizzard tunes values after a build ships, and those changes
-								never reach a datamining site. The live client's own hotfix cache is read instead. Today it holds 11,800 changed rows, all of
-								them item data: the client's per-table caches show 1.3 MB of item hotfixes and a 4 byte stub for spells, so nothing in this
-								sim's spell data is stale from one.
-							</li>
-							<li>
-								<strong>Wording, not just values.</strong> A talent's rank curve says what its numbers are and not what it applies to, which is
-								how Improved Seals passed a value check while scaling only half of what it should. Every talent's text is diffed between the
-								two clients as well; 231 read differently in Forever.
-							</li>
-							<li>
-								<strong>Nothing has been checked against a running game.</strong> No combat log, no parse, no second implementation. Addons
-								cannot read damage in Forever, so the plan is the client's own damage meter on the beta: cast two ranks of the same spell at a
-								dummy, twice, and see whether the sim predicted the gap. Until that happens every number here is internally consistent and
-								externally unconfirmed.
-							</li>
-						</ul>
-						<p class="site-info-caveat">
-							What it still cannot do. Every one of these can move a number, and some can move it a long way:
-						</p>
-						<ul class="site-info-caveat site-info-limits">
-							<li>
-								41 abilities still carry at least one number the client does not settle, and 45 have not been classified at all. Each is named
-								in the spell manifest and in the
-								<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer"
-									>beta re-verification checklist</a
-								>.
-							</li>
-							<li>
-								Downranking is unresolved, and it is the big one. The client carries the full spell power coefficient on low ranks where Classic
-								Era carried a reduced one. Read as written, a rank 4 Lightning Bolt does most of a rank 10 for a quarter of the mana, which is
-								what the elemental rotation currently does. Whether Forever removed the penalty or applies it somewhere the data does not show
-								changes every caster here.
-							</li>
-							<li>
-								The client stores what an ability does, not how the server runs it. Proc chances often read as unset, and rules like whether
-								melee-table Holy damage partially resists are not in any table.
-							</li>
-							<li>
-								No healing sim runs, and the tank specs that exist are measured on damage alone. Rotations are hand-written priority lists, not
-								solved ones, and nothing has re-tuned them around the cooldowns Forever changed.
-							</li>
-						</ul>
-						<p class="site-info-caveat">
-							Treat every number these sims produce as provisional, and as a way to catch the sim doing something obviously wrong rather than as a
-							statement about Forever.
-						</p>
-						<div class="site-info-cta">
-							<h2 class="site-info-cta-title">Playing the beta? Send one file.</h2>
-							<p>
-								Every number here comes out of the shipped build's data tables. Blizzard tunes values <em>after</em> a build ships, and those
-								hotfixes never reach a datamining site &mdash; they exist only in the cache your own client downloads them into. That cache is
-								the one source of Forever data nobody can look up.
-							</p>
-							<p class="site-info-cta-label">The file</p>
-							<p>
-								<code>DBCache.bin</code>, in
-								<code>World of Warcraft\_classic_beta_\Cache\ADB\enUS\</code>. Copy it out while the game is closed and attach it below.
-								If it is easier, send the whole <code>enUS</code> folder.
-							</p>
-							<p class="site-info-cta-label">It holds nothing about you</p>
-							<p>
-								No character name, no account, no realm, no Battle.net tag, no IP. It is NPC dialogue, item names and Blizzard's tuning rows
-								&mdash; the same data everyone in your region is served. That has been checked byte by byte rather than assumed, and it is
-								why this is the file being asked for instead of a damage meter screenshot.
-							</p>
-							<p class="site-info-cta-label">Why yours is worth having when mine exists</p>
-							<p>
-								The client only caches the rows it has actually needed, so two players who have done different things hold different subsets.
-								Mine carries 42,871 of them and not one is a spell. As far as my client knows, no spell value in this sim is stale &mdash;
-								which is a claim resting on one machine that has mostly sat in a city.
-							</p>
-							<p class="site-info-cta-label">A ten second check before you bother</p>
-							<p>
-								In that same folder, look at <code>Spell&lt;number&gt;.tmp</code>. If it is 4 bytes, your client has no spell hotfixes either.
-								<strong>If it is bigger than that, something in this sim is out of date and you are the only one who can see it.</strong>
-								Either way the file is worth sending; that check just tells you whether to expect it to matter.
-							</p>
-							<p class="site-info-cta-actions">
-								<a class="site-info-cta-button" href="https://github.com/@@REPO@@/issues/new?template=hotfix_cache.md" target="_blank" rel="noreferrer">
-									<i class="fab fa-github"></i>&nbsp; Attach it to a GitHub issue
+
+						<div class="site-cta">
+							<div class="site-cta-body">
+								<h2 class="site-cta-title">Playing the beta? Send one file.</h2>
+								<p class="site-cta-lede">
+									Blizzard tunes values <em>after</em> a build ships. Those hotfixes never reach a datamining site &mdash; they exist only in
+									the cache your own client downloads them into. It is the one source of Forever data nobody can look up.
+								</p>
+								<a class="site-cta-button" href="https://github.com/@@REPO@@/issues/new?template=hotfix_cache.md" target="_blank" rel="noreferrer">
+									<i class="fab fa-github"></i><span>Send your DBCache.bin</span>
 								</a>
-							</p>
-							<p class="site-info-cta-foot">
-								The files are read and thrown away, never committed to this repository. Anything that moves a number gets credited in the
-								<a href="changelog/">changelog</a>, the same as the bug reports already there.
-							</p>
+								<p class="site-cta-note">Contains no character name, account or realm. Read and discarded, never committed.</p>
+							</div>
+							<details class="site-panel site-panel-inset">
+								<summary>Which file, and why yours differs from mine</summary>
+								<div class="site-panel-body">
+									<p>
+										<code>DBCache.bin</code>, in <code>World of Warcraft\_classic_beta_\Cache\ADB\enUS\</code>. Copy it out with the
+										game closed, or send the whole <code>enUS</code> folder.
+									</p>
+									<p>
+										<strong>It holds nothing about you.</strong> No character name, account, realm, Battle.net tag or IP &mdash; checked
+										byte by byte rather than assumed. It is NPC dialogue, item names and Blizzard's tuning rows, the same data everyone in
+										your region is served.
+									</p>
+									<p>
+										<strong>Yours is not mine.</strong> The client caches only the rows it has needed, so two players who have done
+										different things hold different subsets. Mine carries 42,871 and not one is a spell &mdash; a claim about this sim
+										resting on one machine that has mostly sat in a city.
+									</p>
+									<p>
+										<strong>A ten second check.</strong> In that folder, look at <code>Spell&lt;number&gt;.tmp</code>. At 4 bytes your
+										client has no spell hotfixes either. Bigger than that and something here is out of date and you are the only one who
+										can see it.
+									</p>
+								</div>
+							</details>
 						</div>
+
+						<details class="site-panel">
+							<summary>Where the numbers come from</summary>
+							<div class="site-panel-body">
+								<p>
+									Since the beta client was datamined on 17 September the numbers come from the client's own data tables rather than BlizzCon
+									tooltips: build <code>1.60.1.69913</code> on wago.tools, read against Classic Era and diffed spell by spell. Talent values
+									come from the client's rank curves, coefficients from <code>SpellEffect.EffectBonusCoefficient</code>, and each rank's
+									damage is scaled to level 60 by the client's own per-level points.
+								</p>
+								<p>Three things are settled from data and one is not, and it is worth being plain about which is which:</p>
+								<ul>
+									<li>
+										<strong>The client's tables, diffed against Classic Era.</strong> 623 abilities carry the client's numbers and 288 are
+										confirmed unchanged from Classic.
+									</li>
+									<li>
+										<strong>Hotfixes, which the static data does not carry.</strong> The live client's own cache is read instead. Today it
+										holds 11,800 changed rows, all item data, with a 4 byte stub for spells.
+									</li>
+									<li>
+										<strong>Wording, not just values.</strong> A rank curve says what a talent's numbers are, not what they apply to, which
+										is how Improved Seals passed a value check while scaling half of what it should. 231 talents read differently in Forever.
+									</li>
+									<li>
+										<strong>Nothing has been checked against a running game.</strong> No combat log, no parse, no second implementation.
+										Every number is internally consistent and externally unconfirmed.
+									</li>
+								</ul>
+							</div>
+						</details>
+
+						<details class="site-panel">
+							<summary>What it still cannot do</summary>
+							<div class="site-panel-body">
+								<p>Every one of these can move a number, and some can move it a long way:</p>
+								<ul>
+									<li>
+										41 abilities still carry a number the client does not settle and 45 are unclassified. Each is named in the spell
+										manifest and the
+										<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer"
+											>beta re-verification checklist</a
+										>.
+									</li>
+									<li>
+										<strong>Downranking is unresolved, and it is the big one.</strong> The client carries the full coefficient on low ranks
+										where Classic Era carried a reduced one. Read as written, a rank 4 Lightning Bolt does most of a rank 10 for a quarter
+										of the mana. Whether Forever removed the penalty changes every caster here.
+									</li>
+									<li>
+										The client stores what an ability does, not how the server runs it. Proc chances often read as unset, and rules like
+										whether melee-table Holy damage partially resists are in no table.
+									</li>
+									<li>
+										No healing sim runs, tank specs are measured on damage alone, and rotations are hand-written priority lists that nothing
+										has re-tuned around the cooldowns Forever changed.
+									</li>
+								</ul>
+							</div>
+						</details>
 					</div>
 					<div class="sim-links-container">
 						<div class="sim-links">
