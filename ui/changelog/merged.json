@@ -1,5 +1,11 @@
 [
 	{
+		"number": 237,
+		"title": "One button per file, side by side",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/237"
+	},
+	{
 		"number": 236,
 		"title": "Take either beta file, and scrub the damage meter in the browser",
 		"mergedAt": "2026-09-19",
