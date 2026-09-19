@@ -873,7 +873,8 @@ func init() {
 	core.NewMobTypeAttackPowerEffect(EnchantedAzshariteSword, []proto.MobType{proto.MobType_MobTypeDemon}, 33)
 
 	// https://www.wowhead.com/classic/item=18202/eskhandars-left-claw
-	// Chance on hit: Slows enemy's movement by 60% and causes them to bleed for 150 damage over 30 sec.
+	// Beta client 1.60.1 (spell 22639): 21 a tick every 1 sec for 5 sec, 105 in all. Era's is
+	// 15 every 3 sec for 30 sec, 150 in all - a slower, longer bleed for more total damage.
 	// TODO: Proc rate untested
 	itemhelpers.CreateWeaponProcSpell(EskhandarsLeftClaw, "Eskhandar's Left Claw", 1.0, func(character *core.Character) *core.Spell {
 		return character.GetOrRegisterSpell(core.SpellConfig{
@@ -886,11 +887,11 @@ func init() {
 				Aura: core.Aura{
 					Label: "Eskhandar's Rake",
 				},
-				TickLength:    time.Second * 3,
-				NumberOfTicks: 10,
+				TickLength:    time.Second * 1,
+				NumberOfTicks: 5,
 
 				OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot, isRollover bool) {
-					dot.Snapshot(target, 15, isRollover)
+					dot.Snapshot(target, 21, isRollover)
 				},
 
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
@@ -909,13 +910,13 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=18203/eskhandars-right-claw
-	// Chance on hit: Increases your attack speed by 30% for 5 sec.
+	// Beta client 1.60.1 (spell 22640): 10% for 6 sec, down from Era's 30% for 5 sec.
 	itemhelpers.CreateWeaponProcAura(EskhandarsRightClaw, "Eskhandar's Right Claw", 1.0, func(character *core.Character) *core.Aura {
 		return character.GetOrRegisterAura(core.Aura{
 			Label:    "Eskhandar's Rage",
 			ActionID: core.ActionID{SpellID: 22640},
-			Duration: time.Second * 5,
-		}).AttachMultiplyAttackSpeed(&character.Unit, 1.3)
+			Duration: time.Second * 6,
+		}).AttachMultiplyAttackSpeed(&character.Unit, 1.1)
 	})
 
 	// https://www.wowhead.com/classic/item=13218/fang-of-the-crystal-spider
@@ -1573,23 +1574,23 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=11817/lord-generals-sword
-	// Chance on hit: Increases attack power by 50 for 30 sec.
+	// Beta client 1.60.1 (spell 15602): 84 attack power for 10 sec, up from Era's 50 for 30 sec.
 	// // TODO: Proc rate assumed and needs testing
 	itemhelpers.CreateWeaponProcAura(LordGeneralsSword, "Lord General's Sword", 1.0, func(character *core.Character) *core.Aura {
 		return character.RegisterAura(core.Aura{
 			ActionID: core.ActionID{SpellID: 15602},
 			Label:    "Lord General's Sword",
-			Duration: time.Second * 30,
+			Duration: time.Second * 10,
 			OnGain: func(aura *core.Aura, sim *core.Simulation) {
 				character.AddStatsDynamic(sim, stats.Stats{
-					stats.AttackPower:       50,
-					stats.RangedAttackPower: 50,
+					stats.AttackPower:       84,
+					stats.RangedAttackPower: 84,
 				})
 			},
 			OnExpire: func(aura *core.Aura, sim *core.Simulation) {
 				character.AddStatsDynamic(sim, stats.Stats{
-					stats.AttackPower:       -50,
-					stats.RangedAttackPower: -50,
+					stats.AttackPower:       -84,
+					stats.RangedAttackPower: -84,
 				})
 			},
 		})
@@ -1733,7 +1734,10 @@ func init() {
 	})
 
 	// https://www.wowhead.com/classic/item=10626/ragehammer
-	// Chance on hit: Increases damage done by 20 and attack speed by 5% for 15 sec.
+	// Beta client 1.60.1 (spell 12686): "Increases Attack Power by 102 and melee attack speed
+	// by 6% for 15 sec". Era's reads "Increases damage done by 20", which is why this was flat
+	// physical damage - Forever changed the wording along with the number, so 102 is attack
+	// power and not 102 damage a swing.
 	// TODO: Proc rate assumed and needs testing
 	itemhelpers.CreateWeaponProcAura(Ragehammer, "Ragehammer", 1.0, func(character *core.Character) *core.Aura {
 		return character.GetOrRegisterAura(core.Aura{
@@ -1741,12 +1745,12 @@ func init() {
 			Label:    "Enrage (12686)",
 			Duration: time.Second * 15,
 			OnGain: func(aura *core.Aura, sim *core.Simulation) {
-				character.PseudoStats.BonusPhysicalDamage += 20
+				character.AddStatsDynamic(sim, stats.Stats{stats.AttackPower: 102, stats.RangedAttackPower: 102})
 			},
 			OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-				character.PseudoStats.BonusPhysicalDamage -= 20
+				character.AddStatsDynamic(sim, stats.Stats{stats.AttackPower: -102, stats.RangedAttackPower: -102})
 			},
-		}).AttachMultiplyAttackSpeed(&character.Unit, 1.05)
+		}).AttachMultiplyAttackSpeed(&character.Unit, 1.06)
 	})
 
 	// https://www.wowhead.com/classic/item=7717/ravager
@@ -2257,7 +2261,8 @@ func init() {
 			Label:    "The Jackhammer Haste Aura",
 			ActionID: core.ActionID{SpellID: 13533},
 			Duration: time.Second * 10,
-		}).AttachMultiplyAttackSpeed(&character.Unit, 1.3)
+			// Beta client 1.60.1 (spell 13533): 15%, halved from Era's 30%.
+		}).AttachMultiplyAttackSpeed(&character.Unit, 1.15)
 	})
 
 	// https://www.wowhead.com/classic/item=13060/the-needler
@@ -2729,7 +2734,8 @@ func init() {
 	// https://www.wowhead.com/classic/item=17774/mark-of-the-chosen
 	core.NewItemEffect(MarkOfTheChosen, func(agent core.Agent) {
 		character := agent.GetCharacter()
-		statIncrease := float64(25)
+		// Beta client 1.60.1 (spell 21970): 21 to all stats, down from Era's 25.
+		statIncrease := float64(21)
 		markProcChance := 0.02
 
 		procAura := character.GetOrRegisterAura(core.Aura{
@@ -2771,7 +2777,8 @@ func init() {
 	core.NewMobTypeSpellPowerEffect(RuneOfTheDawn, []proto.MobType{proto.MobType_MobTypeUndead}, 48)
 
 	// https://www.wowhead.com/classic/item=11819/second-wind
-	// Use: Restores 30 mana every 1 sec for 10 sec. (15 Min Cooldown)
+	// Beta client 1.60.1 (spell 15604): 63 mana a tick, up from Era's 30. The tooltip's
+	// "doubled in Mountainous areas" has nothing to sim against.
 	core.NewItemEffect(SecondWind, func(agent core.Agent) {
 		character := agent.GetCharacter()
 		actionID := core.ActionID{SpellID: 15604}
@@ -2791,7 +2798,7 @@ func init() {
 					NumTicks: 10,
 					Priority: core.ActionPriorityAuto,
 					OnAction: func(sim *core.Simulation) {
-						character.AddMana(sim, 30, manaMetrics)
+						character.AddMana(sim, 63, manaMetrics)
 					},
 				})
 			},

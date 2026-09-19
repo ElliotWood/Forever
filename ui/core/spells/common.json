@@ -39,9 +39,11 @@
 		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"12686": {
-		"ability": "Enrage",
+		"ability": "Enrage (Ragehammer)",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases Attack Power by 102 and melee attack speed by 6% for 15 sec.",
+		"note": "Beta client 1.60.1 (spell 12686). Era reads \"Increases damage done by 20\" and 5%; Forever changed the wording with the number, so this is attack power rather than flat damage a swing."
 	},
 	"13318": {
 		"ability": "Rend",
@@ -50,9 +52,11 @@
 		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"13494": {
-		"ability": "Haste",
+		"ability": "Haste (Manual Crowd Pummeler)",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 50% for 30 sec.",
+		"note": "Beta client 1.60.1 (spell 13494). Unchanged in value; Forever only renumbered the haste aura from 138 to 319."
 	},
 	"13526": {
 		"ability": "Corrosive Poison",
@@ -65,9 +69,11 @@
 		"source": "unreviewed"
 	},
 	"13533": {
-		"ability": "Haste",
+		"ability": "Haste (The Jackhammer)",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 15% for 10 sec.",
+		"note": "Beta client 1.60.1 (spell 13533). Halved from Era's 30%."
 	},
 	"13889": {
 		"ability": "Minor Speed",
@@ -89,17 +95,23 @@
 	"15600": {
 		"ability": "Hand of Justice",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Chance on melee hit to gain 1 extra attack.",
+		"note": "Beta client 1.60.1 (spell 15600). Forever halves Era's hardcoded 2% chance; the sim rolls 1%. The tooltip's Dwarf clause has nothing to sim against."
 	},
 	"15602": {
 		"ability": "Lord General's Sword",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases attack power by 84 for 10 sec.",
+		"note": "Beta client 1.60.1 (spell 15602). Era is 50 for 30 sec."
 	},
 	"15604": {
 		"ability": "Second Wind",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Restores 63 Mana every 1 sec for 10 sec.",
+		"note": "Beta client 1.60.1 (spell 15604). Era restores 30. The tooltip's \"doubled in Mountainous areas\" has nothing to sim against."
 	},
 	"16406": {
 		"ability": "Rend",
@@ -125,7 +137,9 @@
 	"16551": {
 		"ability": "Felstriker",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "All attacks are guaranteed to land and will be critical strikes for the next 3 sec.",
+		"note": "Beta client 1.60.1 (spell 16551). Unchanged in value and duration; Forever only renumbered the crit aura from 52 to 290."
 	},
 	"16596": {
 		"ability": "Flames of Shahram",
@@ -356,9 +370,11 @@
 		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"21165": {
-		"ability": "Haste",
+		"ability": "Haste (Empyrean Demolisher)",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 20% for 10 sec.",
+		"note": "Beta client 1.60.1 (spell 21165). Unchanged in value; Forever only renumbered the haste aura from 138 to 319."
 	},
 	"21919": {
 		"ability": "Extra Attacks (Main Hand) tracker",
@@ -367,9 +383,11 @@
 		"source": "classic"
 	},
 	"21970": {
-		"ability": "Mark of the Chosen Effect",
+		"ability": "Mark of the Chosen",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases all stats by 21 for 1 min.",
+		"note": "Beta client 1.60.1 (spell 21970). Era is 25."
 	},
 	"21992": {
 		"ability": "Thunderfury",
@@ -380,12 +398,16 @@
 	"22639": {
 		"ability": "Eskhandar's Rake",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Slows enemy's movement by 60% and causes them to bleed for 105 damage over 5 sec.",
+		"note": "Beta client 1.60.1 (spell 22639). 21 a tick every 1 sec for 5 sec. Era is 15 every 3 sec for 30 sec, 150 in all."
 	},
 	"22640": {
 		"ability": "Eskhandar's Rage",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases your attack speed by 10% for 6 sec.",
+		"note": "Beta client 1.60.1 (spell 22640). Era is 30% for 5 sec."
 	},
 	"23266": {
 		"ability": "Fiery Aura",
