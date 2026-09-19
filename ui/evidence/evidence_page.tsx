@@ -18,6 +18,52 @@ const TIERS: Array<{ key: Tier; label: string; blurb: string }> = [
 	{ key: 'assumed', label: 'Still a guess', blurb: 'At least one number here is unconfirmed, and the row says which.' },
 ];
 
+// What would actually move a number, worst first, with what to send for each.
+//
+// Hand-written on purpose. The manifest knows which abilities are unsettled, but not which
+// unsettled thing matters - downranking is one line in no JSON file and moves every caster
+// on the site, while a hunter pet's attack speed is a rounding error. A list generated from
+// the manifest would rank those the same and quietly waste the first person who offers to
+// help. The counts inside it come from the manifest, so those cannot go stale.
+type Need = {
+	title: string;
+	why: string;
+	/** What to send, in the words of someone who has the game open. */
+	send: string;
+	/** Pre-fills the search box below, so the row in question is one click away. */
+	find?: string;
+};
+
+const NEEDS: Array<Need> = [
+	{
+		title: 'Downranking: does a low rank still hit for full?',
+		why: 'The client carries the full coefficient on low ranks where Classic Era carried a reduced one. Read as written, a rank 4 Lightning Bolt does most of a rank 10 for a quarter of the mana, which would rewrite every caster rotation on this site. No table anywhere says whether Forever kept the penalty.',
+		send: 'A DamageMeter.bin from a session where you deliberately spammed a low rank of a direct damage spell - rank 1-4 Lightning Bolt, Fireball, Shadow Bolt. Twenty casts is plenty. The meter records the biggest hit, and that alone settles it.',
+		find: 'Lightning Bolt',
+	},
+	{
+		title: 'Hunter, nearly everything',
+		why: 'Hunter carries more guesses than the rest of the game put together. Volley, Serpent Sting, Arcane Shot and the pet abilities all run on numbers the client does not settle, and Summon Hawk models one hawk where the tooltip can be read as allowing two.',
+		send: 'A DamageMeter.bin from any hunter at any level, or screenshots of those tooltips out of your spellbook. Either one. The tooltips are worth as much as the damage here, because half of what is wrong is about what a number applies to rather than what it is.',
+		find: 'hunter',
+	},
+	{
+		title: 'Sky Elf abilities that appear in no file at all',
+		why: 'Three spell ids turn up in the beta client with no home: 1259231 Infusion of Wind, 1259652 Shock, 1248802 Wind Spike. They are not registered anywhere in this sim because nobody knows whether they are racials, a quest reward or cut content.',
+		send: 'A screenshot of a Sky Elf spellbook, or of the racials pane on the character screen. One picture ends this.',
+	},
+	{
+		title: 'Hotfixes, from anyone, any day',
+		why: 'Blizzard tunes after the build ships and none of it reaches a datamining site. It exists only in the cache your own client downloads it into, so a number here can go stale with nothing to indicate it has.',
+		send: 'DBCache.bin, as it is. It carries no character name, account, realm or Battle.net tag, so there is nothing to strip. Sending the same file again next week is useful - it is the change that matters.',
+	},
+	{
+		title: 'Any tooltip that disagrees with this sim',
+		why: 'Five bugs so far passed a value check and were wrong about what the value applied to. Improved Seals scaled half of what it should while every number matched. A rank curve says what a talent’s numbers are, never what they do.',
+		send: 'A screenshot, cropped to the tooltip. If it contradicts what is written on a row below, that row is wrong and it takes one picture to prove it.',
+	},
+];
+
 const tierOf = (s: SpellSource): Tier => s.source as Tier;
 
 /** A row's searchable text, so filtering never has to walk the DOM. */
@@ -41,6 +87,7 @@ const iconsInView = new IntersectionObserver(
 export class EvidencePage {
 	private readonly rows: Array<{ elem: HTMLElement; tiers: Set<Tier>; text: string }> = [];
 	private readonly count: HTMLElement;
+	private readonly search: HTMLInputElement;
 	private query = '';
 	private tier: Tier | 'all' = 'all';
 
@@ -72,6 +119,32 @@ export class EvidencePage {
 				</header>
 
 				<main className="container evidence-content">
+					<section className="evidence-wanted" id="most-wanted">
+						<h2 className="evidence-wanted-title">Most wanted</h2>
+						<p className="evidence-wanted-lede">
+							Worst first. Each of these can be closed by one person with the game open, and the top one moves every caster on the site.{' '}
+							<a className="evidence-wanted-link" href={`${SITE_BASE}scrub/`}>
+								Send a file or a screenshot
+							</a>{' '}
+							&mdash; no account, no form.
+						</p>
+						<ol className="evidence-wanted-list">
+							{NEEDS.map((need, i) => (
+								<li className="evidence-want">
+									<h3 className="evidence-want-title">
+										<span className="evidence-want-rank">{String(i + 1)}</span>
+										{need.title}
+									</h3>
+									<p className="evidence-want-why">{need.why}</p>
+									<p className="evidence-want-send">
+										<strong>What settles it:</strong> {need.send}
+									</p>
+									{need.find ? this.findButton(need.find) : <></>}
+								</li>
+							))}
+						</ol>
+					</section>
+
 					<div className="evidence-controls">
 						<input
 							className="evidence-search"
@@ -111,7 +184,25 @@ export class EvidencePage {
 		);
 
 		this.count = parent.querySelector('.evidence-count') as HTMLElement;
+		this.search = parent.querySelector('.evidence-search') as HTMLInputElement;
 		this.apply();
+	}
+
+	/** Drops a most-wanted item straight into the list below it. */
+	private findButton(find: string): Element {
+		const button = (
+			<button className="evidence-find" type="button">
+				<i className="fas fa-search" />
+				<span>Show these rows</span>
+			</button>
+		) as HTMLButtonElement;
+
+		button.addEventListener('click', () => {
+			this.search.value = find;
+			this.setQuery(find);
+			this.search.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		});
+		return button;
 	}
 
 	private tierButton(tier: Tier | 'all', label: string, count: number): Element {

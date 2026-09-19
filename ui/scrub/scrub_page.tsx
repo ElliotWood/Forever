@@ -1,5 +1,6 @@
 import { SITE_BASE, SITE_REPO_URL } from '../core/constants/other';
 import { ActorRecord, plausible, readRecords, scrub } from './scrub';
+import { toCleanPng } from './shot';
 import { upload } from './upload';
 
 const ISSUE_URL = `${SITE_REPO_URL}/issues/new?template=hotfix_cache.md`;
@@ -31,10 +32,10 @@ const summaryRow = (label: string, cells: string[]) => (
 	</li>
 );
 
-const dropZone = (id: string, title: string, hint: string, onFile: (file: File | undefined) => void) => {
+const dropZone = (id: string, title: string, hint: string, onFile: (file: File | undefined) => void, accept?: string) => {
 	const label = (
 		<label className="scrub-drop" id={id}>
-			<input type="file" onchange={(event: Event) => onFile((event.target as HTMLInputElement).files?.[0])} />
+			<input type="file" accept={accept ?? ''} onchange={(event: Event) => onFile((event.target as HTMLInputElement).files?.[0])} />
 			<i className="fas fa-upload" />
 			<span className="scrub-drop-title">{title}</span>
 			<span className="scrub-drop-hint">{hint}</span>
@@ -57,6 +58,7 @@ const dropZone = (id: string, title: string, hint: string, onFile: (file: File |
 export class ScrubPage {
 	private readonly hotfixResult: HTMLElement;
 	private readonly meterResult: HTMLElement;
+	private readonly shotResult: HTMLElement;
 	private note = '';
 
 	constructor(parent: HTMLElement) {
@@ -70,8 +72,9 @@ export class ScrubPage {
 						<div className="scrub-title-block">
 							<h1 className="scrub-title">Send the beta&apos;s own numbers</h1>
 							<p className="scrub-subtitle">
-								This sim reads Blizzard&apos;s data tables, which say what an ability is <em>meant</em> to do. Two files on your machine say
-								things the tables cannot. Drop either one below, and that is the whole job &mdash; no account, no form.
+								This sim reads Blizzard&apos;s data tables, which say what an ability is <em>meant</em> to do. Two files on your machine, and a
+								picture of a tooltip, say things the tables cannot. Drop any of them below, and that is the whole job &mdash; no account, no
+								form.
 							</p>
 						</div>
 					</div>
@@ -133,6 +136,27 @@ export class ScrubPage {
 							{dropZone('meter-drop', 'Choose DamageMeter.bin', 'or drag it here', file => this.scrubMeter(file))}
 							<div className="scrub-result scrub-result-meter" />
 						</section>
+
+						<section className="scrub-file">
+							<h2 className="scrub-file-title">A screenshot</h2>
+							<p className="scrub-file-sub">What the tooltip actually says</p>
+							<p>
+								Five bugs so far passed a number check and were wrong about what the number applied to &mdash; Improved Seals scaled half of
+								what it should while every value matched. A rank curve says what a talent&apos;s numbers are, never what they do. A picture of
+								the tooltip settles it, and a spellbook page settles an ability nobody has found at all.
+							</p>
+							<div className="scrub-file-note scrub-hint">
+								<strong>Most wanted right now:</strong> hunter abilities, anything a Sky Elf has that nobody else does, and any tooltip that
+								disagrees with what this sim shows. The <a href={`${SITE_BASE}evidence/`}>evidence page</a> keeps the running list.
+							</div>
+							<p className="scrub-file-note scrub-warn">
+								<strong>Crop it to the tooltip.</strong> A name in a picture is pixels, and no scrubber can honestly promise to have found it.
+								Everything the file carries around the picture &mdash; EXIF, GPS, camera, editor history &mdash; is dropped in your browser, but
+								what is in frame is up to you.
+							</p>
+							{dropZone('shot-drop', 'Choose a screenshot', 'or drag it here', file => this.sendShot(file), 'image/*')}
+							<div className="scrub-result scrub-result-shot" />
+						</section>
 					</div>
 
 					<section className="scrub-drop-section">
@@ -159,6 +183,52 @@ export class ScrubPage {
 		);
 		this.hotfixResult = parent.querySelector('.scrub-result-hotfix') as HTMLElement;
 		this.meterResult = parent.querySelector('.scrub-result-meter') as HTMLElement;
+		this.shotResult = parent.querySelector('.scrub-result-shot') as HTMLElement;
+	}
+
+	/** Re-encoded to drop everything but the pixels, shown back, then sent on a click. */
+	private async sendShot(file: File | undefined) {
+		if (!file) return;
+		this.shotResult.replaceChildren(<p className="scrub-message">Reading {file.name}...</p>);
+		let bytes: Uint8Array;
+		try {
+			bytes = await toCleanPng(file);
+		} catch (error) {
+			this.shotResult.replaceChildren(<p className="scrub-warn scrub-message">Could not read that as an image: {String(error)}</p>);
+			return;
+		}
+
+		const send = (
+			<button className="scrub-button" type="button">
+				<i className="fas fa-paper-plane" />
+				<span>Send it</span>
+			</button>
+		) as HTMLButtonElement;
+
+		send.addEventListener('click', async () => {
+			send.disabled = true;
+			send.replaceChildren(<span>Sending...</span>);
+			const result = await upload('screenshot', bytes, this.note);
+			send.replaceWith(
+				result.ok ? (
+					<p className="scrub-sent">
+						<i className="fas fa-check" /> Sent, thank you. Reference <code>{result.receipt.split('/').pop()!.slice(0, 8)}</code>.
+					</p>
+				) : (
+					<p className="scrub-warn scrub-message">{result.error}</p>
+				),
+			);
+		});
+
+		// Shown back before it goes anywhere, so the crop is checked by the person who can
+		// actually tell whether a name is in it.
+		this.shotResult.replaceChildren(
+			<div className="scrub-report">
+				<p className="scrub-report-head">This is exactly what would be sent. Anything in it you would rather not send?</p>
+				<img className="scrub-preview" src={URL.createObjectURL(new Blob([bytes as unknown as BlobPart], { type: 'image/png' }))} alt="" />
+				<p className="scrub-actions">{send}</p>
+			</div>,
+		);
 	}
 
 	/** No names in it, so it goes as soon as it is dropped. */

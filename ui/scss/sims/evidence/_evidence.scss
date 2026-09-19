@@ -53,6 +53,92 @@
 		color: var(--bs-gray-300);
 	}
 
+	// The ask, above the list rather than under it. Someone who has the game open and five
+	// spare minutes should not have to scroll 996 rows to find out what would help.
+	.evidence-wanted {
+		padding: var(--spacer-3) var(--spacer-4);
+		border: 1px solid rgba(224, 163, 53, 0.35);
+		border-radius: var(--bs-border-radius);
+		background: rgba(224, 163, 53, 0.06);
+	}
+
+	.evidence-wanted-title {
+		margin: 0;
+		font-size: 1.3rem;
+		color: var(--bs-white);
+	}
+
+	.evidence-wanted-lede {
+		margin: var(--spacer-2) 0 0;
+		max-width: 52rem;
+		color: var(--bs-gray-300);
+	}
+
+	.evidence-wanted-link {
+		color: var(--bs-brand);
+		font-weight: 600;
+	}
+
+	// The rank is drawn in the heading instead, so the marker would be a second number.
+	.evidence-wanted-list {
+		margin: var(--spacer-3) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.evidence-want + .evidence-want {
+		margin-top: var(--spacer-3);
+		padding-top: var(--spacer-3);
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.evidence-want-title {
+		display: flex;
+		align-items: baseline;
+		gap: var(--spacer-2);
+		margin: 0;
+		font-size: 1.05rem;
+		color: var(--bs-white);
+	}
+
+	.evidence-want-rank {
+		flex: 0 0 auto;
+		color: var(--bs-brand);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.evidence-want-why {
+		margin: var(--spacer-1) 0 0;
+		color: var(--bs-gray-400);
+		font-size: 0.9rem;
+	}
+
+	.evidence-want-send {
+		margin: var(--spacer-1) 0 0;
+		color: var(--bs-gray-200);
+		font-size: 0.9rem;
+	}
+
+	.evidence-find {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacer-1);
+		margin-top: var(--spacer-2);
+		padding: 0.3rem 0.8rem;
+		border: 1px solid var(--bs-brand);
+		border-radius: 999px;
+		background: transparent;
+		color: var(--bs-white);
+		font: inherit;
+		font-size: 0.85rem;
+		cursor: pointer;
+
+		&:hover,
+		&:focus-visible {
+			background: rgba(224, 163, 53, 0.15);
+		}
+	}
+
 	// Sticky so the filter is still reachable a few hundred rows down, which is most of them.
 	.evidence-controls {
 		position: sticky;

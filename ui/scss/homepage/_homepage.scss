@@ -94,7 +94,6 @@
 				}
 			}
 
-
 			// The page used to be eight paragraphs of caveat before anything clickable.
 			// The detail is all still here, one <details> deep - native, so it costs no
 			// JS and keyboard and screen readers get it for free.
@@ -167,6 +166,62 @@
 				}
 			}
 
+			.site-cta-button {
+				display: inline-flex;
+				align-items: center;
+				gap: var(--spacer-2);
+				padding: 0.6rem 1.4rem;
+				border: 0;
+				border-radius: var(--bs-border-radius);
+				background: var(--bs-brand);
+				color: #1a1205;
+				font-size: 1.05rem;
+				font-weight: 600;
+				text-decoration: none;
+				box-shadow: 0 2px 10px rgba(224, 163, 53, 0.25);
+				transition:
+					transform 0.12s ease,
+					box-shadow 0.12s ease,
+					filter 0.12s ease;
+
+				&:hover,
+				&:focus-visible {
+					color: #1a1205;
+					filter: brightness(1.08);
+					transform: translateY(-1px);
+					box-shadow: 0 4px 16px rgba(224, 163, 53, 0.35);
+				}
+
+				&:active {
+					transform: translateY(0);
+				}
+			}
+
+			// The quiet twin, for the secondary of a pair. Same shape, so the pair still reads
+			// as one control rather than a button next to a link.
+			.site-cta-button-quiet {
+				border: 1px solid var(--bs-brand);
+				background: transparent;
+				color: var(--bs-white);
+				box-shadow: none;
+
+				&:hover,
+				&:focus-visible {
+					color: var(--bs-white);
+					background: rgba(224, 163, 53, 0.15);
+					box-shadow: none;
+				}
+			}
+
+			// Above the fold and above the wall of caveats: what the site knows, and how to help.
+			// These were a tile at the bottom of the sim list, which is where nobody looked.
+			.site-top-actions {
+				display: flex;
+				flex-wrap: wrap;
+				gap: var(--spacer-2);
+				margin: var(--spacer-4) 0 0;
+			}
+
 			// The one block asking for something back, so the one that is not grey on grey.
 			.site-cta {
 				width: 75%;
@@ -218,37 +273,6 @@
 					margin: var(--spacer-3) 0 0;
 				}
 
-				.site-cta-button {
-					display: inline-flex;
-					align-items: center;
-					gap: var(--spacer-2);
-					padding: 0.6rem 1.4rem;
-					border: 0;
-					border-radius: var(--bs-border-radius);
-					background: var(--bs-brand);
-					color: #1a1205;
-					font-size: 1.05rem;
-					font-weight: 600;
-					text-decoration: none;
-					box-shadow: 0 2px 10px rgba(224, 163, 53, 0.25);
-					transition:
-						transform 0.12s ease,
-						box-shadow 0.12s ease,
-						filter 0.12s ease;
-
-					&:hover,
-					&:focus-visible {
-						color: #1a1205;
-						filter: brightness(1.08);
-						transform: translateY(-1px);
-						box-shadow: 0 4px 16px rgba(224, 163, 53, 0.35);
-					}
-
-					&:active {
-						transform: translateY(0);
-					}
-				}
-
 				// The panel inside the call to action sits flush with it rather than
 				// floating as a second card.
 				.site-panel-inset {
@@ -260,7 +284,6 @@
 					background: rgba(0, 0, 0, 0.2);
 				}
 			}
-
 		}
 
 		.sim-links-container {
