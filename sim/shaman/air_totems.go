@@ -117,8 +117,6 @@ func (shaman *Shaman) newGraceOfAirTotemSpellConfig(rank int) core.SpellConfig {
 	level := GraceOfAirTotemLevel[rank]
 
 	buffAura := core.GraceOfAirTotemAura(&shaman.Unit, graceOfAirMultiplier)
-	// The core aura lasts Classic's 2 min.
-	buffAura.Duration = totemDuration
 
 	spell := shaman.newTotemSpellConfig(manaCost, spellId)
 	spell.RequiredLevel = level

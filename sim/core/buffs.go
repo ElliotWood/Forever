@@ -1348,7 +1348,10 @@ const ReplenishmentAuraDuration = time.Second * 15
 func StrengthOfEarthTotemAura(unit *Unit, multiplier float64) *Aura {
 	rank := TernaryInt32(IncludeAQ, 5, 4)
 	spellID := []int32{0, 8075, 8160, 8161, 10442, 25361}[rank]
-	duration := time.Minute * 2
+	// Beta client 1.60.1: every rank lasts 5 min, not Classic's 2. As a raid buff this aura
+	// is permanent and the duration never comes up; the shaman dropping the totem itself
+	// reads it, and used to have to overwrite it on the way past.
+	duration := time.Minute * 5
 	updateStats := BuffSpellValues[StrengthOfEarth].Multiply(multiplier).Floor()
 
 	aura := unit.GetOrRegisterAura(Aura{
@@ -1377,7 +1380,8 @@ func StrengthOfEarthTotemAura(unit *Unit, multiplier float64) *Aura {
 func GraceOfAirTotemAura(unit *Unit, multiplier float64) *Aura {
 	rank := TernaryInt32(IncludeAQ, 3, 2)
 	spellID := []int32{0, 8835, 10627, 25359}[rank]
-	duration := time.Minute * 2
+	// Beta client 1.60.1: 5 min, as Strength of Earth above.
+	duration := time.Minute * 5
 	updateStats := BuffSpellValues[GraceOfAir].Multiply(multiplier).Floor()
 
 	aura := unit.GetOrRegisterAura(Aura{
