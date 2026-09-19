@@ -52,9 +52,11 @@
 		"note": "Beta client 1.60.1 (spell 10627). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"11198": {
-		"ability": "Expose Armor",
+		"ability": "Expose Armor Rank 5",
 		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Finishing move that reduces the target armor by 450 per combo point for 30 sec.",
+		"note": "Beta client 1.60.1 (spell 11198). 450 a combo point where Era is 340, carried in EffectPointsPerResource rather than the base points - a reader that only looks at base points sees 0 in both builds and finds nothing changed. Forever also replaced Improved Expose Armor: it reduces the energy cost and refunds combo points now, and no longer touches the armor. 2250/1700 is 1.32, neither 1.25 nor 1.5, so this is a retune and not the talent folded in. Forever’s Sunder Armor carries the same 450 on its own base points."
 	},
 	"11374": {
 		"ability": "Gift of Arthas",

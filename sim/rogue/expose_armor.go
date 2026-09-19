@@ -12,7 +12,7 @@ import (
 // talent multiplier is applied.
 func (rogue *Rogue) registerExposeArmorSpell() {
 	rogue.ExposeArmorAuras = rogue.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ExposeArmorAura(target, 0)
+		return core.ExposeArmorAura(target)
 	})
 
 	spellID := map[int32]int32{

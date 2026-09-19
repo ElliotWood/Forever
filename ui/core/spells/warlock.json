@@ -751,11 +751,6 @@
 		"note": "Same unchanged registration as Summon Imp.",
 		"source": "classic"
 	},
-	"758": {
-		"ability": "Firestone Passive",
-		"file": "sim/warlock/talents.go",
-		"source": "unreviewed"
-	},
 	"7641": {
 		"ability": "Shadow Bolt",
 		"file": "sim/warlock/shadowbolt.go",

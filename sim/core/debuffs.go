@@ -117,7 +117,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	// Major Armor Debuffs
 	if targetIdx == 0 {
 		if debuffs.ExposeArmor != proto.TristateEffect_TristateEffectMissing {
-			aura := ExposeArmorAura(target, TernaryInt32(debuffs.ExposeArmor == proto.TristateEffect_TristateEffectRegular, 0, 2))
+			aura := ExposeArmorAura(target)
 			SchedulePeriodicDebuffApplication(aura, PeriodicActionOptions{
 				Period:   time.Second * 3,
 				NumTicks: 1,
@@ -675,11 +675,18 @@ func SunderArmorAura(target *Unit) *Aura {
 	return aura
 }
 
-func ExposeArmorAura(target *Unit, improvedEA int32) *Aura {
+// Beta client 1.60.1 (spell 11198): 450 armor a combo point, where Era is 340. The value is
+// in EffectPointsPerResource rather than the base points, which is why a reader that only
+// looks at base points sees 0 for both builds and finds nothing changed.
+//
+// The Improved Expose Armor multiplier is gone with it. In Classic that talent reads
+// "increases the armor reduction of your Expose Armor ability by 25%/50%"; the Forever tree's
+// reads "Reduces the Energy cost of your Expose Armor ability, and refunds Combo Points when
+// cast" - a different talent that does nothing to the armor. 2250/1700 is 1.32, which is not
+// 1.25 or 1.5, so this is a retune rather than the talent being folded into the base.
+func ExposeArmorAura(target *Unit) *Aura {
 	spellID := int32(11198)
-	arpen := 1700.0
-
-	arpen *= []float64{1, 1.25, 1.5}[improvedEA]
+	arpen := 450.0 * 5
 
 	aura := target.GetOrRegisterAura(Aura{
 		Label:    "ExposeArmor",

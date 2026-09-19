@@ -60,81 +60,46 @@ func (warlock *Warlock) applyWeaponImbue() {
 	}
 }
 
+// Forever turned the Firestone from a weapon proc into a passive. Era's tooltip reads
+// "Enchants the main hand weapon with fire, granting each attack a chance to deal additional
+// fire damage"; the beta client's reads "Imbues your weapon with Fire, increasing your spell
+// critical strike chance by X% and the damage done by your Fire spells by up to Y", with no
+// proc in it at all.
+//
+// The numbers come from the spell each rank's tooltip points at - 758 -> 23480, 17945 ->
+// 23481, 17947 -> 23482, 17949 -> 23483 - which carry the fire damage on aura 13 and the
+// crit on aura 57:
+//
+//	rank 1, level 28:  10 fire damage,  1% spell crit
+//	rank 2, level 36:  14 fire damage,  1% spell crit
+//	rank 3, level 46:  17 fire damage,  2% spell crit
+//	rank 4, level 56:  21 fire damage,  2% spell crit
+//
+// The fire damage was already right. The crit was missing and the proc should not be there.
 func (warlock *Warlock) applyFirestone() {
+	if warlock.Consumes.MainHandImbue != proto.WeaponImbue_WeaponImbueUnknown {
+		return
+	}
+
 	level := warlock.Level
+	firePower := 0.0
+	spellCrit := 0.0
 
-	damageMin := 0.0
-	damageMax := 0.0
-
-	// TODO: Test for spell scaling
-	spellCoeff := 0.0
-	spellId := int32(0)
-
-	// TODO: Test PPM
-	ppm := warlock.AutoAttacks.NewPPMManager(8, core.ProcMaskMelee)
-
-	firestoneMulti := 1.0
-
-	if level >= 56 {
-		warlock.AddStat(stats.FirePower, 21*firestoneMulti)
-		damageMin = 80.0
-		damageMax = 120.0
-		spellId = 17949
-	} else if level >= 46 {
-		warlock.AddStat(stats.FirePower, 17*firestoneMulti)
-		damageMin = 60.0
-		damageMax = 90.0
-		spellId = 17947
-	} else if level >= 36 {
-		warlock.AddStat(stats.FirePower, 14*firestoneMulti)
-		damageMin = 40.0
-		damageMax = 60.0
-		spellId = 17945
-	} else if level >= 28 {
-		warlock.AddStat(stats.FirePower, 10*firestoneMulti)
-		damageMin = 25.0
-		damageMax = 35.0
-		spellId = 758
+	switch {
+	case level >= 56:
+		firePower, spellCrit = 21, 2
+	case level >= 46:
+		firePower, spellCrit = 17, 2
+	case level >= 36:
+		firePower, spellCrit = 14, 1
+	case level >= 28:
+		firePower, spellCrit = 10, 1
+	default:
+		return
 	}
 
-	if level >= 28 && warlock.Consumes.MainHandImbue == proto.WeaponImbue_WeaponImbueUnknown {
-		fireProcSpell := warlock.GetOrRegisterSpell(core.SpellConfig{
-			ActionID:    core.ActionID{SpellID: spellId},
-			SpellSchool: core.SpellSchoolFire,
-			DefenseType: core.DefenseTypeMagic,
-			ProcMask:    core.ProcMaskEmpty,
-
-			DamageMultiplier:         firestoneMulti,
-			ThreatMultiplier:         1,
-			DamageMultiplierAdditive: 1,
-			BonusCoefficient:         spellCoeff,
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				baseDamage := sim.Roll(damageMin, damageMax)
-
-				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicCrit)
-			},
-		})
-
-		core.MakePermanent(warlock.GetOrRegisterAura(core.Aura{
-			Label: "Firestone Proc",
-			OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				if !result.Landed() {
-					return
-				}
-
-				if !spell.ProcMask.Matches(core.ProcMaskMelee) {
-					return
-				}
-
-				if !ppm.Proc(sim, core.ProcMaskMelee, "Firestone Proc") {
-					return
-				}
-
-				fireProcSpell.Cast(sim, result.Target)
-			},
-		}))
-	}
+	warlock.AddStat(stats.FirePower, firePower)
+	warlock.AddStat(stats.SpellCrit, spellCrit*core.SpellCritRatingPerCritChance)
 }
 
 ///////////////////////////////////////////////////////////////////////////
