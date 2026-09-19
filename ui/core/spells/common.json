@@ -2,17 +2,20 @@
 	"6296": {
 		"ability": "Enchant: Fiery Blaze",
 		"file": "sim/common/enchant_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"7712": {
 		"ability": "Fire Strike",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"8191": {
 		"ability": "Zeal",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"9057": {
 		"ability": "Firebolt",
@@ -32,7 +35,8 @@
 	"9633": {
 		"ability": "Whirlwind",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"12686": {
 		"ability": "Enrage",
@@ -42,7 +46,8 @@
 	"13318": {
 		"ability": "Rend",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"13494": {
 		"ability": "Haste",
@@ -67,12 +72,14 @@
 	"13889": {
 		"ability": "Minor Speed",
 		"file": "sim/common/enchant_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"13897": {
 		"ability": "Fiery Weapon",
 		"file": "sim/common/enchant_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"15494": {
 		"ability": "Fury of Forgewright",
@@ -97,7 +104,8 @@
 	"16406": {
 		"ability": "Rend",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"16413": {
 		"ability": "Fireball",
@@ -122,7 +130,8 @@
 	"16596": {
 		"ability": "Flames of Shahram",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"16597": {
 		"ability": "Curse of Shahram",
@@ -132,7 +141,8 @@
 	"16598": {
 		"ability": "Will of Shahram",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"16599": {
 		"ability": "Blessing of Shahram",
@@ -142,7 +152,8 @@
 	"16600": {
 		"ability": "Might of Shahram",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"16601": {
 		"ability": "Fist of Shahram",
@@ -157,7 +168,8 @@
 	"16916": {
 		"ability": "Strength of the Champion",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"16927": {
 		"ability": "Chilled",
@@ -172,7 +184,8 @@
 	"17152": {
 		"ability": "Destiny",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"17196": {
 		"ability": "Seeping Willow",
@@ -197,7 +210,8 @@
 	"17333": {
 		"ability": "Spider's Kiss",
 		"file": "sim/common/item_sets/item_sets_pve.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"17352": {
 		"ability": "Argent Avenger",
@@ -212,7 +226,8 @@
 	"17504": {
 		"ability": "Rend",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"17505": {
 		"ability": "Curse of Timmy",
@@ -222,7 +237,8 @@
 	"17511": {
 		"ability": "Poison",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"17625": {
 		"ability": "Unholy Aura",
@@ -262,17 +278,20 @@
 	"18796": {
 		"ability": "Fireball",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"18797": {
 		"ability": "Flurry Axe",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"18803": {
 		"ability": "Focus",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"18817": {
 		"ability": "Drain Life",
@@ -292,7 +311,8 @@
 	"18980": {
 		"ability": "Lightning",
 		"file": "sim/common/item_sets/crafted.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"19755": {
 		"ability": "Frightalon",
@@ -302,32 +322,38 @@
 	"20004": {
 		"ability": "Life Steal",
 		"file": "sim/common/enchant_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"20007": {
 		"ability": "Holy Strength",
 		"file": "sim/common/enchant_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"21142": {
 		"ability": "Immolation",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"21153": {
 		"ability": "Bonereaver's Edge",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"21159": {
 		"ability": "Fireball",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"21162": {
 		"ability": "Fireball",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"21165": {
 		"ability": "Haste",
@@ -369,12 +395,14 @@
 	"23605": {
 		"ability": "Spell Vulnerability",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"23686": {
 		"ability": "Lightning Strike",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"23688": {
 		"ability": "Aura of the Blue Dragon",
@@ -384,7 +412,8 @@
 	"23689": {
 		"ability": "Heroism",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"23863": {
 		"ability": "Revitalize",
@@ -394,12 +423,14 @@
 	"23864": {
 		"ability": "Revitalize",
 		"file": "sim/common/item_sets/crafted.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"24388": {
 		"ability": "Brain Damage",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"27499": {
 		"ability": "Crusader's Wrath",
@@ -431,9 +462,10 @@
 		"source": "unreviewed"
 	},
 	"433801": {
-		"ability": "spell 433801",
+		"ability": "Bladestorm Rank 1",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"450527": {
 		"ability": "Sudden Insight",
@@ -499,39 +531,46 @@
 		"note": "The Elements 5 piece and The Five Thunders 4 piece; the buff is 27775, which shaman.json owns."
 	},
 	"461151": {
-		"ability": "spell 461151",
+		"ability": "Flame Wrath",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"461152": {
-		"ability": "spell 461152",
+		"ability": "Flame Wrath",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"461682": {
-		"ability": "spell 461682",
+		"ability": "Gutgore Ripper",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"461683": {
-		"ability": "spell 461683",
+		"ability": "Drain Life",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"461686": {
-		"ability": "spell 461686",
+		"ability": "Chain Lightning",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"463105": {
-		"ability": "spell 463105",
+		"ability": "Sanctuary",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"463946": {
-		"ability": "spell 463946",
+		"ability": "Chain Lightning",
 		"file": "sim/common/item_effects.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"1299743": {
 		"ability": "Deathbone Surge",
