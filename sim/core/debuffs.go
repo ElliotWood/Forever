@@ -39,7 +39,10 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		ExternalIsbCaster(debuffs, target)
 	}
 
-	if debuffs.ShadowWeaving {
+	// Forever turned Shadow Weaving into a buff on the priest rather than a debuff on the
+	// target, so another raid member running one is worth nothing here - same as Improved
+	// Shadow Bolt above. The priest applies its own in sim/priest/talents.go.
+	if debuffs.ShadowWeaving && !target.Env.IsForever() {
 		aura := ShadowWeavingAura(target, 5)
 		SchedulePeriodicDebuffApplication(aura, PeriodicActionOptions{
 			Period:          time.Millisecond * 1500,
