@@ -155,8 +155,8 @@ dps_results: {
 dps_results: {
  key: "TestForeverElemental-Phase1-Average-Default"
  value: {
-  dps: 409.27176
-  tps: 387.39605
+  dps: 409.27178
+  tps: 387.39607
  }
 }
 dps_results: {

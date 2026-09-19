@@ -24,24 +24,32 @@
 		"source": "classic"
 	},
 	"10442": {
-		"ability": "Strength of Earth Totem",
+		"ability": "Strength of Earth Totem Rank 4",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the Strength of party members within 20 yards for 5 min.",
+		"note": "Beta client 1.60.1 (spell 10442). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"10608": {
-		"ability": "Windfury Totem",
+		"ability": "Windfury Totem Rank 2",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Grants attacks an extra swing with 179 bonus attack power.",
+		"note": "Beta client 1.60.1 (spell 10608). Forever cuts the bonus attack power - rank 3 from Era 315 to 246 - and shortens the buff window from 1.5 sec to 1."
 	},
 	"10610": {
-		"ability": "Windfury Totem",
+		"ability": "Windfury Totem Rank 3",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Grants attacks an extra swing with 246 bonus attack power.",
+		"note": "Beta client 1.60.1 (spell 10610). Forever cuts the bonus attack power - rank 3 from Era 315 to 246 - and shortens the buff window from 1.5 sec to 1."
 	},
 	"10627": {
-		"ability": "Grace of Air Totem",
+		"ability": "Grace of Air Totem Rank 2",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the Agility of party members within 20 yards for 5 min.",
+		"note": "Beta client 1.60.1 (spell 10627). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"11198": {
 		"ability": "Expose Armor",
@@ -233,9 +241,11 @@
 		"source": "classic"
 	},
 	"19838": {
-		"ability": "Blessing of Might",
+		"ability": "Blessing of Might Rank 6",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases attack power by 112 for 1 hour.",
+		"note": "Beta client 1.60.1 (spell 19838). Forever cuts the attack power - rank 7 from Era 185 to 133 - and lengthens it from 5 min to an hour, which the sim treats as permanent."
 	},
 	"20217": {
 		"ability": "Blessing of Kings",
@@ -342,19 +352,25 @@
 		"note": "Beta client 1.60.1 (spell 25289). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"25291": {
-		"ability": "Blessing of Might",
+		"ability": "Blessing of Might Rank 7",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases attack power by 133 for 1 hour.",
+		"note": "Beta client 1.60.1 (spell 25291). Forever cuts the attack power - rank 7 from Era 185 to 133 - and lengthens it from 5 min to an hour, which the sim treats as permanent."
 	},
 	"25359": {
-		"ability": "Grace of Air Totem",
+		"ability": "Grace of Air Totem Rank 3",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the Agility of party members within 20 yards for 5 min.",
+		"note": "Beta client 1.60.1 (spell 25359). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"25361": {
-		"ability": "Strength of Earth Totem",
+		"ability": "Strength of Earth Totem Rank 5",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the Strength of party members within 20 yards for 5 min.",
+		"note": "Beta client 1.60.1 (spell 25361). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"26016": {
 		"ability": "Vindication",
@@ -497,29 +513,39 @@
 		"note": "Beta client 1.60.1 (spell 6673). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"8075": {
-		"ability": "Strength of Earth Totem",
+		"ability": "Strength of Earth Totem Rank 1",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the Strength of party members within 20 yards for 5 min.",
+		"note": "Beta client 1.60.1 (spell 8075). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"8160": {
-		"ability": "Strength of Earth Totem",
+		"ability": "Strength of Earth Totem Rank 2",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the Strength of party members within 20 yards for 5 min.",
+		"note": "Beta client 1.60.1 (spell 8160). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"8161": {
-		"ability": "Strength of Earth Totem",
+		"ability": "Strength of Earth Totem Rank 3",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the Strength of party members within 20 yards for 5 min.",
+		"note": "Beta client 1.60.1 (spell 8161). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"8516": {
-		"ability": "Windfury Totem",
+		"ability": "Windfury Totem Rank 1",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Grants attacks an extra swing with 95 bonus attack power.",
+		"note": "Beta client 1.60.1 (spell 8516). Forever cuts the bonus attack power - rank 3 from Era 315 to 246 - and shortens the buff window from 1.5 sec to 1."
 	},
 	"8835": {
-		"ability": "Grace of Air Totem",
+		"ability": "Grace of Air Totem Rank 1",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the Agility of party members within 20 yards for 5 min.",
+		"note": "Beta client 1.60.1 (spell 8835). Forever lengthens the totem from 2 min to 5; the value is unchanged from Era. Only the top rank is used at 60."
 	},
 	"9898": {
 		"ability": "Demoralizing Roar",

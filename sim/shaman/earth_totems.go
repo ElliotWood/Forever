@@ -35,8 +35,6 @@ func (shaman *Shaman) newStrengthOfEarthTotemSpellConfig(rank int) core.SpellCon
 	duration := totemDuration
 
 	buffAura := core.StrengthOfEarthTotemAura(&shaman.Unit, strengthOfEarthMultiplier)
-	// The core aura lasts Classic's 2 min.
-	buffAura.Duration = duration
 
 	spell := shaman.newTotemSpellConfig(manaCost, spellId)
 	spell.RequiredLevel = level
