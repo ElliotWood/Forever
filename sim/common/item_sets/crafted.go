@@ -260,7 +260,7 @@ var ItemSetVolcanicArmor = core.NewItemSet(core.ItemSet{
 	Name: "Volcanic Armor",
 	ID:   141,
 	Bonuses: map[int32]core.ApplyEffect{
-		// 5% chance of dealing 15 to 25 Fire damage on a successful melee attack.
+		// Beta client 1.60.1 (spell 9057): 30 to 50 Fire damage, doubled from Era's 15 to 25.
 		3: func(agent core.Agent) {
 			character := agent.GetCharacter()
 			procSpell := character.RegisterSpell(core.SpellConfig{
@@ -273,7 +273,7 @@ var ItemSetVolcanicArmor = core.NewItemSet(core.ItemSet{
 				ThreatMultiplier: 1,
 
 				ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-					spell.CalcAndDealDamage(sim, target, sim.Roll(15, 25), spell.OutcomeMagicHitAndCrit)
+					spell.CalcAndDealDamage(sim, target, sim.Roll(30, 50), spell.OutcomeMagicHitAndCrit)
 				},
 			})
 
