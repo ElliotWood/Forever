@@ -712,10 +712,11 @@
 		"tooltip": "85 Mana\nChannelled, 5 sec\nTransfers 14 health every 1 sec from the target to the caster. Lasts 5 sec."
 	},
 	"704": {
-		"ability": "Curse of Recklessness",
+		"ability": "Curse of Recklessness Rank 1",
 		"file": "sim/warlock/curses.go",
-		"note": "The beta client lowers the armor reduction to 175/285/395/505 by rank and drops the attack power bonus, but the curse applies core.CurseOfRecklessnessAura, which still carries Classic's rank 4 values (-640 armor, +90 attack power).",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1 (spell 704). Forever dropped the attack power the curse used to hand the target: Era reads \"increasing melee attack power by $s1 but reducing armor by $s2\", Forever reads only \"reducing the target's armor by $s2\". Only rank 4 is used at 60.",
+		"source": "forever",
+		"tooltip": "Reduces the target's armor by 175 for 2 min. Cursed enemies will not flee and will ignore Fear and Horror effects."
 	},
 	"705": {
 		"ability": "Shadow Bolt",
@@ -777,16 +778,18 @@
 		"tooltip": "185 Mana\nChannelled, 5 sec\nTransfers 28 health every 1 sec from the target to the caster. Lasts 5 sec."
 	},
 	"7658": {
-		"ability": "Curse of Recklessness",
+		"ability": "Curse of Recklessness Rank 2",
 		"file": "sim/warlock/curses.go",
-		"note": "The beta client lowers the armor reduction to 175/285/395/505 by rank and drops the attack power bonus, but the curse applies core.CurseOfRecklessnessAura, which still carries Classic's rank 4 values (-640 armor, +90 attack power).",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1 (spell 7658). Forever dropped the attack power the curse used to hand the target: Era reads \"increasing melee attack power by $s1 but reducing armor by $s2\", Forever reads only \"reducing the target's armor by $s2\". Only rank 4 is used at 60.",
+		"source": "forever",
+		"tooltip": "Reduces the target's armor by 285 for 2 min. Cursed enemies will not flee and will ignore Fear and Horror effects."
 	},
 	"7659": {
-		"ability": "Curse of Recklessness",
+		"ability": "Curse of Recklessness Rank 3",
 		"file": "sim/warlock/curses.go",
-		"note": "The beta client lowers the armor reduction to 175/285/395/505 by rank and drops the attack power bonus, but the curse applies core.CurseOfRecklessnessAura, which still carries Classic's rank 4 values (-640 armor, +90 attack power).",
-		"source": "unreviewed"
+		"note": "Beta client 1.60.1 (spell 7659). Forever dropped the attack power the curse used to hand the target: Era reads \"increasing melee attack power by $s1 but reducing armor by $s2\", Forever reads only \"reducing the target's armor by $s2\". Only rank 4 is used at 60.",
+		"source": "forever",
+		"tooltip": "Reduces the target's armor by 395 for 2 min. Cursed enemies will not flee and will ignore Fear and Horror effects."
 	},
 	"7799": {
 		"ability": "Firebolt",
