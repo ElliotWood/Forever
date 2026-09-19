@@ -109,6 +109,14 @@
 		color: var(--bs-gray-400);
 	}
 
+	// Practical help rather than something to weigh up, so it is quieter than .scrub-warn.
+	// Two gold-bordered notes in a row would make neither of them stand out, and the one
+	// that has to stand out is the one about other people's names.
+	.scrub-hint {
+		padding-left: var(--spacer-3);
+		border-left: 3px solid rgba(255, 255, 255, 0.2);
+	}
+
 	.scrub-warn {
 		padding-left: var(--spacer-3);
 		border-left: 3px solid var(--bs-brand);
