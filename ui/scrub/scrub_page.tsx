@@ -112,11 +112,20 @@ export class ScrubPage {
 							<p className="scrub-path">
 								<code>World of Warcraft\_classic_beta_\Cache\</code>
 							</p>
-							<p className="scrub-file-note scrub-hint">
-								<strong>Not there while you are logged in? That is normal.</strong> The meter is only written to disk when it flushes, and it
-								flushes on logout. Fight something, log out to character select, and it appears. An empty folder mid-session means the meter has
-								not been written yet, not that you are in the wrong place.
-							</p>
+							<div className="scrub-file-note scrub-hint">
+								<strong>Getting one out is fiddly. In order:</strong>
+								<ol className="scrub-steps">
+									<li>Open the damage meter and leave it open. It records nothing while it is closed.</li>
+									<li>Fight things.</li>
+									<li>
+										Log out to character select. The file is only written when the meter flushes, and it flushes on logout &mdash; which is
+										why the folder looks empty while you are still playing.
+									</li>
+									<li>
+										<strong>Copy it out before logging back in.</strong> Logging in deletes it and starts again.
+									</li>
+								</ol>
+							</div>
 							<p className="scrub-file-note scrub-warn">
 								This one holds character names, yours and everyone you grouped with. They are taken out <strong>in your browser</strong> before
 								anything is sent, and you get to see what is left first.

@@ -117,6 +117,15 @@
 		border-left: 3px solid rgba(255, 255, 255, 0.2);
 	}
 
+	.scrub-steps {
+		margin: var(--spacer-2) 0 0;
+		padding-left: var(--spacer-4);
+
+		li + li {
+			margin-top: var(--spacer-1);
+		}
+	}
+
 	.scrub-warn {
 		padding-left: var(--spacer-3);
 		border-left: 3px solid var(--bs-brand);
