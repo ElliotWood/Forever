@@ -1025,19 +1025,19 @@ func init() {
 			DamageMultiplier: 1,
 			ThreatMultiplier: 1,
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				result := spell.CalcAndDealDamage(sim, target, 70, spell.OutcomeMagicHitAndCrit)
+				result := spell.CalcAndDealDamage(sim, target, 77, spell.OutcomeMagicHitAndCrit)
 				if result.Landed() {
 					spell.Dot(target).Apply(sim)
 				}
 			},
 			Dot: core.DotConfig{
-				NumberOfTicks: 3,
-				TickLength:    time.Second * 2,
+				NumberOfTicks: 7,
+				TickLength:    time.Second * 1,
 				Aura: core.Aura{
 					Label: "Fireball",
 				},
 				OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-					dot.Spell.CalcAndDealPeriodicDamage(sim, target, 3, dot.OutcomeTick)
+					dot.Spell.CalcAndDealPeriodicDamage(sim, target, 2, dot.OutcomeTick)
 				},
 			},
 		})
@@ -1812,6 +1812,7 @@ func init() {
 
 	// https://www.wowhead.com/classic/item=13505/runeblade-of-baron-rivendare
 	// Equip: Increases movement speed and life regeneration rate.
+	// Beta client 1.60.1 (spell 17625): 60 health every 5 sec, tripled from Era's 20.
 	// TODO: Movement speed not implemented
 	core.NewItemEffect(RunebladeOfBaronRivendare, func(agent core.Agent) {
 		character := agent.GetCharacter()
@@ -1825,7 +1826,7 @@ func init() {
 					Period:   time.Second * 5,
 					Priority: core.ActionPriorityAuto,
 					OnAction: func(sim *core.Simulation) {
-						character.GainHealth(sim, 20, healthMetrics)
+						character.GainHealth(sim, 60, healthMetrics)
 					},
 				})
 			},
