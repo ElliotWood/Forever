@@ -55,19 +55,25 @@
 		"source": "classic"
 	},
 	"11549": {
-		"ability": "Battle Shout",
+		"ability": "Battle Shout Rank 4",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the attack power of all party members within 20 yards by 51 for 3 min.",
+		"note": "Beta client 1.60.1 (spell 11549). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"11550": {
-		"ability": "Battle Shout",
+		"ability": "Battle Shout Rank 5",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the attack power of all party members within 20 yards by 78 for 3 min.",
+		"note": "Beta client 1.60.1 (spell 11550). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"11551": {
-		"ability": "Battle Shout",
+		"ability": "Battle Shout Rank 6",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the attack power of all party members within 20 yards by 111 for 3 min.",
+		"note": "Beta client 1.60.1 (spell 11551). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"11554": {
 		"ability": "Demoralizing Shout",
@@ -340,9 +346,11 @@
 		"source": "classic"
 	},
 	"25289": {
-		"ability": "Battle Shout",
+		"ability": "Battle Shout Rank 7",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the attack power of all party members within 20 yards by 139 for 3 min.",
+		"note": "Beta client 1.60.1 (spell 25289). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"25291": {
 		"ability": "Blessing of Might",
@@ -472,9 +480,11 @@
 		"tooltip": "Instant\n2 min cooldown\nYour next 3 damaging or healing abilities cost 50% less Mana and do 10% more damage or healing."
 	},
 	"5242": {
-		"ability": "Battle Shout",
+		"ability": "Battle Shout Rank 2",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the attack power of all party members within 20 yards by 21 for 3 min.",
+		"note": "Beta client 1.60.1 (spell 5242). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"6190": {
 		"ability": "Demoralizing Shout",
@@ -482,14 +492,18 @@
 		"source": "unreviewed"
 	},
 	"6192": {
-		"ability": "Battle Shout",
+		"ability": "Battle Shout Rank 3",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the attack power of all party members within 20 yards by 33 for 3 min.",
+		"note": "Beta client 1.60.1 (spell 6192). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"6673": {
-		"ability": "Battle Shout",
+		"ability": "Battle Shout Rank 1",
 		"file": "sim/core/buffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Increases the attack power of all party members within 20 yards by 9 for 3 min.",
+		"note": "Beta client 1.60.1 (spell 6673). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"8075": {
 		"ability": "Strength of Earth Totem",

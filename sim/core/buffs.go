@@ -1418,9 +1418,12 @@ func BattleShoutAura(unit *Unit, impBattleShout int32, boomingVoicePts int32, ha
 	baseAP := BattleShoutBaseAP[rank]
 
 	return unit.GetOrRegisterAura(Aura{
-		Label:      "Battle Shout",
-		ActionID:   ActionID{SpellID: spellId},
-		Duration:   time.Duration(float64(time.Minute*2) * (1 + 0.1*float64(boomingVoicePts))),
+		Label:    "Battle Shout",
+		ActionID: ActionID{SpellID: spellId},
+		// Beta client 1.60.1: every rank of Battle Shout lasts 3 min, not Classic's 2. The value
+		// was taken from the client already - 139 attack power at rank 7 - but the duration was
+		// left behind, so the warrior re-shouted half again as often as it should.
+		Duration:   time.Duration(float64(time.Minute*3) * (1 + 0.1*float64(boomingVoicePts))),
 		BuildPhase: CharacterBuildPhaseBuffs,
 		OnGain: func(aura *Aura, sim *Simulation) {
 			aura.Unit.AddStatsDynamic(sim, stats.Stats{
