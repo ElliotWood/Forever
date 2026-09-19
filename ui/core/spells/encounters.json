@@ -2,7 +2,8 @@
 	"23513": {
 		"ability": "Essence of the Red",
 		"file": "sim/encounters/blackwing_lair.go",
-		"source": "unreviewed"
+		"source": "classic",
+		"note": "Identical in the Forever beta client and Classic Era - duration, cooldown, cast time, cost and every effect value, coefficient, period and per-level - so Wowhead's Classic tooltip describes it. Checked with tools/data_watch/spell_diff.py."
 	},
 	"28131": {
 		"ability": "Enrage",
