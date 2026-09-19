@@ -94,75 +94,154 @@
 				}
 			}
 
-			// The one thing on this page asking for something back, so it is the one block
-			// that is not grey-on-grey. Sits below the limits deliberately: the ask only
-			// makes sense once you have read what is unconfirmed.
-			.site-info-cta {
+
+			// The page used to be eight paragraphs of caveat before anything clickable.
+			// The detail is all still here, one <details> deep - native, so it costs no
+			// JS and keyboard and screen readers get it for free.
+			.site-panel {
 				width: 75%;
-				margin: var(--spacer-4) 0 0;
-				padding: var(--spacer-3) var(--spacer-4);
-				border: 1px solid var(--bs-brand);
+				margin-top: var(--spacer-2);
+				border: 1px solid rgba(255, 255, 255, 0.12);
 				border-radius: var(--bs-border-radius);
-				background: rgba(0, 0, 0, 0.25);
+				background: rgba(0, 0, 0, 0.2);
 				font-size: 1rem;
-				color: var(--bs-gray-300);
+				color: var(--bs-gray-400);
 
-				p {
-					margin: var(--spacer-2) 0 0;
+				&[open] {
+					border-color: rgba(255, 255, 255, 0.2);
 				}
 
-				a {
+				summary {
+					padding: var(--spacer-2) var(--spacer-3);
 					color: var(--bs-gray-200);
-					text-decoration: underline;
-				}
+					cursor: pointer;
+					list-style: none;
+					user-select: none;
 
-				.site-info-cta-title {
-					margin: 0;
-					font-size: 1.25rem;
-					color: var(--bs-white);
-				}
-
-				.site-info-cta-label {
-					margin-top: var(--spacer-3);
-					color: var(--bs-white);
-					font-weight: 600;
-				}
-
-				.site-info-cta-list {
-					margin: var(--spacer-1) 0 0;
-					padding-left: var(--spacer-4);
-
-					li + li {
-						margin-top: var(--spacer-1);
+					&::-webkit-details-marker {
+						display: none;
 					}
-				}
 
-				.site-info-cta-actions {
-					display: flex;
-					flex-wrap: wrap;
-					gap: var(--spacer-2);
-					margin-top: var(--spacer-3);
-				}
-
-				.site-info-cta-button {
-					display: inline-block;
-					padding: var(--spacer-1) var(--spacer-3);
-					border: 1px solid var(--bs-brand);
-					border-radius: var(--bs-border-radius);
-					color: var(--bs-white);
-					text-decoration: none;
+					// The disclosure arrow, drawn rather than inherited so it can rotate.
+					&::before {
+						content: '';
+						display: inline-block;
+						width: 0.45em;
+						height: 0.45em;
+						margin-right: var(--spacer-2);
+						border-right: 2px solid var(--bs-brand);
+						border-bottom: 2px solid var(--bs-brand);
+						transform: rotate(-45deg) translateY(-0.1em);
+						transition: transform 0.15s ease;
+					}
 
 					&:hover {
-						background: var(--bs-brand);
-						color: var(--bs-black);
+						color: var(--bs-white);
 					}
 				}
 
-				.site-info-cta-foot {
-					margin-top: var(--spacer-3);
-					color: var(--bs-gray-400);
+				&[open] > summary::before {
+					transform: rotate(45deg) translateY(-0.15em);
+				}
+
+				.site-panel-body {
+					padding: 0 var(--spacer-3) var(--spacer-3);
+
+					p {
+						margin: 0 0 var(--spacer-2);
+					}
+
+					ul {
+						margin: 0;
+						padding-left: var(--spacer-4);
+
+						li + li {
+							margin-top: var(--spacer-1);
+						}
+					}
+
+					a {
+						color: var(--bs-gray-200);
+						text-decoration: underline;
+					}
 				}
 			}
+
+			// The one block asking for something back, so the one that is not grey on grey.
+			.site-cta {
+				width: 75%;
+				margin-top: var(--spacer-4);
+				border: 1px solid var(--bs-brand);
+				border-radius: var(--bs-border-radius);
+				background: linear-gradient(180deg, rgba(224, 163, 53, 0.12), rgba(0, 0, 0, 0.25));
+				overflow: hidden;
+
+				.site-cta-body {
+					padding: var(--spacer-3) var(--spacer-4);
+				}
+
+				.site-cta-title {
+					margin: 0;
+					font-size: 1.35rem;
+					color: var(--bs-white);
+				}
+
+				.site-cta-lede {
+					margin: var(--spacer-2) 0 0;
+					font-size: 1rem;
+					color: var(--bs-gray-300);
+				}
+
+				.site-cta-note {
+					margin: var(--spacer-2) 0 0;
+					font-size: 0.875rem;
+					color: var(--bs-gray-400);
+				}
+
+				.site-cta-button {
+					display: inline-flex;
+					align-items: center;
+					gap: var(--spacer-2);
+					margin-top: var(--spacer-3);
+					padding: 0.6rem 1.4rem;
+					border: 0;
+					border-radius: var(--bs-border-radius);
+					background: var(--bs-brand);
+					color: #1a1205;
+					font-size: 1.05rem;
+					font-weight: 600;
+					text-decoration: none;
+					box-shadow: 0 2px 10px rgba(224, 163, 53, 0.25);
+					transition:
+						transform 0.12s ease,
+						box-shadow 0.12s ease,
+						filter 0.12s ease;
+
+					&:hover,
+					&:focus-visible {
+						color: #1a1205;
+						filter: brightness(1.08);
+						transform: translateY(-1px);
+						box-shadow: 0 4px 16px rgba(224, 163, 53, 0.35);
+					}
+
+					&:active {
+						transform: translateY(0);
+					}
+				}
+
+				// The panel inside the call to action sits flush with it rather than
+				// floating as a second card.
+				.site-panel-inset {
+					width: 100%;
+					margin: 0;
+					border: 0;
+					border-top: 1px solid rgba(224, 163, 53, 0.35);
+					border-radius: 0;
+					background: rgba(0, 0, 0, 0.2);
+				}
+			}
+
 		}
 
 		.sim-links-container {
@@ -210,7 +289,8 @@
 			.info-container {
 				.site-info,
 				.site-info-caveat,
-				.site-info-cta,
+				.site-cta,
+				.site-panel,
 				.site-info-limits {
 					width: 100%;
 				}
