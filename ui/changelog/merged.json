@@ -1,5 +1,11 @@
 [
 	{
+		"number": 226,
+		"title": "Five procs Forever redesigned rather than retuned",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/226"
+	},
+	{
 		"number": 225,
 		"title": "Eight more procs off the beta client",
 		"mergedAt": "2026-09-19",
