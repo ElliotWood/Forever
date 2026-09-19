@@ -1,5 +1,11 @@
 [
 	{
+		"number": 220,
+		"title": "docs: say on the homepage how a number gets in and what checks it",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/220"
+	},
+	{
 		"number": 219,
 		"title": "tools: read the per-table hotfix caches, which answer the question directly",
 		"mergedAt": "2026-09-19",
