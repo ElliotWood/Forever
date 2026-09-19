@@ -1,5 +1,11 @@
 [
 	{
+		"number": 248,
+		"title": "The damage meter's hit count is not the first word",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/248"
+	},
+	{
 		"number": 247,
 		"title": "Say on the homepage that the meter flushes on logout",
 		"mergedAt": "2026-09-19",
