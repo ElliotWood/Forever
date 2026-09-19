@@ -1,7 +1,7 @@
 {
 	"Settings": {
 		"BaseDir": "/mnt/c/Program Files/World of Warcraft",
-		"Product": "wow_anniversary_ptr"
+		"Product": "wow_classic_beta"
 	},
 	"TargetDirectory": "dbfilesclient",
 	"GameTablesOutDirectory": "../../assets/db_inputs/basestats",
@@ -29,9 +29,7 @@
 		"ItemEffect",
 		"ItemClass",
 		"SpellCategory",
-		"ItemRandomProperties",
 		"ItemExtendedCost",
-		"ItemRandomSuffix",
 		"RandPropPoints",
 		"ItemDamageAmmo",
 		"ItemDamageOneHand",
@@ -43,7 +41,6 @@
 		"ItemDamageWand",
 		"ItemNameDescription",
 		"ItemSparse",
-		"ItemUpgrade",
 		"ArmorLocation",
 		"ItemArmorTotal",
 		"ItemArmorShield",
@@ -56,12 +53,10 @@
 		"SpellEquippedItems",
 		"SpellRadius",
 		"SpellMisc",
-		"SpellCastTimes",
 		"SpellLevels",
 		"SpellPower",
 		"SpellLabel",
 		"SpellName",
-		"ScalingStatDistribution",
 		"SpellCooldowns",
 		"SpellScaling",
 		"SpellClassOptions",
@@ -85,6 +80,21 @@
 		"Map",
 		"JournalEncounter",
 		"JournalEncounterItem",
-		"AreaTable"
+		"AreaTable",
+		"TraitDefinition",
+		"TraitDefinitionEffectPoints",
+		"TraitNodeEntry",
+		"TraitNodeXTraitNodeEntry",
+		"TraitNode",
+		"TraitTree",
+		"TraitNodeGroup",
+		"TraitNodeGroupXTraitNode",
+		"TraitCond",
+		"TraitNodeXTraitCond",
+		"TraitSubTree",
+		"TraitEdge",
+		"TraitNodeGroupXTraitCond",
+		"SpellCastTimes",
+		"SpellCastingRequirements"
 	]
 }
