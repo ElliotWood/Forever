@@ -72,6 +72,38 @@ def read(path):
 	return version, build, out
 
 
+def sidecars(adb_dir):
+	"""The named per-table caches sitting beside DBCache.bin, which answer the question directly.
+
+	The client keeps one <Table><pid>.tmp per table it caches hotfixes for, and a table with
+	nothing to cache gets a 4 byte stub. So the file sizes say which tables have been hotfixed
+	without any of the tableHash guesswork: a 4 byte Spell<pid>.tmp means no spell hotfixes at
+	all. The files are held open while the client runs, but their sizes are readable.
+	"""
+	try:
+		names = [n for n in os.listdir(adb_dir) if n.endswith('.tmp')]
+	except OSError:
+		return
+	if not names:
+		return
+	by_pid = collections.defaultdict(list)
+	for name in sorted(names):
+		stem = name[:-4]
+		i = len(stem)
+		while i > 0 and stem[i - 1].isdigit():
+			i -= 1
+		table_name, pid = stem[:i], stem[i:]
+		size = os.path.getsize(os.path.join(adb_dir, name))
+		by_pid[pid].append((table_name, size))
+	print('\nper-table caches (4 bytes means the client has no hotfixes for that table):')
+	for pid, rows in sorted(by_pid.items()):
+		live = [f'{t} {s:,}' for t, s in rows if s > 4]
+		empty = [t for t, s in rows if s <= 4]
+		print(f'  client pid {pid}: ' + (', '.join(live) if live else 'nothing cached'))
+		if empty:
+			print(f'    empty: {", ".join(empty)}')
+
+
 def main():
 	parser = argparse.ArgumentParser(description="What the client's hotfix cache has changed.")
 	parser.add_argument('--cache', default=DEFAULT_CACHE)
@@ -85,6 +117,7 @@ def main():
 	carrying = [r for r in records if r[2] > 0]
 	print(f'{args.cache}\n  version {version}, build {build}')
 	print(f'  {len(records)} records, {len(carrying)} carrying data, {len(records) - len(carrying)} invalidations')
+	sidecars(os.path.dirname(args.cache))
 
 	if args.ids:
 		want = int(args.ids, 16) if args.ids.startswith('0x') else int(args.ids)
