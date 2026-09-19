@@ -1,5 +1,11 @@
 [
 	{
+		"number": 222,
+		"title": "Shadow Weaving is not a raid debuff in Forever",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/222"
+	},
+	{
 		"number": 221,
 		"title": "Stop reading damage and tick counts as spell ids",
 		"mergedAt": "2026-09-19",
