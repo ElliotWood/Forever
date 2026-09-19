@@ -105,11 +105,16 @@ export class ScrubPage {
 							<p className="scrub-file-sub">What the server actually paid out</p>
 							<p>
 								Nothing on this site has been checked against a running game, and Forever blocks addons from reading damage, so the
-								client&apos;s own meter is the only measurement there will be. The client clears it between sessions, so grab it while you are
-								logged in.
+								client&apos;s own meter is the only measurement there will be. It is the only thing that can show a number here is wrong rather
+								than merely unverified.
 							</p>
 							<p className="scrub-path">
 								<code>World of Warcraft\_classic_beta_\Cache\</code>
+							</p>
+							<p className="scrub-file-note scrub-hint">
+								<strong>Not there? That is normal.</strong> The client writes this file while you play and clears it between sessions, so an
+								empty folder means the meter has nothing in it yet rather than that you are in the wrong place. Log in, fight something, then
+								copy it out &mdash; ideally without closing the game first.
 							</p>
 							<p className="scrub-file-note scrub-warn">
 								This one holds character names, yours and everyone you grouped with. They are taken out <strong>in your browser</strong> before
@@ -172,7 +177,10 @@ export class ScrubPage {
 			const { scrubbed, records, namesRemoved } = scrub(bytes);
 			if (!records.length) {
 				this.meterResult.replaceChildren(
-					<p className="scrub-warn scrub-message">No damage meter records in that file. Is it Cache/DamageMeter.bin?</p>,
+					<p className="scrub-warn scrub-message">
+						No damage meter records in that file. If the meter had nothing in it the client writes an empty one, so fight something and copy it out
+						again.
+					</p>,
 				);
 				return;
 			}
