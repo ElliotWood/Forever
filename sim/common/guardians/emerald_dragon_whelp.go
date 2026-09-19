@@ -124,7 +124,9 @@ func (whelp *EmeraldDragonWhelp) registerAcidSpitSpell() {
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			// TODO: The one log i was looking at has 0 misses on the spell but it also has only 25 casts
 			// so i can't make a good assumption. Right now we leave it with a hit check and we can remove later.
-			spell.CalcAndDealDamage(sim, target, sim.Roll(64, 86), spell.OutcomeMagicHitAndCrit)
+			// Beta client 1.60.1 (spell 9591): a flat 374, where Era rolls around 64. The whelp
+			// hits roughly six times as hard in Forever.
+			spell.CalcAndDealDamage(sim, target, 374, spell.OutcomeMagicHitAndCrit)
 		},
 	})
 }
