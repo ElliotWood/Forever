@@ -212,6 +212,14 @@ export class ActionId {
 		// manifest has a tooltip, show that and leave the Wowhead dataset off, so its script has
 		// nothing to attach to.
 		const source = this.spellId ? spellSource(this.spellId) : undefined;
+
+		// Where the number came from, on every icon the sim draws. The manifest knows this for
+		// every ability the sim registers, and until now it was only visible by reading the
+		// repository. An ability carrying an assumption looks the same on screen as one read
+		// straight out of the client, which is the wrong way round for a site whose whole claim
+		// is being plain about what is settled. Styled in scss/shared/_spell_source.scss.
+		if (elem && source) elem.dataset.spellSource = source.source;
+
 		if (elem && source?.tooltip && (source.source === 'forever' || source.source === 'assumed')) {
 			const unconfirmed = source.source === 'assumed' ? '\n\nSome numbers here are unconfirmed.' : '';
 			tippy(elem, {
