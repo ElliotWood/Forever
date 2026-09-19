@@ -1,5 +1,11 @@
 [
 	{
+		"number": 232,
+		"title": "Ask for the client's hotfix cache instead of a damage meter",
+		"mergedAt": "2026-09-19",
+		"url": "https://github.com/ElliotWood/Forever/pull/232"
+	},
+	{
 		"number": 231,
 		"title": "Ask beta players for in-game numbers",
 		"mergedAt": "2026-09-19",
