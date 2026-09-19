@@ -48,11 +48,6 @@
 		"source": "forever",
 		"tooltip": "160 Mana\n20 yd range\nInstant\n10 sec cooldown\nBlasts the target with Holy energy, causing 128 to 140 Holy damage to an enemy."
 	},
-	"14": {
-		"ability": "Mana Drain",
-		"file": "sim/paladin/blessing_of_sanctuary.go",
-		"source": "unreviewed"
-	},
 	"1866": {
 		"ability": "Holy Strike",
 		"file": "sim/paladin/holy_strike.go",
@@ -330,11 +325,6 @@
 		"file": "sim/paladin/soc.go",
 		"note": "Beta client 1.60.1.69893 matches Classic, 0.429 coefficient.",
 		"source": "classic"
-	},
-	"21": {
-		"ability": "spell 21",
-		"file": "sim/paladin/blessing_of_sanctuary.go",
-		"source": "unreviewed"
 	},
 	"21183": {
 		"ability": "Judgement of the Crusader",

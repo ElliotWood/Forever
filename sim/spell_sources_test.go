@@ -30,7 +30,7 @@ import (
 
 // Raised by hand when an id is deliberately left undeclared, never by a tool. Every entry
 // needs a reason, because an undeclared id is an ability the site describes wrongly.
-const unreviewedSpellBudget = 143
+const unreviewedSpellBudget = 129
 
 // Registration sites whose id the walk cannot read from the source. Each one is an ability
 // the manifest cannot cover, so this only ever falls.
@@ -175,14 +175,14 @@ func registeredSpellIDs(t *testing.T) (map[int][]string, []string) {
 						if !ok || i >= len(stmt.Rhs) {
 							continue
 						}
-						if lit, ok := stmt.Rhs[i].(*ast.CompositeLit); ok {
+						if lit := boundComposite(stmt.Rhs[i]); lit != nil {
 							tableNames[lit] = name.Name
 						}
 					}
 				case *ast.ValueSpec:
 					for i, name := range stmt.Names {
 						if i < len(stmt.Values) {
-							if lit, ok := stmt.Values[i].(*ast.CompositeLit); ok {
+							if lit := boundComposite(stmt.Values[i]); lit != nil {
 								tableNames[lit] = name.Name
 							}
 						}
@@ -206,6 +206,11 @@ func registeredSpellIDs(t *testing.T) (map[int][]string, []string) {
 				// level below the only literal that still names the type.
 				elements := []*ast.CompositeLit{lit}
 				for _, elt := range lit.Elts {
+					// A table keyed by level writes its ranks as `60: {spellID: ...}`, so the
+					// rank sits behind the key rather than directly in the element list.
+					if kv, ok := elt.(*ast.KeyValueExpr); ok {
+						elt = kv.Value
+					}
 					if inner, ok := elt.(*ast.CompositeLit); ok && inner.Type == nil {
 						elements = append(elements, inner)
 					}
@@ -308,6 +313,24 @@ func registeredSpellIDs(t *testing.T) (map[int][]string, []string) {
 
 // The ids a single `SpellID:` value can stand for, in the shapes the sim uses. A name can
 // stand for another name, so this follows bindings rather than looking only one step back.
+// The composite an expression binds, seen through the index that picks one rank out of it:
+// `map[int32]rankInfo{...}[warrior.Level]` binds the whole table to the local, and the
+// field lookup needs the table filed under that local's name.
+func boundComposite(expr ast.Expr) *ast.CompositeLit {
+	for {
+		switch node := expr.(type) {
+		case *ast.CompositeLit:
+			return node
+		case *ast.IndexExpr:
+			expr = node.X
+		case *ast.ParenExpr:
+			expr = node.X
+		default:
+			return nil
+		}
+	}
+}
+
 func resolveSpellID(expr ast.Expr, locals, globals map[string]ast.Expr, fields map[string]map[string][]int, structFields map[string]map[string]string, depth int) []int {
 	if depth > 4 {
 		return nil
@@ -331,19 +354,6 @@ func resolveSpellID(expr ast.Expr, locals, globals map[string]ast.Expr, fields m
 		}
 		if len(found) > 0 {
 			return found
-		}
-	}
-
-	// A name bound to such a table, in the function or at package level.
-	if root := rootIdent(expr); root != nil {
-		for _, scope := range []map[string]ast.Expr{locals, globals} {
-			bound, ok := scope[root.Name]
-			if !ok || bound == expr {
-				continue
-			}
-			if found := resolveSpellID(bound, locals, globals, fields, structFields, depth+1); len(found) > 0 {
-				return found
-			}
 		}
 	}
 
@@ -387,6 +397,19 @@ func resolveSpellID(expr ast.Expr, locals, globals map[string]ast.Expr, fields m
 				if found, ok := fields[candidate][field]; ok {
 					return found
 				}
+			}
+		}
+	}
+
+	// A name bound to such a table, in the function or at package level.
+	if root := rootIdent(expr); root != nil {
+		for _, scope := range []map[string]ast.Expr{locals, globals} {
+			bound, ok := scope[root.Name]
+			if !ok || bound == expr {
+				continue
+			}
+			if found := resolveSpellID(bound, locals, globals, fields, structFields, depth+1); len(found) > 0 {
+				return found
 			}
 		}
 	}
