@@ -8,7 +8,7 @@
 
 export const UPLOAD_URL = 'https://forever-uploads.gigaflare-elliot.workers.dev/upload';
 
-export type UploadKind = 'dbcache' | 'damagemeter';
+export type UploadKind = 'dbcache' | 'damagemeter' | 'screenshot';
 
 export type UploadResult = { ok: true; receipt: string } | { ok: false; error: string };
 

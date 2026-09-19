@@ -8,11 +8,11 @@ import { SocialLinks } from '../core/components/social_links.jsx';
 import { SITE_BASE, SITE_VERSION } from '../core/constants/other.js';
 import { IndividualSimUIConfig, RaidSimPreset } from '../core/individual_sim_ui.js';
 import { LaunchStatus, simLaunchStatuses } from '../core/launched_sims.js';
+import { MAX_PARTY_SIZE } from '../core/party.js';
 import { getSpecConfig } from '../core/player.js';
 import { ErrorOutcomeType, ProgressMetrics, Raid as RaidProto } from '../core/proto/api.js';
 import { Class, Spec } from '../core/proto/common.js';
 import { SimResult } from '../core/proto_utils/sim_result.js';
-import { MAX_PARTY_SIZE } from '../core/party.js';
 import {
 	cssClassForClass,
 	getTalentTree,
@@ -28,6 +28,9 @@ import { Sim, SimError } from '../core/sim.js';
 import { EventID, TypedEvent } from '../core/typed_event.js';
 import { formatToNumber, formatToPercent } from '../core/utils.js';
 import { applyBlessings, applyNewPlayerAssignments, communityBuilds, newPlayerFromPreset, playerPresets, RaidBuild } from '../raid/presets.js';
+import { restsCell } from '../core/components/rests_cell.js';
+import { Composition } from '../core/spells/rests.js';
+import { composition } from './confidence.js';
 
 // Twenty-six players over a two minute encounter, so this is not free: measured at about
 // forty seconds from opening the page to the table appearing, on four cores. The run has
@@ -41,6 +44,7 @@ const isLaunched = (spec: Spec) => simLaunchStatuses[spec].status != LaunchStatu
 type Ranking = {
 	build: RaidBuild;
 	dps: number;
+	rests: Composition;
 };
 
 // Every spec's own sim starts with the raid buffs and debuffs that spec assumes somebody
@@ -163,10 +167,10 @@ export class DpsRankings extends Component {
 			<div className="dps-rankings-provenance-block">
 				<h2 className="dps-rankings-provenance-title">These numbers are provisional</h2>
 				<p className="dps-rankings-provenance-body">
-					The beta client was datamined on 17 September, and the numbers here come from its own data tables rather than from BlizzCon tooltips:
-					build 1.60.1.69913, read against Classic Era and diffed spell by spell. Talent values come from the client's rank curves, coefficients
-					from the spell tables, and each rank is scaled to level 60 by the client's per-level points. 41 abilities still carry a number the
-					client does not settle and 143 have not been classified; they are listed one line each in the{' '}
+					The beta client was datamined on 17 September, and the numbers here come from its own data tables rather than from BlizzCon tooltips: build
+					1.60.1.69913, read against Classic Era and diffed spell by spell. Talent values come from the client's rank curves, coefficients from the
+					spell tables, and each rank is scaled to level 60 by the client's per-level points. 41 abilities still carry a number the client does not
+					settle and 143 have not been classified; they are listed one line each in the{' '}
 					<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer">
 						beta re-verification checklist
 					</a>
@@ -181,10 +185,10 @@ export class DpsRankings extends Component {
 				</p>
 				<p className="dps-rankings-provenance-body">
 					There is a second limit under the first one, and the client does not lift it. Downranking is the clearest case: the client carries the full
-					spell power coefficient on low ranks where Classic Era carried a reduced one, so read as written a rank 4 Lightning Bolt does most of a
-					rank 10 for a quarter of the mana, which is what the elemental rotation on this table does. Whether Forever removed that penalty or applies
-					it somewhere the data does not show changes every caster here. The same goes for proc chances the client leaves unset and for combat rules
-					that live on the server rather than in a table.
+					spell power coefficient on low ranks where Classic Era carried a reduced one, so read as written a rank 4 Lightning Bolt does most of a rank
+					10 for a quarter of the mana, which is what the elemental rotation on this table does. Whether Forever removed that penalty or applies it
+					somewhere the data does not show changes every caster here. The same goes for proc chances the client leaves unset and for combat rules that
+					live on the server rather than in a table.
 				</p>
 				<p className="dps-rankings-provenance-body">
 					So: do not pick a main off this table, and do not quote it as a Forever balance claim. It is a place to catch the sim getting something
@@ -261,6 +265,14 @@ export class DpsRankings extends Component {
 					Raid buffs, party buffs and debuffs are the strongest of what each launched spec's own sim assumes by default, given to everyone alike, so
 					nobody is missing a buff it expects. Blessings come from the paladins actually in the raid; innervates and power infusions are off, because
 					nobody in the raid is casting them. <strong>No world buffs</strong>: they do not work inside Forever raids.
+				</li>
+				<li>
+					<strong>Rests on a guess</strong> is not a verdict on the build, it is what the build's damage is made of. Every action it performed is
+					weighted by its share of that build's damage and looked up in the <a href={`${SITE_BASE}evidence/`}>evidence manifest</a>, which covers the
+					talents, buffs, debuffs and item procs as well as the spells. The figure is everything neither settled from data, seen happen, nor a plain
+					weapon swing - white damage is weapon damage times attack speed, which is the oldest arithmetic in the sim and has no manifest entry to
+					have. Two builds a hundred DPS apart mean different things if one of them runs its rotation through three unconfirmed numbers and the other
+					does not. It is deliberately a composition and not a score: collapsing the tiers into one figure would need weights nobody can defend.
 				</li>
 				<li>
 					Every run is a fresh simulation in your browser at the iteration count below. Fewer iterations means a noisier comparison; raise it if two
@@ -357,7 +369,10 @@ export class DpsRankings extends Component {
 	private setResults(result: SimResult) {
 		// Builds of one spec share it, so match each player back by its raid slot, not its spec.
 		const rankings: Array<Ranking> = this.builds
-			.map((build, index) => ({ build, dps: result.getPlayerWithRaidIndex(index)?.dps.avg || 0 }))
+			.map((build, index) => {
+				const player = result.getPlayerWithRaidIndex(index);
+				return { build, dps: player?.dps.avg || 0, rests: composition(player!) };
+			})
 			.sort((a, b) => b.dps - a.dps);
 		const topDps = rankings[0]?.dps || 1;
 
@@ -370,6 +385,7 @@ export class DpsRankings extends Component {
 						<th className="metrics-table-header-cell dps-rankings-spec-cell">Build</th>
 						<th className="metrics-table-header-cell dps-rankings-dps-cell">DPS</th>
 						<th className="metrics-table-header-cell dps-rankings-share-cell">Share of top</th>
+						<th className="metrics-table-header-cell rests-cell">Rests on a guess</th>
 					</tr>
 				</thead>
 				<tbody className="metrics-table-body">{rankings.map(ranking => this.buildRow(ranking, topDps))}</tbody>
@@ -400,6 +416,7 @@ export class DpsRankings extends Component {
 						<span className="dps-rankings-share-percent">{formatToPercent(share, { maximumFractionDigits: 1 })}</span>
 					</div>
 				</td>
+				<td className="rests-cell">{restsCell(ranking.rests)}</td>
 			</tr>
 		) as Element;
 	}

@@ -1,6 +1,7 @@
 package shadow
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common" // imported to get caster sets included.
@@ -78,4 +79,17 @@ var Stats = []proto.Stat{
 	proto.Stat_StatShadowPower,
 	proto.Stat_StatSpellHit,
 	proto.Stat_StatSpellCrit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:                "shadow_priest",
+		Class:              proto.Class_ClassPriest,
+		Race:               proto.Race_RaceUndead,
+		SpecOptions:        PlayerOptionsBasic,
+		Consumes:           P1Consumes,
+		Buffs:              core.ForeverBuffs,
+		DistanceFromTarget: 30,
+	})
 }

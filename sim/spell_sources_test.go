@@ -37,13 +37,25 @@ const unreviewedSpellBudget = 0
 const unresolvedSpellSiteBudget = 14
 
 type spellSource struct {
-	Ability     string   `json:"ability"`
-	File        string   `json:"file"`
-	Source      string   `json:"source"`
-	ForeverID   int      `json:"foreverId,omitempty"`
-	Tooltip     string   `json:"tooltip,omitempty"`
-	Note        string   `json:"note,omitempty"`
-	Assumptions []string `json:"assumptions,omitempty"`
+	Ability     string         `json:"ability"`
+	File        string         `json:"file"`
+	Source      string         `json:"source"`
+	ForeverID   int            `json:"foreverId,omitempty"`
+	Tooltip     string         `json:"tooltip,omitempty"`
+	Note        string         `json:"note,omitempty"`
+	Assumptions []string       `json:"assumptions,omitempty"`
+	Measured    *spellMeasured `json:"measured,omitempty"`
+}
+
+// A number checked against a running game rather than against a table. This sits alongside
+// Source rather than replacing it: where a number came from and whether anyone has seen it
+// happen are two different facts, and an ability read from the client AND confirmed in game
+// is worth more than either on its own. Collapsing them into one label would throw that away.
+type spellMeasured struct {
+	Date    string `json:"date"`
+	How     string `json:"how"`
+	Client  string `json:"client"`
+	Biggest int    `json:"biggest"`
 }
 
 var validSpellSources = map[string]bool{
@@ -655,6 +667,14 @@ func TestSpellSourcesAreWellFormed(t *testing.T) {
 		}
 		if !validSpellSources[source.Source] {
 			t.Errorf("spell %d (%s): %q is not a source", id, source.Ability, source.Source)
+		}
+
+		// A measurement that does not say when it was taken, against what, or what was seen
+		// is not a measurement; it is a claim.
+		if m := source.Measured; m != nil {
+			if m.Date == "" || m.How == "" || m.Client == "" || m.Biggest <= 0 {
+				t.Errorf("spell %d (%s): measured needs a date, a method, the client's range and what was seen", id, source.Ability)
+			}
 		}
 
 		// An ability Forever changed has to carry its own words, or the site falls back to

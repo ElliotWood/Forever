@@ -1,6 +1,7 @@
 package dpswarrior
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common" // imported to get item effects included.
@@ -90,4 +91,16 @@ var Stats = []proto.Stat{
 	proto.Stat_StatAttackPower,
 	proto.Stat_StatMeleeCrit,
 	proto.Stat_StatMeleeHit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "warrior",
+		Class:       proto.Class_ClassWarrior,
+		Race:        proto.Race_RaceOrc,
+		SpecOptions: PlayerOptionsFury,
+		Consumes:    P1Consumes,
+		Buffs:       core.ForeverBuffs,
+	})
 }

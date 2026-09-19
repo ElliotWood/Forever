@@ -1,0 +1,75 @@
+name: Build Arena
+
+# Runs every build the sim can be given and commits the leaderboard to ui/arena/results.json,
+# which the arena page renders without simulating anything in the browser.
+#
+# This is also the entire cache story. The committed file is the cache, the commit that
+# produced it is the key, and this workflow is the invalidation: nothing has to notice that a
+# spell changed, because the only thing that ever writes the file is a run that happened
+# after the change. The paths below are what a build's number can actually depend on.
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'sim/**'
+      - 'ui/*/gear_sets/**'
+      - 'ui/*/apls/**'
+      - 'ui/*/presets.ts'
+      - 'ui/core/spells/**'
+      - 'tools/arena/**'
+      - '.github/workflows/build_arena.yml'
+  workflow_dispatch:
+
+# Each run commits to master, so two of them racing means the loser is rejected as a
+# non fast forward. Queued rather than cancelled: a cancelled run leaves the leaderboard
+# describing a sim nobody is running any more.
+concurrency:
+  group: build-arena
+  cancel-in-progress: false
+
+jobs:
+  arena:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    # Several hundred runs at five thousand iterations each. The specs go in parallel, but
+    # rogue alone is most of it: nine gear sets times seven rotations.
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.23.x
+
+      - name: Run the arena
+        run: go test --tags=with_db -timeout 80m -run TestArena ./sim/...
+        env:
+          ARENA_OUT: ${{ github.workspace }}/arena-out
+
+      - name: Merge and score
+        run: go run ./tools/arena arena-out ui/arena/results.json
+
+      - name: Commit
+        run: |
+          git add ui/arena/results.json
+          if git diff --cached --quiet; then
+            echo "The leaderboard has not moved"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(arena): rebuild the leaderboard"
+          for attempt in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "push rejected, rebasing on master (attempt $attempt)"
+            git pull --rebase origin master
+          done
+          echo "could not push after five attempts"
+          exit 1

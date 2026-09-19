@@ -1,0 +1,5207 @@
+{
+	"commit": "1d0e129061b62e81332e5f9c22b36f31408a933a",
+	"generated": "2026-09-19T16:25:46Z",
+	"iterations": 5000,
+	"builds": [
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "phase_1",
+			"rotation": "dps_reck",
+			"dps": 924.6124425094188,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6219,
+				"core": 0.258,
+				"forever": 0.1117,
+				"measured": 0,
+				"unknown": 0.0084
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "phase_2",
+			"rotation": "dps_reck",
+			"dps": 921.1983915463479,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6298,
+				"core": 0.2553,
+				"forever": 0.1107,
+				"measured": 0,
+				"unknown": 0.0042
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "phase_1",
+			"rotation": "dps_no_reck",
+			"dps": 897.9630683167735,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6114,
+				"core": 0.2651,
+				"forever": 0.1151,
+				"measured": 0,
+				"unknown": 0.0084
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "phase_2",
+			"rotation": "dps_no_reck",
+			"dps": 893.8108472307628,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6194,
+				"core": 0.2623,
+				"forever": 0.1141,
+				"measured": 0,
+				"unknown": 0.0042
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 820.7852814828259,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6295,
+				"core": 0.2577,
+				"forever": 0.1128,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "launch",
+			"rotation": "dps_no_reck",
+			"dps": 800.4891210326297,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6201,
+				"core": 0.2643,
+				"forever": 0.1157,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "p0.bis",
+			"rotation": "dps_reck",
+			"dps": 756.4402150974557,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6058,
+				"core": 0.2654,
+				"forever": 0.1287,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "retribution_paladin",
+			"build": "Retribution 10/0/41",
+			"talents": "250003--552250312012331321",
+			"gear": "launch",
+			"rotation": "basic_ret",
+			"dps": 736.7453058223261,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.4818,
+				"core": 0.3227,
+				"forever": 0.1956,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "p0.bis",
+			"rotation": "dps_no_reck",
+			"dps": 736.485285046964,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.595,
+				"core": 0.2728,
+				"forever": 0.1322,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "enhancement_shaman",
+			"build": "Enhancement 16/35/0",
+			"talents": "05023015-055030030205112251",
+			"gear": "phase_2",
+			"rotation": "default",
+			"dps": 686.5407035470062,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2744,
+				"core": 0.3864,
+				"forever": 0.3393,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "enhancement_shaman",
+			"build": "Enhancement 16/35/0",
+			"talents": "05023015-055030030205112251",
+			"gear": "phase_1",
+			"rotation": "default",
+			"dps": 681.699471485534,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2723,
+				"core": 0.3891,
+				"forever": 0.3386,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "arms_launch",
+			"rotation": "dps_reck",
+			"dps": 667.9856978978969,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5346,
+				"core": 0.3385,
+				"forever": 0.1269,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 666.7323575595327,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.138,
+				"forever": 0.862,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "phase_1",
+			"rotation": "dps_reck",
+			"dps": 665.9544105602829,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5841,
+				"core": 0.3933,
+				"forever": 0.0131,
+				"measured": 0,
+				"unknown": 0.0095
+			}
+		},
+		{
+			"spec": "enhancement_shaman",
+			"build": "Enhancement 16/35/0",
+			"talents": "05023015-055030030205112251",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 662.769947790002,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2459,
+				"core": 0.4199,
+				"forever": 0.3342,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "launch",
+			"rotation": "forever_affliction",
+			"dps": 658.399487807734,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1356,
+				"forever": 0.8643,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 656.0839412854326,
+			"rests": {
+				"assumed": 0.2722,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.7278,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "mc",
+			"rotation": "forever_pact",
+			"dps": 654.3472886016009,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1406,
+				"forever": 0.8594,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "phase_1",
+			"rotation": "dps_no_reck",
+			"dps": 652.4724527870501,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5755,
+				"core": 0.4017,
+				"forever": 0.0134,
+				"measured": 0,
+				"unknown": 0.0094
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0",
+			"talents": "30305213-550501015050010051",
+			"gear": "arms_launch",
+			"rotation": "dps_no_reck",
+			"dps": 648.70917101398,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5251,
+				"core": 0.3443,
+				"forever": 0.1306,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "shadow_priest",
+			"build": "Shadow 15/0/36",
+			"talents": "0253000311--550022501201302251",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 647.3251945253613,
+			"rests": {
+				"assumed": 0.0063,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9937,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "arms_launch",
+			"rotation": "dps_reck",
+			"dps": 646.3275447429468,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.652,
+				"core": 0.3264,
+				"forever": 0.0216,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "mc",
+			"rotation": "forever_affliction",
+			"dps": 645.6105576895811,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1383,
+				"forever": 0.8616,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "launch",
+			"rotation": "forever_arcane",
+			"dps": 644.5406941969449,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "p1.bis",
+			"rotation": "forever_frost",
+			"dps": 643.2595597637843,
+			"rests": {
+				"assumed": 0.2479,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.7521,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "launch",
+			"rotation": "forever_affliction",
+			"dps": 636.946123482941,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1402,
+				"forever": 0.8598,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "arms_launch",
+			"rotation": "dps_no_reck",
+			"dps": 634.155830363869,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6472,
+				"core": 0.3308,
+				"forever": 0.022,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "mc",
+			"rotation": "forever_affliction",
+			"dps": 627.4758618506538,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1423,
+				"forever": 0.8577,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 626.1668304496608,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1426,
+				"forever": 0.8574,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 620.6297905066556,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5967,
+				"forever": 0.0185,
+				"measured": 0,
+				"unknown": 0.3848
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab",
+			"dps": 620.416910641493,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5973,
+				"forever": 0.0185,
+				"measured": 0,
+				"unknown": 0.3842
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "launch",
+			"rotation": "forever_affliction",
+			"dps": 619.840408643723,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.131,
+				"forever": 0.869,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "p1.bis",
+			"rotation": "forever_arcane",
+			"dps": 619.3410505145371,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 617.8013539895697,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2491,
+				"core": 0.6586,
+				"forever": 0.0116,
+				"measured": 0,
+				"unknown": 0.0808
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "mc",
+			"rotation": "forever_pact",
+			"dps": 617.4662829508699,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1446,
+				"forever": 0.8554,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "launch",
+			"rotation": "forever_ds_ruin",
+			"dps": 614.5916642960881,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 613.5708804221956,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5982,
+				"forever": 0.0178,
+				"measured": 0,
+				"unknown": 0.3841
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_backstab",
+			"dps": 613.3564823960418,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5988,
+				"forever": 0.0178,
+				"measured": 0,
+				"unknown": 0.3834
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "mc",
+			"rotation": "forever_affliction",
+			"dps": 613.268269325681,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1324,
+				"forever": 0.8676,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "shadow_priest",
+			"build": "Shadow 15/0/36",
+			"talents": "0253000311--550022501201302251",
+			"gear": "p0.bis",
+			"rotation": "p1",
+			"dps": 610.4987322712032,
+			"rests": {
+				"assumed": 0.0056,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9944,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "launch",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 610.3006960005982,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 607.553405900711,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5957,
+				"forever": 0.0174,
+				"measured": 0,
+				"unknown": 0.3869
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_backstab",
+			"dps": 607.4089671341503,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5964,
+				"forever": 0.0175,
+				"measured": 0,
+				"unknown": 0.3861
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "mc",
+			"rotation": "forever_ds_ruin",
+			"dps": 604.7742041403477,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike",
+			"dps": 604.5093246648854,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2543,
+				"core": 0.6518,
+				"forever": 0.0118,
+				"measured": 0,
+				"unknown": 0.082
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 603.7075978871078,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1345,
+				"forever": 0.8655,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 602.904543952973,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2548,
+				"core": 0.6522,
+				"forever": 0.0118,
+				"measured": 0,
+				"unknown": 0.0812
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "launch",
+			"rotation": "forever_affliction",
+			"dps": 602.8107238770347,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1481,
+				"forever": 0.8519,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "launch",
+			"rotation": "forever_fire",
+			"dps": 601.9962671401535,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "phase_2",
+			"rotation": "dps_reck",
+			"dps": 601.3708571811109,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5842,
+				"core": 0.3975,
+				"forever": 0.0139,
+				"measured": 0,
+				"unknown": 0.0044
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 600.9428954257519,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1486,
+				"forever": 0.8514,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 600.0659975164647,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2597,
+				"core": 0.6408,
+				"forever": 0.0119,
+				"measured": 0,
+				"unknown": 0.0876
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "mc",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 598.8362752160859,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "mc",
+			"rotation": "forever_pact",
+			"dps": 596.8332419105412,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.136,
+				"forever": 0.864,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "mc",
+			"rotation": "forever_affliction",
+			"dps": 593.4495307491169,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1505,
+				"forever": 0.8495,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 592.3289509187712,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2629,
+				"core": 0.6371,
+				"forever": 0.012,
+				"measured": 0,
+				"unknown": 0.0879
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "mc",
+			"rotation": "forever_pact",
+			"dps": 591.8190713262794,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1509,
+				"forever": 0.8491,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p2.bis",
+			"rotation": "feral",
+			"dps": 591.2636688600612,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0637,
+				"core": 0.3891,
+				"forever": 0.5473,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 590.8497856930275,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2635,
+				"core": 0.6377,
+				"forever": 0.0121,
+				"measured": 0,
+				"unknown": 0.0867
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 590.4686746204399,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2621,
+				"core": 0.6377,
+				"forever": 0.0118,
+				"measured": 0,
+				"unknown": 0.0885
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p2.pre-bis",
+			"rotation": "feral",
+			"dps": 590.2527354643931,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0602,
+				"core": 0.3893,
+				"forever": 0.5505,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "phase_2",
+			"rotation": "dps_no_reck",
+			"dps": 589.1956494558902,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5751,
+				"core": 0.4063,
+				"forever": 0.0142,
+				"measured": 0,
+				"unknown": 0.0044
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "p0.bis",
+			"rotation": "forever_frost",
+			"dps": 588.3810428737668,
+			"rests": {
+				"assumed": 0.255,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.745,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "p1.bis",
+			"rotation": "forever_fire",
+			"dps": 588.3526790736465,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 586.5158618413451,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5934,
+				"core": 0.3915,
+				"forever": 0.0152,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 583.078681392905,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2652,
+				"core": 0.634,
+				"forever": 0.0119,
+				"measured": 0,
+				"unknown": 0.089
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "launch",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 582.1821201270337,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 581.2208174282046,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2661,
+				"core": 0.6345,
+				"forever": 0.0119,
+				"measured": 0,
+				"unknown": 0.0875
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "launch",
+			"rotation": "forever_ds_ruin",
+			"dps": 579.9454162610879,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "launch",
+			"rotation": "dps_no_reck",
+			"dps": 576.7416585710854,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5855,
+				"core": 0.3991,
+				"forever": 0.0154,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "mc",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 570.0365654020657,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "mc",
+			"rotation": "forever_ds_ruin",
+			"dps": 569.9225446662527,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_backstab",
+			"dps": 565.3920417764557,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5888,
+				"forever": 0.0231,
+				"measured": 0,
+				"unknown": 0.3881
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 565.2680460599965,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5883,
+				"forever": 0.0231,
+				"measured": 0,
+				"unknown": 0.3886
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "prebis",
+			"rotation": "forever_pact",
+			"dps": 563.3362105112686,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1633,
+				"forever": 0.8367,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 561.2627371886034,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9123,
+				"core": 0.0877,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 558.604553215253,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2093,
+				"core": 0.6792,
+				"forever": 0.0206,
+				"measured": 0,
+				"unknown": 0.091
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 557.4078740419501,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2584,
+				"core": 0.6512,
+				"forever": 0.0164,
+				"measured": 0,
+				"unknown": 0.0741
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "prebis",
+			"rotation": "forever_affliction",
+			"dps": 556.3497519620008,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1605,
+				"forever": 0.8394,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Beast Mastery 35/16/0",
+			"talents": "5520001505121251-0050551",
+			"gear": "p1.bis",
+			"rotation": "p1",
+			"dps": 555.4595595624938,
+			"rests": {
+				"assumed": 0.0965,
+				"classic": 0.0442,
+				"core": 0.6811,
+				"forever": 0.1783,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 553.3987859535716,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6081,
+				"forever": 0.0265,
+				"measured": 0,
+				"unknown": 0.3655
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab",
+			"dps": 553.3987859535716,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6081,
+				"forever": 0.0265,
+				"measured": 0,
+				"unknown": 0.3655
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike",
+			"dps": 551.5775779413283,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2116,
+				"core": 0.6762,
+				"forever": 0.0208,
+				"measured": 0,
+				"unknown": 0.0914
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 550.4437836095177,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2118,
+				"core": 0.6766,
+				"forever": 0.0208,
+				"measured": 0,
+				"unknown": 0.0908
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 549.414368259849,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2079,
+				"core": 0.6792,
+				"forever": 0.0198,
+				"measured": 0,
+				"unknown": 0.0931
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 548.1196457341682,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2647,
+				"core": 0.6438,
+				"forever": 0.0166,
+				"measured": 0,
+				"unknown": 0.0749
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike",
+			"dps": 547.7937673129647,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2641,
+				"core": 0.6451,
+				"forever": 0.0166,
+				"measured": 0,
+				"unknown": 0.0742
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 547.0339758110276,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.268,
+				"core": 0.6337,
+				"forever": 0.0166,
+				"measured": 0,
+				"unknown": 0.0817
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 545.620630106778,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6095,
+				"forever": 0.0255,
+				"measured": 0,
+				"unknown": 0.3651
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_backstab",
+			"dps": 545.620630106778,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6095,
+				"forever": 0.0255,
+				"measured": 0,
+				"unknown": 0.3651
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "launch",
+			"rotation": "feral",
+			"dps": 545.6024014024016,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0349,
+				"core": 0.4046,
+				"forever": 0.5605,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 543.5661699540325,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2097,
+				"core": 0.6766,
+				"forever": 0.02,
+				"measured": 0,
+				"unknown": 0.0936
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 543.4177788095118,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2095,
+				"core": 0.6772,
+				"forever": 0.0195,
+				"measured": 0,
+				"unknown": 0.0938
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 543.0945926312354,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2711,
+				"core": 0.6295,
+				"forever": 0.0167,
+				"measured": 0,
+				"unknown": 0.0827
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 542.889202549568,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2703,
+				"core": 0.6307,
+				"forever": 0.0167,
+				"measured": 0,
+				"unknown": 0.0822
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 542.4566917790933,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2099,
+				"core": 0.6771,
+				"forever": 0.02,
+				"measured": 0,
+				"unknown": 0.0929
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "launch",
+			"rotation": "forever_ds_ruin",
+			"dps": 539.6348168660835,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "launch",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 539.6348168660835,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_backstab",
+			"dps": 539.3317820408876,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.607,
+				"forever": 0.0251,
+				"measured": 0,
+				"unknown": 0.3679
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 539.3317820408876,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.607,
+				"forever": 0.0251,
+				"measured": 0,
+				"unknown": 0.3679
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 538.3052069152404,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2703,
+				"core": 0.6309,
+				"forever": 0.0164,
+				"measured": 0,
+				"unknown": 0.0824
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 537.5821676776217,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2115,
+				"core": 0.6745,
+				"forever": 0.0197,
+				"measured": 0,
+				"unknown": 0.0943
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "prebis",
+			"rotation": "forever_affliction",
+			"dps": 537.2365456204594,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1662,
+				"forever": 0.8338,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p2.bis",
+			"rotation": "simple_vael",
+			"dps": 537.0333455222222,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1811,
+				"core": 0.563,
+				"forever": 0.2558,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "launch",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 536.7809136666169,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 536.5585330311552,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2117,
+				"core": 0.6751,
+				"forever": 0.0197,
+				"measured": 0,
+				"unknown": 0.0935
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "launch",
+			"rotation": "dps_no_reck",
+			"dps": 535.819972513647,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9108,
+				"core": 0.0892,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p2.pre-bis",
+			"rotation": "simple_vael",
+			"dps": 535.7418221802934,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1779,
+				"core": 0.564,
+				"forever": 0.2581,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 534.4719743214339,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2736,
+				"core": 0.6267,
+				"forever": 0.0165,
+				"measured": 0,
+				"unknown": 0.0832
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 534.1176802303575,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2727,
+				"core": 0.6278,
+				"forever": 0.0165,
+				"measured": 0,
+				"unknown": 0.0829
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "launch",
+			"rotation": "forever_ds_ruin",
+			"dps": 533.7115436456681,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "mc",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 529.0203355610815,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "mc",
+			"rotation": "forever_ds_ruin",
+			"dps": 527.3838323599601,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "mc",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 527.3838323599601,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "mc",
+			"rotation": "forever_ds_ruin",
+			"dps": 526.9605956630324,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "prebis",
+			"rotation": "forever_pact",
+			"dps": 526.5951541151367,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1696,
+				"forever": 0.8304,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "prebis",
+			"rotation": "forever_affliction",
+			"dps": 525.5162766543494,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1545,
+				"forever": 0.8455,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_tank_druid",
+			"build": "Bear Tank 0/31/20",
+			"talents": "-5003232120132010501-0550325",
+			"gear": "launch",
+			"rotation": "bear",
+			"dps": 525.0748317189382,
+			"rests": {
+				"assumed": 0.4149,
+				"classic": 0.4551,
+				"core": 0.0695,
+				"forever": 0.0605,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p2.bis",
+			"rotation": "p1",
+			"dps": 523.8018155178753,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0105,
+				"core": 0.5629,
+				"forever": 0.4266,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p2.pre-bis",
+			"rotation": "p1",
+			"dps": 522.5983489035054,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0059,
+				"core": 0.5641,
+				"forever": 0.43,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Marksmanship 0/39/12",
+			"talents": "-3050552301503151-50024001",
+			"gear": "p1.bis",
+			"rotation": "p1",
+			"dps": 519.8721622294557,
+			"rests": {
+				"assumed": 0.0529,
+				"classic": 0.0278,
+				"core": 0.6029,
+				"forever": 0.3163,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "backstab_launch",
+			"rotation": "forever_mutilate",
+			"dps": 518.2188460356197,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6475,
+				"forever": 0.2073,
+				"measured": 0,
+				"unknown": 0.1452
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "sinister_strike_launch",
+			"rotation": "forever_hemorrhage",
+			"dps": 517.6414220191435,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6141,
+				"forever": 0.381,
+				"measured": 0,
+				"unknown": 0.0049
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "forever_mutilate",
+			"dps": 511.8383345544832,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6472,
+				"forever": 0.205,
+				"measured": 0,
+				"unknown": 0.1478
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "backstab_launch",
+			"rotation": "forever_hemorrhage",
+			"dps": 510.4100932826183,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0127,
+				"core": 0.5974,
+				"forever": 0.3847,
+				"measured": 0,
+				"unknown": 0.0052
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 510.34933347727264,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6004,
+				"forever": 0.3942,
+				"measured": 0,
+				"unknown": 0.0053
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "prebis",
+			"rotation": "forever_pact",
+			"dps": 509.6996140398297,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1593,
+				"forever": 0.8407,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "prebis",
+			"rotation": "forever_affliction",
+			"dps": 507.7088502520739,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1759,
+				"forever": 0.8241,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "launch",
+			"rotation": "protection",
+			"dps": 507.3443963325897,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5643,
+				"core": 0.0687,
+				"forever": 0.367,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "prebis",
+			"rotation": "forever_pact",
+			"dps": 506.26248575762065,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1764,
+				"forever": 0.8236,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 506.21607911120344,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2686,
+				"core": 0.6169,
+				"forever": 0.0176,
+				"measured": 0,
+				"unknown": 0.0969
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "forever_mutilate",
+			"dps": 505.53886427596706,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6452,
+				"forever": 0.2061,
+				"measured": 0,
+				"unknown": 0.1487
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 504.25678539313395,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2043,
+				"core": 0.6698,
+				"forever": 0.0259,
+				"measured": 0,
+				"unknown": 0.1
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 503.1095098376751,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2097,
+				"core": 0.6849,
+				"forever": 0.0291,
+				"measured": 0,
+				"unknown": 0.0762
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "p0.bis",
+			"rotation": "forever_arcane",
+			"dps": 502.7931990096101,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 502.293296162368,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5992,
+				"forever": 0.0331,
+				"measured": 0,
+				"unknown": 0.3676
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_backstab",
+			"dps": 502.293296162368,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5992,
+				"forever": 0.0331,
+				"measured": 0,
+				"unknown": 0.3676
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 501.29200744602934,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0125,
+				"core": 0.5977,
+				"forever": 0.3845,
+				"measured": 0,
+				"unknown": 0.0052
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "prebis",
+			"rotation": "forever_ds_ruin",
+			"dps": 500.85518016099036,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike",
+			"dps": 500.3977390538966,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2054,
+				"core": 0.6687,
+				"forever": 0.0261,
+				"measured": 0,
+				"unknown": 0.0998
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 499.8357680709133,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5976,
+				"forever": 0.3973,
+				"measured": 0,
+				"unknown": 0.0052
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 499.03726933014707,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2059,
+				"core": 0.6692,
+				"forever": 0.0261,
+				"measured": 0,
+				"unknown": 0.0988
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16",
+			"talents": "25220010135201-0025003001-05500051",
+			"gear": "prebis",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 498.03296224431705,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike",
+			"dps": 497.18930892652145,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2123,
+				"core": 0.6814,
+				"forever": 0.0294,
+				"measured": 0,
+				"unknown": 0.0769
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 497.00508690309164,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2133,
+				"core": 0.68,
+				"forever": 0.0294,
+				"measured": 0,
+				"unknown": 0.0774
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike",
+			"dps": 495.73616862337906,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2742,
+				"core": 0.6094,
+				"forever": 0.018,
+				"measured": 0,
+				"unknown": 0.0984
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 494.65662410331845,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0126,
+				"core": 0.5964,
+				"forever": 0.3858,
+				"measured": 0,
+				"unknown": 0.0052
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 494.31166920949863,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2746,
+				"core": 0.61,
+				"forever": 0.018,
+				"measured": 0,
+				"unknown": 0.0973
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Beast Mastery 35/16/0",
+			"talents": "5520001505121251-0050551",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 493.2462586356882,
+			"rests": {
+				"assumed": 0.0964,
+				"classic": 0.0497,
+				"core": 0.6889,
+				"forever": 0.165,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 492.83764480875107,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2091,
+				"core": 0.6848,
+				"forever": 0.0282,
+				"measured": 0,
+				"unknown": 0.0779
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "p0.bis",
+			"rotation": "dps_reck",
+			"dps": 490.0642737257894,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5825,
+				"core": 0.4013,
+				"forever": 0.0162,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Beast Mastery 35/16/0",
+			"talents": "5520001505121251-0050551",
+			"gear": "p0.bis",
+			"rotation": "p1",
+			"dps": 488.8945210604338,
+			"rests": {
+				"assumed": 0.1021,
+				"classic": 0.0502,
+				"core": 0.6746,
+				"forever": 0.173,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 488.2660098655513,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2112,
+				"core": 0.6821,
+				"forever": 0.0284,
+				"measured": 0,
+				"unknown": 0.0783
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 488.21912533507265,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2121,
+				"core": 0.6808,
+				"forever": 0.0283,
+				"measured": 0,
+				"unknown": 0.0788
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 486.69400909338873,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2109,
+				"core": 0.6832,
+				"forever": 0.0277,
+				"measured": 0,
+				"unknown": 0.0782
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Survival 0/15/36",
+			"talents": "-005055-550230031051220151",
+			"gear": "p1.bis",
+			"rotation": "p1",
+			"dps": 485.60236310408794,
+			"rests": {
+				"assumed": 0.1066,
+				"classic": 0.0298,
+				"core": 0.6559,
+				"forever": 0.2077,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 482.12783501517407,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2132,
+				"core": 0.6804,
+				"forever": 0.028,
+				"measured": 0,
+				"unknown": 0.0785
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 482.09633915193996,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.214,
+				"core": 0.6791,
+				"forever": 0.0279,
+				"measured": 0,
+				"unknown": 0.079
+			}
+		},
+		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0",
+			"talents": "32305213132515201-5502",
+			"gear": "p0.bis",
+			"rotation": "dps_no_reck",
+			"dps": 481.4809564329046,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.5746,
+				"core": 0.4088,
+				"forever": 0.0165,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "launch",
+			"rotation": "simple_vael",
+			"dps": 480.14821260149284,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2216,
+				"core": 0.4628,
+				"forever": 0.3157,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "p1.bis",
+			"rotation": "forever_frost",
+			"dps": 477.2617071863917,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "prebis",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 475.03228481075706,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 474.27306740680876,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 473.3975296413022,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0161,
+				"core": 0.4577,
+				"forever": 0.5263,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27",
+			"talents": "25501-0025003001-055035510010002",
+			"gear": "prebis",
+			"rotation": "forever_ds_ruin",
+			"dps": 472.53105575373473,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_mutilate",
+			"dps": 472.33380672482195,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6352,
+				"forever": 0.2101,
+				"measured": 0,
+				"unknown": 0.1548
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 467.78071683476185,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.283,
+				"core": 0.6973,
+				"forever": 0.014,
+				"measured": 0,
+				"unknown": 0.0056
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike",
+			"dps": 458.6218718084229,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2899,
+				"core": 0.6923,
+				"forever": 0.0143,
+				"measured": 0,
+				"unknown": 0.0035
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 458.5571686230747,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.291,
+				"core": 0.6914,
+				"forever": 0.0143,
+				"measured": 0,
+				"unknown": 0.0034
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 456.7514589099541,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2786,
+				"core": 0.6113,
+				"forever": 0.0248,
+				"measured": 0,
+				"unknown": 0.0853
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_hemorrhage",
+			"dps": 455.89429777969394,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0126,
+				"core": 0.594,
+				"forever": 0.3876,
+				"measured": 0,
+				"unknown": 0.0058
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 453.53954253175743,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2964,
+				"core": 0.6856,
+				"forever": 0.0139,
+				"measured": 0,
+				"unknown": 0.0042
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 450.6701035277221,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.206,
+				"core": 0.6772,
+				"forever": 0.0369,
+				"measured": 0,
+				"unknown": 0.0799
+			}
+		},
+		{
+			"spec": "shadow_priest",
+			"build": "Shadow 15/0/36",
+			"talents": "0253000311--550022501201302251",
+			"gear": "p1.bis",
+			"rotation": "p1",
+			"dps": 449.7556109372421,
+			"rests": {
+				"assumed": 0.0083,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9917,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 449.45141612449765,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2856,
+				"core": 0.6034,
+				"forever": 0.0251,
+				"measured": 0,
+				"unknown": 0.0858
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 449.3122965944299,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2997,
+				"core": 0.6827,
+				"forever": 0.014,
+				"measured": 0,
+				"unknown": 0.0036
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab",
+			"dps": 449.1900135179343,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6734,
+				"forever": 0.0234,
+				"measured": 0,
+				"unknown": 0.3032
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 449.1900135179343,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6734,
+				"forever": 0.0234,
+				"measured": 0,
+				"unknown": 0.3032
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike",
+			"dps": 449.1187875357643,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2846,
+				"core": 0.6052,
+				"forever": 0.0252,
+				"measured": 0,
+				"unknown": 0.085
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 448.9101178402508,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3009,
+				"core": 0.6815,
+				"forever": 0.014,
+				"measured": 0,
+				"unknown": 0.0036
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 447.8855860103761,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2079,
+				"core": 0.674,
+				"forever": 0.037,
+				"measured": 0,
+				"unknown": 0.081
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike",
+			"dps": 447.84870608813924,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2073,
+				"core": 0.6753,
+				"forever": 0.0371,
+				"measured": 0,
+				"unknown": 0.0803
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 447.65664083666485,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1846,
+				"core": 0.0051,
+				"forever": 0.8103,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "protection_paladin",
+			"build": "Protection 0/45/6",
+			"talents": "-5532513321301551-15",
+			"gear": "launch",
+			"rotation": "basic_prot",
+			"dps": 446.02336818543347,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2488,
+				"core": 0.4239,
+				"forever": 0.3273,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 444.3854481221346,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2995,
+				"core": 0.6827,
+				"forever": 0.0137,
+				"measured": 0,
+				"unknown": 0.0041
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "prebis",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 442.2389180758669,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 441.83071382799346,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6759,
+				"forever": 0.0217,
+				"measured": 0,
+				"unknown": 0.3023
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_backstab",
+			"dps": 441.83071382799346,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6759,
+				"forever": 0.0217,
+				"measured": 0,
+				"unknown": 0.3023
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 440.07206970188145,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3029,
+				"core": 0.6795,
+				"forever": 0.0139,
+				"measured": 0,
+				"unknown": 0.0038
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 439.91428265607357,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3041,
+				"core": 0.6787,
+				"forever": 0.0138,
+				"measured": 0,
+				"unknown": 0.0034
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16",
+			"talents": "2535002013521105--05000551",
+			"gear": "prebis",
+			"rotation": "forever_ds_ruin",
+			"dps": 439.14687932751036,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "prebis",
+			"rotation": "forever_shadow_and_flame",
+			"dps": 436.8864324597585,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18",
+			"talents": "113-0005003221220311351-0550005",
+			"gear": "prebis",
+			"rotation": "forever_ds_ruin",
+			"dps": 436.8864324597585,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_backstab",
+			"dps": 435.9977325882484,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6742,
+				"forever": 0.0214,
+				"measured": 0,
+				"unknown": 0.3044
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 435.9977325882484,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6742,
+				"forever": 0.0214,
+				"measured": 0,
+				"unknown": 0.3044
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Marksmanship 0/39/12",
+			"talents": "-3050552301503151-50024001",
+			"gear": "p0.bis",
+			"rotation": "p1",
+			"dps": 434.60821186233835,
+			"rests": {
+				"assumed": 0.038,
+				"classic": 0.0333,
+				"core": 0.6373,
+				"forever": 0.2915,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "p0.bis",
+			"rotation": "forever_frost",
+			"dps": 433.27031422390456,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Marksmanship 0/39/12",
+			"talents": "-3050552301503151-50024001",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 432.79363705569494,
+			"rests": {
+				"assumed": 0.0412,
+				"classic": 0.0334,
+				"core": 0.6364,
+				"forever": 0.2889,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "protection_paladin",
+			"build": "Protection 0/45/6",
+			"talents": "-5532513321301551-15",
+			"gear": "launch",
+			"rotation": "p5prot",
+			"dps": 431.21671496259495,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3337,
+				"core": 0.4281,
+				"forever": 0.2382,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Survival 0/15/36",
+			"talents": "-005055-550230031051220151",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 427.57474344037024,
+			"rests": {
+				"assumed": 0.1091,
+				"classic": 0.0338,
+				"core": 0.6557,
+				"forever": 0.2014,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "Elemental 31/6/14",
+			"talents": "2505301500123031-0500001-053050001",
+			"gear": "phase_2",
+			"rotation": "default",
+			"dps": 425.8068457357094,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "forever_hemorrhage",
+			"dps": 420.89436782497427,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5768,
+				"forever": 0.4179,
+				"measured": 0,
+				"unknown": 0.0054
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 419.9615146904493,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2314,
+				"core": 0.7397,
+				"forever": 0.0251,
+				"measured": 0,
+				"unknown": 0.0039
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "p0.bis",
+			"rotation": "forever_fire",
+			"dps": 419.9002183348801,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "p1.bis",
+			"rotation": "forever_frost",
+			"dps": 417.36317796812165,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 417.3283827736276,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike",
+			"dps": 414.2837483960886,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2345,
+				"core": 0.7363,
+				"forever": 0.0254,
+				"measured": 0,
+				"unknown": 0.0038
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "backstab_launch",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 414.1911655854844,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2353,
+				"core": 0.7355,
+				"forever": 0.0254,
+				"measured": 0,
+				"unknown": 0.0038
+			}
+		},
+		{
+			"spec": "hunter",
+			"build": "Survival 0/15/36",
+			"talents": "-005055-550230031051220151",
+			"gear": "p0.bis",
+			"rotation": "p1",
+			"dps": 413.23720614056515,
+			"rests": {
+				"assumed": 0.1013,
+				"classic": 0.035,
+				"core": 0.6475,
+				"forever": 0.2163,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 410.2660015817844,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2314,
+				"core": 0.7412,
+				"forever": 0.0234,
+				"measured": 0,
+				"unknown": 0.004
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p1.bis",
+			"rotation": "launch",
+			"dps": 409.0030215578073,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1949,
+				"core": 0.0122,
+				"forever": 0.7929,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "Stormcaller 28/23/0",
+			"talents": "050433150010303-055030030004102",
+			"gear": "phase_2",
+			"rotation": "default",
+			"dps": 407.90320158829496,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 406.10688127717134,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2336,
+				"core": 0.7387,
+				"forever": 0.0237,
+				"measured": 0,
+				"unknown": 0.0041
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 406.0005215043446,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2346,
+				"core": 0.7379,
+				"forever": 0.0236,
+				"measured": 0,
+				"unknown": 0.0039
+			}
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "Elemental 31/6/14",
+			"talents": "2505301500123031-0500001-053050001",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 405.0016766253205,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 404.73080475543475,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2331,
+				"core": 0.7398,
+				"forever": 0.0231,
+				"measured": 0,
+				"unknown": 0.004
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_backstab",
+			"dps": 403.74279471196627,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6689,
+				"forever": 0.0285,
+				"measured": 0,
+				"unknown": 0.3027
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 403.74279471196627,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6689,
+				"forever": 0.0285,
+				"measured": 0,
+				"unknown": 0.3027
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike",
+			"dps": 400.7495118206419,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2354,
+				"core": 0.7374,
+				"forever": 0.0233,
+				"measured": 0,
+				"unknown": 0.0039
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 400.5451994184893,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2363,
+				"core": 0.7366,
+				"forever": 0.0233,
+				"measured": 0,
+				"unknown": 0.0039
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p2.bis",
+			"rotation": "launch",
+			"dps": 398.15946279533557,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.194,
+				"core": 0.0099,
+				"forever": 0.796,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "Elemental 31/6/14",
+			"talents": "2505301500123031-0500001-053050001",
+			"gear": "phase_1",
+			"rotation": "default",
+			"dps": 397.2404599989809,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "Stormcaller 28/23/0",
+			"talents": "050433150010303-055030030004102",
+			"gear": "phase_1",
+			"rotation": "default",
+			"dps": 388.2160314893306,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "Stormcaller 28/23/0",
+			"talents": "050433150010303-055030030004102",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 384.7054582568735,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 375.6989168656804,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.309,
+				"core": 0.663,
+				"forever": 0.0208,
+				"measured": 0,
+				"unknown": 0.0072
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "p0.bis",
+			"rotation": "forever_frost",
+			"dps": 375.0691755664301,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike_sweaty",
+			"dps": 372.7683567804609,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2288,
+				"core": 0.736,
+				"forever": 0.0309,
+				"measured": 0,
+				"unknown": 0.0044
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p0.bis",
+			"rotation": "feral",
+			"dps": 372.22868609311087,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.017,
+				"core": 0.371,
+				"forever": 0.612,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike",
+			"dps": 369.68552367508414,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2305,
+				"core": 0.7342,
+				"forever": 0.0311,
+				"measured": 0,
+				"unknown": 0.0042
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_prebis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 369.46543370964645,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2314,
+				"core": 0.7334,
+				"forever": 0.0311,
+				"measured": 0,
+				"unknown": 0.0041
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike",
+			"dps": 368.4503614382078,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3168,
+				"core": 0.658,
+				"forever": 0.0212,
+				"measured": 0,
+				"unknown": 0.0041
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_sinister_strike_iea",
+			"dps": 368.1472475211492,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.318,
+				"core": 0.6571,
+				"forever": 0.0212,
+				"measured": 0,
+				"unknown": 0.0037
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "launch",
+			"rotation": "forever_arcane",
+			"dps": 364.2267140600912,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p1.bis",
+			"rotation": "feral",
+			"dps": 361.7204934321945,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0222,
+				"core": 0.3632,
+				"forever": 0.6146,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "launch",
+			"rotation": "forever_fire",
+			"dps": 361.2085320484062,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "p1.bis",
+			"rotation": "forever_arcane",
+			"dps": 350.15444621682354,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "p1.bis",
+			"rotation": "forever_fire",
+			"dps": 347.6276929486961,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "launch",
+			"rotation": "balance",
+			"dps": 338.44583585583825,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0752,
+				"forever": 0.9248,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "launch",
+			"rotation": "forever_fire",
+			"dps": 335.72023280188256,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p0.bis",
+			"rotation": "simple_vael",
+			"dps": 326.07567474239175,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2321,
+				"core": 0.4263,
+				"forever": 0.3416,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "launch",
+			"rotation": "forever_arcane",
+			"dps": 324.6291615486172,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "p1.bis",
+			"rotation": "forever_fire",
+			"dps": 321.58986249900846,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p0.bis",
+			"rotation": "p1",
+			"dps": 318.72609855252887,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0092,
+				"core": 0.426,
+				"forever": 0.5649,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p1.bis",
+			"rotation": "simple_vael",
+			"dps": 317.054324466113,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2419,
+				"core": 0.4174,
+				"forever": 0.3407,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "p0.bis",
+			"rotation": "dps_reck",
+			"dps": 316.17575441606635,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9323,
+				"core": 0.0677,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "p1.bis",
+			"rotation": "forever_arcane",
+			"dps": 313.90113293957387,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p1.bis",
+			"rotation": "balance",
+			"dps": 311.77712947224217,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0927,
+				"forever": 0.9073,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "feral_druid",
+			"build": "Feral Cat 9/35/7",
+			"talents": "050022-5500002123032213051-052",
+			"gear": "p1.bis",
+			"rotation": "p1",
+			"dps": 310.4488389953683,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0147,
+				"core": 0.4163,
+				"forever": 0.569,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p2.bis",
+			"rotation": "balance",
+			"dps": 304.4724942522497,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0794,
+				"forever": 0.9206,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "smite_priest",
+			"build": "Smite 31/17/3",
+			"talents": "515030031305001031-00505023002-003",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 298.1632242312066,
+			"rests": {
+				"assumed": 0.1694,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.8306,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 297.773022890726,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0016,
+				"forever": 0.9984,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "p1.bis",
+			"rotation": "dps_reck",
+			"dps": 297.17396224496656,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9152,
+				"core": 0.0848,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "p0.bis",
+			"rotation": "dps_no_reck",
+			"dps": 295.1112371406708,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9297,
+				"core": 0.0703,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 293.7261500415822,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9815,
+				"forever": 0.0185,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "sinister_strike_launch",
+			"rotation": "forever_hemorrhage",
+			"dps": 291.17849142804357,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9815,
+				"forever": 0.0185,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_backstab",
+			"dps": 291.17849142804357,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9815,
+				"forever": 0.0185,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "sinister_strike_launch",
+			"rotation": "forever_mutilate",
+			"dps": 291.17849142804357,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9815,
+				"forever": 0.0185,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p0.bis",
+			"rotation": "launch",
+			"dps": 291.1340985277379,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1906,
+				"core": 0.0127,
+				"forever": 0.7967,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 285.1148978331342,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9712,
+				"forever": 0.0288,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "forever_mutilate",
+			"dps": 285.1148978331342,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9712,
+				"forever": 0.0288,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "p0.bis",
+			"rotation": "forever_arcane",
+			"dps": 284.98520013822025,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "backstab_launch",
+			"rotation": "forever_hemorrhage",
+			"dps": 284.24236456320995,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9696,
+				"forever": 0.0304,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "backstab_launch",
+			"rotation": "forever_mutilate",
+			"dps": 284.24236456320995,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9696,
+				"forever": 0.0304,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 280.9269764599014,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9716,
+				"forever": 0.0284,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "forever_mutilate",
+			"dps": 280.9269764599014,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9716,
+				"forever": 0.0284,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 279.1557854518204,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9805,
+				"forever": 0.0195,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "p1.bis",
+			"rotation": "dps_no_reck",
+			"dps": 276.77298658875793,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9117,
+				"core": 0.0883,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 276.23151342625033,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9806,
+				"forever": 0.0194,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_backstab",
+			"dps": 276.23151342625033,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9806,
+				"forever": 0.0194,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "forever_mutilate",
+			"dps": 276.23151342625033,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9806,
+				"forever": 0.0194,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16",
+			"talents": "055005023100311531--005500033",
+			"gear": "p0.bis",
+			"rotation": "forever_fire",
+			"dps": 273.73098304842716,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_backstab",
+			"dps": 273.60523025824637,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9741,
+				"forever": 0.0259,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "sinister_strike_launch",
+			"rotation": "forever_hemorrhage",
+			"dps": 273.60523025824637,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9741,
+				"forever": 0.0259,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "sinister_strike_launch",
+			"rotation": "forever_mutilate",
+			"dps": 273.60523025824637,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9741,
+				"forever": 0.0259,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 273.60523025824637,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9741,
+				"forever": 0.0259,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 273.2539727272667,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9807,
+				"forever": 0.0193,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_mutilate",
+			"dps": 270.3798407133823,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9807,
+				"forever": 0.0193,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_backstab",
+			"dps": 270.3798407133823,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9807,
+				"forever": 0.0193,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 270.3798407133823,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9807,
+				"forever": 0.0193,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 268.80965752952534,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9599,
+				"forever": 0.0401,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "backstab_launch",
+			"rotation": "forever_hemorrhage",
+			"dps": 268.2238075482648,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9577,
+				"forever": 0.0423,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 264.54591153020584,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9604,
+				"forever": 0.0396,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p1.bis",
+			"rotation": "p1",
+			"dps": 262.3836725231494,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0031,
+				"forever": 0.9969,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 261.9801670565933,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9733,
+				"forever": 0.0267,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "forever_mutilate",
+			"dps": 261.9801670565933,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9733,
+				"forever": 0.0267,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 261.9801670565933,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9733,
+				"forever": 0.0267,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_backstab",
+			"dps": 261.9801670565933,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9733,
+				"forever": 0.0267,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_hemorrhage",
+			"dps": 260.84367830848913,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9623,
+				"forever": 0.0377,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_mutilate",
+			"dps": 260.84367830848913,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9623,
+				"forever": 0.0377,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_backstab",
+			"dps": 256.57567989626335,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9735,
+				"forever": 0.0265,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_mutilate",
+			"dps": 256.57567989626335,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9735,
+				"forever": 0.0265,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 256.57567989626335,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9735,
+				"forever": 0.0265,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 256.57567989626335,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9735,
+				"forever": 0.0265,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16",
+			"talents": "-03552020130133151-005500033",
+			"gear": "p0.bis",
+			"rotation": "forever_arcane",
+			"dps": 256.5703235073572,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "mage",
+			"build": "Frost 14/0/37",
+			"talents": "050005013--0555003301001301251",
+			"gear": "p0.bis",
+			"rotation": "forever_fire",
+			"dps": 253.60538986072288,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p2.bis",
+			"rotation": "p1",
+			"dps": 252.31090161926673,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0026,
+				"forever": 0.9974,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_hemorrhage",
+			"dps": 246.55873881312738,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9477,
+				"forever": 0.0523,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "sinister_strike_launch",
+			"rotation": "forever_mutilate",
+			"dps": 245.14422753609387,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_backstab",
+			"dps": 245.14422753609387,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 245.14422753609387,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p2_bis",
+			"rotation": "forever_mutilate",
+			"dps": 239.98872095689336,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.969,
+				"forever": 0.031,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "backstab_launch",
+			"rotation": "forever_mutilate",
+			"dps": 239.9259453485555,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.966,
+				"forever": 0.034,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p0.bis",
+			"rotation": "balance",
+			"dps": 236.10278882009774,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1105,
+				"forever": 0.8895,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "forever_mutilate",
+			"dps": 236.02749352393127,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9693,
+				"forever": 0.0307,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "forever_mutilate",
+			"dps": 234.18279786945274,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 234.18279786945274,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_backstab",
+			"dps": 234.18279786945274,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "forever_mutilate",
+			"dps": 228.2513913568267,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 228.2513913568267,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_backstab",
+			"dps": 228.2513913568267,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 227.78571583860727,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9702,
+				"forever": 0.0298,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "forever_hemorrhage",
+			"dps": 225.70742202083576,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9703,
+				"forever": 0.0297,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "forever_mutilate",
+			"dps": 225.70742202083576,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9703,
+				"forever": 0.0297,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_backstab",
+			"dps": 225.70742202083576,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9703,
+				"forever": 0.0297,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "p0.bis",
+			"rotation": "protection",
+			"dps": 222.49126126884053,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.8107,
+				"core": 0.0565,
+				"forever": 0.1327,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_mutilate",
+			"dps": 219.29706969005866,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9594,
+				"forever": 0.0406,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 213.56610753389987,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9589,
+				"forever": 0.0411,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_backstab",
+			"dps": 213.56610753389987,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9589,
+				"forever": 0.0411,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "forever_mutilate",
+			"dps": 213.56610753389987,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9589,
+				"forever": 0.0411,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "forever_hemorrhage",
+			"dps": 213.56610753389987,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9589,
+				"forever": 0.0411,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50",
+			"talents": "1--552531233331212531",
+			"gear": "p1.bis",
+			"rotation": "protection",
+			"dps": 211.63762039178135,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.7676,
+				"core": 0.082,
+				"forever": 0.1503,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_backstab",
+			"dps": 189.4226502139269,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9681,
+				"forever": 0.0319,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 189.4226502139269,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9681,
+				"forever": 0.0319,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_prebis",
+			"rotation": "forever_mutilate",
+			"dps": 189.4226502139269,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9681,
+				"forever": 0.0319,
+				"measured": 0,
+				"unknown": 0
+			}
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p0.bis",
+			"rotation": "p1",
+			"dps": 168.5614970173774,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0037,
+				"forever": 0.9963,
+				"measured": 0,
+				"unknown": 0
+			}
+		}
+	]
+}

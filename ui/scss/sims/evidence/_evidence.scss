@@ -1,0 +1,367 @@
+// The global .container is display:flex with no direction, so anything using it has to say
+// which way it runs — the same trap that pushed the upload page 190px wider than a phone.
+#evidence-page {
+	.container {
+		flex-direction: column;
+	}
+
+	.evidence-header {
+		border-bottom: $border-default;
+		background: var(--bs-black-alpha-30);
+	}
+
+	.evidence-header-container {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: var(--gap-width);
+		padding-top: calc(var(--container-padding) / 2);
+		padding-bottom: calc(var(--container-padding) / 2);
+	}
+
+	.evidence-home-link {
+		display: block;
+
+		.forever-logo {
+			width: 12rem;
+			max-width: 100%;
+		}
+	}
+
+	// min-width:0 so a long word cannot push the flex item past the viewport.
+	.evidence-title-block {
+		flex: 1 1 20rem;
+		min-width: 0;
+	}
+
+	.evidence-title {
+		margin: 0;
+		font-size: 1.75rem;
+		color: var(--bs-white);
+	}
+
+	.evidence-subtitle {
+		margin: var(--spacer-2) 0 0;
+		max-width: 52rem;
+		color: var(--bs-gray-400);
+	}
+
+	.evidence-content {
+		gap: var(--spacer-3);
+		padding-top: var(--container-padding);
+		padding-bottom: var(--container-padding);
+		color: var(--bs-gray-300);
+	}
+
+	// The ask, above the list rather than under it. Someone who has the game open and five
+	// spare minutes should not have to scroll 996 rows to find out what would help.
+	.evidence-wanted {
+		padding: var(--spacer-3) var(--spacer-4);
+		border: 1px solid rgba(224, 163, 53, 0.35);
+		border-radius: var(--bs-border-radius);
+		background: rgba(224, 163, 53, 0.06);
+	}
+
+	.evidence-wanted-title {
+		margin: 0;
+		font-size: 1.3rem;
+		color: var(--bs-white);
+	}
+
+	.evidence-wanted-lede {
+		margin: var(--spacer-2) 0 0;
+		max-width: 52rem;
+		color: var(--bs-gray-300);
+	}
+
+	.evidence-wanted-link {
+		color: var(--bs-brand);
+		font-weight: 600;
+	}
+
+	// The rank is drawn in the heading instead, so the marker would be a second number.
+	.evidence-wanted-list {
+		margin: var(--spacer-3) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.evidence-want + .evidence-want {
+		margin-top: var(--spacer-3);
+		padding-top: var(--spacer-3);
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.evidence-want-title {
+		display: flex;
+		align-items: baseline;
+		gap: var(--spacer-2);
+		margin: 0;
+		font-size: 1.05rem;
+		color: var(--bs-white);
+	}
+
+	.evidence-want-rank {
+		flex: 0 0 auto;
+		color: var(--bs-brand);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.evidence-want-why {
+		margin: var(--spacer-1) 0 0;
+		color: var(--bs-gray-400);
+		font-size: 0.9rem;
+	}
+
+	.evidence-want-send {
+		margin: var(--spacer-1) 0 0;
+		color: var(--bs-gray-200);
+		font-size: 0.9rem;
+	}
+
+	.evidence-find {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacer-1);
+		margin-top: var(--spacer-2);
+		padding: 0.3rem 0.8rem;
+		border: 1px solid var(--bs-brand);
+		border-radius: 999px;
+		background: transparent;
+		color: var(--bs-white);
+		font: inherit;
+		font-size: 0.85rem;
+		cursor: pointer;
+
+		&:hover,
+		&:focus-visible {
+			background: rgba(224, 163, 53, 0.15);
+		}
+	}
+
+	// Sticky so the filter is still reachable a few hundred rows down, which is most of them.
+	.evidence-controls {
+		position: sticky;
+		top: 0;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacer-2);
+		padding: var(--spacer-2) 0;
+		background: var(--bs-body-bg);
+	}
+
+	.evidence-search {
+		width: 100%;
+		padding: 0.55rem 0.85rem;
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		border-radius: var(--bs-border-radius);
+		background: rgba(0, 0, 0, 0.35);
+		color: var(--bs-white);
+
+		&:focus {
+			outline: none;
+			border-color: var(--bs-brand);
+		}
+	}
+
+	.evidence-tiers {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacer-1);
+	}
+
+	.evidence-tier {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--spacer-1);
+		padding: 0.35rem 0.75rem;
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		border-radius: 999px;
+		background: transparent;
+		color: var(--bs-gray-300);
+		font: inherit;
+		font-size: 0.9rem;
+		cursor: pointer;
+
+		&:hover {
+			border-color: var(--bs-brand);
+			color: var(--bs-white);
+		}
+	}
+
+	.evidence-tier-count {
+		color: var(--bs-gray-500);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.evidence-tier-on {
+		border-color: var(--bs-brand);
+		background: rgba(224, 163, 53, 0.15);
+		color: var(--bs-white);
+	}
+
+	.evidence-legend {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+		gap: var(--spacer-1) var(--spacer-3);
+		font-size: 0.9rem;
+		color: var(--bs-gray-400);
+
+		li {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: baseline;
+			gap: var(--spacer-2);
+		}
+	}
+
+	.evidence-count {
+		margin: 0;
+		color: var(--bs-gray-500);
+		font-variant-numeric: tabular-nums;
+	}
+
+	.evidence-rows {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	// A grid rather than a table: on a phone the icon keeps its column and everything else
+	// stacks under the name, instead of a table forcing a sideways scroll.
+	.evidence-row {
+		display: grid;
+		grid-template-columns: 2.5rem minmax(0, 1fr);
+		grid-template-areas:
+			'icon name'
+			'icon tags'
+			'detail detail';
+		gap: var(--spacer-1) var(--spacer-2);
+		padding: var(--spacer-2) 0;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	.evidence-hidden {
+		display: none;
+	}
+
+	.evidence-icon {
+		grid-area: icon;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: var(--bs-border-radius);
+		background-color: rgba(0, 0, 0, 0.4);
+		background-size: cover;
+	}
+
+	.evidence-name {
+		grid-area: name;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: var(--spacer-2);
+		min-width: 0;
+	}
+
+	.evidence-ability {
+		color: var(--bs-white);
+		font-weight: 600;
+		overflow-wrap: anywhere;
+	}
+
+	.evidence-id {
+		color: var(--bs-gray-500);
+		font-size: 0.85rem;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.evidence-tags {
+		grid-area: tags;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacer-1);
+	}
+
+	.evidence-chip {
+		padding: 0.1rem 0.5rem;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 999px;
+		font-size: 0.78rem;
+		white-space: nowrap;
+	}
+
+	// Gold is the mark for "read the hover before trusting this", set in shared/_spell_source,
+	// so it means the same thing here. Green is the only tier that has been seen happen.
+	.evidence-chip-assumed {
+		border-color: var(--bs-brand);
+		color: var(--bs-brand);
+	}
+
+	.evidence-chip-measured {
+		border-color: #6dbf6d;
+		color: #6dbf6d;
+	}
+
+	.evidence-detail {
+		grid-area: detail;
+		min-width: 0;
+		font-size: 0.9rem;
+
+		p {
+			margin: 0 0 var(--spacer-1);
+			overflow-wrap: anywhere;
+		}
+	}
+
+	.evidence-tooltip {
+		color: var(--bs-gray-300);
+		white-space: pre-line;
+	}
+
+	.evidence-measured {
+		color: #a9d8a9;
+	}
+
+	.evidence-assumption {
+		padding-left: var(--spacer-2);
+		border-left: 3px solid var(--bs-brand);
+		color: var(--bs-gray-200);
+	}
+
+	.evidence-note,
+	.evidence-file {
+		color: var(--bs-gray-500);
+		font-size: 0.85rem;
+	}
+
+	.evidence-foot {
+		margin: var(--spacer-3) 0 0;
+		color: var(--bs-gray-400);
+		font-size: 0.9rem;
+	}
+
+	@include media-breakpoint-up(md) {
+		.evidence-controls {
+			flex-direction: row;
+			align-items: center;
+		}
+
+		.evidence-search {
+			flex: 0 1 22rem;
+		}
+
+		.evidence-row {
+			grid-template-columns: 2.5rem minmax(12rem, 18rem) minmax(0, 1fr);
+			grid-template-areas: 'icon name detail' 'icon tags detail';
+			align-items: start;
+		}
+
+		.evidence-tags {
+			align-self: start;
+		}
+	}
+}

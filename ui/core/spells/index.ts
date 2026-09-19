@@ -19,6 +19,22 @@ import shamanJson from './shaman.json';
 import warlockJson from './warlock.json';
 import warriorJson from './warrior.json';
 
+/**
+ * A number checked against a running game rather than against a table.
+ *
+ * Sits alongside `source` rather than replacing it: where a number came from and whether
+ * anyone has watched it happen are two different facts, and an ability read from the client
+ * AND confirmed in game is worth more than either on its own.
+ */
+export type SpellMeasured = {
+	date: string;
+	how: string;
+	/** What the client's tables say, for comparison. */
+	client: string;
+	/** The largest single hit the game's own meter recorded. */
+	biggest: number;
+};
+
 export type SpellSource = {
 	ability: string;
 	file: string;
@@ -27,6 +43,7 @@ export type SpellSource = {
 	tooltip?: string;
 	note?: string;
 	assumptions?: Array<string>;
+	measured?: SpellMeasured;
 };
 
 const files: Array<Record<string, unknown>> = [
@@ -53,4 +70,9 @@ for (const file of files) {
 
 export function spellSource(spellId: number): SpellSource | undefined {
 	return bySpellId.get(spellId);
+}
+
+/** Every entry, for the evidence page. */
+export function allSpellSources(): Array<[number, SpellSource]> {
+	return [...bySpellId.entries()];
 }

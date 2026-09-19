@@ -1,6 +1,7 @@
 package dps
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common"
@@ -173,4 +174,17 @@ var Stats = []proto.Stat{
 	proto.Stat_StatSpellPower,
 	proto.Stat_StatSpellHit,
 	proto.Stat_StatSpellCrit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:                "warlock",
+		Class:              proto.Class_ClassWarlock,
+		Race:               proto.Race_RaceOrc,
+		SpecOptions:        DefaultPactWarlock,
+		Consumes:           Consumes,
+		Buffs:              core.ForeverBuffs,
+		DistanceFromTarget: 30,
+	})
 }

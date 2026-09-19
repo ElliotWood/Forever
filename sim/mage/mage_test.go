@@ -1,6 +1,7 @@
 package mage
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common"
@@ -203,4 +204,17 @@ var Stats = []proto.Stat{
 	proto.Stat_StatFrostPower,
 	proto.Stat_StatSpellHit,
 	proto.Stat_StatSpellCrit,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:                "mage",
+		Class:              proto.Class_ClassMage,
+		Race:               proto.Race_RaceGnome,
+		SpecOptions:        PlayerOptions,
+		Consumes:           P1Consumes,
+		Buffs:              core.ForeverBuffs,
+		DistanceFromTarget: 30,
+	})
 }

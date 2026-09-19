@@ -1,8 +1,10 @@
-// Receives the two beta client files the sim asks players for, so that sending one is a
-// drag and a click rather than a GitHub account, an issue template and an attachment.
+// Receives the beta client files and tooltip screenshots the sim asks players for, so that
+// sending one is a drag and a click rather than a GitHub account, an issue template and an
+// attachment.
 //
 //   POST /upload?kind=dbcache        body: the raw DBCache.bin
 //   POST /upload?kind=damagemeter    body: the raw scrubbed DamageMeter.bin
+//   POST /upload?kind=screenshot     body: a PNG re-encoded in the browser, metadata gone
 //
 // Returns { ok: true, receipt } on success. The receipt is the object key, so a sender can
 // quote it if they want to say which upload was theirs.
@@ -10,10 +12,11 @@
 // This is a public endpoint that takes binary from strangers, so it is deliberately a bad
 // place to put anything else:
 //
-//   Only two shapes are accepted. A DBCache.bin has to start with the XFTH magic. A
+//   Only three shapes are accepted. A DBCache.bin has to start with the XFTH magic. A
 //   DamageMeter.bin has to contain the scrubber's placeholder, which means an unscrubbed
 //   file cannot be accepted even by accident - the names have to be gone before the bytes
-//   are worth sending.
+//   are worth sending. A screenshot has to be a PNG, which it only is if the page re-encoded
+//   it, which is also what strips its metadata.
 //
 //   Both are capped well above a real file and far below anything worth hosting.
 //
@@ -33,19 +36,33 @@ const ALLOWED_ORIGINS = new Set([
 	'http://localhost:8129',
 ]);
 
+const PNG_MAGIC = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+
 const KINDS = {
 	dbcache: {
+		ext: 'bin',
 		maxBytes: 16 * 1024 * 1024,
 		// 'XFTH' - the hotfix cache header.
 		check: bytes => bytes.length > 44 && bytes[0] === 0x58 && bytes[1] === 0x46 && bytes[2] === 0x54 && bytes[3] === 0x48,
 		reason: 'not a hotfix cache: it should start with XFTH',
 	},
 	damagemeter: {
+		ext: 'bin',
 		maxBytes: 4 * 1024 * 1024,
 		// The scrubber replaces every class-tagged name with Player<n>, so a scrubbed file
 		// always carries at least one. An original never does.
 		check: bytes => indexOfAscii(bytes, 'Player1') >= 0,
 		reason: 'no scrubbed names found: send the file the scrub page hands back, not the original',
+	},
+	screenshot: {
+		ext: 'png',
+		maxBytes: 8 * 1024 * 1024,
+		// The page re-encodes whatever was dropped through a canvas before sending, which
+		// makes the result a PNG by construction and drops every metadata block on the way -
+		// EXIF, GPS, camera, the lot. A file that does not arrive as a PNG did not go through
+		// that, so it is refused rather than stored with whatever it was carrying.
+		check: bytes => PNG_MAGIC.every((byte, i) => bytes[i] === byte),
+		reason: 'not a PNG: send it through the page so its metadata is stripped first',
 	},
 };
 
@@ -113,9 +130,9 @@ export default {
 		if (!kind.check(bytes)) return json(allowed, { ok: false, error: kind.reason }, 422);
 
 		const name = url.searchParams.get('kind');
-		const receipt = `${name}/${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.bin`;
+		const receipt = `${name}/${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${kind.ext}`;
 		await env.UPLOADS.put(receipt, bytes, {
-			httpMetadata: { contentType: 'application/octet-stream' },
+			httpMetadata: { contentType: kind.ext === 'png' ? 'image/png' : 'application/octet-stream' },
 			customMetadata: {
 				kind: name,
 				bytes: String(bytes.length),

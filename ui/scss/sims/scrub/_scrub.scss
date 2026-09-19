@@ -281,6 +281,17 @@
 		margin-top: var(--spacer-3);
 	}
 
+	// Shown at whatever size fits, so the crop can be checked before it is sent. The image is
+	// full resolution behind this; only the display is scaled.
+	.scrub-preview {
+		display: block;
+		max-width: 100%;
+		max-height: 20rem;
+		margin: var(--spacer-2) 0;
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		border-radius: var(--bs-border-radius);
+	}
+
 	.scrub-report-head {
 		font-size: 1.05rem;
 		color: var(--bs-gray-200);

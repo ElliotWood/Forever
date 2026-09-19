@@ -30,8 +30,10 @@ const unlistedPages = new Set(['dps_rankings']);
 
 const pageTitles: Record<string, string> = {
 	bis: 'Best in Slot - Forever Sim (unofficial)',
+	arena: 'The build arena - Forever Sim (unofficial)',
 	changelog: 'Changelog - Forever Sim (unofficial)',
 	dps_rankings: 'Damage comparison - Forever Sim (unofficial)',
+	evidence: 'Where every number came from - Forever Sim (unofficial)',
 	scrub: "Send the beta's own numbers - Forever Sim (unofficial)",
 	stat_weights: 'Stat Weights - Forever Sim (unofficial)',
 };

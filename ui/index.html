@@ -70,38 +70,44 @@
 							number is provisional &mdash; useful for catching the sim doing something obviously wrong, not as a statement about Forever.
 						</p>
 
+						<p class="site-top-actions">
+							<a class="site-cta-button" href="arena/"> <i class="fas fa-trophy"></i><span>The build arena</span> </a>
+							<a class="site-cta-button site-cta-button-quiet" href="evidence/">
+								<i class="fas fa-clipboard-check"></i><span>Where every number came from</span>
+							</a>
+							<a class="site-cta-button site-cta-button-quiet" href="evidence/#most-wanted">
+								<i class="fas fa-hand-holding-heart"></i><span>How you can help</span>
+							</a>
+						</p>
+
 						<div class="site-cta">
 							<div class="site-cta-body">
 								<h2 class="site-cta-title">Playing the beta? Two files here are worth more than anything I can datamine.</h2>
 								<p class="site-cta-lede">
-									This sim reads Blizzard's data tables, which say what an ability is <em>meant</em> to do. Your client holds two files
-									that say things the tables cannot, and between them they close the two largest gaps on this page.
+									This sim reads Blizzard's data tables, which say what an ability is <em>meant</em> to do. Your client holds two files that
+									say things the tables cannot, and between them they close the two largest gaps on this page.
 								</p>
 								<ul class="site-cta-files">
 									<li>
-										<strong><code>DBCache.bin</code> &mdash; what Blizzard changed after the build shipped.</strong> Hotfixes never
-										reach a datamining site, so a value here can be stale the moment it is tuned and there is no way to tell from the
-										outside. Carries no personal data; send it as it is.
+										<strong><code>DBCache.bin</code> &mdash; what Blizzard changed after the build shipped.</strong> Hotfixes never reach a
+										datamining site, so a value here can be stale the moment it is tuned and there is no way to tell from the outside.
+										Carries no personal data; send it as it is.
 									</li>
 									<li>
-										<strong><code>DamageMeter.bin</code> &mdash; what the server actually paid out.</strong> Nothing here has been
-										checked against a running game, and Forever blocks addons from reading damage, so the client's own meter is the
-										only measurement there will be. It does carry character names, so it gets scrubbed in your browser first.
-										<strong>Getting one out is fiddly:</strong> open the meter, fight things, log out to character select, then copy
-										the file before logging back in &mdash; logging in deletes it.
+										<strong><code>DamageMeter.bin</code> &mdash; what the server actually paid out.</strong> Forever blocks addons from
+										reading damage, so the client's own meter is the only measurement there will be. Twelve abilities have been confirmed
+										this way so far, out of 996. It does carry character names, so it gets scrubbed in your browser first.
+										<strong>Getting one out is fiddly:</strong> open the meter, fight things, log out to character select, then copy the
+										file before logging back in &mdash; logging in deletes it.
 									</li>
 								</ul>
 								<p class="site-cta-actions">
-									<a class="site-cta-button" href="scrub/#hotfix-drop">
-										<i class="fas fa-upload"></i><span>Send DBCache.bin</span>
-									</a>
-									<a class="site-cta-button" href="scrub/#meter-drop">
-										<i class="fas fa-upload"></i><span>Send DamageMeter.bin</span>
-									</a>
+									<a class="site-cta-button" href="scrub/#hotfix-drop"> <i class="fas fa-upload"></i><span>Send DBCache.bin</span> </a>
+									<a class="site-cta-button" href="scrub/#meter-drop"> <i class="fas fa-upload"></i><span>Send DamageMeter.bin</span> </a>
 								</p>
 								<p class="site-cta-note">
-									Drag, drop, done. No account and no form. The damage meter file has its character names taken out in your browser
-									before anything is sent.
+									Drag, drop, done. No account and no form. The damage meter file has its character names taken out in your browser before
+									anything is sent.
 								</p>
 							</div>
 						</div>
@@ -115,10 +121,10 @@
 									come from the client's rank curves, coefficients from <code>SpellEffect.EffectBonusCoefficient</code>, and each rank's
 									damage is scaled to level 60 by the client's own per-level points.
 								</p>
-								<p>Three things are settled from data and one is not, and it is worth being plain about which is which:</p>
+								<p>Most of it is settled from data, a little of it has been seen happen, and it is worth being plain about which is which:</p>
 								<ul>
 									<li>
-										<strong>The client's tables, diffed against Classic Era.</strong> 623 abilities carry the client's numbers and 288 are
+										<strong>The client's tables, diffed against Classic Era.</strong> 656 abilities carry the client's numbers and 297 are
 										confirmed unchanged from Classic.
 									</li>
 									<li>
@@ -127,13 +133,20 @@
 									</li>
 									<li>
 										<strong>Wording, not just values.</strong> A rank curve says what a talent's numbers are, not what they apply to, which
-										is how Improved Seals passed a value check while scaling half of what it should. 231 talents read differently in Forever.
+										is how Improved Seals passed a value check while scaling half of what it should. 231 talents read differently in
+										Forever.
 									</li>
 									<li>
-										<strong>Nothing has been checked against a running game.</strong> No combat log, no parse, no second implementation.
-										Every number is internally consistent and externally unconfirmed.
+										<strong>Twelve abilities have now been watched happen on a running server</strong> &mdash; through the client's own
+										damage meter, on the beta &mdash; and every one landed where the client's tables said it would. Twelve out of 996, so
+										the honest reading is that the method works, not that the sim is verified. The other 984 are internally consistent and
+										externally unconfirmed.
 									</li>
 								</ul>
+								<p>
+									<a href="evidence/">Every ability, and what is known about its numbers</a> &mdash; the whole list, filterable, with the
+									reason attached to each row.
+								</p>
 							</div>
 						</details>
 
@@ -143,9 +156,12 @@
 								<p>Every one of these can move a number, and some can move it a long way:</p>
 								<ul>
 									<li>
-										41 abilities still carry a number the client does not settle and 45 are unclassified. Each is named in the spell
-										manifest and the
-										<a href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md" target="_blank" rel="noreferrer"
+										43 abilities still carry a number the client does not settle &mdash; 25 of them hunter. Each is named on the
+										<a href="evidence/">evidence page</a>, in the spell manifest, and in the
+										<a
+											href="https://github.com/ElliotWood/Forever/blob/master/docs/forever_beta_checklist.md"
+											target="_blank"
+											rel="noreferrer"
 											>beta re-verification checklist</a
 										>.
 									</li>
@@ -201,6 +217,24 @@
 									<div class="d-flex flex-column">
 										<span class="sim-link-title">What changed for Forever</span>
 										<span class="launch-status-label text-brand">Changelog and sources</span>
+									</div>
+								</div>
+							</a>
+							<a href="arena/" class="sim-link raid-sim-link text-white">
+								<div class="sim-link-content">
+									<img src="assets/img/WoW-Simulator-Icon.png" class="sim-link-icon" />
+									<div class="d-flex flex-column">
+										<span class="sim-link-title">The build arena</span>
+										<span class="launch-status-label text-brand">Every build, ranked</span>
+									</div>
+								</div>
+							</a>
+							<a href="evidence/" class="sim-link raid-sim-link text-white">
+								<div class="sim-link-content">
+									<img src="assets/img/WoW-Simulator-Icon.png" class="sim-link-icon" />
+									<div class="d-flex flex-column">
+										<span class="sim-link-title">Where every number came from</span>
+										<span class="launch-status-label text-brand">996 abilities, one reason each</span>
 									</div>
 								</div>
 							</a>

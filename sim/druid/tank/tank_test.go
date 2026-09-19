@@ -1,6 +1,7 @@
 package tank
 
 import (
+	"github.com/wowsims/classic/sim/arenalib"
 	"testing"
 
 	_ "github.com/wowsims/classic/sim/common" // imported to get item effects included.
@@ -88,4 +89,17 @@ var Stats = []proto.Stat{
 	proto.Stat_StatArmor,
 	proto.Stat_StatDodge,
 	proto.Stat_StatDefense,
+}
+
+// The arena entry for this spec. Skipped unless ARENA_OUT is set; see sim/arenalib.
+func TestArena(t *testing.T) {
+	arenalib.Run(t, arenalib.Spec{
+		Dir:         "feral_tank_druid",
+		Class:       proto.Class_ClassDruid,
+		Race:        proto.Race_RaceTauren,
+		SpecOptions: PlayerOptionsDefault,
+		Consumes:    P1Consumes,
+		Buffs:       core.ForeverBuffs,
+		IsTank:      true,
+	})
 }
