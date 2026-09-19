@@ -1,8 +1,8 @@
 ---
-name: Hotfix cache from the beta
-about: Send your client's DBCache.bin so the sim can see Blizzard's live tuning
-title: 'Hotfix cache: '
-labels: hotfix-cache
+name: Numbers from the beta client
+about: Send DBCache.bin, a scrubbed DamageMeter.bin, or both
+title: 'Beta client: '
+labels: client-data
 ---
 
 <!--
@@ -44,6 +44,19 @@ The client only caches rows it has actually needed, so what you have depends on
 what you have done. That last question is the interesting one: if your Spell cache
 is bigger than 4 bytes, your client knows about spell hotfixes mine does not, and
 something in the sim is out of date.
+-->
+
+## Damage meter, if you are sending one
+
+<!--
+DamageMeter.bin, from World of Warcraft\_classic_beta_\Cache\ - the only record of what
+the server actually paid out, since addons cannot read damage in Forever.
+
+It carries character names, yours and everyone you grouped with, so run it through the
+scrubber first: https://elliotwood.github.io/Forever/classic/scrub/
+
+That page reads the file in your browser and never uploads it; the names are gone before
+anything leaves your machine. Attach the file it hands back, not the original.
 -->
 
 ## Anything that looked wrong in game
