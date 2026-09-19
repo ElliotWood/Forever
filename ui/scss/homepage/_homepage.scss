@@ -209,11 +209,19 @@
 					color: var(--bs-gray-400);
 				}
 
+				// Two buttons, one per file, wrapping onto their own lines when the pair no
+				// longer fits rather than shrinking the labels.
+				.site-cta-actions {
+					display: flex;
+					flex-wrap: wrap;
+					gap: var(--spacer-2);
+					margin: var(--spacer-3) 0 0;
+				}
+
 				.site-cta-button {
 					display: inline-flex;
 					align-items: center;
 					gap: var(--spacer-2);
-					margin-top: var(--spacer-3);
 					padding: 0.6rem 1.4rem;
 					border: 0;
 					border-radius: var(--bs-border-radius);
