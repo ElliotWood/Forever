@@ -18,7 +18,8 @@ type TooltipDataProvider interface {
 	GetDescriptionVariableString(spellId int64) string
 	GetEffectAmplitude(spellId int64, effectIdx int64) float64
 	GetEffectScaledValue(spellId int64, effectIdx int64) float64
-	GetEffectBaseValue(spellId int64, effectIdx int64) float64 // basePoints + ?
+	GetEffectBaseValue(spellId int64, effectIdx int64) float64 // backs $m, the bottom of the effect's roll
+	GetEffectMaxValue(spellId int64, effectIdx int64) float64  // backs $M, the top of that same roll
 	GetEffectChainAmplitude(spellId int64, effectidx int64) float64
 	GetEffectMaxTargets(spellId int64, effectIdx int64) int64
 	GetEffectPeriod(spellId int64, effectIdx int64) time.Duration
@@ -341,6 +342,11 @@ type SimpleSpellValue struct {
 type SpellEntryRef struct {
 	EffectColumn string
 	EffectIndex  int64
+	// HasIndex records whether the token actually carried a digit. A bare token
+	// such as Wrack's "$t" means effect 1, but $r without an index means the
+	// spell's range rather than an effect radius, so the two cases have to be
+	// told apart rather than both leaning on EffectIndex == 0.
+	HasIndex bool
 }
 
 // Due to some complications the the lexing context and many inconsistencies on blizzards side
@@ -348,8 +354,11 @@ type SpellEntryRef struct {
 func (s *SpellEntryRef) Capture(values []string) error {
 	val := values[0]
 	(*s).EffectColumn = val[:1]
+	(*s).EffectIndex = 1 // a bare selector refers to the first effect
 	if len(val) > 1 {
-		(*s).EffectIndex, _ = strconv.ParseInt(val[1:], 10, 64)
+		if idx, err := strconv.ParseInt(val[1:], 10, 64); err == nil {
+			(*s).EffectIndex, (*s).HasIndex = idx, true
+		}
 	}
 
 	return nil
@@ -616,7 +625,7 @@ func (s SimpleCompute) Eval(ctx *TooltipContext) float64 {
 	case "/":
 		return s.Value.Eval(ctx) / float64(s.Num)
 	case "*":
-		return s.Value.Eval(ctx) / float64(s.Num)
+		return s.Value.Eval(ctx) * float64(s.Num)
 	default:
 		panic("OP not implemented")
 	}
@@ -633,6 +642,12 @@ func (s SimpleCompute) String(ctx *TooltipContext) string {
 }
 
 func (s SimpleSpellValue) Eval(ctx *TooltipContext) float64 {
+	// $M is the only selector whose case carries meaning: it is the top of a
+	// range where $m is the bottom. Every other pair below is case-insensitive,
+	// so the switch lowercases and this one is handled before it.
+	if s.Selector.EffectColumn == "M" {
+		return ctx.DataProvider.GetEffectMaxValue(s.getSpellId(ctx), s.Selector.EffectIndex-1)
+	}
 	switch strings.ToLower(s.Selector.EffectColumn) {
 	case "e":
 		return ctx.DataProvider.GetEffectAmplitude(s.getSpellId(ctx), s.Selector.EffectIndex-1)
@@ -647,8 +662,6 @@ func (s SimpleSpellValue) Eval(ctx *TooltipContext) float64 {
 		fallthrough
 	case "s":
 		return ctx.DataProvider.GetEffectScaledValue(s.getSpellId(ctx), s.Selector.EffectIndex-1)
-	case "M":
-		fallthrough
 	case "m":
 		return ctx.DataProvider.GetEffectBaseValue(s.getSpellId(ctx), s.Selector.EffectIndex-1)
 	case "T":
@@ -678,7 +691,7 @@ func (s SimpleSpellValue) Eval(ctx *TooltipContext) float64 {
 	case "R":
 		fallthrough
 	case "r":
-		if s.Selector.EffectIndex == 0 {
+		if !s.Selector.HasIndex {
 			return ctx.DataProvider.GetSpellRange(s.getSpellId(ctx))
 		}
 		return ctx.DataProvider.GetEffectRadius(s.getSpellId(ctx), s.Selector.EffectIndex-1)

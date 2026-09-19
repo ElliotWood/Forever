@@ -316,19 +316,40 @@ func (d DBCTooltipDataProvider) GetDescriptionVariableString(spellId int64) stri
 	return spellEntry.Variables
 }
 
-// GetEffectBaseValue implements TooltipDataProvider.
-func (d DBCTooltipDataProvider) GetEffectBaseValue(spellId int64, effectIdx int64) float64 {
+// effectRange returns the bottom and top of the value an effect rolls. TBC
+// carries the spread as die sides rather than a variance: the client rolls
+// basePoints + 1 .. basePoints + dieSides, so no sides at all collapses the
+// range onto basePoints, and negative sides roll the other way.
+func (d DBCTooltipDataProvider) effectRange(spellId int64, effectIdx int64) (float64, float64) {
 	effectEntries, ok := d.DBC.SpellEffects[int(spellId)]
 	if !ok {
-		return 0
+		return 0, 0
 	}
 
 	effect := GetEffectByIndex(effectEntries, int(effectIdx))
 	if effect == nil {
-		return 0
+		return 0, 0
 	}
 
-	return float64(effect.EffectBasePoints + effect.EffectDieSides)
+	base := float64(effect.EffectBasePoints)
+	if effect.EffectDieSides == 0 {
+		return base, base
+	}
+
+	sides := float64(effect.EffectDieSides)
+	return math.Min(base+1, base+sides), math.Max(base+1, base+sides)
+}
+
+// GetEffectBaseValue implements TooltipDataProvider.
+func (d DBCTooltipDataProvider) GetEffectBaseValue(spellId int64, effectIdx int64) float64 {
+	low, _ := d.effectRange(spellId, effectIdx)
+	return low
+}
+
+// GetEffectMaxValue implements TooltipDataProvider.
+func (d DBCTooltipDataProvider) GetEffectMaxValue(spellId int64, effectIdx int64) float64 {
+	_, high := d.effectRange(spellId, effectIdx)
+	return high
 }
 
 // GetEffectPeriod implements TooltipDataProvider.

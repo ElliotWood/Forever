@@ -160,3 +160,8 @@ func (d DummyTooltipDataProvider) GetOffHandWeapon() *core.Weapon {
 func (d DummyTooltipDataProvider) GetEffectEnchantValue(enchantId int64, effectIdx int64) float64 {
 	return 10
 }
+
+// GetEffectMaxValue implements TooltipDataProvider.
+func (d DummyTooltipDataProvider) GetEffectMaxValue(spellId int64, effectIdx int64) float64 {
+	return 120
+}
