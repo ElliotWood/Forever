@@ -1,0 +1,21 @@
+name = "forever-uploads"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Takes the beta client files the sim asks for, so sending one does not need a GitHub
+# account. Public by necessity; see src/index.js for what keeps it from being useful as
+# anything other than what it is.
+
+[observability]
+enabled = true
+
+# Where the files land. Nothing reads from here except a human going to look.
+[[r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "forever-uploads"
+
+# Per-IP daily counter only. Keys are salted hashes, values are integers, entries expire
+# after 26 hours. No address is ever stored.
+[[kv_namespaces]]
+binding = "UPLOAD_KV"
+id = "fb41f7f995f74d26848f88b4107f92c1"

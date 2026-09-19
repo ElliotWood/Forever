@@ -55,3 +55,6 @@ wowsimsod*.h
 __pycache__/
 *.pyc
 tools/data_watch/.cache/
+
+# Wrangler local state for the uploads worker: miniflare caches and sqlite, not source.
+infra/cloudflare/**/.wrangler/
