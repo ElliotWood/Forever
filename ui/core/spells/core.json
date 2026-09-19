@@ -76,19 +76,25 @@
 		"note": "Beta client 1.60.1 (spell 11551). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"11554": {
-		"ability": "Demoralizing Shout",
+		"ability": "Demoralizing Shout Rank 3",
 		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Reduces the melee attack power of nearby enemies by 106 for 45 sec.",
+		"note": "Beta client 1.60.1 (spell 11554). Forever lengthens the debuff from 30 sec to 45 and folds Improved Demoralizing Shout into the base: rank 5 takes 204 attack power at level 60 where Era takes 146, and 204/146 is exactly the 1+0.08x5 the talent used to add. Only rank 5 is used at 60."
 	},
 	"11555": {
-		"ability": "Demoralizing Shout",
+		"ability": "Demoralizing Shout Rank 4",
 		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Reduces the melee attack power of nearby enemies by 155 for 45 sec.",
+		"note": "Beta client 1.60.1 (spell 11555). Forever lengthens the debuff from 30 sec to 45 and folds Improved Demoralizing Shout into the base: rank 5 takes 204 attack power at level 60 where Era takes 146, and 204/146 is exactly the 1+0.08x5 the talent used to add. Only rank 5 is used at 60."
 	},
 	"11556": {
-		"ability": "Demoralizing Shout",
+		"ability": "Demoralizing Shout Rank 5",
 		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Reduces the melee attack power of nearby enemies by 204 for 45 sec.",
+		"note": "Beta client 1.60.1 (spell 11556). Forever lengthens the debuff from 30 sec to 45 and folds Improved Demoralizing Shout into the base: rank 5 takes 204 attack power at level 60 where Era takes 146, and 204/146 is exactly the 1+0.08x5 the talent used to add. Only rank 5 is used at 60."
 	},
 	"11597": {
 		"ability": "Sunder Armor",
@@ -97,9 +103,11 @@
 		"source": "classic"
 	},
 	"1160": {
-		"ability": "Demoralizing Shout",
+		"ability": "Demoralizing Shout Rank 1",
 		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Reduces the melee attack power of nearby enemies by 63 for 45 sec.",
+		"note": "Beta client 1.60.1 (spell 1160). Forever lengthens the debuff from 30 sec to 45 and folds Improved Demoralizing Shout into the base: rank 5 takes 204 attack power at level 60 where Era takes 146, and 204/146 is exactly the 1+0.08x5 the talent used to add. Only rank 5 is used at 60."
 	},
 	"11708": {
 		"ability": "Curse of Weakness",
@@ -468,9 +476,11 @@
 		"note": "Beta client 1.60.1 (spell 5242). Forever cuts the attack power to about 60% of Era and lengthens the buff from 2 min to 3. Improved Battle Shout is gone from the tree and did not become baseline."
 	},
 	"6190": {
-		"ability": "Demoralizing Shout",
+		"ability": "Demoralizing Shout Rank 2",
 		"file": "sim/core/debuffs.go",
-		"source": "unreviewed"
+		"source": "forever",
+		"tooltip": "Reduces the melee attack power of nearby enemies by 78 for 45 sec.",
+		"note": "Beta client 1.60.1 (spell 6190). Forever lengthens the debuff from 30 sec to 45 and folds Improved Demoralizing Shout into the base: rank 5 takes 204 attack power at level 60 where Era takes 146, and 204/146 is exactly the 1+0.08x5 the talent used to add. Only rank 5 is used at 60."
 	},
 	"6192": {
 		"ability": "Battle Shout Rank 3",

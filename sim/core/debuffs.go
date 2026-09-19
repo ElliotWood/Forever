@@ -158,10 +158,10 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	}
 
 	if debuffs.DemoralizingRoar != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(DemoralizingRoarAura(target, GetTristateValueInt32(debuffs.DemoralizingRoar, 0, 5)))
+		MakePermanent(DemoralizingRoarAura(target))
 	}
 	if debuffs.DemoralizingShout != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(DemoralizingShoutAura(target, 0, GetTristateValueInt32(debuffs.DemoralizingShout, 0, 5)))
+		MakePermanent(DemoralizingShoutAura(target))
 	}
 	if debuffs.HuntersMark != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(HuntersMarkAura(target, GetTristateValueInt32(debuffs.HuntersMark, 0, 5)))
@@ -833,15 +833,18 @@ func ExposeWeaknessAura(target *Unit) *Aura {
 	return aura
 }
 
-func DemoralizingRoarAura(target *Unit, points int32) *Aura {
+// Forever folds Improved Demoralizing Roar into the base value: the beta client's rank 5 takes
+// 204 attack power at level 60 where Era's takes 138, and 204/138 is 1.48, exactly the 1+0.08x6
+// the talent used to add. So the points must not be applied a second time on top.
+func DemoralizingRoarAura(target *Unit) *Aura {
 	baseAPReduction := 204.0
 
 	aura := target.GetOrRegisterAura(Aura{
-		Label:    "DemoralizingRoar-" + strconv.Itoa(int(points)),
+		Label:    "DemoralizingRoar",
 		ActionID: ActionID{SpellID: 9898},
 		Duration: time.Second * 30,
 	})
-	apReductionEffect(aura, math.Floor(baseAPReduction*(1+0.08*float64(points))))
+	apReductionEffect(aura, baseAPReduction)
 	return aura
 }
 
@@ -851,17 +854,20 @@ var DemoralizingShoutSpellId = [DemoralizingShoutRanks + 1]int32{0, 1160, 6190, 
 var DemoralizingShoutBaseAP = [DemoralizingShoutRanks + 1]float64{0, 63, 78, 106, 155, 204}
 var DemoralizingShoutLevel = [DemoralizingShoutRanks + 1]int{0, 14, 24, 34, 44, 54}
 
-func DemoralizingShoutAura(target *Unit, boomingVoicePts int32, impDemoShoutPts int32) *Aura {
+// Same fold-in as Demoralizing Roar above. The beta client's rank 5 takes 204 attack power at
+// level 60 where Era's takes 146, and 204/146 is 1.4000, exactly the 1+0.08x5 Improved
+// Demoralizing Shout used to add. Booming Voice only widens the radius in Forever.
+func DemoralizingShoutAura(target *Unit) *Aura {
 	rank := int32(5)
 	spellId := DemoralizingShoutSpellId[rank]
 	baseAPReduction := DemoralizingShoutBaseAP[rank]
 
 	aura := target.GetOrRegisterAura(Aura{
-		Label:    "DemoralizingShout-" + strconv.Itoa(int(impDemoShoutPts)),
+		Label:    "DemoralizingShout",
 		ActionID: ActionID{SpellID: spellId},
 		Duration: time.Second * 45,
 	})
-	apReductionEffect(aura, math.Floor(baseAPReduction*(1+0.08*float64(impDemoShoutPts))))
+	apReductionEffect(aura, baseAPReduction)
 	return aura
 }
 

@@ -12,7 +12,7 @@ func (warrior *Warrior) registerDemoralizingShoutSpell() {
 		// Improved Demoralizing Shout is gone from the Forever tree and is baseline at full strength:
 		// the beta client's rank 5 reduces attack power by 196, Classic's 140 plus 40%, for 45 sec.
 		// Forever's Booming Voice only widens the radius.
-		return core.DemoralizingShoutAura(target, 0, 5)
+		return core.DemoralizingShoutAura(target)
 	})
 
 	warrior.DemoralizingShout = warrior.RegisterSpell(AnyStance, core.SpellConfig{

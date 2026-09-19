@@ -21,7 +21,7 @@ func (druid *Druid) registerDemoralizingRoarSpell() {
 		// Feral Aggression is gone from the Forever tree and more than folded in: the beta client's rank 5
 		// is 193 plus 1.4 a level, 204 at 60, where Classic's is 130 plus 1 a level. 204 is Classic's 138
 		// with six points of the old 8%, which is how the shared aura is asked for it.
-		return core.DemoralizingRoarAura(target, 6)
+		return core.DemoralizingRoarAura(target)
 	})
 
 	druid.DemoralizingRoar = druid.RegisterSpell(Bear, core.SpellConfig{
