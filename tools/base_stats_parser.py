@@ -17,7 +17,7 @@ SPELL_CRIT_BASE = "chancetospellcritbase.txt"
 COMBAT_RATINGS = "combatratings.txt"
 RATING_SCALAR = "octclasscombatratingscalar.txt"
 
-BASE_LEVEL = 70
+BASE_LEVEL = 60
 
 Offs = {
     "Warrior": 0,

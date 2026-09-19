@@ -33,12 +33,12 @@ describe('statDisplayString, defense rating', () => {
 
 	it('renders as a skill level with no percent suffix and no decimals', () => {
 		const stats = new Stats().withStat(Stat.StatDefenseRating, Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL * 10);
-		expect(show(stats, defense)).toBe('24 (10)');
+		expect(show(stats, defense)).toBe('15 (10)');
 	});
 
 	it('adds the base defense skill when the delta includes the base stage', () => {
 		const stats = new Stats().withStat(Stat.StatDefenseRating, Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL * 10);
-		expect(show(stats, defense, true)).toBe('24 (360)');
+		expect(show(stats, defense, true)).toBe('15 (310)');
 	});
 
 	it('shows the skill level at zero, which the percent-bearing stats hide', () => {
@@ -65,8 +65,8 @@ describe('statDisplayString, TBC-only stats', () => {
 			.withPseudoStat(PseudoStat.PseudoStatRangedCritPercent, 1);
 		const racial = { ...NO_RACIALS, rangedImbueStatOffsets: new Stats().withStat(Stat.StatMeleeCritRating, -14) };
 
-		expect(show(stats, rangedCrit, false, false, false, racial)).toBe('22 (1.00%)');
-		expect(show(stats, rangedCrit, false, false, true, racial)).toBe('8 (1.00%)');
+		expect(show(stats, rangedCrit, false, false, false, racial)).toBe('14 (1.00%)');
+		expect(show(stats, rangedCrit, false, false, true, racial)).toBe('1.00%');
 	});
 
 	it('adds the ranged hit enchant rating at the gear stage only', () => {
@@ -85,8 +85,8 @@ describe('statDisplayString, TBC-only stats', () => {
 			.withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 2);
 		const racial = { ...NO_RACIALS, hasRacialHitBonus: true };
 
-		expect(show(stats, meleeHit, true, false, false, racial)).toBe('16 (2.00%)');
-		expect(show(stats, meleeHit, false, false, false, racial)).toBe('32 (2.00%)');
+		expect(show(stats, meleeHit, true, false, false, racial)).toBe('10 (2.00%)');
+		expect(show(stats, meleeHit, false, false, false, racial)).toBe('20 (2.00%)');
 	});
 });
 

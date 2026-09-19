@@ -84,7 +84,7 @@ func SetupFakeRageSim() *Simulation {
 		},
 		Encounter: &proto.Encounter{
 			Targets: []*proto.Target{
-				{Name: "target", Level: 73, MobType: proto.MobType_MobTypeHumanoid},
+				{Name: "target", Level: 63, MobType: proto.MobType_MobTypeHumanoid},
 			},
 			Duration: 180,
 		},

@@ -23,7 +23,7 @@ func createCustomBossPreset() {
 		Config: &proto.Target{
 			Id:        bossTankID,
 			Name:      bossName,
-			Level:     73,
+			Level:     63,
 			MobType:   proto.MobType_MobTypeMechanical,
 			TankIndex: 0,
 

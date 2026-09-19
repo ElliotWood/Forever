@@ -32,7 +32,7 @@ func AddDefaultPresetEncounter() {
 		Config: &proto.Target{
 			Id:        31146,
 			Name:      "Raid Target",
-			Level:     73,
+			Level:     63,
 			MobType:   proto.MobType_MobTypeMechanical,
 			TankIndex: 0,
 

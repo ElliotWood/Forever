@@ -124,6 +124,8 @@ func (shaman *Shaman) fireElementalBaseStats() stats.Stats {
 	// Logs suggest at least the crit chances are probably correct
 	// and damage value are looking reliable right now
 	return core.ClassBaseStats[proto.Class_ClassWarrior].Add(stats.Stats{
+		// TODO: level-70 value; needs re-measuring at level 60 (see the base-stats TODO
+		// in sim/core/base_stats.go -- hardcoded level-70 data the level constant misses).
 		stats.Mana:                4910, // Confirmed in-game level 70
 		stats.PhysicalCritPercent: 5,
 		stats.SpellCritPercent:    5,

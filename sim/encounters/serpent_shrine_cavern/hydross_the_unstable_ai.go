@@ -33,7 +33,7 @@ func createHydrossPreset(raidPrefix string, raidSize int32, bossHealth float64, 
 		Config: &proto.Target{
 			Id:              hydrossTheUnstableID,
 			Name:            bossName,
-			Level:           73,
+			Level:           63,
 			MobType:         proto.MobType_MobTypeElemental,
 			TankIndex:       0, //Main Tank (tanks Frost phase).
 			SecondTankIndex: 1, //Off Tank (tanks Nature phase).

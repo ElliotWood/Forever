@@ -31,7 +31,7 @@
 			{
 				"id": 21216,
 				"name": "Hydross the Unstable 25",
-				"level": 73,
+				"level": 63,
 				"mobType": "MobTypeElemental",
 				"stats": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 320, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7685, 0, 3380792, 0, 0, 0, 0, 0, 0, 0, 0],
 				"minBaseDamage": 5974,

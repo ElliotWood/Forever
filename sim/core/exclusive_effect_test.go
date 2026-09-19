@@ -9,7 +9,7 @@ func newExclusiveTestTarget() *Unit {
 	return &Unit{
 		Type:        EnemyUnit,
 		Index:       0,
-		Level:       73,
+		Level:       63,
 		auraTracker: newAuraTracker(),
 	}
 }

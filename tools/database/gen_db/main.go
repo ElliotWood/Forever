@@ -92,7 +92,8 @@ func main() {
 	var g errgroup.Group
 	g.Go(func() error { _, err := database.LoadAndWriteRawRandomSuffixes(helper, inputsDir); return err })
 	g.Go(func() error {
-		_, err := database.LoadAndWriteRawItems(helper, "s.OverallQualityId != 7 AND s.Field_1_15_7_59706_054 = 0 AND s.OverallQualityId != 0 AND (i.ClassID = 2 OR i.ClassID = 4 OR (i.ClassID = 7 AND i.InventoryType = 12)) AND s.Display_lang != '' AND (s.ID != 34219 AND s.Display_lang NOT LIKE '%Test%' AND s.Display_lang NOT LIKE 'QA%' AND s.Display_lang != 'unused')", inputsDir)
+		// RequiredLevel 0 means "no level requirement", so <= keeps those.
+		_, err := database.LoadAndWriteRawItems(helper, fmt.Sprintf("s.OverallQualityId != 7 AND s.Field_1_15_7_59706_054 = 0 AND s.OverallQualityId != 0 AND (i.ClassID = 2 OR i.ClassID = 4 OR (i.ClassID = 7 AND i.InventoryType = 12)) AND s.Display_lang != '' AND s.RequiredLevel <= %d AND (s.ID != 34219 AND s.Display_lang NOT LIKE '%%Test%%' AND s.Display_lang NOT LIKE 'QA%%' AND s.Display_lang != 'unused')", core.CharacterLevel), inputsDir)
 		return err
 	})
 	g.Go(func() error { _, err := database.LoadAndWriteRandomPropAllocations(helper, inputsDir); return err })
@@ -538,9 +539,10 @@ func simmableItemFilter(_ int32, item *proto.UIItem) bool {
 	} else if item.Quality >= proto.ItemQuality_ItemQualityHeirloom {
 		return false
 	} else if item.Quality <= proto.ItemQuality_ItemQualityEpic {
-		if item.ScalingOptions[0].Ilvl < 60 {
-			return false
-		}
+		// TODO: Figure out the appropriate filter
+		// if item.ScalingOptions[0].Ilvl < 60 {
+		// 	return false
+		// }
 	}
 	if item.ScalingOptions[0].Ilvl == 0 {
 		fmt.Printf("Missing ilvl: %s\n", item.Name)
@@ -562,7 +564,9 @@ func simmableEnchantFilter(key database.EnchantDBKey, enchant *proto.UIEnchant) 
 	if _, ok := database.EnchantDenyList[enchant.EffectId]; ok {
 		return false
 	}
-	return enchant.EffectId > 1000 && (enchant.ItemId == 0 || enchant.ItemId > 20000 || enchant.ItemId == 18283) // Filters EXTREMELY low level enchants
+	// TODO: Refine this filter to better capture simmable enchants based on effect ID and item ID ranges.
+	// return enchant.EffectId > 1000 && (enchant.ItemId == 0 || enchant.ItemId > 20000 || enchant.ItemId == 18283)
+	return true
 }
 
 type TalentConfig struct {

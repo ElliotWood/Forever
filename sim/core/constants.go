@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
-const CharacterLevel = 70
+const CharacterLevel = 60
 const MinIlvl = 60
 const MaxIlvl = 600
 
@@ -23,7 +23,7 @@ const DefaultAttackPowerPerDPS = 14.0
 
 const ArmorPenPerPercentArmor = 5.92
 const MissDodgeParryBlockCritChancePerDefense = 0.04
-const ResilienceRatingPerCritReductionChance = 39.4231
+const ResilienceRatingPerCritReductionChance = 25
 
 const EnemyAutoAttackAPCoefficient = 0.00052
 

@@ -32,7 +32,7 @@ func createArchimondePreset(raidPrefix string, raidSize int32, bossHealth float6
 		Config: &proto.Target{
 			Id:        archimondeID,
 			Name:      bossName,
-			Level:     73,
+			Level:     63,
 			MobType:   proto.MobType_MobTypeDemon,
 			TankIndex: 0,
 

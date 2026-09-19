@@ -11,7 +11,7 @@ import (
 	"github.com/wowsims/forever/tools/database/dbc"
 )
 
-const RankLevel = 70
+const RankLevel = 60
 
 // Rage is stored in tenths: Heroic Strike costs 150, not 15. Mana, energy and focus are not.
 const powerTypeRage = 1

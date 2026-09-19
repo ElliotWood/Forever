@@ -25,7 +25,7 @@ func createMagtheridonPreset(raidPrefix string, raidSize int32, bossHealth float
 		Config: &proto.Target{
 			Id:        magtheridonID,
 			Name:      bossName,
-			Level:     73,
+			Level:     63,
 			MobType:   proto.MobType_MobTypeDemon,
 			TankIndex: 0,
 

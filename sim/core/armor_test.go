@@ -7,15 +7,15 @@ import (
 )
 
 func TestArmorDamageReductionCap(t *testing.T) {
-	// Boss attacker: armorConstant = 73*467.5 - 22167.5 = 11960, so 75% reduction is
-	// reached at 3*11960 = 35880 armor.
-	attacker := Unit{Type: EnemyUnit, Level: 73}
+	// Boss attacker: armorConstant = 63*467.5 - 22167.5 = 7285, so 75% reduction is
+	// reached at 3*7285 = 21855 armor.
+	attacker := Unit{Type: EnemyUnit, Level: 63}
 	tolerance := 0.0001
 
 	modifierForArmor := func(armor float64) float64 {
 		defender := Unit{
 			Type:         PlayerUnit,
-			Level:        70,
+			Level:        60,
 			initialStats: stats.Stats{stats.Armor: armor},
 			PseudoStats:  stats.NewPseudoStats(),
 		}
@@ -23,10 +23,10 @@ func TestArmorDamageReductionCap(t *testing.T) {
 		return NewAttackTable(&attacker, &defender).GetArmorDamageModifier(nil)
 	}
 
-	if modifier := modifierForArmor(23920); !WithinToleranceFloat64(1.0/3.0, modifier, tolerance) {
+	if modifier := modifierForArmor(14570); !WithinToleranceFloat64(1.0/3.0, modifier, tolerance) {
 		t.Fatalf("Expected %f damage taken below the cap, got %f", 1.0/3.0, modifier)
 	}
-	if modifier := modifierForArmor(35880); !WithinToleranceFloat64(0.25, modifier, tolerance) {
+	if modifier := modifierForArmor(21855); !WithinToleranceFloat64(0.25, modifier, tolerance) {
 		t.Fatalf("Expected %f damage taken at the cap, got %f", 0.25, modifier)
 	}
 	if modifier := modifierForArmor(50000); !WithinToleranceFloat64(0.25, modifier, tolerance) {

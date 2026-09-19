@@ -12,6 +12,14 @@ type BaseStatsKey struct {
 
 var BaseStats = map[BaseStatsKey]stats.Stats{}
 
+// TODO: These are LEVEL 70 attributes, but CharacterLevel is now 60. Changing the
+// level constant does not rescale them -- unlike the ratings/crit/mana in
+// base_stats_auto_gen.go, nothing regenerates these two maps, so a level-60
+// character currently runs on level-70 str/agi/sta/int/spi. Needs a level-60
+// source: Classic-era WCL combatant info fitted the same way as the rows below,
+// or the client's own per-level attribute tables. Until then every sim number
+// that depends on base attributes is wrong, and the goldens bake that in.
+//
 // ClassBaseStats + RaceOffsets hold TRUE pre-racial base attributes: the
 // multiplier racials (The Human Spirit ×1.1 spirit, gnome Expansive Mind
 // ×1.05 int, applied via MultiplyStat in racials.go) are NOT included here.
@@ -33,6 +41,10 @@ var BaseStats = map[BaseStatsKey]stats.Stats{}
 //   2. Calculate the bonus from int (for troll shaman that would be 104/78.1=1.331% crit)
 //   3. Subtract as-shown from int bouns (3.5-1.331=2.169)
 //   4. 2.169*22.08 (rating per crit percent) = 47.89 crit rating.
+//
+// TODO: the 22.08 in step 4 is the level-70 crit rating per percent. At level 60
+// it is 14 (see SpellCritRatingPerCritPercent in base_stats_auto_gen.go), so this
+// worked example no longer reproduces the numbers above it.
 
 // Base mana can be looked up here: https://wowwiki-archive.fandom.com/wiki/Base_mana
 
@@ -191,6 +203,11 @@ var ClassBaseStats = map[proto.Class]stats.Stats{
 	},
 }
 
+// TODO: These are the LEVEL 90 rows of GameTables/SpellScaling.txt -- MoP-port
+// leftovers that were never updated for TBC, and are doubly wrong at level 60
+// (warrior should be 491.949980, not 1246.298600). Only tools/tooltip reads this
+// today (dbc_data_provider.go:249), so the sim is unaffected, but tooltip spell
+// values are computed off the wrong scaling row.
 var ClassBaseScaling = map[proto.Class]float64{
 	proto.Class_ClassUnknown: 1710.000000,
 	proto.Class_ClassWarrior: 1246.298600,

@@ -25,7 +25,7 @@ func createMorogrimPreset(raidPrefix string, raidSize int32, bossHealth float64,
 		Config: &proto.Target{
 			Id:        morogrimTidewalkerID,
 			Name:      bossName,
-			Level:     73,
+			Level:     63,
 			MobType:   proto.MobType_MobTypeGiant,
 			TankIndex: 0,
 
