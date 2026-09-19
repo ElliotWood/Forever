@@ -376,7 +376,13 @@
 		"file": "sim/mage/fireball.go",
 		"note": "Beta client 1.60.1.69893: lower damage at every rank from 2 up (rank 12 596-760 -> 425-541, dot 76 -> 60) and no downranking penalty (rank 1 coefficient .123 -> .429). Cast times and costs are Classic's.",
 		"source": "forever",
-		"tooltip": "65 Mana\n2.5 sec cast\nHurls a fiery ball that causes 48 to 65 Fire damage and an additional 6 Fire damage over 6 sec."
+		"tooltip": "65 Mana\n2.5 sec cast\nHurls a fiery ball that causes 48 to 65 Fire damage and an additional 6 Fire damage over 6 sec.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "45-61 +0.9/level",
+			"biggest": 65
+		}
 	},
 	"18809": {
 		"ability": "Pyroblast",
@@ -390,7 +396,13 @@
 		"file": "sim/mage/frostbolt.go",
 		"note": "Beta client 1.60.1.69893: lower damage from rank 3 up (rank 11 515-555 -> 457-493) and the low ranks lost their downranking penalty (rank 1 coefficient .163 -> .407). Cast times and costs are Classic's.",
 		"source": "forever",
-		"tooltip": "35 Mana\n1.8 sec cast\nLaunches a bolt of frost at the enemy, causing 33 to 38 Frost damage and slowing movement speed by 40%."
+		"tooltip": "35 Mana\n1.8 sec cast\nLaunches a bolt of frost at the enemy, causing 33 to 38 Frost damage and slowing movement speed by 40%.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "31-35 +0.7/level",
+			"biggest": 60
+		}
 	},
 	"2120": {
 		"ability": "Flamestrike",
@@ -411,7 +423,13 @@
 		"file": "sim/mage/fire_blast.go",
 		"note": "Beta client 1.60.1.69893: lower damage from rank 2 up (rank 7 446-524 -> 417-489), ranks 1 and 2 now scale at .429 like the rest.",
 		"source": "forever",
-		"tooltip": "40 Mana\nInstant\n8 sec cooldown\nBlasts the enemy for 27 to 35 Fire damage."
+		"tooltip": "40 Mana\nInstant\n8 sec cooldown\nBlasts the enemy for 27 to 35 Fire damage.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "24-32 +0.6/level",
+			"biggest": 49
+		}
 	},
 	"2137": {
 		"ability": "Fire Blast",

@@ -94,7 +94,13 @@
 		"file": "sim/shaman/fire_totems.go",
 		"note": "Searing Totem rank 1. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Damage unchanged from Classic; the coefficient falls from 0.052 to 0.017.",
 		"source": "forever",
-		"tooltip": "Searing Totem attack for 9 to 11 Fire damage."
+		"tooltip": "Searing Totem attack for 9 to 11 Fire damage.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "9-11",
+			"biggest": 10
+		}
 	},
 	"5672": {
 		"ability": "Healing Stream",
@@ -200,7 +206,13 @@
 		"file": "sim/shaman/earth_shock.go",
 		"note": "Rank 1. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Every rank has the 0.386 coefficient; Classic Era gave ranks 1 to 3 less and dealt more damage from rank 3 up.",
 		"source": "forever",
-		"tooltip": "30 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 19 to 22 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat."
+		"tooltip": "30 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 19 to 22 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "17-19 +0.5/level",
+			"biggest": 20
+		}
 	},
 	"8044": {
 		"ability": "Earth Shock",
@@ -214,7 +226,13 @@
 		"file": "sim/shaman/earth_shock.go",
 		"note": "Rank 3. Beta client 1.60.1.69893 (tools/data_watch/spell_client.py), damage scaled to level 60 by the client's per-level points. Every rank has the 0.386 coefficient; Classic Era gave ranks 1 to 3 less and dealt more damage from rank 3 up.",
 		"source": "forever",
-		"tooltip": "85 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 51 to 56 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat."
+		"tooltip": "85 Mana\n20 yd range\nInstant\n6 sec cooldown\nInstantly shocks the target with concussive force, causing 51 to 56 Nature damage. It also interrupts spellcasting and prevents any spell in that school from being cast for 2 sec. Causes a high amount of threat.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "47-51 +0.9/level",
+			"biggest": 52
+		}
 	},
 	"8046": {
 		"ability": "Earth Shock",

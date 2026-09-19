@@ -105,9 +105,9 @@ export class ScrubPage {
 							</h2>
 							<p className="scrub-file-sub">What the server actually paid out</p>
 							<p>
-								Nothing on this site has been checked against a running game, and Forever blocks addons from reading damage, so the
-								client&apos;s own meter is the only measurement there will be. It is the only thing that can show a number here is wrong rather
-								than merely unverified.
+								Forever blocks addons from reading damage, so the client&apos;s own meter is the only measurement there will be. It is the only
+								thing that can show a number here is wrong rather than merely unverified. Twelve abilities have been confirmed this way so far,
+								out of 996 &mdash; they are on the <a href={`${SITE_BASE}evidence/`}>evidence page</a>.
 							</p>
 							<p className="scrub-path">
 								<code>World of Warcraft\_classic_beta_\Cache\</code>

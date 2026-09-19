@@ -696,7 +696,13 @@
 		"file": "sim/warlock/shadowbolt.go",
 		"note": "Forever roughly halved the damage and removed the low rank coefficient penalty. Values from the beta client 1.60.1.69893 (spell_client.py).",
 		"source": "forever",
-		"tooltip": "40 Mana\n2.2 sec cast\nSends a shadowy bolt at the enemy, causing 25 to 31 Shadow damage."
+		"tooltip": "40 Mana\n2.2 sec cast\nSends a shadowy bolt at the enemy, causing 25 to 31 Shadow damage.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "22-28 +0.6/level",
+			"biggest": 38
+		}
 	},
 	"697": {
 		"ability": "Summon Voidwalker",
@@ -791,7 +797,13 @@
 		"file": "sim/warlock/imp.go",
 		"note": "Forever halved the damage. Values from the beta client 1.60.1.69893 (spell_client.py).",
 		"source": "forever",
-		"tooltip": "20 Mana\n2 sec cast\nDeals 7 to 9 Fire damage to a target."
+		"tooltip": "20 Mana\n2 sec cast\nDeals 7 to 9 Fire damage to a target.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "6-8 +0.2/level",
+			"biggest": 9
+		}
 	},
 	"7800": {
 		"ability": "Firebolt",
@@ -862,6 +874,12 @@
 		"file": "sim/warlock/curses.go",
 		"note": "Forever renames Curse of Agony to Bane of Agony, roughly halves the damage and raises the coefficient to 0.133 per tick at every rank. Values from the beta client 1.60.1.69893 (spell_client.py).",
 		"source": "forever",
-		"tooltip": "25 Mana\nInstant\nBanes the target with agony, causing 72 Shadow damage over 24 sec. This damage is dealt slowly at first, and builds up as the Bane reaches its full duration. Only one Bane per Warlock can be active on any one target."
+		"tooltip": "25 Mana\nInstant\nBanes the target with agony, causing 72 Shadow damage over 24 sec. This damage is dealt slowly at first, and builds up as the Bane reaches its full duration. Only one Bane per Warlock can be active on any one target.",
+		"measured": {
+			"date": "2026-09-19",
+			"how": "the client's own damage meter, levelling sessions on the beta",
+			"client": "6 a tick",
+			"biggest": 14
+		}
 	}
 }
