@@ -17,14 +17,30 @@ var ConsecrationRankMap = spellData.Consecration
 // Consecration
 // https://www.wowhead.com/forever/spell=26573
 //
-// Consecrates the land beneath the Paladin, doing X Holy damage over 8 sec to enemies who enter the area.
+// Consecrates the land beneath the Paladin, doing X Holy damage over 8 sec to enemies who enter the
+// area. The first N enemies who enter the area will take an additional Y damage over 8 sec.
 func (paladin *Paladin) registerConsecration(rankConfig shared.SpellData) {
 	tick := rankConfig.Periodic.(shared.SpellDataPeriodic)
 
+	// The extra damage the first few targets take, which is the only part of the spell the client
+	// gives a spell power coefficient: the tick everyone takes has none.
+	bonus := rankConfig.SecondaryPeriodic.(shared.SpellDataPeriodic)
+	bonusTargets := int(rankConfig.Effect(shared.A_PERIODIC_DUMMY, 0).Value)
+
 	spellID := rankConfig.SpellID
 	cost := rankConfig.Cost
-	minDamage := tick.Tick
-	coefficient := tick.Coef
+
+	// The bonus scales on its own coefficient, so it is added to the base damage here rather than
+	// through the dot's, which is the base tick's.
+	dealTick := func(sim *core.Simulation, dot *core.Dot) {
+		for i, target := range sim.Encounter.ActiveTargetUnits {
+			damage := tick.Tick
+			if i < bonusTargets {
+				damage += bonus.Tick + bonus.Coef*dot.Spell.BonusDamage(dot.Spell.Unit.AttackTables[target.UnitIndex])
+			}
+			dot.Spell.CalcAndDealPeriodicDamage(sim, target, damage, dot.OutcomeTickMagicHit)
+		}
+	}
 
 	paladin.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: spellID},
@@ -59,11 +75,11 @@ func (paladin *Paladin) registerConsecration(rankConfig shared.SpellData) {
 				ActionID: core.ActionID{SpellID: spellID},
 				Label:    "Consecration" + paladin.Label + " " + rankConfig.GetRankLabel(),
 			},
-			NumberOfTicks:    7, // the table says 8; the sim adds an immediate tick below
+			NumberOfTicks:    tick.NumberOfTicks - 1, // the sim adds an immediate tick below
 			TickLength:       tick.TickLength,
-			BonusCoefficient: coefficient,
+			BonusCoefficient: tick.Coef,
 			OnTick: func(sim *core.Simulation, _ *core.Unit, dot *core.Dot) {
-				dot.Spell.CalcAndDealPeriodicAoeDamage(sim, minDamage, dot.OutcomeTickMagicHit)
+				dealTick(sim, dot)
 			},
 		},
 
@@ -74,7 +90,7 @@ func (paladin *Paladin) registerConsecration(rankConfig shared.SpellData) {
 
 			dot := spell.AOEDot()
 			dot.Apply(sim)
-			dot.Spell.CalcAndDealPeriodicAoeDamage(sim, minDamage, dot.OutcomeTickMagicHit)
+			dealTick(sim, dot)
 		},
 	})
 }

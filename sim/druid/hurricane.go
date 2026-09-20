@@ -1,8 +1,6 @@
 package druid
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
@@ -10,6 +8,8 @@ import (
 var hurricaneRank = spellData.Hurricane.HighestRank()
 
 func (druid *Druid) registerHurricaneSpell() {
+	hurricaneTick := hurricaneRank.Periodic.(shared.SpellDataPeriodic)
+
 	druid.Hurricane = druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: hurricaneRank.SpellID},
 		SpellSchool:    hurricaneRank.SpellSchool,
@@ -34,8 +34,8 @@ func (druid *Druid) registerHurricaneSpell() {
 			Aura: core.Aura{
 				Label: "Hurricane (Aura)",
 			},
-			NumberOfTicks:       10,
-			TickLength:          time.Second * 1,
+			NumberOfTicks:       hurricaneTick.NumberOfTicks,
+			TickLength:          hurricaneTick.TickLength,
 			AffectedByCastSpeed: true,
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				druid.Hurricane.RelatedDotSpell.Cast(sim, target)
@@ -58,13 +58,10 @@ func (druid *Druid) registerHurricaneSpell() {
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		// TODO: Forever moves Hurricane's damage onto the area trigger its second effect
-		// creates, which the client tables do not carry, so the rank has no Direct value at
-		// all and the tick is pinned to no damage rather than an invented one.
-		BonusCoefficient: shared.SpellDataCoef(hurricaneRank.Direct),
+		BonusCoefficient: hurricaneTick.Coef,
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealAoeDamage(sim, 0, spell.OutcomeMagicHit)
+			spell.CalcAndDealAoeDamage(sim, hurricaneTick.Tick, spell.OutcomeMagicHit)
 		},
 	})
 }
