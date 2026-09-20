@@ -1,5 +1,7 @@
 import { Player } from '@generated/proto/api';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
 import { IndividualSimSettings } from '@generated/proto/ui';
+import { ScalarType } from '@protobuf-ts/runtime';
 import { describe, expect, it } from 'vitest';
 
 import { migrateRetypedBuffFields, retypedBuffFields } from './buff_field_migration';
@@ -75,5 +77,24 @@ describe('migrateRetypedBuffFields', () => {
 
 		expect(fields).toHaveLength(25);
 		expect(new Set(fields).size).toBe(25);
+	});
+
+	// A row that goes back to ProtoTristate in the manifest would have the rewrite write a bool into
+	// an enum, which fromJson throws on. The list has to name bool fields, and only bool fields.
+	it('names a bool field of the message it is grouped under', () => {
+		const messages = {
+			raidBuffs: RaidBuffs,
+			partyBuffs: PartyBuffs,
+			individualBuffs: IndividualBuffs,
+			debuffs: Debuffs,
+		};
+
+		for (const [group, fields] of Object.entries(retypedBuffFields)) {
+			for (const name of fields) {
+				const field = messages[group as keyof typeof messages].fields.find(f => f.localName === name);
+				expect(field, `${group}.${name}`).toBeDefined();
+				expect(field!.kind === 'scalar' && field!.T === ScalarType.BOOL, `${group}.${name} is ${field!.kind}`).toBe(true);
+			}
+		}
 	});
 });

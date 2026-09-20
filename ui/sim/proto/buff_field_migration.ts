@@ -5,7 +5,8 @@
 // `fromJson` throws on "TristateEffectImproved" in a bool field long before they are reached, so
 // the rewrite happens here, on the JSON. Share links carry these fields as varints, and 1 and 2
 // both decode as true, so `fromBinary` needs nothing.
-import { CURRENT_API_VERSION } from '../constants/other';
+
+const RETYPED_API_VERSION = 17;
 
 export const retypedBuffFields = {
 	raidBuffs: ['powerWordFortitude', 'divineSpirit', 'giftOfTheWild', 'thorns'],
@@ -39,12 +40,12 @@ type JsonObject = Record<string, unknown>;
 
 const asObject = (value: unknown): JsonObject | null => (typeof value === 'object' && value !== null && !Array.isArray(value) ? (value as JsonObject) : null);
 
-// A message stamped with the current version already holds bools. The messages that carry buffs
+// A message stamped with version 17 or later already holds bools. The messages that carry buffs
 // without an api_version of their own (SavedSettings, Raid, Party) are always rewritten, which
 // costs nothing: a value that is already a bool is left as it is.
 const isOutdated = (message: JsonObject): boolean => {
 	const version = message.apiVersion;
-	return typeof version !== 'number' || version < CURRENT_API_VERSION;
+	return typeof version !== 'number' || version < RETYPED_API_VERSION;
 };
 
 // `toJson` writes an enum as its name and a `fromJson` payload may also hold the number, so both
