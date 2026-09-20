@@ -138,7 +138,6 @@
 						},
 						"buffs": {
 							"blessingOfKings": true,
-							"blessingOfSanctuary": true,
 							"blessingOfWisdom": 2,
 							"blessingOfMight": 2
 						},
@@ -168,9 +167,7 @@
 					}
 				],
 				"buffs": {
-					"drums": 4,
 					"manaSpringTotem": 1,
-					"wrathOfAirTotem": 1,
 					"strengthOfEarthTotem": 2
 				}
 			},
@@ -274,16 +271,12 @@
 			"judgementOfWisdom": true,
 			"judgementOfLight": true,
 			"improvedSealOfTheCrusader": 2,
-			"misery": true,
 			"curseOfElements": 2,
-			"bloodFrenzy": true,
 			"exposeArmor": 2,
 			"faerieFire": 2,
 			"sunderArmor": true,
 			"curseOfRecklessness": true,
 			"huntersMark": 2,
-			"exposeWeaknessUptime": 0.9,
-			"exposeWeaknessHunterAgility": 1150,
 			"insectSwarm": true
 		}
 	},

@@ -154,11 +154,7 @@
 					}
 				],
 				"buffs": {
-					"drums": 4,
-					"eyeOfTheNight": true,
-					"chainOfTheTwilightOwl": true,
-					"manaSpringTotem": 1,
-					"wrathOfAirTotem": 2
+					"manaSpringTotem": 1
 				}
 			},
 			{
@@ -254,10 +250,8 @@
 			"judgementOfWisdom": true,
 			"improvedSealOfTheCrusader": 2,
 			"curseOfElements": 2,
-			"isbUptime": 0.59,
 			"exposeArmor": 2,
-			"faerieFire": 2,
-			"shadowEmbrace": true
+			"faerieFire": 2
 		}
 	},
 	"preCapEpWeights": {

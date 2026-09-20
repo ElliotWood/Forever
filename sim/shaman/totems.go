@@ -189,7 +189,9 @@ func (shaman *Shaman) registerGraceOfAirTotemSpell() {
 func (shaman *Shaman) registerWrathOfAirTotemSpell() {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
+	// The TBC implementation, kept for the port. core.WrathOfAirTotemValue and
+	// core.WrathOfAirTotemCategory named below no longer exist: the party buff was
+	// retired with its proto field, so a port has to state its own numbers.
 	// value := core.WrathOfAirTotemValue(shaman.Character.CouldHaveSetBonus(ItemSetCycloneRegalia, 2))
 	//
 	// duration := time.Second * 120

@@ -31,24 +31,30 @@ func TestUniqueScopeNumber(t *testing.T) {
 	}
 }
 
-func TestNoLiveRowTakesARetiredNumber(t *testing.T) {
+func TestNoLiveRowTakesARetiredNumberOrName(t *testing.T) {
 	for _, spec := range Manifest {
-		for _, number := range Retired[spec.Scope] {
-			if spec.Number == number {
-				t.Errorf("%s/%s takes %d, which is retired", spec.Scope, spec.Field, number)
+		for _, retired := range Retired[spec.Scope] {
+			if spec.Number == retired.Number {
+				t.Errorf("%s/%s takes %d, which %s retired", spec.Scope, spec.Field, spec.Number, retired.Field)
+			}
+			if spec.Field == retired.Field {
+				t.Errorf("%s/%s takes a retired field name", spec.Scope, spec.Field)
 			}
 		}
 	}
 }
 
-func TestRetiredNumbersAreUniqueAndSorted(t *testing.T) {
-	for scope, numbers := range Retired {
-		for i, number := range numbers {
-			if i > 0 && number <= numbers[i-1] {
-				t.Errorf("%s retires %v, which is not in ascending order at index %d", scope, numbers, i)
+func TestRetiredFieldsAreWellFormed(t *testing.T) {
+	for scope, retired := range Retired {
+		for i, entry := range retired {
+			if i > 0 && entry.Number <= retired[i-1].Number {
+				t.Errorf("%s retires %d after %d, which is not ascending", scope, entry.Number, retired[i-1].Number)
 			}
-			if number <= 0 {
-				t.Errorf("%s retires %d, which is no proto field number", scope, number)
+			if entry.Number <= 0 {
+				t.Errorf("%s retires %d, which is no proto field number", scope, entry.Number)
+			}
+			if entry.Field == "" {
+				t.Errorf("%s retires number %d under no name", scope, entry.Number)
 			}
 		}
 	}

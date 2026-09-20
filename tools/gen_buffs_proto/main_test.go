@@ -80,14 +80,24 @@ func TestRenderReservesEveryRetiredNumber(t *testing.T) {
 	rendered := string(Render(buffmanifest.Manifest))
 
 	for message, scope := range scopeOfMessage {
-		got := parseReserved(t, rendered, message)
-		want := buffmanifest.Retired[scope]
-		if fmt.Sprint(got) != fmt.Sprint(want) {
-			t.Errorf("%s reserves %v, want %v", message, got, want)
+		numbers := parseReserved(t, rendered, message)
+		wantNumbers := buffmanifest.RetiredNumbers(scope)
+		if fmt.Sprint(numbers) != fmt.Sprint(wantNumbers) {
+			t.Errorf("%s reserves the numbers %v, want %v", message, numbers, wantNumbers)
 		}
-		for _, field := range parseProtoMessage(t, []byte(rendered), message) {
-			if slices.Contains(want, field.Number) {
+
+		names := parseReservedNames(t, rendered, message)
+		wantNames := buffmanifest.RetiredFields(scope)
+		if fmt.Sprint(names) != fmt.Sprint(wantNames) {
+			t.Errorf("%s reserves the names %v, want %v", message, names, wantNames)
+		}
+
+		for name, field := range parseProtoMessage(t, []byte(rendered), message) {
+			if slices.Contains(wantNumbers, field.Number) {
 				t.Errorf("%s declares a field with the reserved number %d", message, field.Number)
+			}
+			if slices.Contains(wantNames, name) {
+				t.Errorf("%s declares a field with the reserved name %q", message, name)
 			}
 		}
 	}
@@ -128,19 +138,90 @@ func TestRetypedFieldsAreBool(t *testing.T) {
 }
 
 func TestRetypedFieldsMatchTheMigration(t *testing.T) {
-	raw, err := os.ReadFile("../../ui/sim/proto/buff_field_migration.ts")
-	if err != nil {
-		t.Fatalf("read buff_field_migration.ts: %v", err)
-	}
+	raw := readMigration(t)
 
 	for message, names := range retypedFields {
 		for _, name := range names {
 			want := "'" + tsFieldName(name) + "'"
-			if !strings.Contains(string(raw), want) {
+			if !strings.Contains(raw, want) {
 				t.Errorf("%s.%s is retyped but the migration does not name %s", message, name, want)
 			}
 		}
 	}
+}
+
+// The migration deletes the retired keys before `fromJson` sees them, so it has to
+// name exactly the fields the manifest retired: one it misses throws on load, and
+// one it names that is live would silently drop a setting.
+func TestRetiredFieldsMatchTheMigration(t *testing.T) {
+	raw := readMigration(t)
+
+	groups := map[buffmanifest.BuffScope]string{
+		buffmanifest.ScopeRaid:       "raidBuffs",
+		buffmanifest.ScopeParty:      "partyBuffs",
+		buffmanifest.ScopeIndividual: "individualBuffs",
+		buffmanifest.ScopeDebuff:     "debuffs",
+	}
+
+	declared := migrationRetiredFields(t, raw)
+	total := 0
+	for scope, group := range groups {
+		want := buffmanifest.RetiredFields(scope)
+		total += len(want)
+		got := declared[group]
+		slices.Sort(got)
+		sorted := slices.Clone(want)
+		slices.Sort(sorted)
+		if fmt.Sprint(got) != fmt.Sprint(sorted) {
+			t.Errorf("the migration retires %s %v, want %v", group, got, sorted)
+		}
+	}
+	if total != 33 {
+		t.Errorf("the manifest retires %d fields, want the 33 api version 17 declares", total)
+	}
+}
+
+func readMigration(t *testing.T) string {
+	t.Helper()
+
+	raw, err := os.ReadFile("../../ui/sim/proto/buff_field_migration.ts")
+	if err != nil {
+		t.Fatalf("read buff_field_migration.ts: %v", err)
+	}
+	return string(raw)
+}
+
+var migrationGroupRE = regexp.MustCompile(`(?s)export const retiredBuffFields = \{(.*?)\n\} as const;`)
+
+// The quoted proto names under each group of `retiredBuffFields`.
+func migrationRetiredFields(t *testing.T, raw string) map[string][]string {
+	t.Helper()
+
+	body := migrationGroupRE.FindStringSubmatch(raw)
+	if body == nil {
+		t.Fatal("buff_field_migration.ts declares no retiredBuffFields")
+	}
+
+	out := map[string][]string{}
+	group := ""
+	for _, line := range strings.Split(body[1], "\n") {
+		trimmed := strings.TrimSpace(line)
+		if name, rest, found := strings.Cut(trimmed, ":"); found && !strings.HasPrefix(trimmed, "'") {
+			group = name
+			if _, ok := out[group]; !ok {
+				out[group] = []string{}
+			}
+			trimmed = rest
+		}
+		for _, quoted := range strings.Split(trimmed, ",") {
+			quoted = strings.TrimSpace(strings.Trim(strings.TrimSpace(quoted), "[]"))
+			if len(quoted) < 2 || !strings.HasPrefix(quoted, "'") {
+				continue
+			}
+			out[group] = append(out[group], strings.Trim(quoted, "'"))
+		}
+	}
+	return out
 }
 
 // The property protobuf-ts generates for a proto field name, which is how the
@@ -156,10 +237,31 @@ func tsFieldName(protoName string) string {
 
 var reservedRE = regexp.MustCompile(`^\s*reserved\s+([\d,\s]+);`)
 
-func parseReserved(t *testing.T, rendered string, message string) []int32 {
+var reservedNameRE = regexp.MustCompile(`^\s*reserved\s+("[^;]+);`)
+
+func parseReservedNames(t *testing.T, rendered string, message string) []string {
 	t.Helper()
 
-	var numbers []int32
+	var names []string
+	for _, line := range messageLines(rendered, message) {
+		match := reservedNameRE.FindStringSubmatch(line)
+		if match == nil {
+			continue
+		}
+		for _, part := range strings.Split(match[1], ",") {
+			name, err := strconv.Unquote(strings.TrimSpace(part))
+			if err != nil {
+				t.Fatalf("reserved name %q of %s: %v", part, message, err)
+			}
+			names = append(names, name)
+		}
+	}
+	return names
+}
+
+// The lines between `message <name> {` and its closing brace.
+func messageLines(rendered string, message string) []string {
+	var lines []string
 	inMessage := false
 	for _, line := range strings.Split(rendered, "\n") {
 		if !inMessage {
@@ -169,6 +271,16 @@ func parseReserved(t *testing.T, rendered string, message string) []int32 {
 		if strings.HasPrefix(strings.TrimSpace(line), "}") {
 			break
 		}
+		lines = append(lines, line)
+	}
+	return lines
+}
+
+func parseReserved(t *testing.T, rendered string, message string) []int32 {
+	t.Helper()
+
+	var numbers []int32
+	for _, line := range messageLines(rendered, message) {
 		match := reservedRE.FindStringSubmatch(line)
 		if match == nil {
 			continue

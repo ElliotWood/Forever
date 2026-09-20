@@ -64,16 +64,17 @@ func Render(manifest []buffmanifest.BuffSpec) []byte {
 				next = spec.Number + 1
 			}
 		}
-		for _, number := range retired {
-			if number >= next {
-				next = number + 1
+		for _, entry := range retired {
+			if entry.Number >= next {
+				next = entry.Number + 1
 			}
 		}
 		fmt.Fprintf(&b, "// Next index: %d\n", next)
 
 		fmt.Fprintf(&b, "message %s {\n", msg.Name)
 		if len(retired) > 0 {
-			fmt.Fprintf(&b, "\treserved %s;\n", joinNumbers(retired))
+			fmt.Fprintf(&b, "\treserved %s;\n", joinNumbers(buffmanifest.RetiredNumbers(msg.Scope)))
+			fmt.Fprintf(&b, "\treserved %s;\n", joinQuoted(buffmanifest.RetiredFields(msg.Scope)))
 		}
 		for _, spec := range specs {
 			fmt.Fprintf(&b, "\t%s %s = %d;\n", protoType(spec), spec.Field, spec.Number)
@@ -96,6 +97,14 @@ func joinNumbers(numbers []int32) string {
 	parts := make([]string, len(numbers))
 	for i, number := range numbers {
 		parts[i] = strconv.Itoa(int(number))
+	}
+	return strings.Join(parts, ", ")
+}
+
+func joinQuoted(names []string) string {
+	parts := make([]string, len(names))
+	for i, name := range names {
+		parts[i] = strconv.Quote(name)
 	}
 	return strings.Join(parts, ", ")
 }

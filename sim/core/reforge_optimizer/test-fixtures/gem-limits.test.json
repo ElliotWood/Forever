@@ -129,8 +129,7 @@
 						},
 						"buffs": {
 							"blessingOfKings": true,
-							"blessingOfMight": 2,
-							"unleashedRage": true
+							"blessingOfMight": 2
 						},
 						"cooldowns": {},
 						"healingModel": {}
@@ -149,9 +148,7 @@
 					}
 				],
 				"buffs": {
-					"ferociousInspiration": 1,
 					"leaderOfThePack": 1,
-					"drums": 4,
 					"graceOfAirTotem": 2,
 					"strengthOfEarthTotem": 2,
 					"windfuryTotem": 2,
@@ -247,16 +244,12 @@
 		},
 		"debuffs": {
 			"improvedSealOfTheCrusader": 2,
-			"misery": true,
-			"bloodFrenzy": true,
 			"giftOfArthas": true,
 			"mangle": true,
 			"faerieFire": 2,
 			"sunderArmor": true,
 			"curseOfRecklessness": true,
-			"huntersMark": 2,
-			"exposeWeaknessUptime": 0.9,
-			"exposeWeaknessHunterAgility": 1150
+			"huntersMark": 2
 		}
 	},
 	"preCapEpWeights": {

@@ -153,9 +153,7 @@
 					}
 				],
 				"buffs": {
-					"moonkinAura": 2,
-					"eyeOfTheNight": true,
-					"chainOfTheTwilightOwl": true
+					"moonkinAura": 2
 				}
 			},
 			{
@@ -250,9 +248,7 @@
 		"debuffs": {
 			"judgementOfWisdom": true,
 			"improvedSealOfTheCrusader": 2,
-			"misery": true,
 			"curseOfElements": 2,
-			"bloodFrenzy": true,
 			"giftOfArthas": true,
 			"mangle": true,
 			"exposeArmor": 2,

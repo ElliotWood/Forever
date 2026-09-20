@@ -167,9 +167,7 @@
 					}
 				],
 				"buffs": {
-					"ferociousInspiration": 2,
 					"leaderOfThePack": 1,
-					"braidedEterniumChain": true,
 					"battleShout": 2
 				}
 			},
@@ -264,19 +262,14 @@
 		"debuffs": {
 			"judgementOfWisdom": true,
 			"improvedSealOfTheCrusader": 2,
-			"misery": true,
 			"curseOfElements": 2,
-			"bloodFrenzy": true,
 			"giftOfArthas": true,
 			"mangle": true,
 			"exposeArmor": 2,
 			"faerieFire": 2,
 			"sunderArmor": true,
 			"curseOfRecklessness": true,
-			"huntersMark": 2,
-			"exposeWeaknessUptime": 0.9,
-			"exposeWeaknessHunterAgility": 1150,
-			"screech": true
+			"huntersMark": 2
 		}
 	},
 	"preCapEpWeights": {

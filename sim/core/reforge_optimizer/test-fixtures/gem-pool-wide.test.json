@@ -156,12 +156,7 @@
 				],
 				"buffs": {
 					"moonkinAura": 1,
-					"drums": 4,
-					"eyeOfTheNight": true,
-					"chainOfTheTwilightOwl": true,
-					"manaSpringTotem": 1,
-					"totemOfWrath": 1,
-					"wrathOfAirTotem": 2
+					"manaSpringTotem": 1
 				}
 			},
 			{
@@ -256,22 +251,14 @@
 		"debuffs": {
 			"judgementOfWisdom": true,
 			"improvedSealOfTheCrusader": 2,
-			"misery": true,
 			"curseOfElements": 2,
-			"isbUptime": 0.59,
-			"shadowWeaving": true,
-			"bloodFrenzy": true,
 			"giftOfArthas": true,
 			"mangle": true,
 			"exposeArmor": 2,
 			"faerieFire": 2,
 			"sunderArmor": true,
 			"curseOfRecklessness": true,
-			"huntersMark": 2,
-			"exposeWeaknessUptime": 0.9,
-			"exposeWeaknessHunterAgility": 1150,
-			"shadowEmbrace": true,
-			"screech": true
+			"huntersMark": 2
 		}
 	},
 	"preCapEpWeights": {

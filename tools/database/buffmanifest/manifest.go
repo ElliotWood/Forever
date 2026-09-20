@@ -269,14 +269,73 @@ func (s BuffSpec) TSField() string {
 	return b.String()
 }
 
-// Retired holds the field numbers api version 17 gave up, per scope, so that no
-// later row takes one: a saved payload or a share link from before the bump still
-// carries the old field under that number, and a new field reusing it would read
-// the old value. gen_buffs_proto turns each entry into a `reserved` line.
-var Retired = map[BuffScope][]int32{
-	ScopeParty:      {1, 5, 9, 10, 11, 14, 15, 16, 17, 20, 21, 22, 25, 26, 29, 30, 31, 32, 37},
-	ScopeIndividual: {3, 7},
-	ScopeDebuff:     {4, 6, 7, 8, 9, 10, 18, 19, 25, 26, 27, 28},
+type RetiredField struct {
+	Number int32
+	Field  string
+}
+
+// Retired holds the fields api version 17 gave up, per scope in ascending number
+// order, so that no later row takes a number or a name back: a saved payload or a
+// share link from before the bump still carries the old field under both, and a new
+// field reusing either would read the old value. gen_buffs_proto turns each entry
+// into a `reserved` number and a `reserved` name, and
+// ui/sim/proto/buff_field_migration.ts drops the same names from an older payload.
+var Retired = map[BuffScope][]RetiredField{
+	ScopeParty: {
+		{1, "ferocious_inspiration"},
+		{5, "sanctity_aura"},
+		{9, "draenei_racial_melee"},
+		{10, "draenei_racial_caster"},
+		{11, "drums"},
+		{14, "braided_eternium_chain"},
+		{15, "eye_of_the_night"},
+		{16, "chain_of_the_twilight_owl"},
+		{17, "jade_pendant_of_blasting"},
+		{20, "totem_of_wrath"},
+		{21, "wrath_of_air_totem"},
+		{22, "snapshot_improved_wrath_of_air_totem"},
+		{25, "snapshot_improved_strength_of_earth_totem"},
+		{26, "tranquil_air_totem"},
+		{29, "bs_solarian_sapphire"},
+		{30, "snapshot_bs_solarian_sapphire"},
+		{31, "snapshot_bs_t2"},
+		{32, "snapshot_bs_booming_voice_rank"},
+		{37, "soe_enhancement_2pt4"},
+	},
+	ScopeIndividual: {
+		{3, "blessing_of_sanctuary"},
+		{7, "unleashed_rage"},
+	},
+	ScopeDebuff: {
+		{4, "misery"},
+		{6, "isb_uptime"},
+		{7, "shadow_weaving"},
+		{8, "improved_scorch"},
+		{9, "winters_chill"},
+		{10, "blood_frenzy"},
+		{18, "expose_weakness_uptime"},
+		{19, "expose_weakness_hunter_agility"},
+		{25, "shadow_embrace"},
+		{26, "screech"},
+		{27, "hemorrhage_uptime"},
+		{28, "joc_retribution_2pt4"},
+	},
+}
+
+func RetiredNumbers(scope BuffScope) []int32 {
+	out := make([]int32, 0, len(Retired[scope]))
+	for _, retired := range Retired[scope] {
+		out = append(out, retired.Number)
+	}
+	return out
+}
+
+func RetiredFields(scope BuffScope) []string {
+	out := make([]string, 0, len(Retired[scope]))
+	for _, retired := range Retired[scope] {
+		out = append(out, retired.Field)
+	}
+	return out
 }
 
 func ByScope(scope BuffScope) []BuffSpec {
