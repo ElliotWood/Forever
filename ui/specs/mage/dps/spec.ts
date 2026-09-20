@@ -29,7 +29,7 @@ export default defineSpec<Spec.SpecMage>({
 		Stat.StatArcaneDamage,
 		Stat.StatFrostDamage,
 		Stat.StatFireDamage,
-		Stat.StatSpellPenetration,
+		Stat.StatSpellPiercing,
 		Stat.StatSpellHitRating,
 		Stat.StatSpellCritRating,
 		Stat.StatSpellHasteRating,

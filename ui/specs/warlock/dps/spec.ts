@@ -27,7 +27,7 @@ export default defineSpec<Spec.SpecWarlock>({
 		Stat.StatSpellHitRating,
 		Stat.StatSpellCritRating,
 		Stat.StatSpellHasteRating,
-		Stat.StatSpellPenetration,
+		Stat.StatSpellPiercing,
 		Stat.StatMP5,
 	],
 	// Reference stat against which to calculate EP. DPS classes use either spell power or attack power.
@@ -42,7 +42,7 @@ export default defineSpec<Spec.SpecWarlock>({
 			Stat.StatSpellDamage,
 			Stat.StatShadowDamage,
 			Stat.StatFireDamage,
-			Stat.StatSpellPenetration,
+			Stat.StatSpellPiercing,
 			Stat.StatMP5,
 			Stat.StatArcaneResistance,
 			Stat.StatFireResistance,

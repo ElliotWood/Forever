@@ -187,7 +187,9 @@ enum Stat {
 	StatSpellHitRating = 12;
 	StatSpellCritRating = 13;
 	StatSpellHasteRating = 14;
-	StatSpellPenetration = 15;
+	// Forever renames this stat: "Rune of Perfection" states "Spell Piercing increased".
+	// The number stays 15 so saved data and old sim links keep resolving.
+	StatSpellPiercing = 15;
 	StatSpirit = 16;
 
 	// Physical Secondaries

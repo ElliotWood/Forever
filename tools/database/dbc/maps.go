@@ -144,7 +144,7 @@ func MapBonusStatIndexToStat(index int) (proto.Stat, bool) {
 	case ITEM_MOD_MANA_REGENERATION: // ManaRegeneration
 		return proto.Stat_StatMP5, true
 	case ITEM_MOD_SPELL_PENETRATION:
-		return proto.Stat_StatSpellPenetration, true
+		return proto.Stat_StatSpellPiercing, true
 	case ITEM_MOD_BLOCK_VALUE:
 		return proto.Stat_StatBlockValue, true
 	default:

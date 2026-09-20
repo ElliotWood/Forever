@@ -172,12 +172,12 @@ func processEnchantmentEffects(
 					stat := ConvertEffectAuraToStatIndex(spellEffect.EffectAura, spellEffect.EffectMiscValues[0])
 					if stat >= 0 || stat == -2 {
 						value := float64(points)
-						if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPenetration {
+						if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPiercing {
 							// Make sure it's not Feral AP
 							if strings.Contains(dbcInstance.Spells[spellEffect.SpellID].Description, "forms only") {
 								stat = proto.Stat_StatFeralAttackPower
 							}
-							if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPenetration {
+							if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPiercing {
 								// Make these not negative
 								value = math.Abs(value)
 							}
@@ -241,7 +241,7 @@ func ConvertTargetResistanceFlagToPenetrationStat(flag int) proto.Stat {
 	case 1:
 		return proto.Stat_StatArmorPenetration
 	default:
-		return proto.Stat_StatSpellPenetration
+		return proto.Stat_StatSpellPiercing
 	}
 }
 

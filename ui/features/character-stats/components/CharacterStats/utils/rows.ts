@@ -72,7 +72,7 @@ const statGroups = new Map<string, Array<DisplayStat>>([
 			{ stat: UnitStat.fromPseudoStat(PseudoStat.PseudoStatSchoolHitPercentShadow) },
 			{ stat: UnitStat.fromPseudoStat(PseudoStat.PseudoStatSpellCritPercent) },
 			{ stat: UnitStat.fromPseudoStat(PseudoStat.PseudoStatSpellHastePercent) },
-			{ stat: UnitStat.fromStat(Stat.StatSpellPenetration) },
+			{ stat: UnitStat.fromStat(Stat.StatSpellPiercing) },
 			{ stat: UnitStat.fromStat(Stat.StatMP5) },
 		],
 	],

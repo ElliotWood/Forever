@@ -219,7 +219,7 @@ func RegisterAllOnUseCds() {
 	// SpellCritRating
 	shared.NewSimpleStatActive(19952) // Gri'lek's Charm of Valor - https://www.wowhead.com/forever/spell=24498
 
-	// SpellDamage / SpellPenetration
+	// SpellDamage / SpellPiercing
 	shared.NewSimpleStatActive(21473) // Eye of Moam - https://www.wowhead.com/forever/spell=26166
 
 	// Spirit
