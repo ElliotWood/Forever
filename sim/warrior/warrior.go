@@ -161,6 +161,8 @@ func (warrior *Warrior) Initialize() {
 	warrior.registerIntercept()
 	warrior.registerPummel()
 	warrior.registerHamstring()
+	warrior.registerDisarm()
+	warrior.registerTaunt()
 
 	warrior.registerRend()
 	warrior.registerSunderArmor()
@@ -174,10 +176,13 @@ func (warrior *Warrior) Initialize() {
 	warrior.registerRevenge()
 	warrior.registerShieldBlock()
 	warrior.registerShieldBash()
+	warrior.registerMockingBlow()
+	warrior.registerVictoryRush()
 
 	warrior.registerStances()
 	warrior.registerShouts()
-	warrior.registerForeverAbilities()
+	warrior.registerChallengingShout()
+	warrior.registerIntimidatingShout()
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {
