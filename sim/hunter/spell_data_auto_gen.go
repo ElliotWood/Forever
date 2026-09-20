@@ -23,45 +23,74 @@ type generatedSpellData struct {
 	ArcaneResistance           shared.SpellDataTable
 	ArcaneShot                 shared.SpellDataTable
 	AspectOfTheBeast           shared.SpellDataTable
+	AspectOfTheCheetah         shared.SpellDataTable
+	AspectOfTheFalcon          shared.SpellDataTable
 	AspectOfTheHawk            shared.SpellDataTable
+	AspectOfTheMonkey          shared.SpellDataTable
+	AspectOfThePack            shared.SpellDataTable
+	AspectOfTheViper           shared.SpellDataTable
 	AspectOfTheWild            shared.SpellDataTable
+	AutoShot                   shared.SpellDataTable
 	Barrage                    shared.SpellDataTable
+	BeastLore                  shared.SpellDataTable
+	BeastTraining              shared.SpellDataTable
 	BestialDiscipline          shared.SpellDataTable
+	BestialSwiftness           shared.SpellDataTable
+	BestialWrath               shared.SpellDataTable
 	Bite                       shared.SpellDataTable
 	BlackArrow                 shared.SpellDataTable
+	CallPet                    shared.SpellDataTable
 	CarefulAim                 shared.SpellDataTable
 	Charge                     shared.SpellDataTable
 	Claw                       shared.SpellDataTable
 	CleverTraps                shared.SpellDataTable
 	CobraReflexes              shared.SpellDataTable
+	ConcussiveShot             shared.SpellDataTable
 	Counterattack              shared.SpellDataTable
 	Cower                      shared.SpellDataTable
 	Dash                       shared.SpellDataTable
 	DeadlyAspects              shared.SpellDataTable
 	Deflection                 shared.SpellDataTable
 	DemoralizingScreech        shared.SpellDataTable
+	Deterrence                 shared.SpellDataTable
 	Disengage                  shared.SpellDataTable
 	Dismember                  shared.SpellDataTable
+	DismissPet                 shared.SpellDataTable
 	DistractingShot            shared.SpellDataTable
 	Dive                       shared.SpellDataTable
 	DustCloud                  shared.SpellDataTable
+	EagleEye                   shared.SpellDataTable
 	Efficiency                 shared.SpellDataTable
+	EnchantedFlare             shared.SpellDataTable
 	EnduranceTraining          shared.SpellDataTable
 	Entrapment                 shared.SpellDataTable
 	ExplosiveTrap              shared.SpellDataTable
 	ExplosiveTrapEffect        shared.SpellDataTable
 	ExposePrey                 shared.SpellDataTable
+	EyesOfTheBeast             shared.SpellDataTable
+	FasterAttackI              shared.SpellDataTable
+	FasterAttackII             shared.SpellDataTable
+	FasterAttackIII            shared.SpellDataTable
+	FasterAttackIV             shared.SpellDataTable
+	FasterAttackV              shared.SpellDataTable
+	FasterAttackVI             shared.SpellDataTable
+	FasterAttackVII            shared.SpellDataTable
+	FeedPet                    shared.SpellDataTable
+	FeignDeath                 shared.SpellDataTable
 	Ferocity                   shared.SpellDataTable
 	FireResistance             shared.SpellDataTable
+	Flare                      shared.SpellDataTable
 	FocusedFire                shared.SpellDataTable
 	FreezingTrap               shared.SpellDataTable
 	Frenzy                     shared.SpellDataTable
 	FrostResistance            shared.SpellDataTable
+	FrostTrap                  shared.SpellDataTable
 	FuriousHowl                shared.SpellDataTable
 	GreatStamina               shared.SpellDataTable
 	Growl                      shared.SpellDataTable
 	Harass                     shared.SpellDataTable
 	HawkEye                    shared.SpellDataTable
+	HeartOfTheLion             shared.SpellDataTable
 	HumanoidSlaying            shared.SpellDataTable
 	HuntersMark                shared.SpellDataTable
 	ImmolationTrap             shared.SpellDataTable
@@ -71,12 +100,15 @@ type generatedSpellData struct {
 	ImprovedConcussiveShot     shared.SpellDataTable
 	ImprovedEyesOfTheBeast     shared.SpellDataTable
 	ImprovedFeignDeath         shared.SpellDataTable
+	ImprovedHuntersMark        shared.SpellDataTable
 	ImprovedMendPet            shared.SpellDataTable
 	ImprovedRevivePet          shared.SpellDataTable
 	ImprovedSerpentSting       shared.SpellDataTable
 	ImprovedStings             shared.SpellDataTable
 	ImprovedTracking           shared.SpellDataTable
 	ImprovedWingClip           shared.SpellDataTable
+	Intimidation               shared.SpellDataTable
+	KillerInstinct             shared.SpellDataTable
 	Lacerate                   shared.SpellDataTable
 	LavaBreath                 shared.SpellDataTable
 	LethalAttacks              shared.SpellDataTable
@@ -98,18 +130,23 @@ type generatedSpellData struct {
 	PredatorsEdge              shared.SpellDataTable
 	Prowl                      shared.SpellDataTable
 	RangedWeaponSpecialization shared.SpellDataTable
+	RapidFire                  shared.SpellDataTable
 	RapidKilling               shared.SpellDataTable
 	RapidRecuperation          shared.SpellDataTable
 	RaptorStrike               shared.SpellDataTable
 	Resourcefulness            shared.SpellDataTable
+	RevivePet                  shared.SpellDataTable
 	SavageRend                 shared.SpellDataTable
 	SavageStrikes              shared.SpellDataTable
 	ScareBeast                 shared.SpellDataTable
+	ScatterShot                shared.SpellDataTable
 	ScorpidPoison              shared.SpellDataTable
 	ScorpidSting               shared.SpellDataTable
 	SerpentSting               shared.SpellDataTable
 	ShadowResistance           shared.SpellDataTable
 	ShellShield                shared.SpellDataTable
+	SlowerAttackII             shared.SpellDataTable
+	SlowerAttackIII            shared.SpellDataTable
 	SniperShot                 shared.SpellDataTable
 	SpiritBond                 shared.SpellDataTable
 	StriderKick                shared.SpellDataTable
@@ -119,8 +156,19 @@ type generatedSpellData struct {
 	Survivalist                shared.SpellDataTable
 	SurvivalistsDiscipline     shared.SpellDataTable
 	Swipe                      shared.SpellDataTable
+	TameBeast                  shared.SpellDataTable
 	TendonRip                  shared.SpellDataTable
+	ThickHide                  shared.SpellDataTable
 	Thunderstomp               shared.SpellDataTable
+	TrackBeasts                shared.SpellDataTable
+	TrackDemons                shared.SpellDataTable
+	TrackDragonkin             shared.SpellDataTable
+	TrackElementals            shared.SpellDataTable
+	TrackGiants                shared.SpellDataTable
+	TrackHidden                shared.SpellDataTable
+	TrackHumanoids             shared.SpellDataTable
+	TrackUndead                shared.SpellDataTable
+	TranquilizingShot          shared.SpellDataTable
 	TrickstersDance            shared.SpellDataTable
 	TrueshotAura               shared.SpellDataTable
 	UnleashedFury              shared.SpellDataTable
@@ -161,6 +209,12 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 1299446, Cost: 90, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_UNTRACKABLE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACK_POWER, Misc: 0, Value: 90}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 90, Coef: 0}},
 		{Rank: 4, SpellID: 1299447, Cost: 110, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_UNTRACKABLE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACK_POWER, Misc: 0, Value: 110}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 110, Coef: 0}},
 	},
+	AspectOfTheCheetah: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5118, Cost: 40, GCD: 1500 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 30}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
+	},
+	AspectOfTheFalcon: shared.SpellDataTable{
+		{Rank: 1, SpellID: 469145, Cost: 120, GCD: 1500 * time.Millisecond, ProcChance: 5, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACK_POWER, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
+	},
 	AspectOfTheHawk: shared.SpellDataTable{
 		{Rank: 1, SpellID: 13165, Cost: 20, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 20}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 0}},
 		{Rank: 2, SpellID: 14318, Cost: 35, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 35}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 35, Coef: 0}},
@@ -170,18 +224,42 @@ var spellData = generatedSpellData{
 		{Rank: 6, SpellID: 14322, Cost: 110, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 55}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 55, Coef: 0}},
 		{Rank: 7, SpellID: 25296, Cost: 120, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 120}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 120, Coef: 0}},
 	},
+	AspectOfTheMonkey: shared.SpellDataTable{
+		{Rank: 1, SpellID: 13163, Cost: 20, GCD: 1500 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DODGE_PERCENT, Misc: 0, Value: 8}}, Direct: shared.SpellDataFlat{Value: 8, Coef: 0}},
+	},
+	AspectOfThePack: shared.SpellDataTable{
+		{Rank: 1, SpellID: 13159, Cost: 100, GCD: 1500 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 30}, {Index: 1, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
+	},
+	AspectOfTheViper: shared.SpellDataTable{
+		{Rank: 1, SpellID: 415423, GCD: 1500 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_OBS_MOD_POWER, Misc: 0, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_DONE, Misc: 127, Value: -10}}, Periodic: shared.SpellDataPeriodic{Tick: 10, Coef: 0, TickLength: 3000 * time.Millisecond}},
+	},
 	AspectOfTheWild: shared.SpellDataTable{
 		{Rank: 1, SpellID: 20043, Cost: 90, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_RAID, Aura: shared.A_MOD_RESISTANCE, Misc: 8, Value: 45}}, Direct: shared.SpellDataFlat{Value: 45, Coef: 0}},
 		{Rank: 2, SpellID: 20190, Cost: 115, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_RAID, Aura: shared.A_MOD_RESISTANCE, Misc: 8, Value: 60}}, Direct: shared.SpellDataFlat{Value: 60, Coef: 0}},
+	},
+	AutoShot: shared.SpellDataTable{
+		{Rank: 1, SpellID: 75, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_WEAPON_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 0, Coef: 1}},
 	},
 	Barrage: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19461, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 1}},
 		{Rank: 2, SpellID: 19461, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 7}}, Direct: shared.SpellDataFlat{Value: 7, Coef: 1}},
 		{Rank: 3, SpellID: 19461, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 1}},
 	},
+	BeastLore: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1462, Cost: 40, GCD: 1500 * time.Millisecond, Duration: 30000 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolNature, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_EMPATHY, Misc: 0, Value: 0}}},
+	},
+	BeastTraining: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5149, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_TRADE_SKILL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
+	},
 	BestialDiscipline: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19590, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 8, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MANA_REGEN_INTERRUPT, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 1}},
 		{Rank: 2, SpellID: 19590, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 8, Value: 20}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MANA_REGEN_INTERRUPT, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 1}},
+	},
+	BestialSwiftness: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19596, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 8, Value: 30}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 1}},
+	},
+	BestialWrath: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19574, Cooldown: 120000 * time.Millisecond, Duration: 18000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_SCALE, Misc: 0, Value: 50}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_DONE, Misc: 127, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 12, Value: 0}, {Index: 3, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 1, Value: 0}, {Index: 4, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 5, Value: 0}, {Index: 5, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 17, Value: 0}, {Index: 6, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 14, Value: 0}, {Index: 7, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 13, Value: 0}, {Index: 8, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 24, Value: 0}, {Index: 9, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 7, Value: 0}, {Index: 10, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 10, Value: 0}, {Index: 11, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 11, Value: 0}, {Index: 12, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 2, Value: 0}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 1}},
 	},
 	Bite: shared.SpellDataTable{
 		{Rank: 1, SpellID: 17254, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -194,8 +272,11 @@ var spellData = generatedSpellData{
 		{Rank: 8, SpellID: 17268, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
 	BlackArrow: shared.SpellDataTable{
-		{Rank: 1, SpellID: 3674, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -70}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 10}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 10}}, Periodic: shared.SpellDataPeriodic{Tick: 10, Coef: 0.10000000149011612, TickLength: 2000 * time.Millisecond, NumberOfTicks: 15}},
-		{Rank: 2, SpellID: 14296, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -70}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 10}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 10}}, Periodic: shared.SpellDataPeriodic{Tick: 10, Coef: 0.10000000149011612, TickLength: 2000 * time.Millisecond, NumberOfTicks: 15}},
+		{Rank: 1, SpellID: 3674, GCD: 1500 * time.Millisecond, Duration: 30000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -70}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 10}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 10}}, Periodic: shared.SpellDataPeriodic{Tick: 10, Coef: 0.10000000149011612, TickLength: 2000 * time.Millisecond, NumberOfTicks: 15}},
+		{Rank: 2, SpellID: 14296, GCD: 1500 * time.Millisecond, Duration: 30000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -70}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 10}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 10}}, Periodic: shared.SpellDataPeriodic{Tick: 10, Coef: 0.10000000149011612, TickLength: 2000 * time.Millisecond, NumberOfTicks: 15}},
+	},
+	CallPet: shared.SpellDataTable{
+		{Rank: 1, SpellID: 883, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_PET, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_SCRIPT_EFFECT, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
 	CarefulAim: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1223984, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: 580, Misc: 3, Value: 20}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: 598, Misc: 3, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 0}},
@@ -229,11 +310,14 @@ var spellData = generatedSpellData{
 	CobraReflexes: shared.SpellDataTable{
 		{Rank: 1, SpellID: 25077, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
+	ConcussiveShot: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5116, GCD: 1500 * time.Millisecond, Cooldown: 12000 * time.Millisecond, Duration: 4000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -50}}},
+	},
 	Counterattack: shared.SpellDataTable{
-		{Rank: 1, SpellID: 19306, Cost: 30, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 26}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 26, Coef: 1}},
-		{Rank: 2, SpellID: 1242634, Cost: 45, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 40}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 40, Coef: 1}},
-		{Rank: 3, SpellID: 20909, Cost: 65, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 70}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 70, Coef: 1}},
-		{Rank: 4, SpellID: 20910, Cost: 85, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 110}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 110, Coef: 1}},
+		{Rank: 1, SpellID: 19306, Cost: 30, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 26}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 26, Coef: 1}},
+		{Rank: 2, SpellID: 1242634, Cost: 45, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 40}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 40, Coef: 1}},
+		{Rank: 3, SpellID: 20909, Cost: 65, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 70}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 70, Coef: 1}},
+		{Rank: 4, SpellID: 20910, Cost: 85, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 110}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 110, Coef: 1}},
 	},
 	Cower: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1747, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -268,6 +352,9 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 24581, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 4, SpellID: 24582, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
+	Deterrence: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19263, Cooldown: 300000 * time.Millisecond, Duration: 10000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_PARRY_PERCENT, Misc: 0, Value: 25}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DODGE_PERCENT, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 1}},
+	},
 	Disengage: shared.SpellDataTable{
 		{Rank: 1, SpellID: 781, Cost: 50, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, FlatThreatBonus: -170, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_THREAT, Aura: shared.A_NONE, Misc: 0, Value: -170}}},
 		{Rank: 2, SpellID: 14272, Cost: 100, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, FlatThreatBonus: -310, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_THREAT, Aura: shared.A_NONE, Misc: 0, Value: -310}}},
@@ -279,6 +366,9 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 1264970, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 4, SpellID: 1264971, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 5, SpellID: 1264972, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
+	},
+	DismissPet: shared.SpellDataTable{
+		{Rank: 1, SpellID: 2641, CastTime: 5000 * time.Millisecond, GCD: 1500 * time.Millisecond, MaxRange: 10, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_POWER_DRAIN, Aura: shared.A_NONE, Misc: 27, Value: 50000}, {Index: 1, Effect: shared.E_DISMISS_PET, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
 	DistractingShot: shared.SpellDataTable{
 		{Rank: 1, SpellID: 20736, Cost: 20, GCD: 1500 * time.Millisecond, Cooldown: 8000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, FlatThreatBonus: 120, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_THREAT, Aura: shared.A_NONE, Misc: 0, Value: 120}}},
@@ -300,12 +390,18 @@ var spellData = generatedSpellData{
 		{Rank: 4, SpellID: 1265913, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 5, SpellID: 1265911, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
+	EagleEye: shared.SpellDataTable{
+		{Rank: 1, SpellID: 6197, Cost: 25, GCD: 1500 * time.Millisecond, Duration: 60000 * time.Millisecond, MaxRange: 50000, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ADD_FARSIGHT, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
+	},
 	Efficiency: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19416, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -3}}},
 		{Rank: 2, SpellID: 19416, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -6}}},
 		{Rank: 3, SpellID: 19416, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -9}}},
 		{Rank: 4, SpellID: 19416, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -12}}},
 		{Rank: 5, SpellID: 19416, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -15}}},
+	},
+	EnchantedFlare: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1221404, Cost: 50, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 30000 * time.Millisecond, MaxRange: 30, MissileSpeed: 30, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_PERSISTENT_AREA_AURA, Aura: shared.A_DISPEL_IMMUNITY, Misc: 5, Value: 0}, {Index: 1, Effect: shared.E_PERSISTENT_AREA_AURA, Aura: shared.A_DISPEL_IMMUNITY, Misc: 6, Value: 0}, {Index: 2, Effect: shared.E_SUMMON, Aura: shared.A_NONE, Misc: 238619, Value: 0}, {Index: 3, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
 	EnduranceTraining: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19583, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 8, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 1}},
@@ -322,18 +418,48 @@ var spellData = generatedSpellData{
 		{Rank: 5, SpellID: 19184, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 5000}}, Direct: shared.SpellDataFlat{Value: 5000, Coef: 1}},
 	},
 	ExplosiveTrap: shared.SpellDataTable{
-		{Rank: 1, SpellID: 13813, Cost: 275, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164839, Value: 0}}},
-		{Rank: 2, SpellID: 14316, Cost: 395, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164879, Value: 0}}},
-		{Rank: 3, SpellID: 14317, Cost: 520, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164880, Value: 0}}},
+		{Rank: 1, SpellID: 13813, Cost: 275, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164839, Value: 0}}},
+		{Rank: 2, SpellID: 14316, Cost: 395, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164879, Value: 0}}},
+		{Rank: 3, SpellID: 14317, Cost: 520, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164880, Value: 0}}},
 	},
 	ExplosiveTrapEffect: shared.SpellDataTable{
-		{Rank: 1, SpellID: 13812, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 119}, {Index: 1, Effect: shared.E_PERSISTENT_AREA_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 15}}, Direct: shared.SpellDataFlat{Value: 119, Coef: 0}, Periodic: shared.SpellDataPeriodic{Tick: 15, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 10}},
-		{Rank: 2, SpellID: 14314, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 169}, {Index: 1, Effect: shared.E_PERSISTENT_AREA_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 24}}, Direct: shared.SpellDataFlat{Value: 169, Coef: 0}, Periodic: shared.SpellDataPeriodic{Tick: 24, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 10}},
-		{Rank: 3, SpellID: 14315, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 236}, {Index: 1, Effect: shared.E_PERSISTENT_AREA_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 33}}, Direct: shared.SpellDataFlat{Value: 236, Coef: 0}, Periodic: shared.SpellDataPeriodic{Tick: 33, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 10}},
+		{Rank: 1, SpellID: 13812, Duration: 20000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 119}, {Index: 1, Effect: shared.E_PERSISTENT_AREA_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 15}}, Direct: shared.SpellDataFlat{Value: 119, Coef: 0}, Periodic: shared.SpellDataPeriodic{Tick: 15, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 10}},
+		{Rank: 2, SpellID: 14314, Duration: 20000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 169}, {Index: 1, Effect: shared.E_PERSISTENT_AREA_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 24}}, Direct: shared.SpellDataFlat{Value: 169, Coef: 0}, Periodic: shared.SpellDataPeriodic{Tick: 24, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 10}},
+		{Rank: 3, SpellID: 14315, Duration: 20000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 236}, {Index: 1, Effect: shared.E_PERSISTENT_AREA_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 33}}, Direct: shared.SpellDataFlat{Value: 236, Coef: 0}, Periodic: shared.SpellDataPeriodic{Tick: 33, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 10}},
 	},
 	ExposePrey: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1310532, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 0}},
 		{Rank: 2, SpellID: 1310532, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 0}},
+	},
+	EyesOfTheBeast: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1002, Cost: 20, CastTime: 2000 * time.Millisecond, GCD: 1500 * time.Millisecond, Duration: 120000 * time.Millisecond, MaxRange: 50000, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_POSSESS_PET, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
+	},
+	FasterAttackI: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263099, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: 17}}, Direct: shared.SpellDataFlat{Value: 17, Coef: 0}},
+	},
+	FasterAttackII: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263100, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
+	},
+	FasterAttackIII: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263102, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: 33}}, Direct: shared.SpellDataFlat{Value: 33, Coef: 0}},
+	},
+	FasterAttackIV: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263104, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: 43}}, Direct: shared.SpellDataFlat{Value: 43, Coef: 0}},
+	},
+	FasterAttackV: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263107, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: 54}}, Direct: shared.SpellDataFlat{Value: 54, Coef: 0}},
+	},
+	FasterAttackVI: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263109, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: 67}}, Direct: shared.SpellDataFlat{Value: 67, Coef: 0}},
+	},
+	FasterAttackVII: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263110, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
+	},
+	FeedPet: shared.SpellDataTable{
+		{Rank: 1, SpellID: 6991, MaxRange: 10, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_FEED_PET, Aura: shared.A_NONE, Misc: 0, Value: 35000}}},
+	},
+	FeignDeath: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5384, Cost: 80, Cooldown: 30000 * time.Millisecond, Duration: 360000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_FEIGN_DEATH, Misc: 0, Value: 0}}},
 	},
 	Ferocity: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19598, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 3, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},
@@ -348,14 +474,17 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 24463, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 4, SpellID: 24464, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
+	Flare: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1543, Cost: 50, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, Duration: 30000 * time.Millisecond, MaxRange: 30, MissileSpeed: 4, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41236, Value: 0}}},
+	},
 	FocusedFire: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1223755, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 1}}, Direct: shared.SpellDataFlat{Value: 1, Coef: 0}},
 		{Rank: 2, SpellID: 1223755, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 0}},
 	},
 	FreezingTrap: shared.SpellDataTable{
-		{Rank: 1, SpellID: 1499, Cost: 50, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 2561, Value: 0}}},
-		{Rank: 2, SpellID: 14310, Cost: 75, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164876, Value: 0}}},
-		{Rank: 3, SpellID: 14311, Cost: 100, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164877, Value: 0}}},
+		{Rank: 1, SpellID: 1499, Cost: 50, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 2561, Value: 0}}},
+		{Rank: 2, SpellID: 14310, Cost: 75, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164876, Value: 0}}},
+		{Rank: 3, SpellID: 14311, Cost: 100, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164877, Value: 0}}},
 	},
 	Frenzy: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19621, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 18, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 1}},
@@ -369,6 +498,9 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 24476, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 3, SpellID: 24477, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 4, SpellID: 24478, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
+	},
+	FrostTrap: shared.SpellDataTable{
+		{Rank: 1, SpellID: 13809, Cost: 60, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164639, Value: 0}}},
 	},
 	FuriousHowl: shared.SpellDataTable{
 		{Rank: 1, SpellID: 24609, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -407,30 +539,33 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 19498, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 5, Value: 4}}, Direct: shared.SpellDataFlat{Value: 4, Coef: 1}},
 		{Rank: 3, SpellID: 19498, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 5, Value: 6}}, Direct: shared.SpellDataFlat{Value: 6, Coef: 1}},
 	},
+	HeartOfTheLion: shared.SpellDataTable{
+		{Rank: 1, SpellID: 409580, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_TOTAL_STAT_PERCENTAGE, Misc: -1, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 0}},
+	},
 	HumanoidSlaying: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19151, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 64, Value: 1}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CRIT_PERCENT_VERSUS, Misc: 64, Value: 1}}, Direct: shared.SpellDataFlat{Value: 1, Coef: 1}},
 		{Rank: 2, SpellID: 19152, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 64, Value: 2}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CRIT_PERCENT_VERSUS, Misc: 64, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},
 		{Rank: 3, SpellID: 19153, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 64, Value: 3}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CRIT_PERCENT_VERSUS, Misc: 64, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 1}},
 	},
 	HuntersMark: shared.SpellDataTable{
-		{Rank: 1, SpellID: 1130, Cost: 15, GCD: 1500 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STALKED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, Misc: 0, Value: 26}}, Direct: shared.SpellDataFlat{Value: 26, Coef: 0}},
-		{Rank: 2, SpellID: 14323, Cost: 30, GCD: 1500 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STALKED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, Misc: 0, Value: 59}}, Direct: shared.SpellDataFlat{Value: 59, Coef: 0}},
-		{Rank: 3, SpellID: 14324, Cost: 45, GCD: 1500 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STALKED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, Misc: 0, Value: 98}}, Direct: shared.SpellDataFlat{Value: 98, Coef: 0}},
-		{Rank: 4, SpellID: 14325, Cost: 60, GCD: 1500 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STALKED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, Misc: 0, Value: 71}}, Direct: shared.SpellDataFlat{Value: 71, Coef: 0}},
+		{Rank: 1, SpellID: 1130, Cost: 15, GCD: 1500 * time.Millisecond, Duration: 120000 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STALKED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, Misc: 0, Value: 26}}, Direct: shared.SpellDataFlat{Value: 26, Coef: 0}},
+		{Rank: 2, SpellID: 14323, Cost: 30, GCD: 1500 * time.Millisecond, Duration: 120000 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STALKED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, Misc: 0, Value: 59}}, Direct: shared.SpellDataFlat{Value: 59, Coef: 0}},
+		{Rank: 3, SpellID: 14324, Cost: 45, GCD: 1500 * time.Millisecond, Duration: 120000 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STALKED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, Misc: 0, Value: 98}}, Direct: shared.SpellDataFlat{Value: 98, Coef: 0}},
+		{Rank: 4, SpellID: 14325, Cost: 60, GCD: 1500 * time.Millisecond, Duration: 120000 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STALKED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, Misc: 0, Value: 71}}, Direct: shared.SpellDataFlat{Value: 71, Coef: 0}},
 	},
 	ImmolationTrap: shared.SpellDataTable{
-		{Rank: 1, SpellID: 13795, Cost: 50, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164638, Value: 0}}},
-		{Rank: 2, SpellID: 14302, Cost: 90, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164872, Value: 0}}},
-		{Rank: 3, SpellID: 14303, Cost: 135, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164873, Value: 0}}},
-		{Rank: 4, SpellID: 14304, Cost: 190, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164874, Value: 0}}},
-		{Rank: 5, SpellID: 14305, Cost: 245, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164875, Value: 0}}},
+		{Rank: 1, SpellID: 13795, Cost: 50, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164638, Value: 0}}},
+		{Rank: 2, SpellID: 14302, Cost: 90, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164872, Value: 0}}},
+		{Rank: 3, SpellID: 14303, Cost: 135, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164873, Value: 0}}},
+		{Rank: 4, SpellID: 14304, Cost: 190, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164874, Value: 0}}},
+		{Rank: 5, SpellID: 14305, Cost: 245, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON_OBJECT_SLOT1, Aura: shared.A_NONE, Misc: 164875, Value: 0}}},
 	},
 	ImmolationTrapEffect: shared.SpellDataTable{
-		{Rank: 1, SpellID: 13797, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 21}}, Periodic: shared.SpellDataPeriodic{Tick: 21, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 2, SpellID: 14298, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 43}}, Periodic: shared.SpellDataPeriodic{Tick: 43, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 3, SpellID: 14299, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 68}}, Periodic: shared.SpellDataPeriodic{Tick: 68, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 4, SpellID: 14300, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 102}}, Periodic: shared.SpellDataPeriodic{Tick: 102, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 5, SpellID: 14301, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 138}}, Periodic: shared.SpellDataPeriodic{Tick: 138, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 1, SpellID: 13797, Duration: 15000 * time.Millisecond, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 21}}, Periodic: shared.SpellDataPeriodic{Tick: 21, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 2, SpellID: 14298, Duration: 15000 * time.Millisecond, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 43}}, Periodic: shared.SpellDataPeriodic{Tick: 43, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 3, SpellID: 14299, Duration: 15000 * time.Millisecond, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 68}}, Periodic: shared.SpellDataPeriodic{Tick: 68, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 4, SpellID: 14300, Duration: 15000 * time.Millisecond, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 102}}, Periodic: shared.SpellDataPeriodic{Tick: 102, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 5, SpellID: 14301, Duration: 15000 * time.Millisecond, MaxRange: 10, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 138}}, Periodic: shared.SpellDataPeriodic{Tick: 138, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
 	},
 	ImprovedArcaneShot: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19454, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 11, Value: -300}}},
@@ -458,6 +593,9 @@ var spellData = generatedSpellData{
 	ImprovedFeignDeath: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19286, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 16, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},
 		{Rank: 2, SpellID: 19287, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 16, Value: 4}}, Direct: shared.SpellDataFlat{Value: 4, Coef: 1}},
+	},
+	ImprovedHuntersMark: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19421, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 8, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 1}},
 	},
 	ImprovedMendPet: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19572, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 15}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: 10}}, Direct: shared.SpellDataFlat{Value: 15, Coef: 1}},
@@ -491,11 +629,17 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 19228, ProcChance: 4, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 13}}, Direct: shared.SpellDataFlat{Value: 13, Coef: 1}},
 		{Rank: 3, SpellID: 19228, ProcChance: 4, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 1}},
 	},
+	Intimidation: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19577, GCD: 1500 * time.Millisecond, Cooldown: 60000 * time.Millisecond, Duration: 15000 * time.Millisecond, MaxRange: 100, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CRIT_PCT, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
+	},
+	KillerInstinct: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19370, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CRIT_PCT, Misc: 0, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 1}},
+	},
 	Lacerate: shared.SpellDataTable{
-		{Rank: 1, SpellID: 24118, Cost: 40, GCD: 1500 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 21}}, Periodic: shared.SpellDataPeriodic{Tick: 21, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 7}},
-		{Rank: 2, SpellID: 24119, Cost: 65, GCD: 1500 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 32}}, Periodic: shared.SpellDataPeriodic{Tick: 32, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 7}},
-		{Rank: 3, SpellID: 24120, Cost: 80, GCD: 1500 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 45}}, Periodic: shared.SpellDataPeriodic{Tick: 45, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 7}},
-		{Rank: 4, SpellID: 1299332, Cost: 95, GCD: 1500 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 58}}, Periodic: shared.SpellDataPeriodic{Tick: 58, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 7}},
+		{Rank: 1, SpellID: 24118, Cost: 40, GCD: 1500 * time.Millisecond, Duration: 21000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 21}}, Periodic: shared.SpellDataPeriodic{Tick: 21, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 7}},
+		{Rank: 2, SpellID: 24119, Cost: 65, GCD: 1500 * time.Millisecond, Duration: 21000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 32}}, Periodic: shared.SpellDataPeriodic{Tick: 32, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 7}},
+		{Rank: 3, SpellID: 24120, Cost: 80, GCD: 1500 * time.Millisecond, Duration: 21000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 45}}, Periodic: shared.SpellDataPeriodic{Tick: 45, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 7}},
+		{Rank: 4, SpellID: 1299332, Cost: 95, GCD: 1500 * time.Millisecond, Duration: 21000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 58}}, Periodic: shared.SpellDataPeriodic{Tick: 58, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 7}},
 	},
 	LavaBreath: shared.SpellDataTable{
 		{Rank: 1, SpellID: 444680, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -531,13 +675,13 @@ var spellData = generatedSpellData{
 		{Rank: 5, SpellID: 19385, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_DONE, Misc: 1, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 1}},
 	},
 	MendPet: shared.SpellDataTable{
-		{Rank: 1, SpellID: 136, Cost: 50, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 20}}, Periodic: shared.SpellDataPeriodic{Tick: 20, Coef: 0.14000000059604645, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 2, SpellID: 3111, Cost: 90, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 38}}, Periodic: shared.SpellDataPeriodic{Tick: 38, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 3, SpellID: 3661, Cost: 155, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 68}}, Periodic: shared.SpellDataPeriodic{Tick: 68, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 4, SpellID: 3662, Cost: 225, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 103}}, Periodic: shared.SpellDataPeriodic{Tick: 103, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 5, SpellID: 13542, Cost: 300, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 142}}, Periodic: shared.SpellDataPeriodic{Tick: 142, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 6, SpellID: 13543, Cost: 385, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 189}}, Periodic: shared.SpellDataPeriodic{Tick: 189, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 7, SpellID: 13544, Cost: 480, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 245}}, Periodic: shared.SpellDataPeriodic{Tick: 245, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 1, SpellID: 136, Cost: 50, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 20}}, Periodic: shared.SpellDataPeriodic{Tick: 20, Coef: 0.14000000059604645, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 2, SpellID: 3111, Cost: 90, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 38}}, Periodic: shared.SpellDataPeriodic{Tick: 38, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 3, SpellID: 3661, Cost: 155, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 68}}, Periodic: shared.SpellDataPeriodic{Tick: 68, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 4, SpellID: 3662, Cost: 225, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 103}}, Periodic: shared.SpellDataPeriodic{Tick: 103, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 5, SpellID: 13542, Cost: 300, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 142}}, Periodic: shared.SpellDataPeriodic{Tick: 142, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 6, SpellID: 13543, Cost: 385, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 189}}, Periodic: shared.SpellDataPeriodic{Tick: 189, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 7, SpellID: 13544, Cost: 480, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 245}}, Periodic: shared.SpellDataPeriodic{Tick: 245, Coef: 0.20000000298023224, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
 	},
 	Mine: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1265059, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -626,6 +770,9 @@ var spellData = generatedSpellData{
 		{Rank: 4, SpellID: 19507, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_DONE, Misc: 127, Value: 4}}, Direct: shared.SpellDataFlat{Value: 4, Coef: 1}},
 		{Rank: 5, SpellID: 19507, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_DONE, Misc: 127, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 1}},
 	},
+	RapidFire: shared.SpellDataTable{
+		{Rank: 1, SpellID: 3045, Cost: 100, Cooldown: 300000 * time.Millisecond, Duration: 15000 * time.Millisecond, ProcChance: 101, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RANGED_HASTE, Misc: 0, Value: 40}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_POWER_REGEN_PERCENT, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MANA_REGEN_INTERRUPT, Misc: 0, Value: 0}, {Index: 3, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MELEE_HASTE_3, Misc: 0, Value: 40}}, Direct: shared.SpellDataFlat{Value: 40, Coef: 0}},
+	},
 	RapidKilling: shared.SpellDataTable{
 		{Rank: 1, SpellID: 415405, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 11, Value: -60000}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 1}},
 		{Rank: 2, SpellID: 415405, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 11, Value: -120000}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 1}},
@@ -648,6 +795,9 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 440529, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -30}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: -20}}, Direct: shared.SpellDataFlat{Value: -20, Coef: 1}},
 		{Rank: 2, SpellID: 440529, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -60}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: -40}}, Direct: shared.SpellDataFlat{Value: -40, Coef: 1}},
 	},
+	RevivePet: shared.SpellDataTable{
+		{Rank: 1, SpellID: 982, CastTime: 10000 * time.Millisecond, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_RESURRECT_PET, Aura: shared.A_NONE, Misc: 0, Value: 15}}},
+	},
 	SavageRend: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1265831, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 2, SpellID: 1265833, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -660,9 +810,12 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 19159, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 4}}, Direct: shared.SpellDataFlat{Value: 4, Coef: 1}},
 	},
 	ScareBeast: shared.SpellDataTable{
-		{Rank: 1, SpellID: 1513, Cost: 35, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, MaxRange: 10, ProcChance: 100, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
-		{Rank: 2, SpellID: 14326, Cost: 50, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, MaxRange: 10, ProcChance: 100, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
-		{Rank: 3, SpellID: 14327, Cost: 75, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, MaxRange: 10, ProcChance: 100, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
+		{Rank: 1, SpellID: 1513, Cost: 35, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 10000 * time.Millisecond, MaxRange: 10, ProcChance: 100, MaxTargets: 1, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
+		{Rank: 2, SpellID: 14326, Cost: 50, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 15000 * time.Millisecond, MaxRange: 10, ProcChance: 100, MaxTargets: 1, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
+		{Rank: 3, SpellID: 14327, Cost: 75, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 20000 * time.Millisecond, MaxRange: 10, ProcChance: 100, MaxTargets: 1, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
+	},
+	ScatterShot: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19503, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 4000 * time.Millisecond, MaxRange: 15, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CONFUSE, Misc: 0, Value: 0}}},
 	},
 	ScorpidPoison: shared.SpellDataTable{
 		{Rank: 1, SpellID: 24641, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -671,18 +824,18 @@ var spellData = generatedSpellData{
 		{Rank: 4, SpellID: 24589, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
 	ScorpidSting: shared.SpellDataTable{
-		{Rank: 1, SpellID: 3043, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, ProcChance: 101, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_HIT_CHANCE, Misc: 0, Value: -2}}},
+		{Rank: 1, SpellID: 3043, GCD: 1500 * time.Millisecond, Duration: 20000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, ProcChance: 101, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_HIT_CHANCE, Misc: 0, Value: -2}}},
 	},
 	SerpentSting: shared.SpellDataTable{
-		{Rank: 1, SpellID: 1978, Cost: 15, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 2}}, Periodic: shared.SpellDataPeriodic{Tick: 2, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 2, SpellID: 13549, Cost: 30, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 6}}, Periodic: shared.SpellDataPeriodic{Tick: 6, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 3, SpellID: 13550, Cost: 50, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 12}}, Periodic: shared.SpellDataPeriodic{Tick: 12, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 4, SpellID: 13551, Cost: 80, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 22}}, Periodic: shared.SpellDataPeriodic{Tick: 22, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 5, SpellID: 13552, Cost: 115, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 34}}, Periodic: shared.SpellDataPeriodic{Tick: 34, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 6, SpellID: 13553, Cost: 150, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 48}}, Periodic: shared.SpellDataPeriodic{Tick: 48, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 7, SpellID: 13554, Cost: 190, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 64}}, Periodic: shared.SpellDataPeriodic{Tick: 64, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 8, SpellID: 13555, Cost: 230, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 83}}, Periodic: shared.SpellDataPeriodic{Tick: 83, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
-		{Rank: 9, SpellID: 25295, Cost: 250, GCD: 1500 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 111}}, Periodic: shared.SpellDataPeriodic{Tick: 111, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 1, SpellID: 1978, Cost: 15, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 2}}, Periodic: shared.SpellDataPeriodic{Tick: 2, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 2, SpellID: 13549, Cost: 30, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 6}}, Periodic: shared.SpellDataPeriodic{Tick: 6, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 3, SpellID: 13550, Cost: 50, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 12}}, Periodic: shared.SpellDataPeriodic{Tick: 12, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 4, SpellID: 13551, Cost: 80, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 22}}, Periodic: shared.SpellDataPeriodic{Tick: 22, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 5, SpellID: 13552, Cost: 115, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 34}}, Periodic: shared.SpellDataPeriodic{Tick: 34, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 6, SpellID: 13553, Cost: 150, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 48}}, Periodic: shared.SpellDataPeriodic{Tick: 48, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 7, SpellID: 13554, Cost: 190, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 64}}, Periodic: shared.SpellDataPeriodic{Tick: 64, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 8, SpellID: 13555, Cost: 230, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 83}}, Periodic: shared.SpellDataPeriodic{Tick: 83, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 9, SpellID: 25295, Cost: 250, GCD: 1500 * time.Millisecond, Duration: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DAMAGE, Misc: 0, Value: 111}}, Periodic: shared.SpellDataPeriodic{Tick: 111, Coef: 0, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
 	},
 	ShadowResistance: shared.SpellDataTable{
 		{Rank: 1, SpellID: 24490, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -692,6 +845,12 @@ var spellData = generatedSpellData{
 	},
 	ShellShield: shared.SpellDataTable{
 		{Rank: 1, SpellID: 26065, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
+	},
+	SlowerAttackII: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263113, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: -20}}},
+	},
+	SlowerAttackIII: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1263114, CastTime: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKSPEED, Misc: 0, Value: -26}}},
 	},
 	SniperShot: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1310687, Cost: 365, CastTime: 4000 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 60, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 160}}, Direct: shared.SpellDataFlat{Value: 160, Coef: 1}},
@@ -738,6 +897,9 @@ var spellData = generatedSpellData{
 		{Rank: 4, SpellID: 1264731, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 5, SpellID: 1264732, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
+	TameBeast: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1515, GCD: 1500 * time.Millisecond, Duration: 20000 * time.Millisecond, MaxRange: 30, FlatThreatBonus: 10, SpellSchool: core.SpellSchoolNature, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_THREAT, Aura: shared.A_NONE, Misc: 0, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_TRIGGER_SPELL, Misc: 0, Value: 1}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE_PCT, Misc: 1, Value: -100}}, Periodic: shared.SpellDataPeriodic{Tick: 1, Coef: 1, TickLength: 20000 * time.Millisecond, NumberOfTicks: 1}},
+	},
 	TendonRip: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1265043, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 2, SpellID: 1265045, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -745,21 +907,51 @@ var spellData = generatedSpellData{
 		{Rank: 4, SpellID: 1265047, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 5, SpellID: 1265048, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
+	ThickHide: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19609, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 8, Value: 30}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
+	},
 	Thunderstomp: shared.SpellDataTable{
 		{Rank: 1, SpellID: 26094, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 2, SpellID: 26189, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 3, SpellID: 26190, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 4, SpellID: 1264456, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
+	TrackBeasts: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1494, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_CREATURES, Misc: 1, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 1, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_RESOURCES, Misc: 24, Value: 0}}},
+	},
+	TrackDemons: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19878, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_CREATURES, Misc: 3, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 4, Value: 0}}},
+	},
+	TrackDragonkin: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19879, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_CREATURES, Misc: 2, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 2, Value: 0}}},
+	},
+	TrackElementals: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19880, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_CREATURES, Misc: 4, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 8, Value: 0}}},
+	},
+	TrackGiants: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19882, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_CREATURES, Misc: 5, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 16, Value: 0}}},
+	},
+	TrackHidden: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19885, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_STEALTHED, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STEALTH_DETECT, Misc: 0, Value: 30}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 1}},
+	},
+	TrackHumanoids: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19883, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_CREATURES, Misc: 7, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 64, Value: 0}}},
+	},
+	TrackUndead: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19884, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_TRACK_CREATURES, Misc: 6, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE_VERSUS, Misc: 32, Value: 0}}},
+	},
+	TranquilizingShot: shared.SpellDataTable{
+		{Rank: 1, SpellID: 19801, Cost: 270, GCD: 1500 * time.Millisecond, Cooldown: 20000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DISPEL, Aura: shared.A_NONE, Misc: 9, Value: 1}}},
+	},
 	TrickstersDance: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1310617, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
 	TrueshotAura: shared.SpellDataTable{
-		{Rank: 1, SpellID: 1299346, Cost: 180, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 30}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
-		{Rank: 2, SpellID: 1299348, Cost: 245, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 40}}, Direct: shared.SpellDataFlat{Value: 40, Coef: 0}},
-		{Rank: 3, SpellID: 19506, Cost: 325, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 0}},
-		{Rank: 4, SpellID: 20905, Cost: 425, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 75, Coef: 0}},
-		{Rank: 5, SpellID: 20906, Cost: 525, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 0}},
+		{Rank: 1, SpellID: 1299346, Cost: 180, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 30}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
+		{Rank: 2, SpellID: 1299348, Cost: 245, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 40}}, Direct: shared.SpellDataFlat{Value: 40, Coef: 0}},
+		{Rank: 3, SpellID: 19506, Cost: 325, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 0}},
+		{Rank: 4, SpellID: 20905, Cost: 425, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 75, Coef: 0}},
+		{Rank: 5, SpellID: 20906, Cost: 525, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RANGED_ATTACK_POWER, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 0}},
 	},
 	UnleashedFury: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19616, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 3, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 1}},
@@ -769,14 +961,14 @@ var spellData = generatedSpellData{
 		{Rank: 5, SpellID: 19616, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 3, Value: 15}}, Direct: shared.SpellDataFlat{Value: 15, Coef: 1}},
 	},
 	ViperSting: shared.SpellDataTable{
-		{Rank: 1, SpellID: 3034, Cost: 135, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 154}}, Periodic: shared.SpellDataPeriodic{Tick: 154, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 4}},
-		{Rank: 2, SpellID: 14279, Cost: 175, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 212}}, Periodic: shared.SpellDataPeriodic{Tick: 212, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 4}},
-		{Rank: 3, SpellID: 14280, Cost: 215, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 277}}, Periodic: shared.SpellDataPeriodic{Tick: 277, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 4}},
+		{Rank: 1, SpellID: 3034, Cost: 135, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, Duration: 8000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 154}}, Periodic: shared.SpellDataPeriodic{Tick: 154, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 4}},
+		{Rank: 2, SpellID: 14279, Cost: 175, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, Duration: 8000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 212}}, Periodic: shared.SpellDataPeriodic{Tick: 212, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 4}},
+		{Rank: 3, SpellID: 14280, Cost: 215, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, Duration: 8000 * time.Millisecond, MinRange: 8, MaxRange: 35, MissileSpeed: 40, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 277}}, Periodic: shared.SpellDataPeriodic{Tick: 277, Coef: 0, TickLength: 2000 * time.Millisecond, NumberOfTicks: 4}},
 	},
 	Volley: shared.SpellDataTable{
-		{Rank: 1, SpellID: 1510, Cost: 350, GCD: 1500 * time.Millisecond, MaxRange: 35, MissileSpeed: 45, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 6}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41245, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Periodic: shared.SpellDataPeriodic{Tick: 70, Coef: 0, TickLength: 1000 * time.Millisecond, NumberOfTicks: 6, SpellID: 1279721}},
-		{Rank: 2, SpellID: 14294, Cost: 420, GCD: 1500 * time.Millisecond, MaxRange: 35, MissileSpeed: 45, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 3}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41244, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Periodic: shared.SpellDataPeriodic{Tick: 91, Coef: 0, TickLength: 1000 * time.Millisecond, NumberOfTicks: 6, SpellID: 1279719}},
-		{Rank: 3, SpellID: 14295, Cost: 490, GCD: 1500 * time.Millisecond, MaxRange: 35, MissileSpeed: 45, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41242, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Periodic: shared.SpellDataPeriodic{Tick: 112, Coef: 0, TickLength: 1000 * time.Millisecond, NumberOfTicks: 6, SpellID: 1279715}},
+		{Rank: 1, SpellID: 1510, Cost: 350, GCD: 1500 * time.Millisecond, Duration: 6000 * time.Millisecond, MaxRange: 35, MissileSpeed: 45, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 6}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41245, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Periodic: shared.SpellDataPeriodic{Tick: 70, Coef: 0, TickLength: 1000 * time.Millisecond, NumberOfTicks: 6, SpellID: 1279721}},
+		{Rank: 2, SpellID: 14294, Cost: 420, GCD: 1500 * time.Millisecond, Duration: 6000 * time.Millisecond, MaxRange: 35, MissileSpeed: 45, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 3}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41244, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Periodic: shared.SpellDataPeriodic{Tick: 91, Coef: 0, TickLength: 1000 * time.Millisecond, NumberOfTicks: 6, SpellID: 1279719}},
+		{Rank: 3, SpellID: 14295, Cost: 490, GCD: 1500 * time.Millisecond, Duration: 6000 * time.Millisecond, MaxRange: 35, MissileSpeed: 45, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeRanged, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41242, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Periodic: shared.SpellDataPeriodic{Tick: 112, Coef: 0, TickLength: 1000 * time.Millisecond, NumberOfTicks: 6, SpellID: 1279715}},
 	},
 	Web: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1265887, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
@@ -786,8 +978,8 @@ var spellData = generatedSpellData{
 		{Rank: 5, SpellID: 1265892, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_LEARN_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
 	WingClip: shared.SpellDataTable{
-		{Rank: 1, SpellID: 2974, Cost: 40, GCD: 1500 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -50}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 1}},
-		{Rank: 2, SpellID: 14267, Cost: 60, GCD: 1500 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -55}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 1}},
-		{Rank: 3, SpellID: 14268, Cost: 80, GCD: 1500 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -60}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 1}},
+		{Rank: 1, SpellID: 2974, Cost: 40, GCD: 1500 * time.Millisecond, Duration: 10000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -50}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 1}},
+		{Rank: 2, SpellID: 14267, Cost: 60, GCD: 1500 * time.Millisecond, Duration: 10000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -55}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 1}},
+		{Rank: 3, SpellID: 14268, Cost: 80, GCD: 1500 * time.Millisecond, Duration: 10000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -60}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 1}},
 	},
 }

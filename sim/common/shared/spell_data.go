@@ -136,6 +136,10 @@ type SpellData struct {
 	CastTime time.Duration
 	GCD      time.Duration
 	Cooldown time.Duration
+	// The aura or effect the spell leaves, as SpellDuration states it: Shield Wall 12 s, Berserker
+	// Rage 10 s. Zero is instant or permanent. A talent proc's aura is usually a triggered spell of
+	// its own, so its duration sits on that spell's row.
+	Duration time.Duration
 
 	// MinRange gates a cast from too close - the dead zone on a charge - the way MaxRange gates it
 	// from too far. Zero means ungated, which is what core reads a zero as.
@@ -150,6 +154,14 @@ type SpellData struct {
 	// aura fires on its own condition rather than on a roll, as Flurry's does on a crit, so it is
 	// not always the number a ProcTrigger wants.
 	ProcChance int32
+
+	// SpellAuraOptions.ProcCharges: Shield Block blocks 2 attacks, Retaliation answers 30. Zero is
+	// unlimited.
+	ProcCharges int32
+
+	// SpellTargetRestrictions.MaxTargets for an area effect: Whirlwind and Thunder Clap hit 4.
+	// Zero is unlimited.
+	MaxTargets int32
 
 	// SpellSchool and DefenseType as core names them. The client's school bits are in a different
 	// order - Holy is 2 there and 32 here - so the generator translates rather than copies.
