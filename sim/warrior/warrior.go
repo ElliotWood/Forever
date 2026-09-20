@@ -75,6 +75,7 @@ const (
 	SpellMaskDisarm
 	SpellMaskTaunt
 	SpellMaskVictoryRush
+	SpellMaskSpearingStrike
 
 	WarriorSpellLast
 	WarriorSpellsAll = WarriorSpellLast<<1 - 1
@@ -84,7 +85,7 @@ const (
 		SpellMaskRevenge | SpellMaskSlam | SpellMaskShieldBash | SpellMaskSunderArmor |
 		SpellMaskThunderClap | SpellMaskWhirlwind | SpellMaskWhirlwindOh | SpellMaskShieldSlam |
 		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskRetaliationHit |
-		SpellMaskMockingBlow | SpellMaskVictoryRush
+		SpellMaskMockingBlow | SpellMaskVictoryRush | SpellMaskSpearingStrike
 
 	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
 )
@@ -133,6 +134,7 @@ type Warrior struct {
 	EnrageAura *core.Aura
 
 	SweepingStrikesAura *core.Aura
+	OverpowerAura       *core.Aura
 
 	DemoralizingShoutAuras core.AuraArray
 	SunderArmorAuras       core.AuraArray
@@ -182,7 +184,8 @@ func (warrior *Warrior) Reset(_ *core.Simulation) {
 	warrior.curQueueAura = nil
 	warrior.curQueuedAutoSpell = nil
 
-	warrior.ChargeRageGain = 15
+	// Charge (11578) energizes 15 rage; Improved Charge adds its ladder.
+	warrior.ChargeRageGain = 15 + spellData.ImprovedCharge.ValueAt(warrior.Talents.ImprovedCharge)/10
 	warrior.BerserkerRageRageGain = 0
 
 	switch warrior.DefaultStance {
@@ -241,7 +244,7 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 
 	warrior.sharedShoutsCD = warrior.NewTimer()
-	warrior.ChargeRageGain = 15
+	warrior.ChargeRageGain = 15 + spellData.ImprovedCharge.ValueAt(warrior.Talents.ImprovedCharge)/10
 	warrior.BerserkerRageRageGain = 0
 	// The sim often re-enables heroic strike in an unrealistic amount of time.
 	// This can cause an unrealistic immediate double-hit around wild strikes procs

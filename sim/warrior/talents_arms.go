@@ -79,13 +79,7 @@ func (warrior *Warrior) registerImprovedRend() {
 }
 
 func (warrior *Warrior) registerImprovedCharge() {
-	if warrior.Talents.ImprovedCharge == 0 {
-		return
-	}
-
-	// TODO: warrior.Reset sets ChargeRageGain back to 15 after this runs, so the bonus never
-	// reaches a Charge cast until warrior.go applies it there.
-	warrior.ChargeRageGain += spellData.ImprovedCharge.ValueAt(warrior.Talents.ImprovedCharge) / 10
+	// warrior.go adds the ladder to ChargeRageGain when it resets the warrior.
 }
 
 func (warrior *Warrior) registerImprovedOverpower() {
@@ -130,10 +124,8 @@ func (warrior *Warrior) registerDeepWounds() {
 	}
 
 	warrior.DeepWounds = warrior.RegisterSpell(core.SpellConfig{
-		// TODO: Manual review needed -- the client's chain is the talent 12834 -> 12162 -> the
-		// bleed 412609, and it carries no 12867; the timeline in
-		// ui/features/results/model/timeline/rotation/categories.ts keys on 12867.
-		ActionID:       core.ActionID{SpellID: 12867},
+		// The bleed the talent (12834) reaches through 12162.
+		ActionID:       core.ActionID{SpellID: 412609},
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskEmpty,
 		ClassSpellMask: SpellMaskDeepWounds,
@@ -288,13 +280,12 @@ func (warrior *Warrior) registerSpearingStrike() {
 	}
 
 	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 1310222},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
-		// TODO: warrior.go has no mask bit for Spearing Strike, so no talent or set bonus reaches it.
-		ClassSpellMask: SpellMaskNone,
+		ActionID:       core.ActionID{SpellID: 1310222},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
+		ClassSpellMask: SpellMaskSpearingStrike,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
@@ -337,25 +328,7 @@ func (warrior *Warrior) registerBloodthrill() {
 	}
 
 	// 1289681 lasts 6 seconds and carries one charge, which the Overpower cast spends.
-	activation := warrior.RegisterAura(core.Aura{
-		Label:    "Bloodthrill",
-		ActionID: core.ActionID{SpellID: 1289681},
-		Duration: time.Second * 6,
-	})
-	activation.AttachProcTrigger(core.ProcTrigger{
-		Name:           "Bloodthrill - Consume",
-		Callback:       core.CallbackOnCastComplete,
-		ClassSpellMask: SpellMaskOverpower,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			activation.Deactivate(sim)
-		},
-	})
-
-	// TODO: overpower.go keeps its activation aura unexported, so this reaches it by label; an
-	// exported field on Warrior, and an Overpower cast gated on that aura, would replace both the
-	// lookup and this talent's own aura.
-	var overpowerAura *core.Aura
-
+	// The proc (1289681) makes Overpower usable for 6 s; the cast consumes it like a dodge would.
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:       "Bloodthrill - Trigger",
 		ActionID:   core.ActionID{SpellID: 1289682},
@@ -367,13 +340,8 @@ func (warrior *Warrior) registerBloodthrill() {
 			return warrior.Rend != nil && warrior.Rend.Dot(result.Target).IsActive()
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			activation.Activate(sim)
-			if overpowerAura != nil {
-				overpowerAura.Activate(sim)
-			}
+			warrior.OverpowerAura.Activate(sim)
 		},
-	}).ApplyOnInit(func(aura *core.Aura, sim *core.Simulation) {
-		overpowerAura = warrior.GetAura("Overpower Aura")
 	})
 }
 
@@ -588,7 +556,8 @@ func (warrior *Warrior) registerSweepingStrikes() {
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.StanceMatches(BattleStance|BerserkerStance) || sim.ActiveTargetCount() > 1
+			// Sweeping Strikes (12292) is usable in Battle Stance only.
+			return warrior.StanceMatches(BattleStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {

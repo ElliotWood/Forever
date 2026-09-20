@@ -31,7 +31,8 @@ func (warrior *Warrior) registerSlam() {
 			},
 			IgnoreHaste: true,
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
-				if cast.CastTime > 0 {
+				// Improved Slam (12862) stops Slam from interrupting the swing.
+				if cast.CastTime > 0 && warrior.Talents.ImprovedSlam == 0 {
 					warrior.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime+cast.CastTime)
 				}
 			},

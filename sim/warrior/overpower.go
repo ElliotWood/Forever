@@ -14,7 +14,7 @@ func (warrior *Warrior) registerOverpower() {
 
 	// TODO: Manual review needed -- spell 11585 states only that Overpower is useable after the
 	// target dodges, so the 5 second window is hand-supplied.
-	aura := warrior.RegisterAura(core.Aura{
+	warrior.OverpowerAura = warrior.RegisterAura(core.Aura{
 		ActionID: actionID,
 		Label:    "Overpower Aura",
 		Duration: time.Second * 5,
@@ -26,7 +26,7 @@ func (warrior *Warrior) registerOverpower() {
 		Outcome:            core.OutcomeDodge,
 		Callback:           core.CallbackOnSpellHitDealt,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			aura.Activate(sim)
+			warrior.OverpowerAura.Activate(sim)
 		},
 	})
 
@@ -58,13 +58,13 @@ func (warrior *Warrior) registerOverpower() {
 		ThreatMultiplier: 0.75,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.StanceMatches(BattleStance)
+			return warrior.StanceMatches(BattleStance) && warrior.OverpowerAura.IsActive()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := overpowerBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialNoBlockDodgeParry)
-			aura.Deactivate(sim)
+			warrior.OverpowerAura.Deactivate(sim)
 
 			if !result.Landed() {
 				spell.IssueRefund(sim)
