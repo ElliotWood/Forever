@@ -74,9 +74,6 @@ func (warrior *Warrior) registerSunderArmor() {
 		},
 	}, shared.OutcomeMeleeNoCrit))
 
-	warrior.SunderArmorDevastate = warrior.RegisterSpell(getSunderArmorConfig(core.SpellConfig{
-		ActionID: actionId.WithTag(1),
-	}, shared.OutcomeAlwaysHit))
 }
 
 func (warrior *Warrior) CanApplySunderAura(target *core.Unit) bool {

@@ -167,7 +167,7 @@ func (warrior *Warrior) registerImprovedSunderArmor() {
 
 	// Retained rage when swapping stances implemented in stances.go
 	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskSunderArmor | SpellMaskDevastate,
+		ClassMask: SpellMaskSunderArmor,
 		Kind:      core.SpellMod_PowerCost_Flat,
 		// TODO: this read warrior.Talents.TacticalMastery, which looks like a long-standing
 		// copy-paste bug -- the registrar guards ImprovedSunderArmor. Forever drops
@@ -232,9 +232,6 @@ func (warrior *Warrior) registerConcussionBlow() {
 
 var shieldSlamRank = spellData.ShieldSlam.HighestRank()
 
-// Nothing in this package currently consumes a Devastate rank pin (DevastateSunder in
-// warrior.go is declared but never assigned), so there is no registrar body left to stub here.
-
 func (warrior *Warrior) registerShieldSlam() {
 	if !warrior.Talents.ShieldSlam {
 		return
@@ -288,7 +285,7 @@ func (warrior *Warrior) registerFocusedRage() {
 	}
 
 	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: WarriorSpellsAll ^ (SpellMaskRampage | SpellMaskDeathWish | SpellMaskBattleShout),
+		ClassMask: WarriorSpellsAll ^ (SpellMaskDeathWish | SpellMaskBattleShout),
 		Kind:      core.SpellMod_PowerCost_Flat,
 		IntValue:  -warrior.Talents.FocusedRage,
 	})

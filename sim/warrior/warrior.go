@@ -34,7 +34,6 @@ const (
 	SpellMaskDeathWish
 	SpellMaskRetaliation
 	SpellMaskRetaliationHit
-	SpellMaskRampage
 	SpellMaskShieldWall
 	SpellMaskLastStand
 	SpellMaskCharge
@@ -54,7 +53,6 @@ const (
 	SpellMaskSweepingStrikesNormalizedHit
 	SpellMaskHeroicStrike
 	SpellMaskCleave
-	SpellMaskDevastate
 	SpellMaskExecute
 	SpellMaskOverpower
 	SpellMaskRevenge
@@ -71,6 +69,12 @@ const (
 	SpellMaskShieldBlock
 	SpellMaskHamstring
 	SpellMaskPummel
+	SpellMaskMockingBlow
+	SpellMaskChallengingShout
+	SpellMaskIntimidatingShout
+	SpellMaskDisarm
+	SpellMaskTaunt
+	SpellMaskVictoryRush
 
 	WarriorSpellLast
 	WarriorSpellsAll = WarriorSpellLast<<1 - 1
@@ -80,7 +84,8 @@ const (
 		SpellMaskCleave | SpellMaskExecute | SpellMaskHeroicStrike | SpellMaskOverpower |
 		SpellMaskRevenge | SpellMaskSlam | SpellMaskShieldBash | SpellMaskSunderArmor |
 		SpellMaskThunderClap | SpellMaskWhirlwind | SpellMaskWhirlwindOh | SpellMaskShieldSlam |
-		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskDevastate | SpellMaskRetaliationHit
+		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskRetaliationHit |
+		SpellMaskMockingBlow | SpellMaskVictoryRush
 
 	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
 )
@@ -110,12 +115,16 @@ type Warrior struct {
 	Rend                            *core.Spell
 	DeepWounds                      *core.Spell
 	MortalStrike                    *core.Spell
-	DevastateSunder                 *core.Spell
 	SweepingStrikesNormalizedAttack *core.Spell
-	SunderArmorDevastate            *core.Spell
 
 	HeroicStrike       *core.Spell
 	Cleave             *core.Spell
+	MockingBlow        *core.Spell
+	ChallengingShout   *core.Spell
+	IntimidatingShout  *core.Spell
+	Disarm             *core.Spell
+	Taunt              *core.Spell
+	VictoryRush        *core.Spell
 	curQueueAura       *core.Aura
 	curQueuedAutoSpell *core.Spell
 
@@ -129,9 +138,6 @@ type Warrior struct {
 
 	DemoralizingShoutAuras core.AuraArray
 	SunderArmorAuras       core.AuraArray
-
-	// Set bonuses
-	T6Tank2P *core.Aura
 }
 
 func (warrior *Warrior) GetCharacter() *core.Character {

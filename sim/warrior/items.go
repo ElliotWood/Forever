@@ -298,9 +298,6 @@ var ItemSetOnslaughtArmor = core.NewItemSet(core.ItemSet{
 	Name: "Onslaught Armor",
 	Bonuses: map[int32]core.ApplySetBonus{
 		2: func(agent core.Agent, setBonusAura *core.Aura) {
-			warrior := agent.(WarriorAgent).GetWarrior()
-			warrior.T6Tank2P = setBonusAura
-
 			setBonusAura.ExposeToAPL(38408)
 		},
 		4: func(agent core.Agent, setBonusAura *core.Aura) {
