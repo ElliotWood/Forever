@@ -10,7 +10,7 @@
           "rowIdx": 0,
           "colIdx": 0
         },
-        "spellIds": [13741, 13793, 13792],
+        "spellIds": [13741, 13741, 13741],
         "maxPoints": 3
       },
       {
@@ -20,7 +20,7 @@
           "rowIdx": 0,
           "colIdx": 1
         },
-        "spellIds": [14144, 14148],
+        "spellIds": [14144, 14144],
         "maxPoints": 2
       },
       {
@@ -30,7 +30,7 @@
           "rowIdx": 0,
           "colIdx": 2
         },
-        "spellIds": [14138, 14139, 14140, 14141, 14142],
+        "spellIds": [14138, 14138, 14138, 14138, 14138],
         "maxPoints": 5
       },
       {
@@ -40,7 +40,7 @@
           "rowIdx": 1,
           "colIdx": 0
         },
-        "spellIds": [14156, 14160, 14161],
+        "spellIds": [14156, 14156, 14156],
         "maxPoints": 3
       },
       {
@@ -50,7 +50,7 @@
           "rowIdx": 1,
           "colIdx": 1
         },
-        "spellIds": [14158, 14159],
+        "spellIds": [14158, 14158],
         "maxPoints": 2
       },
       {
@@ -60,7 +60,7 @@
           "rowIdx": 1,
           "colIdx": 3
         },
-        "spellIds": [14165, 14166, 14167],
+        "spellIds": [14165, 14165, 14165],
         "maxPoints": 3
       },
       {
@@ -80,7 +80,7 @@
           "rowIdx": 2,
           "colIdx": 1
         },
-        "spellIds": [14168, 14169],
+        "spellIds": [14168, 14168],
         "maxPoints": 2
       },
       {
@@ -90,7 +90,7 @@
           "rowIdx": 2,
           "colIdx": 2
         },
-        "spellIds": [14128, 14132, 14135, 14136, 14137],
+        "spellIds": [14128, 14128, 14128, 14128, 14128],
         "maxPoints": 5,
         "prereqLocation": {
           "rowIdx": 0,
@@ -104,7 +104,7 @@
           "rowIdx": 3,
           "colIdx": 0
         },
-        "spellIds": [16513, 16514, 16515, 16719, 16720],
+        "spellIds": [16513, 16513, 16513, 16513, 16513],
         "maxPoints": 5
       },
       {
@@ -124,7 +124,7 @@
           "rowIdx": 3,
           "colIdx": 2
         },
-        "spellIds": [14113, 14114, 14115, 14116, 14117],
+        "spellIds": [14113, 14113, 14113, 14113, 14113],
         "maxPoints": 5
       },
       {
@@ -164,7 +164,7 @@
           "rowIdx": 5,
           "colIdx": 2
         },
-        "spellIds": [14186, 14190, 14193, 14194, 14195],
+        "spellIds": [14186, 14186, 14186, 14186, 14186],
         "maxPoints": 5
       },
       {
@@ -194,7 +194,7 @@
           "rowIdx": 0,
           "colIdx": 0
         },
-        "spellIds": [14162, 14163, 14164],
+        "spellIds": [14162, 14162, 14162],
         "maxPoints": 3
       },
       {
@@ -204,7 +204,7 @@
           "rowIdx": 0,
           "colIdx": 1
         },
-        "spellIds": [13732, 13863],
+        "spellIds": [13732, 13732],
         "maxPoints": 2
       },
       {
@@ -214,7 +214,7 @@
           "rowIdx": 0,
           "colIdx": 2
         },
-        "spellIds": [13712, 13788, 13789, 13790, 13791],
+        "spellIds": [13712, 13712, 13712, 13712, 13712],
         "maxPoints": 5
       },
       {
@@ -254,7 +254,7 @@
           "rowIdx": 2,
           "colIdx": 0
         },
-        "spellIds": [13742, 13872],
+        "spellIds": [13742, 13742],
         "maxPoints": 2
       },
       {
@@ -278,7 +278,7 @@
           "rowIdx": 2,
           "colIdx": 3
         },
-        "spellIds": [13743, 13875],
+        "spellIds": [13743, 13743],
         "maxPoints": 2
       },
       {
@@ -288,7 +288,7 @@
           "rowIdx": 3,
           "colIdx": 0
         },
-        "spellIds": [13754, 13867],
+        "spellIds": [13754, 13754],
         "maxPoints": 2
       },
       {
@@ -308,7 +308,7 @@
           "rowIdx": 3,
           "colIdx": 2
         },
-        "spellIds": [13715, 13848, 13849, 13851, 13852],
+        "spellIds": [13715, 13715, 13715, 13715, 13715],
         "maxPoints": 5,
         "prereqLocation": {
           "rowIdx": 1,
@@ -332,7 +332,7 @@
           "rowIdx": 4,
           "colIdx": 2
         },
-        "spellIds": [13960, 13961, 13962, 13963, 13964],
+        "spellIds": [13960, 13960, 13960, 13960, 13960],
         "maxPoints": 5
       },
       {
@@ -342,7 +342,7 @@
           "rowIdx": 5,
           "colIdx": 1
         },
-        "spellIds": [30919, 30920],
+        "spellIds": [30919, 30919],
         "maxPoints": 2,
         "prereqLocation": {
           "rowIdx": 4,
@@ -356,7 +356,7 @@
           "rowIdx": 5,
           "colIdx": 2
         },
-        "spellIds": [18427, 18428, 18429],
+        "spellIds": [18427, 18427, 18427],
         "maxPoints": 3
       },
       {
@@ -382,7 +382,7 @@
           "rowIdx": 0,
           "colIdx": 0
         },
-        "spellIds": [13975, 14062, 14063, 14064, 14065],
+        "spellIds": [13975, 13975, 13975, 13975, 13975],
         "maxPoints": 5
       },
       {
@@ -412,7 +412,7 @@
           "rowIdx": 1,
           "colIdx": 0
         },
-        "spellIds": [13983, 14070, 14071],
+        "spellIds": [13983, 13983, 13983],
         "maxPoints": 3
       },
       {
@@ -422,7 +422,7 @@
           "rowIdx": 1,
           "colIdx": 1
         },
-        "spellIds": [13981, 14066],
+        "spellIds": [13981, 13981],
         "maxPoints": 2
       },
       {
@@ -442,7 +442,7 @@
           "rowIdx": 1,
           "colIdx": 3
         },
-        "spellIds": [14079, 14080, 14081],
+        "spellIds": [14079, 14079, 14079],
         "maxPoints": 3
       },
       {
@@ -452,7 +452,7 @@
           "rowIdx": 2,
           "colIdx": 0
         },
-        "spellIds": [13976, 13979, 13980],
+        "spellIds": [13976, 13976, 13976],
         "maxPoints": 3
       },
       {
@@ -482,7 +482,7 @@
           "rowIdx": 3,
           "colIdx": 0
         },
-        "spellIds": [30894, 30895],
+        "spellIds": [30894, 30894],
         "maxPoints": 2
       },
       {
@@ -502,7 +502,7 @@
           "rowIdx": 3,
           "colIdx": 2
         },
-        "spellIds": [14171, 14172, 14173],
+        "spellIds": [14171, 14171, 14171],
         "maxPoints": 3
       },
       {
@@ -512,7 +512,7 @@
           "rowIdx": 4,
           "colIdx": 0
         },
-        "spellIds": [14082, 14083],
+        "spellIds": [14082, 14082],
         "maxPoints": 2
       },
       {

@@ -1172,12 +1172,10 @@ type traitNodeRow struct {
 	MaxRanks  int
 	SpellID   int
 	Name      string
-	RankChain string
 }
 
 func scanTraitNode(rows *sql.Rows) (traitNodeRow, error) {
 	var n traitNodeRow
-	var chain sql.NullString
 	err := rows.Scan(
 		&n.TreeID,
 		&n.NodeID,
@@ -1188,12 +1186,10 @@ func scanTraitNode(rows *sql.Rows) (traitNodeRow, error) {
 		&n.MaxRanks,
 		&n.SpellID,
 		&n.Name,
-		&chain,
 	)
 	if err != nil {
 		return n, fmt.Errorf("scanning trait node: %w", err)
 	}
-	n.RankChain = chain.String
 	return n, nil
 }
 
@@ -1370,21 +1366,12 @@ func abs(value int) int {
 // unrelated Vanguard talent), so the legacy Talent rank chain is used whenever
 // it still describes the same number of ranks. Everything else repeats the base
 // spell, which shows the rank 1 tooltip instead of a wrong spell.
-func traitRankSpellIDs(spellID, maxRanks int, rankChain string) []int {
-	if rankChain != "" {
-		var chain []int
-		if err := json.Unmarshal([]byte(rankChain), &chain); err == nil {
-			ranks := []int{}
-			for _, id := range chain {
-				if id != 0 {
-					ranks = append(ranks, id)
-				}
-			}
-			if len(ranks) == maxRanks && ranks[0] == spellID {
-				return ranks
-			}
-		}
-	}
+// A trait talent is one spell whose per-rank values come from its curve, so every rank
+// reports the same id. This used to prefer the legacy Talent.SpellRank chain where it had
+// the right shape, but that table is vestigial TBC data: 232 of the 235 talents it fed
+// listed ids the client does not ship, which is 601 spells the UI linked to and Wowhead
+// answered with a 404. Wowhead takes the rank as ?rank=N on the one id instead.
+func traitRankSpellIDs(spellID, maxRanks int) []int {
 	ranks := make([]int, maxRanks)
 	for i := range ranks {
 		ranks[i] = spellID
@@ -1418,8 +1405,7 @@ SELECT
   tn.PosY,
   e.MaxRanks,
   COALESCE(d.SpellID, 0),
-  COALESCE(NULLIF(sn.Name_lang, ''), d.OverrideName_lang, '') AS Name_lang,
-  (SELECT tl.SpellRank FROM Talent tl WHERE tl.SpellRank_0 = d.SpellID ORDER BY tl.ID LIMIT 1) AS SpellRank
+  COALESCE(NULLIF(sn.Name_lang, ''), d.OverrideName_lang, '') AS Name_lang
 FROM TraitNode tn
 JOIN TraitNodeXTraitNodeEntry x ON x.TraitNodeID = tn.ID
 JOIN TraitNodeEntry e ON e.ID = x.TraitNodeEntryID
@@ -1664,7 +1650,7 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 
 		for _, node := range kept {
 			pos := positions[node.NodeID]
-			spellIDs, err := json.Marshal(traitRankSpellIDs(node.SpellID, node.MaxRanks, node.RankChain))
+			spellIDs, err := json.Marshal(traitRankSpellIDs(node.SpellID, node.MaxRanks))
 			if err != nil {
 				return nil, fmt.Errorf("encoding rank spells for trait node %d: %w", node.NodeID, err)
 			}

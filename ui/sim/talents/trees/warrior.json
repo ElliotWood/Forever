@@ -10,7 +10,7 @@
           "rowIdx": 0,
           "colIdx": 0
         },
-        "spellIds": [12282, 12663, 12664],
+        "spellIds": [12282, 12282, 12282],
         "maxPoints": 3
       },
       {
@@ -20,7 +20,7 @@
           "rowIdx": 0,
           "colIdx": 1
         },
-        "spellIds": [16462, 16463, 16464, 16465, 16466],
+        "spellIds": [16462, 16462, 16462, 16462, 16462],
         "maxPoints": 5
       },
       {
@@ -30,7 +30,7 @@
           "rowIdx": 0,
           "colIdx": 2
         },
-        "spellIds": [12286, 12658, 12659],
+        "spellIds": [12286, 12286, 12286],
         "maxPoints": 3
       },
       {
@@ -40,7 +40,7 @@
           "rowIdx": 1,
           "colIdx": 0
         },
-        "spellIds": [12285, 12697],
+        "spellIds": [12285, 12285],
         "maxPoints": 2
       },
       {
@@ -50,7 +50,7 @@
           "rowIdx": 1,
           "colIdx": 1
         },
-        "spellIds": [12295, 12676, 12677, 12678, 12679],
+        "spellIds": [12295, 12295, 12295, 12295, 12295],
         "maxPoints": 5
       },
       {
@@ -60,7 +60,7 @@
           "rowIdx": 1,
           "colIdx": 3
         },
-        "spellIds": [12290, 12963],
+        "spellIds": [12290, 12290],
         "maxPoints": 2
       },
       {
@@ -84,7 +84,7 @@
           "rowIdx": 2,
           "colIdx": 2
         },
-        "spellIds": [12834, 12849, 12867],
+        "spellIds": [12834, 12834, 12834],
         "maxPoints": 3,
         "prereqLocation": {
           "rowIdx": 0,
@@ -118,7 +118,7 @@
           "rowIdx": 3,
           "colIdx": 2
         },
-        "spellIds": [16493, 16494],
+        "spellIds": [16493, 16493],
         "maxPoints": 2
       },
       {
@@ -168,7 +168,7 @@
           "rowIdx": 5,
           "colIdx": 2
         },
-        "spellIds": [12289, 12668, 23695],
+        "spellIds": [12289, 12289, 12289],
         "maxPoints": 3
       },
       {
@@ -198,7 +198,7 @@
           "rowIdx": 0,
           "colIdx": 1
         },
-        "spellIds": [12321, 12835, 12836, 12837, 12838],
+        "spellIds": [12321, 12321, 12321, 12321, 12321],
         "maxPoints": 5
       },
       {
@@ -208,7 +208,7 @@
           "rowIdx": 0,
           "colIdx": 2
         },
-        "spellIds": [12320, 12852, 12853, 12855, 12856],
+        "spellIds": [12320, 12320, 12320, 12320, 12320],
         "maxPoints": 5
       },
       {
@@ -228,7 +228,7 @@
           "rowIdx": 1,
           "colIdx": 2
         },
-        "spellIds": [12322, 12999, 13000, 13001, 13002],
+        "spellIds": [12322, 12322, 12322, 12322, 12322],
         "maxPoints": 5
       },
       {
@@ -238,7 +238,7 @@
           "rowIdx": 2,
           "colIdx": 0
         },
-        "spellIds": [12329, 12950, 20496],
+        "spellIds": [12329, 12329, 12329],
         "maxPoints": 3
       },
       {
@@ -258,7 +258,7 @@
           "rowIdx": 2,
           "colIdx": 2
         },
-        "spellIds": [16487, 16489, 16492],
+        "spellIds": [16487, 16487, 16487],
         "maxPoints": 3
       },
       {
@@ -278,7 +278,7 @@
           "rowIdx": 3,
           "colIdx": 0
         },
-        "spellIds": [23584, 23585, 23586, 23587, 23588],
+        "spellIds": [23584, 23584, 23584, 23584, 23584],
         "maxPoints": 5
       },
       {
@@ -298,7 +298,7 @@
           "rowIdx": 3,
           "colIdx": 2
         },
-        "spellIds": [12317, 13045, 13046, 13047, 13048],
+        "spellIds": [12317, 12317, 12317, 12317, 12317],
         "maxPoints": 5
       },
       {
@@ -308,7 +308,7 @@
           "rowIdx": 3,
           "colIdx": 3
         },
-        "spellIds": [20502, 20503],
+        "spellIds": [20502, 20502],
         "maxPoints": 2
       },
       {
@@ -338,7 +338,7 @@
           "rowIdx": 4,
           "colIdx": 3
         },
-        "spellIds": [20504, 20505],
+        "spellIds": [20504, 20504],
         "maxPoints": 2
       },
       {
@@ -348,7 +348,7 @@
           "rowIdx": 5,
           "colIdx": 0
         },
-        "spellIds": [20500, 20501],
+        "spellIds": [20500, 20500],
         "maxPoints": 2
       },
       {
@@ -358,7 +358,7 @@
           "rowIdx": 5,
           "colIdx": 2
         },
-        "spellIds": [12319, 12971, 12972, 12973, 12974],
+        "spellIds": [12319, 12319, 12319, 12319, 12319],
         "maxPoints": 5,
         "prereqLocation": {
           "rowIdx": 3,
@@ -392,7 +392,7 @@
           "rowIdx": 0,
           "colIdx": 1
         },
-        "spellIds": [12298, 12724, 12725, 12726, 12727],
+        "spellIds": [12298, 12298, 12298, 12298, 12298],
         "maxPoints": 5
       },
       {
@@ -402,7 +402,7 @@
           "rowIdx": 0,
           "colIdx": 2
         },
-        "spellIds": [12297, 12750, 12751, 12752, 12753],
+        "spellIds": [12297, 12297, 12297, 12297, 12297],
         "maxPoints": 5
       },
       {
@@ -412,7 +412,7 @@
           "rowIdx": 1,
           "colIdx": 0
         },
-        "spellIds": [12301, 12818],
+        "spellIds": [12301, 12301],
         "maxPoints": 2
       },
       {
@@ -422,7 +422,7 @@
           "rowIdx": 1,
           "colIdx": 2
         },
-        "spellIds": [12299, 12761, 12762, 12763, 12764],
+        "spellIds": [12299, 12299, 12299, 12299, 12299],
         "maxPoints": 5
       },
       {
@@ -432,7 +432,7 @@
           "rowIdx": 1,
           "colIdx": 3
         },
-        "spellIds": [12287, 12665, 12666],
+        "spellIds": [12287, 12287, 12287],
         "maxPoints": 3
       },
       {
@@ -470,7 +470,7 @@
           "rowIdx": 2,
           "colIdx": 2
         },
-        "spellIds": [12797, 12799, 12800],
+        "spellIds": [12797, 12797, 12797],
         "maxPoints": 3
       },
       {
@@ -490,7 +490,7 @@
           "rowIdx": 3,
           "colIdx": 0
         },
-        "spellIds": [12308, 12810, 12811],
+        "spellIds": [12308, 12308, 12308],
         "maxPoints": 3
       },
       {
@@ -500,7 +500,7 @@
           "rowIdx": 3,
           "colIdx": 1
         },
-        "spellIds": [12313, 12804, 12807],
+        "spellIds": [12313, 12313, 12313],
         "maxPoints": 3
       },
       {
@@ -520,7 +520,7 @@
           "rowIdx": 4,
           "colIdx": 0
         },
-        "spellIds": [12312, 12803],
+        "spellIds": [12312, 12312],
         "maxPoints": 2
       },
       {
@@ -540,7 +540,7 @@
           "rowIdx": 4,
           "colIdx": 2
         },
-        "spellIds": [12311, 12958],
+        "spellIds": [12311, 12311],
         "maxPoints": 2
       },
       {
@@ -550,7 +550,7 @@
           "rowIdx": 4,
           "colIdx": 3
         },
-        "spellIds": [16538, 16539, 16540, 16541, 16542],
+        "spellIds": [16538, 16538, 16538, 16538, 16538],
         "maxPoints": 5
       },
       {

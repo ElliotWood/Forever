@@ -10,6 +10,7 @@ import (
 func RegisterAllOnUseCds() {
 
 	//
+	// shared.NewSimpleStatActive(7734) // Six Demon Bag - https://www.wowhead.com/forever/spell=14537
 	// shared.NewSimpleStatActive(8367) // Dragonscale Breastplate - https://www.wowhead.com/forever/spell=10618
 	// shared.NewSimpleStatActive(11905) // Linken's Boomerang - https://www.wowhead.com/forever/spell=15712
 	// shared.NewSimpleStatActive(14134) // Cloak of Fire - https://www.wowhead.com/forever/spell=18364
@@ -79,6 +80,7 @@ func RegisterAllOnUseCds() {
 	shared.NewSimpleStatActive(23042) // Loatheb's Reflection - https://www.wowhead.com/forever/spell=28778
 
 	// Armor
+	shared.NewSimpleStatActive(11811) // Smoking Heart of the Mountain - https://www.wowhead.com/forever/spell=1300752
 	shared.NewSimpleStatActive(19345) // Aegis of Preservation - https://www.wowhead.com/forever/spell=23780
 
 	// ArmorPenetration
@@ -124,11 +126,20 @@ func RegisterAllOnUseCds() {
 	})
 	shared.NewSimpleStatActive(23046) // The Restrained Essence of Sapphiron - https://www.wowhead.com/forever/spell=28779
 
+	// MP5
+	shared.NewSimpleStatActive(4696) // Lapidis Tankard of Tidesippe - https://www.wowhead.com/forever/spell=1135
+
 	// Skipped
+	// Not simulated: Staff of Conjuring: "Conjure Food" (8736) - ignored effect type 24
+	// https://www.wowhead.com/forever/spell=8736
+	// Not simulated: Orb of Deception: "Orb of Deception" (16739) - ignored aura type 56
+	// https://www.wowhead.com/forever/spell=16739
 	// Not simulated: Spider Belt: "Immune Root" (9774) - ignored aura type 77
 	// https://www.wowhead.com/forever/spell=9774
 	// Not simulated: Cold Basilisk Eye: "Cold Eye" (1139) - ignored aura type 33
 	// https://www.wowhead.com/forever/spell=1139
+	// Not simulated: Enchanted Moonstalker Cloak: "Form of the Moonstalker" (6298) - ignored aura type 56
+	// https://www.wowhead.com/forever/spell=6298
 	// Not simulated: Ornate Mithril Boots: "Immune Root" (9774) - ignored aura type 77
 	// https://www.wowhead.com/forever/spell=9774
 	// Not simulated: Glimmering Mithril Insignia: "Fearless" (12733) - ignored aura type 77
@@ -209,6 +220,8 @@ func RegisterAllOnUseCds() {
 	// https://www.wowhead.com/forever/spell=23442
 	// Not simulated: Defender of the Barkskin: "Defender of the Barkskin" (1294063) - ignored effect type 28
 	// https://www.wowhead.com/forever/spell=1294063
+	// Not simulated: Graverobber's Shovel: "Dig" (1292560) - ignored effect type 24
+	// https://www.wowhead.com/forever/spell=1292560
 	// Not simulated: Greater Insignia of the Horde: "PvP Trinket" (438273) - ignored aura type 77
 	// https://www.wowhead.com/forever/spell=438273
 	// Not simulated: Greater Insignia of the Alliance: "PvP Trinket" (438273) - ignored aura type 77
