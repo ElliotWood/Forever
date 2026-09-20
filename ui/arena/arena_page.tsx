@@ -45,6 +45,8 @@ type Build = {
 	talents: string;
 	gear: string;
 	rotation: string;
+	/** Which of the arena's consumable lists the build drank. */
+	consumables: string;
 	dps: number;
 	rests: Composition;
 	/** Average item level of the gear set, and how many slots it fills. */
@@ -242,9 +244,23 @@ export class ArenaPage {
 
 					<ul className="arena-notes">
 						<li>
-							<strong>Every build meets the same conditions.</strong> One target, one encounter length, one buff set, one set of consumables. That
-							is what makes two numbers comparable - the live <a href={`${SITE_BASE}dps_rankings/`}>rankings page</a> achieves the same thing by
-							putting everyone in one raid, which stops being possible at this count.
+							<strong>Every build meets the same conditions.</strong> One target, one encounter length, one buff set, one consumable list for its
+							role. That is what makes two numbers comparable - the live <a href={`${SITE_BASE}dps_rankings/`}>rankings page</a> achieves the same
+							thing by putting everyone in one raid, which stops being possible at this count.
+						</li>
+						<li>
+							<strong>The consumables are the arena's, and they did not used to be.</strong> Every spec brought its own list from its own test
+							file, and the gaps were not small ones: both paladins and the feral tank had their weapon imbue commented out entirely, while
+							warrior, hunter, rogue and tank warrior carried Windfury. Stripping the warrior's imbues costs it 14.2% - so this table was
+							reporting a 19.6% gap between warrior and retribution while handing one of them a weapon buff and the other a bare weapon. It is
+							2.3% now, and the difference was never about the specs. Each row says which list it drank.
+						</li>
+						<li>
+							<strong>Three lists, not one.</strong> Elemental Sharpening Stone is +2% melee crit and -2% <em>ranged</em> crit, so a single list
+							for all fifteen would equalise the shopping and quietly tax the only spec that shoots. Within a role the list is identical - the
+							same shopping list, not the same benefit, which is why Mighty Rage Potion stays in the melee list even though only warriors can
+							spend it. What a class grants itself is not a consumable and is left alone: an enhancement shaman keeps Windfury Weapon and a rogue
+							keeps its poisons. Equalising those took 23.6% off the shaman, which is not a shaman measured fairly, it is a shaman disarmed.
 						</li>
 						<li>
 							<strong>Item level is the filter, not the file name.</strong> This table used to compare every spec on its "launch" gear set, on the
@@ -413,6 +429,13 @@ export class ArenaPage {
 				<td className="arena-setup-cell">
 					<span className="arena-setup">{build.gear}</span>
 					<span className="arena-setup arena-setup-quiet">{build.rotation || 'default rotation'}</span>
+					<span
+						className="arena-setup arena-setup-quiet"
+						attributes={{
+							title: 'The consumable list this build drank. Every spec in a role drinks the same one; it is set by the arena, not by the spec.',
+						}}>
+						{(build.consumables || 'unknown consumables').replace('Arena-', '').replace('+class', ' + class imbues').toLowerCase()}
+					</span>
 				</td>
 				<td className="arena-ilvl-cell">
 					<span className="arena-ilvl">{build.ilvl ? build.ilvl.toFixed(1) : '?'}</span>

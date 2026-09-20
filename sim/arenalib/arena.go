@@ -64,12 +64,15 @@ const iterations = int32(5000)
 
 // One row of the leaderboard: a build, what it did, and what its damage was made of.
 type Result struct {
-	Spec     string  `json:"spec"`
-	Talents  string  `json:"talents"`
-	Build    string  `json:"build"`
-	Gear     string  `json:"gear"`
-	Rotation string  `json:"rotation"`
-	Dps      float64 `json:"dps"`
+	Spec     string `json:"spec"`
+	Talents  string `json:"talents"`
+	Build    string `json:"build"`
+	Gear     string `json:"gear"`
+	Rotation string `json:"rotation"`
+	// Which of the arena's consumable lists this build drank. Published, because equalising
+	// the environment and saying so are two different things and the page needs both.
+	Consumables string  `json:"consumables"`
+	Dps         float64 `json:"dps"`
 	// Damage by spell id, for the confidence column. Weighting happens in the merge step,
 	// where the manifest is read once rather than once per spec.
 	Damage map[string]float64 `json:"damage"`
@@ -330,12 +333,13 @@ func runAt(spec Spec, uiDir string, talent TalentBuild, gear string, rotation st
 	})
 
 	row := Result{
-		Spec:     spec.Dir,
-		Talents:  talent.Talents,
-		Build:    talent.Name,
-		Gear:     gear,
-		Rotation: rotation,
-		Damage:   map[string]float64{},
+		Spec:        spec.Dir,
+		Consumables: consumesFor(spec.Role, spec.ClassImbues).Label,
+		Talents:     talent.Talents,
+		Build:       talent.Name,
+		Gear:        gear,
+		Rotation:    rotation,
+		Damage:      map[string]float64{},
 	}
 	if result.Error != nil || result.RaidMetrics == nil || len(result.RaidMetrics.Parties) == 0 {
 		return row
