@@ -1,19 +1,8 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation } from '@generated/proto/apl';
-import {
-	Debuffs,
-	Drums,
-	EquipmentSpec,
-	IndividualBuffs,
-	ItemSlot,
-	PartyBuffs,
-	PseudoStat,
-	RaidBuffs,
-	Spec,
-	Stat,
-	TristateEffect,
-} from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Drums, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -98,32 +87,32 @@ export default defineSpec<Spec.SpecRogue>({
 		// Default raid/party buffs settings.
 		raidBuffs: RaidBuffs.create({
 			...defaultRaidBuffMajorDamageCooldowns(),
-			giftOfTheWild: TristateEffect.TristateEffectImproved,
+			giftOfTheWild: true,
 		}),
 		partyBuffs: PartyBuffs.create({
-			battleShout: TristateEffect.TristateEffectImproved,
+			battleShout: true,
 			ferociousInspiration: 1,
-			strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
-			graceOfAirTotem: TristateEffect.TristateEffectImproved,
-			windfuryTotem: TristateEffect.TristateEffectImproved,
-			leaderOfThePack: TristateEffect.TristateEffectRegular,
+			strengthOfEarthTotem: true,
+			graceOfAirTotem: true,
+			windfuryTotem: true,
+			leaderOfThePack: true,
 			totemTwisting: true,
 			drums: Drums.LesserDrumsOfBattle,
 		}),
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
-			blessingOfMight: TristateEffect.TristateEffectImproved,
+			blessingOfMight: true,
 			unleashedRage: true,
 		}),
 		debuffs: Debuffs.create({
 			...defaultExposeWeaknessSettings(),
 			bloodFrenzy: true,
-			huntersMark: TristateEffect.TristateEffectImproved,
-			improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+			huntersMark: true,
+			improvedSealOfTheCrusader: true,
 			mangle: true,
 			misery: true,
 			curseOfRecklessness: true,
-			faerieFire: TristateEffect.TristateEffectImproved,
+			faerieFire: true,
 			giftOfArthas: true,
 			sunderArmor: true,
 		}),

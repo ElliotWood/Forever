@@ -1,19 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLAction, APLListItem, APLRotation, APLRotation_Type as APLRotationType } from '@generated/proto/apl';
-import {
-	Cooldowns,
-	Debuffs,
-	Drums,
-	EquipmentSpec,
-	IndividualBuffs,
-	ItemSlot,
-	PartyBuffs,
-	PseudoStat,
-	RaidBuffs,
-	Spec,
-	Stat,
-	TristateEffect,
-} from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Cooldowns, Drums, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import { FeralBearDruid_Rotation as DruidRotation } from '@generated/proto/druid';
 import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
@@ -103,37 +91,37 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 		specOptions: Presets.DefaultOptions,
 		raidBuffs: RaidBuffs.create({
 			arcaneBrilliance: true,
-			giftOfTheWild: TristateEffect.TristateEffectImproved,
-			powerWordFortitude: TristateEffect.TristateEffectImproved,
+			giftOfTheWild: true,
+			powerWordFortitude: true,
 			bloodlust: true,
 			shadowProtection: true,
-			thorns: TristateEffect.TristateEffectRegular,
-			divineSpirit: TristateEffect.TristateEffectImproved,
+			thorns: true,
+			divineSpirit: true,
 		}),
 		partyBuffs: PartyBuffs.create({
 			drums: Drums.LesserDrumsOfBattle,
 			ferociousInspiration: 2,
-			battleShout: TristateEffect.TristateEffectImproved,
-			graceOfAirTotem: TristateEffect.TristateEffectImproved,
-			windfuryTotem: TristateEffect.TristateEffectImproved,
+			battleShout: true,
+			graceOfAirTotem: true,
+			windfuryTotem: true,
 			manaSpringTotem: TristateEffect.TristateEffectRegular,
-			strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
+			strengthOfEarthTotem: true,
 			totemTwisting: true,
 		}),
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
-			blessingOfMight: TristateEffect.TristateEffectImproved,
+			blessingOfMight: true,
 			blessingOfSanctuary: true,
 			unleashedRage: true,
 		}),
 		debuffs: Debuffs.create({
 			...defaultExposeWeaknessSettings(),
 			bloodFrenzy: true,
-			exposeArmor: TristateEffect.TristateEffectImproved,
-			faerieFire: TristateEffect.TristateEffectImproved,
+			exposeArmor: true,
+			faerieFire: true,
 			giftOfArthas: false,
-			huntersMark: TristateEffect.TristateEffectImproved,
-			improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+			huntersMark: true,
+			improvedSealOfTheCrusader: true,
 			curseOfRecklessness: true,
 			insectSwarm: true,
 			judgementOfWisdom: true,

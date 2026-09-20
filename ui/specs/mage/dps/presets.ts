@@ -1,6 +1,7 @@
 import * as PresetUtils from '@app/preset_utils';
 import { makeSpecChangeWarningToast } from '@features/settings/utils/spec_change_warning_toast';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, ItemSlot, PartyBuffs, Profession, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { ConsumesSpec, Drums, ItemSlot, Profession, Spec } from '@generated/proto/common';
 import { Mage_Options as MageOptions, Mage_Rotation, MageArmor } from '@generated/proto/mage';
 import { SavedTalents } from '@generated/proto/ui';
 import { Player } from '@sim/player/player';
@@ -70,10 +71,10 @@ export const DefaultConsumables = ConsumesSpec.create({
 
 export const DefaultRaidBuffs = RaidBuffs.create({
 	bloodlust: true,
-	divineSpirit: 2,
+	divineSpirit: true,
 	arcaneBrilliance: true,
-	giftOfTheWild: 2,
-	powerWordFortitude: 2,
+	giftOfTheWild: true,
+	powerWordFortitude: true,
 	shadowProtection: true,
 });
 
@@ -86,7 +87,7 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: 2,
+	blessingOfWisdom: true,
 	innervates: 1,
 	blessingOfSalvation: true,
 	shadowPriestDps: 1400,
@@ -94,8 +95,8 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 
 export const DefaultDebuffs = Debuffs.create({
 	misery: true,
-	curseOfElements: 2,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	curseOfElements: true,
+	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	...defaultImprovedShadowBoltSettings(),
 });

@@ -1,5 +1,6 @@
 import { Player } from '@generated/proto/api';
-import { ConsumesSpec, Drums, PartyBuffs } from '@generated/proto/common';
+import { PartyBuffs } from '@generated/proto/buffs';
+import { ConsumesSpec, Drums } from '@generated/proto/common';
 import { IndividualSimSettings } from '@generated/proto/ui';
 import { CURRENT_API_VERSION } from '@sim/constants/other';
 import { beforeEach, describe, expect, it, vi } from 'vitest';

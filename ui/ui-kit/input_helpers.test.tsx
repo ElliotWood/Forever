@@ -1,4 +1,4 @@
-import type { PartyBuffs } from '@generated/proto/common';
+import type { PartyBuffs } from '@generated/proto/buffs';
 import type { Player } from '@sim/player/player';
 import { ActionId } from '@sim/proto/action_id';
 import { fireEvent, render, screen } from '@testing-library/react';

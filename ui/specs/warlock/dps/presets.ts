@@ -1,5 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { ConsumesSpec, Drums, Profession, TristateEffect } from '@generated/proto/common';
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
 import { defaultExposeWeaknessSettings, defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
@@ -51,14 +52,14 @@ export const OtherDefaults = {
 export const DefaultRaidBuffs = RaidBuffs.create({
 	...defaultRaidBuffMajorDamageCooldowns(),
 	arcaneBrilliance: true,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	divineSpirit: TristateEffect.TristateEffectImproved,
+	giftOfTheWild: true,
+	powerWordFortitude: true,
+	divineSpirit: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	manaSpringTotem: TristateEffect.TristateEffectRegular,
-	moonkinAura: TristateEffect.TristateEffectRegular,
+	moonkinAura: true,
 	totemOfWrath: 1,
 	wrathOfAirTotem: TristateEffect.TristateEffectImproved,
 	eyeOfTheNight: true,
@@ -68,26 +69,26 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
+	blessingOfWisdom: true,
 	shadowPriestDps: 0,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	...defaultExposeWeaknessSettings(),
 	...defaultImprovedShadowBoltSettings(),
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	misery: true,
 	shadowWeaving: true,
 	sunderArmor: true,
 	screech: true,
-	faerieFire: TristateEffect.TristateEffectImproved,
+	faerieFire: true,
 	curseOfRecklessness: true,
 	shadowEmbrace: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
+	curseOfElements: true,
 	bloodFrenzy: true,
 	giftOfArthas: true,
 	mangle: true,
-	exposeArmor: TristateEffect.TristateEffectImproved,
-	huntersMark: TristateEffect.TristateEffectImproved,
+	exposeArmor: true,
+	huntersMark: true,
 });

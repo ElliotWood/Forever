@@ -1,4 +1,5 @@
-import { Debuffs, Encounter as EncounterProto, PartyBuffs, RaidBuffs } from '@generated/proto/common';
+import { Debuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Encounter as EncounterProto } from '@generated/proto/common';
 import { IndividualSimSettings } from '@generated/proto/ui';
 
 import { CURRENT_API_VERSION } from '../constants/other';

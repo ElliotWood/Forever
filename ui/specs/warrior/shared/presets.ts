@@ -1,41 +1,42 @@
-import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Class, ConsumesSpec, Drums } from '@generated/proto/common';
 import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
+	blessingOfMight: true,
 	unleashedRage: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	ferociousInspiration: 2,
 	braidedEterniumChain: true,
-	graceOfAirTotem: TristateEffect.TristateEffectImproved,
-	strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
-	windfuryTotem: TristateEffect.TristateEffectImproved,
-	leaderOfThePack: TristateEffect.TristateEffectRegular,
+	graceOfAirTotem: true,
+	strengthOfEarthTotem: true,
+	windfuryTotem: true,
+	leaderOfThePack: true,
 	totemTwisting: true,
 	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
 	...defaultRaidBuffMajorDamageCooldowns(Class.ClassWarrior),
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
+	powerWordFortitude: true,
+	giftOfTheWild: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	...defaultExposeWeaknessSettings(),
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	improvedSealOfTheCrusader: true,
 	misery: true,
 	bloodFrenzy: true,
 	giftOfArthas: true,
 	mangle: true,
-	exposeArmor: TristateEffect.TristateEffectImproved,
-	faerieFire: TristateEffect.TristateEffectImproved,
+	exposeArmor: true,
+	faerieFire: true,
 	sunderArmor: true,
 	curseOfRecklessness: true,
-	huntersMark: TristateEffect.TristateEffectImproved,
+	huntersMark: true,
 });
 
 export const DefaultConsumables = ConsumesSpec.create({

@@ -7,6 +7,7 @@ import {
 	UnitMetadata as UnitMetadataProto,
 } from '@generated/proto/api';
 import { APLRotation, APLRotation_Type as APLRotationType, SimpleRotation } from '@generated/proto/apl';
+import { IndividualBuffs } from '@generated/proto/buffs';
 import {
 	Class,
 	ConsumableType,
@@ -16,7 +17,6 @@ import {
 	GemColor,
 	HandType,
 	HealingModel,
-	IndividualBuffs,
 	ItemRandomSuffix,
 	ItemSlot,
 	Profession,
@@ -24,7 +24,6 @@ import {
 	Race,
 	Spec,
 	Stat,
-	TristateEffect,
 	UnitReference,
 	UnitStats,
 	WeaponType,
@@ -705,7 +704,7 @@ export class Player<SpecType extends Spec> {
 		const isWeaponStone = (imbueId: number) => imbueId === ADAMANTITE_SHARPENING_STONE_ID || imbueId === ADAMANTITE_WEIGHTSTONE_ID;
 		const consumables = this.slice().consumables;
 		const party = this.getParty();
-		const mhImbueApplied = !party || party.getBuffs().windfuryTotem === TristateEffect.TristateEffectMissing;
+		const mhImbueApplied = !party || !party.getBuffs().windfuryTotem;
 
 		let offsets = new Stats();
 		if (mhImbueApplied && isWeaponStone(consumables.mhImbueId)) {
@@ -785,17 +784,6 @@ export class Player<SpecType extends Spec> {
 		let debuffStats = new Stats();
 		const debuffs = this.sim.raid.getDebuffs();
 
-		if (debuffs.faerieFire == TristateEffect.TristateEffectImproved) {
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 3);
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatRangedHitPercent, 3);
-		}
-
-		if (debuffs.improvedSealOfTheCrusader) {
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatMeleeCritPercent, 3);
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatRangedCritPercent, 3);
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatSpellCritPercent, 3);
-		}
-
 		if (debuffs.exposeWeaknessUptime && debuffs.exposeWeaknessHunterAgility) {
 			let agi = debuffs.exposeWeaknessHunterAgility;
 
@@ -807,12 +795,8 @@ export class Player<SpecType extends Spec> {
 			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, agi * 0.25);
 		}
 
-		if (debuffs.huntersMark != TristateEffect.TristateEffectMissing) {
+		if (debuffs.huntersMark) {
 			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, 440);
-
-			if (debuffs.huntersMark == TristateEffect.TristateEffectImproved) {
-				debuffStats = debuffStats.addStat(Stat.StatAttackPower, 110);
-			}
 		}
 
 		return debuffStats;

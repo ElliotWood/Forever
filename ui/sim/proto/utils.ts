@@ -1,17 +1,6 @@
 import { Player } from '@generated/proto/api';
-import {
-	Class,
-	Debuffs,
-	Faction,
-	IndividualBuffs,
-	PartyBuffs,
-	Race,
-	RaidBuffs,
-	Spec,
-	TristateEffect,
-	UnitReference,
-	UnitReference_Type,
-} from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Class, Faction, Race, Spec, TristateEffect, UnitReference, UnitReference_Type } from '@generated/proto/common';
 import { ResourceType } from '@generated/proto/spell';
 
 import { CURRENT_PHASE, Phase } from '../constants/other';
@@ -142,9 +131,9 @@ export const defaultRaidBuffMajorDamageCooldowns = (_?: Class): Partial<RaidBuff
 export const defaultHealerRaidBuffs = (): RaidBuffs =>
 	RaidBuffs.create({
 		arcaneBrilliance: true,
-		giftOfTheWild: TristateEffect.TristateEffectImproved,
-		powerWordFortitude: TristateEffect.TristateEffectImproved,
-		divineSpirit: TristateEffect.TristateEffectImproved,
+		giftOfTheWild: true,
+		powerWordFortitude: true,
+		divineSpirit: true,
 	});
 
 export const defaultHealerPartyBuffs = (): PartyBuffs =>
@@ -156,7 +145,7 @@ export const defaultHealerPartyBuffs = (): PartyBuffs =>
 export const defaultHealerIndividualBuffs = (): IndividualBuffs =>
 	IndividualBuffs.create({
 		blessingOfKings: true,
-		blessingOfWisdom: TristateEffect.TristateEffectImproved,
+		blessingOfWisdom: true,
 	});
 
 const exposeWeaknessPhaseSettings: Map<Phase, Pick<Debuffs, 'exposeWeaknessUptime' | 'exposeWeaknessHunterAgility'>> = new Map([

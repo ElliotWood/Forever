@@ -1,5 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { ConsumesSpec, Drums, Profession, TristateEffect } from '@generated/proto/common';
 import { DpsPriest_Options as Options } from '@generated/proto/priest';
 import { defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
@@ -25,9 +26,9 @@ export const DefaultConsumables = ConsumesSpec.create({
 export const DefaultRaidBuffs = RaidBuffs.create({
 	...defaultRaidBuffMajorDamageCooldowns(),
 	arcaneBrilliance: true,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	divineSpirit: TristateEffect.TristateEffectImproved,
+	giftOfTheWild: true,
+	powerWordFortitude: true,
+	divineSpirit: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
@@ -40,19 +41,19 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
+	blessingOfWisdom: true,
 	shadowPriestDps: 0,
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	misery: false,
 	shadowWeaving: false,
-	faerieFire: TristateEffect.TristateEffectImproved,
+	faerieFire: true,
 	shadowEmbrace: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
-	exposeArmor: TristateEffect.TristateEffectImproved,
+	curseOfElements: true,
+	exposeArmor: true,
 	...defaultImprovedShadowBoltSettings(),
 });
 

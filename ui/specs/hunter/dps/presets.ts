@@ -1,5 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
-import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Class, ConsumesSpec, Drums, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	Hunter_Options as HunterOptions,
 	Hunter_Rotation,
@@ -45,42 +46,42 @@ export const DefaultOptions = HunterOptions.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
+	blessingOfMight: true,
+	blessingOfWisdom: true,
 	unleashedRage: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
-	battleShout: TristateEffect.TristateEffectImproved,
+	battleShout: true,
 	braidedEterniumChain: true,
 	ferociousInspiration: 1,
-	graceOfAirTotem: TristateEffect.TristateEffectImproved,
-	leaderOfThePack: TristateEffect.TristateEffectImproved,
-	strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
+	graceOfAirTotem: true,
+	leaderOfThePack: true,
+	strengthOfEarthTotem: true,
 	totemTwisting: true,
-	windfuryTotem: TristateEffect.TristateEffectImproved,
+	windfuryTotem: true,
 	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
 	...defaultRaidBuffMajorDamageCooldowns(Class.ClassWarrior),
 	arcaneBrilliance: true,
-	divineSpirit: TristateEffect.TristateEffectImproved,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
+	divineSpirit: true,
+	giftOfTheWild: true,
+	powerWordFortitude: true,
 	shadowProtection: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	bloodFrenzy: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
+	curseOfElements: true,
 	curseOfRecklessness: true,
-	exposeArmor: TristateEffect.TristateEffectImproved,
+	exposeArmor: true,
 	...defaultExposeWeaknessSettings(),
-	faerieFire: TristateEffect.TristateEffectImproved,
+	faerieFire: true,
 	giftOfArthas: true,
-	huntersMark: TristateEffect.TristateEffectImproved,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	huntersMark: true,
+	improvedSealOfTheCrusader: true,
 	insectSwarm: true,
 	judgementOfLight: true,
 	judgementOfWisdom: true,

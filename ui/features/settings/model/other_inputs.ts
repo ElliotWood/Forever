@@ -1,4 +1,4 @@
-import { TristateEffect, UnitReference } from '@generated/proto/common';
+import { UnitReference } from '@generated/proto/common';
 import i18n from '@i18n/config';
 import { Player } from '@sim/player/player';
 import { emptyUnitReference } from '@sim/proto/utils';
@@ -277,7 +277,7 @@ export const TotemTwisting = {
 	storeField: 'raid:partyBuffs' as const,
 	enableWhen: (player: Player<any>) => {
 		const buffs = player.getParty()!.getBuffs();
-		return buffs.windfuryTotem != TristateEffect.TristateEffectMissing && buffs.graceOfAirTotem != TristateEffect.TristateEffectMissing;
+		return buffs.windfuryTotem && buffs.graceOfAirTotem;
 	},
 	getValue: (player: Player<any>) => player.getParty()!.getBuffs().totemTwisting,
 	setValue: (player: Player<any>, newValue: boolean) => {

@@ -1,5 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { ConsumesSpec, Drums, Profession, Race, Spec, TristateEffect } from '@generated/proto/common';
 import { PaladinAura, RetributionPaladin_Options as RetributionPaladinOptions, RetributionPaladin_Rotation as PaladinRotation } from '@generated/proto/paladin';
 import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
@@ -34,45 +35,45 @@ export const DefaultConsumables = ConsumesSpec.create({
 
 export const DefaultRaidBuffs = RaidBuffs.create({
 	bloodlust: true,
-	divineSpirit: TristateEffect.TristateEffectImproved,
+	divineSpirit: true,
 	arcaneBrilliance: true,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
+	giftOfTheWild: true,
+	powerWordFortitude: true,
 	shadowProtection: true,
-	thorns: TristateEffect.TristateEffectImproved,
+	thorns: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	manaSpringTotem: TristateEffect.TristateEffectRegular,
-	leaderOfThePack: TristateEffect.TristateEffectImproved,
-	battleShout: TristateEffect.TristateEffectImproved,
-	strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
+	leaderOfThePack: true,
+	battleShout: true,
+	strengthOfEarthTotem: true,
 	totemTwisting: true,
-	windfuryTotem: TristateEffect.TristateEffectImproved,
-	graceOfAirTotem: TristateEffect.TristateEffectImproved,
+	windfuryTotem: true,
+	graceOfAirTotem: true,
 	drums: Drums.LesserDrumsOfBattle,
 	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
+	blessingOfWisdom: true,
+	blessingOfMight: true,
 	unleashedRage: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	misery: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	curseOfElements: true,
+	improvedSealOfTheCrusader: true,
 	jocRetribution2Pt4: true,
 	judgementOfWisdom: true,
 	bloodFrenzy: true,
-	huntersMark: TristateEffect.TristateEffectImproved,
+	huntersMark: true,
 	curseOfRecklessness: true,
 	sunderArmor: true,
-	faerieFire: TristateEffect.TristateEffectImproved,
-	exposeArmor: TristateEffect.TristateEffectImproved,
+	faerieFire: true,
+	exposeArmor: true,
 	...defaultExposeWeaknessSettings(),
 });
 
