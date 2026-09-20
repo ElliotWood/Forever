@@ -6,6 +6,12 @@ package database
 
 const tmplStrBuffRows = `
 {{- range .Rows}}
+{{- if .OwnerAuraVar}}
+
+// The label a pet looks for on its owner, and the label the buff's own aura
+// carries.
+var {{.OwnerAuraVar}} = {{.OwnerAura}}
+{{- end}}
 
 {{if .Supported}}
 {{if .HasWowhead}}// {{.Label}} - https://www.wowhead.com/forever/spell={{.SpellID}}{{end}}

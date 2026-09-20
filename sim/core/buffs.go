@@ -332,13 +332,6 @@ func WrathOfAirTotemAura(char *Character, improved bool) *Aura {
 //	Item Buffs
 ////////////////////////////
 
-const (
-	BraidedEterniumChainAuraLabel  = "Braided Eternium Chain"
-	ChainOfTheTwilightOwlAuraLabel = "Chain of the Twilight Owl"
-	EyeOfTheNightAuraLabel         = "Eye of the Night"
-	JadePendantOfBlastingAuraLabel = "Jade Pendant of Blasting"
-)
-
 func BraidedEterniumChainAura(char *Character) *Aura {
 	return makeStatBuff(char, BuffConfig{
 		Label:             BraidedEterniumChainAuraLabel,

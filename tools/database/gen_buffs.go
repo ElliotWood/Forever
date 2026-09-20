@@ -371,6 +371,11 @@ func (res *buffResolver) resolve(spec buffmanifest.BuffSpec) (ResolvedBuff, erro
 	if spec.Pet == buffmanifest.PetInheritOwnerAura && spec.Label == "" && spec.Name == "" && spec.Category == "" {
 		return row, fmt.Errorf("states %s but names no aura for the pet to find on its owner", spec.Pet)
 	}
+	// A pet policy is about what its owner's buffs reach it, which a debuff is
+	// not, and applyGeneratedPetBuffs never sees the debuff message.
+	if spec.Scope == buffmanifest.ScopeDebuff && spec.Pet != buffmanifest.PetNormal {
+		return row, fmt.Errorf("states %s, which only a buff row can", spec.Pet)
+	}
 
 	switch spec.Kind {
 	case buffmanifest.KindAbsent:
@@ -1077,10 +1082,13 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 		// The client states mana per 5 seconds directly on this aura.
 		return flat(stats.MP5, e.Value)
 	case dbc.A_PERIODIC_ENERGIZE:
+		// The client's amount is already whole; what the conversion to mana per
+		// five seconds produces is not, and truncating it would lose part of a
+		// tick the aura really restores.
 		if e.PeriodMs <= 0 {
 			return nil, false
 		}
-		return flat(stats.MP5, math.Trunc(e.Value*5000/float64(e.PeriodMs)))
+		return flat(stats.MP5, e.Value*5000/float64(e.PeriodMs))
 	case dbc.A_MOD_SPELL_CRIT_CHANCE:
 		return flat(stats.SpellCritPercent, e.Value)
 	case dbc.A_MOD_HIT_CHANCE:
@@ -1150,6 +1158,9 @@ func resistanceCategoryOf(stat stats.Stat) string {
 // the sim counts as spell damage.
 const everySpellSchoolMask int32 = 126
 
+// The spell schools plus physical, which is everything a unit can deal.
+const everySchoolMask int32 = 127
+
 var resistanceBits = map[int32]stats.Stat{
 	1:  stats.Armor,
 	4:  stats.FireResistance,
@@ -1164,7 +1175,16 @@ func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
 	case dbc.A_MOD_THREAT:
 		return []PseudoMod{{Kind: "ThreatMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
 	case dbc.A_MOD_DAMAGE_PERCENT_DONE:
-		return []PseudoMod{{Kind: "DamageDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
+		// A mask of every school, physical included, raises everything the unit
+		// deals; anything narrower is per school, so a buff the client states
+		// for the magic schools does not raise a melee swing.
+		if e.Misc == everySchoolMask {
+			return []PseudoMod{{Kind: "DamageDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
+		}
+		return []PseudoMod{{
+			Kind: "SchoolDamageDealtMultiplier", Amount: 1 + e.Value/100,
+			Multiplicative: true, SchoolMask: e.Misc,
+		}}, true
 	case dbc.A_MOD_HEALING_DONE_PERCENT:
 		return []PseudoMod{{Kind: "HealingDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
 	case dbc.A_REDUCE_PUSHBACK:
@@ -1640,6 +1660,8 @@ type buffRow struct {
 	Cooldown      string
 	HasCooldown   bool
 	ExtraParams   string
+	OwnerAura     string
+	OwnerAuraVar  string
 	Constructor   string
 	ApplyIf       string
 	ApplyBody     string
@@ -1739,7 +1761,7 @@ func petBuffRows(resolved []ResolvedBuff) []petBuffRow {
 			StripLate: row.Pet == buffmanifest.PetStripWhenSummonedLate,
 		}
 		if out.Inherit {
-			out.OwnerAura = strconv.Quote(petOwnerAura(row))
+			out.OwnerAura = petOwnerAuraVar(row)
 		}
 		rows = append(rows, out)
 	}
@@ -1754,6 +1776,12 @@ func petOwnerAura(row ResolvedBuff) string {
 		return label
 	}
 	return row.Category
+}
+
+// The identifier the generated file gives that label, which the buff's own
+// hand-written constructor names as well.
+func petOwnerAuraVar(row ResolvedBuff) string {
+	return row.Go + "AuraLabel"
 }
 
 func buffProtoZero(protoType buffmanifest.BuffProtoType) string {
@@ -1786,6 +1814,10 @@ func renderRow(row ResolvedBuff) buffRow {
 		SpellID: row.SpellID, Kind: row.Kind.String(), Reason: row.Reason, Note: row.Note,
 		Supported: row.Supported, HasWowhead: row.SpellID != 0,
 	}
+	if row.Pet == buffmanifest.PetInheritOwnerAura {
+		out.OwnerAura, out.OwnerAuraVar = strconv.Quote(petOwnerAura(row)), petOwnerAuraVar(row)
+	}
+
 	// A row whose amounts are worth one item each takes the number of them, so
 	// that a party with three of the same staff gets three times the aura.
 	if row.Kind == buffmanifest.KindItemCount {

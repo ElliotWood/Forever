@@ -125,7 +125,7 @@ func LeaderOfThePackAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 var ManaSpringTotemCategory = "ManaSpringTotem"
 
 func ManaSpringTotemValue(talentPoints int32) float64 {
-	return []float64{25.0, 25.0, 27.0, 27.0, 30.0, 30.0}[talentPoints]
+	return []float64{25.0, 25.0, 27.5, 27.5, 30.0, 30.0}[talentPoints]
 }
 func ManaSpringTotemDuration(talentPoints int32) time.Duration {
 	return NeverExpires
@@ -147,7 +147,7 @@ func ManaSpringTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 var ManaTideTotemsCategory = "ManaTideTotem"
 
 func ManaTideTotemsValue(talentPoints int32) float64 {
-	return 483.0
+	return 483.3333333333333
 }
 func ManaTideTotemsDuration(talentPoints int32) time.Duration {
 	return 13000 * time.Millisecond
@@ -295,7 +295,15 @@ func AtieshWarlockAura(unit *Unit, isPlayer bool, talentPoints int32, count floa
 	})
 }
 
+// The label a pet looks for on its owner, and the label the buff's own aura
+// carries.
+var BraidedEterniumChainAuraLabel = "Braided Eternium Chain"
+
 // func BraidedEterniumChainAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // braided_eternium_chain, KindAbsent: spell 31025 has no SpellName row and the neck has no Item row.
+
+// The label a pet looks for on its owner, and the label the buff's own aura
+// carries.
+var ChainOfTheTwilightOwlAuraLabel = "Chain of the Twilight Owl"
 
 // func ChainOfTheTwilightOwlAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // chain_of_the_twilight_owl, KindAbsent: spell 31035 has no SpellName row and the neck has no Item row.
 
@@ -303,7 +311,15 @@ func AtieshWarlockAura(unit *Unit, isPlayer bool, talentPoints int32, count floa
 
 // func DraeneiRacialMeleeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // draenei_racial_melee, KindAbsent: spell 6562 has no SpellName row.
 
+// The label a pet looks for on its owner, and the label the buff's own aura
+// carries.
+var EyeOfTheNightAuraLabel = "Eye of the Night"
+
 // func EyeOfTheNightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // eye_of_the_night, KindAbsent: spell 31033 has no SpellName row and the neck has no Item row.
+
+// The label a pet looks for on its owner, and the label the buff's own aura
+// carries.
+var JadePendantOfBlastingAuraLabel = "Jade Pendant of Blasting"
 
 // func JadePendantOfBlastingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // jade_pendant_of_blasting, KindAbsent: spell 25607 has no SpellName row and the neck has no Item row.
 
@@ -836,7 +852,7 @@ func PowerInfusionsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		IsPlayer: isPlayer,
 		Pseudo: []PseudoConfig{
 			{PseudoStatHealingDealtMultiplier, PowerInfusionsValue(talentPoints), true, 0},
-			{PseudoStatDamageDealtMultiplier, 1.2, true, 0},
+			{PseudoStatSchoolDamageDealtMultiplier, 1.2, true, 126},
 		},
 	})
 }
@@ -970,10 +986,10 @@ func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyB
 	raid.Thorns = false
 	individual.Innervates = 0
 	individual.PowerInfusions = 0
-	party.BraidedEterniumChain = party.BraidedEterniumChain || pet.Owner.HasAura("Braided Eternium Chain")
-	party.ChainOfTheTwilightOwl = party.ChainOfTheTwilightOwl || pet.Owner.HasAura("Chain of the Twilight Owl")
-	party.EyeOfTheNight = party.EyeOfTheNight || pet.Owner.HasAura("Eye of the Night")
-	party.JadePendantOfBlasting = party.JadePendantOfBlasting || pet.Owner.HasAura("Jade Pendant of Blasting")
+	party.BraidedEterniumChain = party.BraidedEterniumChain || pet.Owner.HasAura(BraidedEterniumChainAuraLabel)
+	party.ChainOfTheTwilightOwl = party.ChainOfTheTwilightOwl || pet.Owner.HasAura(ChainOfTheTwilightOwlAuraLabel)
+	party.EyeOfTheNight = party.EyeOfTheNight || pet.Owner.HasAura(EyeOfTheNightAuraLabel)
+	party.JadePendantOfBlasting = party.JadePendantOfBlasting || pet.Owner.HasAura(JadePendantOfBlastingAuraLabel)
 
 	if !pet.enabledOnStart {
 		individual.ShadowPriestDps = 0

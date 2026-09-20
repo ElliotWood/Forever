@@ -109,6 +109,19 @@ func syntheticBuffRows() []ResolvedBuff {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
+				Field: "power_infusions", Scope: buffmanifest.ScopeIndividual,
+				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindExternalCD,
+				Go: "SynthPowerInfusions", Name: "Power Infusion", Label: "Power Infusions",
+				Category: "PowerInfusion",
+			},
+			SpellID: 10060, DurationMs: 15000, CooldownMs: 180000, Supported: true,
+			Pseudo: []PseudoMod{
+				{Kind: "SchoolDamageDealtMultiplier", Amount: 1.2, Multiplicative: true, SchoolMask: 126},
+				{Kind: "HealingDealtMultiplier", Amount: 1.2, Multiplicative: true},
+			},
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
 				Field: "braided_eternium_chain", Scope: buffmanifest.ScopeParty,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindAbsent,
 				Go: "SynthBraidedEterniumChain", Category: "Braided Eternium Chain",
@@ -304,7 +317,11 @@ func TestRenderedBuffFilesCompile(t *testing.T) {
 		"\tMakePermanent(SynthSunderArmorAura(target, false, 0))\n}\n\n"+
 		"func driveSynthAtieshMage(char *Character, party *proto.PartyBuffs) {\n"+
 		"\tMakePermanent(SynthAtieshMageAura(&char.Unit, false, 0,"+
-		" float64(party.AtieshMage)))\n}\n"), 0644); err != nil {
+		" float64(party.AtieshMage)))\n}\n\n"+
+		"func driveSynthPowerInfusions(char *Character, individual *proto.IndividualBuffs) {\n"+
+		"\tnewGeneratedExternalCD(char, SynthPowerInfusionsAura(&char.Unit, false, 0),"+
+		" GeneratedExternalCD{NumSources: individual.PowerInfusions,"+
+		" Cooldown: SynthPowerInfusionsCooldown(), Type: CooldownTypeDPS})\n}\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
 	overlay[filepath.Join(root, "sim", "core", "zz_synthetic_drivers.go")] = drivers

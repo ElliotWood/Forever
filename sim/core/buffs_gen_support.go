@@ -19,6 +19,7 @@ const (
 	PseudoStatDamageDealtMultiplier
 	PseudoStatHealingDealtMultiplier
 	PseudoStatDamageTakenMultiplier
+	PseudoStatSchoolDamageDealtMultiplier
 	PseudoStatSchoolDamageTakenMultiplier
 	PseudoStatMeleeSpeedMultiplier
 	PseudoStatPushbackChance
@@ -38,6 +39,8 @@ func (kind PseudoStatKind) Name() string {
 		return "HealingDealtMultiplier"
 	case PseudoStatDamageTakenMultiplier:
 		return "DamageTakenMultiplier"
+	case PseudoStatSchoolDamageDealtMultiplier:
+		return "SchoolDamageDealtMultiplier"
 	case PseudoStatSchoolDamageTakenMultiplier:
 		return "SchoolDamageTakenMultiplier"
 	case PseudoStatMeleeSpeedMultiplier:
@@ -514,6 +517,12 @@ func generatedPseudoStatFields(unit *Unit, config PseudoConfig) []*float64 {
 		return []*float64{&unit.PseudoStats.BonusAttackPower}
 	case PseudoStatBonusRangedAttackPower:
 		return []*float64{&unit.PseudoStats.BonusRangedAttackPower}
+	case PseudoStatSchoolDamageDealtMultiplier:
+		var fields []*float64
+		for _, school := range generatedSchoolIndexes(config.SchoolMask) {
+			fields = append(fields, &unit.PseudoStats.SchoolDamageDealtMultiplier[school])
+		}
+		return fields
 	case PseudoStatSchoolDamageTakenMultiplier:
 		var fields []*float64
 		for _, school := range generatedSchoolIndexes(config.SchoolMask) {

@@ -153,12 +153,13 @@ var pinnedStatAmounts = map[string]map[string]float64{
 }
 
 // Mana Spring is the only buff an improving talent still prices, so it is the
-// only place the curve can be checked against the client until the rest of the
-// manifest stops rendering as shells. Restorative Totems modifies the aura's own
-// number - 10 mana per 2 seconds - by 5% a point, and the client states that
-// number as a whole one, so ranks 1 and 2 both come out at 10 per tick.
+// only place the curve can be checked against the client. Restorative Totems
+// modifies the aura's own number - 10 mana per 2 seconds - by 5% a point, and
+// the client states that number as a whole one, so ranks 1 and 2 both come out
+// at 10 per tick; the conversion to mana per 5 seconds keeps the half the 11 of
+// ranks 3 and 4 is worth.
 var pinnedTalentCurves = map[string][]float64{
-	"mana_spring_totem": {25, 25, 27, 27, 30, 30},
+	"mana_spring_totem": {25, 25, 27.5, 27.5, 30, 30},
 }
 
 // What a resistance row competes under, as (stats, own aura). A source that has

@@ -206,12 +206,13 @@ func driveGraceOfAirTotem(char *Character, party *proto.PartyBuffs) {
 		return
 	}
 
+	// The first cast lands a totem cycle into the fight, because the shaman
+	// spends the opening one on the totem being twisted with.
 	aura.Duration = time.Second * 9
 	aura.ApplyOnReset(func(aura *Aura, sim *Simulation) {
 		StartPeriodicAction(sim, PeriodicActionOptions{
-			Period:          time.Second * 10,
-			TickImmediately: true,
-			Priority:        ActionPriorityAuto,
+			Period:   time.Second * 10,
+			Priority: ActionPriorityAuto,
 			OnAction: func(sim *Simulation) {
 				aura.Activate(sim)
 			},
@@ -262,11 +263,12 @@ func driveJudgementOfWisdom(target *Unit, _ *proto.Debuffs, _ *proto.Raid) {
 	actionID := ActionID{SpellID: 20355}
 
 	MakePermanent(JudgementOfWisdomAura(target, false, 0)).AttachProcTrigger(ProcTrigger{
-		Name:       "Judgement of Wisdom",
-		ActionID:   actionID,
-		ProcChance: 0.5,
-		ProcMask:   ProcMaskDirect,
-		Callback:   CallbackOnSpellHitTaken,
+		Name:            "Judgement of Wisdom",
+		ActionID:        actionID,
+		MetricsActionID: actionID,
+		ProcChance:      0.5,
+		ProcMask:        ProcMaskDirect,
+		Callback:        CallbackOnSpellHitTaken,
 		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
 			if !spell.ProcMask.Matches(ProcMaskMeleeOrRanged) && !result.Landed() {
 				return

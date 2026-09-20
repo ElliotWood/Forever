@@ -142,6 +142,36 @@ func SynthInnervatesAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
+// Power Infusions - https://www.wowhead.com/forever/spell=10060
+var SynthPowerInfusionsCategory = "PowerInfusion"
+
+func SynthPowerInfusionsValue(talentPoints int32) float64 {
+	return 1.2
+}
+func SynthPowerInfusionsDuration(talentPoints int32) time.Duration {
+	return 15000 * time.Millisecond
+}
+func SynthPowerInfusionsCooldown() time.Duration {
+	return 180000 * time.Millisecond
+}
+func SynthPowerInfusionsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Power Infusions (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10060}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: SynthPowerInfusionsDuration(talentPoints),
+		Category: SynthPowerInfusionsCategory,
+		IsPlayer: isPlayer,
+		Pseudo: []PseudoConfig{
+			{PseudoStatSchoolDamageDealtMultiplier, SynthPowerInfusionsValue(talentPoints), true, 126},
+			{PseudoStatHealingDealtMultiplier, 1.2, true, 0},
+		},
+	})
+}
+
+// The label a pet looks for on its owner, and the label the buff's own aura
+// carries.
+var SynthBraidedEterniumChainAuraLabel = "Braided Eternium Chain"
+
 // func SynthBraidedEterniumChainAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // braided_eternium_chain, KindAbsent: the neck has no Item row
 
 // Atiesh - Mage - https://www.wowhead.com/forever/spell=28142
@@ -201,6 +231,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if individual.Innervates > 0 {
 		driveSynthInnervates(char, individual)
 	}
+	if individual.PowerInfusions > 0 {
+		driveSynthPowerInfusions(char, individual)
+	}
 	if party.AtieshMage > 0 {
 		driveSynthAtieshMage(char, party)
 	}
@@ -219,7 +252,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 // it now grants anyway, so nothing is emitted for it.
 func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
 	raid.Thorns = false
-	party.BraidedEterniumChain = party.BraidedEterniumChain || pet.Owner.HasAura("Braided Eternium Chain")
+	party.BraidedEterniumChain = party.BraidedEterniumChain || pet.Owner.HasAura(SynthBraidedEterniumChainAuraLabel)
 
 	if !pet.enabledOnStart {
 		individual.BlessingOfKings = false

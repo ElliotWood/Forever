@@ -435,6 +435,37 @@ func TestGeneratedGraceOfAirFollowsTotemTwisting(t *testing.T) {
 	if twisted.Duration != time.Second*9 {
 		t.Errorf("the twisted totem's aura lasts %v, want 9 seconds of every 10", twisted.Duration)
 	}
+
+	// The schedule itself: the first cast lands one totem cycle in, not at the
+	// pull, so the aura is down for the opening 10 seconds.
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{},
+		&proto.PartyBuffs{GraceOfAirTotem: true, TotemTwisting: true}, &proto.IndividualBuffs{})
+	scheduled := sim.Raid.Parties[0].Players[0].GetCharacter().GetAura("Grace of Air Totem (External)")
+	if scheduled == nil {
+		t.Fatal("the twisting shaman's totem registered no aura")
+	}
+	if scheduled.IsActive() {
+		t.Error("the twisted totem is up at the pull, want the first cast one cycle in")
+	}
+
+	for sim.CurrentTime < time.Second*10 && !scheduled.IsActive() {
+		sim.Step()
+	}
+	if !scheduled.IsActive() {
+		t.Errorf("the twisted totem is still down at %v, want it up after the first 10 second tick",
+			sim.CurrentTime)
+	}
+	if sim.CurrentTime != time.Second*10 {
+		t.Errorf("the first cast landed at %v, want 10 seconds in", sim.CurrentTime)
+	}
+
+	standingSim := setupFakeSimWithBuffs(&proto.RaidBuffs{},
+		&proto.PartyBuffs{GraceOfAirTotem: true}, &proto.IndividualBuffs{})
+	permanent := standingSim.Raid.Parties[0].Players[0].GetCharacter().GetAura("Grace of Air Totem (External)")
+	if !permanent.IsActive() || permanent.Duration != NeverExpires {
+		t.Errorf("without twisting the totem is active %v for %v, want it up from the pull for the fight",
+			permanent.IsActive(), permanent.Duration)
+	}
 }
 
 // Each staff in the party is worth its own copy of the aura's amounts: 11 MP5
@@ -678,7 +709,8 @@ func TestGeneratedInnervatesTakeTurnsBetweenTheirSources(t *testing.T) {
 }
 
 // Power Infusion is +20% damage and healing done while it is up, and nothing
-// once it has expired.
+// once it has expired. The damage half is the six schools the client's mask
+// names, which does not include physical.
 func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
 	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{}, &proto.IndividualBuffs{PowerInfusions: 1})
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
@@ -692,17 +724,32 @@ func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
 			aura.Duration, PowerInfusionsCooldown())
 	}
 
-	damage, healing := char.PseudoStats.DamageDealtMultiplier, char.PseudoStats.HealingDealtMultiplier
+	healing := char.PseudoStats.HealingDealtMultiplier
+	physical := generatedSchoolIndexes(1)[0]
+	before := char.PseudoStats.SchoolDamageDealtMultiplier[physical]
+
 	aura.Activate(sim)
-	if got := char.PseudoStats.DamageDealtMultiplier; got != damage*1.2 {
-		t.Errorf("the infusion multiplies damage dealt by %v, want the client's 1.2", got/damage)
+	// Spell 10060 states mask 126, which is every school but physical, so a
+	// melee swing is not part of what the infusion raises.
+	for _, school := range generatedSchoolIndexes(126) {
+		if got := char.PseudoStats.SchoolDamageDealtMultiplier[school]; got != 1.2 {
+			t.Errorf("school %d deals %v times the damage, want the client's 1.2", school, got)
+		}
+	}
+	if got := char.PseudoStats.SchoolDamageDealtMultiplier[physical]; got != before {
+		t.Errorf("physical damage dealt is %v, want the mask to have left it at %v", got, before)
 	}
 	if got := char.PseudoStats.HealingDealtMultiplier; got != healing*1.2 {
 		t.Errorf("the infusion multiplies healing dealt by %v, want the client's 1.2", got/healing)
 	}
 
 	aura.Deactivate(sim)
-	if char.PseudoStats.DamageDealtMultiplier != damage || char.PseudoStats.HealingDealtMultiplier != healing {
+	for _, school := range generatedSchoolIndexes(126) {
+		if got := char.PseudoStats.SchoolDamageDealtMultiplier[school]; got != 1 {
+			t.Errorf("school %d still deals %v times the damage once the infusion expired", school, got)
+		}
+	}
+	if char.PseudoStats.HealingDealtMultiplier != healing {
 		t.Error("the infusion left part of itself behind when it expired")
 	}
 }
@@ -721,15 +768,15 @@ func TestGeneratedManaTideTotemRestoresTheClientsMana(t *testing.T) {
 		t.Errorf("the totem stands for %v on a %v cooldown, want the client's 13 seconds and 5 minutes",
 			aura.Duration, ManaTideTotemsCooldown())
 	}
-	if ManaTideTotemsValue(0) != 483 {
-		t.Errorf("the totem is worth %v MP5, want the 290 per 3 seconds the client states",
-			ManaTideTotemsValue(0))
+	if want := 290 * 5000.0 / 3000.0; ManaTideTotemsValue(0) != want {
+		t.Errorf("the totem is worth %v MP5, want the 290 per 3 seconds the client states as %v",
+			ManaTideTotemsValue(0), want)
 	}
 
 	before := char.stats[stats.MP5]
 	aura.Activate(sim)
-	if got := char.stats[stats.MP5] - before; got != 483 {
-		t.Errorf("the totem applied %v MP5, want 483", got)
+	if got := char.stats[stats.MP5] - before; got != ManaTideTotemsValue(0) {
+		t.Errorf("the totem applied %v MP5, want %v", got, ManaTideTotemsValue(0))
 	}
 }
 

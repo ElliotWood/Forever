@@ -256,6 +256,47 @@ func TestGeneratedBuffPseudoStatsCoverEveryField(t *testing.T) {
 	}
 }
 
+// A buff the client states for a mask of schools raises what the unit deals in
+// those schools only; mask 126 is every school but physical, so a melee swing
+// is untouched while the six magic schools are multiplied.
+func TestGeneratedBuffRaisesTheSchoolsItsMaskNames(t *testing.T) {
+	sim := &Simulation{}
+	unit := newExclusiveTestTarget()
+	unit.PseudoStats = stats.NewPseudoStats()
+
+	aura := MakePermanent(newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Generated Power Infusion",
+		ActionID: ActionID{SpellID: 10060},
+		Duration: NeverExpires,
+		Pseudo: []PseudoConfig{{
+			Kind: PseudoStatSchoolDamageDealtMultiplier, Amount: 1.2,
+			IsMultiplicative: true, SchoolMask: 126,
+		}},
+	}))
+
+	aura.Activate(sim)
+
+	for _, school := range generatedSchoolIndexes(126) {
+		if got := unit.PseudoStats.SchoolDamageDealtMultiplier[school]; got != 1.2 {
+			t.Errorf("school %d deals %v times the damage, want 1.2", school, got)
+		}
+	}
+	physical := generatedSchoolIndexes(1)[0]
+	if got := unit.PseudoStats.SchoolDamageDealtMultiplier[physical]; got != 1 {
+		t.Errorf("physical damage dealt is %v, want the mask to have left it alone", got)
+	}
+	if got := unit.PseudoStats.DamageDealtMultiplier; got != 1 {
+		t.Errorf("the all-school multiplier is %v, want a masked buff to stay out of it", got)
+	}
+
+	aura.Deactivate(sim)
+	for _, school := range generatedSchoolIndexes(127) {
+		if got := unit.PseudoStats.SchoolDamageDealtMultiplier[school]; got != 1 {
+			t.Errorf("school %d still deals %v times the damage once the buff is gone", school, got)
+		}
+	}
+}
+
 // Every member of the attack-speed category bids how far from 1 its multiplier
 // is, so that the strongest slow on the target is the one that applies whatever
 // form its source states it in. The generated one changes the melee speed
