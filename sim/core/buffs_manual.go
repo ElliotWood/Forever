@@ -171,6 +171,23 @@ func driveWindfuryTotem(char *Character, _ *proto.PartyBuffs) {
 	})
 }
 
+// The staff's aura is worth its amounts once per Atiesh in the party.
+func driveAtieshDruid(char *Character, party *proto.PartyBuffs) {
+	MakePermanent(AtieshDruidAura(&char.Unit, false, 0, float64(party.AtieshDruid)))
+}
+
+func driveAtieshMage(char *Character, party *proto.PartyBuffs) {
+	MakePermanent(AtieshMageAura(&char.Unit, false, 0, float64(party.AtieshMage)))
+}
+
+func driveAtieshPriest(char *Character, party *proto.PartyBuffs) {
+	MakePermanent(AtieshPriestAura(&char.Unit, false, 0, float64(party.AtieshPriest)))
+}
+
+func driveAtieshWarlock(char *Character, party *proto.PartyBuffs) {
+	MakePermanent(AtieshWarlockAura(&char.Unit, false, 0, float64(party.AtieshWarlock)))
+}
+
 // The judgement the paladin leaves on the target heals whoever strikes it; the
 // client's trigger spell 5373 is a dummy, so how much and how often is the
 // driver's.

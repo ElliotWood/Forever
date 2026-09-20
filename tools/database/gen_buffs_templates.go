@@ -28,12 +28,12 @@ func {{.Go}}Cooldown() time.Duration {
 	return {{.Cooldown}}
 }
 {{- end}}
-func {{.Go}}Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+func {{.Go}}Aura(unit *Unit, isPlayer bool, talentPoints int32{{.ExtraParams}}) *Aura {
 	{{.Constructor}}
 }
 {{- else}}
 {{if .HasWowhead}}// {{.Label}} - https://www.wowhead.com/forever/spell={{.SpellID}}
-{{end}}// func {{.Go}}Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // {{.Field}}, {{.Kind}}: {{.Reason}}
+{{end}}// func {{.Go}}Aura(unit *Unit, isPlayer bool, talentPoints int32{{.ExtraParams}}) *Aura // {{.Field}}, {{.Kind}}: {{.Reason}}
 {{- end}}
 {{- end}}
 `

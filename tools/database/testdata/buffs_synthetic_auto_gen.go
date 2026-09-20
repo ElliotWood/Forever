@@ -142,6 +142,25 @@ func SynthInnervatesAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
+// Atiesh - Mage - https://www.wowhead.com/forever/spell=28142
+func SynthAtieshMageValue(talentPoints int32) float64 {
+	return 2.0
+}
+func SynthAtieshMageDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func SynthAtieshMageAura(unit *Unit, isPlayer bool, talentPoints int32, count float64) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Atiesh - Mage (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 28142}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: SynthAtieshMageDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.SpellCritPercent, SynthAtieshMageValue(talentPoints) * count, false},
+		},
+	})
+}
+
 // Thorns - https://www.wowhead.com/forever/spell=9910
 var SynthThornsCategory = "Thorns"
 
@@ -179,6 +198,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if individual.Innervates > 0 {
 		driveSynthInnervates(char, individual)
+	}
+	if party.AtieshMage > 0 {
+		driveSynthAtieshMage(char, party)
 	}
 	if raid.Thorns {
 		MakePermanent(SynthThornsAura(&char.Unit, false, 0))

@@ -141,22 +141,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 	}
 
 	// Party Buffs
-	if partyBuffs.AtieshDruid > 0 {
-		MakePermanent(AtieshAura(char, proto.Class_ClassDruid, float64(partyBuffs.AtieshDruid)))
-	}
-
-	if partyBuffs.AtieshMage > 0 {
-		MakePermanent(AtieshAura(char, proto.Class_ClassMage, float64(partyBuffs.AtieshMage)))
-	}
-
-	if partyBuffs.AtieshPriest > 0 {
-		MakePermanent(AtieshAura(char, proto.Class_ClassPriest, float64(partyBuffs.AtieshPriest)))
-	}
-
-	if partyBuffs.AtieshWarlock > 0 {
-		MakePermanent(AtieshAura(char, proto.Class_ClassWarlock, float64(partyBuffs.AtieshWarlock)))
-	}
-
 	if partyBuffs.BraidedEterniumChain {
 		MakePermanent(BraidedEterniumChainAura(char))
 	}
@@ -393,45 +377,6 @@ func WrathOfAirTotemAura(char *Character, improved bool) *Aura {
 ////////////////////////////
 //	Item Buffs
 ////////////////////////////
-
-func AtieshAura(char *Character, class proto.Class, numStaves float64) *Aura {
-	switch class {
-	case proto.Class_ClassDruid:
-		return makeStatBuff(char, BuffConfig{
-			Label:    "Power of the Guardian - Druid",
-			ActionID: ActionID{SpellID: 28145},
-			Stats: []StatConfig{
-				{stats.MP5, 11 * numStaves, false},
-			},
-		})
-	case proto.Class_ClassMage:
-		return makeStatBuff(char, BuffConfig{
-			Label:    "Power of the Guardian - Mage",
-			ActionID: ActionID{SpellID: 28142},
-			Stats: []StatConfig{
-				{stats.SpellCritRating, 28 * numStaves, false},
-			},
-		})
-	case proto.Class_ClassPriest:
-		return makeStatBuff(char, BuffConfig{
-			Label:    "Power of the Guardian - Priest",
-			ActionID: ActionID{SpellID: 28144},
-			Stats: []StatConfig{
-				{stats.HealingPower, 62 * numStaves, false},
-			},
-		})
-	default: // Use warlock as default to satisfy compiler
-		return makeStatBuff(char, BuffConfig{
-			Label:    "Power of the Guardian - Warlock",
-			ActionID: ActionID{SpellID: 28143},
-			Stats: []StatConfig{
-				{stats.SpellDamage, 33 * numStaves, false},
-				{stats.HealingPower, 33 * numStaves, false},
-			},
-		})
-	}
-
-}
 
 const (
 	BraidedEterniumChainAuraLabel  = "Braided Eternium Chain"

@@ -108,6 +108,15 @@ func syntheticBuffRows() []ResolvedBuff {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
+				Field: "atiesh_mage", Scope: buffmanifest.ScopeParty,
+				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindItemCount,
+				Go: "SynthAtieshMage", Anchor: 28142, Label: "Atiesh - Mage",
+			},
+			SpellID: 28142, Supported: true,
+			Stats: []StatAmount{{Stat: stats.SpellCritPercent, Amount: 2}},
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
 				Field: "thorns", Scope: buffmanifest.ScopeRaid,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDamageShield,
 				Go: "SynthThorns", Name: "Thorns", Category: "Thorns",
@@ -281,7 +290,10 @@ func TestRenderedBuffFilesCompile(t *testing.T) {
 		"\tApplyFixedShoutAura(char, SynthBattleShoutAura(&char.Unit, false, 0),"+
 		" SynthBattleShoutCategory)\n}\n\n"+
 		"func driveSynthSunderArmor(target *Unit, _ *proto.Debuffs, _ *proto.Raid) {\n"+
-		"\tMakePermanent(SynthSunderArmorAura(target, false, 0))\n}\n"), 0644); err != nil {
+		"\tMakePermanent(SynthSunderArmorAura(target, false, 0))\n}\n\n"+
+		"func driveSynthAtieshMage(char *Character, party *proto.PartyBuffs) {\n"+
+		"\tMakePermanent(SynthAtieshMageAura(&char.Unit, false, 0,"+
+		" float64(party.AtieshMage)))\n}\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
 	overlay[filepath.Join(root, "sim", "core", "zz_synthetic_drivers.go")] = drivers

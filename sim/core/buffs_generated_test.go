@@ -317,6 +317,33 @@ func measureGeneratedBuffStats(char *Character) {
 	char.stats = char.SortAndApplyStatDependencies(char.stats).FloorGameStats()
 }
 
+// Each staff in the party is worth its own copy of the aura's amounts: 11 MP5
+// per druid staff, 2 spell crit per mage one, 62 healing per priest one and
+// 33 spell damage plus 33 healing per warlock one.
+func TestGeneratedAtieshStavesCountTheStaves(t *testing.T) {
+	char := newGeneratedBuffTestCharacter()
+
+	applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
+		&proto.PartyBuffs{AtieshDruid: 1, AtieshMage: 3, AtieshPriest: 2, AtieshWarlock: 1},
+		&proto.IndividualBuffs{})
+	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+	for stat, want := range map[stats.Stat]float64{
+		stats.MP5:              11,
+		stats.SpellCritPercent: 6,
+		stats.HealingPower:     62*2 + 33,
+		stats.SpellDamage:      33,
+	} {
+		if got := char.stats[stat]; got != want {
+			t.Errorf("the party's staves applied %v %s, want %v", got, stat.StatName(), want)
+		}
+	}
+
+	if char.GetAura("Atiesh - Mage (External)") == nil {
+		t.Fatalf("the unit has %v, want an aura for the mage's staff", auraLabels(char))
+	}
+}
+
 // The windfury proc grants the attack power the client states for the second
 // the aura lasts; the totem aura around it holds the category and the trigger.
 func TestGeneratedWindfuryTotemProcAppliesTheClientsAttackPower(t *testing.T) {

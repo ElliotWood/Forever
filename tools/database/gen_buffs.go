@@ -955,8 +955,23 @@ func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 			row.unsupported("no A_DAMAGE_SHIELD effect on spell %d", row.SpellID)
 			return
 		}
+	case buffmanifest.KindItemCount:
+		// The count multiplies every amount, which a multiplier cannot be read
+		// through: two of the same staff would raise a stat by twice its factor.
+		for _, stat := range row.Stats {
+			if stat.Multiplicative {
+				row.unsupported("%s is a multiplier, which a count of items cannot scale", stat.Stat.StatName())
+				return
+			}
+		}
+		for _, mod := range row.Pseudo {
+			if mod.Multiplicative {
+				row.unsupported("%s is a multiplier, which a count of items cannot scale", mod.Kind)
+				return
+			}
+		}
 	case buffmanifest.KindExternalCD, buffmanifest.KindProc, buffmanifest.KindManual,
-		buffmanifest.KindDebuffUptime, buffmanifest.KindItemCount:
+		buffmanifest.KindDebuffUptime:
 		// Driver kinds: the hand-written driver decides what the numbers mean.
 	default:
 		if len(row.Stats) == 0 && len(row.Pseudo) == 0 {
@@ -1618,6 +1633,7 @@ type buffRow struct {
 	Duration      string
 	Cooldown      string
 	HasCooldown   bool
+	ExtraParams   string
 	Constructor   string
 	ApplyIf       string
 	ApplyBody     string
@@ -1693,6 +1709,12 @@ func renderRow(row ResolvedBuff) buffRow {
 		SpellID: row.SpellID, Kind: row.Kind.String(), Reason: row.Reason, Note: row.Note,
 		Supported: row.Supported, HasWowhead: row.SpellID != 0,
 	}
+	// A row whose amounts are worth one item each takes the number of them, so
+	// that a party with three of the same staff gets three times the aura.
+	if row.Kind == buffmanifest.KindItemCount {
+		out.ExtraParams = ", count float64"
+	}
+
 	if !row.Supported {
 		if out.Reason == "" {
 			out.Reason = "no reason given"
@@ -1801,6 +1823,11 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	// The talent curve prices one amount, so the call to <Go>Value goes where
 	// that amount sits and every other amount is a literal.
 	value := row.Go + "Value(talentPoints)"
+	// Every amount of an item-count row is per item.
+	scale := ""
+	if rendered.ExtraParams != "" {
+		scale = " * count"
+	}
 
 	if len(row.Stats) > 0 {
 		b.WriteString("Stats: []StatConfig{\n")
@@ -1809,7 +1836,7 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 			if i == 0 && rendered.HasValue && !rendered.ValueOnPseudo {
 				amount = value
 			}
-			fmt.Fprintf(&b, "{stats.%s, %s, %t},\n", stat.Stat.StatName(), amount, stat.Multiplicative)
+			fmt.Fprintf(&b, "{stats.%s, %s%s, %t},\n", stat.Stat.StatName(), amount, scale, stat.Multiplicative)
 		}
 		b.WriteString("},\n")
 	}
@@ -1820,8 +1847,8 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 			if i == 0 && rendered.HasValue && rendered.ValueOnPseudo {
 				amount = value
 			}
-			fmt.Fprintf(&b, "{PseudoStat%s, %s, %t, %d},\n",
-				mod.Kind, amount, mod.Multiplicative, mod.SchoolMask)
+			fmt.Fprintf(&b, "{PseudoStat%s, %s%s, %t, %d},\n",
+				mod.Kind, amount, scale, mod.Multiplicative, mod.SchoolMask)
 		}
 		b.WriteString("},\n")
 	}

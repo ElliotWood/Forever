@@ -247,10 +247,43 @@ func ConcentrationAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 // func UnleashedRageAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // unleashed_rage, KindAbsent: spells 30802-30811 exist but have no SkillLineAbility row and no node in shaman tree 1082.
 
 // Atiesh - Mage - https://www.wowhead.com/forever/spell=28142
-// func AtieshMageAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // atiesh_mage, KindItemCount: hand-written apply block still present
+func AtieshMageValue(talentPoints int32) float64 {
+	return 2.0
+}
+func AtieshMageDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func AtieshMageAura(unit *Unit, isPlayer bool, talentPoints int32, count float64) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Atiesh - Mage (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 28142}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: AtieshMageDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.SpellCritPercent, AtieshMageValue(talentPoints) * count, false},
+		},
+	})
+}
 
 // Atiesh - Warlock - https://www.wowhead.com/forever/spell=28143
-// func AtieshWarlockAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // atiesh_warlock, KindItemCount: hand-written apply block still present
+func AtieshWarlockValue(talentPoints int32) float64 {
+	return 33.0
+}
+func AtieshWarlockDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func AtieshWarlockAura(unit *Unit, isPlayer bool, talentPoints int32, count float64) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Atiesh - Warlock (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 28143}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: AtieshWarlockDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.SpellDamage, AtieshWarlockValue(talentPoints) * count, false},
+			{stats.HealingPower, 33.0 * count, false},
+		},
+	})
+}
 
 // func BraidedEterniumChainAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // braided_eternium_chain, KindAbsent: spell 31025 has no SpellName row and the neck has no Item row.
 
@@ -471,10 +504,42 @@ func AspectOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Atiesh - Druid - https://www.wowhead.com/forever/spell=28145
-// func AtieshDruidAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // atiesh_druid, KindItemCount: hand-written apply block still present
+func AtieshDruidValue(talentPoints int32) float64 {
+	return 11.0
+}
+func AtieshDruidDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func AtieshDruidAura(unit *Unit, isPlayer bool, talentPoints int32, count float64) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Atiesh - Druid (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 28145}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: AtieshDruidDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.MP5, AtieshDruidValue(talentPoints) * count, false},
+		},
+	})
+}
 
 // Atiesh - Priest - https://www.wowhead.com/forever/spell=28144
-// func AtieshPriestAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // atiesh_priest, KindItemCount: hand-written apply block still present
+func AtieshPriestValue(talentPoints int32) float64 {
+	return 62.0
+}
+func AtieshPriestDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func AtieshPriestAura(unit *Unit, isPlayer bool, talentPoints int32, count float64) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Atiesh - Priest (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 28144}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: AtieshPriestDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.HealingPower, AtieshPriestValue(talentPoints) * count, false},
+		},
+	})
+}
 
 // func SnapshotImprovedWrathOfAirTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // snapshot_improved_wrath_of_air_totem, KindFlag: totem-twisting snapshot toggle with no spell source.
 
@@ -778,6 +843,12 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if party.ConcentrationAura {
 		MakePermanent(ConcentrationAuraAura(&char.Unit, false, 0))
 	}
+	if party.AtieshMage > 0 {
+		driveAtieshMage(char, party)
+	}
+	if party.AtieshWarlock > 0 {
+		driveAtieshWarlock(char, party)
+	}
 	if party.StrengthOfEarthTotem {
 		MakePermanent(StrengthOfEarthTotemAura(&char.Unit, false, 0))
 	}
@@ -804,6 +875,12 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if party.AspectOfTheWild {
 		MakePermanent(AspectOfTheWildAura(&char.Unit, false, 0))
+	}
+	if party.AtieshDruid > 0 {
+		driveAtieshDruid(char, party)
+	}
+	if party.AtieshPriest > 0 {
+		driveAtieshPriest(char, party)
 	}
 	if raid.ArcaneBrilliance {
 		MakePermanent(ArcaneBrillianceAura(&char.Unit, false, 0))
