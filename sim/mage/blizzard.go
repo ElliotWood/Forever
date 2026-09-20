@@ -4,7 +4,7 @@ package mage
 
 var blizzardRank = spellData.Blizzard.HighestRank()
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+// TODO: To be implemented.
 func (mage *Mage) registerBlizzardSpell() {
 	panic("To be implemented")
 

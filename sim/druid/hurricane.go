@@ -49,12 +49,12 @@ func (druid *Druid) registerHurricaneSpell() {
 	// })
 	//
 	// druid.Hurricane.RelatedDotSpell = druid.Unit.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 42230},
+	// 	ActionID:       core.ActionID{SpellID: hurricaneTick.SpellID},
 	// 	SpellSchool:    core.SpellSchoolNature,
 	// 	DefenseType:    core.DefenseTypeMagic,
 	// 	ProcMask:       core.ProcMaskSpellDamage,
 	// 	ClassSpellMask: DruidSpellHurricane,
-	// 	// 42230 is the tick the channel triggers, a proc rather than a cast.
+	// 	// The tick is its own client row that the channel triggers, a proc rather than a cast.
 	// 	Flags: core.SpellFlagProc,
 	//
 	// 	DamageMultiplier: 1,

@@ -14,8 +14,6 @@ func (paladin *Paladin) getConsecrationTimer() *core.Timer {
 
 var ConsecrationRankMap = spellData.Consecration
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
-//
 // Consecration
 // https://www.wowhead.com/forever/spell=26573
 //
