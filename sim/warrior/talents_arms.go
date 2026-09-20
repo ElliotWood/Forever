@@ -6,7 +6,6 @@ import (
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // TODO: Manual review needed -- this was modelled during the Forever port, not carried
@@ -19,39 +18,29 @@ func (warrior *Warrior) registerArmsTalents() {
 
 	// Tier 2
 	warrior.registerImprovedCharge()
-	// Iron Will not implemented
-	warrior.registerImprovedThunderClap()
+	warrior.registerImprovedTacticalMastery()
+	warrior.registerImprovedOverpower()
 
 	// Tier 3
-	warrior.registerImprovedOverpower()
 	warrior.registerAngerManagement()
 	warrior.registerDeepWounds()
 
 	// Tier 4
+	warrior.registerSpearingStrike()
 	warrior.registerTwoHandedWeaponSpecialization()
 	warrior.registerImpale()
 
 	// Tier 5
-	warrior.registerDeathWish()
+	warrior.registerBloodthrill()
+	warrior.registerSweepingStrikes()
+	warrior.registerWeaponmaster()
 
 	// Tier 6
-	warrior.registerImprovedIntercept()
-	// Improved Hamstring not implemented
+	warrior.registerImprovedSlam()
+	warrior.registerImprovedHamstring()
 
 	// Tier 7
 	warrior.registerMortalStrike()
-	// Second Wind not implemented
-
-	// Tier 8
-
-	// Tier 9
-
-	// Forever additions, not yet implemented.
-	warrior.registerImprovedTacticalMastery()
-	warrior.registerSpearingStrike()
-	warrior.registerBloodthrill()
-	warrior.registerWeaponmaster()
-	warrior.registerImprovedHamstring()
 }
 
 /*
@@ -94,29 +83,6 @@ func (warrior *Warrior) registerImprovedCharge() {
 	}
 
 	warrior.ChargeRageGain += 3.0 + float64(warrior.Talents.ImprovedCharge)
-}
-
-func (warrior *Warrior) registerImprovedThunderClap() {
-	if warrior.Talents.ImprovedThunderClap == 0 {
-		return
-	}
-
-	// Slowing effect implemented in core/debuffs.go
-
-	rageCostReduction := []int32{0, 1, 2, 4}[warrior.Talents.ImprovedThunderClap]
-	damageGain := []float64{0, 0.4, 0.7, 1.0}[warrior.Talents.ImprovedThunderClap]
-
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskThunderClap,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: damageGain,
-	})
-
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskThunderClap,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  -rageCostReduction,
-	})
 }
 
 func (warrior *Warrior) registerImprovedOverpower() {
@@ -248,72 +214,6 @@ func (warrior *Warrior) registerImpale() {
 	})
 }
 
-func (warrior *Warrior) registerDeathWish() {
-	if !warrior.Talents.DeathWish {
-		return
-	}
-
-	actionID := core.ActionID{SpellID: 12292}
-
-	deathWishAura := warrior.RegisterAura(core.Aura{
-		Label:    "Death Wish",
-		ActionID: actionID,
-		Duration: time.Second * 30,
-	}).
-		AttachMultiplicativePseudoStatBuff(
-			&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical], 1.2,
-		).
-		AttachMultiplicativePseudoStatBuff(
-			&warrior.PseudoStats.DamageTakenMultiplier, 1.05,
-		).
-		// Grants immunity to Fear effects.
-		AttachFearImmunity()
-
-	deathWishSpell := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		ClassSpellMask: SpellMaskDeathWish,
-		Flags:          core.SpellFlagCastWhileIncapacitated,
-
-		RageCost: core.RageCostOptions{
-			Cost: 10,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: time.Minute * 3,
-			},
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			deathWishAura.Activate(sim)
-			warrior.WaitUntil(sim, sim.CurrentTime+core.GCDDefault)
-		},
-
-		RelatedSelfBuff: deathWishAura,
-	})
-
-	warrior.AddMajorCooldown(core.MajorCooldown{
-		Spell: deathWishSpell,
-		Type:  core.CooldownTypeDPS,
-	})
-}
-
-func (warrior *Warrior) registerImprovedIntercept() {
-	if warrior.Talents.ImprovedIntercept == 0 {
-		return
-	}
-
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskIntercept,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: -time.Second * time.Duration(5*warrior.Talents.ImprovedIntercept),
-	})
-}
-
 var mortalStrikeRank = spellData.MortalStrike.HighestRank()
 var mortalStrikeBaseDamage, _ = mortalStrikeRank.Direct.Range()
 
@@ -361,52 +261,153 @@ func (warrior *Warrior) registerMortalStrike() {
 	})
 }
 
-// registerImprovedTacticalMastery implements Improved Tactical Mastery, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerImprovedTacticalMastery models nothing yet; spellData.ImprovedTacticalMastery carries the ranks.
 func (warrior *Warrior) registerImprovedTacticalMastery() {
 	if warrior.Talents.ImprovedTacticalMastery == 0 {
 		return
 	}
 }
 
-// registerSpearingStrike implements Spearing Strike, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerSpearingStrike models nothing yet; the client has no ladder for it, so the tooltip is the source.
 func (warrior *Warrior) registerSpearingStrike() {
 	if !warrior.Talents.SpearingStrike {
 		return
 	}
 }
 
-// registerBloodthrill implements Bloodthrill, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerBloodthrill models nothing yet; spellData.Bloodthrill carries the ranks.
 func (warrior *Warrior) registerBloodthrill() {
 	if warrior.Talents.Bloodthrill == 0 {
 		return
 	}
 }
 
-// registerWeaponmaster implements Weaponmaster, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerWeaponmaster models nothing yet; spellData.Weaponmaster carries the ranks.
 func (warrior *Warrior) registerWeaponmaster() {
 	if warrior.Talents.Weaponmaster == 0 {
 		return
 	}
 }
 
-// registerImprovedHamstring implements Improved Hamstring, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerImprovedHamstring models nothing yet; spellData.ImprovedHamstring carries the ranks.
 func (warrior *Warrior) registerImprovedHamstring() {
 	if warrior.Talents.ImprovedHamstring == 0 {
 		return
 	}
+}
+
+func (warrior *Warrior) registerImprovedSlam() {
+	if warrior.Talents.ImprovedSlam == 0 {
+		return
+	}
+
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskSlam,
+		Kind:      core.SpellMod_CastTime_Flat,
+		TimeValue: -time.Millisecond * time.Duration(500*warrior.Talents.ImprovedSlam),
+	})
+}
+
+func (warrior *Warrior) registerSweepingStrikes() {
+	if !warrior.Talents.SweepingStrikes {
+		return
+	}
+
+	actionID := core.ActionID{SpellID: 12723}
+
+	var copyDamage float64
+	hitSpell := warrior.RegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		ClassSpellMask: SpellMaskSweepingStrikesHit,
+		SpellSchool:    core.SpellSchoolPhysical,
+		ProcMask:       core.ProcMaskMeleeSpecial,
+		Flags:          core.SpellFlagIgnoreModifiers | core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, copyDamage, spell.OutcomeAlwaysHit)
+		},
+	})
+
+	warrior.SweepingStrikesNormalizedAttack = warrior.RegisterSpell(core.SpellConfig{
+		ActionID:       actionID.WithTag(1), // Real SpellID: 26654
+		ClassSpellMask: SpellMaskSweepingStrikesNormalizedHit,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			baseDamage := spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeAlwaysHit)
+		},
+	})
+
+	warrior.SweepingStrikesAura = warrior.MakeProcTriggerAura(core.ProcTrigger{
+		Name:               "Sweeping Strikes",
+		ActionID:           actionID,
+		MetricsActionID:    actionID,
+		Duration:           time.Second * 10,
+		Callback:           core.CallbackOnSpellHitDealt,
+		ProcMask:           core.ProcMaskMelee,
+		Outcome:            core.OutcomeLanded,
+		TriggerImmediately: true,
+
+		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if warrior.Env.ActiveTargetCount() < 2 || warrior.SweepingStrikesAura.GetStacks() == 0 || result.PostOutcomeDamage <= 0 || !spell.ProcMask.Matches(core.ProcMaskMelee) {
+				return
+			}
+
+			if spell.Matches(SpellMaskSweepingStrikesHit | SpellMaskSweepingStrikesNormalizedHit | SpellMaskThunderClap | SpellMaskWhirlwind | SpellMaskWhirlwindOh) {
+				return
+			}
+
+			nextTarget := warrior.Env.NextActiveTargetUnit(result.Target)
+			if spell.Matches(SpellMaskExecute) && sim.IsExecutePhase20() {
+				warrior.SweepingStrikesNormalizedAttack.Cast(sim, nextTarget)
+			} else {
+				copyDamage = result.Damage / result.ArmorAndResistanceMultiplier
+				hitSpell.Cast(sim, nextTarget)
+			}
+
+			warrior.SweepingStrikesAura.RemoveStack(sim)
+		},
+	})
+	warrior.SweepingStrikesAura.MaxStacks = 10
+
+	ssCD := warrior.RegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		ClassSpellMask: SpellMaskSweepingStrikes,
+		SpellSchool:    core.SpellSchoolPhysical,
+
+		RageCost: core.RageCostOptions{
+			Cost: 30,
+		},
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    warrior.NewTimer(),
+				Duration: time.Second * 30,
+			},
+		},
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return warrior.StanceMatches(BattleStance|BerserkerStance) || sim.ActiveTargetCount() > 1
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+			spell.RelatedSelfBuff.Activate(sim)
+			warrior.SweepingStrikesAura.SetStacks(sim, 10)
+		},
+
+		RelatedSelfBuff: warrior.SweepingStrikesAura,
+	})
+
+	warrior.AddMajorCooldown(core.MajorCooldown{
+		Spell: ssCD,
+		Type:  core.CooldownTypeDPS,
+	})
 }

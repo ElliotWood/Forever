@@ -12,45 +12,36 @@ import (
 // over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerProtectionTalents() {
 	// Tier 1
-	// Improved Bloodrage implemented in bloodrage.go
+	warrior.registerShieldSpecialization()
 	warrior.registerAnticipation()
 
 	// Tier 2
-	warrior.registerShieldSpecialization()
+	// Improved Bloodrage: bloodrage.go
 	warrior.registerToughness()
+	warrior.registerImprovedThunderClap()
 
 	// Tier 3
 	warrior.registerLastStand()
-	// Improved Revenge not implemented
+	warrior.registerMasterOfDefense()
+	warrior.registerImprovedRevenge()
 	warrior.registerDefiance()
 
 	// Tier 4
 	warrior.registerImprovedSunderArmor()
-	// Improved Disarm not implemented
-	// Improved Taunt not implemented
+	warrior.registerImprovedDisarm()
+	warrior.registerVanguard()
 
 	// Tier 5
 	warrior.registerImprovedShieldWall()
 	warrior.registerConcussionBlow()
-	// Improved Shield Bash not implemented
+	warrior.registerImprovedShieldBash()
+	warrior.registerBastion()
 
 	// Tier 6
+	warrior.registerFocusedRage()
 
 	// Tier 7
 	warrior.registerShieldSlam()
-	warrior.registerFocusedRage()
-
-	// Tier 8
-
-	// Tier 9
-
-	// Forever additions, not yet implemented.
-	warrior.registerMasterOfDefense()
-	warrior.registerImprovedRevenge()
-	warrior.registerImprovedDisarm()
-	warrior.registerVanguard()
-	warrior.registerImprovedShieldBash()
-	warrior.registerBastion()
 }
 
 // TODO: Manual review needed -- this was modelled during the Forever port, not carried
@@ -303,62 +294,67 @@ func (warrior *Warrior) registerFocusedRage() {
 	})
 }
 
-// registerMasterOfDefense implements Master of Defense, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerMasterOfDefense models nothing yet; spellData.MasterOfDefense carries the ranks.
 func (warrior *Warrior) registerMasterOfDefense() {
 	if warrior.Talents.MasterOfDefense == 0 {
 		return
 	}
 }
 
-// registerImprovedRevenge implements Improved Revenge, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerImprovedRevenge models nothing yet; spellData.ImprovedRevenge carries the ranks.
 func (warrior *Warrior) registerImprovedRevenge() {
 	if warrior.Talents.ImprovedRevenge == 0 {
 		return
 	}
 }
 
-// registerImprovedDisarm implements Improved Disarm, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerImprovedDisarm models nothing yet; spellData.ImprovedDisarm carries the ranks.
 func (warrior *Warrior) registerImprovedDisarm() {
 	if warrior.Talents.ImprovedDisarm == 0 {
 		return
 	}
 }
 
-// registerVanguard implements Vanguard, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerVanguard models nothing yet; the client has no ladder for it, so the tooltip is the source.
 func (warrior *Warrior) registerVanguard() {
 	if !warrior.Talents.Vanguard {
 		return
 	}
 }
 
-// registerImprovedShieldBash implements Improved Shield Bash, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerImprovedShieldBash models nothing yet; spellData.ImprovedShieldBash carries the ranks.
 func (warrior *Warrior) registerImprovedShieldBash() {
 	if warrior.Talents.ImprovedShieldBash == 0 {
 		return
 	}
 }
 
-// registerBastion implements Bastion, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: registerBastion models nothing yet; spellData.Bastion carries the ranks.
 func (warrior *Warrior) registerBastion() {
 	if warrior.Talents.Bastion == 0 {
 		return
 	}
+}
+
+func (warrior *Warrior) registerImprovedThunderClap() {
+	if warrior.Talents.ImprovedThunderClap == 0 {
+		return
+	}
+
+	// Slowing effect implemented in core/debuffs.go
+
+	rageCostReduction := []int32{0, 1, 2, 4}[warrior.Talents.ImprovedThunderClap]
+	damageGain := []float64{0, 0.4, 0.7, 1.0}[warrior.Talents.ImprovedThunderClap]
+
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask:  SpellMaskThunderClap,
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: damageGain,
+	})
+
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskThunderClap,
+		Kind:      core.SpellMod_PowerCost_Flat,
+		IntValue:  -rageCostReduction,
+	})
 }
