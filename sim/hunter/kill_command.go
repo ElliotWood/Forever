@@ -1,13 +1,67 @@
 package hunter
 
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+// Package-level state the commented-out implementations used:
+// var killCommandRank = spellData.KillCommand.BySpellID(34026)
+
+// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
+// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
 func (hunter *Hunter) registerKillCommandSpell() {
 	if hunter.Pet == nil {
 		return
 	}
+	panic("To be implemented")
 
-	// Registered unconditionally, so this returns instead of panicking -- a panic
-	// here would stop the sim from starting at all rather than flagging one ability.
+	// The TBC implementation, kept for the port:
+	// if hunter.Pet == nil {
+	// 	return
+	// }
+	//
+	// hunter.MakeProcTriggerAura(core.ProcTrigger{
+	// 	Name:     "Kill Command Trigger",
+	// 	Callback: core.CallbackOnSpellHitDealt,
+	// 	Outcome:  core.OutcomeCrit,
+	//
+	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 		hunter.killCommandEnabledUntil = sim.CurrentTime + time.Second*5
+	// 	},
+	// })
+	//
+	// hunter.KillCommand = hunter.RegisterSpell(core.SpellConfig{
+	// 	ActionID:    core.ActionID{SpellID: killCommandRank.SpellID},
+	// 	SpellSchool: killCommandRank.SpellSchool,
+	// 	// Kill Command (34026) has no SpellCategories row; the actual damage is dealt by
+	// 	// the pet's Kill Command (34027), which is Melee.
+	// 	DefenseType:    core.DefenseTypeMelee,
+	// 	ProcMask:       core.ProcMaskMelee,
+	// 	ClassSpellMask: HunterSpellKillCommand,
+	// 	Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
+	//
+	// 	MaxRange: killCommandRank.MaxRange,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		FlatCost: killCommandRank.Cost,
+	// 	},
+	//
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			NonEmpty: true,
+	// 		},
+	// 		CD: core.Cooldown{
+	// 			Timer:    hunter.NewTimer(),
+	// 			Duration: killCommandRank.Cooldown,
+	// 		},
+	// 	},
+	//
+	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+	// 		return hunter.killCommandEnabledUntil >= sim.CurrentTime && hunter.Pet != nil && hunter.Pet.KillCommand.CanCast(sim, target)
+	// 	},
+	//
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		hunter.killCommandEnabledUntil = 0
+	// 		hunter.Pet.KillCommand.Cast(sim, target)
+	// 	},
+	// })
 }

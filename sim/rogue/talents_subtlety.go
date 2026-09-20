@@ -8,6 +8,9 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+// Package-level state the commented-out implementations used:
+// var hemorrhageRank = spellData.Hemorrhage.BySpellID(26864)
+
 func (rogue *Rogue) registerSubtletyTalents() {
 	// Tier 1
 	// Master of Deception NYI
@@ -240,15 +243,55 @@ func (rogue *Rogue) registerDirtyDeeds() {
 	})
 }
 
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
+// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
 func (rogue *Rogue) registerHemorrhage() {
 	if !rogue.Talents.Hemorrhage {
 		return
 	}
-
 	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// if !rogue.Talents.Hemorrhage {
+	// 	return
+	// }
+	//
+	// pointMetric := rogue.NewComboPointMetrics(core.ActionID{SpellID: hemorrhageRank.SpellID})
+	// rogue.Hemorrhage = rogue.GetOrRegisterSpell(core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: hemorrhageRank.SpellID},
+	// 	ClassSpellMask: RogueSpellHemorrhage,
+	// 	SpellSchool:    hemorrhageRank.SpellSchool,
+	// 	DefenseType:    hemorrhageRank.DefenseType,
+	// 	Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics | SpellFlagBuilder,
+	// 	ProcMask:       core.ProcMaskMeleeMHSpecial,
+	// 	MaxRange:       core.MaxMeleeRange,
+	//
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD: hemorrhageRank.GCD,
+	// 		},
+	// 		IgnoreHaste: true,
+	// 	},
+	// 	EnergyCost: core.EnergyCostOptions{
+	// 		Cost:   hemorrhageRank.Cost,
+	// 		Refund: 0.8,
+	// 	},
+	//
+	// 	DamageMultiplier: 1.1,
+	// 	ThreatMultiplier: 1,
+	//
+	// 	BonusCoefficient: hemorrhageRank.Direct.BonusCoefficient(),
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		rogue.BreakStealth(sim)
+	//
+	// 		baseDamage := rogue.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+	// 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+	// 		if result.Landed() {
+	// 			rogue.AddComboPoints(sim, 1, pointMetric)
+	// 		}
+	// 	},
+	// })
 }
 
 func (rogue *Rogue) registerPremeditation() {

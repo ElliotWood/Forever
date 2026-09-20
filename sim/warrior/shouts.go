@@ -89,7 +89,8 @@ func (warrior *Warrior) registerShouts() {
 
 	// TODO: To be implemented. The Forever client ships no rank ladder the generator can
 	// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-	// no ranked SkillLineAbility row -- so there is no data to build the spell from.
-	// Left unregistered (warrior.CommandingShout stays nil) rather than panicking here, since
-	// this function also builds Battle Shout, which every warrior needs working.
+	// no ranked SkillLineAbility row -- it has a class ability row but no "Rank N" subtext,
+	// so no ladder can be built for it. Left unregistered (warrior.CommandingShout stays nil)
+	// rather than panicking here, since this function also builds Battle Shout, which every
+	// warrior needs working.
 }

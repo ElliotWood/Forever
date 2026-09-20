@@ -9,6 +9,10 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
+// Package-level state the commented-out implementations used:
+// var SealOfJusticeRanks = sealRankMap{
+// var SealOfTheCrusaderRanks = sealRankMap{
+
 type proc struct {
 	spellID int32
 	value   float64
@@ -496,12 +500,85 @@ func (paladin *Paladin) registerSealOfWisdom(seal seal) {
 // Unleashing this Seal's energy will judge an enemy for 20 sec, preventing
 // them from fleeing.
 //
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
+// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
 func (paladin *Paladin) registerSealOfJustice(seal seal) {
-	// Registered unconditionally, so this returns instead of panicking -- a panic
-	// here would stop the sim from starting at all rather than flagging one ability.
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// registerJoJDebuff := func(target *core.Unit) *core.Aura {
+	// 	return target.GetOrRegisterAura(core.Aura{
+	// 		Label:    "Judgement of Justice",
+	// 		ActionID: core.ActionID{SpellID: seal.judge.spellID},
+	// 		Tag:      JudgementAuraTag,
+	// 		Duration: time.Second * 20,
+	// 		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 			if spell.ProcMask.Matches(core.ProcMaskMeleeWhiteHit) {
+	// 				aura.Refresh(sim)
+	// 			}
+	// 		},
+	// 	})
+	// }
+	//
+	// judgementOfJusticeAuras := paladin.NewEnemyAuraArray(registerJoJDebuff)
+	// paladin.JudgementAuras = append(paladin.JudgementAuras, judgementOfJusticeAuras)
+	//
+	// judgeSpell := paladin.RegisterSpell(core.SpellConfig{
+	// 	ActionID:         core.ActionID{SpellID: seal.judge.spellID},
+	// 	SpellSchool:      core.SpellSchoolHoly,
+	// 	DefenseType:      core.DefenseTypeMagic,
+	// 	ProcMask:         core.ProcMaskEmpty,
+	// 	Flags:            core.SpellFlagMeleeMetrics | core.SpellFlagBinary,
+	// 	ClassSpellMask:   SpellMaskJudgementOfJustice,
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
+	// 		judgementOfJusticeAuras.Get(target).Activate(sim)
+	// 	},
+	// })
+	// procSpell := paladin.RegisterSpell(core.SpellConfig{
+	// 	ActionID:         core.ActionID{SpellID: seal.proc.spellID},
+	// 	ClassSpellMask:   SpellMaskSealOfJustice,
+	// 	SpellSchool:      core.SpellSchoolHoly,
+	// 	DefenseType:      core.DefenseTypeMagic,
+	// 	ProcMask:         core.ProcMaskEmpty,
+	// 	Flags:            core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagProc, // 20170 lacks Not a Proc.
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
+	// 	},
+	// })
+	// aura := paladin.MakeProcTriggerAura(core.ProcTrigger{
+	// 	Name:            "Seal of Justice" + paladin.Label + " " + seal.GetRankLabel(),
+	// 	ActionID:        core.ActionID{SpellID: seal.spellID},
+	// 	MetricsActionID: core.ActionID{SpellID: seal.spellID},
+	// 	Duration:        time.Second * 30,
+	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 		procSpell.Cast(sim, result.Target)
+	// 	},
+	// })
+	// paladin.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: seal.spellID},
+	// 	ClassSpellMask: SpellMaskSealOfJustice,
+	// 	SpellSchool:    core.SpellSchoolHoly,
+	// 	DefenseType:    core.DefenseTypeMagic,
+	// 	ProcMask:       core.ProcMaskEmpty,
+	// 	Flags:          core.SpellFlagAPL,
+	// 	Rank:           seal.rank,
+	// 	ManaCost: core.ManaCostOptions{
+	// 		BaseCostPercent: seal.manaCost,
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{GCD: core.GCDDefault},
+	// 	},
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+	// 		paladin.applySeal(aura, spell, judgeSpell, sim)
+	// 	},
+	// })
 }
 
 // Seal of the Crusader
@@ -515,12 +592,79 @@ func (paladin *Paladin) registerSealOfJustice(seal seal) {
 // Unleashing this Seal's energy will judge an enemy for 20 sec, increasing
 // Holy damage taken from all sources.
 //
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+// TODO: To be implemented. The Forever client DOES ship a rank ladder for this, and spellData
+// now carries it -- the family was previously dropped as ambiguous because Forever re-issues
+// the ability as a second spell per rank. The body below is the TBC implementation, awaiting
+// a port onto the recovered ladder.
 func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
-	// Registered unconditionally, so this returns instead of panicking -- a panic
-	// here would stop the sim from starting at all rather than flagging one ability.
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// percentBonus := core.Ternary(paladin.CouldHaveSetBonus(ItemSetJusticarBattlegear, 2), 1.15, 1.0)
+	// flatBonus := 0.0
+	// if paladin.Ranged().ID == 23203 { //https://www.wowhead.com/forever/item=23203/libram-of-fervor
+	// 	flatBonus += 33.0
+	// } else if paladin.Ranged().ID == 27949 || paladin.Ranged().ID == 27983 { //https://www.wowhead.com/forever/item=27949/libram-of-zeal
+	// 	flatBonus += 47.0
+	// }
+	//
+	// judgementOfTheCrusaderAuras := paladin.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+	// 	// TODO: Forever drops Improved Seal of the Crusader; untalented (0 points) until
+	// 	// we know whether the effect moved onto another talent.
+	// 	return core.ImprovedSealOfTheCrusaderAura(target, 1, 0, flatBonus, percentBonus)
+	// })
+	//
+	// paladin.JudgementAuras = append(paladin.JudgementAuras, judgementOfTheCrusaderAuras)
+	//
+	// judgeSpell := paladin.RegisterSpell(core.SpellConfig{
+	// 	ActionID:         core.ActionID{SpellID: seal.judge.spellID},
+	// 	SpellSchool:      core.SpellSchoolHoly,
+	// 	DefenseType:      core.DefenseTypeMagic,
+	// 	ProcMask:         core.ProcMaskEmpty,
+	// 	Flags:            core.SpellFlagMeleeMetrics | core.SpellFlagBinary,
+	// 	ClassSpellMask:   SpellMaskJudgementOfTheCrusader,
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
+	// 		judgementOfTheCrusaderAuras.Get(target).Activate(sim)
+	// 	},
+	// })
+	//
+	// aura := paladin.RegisterAura(core.Aura{
+	// 	Label:    "Seal of the Crusader" + paladin.Label + " " + seal.GetRankLabel(),
+	// 	ActionID: core.ActionID{SpellID: seal.spellID},
+	// 	Duration: time.Second * 30,
+	// }).
+	// 	AttachMultiplyMeleeSpeed(1.4).
+	// 	AttachSpellMod(core.SpellModConfig{
+	// 		ProcMask:   core.ProcMaskMeleeMHAuto,
+	// 		Kind:       core.SpellMod_DamageDone_Flat,
+	// 		FloatValue: -0.4,
+	// 	}).
+	// 	AttachStatBuff(stats.AttackPower, seal.proc.value)
+	//
+	// paladin.RegisterSpell(core.SpellConfig{
+	// 	ActionID:         aura.ActionID,
+	// 	ClassSpellMask:   SpellMaskSealOfTheCrusader,
+	// 	SpellSchool:      core.SpellSchoolHoly,
+	// 	DefenseType:      core.DefenseTypeMagic,
+	// 	ProcMask:         core.ProcMaskEmpty,
+	// 	Flags:            core.SpellFlagAPL,
+	// 	Rank:             seal.rank,
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	// 	ManaCost: core.ManaCostOptions{
+	// 		FlatCost: int32(seal.manaCost),
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{GCD: core.GCDDefault},
+	// 	},
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+	// 		paladin.applySeal(aura, spell, judgeSpell, sim)
+	// 	},
+	// 	RelatedSelfBuff: aura,
+	// })
 }
 
 // Seal of Blood

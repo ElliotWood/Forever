@@ -1,13 +1,76 @@
 package warlock
 
+// Package-level state the commented-out implementations used:
+// var uaRank = spellData.UnstableAffliction.BySpellID(30405)
+// var uaTick = uaRank.Periodic.(shared.SpellDataPeriodic)
+// var uaCoeff = uaTick.Coef
+
 // TODO: uncalled -- Forever drops the Unstable Affliction talent that gated this spell, so
 // nothing calls this any more. Kept rather than deleted because "the talent is gone"
 // and "the spell is gone" are not the same claim, and the client data does not
 // distinguish them. Re-gate before wiring it back up.
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+// TODO: To be implemented. Spells of this name exist in the Forever client, but none of them
+// has a class ability row -- no SkillLineAbility entry in a CategoryID 7 skill line -- so the
+// generator has no class spell to build a ladder from.
 func (warlock *Warlock) registerUnstableAffliction() {
-	// Registered unconditionally, so this returns instead of panicking -- a panic
-	// here would stop the sim from starting at all rather than flagging one ability.
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// warlock.UnstableAffliction = warlock.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: uaRank.SpellID},
+	// 	SpellSchool:    uaRank.SpellSchool,
+	// 	DefenseType:    uaRank.DefenseType,
+	// 	ProcMask:       core.ProcMaskSpellDamage,
+	// 	Flags:          core.SpellFlagAPL,
+	// 	ClassSpellMask: WarlockSpellUnstableAffliction,
+	//
+	// 	ManaCost: core.ManaCostOptions{FlatCost: uaRank.Cost},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD:      uaRank.GCD,
+	// 			CastTime: uaRank.CastTime,
+	// 		},
+	// 	},
+	//
+	// 	DamageMultiplierAdditive: 1,
+	// 	ThreatMultiplier:         1,
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMagicHit)
+	// 		if result.Landed() {
+	// 			spell.Dot(target).Apply(sim)
+	// 		}
+	// 	},
+	// 	BonusCoefficient: uaCoeff,
+	//
+	// 	Dot: core.DotConfig{
+	// 		Aura: core.Aura{
+	// 			Label:    "Unstable Affliction",
+	// 			Tag:      "Affliction",
+	// 			ActionID: core.ActionID{SpellID: 30108},
+	// 		},
+	// 		NumberOfTicks:    uaTick.NumberOfTicks,
+	// 		TickLength:       uaTick.TickLength,
+	// 		BonusCoefficient: uaCoeff,
+	//
+	// 		OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+	// 			dot.Snapshot(target, uaTick.Tick)
+	// 		},
+	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+	// 			dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+	// 		},
+	// 	},
+	//
+	// 	ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
+	// 		dot := spell.Dot(target)
+	// 		if useSnapshot {
+	// 			result := dot.CalcSnapshotDamage(sim, target, dot.OutcomeTick)
+	// 			result.Damage /= dot.TickPeriod().Seconds()
+	// 			return result
+	// 		} else {
+	// 			result := spell.CalcPeriodicDamage(sim, target, uaTick.Tick*float64(uaTick.NumberOfTicks), spell.OutcomeExpectedMagicHit)
+	// 			result.Damage /= dot.CalcTickPeriod().Round(time.Millisecond).Seconds()
+	// 			return result
+	// 		}
+	// 	},
+	// })
 }

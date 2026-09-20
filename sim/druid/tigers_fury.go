@@ -1,9 +1,49 @@
 package druid
 
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+// Package-level state the commented-out implementations used:
+// var tigersFuryRank = spellData.TigersFury.BySpellID(9846)
+
+// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
+// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
 func (druid *Druid) registerTigersFurySpell() {
-	// Registered unconditionally, so this returns instead of panicking -- a panic
-	// here would stop the sim from starting at all rather than flagging one ability.
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// weaponDamageBonus := shared.SpellDataMin(tigersFuryRank.Direct)
+	//
+	// druid.TigersFuryAura = druid.RegisterAura(core.Aura{
+	// 	Label:    "Tiger's Fury",
+	// 	ActionID: core.ActionID{SpellID: tigersFuryRank.SpellID},
+	// 	Duration: time.Second * 6,
+	//
+	// 	OnGain: func(aura *core.Aura, sim *core.Simulation) {
+	// 		druid.AutoAttacks.MH().BaseDamageMin += weaponDamageBonus
+	// 		druid.AutoAttacks.MH().BaseDamageMax += weaponDamageBonus
+	// 	},
+	// 	OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+	// 		druid.AutoAttacks.MH().BaseDamageMin -= weaponDamageBonus
+	// 		druid.AutoAttacks.MH().BaseDamageMax -= weaponDamageBonus
+	// 	},
+	// })
+	//
+	// druid.TigersFury = druid.RegisterSpell(Cat, core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: tigersFuryRank.SpellID},
+	// 	ClassSpellMask: DruidSpellTigersFury,
+	// 	Flags:          core.SpellFlagAPL,
+	//
+	// 	EnergyCost: core.EnergyCostOptions{
+	// 		Cost: tigersFuryRank.Cost,
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		IgnoreHaste: true,
+	// 		CD: core.Cooldown{
+	// 			Timer:    druid.NewTimer(),
+	// 			Duration: tigersFuryRank.Cooldown,
+	// 		},
+	// 	},
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+	// 		druid.TigersFuryAura.Activate(sim)
+	// 	},
+	// })
 }

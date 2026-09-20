@@ -8,6 +8,9 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+// Package-level state the commented-out implementations used:
+// var wrathOfAirTotemRank = spellData.WrathOfAirTotem.BySpellID(3738)
+
 var windfuryTotemRank = spellData.WindfuryTotem.HighestRank()
 var strengthOfEarthTotemRank = spellData.StrengthOfEarthTotem.HighestRank()
 var graceOfAirTotemRank = spellData.GraceOfAirTotem.BySpellID(25359)
@@ -194,12 +197,51 @@ func (shaman *Shaman) registerGraceOfAirTotemSpell() {
 	shaman.RegisterSpell(config)
 }
 
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+// TODO: To be implemented, or removed. The Forever client does not ship this spell at all --
+// no SpellName row carries the name -- so there is nothing to build a registrar from. The
+// body below is kept commented as the record of the TBC implementation.
 func (shaman *Shaman) registerWrathOfAirTotemSpell() {
-	// Registered unconditionally, so this returns instead of panicking -- a panic
-	// here would stop the sim from starting at all rather than flagging one ability.
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// value := core.WrathOfAirTotemValue(shaman.Character.CouldHaveSetBonus(ItemSetCycloneRegalia, 2))
+	//
+	// duration := time.Second * 120
+	// config := shaman.newTotemSpellConfig(wrathOfAirTotemRank.Cost, wrathOfAirTotemRank.SpellID, SpellMaskBasicTotem, wrathOfAirTotemRank.GCD)
+	// buffAura := shaman.RegisterAura(core.Aura{
+	// 	Label:    "Wrath Of Air Totem (Self)",
+	// 	ActionID: config.ActionID,
+	// 	Duration: duration,
+	// })
+	//
+	// buffAura.NewExclusiveEffect(core.WrathOfAirTotemCategory+stats.SpellDamage.StatName()+"Add", false, core.ExclusiveEffect{
+	// 	Priority: value,
+	// 	OnGain: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
+	// 		ee.Aura.Unit.AddStatDynamic(sim, stats.SpellDamage, value)
+	// 	},
+	// 	OnExpire: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
+	// 		ee.Aura.Unit.AddStatDynamic(sim, stats.SpellDamage, -value)
+	// 	},
+	// })
+	// buffAura.NewExclusiveEffect(core.WrathOfAirTotemCategory+stats.HealingPower.StatName()+"Add", false, core.ExclusiveEffect{
+	// 	Priority: value,
+	// 	OnGain: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
+	// 		ee.Aura.Unit.AddStatDynamic(sim, stats.HealingPower, value)
+	// 	},
+	// 	OnExpire: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
+	// 		ee.Aura.Unit.AddStatDynamic(sim, stats.HealingPower, -value)
+	// 	},
+	// })
+	//
+	// config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 	if shaman.AirTotemAura != nil {
+	// 		shaman.AirTotemAura.Deactivate(sim)
+	// 	}
+	// 	shaman.TotemExpirations[AirTotem] = sim.CurrentTime + duration
+	// 	shaman.AirTotemAura = buffAura
+	// 	buffAura.Activate(sim)
+	// }
+	// shaman.RegisterSpell(config)
 }
 
 func (shaman *Shaman) registerManaSpringTotemSpell() {

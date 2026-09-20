@@ -92,8 +92,18 @@ func (druid *Druid) applyPredatoryInstincts() {
 	if druid.Talents.PredatoryInstincts == 0 {
 		return
 	}
-
 	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// if druid.Talents.PredatoryInstincts == 0 {
+	// 	return
+	// }
+	//
+	// druid.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_CritMultiplier_Pct,
+	// 	School:     core.SpellSchoolPhysical,
+	// 	FloatValue: spellData.PredatoryInstincts.Effect(shared.A_MOD_CRIT_DAMAGE_BONUS, 1).FractionAt(druid.Talents.PredatoryInstincts),
+	// })
 }
 
 func (druid *Druid) applyMoonfury() {

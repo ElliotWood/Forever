@@ -231,9 +231,10 @@ func (war *Warrior) registerConcussionBlow() {
 
 var shieldSlamRank = spellData.ShieldSlam.HighestRank()
 
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from. Nothing
+// TODO: To be implemented. The Forever client DOES ship a rank ladder for this, and spellData
+// now carries it -- the family was previously dropped as ambiguous because Forever re-issues
+// the ability as a second spell per rank. The body below is the TBC implementation, awaiting
+// a port onto the recovered ladder. Nothing
 // in this package currently consumes a Devastate rank pin (DevastateSunder in warrior.go
 // is declared but never assigned), so there is no registrar body left to stub here.
 
