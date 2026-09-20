@@ -39,6 +39,7 @@ var buffInputNumStates = map[string]int{
 var manualBuffInputs = map[string]string{
 	"blessing_of_salvation": "the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.",
 	"shadow_priest_dps":     "the returned mana is typed in by hand and the input renders in the party registry over an individual-buff field.",
+	"bloodlust":             "the raid cooldown keeps its hand-written input and driver; no SkillLineAbility row anchors the name to a shaman.",
 	"atiesh_druid":          "no settings input over this field.",
 	"atiesh_priest":         "no settings input over this field.",
 }
@@ -112,6 +113,8 @@ export const {{ .Name }}: GeneratedStatOption[] = [
 {{- end }}
 	},
 {{- end }}
+{{- if .Entries }}
+{{ end -}}
 ];
 {{ end }}`
 
@@ -140,6 +143,10 @@ func GenerateBuffsDebuffsTSFile(helper *DBHelper) error {
 // RenderBuffsDebuffsTS renders one input per resolved row that has one, plus the
 // four registries the settings tab reads.
 func RenderBuffsDebuffsTS(rows []ResolvedBuff) ([]byte, error) {
+	if err := checkBuffInputTables(); err != nil {
+		return nil, err
+	}
+
 	file := tsBuffsDebuffs{}
 	factories := map[string]bool{}
 	registries := map[buffmanifest.BuffScope]*[]tsBuffRegistryEntry{
@@ -190,19 +197,63 @@ func RenderBuffsDebuffsTS(rows []ResolvedBuff) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-// Why a row renders no input: the client describes no spell to hang an icon on, or
-// its hand-written input does something no manifest row states.
+// A key of either table that names no manifest field is a row that was renamed or
+// dropped, and the input it stands for would silently disappear from the settings
+// tab, so the generator refuses to render.
+func checkBuffInputTables() error {
+	fields := map[string]bool{}
+	for _, spec := range buffmanifest.Manifest {
+		fields[spec.Field] = true
+	}
+	for field := range manualBuffInputs {
+		if !fields[field] {
+			return fmt.Errorf("manualBuffInputs names %q, which is no manifest field", field)
+		}
+	}
+	for field := range buffInputNumStates {
+		if !fields[field] {
+			return fmt.Errorf("buffInputNumStates names %q, which is no manifest field", field)
+		}
+	}
+	return nil
+}
+
+// Why a row renders no input: its hand-written input does something no manifest
+// row states, its kind or proto type has no icon input at all, or the client
+// describes no spell to hang an icon on.
 func skipBuffInputReason(row ResolvedBuff) string {
 	if reason, ok := manualBuffInputs[row.Field]; ok {
+		return reason
+	}
+	if reason := uninputtableBuffReason(row); reason != "" {
 		return reason
 	}
 	if row.SpellID == 0 {
 		if row.Reason != "" {
 			return row.Reason
 		}
-		return row.Notes
+		return "the client database resolves no spell for it."
 	}
 	return ""
+}
+
+// A row the settings UI never renders an icon for whatever the client says about
+// it: the client does not describe the buff at all, the field is a sim toggle or
+// a swatch pick rather than a buff, or no icon factory takes its proto type.
+func uninputtableBuffReason(row ResolvedBuff) string {
+	var fixed string
+	switch {
+	case row.Kind == buffmanifest.KindAbsent, row.Kind == buffmanifest.KindFlag, row.Kind == buffmanifest.KindEnum:
+		fixed = fmt.Sprintf("%s renders no settings input.", row.Kind)
+	case row.Proto == buffmanifest.ProtoDouble, row.Proto == buffmanifest.ProtoEnumDrums:
+		fixed = fmt.Sprintf("%s has no settings factory.", row.Proto)
+	default:
+		return ""
+	}
+	if row.Reason != "" {
+		return row.Reason
+	}
+	return fixed
 }
 
 func buffInput(row ResolvedBuff) (*tsBuffInput, error) {
