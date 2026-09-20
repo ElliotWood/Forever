@@ -55,7 +55,6 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	if debuffs.ShadowEmbrace {
 		MakePermanent(ShadowEmbraceAura(target, 5))
 	}
-
 }
 
 func ScheduledAura(aura *Aura, options PeriodicActionOptions) {

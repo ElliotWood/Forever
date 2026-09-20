@@ -430,7 +430,7 @@ func attachGeneratedPseudoStats(aura *Aura, config GeneratedBuff) {
 
 	for _, pseudoConfig := range config.Pseudo {
 		if category == "" {
-			attachGeneratedPseudoStat(aura, pseudoConfig)
+			attachUncontestedPseudoStat(aura, pseudoConfig)
 			continue
 		}
 
@@ -455,7 +455,7 @@ func attachGeneratedPseudoStats(aura *Aura, config GeneratedBuff) {
 }
 
 // A pseudo-stat nothing competes for, attached to the aura itself.
-func attachGeneratedPseudoStat(aura *Aura, config PseudoConfig) {
+func attachUncontestedPseudoStat(aura *Aura, config PseudoConfig) {
 	if config.Kind == PseudoStatMeleeSpeedMultiplier {
 		aura.AttachMultiplyMeleeSpeed(config.Amount)
 		return

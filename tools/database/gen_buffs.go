@@ -878,10 +878,10 @@ func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 					e.Index, e.PerResource)
 				return
 			}
-			e.Value = e.PerResource * maxComboPoints
-			row.Effects[i].Value = e.Value
+			row.Effects[i].Value = e.PerResource * maxComboPoints
+			e = row.Effects[i]
 			row.Note = fmt.Sprintf("Effect %d is worth %s per combo point; this is the %d-point finisher.",
-				e.Index, formatFloat(e.PerResource), int(maxComboPoints))
+				e.Index, formatFloat(e.PerResource), maxComboPoints)
 		}
 		if amounts, ok := row.statAmounts(e); ok {
 			row.Stats = append(row.Stats, amounts...)
