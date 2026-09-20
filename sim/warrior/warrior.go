@@ -147,33 +147,32 @@ func (warrior *Warrior) AddPartyBuffs(_ *proto.PartyBuffs) {
 }
 
 func (warrior *Warrior) Initialize() {
-	warrior.registerRecklessness()
-	warrior.registerShieldWall()
-	warrior.registerRetaliation()
+	// warrior.registerRecklessness()
+	// warrior.registerShieldWall()
+	// warrior.registerRetaliation()
 
-	warrior.registerBerserkerRage()
-	warrior.registerBloodrage()
-	warrior.registerCharge()
-	warrior.registerIntercept()
-	warrior.registerPummel()
-	warrior.registerHamstring()
+	// warrior.registerBerserkerRage()
+	// warrior.registerBloodrage()
+	// warrior.registerCharge()
+	// warrior.registerIntercept()
+	// warrior.registerPummel()
+	// warrior.registerHamstring()
 
-	warrior.registerRend()
-	warrior.registerSunderArmor()
-	warrior.registerHeroicStrike()
-	warrior.registerCleave()
-	warrior.registerOverpower()
-	warrior.registerSlam()
-	warrior.registerWhirlwind()
-	warrior.registerExecute()
-	warrior.registerThunderClap()
-	warrior.registerRevenge()
-	warrior.registerShieldBlock()
-	warrior.registerShieldBash()
+	// warrior.registerRend()
+	// warrior.registerSunderArmor()
+	// warrior.registerHeroicStrike()
+	// warrior.registerCleave()
+	// warrior.registerOverpower()
+	// warrior.registerSlam()
+	// warrior.registerWhirlwind()
+	// warrior.registerExecute()
+	// warrior.registerThunderClap()
+	// warrior.registerRevenge()
+	// warrior.registerShieldBlock()
+	// warrior.registerShieldBash()
 
-	warrior.registerStances()
-	warrior.registerShouts()
-
+	// warrior.registerStances()
+	// warrior.registerShouts()
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {
