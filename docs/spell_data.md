@@ -7,6 +7,7 @@ hand-transcribed literals.
 - [Using a rank](#using-a-rank)
 - [The value shapes](#the-value-shapes)
 - [Reaching a single effect](#reaching-a-single-effect)
+- [A tick the client keeps on another spell](#a-tick-the-client-keeps-on-another-spell)
 - [Talents](#talents)
 - [Worked examples](#worked-examples)
 - [Attack power](#attack-power)
@@ -49,16 +50,17 @@ A rank's value is discriminated by shape, so a variant only carries fields that 
 ```go
 shared.SpellDataFlat     {Value, Coef, APCoef}                          // a mana restore, a talent's number
 shared.SpellDataRange    {Min, Max, Coef, APCoef}                       // damage or healing the client rolls
-shared.SpellDataPeriodic {Tick, TickMax, TickLength, NumberOfTicks, Coef, APCoef} // a tick and its schedule
+shared.SpellDataPeriodic {Tick, TickMax, TickLength, NumberOfTicks, Coef, APCoef, SpellID} // a tick and its schedule
 ```
 
-They sit on the four roles a rank can carry, any of which may be nil:
+They sit on the roles a rank can carry, any of which may be nil:
 
 ```go
-rank.Direct     // Effect = SCHOOL_DAMAGE
-rank.Heal       // Effect = HEAL
-rank.Periodic   // a periodic aura
-rank.Energize   // Effect = ENERGIZE, e.g. Lay on Hands' mana restore
+rank.Direct             // Effect = SCHOOL_DAMAGE
+rank.Heal               // Effect = HEAL
+rank.Periodic           // a periodic aura
+rank.Energize           // Effect = ENERGIZE, e.g. Lay on Hands' mana restore
+rank.SecondaryPeriodic  // a second tick the description names - Consecration alone, see below
 ```
 
 Asking what a value is worth on this cast is a single call, because the question means something for
@@ -147,6 +149,38 @@ talent. Index into `Effects` where the pair cannot tell them apart.
 threat bonus reads `16`, not `0.16` - so the `/100` stays at the call site. It is deliberately not
 folded into the generator the way the rage `/10` is: whether a value is a percentage depends on the
 aura, so a blanket rule would be wrong for some rows and invisible when it was.
+
+## A tick the client keeps on another spell
+
+Forever moves a ground effect's damage onto a spell of its own. Consecration rank 5 states a dummy,
+the area trigger it creates, and a periodic dummy - no damage - and its tooltip reads
+`${$1280349m1*8}`: the tick sits on 1280349, a spell that shares the name and rank subtext and that
+the client links from nowhere but that description. Blizzard, Flamestrike, Rain of Fire, Hurricane
+and Volley are shaped the same way, each rank naming its own sub-spell.
+
+The generator follows the reference. When a rank carries a periodic dummy and no periodic damage of
+its own, it reads the description for `$<spellID>m<n>` and `$<spellID>s<n>`, takes effect `n` of a
+spell with the rank's name, and gives it the dummy's period, so it lands in `Periodic` with the tick
+schedule the rank states. The tick says where it came from:
+
+```go
+p := spellData.Consecration.BySpellID(20924).Periodic.(shared.SpellDataPeriodic)
+p.SpellID   // 1280349; zero on a tick the rank's own effect states
+```
+
+Consecration's description names two, and the second lands in `SecondaryPeriodic`: the extra damage
+its first few targets take, and the only part of the spell the client gives a spell power coefficient.
+A third would fail the generator rather than be dropped.
+
+**The periodic dummy's points are not a tick.** Consecration's reads 4, which is how many targets
+take the second tick, and it stays where the client put it:
+
+```go
+bonusTargets := int(rank.Effect(shared.A_PERIODIC_DUMMY, 0).Value)   // 4
+```
+
+Before the generator followed the description, that 4 was filed as the tick and the AoE families
+above had no tick at all.
 
 ## Talents
 
@@ -287,6 +321,31 @@ func (priest *Priest) registerShadowWordPain() {
 			},
 		},
 	})
+}
+```
+
+### A tick, and a second one for the first few targets
+
+Consecration ticks on everyone in the area and again on the first four to enter it, with the spell
+power coefficient on the second tick only, so the bonus is added to the base damage per target rather
+than through the dot's coefficient:
+
+```go
+func (paladin *Paladin) registerConsecration(rankConfig shared.SpellData) {
+	tick := rankConfig.Periodic.(shared.SpellDataPeriodic)
+	bonus := rankConfig.SecondaryPeriodic.(shared.SpellDataPeriodic)
+	bonusTargets := int(rankConfig.Effect(shared.A_PERIODIC_DUMMY, 0).Value)
+
+	dealTick := func(sim *core.Simulation, dot *core.Dot) {
+		for i, target := range sim.Encounter.ActiveTargetUnits {
+			damage := tick.Tick
+			if i < bonusTargets {
+				damage += bonus.Tick + bonus.Coef*dot.Spell.BonusDamage(dot.Spell.Unit.AttackTables[target.UnitIndex])
+			}
+			dot.Spell.CalcAndDealPeriodicDamage(sim, target, damage, dot.OutcomeTickMagicHit)
+		}
+	}
+	// ...
 }
 ```
 

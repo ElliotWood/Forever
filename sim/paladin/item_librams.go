@@ -101,9 +101,10 @@ func init() {
 		paladin := agent.(PaladinAgent).GetPaladin()
 
 		// For some ungodly reason, Libram of the Eternal Rest has its own spell coeff...
-		// This means the coef has to be divided by the default Consecration spell coefficient
-		// to get the correct damage increase when it's then being multiplied in the dmg calc...
-		coef := 0.09525 / ConsecrationRankMap.HighestRank().Periodic.BonusCoefficient()
+		// This means the coef has to be divided by the Consecration coefficient it is then
+		// multiplied by in the damage calc, which in this client is the second tick's, the extra
+		// damage on the first few targets: the base tick scales with nothing.
+		coef := 0.09525 / ConsecrationRankMap.HighestRank().SecondaryPeriodic.BonusCoefficient()
 		aura := core.MakePermanent(paladin.RegisterAura(core.Aura{
 			Label:    "Libram of the Eternal Rest",
 			ActionID: core.ActionID{SpellID: 34252},

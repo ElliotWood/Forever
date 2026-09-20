@@ -21,7 +21,7 @@ Not in scope: item and enchant data (gen_db proper), and talent _trees_ — the 
 
 - sim/common/shared/spell_data.go — hand-written. SpellData, the SpellDataValue union, the table accessors. The only hand-written piece of the pipeline.
 - sim/<class>/spell_data_auto_gen.go — generated, checked in, one `spellData` global per class with a field per family.
-- tools/database/spelldata.go — the derivation rule and the row loader, shared by the generator and the regeneration check so the two cannot drift.
+- tools/database/spelldata.go — the derivation rule and the row loader, shared by the generator and the regeneration check so the two cannot drift. Also `ReferencedTickEffects`, which follows a ground effect's description to the sub-spell its tick sits on.
 - tools/database/gen_spell_data.go — ladder discovery, role assignment, rendering.
 - tools/database/gen_spelldata/ — the standalone binary. Not a mode of gen_db: gen_db imports the sim and the sim reads these tables, so a stale generated file stopped the generator that would fix it from compiling.
 - sim/common/shared/spell_data_talents.go — hand-written. The rank-indexed readers and the SPELLMOD names.
@@ -49,7 +49,9 @@ ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 
 A rank's value is discriminated by shape — SpellDataFlat, SpellDataRange, SpellDataPeriodic — behind a sealed interface, so a flat number has no Max to misread and only a periodic value carries a tick schedule. `Damage(sim)` rolls where the client rolls and returns the amount unchanged where it does not; `Range()` gives both ends.
 
-Role fields: Direct, Heal, Periodic, Energize. Each is one effect. A rank can carry nothing in a role — Lay on Hands rank 1 restores no mana where ranks 2-4 do — so the `SpellDataMin/Max/Coef/APCoef` helpers read nil as zero where a direct field access would panic.
+Role fields: Direct, Heal, Periodic, Energize, and SecondaryPeriodic for a second tick the description names — only Consecration has one. Each is one effect. A rank can carry nothing in a role — Lay on Hands rank 1 restores no mana where ranks 2-4 do — so the `SpellDataMin/Max/Coef/APCoef` helpers read nil as zero where a direct field access would panic.
+
+A tick's `SpellID` names the spell it was read from when that is not the rank's own. Forever keeps a ground effect's damage on a sub-spell the client links only through the tooltip's `$1280349m1`, and the generator follows that reference — see "A tick the client keeps on another spell" in docs/spell_data.md.
 
 ## Using a talent
 
@@ -105,6 +107,7 @@ Needs tools/database/wowsims.db, which is gitignored and built by `make db` from
 - **An effect's `Value` is its low end.** An aura with one die side and a fractional base has two ends a whole number apart and the game shows the higher - Seal of the Crusader states 39.2 attack power and buffs for 41. Read `High()`, not `ValueMax`, which is zero on the 82% of effects where the two agree.
 - **A golden proving nothing is not a golden passing.** The paladin goldens carry no seal spell ID at all, so no seal change can move one. Check a port like that by dumping the constructed rows against the literals they replace, field by field - that is how three real bugs surfaced in the seal port.
 - **core's `SpellSchool` bits are the client's**, so `SpellMisc.SchoolMask` is carried rather than translated. `stats.SchoolIndex` is a separate enum for array positions and `proto.SpellSchool` a third; only the names connect them.
+- **A periodic dummy's points are not a tick.** Consecration's `A_PERIODIC_DUMMY` reads 4, the number of targets that take its second tick; the damage is on the spell its description names. The generator follows the description, so a ground-effect row with `Periodic` at the dummy's value means the reference did not resolve — check the sub-spell shares the rank's name.
 - **A proc chance of 100 is not always a 100% roll.** `SpellAuraOptions.ProcChance` reads 100 for Flurry and Enrage because they fire on a crit rather than a chance; the number the sim wants is elsewhere.
 - **`rtk`-wrapped `go test` exits 0 with failing tests.** Read the summary line, not the exit code.
 
@@ -114,7 +117,7 @@ The generated table is a second opinion on every number the sim already had. Whe
 
 Evidence that the sim is wrong: the value equals a _different_ rank's (Shield Slam 30356 is rank 6 but dealt rank 5's 381-399); the value equals a sibling spell's (Holy Shock rank 3's max was the heal's min); the spread breaks the die-sides ladder.
 
-Evidence that the sim is right: a uniform offset across unrelated abilities usually means the sim models something the DBC base excludes — every hunter cast time is exactly +500ms, a ranged-weapon component, not three transcription slips. A coefficient read from a different spell is not a disagreement either: Blizzard's 0.119 belongs to the tick spell 42208, not the parent.
+Evidence that the sim is right: a uniform offset across unrelated abilities usually means the sim models something the DBC base excludes — every hunter cast time is exactly +500ms, a ranged-weapon component, not three transcription slips. A coefficient read from a different spell is not a disagreement either: Blizzard's belongs to the tick spell its description names, not the parent, and the tick's `SpellID` says which.
 
 ## Verifying a change
 

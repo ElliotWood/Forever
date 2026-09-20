@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"regexp"
 	"slices"
+	"strconv"
 	"sync"
 
 	"github.com/wowsims/forever/tools/database/dbc"
@@ -52,6 +54,11 @@ type RankEffect struct {
 	MiscValue    int32
 	AuraPeriod   int32
 	OwnerSpellID int32
+
+	// SpellLevels of the spell the effect belongs to, which is not always the rank's own: Blizzard
+	// rank 1's damage sits on 1279976, a level 20-25 spell gaining 0.1 a level, whatever spell 10 says.
+	SpellLevel int32
+	MaxLevel   int32
 }
 
 type RankSpell struct {
@@ -82,6 +89,10 @@ type RankSpell struct {
 	DefenseType int32
 
 	Effects []RankEffect
+
+	// Effects of other spells the description names, in its order - see ReferencedTickEffects.
+	// The first fills Periodic and the second SecondaryPeriodic.
+	Referenced []RankEffect
 }
 
 // Absent from a database extracted before SpellCastTimes went into generator-settings.json. Keyed by
@@ -211,8 +222,87 @@ func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 		}
 	}
 
-	s.Effects, err = RankEffectsOf(db, spellID)
+	if s.Effects, err = RankEffectsOf(db, spellID); err != nil {
+		return s, err
+	}
+	s.Referenced, err = ReferencedTickEffects(db, s)
 	return s, err
+}
+
+// No row means no level scaling, the way LoadRankSpell reads it.
+func levelsOf(db *sql.DB, spellID int32) (spellLevel, maxLevel int32, err error) {
+	err = db.QueryRow(`SELECT SpellLevel, MaxLevel FROM SpellLevels WHERE SpellID = ?`, spellID).Scan(&spellLevel, &maxLevel)
+	if errors.Is(err, sql.ErrNoRows) {
+		return RankLevel, 0, nil
+	}
+	return spellLevel, maxLevel, err
+}
+
+// A $<spellID><token><n> in a description, the "$1280349m1" in Consecration's. Four digits is the
+// shortest real spell ID, which keeps the plain $s3 and $m2 out.
+var descriptionValueRef = regexp.MustCompile(`\$(\d{4,7})[ms](\d)`)
+
+// Forever moves a ground effect's damage onto a spell of its own - Consecration rank 5 ticks through
+// 1280349, Blizzard rank 1 through 1279976 - that the client links from nowhere but the description.
+// What the rank itself states is a dummy, the area trigger, and a periodic dummy whose period is the
+// tick and whose points are not damage: Consecration's 4 is how many targets take the extra damage.
+// This follows the description to the named effect of a spell sharing the rank's name and gives it
+// the dummy's period, so it files as the periodic value. Nil for a spell without such a dummy, which
+// is everything outside the six ground-effect families.
+func ReferencedTickEffects(db *sql.DB, spell RankSpell) ([]RankEffect, error) {
+	var period int32
+	for _, e := range spell.Effects {
+		if IsPeriodicAura(e.Aura) {
+			return nil, nil
+		}
+		if e.Aura == dbc.A_PERIODIC_DUMMY && e.AuraPeriod > 0 {
+			period = e.AuraPeriod
+		}
+	}
+	if period == 0 {
+		return nil, nil
+	}
+
+	var name, description string
+	if err := db.QueryRow(`
+		SELECT n.Name_lang, COALESCE(s.Description_lang, '')
+		FROM SpellName n JOIN Spell s ON s.ID = n.ID
+		WHERE n.ID = ?`, spell.SpellID).Scan(&name, &description); err != nil {
+		return nil, fmt.Errorf("description of spell %d: %w", spell.SpellID, err)
+	}
+
+	var out []RankEffect
+	seen := map[[2]int32]bool{}
+	for _, m := range descriptionValueRef.FindAllStringSubmatch(description, -1) {
+		id, _ := strconv.Atoi(m[1])
+		n, _ := strconv.Atoi(m[2])
+		key := [2]int32{int32(id), int32(n) - 1}
+		if int32(id) == spell.SpellID || n < 1 || seen[key] {
+			continue
+		}
+		seen[key] = true
+
+		var sameName int
+		if err := db.QueryRow(`SELECT count(*) FROM SpellName WHERE ID = ? AND Name_lang = ?`,
+			id, name).Scan(&sameName); err != nil {
+			return nil, err
+		}
+		if sameName == 0 {
+			continue
+		}
+
+		effects, err := RankEffectsOf(db, int32(id))
+		if err != nil {
+			return nil, err
+		}
+		for _, e := range effects {
+			if e.Index == key[1] && e.Effect == dbc.E_SCHOOL_DAMAGE {
+				e.AuraPeriod = period
+				out = append(out, e)
+			}
+		}
+	}
+	return out, nil
 }
 
 // A spell with no row in one of the optional tables is ordinary - most spells have no cooldown - and
@@ -246,9 +336,14 @@ func RankEffectsOf(db *sql.DB, spellID int32) ([]RankEffect, error) {
 	}
 	defer rows.Close()
 
+	spellLevel, maxLevel, err := levelsOf(db, spellID)
+	if err != nil {
+		return nil, fmt.Errorf("levels for spell %d: %w", spellID, err)
+	}
+
 	var out []RankEffect
 	for rows.Next() {
-		e := RankEffect{OwnerSpellID: spellID}
+		e := RankEffect{OwnerSpellID: spellID, SpellLevel: spellLevel, MaxLevel: maxLevel}
 		if err := rows.Scan(&e.Index, &e.Effect, &e.Aura, &e.BasePoints, &e.DieSides, &e.PointsPerLvl, &e.Coefficient, &e.APCoef, &e.AuraPeriod, &e.MiscValue); err != nil {
 			return nil, err
 		}
@@ -342,14 +437,14 @@ func HasValueEffect(effects []RankEffect) bool {
 }
 
 // Every effect that could carry the numbers a rank row wants, including the ones reached only through
-// a same-name sibling.
+// the description or a same-name sibling.
 func RankCandidates(db *sql.DB, spellID int32, classBit int) (RankSpell, []RankEffect, error) {
 	spell, err := LoadRankSpell(db, spellID)
 	if err != nil {
 		return spell, nil, err
 	}
 
-	candidates := spell.Effects
+	candidates := slices.Concat(spell.Effects, spell.Referenced)
 	if !HasValueEffect(candidates) {
 		sibs, err := SiblingRankEffects(db, spellID, classBit)
 		if err != nil {

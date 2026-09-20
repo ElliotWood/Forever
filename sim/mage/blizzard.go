@@ -1,19 +1,15 @@
 package mage
 
 import (
-	"time"
-
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
 var blizzardRank = spellData.Blizzard.HighestRank()
 
 func (mage *Mage) registerBlizzardSpell() {
-
 	blizzardActionId := core.ActionID{SpellID: blizzardRank.SpellID}
-
-	// https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=42208
-	blizzardCoefficient := 0.11900000274
+	blizzardTick := blizzardRank.Periodic.(shared.SpellDataPeriodic)
 
 	blizzardTickSpell := mage.RegisterSpell(core.SpellConfig{
 		ActionID:       blizzardActionId,
@@ -23,11 +19,11 @@ func (mage *Mage) registerBlizzardSpell() {
 		ClassSpellMask: MageSpellBlizzard,
 
 		DamageMultiplier: 1,
-		BonusCoefficient: blizzardCoefficient,
+		BonusCoefficient: blizzardTick.Coef,
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealAoeDamage(sim, 184, spell.OutcomeMagicHit)
+			spell.CalcAndDealAoeDamage(sim, blizzardTick.Tick, spell.OutcomeMagicHit)
 		},
 	})
 
@@ -52,8 +48,8 @@ func (mage *Mage) registerBlizzardSpell() {
 				Label:    "Blizzard",
 				ActionID: blizzardActionId,
 			},
-			NumberOfTicks:        8,
-			TickLength:           time.Second * 1,
+			NumberOfTicks:        blizzardTick.NumberOfTicks,
+			TickLength:           blizzardTick.TickLength,
 			AffectedByCastSpeed:  true,
 			HasteReducesDuration: true,
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
