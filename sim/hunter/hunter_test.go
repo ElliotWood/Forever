@@ -103,7 +103,7 @@ func TestArena(t *testing.T) {
 		Class:              proto.Class_ClassHunter,
 		Race:               proto.Race_RaceOrc,
 		SpecOptions:        P1PlayerOptions,
-		Consumes:           P1Consumes,
+		Role:        arenalib.Ranged,
 		Buffs:              core.ForeverBuffs,
 		DistanceFromTarget: 30,
 	})

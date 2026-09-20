@@ -213,7 +213,7 @@ func TestArena(t *testing.T) {
 		Class:              proto.Class_ClassMage,
 		Race:               proto.Race_RaceGnome,
 		SpecOptions:        PlayerOptions,
-		Consumes:           P1Consumes,
+		Role:        arenalib.Caster,
 		Buffs:              core.ForeverBuffs,
 		DistanceFromTarget: 30,
 	})

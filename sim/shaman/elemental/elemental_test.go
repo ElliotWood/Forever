@@ -163,7 +163,7 @@ func TestArena(t *testing.T) {
 		Class:              proto.Class_ClassShaman,
 		Race:               proto.Race_RaceOrc,
 		SpecOptions:        PlayerOptionsAdaptive,
-		Consumes:           Phase1Consumes,
+		Role:        arenalib.Caster,
 		Buffs:              core.ForeverBuffs,
 		DistanceFromTarget: 30,
 	})

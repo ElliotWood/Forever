@@ -174,7 +174,9 @@ func TestArena(t *testing.T) {
 		Class:       proto.Class_ClassRogue,
 		Race:        proto.Race_RaceHuman,
 		SpecOptions: DefaultRogue,
-		Consumes:    Phase1Consumes,
+		Role:        arenalib.Melee,
+		// Poisons are a rogue ability, not something on the vendor list.
+		ClassImbues: arenalib.ClassImbues{OffHand: proto.WeaponImbue_InstantPoison},
 		Buffs:       core.ForeverBuffs,
 	})
 }

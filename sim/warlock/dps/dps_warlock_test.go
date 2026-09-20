@@ -183,7 +183,7 @@ func TestArena(t *testing.T) {
 		Class:              proto.Class_ClassWarlock,
 		Race:               proto.Race_RaceOrc,
 		SpecOptions:        DefaultPactWarlock,
-		Consumes:           Consumes,
+		Role:        arenalib.Caster,
 		Buffs:              core.ForeverBuffs,
 		DistanceFromTarget: 30,
 	})

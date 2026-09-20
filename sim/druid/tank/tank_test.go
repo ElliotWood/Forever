@@ -98,7 +98,7 @@ func TestArena(t *testing.T) {
 		Class:       proto.Class_ClassDruid,
 		Race:        proto.Race_RaceTauren,
 		SpecOptions: PlayerOptionsDefault,
-		Consumes:    P1Consumes,
+		Role:        arenalib.Melee,
 		Buffs:       core.ForeverBuffs,
 		IsTank:      true,
 	})

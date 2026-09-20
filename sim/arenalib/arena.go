@@ -14,8 +14,11 @@
 // that would make its numbers worthless. Each spec contributes ten lines next to the
 // definitions themselves instead.
 //
-// Every build meets the same fixed environment - one buff set, one consumable set, one
-// encounter - because that, not a shared raid, is what makes two numbers comparable. The
+// Every build meets the same fixed environment - one buff set, one consumable list for its
+// role, one encounter - because that, not a shared raid, is what makes two numbers comparable.
+// The consumables live in consumables.go rather than in each spec's own test file; they used
+// to come from the fixtures, and fifteen specs brought four different sets from four different
+// content phases, which quietly made half the leaderboard incomparable. The
 // rankings page achieves the same thing by putting everyone in one raid; at this count that
 // is not an option, and a fixed environment is if anything fairer, since no build gets a
 // better draw of party members than another.
@@ -84,7 +87,12 @@ type Spec struct {
 	Race  proto.Race
 
 	SpecOptions interface{}
-	Consumes    core.ConsumesCombo
+	// Which of the arena's three consumable lists this spec drinks. NOT the spec's own test
+	// fixture: see consumables.go for why that had to stop.
+	Role Role
+	// Imbues the class grants itself - a shaman's Windfury Weapon, a rogue's poisons. These
+	// override the role list, because they are not things a character buys.
+	ClassImbues ClassImbues
 	Cooldowns   *proto.Cooldowns
 	Buffs       core.BuffsCombo
 
@@ -289,7 +297,7 @@ func runAt(spec Spec, uiDir string, talent TalentBuild, gear string, rotation st
 		Class:              spec.Class,
 		Race:               spec.Race,
 		Equipment:          gearCombo.GearSet,
-		Consumes:           spec.Consumes.Consumes,
+		Consumes:           consumesFor(spec.Role, spec.ClassImbues).Consumes,
 		Buffs:              spec.Buffs.Player,
 		TalentsString:      talent.Talents,
 		Profession1:        proto.Profession_Engineering,

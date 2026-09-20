@@ -136,7 +136,12 @@ func TestArena(t *testing.T) {
 		Class:       proto.Class_ClassShaman,
 		Race:        proto.Race_RaceDwarf,
 		SpecOptions: PlayerOptionsSyncAuto,
-		Consumes:    Phase1Consumes,
-		Buffs:       core.ForeverBuffs,
+		Role:        arenalib.Melee,
+		// Windfury Weapon is the shaman casting on their own weapons, not a consumable.
+		ClassImbues: arenalib.ClassImbues{
+			MainHand: proto.WeaponImbue_WindfuryWeapon,
+			OffHand:  proto.WeaponImbue_WindfuryWeapon,
+		},
+		Buffs: core.ForeverBuffs,
 	})
 }

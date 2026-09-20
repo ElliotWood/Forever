@@ -1116,6 +1116,13 @@ func makeMagicResistancePotionMCD(character *Character, cdTimer *Timer) MajorCoo
 }
 
 func makeRageConsumableMCD(itemId int32, character *Character, cdTimer *Timer) MajorCooldown {
+	// A rage potion on a class with no rage bar used to nil-deref inside AddRage rather than
+	// do nothing, and the site lets anyone pick one on any character. Returning an empty
+	// cooldown is what "drank it, got nothing" already looks like everywhere else here.
+	if !character.HasRageBar() {
+		return MajorCooldown{}
+	}
+
 	minRoll := map[int32]float64{
 		5631:  20.0,
 		5633:  30.0,
