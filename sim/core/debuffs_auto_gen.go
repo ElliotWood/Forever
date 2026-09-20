@@ -338,7 +338,7 @@ func applyGeneratedDebuffs(target *Unit, debuffs *proto.Debuffs, raid *proto.Rai
 		MakePermanent(ExposeArmorAura(target, false, 0))
 	}
 	if debuffs.SunderArmor {
-		driveSunderArmor(target, debuffs.SunderArmor)
+		driveSunderArmor(target, debuffs, raid)
 	}
 	if debuffs.GiftOfArthas {
 		MakePermanent(GiftOfArthasAura(target, false, 0))

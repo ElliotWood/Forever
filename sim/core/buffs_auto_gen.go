@@ -641,10 +641,10 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 		MakePermanent(BloodPactAura(&char.Unit, false, 0))
 	}
 	if party.CommandingShout {
-		driveCommandingShout(char, party.CommandingShout)
+		driveCommandingShout(char, party)
 	}
 	if party.BattleShout {
-		driveBattleShout(char, party.BattleShout)
+		driveBattleShout(char, party)
 	}
 	if party.DevotionAura {
 		MakePermanent(DevotionAuraAura(&char.Unit, false, 0))

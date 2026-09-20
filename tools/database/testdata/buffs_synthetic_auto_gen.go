@@ -163,7 +163,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 		MakePermanent(SynthBlessingOfKingsAura(&char.Unit, false, 0))
 	}
 	if party.BattleShout {
-		driveSynthBattleShout(char, party.BattleShout)
+		driveSynthBattleShout(char, party)
 	}
 	if party.DevotionAura {
 		MakePermanent(SynthDevotionAuraAura(&char.Unit, false, 0))
@@ -172,7 +172,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 		MakePermanent(SynthFrostResistanceAuraAura(&char.Unit, false, 0))
 	}
 	if individual.Innervates > 0 {
-		driveSynthInnervates(char, individual.Innervates)
+		driveSynthInnervates(char, individual)
 	}
 	if raid.Thorns {
 		MakePermanent(SynthThornsAura(&char.Unit, false, 0))

@@ -121,7 +121,7 @@ func syntheticBuffRows() []ResolvedBuff {
 				Field: "sunder_armor", Scope: buffmanifest.ScopeDebuff,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDebuffStacking,
 				Go: "SynthSunderArmor", Name: "Sunder Armor", Category: "MajorArmorReduction",
-				SingleAura: true,
+				SingleAura: true, Driver: true,
 			},
 			SpellID: 11597, DurationMs: 30000, MaxStacks: 5, Supported: true,
 			Stats: []StatAmount{{Stat: stats.Armor, Amount: -450}},
@@ -271,12 +271,15 @@ func TestRenderedBuffFilesCompile(t *testing.T) {
 
 	drivers := filepath.Join(dir, "drivers.go")
 	if err := os.WriteFile(drivers, []byte("package core\n\n"+
-		"func driveSynthInnervates(char *Character, numSources int32) {\n"+
+		"import \"github.com/wowsims/forever/sim/core/proto\"\n\n"+
+		"func driveSynthInnervates(char *Character, individual *proto.IndividualBuffs) {\n"+
 		"\tnewGeneratedExternalCD(char, GeneratedBuff{ActionID: ActionID{SpellID: 29166}},"+
-		" numSources, 0, nil)\n}\n\n"+
-		"func driveSynthBattleShout(char *Character, _ bool) {\n"+
+		" individual.Innervates, 0, nil)\n}\n\n"+
+		"func driveSynthBattleShout(char *Character, _ *proto.PartyBuffs) {\n"+
 		"\tApplyFixedShoutAura(char, SynthBattleShoutAura(&char.Unit, false, 0),"+
-		" SynthBattleShoutCategory)\n}\n"), 0644); err != nil {
+		" SynthBattleShoutCategory)\n}\n\n"+
+		"func driveSynthSunderArmor(target *Unit, _ *proto.Debuffs, _ *proto.Raid) {\n"+
+		"\tMakePermanent(SynthSunderArmorAura(target, false, 0))\n}\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
 	overlay[filepath.Join(root, "sim", "core", "zz_synthetic_drivers.go")] = drivers

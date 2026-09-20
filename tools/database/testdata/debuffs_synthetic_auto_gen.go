@@ -114,7 +114,7 @@ func applyGeneratedDebuffs(target *Unit, debuffs *proto.Debuffs, raid *proto.Rai
 		MakePermanent(SynthThunderClapAura(target, false, 0))
 	}
 	if debuffs.SunderArmor {
-		MakePermanent(SynthSunderArmorAura(target, false, 0))
+		driveSynthSunderArmor(target, debuffs, raid)
 	}
 	if debuffs.ExposeArmor {
 		MakePermanent(SynthExposeArmorAura(target, false, 0))

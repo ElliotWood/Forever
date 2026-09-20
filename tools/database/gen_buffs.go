@@ -1782,7 +1782,9 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 // The apply block: the condition the proto field is read by, and the call that
 // puts the buff on the unit. A kind whose behaviour is a cooldown, a proc or an
 // uptime calls a driver of a fixed name that sim/core/buffs_manual.go declares,
-// and so does a row the manifest marks as driven.
+// and so does a row the manifest marks as driven. A driver is handed the whole
+// scope message rather than its own field, because a driven buff often reads a
+// second one: Grace of Air is 9 seconds long while the party is twisting totems.
 func buffApply(row ResolvedBuff) (string, string, bool) {
 	unit, field := "char", "individual"
 	switch row.Scope {
@@ -1814,7 +1816,11 @@ func buffApply(row ResolvedBuff) (string, string, bool) {
 		row.Kind == buffmanifest.KindExternalCD, row.Kind == buffmanifest.KindProc,
 		row.Kind == buffmanifest.KindManual, row.Kind == buffmanifest.KindDebuffUptime,
 		row.Kind == buffmanifest.KindItemCount:
-		body = fmt.Sprintf("drive%s(%s, %s)", row.Go, unit, access)
+		scope := field
+		if row.Scope == buffmanifest.ScopeDebuff {
+			scope = "debuffs, raid"
+		}
+		body = fmt.Sprintf("drive%s(%s, %s)", row.Go, unit, scope)
 	default:
 		target := "&char.Unit"
 		if row.Scope == buffmanifest.ScopeDebuff {
