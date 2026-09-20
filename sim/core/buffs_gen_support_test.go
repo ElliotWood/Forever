@@ -142,6 +142,60 @@ func TestGeneratedResistanceAuraCompetesForTheSchool(t *testing.T) {
 	}
 }
 
+// A buff that grants several stats at once still competes per school for the
+// resistances among them, which is how Gift of the Wild reads next to a
+// dedicated resistance buff. Everything else it grants is applied outright.
+func TestGeneratedBuffCompetesPerSchoolForItsResistances(t *testing.T) {
+	sim := &Simulation{}
+	target := newExclusiveTestTarget()
+	target.Env = &Environment{MeasuringStats: true}
+
+	giftOfTheWild := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+		Label:    "Generated Gift of the Wild",
+		ActionID: ActionID{SpellID: 21850},
+		Duration: time.Hour,
+		Stats: []StatConfig{
+			{stats.Armor, 385, false},
+			{stats.Stamina, 16, false},
+			{stats.ShadowResistance, 27, false},
+			{stats.FireResistance, 27, false},
+		},
+	}))
+
+	shadowProtection := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+		Label:        "Generated Shadow Protection",
+		ActionID:     ActionID{SpellID: 10958},
+		Duration:     time.Minute * 10,
+		StatCategory: ResistanceCategoryShadow,
+		Stats:        []StatConfig{{stats.ShadowResistance, 60, false}},
+	}))
+
+	giftOfTheWild.Activate(sim)
+	shadowProtection.Activate(sim)
+
+	if got := target.stats[stats.ShadowResistance]; got != 60 {
+		t.Errorf("shadow resistance is %v, want only the stronger source's 60", got)
+	}
+	if got := target.stats[stats.FireResistance]; got != 27 {
+		t.Errorf("fire resistance is %v, want the buff's own 27", got)
+	}
+	if got := target.stats[stats.Armor]; got != 385 {
+		t.Errorf("armor is %v, want 385 applied outright", got)
+	}
+	if got := target.stats[stats.Stamina]; got != 16 {
+		t.Errorf("stamina is %v, want 16 applied outright", got)
+	}
+
+	school := target.ExclusiveEffectManager.GetExclusiveEffectCategory(
+		ResistanceCategoryShadow + stats.ShadowResistance.StatName() + "Add")
+	if len(school.effects) != 2 {
+		t.Errorf("the shadow school holds %d effects, want both sources", len(school.effects))
+	}
+	if !giftOfTheWild.IsActive() {
+		t.Error("losing the school pushed the whole aura off, and it still grants everything else")
+	}
+}
+
 // The branch a buff with a category but no SingleAura takes: the pseudo-stats
 // are registered by attachGeneratedPseudoStats rather than folded into one
 // category-wide effect.

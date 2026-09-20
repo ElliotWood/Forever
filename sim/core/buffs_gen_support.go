@@ -121,6 +121,8 @@ func newGeneratedStatAura(unit *Unit, config GeneratedBuff) *Aura {
 // for everything it applies, which is also what every debuff does. Anything
 // else applies its amounts outright.
 func registerGeneratedEffects(aura *Aura, config GeneratedBuff, perStack float64, bareWhenCategory bool) *ExclusiveEffect {
+	config.Stats = registerGeneratedSchoolResistances(aura, config.Stats)
+
 	if config.StatCategory != "" {
 		registerExlusiveEffects(aura, config.Stats, config.StatCategory)
 		attachGeneratedPseudoStats(aura, config)
@@ -141,6 +143,39 @@ func registerGeneratedEffects(aura *Aura, config GeneratedBuff, perStack float64
 	}
 	attachGeneratedPseudoStats(aura, config)
 	return nil
+}
+
+// Every source of a school's resistance bids under that school, whatever else
+// the buff does, so that Gift of the Wild's 27 and a resistance aura's 60 do
+// not both land on the unit. The stats that are left are returned for the
+// caller to place. Armor is not a school and is one of them.
+func registerGeneratedSchoolResistances(aura *Aura, config []StatConfig) []StatConfig {
+	var rest []StatConfig
+	for _, statConfig := range config {
+		category := resistanceCategoryOfStat(statConfig.Stat)
+		if category == "" || statConfig.IsMultiplicative {
+			rest = append(rest, statConfig)
+			continue
+		}
+		makeExclusiveFlatStatBuff(aura, statConfig.Stat, statConfig.Amount, category)
+	}
+	return rest
+}
+
+func resistanceCategoryOfStat(stat stats.Stat) string {
+	switch stat {
+	case stats.ArcaneResistance:
+		return ResistanceCategoryArcane
+	case stats.FireResistance:
+		return ResistanceCategoryFire
+	case stats.FrostResistance:
+		return ResistanceCategoryFrost
+	case stats.NatureResistance:
+		return ResistanceCategoryNature
+	case stats.ShadowResistance:
+		return ResistanceCategoryShadow
+	}
+	return ""
 }
 
 // Whether the aura will bid under its own category, which is what the stack
