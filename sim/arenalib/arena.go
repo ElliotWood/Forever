@@ -176,36 +176,54 @@ func Run(t *testing.T, spec Spec) {
 			}
 		}
 
-		best, totalRuns := TalentBuild{}, 0
-		bestDps := top.Dps
+		// The shapes anyone choosing a build actually compares: the best this spec can do with
+		// 31 points committed to each tree, and with 21. An unconstrained climb answers "what
+		// is best" and says nothing about "what if I go deep in the other tree", which is the
+		// question a player is usually asking.
+		anchors, err := anchorsFor(spec.Class)
+		if err != nil {
+			t.Fatalf("%s: %s", spec.Dir, err)
+		}
+		share := optimiseBudget / (len(starts) + len(anchors))
+
+		found := map[string]string{}
+		totalRuns := 0
 		for _, start := range starts {
-			found, runs, err := optimise(spec, uiDir, start, top.Gear, top.Rotation, optimiseBudget/len(starts))
+			build, runs, err := optimise(spec, uiDir, start, top.Gear, top.Rotation, share)
 			totalRuns += runs
 			if err != nil {
 				t.Fatalf("%s: %s", spec.Dir, err)
 			}
-			if hasTalents(results, found.Talents) {
-				continue
+			found[build.Talents] = build.Name
+		}
+		for _, hold := range anchors {
+			build, runs, err := optimiseAnchored(spec, uiDir, starts[0], top.Gear, top.Rotation, share, &hold)
+			totalRuns += runs
+			if err != nil {
+				t.Fatalf("%s: %s", spec.Dir, err)
 			}
-			// Re-run at full iterations before comparing: the climb worked at survey quality,
-			// and two peaks a few DPS apart cannot be separated at that resolution.
-			row := run(spec, uiDir, found, top.Gear, top.Rotation)
-			if row.Dps > bestDps {
-				bestDps = row.Dps
-				best = found
+			// A shape that is not reachable, or that lands on a build another anchor already
+			// found, is not worth a row of its own.
+			if build.Talents != "" {
+				if _, taken := found[build.Talents]; !taken {
+					found[build.Talents] = hold.label
+				}
 			}
 		}
 
-		if best.Talents != "" {
-			row := run(spec, uiDir, best, top.Gear, top.Rotation)
+		added := 0
+		for talents, name := range found {
+			if hasTalents(results, talents) {
+				continue
+			}
+			row := run(spec, uiDir, TalentBuild{Name: name, Talents: talents}, top.Gear, top.Rotation)
 			row.Optimised = true
 			results = append(results, row)
-			sort.Slice(results, func(i, j int) bool { return results[i].Dps > results[j].Dps })
-			t.Logf("%s: %d runs from %d starts moved %.1f to %.1f dps (%s)",
-				spec.Dir, totalRuns, len(starts), top.Dps, row.Dps, best.Talents)
-		} else {
-			t.Logf("%s: %d runs from %d starts found nothing better than %s", spec.Dir, totalRuns, len(starts), top.Build)
+			added++
 		}
+		sort.Slice(results, func(i, j int) bool { return results[i].Dps > results[j].Dps })
+		t.Logf("%s: %d runs from %d starts and %d anchors added %d builds, best now %.1f dps",
+			spec.Dir, totalRuns, len(starts), len(anchors), added, results[0].Dps)
 	}
 
 	write(t, filepath.Join(outDir, spec.Dir+".json"), results)
@@ -420,4 +438,19 @@ func previouslyOptimised(uiDir string, spec string) []TalentBuild {
 		}
 	}
 	return builds
+}
+
+// The 31 and 21 point shapes, one pair per tree, named by the tree they commit to.
+func anchorsFor(class proto.Class) ([]anchor, error) {
+	trees, err := loadTrees(class)
+	if err != nil {
+		return nil, err
+	}
+	anchors := []anchor{}
+	for i, tree := range trees {
+		for _, points := range []int{31, 21} {
+			anchors = append(anchors, anchor{tree: i, points: points, label: fmt.Sprintf("%d %s", points, tree.Name)})
+		}
+	}
+	return anchors, nil
 }

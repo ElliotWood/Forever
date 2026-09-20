@@ -214,6 +214,41 @@ func (points allocation) valid(trees []tree) bool {
 	return true
 }
 
+// Which talents can move this spec's damage at all.
+//
+// Most of a tree cannot. Defensives, PvP talents, the ones the sim does not implement -
+// spending a point there changes nothing, and every pass that prices them spends a run to
+// rediscover that. Measuring once and skipping them afterwards roughly halves the cost of a
+// step, which is what pays for searching several builds instead of one.
+//
+// The probe deliberately leaves the legal space: it adds a point on top of the build without
+// taking one away, so the character briefly holds 52. The sim does not care - it applies
+// whatever the string says - and nothing probed this way is ever published. Only the answer
+// "did the number move" comes back out.
+//
+// Conservative in the direction that matters: a talent is dropped only when the number does
+// not move at all, so anything with the faintest effect stays in the search.
+func relevantTalents(trees []tree, base allocation, measure func(allocation) float64, baseDps float64) map[[2]int]bool {
+	relevant := map[[2]int]bool{}
+	for i, tree := range trees {
+		for j, t := range tree.Talents {
+			if t.NotSimulated {
+				continue
+			}
+			probe := base.clone()
+			if probe[i][j] < t.MaxPoints {
+				probe[i][j] = t.MaxPoints
+			} else {
+				probe[i][j] = 0
+			}
+			if measure(probe) != baseDps {
+				relevant[[2]int{i, j}] = true
+			}
+		}
+	}
+	return relevant
+}
+
 // One evaluated build.
 type candidate struct {
 	points allocation
@@ -227,7 +262,23 @@ type candidate struct {
 // could be put in, then actually run the best-looking trade rather than trusting the two
 // halves to add up. Talents interact - a point in Flurry is worth more next to Enrage - and
 // the separable estimate is only a way of deciding what to measure properly.
+// Holds a tree at a fixed number of points while everything around it is optimised.
+//
+// The shapes players actually compare: 31 points for a tree's capstone, 21 for the talent
+// two rows above it. An unconstrained climb finds one build and says nothing about what the
+// spec can do if you commit to a different tree, which is the question anyone choosing a
+// build is actually asking.
+type anchor struct {
+	tree   int
+	points int
+	label  string
+}
+
 func optimise(spec Spec, uiDir string, start TalentBuild, gear string, rotation string, budget int) (TalentBuild, int, error) {
+	return optimiseAnchored(spec, uiDir, start, gear, rotation, budget, nil)
+}
+
+func optimiseAnchored(spec Spec, uiDir string, start TalentBuild, gear string, rotation string, budget int, hold *anchor) (TalentBuild, int, error) {
 	trees, err := loadTrees(spec.Class)
 	if err != nil {
 		return start, 0, err
@@ -244,7 +295,26 @@ func optimise(spec Spec, uiDir string, start TalentBuild, gear string, rotation 
 		return runAt(spec, uiDir, TalentBuild{Talents: points.String()}, gear, rotation, searchIterations).Dps
 	}
 
+	// The starting build has to satisfy the anchor before the climb can preserve it, so points
+	// are moved into or out of the held tree first, cheapest first, until the total is right.
+	if hold != nil {
+		var err error
+		current, err = reshape(trees, current, *hold)
+		if err != nil {
+			return start, 0, nil
+		}
+	}
+
+	// Anything the anchor forbids is simply not a move.
+	allowed := func(from allocation, to allocation) bool {
+		if hold == nil {
+			return true
+		}
+		return sum(to[hold.tree]) == hold.points
+	}
+
 	best := candidate{points: current, dps: measure(current)}
+	relevant := relevantTalents(trees, current, measure, best.dps)
 
 	// Spend anything the starting build left on the table before trading points around.
 	// Not hypothetical: the mage Frost community build spends 49 of its 51 points, and
@@ -253,10 +323,10 @@ func optimise(spec Spec, uiDir string, start TalentBuild, gear string, rotation 
 	// that there is a point nobody moved.
 	for best.points.total() < talentBudget && runs < budget {
 		added := false
-		for _, add := range rank(trees, best.points, measure, best.dps, true) {
+		for _, add := range rank(trees, best.points, measure, best.dps, true, relevant) {
 			trial := best.points.clone()
 			trial[add.tree][add.talent]++
-			if !trial.valid(trees) {
+			if !trial.valid(trees) || !allowed(best.points, trial) {
 				continue
 			}
 			best = candidate{points: trial, dps: measure(trial)}
@@ -269,8 +339,8 @@ func optimise(spec Spec, uiDir string, start TalentBuild, gear string, rotation 
 	}
 
 	for step := 0; step < maxSteps && runs < budget; step++ {
-		removals := rank(trees, best.points, measure, best.dps, false)
-		additions := rank(trees, best.points, measure, best.dps, true)
+		removals := rank(trees, best.points, measure, best.dps, false, relevant)
+		additions := rank(trees, best.points, measure, best.dps, true, relevant)
 
 		// Only the few most promising pairs are run for real. The estimate is good enough to
 		// rank candidates and not good enough to accept one.
@@ -289,7 +359,7 @@ func optimise(spec Spec, uiDir string, start TalentBuild, gear string, rotation 
 				trial := best.points.clone()
 				trial[remove.tree][remove.talent]--
 				trial[add.tree][add.talent]++
-				if !trial.valid(trees) || trial.total() != best.points.total() {
+				if !trial.valid(trees) || trial.total() != best.points.total() || !allowed(best.points, trial) {
 					continue
 				}
 				dps := measure(trial)
@@ -321,10 +391,13 @@ type scoredMove struct {
 }
 
 // Prices every legal single-point change of one direction, best first.
-func rank(trees []tree, points allocation, measure func(allocation) float64, base float64, adding bool) []scoredMove {
+func rank(trees []tree, points allocation, measure func(allocation) float64, base float64, adding bool, relevant map[[2]int]bool) []scoredMove {
 	moves := []scoredMove{}
 	for i, tree := range trees {
 		for j := range tree.Talents {
+			if !relevant[[2]int{i, j}] {
+				continue
+			}
 			trial := points.clone()
 			if adding {
 				if points[i][j] >= tree.Talents[j].MaxPoints {
@@ -352,4 +425,115 @@ func topN[T any](items []T, n int) []T {
 		return items
 	}
 	return items[:n]
+}
+
+func sum(points []int) int {
+	total := 0
+	for _, p := range points {
+		total += p
+	}
+	return total
+}
+
+// Moves points into or out of the held tree until it holds exactly what the anchor asks.
+//
+// Blind on purpose - it takes from wherever is legal rather than measuring, because the
+// climb that follows is what decides where points belong. This only has to produce a legal
+// build of the right shape for it to start from.
+func reshape(trees []tree, points allocation, hold anchor) (allocation, error) {
+	out := points.clone()
+
+	for sum(out[hold.tree]) < hold.points {
+		placed := false
+		for j, t := range trees[hold.tree].Talents {
+			if out[hold.tree][j] >= t.MaxPoints {
+				continue
+			}
+			trial := out.clone()
+			trial[hold.tree][j]++
+			if trial.valid(trees) {
+				out, placed = trial, true
+				break
+			}
+		}
+		if !placed {
+			return nil, fmt.Errorf("cannot reach %d points in %s", hold.points, trees[hold.tree].Name)
+		}
+	}
+	for sum(out[hold.tree]) > hold.points {
+		removed := false
+		// Deepest first: a point in the last row is never holding another one up.
+		for j := len(trees[hold.tree].Talents) - 1; j >= 0; j-- {
+			if out[hold.tree][j] == 0 {
+				continue
+			}
+			trial := out.clone()
+			trial[hold.tree][j]--
+			if trial.valid(trees) {
+				out, removed = trial, true
+				break
+			}
+		}
+		if !removed {
+			return nil, fmt.Errorf("cannot come down to %d points in %s", hold.points, trees[hold.tree].Name)
+		}
+	}
+
+	// The points taken out of the held tree have to land somewhere, and the ones added to it
+	// had to come from somewhere. Balanced blindly for the same reason as above.
+	for out.total() > talentBudget {
+		removed := false
+		for i := range trees {
+			if hold.tree == i {
+				continue
+			}
+			for j := len(trees[i].Talents) - 1; j >= 0; j-- {
+				if out[i][j] == 0 {
+					continue
+				}
+				trial := out.clone()
+				trial[i][j]--
+				if trial.valid(trees) {
+					out, removed = trial, true
+					break
+				}
+			}
+			if removed {
+				break
+			}
+		}
+		if !removed {
+			return nil, fmt.Errorf("cannot come down to %d points", talentBudget)
+		}
+	}
+	for out.total() < talentBudget {
+		placed := false
+		for i := range trees {
+			if hold.tree == i {
+				continue
+			}
+			for j, t := range trees[i].Talents {
+				if out[i][j] >= t.MaxPoints {
+					continue
+				}
+				trial := out.clone()
+				trial[i][j]++
+				if trial.valid(trees) {
+					out, placed = trial, true
+					break
+				}
+			}
+			if placed {
+				break
+			}
+		}
+		if !placed {
+			return nil, fmt.Errorf("cannot reach %d points", talentBudget)
+		}
+	}
+
+	if !out.valid(trees) || out.total() != talentBudget || sum(out[hold.tree]) != hold.points {
+		return nil, fmt.Errorf("reshaping produced a build that does not hold")
+	}
+	return out, nil
 }

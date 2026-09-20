@@ -106,6 +106,24 @@ const searchGains = (): Map<string, number> => {
 
 const gains = searchGains();
 
+/** The x/y/z everyone reads a build as, straight off the talents string. */
+const split = (talents: string) => {
+	const trees = talents.split('-');
+	while (trees.length < 3) trees.push('');
+	return trees
+		.slice(0, 3)
+		.map(tree => [...tree].reduce((total, char) => total + (parseInt(char) || 0), 0))
+		.join('/');
+};
+
+/**
+ * A searched build keeps the name of the build it started from, which is fine right up until
+ * that name contains a point split. "Retribution 10/0/41, optimised" is not 10/0/41 any more
+ * - it is 15/0/36 - and printing the old numbers next to the new ones invites the reader to
+ * believe the wrong one. The name keeps its origin, the split beside it keeps the truth.
+ */
+const displayName = (build: Build) => (build.optimised ? build.build.replace(/\s*\d+\/\d+\/\d+/, '') : build.build);
+
 const specName = (spec: string) => (SPECS[spec] !== undefined ? specNames[SPECS[spec]] : spec);
 
 /**
@@ -364,7 +382,8 @@ export class ArenaPage {
 					{spec !== undefined ? <img className="metrics-action-icon" src={titleIcons[spec]} alt="" /> : <></>}
 					<span className="arena-build-names">
 						<span className="arena-spec-name">{specName(build.spec)}</span>
-						<span className={`arena-talents text-${classColor}`}>{build.build}</span>
+						<span className={`arena-talents text-${classColor}`}>{displayName(build)}</span>
+						<span className="arena-split">{split(build.talents)}</span>
 						{build.optimised ? (
 							<span
 								className="arena-found"

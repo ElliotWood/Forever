@@ -232,6 +232,14 @@
 		font-weight: 600;
 	}
 
+	// The x/y/z split, because a build named "31 Fury" and a build named "Fury 17/34/0" are
+	// the same kind of thing and should not need different reading.
+	.arena-split {
+		color: var(--bs-gray-500);
+		font-size: 0.75rem;
+		font-variant-numeric: tabular-nums;
+	}
+
 	// A build nobody wrote down. Marked rather than hidden: it is the most interesting row in
 	// the table and also the one carrying the most assumptions.
 	.arena-found {

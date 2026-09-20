@@ -1,6 +1,6 @@
 {
-	"commit": "61693fe0ce7b42ed3f7e5d667b3ddba32e14f1b8",
-	"generated": "2026-09-20T00:52:20Z",
+	"commit": "23eea2e5044298736c7e842ff22bed54abfb883f",
+	"generated": "2026-09-20T02:39:07Z",
 	"iterations": 5000,
 	"builds": [
 		{
@@ -192,6 +192,25 @@
 		{
 			"spec": "warrior",
 			"build": "Fury 17/34/0, optimised",
+			"talents": "20305213002-550401005150010051",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 874.8585736137175,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6362,
+				"core": 0.2523,
+				"forever": 0.1115,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.7,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warrior",
+			"build": "Fury 17/34/0, optimised",
 			"talents": "30305013002-350501015151010051",
 			"gear": "p0.bis",
 			"rotation": "dps_reck",
@@ -265,6 +284,44 @@
 		},
 		{
 			"spec": "warrior",
+			"build": "31 Fury",
+			"talents": "33305013002-35050101515101003",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 796.7218305124946,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.7822,
+				"core": 0.2178,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.7,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warrior",
+			"build": "21 Arms",
+			"talents": "34305013002-35050101515101002",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 770.597141209782,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.7831,
+				"core": 0.2169,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.7,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warrior",
 			"build": "Fury 17/34/0",
 			"talents": "30305213-550501015050010051",
 			"gear": "p0.bis",
@@ -293,6 +350,25 @@
 				"classic": 0.4803,
 				"core": 0.3213,
 				"forever": 0.1985,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.2,
+			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "retribution_paladin",
+			"build": "Retribution 10/0/41, optimised",
+			"talents": "250003--532253312012331311",
+			"gear": "launch",
+			"rotation": "basic_ret",
+			"dps": 741.3944688482559,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.4905,
+				"core": 0.3264,
+				"forever": 0.1831,
 				"measured": 0,
 				"unknown": 0
 			},
@@ -376,6 +452,25 @@
 		},
 		{
 			"spec": "warrior",
+			"build": "21 Protection",
+			"talents": "-35050101515001003-552531",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 722.7157343258037,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.7473,
+				"core": 0.2527,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.7,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warrior",
 			"build": "Fury 17/34/0, optimised",
 			"talents": "30305013002-350501015151010051",
 			"gear": "arms_launch",
@@ -390,6 +485,25 @@
 				"unknown": 0
 			},
 			"ilvl": 64.9,
+			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "retribution_paladin",
+			"build": "31 Retribution",
+			"talents": "255323--142253300012330101",
+			"gear": "launch",
+			"rotation": "basic_ret",
+			"dps": 696.7146948446872,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.4753,
+				"core": 0.3471,
+				"forever": 0.1776,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.2,
 			"slots": 16,
 			"optimised": true
 		},
@@ -429,6 +543,25 @@
 			},
 			"ilvl": 65.3,
 			"slots": 15
+		},
+		{
+			"spec": "warlock",
+			"build": "Demonic Pact 2/31/18, optimised",
+			"talents": "102-0005003221220311351-0550005002",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 686.3018348202404,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.134,
+				"forever": 0.8659,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "warrior",
@@ -522,6 +655,44 @@
 			},
 			"ilvl": 66.5,
 			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warrior",
+			"build": "21 Fury",
+			"talents": "05325213132003-3505010151",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 676.1288655398815,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.7312,
+				"core": 0.2556,
+				"forever": 0.0132,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.7,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "enhancement_shaman",
+			"build": "Enhancement 16/35/0, optimised",
+			"talents": "05023315-054030030205112051",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 673.155687636846,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2481,
+				"core": 0.4204,
+				"forever": 0.3314,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.5,
+			"slots": 16,
 			"optimised": true
 		},
 		{
@@ -635,6 +806,44 @@
 			"slots": 16
 		},
 		{
+			"spec": "mage",
+			"build": "Frost 14/0/37, optimised",
+			"talents": "050005013-02-0555003301001301251",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 660.3292090165569,
+			"rests": {
+				"assumed": 0.2768,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.7232,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "enhancement_shaman",
+			"build": "21 Elemental Combat",
+			"talents": "15033305001-05503003100510205",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 659.7326061262813,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2454,
+				"core": 0.4095,
+				"forever": 0.3451,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.5,
+			"slots": 16,
+			"optimised": true
+		},
+		{
 			"spec": "warlock",
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
@@ -709,6 +918,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "warlock",
+			"build": "21 Destruction",
+			"talents": "-000500322122031135-2551005003",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 652.5038113610794,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.141,
+				"forever": 0.859,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "warrior",
 			"build": "Arms 39/12/0",
 			"talents": "32305213132515201-5502",
@@ -765,6 +993,25 @@
 		},
 		{
 			"spec": "shadow_priest",
+			"build": "Shadow 15/0/36, optimised",
+			"talents": "025300031101--550022401201302251",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 648.2153327008693,
+			"rests": {
+				"assumed": 0.0063,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9937,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.8,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "shadow_priest",
 			"build": "Shadow 15/0/36",
 			"talents": "0253000311--550022501201302251",
 			"gear": "launch",
@@ -780,6 +1027,25 @@
 			},
 			"ilvl": 63.8,
 			"slots": 17
+		},
+		{
+			"spec": "warlock",
+			"build": "DS/Ruin Pandemic 24/11/16, optimised",
+			"talents": "25220000135101-0025003001-0550005102",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 646.536103814536,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1381,
+				"forever": 0.8619,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "warrior",
@@ -836,6 +1102,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "enhancement_shaman",
+			"build": "21 Restoration",
+			"talents": "-05503003100510205-55335",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 643.3863851165668,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.256,
+				"core": 0.4323,
+				"forever": 0.3116,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.5,
+			"slots": 16,
+			"optimised": true
+		},
+		{
 			"spec": "mage",
 			"build": "Frost 14/0/37",
 			"talents": "050005013--0555003301001301251",
@@ -855,6 +1140,44 @@
 			"points": 49
 		},
 		{
+			"spec": "mage",
+			"build": "31 Frost",
+			"talents": "254005001-03-055500330100030123",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 643.0831111672135,
+			"rests": {
+				"assumed": 0.2809,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.7191,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warlock",
+			"build": "31 Affliction",
+			"talents": "25552303132-0002-0550005003",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 642.2107846179042,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1315,
+				"forever": 0.8685,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "warlock",
 			"build": "DS/Ruin Pandemic 24/11/16",
 			"talents": "25220010135201-0025003001-05500051",
@@ -871,6 +1194,44 @@
 			},
 			"ilvl": 65.1,
 			"slots": 17
+		},
+		{
+			"spec": "warlock",
+			"build": "21 Affliction",
+			"talents": "25442200002-000500322-0550005003",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 635.9298799956671,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1404,
+				"forever": 0.8596,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warrior",
+			"build": "31 Arms",
+			"talents": "353252131321-350501015",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 635.6346794810461,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.7456,
+				"core": 0.2404,
+				"forever": 0.0141,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.7,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "warrior",
@@ -929,6 +1290,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "tank_warrior",
+			"build": "31 Fury",
+			"talents": "-555531131000010001-5020312322",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 629.323670149919,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.7147,
+				"core": 0.1344,
+				"forever": 0.1509,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.9,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "warlock",
 			"build": "DS/Ruin Pandemic 24/11/16",
 			"talents": "25220010135201-0025003001-05500051",
@@ -945,6 +1325,25 @@
 			},
 			"ilvl": 66.5,
 			"slots": 17
+		},
+		{
+			"spec": "mage",
+			"build": "21 Arcane",
+			"talents": "255215001--055500330100030122",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 626.5147394970978,
+			"rests": {
+				"assumed": 0.2748,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.7252,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "warlock",
@@ -984,6 +1383,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "warlock",
+			"build": "21 Demonology",
+			"talents": "2540000001-000500322122031-0550005003",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 625.1192087821589,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1428,
+				"forever": 0.8571,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3, optimised",
 			"talents": "005303104-22530300001515231-002",
@@ -1018,6 +1436,44 @@
 				"unknown": 0.0801
 			},
 			"ilvl": 68.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "rogue",
+			"build": "31 Combat",
+			"talents": "205303104-22530300001515211-002",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 623.3733895070392,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5941,
+				"forever": 0.0184,
+				"measured": 0,
+				"unknown": 0.3875
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warlock",
+			"build": "Shadow and Flame 13/11/27, optimised",
+			"talents": "25301-0025003001-055035510210002",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 621.7905230445064,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1436,
+				"forever": 0.8564,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
 			"slots": 17,
 			"optimised": true
 		},
@@ -1240,6 +1696,25 @@
 			},
 			"ilvl": 66.3,
 			"slots": 17
+		},
+		{
+			"spec": "warlock",
+			"build": "Deep Affliction 35/0/16, optimised",
+			"talents": "2535001013521105--05100551",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 613.5636630445588,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1323,
+				"forever": 0.8677,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -1588,6 +2063,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "rogue",
+			"build": "21 Assassination",
+			"talents": "325303104-225303000015151-002",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 599.5251359121753,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6104,
+				"forever": 0.0189,
+				"measured": 0,
+				"unknown": 0.3707
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "warlock",
 			"build": "DS/Ruin Pandemic 24/11/16",
 			"talents": "25220010135201-0025003001-05500051",
@@ -1682,6 +2176,25 @@
 		},
 		{
 			"spec": "warlock",
+			"build": "31 Destruction",
+			"talents": "002-00050032212201-2555335003",
+			"gear": "launch",
+			"rotation": "forever_pact",
+			"dps": 595.0004251528168,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.1501,
+				"forever": 0.8499,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "warlock",
 			"build": "Shadow and Flame 13/11/27",
 			"talents": "25501-0025003001-055035510010002",
 			"gear": "mc",
@@ -1715,6 +2228,25 @@
 			},
 			"ilvl": 61.7,
 			"slots": 15,
+			"optimised": true
+		},
+		{
+			"spec": "feral_tank_druid",
+			"build": "21 Restoration",
+			"talents": "-500320212113221005-5553003",
+			"gear": "launch",
+			"rotation": "bear",
+			"dps": 592.3537451320258,
+			"rests": {
+				"assumed": 0.4009,
+				"classic": 0.4983,
+				"core": 0.0432,
+				"forever": 0.0576,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 70,
+			"slots": 16,
 			"optimised": true
 		},
 		{
@@ -1755,6 +2287,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "tank_warrior",
+			"build": "21 Fury",
+			"talents": "-55541000000001-5020311320312124",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 592.2948287051995,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.8944,
+				"core": 0.1056,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.9,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "warlock",
 			"build": "Shadow and Flame 13/11/27",
 			"talents": "25501-0025003001-055035510010002",
@@ -1771,6 +2322,25 @@
 			},
 			"ilvl": 66.5,
 			"slots": 17
+		},
+		{
+			"spec": "feral_tank_druid",
+			"build": "31 Feral Combat",
+			"talents": "500011-5003202123132210301-0550003",
+			"gear": "launch",
+			"rotation": "bear",
+			"dps": 591.4848528067492,
+			"rests": {
+				"assumed": 0.4165,
+				"classic": 0.4984,
+				"core": 0.0302,
+				"forever": 0.0549,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 70,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "tank_warrior",
@@ -1864,6 +2434,25 @@
 			"slots": 15
 		},
 		{
+			"spec": "warrior",
+			"build": "31 Protection",
+			"talents": "-3505010141-5525312332",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 590.0198470503454,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.7212,
+				"core": 0.2788,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.7,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3, optimised",
 			"talents": "005303104-22530300001515231-002",
@@ -1938,6 +2527,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "warrior",
+			"build": "Arms 39/12/0, optimised",
+			"talents": "22305213032515201-5504",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 587.9562036544594,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.6191,
+				"core": 0.3809,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.7,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3, optimised",
 			"talents": "005303104-22530300001515231-002",
@@ -1975,6 +2583,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "tank_warrior",
+			"build": "Protection 1/0/50, optimised",
+			"talents": "1-05-552031233331212531",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 583.9603483558553,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9137,
+				"core": 0.0863,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.9,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
@@ -2009,6 +2636,25 @@
 			},
 			"ilvl": 65.1,
 			"slots": 17
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "21 Protection",
+			"talents": "14325213102001-05-5020312321100001",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 582.0712472458638,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.905,
+				"core": 0.095,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.9,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "warlock",
@@ -2048,6 +2694,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "rogue",
+			"build": "21 Combat",
+			"talents": "3253231250000002-225303000015-002",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 580.2063618204353,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5806,
+				"forever": 0.0188,
+				"measured": 0,
+				"unknown": 0.4006
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "warlock",
 			"build": "Shadow and Flame 13/11/27",
 			"talents": "25501-0025003001-055035510010002",
@@ -2082,6 +2747,25 @@
 			},
 			"ilvl": 67.3,
 			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "31 Protection",
+			"talents": "25321002-05-5020312320312124",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 578.9756296064241,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9016,
+				"core": 0.0984,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.9,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -2160,6 +2844,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0, optimised",
+			"talents": "02532110521201051-225303000013-001",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 571.1425155971463,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5736,
+				"forever": 0.0247,
+				"measured": 0,
+				"unknown": 0.4017
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "warlock",
 			"build": "Shadow and Flame 13/11/27",
 			"talents": "25501-0025003001-055035510010002",
@@ -2194,6 +2897,44 @@
 			},
 			"ilvl": 66.5,
 			"slots": 17
+		},
+		{
+			"spec": "feral_tank_druid",
+			"build": "Bear Tank 0/31/20, optimised",
+			"talents": "-5003212120132210331-0540325",
+			"gear": "launch",
+			"rotation": "bear",
+			"dps": 569.7377217358631,
+			"rests": {
+				"assumed": 0.4177,
+				"classic": 0.47,
+				"core": 0.0572,
+				"forever": 0.0552,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 70,
+			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "rogue",
+			"build": "31 Assassination",
+			"talents": "3253231253000002-225303000012-002",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 568.2580524039762,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.5695,
+				"forever": 0.0215,
+				"measured": 0,
+				"unknown": 0.409
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "tank_warrior",
@@ -2327,6 +3068,25 @@
 		},
 		{
 			"spec": "tank_warrior",
+			"build": "31 Arms",
+			"talents": "15325213132102-02-502031232",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 561.2904464511489,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9015,
+				"core": 0.0985,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.9,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "tank_warrior",
 			"build": "Protection 1/0/50",
 			"talents": "1--552531233331212531",
 			"gear": "launch",
@@ -2342,6 +3102,44 @@
 			},
 			"ilvl": 67.9,
 			"slots": 17
+		},
+		{
+			"spec": "mage",
+			"build": "21 Fire",
+			"talents": "-2155231000002-04550033310003012",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 560.0525047655602,
+			"rests": {
+				"assumed": 0.28,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.72,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "21 Arms",
+			"talents": "15325210002--5020312320312123",
+			"gear": "launch",
+			"rotation": "dps_reck",
+			"dps": 559.9004510560087,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.9025,
+				"core": 0.0975,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.9,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -2732,6 +3530,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "feral_tank_druid",
+			"build": "21 Feral Combat",
+			"talents": "543221-50032021231011-0550003",
+			"gear": "launch",
+			"rotation": "bear",
+			"dps": 547.5233993004894,
+			"rests": {
+				"assumed": 0.3949,
+				"classic": 0.4898,
+				"core": 0.0485,
+				"forever": 0.0669,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 70,
+			"slots": 16,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
@@ -2823,6 +3640,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "feral_druid",
+			"build": "31 Feral Combat",
+			"talents": "150022-5500002123032213011-055",
+			"gear": "launch",
+			"rotation": "feral",
+			"dps": 544.1962733121388,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0344,
+				"core": 0.4176,
+				"forever": 0.548,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
@@ -2857,6 +3693,25 @@
 			},
 			"ilvl": 65.2,
 			"slots": 17
+		},
+		{
+			"spec": "mage",
+			"build": "Arcane 35/0/16, optimised",
+			"talents": "055005023100311431--04550003",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 543.3693198906451,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -2974,7 +3829,7 @@
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
 			"gear": "launch",
-			"rotation": "forever_shadow_and_flame",
+			"rotation": "forever_ds_ruin",
 			"dps": 539.6348168660835,
 			"rests": {
 				"assumed": 0,
@@ -2992,7 +3847,7 @@
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
 			"gear": "launch",
-			"rotation": "forever_ds_ruin",
+			"rotation": "forever_shadow_and_flame",
 			"dps": 539.6348168660835,
 			"rests": {
 				"assumed": 0,
@@ -3094,6 +3949,25 @@
 			},
 			"ilvl": 60.4,
 			"slots": 17
+		},
+		{
+			"spec": "retribution_paladin",
+			"build": "21 Holy",
+			"talents": "2553231--1422533000123301",
+			"gear": "launch",
+			"rotation": "basic_ret",
+			"dps": 537.1663510193855,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.33,
+				"core": 0.448,
+				"forever": 0.222,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.2,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "feral_druid",
@@ -3202,6 +4076,25 @@
 			},
 			"ilvl": 67.7,
 			"slots": 17
+		},
+		{
+			"spec": "retribution_paladin",
+			"build": "21 Protection",
+			"talents": "-553251-1422513000123303",
+			"gear": "launch",
+			"rotation": "basic_ret",
+			"dps": 534.1730269053528,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3355,
+				"core": 0.4339,
+				"forever": 0.2306,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.2,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -3459,6 +4352,25 @@
 		},
 		{
 			"spec": "rogue",
+			"build": "21 Subtlety",
+			"talents": "002-225303000005152-53232231",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 519.2511826553625,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.69,
+				"forever": 0.0217,
+				"measured": 0,
+				"unknown": 0.2883
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "rogue",
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "backstab_launch",
@@ -3492,6 +4404,44 @@
 			},
 			"ilvl": 68.1,
 			"slots": 17
+		},
+		{
+			"spec": "mage",
+			"build": "21 Frost",
+			"talents": "25522422200000001-03-05550033",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 515.2271965253157,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "feral_tank_druid",
+			"build": "31 Restoration",
+			"talents": "-5003202122102-555333511",
+			"gear": "launch",
+			"rotation": "bear",
+			"dps": 512.1500875335606,
+			"rests": {
+				"assumed": 0.3918,
+				"classic": 0.5019,
+				"core": 0.0396,
+				"forever": 0.0667,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 70,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -3602,6 +4552,25 @@
 			},
 			"ilvl": 60.4,
 			"slots": 17
+		},
+		{
+			"spec": "mage",
+			"build": "31 Arcane",
+			"talents": "25522422312000001--05450033",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 509.6609582206073,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "hunter",
@@ -4025,6 +4994,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "hunter",
+			"build": "Beast Mastery 35/16/0, optimised",
+			"talents": "5520001505121241-0050531-3",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 497.89002852944407,
+			"rests": {
+				"assumed": 0.0991,
+				"classic": 0.0493,
+				"core": 0.6844,
+				"forever": 0.1672,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
@@ -4096,6 +5084,25 @@
 			},
 			"ilvl": 61.3,
 			"slots": 17
+		},
+		{
+			"spec": "feral_druid",
+			"build": "21 Restoration",
+			"talents": "-550000212303221301-55533",
+			"gear": "launch",
+			"rotation": "feral",
+			"dps": 495.0818168095765,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0276,
+				"core": 0.4268,
+				"forever": 0.5457,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -4297,6 +5304,25 @@
 			"slots": 16
 		},
 		{
+			"spec": "feral_druid",
+			"build": "21 Balance",
+			"talents": "5532222-5500002123002003-052",
+			"gear": "launch",
+			"rotation": "feral",
+			"dps": 485.4491457395465,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.033,
+				"core": 0.4386,
+				"forever": 0.5285,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "protection_paladin",
 			"build": "Protection 0/45/6, optimised",
 			"talents": "250003-3532013301301501-14005",
@@ -4388,6 +5414,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "hunter",
+			"build": "21 Marksmanship",
+			"talents": "53200015050112-3353421-5",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 480.0866222384565,
+			"rests": {
+				"assumed": 0.1272,
+				"classic": 0.0475,
+				"core": 0.6492,
+				"forever": 0.1761,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "balance_druid",
 			"build": "Moonkin 38/0/13, optimised",
 			"talents": "533222011550135--055003",
@@ -4403,6 +5448,25 @@
 				"unknown": 0
 			},
 			"ilvl": 63.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "hunter",
+			"build": "21 Beast Mastery",
+			"talents": "53200015040001-3553441-5",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 478.7909427827009,
+			"rests": {
+				"assumed": 0.1223,
+				"classic": 0.043,
+				"core": 0.6552,
+				"forever": 0.1795,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.6,
 			"slots": 17,
 			"optimised": true
 		},
@@ -4423,6 +5487,25 @@
 			},
 			"ilvl": 65.3,
 			"slots": 17
+		},
+		{
+			"spec": "rogue",
+			"build": "31 Subtlety",
+			"talents": "001-225303000004-5323223312212",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 476.0891607184581,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6672,
+				"forever": 0.0224,
+				"measured": 0,
+				"unknown": 0.3104
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "warlock",
@@ -4534,6 +5617,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "feral_tank_druid",
+			"build": "21 Balance",
+			"talents": "5532222-5003202122-0550003",
+			"gear": "launch",
+			"rotation": "bear",
+			"dps": 469.2342254140796,
+			"rests": {
+				"assumed": 0.3183,
+				"classic": 0.5155,
+				"core": 0.0865,
+				"forever": 0.0797,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 70,
+			"slots": 16,
+			"optimised": true
+		},
+		{
 			"spec": "protection_paladin",
 			"build": "Protection 0/45/6, optimised",
 			"talents": "230003-5530410021301501-14205",
@@ -4569,6 +5671,139 @@
 			},
 			"ilvl": 68.1,
 			"slots": 17
+		},
+		{
+			"spec": "hunter",
+			"build": "Marksmanship 0/39/12, optimised",
+			"talents": "3-305055130140315-50024001",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 466.34078026452426,
+			"rests": {
+				"assumed": 0.0959,
+				"classic": 0.031,
+				"core": 0.6555,
+				"forever": 0.2177,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "balance_druid",
+			"build": "31 Balance",
+			"talents": "503222011550131-52-055003",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 466.2412515975172,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1637,
+				"core": 0.0043,
+				"forever": 0.832,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "protection_paladin",
+			"build": "Protection 0/45/6, optimised",
+			"talents": "2-5532113321301551-15002",
+			"gear": "launch",
+			"rotation": "p5prot",
+			"dps": 464.8107429603989,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3262,
+				"core": 0.4239,
+				"forever": 0.2498,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.3,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "hunter",
+			"build": "31 Marksmanship",
+			"talents": "53200014-355355130000001-5",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 463.5477865254531,
+			"rests": {
+				"assumed": 0.1124,
+				"classic": 0.0349,
+				"core": 0.664,
+				"forever": 0.1887,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "feral_druid",
+			"build": "21 Feral Combat",
+			"talents": "5532221-5500002123020001-055",
+			"gear": "launch",
+			"rotation": "feral",
+			"dps": 461.5811614127632,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0169,
+				"core": 0.4837,
+				"forever": 0.4994,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "balance_druid",
+			"build": "21 Restoration",
+			"talents": "50322201155013--555303",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 461.4852297857957,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1643,
+				"core": 0.0042,
+				"forever": 0.8315,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36, optimised",
+			"talents": "1251231--5320003310013211551",
+			"gear": "backstab_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 459.2876362403705,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.6602,
+				"forever": 0.0229,
+				"measured": 0,
+				"unknown": 0.3169
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -4794,7 +6029,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "backstab_launch",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 449.1900135179343,
 			"rests": {
 				"assumed": 0,
@@ -4812,7 +6047,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "backstab_launch",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 449.1900135179343,
 			"rests": {
 				"assumed": 0,
@@ -4860,6 +6095,25 @@
 			},
 			"ilvl": 68.7,
 			"slots": 17
+		},
+		{
+			"spec": "hunter",
+			"build": "21 Survival",
+			"talents": "53200014-0050541-55524",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 448.77639431083145,
+			"rests": {
+				"assumed": 0.0967,
+				"classic": 0.0361,
+				"core": 0.6758,
+				"forever": 0.1914,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.6,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -4934,6 +6188,44 @@
 			"slots": 17
 		},
 		{
+			"spec": "hunter",
+			"build": "Survival 0/15/36, optimised",
+			"talents": "3-0050551-550230031051020131",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 445.1856844362069,
+			"rests": {
+				"assumed": 0.1039,
+				"classic": 0.0325,
+				"core": 0.6654,
+				"forever": 0.1982,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "hunter",
+			"build": "31 Survival",
+			"talents": "502-0050521-555253231",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 444.6271967273815,
+			"rests": {
+				"assumed": 0.1036,
+				"classic": 0.0325,
+				"core": 0.6678,
+				"forever": 0.1961,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
@@ -4950,6 +6242,25 @@
 			},
 			"ilvl": 67.7,
 			"slots": 17
+		},
+		{
+			"spec": "protection_paladin",
+			"build": "21 Retribution",
+			"talents": "1-55303100213015-352252000002",
+			"gear": "launch",
+			"rotation": "p5prot",
+			"dps": 443.77332955176917,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3701,
+				"core": 0.463,
+				"forever": 0.1669,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.3,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "warlock",
@@ -5004,6 +6315,25 @@
 			},
 			"ilvl": 66.3,
 			"slots": 17
+		},
+		{
+			"spec": "mage",
+			"build": "Fire 0/35/16, optimised",
+			"talents": "-03552020130123151-033500033",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 441.1595212332678,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -5083,7 +6413,7 @@
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
 			"gear": "prebis",
-			"rotation": "forever_shadow_and_flame",
+			"rotation": "forever_ds_ruin",
 			"dps": 436.8864324597585,
 			"rests": {
 				"assumed": 0,
@@ -5101,7 +6431,7 @@
 			"build": "Demonic Pact 2/31/18",
 			"talents": "113-0005003221220311351-0550005",
 			"gear": "prebis",
-			"rotation": "forever_ds_ruin",
+			"rotation": "forever_shadow_and_flame",
 			"dps": 436.8864324597585,
 			"rests": {
 				"assumed": 0,
@@ -5119,7 +6449,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_backstab_p1_bis",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 435.9977325882484,
 			"rests": {
 				"assumed": 0,
@@ -5137,7 +6467,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_backstab_p1_bis",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 435.9977325882484,
 			"rests": {
 				"assumed": 0,
@@ -5205,6 +6535,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "retribution_paladin",
+			"build": "21 Retribution",
+			"talents": "25532321322--14225330000001",
+			"gear": "launch",
+			"rotation": "basic_ret",
+			"dps": 431.7144833154992,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.322,
+				"core": 0.4528,
+				"forever": 0.2252,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.2,
+			"slots": 16,
+			"optimised": true
+		},
+		{
 			"spec": "protection_paladin",
 			"build": "Protection 0/45/6",
 			"talents": "-5532513321301551-15",
@@ -5239,6 +6588,63 @@
 			},
 			"ilvl": 67.1,
 			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "protection_paladin",
+			"build": "21 Protection",
+			"talents": "255303-55301100213-14205",
+			"gear": "launch",
+			"rotation": "p5prot",
+			"dps": 429.0916887126832,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3924,
+				"core": 0.4345,
+				"forever": 0.1731,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.3,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "mage",
+			"build": "31 Fire",
+			"talents": "-23552333131-051500333",
+			"gear": "launch",
+			"rotation": "forever_frost",
+			"dps": 428.8903979605996,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "protection_paladin",
+			"build": "31 Retribution",
+			"talents": "-553041002-2522533122100003",
+			"gear": "launch",
+			"rotation": "p5prot",
+			"dps": 428.48095209889635,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.4213,
+				"core": 0.3891,
+				"forever": 0.1896,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.3,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -5297,6 +6703,25 @@
 			"slots": 16
 		},
 		{
+			"spec": "protection_paladin",
+			"build": "21 Holy",
+			"talents": "2553231-55301100003-14205",
+			"gear": "launch",
+			"rotation": "p5prot",
+			"dps": 422.482334297558,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3829,
+				"core": 0.4413,
+				"forever": 0.1758,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.3,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
@@ -5313,6 +6738,25 @@
 			},
 			"ilvl": 61.3,
 			"slots": 17
+		},
+		{
+			"spec": "balance_druid",
+			"build": "21 Balance",
+			"talents": "5032220115-55232-055003",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 420.84416910346744,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1724,
+				"core": 0.0028,
+				"forever": 0.8248,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -5387,6 +6831,44 @@
 			"slots": 17
 		},
 		{
+			"spec": "retribution_paladin",
+			"build": "31 Holy",
+			"talents": "255323213221--142253200001",
+			"gear": "launch",
+			"rotation": "basic_ret",
+			"dps": 416.70045228175127,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3281,
+				"core": 0.4574,
+				"forever": 0.2145,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.2,
+			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "feral_druid",
+			"build": "31 Restoration",
+			"talents": "-550000212302-555333511",
+			"gear": "launch",
+			"rotation": "feral",
+			"dps": 415.84119624852366,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.017,
+				"core": 0.4977,
+				"forever": 0.4853,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
@@ -5441,6 +6923,44 @@
 			"slots": 16
 		},
 		{
+			"spec": "feral_tank_druid",
+			"build": "31 Balance",
+			"talents": "55322231152-5002-0550003",
+			"gear": "launch",
+			"rotation": "bear",
+			"dps": 412.50435327277665,
+			"rests": {
+				"assumed": 0.3199,
+				"classic": 0.4741,
+				"core": 0.1194,
+				"forever": 0.0866,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 70,
+			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "balance_druid",
+			"build": "31 Restoration",
+			"talents": "5032220114--555333511",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 411.4396407408275,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1735,
+				"core": 0.0028,
+				"forever": 0.8236,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "elemental_shaman",
 			"build": "Elemental 31/6/14, optimised",
 			"talents": "5502301500123031-052-05305",
@@ -5479,6 +6999,25 @@
 		},
 		{
 			"spec": "balance_druid",
+			"build": "21 Feral Combat",
+			"talents": "5032220114-5523231-055",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 410.1928574627988,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1797,
+				"core": 0.0037,
+				"forever": 0.8166,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "balance_druid",
 			"build": "Moonkin 38/0/13",
 			"talents": "5502220115501351--055003",
 			"gear": "p1.bis",
@@ -5512,6 +7051,25 @@
 			},
 			"ilvl": 67.1,
 			"slots": 16
+		},
+		{
+			"spec": "retribution_paladin",
+			"build": "31 Protection",
+			"talents": "-55325133211-142250300012",
+			"gear": "launch",
+			"rotation": "basic_ret",
+			"dps": 406.9342031465848,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3227,
+				"core": 0.4569,
+				"forever": 0.2205,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.2,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "balance_druid",
@@ -5696,6 +7254,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "shadow_priest",
+			"build": "21 Discipline",
+			"talents": "125300031303--53002150120130205",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 399.5597950095836,
+			"rests": {
+				"assumed": 0.0067,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9933,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.8,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "balance_druid",
 			"build": "Moonkin 38/0/13",
 			"talents": "5502220115501351--055003",
@@ -5730,6 +7307,44 @@
 			},
 			"ilvl": 66.3,
 			"slots": 15
+		},
+		{
+			"spec": "protection_paladin",
+			"build": "31 Holy",
+			"talents": "255323213221-53-14205",
+			"gear": "launch",
+			"rotation": "p5prot",
+			"dps": 392.99110216462606,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.39,
+				"core": 0.4309,
+				"forever": 0.1791,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.3,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "Stormcaller 28/23/0, optimised",
+			"talents": "050433150010303-054030031004102",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 391.6583020944766,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.9,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "elemental_shaman",
@@ -5988,6 +7603,44 @@
 			"slots": 17
 		},
 		{
+			"spec": "shadow_priest",
+			"build": "21 Shadow Magic",
+			"talents": "525332031303--5300213012013",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 366.55748440355325,
+			"rests": {
+				"assumed": 0.0066,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9934,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.8,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "shadow_priest",
+			"build": "31 Discipline",
+			"talents": "525333031303--5300212012013",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 366.55748440355325,
+			"rests": {
+				"assumed": 0.0066,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9934,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.8,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "mage",
 			"build": "Frost 14/0/37",
 			"talents": "050005013--0555003301001301251",
@@ -6081,6 +7734,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "feral_druid",
+			"build": "31 Balance",
+			"talents": "55322231152-55-055",
+			"gear": "launch",
+			"rotation": "feral",
+			"dps": 352.32545249892235,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0211,
+				"core": 0.5869,
+				"forever": 0.392,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "mage",
 			"build": "Frost 14/0/37",
 			"talents": "050005013--0555003301001301251",
@@ -6098,6 +7770,25 @@
 			"ilvl": 65.3,
 			"slots": 17,
 			"points": 49
+		},
+		{
+			"spec": "enhancement_shaman",
+			"build": "21 Enhancement",
+			"talents": "353533050010002-0540300310041",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 349.52869109913985,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2039,
+				"core": 0.2402,
+				"forever": 0.5559,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.5,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "mage",
@@ -6134,6 +7825,25 @@
 			},
 			"ilvl": 65.1,
 			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "enhancement_shaman",
+			"build": "31 Elemental Combat",
+			"talents": "453533050010002-0540300310031",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 341.92617344108135,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2015,
+				"core": 0.2303,
+				"forever": 0.5681,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.5,
+			"slots": 16,
 			"optimised": true
 		},
 		{
@@ -6212,6 +7922,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "balance_druid",
+			"build": "31 Feral Combat",
+			"talents": "500212-552323212312-055",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 331.01880576291853,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0029,
+				"forever": 0.9971,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.1,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "mage",
 			"build": "Frost 14/0/37, optimised",
 			"talents": "050005001-03-0555003331000301251",
@@ -6228,6 +7957,25 @@
 			},
 			"ilvl": 65.3,
 			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "21 Restoration",
+			"talents": "5500301500113-051-54335000000001",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 326.7826129745735,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.9,
+			"slots": 16,
 			"optimised": true
 		},
 		{
@@ -6286,6 +8034,25 @@
 			"slots": 17
 		},
 		{
+			"spec": "elemental_shaman",
+			"build": "21 Elemental Combat",
+			"talents": "5500301500101-254230001-05305",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 324.2419442237679,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.9,
+			"slots": 16,
+			"optimised": true
+		},
+		{
 			"spec": "mage",
 			"build": "Frost 14/0/37",
 			"talents": "050005013--0555003301001301251",
@@ -6303,6 +8070,25 @@
 			"ilvl": 65.3,
 			"slots": 17,
 			"points": 49
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "21 Enhancement",
+			"talents": "45003014-254232200000001-05305",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 319.1200808632028,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.9,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "feral_druid",
@@ -6527,6 +8313,25 @@
 			"optimised": true
 		},
 		{
+			"spec": "smite_priest",
+			"build": "21 Holy",
+			"talents": "504020031305-31505023002-20302",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 304.82403187531776,
+			"rests": {
+				"assumed": 0.0076,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9924,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.9,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "balance_druid",
 			"build": "Moonkin 38/0/13",
 			"talents": "5502220115501351--055003",
@@ -6543,6 +8348,63 @@
 			},
 			"ilvl": 66.1,
 			"slots": 16
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "31 Enhancement",
+			"talents": "42001-252232331320002001-05305",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 303.53968103830414,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.9,
+			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "smite_priest",
+			"build": "21 Discipline",
+			"talents": "503020031304-33505023002-20302",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 302.5688058045141,
+			"rests": {
+				"assumed": 0.0076,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9924,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.9,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "smite_priest",
+			"build": "Smite 31/17/3, optimised",
+			"talents": "51402003130500103-00505023002-20301",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 302.005338981629,
+			"rests": {
+				"assumed": 0.1633,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.8367,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.9,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "smite_priest",
@@ -6583,6 +8445,24 @@
 		},
 		{
 			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 297.773022890726,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0016,
+				"forever": 0.9984,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.1,
+			"slots": 17
+		},
+		{
+			"spec": "balance_druid",
 			"build": "Moonkin 38/0/13, optimised",
 			"talents": "533222011550135--055003",
 			"gear": "launch",
@@ -6601,22 +8481,23 @@
 			"optimised": true
 		},
 		{
-			"spec": "balance_druid",
-			"build": "Moonkin 38/0/13",
-			"talents": "5502220115501351--055003",
+			"spec": "enhancement_shaman",
+			"build": "31 Restoration",
+			"talents": "-0530300310041-55235233110001",
 			"gear": "launch",
-			"rotation": "p1",
-			"dps": 297.773022890726,
+			"rotation": "default",
+			"dps": 297.63916707126765,
 			"rests": {
 				"assumed": 0,
-				"classic": 0,
-				"core": 0.0016,
-				"forever": 0.9984,
+				"classic": 0.2022,
+				"core": 0.2113,
+				"forever": 0.5865,
 				"measured": 0,
 				"unknown": 0
 			},
-			"ilvl": 63.1,
-			"slots": 17
+			"ilvl": 64.5,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "tank_warrior",
@@ -6655,21 +8536,21 @@
 			"slots": 8
 		},
 		{
-			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3, optimised",
-			"talents": "005303104-22530300001515231-002",
-			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab_sweaty",
-			"dps": 293.7261500415822,
+			"spec": "smite_priest",
+			"build": "31 Discipline",
+			"talents": "52523003130500101-00505021-20302",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 294.63245824943914,
 			"rests": {
-				"assumed": 0,
+				"assumed": 0.1623,
 				"classic": 0,
-				"core": 0.9815,
-				"forever": 0.0185,
+				"core": 0,
+				"forever": 0.8377,
 				"measured": 0,
 				"unknown": 0
 			},
-			"ilvl": 68.1,
+			"ilvl": 63.9,
 			"slots": 17,
 			"optimised": true
 		},
@@ -6690,6 +8571,25 @@
 			},
 			"ilvl": 68.1,
 			"slots": 17
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3, optimised",
+			"talents": "005303104-22530300001515231-002",
+			"gear": "sinister_strike_launch",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 293.7261500415822,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9815,
+				"forever": 0.0185,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 68.1,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "mage",
@@ -6752,7 +8652,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab",
+			"rotation": "forever_mutilate",
 			"dps": 291.17849142804357,
 			"rests": {
 				"assumed": 0,
@@ -6770,7 +8670,7 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "sinister_strike_launch",
-			"rotation": "forever_mutilate",
+			"rotation": "combat_backstab",
 			"dps": 291.17849142804357,
 			"rests": {
 				"assumed": 0,
@@ -6840,22 +8740,23 @@
 			"slots": 15
 		},
 		{
-			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3",
-			"talents": "1053231-22530300001515231-012",
-			"gear": "combat_backstab_p2_bis",
-			"rotation": "forever_hemorrhage",
-			"dps": 285.1148978331342,
+			"spec": "shadow_priest",
+			"build": "21 Holy",
+			"talents": "-33555-53002150120130205",
+			"gear": "launch",
+			"rotation": "p1",
+			"dps": 289.8107961185861,
 			"rests": {
-				"assumed": 0,
+				"assumed": 0.0068,
 				"classic": 0,
-				"core": 0.9712,
-				"forever": 0.0288,
+				"core": 0,
+				"forever": 0.9932,
 				"measured": 0,
 				"unknown": 0
 			},
-			"ilvl": 66.3,
-			"slots": 17
+			"ilvl": 63.8,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -6900,6 +8801,24 @@
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_backstab_p2_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 285.1148978331342,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9712,
+				"forever": 0.0288,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.3,
+			"slots": 17
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_p2_bis",
 			"rotation": "forever_mutilate",
 			"dps": 285.1148978331342,
 			"rests": {
@@ -6912,6 +8831,25 @@
 			},
 			"ilvl": 66.3,
 			"slots": 17
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "31 Restoration",
+			"talents": "45001012-052-5533523311",
+			"gear": "launch",
+			"rotation": "default",
+			"dps": 285.09156517979244,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 64.9,
+			"slots": 16,
+			"optimised": true
 		},
 		{
 			"spec": "mage",
@@ -6934,6 +8872,44 @@
 		},
 		{
 			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3, optimised",
+			"talents": "005303104-22530300001515231-002",
+			"gear": "backstab_launch",
+			"rotation": "forever_mutilate",
+			"dps": 284.24236456320995,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9696,
+				"forever": 0.0304,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3, optimised",
+			"talents": "005303104-22530300001515231-002",
+			"gear": "backstab_launch",
+			"rotation": "forever_hemorrhage",
+			"dps": 284.24236456320995,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9696,
+				"forever": 0.0304,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.6,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "backstab_launch",
@@ -6970,82 +8946,6 @@
 		},
 		{
 			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3, optimised",
-			"talents": "005303104-22530300001515231-002",
-			"gear": "backstab_launch",
-			"rotation": "forever_hemorrhage",
-			"dps": 284.24236456320995,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9696,
-				"forever": 0.0304,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 67.6,
-			"slots": 17,
-			"optimised": true
-		},
-		{
-			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3, optimised",
-			"talents": "005303104-22530300001515231-002",
-			"gear": "backstab_launch",
-			"rotation": "forever_mutilate",
-			"dps": 284.24236456320995,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9696,
-				"forever": 0.0304,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 67.6,
-			"slots": 17,
-			"optimised": true
-		},
-		{
-			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3, optimised",
-			"talents": "005303104-22530300001515231-002",
-			"gear": "combat_backstab_p1_bis",
-			"rotation": "forever_hemorrhage",
-			"dps": 280.9269764599014,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9716,
-				"forever": 0.0284,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 65.2,
-			"slots": 17,
-			"optimised": true
-		},
-		{
-			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3, optimised",
-			"talents": "005303104-22530300001515231-002",
-			"gear": "combat_backstab_p1_bis",
-			"rotation": "forever_mutilate",
-			"dps": 280.9269764599014,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9716,
-				"forever": 0.0284,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 65.2,
-			"slots": 17,
-			"optimised": true
-		},
-		{
-			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_backstab_p1_bis",
@@ -7061,6 +8961,44 @@
 			},
 			"ilvl": 65.2,
 			"slots": 17
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3, optimised",
+			"talents": "005303104-22530300001515231-002",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "forever_mutilate",
+			"dps": 280.9269764599014,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9716,
+				"forever": 0.0284,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.2,
+			"slots": 17,
+			"optimised": true
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3, optimised",
+			"talents": "005303104-22530300001515231-002",
+			"gear": "combat_backstab_p1_bis",
+			"rotation": "forever_hemorrhage",
+			"dps": 280.9269764599014,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9716,
+				"forever": 0.0284,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 65.2,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
@@ -7101,24 +9039,6 @@
 		},
 		{
 			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3",
-			"talents": "1053231-22530300001515231-012",
-			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "combat_backstab_sweaty",
-			"dps": 279.1557854518204,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9805,
-				"forever": 0.0195,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 68.7,
-			"slots": 17
-		},
-		{
-			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3, optimised",
 			"talents": "005303104-22530300001515231-002",
 			"gear": "combat_sinister_strike_p2_bis",
@@ -7135,6 +9055,24 @@
 			"ilvl": 68.7,
 			"slots": 17,
 			"optimised": true
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_backstab_sweaty",
+			"dps": 279.1557854518204,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9805,
+				"forever": 0.0195,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 68.7,
+			"slots": 17
 		},
 		{
 			"spec": "tank_warrior",
@@ -7156,8 +9094,8 @@
 		},
 		{
 			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3",
-			"talents": "1053231-22530300001515231-012",
+			"build": "Combat Dual-Wield 15/33/3, optimised",
+			"talents": "005303104-22530300001515231-002",
 			"gear": "combat_sinister_strike_p2_bis",
 			"rotation": "combat_backstab",
 			"dps": 276.23151342625033,
@@ -7170,14 +9108,15 @@
 				"unknown": 0
 			},
 			"ilvl": 68.7,
-			"slots": 17
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "forever_hemorrhage",
+			"rotation": "forever_mutilate",
 			"dps": 276.23151342625033,
 			"rests": {
 				"assumed": 0,
@@ -7195,7 +9134,7 @@
 			"build": "Combat Dual-Wield 15/33/3, optimised",
 			"talents": "005303104-22530300001515231-002",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "combat_backstab",
+			"rotation": "forever_hemorrhage",
 			"dps": 276.23151342625033,
 			"rests": {
 				"assumed": 0,
@@ -7230,8 +9169,8 @@
 		},
 		{
 			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3, optimised",
-			"talents": "005303104-22530300001515231-002",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_p2_bis",
 			"rotation": "forever_hemorrhage",
 			"dps": 276.23151342625033,
@@ -7244,15 +9183,14 @@
 				"unknown": 0
 			},
 			"ilvl": 68.7,
-			"slots": 17,
-			"optimised": true
+			"slots": 17
 		},
 		{
 			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3",
 			"talents": "1053231-22530300001515231-012",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "forever_mutilate",
+			"rotation": "combat_backstab",
 			"dps": 276.23151342625033,
 			"rests": {
 				"assumed": 0,
@@ -7288,6 +9226,24 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "sinister_strike_launch",
+			"rotation": "forever_mutilate",
+			"dps": 273.60523025824637,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9741,
+				"forever": 0.0259,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 68.1,
+			"slots": 17
+		},
+		{
+			"spec": "rogue",
+			"build": "Assassination Mutilate 31/20/0",
+			"talents": "02532010531201051-225303000005",
+			"gear": "sinister_strike_launch",
 			"rotation": "forever_hemorrhage",
 			"dps": 273.60523025824637,
 			"rests": {
@@ -7306,24 +9262,6 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "sinister_strike_launch",
-			"rotation": "forever_mutilate",
-			"dps": 273.60523025824637,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9741,
-				"forever": 0.0259,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 68.1,
-			"slots": 17
-		},
-		{
-			"spec": "rogue",
-			"build": "Assassination Mutilate 31/20/0",
-			"talents": "02532010531201051-225303000005",
-			"gear": "sinister_strike_launch",
 			"rotation": "combat_backstab",
 			"dps": 273.60523025824637,
 			"rests": {
@@ -7394,6 +9332,24 @@
 		},
 		{
 			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_sinister_strike_p1_bis",
+			"rotation": "combat_backstab",
+			"dps": 270.3798407133823,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9807,
+				"forever": 0.0193,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 67.7,
+			"slots": 17
+		},
+		{
+			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3, optimised",
 			"talents": "005303104-22530300001515231-002",
 			"gear": "combat_sinister_strike_p1_bis",
@@ -7429,24 +9385,6 @@
 			"ilvl": 67.7,
 			"slots": 17,
 			"optimised": true
-		},
-		{
-			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3",
-			"talents": "1053231-22530300001515231-012",
-			"gear": "combat_sinister_strike_p1_bis",
-			"rotation": "combat_backstab",
-			"dps": 270.3798407133823,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9807,
-				"forever": 0.0193,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 67.7,
-			"slots": 17
 		},
 		{
 			"spec": "rogue",
@@ -7558,22 +9496,23 @@
 			"slots": 17
 		},
 		{
-			"spec": "balance_druid",
-			"build": "Moonkin 38/0/13",
-			"talents": "5502220115501351--055003",
-			"gear": "p1.bis",
-			"rotation": "p1",
-			"dps": 262.3836725231494,
+			"spec": "smite_priest",
+			"build": "21 Shadow Magic",
+			"talents": "3050200113-00505023-555321",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 262.40431231819906,
 			"rests": {
-				"assumed": 0,
+				"assumed": 0.0079,
 				"classic": 0,
-				"core": 0.0031,
-				"forever": 0.9969,
+				"core": 0,
+				"forever": 0.9921,
 				"measured": 0,
 				"unknown": 0
 			},
-			"ilvl": 66.2,
-			"slots": 15
+			"ilvl": 63.9,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "balance_druid",
@@ -7593,6 +9532,24 @@
 			"ilvl": 66.2,
 			"slots": 15,
 			"optimised": true
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p1.bis",
+			"rotation": "p1",
+			"dps": 262.3836725231494,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0031,
+				"forever": 0.9969,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.2,
+			"slots": 15
 		},
 		{
 			"spec": "rogue",
@@ -7687,42 +9644,6 @@
 		},
 		{
 			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3",
-			"talents": "1053231-22530300001515231-012",
-			"gear": "combat_backstab_prebis",
-			"rotation": "forever_hemorrhage",
-			"dps": 260.84367830848913,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9623,
-				"forever": 0.0377,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 61.8,
-			"slots": 17
-		},
-		{
-			"spec": "rogue",
-			"build": "Combat Dual-Wield 15/33/3",
-			"talents": "1053231-22530300001515231-012",
-			"gear": "combat_backstab_prebis",
-			"rotation": "forever_mutilate",
-			"dps": 260.84367830848913,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9623,
-				"forever": 0.0377,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 61.8,
-			"slots": 17
-		},
-		{
-			"spec": "rogue",
 			"build": "Combat Dual-Wield 15/33/3, optimised",
 			"talents": "005303104-22530300001515231-002",
 			"gear": "combat_backstab_prebis",
@@ -7739,6 +9660,42 @@
 			"ilvl": 61.8,
 			"slots": 17,
 			"optimised": true
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_mutilate",
+			"dps": 260.84367830848913,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9623,
+				"forever": 0.0377,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 61.8,
+			"slots": 17
+		},
+		{
+			"spec": "rogue",
+			"build": "Combat Dual-Wield 15/33/3",
+			"talents": "1053231-22530300001515231-012",
+			"gear": "combat_backstab_prebis",
+			"rotation": "forever_hemorrhage",
+			"dps": 260.84367830848913,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9623,
+				"forever": 0.0377,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 61.8,
+			"slots": 17
 		},
 		{
 			"spec": "mage",
@@ -7764,7 +9721,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_sinister_strike_p1_bis",
-			"rotation": "forever_hemorrhage",
+			"rotation": "combat_backstab",
 			"dps": 256.57567989626335,
 			"rests": {
 				"assumed": 0,
@@ -7782,7 +9739,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_sinister_strike_p1_bis",
-			"rotation": "combat_backstab",
+			"rotation": "forever_hemorrhage",
 			"dps": 256.57567989626335,
 			"rests": {
 				"assumed": 0,
@@ -7869,22 +9826,23 @@
 			"points": 49
 		},
 		{
-			"spec": "balance_druid",
-			"build": "Moonkin 38/0/13",
-			"talents": "5502220115501351--055003",
-			"gear": "p2.bis",
+			"spec": "shadow_priest",
+			"build": "31 Holy",
+			"talents": "001-3355513321-5300211012013",
+			"gear": "launch",
 			"rotation": "p1",
-			"dps": 252.31090161926673,
+			"dps": 252.5196236595432,
 			"rests": {
-				"assumed": 0,
+				"assumed": 0.0067,
 				"classic": 0,
-				"core": 0.0026,
-				"forever": 0.9974,
+				"core": 0,
+				"forever": 0.9933,
 				"measured": 0,
 				"unknown": 0
 			},
-			"ilvl": 66.1,
-			"slots": 16
+			"ilvl": 63.8,
+			"slots": 17,
+			"optimised": true
 		},
 		{
 			"spec": "balance_druid",
@@ -7903,6 +9861,43 @@
 			},
 			"ilvl": 66.1,
 			"slots": 16,
+			"optimised": true
+		},
+		{
+			"spec": "balance_druid",
+			"build": "Moonkin 38/0/13",
+			"talents": "5502220115501351--055003",
+			"gear": "p2.bis",
+			"rotation": "p1",
+			"dps": 252.31090161926673,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0026,
+				"forever": 0.9974,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 66.1,
+			"slots": 16
+		},
+		{
+			"spec": "smite_priest",
+			"build": "31 Holy",
+			"talents": "3050200012-33555133102-20302",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 249.05124127868953,
+			"rests": {
+				"assumed": 0.0077,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9923,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.9,
+			"slots": 17,
 			"optimised": true
 		},
 		{
@@ -7965,7 +9960,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 245.14422753609387,
 			"rests": {
 				"assumed": 0,
@@ -7983,7 +9978,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "sinister_strike_launch",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 245.14422753609387,
 			"rests": {
 				"assumed": 0,
@@ -8092,24 +10087,6 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_p2_bis",
-			"rotation": "combat_backstab_sweaty",
-			"dps": 234.18279786945274,
-			"rests": {
-				"assumed": 0,
-				"classic": 0,
-				"core": 0.9793,
-				"forever": 0.0207,
-				"measured": 0,
-				"unknown": 0
-			},
-			"ilvl": 68.7,
-			"slots": 17
-		},
-		{
-			"spec": "rogue",
-			"build": "Subtlety Hemo 15/0/36",
-			"talents": "125320101--5320003310013211551",
-			"gear": "combat_sinister_strike_p2_bis",
 			"rotation": "combat_backstab",
 			"dps": 234.18279786945274,
 			"rests": {
@@ -8129,6 +10106,24 @@
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_p2_bis",
 			"rotation": "forever_mutilate",
+			"dps": 234.18279786945274,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.9793,
+				"forever": 0.0207,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 68.7,
+			"slots": 17
+		},
+		{
+			"spec": "rogue",
+			"build": "Subtlety Hemo 15/0/36",
+			"talents": "125320101--5320003310013211551",
+			"gear": "combat_sinister_strike_p2_bis",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 234.18279786945274,
 			"rests": {
 				"assumed": 0,
@@ -8384,7 +10379,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 213.56610753389987,
 			"rests": {
 				"assumed": 0,
@@ -8402,7 +10397,7 @@
 			"build": "Assassination Mutilate 31/20/0",
 			"talents": "02532010531201051-225303000005",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 213.56610753389987,
 			"rests": {
 				"assumed": 0,
@@ -8470,6 +10465,25 @@
 			"slots": 8
 		},
 		{
+			"spec": "smite_priest",
+			"build": "31 Shadow Magic",
+			"talents": "3-00505023002-5553225211",
+			"gear": "launch",
+			"rotation": "launch",
+			"dps": 191.3569685742445,
+			"rests": {
+				"assumed": 0.0081,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.9919,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 63.9,
+			"slots": 17,
+			"optimised": true
+		},
+		{
 			"spec": "rogue",
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
@@ -8492,7 +10506,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "combat_backstab_sweaty",
+			"rotation": "combat_backstab",
 			"dps": 189.4226502139269,
 			"rests": {
 				"assumed": 0,
@@ -8510,7 +10524,7 @@
 			"build": "Subtlety Hemo 15/0/36",
 			"talents": "125320101--5320003310013211551",
 			"gear": "combat_sinister_strike_prebis",
-			"rotation": "combat_backstab",
+			"rotation": "combat_backstab_sweaty",
 			"dps": 189.4226502139269,
 			"rests": {
 				"assumed": 0,
