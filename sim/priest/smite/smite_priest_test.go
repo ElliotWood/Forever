@@ -90,7 +90,7 @@ func TestArena(t *testing.T) {
 		Class:              proto.Class_ClassPriest,
 		Race:               proto.Race_RaceUndead,
 		SpecOptions:        PlayerOptionsBasic,
-		Consumes:           LaunchConsumes,
+		Role:        arenalib.Caster,
 		Buffs:              core.ForeverBuffs,
 		DistanceFromTarget: 30,
 	})

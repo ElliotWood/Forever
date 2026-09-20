@@ -132,7 +132,7 @@ func TestArena(t *testing.T) {
 		Class:       proto.Class_ClassPaladin,
 		Race:        proto.Race_RaceHuman,
 		SpecOptions: PlayerOptionsSealofRighteousness,
-		Consumes:    Phase5Consumes,
+		Role:        arenalib.Melee,
 		Buffs:       core.ForeverBuffs,
 	})
 }

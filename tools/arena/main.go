@@ -30,6 +30,7 @@ type rawResult struct {
 	Build        string             `json:"build"`
 	Gear         string             `json:"gear"`
 	Rotation     string             `json:"rotation"`
+	Consumables  string             `json:"consumables"`
 	Dps          float64            `json:"dps"`
 	Damage       map[string]float64 `json:"damage"`
 	WeaponDamage float64            `json:"weaponDamage"`
@@ -45,13 +46,16 @@ type spellSource struct {
 // What the page renders. Damage is not carried through: a few hundred builds times their
 // spell breakdowns is megabytes, and the composition is the only part anyone reads.
 type build struct {
-	Spec     string             `json:"spec"`
-	Build    string             `json:"build"`
-	Talents  string             `json:"talents"`
-	Gear     string             `json:"gear"`
-	Rotation string             `json:"rotation"`
-	Dps      float64            `json:"dps"`
-	Rests    map[string]float64 `json:"rests"`
+	Spec     string `json:"spec"`
+	Build    string `json:"build"`
+	Talents  string `json:"talents"`
+	Gear     string `json:"gear"`
+	Rotation string `json:"rotation"`
+	// Which consumable list the build drank. The arena equalises these; the page says so
+	// rather than asking anyone to take it on trust.
+	Consumables string             `json:"consumables"`
+	Dps         float64            `json:"dps"`
+	Rests       map[string]float64 `json:"rests"`
 	// Average item level of the gear set, and how many slots it actually fills. Both, because
 	// a set of eight items can average a respectable number while the character wearing it is
 	// missing half its slots.
@@ -106,17 +110,18 @@ func main() {
 			}
 			gearIlvl, slots := gearLevel(ilvls, result.Spec, result.Gear)
 			builds = append(builds, build{
-				Spec:      result.Spec,
-				Build:     result.Build,
-				Talents:   result.Talents,
-				Gear:      result.Gear,
-				Rotation:  result.Rotation,
-				Dps:       result.Dps,
-				Rests:     compose(result, manifest),
-				Optimised: result.Optimised,
-				Points:    shortOf51(result.Talents),
-				Ilvl:      gearIlvl,
-				Slots:     slots,
+				Spec:        result.Spec,
+				Build:       result.Build,
+				Talents:     result.Talents,
+				Gear:        result.Gear,
+				Rotation:    result.Rotation,
+				Consumables: result.Consumables,
+				Dps:         result.Dps,
+				Rests:       compose(result, manifest),
+				Optimised:   result.Optimised,
+				Points:      shortOf51(result.Talents),
+				Ilvl:        gearIlvl,
+				Slots:       slots,
 			})
 		}
 	}

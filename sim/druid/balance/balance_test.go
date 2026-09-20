@@ -111,7 +111,7 @@ func TestArena(t *testing.T) {
 		Class:       proto.Class_ClassDruid,
 		Race:        proto.Race_RaceNightElf,
 		SpecOptions: PlayerOptionsAdaptive,
-		Consumes:    P1Consumes,
+		Role:        arenalib.Caster,
 		Buffs:       core.ForeverBuffs,
 	})
 }
