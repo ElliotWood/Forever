@@ -13,6 +13,7 @@ func (warrior *Warrior) registerBerserkerRage() {
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Berserker Rage",
 		ActionID: actionID,
+		// TODO: Manual review needed -- spell 18499 states a 10 second duration.
 		Duration: time.Second * 10,
 	}).
 		// Grants immunity to Fear, Sap and Incapacitate effects.
@@ -29,7 +30,8 @@ func (warrior *Warrior) registerBerserkerRage() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
+				Timer: warrior.NewTimer(),
+				// TODO: Manual review needed -- spell 18499 states a 30 second cooldown.
 				Duration: time.Second * 30,
 			},
 		},

@@ -14,6 +14,8 @@ func (warrior *Warrior) registerCharge() {
 
 	chargeMinRange := chargeRank.MinRange
 
+	// TODO: Manual review needed -- spell 11578 states no duration; the 15 seconds covers the
+	// sim's movement to the target and is hand-supplied.
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Charge",
 		ActionID: actionID,
@@ -49,7 +51,8 @@ func (warrior *Warrior) registerCharge() {
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return sim.CurrentTime < 0 && warrior.StanceMatches(BattleStance)
+			// Vanguard (1310317) replaces Charge with a copy usable in Defensive Stance.
+			return sim.CurrentTime < 0 && (warrior.StanceMatches(BattleStance) || warrior.Talents.Vanguard)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

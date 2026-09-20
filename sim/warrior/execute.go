@@ -6,6 +6,14 @@ import (
 
 var executeRank = spellData.Execute.HighestRank()
 
+// The dummy effect carries the base damage; Execute has no Direct role, and both of its
+// effects share the aura/misc pair Effect() selects on.
+var executeBaseDamage = executeRank.Effects[0].Value
+
+// TODO: Manual review needed -- spell 20662 states 15 damage per extra point of rage
+// ($*10;F1 over its EffectChainAmplitude of 1.5), which no table column carries.
+const executeDamagePerRage = 15.0
+
 func (warrior *Warrior) registerExecute() {
 
 	var rageMetrics *core.ResourceMetrics
@@ -46,7 +54,7 @@ func (warrior *Warrior) registerExecute() {
 			warrior.SpendRage(sim, extraRage, rageMetrics)
 			rageMetrics.Events--
 
-			baseDamage := 925 + 21*extraRage
+			baseDamage := executeBaseDamage + executeDamagePerRage*extraRage
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
 			if !result.Landed() {

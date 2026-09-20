@@ -27,8 +27,9 @@ func (warrior *Warrior) registerRetaliation() {
 	})
 
 	aura := warrior.RegisterAura(core.Aura{
-		ActionID:  actionID,
-		Label:     "Retaliation",
+		ActionID: actionID,
+		Label:    "Retaliation",
+		// TODO: Manual review needed -- spell 20230 states a 15 second duration and 30 charges.
 		Duration:  time.Second * 15,
 		MaxStacks: 30,
 		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
@@ -48,12 +49,9 @@ func (warrior *Warrior) registerRetaliation() {
 				GCD: core.GCDDefault,
 			},
 			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: time.Minute * 30,
-			},
-			SharedCD: core.Cooldown{
-				Timer:    warrior.sharedMCD,
-				Duration: time.Minute * 30,
+				Timer: warrior.NewTimer(),
+				// TODO: Manual review needed -- spell 20230 states a 15 minute cooldown.
+				Duration: time.Minute * 15,
 			},
 		},
 

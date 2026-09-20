@@ -5,6 +5,10 @@ import (
 )
 
 var thunderClapRank = spellData.ThunderClap.HighestRank()
+
+// TODO: Manual review needed -- spell 11581 states 4 targets, which no table column carries.
+const thunderClapMaxTargets int32 = 4
+
 var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
 
 func (warrior *Warrior) registerThunderClap() {
@@ -41,8 +45,13 @@ func (warrior *Warrior) registerThunderClap() {
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1.75,
 
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			// Thunder Clap (11581) is usable in Battle and Defensive Stance.
+			return warrior.StanceMatches(BattleStance | DefensiveStance)
+		},
+
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			results := spell.CalcCleaveDamage(sim, target, 4, thunderClapBaseDamage, spell.OutcomeMagicHitAndCrit)
+			results := spell.CalcCleaveDamage(sim, target, thunderClapMaxTargets, thunderClapBaseDamage, spell.OutcomeMagicHitAndCrit)
 			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 
 			for _, result := range results {

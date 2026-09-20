@@ -6,6 +6,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
+// TODO: Manual review needed -- spell 1680 states 4 targets, a 25 rage cost and a 10 second cooldown.
+const whirlwindMaxTargets int32 = 4
+
 func (warrior *Warrior) registerWhirlwind() {
 	actionID := core.ActionID{SpellID: 1680}
 
@@ -22,7 +25,7 @@ func (warrior *Warrior) registerWhirlwind() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			spell.CalcCleaveDamage(sim, target, 4, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			spell.CalcCleaveDamage(sim, target, whirlwindMaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			spell.DealBatchedAoeDamage(sim)
 		},
 	})
@@ -58,7 +61,7 @@ func (warrior *Warrior) registerWhirlwind() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := warrior.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			results := spell.CalcCleaveDamage(sim, target, 4, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			results := spell.CalcCleaveDamage(sim, target, whirlwindMaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 			spell.DealBatchedAoeDamage(sim)
 

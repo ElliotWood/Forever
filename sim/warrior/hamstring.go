@@ -5,6 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
+// TODO: Manual review needed -- spell 7373 carries no threat effect, so the 167.5 is hand-supplied.
 var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 167.5).HighestRank()
 var hamstringBaseDamage, _ = hamstringRank.Direct.Range()
 
@@ -34,7 +35,8 @@ func (warrior *Warrior) registerHamstring() {
 		FlatThreatBonus:  hamstringRank.FlatThreatBonus,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.StanceMatches(BerserkerStance)
+			// Hamstring (7373) is usable in Battle and Berserker Stance.
+			return warrior.StanceMatches(BattleStance | BerserkerStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

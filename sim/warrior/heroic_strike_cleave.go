@@ -1,12 +1,16 @@
 package warrior
 
 import (
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-var heroicStrikeRank = spellData.HeroicStrike.HighestRank()
+// TODO: Manual review needed -- spell 25286 carries no threat effect, so the 194 is hand-supplied.
+var heroicStrikeRank = shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 194).HighestRank()
 var heroicStrikeBaseDamage, _ = heroicStrikeRank.Direct.Range()
-var cleaveRank = spellData.Cleave.HighestRank()
+
+// TODO: Manual review needed -- spell 20569 carries no threat effect, so the 125 is hand-supplied.
+var cleaveRank = shared.WithSpellDataFlatThreat(spellData.Cleave, 125).HighestRank()
 
 func (warrior *Warrior) registerHeroicStrike() {
 	spell := warrior.RegisterSpell(core.SpellConfig{
@@ -31,7 +35,7 @@ func (warrior *Warrior) registerHeroicStrike() {
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  194,
+		FlatThreatBonus:  heroicStrikeRank.FlatThreatBonus,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := heroicStrikeBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
@@ -75,7 +79,7 @@ func (warrior *Warrior) registerCleave() {
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  125,
+		FlatThreatBonus:  cleaveRank.FlatThreatBonus,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := flatDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))

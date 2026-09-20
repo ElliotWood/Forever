@@ -13,11 +13,13 @@ func (warrior *Warrior) registerShieldBlock() {
 
 	var spell *core.Spell
 	aura := warrior.RegisterAura(core.Aura{
-		Label:     "Shield Block",
-		ActionID:  actionId,
-		Duration:  time.Second * 5,
-		MaxStacks: 1,
+		Label:    "Shield Block",
+		ActionID: actionId,
+		// TODO: Manual review needed -- spell 2565 states a 7 second duration and 2 charges.
+		Duration:  time.Second * 7,
+		MaxStacks: 2,
 	}).
+		// TODO: Manual review needed -- spell 2565 states 75% increased block chance.
 		AttachStatBuff(stats.BlockPercent, 0.75).
 		AttachProcTrigger(core.ProcTrigger{
 			Name:               "Shield Block - Consume",
@@ -36,6 +38,7 @@ func (warrior *Warrior) registerShieldBlock() {
 		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
 
 		RageCost: core.RageCostOptions{
+			// TODO: Manual review needed -- spell 2565 states a 10 rage cost.
 			Cost: 10,
 		},
 
@@ -45,7 +48,8 @@ func (warrior *Warrior) registerShieldBlock() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
+				Timer: warrior.NewTimer(),
+				// TODO: Manual review needed -- spell 2565 states a 5 second cooldown.
 				Duration: time.Second * 5,
 			},
 		},

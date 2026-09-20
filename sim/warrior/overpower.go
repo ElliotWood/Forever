@@ -12,6 +12,8 @@ var overpowerBaseDamage, _ = overpowerRank.Direct.Range()
 func (warrior *Warrior) registerOverpower() {
 	actionID := core.ActionID{SpellID: overpowerRank.SpellID}
 
+	// TODO: Manual review needed -- spell 11585 states only that Overpower is useable after the
+	// target dodges, so the 5 second window is hand-supplied.
 	aura := warrior.RegisterAura(core.Aura{
 		ActionID: actionID,
 		Label:    "Overpower Aura",

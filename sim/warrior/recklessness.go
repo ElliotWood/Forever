@@ -12,12 +12,15 @@ func (warrior *Warrior) registerRecklessness() {
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Recklessness",
 		ActionID: actionID,
+		// TODO: Manual review needed -- spell 1719 states a 15 second duration.
 		Duration: time.Second * 15,
 	}).AttachSpellMod(core.SpellModConfig{
-		ProcMask:   core.ProcMaskMeleeSpecial,
-		Kind:       core.SpellMod_BonusCrit_Percent,
+		ProcMask: core.ProcMaskMeleeSpecial,
+		Kind:     core.SpellMod_BonusCrit_Percent,
+		// TODO: Manual review needed -- spell 1719 states 100% critical strike chance.
 		FloatValue: 100,
 	}).AttachMultiplicativePseudoStatBuff(
+		// TODO: Manual review needed -- spell 1719 states 20% increased damage taken.
 		&warrior.PseudoStats.DamageTakenMultiplier, 1.2,
 	).
 		// Grants immunity to Fear effects.
@@ -34,11 +37,8 @@ func (warrior *Warrior) registerRecklessness() {
 				GCD: core.GCDDefault,
 			},
 			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: time.Minute * 30,
-			},
-			SharedCD: core.Cooldown{
-				Timer:    warrior.sharedMCD,
+				Timer: warrior.NewTimer(),
+				// TODO: Manual review needed -- spell 1719 states a 30 minute cooldown.
 				Duration: time.Minute * 30,
 			},
 		},

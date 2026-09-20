@@ -5,6 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
+// TODO: Manual review needed -- spell 1672 carries no threat effect, so the 192 is hand-supplied.
 var shieldBashRank = shared.WithSpellDataFlatThreat(spellData.ShieldBash, 192).HighestRank()
 
 func (warrior *Warrior) registerShieldBash() {

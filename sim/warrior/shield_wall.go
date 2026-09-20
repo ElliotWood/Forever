@@ -12,9 +12,11 @@ func (warrior *Warrior) registerShieldWall() {
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Shield Wall",
 		ActionID: actionID,
-		Duration: time.Second * 10,
+		// TODO: Manual review needed -- spell 871 states a 12 second duration.
+		Duration: time.Second * 12,
 	}).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.DamageTakenMultiplier, 0.25,
+		// TODO: Manual review needed -- spell 871 states 60% reduced damage taken.
+		&warrior.PseudoStats.DamageTakenMultiplier, 0.4,
 	)
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
@@ -28,12 +30,9 @@ func (warrior *Warrior) registerShieldWall() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: time.Minute * 30,
-			},
-			SharedCD: core.Cooldown{
-				Timer:    warrior.sharedMCD,
-				Duration: time.Minute * 30,
+				Timer: warrior.NewTimer(),
+				// TODO: Manual review needed -- spell 871 states a 15 minute cooldown.
+				Duration: time.Minute * 15,
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {

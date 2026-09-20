@@ -8,6 +8,10 @@ import (
 
 var interceptRank = spellData.Intercept.HighestRank()
 
+// TODO: Manual review needed -- Intercept 20617 triggers Intercept Stun 20615, which states
+// 65 damage and is not a ranked row, so it carries no table.
+const interceptStunDamage = 65.0
+
 func (warrior *Warrior) registerIntercept() {
 	actionID := core.ActionID{SpellID: interceptRank.SpellID}
 	chargeMinRange := interceptRank.MinRange
@@ -15,6 +19,8 @@ func (warrior *Warrior) registerIntercept() {
 	var spell *core.Spell
 	var interceptTarget *core.Unit
 
+	// TODO: Manual review needed -- spell 20617 states no duration; the 15 seconds covers the
+	// sim's movement to the target and is hand-supplied.
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Intercept",
 		ActionID: actionID,
@@ -24,7 +30,7 @@ func (warrior *Warrior) registerIntercept() {
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
 			warrior.MultiplyMovementSpeed(sim, 1.0/3.0)
-			spell.CalcAndDealDamage(sim, interceptTarget, 105, spell.OutcomeAlwaysHit)
+			spell.CalcAndDealDamage(sim, interceptTarget, interceptStunDamage, spell.OutcomeAlwaysHit)
 		},
 	})
 

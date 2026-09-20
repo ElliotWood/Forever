@@ -127,7 +127,6 @@ type Warrior struct {
 	curQueueAura       *core.Aura
 	curQueuedAutoSpell *core.Spell
 
-	sharedMCD        *core.Timer // Recklessness, Shield Wall & Retaliation
 	sharedShoutsCD   *core.Timer
 	queuedRealismICD *core.Cooldown
 
@@ -176,6 +175,7 @@ func (warrior *Warrior) Initialize() {
 
 	warrior.registerStances()
 	warrior.registerShouts()
+	warrior.registerForeverAbilities()
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {
@@ -240,7 +240,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 
 	warrior.sharedShoutsCD = warrior.NewTimer()
-	warrior.sharedMCD = warrior.NewTimer()
 	warrior.ChargeRageGain = 15
 	warrior.BerserkerRageRageGain = 0
 	// The sim often re-enables heroic strike in an unrealistic amount of time.

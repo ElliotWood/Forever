@@ -43,6 +43,8 @@ func (warrior *Warrior) registerRend() {
 			NumberOfTicks: tick.NumberOfTicks,
 			TickLength:    tick.TickLength,
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				// TODO: Manual review needed -- spell 11574 states no weapon or attack power scaling,
+				// so the 0.00743 per point of average weapon damage is hand-supplied.
 				dot.SnapshotBaseDamage = tick.Tick + warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))*0.00743
 				dot.SnapshotAttackerMultiplier = dot.Spell.AttackerDamageMultiplier(dot.Spell.Unit.AttackTables[target.UnitIndex], true)
 			},
