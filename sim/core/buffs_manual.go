@@ -115,6 +115,9 @@ func driveManaTideTotems(char *Character, party *proto.PartyBuffs) {
 // proc lands, and the totem aura that holds the category.
 func driveWindfuryTotem(char *Character, _ *proto.PartyBuffs) {
 	procAura := WindfuryTotemAura(&char.Unit, false, 0)
+	// The attack power is only there for the second after a proc, so it is not
+	// part of the stats the character sheet is measured with.
+	procAura.BuildPhase = CharacterBuildPhaseNone
 
 	var windfurySpell *Spell
 	procTrigger := char.MakeProcTriggerAura(ProcTrigger{
@@ -176,6 +179,9 @@ func driveWindfuryTotem(char *Character, _ *proto.PartyBuffs) {
 // priest's side of it, a periodic 65 damage, and nothing about the party's.
 func driveShadowPriestDps(char *Character, individual *proto.IndividualBuffs) {
 	aura := ShadowPriestDpsAura(&char.Unit, false, 0)
+	// What the aura does is give mana away over the fight, which is not a stat
+	// the character sheet is measured with and needs a running fight to do.
+	aura.BuildPhase = CharacterBuildPhaseNone
 	manaMetrics := char.NewManaMetrics(aura.ActionID)
 	manaGain := float64(individual.ShadowPriestDps) * 0.05
 

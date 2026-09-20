@@ -733,15 +733,18 @@ func TestGeneratedManaTideTotemRestoresTheClientsMana(t *testing.T) {
 	}
 }
 
-// A cooldown is not up while the character sheet is measured, so its aura stays
-// out of the build phase the external copy of a permanent buff joins.
-func TestGeneratedExternalCooldownsAreNotBuildPhaseAuras(t *testing.T) {
-	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{ManaTideTotems: 1},
-		&proto.IndividualBuffs{Innervates: 1, PowerInfusions: 1})
+// A buff that is not simply up is not part of the stats the character sheet is
+// measured with: the cooldowns, the windfury proc and the shadow priest's mana,
+// the last of which has a fight to run before it can give any away.
+func TestGeneratedDrivenBuffsAreNotBuildPhaseAuras(t *testing.T) {
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{},
+		&proto.PartyBuffs{ManaTideTotems: 1, WindfuryTotem: true},
+		&proto.IndividualBuffs{Innervates: 1, PowerInfusions: 1, ShadowPriestDps: 500})
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
 
 	for _, label := range []string{
 		"Innervates (External)", "Power Infusions (External)", "Mana Tide Totem (External)",
+		"Windfury Totem (External)", "Vampiric Touch (External)",
 	} {
 		aura := char.GetAura(label)
 		if aura == nil {
@@ -751,6 +754,13 @@ func TestGeneratedExternalCooldownsAreNotBuildPhaseAuras(t *testing.T) {
 			t.Errorf("%s is measured in build phase %v, want none of them", label, aura.BuildPhase)
 		}
 	}
+
+	// The build phase runs on a simulation that has no fight in it, which the
+	// mana the shadow priest gives away would otherwise be scheduled against.
+	bare := newGeneratedBuffTestCharacter()
+	applyBuffEffects(generatedBuffTestAgent{bare}, &proto.RaidBuffs{}, &proto.PartyBuffs{},
+		&proto.IndividualBuffs{ShadowPriestDps: 500})
+	bare.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 }
 
 func auraLabels(char *Character) []string {
