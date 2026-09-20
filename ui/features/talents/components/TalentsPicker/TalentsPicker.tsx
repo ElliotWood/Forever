@@ -5,6 +5,7 @@ import type { TalentsConfig } from '@sim/talents/config';
 import { Button } from '@ui-kit/Button';
 import { useCopyToClipboard } from '@ui-kit/hooks/useCopyToClipboard';
 import { useInput } from '@ui-kit/hooks/useInput';
+import { useWowheadTooltipRefresh } from '@ui-kit/hooks/useWowheadTooltipRefresh';
 import { Icon } from '@ui-kit/Icon';
 import type { InputConfig } from '@ui-kit/input';
 import { PickerShell } from '@ui-kit/PickerShell';
@@ -45,6 +46,8 @@ export const TalentsPicker = <TalentsProto,>({ config }: TalentsPickerProps<Tale
 	const limits = useMemo(() => ({ maxPoints: MAX_POINTS_PLAYER, pointsPerRow: config.pointsPerRow }), [config.pointsPerRow]);
 
 	const onChange = useCallback((next: TalentPoints) => setValue(serializeTalentsString(next)), [setValue]);
+
+	useWowheadTooltipRefresh(value);
 
 	return (
 		<PickerShell

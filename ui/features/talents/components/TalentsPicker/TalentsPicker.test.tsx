@@ -1,10 +1,10 @@
 import { SimHostProvider } from '@sim/context/SimHostContext';
 import type { Player } from '@sim/player/player';
+import { ActionId } from '@sim/proto/action_id';
 import type { TalentsConfig } from '@sim/talents/config';
 import { newTalentsConfig } from '@sim/talents/config';
 import { mageTalentsConfig } from '@sim/talents/mage';
 import { warriorTalentsConfig } from '@sim/talents/warrior';
-import { ActionId } from '@sim/proto/action_id';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
