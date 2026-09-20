@@ -1,10 +1,7 @@
 #!/bin/sh
-# Prints every upload sitting in the bucket: key, size, when it arrived, the sender's note.
-# Nothing consumes these automatically - this is the "go and look" the upload worker assumes.
+# Every upload sitting in the bucket. R2 has no object listing outside a worker binding, so the
+# worker grew a token-gated /list endpoint rather than this needing wrangler and a dev preview.
 set -e
-cd "$(dirname "$0")"
-npx wrangler dev --remote --port 8799 --ip 127.0.0.1 >/dev/null 2>&1 &
-pid=$!
-trap 'kill $pid 2>/dev/null' EXIT
-until curl -sf http://127.0.0.1:8799/ >/dev/null 2>&1; do sleep 2; done
-curl -s http://127.0.0.1:8799/
+curl -sf -H "Authorization: Bearer $(cat ~/.openclaw-alfred/secrets/forever_list_token.txt)" \
+    https://forever-uploads.gigaflare-elliot.workers.dev/list |
+    python -c "import json,sys; [print(f'{o[\"uploaded\"][:16]}  {o[\"size\"]:>9}  {o[\"key\"]}  {o[\"note\"]}') for o in json.load(sys.stdin)['objects']]"

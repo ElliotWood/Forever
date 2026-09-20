@@ -109,6 +109,37 @@ export default {
 		if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(allowed) });
 
 		const url = new URL(request.url);
+
+		// R2 has no object listing outside a binding, so without this the only way to answer
+		// "what has anyone sent us" is the Cloudflare dashboard. Bearer token rather than origin,
+		// because the caller is a scheduled job on a desktop, not a browser.
+		if (url.pathname === '/list') {
+			if (!env.LIST_TOKEN || request.headers.get('Authorization') !== `Bearer ${env.LIST_TOKEN}`) {
+				return json('', { ok: false, error: 'no' }, 403);
+			}
+			const listed = await env.UPLOADS.list({ include: ['customMetadata'] });
+			return json('', {
+				ok: true,
+				objects: listed.objects.map(object => ({
+					key: object.key,
+					size: object.size,
+					uploaded: object.uploaded,
+					note: object.customMetadata?.note || '',
+				})),
+			});
+		}
+
+		// Same token. Together with /list this is enough for the processor to be plain HTTP, which
+		// is why there is no wrangler anywhere in it.
+		if (url.pathname === '/get') {
+			if (!env.LIST_TOKEN || request.headers.get('Authorization') !== `Bearer ${env.LIST_TOKEN}`) {
+				return json('', { ok: false, error: 'no' }, 403);
+			}
+			const object = await env.UPLOADS.get(url.searchParams.get('key') || '');
+			if (!object) return json('', { ok: false, error: 'not found' }, 404);
+			return new Response(object.body, { headers: { 'Content-Type': 'application/octet-stream' } });
+		}
+
 		if (url.pathname !== '/upload') return json(allowed, { ok: false, error: 'not found' }, 404);
 		if (request.method !== 'POST') return json(allowed, { ok: false, error: 'POST only' }, 405);
 		if (!allowed) return json(allowed, { ok: false, error: 'wrong origin' }, 403);
