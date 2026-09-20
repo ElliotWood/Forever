@@ -81,4 +81,8 @@ make db
 # Same as make db but from the ptr client
 # Uses tools/database/ptr-generator-settings.json for settings
 make ptrdb
+
+# Regenerate the sim/<class>/spell_data_auto_gen.go tables from the client data
+# Needs tools/database/wowsims.db, so run make db at least once first
+make spelldata
 ```
