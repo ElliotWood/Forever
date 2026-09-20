@@ -230,6 +230,10 @@ func Run(t *testing.T, spec Spec) {
 			found[best.Talents] = "best of every combination"
 			starts = append(starts, best)
 			t.Logf("%s: considered %d combinations, simulated %d, best %s", spec.Dir, considered, simulated, best.Talents)
+		} else {
+			// Said out loud. Seven specs came back from a four hour run without this row and
+			// nothing in the log said why, because only the success path logged anything.
+			t.Logf("%s: exhaustive search produced nothing - considered %d combinations, %d runs", spec.Dir, considered, simulated)
 		}
 
 		for _, start := range starts {
