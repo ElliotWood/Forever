@@ -14,7 +14,7 @@ import (
 // func ImprovedScorchAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // improved_scorch, KindAbsent: the debuff 22959 (Fire Vulnerability) is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the mage that applied it.
 
 // Seal of the Crusader - https://www.wowhead.com/forever/spell=20303
-// func ImprovedSealOfTheCrusaderAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // improved_seal_of_the_crusader, KindDebuffStat: hand-written constructor still present
+// func ImprovedSealOfTheCrusaderAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // improved_seal_of_the_crusader, KindDebuffStat: spell 20303 states no aura effect this generator maps (auras 14)
 
 // func JocRetribution2Pt4Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // joc_retribution_2pt4, KindAbsent: second state of the Seal of the Crusader quadstate input; set-bonus spell 37186 has no SpellName row.
 

@@ -1082,6 +1082,10 @@ func resistanceCategoryOf(stat stats.Stat) string {
 	return ""
 }
 
+// Holy, fire, nature, frost, shadow and arcane together, which is every school
+// the sim counts as spell damage.
+const everySpellSchoolMask int32 = 126
+
 var resistanceBits = map[int32]stats.Stat{
 	1:  stats.Armor,
 	4:  stats.FireResistance,
@@ -1112,11 +1116,16 @@ func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
 		return []PseudoMod{{Kind: "BonusRangedAttackPower", Amount: e.Value}}, true
 	case dbc.A_MOD_DAMAGE_TAKEN:
 		// The sim splits flat damage taken into a physical and a spell field,
-		// so the school mask picks which one the effect is.
+		// so the school mask picks which one the effect is. A mask that names
+		// some spell schools and not others has neither: the spell field would
+		// raise what every school does to the target.
 		if e.Misc&1 != 0 {
 			return []PseudoMod{{Kind: "BonusPhysicalDamageTaken", Amount: e.Value}}, true
 		}
-		return []PseudoMod{{Kind: "BonusSpellDamageTaken", Amount: e.Value}}, true
+		if e.Misc&everySpellSchoolMask == everySpellSchoolMask {
+			return []PseudoMod{{Kind: "BonusSpellDamageTaken", Amount: e.Value}}, true
+		}
+		return nil, false
 	}
 	return nil, false
 }

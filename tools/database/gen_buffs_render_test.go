@@ -186,6 +186,27 @@ func TestTalentCurveScalesTheClientAmount(t *testing.T) {
 	}
 }
 
+// The sim holds flat damage taken in a physical field and a spell field, and
+// the client states the aura with a school mask. A mask naming some spell
+// schools and not others - Judgement of the Crusader is holy alone - fits
+// neither, and the spell field would raise what every school does to the target.
+func TestSchoolMaskedDamageTakenHasNoFieldToLandOn(t *testing.T) {
+	physical := ResolvedEffect{Aura: dbc.A_MOD_DAMAGE_TAKEN, Misc: 1, Value: 8}
+	if mods, ok := pseudoModsOf(physical); !ok || mods[0].Kind != "BonusPhysicalDamageTaken" || mods[0].Amount != 8 {
+		t.Errorf("a physical mask maps to %v, ok %v; want 8 BonusPhysicalDamageTaken", mods, ok)
+	}
+
+	everySchool := ResolvedEffect{Aura: dbc.A_MOD_DAMAGE_TAKEN, Misc: 126, Value: 40}
+	if mods, ok := pseudoModsOf(everySchool); !ok || mods[0].Kind != "BonusSpellDamageTaken" || mods[0].Amount != 40 {
+		t.Errorf("a mask of every spell school maps to %v, ok %v; want 40 BonusSpellDamageTaken", mods, ok)
+	}
+
+	holy := ResolvedEffect{Aura: dbc.A_MOD_DAMAGE_TAKEN, Misc: 2, Value: 161}
+	if mods, ok := pseudoModsOf(holy); ok {
+		t.Errorf("a holy-only mask maps to %v, want the row to stay a shell", mods)
+	}
+}
+
 var syntheticFixtures = map[string]string{
 	buffsGenFile:   filepath.Join("testdata", "buffs_synthetic_auto_gen.go"),
 	debuffsGenFile: filepath.Join("testdata", "debuffs_synthetic_auto_gen.go"),
