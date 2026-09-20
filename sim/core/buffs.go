@@ -133,6 +133,8 @@ func makeStatBuff(char *Character, config BuffConfig) *Aura {
 func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto.PartyBuffs, individual *proto.IndividualBuffs) {
 	char := agent.GetCharacter()
 
+	applyGeneratedBuffs(char, raidBuffs, partyBuffs, individual)
+
 	// Raid Buffs
 	if raidBuffs.ArcaneBrilliance {
 		MakePermanent(ArcaneBrillianceAura(char))

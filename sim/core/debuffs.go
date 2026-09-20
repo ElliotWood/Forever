@@ -11,6 +11,7 @@ import (
 
 // applyRaidDebuffEffects applies all raid-level debuffs based on the provided Debuffs proto.
 func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, raid *proto.Raid) {
+	applyGeneratedDebuffs(target, debuffs, raid)
 
 	if debuffs.BloodFrenzy {
 		MakePermanent(BloodFrenzyAura(target, 2))

@@ -28,4 +28,8 @@ func main() {
 	if err := database.GenerateSpellDataFiles(helper); err != nil {
 		log.Fatalf("failed to generate spell data tables: %v", err)
 	}
+
+	if err := database.GenerateBuffFiles(helper); err != nil {
+		log.Fatalf("failed to generate buff files: %v", err)
+	}
 }
