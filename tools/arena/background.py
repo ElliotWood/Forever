@@ -124,11 +124,17 @@ def main():
 
     specs = [s for s in args.specs.split(',') if s]
     pkgs = packages(specs)
+    # Most of ./sim/... is not a spec - core, common, the shared test helpers - so the package
+    # count makes a bar that stops at 43% and looks stuck. The spec files already on disk are the
+    # honest denominator when the whole arena is being run.
+    # ponytail: uses the previous run's output; a brand new checkout falls back to packages.
+    expected = len(os.listdir(ARENA_OUT)) if not specs and os.path.isdir(ARENA_OUT) else 0
+    total = expected or len(pkgs)
     what = 'talent search' if args.optimise else 'arena rebuild'
     url = webhook()
     start = time.time()
 
-    message = discord(url, f'**{what}** starting - {len(pkgs)} specs')
+    message = discord(url, f'**{what}** starting - {total} specs')
 
     environment = dict(os.environ, ARENA_OUT=ARENA_OUT, ARENA_OPTIMISE='1' if args.optimise else '')
     os.makedirs(ARENA_OUT, exist_ok=True)
@@ -136,10 +142,11 @@ def main():
     run = subprocess.Popen(['go', 'test', '--tags=with_db', '-timeout', '0', '-p', '1', '-run', 'TestArena'] + pkgs,
                            cwd=REPO, env=environment, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
+    done = 0
     while run.poll() is None:
         time.sleep(EVERY)
         done = len(written_since(start))
-        message = discord(url, f'**{what}** - {done}/{len(pkgs)} specs  `{bar(done, len(pkgs))}`  {elapsed(time.time() - start)}', message)
+        message = discord(url, f'**{what}** - {done}/{total} specs  `{bar(done, total)}`  {elapsed(time.time() - start)}', message)
 
     if run.returncode != 0:
         discord(url, f'**{what} failed** after {elapsed(time.time() - start)} - exit {run.returncode}', message)
@@ -160,7 +167,7 @@ def main():
         else:
             pushed = ' - leaderboard unchanged'
 
-    discord(url, f'**{what} done** - {len(pkgs)} specs in {elapsed(time.time() - start)}{pushed}\n```\n{leaderboard()}\n```', message)
+    discord(url, f'**{what} done** - {done} specs in {elapsed(time.time() - start)}{pushed}\n```\n{leaderboard()}\n```', message)
 
 
 if __name__ == '__main__':
