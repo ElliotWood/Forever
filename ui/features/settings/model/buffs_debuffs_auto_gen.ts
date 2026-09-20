@@ -378,7 +378,7 @@ export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 	},
 	{
 		config: BattleShout,
-		stats: [Stat.StatAttackPower, Stat.StatRangedAttackPower],
+		stats: [Stat.StatAttackPower],
 		ownerClass: Class.ClassWarrior,
 	},
 	{

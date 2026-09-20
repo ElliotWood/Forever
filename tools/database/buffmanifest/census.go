@@ -25,8 +25,8 @@ var Manifest = []BuffSpec{
 		Field: "battle_shout", Number: 28, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "BattleShout", Name: "Battle Shout", Owner: proto.Class_ClassWarrior,
 		Category: "BattleShout", SingleAura: true, Driver: true,
-		Stats: []proto.Stat{proto.Stat_StatAttackPower, proto.Stat_StatRangedAttackPower},
-		Notes: "Booming Voice (12321) is in warrior tree 1117 but modifies radius only (misc 6), so there is no improved state.",
+		Stats: []proto.Stat{proto.Stat_StatAttackPower},
+		Notes: "Booming Voice (12321) is in warrior tree 1117 but modifies radius only (misc 6), so there is no improved state. The single A_MOD_ATTACK_POWER effect is melee attack power, which is why the row tags that alone.",
 	},
 	{
 		Field: "devotion_aura", Number: 6, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
