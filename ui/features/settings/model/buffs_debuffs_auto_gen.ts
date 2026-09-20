@@ -443,7 +443,7 @@ export const GENERATED_PARTY_BUFFS_CONFIG: GeneratedStatOption[] = [
 	},
 	{
 		config: CommandingShout,
-		stats: [Stat.StatHealth],
+		stats: [Stat.StatStamina],
 		ownerClass: Class.ClassWarrior,
 	},
 	{

@@ -163,7 +163,4 @@ func (paladin *Paladin) registerShadowResistanceAura() {
 // TODO: To be implemented once the client has a spell to read the aura from.
 func (paladin *Paladin) registerSanctityAura() {
 	panic("To be implemented")
-
-	// The shape the port needs:
-	// paladin.registerAuraSpell(aura, SpellMaskSanctityAura)
 }

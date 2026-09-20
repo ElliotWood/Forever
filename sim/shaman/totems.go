@@ -139,13 +139,15 @@ func (shaman *Shaman) registerWindfuryTotemSpell() {
 	// shaman.RegisterSpell(config)
 }
 
-// TODO: To be implemented. Port the TBC Strength Of Earth Totem Spell implementation below; not yet verified against the Forever client.
+// TODO: To be implemented. The body below builds the totem around the generated
+// aura, whose value the client states; kept commented until this class's port is reviewed.
 func (shaman *Shaman) registerStrengthOfEarthTotemSpell() {
 	panic("To be implemented")
 
 	// The implementation, kept for the port:
 	// duration := time.Second * 120
 	// config := shaman.newTotemSpellConfig(strengthOfEarthTotemRank.Cost, strengthOfEarthTotemRank.SpellID, SpellMaskBasicTotem, strengthOfEarthTotemRank.GCD)
+	// // Enhancing Totems (16295) has no node in shaman tree 1082, so the aura is untalented.
 	// buffAura := core.StrengthOfEarthTotemAura(&shaman.Unit, true, 0)
 	// buffAura.Duration = duration
 	// config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
@@ -240,7 +242,8 @@ func (shaman *Shaman) registerWrathOfAirTotemSpell() {
 	// shaman.RegisterSpell(config)
 }
 
-// TODO: To be implemented. Port the TBC Mana Spring Totem Spell implementation below; not yet verified against the Forever client.
+// TODO: To be implemented. The body below builds the totem around the generated
+// aura, which Restorative Totems prices; kept commented until this class's port is reviewed.
 func (shaman *Shaman) registerManaSpringTotemSpell() {
 	panic("To be implemented")
 
