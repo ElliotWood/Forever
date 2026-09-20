@@ -1692,7 +1692,8 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 
 // The apply block: the condition the proto field is read by, and the call that
 // puts the buff on the unit. A kind whose behaviour is a cooldown, a proc or an
-// uptime calls a driver of a fixed name that sim/core/buffs_manual.go declares.
+// uptime calls a driver of a fixed name that sim/core/buffs_manual.go declares,
+// and so does a row the manifest marks as driven.
 func buffApply(row ResolvedBuff) (string, string, bool) {
 	unit, field := "char", "individual"
 	switch row.Scope {
@@ -1719,9 +1720,11 @@ func buffApply(row ResolvedBuff) (string, string, bool) {
 	}
 
 	var body string
-	switch row.Kind {
-	case buffmanifest.KindExternalCD, buffmanifest.KindProc, buffmanifest.KindManual,
-		buffmanifest.KindDebuffUptime, buffmanifest.KindItemCount:
+	switch {
+	case row.Driver,
+		row.Kind == buffmanifest.KindExternalCD, row.Kind == buffmanifest.KindProc,
+		row.Kind == buffmanifest.KindManual, row.Kind == buffmanifest.KindDebuffUptime,
+		row.Kind == buffmanifest.KindItemCount:
 		body = fmt.Sprintf("drive%s(%s, %s)", row.Go, unit, access)
 	default:
 		target := "&char.Unit"

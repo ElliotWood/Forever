@@ -197,6 +197,7 @@ type BuffSpec struct {
 	Category       string      // exclusive-effect category value, "" = none
 	SharedCategory string      // second exclusive category the aura also joins, "" = none
 	SingleAura     bool
+	Driver         bool // apply block hands the field to drive<Go>; the aura is not simply always up
 	Pet            PetPolicy
 	Stats          []proto.Stat // UI relevance tags
 	ImpAction      *ActionRef   // improved-icon override when it is an item

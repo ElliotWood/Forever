@@ -51,6 +51,29 @@ func SynthBlessingOfKingsAura(unit *Unit, isPlayer bool, talentPoints int32) *Au
 	})
 }
 
+// Battle Shout - https://www.wowhead.com/forever/spell=25289
+var SynthBattleShoutCategory = "SynthBattleShout"
+
+func SynthBattleShoutValue(talentPoints int32) float64 {
+	return 139.0
+}
+func SynthBattleShoutDuration(talentPoints int32) time.Duration {
+	return 180000 * time.Millisecond
+}
+func SynthBattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:      "Battle Shout (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 25289}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   SynthBattleShoutDuration(talentPoints),
+		Category:   SynthBattleShoutCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.AttackPower, SynthBattleShoutValue(talentPoints), false},
+		},
+	})
+}
+
 // Devotion Aura - https://www.wowhead.com/forever/spell=10293
 var SynthDevotionAuraCategory = "DevotionAura"
 
@@ -138,6 +161,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if individual.BlessingOfKings {
 		MakePermanent(SynthBlessingOfKingsAura(&char.Unit, false, 0))
+	}
+	if party.BattleShout {
+		driveSynthBattleShout(char, party.BattleShout)
 	}
 	if party.DevotionAura {
 		MakePermanent(SynthDevotionAuraAura(&char.Unit, false, 0))

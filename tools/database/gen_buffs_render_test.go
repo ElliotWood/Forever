@@ -1,10 +1,10 @@
 package database
 
-// Pins what the generator emits for a row it can express. No row of the real
-// manifest renders code yet - every one is still a shell - so without these
-// synthetic rows the whole supported branch of the templates would be untested,
-// and nothing would notice a generated constructor that no longer compiles
-// against sim/core/buffs_gen_support.go.
+// Pins what the generator emits for a row it can express. Only battle_shout of
+// the real manifest renders code so far - every other row is still a shell - so
+// without these synthetic rows most of the supported branch of the templates
+// would be untested, and nothing would notice a generated constructor that no
+// longer compiles against sim/core/buffs_gen_support.go.
 //
 // Needs no client database. Set UPDATE_BUFF_FIXTURES=1 to rewrite the fixtures
 // after a deliberate change.
@@ -50,6 +50,16 @@ func syntheticBuffRows() []ResolvedBuff {
 				{Stat: stats.Strength, Amount: 1.1, Multiplicative: true},
 				{Stat: stats.Agility, Amount: 1.1, Multiplicative: true},
 			},
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "battle_shout", Scope: buffmanifest.ScopeParty,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindStatFlat,
+				Go: "SynthBattleShout", Name: "Battle Shout", Category: "SynthBattleShout",
+				SingleAura: true, Driver: true,
+			},
+			SpellID: 25289, DurationMs: 180000, Supported: true,
+			Stats: []StatAmount{{Stat: stats.AttackPower, Amount: 139}},
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -200,8 +210,8 @@ func TestRenderedBuffFilesMatchTheFixtures(t *testing.T) {
 // Builds sim/core with the rendered files overlaid onto it, which is the only
 // check that a generated constructor still names an identifier the support API
 // declares. The apply functions are renamed because the real generated files
-// already declare them, and the one driver the rows call is stubbed here the way
-// sim/core/buffs_manual.go would declare it.
+// already declare them, and the drivers the rows call are stubbed here the way
+// sim/core/buffs_manual.go would declare them.
 func TestRenderedBuffFilesCompile(t *testing.T) {
 	goTool := findGoTool(t)
 	root, err := repoRoot()
@@ -224,7 +234,10 @@ func TestRenderedBuffFilesCompile(t *testing.T) {
 	if err := os.WriteFile(drivers, []byte("package core\n\n"+
 		"func driveSynthInnervates(char *Character, numSources int32) {\n"+
 		"\tnewGeneratedExternalCD(char, GeneratedBuff{ActionID: ActionID{SpellID: 29166}},"+
-		" numSources, 0, nil)\n}\n"), 0644); err != nil {
+		" numSources, 0, nil)\n}\n\n"+
+		"func driveSynthBattleShout(char *Character, _ bool) {\n"+
+		"\tApplyFixedShoutAura(char, SynthBattleShoutAura(&char.Unit, false, 0),"+
+		" SynthBattleShoutCategory)\n}\n"), 0644); err != nil {
 		t.Fatal(err)
 	}
 	overlay[filepath.Join(root, "sim", "core", "zz_synthetic_drivers.go")] = drivers
