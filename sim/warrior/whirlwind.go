@@ -65,7 +65,8 @@ func (warrior *Warrior) registerWhirlwind() {
 			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 			spell.DealBatchedAoeDamage(sim)
 
-			if warrior.HasOHWeapon() {
+			// Raging Blows (1310315) adds the off-hand strike.
+			if warrior.HasOHWeapon() && warrior.Talents.RagingBlows {
 				whirlwindOH.Cast(sim, target)
 			}
 		},

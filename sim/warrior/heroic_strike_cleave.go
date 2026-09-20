@@ -56,7 +56,7 @@ func (warrior *Warrior) registerHeroicStrike() {
 func (warrior *Warrior) registerCleave() {
 	const maxTargets int32 = 2
 	cleaveVal, _ := cleaveRank.Direct.Range()
-	flatDamage := cleaveVal * spellData.ImprovedCleave.MultiplierAt(warrior.Talents.ImprovedCleave)
+	flatDamage := cleaveVal
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: cleaveRank.SpellID},

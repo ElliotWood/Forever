@@ -16,16 +16,16 @@
 	{"action":{"condition":{"multipleCdUsages":{"baseSpellId":{"spellId":2825,"tag":-1},"targetSpellId":{"otherId":"OtherActionPotion"},"offset":{"variableRef":{"name":"Bloodlust time"}},"alignCdEnd":true}},"castSpell":{"spellId":{"otherId":"OtherActionPotion"}}}},
 	{"action":{"condition":{"multipleCdUsages":{"baseSpellId":{"spellId":2825,"tag":-1},"targetSpellId":{"itemId":22788},"offset":{"variableRef":{"name":"Bloodlust time"}},"alignCdEnd":true}},"castSpell":{"spellId":{"itemId":22788}}}},
 	{"action":{"groupReference":{"groupName":"CD: Racials"}}},
-	{"action":{"condition":{"multipleCdUsages":{"baseSpellId":{"spellId":2825,"tag":-1},"targetSpellId":{"spellId":12292},"offset":{"variableRef":{"name":"Bloodlust time"}},"alignCdEnd":true}},"castSpell":{"spellId":{"spellId":12292}}}},
+	{"action":{"condition":{"multipleCdUsages":{"baseSpellId":{"spellId":2825,"tag":-1},"targetSpellId":{"spellId":12328},"offset":{"variableRef":{"name":"Bloodlust time"}},"alignCdEnd":true}},"castSpell":{"spellId":{"spellId":12328}}}},
 	{"action":{"condition":{"and":{"vals":[{"actionGroupUsed":{"name":"Recklessness ON/OFF"}},{"multipleCdUsages":{"baseSpellId":{"spellId":2825,"tag":-1},"targetSpellId":{"spellId":1719},"offset":{"variableRef":{"name":"Bloodlust time"}},"alignCdEnd":true}}]}},"castSpell":{"spellId":{"spellId":1719}}}},
 	{"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpGt","lhs":{"numberTargets":{}},"rhs":{"const":{"val":"1"}}}},{"multipleCdUsages":{"baseSpellId":{"spellId":2825,"tag":-1},"targetSpellId":{"spellId":12723},"offset":{"variableRef":{"name":"Bloodlust time"}}}}]}},"castSpell":{"spellId":{"spellId":12723}}}},
 	{"action":{"condition":{"cmp":{"op":"OpGt","lhs":{"numberTargets":{}},"rhs":{"const":{"val":"1"}}}},"castSpell":{"spellId":{"spellId":1680,"tag":1}}}},
-	{"action":{"castSpell":{"spellId":{"spellId":30335}}}},
-	{"action":{"condition":{"cmp":{"op":"OpGe","lhs":{"spellTimeToReady":{"spellId":{"spellId":30335}}},"rhs":{"const":{"val":"1.5s"}}}},"castSpell":{"spellId":{"spellId":1680,"tag":1}}}},
+	{"action":{"castSpell":{"spellId":{"spellId":23894}}}},
+	{"action":{"condition":{"cmp":{"op":"OpGe","lhs":{"spellTimeToReady":{"spellId":{"spellId":23894}}},"rhs":{"const":{"val":"1.5s"}}}},"castSpell":{"spellId":{"spellId":1680,"tag":1}}}},
 	{"action":{"condition":{"isExecutePhase":{"threshold":"E20"}},"castSpell":{"spellId":{"spellId":25236}}}},
 	{"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpGt","lhs":{"numberTargets":{}},"rhs":{"const":{"val":"1"}}}},{"or":{"vals":[{"cmp":{"op":"OpGe","lhs":{"currentRage":{}},"rhs":{"const":{"val":"40"}}}}]}}]}},"castSpell":{"spellId":{"spellId":25231,"tag":1}}}},
 	{"action":{"groupReference":{"groupName":"Overpower Weaving"}}},
-	{"action":{"condition":{"and":{"vals":[{"auraIsInactive":{"auraId":{"spellId":2458}}},{"or":{"vals":[{"cmp":{"op":"OpLe","lhs":{"spellTimeToReady":{"spellId":{"spellId":30335}}},"rhs":{"inputDelay":{}}}},{"cmp":{"op":"OpLe","lhs":{"spellTimeToReady":{"spellId":{"spellId":1680,"tag":1}}},"rhs":{"inputDelay":{}}}}]}}]}},"castSpell":{"spellId":{"spellId":2458}}}},
+	{"action":{"condition":{"and":{"vals":[{"auraIsInactive":{"auraId":{"spellId":2458}}},{"or":{"vals":[{"cmp":{"op":"OpLe","lhs":{"spellTimeToReady":{"spellId":{"spellId":23894}}},"rhs":{"inputDelay":{}}}},{"cmp":{"op":"OpLe","lhs":{"spellTimeToReady":{"spellId":{"spellId":1680,"tag":1}}},"rhs":{"inputDelay":{}}}}]}}]}},"castSpell":{"spellId":{"spellId":2458}}}},
 	{"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpEq","lhs":{"numberTargets":{}},"rhs":{"const":{"val":"1"}}}},{"not":{"val":{"isExecutePhase":{"threshold":"E20"}}}},{"cmp":{"op":"OpGe","lhs":{"currentRage":{}},"rhs":{"const":{"val":"40"}}}}]}},"castSpell":{"spellId":{"spellId":29707,"tag":1}}}},
 	{"action":{"condition":{"and":{"vals":[{"variableRef":{"name":"Delay Check"}},{"cmp":{"op":"OpGt","lhs":{"currentRage":{}},"rhs":{"const":{"val":"60"}}}}]}},"castSpell":{"spellId":{"spellId":25212}}}},
 	{"action":{"condition":{"cmp":{"op":"OpLt","lhs":{"currentRage":{}},"rhs":{"const":{"val":"90"}}}},"castSpell":{"spellId":{"spellId":2687}}}},
@@ -49,7 +49,7 @@
 	],
 	"valueVariables": [
 	{"name":"Bloodlust time","value":{"const":{"val":"5s"}}},
-	{"name":"Delay Check","value":{"and":{"vals":[{"cmp":{"op":"OpGe","lhs":{"spellTimeToReady":{"spellId":{"spellId":30335}}},"rhs":{"const":{"val":"1.5s"}}}},{"cmp":{"op":"OpGe","lhs":{"spellTimeToReady":{"spellId":{"spellId":1680,"tag":1}}},"rhs":{"const":{"val":"1.5s"}}}}]}}},
+	{"name":"Delay Check","value":{"and":{"vals":[{"cmp":{"op":"OpGe","lhs":{"spellTimeToReady":{"spellId":{"spellId":23894}}},"rhs":{"const":{"val":"1.5s"}}}},{"cmp":{"op":"OpGe","lhs":{"spellTimeToReady":{"spellId":{"spellId":1680,"tag":1}}},"rhs":{"const":{"val":"1.5s"}}}}]}}},
 	{"name":"Overpower: Can Cast","value":{"and":{"vals":[{"variableRef":{"name":"Delay Check"}},{"not":{"val":{"isExecutePhase":{"threshold":"E20"}}}},{"or":{"vals":[{"and":{"vals":[{"auraIsActive":{"auraId":{"spellId":11585},"includeReactionTime":true}},{"cmp":{"op":"OpGe","lhs":{"currentRage":{}},"rhs":{"const":{"val":"5"}}}},{"cmp":{"op":"OpLe","lhs":{"currentRage":{}},"rhs":{"const":{"val":"100"}}}}]}}]}}]}}}
 	]
 }

@@ -216,7 +216,8 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	core.FillTalentsProto(warrior.Talents.ProtoReflect(), talents, TalentTreeSizes)
 
 	warrior.EnableRageBar(core.RageBarOptions{
-		MaxRage:            100,
+		// Boundless Rage (1310236) raises the cap by 10 per rank.
+		MaxRage:            100 + spellData.BoundlessRage.ValueAt(warrior.Talents.BoundlessRage)/10,
 		BaseRageMultiplier: 1,
 		StartingRage:       inputs.StartingRage,
 	})

@@ -19,7 +19,7 @@ func (warrior *Warrior) registerFuryTalents() {
 	warrior.registerUnbridledWrath()
 
 	// Tier 3
-	// Improved Cleave: heroic_strike_cleave.go
+	warrior.registerImprovedCleave()
 	warrior.registerPiercingHowl()
 	warrior.registerBloodCraze()
 	warrior.registerBoundlessRage()
@@ -358,13 +358,21 @@ func (warrior *Warrior) registerBloodCraze() {
 	})
 }
 
-// TODO: Boundless Rage raises the warrior's maximum Rage by 10 per point (1310236). The rage bar
-// takes its ceiling once, from RageBarOptions.MaxRage in NewWarrior, and sim/core/rage.go exposes no
-// setter, so the bonus has to be passed there.
+// Boundless Rage (1310236) raises the rage cap, which warrior.go reads from the table when it
+// enables the rage bar.
 func (warrior *Warrior) registerBoundlessRage() {
-	if warrior.Talents.BoundlessRage == 0 {
+}
+
+// Improved Cleave (12329) states only a rage discount on Cleave.
+func (warrior *Warrior) registerImprovedCleave() {
+	if warrior.Talents.ImprovedCleave == 0 {
 		return
 	}
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskCleave,
+		Kind:      core.SpellMod_PowerCost_Flat,
+		IntValue:  int32(spellData.ImprovedCleave.ValueAt(warrior.Talents.ImprovedCleave) / 10),
+	})
 }
 
 // TODO: The other half of 1310315, Whirlwind striking with the off-hand as well, is not gated on the
