@@ -786,7 +786,8 @@ export class Player<SpecType extends Spec> {
 
 		// Spell 14325, the top rank the buff generator resolves, which HuntersMarkValue
 		// in sim/core/debuffs_auto_gen.go states. Nothing exports it to TypeScript, so
-		// the sheet repeats the number and this is the second place to change.
+		// the sheet repeats the number and this is the second place to change;
+		// TestHuntersMarkOnTheCharacterSheetMatchesTheSim holds the two together.
 		if (debuffs.huntersMark) {
 			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, 71);
 		}

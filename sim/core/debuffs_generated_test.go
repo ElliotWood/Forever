@@ -1,6 +1,9 @@
 package core
 
 import (
+	"os"
+	"regexp"
+	"strconv"
 	"testing"
 	"time"
 
@@ -236,4 +239,29 @@ func targetAuraLabels(target *Unit) []string {
 		labels = append(labels, aura.Label)
 	}
 	return labels
+}
+
+// The addStat call under the comment that names HuntersMarkValue.
+var huntersMarkSheetRE = regexp.MustCompile(`(?s)HuntersMarkValue.*?addStat\(\s*Stat\.StatRangedAttackPower,\s*([0-9.]+)\s*\)`)
+
+// Nothing exports a generated debuff's value to TypeScript, so the character sheet repeats
+// Hunter's Mark's ranged attack power as a literal. The sheet and the sim state one number.
+func TestHuntersMarkOnTheCharacterSheetMatchesTheSim(t *testing.T) {
+	raw, err := os.ReadFile("../../ui/sim/player/player.ts")
+	if err != nil {
+		t.Fatalf("read player.ts: %v", err)
+	}
+
+	match := huntersMarkSheetRE.FindStringSubmatch(string(raw))
+	if match == nil {
+		t.Fatalf("player.ts credits no ranged attack power under the comment naming HuntersMarkValue; the pattern is %v", huntersMarkSheetRE)
+	}
+
+	sheet, err := strconv.ParseFloat(match[1], 64)
+	if err != nil {
+		t.Fatalf("player.ts credits %q ranged attack power: %v", match[1], err)
+	}
+	if want := HuntersMarkValue(0); sheet != want {
+		t.Errorf("the sheet credits Hunter's Mark with %v ranged attack power, want the %v HuntersMarkValue states", sheet, want)
+	}
 }
