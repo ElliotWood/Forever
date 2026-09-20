@@ -127,6 +127,13 @@ describe('useActionId', () => {
 		expect(ActionId.fromTalent(12297, 1, 135506).equalityKey()).not.toBe(ActionId.fromTalent(12297, 1, 999999).equalityKey());
 	});
 
+	it('previews rank 1 for an unspent talent rather than letting wowhead pick a default', () => {
+		deferFill();
+		const unspentPoints = 0;
+		const { container } = render(<Probe actionId={ActionId.fromTalent(12297, Math.max(unspentPoints, 1), 135506)} />);
+		expect(anchor(container).href).toContain('rank=1');
+	});
+
 	it('keeps the definition through fill, which rebuilds the id field by field', async () => {
 		vi.spyOn(ActionId, 'getTooltipData').mockResolvedValue({ id: 12297, name: 'Anticipation', icon: 'ability_warrior_anticipation' } as never);
 
