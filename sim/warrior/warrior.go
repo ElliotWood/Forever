@@ -244,7 +244,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 
 	warrior.sharedShoutsCD = warrior.NewTimer()
-	warrior.ChargeRageGain = 15 + spellData.ImprovedCharge.ValueAt(warrior.Talents.ImprovedCharge)/10
 	warrior.BerserkerRageRageGain = 0
 	// The sim often re-enables heroic strike in an unrealistic amount of time.
 	// This can cause an unrealistic immediate double-hit around wild strikes procs

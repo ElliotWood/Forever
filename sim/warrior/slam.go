@@ -29,6 +29,10 @@ func (warrior *Warrior) registerSlam() {
 				GCD:      slamRank.GCD,
 				CastTime: slamRank.CastTime,
 			},
+			CD: core.Cooldown{
+				Timer:    warrior.NewTimer(),
+				Duration: slamRank.Cooldown,
+			},
 			IgnoreHaste: true,
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
 				// Improved Slam (12862) stops Slam from interrupting the swing.

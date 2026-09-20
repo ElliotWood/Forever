@@ -17,8 +17,8 @@ func (warrior *Warrior) registerArmsTalents() {
 	warrior.registerImprovedRend()
 
 	// Tier 2
-	warrior.registerImprovedCharge()
-	warrior.registerImprovedTacticalMastery()
+	// Improved Charge: warrior.go, when it resets ChargeRageGain
+	// Improved Tactical Mastery: stances.go
 	warrior.registerImprovedOverpower()
 
 	// Tier 3
@@ -76,10 +76,6 @@ func (warrior *Warrior) registerImprovedRend() {
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.ImprovedRend.FractionAt(warrior.Talents.ImprovedRend),
 	})
-}
-
-func (warrior *Warrior) registerImprovedCharge() {
-	// warrior.go adds the ladder to ChargeRageGain when it resets the warrior.
 }
 
 func (warrior *Warrior) registerImprovedOverpower() {
@@ -263,14 +259,6 @@ func (warrior *Warrior) registerMortalStrike() {
 	})
 }
 
-// The rage a stance change retains is stances.go's, and it reads
-// spellData.ImprovedTacticalMastery itself.
-func (warrior *Warrior) registerImprovedTacticalMastery() {
-	if warrior.Talents.ImprovedTacticalMastery == 0 {
-		return
-	}
-}
-
 // TODO: Manual review needed -- Spearing Strike has no generated table. The client states 15 Rage,
 // a 20 second cooldown, a 1.5 second global cooldown, melee range, 40% of normalized weapon damage
 // and triple that against Giants and Dragonkin (1310222).
@@ -341,6 +329,7 @@ func (warrior *Warrior) registerBloodthrill() {
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.OverpowerAura.Activate(sim)
+			warrior.OverpowerAura.UpdateExpires(sim.CurrentTime + time.Second*6)
 		},
 	})
 }

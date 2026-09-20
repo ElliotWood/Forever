@@ -11,7 +11,9 @@ func (warrior *Warrior) registerBloodrage() {
 	actionID := core.ActionID{SpellID: 2687}
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	healthCost := warrior.GetBaseStats()[stats.Health] * 0.16
-	instantRage := 10.0 + 3*float64(warrior.Talents.ImprovedBloodrage)
+	// Improved Bloodrage (12301) raises every rage amount Bloodrage generates by 25% per rank.
+	improvedBloodrage := spellData.ImprovedBloodrage.MultiplierAt(warrior.Talents.ImprovedBloodrage)
+	instantRage := 10.0 * improvedBloodrage
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID: actionID,
@@ -34,7 +36,7 @@ func (warrior *Warrior) registerBloodrage() {
 				NumTicks: 10,
 				Period:   time.Second * 1,
 				OnAction: func(sim *core.Simulation) {
-					warrior.AddRage(sim, 1, rageMetrics)
+					warrior.AddRage(sim, improvedBloodrage, rageMetrics)
 				},
 			})
 		},

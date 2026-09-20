@@ -28,7 +28,7 @@ func (warrior *Warrior) registerProtectionTalents() {
 	// Tier 4
 	warrior.registerImprovedSunderArmor()
 	warrior.registerImprovedDisarm()
-	warrior.registerVanguard()
+	// Vanguard: charge.go
 
 	// Tier 5
 	warrior.registerImprovedShieldWall()
@@ -332,15 +332,6 @@ func (warrior *Warrior) registerImprovedDisarm() {
 		Kind:      core.SpellMod_Cooldown_Flat,
 		TimeValue: time.Duration(spellData.ImprovedDisarm.ValueAt(warrior.Talents.ImprovedDisarm)) * time.Millisecond,
 	})
-}
-
-// TODO: Vanguard makes Charge usable in Defensive Stance -- spell 1310317 overrides each Charge
-// rank with 1240287/1240288/1240289, which carry the same rage and cooldown. That needs the stance
-// condition in charge.go.
-func (warrior *Warrior) registerVanguard() {
-	if !warrior.Talents.Vanguard {
-		return
-	}
 }
 
 func (warrior *Warrior) registerImprovedShieldBash() {

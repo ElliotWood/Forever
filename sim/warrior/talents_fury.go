@@ -15,14 +15,15 @@ func (warrior *Warrior) registerFuryTalents() {
 	warrior.registerCruelty()
 
 	// Tier 2
-	warrior.registerIronWill()
+	// TODO: Iron Will (12962) shortens stuns and fears by 3% per rank; core registers them at a
+	// fixed duration with no per-unit modifier to hang the talent on.
 	warrior.registerUnbridledWrath()
 
 	// Tier 3
 	warrior.registerImprovedCleave()
 	warrior.registerPiercingHowl()
 	warrior.registerBloodCraze()
-	warrior.registerBoundlessRage()
+	// Boundless Rage: warrior.go, when it enables the rage bar
 
 	// Tier 4
 	warrior.registerDualWieldSpecialization()
@@ -60,9 +61,11 @@ func (warrior *Warrior) registerUnbridledWrath() {
 
 	// TODO: Manual review needed -- 12964 restores 10 rage tenths, which 12322 doubles for a
 	// two-handed weapon.
-	rageGain := 1.0
-	if warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand {
-		rageGain = 2.0
+	rageGain := func() float64 {
+		if warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand {
+			return 2
+		}
+		return 1
 	}
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
@@ -73,7 +76,7 @@ func (warrior *Warrior) registerUnbridledWrath() {
 		Outcome:            core.OutcomeLanded,
 		Callback:           core.CallbackOnSpellHitDealt,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			warrior.AddRage(sim, rageGain, rageMetrics)
+			warrior.AddRage(sim, rageGain(), rageMetrics)
 		},
 	})
 }
@@ -132,7 +135,7 @@ func (warrior *Warrior) registerEnrage() {
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Enrage - Trigger",
-		Callback:           core.CallbackOnSpellHitTaken | core.CallbackOnPeriodicDamageTaken,
+		Callback:           core.CallbackOnSpellHitTaken,
 		Outcome:            core.OutcomeLanded,
 		RequireDamageDealt: true,
 		ProcChance:         spellData.Enrage.ProcChanceAt(warrior.Talents.Enrage),
@@ -262,15 +265,6 @@ func (warrior *Warrior) registerBloodthirst() {
 	})
 }
 
-// TODO: Iron Will shortens the Stun and Fear effects on the warrior by 3% per point (12962).
-// sim/core/incapacitate.go registers a stun or a fear at a fixed duration and carries no per-unit
-// duration modifier to hang the talent on.
-func (warrior *Warrior) registerIronWill() {
-	if warrior.Talents.IronWill == 0 {
-		return
-	}
-}
-
 // TODO: The daze itself is not modelled; the encounter's targets do not move, so the -50% movement
 // speed 12323 applies for 6 seconds within 10 yards has nothing to act on.
 func (warrior *Warrior) registerPiercingHowl() {
@@ -358,23 +352,6 @@ func (warrior *Warrior) registerBloodCraze() {
 	})
 }
 
-// Boundless Rage (1310236) raises the rage cap, which warrior.go reads from the table when it
-// enables the rage bar.
-func (warrior *Warrior) registerBoundlessRage() {
-}
-
-// Improved Cleave (12329) states only a rage discount on Cleave.
-func (warrior *Warrior) registerImprovedCleave() {
-	if warrior.Talents.ImprovedCleave == 0 {
-		return
-	}
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskCleave,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedCleave.ValueAt(warrior.Talents.ImprovedCleave) / 10),
-	})
-}
-
 // TODO: The other half of 1310315, Whirlwind striking with the off-hand as well, is not gated on the
 // talent: whirlwind.go casts its off-hand hit off every Whirlwind the warrior lands with an off-hand
 // weapon equipped.
@@ -459,5 +436,17 @@ func (warrior *Warrior) registerImprovedIntercept() {
 		ClassMask: SpellMaskIntercept,
 		Kind:      core.SpellMod_Cooldown_Flat,
 		TimeValue: time.Duration(spellData.ImprovedIntercept.ValueAt(warrior.Talents.ImprovedIntercept)) * time.Millisecond,
+	})
+}
+
+// Improved Cleave (12329) states only a rage discount on Cleave.
+func (warrior *Warrior) registerImprovedCleave() {
+	if warrior.Talents.ImprovedCleave == 0 {
+		return
+	}
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskCleave,
+		Kind:      core.SpellMod_PowerCost_Flat,
+		IntValue:  int32(spellData.ImprovedCleave.ValueAt(warrior.Talents.ImprovedCleave) / 10),
 	})
 }

@@ -63,8 +63,9 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 	ID:   218,
 	Bonuses: map[int32]core.ApplySetBonus{
 		3: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 23563 states 30 attack power on Battle Shout. shouts.go's HasBsT2 option
-			// stands in for this bonus, so nothing is applied here.
+			// Spell 23563 states 30 attack power on Battle Shout, which shouts.go adds through
+			// the same flag the HasBsT2 option sets.
+			agent.(WarriorAgent).GetWarrior().HasBsT2 = true
 		},
 		5: func(agent core.Agent, setBonusAura *core.Aura) {
 			// Spell 21890 states a 20% chance after an offensive ability requiring rage that the

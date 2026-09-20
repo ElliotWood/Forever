@@ -78,7 +78,7 @@ var DefaultOptions = &proto.Player_DpsWarrior{
 }
 
 var DefaultFuryTalents = "30305003-050530205052310051"
-var DefaultArmsTalents = "30305213032315001-05052030004"
+var DefaultArmsTalents = "30305213032115201-05052030004"
 
 var DefaultConsumables = &proto.ConsumesSpec{
 	PotId:       22838,

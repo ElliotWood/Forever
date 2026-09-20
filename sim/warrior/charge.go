@@ -52,7 +52,7 @@ func (warrior *Warrior) registerCharge() {
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			// Vanguard (1310317) replaces Charge with a copy usable in Defensive Stance.
-			return sim.CurrentTime < 0 && (warrior.StanceMatches(BattleStance) || warrior.Talents.Vanguard)
+			return sim.CurrentTime < 0 && (warrior.StanceMatches(BattleStance) || (warrior.Talents.Vanguard && warrior.StanceMatches(DefensiveStance)))
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
