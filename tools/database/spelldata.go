@@ -129,7 +129,11 @@ func DeriveRankAmount(e RankEffect, spellLevel, maxLevel int32) (min float64, ma
 	}
 
 	base := float32(e.BasePoints) + float32(float32(delta)*float32(e.PointsPerLvl))
-	min = math.Floor(float64(base)) + 1
+	// The old EffectBasePoints column stored the value MINUS ONE, so the roll was
+	// basePoints+1 .. basePoints+dieSides and the +1 below was the true minimum. This
+	// client stores the real value in EffectBasePointsF, so the +1 is gone: Improved
+	// Battle Shout reads 5/10/15/20/25 and must generate as 5/10/15/20/25, not 6..26.
+	min = math.Floor(float64(base))
 	max = math.Ceil(float64(base)) + float64(e.DieSides)
 	if e.DieSides <= 0 {
 		max = min
@@ -225,7 +229,15 @@ func scanOptional(db *sql.DB, query string, spellID int32, dest ...any) error {
 
 func RankEffectsOf(db *sql.DB, spellID int32) ([]RankEffect, error) {
 	rows, err := db.Query(`
-		SELECT EffectIndex, Effect, EffectAura, EffectBasePoints, EffectDieSides,
+		-- EffectBasePoints became the REAL EffectBasePointsF in this client's layout, and
+		-- EffectDieSides is gone entirely (Variance carries the spread now). BasePoints stays
+		-- integral here because the dummy-target heuristic below reads base+dieSides as a
+		-- spell id.
+		--
+		-- TODO: ~1.8% of SpellEffect rows have a fractional EffectBasePointsF and lose it to
+		-- this cast. TODO: with DieSides pinned to 0, DeriveRankAmount collapses min and max
+		-- onto the same value, so generated rank tables no longer carry a damage range.
+		SELECT EffectIndex, Effect, EffectAura, CAST(EffectBasePointsF AS INTEGER), 0,
 		       EffectRealPointsPerLevel, EffectBonusCoefficient, BonusCoefficientFromAP, EffectAuraPeriod,
 		       COALESCE(EffectMiscValue_0, 0)
 		FROM SpellEffect WHERE SpellID = ? ORDER BY EffectIndex`, spellID)
