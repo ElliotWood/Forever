@@ -4,6 +4,7 @@ import { UnitStat } from '@sim/proto/stats';
 import { fakeHost } from '@sim/testing';
 import { describe, expect, it } from 'vitest';
 
+import * as BuffDebuffInputs from './buffs_debuffs';
 import { applyOwnerClassLabels, type PickerStatOptions, relevantStatOptions, type RenderableStatOptions } from './stat_options';
 
 const option = (stats: Array<Stat>) => ({ config: { label: stats.join('/') }, stats }) as unknown as PickerStatOptions;
@@ -79,5 +80,26 @@ describe('applyOwnerClassLabels', () => {
 		);
 
 		expect(shown.map(option => option.config.label)).toEqual(['Arcane Brilliance']);
+	});
+});
+
+describe('the buff registries', () => {
+	it('carries every generated row and every hand-written one, hand-written rows at their old positions', () => {
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG).toHaveLength(36);
+		expect(BuffDebuffInputs.BUFFS_CONFIG).toHaveLength(14);
+		expect(BuffDebuffInputs.DEBUFFS_CONFIG).toHaveLength(23);
+		expect(BuffDebuffInputs.DEBUFFS_MISC_CONFIG).toHaveLength(0);
+
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[4].config).toBe(BuffDebuffInputs.FerociousInspiration);
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[28].config).toBe(BuffDebuffInputs.DrumsBuff);
+		expect(BuffDebuffInputs.BUFFS_CONFIG[2].config).toBe(BuffDebuffInputs.Bloodlust);
+		expect(BuffDebuffInputs.DEBUFFS_CONFIG[0].config).toBe(BuffDebuffInputs.BloodFrenzy);
+		expect(BuffDebuffInputs.DEBUFFS_CONFIG[22].config).toBe(BuffDebuffInputs.ShadowEmbrace);
+	});
+
+	it('gives the generated rows their owner class, so the settings tab can mark them external', () => {
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].config).toBe(BuffDebuffInputs.BattleShout);
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].ownerClass).toBe(Class.ClassWarrior);
+		expect(BuffDebuffInputs.BUFFS_CONFIG[2].ownerClass).toBeUndefined();
 	});
 });
