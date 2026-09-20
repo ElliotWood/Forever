@@ -196,6 +196,29 @@ func TestGeneratedBuffCompetesPerSchoolForItsResistances(t *testing.T) {
 	}
 }
 
+// A_REDUCE_PUSHBACK states how much pushback is taken away, while the sim's
+// PushbackChance is the chance of being pushed back and starts at 1.
+func TestGeneratedConcentrationAuraReducesPushback(t *testing.T) {
+	sim := &Simulation{}
+	target := newExclusiveTestTarget()
+	target.PseudoStats = stats.NewPseudoStats()
+
+	aura := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+		Label:      "Generated Concentration Aura",
+		ActionID:   ActionID{SpellID: 19746},
+		Duration:   NeverExpires,
+		Category:   "ConcentrationAura",
+		SingleAura: true,
+		Pseudo:     []PseudoConfig{{Kind: PseudoStatPushbackChance, Amount: -0.35}},
+	}))
+
+	aura.Activate(sim)
+
+	if got := target.PseudoStats.PushbackChance; got != 0.65 {
+		t.Errorf("pushback chance is %v, want 1 reduced by 35%% to 0.65", got)
+	}
+}
+
 // The branch a buff with a category but no SingleAura takes: the pseudo-stats
 // are registered by attachGeneratedPseudoStats rather than folded into one
 // category-wide effect.

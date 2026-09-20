@@ -1081,7 +1081,9 @@ func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
 	case dbc.A_MOD_DAMAGE_PERCENT_DONE:
 		return []PseudoMod{{Kind: "DamageDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
 	case dbc.A_REDUCE_PUSHBACK:
-		return []PseudoMod{{Kind: "PushbackChance", Amount: e.Value / 100}}, true
+		// PseudoStats.PushbackChance is the chance of being pushed back and
+		// starts at 1, so the client's "35% less pushback" is -0.35 there.
+		return []PseudoMod{{Kind: "PushbackChance", Amount: -e.Value / 100}}, true
 	case dbc.A_MOD_MELEE_HASTE_3, dbc.A_MOD_ATTACKSPEED:
 		return []PseudoMod{{Kind: "MeleeSpeedMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
 	case dbc.A_MOD_DAMAGE_PERCENT_TAKEN:
