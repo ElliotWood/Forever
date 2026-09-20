@@ -84,8 +84,9 @@ func (war *Warrior) registerShieldSpecialization() {
 	rageMetrics := war.NewRageMetrics(core.ActionID{SpellID: 23602})
 
 	war.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Shield Specialization",
-		ProcChance:         spellData.ShieldSpecialization.ProcChanceAt(war.Talents.ShieldSpecialization),
+		Name: "Shield Specialization",
+		// Effect 0 is the block bonus; effect 1 is the proc chance. ProcChanceAt reads a flat 100%.
+		ProcChance:         spellData.ShieldSpecialization.EffectAt(1).FractionAt(war.Talents.ShieldSpecialization),
 		TriggerImmediately: true,
 		Outcome:            core.OutcomeBlock,
 		Callback:           core.CallbackOnSpellHitTaken,

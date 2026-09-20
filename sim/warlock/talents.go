@@ -179,8 +179,9 @@ func (warlock *Warlock) applyNightfall() {
 	warlock.MakeProcTriggerAura(core.ProcTrigger{
 		Name:           "Nightfall",
 		ClassSpellMask: WarlockSpellCorruption | WarlockSpellDrainLife,
-		ProcChance:     spellData.Nightfall.ProcChanceAt(warlock.Talents.Nightfall),
-		Callback:       core.CallbackOnPeriodicDamageDealt,
+		// Forever puts the real per-rank chance on the effect; ProcChanceAt reads a flat 100%.
+		ProcChance: spellData.Nightfall.FractionAt(warlock.Talents.Nightfall),
+		Callback:   core.CallbackOnPeriodicDamageDealt,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warlock.NightfallProcAura.Activate(sim)
 		},

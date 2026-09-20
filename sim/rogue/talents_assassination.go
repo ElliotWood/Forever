@@ -194,9 +194,10 @@ func (rogue *Rogue) registerSealFate() {
 	sfMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 14195})
 
 	rogue.MakeProcTriggerAura(core.ProcTrigger{
-		Name:       "Seal Fate Trigger",
-		ActionID:   core.ActionID{SpellID: 14195},
-		ProcChance: spellData.SealFate.ProcChanceAt(rogue.Talents.SealFate),
+		Name:     "Seal Fate Trigger",
+		ActionID: core.ActionID{SpellID: 14195},
+		// Forever puts the real per-rank chance on the effect; ProcChanceAt reads a flat 100%.
+		ProcChance: spellData.SealFate.FractionAt(rogue.Talents.SealFate),
 		Callback:   core.CallbackOnSpellHitDealt,
 		Outcome:    core.OutcomeCrit,
 		SpellFlags: SpellFlagBuilder,

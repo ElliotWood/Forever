@@ -169,7 +169,9 @@ func (mage *Mage) registerArcaneConcentration() {
 				return
 			}
 
-			procChance := spellData.ArcaneConcentration.ProcChanceAt(mage.Talents.ArcaneConcentration)
+			// Forever states a flat SpellAuraOptions.ProcChance of 100 on the talent spell and puts the
+			// real per-rank chance on the effect, so ProcChanceAt would read 100% at every rank.
+			procChance := spellData.ArcaneConcentration.FractionAt(mage.Talents.ArcaneConcentration)
 			if sim.Proc(procChance, "Arcane Concentration") {
 				proccedAt = sim.CurrentTime
 				proccedSpell = spell
@@ -496,7 +498,10 @@ func (mage *Mage) registerWinterChill() {
 		return
 	}
 
-	procChance := spellData.WintersChill.ProcChanceAt(mage.Talents.WintersChill)
+	// Forever states a flat SpellAuraOptions.ProcChance of 100 on the talent spell and puts the
+	// real per-rank chance on the effect, so ProcChanceAt would read 100% at every rank.
+	// Effect 0 is the stack count (1..5); effect 1 is the chance (20..100).
+	procChance := spellData.WintersChill.EffectAt(1).FractionAt(mage.Talents.WintersChill)
 
 	wcAuras := mage.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return core.WintersChillAura(target, 0)
