@@ -7,24 +7,35 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-func (shaman *Shaman) ApplyElementalTalents() {
-	shaman.applyCallOfFlame()
-	shaman.applyCallOfThunder()
-	shaman.applyConcussion()
+func (shaman *Shaman) registerElementalTalents() {
+	// Tier 1
 	shaman.applyConvection()
+	shaman.applyConcussion()
+
+	// Tier 2
+	shaman.applyElementalWarding()
+	shaman.applyReverberation()
+	shaman.applyCallOfFlame()
 	shaman.applyElementalDevastation()
+
+	// Tier 3
 	shaman.applyElementalFocus()
 	shaman.applyElementalFury()
-	shaman.applyLightningOverload()
-	shaman.applyReverberation()
 
-	// Forever additions, not yet implemented.
-	shaman.applyElementalAlacrity()
-	shaman.applyElementalReach()
-	shaman.applyElementalWarding()
-	shaman.applyEyeOfTheStorm()
+	// Tier 4
 	shaman.applyImprovedFireNova()
+	shaman.applyEyeOfTheStorm()
+	shaman.applyCallOfThunder()
+
+	// Tier 5
+	shaman.applyElementalReach()
+	shaman.applyLightningOverload()
 	shaman.applyEarthbound()
+
+	// Tier 6
+	shaman.applyElementalAlacrity()
+
+	// Tier 7
 	shaman.applyLavaBurst()
 }
 

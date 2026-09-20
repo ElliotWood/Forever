@@ -6,23 +6,35 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-func (shaman *Shaman) ApplyRestorationTalents() {
-	shaman.applyNaturesSwiftness()
-	shaman.applyRestorativeTotems()
-	shaman.applyTidalMastery()
+func (shaman *Shaman) registerRestorationTalents() {
+	// Tier 1
+	shaman.applyImprovedHealingWave()
 	shaman.applyTotemicFocus()
 
-	// Forever additions, not yet implemented.
-	shaman.applyImprovedHealingWave()
+	// Tier 2
 	shaman.applyMindfulness()
 	shaman.applyNaturalGrace()
+	// Tidal Focus not implemented
 	shaman.applyImprovedReincarnation()
+
+	// Tier 3
 	shaman.applyAncestralHealing()
 	shaman.applyHealingFocus()
 	shaman.applyWaterShield()
+
+	// Tier 4
+	shaman.applyTidalMastery()
+	shaman.applyRestorativeTotems()
 	shaman.applyManaTideTotem()
+
+	// Tier 5
 	shaman.applyHealingWay()
+	shaman.applyNaturesSwiftness()
+
+	// Tier 6
 	shaman.applyPurification()
+
+	// Tier 7
 	shaman.applyRiptide()
 }
 

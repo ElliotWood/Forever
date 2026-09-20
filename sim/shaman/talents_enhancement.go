@@ -7,26 +7,37 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-func (shaman *Shaman) ApplyEnhancementTalents() {
-	shaman.applyAncestralKnowledge()
-	shaman.applyElementalWeapons()
-	shaman.applyFlurry()
-	shaman.applyImprovedLightningShield()
-	shaman.applyMentalQuickness()
-	shaman.applyShamanisticFocus()
-	shaman.applySpiritWeapons()
-	shaman.applyStormstrike()
-	shaman.applyThunderingStrikes()
-
-	// Forever additions, not yet implemented.
+func (shaman *Shaman) registerEnhancementTalents() {
+	// Tier 1
 	shaman.applyEarthsGrasp()
+	shaman.applyThunderingStrikes()
+	shaman.applyAncestralKnowledge()
+
+	// Tier 2
 	shaman.applyGuardianTotems()
 	shaman.applyMentalDexterity()
 	shaman.applyImprovedGhostWolf()
+	shaman.applyImprovedLightningShield()
+
+	// Tier 3
+	shaman.applyElementalWeapons()
+	shaman.applyShamanisticFocus()
 	shaman.applyAnticipation()
+
+	// Tier 4
 	shaman.applyToughness()
+	shaman.applyFlurry()
+	shaman.applyStormstrike()
+
+	// Tier 5
+	shaman.applySpiritWeapons()
+	shaman.applyMentalQuickness()
 	shaman.applyImprovedStormstrike()
+
+	// Tier 6
 	shaman.applyMaelstromWeapon()
+
+	// Tier 7
 	shaman.applyRageOfTheFarseer()
 }
 

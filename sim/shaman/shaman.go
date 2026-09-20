@@ -158,9 +158,9 @@ func (shaman *Shaman) Initialize() {
 }
 
 func (shaman *Shaman) ApplyTalents() {
-	shaman.ApplyElementalTalents()
-	shaman.ApplyEnhancementTalents()
-	shaman.ApplyRestorationTalents()
+	shaman.registerElementalTalents()
+	shaman.registerEnhancementTalents()
+	shaman.registerRestorationTalents()
 }
 
 func (shaman *Shaman) Reset(sim *core.Simulation) {
