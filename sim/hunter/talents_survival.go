@@ -1,10 +1,5 @@
 package hunter
 
-import (
-	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/stats"
-)
-
 func (hunter *Hunter) registerSurvivalTalents() {
 	// Tier 1
 	hunter.registerImprovedTracking()
@@ -39,52 +34,82 @@ func (hunter *Hunter) registerSurvivalTalents() {
 	hunter.registerLaceratingStrikes()
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) registerSavageStrikes() {
 	if hunter.Talents.SavageStrikes == 0 {
 		return
 	}
 
-	hunter.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ClassMask:  HunterSpellRaptorStrike,
-		FloatValue: spellData.SavageStrikes.ValueAt(hunter.Talents.SavageStrikes),
-	})
+	// The TBC implementation, kept for the port:
+	// if hunter.Talents.SavageStrikes == 0 {
+	// 	return
+	// }
+	//
+	// hunter.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_BonusCrit_Percent,
+	// 	ClassMask:  HunterSpellRaptorStrike,
+	// 	FloatValue: spellData.SavageStrikes.ValueAt(hunter.Talents.SavageStrikes),
+	// })
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) registerSurvivalist() {
 	if hunter.Talents.Survivalist == 0 {
 		return
 	}
 
-	hunter.MultiplyStat(stats.Health, spellData.Survivalist.MultiplierAt(hunter.Talents.Survivalist))
+	// The TBC implementation, kept for the port:
+	// if hunter.Talents.Survivalist == 0 {
+	// 	return
+	// }
+	//
+	// hunter.MultiplyStat(stats.Health, spellData.Survivalist.MultiplierAt(hunter.Talents.Survivalist))
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) registerSurefooted() {
 	if hunter.Talents.Surefooted == 0 {
 		return
 	}
 
-	hunter.AddStat(stats.PhysicalHitPercent, float64(hunter.Talents.Surefooted))
+	// The TBC implementation, kept for the port:
+	// if hunter.Talents.Surefooted == 0 {
+	// 	return
+	// }
+	//
+	// hunter.AddStat(stats.PhysicalHitPercent, float64(hunter.Talents.Surefooted))
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) registerResourcefulness() {
 	if hunter.Talents.Resourcefulness == 0 {
 		return
 	}
 
-	hunter.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		ClassMask:  HunterSpellRaptorStrike,
-		FloatValue: -0.2 * float64(hunter.Talents.Resourcefulness),
-	})
+	// The TBC implementation, kept for the port:
+	// if hunter.Talents.Resourcefulness == 0 {
+	// 	return
+	// }
+	//
+	// hunter.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
+	// 	ClassMask:  HunterSpellRaptorStrike,
+	// 	FloatValue: -0.2 * float64(hunter.Talents.Resourcefulness),
+	// })
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) registerLightningReflexes() {
 	if hunter.Talents.LightningReflexes == 0 {
 		return
 	}
 
-	hunter.MultiplyStat(stats.Agility, spellData.LightningReflexes.MultiplierAt(hunter.Talents.LightningReflexes))
+	// The TBC implementation, kept for the port:
+	// if hunter.Talents.LightningReflexes == 0 {
+	// 	return
+	// }
+	//
+	// hunter.MultiplyStat(stats.Agility, spellData.LightningReflexes.MultiplierAt(hunter.Talents.LightningReflexes))
 }
 
 // registerImprovedTracking implements Improved Tracking, new in Forever.

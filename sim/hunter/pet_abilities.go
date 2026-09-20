@@ -42,33 +42,37 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 	}
 }
 
+// TODO: To be implemented.
 func (hp *HunterPet) registerKillCommandSpell() {
-	hp.KillCommand = hp.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 34027},
-		SpellSchool:    core.SpellSchoolPhysical,
-		DefenseType:    core.DefenseTypeMelee,
-		ProcMask:       core.ProcMaskEmpty,
-		Flags:          core.SpellFlagAPL,
-		ClassSpellMask: HunterSpellKillCommandPet,
-		MaxRange:       core.MaxMeleeRange,
+	panic("To be implemented")
 
-		FocusCost: core.FocusCostOptions{
-			Cost: 0,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-		},
-
-		DamageMultiplier: hp.config.DamageMultiplier,
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := hp.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) + 127
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// hp.KillCommand = hp.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: 34027},
+	// 	SpellSchool:    core.SpellSchoolPhysical,
+	// 	DefenseType:    core.DefenseTypeMelee,
+	// 	ProcMask:       core.ProcMaskEmpty,
+	// 	Flags:          core.SpellFlagAPL,
+	// 	ClassSpellMask: HunterSpellKillCommandPet,
+	// 	MaxRange:       core.MaxMeleeRange,
+	//
+	// 	FocusCost: core.FocusCostOptions{
+	// 		Cost: 0,
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			NonEmpty: true,
+	// 		},
+	// 	},
+	//
+	// 	DamageMultiplier: hp.config.DamageMultiplier,
+	// 	ThreatMultiplier: 1,
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		baseDamage := hp.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) + 127
+	// 		spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+	// 	},
+	// })
 }
 
 func (hp *HunterPet) newBite() *core.Spell {
@@ -311,39 +315,43 @@ func (hp *HunterPet) newScreech() *core.Spell {
 	})
 }
 
+// TODO: To be implemented.
 func (hp *HunterPet) registerDash() {
-	actionID := core.ActionID{SpellID: 23110}
+	panic("To be implemented")
 
-	dashAura := hp.RegisterAura(core.Aura{
-		Label:    "Dash",
-		ActionID: actionID,
-		Duration: time.Second * 15,
-	})
-	dashAura.NewActiveMovementSpeedEffect(0.8)
-
-	hp.Dash = hp.RegisterSpell(core.SpellConfig{
-		ActionID: actionID,
-
-		FocusCost: core.FocusCostOptions{
-			Cost: 20,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			CD: core.Cooldown{
-				Timer:    hp.NewTimer(),
-				Duration: time.Second * 30,
-			},
-		},
-
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return hp.IsEnabled()
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			dashAura.Activate(sim)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// actionID := core.ActionID{SpellID: 23110}
+	//
+	// dashAura := hp.RegisterAura(core.Aura{
+	// 	Label:    "Dash",
+	// 	ActionID: actionID,
+	// 	Duration: time.Second * 15,
+	// })
+	// dashAura.NewActiveMovementSpeedEffect(0.8)
+	//
+	// hp.Dash = hp.RegisterSpell(core.SpellConfig{
+	// 	ActionID: actionID,
+	//
+	// 	FocusCost: core.FocusCostOptions{
+	// 		Cost: 20,
+	// 	},
+	//
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD: core.GCDDefault,
+	// 		},
+	// 		CD: core.Cooldown{
+	// 			Timer:    hp.NewTimer(),
+	// 			Duration: time.Second * 30,
+	// 		},
+	// 	},
+	//
+	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+	// 		return hp.IsEnabled()
+	// 	},
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+	// 		dashAura.Activate(sim)
+	// 	},
+	// })
 }

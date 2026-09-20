@@ -1,17 +1,20 @@
 package druid
 
-import (
-	"github.com/wowsims/forever/sim/core"
-)
-
 // Package-level state the commented-out implementation used:
 // var mangleBearRank = spellData.MangleBear.BySpellID(33987)
 
+// TODO: To be implemented.
 func (druid *Druid) registerMangleAuras() {
 	if druid.MangleAuras != nil {
 		return
 	}
-	druid.MangleAuras = druid.NewEnemyAuraArray(core.MangleAura)
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// if druid.MangleAuras != nil {
+	// 	return
+	// }
+	// druid.MangleAuras = druid.NewEnemyAuraArray(core.MangleAura)
 }
 
 // TODO: To be implemented. Forever ships ONE Mangle -- spells 407995 and 1238069/1238070/1238073

@@ -1,13 +1,5 @@
 package paladin
 
-import (
-	"time"
-
-	"github.com/wowsims/forever/sim/common/shared"
-	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/stats"
-)
-
 func (paladin *Paladin) registerProtectionTalents() {
 	// Tier 1
 	paladin.applyToughness()
@@ -40,77 +32,107 @@ func (paladin *Paladin) registerProtectionTalents() {
 	// Holy Shield registered in registerTalentSpells
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Redoubt - Increases your chance to block by 6/12/18/24/30% after being the victim of a melee or ranged critical strike. Lasts 10 sec or 5 blocks.
 func (paladin *Paladin) applyRedoubt() {
 	if paladin.Talents.Redoubt == 0 {
 		return
 	}
 
-	bonusBlockPercent := 0.06 * float64(paladin.Talents.Redoubt)
-
-	procAura := paladin.RegisterAura(core.Aura{
-		Label:     "Redoubt Proc",
-		ActionID:  core.ActionID{SpellID: 20137},
-		Duration:  time.Second * 10,
-		MaxStacks: 5,
-	}).AttachStatBuff(stats.BlockPercent, bonusBlockPercent)
-
-	procAura.AttachProcTrigger(core.ProcTrigger{
-		Name:     "Redoubt Block Consume",
-		Callback: core.CallbackOnSpellHitTaken,
-		Outcome:  core.OutcomeBlock,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			procAura.RemoveStack(sim)
-		},
-	})
-
-	paladin.MakeProcTriggerAura(core.ProcTrigger{
-		Name:       "Redoubt",
-		Callback:   core.CallbackOnSpellHitTaken,
-		ProcMask:   core.ProcMaskMeleeOrRanged,
-		Outcome:    core.OutcomeLanded,
-		ProcChance: 0.1,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			procAura.Activate(sim)
-			procAura.SetStacks(sim, 5)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.Redoubt == 0 {
+	// 	return
+	// }
+	//
+	// bonusBlockPercent := 0.06 * float64(paladin.Talents.Redoubt)
+	//
+	// procAura := paladin.RegisterAura(core.Aura{
+	// 	Label:     "Redoubt Proc",
+	// 	ActionID:  core.ActionID{SpellID: 20137},
+	// 	Duration:  time.Second * 10,
+	// 	MaxStacks: 5,
+	// }).AttachStatBuff(stats.BlockPercent, bonusBlockPercent)
+	//
+	// procAura.AttachProcTrigger(core.ProcTrigger{
+	// 	Name:     "Redoubt Block Consume",
+	// 	Callback: core.CallbackOnSpellHitTaken,
+	// 	Outcome:  core.OutcomeBlock,
+	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 		procAura.RemoveStack(sim)
+	// 	},
+	// })
+	//
+	// paladin.MakeProcTriggerAura(core.ProcTrigger{
+	// 	Name:       "Redoubt",
+	// 	Callback:   core.CallbackOnSpellHitTaken,
+	// 	ProcMask:   core.ProcMaskMeleeOrRanged,
+	// 	Outcome:    core.OutcomeLanded,
+	// 	ProcChance: 0.1,
+	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 		procAura.Activate(sim)
+	// 		procAura.SetStacks(sim, 5)
+	// 	},
+	// })
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Shield Specialization - Increases the amount of damage absorbed by your shield by 10/20/30%
 func (paladin *Paladin) applyShieldSpecialization() {
 	if paladin.Talents.ShieldSpecialization == 0 {
 		return
 	}
 
-	paladin.PseudoStats.BlockValueMultiplier *= spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_VALUE_PCT, 0).MultiplierAt(paladin.Talents.ShieldSpecialization)
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.ShieldSpecialization == 0 {
+	// 	return
+	// }
+	//
+	// paladin.PseudoStats.BlockValueMultiplier *= spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_VALUE_PCT, 0).MultiplierAt(paladin.Talents.ShieldSpecialization)
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Precision - Increases your chance to hit with melee weapons and spells by 1/2/3%
 func (paladin *Paladin) applyPrecision() {
 	if float64(paladin.Talents.Precision) == 0 {
 		return
 	}
 
-	paladin.AddStat(stats.SpellHitPercent, float64(paladin.Talents.Precision))
-	paladin.AddStat(stats.PhysicalHitPercent, float64(paladin.Talents.Precision))
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusHit_Percent,
-		FloatValue: -float64(paladin.Talents.Precision),
-		ClassMask:  SpellMaskAvengersShield | SpellMaskHammerOfWrath,
-	})
+	// The TBC implementation, kept for the port:
+	// if float64(paladin.Talents.Precision) == 0 {
+	// 	return
+	// }
+	//
+	// paladin.AddStat(stats.SpellHitPercent, float64(paladin.Talents.Precision))
+	// paladin.AddStat(stats.PhysicalHitPercent, float64(paladin.Talents.Precision))
+	// paladin.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_BonusHit_Percent,
+	// 	FloatValue: -float64(paladin.Talents.Precision),
+	// 	ClassMask:  SpellMaskAvengersShield | SpellMaskHammerOfWrath,
+	// })
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Toughness - Increases your armor value from items by 2/4/6/8/10%
 func (paladin *Paladin) applyToughness() {
 	if paladin.Talents.Toughness == 0 {
 		return
 	}
 
-	// The bonus-armor effect carries the same ladder; this multiplies base armor only.
-	paladin.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(paladin.Talents.Toughness))
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.Toughness == 0 {
+	// 	return
+	// }
+	//
+	// // The bonus-armor effect carries the same ladder; this multiplies base armor only.
+	// paladin.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(paladin.Talents.Toughness))
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Improved Righteous Fury - While Righteous Fury is active, all damage taken is reduced by 2/4/6%
 // and threat generated by Righteous Fury is increased by 16/33/50%.
 // Threat bonus is combined with the base in registerRighteousFury() since it's additive on the base 60%.
@@ -119,102 +141,135 @@ func (paladin *Paladin) applyImprovedRighteousFury() {
 		return
 	}
 
-	paladin.OnSpellRegistered(func(spell *core.Spell) {
-		if !spell.Matches(SpellMaskRighteousFury) {
-			return
-		}
-
-		// The client states this as a negative percentage per rank: -2 / -4 / -6, so MultiplierAt
-		// gives 0.98 / 0.96 / 0.94 and the minus is never written here.
-		spell.RelatedSelfBuff.AttachMultiplicativePseudoStatBuff(
-			&paladin.PseudoStats.DamageTakenMultiplier,
-			spellData.ImprovedRighteousFury.
-				Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_EFFECT2).
-				MultiplierAt(paladin.Talents.ImprovedRighteousFury),
-		)
-	})
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.ImprovedRighteousFury == 0 {
+	// 	return
+	// }
+	//
+	// paladin.OnSpellRegistered(func(spell *core.Spell) {
+	// 	if !spell.Matches(SpellMaskRighteousFury) {
+	// 		return
+	// 	}
+	//
+	// 	// The client states this as a negative percentage per rank: -2 / -4 / -6, so MultiplierAt
+	// 	// gives 0.98 / 0.96 / 0.94 and the minus is never written here.
+	// 	spell.RelatedSelfBuff.AttachMultiplicativePseudoStatBuff(
+	// 		&paladin.PseudoStats.DamageTakenMultiplier,
+	// 		spellData.ImprovedRighteousFury.
+	// 			Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_EFFECT2).
+	// 			MultiplierAt(paladin.Talents.ImprovedRighteousFury),
+	// 	)
+	// })
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Anticipation - Increases your Defense skill by 4/8/12/16/20
 func (paladin *Paladin) applyAnticipation() {
 	if paladin.Talents.Anticipation == 0 {
 		return
 	}
 
-	defenseBonus := float64(paladin.Talents.Anticipation) * 4 * core.DefenseRatingPerDefenseLevel
-	paladin.AddStat(stats.DefenseRating, defenseBonus)
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.Anticipation == 0 {
+	// 	return
+	// }
+	//
+	// defenseBonus := float64(paladin.Talents.Anticipation) * 4 * core.DefenseRatingPerDefenseLevel
+	// paladin.AddStat(stats.DefenseRating, defenseBonus)
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Reckoning - Gives you a 2/4/6/8/10% chance after being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack
 func (paladin *Paladin) applyReckoning() {
 	if paladin.Talents.Reckoning == 0 {
 		return
 	}
 
-	var reckoningSpell *core.Spell
-
-	procAura := paladin.RegisterAura(core.Aura{
-		Label:     "Reckoning Proc",
-		ActionID:  core.ActionID{SpellID: 20182},
-		Duration:  time.Second * 8,
-		MaxStacks: 4,
-		OnInit: func(aura *core.Aura, sim *core.Simulation) {
-			config := *paladin.AutoAttacks.MHConfig()
-			config.ActionID = config.ActionID.WithTag(20182)
-			config.Flags |= core.SpellFlagPassiveSpell
-			reckoningSpell = paladin.GetOrRegisterSpell(config)
-		},
-	})
-
-	procAura.AttachProcTrigger(core.ProcTrigger{
-		Name:     "Reckoning Extra Attack",
-		Callback: core.CallbackOnSpellHitDealt,
-		ProcMask: core.ProcMaskMeleeMHAuto,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if spell == reckoningSpell {
-				return
-			}
-			reckoningSpell.Cast(sim, result.Target)
-			procAura.RemoveStack(sim)
-		},
-	})
-
-	paladin.MakeProcTriggerAura(core.ProcTrigger{
-		Name:     "Reckoning",
-		Callback: core.CallbackOnSpellHitTaken,
-		// Forever puts the real per-rank chance on the effect; ProcChanceAt reads a flat 100%.
-		ProcChance:         spellData.Reckoning.FractionAt(paladin.Talents.Reckoning),
-		RequireDamageDealt: true,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			procAura.Activate(sim)
-			procAura.SetStacks(sim, 4)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.Reckoning == 0 {
+	// 	return
+	// }
+	//
+	// var reckoningSpell *core.Spell
+	//
+	// procAura := paladin.RegisterAura(core.Aura{
+	// 	Label:     "Reckoning Proc",
+	// 	ActionID:  core.ActionID{SpellID: 20182},
+	// 	Duration:  time.Second * 8,
+	// 	MaxStacks: 4,
+	// 	OnInit: func(aura *core.Aura, sim *core.Simulation) {
+	// 		config := *paladin.AutoAttacks.MHConfig()
+	// 		config.ActionID = config.ActionID.WithTag(20182)
+	// 		config.Flags |= core.SpellFlagPassiveSpell
+	// 		reckoningSpell = paladin.GetOrRegisterSpell(config)
+	// 	},
+	// })
+	//
+	// procAura.AttachProcTrigger(core.ProcTrigger{
+	// 	Name:     "Reckoning Extra Attack",
+	// 	Callback: core.CallbackOnSpellHitDealt,
+	// 	ProcMask: core.ProcMaskMeleeMHAuto,
+	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 		if spell == reckoningSpell {
+	// 			return
+	// 		}
+	// 		reckoningSpell.Cast(sim, result.Target)
+	// 		procAura.RemoveStack(sim)
+	// 	},
+	// })
+	//
+	// paladin.MakeProcTriggerAura(core.ProcTrigger{
+	// 	Name:     "Reckoning",
+	// 	Callback: core.CallbackOnSpellHitTaken,
+	// 	// Forever puts the real per-rank chance on the effect; ProcChanceAt reads a flat 100%.
+	// 	ProcChance:         spellData.Reckoning.FractionAt(paladin.Talents.Reckoning),
+	// 	RequireDamageDealt: true,
+	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 		procAura.Activate(sim)
+	// 		procAura.SetStacks(sim, 4)
+	// 	},
+	// })
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Sacred Duty - Increases your total Stamina by 3/6% and reduces the cooldown of your Divine Shield and Divine Protection by 30/60 sec
 func (paladin *Paladin) applySacredDuty() {
 	if paladin.Talents.SacredDuty == 0 {
 		return
 	}
 
-	// Every stat-percent effect in the Forever data carries misc 0, so the stat is the call
-	// site's choice, not the client's.
-	bonus := spellData.SacredDuty.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(paladin.Talents.SacredDuty)
-	paladin.MultiplyStat(stats.Stamina, bonus)
-	// TODO: Implement cooldown reduction
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.SacredDuty == 0 {
+	// 	return
+	// }
+	//
+	// // Every stat-percent effect in the Forever data carries misc 0, so the stat is the call
+	// // site's choice, not the client's.
+	// bonus := spellData.SacredDuty.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(paladin.Talents.SacredDuty)
+	// paladin.MultiplyStat(stats.Stamina, bonus)
+	// // TODO: Implement cooldown reduction
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // One-Handed Weapon Specialization - Increases all damage you deal when a one-handed melee weapon is equipped by 1/2/3/4/5%
 func (paladin *Paladin) applyOneHandedWeaponSpecialization() {
 	if paladin.Talents.OneHandedWeaponSpecialization == 0 {
 		return
 	}
 
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.OneHandedWeaponSpecialization.FractionAt(paladin.Talents.OneHandedWeaponSpecialization),
-	})
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.OneHandedWeaponSpecialization == 0 {
+	// 	return
+	// }
+	//
+	// paladin.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_DamageDone_Pct,
+	// 	FloatValue: spellData.OneHandedWeaponSpecialization.FractionAt(paladin.Talents.OneHandedWeaponSpecialization),
+	// })
 }
 
 // applyGuardiansFavor implements Guardian's Favor, new in Forever.

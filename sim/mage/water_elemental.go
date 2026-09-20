@@ -1,37 +1,39 @@
 package mage
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // TODO: uncalled -- Forever drops the Summon Water Elemental talent; re-gate before
 // wiring back into registerSpells and NewMage.
+// TODO: To be implemented. The TBC body below is otherwise a clean port; kept commented until this class's port is reviewed.
 func (mage *Mage) registerSummonWaterElementalSpell() {
-	mage.SummonWaterElemental = mage.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 31687},
-		DefenseType: core.DefenseTypeMagic,
-		Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	panic("To be implemented")
 
-		ManaCost: core.ManaCostOptions{
-			BaseCostPercent: 16,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			CD: core.Cooldown{
-				Timer:    mage.NewTimer(),
-				Duration: time.Minute * 3,
-			},
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			mage.waterElemental.Enable(sim, mage.waterElemental)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// mage.SummonWaterElemental = mage.RegisterSpell(core.SpellConfig{
+	// 	ActionID:    core.ActionID{SpellID: 31687},
+	// 	DefenseType: core.DefenseTypeMagic,
+	// 	Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		BaseCostPercent: 16,
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD: core.GCDDefault,
+	// 		},
+	// 		CD: core.Cooldown{
+	// 			Timer:    mage.NewTimer(),
+	// 			Duration: time.Minute * 3,
+	// 		},
+	// 	},
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+	// 		mage.waterElemental.Enable(sim, mage.waterElemental)
+	// 	},
+	// })
 }
 
 type WaterElemental struct {
@@ -95,38 +97,42 @@ func (we *WaterElemental) ExecuteCustomRotation(sim *core.Simulation) {
 	spell.Cast(sim, we.CurrentTarget)
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
 func (we *WaterElemental) registerWaterboltSpell() {
+	panic("To be implemented")
 
-	waterboltCoefficient := 0.83300000429 // Per https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=31707 Field: "BonusCoefficient"
-
-	we.Waterbolt = we.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 31707},
-		SpellSchool:    core.SpellSchoolFrost,
-		DefenseType:    core.DefenseTypeMagic,
-		ProcMask:       core.ProcMaskSpellDamage,
-		ClassSpellMask: MageWaterElementalSpellWaterBolt,
-
-		ManaCost: core.ManaCostOptions{
-			BaseCostPercent: 10,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD:      core.GCDDefault,
-				GCDMin:   core.GCDDefault,
-				CastTime: time.Millisecond * 2500,
-			},
-		},
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		BonusCoefficient: waterboltCoefficient,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := we.CalcAndRollDamageRange(sim, 256, 328)
-			result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
-				spell.DealDamage(sim, result)
-			})
-		},
-	})
+	// The TBC implementation, kept for the port:
+	//
+	// waterboltCoefficient := 0.83300000429 // Per https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=31707 Field: "BonusCoefficient"
+	//
+	// we.Waterbolt = we.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: 31707},
+	// 	SpellSchool:    core.SpellSchoolFrost,
+	// 	DefenseType:    core.DefenseTypeMagic,
+	// 	ProcMask:       core.ProcMaskSpellDamage,
+	// 	ClassSpellMask: MageWaterElementalSpellWaterBolt,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		BaseCostPercent: 10,
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD:      core.GCDDefault,
+	// 			GCDMin:   core.GCDDefault,
+	// 			CastTime: time.Millisecond * 2500,
+	// 		},
+	// 	},
+	//
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	// 	BonusCoefficient: waterboltCoefficient,
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		baseDamage := we.CalcAndRollDamageRange(sim, 256, 328)
+	// 		result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
+	// 		spell.WaitTravelTime(sim, func(sim *core.Simulation) {
+	// 			spell.DealDamage(sim, result)
+	// 		})
+	// 	},
+	// })
 }

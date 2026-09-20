@@ -9,12 +9,16 @@ import (
 
 var LightningBoltRankMap = spellData.LightningBolt
 
+// TODO: To be implemented. Port the TBC Lightning Bolt Spell implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerLightningBoltSpell() {
-	shaman.LightningBoltOverloads = make(map[int32]*core.Spell, len(LightningBoltRankMap))
-	LightningBoltRankMap.RegisterAll(func(config shared.SpellData) {
-		shaman.RegisterSpell(shaman.newLightningBoltSpellConfig(config, false))
-		shaman.LightningBoltOverloads[config.Rank] = shaman.RegisterSpell(shaman.newLightningBoltSpellConfig(config, true))
-	})
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// shaman.LightningBoltOverloads = make(map[int32]*core.Spell, len(LightningBoltRankMap))
+	// LightningBoltRankMap.RegisterAll(func(config shared.SpellData) {
+	// 	shaman.RegisterSpell(shaman.newLightningBoltSpellConfig(config, false))
+	// 	shaman.LightningBoltOverloads[config.Rank] = shaman.RegisterSpell(shaman.newLightningBoltSpellConfig(config, true))
+	// })
 }
 
 func (shaman *Shaman) newLightningBoltSpellConfig(config shared.SpellData, isElementalOverload bool) core.SpellConfig {

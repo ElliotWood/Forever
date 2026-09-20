@@ -179,29 +179,33 @@ func (druid *Druid) RegisterCatFormAura() {
 	druid.CatFormAura.NewPassiveMovementSpeedEffect(0.25)
 }
 
+// TODO: To be implemented.
 func (druid *Druid) registerCatFormSpell() {
-	druid.CatForm = druid.RegisterSpell(Any, core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 768},
-		ClassSpellMask: DruidSpellCatForm,
-		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	panic("To be implemented")
 
-		ManaCost: core.ManaCostOptions{
-			BaseCostPercent: 35,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			if druid.CatFormAura.IsActive() {
-				druid.CatFormAura.Deactivate(sim)
-			}
-			druid.CatFormAura.Activate(sim)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// druid.CatForm = druid.RegisterSpell(Any, core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: 768},
+	// 	ClassSpellMask: DruidSpellCatForm,
+	// 	Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		BaseCostPercent: 35,
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD: core.GCDDefault,
+	// 		},
+	// 		IgnoreHaste: true,
+	// 	},
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+	// 		if druid.CatFormAura.IsActive() {
+	// 			druid.CatFormAura.Deactivate(sim)
+	// 		}
+	// 		druid.CatFormAura.Activate(sim)
+	// 	},
+	// })
 }
 
 func (druid *Druid) RegisterBearFormAura() {
@@ -289,42 +293,46 @@ func (druid *Druid) RegisterBearFormAura() {
 	})
 }
 
+// TODO: To be implemented.
 func (druid *Druid) registerBearFormSpell() {
-	actionID := core.ActionID{SpellID: 9634} // Dire Bear Form
-	rageMetrics := druid.NewRageMetrics(actionID)
+	panic("To be implemented")
 
-	druid.BearForm = druid.RegisterSpell(Any, core.SpellConfig{
-		ActionID:       actionID,
-		ClassSpellMask: DruidSpellBearForm,
-		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
-
-		ManaCost: core.ManaCostOptions{
-			BaseCostPercent: 35,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			if cur := druid.CurrentRage(); cur > 0 {
-				// Resets rage to 0 when entering bear form
-				druid.SpendRage(sim, cur, rageMetrics)
-			}
-			// Wolfshead Helm: +5 rage on shift into Bear.
-			rageGain := druid.WolfsheadRageBonus
-			// Furor: 20% chance per rank (rank 5 = 100%) to gain 10 rage on shift.
-			if druid.FurorProcChance == 1 || (druid.FurorProcChance > 0 && sim.RandomFloat("Furor") < druid.FurorProcChance) {
-				rageGain += 10.0
-			}
-			if rageGain > 0 {
-				druid.AddRage(sim, rageGain, rageMetrics)
-			}
-			druid.BearFormAura.Activate(sim)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// actionID := core.ActionID{SpellID: 9634} // Dire Bear Form
+	// rageMetrics := druid.NewRageMetrics(actionID)
+	//
+	// druid.BearForm = druid.RegisterSpell(Any, core.SpellConfig{
+	// 	ActionID:       actionID,
+	// 	ClassSpellMask: DruidSpellBearForm,
+	// 	Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		BaseCostPercent: 35,
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD: core.GCDDefault,
+	// 		},
+	// 		IgnoreHaste: true,
+	// 	},
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+	// 		if cur := druid.CurrentRage(); cur > 0 {
+	// 			// Resets rage to 0 when entering bear form
+	// 			druid.SpendRage(sim, cur, rageMetrics)
+	// 		}
+	// 		// Wolfshead Helm: +5 rage on shift into Bear.
+	// 		rageGain := druid.WolfsheadRageBonus
+	// 		// Furor: 20% chance per rank (rank 5 = 100%) to gain 10 rage on shift.
+	// 		if druid.FurorProcChance == 1 || (druid.FurorProcChance > 0 && sim.RandomFloat("Furor") < druid.FurorProcChance) {
+	// 			rageGain += 10.0
+	// 		}
+	// 		if rageGain > 0 {
+	// 			druid.AddRage(sim, rageGain, rageMetrics)
+	// 		}
+	// 		druid.BearFormAura.Activate(sim)
+	// 	},
+	// })
 }
 
 func (druid *Druid) RegisterMoonkinFormAura() {

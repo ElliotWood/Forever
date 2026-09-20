@@ -1,11 +1,7 @@
 package warlock
 
 import (
-	"time"
-
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -44,191 +40,242 @@ func (warlock *Warlock) registerDemonologyTalents() {
 	warlock.applyDemonicPact()
 }
 
+// TODO: To be implemented. Port the TBC Improved Imp implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) appyImprovedImp() {
 	if warlock.Talents.ImprovedImp == 0 || warlock.Options.SacrificeSummon {
 		return
 	}
 
-	warlock.Imp.AddStaticMod(core.SpellModConfig{
-		Kind: core.SpellMod_DamageDone_Flat,
-		// SPELLMOD_ALL_EFFECTS carries the same ladder and also covers Blood Pact, which is
-		// buffed elsewhere; this mod is the Firebolt damage half.
-		FloatValue: spellData.ImprovedImp.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.ImprovedImp),
-		ClassMask:  WarlockSpellImpFireBolt,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.ImprovedImp == 0 || warlock.Options.SacrificeSummon {
+	// 	return
+	// }
+	//
+	// warlock.Imp.AddStaticMod(core.SpellModConfig{
+	// 	Kind: core.SpellMod_DamageDone_Flat,
+	// 	// SPELLMOD_ALL_EFFECTS carries the same ladder and also covers Blood Pact, which is
+	// 	// buffed elsewhere; this mod is the Firebolt damage half.
+	// 	FloatValue: spellData.ImprovedImp.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.ImprovedImp),
+	// 	ClassMask:  WarlockSpellImpFireBolt,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Demonic Embrace implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyDemonicEmbrace() {
 	if warlock.Talents.DemonicEmbrace == 0 {
 		return
 	}
 
-	warlock.MultiplyStat(stats.Stamina, 1.0+(0.03)*float64(warlock.Talents.DemonicEmbrace))
-	warlock.MultiplyStat(stats.Spirit, 1.0-(0.01)*float64(warlock.Talents.DemonicEmbrace))
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.DemonicEmbrace == 0 {
+	// 	return
+	// }
+	//
+	// warlock.MultiplyStat(stats.Stamina, 1.0+(0.03)*float64(warlock.Talents.DemonicEmbrace))
+	// warlock.MultiplyStat(stats.Spirit, 1.0-(0.01)*float64(warlock.Talents.DemonicEmbrace))
 }
 
+// TODO: To be implemented. Port the TBC Improved Sayaad implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyImprovedSayaad() {
 	if warlock.Talents.ImprovedSayaad == 0 || warlock.Options.SacrificeSummon {
 		return
 	}
 
-	//This might not actually increase the damage, find a source to prove this
-	warlock.Succubus.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: 0.1 * float64(warlock.Talents.ImprovedSayaad),
-		ClassMask:  WarlockSpellSuccubusLashOfPain,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.ImprovedSayaad == 0 || warlock.Options.SacrificeSummon {
+	// 	return
+	// }
+	//
+	// //This might not actually increase the damage, find a source to prove this
+	// warlock.Succubus.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_DamageDone_Flat,
+	// 	FloatValue: 0.1 * float64(warlock.Talents.ImprovedSayaad),
+	// 	ClassMask:  WarlockSpellSuccubusLashOfPain,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Unholy Power implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyUnholyPower() {
 	if warlock.Talents.UnholyPower == 0 || warlock.Options.SacrificeSummon {
 		return
 	}
 
-	for _, pet := range warlock.Pets {
-		if pet != &warlock.Imp.Pet {
-			pet.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.UnholyPower.MultiplierAt(warlock.Talents.UnholyPower)
-		}
-	}
-
-	warlock.Imp.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.UnholyPower.FractionAt(warlock.Talents.UnholyPower),
-		ClassMask:  WarlockSpellImpFireBolt,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.UnholyPower == 0 || warlock.Options.SacrificeSummon {
+	// 	return
+	// }
+	//
+	// for _, pet := range warlock.Pets {
+	// 	if pet != &warlock.Imp.Pet {
+	// 		pet.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.UnholyPower.MultiplierAt(warlock.Talents.UnholyPower)
+	// 	}
+	// }
+	//
+	// warlock.Imp.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_DamageDone_Flat,
+	// 	FloatValue: spellData.UnholyPower.FractionAt(warlock.Talents.UnholyPower),
+	// 	ClassMask:  WarlockSpellImpFireBolt,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Demonic Sacrifice implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyDemonicSacrifice() {
 	if !warlock.Talents.DemonicSacrifice || warlock.Options.SacrificeSummon == false {
 		return
 	}
 
-	switch warlock.Options.Summon {
-	case proto.WarlockOptions_Succubus:
-		warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
-	case proto.WarlockOptions_Imp:
-		warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= 1.15
-	case proto.WarlockOptions_Felguard:
-		warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.10
-		warlock.applyDemonicSacrificeManaRegen(core.ActionID{SpellID: 18788}, 0.02)
-	case proto.WarlockOptions_Felhunter:
-		warlock.applyDemonicSacrificeManaRegen(core.ActionID{SpellID: 18792}, 0.03)
-	}
+	// The TBC implementation, kept for the port:
+	// if !warlock.Talents.DemonicSacrifice || warlock.Options.SacrificeSummon == false {
+	// 	return
+	// }
+	//
+	// switch warlock.Options.Summon {
+	// case proto.WarlockOptions_Succubus:
+	// 	warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
+	// case proto.WarlockOptions_Imp:
+	// 	warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= 1.15
+	// case proto.WarlockOptions_Felguard:
+	// 	warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.10
+	// 	warlock.applyDemonicSacrificeManaRegen(core.ActionID{SpellID: 18788}, 0.02)
+	// case proto.WarlockOptions_Felhunter:
+	// 	warlock.applyDemonicSacrificeManaRegen(core.ActionID{SpellID: 18792}, 0.03)
+	// }
 }
 
+// TODO: To be implemented. Port the TBC Demonic Sacrifice Mana Regen implementation below; not yet verified against the Forever client.
 // Demonic Sacrifice restores a percentage of maximum mana every 4 seconds, which is
 // independent of the sim's regular 2 second mana ticks.
 func (warlock *Warlock) applyDemonicSacrificeManaRegen(actionID core.ActionID, manaPercent float64) {
-	manaMetrics := warlock.NewManaMetrics(actionID)
 
-	warlock.RegisterResetEffect(func(sim *core.Simulation) {
-		core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-			Period:   time.Second * 4,
-			Priority: core.ActionPriorityRegen,
-			OnAction: func(sim *core.Simulation) {
-				warlock.AddMana(sim, warlock.MaxMana()*manaPercent, manaMetrics)
-			},
-		})
-	})
+	// The TBC implementation, kept for the port:
+	// manaMetrics := warlock.NewManaMetrics(actionID)
+	//
+	// warlock.RegisterResetEffect(func(sim *core.Simulation) {
+	// 	core.StartPeriodicAction(sim, core.PeriodicActionOptions{
+	// 		Period:   time.Second * 4,
+	// 		Priority: core.ActionPriorityRegen,
+	// 		OnAction: func(sim *core.Simulation) {
+	// 			warlock.AddMana(sim, warlock.MaxMana()*manaPercent, manaMetrics)
+	// 		},
+	// 	})
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Master Demonologist implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyMasterDemonologist() {
 	if warlock.Talents.MasterDemonologist == 0 || warlock.Options.SacrificeSummon == true {
 		return
 	}
-	points := float64(warlock.Talents.MasterDemonologist)
 
-	switch warlock.Options.Summon {
-
-	case proto.WarlockOptions_Imp:
-		warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23825 + int32(points))}, stats.Stats{}, core.NeverExpires).Aura
-		warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.ThreatMultiplier, 1.0-0.04*points)
-		for _, pet := range warlock.Pets {
-			if pet == &warlock.Imp.Pet {
-				pet.PseudoStats.ThreatMultiplier *= 1.0 - 0.04*points
-			}
-		}
-	case proto.WarlockOptions_Succubus:
-		warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23832 + int32(points))}, stats.Stats{}, core.NeverExpires).Aura
-		warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.DamageDealtMultiplier, 1.0+0.02*points)
-		for _, pet := range warlock.Pets {
-			if pet == &warlock.Succubus.Pet {
-				pet.PseudoStats.DamageDealtMultiplier *= 1.0 + 0.02*points
-			}
-		}
-	case proto.WarlockOptions_Felguard:
-		resistsBonus := 0.10 * points * 70
-		warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (35701 + int32(points))}, stats.Stats{
-			stats.ArcaneResistance: resistsBonus,
-			stats.FireResistance:   resistsBonus,
-			stats.FrostResistance:  resistsBonus,
-			stats.NatureResistance: resistsBonus,
-			stats.ShadowResistance: resistsBonus,
-		}, core.NeverExpires).Aura
-		warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.DamageDealtMultiplier, 1.0+0.01*points)
-
-		for _, pet := range warlock.Pets {
-			if pet == &warlock.Felguard.Pet {
-				pet.PseudoStats.DamageDealtMultiplier *= 1.0 + 0.01*points
-			}
-		}
-	case proto.WarlockOptions_Voidwalker:
-		warlock.PseudoStats.BonusPhysicalDamageTaken *= 1.0 - 0.02*points
-		warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23840 + int32(points))}, stats.Stats{}, core.NeverExpires).Aura
-		warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.BonusPhysicalDamageTaken, 1.0-0.02*points)
-		for _, pet := range warlock.Pets {
-			if pet == &warlock.Voidwalker.Pet {
-				pet.PseudoStats.BonusPhysicalDamageTaken *= 1.0 - 0.02*points
-			}
-		}
-	case proto.WarlockOptions_Felhunter:
-		resistsBonus := 0.20 * points * 70
-		warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23836 + int32(points))}, stats.Stats{}, core.NeverExpires).Aura
-		warlock.MasterDemonologistAura.AttachStatsBuff(stats.Stats{
-			stats.ArcaneResistance: resistsBonus,
-			stats.FireResistance:   resistsBonus,
-			stats.FrostResistance:  resistsBonus,
-			stats.NatureResistance: resistsBonus,
-			stats.ShadowResistance: resistsBonus,
-		})
-		for _, pet := range warlock.Pets {
-			if pet == &warlock.Felhunter.Pet {
-				pet.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23836 + int32(points))}, stats.Stats{
-					stats.ArcaneResistance: resistsBonus,
-					stats.FireResistance:   resistsBonus,
-					stats.FrostResistance:  resistsBonus,
-					stats.NatureResistance: resistsBonus,
-					stats.ShadowResistance: resistsBonus,
-				}, core.NeverExpires)
-			}
-		}
-	}
-
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.MasterDemonologist == 0 || warlock.Options.SacrificeSummon == true {
+	// 	return
+	// }
+	// points := float64(warlock.Talents.MasterDemonologist)
+	//
+	// switch warlock.Options.Summon {
+	//
+	// case proto.WarlockOptions_Imp:
+	// 	warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23825 + int32(points))}, stats.Stats{}, core.NeverExpires).Aura
+	// 	warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.ThreatMultiplier, 1.0-0.04*points)
+	// 	for _, pet := range warlock.Pets {
+	// 		if pet == &warlock.Imp.Pet {
+	// 			pet.PseudoStats.ThreatMultiplier *= 1.0 - 0.04*points
+	// 		}
+	// 	}
+	// case proto.WarlockOptions_Succubus:
+	// 	warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23832 + int32(points))}, stats.Stats{}, core.NeverExpires).Aura
+	// 	warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.DamageDealtMultiplier, 1.0+0.02*points)
+	// 	for _, pet := range warlock.Pets {
+	// 		if pet == &warlock.Succubus.Pet {
+	// 			pet.PseudoStats.DamageDealtMultiplier *= 1.0 + 0.02*points
+	// 		}
+	// 	}
+	// case proto.WarlockOptions_Felguard:
+	// 	resistsBonus := 0.10 * points * 70
+	// 	warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (35701 + int32(points))}, stats.Stats{
+	// 		stats.ArcaneResistance: resistsBonus,
+	// 		stats.FireResistance:   resistsBonus,
+	// 		stats.FrostResistance:  resistsBonus,
+	// 		stats.NatureResistance: resistsBonus,
+	// 		stats.ShadowResistance: resistsBonus,
+	// 	}, core.NeverExpires).Aura
+	// 	warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.DamageDealtMultiplier, 1.0+0.01*points)
+	//
+	// 	for _, pet := range warlock.Pets {
+	// 		if pet == &warlock.Felguard.Pet {
+	// 			pet.PseudoStats.DamageDealtMultiplier *= 1.0 + 0.01*points
+	// 		}
+	// 	}
+	// case proto.WarlockOptions_Voidwalker:
+	// 	warlock.PseudoStats.BonusPhysicalDamageTaken *= 1.0 - 0.02*points
+	// 	warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23840 + int32(points))}, stats.Stats{}, core.NeverExpires).Aura
+	// 	warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.BonusPhysicalDamageTaken, 1.0-0.02*points)
+	// 	for _, pet := range warlock.Pets {
+	// 		if pet == &warlock.Voidwalker.Pet {
+	// 			pet.PseudoStats.BonusPhysicalDamageTaken *= 1.0 - 0.02*points
+	// 		}
+	// 	}
+	// case proto.WarlockOptions_Felhunter:
+	// 	resistsBonus := 0.20 * points * 70
+	// 	warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23836 + int32(points))}, stats.Stats{}, core.NeverExpires).Aura
+	// 	warlock.MasterDemonologistAura.AttachStatsBuff(stats.Stats{
+	// 		stats.ArcaneResistance: resistsBonus,
+	// 		stats.FireResistance:   resistsBonus,
+	// 		stats.FrostResistance:  resistsBonus,
+	// 		stats.NatureResistance: resistsBonus,
+	// 		stats.ShadowResistance: resistsBonus,
+	// 	})
+	// 	for _, pet := range warlock.Pets {
+	// 		if pet == &warlock.Felhunter.Pet {
+	// 			pet.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (23836 + int32(points))}, stats.Stats{
+	// 				stats.ArcaneResistance: resistsBonus,
+	// 				stats.FireResistance:   resistsBonus,
+	// 				stats.FrostResistance:  resistsBonus,
+	// 				stats.NatureResistance: resistsBonus,
+	// 				stats.ShadowResistance: resistsBonus,
+	// 			}, core.NeverExpires)
+	// 		}
+	// 	}
+	// }
+	//
 }
 
+// TODO: To be implemented. Port the TBC Soul Link implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applySoulLink() {
 	if !warlock.Talents.SoulLink {
 		return
 	}
 
-	// TODO Add if/while pet is alive
-	warlock.PseudoStats.DamageTakenMultiplier *= 0.80
-	warlock.PseudoStats.DamageDealtMultiplier *= 1.05
-
-	for _, pet := range warlock.Pets {
-		pet.PseudoStats.DamageDealtMultiplier *= 1.05
-	}
+	// The TBC implementation, kept for the port:
+	// if !warlock.Talents.SoulLink {
+	// 	return
+	// }
+	//
+	// // TODO Add if/while pet is alive
+	// warlock.PseudoStats.DamageTakenMultiplier *= 0.80
+	// warlock.PseudoStats.DamageDealtMultiplier *= 1.05
+	//
+	// for _, pet := range warlock.Pets {
+	// 	pet.PseudoStats.DamageDealtMultiplier *= 1.05
+	// }
 }
 
+// TODO: To be implemented. Port the TBC Demonic Knowledge implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyDemonicKnowledge() {
 	if warlock.Talents.DemonicKnowledge == 0 {
 		return
 	}
 
-	warlock.DemonicKnowledgeAura = warlock.RegisterAura(core.Aura{
-		Label:    "Demonic Knowledge",
-		Duration: core.NeverExpires,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.DemonicKnowledge == 0 {
+	// 	return
+	// }
+	//
+	// warlock.DemonicKnowledgeAura = warlock.RegisterAura(core.Aura{
+	// 	Label:    "Demonic Knowledge",
+	// 	Duration: core.NeverExpires,
+	// })
 }
 
 func (warlock *Warlock) updateDemonicKnowledge(sim *core.Simulation) {

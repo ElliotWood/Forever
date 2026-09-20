@@ -1,11 +1,5 @@
 package shaman
 
-import (
-	"time"
-
-	"github.com/wowsims/forever/sim/core"
-)
-
 func (shaman *Shaman) registerRestorationTalents() {
 	// Tier 1
 	shaman.applyImprovedHealingWave()
@@ -38,40 +32,46 @@ func (shaman *Shaman) registerRestorationTalents() {
 	shaman.applyRiptide()
 }
 
+// TODO: To be implemented. Port the TBC Natures Swiftness implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyNaturesSwiftness() {
 	if !shaman.Talents.NaturesSwiftness {
 		return
 	}
-	nsAura := shaman.RegisterAura(core.Aura{
-		ActionID: core.ActionID{SpellID: 16188},
-		Label:    "Nature's Swiftness",
-		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-			if !spell.Matches(SpellMaskChainLightning | SpellMaskLightningBolt) {
-				return
-			}
-			aura.Deactivate(sim)
-		},
-	}).AttachSpellMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CastTime_Pct,
-		FloatValue: -100,
-		ClassMask:  SpellMaskChainLightning | SpellMaskLightningBolt,
-	})
 
-	shaman.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 16188},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMagic,
-		Flags:       core.SpellFlagAPL | core.SpellFlagNoOnCastComplete | SpellFlagInstant,
-		Cast: core.CastConfig{
-			CD: core.Cooldown{
-				Timer:    shaman.NewTimer(),
-				Duration: time.Second * 180,
-			},
-		},
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			nsAura.Activate(sim)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// if !shaman.Talents.NaturesSwiftness {
+	// 	return
+	// }
+	// nsAura := shaman.RegisterAura(core.Aura{
+	// 	ActionID: core.ActionID{SpellID: 16188},
+	// 	Label:    "Nature's Swiftness",
+	// 	OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+	// 		if !spell.Matches(SpellMaskChainLightning | SpellMaskLightningBolt) {
+	// 			return
+	// 		}
+	// 		aura.Deactivate(sim)
+	// 	},
+	// }).AttachSpellMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_CastTime_Pct,
+	// 	FloatValue: -100,
+	// 	ClassMask:  SpellMaskChainLightning | SpellMaskLightningBolt,
+	// })
+	//
+	// shaman.RegisterSpell(core.SpellConfig{
+	// 	ActionID:    core.ActionID{SpellID: 16188},
+	// 	SpellSchool: core.SpellSchoolPhysical,
+	// 	DefenseType: core.DefenseTypeMagic,
+	// 	Flags:       core.SpellFlagAPL | core.SpellFlagNoOnCastComplete | SpellFlagInstant,
+	// 	Cast: core.CastConfig{
+	// 		CD: core.Cooldown{
+	// 			Timer:    shaman.NewTimer(),
+	// 			Duration: time.Second * 180,
+	// 		},
+	// 	},
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		nsAura.Activate(sim)
+	// 	},
+	// })
 }
 
 func (shaman *Shaman) applyRestorativeTotems() {
@@ -81,26 +81,38 @@ func (shaman *Shaman) applyRestorativeTotems() {
 	// In totems.go
 }
 
+// TODO: To be implemented. Port the TBC Tidal Mastery implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyTidalMastery() {
 	if shaman.Talents.TidalMastery == 0 {
 		return
 	}
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.TidalMastery.ValueAt(shaman.Talents.TidalMastery),
-		ClassMask:  SpellMaskChainLightning | SpellMaskLightningBolt | SpellMaskLightningShield | SpellMaskOverload,
-	})
+
+	// The TBC implementation, kept for the port:
+	// if shaman.Talents.TidalMastery == 0 {
+	// 	return
+	// }
+	// shaman.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_BonusCrit_Percent,
+	// 	FloatValue: spellData.TidalMastery.ValueAt(shaman.Talents.TidalMastery),
+	// 	ClassMask:  SpellMaskChainLightning | SpellMaskLightningBolt | SpellMaskLightningShield | SpellMaskOverload,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Totemic Focus implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyTotemicFocus() {
 	if shaman.Talents.TotemicFocus == 0 {
 		return
 	}
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: -0.05 * float64(shaman.Talents.TotemicFocus),
-		ClassMask:  SpellMaskTotem,
-	})
+
+	// The TBC implementation, kept for the port:
+	// if shaman.Talents.TotemicFocus == 0 {
+	// 	return
+	// }
+	// shaman.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
+	// 	FloatValue: -0.05 * float64(shaman.Talents.TotemicFocus),
+	// 	ClassMask:  SpellMaskTotem,
+	// })
 }
 
 // applyImprovedHealingWave implements Improved Healing Wave, new in Forever.

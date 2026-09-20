@@ -1,35 +1,33 @@
 package mage
 
-import (
-	"time"
-
-	"github.com/wowsims/forever/sim/core"
-)
-
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
 func (mage *Mage) registerColdSnapSpell() {
-	if !mage.Talents.ColdSnap {
-		return
-	}
+	panic("To be implemented")
 
-	mage.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 11958},
-		DefenseType:    core.DefenseTypeMagic,
-		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
-		ClassSpellMask: MageSpellColdSnap,
-
-		Cast: core.CastConfig{
-			CD: core.Cooldown{
-				Timer:    mage.NewTimer(),
-				Duration: time.Second * 480,
-			},
-		},
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			if mage.IcyVeins != nil {
-				mage.IcyVeins.CD.Reset()
-			}
-			if mage.SummonWaterElemental != nil {
-				mage.SummonWaterElemental.CD.Reset()
-			}
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// if !mage.Talents.ColdSnap {
+	// 	return
+	// }
+	//
+	// mage.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: 11958},
+	// 	DefenseType:    core.DefenseTypeMagic,
+	// 	Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	// 	ClassSpellMask: MageSpellColdSnap,
+	//
+	// 	Cast: core.CastConfig{
+	// 		CD: core.Cooldown{
+	// 			Timer:    mage.NewTimer(),
+	// 			Duration: time.Second * 480,
+	// 		},
+	// 	},
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+	// 		if mage.IcyVeins != nil {
+	// 			mage.IcyVeins.CD.Reset()
+	// 		}
+	// 		if mage.SummonWaterElemental != nil {
+	// 			mage.SummonWaterElemental.CD.Reset()
+	// 		}
+	// 	},
+	// })
 }

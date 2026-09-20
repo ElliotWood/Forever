@@ -1,10 +1,5 @@
 package paladin
 
-import (
-	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/stats"
-)
-
 func (paladin *Paladin) registerHolyTalents() {
 	// Tier 1
 	paladin.applyImprovedHolyStrike()
@@ -39,36 +34,57 @@ func (paladin *Paladin) registerHolyTalents() {
 	paladin.applyLightsVigil()
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Divine Strength - Increases your total Strength by 2/4/6/8/10%
 func (paladin *Paladin) applyDivineStrength() {
 	if paladin.Talents.DivineStrength == 0 {
 		return
 	}
 
-	paladin.MultiplyStat(stats.Strength, 1+(float64(paladin.Talents.DivineStrength)*.02))
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.DivineStrength == 0 {
+	// 	return
+	// }
+	//
+	// paladin.MultiplyStat(stats.Strength, 1+(float64(paladin.Talents.DivineStrength)*.02))
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Divine Intellect - Increases your total Intellect by 2/4/6/8/10%
 func (paladin *Paladin) applyDivineIntellect() {
 	if paladin.Talents.DivineIntellect == 0 {
 		return
 	}
 
-	bonus := 1.0 + 0.02*float64(paladin.Talents.DivineIntellect)
-	paladin.MultiplyStat(stats.Intellect, bonus)
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.DivineIntellect == 0 {
+	// 	return
+	// }
+	//
+	// bonus := 1.0 + 0.02*float64(paladin.Talents.DivineIntellect)
+	// paladin.MultiplyStat(stats.Intellect, bonus)
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Healing Light - Increases the amount healed by your Holy Light and Flash of Light spells by 4/8/12%
 func (paladin *Paladin) applyHealingLight() {
 	if paladin.Talents.HealingLight == 0 {
 		return
 	}
 
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: 0.04 * float64(paladin.Talents.HealingLight),
-		ClassMask:  SpellMaskHolyLight | SpellMaskFlashOfLight,
-	})
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.HealingLight == 0 {
+	// 	return
+	// }
+	//
+	// paladin.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_DamageDone_Flat,
+	// 	FloatValue: 0.04 * float64(paladin.Talents.HealingLight),
+	// 	ClassMask:  SpellMaskHolyLight | SpellMaskFlashOfLight,
+	// })
 }
 
 // Illumination - After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell, you have a 20/40/60/80/100% chance to gain mana equal to 60% of the base cost of the spell
@@ -80,39 +96,53 @@ func (paladin *Paladin) applyIllumination() {
 	// TODO: Implement mana return on crit
 }
 
+// TODO: To be implemented. TBC body below already accounts for Forever dropping Purifying Power's crit bonus (pinned to 0, per the TODO inside); kept commented until this class's port is reviewed.
+//
 // Purifying Power - Reduces the mana cost of your Cleanse and Consecration spells by 5/10%, and increases the critical strike chance of your Exorcism and Holy Wrath spells by 10/20%
 func (paladin *Paladin) applyPurifyingPower() {
 	if paladin.Talents.PurifyingPower == 0 {
 		return
 	}
 
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: -0.05 * float64(paladin.Talents.PurifyingPower),
-		ClassMask:  SpellMaskConsecration, // Cleanse not modeled
-	})
-	// TODO: Forever drops Purifying Power's crit bonus; the spell carries only a cost
-	// (-10% per rank) and a cooldown (-16.5% per rank) modifier, so the crit bonus is pinned
-	// to the untalented 0.
-	exorcismHolyWrathBonusCrit := 0.0
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: exorcismHolyWrathBonusCrit,
-		ClassMask:  SpellMaskExorcism | SpellMaskHolyWrath,
-	})
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.PurifyingPower == 0 {
+	// 	return
+	// }
+	//
+	// paladin.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
+	// 	FloatValue: -0.05 * float64(paladin.Talents.PurifyingPower),
+	// 	ClassMask:  SpellMaskConsecration, // Cleanse not modeled
+	// })
+	// // TODO: Forever drops Purifying Power's crit bonus; the spell carries only a cost
+	// // (-10% per rank) and a cooldown (-16.5% per rank) modifier, so the crit bonus is pinned
+	// // to the untalented 0.
+	// exorcismHolyWrathBonusCrit := 0.0
+	// paladin.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_BonusCrit_Percent,
+	// 	FloatValue: exorcismHolyWrathBonusCrit,
+	// 	ClassMask:  SpellMaskExorcism | SpellMaskHolyWrath,
+	// })
 }
 
+// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+//
 // Holy Power (talent) - Increases the critical effect chance of your Holy spells by 1/2/3/4/5%
 func (paladin *Paladin) applyHolyPowerTalent() {
 	if paladin.Talents.HolyPower == 0 {
 		return
 	}
 
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: float64(paladin.Talents.HolyPower),
-		School:     core.SpellSchoolHoly,
-	})
+	// The TBC implementation, kept for the port:
+	// if paladin.Talents.HolyPower == 0 {
+	// 	return
+	// }
+	//
+	// paladin.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_BonusCrit_Percent,
+	// 	FloatValue: float64(paladin.Talents.HolyPower),
+	// 	School:     core.SpellSchoolHoly,
+	// })
 }
 
 // applyImprovedHolyStrike implements Improved Holy Strike, new in Forever.

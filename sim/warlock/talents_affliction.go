@@ -1,12 +1,5 @@
 package warlock
 
-import (
-	"time"
-
-	"github.com/wowsims/forever/sim/common/shared"
-	"github.com/wowsims/forever/sim/core"
-)
-
 func (warlock *Warlock) registerAfflictionTalents() {
 	// Tier 1
 	// Improved Life Tap implemented in lifetap.go
@@ -42,133 +35,169 @@ func (warlock *Warlock) registerAfflictionTalents() {
 	warlock.applyWrack()
 }
 
+// TODO: To be implemented. Port the TBC Suppression implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applySuppression() {
 	if warlock.Talents.Suppression == 0 {
 		return
 	}
 
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusHit_Percent,
-		FloatValue: spellData.Suppression.Effect(shared.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warlock.Talents.Suppression),
-		ClassMask:  WarlockAfflictionSpells,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.Suppression == 0 {
+	// 	return
+	// }
+	//
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_BonusHit_Percent,
+	// 	FloatValue: spellData.Suppression.Effect(shared.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warlock.Talents.Suppression),
+	// 	ClassMask:  WarlockAfflictionSpells,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Improved Corruption implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyImprovedCorruption() {
 	if warlock.Talents.ImprovedCorruption == 0 {
 		return
 	}
 
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * (-400 * time.Duration(warlock.Talents.ImprovedCorruption)),
-		ClassMask: WarlockSpellCorruption,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.ImprovedCorruption == 0 {
+	// 	return
+	// }
+	//
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:      core.SpellMod_CastTime_Flat,
+	// 	TimeValue: time.Millisecond * (-400 * time.Duration(warlock.Talents.ImprovedCorruption)),
+	// 	ClassMask: WarlockSpellCorruption,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Empowered Corruption implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyEmpoweredCorruption() {
 	if warlock.Talents.ImprovedCorruption == 0 {
 		return
 	}
 
-	// TODO: this read Talents.EmpoweredCorruption, a talent Forever drops entirely, while
-	// the registrar's guard is ImprovedCorruption (kept) -- looks like a long-standing
-	// copy-paste bug. EmpoweredCorruption's spellData ladder is unrelated to
-	// ImprovedCorruption's rank count, so the bonus coefficient is unknown and pinned to 0
-	// until confirmed against the Forever tooltip.
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DotBonusCoeffecient_Flat,
-		FloatValue: 0,
-		ClassMask:  WarlockSpellCorruption,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.ImprovedCorruption == 0 {
+	// 	return
+	// }
+	//
+	// // TODO: this read Talents.EmpoweredCorruption, a talent Forever drops entirely, while
+	// // the registrar's guard is ImprovedCorruption (kept) -- looks like a long-standing
+	// // copy-paste bug. EmpoweredCorruption's spellData ladder is unrelated to
+	// // ImprovedCorruption's rank count, so the bonus coefficient is unknown and pinned to 0
+	// // until confirmed against the Forever tooltip.
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_DotBonusCoeffecient_Flat,
+	// 	FloatValue: 0,
+	// 	ClassMask:  WarlockSpellCorruption,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Nightfall implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyNightfall() {
 	if warlock.Talents.Nightfall == 0 {
 		return
 	}
 
-	warlock.NightfallProcAura = warlock.MakeProcTriggerAura(core.ProcTrigger{
-		Name:            "Shadow Trance",
-		MetricsActionID: core.ActionID{SpellID: 17941},
-		ClassSpellMask:  WarlockSpellShadowBolt,
-		Callback:        core.CallbackOnCastComplete,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if spell.CurCast.CastTime != 0 {
-				return
-			}
-			warlock.NightfallProcAura.Deactivate(sim)
-		},
-	}).AttachSpellMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CastTime_Pct,
-		FloatValue: -1.0,
-		ClassMask:  WarlockSpellShadowBolt,
-	})
-
-	warlock.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Nightfall",
-		ClassSpellMask: WarlockSpellCorruption | WarlockSpellDrainLife,
-		// Forever puts the real per-rank chance on the effect; ProcChanceAt reads a flat 100%.
-		ProcChance: spellData.Nightfall.FractionAt(warlock.Talents.Nightfall),
-		Callback:   core.CallbackOnPeriodicDamageDealt,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			warlock.NightfallProcAura.Activate(sim)
-		},
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.Nightfall == 0 {
+	// 	return
+	// }
+	//
+	// warlock.NightfallProcAura = warlock.MakeProcTriggerAura(core.ProcTrigger{
+	// 	Name:            "Shadow Trance",
+	// 	MetricsActionID: core.ActionID{SpellID: 17941},
+	// 	ClassSpellMask:  WarlockSpellShadowBolt,
+	// 	Callback:        core.CallbackOnCastComplete,
+	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 		if spell.CurCast.CastTime != 0 {
+	// 			return
+	// 		}
+	// 		warlock.NightfallProcAura.Deactivate(sim)
+	// 	},
+	// }).AttachSpellMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_CastTime_Pct,
+	// 	FloatValue: -1.0,
+	// 	ClassMask:  WarlockSpellShadowBolt,
+	// })
+	//
+	// warlock.MakeProcTriggerAura(core.ProcTrigger{
+	// 	Name:           "Nightfall",
+	// 	ClassSpellMask: WarlockSpellCorruption | WarlockSpellDrainLife,
+	// 	// Forever puts the real per-rank chance on the effect; ProcChanceAt reads a flat 100%.
+	// 	ProcChance: spellData.Nightfall.FractionAt(warlock.Talents.Nightfall),
+	// 	Callback:   core.CallbackOnPeriodicDamageDealt,
+	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// 		warlock.NightfallProcAura.Activate(sim)
+	// 	},
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Shadow Mastery implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyShadowMastery() {
 	if warlock.Talents.ShadowMastery == 0 {
 		return
 	}
 
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ShadowMastery.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.ShadowMastery),
-		ClassMask:  WarlockShadowDamage,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.ShadowMastery == 0 {
+	// 	return
+	// }
+	//
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_DamageDone_Flat,
+	// 	FloatValue: spellData.ShadowMastery.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.ShadowMastery),
+	// 	ClassMask:  WarlockShadowDamage,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Amplify Curse implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) registerAmplifyCurse() {
 	if !warlock.Talents.AmplifyCurse {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 18288}
-
-	warlock.AmplifyCurseAura = warlock.GetOrRegisterAura(core.Aura{
-		Label:    "Amplify Curse",
-		Tag:      "Affliction",
-		ActionID: actionID,
-		Duration: time.Second * 30,
-		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-			if spell.Matches(WarlockSpellCurseOfAgony | WarlockSpellCurseOfDoom) {
-				warlock.AmplifyCurseAura.Deactivate(sim)
-			}
-		},
-	})
-
-	warlock.AmplifyCurse = warlock.RegisterSpell(core.SpellConfig{
-		ActionID: actionID,
-		Flags:    core.SpellFlagAPL,
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: time.Second,
-			},
-			CD: core.Cooldown{
-				Timer:    warlock.NewTimer(),
-				Duration: time.Minute * 3,
-			},
-		},
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			warlock.AmplifyCurseAura.Activate(sim)
-		},
-	})
-
-	warlock.AddMajorCooldown(core.MajorCooldown{
-		Spell: warlock.AmplifyCurse,
-		Type:  core.CooldownTypeDPS,
-	})
+	// The TBC implementation, kept for the port:
+	// if !warlock.Talents.AmplifyCurse {
+	// 	return
+	// }
+	//
+	// actionID := core.ActionID{SpellID: 18288}
+	//
+	// warlock.AmplifyCurseAura = warlock.GetOrRegisterAura(core.Aura{
+	// 	Label:    "Amplify Curse",
+	// 	Tag:      "Affliction",
+	// 	ActionID: actionID,
+	// 	Duration: time.Second * 30,
+	// 	OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+	// 		if spell.Matches(WarlockSpellCurseOfAgony | WarlockSpellCurseOfDoom) {
+	// 			warlock.AmplifyCurseAura.Deactivate(sim)
+	// 		}
+	// 	},
+	// })
+	//
+	// warlock.AmplifyCurse = warlock.RegisterSpell(core.SpellConfig{
+	// 	ActionID: actionID,
+	// 	Flags:    core.SpellFlagAPL,
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD: time.Second,
+	// 		},
+	// 		CD: core.Cooldown{
+	// 			Timer:    warlock.NewTimer(),
+	// 			Duration: time.Minute * 3,
+	// 		},
+	// 	},
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+	// 		warlock.AmplifyCurseAura.Activate(sim)
+	// 	},
+	// })
+	//
+	// warlock.AddMajorCooldown(core.MajorCooldown{
+	// 	Spell: warlock.AmplifyCurse,
+	// 	Type:  core.CooldownTypeDPS,
+	// })
 }
 
 // applySoulHarvesting implements Soul Harvesting, new in Forever.

@@ -1,11 +1,5 @@
 package druid
 
-import (
-	"github.com/wowsims/forever/sim/common/shared"
-	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/stats"
-)
-
 func (druid *Druid) registerRestorationTalents() {
 	// Tier 1
 	druid.applyNaturesFocus()
@@ -38,48 +32,72 @@ func (druid *Druid) registerRestorationTalents() {
 	druid.applyWildGrowth()
 }
 
+// TODO: To be implemented.
 func (druid *Druid) applyNaturalShapeshifter() {
 	if druid.Talents.NaturalShapeshifter == 0 {
 		return
 	}
 
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellCatForm | DruidSpellBearForm,
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: -0.1 * float64(druid.Talents.NaturalShapeshifter),
-	})
+	// The TBC implementation, kept for the port:
+	// if druid.Talents.NaturalShapeshifter == 0 {
+	// 	return
+	// }
+	//
+	// druid.AddStaticMod(core.SpellModConfig{
+	// 	ClassMask:  DruidSpellCatForm | DruidSpellBearForm,
+	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
+	// 	FloatValue: -0.1 * float64(druid.Talents.NaturalShapeshifter),
+	// })
 }
 
+// TODO: To be implemented.
 func (druid *Druid) applyNaturalist() {
 	if druid.Talents.Naturalist == 0 {
 		return
 	}
 
-	// Forever states the damage bonus against every school (mask 127) instead of physical
-	// only; the sim keeps it on physical, which is all a feral druid deals.
-	druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(druid.Talents.Naturalist)
+	// The TBC implementation, kept for the port:
+	// if druid.Talents.Naturalist == 0 {
+	// 	return
+	// }
+	//
+	// // Forever states the damage bonus against every school (mask 127) instead of physical
+	// // only; the sim keeps it on physical, which is all a feral druid deals.
+	// druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(druid.Talents.Naturalist)
 }
 
+// TODO: To be implemented.
 func (druid *Druid) applySubtlety() {
 	if druid.Talents.Subtlety == 0 {
 		return
 	}
 
-	// Reduces the threat caused by healing/damage spells by 4/8/12/16/20% per rank.
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidHealingSpells | DruidDamagingSpells,
-		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: -0.04 * float64(druid.Talents.Subtlety),
-	})
+	// The TBC implementation, kept for the port:
+	// if druid.Talents.Subtlety == 0 {
+	// 	return
+	// }
+	//
+	// // Reduces the threat caused by healing/damage spells by 4/8/12/16/20% per rank.
+	// druid.AddStaticMod(core.SpellModConfig{
+	// 	ClassMask:  DruidHealingSpells | DruidDamagingSpells,
+	// 	Kind:       core.SpellMod_ThreatMultiplier_Pct,
+	// 	FloatValue: -0.04 * float64(druid.Talents.Subtlety),
+	// })
 }
 
+// TODO: To be implemented.
 func (druid *Druid) applyLivingSpirit() {
 	if druid.Talents.LivingSpirit == 0 {
 		return
 	}
 
-	// Increases total Spirit by 5/10/15% per rank.
-	druid.MultiplyStat(stats.Spirit, spellData.LivingSpirit.MultiplierAt(druid.Talents.LivingSpirit))
+	// The TBC implementation, kept for the port:
+	// if druid.Talents.LivingSpirit == 0 {
+	// 	return
+	// }
+	//
+	// // Increases total Spirit by 5/10/15% per rank.
+	// druid.MultiplyStat(stats.Spirit, spellData.LivingSpirit.MultiplierAt(druid.Talents.LivingSpirit))
 }
 
 // applyNaturesFocus implements Nature's Focus, new in Forever.
@@ -92,13 +110,19 @@ func (druid *Druid) applyNaturesFocus() {
 	}
 }
 
+// TODO: To be implemented.
 func (druid *Druid) applyFuror() {
 	if druid.Talents.Furor == 0 {
 		return
 	}
 
-	// Both dummy effects carry the same ladder, one per form, so either answers the chance.
-	druid.FurorProcChance = spellData.Furor.EffectAt(0).FractionAt(druid.Talents.Furor)
+	// The TBC implementation, kept for the port:
+	// if druid.Talents.Furor == 0 {
+	// 	return
+	// }
+	//
+	// // Both dummy effects carry the same ladder, one per form, so either answers the chance.
+	// druid.FurorProcChance = spellData.Furor.EffectAt(0).FractionAt(druid.Talents.Furor)
 }
 
 // applyReflection implements Reflection, new in Forever.

@@ -9,50 +9,54 @@ import (
 
 var maulRank = shared.WithSpellDataFlatThreat(spellData.Maul, 344).HighestRank()
 
+// TODO: To be implemented.
 func (druid *Druid) registerMaulSpell() {
-	// The actual Maul spell that fires on the next auto-attack swing.
-	maulSpell := druid.RegisterSpell(Bear, core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: maulRank.SpellID},
-		SpellSchool:    maulRank.SpellSchool,
-		DefenseType:    maulRank.DefenseType,
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		ClassSpellMask: DruidSpellMaul,
-		Flags:          core.SpellFlagMeleeMetrics,
+	panic("To be implemented")
 
-		RageCost: core.RageCostOptions{
-			Cost:   maulRank.Cost,
-			Refund: 0.8,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-		},
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		FlatThreatBonus:  maulRank.FlatThreatBonus,
-		MaxRange:         core.MaxMeleeRange,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := maulRank.Direct.Damage(sim) + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-			if druid.maulQueueAura != nil {
-				druid.maulQueueAura.Deactivate(sim)
-			}
-		},
-
-		ExpectedInitialDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
-			baseDamage := shared.SpellDataMin(maulRank.Direct) + spell.Unit.AutoAttacks.MH().CalculateAverageWeaponDamage(spell.MeleeAttackPower(target))
-			return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
-		},
-	})
-
-	druid.Maul = druid.makeMaulQueueSpellAndAura(maulSpell)
+	// The TBC implementation, kept for the port:
+	// // The actual Maul spell that fires on the next auto-attack swing.
+	// maulSpell := druid.RegisterSpell(Bear, core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: maulRank.SpellID},
+	// 	SpellSchool:    maulRank.SpellSchool,
+	// 	DefenseType:    maulRank.DefenseType,
+	// 	ProcMask:       core.ProcMaskMeleeMHSpecial,
+	// 	ClassSpellMask: DruidSpellMaul,
+	// 	Flags:          core.SpellFlagMeleeMetrics,
+	//
+	// 	RageCost: core.RageCostOptions{
+	// 		Cost:   maulRank.Cost,
+	// 		Refund: 0.8,
+	// 	},
+	//
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			NonEmpty: true,
+	// 		},
+	// 	},
+	//
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	// 	FlatThreatBonus:  maulRank.FlatThreatBonus,
+	// 	MaxRange:         core.MaxMeleeRange,
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		baseDamage := maulRank.Direct.Damage(sim) + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+	// 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+	// 		if !result.Landed() {
+	// 			spell.IssueRefund(sim)
+	// 		}
+	// 		if druid.maulQueueAura != nil {
+	// 			druid.maulQueueAura.Deactivate(sim)
+	// 		}
+	// 	},
+	//
+	// 	ExpectedInitialDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
+	// 		baseDamage := shared.SpellDataMin(maulRank.Direct) + spell.Unit.AutoAttacks.MH().CalculateAverageWeaponDamage(spell.MeleeAttackPower(target))
+	// 		return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
+	// 	},
+	// })
+	//
+	// druid.Maul = druid.makeMaulQueueSpellAndAura(maulSpell)
 }
 
 // makeMaulQueueSpellAndAura creates the APL-visible queue spell and the aura

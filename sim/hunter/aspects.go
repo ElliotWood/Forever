@@ -3,83 +3,90 @@ package hunter
 import (
 	"math"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 var aspectOfTheHawkRank = spellData.AspectOfTheHawk.HighestRank()
 
+// TODO: To be implemented.
 func (hunter *Hunter) registerAspectOfTheHawkSpell() {
-	actionID := core.ActionID{SpellID: aspectOfTheHawkRank.SpellID}
+	panic("To be implemented")
 
-	hunter.AspectOfTheHawkAura = hunter.applySharedAspectConfig(hunter.RegisterAura(core.Aura{
-		Label:      "Aspect of the Hawk",
-		ActionID:   actionID,
-		BuildPhase: core.CharacterBuildPhaseBase,
-	}).AttachStatBuff(stats.RangedAttackPower, shared.SpellDataMin(aspectOfTheHawkRank.Direct)))
-
-	hunter.AspectOfTheHawk = hunter.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		SpellSchool:    core.SpellSchoolNature,
-		DefenseType:    core.DefenseTypeMagic,
-		ClassSpellMask: HunterSpellAspectOfTheHawk,
-		Flags:          core.SpellFlagAPL,
-
-		ManaCost: core.ManaCostOptions{
-			FlatCost: aspectOfTheHawkRank.Cost,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: aspectOfTheHawkRank.GCD,
-			},
-			IgnoreHaste: true,
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.RelatedSelfBuff.Activate(sim)
-		},
-
-		RelatedSelfBuff: hunter.AspectOfTheHawkAura,
-	})
+	// The TBC implementation, kept for the port:
+	// actionID := core.ActionID{SpellID: aspectOfTheHawkRank.SpellID}
+	//
+	// hunter.AspectOfTheHawkAura = hunter.applySharedAspectConfig(hunter.RegisterAura(core.Aura{
+	// 	Label:      "Aspect of the Hawk",
+	// 	ActionID:   actionID,
+	// 	BuildPhase: core.CharacterBuildPhaseBase,
+	// }).AttachStatBuff(stats.RangedAttackPower, shared.SpellDataMin(aspectOfTheHawkRank.Direct)))
+	//
+	// hunter.AspectOfTheHawk = hunter.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       actionID,
+	// 	SpellSchool:    core.SpellSchoolNature,
+	// 	DefenseType:    core.DefenseTypeMagic,
+	// 	ClassSpellMask: HunterSpellAspectOfTheHawk,
+	// 	Flags:          core.SpellFlagAPL,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		FlatCost: aspectOfTheHawkRank.Cost,
+	// 	},
+	//
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD: aspectOfTheHawkRank.GCD,
+	// 		},
+	// 		IgnoreHaste: true,
+	// 	},
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+	// 		spell.RelatedSelfBuff.Activate(sim)
+	// 	},
+	//
+	// 	RelatedSelfBuff: hunter.AspectOfTheHawkAura,
+	// })
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) registerAspectOfTheViper() {
-	actionID := core.ActionID{SpellID: 34074}
+	panic("To be implemented")
 
-	hunter.AspectOfTheViperAura = hunter.applySharedAspectConfig(hunter.RegisterAura(core.Aura{
-		Label:    "Aspect of the Viper",
-		ActionID: actionID,
-	}))
-
-	hunter.AspectOfTheViper = hunter.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		SpellSchool:    core.SpellSchoolNature,
-		DefenseType:    core.DefenseTypeMagic,
-		ClassSpellMask: HunterSpellAspectOfTheViper,
-		Flags:          core.SpellFlagAPL,
-
-		ManaCost: core.ManaCostOptions{
-			FlatCost: 40,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				// Aspect of the Viper has no generated row - it carries no "Rank N" subtext, so the
-				// ladder discovery never sees it. See the not-generated list at the head of
-				// spell_data_auto_gen.go.
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.RelatedSelfBuff.Activate(sim)
-		},
-
-		RelatedSelfBuff: hunter.AspectOfTheViperAura,
-	})
+	// The TBC implementation, kept for the port:
+	// actionID := core.ActionID{SpellID: 34074}
+	//
+	// hunter.AspectOfTheViperAura = hunter.applySharedAspectConfig(hunter.RegisterAura(core.Aura{
+	// 	Label:    "Aspect of the Viper",
+	// 	ActionID: actionID,
+	// }))
+	//
+	// hunter.AspectOfTheViper = hunter.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       actionID,
+	// 	SpellSchool:    core.SpellSchoolNature,
+	// 	DefenseType:    core.DefenseTypeMagic,
+	// 	ClassSpellMask: HunterSpellAspectOfTheViper,
+	// 	Flags:          core.SpellFlagAPL,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		FlatCost: 40,
+	// 	},
+	//
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			// Aspect of the Viper has no generated row - it carries no "Rank N" subtext, so the
+	// 			// ladder discovery never sees it. See the not-generated list at the head of
+	// 			// spell_data_auto_gen.go.
+	// 			GCD: core.GCDDefault,
+	// 		},
+	// 		IgnoreHaste: true,
+	// 	},
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+	// 		spell.RelatedSelfBuff.Activate(sim)
+	// 	},
+	//
+	// 	RelatedSelfBuff: hunter.AspectOfTheViperAura,
+	// })
 }
 
 func (hunter *Hunter) registerAspects() {
@@ -87,10 +94,14 @@ func (hunter *Hunter) registerAspects() {
 	hunter.registerAspectOfTheViper()
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) applySharedAspectConfig(aura *core.Aura) *core.Aura {
-	aura.Duration = core.NeverExpires
-	aura.NewExclusiveEffect("Aspect", true, core.ExclusiveEffect{})
-	return aura
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// aura.Duration = core.NeverExpires
+	// aura.NewExclusiveEffect("Aspect", true, core.ExclusiveEffect{})
+	// return aura
 }
 
 func (hunter *Hunter) OnManaTick(sim *core.Simulation) {

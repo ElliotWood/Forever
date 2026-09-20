@@ -165,47 +165,58 @@ var quiverHasteSpellIDs = map[proto.HunterOptions_QuiverBonus]int32{
 	proto.HunterOptions_Speed15: 29414,
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) applyQuiverBonus(weapon *core.Item) {
 	if hunter.Options.QuiverBonus == proto.HunterOptions_QuiverNone {
 		return
 	}
+	panic("To be implemented")
 
-	isThoridalEquipped := weapon != nil && weapon.ID == ThoridalTheStarsFuryItemID
-	buildPhase := core.Ternary(
-		isThoridalEquipped,
-		core.CharacterBuildPhaseNone,
-		core.CharacterBuildPhaseGear)
-
-	hunter.quiverBonusAura = hunter.RegisterAura(core.Aura{
-		Label:      "Haste",
-		ActionID:   core.ActionID{SpellID: quiverHasteSpellIDs[hunter.Options.QuiverBonus]},
-		Duration:   core.NeverExpires,
-		BuildPhase: buildPhase,
-	}).AttachMultiplicativePseudoStatBuff(
-		&hunter.PseudoStats.RangedSpeedMultiplier,
-		quiverHasteMultipliers[hunter.Options.QuiverBonus],
-	)
-
-	if !isThoridalEquipped {
-		core.MakePermanent(hunter.quiverBonusAura)
-	}
+	// The TBC implementation, kept for the port:
+	// if hunter.Options.QuiverBonus == proto.HunterOptions_QuiverNone {
+	// 	return
+	// }
+	//
+	// isThoridalEquipped := weapon != nil && weapon.ID == ThoridalTheStarsFuryItemID
+	// buildPhase := core.Ternary(
+	// 	isThoridalEquipped,
+	// 	core.CharacterBuildPhaseNone,
+	// 	core.CharacterBuildPhaseGear)
+	//
+	// hunter.quiverBonusAura = hunter.RegisterAura(core.Aura{
+	// 	Label:      "Haste",
+	// 	ActionID:   core.ActionID{SpellID: quiverHasteSpellIDs[hunter.Options.QuiverBonus]},
+	// 	Duration:   core.NeverExpires,
+	// 	BuildPhase: buildPhase,
+	// }).AttachMultiplicativePseudoStatBuff(
+	// 	&hunter.PseudoStats.RangedSpeedMultiplier,
+	// 	quiverHasteMultipliers[hunter.Options.QuiverBonus],
+	// )
+	//
+	// if !isThoridalEquipped {
+	// 	core.MakePermanent(hunter.quiverBonusAura)
+	// }
 }
 
+// TODO: To be implemented.
 func (hunter *Hunter) applyAmmoDPS() {
-	switch hunter.Options.Ammo {
-	case proto.HunterOptions_TimelessArrow:
-		hunter.AmmoDPS = 53
-	case proto.HunterOptions_MysteriousArrow:
-		hunter.AmmoDPS = 46.5
-	case proto.HunterOptions_AdamantiteStinger:
-		hunter.AmmoDPS = 43
-	case proto.HunterOptions_WardensArrow:
-		hunter.AmmoDPS = 37
-	case proto.HunterOptions_HalaaniRazorshaft:
-		hunter.AmmoDPS = 34
-	case proto.HunterOptions_BlackflightArrow:
-		hunter.AmmoDPS = 32
-	}
+	panic("To be implemented")
+
+	// The TBC implementation, kept for the port:
+	// switch hunter.Options.Ammo {
+	// case proto.HunterOptions_TimelessArrow:
+	// 	hunter.AmmoDPS = 53
+	// case proto.HunterOptions_MysteriousArrow:
+	// 	hunter.AmmoDPS = 46.5
+	// case proto.HunterOptions_AdamantiteStinger:
+	// 	hunter.AmmoDPS = 43
+	// case proto.HunterOptions_WardensArrow:
+	// 	hunter.AmmoDPS = 37
+	// case proto.HunterOptions_HalaaniRazorshaft:
+	// 	hunter.AmmoDPS = 34
+	// case proto.HunterOptions_BlackflightArrow:
+	// 	hunter.AmmoDPS = 32
+	// }
 }
 
 func (hunter *Hunter) RegisterRangedSpell(config core.SpellConfig) *core.Spell {

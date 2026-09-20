@@ -9,17 +9,21 @@ import (
 
 var ChainLightningRankMap = spellData.ChainLightning
 
+// TODO: To be implemented. Port the TBC Chain Lightning Spell implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerChainLightningSpell() {
-	maxHits := min(3, shaman.Env.TotalTargetCount())
-	sharedCDTimer := shaman.NewTimer()
-	shaman.ChainLightningOverloads = make(map[int32][]*core.Spell, len(ChainLightningRankMap))
-	ChainLightningRankMap.RegisterAll(func(config shared.SpellData) {
-		shaman.newChainLightningSpell(config, false, sharedCDTimer)
-		for range maxHits {
-			shaman.ChainLightningOverloads[config.Rank] = append(shaman.ChainLightningOverloads[config.Rank], shaman.newChainLightningSpell(config, true, nil))
-		}
-	})
+	panic("To be implemented")
 
+	// The TBC implementation, kept for the port:
+	// maxHits := min(3, shaman.Env.TotalTargetCount())
+	// sharedCDTimer := shaman.NewTimer()
+	// shaman.ChainLightningOverloads = make(map[int32][]*core.Spell, len(ChainLightningRankMap))
+	// ChainLightningRankMap.RegisterAll(func(config shared.SpellData) {
+	// 	shaman.newChainLightningSpell(config, false, sharedCDTimer)
+	// 	for range maxHits {
+	// 		shaman.ChainLightningOverloads[config.Rank] = append(shaman.ChainLightningOverloads[config.Rank], shaman.newChainLightningSpell(config, true, nil))
+	// 	}
+	// })
+	//
 }
 
 func (shaman *Shaman) newChainLightningSpell(config shared.SpellData, isElementalOverload bool, sharedCDTimer *core.Timer) *core.Spell {

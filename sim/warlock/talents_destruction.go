@@ -1,11 +1,5 @@
 package warlock
 
-import (
-	"time"
-
-	"github.com/wowsims/forever/sim/core"
-)
-
 func (warlock *Warlock) registerDestructionTalents() {
 	// Tier 1
 	warlock.applyDestructiveReach()
@@ -38,41 +32,59 @@ func (warlock *Warlock) registerDestructionTalents() {
 	warlock.applyIncinerate()
 }
 
+// TODO: To be implemented. Port the TBC Improved Shadow Bolt implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyImprovedShadowBolt() {
 	if warlock.Talents.ImprovedShadowBolt == 0 {
 		return
 	}
-	warlock.ImpShadowboltAura = core.ImprovedShadowBoltAura(warlock.CurrentTarget, 0, warlock.Talents.ImprovedShadowBolt)
+
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.ImprovedShadowBolt == 0 {
+	// 	return
+	// }
+	// warlock.ImpShadowboltAura = core.ImprovedShadowBoltAura(warlock.CurrentTarget, 0, warlock.Talents.ImprovedShadowBolt)
 }
 
+// TODO: To be implemented. Port the TBC Cataclysm implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyCataclysm() {
 	if warlock.Talents.Cataclysm == 0 {
 		return
 	}
 
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: -0.01 * float64(warlock.Talents.Cataclysm),
-		ClassMask:  WarlockDestructionSpells,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.Cataclysm == 0 {
+	// 	return
+	// }
+	//
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
+	// 	FloatValue: -0.01 * float64(warlock.Talents.Cataclysm),
+	// 	ClassMask:  WarlockDestructionSpells,
+	// })
 }
 
+// TODO: To be implemented. Port the TBC Bane implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyBane() {
 	if warlock.Talents.Bane == 0 {
 		return
 	}
 
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * time.Duration(-100*warlock.Talents.Bane),
-		ClassMask: WarlockSpellShadowBolt | WarlockSpellImmolate,
-	})
-
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * time.Duration(-400*warlock.Talents.Bane),
-		ClassMask: WarlockSpellSoulFire,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.Bane == 0 {
+	// 	return
+	// }
+	//
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:      core.SpellMod_CastTime_Flat,
+	// 	TimeValue: time.Millisecond * time.Duration(-100*warlock.Talents.Bane),
+	// 	ClassMask: WarlockSpellShadowBolt | WarlockSpellImmolate,
+	// })
+	//
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:      core.SpellMod_CastTime_Flat,
+	// 	TimeValue: time.Millisecond * time.Duration(-400*warlock.Talents.Bane),
+	// 	ClassMask: WarlockSpellSoulFire,
+	// })
 }
 
 func (warlock *Warlock) applyShadowburn() {
@@ -83,31 +95,43 @@ func (warlock *Warlock) applyShadowburn() {
 	warlock.registerShadowBurn()
 }
 
+// TODO: To be implemented. Port the TBC Destructive Reach implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyDestructiveReach() {
 	if warlock.Talents.DestructiveReach == 0 {
 		return
 	}
 
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: -0.05 * float64(warlock.Talents.DestructiveReach),
-		ClassMask:  WarlockDestructionSpells,
-	})
-
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.DestructiveReach == 0 {
+	// 	return
+	// }
+	//
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_ThreatMultiplier_Pct,
+	// 	FloatValue: -0.05 * float64(warlock.Talents.DestructiveReach),
+	// 	ClassMask:  WarlockDestructionSpells,
+	// })
+	//
 }
 
+// TODO: To be implemented. Port the TBC Ruin implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyRuin() {
 	if warlock.Talents.Ruin == 0 {
 		return
 	}
 
-	// TODO: Forever expands Ruin from 1 rank to 5; the per-rank crit-multiplier bonus is
-	// unconfirmed, so it is pinned to 0 until the Forever tooltip is known.
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CritMultiplier_Flat,
-		FloatValue: 0,
-		ClassMask:  WarlockDestructionSpells,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.Ruin == 0 {
+	// 	return
+	// }
+	//
+	// // TODO: Forever expands Ruin from 1 rank to 5; the per-rank crit-multiplier bonus is
+	// // unconfirmed, so it is pinned to 0 until the Forever tooltip is known.
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind:       core.SpellMod_CritMultiplier_Flat,
+	// 	FloatValue: 0,
+	// 	ClassMask:  WarlockDestructionSpells,
+	// })
 }
 
 func (warlock *Warlock) applyConflagrate() {
@@ -118,19 +142,25 @@ func (warlock *Warlock) applyConflagrate() {
 	warlock.registerConflagrate()
 }
 
+// TODO: To be implemented. Port the TBC Shadow And Flame implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) applyShadowAndFlame() {
 	if warlock.Talents.ShadowAndFlame == 0 {
 		return
 	}
 
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind: core.SpellMod_BonusCoeffecient_Flat,
-		// Four dummy effects, of which only the first (4% per rank) matches the coefficient
-		// bonus this talent has always granted; the other three (20/2/2 per rank) are
-		// unidentified.
-		FloatValue: spellData.ShadowAndFlame.EffectAt(0).FractionAt(warlock.Talents.ShadowAndFlame),
-		ClassMask:  WarlockSpellShadowBolt | WarlockSpellIncinerate,
-	})
+	// The TBC implementation, kept for the port:
+	// if warlock.Talents.ShadowAndFlame == 0 {
+	// 	return
+	// }
+	//
+	// warlock.AddStaticMod(core.SpellModConfig{
+	// 	Kind: core.SpellMod_BonusCoeffecient_Flat,
+	// 	// Four dummy effects, of which only the first (4% per rank) matches the coefficient
+	// 	// bonus this talent has always granted; the other three (20/2/2 per rank) are
+	// 	// unidentified.
+	// 	FloatValue: spellData.ShadowAndFlame.EffectAt(0).FractionAt(warlock.Talents.ShadowAndFlame),
+	// 	ClassMask:  WarlockSpellShadowBolt | WarlockSpellIncinerate,
+	// })
 }
 
 // applyMoltenSkin implements Molten Skin, new in Forever.

@@ -105,11 +105,15 @@ func (shaman *Shaman) newStormstrikeSpellConfig(spellID int32, ssDebuffAuras *co
 	return stormstrikeSpellConfig
 }
 
+// TODO: To be implemented. Port the TBC Stormstrike Spell implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerStormstrikeSpell() {
-	mhHit := shaman.newStormstrikeHitSpell(true)
-	ohHit := shaman.newStormstrikeHitSpell(false)
+	panic("To be implemented")
 
-	shaman.StormStrikeDebuffAuras = shaman.NewEnemyAuraArray(shaman.StormstrikeDebuffAura)
-
-	shaman.Stormstrike = shaman.RegisterSpell(shaman.newStormstrikeSpellConfig(17364, &shaman.StormStrikeDebuffAuras, mhHit, ohHit))
+	// The TBC implementation, kept for the port:
+	// mhHit := shaman.newStormstrikeHitSpell(true)
+	// ohHit := shaman.newStormstrikeHitSpell(false)
+	//
+	// shaman.StormStrikeDebuffAuras = shaman.NewEnemyAuraArray(shaman.StormstrikeDebuffAura)
+	//
+	// shaman.Stormstrike = shaman.RegisterSpell(shaman.newStormstrikeSpellConfig(17364, &shaman.StormStrikeDebuffAuras, mhHit, ohHit))
 }
