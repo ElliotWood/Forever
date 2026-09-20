@@ -30,7 +30,7 @@ type ProtectionWarrior struct {
 }
 
 func (war *ProtectionWarrior) ApplyTalents() {
-	// war.Warrior.ApplyTalents()
+	war.Warrior.ApplyTalents()
 }
 
 func NewProtectionWarrior(character *core.Character, options *proto.Player) *ProtectionWarrior {

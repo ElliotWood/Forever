@@ -33,7 +33,7 @@ type DpsWarrior struct {
 }
 
 func (war *DpsWarrior) ApplyTalents() {
-	// war.Warrior.ApplyTalents()
+	war.Warrior.ApplyTalents()
 }
 
 func NewDpsWarrior(character *core.Character, options *proto.Player) *DpsWarrior {
