@@ -181,20 +181,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(AtieshAura(char, proto.Class_ClassWarlock, float64(partyBuffs.AtieshWarlock)))
 	}
 
-	if partyBuffs.BattleShout {
-		boomingVoicePoints := int32(0)
-		aura := BattleShoutAura(
-			char,
-			false,
-			boomingVoicePoints,
-			1.0,
-			partyBuffs.BsSolarianSapphire,
-			false,
-		)
-
-		ApplyFixedShoutAura(char, aura, BattleShoutCategory)
-	}
-
 	if partyBuffs.BloodPact {
 		MakePermanent(BloodPactAura(char, false))
 	}
@@ -622,51 +608,6 @@ func ShadowResistanceAura(char *Character, isPlayer bool) *Aura {
 //	Party Buffs
 //
 // /////////////////////////////////////////////////////////////////////////
-var BattleShoutCategory = "BattleShout"
-
-func GetBattleShoutValue(boomingVoicePoints int32, commandingPresenceMultiplier float64, hasSolarianSapphire bool, hasT2 bool, isPrepull bool) float64 {
-	baseApBuff := 306.0
-	apBuff := baseApBuff
-	if isPrepull {
-		if hasSolarianSapphire {
-			apBuff += 70
-		}
-		if hasT2 {
-			apBuff += 30
-		}
-	}
-	// Truncated like the game: 306*1.25=382.5 -> 382.
-	return math.Floor(apBuff * commandingPresenceMultiplier)
-}
-
-func BattleShoutAura(char *Character, isPlayer bool, boomingVoicePoints int32, commandingPresenceMultiplier float64, hasSolarianSapphire bool, hasT2 bool) *Aura {
-	prepullApBuff := GetBattleShoutValue(boomingVoicePoints, commandingPresenceMultiplier, hasSolarianSapphire, hasT2, true)
-	apBuff := GetBattleShoutValue(boomingVoicePoints, commandingPresenceMultiplier, hasSolarianSapphire, hasT2, false)
-
-	var ee *ExclusiveEffect
-	aura := char.GetOrRegisterAura(Aura{
-		Label:      fmt.Sprintf("Battle Shout (%s)", Ternary(isPlayer, "Player", "External")),
-		Tag:        BattleShoutCategory,
-		ActionID:   ActionID{SpellID: 2048}.WithTag(TernaryInt32(isPlayer, 0, 1)),
-		Duration:   time.Duration(float64(time.Minute*2) * (1 + 0.1*float64(boomingVoicePoints))),
-		BuildPhase: CharacterBuildPhaseBuffs,
-		OnGain: func(aura *Aura, sim *Simulation) {
-			ee.SetPriority(sim, TernaryFloat64(sim.CurrentTime > 0, apBuff, prepullApBuff))
-		},
-	})
-
-	ee = aura.NewExclusiveEffect(BattleShoutCategory, true, ExclusiveEffect{
-		Priority: 0,
-		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.AttackPower, ee.Priority)
-		},
-		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.AttackPower, -ee.Priority)
-		},
-	})
-
-	return aura
-}
 
 func ApplyFixedShoutAura(char *Character, aura *Aura, category string) {
 	aura.ApplyOnInit(func(aura *Aura, sim *Simulation) {

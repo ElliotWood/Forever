@@ -3,7 +3,10 @@
 package core
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // Blood Pact - https://www.wowhead.com/forever/spell=11767
@@ -13,7 +16,27 @@ import (
 // func CommandingShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // commanding_shout, KindStatFlat: hand-written constructor still present
 
 // Battle Shout - https://www.wowhead.com/forever/spell=25289
-// func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // battle_shout, KindStatFlat: hand-written constructor still present
+var BattleShoutCategory = "BattleShout"
+
+func BattleShoutValue(talentPoints int32) float64 {
+	return 139.0
+}
+func BattleShoutDuration(talentPoints int32) time.Duration {
+	return 180000 * time.Millisecond
+}
+func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:      "Battle Shout (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 25289}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   BattleShoutDuration(talentPoints),
+		Category:   BattleShoutCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.AttackPower, BattleShoutValue(talentPoints), false},
+		},
+	})
+}
 
 // func BsSolarianSapphireAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // bs_solarian_sapphire, KindAbsent: second state of the Battle Shout quadstate input; item 30446 has no Item row.
 
@@ -167,4 +190,7 @@ import (
 // func PowerInfusionsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // power_infusions, KindExternalCD: hand-written apply block still present
 
 func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
+	if party.BattleShout {
+		driveBattleShout(char, party.BattleShout)
+	}
 }

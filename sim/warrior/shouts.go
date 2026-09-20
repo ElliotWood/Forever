@@ -53,26 +53,17 @@ func (warrior *Warrior) MakeShoutSpellHelper(config ShoutHelperConfig) *core.Spe
 	})
 }
 
-var battleShoutRank = spellData.BattleShout.HighestRank()
+var battleShoutRank = spellData.BattleShout.BySpellID(25289)
 
 // TODO: Manual review needed -- this was modelled during the Forever port, not carried
 // over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerShouts() {
-	// TODO: Forever drops Commanding Presence. Neutral multiplier until we know whether
-	// the shout scaling moved to another talent.
-	commandingPresenceMultiplier := 1.0
-
 	warrior.registerDemoralizingShout()
 
 	battleShoutAuras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
-		aura := core.BattleShoutAura(
-			warrior.GetCharacter(),
-			warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone,
-			warrior.Talents.BoomingVoice,
-			commandingPresenceMultiplier,
-			warrior.HasBsSolarianSapphire,
-			warrior.HasBsT2,
-		)
+		// Booming Voice modifies the radius only, so the generated aura ignores the
+		// points; they are passed for signature uniformity.
+		aura := core.BattleShoutAura(unit, warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone, warrior.Talents.BoomingVoice)
 		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
 		return aura
 	})
@@ -82,9 +73,9 @@ func (warrior *Warrior) registerShouts() {
 		RageCost:    battleShoutRank.Cost,
 		SpellMask:   SpellMaskBattleShout,
 		ThreatBonus: 69,
-		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
+		ExtraCastCondition: func(_ *core.Simulation, _ *core.Unit) bool {
 			aura := battleShoutAuras.Get(&warrior.Unit)
-			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= core.GetBattleShoutValue(warrior.Talents.BoomingVoice, commandingPresenceMultiplier, warrior.HasBsSolarianSapphire, warrior.HasBsT2, sim.CurrentTime < 0)
+			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= core.BattleShoutValue(warrior.Talents.BoomingVoice)
 		},
 		AllyAuras: battleShoutAuras,
 	})

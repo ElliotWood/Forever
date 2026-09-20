@@ -88,10 +88,12 @@ type GeneratedBuff struct {
 // The aura a generated buff registers on the player. Tag -1 is the external
 // caster's copy, which the character build phase has to see so that stat
 // dependencies are computed with it; tag 0 is the player's own and is applied
-// during the fight.
+// during the fight. The aura's Tag is the category name, so that a driver
+// handed the external copy can find the player's own among the unit's auras.
 func newGeneratedStatAura(unit *Unit, config GeneratedBuff) *Aura {
 	auraConfig := Aura{
 		Label:      config.Label,
+		Tag:        config.Category,
 		ActionID:   config.ActionID,
 		Duration:   TernaryDuration(config.Duration > 0, config.Duration, NeverExpires),
 		MaxStacks:  config.MaxStacks,

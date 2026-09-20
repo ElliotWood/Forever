@@ -24,7 +24,7 @@ var Manifest = []BuffSpec{
 	{
 		Field: "battle_shout", Number: 28, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "BattleShout", Name: "Battle Shout", Owner: proto.Class_ClassWarrior,
-		Category: "BattleShout", SingleAura: true,
+		Category: "BattleShout", SingleAura: true, Driver: true,
 		Stats: []proto.Stat{proto.Stat_StatAttackPower, proto.Stat_StatRangedAttackPower},
 		Notes: "Booming Voice (12321) is in warrior tree 1117 but modifies radius only (misc 6), so there is no improved state.",
 	},
