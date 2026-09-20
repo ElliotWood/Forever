@@ -79,7 +79,6 @@ const (
 	WarriorSpellLast
 	WarriorSpellsAll = WarriorSpellLast<<1 - 1
 
-	SpellMaskShouts             = SpellMaskBattleShout | SpellMaskDemoralizingShout
 	SpellMaskDirectDamageSpells = SpellMaskSweepingStrikesHit | SpellMaskSweepingStrikesNormalizedHit |
 		SpellMaskCleave | SpellMaskExecute | SpellMaskHeroicStrike | SpellMaskOverpower |
 		SpellMaskRevenge | SpellMaskSlam | SpellMaskShieldBash | SpellMaskSunderArmor |
