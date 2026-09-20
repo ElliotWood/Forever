@@ -8,7 +8,7 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var aspectOfTheHawkRank = spellData.AspectOfTheHawk.BySpellID(27044)
+var aspectOfTheHawkRank = spellData.AspectOfTheHawk.HighestRank()
 
 func (hunter *Hunter) registerAspectOfTheHawkSpell() {
 	actionID := core.ActionID{SpellID: aspectOfTheHawkRank.SpellID}

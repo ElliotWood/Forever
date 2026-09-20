@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var rendRank = spellData.Rend.BySpellID(25208)
+var rendRank = spellData.Rend.HighestRank()
 
 func (war *Warrior) registerRend() {
 	tick := rendRank.Periodic.(shared.SpellDataPeriodic)

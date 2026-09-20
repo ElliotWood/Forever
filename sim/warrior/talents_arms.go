@@ -312,7 +312,7 @@ func (war *Warrior) registerImprovedIntercept() {
 	})
 }
 
-var mortalStrikeRank = spellData.MortalStrike.BySpellID(30330)
+var mortalStrikeRank = spellData.MortalStrike.HighestRank()
 var mortalStrikeBaseDamage, _ = mortalStrikeRank.Direct.Range()
 
 func (war *Warrior) registerMortalStrike() {

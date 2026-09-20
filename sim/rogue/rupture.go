@@ -5,7 +5,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-const RuptureSpellID = 26867
+// Was the TBC rank-6 id 26867, which the level squish removed. Derived from the table so
+// it follows the data instead of naming a rank that may not exist.
+var RuptureSpellID = spellData.Rupture.HighestRank().SpellID
 
 var ruptureRank = spellData.Rupture.BySpellID(RuptureSpellID)
 

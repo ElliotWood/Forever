@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var maulRank = shared.WithSpellDataFlatThreat(spellData.Maul, 344).BySpellID(26996)
+var maulRank = shared.WithSpellDataFlatThreat(spellData.Maul, 344).HighestRank()
 
 func (druid *Druid) registerMaulSpell() {
 	// The actual Maul spell that fires on the next auto-attack swing.

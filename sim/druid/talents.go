@@ -84,16 +84,16 @@ func (druid *Druid) applyThickHide() {
 // Predatory Instincts: +2% melee critical strike damage per rank while in Cat or Bear form.
 // The client aura (33859 and its ranks) is school-masked to Physical, so it covers every
 // physical attack in form (abilities and auto attacks, Ravage included) and nothing else.
+//
+// TODO: To be implemented. Forever's regenerated aura enum no longer carries the crit damage
+// aura this talent's rank data used (A_MOD_CRIT_DAMAGE_BONUS is gone from the auto-generated
+// table), and this talent has no other effect to fall back on, so it is fully disabled.
 func (druid *Druid) applyPredatoryInstincts() {
 	if druid.Talents.PredatoryInstincts == 0 {
 		return
 	}
 
-	druid.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CritMultiplier_Pct,
-		School:     core.SpellSchoolPhysical,
-		FloatValue: spellData.PredatoryInstincts.Effect(shared.A_MOD_CRIT_DAMAGE_BONUS, 1).FractionAt(druid.Talents.PredatoryInstincts),
-	})
+	panic("To be implemented")
 }
 
 func (druid *Druid) applyMoonfury() {

@@ -218,7 +218,7 @@ func (hunter *Hunter) registerImprovedArcaneShot() {
 	})
 }
 
-var aimedShotRank = spellData.AimedShot.BySpellID(27065)
+var aimedShotRank = spellData.AimedShot.HighestRank()
 
 func (hunter *Hunter) registerAimedShot() {
 	hunter.AimedShot = hunter.RegisterRangedSpell(core.SpellConfig{

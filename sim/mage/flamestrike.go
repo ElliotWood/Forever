@@ -7,7 +7,8 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var FlameStrikeRankMap = spellData.Flamestrike.Ranks(7, 6)
+// TODO: was Ranks(7, 6); Forever's Flamestrike tops out at rank 6, so only that remains.
+var FlameStrikeRankMap = spellData.Flamestrike.Ranks(6)
 
 func (mage *Mage) registerFlamestrike(rankConfig shared.SpellData) {
 	tick := rankConfig.Periodic.(shared.SpellDataPeriodic)

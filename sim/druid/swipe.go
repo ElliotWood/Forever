@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var swipeRank = spellData.Swipe.BySpellID(26997)
+var swipeRank = spellData.Swipe.HighestRank()
 
 func (druid *Druid) registerSwipeBearSpell() {
 	druid.Swipe = druid.RegisterSpell(Bear, core.SpellConfig{

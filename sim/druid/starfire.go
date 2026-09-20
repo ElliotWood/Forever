@@ -5,7 +5,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var StarfireRankMap = spellData.Starfire.Ranks(6, 8)
+// TODO: was Ranks(6, 8); Forever's Starfire tops out at rank 7, so the max-rank entry
+// moves down rather than naming a rank the table does not hold.
+var StarfireRankMap = spellData.Starfire.Ranks(6, 7)
 
 func (druid *Druid) registerStarfireSpell(rankConfig shared.SpellData) {
 	spell := druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{

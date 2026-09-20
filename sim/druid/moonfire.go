@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var moonfireRank = spellData.Moonfire.BySpellID(26988)
+var moonfireRank = spellData.Moonfire.HighestRank()
 var moonfireTick = moonfireRank.Periodic.(shared.SpellDataPeriodic)
 
 func (druid *Druid) registerMoonfireSpell() {

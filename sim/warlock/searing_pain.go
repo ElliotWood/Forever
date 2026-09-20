@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var searingPainRank = spellData.SearingPain.BySpellID(30459)
+var searingPainRank = spellData.SearingPain.HighestRank()
 var searingPainCoeff = searingPainRank.Direct.BonusCoefficient()
 
 func (warlock *Warlock) registerSearingPain() {

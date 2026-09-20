@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (shaman *Shaman) registerShieldsSpells() {
@@ -35,53 +34,14 @@ func (shaman *Shaman) startShieldProcPeriodicAction(sim *core.Simulation) {
 	}
 }
 
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (shaman *Shaman) registerWaterShieldSpell() {
-	bonusManaReturned := 0.0
-	mp5 := 50.0
-	if shaman.CouldHaveSetBonus(ItemSetTidefuryRaiment, 4) {
-		bonusManaReturned = 56
-	}
-
-	actionID := core.ActionID{SpellID: waterShieldRank.SpellID}
-	waterShieldManaMetrics := shaman.NewManaMetrics(actionID)
-
-	shaman.WaterShieldAura = shaman.RegisterAura(core.Aura{
-		Label:     "Water Shield",
-		ActionID:  actionID,
-		Duration:  10 * time.Minute,
-		MaxStacks: 3,
-	}).AttachProcTrigger(core.ProcTrigger{
-		Name:           "Water Shield Trigger",
-		Callback:       core.CallbackOnSpellHitTaken,
-		ICD:            3500 * time.Millisecond,
-		ClassSpellMask: SpellMaskShieldSelfProc,
-		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			shaman.WaterShieldAura.RemoveStack(sim)
-			shaman.AddMana(sim, waterShieldRank.Direct.Damage(sim)+bonusManaReturned, waterShieldManaMetrics)
-		},
-	}).AttachStatBuff(stats.MP5, mp5)
-
-	shaman.RegisterSpell(core.SpellConfig{
-		ActionID:    actionID,
-		SpellSchool: core.SpellSchoolNature,
-		DefenseType: core.DefenseTypeMagic,
-		Flags:       core.SpellFlagAPL | SpellFlagInstant,
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: waterShieldRank.GCD,
-			},
-		},
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			shaman.LightningShieldAura.Deactivate(sim)
-			shaman.WaterShieldAura.Activate(sim)
-			shaman.WaterShieldAura.SetStacks(sim, 3)
-		},
-		RelatedSelfBuff: shaman.WaterShieldAura,
-	})
+	panic("To be implemented")
 }
 
-var lightningShieldRank = spellData.LightningShield.BySpellID(25472)
-var waterShieldRank = spellData.WaterShield.BySpellID(33736)
+var lightningShieldRank = spellData.LightningShield.HighestRank()
 
 func (shaman *Shaman) registerLightningShieldSpell() {
 	actionID := core.ActionID{SpellID: lightningShieldRank.SpellID}

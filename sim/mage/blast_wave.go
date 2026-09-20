@@ -6,7 +6,7 @@ import (
 
 const blastWaveCoefficient = 0.1930000037
 
-var blastWaveRank = spellData.BlastWave.BySpellID(33933)
+var blastWaveRank = spellData.BlastWave.HighestRank()
 
 func (mage *Mage) registerBlastWaveSpell() {
 	if !mage.Talents.BlastWave {

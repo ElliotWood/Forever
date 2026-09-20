@@ -208,7 +208,9 @@ func (rogue *Rogue) registerSealFate() {
 	})
 }
 
-const MutilateSpellID int32 = 34413
+// Was 34413; Forever reworked Mutilate onto an entirely new set of spell ids, so this
+// follows the highest rank the client actually ships.
+var MutilateSpellID int32 = spellData.Mutilate.HighestRank().SpellID
 
 var mutilateRank = spellData.Mutilate.BySpellID(MutilateSpellID)
 

@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var serpentStingRank = spellData.SerpentSting.BySpellID(27016)
+var serpentStingRank = spellData.SerpentSting.HighestRank()
 
 func (hunter *Hunter) registerSerpentStingSpell() {
 	serpentStingTick := serpentStingRank.Periodic.(shared.SpellDataPeriodic)

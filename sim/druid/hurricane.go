@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var hurricaneRank = spellData.Hurricane.BySpellID(27012)
+var hurricaneRank = spellData.Hurricane.HighestRank()
 
 func (druid *Druid) registerHurricaneSpell() {
 	druid.Hurricane = druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{

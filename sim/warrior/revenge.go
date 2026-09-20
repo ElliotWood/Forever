@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var revengeRank = shared.WithSpellDataFlatThreat(spellData.Revenge, 200).BySpellID(30357)
+var revengeRank = shared.WithSpellDataFlatThreat(spellData.Revenge, 200).HighestRank()
 
 func (war *Warrior) registerRevenge() {
 	actionID := core.ActionID{SpellID: revengeRank.SpellID}

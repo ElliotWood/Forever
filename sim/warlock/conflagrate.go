@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var conflagrateRank = spellData.Conflagrate.BySpellID(30912)
+var conflagrateRank = spellData.Conflagrate.HighestRank()
 var conflagrateCoeff = conflagrateRank.Direct.BonusCoefficient()
 
 func (warlock *Warlock) registerConflagrate() {

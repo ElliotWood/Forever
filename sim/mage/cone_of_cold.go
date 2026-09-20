@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var coneOfColdRank = spellData.ConeOfCold.BySpellID(27087)
+var coneOfColdRank = spellData.ConeOfCold.HighestRank()
 
 func (mage *Mage) registerConeOfColdSpell() {
 

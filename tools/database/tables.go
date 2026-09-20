@@ -1216,6 +1216,7 @@ type traitTab struct {
 	ID         int
 	ClassMask  int
 	OrderIndex int
+	Name       string
 }
 
 // traitGridPos is a node's place in the picker grid: which tab it belongs to
@@ -1461,18 +1462,24 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 		return nil, fmt.Errorf("error loading trait edges: %w", err)
 	}
 
-	tabs, err := LoadRows(dbHelper.db, `SELECT ID, ClassMask, OrderIndex FROM TalentTab ORDER BY ClassMask, OrderIndex`,
+	tabs, err := LoadRows(dbHelper.db, `SELECT ID, ClassMask, OrderIndex, Name_lang FROM TalentTab ORDER BY ClassMask, OrderIndex`,
 		func(rows *sql.Rows) (traitTab, error) {
 			var t traitTab
-			err := rows.Scan(&t.ID, &t.ClassMask, &t.OrderIndex)
+			err := rows.Scan(&t.ID, &t.ClassMask, &t.OrderIndex, &t.Name)
 			return t, err
 		})
 	if err != nil {
 		return nil, fmt.Errorf("error loading talent tabs: %w", err)
 	}
 	tabBackground := map[[2]int]int{}
+	// TalentTab.Name_lang is the label the talent frame shows ("Elemental", "Shadow").
+	// SkillLine.DisplayName_lang, which the block's majority vote yields, is the skill
+	// line behind it ("Elemental Combat", "Shadow Magic"). Prefer the frame label and
+	// fall back to the skill line where no tab row matches.
+	tabLabel := map[[2]int]string{}
 	for _, t := range tabs {
 		tabBackground[[2]int{t.ClassMask, t.OrderIndex}] = t.ID
+		tabLabel[[2]int{t.ClassMask, t.OrderIndex}] = t.Name
 	}
 
 	// One node can point at several entries (a choice node). Keep the lowest
@@ -1666,7 +1673,7 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 				ColumnIndex:    pos.Col,
 				ClassMask:      classMask,
 				SpellRank:      string(spellIDs),
-				TabName:        tabNames[pos.TabIdx],
+				TabName:        tabDisplayName(tabLabel, classMask, pos.TabIdx, tabNames[pos.TabIdx]),
 				BackgroundFile: strconv.Itoa(tabBackground[[2]int{classMask, pos.TabIdx}]),
 			}
 			if prereq, ok := prereqOf[node.NodeID]; ok {
@@ -2253,4 +2260,13 @@ func LoadItemUpgradePath(dbHelper *DBHelper) (upgradePath map[int][]int, err err
 	}
 	fmt.Println("Loaded Upgrade Path", len(upgradePath))
 	return upgradePath, nil
+}
+
+// tabDisplayName prefers the talent frame's own label for a tree, falling back to the
+// skill-line name derived from the block's spells when no TalentTab row matches.
+func tabDisplayName(labels map[[2]int]string, classMask, tabIdx int, fallback string) string {
+	if name, ok := labels[[2]int{classMask, tabIdx}]; ok && name != "" {
+		return name
+	}
+	return fallback
 }

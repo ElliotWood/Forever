@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var shadowBoltRank = spellData.ShadowBolt.BySpellID(27209)
+var shadowBoltRank = spellData.ShadowBolt.HighestRank()
 var shadowBoltCoeff = shadowBoltRank.Direct.BonusCoefficient()
 
 func (warlock *Warlock) registerShadowBolt() {

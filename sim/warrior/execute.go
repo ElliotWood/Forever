@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var executeRank = spellData.Execute.BySpellID(25236)
+var executeRank = spellData.Execute.HighestRank()
 
 func (war *Warrior) registerExecute() {
 

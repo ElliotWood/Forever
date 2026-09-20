@@ -12,8 +12,6 @@ func (paladin *Paladin) getAvengersShieldTimer() *core.Timer {
 	return paladin.avengersShieldTimer
 }
 
-var AvengersShieldRankMap = spellData.AvengersShield
-
 // Avenger's Shield (Talent)
 // https://www.wowhead.com/forever/spell=31935
 //
@@ -22,50 +20,9 @@ var AvengersShieldRankMap = spellData.AvengersShield
 //
 // TODO: uncalled -- Forever drops the Avenger's Shield talent; re-gate before wiring
 // back into registerTalentSpells.
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (paladin *Paladin) registerAvengersShield(rankConfig shared.SpellData) {
-	paladin.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: rankConfig.SpellID},
-		SpellSchool:    core.SpellSchoolHoly,
-		DefenseType:    core.DefenseTypeRanged,
-		ProcMask:       core.ProcMaskRangedSpecial,
-		Flags:          core.SpellFlagAPL | core.SpellFlagBinary,
-		ClassSpellMask: SpellMaskAvengersShield,
-		Rank:           rankConfig.Rank,
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		MaxRange:     rankConfig.MaxRange,
-		MissileSpeed: rankConfig.MissileSpeed,
-
-		ManaCost: core.ManaCostOptions{
-			FlatCost: rankConfig.Cost,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD:      rankConfig.GCD,
-				CastTime: rankConfig.CastTime,
-			},
-			CD: core.Cooldown{
-				Timer:    paladin.getAvengersShieldTimer(),
-				Duration: rankConfig.Cooldown,
-			},
-			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
-				castTime := paladin.ApplyCastSpeedForSpell(cast.CastTime, spell)
-				paladin.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime+castTime)
-			},
-		},
-
-		BonusCoefficient: rankConfig.Direct.BonusCoefficient(),
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			damage := rankConfig.Direct.Damage(sim)
-			results := spell.CalcCleaveDamage(sim, target, 3, damage, spell.OutcomeRangedHitAndCrit)
-			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
-				for _, result := range results {
-					spell.DealDamage(sim, result)
-				}
-			})
-		},
-	})
+	panic("To be implemented")
 }

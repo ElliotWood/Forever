@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var ravageRank = spellData.Ravage.BySpellID(27005)
+var ravageRank = spellData.Ravage.HighestRank()
 
 func (druid *Druid) registerRavageSpell() {
 	// 385% weapon damage, which the client states as E_WEAPON_PERCENT_DAMAGE = 384 on spell 27005 -

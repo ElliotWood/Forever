@@ -7,9 +7,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var earthShockRank = spellData.EarthShock.BySpellID(25454)
-var flameShockRank = spellData.FlameShock.BySpellID(25457)
-var frostShockRank = spellData.FrostShock.BySpellID(25464)
+var earthShockRank = spellData.EarthShock.HighestRank()
+var flameShockRank = spellData.FlameShock.HighestRank()
+var frostShockRank = spellData.FrostShock.HighestRank()
 
 // Shared logic for all shocks.
 func (shaman *Shaman) newShockSpellConfig(rank shared.SpellData, spellSchool core.SpellSchool, shockTimer *core.Timer) core.SpellConfig {

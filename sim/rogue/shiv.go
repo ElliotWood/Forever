@@ -1,68 +1,10 @@
 package rogue
 
-import (
-	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/proto"
-)
-
-var shivRank = spellData.Shiv.BySpellID(5938)
-
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (rogue *Rogue) registerShivSpell() {
-	shivCostMod := rogue.AddDynamicMod(core.SpellModConfig{
-		Kind:      core.SpellMod_PowerCost_Flat,
-		ClassMask: RogueSpellShiv,
-		IntValue:  rogue.getShivCostModifier(),
-	})
-	shivCostMod.Activate()
-
-	rogue.Shiv = rogue.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: shivRank.SpellID},
-		SpellSchool:    shivRank.SpellSchool,
-		DefenseType:    shivRank.DefenseType,
-		ProcMask:       core.ProcMaskMeleeOHSpecial,
-		Flags:          core.SpellFlagCannotBeDodged | core.SpellFlagMeleeMetrics | SpellFlagBuilder | core.SpellFlagAPL,
-		ClassSpellMask: RogueSpellShiv,
-
-		EnergyCost: core.EnergyCostOptions{
-			Cost: shivRank.Cost,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: shivRank.GCD,
-			},
-			IgnoreHaste: true,
-		},
-
-		DamageMultiplier:         1,
-		DamageMultiplierAdditive: 1,
-		ThreatMultiplier:         1,
-
-		BonusCoefficient: 1,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			rogue.BreakStealth(sim)
-			baseDamage := spell.Unit.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialNoParry)
-
-			if result.Landed() {
-				rogue.AddComboPoints(sim, 1, spell.ComboPointMetrics())
-
-				switch rogue.Consumables.OhImbueId {
-				case deadlyImbueID:
-					rogue.ShivDeadlyPoison.Cast(sim, target)
-				case instantImbueID:
-					rogue.ShivInstantPoison.Cast(sim, target)
-				case woundImbueID:
-					rogue.ShivWoundPoison.Cast(sim, target)
-				}
-			}
-		},
-	})
-
-	rogue.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(s *core.Simulation, is proto.ItemSlot) {
-		shivCostMod.UpdateIntValue(rogue.getShivCostModifier())
-		shivCostMod.Activate()
-	})
+	panic("To be implemented")
 }
 
 func (rogue *Rogue) getShivCostModifier() int32 {

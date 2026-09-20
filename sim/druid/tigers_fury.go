@@ -1,50 +1,8 @@
 package druid
 
-import (
-	"time"
-
-	"github.com/wowsims/forever/sim/common/shared"
-	"github.com/wowsims/forever/sim/core"
-)
-
-var tigersFuryRank = spellData.TigersFury.BySpellID(9846)
-
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (druid *Druid) registerTigersFurySpell() {
-	weaponDamageBonus := shared.SpellDataMin(tigersFuryRank.Direct)
-
-	druid.TigersFuryAura = druid.RegisterAura(core.Aura{
-		Label:    "Tiger's Fury",
-		ActionID: core.ActionID{SpellID: tigersFuryRank.SpellID},
-		Duration: time.Second * 6,
-
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			druid.AutoAttacks.MH().BaseDamageMin += weaponDamageBonus
-			druid.AutoAttacks.MH().BaseDamageMax += weaponDamageBonus
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			druid.AutoAttacks.MH().BaseDamageMin -= weaponDamageBonus
-			druid.AutoAttacks.MH().BaseDamageMax -= weaponDamageBonus
-		},
-	})
-
-	druid.TigersFury = druid.RegisterSpell(Cat, core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: tigersFuryRank.SpellID},
-		ClassSpellMask: DruidSpellTigersFury,
-		Flags:          core.SpellFlagAPL,
-
-		EnergyCost: core.EnergyCostOptions{
-			Cost: tigersFuryRank.Cost,
-		},
-		Cast: core.CastConfig{
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    druid.NewTimer(),
-				Duration: tigersFuryRank.Cooldown,
-			},
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			druid.TigersFuryAura.Activate(sim)
-		},
-	})
+	panic("To be implemented")
 }

@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var shredRank = spellData.Shred.BySpellID(27002)
+var shredRank = spellData.Shred.HighestRank()
 
 func (druid *Druid) registerShredSpell() {
 	druid.Shred = druid.RegisterSpell(Cat, core.SpellConfig{

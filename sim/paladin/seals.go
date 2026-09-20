@@ -7,7 +7,6 @@ import (
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 type proc struct {
@@ -78,7 +77,8 @@ var SealOfRighteousnessRanks = sealRankMap{
 	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 6, proc{spellID: 25736, value: spellData.SealOfRighteousness.ByRank(6).Effects[0].Value, coeff: 0.1}),
 	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 7, proc{spellID: 25735, value: spellData.SealOfRighteousness.ByRank(7).Effects[0].Value, coeff: 0.1}),
 	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 8, proc{spellID: 25713, value: spellData.SealOfRighteousness.ByRank(8).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 9, proc{spellID: 27156, value: spellData.SealOfRighteousness.ByRank(9).Effects[0].Value, coeff: 0.1}),
+	// TODO: Forever drops Seal of Righteousness rank 9; the row is removed rather than
+	// indexing a rank the table does not hold.
 }
 
 var SealOfLightRanks = sealRankMap{
@@ -89,33 +89,16 @@ var SealOfLightRanks = sealRankMap{
 	sealWithJudgement(spellData.SealOfLight, spellData.JudgementOfLight, 2, proc{spellID: 20333, value: 53, coeff: 0.0}, judge{minDamage: 34, maxDamage: 34, coeff: 0.0}),
 	sealWithJudgement(spellData.SealOfLight, spellData.JudgementOfLight, 3, proc{spellID: 20334, value: 76, coeff: 0.0}, judge{minDamage: 49, maxDamage: 49, coeff: 0.0}),
 	sealWithJudgement(spellData.SealOfLight, spellData.JudgementOfLight, 4, proc{spellID: 20340, value: 94, coeff: 0.0}, judge{minDamage: 61, maxDamage: 61, coeff: 0.0}),
-	sealWithJudgement(spellData.SealOfLight, spellData.JudgementOfLight, 5, proc{spellID: 27161, value: 133, coeff: 0.0}, judge{minDamage: 95, maxDamage: 95, coeff: 0.0}),
+	// TODO: Forever drops Seal of Light rank 5; the row is removed rather than indexing a rank
+	// neither the seal nor its judgement table holds.
 }
 
 var SealOfWisdomRanks = sealRankMap{
 	sealWithJudgement(spellData.SealOfWisdom, spellData.JudgementOfWisdom, 1, proc{spellID: 20168, value: 50, coeff: 0.0}, judge{minDamage: 33, maxDamage: 33, coeff: 0.0}),
 	sealWithJudgement(spellData.SealOfWisdom, spellData.JudgementOfWisdom, 2, proc{spellID: 20350, value: 71, coeff: 0.0}, judge{minDamage: 46, maxDamage: 46, coeff: 0.0}),
 	sealWithJudgement(spellData.SealOfWisdom, spellData.JudgementOfWisdom, 3, proc{spellID: 20351, value: 90, coeff: 0.0}, judge{minDamage: 59, maxDamage: 59, coeff: 0.0}),
-	sealWithJudgement(spellData.SealOfWisdom, spellData.JudgementOfWisdom, 4, proc{spellID: 27167, value: 121, coeff: 0.0}, judge{minDamage: 74, maxDamage: 74, coeff: 0.0}),
-}
-
-var SealOfJusticeRanks = sealRankMap{
-	// The judgement stuns and deals no damage, which is why both ranks are zero where the client gives
-	// rank 2 a 7. The client states no mana cost for either rank; the sim charges 10, so that stays.
-	sealMana(sealWithJudgement(spellData.SealOfJustice, spellData.JudgementOfJustice, 1, proc{spellID: 20170}, judge{}), 10),
-	sealMana(sealWithJudgement(spellData.SealOfJustice, spellData.JudgementOfJustice, 2, proc{spellID: 20170}, judge{}), 10),
-}
-
-var SealOfTheCrusaderRanks = sealRankMap{
-	// The attack power is the effect's high end, not its low one: rank 1's base is 39.2 and the game
-	// buffs for 41. Exact on all seven ranks, and so is the judgement damage.
-	sealOf(spellData.SealOfTheCrusader, spellData.JudgementOfTheCrusader, 1, proc{spellID: 21082, value: spellData.SealOfTheCrusader.ByRank(1).Effects[0].High()}),
-	sealOf(spellData.SealOfTheCrusader, spellData.JudgementOfTheCrusader, 2, proc{spellID: 21082, value: spellData.SealOfTheCrusader.ByRank(2).Effects[0].High()}),
-	sealOf(spellData.SealOfTheCrusader, spellData.JudgementOfTheCrusader, 3, proc{spellID: 21082, value: spellData.SealOfTheCrusader.ByRank(3).Effects[0].High()}),
-	sealOf(spellData.SealOfTheCrusader, spellData.JudgementOfTheCrusader, 4, proc{spellID: 21082, value: spellData.SealOfTheCrusader.ByRank(4).Effects[0].High()}),
-	sealOf(spellData.SealOfTheCrusader, spellData.JudgementOfTheCrusader, 5, proc{spellID: 21082, value: spellData.SealOfTheCrusader.ByRank(5).Effects[0].High()}),
-	sealOf(spellData.SealOfTheCrusader, spellData.JudgementOfTheCrusader, 6, proc{spellID: 21082, value: spellData.SealOfTheCrusader.ByRank(6).Effects[0].High()}),
-	sealOf(spellData.SealOfTheCrusader, spellData.JudgementOfTheCrusader, 7, proc{spellID: 21082, value: spellData.SealOfTheCrusader.ByRank(7).Effects[0].High()}),
+	// TODO: Forever drops Seal of Wisdom rank 4; the row is removed rather than indexing a rank
+	// neither the seal nor its judgement table holds.
 }
 
 var SealOfCommandRanks = sealRankMap{
@@ -126,15 +109,16 @@ var SealOfCommandRanks = sealRankMap{
 	sealOf(spellData.SealOfCommand, spellData.JudgementOfCommand, 3, proc{spellID: 20424, value: 0.70, coeff: 0.29}),
 	sealOf(spellData.SealOfCommand, spellData.JudgementOfCommand, 4, proc{spellID: 20424, value: 0.70, coeff: 0.29}),
 	sealOf(spellData.SealOfCommand, spellData.JudgementOfCommand, 5, proc{spellID: 20424, value: 0.70, coeff: 0.29}),
-	sealOf(spellData.SealOfCommand, spellData.JudgementOfCommand, 6, proc{spellID: 20424, value: 0.70, coeff: 0.29}),
+	// TODO: Forever drops Seal of Command rank 6; the row is removed rather than indexing a rank
+	// neither the seal nor its judgement table holds.
 }
 
 func (paladin *Paladin) registerSeals() {
 	SealOfRighteousnessRanks.RegisterAll(paladin.registerSealOfRighteousness)
 	SealOfLightRanks.RegisterAll(paladin.registerSealOfLight)
 	SealOfWisdomRanks.RegisterAll(paladin.registerSealOfWisdom)
-	SealOfJusticeRanks.RegisterAll(paladin.registerSealOfJustice)
-	SealOfTheCrusaderRanks.RegisterAll(paladin.registerSealOfTheCrusader)
+	paladin.registerSealOfJustice(seal{})
+	paladin.registerSealOfTheCrusader(seal{})
 	paladin.registerSealOfBlood()
 	paladin.registerSealOfVengeance()
 }
@@ -511,80 +495,12 @@ func (paladin *Paladin) registerSealOfWisdom(seal seal) {
 //
 // Unleashing this Seal's energy will judge an enemy for 20 sec, preventing
 // them from fleeing.
+//
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (paladin *Paladin) registerSealOfJustice(seal seal) {
-	registerJoJDebuff := func(target *core.Unit) *core.Aura {
-		return target.GetOrRegisterAura(core.Aura{
-			Label:    "Judgement of Justice",
-			ActionID: core.ActionID{SpellID: seal.judge.spellID},
-			Tag:      JudgementAuraTag,
-			Duration: time.Second * 20,
-			OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-				if spell.ProcMask.Matches(core.ProcMaskMeleeWhiteHit) {
-					aura.Refresh(sim)
-				}
-			},
-		})
-	}
-
-	judgementOfJusticeAuras := paladin.NewEnemyAuraArray(registerJoJDebuff)
-	paladin.JudgementAuras = append(paladin.JudgementAuras, judgementOfJusticeAuras)
-
-	judgeSpell := paladin.RegisterSpell(core.SpellConfig{
-		ActionID:         core.ActionID{SpellID: seal.judge.spellID},
-		SpellSchool:      core.SpellSchoolHoly,
-		DefenseType:      core.DefenseTypeMagic,
-		ProcMask:         core.ProcMaskEmpty,
-		Flags:            core.SpellFlagMeleeMetrics | core.SpellFlagBinary,
-		ClassSpellMask:   SpellMaskJudgementOfJustice,
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
-			judgementOfJusticeAuras.Get(target).Activate(sim)
-		},
-	})
-	procSpell := paladin.RegisterSpell(core.SpellConfig{
-		ActionID:         core.ActionID{SpellID: seal.proc.spellID},
-		ClassSpellMask:   SpellMaskSealOfJustice,
-		SpellSchool:      core.SpellSchoolHoly,
-		DefenseType:      core.DefenseTypeMagic,
-		ProcMask:         core.ProcMaskEmpty,
-		Flags:            core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagProc, // 20170 lacks Not a Proc.
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
-		},
-	})
-	aura := paladin.MakeProcTriggerAura(core.ProcTrigger{
-		Name:            "Seal of Justice" + paladin.Label + " " + seal.GetRankLabel(),
-		ActionID:        core.ActionID{SpellID: seal.spellID},
-		MetricsActionID: core.ActionID{SpellID: seal.spellID},
-		Duration:        time.Second * 30,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			procSpell.Cast(sim, result.Target)
-		},
-	})
-	paladin.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: seal.spellID},
-		ClassSpellMask: SpellMaskSealOfJustice,
-		SpellSchool:    core.SpellSchoolHoly,
-		DefenseType:    core.DefenseTypeMagic,
-		ProcMask:       core.ProcMaskEmpty,
-		Flags:          core.SpellFlagAPL,
-		Rank:           seal.rank,
-		ManaCost: core.ManaCostOptions{
-			BaseCostPercent: seal.manaCost,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{GCD: core.GCDDefault},
-		},
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			paladin.applySeal(aura, spell, judgeSpell, sim)
-		},
-	})
+	panic("To be implemented")
 }
 
 // Seal of the Crusader
@@ -597,72 +513,12 @@ func (paladin *Paladin) registerSealOfJustice(seal seal) {
 //
 // Unleashing this Seal's energy will judge an enemy for 20 sec, increasing
 // Holy damage taken from all sources.
+//
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
-	percentBonus := core.Ternary(paladin.CouldHaveSetBonus(ItemSetJusticarBattlegear, 2), 1.15, 1.0)
-	flatBonus := 0.0
-	if paladin.Ranged().ID == 23203 { //https://www.wowhead.com/forever/item=23203/libram-of-fervor
-		flatBonus += 33.0
-	} else if paladin.Ranged().ID == 27949 || paladin.Ranged().ID == 27983 { //https://www.wowhead.com/forever/item=27949/libram-of-zeal
-		flatBonus += 47.0
-	}
-
-	judgementOfTheCrusaderAuras := paladin.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		// TODO: Forever drops Improved Seal of the Crusader; untalented (0 points) until
-		// we know whether the effect moved onto another talent.
-		return core.ImprovedSealOfTheCrusaderAura(target, 1, 0, flatBonus, percentBonus)
-	})
-
-	paladin.JudgementAuras = append(paladin.JudgementAuras, judgementOfTheCrusaderAuras)
-
-	judgeSpell := paladin.RegisterSpell(core.SpellConfig{
-		ActionID:         core.ActionID{SpellID: seal.judge.spellID},
-		SpellSchool:      core.SpellSchoolHoly,
-		DefenseType:      core.DefenseTypeMagic,
-		ProcMask:         core.ProcMaskEmpty,
-		Flags:            core.SpellFlagMeleeMetrics | core.SpellFlagBinary,
-		ClassSpellMask:   SpellMaskJudgementOfTheCrusader,
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
-			judgementOfTheCrusaderAuras.Get(target).Activate(sim)
-		},
-	})
-
-	aura := paladin.RegisterAura(core.Aura{
-		Label:    "Seal of the Crusader" + paladin.Label + " " + seal.GetRankLabel(),
-		ActionID: core.ActionID{SpellID: seal.spellID},
-		Duration: time.Second * 30,
-	}).
-		AttachMultiplyMeleeSpeed(1.4).
-		AttachSpellMod(core.SpellModConfig{
-			ProcMask:   core.ProcMaskMeleeMHAuto,
-			Kind:       core.SpellMod_DamageDone_Flat,
-			FloatValue: -0.4,
-		}).
-		AttachStatBuff(stats.AttackPower, seal.proc.value)
-
-	paladin.RegisterSpell(core.SpellConfig{
-		ActionID:         aura.ActionID,
-		ClassSpellMask:   SpellMaskSealOfTheCrusader,
-		SpellSchool:      core.SpellSchoolHoly,
-		DefenseType:      core.DefenseTypeMagic,
-		ProcMask:         core.ProcMaskEmpty,
-		Flags:            core.SpellFlagAPL,
-		Rank:             seal.rank,
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		ManaCost: core.ManaCostOptions{
-			FlatCost: int32(seal.manaCost),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{GCD: core.GCDDefault},
-		},
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			paladin.applySeal(aura, spell, judgeSpell, sim)
-		},
-		RelatedSelfBuff: aura,
-	})
+	panic("To be implemented")
 }
 
 // Seal of Blood

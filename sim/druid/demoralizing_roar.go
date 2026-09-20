@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var demoralizingRoarRank = spellData.DemoralizingRoar.BySpellID(26998)
+var demoralizingRoarRank = spellData.DemoralizingRoar.HighestRank()
 
 func (druid *Druid) registerDemoralizingRoarSpell() {
 	druid.registerDemoralizingRoarAura()

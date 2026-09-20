@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var fireballRank = spellData.Fireball.BySpellID(27070)
+var fireballRank = spellData.Fireball.HighestRank()
 
 func (mage *Mage) registerFireballSpell() {
 	fireballTick := fireballRank.Periodic.(shared.SpellDataPeriodic)

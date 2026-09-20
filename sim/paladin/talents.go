@@ -16,7 +16,7 @@ func (paladin *Paladin) registerTalentSpells() {
 		paladin.registerDivineFavor()
 	}
 	if paladin.Talents.HolyShock {
-		HolyShockRankMap.RegisterAll(paladin.registerHolyShock)
+		paladin.registerHolyShock(shared.SpellData{})
 	}
 	// Divine Illumination: Forever drops the talent; see registerDivineIllumination
 

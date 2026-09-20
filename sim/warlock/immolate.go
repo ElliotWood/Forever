@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var immolateRank = spellData.Immolate.BySpellID(27215)
+var immolateRank = spellData.Immolate.HighestRank()
 var immolateTick = immolateRank.Periodic.(shared.SpellDataPeriodic)
 var immolateCoeff = immolateRank.Direct.BonusCoefficient()
 var immolateDotCoeff = immolateTick.Coef

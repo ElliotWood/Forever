@@ -3,7 +3,6 @@ package shaman
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -134,8 +133,10 @@ func (shaman *Shaman) fireElementalBaseStats() stats.Stats {
 
 func (shaman *Shaman) fireElementalStatInheritance() core.PetStatInheritance {
 	return func(ownerStats stats.Stats) stats.Stats {
-		power := ownerStats[stats.SpellDamage] + ownerStats[stats.NatureDamage] -
-			ownerStats[stats.AttackPower]*spellData.MentalQuickness.Effect(shared.A_MOD_SPELL_DAMAGE_OF_ATTACK_POWER, 126).FractionAt(shaman.Talents.MentalQuickness) // remove Spell Damage that comes from Mental Quickness
+		// The Mental Quickness AP-to-SpellDamage conversion this used to subtract back out is itself
+		// disabled in applyMentalQuickness (Forever's regenerated aura enum dropped
+		// A_MOD_SPELL_DAMAGE_OF_ATTACK_POWER), so ownerStats[SpellDamage] no longer carries it either.
+		power := ownerStats[stats.SpellDamage] + ownerStats[stats.NatureDamage]
 
 		return stats.Stats{
 			stats.Stamina:     ownerStats[stats.Stamina] * 0.30,

@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var ambushRank = spellData.Ambush.BySpellID(27441)
+var ambushRank = spellData.Ambush.HighestRank()
 
 func (rogue *Rogue) registerAmbushSpell() {
 	baseDamage, _ := ambushRank.Direct.Range()

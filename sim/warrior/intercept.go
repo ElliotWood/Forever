@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var interceptRank = spellData.Intercept.BySpellID(25275)
+var interceptRank = spellData.Intercept.HighestRank()
 
 func (war *Warrior) registerIntercept() {
 	actionID := core.ActionID{SpellID: interceptRank.SpellID}

@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var eviscerateRank = spellData.Eviscerate.BySpellID(26865)
+var eviscerateRank = spellData.Eviscerate.HighestRank()
 
 func (rogue *Rogue) registerEviscerate() {
 	flatDamage, flatDamageMax := eviscerateRank.Direct.Range()

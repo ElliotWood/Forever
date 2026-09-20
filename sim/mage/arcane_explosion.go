@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var arcaneExplosionRank = spellData.ArcaneExplosion.BySpellID(27082)
+var arcaneExplosionRank = spellData.ArcaneExplosion.HighestRank()
 
 func (mage *Mage) registerArcaneExplosionSpell() {
 	arcaneExplosionCoefficient := 0.21400000155

@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var corruptionRank = spellData.Corruption.BySpellID(27216)
+var corruptionRank = spellData.Corruption.HighestRank()
 var corruptionTick = corruptionRank.Periodic.(shared.SpellDataPeriodic)
 var corruptionCoeff = corruptionTick.Coef
 

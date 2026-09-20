@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var deathCoilRank = spellData.DeathCoil.BySpellID(27223)
+var deathCoilRank = spellData.DeathCoil.HighestRank()
 
 func (warlock *Warlock) registerDeathCoil() {
 

@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var insectSwarmRank = spellData.InsectSwarm.BySpellID(27013)
+var insectSwarmRank = spellData.InsectSwarm.HighestRank()
 var insectSwarmTick = insectSwarmRank.Periodic.(shared.SpellDataPeriodic)
 
 func (druid *Druid) registerInsectSwarmSpell() {

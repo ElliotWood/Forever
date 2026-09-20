@@ -3,7 +3,6 @@ package shaman
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -122,10 +121,11 @@ func (shaman *Shaman) applyMentalQuickness() {
 		FloatValue: -0.02 * float64(shaman.Talents.MentalQuickness),
 		SpellFlag:  SpellFlagInstant,
 	})
-	core.MakePermanent(shaman.RegisterAura(core.Aura{
-		Label:      "Mental Quickness",
-		BuildPhase: core.CharacterBuildPhaseTalents,
-	})).AttachStatDependency(shaman.NewDynamicStatDependency(stats.AttackPower, stats.SpellDamage, spellData.MentalQuickness.Effect(shared.A_MOD_SPELL_DAMAGE_OF_ATTACK_POWER, 126).FractionAt(shaman.Talents.MentalQuickness)))
+
+	// TODO: To be implemented. Forever's regenerated aura enum no longer carries the
+	// attack-power-to-spell-damage aura this talent's rank data used
+	// (A_MOD_SPELL_DAMAGE_OF_ATTACK_POWER is gone from the auto-generated table), so the
+	// spell damage conversion below is not applied.
 }
 
 func (shaman *Shaman) applyShamanisticFocus() {

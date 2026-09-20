@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var exposeArmorRank = spellData.ExposeArmor.BySpellID(26866)
+var exposeArmorRank = spellData.ExposeArmor.HighestRank()
 
 func (rogue *Rogue) registerExposeArmorSpell() {
 	rogue.ExposeArmorAuras = rogue.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {

@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var siphonLifeRank = spellData.SiphonLife.BySpellID(30911)
+var siphonLifeRank = spellData.SiphonLife.HighestRank()
 var siphonLifeTick = siphonLifeRank.Periodic.(shared.SpellDataPeriodic)
 var siphonLifeCoeff = siphonLifeTick.Coef
 

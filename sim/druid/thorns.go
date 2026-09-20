@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var thornsRank = spellData.Thorns.BySpellID(26992)
+var thornsRank = spellData.Thorns.HighestRank()
 
 // Self-cast Thorns (rank 7). Reuses the core raid-buff aura, passing the
 // druid's own Brambles talent points. If the Thorns raid buff is selected it

@@ -4,9 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var heroicStrikeRank = spellData.HeroicStrike.BySpellID(29707)
+var heroicStrikeRank = spellData.HeroicStrike.HighestRank()
 var heroicStrikeBaseDamage, _ = heroicStrikeRank.Direct.Range()
-var cleaveRank = spellData.Cleave.BySpellID(25231)
+var cleaveRank = spellData.Cleave.HighestRank()
 
 func (war *Warrior) registerHeroicStrike() {
 	spell := war.RegisterSpell(core.SpellConfig{

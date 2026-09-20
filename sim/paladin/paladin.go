@@ -1,6 +1,7 @@
 package paladin
 
 import (
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -68,7 +69,7 @@ func (paladin *Paladin) registerSpells() {
 	ConsecrationRankMap.RegisterAll(paladin.registerConsecration)
 	HammerOfWrathRankMap.RegisterAll(paladin.registerHammerOfWrath)
 	HolyWrathRankMap.RegisterAll(paladin.registerHolyWrath)
-	ExorcismRankMap.RegisterAll(paladin.registerExorcism)
+	paladin.registerExorcism(shared.SpellData{})
 	paladin.registerAvengingWrath()
 	paladin.registerRighteousFury()
 
