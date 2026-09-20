@@ -557,3 +557,16 @@ at all.
 
 **A talent curve only scales the row's first stat.** A row whose talent improves a second amount would
 need the generator extended; nothing in the manifest does today.
+
+**A party or raid flag means an external caster provides the buff.** The generated apply block builds
+the row's `isPlayer=false` copy whenever the proto field is set, so a class port that registers its own
+`isPlayer=true` copy has two copies on the character. It either stops setting the flag in
+`AddPartyBuffs`/`AddRaidBuffs`, or the row states a `Category` with `SingleAura` and the two copies bid
+against each other - the loser is deactivated, so the character sheet shows the buff once. Battle Shout
+is the worked example: both copies are worth the same, and
+`TestPlayerBattleShoutTakesTheCategoryOnATie` holds the player's own to the tie. The rows this decides
+are `thorns`, `leader_of_the_pack`, `moonkin_aura` and `trueshot_aura`: `sim/druid/druid.go`,
+`sim/druid/feralcat` and `sim/druid/feralbear` raise the party's Leader of the Pack or Moonkin Aura
+from a talent, `sim/hunter/hunter.go` raises Trueshot Aura, and the druid's own Thorns waits on the
+druid port. `thorns` and `battle_shout` carry the category; the other three do not, so their ports
+have to choose.

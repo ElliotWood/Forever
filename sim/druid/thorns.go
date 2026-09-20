@@ -5,7 +5,8 @@ var thornsRank = spellData.Thorns.HighestRank()
 // TODO: To be implemented.
 // Self-cast Thorns. The druid's own copy of the generated shield deals the
 // client's 22 nature damage; the raid buff registers the external copy before
-// Initialize runs, and the two are separate auras.
+// Initialize runs, and the two auras bid in ThornsCategory, which holds one of
+// them at a time.
 func (druid *Druid) registerThornsSpell() {
 	panic("To be implemented")
 

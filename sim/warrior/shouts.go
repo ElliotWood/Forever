@@ -53,6 +53,8 @@ func (warrior *Warrior) MakeShoutSpellHelper(config ShoutHelperConfig) *core.Spe
 	})
 }
 
+// The manifest's battle_shout row resolves to this rank too, so the warrior's own shout and the
+// party's copy state one spell.
 var battleShoutRank = spellData.BattleShout.BySpellID(25289)
 
 // TODO: Manual review needed -- this was modelled during the Forever port, not carried
