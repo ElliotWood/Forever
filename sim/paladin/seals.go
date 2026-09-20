@@ -7,11 +7,11 @@ import (
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	// "github.com/wowsims/forever/sim/core/stats" -- used only by the commented-out implementation below
 )
 
 // Package-level state the commented-out implementations used:
 // var SealOfJusticeRanks = sealRankMap{
-// var SealOfTheCrusaderRanks = sealRankMap{
 
 type proc struct {
 	spellID int32
@@ -68,6 +68,19 @@ func sealWithJudgement(seals, judges shared.SpellDataTable, rank int32, p proc, 
 	return seal{rank: rank, spellID: s.SpellID, manaCost: float64(s.Cost), proc: p, judge: j}
 }
 
+// Seal of the Crusader has no separate JudgementOfTheCrusader table - each rank's own row carries the
+// judgement's spell ID as an A_DUMMY effect (index 2), the same way every other seal's own effect 0
+// points back at its judgement.
+func sealOfTheCrusader(rank shared.SpellData) seal {
+	return seal{
+		rank:     rank.Rank,
+		spellID:  rank.SpellID,
+		manaCost: float64(rank.Cost),
+		proc:     proc{value: rank.Effect(shared.A_MOD_ATTACK_POWER, 0).High()},
+		judge:    judge{spellID: int32(rank.Effect(shared.A_DUMMY, 0).Value)},
+	}
+}
+
 var SealOfRighteousnessRanks = sealRankMap{
 	// The proc value is the seal's own effect 0, exact on all nine ranks; its coefficient is not in
 	// the client at all. The judgement damage matches the hand rows on ranks 2-9; rank 1 was a flat
@@ -105,6 +118,17 @@ var SealOfWisdomRanks = sealRankMap{
 	// neither the seal nor its judgement table holds.
 }
 
+var SealOfTheCrusaderRanks = sealRankMap{
+	// TBC shipped 7 ranks; Forever's SealOfTheCrusader table stops at 6, so there is no rank 7 row to
+	// index here.
+	sealOfTheCrusader(spellData.SealOfTheCrusader.ByRank(1)),
+	sealOfTheCrusader(spellData.SealOfTheCrusader.ByRank(2)),
+	sealOfTheCrusader(spellData.SealOfTheCrusader.ByRank(3)),
+	sealOfTheCrusader(spellData.SealOfTheCrusader.ByRank(4)),
+	sealOfTheCrusader(spellData.SealOfTheCrusader.ByRank(5)),
+	sealOfTheCrusader(spellData.SealOfTheCrusader.ByRank(6)),
+}
+
 var SealOfCommandRanks = sealRankMap{
 	// The 70 lives on proc spell 20424, which has no rank subtext and so is in no table. The
 	// judgement damage is the client's full number; registerSealOfCommandRank halves it.
@@ -122,7 +146,7 @@ func (paladin *Paladin) registerSeals() {
 	SealOfLightRanks.RegisterAll(paladin.registerSealOfLight)
 	SealOfWisdomRanks.RegisterAll(paladin.registerSealOfWisdom)
 	paladin.registerSealOfJustice(seal{})
-	paladin.registerSealOfTheCrusader(seal{})
+	SealOfTheCrusaderRanks.RegisterAll(paladin.registerSealOfTheCrusader)
 	paladin.registerSealOfBlood()
 	paladin.registerSealOfVengeance()
 }
@@ -591,15 +615,13 @@ func (paladin *Paladin) registerSealOfJustice(seal seal) {
 //
 // Unleashing this Seal's energy will judge an enemy for 20 sec, increasing
 // Holy damage taken from all sources.
-//
-// TODO: To be implemented. The Forever client DOES ship a rank ladder for this, and spellData
-// now carries it -- the family was previously dropped as ambiguous because Forever re-issues
-// the ability as a second spell per rank. The body below is the TBC implementation, awaiting
-// a port onto the recovered ladder.
+// TODO: To be implemented. Seal of the Crusader exists in Forever with six ranks (TBC had
+// seven); SealOfTheCrusaderRanks above reads the judgement spell id out of each rank's
+// A_DUMMY effect, the way every other seal in this file does. The implementation below is
+// the TBC one on that data. It stays commented until it has been reviewed.
 func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
 	// percentBonus := core.Ternary(paladin.CouldHaveSetBonus(ItemSetJusticarBattlegear, 2), 1.15, 1.0)
 	// flatBonus := 0.0
 	// if paladin.Ranged().ID == 23203 { //https://www.wowhead.com/forever/item=23203/libram-of-fervor
@@ -611,6 +633,10 @@ func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
 	// judgementOfTheCrusaderAuras := paladin.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 	// 	// TODO: Forever drops Improved Seal of the Crusader; untalented (0 points) until
 	// 	// we know whether the effect moved onto another talent.
+	// 	// TODO: core.ImprovedSealOfTheCrusaderAura hardcodes 219.0 as the TBC rank-7 holy damage
+	// 	// bonus (219 = "Max Rank Seal Of Crusader (Rank 7)" per its own comment). Forever's
+	// 	// SealOfTheCrusader table tops out at rank 6, and spellData does not state what a
+	// 	// rank-6-capped version of this aura's bonus should be, so the TBC rank-7 number stays.
 	// 	return core.ImprovedSealOfTheCrusaderAura(target, 1, 0, flatBonus, percentBonus)
 	// })
 	//

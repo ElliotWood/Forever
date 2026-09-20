@@ -2,18 +2,70 @@ package paladin
 
 import (
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	// "github.com/wowsims/forever/sim/core/proto" -- used only by the commented-out implementation below
 )
+
+var ExorcismRankMap = spellData.Exorcism
+
+func (paladin *Paladin) getExorcismTimer() *core.Timer {
+	if paladin.exorcismTimer == nil {
+		paladin.exorcismTimer = paladin.NewTimer()
+	}
+	return paladin.exorcismTimer
+}
 
 // Exorcism
 // https://www.wowhead.com/forever/spell=10314
 //
 // Causes X to Y Holy damage to an Undead or Demon target.
-//
-// TODO: To be implemented. The Forever client DOES ship a rank ladder for this, and spellData
-// now carries it -- the family was previously dropped as ambiguous because Forever re-issues
-// the ability as a second spell per rank. The body below is the TBC implementation, awaiting
-// a port onto the recovered ladder.
+// TODO: To be implemented. Exorcism exists in Forever with a full six-rank ladder
+// (spellData.Exorcism, 879/5614/5615/10312/10313/10314) and ExorcismRankMap below feeds it
+// rank by rank. The implementation is the TBC one, which needed no porting -- every field
+// it reads is present on the recovered ladder -- so bringing it back is uncommenting it.
+// It stays commented until it has been reviewed.
 func (paladin *Paladin) registerExorcism(rankConfig shared.SpellData) {
-	// Registered unconditionally, so this returns instead of panicking -- a panic
-	// here would stop the sim from starting at all rather than flagging one ability.
+	panic("To be implemented")
+
+	// spellID := rankConfig.SpellID
+	// cost := rankConfig.Cost
+	// coefficient := rankConfig.Direct.BonusCoefficient()
+	//
+	// paladin.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: spellID},
+	// 	SpellSchool:    core.SpellSchoolHoly,
+	// 	DefenseType:    core.DefenseTypeMagic,
+	// 	ProcMask:       core.ProcMaskSpellDamage,
+	// 	Flags:          core.SpellFlagAPL,
+	// 	Rank:           rankConfig.Rank,
+	// 	ClassSpellMask: SpellMaskExorcism,
+	//
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	//
+	// 	MaxRange: rankConfig.MaxRange,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		FlatCost: cost,
+	// 	},
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			GCD: rankConfig.GCD,
+	// 		},
+	// 		CD: core.Cooldown{
+	// 			Timer:    paladin.getExorcismTimer(),
+	// 			Duration: rankConfig.Cooldown,
+	// 		},
+	// 	},
+	//
+	// 	BonusCoefficient: coefficient,
+	//
+	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+	// 		return target.MobType == proto.MobType_MobTypeUndead || target.MobType == proto.MobType_MobTypeDemon
+	// 	},
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		spell.CalcAndDealDamage(sim, target, rankConfig.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+	// 	},
+	// })
 }

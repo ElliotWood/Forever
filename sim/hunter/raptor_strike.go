@@ -1,61 +1,68 @@
 package hunter
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
-var raptorStrikeRank = spellData.RaptorStrike.HighestRank()
+// TODO: To be implemented. Raptor Strike exists in Forever with a full eight-rank ladder
+// (spellData.RaptorStrike, 2973/14260-14266). The implementation below is the TBC one
+// already ported onto that ladder -- HighestRank() in place of the level-70 rank it
+// pinned -- so bringing it back is uncommenting it. It stays commented until reviewed.
+//
+// The "time" import and the rank pin below belong with the commented implementation:
+// import "time"
+// var raptorStrikeRank = spellData.RaptorStrike.HighestRank()
 
 func (hunter *Hunter) registerRaptorStrikeSpell() {
-	hunter.RaptorStrike = hunter.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: raptorStrikeRank.SpellID},
-		SpellSchool:    raptorStrikeRank.SpellSchool,
-		DefenseType:    raptorStrikeRank.DefenseType,
-		ClassSpellMask: HunterSpellRaptorStrike,
-		ProcMask:       core.ProcMaskMeleeMH,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
+	panic("To be implemented")
 
-		MaxRange: core.MaxMeleeRange,
-
-		ManaCost: core.ManaCostOptions{
-			FlatCost: raptorStrikeRank.Cost,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-			CD: core.Cooldown{
-				Timer:    hunter.NewTimer(),
-				Duration: raptorStrikeRank.Cooldown,
-			},
-		},
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			// Emit an "auto delayed" log line whenever the mh auto fired
-			// later than it would have in an uncontested rotation. Below 1ms
-			// is treated as rounding noise so the common case stays silent.
-			delay := hunter.AutoAttacks.MainHandPendingSwingDelay()
-			readyAt := sim.CurrentTime - delay
-			if sim.Log != nil && delay > time.Millisecond && readyAt > 0 {
-				hunter.Log(sim, "%s delayed by %s, was ready at %s", spell.ActionID, delay, readyAt)
-			}
-
-			baseDamage := hunter.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) + raptorStrikeRank.Direct.Damage(sim)
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-		},
-	})
-
-	hunter.RegisterAura(core.Aura{
-		Label:    "Raptor Strike",
-		ActionID: core.ActionID{SpellID: raptorStrikeRank.SpellID}.WithTag(2),
-		Icd:      &hunter.RaptorStrike.CD,
-	})
+	// hunter.RaptorStrike = hunter.RegisterSpell(core.SpellConfig{
+	// 	ActionID:       core.ActionID{SpellID: raptorStrikeRank.SpellID},
+	// 	SpellSchool:    raptorStrikeRank.SpellSchool,
+	// 	DefenseType:    raptorStrikeRank.DefenseType,
+	// 	ClassSpellMask: HunterSpellRaptorStrike,
+	// 	ProcMask:       core.ProcMaskMeleeMH,
+	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
+	//
+	// 	MaxRange: core.MaxMeleeRange,
+	//
+	// 	ManaCost: core.ManaCostOptions{
+	// 		FlatCost: raptorStrikeRank.Cost,
+	// 	},
+	//
+	// 	Cast: core.CastConfig{
+	// 		DefaultCast: core.Cast{
+	// 			NonEmpty: true,
+	// 		},
+	// 		CD: core.Cooldown{
+	// 			Timer:    hunter.NewTimer(),
+	// 			Duration: raptorStrikeRank.Cooldown,
+	// 		},
+	// 	},
+	//
+	// 	DamageMultiplier: 1,
+	// 	ThreatMultiplier: 1,
+	//
+	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+	// 		// Emit an "auto delayed" log line whenever the mh auto fired
+	// 		// later than it would have in an uncontested rotation. Below 1ms
+	// 		// is treated as rounding noise so the common case stays silent.
+	// 		delay := hunter.AutoAttacks.MainHandPendingSwingDelay()
+	// 		readyAt := sim.CurrentTime - delay
+	// 		if sim.Log != nil && delay > time.Millisecond && readyAt > 0 {
+	// 			hunter.Log(sim, "%s delayed by %s, was ready at %s", spell.ActionID, delay, readyAt)
+	// 		}
+	//
+	// 		baseDamage := hunter.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) + raptorStrikeRank.Direct.Damage(sim)
+	// 		spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+	// 	},
+	// })
+	//
+	// hunter.RegisterAura(core.Aura{
+	// 	Label:    "Raptor Strike",
+	// 	ActionID: core.ActionID{SpellID: raptorStrikeRank.SpellID}.WithTag(2),
+	// 	Icd:      &hunter.RaptorStrike.CD,
+	// })
 }
 
 // Returns true if the regular melee swing should be used, false otherwise.
