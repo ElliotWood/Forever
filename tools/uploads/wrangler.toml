@@ -1,0 +1,10 @@
+name = "forever-uploads-list"
+main = "list.js"
+compatibility_date = "2026-09-01"
+
+# Read-only listing of the same bucket the upload worker writes to. Never deployed - it only
+# exists to be run locally with `wrangler dev --remote`, which binds the real bucket without
+# putting a listing endpoint on the public internet.
+[[r2_buckets]]
+binding = "UPLOADS"
+bucket_name = "forever-uploads"
