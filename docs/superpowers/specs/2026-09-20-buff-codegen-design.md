@@ -188,7 +188,7 @@ CI runs `make go-to-ts` before `type-check` with **no `wowsims.db`**, and this f
 
 - Contract: every generated constructor `XAura(unit *Unit, isPlayer bool, talentPoints int32)`. Class code passes `isPlayer=true` + its real talent points; `applyGeneratedBuffs` passes `false, 0`.
 - UI: add `ownerClass?: Class` to `StatOption` and `applyOwnerClassLabels(options, player)` in `stat_options.ts`, called in `SettingsTabBody.tsx` **after** `relevantStatOptions` (include/exclude matches config by reference). **Relabel "(External)", don't hide**: `ApplyFixedShoutAura` chains the external shout after the player's expires, and protection warrior defaults it on; hiding would leave an invisible enabled buff. No `showWhen` plumbing on tristate/quadstate factories is needed for this (relabel happens in the registry layer).
-- Metrics (`ui/sim/proto/action_id/index.ts`): the `default:` branch already maps tag -1 → " (External)". Delete `case 'Battle Shout'/'Commanding Shout'` (:481-488; tag 1 gone, tag 3 never emitted by Go) and the six-name `(Self)/(External)` block (:316-325). Keep the raid-index block (:441-459 Bloodlust/Innervate/Mana Tide/PI/Ferocious Inspiration — there -1 means "(raid)") and Drums. `AuraMetricsTable` grouping unchanged: parent "Battle Shout" with sub-rows "Battle Shout" + "Battle Shout (External)".
+- Metrics (`ui/sim/proto/action_id/index.ts`): the `default:` branch already maps tag -1 → " (External)". Delete `case 'Battle Shout'/'Commanding Shout'` (:481-488; tag 1 gone, tag 3 never emitted by Go) and the six-name `(Self)/(External)` block (:316-325). Keep the raid-index block (there -1 means "(raid)"). **As shipped:** it names Bloodlust, Innervate, Focus Magic, Mana Tide Totem, Stormlash Totem, Unholy Frenzy, Power Infusion, Curse of the Elements, Curse of Recklessness and Improved Seal of the Crusader; the Ferocious Inspiration and Unleashed Rage cases went with their retired rows, and the surviving `Drums of …` cases belong to the player's own consumable, which keeps its field. `AuraMetricsTable` grouping unchanged: parent "Battle Shout" with sub-rows "Battle Shout" + "Battle Shout (External)".
 - `ui/specs/warrior/shared/inputs.ts:15` ShoutPicker icon 2048 → 25289 (2048 has no DB row; tooltip lookup fails).
 
 ## Battle Shout pilot (Phase 2)
@@ -242,7 +242,7 @@ CI runs `make go-to-ts` before `type-check` with **no `wowsims.db`**, and this f
 
 - Bloodlust: no SLA row for any candidate (1245940 / 1222564 / 468408). Keep `KindManual` with today's `registerBloodlustCD`, `Anchor: 0`, open item in issue.
 - Ghost tristate → bool + v17 converter (DB truth). Reversible per row by setting `Proto: ProtoTristate` + explicit `Talent`.
-- Absent fields keep their proto number and UI input is not emitted (no icon to show); issue tracks them.
+- Absent fields emit no UI input (no icon to show); issue tracks them. **As shipped:** they do not keep their proto number either — api version 17 retires the row, so it leaves the manifest and the proto, its number and name are `reserved` in `proto/buffs.proto`, and the v17 pre-pass in `ui/sim/proto/buff_field_migration.ts` drops its key from an older payload.
 
 ## Phases
 

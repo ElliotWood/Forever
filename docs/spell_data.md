@@ -520,17 +520,18 @@ then run the generator, which writes the whole file back. Running it twice and s
 
 `go test ./tools/database/... ./tools/gen_buffs_proto/...` needs no client database and runs in CI.
 Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`, `TestGeneratedBuffsDebuffsTS`
-and `TestGeneratedRankTablesMatchTheDatabase` skip; the other 26 run.
+and `TestGeneratedRankTablesMatchTheDatabase` skip; the other 27 run.
 
 | Test                                                                                                              | What it holds                                                                                                                   |
 | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | `TestUniqueScopeField`, `TestUniqueScopeNumber`, `TestUniqueGoStem`                                               | no two rows collide                                                                                                             |
-| `TestNoLiveRowTakesARetiredNumber`                                                                                | a field number api version 17 gave up is never handed out again                                                                 |
+| `TestNoLiveRowTakesARetiredNumberOrName`                                                                          | neither a field number nor a field name api version 17 gave up is ever handed out again                                         |
 | `TestProtoTypeMatchesKind`, `TestTalentImpliesTristate`, `TestShellRowsHaveNotes`, `TestResolvableRowsHaveAnchor` | the schema rules above                                                                                                          |
 | `TestFieldNaming`, `TestFieldNamesRoundTrip`                                                                      | `GoField()` and `TSField()` reproduce protoc's and protobuf-ts's camel case                                                     |
 | `TestRenderMatchesCommittedFile`                                                                                  | `proto/buffs.proto` is what the manifest renders                                                                                |
-| `TestRenderReservesEveryRetiredNumber`, `TestRenderNextIndex`                                                     | the `reserved` lines and the next free number                                                                                   |
+| `TestRenderReservesEveryRetiredNumber`, `TestRenderNextIndex`                                                     | both `reserved` lines per message — numbers and names — and the next free number                                                |
 | `TestRetypedFieldsAreBool`, `TestRetypedFieldsMatchTheMigration`                                                  | the 25 fields api version 17 retyped are bool, and `ui/sim/proto/buff_field_migration.ts` names the same 25                     |
+| `TestRetiredFieldsMatchTheMigration`                                                                              | `buff_field_migration.ts` drops the same 33 retired names the manifest retires, scope by scope                                  |
 | `TestRenderedBuffFilesMatchTheFixtures`, `TestRenderedBuffFilesCompile`                                           | synthetic rows render to the committed fixtures, and those fixtures compile against the real `sim/core` through a build overlay |
 | `TestRenderBuffsDebuffsTS*`                                                                                       | the settings inputs each proto type and kind renders                                                                            |
 | `TestGeneratedBuffFiles`, `TestGeneratedBuffsDebuffsTS`                                                           | with a database, the committed files are byte-for-byte what the generator emits                                                 |
