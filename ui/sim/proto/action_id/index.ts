@@ -315,18 +315,6 @@ export class ActionId {
 				}
 
 				break;
-			case 'Devotion Aura':
-			case 'Pain Suppression':
-			case 'Curse of the Elements':
-			case 'Curse of Recklessness':
-			case 'Improved Seal of the Crusader':
-			case 'Unleashed Rage':
-				if (tag === -1) {
-					name += ' (External)';
-				} else {
-					name += ` (Self)`;
-				}
-				break;
 			case 'Envenom':
 			case 'Eviscerate':
 			case 'Rupture':
@@ -476,14 +464,6 @@ export class ActionId {
 					name += ' (Main Hand)';
 				} else if (tag == 2) {
 					name += ' (Off Hand)';
-				}
-				break;
-			case 'Battle Shout':
-			case 'Commanding Shout':
-				if (tag == 1) {
-					name += ' (External)';
-				} else if (tag == 3) {
-					name += ' (Snapshot)';
 				}
 				break;
 			case 'Heroic Strike':
