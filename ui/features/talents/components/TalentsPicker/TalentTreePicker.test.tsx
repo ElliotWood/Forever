@@ -7,15 +7,15 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildTalentGraph } from '../../model/tree_graph';
 import { TalentTreePicker } from './TalentTreePicker';
 
-// The icon and the wowhead href come from the database, which no unit test has; echoing the id and
-// rank back is what lets the icon cases see what was asked for.
+// The icon comes from the database, which no unit test has; echoing the id back is what lets the
+// icon cases see what was asked for, and recording the ranks shows what the lookup was keyed on.
+const { lookedUpRanks } = vi.hoisted(() => ({ lookedUpRanks: [] as Array<number | undefined> }));
+
 vi.mock('@ui-kit/hooks/useActionId', () => ({
-	useActionId: (actionId: { spellId?: number; rank?: number }) => ({
-		iconUrl: `icon-${actionId.spellId}`,
-		name: '',
-		href: `href-${actionId.spellId}-rank-${actionId.rank}`,
-		ready: true,
-	}),
+	useActionId: (actionId: { spellId?: number; rank?: number }) => {
+		lookedUpRanks.push(actionId.rank);
+		return { iconUrl: `icon-${actionId.spellId}`, name: '', href: '', ready: true };
+	},
 }));
 
 type Fake = Record<string, never>;
@@ -111,13 +111,21 @@ describe('TalentTreePicker icons', () => {
 		expect(talents()[0].style.backgroundImage).toBe('url("icon-1")');
 	});
 
-	it('carries the spent points as the rank, and previews rank 1 while unspent', () => {
+	it('carries the spent points as the rank on the link, and previews rank 1 while unspent', () => {
 		tree('3');
-		expect(talents()[0].getAttribute('href')).toBe('href-1-rank-3');
+		expect(talents()[0].getAttribute('href')).toContain('rank=3');
 		document.body.innerHTML = '';
 
 		tree('');
-		expect(talents()[0].getAttribute('href')).toBe('href-1-rank-1');
+		expect(talents()[0].getAttribute('href')).toContain('rank=1');
+	});
+
+	it('keys the icon lookup on rank 1 whatever the points, so spending one never blanks the cell', () => {
+		lookedUpRanks.length = 0;
+		tree('35');
+
+		expect(lookedUpRanks.length).toBeGreaterThan(0);
+		expect(new Set(lookedUpRanks)).toEqual(new Set([1]));
 	});
 });
 

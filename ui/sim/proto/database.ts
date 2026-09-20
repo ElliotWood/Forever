@@ -118,7 +118,6 @@ export class Database {
 	private readonly presetTargets = new Map<string, PresetTarget>();
 	private readonly itemIcons: Record<number, IconData> = {};
 	private readonly spellIcons: Record<number, IconData> = {};
-	private readonly rankedSpellIcons = new Map<string, IconData>();
 	private readonly consumables = new Map<number, Consumable>();
 	private readonly spellEffects = new Map<number, SpellEffect>();
 
@@ -392,22 +391,10 @@ export class Database {
 		return db.itemIcons[itemId];
 	}
 
-	static async getSpellIconData(spellId: number, rank = 0, definitionId = 0): Promise<IconData> {
+	// A talent's rank and trait definition steer the wowhead LINK, not the icon: every rank of a
+	// talent is one spell with one icon, so they are no part of the lookup.
+	static async getSpellIconData(spellId: number): Promise<IconData> {
 		const db = await Database.get();
-		if (rank > 0) {
-			// The icon is the same at every rank, so the bundled one answers without a round trip;
-			// only an id the database does not carry needs the ranked wowhead request.
-			const bundled = db.spellIcons[spellId];
-			if (bundled?.icon) return bundled;
-
-			const key = `${spellId}-${rank}-${definitionId}`;
-			const cached = db.rankedSpellIcons.get(key);
-			if (cached?.icon) return cached;
-			const fetched = await Database.sharedIconRequest(`spell-${key}`, () => Database.getWowheadSpellTooltipData(spellId, rank, definitionId));
-			db.rankedSpellIcons.set(key, fetched);
-			return fetched;
-		}
-
 		const data = db.spellIcons[spellId];
 		if (!data?.icon) {
 			db.spellIcons[spellId] = await Database.sharedIconRequest(`spell-${spellId}`, () => Database.getWowheadSpellTooltipData(spellId));
@@ -433,13 +420,11 @@ export class Database {
 	private static async getWowheadItemTooltipData(id: number): Promise<IconData> {
 		return Database.getWowheadTooltipData(id, 'item');
 	}
-	private static async getWowheadSpellTooltipData(id: number, rank = 0, definitionId = 0): Promise<IconData> {
-		return Database.getWowheadTooltipData(id, 'spell', rank, definitionId);
+	private static async getWowheadSpellTooltipData(id: number): Promise<IconData> {
+		return Database.getWowheadTooltipData(id, 'spell');
 	}
-	private static async getWowheadTooltipData(id: number, tooltipPostfix: string, rank = 0, definitionId = 0): Promise<IconData> {
+	private static async getWowheadTooltipData(id: number, tooltipPostfix: string): Promise<IconData> {
 		const params = new URLSearchParams({ lvl: String(CHARACTER_LEVEL), dataEnv: String(WOWHEAD_EXPANSION_ENV) });
-		if (definitionId > 0) params.set('def', String(definitionId));
-		if (rank > 0) params.set('rank', String(rank));
 		const url = `https://nether.wowhead.com/${WOWHEAD_DOMAIN}/tooltip/${tooltipPostfix}/${id}?${params}`;
 		try {
 			const response = await fetch(url);

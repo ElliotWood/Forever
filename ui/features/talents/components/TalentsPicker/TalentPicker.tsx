@@ -18,7 +18,12 @@ const LONG_TOUCH_MS = 750;
 
 export const TalentPicker = <TalentsProto,>({ config, points, canAdd, allPointsSpent, zIndex, onSetPoints }: TalentPickerProps<TalentsProto>) => {
 	const rootRef = useRef<HTMLAnchorElement>(null);
-	const { iconUrl, href } = useActionId(ActionId.fromTalent(config.spellId, Math.max(points, 1), config.definitionId ?? 0));
+	const definitionId = config.definitionId ?? 0;
+	// The icon lookup leaves the rank out, so spending a point does not re-seed it and blank the
+	// cell for a frame -- a talent is one spell with one icon. Only the wowhead link carries the
+	// rank, and that needs no lookup at all.
+	const { iconUrl } = useActionId(ActionId.fromTalent(config.spellId, 1, definitionId));
+	const href = ActionId.makeSpellUrl(config.spellId, Math.max(points, 1), definitionId);
 	const isFull = points >= config.maxPoints;
 
 	const spend = () => onSetPoints(points + 1);

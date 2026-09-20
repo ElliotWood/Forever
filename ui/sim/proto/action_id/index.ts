@@ -829,7 +829,7 @@ export class ActionId {
 		if (actionId.itemId) {
 			return Database.getItemIconData(actionId.itemId);
 		}
-		return Database.getSpellIconData(actionId.spellId, actionId.rank, actionId.definitionId);
+		return Database.getSpellIconData(actionId.spellId);
 	}
 
 	get spellIconOverride(): ActionId | null {
