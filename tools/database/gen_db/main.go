@@ -76,6 +76,11 @@ func main() {
 	itemTooltips := database.NewWowheadItemTooltipManager(fmt.Sprintf("%s/wowhead_item_tooltips.csv", inputsDir)).Read()
 	spellTooltips := database.NewWowheadSpellTooltipManager(fmt.Sprintf("%s/wowhead_spell_tooltips.csv", inputsDir)).Read()
 	wowheadDB := database.ParseWowheadDB(tools.ReadFile(fmt.Sprintf("%s/wowhead_gearplannerdb.txt", inputsDir)))
+	// Forever's own gear planner. The dump above is Classic Era's, and Forever has retuned items
+	// it does not know about - Shadowcraft Pants carry Spirit rather than Strength, the Valor
+	// pieces lost theirs - so this one is merged last and wins where it has the item. Items it
+	// does not carry keep their Classic values rather than being emptied.
+	foreverDB := database.ParseWowheadDBFor("classicplus", tools.ReadFile(fmt.Sprintf("%s/wowhead_forever_gearplanner.txt", inputsDir)))
 	atlaslootDB := database.ReadDatabaseFromJson(tools.ReadFile(fmt.Sprintf("%s/atlasloot_db.json", inputsDir)))
 	wagoItems := database.ParseWagoDB(tools.ReadFile(fmt.Sprintf("%s/wago_db2_items.csv", inputsDir)))
 
@@ -158,6 +163,15 @@ func main() {
 	for _, item := range atlaslootDB.Items {
 		if _, ok := db.Items[item.Id]; ok {
 			db.MergeItem(item)
+		}
+	}
+	// After the Classic dump and AtlasLoot, before the hand-written overrides. MergeItem replaces
+	// the whole stat block rather than merging field by field, which is what lets this remove a
+	// stat Forever took off an item - no value-by-value merge could express that. The overrides
+	// still win, because those are deliberate and this is a scrape.
+	for _, foreverItem := range foreverDB.Items {
+		if existing, ok := db.Items[foreverItem.ID]; ok {
+			existing.Stats = foreverItem.OverlayStats(existing.Stats)
 		}
 	}
 

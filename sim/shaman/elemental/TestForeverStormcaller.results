@@ -6,7 +6,7 @@ character_stats_results: {
   final_stats: 353
   final_stats: 269.5
   final_stats: 177
-  final_stats: 632.85
+  final_stats: 558.85
   final_stats: 0
   final_stats: 40
   final_stats: 0
@@ -14,13 +14,13 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 39.25
-  final_stats: 7
-  final_stats: 20.85455
+  final_stats: 11
+  final_stats: 22.85455
   final_stats: 0
   final_stats: 0
   final_stats: 890.5
-  final_stats: 7
-  final_stats: 24.59
+  final_stats: 11
+  final_stats: 26.59
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.22709
+  weights: 0.39255
   weights: 0
-  weights: 0.42719
+  weights: 0.45258
   weights: 0
-  weights: 0.07171
-  weights: 0
-  weights: 0
-  weights: 0.34991
+  weights: 0.07482
   weights: 0
   weights: 0
-  weights: 4.097
-  weights: 3.51456
+  weights: 0.37186
+  weights: 0
+  weights: 0
+  weights: 4.28701
+  weights: 3.00761
   weights: 0
   weights: 0
   weights: 0
@@ -99,112 +99,112 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 334.53989
-  tps: 314.82774
+  dps: 311.50968
+  tps: 292.66307
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 341.01006
-  tps: 320.3208
+  dps: 321.27073
+  tps: 300.8675
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 375.75494
-  tps: 352.72161
+  dps: 374.586
+  tps: 351.61344
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 387.49351
-  tps: 364.1306
+  dps: 372.86829
+  tps: 349.67949
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 329.70019
-  tps: 310.27579
+  dps: 302.22816
+  tps: 284.20513
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 349.54822
-  tps: 329.09679
+  dps: 327.34273
+  tps: 307.66714
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 379.04738
-  tps: 355.84664
+  dps: 367.36104
+  tps: 343.74915
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 366.7557
-  tps: 344.49037
+  dps: 340.14999
+  tps: 319.15718
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Average-Default"
  value: {
-  dps: 390.19737
-  tps: 366.46733
+  dps: 380.65688
+  tps: 356.46542
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 1013.10598
-  tps: 766.61567
+  dps: 1022.48334
+  tps: 768.05616
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 379.84054
-  tps: 355.77088
+  dps: 373.02545
+  tps: 348.90466
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 437.49559
-  tps: 425.20309
+  dps: 426.18144
+  tps: 413.41516
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 711.80341
-  tps: 512.9563
+  dps: 722.28167
+  tps: 508.16792
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 285.47248
-  tps: 265.34404
+  dps: 278.37963
+  tps: 258.86369
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 400.26887
-  tps: 383.89811
+  dps: 392.42266
+  tps: 376.36073
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 384.93063
-  tps: 361.10047
+  dps: 378.04319
+  tps: 354.3683
  }
 }
