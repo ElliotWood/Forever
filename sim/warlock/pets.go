@@ -297,6 +297,7 @@ func (warlock *Warlock) registerFelguardWithName(name string, enabledOnStart boo
 	// return pet
 }
 
+// TODO: To be implemented. Not verified against Forever.
 func (warlock *Warlock) RegisterPet(
 	t proto.WarlockOptions_Summon,
 	min float64,
@@ -305,19 +306,22 @@ func (warlock *Warlock) RegisterPet(
 	enabledOnStart bool,
 	isGuardian bool,
 ) *WarlockPet {
-	baseStats, ok := petBaseStats[t]
-	if !ok {
-		panic("Undefined base stats for pet")
-	}
+	panic("To be implemented")
 
-	var attackOptions *core.AutoAttackOptions = nil
-	if t > 1 {
-		attackOptions = AutoAttackConfig(min, max)
-	}
-
-	inheritance := warlock.SimplePetStatInheritanceWithScale()
-
-	return warlock.makePet(name, enabledOnStart, *baseStats, attackOptions, inheritance, isGuardian)
+	// The TBC implementation, kept for the port:
+	// baseStats, ok := petBaseStats[t]
+	// if !ok {
+	// panic("Undefined base stats for pet")
+	// }
+	//
+	// var attackOptions *core.AutoAttackOptions = nil
+	// if t > 1 {
+	// attackOptions = AutoAttackConfig(min, max)
+	// }
+	//
+	// inheritance := warlock.SimplePetStatInheritanceWithScale()
+	//
+	// return warlock.makePet(name, enabledOnStart, *baseStats, attackOptions, inheritance, isGuardian)
 }
 
 func (pet *WarlockPet) GetPet() *core.Pet {

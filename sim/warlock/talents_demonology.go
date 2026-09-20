@@ -8,7 +8,7 @@ import (
 func (warlock *Warlock) registerDemonologyTalents() {
 	// Tier 1
 	warlock.applyImprovedHealthFunnel()
-	warlock.appyImprovedImp()
+	warlock.applyImprovedImp()
 	warlock.applyDemonicEmbrace()
 	warlock.applyUnholyPower()
 
@@ -41,7 +41,7 @@ func (warlock *Warlock) registerDemonologyTalents() {
 }
 
 // TODO: To be implemented. Port the TBC Improved Imp implementation below; not yet verified against the Forever client.
-func (warlock *Warlock) appyImprovedImp() {
+func (warlock *Warlock) applyImprovedImp() {
 	if warlock.Talents.ImprovedImp == 0 || warlock.Options.SacrificeSummon {
 		return
 	}
