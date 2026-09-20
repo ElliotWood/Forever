@@ -99,12 +99,6 @@ func RegisterWarlock() {
 	)
 }
 
-func (warlock *Warlock) ApplyTalents() {
-	warlock.applyAfflictionTalents()
-	warlock.applyDemonologyTalents()
-	warlock.applyDestructionTalents()
-}
-
 func (warlock *Warlock) Initialize() {
 
 	// Curses
