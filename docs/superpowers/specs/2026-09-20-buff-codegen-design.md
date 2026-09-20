@@ -8,22 +8,23 @@ Visual version of this plan (pipeline, tag contract, deltas, phases): https://cl
 
 Goal: one checked-in **manifest** (one row per buff/debuff) + the existing `tools/database` parsers derive **proto + Go + TS** from `tools/database/wowsims.db`. Forever's actual values, ranks, durations, icons and talent availability replace TBC numbers. Class-owned buffs get one integration contract so the player-cast and external versions separate cleanly in UI and metrics (Battle Shout is the pilot).
 
-**Why a manifest.** The DB has no "raid buff" flag. `ImplicitTarget` + skill-line gating narrows candidates but still leaves ungranted twins (BoK 1213408, MotW 1291335/1310503) and NPC copies. The manifest names *which* spells are the sim's buffs; the DB supplies everything else.
+**Why a manifest.** The DB has no "raid buff" flag. `ImplicitTarget` + skill-line gating narrows candidates but still leaves ungranted twins (BoK 1213408, MotW 1291335/1310503) and NPC copies. The manifest names _which_ spells are the sim's buffs; the DB supplies everything else.
 
 ## Decisions (user-confirmed)
 
-| Decision | Choice |
-|---|---|
-| Proto messages | Generated from manifest into `proto/buffs.proto` (checked in; protoc needs it to bootstrap). Manifest owns field numbers; **existing numbers kept**. |
-| Values | **DB is truth.** Expected deltas listed below for review. |
-| Scope | **Every kind** in manifest. Generator emits proto field + TS input + Go shell for all; hand-written drivers plug in by fixed name. Manual additions stay possible via `KindManual`. |
-| Class integration | One tag convention: `ActionID.Tag 0` = player-cast, `-1` = external. Generic "(External)" rule in TS replaces per-name cases. Owner class emitted so the UI relabels the external picker. Pilot = Battle Shout, re-enable `warrior.registerShouts()`. |
-| Tooling | Extend existing parsers: `tools/database/gen_spelldata` binary, `dbc` package, `gen_effects.go` template/writer pattern, `gen_db -gen=go-to-ts` for TS. |
-| Work location | New worktree + branch `forever-buff-codegen`. **Not merged** by this work; PR left open for review. GitHub issue `[Core] Implement all known buffs/debuffs` created as step 0 (body below). |
-| Execution | Opus workers (`opus-worker` / `opus-high`) on disjoint files per phase. Another agent is active on this machine: every test/build run capped at **50% of 18 cores = 9**: `GOMAXPROCS=9 /usr/local/go/bin/go test -p 9 ...`, `npx vitest run --maxWorkers 9`, `make -j9`. |
+| Decision          | Choice                                                                                                                                                                                                                                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Proto messages    | Generated from manifest into `proto/buffs.proto` (checked in; protoc needs it to bootstrap). Manifest owns field numbers; **existing numbers kept**.                                                                                                                     |
+| Values            | **DB is truth.** Expected deltas listed below for review.                                                                                                                                                                                                                |
+| Scope             | **Every kind** in manifest. Generator emits proto field + TS input + Go shell for all; hand-written drivers plug in by fixed name. Manual additions stay possible via `KindManual`.                                                                                      |
+| Class integration | One tag convention: `ActionID.Tag 0` = player-cast, `-1` = external. Generic "(External)" rule in TS replaces per-name cases. Owner class emitted so the UI relabels the external picker. Pilot = Battle Shout, re-enable `warrior.registerShouts()`.                    |
+| Tooling           | Extend existing parsers: `tools/database/gen_spelldata` binary, `dbc` package, `gen_effects.go` template/writer pattern, `gen_db -gen=go-to-ts` for TS.                                                                                                                  |
+| Work location     | New worktree + branch `forever-buff-codegen`. **Not merged** by this work; PR left open for review. GitHub issue `[Core] Implement all known buffs/debuffs` created as step 0 (body below).                                                                              |
+| Execution         | Opus workers (`opus-worker` / `opus-high`) on disjoint files per phase. Another agent is active on this machine: every test/build run capped at **50% of 18 cores = 9**: `GOMAXPROCS=9 /usr/local/go/bin/go test -p 9 ...`, `npx vitest run --maxWorkers 9`, `make -j9`. |
 
 **Calls made without an explicit user answer (approve or override):**
-- Ghost improved talents (not in the Forever Trait tree) change field type `TristateEffect → bool` and bump the proto to version 17. User approved DB-is-truth for *values*; this extends it to schema type. Alternative: keep `TristateEffect` and ignore the Improved state (no version bump, dead UI state).
+
+- Ghost improved talents (not in the Forever Trait tree) change field type `TristateEffect → bool` and bump the proto to version 17. User approved DB-is-truth for _values_; this extends it to schema type. Alternative: keep `TristateEffect` and ignore the Improved state (no version bump, dead UI state).
 - Owner-class picker is **relabelled "(External)", not hidden** (hiding would leave an enabled invisible buff; protection warrior defaults it on).
 - Issue/commit prefix spelled `[Core]` to match the repo's commit convention (user wrote `[CORE]`).
 - Correction to an earlier question: Sunder Armor in the DB is −450 per stack ×5 (not −90/stack as written in the question).
@@ -75,8 +76,11 @@ type BuffSpec struct {
     Owner      proto.Class   // validated against SkillLineAbility.ClassMask, not derived
     Talent     *TalentMod    // {Name "Booming Voice", Effect idx, Applies ScalesValue|ScalesDuration|AddsStat}
     Category   string        // exclusive category ("" = none)
+    SharedCategory string    // second category the aura joins without an effect of its own ("PaladinAura"), player copy only
     SingleAura bool
-    Pet        PetPolicy     // PetNormal | PetStrip | PetInheritOwnerAura | PetCapAtRegular
+    Driver     bool          // apply block calls drive<Go> instead of activating the aura outright
+    Pet        PetPolicy     // PetNormal | PetStrip | PetInheritOwnerAura | PetCapAtRegular | PetStripWhenSummonedLate
+    StatOverride []string    // sim stats an untyped aura lands on (A_MOD_CRIT_PCT: LotP melee, Moonkin spell); one aura effect only
     Stats      []proto.Stat  // UI relevance tags (heuristic, manifest-authoritative)
     ImpAction  *ActionRef    // override for improved icon when it is an item (30446, 32387)
     Label      string        // override only when DB name is wrong for UI
@@ -84,43 +88,48 @@ type BuffSpec struct {
 }
 ```
 
+Shipped as built, plus `var Retired = map[BuffScope][]int32{...}`: the field numbers api version 17 gave up, which the emitter turns into `reserved` lines and no later row may take.
+
 Seed rows in current registry order (`PARTY_BUFFS_CONFIG` :325-368, `BUFFS_CONFIG` :370-385, `DEBUFFS_CONFIG` :466-490) so UI order is unchanged.
 
 ## Kind taxonomy
 
-| Kind | DB source | Emitted Go |
-|---|---|---|
-| `KindStatFlat` | `E_APPLY_AURA`(6)/`AREA_AURA_PARTY`(35)/`AREA_AURA_RAID`(65) with `A_MOD_STAT` (misc -1 = all five), `A_MOD_ATTACK_POWER`, `A_MOD_RANGED_ATTACK_POWER`, `A_MOD_DAMAGE_DONE`, `A_MOD_SPELL_CRIT_CHANCE`, `A_MOD_CRIT_PCT`, `A_MOD_HIT_CHANCE`, `A_MOD_POWER_REGEN` (MP5 = v×5000/period). Reuse `dbc.ParseStatEffect` (spell_effect.go:288-350), `MapMainStatToStat` | `newGeneratedStatAura(unit, GeneratedBuff{...})` |
-| `KindStatPct` | `A_MOD_TOTAL_STAT_PERCENTAGE`, `A_MOD_ATTACK_POWER_PCT` | same, `IsMultiplicative`, `1+v/100` |
-| `KindResistance` | `A_MOD_RESISTANCE` school bitmask (1 armor, 4 fire, 8 nature, 16 frost, 32 shadow, 64 arcane; bit 2 holy → comment) | `makeExclusiveFlatStatBuff(..., ResistanceCategoryX)` |
-| `KindPseudoMult` | `A_MOD_THREAT`, `A_MOD_DAMAGE_PERCENT_DONE`, `A_REDUCE_PUSHBACK`, `A_MOD_MELEE_HASTE_3` | `AttachMultiplicativePseudoStatBuff` / additive |
-| `KindDamageShield` | `A_DAMAGE_SHIELD` + `SpellMisc.SchoolMask` | `newGeneratedDamageShield` (factored from `ThornsAura` buffs.go:377) |
-| `KindDebuffStat` | stat mapping on target; `EffectPointsPerResource` → per-combo-point | `newGeneratedDebuff`, `ExclusiveEffect` priority = value |
-| `KindDebuffStacking` | `SpellAuraOptions.CumulativeAura` → MaxStacks | priority = value×stacks (factored from `SunderArmorAura` debuffs.go:759) |
-| `KindDebuffDamageTaken` | `A_MOD_DAMAGE_PERCENT_TAKEN` mask, `A_MOD_DAMAGE_TAKEN` flat | `damageTakenDebuff` / additive pseudo |
-| `KindDebuffAtkSpeed` | `A_MOD_MELEE_HASTE_3` negative | `AtkSpeedReductionEffect` |
-| `KindDebuffUptime` | proto `double` + `EffectTriggerSpell` one hop | shell + driver calling `ApplyFixedUptimeAura` |
-| `KindExternalCD` | duration, `SpellCooldowns.RecoveryTime` | generated aura + `registerXxxCD` via `registerExternalConsecutiveCDApproximation` (buffs.go:1859); `ShouldActivate` from `buffs_manual.go` |
-| `KindProc` | anchor only | shell; driver (Windfury, JoL/JoW) |
-| `KindItemCount` | anchor effects × count | stat aura × `float64(count)` |
-| `KindManual` | anchor only (**escape hatch**) | shell + `// manual driver: <Notes>` + call `manualXxx(...)` that `buffs_manual.go` must define (missing = compile error) |
-| `KindFlag` / `KindEnum` | none | proto field only |
-| `KindAbsent` | no `SpellName` row / aura 270,271 caster-only | commented-out shell with reason (the `{{- else if not .Supported}}` idiom from `gen_effects_templates.go`) |
+| Kind                    | DB source                                                                                                                                                                                                                                                                                                                                                           | Emitted Go                                                                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `KindStatFlat`          | `E_APPLY_AURA`(6)/`AREA_AURA_PARTY`(35)/`AREA_AURA_RAID`(65) with `A_MOD_STAT` (misc -1 = all five), `A_MOD_ATTACK_POWER`, `A_MOD_RANGED_ATTACK_POWER`, `A_MOD_DAMAGE_DONE`, `A_MOD_SPELL_CRIT_CHANCE`, `A_MOD_CRIT_PCT`, `A_MOD_HIT_CHANCE`, `A_MOD_POWER_REGEN` (MP5 = v×5000/period). Reuse `dbc.ParseStatEffect` (spell_effect.go:288-350), `MapMainStatToStat` | `newGeneratedStatAura(unit, GeneratedBuff{...})`                                                                                           |
+| `KindStatPct`           | `A_MOD_TOTAL_STAT_PERCENTAGE`, `A_MOD_ATTACK_POWER_PCT`                                                                                                                                                                                                                                                                                                             | same, `IsMultiplicative`, `1+v/100`                                                                                                        |
+| `KindResistance`        | `A_MOD_RESISTANCE` school bitmask (1 armor, 4 fire, 8 nature, 16 frost, 32 shadow, 64 arcane; bit 2 holy → comment)                                                                                                                                                                                                                                                 | `makeExclusiveFlatStatBuff(..., ResistanceCategoryX)`                                                                                      |
+| `KindPseudoMult`        | `A_MOD_THREAT`, `A_MOD_DAMAGE_PERCENT_DONE`, `A_REDUCE_PUSHBACK`, `A_MOD_MELEE_HASTE_3`                                                                                                                                                                                                                                                                             | `AttachMultiplicativePseudoStatBuff` / additive                                                                                            |
+| `KindDamageShield`      | `A_DAMAGE_SHIELD` + `SpellMisc.SchoolMask`                                                                                                                                                                                                                                                                                                                          | `newGeneratedDamageShield` (factored from `ThornsAura` buffs.go:377)                                                                       |
+| `KindDebuffStat`        | stat mapping on target; `EffectPointsPerResource` → per-combo-point                                                                                                                                                                                                                                                                                                 | `newGeneratedDebuff`, `ExclusiveEffect` priority = value                                                                                   |
+| `KindDebuffStacking`    | `SpellAuraOptions.CumulativeAura` → MaxStacks                                                                                                                                                                                                                                                                                                                       | priority = value×stacks (factored from `SunderArmorAura` debuffs.go:759)                                                                   |
+| `KindDebuffDamageTaken` | `A_MOD_DAMAGE_PERCENT_TAKEN` mask, `A_MOD_DAMAGE_TAKEN` flat                                                                                                                                                                                                                                                                                                        | `damageTakenDebuff` / additive pseudo                                                                                                      |
+| `KindDebuffAtkSpeed`    | `A_MOD_MELEE_HASTE_3` negative                                                                                                                                                                                                                                                                                                                                      | `AtkSpeedReductionEffect`                                                                                                                  |
+| `KindDebuffUptime`      | proto `double` + `EffectTriggerSpell` one hop                                                                                                                                                                                                                                                                                                                       | shell + driver calling `ApplyFixedUptimeAura`                                                                                              |
+| `KindExternalCD`        | duration, `SpellCooldowns.RecoveryTime`                                                                                                                                                                                                                                                                                                                             | generated aura + `registerXxxCD` via `registerExternalConsecutiveCDApproximation` (buffs.go:1859); `ShouldActivate` from `buffs_manual.go` |
+| `KindProc`              | anchor only                                                                                                                                                                                                                                                                                                                                                         | shell; driver (Windfury, JoL/JoW)                                                                                                          |
+| `KindItemCount`         | anchor effects × count                                                                                                                                                                                                                                                                                                                                              | stat aura × `float64(count)`                                                                                                               |
+| `KindManual`            | anchor only (**escape hatch**)                                                                                                                                                                                                                                                                                                                                      | shell + `// manual driver: <Notes>` + call `manualXxx(...)` that `buffs_manual.go` must define (missing = compile error)                   |
+| `KindFlag` / `KindEnum` | none                                                                                                                                                                                                                                                                                                                                                                | proto field only                                                                                                                           |
+| `KindAbsent`            | no `SpellName` row / aura 270,271 caster-only                                                                                                                                                                                                                                                                                                                       | commented-out shell with reason (the `{{- else if not .Supported}}` idiom from `gen_effects_templates.go`)                                 |
 
 ## Generator (`tools/database/gen_buffs.go`, `gen_buffs_templates.go`)
 
 Hooked into `tools/database/gen_spelldata/main.go` after `GenerateSpellDataFiles`. New `make spelldata` target. `RenderBuffFiles(helper) map[string][]byte` renders everything, `format.Source` gate before any write (as `renderClassFile` does).
 
 **Anchor resolution** (no `Rank %` filter — BoK, Greater BoK, Innervate, PI have no subtext):
+
 ```sql
 SELECT sla.Spell, s.NameSubtext_lang, sla.ClassMask, sla.SkillLine, sla.AcquireMethod, sla.SupercedesSpell
 FROM SkillLineAbility sla JOIN SpellName n ON n.ID = sla.Spell JOIN Spell s ON s.ID = sla.Spell
 JOIN SkillLine sl ON sl.ID = sla.SkillLine AND sl.CategoryID = 7 AND sl.ID NOT IN (2851, 2853)
 WHERE n.Name_lang = ? AND (sla.ClassMask & ? != 0 OR sla.ClassMask = 0)
 ```
+
 Rank = subtext if present, else the spell no other row `SupercedesSpell`. Pick highest; warn on non-monotonic ladder (Trueshot r5=50 < r4=75). `AuraName` set → resolve aura family by name + same rank subtext among `Effect IN (6,35,65)` (no creature table to follow `E_SUMMON`). `Anchor != 0` → use directly.
 
 **Traps the generator must handle (all verified in DB this session):**
+
 - `SkillLine` 2851 Engraving / 2853 Runes are `CategoryID = 7`. Exclude explicitly. Rune-granted check: `Engrave % - %` spells have `Effect=54`, `EffectMiscValue_0 = SpellItemEnchantment.ID`, `EffectArg_0..2` = rune spell. SoD-band ids 403215 (Commanding Shout), 402004, 407995 (Mangle) are NOT rune-granted → Forever content.
 - Improved talents: look up **only in the owner's live `Trait*` tree** (trees: warrior 1117, paladin 1100, hunter 1091, rogue 1111, priest 1114, shaman 1082, mage 1112, warlock 1116, druid 1089). Legacy `Talent` table has ClassID/SpellID zeroed. Detection rule: trait spell with `A_ADD_PCT_MODIFIER`(108)/`A_ADD_FLAT_MODIFIER`(107) whose `EffectSpellClassMask` overlaps the buff's `SpellClassOptions.SpellClassMask`, same `SpellClassSet`. Misc → `Applies`: 1 → ScalesDuration; 0/3/8 → ScalesValue; anything else (6 radius, 14 cost, 7 crit…) ignored with a stdout note. No matching row → `TalentGhost`; field emitted as **bool**. Verified: Forever Booming Voice (12321, 5 ranks) is misc 6 radius only, so Battle Shout has **no** talent hook and a flat 3 min duration.
 - Duration via `SpellMisc.DurationIndex → SpellDuration.Duration` (`-1` = NeverExpires). `shared.SpellData` lacks it; query directly.
@@ -134,12 +143,15 @@ Stdout summary: `resolved N rows: a generated, b manual, c ghost talents, d abse
 ## Generated outputs
 
 ### `proto/buffs.proto` (generated in place, committed)
-`syntax proto3; package proto; import "common.proto";` — exactly `RaidBuffs`, `PartyBuffs`, `IndividualBuffs`, `Debuffs`. `TristateEffect`, `Drums`, `StrengthOfEarthType` stay in `common.proto`. Emitter = tiny `tools/gen_buffs_proto/main.go` importing only the manifest package (bootstrap: protoc must run before `gen_db` can compile). Edits: delete `common.proto:453-580`; add `import "buffs.proto";` in `api.proto` and `ui.proto`. Makefile: `proto/buffs.proto` rule + prerequisite on `sim/core/proto/api.pb.go` (:192) and `ui/generated/proto/api.ts` (:53). Proto messages will not be `DO NOT EDIT`-only; the manifest is edited instead.
+
+`syntax proto3; package proto; import "common.proto";` — exactly `RaidBuffs`, `PartyBuffs`, `IndividualBuffs`, `Debuffs`. `TristateEffect` stays in `common.proto`, and so does `Drums`, which `ConsumesSpec.drums_id` still names; `StrengthOfEarthType` was unreferenced and is gone. **As shipped:** api version 17 also retires the 33 fields the Forever client describes no spell for, so each message opens with a `reserved` line and the `// Next index` comment counts past the reserved numbers as well as the live ones. Emitter = tiny `tools/gen_buffs_proto/main.go` importing only the manifest package (bootstrap: protoc must run before `gen_db` can compile). Edits: delete `common.proto:453-580`; add `import "buffs.proto";` in `api.proto` and `ui.proto`. Makefile: `proto/buffs.proto` rule + prerequisite on `sim/core/proto/api.pb.go` (:192) and `ui/generated/proto/api.ts` (:53). Proto messages will not be `DO NOT EDIT`-only; the manifest is edited instead.
 
 **Versioning (mandatory):** ghost-talent fields change `TristateEffect → bool` (~15 fields). Settings persist as JSON and `migrateOldProto` runs on the **already-parsed** proto (`ui/sim/state/serialization.ts:39`, `ui/app/proto_version.ts:60`), so protobuf-ts `fromJson` throws on `"TristateEffectImproved"` in a bool field before any converter runs. Therefore: bump `current_version_number` 16→17 in `common.proto`; add a **raw-JSON pre-pass** at every `IndividualSimSettings.fromJson` / `Player.fromJson` entry (`ui/app/preset_utils.ts:279`, storage load in `ui/sim/state/serialization.ts`, share-link decode) that, when `apiVersion < 17`, rewrites the listed field names from tristate string → boolean; then the normal v17 stamp in `proto_version.ts`; update `ui/app/storage_keys.test.ts:58`; `make update-tests` for `TestProtoVersioning.results`. Binary/share-link payloads are fine either way (varint 1 or 2 decodes to `true`). Add `proto_version.test.ts` case: v16 JSON with `battleShout: "TristateEffectImproved"` loads as `true`. Also switch `buf.yaml` breaking to `PACKAGE` so the same-package file move is not itself flagged (probe with `npx buf breaking` first; fall back to FILE + bump, which we need anyway).
 
 ### Go: `sim/core/buffs_auto_gen.go`, `sim/core/debuffs_auto_gen.go`
+
 Per row (data literals + calls into a thin hand-written support API so generated code is nearly type-error-proof):
+
 ```go
 // Battle Shout - https://www.wowhead.com/forever/spell=25289
 var BattleShoutCategory = "BattleShout"
@@ -155,18 +167,20 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
     })
 }
 ```
+
 Plus `applyGeneratedBuffs(char, raid, party, individual)` / `applyGeneratedDebuffs(target, debuffs, raid)` — one `if` block per row, calling `MakePermanent(...)` or the named driver (`driveBattleShout`, `windfuryTotemDriver`, `innervateShouldActivate`, ...). `applyBuffEffects` (called character.go:304) and `applyDebuffEffects` (environment.go:93) become the generated call + shrinking hand-written remainder.
 
 New hand-written files: `sim/core/buffs_gen_support.go` (`GeneratedBuff`, `newGeneratedStatAura`, `newGeneratedDebuff`, `newGeneratedDamageShield`, `newGeneratedExternalCD`), `sim/core/buffs_manual.go` (drivers).
 
-`makeStatBuff` (buffs.go:113-115) tag rewrite `0→-1` removed; `BuildPhase = Ternary(Tag == -1, Buffs, None)` on the explicit tag. Paladin auras `1/-1` (buffs.go:776-778) and shouts `0/1` collapse to `0/-1`. Class stubs (`sim/paladin/auras.go`, `sim/shaman/totems.go`, …) get their commented bodies updated to the new signatures, still stubbed (repo rule: stub, don't delete).
+**As shipped:** `makeStatBuff`'s tag rewrite `0→-1` is gone and `BuildPhase = Ternary(Tag == -1, Buffs, None)` reads the explicit tag; its one remaining caller is the draenei racial, which states `-1`. Every other hand-written buff body whose row is generated, retired or unsupported is deleted, leaving `BuffConfig`/`StatConfig` and the `registerExlusiveEffects`/`registerStatEffect` family the support API calls, `ApplyFixedShoutAura`, `registerExternalConsecutiveCDApproximation`, `registerBloodlustCD`/`BloodlustAura`, `ScheduledAura`, and the two rows the client has a named gap for (`MangleAura`, `ImprovedSealOfTheCrusaderAura`). Paladin auras `1/-1` (buffs.go:776-778) and shouts `0/1` collapse to `0/-1`. Class stubs (`sim/paladin/auras.go`, `sim/shaman/totems.go`, …) get their commented bodies updated to the new signatures, still stubbed (repo rule: stub, don't delete).
 
-Import cycle: generated values are literals in `sim/core`; never read `sim/<class>` tables. `tools/database` imports `sim/core`, so a stale `*_auto_gen.go` (e.g. after a proto field retype) breaks the generator itself. Recovery, documented in `docs/spell_data.md`: `make buffs-regen` = replace `sim/core/{buffs,debuffs}_auto_gen.go` with package-only stubs (`//go:build ignore` swap or a tiny script), run `gen_spelldata`, restore. Plain `git checkout` is not a recovery when the committed file is the stale one.
+Import cycle: generated values are literals in `sim/core`; never read `sim/<class>` tables. `tools/database` imports `sim/core`, so a stale `*_auto_gen.go` (e.g. after a proto field retype) breaks the generator itself. Recovery, documented in `docs/spell_data.md`: cut the lines of the generated file that name the field or symbol that is going away by hand, `go build ./...`, then run `gen_spelldata`, which writes the whole file back. No `make buffs-regen` target was added - the cut is a handful of lines and differs per change, so a target would only hide it. Plain `git checkout` is not a recovery when the committed file is the stale one.
 
 ### TS: `ui/features/settings/model/buffs_debuffs_auto_gen.ts` (**committed**, not gitignored)
-CI runs `make go-to-ts` before `type-check` with **no `wowsims.db`**, and this file needs the DB (icons, labels, spell IDs). So it is emitted by `gen_spelldata` in the same DB run as the Go files, like `spell_data_auto_gen.go`. Emitter `tools/database/gen_buffs_debuffs_ts.go` → `GenerateBuffsDebuffsTSFile()`. Add a negated `.gitignore` entry (`!ui/features/settings/model/buffs_debuffs_auto_gen.ts`) and explicit ignore entries in the oxlint/oxfmt configs (today they skip `*_auto_gen.ts` only because it is gitignored). Not added to `AUTO_GEN_FILES_TS`. **Factory is chosen from the emitted proto type**, never from the legacy kind: bool → `makeBoolean*Input`, tristate (talent present in the live tree) → `makeTristate*Input` with `impId` = the talent's top-rank spell, int32 → `makeMultistate*Input`, quadstate only when a second bool field survives. **Item anchors are checked against the `Item` table**; missing ones (30446 Solarian's Sapphire, 32387, the four pendants; T2 bonus 23563 as an aura source) turn their flag row into `KindAbsent`: proto field kept, no UI input, no Go effect. Per row: `export const BattleShout = makeBooleanPartyBuffInput({ actionId: ActionId.fromSpellId(25289), fieldName: 'battleShout', label: 'Battle Shout' })` + registries `GENERATED_{RAID,PARTY,INDIVIDUAL,DEBUFF}_CONFIG: RenderableStatOptions[]` with `{ config, stats, ownerClass }`.
 
-`buffs_debuffs.ts` shrinks to: `export * from './buffs_debuffs_auto_gen'` + manual rows (`DrumsBuff`, `DraeneiRacial*`, `BlessingOfSalvation` role-gated, `ShadowPriestDPS`) + composed registries. `ui/specs/**` imports of `BuffDebuffInputs.X` keep working. Windfury `StatParryRating` sentinel removed; feral specs exclude `[BuffDebuffInputs.WindfuryTotem]` instead.
+CI runs `make go-to-ts` before `type-check` with **no `wowsims.db`**, and this file needs the DB (icons, labels, spell IDs). So it is emitted by `gen_spelldata` in the same DB run as the Go files, like `spell_data_auto_gen.go`. Emitter `tools/database/gen_buffs_debuffs_ts.go` → `GenerateBuffsDebuffsTSFile()`. Add a negated `.gitignore` entry (`!ui/features/settings/model/buffs_debuffs_auto_gen.ts`) and explicit ignore entries in the oxlint/oxfmt configs (today they skip `*_auto_gen.ts` only because it is gitignored). Not added to `AUTO_GEN_FILES_TS`. **Factory is chosen from the emitted proto type**, never from the legacy kind: bool → `makeBoolean*Input`, tristate (talent present in the live tree) → `makeTristate*Input` with `impId` = the talent's top-rank spell, int32 → `makeMultistate*Input`, quadstate only when a second bool field survives. **Item anchors are checked against the `Item` table**; missing ones (30446 Solarian's Sapphire, 32387, the four pendants; T2 bonus 23563 as an aura source) turn their flag row into `KindAbsent`: proto field kept, no UI input, no Go effect. Per row: `export const BattleShout = makeBooleanPartyBuffInput({ actionId: ActionId.fromSpellId(25289), fieldName: 'battleShout', label: 'Battle Shout' })` + registries `GENERATED_{RAID,PARTY,INDIVIDUAL,DEBUFFS}_CONFIG: RenderableStatOptions[]` with `{ config, stats, ownerClass }`. `StatOption` carries `ownerClass`, so the registries use `RenderableStatOptions` directly.
+
+`buffs_debuffs.ts` shrinks to: `export * from './buffs_debuffs_auto_gen'` + the three rows the manifest cannot produce (`Bloodlust`, `BlessingOfSalvation` role-gated, `ShadowPriestDPS`) + the `Innervate`/`PowerInfusion`/`ManaTideTotem` aliases the specs name + composed registries. The rows for fields api version 17 retired - the drums swatch, the draenei racials, the necks, the absent debuffs - are gone with their fields. `ui/specs/**` imports of `BuffDebuffInputs.X` keep working. Windfury `StatParryRating` sentinel removed; feral specs exclude `[BuffDebuffInputs.WindfuryTotem]` instead.
 
 24 files change `RaidBuffs|PartyBuffs|IndividualBuffs|Debuffs` import from `@generated/proto/common` to `@generated/proto/buffs` (list in section 5 of the proto/TS design: specs presets, icon_inputs, input_helpers, saved_settings, serialization, raid/party, …). No field renames → zero preset value edits.
 
@@ -189,34 +203,34 @@ CI runs `make go-to-ts` before `type-check` with **no `wowsims.db`**, and this f
 
 ## Expected value deltas (DB @60 vs hand-written) — review list
 
-| Buff | Now | DB | Note |
-|---|---|---|---|
-| Battle Shout | 306 AP, 2 min, spell 2048 | 139 AP, 3 min, 25289 | Imp BS ghost; Booming Voice = radius only, no sim effect |
-| Commanding Shout | 1080 HP | 42 Stam, 5 min, 403215 | |
-| Arcane Brilliance | 40 Int | 31 | |
-| PW:Fortitude / Divine Spirit | 79 Stam / 50 Spi | 70 / 40 | Imp ghosts; no DS 10% conversion |
-| Gift of the Wild | 340 armor/14 stats/25 res | 385/16/27 | includes holy (no stat) |
-| Thorns / Retribution Aura | 25 / 26 | 22 / 30 | |
-| Devotion Aura | 861 armor | 735 | |
-| Trueshot Aura | 125 AP+RAP | 50 RAP (r4 = 75!) | non-monotonic, flag |
-| Blood Pact | 70 Stam | 54 | |
-| Moonkin / LotP | 5% crit (+rating) | 3% | `A_MOD_CRIT_PCT` can't split melee/spell → manifest `StatOverride` |
-| Blessing of Might | 220 AP+RAP | 133 melee AP only | |
-| Blessing of Wisdom | 41 MP5 | 40 | |
-| SoE / GoA / Mana Spring | 86 Str / 77 Agi / 50 MP5 | 53 / 89 / 25 | |
-| Windfury Totem | 445 AP | 246 | |
-| Resist auras/totems, Aspect of the Wild | 70 | 60 | |
-| Power Infusion | cast speed/cost | +20% dmg & healing done, 15 s | **semantics change** |
-| Sunder Armor | -520 ×5 | -450 ×5, threat 1013 | |
-| Expose Armor | -2050 @5cp | -450/cp = -2250 | Imp EA in tree |
-| Faerie Fire | -610 | -505, 40 s | |
-| Curse of Recklessness | -800 armor / +135 AP | -505 / dummy 90 | |
-| Curse of Elements | 4 schools 10%, -88 | mask 126 incl. holy+nature 10%, -75, 5 min | Malediction in tree |
-| Hunter's Mark | 110 +11/stack | 71 flat | |
-| Demo Roar / Shout | -248 / -300, 30 s | -204 / -204, 45 s | |
-| Thunder Clap | -10% | -20% | Imp TC in tree |
-| Scorpid Sting | -5 hit | -2 | |
-| JotC | 219 holy taken | 161, 40 s | ISotC ghost |
+| Buff                                    | Now                       | DB                                         | Note                                                               |
+| --------------------------------------- | ------------------------- | ------------------------------------------ | ------------------------------------------------------------------ |
+| Battle Shout                            | 306 AP, 2 min, spell 2048 | 139 AP, 3 min, 25289                       | Imp BS ghost; Booming Voice = radius only, no sim effect           |
+| Commanding Shout                        | 1080 HP                   | 42 Stam, 5 min, 403215                     |                                                                    |
+| Arcane Brilliance                       | 40 Int                    | 31                                         |                                                                    |
+| PW:Fortitude / Divine Spirit            | 79 Stam / 50 Spi          | 70 / 40                                    | Imp ghosts; no DS 10% conversion                                   |
+| Gift of the Wild                        | 340 armor/14 stats/25 res | 385/16/27                                  | includes holy (no stat)                                            |
+| Thorns / Retribution Aura               | 25 / 26                   | 22 / 30                                    |                                                                    |
+| Devotion Aura                           | 861 armor                 | 735                                        |                                                                    |
+| Trueshot Aura                           | 125 AP+RAP                | 50 RAP (r4 = 75!)                          | non-monotonic, flag                                                |
+| Blood Pact                              | 70 Stam                   | 54                                         |                                                                    |
+| Moonkin / LotP                          | 5% crit (+rating)         | 3%                                         | `A_MOD_CRIT_PCT` can't split melee/spell → manifest `StatOverride` |
+| Blessing of Might                       | 220 AP+RAP                | 133 melee AP only                          |                                                                    |
+| Blessing of Wisdom                      | 41 MP5                    | 40                                         |                                                                    |
+| SoE / GoA / Mana Spring                 | 86 Str / 77 Agi / 50 MP5  | 53 / 89 / 25                               |                                                                    |
+| Windfury Totem                          | 445 AP                    | 246                                        |                                                                    |
+| Resist auras/totems, Aspect of the Wild | 70                        | 60                                         |                                                                    |
+| Power Infusion                          | cast speed/cost           | +20% dmg & healing done, 15 s              | **semantics change**                                               |
+| Sunder Armor                            | -520 ×5                   | -450 ×5, threat 1013                       |                                                                    |
+| Expose Armor                            | -2050 @5cp                | -450/cp = -2250                            | Imp EA in tree                                                     |
+| Faerie Fire                             | -610                      | -505, 40 s                                 |                                                                    |
+| Curse of Recklessness                   | -800 armor / +135 AP      | -505 / dummy 90                            |                                                                    |
+| Curse of Elements                       | 4 schools 10%, -88        | mask 126 incl. holy+nature 10%, -75, 5 min | Malediction in tree                                                |
+| Hunter's Mark                           | 110 +11/stack             | 71 flat                                    |                                                                    |
+| Demo Roar / Shout                       | -248 / -300, 30 s         | -204 / -204, 45 s                          |                                                                    |
+| Thunder Clap                            | -10%                      | -20%                                       | Imp TC in tree                                                     |
+| Scorpid Sting                           | -5 hit                    | -2                                         |                                                                    |
+| JotC                                    | 219 holy taken            | 161, 40 s                                  | ISotC ghost                                                        |
 
 **Ghost improved talents** (not in live tree → field becomes bool): Imp Battle Shout, BoM, BoW, Devotion, Retribution, Concentration, Sanctity, PW:F, Divine Spirit, MotW, Blood Pact, LotP, Moonkin, Enhancing Totems, Imp WF, Imp Hunter's Mark, Imp Demo Shout, Feral Aggression, Brambles, Imp FF, ISotC.
 

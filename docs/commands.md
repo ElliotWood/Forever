@@ -83,6 +83,11 @@ make db
 make ptrdb
 
 # Regenerate the sim/<class>/spell_data_auto_gen.go tables from the client data
+# Also rewrites the generated buff and debuff files, in sim/core and in the settings UI
 # Needs tools/database/wowsims.db, so run make db at least once first
 make spelldata
+
+# Rewrite proto/buffs.proto from tools/database/buffmanifest
+# Needs no client database; make sim/core/proto/api.pb.go runs it before protoc
+go run ./tools/gen_buffs_proto
 ```

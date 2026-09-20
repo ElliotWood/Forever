@@ -12,6 +12,7 @@ hand-transcribed literals.
 - [Attack power](#attack-power)
 - [Regenerating](#regenerating)
 - [Traps](#traps)
+- [Buffs and debuffs](#buffs-and-debuffs)
 
 ## Using a rank
 
@@ -429,3 +430,129 @@ still be in tenths - nothing generated today does.
 **A new client table needs a settings line.** `SpellCastTimes` was missing from
 `generator-settings.json` and cast times read zero until it was added and `make db` re-run. Adding a
 table is one line; the extractor needs no code.
+
+## Buffs and debuffs
+
+Every raid, party, individual and enemy-debuff proto field has one row in
+`tools/database/buffmanifest`, and `tools/database/gen_spelldata` turns those rows into
+`sim/core/buffs_auto_gen.go`, `sim/core/debuffs_auto_gen.go` and
+`ui/features/settings/model/buffs_debuffs_auto_gen.ts`. `tools/gen_buffs_proto` renders
+`proto/buffs.proto` from the same rows. The manifest owns the field numbers; the client database owns
+the values.
+
+### The manifest row
+
+`BuffSpec` in `tools/database/buffmanifest/manifest.go`:
+
+| Field                      | What it is                                                                                                                                                                                                                                                        |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Field`, `Number`, `Scope` | the proto field, its number and the message it lives on. Nothing else may take a number, and a retired one goes into `Retired`                                                                                                                                    |
+| `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32`, `ProtoDouble` or `ProtoEnumDrums`. Declared, not derived, so the emitter runs while the compiled protos are stale; the resolver checks it against the live trait tree                                                 |
+| `Kind`                     | what the generator emits, below                                                                                                                                                                                                                                   |
+| `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory`                                                                                                                                      |
+| `Name`                     | the castable family's `SpellName.Name_lang`, resolved through `SkillLineAbility` for the owning class                                                                                                                                                             |
+| `AuraName`                 | the aura family, when the cast is a summon or a dummy: the totem cast names `Strength of Earth Totem` and the aura `Strength of Earth`                                                                                                                            |
+| `Anchor`                   | an explicit spell id, for a row with no castable name at all (the Atiesh staves)                                                                                                                                                                                  |
+| `Owner`                    | the class that casts it, which narrows the `SkillLineAbility` lookup and marks the row "(External)" on that class's settings tab                                                                                                                                  |
+| `Talent`                   | the improving talent family, its effect index, and whether it scales the value, the duration or adds a stat. Only a `ProtoTristate` row may state one                                                                                                             |
+| `Category`                 | the exclusive-effect category the aura bids in, `""` for none                                                                                                                                                                                                     |
+| `SharedCategory`           | a second category the aura joins without an effect of its own, which is how the paladin auras exclude each other across schools. Applied to the player's copy only                                                                                                |
+| `SingleAura`               | the category holds one aura at a time, so the loser is deactivated rather than outbid                                                                                                                                                                             |
+| `Driver`                   | the apply block hands the row to `drive<Go>` instead of activating the aura outright                                                                                                                                                                              |
+| `Pet`                      | `PetNormal`, `PetStrip`, `PetInheritOwnerAura`, `PetCapAtRegular` or `PetStripWhenSummonedLate`                                                                                                                                                                   |
+| `StatOverride`             | the sim stats the value lands on, for an aura the client states without naming one: `A_MOD_CRIT_PCT` carries no school, so Leader of the Pack says `PhysicalCritPercent` and Moonkin Aura `SpellCritPercent`. A row that states one may have only one aura effect |
+| `Stats`                    | the UI relevance tags a spec's `epStats` and `displayStats` are matched against                                                                                                                                                                                   |
+| `ImpAction`                | the icon the improved state of a tristate input shows, when it is an item rather than the talent                                                                                                                                                                  |
+| `Label`                    | a UI label override; the client's name is the default                                                                                                                                                                                                             |
+| `Notes`                    | why a `KindManual`, `KindAbsent` or `KindFlag` row is one. Required for those three                                                                                                                                                                               |
+
+### The kinds
+
+`KindStatFlat`, `KindStatPct` and `KindResistance` are stat buffs; `KindPseudoMult` moves a
+pseudo-stat; `KindDamageShield` is a retaliation proc; `KindProc` and `KindExternalCD` need a driver
+for the trigger or the cooldown; `KindItemCount` takes a count and applies its amounts per item;
+`KindDebuffStat`, `KindDebuffStacking`, `KindDebuffDamageTaken`, `KindDebuffAtkSpeed` and
+`KindDebuffUptime` are the debuff shapes. `KindManual` is a row the sim models by hand,
+`KindFlag`/`KindEnum` are sim toggles rather than buffs, and `KindAbsent` is a field the Forever
+client describes no spell for. The last three resolve to a commented shell naming the reason.
+
+### Resolving a row
+
+An `Anchor` is taken as it stands. Otherwise `Name` is looked up in `SkillLineAbility` for the owner's
+class, the highest rank is taken, and a non-monotonic ladder is warned about and recorded above the
+constructor. `AuraName` then hops from the cast to the aura family member with the same rank subtext.
+A spell an engraving rune grants is refused: those are class runes, not raid buffs. A `Talent` is
+matched in the owner's live trait tree and priced per point into a curve; declaring one for a talent
+that is not in the tree is an error, and not declaring one where a value-scaling talent exists is a
+warning.
+
+### What stays hand-written
+
+The generator emits a real constructor only when `sim/core` declares none: it parses the non-generated
+files and treats a row as hand-written if `<Go>Aura` is declared there **or** if an apply block still
+reads the row's proto field. Either way the row renders as a commented shell, so migrating one means
+deleting both the constructor and the apply-block branch and regenerating.
+
+### Drivers
+
+A row the generator cannot express outright states `Driver: true`, or is a kind that always needs one,
+and the apply block calls `drive<Go>` instead. The contract is in `sim/core/buffs_manual.go`: a buff
+row's driver takes the `*Character` and the whole scope message, a debuff row's takes the `*Unit`, the
+debuffs and the raid. Handing over the message rather than the one field is what lets Grace of Air read
+`party.TotemTwisting`. The driver builds the generated aura with `<Go>Aura(...)` and adds what the
+client does not state: a proc trigger, a cooldown, a delay, a regen. Declaring the function is what
+makes the row compile.
+
+### Regenerating
+
+```
+go run ./tools/database/gen_spelldata
+```
+
+writes all three generated files. `tools/database` imports `sim/core`, so the generator cannot run
+while the tree it generates into does not compile. A change that breaks it - retiring a proto field,
+deleting a hand-written constructor the generated file still references - needs the generated file cut
+by hand first: delete the lines that name the field or symbol that is going away, `go build ./...`,
+then run the generator, which writes the whole file back. Running it twice and seeing an empty
+`git status` is the check that it converged.
+
+### The guard tests
+
+`go test ./tools/database/... ./tools/gen_buffs_proto/...` needs no client database and runs in CI.
+Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants` and `TestGeneratedBuffsDebuffsTS`
+skip; everything else runs.
+
+| Test                                                                                                              | What it holds                                                                                                                   |
+| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `TestUniqueScopeField`, `TestUniqueScopeNumber`, `TestUniqueGoStem`                                               | no two rows collide                                                                                                             |
+| `TestNoLiveRowTakesARetiredNumber`                                                                                | a field number api version 17 gave up is never handed out again                                                                 |
+| `TestProtoTypeMatchesKind`, `TestTalentImpliesTristate`, `TestShellRowsHaveNotes`, `TestResolvableRowsHaveAnchor` | the schema rules above                                                                                                          |
+| `TestFieldNaming`, `TestFieldNamesRoundTrip`                                                                      | `GoField()` and `TSField()` reproduce protoc's and protobuf-ts's camel case                                                     |
+| `TestRenderMatchesCommittedFile`                                                                                  | `proto/buffs.proto` is what the manifest renders                                                                                |
+| `TestRenderReservesEveryRetiredNumber`, `TestRenderNextIndex`                                                     | the `reserved` lines and the next free number                                                                                   |
+| `TestRetypedFieldsAreBool`, `TestRetypedFieldsMatchTheMigration`                                                  | the 25 fields api version 17 retyped are bool, and `ui/sim/proto/buff_field_migration.ts` names the same 25                     |
+| `TestRenderedBuffFilesMatchTheFixtures`, `TestRenderedBuffFilesCompile`                                           | synthetic rows render to the committed fixtures, and those fixtures compile against the real `sim/core` through a build overlay |
+| `TestRenderBuffsDebuffsTS*`                                                                                       | the settings inputs each proto type and kind renders                                                                            |
+| `TestGeneratedBuffFiles`, `TestGeneratedBuffsDebuffsTS`                                                           | with a database, the committed files are byte-for-byte what the generator emits                                                 |
+| `TestResolvedBuffInvariants`                                                                                      | with a database, the pinned talent curves, categories and stat amounts                                                          |
+
+Rewrite the fixtures with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`.
+
+### Traps
+
+**A retired field number is gone for good.** `buffmanifest.Retired` lists the 33 api version 17 gave
+up; a share link or a saved setting from before the bump still carries them on the wire, and a new row
+reusing one would read the old value. The emitter turns them into `reserved` lines and counts the next
+free index past them.
+
+**A proto change here is a UI migration too.** `ui/sim/proto/buff_field_migration.ts` runs on the raw
+JSON before `fromJson`, because the parser throws on an enum name in a bool field and on an unknown key
+long before the version converters run. A retyped field goes in its list, a retired one in the other,
+and every `fromJson` of a settings envelope passes `ignoreUnknownFields`.
+
+**A `PetInheritOwnerAura` row must name the aura the pet looks for.** The pet finds it on its owner by
+label, so the row needs a `Label`, a `Name` or a `Category` even when the client describes the buff not
+at all.
+
+**A talent curve only scales the row's first stat.** A row whose talent improves a second amount would
+need the generator extended; nothing in the manifest does today.
