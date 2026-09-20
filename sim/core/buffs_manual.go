@@ -171,6 +171,24 @@ func driveWindfuryTotem(char *Character, _ *proto.PartyBuffs) {
 	})
 }
 
+// The mana a shadow priest returns to the party is entered as the damage that
+// priest does, of which the party gets 5% a second. The client states the
+// priest's side of it, a periodic 65 damage, and nothing about the party's.
+func driveShadowPriestDps(char *Character, individual *proto.IndividualBuffs) {
+	aura := ShadowPriestDpsAura(&char.Unit, false, 0)
+	manaMetrics := char.NewManaMetrics(aura.ActionID)
+	manaGain := float64(individual.ShadowPriestDps) * 0.05
+
+	MakePermanent(aura).ApplyOnGain(func(aura *Aura, sim *Simulation) {
+		StartPeriodicAction(sim, PeriodicActionOptions{
+			Period: time.Second,
+			OnAction: func(sim *Simulation) {
+				char.AddMana(sim, manaGain, manaMetrics)
+			},
+		})
+	})
+}
+
 // A shaman twisting totems keeps Grace of Air up for 9 seconds out of every 10,
 // because the air slot is holding another totem the rest of the time; a shaman
 // who is not twisting leaves it standing.

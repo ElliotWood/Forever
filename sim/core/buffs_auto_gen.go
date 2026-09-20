@@ -169,7 +169,17 @@ func ManaTideTotemsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Vampiric Touch - https://www.wowhead.com/forever/spell=402668
-// func ShadowPriestDpsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_priest_dps, KindManual: hand-written apply block still present
+func ShadowPriestDpsDuration(talentPoints int32) time.Duration {
+	return 15000 * time.Millisecond
+}
+func ShadowPriestDpsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Vampiric Touch (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 402668}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: ShadowPriestDpsDuration(talentPoints),
+		IsPlayer: isPlayer,
+	})
+}
 
 // Moonkin Aura - https://www.wowhead.com/forever/spell=24907
 func MoonkinAuraValue(talentPoints int32) float64 {
@@ -852,6 +862,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if party.ManaTideTotems > 0 {
 		driveManaTideTotems(char, party)
+	}
+	if individual.ShadowPriestDps > 0 {
+		driveShadowPriestDps(char, individual)
 	}
 	if party.MoonkinAura {
 		MakePermanent(MoonkinAuraAura(&char.Unit, false, 0))

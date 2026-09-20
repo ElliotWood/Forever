@@ -192,10 +192,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(BlessingOfSanctuaryAura(char))
 	}
 
-	if individual.ShadowPriestDps > 0 {
-		MakePermanent(ShadowPriestDPSManaAura(char, float64(individual.ShadowPriestDps)))
-	}
-
 	if individual.UnleashedRage {
 		MakePermanent(UnleashedRageAura(char, -1, 5))
 	}
@@ -614,25 +610,6 @@ func BlessingOfSanctuaryAura(char *Character) *Aura {
 ////////////////////////////
 //  Individual Buffs
 ////////////////////////////
-
-func ShadowPriestDPSManaAura(char *Character, dps float64) *Aura {
-	manaMetrics := char.NewManaMetrics(ActionID{SpellID: 34914})
-
-	manaGain := dps * 0.05
-
-	return char.GetOrRegisterAura(Aura{
-		Label:    "Vampiric Touch",
-		ActionID: ActionID{SpellID: 34914},
-		OnGain: func(aura *Aura, sim *Simulation) {
-			StartPeriodicAction(sim, PeriodicActionOptions{
-				Period: DurationFromSeconds(1),
-				OnAction: func(s *Simulation) {
-					char.AddMana(sim, manaGain, manaMetrics)
-				},
-			})
-		},
-	})
-}
 
 ////////////////////////////
 //  Cooldowns
