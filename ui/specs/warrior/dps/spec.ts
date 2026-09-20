@@ -2,6 +2,7 @@ import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation, APLRotation_Type, SimpleRotation } from '@generated/proto/apl';
 import { Cooldowns, EquipmentSpec, HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
 import { DpsWarriorSpec, WarriorSunder } from '@generated/proto/warrior';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -81,7 +82,7 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: Presets.FuryTalents.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -123,7 +124,7 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.FuryTalents, Presets.ArmsTalents, Presets.ArmsKebabTalents],
+		talents: [],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.SIMPLE_DEFAULT_ROTATION, Presets.FURY_DEFAULT_ROTATION, Presets.ARMS_DEFAULT_ROTATION],
 		// Preset gear configurations that the user can quickly select.

@@ -1,6 +1,7 @@
 import * as BuffDebuffInputs from '@features/settings/model/buffs_debuffs';
 import { APLRotation } from '@generated/proto/apl';
 import { Debuffs, EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_HEALER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
@@ -54,7 +55,7 @@ export default defineSpec<Spec.SpecRestorationDruid>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: Presets.TreeOfLifeTalents.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,
@@ -96,7 +97,7 @@ export default defineSpec<Spec.SpecRestorationDruid>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.TreeOfLifeTalents, Presets.DreamstateTalents],
+		talents: [],
 		// Preset rotations that the user can quickly select.
 		rotations: [],
 		// Preset gear configurations that the user can quickly select.

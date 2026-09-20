@@ -1,6 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
 import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_HYBRID_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
@@ -66,7 +67,7 @@ export default defineSpec<Spec.SpecElementalShaman>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: Presets.StandardTalents.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,
@@ -94,7 +95,7 @@ export default defineSpec<Spec.SpecElementalShaman>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.StandardTalents],
+		talents: [],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_DEFAULT],
 		// Preset gear configurations that the user can quickly select.

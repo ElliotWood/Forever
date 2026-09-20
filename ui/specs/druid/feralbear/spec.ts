@@ -15,6 +15,7 @@ import {
 	TristateEffect,
 } from '@generated/proto/common';
 import { FeralBearDruid_Rotation as DruidRotation } from '@generated/proto/druid';
+import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -98,7 +99,7 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 		consumables: Presets.DefaultConsumables,
 		rotationType: APLRotationType.TypeAPL,
 		aplRotation: Presets.ROTATION_DEFAULT.rotation.rotation!,
-		talents: Presets.StandardTalents.data,
+		talents: SavedTalents.create(),
 		specOptions: Presets.DefaultOptions,
 		raidBuffs: RaidBuffs.create({
 			arcaneBrilliance: true,
@@ -171,7 +172,7 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 
 	presets: {
 		epWeights: [],
-		talents: [Presets.StandardTalents, Presets.DemoRoarTalents],
+		talents: [],
 		// ROTATION_SIMPLE is kept in presets.ts for reference but omitted here —
 		// the APL rotation is more user-friendly and handles CDs, re-shifting, and
 		// on-use items more easily.

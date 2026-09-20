@@ -5,25 +5,8 @@ import {
 	FeralCatDruid_Rotation as FeralCatDruidRotation,
 	FeralCatDruid_Rotation_FinishingMove as FinishingMove,
 } from '@generated/proto/druid';
-import { SavedTalents } from '@generated/proto/ui';
 
 import DefaultApl from './apls/default.apl.json';
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/forever/talent-calc and copy the numbers in the url.
-export const StandardTalents = {
-	name: 'Standard',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const MonocatTalents = {
-	name: 'Monocat',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = FeralDruidOptions.create({});
 

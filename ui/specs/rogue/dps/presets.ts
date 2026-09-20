@@ -1,7 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec } from '@generated/proto/common';
 import { Rogue_Options as RogueOptions } from '@generated/proto/rogue';
-import { SavedTalents } from '@generated/proto/ui';
 
 import SinisterAPL from './apls/swords.apl.json';
 
@@ -10,16 +9,6 @@ import SinisterAPL from './apls/swords.apl.json';
 // keep them in a separate file.
 
 export const SINSITER_APL = PresetUtils.makePresetAPLRotation('Rogue (Check Variables for Backstab/Shiv)', SinisterAPL);
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/wotlk/talent-calc and copy the numbers in the url.
-
-export const Talents = {
-	name: 'Combat Swords',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = RogueOptions.create({
 	classOptions: {},

@@ -1,21 +1,11 @@
 import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { DpsPriest_Options as Options } from '@generated/proto/priest';
-import { SavedTalents } from '@generated/proto/ui';
 import { defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://www.wowhead.com/forever/talent-calc/priest and copy the numbers in the url.
-export const StandardTalents = {
-	name: 'Shadow',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = Options.create({
 	classOptions: {

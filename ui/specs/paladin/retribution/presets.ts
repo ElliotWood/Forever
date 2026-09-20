@@ -1,7 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
 import { PaladinAura, RetributionPaladin_Options as RetributionPaladinOptions, RetributionPaladin_Rotation as PaladinRotation } from '@generated/proto/paladin';
-import { SavedTalents } from '@generated/proto/ui';
 import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
@@ -16,27 +15,6 @@ export const DefaultSimpleRotation = PaladinRotation.create({
 
 export const APL_PRESET = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 export const APL_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.SpecRetributionPaladin, DefaultSimpleRotation);
-
-export const DefaultTalents = {
-	name: 'Default',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const NoKingsTalents = {
-	name: 'No Kings',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const ImpMightTalents = {
-	name: 'Imp Might',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = RetributionPaladinOptions.create({
 	classOptions: {},

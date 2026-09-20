@@ -1,21 +1,23 @@
 import * as PresetUtils from '@app/preset_utils';
-import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect, UnitReference } from '@generated/proto/common';
+import {
+	Class,
+	ConsumesSpec,
+	Debuffs,
+	Drums,
+	IndividualBuffs,
+	PartyBuffs,
+	Profession,
+	Race,
+	RaidBuffs,
+	TristateEffect,
+	UnitReference,
+} from '@generated/proto/common';
 import { BalanceDruid_Options as BalanceDruidOptions } from '@generated/proto/druid';
-import { SavedTalents } from '@generated/proto/ui';
 import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultAPL from './apls/default.apl.json';
 
 export const StandardRotation = PresetUtils.makePresetAPLRotation('Default', DefaultAPL);
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/forever/talent-calc and copy the numbers in the url.
-export const StandardTalents = {
-	name: 'Standard',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = BalanceDruidOptions.create({
 	classOptions: {

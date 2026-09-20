@@ -41,7 +41,19 @@ export class ActionId {
 	// "Empty action id!" error logged by toStringIgnoringTag() for accidental empties.
 	private readonly isEmptyPlaceholder: boolean;
 
-	private constructor({ itemId, spellId, otherId, tag, baseName, name, iconUrl, randomSuffixId, rank, definitionId, isEmptyPlaceholder }: ActionIdOptions = {}) {
+	private constructor({
+		itemId,
+		spellId,
+		otherId,
+		tag,
+		baseName,
+		name,
+		iconUrl,
+		randomSuffixId,
+		rank,
+		definitionId,
+		isEmptyPlaceholder,
+	}: ActionIdOptions = {}) {
 		this.itemId = itemId ?? 0;
 		this.randomSuffixId = randomSuffixId ?? 0;
 		this.spellId = spellId ?? 0;

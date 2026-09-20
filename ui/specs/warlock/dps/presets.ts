@@ -1,6 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
-import { SavedTalents } from '@generated/proto/ui';
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
 import { defaultExposeWeaknessSettings, defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
@@ -21,43 +20,6 @@ export const AfflictionAPL = PresetUtils.makePresetAPLRotation('Affliction', Aff
 export const DemoAPL = PresetUtils.makePresetAPLRotation('Demonology', DemoRot);
 export const DestroAPL = PresetUtils.makePresetAPLRotation('Destruction', DestroRot);
 export const DestroFireAPL = PresetUtils.makePresetAPLRotation('Destruction (Fire)', DestroFireRot);
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/wotlk/talent-calc and copy the numbers in the url.
-export const TalentsAffliction = {
-	name: 'Affliction',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const TalentsDemoRuin = {
-	name: 'Demo/Ruin',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const TalentsDemoFelguard = {
-	name: 'Demonology Felguard',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const TalentsDestroNightfall = {
-	name: 'Destro/Nightfall',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const TalentsDestruction = {
-	name: 'Destruction',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 // Defaults
 export const DefaultOptions = WarlockOptions.create({
@@ -129,4 +91,3 @@ export const DefaultDebuffs = Debuffs.create({
 	exposeArmor: TristateEffect.TristateEffectImproved,
 	huntersMark: TristateEffect.TristateEffectImproved,
 });
-

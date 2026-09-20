@@ -2,6 +2,7 @@ import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLListItem, APLRotation, APLRotation_Type, APLValueVariable } from '@generated/proto/apl';
 import { Cooldowns, EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PaladinAura } from '@generated/proto/paladin';
+import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -108,7 +109,7 @@ export default defineSpec<Spec.SpecRetributionPaladin>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: Presets.DefaultTalents.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,
@@ -142,7 +143,7 @@ export default defineSpec<Spec.SpecRetributionPaladin>({
 		epWeights: [],
 		rotations: [Presets.APL_PRESET, Presets.APL_SIMPLE],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.DefaultTalents, Presets.NoKingsTalents, Presets.ImpMightTalents],
+		talents: [],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],
 	},

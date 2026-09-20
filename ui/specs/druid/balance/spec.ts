@@ -1,6 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation, APLRotation_Type } from '@generated/proto/apl';
 import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_HYBRID_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
@@ -65,7 +66,7 @@ export default defineSpec<Spec.SpecBalanceDruid>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: Presets.StandardTalents.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -95,7 +96,7 @@ export default defineSpec<Spec.SpecBalanceDruid>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.StandardTalents],
+		talents: [],
 		rotations: [Presets.StandardRotation],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],

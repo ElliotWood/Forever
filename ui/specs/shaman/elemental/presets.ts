@@ -1,7 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { ElementalShaman_Options as ElementalShamanOptions } from '@generated/proto/shaman';
-import { SavedTalents } from '@generated/proto/ui';
 import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
@@ -9,12 +8,6 @@ import DefaultApl from './apls/default.apl.json';
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
 // https://wowhead.com/forever/talent-calc and copy the numbers in the url.
-export const StandardTalents = {
-	name: 'Default',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = ElementalShamanOptions.create({
 	classOptions: {

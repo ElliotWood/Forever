@@ -1,17 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import {
-	Class,
-	ConsumesSpec,
-	Debuffs,
-	Drums,
-	IndividualBuffs,
-	PartyBuffs,
-	Profession,
-	Race,
-	RaidBuffs,
-	Spec,
-	TristateEffect,
-} from '@generated/proto/common';
+import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
 import {
 	Hunter_Options as HunterOptions,
 	Hunter_Rotation,
@@ -19,7 +7,6 @@ import {
 	HunterOptions_PetType as PetType,
 	HunterOptions_QuiverBonus,
 } from '@generated/proto/hunter';
-import { SavedTalents } from '@generated/proto/ui';
 import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultAPL from './apls/default.apl.json';
@@ -45,22 +32,6 @@ export const WeaveRotation = Hunter_Rotation.create({
 	useArcane: true,
 });
 export const WeaveSimple = PresetUtils.makePresetSimpleRotation('Weave', Spec.SpecHunter, WeaveRotation);
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/wotlk/talent-calc and copy the numbers in the url.
-
-export const BMTalents = {
-	name: 'BM',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-export const SVTalents = {
-	name: 'SV',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = HunterOptions.create({
 	classOptions: {

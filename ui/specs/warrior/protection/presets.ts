@@ -1,6 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, HealingModel, Profession, Race } from '@generated/proto/common';
-import { SavedTalents } from '@generated/proto/ui';
 import { ProtectionWarrior_Options as ProtectionWarriorOptions, WarriorShout, WarriorStance } from '@generated/proto/warrior';
 import { OtherDefaults as SimUIOtherDefaults } from '@sim/spec_config';
 
@@ -12,15 +11,6 @@ import GenericApl from './apls/default.apl.json';
 // keep them in a separate file.
 
 export const ROTATION_DEFAULT = PresetUtils.makePresetAPLRotation('Generic', GenericApl);
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/forever/talent-calc and copy the numbers in the url.
-export const DefaultTalents = {
-	name: 'Default',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = ProtectionWarriorOptions.create({
 	classOptions: {

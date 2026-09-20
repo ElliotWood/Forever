@@ -1,35 +1,11 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, ShamanSyncType } from '@generated/proto/shaman';
-import { SavedTalents } from '@generated/proto/ui';
 import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/forever/talent-calc and copy the numbers in the url.
-export const SubRestoIWT = {
-	name: 'Sub-Restoration IWT',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const SubRestoILS = {
-	name: 'Sub-Restoration ILS',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
-
-export const SubEle = {
-	name: 'Sub-Elemental',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,

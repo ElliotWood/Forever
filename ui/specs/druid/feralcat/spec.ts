@@ -15,6 +15,7 @@ import {
 	TristateEffect,
 } from '@generated/proto/common';
 import { FeralCatDruid_Rotation as DruidRotation } from '@generated/proto/druid';
+import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -92,7 +93,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		// Default rotation settings.
 		rotationType: APLRotationType.TypeAuto,
 		// Default talents.
-		talents: Presets.StandardTalents.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -161,7 +162,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.StandardTalents, Presets.MonocatTalents],
+		talents: [],
 		rotations: [Presets.SIMPLE, Presets.APL],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],

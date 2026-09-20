@@ -1,6 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLListItem, APLRotation, APLRotation_Type, APLValueVariable } from '@generated/proto/apl';
 import { Cooldowns, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import * as AplUtils from '@sim/proto/apl_utils';
@@ -100,7 +101,7 @@ export default defineSpec<Spec.SpecMage>({
 		// Default consumes settings.
 		consumables: DefaultConsumables,
 		// Default talents.
-		talents: Presets.ARCANE_TALENTS.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,
@@ -136,7 +137,7 @@ export default defineSpec<Spec.SpecMage>({
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_ARCANE, Presets.APL_ARCANE_SIMPLE, Presets.ROTATION_PRESET_ARCANEBRAID],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.ARCANE_TALENTS],
+		talents: [],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],
 	},

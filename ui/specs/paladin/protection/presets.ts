@@ -6,7 +6,6 @@ import {
 	ProtectionPaladin_Options as ProtectionPaladinOptions,
 	ProtectionPaladin_Rotation as ProtectionPaladinRotation,
 } from '@generated/proto/paladin';
-import { SavedTalents } from '@generated/proto/ui';
 import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
@@ -25,16 +24,6 @@ export const DefaultSimpleRotation = ProtectionPaladinRotation.create({
 });
 
 export const APL_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.SpecProtectionPaladin, DefaultSimpleRotation);
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/forever/talent-calc and copy the numbers in the url.
-
-export const DefaultTalents = {
-	name: 'Default',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = ProtectionPaladinOptions.create({
 	classOptions: {},

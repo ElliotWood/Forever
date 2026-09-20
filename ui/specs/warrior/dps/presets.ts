@@ -1,8 +1,13 @@
 import * as PresetUtils from '@app/preset_utils';
-import { makeSpecChangeWarningToast } from '@features/settings/utils/spec_change_warning_toast';
 import { ConsumesSpec, HandType, ItemSlot, Profession, Race, Spec } from '@generated/proto/common';
-import { SavedTalents } from '@generated/proto/ui';
-import { DpsWarrior_Options as WarriorOptions, DpsWarrior_Rotation, DpsWarriorSpec, WarriorShout, WarriorStance, WarriorSunder } from '@generated/proto/warrior';
+import {
+	DpsWarrior_Options as WarriorOptions,
+	DpsWarrior_Rotation,
+	DpsWarriorSpec,
+	WarriorShout,
+	WarriorStance,
+	WarriorSunder,
+} from '@generated/proto/warrior';
 import { Player } from '@sim/player/player';
 
 import * as WarriorPresets from '../shared/presets';
@@ -24,38 +29,6 @@ export const isFurySpec = (player: Player<Spec.SpecDpsWarrior>) =>
 	player.getEquippedItem(ItemSlot.ItemSlotMainHand)?.item.handType === HandType.HandTypeOneHand;
 
 // Handlers for spec specific load checks
-const FURY_PRESET_OPTIONS = {
-	group: 'Fury',
-	onLoad: (player: Player<Spec.SpecDpsWarrior>) => {
-		makeSpecChangeWarningToast(
-			[
-				{
-					condition: isArmsSpec,
-					message: 'Check your gear: You have a two-handed weapon equipped, but the selected option is for dual wield.',
-				},
-				{
-					condition: (player: Player<Spec.SpecDpsWarrior>) => !player.getTalents().dualWieldSpecialization,
-					message: "Check your talents: You have selected a dual-wield spec but don't have [Dual Wield Specialization] talented.",
-				},
-			],
-			player,
-		);
-	},
-};
-const ARMS_PRESET_OPTIONS = {
-	group: 'Arms',
-	onLoad: (player: Player<any>) => {
-		makeSpecChangeWarningToast(
-			[
-				{
-					condition: isFurySpec,
-					message: 'Check your gear: You have a one-handed weapon equipped, but the selected option is for two-handed weapons.',
-				},
-			],
-			player,
-		);
-	},
-};
 
 export const FURY_DEFAULT_ROTATION = PresetUtils.makePresetAPLRotation('Fury', DefaultFuryApl);
 export const ARMS_DEFAULT_ROTATION = PresetUtils.makePresetAPLRotation('Arms', DefaultArmsApl);
@@ -72,32 +45,6 @@ export const SIMPLE_ARMS_DEFAULT_ROTATION = PresetUtils.makePresetSimpleRotation
 	...SIMPLE_ROTATION,
 	spec: DpsWarriorSpec.DpsWarriorSpecArms,
 });
-
-// Default talents. Uses the wowhead calculator format, make the talents on
-// https://wowhead.com/forever/talent-calc and copy the numbers in the url.
-export const FuryTalents = {
-	name: 'Fury',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-	...FURY_PRESET_OPTIONS,
-};
-
-export const ArmsTalents = {
-	name: 'Arms',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-	...ARMS_PRESET_OPTIONS,
-};
-
-export const ArmsKebabTalents = {
-	name: 'Arms - Kebab',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-	...FURY_PRESET_OPTIONS,
-};
 
 export const DefaultOptions = WarriorOptions.create({
 	classOptions: {

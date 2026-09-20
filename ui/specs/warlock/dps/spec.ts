@@ -1,6 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
 import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
@@ -68,7 +69,7 @@ export default defineSpec<Spec.SpecWarlock>({
 		consumables: Presets.DefaultConsumables,
 
 		// Default talents.
-		talents: Presets.TalentsDestruction.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 
@@ -111,7 +112,7 @@ export default defineSpec<Spec.SpecWarlock>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.TalentsAffliction, Presets.TalentsDemoFelguard, Presets.TalentsDemoRuin, Presets.TalentsDestroNightfall, Presets.TalentsDestruction],
+		talents: [],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.AfflictionAPL, Presets.DemoAPL, Presets.DestroAPL, Presets.DestroFireAPL],
 

@@ -5,7 +5,6 @@ import {
 	FeralBearDruid_Rotation as DruidRotation,
 	FeralBearDruid_Rotation_SwipeUsage as SwipeUsage,
 } from '@generated/proto/druid';
-import { SavedTalents } from '@generated/proto/ui';
 import { OtherDefaults as SimUIOtherDefaults } from '@sim/spec_config';
 
 export const DefaultSimpleRotation = DruidRotation.create({
@@ -21,20 +20,8 @@ export const ROTATION_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Sp
 export const ROTATION_DEFAULT = PresetUtils.makePresetAPLRotation('APL', DefaultApl);
 
 // Default talents — Standard feral bear TBC build.
-export const StandardTalents = {
-	name: 'Standard',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 // Alternative talents focused on Demoralizing Roar uptime.
-export const DemoRoarTalents = {
-	name: 'DemoRoar',
-	data: SavedTalents.create({
-		talentsString: '',
-	}),
-};
 
 export const DefaultOptions = DruidOptions.create({
 	startingRage: 0,

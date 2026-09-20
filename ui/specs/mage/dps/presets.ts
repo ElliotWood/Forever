@@ -16,7 +16,6 @@ import BlankAPL from './apls/blank.apl.json';
 
 export const BLANK_APL = PresetUtils.makePresetAPLRotation('Blank', BlankAPL);
 
-export const ARCANE_TALENTS = PresetUtils.makePresetTalents('Arcane', SavedTalents.create({ talentsString: '' }));
 export const ROTATION_PRESET_ARCANE = PresetUtils.makePresetAPLRotation('Arcane', ArcaneApl);
 export const doesNotHaveSerpentCoilBraid = (player: Player<Spec.SpecMage>) =>
 	player.getEquippedItem(ItemSlot.ItemSlotTrinket1)?.id != 30720 && player.getEquippedItem(ItemSlot.ItemSlotTrinket2)?.id != 30720;

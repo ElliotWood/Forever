@@ -1,12 +1,5 @@
-import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, Profession } from '@generated/proto/common';
 import { HealerPriest_Options as HealerPriestOptions, PriestOptions_Armor } from '@generated/proto/priest';
-
-import CircleOfHealingTalentsJson from './presets/talents/circle_of_healing.talents.json';
-
-// Talent builds from wowhead's TBC guide. Uses the wowhead calculator format, make the talents on
-// https://www.wowhead.com/forever/talent-calc and copy the numbers in the url.
-export const CircleOfHealingTalents = PresetUtils.makePresetTalentsFromJSON(CircleOfHealingTalentsJson);
 
 export const DefaultOptions = HealerPriestOptions.create({
 	classOptions: {

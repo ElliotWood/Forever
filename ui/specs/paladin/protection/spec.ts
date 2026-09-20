@@ -3,6 +3,7 @@ import { StatCapType } from '@generated/proto/api';
 import { APLListItem, APLRotation, APLRotation_Type, APLValueVariable } from '@generated/proto/apl';
 import { Cooldowns, EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PaladinAura, PaladinJudgement } from '@generated/proto/paladin';
+import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import * as AplUtils from '@sim/proto/apl_utils';
@@ -154,7 +155,7 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: Presets.DefaultTalents.data,
+		talents: SavedTalents.create(),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,
@@ -198,7 +199,7 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.DefaultTalents],
+		talents: [],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.APL_SIMPLE, Presets.APL_PRESET],
 		// Preset gear configurations that the user can quickly select.
