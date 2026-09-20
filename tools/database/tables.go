@@ -1496,15 +1496,39 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 		fmt.Fprintf(os.Stderr, "[traits] dropped %d extra choice-node entries (kept the lowest Index)\n", choiceDiscards)
 	}
 
+	// Ten node pairs carry an edge in both directions, which read naively make each node the
+	// other's prerequisite -- a cycle leaving both unreachable. Keep the half whose left node
+	// sits higher, as the client's single arrow does. Every reversed edge in the beta data is
+	// one half of such a pair, so an unpaired edge is never dropped.
+	hasEdge := map[[2]int]bool{}
+	for _, e := range edges {
+		hasEdge[[2]int{e.LeftNodeID, e.RightNodeID}] = true
+	}
+	isMirror := func(e traitEdge) bool {
+		if !hasEdge[[2]int{e.RightNodeID, e.LeftNodeID}] {
+			return false
+		}
+		left, right := byNode[e.LeftNodeID], byNode[e.RightNodeID]
+		if left.PosY != right.PosY {
+			return left.PosY > right.PosY
+		}
+		return e.LeftNodeID > e.RightNodeID
+	}
+
 	// A node can be the right side of several edges. Keep the lowest left node
 	// id so the generated prereq is stable.
 	prereqOf := map[int]int{}
 	edgeDiscards := 0
+	mirrorDiscards := 0
 	for _, e := range edges {
 		if _, ok := byNode[e.RightNodeID]; !ok {
 			continue
 		}
 		if _, ok := byNode[e.LeftNodeID]; !ok {
+			continue
+		}
+		if isMirror(e) {
+			mirrorDiscards++
 			continue
 		}
 		if cur, ok := prereqOf[e.RightNodeID]; ok {
@@ -1514,6 +1538,9 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 			}
 		}
 		prereqOf[e.RightNodeID] = e.LeftNodeID
+	}
+	if mirrorDiscards > 0 {
+		fmt.Fprintf(os.Stderr, "[traits] dropped %d trait edges that mirror one running down the tree\n", mirrorDiscards)
 	}
 	if edgeDiscards > 0 {
 		fmt.Fprintf(os.Stderr, "[traits] dropped %d extra incoming trait edges (kept the lowest left node id)\n", edgeDiscards)

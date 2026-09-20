@@ -56,11 +56,7 @@
         },
         "spellIds": [1223082, 1223082],
         "definitionId": 134388,
-        "maxPoints": 2,
-        "prereqLocation": {
-          "rowIdx": 2,
-          "colIdx": 2
-        }
+        "maxPoints": 2
       },
       {
         "fieldName": "naturesReach",
