@@ -38,17 +38,17 @@ type rankFamily struct {
 
 // The two shaman tables were inline anonymous literals until they were hoisted to package vars so this
 // gate could read them.
+// TODO: Exorcism, Holy Shock, Avenger's Shield and Vampiric Touch left this gate when
+// their abilities were stubbed -- the Forever client ships no rank ladder the generator
+// can read for them. Restore these rows once those abilities are implemented.
 var rankFamilies = []rankFamily{
 	{"Consecration", classPaladin, paladin.ConsecrationRankMap},
 	{"Hammer of Wrath", classPaladin, paladin.HammerOfWrathRankMap},
 	{"Holy Wrath", classPaladin, paladin.HolyWrathRankMap},
-	{"Exorcism", classPaladin, paladin.ExorcismRankMap},
 	{"Holy Light", classPaladin, paladin.HolyLightRankMap},
 	{"Flash of Light", classPaladin, paladin.FlashOfLightRankMap},
 	{"Lay on Hands", classPaladin, paladin.LayOnHandsRankMap},
 	{"Holy Shield", classPaladin, paladin.HolyShieldRankMap},
-	{"Holy Shock", classPaladin, paladin.HolyShockRankMap},
-	{"Avenger's Shield", classPaladin, paladin.AvengersShieldRankMap},
 
 	{"Mind Blast", classPriest, priest.MindBlastRankMap},
 	{"Mind Flay", classPriest, priest.MindFlayRankMap},
@@ -58,7 +58,6 @@ var rankFamilies = []rankFamily{
 	{"Devouring Plague", classPriest, priest.DevouringPlagueRankMap},
 	{"Holy Nova", classPriest, priest.HolyNovaRankMap},
 	{"Starshards", classPriest, priest.StarshardsRankMap},
-	{"Vampiric Touch", classPriest, priest.VampiricTouchRankMap},
 
 	{"Lightning Bolt", classShaman, shaman.LightningBoltRankMap},
 	{"Chain Lightning", classShaman, shaman.ChainLightningRankMap},
