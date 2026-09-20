@@ -151,7 +151,7 @@ const (
 	PriestSpellFade
 	PriestSpellSmite
 
-	// Forever abilities the sim does not model yet; see the stub file named for each.
+	// TODO: Forever abilities the sim does not model yet; see the stub file named for each.
 	PriestSpellChastise
 	PriestSpellConfoundingFlash
 	PriestSpellContingencyPlan
