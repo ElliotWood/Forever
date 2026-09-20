@@ -49,8 +49,9 @@ var Manifest = []BuffSpec{
 		Field: "leader_of_the_pack", Number: 4, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "LeaderOfThePack", Name: "Leader of the Pack", AuraName: "Leader of the Pack",
 		Owner: proto.Class_ClassDruid, Pet: PetCapAtRegular,
-		Stats: []proto.Stat{proto.Stat_StatAttackPower, proto.Stat_StatMeleeCritRating},
-		Notes: "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule cannot separate them: the generator must prefer the party aura 24932 or this row needs an explicit Anchor. No improving talent in druid tree 1089.",
+		StatOverride: []string{"PhysicalCritPercent"},
+		Stats:        []proto.Stat{proto.Stat_StatAttackPower, proto.Stat_StatMeleeCritRating},
+		Notes:        "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule cannot separate them: the generator must prefer the party aura 24932 or this row needs an explicit Anchor. No improving talent in druid tree 1089. Spell 24932 reads \"Increases critical strike chance by $s1%\" and 17007 calls it \"exclusive with Moonkin Aura\": the client never says melee, so StatOverride does.",
 	},
 	{
 		Field: "mana_spring_totem", Number: 18, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindStatFlat,
@@ -76,8 +77,9 @@ var Manifest = []BuffSpec{
 	{
 		Field: "moonkin_aura", Number: 3, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "MoonkinAura", Name: "Moonkin Aura", Owner: proto.Class_ClassDruid, Pet: PetCapAtRegular,
-		Stats: []proto.Stat{proto.Stat_StatSpellCritRating},
-		Notes: "A_MOD_CRIT_PCT does not distinguish melee from spell crit; no improving talent in druid tree 1089.",
+		StatOverride: []string{"SpellCritPercent"},
+		Stats:        []proto.Stat{proto.Stat_StatSpellCritRating},
+		Notes:        "A_MOD_CRIT_PCT does not distinguish melee from spell crit, so StatOverride names the stat spell 24907 means; no improving talent in druid tree 1089.",
 	},
 	{
 		Field: "retribution_aura", Number: 7, Scope: ScopeParty, Proto: ProtoBool, Kind: KindDamageShield,

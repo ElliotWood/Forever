@@ -154,7 +154,7 @@ func TestTalentCurveScalesTheClientAmount(t *testing.T) {
 		t.Fatalf("talentTarget() = %v, onPseudo %v, ok %v; want the pseudo-stat effect", target, onPseudo, ok)
 	}
 
-	if got := convertedAmount(target, onPseudo); math.Abs(got-0.8) > 1e-9 {
+	if got := row.convertedAmount(target, onPseudo); math.Abs(got-0.8) > 1e-9 {
 		t.Errorf("untalented amount = %v, want 0.8", got)
 	}
 
@@ -163,7 +163,7 @@ func TestTalentCurveScalesTheClientAmount(t *testing.T) {
 	if scaled.Value != -22 {
 		t.Errorf("scaled client amount = %v, want -22", scaled.Value)
 	}
-	if got := convertedAmount(scaled, onPseudo); math.Abs(got-0.78) > 1e-9 {
+	if got := row.convertedAmount(scaled, onPseudo); math.Abs(got-0.78) > 1e-9 {
 		t.Errorf("talented amount = %v, want 0.78", got)
 	}
 }

@@ -46,7 +46,7 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func FerociousInspirationAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // ferocious_inspiration, KindAbsent: no SpellName row for Ferocious Inspiration.
 
 // Leader of the Pack - https://www.wowhead.com/forever/spell=24932
-// func LeaderOfThePackAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // leader_of_the_pack, KindStatFlat: spell 24932 states no aura effect this generator maps (auras 290)
+// func LeaderOfThePackAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // leader_of_the_pack, KindStatFlat: hand-written constructor still present
 
 // Mana Spring Totem - https://www.wowhead.com/forever/spell=10494
 // func ManaSpringTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // mana_spring_totem, KindStatFlat: hand-written constructor still present
@@ -58,7 +58,7 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func ShadowPriestDpsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_priest_dps, KindManual: hand-written apply block still present
 
 // Moonkin Aura - https://www.wowhead.com/forever/spell=24907
-// func MoonkinAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // moonkin_aura, KindStatFlat: spell 24907 states no aura effect this generator maps (auras 290)
+// func MoonkinAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // moonkin_aura, KindStatFlat: hand-written apply block still present
 
 // Retribution Aura - https://www.wowhead.com/forever/spell=10301
 // func RetributionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // retribution_aura, KindDamageShield: hand-written apply block still present

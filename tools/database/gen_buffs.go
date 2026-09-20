@@ -86,6 +86,9 @@ type ResolvedBuff struct {
 	Stats  []StatAmount
 	Pseudo []PseudoMod
 
+	// OverrideStats is the manifest's StatOverride resolved to sim stats.
+	OverrideStats []stats.Stat
+
 	// TalentCurve holds the finished value per talent point: index 0 is the
 	// untalented value, index n the value with n points spent. Nil when the
 	// improving talent has no node in the owner's live tree.
@@ -367,6 +370,10 @@ func (res *buffResolver) resolve(spec buffmanifest.BuffSpec) (ResolvedBuff, erro
 	}
 	if !row.Supported {
 		return row, nil
+	}
+
+	if err := resolveStatOverride(&row); err != nil {
+		return row, err
 	}
 
 	res.mapEffects(&row)
@@ -859,7 +866,7 @@ func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 				e.Index, e.PerResource)
 			return
 		}
-		if amounts, ok := statAmountsOf(e); ok {
+		if amounts, ok := row.statAmounts(e); ok {
 			row.Stats = append(row.Stats, amounts...)
 			continue
 		}
@@ -903,6 +910,59 @@ func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 		row.warn("aura %s of spell %d is left out: the generator maps no stat or pseudo-stat to it",
 			aura, row.SpellID)
 	}
+}
+
+// The stats one effect grants. A row that names stats itself puts the effect's
+// value on exactly those, which is how an aura the client leaves unqualified -
+// A_MOD_CRIT_PCT says "critical strike chance" and no more - reaches the melee
+// or the spell crit stat.
+func (row ResolvedBuff) statAmounts(e ResolvedEffect) ([]StatAmount, bool) {
+	if len(row.OverrideStats) == 0 {
+		return statAmountsOf(e)
+	}
+	out := make([]StatAmount, 0, len(row.OverrideStats))
+	for _, stat := range row.OverrideStats {
+		out = append(out, StatAmount{Stat: stat, Amount: e.Value})
+	}
+	return out, true
+}
+
+// The manifest's StatOverride, read as sim stats. A row that states one may
+// only have a single aura effect: every effect would otherwise be mapped onto
+// the same stats and the amounts would add up.
+func resolveStatOverride(row *ResolvedBuff) error {
+	if len(row.StatOverride) == 0 {
+		return nil
+	}
+
+	auraEffects := 0
+	for _, e := range row.Effects {
+		if isAuraApplication(e.Effect) {
+			auraEffects++
+		}
+	}
+	if auraEffects != 1 {
+		return fmt.Errorf("states a StatOverride, but spell %d has %d aura effects",
+			row.SpellID, auraEffects)
+	}
+
+	for _, name := range row.StatOverride {
+		stat, ok := statByName(name)
+		if !ok {
+			return fmt.Errorf("StatOverride names %q, which is not a sim stat", name)
+		}
+		row.OverrideStats = append(row.OverrideStats, stat)
+	}
+	return nil
+}
+
+func statByName(name string) (stats.Stat, bool) {
+	for stat := stats.Stat(0); stat < stats.SimStatsLen; stat++ {
+		if stat.StatName() == name {
+			return stat, true
+		}
+	}
+	return 0, false
 }
 
 func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
@@ -1148,7 +1208,7 @@ func (res *buffResolver) resolveTalent(row *ResolvedBuff) error {
 		if rank > 0 {
 			scaled.Value = math.Trunc(applyTalentPoints(target.Value, values[rank], chosen.Aura))
 		}
-		row.TalentCurve[rank] = convertedAmount(scaled, onPseudo)
+		row.TalentCurve[rank] = row.convertedAmount(scaled, onPseudo)
 	}
 	return nil
 }
@@ -1172,7 +1232,7 @@ func (row ResolvedBuff) talentTarget() (ResolvedEffect, bool, bool) {
 			}
 			continue
 		}
-		if _, ok := statAmountsOf(e); ok {
+		if _, ok := row.statAmounts(e); ok {
 			return e, false, true
 		}
 		if _, ok := pseudoModsOf(e); ok {
@@ -1183,14 +1243,14 @@ func (row ResolvedBuff) talentTarget() (ResolvedEffect, bool, bool) {
 }
 
 // What the effect is worth once the kind mapping has converted it.
-func convertedAmount(e ResolvedEffect, onPseudo bool) float64 {
+func (row ResolvedBuff) convertedAmount(e ResolvedEffect, onPseudo bool) float64 {
 	if onPseudo {
 		if mods, ok := pseudoModsOf(e); ok {
 			return mods[0].Amount
 		}
 		return e.Value
 	}
-	if amounts, ok := statAmountsOf(e); ok {
+	if amounts, ok := row.statAmounts(e); ok {
 		return amounts[0].Amount
 	}
 	return e.Value

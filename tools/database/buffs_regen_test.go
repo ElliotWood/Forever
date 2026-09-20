@@ -16,6 +16,7 @@ import (
 	"bytes"
 	"database/sql"
 	"errors"
+	"maps"
 	"os"
 	"path/filepath"
 	"slices"
@@ -126,7 +127,25 @@ func TestResolvedBuffInvariants(t *testing.T) {
 			t.Errorf("%s: competes under (%q, %q), want (%q, %q)",
 				row.Field, row.StatCategory, row.Category, want[0], want[1])
 		}
+		if want, pinned := pinnedStatAmounts[row.Field]; pinned {
+			got := map[string]float64{}
+			for _, amount := range row.Stats {
+				got[amount.Stat.StatName()] = amount.Amount
+			}
+			if !maps.Equal(got, want) {
+				t.Errorf("%s: grants %v, want %v", row.Field, got, want)
+			}
+		}
 	}
+}
+
+// The two auras the client states as a bare A_MOD_CRIT_PCT, which carries no
+// school: what they are worth is the client's 3, and which stat they land on is
+// the manifest's StatOverride. Nothing else can see that mapping while both
+// rows render as shells.
+var pinnedStatAmounts = map[string]map[string]float64{
+	"leader_of_the_pack": {"PhysicalCritPercent": 3},
+	"moonkin_aura":       {"SpellCritPercent": 3},
 }
 
 // Mana Spring is the only buff an improving talent still prices, so it is the

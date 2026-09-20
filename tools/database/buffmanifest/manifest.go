@@ -199,10 +199,18 @@ type BuffSpec struct {
 	SingleAura     bool
 	Driver         bool // apply block hands the field to drive<Go>; the aura is not simply always up
 	Pet            PetPolicy
-	Stats          []proto.Stat // UI relevance tags
-	ImpAction      *ActionRef   // improved-icon override when it is an item
-	Label          string       // UI label override, "" = DB name
-	Notes          string       // reason for manual/absent rows; emitted as a comment
+	// StatOverride names the sim stats the aura's value lands on, spelled the
+	// way stats.Stat.StatName() spells them, for an aura the client states
+	// without saying which stat it means: A_MOD_CRIT_PCT carries no school, so
+	// Leader of the Pack and Moonkin Aura have to be told apart here. The names
+	// are checked while the row is resolved, and a row that states one may have
+	// only one aura effect, since every effect would otherwise land on the same
+	// stats.
+	StatOverride []string
+	Stats        []proto.Stat // UI relevance tags
+	ImpAction    *ActionRef   // improved-icon override when it is an item
+	Label        string       // UI label override, "" = DB name
+	Notes        string       // reason for manual/absent rows; emitted as a comment
 }
 
 // GoField is the field name protoc-gen-go generates for Field. It ports
