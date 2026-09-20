@@ -260,14 +260,9 @@ export class SimHostObject<SpecType extends Spec> implements IndividualSimHost<S
 
 	applyDefaultConfigOptions(config: IndividualSimUIConfig<SpecType>): IndividualSimUIConfig<SpecType> {
 		const epStats = [...config.epStats, ...config.includeBuffDebuffInputs];
-		const hasAttackPowerScaling = epStats.includes(Stat.StatAttackPower);
 		const hasSpellDamageScaling = epStats.includes(Stat.StatSpellDamage);
 
-		config.otherInputs.inputs = [
-			...(hasAttackPowerScaling ? [OtherInputs.ExposeWeaknessHunterAgility, OtherInputs.ExposeWeaknessUptime] : []),
-			...(hasSpellDamageScaling ? [OtherInputs.ShadowPriestDPS] : []),
-			...config.otherInputs.inputs,
-		];
+		config.otherInputs.inputs = [...(hasSpellDamageScaling ? [OtherInputs.ShadowPriestDPS] : []), ...config.otherInputs.inputs];
 
 		return config;
 	}

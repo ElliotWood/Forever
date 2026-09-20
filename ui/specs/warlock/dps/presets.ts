@@ -1,8 +1,8 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Drums, Profession, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Profession, TristateEffect } from '@generated/proto/common';
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
-import { defaultExposeWeaknessSettings, defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
+import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import AfflictionRot from './apls/affliction.apl.json';
 import BlankAPL from './apls/blank.apl.json';
@@ -60,11 +60,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 export const DefaultPartyBuffs = PartyBuffs.create({
 	manaSpringTotem: TristateEffect.TristateEffectRegular,
 	moonkinAura: true,
-	totemOfWrath: 1,
-	wrathOfAirTotem: TristateEffect.TristateEffectImproved,
-	eyeOfTheNight: true,
-	chainOfTheTwilightOwl: true,
-	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
@@ -74,19 +69,12 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	...defaultExposeWeaknessSettings(),
-	...defaultImprovedShadowBoltSettings(),
 	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
-	misery: true,
-	shadowWeaving: true,
 	sunderArmor: true,
-	screech: true,
 	faerieFire: true,
 	curseOfRecklessness: true,
-	shadowEmbrace: true,
 	curseOfElements: true,
-	bloodFrenzy: true,
 	giftOfArthas: true,
 	mangle: true,
 	exposeArmor: true,

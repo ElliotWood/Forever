@@ -2,7 +2,7 @@ import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
 import { Class, ConsumesSpec, Drums, Profession, Race } from '@generated/proto/common';
 import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, ShamanSyncType } from '@generated/proto/shaman';
-import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
+import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 
@@ -43,8 +43,6 @@ export const DefaultConsumables = ConsumesSpec.create({
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
-	ferociousInspiration: 2,
-	braidedEterniumChain: true,
 	leaderOfThePack: true,
 	battleShout: true,
 });
@@ -57,12 +55,8 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	...defaultExposeWeaknessSettings(),
 	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
-	screech: true,
-	misery: true,
-	bloodFrenzy: true,
 	giftOfArthas: true,
 	mangle: true,
 	exposeArmor: true,

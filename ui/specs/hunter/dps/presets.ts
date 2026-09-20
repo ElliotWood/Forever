@@ -1,6 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { Class, ConsumesSpec, Drums, Profession, Race, Spec } from '@generated/proto/common';
+import { Class, ConsumesSpec, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	Hunter_Options as HunterOptions,
 	Hunter_Rotation,
@@ -8,7 +8,7 @@ import {
 	HunterOptions_PetType as PetType,
 	HunterOptions_QuiverBonus,
 } from '@generated/proto/hunter';
-import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
+import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultAPL from './apls/default.apl.json';
 
@@ -48,19 +48,15 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfMight: true,
 	blessingOfWisdom: true,
-	unleashedRage: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	battleShout: true,
-	braidedEterniumChain: true,
-	ferociousInspiration: 1,
 	graceOfAirTotem: true,
 	leaderOfThePack: true,
 	strengthOfEarthTotem: true,
 	totemTwisting: true,
 	windfuryTotem: true,
-	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
@@ -73,11 +69,9 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	bloodFrenzy: true,
 	curseOfElements: true,
 	curseOfRecklessness: true,
 	exposeArmor: true,
-	...defaultExposeWeaknessSettings(),
 	faerieFire: true,
 	giftOfArthas: true,
 	huntersMark: true,
@@ -86,7 +80,6 @@ export const DefaultDebuffs = Debuffs.create({
 	judgementOfLight: true,
 	judgementOfWisdom: true,
 	mangle: true,
-	misery: true,
 	sunderArmor: true,
 });
 

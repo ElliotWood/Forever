@@ -1,8 +1,7 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Drums, Profession, Race, Spec, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race, Spec, TristateEffect } from '@generated/proto/common';
 import { PaladinAura, RetributionPaladin_Options as RetributionPaladinOptions, RetributionPaladin_Rotation as PaladinRotation } from '@generated/proto/paladin';
-import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 
@@ -51,30 +50,23 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 	totemTwisting: true,
 	windfuryTotem: true,
 	graceOfAirTotem: true,
-	drums: Drums.LesserDrumsOfBattle,
-	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfWisdom: true,
 	blessingOfMight: true,
-	unleashedRage: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	misery: true,
 	curseOfElements: true,
 	improvedSealOfTheCrusader: true,
-	jocRetribution2Pt4: true,
 	judgementOfWisdom: true,
-	bloodFrenzy: true,
 	huntersMark: true,
 	curseOfRecklessness: true,
 	sunderArmor: true,
 	faerieFire: true,
 	exposeArmor: true,
-	...defaultExposeWeaknessSettings(),
 });
 
 export const OtherDefaults = {

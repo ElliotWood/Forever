@@ -2,13 +2,13 @@ import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation } from '@generated/proto/apl';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { Drums, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
-import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
+import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
 import * as Presets from './presets';
@@ -91,26 +91,20 @@ export default defineSpec<Spec.SpecRogue>({
 		}),
 		partyBuffs: PartyBuffs.create({
 			battleShout: true,
-			ferociousInspiration: 1,
 			strengthOfEarthTotem: true,
 			graceOfAirTotem: true,
 			windfuryTotem: true,
 			leaderOfThePack: true,
 			totemTwisting: true,
-			drums: Drums.LesserDrumsOfBattle,
 		}),
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
 			blessingOfMight: true,
-			unleashedRage: true,
 		}),
 		debuffs: Debuffs.create({
-			...defaultExposeWeaknessSettings(),
-			bloodFrenzy: true,
 			huntersMark: true,
 			improvedSealOfTheCrusader: true,
 			mangle: true,
-			misery: true,
 			curseOfRecklessness: true,
 			faerieFire: true,
 			giftOfArthas: true,

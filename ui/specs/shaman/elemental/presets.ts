@@ -31,8 +31,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	moonkinAura: true,
-	chainOfTheTwilightOwl: true,
-	eyeOfTheNight: true,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
@@ -42,7 +40,6 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	bloodFrenzy: true,
 	curseOfElements: true,
 	curseOfRecklessness: true,
 	exposeArmor: true,
@@ -52,7 +49,6 @@ export const DefaultDebuffs = Debuffs.create({
 	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	mangle: true,
-	misery: true,
 	sunderArmor: true,
 });
 

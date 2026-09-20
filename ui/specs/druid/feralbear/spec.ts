@@ -2,14 +2,13 @@ import * as BuffDebuffInputs from '@features/settings/model/buffs_debuffs';
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLAction, APLListItem, APLRotation, APLRotation_Type as APLRotationType } from '@generated/proto/apl';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { Cooldowns, Drums, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { Cooldowns, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import { FeralBearDruid_Rotation as DruidRotation } from '@generated/proto/druid';
 import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { Stats, UnitStat } from '@sim/proto/stats';
-import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
 import * as FeralBearInputs from './inputs';
@@ -100,8 +99,6 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 			divineSpirit: true,
 		}),
 		partyBuffs: PartyBuffs.create({
-			drums: Drums.LesserDrumsOfBattle,
-			ferociousInspiration: 2,
 			battleShout: true,
 			graceOfAirTotem: true,
 			windfuryTotem: true,
@@ -112,12 +109,8 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
 			blessingOfMight: true,
-			blessingOfSanctuary: true,
-			unleashedRage: true,
 		}),
 		debuffs: Debuffs.create({
-			...defaultExposeWeaknessSettings(),
-			bloodFrenzy: true,
 			exposeArmor: true,
 			faerieFire: true,
 			giftOfArthas: false,
@@ -126,9 +119,6 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 			curseOfRecklessness: true,
 			insectSwarm: true,
 			judgementOfWisdom: true,
-			misery: true,
-			screech: true,
-			shadowEmbrace: true,
 			sunderArmor: true,
 		}),
 	},

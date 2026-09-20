@@ -196,36 +196,6 @@ export const HpPercentForDefensives = {
 	},
 };
 
-export const IsbUptime = {
-	id: 'isbUptime',
-	type: 'number' as const,
-	float: true,
-	label: i18n.t('settings_tab.other.isb_uptime.label'),
-	labelTooltip: i18n.t('settings_tab.other.isb_uptime.tooltip'),
-	storeField: 'raid:debuffs' as const,
-	getValue: (player: Player<any>) => Math.round(player.getRaid()!.getDebuffs().isbUptime! * 100),
-	setValue: (player: Player<any>, newValue: number) => {
-		const newDebuffs = player.getRaid()!.getDebuffs();
-		newDebuffs.isbUptime = newValue / 100;
-		player.getRaid()!.setDebuffs(newDebuffs);
-	},
-};
-
-export const HemoUptime = {
-	id: 'hemoUptime',
-	type: 'number' as const,
-	float: true,
-	label: i18n.t('settings_tab.other.hemo_uptime.label'),
-	labelTooltip: i18n.t('settings_tab.other.hemo_uptime.tooltip'),
-	storeField: 'raid:debuffs' as const,
-	getValue: (player: Player<any>) => Math.round(player.getRaid()!.getDebuffs().hemorrhageUptime! * 100),
-	setValue: (player: Player<any>, newValue: number) => {
-		const newDebuffs = player.getRaid()!.getDebuffs();
-		newDebuffs.hemorrhageUptime = newValue / 100;
-		player.getRaid()!.setDebuffs(newDebuffs);
-	},
-};
-
 export const ShadowPriestDPS = {
 	id: 'shadowPriestDps',
 	type: 'number' as const,
@@ -238,34 +208,6 @@ export const ShadowPriestDPS = {
 		const buffs = player.getBuffs();
 		buffs.shadowPriestDps = newValue;
 		player.setBuffs(buffs);
-	},
-};
-
-export const ExposeWeaknessUptime = {
-	id: 'exposeWeaknessUptime',
-	type: 'number' as const,
-	label: i18n.t('settings_tab.other.expose_weakness_uptime.label'),
-	labelTooltip: i18n.t('settings_tab.other.expose_weakness_uptime.tooltip'),
-	storeField: 'raid:debuffs' as const,
-	getValue: (player: Player<any>) => Math.round(player.getRaid()!.getDebuffs().exposeWeaknessUptime * 100),
-	setValue: (player: Player<any>, newValue: number) => {
-		const debuffs = player.getRaid()!.getDebuffs();
-		debuffs.exposeWeaknessUptime = newValue / 100;
-		player.getRaid()!.setDebuffs(debuffs);
-	},
-};
-
-export const ExposeWeaknessHunterAgility = {
-	id: 'exposeWeaknessHunterAgility',
-	type: 'number' as const,
-	label: i18n.t('settings_tab.other.expose_weakness_hunter_agility.label'),
-	labelTooltip: i18n.t('settings_tab.other.expose_weakness_hunter_agility.tooltip'),
-	storeField: 'raid:debuffs' as const,
-	getValue: (player: Player<any>) => player.getRaid()!.getDebuffs().exposeWeaknessHunterAgility,
-	setValue: (player: Player<any>, newValue: number) => {
-		const debuffs = player.getRaid()!.getDebuffs();
-		debuffs.exposeWeaknessHunterAgility = newValue;
-		player.getRaid()!.setDebuffs(debuffs);
 	},
 };
 

@@ -1,13 +1,12 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Drums, HealingModel, Profession, Spec, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, HealingModel, Profession, Spec, TristateEffect } from '@generated/proto/common';
 import {
 	PaladinAura,
 	PaladinJudgement,
 	ProtectionPaladin_Options as ProtectionPaladinOptions,
 	ProtectionPaladin_Rotation as ProtectionPaladinRotation,
 } from '@generated/proto/paladin';
-import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 
@@ -57,36 +56,29 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	manaSpringTotem: TristateEffect.TristateEffectRegular,
-	wrathOfAirTotem: TristateEffect.TristateEffectRegular,
 	graceOfAirTotem: false,
 	strengthOfEarthTotem: true,
 	windfuryTotem: false,
 	battleShout: false,
-	drums: Drums.LesserDrumsOfBattle,
-	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfWisdom: true,
 	blessingOfMight: true,
-	blessingOfSanctuary: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	misery: true,
 	curseOfElements: true,
 	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	judgementOfLight: true,
-	bloodFrenzy: true,
 	huntersMark: true,
 	curseOfRecklessness: true,
 	sunderArmor: true,
 	faerieFire: true,
 	exposeArmor: true,
 	insectSwarm: true,
-	...defaultExposeWeaknessSettings(),
 });
 
 export const OtherDefaults = {

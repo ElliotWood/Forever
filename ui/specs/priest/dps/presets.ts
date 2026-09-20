@@ -1,8 +1,8 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Drums, Profession, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Profession, TristateEffect } from '@generated/proto/common';
 import { DpsPriest_Options as Options } from '@generated/proto/priest';
-import { defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
+import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 
@@ -33,10 +33,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	manaSpringTotem: TristateEffect.TristateEffectRegular,
-	wrathOfAirTotem: TristateEffect.TristateEffectImproved,
-	eyeOfTheNight: true,
-	chainOfTheTwilightOwl: true,
-	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
@@ -48,13 +44,9 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 export const DefaultDebuffs = Debuffs.create({
 	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
-	misery: false,
-	shadowWeaving: false,
 	faerieFire: true,
-	shadowEmbrace: true,
 	curseOfElements: true,
 	exposeArmor: true,
-	...defaultImprovedShadowBoltSettings(),
 });
 
 export const OtherDefaults = {

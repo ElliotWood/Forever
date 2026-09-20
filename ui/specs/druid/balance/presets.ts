@@ -1,6 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { Class, ConsumesSpec, Drums, Profession, Race, TristateEffect, UnitReference } from '@generated/proto/common';
+import { Class, ConsumesSpec, Drums, Profession, Race, UnitReference } from '@generated/proto/common';
 import { BalanceDruid_Options as BalanceDruidOptions } from '@generated/proto/druid';
 import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
@@ -22,14 +22,7 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 	divineSpirit: true,
 });
 
-export const DefaultPartyBuffs = PartyBuffs.create({
-	chainOfTheTwilightOwl: true,
-	draeneiRacialCaster: true,
-	drums: Drums.LesserDrumsOfBattle,
-	eyeOfTheNight: true,
-	totemOfWrath: 1,
-	wrathOfAirTotem: TristateEffect.TristateEffectImproved,
-});
+export const DefaultPartyBuffs = PartyBuffs.create({});
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
@@ -38,7 +31,6 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	bloodFrenzy: true,
 	curseOfElements: true,
 	curseOfRecklessness: true,
 	exposeArmor: true,
@@ -47,7 +39,6 @@ export const DefaultDebuffs = Debuffs.create({
 	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	mangle: true,
-	misery: true,
 	sunderArmor: true,
 });
 

@@ -583,9 +583,6 @@ export class ActionId {
 				if (CURRENT_PHASE >= Phase.Phase4) {
 					name = 'Greater ' + name;
 				}
-				if (tag === -1) {
-					name += ' (External)';
-				}
 				break;
 			case 'Retribution Aura':
 			case 'Holy Shield':

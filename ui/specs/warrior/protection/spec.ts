@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -103,8 +103,6 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 			shadowProtection: true,
 		}),
 		partyBuffs: PartyBuffs.create({
-			sanctityAura: TristateEffect.TristateEffectImproved,
-			braidedEterniumChain: true,
 			graceOfAirTotem: true,
 			strengthOfEarthTotem: true,
 			windfuryTotem: true,
@@ -113,14 +111,11 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 		}),
 		individualBuffs: IndividualBuffs.create({
 			...WarriorPresets.DefaultIndividualBuffs,
-			blessingOfSanctuary: true,
 		}),
 		debuffs: Debuffs.create({
 			...WarriorPresets.DefaultDebuffs,
 			giftOfArthas: false,
 			insectSwarm: true,
-			shadowEmbrace: true,
-			screech: true,
 		}),
 	},
 

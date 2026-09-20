@@ -139,7 +139,6 @@ export const defaultHealerRaidBuffs = (): RaidBuffs =>
 export const defaultHealerPartyBuffs = (): PartyBuffs =>
 	PartyBuffs.create({
 		manaSpringTotem: TristateEffect.TristateEffectRegular,
-		wrathOfAirTotem: TristateEffect.TristateEffectRegular,
 	});
 
 export const defaultHealerIndividualBuffs = (): IndividualBuffs =>
