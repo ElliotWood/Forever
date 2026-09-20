@@ -8,11 +8,10 @@ import (
 	"testing"
 )
 
-// ui/sim/constants/mechanics.ts is a hand-maintained copy of constants that live
-// in Go, half of them generated into base_stats_auto_gen.go from the client's
-// CombatRatings gametable. Nothing regenerates the TypeScript side, so a retune
-// that moves a Go constant leaves the UI quietly reporting the old conversion --
-// caps, gap-to-cap and every rating tooltip. This pins the two copies together.
+// ui/sim/constants/mechanics.ts and base_stats_auto_gen.go are both written by
+// tools/base_stats_parser.py from the same numbers, so they cannot disagree unless
+// someone hand-edits one. This catches that, and catches a constant being added to
+// one side only. The fix is `make basestats`, not an edit to the generated file.
 func TestMechanicsConstantsMatchTheUI(t *testing.T) {
 	const mechanicsPath = "../../ui/sim/constants/mechanics.ts"
 
@@ -57,7 +56,7 @@ func TestMechanicsConstantsMatchTheUI(t *testing.T) {
 			continue
 		}
 		if got != want {
-			t.Errorf("%s: %s = %s, but Go says %s", mechanicsPath, name, literal, strconv.FormatFloat(want, 'f', -1, 64))
+			t.Errorf("%s: %s = %s, but Go says %s -- run `make basestats` rather than editing it", mechanicsPath, name, literal, strconv.FormatFloat(want, 'f', -1, 64))
 		}
 	}
 
