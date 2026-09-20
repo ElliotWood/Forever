@@ -51,18 +51,21 @@ export const canSetPoints = <TalentsProto>(
 		return true;
 	}
 
-	const pointTotalsByRow = Array.from({ length: graph.numRows }, () => 0);
-	talents.forEach((talent, idx) => (pointTotalsByRow[talent.location.rowIdx] += points[treeIdx][idx]));
-	pointTotalsByRow[rowIdx] -= oldPoints - newPoints;
+	const strandedCount = (treePoints: number[]) => {
+		const totalsByRow = Array.from({ length: graph.numRows }, () => 0);
+		talents.forEach((talent, idx) => (totalsByRow[talent.location.rowIdx] += treePoints[idx]));
 
-	let running = 0;
-	const cumulativeTotalsByRow = pointTotalsByRow.map(total => (running += total));
+		let running = 0;
+		const cumulativeTotalsByRow = totalsByRow.map(total => (running += total));
 
-	const strands = talents.some((talent, idx) => {
-		const row = talent.location.rowIdx;
-		return points[treeIdx][idx] > 0 && row > 0 && cumulativeTotalsByRow[row - 1] < row * limits.pointsPerRow;
-	});
-	if (strands) return false;
+		return talents.filter((talent, idx) => {
+			const row = talent.location.rowIdx;
+			return treePoints[idx] > 0 && row > 0 && cumulativeTotalsByRow[row - 1] < row * limits.pointsPerRow;
+		}).length;
+	};
+
+	const afterRemoval = points[treeIdx].map((value, idx) => (idx === talentIdx ? newPoints : value));
+	if (strandedCount(afterRemoval) > strandedCount(points[treeIdx])) return false;
 
 	return !treeGraph.childIdxs[talentIdx].some(childIdx => points[treeIdx][childIdx] > 0);
 };

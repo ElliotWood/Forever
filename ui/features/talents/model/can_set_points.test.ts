@@ -88,4 +88,12 @@ describe('canSetPoints — removing', () => {
 	it('lets a higher row keep its points when the removal comes from that same row', () => {
 		expect(can('5555000055', 0, 8, 4)).toBe(true);
 	});
+
+	it('lets an already-stranded build give points back, so an illegal import can be repaired', () => {
+		const stranded = '4000' + '0000' + '1';
+		expect(at(stranded)[0][8]).toBe(1);
+
+		expect(can(stranded, 0, 8, 0)).toBe(true);
+		expect(can(stranded, 0, 0, 3)).toBe(false);
+	});
 });
