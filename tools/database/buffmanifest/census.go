@@ -464,7 +464,7 @@ var Manifest = []BuffSpec{
 		Go: "ExposeArmor", Name: "Expose Armor", Owner: proto.Class_ClassRogue,
 		Category: "MajorArmorReduction", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatAttackPower},
-		Notes: "Improved Expose Armor (14168) is in rogue tree 1111 but its only 107/108 effect is misc 14 (cost); effects 1 and 2 are dummy auras.",
+		Notes: "effect 0 states 0 and -450 per combo point, so the row is resolved as the five-point finisher, which is what the raid config applies; a rogue casting it for fewer combo points needs a driver that prices the aura, and there is none. Improved Expose Armor (14168) is in rogue tree 1111 but its only 107/108 effect is misc 14 (cost); effects 1 and 2 are dummy auras.",
 	},
 	{
 		Field: "sunder_armor", Number: 15, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStacking,
