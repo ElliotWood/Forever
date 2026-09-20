@@ -127,6 +127,16 @@ describe('useActionId', () => {
 		expect(ActionId.fromTalent(12297, 1, 135506).equalityKey()).not.toBe(ActionId.fromTalent(12297, 1, 999999).equalityKey());
 	});
 
+	it('keeps the definition through fill, which rebuilds the id field by field', async () => {
+		vi.spyOn(ActionId, 'getTooltipData').mockResolvedValue({ id: 12297, name: 'Anticipation', icon: 'ability_warrior_anticipation' } as never);
+
+		const resolved = await ActionId.fromTalent(12297, 2, 135506).fill();
+
+		expect(resolved.definitionId).toBe(135506);
+		expect(resolved.rank).toBe(2);
+		expect(ActionId.makeSpellUrl(resolved.spellId, resolved.rank, resolved.definitionId)).toContain('def=135506');
+	});
+
 	it('treats two ranks of one spell as different ids, so the tooltip refetches', () => {
 		expect(ActionId.fromSpellId(12297, 1).equalityKey()).not.toBe(ActionId.fromSpellId(12297, 2).equalityKey());
 		expect(ActionId.fromSpellId(12297, 1).equalityKey()).toBe(ActionId.fromSpellId(12297, 1).equalityKey());

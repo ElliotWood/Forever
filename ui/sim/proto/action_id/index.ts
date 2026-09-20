@@ -633,6 +633,7 @@ export class ActionId {
 			iconUrl,
 			randomSuffixId: this.randomSuffixId,
 			rank: this.rank || tooltipData['rank'],
+			definitionId: this.definitionId,
 		});
 	}
 
