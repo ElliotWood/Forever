@@ -168,8 +168,11 @@ type WowheadEntity = 'item' | 'spell' | 'quest' | 'npc' | 'zone';
 // is empty for English.
 export function wowheadEntityUrl(entity: WowheadEntity, id: number, rank = 0, definitionId = 0): string {
 	const url = `${WOWHEAD_BASE_URL}/${getWowheadLanguagePrefix()}${entity}=${id}`;
-	const params = [definitionId > 0 ? `def=${definitionId}` : '', rank > 0 ? `rank=${rank}` : ''].filter(Boolean);
-	return params.length ? `${url}?${params.join('&')}` : url;
+	const params = new URLSearchParams();
+	if (definitionId > 0) params.set('def', String(definitionId));
+	if (rank > 0) params.set('rank', String(rank));
+	const query = params.toString();
+	return query ? `${url}?${query}` : url;
 }
 
 export function wowheadIconUrl(iconLabel: string, size: 'large' | 'medium' | 'small' = 'large'): string {

@@ -3,6 +3,8 @@ import type { Player } from '@sim/player/player';
 import type { TalentsConfig } from '@sim/talents/config';
 import { newTalentsConfig } from '@sim/talents/config';
 import { mageTalentsConfig } from '@sim/talents/mage';
+import { warriorTalentsConfig } from '@sim/talents/warrior';
+import { ActionId } from '@sim/proto/action_id';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -190,5 +192,17 @@ describe('TalentsPicker carousel', () => {
 		expect(screen.getAllByTestId('talent-tree').map(el => el.getAttribute('data-active'))).toEqual(['false', 'false', 'true']);
 		expect(screen.getByTestId('talents-picker-trees').style.getPropertyValue('--talents-carousel-offset')).toBe('-33.3%');
 		expect(screen.getByTestId('talents-carousel-next').hasAttribute('disabled')).toBe(true);
+	});
+
+	it('builds the wowhead link from the generated trait data, def and rank included', () => {
+		const anticipation = warriorTalentsConfig.flatMap(tree => tree.talents).find(talent => talent.fancyName === 'Anticipation')!;
+
+		expect(anticipation.definitionId).toBe(135506);
+		expect(new Set(anticipation.spellIds).size).toBe(1);
+
+		const href = ActionId.makeSpellUrl(anticipation.spellIds[0], 2, anticipation.definitionId!);
+		expect(href).toContain('spell=12297');
+		expect(href).toContain('def=135506');
+		expect(href).toContain('rank=2');
 	});
 });

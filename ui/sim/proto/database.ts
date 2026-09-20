@@ -432,8 +432,10 @@ export class Database {
 		return Database.getWowheadTooltipData(id, 'spell', rank, definitionId);
 	}
 	private static async getWowheadTooltipData(id: number, tooltipPostfix: string, rank = 0, definitionId = 0): Promise<IconData> {
-		const extra = `${definitionId > 0 ? `&def=${definitionId}` : ''}${rank > 0 ? `&rank=${rank}` : ''}`;
-		const url = `https://nether.wowhead.com/${WOWHEAD_DOMAIN}/tooltip/${tooltipPostfix}/${id}?lvl=${CHARACTER_LEVEL}&dataEnv=${WOWHEAD_EXPANSION_ENV}${extra}`;
+		const params = new URLSearchParams({ lvl: String(CHARACTER_LEVEL), dataEnv: String(WOWHEAD_EXPANSION_ENV) });
+		if (definitionId > 0) params.set('def', String(definitionId));
+		if (rank > 0) params.set('rank', String(rank));
+		const url = `https://nether.wowhead.com/${WOWHEAD_DOMAIN}/tooltip/${tooltipPostfix}/${id}?${params}`;
 		try {
 			const response = await fetch(url);
 			const json = await response.json();
