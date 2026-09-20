@@ -10,7 +10,6 @@ import (
 )
 
 // Not generated:
-//   Exorcism: ambiguous rank 1 between spells 415068, 879; rank 2 between spells 415069, 5614; rank 3 between spells 415070, 5615; rank 4 between spells 10312, 415071; rank 5 between spells 10313, 415072; rank 6 between spells 10314, 415073
 //   Holy Shock: ambiguous rank 2 between spells 25912, 25914; rank 3 between spells 25911, 25913; rank 4 between spells 25902, 25903
 //   Judgement of Fury: missing rank 1 of 7
 //   Judgement of the Crusader: missing rank 1 of 6
@@ -40,6 +39,7 @@ type generatedSpellData struct {
 	DivineProtection              shared.SpellDataTable
 	DivineShield                  shared.SpellDataTable
 	DivineStrength                shared.SpellDataTable
+	Exorcism                      shared.SpellDataTable
 	EyeForAnEye                   shared.SpellDataTable
 	FireResistanceAura            shared.SpellDataTable
 	FlashOfLight                  shared.SpellDataTable
@@ -222,6 +222,14 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 20262, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_TOTAL_STAT_PERCENTAGE, Misc: 0, Value: 6}}, Direct: shared.SpellDataFlat{Value: 6, Coef: 1}},
 		{Rank: 4, SpellID: 20262, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_TOTAL_STAT_PERCENTAGE, Misc: 0, Value: 8}}, Direct: shared.SpellDataFlat{Value: 8, Coef: 1}},
 		{Rank: 5, SpellID: 20262, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_TOTAL_STAT_PERCENTAGE, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 1}},
+	},
+	Exorcism: shared.SpellDataTable{
+		{Rank: 1, SpellID: 879, Cost: 85, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 85}}, Direct: shared.SpellDataFlat{Value: 85, Coef: 0.42899999022483826}},
+		{Rank: 2, SpellID: 5614, Cost: 135, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 149}}, Direct: shared.SpellDataFlat{Value: 149, Coef: 0.42899999022483826}},
+		{Rank: 3, SpellID: 5615, Cost: 180, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 212}}, Direct: shared.SpellDataFlat{Value: 212, Coef: 0.42899999022483826}},
+		{Rank: 4, SpellID: 10312, Cost: 235, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 303}}, Direct: shared.SpellDataFlat{Value: 303, Coef: 0.42899999022483826}},
+		{Rank: 5, SpellID: 10313, Cost: 285, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 398}}, Direct: shared.SpellDataFlat{Value: 398, Coef: 0.42899999022483826}},
+		{Rank: 6, SpellID: 10314, Cost: 345, GCD: 1500 * time.Millisecond, Cooldown: 15000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 502}}, Direct: shared.SpellDataFlat{Value: 502, Coef: 0.42899999022483826}},
 	},
 	EyeForAnEye: shared.SpellDataTable{
 		{Rank: 1, SpellID: 9799, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 1}},

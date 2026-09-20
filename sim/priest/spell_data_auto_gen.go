@@ -9,9 +9,6 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// Not generated:
-//   Renew: ambiguous rank 1 between spells 139, 425268; rank 2 between spells 425269, 6074; rank 3 between spells 425270, 6075; rank 4 between spells 425271, 6076; rank 5 between spells 425272, 6077; rank 6 between spells 425273, 6078; rank 7 between spells 10927, 425274; rank 8 between spells 10928, 425275; rank 9 between spells 10929, 425276; rank 10 between spells 25315, 425277
-
 // Generated without an effect the talent tree states no rank value for:
 //   Blessed Recovery: effect 1 of spell 27811 has no rank curve and is left out
 //   Early Demise: effect 1 of spell 1310076 has no rank curve and is left out
@@ -83,6 +80,7 @@ type generatedSpellData struct {
 	PrayerOfShadowProtection   shared.SpellDataTable
 	PrayerOfSpirit             shared.SpellDataTable
 	PsychicScream              shared.SpellDataTable
+	Renew                      shared.SpellDataTable
 	RenewedHope                shared.SpellDataTable
 	Resurrection               shared.SpellDataTable
 	SearingLight               shared.SpellDataTable
@@ -503,6 +501,18 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 8124, Cost: 140, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 1}},
 		{Rank: 3, SpellID: 10888, Cost: 180, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 1}},
 		{Rank: 4, SpellID: 10890, Cost: 210, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 1}},
+	},
+	Renew: shared.SpellDataTable{
+		{Rank: 1, SpellID: 139, Cost: 30, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 9}}, Periodic: shared.SpellDataPeriodic{Tick: 9, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 2, SpellID: 6074, Cost: 65, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 15}}, Periodic: shared.SpellDataPeriodic{Tick: 15, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 3, SpellID: 6075, Cost: 105, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 25}}, Periodic: shared.SpellDataPeriodic{Tick: 25, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 4, SpellID: 6076, Cost: 140, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 32}}, Periodic: shared.SpellDataPeriodic{Tick: 32, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 5, SpellID: 6077, Cost: 170, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 41}}, Periodic: shared.SpellDataPeriodic{Tick: 41, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 6, SpellID: 6078, Cost: 205, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 54}}, Periodic: shared.SpellDataPeriodic{Tick: 54, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 7, SpellID: 10927, Cost: 250, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 74}}, Periodic: shared.SpellDataPeriodic{Tick: 74, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 8, SpellID: 10928, Cost: 305, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 102}}, Periodic: shared.SpellDataPeriodic{Tick: 102, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 9, SpellID: 10929, Cost: 365, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 134}}, Periodic: shared.SpellDataPeriodic{Tick: 134, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 10, SpellID: 25315, Cost: 410, GCD: 1500 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_HEAL, Misc: 0, Value: 166}}, Periodic: shared.SpellDataPeriodic{Tick: 166, Coef: 0.20000000298023224, TickLength: 3000 * time.Millisecond, NumberOfTicks: 5}},
 	},
 	RenewedHope: shared.SpellDataTable{
 		{Rank: 1, SpellID: 425280, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 2}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: -1000}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 0}},

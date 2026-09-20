@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"go/format"
+	"math"
 	"os"
 	"regexp"
 	"sort"
@@ -58,10 +59,11 @@ type generatedAmount struct {
 }
 
 type rankCandidate struct {
-	SpellID   int32
-	Rank      int32
-	ClassMask int
-	SkillLine int32
+	SpellID       int32
+	Rank          int32
+	ClassMask     int
+	SkillLine     int32
+	AcquireMethod int32
 }
 
 type rankLadder struct {
@@ -132,7 +134,7 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	}
 
 	rows, err := db.Query(`
-		SELECT n.Name_lang, sla.Spell, s.NameSubtext_lang, sla.ClassMask, sla.SkillLine
+		SELECT n.Name_lang, sla.Spell, s.NameSubtext_lang, sla.ClassMask, sla.SkillLine, sla.AcquireMethod
 		FROM SkillLineAbility sla
 		JOIN SpellName n ON n.ID = sla.Spell
 		JOIN Spell s ON s.ID = sla.Spell
@@ -153,7 +155,7 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	for rows.Next() {
 		var name, subtext string
 		var c rankCandidate
-		if err := rows.Scan(&name, &c.SpellID, &subtext, &c.ClassMask, &c.SkillLine); err != nil {
+		if err := rows.Scan(&name, &c.SpellID, &subtext, &c.ClassMask, &c.SkillLine, &c.AcquireMethod); err != nil {
 			return nil, nil, nil, err
 		}
 		m := rankSubtext.FindStringSubmatch(subtext)
@@ -485,6 +487,36 @@ var ladderPins = map[string]map[int32]int32{
 	"Seal of Righteousness": {1: 21084},
 }
 
+// Forever re-issues a classic ability as a second spell in the 4xxxxx range, same name, same rank
+// subtext, same class: Exorcism rank 1 is both 879 and 415068, and Raptor Strike rank 1 is 2973,
+// 409691 and 415335. The copies are granted (AcquireMethod 3) where the original is trained (0) or
+// learned (2), so the lowest method is the ability the player actually casts. Narrowing is relative
+// and never empties the set, which leaves the 44 accepted ladder spells that are only ever granted
+// exactly where they were.
+func lowestAcquireMethod(cands []rankCandidate) []rankCandidate {
+	perSpell := map[int32]int32{}
+	for _, c := range cands {
+		if best, seen := perSpell[c.SpellID]; !seen || c.AcquireMethod < best {
+			perSpell[c.SpellID] = c.AcquireMethod
+		}
+	}
+
+	best := int32(math.MaxInt32)
+	for _, method := range perSpell {
+		if method < best {
+			best = method
+		}
+	}
+
+	var kept []rankCandidate
+	for _, c := range cands {
+		if perSpell[c.SpellID] == best {
+			kept = append(kept, c)
+		}
+	}
+	return kept
+}
+
 func resolveLadder(db *sql.DB, name string, byRank map[int32][]rankCandidate, mask int) (map[int32]int32, error) {
 	ladder := map[int32]int32{}
 
@@ -508,6 +540,7 @@ func resolveLadder(db *sql.DB, name string, byRank map[int32][]rankCandidate, ma
 		if len(chosen) == 0 {
 			chosen = cands
 		}
+		chosen = lowestAcquireMethod(chosen)
 
 		ids := map[int32]bool{}
 		for _, c := range chosen {
