@@ -7,17 +7,14 @@ name: Build Arena
 # produced it is the key, and this workflow is the invalidation: nothing has to notice that a
 # spell changed, because the only thing that ever writes the file is a run that happened
 # after the change. The paths below are what a build's number can actually depend on.
+# Manual only. This used to run on every push to master, and that made two writers for one
+# file: a four hour search on Tonberry finished to find CI had already replaced its results
+# with a rebuild that carried only the talents it had found by the time CI started. The
+# searched leaderboard is Tonberry's - tools/arena/background.py - and nothing else commits it.
+#
+# Staleness is not lost by this: results.json records the commit that produced it, and the
+# page compares that against the site's own commit and says so when they have drifted.
 on:
-  push:
-    branches: [master]
-    paths:
-      - 'sim/**'
-      - 'ui/*/gear_sets/**'
-      - 'ui/*/apls/**'
-      - 'ui/*/presets.ts'
-      - 'ui/core/spells/**'
-      - 'tools/arena/**'
-      - '.github/workflows/build_arena.yml'
   workflow_dispatch:
 
 # Each run commits to master, so two of them racing means the loser is rejected as a

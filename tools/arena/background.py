@@ -162,8 +162,11 @@ def main():
         subprocess.run(['git', 'add', 'ui/arena/results.json'], cwd=REPO, check=True)
         if subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=REPO).returncode != 0:
             subprocess.run(['git', 'commit', '-m', 'chore(arena): rebuild the leaderboard'], cwd=REPO, check=True)
-            subprocess.run(['git', 'push'], cwd=REPO, check=True)
-            pushed = ' - pushed'
+            # Never check=True on the push. A rejected push killed a four hour search between
+            # its last progress update and its report, so the only evidence it had finished at
+            # all was a commit sitting unpushed in the working tree.
+            ok = subprocess.run(['git', 'push'], cwd=REPO).returncode == 0
+            pushed = ' - pushed' if ok else ' - **committed but the push was rejected**, run git push'
         else:
             pushed = ' - leaderboard unchanged'
 
