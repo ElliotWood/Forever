@@ -680,7 +680,7 @@ func CommandingShoutAura(char *Character, isPlayer bool, boomingVoicePoints int3
 	aura := char.GetOrRegisterAura(Aura{
 		Label:      fmt.Sprintf("Commanding Shout (%s)", Ternary(isPlayer, "Player", "External")),
 		Tag:        CommandingShoutCategory,
-		ActionID:   ActionID{SpellID: 469}.WithTag(TernaryInt32(isPlayer, 0, 1)),
+		ActionID:   ActionID{SpellID: 469}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:   time.Duration(float64(time.Minute*2) * (1 + 0.1*float64(boomingVoicePoints))),
 		BuildPhase: CharacterBuildPhaseBuffs,
 		OnGain: func(aura *Aura, sim *Simulation) {
