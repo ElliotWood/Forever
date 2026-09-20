@@ -36,7 +36,7 @@ var Manifest = []BuffSpec{
 	{
 		Field: "devotion_aura", Number: 6, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "DevotionAura", Name: "Devotion Aura", Owner: proto.Class_ClassPaladin,
-		Category: "DevotionAura", SingleAura: true,
+		Category: "DevotionAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatArmor},
 		Notes: "no Improved Devotion Aura node in paladin tree 1100.",
 	},
@@ -50,7 +50,7 @@ var Manifest = []BuffSpec{
 		Go: "LeaderOfThePack", Name: "Leader of the Pack", AuraName: "Leader of the Pack",
 		Owner: proto.Class_ClassDruid, Pet: PetCapAtRegular,
 		Stats: []proto.Stat{proto.Stat_StatAttackPower, proto.Stat_StatMeleeCritRating},
-		Notes: "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. No improving talent in druid tree 1089.",
+		Notes: "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule cannot separate them: the generator must prefer the party aura 24932 or this row needs an explicit Anchor. No improving talent in druid tree 1089.",
 	},
 	{
 		Field: "mana_spring_totem", Number: 18, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindStatFlat,
@@ -69,6 +69,7 @@ var Manifest = []BuffSpec{
 	{
 		Field: "shadow_priest_dps", Number: 6, Scope: ScopeIndividual, Proto: ProtoInt32, Kind: KindManual,
 		Go: "ShadowPriestDps", Name: "Vampiric Touch", Owner: proto.Class_ClassPriest,
+		Pet:   PetStripWhenSummonedLate,
 		Stats: []proto.Stat{proto.Stat_StatMP5}, Label: "Vampiric Touch",
 		Notes: "mana returned to the party is entered by hand and stays a hand-written driver; SkillLineAbility resolves Vampiric Touch to 402668.",
 	},
@@ -81,20 +82,21 @@ var Manifest = []BuffSpec{
 	{
 		Field: "retribution_aura", Number: 7, Scope: ScopeParty, Proto: ProtoBool, Kind: KindDamageShield,
 		Go: "RetributionAura", Name: "Retribution Aura", Owner: proto.Class_ClassPaladin,
-		Category: "RetributionAura", SingleAura: true,
+		Category: "RetributionAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatResilienceRating, proto.Stat_StatArmor, proto.Stat_StatDefenseRating},
 		Notes: "the only paladin trait matching Retribution Aura is Benediction (20101), which modifies cost (misc 14).",
 	},
 	{
 		Field: "concentration_aura", Number: 45, Scope: ScopeParty, Proto: ProtoBool, Kind: KindPseudoMult,
 		Go: "ConcentrationAura", Name: "Concentration Aura", Owner: proto.Class_ClassPaladin,
-		Category: "ConcentrationAura", SingleAura: true,
+		Category: "ConcentrationAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatDefenseRating},
 		Notes: "no Improved Concentration Aura node in paladin tree 1100.",
 	},
 	{
 		Field: "sanctity_aura", Number: 5, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindAbsent,
-		Go: "SanctityAura", Owner: proto.Class_ClassPaladin, Category: "SanctityAura",
+		Go: "SanctityAura", Owner: proto.Class_ClassPaladin,
+		Category: "SanctityAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Notes: "SpellName 20218 exists but has no SkillLineAbility row and no node in paladin tree 1100.",
 	},
 	{
@@ -221,19 +223,19 @@ var Manifest = []BuffSpec{
 	{
 		Field: "frost_resistance_aura", Number: 38, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "FrostResistanceAura", Name: "Frost Resistance Aura", Owner: proto.Class_ClassPaladin,
-		Category: "ResistanceFrost", SingleAura: true,
+		Category: "ResistanceFrost", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatFrostResistance},
 	},
 	{
 		Field: "fire_resistance_aura", Number: 42, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "FireResistanceAura", Name: "Fire Resistance Aura", Owner: proto.Class_ClassPaladin,
-		Category: "ResistanceFire", SingleAura: true,
+		Category: "ResistanceFire", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatFireResistance},
 	},
 	{
 		Field: "shadow_resistance_aura", Number: 43, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "ShadowResistanceAura", Name: "Shadow Resistance Aura", Owner: proto.Class_ClassPaladin,
-		Category: "ResistanceShadow", SingleAura: true,
+		Category: "ResistanceShadow", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatShadowResistance},
 	},
 	{
@@ -290,13 +292,14 @@ var Manifest = []BuffSpec{
 	{
 		Field: "arcane_brilliance", Number: 1, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "ArcaneBrilliance", Name: "Arcane Brilliance", Owner: proto.Class_ClassMage,
-		Category: "StatBuff",
-		Stats:    []proto.Stat{proto.Stat_StatIntellect},
-		Notes:    "the ungranted twin 364161 has no SkillLineAbility row.",
+		Category: "StatBuff", Pet: PetStripWhenSummonedLate,
+		Stats: []proto.Stat{proto.Stat_StatIntellect},
+		Notes: "the ungranted twin 364161 has no SkillLineAbility row.",
 	},
 	{
 		Field: "blessing_of_kings", Number: 1, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindStatPct,
 		Go: "BlessingOfKings", Name: "Blessing of Kings", Owner: proto.Class_ClassPaladin,
+		Pet:   PetStripWhenSummonedLate,
 		Stats: []proto.Stat{proto.Stat_StatAgility, proto.Stat_StatIntellect, proto.Stat_StatSpirit, proto.Stat_StatStamina, proto.Stat_StatStrength},
 		Notes: "SkillLineAbility resolves the name to 20217 and Greater Blessing of Kings to 25898; the ungranted twin 1213408 has no SkillLineAbility row.",
 	},
@@ -308,14 +311,16 @@ var Manifest = []BuffSpec{
 	{
 		Field: "divine_spirit", Number: 4, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "DivineSpirit", Name: "Divine Spirit", Owner: proto.Class_ClassPriest,
+		Category: "StatBuff", Pet: PetStripWhenSummonedLate,
 		Stats: []proto.Stat{proto.Stat_StatSpirit, proto.Stat_StatSpellDamage},
 		Notes: "no Improved Divine Spirit node in priest tree 1114.",
 	},
 	{
 		Field: "gift_of_the_wild", Number: 5, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "GiftOfTheWild", Name: "Gift of the Wild", Owner: proto.Class_ClassDruid,
+		Pet:   PetStripWhenSummonedLate,
 		Stats: []proto.Stat{proto.Stat_StatArmor, proto.Stat_StatStrength, proto.Stat_StatAgility, proto.Stat_StatIntellect, proto.Stat_StatSpirit, proto.Stat_StatStamina},
-		Notes: "no Improved Mark of the Wild node in druid tree 1089; the ungranted twins 1291335/1310503 have no SkillLineAbility row.",
+		Notes: "no Improved Mark of the Wild node in druid tree 1089; the ungranted twins 1291335/1310503 have no SkillLineAbility row. The per-school resistance categories this aura joins are derived from the effect school mask by KindResistance, not carried in the manifest.",
 	},
 	{
 		Field: "thorns", Number: 6, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindDamageShield,
@@ -326,36 +331,41 @@ var Manifest = []BuffSpec{
 	{
 		Field: "power_word_fortitude", Number: 2, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "PowerWordFortitude", Name: "Power Word: Fortitude", Owner: proto.Class_ClassPriest,
+		Pet:   PetStripWhenSummonedLate,
 		Stats: []proto.Stat{proto.Stat_StatStamina},
 		Notes: "no Improved Power Word: Fortitude node in priest tree 1114.",
 	},
 	{
 		Field: "blessing_of_might", Number: 5, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "BlessingOfMight", Name: "Blessing of Might", Owner: proto.Class_ClassPaladin,
+		Pet:   PetStripWhenSummonedLate,
 		Stats: []proto.Stat{proto.Stat_StatAttackPower},
 		Notes: "no Improved Blessing of Might node in paladin tree 1100; Benediction (20101) modifies cost (misc 14).",
 	},
 	{
 		Field: "blessing_of_wisdom", Number: 4, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "BlessingOfWisdom", Name: "Blessing of Wisdom", Owner: proto.Class_ClassPaladin,
+		Pet:   PetStripWhenSummonedLate,
 		Stats: []proto.Stat{proto.Stat_StatMP5},
 		Notes: "no Improved Blessing of Wisdom node in paladin tree 1100; Benediction (20101) modifies cost (misc 14).",
 	},
 	{
 		Field: "blessing_of_sanctuary", Number: 3, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindAbsent,
 		Go: "BlessingOfSanctuary", Owner: proto.Class_ClassPaladin,
+		Pet:   PetStripWhenSummonedLate,
 		Stats: []proto.Stat{proto.Stat_StatStamina, proto.Stat_StatArmor},
 		Notes: "no SpellName row for Blessing of Sanctuary.",
 	},
 	{
 		Field: "blessing_of_salvation", Number: 2, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindPseudoMult,
 		Go: "BlessingOfSalvation", Name: "Blessing of Salvation", Owner: proto.Class_ClassPaladin,
+		Pet: PetStripWhenSummonedLate,
 	},
 	{
 		Field: "shadow_protection", Number: 3, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindResistance,
 		Go: "ShadowProtection", Name: "Shadow Protection", Owner: proto.Class_ClassPriest,
-		Category: "ResistanceShadow",
-		Stats:    []proto.Stat{proto.Stat_StatShadowResistance, proto.Stat_StatStamina},
+		Category: "ResistanceShadow", Pet: PetStripWhenSummonedLate,
+		Stats: []proto.Stat{proto.Stat_StatShadowResistance, proto.Stat_StatStamina},
 	},
 	{
 		Field: "innervates", Number: 8, Scope: ScopeIndividual, Proto: ProtoInt32, Kind: KindExternalCD,

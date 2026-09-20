@@ -149,6 +149,9 @@ const (
 	PetStrip
 	PetInheritOwnerAura
 	PetCapAtRegular
+	// PetStripWhenSummonedLate drops the buff only for a pet that is not enabled
+	// at fight start.
+	PetStripWhenSummonedLate
 )
 
 func (p PetPolicy) String() string {
@@ -161,6 +164,8 @@ func (p PetPolicy) String() string {
 		return "PetInheritOwnerAura"
 	case PetCapAtRegular:
 		return "PetCapAtRegular"
+	case PetStripWhenSummonedLate:
+		return "PetStripWhenSummonedLate"
 	}
 	return "PetPolicy(unknown)"
 }
@@ -178,24 +183,25 @@ type ActionRef struct {
 }
 
 type BuffSpec struct {
-	Field      string // proto field name, snake_case, owns the number
-	Number     int32  // existing proto field number, preserved
-	Scope      BuffScope
-	Proto      BuffProtoType // bool when the improving talent is not in the live Trait tree
-	Kind       BuffKind
-	Go         string      // identifier stem: "BattleShout"
-	Name       string      // SpellName.Name_lang of the castable family ("" for rows with no spell)
-	AuraName   string      // aura family when the cast is a summon or dummy (totems: "Strength of Earth")
-	Anchor     int32       // explicit spell id; 0 = resolve Name via SkillLineAbility
-	Owner      proto.Class // class that casts it; ClassUnknown for none
-	Talent     *TalentMod  // improving talent family, nil when none
-	Category   string      // exclusive-effect category value, "" = none
-	SingleAura bool
-	Pet        PetPolicy
-	Stats      []proto.Stat // UI relevance tags
-	ImpAction  *ActionRef   // improved-icon override when it is an item
-	Label      string       // UI label override, "" = DB name
-	Notes      string       // reason for manual/absent rows; emitted as a comment
+	Field          string // proto field name, snake_case, owns the number
+	Number         int32  // existing proto field number, preserved
+	Scope          BuffScope
+	Proto          BuffProtoType // bool when the improving talent is not in the live Trait tree
+	Kind           BuffKind
+	Go             string      // identifier stem: "BattleShout"
+	Name           string      // SpellName.Name_lang of the castable family ("" for rows with no spell)
+	AuraName       string      // aura family when the cast is a summon or dummy (totems: "Strength of Earth")
+	Anchor         int32       // explicit spell id; 0 = resolve Name via SkillLineAbility
+	Owner          proto.Class // class that casts it; ClassUnknown for none
+	Talent         *TalentMod  // improving talent family, nil when none
+	Category       string      // exclusive-effect category value, "" = none
+	SharedCategory string      // second exclusive category the aura also joins, "" = none
+	SingleAura     bool
+	Pet            PetPolicy
+	Stats          []proto.Stat // UI relevance tags
+	ImpAction      *ActionRef   // improved-icon override when it is an item
+	Label          string       // UI label override, "" = DB name
+	Notes          string       // reason for manual/absent rows; emitted as a comment
 }
 
 // GoField is the field name protoc-gen-go generates for Field. It ports

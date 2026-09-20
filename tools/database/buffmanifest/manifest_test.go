@@ -42,6 +42,9 @@ func TestUniqueGoStem(t *testing.T) {
 			t.Errorf("duplicate Go stem: %s", spec.Go)
 		}
 		seen[spec.Go] = true
+		if want := strings.ReplaceAll(spec.GoField(), "_", ""); spec.Go != want {
+			t.Errorf("%s has Go stem %q, want %q", spec.Field, spec.Go, want)
+		}
 	}
 }
 
@@ -59,7 +62,7 @@ func TestShellRowsHaveNotes(t *testing.T) {
 func TestResolvableRowsHaveAnchor(t *testing.T) {
 	for _, spec := range Manifest {
 		switch spec.Kind {
-		case KindAbsent, KindFlag, KindEnum:
+		case KindAbsent, KindFlag, KindEnum, KindManual:
 			continue
 		}
 		if spec.Name == "" && spec.Anchor == 0 {
@@ -148,35 +151,63 @@ func TestCensusMatchesProto(t *testing.T) {
 		"Debuffs":         ScopeDebuff,
 	}
 
-	want := map[string]int32{}
+	want := map[string]protoField{}
 	for message, scope := range messages {
-		for field, number := range parseProtoMessage(t, message) {
-			want[fmt.Sprintf("%s/%s", scope, field)] = number
+		for field, declared := range parseProtoMessage(t, message) {
+			want[fmt.Sprintf("%s/%s", scope, field)] = declared
 		}
 	}
 
-	got := map[string]int32{}
+	got := map[string]bool{}
 	for _, spec := range Manifest {
-		got[fmt.Sprintf("%s/%s", spec.Scope, spec.Field)] = spec.Number
-	}
+		key := fmt.Sprintf("%s/%s", spec.Scope, spec.Field)
+		got[key] = true
 
-	for key, number := range want {
-		if other, ok := got[key]; !ok {
-			t.Errorf("%s is in common.proto but not in the manifest", key)
-		} else if other != number {
-			t.Errorf("%s has number %d in the manifest and %d in common.proto", key, other, number)
+		declared, ok := want[key]
+		if !ok {
+			t.Errorf("%s is in the manifest but not in common.proto", key)
+			continue
+		}
+		if spec.Number != declared.number {
+			t.Errorf("%s has number %d in the manifest and %d in common.proto", key, spec.Number, declared.number)
+		}
+		if !declared.allows(spec.Proto) {
+			t.Errorf("%s is %s in the manifest and %s in common.proto", key, spec.Proto, declared.kind)
 		}
 	}
-	for key := range got {
-		if _, ok := want[key]; !ok {
-			t.Errorf("%s is in the manifest but not in common.proto", key)
+	for key := range want {
+		if !got[key] {
+			t.Errorf("%s is in common.proto but not in the manifest", key)
 		}
 	}
 }
 
-var protoFieldRE = regexp.MustCompile(`^\s*(?:[A-Za-z][\w.]*)\s+([a-z][a-z0-9_]*)\s*=\s*(\d+)\s*;`)
+type protoField struct {
+	kind   string
+	number int32
+}
 
-func parseProtoMessage(t *testing.T, message string) map[string]int32 {
+// allows reports whether a manifest row may carry proto type p. A TristateEffect
+// field may also be ProtoBool: those are the approved ghost-talent retypes.
+func (f protoField) allows(p BuffProtoType) bool {
+	switch f.kind {
+	case "bool":
+		return p == ProtoBool
+	case "int32":
+		return p == ProtoInt32
+	case "double":
+		return p == ProtoDouble
+	case "Drums":
+		return p == ProtoEnumDrums
+	case "TristateEffect":
+		return p == ProtoTristate || p == ProtoBool
+	}
+	return false
+}
+
+var protoFieldRE = regexp.MustCompile(`^\s*([A-Za-z][\w.]*)\s+([a-z][a-z0-9_]*)\s*=\s*(\d+)\s*;`)
+
+func parseProtoMessage(t *testing.T, message string) map[string]protoField {
 	t.Helper()
 
 	raw, err := os.ReadFile("../../../proto/common.proto")
@@ -184,7 +215,7 @@ func parseProtoMessage(t *testing.T, message string) map[string]int32 {
 		t.Fatalf("read common.proto: %v", err)
 	}
 
-	fields := map[string]int32{}
+	fields := map[string]protoField{}
 	inMessage := false
 	for _, line := range strings.Split(string(raw), "\n") {
 		if !inMessage {
@@ -198,11 +229,11 @@ func parseProtoMessage(t *testing.T, message string) map[string]int32 {
 		if match == nil {
 			continue
 		}
-		number, err := strconv.Atoi(match[2])
+		number, err := strconv.Atoi(match[3])
 		if err != nil {
-			t.Fatalf("field %s of %s: %v", match[1], message, err)
+			t.Fatalf("field %s of %s: %v", match[2], message, err)
 		}
-		fields[match[1]] = int32(number)
+		fields[match[2]] = protoField{kind: match[1], number: int32(number)}
 	}
 
 	if len(fields) == 0 {
