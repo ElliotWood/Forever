@@ -881,6 +881,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		23203, // Libram of Fervor
+		[
+			"Increases the melee attack power bonus of your Seal of the Crusader by 48 and the Holy damage increase of your Judgement of the Crusader by 33.", // 28852 - https://www.wowhead.com/forever/spell=28852
+		]
+	],
+	[
 		23274, // Knight-Lieutenant's Lamellar Gauntlets
 		[
 			"Increases the Holy damage bonus of your Judgement of the Crusader by 20.", // 23300 - https://www.wowhead.com/forever/spell=23300

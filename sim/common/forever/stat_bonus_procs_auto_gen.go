@@ -1995,6 +1995,22 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
+	// Increases the melee attack power bonus of your Seal of the Crusader by 48 and the Holy damage increase
+	// of your Judgement of the Crusader by 33.
+	// https://www.wowhead.com/forever/spell=28852
+	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
+	//	Callback:           core.CallbackEmpty,
+	//	ProcMask:           core.ProcMaskUnknown,
+	//	Outcome:            core.OutcomeEmpty,
+	//	RequireDamageDealt: false
+	// }, []shared.ItemVariant{
+	//	{ItemID: 23203, ItemName: "Libram of Fervor"},
+	// })
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
 	// Gives you a 50% chance to avoid interruption caused by damage while casting Searing Pain.
 	// https://www.wowhead.com/forever/spell=23046
 	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
