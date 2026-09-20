@@ -69,7 +69,11 @@ type output struct {
 	Commit     string    `json:"commit"`
 	Generated  time.Time `json:"generated"`
 	Iterations int       `json:"iterations"`
-	Builds     []build   `json:"builds"`
+	// Which machine ran it. The long searches moved off CI onto a host with more cores and no
+	// six hour job ceiling, so "where did this number come from" stopped being answerable
+	// from the workflow file alone.
+	Host   string  `json:"host,omitempty"`
+	Builds []build `json:"builds"`
 }
 
 func main() {
@@ -126,6 +130,7 @@ func main() {
 		Commit:     commit(),
 		Generated:  time.Now().UTC().Truncate(time.Second),
 		Iterations: 5000,
+		Host:       host(),
 		Builds:     builds,
 	}, "", "\t")
 	if err != nil {
@@ -210,6 +215,19 @@ func commit() string {
 		return ""
 	}
 	return strings.TrimSpace(string(out))
+}
+
+// Where it ran. CI sets GITHUB_ACTIONS, everything else is a person's machine and the
+// hostname is the honest answer.
+func host() string {
+	if os.Getenv("GITHUB_ACTIONS") != "" {
+		return "github-actions"
+	}
+	name, err := os.Hostname()
+	if err != nil {
+		return ""
+	}
+	return name
 }
 
 // What the build spends, and zero when that is the 51 a level 60 character has - so the
