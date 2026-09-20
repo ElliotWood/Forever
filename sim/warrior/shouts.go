@@ -55,6 +55,8 @@ func (warrior *Warrior) MakeShoutSpellHelper(config ShoutHelperConfig) *core.Spe
 
 var battleShoutRank = spellData.BattleShout.HighestRank()
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerShouts() {
 	// TODO: Forever drops Commanding Presence. Neutral multiplier until we know whether
 	// the shout scaling moved to another talent.

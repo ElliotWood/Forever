@@ -23,6 +23,8 @@ func (warrior *Warrior) StanceMatches(other Stance) bool {
 	return (warrior.Stance & other) != 0
 }
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, defenseType core.DefenseType, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
 	// TODO: Forever drops Tactical Mastery and adds Improved Tactical Mastery, which is
 	// probably its replacement -- but the new talent's effect is not modelled yet, so
@@ -106,6 +108,8 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 	return aura
 }
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
 	actionId := core.ActionID{SpellID: 2458}
 	// TODO: Forever drops Improved Berserker Stance; untalented threat modifier only.

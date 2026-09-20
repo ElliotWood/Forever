@@ -7,6 +7,8 @@ import (
 
 var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 56).HighestRank()
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerDemoralizingShout() {
 	war.DemoralizingShoutAuras = war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		// TODO: Forever drops Improved Demoralizing Shout; the core aura still takes a

@@ -8,6 +8,8 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerFuryTalents() {
 	// Tier 1
 	// Booming Voice implemented in shouts.go
@@ -79,6 +81,8 @@ func (war *Warrior) registerUnbridledWrath() {
 	})
 }
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerDualWieldSpecialization() {
 	if war.Talents.DualWieldSpecialization == 0 {
 		return
@@ -314,6 +318,8 @@ func (war *Warrior) registerFlurry() {
 	})
 }
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerPrecision() {
 	if war.Talents.Precision == 0 {
 		return

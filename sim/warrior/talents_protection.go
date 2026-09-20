@@ -8,6 +8,8 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerProtectionTalents() {
 	// Tier 1
 	// Improved Bloodrage implemented in bloodrage.go
@@ -51,6 +53,8 @@ func (war *Warrior) registerProtectionTalents() {
 	war.registerBastion()
 }
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerDefiance() {
 	if war.Talents.Defiance == 0 {
 		return
@@ -77,6 +81,8 @@ func (war *Warrior) registerAnticipation() {
 	war.AddStat(stats.DefenseRating, spellData.Anticipation.ValueAt(war.Talents.Anticipation)*core.DefenseRatingPerDefenseLevel)
 }
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerShieldSpecialization() {
 	if war.Talents.ShieldSpecialization == 0 {
 		return
@@ -99,6 +105,8 @@ func (war *Warrior) registerShieldSpecialization() {
 	})
 }
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerToughness() {
 	if war.Talents.Toughness == 0 {
 		return
@@ -159,6 +167,8 @@ func (war *Warrior) registerLastStand() {
 	})
 }
 
+// TODO: Manual review needed -- this was modelled during the Forever port, not carried
+// over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerImprovedSunderArmor() {
 	if war.Talents.ImprovedSunderArmor == 0 {
 		return
@@ -231,12 +241,8 @@ func (war *Warrior) registerConcussionBlow() {
 
 var shieldSlamRank = spellData.ShieldSlam.HighestRank()
 
-// TODO: To be implemented. The Forever client DOES ship a rank ladder for this, and spellData
-// now carries it -- the family was previously dropped as ambiguous because Forever re-issues
-// the ability as a second spell per rank. The body below is the TBC implementation, awaiting
-// a port onto the recovered ladder. Nothing
-// in this package currently consumes a Devastate rank pin (DevastateSunder in warrior.go
-// is declared but never assigned), so there is no registrar body left to stub here.
+// Nothing in this package currently consumes a Devastate rank pin (DevastateSunder in
+// warrior.go is declared but never assigned), so there is no registrar body left to stub here.
 
 func (war *Warrior) registerShieldSlam() {
 	if !war.Talents.ShieldSlam {
