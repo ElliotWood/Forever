@@ -3,13 +3,36 @@
 package core
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // func BloodFrenzyAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blood_frenzy, KindAbsent: spells 403352/412507/445285/445286 exist but have no SkillLineAbility row and no node in warrior tree 1117.
 
 // Hunter's Mark - https://www.wowhead.com/forever/spell=14325
-// func HuntersMarkAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // hunters_mark, KindDebuffStat: hand-written constructor still present
+var HuntersMarkCategory = "HuntersMark"
+
+func HuntersMarkValue(talentPoints int32) float64 {
+	return 71.0
+}
+func HuntersMarkDuration(talentPoints int32) time.Duration {
+	return 120000 * time.Millisecond
+}
+func HuntersMarkAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Hunter's Mark (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 14325}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   HuntersMarkDuration(talentPoints),
+		Category:   HuntersMarkCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Pseudo: []PseudoConfig{
+			{PseudoStatBonusRangedAttackPower, HuntersMarkValue(talentPoints), false, 0},
+		},
+	})
+}
 
 // func ImprovedScorchAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // improved_scorch, KindAbsent: the debuff 22959 (Fire Vulnerability) is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the mage that applied it.
 
@@ -32,16 +55,104 @@ import (
 // func ShadowWeavingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_weaving, KindAbsent: the debuff 15258 is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the priest that applied it.
 
 // Curse of the Elements - https://www.wowhead.com/forever/spell=1311680
-// func CurseOfElementsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // curse_of_elements, KindDebuffDamageTaken: hand-written constructor still present
+var CurseOfElementsCategory = "CurseOfElements"
+
+func CurseOfElementsValue(talentPoints int32) float64 {
+	return -75.0
+}
+func CurseOfElementsDuration(talentPoints int32) time.Duration {
+	return 300000 * time.Millisecond
+}
+func CurseOfElementsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Curse of the Elements (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 1311680}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   CurseOfElementsDuration(talentPoints),
+		Category:   CurseOfElementsCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.ArcaneResistance, CurseOfElementsValue(talentPoints), false},
+			{stats.FireResistance, -75.0, false},
+			{stats.FrostResistance, -75.0, false},
+			{stats.NatureResistance, -75.0, false},
+			{stats.ShadowResistance, -75.0, false},
+		},
+		Pseudo: []PseudoConfig{
+			{PseudoStatSchoolDamageTakenMultiplier, 1.1, true, 126},
+		},
+	})
+}
 
 // Curse of Recklessness - https://www.wowhead.com/forever/spell=11717
-// func CurseOfRecklessnessAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // curse_of_recklessness, KindDebuffStat: hand-written constructor still present
+var CurseOfRecklessnessCategory = "CurseOfRecklessness"
+
+func CurseOfRecklessnessValue(talentPoints int32) float64 {
+	return -505.0
+}
+func CurseOfRecklessnessDuration(talentPoints int32) time.Duration {
+	return 120000 * time.Millisecond
+}
+func CurseOfRecklessnessAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Curse of Recklessness (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 11717}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   CurseOfRecklessnessDuration(talentPoints),
+		Category:   CurseOfRecklessnessCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.Armor, CurseOfRecklessnessValue(talentPoints), false},
+		},
+	})
+}
 
 // Faerie Fire - https://www.wowhead.com/forever/spell=9907
-// func FaerieFireAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // faerie_fire, KindDebuffStat: hand-written constructor still present
+var FaerieFireCategory = "FaerieFireAura"
+
+func FaerieFireValue(talentPoints int32) float64 {
+	return -505.0
+}
+func FaerieFireDuration(talentPoints int32) time.Duration {
+	return 40000 * time.Millisecond
+}
+func FaerieFireAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Faerie Fire (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 9907}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   FaerieFireDuration(talentPoints),
+		Category:   FaerieFireCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.Armor, FaerieFireValue(talentPoints), false},
+		},
+	})
+}
 
 // Expose Armor - https://www.wowhead.com/forever/spell=11198
-// func ExposeArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // expose_armor, KindDebuffStat: hand-written constructor still present
+// Effect 0 is worth -450.0 per combo point; this is the 5-point finisher.
+var ExposeArmorCategory = "MajorArmorReduction"
+
+func ExposeArmorValue(talentPoints int32) float64 {
+	return -2250.0
+}
+func ExposeArmorDuration(talentPoints int32) time.Duration {
+	return 30000 * time.Millisecond
+}
+func ExposeArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Expose Armor (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 11198}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   ExposeArmorDuration(talentPoints),
+		Category:   ExposeArmorCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.Armor, ExposeArmorValue(talentPoints), false},
+		},
+	})
+}
 
 // Sunder Armor - https://www.wowhead.com/forever/spell=11597
 // func SunderArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // sunder_armor, KindDebuffStacking: hand-written constructor still present
@@ -49,10 +160,50 @@ import (
 // func WintersChillAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // winters_chill, KindAbsent: the debuff 12579 is aura 308 A_MOD_CRIT_CHANCE_FOR_CASTER_WITH_ABILITIES, so it only benefits the mage that applied it; the name also resolves to the talent 11180 rather than to the debuff.
 
 // Gift of Arthas - https://www.wowhead.com/forever/spell=11374
-// func GiftOfArthasAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // gift_of_arthas, KindDebuffDamageTaken: hand-written constructor still present
+var GiftOfArthasCategory = "GiftOfArthasAura"
+
+func GiftOfArthasValue(talentPoints int32) float64 {
+	return 8.0
+}
+func GiftOfArthasDuration(talentPoints int32) time.Duration {
+	return 180000 * time.Millisecond
+}
+func GiftOfArthasAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Gift of Arthas (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 11374}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   GiftOfArthasDuration(talentPoints),
+		Category:   GiftOfArthasCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Pseudo: []PseudoConfig{
+			{PseudoStatBonusPhysicalDamageTaken, GiftOfArthasValue(talentPoints), false, 0},
+		},
+	})
+}
 
 // Demoralizing Roar - https://www.wowhead.com/forever/spell=9898
-// func DemoralizingRoarAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // demoralizing_roar, KindDebuffStat: hand-written constructor still present
+var DemoralizingRoarCategory = "Demoralizing"
+
+func DemoralizingRoarValue(talentPoints int32) float64 {
+	return -204.0
+}
+func DemoralizingRoarDuration(talentPoints int32) time.Duration {
+	return 30000 * time.Millisecond
+}
+func DemoralizingRoarAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Demoralizing Roar (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 9898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   DemoralizingRoarDuration(talentPoints),
+		Category:   DemoralizingRoarCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.AttackPower, DemoralizingRoarValue(talentPoints), false},
+		},
+	})
+}
 
 // Demoralizing Shout - https://www.wowhead.com/forever/spell=11556
 // func DemoralizingShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // demoralizing_shout, KindDebuffStat: hand-written constructor still present
@@ -63,10 +214,42 @@ import (
 // func ThunderClapAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // thunder_clap, KindDebuffAtkSpeed: hand-written constructor still present
 
 // Insect Swarm - https://www.wowhead.com/forever/spell=24977
-// func InsectSwarmAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // insect_swarm, KindDebuffStat: hand-written constructor still present
+func InsectSwarmValue(talentPoints int32) float64 {
+	return -2.0
+}
+func InsectSwarmDuration(talentPoints int32) time.Duration {
+	return 12000 * time.Millisecond
+}
+func InsectSwarmAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:    "Insect Swarm (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 24977}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: InsectSwarmDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.PhysicalHitPercent, InsectSwarmValue(talentPoints), false},
+		},
+	})
+}
 
 // Scorpid Sting - https://www.wowhead.com/forever/spell=3043
-// func ScorpidStingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // scorpid_sting, KindDebuffStat: hand-written constructor still present
+func ScorpidStingValue(talentPoints int32) float64 {
+	return -2.0
+}
+func ScorpidStingDuration(talentPoints int32) time.Duration {
+	return 20000 * time.Millisecond
+}
+func ScorpidStingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:    "Scorpid Sting (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 3043}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: ScorpidStingDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.PhysicalHitPercent, ScorpidStingValue(talentPoints), false},
+		},
+	})
+}
 
 // func ShadowEmbraceAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_embrace, KindAbsent: no SpellName row for Shadow Embrace.
 
@@ -79,4 +262,31 @@ import (
 // func HemorrhageUptimeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // hemorrhage_uptime, KindAbsent: Hemorrhage (16511) effect 2 is aura 271 A_MOD_SPELL_DAMAGE_FROM_CASTER, so it only benefits the rogue that applied it.
 
 func applyGeneratedDebuffs(target *Unit, debuffs *proto.Debuffs, raid *proto.Raid) {
+	if debuffs.HuntersMark {
+		MakePermanent(HuntersMarkAura(target, false, 0))
+	}
+	if debuffs.CurseOfElements {
+		MakePermanent(CurseOfElementsAura(target, false, 0))
+	}
+	if debuffs.CurseOfRecklessness {
+		MakePermanent(CurseOfRecklessnessAura(target, false, 0))
+	}
+	if debuffs.FaerieFire {
+		MakePermanent(FaerieFireAura(target, false, 0))
+	}
+	if debuffs.ExposeArmor {
+		MakePermanent(ExposeArmorAura(target, false, 0))
+	}
+	if debuffs.GiftOfArthas {
+		MakePermanent(GiftOfArthasAura(target, false, 0))
+	}
+	if debuffs.DemoralizingRoar {
+		MakePermanent(DemoralizingRoarAura(target, false, 0))
+	}
+	if debuffs.InsectSwarm {
+		MakePermanent(InsectSwarmAura(target, false, 0))
+	}
+	if debuffs.ScorpidSting {
+		MakePermanent(ScorpidStingAura(target, false, 0))
+	}
 }
