@@ -1,0 +1,88 @@
+package core
+
+import (
+	"testing"
+	"time"
+
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
+// A category's SingleAura flag is whatever its last member registered, so a
+// generated buff has to declare the same thing the hand-written members of the
+// category declare. Thunder Clap's AtkSpdReduction holds several auras at once;
+// a paladin aura's category holds one.
+func TestGeneratedAuraKeepsTheCategorySingleAuraFlag(t *testing.T) {
+	target := newExclusiveTestTarget()
+
+	newGeneratedDebuff(target, GeneratedBuff{
+		Label:    "Generated Thunder Clap",
+		ActionID: ActionID{SpellID: 11581},
+		Duration: time.Second * 30,
+		Category: "AtkSpdReduction",
+		Pseudo: []PseudoConfig{
+			{Kind: PseudoStatMeleeSpeedMultiplier, Amount: 0.8, IsMultiplicative: true},
+		},
+	})
+
+	slow := target.ExclusiveEffectManager.GetExclusiveEffectCategory("AtkSpdReduction")
+	if slow.SingleAura {
+		t.Error("a debuff the manifest does not mark SingleAura turned its category single-aura, " +
+			"which would stop the hand-written members from activating")
+	}
+	if len(slow.effects) != 1 {
+		t.Errorf("registered %d effects under the bare category, want 1", len(slow.effects))
+	}
+
+	newGeneratedStatAura(target, GeneratedBuff{
+		Label:      "Generated Devotion Aura",
+		ActionID:   ActionID{SpellID: 10293},
+		Duration:   NeverExpires,
+		Category:   "DevotionAura",
+		SingleAura: true,
+		IsPlayer:   true,
+		Stats:      []StatConfig{{stats.Armor, 735, false}},
+	})
+
+	devotion := target.ExclusiveEffectManager.GetExclusiveEffectCategory("DevotionAura")
+	if !devotion.SingleAura {
+		t.Error("a buff the manifest marks SingleAura did not turn its category single-aura")
+	}
+	if len(devotion.effects) != 1 {
+		t.Errorf("registered %d effects under the bare category, want 1", len(devotion.effects))
+	}
+	if priority := devotion.effects[0].Priority; priority != 735 {
+		t.Errorf("the category effect bids %v, want the positive magnitude 735", priority)
+	}
+}
+
+// Every school of a damage-taken debuff has to be applied, which a category
+// cannot do with one effect per school: it keeps a single effect per aura.
+func TestGeneratedPseudoStatsCoverEverySchool(t *testing.T) {
+	sim := &Simulation{}
+	target := newExclusiveTestTarget()
+	// The bare test unit leaves every multiplier at zero, and a damage-taken
+	// multiplier is only meaningful against the 1 a real unit starts at.
+	target.PseudoStats = stats.NewPseudoStats()
+
+	aura := newGeneratedDebuff(target, GeneratedBuff{
+		Label:    "Generated Curse of the Elements",
+		ActionID: ActionID{SpellID: 1311680},
+		Duration: time.Minute * 5,
+		Category: "CurseOfElements",
+		Pseudo: []PseudoConfig{{
+			Kind: PseudoStatSchoolDamageTakenMultiplier, Amount: 1.1,
+			IsMultiplicative: true, SchoolMask: 126,
+		}},
+	})
+
+	aura.Activate(sim)
+
+	for _, school := range generatedSchoolIndexes(126) {
+		if got := target.PseudoStats.SchoolDamageTakenMultiplier[school]; got != 1.1 {
+			t.Errorf("school %d takes %v times the damage, want 1.1", school, got)
+		}
+	}
+	if got := target.PseudoStats.SchoolDamageTakenMultiplier[generatedSchoolIndexes(1)[0]]; got != 1 {
+		t.Errorf("physical damage taken is %v, want the mask to have left it alone", got)
+	}
+}

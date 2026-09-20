@@ -1124,12 +1124,20 @@ func (res *buffResolver) resolveTalent(row *ResolvedBuff) error {
 // pseudo-stat. It is the first effect the kind mapping took an amount from, so
 // the curve and Stats[0] or Pseudo[0] describe the same number.
 func (row ResolvedBuff) talentTarget() (ResolvedEffect, bool, bool) {
+	// The damage shield is stepped over here exactly as the kind mapping steps
+	// over it, so a spell that shields and buffs a stat prices the stat, and it
+	// is only fallen back on when the spell states nothing else.
+	var shield ResolvedEffect
+	var shielded bool
 	for _, e := range row.Effects {
 		if !isAuraApplication(e.Effect) {
 			continue
 		}
 		if e.Aura == dbc.A_DAMAGE_SHIELD {
-			return e, false, true
+			if !shielded {
+				shield, shielded = e, true
+			}
+			continue
 		}
 		if _, ok := statAmountsOf(e); ok {
 			return e, false, true
@@ -1138,7 +1146,7 @@ func (row ResolvedBuff) talentTarget() (ResolvedEffect, bool, bool) {
 			return e, true, true
 		}
 	}
-	return ResolvedEffect{}, false, false
+	return shield, false, shielded
 }
 
 // What the effect is worth once the kind mapping has converted it.
