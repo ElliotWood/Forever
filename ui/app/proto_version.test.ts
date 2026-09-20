@@ -1,6 +1,5 @@
 import { Player } from '@generated/proto/api';
-import { PartyBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Drums } from '@generated/proto/common';
+import { ConsumesSpec } from '@generated/proto/common';
 import { IndividualSimSettings } from '@generated/proto/ui';
 import { CURRENT_API_VERSION } from '@sim/constants/other';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -17,18 +16,16 @@ const settings = (apiVersion: number, drumsId: number) =>
 	IndividualSimSettings.create({
 		apiVersion,
 		player: Player.create({ consumables: ConsumesSpec.create({ drumsId }) }),
-		partyBuffs: PartyBuffs.create(),
 	});
 
 describe('updateIndividualProtoVersion', () => {
 	beforeEach(() => added.mockClear());
 
-	it('moves a pre-7 payload’s party drums onto the party buffs and clears the consumable', () => {
+	it('clears a pre-7 payload’s party drums, which version 17 left nowhere to put', () => {
 		const proto = settings(6, GREATER_DRUMS_OF_BATTLE);
 
 		updateIndividualProtoVersion(proto);
 
-		expect(proto.partyBuffs?.drums).toBe(Drums.LesserDrumsOfBattle);
 		expect(proto.player?.consumables?.drumsId).toBe(0);
 		expect(added).toHaveBeenCalledTimes(1);
 	});
@@ -38,7 +35,6 @@ describe('updateIndividualProtoVersion', () => {
 
 		updateIndividualProtoVersion(proto);
 
-		expect(proto.partyBuffs?.drums).toBe(Drums.DrumsUnknown);
 		expect(proto.player?.consumables?.drumsId).toBe(GREATER_DRUMS_OF_BATTLE);
 		expect(added).not.toHaveBeenCalled();
 	});
@@ -66,6 +62,15 @@ describe('updateIndividualProtoVersion', () => {
 
 		updateIndividualProtoVersion(proto);
 
+		expect(added).not.toHaveBeenCalled();
+	});
+
+	it('leaves the player’s own drums consumable alone, which is not the party buff', () => {
+		const proto = settings(6, 29529);
+
+		updateIndividualProtoVersion(proto);
+
+		expect(proto.player?.consumables?.drumsId).toBe(29529);
 		expect(added).not.toHaveBeenCalled();
 	});
 });

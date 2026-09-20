@@ -4,13 +4,13 @@ import { IndividualSimSettings } from '@generated/proto/ui';
 import { ScalarType } from '@protobuf-ts/runtime';
 import { describe, expect, it } from 'vitest';
 
-import { migrateRetypedBuffFields, retypedBuffFields } from './buff_field_migration';
+import { migrateRetypedBuffFields, retiredBuffFields, retiredFieldSpellings, retypedBuffFields } from './buff_field_migration';
 
 const v16Settings = () => ({
 	apiVersion: 16,
 	partyBuffs: { battleShout: 'TristateEffectImproved', manaSpringTotem: 'TristateEffectImproved' },
-	debuffs: { faerieFire: 'TristateEffectMissing', misery: true },
-	player: { buffs: { blessingOfMight: 2, blessingOfKings: true } },
+	debuffs: { faerieFire: 'TristateEffectMissing', misery: true, jocRetribution2pt4: true },
+	player: { buffs: { blessingOfMight: 2, blessingOfKings: true, unleashedRage: true } },
 });
 
 describe('migrateRetypedBuffFields', () => {
@@ -31,7 +31,6 @@ describe('migrateRetypedBuffFields', () => {
 		migrateRetypedBuffFields(json);
 
 		expect(json.partyBuffs.manaSpringTotem).toBe('TristateEffectImproved');
-		expect(json.debuffs.misery).toBe(true);
 		expect(json.player.buffs.blessingOfKings).toBe(true);
 	});
 
@@ -90,6 +89,36 @@ describe('migrateRetypedBuffFields', () => {
 		expect(() => migrateRetypedBuffFields(null)).not.toThrow();
 		expect(() => migrateRetypedBuffFields('settings')).not.toThrow();
 		expect(() => migrateRetypedBuffFields({ partyBuffs: 7 })).not.toThrow();
+	});
+
+	it('drops the retired fields of a version-16 envelope so the parser accepts it', () => {
+		const json = {
+			apiVersion: 16,
+			partyBuffs: { drums: 'LesserDrumsOfBattle', snapshotBsT2: true, wrath_of_air_totem: 'TristateEffectImproved', battleShout: true },
+			debuffs: { jocRetribution2pt4: true, misery: true },
+			player: { buffs: { unleashedRage: true, blessingOfKings: true } },
+		} as Record<string, any>;
+
+		migrateRetypedBuffFields(json);
+
+		expect(Object.keys(json.partyBuffs)).toEqual(['battleShout']);
+		expect(Object.keys(json.debuffs)).toEqual([]);
+		expect(Object.keys(json.player.buffs)).toEqual(['blessingOfKings']);
+		expect(() => IndividualSimSettings.fromJson(json as never)).not.toThrow();
+	});
+
+	it('spells a retired field the three ways a payload may carry it', () => {
+		expect(retiredFieldSpellings('joc_retribution_2pt4')).toEqual(['joc_retribution_2pt4', 'jocRetribution2pt4', 'jocRetribution2Pt4']);
+		expect(retiredFieldSpellings('soe_enhancement_2pt4')).toEqual(['soe_enhancement_2pt4', 'soeEnhancement2pt4', 'soeEnhancement2Pt4']);
+		expect(retiredFieldSpellings('snapshot_bs_t2')).toEqual(['snapshot_bs_t2', 'snapshotBsT2']);
+		expect(retiredFieldSpellings('drums')).toEqual(['drums']);
+	});
+
+	it('names 33 retired fields, the ones the proto reserved', () => {
+		const fields = Object.values(retiredBuffFields).flat();
+
+		expect(fields).toHaveLength(33);
+		expect(new Set(fields).size).toBe(33);
 	});
 
 	it('names 25 fields, the ones the proto retyped', () => {

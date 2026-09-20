@@ -11,7 +11,7 @@ const savedSettingsCodec: SavedDataCodec<SavedSettings> = {
 	toJson: settings => SavedSettings.toJson(settings),
 	fromJson: json => {
 		migrateRetypedBuffFields(json);
-		return SavedSettings.fromJson(json);
+		return SavedSettings.fromJson(json, { ignoreUnknownFields: true });
 	},
 };
 

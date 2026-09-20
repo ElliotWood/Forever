@@ -278,7 +278,7 @@ export const makePresetBuildFromJSON = (
 	options?: PresetOptionsBase,
 ): PresetBuild => {
 	migrateRetypedBuffFields(json);
-	const simSettings = IndividualSimSettings.fromJson(json);
+	const simSettings = IndividualSimSettings.fromJson(json, { ignoreUnknownFields: true });
 	const buildConfig: PresetBuildOptions = {};
 
 	if (simSettings.player) {

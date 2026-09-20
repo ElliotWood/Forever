@@ -38,12 +38,21 @@ describe('useSavedSettings', () => {
 	// `SavedSettings.fromJson` throws on now that the field is a bool; `useSavedData` swallows that
 	// and the entry would be gone from the panel without a word.
 	it('keeps an entry whose improvedSealOfTheCrusader is a saved enum name', () => {
-		store({ Legacy: { race: 'RaceOrc', debuffs: { improvedSealOfTheCrusader: 'TristateEffectRegular', misery: true } } });
+		store({ Legacy: { race: 'RaceOrc', debuffs: { improvedSealOfTheCrusader: 'TristateEffectRegular', huntersMark: true } } });
 
 		const { entries } = load();
 		expect(entries.map(entry => entry.name)).toEqual(['Legacy']);
 		expect(entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(true);
-		expect(entries[0].data.debuffs?.misery).toBe(true);
+		expect(entries[0].data.debuffs?.huntersMark).toBe(true);
+	});
+
+	// The same swallowing would hide an entry that names a field api version 17 retired.
+	it('keeps an entry that still carries a retired buff', () => {
+		store({ Legacy: { race: 'RaceOrc', debuffs: { misery: true, huntersMark: true }, partyBuffs: { drums: 'LesserDrumsOfBattle' } } });
+
+		const { entries } = load();
+		expect(entries.map(entry => entry.name)).toEqual(['Legacy']);
+		expect(entries[0].data.debuffs?.huntersMark).toBe(true);
 	});
 
 	it('reads the missing state as off rather than as a set buff', () => {
