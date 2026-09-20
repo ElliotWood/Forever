@@ -36,7 +36,7 @@ func (druid *Druid) registerMaulSpell() {
 		MaxRange:         core.MaxMeleeRange,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := maulRank.Direct.Damage(sim) + druid.IdolMaulBonus + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			baseDamage := maulRank.Direct.Damage(sim) + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			if !result.Landed() {
 				spell.IssueRefund(sim)
@@ -47,7 +47,7 @@ func (druid *Druid) registerMaulSpell() {
 		},
 
 		ExpectedInitialDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
-			baseDamage := shared.SpellDataMin(maulRank.Direct) + druid.IdolMaulBonus + spell.Unit.AutoAttacks.MH().CalculateAverageWeaponDamage(spell.MeleeAttackPower(target))
+			baseDamage := shared.SpellDataMin(maulRank.Direct) + spell.Unit.AutoAttacks.MH().CalculateAverageWeaponDamage(spell.MeleeAttackPower(target))
 			return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
 		},
 	})

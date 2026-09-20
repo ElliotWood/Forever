@@ -12,7 +12,7 @@ import (
 func (druid *Druid) applyOmenOfClarity() {
 	const ppm = 2.0
 
-	const clearcastingSpells = DruidSpellMangleCat | DruidSpellRake | DruidSpellRip |
+	const clearcastingSpells = DruidSpellRake | DruidSpellRip |
 		DruidSpellFerociousBite | DruidSpellShred |
 		DruidSpellMangleBear | DruidSpellMaul | DruidSpellLacerate |
 		DruidSpellSwipe | DruidSpellDemoralizingRoar

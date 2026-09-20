@@ -18,15 +18,14 @@ const RipEndThresh = time.Second * 10
 const MaxWaitTime = time.Second * 1
 
 type FeralDruidRotation struct {
-	RipCP          int32
-	BiteCP         int32
-	RipTrickCP     int32
-	UseBite        bool
-	BiteOverRip    bool
-	UseMangleTrick bool
-	UseRipTrick    bool
-	UseRakeTrick   bool
-	Wolfshead      bool
+	RipCP        int32
+	BiteCP       int32
+	RipTrickCP   int32
+	UseBite      bool
+	BiteOverRip  bool
+	UseRipTrick  bool
+	UseRakeTrick bool
+	Wolfshead    bool
 
 	MaintainFaerieFire bool
 }
@@ -41,15 +40,14 @@ func (cat *FeralDruid) setupRotation(rotation *proto.FeralCatDruid_Rotation) {
 	}
 
 	cat.Rotation = FeralDruidRotation{
-		RipCP:          ripCP,
-		BiteCP:         rotation.BiteMinComboPoints,
-		RipTrickCP:     rotation.RipMinComboPoints,
-		UseBite:        useBite,
-		BiteOverRip:    useBite && rotation.FinishingMove != proto.FeralCatDruid_Rotation_Rip,
-		UseMangleTrick: rotation.MangleTrick,
-		UseRipTrick:    rotation.Ripweave,
-		UseRakeTrick:   rotation.RakeTrick,
-		Wolfshead:      cat.HasItemEquipped(8345, []proto.ItemSlot{proto.ItemSlot_ItemSlotHead}),
+		RipCP:        ripCP,
+		BiteCP:       rotation.BiteMinComboPoints,
+		RipTrickCP:   rotation.RipMinComboPoints,
+		UseBite:      useBite,
+		BiteOverRip:  useBite && rotation.FinishingMove != proto.FeralCatDruid_Rotation_Rip,
+		UseRipTrick:  rotation.Ripweave,
+		UseRakeTrick: rotation.RakeTrick,
+		Wolfshead:    cat.HasItemEquipped(8345, []proto.ItemSlot{proto.ItemSlot_ItemSlotHead}),
 
 		MaintainFaerieFire: rotation.MaintainFaerieFire,
 	}
@@ -155,10 +153,11 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) bool {
 	ripCost := cat.CurrentRipCost()
 	biteCost := cat.CurrentFerociousBiteCost()
 	shredCost := cat.CurrentShredCost()
-	mangleCost := 45.0 // sentinel when Mangle is not talented
-	if cat.MangleCat != nil {
-		mangleCost = cat.CurrentMangleCatCost()
-	}
+	// TODO: these thresholds were tuned against TBC's 45-energy Mangle (Cat)
+	// cycle; Forever has no Cat-form Mangle, so 45 is now a fixed constant
+	// rather than a measured cost. Re-tune when the Forever cat rotation is
+	// revisited.
+	mangleCost := 45.0
 
 	ripNow := cp >= rotation.RipCP && !ripDebuff
 	ripweaveNow := rotation.UseRipTrick &&
@@ -173,8 +172,6 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) bool {
 		(remainingDuration < RipEndThresh ||
 			(ripDebuff && sim.Duration-ripEnd < RipEndThresh))
 
-	mangleNow := cat.MangleCat != nil && !ripNow && !mangleDebuff
-
 	biteBeforeRip := ripDebuff && rotation.UseBite &&
 		ripEnd-sim.CurrentTime >= BiteTime
 
@@ -184,13 +181,11 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) bool {
 	ripNext := (ripNow || (cp >= rotation.RipCP && ripEnd <= nextTick)) &&
 		sim.Duration-nextTick >= RipEndThresh
 
-	mangleNext := !ripNext && (mangleNow || mangleEnd <= nextTick)
+	mangleNext := !ripNext && mangleEnd <= nextTick
 
 	waitToMangle := mangleNext || (!rotation.Wolfshead && mangleCost <= 38)
 
 	biteBeforeRipNext := biteBeforeRip && ripEnd-nextTick >= BiteTime
-
-	prioBiteOverMangle := rotation.BiteOverRip || !mangleNow
 
 	timeToNextTick := nextTick - sim.CurrentTime
 	cat.waitingForTick = true
@@ -199,8 +194,6 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) bool {
 		// No-shift rotation when OOM.
 		if ripNow && (energy >= ripCost || omenProc) {
 			return cat.Rip.Cast(sim, cat.CurrentTarget)
-		} else if mangleNow && (energy >= mangleCost || omenProc) {
-			return cat.MangleCat.Cast(sim, cat.CurrentTarget)
 		} else if biteNow && (energy >= biteCost || omenProc) {
 			return cat.FerociousBite.Cast(sim, cat.CurrentTarget)
 		} else if energy >= shredCost || omenProc {
@@ -215,7 +208,7 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) bool {
 		} else if timeToNextTick > MaxWaitTime {
 			cat.shift(sim)
 		}
-	} else if (biteNow || biteAtEnd) && prioBiteOverMangle {
+	} else if biteNow || biteAtEnd {
 		cutoffMod := 20.0
 		if timeToNextTick <= time.Second {
 			cutoffMod = 0.0
@@ -252,31 +245,12 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) bool {
 		!rakeDebuff &&
 		!omenProc {
 		return cat.Rake.Cast(sim, cat.CurrentTarget)
-	} else if mangleNow {
-		if energy < mangleCost-20 && !ripNext {
-			cat.shift(sim)
-		} else if energy >= mangleCost || omenProc {
-			return cat.MangleCat.Cast(sim, cat.CurrentTarget)
-		} else if timeToNextTick > MaxWaitTime {
-			cat.shift(sim)
-		}
 	} else if energy >= 22 {
 		if omenProc {
 			return cat.Shred.Cast(sim, cat.CurrentTarget)
 		}
-		// Mangle trick: if energy is in range to fit two Mangles instead of
-		// Shred + shift on the current cycle (relevant for no-Wolfshead rotations).
-		if cat.MangleCat != nil && energy >= 2*mangleCost-20 && energy < 22+mangleCost &&
-			timeToNextTick <= time.Second &&
-			rotation.UseMangleTrick &&
-			(!rotation.UseRakeTrick || mangleCost == 35) {
-			return cat.MangleCat.Cast(sim, cat.CurrentTarget)
-		}
 		if energy >= shredCost {
 			return cat.Shred.Cast(sim, cat.CurrentTarget)
-		}
-		if cat.MangleCat != nil && energy >= mangleCost && timeToNextTick > time.Second+cat.ReactionTime {
-			return cat.MangleCat.Cast(sim, cat.CurrentTarget)
 		}
 		if timeToNextTick > MaxWaitTime {
 			cat.shift(sim)

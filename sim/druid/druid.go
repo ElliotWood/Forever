@@ -23,15 +23,6 @@ type Druid struct {
 	ShredFlatBonus    float64 // Nordrassil Harness 4P: +75
 	LacerateTickBonus float64 // Nordrassil Harness 4P: +15 per stack per tick
 
-	IdolFerociousBiteBonus float64 // Idol of the Beast (25667): +14 per combo point
-	IdolMangleCatBonus     float64 // Idol of the Wild (28064): +24 flat to Mangle Cat
-	IdolMangleBearBonus    float64 // Idol of the Wild (28064): +52 flat to Mangle Bear
-	IdolShredBonus         float64 // Everbloom Idol (29390): +88 flat to Shred
-	IdolRipBonus           float64 // Idol of Feral Shadows (28372): +7 per combo point per tick
-	IdolLacerateBonus      float64 // Idol of Ursoc (27744): +8 per tick per stack
-	IdolMaulBonus          float64 // Idol of Brutality (23198): +50 flat to Maul
-	IdolSwipeBonus         float64 // Idol of Brutality (23198): +10 flat to Swipe
-
 	WolfsheadEnergyBonus float64 // Wolfshead Helm (8345): +20 energy on shift into Cat Form
 	WolfsheadRageBonus   float64 // Wolfshead Helm (8345): +5 rage on shift into Bear Form
 
@@ -52,7 +43,6 @@ type Druid struct {
 	InsectSwarm          *DruidSpell
 	Lacerate             *DruidSpell
 	MangleBear           *DruidSpell
-	MangleCat            *DruidSpell
 	Maul                 *DruidSpell
 	Moonfire             *DruidSpell
 	NaturesSwiftness     *DruidSpell
@@ -110,7 +100,6 @@ const (
 	DruidSpellInsectSwarm
 	DruidSpellLacerate
 	DruidSpellMangleBear
-	DruidSpellMangleCat
 	DruidSpellMaul
 	DruidSpellMoonfireInitial
 	DruidSpellMoonfireDoT
@@ -143,7 +132,7 @@ const (
 	DruidSpellDoT                = DruidSpellMoonfireDoT | DruidSpellInsectSwarm
 	DruidSpellHoT                = DruidSpellRejuvenation | DruidSpellLifebloom | DruidSpellRegrowth
 	DruidSpellInstant            = DruidSpellMoonfire | DruidSpellFaerieFire
-	DruidSpellMangle             = DruidSpellMangleBear | DruidSpellMangleCat
+	DruidSpellMangle             = DruidSpellMangleBear
 	DruidSpellBuilder            = DruidSpellMangle | DruidSpellShred | DruidSpellRake | DruidSpellRavage
 	DruidSpellFinisher           = DruidSpellFerociousBite | DruidSpellRip
 	DruidArcaneSpells            = DruidSpellMoonfire | DruidSpellMoonfireDoT | DruidSpellStarfire
@@ -257,7 +246,7 @@ func (druid *Druid) RegisterBalanceSpells() {
 func (druid *Druid) RegisterFeralCatSpells() {
 	druid.registerCatFormSpell()
 
-	druid.registerMangleCatSpell()
+	// Forever has no Cat-form Mangle.
 	druid.registerRakeSpell()
 	druid.registerRipSpell()
 	druid.registerFerociousBiteSpell()

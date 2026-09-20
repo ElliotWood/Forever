@@ -9,10 +9,6 @@ var ripRank = spellData.Rip.HighestRank()
 var ripTick = ripRank.Periodic.(shared.SpellDataPeriodic)
 
 func (druid *Druid) registerRipSpell() {
-	idolBonus := func(cp int32) float64 {
-		return druid.IdolRipBonus * float64(cp)
-	}
-
 	druid.Rip = druid.RegisterSpell(Cat, core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: ripRank.SpellID},
 		SpellSchool:    ripRank.SpellSchool,
@@ -58,7 +54,7 @@ func (druid *Druid) registerRipSpell() {
 				default: // 5
 					tickDamage = 1554 + 0.24*ap
 				}
-				tickDamage = tickDamage/6 + idolBonus(cp)
+				tickDamage = tickDamage / 6
 
 				dot.SnapshotPhysical(target, tickDamage)
 				druid.UpdateBleedPower(druid.Rip, sim, target, true, true)
@@ -84,7 +80,7 @@ func (druid *Druid) registerRipSpell() {
 			}
 			// Assume 5 CP for projections.
 			ap := spell.MeleeAttackPower(target)
-			tickDamage := (1554+0.24*ap)/6 + idolBonus(5)
+			tickDamage := (1554 + 0.24*ap) / 6
 			result := spell.CalcPeriodicDamage(sim, target, tickDamage, spell.OutcomeExpectedMagicAlwaysHit)
 			attackTable := spell.Unit.AttackTables[target.UnitIndex]
 			critChance := spell.PhysicalCritChance(attackTable)

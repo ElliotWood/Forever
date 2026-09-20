@@ -4,8 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// Package-level state the commented-out implementations used:
-// var mangleCatRank = spellData.MangleCat.BySpellID(33983)
+// Package-level state the commented-out implementation used:
 // var mangleBearRank = spellData.MangleBear.BySpellID(33987)
 
 func (druid *Druid) registerMangleAuras() {
@@ -15,70 +14,10 @@ func (druid *Druid) registerMangleAuras() {
 	druid.MangleAuras = druid.NewEnemyAuraArray(core.MangleAura)
 }
 
-// TODO: To be implemented. Forever ships ONE Mangle, not the TBC Cat/Bear split: spells 407995 and
-// 1238069/1238070/1238073 on the Feral Combat line. Both registrars here are obsolete in
-// shape -- what this needs is a single Mangle, not two implementations.
-func (druid *Druid) registerMangleCatSpell() {
-	if !druid.Talents.Mangle {
-		return
-	}
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// if !druid.Talents.Mangle {
-	// 	return
-	// }
-	//
-	// druid.registerMangleAuras()
-	//
-	// druid.MangleCat = druid.RegisterSpell(Cat, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: mangleCatRank.SpellID},
-	// 	SpellSchool:    mangleCatRank.SpellSchool,
-	// 	DefenseType:    mangleCatRank.DefenseType,
-	// 	ProcMask:       core.ProcMaskMeleeMHSpecial,
-	// 	ClassSpellMask: DruidSpellMangleCat,
-	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-	//
-	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost:   mangleCatRank.Cost,
-	// 		Refund: 0.8,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: mangleCatRank.GCD,
-	// 		},
-	// 		IgnoreHaste: true,
-	// 	},
-	//
-	// 	DamageMultiplier: 1.6,
-	// 	ThreatMultiplier: 1,
-	// 	MaxRange:         core.MaxMeleeRange,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		// mangleCatRank.Direct is the pre-multiplier flat value (165); the idol
-	// 		// bonus is historically expressed post-multiplier, so scale up and back
-	// 		// down around it to keep the result identical.
-	// 		baseDamage := (mangleCatRank.Direct.Damage(sim)*1.6+druid.IdolMangleCatBonus)/1.6 + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
-	// 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-	//
-	// 		if result.Landed() {
-	// 			druid.AddComboPoints(sim, 1, spell.ComboPointMetrics())
-	// 			druid.MangleAuras.Get(target).Activate(sim)
-	// 		} else {
-	// 			spell.IssueRefund(sim)
-	// 		}
-	// 	},
-	//
-	// 	ExpectedInitialDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
-	// 		baseDamage := (shared.SpellDataMin(mangleCatRank.Direct)*1.6+druid.IdolMangleCatBonus)/1.6 + spell.Unit.AutoAttacks.MH().CalculateAverageWeaponDamage(spell.MeleeAttackPower(target))
-	// 		return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
-	// 	},
-	// })
-}
-
-// TODO: To be implemented. Forever ships ONE Mangle, not the TBC Cat/Bear split: spells 407995 and
-// 1238069/1238070/1238073 on the Feral Combat line. Both registrars here are obsolete in
-// shape -- what this needs is a single Mangle, not two implementations.
+// TODO: To be implemented. Forever ships ONE Mangle -- spells 407995 and 1238069/1238070/1238073
+// on the Feral Combat line, all with ShapeshiftMask [144,0], which is Bear and Dire Bear only.
+// The TBC Cat/Bear split is gone with it, so this is the only Mangle registrar and the name
+// still says "Bear" only because that is the form it is restricted to.
 func (druid *Druid) registerMangleBearSpell() {
 	if !druid.Talents.Mangle {
 		return
@@ -130,8 +69,4 @@ func (druid *Druid) registerMangleBearSpell() {
 	// 		}
 	// 	},
 	// })
-}
-
-func (druid *Druid) CurrentMangleCatCost() float64 {
-	return druid.MangleCat.Cost.GetCurrentCost()
 }

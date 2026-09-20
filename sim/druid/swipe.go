@@ -34,7 +34,7 @@ func (druid *Druid) registerSwipeBearSpell() {
 			numHits := min(3, len(druid.Env.Encounter.AllTargetUnits))
 			for i := 0; i < numHits; i++ {
 				aoeTarget := druid.Env.Encounter.AllTargetUnits[i]
-				baseDamage := swipeRank.Direct.Damage(sim) + druid.IdolSwipeBonus + 0.07*spell.MeleeAttackPower(aoeTarget)
+				baseDamage := swipeRank.Direct.Damage(sim) + 0.07*spell.MeleeAttackPower(aoeTarget)
 				spell.CalcAndDealDamage(sim, aoeTarget, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			}
 		},

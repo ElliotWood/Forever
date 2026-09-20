@@ -318,7 +318,7 @@ func (druid *Druid) applyFerocity() {
 	}
 
 	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask: DruidSpellRake | DruidSpellMangleCat,
+		ClassMask: DruidSpellRake,
 		Kind:      core.SpellMod_PowerCost_Flat,
 		IntValue:  -druid.Talents.Ferocity,
 	})
@@ -336,7 +336,7 @@ func (druid *Druid) applySavageFury() {
 	}
 
 	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellMangleCat | DruidSpellRake,
+		ClassMask:  DruidSpellRake,
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.SavageFury.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(druid.Talents.SavageFury),
 	})

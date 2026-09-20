@@ -44,7 +44,7 @@ func (druid *Druid) registerFerociousBiteSpell() {
 				energyMetrics.Events--
 			}
 
-			dmgPerCP := 169.0 + druid.IdolFerociousBiteBonus
+			dmgPerCP := 169.0
 			baseDamage := ferociousBiteMin + dmgPerCP*cp + 4.1*excessEnergy + 0.05*cp*ap
 			baseDamage += sim.RandomFloat("Ferocious Bite") * (ferociousBiteMax - ferociousBiteMin)
 
@@ -58,7 +58,7 @@ func (druid *Druid) registerFerociousBiteSpell() {
 		ExpectedInitialDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
 			cp := float64(druid.ComboPoints())
 			ap := spell.MeleeAttackPower(target)
-			dmgPerCP := 169.0 + druid.IdolFerociousBiteBonus
+			dmgPerCP := 169.0
 			baseDamage := ferociousBiteMin + dmgPerCP*cp + (ferociousBiteMax-ferociousBiteMin)/2 + 0.05*cp*ap
 			return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
 		},
