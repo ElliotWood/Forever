@@ -53,6 +53,38 @@
 		color: var(--bs-gray-300);
 	}
 
+	// Two blocks side by side on a wide screen, stacked on a phone. minmax(min(26rem,100%),1fr)
+	// rather than a plain 1fr, because a 1fr track will not shrink below its content and that
+	// is how a paragraph escapes the grid.
+	.arena-intro {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(26rem, 100%), 1fr));
+		gap: var(--spacer-3);
+	}
+
+	.arena-intro-block {
+		min-width: 0;
+		padding: var(--spacer-3) var(--spacer-4);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: var(--bs-border-radius);
+		background: rgba(0, 0, 0, 0.2);
+		font-size: 0.9rem;
+
+		p {
+			margin: 0 0 var(--spacer-2);
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.arena-intro-title {
+		margin: 0 0 var(--spacer-2);
+		font-size: 1.05rem;
+		color: var(--bs-white);
+	}
+
 	.arena-controls {
 		display: flex;
 		flex-wrap: wrap;

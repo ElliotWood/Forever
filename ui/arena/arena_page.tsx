@@ -160,6 +160,46 @@ export class ArenaPage {
 				</header>
 
 				<main className="container arena-content">
+					<section className="arena-intro">
+						<div className="arena-intro-block">
+							<h2 className="arena-intro-title">How a number gets onto this page</h2>
+							<p>
+								Every build here was simulated: a character is assembled, given a talent build, a gear set and a rotation, and run against the
+								same target for {formatToNumber(results.iterations)} iterations. What comes out is the average damage per second of those runs.
+								Nothing is estimated, interpolated or predicted - each row is the outcome of that build being played out five thousand times.
+							</p>
+							<p>
+								The gear sets and rotations are files in the repository, written by people. The talent builds are the community ones from each
+								spec's own page, plus whatever a search found on top of them. All of it runs headless when the sim changes, and the site ships
+								the results, which is why the table is instant and why nothing is simulated in your browser.
+							</p>
+						</div>
+
+						<div className="arena-intro-block">
+							<h2 className="arena-intro-title">Where AI comes into it, and where it does not</h2>
+							<p>
+								<strong>Not into any number on this page.</strong> The damage figures come from a simulator - the{' '}
+								<a href="https://github.com/wowsims/classic" target="_blank" rel="noreferrer">
+									wowsims
+								</a>{' '}
+								engine, forked and adjusted for Forever. It is ordinary code doing arithmetic on the client's own data tables. No language model
+								produces, adjusts or estimates a DPS figure, and the talent search is a hill climb that measures builds rather than reasons
+								about them.
+							</p>
+							<p>
+								<strong>Into the code, heavily.</strong> This sim's Forever changes, the talent search, this page and most of what surrounds
+								them were written by an AI assistant working to one person's direction. That is worth saying plainly, because it is exactly the
+								situation where confident-sounding output is cheap and being wrong is easy.
+							</p>
+							<p>
+								So the checking is the point rather than an afterthought. <a href={`${SITE_BASE}evidence/`}>Every ability the sim registers</a>{' '}
+								records where its numbers came from, and a test refuses to let one be added without that. The <strong>rests on a guess</strong>{' '}
+								column on the right carries it through to here: it is how much of a build's damage depends on something nobody has confirmed.
+								Where those numbers came out wrong, they came out wrong visibly - which is the only version of this that is worth publishing.
+							</p>
+						</div>
+					</section>
+
 					<div className="arena-controls">
 						{this.toggle()}
 						<div className="arena-brackets">{BRACKETS.map(bracket => this.bracketButton(bracket))}</div>
