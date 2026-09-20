@@ -85,8 +85,12 @@ func (hunter *Hunter) registerEnduranceTraining() {
 		hunter.Pet.NewDynamicMultiplyStat(stats.Health, spellData.EnduranceTraining.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).MultiplierAt(hunter.Talents.EnduranceTraining)),
 	)
 
+	// TODO: Forever drops the hunter's own health bonus from Endurance Training; the spell
+	// carries only the pet modifier applied above (+3% per rank), so this is pinned to the
+	// untalented 1.0.
+	ownHealthMultiplier := 1.0
 	hunter.StatDependencyManager.EnableDynamicStatDep(
-		hunter.NewDynamicMultiplyStat(stats.Health, spellData.EnduranceTraining.Effect(shared.A_MOD_INCREASE_HEALTH_PERCENT, 0).MultiplierAt(hunter.Talents.EnduranceTraining)),
+		hunter.NewDynamicMultiplyStat(stats.Health, ownHealthMultiplier),
 	)
 }
 
@@ -95,11 +99,16 @@ func (hunter *Hunter) registerFocusedFire() {
 		return
 	}
 
-	hunter.PseudoStats.DamageDealtMultiplier *= spellData.FocusedFire.Effect(shared.A_NONE, 0).MultiplierAt(hunter.Talents.FocusedFire)
+	// The single dummy effect is the 1% per rank damage bonus.
+	hunter.PseudoStats.DamageDealtMultiplier *= spellData.FocusedFire.EffectAt(0).MultiplierAt(hunter.Talents.FocusedFire)
+
+	// TODO: Forever drops Focused Fire's Kill Command crit bonus; the spell carries only the
+	// dummy used above, so the pet crit bonus is pinned to the untalented 0.
+	killCommandBonusCrit := 0.0
 	hunter.Pet.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
 		ClassMask:  HunterSpellKillCommandPet,
-		FloatValue: spellData.FocusedFire.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(hunter.Talents.FocusedFire),
+		FloatValue: killCommandBonusCrit,
 	})
 }
 

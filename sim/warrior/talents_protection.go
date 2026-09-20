@@ -56,7 +56,10 @@ func (war *Warrior) registerDefiance() {
 		return
 	}
 
-	war.AddStat(stats.ExpertiseRating, spellData.Defiance.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).ValueAt(war.Talents.Defiance)*core.ExpertisePerQuarterPercentReduction)
+	// TODO: Forever drops Defiance's expertise; the spell carries only the threat modifier
+	// applied below (A_MOD_THREAT, +5/10/15%), so expertise is pinned to the untalented 0.
+	expertiseBonus := 0.0
+	war.AddStat(stats.ExpertiseRating, expertiseBonus)
 	war.OnSpellRegistered(func(spell *core.Spell) {
 		if !spell.Matches(SpellMaskDefensiveStance) {
 			return
@@ -101,7 +104,8 @@ func (war *Warrior) registerToughness() {
 		return
 	}
 
-	war.MultiplyStat(stats.Armor, spellData.Toughness.MultiplierAt(war.Talents.Toughness))
+	// The bonus-armor effect carries the same ladder; this multiplies base armor only.
+	war.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(war.Talents.Toughness))
 }
 
 func (war *Warrior) registerLastStand() {

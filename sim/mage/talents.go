@@ -215,13 +215,13 @@ func (mage *Mage) registerArcaneInstability() {
 		return
 	}
 
-	// TODO: To be implemented. Forever's regenerated aura enum no longer carries the crit
-	// chance aura this talent's rank data used (A_MOD_SPELL_CRIT_CHANCE_SCHOOL is gone from
-	// the auto-generated table), so only the damage-done portion below is applied.
+	// TODO: Forever restates the crit half as A_MOD_CRIT_PCT (+1% per rank) rather than the
+	// school-crit aura, and whether that covers spells or every attack is unknown, so only
+	// the damage-done portion below is applied.
 
 	mage.AddStaticMod(core.SpellModConfig{
 		ClassMask:  MageSpellsAll,
-		FloatValue: spellData.ArcaneInstability.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 126).FractionAt(mage.Talents.ArcaneInstability),
+		FloatValue: spellData.ArcaneInstability.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(mage.Talents.ArcaneInstability),
 		Kind:       core.SpellMod_DamageDone_Pct,
 	})
 

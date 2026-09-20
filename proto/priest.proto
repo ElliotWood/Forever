@@ -45,7 +45,7 @@ message PriestTalents {
     int32 spiritual_guidance = 33;
     int32 spiritual_healing = 34;
     bool prayer_of_mending = 35;
-    // Shadow Magic
+    // Shadow
     int32 shadow_focus = 36;
     int32 blackout = 37;
     int32 spirit_tap = 38;

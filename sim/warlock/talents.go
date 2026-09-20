@@ -95,7 +95,7 @@ func (warlock *Warlock) applySuppression() {
 
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusHit_Percent,
-		FloatValue: spellData.Suppression.ValueAt(warlock.Talents.Suppression),
+		FloatValue: spellData.Suppression.Effect(shared.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warlock.Talents.Suppression),
 		ClassMask:  WarlockAfflictionSpells,
 	})
 }
@@ -233,8 +233,10 @@ func (warlock *Warlock) appyImprovedImp() {
 	}
 
 	warlock.Imp.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedImp.FractionAt(warlock.Talents.ImprovedImp),
+		Kind: core.SpellMod_DamageDone_Flat,
+		// SPELLMOD_ALL_EFFECTS carries the same ladder and also covers Blood Pact, which is
+		// buffed elsewhere; this mod is the Firebolt damage half.
+		FloatValue: spellData.ImprovedImp.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.ImprovedImp),
 		ClassMask:  WarlockSpellImpFireBolt,
 	})
 }
@@ -520,8 +522,11 @@ func (warlock *Warlock) applyShadowAndFlame() {
 	}
 
 	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCoeffecient_Flat,
-		FloatValue: spellData.ShadowAndFlame.FractionAt(warlock.Talents.ShadowAndFlame),
+		Kind: core.SpellMod_BonusCoeffecient_Flat,
+		// Four dummy effects, of which only the first (4% per rank) matches the coefficient
+		// bonus this talent has always granted; the other three (20/2/2 per rank) are
+		// unidentified.
+		FloatValue: spellData.ShadowAndFlame.EffectAt(0).FractionAt(warlock.Talents.ShadowAndFlame),
 		ClassMask:  WarlockSpellShadowBolt | WarlockSpellIncinerate,
 	})
 }

@@ -3,6 +3,7 @@ package warrior
 import (
 	"time"
 
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -86,7 +87,7 @@ func (war *Warrior) registerDualWieldSpecialization() {
 	war.AddStaticMod(core.SpellModConfig{
 		ProcMask:   core.ProcMaskMeleeOH,
 		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.DualWieldSpecialization.FractionAt(war.Talents.DualWieldSpecialization),
+		FloatValue: spellData.DualWieldSpecialization.Effect(shared.A_MOD_OFFHAND_DAMAGE_PCT, 0).FractionAt(war.Talents.DualWieldSpecialization),
 	})
 }
 
@@ -318,7 +319,8 @@ func (war *Warrior) registerPrecision() {
 		return
 	}
 
-	war.AddStat(stats.PhysicalHitPercent, spellData.Precision.ValueAt(war.Talents.Precision))
+	// The spell-hit effect carries the same ladder; only melee hit is taken here.
+	war.AddStat(stats.PhysicalHitPercent, spellData.Precision.Effect(shared.A_MOD_HIT_CHANCE, 0).ValueAt(war.Talents.Precision))
 }
 
 func (war *Warrior) registerBloodthirst() {

@@ -1,8 +1,6 @@
 package mage
 
 import (
-	"fmt"
-
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
@@ -11,10 +9,10 @@ import (
 var FlameStrikeRankMap = spellData.Flamestrike.Ranks(6)
 
 func (mage *Mage) registerFlamestrike(rankConfig shared.SpellData) {
-	tick := rankConfig.Periodic.(shared.SpellDataPeriodic)
-
+	// TODO: Forever moves Flamestrike's damage over time onto the area trigger its second
+	// effect creates, which the client tables do not carry, so the rank has no Periodic value
+	// and only the direct hit is registered - no DoT rather than an invented one.
 	flameStrikeCoefficient := 0.23600000143 // Per https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=exact%253A2120 Field: "BonusCoefficient"
-	flameStrikeDotCoefficient := 0.02999999933
 
 	spell := mage.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rankConfig.SpellID},
@@ -39,29 +37,9 @@ func (mage *Mage) registerFlamestrike(rankConfig shared.SpellData) {
 		BonusCoefficient: flameStrikeCoefficient,
 		ThreatMultiplier: 1,
 
-		Dot: core.DotConfig{
-			IsAOE: true,
-			Aura: core.Aura{
-				Label: fmt.Sprintf("Flamestrike DoT %s", rankConfig.GetRankLabel()),
-			},
-			NumberOfTicks:    tick.NumberOfTicks,
-			TickLength:       tick.TickLength,
-			BonusCoefficient: flameStrikeDotCoefficient,
-
-			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.Snapshot(target, tick.Tick)
-			},
-			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
-					dot.CalcAndDealPeriodicSnapshotDamage(sim, aoeTarget, dot.OutcomeTick)
-				}
-			},
-		},
-
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 			baseDamage := rankConfig.Direct.Damage(sim)
 			spell.CalcAndDealAoeDamage(sim, baseDamage, spell.OutcomeMagicHitAndCrit)
-			spell.AOEDot().Apply(sim)
 		},
 	})
 

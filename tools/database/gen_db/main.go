@@ -9,7 +9,6 @@ import (
 	"maps"
 	"os"
 	"slices"
-	"strconv"
 	"strings"
 
 	"golang.org/x/sync/errgroup"
@@ -235,7 +234,7 @@ func main() {
 		addSpellIcons(db, group, icons, iconsMap)
 	}
 
-	for _, group := range GetAllRotationSpellIds(&inputsDir) {
+	for _, group := range GetAllRotationSpellIds() {
 		addSpellIcons(db, group, icons, iconsMap)
 	}
 
@@ -623,35 +622,20 @@ func getSpellIdsFromTalentJson(infile *string) []int32 {
 	return spellIds
 }
 
-// maxTalentsString builds the "every talent maxed" string for a class from the generated
-// talent tree, which is what GetAllRotationSpellIds needs in order to reach every
-// talent-gated rotation spell. It was a hardcoded TBC-shaped literal; Forever's trees are
-// a different size per class, and FillTalentsProto panics on a string longer than the
-// tree. Each digit is the talent's own maxPoints, never higher -- a rank above the cap
-// would make ByRank panic inside whichever registrar reads that ladder.
-func maxTalentsString(inputsDir *string, class string) string {
-	path := fmt.Sprintf("%s/../../ui/sim/talents/trees/%s.json", *inputsDir, class)
-	data, err := os.ReadFile(path)
-	if err != nil {
-		panic(fmt.Sprintf("reading talent tree %s: %v", path, err))
-	}
-	var trees []struct {
-		Talents []struct {
-			MaxPoints int `json:"maxPoints"`
-		} `json:"talents"`
-	}
-	if err := json.Unmarshal(data, &trees); err != nil {
-		panic(fmt.Sprintf("parsing talent tree %s: %v", path, err))
-	}
-	parts := make([]string, 0, len(trees))
-	for _, tree := range trees {
-		var sb strings.Builder
-		for _, talent := range tree.Talents {
-			sb.WriteString(strconv.Itoa(talent.MaxPoints))
-		}
-		parts = append(parts, sb.String())
-	}
-	return strings.Join(parts, "-")
+// rotationTalentsString is the talent string GetAllRotationSpellIds registers each spec
+// with, purely to reach the rotation spells whose icons the database needs.
+//
+// It is deliberately EMPTY. It used to be a hardcoded "every talent maxed" TBC string,
+// but every talent whose Forever behaviour is not yet known is a registrar that panics
+// with "To be implemented" -- 249 of them across the nine classes -- so maxing talents
+// makes this tool abort on the first one. Taking no talents registers every baseline
+// ability, which is what the icon set actually needs today.
+//
+// TODO: talent-gated rotation spells therefore contribute no icons. Restore a maxed
+// string, built from ui/sim/talents/trees/<class>.json using each talent's own
+// maxPoints, once the stubs are implemented.
+func rotationTalentsString() string {
+	return ""
 }
 
 func GetAllTalentSpellIds(inputsDir *string) map[string][]int32 {
@@ -690,7 +674,7 @@ type RotContainer struct {
 	Raid *proto.Raid
 }
 
-func GetAllRotationSpellIds(inputsDir *string) map[string][]int32 {
+func GetAllRotationSpellIds() map[string][]int32 {
 	sim.RegisterAll()
 
 	rotMapping := []RotContainer{
@@ -698,22 +682,22 @@ func GetAllRotationSpellIds(inputsDir *string) map[string][]int32 {
 		{Name: "balanceDruid", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassDruid,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "druid"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_BalanceDruid{BalanceDruid: &proto.BalanceDruid{Options: &proto.BalanceDruid_Options{ClassOptions: &proto.DruidOptions{}}}}), nil, nil, nil)},
 		{Name: "feralCatDruid", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassDruid,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "druid"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_FeralCatDruid{FeralCatDruid: &proto.FeralCatDruid{Options: &proto.FeralCatDruid_Options{ClassOptions: &proto.DruidOptions{}}, Rotation: &proto.FeralCatDruid_Rotation{}}}), nil, nil, nil)},
 		{Name: "feralBearDruid", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassDruid,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "druid"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_FeralBearDruid{FeralBearDruid: &proto.FeralBearDruid{Options: &proto.FeralBearDruid_Options{ClassOptions: &proto.DruidOptions{}}}}), nil, nil, nil)},
 		{Name: "restorationDruid", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassDruid,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "druid"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_RestorationDruid{RestorationDruid: &proto.RestorationDruid{Options: &proto.RestorationDruid_Options{ClassOptions: &proto.DruidOptions{}}}}), nil, nil, nil)},
 
 		// Hunter
@@ -721,7 +705,7 @@ func GetAllRotationSpellIds(inputsDir *string) map[string][]int32 {
 			Class:         proto.Class_ClassHunter,
 			Race:          proto.Race_RaceTroll,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "hunter"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_Hunter{Hunter: &proto.Hunter{Options: &proto.Hunter_Options{ClassOptions: &proto.HunterOptions{}}}}), nil, nil, nil)},
 
 		// Mage
@@ -729,44 +713,44 @@ func GetAllRotationSpellIds(inputsDir *string) map[string][]int32 {
 			Class:         proto.Class_ClassMage,
 			Race:          proto.Race_RaceTroll,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "mage"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}}), nil, nil, nil)},
 
 		// Paladin
 		{Name: "holyPaladin", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassPaladin,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "paladin"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_HolyPaladin{HolyPaladin: &proto.HolyPaladin{Options: &proto.HolyPaladin_Options{ClassOptions: &proto.PaladinOptions{}}}}), nil, nil, nil)},
 		{Name: "protPaladin", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassPaladin,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "paladin"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_ProtectionPaladin{ProtectionPaladin: &proto.ProtectionPaladin{Options: &proto.ProtectionPaladin_Options{ClassOptions: &proto.PaladinOptions{}}}}), nil, nil, nil)},
 		{Name: "retPaladin", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassPaladin,
 			Race:          proto.Race_RaceBloodElf,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "paladin"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_RetributionPaladin{RetributionPaladin: &proto.RetributionPaladin{Options: &proto.RetributionPaladin_Options{ClassOptions: &proto.PaladinOptions{}}}}), nil, nil, nil)},
 
 		// Priest
 		{Name: "priest", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassPriest,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "priest"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_DpsPriest{DpsPriest: &proto.DpsPriest{Options: &proto.DpsPriest_Options{ClassOptions: &proto.PriestOptions{}}}}), nil, nil, nil)},
 		{Name: "healerPriest", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassPriest,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "priest"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_HealerPriest{HealerPriest: &proto.HealerPriest{Options: &proto.HealerPriest_Options{ClassOptions: &proto.PriestOptions{}}}}), nil, nil, nil)},
 
 		// Rogue
 		{Name: "rogue", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassRogue,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "rogue"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_Rogue{Rogue: &proto.Rogue{Options: &proto.Rogue_Options{ClassOptions: &proto.RogueOptions{}}}}), nil, nil, nil)},
 
 		// Shaman
@@ -774,26 +758,26 @@ func GetAllRotationSpellIds(inputsDir *string) map[string][]int32 {
 			Class:         proto.Class_ClassShaman,
 			Race:          proto.Race_RaceTroll,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "shaman"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_ElementalShaman{ElementalShaman: &proto.ElementalShaman{Options: &proto.ElementalShaman_Options{ClassOptions: &proto.ShamanOptions{}}}}), nil, nil, nil)},
 		{Name: "enhancementShaman", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassShaman,
 			Race:          proto.Race_RaceTroll,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "shaman"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_EnhancementShaman{EnhancementShaman: &proto.EnhancementShaman{Options: &proto.EnhancementShaman_Options{ClassOptions: &proto.ShamanOptions{}}}}), nil, nil, nil)},
 		{Name: "restorationShaman", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassShaman,
 			Race:          proto.Race_RaceTroll,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "shaman"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_RestorationShaman{RestorationShaman: &proto.RestorationShaman{Options: &proto.RestorationShaman_Options{ClassOptions: &proto.ShamanOptions{}}}}), nil, nil, nil)},
 
 		// Warlock
 		{Name: "warlock", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassWarlock,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "warlock"),
+			TalentsString: rotationTalentsString(),
 			Profession1:   proto.Profession_Herbalism,
 		}, &proto.Player_Warlock{Warlock: &proto.Warlock{Options: &proto.Warlock_Options{ClassOptions: &proto.WarlockOptions{}}}}), nil, nil, nil)},
 
@@ -801,12 +785,12 @@ func GetAllRotationSpellIds(inputsDir *string) map[string][]int32 {
 		{Name: "DpsWarrior", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassWarrior,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "warrior"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_DpsWarrior{DpsWarrior: &proto.DpsWarrior{Options: &proto.DpsWarrior_Options{ClassOptions: &proto.WarriorOptions{}}}}), nil, nil, nil)},
 		{Name: "protectionWarrior", Raid: core.SinglePlayerRaidProto(core.WithSpec(&proto.Player{
 			Class:         proto.Class_ClassWarrior,
 			Equipment:     &proto.EquipmentSpec{},
-			TalentsString: maxTalentsString(inputsDir, "warrior"),
+			TalentsString: rotationTalentsString(),
 		}, &proto.Player_ProtectionWarrior{ProtectionWarrior: &proto.ProtectionWarrior{Options: &proto.ProtectionWarrior_Options{ClassOptions: &proto.WarriorOptions{}}}}), nil, nil, nil)},
 	}
 

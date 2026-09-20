@@ -6,7 +6,7 @@ option go_package = "./proto";
 // BEGIN GENERATED
 // ShamanTalents message.
 message ShamanTalents {
-    // Elemental Combat
+    // Elemental
     int32 convection = 1;
     int32 concussion = 2;
     int32 elemental_warding = 3;

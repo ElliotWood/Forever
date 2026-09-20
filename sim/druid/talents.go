@@ -101,10 +101,12 @@ func (druid *Druid) applyMoonfury() {
 		return
 	}
 
+	// Forever states Moonfury as +2% damage per rank to the Arcane|Nature schools (mask 72)
+	// rather than as a spell modifier; the class mask keeps it on the TBC spell list.
 	druid.AddStaticMod(core.SpellModConfig{
 		ClassMask:  DruidSpellWrath | DruidSpellStarfire | DruidSpellMoonfire,
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Moonfury.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(druid.Talents.Moonfury),
+		FloatValue: spellData.Moonfury.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 72).FractionAt(druid.Talents.Moonfury),
 	})
 }
 
@@ -239,7 +241,9 @@ func (druid *Druid) applyNaturalist() {
 		return
 	}
 
-	druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).MultiplierAt(druid.Talents.Naturalist)
+	// Forever states the damage bonus against every school (mask 127) instead of physical
+	// only; the sim keeps it on physical, which is all a feral druid deals.
+	druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(druid.Talents.Naturalist)
 }
 
 func (druid *Druid) applyHeartOfTheWild() {
@@ -247,10 +251,11 @@ func (druid *Druid) applyHeartOfTheWild() {
 		return
 	}
 
-	// +4% Intellect per rank (all forms, always active).
-	// The Cat/Bear form-specific bonuses (+2% AP, +4% Stamina) are handled
-	// dynamically in RegisterCatFormAura / RegisterBearFormAura.
-	druid.MultiplyStat(stats.Intellect, spellData.HeartOfTheWild.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 3).MultiplierAt(druid.Talents.HeartOfTheWild))
+	// +2% Intellect per rank (all forms, always active). The stat aura carries misc 0 in the
+	// Forever data, as every stat-percent effect does, so the stat is the call site's choice.
+	// The Cat/Bear form-specific bonuses are handled dynamically in RegisterCatFormAura /
+	// RegisterBearFormAura.
+	druid.MultiplyStat(stats.Intellect, spellData.HeartOfTheWild.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(druid.Talents.HeartOfTheWild))
 }
 
 func (druid *Druid) applySharpenedClaws() {
@@ -293,7 +298,8 @@ func (druid *Druid) applyFuror() {
 		return
 	}
 
-	druid.FurorProcChance = spellData.Furor.FractionAt(druid.Talents.Furor)
+	// Both dummy effects carry the same ladder, one per form, so either answers the chance.
+	druid.FurorProcChance = spellData.Furor.EffectAt(0).FractionAt(druid.Talents.Furor)
 }
 
 func (druid *Druid) applyFerocity() {
@@ -392,8 +398,11 @@ func (druid *Druid) applyFeralInstincts() {
 		return
 	}
 
-	// Increases threat caused in Dire Bear Form by 5/10/15% per rank.
-	druid.BearFormAura.AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.ThreatMultiplier, spellData.FeralInstinct.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).MultiplierAt(druid.Talents.FeralInstinct))
+	// TODO: Forever repurposes Feral Instinct: the Dire Bear threat bonus is gone and the
+	// spell now carries SPELLMOD_EFFECT1 +5/10/15 and SPELLMOD_DAMAGE +10/20/30% against an
+	// unknown spell, so the threat multiplier is pinned to the untalented 1.0.
+	threatMultiplier := 1.0
+	druid.BearFormAura.AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.ThreatMultiplier, threatMultiplier)
 }
 
 func (druid *Druid) applySubtlety() {

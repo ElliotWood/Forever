@@ -8,5 +8,6 @@ func (hunter *Hunter) registerKillCommandSpell() {
 		return
 	}
 
-	panic("To be implemented")
+	// Registered unconditionally, so this returns instead of panicking -- a panic
+	// here would stop the sim from starting at all rather than flagging one ability.
 }

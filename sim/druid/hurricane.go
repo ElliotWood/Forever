@@ -3,6 +3,7 @@ package druid
 import (
 	"time"
 
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -21,13 +22,11 @@ func (druid *Druid) registerHurricaneSpell() {
 		ManaCost: core.ManaCostOptions{
 			FlatCost: hurricaneRank.Cost,
 		},
+		// TODO: Forever states no cooldown on Hurricane (the client rows carry none), so the
+		// spell is registered without one rather than with an invented duration.
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: hurricaneRank.GCD,
-			},
-			CD: core.Cooldown{
-				Timer:    druid.NewTimer(),
-				Duration: hurricaneRank.Cooldown,
 			},
 		},
 		Dot: core.DotConfig{
@@ -59,10 +58,13 @@ func (druid *Druid) registerHurricaneSpell() {
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		BonusCoefficient: hurricaneRank.Direct.BonusCoefficient(),
+		// TODO: Forever moves Hurricane's damage onto the area trigger its second effect
+		// creates, which the client tables do not carry, so the rank has no Direct value at
+		// all and the tick is pinned to no damage rather than an invented one.
+		BonusCoefficient: shared.SpellDataCoef(hurricaneRank.Direct),
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealAoeDamage(sim, hurricaneRank.Direct.Damage(sim), spell.OutcomeMagicHit)
+			spell.CalcAndDealAoeDamage(sim, 0, spell.OutcomeMagicHit)
 		},
 	})
 }

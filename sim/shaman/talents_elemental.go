@@ -34,7 +34,7 @@ func (shaman *Shaman) applyCallOfFlame() {
 	}
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.CallOfFlame.FractionAt(shaman.Talents.CallOfFlame),
+		FloatValue: spellData.CallOfFlame.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(shaman.Talents.CallOfFlame),
 		ClassMask:  SpellMaskFireTotem,
 	})
 }

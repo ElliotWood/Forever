@@ -99,9 +99,11 @@ func (rogue *Rogue) registerPuncturingWounds() {
 		FloatValue: 10.0 * float64(rogue.Talents.PuncturingWounds),
 	})
 	rogue.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ClassMask:  RogueSpellMutilateHit,
-		FloatValue: spellData.PuncturingWounds.EffectAt(1).ValueAt(rogue.Talents.PuncturingWounds),
+		Kind:      core.SpellMod_BonusCrit_Percent,
+		ClassMask: RogueSpellMutilateHit,
+		// Effect 1 is the proc trigger; the Mutilate crit bonus is the second of the two
+		// crit modifiers, which share an aura and misc and so have to be indexed.
+		FloatValue: spellData.PuncturingWounds.EffectAt(2).ValueAt(rogue.Talents.PuncturingWounds),
 	})
 }
 

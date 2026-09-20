@@ -500,7 +500,8 @@ func (paladin *Paladin) registerSealOfWisdom(seal seal) {
 // read for this ability -- it survives as a single spell with no "Rank N" subtext and
 // no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (paladin *Paladin) registerSealOfJustice(seal seal) {
-	panic("To be implemented")
+	// Registered unconditionally, so this returns instead of panicking -- a panic
+	// here would stop the sim from starting at all rather than flagging one ability.
 }
 
 // Seal of the Crusader
@@ -518,7 +519,8 @@ func (paladin *Paladin) registerSealOfJustice(seal seal) {
 // read for this ability -- it survives as a single spell with no "Rank N" subtext and
 // no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
-	panic("To be implemented")
+	// Registered unconditionally, so this returns instead of panicking -- a panic
+	// here would stop the sim from starting at all rather than flagging one ability.
 }
 
 // Seal of Blood

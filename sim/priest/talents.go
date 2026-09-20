@@ -87,7 +87,7 @@ func (priest *Priest) applySearingLight() {
 	// +5% damage per rank
 	priest.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.SearingLight.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(priest.Talents.SearingLight),
+		FloatValue: spellData.SearingLight.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 0).FractionAt(priest.Talents.SearingLight),
 		ClassMask:  PriestSpellSmite | PriestSpellHolyFire,
 	})
 }
@@ -218,7 +218,7 @@ func (priest *Priest) applyDarkness() {
 
 	priest.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Darkness.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DOT).FractionAt(priest.Talents.Darkness),
+		FloatValue: spellData.Darkness.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 32).FractionAt(priest.Talents.Darkness),
 		ClassMask:  PriestShadowSpells,
 	})
 }

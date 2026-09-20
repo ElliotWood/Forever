@@ -61,7 +61,11 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 }
 
 func (rogue *Rogue) GetExposeArmorValue() float64 {
-	return 410.0 * float64(rogue.ComboPoints()) * spellData.ImprovedExposeArmor.MultiplierAt(rogue.Talents.ImprovedExposeArmor)
+	// TODO: Forever repurposes Improved Expose Armor: the spell now carries an energy cost
+	// reduction (SPELLMOD_COST -5/-10) and a dummy of 1/2, neither of which is the 25/50%
+	// armor bonus this call wants, so the armor value is pinned to the untalented one.
+	improvedExposeArmorMultiplier := 1.0
+	return 410.0 * float64(rogue.ComboPoints()) * improvedExposeArmorMultiplier
 }
 
 func (rogue *Rogue) CanApplyExposeArmorAura(target *core.Unit) bool {

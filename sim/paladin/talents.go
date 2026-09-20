@@ -307,9 +307,13 @@ func (paladin *Paladin) applyPurifyingPower() {
 		FloatValue: -0.05 * float64(paladin.Talents.PurifyingPower),
 		ClassMask:  SpellMaskConsecration, // Cleanse not modeled
 	})
+	// TODO: Forever drops Purifying Power's crit bonus; the spell carries only a cost
+	// (-10% per rank) and a cooldown (-16.5% per rank) modifier, so the crit bonus is pinned
+	// to the untalented 0.
+	exorcismHolyWrathBonusCrit := 0.0
 	paladin.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.PurifyingPower.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(paladin.Talents.PurifyingPower),
+		FloatValue: exorcismHolyWrathBonusCrit,
 		ClassMask:  SpellMaskExorcism | SpellMaskHolyWrath,
 	})
 }
@@ -362,7 +366,7 @@ func (paladin *Paladin) applyRedoubt() {
 
 // Shield Specialization - Increases the amount of damage absorbed by your shield by 10/20/30%
 func (paladin *Paladin) applyShieldSpecialization() {
-	paladin.PseudoStats.BlockValueMultiplier *= spellData.ShieldSpecialization.MultiplierAt(paladin.Talents.ShieldSpecialization)
+	paladin.PseudoStats.BlockValueMultiplier *= spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_VALUE_PCT, 0).MultiplierAt(paladin.Talents.ShieldSpecialization)
 }
 
 // Precision - Increases your chance to hit with melee weapons and spells by 1/2/3%
@@ -382,7 +386,8 @@ func (paladin *Paladin) applyPrecision() {
 
 // Toughness - Increases your armor value from items by 2/4/6/8/10%
 func (paladin *Paladin) applyToughness() {
-	paladin.MultiplyStat(stats.Armor, spellData.Toughness.MultiplierAt(paladin.Talents.Toughness))
+	// The bonus-armor effect carries the same ladder; this multiplies base armor only.
+	paladin.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(paladin.Talents.Toughness))
 }
 
 // Improved Righteous Fury - While Righteous Fury is active, all damage taken is reduced by 2/4/6%
@@ -456,7 +461,9 @@ func (paladin *Paladin) applyReckoning() {
 
 // Sacred Duty - Increases your total Stamina by 3/6% and reduces the cooldown of your Divine Shield and Divine Protection by 30/60 sec
 func (paladin *Paladin) applySacredDuty() {
-	bonus := spellData.SacredDuty.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 2).MultiplierAt(paladin.Talents.SacredDuty)
+	// Every stat-percent effect in the Forever data carries misc 0, so the stat is the call
+	// site's choice, not the client's.
+	bonus := spellData.SacredDuty.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(paladin.Talents.SacredDuty)
 	paladin.MultiplyStat(stats.Stamina, bonus)
 	// TODO: Implement cooldown reduction
 }
@@ -506,7 +513,9 @@ func (paladin *Paladin) applyCrusade() {
 	paladin.Env.RegisterPostFinalizeEffect(func() {
 		for _, at := range paladin.AttackTables {
 			if slices.Contains([]proto.MobType{proto.MobType_MobTypeDemon, proto.MobType_MobTypeHumanoid, proto.MobType_MobTypeUndead, proto.MobType_MobTypeElemental}, at.Defender.MobType) {
-				at.DamageDealtMultiplier *= spellData.Crusade.MultiplierAt(paladin.Talents.Crusade)
+				// Misc 36 is the creature-type mask the client states the bonus against; the
+				// mob list above is the sim's own reading of it.
+				at.DamageDealtMultiplier *= spellData.Crusade.Effect(shared.A_MOD_DAMAGE_DONE_VERSUS, 36).MultiplierAt(paladin.Talents.Crusade)
 			}
 		}
 	})
