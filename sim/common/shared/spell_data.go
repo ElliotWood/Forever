@@ -57,6 +57,11 @@ type SpellDataPeriodic struct {
 	// Named for the core.DotConfig fields they feed.
 	TickLength    time.Duration
 	NumberOfTicks int32
+
+	// The spell the tick was read from when it is not the rank's own: Consecration rank 5 ticks
+	// through 1280349, which the client links from nowhere but the tooltip's "$1280349m1". Zero
+	// where the rank's own effect states the tick.
+	SpellID int32
 }
 
 func (v SpellDataFlat) Range() (float64, float64)  { return v.Value, v.Value }
@@ -154,6 +159,10 @@ type SpellData struct {
 	Heal        SpellDataValue
 	Periodic    SpellDataValue
 	Energize    SpellDataValue
+
+	// A second tick the description names after Periodic's. One spell has one: Consecration's is
+	// the extra damage its first $s3 targets take.
+	SecondaryPeriodic SpellDataValue
 
 	// Every effect the client states, in index order. A role field above holds one each, which is not
 	// enough for a talent: Improved Righteous Fury raises threat on one effect and cuts damage taken

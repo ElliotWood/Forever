@@ -36,6 +36,8 @@ type generatedRow struct {
 	Heal            *generatedAmount
 	Periodic        *generatedAmount
 	Energize        *generatedAmount
+
+	SecondaryPeriodic *generatedAmount
 }
 
 type generatedEffect struct {
@@ -55,6 +57,9 @@ type generatedAmount struct {
 
 	PeriodMs int32
 	Ticks    int32
+
+	// The effect's spell where it is not the rank's own, which only a periodic value renders.
+	SpellID int32
 }
 
 type rankCandidate struct {
@@ -656,7 +661,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		if value, ok := points[e.Index]; ok {
 			return value, value
 		}
-		return DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
+		return DeriveRankAmount(e, e.SpellLevel, e.MaxLevel)
 	}
 
 	row := generatedRow{
@@ -672,6 +677,9 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 	amountOf := func(e RankEffect) *generatedAmount {
 		min, max := derive(e)
 		a := &generatedAmount{Min: min, Max: max, Coef: e.Coefficient, APCoef: e.APCoef}
+		if e.OwnerSpellID != spell.SpellID {
+			a.SpellID = e.OwnerSpellID
+		}
 
 		// A tick count is the duration over the period, which is how every hand-written
 		// NumberOfTicks in the sim was arrived at.
@@ -696,6 +704,19 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 
 	for _, e := range candidates {
 		switch {
+		// A damage effect with a period is one the description reached and the rank's periodic
+		// dummy times, so it ticks; the rank's own damage effects never carry one. Consecration
+		// names a second, the extra damage on the first few targets.
+		case e.Effect == dbc.E_SCHOOL_DAMAGE && e.AuraPeriod > 0:
+			switch {
+			case row.Periodic == nil:
+				row.Periodic = amountOf(e)
+			case row.SecondaryPeriodic == nil:
+				row.SecondaryPeriodic = amountOf(e)
+			default:
+				return generatedRow{}, fmt.Errorf("spell %d names a third ticking value on spell %d, and the row holds two",
+					spellID, e.OwnerSpellID)
+			}
 		case (e.Effect == dbc.E_SCHOOL_DAMAGE || IsWeaponDamageEffect(e.Effect)) && row.Direct == nil:
 			row.Direct = amountOf(e)
 		case e.Effect == dbc.E_HEAL && row.Heal == nil:
@@ -996,6 +1017,7 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 		{"Heal", row.Heal},
 		{"Periodic", row.Periodic},
 		{"Energize", row.Energize},
+		{"SecondaryPeriodic", row.SecondaryPeriodic},
 	} {
 		if role.value != nil {
 			parts = append(parts, role.name+": "+formatValue(*role.value))
@@ -1021,6 +1043,9 @@ func formatValue(a generatedAmount) string {
 		out := fmt.Sprintf("shared.SpellDataPeriodic{Tick: %s, %s, TickLength: %s", tick, tail, millis(a.PeriodMs))
 		if a.Ticks > 0 {
 			out += fmt.Sprintf(", NumberOfTicks: %d", a.Ticks)
+		}
+		if a.SpellID > 0 {
+			out += fmt.Sprintf(", SpellID: %d", a.SpellID)
 		}
 		return out + "}"
 	case a.Max > a.Min:

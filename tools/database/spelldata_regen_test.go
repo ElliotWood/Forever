@@ -142,26 +142,34 @@ func compareRow(t *testing.T, db *sql.DB, fam rankFamily, row shared.SpellData) 
 	coef := 0.0
 	if row.Direct != nil {
 		out = append(out, matchPair(base, "Direct.Min", "Direct.Max", shared.SpellDataMin(row.Direct), shared.SpellDataMax(row.Direct),
-			directCandidates(candidates), spell)...)
+			directCandidates(candidates))...)
 		coef = row.Direct.BonusCoefficient()
 	}
 
 	if row.Heal != nil {
 		out = append(out, matchPair(base, "Heal.Min", "Heal.Max", shared.SpellDataMin(row.Heal), shared.SpellDataMax(row.Heal),
-			directCandidates(candidates), spell)...)
+			directCandidates(candidates))...)
 		coef = row.Heal.BonusCoefficient()
 	}
 
 	if row.Periodic != nil {
-		out = append(out, matchTick(base, shared.SpellDataMin(row.Periodic), periodicCandidates(candidates), spell))
+		out = append(out, matchTick(base, "DotTickDamage", shared.SpellDataMin(row.Periodic), periodicCandidates(candidates)))
 		if row.Periodic.BonusCoefficient() > 0 {
 			coef = row.Periodic.BonusCoefficient()
 		}
 	}
 
+	// Consecration's second tick, and the coefficient that sits on it alone.
+	if row.SecondaryPeriodic != nil {
+		out = append(out, matchTick(base, "SecondaryTickDamage", shared.SpellDataMin(row.SecondaryPeriodic), periodicCandidates(candidates)))
+		if c := row.SecondaryPeriodic.BonusCoefficient(); c > 0 {
+			out = append(out, matchCoefficient(base, c, candidates))
+		}
+	}
+
 	if row.Energize != nil {
 		out = append(out, matchPair(base, "Energize", "", shared.SpellDataMin(row.Energize), 0,
-			directCandidates(candidates), spell)...)
+			directCandidates(candidates))...)
 	}
 
 	if coef > 0 {
@@ -196,10 +204,10 @@ func periodicCandidates(effects []RankEffect) []RankEffect {
 	return out
 }
 
-func matchPair(base comparison, minField, maxField string, genMin, genMax float64, cands []RankEffect, spell RankSpell) []comparison {
+func matchPair(base comparison, minField, maxField string, genMin, genMax float64, cands []RankEffect) []comparison {
 	bestMin, bestMax, bestSrc, found := 0.0, 0.0, "no candidate effect", false
 	for _, e := range cands {
-		dMin, dMax := DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
+		dMin, dMax := DeriveRankAmount(e, e.SpellLevel, e.MaxLevel)
 		src := fmt.Sprintf("spell %d effect %d (Effect=%d, Aura=%d)", e.OwnerSpellID, e.Index, e.Effect, e.Aura)
 		if dMin == genMin && (genMax == 0 || dMax == genMax) {
 			out := []comparison{finishWith(base, minField, genMin, dMin, src)}
@@ -221,19 +229,19 @@ func matchPair(base comparison, minField, maxField string, genMin, genMax float6
 	return out
 }
 
-func matchTick(base comparison, genTick float64, cands []RankEffect, spell RankSpell) comparison {
+func matchTick(base comparison, field string, genTick float64, cands []RankEffect) comparison {
 	bestTick, bestSrc := 0.0, "no periodic effect"
 	for _, e := range cands {
-		dMin, _ := DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
+		dMin, _ := DeriveRankAmount(e, e.SpellLevel, e.MaxLevel)
 		src := fmt.Sprintf("spell %d effect %d (periodic)", e.OwnerSpellID, e.Index)
 		if dMin == genTick {
-			return finishWith(base, "DotTickDamage", genTick, dMin, src)
+			return finishWith(base, field, genTick, dMin, src)
 		}
 		if bestSrc == "no periodic effect" || math.Abs(dMin-genTick) < math.Abs(bestTick-genTick) {
 			bestTick, bestSrc = dMin, src
 		}
 	}
-	return finishWith(base, "DotTickDamage", genTick, bestTick, bestSrc)
+	return finishWith(base, field, genTick, bestTick, bestSrc)
 }
 
 func matchCoefficient(base comparison, genCoef float64, cands []RankEffect) comparison {
