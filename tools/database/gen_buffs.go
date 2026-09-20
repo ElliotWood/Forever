@@ -92,6 +92,12 @@ type ResolvedBuff struct {
 	TalentCurve   []float64
 	TalentApplies buffmanifest.TalentApplies
 
+	// TalentOnPseudo says the curve prices Pseudo[0] rather than Stats[0].
+	TalentOnPseudo bool
+	// TalentSpellID is the spell of the trait node that prices the improvement,
+	// which is the icon the UI shows for the improved state.
+	TalentSpellID int32
+
 	OwnerClassMask int32
 	ScopeFromDB    buffmanifest.BuffScope
 
@@ -647,8 +653,7 @@ func (res *buffResolver) primaryValue(spellID int32) (float64, bool, error) {
 		if !isAuraApplication(e.Effect) {
 			continue
 		}
-		value, _ := DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
-		return math.Trunc(value), true, nil
+		return buffValueAt60(e, spell.SpellLevel, spell.MaxLevel), true, nil
 	}
 	return 0, false, nil
 }
@@ -1075,44 +1080,79 @@ func (res *buffResolver) resolveTalent(row *ResolvedBuff) error {
 		return nil
 	}
 
+	row.TalentSpellID = chosen.SpellID
 	row.TalentApplies = row.Talent.Applies
 	if chosen.Misc == 1 {
 		row.TalentApplies = buffmanifest.TalentScalesDuration
 	}
 
-	base, integral := row.talentBase()
 	row.TalentCurve = make([]float64, chosen.MaxRanks+1)
-	row.TalentCurve[0] = base
-	for rank := int32(1); rank <= chosen.MaxRanks; rank++ {
-		value := applyTalentPoints(base, values[rank], chosen.Aura)
-		// A multiplier is a fraction the sim multiplies a stat by, so only an
-		// amount the client states as a whole number is truncated.
-		if integral {
-			value = math.Trunc(value)
+	if row.TalentApplies == buffmanifest.TalentScalesDuration {
+		for rank := int32(0); rank <= chosen.MaxRanks; rank++ {
+			duration := float64(row.DurationMs)
+			if rank > 0 {
+				duration = math.Trunc(applyTalentPoints(duration, values[rank], chosen.Aura))
+			}
+			row.TalentCurve[rank] = duration
 		}
-		row.TalentCurve[rank] = value
+		return nil
+	}
+
+	target, onPseudo, ok := row.talentTarget()
+	if !ok {
+		row.TalentCurve = nil
+		row.warn("talent %q has nothing to scale: spell %d states no amount this generator maps",
+			chosen.Name, row.SpellID)
+		return nil
+	}
+	row.TalentOnPseudo = onPseudo
+
+	// The talent scales the number the client states, not the number the sim
+	// stores: a percentage aura reaches the sim as 1 + value/100, and adding
+	// talent points to that would be arithmetic on the wrong quantity.
+	for rank := int32(0); rank <= chosen.MaxRanks; rank++ {
+		scaled := target
+		if rank > 0 {
+			scaled.Value = math.Trunc(applyTalentPoints(target.Value, values[rank], chosen.Aura))
+		}
+		row.TalentCurve[rank] = convertedAmount(scaled, onPseudo)
 	}
 	return nil
 }
 
-// The number the talent scales - the aura's first stat amount, or its duration
-// when the talent extends it - and whether that number is a whole one.
-func (row ResolvedBuff) talentBase() (float64, bool) {
-	if row.TalentApplies == buffmanifest.TalentScalesDuration {
-		return float64(row.DurationMs), true
-	}
-	if len(row.Stats) > 0 {
-		return row.Stats[0].Amount, !row.Stats[0].Multiplicative
-	}
-	if len(row.Pseudo) > 0 {
-		return row.Pseudo[0].Amount, !row.Pseudo[0].Multiplicative
-	}
+// The effect the talent's curve is read through, and whether it lands on a
+// pseudo-stat. It is the first effect the kind mapping took an amount from, so
+// the curve and Stats[0] or Pseudo[0] describe the same number.
+func (row ResolvedBuff) talentTarget() (ResolvedEffect, bool, bool) {
 	for _, e := range row.Effects {
-		if isAuraApplication(e.Effect) {
-			return e.Value, true
+		if !isAuraApplication(e.Effect) {
+			continue
+		}
+		if e.Aura == dbc.A_DAMAGE_SHIELD {
+			return e, false, true
+		}
+		if _, ok := statAmountsOf(e); ok {
+			return e, false, true
+		}
+		if _, ok := pseudoModsOf(e); ok {
+			return e, true, true
 		}
 	}
-	return 0, true
+	return ResolvedEffect{}, false, false
+}
+
+// What the effect is worth once the kind mapping has converted it.
+func convertedAmount(e ResolvedEffect, onPseudo bool) float64 {
+	if onPseudo {
+		if mods, ok := pseudoModsOf(e); ok {
+			return mods[0].Amount
+		}
+		return e.Value
+	}
+	if amounts, ok := statAmountsOf(e); ok {
+		return amounts[0].Amount
+	}
+	return e.Value
 }
 
 // A_ADD_PCT_MODIFIER states a percentage of the spell's own number;
@@ -1387,23 +1427,24 @@ func spellIDList(cands []buffCandidate) string {
 // buffRow is what the templates see: every expression the generated file needs,
 // already spelled as Go source.
 type buffRow struct {
-	Go          string
-	Field       string
-	Label       string
-	SpellID     int32
-	Kind        string
-	Reason      string
-	Supported   bool
-	HasWowhead  bool
-	Category    string
-	CategoryVar string
-	ValueExpr   string
-	HasValue    bool
-	Duration    string
-	Constructor string
-	ApplyIf     string
-	ApplyBody   string
-	HasApply    bool
+	Go            string
+	Field         string
+	Label         string
+	SpellID       int32
+	Kind          string
+	Reason        string
+	Supported     bool
+	HasWowhead    bool
+	Category      string
+	CategoryVar   string
+	ValueExpr     string
+	HasValue      bool
+	ValueOnPseudo bool
+	Duration      string
+	Constructor   string
+	ApplyIf       string
+	ApplyBody     string
+	HasApply      bool
 }
 
 // RenderBuffFiles renders both generated files without writing them.
@@ -1486,7 +1527,7 @@ func renderRow(row ResolvedBuff) buffRow {
 		out.Category = row.Category
 		out.CategoryVar = row.Go + "Category"
 	}
-	out.ValueExpr, out.HasValue = buffValueExpr(row)
+	out.ValueExpr, out.ValueOnPseudo, out.HasValue = buffValueExpr(row)
 	out.Duration = buffDurationExpr(row)
 	out.Constructor = buffConstructor(row, out)
 	out.ApplyIf, out.ApplyBody, out.HasApply = buffApply(row)
@@ -1506,22 +1547,22 @@ func buffLabel(row ResolvedBuff) string {
 }
 
 // The first stat amount, talent-scaled when the tree prices the talent.
-func buffValueExpr(row ResolvedBuff) (string, bool) {
+func buffValueExpr(row ResolvedBuff) (string, bool, bool) {
 	if len(row.TalentCurve) > 0 && row.TalentApplies != buffmanifest.TalentScalesDuration {
-		return floatSliceLiteral(row.TalentCurve) + "[talentPoints]", true
+		return floatSliceLiteral(row.TalentCurve) + "[talentPoints]", row.TalentOnPseudo, true
 	}
 	if len(row.Stats) > 0 {
-		return formatFloat(row.Stats[0].Amount), true
+		return formatFloat(row.Stats[0].Amount), false, true
 	}
 	if len(row.Pseudo) > 0 {
-		return formatFloat(row.Pseudo[0].Amount), true
+		return formatFloat(row.Pseudo[0].Amount), true, true
 	}
 	for _, e := range row.Effects {
 		if e.Aura == dbc.A_DAMAGE_SHIELD {
-			return formatFloat(e.Value), true
+			return formatFloat(e.Value), false, true
 		}
 	}
-	return "", false
+	return "", false, false
 }
 
 func buffDurationExpr(row ResolvedBuff) string {
@@ -1566,17 +1607,24 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	if rendered.CategoryVar != "" {
 		fmt.Fprintf(&b, "Category: %s,\n", rendered.CategoryVar)
 	}
+	if row.SharedCategory != "" {
+		fmt.Fprintf(&b, "SharedCategory: %q,\n", row.SharedCategory)
+	}
 	if row.SingleAura {
 		b.WriteString("SingleAura: true,\n")
 	}
 	b.WriteString("IsPlayer: isPlayer,\n")
 
+	// The talent curve prices one amount, so the call to <Go>Value goes where
+	// that amount sits and every other amount is a literal.
+	value := row.Go + "Value(talentPoints)"
+
 	if len(row.Stats) > 0 {
 		b.WriteString("Stats: []StatConfig{\n")
 		for i, stat := range row.Stats {
 			amount := formatFloat(stat.Amount)
-			if i == 0 && rendered.HasValue {
-				amount = row.Go + "Value(talentPoints)"
+			if i == 0 && rendered.HasValue && !rendered.ValueOnPseudo {
+				amount = value
 			}
 			fmt.Fprintf(&b, "{stats.%s, %s, %t},\n", stat.Stat.StatName(), amount, stat.Multiplicative)
 		}
@@ -1584,9 +1632,13 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	}
 	if len(row.Pseudo) > 0 {
 		b.WriteString("Pseudo: []PseudoConfig{\n")
-		for _, mod := range row.Pseudo {
+		for i, mod := range row.Pseudo {
+			amount := formatFloat(mod.Amount)
+			if i == 0 && rendered.HasValue && rendered.ValueOnPseudo {
+				amount = value
+			}
 			fmt.Fprintf(&b, "{PseudoStat%s, %s, %t, %d},\n",
-				mod.Kind, formatFloat(mod.Amount), mod.Multiplicative, mod.SchoolMask)
+				mod.Kind, amount, mod.Multiplicative, mod.SchoolMask)
 		}
 		b.WriteString("},\n")
 	}
@@ -1695,7 +1747,7 @@ func GenerateBuffFiles(helper *DBHelper) error {
 }
 
 func printBuffSummary(rows []ResolvedBuff) {
-	var generated, handWritten, manual, ghost, absent int
+	var generated, handWritten, manual, ghost, absent, unsupported int
 	for _, row := range rows {
 		switch {
 		case row.HandWritten:
@@ -1707,15 +1759,17 @@ func printBuffSummary(rows []ResolvedBuff) {
 		case row.Supported:
 			generated++
 		default:
-			absent++
+			// The client describes the row, this generator cannot express it,
+			// which is not the same thing as the client not having it.
+			unsupported++
 		}
 		if row.Talent != nil && len(row.TalentCurve) == 0 {
 			ghost++
 		}
 	}
 
-	fmt.Printf("buffs: resolved %d rows: %d generated, %d hand-written, %d manual, %d ghost talents, %d absent\n",
-		len(rows), generated, handWritten, manual, ghost, absent)
+	fmt.Printf("buffs: resolved %d rows: %d generated, %d hand-written, %d manual, %d ghost talents, %d absent, %d unsupported\n",
+		len(rows), generated, handWritten, manual, ghost, absent, unsupported)
 
 	var stale int
 	for _, row := range rows {

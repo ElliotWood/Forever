@@ -1,0 +1,262 @@
+package database
+
+// Pins what the generator emits for a row it can express. No row of the real
+// manifest renders code yet - every one is still a shell - so without these
+// synthetic rows the whole supported branch of the templates would be untested,
+// and nothing would notice a generated constructor that no longer compiles
+// against sim/core/buffs_gen_support.go.
+//
+// Needs no client database. Set UPDATE_BUFF_FIXTURES=1 to rewrite the fixtures
+// after a deliberate change.
+
+import (
+	"math"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"testing"
+
+	"github.com/wowsims/forever/sim/core/stats"
+	"github.com/wowsims/forever/tools/database/buffmanifest"
+	"github.com/wowsims/forever/tools/database/dbc"
+)
+
+// One row per shape the templates have a branch for. The proto field of each row
+// is a real one whose compiled type matches the row's declared type, so the
+// rendered apply blocks type-check against the sim.
+func syntheticBuffRows() []ResolvedBuff {
+	return []ResolvedBuff{
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "mana_spring_totem", Scope: buffmanifest.ScopeParty,
+				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindStatFlat,
+				Go: "SynthManaSpring", Name: "Mana Spring Totem", Category: "ManaSpringTotem",
+			},
+			SpellID: 10494, Supported: true,
+			Stats:         []StatAmount{{Stat: stats.MP5, Amount: 25}},
+			TalentCurve:   []float64{25, 26, 27, 28, 30, 31},
+			TalentApplies: buffmanifest.TalentScalesValue,
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "blessing_of_kings", Scope: buffmanifest.ScopeIndividual,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindStatPct,
+				Go: "SynthBlessingOfKings", Name: "Blessing of Kings",
+			},
+			SpellID: 20217, DurationMs: 3600000, Supported: true,
+			Stats: []StatAmount{
+				{Stat: stats.Strength, Amount: 1.1, Multiplicative: true},
+				{Stat: stats.Agility, Amount: 1.1, Multiplicative: true},
+			},
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "devotion_aura", Scope: buffmanifest.ScopeParty,
+				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindResistance,
+				Go: "SynthDevotionAura", Name: "Devotion Aura", Category: "DevotionAura",
+				SharedCategory: "PaladinAura", SingleAura: true,
+			},
+			SpellID: 10293, DurationMs: 600000, Supported: true,
+			Stats:         []StatAmount{{Stat: stats.Armor, Amount: 735}},
+			TalentCurve:   []float64{600000, 900000, 1200000},
+			TalentApplies: buffmanifest.TalentScalesDuration,
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "thunder_clap", Scope: buffmanifest.ScopeDebuff,
+				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindDebuffAtkSpeed,
+				Go: "SynthThunderClap", Name: "Thunder Clap", Category: "AtkSpdReduction",
+			},
+			SpellID: 11581, DurationMs: 30000, Supported: true,
+			Pseudo: []PseudoMod{
+				{Kind: "MeleeSpeedMultiplier", Amount: 0.8, Multiplicative: true},
+			},
+			TalentCurve:    []float64{0.8, 0.78, 0.76},
+			TalentApplies:  buffmanifest.TalentScalesValue,
+			TalentOnPseudo: true,
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "innervates", Scope: buffmanifest.ScopeIndividual,
+				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindExternalCD,
+				Go: "SynthInnervates", Name: "Innervate", Label: "Innervates",
+			},
+			SpellID: 29166, DurationMs: 20000, Supported: true,
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "thorns", Scope: buffmanifest.ScopeRaid,
+				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindDamageShield,
+				Go: "SynthThorns", Name: "Thorns", Category: "Thorns",
+			},
+			SpellID: 9910, DurationMs: 600000, SchoolMask: 8, Supported: true,
+			Effects:       []ResolvedEffect{{Index: 0, Effect: 6, Aura: 15, Value: 22}},
+			TalentCurve:   []float64{22, 27, 33},
+			TalentApplies: buffmanifest.TalentScalesValue,
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "sunder_armor", Scope: buffmanifest.ScopeDebuff,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDebuffStacking,
+				Go: "SynthSunderArmor", Name: "Sunder Armor", Category: "MajorArmorReduction",
+				SingleAura: true,
+			},
+			SpellID: 11597, DurationMs: 30000, MaxStacks: 5, Supported: true,
+			Stats: []StatAmount{{Stat: stats.Armor, Amount: -450}},
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
+				Field: "curse_of_elements", Scope: buffmanifest.ScopeDebuff,
+				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindDebuffDamageTaken,
+				Go: "SynthCurseOfElements", Name: "Curse of the Elements", Category: "CurseOfElements",
+				SingleAura: true,
+			},
+			SpellID: 1311680, DurationMs: 300000, Supported: true,
+			Pseudo: []PseudoMod{
+				{Kind: "SchoolDamageTakenMultiplier", Amount: 1.1, Multiplicative: true, SchoolMask: 126},
+			},
+		},
+	}
+}
+
+// The curve has to scale the amount the client states and convert afterwards: a
+// percentage aura reaches the sim as 1 + value/100, and spending talent points
+// on that number instead of on the client's -20 would price the buff at 0.9 + n.
+func TestTalentCurveScalesTheClientAmount(t *testing.T) {
+	row := ResolvedBuff{Effects: []ResolvedEffect{
+		{Effect: dbc.E_APPLY_AURA, Aura: dbc.A_MOD_MELEE_HASTE_3, Value: -20},
+	}}
+
+	target, onPseudo, ok := row.talentTarget()
+	if !ok || !onPseudo {
+		t.Fatalf("talentTarget() = %v, onPseudo %v, ok %v; want the pseudo-stat effect", target, onPseudo, ok)
+	}
+
+	if got := convertedAmount(target, onPseudo); math.Abs(got-0.8) > 1e-9 {
+		t.Errorf("untalented amount = %v, want 0.8", got)
+	}
+
+	scaled := target
+	scaled.Value = math.Trunc(applyTalentPoints(target.Value, 10, dbc.A_ADD_PCT_MODIFIER))
+	if scaled.Value != -22 {
+		t.Errorf("scaled client amount = %v, want -22", scaled.Value)
+	}
+	if got := convertedAmount(scaled, onPseudo); math.Abs(got-0.78) > 1e-9 {
+		t.Errorf("talented amount = %v, want 0.78", got)
+	}
+}
+
+var syntheticFixtures = map[string]string{
+	buffsGenFile:   filepath.Join("testdata", "buffs_synthetic_auto_gen.go"),
+	debuffsGenFile: filepath.Join("testdata", "debuffs_synthetic_auto_gen.go"),
+}
+
+func renderSyntheticBuffFiles(t *testing.T) map[string][]byte {
+	t.Helper()
+
+	files, err := renderBuffFiles(syntheticBuffRows())
+	if err != nil {
+		t.Fatalf("rendering the synthetic rows: %v", err)
+	}
+	return files
+}
+
+func TestRenderedBuffFilesMatchTheFixtures(t *testing.T) {
+	files := renderSyntheticBuffFiles(t)
+
+	for name, rendered := range files {
+		fixture := syntheticFixtures[name]
+		if os.Getenv("UPDATE_BUFF_FIXTURES") != "" {
+			if err := os.WriteFile(fixture, rendered, 0644); err != nil {
+				t.Fatalf("writing %s: %v", fixture, err)
+			}
+			continue
+		}
+
+		committed, err := os.ReadFile(fixture)
+		if err != nil {
+			t.Fatalf("reading %s: %v", fixture, err)
+		}
+		if string(committed) != string(rendered) {
+			t.Errorf("%s no longer matches what the generator emits, "+
+				"rewrite it with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`:\n%s",
+				fixture, unifiedBuffDiff(string(committed), string(rendered)))
+		}
+	}
+}
+
+// Builds sim/core with the rendered files overlaid onto it, which is the only
+// check that a generated constructor still names an identifier the support API
+// declares. The apply functions are renamed because the real generated files
+// already declare them, and the one driver the rows call is stubbed here the way
+// sim/core/buffs_manual.go would declare it.
+func TestRenderedBuffFilesCompile(t *testing.T) {
+	goTool := findGoTool(t)
+	root, err := repoRoot()
+	if err != nil {
+		t.Fatalf("finding the repository root: %v", err)
+	}
+
+	dir := t.TempDir()
+	overlay := map[string]string{}
+	for name, rendered := range renderSyntheticBuffFiles(t) {
+		body := strings.ReplaceAll(string(rendered), "func applyGenerated", "func synthApplyGenerated")
+		path := filepath.Join(dir, filepath.Base(name))
+		if err := os.WriteFile(path, []byte(body), 0644); err != nil {
+			t.Fatal(err)
+		}
+		overlay[filepath.Join(root, "sim", "core", "zz_synthetic_"+filepath.Base(name))] = path
+	}
+
+	drivers := filepath.Join(dir, "drivers.go")
+	if err := os.WriteFile(drivers, []byte("package core\n\n"+
+		"func driveSynthInnervates(char *Character, numSources int32) {\n"+
+		"\tnewGeneratedExternalCD(char, GeneratedBuff{ActionID: ActionID{SpellID: 29166}},"+
+		" numSources, 0, nil)\n}\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	overlay[filepath.Join(root, "sim", "core", "zz_synthetic_drivers.go")] = drivers
+
+	overlayPath := filepath.Join(dir, "overlay.json")
+	if err := os.WriteFile(overlayPath, []byte(overlayJSON(overlay)), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := exec.Command(goTool, "build", "-overlay", overlayPath, "./sim/core/")
+	cmd.Dir = root
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Errorf("the generated constructors do not compile against sim/core:\n%s", out)
+	}
+}
+
+func overlayJSON(replace map[string]string) string {
+	var b strings.Builder
+	b.WriteString(`{"Replace":{`)
+	first := true
+	for from, to := range replace {
+		if !first {
+			b.WriteString(",")
+		}
+		first = false
+		b.WriteString(`"` + filepath.ToSlash(from) + `":"` + filepath.ToSlash(to) + `"`)
+	}
+	b.WriteString("}}")
+	return b.String()
+}
+
+func findGoTool(t *testing.T) string {
+	t.Helper()
+
+	if path := filepath.Join(runtime.GOROOT(), "bin", "go"); runtime.GOROOT() != "" {
+		if _, err := os.Stat(path); err == nil {
+			return path
+		}
+	}
+	path, err := exec.LookPath("go")
+	if err != nil {
+		t.Skip("no go tool on PATH, so the generated files cannot be type-checked")
+	}
+	return path
+}

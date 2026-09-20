@@ -27,6 +27,32 @@ const (
 	PseudoStatBonusRangedAttackPower
 )
 
+func (kind PseudoStatKind) Name() string {
+	switch kind {
+	case PseudoStatThreatMultiplier:
+		return "ThreatMultiplier"
+	case PseudoStatDamageDealtMultiplier:
+		return "DamageDealtMultiplier"
+	case PseudoStatDamageTakenMultiplier:
+		return "DamageTakenMultiplier"
+	case PseudoStatSchoolDamageTakenMultiplier:
+		return "SchoolDamageTakenMultiplier"
+	case PseudoStatMeleeSpeedMultiplier:
+		return "MeleeSpeedMultiplier"
+	case PseudoStatPushbackChance:
+		return "PushbackChance"
+	case PseudoStatBonusPhysicalDamageTaken:
+		return "BonusPhysicalDamageTaken"
+	case PseudoStatBonusSpellDamageTaken:
+		return "BonusSpellDamageTaken"
+	case PseudoStatBonusAttackPower:
+		return "BonusAttackPower"
+	case PseudoStatBonusRangedAttackPower:
+		return "BonusRangedAttackPower"
+	}
+	return "PseudoStatKind(unknown)"
+}
+
 type PseudoConfig struct {
 	Kind             PseudoStatKind
 	Amount           float64
@@ -38,15 +64,21 @@ type PseudoConfig struct {
 }
 
 type GeneratedBuff struct {
-	Label      string
-	ActionID   ActionID
-	Duration   time.Duration
-	MaxStacks  int32
-	Category   string
-	SingleAura bool
-	Stats      []StatConfig
-	Pseudo     []PseudoConfig
-	IsPlayer   bool
+	Label     string
+	ActionID  ActionID
+	Duration  time.Duration
+	MaxStacks int32
+
+	// Category is the exclusive category the buff competes in; SharedCategory is
+	// a second one it joins as a member without an effect of its own, which is
+	// how the paladin auras exclude each other across schools.
+	Category       string
+	SharedCategory string
+	SingleAura     bool
+
+	Stats    []StatConfig
+	Pseudo   []PseudoConfig
+	IsPlayer bool
 }
 
 // The aura a generated buff registers on the player. Tag -1 is the external
@@ -64,42 +96,74 @@ func newGeneratedStatAura(unit *Unit, config GeneratedBuff) *Aura {
 
 	if config.Category != "" {
 		registerExlusiveEffects(aura, config.Stats, config.Category)
-		if config.SingleAura {
-			aura.NewExclusiveEffect(config.Category, true, ExclusiveEffect{
-				Priority: generatedPriority(config),
-			})
-		}
 	} else {
 		registerStatEffect(aura, config.Stats)
 	}
-
-	attachGeneratedPseudoStats(aura, config.Pseudo)
+	attachGeneratedPseudoStats(aura, config)
+	joinSharedCategory(aura, config)
 	return aura
 }
 
-// The aura a generated debuff registers on the target. A stacking debuff prices
-// its exclusive effect by what it is worth at full stacks, which is what lets
-// the strongest of several armor reductions win before any of them has stacked.
+// The aura a generated debuff registers on the target. Its exclusive effect
+// carries the bare category name, which is the one the hand-written debuffs
+// compete in, and holds every stat and pseudo-stat the debuff applies so that
+// only the strongest of several armor reductions is on the target at a time.
 func newGeneratedDebuff(target *Unit, config GeneratedBuff) *Aura {
-	aura := target.GetOrRegisterAura(Aura{
+	if config.Category == "" {
+		aura := target.GetOrRegisterAura(Aura{
+			Label:     config.Label,
+			ActionID:  config.ActionID,
+			Duration:  TernaryDuration(config.Duration > 0, config.Duration, NeverExpires),
+			MaxStacks: config.MaxStacks,
+		})
+		registerStatEffect(aura, config.Stats)
+		attachGeneratedPseudoStats(aura, config)
+		return aura
+	}
+
+	// What one stack is worth, as a positive number: the category's active effect
+	// is the one with the highest priority, so a debuff that subtracts 2250 armor
+	// has to bid 2250 and not -2250.
+	perStack := generatedMagnitude(config)
+
+	var effect *ExclusiveEffect
+	auraConfig := Aura{
 		Label:     config.Label,
 		ActionID:  config.ActionID,
 		Duration:  TernaryDuration(config.Duration > 0, config.Duration, NeverExpires),
 		MaxStacks: config.MaxStacks,
-	})
-
-	if config.Category != "" {
-		registerExlusiveEffects(aura, config.Stats, config.Category)
-		if config.SingleAura {
-			aura.NewExclusiveEffect(config.Category, true, ExclusiveEffect{
-				Priority: generatedPriority(config),
-			})
+	}
+	priority := perStack
+	if config.MaxStacks > 0 {
+		// A stacking debuff is worth nothing until it has a stack, and re-prices
+		// itself on every one; SetPriority re-applies the amounts as it goes.
+		priority = 0
+		auraConfig.OnStacksChange = func(_ *Aura, sim *Simulation, _ int32, newStacks int32) {
+			effect.SetPriority(sim, perStack*float64(newStacks))
 		}
-	} else {
-		registerStatEffect(aura, config.Stats)
 	}
 
-	attachGeneratedPseudoStats(aura, config.Pseudo)
+	aura := target.GetOrRegisterAura(auraConfig)
+
+	// A stat the buff multiplies rather than adds goes through a dependency, and
+	// a dependency is either on or off: stacks scale the flat amounts only.
+	multipliers := make([]*stats.StatDependency, len(config.Stats))
+	for i, statConfig := range config.Stats {
+		if statConfig.IsMultiplicative {
+			multipliers[i] = target.NewDynamicMultiplyStat(statConfig.Stat, statConfig.Amount)
+		}
+	}
+
+	effect = aura.NewExclusiveEffect(config.Category, true, ExclusiveEffect{
+		Priority: priority,
+		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
+			applyGeneratedAmounts(ee.Aura.Unit, sim, config, multipliers, generatedStackFactor(ee, perStack))
+		},
+		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
+			applyGeneratedAmounts(ee.Aura.Unit, sim, config, multipliers, -generatedStackFactor(ee, perStack))
+		},
+	})
+	joinSharedCategory(aura, config)
 	return aura
 }
 
@@ -136,8 +200,9 @@ func newGeneratedDamageShield(unit *Unit, config GeneratedBuff, school SpellScho
 	})
 
 	if config.Category != "" {
-		aura.NewExclusiveEffect(config.Category, true, ExclusiveEffect{Priority: generatedPriority(config)})
+		aura.NewExclusiveEffect(config.Category, config.SingleAura, ExclusiveEffect{Priority: damage})
 	}
+	joinSharedCategory(aura, config)
 	return aura
 }
 
@@ -162,28 +227,120 @@ func newGeneratedExternalCD(char *Character, config GeneratedBuff, numSources in
 	}, numSources)
 }
 
-// The priority an exclusive effect of a whole aura carries: what the buff is
-// worth at full stacks, so the larger of two mutually exclusive versions wins
-// before either has stacked up.
-func generatedPriority(config GeneratedBuff) float64 {
-	if len(config.Stats) == 0 {
-		return 0
+// The second category the aura joins without an effect of its own. Only the
+// player's own copy joins it: the external copy has to be able to sit next to
+// the one the player casts.
+func joinSharedCategory(aura *Aura, config GeneratedBuff) {
+	if config.SharedCategory == "" || !config.IsPlayer {
+		return
 	}
-	priority := config.Stats[0].Amount
-	if config.MaxStacks > 0 {
-		priority *= float64(config.MaxStacks)
-	}
-	return priority
+	aura.NewExclusiveEffect(config.SharedCategory, true, ExclusiveEffect{Priority: 1})
 }
 
-func attachGeneratedPseudoStats(aura *Aura, configs []PseudoConfig) {
-	for _, config := range configs {
-		for _, field := range generatedPseudoStatFields(aura.Unit, config) {
-			if config.IsMultiplicative {
-				aura.AttachMultiplicativePseudoStatBuff(field, config.Amount)
+// How strong the buff is, as a positive number. A multiplier is judged by how
+// far from 1 it is, so a 20% attack speed reduction (0.8) outbids a 10% one.
+func generatedMagnitude(config GeneratedBuff) float64 {
+	magnitude := func(amount float64, multiplicative bool) float64 {
+		if multiplicative {
+			amount -= 1
+		}
+		if amount < 0 {
+			return -amount
+		}
+		return amount
+	}
+
+	if len(config.Stats) > 0 {
+		return magnitude(config.Stats[0].Amount, config.Stats[0].IsMultiplicative)
+	}
+	if len(config.Pseudo) > 0 {
+		return magnitude(config.Pseudo[0].Amount, config.Pseudo[0].IsMultiplicative)
+	}
+	return 0
+}
+
+// How many stacks the effect is currently priced at.
+func generatedStackFactor(effect *ExclusiveEffect, perStack float64) float64 {
+	if perStack == 0 {
+		return 1
+	}
+	return effect.Priority / perStack
+}
+
+// Applies every stat and pseudo-stat the buff holds, scaled by the stack count
+// the exclusive effect is priced at. A negative factor takes them away again.
+func applyGeneratedAmounts(unit *Unit, sim *Simulation, config GeneratedBuff, multipliers []*stats.StatDependency, factor float64) {
+	for i, statConfig := range config.Stats {
+		if multipliers[i] != nil {
+			if factor > 0 {
+				unit.EnableDynamicStatDep(sim, multipliers[i])
 			} else {
-				aura.AttachAdditivePseudoStatBuff(field, config.Amount)
+				unit.DisableDynamicStatDep(sim, multipliers[i])
 			}
+			continue
+		}
+		unit.AddStatDynamic(sim, statConfig.Stat, statConfig.Amount*factor)
+	}
+	for _, pseudoConfig := range config.Pseudo {
+		for _, field := range generatedPseudoStatFields(unit, pseudoConfig) {
+			if pseudoConfig.IsMultiplicative {
+				applyGeneratedMultiplier(field, pseudoConfig.Amount, factor)
+			} else {
+				*field += pseudoConfig.Amount * factor
+			}
+		}
+	}
+}
+
+// A multiplier is applied once per stack and divided back out the same way.
+func applyGeneratedMultiplier(field *float64, amount float64, factor float64) {
+	for i := float64(0); i < factor; i++ {
+		*field *= amount
+	}
+	for i := float64(0); i > factor; i-- {
+		*field /= amount
+	}
+}
+
+// The pseudo-stats a generated buff modifies. With a category they compete in
+// it per field, the way registerExlusiveEffects does for stats, so that two
+// buffs modifying the same field do not both apply.
+func attachGeneratedPseudoStats(aura *Aura, config GeneratedBuff) {
+	for _, pseudoConfig := range config.Pseudo {
+		for _, field := range generatedPseudoStatFields(aura.Unit, pseudoConfig) {
+			if config.Category == "" {
+				if pseudoConfig.IsMultiplicative {
+					aura.AttachMultiplicativePseudoStatBuff(field, pseudoConfig.Amount)
+				} else {
+					aura.AttachAdditivePseudoStatBuff(field, pseudoConfig.Amount)
+				}
+				continue
+			}
+
+			suffix := "Add"
+			if pseudoConfig.IsMultiplicative {
+				suffix = "Mul"
+			}
+			amount := pseudoConfig.Amount
+			multiplicative := pseudoConfig.IsMultiplicative
+			target := field
+			aura.NewExclusiveEffect(config.Category+pseudoConfig.Kind.Name()+suffix, false, ExclusiveEffect{
+				Priority: generatedMagnitude(GeneratedBuff{Pseudo: []PseudoConfig{pseudoConfig}}),
+				OnGain: func(_ *ExclusiveEffect, _ *Simulation) {
+					if multiplicative {
+						*target *= amount
+					} else {
+						*target += amount
+					}
+				},
+				OnExpire: func(_ *ExclusiveEffect, _ *Simulation) {
+					if multiplicative {
+						*target /= amount
+					} else {
+						*target -= amount
+					}
+				},
+			})
 		}
 	}
 }

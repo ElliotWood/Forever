@@ -5,6 +5,12 @@ package database
 // without a database.
 //
 // Skips when tools/database/wowsims.db is absent, which is why CI is unaffected.
+//
+// RenderBuffFiles reads the live sim/core tree to decide which rows sim/core
+// still implements by hand, so declaring any func named <Something>Aura there,
+// or reading a buff's proto field in applyBuffEffects or applyDebuffEffects,
+// changes what this test expects. That is the migration switch working, not a
+// broken test: regenerate.
 
 import (
 	"bytes"
@@ -12,6 +18,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"slices"
 	"strconv"
 	"strings"
 	"testing"
@@ -111,7 +118,19 @@ func TestResolvedBuffInvariants(t *testing.T) {
 		if row.Proto == buffmanifest.ProtoTristate && len(row.TalentCurve) == 0 {
 			t.Errorf("%s: declared ProtoTristate but no talent in the owner's tree prices it", row.Field)
 		}
+		if want, pinned := pinnedTalentCurves[row.Field]; pinned && !slices.Equal(row.TalentCurve, want) {
+			t.Errorf("%s: talent curve is %v, want %v", row.Field, row.TalentCurve, want)
+		}
 	}
+}
+
+// Mana Spring is the only buff an improving talent still prices, so it is the
+// only place the curve can be checked against the client until the rest of the
+// manifest stops rendering as shells. Restorative Totems modifies the aura's own
+// number - 10 mana per 2 seconds - by 5% a point, and the client states that
+// number as a whole one, so ranks 1 and 2 both come out at 10 per tick.
+var pinnedTalentCurves = map[string][]float64{
+	"mana_spring_totem": {25, 25, 27, 27, 30, 30},
 }
 
 // The first differing line of each file with a little context, which is all a
