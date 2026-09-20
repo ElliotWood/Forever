@@ -1,6 +1,19 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLAction, APLListItem, APLRotation, APLRotation_Type as APLRotationType } from '@generated/proto/apl';
-import { Cooldowns, Debuffs, Drums, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import {
+	Cooldowns,
+	Debuffs,
+	Drums,
+	EquipmentSpec,
+	IndividualBuffs,
+	ItemSlot,
+	PartyBuffs,
+	PseudoStat,
+	RaidBuffs,
+	Spec,
+	Stat,
+	TristateEffect,
+} from '@generated/proto/common';
 import { FeralBearDruid_Rotation as DruidRotation } from '@generated/proto/druid';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -73,8 +86,8 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 	),
 
 	defaults: {
-		gear: Presets.P3_PRESET.gear,
-		epWeights: Presets.P1_EP_PRESET.epWeights,
+		gear: EquipmentSpec.create(),
+		epWeights: new Stats(),
 		statCaps: (() => {
 			const hitCap = new Stats().withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9);
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
@@ -151,41 +164,19 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 		],
 	},
 	itemSwapSlots: [ItemSlot.ItemSlotTrinket1, ItemSlot.ItemSlotTrinket2, ItemSlot.ItemSlotMainHand, ItemSlot.ItemSlotRanged],
-	defaultBuild: Presets.MAGTHERIDON_PRESET_BUILD,
 
 	encounterPicker: {
 		showExecuteProportion: false,
 	},
 
 	presets: {
-		epWeights: [Presets.P1_EP_PRESET],
+		epWeights: [],
 		talents: [Presets.StandardTalents, Presets.DemoRoarTalents],
 		// ROTATION_SIMPLE is kept in presets.ts for reference but omitted here —
 		// the APL rotation is more user-friendly and handles CDs, re-shifting, and
 		// on-use items more easily.
 		rotations: [Presets.ROTATION_DEFAULT],
-		gear: [
-			Presets.PRERAID_PRESET,
-			Presets.P1_PRESET,
-			Presets.P2_SURVIVAL_PRESET,
-			Presets.P2_BALANCED_PRESET,
-			Presets.P2_OFFENSIVE_PRESET,
-			Presets.P2_WARDEN_PRESET,
-			Presets.P2_HYDROSS_FROST_PRESET,
-			Presets.P2_HYDROSS_NATURE_PRESET,
-			Presets.P3_PRESET,
-			Presets.P4_PRESET,
-			Presets.P5_PRESET,
-		],
-		builds: [
-			Presets.DEFAULT_PRESET_BUILD,
-			Presets.KARAZHAN_PRESET_BUILD,
-			Presets.MAGTHERIDON_PRESET_BUILD,
-			Presets.MOROGRIM_PRESET_BUILD,
-			Presets.HYDROSS_PRESET_BUILD,
-			Presets.GOREFIEND_PRESET_BUILD,
-			Presets.ARCHIMONDE_PRESET_BUILD,
-		],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecFeralBearDruid>): APLRotation => {

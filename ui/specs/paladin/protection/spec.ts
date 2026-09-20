@@ -1,13 +1,13 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLListItem, APLRotation, APLRotation_Type, APLValueVariable } from '@generated/proto/apl';
-import { Cooldowns, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { Cooldowns, EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PaladinAura, PaladinJudgement } from '@generated/proto/paladin';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import * as AplUtils from '@sim/proto/apl_utils';
 import { SpecRotation } from '@sim/proto/spec_types';
-import { StatCap, UnitStat } from '@sim/proto/stats';
+import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
 import * as ProtPaladinInputs from './inputs';
@@ -140,7 +140,7 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_GEAR_PRESET.gear,
+		gear: EquipmentSpec.create(),
 		softCapBreakpoints: [
 			StatCap.fromPseudoStat(PseudoStat.PseudoStatReducedCritTakenPercent, {
 				breakpoints: [5.6],
@@ -150,7 +150,7 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 		],
 		// Default EP weights for sorting gear in the gear picker.
 		// Values for now are pre-Cata initial WAG
-		epWeights: Presets.P4_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
@@ -195,25 +195,14 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 		showExecuteProportion: false,
 	},
 
-	defaultBuild: Presets.MAGTHERIDON_PRESET_BUILD,
-
 	presets: {
-		epWeights: [Presets.P4_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.DefaultTalents],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.APL_SIMPLE, Presets.APL_PRESET],
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.P1_GEAR_PRESET, Presets.P2_GEAR_PRESET, Presets.P3_GEAR_PRESET, Presets.P4_GEAR_PRESET, Presets.P5_GEAR_PRESET],
-		builds: [
-			Presets.DEFAULT_PRESET_BUILD,
-			Presets.KARAZHAN_PRESET_BUILD,
-			Presets.MAGTHERIDON_PRESET_BUILD,
-			Presets.MOROGRIM_PRESET_BUILD,
-			Presets.HYDROSS_PRESET_BUILD,
-			Presets.GOREFIEND_PRESET_BUILD,
-			Presets.ARCHIMONDE_PRESET_BUILD,
-		],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecProtectionPaladin>): APLRotation => {
@@ -235,10 +224,10 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 			aura: rawAura = PaladinAura.DevotionAura,
 		} = simple;
 
-		if (!player.getTalents().avengersShield) {
-			useAvengersShield = false;
-			precastAvengersShield = false;
-		}
+		// TODO: Forever drops the Avenger's Shield talent, so the ability is unreachable and
+		// both knobs are forced off rather than gated on a talent that no longer exists.
+		useAvengersShield = false;
+		precastAvengersShield = false;
 
 		if (!player.getTalents().holyShield) {
 			prioritizeHolyShield = false;
@@ -246,7 +235,8 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 
 		// Sanctity Aura requires the talent. If the user picked it without the
 		// talent (e.g. dropped the point after selecting), fall back to None.
-		const aura = rawAura === PaladinAura.SanctityAura && !player.getTalents().sanctityAura ? PaladinAura.AuraNone : rawAura;
+		// TODO: Forever drops the Sanctity Aura talent, so the pick always falls back.
+		const aura = rawAura === PaladinAura.SanctityAura ? PaladinAura.AuraNone : rawAura;
 
 		const judgementConfig = JUDGEMENT_CONFIG[maintainJudgement];
 

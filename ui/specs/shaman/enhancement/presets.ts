@@ -1,102 +1,12 @@
 import * as PresetUtils from '@app/preset_utils';
-import {
-	Class,
-	ConsumesSpec,
-	Debuffs,
-	Drums,
-	IndividualBuffs,
-	PartyBuffs,
-	Profession,
-	PseudoStat,
-	Race,
-	RaidBuffs,
-	Stat,
-	TristateEffect,
-} from '@generated/proto/common';
+import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, ShamanSyncType } from '@generated/proto/shaman';
 import { SavedTalents } from '@generated/proto/ui';
-import { Stats } from '@sim/proto/stats';
 import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
-import P1BisItemSwap from './gear_sets/p1.bis.itemswap.json';
-import P1Gear from './gear_sets/p1.gear.json';
-import P1KhadgarsItemSwap from './gear_sets/p1.khadgars.itemswap.json';
-import P1TruncheonItemSwap from './gear_sets/p1.truncheon.itemswap.json';
-import P2Gear from './gear_sets/p2.gear.json';
-import P3Gear from './gear_sets/p3.gear.json';
-import P4Gear from './gear_sets/p4.gear.json';
-import P5Gear from './gear_sets/p5.gear.json';
-import PreraidGear from './gear_sets/preraid.gear.json';
-
-// Preset options for this spec.
-// Eventually we will import these values for the raid sim too, so its good to
-// keep them in a separate file.
-
-export const PRERAID_PRESET = PresetUtils.makePresetGear('Pre-raid', PreraidGear);
-
-export const P1_PRESET = PresetUtils.makePresetGear('P1 Preset', P1Gear);
-export const P2_PRESET = PresetUtils.makePresetGear('P2 Preset', P2Gear);
-export const P3_PRESET = PresetUtils.makePresetGear('P3 Preset', P3Gear);
-export const P4_PRESET = PresetUtils.makePresetGear('P4 Preset', P4Gear);
-export const P5_PRESET = PresetUtils.makePresetGear('P5 Preset', P5Gear);
-
-export const P1_BADGEOH_ITEMSWAP_PRESET = PresetUtils.makePresetItemSwapGear('P1 FireEle Swap (Badge OH)', P1KhadgarsItemSwap);
-export const P1_TRUNCHEON_ITEMSWAP_PRESET = PresetUtils.makePresetItemSwapGear('P1 FireEle Swap (Weapon OH)', P1TruncheonItemSwap);
-export const P1_BIS_ITEMSWAP_PRESET = PresetUtils.makePresetItemSwapGear('P1 FireEle Swap (BIS)', P1BisItemSwap);
 
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
-
-// Preset options for EP weights
-export const P1_EP_PRESET = PresetUtils.makePresetEpWeights(
-	'Default',
-	Stats.fromMap(
-		{
-			// calculated in p1 bis after building out new default APL
-			[Stat.StatStrength]: 2.2,
-			[Stat.StatAgility]: 1.62,
-			[Stat.StatIntellect]: 0.08,
-			[Stat.StatSpellDamage]: 0.56,
-			[Stat.StatNatureDamage]: 0.4, // As simulated using Fire Ele Totem Only
-			[Stat.StatSpellHitRating]: 0.55,
-			[Stat.StatSpellCritRating]: 0.13,
-			[Stat.StatAttackPower]: 1.0,
-			[Stat.StatMeleeHitRating]: 1.9,
-			[Stat.StatMeleeCritRating]: 1.73,
-			[Stat.StatMeleeHasteRating]: 1.37,
-			[Stat.StatArmorPenetration]: 0.3,
-			[Stat.StatExpertiseRating]: 3.1,
-		},
-		{
-			[PseudoStat.PseudoStatMainHandDps]: 8.19,
-			[PseudoStat.PseudoStatOffHandDps]: 3.59,
-		},
-	),
-);
-
-export const P3_EP_PRESET = PresetUtils.makePresetEpWeights(
-	'P3 (WiP)',
-	Stats.fromMap(
-		{
-			// calculated in p3 bis after building out new default APL
-			[Stat.StatIntellect]: 0.1,
-			[Stat.StatAgility]: 1.69,
-			[Stat.StatStrength]: 2.2,
-			[Stat.StatAttackPower]: 1.0,
-			[Stat.StatSpellDamage]: 0.48,
-			[Stat.StatNatureDamage]: 0.35, // As simulated using Fire Ele Totem Only
-			[Stat.StatMeleeHitRating]: 1.91,
-			[Stat.StatMeleeCritRating]: 1.74,
-			[Stat.StatMeleeHasteRating]: 1.94,
-			[Stat.StatArmorPenetration]: 0.33,
-			[Stat.StatExpertiseRating]: 2.73,
-		},
-		{
-			[PseudoStat.PseudoStatMainHandDps]: 8.25,
-			[PseudoStat.PseudoStatOffHandDps]: 3.61,
-		},
-	),
-);
 
 // Default talents. Uses the wowhead calculator format, make the talents on
 // https://wowhead.com/forever/talent-calc and copy the numbers in the url.

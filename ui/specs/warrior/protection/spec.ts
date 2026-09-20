@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
-import { Debuffs, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { Debuffs, EquipmentSpec, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -77,9 +77,9 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_PRESET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P1_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			const hitCap = new Stats().withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9);
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
@@ -149,7 +149,6 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 		],
 	},
 	itemSwapSlots: [ItemSlot.ItemSlotTrinket1, ItemSlot.ItemSlotTrinket2, ItemSlot.ItemSlotMainHand, ItemSlot.ItemSlotOffHand],
-	defaultBuild: Presets.MAGTHERIDON_PRESET_BUILD,
 
 	encounterPicker: {
 		// Whether to include 'Execute DuratFion (%)' in the 'Encounter' section of the settings tab.
@@ -157,31 +156,13 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.DefaultTalents],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_DEFAULT],
 		// Preset gear configurations that the user can quickly select.
-		gear: [
-			Presets.PRERAID_BALANCED_PRESET,
-			Presets.P1_PRESET,
-			Presets.P2_PRESET,
-			Presets.P2_HYDROSS_PRESET,
-			Presets.P3_PRESET,
-			Presets.P4_PRESET,
-			Presets.P5_PRESET,
-		],
-		builds: [
-			Presets.DEFAULT_PRESET_BUILD,
-			Presets.KARAZHAN_PRESET_BUILD,
-			Presets.MAGTHERIDON_PRESET_BUILD,
-			Presets.MOROGRIM_PRESET_BUILD,
-			Presets.HYDROSS_PRESET_BUILD,
-			Presets.GOREFIEND_PRESET_BUILD,
-			Presets.ARCHIMONDE_PRESET_BUILD,
-			Presets.P1_PRESET_BUILD,
-		],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecProtectionWarrior>): APLRotation => {

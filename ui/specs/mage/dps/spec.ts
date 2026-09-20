@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLListItem, APLRotation, APLRotation_Type, APLValueVariable } from '@generated/proto/apl';
-import { Cooldowns, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { Cooldowns, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import * as AplUtils from '@sim/proto/apl_utils';
@@ -91,9 +91,9 @@ export default defineSpec<Spec.SpecMage>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_BIS_ARCANE_STAFF.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P3_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSchoolHitPercentArcane, 16);
 		})(),
@@ -132,15 +132,13 @@ export default defineSpec<Spec.SpecMage>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_EP_PRESET, Presets.P2_EP_PRESET, Presets.P3_EP_PRESET],
+		epWeights: [],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_ARCANE, Presets.APL_ARCANE_SIMPLE, Presets.ROTATION_PRESET_ARCANEBRAID],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.ARCANE_TALENTS],
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.PREBIS_ARCANE, Presets.P1_BIS_ARCANE, Presets.P2_BIS_ARCANE, Presets.P3_BIS_ARCANE_STAFF, Presets.P3_BIS_ARCANE_SWORD],
-
-		builds: [Presets.P1_PRESET_BUILD_ARC, Presets.P2_PRESET_BUILD_ARC, Presets.P3_PRESET_BUILD_ARC_STAFF, Presets.P3_PRESET_BUILD_ARC_SWORD],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecMage>): APLRotation => {

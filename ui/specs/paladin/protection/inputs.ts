@@ -38,7 +38,9 @@ export const PaladinRotationConfig = {
 			labelTooltip: "If <b>true</b>, will use Avenger's Shield in the rotation.",
 			storeField: ['rotation', 'talentsString'] as const,
 			getValue: player => player.getSimpleRotation().useAvengersShield,
-			showWhen: player => player.getTalents().avengersShield,
+			// TODO: Forever drops the Avenger's Shield talent; the input stays hidden until
+			// we know what gates the ability now.
+			showWhen: () => false,
 		}),
 		InputHelpers.makeRotationBooleanInput<Spec.SpecProtectionPaladin>({
 			fieldName: 'precastAvengersShield',
@@ -47,7 +49,9 @@ export const PaladinRotationConfig = {
 				"If <b>true</b>, opens combat with a prepull Avenger's Shield cast that lands at pull. Adjusts the prepull Holy Shield and seal cast timings to fit.",
 			storeField: ['rotation', 'talentsString'] as const,
 			getValue: player => player.getSimpleRotation().precastAvengersShield,
-			showWhen: player => player.getTalents().avengersShield,
+			// TODO: Forever drops the Avenger's Shield talent; the input stays hidden until
+			// we know what gates the ability now.
+			showWhen: () => false,
 		}),
 	],
 };

@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLListItem, APLRotation, APLRotation_Type, APLValueVariable } from '@generated/proto/apl';
-import { Cooldowns, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { Cooldowns, EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PaladinAura } from '@generated/proto/paladin';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -96,9 +96,9 @@ export default defineSpec<Spec.SpecRetributionPaladin>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_GEAR_PRESET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P3_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			const hitCap = new Stats().withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9);
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
@@ -139,13 +139,12 @@ export default defineSpec<Spec.SpecRetributionPaladin>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_EP_PRESET, Presets.P2_EP_PRESET, Presets.P3_EP_PRESET],
+		epWeights: [],
 		rotations: [Presets.APL_PRESET, Presets.APL_SIMPLE],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.DefaultTalents, Presets.NoKingsTalents, Presets.ImpMightTalents],
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.PRERAID_GEAR_PRESET, Presets.P1_GEAR_PRESET, Presets.P2_GEAR_PRESET, Presets.P3_GEAR_PRESET, Presets.P3BULWARK_GEAR_PRESET],
-		builds: [Presets.P1_PRESET_BUILD_RET, Presets.P2_PRESET_BUILD_RET, Presets.P3_PRESET_BUILD_RET],
+		gear: [],
 	},
 
 	autoRotation: (_: Player<Spec.SpecRetributionPaladin>): APLRotation => {
@@ -160,7 +159,8 @@ export default defineSpec<Spec.SpecRetributionPaladin>({
 
 		// Sanctity Aura requires the talent. If the user picked it without the
 		// talent (e.g. dropped the point after selecting), fall back to None.
-		const aura = rawAura === PaladinAura.SanctityAura && !player.getTalents().sanctityAura ? PaladinAura.AuraNone : rawAura;
+		// TODO: Forever drops the Sanctity Aura talent, so the pick always falls back.
+		const aura = rawAura === PaladinAura.SanctityAura ? PaladinAura.AuraNone : rawAura;
 
 		const useExorcismBool = APLValueVariable.fromJson({
 			name: 'Use Exorcism',

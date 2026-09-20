@@ -1,8 +1,7 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, Stat, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
-import { Stats } from '@sim/proto/stats';
 import { defaultExposeWeaknessSettings, defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import AfflictionRot from './apls/affliction.apl.json';
@@ -10,54 +9,12 @@ import BlankAPL from './apls/blank.apl.json';
 import DemoRot from './apls/demonology.apl.json';
 import DestroFireRot from './apls/destro_fire.apl.json';
 import DestroRot from './apls/destruction.apl.json';
-import BlankGear from './gear_sets/blank.gear.json';
-import PreRaidFire from './gear_sets/destro_fire_preraid.gear.json';
-import T4Fire from './gear_sets/destro_fire_t4.gear.json';
-import PreRaid from './gear_sets/preraid.gear.json';
-import SWPSet from './gear_sets/swp.gear.json';
-import T4Set from './gear_sets/t4.gear.json';
-import T5Set from './gear_sets/t5.gear.json';
-import T6Set from './gear_sets/t6.gear.json';
-import ZASet from './gear_sets/za.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
 // keep them in a separate file.
 
 export const BLANK_APL = PresetUtils.makePresetAPLRotation('Blank', BlankAPL);
-
-export const BLANK_GEARSET = PresetUtils.makePresetGear('Blank', BlankGear);
-
-export const PRE_RAID = PresetUtils.makePresetGear('Pre-Raid', PreRaid);
-export const PRE_RAID_FIRE = PresetUtils.makePresetGear('Pre-Raid (Fire)', PreRaidFire);
-
-export const T4 = PresetUtils.makePresetGear('T4', T4Set);
-export const T4_FIRE = PresetUtils.makePresetGear('T4 (Fire)', T4Fire);
-
-export const T5 = PresetUtils.makePresetGear('T5', T5Set);
-export const T6 = PresetUtils.makePresetGear('T6', T6Set);
-export const ZA = PresetUtils.makePresetGear("Zul'Aman", ZASet);
-export const SWP = PresetUtils.makePresetGear('Sunwell Plateau', SWPSet);
-
-// Preset options for EP weights
-export const P1_AFFLI_DEMO_DESTRO_EP = PresetUtils.makePresetEpWeights(
-	'P1 - Affli / Demo / Destro',
-	Stats.fromMap({
-		[Stat.StatIntellect]: 0.38,
-		[Stat.StatSpellDamage]: 1,
-		[Stat.StatFireDamage]: 0.07,
-		[Stat.StatShadowDamage]: 0.92,
-		[Stat.StatSpellHitRating]: 1.73,
-		[Stat.StatSpellCritRating]: 0.82,
-		[Stat.StatSpellHasteRating]: 1.21,
-		[Stat.StatMP5]: 0.29,
-	}),
-);
-
-export const P1_DESTRUCTION_FIRE_EP = PresetUtils.makePresetEpWeights(
-	'P1 - Destro (Fire)',
-	P1_AFFLI_DEMO_DESTRO_EP.epWeights.withStat(Stat.StatFireDamage, 0.92).withStat(Stat.StatShadowDamage, 0.07),
-);
 
 // Rotations
 export const AfflictionAPL = PresetUtils.makePresetAPLRotation('Affliction', AfflictionRot);
@@ -173,92 +130,3 @@ export const DefaultDebuffs = Debuffs.create({
 	huntersMark: TristateEffect.TristateEffectImproved,
 });
 
-export const P1_DEFAULT_SETTINGS: PresetUtils.PresetSettings = {
-	name: 'Default',
-	specOptions: DefaultOptions,
-	consumables: DefaultConsumables,
-	buffs: DefaultIndividualBuffs,
-	partyBuffs: DefaultPartyBuffs,
-	raidBuffs: DefaultRaidBuffs,
-	debuffs: DefaultDebuffs,
-};
-
-export const P1_AFFLICTION_DEFAULT_SETTINGS: PresetUtils.PresetSettings = {
-	...P1_DEFAULT_SETTINGS,
-	name: 'Affliction',
-	specOptions: WarlockOptions.create({
-		...DefaultOptions,
-		classOptions: {
-			...DefaultOptions.classOptions,
-			curseOptions: WarlockOptions_CurseOptions.Elements,
-			summon: WarlockOptions_Summon.Imp,
-			sacrificeSummon: false,
-		},
-	}),
-	debuffs: DefaultDebuffs,
-};
-
-export const P1_DEMONOLOGY_DEFAULT_SETTINGS: PresetUtils.PresetSettings = {
-	...P1_DEFAULT_SETTINGS,
-	name: 'Demonology',
-	specOptions: WarlockOptions.create({
-		...DefaultOptions,
-		classOptions: {
-			...DefaultOptions.classOptions,
-			curseOptions: WarlockOptions_CurseOptions.Recklessness,
-			summon: WarlockOptions_Summon.Succubus,
-			sacrificeSummon: false,
-		},
-	}),
-	debuffs: DefaultDebuffs,
-};
-
-export const P1_FIRE_DEFAULT_SETTINGS: PresetUtils.PresetSettings = {
-	...P1_DEFAULT_SETTINGS,
-	name: 'Fire',
-	specOptions: WarlockOptions.create({
-		...DefaultOptions,
-		classOptions: {
-			...DefaultOptions.classOptions,
-			summon: WarlockOptions_Summon.Imp,
-			sacrificeSummon: true,
-		},
-	}),
-	consumables: ConsumesSpec.create({
-		...DefaultConsumables,
-		conjuredId: 22788,
-	}),
-	debuffs: Debuffs.create({
-		...DefaultDebuffs,
-		improvedScorch: true,
-	}),
-};
-
-// Builds
-export const AFFLICTION_BUILD = PresetUtils.makePresetBuild('Affliction', {
-	talents: TalentsAffliction,
-	epWeights: P1_AFFLI_DEMO_DESTRO_EP,
-	rotation: AfflictionAPL,
-	settings: P1_AFFLICTION_DEFAULT_SETTINGS,
-});
-
-export const DEMONOLOGY_BUILD = PresetUtils.makePresetBuild('Demonology', {
-	talents: TalentsDemoRuin,
-	epWeights: P1_AFFLI_DEMO_DESTRO_EP,
-	rotation: DemoAPL,
-	settings: P1_DEMONOLOGY_DEFAULT_SETTINGS,
-});
-
-export const DESTRUCTION_BUILD = PresetUtils.makePresetBuild('Destruction', {
-	talents: TalentsDestruction,
-	epWeights: P1_AFFLI_DEMO_DESTRO_EP,
-	rotation: DestroAPL,
-	settings: P1_DEFAULT_SETTINGS,
-});
-
-export const DESTRUCTION_FIRE_BUILD = PresetUtils.makePresetBuild('Destruction (Fire)', {
-	talents: TalentsDestruction,
-	epWeights: P1_DESTRUCTION_FIRE_EP,
-	rotation: DestroFireAPL,
-	settings: P1_FIRE_DEFAULT_SETTINGS,
-});

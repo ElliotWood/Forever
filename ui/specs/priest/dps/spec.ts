@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
-import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_HYBRID_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
@@ -66,9 +66,9 @@ export default defineSpec<Spec.SpecDpsPriest>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_PRESET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P3_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSchoolHitPercentShadow, 16);
 		})(),
@@ -106,14 +106,12 @@ export default defineSpec<Spec.SpecDpsPriest>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_EP_PRESET, Presets.P3_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.StandardTalents],
 		rotations: [Presets.ROTATION_PRESET_DEFAULT],
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.PRE_RAID_PRESET, Presets.P1_PRESET, Presets.P2_PRESET, Presets.P3_PRESET],
-		itemSwaps: [],
-		builds: [],
+		gear: [],
 	},
 
 	autoRotation: (_: Player<Spec.SpecDpsPriest>): APLRotation => {

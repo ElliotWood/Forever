@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation, APLRotation_Type, SimpleRotation } from '@generated/proto/apl';
-import { Cooldowns, HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { Cooldowns, EquipmentSpec, HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { DpsWarriorSpec, WarriorSunder } from '@generated/proto/warrior';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -59,9 +59,9 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_BIS_FURY_PRESET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P2_FURY_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
 			return expCap;
@@ -121,41 +121,13 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_FURY_EP_PRESET, Presets.P2_FURY_EP_PRESET, Presets.P1_ARMS_EP_PRESET, Presets.P3_ARMS_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.FuryTalents, Presets.ArmsTalents, Presets.ArmsKebabTalents],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.SIMPLE_DEFAULT_ROTATION, Presets.FURY_DEFAULT_ROTATION, Presets.ARMS_DEFAULT_ROTATION],
 		// Preset gear configurations that the user can quickly select.
-		gear: [
-			Presets.P1_PRERAID_FURY_PRESET,
-			Presets.P1_BIS_FURY_PRESET,
-			Presets.P2_BIS_FURY_PRESET,
-			Presets.P3_BIS_FURY_PRESET,
-			Presets.P4_BIS_FURY_PRESET,
-			Presets.P5_BIS_FURY_PRESET,
-			Presets.P1_PRERAID_ARMS_PRESET,
-			Presets.P1_BIS_ARMS_PRESET,
-			Presets.P2_BIS_ARMS_PRESET,
-			Presets.P3_BIS_ARMS_PRESET,
-			Presets.P4_BIS_ARMS_PRESET,
-			Presets.P5_BIS_ARMS_PRESET,
-		],
-		builds: [
-			Presets.PRESET_BUILD_FURY,
-			Presets.PRESET_BUILD_ARMS,
-			Presets.PRESET_BUILD_ARMS_KEBAB,
-			Presets.P1_PRESET_BUILD_FURY,
-			Presets.P2_PRESET_BUILD_FURY,
-			Presets.P3_PRESET_BUILD_FURY,
-			Presets.P4_PRESET_BUILD_FURY,
-			Presets.P5_PRESET_BUILD_FURY,
-			Presets.P1_PRESET_BUILD_ARMS,
-			Presets.P2_PRESET_BUILD_ARMS,
-			Presets.P3_PRESET_BUILD_ARMS,
-			Presets.P4_PRESET_BUILD_ARMS,
-			Presets.P5_PRESET_BUILD_ARMS,
-		],
+		gear: [],
 	},
 
 	autoRotation: (player: Player<Spec.SpecDpsWarrior>): APLRotation => {

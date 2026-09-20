@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
-import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
@@ -56,10 +56,10 @@ export default defineSpec<Spec.SpecWarlock>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.T6.gear,
+		gear: EquipmentSpec.create(),
 
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P1_AFFLI_DEMO_DESTRO_EP.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSpellHitPercent, 16);
 		})(),
@@ -109,16 +109,14 @@ export default defineSpec<Spec.SpecWarlock>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_AFFLI_DEMO_DESTRO_EP, Presets.P1_DESTRUCTION_FIRE_EP],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.TalentsAffliction, Presets.TalentsDemoFelguard, Presets.TalentsDemoRuin, Presets.TalentsDestroNightfall, Presets.TalentsDestruction],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.AfflictionAPL, Presets.DemoAPL, Presets.DestroAPL, Presets.DestroFireAPL],
 
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.PRE_RAID, Presets.PRE_RAID_FIRE, Presets.T4, Presets.T4_FIRE, Presets.T5, Presets.T6, Presets.ZA, Presets.SWP],
-		itemSwaps: [],
-		builds: [Presets.AFFLICTION_BUILD, Presets.DEMONOLOGY_BUILD, Presets.DESTRUCTION_BUILD, Presets.DESTRUCTION_FIRE_BUILD],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecWarlock>): APLRotation => {

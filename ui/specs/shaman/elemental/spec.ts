@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
-import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_HYBRID_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
@@ -57,9 +57,9 @@ export default defineSpec<Spec.SpecElementalShaman>({
 	gemStats: DEFAULT_HYBRID_CASTER_GEM_STATS,
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_PRESET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.EP_PRESET_DEFAULT.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSchoolHitPercentNature, 16);
 		})(),
@@ -92,15 +92,13 @@ export default defineSpec<Spec.SpecElementalShaman>({
 	},
 
 	presets: {
-		epWeights: [Presets.EP_PRESET_DEFAULT],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.StandardTalents],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_DEFAULT],
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.PRERAID_PRESET, Presets.P1_PRESET_A, Presets.P1_PRESET_H, Presets.P2_PRESET, Presets.P3_PRESET, Presets.P4_PRESET, Presets.P5_PRESET],
-		// Preset build combinations that the user can quickly select.
-		builds: [Presets.P1_PRESET_BUILD_DEFAULT],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecElementalShaman>): APLRotation => {

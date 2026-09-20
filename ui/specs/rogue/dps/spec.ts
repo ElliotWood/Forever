@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation } from '@generated/proto/apl';
-import { Debuffs, Drums, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { Debuffs, Drums, EquipmentSpec, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -59,9 +59,9 @@ export default defineSpec<Spec.SpecRogue>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_SWORDS_GEAR.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P1_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
 			return expCap;
@@ -135,13 +135,13 @@ export default defineSpec<Spec.SpecRogue>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.Talents],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.SINSITER_APL],
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.PREARAID_SWORDS_GEAR, Presets.P1_SWORDS_GEAR, Presets.P2_SWORDS_GEAR, Presets.P3_SWORDS_GEAR],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecRogue>): APLRotation => {

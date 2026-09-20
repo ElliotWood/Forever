@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation } from '@generated/proto/apl';
-import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -73,9 +73,9 @@ export default defineSpec<Spec.SpecEnhancementShaman>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_PRESET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P3_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
 			return expCap;
@@ -94,7 +94,6 @@ export default defineSpec<Spec.SpecEnhancementShaman>({
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
 		talents: Presets.SubRestoIWT.data,
-		itemSwap: Presets.P1_TRUNCHEON_ITEMSWAP_PRESET.itemSwap,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -126,15 +125,13 @@ export default defineSpec<Spec.SpecEnhancementShaman>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_EP_PRESET, Presets.P3_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.SubRestoIWT, Presets.SubRestoILS, Presets.SubEle],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_DEFAULT],
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.PRERAID_PRESET, Presets.P1_PRESET, Presets.P2_PRESET, Presets.P3_PRESET, Presets.P4_PRESET, Presets.P5_PRESET],
-
-		itemSwaps: [Presets.P1_BADGEOH_ITEMSWAP_PRESET, Presets.P1_TRUNCHEON_ITEMSWAP_PRESET, Presets.P1_BIS_ITEMSWAP_PRESET],
+		gear: [],
 	},
 
 	autoRotation: (_: Player<Spec.SpecEnhancementShaman>): APLRotation => {

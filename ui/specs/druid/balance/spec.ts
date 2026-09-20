@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation, APLRotation_Type } from '@generated/proto/apl';
-import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_HYBRID_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
@@ -55,9 +55,9 @@ export default defineSpec<Spec.SpecBalanceDruid>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.Phase3PresetGear.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.Phase3EPWeights.epWeights,
+		epWeights: new Stats(),
 		// Default stat caps for stat weights tab. (also needed for reforging since we don't want to reforge above stat caps)
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSpellHitPercent, 16);
@@ -93,28 +93,12 @@ export default defineSpec<Spec.SpecBalanceDruid>({
 	},
 
 	presets: {
-		epWeights: [
-			Presets.PreRaidEPWeights,
-			Presets.Phase1EPWeights,
-			Presets.Phase2EPWeights,
-			Presets.Phase3EPWeights,
-			Presets.Phase3_5EPWeights,
-			Presets.Phase4EPWeights,
-			Presets.DefaultEPWeights,
-		],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.StandardTalents],
 		rotations: [Presets.StandardRotation],
 		// Preset gear configurations that the user can quickly select.
-		gear: [
-			Presets.PreraidPresetGear,
-			Presets.Phase1PresetGear,
-			Presets.Phase2PresetGear,
-			Presets.Phase3PresetGear,
-			Presets.Phase4PresetGear,
-			Presets.Phase5PresetGear,
-		],
-		builds: [],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecBalanceDruid>): APLRotation => {
