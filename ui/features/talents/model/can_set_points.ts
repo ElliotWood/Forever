@@ -11,10 +11,14 @@
 import type { TalentsConfig } from '@sim/talents/config';
 
 import type { TalentPoints } from './talents_string';
+import { CHARACTER_LEVEL } from '@sim/constants/mechanics';
+
 import { totalPointsSpent, treePointTotal } from './talents_string';
 import type { TalentGraph } from './tree_graph';
 
-export const MAX_POINTS_PLAYER = 61;
+// A character earns one talent point per level from 10 onwards, so the cap follows
+// CHARACTER_LEVEL: 51 at level 60, where TBC's 61 was the level 70 figure.
+export const MAX_POINTS_PLAYER = CHARACTER_LEVEL - 9;
 export const POINTS_PER_ROW = 5;
 
 export interface TalentLimits {

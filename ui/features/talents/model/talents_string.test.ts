@@ -3,10 +3,12 @@ import { describe, expect, it } from 'vitest';
 
 import { parseTalentsString, serializeTalentsString, totalPointsSpent, treePointTotal, withTalentPoints, withTreeCleared } from './talents_string';
 
-const MAGE_DEFAULT = '2500052300030150330125--053500031003001';
+// A valid Forever mage build: 51 points, Fire left empty so the codec's empty-run
+// handling stays covered. Was a TBC build, which overflows the 18-talent Arcane tree.
+const MAGE_DEFAULT = '2552252231221--2555';
 
 describe('talents string codec', () => {
-	it('round-trips a real TBC default byte-identically, empty middle tree and all', () => {
+	it('round-trips a real Forever default byte-identically, empty middle tree and all', () => {
 		expect(serializeTalentsString(parseTalentsString(mageTalentsConfig, MAGE_DEFAULT))).toBe(MAGE_DEFAULT);
 	});
 
@@ -17,7 +19,7 @@ describe('talents string codec', () => {
 			serializeTalentsString(points)
 				.split('-')
 				.map(tree => tree.length),
-		).toEqual([22, 0, 15]);
+		).toEqual([13, 0, 4]);
 	});
 
 	it('widens a short string to the config shape and trims it back', () => {
@@ -56,8 +58,8 @@ describe('talents string codec', () => {
 
 	it('replaces one talent without disturbing the rest', () => {
 		const points = parseTalentsString(mageTalentsConfig, MAGE_DEFAULT);
-		const next = withTalentPoints(points, 2, 0, 3);
-		expect(next[2][0]).toBe(3);
+		const next = withTalentPoints(points, 2, 10, 3);
+		expect(next[2][10]).toBe(3);
 		expect(next[0]).toEqual(points[0]);
 		expect(totalPointsSpent(next)).toBe(totalPointsSpent(points) + 3);
 	});
@@ -67,10 +69,10 @@ describe('talents string codec', () => {
 		const next = withTreeCleared(points, 0);
 		expect(treePointTotal(next, 0)).toBe(0);
 		expect(treePointTotal(next, 2)).toBe(treePointTotal(points, 2));
-		expect(serializeTalentsString(next)).toBe('--053500031003001');
+		expect(serializeTalentsString(next)).toBe('--2555');
 	});
 
-	it('counts 61 points in a full default build', () => {
-		expect(totalPointsSpent(parseTalentsString(mageTalentsConfig, MAGE_DEFAULT))).toBe(61);
+	it('counts every point in a full default build', () => {
+		expect(totalPointsSpent(parseTalentsString(mageTalentsConfig, MAGE_DEFAULT))).toBe(51);
 	});
 });
