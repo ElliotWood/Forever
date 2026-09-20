@@ -8,8 +8,8 @@ import (
 var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 167.5).HighestRank()
 var hamstringBaseDamage, _ = hamstringRank.Direct.Range()
 
-func (war *Warrior) registerHamstring() {
-	war.RegisterSpell(core.SpellConfig{
+func (warrior *Warrior) registerHamstring() {
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: hamstringRank.SpellID},
 		SpellSchool:    hamstringRank.SpellSchool,
 		DefenseType:    hamstringRank.DefenseType,
@@ -34,7 +34,7 @@ func (war *Warrior) registerHamstring() {
 		FlatThreatBonus:  hamstringRank.FlatThreatBonus,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
+			return warrior.StanceMatches(BerserkerStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

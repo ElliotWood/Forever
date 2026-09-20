@@ -7,8 +7,8 @@ import (
 var pummelRank = spellData.Pummel.BySpellID(6554)
 var pummelBaseDamage, _ = pummelRank.Direct.Range()
 
-func (war *Warrior) registerPummel() {
-	war.RegisterSpell(core.SpellConfig{
+func (warrior *Warrior) registerPummel() {
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: pummelRank.SpellID},
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskPummel,
@@ -24,7 +24,7 @@ func (war *Warrior) registerPummel() {
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: pummelRank.Cooldown,
 			},
 		},
@@ -33,7 +33,7 @@ func (war *Warrior) registerPummel() {
 		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
+			return warrior.StanceMatches(BerserkerStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

@@ -6,11 +6,11 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-func (war *Warrior) registerBerserkerRage() {
+func (warrior *Warrior) registerBerserkerRage() {
 	actionID := core.ActionID{SpellID: 18499}
-	rageMetrics := war.NewRageMetrics(actionID)
+	rageMetrics := warrior.NewRageMetrics(actionID)
 
-	aura := war.RegisterAura(core.Aura{
+	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Berserker Rage",
 		ActionID: actionID,
 		Duration: time.Second * 10,
@@ -18,7 +18,7 @@ func (war *Warrior) registerBerserkerRage() {
 		// Grants immunity to Fear, Sap and Incapacitate effects.
 		AttachFearImmunity()
 
-	spell := war.RegisterSpell(core.SpellConfig{
+	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskBerserkerRage,
 		Flags:          core.SpellFlagAPL | core.SpellFlagCastWhileIncapacitated,
@@ -29,27 +29,27 @@ func (war *Warrior) registerBerserkerRage() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: time.Second * 30,
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
+			return warrior.StanceMatches(BerserkerStance)
 		},
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			if war.BerserkerRageRageGain > 0 {
-				war.AddRage(sim, war.BerserkerRageRageGain, rageMetrics)
+			if warrior.BerserkerRageRageGain > 0 {
+				warrior.AddRage(sim, warrior.BerserkerRageRageGain, rageMetrics)
 			}
 			aura.Activate(sim)
 		},
 		RelatedSelfBuff: aura,
 	})
 
-	war.AddMajorCooldown(core.MajorCooldown{
+	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
 		Type:  core.CooldownTypeSurvival,
 		ShouldActivate: func(s *core.Simulation, c *core.Character) bool {
-			return war.BerserkerRageRageGain > 0 && war.CurrentRage()+war.BerserkerRageRageGain <= war.MaximumRage()
+			return warrior.BerserkerRageRageGain > 0 && warrior.CurrentRage()+warrior.BerserkerRageRageGain <= warrior.MaximumRage()
 		},
 	})
 }

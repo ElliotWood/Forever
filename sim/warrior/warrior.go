@@ -192,8 +192,8 @@ func (warrior *Warrior) Reset(_ *core.Simulation) {
 
 func (warrior *Warrior) OnEncounterStart(sim *core.Simulation) {}
 
-func (war *Warrior) GetMainHandType() proto.HandType {
-	mh := war.GetMHWeapon()
+func (warrior *Warrior) GetMainHandType() proto.HandType {
+	mh := warrior.GetMHWeapon()
 
 	if mh != nil && (mh.HandType == proto.HandType_HandTypeTwoHand) {
 		return proto.HandType_HandTypeTwoHand

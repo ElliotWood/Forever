@@ -7,10 +7,10 @@ import (
 
 var rendRank = spellData.Rend.HighestRank()
 
-func (war *Warrior) registerRend() {
+func (warrior *Warrior) registerRend() {
 	tick := rendRank.Periodic.(shared.SpellDataPeriodic)
 
-	war.Rend = war.RegisterSpell(core.SpellConfig{
+	warrior.Rend = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rendRank.SpellID},
 		SpellSchool:    rendRank.SpellSchool,
 		DefenseType:    rendRank.DefenseType,
@@ -30,7 +30,7 @@ func (war *Warrior) registerRend() {
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BattleStance | DefensiveStance)
+			return warrior.StanceMatches(BattleStance | DefensiveStance)
 		},
 
 		DamageMultiplier: 1,
@@ -43,7 +43,7 @@ func (war *Warrior) registerRend() {
 			NumberOfTicks: tick.NumberOfTicks,
 			TickLength:    tick.TickLength,
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.SnapshotBaseDamage = tick.Tick + war.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))*0.00743
+				dot.SnapshotBaseDamage = tick.Tick + warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))*0.00743
 				dot.SnapshotAttackerMultiplier = dot.Spell.AttackerDamageMultiplier(dot.Spell.Unit.AttackTables[target.UnitIndex], true)
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {

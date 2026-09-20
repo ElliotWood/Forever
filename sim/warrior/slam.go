@@ -7,11 +7,11 @@ import (
 var slamRank = spellData.Slam.HighestRank()
 var slamBaseDamage, _ = slamRank.Direct.Range()
 
-func (war *Warrior) registerSlam() {
+func (warrior *Warrior) registerSlam() {
 
 	actionID := core.ActionID{SpellID: slamRank.SpellID}
 
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
@@ -32,7 +32,7 @@ func (war *Warrior) registerSlam() {
 			IgnoreHaste: true,
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
 				if cast.CastTime > 0 {
-					war.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime+cast.CastTime)
+					warrior.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime+cast.CastTime)
 				}
 			},
 		},

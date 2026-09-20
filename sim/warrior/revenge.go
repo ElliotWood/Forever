@@ -9,16 +9,16 @@ import (
 
 var revengeRank = shared.WithSpellDataFlatThreat(spellData.Revenge, 200).HighestRank()
 
-func (war *Warrior) registerRevenge() {
+func (warrior *Warrior) registerRevenge() {
 	actionID := core.ActionID{SpellID: revengeRank.SpellID}
 
-	aura := war.RegisterAura(core.Aura{
+	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Revenge",
 		Duration: 5 * time.Second,
 		ActionID: actionID,
 	})
 
-	war.MakeProcTriggerAura(core.ProcTrigger{
+	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Revenge - Trigger",
 		TriggerImmediately: true,
 		Outcome:            core.OutcomeBlock | core.OutcomeDodge | core.OutcomeParry,
@@ -28,7 +28,7 @@ func (war *Warrior) registerRevenge() {
 		},
 	})
 
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
@@ -43,7 +43,7 @@ func (war *Warrior) registerRevenge() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: revengeRank.Cooldown,
 			},
 		},
@@ -58,7 +58,7 @@ func (war *Warrior) registerRevenge() {
 		FlatThreatBonus:  revengeRank.FlatThreatBonus,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(DefensiveStance) && aura.IsActive()
+			return warrior.StanceMatches(DefensiveStance) && aura.IsActive()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

@@ -13,10 +13,10 @@ import (
 // rest of the ladder. Harmless while this pins the highest rank, but worth confirming.
 var sunderArmorRank = spellData.SunderArmor.HighestRank()
 
-func (war *Warrior) registerSunderArmor() {
+func (warrior *Warrior) registerSunderArmor() {
 	actionId := core.ActionID{SpellID: sunderArmorRank.SpellID}
 
-	war.SunderArmorAuras = war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+	warrior.SunderArmorAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return core.SunderArmorAura(target)
 	})
 
@@ -33,7 +33,7 @@ func (war *Warrior) registerSunderArmor() {
 			RageCost: config.RageCost,
 			Cast:     config.Cast,
 			ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-				return war.CanApplySunderAura(target)
+				return warrior.CanApplySunderAura(target)
 			},
 
 			DamageMultiplier: 1,
@@ -44,7 +44,7 @@ func (war *Warrior) registerSunderArmor() {
 				result := spell.CalcOutcome(sim, target, shared.GetOutcome(spell, outcome))
 
 				if result.Landed() {
-					aura := war.SunderArmorAuras.Get(target)
+					aura := warrior.SunderArmorAuras.Get(target)
 					aura.Activate(sim)
 					aura.AddStack(sim)
 				} else if spell.Cost != nil {
@@ -54,11 +54,11 @@ func (war *Warrior) registerSunderArmor() {
 				spell.DealOutcome(sim, result)
 			},
 
-			RelatedAuraArrays: war.SunderArmorAuras.ToMap(),
+			RelatedAuraArrays: warrior.SunderArmorAuras.ToMap(),
 		}
 	}
 
-	war.RegisterSpell(getSunderArmorConfig(core.SpellConfig{
+	warrior.RegisterSpell(getSunderArmorConfig(core.SpellConfig{
 		ActionID: actionId,
 		Flags:    core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
@@ -74,7 +74,7 @@ func (war *Warrior) registerSunderArmor() {
 		},
 	}, shared.OutcomeMeleeNoCrit))
 
-	war.SunderArmorDevastate = war.RegisterSpell(getSunderArmorConfig(core.SpellConfig{
+	warrior.SunderArmorDevastate = warrior.RegisterSpell(getSunderArmorConfig(core.SpellConfig{
 		ActionID: actionId.WithTag(1),
 	}, shared.OutcomeAlwaysHit))
 }

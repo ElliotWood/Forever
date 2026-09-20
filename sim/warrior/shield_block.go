@@ -8,11 +8,11 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-func (war *Warrior) registerShieldBlock() {
+func (warrior *Warrior) registerShieldBlock() {
 	actionId := core.ActionID{SpellID: 2565}
 
 	var spell *core.Spell
-	aura := war.RegisterAura(core.Aura{
+	aura := warrior.RegisterAura(core.Aura{
 		Label:     "Shield Block",
 		ActionID:  actionId,
 		Duration:  time.Second * 5,
@@ -29,7 +29,7 @@ func (war *Warrior) registerShieldBlock() {
 			},
 		})
 
-	spell = war.RegisterSpell(core.SpellConfig{
+	spell = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionId,
 		SpellSchool:    core.SpellSchoolPhysical,
 		ClassSpellMask: SpellMaskShieldBlock,
@@ -45,13 +45,13 @@ func (war *Warrior) registerShieldBlock() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: time.Second * 5,
 			},
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.PseudoStats.CanBlock && war.StanceMatches(DefensiveStance)
+			return warrior.PseudoStats.CanBlock && warrior.StanceMatches(DefensiveStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
@@ -62,8 +62,8 @@ func (war *Warrior) registerShieldBlock() {
 		RelatedSelfBuff: aura,
 	})
 
-	war.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
-		if !war.PseudoStats.CanBlock {
+	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
+		if !warrior.PseudoStats.CanBlock {
 			aura.Deactivate(sim)
 		}
 	})

@@ -6,10 +6,10 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-func (war *Warrior) registerRetaliation() {
+func (warrior *Warrior) registerRetaliation() {
 	actionID := core.ActionID{SpellID: 20230}
 
-	attackSpell := war.RegisterSpell(core.SpellConfig{
+	attackSpell := warrior.RegisterSpell(core.SpellConfig{
 		ClassSpellMask: SpellMaskRetaliationHit,
 		ActionID:       core.ActionID{SpellID: 20240},
 		SpellSchool:    core.SpellSchoolPhysical,
@@ -21,12 +21,12 @@ func (war *Warrior) registerRetaliation() {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := war.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			baseDamage := warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})
 
-	aura := war.RegisterAura(core.Aura{
+	aura := warrior.RegisterAura(core.Aura{
 		ActionID:  actionID,
 		Label:     "Retaliation",
 		Duration:  time.Second * 15,
@@ -39,7 +39,7 @@ func (war *Warrior) registerRetaliation() {
 		},
 	})
 
-	spell := war.RegisterSpell(core.SpellConfig{
+	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		DefenseType:    core.DefenseTypeMelee,
 		ClassSpellMask: SpellMaskRetaliation,
@@ -48,17 +48,17 @@ func (war *Warrior) registerRetaliation() {
 				GCD: core.GCDDefault,
 			},
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: time.Minute * 30,
 			},
 			SharedCD: core.Cooldown{
-				Timer:    war.sharedMCD,
+				Timer:    warrior.sharedMCD,
 				Duration: time.Minute * 30,
 			},
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BattleStance)
+			return warrior.StanceMatches(BattleStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
@@ -69,7 +69,7 @@ func (war *Warrior) registerRetaliation() {
 		RelatedSelfBuff: aura,
 	})
 
-	war.AddMajorCooldown(core.MajorCooldown{
+	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
 		Type:  core.CooldownTypeDPS,
 		// Require manual CD usage

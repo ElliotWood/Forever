@@ -7,12 +7,12 @@ import (
 var thunderClapRank = spellData.ThunderClap.HighestRank()
 var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
 
-func (war *Warrior) registerThunderClap() {
-	auras := war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ThunderClapAura(target, war.Talents.ImprovedThunderClap)
+func (warrior *Warrior) registerThunderClap() {
+	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		return core.ThunderClapAura(target, warrior.Talents.ImprovedThunderClap)
 	})
 
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: thunderClapRank.SpellID},
 		SpellSchool: thunderClapRank.SpellSchool,
 		// Thunder Clap is Physical but Magic in SpellCategories: it rolls on the spell hit table
@@ -33,7 +33,7 @@ func (war *Warrior) registerThunderClap() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: thunderClapRank.Cooldown,
 			},
 		},
@@ -43,7 +43,7 @@ func (war *Warrior) registerThunderClap() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			results := spell.CalcCleaveDamage(sim, target, 4, thunderClapBaseDamage, spell.OutcomeMagicHitAndCrit)
-			war.CastNormalizedSweepingStrikesAttack(results, sim)
+			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 
 			for _, result := range results {
 				if result.Landed() {

@@ -9,16 +9,16 @@ import (
 var overpowerRank = spellData.Overpower.BySpellID(11585)
 var overpowerBaseDamage, _ = overpowerRank.Direct.Range()
 
-func (war *Warrior) registerOverpower() {
+func (warrior *Warrior) registerOverpower() {
 	actionID := core.ActionID{SpellID: overpowerRank.SpellID}
 
-	aura := war.RegisterAura(core.Aura{
+	aura := warrior.RegisterAura(core.Aura{
 		ActionID: actionID,
 		Label:    "Overpower Aura",
 		Duration: time.Second * 5,
 	})
 
-	war.MakeProcTriggerAura(core.ProcTrigger{
+	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Overpower - Trigger",
 		TriggerImmediately: true,
 		Outcome:            core.OutcomeDodge,
@@ -28,7 +28,7 @@ func (war *Warrior) registerOverpower() {
 		},
 	})
 
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
@@ -46,7 +46,7 @@ func (war *Warrior) registerOverpower() {
 				GCD: overpowerRank.GCD,
 			},
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: overpowerRank.Cooldown,
 			},
 			IgnoreHaste: true,
@@ -56,7 +56,7 @@ func (war *Warrior) registerOverpower() {
 		ThreatMultiplier: 0.75,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BattleStance)
+			return warrior.StanceMatches(BattleStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

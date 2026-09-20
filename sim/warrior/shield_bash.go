@@ -7,10 +7,10 @@ import (
 
 var shieldBashRank = shared.WithSpellDataFlatThreat(spellData.ShieldBash, 192).HighestRank()
 
-func (war *Warrior) registerShieldBash() {
+func (warrior *Warrior) registerShieldBash() {
 	actionID := core.ActionID{SpellID: shieldBashRank.SpellID}
 
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskShieldBash,
 		SpellSchool:    core.SpellSchoolPhysical,
@@ -29,7 +29,7 @@ func (war *Warrior) registerShieldBash() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: shieldBashRank.Cooldown,
 			},
 		},
@@ -39,7 +39,7 @@ func (war *Warrior) registerShieldBash() {
 		FlatThreatBonus:  shieldBashRank.FlatThreatBonus,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.PseudoStats.CanBlock && war.StanceMatches(DefensiveStance|BattleStance)
+			return warrior.PseudoStats.CanBlock && warrior.StanceMatches(DefensiveStance|BattleStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

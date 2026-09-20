@@ -6,11 +6,11 @@ import (
 
 var executeRank = spellData.Execute.HighestRank()
 
-func (war *Warrior) registerExecute() {
+func (warrior *Warrior) registerExecute() {
 
 	var rageMetrics *core.ResourceMetrics
 
-	spell := war.RegisterSpell(core.SpellConfig{
+	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: executeRank.SpellID},
 		SpellSchool:    executeRank.SpellSchool,
 		DefenseType:    executeRank.DefenseType,
@@ -34,16 +34,16 @@ func (war *Warrior) registerExecute() {
 		ThreatMultiplier: 1.25,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance|BattleStance) && sim.IsExecutePhase20()
+			return warrior.StanceMatches(BerserkerStance|BattleStance) && sim.IsExecutePhase20()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			extraRage := spell.Unit.CurrentRage()
-			maxRage := war.MaximumRage()
+			maxRage := warrior.MaximumRage()
 			if extraRage > maxRage-spell.Cost.GetCurrentCost() {
 				extraRage = maxRage - spell.Cost.GetCurrentCost()
 			}
-			war.SpendRage(sim, extraRage, rageMetrics)
+			warrior.SpendRage(sim, extraRage, rageMetrics)
 			rageMetrics.Events--
 
 			baseDamage := 925 + 21*extraRage

@@ -8,33 +8,33 @@ import (
 
 var interceptRank = spellData.Intercept.HighestRank()
 
-func (war *Warrior) registerIntercept() {
+func (warrior *Warrior) registerIntercept() {
 	actionID := core.ActionID{SpellID: interceptRank.SpellID}
 	chargeMinRange := interceptRank.MinRange
 
 	var spell *core.Spell
 	var interceptTarget *core.Unit
 
-	aura := war.RegisterAura(core.Aura{
+	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Intercept",
 		ActionID: actionID,
 		Duration: 15 * time.Second,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			war.MultiplyMovementSpeed(sim, 3.0)
+			warrior.MultiplyMovementSpeed(sim, 3.0)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			war.MultiplyMovementSpeed(sim, 1.0/3.0)
+			warrior.MultiplyMovementSpeed(sim, 1.0/3.0)
 			spell.CalcAndDealDamage(sim, interceptTarget, 105, spell.OutcomeAlwaysHit)
 		},
 	})
 
-	war.RegisterMovementCallback(func(sim *core.Simulation, position float64, kind core.MovementUpdateType) {
+	warrior.RegisterMovementCallback(func(sim *core.Simulation, position float64, kind core.MovementUpdateType) {
 		if kind == core.MovementEnd && aura.IsActive() {
 			aura.Deactivate(sim)
 		}
 	})
 
-	spell = war.RegisterSpell(core.SpellConfig{
+	spell = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		SpellSchool:    core.SpellSchoolPhysical,
 		Flags:          core.SpellFlagAPL,
@@ -44,20 +44,20 @@ func (war *Warrior) registerIntercept() {
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: interceptRank.Cooldown,
 			},
 			IgnoreHaste: true,
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
+			return warrior.StanceMatches(BerserkerStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			interceptTarget = target
 			aura.Activate(sim)
-			war.MoveTo(chargeMinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
+			warrior.MoveTo(chargeMinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
 		},
 	})
 }

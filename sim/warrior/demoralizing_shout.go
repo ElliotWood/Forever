@@ -9,15 +9,15 @@ var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.Demoralizin
 
 // TODO: Manual review needed -- this was modelled during the Forever port, not carried
 // over unchanged, so its numbers and shape want checking against the client.
-func (war *Warrior) registerDemoralizingShout() {
-	war.DemoralizingShoutAuras = war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+func (warrior *Warrior) registerDemoralizingShout() {
+	warrior.DemoralizingShoutAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		// TODO: Forever drops Improved Demoralizing Shout; the core aura still takes a
 		// rank for it, so it is pinned to 0 until we know whether the effect moved onto
 		// another talent or was removed outright.
-		return core.DemoralizingShoutAura(target, war.Talents.BoomingVoice, 0)
+		return core.DemoralizingShoutAura(target, warrior.Talents.BoomingVoice, 0)
 	})
 
-	war.DemoralizingShout = war.RegisterSpell(core.SpellConfig{
+	warrior.DemoralizingShout = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: demoralizingShoutRank.SpellID},
 		SpellSchool:    demoralizingShoutRank.SpellSchool,
 		DefenseType:    demoralizingShoutRank.DefenseType,
@@ -42,11 +42,11 @@ func (war *Warrior) registerDemoralizingShout() {
 			for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
 				result := spell.CalcAndDealOutcome(sim, aoeTarget, spell.OutcomeMagicHit)
 				if result.Landed() {
-					war.DemoralizingShoutAuras.Get(aoeTarget).Activate(sim)
+					warrior.DemoralizingShoutAuras.Get(aoeTarget).Activate(sim)
 				}
 			}
 		},
 
-		RelatedAuraArrays: war.DemoralizingShoutAuras.ToMap(),
+		RelatedAuraArrays: warrior.DemoralizingShoutAuras.ToMap(),
 	})
 }
