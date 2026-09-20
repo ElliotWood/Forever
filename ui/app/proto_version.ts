@@ -50,6 +50,10 @@ const TBC_CONVERSION_MAP: ProtoConversionMap<IndividualSimSettings> = new Map([
 	// are renamed before parsing by `parseLegacySettingsJson`, so there is nothing left to convert
 	// here; the entry only stamps the version.
 	[15, (oldProto: IndividualSimSettings) => oldProto],
+	// Version 17 types the ghost-talent buff fields bool. JSON payloads are rewritten before they
+	// are parsed (`migrateRetypedBuffFields`), and a binary one carries 1 or 2, which decode as
+	// true, so this entry only stamps the version.
+	[17, (oldProto: IndividualSimSettings) => oldProto],
 ]);
 
 /**

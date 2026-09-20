@@ -1,5 +1,6 @@
 import { IndividualSimSettings } from '@generated/proto/ui';
 import i18n from '@i18n/config';
+import { migrateRetypedBuffFields } from '@sim/proto/buff_field_migration';
 import { Database } from '@sim/proto/database';
 import { parseLegacySettingsJson } from '@sim/state/legacy_settings';
 
@@ -11,7 +12,9 @@ export const JSON_IMPORTER: ImporterDefinition = {
 	onImport: async (host, data) => {
 		let proto: ReturnType<typeof IndividualSimSettings.fromJson>;
 		try {
-			proto = IndividualSimSettings.fromJson(parseLegacySettingsJson(data) as never, { ignoreUnknownFields: true });
+			const json = parseLegacySettingsJson(data);
+			migrateRetypedBuffFields(json);
+			proto = IndividualSimSettings.fromJson(json as never, { ignoreUnknownFields: true });
 		} catch {
 			throw new Error(i18n.t('import.json.error_invalid_json'));
 		}

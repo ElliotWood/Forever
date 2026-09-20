@@ -1647,6 +1647,10 @@ export class Player<SpecType extends Spec> {
 					return oldProto;
 				},
 			],
+			// v17 types the ghost-talent buff fields bool. A JSON payload is rewritten before it is
+			// parsed (`migrateRetypedBuffFields`) and a binary one decodes 1 or 2 as true, so this
+			// entry only stamps the version.
+			[17, (oldProto: PlayerProto) => oldProto],
 		]);
 
 		// Run the migration utility using the above map.

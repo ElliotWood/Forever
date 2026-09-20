@@ -1,4 +1,4 @@
-import { Race, TristateEffect } from '@generated/proto/common';
+import { Race } from '@generated/proto/common';
 import { SimHostProvider } from '@sim/context/SimHostContext';
 import { fakeHost } from '@sim/testing';
 import { renderHook } from '@testing-library/react';
@@ -34,28 +34,26 @@ describe('useSavedSettings', () => {
 		expect(entries[0].data.race).toBe(Race.RaceOrc);
 	});
 
-	// Saves written before e4d97302e6 hold a bool here, which `SavedSettings.fromJson` throws on;
-	// `useSavedData` swallows that and the entry would be gone from the panel without a word.
-	it('keeps an entry whose improvedSealOfTheCrusader is a legacy bool', () => {
-		store({ Legacy: { race: 'RaceOrc', debuffs: { improvedSealOfTheCrusader: true, misery: true } } });
+	// A save written while the field was a TristateEffect holds an enum name, which
+	// `SavedSettings.fromJson` throws on now that the field is a bool; `useSavedData` swallows that
+	// and the entry would be gone from the panel without a word.
+	it('keeps an entry whose improvedSealOfTheCrusader is a saved enum name', () => {
+		store({ Legacy: { race: 'RaceOrc', debuffs: { improvedSealOfTheCrusader: 'TristateEffectRegular', misery: true } } });
 
 		const { entries } = load();
 		expect(entries.map(entry => entry.name)).toEqual(['Legacy']);
-		expect(entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(TristateEffect.TristateEffectImproved);
+		expect(entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(true);
 		expect(entries[0].data.debuffs?.misery).toBe(true);
 	});
 
-	// The migration keys on the bool and not on truthiness: `toJson` writes an enum as its name, so
-	// coercing every truthy value the way master's `updateSavedSettings` does would turn a saved
-	// Regular into Improved.
-	it('leaves a current enum name alone', () => {
-		store({ Current: { debuffs: { improvedSealOfTheCrusader: 'TristateEffectRegular' } } });
+	it('reads the missing state as off rather than as a set buff', () => {
+		store({ Current: { debuffs: { improvedSealOfTheCrusader: 'TristateEffectMissing' } } });
 
-		expect(load().entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(TristateEffect.TristateEffectRegular);
+		expect(load().entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(false);
 	});
 
 	it('does not drop the other entries of the slot', () => {
-		store({ Legacy: { debuffs: { improvedSealOfTheCrusader: true } }, Current: { race: 'RaceOrc' } });
+		store({ Legacy: { debuffs: { improvedSealOfTheCrusader: 'TristateEffectImproved' } }, Current: { race: 'RaceOrc' } });
 
 		expect(load().entries.map(entry => entry.name)).toEqual(['Legacy', 'Current']);
 	});
