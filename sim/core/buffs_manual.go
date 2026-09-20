@@ -171,6 +171,30 @@ func driveWindfuryTotem(char *Character, _ *proto.PartyBuffs) {
 	})
 }
 
+// A shaman twisting totems keeps Grace of Air up for 9 seconds out of every 10,
+// because the air slot is holding another totem the rest of the time; a shaman
+// who is not twisting leaves it standing.
+func driveGraceOfAirTotem(char *Character, party *proto.PartyBuffs) {
+	aura := GraceOfAirTotemAura(&char.Unit, false, 0)
+
+	if !party.TotemTwisting {
+		MakePermanent(aura)
+		return
+	}
+
+	aura.Duration = time.Second * 9
+	aura.ApplyOnReset(func(aura *Aura, sim *Simulation) {
+		StartPeriodicAction(sim, PeriodicActionOptions{
+			Period:          time.Second * 10,
+			TickImmediately: true,
+			Priority:        ActionPriorityAuto,
+			OnAction: func(sim *Simulation) {
+				aura.Activate(sim)
+			},
+		})
+	})
+}
+
 // The staff's aura is worth its amounts once per Atiesh in the party.
 func driveAtieshDruid(char *Character, party *proto.PartyBuffs) {
 	MakePermanent(AtieshDruidAura(&char.Unit, false, 0, float64(party.AtieshDruid)))

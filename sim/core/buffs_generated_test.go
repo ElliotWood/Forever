@@ -317,6 +317,40 @@ func measureGeneratedBuffStats(char *Character) {
 	char.stats = char.SortAndApplyStatDependencies(char.stats).FloorGameStats()
 }
 
+// Grace of Air is the row whose uptime another field decides: with totem
+// twisting on it is 9 seconds long and re-cast every 10, and without it the
+// totem simply stands.
+func TestGeneratedGraceOfAirFollowsTotemTwisting(t *testing.T) {
+	standing := newGeneratedBuffTestCharacter()
+	applyBuffEffects(generatedBuffTestAgent{standing},
+		&proto.RaidBuffs{}, &proto.PartyBuffs{GraceOfAirTotem: true}, &proto.IndividualBuffs{})
+	standing.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+	if got := standing.stats[stats.Agility]; got != 89 {
+		t.Errorf("the totem applied %v agility, want the client's 89", got)
+	}
+	aura := standing.GetAura("Grace of Air Totem (External)")
+	if aura == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Grace of Air Totem (External)", auraLabels(standing))
+	}
+	if aura.Duration != NeverExpires {
+		t.Errorf("the totem's aura lasts %v, want it to stand for the fight", aura.Duration)
+	}
+
+	twisting := newGeneratedBuffTestCharacter()
+	applyBuffEffects(generatedBuffTestAgent{twisting}, &proto.RaidBuffs{},
+		&proto.PartyBuffs{GraceOfAirTotem: true, TotemTwisting: true}, &proto.IndividualBuffs{})
+	twisting.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+	if got := twisting.stats[stats.Agility]; got != 89 {
+		t.Errorf("the twisted totem applied %v agility, want the client's 89", got)
+	}
+	twisted := twisting.GetAura("Grace of Air Totem (External)")
+	if twisted.Duration != time.Second*9 {
+		t.Errorf("the twisted totem's aura lasts %v, want 9 seconds of every 10", twisted.Duration)
+	}
+}
+
 // Each staff in the party is worth its own copy of the aura's amounts: 11 MP5
 // per druid staff, 2 spell crit per mage one, 62 healing per priest one and
 // 33 spell damage plus 33 healing per warlock one.

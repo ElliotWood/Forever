@@ -190,9 +190,9 @@ var Manifest = []BuffSpec{
 	{
 		Field: "grace_of_air_totem", Number: 23, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "GraceOfAirTotem", Name: "Grace of Air Totem", AuraName: "Grace of Air",
-		Owner: proto.Class_ClassShaman, Category: "GraceOfAirTotem",
+		Owner: proto.Class_ClassShaman, Category: "GraceOfAirTotem", Driver: true,
 		Stats: []proto.Stat{proto.Stat_StatAgility},
-		Notes: "Enhancing Totems (16295) exists as a spell but has no node in shaman tree 1082.",
+		Notes: "Enhancing Totems (16295) exists as a spell but has no node in shaman tree 1082. Driven because totem_twisting shortens the aura to the 9 s of every 10 a twisting shaman keeps it up.",
 	},
 	{
 		Field: "windfury_totem", Number: 27, Scope: ScopeParty, Proto: ProtoBool, Kind: KindProc,

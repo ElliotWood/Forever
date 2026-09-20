@@ -322,7 +322,26 @@ func StrengthOfEarthTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Au
 // func SoeEnhancement2Pt4Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // soe_enhancement_2pt4, KindAbsent: second state of the Strength of Earth quadstate input; set-bonus spell 37223 has no SpellName row.
 
 // Grace of Air Totem - https://www.wowhead.com/forever/spell=25360
-// func GraceOfAirTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // grace_of_air_totem, KindStatFlat: hand-written constructor still present
+var GraceOfAirTotemCategory = "GraceOfAirTotem"
+
+func GraceOfAirTotemValue(talentPoints int32) float64 {
+	return 89.0
+}
+func GraceOfAirTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func GraceOfAirTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Grace of Air Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25360}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: GraceOfAirTotemDuration(talentPoints),
+		Category: GraceOfAirTotemCategory,
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.Agility, GraceOfAirTotemValue(talentPoints), false},
+		},
+	})
+}
 
 // Windfury Totem - https://www.wowhead.com/forever/spell=10610
 var WindfuryTotemCategory = "WindfuryTotem"
@@ -851,6 +870,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if party.StrengthOfEarthTotem {
 		MakePermanent(StrengthOfEarthTotemAura(&char.Unit, false, 0))
+	}
+	if party.GraceOfAirTotem {
+		driveGraceOfAirTotem(char, party)
 	}
 	if party.WindfuryTotem {
 		driveWindfuryTotem(char, party)

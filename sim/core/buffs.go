@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-	"math"
 	"slices"
 	"time"
 
@@ -169,10 +168,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(FerociousInspiration(char, partyBuffs.FerociousInspiration))
 	}
 
-	if partyBuffs.GraceOfAirTotem {
-		GraceOfAirTotemAura(char, false, partyBuffs.TotemTwisting)
-	}
-
 	if partyBuffs.TotemOfWrath > 0 {
 		MakePermanent(TotemOfWrathAura(char, partyBuffs.TotemOfWrath))
 	}
@@ -293,43 +288,6 @@ func UnleashedRageAura(char *Character, casterIdx int32, points int32) *Aura {
 //	Totems
 //
 // //////////////////////////
-var GraceOfAirTotemCategory = "GraceOfAirTotem"
-
-func GraceOfAirTotemAura(char *Character, improved bool, wfActive bool) *Aura {
-	agiBuff := 77.0
-	if improved {
-		// Truncated like the game: 77*1.15=88.55 -> 88.
-		agiBuff = math.Floor(agiBuff * 1.15)
-	}
-
-	duration := NeverExpires
-	if wfActive {
-		duration = time.Second * 9
-	}
-
-	return makeStatBuff(char, BuffConfig{
-		Label:    "Grace of Air Totem",
-		ActionID: ActionID{SpellID: 25359},
-		Stats: []StatConfig{
-			{stats.Agility, agiBuff, false},
-		},
-		Duration:          duration,
-		ExclusiveCategory: GraceOfAirTotemCategory,
-	}).ApplyOnReset(func(aura *Aura, sim *Simulation) {
-		if wfActive {
-			StartPeriodicAction(sim, PeriodicActionOptions{
-				Period:   time.Second * 10,
-				Priority: ActionPriorityAuto,
-				OnAction: func(sim *Simulation) {
-					aura.Activate(sim)
-				},
-			})
-		} else {
-			aura.Activate(sim)
-		}
-	})
-}
-
 func TotemOfWrathAura(char *Character, count int32) *Aura {
 	modValue := 3.0 * float64(count)
 
