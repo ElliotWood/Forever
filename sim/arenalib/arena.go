@@ -162,19 +162,49 @@ func Run(t *testing.T, spec Spec) {
 				break
 			}
 		}
-		found, runs, err := optimise(spec, uiDir, TalentBuild{Name: top.Build, Talents: top.Talents}, top.Gear, top.Rotation, optimiseBudget)
-		if err != nil {
-			t.Fatalf("%s: %s", spec.Dir, err)
+
+		// Climbed from every distinct build the spec has, not only its best one. A climb goes
+		// to the nearest peak, so one start reports the nearest peak to one build and calls it
+		// the answer; several starts that agree is the cheapest evidence available that the
+		// peak is not merely nearby. They share the budget rather than multiplying it.
+		starts := []TalentBuild{}
+		seen := map[string]bool{}
+		for _, result := range results {
+			if result.Gear == top.Gear && result.Rotation == top.Rotation && !seen[result.Talents] {
+				seen[result.Talents] = true
+				starts = append(starts, TalentBuild{Name: result.Build, Talents: result.Talents})
+			}
 		}
-		if found.Talents != top.Talents && !hasTalents(results, found.Talents) {
+
+		best, totalRuns := TalentBuild{}, 0
+		bestDps := top.Dps
+		for _, start := range starts {
+			found, runs, err := optimise(spec, uiDir, start, top.Gear, top.Rotation, optimiseBudget/len(starts))
+			totalRuns += runs
+			if err != nil {
+				t.Fatalf("%s: %s", spec.Dir, err)
+			}
+			if hasTalents(results, found.Talents) {
+				continue
+			}
+			// Re-run at full iterations before comparing: the climb worked at survey quality,
+			// and two peaks a few DPS apart cannot be separated at that resolution.
 			row := run(spec, uiDir, found, top.Gear, top.Rotation)
+			if row.Dps > bestDps {
+				bestDps = row.Dps
+				best = found
+			}
+		}
+
+		if best.Talents != "" {
+			row := run(spec, uiDir, best, top.Gear, top.Rotation)
 			row.Optimised = true
 			results = append(results, row)
 			sort.Slice(results, func(i, j int) bool { return results[i].Dps > results[j].Dps })
-			t.Logf("%s: %d runs of search moved %s from %.1f to %.1f dps (%s)",
-				spec.Dir, runs, top.Build, top.Dps, row.Dps, found.Talents)
+			t.Logf("%s: %d runs from %d starts moved %.1f to %.1f dps (%s)",
+				spec.Dir, totalRuns, len(starts), top.Dps, row.Dps, best.Talents)
 		} else {
-			t.Logf("%s: %d runs of search found nothing better than %s", spec.Dir, runs, top.Build)
+			t.Logf("%s: %d runs from %d starts found nothing better than %s", spec.Dir, totalRuns, len(starts), top.Build)
 		}
 	}
 

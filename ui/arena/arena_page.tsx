@@ -74,23 +74,32 @@ const bestPerSpec = (from: Array<Build>): Array<Build> => {
 };
 
 /**
- * What the search was worth, per spec.
+ * What the search was worth, on each row it appears.
  *
  * The leaderboard is searched builds top to bottom, which on its own hides the only question
  * anyone actually has - was the community build already right? The gain is that answer, and
  * for most specs it is not small.
  *
- * Matched on the exact gear set and rotation the search ran against, not merely a similar
- * one. A gain measured across two gear sets would be part talent search and part item level,
- * which is the confusion this whole column exists to remove.
+ * Matched on the exact gear set and rotation, never across two of them. A gain measured
+ * across gear sets would be part talent search and part item level, which is the confusion
+ * the item level column exists to remove.
  */
+const key = (build: Build) => `${build.spec}|${build.gear}|${build.rotation}`;
+
 const searchGains = (): Map<string, number> => {
+	// Best written build per setup, so a searched row is measured against the strongest thing
+	// a person put on file for that exact gear and rotation rather than whichever turned up
+	// first. Keyed per row, not per spec: a searched build is re-run on every gear set the
+	// spec has, and what those talents were worth is not the same number on each of them.
+	const written = new Map<string, number>();
+	for (const build of builds.filter(build => !build.optimised)) {
+		written.set(key(build), Math.max(written.get(key(build)) ?? 0, build.dps));
+	}
+
 	const gains = new Map<string, number>();
 	for (const searched of builds.filter(build => build.optimised)) {
-		const written = builds.find(
-			build => !build.optimised && build.spec === searched.spec && build.gear === searched.gear && build.rotation === searched.rotation,
-		);
-		if (written && written.dps > 0) gains.set(searched.spec, searched.dps / written.dps - 1);
+		const base = written.get(key(searched));
+		if (base) gains.set(`${key(searched)}|${searched.talents}`, searched.dps / base - 1);
 	}
 	return gains;
 };
@@ -197,19 +206,22 @@ export class ArenaPage {
 							is a gap in the data, not a finding about the spec.
 						</li>
 						<li>
-							<strong>Talents are searched, because they cannot be enumerated.</strong> A warrior has <strong>367,585,685,729,170,421</strong>{' '}
-							legal ways to spend 51 points - counted from the trees themselves, and that is generous, since it ignores the prerequisite arrows.
-							At a second a build that is eleven billion years, so "try every configuration" is not a big job, it is an impossible one. Instead
-							each spec's best known build is used as a starting point and improved one point at a time: price every point that could come out,
-							price every point that could go in, make the best trade, repeat until no single move helps. Rows marked{' '}
+							<strong>Talents are searched, because they cannot be enumerated.</strong> A warrior has <strong>89,776,730,783,606,094</strong>{' '}
+							builds it could actually spend - counted from the trees, enforcing rank caps, row gates and the prerequisite arrows. Legality is not
+							what stands in the way: the arrows cut the count about fourfold, and what is left is two billion years of simulating at a second a
+							build. Nor does throwing out the builds nobody would run. Count only the all-or-nothing ones, every talent maxed or untouched, which
+							is roughly the shape of an optimal build, and a warrior still has 57,341,667 and a mage 1,261,940,421 - eighteen months and forty
+							years. So each spec's best known build is improved one point at a time instead: price every point that could come out, price every
+							point that could go in, make the best trade, repeat until no single move helps. Rows marked{' '}
 							<span className="arena-found">found by search</span> came out of that, and hovering one shows its talent string.
 						</li>
 						<li>
-							<strong>What that does and does not promise.</strong> It finds the best build near the one it started from, not the best build that
-							exists - a different starting point could climb a different hill. It also only knows what this sim models: a talent flagged as
-							unimplemented is worth zero here, so the search will happily empty it, and that is a fact about the sim rather than advice. Every
-							build it reaches is checked against the game's own rules first - rank caps, row gates and prerequisites - so nothing in this table
-							is a build you could not actually spend.
+							<strong>What that does and does not promise.</strong> It climbs from every distinct build the spec has on file rather than only its
+							best one, because a climb goes to the nearest peak and one start reports the nearest peak to one build. Several starts agreeing is
+							the cheapest evidence available that the peak is not merely nearby - it is still not proof that nothing higher exists somewhere else
+							in the tree. It also only knows what this sim models: a talent flagged as unimplemented is worth zero here, so the search will
+							happily empty it, and that is a fact about the sim rather than advice. Every build it reaches is checked against the game's own
+							rules first - rank caps, row gates and prerequisites - so nothing in this table is a build you could not actually spend.
 						</li>
 						<li>
 							<strong>A build that does not spend 51 points says so.</strong> One does: the mage Frost community build spends 49, so every Frost
@@ -316,10 +328,15 @@ export class ArenaPage {
 						{build.optimised ? (
 							<span
 								className="arena-found"
-								attributes={{ title: `${build.talents}\n\nSearched out from the best build anyone had written down for this spec.` }}>
+								attributes={{
+									title: `${build.talents}\n\nClimbed from every distinct build this spec has on file for this gear and rotation.`,
+								}}>
 								found by search
-								{gains.has(build.spec)
-									? ` ${formatToPercent(gains.get(build.spec)! * 100, { maximumFractionDigits: 1, signDisplay: 'always' })}`
+								{gains.has(`${key(build)}|${build.talents}`)
+									? ` ${formatToPercent(gains.get(`${key(build)}|${build.talents}`)! * 100, {
+											maximumFractionDigits: 1,
+											signDisplay: 'always',
+									  })}`
 									: ''}
 							</span>
 						) : (

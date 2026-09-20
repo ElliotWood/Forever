@@ -2,11 +2,17 @@ package arenalib
 
 // Searching the talent trees, because enumerating them is not a thing anyone can do.
 //
-// There are 367,585,685,729,170,421 valid 51 point warrior builds - counted from the trees
-// themselves, respecting rank caps and row gates and generously ignoring prerequisite
-// arrows. At one second a run that is eleven billion years. "Try every configuration" is not
-// a large job, it is an impossible one, and the honest response is not to run a subset and
-// call it the answer.
+// There are 89,776,730,783,606,094 builds a warrior could actually spend - counted by
+// tools/talents/count_builds.py from the trees themselves, enforcing rank caps, row gates
+// and the prerequisite arrows. Legality matters and does not rescue this: it cuts the count
+// about fourfold from the same walk without the arrows, leaving two billion years at a
+// second a build.
+//
+// Nor does restricting it to builds anyone would run. Count only the all-or-nothing ones,
+// every talent maxed or untouched, which is roughly what an optimal build looks like, and a
+// warrior still has 57,341,667 of them and a mage 1,261,940,421. Eighteen months and forty
+// years respectively. "Try every configuration" is not a large job, it is an impossible one,
+// and the honest response is not to run a subset and call it the answer.
 //
 // So: climb instead. Start from a build somebody already believed in, and repeatedly ask
 // what one point is worth. Take the point whose removal costs least, give it to the talent
