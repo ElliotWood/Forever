@@ -2,13 +2,14 @@ package warlock
 
 var curseOfRecklessnessRank = spellData.CurseOfRecklessness.HighestRank()
 
-// TODO: To be implemented. Port the TBC Curse Of Recklessness implementation below; not yet verified against the Forever client.
+// TODO: To be implemented. The body below builds the spell around the generated
+// aura and has not been checked against the client past the aura itself.
 func (warlock *Warlock) registerCurseOfRecklessness() {
 	panic("To be implemented")
 
 	// The TBC implementation, kept for the port:
 	// warlock.CurseOfRecklessnessAuras = warlock.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-	// 	return core.CurseOfRecklessnessAura(target, 1)
+	// 	return core.CurseOfRecklessnessAura(target, true, 0)
 	// })
 	// warlock.CurseOfRecklessness = warlock.RegisterSpell(core.SpellConfig{
 	// 	ActionID:       core.ActionID{SpellID: curseOfRecklessnessRank.SpellID},
