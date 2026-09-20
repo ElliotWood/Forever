@@ -50,8 +50,8 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestP1FeralTank-Phase1-StatWeights-Default"
  value: {
-  weights: 0.78289
-  weights: -0.72282
+  weights: 0.37031
+  weights: 0.60529
   weights: 0
   weights: 0
   weights: 0
@@ -67,7 +67,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.37457
+  weights: 0.18516
   weights: 0
   weights: 0
   weights: 0
@@ -76,12 +76,12 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.04107
+  weights: -0.07523
   weights: 0
-  weights: 0.14842
+  weights: 0.02273
   weights: 0
   weights: 0
-  weights: -0.95668
+  weights: -1.42724
   weights: 0
   weights: 0
   weights: 0
@@ -99,65 +99,65 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-CenarionRaiment"
  value: {
-  dps: 296.92776
-  tps: 660.99636
+  dps: 267.82821
+  tps: 558.73885
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 361.26721
-  tps: 825.79621
+  dps: 312.88993
+  tps: 656.02099
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-FeralheartRaiment"
  value: {
-  dps: 346.95882
-  tps: 785.31721
+  dps: 301.62404
+  tps: 626.70026
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-FieldMarshal'sSanctuary"
  value: {
-  dps: 393.34285
-  tps: 905.97666
+  dps: 334.9648
+  tps: 695.62179
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 361.26721
-  tps: 825.79621
+  dps: 312.88993
+  tps: 656.02099
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-StormrageRaiment"
  value: {
-  dps: 352.8458
-  tps: 803.42721
+  dps: 305.76102
+  tps: 640.23671
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-SymbolsofUnendingLife"
  value: {
-  dps: 371.8407
-  tps: 855.4562
+  dps: 325.38009
+  tps: 681.99806
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-Warlord'sSanctuary"
  value: {
-  dps: 393.34285
-  tps: 905.97666
+  dps: 334.9648
+  tps: 695.62179
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Average-Default"
  value: {
-  dps: 524.6384
-  tps: 1385.75341
-  dtps: 679.17239
+  dps: 513.40714
+  tps: 1342.96437
+  dtps: 679.24767
  }
 }
 dps_results: {
@@ -247,8 +247,8 @@ dps_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 468.75719
-  tps: 1266.83437
-  dtps: 760.64456
+  dps: 462.82466
+  tps: 1246.4004
+  dtps: 759.14256
  }
 }
