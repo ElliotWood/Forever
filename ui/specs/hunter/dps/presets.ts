@@ -52,13 +52,13 @@ export const WeaveSimple = PresetUtils.makePresetSimpleRotation('Weave', Spec.Sp
 export const BMTalents = {
 	name: 'BM',
 	data: SavedTalents.create({
-		talentsString: '522002005150122431051-0505201205',
+		talentsString: '',
 	}),
 };
 export const SVTalents = {
 	name: 'SV',
 	data: SavedTalents.create({
-		talentsString: '502-0550201205-333200022003223005103',
+		talentsString: '',
 	}),
 };
 

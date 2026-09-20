@@ -24,7 +24,7 @@ export const ROTATION_DEFAULT = PresetUtils.makePresetAPLRotation('APL', Default
 export const StandardTalents = {
 	name: 'Standard',
 	data: SavedTalents.create({
-		talentsString: '-503032132322105301251-05503301',
+		talentsString: '',
 	}),
 };
 
@@ -32,7 +32,7 @@ export const StandardTalents = {
 export const DemoRoarTalents = {
 	name: 'DemoRoar',
 	data: SavedTalents.create({
-		talentsString: '-553032132322105301051-05503001',
+		talentsString: '',
 	}),
 };
 

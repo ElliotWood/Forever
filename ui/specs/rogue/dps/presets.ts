@@ -17,7 +17,7 @@ export const SINSITER_APL = PresetUtils.makePresetAPLRotation('Rogue (Check Vari
 export const Talents = {
 	name: 'Combat Swords',
 	data: SavedTalents.create({
-		talentsString: '0053201252-023305200005015002321151',
+		talentsString: '',
 	}),
 };
 

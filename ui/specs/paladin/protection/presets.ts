@@ -32,7 +32,7 @@ export const APL_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.Sp
 export const DefaultTalents = {
 	name: 'Default',
 	data: SavedTalents.create({
-		talentsString: '-0530513050000142521051-052050003003',
+		talentsString: '',
 	}),
 };
 

@@ -27,35 +27,35 @@ export const DestroFireAPL = PresetUtils.makePresetAPLRotation('Destruction (Fir
 export const TalentsAffliction = {
 	name: 'Affliction',
 	data: SavedTalents.create({
-		talentsString: '05022221112351055003--50500051220001',
+		talentsString: '',
 	}),
 };
 
 export const TalentsDemoRuin = {
 	name: 'Demo/Ruin',
 	data: SavedTalents.create({
-		talentsString: '01-205003213305010150134-50500251020001',
+		talentsString: '',
 	}),
 };
 
 export const TalentsDemoFelguard = {
 	name: 'Demonology Felguard',
 	data: SavedTalents.create({
-		talentsString: '01-2050030133250101501351-5050005112',
+		talentsString: '',
 	}),
 };
 
 export const TalentsDestroNightfall = {
 	name: 'Destro/Nightfall',
 	data: SavedTalents.create({
-		talentsString: '150222201023--505020510200510531051',
+		talentsString: '',
 	}),
 };
 
 export const TalentsDestruction = {
 	name: 'Destruction',
 	data: SavedTalents.create({
-		talentsString: '-20500301332101-50500051220051053105',
+		talentsString: '',
 	}),
 };
 

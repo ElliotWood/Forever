@@ -20,21 +20,21 @@ export const APL_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.Sp
 export const DefaultTalents = {
 	name: 'Default',
 	data: SavedTalents.create({
-		talentsString: '5-053201-0523005120033125331051',
+		talentsString: '',
 	}),
 };
 
 export const NoKingsTalents = {
 	name: 'No Kings',
 	data: SavedTalents.create({
-		talentsString: '5-0532-0523005130033125331051',
+		talentsString: '',
 	}),
 };
 
 export const ImpMightTalents = {
 	name: 'Imp Might',
 	data: SavedTalents.create({
-		talentsString: '5-053201-5023005120033125331051',
+		talentsString: '',
 	}),
 };
 

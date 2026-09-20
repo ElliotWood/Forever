@@ -14,14 +14,14 @@ import DefaultApl from './apls/default.apl.json';
 export const StandardTalents = {
 	name: 'Standard',
 	data: SavedTalents.create({
-		talentsString: '-503032132322105301251-05503301',
+		talentsString: '',
 	}),
 };
 
 export const MonocatTalents = {
 	name: 'Monocat',
 	data: SavedTalents.create({
-		talentsString: '-553002132322105301051-05503301',
+		talentsString: '',
 	}),
 };
 

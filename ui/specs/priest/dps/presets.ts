@@ -13,7 +13,7 @@ export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Defaul
 export const StandardTalents = {
 	name: 'Shadow',
 	data: SavedTalents.create({
-		talentsString: '500230013--503250510240103051451',
+		talentsString: '',
 	}),
 };
 

@@ -18,7 +18,7 @@ export const ROTATION_DEFAULT = PresetUtils.makePresetAPLRotation('Generic', Gen
 export const DefaultTalents = {
 	name: 'Default',
 	data: SavedTalents.create({
-		talentsString: '35000301302-03-0055511033001101501351',
+		talentsString: '',
 	}),
 };
 

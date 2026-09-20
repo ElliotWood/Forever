@@ -13,21 +13,21 @@ export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Defaul
 export const SubRestoIWT = {
 	name: 'Sub-Restoration IWT',
 	data: SavedTalents.create({
-		talentsString: '03-500502210501133531151-50005301',
+		talentsString: '',
 	}),
 };
 
 export const SubRestoILS = {
 	name: 'Sub-Restoration ILS',
 	data: SavedTalents.create({
-		talentsString: '03-500503210500133531151-50005301',
+		talentsString: '',
 	}),
 };
 
 export const SubEle = {
 	name: 'Sub-Elemental',
 	data: SavedTalents.create({
-		talentsString: '250031501-500503210500133531151',
+		talentsString: '',
 	}),
 };
 

@@ -78,7 +78,7 @@ export const SIMPLE_ARMS_DEFAULT_ROTATION = PresetUtils.makePresetSimpleRotation
 export const FuryTalents = {
 	name: 'Fury',
 	data: SavedTalents.create({
-		talentsString: '3400502130201-05050005505012050115',
+		talentsString: '',
 	}),
 	...FURY_PRESET_OPTIONS,
 };
@@ -86,7 +86,7 @@ export const FuryTalents = {
 export const ArmsTalents = {
 	name: 'Arms',
 	data: SavedTalents.create({
-		talentsString: '32005011352010500221-0550000500521203',
+		talentsString: '',
 	}),
 	...ARMS_PRESET_OPTIONS,
 };
@@ -94,7 +94,7 @@ export const ArmsTalents = {
 export const ArmsKebabTalents = {
 	name: 'Arms - Kebab',
 	data: SavedTalents.create({
-		talentsString: '34005021302010510321-0550000520501203',
+		talentsString: '',
 	}),
 	...FURY_PRESET_OPTIONS,
 };
