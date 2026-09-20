@@ -1,4 +1,4 @@
-import { Faction, Stat } from '@generated/proto/common';
+import { Class, Faction, Stat } from '@generated/proto/common';
 import { Player } from '@sim/player/player';
 import { ActionId } from '@sim/proto/action_id';
 import type { IndividualSimHost } from '@sim/sim_host';
@@ -15,6 +15,8 @@ export interface ActionInputConfig<T> {
 
 export interface StatOption {
 	stats: Array<Stat>;
+	// The class that casts this buff, where one class owns it. Set by the generated buff rows.
+	ownerClass?: Class;
 }
 
 export interface ItemStatOption<T> extends StatOption {
@@ -58,4 +60,16 @@ export function relevantStatOptions<T, OptionsType extends ItemStatOptions<T> | 
 				listed(individualConfig.includeBuffDebuffInputs, option),
 		)
 		.filter(option => !listed(individualConfig.excludeBuffDebuffInputs, option));
+}
+
+// A class never buffs itself with its own buff, so on that class's settings tab the row reads
+// "(External)": an outside caster is the only source. Every other option comes back as the same
+// object, so include / exclude lists that name a config keep matching it by reference.
+export function applyOwnerClassLabels(options: RenderableStatOptions[], player: Player<any>): RenderableStatOptions[] {
+	const playerClass = player.getClass();
+	return options.map(option => {
+		const label = option.config.label;
+		if (option.ownerClass !== playerClass || typeof label !== 'string') return option;
+		return { ...option, config: { ...option.config, label: `${label} (External)` } } as RenderableStatOptions;
+	});
 }

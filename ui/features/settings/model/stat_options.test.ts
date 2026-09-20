@@ -1,9 +1,10 @@
-import { Stat } from '@generated/proto/common';
+import { Class, Stat } from '@generated/proto/common';
+import type { Player } from '@sim/player/player';
 import { UnitStat } from '@sim/proto/stats';
 import { fakeHost } from '@sim/testing';
 import { describe, expect, it } from 'vitest';
 
-import { type PickerStatOptions, relevantStatOptions } from './stat_options';
+import { applyOwnerClassLabels, type PickerStatOptions, relevantStatOptions, type RenderableStatOptions } from './stat_options';
 
 const option = (stats: Array<Stat>) => ({ config: { label: stats.join('/') }, stats }) as unknown as PickerStatOptions;
 
@@ -44,5 +45,39 @@ describe('relevantStatOptions', () => {
 			host({ epStats: [Stat.StatMP5], include: [fortitude.config], exclude: [manaTide.config, bloodlust.config] }),
 		);
 		expect(shown).toEqual([manaSpring, fortitude]);
+	});
+});
+
+const ownedOption = (label: string, ownerClass?: Class) => ({ config: { label }, stats: [], ownerClass }) as unknown as RenderableStatOptions;
+const playerOf = (playerClass: Class) => ({ getClass: () => playerClass }) as unknown as Player<any>;
+
+const battleShout = ownedOption('Battle Shout', Class.ClassWarrior);
+const arcaneBrilliance = ownedOption('Arcane Brilliance', Class.ClassMage);
+const giftOfArthas = ownedOption('Gift of Arthas');
+
+describe('applyOwnerClassLabels', () => {
+	it('marks the buffs the player casts itself as external, and returns every other row untouched', () => {
+		const shown = applyOwnerClassLabels([battleShout, arcaneBrilliance, giftOfArthas], playerOf(Class.ClassWarrior));
+
+		expect(shown.map(option => option.config.label)).toEqual(['Battle Shout (External)', 'Arcane Brilliance', 'Gift of Arthas']);
+		expect(shown[1]).toBe(arcaneBrilliance);
+		expect(shown[2]).toBe(giftOfArthas);
+	});
+
+	it('copies the relabelled row instead of renaming the shared config', () => {
+		const shown = applyOwnerClassLabels([battleShout], playerOf(Class.ClassWarrior));
+
+		expect(shown[0]).not.toBe(battleShout);
+		expect(shown[0].config).not.toBe(battleShout.config);
+		expect(battleShout.config.label).toBe('Battle Shout');
+	});
+
+	it('runs after relevantStatOptions, so a spec excluding a row by its config still drops it', () => {
+		const shown = applyOwnerClassLabels(
+			relevantStatOptions([battleShout, arcaneBrilliance], host({ exclude: [battleShout.config] })),
+			playerOf(Class.ClassWarrior),
+		);
+
+		expect(shown.map(option => option.config.label)).toEqual(['Arcane Brilliance']);
 	});
 });
