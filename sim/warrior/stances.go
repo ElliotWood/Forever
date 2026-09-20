@@ -107,10 +107,34 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 		&warrior.PseudoStats.DamageDealtMultiplier, 0.9,
 	)
 	if warrior.Talents.Defiance > 0 {
-		// Defiance (12792) raises the stance's threat by 5% per rank.
-		// TODO: the client also requires a shield equipped.
-		aura.AttachMultiplicativePseudoStatBuff(&warrior.PseudoStats.ThreatMultiplier,
-			spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance))
+		// Defiance (12792) raises the stance's threat by 5% per rank while a shield is equipped, so
+		// the multiplier follows both the stance and the off-hand.
+		defiance := spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance)
+		applied := false
+		apply := func(sim *core.Simulation) {
+			if !applied && warrior.PseudoStats.CanBlock {
+				warrior.PseudoStats.ThreatMultiplier *= defiance
+				applied = true
+			}
+		}
+		remove := func(sim *core.Simulation) {
+			if applied {
+				warrior.PseudoStats.ThreatMultiplier /= defiance
+				applied = false
+			}
+		}
+		aura.ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) { apply(sim) })
+		aura.ApplyOnExpire(func(aura *core.Aura, sim *core.Simulation) { remove(sim) })
+		warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
+			if !aura.IsActive() {
+				return
+			}
+			if warrior.PseudoStats.CanBlock {
+				apply(sim)
+			} else {
+				remove(sim)
+			}
+		})
 	}
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
