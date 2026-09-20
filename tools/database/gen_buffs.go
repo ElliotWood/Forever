@@ -302,7 +302,7 @@ func scanHandWrittenBuffs(coreDir string) (map[string]bool, map[string]bool, err
 
 // The proto message each scope's fields live on. The generated apply blocks read
 // the field through the type the sim compiled against, so the manifest's declared
-// type is checked against this rather than against proto/common.proto: a row
+// type is checked against this rather than against proto/buffs.proto: a row
 // whose proto field has not been retyped yet would otherwise generate code that
 // cannot compile.
 var buffScopeMessages = map[buffmanifest.BuffScope]reflect.Type{
