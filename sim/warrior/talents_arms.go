@@ -92,21 +92,26 @@ func (warrior *Warrior) registerImprovedOverpower() {
 	})
 }
 
+var angerManagementRank = spellData.AngerManagement.HighestRank()
+
+// The tooltip reads "Generates $m2 Rage every $m3 sec", and the three dummies share an aura and misc
+// value, so the rage and its period are taken by effect index.
+var angerManagementRage = angerManagementRank.Effects[1].Value
+var angerManagementPeriod = time.Duration(angerManagementRank.Effects[2].Value) * time.Second
+
 func (warrior *Warrior) registerAngerManagement() {
 	if !warrior.Talents.AngerManagement {
 		return
 	}
 
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 12296})
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: angerManagementRank.SpellID})
 
-	// TODO: Manual review needed -- Anger Management has no generated table; the client states
-	// 1 Rage every 3 seconds in combat (12296).
 	warrior.RegisterResetEffect(func(sim *core.Simulation) {
 		core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-			Period: time.Second * 3,
+			Period: angerManagementPeriod,
 			OnAction: func(sim *core.Simulation) {
 				if sim.CurrentTime > 0 {
-					warrior.AddRage(sim, 1, rageMetrics)
+					warrior.AddRage(sim, angerManagementRage, rageMetrics)
 				}
 			},
 		})
@@ -260,35 +265,39 @@ func (warrior *Warrior) registerMortalStrike() {
 	})
 }
 
-// TODO: Manual review needed -- Spearing Strike has no generated table. The client states 15 Rage,
-// a 20 second cooldown, a 1.5 second global cooldown, melee range, 40% of normalized weapon damage
-// and triple that against Giants and Dragonkin (1310222).
+var spearingStrikeRank = spellData.SpearingStrike.HighestRank()
+
+// The tooltip reads "deals $s2% weapon damage" and "an additional ${$s2*$s3}%" against Giants and
+// Dragonkin, and the effects share an aura and misc value, so both are taken by effect index.
+var spearingStrikeWeaponShare = spearingStrikeRank.Effects[1].Value / 100
+var spearingStrikeGiantMultiplier = 1 + spearingStrikeRank.Effects[2].Value
+
 func (warrior *Warrior) registerSpearingStrike() {
 	if !warrior.Talents.SpearingStrike {
 		return
 	}
 
 	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 1310222},
-		SpellSchool:    core.SpellSchoolPhysical,
-		DefenseType:    core.DefenseTypeMelee,
+		ActionID:       core.ActionID{SpellID: spearingStrikeRank.SpellID},
+		SpellSchool:    spearingStrikeRank.SpellSchool,
+		DefenseType:    spearingStrikeRank.DefenseType,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskSpearingStrike,
-		MaxRange:       core.MaxMeleeRange,
+		MaxRange:       spearingStrikeRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   15,
+			Cost:   spearingStrikeRank.Cost,
 			Refund: 0.8,
 		},
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: spearingStrikeRank.GCD,
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: time.Second * 20,
+				Duration: spearingStrikeRank.Cooldown,
 			},
 			IgnoreHaste: true,
 		},
@@ -297,9 +306,9 @@ func (warrior *Warrior) registerSpearingStrike() {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := 0.4 * spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+			baseDamage := spearingStrikeWeaponShare * spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
 			if target.MobType == proto.MobType_MobTypeGiant || target.MobType == proto.MobType_MobTypeDragonkin {
-				baseDamage *= 3
+				baseDamage *= spearingStrikeGiantMultiplier
 			}
 
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
@@ -454,9 +463,7 @@ func (warrior *Warrior) registerImprovedSlam() {
 	})
 }
 
-// TODO: Manual review needed -- Sweeping Strikes has no generated table; the client states 30 Rage,
-// a 30 second cooldown, 5 charges over 20 seconds and Battle Stance only (12292).
-const sweepingStrikesCharges = 5
+var sweepingStrikesRank = spellData.SweepingStrikes.HighestRank()
 
 func (warrior *Warrior) registerSweepingStrikes() {
 	if !warrior.Talents.SweepingStrikes {
@@ -502,7 +509,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 		Name:               "Sweeping Strikes",
 		ActionID:           actionID,
 		MetricsActionID:    actionID,
-		Duration:           time.Second * 20,
+		Duration:           sweepingStrikesRank.Duration,
 		Callback:           core.CallbackOnSpellHitDealt,
 		ProcMask:           core.ProcMaskMelee,
 		Outcome:            core.OutcomeLanded,
@@ -528,7 +535,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 			warrior.SweepingStrikesAura.RemoveStack(sim)
 		},
 	})
-	warrior.SweepingStrikesAura.MaxStacks = sweepingStrikesCharges
+	warrior.SweepingStrikesAura.MaxStacks = sweepingStrikesRank.ProcCharges
 
 	ssCD := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
@@ -536,12 +543,12 @@ func (warrior *Warrior) registerSweepingStrikes() {
 		SpellSchool:    core.SpellSchoolPhysical,
 
 		RageCost: core.RageCostOptions{
-			Cost: 30,
+			Cost: sweepingStrikesRank.Cost,
 		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: time.Second * 30,
+				Duration: sweepingStrikesRank.Cooldown,
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
@@ -551,7 +558,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 			spell.RelatedSelfBuff.Activate(sim)
-			warrior.SweepingStrikesAura.SetStacks(sim, sweepingStrikesCharges)
+			warrior.SweepingStrikesAura.SetStacks(sim, sweepingStrikesRank.ProcCharges)
 		},
 
 		RelatedSelfBuff: warrior.SweepingStrikesAura,

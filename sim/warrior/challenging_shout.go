@@ -1,21 +1,14 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 1161 states a 5 rage cost, a 10 minute cooldown and a
-// 6 second taunt, and states no threat amount.
-const (
-	challengingShoutRageCost int32 = 5
-	challengingShoutCooldown       = time.Minute * 10
-)
+var challengingShoutRank = spellData.ChallengingShout.HighestRank()
 
 func (warrior *Warrior) registerChallengingShout() {
 	warrior.ChallengingShout = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 1161},
+		ActionID:       core.ActionID{SpellID: challengingShoutRank.SpellID},
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMagic,
 		ProcMask:       core.ProcMaskEmpty,
@@ -23,16 +16,16 @@ func (warrior *Warrior) registerChallengingShout() {
 		ClassSpellMask: SpellMaskChallengingShout,
 
 		RageCost: core.RageCostOptions{
-			Cost: challengingShoutRageCost,
+			Cost: challengingShoutRank.Cost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: challengingShoutRank.GCD,
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: challengingShoutCooldown,
+				Duration: challengingShoutRank.Cooldown,
 			},
 		},
 

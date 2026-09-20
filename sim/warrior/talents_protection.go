@@ -94,12 +94,14 @@ func (warrior *Warrior) registerToughness() {
 	warrior.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness))
 }
 
+var lastStandRank = spellData.LastStand.HighestRank()
+
 func (warrior *Warrior) registerLastStand() {
 	if !warrior.Talents.LastStand {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 12975}
+	actionID := core.ActionID{SpellID: lastStandRank.SpellID}
 	healthMetrics := warrior.NewHealthMetrics(actionID)
 
 	var bonusHealth float64
@@ -124,9 +126,8 @@ func (warrior *Warrior) registerLastStand() {
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer: warrior.NewTimer(),
-				// TODO: Manual review needed -- spell 12975 has a 3 minute cooldown.
-				Duration: time.Minute * 3,
+				Timer:    warrior.NewTimer(),
+				Duration: lastStandRank.Cooldown,
 			},
 		},
 
@@ -171,13 +172,15 @@ func (warrior *Warrior) registerImprovedShieldWall() {
 	})
 }
 
+var concussionBlowRank = spellData.ConcussionBlow.HighestRank()
+
 func (warrior *Warrior) registerConcussionBlow() {
 	if !warrior.Talents.ConcussionBlow {
 		return
 	}
 
 	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 12809},
+		ActionID:       core.ActionID{SpellID: concussionBlowRank.SpellID},
 		ClassSpellMask: SpellMaskConcussionBlow,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
@@ -186,8 +189,7 @@ func (warrior *Warrior) registerConcussionBlow() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			// TODO: Manual review needed -- spell 12809 costs 10 Rage.
-			Cost:   10,
+			Cost:   concussionBlowRank.Cost,
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -196,9 +198,8 @@ func (warrior *Warrior) registerConcussionBlow() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer: warrior.NewTimer(),
-				// TODO: Manual review needed -- spell 12809 has a 45 second cooldown.
-				Duration: time.Second * 45,
+				Timer:    warrior.NewTimer(),
+				Duration: concussionBlowRank.Cooldown,
 			},
 		},
 

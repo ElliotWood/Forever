@@ -1,13 +1,13 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
+var retaliationRank = spellData.Retaliation.HighestRank()
+
 func (warrior *Warrior) registerRetaliation() {
-	actionID := core.ActionID{SpellID: 20230}
+	actionID := core.ActionID{SpellID: retaliationRank.SpellID}
 
 	attackSpell := warrior.RegisterSpell(core.SpellConfig{
 		ClassSpellMask: SpellMaskRetaliationHit,
@@ -27,11 +27,10 @@ func (warrior *Warrior) registerRetaliation() {
 	})
 
 	aura := warrior.RegisterAura(core.Aura{
-		ActionID: actionID,
-		Label:    "Retaliation",
-		// TODO: Manual review needed -- spell 20230 states a 15 second duration and 30 charges.
-		Duration:  time.Second * 15,
-		MaxStacks: 30,
+		ActionID:  actionID,
+		Label:     "Retaliation",
+		Duration:  retaliationRank.Duration,
+		MaxStacks: retaliationRank.ProcCharges,
 		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if spell.ProcMask.Matches(core.ProcMaskMelee) && result.Landed() && result.Damage > 0 {
 				attackSpell.Cast(sim, spell.Unit)
@@ -46,12 +45,11 @@ func (warrior *Warrior) registerRetaliation() {
 		ClassSpellMask: SpellMaskRetaliation,
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: retaliationRank.GCD,
 			},
 			CD: core.Cooldown{
-				Timer: warrior.NewTimer(),
-				// TODO: Manual review needed -- spell 20230 states a 15 minute cooldown.
-				Duration: time.Minute * 15,
+				Timer:    warrior.NewTimer(),
+				Duration: retaliationRank.Cooldown,
 			},
 		},
 
@@ -61,7 +59,7 @@ func (warrior *Warrior) registerRetaliation() {
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 			aura.Activate(sim)
-			aura.SetStacks(sim, 30)
+			aura.SetStacks(sim, retaliationRank.ProcCharges)
 		},
 
 		RelatedSelfBuff: aura,

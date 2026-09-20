@@ -7,13 +7,17 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+var bloodrageRank = spellData.Bloodrage.HighestRank()
+
 func (warrior *Warrior) registerBloodrage() {
-	actionID := core.ActionID{SpellID: 2687}
+	actionID := core.ActionID{SpellID: bloodrageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	healthCost := warrior.GetBaseStats()[stats.Health] * 0.16
 	// Improved Bloodrage (12301) raises every rage amount Bloodrage generates by 25% per rank.
 	improvedBloodrage := spellData.ImprovedBloodrage.MultiplierAt(warrior.Talents.ImprovedBloodrage)
-	instantRage := 10.0 * improvedBloodrage
+	// Bloodrage (2687) energizes 100 on the cast, which is 10 rage; its other effect triggers the
+	// rage over time, which is a spell of its own with no table.
+	instantRage := spellData.Bloodrage.EffectAt(0).TenthsAt(1) * improvedBloodrage
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID: actionID,
@@ -24,7 +28,7 @@ func (warrior *Warrior) registerBloodrage() {
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: time.Minute,
+				Duration: bloodrageRank.Cooldown,
 			},
 		},
 

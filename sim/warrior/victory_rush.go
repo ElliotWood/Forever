@@ -6,19 +6,22 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 402927 states ${1+$AP*$m3/100} damage with $m3 of 15,
-// heals 10% of maximum health and has a 30 second cooldown; spell 402975 states 20 seconds.
+var victoryRushRank = spellData.VictoryRush.HighestRank()
+
+// Spell 402927 states ${1+$AP*$m3/100}: the dummy at effect index 2 is the attack power
+// coefficient as a percentage, and the heal at index 1 is a percentage of maximum health.
+var victoryRushAPCoef = victoryRushRank.Effects[2].Value / 100
+var victoryRushHealPercent = victoryRushRank.Effects[1].Value / 100
+
+// TODO: Manual review needed -- the window Victory Rush has to be used in is spell 402975's 20
+// seconds; it is not a ranked row, so it carries no table.
 const (
-	victoryRushBaseDamage        = 1.0
-	victoryRushAPCoef            = 0.15
-	victoryRushHealPercent       = 0.10
-	victoryRushCooldown          = time.Second * 30
-	victoriousDuration           = time.Second * 20
-	victoriousSpellID      int32 = 402975
+	victoriousDuration       = time.Second * 20
+	victoriousSpellID  int32 = 402975
 )
 
 func (warrior *Warrior) registerVictoryRush() {
-	actionID := core.ActionID{SpellID: 402927}
+	actionID := core.ActionID{SpellID: victoryRushRank.SpellID}
 	healthMetrics := warrior.NewHealthMetrics(actionID)
 
 	// TODO: spell 402974 grants this on a kill, which the sim never simulates, so nothing
@@ -36,16 +39,16 @@ func (warrior *Warrior) registerVictoryRush() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskVictoryRush,
-		MaxRange:       core.MaxMeleeRange,
+		MaxRange:       victoryRushRank.MaxRange,
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: victoryRushRank.GCD,
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: victoryRushCooldown,
+				Duration: victoryRushRank.Cooldown,
 			},
 		},
 
@@ -57,7 +60,7 @@ func (warrior *Warrior) registerVictoryRush() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := victoryRushBaseDamage + victoryRushAPCoef*spell.MeleeAttackPower(target)
+			baseDamage := victoryRushRank.Direct.Damage(sim) + victoryRushAPCoef*spell.MeleeAttackPower(target)
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 			warrior.GainHealth(sim, warrior.MaxHealth()*victoryRushHealPercent, healthMetrics)
 			victoriousAura.Deactivate(sim)

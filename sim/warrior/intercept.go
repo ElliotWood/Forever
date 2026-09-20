@@ -48,6 +48,9 @@ func (warrior *Warrior) registerIntercept() {
 		MinRange:       chargeMinRange,
 		MaxRange:       interceptRank.MaxRange,
 
+		RageCost: core.RageCostOptions{
+			Cost: interceptRank.Cost,
+		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),

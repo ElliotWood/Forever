@@ -6,9 +6,6 @@ import (
 
 var thunderClapRank = spellData.ThunderClap.HighestRank()
 
-// TODO: Manual review needed -- spell 11581 states 4 targets, which no table column carries.
-const thunderClapMaxTargets int32 = 4
-
 var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
 
 func (warrior *Warrior) registerThunderClap() {
@@ -51,7 +48,7 @@ func (warrior *Warrior) registerThunderClap() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			results := spell.CalcCleaveDamage(sim, target, thunderClapMaxTargets, thunderClapBaseDamage, spell.OutcomeMagicHitAndCrit)
+			results := spell.CalcCleaveDamage(sim, target, thunderClapRank.MaxTargets, thunderClapBaseDamage, spell.OutcomeMagicHitAndCrit)
 			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 
 			for _, result := range results {

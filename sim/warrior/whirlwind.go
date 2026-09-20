@@ -1,16 +1,13 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 1680 states 4 targets, a 25 rage cost and a 10 second cooldown.
-const whirlwindMaxTargets int32 = 4
+var whirlwindRank = spellData.Whirlwind.HighestRank()
 
 func (warrior *Warrior) registerWhirlwind() {
-	actionID := core.ActionID{SpellID: 1680}
+	actionID := core.ActionID{SpellID: whirlwindRank.SpellID}
 
 	// Raging Blows (1310315) adds the off-hand strike.
 	var whirlwindOH *core.Spell
@@ -28,7 +25,7 @@ func (warrior *Warrior) registerWhirlwind() {
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-				spell.CalcCleaveDamage(sim, target, whirlwindMaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+				spell.CalcCleaveDamage(sim, target, whirlwindRank.MaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 				spell.DealBatchedAoeDamage(sim)
 			},
 		})
@@ -43,15 +40,15 @@ func (warrior *Warrior) registerWhirlwind() {
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
-			Cost: 25,
+			Cost: whirlwindRank.Cost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: whirlwindRank.GCD,
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: time.Second * 10,
+				Duration: whirlwindRank.Cooldown,
 			},
 			IgnoreHaste: true,
 		},
@@ -65,7 +62,7 @@ func (warrior *Warrior) registerWhirlwind() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := warrior.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			results := spell.CalcCleaveDamage(sim, target, whirlwindMaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			results := spell.CalcCleaveDamage(sim, target, whirlwindRank.MaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 			spell.DealBatchedAoeDamage(sim)
 

@@ -244,6 +244,8 @@ func (warrior *Warrior) registerBloodthirst() {
 	})
 }
 
+var piercingHowlRank = spellData.PiercingHowl.HighestRank()
+
 // TODO: The daze itself is not modelled; the encounter's targets do not move, so the -50% movement
 // speed 12323 applies for 6 seconds within 10 yards has nothing to act on.
 func (warrior *Warrior) registerPiercingHowl() {
@@ -252,21 +254,18 @@ func (warrior *Warrior) registerPiercingHowl() {
 	}
 
 	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 12323},
+		ActionID:       core.ActionID{SpellID: piercingHowlRank.SpellID},
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskEmpty,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskNone,
 
 		RageCost: core.RageCostOptions{
-			// TODO: Manual review needed -- 12323 costs 100 rage tenths.
-			Cost: 10,
+			Cost: piercingHowlRank.Cost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				// TODO: Manual review needed -- 12323 states a 1.5 second global cooldown and no
-				// cooldown of its own.
-				GCD: core.GCDDefault,
+				GCD: piercingHowlRank.GCD,
 			},
 			IgnoreHaste: true,
 		},
@@ -347,26 +346,28 @@ func (warrior *Warrior) registerRagingBlows() {
 	})
 }
 
+var deathWishRank = spellData.DeathWish.HighestRank()
+
 func (warrior *Warrior) registerDeathWish() {
 	if !warrior.Talents.DeathWish {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 12328}
+	actionID := core.ActionID{SpellID: deathWishRank.SpellID}
 
 	deathWishAura := warrior.RegisterAura(core.Aura{
 		Label:    "Death Wish",
 		ActionID: actionID,
-		// TODO: Manual review needed -- 12328 lasts 30 seconds.
-		Duration: time.Second * 30,
+		Duration: deathWishRank.Duration,
 	}).
-		// TODO: Manual review needed -- 12328 states +20% Physical damage done.
+		// The damage done effect carries the physical school mask, the damage taken one all schools.
 		AttachMultiplicativePseudoStatBuff(
-			&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical], 1.2,
+			&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical],
+			1+deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).Value/100,
 		).
-		// TODO: Manual review needed -- 12328 states +5% damage taken.
 		AttachMultiplicativePseudoStatBuff(
-			&warrior.PseudoStats.DamageTakenMultiplier, 1.05,
+			&warrior.PseudoStats.DamageTakenMultiplier,
+			1+deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Value/100,
 		).
 		// Grants immunity to Fear effects.
 		AttachFearImmunity()
@@ -377,8 +378,7 @@ func (warrior *Warrior) registerDeathWish() {
 		Flags:          core.SpellFlagCastWhileIncapacitated,
 
 		RageCost: core.RageCostOptions{
-			// TODO: Manual review needed -- 12328 costs 100 rage tenths.
-			Cost: 10,
+			Cost: deathWishRank.Cost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -386,9 +386,8 @@ func (warrior *Warrior) registerDeathWish() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer: warrior.NewTimer(),
-				// TODO: Manual review needed -- 12328 states a 3 minute cooldown.
-				Duration: time.Minute * 3,
+				Timer:    warrior.NewTimer(),
+				Duration: deathWishRank.Cooldown,
 			},
 		},
 

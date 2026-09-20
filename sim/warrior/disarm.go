@@ -1,28 +1,20 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 676 states a 20 rage cost, a 60 second cooldown and a
-// 10 second disarm.
-const (
-	disarmRageCost int32 = 20
-	disarmCooldown       = time.Second * 60
-	disarmDuration       = time.Second * 10
-)
+var disarmRank = spellData.Disarm.HighestRank()
 
 func (warrior *Warrior) registerDisarm() {
-	actionID := core.ActionID{SpellID: 676}
+	actionID := core.ActionID{SpellID: disarmRank.SpellID}
 
 	// TODO: core has no disarm effect, so the aura only tracks the debuff's uptime.
 	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return target.GetOrRegisterAura(core.Aura{
 			Label:    "Disarm-" + warrior.Label,
 			ActionID: actionID,
-			Duration: disarmDuration,
+			Duration: disarmRank.Duration,
 		})
 	})
 
@@ -33,20 +25,20 @@ func (warrior *Warrior) registerDisarm() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskDisarm,
-		MaxRange:       core.MaxMeleeRange,
+		MaxRange:       disarmRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   disarmRageCost,
+			Cost:   disarmRank.Cost,
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: disarmRank.GCD,
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: disarmCooldown,
+				Duration: disarmRank.Cooldown,
 			},
 		},
 

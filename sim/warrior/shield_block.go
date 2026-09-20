@@ -1,26 +1,27 @@
 package warrior
 
 import (
-	"time"
-
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+var shieldBlockRank = spellData.ShieldBlock.HighestRank()
+
 func (warrior *Warrior) registerShieldBlock() {
-	actionId := core.ActionID{SpellID: 2565}
+	actionId := core.ActionID{SpellID: shieldBlockRank.SpellID}
 
 	var spell *core.Spell
 	aura := warrior.RegisterAura(core.Aura{
-		Label:    "Shield Block",
-		ActionID: actionId,
-		// TODO: Manual review needed -- spell 2565 states a 7 second duration and 2 charges.
-		Duration:  time.Second * 7,
-		MaxStacks: 2,
+		Label:     "Shield Block",
+		ActionID:  actionId,
+		Duration:  shieldBlockRank.Duration,
+		MaxStacks: shieldBlockRank.ProcCharges,
 	}).
-		// TODO: Manual review needed -- spell 2565 states 75% increased block chance.
-		AttachStatBuff(stats.BlockPercent, 0.75).
+		// The client states the block chance as a percentage, so the fraction the stat takes is
+		// that number over 100.
+		AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(shared.A_MOD_BLOCK_PERCENT, 0).Value/100).
 		AttachProcTrigger(core.ProcTrigger{
 			Name:               "Shield Block - Consume",
 			TriggerImmediately: true,
@@ -38,8 +39,7 @@ func (warrior *Warrior) registerShieldBlock() {
 		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
 
 		RageCost: core.RageCostOptions{
-			// TODO: Manual review needed -- spell 2565 states a 10 rage cost.
-			Cost: 10,
+			Cost: shieldBlockRank.Cost,
 		},
 
 		Cast: core.CastConfig{
@@ -48,9 +48,8 @@ func (warrior *Warrior) registerShieldBlock() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer: warrior.NewTimer(),
-				// TODO: Manual review needed -- spell 2565 states a 5 second cooldown.
-				Duration: time.Second * 5,
+				Timer:    warrior.NewTimer(),
+				Duration: shieldBlockRank.Cooldown,
 			},
 		},
 

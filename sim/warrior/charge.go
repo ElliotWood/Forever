@@ -3,14 +3,16 @@ package warrior
 import (
 	"time"
 
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
 var chargeRank = spellData.Charge.BySpellID(11578)
 
 func (warrior *Warrior) registerCharge() {
-	// Charge (11578) energizes 15 rage; Improved Charge adds its ladder.
-	chargeRage := 15 + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
+	// Charge (11578) energizes rage on the cast, on the client's 0-1000 bar; Improved Charge adds
+	// its ladder.
+	chargeRage := shared.SpellDataMin(chargeRank.Energize)/10 + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 	actionID := core.ActionID{SpellID: chargeRank.SpellID}
 	metrics := warrior.NewRageMetrics(actionID)
 

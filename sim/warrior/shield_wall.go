@@ -1,22 +1,22 @@
 package warrior
 
 import (
-	"time"
-
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
+var shieldWallRank = spellData.ShieldWall.HighestRank()
+
 func (warrior *Warrior) registerShieldWall() {
-	actionID := core.ActionID{SpellID: 871}
+	actionID := core.ActionID{SpellID: shieldWallRank.SpellID}
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Shield Wall",
 		ActionID: actionID,
-		// TODO: Manual review needed -- spell 871 states a 12 second duration.
-		Duration: time.Second * 12,
+		Duration: shieldWallRank.Duration,
 	}).AttachMultiplicativePseudoStatBuff(
-		// TODO: Manual review needed -- spell 871 states 60% reduced damage taken.
-		&warrior.PseudoStats.DamageTakenMultiplier, 0.4,
+		&warrior.PseudoStats.DamageTakenMultiplier,
+		1+shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Value/100,
 	)
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
@@ -26,13 +26,12 @@ func (warrior *Warrior) registerShieldWall() {
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: shieldWallRank.GCD,
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer: warrior.NewTimer(),
-				// TODO: Manual review needed -- spell 871 states a 15 minute cooldown.
-				Duration: time.Minute * 15,
+				Timer:    warrior.NewTimer(),
+				Duration: shieldWallRank.Cooldown,
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {

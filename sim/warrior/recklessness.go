@@ -1,27 +1,26 @@
 package warrior
 
 import (
-	"time"
-
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
+var recklessnessRank = spellData.Recklessness.HighestRank()
+
 func (warrior *Warrior) registerRecklessness() {
-	actionID := core.ActionID{SpellID: 1719}
+	actionID := core.ActionID{SpellID: recklessnessRank.SpellID}
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Recklessness",
 		ActionID: actionID,
-		// TODO: Manual review needed -- spell 1719 states a 15 second duration.
-		Duration: time.Second * 15,
+		Duration: recklessnessRank.Duration,
 	}).AttachSpellMod(core.SpellModConfig{
-		ProcMask: core.ProcMaskMeleeSpecial,
-		Kind:     core.SpellMod_BonusCrit_Percent,
-		// TODO: Manual review needed -- spell 1719 states 100% critical strike chance.
-		FloatValue: 100,
+		ProcMask:   core.ProcMaskMeleeSpecial,
+		Kind:       core.SpellMod_BonusCrit_Percent,
+		FloatValue: recklessnessRank.Effect(shared.A_MOD_CRIT_PCT, 0).Value,
 	}).AttachMultiplicativePseudoStatBuff(
-		// TODO: Manual review needed -- spell 1719 states 20% increased damage taken.
-		&warrior.PseudoStats.DamageTakenMultiplier, 1.2,
+		&warrior.PseudoStats.DamageTakenMultiplier,
+		1+recklessnessRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Value/100,
 	).
 		// Grants immunity to Fear effects.
 		AttachFearImmunity()
@@ -34,12 +33,11 @@ func (warrior *Warrior) registerRecklessness() {
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: recklessnessRank.GCD,
 			},
 			CD: core.Cooldown{
-				Timer: warrior.NewTimer(),
-				// TODO: Manual review needed -- spell 1719 states a 30 minute cooldown.
-				Duration: time.Minute * 30,
+				Timer:    warrior.NewTimer(),
+				Duration: recklessnessRank.Cooldown,
 			},
 		},
 

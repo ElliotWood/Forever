@@ -1,13 +1,13 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
+var berserkerRageRank = spellData.BerserkerRage.HighestRank()
+
 func (warrior *Warrior) registerBerserkerRage() {
-	actionID := core.ActionID{SpellID: 18499}
+	actionID := core.ActionID{SpellID: berserkerRageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	// Improved Berserker Rage (20500) adds rage on the cast; both of its effects are dummies, so
 	// the rage one is named by its index. Its second effect, shedding movement impairment, has
@@ -17,8 +17,7 @@ func (warrior *Warrior) registerBerserkerRage() {
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Berserker Rage",
 		ActionID: actionID,
-		// TODO: Manual review needed -- spell 18499 states a 10 second duration.
-		Duration: time.Second * 10,
+		Duration: berserkerRageRank.Duration,
 	}).
 		// Grants immunity to Fear, Sap and Incapacitate effects.
 		AttachFearImmunity()
@@ -30,13 +29,12 @@ func (warrior *Warrior) registerBerserkerRage() {
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: berserkerRageRank.GCD,
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer: warrior.NewTimer(),
-				// TODO: Manual review needed -- spell 18499 states a 30 second cooldown.
-				Duration: time.Second * 30,
+				Timer:    warrior.NewTimer(),
+				Duration: berserkerRageRank.Cooldown,
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
