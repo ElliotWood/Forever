@@ -86,14 +86,31 @@ const migrateRaid = (raid: unknown) => {
 	if (Array.isArray(message.parties)) message.parties.forEach(migrateParty);
 };
 
+// Raid, Party and Player all call their buffs `buffs`, and an empty repeated field is absent from
+// the JSON, so a blob cannot be told apart by its shape: the caller names the message it holds.
+export type BuffMessageShape = 'settings' | 'raid' | 'party' | 'player';
+
 /**
- * Rewrites the retyped buff fields of a parsed-but-not-yet-decoded settings blob in place, so that
- * `IndividualSimSettings.fromJson`, `SavedSettings.fromJson`, `Player.fromJson` and the raid forms
- * of the same accept a payload written before api version 17.
+ * Rewrites the retyped buff fields of a parsed-but-not-yet-decoded blob in place, so that
+ * `fromJson` accepts a payload written before api version 17. The default shape covers the
+ * settings envelopes -- IndividualSimSettings, SavedSettings and RaidSimSettings -- and the
+ * messages they nest; a Raid, Party or Player passed on its own names itself.
  */
-export function migrateRetypedBuffFields(json: unknown): void {
+export function migrateRetypedBuffFields(json: unknown, shape: BuffMessageShape = 'settings'): void {
 	const message = asObject(json);
 	if (!message || !isOutdated(message)) return;
+
+	switch (shape) {
+		case 'raid':
+			migrateRaid(message);
+			return;
+		case 'party':
+			migrateParty(message);
+			return;
+		case 'player':
+			migratePlayer(message);
+			return;
+	}
 
 	// IndividualSimSettings, and SavedSettings, which names the individual buffs `playerBuffs`.
 	rewriteBuffs(message.raidBuffs, retypedBuffFields.raidBuffs);
@@ -104,14 +121,4 @@ export function migrateRetypedBuffFields(json: unknown): void {
 
 	// RaidSimSettings.
 	migrateRaid(message.raid);
-
-	// A Raid, a Party or a Player handed over on its own: all three call their buffs `buffs`, so
-	// the message is told apart by what it holds them beside.
-	if ('parties' in message) {
-		migrateRaid(message);
-	} else if ('players' in message) {
-		migrateParty(message);
-	} else {
-		migratePlayer(message);
-	}
 }

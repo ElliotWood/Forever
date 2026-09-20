@@ -143,6 +143,11 @@ func TestFieldNamesRoundTrip(t *testing.T) {
 	}
 }
 
+// proto/buffs.proto is rendered from this manifest, so this test is not an independent oracle for
+// the field set: it catches a hand edit to the committed proto drifting from the manifest, and
+// nothing more. What the numbers and types are checked against is gen_buffs_proto's
+// TestRenderMatchesCommittedFile (the committed file is what the manifest renders) and
+// `buf breaking` against master (no field number or type changes the API version does not declare).
 func TestCensusMatchesProto(t *testing.T) {
 	messages := map[string]BuffScope{
 		"RaidBuffs":       ScopeRaid,

@@ -46,24 +46,44 @@ describe('migrateRetypedBuffFields', () => {
 	// SavedSettings and the raid messages carry no api_version, so they are migrated on sight.
 	it('rewrites a message that carries no version, under either name for the individual buffs', () => {
 		const savedSettings = { debuffs: { thunderClap: 1 }, playerBuffs: { blessingOfWisdom: 'TristateEffectRegular' } };
-		const raid = { buffs: { thorns: 2 }, parties: [{ buffs: { devotionAura: 1 }, players: [{ buffs: { blessingOfMight: 0 } }] }] };
+		const raidSettings = { raid: { buffs: { thorns: 2 }, parties: [{ buffs: { devotionAura: 1 }, players: [{ buffs: { blessingOfMight: 0 } }] }] } };
 
 		migrateRetypedBuffFields(savedSettings);
-		migrateRetypedBuffFields(raid);
+		migrateRetypedBuffFields(raidSettings);
 
 		expect(savedSettings.debuffs.thunderClap).toBe(true);
 		expect(savedSettings.playerBuffs.blessingOfWisdom).toBe(true);
-		expect(raid.buffs.thorns).toBe(true);
-		expect(raid.parties[0].buffs.devotionAura).toBe(true);
-		expect(raid.parties[0].players[0].buffs.blessingOfMight).toBe(false);
+		expect(raidSettings.raid.buffs.thorns).toBe(true);
+		expect(raidSettings.raid.parties[0].buffs.devotionAura).toBe(true);
+		expect(raidSettings.raid.parties[0].players[0].buffs.blessingOfMight).toBe(false);
 	});
 
-	it('rewrites a player handed over on its own', () => {
-		const json = { buffs: { blessingOfWisdom: 'TristateEffectImproved' } };
+	it('rewrites a raid, a party or a player handed over on its own', () => {
+		const raid = { buffs: { thorns: 2 }, debuffs: { thunderClap: 1 } };
+		const party = { buffs: { devotionAura: 1 } };
+		const player = { buffs: { blessingOfWisdom: 'TristateEffectImproved' } };
 
-		migrateRetypedBuffFields(json);
+		migrateRetypedBuffFields(raid, 'raid');
+		migrateRetypedBuffFields(party, 'party');
+		migrateRetypedBuffFields(player, 'player');
 
-		expect(Player.fromJson(json as never).buffs?.blessingOfWisdom).toBe(true);
+		expect(raid.buffs.thorns).toBe(true);
+		expect(raid.debuffs.thunderClap).toBe(true);
+		expect(party.buffs.devotionAura).toBe(true);
+		expect(Player.fromJson(player as never).buffs?.blessingOfWisdom).toBe(true);
+	});
+
+	// `toJson` omits an empty repeated field, so a raid with no parties and a party with no players
+	// reach the migration without the key that used to say which message they are.
+	it('rewrites a raid with no parties and a party with no players', () => {
+		const raid = { buffs: { giftOfTheWild: 'TristateEffectImproved' } };
+		const party = { buffs: { battleShout: 'TristateEffectImproved' } };
+
+		migrateRetypedBuffFields(raid, 'raid');
+		migrateRetypedBuffFields(party, 'party');
+
+		expect(raid.buffs.giftOfTheWild).toBe(true);
+		expect(party.buffs.battleShout).toBe(true);
 	});
 
 	it('survives a blob that is not a message', () => {
