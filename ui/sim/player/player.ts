@@ -784,6 +784,12 @@ export class Player<SpecType extends Spec> {
 		let debuffStats = new Stats();
 		const debuffs = this.sim.raid.getDebuffs();
 
+		if (debuffs.improvedSealOfTheCrusader) {
+			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatMeleeCritPercent, 3);
+			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatRangedCritPercent, 3);
+			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatSpellCritPercent, 3);
+		}
+
 		if (debuffs.exposeWeaknessUptime && debuffs.exposeWeaknessHunterAgility) {
 			let agi = debuffs.exposeWeaknessHunterAgility;
 
