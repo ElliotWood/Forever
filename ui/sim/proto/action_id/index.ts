@@ -584,7 +584,10 @@ export class ActionId {
 				break;
 			case 'Retribution Aura':
 			case 'Holy Shield':
-				if (tag == 2) {
+			case 'Thorns':
+				// A damage shield's proc is tagged two past the aura that carries it: tag 2 is the
+				// player's own copy, tag 1 the copy an outside caster provides.
+				if (tag === 1 || tag === 2) {
 					name += ' (Hit)';
 				}
 				break;
