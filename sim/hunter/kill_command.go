@@ -3,8 +3,8 @@ package hunter
 // Package-level state the commented-out implementations used:
 // var killCommandRank = spellData.KillCommand.BySpellID(34026)
 
-// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
-// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
+// TODO: To be implemented. The ability exists: spell 409379 on the Beast Mastery line. It carries no
+// "Rank N" subtext, so the ladder generator emits no table -- pin the id directly.
 func (hunter *Hunter) registerKillCommandSpell() {
 	if hunter.Pet == nil {
 		return

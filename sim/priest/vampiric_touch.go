@@ -11,8 +11,8 @@ import (
 // nothing calls this any more. Kept rather than deleted because "the talent is gone"
 // and "the spell is gone" are not the same claim, and the client data does not
 // distinguish them. Re-gate before wiring it back up.
-// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
-// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
+// TODO: To be implemented. The ability exists: spell 402668 on the Shadow Magic line. No rank subtext,
+// so no generated table -- pin the id directly.
 func (priest *Priest) registerVampiricTouchSpell(rank shared.SpellData) {
 	panic("To be implemented")
 

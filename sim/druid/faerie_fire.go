@@ -51,9 +51,8 @@ func (druid *Druid) registerFaerieFireSpell() {
 
 // TODO: uncalled -- Forever drops the Faerie Fire (Feral) talent; re-gate before wiring
 // back into RegisterFeralCatSpells/RegisterFeralTankSpells.
-// TODO: To be implemented, or removed. The Forever client does not ship this spell at all --
-// no SpellName row carries the name -- so there is nothing to build a registrar from. The
-// body below is kept commented as the record of the TBC implementation.
+// TODO: To be implemented. Forever has no separate Feral version. Plain Faerie Fire exists on the
+// Balance line as spells 770, 778, 9749, 9907, and the feral variant folded into it.
 func (druid *Druid) registerFaerieFireFeralSpell() {
 	panic("To be implemented")
 

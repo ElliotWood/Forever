@@ -5,9 +5,8 @@ package warlock
 // var doomTick = doomRank.Periodic.(shared.SpellDataPeriodic)
 // var doomCoeff = doomTick.Coef
 
-// TODO: To be implemented. Spells of this name exist in the Forever client, but none of them
-// has a class ability row -- no SkillLineAbility entry in a CategoryID 7 skill line -- so the
-// generator has no class spell to build a ladder from.
+// TODO: To be implemented. Forever renamed this to **Bane of Doom**: spell 603 on the Affliction line.
+// The registrar needs re-pointing at that name, not implementing from nothing.
 func (warlock *Warlock) registerCurseOfDoom() {
 	panic("To be implemented")
 

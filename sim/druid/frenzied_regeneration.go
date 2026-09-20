@@ -4,8 +4,8 @@ package druid
 // var frenziedRegenerationRank = spellData.FrenziedRegeneration.BySpellID(26999)
 // var frenziedRegenerationTick = frenziedRegenerationRank.Periodic.(shared.SpellDataPeriodic)
 
-// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
-// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
+// TODO: To be implemented. The ability exists: spells 22842 and 22845 on the Feral Combat line. No rank
+// subtext, so no generated table -- pin the id directly.
 func (druid *Druid) registerFrenziedRegenerationSpell() {
 	panic("To be implemented")
 

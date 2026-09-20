@@ -3,8 +3,8 @@ package druid
 // Package-level state the commented-out implementations used:
 // var tigersFuryRank = spellData.TigersFury.BySpellID(9846)
 
-// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
-// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
+// TODO: To be implemented. The ability exists: spells 5217 and 417045 on the Feral Combat line. No rank
+// subtext, so no generated table -- pin the id directly.
 func (druid *Druid) registerTigersFurySpell() {
 	panic("To be implemented")
 

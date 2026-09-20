@@ -3,8 +3,8 @@ package priest
 // Package-level state the commented-out implementations used:
 // var shadowfiendRank = spellData.Shadowfiend.BySpellID(34433)
 
-// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
-// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
+// TODO: To be implemented. The ability exists: spell 401977 on the Shadow Magic line. No rank subtext,
+// so no generated table -- pin the id directly. shadowfiend_pet.go already implements the pet.
 func (priest *Priest) registerShadowfiendSpell() {
 	panic("To be implemented")
 

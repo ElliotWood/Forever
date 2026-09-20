@@ -5,9 +5,9 @@ package warlock
 // var agonyTick = agonyRank.Periodic.(shared.SpellDataPeriodic)
 // var agonyCoeff = agonyTick.Coef
 
-// TODO: To be implemented. Spells of this name exist in the Forever client, but none of them
-// has a class ability row -- no SkillLineAbility entry in a CategoryID 7 skill line -- so the
-// generator has no class spell to build a ladder from.
+// TODO: To be implemented. Forever renamed this to **Bane of Agony**: spells 980, 1014, 6217, 11711 (and up)
+// on the Affliction line, a full rank chain. The registrar needs re-pointing at that name,
+// not implementing from nothing.
 func (warlock *Warlock) registerCurseOfAgony() {
 	panic("To be implemented")
 

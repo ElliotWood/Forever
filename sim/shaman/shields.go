@@ -37,8 +37,8 @@ func (shaman *Shaman) startShieldProcPeriodicAction(sim *core.Simulation) {
 	}
 }
 
-// TODO: To be implemented. The Forever client ships this as a single unranked class spell:
-// it has a SkillLineAbility row but no "Rank N" subtext, so no ladder can be built for it.
+// TODO: To be implemented. The ability exists: spell 408510 on the Restoration line. No rank subtext,
+// so no generated table -- pin the id directly.
 func (shaman *Shaman) registerWaterShieldSpell() {
 	panic("To be implemented")
 

@@ -15,9 +15,9 @@ func (druid *Druid) registerMangleAuras() {
 	druid.MangleAuras = druid.NewEnemyAuraArray(core.MangleAura)
 }
 
-// TODO: To be implemented, or removed. The Forever client does not ship this spell at all --
-// no SpellName row carries the name -- so there is nothing to build a registrar from. The
-// body below is kept commented as the record of the TBC implementation.
+// TODO: To be implemented. Forever ships ONE Mangle, not the TBC Cat/Bear split: spells 407995 and
+// 1238069/1238070/1238073 on the Feral Combat line. Both registrars here are obsolete in
+// shape -- what this needs is a single Mangle, not two implementations.
 func (druid *Druid) registerMangleCatSpell() {
 	if !druid.Talents.Mangle {
 		return
@@ -76,9 +76,9 @@ func (druid *Druid) registerMangleCatSpell() {
 	// })
 }
 
-// TODO: To be implemented, or removed. The Forever client does not ship this spell at all --
-// no SpellName row carries the name -- so there is nothing to build a registrar from. The
-// body below is kept commented as the record of the TBC implementation.
+// TODO: To be implemented. Forever ships ONE Mangle, not the TBC Cat/Bear split: spells 407995 and
+// 1238069/1238070/1238073 on the Feral Combat line. Both registrars here are obsolete in
+// shape -- what this needs is a single Mangle, not two implementations.
 func (druid *Druid) registerMangleBearSpell() {
 	if !druid.Talents.Mangle {
 		return
