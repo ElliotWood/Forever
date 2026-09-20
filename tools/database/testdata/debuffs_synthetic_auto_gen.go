@@ -55,6 +55,30 @@ func SynthSunderArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
+// Expose Armor - https://www.wowhead.com/forever/spell=11198
+// Effect 0 is worth -450.0 per combo point; this is the 5-point finisher.
+var SynthExposeArmorCategory = "MajorArmorReduction"
+
+func SynthExposeArmorValue(talentPoints int32) float64 {
+	return -2250.0
+}
+func SynthExposeArmorDuration(talentPoints int32) time.Duration {
+	return 30000 * time.Millisecond
+}
+func SynthExposeArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Expose Armor (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 11198}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   SynthExposeArmorDuration(talentPoints),
+		Category:   SynthExposeArmorCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.Armor, SynthExposeArmorValue(talentPoints), false},
+		},
+	})
+}
+
 // Curse of the Elements - https://www.wowhead.com/forever/spell=1311680
 var SynthCurseOfElementsCategory = "CurseOfElements"
 
@@ -91,6 +115,9 @@ func applyGeneratedDebuffs(target *Unit, debuffs *proto.Debuffs, raid *proto.Rai
 	}
 	if debuffs.SunderArmor {
 		MakePermanent(SynthSunderArmorAura(target, false, 0))
+	}
+	if debuffs.ExposeArmor {
+		MakePermanent(SynthExposeArmorAura(target, false, 0))
 	}
 	if debuffs.CurseOfElements {
 		MakePermanent(SynthCurseOfElementsAura(target, false, 0))

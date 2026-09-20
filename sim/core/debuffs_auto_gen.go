@@ -41,7 +41,7 @@ import (
 // func FaerieFireAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // faerie_fire, KindDebuffStat: hand-written constructor still present
 
 // Expose Armor - https://www.wowhead.com/forever/spell=11198
-// func ExposeArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // expose_armor, KindDebuffStat: effect 0 is worth -450 per combo point, which the support API cannot express
+// func ExposeArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // expose_armor, KindDebuffStat: hand-written constructor still present
 
 // Sunder Armor - https://www.wowhead.com/forever/spell=11597
 // func SunderArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // sunder_armor, KindDebuffStacking: hand-written constructor still present

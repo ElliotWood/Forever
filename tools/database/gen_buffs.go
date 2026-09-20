@@ -44,6 +44,10 @@ const debuffsGenFile = "sim/core/debuffs_auto_gen.go"
 const skillLineEngraving = 2851
 const skillLineRunes = 2853
 
+// The combo points a finisher the raid config simply has on the target is cast
+// with.
+const maxComboPoints = 5
+
 // StatAmount is one stat the aura grants, at level 60.
 type StatAmount struct {
 	Stat           stats.Stat
@@ -110,6 +114,10 @@ type ResolvedBuff struct {
 	StatCategory string
 
 	DBName string
+
+	// Note is what the generated file says about the row above its constructor,
+	// for a value the client states in a way the row had to be read through.
+	Note string
 
 	Supported   bool
 	Reason      string
@@ -851,7 +859,8 @@ func (res *buffResolver) effectTargets(spellID int32) (map[int32]effectTarget, e
 func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 	var unmapped []string
 	damageShield := false
-	for _, e := range row.Effects {
+	for i := range row.Effects {
+		e := row.Effects[i]
 		if !isAuraApplication(e.Effect) {
 			continue
 		}
@@ -859,12 +868,20 @@ func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 			damageShield = true
 			continue
 		}
-		// The value a spell states per combo point is 0 on the spell itself, so
-		// generating it would silently buff nothing.
+		// The value a spell states per combo point is 0 on the spell itself.
+		// The raid config is one debuff that is simply on the target, which is
+		// the finisher at full combo points; a caster spending fewer of them
+		// takes its own value through a driver.
 		if e.PerResource != 0 && e.Value == 0 {
-			row.unsupported("effect %d is worth %v per combo point, which the support API cannot express",
-				e.Index, e.PerResource)
-			return
+			if row.Kind != buffmanifest.KindDebuffStat {
+				row.unsupported("effect %d is worth %v per combo point, which the support API cannot express",
+					e.Index, e.PerResource)
+				return
+			}
+			e.Value = e.PerResource * maxComboPoints
+			row.Effects[i].Value = e.Value
+			row.Note = fmt.Sprintf("Effect %d is worth %s per combo point; this is the %d-point finisher.",
+				e.Index, formatFloat(e.PerResource), int(maxComboPoints))
 		}
 		if amounts, ok := row.statAmounts(e); ok {
 			row.Stats = append(row.Stats, amounts...)
@@ -1536,6 +1553,7 @@ type buffRow struct {
 	SpellID       int32
 	Kind          string
 	Reason        string
+	Note          string
 	Supported     bool
 	HasWowhead    bool
 	Category      string
@@ -1616,7 +1634,7 @@ func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 func renderRow(row ResolvedBuff) buffRow {
 	out := buffRow{
 		Go: row.Go, Field: row.Field, Label: buffLabel(row),
-		SpellID: row.SpellID, Kind: row.Kind.String(), Reason: row.Reason,
+		SpellID: row.SpellID, Kind: row.Kind.String(), Reason: row.Reason, Note: row.Note,
 		Supported: row.Supported, HasWowhead: row.SpellID != 0,
 	}
 	if !row.Supported {

@@ -128,6 +128,17 @@ func syntheticBuffRows() []ResolvedBuff {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
+				Field: "expose_armor", Scope: buffmanifest.ScopeDebuff,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDebuffStat,
+				Go: "SynthExposeArmor", Name: "Expose Armor", Category: "MajorArmorReduction",
+				SingleAura: true,
+			},
+			SpellID: 11198, DurationMs: 30000, Supported: true,
+			Note:  "Effect 0 is worth -450.0 per combo point; this is the 5-point finisher.",
+			Stats: []StatAmount{{Stat: stats.Armor, Amount: -2250}},
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
 				Field: "curse_of_elements", Scope: buffmanifest.ScopeDebuff,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDebuffDamageTaken,
 				Go: "SynthCurseOfElements", Name: "Curse of the Elements", Category: "CurseOfElements",

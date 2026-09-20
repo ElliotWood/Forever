@@ -9,6 +9,9 @@ const tmplStrBuffRows = `
 
 {{if .Supported}}
 {{if .HasWowhead}}// {{.Label}} - https://www.wowhead.com/forever/spell={{.SpellID}}{{end}}
+{{- if .Note}}
+// {{.Note}}
+{{- end}}
 {{- if .CategoryVar}}
 var {{.CategoryVar}} = "{{.Category}}"
 {{- end}}
