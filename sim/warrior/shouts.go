@@ -61,7 +61,6 @@ var battleShoutRank = spellData.BattleShout.HighestRank()
 // itself states 139 attack power for 3 minutes (25289). Pending the shared shout aura rework, the
 // talent and multiplier are passed as neutral.
 func (warrior *Warrior) registerShouts() {
-	commandingPresenceMultiplier := 1.0
 
 	warrior.registerDemoralizingShout()
 
@@ -70,7 +69,7 @@ func (warrior *Warrior) registerShouts() {
 			warrior.GetCharacter(),
 			warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone,
 			0,
-			commandingPresenceMultiplier,
+			1.0,
 			warrior.HasBsSolarianSapphire,
 			warrior.HasBsT2,
 		)
@@ -85,7 +84,7 @@ func (warrior *Warrior) registerShouts() {
 		ThreatBonus: 69,
 		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
 			aura := battleShoutAuras.Get(&warrior.Unit)
-			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= core.GetBattleShoutValue(0, commandingPresenceMultiplier, warrior.HasBsSolarianSapphire, warrior.HasBsT2, sim.CurrentTime < 0)
+			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= core.GetBattleShoutValue(0, 1.0, warrior.HasBsSolarianSapphire, warrior.HasBsT2, sim.CurrentTime < 0)
 		},
 		AllyAuras: battleShoutAuras,
 	})

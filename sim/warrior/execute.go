@@ -47,9 +47,9 @@ func (warrior *Warrior) registerExecute() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			extraRage := spell.Unit.CurrentRage()
-			maxRage := warrior.MaximumRage()
-			if extraRage > maxRage-spell.Cost.GetCurrentCost() {
-				extraRage = maxRage - spell.Cost.GetCurrentCost()
+			maxRage := warrior.MaximumRage() - spell.Cost.GetCurrentCost()
+			if extraRage > maxRage {
+				extraRage = maxRage
 			}
 			warrior.SpendRage(sim, extraRage, rageMetrics)
 			rageMetrics.Events--

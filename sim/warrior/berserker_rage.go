@@ -9,6 +9,10 @@ import (
 func (warrior *Warrior) registerBerserkerRage() {
 	actionID := core.ActionID{SpellID: 18499}
 	rageMetrics := warrior.NewRageMetrics(actionID)
+	// Improved Berserker Rage (20500) adds rage on the cast; both of its effects are dummies, so
+	// the rage one is named by its index. Its second effect, shedding movement impairment, has
+	// nothing to act on in the sim.
+	rageGain := spellData.ImprovedBerserkerRage.EffectAt(0).TenthsAt(warrior.Talents.ImprovedBerserkerRage)
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Berserker Rage",
@@ -39,8 +43,8 @@ func (warrior *Warrior) registerBerserkerRage() {
 			return warrior.StanceMatches(BerserkerStance)
 		},
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			if warrior.BerserkerRageRageGain > 0 {
-				warrior.AddRage(sim, warrior.BerserkerRageRageGain, rageMetrics)
+			if rageGain > 0 {
+				warrior.AddRage(sim, rageGain, rageMetrics)
 			}
 			aura.Activate(sim)
 		},
@@ -51,7 +55,7 @@ func (warrior *Warrior) registerBerserkerRage() {
 		Spell: spell,
 		Type:  core.CooldownTypeSurvival,
 		ShouldActivate: func(s *core.Simulation, c *core.Character) bool {
-			return warrior.BerserkerRageRageGain > 0 && warrior.CurrentRage()+warrior.BerserkerRageRageGain <= warrior.MaximumRage()
+			return rageGain > 0 && warrior.CurrentRage()+rageGain <= warrior.MaximumRage()
 		},
 	})
 }

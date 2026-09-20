@@ -12,23 +12,27 @@ const whirlwindMaxTargets int32 = 4
 func (warrior *Warrior) registerWhirlwind() {
 	actionID := core.ActionID{SpellID: 1680}
 
-	whirlwindOH := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID.WithTag(2),
-		SpellSchool:    core.SpellSchoolPhysical,
-		DefenseType:    core.DefenseTypeMelee,
-		ProcMask:       core.ProcMaskMeleeOHSpecial,
-		ClassSpellMask: SpellMaskWhirlwindOh,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+	// Raging Blows (1310315) adds the off-hand strike.
+	var whirlwindOH *core.Spell
+	if warrior.Talents.RagingBlows {
+		whirlwindOH = warrior.RegisterSpell(core.SpellConfig{
+			ActionID:       actionID.WithTag(2),
+			SpellSchool:    core.SpellSchoolPhysical,
+			DefenseType:    core.DefenseTypeMelee,
+			ProcMask:       core.ProcMaskMeleeOHSpecial,
+			ClassSpellMask: SpellMaskWhirlwindOh,
+			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1.25,
+			DamageMultiplier: 1,
+			ThreatMultiplier: 1.25,
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			spell.CalcCleaveDamage(sim, target, whirlwindMaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-			spell.DealBatchedAoeDamage(sim)
-		},
-	})
+			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+				baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+				spell.CalcCleaveDamage(sim, target, whirlwindMaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+				spell.DealBatchedAoeDamage(sim)
+			},
+		})
+	}
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID.WithTag(1),
@@ -65,8 +69,7 @@ func (warrior *Warrior) registerWhirlwind() {
 			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 			spell.DealBatchedAoeDamage(sim)
 
-			// Raging Blows (1310315) adds the off-hand strike.
-			if warrior.HasOHWeapon() && warrior.Talents.RagingBlows {
+			if whirlwindOH != nil && warrior.HasOHWeapon() {
 				whirlwindOH.Cast(sim, target)
 			}
 		},

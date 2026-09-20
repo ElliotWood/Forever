@@ -147,7 +147,7 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 			// Spell 26109 states -35% rage cost on all warrior shouts, and its class mask lists
 			// Battle Shout, Demoralizing Shout, Intimidating Shout and Challenging Shout.
 			setBonusAura.AttachSpellMod(core.SpellModConfig{
-				ClassMask:  SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout,
+				ClassMask:  SpellMaskShouts,
 				Kind:       core.SpellMod_PowerCost_Pct_Add,
 				FloatValue: -0.35,
 			})

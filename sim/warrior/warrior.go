@@ -88,6 +88,7 @@ const (
 		SpellMaskMockingBlow | SpellMaskVictoryRush | SpellMaskSpearingStrike
 
 	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
+	SpellMaskShouts       = SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout
 )
 
 const EnrageTag = "EnrageEffect"
@@ -102,9 +103,7 @@ type Warrior struct {
 	WarriorInputs
 
 	// Current state
-	Stance                Stance
-	ChargeRageGain        float64
-	BerserkerRageRageGain float64
+	Stance Stance
 
 	BattleShout       *core.Spell
 	DemoralizingShout *core.Spell
@@ -189,10 +188,6 @@ func (warrior *Warrior) Reset(_ *core.Simulation) {
 	warrior.curQueueAura = nil
 	warrior.curQueuedAutoSpell = nil
 
-	// Charge (11578) energizes 15 rage; Improved Charge adds its ladder.
-	warrior.ChargeRageGain = 15 + spellData.ImprovedCharge.ValueAt(warrior.Talents.ImprovedCharge)/10
-	warrior.BerserkerRageRageGain = 0
-
 	switch warrior.DefaultStance {
 	case proto.WarriorStance_WarriorStanceBattle:
 		warrior.Stance = BattleStance
@@ -225,7 +220,7 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 
 	warrior.EnableRageBar(core.RageBarOptions{
 		// Boundless Rage (1310236) raises the cap by 10 per rank.
-		MaxRage:            100 + spellData.BoundlessRage.ValueAt(warrior.Talents.BoundlessRage)/10,
+		MaxRage:            100 + spellData.BoundlessRage.TenthsAt(warrior.Talents.BoundlessRage),
 		BaseRageMultiplier: 1,
 		StartingRage:       inputs.StartingRage,
 	})
@@ -249,7 +244,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 
 	warrior.sharedShoutsCD = warrior.NewTimer()
-	warrior.BerserkerRageRageGain = 0
 	// The sim often re-enables heroic strike in an unrealistic amount of time.
 	// This can cause an unrealistic immediate double-hit around wild strikes procs
 	warrior.queuedRealismICD = &core.Cooldown{

@@ -3,6 +3,7 @@ package warrior
 import (
 	"time"
 
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -105,6 +106,12 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 	).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.DamageDealtMultiplier, 0.9,
 	)
+	if warrior.Talents.Defiance > 0 {
+		// Defiance (12792) raises the stance's threat by 5% per rank.
+		// TODO: the client also requires a shield equipped.
+		aura.AttachMultiplicativePseudoStatBuff(&warrior.PseudoStats.ThreatMultiplier,
+			spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance))
+	}
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
 

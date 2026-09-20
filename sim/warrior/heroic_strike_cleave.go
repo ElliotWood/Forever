@@ -8,6 +8,7 @@ import (
 // TODO: Manual review needed -- spell 25286 carries no threat effect, so the 194 is hand-supplied.
 var heroicStrikeRank = shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 194).HighestRank()
 var heroicStrikeBaseDamage, _ = heroicStrikeRank.Direct.Range()
+var cleaveBaseDamage, _ = cleaveRank.Direct.Range()
 
 // TODO: Manual review needed -- spell 20569 carries no threat effect, so the 125 is hand-supplied.
 var cleaveRank = shared.WithSpellDataFlatThreat(spellData.Cleave, 125).HighestRank()
@@ -55,8 +56,6 @@ func (warrior *Warrior) registerHeroicStrike() {
 
 func (warrior *Warrior) registerCleave() {
 	const maxTargets int32 = 2
-	cleaveVal, _ := cleaveRank.Direct.Range()
-	flatDamage := cleaveVal
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: cleaveRank.SpellID},
@@ -82,7 +81,7 @@ func (warrior *Warrior) registerCleave() {
 		FlatThreatBonus:  cleaveRank.FlatThreatBonus,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := flatDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			baseDamage := cleaveBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
 			spell.CalcCleaveDamage(sim, target, maxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			spell.DealBatchedAoeDamage(sim)
 

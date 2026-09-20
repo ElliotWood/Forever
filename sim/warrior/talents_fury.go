@@ -37,7 +37,7 @@ func (warrior *Warrior) registerFuryTalents() {
 	warrior.registerImprovedIntercept()
 
 	// Tier 6
-	warrior.registerImprovedBerserkerRage()
+	// Improved Berserker Rage: berserker_rage.go
 	warrior.registerFlurry()
 
 	// Tier 7
@@ -61,12 +61,14 @@ func (warrior *Warrior) registerUnbridledWrath() {
 
 	// TODO: Manual review needed -- 12964 restores 10 rage tenths, which 12322 doubles for a
 	// two-handed weapon.
-	rageGain := func() float64 {
-		if warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand {
-			return 2
-		}
-		return 1
+	rageGain := 1.0
+	twoHanded := func() {
+		rageGain = core.TernaryFloat64(warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand, 2, 1)
 	}
+	twoHanded()
+	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
+		twoHanded()
+	})
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Unbridled Wrath",
@@ -76,7 +78,7 @@ func (warrior *Warrior) registerUnbridledWrath() {
 		Outcome:            core.OutcomeLanded,
 		Callback:           core.CallbackOnSpellHitDealt,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			warrior.AddRage(sim, rageGain(), rageMetrics)
+			warrior.AddRage(sim, rageGain, rageMetrics)
 		},
 	})
 }
@@ -111,7 +113,7 @@ func (warrior *Warrior) registerImprovedExecute() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskExecute,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedExecute.ValueAt(warrior.Talents.ImprovedExecute) / 10),
+		IntValue:  int32(spellData.ImprovedExecute.TenthsAt(warrior.Talents.ImprovedExecute)),
 	})
 }
 
@@ -143,29 +145,6 @@ func (warrior *Warrior) registerEnrage() {
 			warrior.EnrageAura.Activate(sim)
 		},
 	})
-}
-
-func (warrior *Warrior) registerImprovedBerserkerRage() {
-	if warrior.Talents.ImprovedBerserkerRage == 0 {
-		return
-	}
-
-	// Both of the talent's effects are dummies, so the rage one is named by its index.
-	rageGain := spellData.ImprovedBerserkerRage.EffectAt(0).ValueAt(warrior.Talents.ImprovedBerserkerRage) / 10
-
-	core.MakePermanent(warrior.RegisterAura(core.Aura{
-		Label:    "Improved Berserker Rage",
-		ActionID: core.ActionID{SpellID: 20500}.WithTag(warrior.Talents.ImprovedBerserkerRage),
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.BerserkerRageRageGain += rageGain
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.BerserkerRageRageGain -= rageGain
-		},
-	}))
-
-	// TODO: The chance to shed movement impairing effects the talent's second effect states is not
-	// modelled; nothing snares the warrior in the sim.
 }
 
 func (warrior *Warrior) registerFlurry() {
@@ -447,6 +426,6 @@ func (warrior *Warrior) registerImprovedCleave() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskCleave,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedCleave.ValueAt(warrior.Talents.ImprovedCleave) / 10),
+		IntValue:  int32(spellData.ImprovedCleave.TenthsAt(warrior.Talents.ImprovedCleave)),
 	})
 }

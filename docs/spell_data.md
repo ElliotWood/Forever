@@ -277,9 +277,9 @@ may state a percentage now, and the other way round.
    quoting the raw column on the line:
 
    ```go
-   var windfuryWeapon = shared.WithSpellDataPPM(spellData.WindfuryWeapon, 2)      // one PPM, every rank
-   var stormstrike = shared.WithSpellDataPPMs(spellData.Stormstrike, map[int32]float64{1: 1, 2: 1.5})
-   dpm := shaman.NewLegacyPPMManager(windfuryWeapon.PPMAt(rank), core.ProcMaskMelee)
+   var imbue = shared.WithSpellDataPPM(spellData.Imbue, 2)                          // one PPM, every rank
+   var strike = shared.WithSpellDataPPMs(spellData.Strike, map[int32]float64{1: 1, 2: 1.5})
+   dpm := character.NewLegacyPPMManager(imbue.PPMAt(rank), core.ProcMaskMelee)
    ```
 
    The per-rank form has to name every rank, and both panic on a table that already carries a PPM.

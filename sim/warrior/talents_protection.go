@@ -23,7 +23,7 @@ func (warrior *Warrior) registerProtectionTalents() {
 	warrior.registerLastStand()
 	warrior.registerMasterOfDefense()
 	warrior.registerImprovedRevenge()
-	warrior.registerDefiance()
+	// Defiance: stances.go
 
 	// Tier 4
 	warrior.registerImprovedSunderArmor()
@@ -43,22 +43,6 @@ func (warrior *Warrior) registerProtectionTalents() {
 	warrior.registerShieldSlam()
 }
 
-func (warrior *Warrior) registerDefiance() {
-	if warrior.Talents.Defiance == 0 {
-		return
-	}
-
-	// Spell 12792 carries one effect, the threat modifier applied below (A_MOD_THREAT, +5/10/15%).
-	// TODO: the client also requires a shield equipped, which needs a condition in stances.go.
-	warrior.OnSpellRegistered(func(spell *core.Spell) {
-		if !spell.Matches(SpellMaskDefensiveStance) {
-			return
-		}
-		spell.RelatedSelfBuff.
-			AttachMultiplicativePseudoStatBuff(&warrior.PseudoStats.ThreatMultiplier, spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance))
-	})
-}
-
 func (warrior *Warrior) registerAnticipation() {
 	if warrior.Talents.Anticipation == 0 {
 		return
@@ -74,21 +58,30 @@ func (warrior *Warrior) registerShieldSpecialization() {
 
 	warrior.AddStat(stats.BlockPercent, spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_PERCENT, 0).FractionAt(warrior.Talents.ShieldSpecialization))
 
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 1310318})
+	// Effect 0 is the block bonus; the tooltip states the chance as $m2%, so effect 1's ladder is
+	// the chance and the 100 in the proc chance column is noise.
+	// TODO: Manual review needed -- spell 1310318 generates 5 Rage on a block ($m1/10).
+	warrior.registerRageOnAvoid("Shield Specialization", 1310318, 5,
+		spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization), core.OutcomeBlock, nil)
+}
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name: "Shield Specialization",
-		// Effect 0 is the block bonus; the tooltip states the chance as $m2%, so effect 1's
-		// ladder is the chance and the 100 in the proc chance column is noise.
-		ProcChance:         spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization),
+// A chance to gain rage when an incoming attack is blocked, dodged or parried.
+func (warrior *Warrior) registerRageOnAvoid(name string, spellID int32, rage float64, chance float64, outcome core.HitOutcome, extra func() bool) {
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: spellID})
+	trigger := core.ProcTrigger{
+		Name:               name,
+		ProcChance:         chance,
 		TriggerImmediately: true,
-		Outcome:            core.OutcomeBlock,
+		Outcome:            outcome,
 		Callback:           core.CallbackOnSpellHitTaken,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			// TODO: Manual review needed -- spell 1310318 generates 5 Rage on a block ($m1/10).
-			warrior.AddRage(sim, 5, rageMetrics)
+			warrior.AddRage(sim, rage, rageMetrics)
 		},
-	})
+	}
+	if extra != nil {
+		trigger.ExtraCondition = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool { return extra() }
+	}
+	warrior.MakeProcTriggerAura(trigger)
 }
 
 func (warrior *Warrior) registerToughness() {
@@ -118,11 +111,10 @@ func (warrior *Warrior) registerLastStand() {
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			// TODO: Manual review needed -- spell 12976 grants 30% of maximum health.
 			bonusHealth = warrior.MaxHealth() * 0.3
-			warrior.AddStatsDynamic(sim, stats.Stats{stats.Health: bonusHealth})
-			warrior.GainHealth(sim, bonusHealth, healthMetrics)
+			warrior.UpdateMaxHealth(sim, bonusHealth, healthMetrics)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.AddStatsDynamic(sim, stats.Stats{stats.Health: -bonusHealth})
+			warrior.UpdateMaxHealth(sim, -bonusHealth, healthMetrics)
 		},
 	})
 
@@ -163,8 +155,7 @@ func (warrior *Warrior) registerImprovedSunderArmor() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskSunderArmor,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		// The client states the rage reduction on a 0-1000 bar, so the ladder is tenths.
-		IntValue: int32(spellData.ImprovedSunderArmor.ValueAt(warrior.Talents.ImprovedSunderArmor) / 10),
+		IntValue:  int32(spellData.ImprovedSunderArmor.TenthsAt(warrior.Talents.ImprovedSunderArmor)),
 	})
 }
 
@@ -280,8 +271,7 @@ func (warrior *Warrior) registerFocusedRage() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: WarriorSpellsAll ^ (SpellMaskDeathWish | SpellMaskBattleShout),
 		Kind:      core.SpellMod_PowerCost_Flat,
-		// The client states the rage reduction on a 0-1000 bar, so the ladder is tenths.
-		IntValue: int32(spellData.FocusedRage.ValueAt(warrior.Talents.FocusedRage) / 10),
+		IntValue:  int32(spellData.FocusedRage.TenthsAt(warrior.Talents.FocusedRage)),
 	})
 }
 
@@ -290,24 +280,12 @@ func (warrior *Warrior) registerMasterOfDefense() {
 		return
 	}
 
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 23602})
-
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name: "Master of Defense",
-		// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100
-		// in the proc chance column is noise.
-		ProcChance:         spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense),
-		TriggerImmediately: true,
-		Outcome:            core.OutcomeDodge | core.OutcomeParry,
-		Callback:           core.CallbackOnSpellHitTaken,
-		ExtraCondition: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {
-			return warrior.PseudoStats.CanBlock
-		},
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			// TODO: Manual review needed -- spell 23602 generates 5 Rage on a dodge or parry ($m1/10).
-			warrior.AddRage(sim, 5, rageMetrics)
-		},
-	})
+	// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100 in
+	// the proc chance column is noise; a shield has to be equipped.
+	// TODO: Manual review needed -- spell 23602 generates 5 Rage on a dodge or parry ($m1/10).
+	warrior.registerRageOnAvoid("Master of Defense", 23602, 5,
+		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense), core.OutcomeDodge|core.OutcomeParry,
+		func() bool { return warrior.PseudoStats.CanBlock })
 }
 
 func (warrior *Warrior) registerImprovedRevenge() {
@@ -399,7 +377,6 @@ func (warrior *Warrior) registerImprovedThunderClap() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskThunderClap,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		// The client states the rage reduction on a 0-1000 bar, so the ladder is tenths.
-		IntValue: int32(spellData.ImprovedThunderClap.ValueAt(warrior.Talents.ImprovedThunderClap) / 10),
+		IntValue:  int32(spellData.ImprovedThunderClap.TenthsAt(warrior.Talents.ImprovedThunderClap)),
 	})
 }

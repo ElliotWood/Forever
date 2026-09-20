@@ -336,26 +336,23 @@ func WithSpellDataPPMs(table SpellDataTable, ppms map[int32]float64) SpellDataTa
 }
 
 func applyPPM(table SpellDataTable, ppmOf func(SpellData) float64) SpellDataTable {
-	out := make(SpellDataTable, len(table))
-	for i, row := range table {
-		out[i] = row
-		if row.PPM != 0 {
-			panic(fmt.Sprintf("spell %d rank %d already has PPM %v", row.SpellID, row.Rank, row.PPM))
-		}
-		out[i].PPM = ppmOf(row)
-	}
-	return out
+	return applyHandValue(table, "PPM", func(r *SpellData) *float64 { return &r.PPM }, ppmOf)
 }
 
 func applyFlatThreat(table SpellDataTable, threatOf func(SpellData) float64) SpellDataTable {
+	return applyHandValue(table, "flat threat", func(r *SpellData) *float64 { return &r.FlatThreatBonus }, threatOf)
+}
+
+// A hand-supplied value goes onto a copy of the table, and only where the client left the field
+// empty: a row that already carries one is a generator change the caller has to see.
+func applyHandValue(table SpellDataTable, what string, field func(*SpellData) *float64, valueOf func(SpellData) float64) SpellDataTable {
 	out := make(SpellDataTable, len(table))
 	for i, row := range table {
 		out[i] = row
-		if row.FlatThreatBonus != 0 {
-			panic(fmt.Sprintf("spell %d rank %d already has flat threat %v from the client DB",
-				row.SpellID, row.Rank, row.FlatThreatBonus))
+		if existing := *field(&row); existing != 0 {
+			panic(fmt.Sprintf("spell %d rank %d already has %s %v from the client DB", row.SpellID, row.Rank, what, existing))
 		}
-		out[i].FlatThreatBonus = threatOf(row)
+		*field(&out[i]) = valueOf(row)
 	}
 	return out
 }

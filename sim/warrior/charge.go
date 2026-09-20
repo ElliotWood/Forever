@@ -9,6 +9,8 @@ import (
 var chargeRank = spellData.Charge.BySpellID(11578)
 
 func (warrior *Warrior) registerCharge() {
+	// Charge (11578) energizes 15 rage; Improved Charge adds its ladder.
+	chargeRage := 15 + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 	actionID := core.ActionID{SpellID: chargeRank.SpellID}
 	metrics := warrior.NewRageMetrics(actionID)
 
@@ -57,7 +59,7 @@ func (warrior *Warrior) registerCharge() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			aura.Activate(sim)
-			warrior.AddRage(sim, warrior.ChargeRageGain, metrics)
+			warrior.AddRage(sim, chargeRage, metrics)
 			warrior.MoveTo(chargeMinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
 		},
 	})

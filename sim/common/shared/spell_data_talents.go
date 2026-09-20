@@ -6,7 +6,7 @@ import "fmt"
 // off the talents that use them and then checked against TrinityCore's SpellModOp (3.3.5) and
 // cmangos-tbc's (2.4.3): all 23 agree on value, and on name too except 24 and 27, where cmangos says
 // SPELL_BONUS_DAMAGE and MULTIPLE_VALUE. Every modifier effect in the generated tables uses one of
-// these 23 - the gaps below are values the cores name and TBC never uses.
+// these - the gaps below are values the cores name and no talent uses.
 const (
 	SPELLMOD_DAMAGE                = 0  // Fire Power, Piercing Ice, Contagion
 	SPELLMOD_DURATION              = 1  // Permafrost, Improved Gouge, Brutal Impact
@@ -26,6 +26,7 @@ const (
 	SPELLMOD_RESIST_MISS_CHANCE    = 16 // Arcane Focus, Elemental Precision, Suppression
 	SPELLMOD_CHANCE_OF_SUCCESS     = 18 // Improved Poisons, Improved Nature's Grasp
 	SPELLMOD_ACTIVATION_TIME       = 19 // Improved Fire Totems
+	SPELLMOD_GLOBAL_COOLDOWN       = 21 // Improved Slam
 	SPELLMOD_DOT                   = 22 // Emberstorm, Contagion, Fire Power
 	SPELLMOD_EFFECT3               = 23 // Improved Faerie Fire, Savage Fury
 	SPELLMOD_BONUS_MULTIPLIER      = 24 // Empowered Arcane Missiles / Fireball / Frostbolt / Corruption
@@ -46,6 +47,12 @@ func (t SpellDataTableOf[T]) FractionAt(rank int32) float64 {
 // The sign comes from the data: Improved Righteous Fury states -2/-4/-6, so rank 3 gives 0.94.
 func (t SpellDataTableOf[T]) MultiplierAt(rank int32) float64 {
 	return 1 + t.FractionAt(rank)
+}
+
+// The client states rage and energy on a 0-1000 bar: a -30 cost modifier is 3 rage, Charge's
+// energize of 150 is 15.
+func (t SpellDataTableOf[T]) TenthsAt(rank int32) float64 {
+	return t.ValueAt(rank) / 10
 }
 
 // The client's proc chance as a fraction, which is the form a ProcTrigger takes. Rank 0 is untaken
@@ -94,6 +101,10 @@ func (l SpellDataEffectLadder[T]) FractionAt(rank int32) float64 {
 
 func (l SpellDataEffectLadder[T]) MultiplierAt(rank int32) float64 {
 	return 1 + l.FractionAt(rank)
+}
+
+func (l SpellDataEffectLadder[T]) TenthsAt(rank int32) float64 {
+	return l.ValueAt(rank) / 10
 }
 
 func ladderValue[T SpellDataRanked](table SpellDataTableOf[T], rank int32, pick func(SpellData) float64) float64 {

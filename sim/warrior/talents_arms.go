@@ -1,7 +1,6 @@
 package warrior
 
 import (
-	"slices"
 	"time"
 
 	"github.com/wowsims/forever/sim/common/shared"
@@ -17,7 +16,7 @@ func (warrior *Warrior) registerArmsTalents() {
 	warrior.registerImprovedRend()
 
 	// Tier 2
-	// Improved Charge: warrior.go, when it resets ChargeRageGain
+	// Improved Charge: charge.go
 	// Improved Tactical Mastery: stances.go
 	warrior.registerImprovedOverpower()
 
@@ -55,7 +54,7 @@ func (warrior *Warrior) registerImprovedHeroicStrike() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskHeroicStrike,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedHeroicStrike.ValueAt(warrior.Talents.ImprovedHeroicStrike) / 10),
+		IntValue:  int32(spellData.ImprovedHeroicStrike.TenthsAt(warrior.Talents.ImprovedHeroicStrike)),
 	})
 }
 func (warrior *Warrior) registerDeflection() {
@@ -119,6 +118,7 @@ func (warrior *Warrior) registerDeepWounds() {
 		return
 	}
 
+	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
 	warrior.DeepWounds = warrior.RegisterSpell(core.SpellConfig{
 		// The bleed the talent (12834) reaches through 12162.
 		ActionID:       core.ActionID{SpellID: 412609},
@@ -144,7 +144,7 @@ func (warrior *Warrior) registerDeepWounds() {
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				baseDamage := warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
-				dot.SnapshotPhysical(target, baseDamage/float64(dot.HastedTickCount())*spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds))
+				dot.SnapshotPhysical(target, baseDamage/float64(dot.HastedTickCount())*share)
 			},
 
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
@@ -154,8 +154,9 @@ func (warrior *Warrior) registerDeepWounds() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHitNoHitCounter)
-			spell.Dot(target).Deactivate(sim)
-			spell.Dot(target).Apply(sim)
+			dot := spell.Dot(target)
+			dot.Deactivate(sim)
+			dot.Apply(sim)
 		},
 	})
 
@@ -315,7 +316,6 @@ func (warrior *Warrior) registerBloodthrill() {
 		return
 	}
 
-	// 1289681 lasts 6 seconds and carries one charge, which the Overpower cast spends.
 	// The proc (1289681) makes Overpower usable for 6 s; the cast consumes it like a dodge would.
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:       "Bloodthrill - Trigger",
@@ -325,7 +325,7 @@ func (warrior *Warrior) registerBloodthrill() {
 		Outcome:    core.OutcomeLanded,
 		ProcChance: spellData.Bloodthrill.FractionAt(warrior.Talents.Bloodthrill),
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
-			return warrior.Rend != nil && warrior.Rend.Dot(result.Target).IsActive()
+			return warrior.Rend.Dot(result.Target).IsActive()
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.OverpowerAura.Activate(sim)
@@ -342,32 +342,33 @@ func (warrior *Warrior) registerWeaponmaster() {
 	rank := warrior.Talents.Weaponmaster
 	actionID := core.ActionID{SpellID: 1290261}
 
+	// The three branches share A_DUMMY and misc 0, so each is named by its effect index. Which
+	// branch applies follows the main hand, re-read on a weapon swap.
 	mainHandIs := func(weaponTypes ...proto.WeaponType) bool {
-		mh := warrior.GetMHWeapon()
-		return mh != nil && slices.Contains(weaponTypes, mh.WeaponType)
+		return warrior.GetProcMaskForTypes(weaponTypes...).Matches(core.ProcMaskMeleeMH)
 	}
+	var critOn, armorIgnoreOn, swordOn bool
+	readMainHand := func() {
+		critOn = mainHandIs(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypePolearm)
+		armorIgnoreOn = mainHandIs(proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff)
+		swordOn = mainHandIs(proto.WeaponType_WeaponTypeSword)
+	}
+	readMainHand()
 
-	// The three branches share A_DUMMY and misc 0, so each is named by its effect index.
 	critAura := warrior.RegisterAura(core.Aura{
 		Label:    "Weaponmaster (Axe/Polearm)",
 		ActionID: actionID.WithTag(1),
 		Duration: core.NeverExpires,
-		OnReset: func(aura *core.Aura, sim *core.Simulation) {
-			if mainHandIs(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypePolearm) {
-				aura.Activate(sim)
-			}
-		},
 	}).AttachStatBuff(stats.PhysicalCritPercent, spellData.Weaponmaster.EffectAt(0).ValueAt(rank))
+	if critOn {
+		core.MakePermanent(critAura)
+	}
 
+	// The attack tables exist only once the environment is built, so the factor is written on reset.
 	armorIgnore := spellData.Weaponmaster.EffectAt(1).FractionAt(rank)
 	applyArmorIgnore := func() {
-		factor := 0.0
-		if mainHandIs(proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff) {
-			factor = armorIgnore
-		}
-
 		for _, attackTable := range warrior.AttackTables {
-			attackTable.ArmorIgnoreFactor = factor
+			attackTable.ArmorIgnoreFactor = core.TernaryFloat64(armorIgnoreOn, armorIgnore, 0)
 		}
 	}
 	warrior.RegisterResetEffect(func(sim *core.Simulation) {
@@ -385,7 +386,7 @@ func (warrior *Warrior) registerWeaponmaster() {
 		TriggerImmediately: true,
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
 			// An extra attack does not give another one.
-			return spell != extraAttack && mainHandIs(proto.WeaponType_WeaponTypeSword)
+			return swordOn && spell != extraAttack
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.AutoAttacks.MaybeReplaceMHSwing(sim, extraAttack).Cast(sim, result.Target)
@@ -397,12 +398,12 @@ func (warrior *Warrior) registerWeaponmaster() {
 	})
 
 	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		if mainHandIs(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypePolearm) {
+		readMainHand()
+		if critOn {
 			critAura.Activate(sim)
 		} else {
 			critAura.Deactivate(sim)
 		}
-
 		applyArmorIgnore()
 	})
 }
@@ -446,11 +447,10 @@ func (warrior *Warrior) registerImprovedSlam() {
 		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CASTING_TIME).ValueAt(warrior.Talents.ImprovedSlam)),
 	})
 
-	// Effect 2 is the same reduction on the global cooldown; shared names no constant for misc 21.
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskSlam,
 		Kind:      core.SpellMod_GlobalCooldown_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.EffectAt(1).ValueAt(warrior.Talents.ImprovedSlam)),
+		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_GLOBAL_COOLDOWN).ValueAt(warrior.Talents.ImprovedSlam)),
 	})
 }
 
@@ -509,7 +509,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 		TriggerImmediately: true,
 
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if warrior.Env.ActiveTargetCount() < 2 || warrior.SweepingStrikesAura.GetStacks() == 0 || result.PostOutcomeDamage <= 0 || !spell.ProcMask.Matches(core.ProcMaskMelee) {
+			if warrior.Env.ActiveTargetCount() < 2 || warrior.SweepingStrikesAura.GetStacks() == 0 || result.PostOutcomeDamage <= 0 {
 				return
 			}
 
