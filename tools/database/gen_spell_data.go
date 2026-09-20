@@ -25,10 +25,13 @@ type generatedRow struct {
 	CastTimeMs      int32
 	GCDMs           int32
 	CooldownMs      int32
+	DurationMs      int32
 	MinRange        float64
 	MaxRange        float64
 	MissileSpeed    float64
 	ProcChance      int32
+	ProcCharges     int32
+	MaxTargets      int32
 	FlatThreatBonus float64
 	SchoolMask      int32
 	DefenseType     int32
@@ -62,6 +65,9 @@ type generatedAmount struct {
 	// The effect's spell where it is not the rank's own, which only a periodic value renders.
 	SpellID int32
 }
+
+// SkillLineAbility.AcquireMethod: 0 trainer, 1 with the skill, 2 on level, 3 granted by another spell.
+const acquireGranted = 3
 
 type rankCandidate struct {
 	SpellID       int32
@@ -127,9 +133,9 @@ func fieldNameOf(spellName string) string {
 	return name
 }
 
-// Every multi-rank family a class can learn, from two sources: every spell whose subtext reads
-// "Rank N" in one of the class's skill lines, and every talent in the class's tree. Nothing
-// hand-maintained.
+// Every family a class can learn, from two sources: every spell in one of the class's skill lines
+// whose subtext reads "Rank N" or is empty (a single-rank ability like Whirlwind is its own rank 1),
+// and every talent in the class's tree. Nothing hand-maintained.
 func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, []string, []string, error) {
 	mask := classMaskOf(class)
 
@@ -149,7 +155,9 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 			JOIN SkillLine sl2 ON sl2.ID = sla2.SkillLine AND sl2.CategoryID = 7
 			WHERE (sla2.ClassMask & ?) != 0
 		)
-		AND s.NameSubtext_lang LIKE 'Rank %'
+		AND (s.NameSubtext_lang LIKE 'Rank %' OR s.NameSubtext_lang = '')
+		AND sla.SkillLine NOT IN (2851, 2853)
+		AND NOT EXISTS (SELECT 1 FROM SpellEffect se WHERE se.SpellID = sla.Spell AND se.EffectAura = 78)
 		ORDER BY n.Name_lang, sla.Spell`, mask)
 	if err != nil {
 		return nil, nil, nil, err
@@ -157,6 +165,14 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	defer rows.Close()
 
 	byName := map[string]map[int32][]rankCandidate{}
+	// A spell with no subtext is a single-rank family of its own only where no "Rank N" row carries
+	// its name - Execute's granted 20647 is a sub-spell of the ranked Execute, not a rank - and only
+	// when a trainer teaches it or the tree names it (Death Wish, Sweeping Strikes): a grant-only one
+	// is a Season of Discovery rune ability or an internal (Quick Strike, Meathook, the stance
+	// passives). Skill lines 2851 and 2853 are the runes themselves, and aura 78 is Mounted: the
+	// paladin Mounts line is a class line too.
+	unranked := map[string][]rankCandidate{}
+	trainedUnranked := map[string]bool{}
 	for rows.Next() {
 		var name, subtext string
 		var c rankCandidate
@@ -165,6 +181,11 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 		}
 		m := rankSubtext.FindStringSubmatch(subtext)
 		if m == nil {
+			c.Rank = 1
+			unranked[name] = append(unranked[name], c)
+			if c.AcquireMethod != acquireGranted {
+				trainedUnranked[name] = true
+			}
 			continue
 		}
 		rank, _ := strconv.Atoi(m[1])
@@ -181,6 +202,18 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	traits, traitSkipped, traitPartial, err := discoverTraitLadders(db, treeID)
 	if err != nil {
 		return nil, nil, nil, err
+	}
+	for name, cands := range unranked {
+		if byName[name] != nil {
+			continue
+		}
+		if _, talent := traits[name]; talent {
+			continue // the tree describes it; its own spell and legacy ranks would only collide
+		}
+		_, talentSkipped := traitSkipped[name]
+		if trainedUnranked[name] || talentSkipped {
+			byName[name] = map[int32][]rankCandidate{1: cands}
+		}
 	}
 
 	seen := map[string]bool{}
@@ -757,7 +790,8 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		Rank: rank, SpellID: spellID,
 		CastTimeMs: spell.CastTimeMs, GCDMs: spell.GCDMs, CooldownMs: spell.CooldownMs,
 		MinRange: spell.MinRange, MaxRange: spell.MaxRange, MissileSpeed: spell.MissileSpeed,
-		ProcChance: spell.ProcChance, SchoolMask: spell.SchoolMask, DefenseType: spell.DefenseType,
+		ProcChance: spell.ProcChance, ProcCharges: spell.ProcCharges, MaxTargets: spell.MaxTargets,
+		DurationMs: spell.DurationMs, SchoolMask: spell.SchoolMask, DefenseType: spell.DefenseType,
 	}
 	if spell.ManaCost.Valid {
 		row.Cost = NormalizePowerCost(int32(spell.ManaCost.Int64), spell.PowerType)
@@ -1069,6 +1103,9 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 	if row.CooldownMs > 0 {
 		parts = append(parts, fmt.Sprintf("Cooldown: %s", millis(row.CooldownMs)))
 	}
+	if row.DurationMs > 0 {
+		parts = append(parts, fmt.Sprintf("Duration: %s", millis(row.DurationMs)))
+	}
 	if row.MinRange > 0 {
 		parts = append(parts, fmt.Sprintf("MinRange: %s", num(row.MinRange)))
 	}
@@ -1080,6 +1117,12 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 	}
 	if row.ProcChance > 0 {
 		parts = append(parts, fmt.Sprintf("ProcChance: %d", row.ProcChance))
+	}
+	if row.ProcCharges > 0 {
+		parts = append(parts, fmt.Sprintf("ProcCharges: %d", row.ProcCharges))
+	}
+	if row.MaxTargets > 0 {
+		parts = append(parts, fmt.Sprintf("MaxTargets: %d", row.MaxTargets))
 	}
 	if row.FlatThreatBonus != 0 {
 		parts = append(parts, fmt.Sprintf("FlatThreatBonus: %s", num(row.FlatThreatBonus)))

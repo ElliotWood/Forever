@@ -86,6 +86,13 @@ type RankSpell struct {
 	// rather than on a roll, which is how Flurry and Enrage read.
 	ProcChance int32
 
+	// SpellAuraOptions.ProcCharges: how many times the aura acts before it drops (Shield Block 2,
+	// Retaliation 30). Zero is unlimited.
+	ProcCharges int32
+
+	// SpellTargetRestrictions.MaxTargets for an area effect (Whirlwind 4). Zero is unlimited.
+	MaxTargets int32
+
 	// SpellMisc.SchoolMask, in the client's bit order, which is not the sim's - see schoolName.
 	SchoolMask int32
 
@@ -203,8 +210,13 @@ func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 	}
 
 	if err := scanOptional(db,
-		`SELECT COALESCE(ProcChance, 0) FROM SpellAuraOptions WHERE SpellID = ?`, spellID, &s.ProcChance); err != nil {
+		`SELECT COALESCE(ProcChance, 0), COALESCE(ProcCharges, 0) FROM SpellAuraOptions WHERE SpellID = ?`, spellID, &s.ProcChance, &s.ProcCharges); err != nil {
 		return s, fmt.Errorf("proc chance for spell %d: %w", spellID, err)
+	}
+
+	if err := scanOptional(db,
+		`SELECT COALESCE(MaxTargets, 0) FROM SpellTargetRestrictions WHERE SpellID = ?`, spellID, &s.MaxTargets); err != nil {
+		return s, fmt.Errorf("max targets for spell %d: %w", spellID, err)
 	}
 
 	if err := scanOptional(db,

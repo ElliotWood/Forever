@@ -44,6 +44,11 @@ The other accessors:
 | `HighestRank()`    | the highest rank _in the data_, which is not always one the game grants - see [Traps](#traps) |
 | `RegisterAll(f)`   | calls `f` once per rank, in declaration order                                                 |
 
+A single-rank ability (Whirlwind, Shield Wall, Taunt) is a one-row table of its own, rank 1, with the
+same columns; nothing about it is hand-typed. Beside cost, cast time, cooldown and range a row carries
+`Duration` (the aura or effect it leaves), `ProcCharges` (how many times that aura acts) and
+`MaxTargets` (an area effect's cap), each zero where the client states none.
+
 ## The value shapes
 
 A rank's value is discriminated by shape, so a variant only carries fields that mean something for it:
