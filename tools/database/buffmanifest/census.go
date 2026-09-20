@@ -29,21 +29,11 @@ var Manifest = []BuffSpec{
 		Notes: "Booming Voice (12321) is in warrior tree 1117 but modifies radius only (misc 6), so there is no improved state.",
 	},
 	{
-		Field: "bs_solarian_sapphire", Number: 29, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go:    "BsSolarianSapphire",
-		Notes: "second state of the Battle Shout quadstate input; item 30446 has no Item row.",
-	},
-	{
 		Field: "devotion_aura", Number: 6, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "DevotionAura", Name: "Devotion Aura", Owner: proto.Class_ClassPaladin,
 		Category: "DevotionAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatArmor},
 		Notes: "no Improved Devotion Aura node in paladin tree 1100.",
-	},
-	{
-		Field: "ferocious_inspiration", Number: 1, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindAbsent,
-		Go: "FerociousInspiration", Owner: proto.Class_ClassHunter,
-		Notes: "no SpellName row for Ferocious Inspiration.",
 	},
 	{
 		Field: "leader_of_the_pack", Number: 4, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
@@ -98,34 +88,10 @@ var Manifest = []BuffSpec{
 		Notes: "no Improved Concentration Aura node in paladin tree 1100.",
 	},
 	{
-		Field: "sanctity_aura", Number: 5, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindAbsent,
-		Go: "SanctityAura", Owner: proto.Class_ClassPaladin,
-		Category: "SanctityAura", SharedCategory: "PaladinAura", SingleAura: true,
-		Notes: "SpellName 20218 exists but has no SkillLineAbility row and no node in paladin tree 1100.",
-	},
-	{
-		Field: "totem_of_wrath", Number: 20, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindAbsent,
-		Go: "TotemOfWrath", Owner: proto.Class_ClassShaman,
-		Stats: []proto.Stat{proto.Stat_StatSpellCritRating, proto.Stat_StatSpellHitRating},
-		Notes: "no SpellName row for Totem of Wrath.",
-	},
-	{
 		Field: "trueshot_aura", Number: 8, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "TrueshotAura", Name: "Trueshot Aura", Owner: proto.Class_ClassHunter,
 		Stats: []proto.Stat{proto.Stat_StatRangedAttackPower},
 		Notes: "the rank ladder is non-monotonic: rank 5 (20906) states 50 ranged attack power where rank 4 (20905) states 75, and the resolver takes the top rank. The single A_MOD_RANGED_ATTACK_POWER effect is why the row tags ranged attack power alone.",
-	},
-	{
-		Field: "wrath_of_air_totem", Number: 21, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindAbsent,
-		Go: "WrathOfAirTotem", Owner: proto.Class_ClassShaman, Category: "WrathOfAirTotem",
-		Stats: []proto.Stat{proto.Stat_StatSpellDamage},
-		Notes: "no SpellName row for Wrath of Air Totem.",
-	},
-	{
-		Field: "unleashed_rage", Number: 7, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "UnleashedRage", Owner: proto.Class_ClassShaman, Category: "UnleashedRage",
-		Stats: []proto.Stat{proto.Stat_StatAttackPower},
-		Notes: "spells 30802-30811 exist but have no SkillLineAbility row and no node in shaman tree 1082.",
 	},
 	{
 		Field: "atiesh_mage", Number: 12, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
@@ -140,52 +106,11 @@ var Manifest = []BuffSpec{
 		Notes: "aura-only spell; 28143 is named Power of the Guardian.",
 	},
 	{
-		Field: "braided_eternium_chain", Number: 14, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "BraidedEterniumChain", Category: "Braided Eternium Chain", Pet: PetInheritOwnerAura,
-		Stats: []proto.Stat{proto.Stat_StatMeleeCritRating},
-		Notes: "spell 31025 has no SpellName row and the neck has no Item row.",
-	},
-	{
-		Field: "chain_of_the_twilight_owl", Number: 16, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "ChainOfTheTwilightOwl", Category: "Chain of the Twilight Owl", Pet: PetInheritOwnerAura,
-		Stats: []proto.Stat{proto.Stat_StatSpellCritRating},
-		Notes: "spell 31035 has no SpellName row and the neck has no Item row.",
-	},
-	{
-		Field: "draenei_racial_caster", Number: 10, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "DraeneiRacialCaster", Stats: []proto.Stat{proto.Stat_StatSpellHitRating},
-		Label: "Inspiring Presense - Caster",
-		Notes: "spell 28878 has no SpellName row.",
-	},
-	{
-		Field: "draenei_racial_melee", Number: 9, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "DraeneiRacialMelee", Stats: []proto.Stat{proto.Stat_StatMeleeHitRating},
-		Label: "Inspiring Presense - Melee",
-		Notes: "spell 6562 has no SpellName row.",
-	},
-	{
-		Field: "eye_of_the_night", Number: 15, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "EyeOfTheNight", Category: "Eye of the Night", Pet: PetInheritOwnerAura,
-		Stats: []proto.Stat{proto.Stat_StatSpellDamage},
-		Notes: "spell 31033 has no SpellName row and the neck has no Item row.",
-	},
-	{
-		Field: "jade_pendant_of_blasting", Number: 17, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "JadePendantOfBlasting", Category: "Jade Pendant of Blasting", Pet: PetInheritOwnerAura,
-		Stats: []proto.Stat{proto.Stat_StatSpellDamage},
-		Notes: "spell 25607 has no SpellName row and the neck has no Item row.",
-	},
-	{
 		Field: "strength_of_earth_totem", Number: 24, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "StrengthOfEarthTotem", Name: "Strength of Earth Totem", AuraName: "Strength of Earth",
 		Owner: proto.Class_ClassShaman, Category: "StrengthOfEarthTotem",
 		Stats: []proto.Stat{proto.Stat_StatStrength},
 		Notes: "Enhancing Totems (16295) exists as a spell but has no node in shaman tree 1082.",
-	},
-	{
-		Field: "soe_enhancement_2pt4", Number: 37, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go:    "SoeEnhancement2Pt4",
-		Notes: "second state of the Strength of Earth quadstate input; set-bonus spell 37223 has no SpellName row.",
 	},
 	{
 		Field: "grace_of_air_totem", Number: 23, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
@@ -200,11 +125,6 @@ var Manifest = []BuffSpec{
 		Owner: proto.Class_ClassShaman, Category: "WindfuryTotem", Pet: PetStrip,
 		Stats: []proto.Stat{proto.Stat_StatAttackPower},
 		Notes: "the cast family (8512/10613/10614) and the aura family (8516/10608/10610) share the name; the aura carries the proc. Improved Weapon Totems (29193) has no node in shaman tree 1082.",
-	},
-	{
-		Field: "drums", Number: 11, Scope: ScopeParty, Proto: ProtoEnumDrums, Kind: KindEnum,
-		Go: "Drums", Pet: PetStrip,
-		Notes: "the drum items are not in the client; the UI keeps a hand-written swatch row over this field.",
 	},
 	{
 		Field: "frost_resistance_totem", Number: 39, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
@@ -259,39 +179,9 @@ var Manifest = []BuffSpec{
 		Notes: "no UI input today; aura-only spell 28144 is named Power of the Guardian.",
 	},
 	{
-		Field: "snapshot_improved_wrath_of_air_totem", Number: 22, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
-		Go:    "SnapshotImprovedWrathOfAirTotem",
-		Notes: "totem-twisting snapshot toggle with no spell source.",
-	},
-	{
-		Field: "snapshot_improved_strength_of_earth_totem", Number: 25, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
-		Go:    "SnapshotImprovedStrengthOfEarthTotem",
-		Notes: "totem-twisting snapshot toggle with no spell source.",
-	},
-	{
-		Field: "tranquil_air_totem", Number: 26, Scope: ScopeParty, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "TranquilAirTotem", Owner: proto.Class_ClassShaman,
-		Notes: "the aura Tranquil Air (25909) exists but there is no Tranquil Air Totem cast and no SkillLineAbility row.",
-	},
-	{
 		Field: "totem_twisting", Number: 34, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
 		Go:    "TotemTwisting",
 		Notes: "sim behaviour toggle with no spell source; rendered under Other Inputs.",
-	},
-	{
-		Field: "snapshot_bs_solarian_sapphire", Number: 30, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
-		Go:    "SnapshotBsSolarianSapphire",
-		Notes: "shout snapshot toggle with no spell source.",
-	},
-	{
-		Field: "snapshot_bs_t2", Number: 31, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
-		Go:    "SnapshotBsT2",
-		Notes: "shout snapshot toggle with no spell source.",
-	},
-	{
-		Field: "snapshot_bs_booming_voice_rank", Number: 32, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindAbsent,
-		Go:    "SnapshotBsBoomingVoiceRank",
-		Notes: "shout snapshot rank counter; Booming Voice (12321) modifies radius only, so the rank has no effect on Battle Shout.",
 	},
 	{
 		Field: "arcane_brilliance", Number: 1, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindStatFlat,
@@ -354,13 +244,6 @@ var Manifest = []BuffSpec{
 		Notes: "no Improved Blessing of Wisdom node in paladin tree 1100; Benediction (20101) modifies cost (misc 14).",
 	},
 	{
-		Field: "blessing_of_sanctuary", Number: 3, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "BlessingOfSanctuary", Owner: proto.Class_ClassPaladin,
-		Pet:   PetStripWhenSummonedLate,
-		Stats: []proto.Stat{proto.Stat_StatStamina, proto.Stat_StatArmor},
-		Notes: "no SpellName row for Blessing of Sanctuary.",
-	},
-	{
 		Field: "blessing_of_salvation", Number: 2, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindPseudoMult,
 		Go: "BlessingOfSalvation", Name: "Blessing of Salvation", Owner: proto.Class_ClassPaladin,
 		Pet: PetStripWhenSummonedLate,
@@ -386,23 +269,11 @@ var Manifest = []BuffSpec{
 		Notes: "Power Infusion (10060) grants +20% damage and healing done for 15 s.",
 	},
 	{
-		Field: "blood_frenzy", Number: 10, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "BloodFrenzy", Owner: proto.Class_ClassWarrior,
-		Stats: []proto.Stat{proto.Stat_StatAttackPower},
-		Notes: "spells 403352/412507/445285/445286 exist but have no SkillLineAbility row and no node in warrior tree 1117.",
-	},
-	{
 		Field: "hunters_mark", Number: 17, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStat,
 		Go: "HuntersMark", Name: "Hunter's Mark", Owner: proto.Class_ClassHunter,
 		Category: "HuntersMark", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatRangedAttackPower, proto.Stat_StatAttackPower},
 		Notes: "no Improved Hunter's Mark node in hunter tree 1091; CumulativeAura is 0, so rank 4 (14325) is a flat value.",
-	},
-	{
-		Field: "improved_scorch", Number: 8, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "ImprovedScorch", Owner: proto.Class_ClassMage,
-		Stats: []proto.Stat{proto.Stat_StatFireDamage},
-		Notes: "the debuff 22959 (Fire Vulnerability) is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the mage that applied it.",
 	},
 	{
 		Field: "improved_seal_of_the_crusader", Number: 3, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStat,
@@ -411,11 +282,6 @@ var Manifest = []BuffSpec{
 		Stats: []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
 		Label: "Seal of the Crusader",
 		Notes: "Improved Seal of the Crusader (20337) exists as a spell but has no node in paladin tree 1100.",
-	},
-	{
-		Field: "joc_retribution_2pt4", Number: 28, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,
-		Go:    "JocRetribution2Pt4",
-		Notes: "second state of the Seal of the Crusader quadstate input; set-bonus spell 37186 has no SpellName row.",
 	},
 	{
 		Field: "judgement_of_light", Number: 2, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindProc,
@@ -432,17 +298,6 @@ var Manifest = []BuffSpec{
 		Go: "Mangle", Name: "Mangle", Owner: proto.Class_ClassDruid,
 		Category: "Mangle", SingleAura: true,
 		Notes: "SkillLineAbility resolves the name to ranks 407995/1238069/1238070/1238073, so the top rank is 1238073.",
-	},
-	{
-		Field: "misery", Number: 4, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "Misery", Owner: proto.Class_ClassPriest, Category: "MiseryBonus",
-		Notes: "no SpellName row for Misery.",
-	},
-	{
-		Field: "shadow_weaving", Number: 7, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "ShadowWeaving", Owner: proto.Class_ClassPriest,
-		Stats: []proto.Stat{proto.Stat_StatShadowDamage},
-		Notes: "the debuff 15258 is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the priest that applied it.",
 	},
 	{
 		Field: "curse_of_elements", Number: 5, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffDamageTaken,
@@ -479,12 +334,6 @@ var Manifest = []BuffSpec{
 		Notes: "CumulativeAura is 5, and a stack is worth nothing until it is there, so the raid's copy is ramped by a driver; Improved Sunder Armor (12308) modifies cost only (misc 14).",
 	},
 	{
-		Field: "winters_chill", Number: 9, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "WintersChill", Owner: proto.Class_ClassMage,
-		Stats: []proto.Stat{proto.Stat_StatFrostDamage},
-		Notes: "the debuff 12579 is aura 308 A_MOD_CRIT_CHANCE_FOR_CASTER_WITH_ABILITIES, so it only benefits the mage that applied it; the name also resolves to the talent 11180 rather than to the debuff.",
-	},
-	{
 		Field: "gift_of_arthas", Number: 11, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffDamageTaken,
 		Go: "GiftOfArthas", Anchor: 11374, Category: "GiftOfArthasAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatAttackPower, proto.Stat_StatResilienceRating},
@@ -505,12 +354,6 @@ var Manifest = []BuffSpec{
 		Notes: "no Improved Demoralizing Shout node in warrior tree 1117.",
 	},
 	{
-		Field: "screech", Number: 26, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "Screech", Owner: proto.Class_ClassHunter,
-		Stats: []proto.Stat{proto.Stat_StatStamina, proto.Stat_StatResilienceRating},
-		Notes: "no SpellName row for Screech.",
-	},
-	{
 		Field: "thunder_clap", Number: 22, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffAtkSpeed,
 		Go: "ThunderClap", Name: "Thunder Clap", Owner: proto.Class_ClassWarrior,
 		Category: "AtkSpdReduction",
@@ -528,31 +371,5 @@ var Manifest = []BuffSpec{
 		Go: "ScorpidSting", Name: "Scorpid Sting", Owner: proto.Class_ClassHunter,
 		Stats: []proto.Stat{proto.Stat_StatStamina, proto.Stat_StatResilienceRating},
 		Notes: "Improved Stings (1310661) effect 2 extends the duration (misc 1); the field is a plain bool, so the talent is not carried.",
-	},
-	{
-		Field: "shadow_embrace", Number: 25, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,
-		Go: "ShadowEmbrace", Owner: proto.Class_ClassWarlock,
-		Stats: []proto.Stat{proto.Stat_StatStamina, proto.Stat_StatResilienceRating},
-		Notes: "no SpellName row for Shadow Embrace.",
-	},
-	{
-		Field: "isb_uptime", Number: 6, Scope: ScopeDebuff, Proto: ProtoDouble, Kind: KindAbsent,
-		Go: "IsbUptime", Owner: proto.Class_ClassWarlock,
-		Notes: "Improved Shadow Bolt (17793) is a single dummy effect with no trigger spell and the debuff 17800 has no SpellName row.",
-	},
-	{
-		Field: "expose_weakness_uptime", Number: 18, Scope: ScopeDebuff, Proto: ProtoDouble, Kind: KindAbsent,
-		Go: "ExposeWeaknessUptime", Owner: proto.Class_ClassHunter,
-		Notes: "spells 7140/23577/23578 exist but have no SkillLineAbility row and no node in hunter tree 1091.",
-	},
-	{
-		Field: "expose_weakness_hunter_agility", Number: 19, Scope: ScopeDebuff, Proto: ProtoDouble, Kind: KindAbsent,
-		Go: "ExposeWeaknessHunterAgility", Owner: proto.Class_ClassHunter,
-		Notes: "input for the absent Expose Weakness row; spells 7140/23577/23578 have no SkillLineAbility row.",
-	},
-	{
-		Field: "hemorrhage_uptime", Number: 27, Scope: ScopeDebuff, Proto: ProtoDouble, Kind: KindAbsent,
-		Go: "HemorrhageUptime", Owner: proto.Class_ClassRogue,
-		Notes: "Hemorrhage (16511) effect 2 is aura 271 A_MOD_SPELL_DAMAGE_FROM_CASTER, so it only benefits the rogue that applied it.",
 	},
 }

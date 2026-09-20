@@ -35,15 +35,11 @@ export const BattleShout = makeBooleanPartyBuffInput({
 	label: 'Battle Shout',
 });
 
-// bs_solarian_sapphire: second state of the Battle Shout quadstate input; item 30446 has no Item row.
-
 export const DevotionAura = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(10293),
 	fieldName: 'devotionAura',
 	label: 'Devotion Aura',
 });
-
-// ferocious_inspiration: no SpellName row for Ferocious Inspiration.
 
 export const LeaderOfThePack = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(24932),
@@ -85,19 +81,11 @@ export const ConcentrationAura = makeBooleanPartyBuffInput({
 	label: 'Concentration Aura',
 });
 
-// sanctity_aura: SpellName 20218 exists but has no SkillLineAbility row and no node in paladin tree 1100.
-
-// totem_of_wrath: no SpellName row for Totem of Wrath.
-
 export const TrueshotAura = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(20906),
 	fieldName: 'trueshotAura',
 	label: 'Trueshot Aura',
 });
-
-// wrath_of_air_totem: no SpellName row for Wrath of Air Totem.
-
-// unleashed_rage: spells 30802-30811 exist but have no SkillLineAbility row and no node in shaman tree 1082.
 
 export const AtieshMage = makeMultistatePartyBuffInput({
 	actionId: ActionId.fromSpellId(28142),
@@ -113,25 +101,11 @@ export const AtieshWarlock = makeMultistatePartyBuffInput({
 	label: 'Atiesh - Warlock',
 });
 
-// braided_eternium_chain: spell 31025 has no SpellName row and the neck has no Item row.
-
-// chain_of_the_twilight_owl: spell 31035 has no SpellName row and the neck has no Item row.
-
-// draenei_racial_caster: spell 28878 has no SpellName row.
-
-// draenei_racial_melee: spell 6562 has no SpellName row.
-
-// eye_of_the_night: spell 31033 has no SpellName row and the neck has no Item row.
-
-// jade_pendant_of_blasting: spell 25607 has no SpellName row and the neck has no Item row.
-
 export const StrengthOfEarthTotem = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(25362),
 	fieldName: 'strengthOfEarthTotem',
 	label: 'Strength of Earth',
 });
-
-// soe_enhancement_2pt4: second state of the Strength of Earth quadstate input; set-bonus spell 37223 has no SpellName row.
 
 export const GraceOfAirTotem = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(25360),
@@ -144,8 +118,6 @@ export const WindfuryTotem = makeBooleanPartyBuffInput({
 	fieldName: 'windfuryTotem',
 	label: 'Windfury Totem',
 });
-
-// drums: the drum items are not in the client; the UI keeps a hand-written swatch row over this field.
 
 export const FrostResistanceTotem = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(10477),
@@ -193,19 +165,7 @@ export const AspectOfTheWild = makeBooleanPartyBuffInput({
 
 // atiesh_priest: no settings input over this field.
 
-// snapshot_improved_wrath_of_air_totem: totem-twisting snapshot toggle with no spell source.
-
-// snapshot_improved_strength_of_earth_totem: totem-twisting snapshot toggle with no spell source.
-
-// tranquil_air_totem: the aura Tranquil Air (25909) exists but there is no Tranquil Air Totem cast and no SkillLineAbility row.
-
 // totem_twisting: sim behaviour toggle with no spell source; rendered under Other Inputs.
-
-// snapshot_bs_solarian_sapphire: shout snapshot toggle with no spell source.
-
-// snapshot_bs_t2: shout snapshot toggle with no spell source.
-
-// snapshot_bs_booming_voice_rank: shout snapshot rank counter; Booming Voice (12321) modifies radius only, so the rank has no effect on Battle Shout.
 
 export const ArcaneBrilliance = makeBooleanRaidBuffInput({
 	actionId: ActionId.fromSpellId(23028),
@@ -257,8 +217,6 @@ export const BlessingOfWisdom = makeBooleanIndividualBuffInput({
 	label: 'Blessing of Wisdom',
 });
 
-// blessing_of_sanctuary: no SpellName row for Blessing of Sanctuary.
-
 // blessing_of_salvation: the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.
 
 export const ShadowProtection = makeBooleanRaidBuffInput({
@@ -281,23 +239,17 @@ export const PowerInfusions = makeMultistateIndividualBuffInput({
 	label: 'Power Infusions',
 });
 
-// blood_frenzy: spells 403352/412507/445285/445286 exist but have no SkillLineAbility row and no node in warrior tree 1117.
-
 export const HuntersMark = makeBooleanDebuffInput({
 	actionId: ActionId.fromSpellId(14325),
 	fieldName: 'huntersMark',
 	label: "Hunter's Mark",
 });
 
-// improved_scorch: the debuff 22959 (Fire Vulnerability) is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the mage that applied it.
-
 export const ImprovedSealOfTheCrusader = makeBooleanDebuffInput({
 	actionId: ActionId.fromSpellId(20303),
 	fieldName: 'improvedSealOfTheCrusader',
 	label: 'Seal of the Crusader',
 });
-
-// joc_retribution_2pt4: second state of the Seal of the Crusader quadstate input; set-bonus spell 37186 has no SpellName row.
 
 export const JudgementOfLight = makeBooleanDebuffInput({
 	actionId: ActionId.fromSpellId(20346),
@@ -316,10 +268,6 @@ export const Mangle = makeBooleanDebuffInput({
 	fieldName: 'mangle',
 	label: 'Mangle',
 });
-
-// misery: no SpellName row for Misery.
-
-// shadow_weaving: the debuff 15258 is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the priest that applied it.
 
 export const CurseOfElements = makeBooleanDebuffInput({
 	actionId: ActionId.fromSpellId(1311680),
@@ -351,9 +299,6 @@ export const SunderArmor = makeBooleanDebuffInput({
 	label: 'Sunder Armor',
 });
 
-// winters_chill: the debuff 12579 is aura 308 A_MOD_CRIT_CHANCE_FOR_CASTER_WITH_ABILITIES, so it only benefits the mage that applied it; the name also resolves
-// to the talent 11180 rather than to the debuff.
-
 export const GiftOfArthas = makeBooleanDebuffInput({
 	actionId: ActionId.fromSpellId(11374),
 	fieldName: 'giftOfArthas',
@@ -372,8 +317,6 @@ export const DemoralizingShout = makeBooleanDebuffInput({
 	label: 'Demoralizing Shout',
 });
 
-// screech: no SpellName row for Screech.
-
 export const ThunderClap = makeBooleanDebuffInput({
 	actionId: ActionId.fromSpellId(11581),
 	fieldName: 'thunderClap',
@@ -391,16 +334,6 @@ export const ScorpidSting = makeBooleanDebuffInput({
 	fieldName: 'scorpidSting',
 	label: 'Scorpid Sting',
 });
-
-// shadow_embrace: no SpellName row for Shadow Embrace.
-
-// isb_uptime: Improved Shadow Bolt (17793) is a single dummy effect with no trigger spell and the debuff 17800 has no SpellName row.
-
-// expose_weakness_uptime: spells 7140/23577/23578 exist but have no SkillLineAbility row and no node in hunter tree 1091.
-
-// expose_weakness_hunter_agility: input for the absent Expose Weakness row; spells 7140/23577/23578 have no SkillLineAbility row.
-
-// hemorrhage_uptime: Hemorrhage (16511) effect 2 is aura 271 A_MOD_SPELL_DAMAGE_FROM_CASTER, so it only benefits the rogue that applied it.
 
 export const GENERATED_RAID_BUFFS_CONFIG: GeneratedStatOption[] = [
 	{

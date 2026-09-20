@@ -122,9 +122,9 @@ func syntheticBuffRows() []ResolvedBuff {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
-				Field: "braided_eternium_chain", Scope: buffmanifest.ScopeParty,
+				Field: "totem_twisting", Scope: buffmanifest.ScopeParty,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindAbsent,
-				Go: "SynthBraidedEterniumChain", Category: "Braided Eternium Chain",
+				Go: "SynthInheritedNeck", Category: "Inherited Neck",
 				Pet: buffmanifest.PetInheritOwnerAura,
 			},
 			Reason: "the neck has no Item row",

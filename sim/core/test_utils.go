@@ -63,69 +63,47 @@ var FullRaidBuffs = &proto.RaidBuffs{
 }
 
 var FullPartyBuffs = &proto.PartyBuffs{
-	FerociousInspiration:  1,
-	BloodPact:             true,
-	MoonkinAura:           true,
-	LeaderOfThePack:       true,
-	SanctityAura:          proto.TristateEffect_TristateEffectImproved,
-	DevotionAura:          true,
-	RetributionAura:       true,
-	ConcentrationAura:     true,
-	TrueshotAura:          true,
-	DraeneiRacialMelee:    true,
-	DraeneiRacialCaster:   true,
-	AtieshDruid:           1,
-	AtieshMage:            1,
-	AtieshPriest:          1,
-	AtieshWarlock:         1,
-	BraidedEterniumChain:  true,
-	EyeOfTheNight:         true,
-	ChainOfTheTwilightOwl: true,
-	JadePendantOfBlasting: true,
-	TotemTwisting:         true,
+	BloodPact:         true,
+	MoonkinAura:       true,
+	LeaderOfThePack:   true,
+	DevotionAura:      true,
+	RetributionAura:   true,
+	ConcentrationAura: true,
+	TrueshotAura:      true,
+	AtieshDruid:       1,
+	AtieshMage:        1,
+	AtieshPriest:      1,
+	AtieshWarlock:     1,
+	TotemTwisting:     true,
 
 	ManaSpringTotem:      proto.TristateEffect_TristateEffectImproved,
 	ManaTideTotems:       1,
-	TotemOfWrath:         1,
-	WrathOfAirTotem:      proto.TristateEffect_TristateEffectImproved,
 	GraceOfAirTotem:      true,
 	StrengthOfEarthTotem: true,
 	WindfuryTotem:        true,
 
 	BattleShout:     true,
 	CommandingShout: true,
-
-	Drums: proto.Drums_LesserDrumsOfBattle,
 }
 
 var FullIndividualBuffs = &proto.IndividualBuffs{
 	BlessingOfKings:     true,
 	BlessingOfSalvation: true,
-	BlessingOfSanctuary: true,
 	BlessingOfWisdom:    true,
 	BlessingOfMight:     true,
-	UnleashedRage:       true,
 }
 
 var FullTankIndividualBuffs = &proto.IndividualBuffs{
-	BlessingOfKings:     true,
-	BlessingOfSanctuary: true,
-	BlessingOfWisdom:    true,
-	BlessingOfMight:     true,
-	UnleashedRage:       true,
+	BlessingOfKings:  true,
+	BlessingOfWisdom: true,
+	BlessingOfMight:  true,
 }
 
 var FullDebuffs = &proto.Debuffs{
 	JudgementOfWisdom:         true,
 	JudgementOfLight:          true,
 	ImprovedSealOfTheCrusader: true,
-	Misery:                    true,
 	CurseOfElements:           true,
-	IsbUptime:                 1,
-	ShadowWeaving:             true,
-	ImprovedScorch:            true,
-	WintersChill:              true,
-	BloodFrenzy:               true,
 	GiftOfArthas:              true,
 	Mangle:                    true,
 	ExposeArmor:               true,
@@ -135,12 +113,9 @@ var FullDebuffs = &proto.Debuffs{
 	HuntersMark:               true,
 	DemoralizingRoar:          true,
 	// DemoralizingShout:         true,
-	ThunderClap:      true,
-	InsectSwarm:      true,
-	ScorpidSting:     true,
-	ShadowEmbrace:    true,
-	Screech:          true,
-	HemorrhageUptime: 1,
+	ThunderClap:  true,
+	InsectSwarm:  true,
+	ScorpidSting: true,
 }
 
 func NewDefaultTarget() *proto.Target {

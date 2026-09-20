@@ -170,9 +170,9 @@ func SynthPowerInfusionsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aur
 
 // The label a pet looks for on its owner, and the label the buff's own aura
 // carries.
-var SynthBraidedEterniumChainAuraLabel = "Braided Eternium Chain"
+var SynthInheritedNeckAuraLabel = "Inherited Neck"
 
-// func SynthBraidedEterniumChainAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // braided_eternium_chain, KindAbsent: the neck has no Item row
+// func SynthInheritedNeckAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // totem_twisting, KindAbsent: the neck has no Item row
 
 // Atiesh - Mage - https://www.wowhead.com/forever/spell=28142
 func SynthAtieshMageValue(talentPoints int32) float64 {
@@ -252,7 +252,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 // it now grants anyway, so nothing is emitted for it.
 func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
 	raid.Thorns = false
-	party.BraidedEterniumChain = party.BraidedEterniumChain || pet.Owner.HasAura(SynthBraidedEterniumChainAuraLabel)
+	party.TotemTwisting = party.TotemTwisting || pet.Owner.HasAura(SynthInheritedNeckAuraLabel)
 
 	if !pet.enabledOnStart {
 		individual.BlessingOfKings = false

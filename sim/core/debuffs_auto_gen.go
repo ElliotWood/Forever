@@ -9,8 +9,6 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// func BloodFrenzyAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blood_frenzy, KindAbsent: spells 403352/412507/445285/445286 exist but have no SkillLineAbility row and no node in warrior tree 1117.
-
 // Hunter's Mark - https://www.wowhead.com/forever/spell=14325
 var HuntersMarkCategory = "HuntersMark"
 
@@ -34,12 +32,8 @@ func HuntersMarkAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// func ImprovedScorchAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // improved_scorch, KindAbsent: the debuff 22959 (Fire Vulnerability) is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the mage that applied it.
-
 // Seal of the Crusader - https://www.wowhead.com/forever/spell=20303
 // func ImprovedSealOfTheCrusaderAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // improved_seal_of_the_crusader, KindDebuffStat: spell 20303 states no aura effect this generator maps (auras 14)
-
-// func JocRetribution2Pt4Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // joc_retribution_2pt4, KindAbsent: second state of the Seal of the Crusader quadstate input; set-bonus spell 37186 has no SpellName row.
 
 // Judgement of Light - https://www.wowhead.com/forever/spell=20346
 func JudgementOfLightDuration(talentPoints int32) time.Duration {
@@ -69,10 +63,6 @@ func JudgementOfWisdomAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 
 // Mangle - https://www.wowhead.com/forever/spell=1238073
 // func MangleAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // mangle, KindDebuffDamageTaken: spell 1238073 states no aura effect this generator maps (auras )
-
-// func MiseryAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // misery, KindAbsent: no SpellName row for Misery.
-
-// func ShadowWeavingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_weaving, KindAbsent: the debuff 15258 is aura 270 A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, so it only benefits the priest that applied it.
 
 // Curse of the Elements - https://www.wowhead.com/forever/spell=1311680
 var CurseOfElementsCategory = "CurseOfElements"
@@ -198,8 +188,6 @@ func SunderArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// func WintersChillAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // winters_chill, KindAbsent: the debuff 12579 is aura 308 A_MOD_CRIT_CHANCE_FOR_CASTER_WITH_ABILITIES, so it only benefits the mage that applied it; the name also resolves to the talent 11180 rather than to the debuff.
-
 // Gift of Arthas - https://www.wowhead.com/forever/spell=11374
 var GiftOfArthasCategory = "GiftOfArthasAura"
 
@@ -269,8 +257,6 @@ func DemoralizingShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 	})
 }
 
-// func ScreechAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // screech, KindAbsent: no SpellName row for Screech.
-
 // Thunder Clap - https://www.wowhead.com/forever/spell=11581
 var ThunderClapCategory = "AtkSpdReduction"
 
@@ -330,16 +316,6 @@ func ScorpidStingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		},
 	})
 }
-
-// func ShadowEmbraceAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_embrace, KindAbsent: no SpellName row for Shadow Embrace.
-
-// func IsbUptimeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // isb_uptime, KindAbsent: Improved Shadow Bolt (17793) is a single dummy effect with no trigger spell and the debuff 17800 has no SpellName row.
-
-// func ExposeWeaknessUptimeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // expose_weakness_uptime, KindAbsent: spells 7140/23577/23578 exist but have no SkillLineAbility row and no node in hunter tree 1091.
-
-// func ExposeWeaknessHunterAgilityAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // expose_weakness_hunter_agility, KindAbsent: input for the absent Expose Weakness row; spells 7140/23577/23578 have no SkillLineAbility row.
-
-// func HemorrhageUptimeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // hemorrhage_uptime, KindAbsent: Hemorrhage (16511) effect 2 is aura 271 A_MOD_SPELL_DAMAGE_FROM_CASTER, so it only benefits the rogue that applied it.
 
 func applyGeneratedDebuffs(target *Unit, debuffs *proto.Debuffs, raid *proto.Raid) {
 	if debuffs.HuntersMark {

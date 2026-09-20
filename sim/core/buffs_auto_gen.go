@@ -74,8 +74,6 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// func BsSolarianSapphireAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // bs_solarian_sapphire, KindAbsent: second state of the Battle Shout quadstate input; item 30446 has no Item row.
-
 // Devotion Aura - https://www.wowhead.com/forever/spell=10293
 var DevotionAuraCategory = "DevotionAura"
 
@@ -99,8 +97,6 @@ func DevotionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		},
 	})
 }
-
-// func FerociousInspirationAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // ferocious_inspiration, KindAbsent: no SpellName row for Ferocious Inspiration.
 
 // Leader of the Pack - https://www.wowhead.com/forever/spell=24932
 func LeaderOfThePackValue(talentPoints int32) float64 {
@@ -245,10 +241,6 @@ func ConcentrationAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 	})
 }
 
-// func SanctityAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // sanctity_aura, KindAbsent: SpellName 20218 exists but has no SkillLineAbility row and no node in paladin tree 1100.
-
-// func TotemOfWrathAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // totem_of_wrath, KindAbsent: no SpellName row for Totem of Wrath.
-
 // Trueshot Aura - https://www.wowhead.com/forever/spell=20906
 // the rank ladder is not monotonic: rank 5 (20906) is worth 50 where rank 4 (20905) is worth 75, and the top rank is what the constructor states
 func TrueshotAuraValue(talentPoints int32) float64 {
@@ -268,10 +260,6 @@ func TrueshotAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		},
 	})
 }
-
-// func WrathOfAirTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // wrath_of_air_totem, KindAbsent: no SpellName row for Wrath of Air Totem.
-
-// func UnleashedRageAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // unleashed_rage, KindAbsent: spells 30802-30811 exist but have no SkillLineAbility row and no node in shaman tree 1082.
 
 // Atiesh - Mage - https://www.wowhead.com/forever/spell=28142
 func AtieshMageValue(talentPoints int32) float64 {
@@ -312,34 +300,6 @@ func AtieshWarlockAura(unit *Unit, isPlayer bool, talentPoints int32, count floa
 	})
 }
 
-// The label a pet looks for on its owner, and the label the buff's own aura
-// carries.
-var BraidedEterniumChainAuraLabel = "Braided Eternium Chain"
-
-// func BraidedEterniumChainAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // braided_eternium_chain, KindAbsent: spell 31025 has no SpellName row and the neck has no Item row.
-
-// The label a pet looks for on its owner, and the label the buff's own aura
-// carries.
-var ChainOfTheTwilightOwlAuraLabel = "Chain of the Twilight Owl"
-
-// func ChainOfTheTwilightOwlAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // chain_of_the_twilight_owl, KindAbsent: spell 31035 has no SpellName row and the neck has no Item row.
-
-// func DraeneiRacialCasterAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // draenei_racial_caster, KindAbsent: spell 28878 has no SpellName row.
-
-// func DraeneiRacialMeleeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // draenei_racial_melee, KindAbsent: spell 6562 has no SpellName row.
-
-// The label a pet looks for on its owner, and the label the buff's own aura
-// carries.
-var EyeOfTheNightAuraLabel = "Eye of the Night"
-
-// func EyeOfTheNightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // eye_of_the_night, KindAbsent: spell 31033 has no SpellName row and the neck has no Item row.
-
-// The label a pet looks for on its owner, and the label the buff's own aura
-// carries.
-var JadePendantOfBlastingAuraLabel = "Jade Pendant of Blasting"
-
-// func JadePendantOfBlastingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // jade_pendant_of_blasting, KindAbsent: spell 25607 has no SpellName row and the neck has no Item row.
-
 // Strength of Earth Totem - https://www.wowhead.com/forever/spell=25362
 var StrengthOfEarthTotemCategory = "StrengthOfEarthTotem"
 
@@ -361,8 +321,6 @@ func StrengthOfEarthTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Au
 		},
 	})
 }
-
-// func SoeEnhancement2Pt4Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // soe_enhancement_2pt4, KindAbsent: second state of the Strength of Earth quadstate input; set-bonus spell 37223 has no SpellName row.
 
 // Grace of Air Totem - https://www.wowhead.com/forever/spell=25360
 var GraceOfAirTotemCategory = "GraceOfAirTotem"
@@ -407,8 +365,6 @@ func WindfuryTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		},
 	})
 }
-
-// func DrumsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // drums, KindEnum: the drum items are not in the client; the UI keeps a hand-written swatch row over this field.
 
 // Frost Resistance Totem - https://www.wowhead.com/forever/spell=10477
 func FrostResistanceTotemValue(talentPoints int32) float64 {
@@ -603,19 +559,7 @@ func AtieshPriestAura(unit *Unit, isPlayer bool, talentPoints int32, count float
 	})
 }
 
-// func SnapshotImprovedWrathOfAirTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // snapshot_improved_wrath_of_air_totem, KindFlag: totem-twisting snapshot toggle with no spell source.
-
-// func SnapshotImprovedStrengthOfEarthTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // snapshot_improved_strength_of_earth_totem, KindFlag: totem-twisting snapshot toggle with no spell source.
-
-// func TranquilAirTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // tranquil_air_totem, KindAbsent: the aura Tranquil Air (25909) exists but there is no Tranquil Air Totem cast and no SkillLineAbility row.
-
 // func TotemTwistingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // totem_twisting, KindFlag: sim behaviour toggle with no spell source; rendered under Other Inputs.
-
-// func SnapshotBsSolarianSapphireAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // snapshot_bs_solarian_sapphire, KindFlag: shout snapshot toggle with no spell source.
-
-// func SnapshotBsT2Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // snapshot_bs_t2, KindFlag: shout snapshot toggle with no spell source.
-
-// func SnapshotBsBoomingVoiceRankAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // snapshot_bs_booming_voice_rank, KindAbsent: shout snapshot rank counter; Booming Voice (12321) modifies radius only, so the rank has no effect on Battle Shout.
 
 // Arcane Brilliance - https://www.wowhead.com/forever/spell=23028
 var ArcaneBrillianceCategory = "StatBuff"
@@ -787,8 +731,6 @@ func BlessingOfWisdomAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		},
 	})
 }
-
-// func BlessingOfSanctuaryAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blessing_of_sanctuary, KindAbsent: no SpellName row for Blessing of Sanctuary.
 
 // Blessing of Salvation - https://www.wowhead.com/forever/spell=1038
 func BlessingOfSalvationValue(talentPoints int32) float64 {
@@ -1001,15 +943,10 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 // it now grants anyway, so nothing is emitted for it.
 func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
 	party.WindfuryTotem = false
-	party.Drums = proto.Drums_DrumsUnknown
 	raid.Bloodlust = false
 	raid.Thorns = false
 	individual.Innervates = 0
 	individual.PowerInfusions = 0
-	party.BraidedEterniumChain = party.BraidedEterniumChain || pet.Owner.HasAura(BraidedEterniumChainAuraLabel)
-	party.ChainOfTheTwilightOwl = party.ChainOfTheTwilightOwl || pet.Owner.HasAura(ChainOfTheTwilightOwlAuraLabel)
-	party.EyeOfTheNight = party.EyeOfTheNight || pet.Owner.HasAura(EyeOfTheNightAuraLabel)
-	party.JadePendantOfBlasting = party.JadePendantOfBlasting || pet.Owner.HasAura(JadePendantOfBlastingAuraLabel)
 
 	if !pet.enabledOnStart {
 		individual.ShadowPriestDps = 0
@@ -1020,7 +957,6 @@ func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyB
 		raid.PowerWordFortitude = false
 		individual.BlessingOfMight = false
 		individual.BlessingOfWisdom = false
-		individual.BlessingOfSanctuary = false
 		individual.BlessingOfSalvation = false
 		raid.ShadowProtection = false
 	}

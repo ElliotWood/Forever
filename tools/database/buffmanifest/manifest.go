@@ -269,6 +269,16 @@ func (s BuffSpec) TSField() string {
 	return b.String()
 }
 
+// Retired holds the field numbers api version 17 gave up, per scope, so that no
+// later row takes one: a saved payload or a share link from before the bump still
+// carries the old field under that number, and a new field reusing it would read
+// the old value. gen_buffs_proto turns each entry into a `reserved` line.
+var Retired = map[BuffScope][]int32{
+	ScopeParty:      {1, 5, 9, 10, 11, 14, 15, 16, 17, 20, 21, 22, 25, 26, 29, 30, 31, 32, 37},
+	ScopeIndividual: {3, 7},
+	ScopeDebuff:     {4, 6, 7, 8, 9, 10, 18, 19, 25, 26, 27, 28},
+}
+
 func ByScope(scope BuffScope) []BuffSpec {
 	var out []BuffSpec
 	for _, spec := range Manifest {

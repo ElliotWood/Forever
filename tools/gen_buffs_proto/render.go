@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/wowsims/forever/tools/database/buffmanifest"
@@ -53,15 +54,27 @@ func Render(manifest []buffmanifest.BuffSpec) []byte {
 		}
 
 		specs := scopeRows(manifest, msg.Scope)
+		retired := buffmanifest.Retired[msg.Scope]
+
+		// A retired number is never handed out again, so the next free one is past
+		// the live fields and the reserved ones alike.
 		next := int32(1)
 		for _, spec := range specs {
 			if spec.Number >= next {
 				next = spec.Number + 1
 			}
 		}
+		for _, number := range retired {
+			if number >= next {
+				next = number + 1
+			}
+		}
 		fmt.Fprintf(&b, "// Next index: %d\n", next)
 
 		fmt.Fprintf(&b, "message %s {\n", msg.Name)
+		if len(retired) > 0 {
+			fmt.Fprintf(&b, "\treserved %s;\n", joinNumbers(retired))
+		}
 		for _, spec := range specs {
 			fmt.Fprintf(&b, "\t%s %s = %d;\n", protoType(spec), spec.Field, spec.Number)
 		}
@@ -77,6 +90,14 @@ func protoType(spec buffmanifest.BuffSpec) string {
 		panic(fmt.Sprintf("%s has no proto type for %s", spec.Field, spec.Proto))
 	}
 	return name
+}
+
+func joinNumbers(numbers []int32) string {
+	parts := make([]string, len(numbers))
+	for i, number := range numbers {
+		parts[i] = strconv.Itoa(int(number))
+	}
+	return strings.Join(parts, ", ")
 }
 
 func scopeRows(manifest []buffmanifest.BuffSpec, scope buffmanifest.BuffScope) []buffmanifest.BuffSpec {

@@ -442,14 +442,6 @@ enum Drums {
 	LesserDrumsOfWar = 6;
 }
 
-enum StrengthOfEarthType {
-	None = 0;
-	Basic = 1;
-	CycloneBonus = 2;
-	EnhancingTotems = 3;
-	EnhancingAndCyclone = 4;
-}
-
 message ConsumesSpec {
 	int32 pot_id = 1;
 	int32 flask_id = 2;

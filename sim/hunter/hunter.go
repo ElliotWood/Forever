@@ -89,15 +89,6 @@ func NewHunter(character *core.Character, options *proto.Player, hunterOptions *
 
 	core.FillTalentsProto(hunter.Talents.ProtoReflect(), options.TalentsString, TalentTreeSizes)
 
-	if raid.Debuffs != nil {
-		if hunter.Options.PetType == proto.HunterOptions_Bat || hunter.Options.PetType == proto.HunterOptions_Owl {
-			raid.Debuffs.Screech = false
-		}
-
-		// TODO: Forever drops Expose Weakness; this hunter can no longer self-provide the
-		// debuff, so the raid.Debuffs fallback values are never cleared.
-	}
-
 	hunter.PseudoStats.CanParry = true
 
 	hunter.EnableManaBar()
