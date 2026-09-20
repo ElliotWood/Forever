@@ -1,7 +1,7 @@
 import { Player } from '@generated/proto/api';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
 import { IndividualSimSettings } from '@generated/proto/ui';
-import { ScalarType } from '@protobuf-ts/runtime';
+import { ScalarType, UnknownFieldHandler } from '@protobuf-ts/runtime';
 import { describe, expect, it } from 'vitest';
 
 import { migrateRetypedBuffFields, retiredBuffFields, retiredFieldSpellings, retypedBuffFields } from './buff_field_migration';
@@ -126,6 +126,19 @@ describe('migrateRetypedBuffFields', () => {
 
 		expect(fields).toHaveLength(25);
 		expect(new Set(fields).size).toBe(25);
+	});
+
+	// A share link is binary, and nothing rewrites it: a tristate's varint 2 decodes as the bool's
+	// true, and a retired field number is skipped as an unknown one. The bytes are written by hand
+	// because no message in the tree encodes either shape: `[0x30, 0x02]` is RaidBuffs field 6
+	// (thorns) carrying 2, and `[0x08, 0x01]` is the retired PartyBuffs field 1 carrying 1.
+	it('reads a saved link with no pre-pass', () => {
+		const raidBuffs = RaidBuffs.fromBinary(new Uint8Array([0x30, 0x02]));
+		const partyBuffs = PartyBuffs.fromBinary(new Uint8Array([0x08, 0x01]));
+
+		expect(raidBuffs.thorns).toBe(true);
+		expect(UnknownFieldHandler.list(partyBuffs).map(field => field.no)).toEqual([1]);
+		expect(PartyBuffs.toJson(partyBuffs)).toEqual({});
 	});
 
 	// A row that goes back to ProtoTristate in the manifest would have the rewrite write a bool into

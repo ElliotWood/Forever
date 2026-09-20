@@ -8,7 +8,8 @@
 // `fromJson` throws on "TristateEffectImproved" in a bool field - and, without
 // `ignoreUnknownFields`, on a retired key - long before they are reached, so both happen here, on
 // the JSON. Share links carry these fields as varints: 1 and 2 both decode as true, and a retired
-// field number is skipped as an unknown one, so `fromBinary` needs nothing.
+// field number is skipped as an unknown one, so `fromBinary` needs nothing; the binary case in
+// buff_field_migration.test.ts reads both off the wire.
 
 const RETYPED_API_VERSION = 17;
 
