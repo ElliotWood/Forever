@@ -41,21 +41,18 @@ func (paladin *Paladin) registerAuraSpell(aura *core.Aura, classSpellMask int64)
 	// })
 }
 
-// TODO: To be implemented. TBC body below already accounts for Forever dropping Improved Devotion Aura (untalented, per the TODO inside); kept commented until this class's port is reviewed.
+// TODO: To be implemented. The body below is the one the port needs; kept commented until this class's port is reviewed.
 //
 // Devotion Aura
-// https://www.wowhead.com/forever/spell=27149
+// https://www.wowhead.com/forever/spell=10293
 //
-// Gives 861 additional armor to party members within 30 yards.
-// Improved Devotion Aura talent increases the armor bonus by up to 40%.
+// Gives 735 additional armor to party members within 30 yards.
 // Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerDevotionAura() {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
-	// // TODO: Forever drops Improved Devotion Aura; untalented (0 points) until we know
-	// // whether the effect moved onto another talent.
-	// aura := core.DevotionAuraBuff(&paladin.Character, true, 0)
+	// The implementation, kept for the port:
+	// aura := core.DevotionAuraAura(&paladin.Unit, true, 0)
 	// paladin.registerAuraSpell(aura, SpellMaskDevotionAura)
 }
 
@@ -104,55 +101,53 @@ func (paladin *Paladin) registerSelfCastAura(label string, actionID core.ActionI
 func (paladin *Paladin) registerConcentrationAura() {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
-	// // TODO: Forever drops Improved Concentration Aura; untalented (0 points) until we
-	// // know whether the effect moved onto another talent.
-	// aura := core.ConcentrationAura(&paladin.Character, true, 0)
+	// The implementation, kept for the port:
+	// aura := core.ConcentrationAuraAura(&paladin.Unit, true, 0)
 	// paladin.registerAuraSpell(aura, SpellMaskConcentrationAura)
 }
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+// TODO: To be implemented. The body below is the one the port needs; kept commented until this class's port is reviewed.
 //
 // Fire Resistance Aura
-// https://www.wowhead.com/forever/spell=27153
+// https://www.wowhead.com/forever/spell=19900
 //
-// Gives 70 fire resistance to party members within 30 yards.
+// Gives 60 fire resistance to party members within 30 yards.
 // Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerFireResistanceAura() {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
-	// aura := core.FireResistanceAura(&paladin.Character, true)
+	// The implementation, kept for the port:
+	// aura := core.FireResistanceAuraAura(&paladin.Unit, true, 0)
 	// paladin.registerAuraSpell(aura, SpellMaskFireResistanceAura)
 }
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+// TODO: To be implemented. The body below is the one the port needs; kept commented until this class's port is reviewed.
 //
 // Frost Resistance Aura
-// https://www.wowhead.com/forever/spell=27152
+// https://www.wowhead.com/forever/spell=19898
 //
-// Gives 70 frost resistance to party members within 30 yards.
+// Gives 60 frost resistance to party members within 30 yards.
 // Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerFrostResistanceAura() {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
-	// aura := core.FrostResistanceAura(&paladin.Character, true)
+	// The implementation, kept for the port:
+	// aura := core.FrostResistanceAuraAura(&paladin.Unit, true, 0)
 	// paladin.registerAuraSpell(aura, SpellMaskFrostResistanceAura)
 }
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+// TODO: To be implemented. The body below is the one the port needs; kept commented until this class's port is reviewed.
 //
 // Shadow Resistance Aura
-// https://www.wowhead.com/forever/spell=27151
+// https://www.wowhead.com/forever/spell=19896
 //
-// Gives 70 shadow resistance to party members within 30 yards.
+// Gives 60 shadow resistance to party members within 30 yards.
 // Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerShadowResistanceAura() {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
-	// aura := core.ShadowResistanceAura(&paladin.Character, true)
+	// The implementation, kept for the port:
+	// aura := core.ShadowResistanceAuraAura(&paladin.Unit, true, 0)
 	// paladin.registerAuraSpell(aura, SpellMaskShadowResistanceAura)
 }
 
@@ -160,18 +155,15 @@ func (paladin *Paladin) registerShadowResistanceAura() {
 // https://www.wowhead.com/forever/spell=20218
 //
 // Increases Holy damage done by party members within 30 yards by 10%.
-// Improved Sanctity Aura talent adds a 1/2% bonus to all damage dealt.
 // Players may only have one Aura on them per Paladin at any one time.
 //
-// TODO: uncalled -- Forever drops the Sanctity Aura talent; re-gate before wiring
+// TODO: uncalled -- no SkillLineAbility row grants spell 20218 and paladin tree 1100
+// has no node for it, so sim/core builds no aura for it either. Re-gate before wiring
 // back into registerTalentSpells.
-// TODO: To be implemented. The TBC body below already accounts for Forever dropping Improved Sanctity Aura (untalented, per the TODO inside); kept commented until this class's port is reviewed.
+// TODO: To be implemented once the client has a spell to read the aura from.
 func (paladin *Paladin) registerSanctityAura() {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
-	// // TODO: Forever drops Improved Sanctity Aura; untalented (0 points) until we know
-	// // whether the effect moved onto another talent.
-	// aura := core.SanctityAuraBuff(&paladin.Character, true, 0)
+	// The shape the port needs:
 	// paladin.registerAuraSpell(aura, SpellMaskSanctityAura)
 }
