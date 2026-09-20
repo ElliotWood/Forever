@@ -663,7 +663,17 @@ func GetAllTalentSpellIds(inputsDir *string) map[string][]int32 {
 
 }
 
-func CreateTempAgent(r *proto.Raid) core.Agent {
+// Returns nil rather than dying when the spec cannot be built. Every class has abilities
+// still stubbed as panic("To be implemented"), and building an agent runs its registrars,
+// so a stubbed spec takes the whole database build down with it. The rotation spell ids
+// this feeds are a UI convenience; a spec that cannot start simply contributes none.
+func CreateTempAgent(r *proto.Raid) (agent core.Agent) {
+	defer func() {
+		if err := recover(); err != nil {
+			agent = nil
+		}
+	}()
+
 	encounter := core.MakeSingleTargetEncounter(0.0)
 	env, _, _ := core.NewEnvironment(r, encounter, false, false)
 	return env.Raid.Parties[0].Players[0]
@@ -796,8 +806,14 @@ func GetAllRotationSpellIds() map[string][]int32 {
 
 	ret_db := make(map[string][]int32, 0)
 
+	stubbed := 0
 	for _, r := range rotMapping {
-		f := CreateTempAgent(r.Raid).GetCharacter()
+		agent := CreateTempAgent(r.Raid)
+		if agent == nil {
+			stubbed++
+			continue
+		}
+		f := agent.GetCharacter()
 
 		spells := make([]int32, 0, len(f.Spellbook))
 
@@ -815,6 +831,10 @@ func GetAllRotationSpellIds() map[string][]int32 {
 
 		ret_db[r.Name] = spells
 	}
+	if stubbed > 0 {
+		fmt.Printf("Rotation spell ids: %d of %d specs skipped, their abilities are still stubbed\n", stubbed, len(rotMapping))
+	}
+
 	return ret_db
 }
 

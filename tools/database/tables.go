@@ -143,11 +143,12 @@ func LoadAndWriteRawItems(dbHelper *DBHelper, filter string, inputsDir string) (
 			s.AllowableClass as ClassMask,
 			s.AllowableRace_0 as RaceMask,
 			s.QualityModifier,
-			(
-				SELECT group_concat(-ench, ',')
-				FROM item_enchantment_template
-				WHERE entry = 0 -- ItemRandomSuffixGroupID: dropped by the client
-			) AS RandomSuffixOptions,
+			-- ItemRandomSuffixGroupID was dropped by the client, so this used to select
+			-- group_concat(-ench) from item_enchantment_template WHERE entry = 0. No row in
+			-- that table has entry 0 -- the lowest is 61 -- so the subquery matched nothing
+			-- and every item came back with a NULL here. ParseRandomSuffixOptions already
+			-- takes a NullString, so this is the same value without the dead 464KB table.
+			NULL AS RandomSuffixOptions,
 			 s.StatPercentageOfSocket,
 			 '[0,0,0,0,0,0,0,0,0,0]', -- StatModifier_bonusAmount: dropped; derived from StatAlloc
 			 i.ClassID,
