@@ -54,7 +54,7 @@ func syntheticBuffRows() []ResolvedBuff {
 		{
 			BuffSpec: buffmanifest.BuffSpec{
 				Field: "devotion_aura", Scope: buffmanifest.ScopeParty,
-				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindResistance,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindResistance,
 				Go: "SynthDevotionAura", Name: "Devotion Aura", Category: "DevotionAura",
 				SharedCategory: "PaladinAura", SingleAura: true,
 			},
@@ -76,7 +76,7 @@ func syntheticBuffRows() []ResolvedBuff {
 		{
 			BuffSpec: buffmanifest.BuffSpec{
 				Field: "thunder_clap", Scope: buffmanifest.ScopeDebuff,
-				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindDebuffAtkSpeed,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDebuffAtkSpeed,
 				Go: "SynthThunderClap", Name: "Thunder Clap", Category: "AtkSpdReduction",
 			},
 			SpellID: 11581, DurationMs: 30000, Supported: true,
@@ -98,7 +98,7 @@ func syntheticBuffRows() []ResolvedBuff {
 		{
 			BuffSpec: buffmanifest.BuffSpec{
 				Field: "thorns", Scope: buffmanifest.ScopeRaid,
-				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindDamageShield,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDamageShield,
 				Go: "SynthThorns", Name: "Thorns", Category: "Thorns",
 			},
 			SpellID: 9910, DurationMs: 600000, SchoolMask: 8, Supported: true,
@@ -119,7 +119,7 @@ func syntheticBuffRows() []ResolvedBuff {
 		{
 			BuffSpec: buffmanifest.BuffSpec{
 				Field: "curse_of_elements", Scope: buffmanifest.ScopeDebuff,
-				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindDebuffDamageTaken,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDebuffDamageTaken,
 				Go: "SynthCurseOfElements", Name: "Curse of the Elements", Category: "CurseOfElements",
 				SingleAura: true,
 			},

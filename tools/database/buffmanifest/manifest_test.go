@@ -165,19 +165,19 @@ func TestCensusMatchesProto(t *testing.T) {
 
 		declared, ok := want[key]
 		if !ok {
-			t.Errorf("%s is in the manifest but not in common.proto", key)
+			t.Errorf("%s is in the manifest but not in buffs.proto", key)
 			continue
 		}
 		if spec.Number != declared.number {
-			t.Errorf("%s has number %d in the manifest and %d in common.proto", key, spec.Number, declared.number)
+			t.Errorf("%s has number %d in the manifest and %d in buffs.proto", key, spec.Number, declared.number)
 		}
 		if !declared.allows(spec.Proto) {
-			t.Errorf("%s is %s in the manifest and %s in common.proto", key, spec.Proto, declared.kind)
+			t.Errorf("%s is %s in the manifest and %s in buffs.proto", key, spec.Proto, declared.kind)
 		}
 	}
 	for key := range want {
 		if !got[key] {
-			t.Errorf("%s is in common.proto but not in the manifest", key)
+			t.Errorf("%s is in buffs.proto but not in the manifest", key)
 		}
 	}
 }
@@ -187,8 +187,7 @@ type protoField struct {
 	number int32
 }
 
-// allows reports whether a manifest row may carry proto type p. A TristateEffect
-// field may also be ProtoBool: those are the approved ghost-talent retypes.
+// allows reports whether a manifest row may carry proto type p.
 func (f protoField) allows(p BuffProtoType) bool {
 	switch f.kind {
 	case "bool":
@@ -200,7 +199,7 @@ func (f protoField) allows(p BuffProtoType) bool {
 	case "Drums":
 		return p == ProtoEnumDrums
 	case "TristateEffect":
-		return p == ProtoTristate || p == ProtoBool
+		return p == ProtoTristate
 	}
 	return false
 }
@@ -210,9 +209,9 @@ var protoFieldRE = regexp.MustCompile(`^\s*([A-Za-z][\w.]*)\s+([a-z][a-z0-9_]*)\
 func parseProtoMessage(t *testing.T, message string) map[string]protoField {
 	t.Helper()
 
-	raw, err := os.ReadFile("../../../proto/common.proto")
+	raw, err := os.ReadFile("../../../proto/buffs.proto")
 	if err != nil {
-		t.Fatalf("read common.proto: %v", err)
+		t.Fatalf("read buffs.proto: %v", err)
 	}
 
 	fields := map[string]protoField{}

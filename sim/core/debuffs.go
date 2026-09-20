@@ -17,21 +17,20 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		MakePermanent(BloodFrenzyAura(target, 2))
 	}
 
-	if debuffs.CurseOfElements != proto.TristateEffect_TristateEffectMissing {
-		ranks := GetTristateValueInt32(debuffs.CurseOfElements, 0, 3)
-		MakePermanent(CurseOfElementsAura(target, -1, ranks))
+	if debuffs.CurseOfElements {
+		MakePermanent(CurseOfElementsAura(target, -1, 0))
 	}
 
 	if debuffs.CurseOfRecklessness {
 		MakePermanent(CurseOfRecklessnessAura(target, -1))
 	}
 
-	if debuffs.DemoralizingRoar != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(DemoralizingRoarAura(target, GetTristateValueInt32(debuffs.DemoralizingRoar, 0, 5)))
+	if debuffs.DemoralizingRoar {
+		MakePermanent(DemoralizingRoarAura(target, 0))
 	}
 
-	if debuffs.DemoralizingShout != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(DemoralizingShoutAura(target, 5, GetTristateValueInt32(debuffs.DemoralizingShout, 0, 5)))
+	if debuffs.DemoralizingShout {
+		MakePermanent(DemoralizingShoutAura(target, 5, 0))
 	}
 
 	if debuffs.ExposeWeaknessUptime > 0.0 {
@@ -41,8 +40,8 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		ApplyFixedUptimeAura(aura, debuffs.ExposeWeaknessUptime, aura.Duration, 1)
 	}
 
-	if debuffs.FaerieFire != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(FaerieFireAura(target, TernaryFloat64(IsImproved(debuffs.FaerieFire), 3, 0)))
+	if debuffs.FaerieFire {
+		MakePermanent(FaerieFireAura(target, 0))
 	}
 
 	if debuffs.HemorrhageUptime > 0.0 {
@@ -53,8 +52,8 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		MakePermanent(GiftOfArthasAura(target))
 	}
 
-	if debuffs.HuntersMark != proto.TristateEffect_TristateEffectMissing {
-		aura := HuntersMarkAura(target, GetTristateValueInt32(debuffs.HuntersMark, 0, 5))
+	if debuffs.HuntersMark {
+		aura := HuntersMarkAura(target, 0)
 		ApplyFixedUptimeAura(aura, 1, aura.Duration, 1)
 
 		ScheduledAura(aura, PeriodicActionOptions{
@@ -88,8 +87,8 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 
 	}
 
-	if debuffs.ImprovedSealOfTheCrusader != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, GetTristateValueInt32(debuffs.ImprovedSealOfTheCrusader, 0, 3), 0.0, Ternary(debuffs.JocRetribution_2Pt4, 1.15, 1.0)))
+	if debuffs.ImprovedSealOfTheCrusader {
+		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, 0, 0.0, Ternary(debuffs.JocRetribution_2Pt4, 1.15, 1.0)))
 	}
 
 	if debuffs.InsectSwarm {
@@ -145,8 +144,8 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 
 	}
 
-	if debuffs.ExposeArmor != proto.TristateEffect_TristateEffectMissing {
-		aura := MakePermanent(ExposeArmorAura(target, func() int32 { return 5 }, GetTristateValueInt32(debuffs.ExposeArmor, 0, 2)))
+	if debuffs.ExposeArmor {
+		aura := MakePermanent(ExposeArmorAura(target, func() int32 { return 5 }, 0))
 
 		ScheduledAura(aura, PeriodicActionOptions{
 			Period:   time.Second * 10,
@@ -178,8 +177,8 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		MakePermanent(WintersChillAura(target, 5))
 	}
 
-	if debuffs.ThunderClap != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(ThunderClapAura(target, GetTristateValueInt32(debuffs.ThunderClap, 0, 3)))
+	if debuffs.ThunderClap {
+		MakePermanent(ThunderClapAura(target, 0))
 	}
 }
 

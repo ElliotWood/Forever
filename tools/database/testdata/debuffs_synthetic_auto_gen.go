@@ -79,13 +79,13 @@ func SynthCurseOfElementsAura(unit *Unit, isPlayer bool, talentPoints int32) *Au
 }
 
 func applyGeneratedDebuffs(target *Unit, debuffs *proto.Debuffs, raid *proto.Raid) {
-	if debuffs.ThunderClap != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(SynthThunderClapAura(target, false, GetTristateValueInt32(debuffs.ThunderClap, 0, 2)))
+	if debuffs.ThunderClap {
+		MakePermanent(SynthThunderClapAura(target, false, 0))
 	}
 	if debuffs.SunderArmor {
 		MakePermanent(SynthSunderArmorAura(target, false, 0))
 	}
-	if debuffs.CurseOfElements != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(SynthCurseOfElementsAura(target, false, GetTristateValueInt32(debuffs.CurseOfElements, 0, 0)))
+	if debuffs.CurseOfElements {
+		MakePermanent(SynthCurseOfElementsAura(target, false, 0))
 	}
 }

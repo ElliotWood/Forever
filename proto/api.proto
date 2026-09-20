@@ -3,6 +3,7 @@ package proto;
 
 option go_package = "./proto";
 
+import "buffs.proto";
 import "common.proto";
 import "apl.proto";
 import "db.proto";

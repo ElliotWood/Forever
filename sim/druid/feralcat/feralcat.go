@@ -75,23 +75,13 @@ func (cat *FeralDruid) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
 // TotemTwisting is preserved so Grace of Air gets the correct reduced uptime.
 func (cat *FeralDruid) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
 	if cat.Talents.LeaderOfThePack {
-		// Idol of the Raven Goddess (32387) upgrades the LotP party buff to Improved (+2% crit).
-		// The ImprovedLeaderOfThePack talent provides healing-on-crit only, NOT extra crit.
-		if cat.HasItemEquipped(32387, []proto.ItemSlot{proto.ItemSlot_ItemSlotRanged}) {
-			if partyBuffs.LeaderOfThePack < proto.TristateEffect_TristateEffectImproved {
-				partyBuffs.LeaderOfThePack = proto.TristateEffect_TristateEffectImproved
-			}
-		} else {
-			if partyBuffs.LeaderOfThePack < proto.TristateEffect_TristateEffectRegular {
-				partyBuffs.LeaderOfThePack = proto.TristateEffect_TristateEffectRegular
-			}
-		}
+		partyBuffs.LeaderOfThePack = true
 	}
 
 	// Feral cats do not proc Windfury Totem. Strip the aura so the sim never
 	// registers WF procs, while keeping TotemTwisting intact so that Grace of
 	// Air receives the correct ~90% uptime when twisting is enabled.
-	partyBuffs.WindfuryTotem = proto.TristateEffect_TristateEffectMissing
+	partyBuffs.WindfuryTotem = false
 }
 
 func (cat *FeralDruid) Initialize() {

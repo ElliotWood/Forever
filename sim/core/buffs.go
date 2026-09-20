@@ -140,25 +140,24 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(ArcaneBrillianceAura(char))
 	}
 
-	if raidBuffs.DivineSpirit != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(DivineSpiritAura(char, IsImproved(raidBuffs.DivineSpirit)))
+	if raidBuffs.DivineSpirit {
+		MakePermanent(DivineSpiritAura(char, false))
 	}
 
-	if raidBuffs.GiftOfTheWild != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(GiftOfTheWildAura(char, IsImproved(raidBuffs.GiftOfTheWild)))
+	if raidBuffs.GiftOfTheWild {
+		MakePermanent(GiftOfTheWildAura(char, false))
 	}
 
-	if raidBuffs.PowerWordFortitude != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(PowerWordFortitudeAura(char, IsImproved(raidBuffs.PowerWordFortitude)))
+	if raidBuffs.PowerWordFortitude {
+		MakePermanent(PowerWordFortitudeAura(char, false))
 	}
 
 	if raidBuffs.ShadowProtection {
 		MakePermanent(ShadowProtectionAura(char))
 	}
 
-	if raidBuffs.Thorns != proto.TristateEffect_TristateEffectMissing {
-		// Improved tristate assumes a Druid with 3/3 Brambles talent (+75% Thorns dmg).
-		MakePermanent(ThornsAura(char, GetTristateValueInt32(raidBuffs.Thorns, 0, 3)))
+	if raidBuffs.Thorns {
+		MakePermanent(ThornsAura(char, 0))
 	}
 
 	if raidBuffs.Bloodlust {
@@ -182,13 +181,13 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(AtieshAura(char, proto.Class_ClassWarlock, float64(partyBuffs.AtieshWarlock)))
 	}
 
-	if partyBuffs.BattleShout != proto.TristateEffect_TristateEffectMissing {
+	if partyBuffs.BattleShout {
 		boomingVoicePoints := int32(0)
 		aura := BattleShoutAura(
 			char,
 			false,
 			boomingVoicePoints,
-			GetTristateValueFloat(partyBuffs.BattleShout, 1.0, 1.25),
+			1.0,
 			partyBuffs.BsSolarianSapphire,
 			false,
 		)
@@ -196,8 +195,8 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		ApplyFixedShoutAura(char, aura, BattleShoutCategory)
 	}
 
-	if partyBuffs.BloodPact != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(BloodPactAura(char, IsImproved(partyBuffs.BloodPact)))
+	if partyBuffs.BloodPact {
+		MakePermanent(BloodPactAura(char, false))
 	}
 
 	if partyBuffs.BraidedEterniumChain {
@@ -216,22 +215,22 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(JadePendantOfBlastingAura(char))
 	}
 
-	if partyBuffs.CommandingShout != proto.TristateEffect_TristateEffectMissing {
+	if partyBuffs.CommandingShout {
 		boomingVoicePoints := int32(0)
 
 		aura := CommandingShoutAura(
 			char,
 			false,
 			boomingVoicePoints,
-			GetTristateValueFloat(partyBuffs.CommandingShout, 1.0, 1.25),
+			1.0,
 			false,
 		)
 
 		ApplyFixedShoutAura(char, aura, CommandingShoutCategory)
 	}
 
-	if partyBuffs.DevotionAura != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(DevotionAuraBuff(char, false, GetTristateValueInt32(partyBuffs.DevotionAura, 0, 5)))
+	if partyBuffs.DevotionAura {
+		MakePermanent(DevotionAuraBuff(char, false, 0))
 	}
 
 	if partyBuffs.DraeneiRacialCaster {
@@ -246,12 +245,12 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(FerociousInspiration(char, partyBuffs.FerociousInspiration))
 	}
 
-	if partyBuffs.GraceOfAirTotem != proto.TristateEffect_TristateEffectMissing {
-		GraceOfAirTotemAura(char, IsImproved(partyBuffs.GraceOfAirTotem), partyBuffs.TotemTwisting)
+	if partyBuffs.GraceOfAirTotem {
+		GraceOfAirTotemAura(char, false, partyBuffs.TotemTwisting)
 	}
 
-	if partyBuffs.LeaderOfThePack != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(LeaderOfThePackAura(char, IsImproved(partyBuffs.LeaderOfThePack)))
+	if partyBuffs.LeaderOfThePack {
+		MakePermanent(LeaderOfThePackAura(char, false))
 	}
 
 	if partyBuffs.ManaSpringTotem != proto.TristateEffect_TristateEffectMissing {
@@ -262,24 +261,24 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		registerManaTideTotemCD(char, partyBuffs.ManaTideTotems)
 	}
 
-	if partyBuffs.MoonkinAura != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(MoonkinAuraBuff(char, IsImproved(partyBuffs.MoonkinAura)))
+	if partyBuffs.MoonkinAura {
+		MakePermanent(MoonkinAuraBuff(char, false))
 	}
 
-	if partyBuffs.RetributionAura != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(RetributionAuraBuff(char, false, GetTristateValueInt32(partyBuffs.RetributionAura, 0, 2)))
+	if partyBuffs.RetributionAura {
+		MakePermanent(RetributionAuraBuff(char, false, 0))
 	}
 
-	if partyBuffs.ConcentrationAura != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(ConcentrationAura(char, false, GetTristateValueInt32(partyBuffs.ConcentrationAura, 0, 3)))
+	if partyBuffs.ConcentrationAura {
+		MakePermanent(ConcentrationAura(char, false, 0))
 	}
 
 	if partyBuffs.SanctityAura != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(SanctityAuraBuff(char, false, GetTristateValueInt32(partyBuffs.SanctityAura, 0, 2)))
 	}
 
-	if partyBuffs.StrengthOfEarthTotem != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(StrengthOfEarthTotemAura(char, GetTristateValueInt32(partyBuffs.StrengthOfEarthTotem, 0, 2), partyBuffs.SoeEnhancement_2Pt4))
+	if partyBuffs.StrengthOfEarthTotem {
+		MakePermanent(StrengthOfEarthTotemAura(char, 0, partyBuffs.SoeEnhancement_2Pt4))
 	}
 
 	if partyBuffs.TotemOfWrath > 0 {
@@ -322,8 +321,8 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(AspectOfTheWildAura(char))
 	}
 
-	if partyBuffs.WindfuryTotem != proto.TristateEffect_TristateEffectMissing {
-		WindfuryTotemAura(char, IsImproved(partyBuffs.WindfuryTotem))
+	if partyBuffs.WindfuryTotem {
+		WindfuryTotemAura(char, false)
 	}
 
 	if partyBuffs.WrathOfAirTotem != proto.TristateEffect_TristateEffectMissing {
@@ -338,8 +337,8 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(BlessingOfKingsAura(char))
 	}
 
-	if individual.BlessingOfMight != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(BlessingOfMightAura(char, IsImproved(individual.BlessingOfMight)))
+	if individual.BlessingOfMight {
+		MakePermanent(BlessingOfMightAura(char, false))
 	}
 
 	if individual.BlessingOfSalvation {
@@ -350,8 +349,8 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(BlessingOfSanctuaryAura(char))
 	}
 
-	if individual.BlessingOfWisdom != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(BlessingOfWisdomAura(char, IsImproved(individual.BlessingOfWisdom)))
+	if individual.BlessingOfWisdom {
+		MakePermanent(BlessingOfWisdomAura(char, false))
 	}
 
 	if individual.Innervates > 0 {
@@ -1795,11 +1794,11 @@ func applyPetBuffEffects(petAgent PetAgent, raidBuffs *proto.RaidBuffs, partyBuf
 	// the owner during combat (Bloodlust) or don't make sense for a pet.
 	raidBuffs = googleProto.Clone(raidBuffs).(*proto.RaidBuffs)
 	raidBuffs.Bloodlust = false
-	raidBuffs.Thorns = proto.TristateEffect_TristateEffectMissing
+	raidBuffs.Thorns = false
 
 	partyBuffs = googleProto.Clone(partyBuffs).(*proto.PartyBuffs)
 	// Pets can't get extra attacks, doh!
-	partyBuffs.WindfuryTotem = proto.TristateEffect_TristateEffectMissing
+	partyBuffs.WindfuryTotem = false
 	// Neck auras are automatically inherited when a unit gets into range (40 yds)
 	partyBuffs.ChainOfTheTwilightOwl = partyBuffs.ChainOfTheTwilightOwl || petAgent.GetPet().Owner.HasAura(ChainOfTheTwilightOwlAuraLabel)
 	partyBuffs.EyeOfTheNight = partyBuffs.EyeOfTheNight || petAgent.GetPet().Owner.HasAura(EyeOfTheNightAuraLabel)
@@ -1811,21 +1810,19 @@ func applyPetBuffEffects(petAgent PetAgent, raidBuffs *proto.RaidBuffs, partyBuf
 	individualBuffs.PowerInfusions = 0
 
 	partyBuffs.Drums = proto.Drums_DrumsUnknown
-	partyBuffs.LeaderOfThePack = MinTristate(partyBuffs.LeaderOfThePack, proto.TristateEffect_TristateEffectRegular)
-	partyBuffs.MoonkinAura = MinTristate(partyBuffs.MoonkinAura, proto.TristateEffect_TristateEffectRegular)
 
 	if !petAgent.GetPet().enabledOnStart {
 		// Auras etc still apply, but not targeted buffs (usually)
 		// Strip targeted buffs that require presence at fight start
 		raidBuffs.ArcaneBrilliance = false
-		raidBuffs.DivineSpirit = proto.TristateEffect_TristateEffectMissing
-		raidBuffs.GiftOfTheWild = proto.TristateEffect_TristateEffectMissing
-		raidBuffs.PowerWordFortitude = proto.TristateEffect_TristateEffectMissing
+		raidBuffs.DivineSpirit = false
+		raidBuffs.GiftOfTheWild = false
+		raidBuffs.PowerWordFortitude = false
 		raidBuffs.ShadowProtection = false
-		raidBuffs.Thorns = proto.TristateEffect_TristateEffectMissing
-		individualBuffs.BlessingOfMight = proto.TristateEffect_TristateEffectMissing
+		raidBuffs.Thorns = false
+		individualBuffs.BlessingOfMight = false
 		individualBuffs.BlessingOfKings = false
-		individualBuffs.BlessingOfWisdom = proto.TristateEffect_TristateEffectMissing
+		individualBuffs.BlessingOfWisdom = false
 
 		// Only individual buff that would apply is Unleashed Rage.
 		unleashedRage := individualBuffs.UnleashedRage

@@ -289,7 +289,7 @@ func (hunter *Hunter) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
 		partyBuffs.TrueshotAura = true
 	}
 
-	if partyBuffs.WindfuryTotem != proto.TristateEffect_TristateEffectMissing {
+	if partyBuffs.WindfuryTotem {
 		hunter.windFuryEnabled = true
 	}
 }

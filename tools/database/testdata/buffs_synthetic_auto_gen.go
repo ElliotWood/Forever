@@ -139,8 +139,8 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if individual.BlessingOfKings {
 		MakePermanent(SynthBlessingOfKingsAura(&char.Unit, false, 0))
 	}
-	if party.DevotionAura != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(SynthDevotionAuraAura(&char.Unit, false, GetTristateValueInt32(party.DevotionAura, 0, 2)))
+	if party.DevotionAura {
+		MakePermanent(SynthDevotionAuraAura(&char.Unit, false, 0))
 	}
 	if party.FrostResistanceAura {
 		MakePermanent(SynthFrostResistanceAuraAura(&char.Unit, false, 0))
@@ -148,7 +148,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if individual.Innervates > 0 {
 		driveSynthInnervates(char, individual.Innervates)
 	}
-	if raid.Thorns != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(SynthThornsAura(&char.Unit, false, GetTristateValueInt32(raid.Thorns, 0, 2)))
+	if raid.Thorns {
+		MakePermanent(SynthThornsAura(&char.Unit, false, 0))
 	}
 }

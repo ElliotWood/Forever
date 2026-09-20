@@ -93,7 +93,7 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 	}
 
 	// Static Imbues
-	if consumables.MhImbueId != 0 && partyBuffs.WindfuryTotem == proto.TristateEffect_TristateEffectMissing {
+	if consumables.MhImbueId != 0 && !partyBuffs.WindfuryTotem {
 		registerStaticImbue(agent, consumables.MhImbueId)
 	}
 	if consumables.OhImbueId != 0 {

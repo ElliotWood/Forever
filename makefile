@@ -50,8 +50,7 @@ clean:
 	  node_modules
 	find . -name "*.results.tmp" -type f -delete
 
-# enabled in the proto split, once buffs.proto owns the buff messages
-#ui/generated/proto/api.ts: proto/buffs.proto
+ui/generated/proto/api.ts: proto/buffs.proto
 ui/generated/proto/api.ts: proto/*.proto node_modules
 	mkdir -p ui/generated/proto
 	npx protoc --ts_opt generate_dependencies --ts_out ui/generated/proto --proto_path proto proto/api.proto
@@ -195,8 +194,7 @@ release: wowsimforever wowsimforever-windows.exe
 	zip wowsimcli-arm64-darwin.zip wowsimcli-arm64-darwin
 	zip wowsimcli-windows.exe.zip wowsimcli-windows.exe
 
-# enabled in the proto split, once buffs.proto owns the buff messages
-#sim/core/proto/api.pb.go: proto/buffs.proto
+sim/core/proto/api.pb.go: proto/buffs.proto
 sim/core/proto/api.pb.go: proto/*.proto
 	@if go version -m "$$(command -v protoc-gen-go)" 2>/dev/null | grep -qE '^[[:space:]]+mod[[:space:]]+github\.com/golang/protobuf[[:space:]]'; then \
 		echo "ERROR: your protoc-gen-go is the deprecated github.com/golang/protobuf plugin;"; \

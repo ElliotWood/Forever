@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"testing"
@@ -19,48 +19,28 @@ type protoField struct {
 
 var messageNames = []string{"RaidBuffs", "PartyBuffs", "IndividualBuffs", "Debuffs"}
 
-func TestRenderMatchesCommonProto(t *testing.T) {
-	common, err := os.ReadFile("../../proto/common.proto")
+func TestRenderMatchesCommittedFile(t *testing.T) {
+	committed, err := os.ReadFile("../../proto/buffs.proto")
 	if err != nil {
-		t.Fatalf("read common.proto: %v", err)
+		t.Fatalf("read buffs.proto: %v", err)
 	}
+
 	rendered := Render(buffmanifest.Manifest)
-
-	var retypes []string
-	for _, message := range messageNames {
-		want := parseProtoMessage(t, common, message)
-		got := parseProtoMessage(t, rendered, message)
-
-		for field, wantField := range want {
-			gotField, ok := got[field]
-			if !ok {
-				t.Errorf("%s.%s is in common.proto but not rendered", message, field)
-				continue
-			}
-			if gotField.Number != wantField.Number {
-				t.Errorf("%s.%s is number %d in common.proto and %d rendered", message, field, wantField.Number, gotField.Number)
-			}
-			switch {
-			case gotField.Type == wantField.Type:
-			case wantField.Type == "TristateEffect" && gotField.Type == "bool":
-				retypes = append(retypes, fmt.Sprintf("%s.%s", message, field))
-			default:
-				t.Errorf("%s.%s is %s in common.proto and %s rendered", message, field, wantField.Type, gotField.Type)
-			}
-		}
-		for field := range got {
-			if _, ok := want[field]; !ok {
-				t.Errorf("%s.%s is rendered but not in common.proto", message, field)
-			}
-		}
+	if bytes.Equal(rendered, committed) {
+		return
 	}
 
-	// The ghost-talent retypes are approved: their Improved talent is absent from the
-	// live Trait tree, so the tristate has no source and the manifest carries a bool.
-	sort.Strings(retypes)
-	t.Logf("%d approved TristateEffect -> bool retypes:", len(retypes))
-	for _, field := range retypes {
-		t.Logf("  %s", field)
+	t.Errorf("proto/buffs.proto does not match the manifest; run `go run ./tools/gen_buffs_proto`")
+	committedLines := strings.Split(string(committed), "\n")
+	for i, line := range strings.Split(string(rendered), "\n") {
+		if i >= len(committedLines) {
+			t.Errorf("rendered line %d %q is past the end of the committed file", i+1, line)
+			return
+		}
+		if line != committedLines[i] {
+			t.Errorf("line %d: rendered %q, committed %q", i+1, line, committedLines[i])
+			return
+		}
 	}
 }
 
