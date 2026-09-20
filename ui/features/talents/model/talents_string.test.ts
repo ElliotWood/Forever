@@ -78,12 +78,8 @@ describe('talents string codec', () => {
 		expect(totalPointsSpent(parseTalentsString(mageTalentsConfig, MAGE_DEFAULT))).toBe(51);
 	});
 
-	// A build saved before the trees changed shape is longer than the tree it is read
-	// into. Walking the string and indexing the config read past the end and threw on
-	// undefined.fieldName, during page load, taking the whole UI down with it.
 	it('reads a build longer than the tree without throwing', () => {
-		// Arcane holds 18 talents, so pad to exactly 18 before overflowing -- extra digits
-		// inside the tree would be read legitimately and would not test anything.
+		// Arcane holds 18 talents: pad to 18 before overflowing, or the digits land inside the tree.
 		const overlong = MAGE_DEFAULT.replace('2552252231221', '2552252231221' + '0'.repeat(5) + '555555');
 		expect(() => talentStringToProto(MageTalents.create(), overlong, mageTalentsConfig)).not.toThrow();
 		expect(talentStringToProto(MageTalents.create(), overlong, mageTalentsConfig)).toEqual(
