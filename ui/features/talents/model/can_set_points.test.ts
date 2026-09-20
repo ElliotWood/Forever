@@ -1,9 +1,9 @@
 import type { TalentsConfig } from '@sim/talents/config';
 import { newTalentsConfig } from '@sim/talents/config';
+import { parseTalentsString } from '@sim/talents/talents_string';
 import { describe, expect, it } from 'vitest';
 
-import { canSetPoints, DEFAULT_TALENT_LIMITS } from './can_set_points';
-import { parseTalentsString } from './talents_string';
+import { canSetPoints } from './can_set_points';
 import { buildTalentGraph } from './tree_graph';
 
 type Fake = Record<string, never>;
@@ -20,7 +20,7 @@ const tree = (name: string, prereqs: Record<string, { rowIdx: number; colIdx: nu
 			fieldName: `talent${index}`,
 			fancyName: `Talent ${index}`,
 			location,
-			spellIds: [1000 + index],
+			spellId: 1000 + index,
 			maxPoints: 5,
 			...(prereqs[String(index)] ? { prereqLocation: prereqs[String(index)] } : {}),
 		};
@@ -35,7 +35,7 @@ const graph = buildTalentGraph(config);
 
 const at = (talentsString: string) => parseTalentsString(config, talentsString);
 const can = (talentsString: string, treeIdx: number, talentIdx: number, newPoints: number) =>
-	canSetPoints(config, graph, at(talentsString), treeIdx, talentIdx, newPoints, DEFAULT_TALENT_LIMITS);
+	canSetPoints(config, graph, at(talentsString), treeIdx, talentIdx, newPoints);
 
 describe('canSetPoints — adding', () => {
 	it('allows a first point in row 0', () => {
@@ -59,7 +59,7 @@ describe('canSetPoints — adding', () => {
 
 	it('refuses a 62nd point across all three trees', () => {
 		const sixty = '5555555555555' + '-' + '5555555555555';
-		expect(canSetPoints(config, graph, at(sixty), 0, 0, 5, DEFAULT_TALENT_LIMITS)).toBe(false);
+		expect(canSetPoints(config, graph, at(sixty), 0, 0, 5)).toBe(false);
 	});
 });
 

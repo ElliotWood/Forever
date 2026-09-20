@@ -1,14 +1,13 @@
 import i18n from '@i18n/config';
 import type { TalentsConfig } from '@sim/talents/config';
+import type { TalentPoints } from '@sim/talents/talents_string';
+import { totalPointsSpent, treePointTotal, withTalentPoints, withTreeCleared } from '@sim/talents/talents_string';
 import { Button } from '@ui-kit/Button';
 import { Icon } from '@ui-kit/Icon';
 import { Tooltip, tooltipAnchorProps } from '@ui-kit/Tooltip';
 import { useId, useMemo } from 'react';
 
-import type { TalentLimits } from '../../model/can_set_points';
-import { canSetPoints } from '../../model/can_set_points';
-import type { TalentPoints } from '../../model/talents_string';
-import { treePointTotal, withTalentPoints, withTreeCleared } from '../../model/talents_string';
+import { canSetPoints, MAX_POINTS_PLAYER } from '../../model/can_set_points';
 import type { TalentGraph } from '../../model/tree_graph';
 import { TalentPicker } from './TalentPicker';
 import { TalentReqArrow } from './TalentReqArrow';
@@ -18,38 +17,35 @@ export interface TalentTreePickerProps<TalentsProto> {
 	graph: TalentGraph;
 	points: TalentPoints;
 	treeIdx: number;
-	limits: TalentLimits;
-	active: boolean;
 	onChange: (next: TalentPoints) => void;
 }
 
 const CELL = 'var(--talent-cell-size, 3.5rem)';
 
-export const TalentTreePicker = <TalentsProto,>({ config, graph, points, treeIdx, limits, active, onChange }: TalentTreePickerProps<TalentsProto>) => {
+export const TalentTreePicker = <TalentsProto,>({ config, graph, points, treeIdx, onChange }: TalentTreePickerProps<TalentsProto>) => {
 	const resetTooltipId = useId();
 	const treeConfig = config[treeIdx];
 	const treeGraph = graph.trees[treeIdx];
 	const treePoints = points[treeIdx];
 	const spentInTree = treePointTotal(points, treeIdx);
-	const allPointsSpent = points.reduce((total, tree) => total + tree.reduce((sub, value) => sub + value, 0), 0) >= limits.maxPoints;
+	const allPointsSpent = totalPointsSpent(points) >= MAX_POINTS_PLAYER;
 
 	const canAdd = useMemo(
-		() => treeConfig.talents.map((_, idx) => canSetPoints(config, graph, points, treeIdx, idx, treePoints[idx] + 1, limits)),
-		[config, graph, points, treeIdx, treeConfig, treePoints, limits],
+		() => treeConfig.talents.map((_, idx) => canSetPoints(config, graph, points, treeIdx, idx, treePoints[idx] + 1)),
+		[config, graph, points, treeIdx, treeConfig, treePoints],
 	);
 
 	const setPoints = (talentIdx: number, newPoints: number) => {
 		const clamped = Math.min(treeConfig.talents[talentIdx].maxPoints, Math.max(0, newPoints));
-		// TBC fired its change event even when the write was rejected; passing the unchanged points
-		// through keeps that, and the facade's equality guard makes it a no-op write.
-		const accepted = canSetPoints(config, graph, points, treeIdx, talentIdx, clamped, limits);
+		// The change event fires even when the write was rejected; the facade's equality guard
+		// turns the unchanged points into a no-op write.
+		const accepted = canSetPoints(config, graph, points, treeIdx, talentIdx, clamped);
 		onChange(accepted ? withTalentPoints(points, treeIdx, talentIdx, clamped) : points);
 	};
 
 	return (
 		<div
 			className="ui-talents-picker-tree relative flex flex-1 flex-col border border-border not-first:-ml-px"
-			data-active={String(active)}
 			data-testid="talent-tree"
 			style={{ maxWidth: `calc(${CELL} * ${graph.numCols + 2})` }}>
 			<div className="z-1 flex items-center bg-black p-3 text-base text-white">
@@ -57,7 +53,7 @@ export const TalentTreePicker = <TalentsProto,>({ config, graph, points, treeIdx
 					{treeConfig.name}
 				</span>
 				<span className="mr-3" data-testid="talent-tree-points">
-					{spentInTree} / {limits.maxPoints}
+					{spentInTree}
 				</span>
 				<Button
 					variant={null}

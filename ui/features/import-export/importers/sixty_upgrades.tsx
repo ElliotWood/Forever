@@ -1,7 +1,6 @@
 import { Class, EquipmentSpec, ItemSpec, Race } from '@generated/proto/common';
 import { getEligibleItemSlots } from '@sim/proto/items';
 import { nameToClass, nameToRace } from '@sim/proto/names';
-import { talentSpellIdsToTalentString } from '@sim/talents/factory';
 import { toastManager } from '@ui-kit/Toast';
 
 import { finishIndividualImport } from './finish_individual_import';
@@ -44,11 +43,10 @@ export const SIXTY_UPGRADES_IMPORTER: ImporterDefinition = {
 			throw new Error('Could not parse Race!');
 		}
 
-		let talentsStr = '';
-		if (importJson?.talents?.length > 0) {
-			const talentIds = (importJson.talents as any[]).map(talentJson => talentJson.spellId);
-			talentsStr = talentSpellIdsToTalentString(charClass, talentIds);
-		}
+		// Sixty Upgrades names a talent by the spell id of the rank taken, which is how the rank
+		// used to come back. A Forever talent reports one id for all of its ranks, so the export
+		// no longer says how many points went in and every talent would import as 1/N.
+		const droppedTalents = (importJson?.talents as any[] | undefined)?.length ?? 0;
 
 		let hasRemovedRandomSuffix = false;
 		const modifiedItemNames: string[] = [];
@@ -88,7 +86,7 @@ export const SIXTY_UPGRADES_IMPORTER: ImporterDefinition = {
 			charClass,
 			race,
 			equipmentSpec,
-			talentsStr,
+			talentsStr: '',
 			professions: [],
 			missingEnchants,
 			missingItems,
@@ -96,6 +94,14 @@ export const SIXTY_UPGRADES_IMPORTER: ImporterDefinition = {
 
 		if (hasRemovedRandomSuffix && modifiedItemNames.length) {
 			toastManager.add({ variant: 'warning', body: removedSuffixesBody(modifiedItemNames), delay: 8000 });
+		}
+
+		if (droppedTalents > 0) {
+			toastManager.add({
+				variant: 'warning',
+				body: 'Sixty Upgrades exports do not carry talent ranks, so talents were not imported. Set them on the Talents tab.',
+				delay: 8000,
+			});
 		}
 	},
 };

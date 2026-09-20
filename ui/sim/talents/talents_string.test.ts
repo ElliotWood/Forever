@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { parseTalentsString, serializeTalentsString, totalPointsSpent, treePointTotal, withTalentPoints, withTreeCleared } from './talents_string';
 
 // A valid Forever mage build: 51 points, Fire left empty so the codec's empty-run
-// handling stays covered. Was a TBC build, which overflows the 18-talent Arcane tree.
+// handling stays covered.
 const MAGE_DEFAULT = '2552252231221--2555';
 
 describe('talents string codec', () => {
@@ -91,5 +91,4 @@ describe('talents string codec', () => {
 		expect(() => talentStringToProto(MageTalents.create(), '25', mageTalentsConfig)).not.toThrow();
 		expect(talentStringToProto(MageTalents.create(), '', mageTalentsConfig)).toEqual(MageTalents.create());
 	});
-
 });

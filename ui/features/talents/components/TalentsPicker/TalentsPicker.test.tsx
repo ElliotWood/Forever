@@ -25,7 +25,7 @@ const tree = (name: string) => ({
 		fieldName: `talent${index}`,
 		fancyName: `Talent ${index}`,
 		location: { rowIdx: Math.floor(index / COLS), colIdx: index % COLS },
-		spellIds: [100 * index + 1],
+		spellId: 100 * index + 1,
 		maxPoints: 5,
 	})),
 });
@@ -44,7 +44,6 @@ const mount = (pickerTrees: TalentsConfig<any> = trees) => {
 	const config = {
 		id: 'talents-picker',
 		trees: pickerTrees,
-		pointsPerRow: 5,
 		getValue: () => talentsString,
 		setValue,
 	};
@@ -112,8 +111,8 @@ describe('TalentsPicker container', () => {
 
 describe('TalentsPicker round trip', () => {
 	// A valid Forever mage build: 51 points, Fire left empty so the codec's empty-run
-// handling stays covered. Was a TBC build, which overflows the 18-talent Arcane tree.
-const MAGE_DEFAULT = '2552252231221--2555';
+	// handling stays covered.
+	const MAGE_DEFAULT = '2552252231221--2555';
 
 	it('hands a real Forever default back byte-identically, empty middle tree and all', () => {
 		talentsString = MAGE_DEFAULT;
@@ -167,40 +166,24 @@ describe('TalentsPicker copy button', () => {
 	});
 });
 
-describe('TalentsPicker carousel', () => {
-	it('opens on the middle tree, with no offset', () => {
-		mount();
-		expect(Array.from(document.querySelectorAll('[data-testid="talent-tree"]')).map(el => el.getAttribute('data-active'))).toEqual([
-			'false',
-			'true',
-			'false',
-		]);
-		expect(screen.getByTestId('talents-picker-trees').style.getPropertyValue('--talents-carousel-offset')).toBe('0.0%');
-	});
+describe('TalentsPicker trees', () => {
+	it('scrolls the middle tree into view on mount', () => {
+		const scrollIntoView = vi.fn();
+		vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(scrollIntoView);
 
-	it('slides to the first tree and stops there', () => {
 		mount();
-		fireEvent.click(screen.getByTestId('talents-carousel-prev'));
-		expect(screen.getAllByTestId('talent-tree').map(el => el.getAttribute('data-active'))).toEqual(['true', 'false', 'false']);
-		expect(screen.getByTestId('talents-picker-trees').style.getPropertyValue('--talents-carousel-offset')).toBe('33.3%');
-		expect(screen.getByTestId('talents-carousel-prev').hasAttribute('disabled')).toBe(true);
-	});
 
-	it('slides to the last tree and stops there', () => {
-		mount();
-		fireEvent.click(screen.getByTestId('talents-carousel-next'));
-		expect(screen.getAllByTestId('talent-tree').map(el => el.getAttribute('data-active'))).toEqual(['false', 'false', 'true']);
-		expect(screen.getByTestId('talents-picker-trees').style.getPropertyValue('--talents-carousel-offset')).toBe('-33.3%');
-		expect(screen.getByTestId('talents-carousel-next').hasAttribute('disabled')).toBe(true);
+		expect(scrollIntoView).toHaveBeenCalledTimes(1);
+		expect(scrollIntoView.mock.instances[0]).toBe(screen.getAllByTestId('talent-tree')[1]);
 	});
 
 	it('builds the wowhead link from the generated trait data, def and rank included', () => {
 		const anticipation = warriorTalentsConfig.flatMap(tree => tree.talents).find(talent => talent.fancyName === 'Anticipation')!;
 
 		expect(anticipation.definitionId).toBe(135506);
-		expect(new Set(anticipation.spellIds).size).toBe(1);
+		expect(anticipation.spellId).toBe(12297);
 
-		const href = ActionId.makeSpellUrl(anticipation.spellIds[0], 2, anticipation.definitionId!);
+		const href = ActionId.makeSpellUrl(anticipation.spellId, 2, anticipation.definitionId!);
 		expect(href).toContain('spell=12297');
 		expect(href).toContain('def=135506');
 		expect(href).toContain('rank=2');

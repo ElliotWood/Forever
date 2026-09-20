@@ -1,6 +1,6 @@
-// The TBC talent-string codec, as a pure function over the config.
+// The talent-string codec, as a pure function over the config.
 //
-// A TBC string is one run of per-talent digits per tree, joined with '-': digit `i` of tree `t` is
+// A talents string is one run of per-talent digits per tree, joined with '-': digit `i` of tree `t` is
 // `config[t].talents[i]`, in the order the config lists them, NOT a row index. Both the per-tree
 // trailing zeroes and the trailing dashes are trimmed, which is what lets a string carry an empty
 // middle tree ('2500052300030150330125--053500031003001').

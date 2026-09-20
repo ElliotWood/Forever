@@ -571,10 +571,8 @@ func simmableEnchantFilter(key database.EnchantDBKey, enchant *proto.UIEnchant) 
 
 type TalentConfig struct {
 	FieldName string `json:"fieldName"`
-	// Spell ID for each rank of this talent.
-	// Omitted ranks will be inferred by incrementing from the last provided rank.
-	SpellIds  []int32 `json:"spellIds"`
-	MaxPoints int32   `json:"maxPoints"`
+	SpellID   int32  `json:"spellId"`
+	MaxPoints int32  `json:"maxPoints"`
 }
 
 type TalentTreeConfig struct {
@@ -607,16 +605,7 @@ func getSpellIdsFromTalentJson(infile *string) []int32 {
 
 	for _, tree := range talents {
 		for _, talent := range tree.Talents {
-			spellIds = append(spellIds, talent.SpellIds...)
-
-			// Infer omitted spell IDs.
-			if len(talent.SpellIds) < int(talent.MaxPoints) {
-				curSpellId := talent.SpellIds[len(talent.SpellIds)-1]
-				for i := len(talent.SpellIds); i < int(talent.MaxPoints); i++ {
-					curSpellId++
-					spellIds = append(spellIds, curSpellId)
-				}
-			}
+			spellIds = append(spellIds, talent.SpellID)
 		}
 	}
 	return spellIds
@@ -625,11 +614,10 @@ func getSpellIdsFromTalentJson(infile *string) []int32 {
 // rotationTalentsString is the talent string GetAllRotationSpellIds registers each spec
 // with, purely to reach the rotation spells whose icons the database needs.
 //
-// It is deliberately EMPTY. It used to be a hardcoded "every talent maxed" TBC string,
-// but every talent whose Forever behaviour is not yet known is a registrar that panics
-// with "To be implemented" -- 249 of them across the nine classes -- so maxing talents
-// makes this tool abort on the first one. Taking no talents registers every baseline
-// ability, which is what the icon set actually needs today.
+// It is deliberately EMPTY. Every talent whose behaviour is not yet known is a registrar
+// that panics with "To be implemented" -- 249 of them across the nine classes -- so maxing
+// talents makes this tool abort on the first one. Taking no talents registers every
+// baseline ability, which is what the icon set actually needs today.
 //
 // TODO: talent-gated rotation spells therefore contribute no icons. Restore a maxed
 // string, built from ui/sim/talents/trees/<class>.json using each talent's own

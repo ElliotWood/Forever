@@ -9,8 +9,15 @@
 		grid-template-columns: repeat(3, 1fr);
 
 		@variant max-lg {
-			transform: translateX(var(--talents-carousel-offset, 0%));
-			transition: transform 0.15s ease-in-out;
+			display: flex;
+			overflow-x: auto;
+			scroll-snap-type: x mandatory;
+			overscroll-behavior-x: contain;
+			scrollbar-width: none;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
 		}
 	}
 
@@ -20,14 +27,8 @@
 		}
 
 		@variant max-lg {
-			opacity: 0.5;
-			transition: opacity 0.15s ease-in-out;
-		}
-
-		&[data-active='true'] {
-			@variant max-lg {
-				opacity: 1;
-			}
+			flex: 0 0 100%;
+			scroll-snap-align: center;
 		}
 	}
 

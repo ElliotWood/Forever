@@ -1363,17 +1363,10 @@ func abs(value int) int {
 	return value
 }
 
-// traitRankSpellIDs returns one spell id per rank. The Trait tables only store
-// the base spell plus a rank count, and rank spell ids are not consecutive
-// (rank 2 of Master of Defense, 1310316, would infer to 1310317 which is the
-// unrelated Vanguard talent), so the legacy Talent rank chain is used whenever
-// it still describes the same number of ranks. Everything else repeats the base
-// spell, which shows the rank 1 tooltip instead of a wrong spell.
 // A trait talent is one spell whose per-rank values come from its curve, so every rank
-// reports the same id. This used to prefer the legacy Talent.SpellRank chain where it had
-// the right shape, but that table is vestigial TBC data: 232 of the 235 talents it fed
-// listed ids the client does not ship, which is 601 spells the UI linked to and Wowhead
-// answered with a 404. Wowhead takes the rank as ?rank=N on the one id instead.
+// reports the same id and Wowhead takes the rank as ?rank=N on it. The legacy
+// Talent.SpellRank chain is not a source for this: 232 of the 235 talents it covers list
+// ids the client does not ship.
 func traitRankSpellIDs(spellID, maxRanks int) []int {
 	ranks := make([]int, maxRanks)
 	for i := range ranks {

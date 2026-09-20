@@ -16,12 +16,9 @@ export interface TalentPickerProps<TalentsProto> {
 
 const LONG_TOUCH_MS = 750;
 
-const spellIdForPoints = <TalentsProto,>(config: TalentConfig<TalentsProto>, points: number): number =>
-	config.spellIds[Math.max(0, points - 1)] ?? config.spellIds[0];
-
 export const TalentPicker = <TalentsProto,>({ config, points, canAdd, allPointsSpent, zIndex, onSetPoints }: TalentPickerProps<TalentsProto>) => {
 	const rootRef = useRef<HTMLAnchorElement>(null);
-	const { iconUrl, href } = useActionId(ActionId.fromTalent(spellIdForPoints(config, points), Math.max(points, 1), config.definitionId ?? 0));
+	const { iconUrl, href } = useActionId(ActionId.fromTalent(config.spellId, Math.max(points, 1), config.definitionId ?? 0));
 	const isFull = points >= config.maxPoints;
 
 	const spend = () => onSetPoints(points + 1);

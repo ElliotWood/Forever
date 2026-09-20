@@ -11,7 +11,7 @@ const talent = (rowIdx: number, colIdx: number, prereqLocation?: { rowIdx: numbe
 	fieldName: `t${rowIdx}${colIdx}`,
 	fancyName: `Talent ${rowIdx}/${colIdx}`,
 	location: { rowIdx, colIdx },
-	spellIds: [1],
+	spellId: 1,
 	maxPoints: 1,
 	...(prereqLocation ? { prereqLocation } : {}),
 });
@@ -59,7 +59,7 @@ describe('buildTalentGraph arrows', () => {
 });
 
 describe('buildTalentGraph dimensions', () => {
-	it('sizes every tree of a class off the largest tree, as TBC did', () => {
+	it('sizes every tree of a class off the largest tree', () => {
 		const graph = buildTalentGraph(mageTalentsConfig);
 		const locations = mageTalentsConfig.flatMap(tree => tree.talents.map(t => t.location));
 		expect(graph.numRows).toBe(Math.max(...locations.map(l => l.rowIdx)) + 1);

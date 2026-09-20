@@ -1,17 +1,21 @@
 import type { TalentsConfig } from '@sim/talents/config';
 import { newTalentsConfig } from '@sim/talents/config';
+import { parseTalentsString, serializeTalentsString } from '@sim/talents/talents_string';
 import { createEvent, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_TALENT_LIMITS } from '../../model/can_set_points';
-import { parseTalentsString, serializeTalentsString } from '../../model/talents_string';
 import { buildTalentGraph } from '../../model/tree_graph';
 import { TalentTreePicker } from './TalentTreePicker';
 
-// The icon and the wowhead href come from the database, which no unit test has; echoing the spell id
-// back is what lets the rank-aware-icon case see which rank was asked for.
+// The icon and the wowhead href come from the database, which no unit test has; echoing the id and
+// rank back is what lets the icon cases see what was asked for.
 vi.mock('@ui-kit/hooks/useActionId', () => ({
-	useActionId: (actionId: { spellId?: number }) => ({ iconUrl: `icon-${actionId.spellId}`, name: '', href: `href-${actionId.spellId}`, ready: true }),
+	useActionId: (actionId: { spellId?: number; rank?: number }) => ({
+		iconUrl: `icon-${actionId.spellId}`,
+		name: '',
+		href: `href-${actionId.spellId}-rank-${actionId.rank}`,
+		ready: true,
+	}),
 }));
 
 type Fake = Record<string, never>;
@@ -22,7 +26,7 @@ const mkTalent = (index: number, overrides: Record<string, unknown> = {}) => ({
 	fieldName: `talent${index}`,
 	fancyName: `Talent ${index}`,
 	location: { rowIdx: Math.floor(index / COLS), colIdx: index % COLS },
-	spellIds: [100 * index + 1, 100 * index + 2, 100 * index + 3, 100 * index + 4, 100 * index + 5],
+	spellId: 100 * index + 1,
 	maxPoints: 5,
 	...overrides,
 });
@@ -39,7 +43,7 @@ const config: TalentsConfig<Fake> = newTalentsConfig<Fake>([
 		backgroundUrl: 'first.jpg',
 		talents: [
 			mkTalent(0),
-			mkTalent(1, { maxPoints: 1, spellIds: [999] }),
+			mkTalent(1, { maxPoints: 1, spellId: 999 }),
 			mkTalent(2),
 			mkTalent(3),
 			mkTalent(4),
@@ -60,17 +64,7 @@ const graph = buildTalentGraph(config);
 
 const tree = (talentsString: string, treeIdx = 0) => {
 	const onChange = vi.fn();
-	render(
-		<TalentTreePicker
-			config={config}
-			graph={graph}
-			points={parseTalentsString(config, talentsString)}
-			treeIdx={treeIdx}
-			limits={DEFAULT_TALENT_LIMITS}
-			active
-			onChange={onChange}
-		/>,
-	);
+	render(<TalentTreePicker config={config} graph={graph} points={parseTalentsString(config, talentsString)} treeIdx={treeIdx} onChange={onChange} />);
 	return { onChange, written: () => serializeTalentsString(onChange.mock.calls.at(-1)![0]) };
 };
 
@@ -96,9 +90,9 @@ describe('TalentTreePicker layout', () => {
 		expect(badges.slice(0, 3)).toEqual(['3/5', '1/1', '0/5']);
 	});
 
-	it('reports the tree total against the 61-point budget', () => {
+	it('reports the points spent in this tree', () => {
 		tree('55');
-		expect(screen.getByTestId('talent-tree-points').textContent).toBe('6 / 51');
+		expect(screen.getByTestId('talent-tree-points').textContent).toBe('6');
 	});
 
 	it('names the tree from the config, not from the spec', () => {
@@ -108,14 +102,22 @@ describe('TalentTreePicker layout', () => {
 });
 
 describe('TalentTreePicker icons', () => {
-	it('asks for a different spell id per rank', () => {
+	it('asks for the talent spell, which is the same at every rank', () => {
 		tree('');
+		expect(talents()[0].style.backgroundImage).toBe('url("icon-1")');
+		document.body.innerHTML = '';
+
+		tree('3');
 		expect(talents()[0].style.backgroundImage).toBe('url("icon-1")');
 	});
 
-	it('follows the rank up as points are spent', () => {
+	it('carries the spent points as the rank, and previews rank 1 while unspent', () => {
 		tree('3');
-		expect(talents()[0].style.backgroundImage).toBe('url("icon-3")');
+		expect(talents()[0].getAttribute('href')).toBe('href-1-rank-3');
+		document.body.innerHTML = '';
+
+		tree('');
+		expect(talents()[0].getAttribute('href')).toBe('href-1-rank-1');
 	});
 });
 
@@ -277,8 +279,7 @@ describe('TalentTreePicker reset', () => {
 				graph={graph}
 				points={parseTalentsString(config, '51-5-5')}
 				treeIdx={0}
-				limits={DEFAULT_TALENT_LIMITS}
-				active
+
 				onChange={onChange}
 			/>,
 		);

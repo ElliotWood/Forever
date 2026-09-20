@@ -8,25 +8,17 @@
 // tree total against rowIdx * pointsPerRow, while the remove branch gates on per-row totals
 // accumulated down to the row above. Collapsing them into one rule breaks tier gating silently.
 
-import type { TalentsConfig } from '@sim/talents/config';
-
-import type { TalentPoints } from './talents_string';
 import { CHARACTER_LEVEL } from '@sim/constants/mechanics';
+import type { TalentsConfig } from '@sim/talents/config';
+import type { TalentPoints } from '@sim/talents/talents_string';
+import { totalPointsSpent, treePointTotal } from '@sim/talents/talents_string';
 
-import { totalPointsSpent, treePointTotal } from './talents_string';
 import type { TalentGraph } from './tree_graph';
 
 // A character earns one talent point per level from 10 onwards, so the cap follows
-// CHARACTER_LEVEL: 51 at level 60, where TBC's 61 was the level 70 figure.
+// CHARACTER_LEVEL: 51 at level 60.
 export const MAX_POINTS_PLAYER = CHARACTER_LEVEL - 9;
 export const POINTS_PER_ROW = 5;
-
-export interface TalentLimits {
-	maxPoints: number;
-	pointsPerRow: number;
-}
-
-export const DEFAULT_TALENT_LIMITS: TalentLimits = { maxPoints: MAX_POINTS_PLAYER, pointsPerRow: POINTS_PER_ROW };
 
 export const canSetPoints = <TalentsProto>(
 	config: TalentsConfig<TalentsProto>,
@@ -35,7 +27,6 @@ export const canSetPoints = <TalentsProto>(
 	treeIdx: number,
 	talentIdx: number,
 	newPoints: number,
-	limits: TalentLimits = DEFAULT_TALENT_LIMITS,
 ): boolean => {
 	const talents = config[treeIdx].talents;
 	const treeGraph = graph.trees[treeIdx];
@@ -43,8 +34,8 @@ export const canSetPoints = <TalentsProto>(
 	const rowIdx = talents[talentIdx].location.rowIdx;
 
 	if (newPoints > oldPoints) {
-		if (totalPointsSpent(points) + (newPoints - oldPoints) > limits.maxPoints) return false;
-		if (treePointTotal(points, treeIdx) < rowIdx * limits.pointsPerRow) return false;
+		if (totalPointsSpent(points) + (newPoints - oldPoints) > MAX_POINTS_PLAYER) return false;
+		if (treePointTotal(points, treeIdx) < rowIdx * POINTS_PER_ROW) return false;
 
 		const prereqIdx = treeGraph.prereqIdx[talentIdx];
 		if (prereqIdx >= 0 && points[treeIdx][prereqIdx] < talents[prereqIdx].maxPoints) return false;
@@ -60,7 +51,7 @@ export const canSetPoints = <TalentsProto>(
 
 		return talents.filter((talent, idx) => {
 			const row = talent.location.rowIdx;
-			return treePoints[idx] > 0 && row > 0 && cumulativeTotalsByRow[row - 1] < row * limits.pointsPerRow;
+			return treePoints[idx] > 0 && row > 0 && cumulativeTotalsByRow[row - 1] < row * POINTS_PER_ROW;
 		}).length;
 	};
 

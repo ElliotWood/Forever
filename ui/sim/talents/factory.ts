@@ -11,6 +11,7 @@ import { paladinTalentsConfig } from './paladin';
 import { priestTalentsConfig } from './priest';
 import { rogueTalentsConfig } from './rogue';
 import { shamanTalentsConfig } from './shaman';
+import { parseTalentsString } from './talents_string';
 import { warlockTalentsConfig } from './warlock';
 import { warriorTalentsConfig } from './warrior';
 
@@ -33,31 +34,6 @@ export const classTalentsConfig: Record<Class, TalentsConfig<any>> = {
 	[Class.ClassWarrior]: warriorTalentsConfig,
 } as const;
 
-export function talentSpellIdsToTalentString(playerClass: Class, talentIds: Array<number>): string {
-	const talentsConfig = classTalentsConfig[playerClass];
-
-	const talentsStr = talentsConfig
-		.map(treeConfig => {
-			const treeStr = treeConfig.talents
-				.map(talentConfig => {
-					const spellIdIndex = talentConfig.spellIds.findIndex(spellId => talentIds.includes(spellId));
-					if (spellIdIndex == -1) {
-						return '0';
-					} else {
-						return String(spellIdIndex + 1);
-					}
-				})
-				.join('')
-				.replace(/0+$/g, '');
-
-			return treeStr;
-		})
-		.join('-')
-		.replace(/-+$/g, '');
-
-	return talentsStr;
-}
-
 export function playerTalentStringToProto<SpecType extends Spec>(playerSpec: PlayerSpec<SpecType>, talentString: string): SpecTalents<SpecType> {
 	const specFunctions = specTypeFunctions[playerSpec.specID];
 	const proto = specFunctions.talentsCreate() as SpecTalents<SpecType>;
@@ -67,34 +43,16 @@ export function playerTalentStringToProto<SpecType extends Spec>(playerSpec: Pla
 }
 
 export function talentStringToProto<TalentsProto>(proto: TalentsProto, talentString: string, talentsConfig: TalentsConfig<TalentsProto>): TalentsProto {
-	const treeStrings = talentString.split('-');
-	talentsConfig.forEach((treeConfig, treeIdx) => {
-		const treeString = treeStrings[treeIdx] ?? '';
-		treeConfig.talents.forEach((talentConfig, i) => {
-			const points = parseInt(treeString.charAt(i));
-			if (!isNaN(points) && talentConfig.fieldName) {
-				if (talentConfig.maxPoints == 1) {
-					(proto[talentConfig.fieldName as keyof TalentsProto] as unknown as boolean) = points == 1;
-				} else {
-					(proto[talentConfig.fieldName as keyof TalentsProto] as unknown as number) = points;
-				}
+	parseTalentsString(talentsConfig, talentString).forEach((treePoints, treeIdx) => {
+		talentsConfig[treeIdx].talents.forEach((talentConfig, i) => {
+			if (!talentConfig.fieldName) return;
+			if (talentConfig.maxPoints == 1) {
+				(proto[talentConfig.fieldName as keyof TalentsProto] as unknown as boolean) = treePoints[i] == 1;
+			} else {
+				(proto[talentConfig.fieldName as keyof TalentsProto] as unknown as number) = treePoints[i];
 			}
 		});
 	});
 
 	return proto;
-}
-
-// Note that this function will fail if any of the talent names are not defined. TODO: Remove that condition
-// once all talents are migrated to wrath and use all fields.
-export function protoToTalentString<TalentsProto>(proto: TalentsProto, talentsConfig: TalentsConfig<TalentsProto>): string {
-	return talentsConfig
-		.map(treeConfig => {
-			return treeConfig.talents
-				.map(talentConfig => String(Number(proto[(talentConfig.fieldName as keyof TalentsProto)!])))
-				.join('')
-				.replace(/0+$/g, '');
-		})
-		.join('-')
-		.replace(/-+$/g, '');
 }
