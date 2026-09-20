@@ -524,6 +524,29 @@ func resolveLadder(db *sql.DB, name string, byRank map[int32][]rankCandidate, ma
 			continue
 		}
 
+		// Exorcism is one name over two full ladders: the trainer ranks 879-10314, and 415068-415073,
+		// which the Season of Discovery passive Exorcist (415076) swaps onto the action bar so the
+		// spell can hit any target. The stand-in copies the rank's name, subtext, class bit and mana,
+		// so nothing above separates them, but the override aura names both sides. The overridden
+		// spell is the one a trainer teaches and the one the ladder wants; the stand-in is only ever
+		// reachable through its owner. Fire Blast, Drain Life, Renew and Raptor Strike carry the same
+		// shape under Overheat, Master Channeler, Empowered Renew and Melee Specialist.
+		replaced, err := overrideReplacements(db, ids)
+		if err != nil {
+			return nil, err
+		}
+		if len(replaced) > 0 && len(replaced) < len(ids) {
+			for id := range replaced {
+				delete(ids, id)
+			}
+			if len(ids) == 1 {
+				for id := range ids {
+					ladder[rank] = id
+				}
+				continue
+			}
+		}
+
 		// Holy Shock is one name over three spells per rank: a dummy the player casts, plus a damage
 		// and a heal spell the client never exposes. Only the castable one carries a SpellPower row,
 		// and it is the one the sim registers, so that is the tie-break.
@@ -630,6 +653,39 @@ func castableOf(db *sql.DB, ids map[int32]bool) (int32, error) {
 		found = id
 	}
 	return found, nil
+}
+
+// The candidates that another candidate is swapped for by an A_OVERRIDE_ACTIONBAR_SPELLS aura. On
+// that aura the misc value is the spell being overridden and the base points is its replacement; a
+// candidate is dropped only when the spell it stands in for is itself in the running, so a stand-in
+// whose base rank was never a candidate is left alone.
+func overrideReplacements(db *sql.DB, ids map[int32]bool) (map[int32]bool, error) {
+	replaced := map[int32]bool{}
+	for id := range ids {
+		rows, err := db.Query(`
+			SELECT CAST(EffectBasePointsF AS INTEGER)
+			FROM SpellEffect
+			WHERE EffectAura = ? AND EffectMiscValue_0 = ?`, int(dbc.A_OVERRIDE_ACTIONBAR_SPELLS), id)
+		if err != nil {
+			return nil, err
+		}
+		for rows.Next() {
+			var replacement int32
+			if err := rows.Scan(&replacement); err != nil {
+				rows.Close()
+				return nil, err
+			}
+			if ids[replacement] {
+				replaced[replacement] = true
+			}
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, err
+		}
+		rows.Close()
+	}
+	return replaced, nil
 }
 
 // Which effect supplies which field. Derived from the effect types rather than declared per family,

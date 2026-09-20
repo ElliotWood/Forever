@@ -38,9 +38,10 @@ type rankFamily struct {
 
 // The two shaman tables were inline anonymous literals until they were hoisted to package vars so this
 // gate could read them.
-// TODO: Exorcism, Holy Shock, Avenger's Shield and Vampiric Touch left this gate when
-// their abilities were stubbed -- the Forever client ships no rank ladder the generator
-// can read for them. Restore these rows once those abilities are implemented.
+// TODO: Exorcism, Holy Shock, Avenger's Shield and Vampiric Touch left this gate when their
+// abilities were stubbed. Exorcism's ladder is generated again now that the resolver drops the
+// Season of Discovery stand-ins an override aura swaps in; the other three still have no ladder
+// the generator can read. Restore each row once its ability is implemented.
 var rankFamilies = []rankFamily{
 	{"Consecration", classPaladin, paladin.ConsecrationRankMap},
 	{"Hammer of Wrath", classPaladin, paladin.HammerOfWrathRankMap},

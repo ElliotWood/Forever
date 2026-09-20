@@ -9,9 +9,6 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// Not generated:
-//   Drain Life: ambiguous rank 1 between spells 403677, 689; rank 2 between spells 403685, 699; rank 3 between spells 403686, 709; rank 4 between spells 403687, 7651; rank 5 between spells 11699, 403688; rank 6 between spells 11700, 403689
-
 // Generated without an effect the talent tree states no rank value for:
 //   Decimation: effect 2 of spell 440870 has no rank curve and is left out
 //   Demonic Embrace: effect 1 of spell 18697 has no rank curve and is left out
@@ -47,6 +44,7 @@ type generatedSpellData struct {
 	DemonicKnowledge          shared.SpellDataTable
 	DestructiveReach          shared.SpellDataTable
 	DetectInvisibility        shared.SpellDataTable
+	DrainLife                 shared.SpellDataTable
 	DrainMana                 shared.SpellDataTable
 	DrainSoul                 shared.SpellDataTable
 	Fear                      shared.SpellDataTable
@@ -266,6 +264,14 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 132, Cost: 50, GCD: 1500 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INVISIBILITY_DETECT, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
 		{Rank: 2, SpellID: 2970, Cost: 90, GCD: 1500 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INVISIBILITY_DETECT, Misc: 0, Value: 200}}, Direct: shared.SpellDataFlat{Value: 200, Coef: 0}},
 		{Rank: 3, SpellID: 11743, Cost: 140, GCD: 1500 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INVISIBILITY_DETECT, Misc: 0, Value: 300}}, Direct: shared.SpellDataFlat{Value: 300, Coef: 0}},
+	},
+	DrainLife: shared.SpellDataTable{
+		{Rank: 1, SpellID: 689, Cost: 55, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_LEECH, Misc: 0, Value: 10}}, Periodic: shared.SpellDataPeriodic{Tick: 10, Coef: 0.10000000149011612, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 2, SpellID: 699, Cost: 85, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_LEECH, Misc: 0, Value: 14}}, Periodic: shared.SpellDataPeriodic{Tick: 14, Coef: 0.10000000149011612, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 3, SpellID: 709, Cost: 135, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_LEECH, Misc: 0, Value: 22}}, Periodic: shared.SpellDataPeriodic{Tick: 22, Coef: 0.10000000149011612, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 4, SpellID: 7651, Cost: 185, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_LEECH, Misc: 0, Value: 28}}, Periodic: shared.SpellDataPeriodic{Tick: 28, Coef: 0.10000000149011612, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 5, SpellID: 11699, Cost: 240, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_LEECH, Misc: 0, Value: 39}}, Periodic: shared.SpellDataPeriodic{Tick: 39, Coef: 0.10000000149011612, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
+		{Rank: 6, SpellID: 11700, Cost: 300, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_LEECH, Misc: 0, Value: 51}}, Periodic: shared.SpellDataPeriodic{Tick: 51, Coef: 0.10000000149011612, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
 	},
 	DrainMana: shared.SpellDataTable{
 		{Rank: 1, SpellID: 5138, Cost: 95, GCD: 1500 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_MANA_LEECH, Misc: 0, Value: 44}}, Periodic: shared.SpellDataPeriodic{Tick: 44, Coef: 0, TickLength: 1000 * time.Millisecond, NumberOfTicks: 5}},
