@@ -27,16 +27,20 @@
 #
 # A record with dataSize 0 invalidates a row rather than carrying a new one.
 #
-# What this cannot do yet: name the tables. tableHash is stored in each DB2 file's own header
-# rather than derived from its name - brute forcing Jenkins lookup3, one-at-a-time and SStrHash
-# over 38 names in 7 spellings matches nothing - so mapping it needs the DB2 files out of the
-# client's CASC archive, which wago does not serve. Until then --match fingerprints a table by
-# asking which DB2's ID space contains every hotfixed record id. That is only worth believing on
-# tables with enough rows to make the containment mean something; on a one row table almost any
-# large table "matches".
+# Naming the tables: tableHash is stored in each DB2 file's own header rather than derived from
+# its name, so no amount of hashing the name reproduces it - Jenkins lookup3, one-at-a-time and
+# SStrHash over 38 names in 7 spellings all match nothing. But the mapping is published:
+# WoWDBDefs ships a manifest of every DB2 with its tableHash, so this reads the names straight
+# out of that rather than guessing.
+#
+# --match is the older fingerprint - which DB2's ID space contains every hotfixed record id - and
+# is kept only to corroborate. It is worth much less than the manifest and it lies: on the cache
+# that made this worth fixing it called LightData "SpellCategories", because record ids that land
+# inside a big table's id space prove nothing.
 
 import argparse
 import collections
+import json
 import os
 import struct
 import sys
@@ -53,6 +57,23 @@ REFERENCE = [
 	'SpellDuration', 'SpellRadius', 'SpellCastTimes', 'SpellItemEnchantment', 'ItemSparse',
 	'ItemEffect', 'ItemSet', 'ItemSetSpell', 'SkillLineAbility',
 ]
+
+
+MANIFEST_URL = 'https://raw.githubusercontent.com/wowdev/WoWDBDefs/master/manifest.json'
+MANIFEST_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dbd_manifest.json')
+
+
+def table_names():
+	"""tableHash -> DB2 name, from WoWDBDefs. Cached on disk; absent means offline, not fatal."""
+	if not os.path.exists(MANIFEST_CACHE):
+		try:
+			import urllib.request
+
+			urllib.request.urlretrieve(MANIFEST_URL, MANIFEST_CACHE)
+		except Exception as error:  # noqa: BLE001 - names are a convenience, the records still read
+			print(f'  (no table names: {error})', file=sys.stderr)
+			return {}
+	return {int(e['tableHash'], 16): e['tableName'] for e in json.load(open(MANIFEST_CACHE)) if e.get('tableHash')}
 
 
 def read(path):
@@ -138,17 +159,18 @@ def main():
 	for table_hash, record_id, size, _status in carrying:
 		by_table[table_hash].append((record_id, size))
 
+	names = table_names()
 	print(f'\n{len(by_table)} tables carry data:')
 	for table_hash, rows in sorted(by_table.items(), key=lambda kv: -len(kv[1])):
 		ids = {r[0] for r in rows}
 		avg = sum(r[1] for r in rows) // len(rows)
-		note = ''
+		note = '  ' + names.get(table_hash, '(unknown table)')
 		if spaces:
 			hits = [(len(ids & s) / len(ids), n) for n, s in spaces.items() if len(ids & s) == len(ids)]
 			hits.sort(reverse=True)
-			note = f'  fingerprint: {hits[0][1]}' if hits else '  fingerprint: none'
-			if hits and len(ids) < 5:
-				note += ' (too few rows to trust)'
+			# Appended, never substituted: the manifest name is the answer, this is only a second
+			# opinion, and where they disagree it is this one that is wrong.
+			note += f'  (fingerprint: {hits[0][1]}{", too few rows to trust" if len(ids) < 5 else ""})' if hits else '  (fingerprint: none)'
 		print(f'  0x{table_hash:08x}  {len(rows):6d} rows  {avg:5d} bytes avg{note}')
 
 
