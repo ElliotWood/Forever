@@ -59,25 +59,36 @@ describe('finishIndividualImport', () => {
 		expect(loadLeftovers).not.toHaveBeenCalled();
 	});
 
-	it('applies race, gear, talents and professions, and reports success', async () => {
-		await finishIndividualImport(host, parsed({ professions: [Profession.Engineering] }));
+	it('applies race, gear and professions, and reports success', async () => {
+		await finishIndividualImport(host, parsed({ professions: [Profession.Engineering], talentsStr: '' }));
 
 		expect(player.setRace).toHaveBeenCalledWith(Race.RaceHuman);
 		expect(player.setGear).toHaveBeenCalledWith('the gear');
-		expect(player.setTalentsString).toHaveBeenCalledWith('05002001-0550000502-05032');
 		expect(player.setProfessions).toHaveBeenCalledWith([Profession.Engineering]);
 		expect(toasts).toEqual([{ variant: 'success', body: 'Import successful!' }]);
 	});
 
-	// `--` is what an empty three-tree talent string looks like, and writing it would wipe the
-	// talents the import did not carry.
-	it('leaves the talents alone for an empty talent string', async () => {
-		await finishIndividualImport(host, parsed({ talentsStr: '--' }));
+	// A talent string indexes the exporter's trees by position, and no exporter targets these
+	// trees, so applying one would spend the points on different talents.
+	it('never applies an imported talent string, and says so', async () => {
+		await finishIndividualImport(host, parsed({}));
+
 		expect(player.setTalentsString).not.toHaveBeenCalled();
+		expect(toasts[0].variant).toBe('warning');
+		expect(toasts[0].body).toContain('not imported');
+	});
+
+	// `--` is what an empty three-tree talent string looks like: the import carried no talents, so
+	// there is nothing to warn about either.
+	it('says nothing when the export carried no talents at all', async () => {
+		await finishIndividualImport(host, parsed({ talentsStr: '--' }));
+
+		expect(player.setTalentsString).not.toHaveBeenCalled();
+		expect(toasts.every(toast => toast.variant !== 'warning')).toBe(true);
 	});
 
 	it('lists what the database did not have', async () => {
-		await finishIndividualImport(host, parsed({ missingItems: [1, 2], missingEnchants: [3] }));
+		await finishIndividualImport(host, parsed({ missingItems: [1, 2], missingEnchants: [3], talentsStr: '' }));
 		expect(toasts).toEqual([
 			{
 				variant: 'info',
