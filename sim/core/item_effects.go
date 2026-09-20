@@ -36,11 +36,30 @@ func HasEnchantEffect(id int32) bool {
 
 // Registers an ApplyEffect function which will be called before the Sim
 // starts, for any Agent that is wearing the item.
+// missingItemEffects collects the items an effect was registered for that this client
+// does not ship, so the count can be reported rather than silently swallowed.
+var missingItemEffects []int32
+
+var missingEnchantEffects []int32
+
+// MissingItemEffects reports the item ids whose effects were skipped because the loaded
+// database has no such item.
+func MissingItemEffects() []int32 { return missingItemEffects }
+
+// MissingEnchantEffects reports the enchant effect ids skipped for the same reason.
+func MissingEnchantEffects() []int32 { return missingEnchantEffects }
+
 func NewItemEffect(id int32, itemEffect ApplyEffect) {
 	if WITH_DB {
 		if GetItemByID(id) == nil {
 			if _, hasGem := GetGemByID(id); !hasGem {
-				panic(fmt.Sprintf("No item with ID: %d", id))
+				// Forever's item set is a subset of TBC's -- 81 items these effects were
+				// written for are simply not in the client any more, and item 1168 is not
+				// in the DBC at all. Skipping keeps the implementation around for the day
+				// an item comes back, where panicking would stop the sim from starting and
+				// deleting the code would lose work that is still correct.
+				missingItemEffects = append(missingItemEffects, id)
+				return
 			}
 		}
 	}
@@ -58,7 +77,10 @@ func NewItemEffect(id int32, itemEffect ApplyEffect) {
 func NewEnchantEffect(id int32, enchantEffect ApplyEffect) {
 	if WITH_DB {
 		if GetEnchantByEffectID(id) == nil {
-			panic(fmt.Sprintf("No enchant with ID: %d", id))
+			// Same as NewItemEffect: enchants this client does not ship are skipped rather
+			// than aborting the process.
+			missingEnchantEffects = append(missingEnchantEffects, id)
+			return
 		}
 	}
 

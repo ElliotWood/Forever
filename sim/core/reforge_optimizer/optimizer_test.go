@@ -28,6 +28,7 @@ import (
 const fixturesDir = "test-fixtures"
 
 func TestReforgerOptimizer(t *testing.T) {
+	requireSocketedItems(t)
 	sim.RegisterAll()
 
 	paths, err := filepath.Glob(filepath.Join(fixturesDir, "*.test.json"))

@@ -10,7 +10,7 @@ func RegisterAllEnchants() {
 	// Enchants
 
 	// Permanently enchant a melee weapon to often inflict a curse on the target reducing their melee damage.
-	// https://www.wowhead.com/forever/spell=20033
+	// https://www.wowhead.com/forever/spell=27102
 	shared.NewProcStatBonusEffect(shared.ProcStatBonusEffect{
 		Name:               "Enchant Weapon - Unholy Weapon",
 		EnchantID:          1899,

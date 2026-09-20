@@ -8,6 +8,11 @@ import { toastManager } from '@ui-kit/Toast';
 // Party drums moved out of the player's consumables and into PartyBuffs in api version 7. The
 // converter lives here rather than beside the shared migrations in `ui/sim` because it reports
 // itself with a toast, and that layer may not reach `@ui-kit`.
+// TODO: version 16 is the Forever talent rebuild -- every class's talent proto changed
+// shape and StatSpellPenetration became StatSpellPiercing. No converter is registered for
+// it on purpose: a saved TBC build's talent string has no meaning against a Forever tree,
+// so there is nothing to migrate it to. Settings below version 16 fall through and the
+// user re-picks their talents.
 const TBC_CONVERSION_MAP: ProtoConversionMap<IndividualSimSettings> = new Map([
 	[
 		7,

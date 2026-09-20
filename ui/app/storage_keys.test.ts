@@ -50,9 +50,11 @@ describe('the storage keys SimHostObject builds', () => {
 });
 
 describe('the settings envelope version', () => {
-	// `updateProtoVersion` migrates anything below this; the golden capture recorded 14, and 15 only
-	// renamed the shadow priest oneof (handled before parsing), so the capture still loads.
-	it('is one past the version the golden capture was taken at', () => {
-		expect(CURRENT_API_VERSION).toBe(15);
+	// `updateProtoVersion` migrates anything below this. The golden capture recorded 14; 15 only
+	// renamed the shadow priest oneof, handled before parsing. 16 is the Forever talent rebuild,
+	// which has no converter on purpose -- a TBC talent string means nothing against a Forever
+	// tree -- so a pre-16 capture loads with its talents dropped rather than migrated.
+	it('matches the version the settings envelope is stamped with', () => {
+		expect(CURRENT_API_VERSION).toBe(16);
 	});
 });
