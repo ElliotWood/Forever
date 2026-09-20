@@ -245,6 +245,13 @@ db:
 	@echo "Running DBC generation tool"
 	go run tools/database/gen_db/*.go -outDir=./assets -gen=db
 
+# Regenerates sim/core/base_stats_auto_gen.go and ui/sim/constants/mechanics.ts from
+# the same numbers, so the sim and the UI cannot disagree about a rating conversion.
+# Needs tools/database/wowsims.db, so it runs after `make db` and from the repo root.
+.PHONY: basestats
+basestats:
+	python3 tools/base_stats_parser.py
+
 .PHONY: ptrdb
 ptrdb:
 	@echo "Extracting client data"

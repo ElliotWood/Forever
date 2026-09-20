@@ -50,7 +50,7 @@ func TestCritChancesSeparateResilienceFromDefense(t *testing.T) {
 			target.PseudoStats.ReducedCritTakenPercent = test.reducedCritTaken
 			defenseRating := 0.0
 			if test.defenseReduction > 0 {
-				defenseRating = test.defenseReduction/(MissDodgeParryBlockCritChancePerDefense/100)*DefenseRatingPerDefenseLevel + 1
+				defenseRating = test.defenseReduction/(MissDodgeParryBlockCritChancePerDefense/100)*DefenseRatingPerDefenseLevel + DefenseRatingPerDefenseLevel/2
 			}
 			target.AddStats(stats.Stats{stats.DefenseRating: defenseRating})
 			target.AddStats(stats.Stats{stats.ResilienceRating: test.resilienceReduction * ResilienceRatingPerCritReductionChance * 100})
