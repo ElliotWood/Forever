@@ -297,7 +297,7 @@ func (war *Warrior) registerFocusedRage() {
 	}
 
 	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: WarriorSpellsAll ^ (SpellMaskRampage | SpellMaskDeathWish | SpellMaskBattleShout | SpellMaskCommandingShout),
+		ClassMask: WarriorSpellsAll ^ (SpellMaskRampage | SpellMaskDeathWish | SpellMaskBattleShout),
 		Kind:      core.SpellMod_PowerCost_Flat,
 		IntValue:  -war.Talents.FocusedRage,
 	})

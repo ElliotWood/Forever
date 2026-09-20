@@ -134,9 +134,6 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 	// 	warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.15
 	// case proto.WarlockOptions_Imp:
 	// 	warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexFire] *= 1.15
-	// case proto.WarlockOptions_Felguard:
-	// 	warlock.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexShadow] *= 1.10
-	// 	warlock.applyDemonicSacrificeManaRegen(core.ActionID{SpellID: 18788}, 0.02)
 	// case proto.WarlockOptions_Felhunter:
 	// 	warlock.applyDemonicSacrificeManaRegen(core.ActionID{SpellID: 18792}, 0.03)
 	// }
@@ -189,22 +186,6 @@ func (warlock *Warlock) applyMasterDemonologist() {
 	// 	for _, pet := range warlock.Pets {
 	// 		if pet == &warlock.Succubus.Pet {
 	// 			pet.PseudoStats.DamageDealtMultiplier *= 1.0 + 0.02*points
-	// 		}
-	// 	}
-	// case proto.WarlockOptions_Felguard:
-	// 	resistsBonus := 0.10 * points * 70
-	// 	warlock.MasterDemonologistAura = warlock.NewTemporaryStatsAura("Master Demonologist", core.ActionID{SpellID: (35701 + int32(points))}, stats.Stats{
-	// 		stats.ArcaneResistance: resistsBonus,
-	// 		stats.FireResistance:   resistsBonus,
-	// 		stats.FrostResistance:  resistsBonus,
-	// 		stats.NatureResistance: resistsBonus,
-	// 		stats.ShadowResistance: resistsBonus,
-	// 	}, core.NeverExpires).Aura
-	// 	warlock.MasterDemonologistAura.AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.DamageDealtMultiplier, 1.0+0.01*points)
-	//
-	// 	for _, pet := range warlock.Pets {
-	// 		if pet == &warlock.Felguard.Pet {
-	// 			pet.PseudoStats.DamageDealtMultiplier *= 1.0 + 0.01*points
 	// 		}
 	// 	}
 	// case proto.WarlockOptions_Voidwalker:

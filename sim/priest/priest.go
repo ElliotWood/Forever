@@ -147,7 +147,6 @@ const (
 	PriestSpellShadowWordPain
 	PriestSpellShadowFiend
 	PriestSpellVampiricEmbrace
-	PriestSpellVampiricTouch
 	PriestSpellFade
 	PriestSpellSmite
 
@@ -160,7 +159,7 @@ const (
 
 	PriestSpellLast
 	PriestSpellsAll    = PriestSpellLast<<1 - 1
-	PriestSpellDoT     = PriestSpellDevouringPlague | PriestSpellHolyFire | PriestSpellMindFlay | PriestSpellShadowWordPain | PriestSpellVampiricTouch | PriestSpellStarshards
+	PriestSpellDoT     = PriestSpellDevouringPlague | PriestSpellHolyFire | PriestSpellMindFlay | PriestSpellShadowWordPain | PriestSpellStarshards
 	PriestSpellInstant = PriestSpellDevouringPlague |
 		PriestSpellFade |
 		PriestSpellHolyNova |
@@ -178,7 +177,6 @@ const (
 		PriestSpellShadowWordPain |
 		PriestSpellMindFlay |
 		PriestSpellMindBlast |
-		PriestSpellVampiricTouch |
 		PriestSpellShadowFiend |
 		PriestSpellVampiricEmbrace
 	PriestHolySpells = PriestSpellSmite | PriestSpellHolyFire | PriestSpellHolyNova

@@ -25,13 +25,12 @@ type Paladin struct {
 	CurrentSealSpell  *core.Spell
 
 	// Timers for spells with multiple ranks
-	consecrationTimer   *core.Timer
-	hammerOfWrathTimer  *core.Timer
-	holyShieldTimer     *core.Timer
-	holyShockTimer      *core.Timer
-	holyWrathTimer      *core.Timer
-	exorcismTimer       *core.Timer
-	avengersShieldTimer *core.Timer
+	consecrationTimer  *core.Timer
+	hammerOfWrathTimer *core.Timer
+	holyShieldTimer    *core.Timer
+	holyShockTimer     *core.Timer
+	holyWrathTimer     *core.Timer
+	exorcismTimer      *core.Timer
 
 	JudgementAuras []core.AuraArray
 }
@@ -57,7 +56,6 @@ func (paladin *Paladin) AddPartyBuffs(_ *proto.PartyBuffs) {
 
 func (paladin *Paladin) Initialize() {
 	paladin.registerSpells()
-	paladin.RegisterSpiritualAttunement()
 }
 
 func (paladin *Paladin) registerSpells() {
@@ -67,7 +65,6 @@ func (paladin *Paladin) registerSpells() {
 	HammerOfWrathRankMap.RegisterAll(paladin.registerHammerOfWrath)
 	HolyWrathRankMap.RegisterAll(paladin.registerHolyWrath)
 	ExorcismRankMap.RegisterAll(paladin.registerExorcism)
-	paladin.registerAvengingWrath()
 	paladin.registerRighteousFury()
 
 	paladin.registerForbearance()

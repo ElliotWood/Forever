@@ -31,21 +31,17 @@ type Hunter struct {
 	AmmoDPS         float64
 	AmmoDamageBonus float64
 
-	killCommandEnabledUntil time.Duration // Time that KC enablement expires.
-
 	AimedShot        *core.Spell
 	ArcaneShot       *core.Spell
 	AspectOfTheHawk  *core.Spell
 	AspectOfTheViper *core.Spell
 	BestialWrath     *core.Spell
-	KillCommand      *core.Spell
 	MultiShot        *core.Spell
 	RapidFire        *core.Spell
 	RaptorStrike     *core.Spell
 	Readiness        *core.Spell
 	ScorpidSting     *core.Spell
 	SerpentSting     *core.Spell
-	SteadyShot       *core.Spell
 	// HuntersMarkSpell *core.Spell
 
 	AspectOfTheHawkAura  *core.Aura
@@ -263,13 +259,11 @@ func (hunter *Hunter) Initialize() {
 func (hunter *Hunter) RegisterSpells() {
 	hunter.registerArcaneShotSpell()
 	hunter.registerAspects()
-	hunter.registerKillCommandSpell()
 	hunter.registerMultiShotSpell()
 	hunter.registerRaptorStrikeSpell()
 	hunter.registerRapidFireCD()
 	hunter.registerScorpidStingSpell()
 	hunter.registerSerpentStingSpell()
-	hunter.registerSteadyShotSpell()
 	// hunter.registerHuntersMarkSpell()
 }
 
@@ -295,7 +289,6 @@ func (hunter *Hunter) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
 }
 
 func (hunter *Hunter) Reset(_ *core.Simulation) {
-	hunter.killCommandEnabledUntil = 0
 }
 
 func (hunter *Hunter) OnEncounterStart(sim *core.Simulation) {
@@ -310,8 +303,6 @@ const (
 	HunterSpellAspectOfTheHawk
 	HunterSpellAspectOfTheViper
 	HunterSpellBestialWrath
-	HunterSpellKillCommand
-	HunterSpellKillCommandPet
 	HunterSpellMultiShot
 	HunterSpellRapidFire
 	HunterSpellRaptorStrike
@@ -319,6 +310,7 @@ const (
 	HunterSpellReadiness
 	HunterSpellScorpidSting
 	HunterSpellSerpentSting
+	// No spell sets this bit; kept because the Ashtongue Talisman of Swiftness proc filters on it.
 	HunterSpellSteadyShot
 	HunterSpellVolley
 	HunterPetDamage
@@ -336,14 +328,14 @@ const (
 
 	HunterSpellsAll = HunterSpellAimedShot |
 		HunterSpellArcaneShot | HunterSpellBestialWrath |
-		HunterSpellKillCommand | HunterSpellMultiShot |
+		HunterSpellMultiShot |
 		HunterSpellRapidFire | HunterSpellRaptorStrike |
 		HunterSpellScorpidSting | HunterSpellSerpentSting |
-		HunterSpellSteadyShot | HunterSpellVolley
+		HunterSpellVolley
 	HunterSpellsShotsAndStings = HunterSpellAimedShot |
 		HunterSpellArcaneShot | HunterSpellMultiShot |
 		HunterSpellScorpidSting | HunterSpellSerpentSting |
-		HunterSpellSteadyShot | HunterSpellVolley
+		HunterSpellVolley
 )
 
 // Agent is a generic way to access underlying hunter on any of the agents.

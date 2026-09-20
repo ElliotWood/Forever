@@ -15,7 +15,6 @@ type HunterPet struct {
 
 	BestialWrathAura *core.Aura
 
-	KillCommand      *core.Spell
 	primaryAbility   *core.Spell
 	secondaryAbility *core.Spell
 	Dash             *core.Spell
@@ -112,7 +111,6 @@ func (hp *HunterPet) Initialize() {
 		hp.secondaryAbility = hp.NewPetAbility(cfg.SecondaryAbility)
 	}
 
-	hp.registerKillCommandSpell()
 	hp.registerDash()
 }
 

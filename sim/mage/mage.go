@@ -18,27 +18,21 @@ type Mage struct {
 	Talents *proto.MageTalents
 	Options *proto.MageOptions
 
-	waterElemental *WaterElemental
-
 	ArcaneChargesAura  *core.Aura
 	ClearCasting       *core.Aura
 	PresenceOfMindAura *core.Aura
 	ArcanePowerAura    *core.Aura
-	IcyVeinsAura       *core.Aura
 
 	ImprovedScorchAuras core.AuraArray
-	SlowAuras           core.AuraArray
 
-	ArcaneBlast          *core.Spell
-	Ignite               *core.Spell
-	FireBlast            *core.Spell
-	FlameOrbExplode      *core.Spell
-	Flamestrike          []*core.Spell
-	FlamestrikeBW        *core.Spell
-	FrostfireOrb         *core.Spell
-	Pyroblast            *core.Spell
-	SummonWaterElemental *core.Spell
-	IcyVeins             *core.Spell
+	ArcaneBlast     *core.Spell
+	Ignite          *core.Spell
+	FireBlast       *core.Spell
+	FlameOrbExplode *core.Spell
+	Flamestrike     []*core.Spell
+	FlamestrikeBW   *core.Spell
+	FrostfireOrb    *core.Spell
+	Pyroblast       *core.Spell
 }
 
 func (mage *Mage) GetCharacter() *core.Character {
@@ -75,7 +69,6 @@ func (mage *Mage) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
 
 func (mage *Mage) Initialize() {
 	mage.ImprovedScorchAuras = mage.NewEnemyAuraArray(core.ImprovedScorchAura)
-	mage.SlowAuras = mage.NewEnemyAuraArray(core.SlowAura)
 
 	mage.registerPassives()
 	mage.registerSpells()
@@ -105,16 +98,12 @@ func (mage *Mage) registerSpells() {
 	//TalentSpells
 	mage.registerPresenceOfMindSpell()
 	mage.registerArcanePowerSpell()
-	// Slow: Forever drops the talent; see registerSlowSpell
 
 	mage.registerBlastWaveSpell()
 	mage.registerPyroblastSpell()
 	mage.registerCombustionSpell()
-	// Dragon's Breath: Forever drops the talent; see registerDragonsBreathSpell
 
-	// Icy Veins: Forever drops the talent; see registerIcyVeinsSpell
 	mage.registerColdSnapSpell()
-	// Summon Water Elemental: Forever drops the talent; see registerSummonWaterElementalSpell
 }
 
 func (mage *Mage) Reset(sim *core.Simulation) {
@@ -159,7 +148,6 @@ const (
 	MageSpellBlizzard
 	MageSpellColdSnap
 	MageSpellConeOfCold
-	MageSpellDragonsBreath
 	MageSpellEvocation
 	MageSpellFireBlast
 	MageSpellFireball
@@ -171,7 +159,6 @@ const (
 	MageSpellIceBarrier
 	MageSpellIceBlock
 	MageSpellIceLance
-	MageSpellIcyVeins
 	MageSpellIgnite
 	MageSpellMageArmor
 	MageSpellManaGems
@@ -180,10 +167,8 @@ const (
 	MageSpellPyroblast
 	MageSpellPyroblastDot
 	MageSpellScorch
-	MageSpellSlow
 	MageSpellManaGem
 	MageSpellCombustion
-	MageWaterElementalSpellWaterBolt
 
 	// TODO: Forever abilities the sim does not model yet; see the stub file named for each.
 	MageSpellFrostfireBolt
@@ -191,13 +176,13 @@ const (
 	MageSpellLast
 	MageSpellsAll  = MageSpellLast<<1 - 1
 	MageSpellFrost = MageSpellFrostbolt | MageSpellBlizzard | MageSpellFrostNova | MageSpellConeOfCold | MageSpellIceLance
-	MageSpellFire  = MageSpellDragonsBreath | MageSpellFireball | MageSpellCombustion |
+	MageSpellFire  = MageSpellFireball | MageSpellCombustion |
 		MageSpellFireBlast | MageSpellFlamestrike | MageSpellIgnite | MageSpellPyroblast | MageSpellScorch
 	MageSpellsAllDamaging = MageSpellArcaneBlast | MageSpellArcaneExplosion | MageSpellArcaneMissilesTick | MageSpellBlizzard |
-		MageSpellDragonsBreath | MageSpellFireBlast | MageSpellFireball | MageSpellFlamestrike | MageSpellFrostbolt |
+		MageSpellFireBlast | MageSpellFireball | MageSpellFlamestrike | MageSpellFrostbolt |
 		MageSpellIceLance | MageSpellPyroblast | MageSpellPyroblastDot | MageSpellScorch
 	MageSpellInstantCast = MageSpellArcaneMissilesCast | MageSpellArcaneMissilesTick | MageSpellFireBlast | MageSpellArcaneExplosion | MageSpellPyroblastDot |
-		MageSpellCombustion | MageSpellConeOfCold | MageSpellDragonsBreath | MageSpellIceLance | MageSpellManaGems | MageSpellPresenceOfMind
+		MageSpellCombustion | MageSpellConeOfCold | MageSpellIceLance | MageSpellManaGems | MageSpellPresenceOfMind
 	MageSpellExtraResult = MageSpellArcaneMissilesTick | MageSpellBlizzard
 	FireSpellIgnitable   = MageSpellFireball | MageSpellScorch | MageSpellPyroblast
 )

@@ -16,8 +16,6 @@ type Druid struct {
 
 	StartingForm DruidForm
 
-	Treants Treants
-
 	CannotShredTarget bool
 
 	WolfsheadEnergyBonus float64 // Wolfshead Helm (8345): +20 energy on shift into Cat Form
@@ -31,7 +29,6 @@ type Druid struct {
 	FaerieFire           *DruidSpell
 	FaerieFireFeral      *DruidSpell
 	FerociousBite        *DruidSpell
-	ForceOfNature        *DruidSpell
 	Enrage               *DruidSpell
 	EnrageAura           *core.Aura
 	FrenziedRegeneration *DruidSpell
@@ -89,7 +86,6 @@ const (
 	DruidSpellDemoralizingRoar
 	DruidSpellFaerieFire
 	DruidSpellFaerieFireFeral
-	DruidSpellForceOfNature
 	DruidSpellHurricane
 	DruidSpellFerociousBite
 	DruidSpellFrenziedRegeneration
@@ -298,9 +294,6 @@ func New(char *core.Character, form DruidForm, selfBuffs SelfBuffs, talents stri
 
 	// TBC: Druids have a -1.87% base dodge correction to match in-game values.
 	druid.PseudoStats.BaseDodgeChance -= 0.0187
-
-	// TODO: Forever drops Force of Nature; the Treants are never enabled until we know
-	// whether the talent moved elsewhere.
 
 	return druid
 }

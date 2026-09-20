@@ -13,7 +13,6 @@ export const ShoutPicker = <SpecType extends WarriorSpecs>() =>
 		labelTooltip: i18n.t('settings_tab.other.default_shout.tooltip'),
 		values: [
 			{ actionId: ActionId.fromSpellId(2048), value: WarriorShout.WarriorShoutBattle },
-			{ actionId: ActionId.fromSpellId(469), value: WarriorShout.WarriorShoutCommanding },
 		],
 	});
 export const StancePicker = <SpecType extends WarriorSpecs>() =>

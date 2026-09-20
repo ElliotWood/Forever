@@ -42,39 +42,6 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 	}
 }
 
-// TODO: To be implemented.
-func (hp *HunterPet) registerKillCommandSpell() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// hp.KillCommand = hp.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 34027},
-	// 	SpellSchool:    core.SpellSchoolPhysical,
-	// 	DefenseType:    core.DefenseTypeMelee,
-	// 	ProcMask:       core.ProcMaskEmpty,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: HunterSpellKillCommandPet,
-	// 	MaxRange:       core.MaxMeleeRange,
-	//
-	// 	FocusCost: core.FocusCostOptions{
-	// 		Cost: 0,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			NonEmpty: true,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: hp.config.DamageMultiplier,
-	// 	ThreatMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := hp.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) + 127
-	// 		spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-	// 	},
-	// })
-}
-
 func (hp *HunterPet) newBite() *core.Spell {
 	return hp.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: 27050},

@@ -155,23 +155,3 @@ func (paladin *Paladin) registerShadowResistanceAura() {
 	// aura := core.ShadowResistanceAura(&paladin.Character, true)
 	// paladin.registerAuraSpell(aura, SpellMaskShadowResistanceAura)
 }
-
-// Sanctity Aura (Talent)
-// https://www.wowhead.com/forever/spell=20218
-//
-// Increases Holy damage done by party members within 30 yards by 10%.
-// Improved Sanctity Aura talent adds a 1/2% bonus to all damage dealt.
-// Players may only have one Aura on them per Paladin at any one time.
-//
-// TODO: uncalled -- Forever drops the Sanctity Aura talent; re-gate before wiring
-// back into registerTalentSpells.
-// TODO: To be implemented. The TBC body below already accounts for Forever dropping Improved Sanctity Aura (untalented, per the TODO inside); kept commented until this class's port is reviewed.
-func (paladin *Paladin) registerSanctityAura() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// // TODO: Forever drops Improved Sanctity Aura; untalented (0 points) until we know
-	// // whether the effect moved onto another talent.
-	// aura := core.SanctityAuraBuff(&paladin.Character, true, 0)
-	// paladin.registerAuraSpell(aura, SpellMaskSanctityAura)
-}

@@ -110,7 +110,7 @@ func (paladin *Paladin) applyPrecision() {
 	// paladin.AddStaticMod(core.SpellModConfig{
 	// 	Kind:       core.SpellMod_BonusHit_Percent,
 	// 	FloatValue: -float64(paladin.Talents.Precision),
-	// 	ClassMask:  SpellMaskAvengersShield | SpellMaskHammerOfWrath,
+	// 	ClassMask:  SpellMaskHammerOfWrath,
 	// })
 }
 
