@@ -115,6 +115,18 @@ describe('useActionId', () => {
 		expect(ActionId.makeSpellUrl(12297, 0)).not.toContain('rank=');
 	});
 
+	it('carries the trait definition alongside the rank, as wowhead expects', () => {
+		deferFill();
+		const { container } = render(<Probe actionId={ActionId.fromTalent(12297, 1, 135506)} />);
+		expect(anchor(container).href).toContain('def=135506');
+		expect(anchor(container).href).toContain('rank=1');
+		expect(ActionId.makeSpellUrl(12297, 0, 0)).not.toContain('def=');
+	});
+
+	it('treats two talents sharing a spell id as different ids', () => {
+		expect(ActionId.fromTalent(12297, 1, 135506).equalityKey()).not.toBe(ActionId.fromTalent(12297, 1, 999999).equalityKey());
+	});
+
 	it('treats two ranks of one spell as different ids, so the tooltip refetches', () => {
 		expect(ActionId.fromSpellId(12297, 1).equalityKey()).not.toBe(ActionId.fromSpellId(12297, 2).equalityKey());
 		expect(ActionId.fromSpellId(12297, 1).equalityKey()).toBe(ActionId.fromSpellId(12297, 1).equalityKey());

@@ -35,6 +35,8 @@ export type TalentConfig<TalentsProto> = {
 	// Omitted ranks will be inferred by incrementing from the last provided rank.
 	spellIds: Array<number>;
 
+	definitionId?: number;
+
 	maxPoints: number;
 };
 

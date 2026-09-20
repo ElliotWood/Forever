@@ -21,7 +21,7 @@ const spellIdForPoints = <TalentsProto,>(config: TalentConfig<TalentsProto>, poi
 
 export const TalentPicker = <TalentsProto,>({ config, points, canAdd, allPointsSpent, zIndex, onSetPoints }: TalentPickerProps<TalentsProto>) => {
 	const rootRef = useRef<HTMLAnchorElement>(null);
-	const { iconUrl, href } = useActionId(ActionId.fromSpellId(spellIdForPoints(config, points), points));
+	const { iconUrl, href } = useActionId(ActionId.fromTalent(spellIdForPoints(config, points), points, config.definitionId ?? 0));
 	const isFull = points >= config.maxPoints;
 
 	const spend = () => onSetPoints(points + 1);

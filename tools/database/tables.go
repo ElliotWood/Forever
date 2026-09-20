@@ -1063,6 +1063,7 @@ func LoadAndWriteItemEffects(dbHelper *DBHelper, inputsDir string) ([]dbc.ItemEf
 }
 
 type RawTalent struct {
+	DefinitionID   int
 	TierID         int
 	TalentName     string
 	ColumnIndex    int
@@ -1171,6 +1172,7 @@ type traitNodeRow struct {
 	PosY      int
 	MaxRanks  int
 	SpellID   int
+	DefID     int
 	Name      string
 }
 
@@ -1185,6 +1187,7 @@ func scanTraitNode(rows *sql.Rows) (traitNodeRow, error) {
 		&n.PosY,
 		&n.MaxRanks,
 		&n.SpellID,
+		&n.DefID,
 		&n.Name,
 	)
 	if err != nil {
@@ -1405,6 +1408,7 @@ SELECT
   tn.PosY,
   e.MaxRanks,
   COALESCE(d.SpellID, 0),
+  d.ID,
   COALESCE(NULLIF(sn.Name_lang, ''), d.OverrideName_lang, '') AS Name_lang
 FROM TraitNode tn
 JOIN TraitNodeXTraitNodeEntry x ON x.TraitNodeID = tn.ID
@@ -1655,6 +1659,7 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 				return nil, fmt.Errorf("encoding rank spells for trait node %d: %w", node.NodeID, err)
 			}
 			talent := RawTalent{
+				DefinitionID:   node.DefID,
 				TierID:         pos.Row,
 				TalentName:     node.Name,
 				ColumnIndex:    pos.Col,

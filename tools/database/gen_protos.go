@@ -22,6 +22,7 @@ type TalentConfig struct {
 	FancyName        string          `json:"fancyName"`
 	Location         TalentLocation  `json:"location"`
 	SpellIds         []int           `json:"spellIds"`
+	DefinitionID     int             `json:"definitionId,omitempty"`
 	MaxPoints        int             `json:"maxPoints"`
 	PrereqLocation   *TalentLocation `json:"prereqLocation,omitempty"`
 	TabName          string          `json:"tabName"`
@@ -87,7 +88,8 @@ const talentJsonTemplate = `[
           "rowIdx": {{ $talent.Location.RowIdx }},
           "colIdx": {{ $talent.Location.ColIdx }}
         },
-        "spellIds": [{{- range $k, $id := $talent.SpellIds }}{{if $k}}, {{end}}{{ $id }}{{- end }}],
+        "spellIds": [{{- range $k, $id := $talent.SpellIds }}{{if $k}}, {{end}}{{ $id }}{{- end }}],{{ if $talent.DefinitionID }}
+        "definitionId": {{ $talent.DefinitionID }},{{ end }}
         "maxPoints": {{ $talent.MaxPoints }}{{ if $talent.PrereqLocation }},
         "prereqLocation": {
           "rowIdx": {{ $talent.PrereqLocation.RowIdx }},
@@ -304,8 +306,9 @@ func transformRawTalentsToTab(rawTalents []RawTalent) ([]TalentTabConfig, error)
 				RowIdx: rt.TierID,
 				ColIdx: rt.ColumnIndex,
 			},
-			SpellIds:  filtered,
-			MaxPoints: maxPoints,
+			SpellIds:     filtered,
+			DefinitionID: rt.DefinitionID,
+			MaxPoints:    maxPoints,
 		}
 
 		if (rt.PrereqRow.Valid && rt.PrereqRow.Int64 != 0) || (rt.PrereqCol.Valid && rt.PrereqCol.Int64 != 0) {
@@ -369,8 +372,9 @@ func transformRawTalentsToConfigsForClass(rawTalents []RawTalent, classID int) (
 					RowIdx: rt.TierID,
 					ColIdx: rt.ColumnIndex,
 				},
-				SpellIds:  filtered,
-				MaxPoints: maxPoints,
+				DefinitionID: rt.DefinitionID,
+				SpellIds:     filtered,
+				MaxPoints:    maxPoints,
 			}
 
 			if (rt.PrereqRow.Valid && rt.PrereqRow.Int64 != 0) || (rt.PrereqCol.Valid && rt.PrereqCol.Int64 != 0) {

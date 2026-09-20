@@ -392,13 +392,13 @@ export class Database {
 		return db.itemIcons[itemId];
 	}
 
-	static async getSpellIconData(spellId: number, rank = 0): Promise<IconData> {
+	static async getSpellIconData(spellId: number, rank = 0, definitionId = 0): Promise<IconData> {
 		const db = await Database.get();
 		if (rank > 0) {
-			const key = `${spellId}-${rank}`;
+			const key = `${spellId}-${rank}-${definitionId}`;
 			const cached = db.rankedSpellIcons.get(key);
 			if (cached?.icon) return cached;
-			const fetched = await Database.sharedIconRequest(`spell-${key}`, () => Database.getWowheadSpellTooltipData(spellId, rank));
+			const fetched = await Database.sharedIconRequest(`spell-${key}`, () => Database.getWowheadSpellTooltipData(spellId, rank, definitionId));
 			db.rankedSpellIcons.set(key, fetched);
 			return fetched;
 		}
@@ -428,12 +428,12 @@ export class Database {
 	private static async getWowheadItemTooltipData(id: number): Promise<IconData> {
 		return Database.getWowheadTooltipData(id, 'item');
 	}
-	private static async getWowheadSpellTooltipData(id: number, rank = 0): Promise<IconData> {
-		return Database.getWowheadTooltipData(id, 'spell', rank);
+	private static async getWowheadSpellTooltipData(id: number, rank = 0, definitionId = 0): Promise<IconData> {
+		return Database.getWowheadTooltipData(id, 'spell', rank, definitionId);
 	}
-	private static async getWowheadTooltipData(id: number, tooltipPostfix: string, rank = 0): Promise<IconData> {
-		const rankParam = rank > 0 ? `&rank=${rank}` : '';
-		const url = `https://nether.wowhead.com/${WOWHEAD_DOMAIN}/tooltip/${tooltipPostfix}/${id}?lvl=${CHARACTER_LEVEL}&dataEnv=${WOWHEAD_EXPANSION_ENV}${rankParam}`;
+	private static async getWowheadTooltipData(id: number, tooltipPostfix: string, rank = 0, definitionId = 0): Promise<IconData> {
+		const extra = `${definitionId > 0 ? `&def=${definitionId}` : ''}${rank > 0 ? `&rank=${rank}` : ''}`;
+		const url = `https://nether.wowhead.com/${WOWHEAD_DOMAIN}/tooltip/${tooltipPostfix}/${id}?lvl=${CHARACTER_LEVEL}&dataEnv=${WOWHEAD_EXPANSION_ENV}${extra}`;
 		try {
 			const response = await fetch(url);
 			const json = await response.json();

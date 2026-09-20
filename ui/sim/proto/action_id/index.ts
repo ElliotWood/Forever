@@ -18,6 +18,7 @@ type ActionIdOptions = {
 	iconUrl?: string;
 	randomSuffixId?: number;
 	rank?: number;
+	definitionId?: number;
 	isEmptyPlaceholder?: boolean;
 };
 
@@ -29,6 +30,7 @@ export class ActionId {
 	readonly otherId: OtherAction;
 	readonly tag: number;
 	readonly rank: number;
+	readonly definitionId: number;
 
 	readonly baseName: string; // The name without any tag additions.
 	readonly name: string;
@@ -39,13 +41,14 @@ export class ActionId {
 	// "Empty action id!" error logged by toStringIgnoringTag() for accidental empties.
 	private readonly isEmptyPlaceholder: boolean;
 
-	private constructor({ itemId, spellId, otherId, tag, baseName, name, iconUrl, randomSuffixId, rank, isEmptyPlaceholder }: ActionIdOptions = {}) {
+	private constructor({ itemId, spellId, otherId, tag, baseName, name, iconUrl, randomSuffixId, rank, definitionId, isEmptyPlaceholder }: ActionIdOptions = {}) {
 		this.itemId = itemId ?? 0;
 		this.randomSuffixId = randomSuffixId ?? 0;
 		this.spellId = spellId ?? 0;
 		this.otherId = otherId ?? OtherAction.OtherActionNone;
 		this.tag = tag ?? 0;
 		this.rank = rank ?? 0;
+		this.definitionId = definitionId ?? 0;
 		this.isEmptyPlaceholder = isEmptyPlaceholder ?? false;
 
 		switch (otherId) {
@@ -191,7 +194,7 @@ export class ActionId {
 
 	// equalityKey() without the tag, matching equalsIgnoringTag below.
 	equalityKeyIgnoringTag(): string {
-		return (this.cachedEqualityKeyIgnoringTag ??= `${this.itemId}|${this.randomSuffixId}|${this.spellId}|${this.otherId}|${this.rank}`);
+		return (this.cachedEqualityKeyIgnoringTag ??= `${this.itemId}|${this.randomSuffixId}|${this.spellId}|${this.otherId}|${this.rank}|${this.definitionId}`);
 	}
 
 	equalsIgnoringTag(other: ActionId): boolean {
@@ -204,8 +207,8 @@ export class ActionId {
 		url.searchParams.set('rand', String(randomSuffixId || 0));
 		return url.toString();
 	}
-	static makeSpellUrl(id: number, rank = 0): string {
-		return wowheadEntityUrl('spell', id, rank);
+	static makeSpellUrl(id: number, rank = 0, definitionId = 0): string {
+		return wowheadEntityUrl('spell', id, rank, definitionId);
 	}
 	static async makeItemTooltipData(id: number, params?: Omit<WowheadTooltipItemParams, 'itemId'>) {
 		return buildWowheadTooltipDataset({ itemId: id, ...params });
@@ -721,6 +724,10 @@ export class ActionId {
 		return new ActionId({ spellId, rank, tag });
 	}
 
+	static fromTalent(spellId: number, rank: number, definitionId: number): ActionId {
+		return new ActionId({ spellId, rank, definitionId });
+	}
+
 	static fromOtherId(otherId: OtherAction, tag?: number): ActionId {
 		return new ActionId({ otherId, tag });
 	}
@@ -809,7 +816,7 @@ export class ActionId {
 		if (actionId.itemId) {
 			return Database.getItemIconData(actionId.itemId);
 		}
-		return Database.getSpellIconData(actionId.spellId, actionId.rank);
+		return Database.getSpellIconData(actionId.spellId, actionId.rank, actionId.definitionId);
 	}
 
 	get spellIconOverride(): ActionId | null {
