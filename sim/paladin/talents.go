@@ -296,8 +296,11 @@ func (paladin *Paladin) applyHealingLight() {
 }
 
 // Illumination - After getting a critical effect from your Flash of Light, Holy Light, or Holy Shock heal spell, you have a 20/40/60/80/100% chance to gain mana equal to 60% of the base cost of the spell
+//
+// TODO: To be implemented. Needs the mana return on crit; the talent is selectable
+// today and would otherwise do nothing at all, which is worse than failing loudly.
 func (paladin *Paladin) applyIllumination() {
-	// TODO: Implement mana return on crit
+	panic("To be implemented")
 }
 
 // Purifying Power - Reduces the mana cost of your Cleanse and Consecration spells by 5/10%, and increases the critical strike chance of your Exorcism and Holy Wrath spells by 10/20%

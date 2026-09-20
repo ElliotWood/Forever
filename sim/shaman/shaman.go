@@ -111,8 +111,9 @@ type Shaman struct {
 
 	ElementalSharedCDTimer *core.Timer
 
-	TotemOfWrath       *core.Spell
-	MagmaTotem         *core.Spell
+	TotemOfWrath *core.Spell
+	MagmaTotem   *core.Spell
+	// Always nil: its registrar is commented out in totems.go, upstream of the fork.
 	HealingStreamTotem *core.Spell
 	SearingTotem       *core.Spell
 	TremorTotem        *core.Spell

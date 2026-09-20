@@ -7,6 +7,11 @@ import (
 
 var ravageRank = spellData.Ravage.HighestRank()
 
+// TODO: uncalled -- Ravage is live Forever content (spellData.Ravage carries four ranks,
+// 6785/6787/9866/9867) but RegisterFeralCatSpells does not wire this up, so druid.Ravage
+// stays nil. Before wiring it, settle the multiplier below: the ladder states
+// E_WEAPON_PERCENT_DAMAGE 350 for every rank, not the 385 taken from TBC's spell 27005.
+// Live Shred has the same disagreement (shred.go hardcodes 2.25 against a stated 155).
 func (druid *Druid) registerRavageSpell() {
 	// 385% weapon damage, which the client states as E_WEAPON_PERCENT_DAMAGE = 384 on spell 27005 -
 	// the same shape as Shred's 224 / 2.25. The flat addend is the rank's own value, scaled by that
