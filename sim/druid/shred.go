@@ -31,7 +31,11 @@ func (druid *Druid) registerShredSpell() {
 			return !druid.PseudoStats.InFrontOfTarget && !druid.CannotShredTarget
 		},
 
-		// Weapon damage * 2.25 + flatDamageBonus, boosted by 30% if Mangle is active.
+		// Weapon damage * 2.25, boosted by 30% if Mangle is active.
+		//
+		// TODO: the client disagrees with this multiplier. Every rank of spellData.Shred
+		// states E_WEAPON_PERCENT_DAMAGE 155, not 225, so Forever appears to have retuned
+		// it. Left at the TBC value rather than changed on one reading of the data.
 		DamageMultiplier: 2.25,
 		ThreatMultiplier: 1,
 		MaxRange:         core.MaxMeleeRange,
@@ -40,7 +44,7 @@ func (druid *Druid) registerShredSpell() {
 			// shredRank.Direct is the pre-multiplier flat value (180); the idol/flat
 			// bonuses are historically expressed post-multiplier, so scale up and back
 			// down around them to keep the result identical.
-			baseDamage := (shredRank.Direct.Damage(sim)*2.25+druid.ShredFlatBonus)/2.25 + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			baseDamage := shredRank.Direct.Damage(sim) + spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
 			if druid.MangleAuras != nil && druid.MangleAuras.Get(target).IsActive() {
 				baseDamage *= 1.3
 			}
@@ -55,7 +59,7 @@ func (druid *Druid) registerShredSpell() {
 		},
 
 		ExpectedInitialDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
-			baseDamage := (shared.SpellDataMin(shredRank.Direct)*2.25+druid.ShredFlatBonus)/2.25 + spell.Unit.AutoAttacks.MH().CalculateAverageWeaponDamage(spell.MeleeAttackPower(target))
+			baseDamage := shared.SpellDataMin(shredRank.Direct) + spell.Unit.AutoAttacks.MH().CalculateAverageWeaponDamage(spell.MeleeAttackPower(target))
 			if druid.MangleAuras != nil && druid.MangleAuras.Get(target).IsActive() {
 				baseDamage *= 1.3
 			}

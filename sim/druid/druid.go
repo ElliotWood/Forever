@@ -20,9 +20,6 @@ type Druid struct {
 
 	CannotShredTarget bool
 
-	ShredFlatBonus    float64 // Nordrassil Harness 4P: +75
-	LacerateTickBonus float64 // Nordrassil Harness 4P: +15 per stack per tick
-
 	WolfsheadEnergyBonus float64 // Wolfshead Helm (8345): +20 energy on shift into Cat Form
 	WolfsheadRageBonus   float64 // Wolfshead Helm (8345): +5 rage on shift into Bear Form
 

@@ -47,7 +47,7 @@ func (druid *Druid) registerLacerateSpell() {
 			TickLength:    lacerateTick.TickLength,
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				perStack := tickDamageBase + druid.LacerateTickBonus + 0.01*dot.Spell.MeleeAttackPower(target)
+				perStack := tickDamageBase + 0.01*dot.Spell.MeleeAttackPower(target)
 				dot.SnapshotPhysical(target, perStack*float64(dot.Aura.GetStacks()))
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
@@ -56,7 +56,7 @@ func (druid *Druid) registerLacerateSpell() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := tickDamageBase + druid.LacerateTickBonus + 0.01*spell.MeleeAttackPower(target)
+			baseDamage := tickDamageBase + 0.01*spell.MeleeAttackPower(target)
 			if druid.MangleAuras != nil && druid.MangleAuras.Get(target).IsActive() {
 				baseDamage *= 1.3
 			}
