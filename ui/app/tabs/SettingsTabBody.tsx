@@ -30,7 +30,7 @@ export const SettingsTabBody = () => {
 			buffs: applyOwnerClassLabels(relevantStatOptions(BuffDebuffInputs.BUFFS_CONFIG, host), player),
 			partyBuffs: applyOwnerClassLabels(relevantStatOptions(BuffDebuffInputs.PARTY_BUFFS_CONFIG, host), player),
 			debuffs: applyOwnerClassLabels(relevantStatOptions(BuffDebuffInputs.DEBUFFS_CONFIG, host), player),
-			debuffsMisc: relevantStatOptions(BuffDebuffInputs.DEBUFFS_MISC_CONFIG, host),
+			debuffsMisc: applyOwnerClassLabels(relevantStatOptions(BuffDebuffInputs.DEBUFFS_MISC_CONFIG, host), player),
 			conjured: ConsumablesInputs.conjuredStatOptionsFrom(relevantConsumableOptions(CONJURED_CONFIG, config)),
 			explosive: relevantStatOptions(ConsumablesInputs.EXPLOSIVE_CONFIG, host),
 			imbueMH: relevantStatOptions(ConsumablesInputs.IMBUE_CONFIG_MH, host),

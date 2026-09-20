@@ -15,7 +15,7 @@ import * as InputHelpers from '@ui-kit/input_helpers';
 
 import * as Generated from './buffs_debuffs_auto_gen';
 import { DrumsBattle, DrumsRestoration, DrumsWar } from './consumables';
-import { IconPickerStatOption, RenderableStatOptions } from './stat_options';
+import { IconPickerStatOption, inDisplayOrder } from './stat_options';
 
 // Every buff the client database resolves to a spell has its input generated from the manifest;
 // the rows below are the ones it cannot produce, and the registries at the end of this file
@@ -27,16 +27,10 @@ export const Innervate = Generated.Innervates;
 export const PowerInfusion = Generated.PowerInfusions;
 export const ManaTideTotem = Generated.ManaTideTotems;
 
-///////////////////////////////////////////////////////////////////////////
-//                                 RAID BUFFS
-///////////////////////////////////////////////////////////////////////////
-
+// Raid Buffs
 export const Bloodlust = makeBooleanRaidBuffInput({ actionId: ActionId.fromSpellId(2825), fieldName: 'bloodlust', label: 'Bloodlust' });
 
-///////////////////////////////////////////////////////////////////////////
-//                                 PARTY BUFFS
-///////////////////////////////////////////////////////////////////////////
-
+// Party Buffs
 export const BraidedEterniumChain = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(31025),
 	fieldName: 'braidedEterniumChain',
@@ -142,20 +136,6 @@ export const ShadowWeaving = makeBooleanDebuffInput({ actionId: ActionId.fromSpe
 export const WintersChill = makeBooleanDebuffInput({ actionId: ActionId.fromSpellId(28595), fieldName: 'wintersChill', label: "Winter's Chill" });
 export const Screech = makeBooleanDebuffInput({ actionId: ActionId.fromSpellId(27051), fieldName: 'screech', label: 'Screech' });
 export const ShadowEmbrace = makeBooleanDebuffInput({ actionId: ActionId.fromSpellId(32394), fieldName: 'shadowEmbrace', label: 'Shadow Embrace' });
-
-// A registry lists its rows in display order: a generated input config stands for the generated
-// row that carries it, with the stat tags and owner class the client database produced, and a
-// literal row is one of the hand-written buffs above.
-const inDisplayOrder = (
-	generated: Generated.GeneratedStatOption[],
-	rows: Array<RenderableStatOptions | RenderableStatOptions['config']>,
-): RenderableStatOptions[] =>
-	rows.map(row => {
-		if ('config' in row) return row;
-		const option = generated.find(candidate => candidate.config === row);
-		if (!option) throw new Error(`no generated row carries the buff input "${row.label}"`);
-		return option;
-	});
 
 export const PARTY_BUFFS_CONFIG = inDisplayOrder(Generated.GENERATED_PARTY_BUFFS_CONFIG, [
 	Generated.BloodPact,

@@ -65,11 +65,38 @@ export function relevantStatOptions<T, OptionsType extends ItemStatOptions<T> | 
 // A class never buffs itself with its own buff, so on that class's settings tab the row reads
 // "(External)": an outside caster is the only source. Every other option comes back as the same
 // object, so include / exclude lists that name a config keep matching it by reference.
-export function applyOwnerClassLabels(options: RenderableStatOptions[], player: Player<any>): RenderableStatOptions[] {
+export function applyOwnerClassLabels<OptionsType extends RenderableStatOptions>(options: ReadonlyArray<OptionsType>, player: Player<any>): OptionsType[] {
 	const playerClass = player.getClass();
 	return options.map(option => {
 		const label = option.config.label;
 		if (option.ownerClass !== playerClass || typeof label !== 'string') return option;
-		return { ...option, config: { ...option.config, label: `${label} (External)` } } as RenderableStatOptions;
+		return { ...option, config: { ...option.config, label: `${label} (External)` } };
 	});
+}
+
+const describeInput = (config: RenderableStatOptions['config']): string =>
+	config.label ?? ('actionId' in config ? `the input for spell ${config.actionId.spellId}` : 'an unlabelled input');
+
+// A registry lists its rows in display order: a prebuilt option's config stands for that option,
+// keeping the stat tags and owner class it was built with, and a literal row is written out in
+// place. Both directions throw: a config with no prebuilt option, and a prebuilt option no row
+// names. A regenerated registry therefore fails loudly instead of losing a row off the tab.
+export function inDisplayOrder(
+	prebuilt: ReadonlyArray<RenderableStatOptions>,
+	rows: ReadonlyArray<RenderableStatOptions | RenderableStatOptions['config']>,
+): RenderableStatOptions[] {
+	const composed = rows.map(row => {
+		if ('config' in row) return row;
+		const option = prebuilt.find(candidate => candidate.config === row);
+		if (!option) throw new Error(`the display order names ${describeInput(row)}, which no prebuilt row carries`);
+		return option;
+	});
+
+	const placed = new Set(composed.map(option => option.config));
+	const dropped = prebuilt.filter(option => !placed.has(option.config));
+	if (dropped.length > 0) {
+		throw new Error(`the display order leaves out ${dropped.map(option => describeInput(option.config)).join(', ')}`);
+	}
+
+	return composed;
 }
