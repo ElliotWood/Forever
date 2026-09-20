@@ -48,16 +48,24 @@ def reviewed_names():
 	return seen
 
 
+def same(client_name, talent_name):
+	"""Whether a spell id belongs to the talent that lists it. Punctuation and case vary."""
+	strip = lambda t: re.sub(r'[^a-z0-9]', '', (t or '').lower())
+	return strip(client_name) == strip(talent_name)
+
+
 def main():
 	parser = argparse.ArgumentParser(description='Talent wording, Forever against Era.')
 	parser.add_argument('--class', dest='klass', help='one class tree')
 	parser.add_argument('--unreviewed', action='store_true', help='only talents no beta pass names')
+	parser.add_argument('--collisions', action='store_true', help='list talents whose spell id belongs to another talent')
 	args = parser.parse_args()
 
 	f, e = Client(FOREVER), Client(ERA)
 	docs = reviewed_names() if args.unreviewed else ''
 	trees = sorted(glob.glob(os.path.join(REPO, 'ui', 'core', 'talents', 'trees', '*.json')))
 	count = 0
+	collisions = 0
 
 	for path in trees:
 		klass = os.path.basename(path).replace('.json', '')
@@ -70,6 +78,19 @@ def main():
 					continue
 				forever, era = f.spell(ids[0]), e.spell(ids[0])
 				if not forever or not era:
+					continue
+				# The trees carry another class's spell ids in five places - druid Genesis points
+				# at the mage's Fire Power, Predatory Instincts at the warrior's Impale - so the
+				# wording being compared is not this talent's at all. Caught by asking the client
+				# what the id is called: 20 ids across 6 talents disagree with their talent name.
+				if same(forever.get('name'), talent['name']):
+					pass
+				elif not args.collisions:
+					continue
+				else:
+					print()
+					print(f"## {klass} / {talent['name']} ({ids[0]}) - COLLISION: that id is {forever.get('name')!r}")
+					collisions += 1
 					continue
 				if wording(forever['description']) == wording(era['description']):
 					continue
