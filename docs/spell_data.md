@@ -519,8 +519,8 @@ then run the generator, which writes the whole file back. Running it twice and s
 ### The guard tests
 
 `go test ./tools/database/... ./tools/gen_buffs_proto/...` needs no client database and runs in CI.
-Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants` and `TestGeneratedBuffsDebuffsTS`
-skip; everything else runs.
+Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`, `TestGeneratedBuffsDebuffsTS`
+and `TestGeneratedRankTablesMatchTheDatabase` skip; the other 26 run.
 
 | Test                                                                                                              | What it holds                                                                                                                   |
 | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
