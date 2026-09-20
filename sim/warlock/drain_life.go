@@ -1,8 +1,9 @@
 package warlock
 
-// TODO: To be implemented. The Forever client ships no rank ladder the generator can
-// read for this ability -- it survives as a single spell with no "Rank N" subtext and
-// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+// TODO: To be implemented. spellData.DrainLife holds the six trainer ranks, 689 to 11700.
+// The client also carries 403677 to 403689, the copies the Season of Discovery rune passive
+// Master Channeler (403668) swaps onto the action bar. That is an Engrave grant with no place
+// in Forever, and the generator drops its stand-ins.
 //
 // Soul Siphon rides on this spell and nothing else, so stubbing Drain Life left
 // Talents.SoulSiphon the one talent field in the repo that no code reads. Re-apply it
