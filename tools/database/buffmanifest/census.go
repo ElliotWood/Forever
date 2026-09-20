@@ -112,8 +112,8 @@ var Manifest = []BuffSpec{
 	{
 		Field: "trueshot_aura", Number: 8, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "TrueshotAura", Name: "Trueshot Aura", Owner: proto.Class_ClassHunter,
-		Stats: []proto.Stat{proto.Stat_StatAttackPower, proto.Stat_StatRangedAttackPower},
-		Notes: "the rank ladder is non-monotonic: rank 5 (20906) gives less ranged attack power than rank 4 (20905).",
+		Stats: []proto.Stat{proto.Stat_StatRangedAttackPower},
+		Notes: "the rank ladder is non-monotonic: rank 5 (20906) states 50 ranged attack power where rank 4 (20905) states 75, and the resolver takes the top rank. The single A_MOD_RANGED_ATTACK_POWER effect is why the row tags ranged attack power alone.",
 	},
 	{
 		Field: "wrath_of_air_totem", Number: 21, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindAbsent,

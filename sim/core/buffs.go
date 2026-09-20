@@ -176,10 +176,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(TranquilAirTotemAura(char))
 	}
 
-	if partyBuffs.TrueshotAura {
-		MakePermanent(TrueShotAuraBuff(char))
-	}
-
 	if partyBuffs.WrathOfAirTotem != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(WrathOfAirTotemAura(char, IsImproved(partyBuffs.WrathOfAirTotem)))
 	}
@@ -250,19 +246,6 @@ func FerociousInspiration(char *Character, count int32) *Aura {
 		ActionID: ActionID{SpellID: 34460},
 		Duration: time.Second * 10,
 	}).AttachMultiplicativePseudoStatBuff(&char.PseudoStats.DamageDealtMultiplier, 1+dmgBuff)
-}
-
-func TrueShotAuraBuff(char *Character) *Aura {
-	apBuff := 125.0
-
-	return makeStatBuff(char, BuffConfig{
-		Label:    "Trueshot Aura",
-		ActionID: ActionID{SpellID: 27066},
-		Stats: []StatConfig{
-			{stats.RangedAttackPower, apBuff, false},
-			{stats.AttackPower, apBuff, false},
-		},
-	})
 }
 
 var UnleashedRageCategory = "UnleashedRage"

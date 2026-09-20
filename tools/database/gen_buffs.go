@@ -140,6 +140,16 @@ func (r *ResolvedBuff) warn(format string, args ...any) {
 	r.Warnings = append(r.Warnings, fmt.Sprintf(format, args...))
 }
 
+// warnInFile warns and puts the same sentence above the row's constructor.
+func (r *ResolvedBuff) warnInFile(format string, args ...any) {
+	message := fmt.Sprintf(format, args...)
+	r.Warnings = append(r.Warnings, message)
+	if r.Note != "" {
+		r.Note += "; "
+	}
+	r.Note += message
+}
+
 func (r *ResolvedBuff) unsupported(format string, args ...any) {
 	r.Supported = false
 	r.Reason = fmt.Sprintf(format, args...)
@@ -682,7 +692,7 @@ func (res *buffResolver) checkLadder(row *ResolvedBuff, byRank map[int32][]buffC
 			continue
 		}
 		if prevValue > math.Inf(-1) && math.Abs(value) < math.Abs(prevValue) {
-			row.warn("non-monotonic ladder: rank %d (%d) is worth %v where rank %d (%d) is worth %v",
+			row.warnInFile("the rank ladder is not monotonic: rank %d (%d) is worth %v where rank %d (%d) is worth %v, and the top rank is what the constructor states",
 				rank, spellID, value, prevRank, prevID, prevValue)
 		}
 		prevRank, prevValue, prevID = rank, value, spellID

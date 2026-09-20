@@ -488,7 +488,7 @@ export const GENERATED_PARTY_BUFFS_CONFIG: GeneratedStatOption[] = [
 	},
 	{
 		config: TrueshotAura,
-		stats: [Stat.StatAttackPower, Stat.StatRangedAttackPower],
+		stats: [Stat.StatRangedAttackPower],
 		ownerClass: Class.ClassHunter,
 	},
 	{

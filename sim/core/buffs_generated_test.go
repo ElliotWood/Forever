@@ -52,6 +52,9 @@ func TestPartyBattleShoutAppliesTheGeneratedAura(t *testing.T) {
 	if want := (ActionID{SpellID: 25289, Tag: -1}); aura.ActionID != want {
 		t.Errorf("the external copy is %v, want %v", aura.ActionID, want)
 	}
+	if BattleShoutDuration(0) != 3*time.Minute {
+		t.Errorf("Battle Shout lasts %v, want the client's 3 minutes", BattleShoutDuration(0))
+	}
 	if aura.Duration != BattleShoutDuration(0) {
 		t.Errorf("the external copy lasts %v, want %v", aura.Duration, BattleShoutDuration(0))
 	}
@@ -60,9 +63,10 @@ func TestPartyBattleShoutAppliesTheGeneratedAura(t *testing.T) {
 	if !category.SingleAura {
 		t.Error("the Battle Shout category is not single-aura, so a second copy could sit next to it")
 	}
-	if len(category.effects) != 1 || category.effects[0].Priority != 139 {
-		t.Errorf("the category holds %d effects, first bid %v; want one bidding 139",
-			len(category.effects), category.effects[0].Priority)
+	if len(category.effects) != 1 {
+		t.Errorf("the category holds %d effects, want one", len(category.effects))
+	} else if category.effects[0].Priority != 139 {
+		t.Errorf("the only effect in the category bids %v, want 139", category.effects[0].Priority)
 	}
 
 	// The chain the driver installs finds the player's own shout by this tag.
@@ -307,6 +311,35 @@ func TestGeneratedPartyAurasApplyTheStatsTheManifestNames(t *testing.T) {
 	}
 	if got := char.PseudoStats.PushbackChance; got != 0.65 {
 		t.Errorf("Concentration Aura left the pushback chance at %v, want 1 reduced by the client's 35%%", got)
+	}
+}
+
+// Rank 5 of Trueshot Aura, which the resolver takes, states one
+// A_MOD_RANGED_ATTACK_POWER effect worth 50: melee attack power is untouched and
+// the 75 of rank 4 is not what the party gets.
+func TestGeneratedTrueshotAuraGivesTheTopRanksRangedAttackPower(t *testing.T) {
+	char := newGeneratedBuffTestCharacter()
+
+	applyBuffEffects(generatedBuffTestAgent{char},
+		&proto.RaidBuffs{}, &proto.PartyBuffs{TrueshotAura: true}, &proto.IndividualBuffs{})
+	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+	if got := char.stats[stats.RangedAttackPower]; got != 50 {
+		t.Errorf("Trueshot Aura applied %v ranged attack power, want the client's 50", got)
+	}
+	if got := char.stats[stats.AttackPower]; got != 0 {
+		t.Errorf("Trueshot Aura applied %v melee attack power, want none", got)
+	}
+
+	aura := char.GetAura("Trueshot Aura (External)")
+	if aura == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Trueshot Aura (External)", auraLabels(char))
+	}
+	if want := (ActionID{SpellID: 20906, Tag: -1}); aura.ActionID != want {
+		t.Errorf("the external copy is %v, want %v", aura.ActionID, want)
+	}
+	if aura.Duration != NeverExpires {
+		t.Errorf("the party's Trueshot Aura lasts %v, want it permanent", aura.Duration)
 	}
 }
 

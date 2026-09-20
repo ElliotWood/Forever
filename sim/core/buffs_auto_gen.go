@@ -250,7 +250,24 @@ func ConcentrationAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 // func TotemOfWrathAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // totem_of_wrath, KindAbsent: no SpellName row for Totem of Wrath.
 
 // Trueshot Aura - https://www.wowhead.com/forever/spell=20906
-// func TrueshotAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // trueshot_aura, KindStatFlat: hand-written apply block still present
+// the rank ladder is not monotonic: rank 5 (20906) is worth 50 where rank 4 (20905) is worth 75, and the top rank is what the constructor states
+func TrueshotAuraValue(talentPoints int32) float64 {
+	return 50.0
+}
+func TrueshotAuraDuration(talentPoints int32) time.Duration {
+	return 1800000 * time.Millisecond
+}
+func TrueshotAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Trueshot Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 20906}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: TrueshotAuraDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.RangedAttackPower, TrueshotAuraValue(talentPoints), false},
+		},
+	})
+}
 
 // func WrathOfAirTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // wrath_of_air_totem, KindAbsent: no SpellName row for Wrath of Air Totem.
 
@@ -890,6 +907,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if party.ConcentrationAura {
 		MakePermanent(ConcentrationAuraAura(&char.Unit, false, 0))
+	}
+	if party.TrueshotAura {
+		MakePermanent(TrueshotAuraAura(&char.Unit, false, 0))
 	}
 	if party.AtieshMage > 0 {
 		driveAtieshMage(char, party)
