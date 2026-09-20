@@ -321,6 +321,26 @@ const (
 		HunterSpellArcaneShot | HunterSpellMultiShot |
 		HunterSpellScorpidSting | HunterSpellSerpentSting |
 		HunterSpellSteadyShot | HunterSpellVolley
+
+	// Forever abilities the sim does not model yet; see the stub file named for each.
+	HunterSpellAspectOfTheFalcon
+	HunterSpellCarve
+	HunterSpellChimeraShot
+	HunterSpellChimeraShotScorpid
+	HunterSpellChimeraShotSerpent
+	HunterSpellChimeraShotViper
+	HunterSpellDismember
+	HunterSpellDustCloud
+	HunterSpellEnchantedFlare
+	HunterSpellFlankingStrike
+	HunterSpellHeartOfTheLion
+	HunterSpellLavaBreath
+	HunterSpellMine
+	HunterSpellPinch
+	HunterSpellSavageRend
+	HunterSpellSwipe
+	HunterSpellTendonRip
+	HunterSpellWeb
 )
 
 // Agent is a generic way to access underlying hunter on any of the agents.

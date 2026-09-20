@@ -278,6 +278,20 @@ const (
 
 	WarlockDestructionSpells = WarlockSpellHellfire | WarlockSpellImmolate | WarlockSpellIncinerate | WarlockSpellRainOfFire | WarlockSpellSearingPain |
 		WarlockSpellShadowBolt | WarlockSpellSoulFire | WarlockSpellConflagrate | WarlockSpellShadowFury | WarlockSpellShadowBurn
+
+	// Forever abilities the sim does not model yet; see the stub file named for each.
+	WarlockSpellChaosBolt
+	WarlockSpellDanceOfTheWicked
+	WarlockSpellDemonCharge
+	WarlockSpellDemonicGrace
+	WarlockSpellDemonicHowl
+	WarlockSpellExplorerImp
+	WarlockSpellGrimoireOfSynergy
+	WarlockSpellInvocation
+	WarlockSpellMenace
+	WarlockSpellMetamorphosis
+	WarlockSpellShadowCleave
+	WarlockSpellVengeance
 )
 
 // Called to handle custom resources
