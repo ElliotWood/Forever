@@ -428,7 +428,6 @@ export class ActionId {
 				break;
 			// For targetted buffs, tag is the source player's raid index or -1 if none.
 			case 'Bloodlust':
-			case 'Ferocious Inspiration':
 			case 'Innervate':
 			case 'Focus Magic':
 			case 'Mana Tide Totem':
@@ -438,7 +437,6 @@ export class ActionId {
 			case 'Curse of the Elements':
 			case 'Curse of Recklessness':
 			case 'Improved Seal of the Crusader':
-			case 'Unleashed Rage':
 				if (tag != -1) {
 					if (tag === playerIndex || playerIndex == undefined) {
 						name += ` (self)`;
