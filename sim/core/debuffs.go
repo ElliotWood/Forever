@@ -317,9 +317,10 @@ func StormstrikeAura(target *Unit, uptime float64) *Aura {
 
 func AtkSpeedReductionEffect(aura *Aura, speedMultiplier float64) *ExclusiveEffect {
 	return aura.NewExclusiveEffect("AtkSpdReduction", false, ExclusiveEffect{
-		// How far from 1 the multiplier is, which is the scale every member of
-		// the category bids on: a 20% slow outbids a 10% one.
-		Priority: speedMultiplier - 1,
+		// How far from 1 the applied factor is, which is the scale every member
+		// of the category bids on: a 20% slow outbids a 10% one. The factor is
+		// 1/speedMultiplier, so a helper stating 1.2 is a 16.67% slow.
+		Priority: 1 - 1/speedMultiplier,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
 			ee.Aura.Unit.MultiplyAttackSpeed(sim, 1/speedMultiplier)
 		},

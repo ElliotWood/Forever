@@ -284,26 +284,76 @@ func TestGeneratedAttackSpeedDebuffBidsAgainstTheHandWrittenOnes(t *testing.T) {
 		t.Errorf("the target swings at %v times its speed, want the slow to have reached the swing timers", got)
 	}
 
+	// A hand-written slow states the multiplier the target's speed is divided
+	// by, so 1.5 is a third slower and outbids the clap's fifth.
+	slower := target.GetOrRegisterAura(Aura{
+		Label:    "Hand-written Slow",
+		ActionID: ActionID{SpellID: 27648},
+		Duration: time.Second * 12,
+	})
+	// Through a variable, so that the test does the same float64 arithmetic the
+	// helper does rather than Go's exact constant arithmetic.
+	divisor := 1.5
+	stronger := AtkSpeedReductionEffect(slower, divisor)
+	if want := 1 - 1/divisor; stronger.Priority != want {
+		t.Errorf("a slow that divides by %v bids %v, want the magnitude %v", divisor, stronger.Priority, want)
+	}
+
+	slower.Activate(sim)
+
+	if got := target.PseudoStats.MeleeSpeedMultiplier; got != 1 {
+		t.Errorf("the melee speed multiplier is %v, want the weaker slow taken back", got)
+	}
+	if got, want := target.PseudoStats.AttackSpeedMultiplier, 1/divisor; got != want {
+		t.Errorf("the attack speed multiplier is %v, want the stronger slow's %v", got, want)
+	}
+	if !clap.IsActive() {
+		t.Error("losing the category pushed the weaker aura off, which only a single-aura category may do")
+	}
+}
+
+// Thunderfury's Cyclone states 1.2, which divides the target's speed by 1.2 and
+// is a 16.67% slow, so the clap's 20% has to keep the category when the proc
+// lands. The two forms are what made the scales easy to confuse: 1.2 - 1 is
+// bit-for-bit the clap's 1 - 0.8.
+func TestGeneratedThunderClapOutbidsThunderfurysCyclone(t *testing.T) {
+	sim := &Simulation{}
+	target := newExclusiveTestTarget()
+	target.Env = &Environment{MeasuringStats: true}
+	target.PseudoStats = stats.NewPseudoStats()
+
+	clap := MakePermanent(newGeneratedDebuff(target, GeneratedBuff{
+		Label:    "Generated Thunder Clap",
+		ActionID: ActionID{SpellID: 11581},
+		Duration: time.Second * 30,
+		Category: "AtkSpdReduction",
+		Pseudo: []PseudoConfig{
+			{Kind: PseudoStatMeleeSpeedMultiplier, Amount: 0.8, IsMultiplicative: true},
+		},
+	}))
+	clap.Activate(sim)
+
 	cyclone := target.GetOrRegisterAura(Aura{
 		Label:    "Cyclone",
 		ActionID: ActionID{SpellID: 27648},
 		Duration: time.Second * 12,
 	})
-	stronger := AtkSpeedReductionEffect(cyclone, 1.25)
-	if stronger.Priority != 0.25 {
-		t.Errorf("a hand-written 25%% slow bids %v, want the magnitude 0.25", stronger.Priority)
+	weaker := AtkSpeedReductionEffect(cyclone, 1.2)
+	if clapBid := clap.ExclusiveEffects[0].Priority; weaker.Priority >= clapBid {
+		t.Fatalf("the proc bids %v against the clap's %v, want the 16.67%% slow to be worth less",
+			weaker.Priority, clapBid)
 	}
 
 	cyclone.Activate(sim)
 
-	if got := target.PseudoStats.MeleeSpeedMultiplier; got != 1 {
-		t.Errorf("the melee speed multiplier is %v, want the weaker slow taken back", got)
+	if got := target.PseudoStats.MeleeSpeedMultiplier; got != 0.8 {
+		t.Errorf("the melee speed multiplier is %v, want the clap's 0.8 to have stayed", got)
 	}
-	if got := target.PseudoStats.AttackSpeedMultiplier; got != 0.8 {
-		t.Errorf("the attack speed multiplier is %v, want the stronger slow's 1/1.25", got)
+	if got := target.PseudoStats.AttackSpeedMultiplier; got != 1 {
+		t.Errorf("the attack speed multiplier is %v, want the weaker proc to have applied nothing", got)
 	}
-	if !clap.IsActive() {
-		t.Error("losing the category pushed the weaker aura off, which only a single-aura category may do")
+	if got := target.TotalMeleeHasteMultiplier(); got != 0.8 {
+		t.Errorf("the target swings at %v times its speed, want the stronger slow's 0.8", got)
 	}
 }
 

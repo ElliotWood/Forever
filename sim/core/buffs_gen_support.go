@@ -479,7 +479,9 @@ func generatedPseudoStatFields(unit *Unit, config PseudoConfig) []*float64 {
 	case PseudoStatDamageTakenMultiplier:
 		return []*float64{&unit.PseudoStats.DamageTakenMultiplier}
 	case PseudoStatMeleeSpeedMultiplier:
-		return []*float64{&unit.PseudoStats.MeleeSpeedMultiplier}
+		// The swing timers are computed from this field and cached, so both
+		// callers route it through MultiplyMeleeSpeed before they get here.
+		panic("a generated melee speed change is applied through MultiplyMeleeSpeed, not through the field")
 	case PseudoStatPushbackChance:
 		return []*float64{&unit.PseudoStats.PushbackChance}
 	case PseudoStatBonusPhysicalDamageTaken:
