@@ -2,49 +2,64 @@ package mage
 
 import (
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 // TODO: was Ranks(7, 6); Forever's Flamestrike tops out at rank 6, so only that remains.
 var FlameStrikeRankMap = spellData.Flamestrike.Ranks(6)
 
-// TODO: To be implemented. TBC body below needs no porting (Forever's dropped DoT is already left out, per the TODO inside); kept commented until this class's port is reviewed.
+// Flamestrike
+// https://www.wowhead.com/forever/spell=10216
+//
+// Calls down a pillar of fire, burning all enemies within the area for X Fire damage and an additional
+// Y Fire damage over 8 sec. Only one Flamestrike can be active per Mage at a time.
 func (mage *Mage) registerFlamestrike(rankConfig shared.SpellData) {
-	panic("To be implemented")
+	actionID := core.ActionID{SpellID: rankConfig.SpellID}
+	tick := rankConfig.Periodic.(shared.SpellDataPeriodic)
 
-	// The TBC implementation, kept for the port:
-	// // TODO: Forever moves Flamestrike's damage over time onto the area trigger its second
-	// // effect creates, which the client tables do not carry, so the rank has no Periodic value
-	// // and only the direct hit is registered - no DoT rather than an invented one.
-	// flameStrikeCoefficient := 0.23600000143 // Per https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=exact%253A2120 Field: "BonusCoefficient"
-	//
-	// spell := mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: rankConfig.SpellID},
-	// 	SpellSchool:    core.SpellSchoolFire,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: MageSpellFlamestrike,
-	// 	Rank:           rankConfig.Rank,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: rankConfig.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD:      rankConfig.GCD,
-	// 			CastTime: rankConfig.CastTime,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	// 	BonusCoefficient: flameStrikeCoefficient,
-	// 	ThreatMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-	// 		baseDamage := rankConfig.Direct.Damage(sim)
-	// 		spell.CalcAndDealAoeDamage(sim, baseDamage, spell.OutcomeMagicHitAndCrit)
-	// 	},
-	// })
-	//
-	// mage.Flamestrike = append(mage.Flamestrike, spell)
+	spell := mage.RegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: MageSpellFlamestrike,
+		Rank:           rankConfig.Rank,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: rankConfig.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD:      rankConfig.GCD,
+				CastTime: rankConfig.CastTime,
+			},
+		},
+
+		DamageMultiplier: 1,
+		BonusCoefficient: rankConfig.Direct.BonusCoefficient(),
+		ThreatMultiplier: 1,
+
+		Dot: core.DotConfig{
+			IsAOE: true,
+			Aura: core.Aura{
+				ActionID: actionID,
+				Label:    "Flamestrike" + mage.Label + " " + rankConfig.GetRankLabel(),
+			},
+			NumberOfTicks:    tick.NumberOfTicks,
+			TickLength:       tick.TickLength,
+			BonusCoefficient: tick.Coef,
+			OnTick: func(sim *core.Simulation, _ *core.Unit, dot *core.Dot) {
+				dot.Spell.CalcAndDealPeriodicAoeDamage(sim, tick.Tick, dot.OutcomeTickMagicHit)
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+			baseDamage := rankConfig.Direct.Damage(sim)
+			spell.CalcAndDealAoeDamage(sim, baseDamage, spell.OutcomeMagicHitAndCrit)
+			spell.AOEDot().Apply(sim)
+		},
+	})
+
+	mage.Flamestrike = append(mage.Flamestrike, spell)
 }

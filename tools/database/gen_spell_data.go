@@ -37,6 +37,8 @@ type generatedRow struct {
 	Heal            *generatedAmount
 	Periodic        *generatedAmount
 	Energize        *generatedAmount
+
+	SecondaryPeriodic *generatedAmount
 }
 
 type generatedEffect struct {
@@ -56,6 +58,9 @@ type generatedAmount struct {
 
 	PeriodMs int32
 	Ticks    int32
+
+	// The effect's spell where it is not the rank's own, which only a periodic value renders.
+	SpellID int32
 }
 
 type rankCandidate struct {
@@ -552,6 +557,29 @@ func resolveLadder(db *sql.DB, name string, byRank map[int32][]rankCandidate, ma
 			continue
 		}
 
+		// Exorcism is one name over two full ladders: the trainer ranks 879-10314, and 415068-415073,
+		// which the Season of Discovery passive Exorcist (415076) swaps onto the action bar so the
+		// spell can hit any target. The stand-in copies the rank's name, subtext, class bit and mana,
+		// so nothing above separates them, but the override aura names both sides. The overridden
+		// spell is the one a trainer teaches and the one the ladder wants; the stand-in is only ever
+		// reachable through its owner. Fire Blast, Drain Life, Renew and Raptor Strike carry the same
+		// shape under Overheat, Master Channeler, Empowered Renew and Melee Specialist.
+		replaced, err := overrideReplacements(db, ids)
+		if err != nil {
+			return nil, err
+		}
+		if len(replaced) > 0 && len(replaced) < len(ids) {
+			for id := range replaced {
+				delete(ids, id)
+			}
+			if len(ids) == 1 {
+				for id := range ids {
+					ladder[rank] = id
+				}
+				continue
+			}
+		}
+
 		// Holy Shock is one name over three spells per rank: a dummy the player casts, plus a damage
 		// and a heal spell the client never exposes. Only the castable one carries a SpellPower row,
 		// and it is the one the sim registers, so that is the tie-break.
@@ -660,6 +688,39 @@ func castableOf(db *sql.DB, ids map[int32]bool) (int32, error) {
 	return found, nil
 }
 
+// The candidates that another candidate is swapped for by an A_OVERRIDE_ACTIONBAR_SPELLS aura. On
+// that aura the misc value is the spell being overridden and the base points is its replacement; a
+// candidate is dropped only when the spell it stands in for is itself in the running, so a stand-in
+// whose base rank was never a candidate is left alone.
+func overrideReplacements(db *sql.DB, ids map[int32]bool) (map[int32]bool, error) {
+	replaced := map[int32]bool{}
+	for id := range ids {
+		rows, err := db.Query(`
+			SELECT CAST(EffectBasePointsF AS INTEGER)
+			FROM SpellEffect
+			WHERE EffectAura = ? AND EffectMiscValue_0 = ?`, int(dbc.A_OVERRIDE_ACTIONBAR_SPELLS), id)
+		if err != nil {
+			return nil, err
+		}
+		for rows.Next() {
+			var replacement int32
+			if err := rows.Scan(&replacement); err != nil {
+				rows.Close()
+				return nil, err
+			}
+			if ids[replacement] {
+				replaced[replacement] = true
+			}
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return nil, err
+		}
+		rows.Close()
+	}
+	return replaced, nil
+}
+
 // Which effect supplies which field. Derived from the effect types rather than declared per family,
 // because the client data already says it: a SCHOOL_DAMAGE effect is direct damage, a HEAL effect is a
 // heal, an ENERGIZE effect is Lay on Hands' mana restore, a periodic aura is a tick.
@@ -689,7 +750,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		if value, ok := points[e.Index]; ok {
 			return value, value
 		}
-		return DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
+		return DeriveRankAmount(e, e.SpellLevel, e.MaxLevel)
 	}
 
 	row := generatedRow{
@@ -705,6 +766,9 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 	amountOf := func(e RankEffect) *generatedAmount {
 		min, max := derive(e)
 		a := &generatedAmount{Min: min, Max: max, Coef: e.Coefficient, APCoef: e.APCoef}
+		if e.OwnerSpellID != spell.SpellID {
+			a.SpellID = e.OwnerSpellID
+		}
 
 		// A tick count is the duration over the period, which is how every hand-written
 		// NumberOfTicks in the sim was arrived at.
@@ -729,6 +793,23 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 
 	for _, e := range candidates {
 		switch {
+		// A damage effect with a period is one the description reached and the rank's periodic
+		// dummy times, so it ticks; the rank's own damage effects never carry one. Consecration
+		// names a second, the extra damage on the first few targets.
+		case e.Effect == dbc.E_SCHOOL_DAMAGE && e.AuraPeriod > 0:
+			switch {
+			case row.Periodic == nil:
+				row.Periodic = amountOf(e)
+			case row.SecondaryPeriodic == nil:
+				row.SecondaryPeriodic = amountOf(e)
+			default:
+				return generatedRow{}, fmt.Errorf("spell %d names a third ticking value on spell %d, and the row holds two",
+					spellID, e.OwnerSpellID)
+			}
+		// A dummy the description names on a spell the rank's own dummy points at is the rank's number
+		// kept there with its coefficient: Seal of Righteousness' per-hit damage, on its judgement.
+		case e.Effect == dbc.E_DUMMY && e.Named && row.Direct == nil:
+			row.Direct = amountOf(e)
 		case (e.Effect == dbc.E_SCHOOL_DAMAGE || IsWeaponDamageEffect(e.Effect)) && row.Direct == nil:
 			row.Direct = amountOf(e)
 		case e.Effect == dbc.E_HEAL && row.Heal == nil:
@@ -1029,6 +1110,7 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 		{"Heal", row.Heal},
 		{"Periodic", row.Periodic},
 		{"Energize", row.Energize},
+		{"SecondaryPeriodic", row.SecondaryPeriodic},
 	} {
 		if role.value != nil {
 			parts = append(parts, role.name+": "+formatValue(*role.value))
@@ -1054,6 +1136,9 @@ func formatValue(a generatedAmount) string {
 		out := fmt.Sprintf("shared.SpellDataPeriodic{Tick: %s, %s, TickLength: %s", tick, tail, millis(a.PeriodMs))
 		if a.Ticks > 0 {
 			out += fmt.Sprintf(", NumberOfTicks: %d", a.Ticks)
+		}
+		if a.SpellID > 0 {
+			out += fmt.Sprintf(", SpellID: %d", a.SpellID)
 		}
 		return out + "}"
 	case a.Max > a.Min:

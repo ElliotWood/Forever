@@ -4,15 +4,11 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: To be implemented. Raptor Strike exists in Forever with a full eight-rank ladder
-// (spellData.RaptorStrike, 2973/14260-14266). The implementation below is the TBC one
-// already ported onto that ladder -- HighestRank() in place of the level-70 rank it
-// pinned -- so bringing it back is uncommenting it. It stays commented until reviewed.
-//
-// The "time" import and the rank pin below belong with the commented implementation:
-// import "time"
-// var raptorStrikeRank = spellData.RaptorStrike.HighestRank()
-
+// TODO: To be implemented. spellData.RaptorStrike holds the eight trainer ranks, 2973 to 14266.
+// The client also carries two Season of Discovery ladders under the same name: 415335 to
+// 415343, which the rune passive Melee Specialist (415352) swaps onto the action bar, and
+// 409691 to 409755, a mana-less copy nothing references. The generator drops the first by
+// its override link and the second because only the trainer rank carries a SpellPower row.
 func (hunter *Hunter) registerRaptorStrikeSpell() {
 	panic("To be implemented")
 

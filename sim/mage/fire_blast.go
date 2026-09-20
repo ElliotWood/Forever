@@ -1,18 +1,9 @@
 package mage
 
-// TODO: To be implemented. Fire Blast exists in Forever with a full seven-rank ladder
-// (spellData.FireBlast, 2136/2137/2138/8412/8413/10197/10199). The implementation below is
-// the TBC one already ported onto that ladder -- HighestRank() in place of the level-70
-// rank it pinned -- so bringing it back is uncommenting it. It stays commented until
-// it has been reviewed.
-//
-// Imports and rank pin the implementation needs, kept with it:
-// import (
-// 	"github.com/wowsims/forever/sim/core"
-// )
-//
-// var fireBlastRank = spellData.FireBlast.HighestRank()
-
+// TODO: To be implemented. spellData.FireBlast holds the seven trainer ranks, 2136 to 10199.
+// The client also carries 400616 to 400623, the copies the Season of Discovery rune passive
+// Overheat (400615) swaps onto the action bar. Overheat is an Engrave grant with no place in
+// Forever, and the generator drops its stand-ins.
 func (mage *Mage) registerFireBlastSpell() {
 	panic("To be implemented")
 

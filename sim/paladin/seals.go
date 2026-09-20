@@ -58,8 +58,8 @@ func sealOf(seals, judges shared.SpellDataTable, rank int32, p proc) seal {
 }
 
 // For the three families whose judgement damage has to be supplied. A seal is three spells for one
-// rank, so it keeps its own row rather than becoming a SpellData. The proc always comes in by hand -
-// no family has its coefficient in the client.
+// rank, so it keeps its own row rather than becoming a SpellData. The proc comes in by hand for every
+// family but Righteousness, whose row's Direct holds it.
 func sealWithJudgement(seals, judges shared.SpellDataTable, rank int32, p proc, j judge) seal {
 	s := seals.ByRank(rank)
 	j.spellID = judges.ByRank(rank).SpellID
@@ -79,21 +79,33 @@ func sealOfTheCrusader(rank shared.SpellData) seal {
 	}
 }
 
+// The seal's rows as the client states them, for the regeneration gate; SealOfRighteousnessRanks is
+// what registers.
+var SealOfRighteousnessTable = spellData.SealOfRighteousness
+
+// The per-hit proc of one Seal of Righteousness rank: the damage spell it fires, and the number and
+// coefficient the row's Direct holds. Those are the judgement's effect 3, a dummy the seal's tooltip
+// renders each hit from ("$/87;20286s3" on rank 8) and the generator follows the description to. The
+// seal's own effect 0 states the same number on every rank but carries 0.1 for a coefficient on ranks
+// 1-7 and nothing on rank 8, where the judgement's dummy says 0.058 on rank 1 rising to 0.2 from rank
+// 4. The proc's damage formula scales with spell power on its own terms, so the coefficient is carried
+// here rather than applied; the hand values it replaces were half the client's on every rank.
+func righteousnessProc(spellID int32, rank int32) proc {
+	d := spellData.SealOfRighteousness.ByRank(rank).Direct
+	return proc{spellID: spellID, value: shared.SpellDataMin(d), coeff: shared.SpellDataCoef(d)}
+}
+
 var SealOfRighteousnessRanks = sealRankMap{
-	// The proc value is the seal's own effect 0, exact on all nine ranks; its coefficient is not in
-	// the client at all. The judgement damage matches the hand rows on ranks 2-9; rank 1 was a flat
-	// 26 against the client's 25-26, the same one-die-side roll Immolate rank 9 and Water Shield
-	// turned out to be, and the client's is taken.
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 1, proc{spellID: 25742, value: spellData.SealOfRighteousness.ByRank(1).Effects[0].Value, coeff: 0.029}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 2, proc{spellID: 25740, value: spellData.SealOfRighteousness.ByRank(2).Effects[0].Value, coeff: 0.063}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 3, proc{spellID: 25739, value: spellData.SealOfRighteousness.ByRank(3).Effects[0].Value, coeff: 0.093}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 4, proc{spellID: 25738, value: spellData.SealOfRighteousness.ByRank(4).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 5, proc{spellID: 25737, value: spellData.SealOfRighteousness.ByRank(5).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 6, proc{spellID: 25736, value: spellData.SealOfRighteousness.ByRank(6).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 7, proc{spellID: 25735, value: spellData.SealOfRighteousness.ByRank(7).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 8, proc{spellID: 25713, value: spellData.SealOfRighteousness.ByRank(8).Effects[0].Value, coeff: 0.1}),
-	// TODO: Forever drops Seal of Righteousness rank 9; the row is removed rather than
-	// indexing a rank the table does not hold.
+	// The judgement damage matches the hand rows on ranks 2-8; rank 1 was a flat 26 against the
+	// client's 25-26, and the client's is taken.
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 1, righteousnessProc(25742, 1)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 2, righteousnessProc(25740, 2)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 3, righteousnessProc(25739, 3)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 4, righteousnessProc(25738, 4)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 5, righteousnessProc(25737, 5)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 6, righteousnessProc(25736, 6)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 7, righteousnessProc(25735, 7)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 8, righteousnessProc(25713, 8)),
 }
 
 var SealOfLightRanks = sealRankMap{
