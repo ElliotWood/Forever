@@ -68,19 +68,6 @@ const (
 	SpellMaskCrusaderStrike
 	SpellMaskRepentance
 	SpellMaskRighteousFury
-
-	// Forever abilities the sim does not model yet; see the stub file named for each.
-	SpellMaskDivineSacrifice
-	SpellMaskDivineStorm
-	SpellMaskEnhancedBlessings
-	SpellMaskExorcist
-	SpellMaskHammerOfTheRighteous
-	SpellMaskHornOfLordaeron
-	SpellMaskInspirationExemplar
-	SpellMaskJudgementOfMartyrdom
-	SpellMaskRebuke
-	SpellMaskRighteousJudgement
-	SpellMaskSacredShield
 )
 
 // Composite masks

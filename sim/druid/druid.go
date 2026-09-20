@@ -139,17 +139,7 @@ const (
 	DruidDamagingSpells          = DruidArcaneSpells | DruidNatureSpells
 
 	// Forever abilities the sim does not model yet; see the stub file named for each.
-	DruidSpellDeeperWilds
-	DruidSpellEfflorescence
-	DruidSpellEnhancedRestoration
-	DruidSpellLivingSeed
-	DruidSpellNourish
 	DruidSpellRevive
-	DruidSpellSkullBash
-	DruidSpellStarfall
-	DruidSpellStarsurge
-	DruidSpellSunfire
-	DruidSpellSurvivalInstincts
 )
 
 type SelfBuffs struct {

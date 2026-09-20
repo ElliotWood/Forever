@@ -198,15 +198,5 @@ const (
 	FireSpellIgnitable   = MageSpellFireball | MageSpellScorch | MageSpellPyroblast
 
 	// Forever abilities the sim does not model yet; see the stub file named for each.
-	MageSpellArcaneBarrage
-	MageSpellArcaneSurge
-	MageSpellBalefireBolt
-	MageSpellExpandedIntellect
 	MageSpellFrostfireBolt
-	MageSpellFrozenOrb
-	MageSpellLivingBomb
-	MageSpellLivingFlame
-	MageSpellMassRegeneration
-	MageSpellRegeneration
-	MageSpellRewindTime
 )

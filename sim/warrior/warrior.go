@@ -84,15 +84,6 @@ const (
 		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskDevastate | SpellMaskRetaliationHit
 
 	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
-
-	// Forever abilities the sim does not model yet; see the stub file named for each.
-	SpellMaskEnragedRegeneration
-	SpellMaskMeathook
-	SpellMaskQuickStrike
-	SpellMaskRallyingCry
-	SpellMaskShockwave
-	SpellMaskValorOfAzeroth
-	SpellMaskVictoryRush
 )
 
 const EnrageTag = "EnrageEffect"

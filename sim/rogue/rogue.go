@@ -305,15 +305,4 @@ const (
 	RogueSpellLethality      = RogueSpellSinisterStrike | RogueSpellGouge | RogueSpellBackstab | RogueSpellGhostlyStrike | RogueSpellMutilateHit | RogueSpellShiv | RogueSpellHemorrhage
 	RogueSpellDirectFinisher = RogueSpellEnvenom | RogueSpellEviscerate
 	RogueSpellFinisher       = RogueSpellDirectFinisher | RogueSpellSliceAndDice | RogueSpellRupture | RogueSpellExposeArmor
-
-	// Forever abilities the sim does not model yet; see the stub file named for each.
-	RogueSpellBetweenTheEyes
-	RogueSpellBladeDance
-	RogueSpellMainGauche
-	RogueSpellPoisonedKnife
-	RogueSpellQuickDraw
-	RogueSpellRedirect
-	RogueSpellSaberSlash
-	RogueSpellShadowstrike
-	RogueSpellShurikenToss
 )

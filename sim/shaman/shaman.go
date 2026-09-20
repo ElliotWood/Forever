@@ -223,13 +223,4 @@ const (
 	SpellMaskTotem        = SpellMaskFireTotem | SpellMaskFireElementalTotem | SpellMaskEarthElementalTotem | SpellMaskBasicTotem
 	SpellMaskInstantSpell = SpellMaskBloodlust
 	SpellMaskImbue        = SpellMaskFrostbrandWeapon | SpellMaskWindfuryWeapon | SpellMaskFlametongueWeapon | SpellMaskRockbiterWeapon
-
-	// Forever abilities the sim does not model yet; see the stub file named for each.
-	SpellMaskAncestralGuidance
-	SpellMaskDecoyTotem
-	SpellMaskHealingRain
-	SpellMaskLavaLash
-	SpellMaskMoltenBlast
-	SpellMaskSpiritOfTheAlpha
-	SpellMaskTotemicProjection
 )

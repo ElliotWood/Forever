@@ -247,18 +247,5 @@ const (
 	PriestSpellConfoundingFlash
 	PriestSpellContingencyPlan
 	PriestSpellDarkSacrifice
-	PriestSpellDispersion
 	PriestSpellDivineGrace
-	PriestSpellEyeOfTheVoid
-	PriestSpellHomunculi
-	PriestSpellIncreasedFortitude
-	PriestSpellMindSear
-	PriestSpellMindSpike
-	PriestSpellPainSuppression
-	PriestSpellPowerWordBarrier
-	PriestSpellSecretsOfElune
-	PriestSpellSecretsOfUndeath
-	PriestSpellSecretsOfTheLight
-	PriestSpellSecretsOfTheLoa
-	PriestSpellVoidPlague
 )
