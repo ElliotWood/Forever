@@ -174,7 +174,6 @@ func (warrior *Warrior) Initialize() {
 	warrior.registerStances()
 	warrior.registerShouts()
 
-	warrior.addPvpGloves()
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {

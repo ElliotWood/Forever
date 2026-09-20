@@ -314,21 +314,3 @@ var ItemSetOnslaughtArmor = core.NewItemSet(core.ItemSet{
 		},
 	},
 })
-
-func init() {
-	for _, itemID := range pvpGloveItemIDs {
-		core.NewItemEffect(itemID, func(_ core.Agent) {})
-	}
-}
-
-var pvpGloveItemIDs = []int32{24549, 28700, 28852, 30487, 32164, 33729, 35408, 35067}
-
-func (warrior *Warrior) addPvpGloves() {
-	warrior.RegisterPvPGloveMod(
-		pvpGloveItemIDs,
-		core.SpellModConfig{
-			Kind:      core.SpellMod_PowerCost_Flat,
-			ClassMask: SpellMaskHamstring,
-			IntValue:  -3,
-		})
-}

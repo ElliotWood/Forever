@@ -5,9 +5,6 @@ import (
 )
 
 func init() {
-	// Totem of Rage
-	// core.NewItemEffect(22395, func(agent core.Agent) {
-	// 	character := agent.GetCharacter()
 
 	// 	aura := core.MakePermanent(character.RegisterAura(core.Aura{
 	// 		Label: "Increased Shock Damage",

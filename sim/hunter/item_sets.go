@@ -157,17 +157,6 @@ func init() {
 		hunter.ItemSwap.RegisterProc(ThoridalTheStarsFuryItemID, ammoAura)
 	})
 
-	// Beast-tamer's Shoulders
-	core.NewItemEffect(30892, func(agent core.Agent) {
-		hunter, ok := hunterFromAgent(agent)
-		if !ok {
-			return
-		}
-
-		hunter.Pet.PseudoStats.DamageDealtMultiplier *= 1.03
-		hunter.Pet.AddStat(stats.PhysicalCritPercent, 3)
-	})
-
 	// Black Bow of the Betrayer
 	const BlackBowOfTheBetrayerItemID = 32336
 	core.NewItemEffect(BlackBowOfTheBetrayerItemID, func(agent core.Agent) {
@@ -265,7 +254,7 @@ func (hunter *Hunter) talonOfAlarBonus() float64 {
 	return 0
 }
 
-var pvpGloveItemIDs = []int32{23279, 22862, 16463, 16571, 35475, 35377, 28806, 28614, 28335, 31961, 33665, 34991}
+var pvpGloveItemIDs = []int32{23279, 22862, 16463, 16571}
 
 func (hunter *Hunter) addPvpGloves() {
 	hunter.RegisterPvPGloveMod(

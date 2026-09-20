@@ -172,7 +172,10 @@ func registerPotionCD(agent Agent, consumes *proto.ConsumesSpec) {
 	}
 }
 
-var AlchStoneItemIDs = []int32{136197, 80508, 96252, 96253, 96254, 44322, 44323, 44324}
+// Empty: the eight ids this carried are MoP-era alchemist stones and none of them is in
+// this client's item database, so HasAlchStone was always false. The lookup is kept for
+// whatever Forever's equivalent turns out to be.
+var AlchStoneItemIDs = []int32{}
 
 func (character *Character) HasAlchStone() bool {
 	alchStoneEquipped := false
