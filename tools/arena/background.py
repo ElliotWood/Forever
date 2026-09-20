@@ -88,7 +88,8 @@ def packages(specs):
 def written_since(start):
     if not os.path.isdir(ARENA_OUT):
         return []
-    return [f for f in os.listdir(ARENA_OUT) if os.path.getmtime(os.path.join(ARENA_OUT, f)) >= start]
+    return [f for f in os.listdir(ARENA_OUT)
+            if f.endswith('.json') and os.path.getmtime(os.path.join(ARENA_OUT, f)) >= start]
 
 
 def leaderboard():
@@ -128,7 +129,7 @@ def main():
     # count makes a bar that stops at 43% and looks stuck. The spec files already on disk are the
     # honest denominator when the whole arena is being run.
     # ponytail: uses the previous run's output; a brand new checkout falls back to packages.
-    expected = len(os.listdir(ARENA_OUT)) if not specs and os.path.isdir(ARENA_OUT) else 0
+    expected = len([f for f in os.listdir(ARENA_OUT) if f.endswith('.json')]) if not specs and os.path.isdir(ARENA_OUT) else 0
     total = expected or len(pkgs)
     what = 'talent search' if args.optimise else 'arena rebuild'
     url = webhook()
@@ -139,8 +140,11 @@ def main():
     environment = dict(os.environ, ARENA_OUT=ARENA_OUT, ARENA_OPTIMISE='1' if args.optimise else '')
     os.makedirs(ARENA_OUT, exist_ok=True)
     # -timeout 0 is the whole reason this runs here and not on a GitHub runner.
-    run = subprocess.Popen(['go', 'test', '--tags=with_db', '-timeout', '0', '-p', '1', '-run', 'TestArena'] + pkgs,
-                           cwd=REPO, env=environment, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    # Kept, not discarded. The first long search threw its output away, so when seven specs came
+    # back without an exhaustive result there was nothing to read to find out why.
+    log = open(os.path.join(ARENA_OUT, 'run.log'), 'w')
+    run = subprocess.Popen(['go', 'test', '--tags=with_db', '-timeout', '0', '-p', '1', '-v', '-run', 'TestArena'] + pkgs,
+                           cwd=REPO, env=environment, stdout=log, stderr=subprocess.STDOUT)
 
     done = 0
     while run.poll() is None:
