@@ -12,3 +12,8 @@ package core
 func driveBattleShout(char *Character, _ bool) {
 	ApplyFixedShoutAura(char, BattleShoutAura(&char.Unit, false, 0), BattleShoutCategory)
 }
+
+// The party's Commanding Shout chains the same way its sibling does.
+func driveCommandingShout(char *Character, _ bool) {
+	ApplyFixedShoutAura(char, CommandingShoutAura(&char.Unit, false, 0), CommandingShoutCategory)
+}

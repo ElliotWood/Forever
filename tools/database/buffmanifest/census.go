@@ -17,7 +17,7 @@ var Manifest = []BuffSpec{
 	{
 		Field: "commanding_shout", Number: 33, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "CommandingShout", Name: "Commanding Shout", Owner: proto.Class_ClassWarrior,
-		Category: "CommandingShout", SingleAura: true,
+		Category: "CommandingShout", SingleAura: true, Driver: true,
 		Stats: []proto.Stat{proto.Stat_StatHealth},
 		Notes: "SkillLineAbility resolves the name to the single rankless spell 403215; no improving talent in warrior tree 1117.",
 	},

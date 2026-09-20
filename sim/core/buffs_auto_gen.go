@@ -10,10 +10,46 @@ import (
 )
 
 // Blood Pact - https://www.wowhead.com/forever/spell=11767
-// func BloodPactAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blood_pact, KindStatFlat: hand-written constructor still present
+func BloodPactValue(talentPoints int32) float64 {
+	return 54.0
+}
+func BloodPactDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func BloodPactAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Blood Pact (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 11767}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: BloodPactDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.Stamina, BloodPactValue(talentPoints), false},
+		},
+	})
+}
 
 // Commanding Shout - https://www.wowhead.com/forever/spell=403215
-// func CommandingShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // commanding_shout, KindStatFlat: hand-written constructor still present
+var CommandingShoutCategory = "CommandingShout"
+
+func CommandingShoutValue(talentPoints int32) float64 {
+	return 42.0
+}
+func CommandingShoutDuration(talentPoints int32) time.Duration {
+	return 300000 * time.Millisecond
+}
+func CommandingShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:      "Commanding Shout (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 403215}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   CommandingShoutDuration(talentPoints),
+		Category:   CommandingShoutCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.Stamina, CommandingShoutValue(talentPoints), false},
+		},
+	})
+}
 
 // Battle Shout - https://www.wowhead.com/forever/spell=25289
 var BattleShoutCategory = "BattleShout"
@@ -41,15 +77,71 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func BsSolarianSapphireAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // bs_solarian_sapphire, KindAbsent: second state of the Battle Shout quadstate input; item 30446 has no Item row.
 
 // Devotion Aura - https://www.wowhead.com/forever/spell=10293
-// func DevotionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // devotion_aura, KindResistance: hand-written apply block still present
+var DevotionAuraCategory = "DevotionAura"
+
+func DevotionAuraValue(talentPoints int32) float64 {
+	return 735.0
+}
+func DevotionAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func DevotionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Devotion Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 10293}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       DevotionAuraDuration(talentPoints),
+		Category:       DevotionAuraCategory,
+		SharedCategory: "PaladinAura",
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Stats: []StatConfig{
+			{stats.Armor, DevotionAuraValue(talentPoints), false},
+		},
+	})
+}
 
 // func FerociousInspirationAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // ferocious_inspiration, KindAbsent: no SpellName row for Ferocious Inspiration.
 
 // Leader of the Pack - https://www.wowhead.com/forever/spell=24932
-// func LeaderOfThePackAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // leader_of_the_pack, KindStatFlat: hand-written constructor still present
+func LeaderOfThePackValue(talentPoints int32) float64 {
+	return 3.0
+}
+func LeaderOfThePackDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func LeaderOfThePackAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Leader of the Pack (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 24932}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: LeaderOfThePackDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.PhysicalCritPercent, LeaderOfThePackValue(talentPoints), false},
+		},
+	})
+}
 
 // Mana Spring Totem - https://www.wowhead.com/forever/spell=10494
-// func ManaSpringTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // mana_spring_totem, KindStatFlat: hand-written constructor still present
+var ManaSpringTotemCategory = "ManaSpringTotem"
+
+func ManaSpringTotemValue(talentPoints int32) float64 {
+	return []float64{25.0, 25.0, 27.0, 27.0, 30.0, 30.0}[talentPoints]
+}
+func ManaSpringTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func ManaSpringTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Mana Spring Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10494}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: ManaSpringTotemDuration(talentPoints),
+		Category: ManaSpringTotemCategory,
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.MP5, ManaSpringTotemValue(talentPoints), false},
+		},
+	})
+}
 
 // Mana Tide Totem - https://www.wowhead.com/forever/spell=17359
 // func ManaTideTotemsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // mana_tide_totems, KindExternalCD: hand-written apply block still present
@@ -58,13 +150,50 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func ShadowPriestDpsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_priest_dps, KindManual: hand-written apply block still present
 
 // Moonkin Aura - https://www.wowhead.com/forever/spell=24907
-// func MoonkinAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // moonkin_aura, KindStatFlat: hand-written apply block still present
+func MoonkinAuraValue(talentPoints int32) float64 {
+	return 3.0
+}
+func MoonkinAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func MoonkinAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Moonkin Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 24907}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: MoonkinAuraDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.SpellCritPercent, MoonkinAuraValue(talentPoints), false},
+		},
+	})
+}
 
 // Retribution Aura - https://www.wowhead.com/forever/spell=10301
 // func RetributionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // retribution_aura, KindDamageShield: hand-written apply block still present
 
 // Concentration Aura - https://www.wowhead.com/forever/spell=19746
-// func ConcentrationAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // concentration_aura, KindPseudoMult: hand-written apply block still present
+var ConcentrationAuraCategory = "ConcentrationAura"
+
+func ConcentrationAuraValue(talentPoints int32) float64 {
+	return -0.35
+}
+func ConcentrationAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func ConcentrationAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Concentration Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 19746}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       ConcentrationAuraDuration(talentPoints),
+		Category:       ConcentrationAuraCategory,
+		SharedCategory: "PaladinAura",
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Pseudo: []PseudoConfig{
+			{PseudoStatPushbackChance, ConcentrationAuraValue(talentPoints), false, 0},
+		},
+	})
+}
 
 // func SanctityAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // sanctity_aura, KindAbsent: SpellName 20218 exists but has no SkillLineAbility row and no node in paladin tree 1100.
 
@@ -96,7 +225,26 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func JadePendantOfBlastingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // jade_pendant_of_blasting, KindAbsent: spell 25607 has no SpellName row and the neck has no Item row.
 
 // Strength of Earth Totem - https://www.wowhead.com/forever/spell=25362
-// func StrengthOfEarthTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // strength_of_earth_totem, KindStatFlat: hand-written constructor still present
+var StrengthOfEarthTotemCategory = "StrengthOfEarthTotem"
+
+func StrengthOfEarthTotemValue(talentPoints int32) float64 {
+	return 53.0
+}
+func StrengthOfEarthTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func StrengthOfEarthTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Strength of Earth Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25362}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: StrengthOfEarthTotemDuration(talentPoints),
+		Category: StrengthOfEarthTotemCategory,
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.Strength, StrengthOfEarthTotemValue(talentPoints), false},
+		},
+	})
+}
 
 // func SoeEnhancement2Pt4Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // soe_enhancement_2pt4, KindAbsent: second state of the Strength of Earth quadstate input; set-bonus spell 37223 has no SpellName row.
 
@@ -109,25 +257,159 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func DrumsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // drums, KindEnum: the drum items are not in the client; the UI keeps a hand-written swatch row over this field.
 
 // Frost Resistance Totem - https://www.wowhead.com/forever/spell=10477
-// func FrostResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // frost_resistance_totem, KindResistance: hand-written constructor still present
+func FrostResistanceTotemValue(talentPoints int32) float64 {
+	return 60.0
+}
+func FrostResistanceTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func FrostResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:        "Frost Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:     ActionID{SpellID: 10477}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:     FrostResistanceTotemDuration(talentPoints),
+		StatCategory: "ResistanceFrost",
+		IsPlayer:     isPlayer,
+		Stats: []StatConfig{
+			{stats.FrostResistance, FrostResistanceTotemValue(talentPoints), false},
+		},
+	})
+}
 
 // Nature Resistance Totem - https://www.wowhead.com/forever/spell=10599
-// func NatureResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // nature_resistance_totem, KindResistance: hand-written constructor still present
+func NatureResistanceTotemValue(talentPoints int32) float64 {
+	return 60.0
+}
+func NatureResistanceTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func NatureResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:        "Nature Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:     ActionID{SpellID: 10599}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:     NatureResistanceTotemDuration(talentPoints),
+		StatCategory: "ResistanceNature",
+		IsPlayer:     isPlayer,
+		Stats: []StatConfig{
+			{stats.NatureResistance, NatureResistanceTotemValue(talentPoints), false},
+		},
+	})
+}
 
 // Fire Resistance Totem - https://www.wowhead.com/forever/spell=10535
-// func FireResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // fire_resistance_totem, KindResistance: hand-written constructor still present
+func FireResistanceTotemValue(talentPoints int32) float64 {
+	return 60.0
+}
+func FireResistanceTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func FireResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:        "Fire Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:     ActionID{SpellID: 10535}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:     FireResistanceTotemDuration(talentPoints),
+		StatCategory: "ResistanceFire",
+		IsPlayer:     isPlayer,
+		Stats: []StatConfig{
+			{stats.FireResistance, FireResistanceTotemValue(talentPoints), false},
+		},
+	})
+}
 
 // Frost Resistance Aura - https://www.wowhead.com/forever/spell=19898
-// func FrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // frost_resistance_aura, KindResistance: hand-written apply block still present
+var FrostResistanceAuraCategory = "FrostResistanceAura"
+
+func FrostResistanceAuraValue(talentPoints int32) float64 {
+	return 60.0
+}
+func FrostResistanceAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func FrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Frost Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 19898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       FrostResistanceAuraDuration(talentPoints),
+		StatCategory:   "ResistanceFrost",
+		Category:       FrostResistanceAuraCategory,
+		SharedCategory: "PaladinAura",
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Stats: []StatConfig{
+			{stats.FrostResistance, FrostResistanceAuraValue(talentPoints), false},
+		},
+	})
+}
 
 // Fire Resistance Aura - https://www.wowhead.com/forever/spell=19900
-// func FireResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // fire_resistance_aura, KindResistance: hand-written apply block still present
+var FireResistanceAuraCategory = "FireResistanceAura"
+
+func FireResistanceAuraValue(talentPoints int32) float64 {
+	return 60.0
+}
+func FireResistanceAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func FireResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Fire Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 19900}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       FireResistanceAuraDuration(talentPoints),
+		StatCategory:   "ResistanceFire",
+		Category:       FireResistanceAuraCategory,
+		SharedCategory: "PaladinAura",
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Stats: []StatConfig{
+			{stats.FireResistance, FireResistanceAuraValue(talentPoints), false},
+		},
+	})
+}
 
 // Shadow Resistance Aura - https://www.wowhead.com/forever/spell=19896
-// func ShadowResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_resistance_aura, KindResistance: hand-written apply block still present
+var ShadowResistanceAuraCategory = "ShadowResistanceAura"
+
+func ShadowResistanceAuraValue(talentPoints int32) float64 {
+	return 60.0
+}
+func ShadowResistanceAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func ShadowResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Shadow Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 19896}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       ShadowResistanceAuraDuration(talentPoints),
+		StatCategory:   "ResistanceShadow",
+		Category:       ShadowResistanceAuraCategory,
+		SharedCategory: "PaladinAura",
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Stats: []StatConfig{
+			{stats.ShadowResistance, ShadowResistanceAuraValue(talentPoints), false},
+		},
+	})
+}
 
 // Aspect of the Wild - https://www.wowhead.com/forever/spell=20190
-// func AspectOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // aspect_of_the_wild, KindResistance: hand-written constructor still present
+func AspectOfTheWildValue(talentPoints int32) float64 {
+	return 60.0
+}
+func AspectOfTheWildDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func AspectOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:        "Aspect of the Wild (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:     ActionID{SpellID: 20190}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:     AspectOfTheWildDuration(talentPoints),
+		StatCategory: "ResistanceNature",
+		IsPlayer:     isPlayer,
+		Stats: []StatConfig{
+			{stats.NatureResistance, AspectOfTheWildValue(talentPoints), false},
+		},
+	})
+}
 
 // Atiesh - Druid - https://www.wowhead.com/forever/spell=28145
 // func AtieshDruidAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // atiesh_druid, KindItemCount: hand-written apply block still present
@@ -150,38 +432,203 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func SnapshotBsBoomingVoiceRankAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // snapshot_bs_booming_voice_rank, KindAbsent: shout snapshot rank counter; Booming Voice (12321) modifies radius only, so the rank has no effect on Battle Shout.
 
 // Arcane Brilliance - https://www.wowhead.com/forever/spell=23028
-// func ArcaneBrillianceAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // arcane_brilliance, KindStatFlat: hand-written constructor still present
+var ArcaneBrillianceCategory = "StatBuff"
+
+func ArcaneBrillianceValue(talentPoints int32) float64 {
+	return 31.0
+}
+func ArcaneBrillianceDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func ArcaneBrillianceAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Arcane Brilliance (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 23028}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: ArcaneBrillianceDuration(talentPoints),
+		Category: ArcaneBrillianceCategory,
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.Intellect, ArcaneBrillianceValue(talentPoints), false},
+		},
+	})
+}
 
 // Blessing of Kings - https://www.wowhead.com/forever/spell=20217
-// func BlessingOfKingsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blessing_of_kings, KindStatPct: hand-written constructor still present
+func BlessingOfKingsValue(talentPoints int32) float64 {
+	return 1.1
+}
+func BlessingOfKingsDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func BlessingOfKingsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Blessing of Kings (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 20217}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: BlessingOfKingsDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.Strength, BlessingOfKingsValue(talentPoints), true},
+			{stats.Agility, 1.1, true},
+			{stats.Stamina, 1.1, true},
+			{stats.Intellect, 1.1, true},
+			{stats.Spirit, 1.1, true},
+		},
+	})
+}
 
 // func BloodlustAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // bloodlust, KindManual: no SkillLineAbility row grants "Bloodlust" to ClassShaman
 
 // Divine Spirit - https://www.wowhead.com/forever/spell=27841
-// func DivineSpiritAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // divine_spirit, KindStatFlat: hand-written constructor still present
+var DivineSpiritCategory = "StatBuff"
+
+func DivineSpiritValue(talentPoints int32) float64 {
+	return 40.0
+}
+func DivineSpiritDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func DivineSpiritAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Divine Spirit (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 27841}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: DivineSpiritDuration(talentPoints),
+		Category: DivineSpiritCategory,
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.Spirit, DivineSpiritValue(talentPoints), false},
+		},
+	})
+}
 
 // Gift of the Wild - https://www.wowhead.com/forever/spell=21850
-// func GiftOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // gift_of_the_wild, KindStatFlat: hand-written constructor still present
+func GiftOfTheWildValue(talentPoints int32) float64 {
+	return 385.0
+}
+func GiftOfTheWildDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func GiftOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Gift of the Wild (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 21850}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: GiftOfTheWildDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.Armor, GiftOfTheWildValue(talentPoints), false},
+			{stats.Strength, 16.0, false},
+			{stats.Agility, 16.0, false},
+			{stats.Stamina, 16.0, false},
+			{stats.Intellect, 16.0, false},
+			{stats.Spirit, 16.0, false},
+			{stats.FireResistance, 27.0, false},
+			{stats.NatureResistance, 27.0, false},
+			{stats.FrostResistance, 27.0, false},
+			{stats.ShadowResistance, 27.0, false},
+			{stats.ArcaneResistance, 27.0, false},
+		},
+	})
+}
 
 // Thorns - https://www.wowhead.com/forever/spell=9910
 // func ThornsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // thorns, KindDamageShield: hand-written constructor still present
 
 // Power Word: Fortitude - https://www.wowhead.com/forever/spell=10938
-// func PowerWordFortitudeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // power_word_fortitude, KindStatFlat: hand-written constructor still present
+func PowerWordFortitudeValue(talentPoints int32) float64 {
+	return 70.0
+}
+func PowerWordFortitudeDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func PowerWordFortitudeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Power Word: Fortitude (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10938}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: PowerWordFortitudeDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.Stamina, PowerWordFortitudeValue(talentPoints), false},
+		},
+	})
+}
 
 // Blessing of Might - https://www.wowhead.com/forever/spell=25291
-// func BlessingOfMightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blessing_of_might, KindStatFlat: hand-written constructor still present
+func BlessingOfMightValue(talentPoints int32) float64 {
+	return 133.0
+}
+func BlessingOfMightDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func BlessingOfMightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Blessing of Might (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25291}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: BlessingOfMightDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.AttackPower, BlessingOfMightValue(talentPoints), false},
+		},
+	})
+}
 
 // Blessing of Wisdom - https://www.wowhead.com/forever/spell=25290
-// func BlessingOfWisdomAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blessing_of_wisdom, KindStatFlat: hand-written constructor still present
+func BlessingOfWisdomValue(talentPoints int32) float64 {
+	return 40.0
+}
+func BlessingOfWisdomDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func BlessingOfWisdomAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Blessing of Wisdom (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25290}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: BlessingOfWisdomDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.MP5, BlessingOfWisdomValue(talentPoints), false},
+		},
+	})
+}
 
 // func BlessingOfSanctuaryAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blessing_of_sanctuary, KindAbsent: no SpellName row for Blessing of Sanctuary.
 
 // Blessing of Salvation - https://www.wowhead.com/forever/spell=1038
-// func BlessingOfSalvationAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // blessing_of_salvation, KindPseudoMult: hand-written constructor still present
+func BlessingOfSalvationValue(talentPoints int32) float64 {
+	return 0.7
+}
+func BlessingOfSalvationDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func BlessingOfSalvationAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Blessing of Salvation (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 1038}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: BlessingOfSalvationDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Pseudo: []PseudoConfig{
+			{PseudoStatThreatMultiplier, BlessingOfSalvationValue(talentPoints), true, 0},
+		},
+	})
+}
 
 // Shadow Protection - https://www.wowhead.com/forever/spell=10958
-// func ShadowProtectionAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_protection, KindResistance: hand-written constructor still present
+func ShadowProtectionValue(talentPoints int32) float64 {
+	return 60.0
+}
+func ShadowProtectionDuration(talentPoints int32) time.Duration {
+	return 600000 * time.Millisecond
+}
+func ShadowProtectionAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:        "Shadow Protection (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:     ActionID{SpellID: 10958}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:     ShadowProtectionDuration(talentPoints),
+		StatCategory: "ResistanceShadow",
+		IsPlayer:     isPlayer,
+		Stats: []StatConfig{
+			{stats.ShadowResistance, ShadowProtectionValue(talentPoints), false},
+		},
+	})
+}
 
 // Innervates - https://www.wowhead.com/forever/spell=29166
 // func InnervatesAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // innervates, KindExternalCD: hand-written apply block still present
@@ -190,7 +637,79 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func PowerInfusionsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // power_infusions, KindExternalCD: hand-written apply block still present
 
 func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
+	if party.BloodPact {
+		MakePermanent(BloodPactAura(&char.Unit, false, 0))
+	}
+	if party.CommandingShout {
+		driveCommandingShout(char, party.CommandingShout)
+	}
 	if party.BattleShout {
 		driveBattleShout(char, party.BattleShout)
+	}
+	if party.DevotionAura {
+		MakePermanent(DevotionAuraAura(&char.Unit, false, 0))
+	}
+	if party.LeaderOfThePack {
+		MakePermanent(LeaderOfThePackAura(&char.Unit, false, 0))
+	}
+	if party.ManaSpringTotem != proto.TristateEffect_TristateEffectMissing {
+		MakePermanent(ManaSpringTotemAura(&char.Unit, false, GetTristateValueInt32(party.ManaSpringTotem, 0, 5)))
+	}
+	if party.MoonkinAura {
+		MakePermanent(MoonkinAuraAura(&char.Unit, false, 0))
+	}
+	if party.ConcentrationAura {
+		MakePermanent(ConcentrationAuraAura(&char.Unit, false, 0))
+	}
+	if party.StrengthOfEarthTotem {
+		MakePermanent(StrengthOfEarthTotemAura(&char.Unit, false, 0))
+	}
+	if party.FrostResistanceTotem {
+		MakePermanent(FrostResistanceTotemAura(&char.Unit, false, 0))
+	}
+	if party.NatureResistanceTotem {
+		MakePermanent(NatureResistanceTotemAura(&char.Unit, false, 0))
+	}
+	if party.FireResistanceTotem {
+		MakePermanent(FireResistanceTotemAura(&char.Unit, false, 0))
+	}
+	if party.FrostResistanceAura {
+		MakePermanent(FrostResistanceAuraAura(&char.Unit, false, 0))
+	}
+	if party.FireResistanceAura {
+		MakePermanent(FireResistanceAuraAura(&char.Unit, false, 0))
+	}
+	if party.ShadowResistanceAura {
+		MakePermanent(ShadowResistanceAuraAura(&char.Unit, false, 0))
+	}
+	if party.AspectOfTheWild {
+		MakePermanent(AspectOfTheWildAura(&char.Unit, false, 0))
+	}
+	if raid.ArcaneBrilliance {
+		MakePermanent(ArcaneBrillianceAura(&char.Unit, false, 0))
+	}
+	if individual.BlessingOfKings {
+		MakePermanent(BlessingOfKingsAura(&char.Unit, false, 0))
+	}
+	if raid.DivineSpirit {
+		MakePermanent(DivineSpiritAura(&char.Unit, false, 0))
+	}
+	if raid.GiftOfTheWild {
+		MakePermanent(GiftOfTheWildAura(&char.Unit, false, 0))
+	}
+	if raid.PowerWordFortitude {
+		MakePermanent(PowerWordFortitudeAura(&char.Unit, false, 0))
+	}
+	if individual.BlessingOfMight {
+		MakePermanent(BlessingOfMightAura(&char.Unit, false, 0))
+	}
+	if individual.BlessingOfWisdom {
+		MakePermanent(BlessingOfWisdomAura(&char.Unit, false, 0))
+	}
+	if individual.BlessingOfSalvation {
+		MakePermanent(BlessingOfSalvationAura(&char.Unit, false, 0))
+	}
+	if raid.ShadowProtection {
+		MakePermanent(ShadowProtectionAura(&char.Unit, false, 0))
 	}
 }
