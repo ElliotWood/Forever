@@ -56,21 +56,19 @@ func (paladin *Paladin) registerDevotionAura() {
 	// paladin.registerAuraSpell(aura, SpellMaskDevotionAura)
 }
 
-// TODO: To be implemented. TBC body below already accounts for Forever dropping Improved Retribution Aura (untalented, per the TODO inside); kept commented until this class's port is reviewed.
+// TODO: To be implemented. The body below needs the spell around the aura;
+// kept commented until this class's port is reviewed.
 //
 // Retribution Aura
-// https://www.wowhead.com/forever/spell=27150
+// https://www.wowhead.com/forever/spell=10301
 //
-// Causes 26 Holy damage to any creature that strikes a party member within 30 yards.
-// Improved Retribution Aura talent increases damage by up to 50%.
+// Causes 30 Holy damage to any creature that strikes a party member.
 // Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerRetributionAura() {
 	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
-	// // TODO: Forever drops Improved Retribution Aura; untalented (0 points) until we know
-	// // whether the effect moved onto another talent.
-	// aura := core.RetributionAuraBuff(&paladin.Character, true, 0)
+	// The body the port needs:
+	// aura := core.RetributionAuraAura(&paladin.Unit, true, 0)
 	// paladin.registerAuraSpell(aura, SpellMaskRetributionAura)
 }
 

@@ -317,9 +317,90 @@ func measureGeneratedBuffStats(char *Character) {
 	char.stats = char.SortAndApplyStatDependencies(char.stats).FloorGameStats()
 }
 
+// A generated damage shield deals the client's damage back to whoever lands a
+// melee hit, and nothing to a spell.
+func TestGeneratedThornsStrikesBackAtAMeleeHit(t *testing.T) {
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{Thorns: true}, &proto.PartyBuffs{}, &proto.IndividualBuffs{})
+	char := sim.Raid.Parties[0].Players[0].GetCharacter()
+	attacker := sim.Encounter.AllTargetUnits[0]
+
+	if ThornsValue(0) != 22 {
+		t.Errorf("Thorns is worth %v, want the client's 22", ThornsValue(0))
+	}
+
+	aura := char.GetAura("Thorns (External)")
+	if aura == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Thorns (External)", auraLabels(char))
+	}
+	if !aura.IsActive() {
+		t.Fatal("the raid's Thorns is not up at the start of the fight")
+	}
+
+	shield := char.GetSpell(ActionID{SpellID: 9910, Tag: 1})
+	if shield == nil {
+		t.Fatal("the shield registered no spell to deal its damage with")
+	}
+
+	// The shield's own swings would land on the character too, so they are
+	// cancelled and every hit the test asks about is delivered by hand.
+	attacker.AutoAttacks.CancelAutoSwing(sim)
+
+	landed := &SpellResult{Target: &char.Unit, Outcome: OutcomeHit}
+	aura.OnSpellHitTaken(aura, sim, attacker.AutoAttacks.MHAuto(), landed)
+	sim.Step()
+	if got := shield.SpellMetrics[attacker.UnitIndex].Casts; got != 1 {
+		t.Errorf("a melee hit taken cast the shield %d times, want once", got)
+	}
+	if got := shield.SpellMetrics[attacker.UnitIndex].TotalDamage; got != 22 {
+		t.Errorf("the shield dealt %v damage, want the client's 22", got)
+	}
+
+	caster := sim.Raid.Parties[0].Players[0].(*FakeAgent)
+	aura.OnSpellHitTaken(aura, sim, caster.Spell, landed)
+	sim.Step()
+	if got := shield.SpellMetrics[attacker.UnitIndex].Casts; got != 1 {
+		t.Errorf("a shadow spell taken cast the shield %d times, want the shield to ignore it", got)
+	}
+}
+
+// Retribution Aura is the paladin's slot: the external copy keeps its own
+// category and stays out of the shared one only the paladin's own cast joins.
+func TestGeneratedRetributionAuraHoldsThePaladinSlot(t *testing.T) {
+	char := newGeneratedBuffTestCharacter()
+
+	applyBuffEffects(generatedBuffTestAgent{char},
+		&proto.RaidBuffs{}, &proto.PartyBuffs{RetributionAura: true}, &proto.IndividualBuffs{})
+
+	external := char.GetAura("Retribution Aura (External)")
+	if external == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Retribution Aura (External)", auraLabels(char))
+	}
+	if RetributionAuraValue(0) != 30 {
+		t.Errorf("the aura is worth %v holy damage, want the client's 30", RetributionAuraValue(0))
+	}
+
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(RetributionAuraCategory)
+	if !category.SingleAura || len(category.effects) != 1 || category.effects[0].Priority != 30 {
+		t.Errorf("the category is single-aura %v with %d effects, first bid %v; want one bidding 30",
+			category.SingleAura, len(category.effects), category.effects[0].Priority)
+	}
+	if shared := char.ExclusiveEffectManager.GetExclusiveEffectCategory(PaladinAuraCategory); len(shared.effects) != 0 {
+		t.Errorf("the external copy put %d effects in the paladin's shared category, want none",
+			len(shared.effects))
+	}
+
+	player := RetributionAuraAura(&char.Unit, true, 0)
+	if shared := char.ExclusiveEffectManager.GetExclusiveEffectCategory(PaladinAuraCategory); len(shared.effects) != 1 {
+		t.Errorf("the paladin's own copy put %d effects in the shared category, want one", len(shared.effects))
+	}
+	if player == external {
+		t.Error("the paladin's own copy and the external one are the same aura")
+	}
+}
+
 // A whole environment, because an external cooldown registers a spell, a timer
 // per source and a major cooldown, none of which a bare Character has.
-func setupFakeSimWithBuffs(party *proto.PartyBuffs, individual *proto.IndividualBuffs) *Simulation {
+func setupFakeSimWithBuffs(raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) *Simulation {
 	sim := NewSim(&proto.RaidSimRequest{
 		SimOptions: &proto.SimOptions{RandomSeed: 100},
 		Raid: &proto.Raid{
@@ -337,9 +418,13 @@ func setupFakeSimWithBuffs(party *proto.PartyBuffs, individual *proto.Individual
 					Buffs: party,
 				},
 			},
+			Buffs: raid,
 		},
 		Encounter: &proto.Encounter{
-			Targets:  []*proto.Target{{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}},
+			Targets: []*proto.Target{{
+				Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon,
+				SwingSpeed: 2, MinBaseDamage: 100,
+			}},
 			Duration: 180,
 		},
 	}, simsignals.CreateSignals())
@@ -352,7 +437,7 @@ func setupFakeSimWithBuffs(party *proto.PartyBuffs, individual *proto.Individual
 // first one's aura to fall off, and a third cast waits for the six minutes the
 // client states.
 func TestGeneratedInnervatesTakeTurnsBetweenTheirSources(t *testing.T) {
-	sim := setupFakeSimWithBuffs(&proto.PartyBuffs{}, &proto.IndividualBuffs{Innervates: 2})
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{}, &proto.IndividualBuffs{Innervates: 2})
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
 
 	aura := char.GetAura("Innervates (External)")
@@ -410,7 +495,7 @@ func TestGeneratedInnervatesTakeTurnsBetweenTheirSources(t *testing.T) {
 // Power Infusion is +20% damage and healing done while it is up, and nothing
 // once it has expired.
 func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
-	sim := setupFakeSimWithBuffs(&proto.PartyBuffs{}, &proto.IndividualBuffs{PowerInfusions: 1})
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{}, &proto.IndividualBuffs{PowerInfusions: 1})
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
 
 	aura := char.GetAura("Power Infusions (External)")
@@ -440,7 +525,7 @@ func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
 // Mana Tide's aura states 290 mana every 3 seconds, which reaches the sim as
 // the mana per 5 seconds it is worth; the totem cast states how long it stands.
 func TestGeneratedManaTideTotemRestoresTheClientsMana(t *testing.T) {
-	sim := setupFakeSimWithBuffs(&proto.PartyBuffs{ManaTideTotems: 1}, &proto.IndividualBuffs{})
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{ManaTideTotems: 1}, &proto.IndividualBuffs{})
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
 
 	aura := char.GetAura("Mana Tide Totem (External)")
@@ -466,7 +551,7 @@ func TestGeneratedManaTideTotemRestoresTheClientsMana(t *testing.T) {
 // A cooldown is not up while the character sheet is measured, so its aura stays
 // out of the build phase the external copy of a permanent buff joins.
 func TestGeneratedExternalCooldownsAreNotBuildPhaseAuras(t *testing.T) {
-	sim := setupFakeSimWithBuffs(&proto.PartyBuffs{ManaTideTotems: 1},
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{ManaTideTotems: 1},
 		&proto.IndividualBuffs{Innervates: 1, PowerInfusions: 1})
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
 

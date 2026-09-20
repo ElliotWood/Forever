@@ -136,10 +136,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 	applyGeneratedBuffs(char, raidBuffs, partyBuffs, individual)
 
 	// Raid Buffs
-	if raidBuffs.Thorns {
-		MakePermanent(ThornsAura(char, 0))
-	}
-
 	if raidBuffs.Bloodlust {
 		registerBloodlustCD(char)
 	}
@@ -193,10 +189,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		GraceOfAirTotemAura(char, false, partyBuffs.TotemTwisting)
 	}
 
-	if partyBuffs.RetributionAura {
-		MakePermanent(RetributionAuraBuff(char, false, 0))
-	}
-
 	if partyBuffs.TotemOfWrath > 0 {
 		MakePermanent(TotemOfWrathAura(char, partyBuffs.TotemOfWrath))
 	}
@@ -233,42 +225,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		MakePermanent(UnleashedRageAura(char, -1, 5))
 	}
 
-}
-
-///////////////////////////////////////////////////////////////////////////
-//							Raid Buffs
-///////////////////////////////////////////////////////////////////////////
-
-func ThornsAura(char *Character, points int32) *Aura {
-	actionID := ActionID{SpellID: 26992}
-
-	procSpell := char.RegisterSpell(SpellConfig{
-		ActionID:    actionID,
-		SpellSchool: SpellSchoolNature,
-		Flags:       SpellFlagBinary | SpellFlagPassiveSpell,
-		ProcMask:    ProcMaskEmpty,
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
-			baseDamage := 25 * (1 + 0.25*float64(points))
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHit)
-		},
-	})
-
-	return char.MakeProcTriggerAura(ProcTrigger{
-		Name:     "Thorns",
-		ActionID: actionID,
-		Duration: time.Minute * 10,
-		Outcome:  OutcomeLanded,
-		Callback: CallbackOnSpellHitTaken,
-		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
-			if spell.SpellSchool.Matches(SpellSchoolPhysical) {
-				procSpell.Cast(sim, spell.Unit)
-			}
-		},
-	})
 }
 
 // /////////////////////////////////////////////////////////////////////////
@@ -313,17 +269,7 @@ func ApplyFixedShoutAura(char *Character, aura *Aura, category string) {
 	ApplyFixedUptimeAura(aura, 1, aura.Duration+1, -1)
 }
 
-var (
-	PaladinAuraCategory     = "PaladinAura"
-	RetributionAuraCategory = "RetributionAura"
-)
-
-// paladinAuraPriority returns the exclusivity priority used for self/external
-// variants of the same paladin aura. Self-cast always wins over party-buff-
-// applied (external) versions so they never stack.
-func paladinAuraPriority(isPlayer bool) float64 {
-	return TernaryFloat64(isPlayer, 1, 0)
-}
+var PaladinAuraCategory = "PaladinAura"
 
 func FerociousInspiration(char *Character, count int32) *Aura {
 	dmgBuff := 0.03 * float64(count)
@@ -333,53 +279,6 @@ func FerociousInspiration(char *Character, count int32) *Aura {
 		ActionID: ActionID{SpellID: 34460},
 		Duration: time.Second * 10,
 	}).AttachMultiplicativePseudoStatBuff(&char.PseudoStats.DamageDealtMultiplier, 1+dmgBuff)
-}
-
-func RetributionAuraBuff(char *Character, isPlayer bool, impRetributionAuraRank int32) *Aura {
-	actionID := ActionID{SpellID: 27150}.WithTag(TernaryInt32(isPlayer, 0, -1))
-	impMultiplier := 1 + 0.25*float64(impRetributionAuraRank)
-
-	procSpell := char.RegisterSpell(SpellConfig{
-		ActionID:    actionID.WithTag(2),
-		SpellSchool: SpellSchoolHoly,
-		ProcMask:    ProcMaskEmpty,
-		Flags:       SpellFlagBinary | SpellFlagPassiveSpell,
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
-			spell.CalcAndDealDamage(sim, target, 26*impMultiplier, spell.OutcomeAlwaysHit)
-		},
-	})
-
-	aura := char.GetOrRegisterAura(Aura{
-		Label:      fmt.Sprintf("Retribution Aura (%s)", Ternary(isPlayer, "Player", "External")),
-		ActionID:   actionID,
-		Duration:   NeverExpires,
-		BuildPhase: Ternary(isPlayer, CharacterBuildPhaseNone, CharacterBuildPhaseBuffs),
-	}).AttachProcTrigger(ProcTrigger{
-		Name:     "Retribution Aura Damage",
-		Callback: CallbackOnSpellHitTaken,
-		Outcome:  OutcomeLanded,
-		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
-			if spell.SpellSchool.Matches(SpellSchoolPhysical) {
-				procSpell.Cast(sim, spell.Unit)
-			}
-		},
-	})
-
-	// Self and external share RetributionAuraCategory (SingleAura) so only one
-	// variant's proc trigger fires at a time; self wins via higher priority.
-	aura.NewExclusiveEffect(RetributionAuraCategory, true, ExclusiveEffect{
-		Priority: paladinAuraPriority(isPlayer),
-	})
-
-	if isPlayer {
-		aura.NewExclusiveEffect(PaladinAuraCategory, true, ExclusiveEffect{})
-	}
-
-	return aura
 }
 
 func TrueShotAuraBuff(char *Character) *Aura {

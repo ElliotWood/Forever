@@ -191,7 +191,25 @@ func MoonkinAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Retribution Aura - https://www.wowhead.com/forever/spell=10301
-// func RetributionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // retribution_aura, KindDamageShield: hand-written apply block still present
+var RetributionAuraCategory = "RetributionAura"
+
+func RetributionAuraValue(talentPoints int32) float64 {
+	return 30.0
+}
+func RetributionAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func RetributionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDamageShield(unit, GeneratedBuff{
+		Label:          "Retribution Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 10301}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       RetributionAuraDuration(talentPoints),
+		Category:       RetributionAuraCategory,
+		SharedCategory: "PaladinAura",
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+	}, SpellSchoolHoly, RetributionAuraValue(talentPoints))
+}
 
 // Concentration Aura - https://www.wowhead.com/forever/spell=19746
 var ConcentrationAuraCategory = "ConcentrationAura"
@@ -552,7 +570,20 @@ func GiftOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Thorns - https://www.wowhead.com/forever/spell=9910
-// func ThornsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // thorns, KindDamageShield: hand-written constructor still present
+func ThornsValue(talentPoints int32) float64 {
+	return 22.0
+}
+func ThornsDuration(talentPoints int32) time.Duration {
+	return 600000 * time.Millisecond
+}
+func ThornsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDamageShield(unit, GeneratedBuff{
+		Label:    "Thorns (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 9910}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: ThornsDuration(talentPoints),
+		IsPlayer: isPlayer,
+	}, SpellSchoolNature, ThornsValue(talentPoints))
+}
 
 // Power Word: Fortitude - https://www.wowhead.com/forever/spell=10938
 func PowerWordFortitudeValue(talentPoints int32) float64 {
@@ -722,6 +753,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if party.MoonkinAura {
 		MakePermanent(MoonkinAuraAura(&char.Unit, false, 0))
 	}
+	if party.RetributionAura {
+		MakePermanent(RetributionAuraAura(&char.Unit, false, 0))
+	}
 	if party.ConcentrationAura {
 		MakePermanent(ConcentrationAuraAura(&char.Unit, false, 0))
 	}
@@ -760,6 +794,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if raid.GiftOfTheWild {
 		MakePermanent(GiftOfTheWildAura(&char.Unit, false, 0))
+	}
+	if raid.Thorns {
+		MakePermanent(ThornsAura(&char.Unit, false, 0))
 	}
 	if raid.PowerWordFortitude {
 		MakePermanent(PowerWordFortitudeAura(&char.Unit, false, 0))
