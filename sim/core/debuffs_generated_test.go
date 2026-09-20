@@ -91,6 +91,113 @@ func TestGeneratedExposeArmorIsTheFivePointFinisher(t *testing.T) {
 	}
 }
 
+// A stacking debuff is worth its amount once per stack, and it bids the same
+// way, so that a debuff worth more than five stacks of it takes the slot.
+func TestGeneratedSunderArmorPricesEveryStack(t *testing.T) {
+	target := newGeneratedDebuffTestTarget()
+
+	sim := applyGeneratedTestDebuffs(target, &proto.Debuffs{SunderArmor: true})
+
+	sunder := target.GetAura("Sunder Armor (External)")
+	if sunder == nil {
+		t.Fatalf("no aura is labelled %q; the target has %v", "Sunder Armor (External)", targetAuraLabels(target))
+	}
+	if got := target.stats[stats.Armor]; got != 0 {
+		t.Errorf("a sunder with no stacks reduced armor by %v, want nothing", got)
+	}
+
+	sunder.SetStacks(sim, 5)
+
+	if got := target.stats[stats.Armor]; got != -2250 {
+		t.Errorf("armor is %v, want five stacks of the client's -450", got)
+	}
+	category := target.ExclusiveEffectManager.GetExclusiveEffectCategory(SunderArmorCategory)
+	if len(category.effects) != 1 || category.effects[0].Priority != 2250 {
+		t.Errorf("the category holds %d effects, first bid %v; want one bidding the magnitude 2250",
+			len(category.effects), category.effects[0].Priority)
+	}
+}
+
+// Only the strongest armor reduction is on the target: the weaker one's aura is
+// pushed off and its armor given back.
+func TestGeneratedExposeArmorOutbidsAWeakerSunder(t *testing.T) {
+	target := newGeneratedDebuffTestTarget()
+
+	sim := applyGeneratedTestDebuffs(target, &proto.Debuffs{SunderArmor: true})
+	sunder := target.GetAura("Sunder Armor (External)")
+	sunder.SetStacks(sim, 1)
+	if got := target.stats[stats.Armor]; got != -450 {
+		t.Fatalf("one stack of sunder reduced armor by %v, want the client's -450", got)
+	}
+
+	expose := MakePermanent(ExposeArmorAura(target, false, 0))
+	expose.Activate(sim)
+
+	if got := target.stats[stats.Armor]; got != -2250 {
+		t.Errorf("armor is %v, want only Expose Armor's -2250", got)
+	}
+	if sunder.IsActive() {
+		t.Error("the weaker armor reduction is still on the target, so both apply")
+	}
+}
+
+// With both in the raid config, Expose Armor is worth its full -2250 from the
+// first moment and the raid's Sunder Armor is worth nothing until it has
+// stacks, so the category turns the sunder away and its ramp never starts.
+func TestGeneratedExposeArmorHoldsTheSlotAgainstTheRaidsSunder(t *testing.T) {
+	target := newGeneratedDebuffTestTarget()
+
+	applyGeneratedTestDebuffs(target, &proto.Debuffs{ExposeArmor: true, SunderArmor: true})
+
+	if got := target.stats[stats.Armor]; got != -2250 {
+		t.Errorf("armor is %v, want one reduction of -2250", got)
+	}
+	if expose := target.GetAura("Expose Armor (External)"); !expose.IsActive() {
+		t.Error("Expose Armor is not on the target")
+	}
+	if sunder := target.GetAura("Sunder Armor (External)"); sunder.IsActive() {
+		t.Error("the raid's Sunder Armor activated next to Expose Armor, so both are on the target")
+	}
+}
+
+func TestGeneratedThunderClapSlowsTheTarget(t *testing.T) {
+	target := newGeneratedDebuffTestTarget()
+
+	applyGeneratedTestDebuffs(target, &proto.Debuffs{ThunderClap: true})
+
+	if got := ThunderClapValue(0); got != 0.8 {
+		t.Errorf("the clap is worth %v, want the client's -20%% as 0.8", got)
+	}
+	if got := target.PseudoStats.MeleeSpeedMultiplier; got != 0.8 {
+		t.Errorf("the melee speed multiplier is %v, want 0.8", got)
+	}
+	if got := target.TotalMeleeHasteMultiplier(); got != 0.8 {
+		t.Errorf("the target swings at %v times its speed, want the slow to have reached the swing timers", got)
+	}
+}
+
+// Demoralizing Roar and Demoralizing Shout are the same category, so the attack
+// power comes off the target once however many of them the raid brings.
+func TestGeneratedDemoralizingDebuffsApplyOnce(t *testing.T) {
+	target := newGeneratedDebuffTestTarget()
+
+	applyGeneratedTestDebuffs(target, &proto.Debuffs{DemoralizingRoar: true, DemoralizingShout: true})
+
+	if got := target.stats[stats.AttackPower]; got != -204 {
+		t.Errorf("attack power is %v, want the client's -204 once", got)
+	}
+
+	roar := target.GetAura("Demoralizing Roar (External)")
+	shout := target.GetAura("Demoralizing Shout (External)")
+	if roar == nil || shout == nil {
+		t.Fatalf("the target has %v, want both demoralizing auras", targetAuraLabels(target))
+	}
+	if roar.IsActive() == shout.IsActive() {
+		t.Errorf("roar active %v, shout active %v; want exactly one of them on the target",
+			roar.IsActive(), shout.IsActive())
+	}
+}
+
 func targetAuraLabels(target *Unit) []string {
 	labels := make([]string, 0, len(target.auras))
 	for _, aura := range target.auras {

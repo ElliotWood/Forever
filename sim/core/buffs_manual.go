@@ -17,3 +17,23 @@ func driveBattleShout(char *Character, _ bool) {
 func driveCommandingShout(char *Character, _ bool) {
 	ApplyFixedShoutAura(char, CommandingShoutAura(&char.Unit, false, 0), CommandingShoutCategory)
 }
+
+// A stack of Sunder Armor is worth nothing until it is on the target, so the
+// raid's copy is ramped to five over the first five global cooldowns, which is
+// how long a warrior takes to stack it.
+func driveSunderArmor(target *Unit, _ bool) {
+	aura := MakePermanent(SunderArmorAura(target, false, 0))
+
+	ScheduledAura(aura, PeriodicActionOptions{
+		Period:          GCDDefault,
+		NumTicks:        5,
+		TickImmediately: true,
+		Priority:        ActionPriorityDOT,
+		OnAction: func(sim *Simulation) {
+			aura.Activate(sim)
+			if aura.IsActive() {
+				aura.AddStack(sim)
+			}
+		},
+	})
+}

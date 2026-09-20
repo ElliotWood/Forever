@@ -17,7 +17,7 @@ func (war *Warrior) registerSunderArmor() {
 	actionId := core.ActionID{SpellID: sunderArmorRank.SpellID}
 
 	war.SunderArmorAuras = war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.SunderArmorAura(target)
+		return core.SunderArmorAura(target, true, 0)
 	})
 
 	getSunderArmorConfig := func(config core.SpellConfig, outcome shared.OutcomeType) core.SpellConfig {

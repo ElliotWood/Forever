@@ -469,9 +469,9 @@ var Manifest = []BuffSpec{
 	{
 		Field: "sunder_armor", Number: 15, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStacking,
 		Go: "SunderArmor", Name: "Sunder Armor", Owner: proto.Class_ClassWarrior,
-		Category: "MajorArmorReduction", SingleAura: true,
+		Category: "MajorArmorReduction", SingleAura: true, Driver: true,
 		Stats: []proto.Stat{proto.Stat_StatAttackPower},
-		Notes: "CumulativeAura is 5; Improved Sunder Armor (12308) modifies cost only (misc 14).",
+		Notes: "CumulativeAura is 5, and a stack is worth nothing until it is there, so the raid's copy is ramped by a driver; Improved Sunder Armor (12308) modifies cost only (misc 14).",
 	},
 	{
 		Field: "winters_chill", Number: 9, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindAbsent,

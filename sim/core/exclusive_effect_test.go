@@ -128,35 +128,3 @@ func TestNewExclusiveEffectDedupsPerAura(t *testing.T) {
 		t.Fatalf("expected priority 5, got %f", first.Priority)
 	}
 }
-
-// Demoralizing Roar and Demoralizing Shout are mutually exclusive — the
-// stronger of the two wins via shared category priority.
-func TestDemoralizingRoarAndShoutShareCategory(t *testing.T) {
-	target := newExclusiveTestTarget()
-	roar := DemoralizingRoarAura(target, false, 0)
-	shout := DemoralizingShoutAura(target, 0, 5)
-
-	if roar.ExclusiveEffects[0].Category != shout.ExclusiveEffects[0].Category {
-		t.Fatalf("expected Demoralizing Roar and Shout to share an exclusive category")
-	}
-}
-
-// Regression: the config's Demoralizing Shout registered first and clobbered a
-// talented warrior's stronger values via the shared-label dedup.
-func TestDemoralizingShoutTalentsSurviveDedup(t *testing.T) {
-	target := newExclusiveTestTarget()
-	configAura := DemoralizingShoutAura(target, 0, 0)
-	warriorAura := DemoralizingShoutAura(target, 5, 5)
-
-	if configAura != warriorAura {
-		t.Fatalf("expected both Demoralizing Shout registrations to share one aura")
-	}
-	expectedPrio := 300.0 * (1 + 0.1*5)
-	if prio := configAura.ExclusiveEffects[0].Priority; prio != expectedPrio {
-		t.Fatalf("expected Demoralizing Shout priority %f, got %f", expectedPrio, prio)
-	}
-	expectedDuration := time.Duration(float64(time.Second*30) * (1 + 0.1*5))
-	if configAura.Duration != expectedDuration {
-		t.Fatalf("expected Demoralizing Shout duration %v, got %v", expectedDuration, configAura.Duration)
-	}
-}

@@ -155,7 +155,28 @@ func ExposeArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Sunder Armor - https://www.wowhead.com/forever/spell=11597
-// func SunderArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // sunder_armor, KindDebuffStacking: hand-written constructor still present
+var SunderArmorCategory = "MajorArmorReduction"
+
+func SunderArmorValue(talentPoints int32) float64 {
+	return -450.0
+}
+func SunderArmorDuration(talentPoints int32) time.Duration {
+	return 30000 * time.Millisecond
+}
+func SunderArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Sunder Armor (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 11597}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   SunderArmorDuration(talentPoints),
+		MaxStacks:  5,
+		Category:   SunderArmorCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.Armor, SunderArmorValue(talentPoints), false},
+		},
+	})
+}
 
 // func WintersChillAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // winters_chill, KindAbsent: the debuff 12579 is aura 308 A_MOD_CRIT_CHANCE_FOR_CASTER_WITH_ABILITIES, so it only benefits the mage that applied it; the name also resolves to the talent 11180 rather than to the debuff.
 
@@ -206,12 +227,51 @@ func DemoralizingRoarAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Demoralizing Shout - https://www.wowhead.com/forever/spell=11556
-// func DemoralizingShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // demoralizing_shout, KindDebuffStat: hand-written constructor still present
+var DemoralizingShoutCategory = "Demoralizing"
+
+func DemoralizingShoutValue(talentPoints int32) float64 {
+	return -204.0
+}
+func DemoralizingShoutDuration(talentPoints int32) time.Duration {
+	return 45000 * time.Millisecond
+}
+func DemoralizingShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:      "Demoralizing Shout (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 11556}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   DemoralizingShoutDuration(talentPoints),
+		Category:   DemoralizingShoutCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.AttackPower, DemoralizingShoutValue(talentPoints), false},
+		},
+	})
+}
 
 // func ScreechAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // screech, KindAbsent: no SpellName row for Screech.
 
 // Thunder Clap - https://www.wowhead.com/forever/spell=11581
-// func ThunderClapAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // thunder_clap, KindDebuffAtkSpeed: hand-written constructor still present
+var ThunderClapCategory = "AtkSpdReduction"
+
+func ThunderClapValue(talentPoints int32) float64 {
+	return 0.8
+}
+func ThunderClapDuration(talentPoints int32) time.Duration {
+	return 30000 * time.Millisecond
+}
+func ThunderClapAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:    "Thunder Clap (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 11581}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: ThunderClapDuration(talentPoints),
+		Category: ThunderClapCategory,
+		IsPlayer: isPlayer,
+		Pseudo: []PseudoConfig{
+			{PseudoStatMeleeSpeedMultiplier, ThunderClapValue(talentPoints), true, 0},
+		},
+	})
+}
 
 // Insect Swarm - https://www.wowhead.com/forever/spell=24977
 func InsectSwarmValue(talentPoints int32) float64 {
@@ -277,11 +337,20 @@ func applyGeneratedDebuffs(target *Unit, debuffs *proto.Debuffs, raid *proto.Rai
 	if debuffs.ExposeArmor {
 		MakePermanent(ExposeArmorAura(target, false, 0))
 	}
+	if debuffs.SunderArmor {
+		driveSunderArmor(target, debuffs.SunderArmor)
+	}
 	if debuffs.GiftOfArthas {
 		MakePermanent(GiftOfArthasAura(target, false, 0))
 	}
 	if debuffs.DemoralizingRoar {
 		MakePermanent(DemoralizingRoarAura(target, false, 0))
+	}
+	if debuffs.DemoralizingShout {
+		MakePermanent(DemoralizingShoutAura(target, false, 0))
+	}
+	if debuffs.ThunderClap {
+		MakePermanent(ThunderClapAura(target, false, 0))
 	}
 	if debuffs.InsectSwarm {
 		MakePermanent(InsectSwarmAura(target, false, 0))

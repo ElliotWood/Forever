@@ -11,10 +11,10 @@ var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.Demoralizin
 // over unchanged, so its numbers and shape want checking against the client.
 func (war *Warrior) registerDemoralizingShout() {
 	war.DemoralizingShoutAuras = war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		// TODO: Forever drops Improved Demoralizing Shout; the core aura still takes a
-		// rank for it, so it is pinned to 0 until we know whether the effect moved onto
-		// another talent or was removed outright.
-		return core.DemoralizingShoutAura(target, war.Talents.BoomingVoice, 0)
+		// Nothing in the warrior tree prices this shout: Forever has no Improved
+		// Demoralizing Shout, and Booming Voice modifies a field no buff reads,
+		// so the aura is the client's -204 attack power for 45 seconds.
+		return core.DemoralizingShoutAura(target, true, 0)
 	})
 
 	war.DemoralizingShout = war.RegisterSpell(core.SpellConfig{

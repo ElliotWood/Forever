@@ -9,7 +9,9 @@ var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
 
 func (war *Warrior) registerThunderClap() {
 	auras := war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ThunderClapAura(target, war.Talents.ImprovedThunderClap)
+		// Improved Thunder Clap modifies the rage cost and nothing else, so the
+		// slow is the client's -20% whatever the warrior spent on it.
+		return core.ThunderClapAura(target, true, 0)
 	})
 
 	war.RegisterSpell(core.SpellConfig{

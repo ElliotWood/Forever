@@ -17,10 +17,6 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		MakePermanent(BloodFrenzyAura(target, 2))
 	}
 
-	if debuffs.DemoralizingShout {
-		MakePermanent(DemoralizingShoutAura(target, 5, 0))
-	}
-
 	if debuffs.ExposeWeaknessUptime > 0.0 {
 		aura := ExposeWeaknessAura(target, func() float64 {
 			return debuffs.ExposeWeaknessHunterAgility
@@ -42,7 +38,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 					aura.AddStack(sim)
 				}
 			},
-		}, raid)
+		})
 
 	}
 
@@ -78,29 +74,9 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		MakePermanent(ShadowEmbraceAura(target, 5))
 	}
 
-	if debuffs.SunderArmor {
-		aura := MakePermanent(SunderArmorAura(target))
-
-		ScheduledAura(aura, PeriodicActionOptions{
-			Period:          GCDDefault,
-			NumTicks:        5,
-			TickImmediately: true,
-			Priority:        ActionPriorityDOT, // High prio so it comes before actual warrior sunders.
-			OnAction: func(sim *Simulation) {
-				aura.Activate(sim)
-				if aura.IsActive() {
-					aura.AddStack(sim)
-				}
-			},
-		}, raid)
-	}
-
-	if debuffs.ThunderClap {
-		MakePermanent(ThunderClapAura(target, 0))
-	}
 }
 
-func ScheduledAura(aura *Aura, options PeriodicActionOptions, raid *proto.Raid) {
+func ScheduledAura(aura *Aura, options PeriodicActionOptions) {
 	aura.OnReset = func(aura *Aura, sim *Simulation) {
 		aura.Duration = NeverExpires
 		StartPeriodicAction(sim, options)
@@ -116,36 +92,6 @@ func BloodFrenzyAura(target *Unit, points int32) *Aura {
 		1+0.02*float64(points),
 		NeverExpires,
 	)
-}
-
-func DemoralizingShoutAura(target *Unit, boomingVoicePoints int32, improvedDemoShoutPoints int32) *Aura {
-	apReduction := 300.0 * (1 + 0.1*float64(improvedDemoShoutPoints))
-	duration := time.Duration(float64(time.Second*30) * (1 + 0.1*float64(boomingVoicePoints)))
-
-	aura := target.GetOrRegisterAura(Aura{
-		Label:    "Demoralizing Shout",
-		ActionID: ActionID{SpellID: 25203},
-		Duration: duration,
-	})
-
-	effect := aura.NewExclusiveEffect(DemoralizingEffectCategory, true, ExclusiveEffect{
-		Priority: apReduction,
-		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.AttackPower, -ee.Priority)
-		},
-		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.AttackPower, ee.Priority)
-		},
-	})
-
-	if effect.Priority < apReduction {
-		effect.Priority = apReduction
-	}
-	if aura.Duration < duration {
-		aura.Duration = duration
-	}
-
-	return aura
 }
 
 func SlowAura(target *Unit) *Aura {
@@ -412,47 +358,6 @@ func StormstrikeAura(target *Unit, uptime float64) *Aura {
 		ApplyFixedUptimeAura(aura, uptime, aura.Duration, 1)
 	}
 
-	return aura
-}
-
-var MajorArmorReductionEffectCategory = "MajorArmorReduction"
-
-// Demoralizing Roar and Demoralizing Shout are mutually exclusive; other AP
-// reduction debuffs (Screech, Curse of Recklessness, ...) stack with them.
-var DemoralizingEffectCategory = "Demoralizing"
-
-func SunderArmorAura(target *Unit) *Aura {
-	var effect *ExclusiveEffect
-	aura := target.GetOrRegisterAura(Aura{
-		Label:     "Sunder Armor",
-		ActionID:  ActionID{SpellID: 25225},
-		Duration:  time.Second * 30,
-		MaxStacks: 5,
-		OnStacksChange: func(aura *Aura, sim *Simulation, oldStacks int32, newStacks int32) {
-			effect.SetPriority(sim, -520*float64(newStacks))
-		},
-	})
-
-	effect = aura.NewExclusiveEffect(MajorArmorReductionEffectCategory, true, ExclusiveEffect{
-		Priority: 0,
-		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.Armor, ee.Priority)
-		},
-		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.Armor, -ee.Priority)
-		},
-	})
-
-	return aura
-}
-
-func ThunderClapAura(target *Unit, points int32) *Aura {
-	aura := target.GetOrRegisterAura(Aura{
-		Label:    "ThunderClap-" + strconv.Itoa(int(points)),
-		ActionID: ActionID{SpellID: 25264},
-		Duration: time.Second * 30,
-	})
-	AtkSpeedReductionEffect(aura, []float64{1.1, 1.14, 1.17, 1.2}[points])
 	return aura
 }
 
