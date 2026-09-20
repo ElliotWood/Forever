@@ -1,6 +1,6 @@
 {
-	"commit": "09e0d08fa072bdaf5838458d52e95d8ce972492f",
-	"generated": "2026-09-20T08:05:32Z",
+	"commit": "b72a40784ddbcae443b87ae285f3d5bcf489d250",
+	"generated": "2026-09-20T08:55:00Z",
 	"iterations": 5000,
 	"host": "github-actions",
 	"builds": [
@@ -19556,8 +19556,8 @@
 		},
 		{
 			"spec": "shadow_priest",
-			"build": "21 Shadow Magic",
-			"talents": "525332031303--5300213012013",
+			"build": "31 Discipline",
+			"talents": "525333031303--5300212012013",
 			"gear": "launch",
 			"rotation": "p1",
 			"consumables": "Arena-Caster",
@@ -19576,8 +19576,8 @@
 		},
 		{
 			"spec": "shadow_priest",
-			"build": "31 Discipline",
-			"talents": "525333031303--5300212012013",
+			"build": "21 Shadow Magic",
+			"talents": "525332031303--5300213012013",
 			"gear": "launch",
 			"rotation": "p1",
 			"consumables": "Arena-Caster",
@@ -20373,8 +20373,8 @@
 		},
 		{
 			"spec": "shadow_priest",
-			"build": "21 Shadow Magic",
-			"talents": "525332031303--5300213012013",
+			"build": "31 Discipline",
+			"talents": "525333031303--5300212012013",
 			"gear": "p0.bis",
 			"rotation": "p1",
 			"consumables": "Arena-Caster",
@@ -20393,8 +20393,8 @@
 		},
 		{
 			"spec": "shadow_priest",
-			"build": "31 Discipline",
-			"talents": "525333031303--5300212012013",
+			"build": "21 Shadow Magic",
+			"talents": "525332031303--5300213012013",
 			"gear": "p0.bis",
 			"rotation": "p1",
 			"consumables": "Arena-Caster",
