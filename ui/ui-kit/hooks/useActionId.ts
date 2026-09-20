@@ -14,7 +14,7 @@ const keyOf = (actionId: ActionId | undefined) => (actionId ? actionId.equalityK
 
 const hrefOf = (actionId: ActionId) => {
 	if (actionId.itemId) return ActionId.makeItemUrl(actionId.itemId, actionId.randomSuffixId);
-	if (actionId.spellId) return ActionId.makeSpellUrl(actionId.spellIdTooltipOverride || actionId.spellId);
+	if (actionId.spellId) return ActionId.makeSpellUrl(actionId.spellIdTooltipOverride || actionId.spellId, actionId.rank);
 	return '';
 };
 

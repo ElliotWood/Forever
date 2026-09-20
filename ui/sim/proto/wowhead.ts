@@ -166,8 +166,9 @@ type WowheadEntity = 'item' | 'spell' | 'quest' | 'npc' | 'zone';
 
 // `https://wowhead.com/<domain>/<lang>/<entity>=<id>` — the language segment
 // is empty for English.
-export function wowheadEntityUrl(entity: WowheadEntity, id: number): string {
-	return `${WOWHEAD_BASE_URL}/${getWowheadLanguagePrefix()}${entity}=${id}`;
+export function wowheadEntityUrl(entity: WowheadEntity, id: number, rank = 0): string {
+	const url = `${WOWHEAD_BASE_URL}/${getWowheadLanguagePrefix()}${entity}=${id}`;
+	return rank > 0 ? `${url}?rank=${rank}` : url;
 }
 
 export function wowheadIconUrl(iconLabel: string, size: 'large' | 'medium' | 'small' = 'large'): string {

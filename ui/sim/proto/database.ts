@@ -118,6 +118,7 @@ export class Database {
 	private readonly presetTargets = new Map<string, PresetTarget>();
 	private readonly itemIcons: Record<number, IconData> = {};
 	private readonly spellIcons: Record<number, IconData> = {};
+	private readonly rankedSpellIcons = new Map<string, IconData>();
 	private readonly consumables = new Map<number, Consumable>();
 	private readonly spellEffects = new Map<number, SpellEffect>();
 
@@ -391,8 +392,17 @@ export class Database {
 		return db.itemIcons[itemId];
 	}
 
-	static async getSpellIconData(spellId: number): Promise<IconData> {
+	static async getSpellIconData(spellId: number, rank = 0): Promise<IconData> {
 		const db = await Database.get();
+		if (rank > 0) {
+			const key = `${spellId}-${rank}`;
+			const cached = db.rankedSpellIcons.get(key);
+			if (cached?.icon) return cached;
+			const fetched = await Database.sharedIconRequest(`spell-${key}`, () => Database.getWowheadSpellTooltipData(spellId, rank));
+			db.rankedSpellIcons.set(key, fetched);
+			return fetched;
+		}
+
 		const data = db.spellIcons[spellId];
 		if (!data?.icon) {
 			db.spellIcons[spellId] = await Database.sharedIconRequest(`spell-${spellId}`, () => Database.getWowheadSpellTooltipData(spellId));
@@ -418,11 +428,12 @@ export class Database {
 	private static async getWowheadItemTooltipData(id: number): Promise<IconData> {
 		return Database.getWowheadTooltipData(id, 'item');
 	}
-	private static async getWowheadSpellTooltipData(id: number): Promise<IconData> {
-		return Database.getWowheadTooltipData(id, 'spell');
+	private static async getWowheadSpellTooltipData(id: number, rank = 0): Promise<IconData> {
+		return Database.getWowheadTooltipData(id, 'spell', rank);
 	}
-	private static async getWowheadTooltipData(id: number, tooltipPostfix: string): Promise<IconData> {
-		const url = `https://nether.wowhead.com/${WOWHEAD_DOMAIN}/tooltip/${tooltipPostfix}/${id}?lvl=${CHARACTER_LEVEL}&dataEnv=${WOWHEAD_EXPANSION_ENV}`;
+	private static async getWowheadTooltipData(id: number, tooltipPostfix: string, rank = 0): Promise<IconData> {
+		const rankParam = rank > 0 ? `&rank=${rank}` : '';
+		const url = `https://nether.wowhead.com/${WOWHEAD_DOMAIN}/tooltip/${tooltipPostfix}/${id}?lvl=${CHARACTER_LEVEL}&dataEnv=${WOWHEAD_EXPANSION_ENV}${rankParam}`;
 		try {
 			const response = await fetch(url);
 			const json = await response.json();

@@ -107,4 +107,16 @@ describe('useActionId', () => {
 		const { container } = render(<Probe actionId={ActionId.fromSpellId(8)} />);
 		expect(anchor(container).href).toBe(ActionId.makeSpellUrl(8));
 	});
+
+	it('carries the rank into the spell url, and leaves it off at rank 0', () => {
+		deferFill();
+		const { container } = render(<Probe actionId={ActionId.fromSpellId(12297, 3)} />);
+		expect(anchor(container).href).toContain('rank=3');
+		expect(ActionId.makeSpellUrl(12297, 0)).not.toContain('rank=');
+	});
+
+	it('treats two ranks of one spell as different ids, so the tooltip refetches', () => {
+		expect(ActionId.fromSpellId(12297, 1).equalityKey()).not.toBe(ActionId.fromSpellId(12297, 2).equalityKey());
+		expect(ActionId.fromSpellId(12297, 1).equalityKey()).toBe(ActionId.fromSpellId(12297, 1).equalityKey());
+	});
 });

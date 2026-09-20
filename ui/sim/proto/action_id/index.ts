@@ -191,7 +191,7 @@ export class ActionId {
 
 	// equalityKey() without the tag, matching equalsIgnoringTag below.
 	equalityKeyIgnoringTag(): string {
-		return (this.cachedEqualityKeyIgnoringTag ??= `${this.itemId}|${this.randomSuffixId}|${this.spellId}|${this.otherId}`);
+		return (this.cachedEqualityKeyIgnoringTag ??= `${this.itemId}|${this.randomSuffixId}|${this.spellId}|${this.otherId}|${this.rank}`);
 	}
 
 	equalsIgnoringTag(other: ActionId): boolean {
@@ -204,8 +204,8 @@ export class ActionId {
 		url.searchParams.set('rand', String(randomSuffixId || 0));
 		return url.toString();
 	}
-	static makeSpellUrl(id: number): string {
-		return wowheadEntityUrl('spell', id);
+	static makeSpellUrl(id: number, rank = 0): string {
+		return wowheadEntityUrl('spell', id, rank);
 	}
 	static async makeItemTooltipData(id: number, params?: Omit<WowheadTooltipItemParams, 'itemId'>) {
 		return buildWowheadTooltipDataset({ itemId: id, ...params });
@@ -809,7 +809,7 @@ export class ActionId {
 		if (actionId.itemId) {
 			return Database.getItemIconData(actionId.itemId);
 		}
-		return Database.getSpellIconData(actionId.spellId);
+		return Database.getSpellIconData(actionId.spellId, actionId.rank);
 	}
 
 	get spellIconOverride(): ActionId | null {
