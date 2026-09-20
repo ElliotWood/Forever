@@ -65,6 +65,16 @@ func syntheticBuffRows() []ResolvedBuff {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
+				Field: "frost_resistance_aura", Scope: buffmanifest.ScopeParty,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindResistance,
+				Go: "SynthFrostResistanceAura", Name: "Frost Resistance Aura",
+				Category: "FrostResistanceAura", SharedCategory: "PaladinAura", SingleAura: true,
+			},
+			SpellID: 19898, Supported: true, StatCategory: "ResistanceFrost",
+			Stats: []StatAmount{{Stat: stats.FrostResistance, Amount: 60}},
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
 				Field: "thunder_clap", Scope: buffmanifest.ScopeDebuff,
 				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindDebuffAtkSpeed,
 				Go: "SynthThunderClap", Name: "Thunder Clap", Category: "AtkSpdReduction",

@@ -75,6 +75,31 @@ func SynthDevotionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 	})
 }
 
+// Frost Resistance Aura - https://www.wowhead.com/forever/spell=19898
+var SynthFrostResistanceAuraCategory = "FrostResistanceAura"
+
+func SynthFrostResistanceAuraValue(talentPoints int32) float64 {
+	return 60.0
+}
+func SynthFrostResistanceAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func SynthFrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Frost Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 19898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       SynthFrostResistanceAuraDuration(talentPoints),
+		StatCategory:   "ResistanceFrost",
+		Category:       SynthFrostResistanceAuraCategory,
+		SharedCategory: "PaladinAura",
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Stats: []StatConfig{
+			{stats.FrostResistance, SynthFrostResistanceAuraValue(talentPoints), false},
+		},
+	})
+}
+
 // Innervates - https://www.wowhead.com/forever/spell=29166
 func SynthInnervatesDuration(talentPoints int32) time.Duration {
 	return 20000 * time.Millisecond
@@ -116,6 +141,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if party.DevotionAura != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(SynthDevotionAuraAura(&char.Unit, false, GetTristateValueInt32(party.DevotionAura, 0, 2)))
+	}
+	if party.FrostResistanceAura {
+		MakePermanent(SynthFrostResistanceAuraAura(&char.Unit, false, 0))
 	}
 	if individual.Innervates > 0 {
 		driveSynthInnervates(char, individual.Innervates)

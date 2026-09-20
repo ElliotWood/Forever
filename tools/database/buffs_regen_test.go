@@ -121,6 +121,11 @@ func TestResolvedBuffInvariants(t *testing.T) {
 		if want, pinned := pinnedTalentCurves[row.Field]; pinned && !slices.Equal(row.TalentCurve, want) {
 			t.Errorf("%s: talent curve is %v, want %v", row.Field, row.TalentCurve, want)
 		}
+		if want, pinned := pinnedCategories[row.Field]; pinned &&
+			(row.StatCategory != want[0] || row.Category != want[1]) {
+			t.Errorf("%s: competes under (%q, %q), want (%q, %q)",
+				row.Field, row.StatCategory, row.Category, want[0], want[1])
+		}
 	}
 }
 
@@ -131,6 +136,20 @@ func TestResolvedBuffInvariants(t *testing.T) {
 // number as a whole one, so ranks 1 and 2 both come out at 10 per tick.
 var pinnedTalentCurves = map[string][]float64{
 	"mana_spring_totem": {25, 25, 27, 27, 30, 30},
+}
+
+// What a resistance row competes under, as (stats, own aura). A source that has
+// no exclusivity beyond the school itself keeps no category of its own, which is
+// how every totem, Aspect of the Wild and Shadow Protection read; a paladin aura
+// also holds its own slot. Armor is not a school, so Devotion Aura has only the
+// slot. Nothing else can see this while every row renders as a shell.
+var pinnedCategories = map[string][2]string{
+	"frost_resistance_totem": {"ResistanceFrost", ""},
+	"aspect_of_the_wild":     {"ResistanceNature", ""},
+	"shadow_protection":      {"ResistanceShadow", ""},
+	"frost_resistance_aura":  {"ResistanceFrost", "FrostResistanceAura"},
+	"shadow_resistance_aura": {"ResistanceShadow", "ShadowResistanceAura"},
+	"devotion_aura":          {"", "DevotionAura"},
 }
 
 // The first differing line of each file with a little context, which is all a

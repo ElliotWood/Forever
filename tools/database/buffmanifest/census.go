@@ -223,19 +223,19 @@ var Manifest = []BuffSpec{
 	{
 		Field: "frost_resistance_aura", Number: 38, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "FrostResistanceAura", Name: "Frost Resistance Aura", Owner: proto.Class_ClassPaladin,
-		Category: "ResistanceFrost", SharedCategory: "PaladinAura", SingleAura: true,
+		Category: "FrostResistanceAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatFrostResistance},
 	},
 	{
 		Field: "fire_resistance_aura", Number: 42, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "FireResistanceAura", Name: "Fire Resistance Aura", Owner: proto.Class_ClassPaladin,
-		Category: "ResistanceFire", SharedCategory: "PaladinAura", SingleAura: true,
+		Category: "FireResistanceAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatFireResistance},
 	},
 	{
 		Field: "shadow_resistance_aura", Number: 43, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "ShadowResistanceAura", Name: "Shadow Resistance Aura", Owner: proto.Class_ClassPaladin,
-		Category: "ResistanceShadow", SharedCategory: "PaladinAura", SingleAura: true,
+		Category: "ShadowResistanceAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatShadowResistance},
 	},
 	{

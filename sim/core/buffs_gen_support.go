@@ -69,9 +69,13 @@ type GeneratedBuff struct {
 	Duration  time.Duration
 	MaxStacks int32
 
-	// Category is the exclusive category the buff competes in; SharedCategory is
-	// a second one it joins as a member without an effect of its own, which is
-	// how the paladin auras exclude each other across schools.
+	// Three separate roles. StatCategory is what the individual stats compete
+	// under, so that a paladin's resistance aura and a shaman's totem of the same
+	// school do not both apply. Category is the aura's own, which decides whether
+	// a second copy of this buff can sit next to it. SharedCategory is one it
+	// joins as a member without an effect of its own, which is how the paladin
+	// auras exclude each other across schools.
+	StatCategory   string
 	Category       string
 	SharedCategory string
 	SingleAura     bool
@@ -94,31 +98,53 @@ func newGeneratedStatAura(unit *Unit, config GeneratedBuff) *Aura {
 		BuildPhase: Ternary(config.ActionID.Tag == -1, CharacterBuildPhaseBuffs, CharacterBuildPhaseNone),
 	}
 
-	// A buff whose category holds one aura at a time competes as a whole, the way
-	// the paladin auras do, so it bids once for everything it applies. A buff
-	// that only excludes equal stats competes per stat instead.
 	perStack := generatedMagnitude(config)
-	single := config.Category != "" && config.SingleAura
 	var effect *ExclusiveEffect
-	if single {
+	if generatedHasCategoryEffect(config, false) {
 		attachGeneratedStackPricing(&auraConfig, config, &effect, perStack)
 	}
 
 	aura := unit.GetOrRegisterAura(auraConfig)
-
-	switch {
-	case single:
-		effect = registerGeneratedCategoryEffect(aura, config, perStack)
-	case config.Category != "":
-		registerExlusiveEffects(aura, config.Stats, config.Category)
-		attachGeneratedPseudoStats(aura, config)
-	default:
-		registerStatEffect(aura, config.Stats)
-		attachGeneratedPseudoStats(aura, config)
-	}
-
+	effect = registerGeneratedEffects(aura, config, perStack, false)
 	joinSharedCategory(aura, config)
 	return aura
+}
+
+// Where a buff's amounts are applied and what it bids for them.
+//
+// A buff that states a StatCategory competes stat by stat, the way every
+// hand-written resistance source does, and its own category is then only the
+// bid that decides whether a second copy may sit next to it. A buff whose
+// category holds one aura at a time competes as a whole instead, bidding once
+// for everything it applies, which is also what every debuff does. Anything
+// else applies its amounts outright.
+func registerGeneratedEffects(aura *Aura, config GeneratedBuff, perStack float64, bareWhenCategory bool) *ExclusiveEffect {
+	if config.StatCategory != "" {
+		registerExlusiveEffects(aura, config.Stats, config.StatCategory)
+		attachGeneratedPseudoStats(aura, config)
+		if config.Category == "" {
+			return nil
+		}
+		return aura.NewExclusiveEffect(config.Category, config.SingleAura, ExclusiveEffect{Priority: perStack})
+	}
+
+	if generatedHasCategoryEffect(config, bareWhenCategory) {
+		return registerGeneratedCategoryEffect(aura, config, perStack)
+	}
+
+	if config.Category != "" {
+		registerExlusiveEffects(aura, config.Stats, config.Category)
+	} else {
+		registerStatEffect(aura, config.Stats)
+	}
+	attachGeneratedPseudoStats(aura, config)
+	return nil
+}
+
+// Whether the aura will bid under its own category, which is what the stack
+// pricing re-prices.
+func generatedHasCategoryEffect(config GeneratedBuff, bareWhenCategory bool) bool {
+	return config.Category != "" && (bareWhenCategory || config.SingleAura || config.StatCategory != "")
 }
 
 // The aura a generated debuff registers on the target. Its exclusive effect
@@ -145,7 +171,7 @@ func newGeneratedDebuff(target *Unit, config GeneratedBuff) *Aura {
 	attachGeneratedStackPricing(&auraConfig, config, &effect, perStack)
 
 	aura := target.GetOrRegisterAura(auraConfig)
-	effect = registerGeneratedCategoryEffect(aura, config, perStack)
+	effect = registerGeneratedEffects(aura, config, perStack, true)
 	joinSharedCategory(aura, config)
 	return aura
 }
@@ -227,8 +253,6 @@ func newGeneratedDamageShield(unit *Unit, config GeneratedBuff, school SpellScho
 
 	// The shield has no stat to apply or remove: what the category decides is
 	// which aura keeps its proc trigger, so the damage is the whole bid.
-	// The shield has no stat to apply or remove: what the category decides is
-	// which aura keeps its proc trigger, so the damage is the whole bid.
 	if config.Category != "" {
 		aura.NewExclusiveEffect(config.Category, config.SingleAura, ExclusiveEffect{Priority: damage})
 	}
@@ -302,10 +326,13 @@ func generatedStackFactor(effect *ExclusiveEffect, perStack float64) float64 {
 func applyGeneratedAmounts(unit *Unit, sim *Simulation, config GeneratedBuff, multipliers []*stats.StatDependency, factor float64) {
 	for i, statConfig := range config.Stats {
 		if multipliers[i] != nil {
+			// The build-phase variants, because a buff applied during
+			// applyBuildPhaseAuras must not recompute the unit's stats yet; they
+			// delegate to the dynamic ones outside it.
 			if factor > 0 {
-				unit.EnableDynamicStatDep(sim, multipliers[i])
+				unit.EnableBuildPhaseStatDep(sim, multipliers[i])
 			} else {
-				unit.DisableDynamicStatDep(sim, multipliers[i])
+				unit.DisableBuildPhaseStatDep(sim, multipliers[i])
 			}
 			continue
 		}
@@ -332,13 +359,19 @@ func applyGeneratedMultiplier(field *float64, amount float64, factor float64) {
 	}
 }
 
-// The pseudo-stats a generated buff modifies. With a category they compete in
-// it per field, the way registerExlusiveEffects does for stats, so that two
-// buffs modifying the same field do not both apply.
+// The pseudo-stats a generated buff modifies. Under a category each config
+// registers one effect that walks every field it names - a damage-taken debuff
+// names one per school - so that two buffs modifying the same fields do not both
+// apply, while the fields of one buff always move together.
 func attachGeneratedPseudoStats(aura *Aura, config GeneratedBuff) {
+	category := config.Category
+	if config.StatCategory != "" {
+		category = config.StatCategory
+	}
+
 	for _, pseudoConfig := range config.Pseudo {
 		fields := generatedPseudoStatFields(aura.Unit, pseudoConfig)
-		if config.Category == "" {
+		if category == "" {
 			for _, field := range fields {
 				if pseudoConfig.IsMultiplicative {
 					aura.AttachMultiplicativePseudoStatBuff(field, pseudoConfig.Amount)
@@ -358,7 +391,7 @@ func attachGeneratedPseudoStats(aura *Aura, config GeneratedBuff) {
 		}
 		amount := pseudoConfig.Amount
 		multiplicative := pseudoConfig.IsMultiplicative
-		aura.NewExclusiveEffect(config.Category+pseudoConfig.Kind.Name()+suffix, false, ExclusiveEffect{
+		aura.NewExclusiveEffect(category+pseudoConfig.Kind.Name()+suffix, false, ExclusiveEffect{
 			Priority: generatedMagnitude(GeneratedBuff{Pseudo: []PseudoConfig{pseudoConfig}}),
 			OnGain: func(_ *ExclusiveEffect, _ *Simulation) {
 				for _, field := range fields {

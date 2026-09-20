@@ -86,3 +86,95 @@ func TestGeneratedPseudoStatsCoverEverySchool(t *testing.T) {
 		t.Errorf("physical damage taken is %v, want the mask to have left it alone", got)
 	}
 }
+
+// A resistance aura competes for the school with every other source of it, and
+// separately for its own slot, so the two roles cannot be the same category.
+func TestGeneratedResistanceAuraCompetesForTheSchool(t *testing.T) {
+	sim := &Simulation{}
+	target := newExclusiveTestTarget()
+	// Enough of an environment for a stat change: the exclusive effects apply
+	// theirs for real, which is what the competition is about.
+	target.Env = &Environment{MeasuringStats: true}
+
+	generated := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+		Label:        "Generated Frost Resistance Aura",
+		ActionID:     ActionID{SpellID: 19898},
+		Duration:     NeverExpires,
+		StatCategory: ResistanceCategoryFrost,
+		Category:     FrostResistanceAuraCategory,
+		SingleAura:   true,
+		IsPlayer:     true,
+		Stats:        []StatConfig{{stats.FrostResistance, 60, false}},
+	}))
+
+	weaker := target.GetOrRegisterAura(Aura{
+		Label:    "Frost Resistance Totem",
+		ActionID: ActionID{SpellID: 10477},
+		Duration: NeverExpires,
+	})
+	makeExclusiveFlatStatBuff(weaker, stats.FrostResistance, 30, ResistanceCategoryFrost)
+
+	weaker.Activate(sim)
+	if got := target.stats[stats.FrostResistance]; got != 30 {
+		t.Fatalf("the weaker source applied %v frost resistance, want 30", got)
+	}
+
+	generated.Activate(sim)
+	if got := target.stats[stats.FrostResistance]; got != 60 {
+		t.Errorf("both sources applied %v frost resistance, want only the stronger 60", got)
+	}
+
+	school := target.ExclusiveEffectManager.GetExclusiveEffectCategory(
+		ResistanceCategoryFrost + stats.FrostResistance.StatName() + "Add")
+	if school.SingleAura {
+		t.Error("the school category turned single-aura, which would push the other sources' auras off")
+	}
+	if len(school.effects) != 2 {
+		t.Errorf("the school category holds %d effects, want the generated aura and the totem", len(school.effects))
+	}
+
+	own := target.ExclusiveEffectManager.GetExclusiveEffectCategory(FrostResistanceAuraCategory)
+	if !own.SingleAura {
+		t.Error("the aura's own category is not single-aura, so a second copy could sit next to it")
+	}
+	if !weaker.IsActive() {
+		t.Error("the totem's aura was deactivated, which only the aura's own category may do")
+	}
+}
+
+// The branch a buff with a category but no SingleAura takes: the pseudo-stats
+// are registered by attachGeneratedPseudoStats rather than folded into one
+// category-wide effect.
+func TestGeneratedBuffPseudoStatsCoverEveryField(t *testing.T) {
+	sim := &Simulation{}
+	target := newExclusiveTestTarget()
+	target.PseudoStats = stats.NewPseudoStats()
+
+	aura := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+		Label:    "Generated School Shield",
+		ActionID: ActionID{SpellID: 1311680},
+		Duration: NeverExpires,
+		Category: "GeneratedSchoolShield",
+		Pseudo: []PseudoConfig{{
+			Kind: PseudoStatSchoolDamageTakenMultiplier, Amount: 1.1,
+			IsMultiplicative: true, SchoolMask: 126,
+		}},
+	}))
+
+	aura.Activate(sim)
+
+	for _, school := range generatedSchoolIndexes(126) {
+		if got := target.PseudoStats.SchoolDamageTakenMultiplier[school]; got != 1.1 {
+			t.Errorf("school %d takes %v times the damage, want 1.1", school, got)
+		}
+	}
+	if got := target.PseudoStats.SchoolDamageTakenMultiplier[generatedSchoolIndexes(1)[0]]; got != 1 {
+		t.Errorf("physical damage taken is %v, want the mask to have left it alone", got)
+	}
+
+	category := target.ExclusiveEffectManager.GetExclusiveEffectCategory(
+		"GeneratedSchoolShield" + PseudoStatSchoolDamageTakenMultiplier.Name() + "Mul")
+	if len(category.effects) != 1 {
+		t.Errorf("the pseudo-stat category holds %d effects, want one covering every school", len(category.effects))
+	}
+}
