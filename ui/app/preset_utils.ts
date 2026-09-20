@@ -129,16 +129,6 @@ export const makePresetEpWeightsFromJSON = (json: PresetEpWeightsJson, options?:
 	return makePresetEpWeights(json.name, Stats.fromMap(statsMap, pseudoStatsMap), options);
 };
 
-// JSON shape for presets/talents/*.talents.json. TBC's SavedTalents is a single per-tree talent
-// string — there are no glyphs anywhere in the proto, so there is nothing else to resolve.
-export type PresetTalentsJson = {
-	name: string;
-	talentsString?: string;
-};
-
-export const makePresetTalentsFromJSON = (json: PresetTalentsJson, options?: PresetTalentsOptions): PresetTalents =>
-	makePresetTalents(json.name, SavedTalents.create({ talentsString: json.talentsString }), options);
-
 export const makePresetAPLRotation = (name: string, rotationJson: any, options?: PresetRotationOptions): PresetRotation => {
 	const rotation = SavedRotation.create({
 		rotation: APLRotation.fromJson(rotationJson),

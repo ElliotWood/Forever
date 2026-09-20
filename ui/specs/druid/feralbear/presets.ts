@@ -19,10 +19,6 @@ import DefaultApl from './apls/default.apl.json';
 export const ROTATION_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.SpecFeralBearDruid, DefaultSimpleRotation);
 export const ROTATION_DEFAULT = PresetUtils.makePresetAPLRotation('APL', DefaultApl);
 
-// Default talents — Standard feral bear TBC build.
-
-// Alternative talents focused on Demoralizing Roar uptime.
-
 export const DefaultOptions = DruidOptions.create({
 	startingRage: 0,
 });

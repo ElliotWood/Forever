@@ -3118,23 +3118,10 @@
 				},
 				"points_remaining": {
 					"type": "string"
-				},
-				"carousel": {
-					"type": "object",
-					"properties": {
-						"previous": {
-							"type": "string"
-						},
-						"next": {
-							"type": "string"
-						}
-					},
-					"additionalProperties": false,
-					"required": ["previous", "next"]
 				}
 			},
 			"additionalProperties": false,
-			"required": ["title", "copy_button", "reset_button", "saved_talents", "points_remaining", "carousel"]
+			"required": ["title", "copy_button", "reset_button", "saved_talents", "points_remaining"]
 		},
 		"bulk_tab": {
 			"type": "object",

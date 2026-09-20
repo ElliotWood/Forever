@@ -7,8 +7,6 @@ import DefaultApl from './apls/default.apl.json';
 
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
-// https://wowhead.com/forever/talent-calc and copy the numbers in the url.
-
 export const DefaultOptions = ElementalShamanOptions.create({
 	classOptions: {
 		shieldProcrate: 0,

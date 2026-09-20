@@ -18,7 +18,7 @@ import type { TalentGraph } from './tree_graph';
 // A character earns one talent point per level from 10 onwards, so the cap follows
 // CHARACTER_LEVEL: 51 at level 60.
 export const MAX_POINTS_PLAYER = CHARACTER_LEVEL - 9;
-export const POINTS_PER_ROW = 5;
+const POINTS_PER_ROW = 5;
 
 export const canSetPoints = <TalentsProto>(
 	config: TalentsConfig<TalentsProto>,
