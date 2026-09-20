@@ -1,66 +1,111 @@
 #!/usr/bin/python
 
 import csv
+import os
+import sqlite3
 
-# Generates go/ts baes stats files from assets/db_inputs/basestats
+# Generates sim/core/base_stats_auto_gen.go from the extracted client data.
+#
+# Two sources, both produced by `make db` from the Forever beta client:
+#
+#   tools/database/wowsims.db     PlayerExpectedStat -- base mana and the
+#                                 crit-per-agility / crit-per-intellect slopes
+#   assets/db_inputs/basestats/   the CombatRatings gametable, plus the two
+#                                 base-crit tables described below
+#
+# The per-level crit slope tables (chancetomeleecrit / chancetospellcrit) and
+# octbasempbyclass used to supply the first three quantities, but the beta
+# client does not ship those gametables -- PlayerExpectedStat replaced them,
+# and it disagrees: Forever retuned crit-per-agility for seven of the nine
+# classes (hunter 0.0189 where the old tables said 0.0301).
 
 BASE_DIR = ""
 
 DIR_PATH = "assets/db_inputs/basestats/"
 OUTPUT_PATH = "sim/core/"
+DB_PATH = "tools/database/wowsims.db"
 
-BASE_MP = "octbasempbyclass.txt"
-MELEE_CRIT = "chancetomeleecrit.txt"
+# The beta does not ship the two base-crit gametables either, so these stay
+# checked in by hand. Their values are the flat per-class crit a character has
+# before any agility/intellect contribution, and nothing here can confirm them
+# for Forever. What is known: they are unchanged from the TBC sim, the MoP-era
+# extraction they came from carries them verbatim, and the placeholder 0.2 in
+# its Death Knight and Monk columns shows that table was inherited rather than
+# refitted. wowsims' vanilla sim independently carries per-class base crit in
+# the same range -- its spell column agrees within about a tenth of a percent
+# for most classes (hunter 3.6 against 3.602, warlock 1.7 exactly), though its
+# melee column differs, notably a 0 where this table has warrior 1.14.
 MELEE_CRIT_BASE = "chancetomeleecritbase.txt"
-SPELL_CRIT = "chancetospellcrit.txt"
 SPELL_CRIT_BASE = "chancetospellcritbase.txt"
 COMBAT_RATINGS = "combatratings.txt"
-RATING_SCALAR = "octclasscombatratingscalar.txt"
 
+# Must track core.CharacterLevel (sim/core/constants.go).
 BASE_LEVEL = 60
 
-Offs = {
-    "Warrior": 0,
-    "Paladin": 1,
-    "Hunter": 2,
-    "Rogue": 3,
-    "Priest": 4,
-    "Shaman": 6,
-    "Mage": 7,
-    "Warlock": 8,
-    "Druid": 10,
+# ChrClasses.ID -> the proto.Class suffix. Hardcoded rather than read from the
+# client so the generated identifiers cannot silently follow a renumbering.
+CLASS_IDS = {
+    1: "Warrior",
+    2: "Paladin",
+    3: "Hunter",
+    4: "Rogue",
+    5: "Priest",
+    7: "Shaman",
+    8: "Mage",
+    9: "Warlock",
+    11: "Druid",
 }
 
-#Warrior	Paladin	Hunter	Rogue	Priest	Shaman	Mage	Warlock	Druid
-def GenIndexedDb(file : str):
+CLASSES = ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"]
+
+
+# Returns {row key: {column name: value}}. Indexing by header name rather than
+# by position survives the column order changes the client makes between
+# expansions -- the beta's SpellScaling grew Evoker/Adventurer/Traveler columns.
+def GenNameIndexedDb(file: str):
     db = {}
     with open(file) as tsv:
-        first = True
-        for line in csv.reader(tsv, delimiter="\t"):
-            if first:
-                first = False
-                continue
-            db[line[0]] = line[1:]
+        rows = list(csv.reader(tsv, delimiter="\t"))
+    header = rows[0]
+    for row in rows[1:]:
+        db[row[0]] = dict(zip(header[1:], row[1:]))
     return db
 
-def GenRowIndexedDb(file : str):
-    db = {}
-    with open(file) as tsv:
-        first = True
-        for col in zip(*[line for line in csv.reader(tsv, delimiter='\t')]):
-            if first:
-                first = False
-                continue
-            db[col[0]] = list(col[1:])
-    return db
+
+def GenExpectedStats(dbPath: str, level: int):
+    conn = sqlite3.connect(dbPath)
+    rows = conn.execute(
+        """SELECT ClassID, BaseMana, CritPerAgility, SpellCritPerIntellect
+           FROM PlayerExpectedStat WHERE Level = ? AND ContentSetID = 0""",
+        (level,),
+    ).fetchall()
+    conn.close()
+
+    stats = {}
+    for classID, baseMana, critPerAgi, critPerInt in rows:
+        if classID not in CLASS_IDS:
+            continue
+        stats[CLASS_IDS[classID]] = {
+            "Mana": baseMana,
+            # The client stores these as a fraction per point (0.0005 = one
+            # percent per 20 agility); the sim's stat dependencies are in
+            # percent per point.
+            "CritPerAgi": critPerAgi * 100,
+            "CritPerInt": critPerInt * 100,
+        }
+
+    missing = [c for c in CLASSES if c not in stats]
+    if missing:
+        raise SystemExit(f"PlayerExpectedStat has no level {level} row for: {', '.join(missing)}")
+    return stats
+
 
 class ClassStats:
-    BaseMp : dict
-    MCrit : dict
-    SCrit : dict
-    MCritBase : dict
-    SCritBase : dict
-    CombatRatings : dict
+    Expected: dict
+    MCritBase: dict
+    SCritBase: dict
+    CombatRatings: dict
+
 
 def GenExtraStatsGoFile(cs: ClassStats):
     header = '''
@@ -76,50 +121,43 @@ import (
 )
 
 '''
-# weapon skill	defense skill	dodge	parry	block	hit melee	hit ranged		hit spell	crit melee		crit ranged		crit spell		hit taken melee		hit taken ranged	hit taken spell		crit taken melee	crit taken ranged	crit taken spell	haste melee		haste ranged	haste spell
     output = header
-    output += f"const ExpertisePerQuarterPercentReduction = {float(cs.CombatRatings['weapon skill'][BASE_LEVEL-1])}\n"
-    output += f"const DefenseRatingPerDefenseLevel = {cs.CombatRatings['defense skill'][BASE_LEVEL-1]}\n"
-    output += f"const DodgeRatingPerDodgePercent = {cs.CombatRatings['dodge'][BASE_LEVEL-1]}\n"
-    output += f"const ParryRatingPerParryPercent = {cs.CombatRatings['parry'][BASE_LEVEL-1]}\n"
-    output += f"const BlockRatingPerBlockPercent = {cs.CombatRatings['block'][BASE_LEVEL-1]}\n"
-    output += f"const PhysicalHitRatingPerHitPercent = {cs.CombatRatings['hit melee'][BASE_LEVEL-1]}\n"
-    output += f"const SpellHitRatingPerHitPercent = {cs.CombatRatings['hit spell'][BASE_LEVEL-1]}\n"
-    output += f"const PhysicalCritRatingPerCritPercent = {cs.CombatRatings['crit melee'][BASE_LEVEL-1]}\n"
-    output += f"const SpellCritRatingPerCritPercent = {cs.CombatRatings['crit spell'][BASE_LEVEL-1]}\n"
-    output += f"const PhysicalHasteRatingPerHastePercent = {cs.CombatRatings['haste melee'][BASE_LEVEL-1]}\n"
-    output += f"const SpellHasteRatingPerHastePercent = {cs.CombatRatings['haste spell'][BASE_LEVEL-1]}\n"
+    ratings = cs.CombatRatings[str(BASE_LEVEL)]
+
+    # The gametable gives expertise rating per whole percent; the sim counts
+    # expertise in quarter percents (see spell_result.go's
+    # math.Floor(rating/ExpertisePerQuarterPercentReduction)/400).
+    output += f"const ExpertisePerQuarterPercentReduction = {float(ratings['Expertise']) / 4}\n"
+    output += f"const DefenseRatingPerDefenseLevel = {float(ratings['Defense Skill']):f}\n"
+    output += f"const DodgeRatingPerDodgePercent = {float(ratings['Dodge']):f}\n"
+    output += f"const ParryRatingPerParryPercent = {float(ratings['Parry']):f}\n"
+    output += f"const BlockRatingPerBlockPercent = {float(ratings['Block']):f}\n"
+    output += f"const PhysicalHitRatingPerHitPercent = {float(ratings['Hit - Melee']):f}\n"
+    output += f"const SpellHitRatingPerHitPercent = {float(ratings['Hit - Spell']):f}\n"
+    output += f"const PhysicalCritRatingPerCritPercent = {float(ratings['Crit - Melee']):f}\n"
+    output += f"const SpellCritRatingPerCritPercent = {float(ratings['Crit - Spell']):f}\n"
+    output += f"const PhysicalHasteRatingPerHastePercent = {float(ratings['Haste - Melee']):f}\n"
+    output += f"const SpellHasteRatingPerHastePercent = {float(ratings['Haste - Spell']):f}\n"
 
     output += '''var CritPerAgiMaxLevel = map[proto.Class]float64{
 proto.Class_ClassUnknown: 0.0,'''
-    for c in ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"]:
-        cName = c.split()
-        cName = ''.join(cName)
-        mc = float(cs.MCrit[str(BASE_LEVEL)][Offs[c]])*100
-        output += f"\nproto.Class_Class{cName}: {mc:.8f},"
+    for c in CLASSES:
+        output += f"\nproto.Class_Class{c}: {cs.Expected[c]['CritPerAgi']:.8f},"
     output += "\n}\n"
 
     output += '''var CritPerIntMaxLevel = map[proto.Class]float64{
 proto.Class_ClassUnknown: 0.0,'''
-    for c in ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"]:
-        cName = c.split()
-        cName = ''.join(cName)
-        mc = float(cs.SCrit[str(BASE_LEVEL)][Offs[c]])*100
-        output += f"\nproto.Class_Class{cName}: {mc:.8f},"
+    for c in CLASSES:
+        output += f"\nproto.Class_Class{c}: {cs.Expected[c]['CritPerInt']:.8f},"
     output += "\n}\n"
 
     output += '''var ExtraClassBaseStats = map[proto.Class]stats.Stats{
 proto.Class_ClassUnknown: {},'''
-    for c in ["Warrior", "Paladin", "Hunter", "Rogue", "Priest", "Shaman", "Mage", "Warlock", "Druid"]:
-        cName = c.split()
-        cName = ''.join(cName)
-        output += f"\nproto.Class_Class{cName}: {{"
-        mp = float(cs.BaseMp[str(BASE_LEVEL)][Offs[c]])
-        scb = float(cs.SCritBase["1"][Offs[c]])*100
-        mcb = float(cs.MCritBase["1"][Offs[c]])*100
-        output += f"\n stats.Mana: {mp:.4f},"
-        output += f"\n stats.SpellCritPercent: {scb:.4f},"
-        output += f"\n stats.PhysicalCritPercent: {mcb:.4f},"
+    for c in CLASSES:
+        output += f"\nproto.Class_Class{c}: {{"
+        output += f"\n stats.Mana: {float(cs.Expected[c]['Mana']):.4f},"
+        output += f"\n stats.SpellCritPercent: {float(cs.SCritBase['1'][c]) * 100:.4f},"
+        output += f"\n stats.PhysicalCritPercent: {float(cs.MCritBase['1'][c]) * 100:.4f},"
         output += "\n},"
     output += "\n}\n"
     return output
@@ -127,12 +165,10 @@ proto.Class_ClassUnknown: {},'''
 
 if __name__ == "__main__":
     args = ClassStats()
-    args.BaseMp = GenIndexedDb(BASE_DIR + DIR_PATH + BASE_MP)
-    args.MCrit = GenIndexedDb(BASE_DIR + DIR_PATH + MELEE_CRIT)
-    args.SCrit = GenIndexedDb(BASE_DIR + DIR_PATH + SPELL_CRIT)
-    args.MCritBase = GenIndexedDb(BASE_DIR + DIR_PATH + MELEE_CRIT_BASE)
-    args.SCritBase = GenIndexedDb(BASE_DIR + DIR_PATH + SPELL_CRIT_BASE)
-    args.CombatRatings = GenRowIndexedDb(BASE_DIR + DIR_PATH + COMBAT_RATINGS)
+    args.Expected = GenExpectedStats(BASE_DIR + DB_PATH, BASE_LEVEL)
+    args.MCritBase = GenNameIndexedDb(BASE_DIR + DIR_PATH + MELEE_CRIT_BASE)
+    args.SCritBase = GenNameIndexedDb(BASE_DIR + DIR_PATH + SPELL_CRIT_BASE)
+    args.CombatRatings = GenNameIndexedDb(BASE_DIR + DIR_PATH + COMBAT_RATINGS)
 
     output = GenExtraStatsGoFile(args)
     fname = BASE_DIR + OUTPUT_PATH + "base_stats_auto_gen.go"
@@ -140,3 +176,4 @@ if __name__ == "__main__":
     f = open(fname, "w")
     f.write(output)
     f.close()
+    os.system(f"gofmt -w {fname}")
