@@ -2,7 +2,6 @@ package database
 
 import (
 	"cmp"
-	"encoding/json"
 	"fmt"
 	"os"
 	"slices"
@@ -272,27 +271,6 @@ func generateTalentJson(tabs []TalentTabConfig, className string) error {
 	return nil
 }
 
-// A talent's SpellRank is the client's rank chain. In Forever every entry is the same
-// trait spell -- the per-rank values come from its curve -- so only the chain's length
-// carries information, as the talent's max points.
-func talentSpellAndMaxPoints(rt RawTalent) (int, int, error) {
-	var spellIds []int
-	if err := json.Unmarshal([]byte(rt.SpellRank), &spellIds); err != nil {
-		return 0, 0, fmt.Errorf("parsing SpellRank for talent %s: %w", rt.TalentName, err)
-	}
-
-	ranks := []int{}
-	for _, id := range spellIds {
-		if id != 0 {
-			ranks = append(ranks, id)
-		}
-	}
-	if len(ranks) == 0 {
-		return 0, 0, fmt.Errorf("talent %s has no spell ranks", rt.TalentName)
-	}
-	return ranks[0], len(ranks), nil
-}
-
 func transformRawTalentsToTab(rawTalents []RawTalent) ([]TalentTabConfig, error) {
 	tabsMap := make(map[string]*TalentTabConfig)
 	for _, rt := range rawTalents {
@@ -306,11 +284,6 @@ func transformRawTalentsToTab(rawTalents []RawTalent) ([]TalentTabConfig, error)
 			tabsMap[rt.TabName] = tab
 		}
 
-		spellID, maxPoints, err := talentSpellAndMaxPoints(rt)
-		if err != nil {
-			return nil, err
-		}
-
 		fieldName := strings.ToLower(rt.TalentName[:1]) + rt.TalentName[1:]
 		talent := TalentConfig{
 			FieldName: fieldName,
@@ -319,9 +292,9 @@ func transformRawTalentsToTab(rawTalents []RawTalent) ([]TalentTabConfig, error)
 				RowIdx: rt.TierID,
 				ColIdx: rt.ColumnIndex,
 			},
-			SpellID:      spellID,
+			SpellID:      rt.SpellID,
 			DefinitionID: rt.DefinitionID,
-			MaxPoints:    maxPoints,
+			MaxPoints:    rt.MaxRanks,
 		}
 
 		if (rt.PrereqRow.Valid && rt.PrereqRow.Int64 != 0) || (rt.PrereqCol.Valid && rt.PrereqCol.Int64 != 0) {
@@ -364,11 +337,6 @@ func transformRawTalentsToConfigsForClass(rawTalents []RawTalent, classID int) (
 
 		converted := convertTalentClassID(classID)
 		if converted == rt.ClassMask {
-			spellID, maxPoints, err := talentSpellAndMaxPoints(rt)
-			if err != nil {
-				return nil, err
-			}
-
 			fieldName := strings.ToLower(rt.TalentName[:1]) + rt.TalentName[1:]
 			talent := TalentConfig{
 				FieldName: fieldName,
@@ -378,8 +346,8 @@ func transformRawTalentsToConfigsForClass(rawTalents []RawTalent, classID int) (
 					ColIdx: rt.ColumnIndex,
 				},
 				DefinitionID: rt.DefinitionID,
-				SpellID:      spellID,
-				MaxPoints:    maxPoints,
+				SpellID:      rt.SpellID,
+				MaxPoints:    rt.MaxRanks,
 			}
 
 			if (rt.PrereqRow.Valid && rt.PrereqRow.Int64 != 0) || (rt.PrereqCol.Valid && rt.PrereqCol.Int64 != 0) {

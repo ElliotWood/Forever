@@ -570,18 +570,6 @@ func simmableEnchantFilter(key database.EnchantDBKey, enchant *proto.UIEnchant) 
 	return true
 }
 
-type TalentConfig struct {
-	FieldName string `json:"fieldName"`
-	SpellID   int32  `json:"spellId"`
-	MaxPoints int32  `json:"maxPoints"`
-}
-
-type TalentTreeConfig struct {
-	Name          string         `json:"name"`
-	BackgroundUrl string         `json:"backgroundUrl"`
-	Talents       []TalentConfig `json:"talents"`
-}
-
 func getSpellIdsFromTalentJson(infile *string) []int32 {
 	data, err := os.ReadFile(*infile)
 
@@ -596,7 +584,7 @@ func getSpellIdsFromTalentJson(infile *string) []int32 {
 		log.Fatalf("failed to compact json: %s", err)
 	}
 
-	var talents []TalentTreeConfig
+	var talents []database.TalentTabConfig
 
 	err = json.Unmarshal(buf.Bytes(), &talents)
 	if err != nil {
@@ -606,7 +594,7 @@ func getSpellIdsFromTalentJson(infile *string) []int32 {
 
 	for _, tree := range talents {
 		for _, talent := range tree.Talents {
-			spellIds = append(spellIds, talent.SpellID)
+			spellIds = append(spellIds, int32(talent.SpellID))
 		}
 	}
 	return spellIds

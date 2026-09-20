@@ -1068,6 +1068,8 @@ type RawTalent struct {
 	TalentName     string
 	ColumnIndex    int
 	ClassMask      int
+	SpellID        int
+	MaxRanks       int
 	SpellRank      string
 	PrereqRank     string
 	PrereqTalent   string
@@ -1363,18 +1365,6 @@ func abs(value int) int {
 	return value
 }
 
-// A trait talent is one spell whose per-rank values come from its curve, so every rank
-// reports the same id and Wowhead takes the rank as ?rank=N on it. The legacy
-// Talent.SpellRank chain is not a source for this: 232 of the 235 talents it covers list
-// ids the client does not ship.
-func traitRankSpellIDs(spellID, maxRanks int) []int {
-	ranks := make([]int, maxRanks)
-	for i := range ranks {
-		ranks[i] = spellID
-	}
-	return ranks
-}
-
 // LoadTraitTalents reads the class trees out of the Trait* tables and returns
 // them as RawTalent rows, so the proto/json generators keep working unchanged.
 func LoadTraitTalents(dbHelper *DBHelper) ([]RawTalent, error) {
@@ -1436,7 +1426,11 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 		nodeSkills[s.NodeID] = append(nodeSkills[s.NodeID], s.Name)
 	}
 
-	edges, err := LoadRows(dbHelper.db, `SELECT LeftTraitNodeID, RightTraitNodeID FROM TraitEdge ORDER BY RightTraitNodeID, LeftTraitNodeID`,
+	// TraitEdge.Type is the client's gating kind: 2 makes the left node sufficient for the right,
+	// 3 makes it required, and 0 only draws a line. Reading every row as a prerequisite turned
+	// those drawn-only links into hard gates -- six node pairs carry one in each direction, and two
+	// nodes cannot each gate the other.
+	edges, err := LoadRows(dbHelper.db, `SELECT LeftTraitNodeID, RightTraitNodeID FROM TraitEdge WHERE Type IN (2, 3) ORDER BY RightTraitNodeID, LeftTraitNodeID`,
 		func(rows *sql.Rows) (traitEdge, error) {
 			var e traitEdge
 			err := rows.Scan(&e.LeftNodeID, &e.RightNodeID)
@@ -1489,10 +1483,9 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 		fmt.Fprintf(os.Stderr, "[traits] dropped %d extra choice-node entries (kept the lowest Index)\n", choiceDiscards)
 	}
 
-	// Ten node pairs carry an edge in both directions, which read naively make each node the
-	// other's prerequisite -- a cycle leaving both unreachable. Keep the half whose left node
-	// sits higher, as the client's single arrow does. Every reversed edge in the beta data is
-	// one half of such a pair, so an unpaired edge is never dropped.
+	// Three pairs are joined by a sufficient edge in each direction, which the single-parent model
+	// below reads as each node requiring the other -- a cycle leaving both unreachable. Collapse
+	// such a pair onto the half that runs down the tree.
 	hasEdge := map[[2]int]bool{}
 	for _, e := range edges {
 		hasEdge[[2]int{e.LeftNodeID, e.RightNodeID}] = true
@@ -1674,9 +1667,8 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 
 		for _, node := range kept {
 			pos := positions[node.NodeID]
-			spellIDs, err := json.Marshal(traitRankSpellIDs(node.SpellID, node.MaxRanks))
-			if err != nil {
-				return nil, fmt.Errorf("encoding rank spells for trait node %d: %w", node.NodeID, err)
+			if node.SpellID == 0 {
+				return nil, fmt.Errorf("trait node %d (%s) has no spell", node.NodeID, node.Name)
 			}
 			talent := RawTalent{
 				DefinitionID:   node.DefID,
@@ -1684,7 +1676,8 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 				TalentName:     node.Name,
 				ColumnIndex:    pos.Col,
 				ClassMask:      classMask,
-				SpellRank:      string(spellIDs),
+				SpellID:        node.SpellID,
+				MaxRanks:       node.MaxRanks,
 				TabName:        tabDisplayName(tabLabel, classMask, pos.TabIdx, tabNames[pos.TabIdx]),
 				BackgroundFile: strconv.Itoa(tabBackground[[2]int{classMask, pos.TabIdx}]),
 			}
