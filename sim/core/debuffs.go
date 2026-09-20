@@ -24,24 +24,6 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		ApplyFixedUptimeAura(aura, debuffs.ExposeWeaknessUptime, aura.Duration, 1)
 	}
 
-	if debuffs.ImprovedScorch {
-		aura := MakePermanent(ImprovedScorchAura(target))
-
-		ScheduledAura(aura, PeriodicActionOptions{
-			Period:          time.Millisecond * 1200,
-			NumTicks:        5,
-			TickImmediately: true,
-			Priority:        ActionPriorityDOT, // High prio so it comes before actual warrior sunders.
-			OnAction: func(sim *Simulation) {
-				aura.Activate(sim)
-				if aura.IsActive() {
-					aura.AddStack(sim)
-				}
-			},
-		})
-
-	}
-
 	if debuffs.ImprovedSealOfTheCrusader {
 		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, 0, 0.0, Ternary(debuffs.JocRetribution_2Pt4, 1.15, 1.0)))
 	}
@@ -135,33 +117,6 @@ func ExposeWeaknessAura(target *Unit, agilityFunc ExposeWeaknessAgiFunc) *Aura {
 
 	return aura
 
-}
-
-func ImprovedScorchAura(target *Unit) *Aura {
-	fireBonus := 0.03
-	var effect *ExclusiveEffect
-
-	aura := target.GetOrRegisterAura(Aura{
-		Label:     "Improved Scorch",
-		ActionID:  ActionID{SpellID: 12873},
-		Duration:  time.Second * 30,
-		MaxStacks: 5,
-		OnStacksChange: func(aura *Aura, sim *Simulation, oldStacks int32, newStacks int32) {
-			effect.SetPriority(sim, 1.0+fireBonus*float64(newStacks))
-		},
-	})
-
-	effect = aura.NewExclusiveEffect("ImprovedScorch", false, ExclusiveEffect{
-		Priority: 1,
-		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			target.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexFire] *= ee.Priority
-		},
-		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			target.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexFire] /= ee.Priority
-		},
-	})
-
-	return aura
 }
 
 // points is number of talent points in improved seal of the crusader
