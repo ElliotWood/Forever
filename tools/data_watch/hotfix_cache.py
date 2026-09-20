@@ -77,7 +77,7 @@ def table_names():
 
 
 def read(path):
-	"""Every record in the cache, as (tableHash, recordID, dataSize, status)."""
+	"""Every record in the cache, as (tableHash, recordID, dataSize, status, data)."""
 	blob = open(path, 'rb').read()
 	if blob[:4] != b'XFTH':
 		sys.exit(f'{path} is not a hotfix cache (magic {blob[:4]!r})')
@@ -88,7 +88,7 @@ def read(path):
 		_region, _push, _uid, table_hash, record_id, size = struct.unpack_from('<iiIIiI', blob, off + 4)
 		status = blob[off + 28]
 		off += 32
-		out.append((table_hash, record_id, size, status))
+		out.append((table_hash, record_id, size, status, blob[off:off + size]))
 		off += size
 	return version, build, out
 
@@ -156,7 +156,7 @@ def main():
 				pass
 
 	by_table = collections.defaultdict(list)
-	for table_hash, record_id, size, _status in carrying:
+	for table_hash, record_id, size, _status, _data in carrying:
 		by_table[table_hash].append((record_id, size))
 
 	names = table_names()

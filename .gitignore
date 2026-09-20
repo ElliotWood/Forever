@@ -60,3 +60,4 @@ tools/data_watch/.cache/
 infra/cloudflare/**/.wrangler/
 arena-out/
 tools/data_watch/dbd_manifest.json
+tools/data_watch/dbd_cache/
