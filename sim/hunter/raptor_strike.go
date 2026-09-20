@@ -1,61 +1,15 @@
 package hunter
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
-var raptorStrikeRank = spellData.RaptorStrike.BySpellID(27014)
-
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (hunter *Hunter) registerRaptorStrikeSpell() {
-	hunter.RaptorStrike = hunter.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: raptorStrikeRank.SpellID},
-		SpellSchool:    raptorStrikeRank.SpellSchool,
-		DefenseType:    raptorStrikeRank.DefenseType,
-		ClassSpellMask: HunterSpellRaptorStrike,
-		ProcMask:       core.ProcMaskMeleeMH,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
-
-		MaxRange: core.MaxMeleeRange,
-
-		ManaCost: core.ManaCostOptions{
-			FlatCost: raptorStrikeRank.Cost,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-			CD: core.Cooldown{
-				Timer:    hunter.NewTimer(),
-				Duration: raptorStrikeRank.Cooldown,
-			},
-		},
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			// Emit an "auto delayed" log line whenever the mh auto fired
-			// later than it would have in an uncontested rotation. Below 1ms
-			// is treated as rounding noise so the common case stays silent.
-			delay := hunter.AutoAttacks.MainHandPendingSwingDelay()
-			readyAt := sim.CurrentTime - delay
-			if sim.Log != nil && delay > time.Millisecond && readyAt > 0 {
-				hunter.Log(sim, "%s delayed by %s, was ready at %s", spell.ActionID, delay, readyAt)
-			}
-
-			baseDamage := hunter.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) + raptorStrikeRank.Direct.Damage(sim)
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-		},
-	})
-
-	hunter.RegisterAura(core.Aura{
-		Label:    "Raptor Strike",
-		ActionID: core.ActionID{SpellID: raptorStrikeRank.SpellID}.WithTag(2),
-		Icd:      &hunter.RaptorStrike.CD,
-	})
+	// Registered unconditionally, so this returns instead of panicking -- a panic
+	// here would stop the sim from starting at all rather than flagging one ability.
 }
 
 // Returns true if the regular melee swing should be used, false otherwise.

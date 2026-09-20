@@ -1,47 +1,13 @@
 package mage
 
-import (
-	"github.com/wowsims/forever/sim/core"
-)
-
 const dragonsBreathCoefficient = 0.1930000037
 
-var dragonsBreathRank = spellData.DragonsBreath.BySpellID(33043)
-
+// TODO: uncalled -- Forever drops the Dragon's Breath talent; re-gate before wiring
+// back into registerSpells.
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (mage *Mage) registerDragonsBreathSpell() {
-	if !mage.Talents.DragonsBreath {
-		return
-	}
-
-	mage.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: dragonsBreathRank.SpellID},
-		SpellSchool:    dragonsBreathRank.SpellSchool,
-		DefenseType:    dragonsBreathRank.DefenseType,
-		ProcMask:       core.ProcMaskSpellDamage,
-		Flags:          core.SpellFlagAPL,
-		ClassSpellMask: MageSpellDragonsBreath,
-
-		ManaCost: core.ManaCostOptions{
-			FlatCost: dragonsBreathRank.Cost,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: dragonsBreathRank.GCD,
-			},
-			CD: core.Cooldown{
-				Timer:    mage.NewTimer(),
-				Duration: dragonsBreathRank.Cooldown,
-			},
-		},
-
-		DamageMultiplier: 1,
-		BonusCoefficient: dragonsBreathRank.Direct.BonusCoefficient(),
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			baseDamage := dragonsBreathRank.Direct.Damage(sim)
-			spell.CalcAndDealAoeDamage(sim, baseDamage, spell.OutcomeMagicHitAndCrit)
-		},
-	})
+	// Registered unconditionally, so this returns instead of panicking -- a panic
+	// here would stop the sim from starting at all rather than flagging one ability.
 }

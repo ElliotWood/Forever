@@ -4,30 +4,26 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (shaman *Shaman) ApplyRestorationTalents() {
-	shaman.applyNaturesGuidance()
 	shaman.applyNaturesSwiftness()
 	shaman.applyRestorativeTotems()
 	shaman.applyTidalMastery()
 	shaman.applyTotemicFocus()
-}
 
-func (shaman *Shaman) applyNaturesGuidance() {
-	if shaman.Talents.NaturesGuidance == 0 {
-		return
-	}
-	value := 1.0 * float64(shaman.Talents.NaturesGuidance)
-	core.MakePermanent(shaman.RegisterAura(core.Aura{
-		Label:      "Nature's Guidance",
-		BuildPhase: core.CharacterBuildPhaseTalents,
-		ActionID:   core.ActionID{SpellID: 16198},
-	}).AttachStatsBuff(stats.Stats{
-		stats.SpellHitPercent:    value,
-		stats.PhysicalHitPercent: value,
-	}))
+	// Forever additions, not yet implemented.
+	shaman.applyImprovedHealingWave()
+	shaman.applyMindfulness()
+	shaman.applyNaturalGrace()
+	shaman.applyImprovedReincarnation()
+	shaman.applyAncestralHealing()
+	shaman.applyHealingFocus()
+	shaman.applyWaterShield()
+	shaman.applyManaTideTotem()
+	shaman.applyHealingWay()
+	shaman.applyPurification()
+	shaman.applyRiptide()
 }
 
 func (shaman *Shaman) applyNaturesSwiftness() {
@@ -93,4 +89,136 @@ func (shaman *Shaman) applyTotemicFocus() {
 		FloatValue: -0.05 * float64(shaman.Talents.TotemicFocus),
 		ClassMask:  SpellMaskTotem,
 	})
+}
+
+// applyImprovedHealingWave implements Improved Healing Wave, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyImprovedHealingWave() {
+	if shaman.Talents.ImprovedHealingWave == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyMindfulness implements Mindfulness, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyMindfulness() {
+	if shaman.Talents.Mindfulness == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyNaturalGrace implements Natural Grace, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyNaturalGrace() {
+	if shaman.Talents.NaturalGrace == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedReincarnation implements Improved Reincarnation, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyImprovedReincarnation() {
+	if shaman.Talents.ImprovedReincarnation == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyAncestralHealing implements Ancestral Healing, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyAncestralHealing() {
+	if shaman.Talents.AncestralHealing == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyHealingFocus implements Healing Focus, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyHealingFocus() {
+	if shaman.Talents.HealingFocus == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyWaterShield implements Water Shield, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyWaterShield() {
+	if !shaman.Talents.WaterShield {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyManaTideTotem implements Mana Tide Totem, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyManaTideTotem() {
+	if !shaman.Talents.ManaTideTotem {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyHealingWay implements Healing Way, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyHealingWay() {
+	if shaman.Talents.HealingWay == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyPurification implements Purification, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyPurification() {
+	if shaman.Talents.Purification == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyRiptide implements Riptide, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyRiptide() {
+	if !shaman.Talents.Riptide {
+		return
+	}
+
+	panic("To be implemented")
 }

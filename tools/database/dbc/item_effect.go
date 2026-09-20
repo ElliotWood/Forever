@@ -251,7 +251,7 @@ func buildBaseStatScalingProps(spellID int, itemSpellID int) *proto.ScalingItemE
 				if strings.Contains(dbcInstance.Spells[se.SpellID].Description, "forms only") {
 					stat = proto.Stat_StatFeralAttackPower
 				}
-				if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPenetration {
+				if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPiercing {
 					// Make these not negative
 					value = math.Abs(value)
 				}

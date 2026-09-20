@@ -10,11 +10,8 @@ func (warlock *Warlock) registerLifeTap() {
 	healthCost := 582.0
 	baseRestore := healthCost * spellData.ImprovedLifeTap.MultiplierAt(warlock.Talents.ImprovedLifeTap)
 
-	petRestore := 0.3333 * float64(warlock.Talents.ManaFeed)
-	var petManaMetrics []*core.ResourceMetrics
-	if warlock.Talents.ManaFeed > 0 && warlock.ActivePet != nil {
-		petManaMetrics = append(petManaMetrics, warlock.ActivePet.NewManaMetrics(actionID))
-	}
+	// TODO: Forever drops Mana Feed; no pet mana restore until we know whether the effect
+	// moved onto another talent.
 
 	warlock.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
@@ -37,14 +34,6 @@ func (warlock *Warlock) registerLifeTap() {
 			restore := baseRestore + (warlock.GetSpellDamageValue(spell, nil) * 0.8)
 			warlock.RemoveHealth(sim, healthCost)
 			warlock.AddMana(sim, restore, manaMetrics)
-
-			if warlock.Talents.ManaFeed > 0 && warlock.ActivePet != nil {
-				for _, pet := range warlock.Pets {
-					if pet == &warlock.ActivePet.Pet {
-						pet.AddMana(sim, restore*petRestore, petManaMetrics[0])
-					}
-				}
-			}
 		},
 	})
 }

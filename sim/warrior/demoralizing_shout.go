@@ -5,11 +5,14 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 56).BySpellID(25203)
+var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 56).HighestRank()
 
 func (war *Warrior) registerDemoralizingShout() {
 	war.DemoralizingShoutAuras = war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.DemoralizingShoutAura(target, war.Talents.BoomingVoice, war.Talents.ImprovedDemoralizingShout)
+		// TODO: Forever drops Improved Demoralizing Shout; the core aura still takes a
+		// rank for it, so it is pinned to 0 until we know whether the effect moved onto
+		// another talent or was removed outright.
+		return core.DemoralizingShoutAura(target, war.Talents.BoomingVoice, 0)
 	})
 
 	war.DemoralizingShout = war.RegisterSpell(core.SpellConfig{

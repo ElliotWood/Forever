@@ -799,12 +799,9 @@ export class Player<SpecType extends Spec> {
 		if (debuffs.exposeWeaknessUptime && debuffs.exposeWeaknessHunterAgility) {
 			let agi = debuffs.exposeWeaknessHunterAgility;
 
-			if (this.isSpec(Spec.SpecHunter)) {
-				const hunter = this as unknown as Player<Spec.SpecHunter>;
-				if (hunter.getTalents().exposeWeakness > 0) {
-					agi = hunter.getCurrentStats().finalStats?.stats[Stat.StatAgility] ?? agi;
-				}
-			}
+			// TODO: Forever drops the Expose Weakness talent, so a hunter can no longer
+			// self-provide this debuff and the agility always comes from the raid setting.
+			// Restore the spec branch if Forever reintroduces an equivalent talent.
 
 			debuffStats = debuffStats.addStat(Stat.StatAttackPower, agi * 0.25);
 			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, agi * 0.25);

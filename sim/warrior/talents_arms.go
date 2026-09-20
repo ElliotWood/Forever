@@ -30,26 +30,26 @@ func (war *Warrior) registerArmsTalents() {
 	war.registerImpale()
 
 	// Tier 5
-	war.registerPoleaxeSpecialization()
 	war.registerDeathWish()
-	war.registerMaceSpecialization()
-	war.registerSwordSpecialization()
 
 	// Tier 6
 	war.registerImprovedIntercept()
 	// Improved Hamstring not implemented
-	war.registerImprovedDisciplines()
 
 	// Tier 7
-	war.registerBloodFrenzy()
 	war.registerMortalStrike()
 	// Second Wind not implemented
 
 	// Tier 8
-	war.registerImprovedMortalStrike()
 
 	// Tier 9
-	war.registerEndlessRage()
+
+	// Forever additions, not yet implemented.
+	war.registerImprovedTacticalMastery()
+	war.registerSpearingStrike()
+	war.registerBloodthrill()
+	war.registerWeaponmaster()
+	war.registerImprovedHamstring()
 }
 
 /*
@@ -246,66 +246,6 @@ func (war *Warrior) registerImpale() {
 	})
 }
 
-func (war *Warrior) registerPoleaxeSpecialization() {
-	if war.Talents.PoleaxeSpecialization == 0 {
-		return
-	}
-
-	isPolearmOrAxe := func(handItem *core.Item) bool {
-		return handItem != nil && (handItem.WeaponType == proto.WeaponType_WeaponTypeAxe || handItem.WeaponType == proto.WeaponType_WeaponTypePolearm)
-	}
-
-	critPercent := spellData.PoleaxeSpecialization.ValueAt(war.Talents.PoleaxeSpecialization)
-
-	mhCritMod := war.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ProcMask:   core.ProcMaskMeleeMH,
-		FloatValue: critPercent,
-	})
-
-	ohCritMod := war.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ProcMask:   core.ProcMaskMeleeOH,
-		FloatValue: critPercent,
-	})
-
-	mainhandWWOhCritMod := war.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ClassMask:  SpellMaskWhirlwindOh,
-		FloatValue: critPercent,
-	})
-
-	offhandWWOhCritMod := war.AddDynamicMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		ClassMask:  SpellMaskWhirlwindOh,
-		FloatValue: -critPercent,
-	})
-
-	handleEquippedWeapons := func() {
-		if isPolearmOrAxe(war.MainHand()) {
-			mhCritMod.Activate()
-			mainhandWWOhCritMod.Activate()
-		} else {
-			mhCritMod.Deactivate()
-			mainhandWWOhCritMod.Deactivate()
-		}
-
-		if isPolearmOrAxe(war.OffHand()) {
-			ohCritMod.Activate()
-			offhandWWOhCritMod.Activate()
-		} else {
-			ohCritMod.Deactivate()
-			offhandWWOhCritMod.Deactivate()
-		}
-	}
-
-	handleEquippedWeapons()
-
-	war.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		handleEquippedWeapons()
-	})
-}
-
 func (war *Warrior) registerDeathWish() {
 	if !war.Talents.DeathWish {
 		return
@@ -360,94 +300,6 @@ func (war *Warrior) registerDeathWish() {
 	})
 }
 
-func (war *Warrior) registerMaceSpecialization() {
-	if war.Talents.MaceSpecialization == 0 {
-		return
-	}
-
-	actionID := core.ActionID{SpellID: 5530}
-	rageMetrics := war.NewRageMetrics(actionID)
-
-	spell := war.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 5530},
-		DefenseType: core.DefenseTypeMagic,
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			war.AddRage(sim, 7, rageMetrics)
-		},
-	})
-
-	newMaceSpecializationDPM := func() *core.DynamicProcManager {
-		return war.NewStaticLegacyPPMManager(
-			0.3*float64(war.Talents.MaceSpecialization), // 5/5 has 1.5 PPM - No data for any other ranks, so this is an estimate
-			war.GetProcMaskForTypes(proto.WeaponType_WeaponTypeMace),
-		)
-	}
-
-	dpm := newMaceSpecializationDPM()
-
-	war.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Mace Specialization",
-		DPM:                dpm,
-		TriggerImmediately: true,
-		Outcome:            core.OutcomeLanded,
-		Callback:           core.CallbackOnSpellHitDealt,
-		Handler: func(sim *core.Simulation, _ *core.Spell, result *core.SpellResult) {
-			spell.Cast(sim, result.Target)
-		},
-	})
-
-	war.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		dpm = newMaceSpecializationDPM()
-	})
-}
-
-func (war *Warrior) registerSwordSpecialization() {
-	if war.Talents.SwordSpecialization == 0 {
-		return
-	}
-
-	var swordSpecializationSpell *core.Spell
-	procChance := spellData.SwordSpecialization.ProcChanceAt(war.Talents.SwordSpecialization)
-
-	newSwordSpecializationDPM := func() *core.DynamicProcManager {
-		return war.NewFixedProcChanceManager(
-			procChance,
-			war.GetProcMaskForTypes(proto.WeaponType_WeaponTypeSword),
-		)
-	}
-
-	dpm := newSwordSpecializationDPM()
-
-	procTrigger := war.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Sword Specialization",
-		ProcMask:           core.ProcMaskMelee,
-		DPM:                dpm,
-		ICD:                time.Millisecond * 500,
-		TriggerImmediately: true,
-		Outcome:            core.OutcomeLanded,
-		Callback:           core.CallbackOnSpellHitDealt,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			// OH WW hits can't proc this
-			if spell.Matches(SpellMaskWhirlwindOh) {
-				return
-			}
-			war.AutoAttacks.MaybeReplaceMHSwing(sim, swordSpecializationSpell).Cast(sim, result.Target)
-		},
-	})
-
-	procTrigger.ApplyOnInit(func(aura *core.Aura, sim *core.Simulation) {
-		config := *war.AutoAttacks.MHConfig()
-		config.ActionID = config.ActionID.WithTag(12281)
-		config.Flags |= core.SpellFlagPassiveSpell
-		swordSpecializationSpell = war.GetOrRegisterSpell(config)
-	})
-
-	war.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		dpm = newSwordSpecializationDPM()
-	})
-}
-
 func (war *Warrior) registerImprovedIntercept() {
 	if war.Talents.ImprovedIntercept == 0 {
 		return
@@ -460,56 +312,7 @@ func (war *Warrior) registerImprovedIntercept() {
 	})
 }
 
-func (war *Warrior) registerImprovedDisciplines() {
-	if war.Talents.ImprovedDisciplines == 0 {
-		return
-	}
-
-	cooldownReduction := []time.Duration{
-		0,
-		4 * time.Minute,
-		7 * time.Minute,
-		10 * time.Minute,
-	}[war.Talents.ImprovedDisciplines]
-
-	durationIncrease := time.Second * time.Duration(2*war.Talents.ImprovedDisciplines)
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskRetaliation | SpellMaskRecklessness | SpellMaskShieldWall,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: -cooldownReduction,
-	})
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskRetaliation | SpellMaskRecklessness | SpellMaskShieldWall,
-		Kind:      core.SpellMod_BuffDuration_Flat,
-		TimeValue: durationIncrease,
-	})
-}
-
-func (war *Warrior) registerBloodFrenzy() {
-	if war.Talents.BloodFrenzy == 0 {
-		return
-	}
-
-	bfAuras := war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.BloodFrenzyAura(target, war.Talents.BloodFrenzy)
-	})
-
-	war.MakeProcTriggerAura(core.ProcTrigger{
-		Name:             "Blood Frenzy",
-		CanProcFromProcs: true, // 29836/29859 carry the bit.
-		ClassSpellMask:   SpellMaskRend | SpellMaskDeepWounds,
-		Callback:         core.CallbackOnSpellHitDealt,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			aura := bfAuras.Get(result.Target)
-			aura.Duration = spell.Dot(result.Target).RemainingDuration(sim)
-			aura.Activate(sim)
-		},
-	})
-}
-
-var mortalStrikeRank = spellData.MortalStrike.BySpellID(30330)
+var mortalStrikeRank = spellData.MortalStrike.HighestRank()
 var mortalStrikeBaseDamage, _ = mortalStrikeRank.Direct.Range()
 
 func (war *Warrior) registerMortalStrike() {
@@ -556,28 +359,62 @@ func (war *Warrior) registerMortalStrike() {
 	})
 }
 
-func (war *Warrior) registerImprovedMortalStrike() {
-	if war.Talents.ImprovedMortalStrike == 0 {
+// registerImprovedTacticalMastery implements Improved Tactical Mastery, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerImprovedTacticalMastery() {
+	if war.Talents.ImprovedTacticalMastery == 0 {
 		return
 	}
 
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskMortalStrike,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: -time.Second * time.Duration(0.2*float64(war.Talents.ImprovedMortalStrike)),
-	})
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskMortalStrike,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedMortalStrike.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(war.Talents.ImprovedMortalStrike),
-	})
+	panic("To be implemented")
 }
 
-func (war *Warrior) registerEndlessRage() {
-	if !war.Talents.EndlessRage {
+// registerSpearingStrike implements Spearing Strike, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerSpearingStrike() {
+	if !war.Talents.SpearingStrike {
 		return
 	}
 
-	war.MultiplyAutoAttackRageGen(1.25)
+	panic("To be implemented")
+}
+
+// registerBloodthrill implements Bloodthrill, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerBloodthrill() {
+	if war.Talents.Bloodthrill == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerWeaponmaster implements Weaponmaster, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerWeaponmaster() {
+	if war.Talents.Weaponmaster == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerImprovedHamstring implements Improved Hamstring, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerImprovedHamstring() {
+	if war.Talents.ImprovedHamstring == 0 {
+		return
+	}
+
+	panic("To be implemented")
 }

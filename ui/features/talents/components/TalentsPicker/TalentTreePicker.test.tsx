@@ -98,7 +98,7 @@ describe('TalentTreePicker layout', () => {
 
 	it('reports the tree total against the 61-point budget', () => {
 		tree('55');
-		expect(screen.getByTestId('talent-tree-points').textContent).toBe('6 / 61');
+		expect(screen.getByTestId('talent-tree-points').textContent).toBe('6 / 51');
 	});
 
 	it('names the tree from the config, not from the spec', () => {

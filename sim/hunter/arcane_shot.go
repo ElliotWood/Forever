@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var arcaneShotRank = spellData.ArcaneShot.BySpellID(27019)
+var arcaneShotRank = spellData.ArcaneShot.HighestRank()
 
 func (hunter *Hunter) registerArcaneShotSpell() {
 	hunter.ArcaneShot = hunter.RegisterRangedSpell(core.SpellConfig{

@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var curseOfElementsRank = spellData.CurseOfTheElements.BySpellID(27228)
+var curseOfElementsRank = spellData.CurseOfTheElements.HighestRank()
 
 func (warlock *Warlock) registerCurseOfElements() {
 	warlock.CurseOfElementsAuras = warlock.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {

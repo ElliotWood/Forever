@@ -1,12 +1,13 @@
 package paladin
 
 import (
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{20, 22, 22}
+var TalentTreeSizes = [3]int{18, 16, 18}
 
 const JudgementAuraTag = "JudgementAura"
 
@@ -68,7 +69,7 @@ func (paladin *Paladin) registerSpells() {
 	ConsecrationRankMap.RegisterAll(paladin.registerConsecration)
 	HammerOfWrathRankMap.RegisterAll(paladin.registerHammerOfWrath)
 	HolyWrathRankMap.RegisterAll(paladin.registerHolyWrath)
-	ExorcismRankMap.RegisterAll(paladin.registerExorcism)
+	paladin.registerExorcism(shared.SpellData{})
 	paladin.registerAvengingWrath()
 	paladin.registerRighteousFury()
 

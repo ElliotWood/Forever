@@ -8,7 +8,7 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{23, 22, 22}
+var TalentTreeSizes = [3]int{18, 17, 19}
 
 type Mage struct {
 	core.Character
@@ -107,16 +107,16 @@ func (mage *Mage) registerSpells() {
 	//TalentSpells
 	mage.registerPresenceOfMindSpell()
 	mage.registerArcanePowerSpell()
-	mage.registerSlowSpell()
+	// Slow: Forever drops the talent; see registerSlowSpell
 
 	mage.registerBlastWaveSpell()
 	mage.registerPyroblastSpell()
 	mage.registerCombustionSpell()
-	mage.registerDragonsBreathSpell()
+	// Dragon's Breath: Forever drops the talent; see registerDragonsBreathSpell
 
-	mage.registerIcyVeinsSpell()
+	// Icy Veins: Forever drops the talent; see registerIcyVeinsSpell
 	mage.registerColdSnapSpell()
-	mage.registerSummonWaterElementalSpell()
+	// Summon Water Elemental: Forever drops the talent; see registerSummonWaterElementalSpell
 }
 
 func (mage *Mage) Reset(sim *core.Simulation) {
@@ -138,9 +138,8 @@ func NewMage(character *core.Character, options *proto.Player) *Mage {
 	mage.EnableManaBar()
 	mage.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
 
-	if mage.Talents.SummonWaterElemental {
-		mage.waterElemental = mage.NewWaterElemental()
-	}
+	// TODO: Forever drops Summon Water Elemental; the pet is never created until we know
+	// whether the talent moved elsewhere.
 
 	return mage
 }

@@ -250,11 +250,16 @@ func RaidBenchmark(b *testing.B, rsr *proto.RaidSimRequest) {
 	}
 }
 
+// The gear sets and encounter builds were removed with the rest of the TBC presets, so a
+// missing file is now an expected state rather than a broken checkout. log.Fatalf killed
+// the whole process and took the test output with it; returning an empty combo lets the
+// suite run and report a normal failure instead.
 func GetAplRotation(dir string, file string) RotationCombo {
 	filePath := dir + "/" + file + ".apl.json"
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		log.Fatalf("failed to load apl json file: %s, %s", filePath, err)
+		log.Printf("no apl json file, skipping rotation: %s", filePath)
+		return RotationCombo{Label: file}
 	}
 
 	return RotationCombo{Label: file, Rotation: APLRotationFromJsonString(string(data))}
@@ -264,7 +269,8 @@ func GetGearSet(dir string, file string) GearSetCombo {
 	filePath := dir + "/" + file + ".gear.json"
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		log.Fatalf("failed to load gear json file: %s, %s", filePath, err)
+		log.Printf("no gear json file, skipping gear set: %s", filePath)
+		return GearSetCombo{Label: file, GearSet: &proto.EquipmentSpec{}}
 	}
 
 	return GearSetCombo{Label: file, GearSet: EquipmentSpecFromJsonString(string(data))}

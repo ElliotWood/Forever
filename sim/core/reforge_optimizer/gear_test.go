@@ -21,6 +21,7 @@ func minimizeRegemsHarness(original *proto.EquipmentSpec) *reforgeOptimizer {
 }
 
 func TestGemMatchesSocketSecondaryColors(t *testing.T) {
+	requireSocketedItems(t)
 	testCases := []struct {
 		name        string
 		gemColor    proto.GemColor
@@ -53,6 +54,7 @@ func TestGemMatchesSocketSecondaryColors(t *testing.T) {
 // neutral — one Red socket stays matched either way — and leaves one bonus active either way, but
 // it moves the claim from the +4 Stamina item to the +3 Stamina one, so it must be rejected.
 func TestMinimizeRegemsKeepsLargerSocketBonus(t *testing.T) {
+	requireSocketedItems(t)
 	sim.RegisterAll()
 
 	const wristSlot, handsSlot = 5, 6
@@ -89,6 +91,7 @@ func TestMinimizeRegemsKeepsLargerSocketBonus(t *testing.T) {
 // socket, so the undo is socket-color-match neutral AND keeps one equally sized bonus active, yet
 // it must still be rejected: the bonuses are not the same stat, so the swap is not provably free.
 func TestMinimizeRegemsKeepsDifferentStatSocketBonus(t *testing.T) {
+	requireSocketedItems(t)
 	sim.RegisterAll()
 
 	const backSlot, legsSlot = 3, 8
@@ -116,4 +119,16 @@ func TestMinimizeRegemsKeepsDifferentStatSocketBonus(t *testing.T) {
 		t.Fatalf("Crit bonus traded for a possibly capped Hit bonus: back=[%d] legs=[%d], want back=[%d] legs=[%d]",
 			gemIDAt(back, 0), gemIDAt(legs, 0), smooth, bold)
 	}
+}
+
+// requireSocketedItems skips a test that needs items with gem sockets and socket bonuses.
+// Forever encrypts item stats until an item is discovered in game, so the extracted
+// database currently holds no socketed items at all and these tests have nothing to work
+// against. They are kept rather than deleted -- the behaviour they pin is still correct.
+func requireSocketedItems(t *testing.T) {
+	t.Helper()
+	if len(core.ItemsWithSockets()) > 0 {
+		return
+	}
+	t.Skip("no socketed items in the database - Forever encrypts item stats until discovery")
 }

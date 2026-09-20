@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var backstabRank = spellData.Backstab.BySpellID(26863)
+var backstabRank = spellData.Backstab.HighestRank()
 
 func (rogue *Rogue) registerBackstabSpell() {
 	baseDamage, _ := backstabRank.Direct.Range()

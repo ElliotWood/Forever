@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var lacerateRank = shared.WithSpellDataFlatThreat(spellData.Lacerate, 267).BySpellID(33745)
+var lacerateRank = shared.WithSpellDataFlatThreat(spellData.Lacerate, 267).HighestRank()
 var lacerateTick = lacerateRank.Periodic.(shared.SpellDataPeriodic)
 
 func (druid *Druid) registerLacerateSpell() {

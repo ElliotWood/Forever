@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var rakeRank = spellData.Rake.BySpellID(27003)
+var rakeRank = spellData.Rake.HighestRank()
 var rakeTick = rakeRank.Periodic.(shared.SpellDataPeriodic)
 
 func (druid *Druid) registerRakeSpell() {

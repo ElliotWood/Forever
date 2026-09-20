@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var shieldBashRank = shared.WithSpellDataFlatThreat(spellData.ShieldBash, 192).BySpellID(29704)
+var shieldBashRank = shared.WithSpellDataFlatThreat(spellData.ShieldBash, 192).HighestRank()
 
 func (war *Warrior) registerShieldBash() {
 	actionID := core.ActionID{SpellID: shieldBashRank.SpellID}

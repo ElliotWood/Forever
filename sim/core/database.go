@@ -794,3 +794,16 @@ func ColorIntersects(g proto.GemColor, o proto.GemColor) bool {
 
 	return false // dunno what else could be.
 }
+
+// ItemsWithSockets returns the loaded items that carry at least one gem socket. Tests use
+// it to skip when the database has none, which is the case while Forever keeps item stats
+// encrypted until an item is discovered in game.
+func ItemsWithSockets() []Item {
+	var out []Item
+	for _, item := range itemsByID {
+		if len(item.GemSockets) > 0 {
+			out = append(out, item)
+		}
+	}
+	return out
+}

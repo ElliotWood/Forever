@@ -7,11 +7,9 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+// TODO: uncalled -- Forever drops the Summon Water Elemental talent; re-gate before
+// wiring back into registerSpells and NewMage.
 func (mage *Mage) registerSummonWaterElementalSpell() {
-	if !mage.Talents.SummonWaterElemental {
-		return
-	}
-
 	mage.SummonWaterElemental = mage.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: 31687},
 		DefenseType: core.DefenseTypeMagic,
@@ -51,7 +49,7 @@ func (mage *Mage) NewWaterElemental() *WaterElemental {
 			stats.Stamina:          ownerStats[stats.Stamina] * 0.3,
 			stats.SpellDamage:      ownerStats[stats.FrostDamage] * 0.33,
 			stats.SpellHitRating:   ownerStats[stats.SpellHitRating],
-			stats.SpellPenetration: ownerStats[stats.SpellPenetration],
+			stats.SpellPiercing:    ownerStats[stats.SpellPiercing],
 			stats.SpellCritPercent: ownerStats[stats.SpellCritPercent],
 			// this (crit) needs to be tested more thoroughly when pet hit is not bugged
 		}

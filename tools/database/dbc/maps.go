@@ -107,17 +107,79 @@ func MapBonusStatIndexToStat(index int) (proto.Stat, bool) {
 		return proto.Stat_StatSpellDamage, true
 	case ITEM_MOD_SPELL_POWER:
 		return 0, false
-	case 50: // ExtraArmor maps to BonusArmor (green armor)
+	case ITEM_MOD_EXTRA_ARMOR: // ExtraArmor maps to BonusArmor (green armor)
 		return proto.Stat_StatBonusArmor, true
+
+	// Forever moved the five resistances out of Item.Resistances_* and onto the item
+	// stat array, which is why the schema no longer carries those columns. Index 53
+	// (Holy Resistance) has no proto.Stat counterpart and stays unmapped.
+	case ITEM_MOD_FIRE_RESISTANCE:
+		return proto.Stat_StatFireResistance, true
+	case ITEM_MOD_FROST_RESISTANCE:
+		return proto.Stat_StatFrostResistance, true
+	case ITEM_MOD_SHADOW_RESISTANCE:
+		return proto.Stat_StatShadowResistance, true
+	case ITEM_MOD_NATURE_RESISTANCE:
+		return proto.Stat_StatNatureResistance, true
+	case ITEM_MOD_ARCANE_RESISTANCE:
+		return proto.Stat_StatArcaneResistance, true
+
+	// The school-damage block. 83 is vanilla's "+N Weapon Damage"; StatPhysicalDamage
+	// is slightly broader (sim/core/spell_result.go adds it to every physical spell,
+	// not swings only), but the magnitudes involved are single digits.
+	case ITEM_MOD_WEAPON_DAMAGE:
+		return proto.Stat_StatPhysicalDamage, true
+	case ITEM_MOD_HOLY_DAMAGE:
+		return proto.Stat_StatHolyDamage, true
+	case ITEM_MOD_FIRE_DAMAGE:
+		return proto.Stat_StatFireDamage, true
+	case ITEM_MOD_NATURE_DAMAGE:
+		return proto.Stat_StatNatureDamage, true
+	case ITEM_MOD_FROST_DAMAGE:
+		return proto.Stat_StatFrostDamage, true
+	case ITEM_MOD_SHADOW_DAMAGE:
+		return proto.Stat_StatShadowDamage, true
+	case ITEM_MOD_ARCANE_DAMAGE:
+		return proto.Stat_StatArcaneDamage, true
 	case ITEM_MOD_MANA_REGENERATION: // ManaRegeneration
 		return proto.Stat_StatMP5, true
 	case ITEM_MOD_SPELL_PENETRATION:
-		return proto.Stat_StatSpellPenetration, true
+		return proto.Stat_StatSpellPiercing, true
 	case ITEM_MOD_BLOCK_VALUE:
 		return proto.Stat_StatBlockValue, true
 	default:
 		return 0, false
 	}
+}
+
+// allResistanceStats is what ItemModType 124 ("All Resistances") expands to. Confirmed
+// from three independent tooltips: 22197 Heavy Obsidian Belt and 22198 Jagged Obsidian
+// Shield both read "+5 All Resistances", and 12252 Staff of Protection spells out
+// "+6 Arcane/Fire/Nature/Frost/Shadow".
+var allResistanceStats = []proto.Stat{
+	proto.Stat_StatArcaneResistance,
+	proto.Stat_StatFireResistance,
+	proto.Stat_StatFrostResistance,
+	proto.Stat_StatNatureResistance,
+	proto.Stat_StatShadowResistance,
+}
+
+// MapBonusStatIndexToStats is MapBonusStatIndexToStat for callers that have to cope with
+// one index granting several stats. Every index maps to exactly one stat except 124.
+//
+// TODO: SpellItemEnchantment row 8203 is named "Spirit +$k1" but carries EffectArg 124,
+// and is applied by Enchant Bracer/Boots - Lesser Spirit. Going through this function it
+// becomes "+N all resistances". The 124 reading is solid, so 8203 is either a Forever
+// data bug or a stale label; special-casing it needs the enchant id threaded into
+// processEnchantmentEffects, which does not currently receive it.
+func MapBonusStatIndexToStats(index int) ([]proto.Stat, bool) {
+	if index == ITEM_MOD_ALL_RESISTANCES {
+		return allResistanceStats, true
+	}
+	if stat, ok := MapBonusStatIndexToStat(index); ok {
+		return []proto.Stat{stat}, true
+	}
+	return nil, false
 }
 
 var MapProfessionIdToProfession = map[int]proto.Profession{

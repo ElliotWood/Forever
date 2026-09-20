@@ -230,9 +230,13 @@ winlib: sim/core/proto/api.pb.go
 .PHONY: simdb
 simdb: sim/core/items/all_items.go sim/core/proto/api.pb.go
 
-CLIENTDATA_SETTINGS := $(shell realpath ./tools/database/generator-settings.json)
-CLIENTDATAPTR_SETTINGS := $(shell realpath ./tools/database/ptr-generator-settings.json)
-CLIENTDATA_OUTPUT   := $(shell realpath ./tools/database/wowsims.db)
+# $(abspath) is make's own lexical resolver: unlike `realpath` it neither requires
+# the path to exist nor follows symlinks. wowsims.db is gitignored and may well be
+# a symlink to a sibling checkout's copy, and `realpath` would then hand db2tool
+# THAT repo's database to overwrite.
+CLIENTDATA_SETTINGS := $(abspath ./tools/database/generator-settings.json)
+CLIENTDATAPTR_SETTINGS := $(abspath ./tools/database/ptr-generator-settings.json)
+CLIENTDATA_OUTPUT   := $(abspath ./tools/database/wowsims.db)
 
 .PHONY: db
 db:

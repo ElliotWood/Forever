@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var multiShotRank = spellData.MultiShot.BySpellID(27021)
+var multiShotRank = spellData.MultiShot.HighestRank()
 
 func (hunter *Hunter) registerMultiShotSpell() {
 	hunter.MultiShot = hunter.RegisterRangedSpell(core.SpellConfig{

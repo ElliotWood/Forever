@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var garroteRank = spellData.Garrote.BySpellID(26884)
+var garroteRank = spellData.Garrote.HighestRank()
 
 func (rogue *Rogue) registerGarrote() {
 	tick := garroteRank.Periodic.(shared.SpellDataPeriodic)

@@ -84,10 +84,10 @@ describe('TalentsPicker container', () => {
 		expect(Array.from(document.querySelectorAll('[data-testid="talent-tree-title"]')).map(el => el.textContent)).toEqual(['First', 'Second', 'Third']);
 	});
 
-	it('counts down from 61 across every tree', () => {
+	it('counts down from the point cap across every tree', () => {
 		talentsString = '5-5-5';
 		mount();
-		expect(remaining()).toBe('46');
+		expect(remaining()).toBe('36');
 	});
 
 	it('writes the joined string when a talent in the last tree is clicked', () => {
@@ -97,21 +97,23 @@ describe('TalentsPicker container', () => {
 		expect(setValue).toHaveBeenCalledWith(expect.anything(), '--1');
 	});
 
-	it('refuses the 62nd point anywhere', () => {
-		talentsString = '55555555555-51';
+	it('refuses the 52nd point anywhere', () => {
+		talentsString = '5555555555-1';
 		mount();
 		expect(remaining()).toBe('0');
 
 		const secondTree = talents().slice(5 * COLS);
 		fireEvent.mouseDown(secondTree[2], { button: 0 });
-		expect(setValue).toHaveBeenLastCalledWith(expect.anything(), '55555555555-51');
+		expect(setValue).toHaveBeenLastCalledWith(expect.anything(), '5555555555-1');
 	});
 });
 
 describe('TalentsPicker round trip', () => {
-	const MAGE_DEFAULT = '2500052300030150330125--053500031003001';
+	// A valid Forever mage build: 51 points, Fire left empty so the codec's empty-run
+// handling stays covered. Was a TBC build, which overflows the 18-talent Arcane tree.
+const MAGE_DEFAULT = '2552252231221--2555';
 
-	it('hands a real TBC default back byte-identically, empty middle tree and all', () => {
+	it('hands a real Forever default back byte-identically, empty middle tree and all', () => {
 		talentsString = MAGE_DEFAULT;
 		mount(mageTalentsConfig);
 
@@ -124,7 +126,7 @@ describe('TalentsPicker round trip', () => {
 		talentsString = MAGE_DEFAULT;
 		mount(mageTalentsConfig);
 
-		// Most spent talents are load-bearing at 61 points; this finds one the rules actually let go.
+		// Most spent talents are load-bearing in a full build; this finds one the rules actually let go.
 		const freeable = talents().findIndex((el, idx) => {
 			if (Number(el.dataset.points) === 0) return false;
 			fireEvent.mouseDown(talents()[idx], { button: 2 });

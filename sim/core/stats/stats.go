@@ -34,7 +34,7 @@ const (
 	SpellHitRating
 	SpellCritRating
 	SpellHasteRating
-	SpellPenetration
+	SpellPiercing
 	Spirit
 	AttackPower
 	RangedAttackPower
@@ -144,8 +144,8 @@ func (s Stat) StatName() string {
 		return "SpellCritRating"
 	case SpellHasteRating:
 		return "SpellHasteRating"
-	case SpellPenetration:
-		return "SpellPenetration"
+	case SpellPiercing:
+		return "SpellPiercing"
 	case MeleeHitRating:
 		return "MeleeHitRating"
 	case MeleeCritRating:

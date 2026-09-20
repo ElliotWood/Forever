@@ -5,7 +5,6 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -32,7 +31,6 @@ func (war *Warrior) registerFuryTalents() {
 	// Tier 5
 	war.registerImprovedSlam()
 	war.registerSweepingStrikes()
-	war.registerWeaponMastery()
 
 	// Tier 6
 	war.registerImprovedBerserkerRage()
@@ -41,13 +39,17 @@ func (war *Warrior) registerFuryTalents() {
 	// Tier 7
 	war.registerPrecision()
 	war.registerBloodthirst()
-	war.registerImprovedWhirlwind()
 
 	// Tier 8
-	war.registerImprovedBerserkerStance()
 
 	// Tier 9
-	war.registerRampage()
+
+	// Forever additions, not yet implemented.
+	war.registerIronWill()
+	war.registerPiercingHowl()
+	war.registerBloodCraze()
+	war.registerBoundlessRage()
+	war.registerRagingBlows()
 }
 
 func (war *Warrior) registerCruelty() {
@@ -85,7 +87,7 @@ func (war *Warrior) registerDualWieldSpecialization() {
 	war.AddStaticMod(core.SpellModConfig{
 		ProcMask:   core.ProcMaskMeleeOH,
 		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.DualWieldSpecialization.FractionAt(war.Talents.DualWieldSpecialization),
+		FloatValue: spellData.DualWieldSpecialization.Effect(shared.A_MOD_OFFHAND_DAMAGE_PCT, 0).FractionAt(war.Talents.DualWieldSpecialization),
 	})
 }
 
@@ -256,14 +258,6 @@ func (war *Warrior) registerSweepingStrikes() {
 	})
 }
 
-func (war *Warrior) registerWeaponMastery() {
-	if war.Talents.WeaponMastery == 0 {
-		return
-	}
-
-	war.PseudoStats.DodgeReduction += 0.01 * float64(war.Talents.WeaponMastery)
-}
-
 func (war *Warrior) registerImprovedBerserkerRage() {
 	if war.Talents.ImprovedBerserkerRage == 0 {
 		return
@@ -325,7 +319,8 @@ func (war *Warrior) registerPrecision() {
 		return
 	}
 
-	war.AddStat(stats.PhysicalHitPercent, spellData.Precision.ValueAt(war.Talents.Precision))
+	// The spell-hit effect carries the same ladder; only melee hit is taken here.
+	war.AddStat(stats.PhysicalHitPercent, spellData.Precision.Effect(shared.A_MOD_HIT_CHANCE, 0).ValueAt(war.Talents.Precision))
 }
 
 func (war *Warrior) registerBloodthirst() {
@@ -373,112 +368,62 @@ func (war *Warrior) registerBloodthirst() {
 	})
 }
 
-func (war *Warrior) registerImprovedWhirlwind() {
-	if war.Talents.ImprovedWhirlwind == 0 {
+// registerIronWill implements Iron Will, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerIronWill() {
+	if war.Talents.IronWill == 0 {
 		return
 	}
 
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskWhirlwind,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: -time.Second * time.Duration(war.Talents.ImprovedWhirlwind),
-	})
+	panic("To be implemented")
 }
 
-func (war *Warrior) registerImprovedBerserkerStance() {
-	if war.Talents.ImprovedBerserkerStance == 0 {
+// registerPiercingHowl implements Piercing Howl, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerPiercingHowl() {
+	if !war.Talents.PiercingHowl {
 		return
 	}
 
-	apDep := war.NewDynamicMultiplyStat(stats.AttackPower, spellData.ImprovedBerserkerStance.Effect(shared.A_MOD_ATTACK_POWER_PCT, 0).MultiplierAt(war.Talents.ImprovedBerserkerStance))
-	aura := war.RegisterAura(core.Aura{
-		Label:      "Improved Berserker Stance",
-		Duration:   core.NeverExpires,
-		BuildPhase: core.Ternary(war.DefaultStance == proto.WarriorStance_WarriorStanceBerserker, core.CharacterBuildPhaseTalents, core.CharacterBuildPhaseNone),
-	}).AttachStatDependency(apDep)
-
-	war.OnSpellRegistered(func(spell *core.Spell) {
-		if !spell.Matches(SpellMaskBerserkerStance) {
-			return
-		}
-
-		spell.RelatedSelfBuff.AttachDependentAura(aura)
-	})
-
+	panic("To be implemented")
 }
 
-func (war *Warrior) registerRampage() {
-	if !war.Talents.Rampage {
+// registerBloodCraze implements Blood Craze, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerBloodCraze() {
+	if war.Talents.BloodCraze == 0 {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 30033}
-	validUntil := time.Duration(0)
+	panic("To be implemented")
+}
 
-	aura := core.MakeStackingAura(&war.Character, core.StackingStatAura{
-		Aura: core.Aura{
-			Label:     "Rampage",
-			ActionID:  actionID,
-			Duration:  time.Second * 30,
-			MaxStacks: 5,
-		},
-		BonusPerStack: stats.Stats{stats.AttackPower: 50},
-	})
+// registerBoundlessRage implements Boundless Rage, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerBoundlessRage() {
+	if war.Talents.BoundlessRage == 0 {
+		return
+	}
 
-	war.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Rampage - Trigger",
-		TriggerImmediately: true,
-		ProcMask:           core.ProcMaskMelee,
-		CanProcFromProcs:   true, // 29801 carries the bit.
-		Outcome:            core.OutcomeLanded,
-		Callback:           core.CallbackOnSpellHitDealt,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if result.Outcome.Matches(core.OutcomeCrit) {
-				validUntil = sim.CurrentTime + time.Second*5
-			}
+	panic("To be implemented")
+}
 
-			if spell.ProcMask.Matches(core.ProcMaskMelee) {
-				if aura.IsActive() {
-					aura.AddStack(sim)
-				}
-			}
-		},
-	})
+// registerRagingBlows implements Raging Blows, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerRagingBlows() {
+	if !war.Talents.RagingBlows {
+		return
+	}
 
-	spell := war.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		ClassSpellMask: SpellMaskRampage,
-		Flags:          core.SpellFlagAPL,
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Second * 90,
-			},
-		},
-
-		RageCost: core.RageCostOptions{
-			Cost: 20,
-		},
-
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return sim.CurrentTime < validUntil
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			validUntil = 0
-			aura.Activate(sim)
-			aura.AddStack(sim)
-		},
-
-		RelatedSelfBuff: aura.Aura,
-	})
-
-	war.AddMajorCooldown(core.MajorCooldown{
-		Type:  core.CooldownTypeDPS,
-		Spell: spell,
-	})
+	panic("To be implemented")
 }

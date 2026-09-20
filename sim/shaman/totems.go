@@ -8,11 +8,10 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var windfuryTotemRank = spellData.WindfuryTotem.BySpellID(25587)
-var strengthOfEarthTotemRank = spellData.StrengthOfEarthTotem.BySpellID(25528)
+var windfuryTotemRank = spellData.WindfuryTotem.HighestRank()
+var strengthOfEarthTotemRank = spellData.StrengthOfEarthTotem.HighestRank()
 var graceOfAirTotemRank = spellData.GraceOfAirTotem.BySpellID(25359)
-var wrathOfAirTotemRank = spellData.WrathOfAirTotem.BySpellID(3738)
-var manaSpringTotemRank = spellData.ManaSpringTotem.BySpellID(25570)
+var manaSpringTotemRank = spellData.ManaSpringTotem.HighestRank()
 
 func (shaman *Shaman) newTotemSpellConfig(flatCost int32, spellID int32, spellMask int64, gcd time.Duration) core.SpellConfig {
 	return core.SpellConfig{
@@ -34,7 +33,8 @@ func (shaman *Shaman) newTotemSpellConfig(flatCost int32, spellID int32, spellMa
 
 func (shaman *Shaman) registerWindfuryTotemSpell() {
 	duration := time.Second * 120
-	value := 445 * (1 + 0.15*float64(shaman.Talents.ImprovedWeaponTotems))
+	// TODO: Forever drops Improved Weapon Totems; untalented Windfury Totem AP only.
+	value := 445.0
 
 	wfProcAura := shaman.NewTemporaryStatsAura("Windfury Totem Proc (Self)", core.ActionID{SpellID: 25584}, stats.Stats{stats.AttackPower: value}, time.Millisecond*1500)
 	wfProcAura.MaxStacks = 2
@@ -136,7 +136,8 @@ func (shaman *Shaman) registerWindfuryTotemSpell() {
 
 func (shaman *Shaman) registerStrengthOfEarthTotemSpell() {
 	duration := time.Second * 120
-	value := core.StrengthOfEarthTotemValue(shaman.Talents.EnhancingTotems, shaman.CouldHaveSetBonus(ItemSetCycloneHarness, 2))
+	// TODO: Forever drops Enhancing Totems; untalented Strength of Earth Totem value only.
+	value := core.StrengthOfEarthTotemValue(0, shaman.CouldHaveSetBonus(ItemSetCycloneHarness, 2))
 	config := shaman.newTotemSpellConfig(strengthOfEarthTotemRank.Cost, strengthOfEarthTotemRank.SpellID, SpellMaskBasicTotem, strengthOfEarthTotemRank.GCD)
 	buffAura := shaman.RegisterAura(core.Aura{
 		Label:    "Strength Of Earth Totem (Self)",
@@ -165,7 +166,8 @@ func (shaman *Shaman) registerStrengthOfEarthTotemSpell() {
 
 func (shaman *Shaman) registerGraceOfAirTotemSpell() {
 	duration := time.Second * 120
-	value := 77 * []float64{1, 1.08, 1.15}[shaman.Talents.EnhancingTotems]
+	// TODO: Forever drops Enhancing Totems; untalented Grace of Air Totem value only.
+	value := 77.0
 	config := shaman.newTotemSpellConfig(graceOfAirTotemRank.Cost, graceOfAirTotemRank.SpellID, SpellMaskBasicTotem, graceOfAirTotemRank.GCD)
 	buffAura := shaman.RegisterAura(core.Aura{
 		Label:    "Grace Of Air Totem (Self)",
@@ -192,45 +194,12 @@ func (shaman *Shaman) registerGraceOfAirTotemSpell() {
 	shaman.RegisterSpell(config)
 }
 
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (shaman *Shaman) registerWrathOfAirTotemSpell() {
-	value := core.WrathOfAirTotemValue(shaman.Character.CouldHaveSetBonus(ItemSetCycloneRegalia, 2))
-
-	duration := time.Second * 120
-	config := shaman.newTotemSpellConfig(wrathOfAirTotemRank.Cost, wrathOfAirTotemRank.SpellID, SpellMaskBasicTotem, wrathOfAirTotemRank.GCD)
-	buffAura := shaman.RegisterAura(core.Aura{
-		Label:    "Wrath Of Air Totem (Self)",
-		ActionID: config.ActionID,
-		Duration: duration,
-	})
-
-	buffAura.NewExclusiveEffect(core.WrathOfAirTotemCategory+stats.SpellDamage.StatName()+"Add", false, core.ExclusiveEffect{
-		Priority: value,
-		OnGain: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.SpellDamage, value)
-		},
-		OnExpire: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.SpellDamage, -value)
-		},
-	})
-	buffAura.NewExclusiveEffect(core.WrathOfAirTotemCategory+stats.HealingPower.StatName()+"Add", false, core.ExclusiveEffect{
-		Priority: value,
-		OnGain: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.HealingPower, value)
-		},
-		OnExpire: func(ee *core.ExclusiveEffect, sim *core.Simulation) {
-			ee.Aura.Unit.AddStatDynamic(sim, stats.HealingPower, -value)
-		},
-	})
-
-	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		if shaman.AirTotemAura != nil {
-			shaman.AirTotemAura.Deactivate(sim)
-		}
-		shaman.TotemExpirations[AirTotem] = sim.CurrentTime + duration
-		shaman.AirTotemAura = buffAura
-		buffAura.Activate(sim)
-	}
-	shaman.RegisterSpell(config)
+	// Registered unconditionally, so this returns instead of panicking -- a panic
+	// here would stop the sim from starting at all rather than flagging one ability.
 }
 
 func (shaman *Shaman) registerManaSpringTotemSpell() {

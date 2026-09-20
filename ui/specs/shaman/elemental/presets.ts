@@ -1,65 +1,12 @@
 import * as PresetUtils from '@app/preset_utils';
-import {
-	Class,
-	ConsumesSpec,
-	Debuffs,
-	Drums,
-	IndividualBuffs,
-	PartyBuffs,
-	Profession,
-	PseudoStat,
-	Race,
-	RaidBuffs,
-	Stat,
-	TristateEffect,
-} from '@generated/proto/common';
+import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { ElementalShaman_Options as ElementalShamanOptions } from '@generated/proto/shaman';
 import { SavedTalents } from '@generated/proto/ui';
-import { Stats } from '@sim/proto/stats';
 import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
-import { Encounter } from '@sim/raid/encounter';
 
 import DefaultApl from './apls/default.apl.json';
-import P1AllianceGear from './gear_sets/p1_a.gear.json';
-import P1HordeGear from './gear_sets/p1_h.gear.json';
-import P2Gear from './gear_sets/p2.gear.json';
-import P3Gear from './gear_sets/p3.gear.json';
-import P4Gear from './gear_sets/p4.gear.json';
-import P5Gear from './gear_sets/p5.gear.json';
-import PreraidGear from './gear_sets/preraid.gear.json';
-
-// Preset options for this spec.
-// Eventually we will import these values for the raid sim too, so its good to
-// keep them in a separate file.
-
-export const PRERAID_PRESET = PresetUtils.makePresetGear('Pre-Raid', PreraidGear);
-export const P1_PRESET_A = PresetUtils.makePresetGear('Phase 1 (A)', P1AllianceGear);
-export const P1_PRESET_H = PresetUtils.makePresetGear('Phase 1 (H)', P1HordeGear);
-export const P2_PRESET = PresetUtils.makePresetGear('Phase 2', P2Gear);
-export const P3_PRESET = PresetUtils.makePresetGear('Phase 3', P3Gear);
-export const P4_PRESET = PresetUtils.makePresetGear('Phase 4', P4Gear);
-export const P5_PRESET = PresetUtils.makePresetGear('Phase 5', P5Gear);
 
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
-
-// Preset options for EP weights
-export const EP_PRESET_DEFAULT = PresetUtils.makePresetEpWeights(
-	'Default',
-	Stats.fromMap(
-		{
-			[Stat.StatIntellect]: 0.25,
-			[Stat.StatSpellDamage]: 1.0,
-			[Stat.StatNatureDamage]: 1.0,
-			[Stat.StatSpellCritRating]: 0.85,
-			[Stat.StatSpellHasteRating]: 1.18,
-			[Stat.StatSpellHitRating]: 2.12,
-			[Stat.StatMP5]: 0,
-		},
-		{
-			[PseudoStat.PseudoStatSchoolHitPercentNature]: 2.12,
-		},
-	),
-);
 
 // https://wowhead.com/forever/talent-calc and copy the numbers in the url.
 export const StandardTalents = {
@@ -124,13 +71,4 @@ export const DefaultConsumables = ConsumesSpec.create({
 	foodId: 27657, // Blackened Basilisk
 	mhImbueId: 25122, // Brilliant Wizard Oil
 	potId: 22839, // Destruction Potion
-});
-
-const ENCOUNTER_SINGLE_TARGET = PresetUtils.makePresetEncounter('Single Target Dummy', Encounter.defaultEncounterProto());
-
-export const P1_PRESET_BUILD_DEFAULT = PresetUtils.makePresetBuild('Default', {
-	talents: StandardTalents,
-	rotation: ROTATION_PRESET_DEFAULT,
-	encounter: ENCOUNTER_SINGLE_TARGET,
-	epWeights: EP_PRESET_DEFAULT,
 });

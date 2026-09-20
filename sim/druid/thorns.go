@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var thornsRank = spellData.Thorns.BySpellID(26992)
+var thornsRank = spellData.Thorns.HighestRank()
 
 // Self-cast Thorns (rank 7). Reuses the core raid-buff aura, passing the
 // druid's own Brambles talent points. If the Thorns raid buff is selected it
@@ -13,7 +13,9 @@ var thornsRank = spellData.Thorns.BySpellID(26992)
 func (druid *Druid) registerThornsSpell() {
 	thornsAura := druid.GetAura("Thorns")
 	if thornsAura == nil {
-		thornsAura = core.ThornsAura(druid.GetCharacter(), druid.Talents.Brambles)
+		// TODO: Forever drops Brambles; the core aura still takes a rank for it, so it is
+		// pinned to 0 until we know whether the effect moved onto another talent.
+		thornsAura = core.ThornsAura(druid.GetCharacter(), 0)
 	}
 
 	druid.RegisterSpell(Humanoid, core.SpellConfig{

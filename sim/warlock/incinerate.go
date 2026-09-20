@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var incinerateRank = spellData.Incinerate.BySpellID(32231)
+var incinerateRank = spellData.Incinerate.HighestRank()
 var incinerateCoeff = incinerateRank.Direct.BonusCoefficient()
 
 func (warlock *Warlock) registerIncinerate() {

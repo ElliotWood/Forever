@@ -118,14 +118,17 @@ func (item *Item) ParseItemFlags(uiItem *proto.UIItem) {
 func (item *Item) GetStats(itemLevel int) *stats.Stats {
 	stats := &stats.Stats{}
 	for i, alloc := range item.BonusStat {
-		stat, success := MapBonusStatIndexToStat(alloc)
+		mapped, success := MapBonusStatIndexToStats(alloc)
 		if !success {
 			// Skip this stat then
 			continue
 		}
-		stats[stat] = item.GetScaledStat(i, itemLevel)
-		if stat == proto.Stat_StatArmorPenetration {
-			stats[stat] = math.Abs(stats[stat])
+		value := item.GetScaledStat(i, itemLevel)
+		for _, stat := range mapped {
+			stats[stat] = value
+			if stat == proto.Stat_StatArmorPenetration {
+				stats[stat] = math.Abs(stats[stat])
+			}
 		}
 	}
 
@@ -182,11 +185,8 @@ func (item *Item) GetRandPropPoints(itemLevel int) int32 {
 func (item *Item) GetScaledStat(index int, itemLevel int) float64 {
 	//Todo check if overflow array
 
-	if itemLevel == item.ItemLevel {
-		// Maybe just return it?
-		return item.BonusAmountCalculated[index]
-	}
-
+	// This client ships no precomputed StatModifier_bonusAmount, so the allocation
+	// budget is the only source: 99.8% of stat slots carry a non-zero StatAlloc.
 	slotType := item.GetRandomSuffixType()
 	itemBudget := 0.0
 
@@ -202,8 +202,6 @@ func (item *Item) GetScaledStat(index int, itemLevel int) float64 {
 			//Not used right now in Cata
 			//socket_penalty := math.RoundNearby item.StatPercentageOfSocket[index] * SocketCost(itemLevel)
 			return rawValue - item.SocketModifier[index] // Todo: Could this be a calculated socket penalty?
-		} else {
-			return math.Floor(item.BonusAmountCalculated[index] * item.ApproximateScaleCoeff(item.ItemLevel, itemLevel))
 		}
 	}
 	return 0
@@ -233,12 +231,14 @@ func (item *Item) GetGemBonus() stats.Stats {
 			continue
 		}
 		if !bonus.EffectIsAura {
-			stat, success := MapBonusStatIndexToStat(effectStat)
+			mapped, success := MapBonusStatIndexToStats(effectStat)
 			if !success {
 				return stats
 			}
 			value := bonus.EffectPointsMin[i]
-			stats[stat] = float64(value)
+			for _, stat := range mapped {
+				stats[stat] = float64(value)
+			}
 		} else {
 			// This socket bonus in an Aura, need to loop over the raw SpellEffect data
 			// effectStat is the SpellID

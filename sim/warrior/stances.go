@@ -3,7 +3,6 @@ package warrior
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -25,7 +24,10 @@ func (warrior *Warrior) StanceMatches(other Stance) bool {
 }
 
 func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, defenseType core.DefenseType, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
-	maxRetainedRage := 10.0 + spellData.TacticalMastery.Effect(shared.A_DUMMY, 0).ValueAt(warrior.Talents.TacticalMastery)
+	// TODO: Forever drops Tactical Mastery and adds Improved Tactical Mastery, which is
+	// probably its replacement -- but the new talent's effect is not modelled yet, so
+	// this is the untalented base only.
+	maxRetainedRage := 10.0
 	actionID := aura.ActionID
 	rageMetrics := warrior.NewRageMetrics(actionID)
 
@@ -106,7 +108,8 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 
 func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
 	actionId := core.ActionID{SpellID: 2458}
-	threatMultiplier := 0.8 + spellData.ImprovedBerserkerStance.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_EFFECT3).FractionAt(warrior.Talents.ImprovedBerserkerStance)
+	// TODO: Forever drops Improved Berserker Stance; untalented threat modifier only.
+	threatMultiplier := 0.8
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:      "Berserker Stance",

@@ -43,7 +43,8 @@ export const AuraInput = <SpecType extends PaladinSimpleSpec>(labelTooltip: stri
 				actionId: ActionId.fromSpellId(20218),
 				value: PaladinAura.SanctityAura,
 				tooltip: 'Sanctity Aura',
-				showWhen: player => player.getTalents().sanctityAura,
+				// TODO: Forever drops the Sanctity Aura talent, so this option can never be taken.
+				showWhen: () => false,
 			},
 		],
 		storeField: ['rotation', 'talentsString'] as const,

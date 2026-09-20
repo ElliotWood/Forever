@@ -122,7 +122,8 @@ func (shaman *Shaman) registerMagmaTotemSpell() {
 
 func (shaman *Shaman) registerFireNovaTotemSpell() {
 	shaman.FireNovaTotemPA = &core.PendingAction{}
-	duration := time.Duration(4-shaman.Talents.ImprovedFireTotems) * time.Second
+	// TODO: Forever drops Improved Fire Totems; untalented activation delay only.
+	duration := time.Duration(4) * time.Second
 
 	shaman.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: 25537},

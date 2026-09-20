@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var pyroblastRank = spellData.Pyroblast.BySpellID(33938)
+var pyroblastRank = spellData.Pyroblast.HighestRank()
 
 func (mage *Mage) registerPyroblastSpell() {
 	actionID := core.ActionID{SpellID: pyroblastRank.SpellID}

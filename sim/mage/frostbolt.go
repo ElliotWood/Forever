@@ -27,7 +27,7 @@ func (mage *Mage) frostBoltConfig(config core.SpellConfig) core.SpellConfig {
 	}
 }
 
-var frostboltRank = spellData.Frostbolt.BySpellID(27072)
+var frostboltRank = spellData.Frostbolt.HighestRank()
 
 func (mage *Mage) registerFrostboltSpell() {
 	actionID := core.ActionID{SpellID: frostboltRank.SpellID}

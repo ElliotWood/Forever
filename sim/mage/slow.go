@@ -2,11 +2,9 @@ package mage
 
 import "github.com/wowsims/forever/sim/core"
 
+// TODO: uncalled -- Forever drops the Slow talent; re-gate before wiring back into
+// registerSpells.
 func (mage *Mage) registerSlowSpell() {
-	if !mage.Talents.Slow {
-		return
-	}
-
 	mage.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: 31589},
 		ClassSpellMask: MageSpellSlow,

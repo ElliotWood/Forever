@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var soulfireRank = spellData.SoulFire.BySpellID(30545)
+var soulfireRank = spellData.SoulFire.HighestRank()
 var soulfireCoeff = soulfireRank.Direct.BonusCoefficient()
 
 func (warlock *Warlock) registerSoulfire() {

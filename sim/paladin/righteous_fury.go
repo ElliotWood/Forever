@@ -1,7 +1,6 @@
 package paladin
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -13,11 +12,10 @@ import (
 func (paladin *Paladin) registerRighteousFury() {
 	actionID := core.ActionID{SpellID: 25780}
 
-	// Base 60% threat, raised by the talent's own 16/33/50 to 69.6% / 79.8% / 90%. Named by aura
-	// because the talent's other effect cuts damage taken, and either could land in Direct.
-	threatBonus := 0.6 * spellData.ImprovedRighteousFury.
-		Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).
-		MultiplierAt(paladin.Talents.ImprovedRighteousFury)
+	// TODO: Forever drops Improved Righteous Fury's threat bonus; the talent carries only the
+	// damage-taken reduction applied in applyImprovedRighteousFury, so the threat stays at the
+	// untalented base 60%.
+	threatBonus := 0.6
 
 	rfAura := paladin.RegisterAura(core.Aura{
 		Label:    "Righteous Fury",

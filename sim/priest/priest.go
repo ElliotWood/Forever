@@ -7,7 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var TalentTreeSizes = [3]int{22, 21, 21}
+var TalentTreeSizes = [3]int{18, 17, 18}
 
 type Priest struct {
 	core.Character
@@ -75,9 +75,6 @@ func (priest *Priest) ApplyTalents() {
 	priest.applyMeditation()
 	priest.applyMentalAgility()
 	priest.applyMentalStrength()
-	priest.applyEnlightenment()
-	priest.applyFocusedPower()
-	priest.applyForceOfWill()
 	priest.applySilentResolve()
 	priest.applyPowerInfusion()
 
@@ -85,7 +82,6 @@ func (priest *Priest) ApplyTalents() {
 	priest.applyHolyNova()
 	priest.applyDivineFury()
 	priest.applySearingLight()
-	priest.applySurgeOfLight()
 	priest.applySpiritualGuidance()
 	priest.applySpiritOfRedemption()
 
@@ -94,15 +90,49 @@ func (priest *Priest) ApplyTalents() {
 	priest.applyDarkness()
 	priest.applyShadowFocus()
 	priest.applyImprovedShadowWordPain()
-	priest.applyFocusedMind()
 	priest.applyShadowAffinity()
-	priest.applyShadowPower()
 	priest.applyShadowWeaving()
-	priest.applyMisery()
 	priest.applyShadowform()
 	priest.applyVampiricEmbrace()
-	priest.applyVampiricTouch()
 	priest.applyImprovedMindBlast()
+
+	// Forever additions, not yet implemented.
+	// Discipline
+	priest.applyPowerInLight()
+	priest.applyWandSpecialization()
+	priest.applyTwinDisciplines()
+	priest.applyHolyPrecision()
+	priest.applyImprovedPowerWordShield()
+	priest.applyMartyrdom()
+	priest.applyImprovedInnerFire()
+	priest.applySoulWarding()
+	priest.applyImprovedManaBurn()
+	priest.applyPenance()
+	priest.applyRenewedHope()
+	priest.applyDivineAegis()
+	// Holy
+	priest.applyTwilightFocus()
+	priest.applyImprovedRenew()
+	priest.applyHolySpecialization()
+	priest.applySpellWarding()
+	priest.applyBlessedRecovery()
+	priest.applyInspiration()
+	priest.applyHolyReach()
+	priest.applyImprovedHealing()
+	priest.applyBindingHeal()
+	priest.applyLitanyOfLight()
+	priest.applySpiritualHealing()
+	priest.applyPrayerOfMending()
+	// Shadow Magic
+	priest.applyBlackout()
+	priest.applySpiritTap()
+	priest.applyShadowReach()
+	priest.applyImprovedPsychicScream()
+	priest.applyImprovedMindFlay()
+	priest.applyImprovedFade()
+	priest.applySilence()
+	priest.applyDevouringContagion()
+	priest.applyEarlyDemise()
 }
 
 func (priest *Priest) Reset(_ *core.Simulation) {

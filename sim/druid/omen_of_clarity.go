@@ -7,11 +7,9 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
+// TODO: uncalled -- Forever drops the Omen of Clarity talent; re-gate before wiring
+// back into ApplyTalents.
 func (druid *Druid) applyOmenOfClarity() {
-	if !druid.Talents.OmenOfClarity {
-		return
-	}
-
 	const ppm = 2.0
 
 	const clearcastingSpells = DruidSpellMangleCat | DruidSpellRake | DruidSpellRip |

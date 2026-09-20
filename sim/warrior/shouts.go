@@ -53,11 +53,12 @@ func (warrior *Warrior) MakeShoutSpellHelper(config ShoutHelperConfig) *core.Spe
 	})
 }
 
-var battleShoutRank = spellData.BattleShout.BySpellID(2048)
-var commandingShoutRank = spellData.CommandingShout.BySpellID(469)
+var battleShoutRank = spellData.BattleShout.HighestRank()
 
 func (warrior *Warrior) registerShouts() {
-	commandingPresenceMultiplier := spellData.CommandingPresence.MultiplierAt(warrior.Talents.CommandingPresence)
+	// TODO: Forever drops Commanding Presence. Neutral multiplier until we know whether
+	// the shout scaling moved to another talent.
+	commandingPresenceMultiplier := 1.0
 
 	warrior.registerDemoralizingShout()
 
@@ -86,28 +87,9 @@ func (warrior *Warrior) registerShouts() {
 		AllyAuras: battleShoutAuras,
 	})
 
-	hasT6Tank2P := warrior.CouldHaveSetBonus(ItemSetOnslaughtArmor, 2)
-	commandingShoutAuras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
-		aura := core.CommandingShoutAura(
-			warrior.GetCharacter(),
-			warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone,
-			warrior.Talents.BoomingVoice,
-			commandingPresenceMultiplier,
-			hasT6Tank2P,
-		)
-		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutCommanding, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
-		return aura
-	})
-
-	warrior.CommandingShout = warrior.MakeShoutSpellHelper(ShoutHelperConfig{
-		ActionID:    core.ActionID{SpellID: commandingShoutRank.SpellID},
-		RageCost:    commandingShoutRank.Cost,
-		SpellMask:   SpellMaskCommandingShout,
-		ThreatBonus: 68,
-		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
-			aura := commandingShoutAuras.Get(&warrior.Unit)
-			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= core.GetCommandingShoutValue(warrior.Talents.BoomingVoice, commandingPresenceMultiplier, hasT6Tank2P, sim.CurrentTime < 0)
-		},
-		AllyAuras: commandingShoutAuras,
-	})
+	// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+	// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+	// no ranked SkillLineAbility row -- so there is no data to build the spell from.
+	// Left unregistered (warrior.CommandingShout stays nil) rather than panicking here, since
+	// this function also builds Battle Shout, which every warrior needs working.
 }

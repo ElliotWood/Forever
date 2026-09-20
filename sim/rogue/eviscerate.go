@@ -1,11 +1,10 @@
 package rogue
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-var eviscerateRank = spellData.Eviscerate.BySpellID(26865)
+var eviscerateRank = spellData.Eviscerate.HighestRank()
 
 func (rogue *Rogue) registerEviscerate() {
 	flatDamage, flatDamageMax := eviscerateRank.Direct.Range()
@@ -22,8 +21,10 @@ func (rogue *Rogue) registerEviscerate() {
 		ClassSpellMask: RogueSpellEviscerate,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost:          eviscerateRank.Cost,
-			Refund:        spellData.QuickRecovery.Effect(shared.A_DUMMY, 0).FractionAt(rogue.Talents.QuickRecovery),
+			Cost: eviscerateRank.Cost,
+			// TODO: Forever drops Quick Recovery; no energy refund until we know whether the
+			// effect moved onto another talent.
+			Refund:        0,
 			RefundMetrics: rogue.EnergyRefundMetrics,
 		},
 		Cast: core.CastConfig{

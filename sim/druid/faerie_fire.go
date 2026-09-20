@@ -4,12 +4,13 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var faerieFireRank = spellData.FaerieFire.BySpellID(26993)
-var faerieFireFeralRank = spellData.FaerieFireFeral.BySpellID(27011)
+var faerieFireRank = spellData.FaerieFire.HighestRank()
 
 func (druid *Druid) registerFaerieFireSpell() {
 	auras := druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.FaerieFireAura(target, float64(druid.Talents.ImprovedFaerieFire))
+		// TODO: Forever drops Improved Faerie Fire; untalented (0 points) until we know
+		// whether the effect moved onto another talent.
+		return core.FaerieFireAura(target, 0)
 	})
 
 	druid.FaerieFire = druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{
@@ -45,46 +46,12 @@ func (druid *Druid) registerFaerieFireSpell() {
 	})
 }
 
+// TODO: uncalled -- Forever drops the Faerie Fire (Feral) talent; re-gate before wiring
+// back into RegisterFeralCatSpells/RegisterFeralTankSpells.
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (druid *Druid) registerFaerieFireFeralSpell() {
-	if !druid.Talents.FaerieFireFeral {
-		return
-	}
-
-	druid.FaerieFireAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.FaerieFireAura(target, float64(druid.Talents.ImprovedFaerieFire))
-	})
-
-	druid.FaerieFireFeral = druid.RegisterSpell(Cat|Bear, core.SpellConfig{
-		ClassSpellMask: DruidSpellFaerieFireFeral,
-		ActionID:       core.ActionID{SpellID: faerieFireFeralRank.SpellID},
-		SpellSchool:    faerieFireFeralRank.SpellSchool,
-		DefenseType:    faerieFireFeralRank.DefenseType,
-		ProcMask:       core.ProcMaskSpellDamage,
-		Flags:          core.SpellFlagAPL,
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: faerieFireFeralRank.GCD,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    druid.NewTimer(),
-				Duration: faerieFireFeralRank.Cooldown,
-			},
-		},
-
-		ThreatMultiplier: 1,
-		FlatThreatBonus:  132,
-		MaxRange:         faerieFireFeralRank.MaxRange,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMagicHit)
-
-			if result.Landed() {
-				druid.FaerieFireAuras.Get(target).Activate(sim)
-			}
-		},
-
-		RelatedAuraArrays: druid.FaerieFireAuras.ToMap(),
-	})
+	// Registered unconditionally, so this returns instead of panicking -- a panic
+	// here would stop the sim from starting at all rather than flagging one ability.
 }

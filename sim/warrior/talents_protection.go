@@ -5,14 +5,12 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (war *Warrior) registerProtectionTalents() {
 	// Tier 1
 	// Improved Bloodrage implemented in bloodrage.go
-	war.registerTacticalMastery()
 	war.registerAnticipation()
 
 	// Tier 2
@@ -21,7 +19,6 @@ func (war *Warrior) registerProtectionTalents() {
 
 	// Tier 3
 	war.registerLastStand()
-	war.registerImprovedShieldBlock()
 	// Improved Revenge not implemented
 	war.registerDefiance()
 
@@ -36,42 +33,22 @@ func (war *Warrior) registerProtectionTalents() {
 	// Improved Shield Bash not implemented
 
 	// Tier 6
-	war.registerShieldMastery()
-	war.registerOneHandedWeaponSpecialization()
 
 	// Tier 7
-	war.registerImprovedDefensiveStance()
 	war.registerShieldSlam()
 	war.registerFocusedRage()
 
 	// Tier 8
-	war.registerVitality()
 
 	// Tier 9
-	war.registerDevastate()
-}
 
-func (war *Warrior) registerTacticalMastery() {
-	if war.Talents.TacticalMastery == 0 {
-		return
-	}
-
-	// Retained rage when swapping stances implemented in stances.go
-	war.OnSpellRegistered(func(spell *core.Spell) {
-		if !spell.Matches(SpellMaskDefensiveStance) {
-			return
-		}
-
-		spell.RelatedSelfBuff.
-			AttachSpellMod(core.SpellModConfig{
-				ClassMask: SpellMaskMortalStrike | SpellMaskBloodthirst,
-				Kind:      core.SpellMod_ThreatMultiplier_Pct,
-				// Both threat effects are A_ADD_PCT_MODIFIER/SPELLMOD_THREAT, one masked to Mortal
-				// Strike and one to Bloodthirst, so Effect cannot tell them apart. They carry the
-				// same 21/42/63.
-				FloatValue: spellData.TacticalMastery.EffectAt(1).FractionAt(war.Talents.TacticalMastery),
-			})
-	})
+	// Forever additions, not yet implemented.
+	war.registerMasterOfDefense()
+	war.registerImprovedRevenge()
+	war.registerImprovedDisarm()
+	war.registerVanguard()
+	war.registerImprovedShieldBash()
+	war.registerBastion()
 }
 
 func (war *Warrior) registerDefiance() {
@@ -79,7 +56,10 @@ func (war *Warrior) registerDefiance() {
 		return
 	}
 
-	war.AddStat(stats.ExpertiseRating, spellData.Defiance.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).ValueAt(war.Talents.Defiance)*core.ExpertisePerQuarterPercentReduction)
+	// TODO: Forever drops Defiance's expertise; the spell carries only the threat modifier
+	// applied below (A_MOD_THREAT, +5/10/15%), so expertise is pinned to the untalented 0.
+	expertiseBonus := 0.0
+	war.AddStat(stats.ExpertiseRating, expertiseBonus)
 	war.OnSpellRegistered(func(spell *core.Spell) {
 		if !spell.Matches(SpellMaskDefensiveStance) {
 			return
@@ -107,8 +87,9 @@ func (war *Warrior) registerShieldSpecialization() {
 	rageMetrics := war.NewRageMetrics(core.ActionID{SpellID: 23602})
 
 	war.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Shield Specialization",
-		ProcChance:         spellData.ShieldSpecialization.ProcChanceAt(war.Talents.ShieldSpecialization),
+		Name: "Shield Specialization",
+		// Effect 0 is the block bonus; effect 1 is the proc chance. ProcChanceAt reads a flat 100%.
+		ProcChance:         spellData.ShieldSpecialization.EffectAt(1).FractionAt(war.Talents.ShieldSpecialization),
 		TriggerImmediately: true,
 		Outcome:            core.OutcomeBlock,
 		Callback:           core.CallbackOnSpellHitTaken,
@@ -123,7 +104,8 @@ func (war *Warrior) registerToughness() {
 		return
 	}
 
-	war.MultiplyStat(stats.Armor, spellData.Toughness.MultiplierAt(war.Talents.Toughness))
+	// The bonus-armor effect carries the same ladder; this multiplies base armor only.
+	war.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(war.Talents.Toughness))
 }
 
 func (war *Warrior) registerLastStand() {
@@ -177,29 +159,6 @@ func (war *Warrior) registerLastStand() {
 	})
 }
 
-func (war *Warrior) registerImprovedShieldBlock() {
-	if !war.Talents.ImprovedShieldBlock {
-		return
-	}
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskShieldBlock,
-		Kind:      core.SpellMod_BuffDuration_Flat,
-		TimeValue: time.Second * 1,
-	})
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskShieldBlock,
-		Kind:      core.SpellMod_Custom,
-		ApplyCustom: func(mod *core.SpellMod, spell *core.Spell) {
-			spell.RelatedSelfBuff.MaxStacks += 1
-		},
-		RemoveCustom: func(mod *core.SpellMod, spell *core.Spell) {
-			spell.RelatedSelfBuff.MaxStacks -= 1
-		},
-	})
-}
-
 func (war *Warrior) registerImprovedSunderArmor() {
 	if war.Talents.ImprovedSunderArmor == 0 {
 		return
@@ -209,7 +168,11 @@ func (war *Warrior) registerImprovedSunderArmor() {
 	war.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskSunderArmor | SpellMaskDevastate,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  -war.Talents.TacticalMastery,
+		// TODO: this read war.Talents.TacticalMastery, which looks like a long-standing
+		// copy-paste bug -- the registrar guards ImprovedSunderArmor. Forever drops
+		// Tactical Mastery entirely, so it now scales off its own talent; the per-rank
+		// rage reduction needs confirming against the Forever tooltip.
+		IntValue: -war.Talents.ImprovedSunderArmor,
 	})
 }
 
@@ -266,77 +229,13 @@ func (war *Warrior) registerConcussionBlow() {
 	})
 }
 
-func (war *Warrior) registerShieldMastery() {
-	if war.Talents.ShieldMastery == 0 {
-		return
-	}
+var shieldSlamRank = spellData.ShieldSlam.HighestRank()
 
-	war.PseudoStats.BlockValueMultiplier *= spellData.ShieldMastery.MultiplierAt(war.Talents.ShieldMastery)
-}
-
-func (war *Warrior) registerOneHandedWeaponSpecialization() {
-	if war.Talents.OneHandedWeaponSpecialization == 0 {
-		return
-	}
-
-	weaponMod := war.AddDynamicMod(core.SpellModConfig{
-		School:     core.SpellSchoolPhysical,
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.OneHandedWeaponSpecialization.FractionAt(war.Talents.OneHandedWeaponSpecialization),
-	})
-
-	hasOneHandEquipped := func() bool {
-		mh := war.GetMHWeapon()
-		if mh != nil && (mh.HandType == proto.HandType_HandTypeOneHand || mh.HandType == proto.HandType_HandTypeMainHand) {
-			return true
-		}
-		oh := war.GetOHWeapon()
-		if oh != nil && (oh.HandType == proto.HandType_HandTypeOneHand || oh.HandType == proto.HandType_HandTypeOffHand) {
-			return true
-		}
-		return false
-	}
-
-	if hasOneHandEquipped() {
-		weaponMod.Activate()
-	}
-
-	war.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		if hasOneHandEquipped() {
-			weaponMod.Activate()
-		} else {
-			weaponMod.Deactivate()
-		}
-	})
-}
-
-func (war *Warrior) registerImprovedDefensiveStance() {
-	impDefStanceMultiplier := spellData.ImprovedDefensiveStance.MultiplierAt(war.Talents.ImprovedDefensiveStance)
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskDefensiveStance,
-		Kind:      core.SpellMod_Custom,
-		ApplyCustom: func(mod *core.SpellMod, spell *core.Spell) {
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexArcane] *= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexFire] *= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexFrost] *= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexHoly] *= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexNature] *= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexShadow] *= impDefStanceMultiplier
-		},
-		RemoveCustom: func(mod *core.SpellMod, spell *core.Spell) {
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexArcane] /= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexFire] /= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexFrost] /= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexHoly] /= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexNature] /= impDefStanceMultiplier
-			war.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexShadow] /= impDefStanceMultiplier
-		},
-	})
-}
-
-var shieldSlamRank = spellData.ShieldSlam.BySpellID(30356)
-var devastateRank = spellData.Devastate.BySpellID(30022)
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from. Nothing
+// in this package currently consumes a Devastate rank pin (DevastateSunder in warrior.go
+// is declared but never assigned), so there is no registrar body left to stub here.
 
 func (war *Warrior) registerShieldSlam() {
 	if !war.Talents.ShieldSlam {
@@ -397,55 +296,74 @@ func (war *Warrior) registerFocusedRage() {
 	})
 }
 
-func (war *Warrior) registerVitality() {
-	if war.Talents.Vitality == 0 {
+// registerMasterOfDefense implements Master of Defense, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerMasterOfDefense() {
+	if war.Talents.MasterOfDefense == 0 {
 		return
 	}
 
-	war.MultiplyStat(stats.Stamina, spellData.Vitality.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 2).MultiplierAt(war.Talents.Vitality))
-	war.MultiplyStat(stats.Strength, spellData.Vitality.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(war.Talents.Vitality))
+	panic("To be implemented")
 }
 
-func (war *Warrior) registerDevastate() {
-	if !war.Talents.Devastate {
+// registerImprovedRevenge implements Improved Revenge, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerImprovedRevenge() {
+	if war.Talents.ImprovedRevenge == 0 {
 		return
 	}
 
-	war.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: devastateRank.SpellID},
-		ClassSpellMask: SpellMaskDevastate,
-		SpellSchool:    devastateRank.SpellSchool,
-		DefenseType:    devastateRank.DefenseType,
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		MaxRange:       core.MaxMeleeRange,
+	panic("To be implemented")
+}
 
-		RageCost: core.RageCostOptions{
-			Cost:   devastateRank.Cost,
-			Refund: 0.8,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: devastateRank.GCD,
-			},
-			IgnoreHaste: true,
-		},
+// registerImprovedDisarm implements Improved Disarm, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerImprovedDisarm() {
+	if war.Talents.ImprovedDisarm == 0 {
+		return
+	}
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		FlatThreatBonus:  100,
+	panic("To be implemented")
+}
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := war.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)) * 0.5
-			sunderStacks := war.SunderArmorAuras.Get(target).GetStacks()
-			sunderDamage := core.TernaryFloat64(war.CanApplySunderAura(target), float64(sunderStacks)*35, 0)
-			result := spell.CalcAndDealDamage(sim, target, baseDamage+sunderDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+// registerVanguard implements Vanguard, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerVanguard() {
+	if !war.Talents.Vanguard {
+		return
+	}
 
-			if result.Landed() {
-				war.SunderArmorDevastate.Cast(sim, target)
-			} else {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	panic("To be implemented")
+}
+
+// registerImprovedShieldBash implements Improved Shield Bash, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerImprovedShieldBash() {
+	if war.Talents.ImprovedShieldBash == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// registerBastion implements Bastion, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (war *Warrior) registerBastion() {
+	if war.Talents.Bastion == 0 {
+		return
+	}
+
+	panic("To be implemented")
 }

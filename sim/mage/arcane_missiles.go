@@ -6,7 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var arcaneMissilesRank = spellData.ArcaneMissiles.BySpellID(38699)
+var arcaneMissilesRank = spellData.ArcaneMissiles.HighestRank()
 
 func (mage *Mage) registerArcaneMissilesSpell() {
 	// Values found at https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=exact%253A7268

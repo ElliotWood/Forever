@@ -16,33 +16,25 @@ func (paladin *Paladin) registerTalentSpells() {
 		paladin.registerDivineFavor()
 	}
 	if paladin.Talents.HolyShock {
-		HolyShockRankMap.RegisterAll(paladin.registerHolyShock)
+		paladin.registerHolyShock(shared.SpellData{})
 	}
-	if paladin.Talents.DivineIllumination {
-		paladin.registerDivineIllumination()
-	}
+	// Divine Illumination: Forever drops the talent; see registerDivineIllumination
 
 	// Protection Tree
 	if paladin.Talents.HolyShield {
 		HolyShieldRankMap.RegisterAll(paladin.registerHolyShield)
 	}
-	if paladin.Talents.AvengersShield {
-		AvengersShieldRankMap.RegisterAll(paladin.registerAvengersShield)
-	}
+	// Avenger's Shield: Forever drops the talent; see registerAvengersShield
 
 	// Retribution Tree
 	if paladin.Talents.SealOfCommand {
 		SealOfCommandRanks.RegisterAll(paladin.registerSealOfCommandRank)
 	}
-	if paladin.Talents.SanctityAura {
-		paladin.registerSanctityAura()
-	}
+	// Sanctity Aura: Forever drops the talent; see registerSanctityAura
 	// if paladin.Talents.Repentance {
 	// 	paladin.registerRepentance()
 	// }
-	if paladin.Talents.CrusaderStrike {
-		paladin.registerCrusaderStrike()
-	}
+	// Crusader Strike: Forever drops the talent; see registerCrusaderStrike
 }
 
 func (paladin *Paladin) ApplyTalents() {
@@ -66,9 +58,6 @@ func (paladin *Paladin) ApplyTalents() {
 	// TODO: Implement pushback resistance
 
 	// Improved Seal of Righteousness (Tier 2) - Increases the damage done by your Seal of Righteousness and its Judgement by 3/6/9/12/15%
-	if paladin.Talents.ImprovedSealOfRighteousness > 0 {
-		paladin.applyImprovedSealOfRighteousness()
-	}
 
 	// Healing Light (Tier 2) - Increases the amount healed by your Holy Light and Flash of Light spells by 4/8/12%
 	if paladin.Talents.HealingLight > 0 {
@@ -92,17 +81,11 @@ func (paladin *Paladin) ApplyTalents() {
 	}
 
 	// Improved Blessing of Wisdom (Tier 4) - Increases the effect of your Blessing of Wisdom spell by 10/20%
-	if paladin.Talents.ImprovedBlessingOfWisdom > 0 {
-		paladin.applyImprovedBlessingOfWisdom()
-	}
 
 	// Pure of Heart (Tier 5) - Increases your resistance to Curse and Disease effects by 5/10/15%
 	// TODO: Implement resistance
 
 	// Sanctified Light (Tier 6) - Increases the critical effect chance of your Holy Light and Holy Shock spells by 2/4/6%
-	if paladin.Talents.SanctifiedLight > 0 {
-		paladin.applySanctifiedLight()
-	}
 
 	// Purifying Power (Tier 6) - Reduces the mana cost of your Cleanse and Consecration spells by 5/10%, and increases the critical strike chance of your Exorcism and Holy Wrath spells by 10/20%
 	if paladin.Talents.PurifyingPower > 0 {
@@ -121,18 +104,12 @@ func (paladin *Paladin) ApplyTalents() {
 	// TODO: Implement damage reduction
 
 	// Holy Guidance (Tier 9) - Increases your spell damage and healing by 7/14/21/28/35% of your total Intellect
-	if paladin.Talents.HolyGuidance > 0 {
-		paladin.applyHolyGuidance()
-	}
 
 	// ==================
 	// Protection Talents
 	// ==================
 
 	// Improved Devotion Aura (Tier 1) - Increases the armor bonus of your Devotion Aura by 8/16/24/32/40%
-	if paladin.Talents.ImprovedDevotionAura > 0 {
-		paladin.applyImprovedDevotionAura()
-	}
 
 	// Redoubt (Tier 1) - Increases your chance to block by 6/12/18/24/30% after being the victim of a critical strike
 	if paladin.Talents.Redoubt > 0 {
@@ -177,9 +154,6 @@ func (paladin *Paladin) ApplyTalents() {
 	// Implemented in auras.go
 
 	// Spell Warding (Tier 5) - All spell damage taken is reduced by 2/4%
-	if paladin.Talents.SpellWarding > 0 {
-		paladin.applySpellWarding()
-	}
 
 	// Reckoning (Tier 6) - Gives you a 2/4/6/8/10% chance after being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack
 	if paladin.Talents.Reckoning > 0 {
@@ -197,28 +171,16 @@ func (paladin *Paladin) ApplyTalents() {
 	}
 
 	// Improved Holy Shield (Tier 8) - Increases damage caused by Holy Shield by 10/20% and increases the number of charges by 2/4
-	if paladin.Talents.HolyShield && paladin.Talents.ImprovedHolyShield > 0 {
-		paladin.applyImprovedHolyShield()
-	}
 
 	// Ardent Defender (Tier 8) - When you have less than 35% health, all damage taken is reduced by 6/12/18/24/30%
-	if paladin.Talents.ArdentDefender > 0 {
-		paladin.applyArdentDefender()
-	}
 
 	// Combat Expertise (Tier 9) - Increases your expertise by 1/2/3/4/5, total Stamina by 2/4/6/8/10% and spell critical strike chance by 1/2/3/4/5%
-	if paladin.Talents.CombatExpertise > 0 {
-		paladin.applyCombatExpertise()
-	}
 
 	// ==================
 	// Retribution Talents
 	// ==================
 
 	// Improved Blessing of Might (Tier 1) - Increases the melee attack power bonus of your Blessing of Might by 4/8/12/16/20%
-	if paladin.Talents.ImprovedBlessingOfMight > 0 {
-		paladin.applyImprovedBlessingOfMight()
-	}
 
 	// Benediction (Tier 1) - Reduces the mana cost of your Judgement and Seal spells by 3/6/9/12/15%
 	if paladin.Talents.Benediction > 0 {
@@ -253,9 +215,6 @@ func (paladin *Paladin) ApplyTalents() {
 	// TODO: Implement reflect
 
 	// Improved Retribution Aura (Tier 5) - Increases the damage done by your Retribution Aura by 25/50%
-	if paladin.Talents.ImprovedRetributionAura > 0 {
-		paladin.applyImprovedRetributionAura()
-	}
 
 	// Crusade (Tier 5) - Increases all damage caused by 1/2/3% and all damage caused against Humanoids, Demons, Undead and Elementals by an additional 1/2/3%
 	if paladin.Talents.Crusade > 0 {
@@ -269,9 +228,6 @@ func (paladin *Paladin) ApplyTalents() {
 
 	// Improved Sanctity Aura (Tier 7) - Increases the damage caused by all party members within 30 yards of the Paladin with Sanctity Aura active by 1/2%
 	// Note: This modifies Sanctity Aura if talented
-	if paladin.Talents.ImprovedSanctityAura > 0 {
-		paladin.applyImprovedSanctityAura()
-	}
 
 	// Vengeance (Tier 7) - Gives you a 1/2/3/4/5% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability
 	if paladin.Talents.Vengeance > 0 {
@@ -284,19 +240,35 @@ func (paladin *Paladin) ApplyTalents() {
 	}
 
 	// Sanctified Seals (Tier 8) - Increases your chance to critically hit with all spells and attacks by 1/2/3% and reduces the chance your Seals will be dispelled by 33/67/100%
-	if paladin.Talents.SanctifiedSeals > 0 {
-		paladin.applySanctifiedSeals()
-	}
 
 	// Divine Purpose (Tier 9) - Reduces your chance to be hit by spells and ranged attacks by 1/2/3%
-	if paladin.Talents.DivinePurpose > 0 {
-		paladin.applyDivinePurposeTalent()
-	}
 
 	// Fanaticism (Tier 9) - Increases the critical strike chance of all Judgements capable of a critical hit by 3/6/9/12/15% and reduces threat caused by all actions by 6/12/18/24/30% except when under the effects of Righteous Fury
-	if paladin.Talents.Fanaticism > 0 {
-		paladin.applyFanaticism()
-	}
+
+	// Forever additions, not yet implemented.
+	paladin.applySpiritualFocus()
+	paladin.applyImprovedSeals()
+	paladin.applyUnyieldingFaith()
+	paladin.applyVoiceOfTruth()
+	paladin.applyReverence()
+	paladin.applyInfusionOfLight()
+	paladin.applyDivinePrecision()
+	paladin.applyConsecratedGround()
+	paladin.applyLightsVigil()
+	paladin.applyGuardiansFavor()
+	paladin.applyImprovedSealOfFury()
+	paladin.applySwiftJudgement()
+	paladin.applyImprovedHammerOfJustice()
+	paladin.applyTemplarsBulwark()
+	paladin.applyIronCreed()
+	paladin.applyHolyConduit()
+	paladin.applyPursuitOfJustice()
+	paladin.applyEyeForAnEye()
+	paladin.applySacredArbiter()
+	paladin.applyChampionOfTheLight()
+	paladin.applyInstrumentOfLaw()
+	paladin.applyTwistOfLight()
+	paladin.applyImprovedHolyStrike()
 }
 
 // ==================
@@ -314,15 +286,6 @@ func (paladin *Paladin) applyDivineIntellect() {
 	paladin.MultiplyStat(stats.Intellect, bonus)
 }
 
-// Improved Seal of Righteousness - Increases the damage done by your Seal of Righteousness and its Judgement by 3/6/9/12/15%
-func (paladin *Paladin) applyImprovedSealOfRighteousness() {
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: 0.03 * float64(paladin.Talents.ImprovedSealOfRighteousness),
-		ClassMask:  SpellMaskSealOfRighteousness | SpellMaskJudgementOfRighteousness,
-	})
-}
-
 // Healing Light - Increases the amount healed by your Holy Light and Flash of Light spells by 4/8/12%
 func (paladin *Paladin) applyHealingLight() {
 	paladin.AddStaticMod(core.SpellModConfig{
@@ -337,20 +300,6 @@ func (paladin *Paladin) applyIllumination() {
 	// TODO: Implement mana return on crit
 }
 
-// Improved Blessing of Wisdom - Increases the effect of your Blessing of Wisdom spell by 10/20%
-func (paladin *Paladin) applyImprovedBlessingOfWisdom() {
-	// TODO: Implement Blessing of Wisdom modifier
-}
-
-// Sanctified Light - Increases the critical effect chance of your Holy Light and Holy Shock spells by 2/4/6%
-func (paladin *Paladin) applySanctifiedLight() {
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.SanctifiedLight.ValueAt(paladin.Talents.SanctifiedLight),
-		ClassMask:  SpellMaskHolyLight | SpellMaskHolyShock,
-	})
-}
-
 // Purifying Power - Reduces the mana cost of your Cleanse and Consecration spells by 5/10%, and increases the critical strike chance of your Exorcism and Holy Wrath spells by 10/20%
 func (paladin *Paladin) applyPurifyingPower() {
 	paladin.AddStaticMod(core.SpellModConfig{
@@ -358,9 +307,13 @@ func (paladin *Paladin) applyPurifyingPower() {
 		FloatValue: -0.05 * float64(paladin.Talents.PurifyingPower),
 		ClassMask:  SpellMaskConsecration, // Cleanse not modeled
 	})
+	// TODO: Forever drops Purifying Power's crit bonus; the spell carries only a cost
+	// (-10% per rank) and a cooldown (-16.5% per rank) modifier, so the crit bonus is pinned
+	// to the untalented 0.
+	exorcismHolyWrathBonusCrit := 0.0
 	paladin.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.PurifyingPower.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(paladin.Talents.PurifyingPower),
+		FloatValue: exorcismHolyWrathBonusCrit,
 		ClassMask:  SpellMaskExorcism | SpellMaskHolyWrath,
 	})
 }
@@ -374,19 +327,9 @@ func (paladin *Paladin) applyHolyPowerTalent() {
 	})
 }
 
-// Holy Guidance - Increases your spell damage and healing by 7/14/21/28/35% of your total Intellect
-func (paladin *Paladin) applyHolyGuidance() {
-	paladin.AddStatDependency(stats.Intellect, stats.SpellDamage, spellData.HolyGuidance.Effect(shared.A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT, 126).FractionAt(paladin.Talents.HolyGuidance))
-}
-
 // ==================
 // Protection Talent Implementations
 // ==================
-
-// Improved Devotion Aura - Increases the armor bonus of your Devotion Aura by 8/16/24/32/40%
-func (paladin *Paladin) applyImprovedDevotionAura() {
-	// Handled in registerDevotionAura() where the talent points are read directly.
-}
 
 // Redoubt - Increases your chance to block by 6/12/18/24/30% after being the victim of a melee or ranged critical strike. Lasts 10 sec or 5 blocks.
 func (paladin *Paladin) applyRedoubt() {
@@ -423,30 +366,7 @@ func (paladin *Paladin) applyRedoubt() {
 
 // Shield Specialization - Increases the amount of damage absorbed by your shield by 10/20/30%
 func (paladin *Paladin) applyShieldSpecialization() {
-	paladin.PseudoStats.BlockValueMultiplier *= spellData.ShieldSpecialization.MultiplierAt(paladin.Talents.ShieldSpecialization)
-}
-
-// Ardent Defender - When you have less than 35% health, all damage taken is reduced by 6/12/18/24/30%
-func (paladin *Paladin) applyArdentDefender() {
-	damageReduction := 1.0 - 0.06*float64(paladin.Talents.ArdentDefender)
-
-	procAura := paladin.RegisterAura(core.Aura{
-		Label:    "Ardent Defender",
-		ActionID: core.ActionID{SpellID: 31854},
-		Duration: core.NeverExpires,
-	}).AttachMultiplicativePseudoStatBuff(&paladin.PseudoStats.DamageTakenMultiplier, damageReduction)
-
-	paladin.MakeProcTriggerAura(core.ProcTrigger{
-		Name:     "Ardent Defender Talent",
-		Callback: core.CallbackOnSpellHitTaken,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if paladin.CurrentHealthPercent() < 0.35 {
-				procAura.Activate(sim)
-			} else {
-				procAura.Deactivate(sim)
-			}
-		},
-	})
+	paladin.PseudoStats.BlockValueMultiplier *= spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_VALUE_PCT, 0).MultiplierAt(paladin.Talents.ShieldSpecialization)
 }
 
 // Precision - Increases your chance to hit with melee weapons and spells by 1/2/3%
@@ -466,7 +386,8 @@ func (paladin *Paladin) applyPrecision() {
 
 // Toughness - Increases your armor value from items by 2/4/6/8/10%
 func (paladin *Paladin) applyToughness() {
-	paladin.MultiplyStat(stats.Armor, spellData.Toughness.MultiplierAt(paladin.Talents.Toughness))
+	// The bonus-armor effect carries the same ladder; this multiplies base armor only.
+	paladin.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(paladin.Talents.Toughness))
 }
 
 // Improved Righteous Fury - While Righteous Fury is active, all damage taken is reduced by 2/4/6%
@@ -493,17 +414,6 @@ func (paladin *Paladin) applyImprovedRighteousFury() {
 func (paladin *Paladin) applyAnticipation() {
 	defenseBonus := float64(paladin.Talents.Anticipation) * 4 * core.DefenseRatingPerDefenseLevel
 	paladin.AddStat(stats.DefenseRating, defenseBonus)
-}
-
-// Spell Warding - All spell damage taken is reduced by 2/4%
-func (paladin *Paladin) applySpellWarding() {
-	reduction := spellData.SpellWarding.MultiplierAt(paladin.Talents.SpellWarding)
-	for i := range paladin.PseudoStats.SchoolDamageTakenMultiplier {
-		if i == int(stats.SchoolIndexPhysical) || i == int(stats.SchoolIndexNone) {
-			continue
-		}
-		paladin.PseudoStats.SchoolDamageTakenMultiplier[i] *= reduction
-	}
 }
 
 // Reckoning - Gives you a 2/4/6/8/10% chance after being hit by any damaging attack that the next 4 weapon swings within 8 sec will generate an additional attack
@@ -537,9 +447,10 @@ func (paladin *Paladin) applyReckoning() {
 	})
 
 	paladin.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Reckoning",
-		Callback:           core.CallbackOnSpellHitTaken,
-		ProcChance:         spellData.Reckoning.ProcChanceAt(paladin.Talents.Reckoning),
+		Name:     "Reckoning",
+		Callback: core.CallbackOnSpellHitTaken,
+		// Forever puts the real per-rank chance on the effect; ProcChanceAt reads a flat 100%.
+		ProcChance:         spellData.Reckoning.FractionAt(paladin.Talents.Reckoning),
 		RequireDamageDealt: true,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			procAura.Activate(sim)
@@ -550,7 +461,9 @@ func (paladin *Paladin) applyReckoning() {
 
 // Sacred Duty - Increases your total Stamina by 3/6% and reduces the cooldown of your Divine Shield and Divine Protection by 30/60 sec
 func (paladin *Paladin) applySacredDuty() {
-	bonus := spellData.SacredDuty.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 2).MultiplierAt(paladin.Talents.SacredDuty)
+	// Every stat-percent effect in the Forever data carries misc 0, so the stat is the call
+	// site's choice, not the client's.
+	bonus := spellData.SacredDuty.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(paladin.Talents.SacredDuty)
 	paladin.MultiplyStat(stats.Stamina, bonus)
 	// TODO: Implement cooldown reduction
 }
@@ -563,33 +476,9 @@ func (paladin *Paladin) applyOneHandedWeaponSpecialization() {
 	})
 }
 
-// Improved Holy Shield - Increases damage caused by Holy Shield by 10/20% and increases the number of charges by 2/4
-func (paladin *Paladin) applyImprovedHolyShield() {
-	// Number of charges handled in holy_shield.go
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		ClassMask:  SpellMaskHolyShieldProc,
-		FloatValue: spellData.ImprovedHolyShield.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(paladin.Talents.ImprovedHolyShield),
-	})
-}
-
-// Combat Expertise - Increases your expertise by 1/2/3/4/5, total Stamina by 2/4/6/8/10%
-func (paladin *Paladin) applyCombatExpertise() {
-	expertiseBonus := float64(paladin.Talents.CombatExpertise)
-	paladin.AddStat(stats.ExpertiseRating, expertiseBonus*core.ExpertisePerQuarterPercentReduction)
-
-	staminaBonus := spellData.CombatExpertise.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 2).MultiplierAt(paladin.Talents.CombatExpertise)
-	paladin.MultiplyStat(stats.Stamina, staminaBonus)
-}
-
 // ==================
 // Retribution Talent Implementations
 // ==================
-
-// Improved Blessing of Might - Increases the melee attack power bonus of your Blessing of Might by 4/8/12/16/20%
-func (paladin *Paladin) applyImprovedBlessingOfMight() {
-	// TODO: Implement Blessing of Might modifier
-}
 
 // Benediction - Reduces the mana cost of your Judgement and Seal spells by 3/6/9/12/15%
 func (paladin *Paladin) applyBenediction() {
@@ -619,17 +508,14 @@ func (paladin *Paladin) applyConviction() {
 	paladin.AddStat(stats.PhysicalCritPercent, float64(paladin.Talents.Conviction))
 }
 
-// Improved Retribution Aura - Increases the damage done by your Retribution Aura by 25/50%
-func (paladin *Paladin) applyImprovedRetributionAura() {
-	// Handled in registerRetributionAura() where the talent points are read directly.
-}
-
 // Crusade - Increases all damage caused by 1/2/3% against Humanoids, Demons, Undead and Elementals
 func (paladin *Paladin) applyCrusade() {
 	paladin.Env.RegisterPostFinalizeEffect(func() {
 		for _, at := range paladin.AttackTables {
 			if slices.Contains([]proto.MobType{proto.MobType_MobTypeDemon, proto.MobType_MobTypeHumanoid, proto.MobType_MobTypeUndead, proto.MobType_MobTypeElemental}, at.Defender.MobType) {
-				at.DamageDealtMultiplier *= spellData.Crusade.MultiplierAt(paladin.Talents.Crusade)
+				// Misc 36 is the creature-type mask the client states the bonus against; the
+				// mob list above is the sim's own reading of it.
+				at.DamageDealtMultiplier *= spellData.Crusade.Effect(shared.A_MOD_DAMAGE_DONE_VERSUS, 36).MultiplierAt(paladin.Talents.Crusade)
 			}
 		}
 	})
@@ -654,11 +540,6 @@ func (paladin *Paladin) applyTwoHandedWeaponSpecialization() {
 			weaponMod.Deactivate()
 		}
 	})
-}
-
-// Improved Sanctity Aura - Increases the damage caused by all party members within 30 yards of the Paladin with Sanctity Aura active by 1/2%
-func (paladin *Paladin) applyImprovedSanctityAura() {
-	// Handled in registerSanctityAura() where the talent points are read directly.
 }
 
 // Vengeance - Gives you a 1/2/3/4/5% bonus to Physical and Holy damage you deal for 30 sec after dealing a critical strike from a weapon swing, spell, or ability
@@ -722,31 +603,290 @@ func (paladin *Paladin) applySanctifiedJudgement() {
 	})
 }
 
-// Sanctified Seals - Increases your chance to critically hit with all spells and attacks by 1/2/3% and reduces the chance your Seals will be dispelled by 33/67/100%
-func (paladin *Paladin) applySanctifiedSeals() {
-	paladin.AddStat(stats.PhysicalCritPercent, float64(paladin.Talents.SanctifiedSeals))
-	paladin.AddStat(stats.SpellCritPercent, float64(paladin.Talents.SanctifiedSeals))
+// applyChampionOfTheLight implements Champion of the Light, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyChampionOfTheLight() {
+	if paladin.Talents.ChampionOfTheLight == 0 {
+		return
+	}
+
+	panic("To be implemented")
 }
 
-// Divine Purpose (talent) - Reduces your chance to be hit by spells and ranged attacks by 1/2/3%
-func (paladin *Paladin) applyDivinePurposeTalent() {
-	// TODO: Implement spell hit reduction
+// applyConsecratedGround implements Consecrated Ground, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyConsecratedGround() {
+	if paladin.Talents.ConsecratedGround == 0 {
+		return
+	}
+
+	panic("To be implemented")
 }
 
-// Fanaticism - Increases the critical strike chance of all Judgements capable of a critical hit by 3/6/9/12/15% and reduces threat caused by all actions by 6/12/18/24/30%
-func (paladin *Paladin) applyFanaticism() {
-	critChance := spellData.Fanaticism.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(paladin.Talents.Fanaticism)
-	threatReduc := -.06 * float64(paladin.Talents.Fanaticism)
+// applyDivinePrecision implements Divine Precision, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyDivinePrecision() {
+	if paladin.Talents.DivinePrecision == 0 {
+		return
+	}
 
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: critChance,
-		ClassMask:  SpellMaskAllJudgements,
-	})
+	panic("To be implemented")
+}
 
-	paladin.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: threatReduc,
-		ProcMask:   core.ProcMaskDirect,
-	})
+// applyEyeForAnEye implements Eye for an Eye, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyEyeForAnEye() {
+	if paladin.Talents.EyeForAnEye == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyGuardiansFavor implements Guardian's Favor, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyGuardiansFavor() {
+	if paladin.Talents.GuardiansFavor == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyHolyConduit implements Holy Conduit, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyHolyConduit() {
+	if paladin.Talents.HolyConduit == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedHammerOfJustice implements Improved Hammer of Justice, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyImprovedHammerOfJustice() {
+	if paladin.Talents.ImprovedHammerOfJustice == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedHolyStrike implements Improved Holy Strike, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyImprovedHolyStrike() {
+	if paladin.Talents.ImprovedHolyStrike == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedSealOfFury implements Improved Seal of Fury, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyImprovedSealOfFury() {
+	if !paladin.Talents.ImprovedSealOfFury {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedSeals implements Improved Seals, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyImprovedSeals() {
+	if paladin.Talents.ImprovedSeals == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyInfusionOfLight implements Infusion of Light, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyInfusionOfLight() {
+	if paladin.Talents.InfusionOfLight == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyInstrumentOfLaw implements Instrument of Law, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyInstrumentOfLaw() {
+	if paladin.Talents.InstrumentOfLaw == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyIronCreed implements Iron Creed, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyIronCreed() {
+	if paladin.Talents.IronCreed == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyLightsVigil implements Light's Vigil, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyLightsVigil() {
+	if !paladin.Talents.LightsVigil {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyPursuitOfJustice implements Pursuit of Justice, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyPursuitOfJustice() {
+	if paladin.Talents.PursuitOfJustice == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyReverence implements Reverence, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyReverence() {
+	if paladin.Talents.Reverence == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySacredArbiter implements Sacred Arbiter, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applySacredArbiter() {
+	if !paladin.Talents.SacredArbiter {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySpiritualFocus implements Spiritual Focus, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applySpiritualFocus() {
+	if paladin.Talents.SpiritualFocus == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySwiftJudgement implements Swift Judgement, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applySwiftJudgement() {
+	if !paladin.Talents.SwiftJudgement {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyTemplarsBulwark implements Templar's Bulwark, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyTemplarsBulwark() {
+	if !paladin.Talents.TemplarsBulwark {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyTwistOfLight implements Twist of Light, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyTwistOfLight() {
+	if !paladin.Talents.TwistOfLight {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyUnyieldingFaith implements Unyielding Faith, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyUnyieldingFaith() {
+	if paladin.Talents.UnyieldingFaith == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyVindication implements Vindication, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyVindication() {
+	if paladin.Talents.Vindication == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyVoiceOfTruth implements Voice of Truth, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (paladin *Paladin) applyVoiceOfTruth() {
+	if !paladin.Talents.VoiceOfTruth {
+		return
+	}
+
+	panic("To be implemented")
 }

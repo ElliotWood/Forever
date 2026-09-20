@@ -10,28 +10,19 @@ import (
 
 func (druid *Druid) ApplyTalents() {
 	// Balance
-	druid.applyStarlightWrath()
-	druid.applyFocusedStarlight()
 	druid.applyImprovedMoonfire()
 	// Brambles: applied as Thorns aura points in thorns.go
 	druid.applyInsectSwarm()
 	druid.applyNaturesReach()
 	druid.applyVengeance()
-	druid.applyCelestialFocus()
-	druid.applyLunarGuidance()
 	druid.applyNaturesGrace()
 	druid.applyMoonglow()
 	druid.applyMoonfury()
-	druid.applyBalanceOfPower()
-	druid.applyDreamstate()
-	druid.applyImprovedFaerieFire()
-	druid.applyWrathOfCenarius()
-	druid.applyForceOfNature()
+	// Omen of Clarity: Forever drops the talent; see omen_of_clarity.go
 
 	// Feral
 	druid.applyFuror()
 	druid.applyFerocity()
-	druid.applyFeralAggression()
 	druid.applyFeralInstincts()
 	druid.applyPredatoryInstincts()
 	druid.applyThickHide()
@@ -42,17 +33,39 @@ func (druid *Druid) ApplyTalents() {
 	druid.applyPrimalFury()
 	druid.applySavageFury()
 	druid.applyHeartOfTheWild()
-	druid.applySurvivalOfTheFittest()
-	druid.applyImprovedLeaderOfThePack()
 
 	// Restoration
 	druid.applyNaturalist()
 	druid.applyNaturalShapeshifter()
-	druid.applyIntensity()
 	druid.applySubtlety()
-	druid.applyOmenOfClarity()
 	druid.applyLivingSpirit()
-	druid.applyNaturalPerfection()
+
+	// Forever additions, not yet implemented.
+	druid.applyImprovedWrath()
+	druid.applyGenesis()
+	druid.applyNaturesMajesty()
+	druid.applyImprovedEntanglingRoots()
+	druid.applyNaturesSplendor()
+	druid.applyImprovedStarfire()
+	druid.applyOvergrowth()
+	druid.applyEclipse()
+	druid.applyBrutalImpact()
+	druid.applyFeralCharge()
+	druid.applyKingOfTheJungle()
+	druid.applyNaturalReaction()
+	druid.applyRendAndTear()
+	druid.applyBerserk()
+	druid.applyNaturesFocus()
+	druid.applyReflection()
+	druid.applyGiftOfNature()
+	druid.applyGiftOfTheEarthmother()
+	druid.applyTranquilSpirit()
+	druid.applyImprovedRejuvenation()
+	druid.applySwiftmend()
+	druid.applyNaturesSwiftness()
+	druid.applyImprovedTranquility()
+	druid.applyImprovedRegrowth()
+	druid.applyWildGrowth()
 }
 
 // applyThickHide increases armor contribution from items by 4/7/10% (ranks 1/2/3).
@@ -71,83 +84,16 @@ func (druid *Druid) applyThickHide() {
 // Predatory Instincts: +2% melee critical strike damage per rank while in Cat or Bear form.
 // The client aura (33859 and its ranks) is school-masked to Physical, so it covers every
 // physical attack in form (abilities and auto attacks, Ravage included) and nothing else.
+//
+// TODO: To be implemented. Forever's regenerated aura enum no longer carries the crit damage
+// aura this talent's rank data used (A_MOD_CRIT_DAMAGE_BONUS is gone from the auto-generated
+// table), and this talent has no other effect to fall back on, so it is fully disabled.
 func (druid *Druid) applyPredatoryInstincts() {
 	if druid.Talents.PredatoryInstincts == 0 {
 		return
 	}
 
-	druid.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_CritMultiplier_Pct,
-		School:     core.SpellSchoolPhysical,
-		FloatValue: spellData.PredatoryInstincts.Effect(shared.A_MOD_CRIT_DAMAGE_BONUS, 1).FractionAt(druid.Talents.PredatoryInstincts),
-	})
-}
-
-func (druid *Druid) applyForceOfNature() {
-	if !druid.Talents.ForceOfNature {
-		return
-	}
-
-	druid.registerForceOfNatureCD()
-}
-
-func (druid *Druid) applyWrathOfCenarius() {
-	if druid.Talents.WrathOfCenarius == 0 {
-		return
-	}
-
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellWrath,
-		Kind:       core.SpellMod_BonusCoeffecient_Flat,
-		FloatValue: spellData.WrathOfCenarius.EffectAt(1).FractionAt(druid.Talents.WrathOfCenarius),
-	})
-
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellStarfire,
-		Kind:       core.SpellMod_BonusCoeffecient_Flat,
-		FloatValue: 0.04 * float64(druid.Talents.WrathOfCenarius),
-	})
-}
-
-func (druid *Druid) applyImprovedFaerieFire() {
-	if druid.Talents.ImprovedFaerieFire == 0 {
-		return
-	}
-}
-
-func (druid *Druid) applyDreamstate() {
-	if druid.Talents.Dreamstate == 0 {
-		return
-	}
-
-	mp5Bonus := []float64{0, 0.04, 0.07, 0.1}[druid.Talents.LunarGuidance]
-	druid.AddStatDependency(stats.Intellect, stats.MP5, mp5Bonus)
-}
-
-func (druid *Druid) applyBalanceOfPower() {
-	if druid.Talents.BalanceOfPower == 0 {
-		return
-	}
-
-	core.MakePermanent(druid.RegisterAura(core.Aura{
-		Label:      "Balance of Power",
-		BuildPhase: core.CharacterBuildPhaseTalents,
-		ActionID:   core.ActionID{SpellID: 33596},
-	}).AttachSpellMod(core.SpellModConfig{
-		// See https://www.wowhead.com/forever/spell=33596/balance-of-power
-		// Importantly does not seem to affect Insect Swarm
-		ClassMask:  DruidSpellWrath | DruidSpellStarfire | DruidSpellMoonfire,
-		Kind:       core.SpellMod_BonusHit_Percent,
-		FloatValue: 2.0 * float64(druid.Talents.BalanceOfPower),
-	})).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
-		if druid.Env.MeasuringStats {
-			druid.AddStatDynamic(sim, stats.SpellHitPercent, 4)
-		}
-	}).ApplyOnExpire(func(aura *core.Aura, sim *core.Simulation) {
-		if druid.Env.MeasuringStats {
-			druid.AddStatDynamic(sim, stats.SpellHitPercent, -4)
-		}
-	})
+	panic("To be implemented")
 }
 
 func (druid *Druid) applyMoonfury() {
@@ -155,10 +101,12 @@ func (druid *Druid) applyMoonfury() {
 		return
 	}
 
+	// Forever states Moonfury as +2% damage per rank to the Arcane|Nature schools (mask 72)
+	// rather than as a spell modifier; the class mask keeps it on the TBC spell list.
 	druid.AddStaticMod(core.SpellModConfig{
 		ClassMask:  DruidSpellWrath | DruidSpellStarfire | DruidSpellMoonfire,
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Moonfury.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(druid.Talents.Moonfury),
+		FloatValue: spellData.Moonfury.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 72).FractionAt(druid.Talents.Moonfury),
 	})
 }
 
@@ -224,21 +172,6 @@ func (druid *Druid) applyNaturesGrace() {
 	})
 }
 
-func (druid *Druid) applyLunarGuidance() {
-	if druid.Talents.LunarGuidance == 0 {
-		return
-	}
-
-	spellDamageBonus := []float64{0, 0.08, 0.16, 0.25}[druid.Talents.LunarGuidance]
-	druid.AddStatDependency(stats.Intellect, stats.SpellDamage, spellDamageBonus)
-}
-
-func (druid *Druid) applyCelestialFocus() {
-	if druid.Talents.CelestialFocus == 0 {
-		return
-	}
-}
-
 func (druid *Druid) applyVengeance() {
 	if druid.Talents.Vengeance == 0 {
 		return
@@ -269,43 +202,6 @@ func (druid *Druid) applyInsectSwarm() {
 	}
 
 	druid.registerInsectSwarmSpell()
-}
-
-func (druid *Druid) applyStarlightWrath() {
-	if druid.Talents.StarlightWrath == 0 {
-		return
-	}
-
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask: DruidSpellStarfire | DruidSpellWrath,
-		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * time.Duration(-100*druid.Talents.StarlightWrath),
-	})
-}
-
-func (druid *Druid) applyFocusedStarlight() {
-	if druid.Talents.FocusedStarlight == 0 {
-		return
-	}
-
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellStarfire | DruidSpellWrath,
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: 2 * float64(druid.Talents.FocusedStarlight),
-	})
-}
-
-func (druid *Druid) applyIntensity() {
-	if druid.Talents.Intensity == 0 {
-		return
-	}
-
-	// Allows 10% per rank of mana regeneration to continue while casting
-	druid.PseudoStats.SpiritRegenRateCasting += spellData.Intensity.Effect(shared.A_MOD_MANA_REGEN_INTERRUPT, 0).FractionAt(druid.Talents.Intensity)
-	druid.UpdateManaRegenRates()
-
-	// Enrage instantly generates additional rage per rank (4/7/10)
-	druid.IntensityEnrageRageBonus = []float64{0, 4, 7, 10}[druid.Talents.Intensity]
 }
 
 func (druid *Druid) applyImprovedMoonfire() {
@@ -345,7 +241,9 @@ func (druid *Druid) applyNaturalist() {
 		return
 	}
 
-	druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).MultiplierAt(druid.Talents.Naturalist)
+	// Forever states the damage bonus against every school (mask 127) instead of physical
+	// only; the sim keeps it on physical, which is all a feral druid deals.
+	druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(druid.Talents.Naturalist)
 }
 
 func (druid *Druid) applyHeartOfTheWild() {
@@ -353,22 +251,11 @@ func (druid *Druid) applyHeartOfTheWild() {
 		return
 	}
 
-	// +4% Intellect per rank (all forms, always active).
-	// The Cat/Bear form-specific bonuses (+2% AP, +4% Stamina) are handled
-	// dynamically in RegisterCatFormAura / RegisterBearFormAura.
-	druid.MultiplyStat(stats.Intellect, spellData.HeartOfTheWild.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 3).MultiplierAt(druid.Talents.HeartOfTheWild))
-}
-
-func (druid *Druid) applySurvivalOfTheFittest() {
-	if druid.Talents.SurvivalOfTheFittest == 0 {
-		return
-	}
-
-	mult := spellData.SurvivalOfTheFittest.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, -1).MultiplierAt(druid.Talents.SurvivalOfTheFittest)
-	for _, s := range []stats.Stat{stats.Stamina, stats.Strength, stats.Agility, stats.Intellect, stats.Spirit} {
-		druid.MultiplyStat(s, mult)
-	}
-	druid.AddReducedCritTakenPercent(-spellData.SurvivalOfTheFittest.Effect(shared.A_MOD_ATTACKER_MELEE_CRIT_CHANCE, 0).FractionAt(druid.Talents.SurvivalOfTheFittest))
+	// +2% Intellect per rank (all forms, always active). The stat aura carries misc 0 in the
+	// Forever data, as every stat-percent effect does, so the stat is the call site's choice.
+	// The Cat/Bear form-specific bonuses are handled dynamically in RegisterCatFormAura /
+	// RegisterBearFormAura.
+	druid.MultiplyStat(stats.Intellect, spellData.HeartOfTheWild.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(druid.Talents.HeartOfTheWild))
 }
 
 func (druid *Druid) applySharpenedClaws() {
@@ -411,7 +298,8 @@ func (druid *Druid) applyFuror() {
 		return
 	}
 
-	druid.FurorProcChance = spellData.Furor.FractionAt(druid.Talents.Furor)
+	// Both dummy effects carry the same ladder, one per form, so either answers the chance.
+	druid.FurorProcChance = spellData.Furor.EffectAt(0).FractionAt(druid.Talents.Furor)
 }
 
 func (druid *Druid) applyFerocity() {
@@ -441,18 +329,6 @@ func (druid *Druid) applySavageFury() {
 		ClassMask:  DruidSpellMangleCat | DruidSpellRake,
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.SavageFury.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(druid.Talents.SavageFury),
-	})
-}
-
-func (druid *Druid) applyFeralAggression() {
-	if druid.Talents.FeralAggression == 0 {
-		return
-	}
-
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellFerociousBite,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.FeralAggression.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(druid.Talents.FeralAggression),
 	})
 }
 
@@ -517,47 +393,16 @@ func (druid *Druid) applyPrimalFury() {
 	})
 }
 
-func (druid *Druid) applyImprovedLeaderOfThePack() {
-	if !druid.Talents.LeaderOfThePack || druid.Talents.ImprovedLeaderOfThePack == 0 {
-		return
-	}
-
-	// Improved LotP: crits heal the druid for 4% max health, 6s ICD.
-	healingSpell := druid.RegisterSpell(Cat|Bear, core.SpellConfig{
-		ActionID:         core.ActionID{SpellID: 34299},
-		SpellSchool:      core.SpellSchoolPhysical,
-		ProcMask:         core.ProcMaskEmpty,
-		Flags:            core.SpellFlagHelpful | core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell | core.SpellFlagIgnoreModifiers,
-		DamageMultiplier: 1,
-		ThreatMultiplier: 0,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealHealing(sim, target, 0.04*spell.Unit.MaxHealth(), spell.OutcomeHealing)
-		},
-	})
-
-	druid.MakeProcTriggerAura(core.ProcTrigger{
-		Name:     "Improved Leader of the Pack",
-		Callback: core.CallbackOnSpellHitDealt,
-		ProcMask: core.ProcMaskMeleeOrRanged,
-		Outcome:  core.OutcomeCrit,
-		ICD:      time.Second * 6,
-		ExtraCondition: func(_ *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {
-			return druid.InForm(Cat | Bear)
-		},
-		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			healingSpell.Cast(sim, &druid.Unit)
-		},
-	})
-}
-
 func (druid *Druid) applyFeralInstincts() {
 	if druid.Talents.FeralInstinct == 0 {
 		return
 	}
 
-	// Increases threat caused in Dire Bear Form by 5/10/15% per rank.
-	druid.BearFormAura.AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.ThreatMultiplier, spellData.FeralInstinct.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).MultiplierAt(druid.Talents.FeralInstinct))
+	// TODO: Forever repurposes Feral Instinct: the Dire Bear threat bonus is gone and the
+	// spell now carries SPELLMOD_EFFECT1 +5/10/15 and SPELLMOD_DAMAGE +10/20/30% against an
+	// unknown spell, so the threat multiplier is pinned to the untalented 1.0.
+	threatMultiplier := 1.0
+	druid.BearFormAura.AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.ThreatMultiplier, threatMultiplier)
 }
 
 func (druid *Druid) applySubtlety() {
@@ -582,15 +427,302 @@ func (druid *Druid) applyLivingSpirit() {
 	druid.MultiplyStat(stats.Spirit, spellData.LivingSpirit.MultiplierAt(druid.Talents.LivingSpirit))
 }
 
-func (druid *Druid) applyNaturalPerfection() {
-	if druid.Talents.NaturalPerfection == 0 {
+// applyImprovedWrath implements Improved Wrath, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyImprovedWrath() {
+	if druid.Talents.ImprovedWrath == 0 {
 		return
 	}
 
-	// Increases spell critical strike chance by 1/2/3% per rank.
-	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellsAll,
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: float64(druid.Talents.NaturalPerfection),
-	})
+	panic("To be implemented")
+}
+
+// applyGenesis implements Genesis, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyGenesis() {
+	if druid.Talents.Genesis == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyNaturesMajesty implements Nature's Majesty, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyNaturesMajesty() {
+	if druid.Talents.NaturesMajesty == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedEntanglingRoots implements Improved Entangling Roots, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyImprovedEntanglingRoots() {
+	if druid.Talents.ImprovedEntanglingRoots == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyNaturesSplendor implements Nature's Splendor, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyNaturesSplendor() {
+	if !druid.Talents.NaturesSplendor {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedStarfire implements Improved Starfire, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyImprovedStarfire() {
+	if druid.Talents.ImprovedStarfire == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyOvergrowth implements Overgrowth, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyOvergrowth() {
+	if druid.Talents.Overgrowth == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyEclipse implements Eclipse, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyEclipse() {
+	if druid.Talents.Eclipse == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyBrutalImpact implements Brutal Impact, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyBrutalImpact() {
+	if druid.Talents.BrutalImpact == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyFeralCharge implements Feral Charge, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyFeralCharge() {
+	if !druid.Talents.FeralCharge {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyKingOfTheJungle implements King of the Jungle, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyKingOfTheJungle() {
+	if druid.Talents.KingOfTheJungle == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyNaturalReaction implements Natural Reaction, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyNaturalReaction() {
+	if druid.Talents.NaturalReaction == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyRendAndTear implements Rend and Tear, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyRendAndTear() {
+	if druid.Talents.RendAndTear == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyBerserk implements Berserk, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyBerserk() {
+	if !druid.Talents.Berserk {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyNaturesFocus implements Nature's Focus, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyNaturesFocus() {
+	if druid.Talents.NaturesFocus == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyReflection implements Reflection, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyReflection() {
+	if druid.Talents.Reflection == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyGiftOfNature implements Gift of Nature, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyGiftOfNature() {
+	if druid.Talents.GiftOfNature == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyGiftOfTheEarthmother implements Gift of the Earthmother, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyGiftOfTheEarthmother() {
+	if !druid.Talents.GiftOfTheEarthmother {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyTranquilSpirit implements Tranquil Spirit, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyTranquilSpirit() {
+	if druid.Talents.TranquilSpirit == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedRejuvenation implements Improved Rejuvenation, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyImprovedRejuvenation() {
+	if druid.Talents.ImprovedRejuvenation == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applySwiftmend implements Swiftmend, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applySwiftmend() {
+	if !druid.Talents.Swiftmend {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyNaturesSwiftness implements Nature's Swiftness, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyNaturesSwiftness() {
+	if !druid.Talents.NaturesSwiftness {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedTranquility implements Improved Tranquility, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyImprovedTranquility() {
+	if druid.Talents.ImprovedTranquility == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedRegrowth implements Improved Regrowth, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyImprovedRegrowth() {
+	if druid.Talents.ImprovedRegrowth == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyWildGrowth implements Wild Growth, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (druid *Druid) applyWildGrowth() {
+	if !druid.Talents.WildGrowth {
+		return
+	}
+
+	panic("To be implemented")
 }

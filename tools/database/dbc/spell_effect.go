@@ -21,11 +21,11 @@ type SpellEffect struct {
 	EffectAttributes               int
 	EffectAura                     EffectAuraType
 	EffectAuraPeriod               int
-	EffectBasePoints               int
+	EffectBasePoints               float64
 	EffectBonusCoefficient         float64
 	EffectChainAmplitude           float64
 	EffectChainTargets             int
-	EffectDieSides                 int
+	EffectDieSides                 float64
 	EffectItemType                 int
 	EffectMechanic                 int
 	EffectPointsPerResource        float64

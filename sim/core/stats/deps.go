@@ -38,7 +38,7 @@ var safeDepsOrder = []Stat{
 	ExpertiseRating,
 	BlockValue,
 	ArmorPenetration,
-	SpellPenetration,
+	SpellPiercing,
 	SpellCritPercent,
 	PhysicalCritPercent,
 	SpellHitPercent,

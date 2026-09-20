@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var scorchRank = spellData.Scorch.BySpellID(27074)
+var scorchRank = spellData.Scorch.HighestRank()
 
 func (mage *Mage) registerScorchSpell() {
 

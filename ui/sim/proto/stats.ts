@@ -431,7 +431,7 @@ export const displayStatOrder: Array<UnitStat> = [
 	UnitStat.fromStat(Stat.StatRangedAttackPower),
 	UnitStat.fromStat(Stat.StatExpertiseRating),
 	UnitStat.fromStat(Stat.StatArmorPenetration),
-	UnitStat.fromStat(Stat.StatSpellPenetration),
+	UnitStat.fromStat(Stat.StatSpellPiercing),
 	UnitStat.fromPseudoStat(PseudoStat.PseudoStatMeleeHitPercent),
 	UnitStat.fromPseudoStat(PseudoStat.PseudoStatMeleeCritPercent),
 	UnitStat.fromPseudoStat(PseudoStat.PseudoStatMeleeHastePercent),

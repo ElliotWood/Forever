@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var ferociousBiteRank = spellData.FerociousBite.BySpellID(24248)
+var ferociousBiteRank = spellData.FerociousBite.HighestRank()
 var ferociousBiteMin, ferociousBiteMax = ferociousBiteRank.Direct.Range()
 
 func (druid *Druid) registerFerociousBiteSpell() {

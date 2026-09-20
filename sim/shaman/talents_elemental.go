@@ -5,10 +5,7 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/stats"
 )
-
-var totemOfWrathRank = spellData.TotemOfWrath.BySpellID(30706)
 
 func (shaman *Shaman) ApplyElementalTalents() {
 	shaman.applyCallOfFlame()
@@ -18,14 +15,17 @@ func (shaman *Shaman) ApplyElementalTalents() {
 	shaman.applyElementalDevastation()
 	shaman.applyElementalFocus()
 	shaman.applyElementalFury()
-	shaman.applyElementalMastery()
-	shaman.applyElementalPrecision()
-	shaman.applyImprovedFireTotems()
-	shaman.applyLightningMastery()
 	shaman.applyLightningOverload()
 	shaman.applyReverberation()
-	shaman.applyTotemOfWrath()
-	shaman.applyUnrelentingStorm()
+
+	// Forever additions, not yet implemented.
+	shaman.applyElementalAlacrity()
+	shaman.applyElementalReach()
+	shaman.applyElementalWarding()
+	shaman.applyEyeOfTheStorm()
+	shaman.applyImprovedFireNova()
+	shaman.applyEarthbound()
+	shaman.applyLavaBurst()
 }
 
 func (shaman *Shaman) applyCallOfFlame() {
@@ -34,17 +34,20 @@ func (shaman *Shaman) applyCallOfFlame() {
 	}
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.CallOfFlame.FractionAt(shaman.Talents.CallOfFlame),
+		FloatValue: spellData.CallOfFlame.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(shaman.Talents.CallOfFlame),
 		ClassMask:  SpellMaskFireTotem,
 	})
 }
 func (shaman *Shaman) applyCallOfThunder() {
-	if shaman.Talents.CallOfThunder == 0 {
+	if !shaman.Talents.CallOfThunder {
 		return
 	}
+	// TODO: Forever collapses Call of Thunder from 2 ranks to 1; the confirmed crit bonus
+	// for the new single-rank version is unknown, so it is pinned to 0 until the Forever
+	// tooltip is known.
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.CallOfThunder.ValueAt(shaman.Talents.CallOfThunder),
+		FloatValue: 0,
 		ClassMask:  SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskOverload,
 	})
 }
@@ -143,98 +146,19 @@ func (shaman *Shaman) applyElementalFocus() {
 	})
 }
 func (shaman *Shaman) applyElementalFury() {
-	if !shaman.Talents.ElementalFury {
+	if shaman.Talents.ElementalFury == 0 {
 		return
 	}
 	// The talent's class mask (16089) also covers Flametongue Attack (bit 21) and Frostbrand
 	// Attack (bit 24): shamans' Flametongue Weapon hits crit for 2.0x in logs while the same
 	// attack granted by Flametongue Totem crits for 1.5x on other players.
+	//
+	// TODO: Forever expands Elemental Fury from 1 rank to 5; the per-rank crit-multiplier
+	// bonus is unconfirmed, so it is pinned to 0 until the Forever tooltip is known.
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_CritMultiplier_Flat,
-		FloatValue: 1.0,
+		FloatValue: 0,
 		ClassMask:  SpellMaskFireTotem | SpellMaskFire | SpellMaskNature | SpellMaskFrost | SpellMaskFlametongueWeapon | SpellMaskFrostbrandWeapon,
-	})
-}
-func (shaman *Shaman) applyElementalMastery() {
-	if !shaman.Talents.ElementalMastery {
-		return
-	}
-
-	emAura := shaman.RegisterAura(core.Aura{
-		ActionID: core.ActionID{SpellID: 16166},
-		Label:    "Elemental Mastery",
-		Duration: core.NeverExpires,
-		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-			if !spell.Matches(SpellMaskFire | SpellMaskFrost | SpellMaskNature) {
-				return
-			}
-			aura.Deactivate(sim)
-		},
-	}).AttachSpellMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: 100,
-		ClassMask:  SpellMaskFire | SpellMaskFrost | SpellMaskNature,
-	}).AttachSpellMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: -1,
-		ClassMask:  SpellMaskFire | SpellMaskFrost | SpellMaskNature,
-	})
-
-	spell := shaman.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 16166},
-		SpellSchool: core.SpellSchoolNature,
-		DefenseType: core.DefenseTypeMagic,
-		Flags:       core.SpellFlagAPL | core.SpellFlagNoOnCastComplete | SpellFlagInstant,
-		Cast: core.CastConfig{
-			CD: core.Cooldown{
-				Timer:    shaman.NewTimer(),
-				Duration: time.Second * 180,
-			},
-		},
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			emAura.Activate(sim)
-		},
-	})
-
-	shaman.AddMajorCooldown(core.MajorCooldown{
-		Spell: spell,
-		Type:  core.CooldownTypeDPS,
-	})
-}
-func (shaman *Shaman) applyElementalPrecision() {
-	if shaman.Talents.ElementalPrecision == 0 {
-		return
-	}
-
-	hitPercent := spellData.ElementalPrecision.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_RESIST_MISS_CHANCE).ValueAt(shaman.Talents.ElementalPrecision)
-	shaman.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexFire] += hitPercent
-	shaman.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexFrost] += hitPercent
-	shaman.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexNature] += hitPercent
-
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: [4]float64{0, -0.04, -0.07, -0.1}[shaman.Talents.ElementalPrecision],
-	})
-}
-func (shaman *Shaman) applyImprovedFireTotems() {
-	if shaman.Talents.ImprovedFireTotems == 0 {
-		return
-	}
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: -0.25 * float64(shaman.Talents.ImprovedFireTotems),
-		ClassMask:  SpellMaskMagmaTotem,
-	})
-	// Reduction to Fire Nova Activation Delay in fire_totems.go
-}
-func (shaman *Shaman) applyLightningMastery() {
-	if shaman.Talents.LightningMastery == 0 {
-		return
-	}
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: -time.Duration(100*shaman.Talents.LightningMastery) * time.Millisecond,
-		ClassMask: SpellMaskLightningBolt | SpellMaskChainLightning,
 	})
 }
 func (shaman *Shaman) applyLightningOverload() {
@@ -253,33 +177,87 @@ func (shaman *Shaman) applyReverberation() {
 		ClassMask: SpellMaskShock,
 	})
 }
-func (shaman *Shaman) applyTotemOfWrath() {
-	if !shaman.Talents.TotemOfWrath {
+
+// applyElementalAlacrity implements Elemental Alacrity, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyElementalAlacrity() {
+	if shaman.Talents.ElementalAlacrity == 0 {
 		return
 	}
-	duration := time.Second * 120
-	value := 3.0
-	config := shaman.newTotemSpellConfig(int32(shaman.GetInitialStat(stats.Mana)*0.05), totemOfWrathRank.SpellID, SpellMaskBasicTotem, totemOfWrathRank.GCD)
-	buffAura := shaman.RegisterAura(core.Aura{
-		Label:      "Totem Of Wrath (Self)",
-		ActionID:   config.ActionID,
-		Duration:   duration,
-		BuildPhase: core.CharacterBuildPhaseBuffs,
-	}).AttachStatsBuff(stats.Stats{
-		stats.SpellCritPercent: value,
-		stats.SpellHitPercent:  value,
-	})
-	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		shaman.cancelFireTotems(sim)
-		shaman.TotemExpirations[FireTotem] = sim.CurrentTime + duration
-		buffAura.Activate(sim)
-	}
-	shaman.TotemOfWrath = shaman.RegisterSpell(config)
-	shaman.TotemOfWrath.RelatedSelfBuff = buffAura
+
+	panic("To be implemented")
 }
-func (shaman *Shaman) applyUnrelentingStorm() {
-	if shaman.Talents.UnrelentingStorm == 0 {
+
+// applyElementalReach implements Elemental Reach, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyElementalReach() {
+	if shaman.Talents.ElementalReach == 0 {
 		return
 	}
-	shaman.AddStatDependency(stats.Intellect, stats.MP5, 0.02*float64(shaman.Talents.UnrelentingStorm))
+
+	panic("To be implemented")
+}
+
+// applyElementalWarding implements Elemental Warding, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyElementalWarding() {
+	if shaman.Talents.ElementalWarding == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyEyeOfTheStorm implements Eye of the Storm, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyEyeOfTheStorm() {
+	if shaman.Talents.EyeOfTheStorm == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyImprovedFireNova implements Improved Fire Nova, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyImprovedFireNova() {
+	if shaman.Talents.ImprovedFireNova == 0 {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyEarthbound implements Earthbound, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyEarthbound() {
+	if !shaman.Talents.Earthbound {
+		return
+	}
+
+	panic("To be implemented")
+}
+
+// applyLavaBurst implements Lava Burst, new in Forever.
+//
+// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
+// the effect can be modelled; there is no TBC equivalent to port.
+func (shaman *Shaman) applyLavaBurst() {
+	if !shaman.Talents.LavaBurst {
+		return
+	}
+
+	panic("To be implemented")
 }

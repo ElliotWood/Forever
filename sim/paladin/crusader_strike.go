@@ -10,6 +10,9 @@ import (
 // https://www.wowhead.com/forever/spell=35395
 //
 // An instant strike that causes 110% weapon damage and refreshes all Judgements on the target.
+//
+// TODO: uncalled -- Forever drops the Crusader Strike talent; re-gate before wiring
+// back into registerTalentSpells.
 func (paladin *Paladin) registerCrusaderStrike() {
 	paladin.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: 35395},

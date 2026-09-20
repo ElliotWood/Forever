@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var ripRank = spellData.Rip.BySpellID(27008)
+var ripRank = spellData.Rip.HighestRank()
 var ripTick = ripRank.Periodic.(shared.SpellDataPeriodic)
 
 func (druid *Druid) registerRipSpell() {

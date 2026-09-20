@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var shadowBurnRank = spellData.Shadowburn.BySpellID(30546)
+var shadowBurnRank = spellData.Shadowburn.HighestRank()
 var shadowBurnCoeff = shadowBurnRank.Direct.BonusCoefficient()
 
 func (warlock *Warlock) registerShadowBurn() {

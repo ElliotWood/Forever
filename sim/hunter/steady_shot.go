@@ -1,58 +1,9 @@
 package hunter
 
-import (
-	"time"
-
-	"github.com/wowsims/forever/sim/core"
-)
-
-var steadyShotRank = spellData.SteadyShot.BySpellID(34120)
-
+// TODO: To be implemented. The Forever client ships no rank ladder the generator can
+// read for this ability -- it survives as a single spell with no "Rank N" subtext and
+// no ranked SkillLineAbility row -- so there is no data to build the spell from.
 func (hunter *Hunter) registerSteadyShotSpell() {
-	hunter.SteadyShot = hunter.RegisterRangedSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: steadyShotRank.SpellID},
-		SpellSchool:    steadyShotRank.SpellSchool,
-		DefenseType:    steadyShotRank.DefenseType,
-		ClassSpellMask: HunterSpellSteadyShot,
-		ProcMask:       core.ProcMaskRangedSpecial,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-
-		ManaCost: core.ManaCostOptions{
-			FlatCost: steadyShotRank.Cost,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				CastTime: time.Millisecond * 1500,
-			},
-		},
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			// Steady Shot isn't affected by Ammo, Scopes or Adamantite Weightstone
-			weaponDamage := hunter.AutoAttacks.Ranged().BaseDamage(sim) - hunter.AmmoDamageBonus
-
-			if ranged := hunter.Ranged(); ranged != nil && ranged.Enchant.EffectID == 2722 {
-				weaponDamage -= 10
-			} else if ranged != nil && ranged.Enchant.EffectID == 2723 {
-				weaponDamage -= 12
-			}
-			if hunter.Consumables.OhImbueId == 34340 || hunter.Consumables.OhImbueId == 29453 {
-				weaponDamage -= 12
-			}
-			if (hunter.Consumables.MhImbueId == 34340 || hunter.Consumables.MhImbueId == 29453) && !hunter.windFuryEnabled {
-				weaponDamage -= 12
-			}
-
-			baseDamage := 0.2*spell.RangedAttackPower(target) +
-				weaponDamage*2.8/hunter.AutoAttacks.Ranged().SwingSpeed +
-				hunter.talonOfAlarBonus() +
-				steadyShotRank.Direct.Damage(sim)
-
-			result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeRangedHitAndCrit)
-
-			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
-				spell.DealDamage(sim, result)
-			})
-		},
-	})
+	// Registered unconditionally, so this returns instead of panicking -- a panic
+	// here would stop the sim from starting at all rather than flagging one ability.
 }

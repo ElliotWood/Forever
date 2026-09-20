@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var frostNovaRank = spellData.FrostNova.BySpellID(27088)
+var frostNovaRank = spellData.FrostNova.HighestRank()
 
 func (mage *Mage) registerFrostNovaSpell() {
 

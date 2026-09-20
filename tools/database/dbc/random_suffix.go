@@ -34,13 +34,15 @@ func (raw RandomSuffix) ToProto() *proto.ItemRandomSuffix {
 				suffix.Name = stats.Stat(stat).StatName()
 			}
 		case ITEM_ENCHANTMENT_STAT:
-			stat, match := MapBonusStatIndexToStat(raw.EffectArgs[i])
+			mapped, match := MapBonusStatIndexToStats(raw.EffectArgs[i])
 			if !match {
 				continue
 			}
-			suffix.Stats[stat] = amount
-			if suffix.Name == "" {
-				suffix.Name = stats.Stat(stat).StatName()
+			for _, stat := range mapped {
+				suffix.Stats[stat] = amount
+				if suffix.Name == "" {
+					suffix.Name = stats.Stat(stat).StatName()
+				}
 			}
 		case ITEM_ENCHANTMENT_EQUIP_SPELL: //Buff
 			spellEffects := dbcInstance.SpellEffects[raw.EffectArgs[i]]

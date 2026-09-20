@@ -1,6 +1,7 @@
 package database
 
 import (
+	"cmp"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -122,15 +123,15 @@ func LoadAndWriteRawItems(dbHelper *DBHelper, filter string, inputsDir string) (
 			s.OverallQualityID,
 			s.DmgVariance,
 			s.ItemLevel,
-			s.Field_1_15_3_55112_014 as StatValue,
+			s.StatPercentEditor as StatValue,
 			s.StatModifier_bonusStat as bonusStat,
-			s.StatPercentEditor as StatPercentEditor,
-			i.Resistances_0 as ArmorValue,
-			i.Resistances_2 as FireResistance,
-			i.Resistances_3 as NatureResistance,
-			i.Resistances_4 as FrostResistance,
-			i.Resistances_5 as ShadowResistance,
-			i.Resistances_6 as ArcaneResistance,
+			'[0,0,0,0,0,0,0,0,0,0]' as StatPercentEditor, -- socket penalty array: dropped by the client
+			0 as ArmorValue, -- Item.Resistances_*: dropped by the client; armor and the
+			0 as FireResistance, -- five resistances arrive as stat-array entries instead
+			0 as NatureResistance,
+			0 as FrostResistance,
+			0 as ShadowResistance,
+			0 as ArcaneResistance,
 			s.SocketType as SocketTypes,
 			s.Socket_match_enchantment_ID as SocketEnchantmentId,
 			s.Flags_0 as Flags_0,
@@ -145,10 +146,10 @@ func LoadAndWriteRawItems(dbHelper *DBHelper, filter string, inputsDir string) (
 			(
 				SELECT group_concat(-ench, ',')
 				FROM item_enchantment_template
-				WHERE entry = s.ItemRandomSuffixGroupID
+				WHERE entry = 0 -- ItemRandomSuffixGroupID: dropped by the client
 			) AS RandomSuffixOptions,
 			 s.StatPercentageOfSocket,
-			 s.StatModifier_bonusAmount,
+			 '[0,0,0,0,0,0,0,0,0,0]', -- StatModifier_bonusAmount: dropped; derived from StatAlloc
 			 i.ClassID,
 			 i.SubClassID,
 			 COALESCE(ind.Description_lang, ''),
@@ -223,7 +224,7 @@ func ScanItemStatEffects(rows *sql.Rows) (dbc.ItemStatEffect, error) {
 func LoadAndWriteItemStatEffects(dbHelper *DBHelper, inputsDir string) ([]dbc.ItemStatEffect, error) {
 	query := `SELECT ID,
 		CASE WHEN Effect_0 = 3 THEN 1 ELSE 0 END as EffectIsAura,
-		EffectPointsMin, EffectPointsMax, EffectArg FROM SpellItemEnchantment WHERE Effect_0 = 5 OR Effect_0 = 3`
+		EffectPointsMin, EffectPointsMin AS EffectPointsMax, EffectArg FROM SpellItemEnchantment WHERE Effect_0 = 5 OR Effect_0 = 3`
 	items, err := LoadRows(dbHelper.db, query, ScanItemStatEffects)
 	if err != nil {
 		return nil, fmt.Errorf("error in query load items")
@@ -435,9 +436,9 @@ func LoadAndWriteRawGems(dbHelper *DBHelper, inputsDir string) ([]dbc.Gem, error
 		s.Display_lang as Name,
 		i.IconFileDataID as FDID,
 		gp.'Type' as GemType,
-		sie.EffectPointsMax as StatList,
+		sie.EffectPointsMin as StatList, -- EffectPointsMax: dropped by the client
 		sie.EffectArg as StatBonus,
-		gp.Min_item_level MinItemLevel,
+		0 MinItemLevel, -- GemProperties.Min_item_level: dropped by the client
 		s.OverallQualityId Quality,
 		sie.Effect,
 		CASE
@@ -545,11 +546,11 @@ func LoadAndWriteRawEnchants(dbHelper *DBHelper, inputsDir string) ([]dbc.Enchan
 				WHEN sie.Effect_2 IN (1, 3) THEN sie.EffectArg_2
 				ELSE se.SpellID
 			END AS spellId,
-			COALESCE(ie.ParentItemID, 0) as ItemId,
+			COALESCE(ixie.ItemID, 0) as ItemId,
 			sie.RequiredSkillID as professionId,
 			sie.Effect as Effect,
 			sie.EffectPointsMin as EffectPoints,
-			group_concat(ese.EffectBasePoints+1) as SpellEffectPoints,
+			group_concat(CAST(ese.EffectBasePointsF AS INTEGER) + 1) as SpellEffectPoints, -- REAL in this layout; the parser wants ints
 			sie.EffectArg as EffectArgs,
 			CASE
 				WHEN sei.EquippedItemClass = 4 THEN false
@@ -568,10 +569,11 @@ func LoadAndWriteRawEnchants(dbHelper *DBHelper, inputsDir string) ([]dbc.Enchan
 			JOIN SpellName sn ON se.SpellID = sn.ID
 			JOIN SpellItemEnchantment sie ON se.EffectMiscValue_0 = sie.ID
 			LEFT JOIN ItemEffect ie ON se.SpellID = ie.SpellID
+			LEFT JOIN ItemXItemEffect ixie ON ixie.ItemEffectID = ie.ID
 			LEFT JOIN SpellEquippedItems sei ON se.SpellId = sei.SpellID
 			LEFT JOIN SkillLineAbility sla ON se.SpellID = sla.Spell
-			LEFT JOIN Item it ON ie.ParentItemId = it.ID
-			LEFT JOIN ItemSparse isp ON ie.ParentItemId = isp.ID
+			LEFT JOIN Item it ON ixie.ItemID = it.ID
+			LEFT JOIN ItemSparse isp ON ixie.ItemID = isp.ID
 			LEFT JOIN SpellEffect ese ON ese.SpellID = sie.ID
 			WHERE se.Effect = 53
 				AND (
@@ -731,11 +733,11 @@ func LoadAndWriteRawSpellEffects(dbHelper *DBHelper, inputsDir string) (map[int]
 		se.EffectAttributes,
 		se.EffectAura,
 		se.EffectAuraPeriod,
-		se.EffectBasePoints,
+		se.EffectBasePointsF,
 		se.EffectBonusCoefficient,
 		se.EffectChainAmplitude,
 		se.EffectChainTargets,
-		se.EffectDieSides,
+		0, -- EffectDieSides: dropped by the client; Variance carries the spread now
 		se.EffectItemType,
 		se.EffectMechanic,
 		se.EffectPointsPerResource,
@@ -752,7 +754,7 @@ func LoadAndWriteRawSpellEffects(dbHelper *DBHelper, inputsDir string) (map[int]
 		se.EffectSpellClassMask,
 		se.ImplicitTarget,
 		se.SpellID,
-		COALESCE(ss.Class, 0),
+		0, -- SpellScaling.Class: dropped by the client
 		COALESCE(sr1.RadiusMin, 0),
 		COALESCE(sr1.RadiusMax, 0),
 		COALESCE(sr2.RadiusMin, 0),
@@ -847,6 +849,17 @@ var RawRandomSuffixes []dbc.RandomSuffix
 var RawRandomSuffixesById map[int]dbc.RandomSuffix
 
 func LoadAndWriteRawRandomSuffixes(dbHelper *DBHelper, inputsDir string) ([]dbc.RandomSuffix, error) {
+	// ItemRandomSuffix is not shipped by every client. The Forever beta drops it
+	// outright -- the file is in the listfile but absent from the build's root --
+	// so there are no random suffixes to load. Write the empty file the rest of
+	// the pipeline expects rather than failing the whole run.
+	if !dbHelper.tableExists("ItemRandomSuffix") {
+		if err := dbc.WriteGzipFile(fmt.Sprintf("%s/dbc/random_suffix.json", inputsDir), []byte("[]")); err != nil {
+			panic(fmt.Sprintf("Error writing random suffixes %v", err))
+		}
+		return nil, nil
+	}
+
 	query := `
 	SELECT
 		COALESCE(-irs.ID, 0) AS ID,
@@ -956,7 +969,8 @@ func LoadAndWriteConsumables(dbHelper *DBHelper, inputsDir string) ([]dbc.Consum
 				(
 					SELECT group_concat(ie2.ID, ',')
 					FROM ItemEffect ie2
-					WHERE ie2.ParentItemID = i.ID
+					JOIN ItemXItemEffect ixie2 ON ixie2.ItemEffectID = ie2.ID
+					WHERE ixie2.ItemID = i.ID
 				) AS ItemEffects,
 				CASE
 					WHEN sp.Description_lang LIKE '%Counts as both a Battle%' THEN 0
@@ -969,7 +983,8 @@ func LoadAndWriteConsumables(dbHelper *DBHelper, inputsDir string) ([]dbc.Consum
 				COALESCE(ie.CategoryCoolDownMSec, 0) as CategoryCooldownDuration
 			FROM Item i
 			JOIN ItemSparse s ON i.ID = s.ID
-			LEFT JOIN ItemEffect ie ON i.ID = ie.ParentItemID
+			LEFT JOIN ItemXItemEffect ixie ON ixie.ItemID = i.ID
+			LEFT JOIN ItemEffect ie ON ie.ID = ixie.ItemEffectID
 			LEFT JOIN SpellCategory sc ON ie.SpellCategoryID = sc.ID
 			LEFT JOIN Spell sp ON ie.SpellID = sp.ID
 			LEFT JOIN SpellMisc sm ON ie.SpellId = sm.SpellID
@@ -1019,17 +1034,18 @@ func ScanItemEffect(rows *sql.Rows) (dbc.ItemEffect, error) {
 func LoadAndWriteItemEffects(dbHelper *DBHelper, inputsDir string) ([]dbc.ItemEffect, error) {
 	query := `
 	SELECT
-		ID,
-		LegacySlotIndex,
-		TriggerType,
-		Charges,
-		CoolDownMSec,
-		CategoryCoolDownMSec,
-		SpellCategoryID,
-		SpellID,
-		ChrSpecializationID,
-		ParentItemID
-	FROM ItemEffect
+		ie.ID,
+		ie.LegacySlotIndex,
+		ie.TriggerType,
+		ie.Charges,
+		ie.CoolDownMSec,
+		ie.CategoryCoolDownMSec,
+		ie.SpellCategoryID,
+		ie.SpellID,
+		ie.ChrSpecializationID,
+		COALESCE(ixie.ItemID, 0) AS ParentItemID
+	FROM ItemEffect ie
+	LEFT JOIN ItemXItemEffect ixie ON ixie.ItemEffectID = ie.ID
 	`
 
 	effects, err := LoadRows(dbHelper.db, query, ScanItemEffect)
@@ -1086,7 +1102,7 @@ func LoadTalents(dbHelper *DBHelper) ([]RawTalent, error) {
 	query := `
 SELECT
   t.TierID,
-  sn.Name_lang,
+  COALESCE(sn.Name_lang, '') AS Name_lang,
   t.ColumnIndex,
   tb.ClassMask,
   t.SpellRank,
@@ -1124,6 +1140,570 @@ ORDER BY tb.Name_lang;
 	}
 
 	fmt.Println("Loaded talents:", len(talents))
+	return talents, nil
+}
+
+// Trait-driven talent loading.
+//
+// The Forever client authors its talent trees in the Trait* tables instead of
+// the legacy Talent/TalentTab pair. A tree is per class and holds all three
+// specs side by side on a pixel lattice, so the generator has to recover the
+// class, the tab and the grid coordinates that the picker and the protos still
+// expect. LoadTraitTalents does that and hands back the same RawTalent rows the
+// legacy loader produced, leaving everything downstream untouched.
+
+// traitGridPitch is the spacing between two neighbouring nodes in TraitNode
+// pixel coordinates. Both axes use it.
+const traitGridPitch = 600
+
+// traitTabGap is the smallest horizontal distance that separates two spec
+// blocks inside a tree. Blocks sit at least 2200 apart while nodes inside a
+// block are 600 apart, so any gap above this splits tabs.
+const traitTabGap = 2 * traitGridPitch
+
+type traitNodeRow struct {
+	TreeID    int
+	NodeID    int
+	XrefIndex int
+	XrefID    int
+	PosX      int
+	PosY      int
+	MaxRanks  int
+	SpellID   int
+	Name      string
+	RankChain string
+}
+
+func scanTraitNode(rows *sql.Rows) (traitNodeRow, error) {
+	var n traitNodeRow
+	var chain sql.NullString
+	err := rows.Scan(
+		&n.TreeID,
+		&n.NodeID,
+		&n.XrefIndex,
+		&n.XrefID,
+		&n.PosX,
+		&n.PosY,
+		&n.MaxRanks,
+		&n.SpellID,
+		&n.Name,
+		&chain,
+	)
+	if err != nil {
+		return n, fmt.Errorf("scanning trait node: %w", err)
+	}
+	n.RankChain = chain.String
+	return n, nil
+}
+
+type traitClassVote struct {
+	TreeID    int
+	ClassMask int
+	Nodes     int
+}
+
+type traitSkillLine struct {
+	NodeID int
+	Name   string
+}
+
+type traitEdge struct {
+	LeftNodeID  int
+	RightNodeID int
+}
+
+type traitTab struct {
+	ID         int
+	ClassMask  int
+	OrderIndex int
+	Name       string
+}
+
+// traitGridPos is a node's place in the picker grid: which tab it belongs to
+// and its cell inside that tab.
+type traitGridPos struct {
+	TabIdx int
+	Row    int
+	Col    int
+}
+
+// traitPlacedNode is a node with its grid cell and the pixel distance between
+// the node and the centre of that cell.
+type traitPlacedNode struct {
+	Node     traitNodeRow
+	Pos      traitGridPos
+	Residual int
+}
+
+// filterTraitCandidates keeps a single node per key, preferring the one closest
+// to its grid cell, and reports every node it drops.
+func filterTraitCandidates(candidates []traitPlacedNode, key func(traitPlacedNode) any, onDrop func(loser, winner traitPlacedNode)) []traitPlacedNode {
+	winners := map[any]traitPlacedNode{}
+	for _, candidate := range candidates {
+		other, seen := winners[key(candidate)]
+		if !seen {
+			winners[key(candidate)] = candidate
+			continue
+		}
+		winner, loser := other, candidate
+		if candidate.Residual < other.Residual {
+			winner, loser = candidate, other
+		}
+		winners[key(candidate)] = winner
+		onDrop(loser, winner)
+	}
+
+	kept := []traitPlacedNode{}
+	for _, candidate := range candidates {
+		if winners[key(candidate)].Node.NodeID == candidate.Node.NodeID {
+			kept = append(kept, candidate)
+		}
+	}
+	return kept
+}
+
+// selectTraitTrees picks one tree per class. The class comes from the class
+// mask on the SkillLineAbility rows of the tree's spells (the mask is 0 for
+// spells shared across classes, so the non-zero majority wins). Several trees
+// can carry the same class - the client keeps stale drafts around - so the tree
+// with the most nodes is taken as the live one.
+func selectTraitTrees(dbHelper *DBHelper) (map[int]int, error) {
+	votes, err := LoadRows(dbHelper.db, `
+SELECT tn.TraitTreeID, sla.ClassMask, COUNT(DISTINCT tn.ID)
+FROM TraitNode tn
+JOIN TraitNodeXTraitNodeEntry x ON x.TraitNodeID = tn.ID
+JOIN TraitNodeEntry e ON e.ID = x.TraitNodeEntryID
+JOIN TraitDefinition d ON d.ID = e.TraitDefinitionID
+JOIN SkillLineAbility sla ON sla.Spell = d.SpellID
+WHERE sla.ClassMask <> 0
+GROUP BY tn.TraitTreeID, sla.ClassMask
+ORDER BY tn.TraitTreeID, sla.ClassMask
+`, func(rows *sql.Rows) (traitClassVote, error) {
+		var v traitClassVote
+		err := rows.Scan(&v.TreeID, &v.ClassMask, &v.Nodes)
+		return v, err
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error loading trait class masks: %w", err)
+	}
+
+	bestMask := map[int]traitClassVote{}
+	for _, v := range votes {
+		if cur, ok := bestMask[v.TreeID]; !ok || v.Nodes > cur.Nodes {
+			bestMask[v.TreeID] = v
+		}
+	}
+
+	counts, err := LoadRows(dbHelper.db, `SELECT TraitTreeID, COUNT(*) FROM TraitNode GROUP BY TraitTreeID`,
+		func(rows *sql.Rows) (traitClassVote, error) {
+			var v traitClassVote
+			err := rows.Scan(&v.TreeID, &v.Nodes)
+			return v, err
+		})
+	if err != nil {
+		return nil, fmt.Errorf("error counting trait nodes: %w", err)
+	}
+	sizes := map[int]int{}
+	for _, c := range counts {
+		sizes[c.TreeID] = c.Nodes
+	}
+
+	live := map[int]int{}
+	for treeID, vote := range bestMask {
+		if cur, ok := live[vote.ClassMask]; !ok || sizes[treeID] > sizes[cur] {
+			live[vote.ClassMask] = treeID
+		}
+	}
+	return live, nil
+}
+
+// repairTraitCoord undoes the 10x transcription typos the client data carries
+// on a handful of nodes (a PosY of 39300 where every other node in the tree
+// sits between 2130 and 5730). A coordinate is only rewritten when it is off
+// the tree's lattice while a tenth of it lands back on it.
+// repairTraitCoord rescues a node parked 10x off canvas, which the beta data does by
+// authoring accident: 1091/104982 PosX 102800, 1091/105003 PosY 39300, 1114/105865
+// PosY 21300. It only fires when the value is off the tree's lattice AND a tenth of it
+// lands back on it, so it cannot move a node that was placed deliberately.
+//
+// TODO: two of those three (104982 Lightning Reflexes, 105865 Holy Specialization) turned
+// out to be retired duplicates whose live twins were re-added at new positions, and are
+// dropped by the dedupe downstream. 1091/105003 "Improved Serpent Sting" has NO twin, so
+// it is either a live talent with a typo -- the reading taken here -- or a retired one
+// being revived. The database cannot distinguish the two. If it should be dropped
+// instead, discard candidates whose residual exceeds 300 and delete this function; note
+// that renumbers every hunter proto field after it.
+func repairTraitCoord(value int, others []int) (int, bool) {
+	nearLattice := func(v int) bool {
+		for _, o := range others {
+			if o != v && o-v <= traitGridPitch && v-o <= traitGridPitch {
+				return true
+			}
+		}
+		return false
+	}
+	if nearLattice(value) {
+		return value, false
+	}
+	if value%10 == 0 && nearLattice(value/10) {
+		return value / 10, true
+	}
+	return value, false
+}
+
+// traitGridIndex maps a repaired pixel coordinate onto the lattice index.
+func traitGridIndex(value, origin int) int {
+	return (value - origin + traitGridPitch/2) / traitGridPitch
+}
+
+func abs(value int) int {
+	if value < 0 {
+		return -value
+	}
+	return value
+}
+
+// traitRankSpellIDs returns one spell id per rank. The Trait tables only store
+// the base spell plus a rank count, and rank spell ids are not consecutive
+// (rank 2 of Master of Defense, 1310316, would infer to 1310317 which is the
+// unrelated Vanguard talent), so the legacy Talent rank chain is used whenever
+// it still describes the same number of ranks. Everything else repeats the base
+// spell, which shows the rank 1 tooltip instead of a wrong spell.
+func traitRankSpellIDs(spellID, maxRanks int, rankChain string) []int {
+	if rankChain != "" {
+		var chain []int
+		if err := json.Unmarshal([]byte(rankChain), &chain); err == nil {
+			ranks := []int{}
+			for _, id := range chain {
+				if id != 0 {
+					ranks = append(ranks, id)
+				}
+			}
+			if len(ranks) == maxRanks && ranks[0] == spellID {
+				return ranks
+			}
+		}
+	}
+	ranks := make([]int, maxRanks)
+	for i := range ranks {
+		ranks[i] = spellID
+	}
+	return ranks
+}
+
+// LoadTraitTalents reads the class trees out of the Trait* tables and returns
+// them as RawTalent rows, so the proto/json generators keep working unchanged.
+func LoadTraitTalents(dbHelper *DBHelper) ([]RawTalent, error) {
+	live, err := selectTraitTrees(dbHelper)
+	if err != nil {
+		return nil, err
+	}
+
+	treeClass := map[int]int{}
+	treeIDs := []int{}
+	for mask, treeID := range live {
+		treeClass[treeID] = mask
+		treeIDs = append(treeIDs, treeID)
+	}
+	slices.Sort(treeIDs)
+
+	nodes, err := LoadRows(dbHelper.db, `
+SELECT
+  tn.TraitTreeID,
+  tn.ID,
+  x.[Index],
+  x.ID,
+  tn.PosX,
+  tn.PosY,
+  e.MaxRanks,
+  COALESCE(d.SpellID, 0),
+  COALESCE(NULLIF(sn.Name_lang, ''), d.OverrideName_lang, '') AS Name_lang,
+  (SELECT tl.SpellRank FROM Talent tl WHERE tl.SpellRank_0 = d.SpellID ORDER BY tl.ID LIMIT 1) AS SpellRank
+FROM TraitNode tn
+JOIN TraitNodeXTraitNodeEntry x ON x.TraitNodeID = tn.ID
+JOIN TraitNodeEntry e ON e.ID = x.TraitNodeEntryID
+JOIN TraitDefinition d ON d.ID = e.TraitDefinitionID
+LEFT JOIN SpellName sn ON sn.ID = d.SpellID
+ORDER BY tn.TraitTreeID, tn.ID, x.[Index], x.ID
+`, scanTraitNode)
+	if err != nil {
+		return nil, fmt.Errorf("error loading trait nodes: %w", err)
+	}
+
+	skillLines, err := LoadRows(dbHelper.db, `
+SELECT DISTINCT x.TraitNodeID, sl.DisplayName_lang
+FROM TraitNodeXTraitNodeEntry x
+JOIN TraitNodeEntry e ON e.ID = x.TraitNodeEntryID
+JOIN TraitDefinition d ON d.ID = e.TraitDefinitionID
+JOIN SkillLineAbility sla ON sla.Spell = d.SpellID
+JOIN SkillLine sl ON sl.ID = sla.SkillLine
+WHERE sl.DisplayName_lang <> ''
+ORDER BY x.TraitNodeID, sl.DisplayName_lang
+`, func(rows *sql.Rows) (traitSkillLine, error) {
+		var s traitSkillLine
+		err := rows.Scan(&s.NodeID, &s.Name)
+		return s, err
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error loading trait skill lines: %w", err)
+	}
+	nodeSkills := map[int][]string{}
+	for _, s := range skillLines {
+		nodeSkills[s.NodeID] = append(nodeSkills[s.NodeID], s.Name)
+	}
+
+	edges, err := LoadRows(dbHelper.db, `SELECT LeftTraitNodeID, RightTraitNodeID FROM TraitEdge ORDER BY RightTraitNodeID, LeftTraitNodeID`,
+		func(rows *sql.Rows) (traitEdge, error) {
+			var e traitEdge
+			err := rows.Scan(&e.LeftNodeID, &e.RightNodeID)
+			return e, err
+		})
+	if err != nil {
+		return nil, fmt.Errorf("error loading trait edges: %w", err)
+	}
+
+	tabs, err := LoadRows(dbHelper.db, `SELECT ID, ClassMask, OrderIndex, Name_lang FROM TalentTab ORDER BY ClassMask, OrderIndex`,
+		func(rows *sql.Rows) (traitTab, error) {
+			var t traitTab
+			err := rows.Scan(&t.ID, &t.ClassMask, &t.OrderIndex, &t.Name)
+			return t, err
+		})
+	if err != nil {
+		return nil, fmt.Errorf("error loading talent tabs: %w", err)
+	}
+	tabBackground := map[[2]int]int{}
+	// TalentTab.Name_lang is the label the talent frame shows ("Elemental", "Shadow").
+	// SkillLine.DisplayName_lang, which the block's majority vote yields, is the skill
+	// line behind it ("Elemental Combat", "Shadow Magic"). Prefer the frame label and
+	// fall back to the skill line where no tab row matches.
+	tabLabel := map[[2]int]string{}
+	for _, t := range tabs {
+		tabBackground[[2]int{t.ClassMask, t.OrderIndex}] = t.ID
+		tabLabel[[2]int{t.ClassMask, t.OrderIndex}] = t.Name
+	}
+
+	// One node can point at several entries (a choice node). Keep the lowest
+	// Index, which is the entry the client shows first.
+	choiceDiscards := 0
+	byNode := map[int]traitNodeRow{}
+	nodeOrder := map[int][]int{}
+	for _, n := range nodes {
+		if _, ok := treeClass[n.TreeID]; !ok {
+			continue
+		}
+		if prev, ok := byNode[n.NodeID]; ok {
+			choiceDiscards++
+			if prev.XrefIndex < n.XrefIndex || (prev.XrefIndex == n.XrefIndex && prev.XrefID <= n.XrefID) {
+				continue
+			}
+		} else {
+			nodeOrder[n.TreeID] = append(nodeOrder[n.TreeID], n.NodeID)
+		}
+		byNode[n.NodeID] = n
+	}
+	if choiceDiscards > 0 {
+		fmt.Fprintf(os.Stderr, "[traits] dropped %d extra choice-node entries (kept the lowest Index)\n", choiceDiscards)
+	}
+
+	// A node can be the right side of several edges. Keep the lowest left node
+	// id so the generated prereq is stable.
+	prereqOf := map[int]int{}
+	edgeDiscards := 0
+	for _, e := range edges {
+		if _, ok := byNode[e.RightNodeID]; !ok {
+			continue
+		}
+		if _, ok := byNode[e.LeftNodeID]; !ok {
+			continue
+		}
+		if cur, ok := prereqOf[e.RightNodeID]; ok {
+			edgeDiscards++
+			if cur <= e.LeftNodeID {
+				continue
+			}
+		}
+		prereqOf[e.RightNodeID] = e.LeftNodeID
+	}
+	if edgeDiscards > 0 {
+		fmt.Fprintf(os.Stderr, "[traits] dropped %d extra incoming trait edges (kept the lowest left node id)\n", edgeDiscards)
+	}
+
+	var talents []RawTalent
+	for _, treeID := range treeIDs {
+		classMask := treeClass[treeID]
+		treeNodes := []traitNodeRow{}
+		xs := []int{}
+		ys := []int{}
+		for _, nodeID := range nodeOrder[treeID] {
+			treeNodes = append(treeNodes, byNode[nodeID])
+		}
+		if len(treeNodes) == 0 {
+			fmt.Fprintf(os.Stderr, "[traits] tree %d: no nodes\n", treeID)
+			continue
+		}
+		for i := range treeNodes {
+			xs = append(xs, treeNodes[i].PosX)
+			ys = append(ys, treeNodes[i].PosY)
+		}
+		for i := range treeNodes {
+			if x, fixed := repairTraitCoord(treeNodes[i].PosX, xs); fixed {
+				fmt.Fprintf(os.Stderr, "[traits] tree %d node %d: repaired PosX %d -> %d\n", treeID, treeNodes[i].NodeID, treeNodes[i].PosX, x)
+				treeNodes[i].PosX = x
+			}
+			if y, fixed := repairTraitCoord(treeNodes[i].PosY, ys); fixed {
+				fmt.Fprintf(os.Stderr, "[traits] tree %d node %d: repaired PosY %d -> %d\n", treeID, treeNodes[i].NodeID, treeNodes[i].PosY, y)
+				treeNodes[i].PosY = y
+			}
+		}
+
+		// Split the tree into the spec blocks that sit next to each other.
+		distinctX := []int{}
+		for i := range treeNodes {
+			if !slices.Contains(distinctX, treeNodes[i].PosX) {
+				distinctX = append(distinctX, treeNodes[i].PosX)
+			}
+		}
+		slices.Sort(distinctX)
+		origins := []int{}
+		for i, x := range distinctX {
+			if i == 0 || x-distinctX[i-1] > traitTabGap {
+				origins = append(origins, x)
+			}
+		}
+		if len(origins) != 3 {
+			fmt.Fprintf(os.Stderr, "[traits] tree %d: found %d tabs instead of 3\n", treeID, len(origins))
+		}
+		tabOf := func(x int) int {
+			tab := 0
+			for i, origin := range origins {
+				if x >= origin {
+					tab = i
+				}
+			}
+			return tab
+		}
+
+		minY := treeNodes[0].PosY
+		for i := range treeNodes {
+			if treeNodes[i].PosY < minY {
+				minY = treeNodes[i].PosY
+			}
+		}
+
+		candidates := []traitPlacedNode{}
+		for _, node := range treeNodes {
+			if node.SpellID == 0 || node.MaxRanks == 0 || node.Name == "" {
+				fmt.Fprintf(os.Stderr, "[traits] tree %d node %d: skipped, spell %d / %d ranks / name %q\n", treeID, node.NodeID, node.SpellID, node.MaxRanks, node.Name)
+				continue
+			}
+			tabIdx := tabOf(node.PosX)
+			candidate := traitPlacedNode{
+				Node: node,
+				Pos: traitGridPos{
+					TabIdx: tabIdx,
+					Row:    traitGridIndex(node.PosY, minY),
+					Col:    traitGridIndex(node.PosX, origins[tabIdx]),
+				},
+			}
+			candidate.Residual = abs(node.PosX-(origins[tabIdx]+candidate.Pos.Col*traitGridPitch)) +
+				abs(node.PosY-(minY+candidate.Pos.Row*traitGridPitch))
+			candidates = append(candidates, candidate)
+		}
+
+		// A tree can hold a talent twice, the retired copy parked far off the
+		// canvas, and two nodes can land on the same cell when one of them is
+		// authored off the lattice. The first breaks protoc, which rejects the
+		// repeated field name, the second breaks the picker, which rejects
+		// duplicate locations, so the node sitting closest to its cell wins and
+		// the other one is dropped.
+		candidates = filterTraitCandidates(candidates, func(p traitPlacedNode) any { return p.Node.SpellID },
+			func(loser, winner traitPlacedNode) {
+				fmt.Fprintf(os.Stderr, "[traits] tree %d node %d (%s at %d/%d): skipped, spell %d is already used by node %d\n",
+					treeID, loser.Node.NodeID, loser.Node.Name, loser.Node.PosX, loser.Node.PosY, loser.Node.SpellID, winner.Node.NodeID)
+			})
+		candidates = filterTraitCandidates(candidates, func(p traitPlacedNode) any { return p.Pos },
+			func(loser, winner traitPlacedNode) {
+				fmt.Fprintf(os.Stderr, "[traits] tree %d node %d (%s at %d/%d): skipped, tab %d row %d col %d is held by node %d\n",
+					treeID, loser.Node.NodeID, loser.Node.Name, loser.Node.PosX, loser.Node.PosY,
+					loser.Pos.TabIdx, loser.Pos.Row, loser.Pos.Col, winner.Node.NodeID)
+			})
+
+		positions := map[int]traitGridPos{}
+		kept := []traitNodeRow{}
+		for _, candidate := range candidates {
+			positions[candidate.Node.NodeID] = candidate.Pos
+			kept = append(kept, candidate.Node)
+		}
+
+		// The tab name is the skill line most of its nodes belong to; single
+		// nodes can be listed under a second skill line (pet abilities, spells
+		// shared between specs) and must not rename the tab.
+		tabNames := make([]string, len(origins))
+		for tabIdx := range origins {
+			votes := map[string]int{}
+			for _, node := range kept {
+				if positions[node.NodeID].TabIdx != tabIdx {
+					continue
+				}
+				for _, name := range nodeSkills[node.NodeID] {
+					votes[name]++
+				}
+			}
+			best := ""
+			for name, count := range votes {
+				if count > votes[best] || (count == votes[best] && (best == "" || name < best)) {
+					best = name
+				}
+			}
+			if best == "" {
+				fmt.Fprintf(os.Stderr, "[traits] tree %d tab %d: no skill line found\n", treeID, tabIdx)
+			}
+			tabNames[tabIdx] = best
+		}
+
+		for _, node := range kept {
+			pos := positions[node.NodeID]
+			spellIDs, err := json.Marshal(traitRankSpellIDs(node.SpellID, node.MaxRanks, node.RankChain))
+			if err != nil {
+				return nil, fmt.Errorf("encoding rank spells for trait node %d: %w", node.NodeID, err)
+			}
+			talent := RawTalent{
+				TierID:         pos.Row,
+				TalentName:     node.Name,
+				ColumnIndex:    pos.Col,
+				ClassMask:      classMask,
+				SpellRank:      string(spellIDs),
+				TabName:        tabDisplayName(tabLabel, classMask, pos.TabIdx, tabNames[pos.TabIdx]),
+				BackgroundFile: strconv.Itoa(tabBackground[[2]int{classMask, pos.TabIdx}]),
+			}
+			if prereq, ok := prereqOf[node.NodeID]; ok {
+				prereqPos, mapped := positions[prereq]
+				switch {
+				case !mapped:
+					fmt.Fprintf(os.Stderr, "[traits] tree %d node %d: prereq node %d was not mapped\n", treeID, node.NodeID, prereq)
+				case prereqPos.TabIdx != pos.TabIdx:
+					fmt.Fprintf(os.Stderr, "[traits] tree %d node %d: prereq node %d sits in another tab\n", treeID, node.NodeID, prereq)
+				default:
+					talent.PrereqRow = sql.NullInt64{Int64: int64(prereqPos.Row), Valid: true}
+					talent.PrereqCol = sql.NullInt64{Int64: int64(prereqPos.Col), Valid: true}
+				}
+			}
+			talents = append(talents, talent)
+		}
+
+		fmt.Fprintf(os.Stderr, "[traits] class mask %d: tree %d, %d talents (%s)\n", classMask, treeID, len(kept), strings.Join(tabNames, ", "))
+	}
+
+	slices.SortStableFunc(talents, func(a, b RawTalent) int {
+		return cmp.Or(
+			cmp.Compare(a.ClassMask, b.ClassMask),
+			cmp.Compare(a.TabName, b.TabName),
+			cmp.Compare(a.TierID, b.TierID),
+			cmp.Compare(a.ColumnIndex, b.ColumnIndex),
+		)
+	})
+
+	fmt.Println("Loaded trait talents:", len(talents))
 	return talents, nil
 }
 
@@ -1170,7 +1750,7 @@ SELECT
 	(
 		(ss.AuraDescription_lang != '' and ss.AuraDescription_lang is not null)
 	) AS HasBuff,
-	sn.Name_lang,
+	COALESCE(sn.Name_lang, '') AS Name_lang,
 	COALESCE(ss.NameSubtext_lang, "")
 FROM SpellMisc sm
 LEFT JOIN Spell ss ON ss.ID = sm.SpellID
@@ -1291,7 +1871,7 @@ func LoadAndWriteSpells(dbHelper *DBHelper, inputsDir string) ([]dbc.Spell, erro
 	COALESCE(sm.MinDuration, 0),
 	COALESCE(ss.MaxScalingLevel, 0),
 	COALESCE(ss.MinScalingLevel, 0),
-	COALESCE(ss.ScalesFromItemLevel, 0),
+	0, -- SpellScaling.ScalesFromItemLevel: dropped by the client
 	COALESCE(sl.SpellLevel, 0),
 	COALESCE(sl.BaseLevel, 0),
 	COALESCE(sl.MaxLevel, 0),
@@ -1316,7 +1896,7 @@ func LoadAndWriteSpells(dbHelper *DBHelper, inputsDir string) ([]dbc.Spell, erro
 	COALESCE(sei.EquippedItemClass, 0),
 	COALESCE(sei.EquippedItemInvTypes, 0),
 	COALESCE(sei.EquippedItemSubclass, 0),
-	COALESCE(ss.CastTimeMin, 0),
+	0, -- SpellScaling.CastTimeMin: dropped by the client
 	COALESCE(sco.SpellClassMask, ""),
 	COALESCE(sco.SpellClassSet, 0),
 	COALESCE(si.AuraInterruptFlags, ""),
@@ -1680,4 +2260,13 @@ func LoadItemUpgradePath(dbHelper *DBHelper) (upgradePath map[int][]int, err err
 	}
 	fmt.Println("Loaded Upgrade Path", len(upgradePath))
 	return upgradePath, nil
+}
+
+// tabDisplayName prefers the talent frame's own label for a tree, falling back to the
+// skill-line name derived from the block's spells when no TalentTab row matches.
+func tabDisplayName(labels map[[2]int]string, classMask, tabIdx int, fallback string) string {
+	if name, ok := labels[[2]int{classMask, tabIdx}]; ok && name != "" {
+		return name
+	}
+	return fallback
 }

@@ -16,9 +16,16 @@ var BaseStats = map[BaseStatsKey]stats.Stats{}
 // level constant does not rescale them -- unlike the ratings/crit/mana in
 // base_stats_auto_gen.go, nothing regenerates these two maps, so a level-60
 // character currently runs on level-70 str/agi/sta/int/spi. Needs a level-60
-// source: Classic-era WCL combatant info fitted the same way as the rows below,
-// or the client's own per-level attribute tables. Until then every sim number
-// that depends on base attributes is wrong, and the goldens bake that in.
+// source. Until then every sim number that depends on base attributes is wrong,
+// and the goldens bake that in.
+//
+// The client is NOT that source, verified against build 1.60.1.69913 by extracting
+// every candidate table: CharBaseInfo is race x class validity only; ChrClasses has
+// AttackPowerPerStrength/Agility but no attributes; ChrRaces has no stat columns;
+// RaceStat (new in 1.60.1) is one row per race and every value is 0; and
+// PlayerExpectedStat carries BaseMana/CritPerAgility/SpellCritPerIntellect but no
+// attributes. So these two maps have to stay log-fitted -- Classic-era WCL combatant
+// info fitted the same way as the rows below, or a server emulator's player_levelstats.
 //
 // ClassBaseStats + RaceOffsets hold TRUE pre-racial base attributes: the
 // multiplier racials (The Human Spirit ×1.1 spirit, gnome Expansive Mind
@@ -203,22 +210,25 @@ var ClassBaseStats = map[proto.Class]stats.Stats{
 	},
 }
 
-// TODO: These are the LEVEL 90 rows of GameTables/SpellScaling.txt -- MoP-port
-// leftovers that were never updated for TBC, and are doubly wrong at level 60
-// (warrior should be 491.949980, not 1246.298600). Only tools/tooltip reads this
-// today (dbc_data_provider.go:249), so the sim is unaffected, but tooltip spell
-// values are computed off the wrong scaling row.
+// The LEVEL 60 rows of GameTables/SpellScaling.txt. Only tools/tooltip reads this
+// (dbc_data_provider.go:249), so the sim is unaffected either way, but tooltip spell
+// values used to be computed off the level 90 row -- a MoP-port leftover that was never
+// updated for TBC and was wrong by two expansions at level 60.
+//
+// TODO: that file is MoP-era, not a beta extraction. The beta ships its own
+// spellscaling.txt but every class column in it is 0 at every level, so there is no
+// build-native confirmation of these numbers and none is currently obtainable.
 var ClassBaseScaling = map[proto.Class]float64{
-	proto.Class_ClassUnknown: 1710.000000,
-	proto.Class_ClassWarrior: 1246.298600,
-	proto.Class_ClassPaladin: 1141.926000,
-	proto.Class_ClassHunter:  1246.298600,
-	proto.Class_ClassRogue:   1246.298600,
-	proto.Class_ClassPriest:  1049.328400,
-	proto.Class_ClassShaman:  1114.501700,
-	proto.Class_ClassMage:    1040.778600,
-	proto.Class_ClassWarlock: 1068.202900,
-	proto.Class_ClassDruid:   1094.739700,
+	proto.Class_ClassUnknown: 49.000000,
+	proto.Class_ClassWarrior: 491.949980,
+	proto.Class_ClassPaladin: 332.962490,
+	proto.Class_ClassHunter:  355.055050,
+	proto.Class_ClassRogue:   532.945800,
+	proto.Class_ClassPriest:  336.625000,
+	proto.Class_ClassShaman:  251.970830,
+	proto.Class_ClassMage:    366.620820,
+	proto.Class_ClassWarlock: 308.962490,
+	proto.Class_ClassDruid:   282.633330,
 }
 
 func AddBaseStatsCombo(r proto.Race, c proto.Class) {

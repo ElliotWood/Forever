@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 167.5).BySpellID(25212)
+var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 167.5).HighestRank()
 var hamstringBaseDamage, _ = hamstringRank.Direct.Range()
 
 func (war *Warrior) registerHamstring() {

@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var demoralizingRoarRank = spellData.DemoralizingRoar.BySpellID(26998)
+var demoralizingRoarRank = spellData.DemoralizingRoar.HighestRank()
 
 func (druid *Druid) registerDemoralizingRoarSpell() {
 	druid.registerDemoralizingRoarAura()
@@ -43,6 +43,8 @@ func (druid *Druid) registerDemoralizingRoarSpell() {
 
 func (druid *Druid) registerDemoralizingRoarAura() {
 	druid.DemoralizingRoarAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.DemoralizingRoarAura(target, druid.Talents.FeralAggression)
+		// TODO: Forever drops Feral Aggression; untalented (0 points) until we know
+		// whether the effect moved onto another talent.
+		return core.DemoralizingRoarAura(target, 0)
 	})
 }

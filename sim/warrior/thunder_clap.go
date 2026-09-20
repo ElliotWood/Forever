@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var thunderClapRank = spellData.ThunderClap.BySpellID(25264)
+var thunderClapRank = spellData.ThunderClap.HighestRank()
 var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
 
 func (war *Warrior) registerThunderClap() {

@@ -1,9 +1,9 @@
 import * as BuffDebuffInputs from '@features/settings/model/buffs_debuffs';
 import { APLRotation } from '@generated/proto/apl';
-import { Debuffs, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { Debuffs, EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
-import { DEFAULT_HEALER_GEM_STATS, UnitStat } from '@sim/proto/stats';
+import { DEFAULT_HEALER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
 import { defaultHealerIndividualBuffs, defaultHealerPartyBuffs, defaultHealerRaidBuffs } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
@@ -48,9 +48,9 @@ export default defineSpec<Spec.SpecRestorationDruid>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_PRESET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.DEFAULT_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
@@ -94,13 +94,13 @@ export default defineSpec<Spec.SpecRestorationDruid>({
 	},
 
 	presets: {
-		epWeights: [Presets.DEFAULT_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.TreeOfLifeTalents, Presets.DreamstateTalents],
 		// Preset rotations that the user can quickly select.
 		rotations: [],
 		// Preset gear configurations that the user can quickly select.
-		gear: [Presets.PRERAID_PRESET, Presets.P3_PRESET],
+		gear: [],
 	},
 
 	autoRotation: (_: Player<Spec.SpecRestorationDruid>): APLRotation => {

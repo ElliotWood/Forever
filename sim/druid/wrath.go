@@ -4,7 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var wrathRank = spellData.Wrath.BySpellID(26985)
+var wrathRank = spellData.Wrath.HighestRank()
 
 func (druid *Druid) registerWrathSpell() {
 	druid.Wrath = druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{

@@ -1,11 +1,10 @@
 package rogue
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-var exposeArmorRank = spellData.ExposeArmor.BySpellID(26866)
+var exposeArmorRank = spellData.ExposeArmor.HighestRank()
 
 func (rogue *Rogue) registerExposeArmorSpell() {
 	rogue.ExposeArmorAuras = rogue.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
@@ -22,8 +21,10 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 		ClassSpellMask: RogueSpellExposeArmor,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost:          exposeArmorRank.Cost,
-			Refund:        spellData.QuickRecovery.Effect(shared.A_DUMMY, 0).FractionAt(rogue.Talents.QuickRecovery),
+			Cost: exposeArmorRank.Cost,
+			// TODO: Forever drops Quick Recovery; no energy refund until we know whether the
+			// effect moved onto another talent.
+			Refund:        0,
 			RefundMetrics: rogue.EnergyRefundMetrics,
 		},
 		Cast: core.CastConfig{
@@ -60,7 +61,11 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 }
 
 func (rogue *Rogue) GetExposeArmorValue() float64 {
-	return 410.0 * float64(rogue.ComboPoints()) * spellData.ImprovedExposeArmor.MultiplierAt(rogue.Talents.ImprovedExposeArmor)
+	// TODO: Forever repurposes Improved Expose Armor: the spell now carries an energy cost
+	// reduction (SPELLMOD_COST -5/-10) and a dummy of 1/2, neither of which is the 25/50%
+	// armor bonus this call wants, so the armor value is pinned to the untalented one.
+	improvedExposeArmorMultiplier := 1.0
+	return 410.0 * float64(rogue.ComboPoints()) * improvedExposeArmorMultiplier
 }
 
 func (rogue *Rogue) CanApplyExposeArmorAura(target *core.Unit) bool {

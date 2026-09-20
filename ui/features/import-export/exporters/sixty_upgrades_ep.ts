@@ -31,7 +31,7 @@ const STAT_NAMES: Record<Stat, string> = {
 	[Stat.StatSpellHitRating]: 'spellHitRating',
 	[Stat.StatSpellCritRating]: 'spellCritRating',
 	[Stat.StatSpellHasteRating]: 'spellHasteRating',
-	[Stat.StatSpellPenetration]: 'spellPenetration',
+	[Stat.StatSpellPiercing]: 'spellPenetration',
 	[Stat.StatFeralAttackPower]: '',
 	[Stat.StatMeleeHitRating]: 'hitRating',
 	[Stat.StatMeleeCritRating]: 'critRating',

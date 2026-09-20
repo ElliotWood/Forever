@@ -5,7 +5,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var hellfireRank = spellData.Hellfire.BySpellID(27213)
+var hellfireRank = spellData.Hellfire.HighestRank()
 var hellfireTick = hellfireRank.Periodic.(shared.SpellDataPeriodic)
 var hellFireCoeff = hellfireTick.Coef
 

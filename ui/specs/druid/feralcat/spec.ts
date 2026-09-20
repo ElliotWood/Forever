@@ -1,6 +1,19 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLAction, APLListItem, APLRotation, APLRotation_Type as APLRotationType } from '@generated/proto/apl';
-import { Cooldowns, Debuffs, Drums, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import {
+	Cooldowns,
+	Debuffs,
+	Drums,
+	EquipmentSpec,
+	IndividualBuffs,
+	ItemSlot,
+	PartyBuffs,
+	PseudoStat,
+	RaidBuffs,
+	Spec,
+	Stat,
+	TristateEffect,
+} from '@generated/proto/common';
 import { FeralCatDruid_Rotation as DruidRotation } from '@generated/proto/druid';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -65,9 +78,9 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_6P_GEARSET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P1_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		statCaps: (() => {
 			return new Stats()
 				.withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9)
@@ -146,31 +159,12 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.StandardTalents, Presets.MonocatTalents],
 		rotations: [Presets.SIMPLE, Presets.APL],
 		// Preset gear configurations that the user can quickly select.
-		gear: [
-			Presets.PRE_RAID_GEARSET,
-			Presets.P1_REALISTIC_6P_GEARSET,
-			Presets.P1_REALISTIC_9P_GEARSET,
-			Presets.P1_BIS_6P_GEARSET,
-			Presets.P1_BIS_9P_GEARSET,
-			Presets.P1_ALT_6P_GEARSET,
-			Presets.P1_ALT_9P_GEARSET,
-			Presets.P2_6P_GEARSET,
-			Presets.P2_9P_GEARSET,
-			Presets.P2_ALT_6P_GEARSET,
-			Presets.P2_ALT_9P_GEARSET,
-			Presets.P3_6P_GEARSET,
-			Presets.P3_9P_GEARSET,
-			Presets.P4_6P_GEARSET,
-			Presets.P4_9P_GEARSET,
-			Presets.P5_GEARSET,
-		],
-		itemSwaps: [],
-		builds: [],
+		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecFeralCatDruid>): APLRotation => {

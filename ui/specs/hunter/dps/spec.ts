@@ -1,12 +1,12 @@
 import * as other_inputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLListItem, APLRotation, APLRotation_Type, APLValueVariable } from '@generated/proto/apl';
-import { Cooldowns, HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { Cooldowns, EquipmentSpec, HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import * as AplUtils from '@sim/proto/apl_utils';
 import { SpecRotation } from '@sim/proto/spec_types';
-import { StatCap, UnitStat } from '@sim/proto/stats';
+import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
 import * as HunterInputs from './inputs';
@@ -72,9 +72,9 @@ export default defineSpec<Spec.SpecHunter>({
 	itemSwapSlots: [ItemSlot.ItemSlotMainHand, ItemSlot.ItemSlotOffHand, ItemSlot.ItemSlotRanged, ItemSlot.ItemSlotTrinket1, ItemSlot.ItemSlotTrinket2],
 	defaults: {
 		// Default equipped gear.
-		gear: Presets.P3_BM_2H_6P_GEARSET.gear,
+		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: Presets.P1_BM_EP_PRESET.epWeights,
+		epWeights: new Stats(),
 		softCapBreakpoints: [
 			StatCap.fromPseudoStat(PseudoStat.PseudoStatRangedHitPercent, {
 				breakpoints: [9],
@@ -121,92 +121,13 @@ export default defineSpec<Spec.SpecHunter>({
 	},
 
 	presets: {
-		epWeights: [Presets.P1_BM_EP_PRESET, Presets.P1_SV_EP_PRESET],
+		epWeights: [],
 		// Preset talents that the user can quickly select.
 		talents: [Presets.BMTalents, Presets.SVTalents],
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.WeaveSimple, Presets.TurretSimple, Presets.DefaultRotation],
 		// Preset gear configurations that the user can quickly select.
-		builds: [
-			// Phase 1
-			Presets.P1_PRESET_BUILD_PRE_RAID,
-			Presets.P1_PRESET_BUILD_BM_2H_6P,
-			Presets.P1_PRESET_BUILD_BM_2H_9P,
-			Presets.P1_PRESET_BUILD_BM_DW_6P,
-			Presets.P1_PRESET_BUILD_BM_DW_9P,
-			Presets.P1_PRESET_BUILD_SV_2H_6P,
-			Presets.P1_PRESET_BUILD_SV_2H_9P,
-			Presets.P1_PRESET_BUILD_SV_DW_6P,
-			Presets.P1_PRESET_BUILD_SV_DW_9P,
-
-			// Phase 2
-			Presets.P2_PRESET_BUILD_BM_2H_6P,
-			Presets.P2_PRESET_BUILD_BM_2H_9P,
-			Presets.P2_PRESET_BUILD_BM_DW_6P,
-			Presets.P2_PRESET_BUILD_BM_DW_9P,
-			Presets.P2_PRESET_BUILD_SV_2H_6P,
-			Presets.P2_PRESET_BUILD_SV_DW_6P,
-
-			// Phase 3
-			Presets.P3_PRESET_BUILD_BM_2H_6P,
-			Presets.P3_PRESET_BUILD_BM_2H_9P,
-			Presets.P3_PRESET_BUILD_BM_DW_6P,
-			Presets.P3_PRESET_BUILD_BM_DW_9P,
-			Presets.P3_PRESET_BUILD_SV_2H_6P,
-			Presets.P3_PRESET_BUILD_SV_2H_9P,
-			Presets.P3_PRESET_BUILD_SV_DW_6P,
-			Presets.P3_PRESET_BUILD_SV_DW_9P,
-
-			// Phase 4
-			Presets.P4_PRESET_BUILD_BM_2H_6P,
-			Presets.P4_PRESET_BUILD_BM_2H_9P,
-			Presets.P4_PRESET_BUILD_BM_DW_6P,
-			Presets.P4_PRESET_BUILD_BM_DW_9P,
-			Presets.P4_PRESET_BUILD_SV_2H_6P,
-			Presets.P4_PRESET_BUILD_SV_2H_9P,
-			Presets.P4_PRESET_BUILD_SV_DW_6P,
-			Presets.P4_PRESET_BUILD_SV_DW_9P,
-		],
-		gear: [
-			// Phase 1
-			Presets.P1_PreRaid_GEARSET,
-			Presets.P1_BM_2H_6P_GEARSET,
-			Presets.P1_BM_2H_9P_GEARSET,
-			Presets.P1_BM_DW_6P_GEARSET,
-			Presets.P1_BM_DW_9P_GEARSET,
-			Presets.P1_SV_2H_3P_GEARSET,
-			Presets.P1_SV_2H_6P_GEARSET,
-			Presets.P1_SV_DW_3P_GEARSET,
-			Presets.P1_SV_DW_6P_GEARSET,
-
-			// Phase 2
-			Presets.P2_BM_2H_6P_GEARSET,
-			Presets.P2_BM_2H_9P_GEARSET,
-			Presets.P2_BM_DW_6P_GEARSET,
-			Presets.P2_BM_DW_9P_GEARSET,
-			Presets.P2_SV_2H_6P_GEARSET,
-			Presets.P2_SV_DW_6P_GEARSET,
-
-			// Phase 3
-			Presets.P3_BM_2H_6P_GEARSET,
-			Presets.P3_BM_2H_9P_GEARSET,
-			Presets.P3_BM_DW_6P_GEARSET,
-			Presets.P3_BM_DW_9P_GEARSET,
-			Presets.P3_SV_2H_6P_GEARSET,
-			Presets.P3_SV_2H_9P_GEARSET,
-			Presets.P3_SV_DW_6P_GEARSET,
-			Presets.P3_SV_DW_9P_GEARSET,
-
-			// Phase 4
-			Presets.P4_BM_2H_6P_GEARSET,
-			Presets.P4_BM_2H_9P_GEARSET,
-			Presets.P4_BM_DW_6P_GEARSET,
-			Presets.P4_BM_DW_9P_GEARSET,
-			Presets.P4_SV_2H_6P_GEARSET,
-			Presets.P4_SV_2H_9P_GEARSET,
-			Presets.P4_SV_DW_6P_GEARSET,
-			Presets.P4_SV_DW_9P_GEARSET,
-		],
+		gear: [],
 	},
 
 	autoRotation: (player: Player<Spec.SpecHunter>): APLRotation => {

@@ -72,20 +72,26 @@ func NewItemSet(set ItemSet) *ItemSet {
 	})
 
 	if WITH_DB {
-		if !foundID {
-			panic(fmt.Sprintf("No items found for set id %d", set.ID))
-		}
-		if !foundName {
-			panic("No items found for set " + set.Name)
-		}
-		if len(set.AlternativeName) > 0 && !foundAlternativeName {
-			panic("No items found for set alternative " + set.AlternativeName)
+		// Forever's item set is a subset of TBC's, so a set the sim implements may have no
+		// members in the loaded database. Skipping keeps the bonus around for the day those
+		// items return; panicking would stop the sim from starting over missing content.
+		if !foundID || !foundName || (len(set.AlternativeName) > 0 && !foundAlternativeName) {
+			missingItemSets = append(missingItemSets, set.Name)
+			return &set
 		}
 	}
 
 	sets = append(sets, &set)
 	return &set
 }
+
+// missingItemSets collects sets whose items this client does not ship, so the count can
+// be reported rather than silently swallowed.
+var missingItemSets []string
+
+// MissingItemSets reports the set names skipped because the loaded database holds none of
+// their items.
+func MissingItemSets() []string { return missingItemSets }
 
 type SetBonus struct {
 	// Name of the set.

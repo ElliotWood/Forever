@@ -68,6 +68,22 @@ type rankLadder struct {
 	Name  string
 	Field string
 	Ranks map[int32]int32
+
+	// What each rank's effects are worth, keyed by rank and then by the client's EffectIndex. Set
+	// only on a ladder the talent tree supplied, where every rank is the same spell and the numbers
+	// sit on the tree's curves rather than on a spell per rank. Nil means the rank's own spell states
+	// its numbers, which is what every "Rank N" family does.
+	Points map[int32]map[int32]float64
+}
+
+// One talent as the tree states it: a single spell, the rank cap the game enforces, and the value
+// each rank gives. The rank spells the legacy Talent table still lists are gone from this client -
+// Anticipation's 12750-12753 have no row in SpellName, SpellEffect or SpellMisc - so the tree is the
+// only place a talent's ranks are described.
+type traitLadder struct {
+	SpellID  int32
+	MaxRanks int32
+	Points   map[int32]map[int32]float64
 }
 
 // SkillLineAbility.ClassMask is a bitmask over the class index dbc.Classes already carries, so the bit
@@ -104,14 +120,15 @@ func fieldNameOf(spellName string) string {
 	return name
 }
 
-// Every multi-rank family a class can learn: its own skill lines, every spell whose subtext reads
-// "Rank N", grouped by name. Nothing hand-maintained.
-func discoverLadders(db *sql.DB, class dbc.DbcClass) ([]rankLadder, []string, error) {
+// Every multi-rank family a class can learn, from two sources: every spell whose subtext reads
+// "Rank N" in one of the class's skill lines, and every talent in the class's tree. Nothing
+// hand-maintained.
+func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, []string, []string, error) {
 	mask := classMaskOf(class)
 
 	exclusive, err := exclusiveSkillLines(db, mask)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
 	rows, err := db.Query(`
@@ -128,7 +145,7 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass) ([]rankLadder, []string, er
 		AND s.NameSubtext_lang LIKE 'Rank %'
 		ORDER BY n.Name_lang, sla.Spell`, mask)
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	defer rows.Close()
 
@@ -137,7 +154,7 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass) ([]rankLadder, []string, er
 		var name, subtext string
 		var c rankCandidate
 		if err := rows.Scan(&name, &c.SpellID, &subtext, &c.ClassMask, &c.SkillLine); err != nil {
-			return nil, nil, err
+			return nil, nil, nil, err
 		}
 		m := rankSubtext.FindStringSubmatch(subtext)
 		if m == nil {
@@ -151,17 +168,28 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass) ([]rankLadder, []string, er
 		byName[name][c.Rank] = append(byName[name][c.Rank], c)
 	}
 	if err := rows.Err(); err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 
-	names := make([]string, 0, len(byName))
-	for name := range byName {
-		names = append(names, name)
+	traits, traitSkipped, traitPartial, err := discoverTraitLadders(db, treeID)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
+	seen := map[string]bool{}
+	var names []string
+	for _, source := range []map[string]bool{keysOf(byName), keysOf(traits), keysOf(traitSkipped)} {
+		for name := range source {
+			if !seen[name] {
+				seen[name] = true
+				names = append(names, name)
+			}
+		}
 	}
 	sort.Strings(names)
 
 	var ladders []rankLadder
-	var skipped []string
+	var skipped, partial []string
 	taken := map[string]string{}
 
 	for _, name := range names {
@@ -175,24 +203,229 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass) ([]rankLadder, []string, er
 			continue
 		}
 
-		if !claimedByClass(byName[name], mask, exclusive) {
-			continue
+		var ladder map[int32]int32
+		var points map[int32]map[int32]float64
+		var resolveErr error
+		if claimedByClass(byName[name], mask, exclusive) {
+			ladder, resolveErr = resolveLadder(db, name, byName[name], mask)
 		}
 
-		ladder, err := resolveLadder(db, name, byName[name], mask)
-		if err != nil {
-			skipped = append(skipped, fmt.Sprintf("%s: %s", name, err))
+		// The tree wins where it states more ranks than the "Rank N" spells resolved to, because the
+		// rank cap it carries is the one the talent proto and the UI trees are built from: Precision
+		// kept its subtext on rank 1 alone, and leaving it as that one rank would let a 3-point
+		// talent be read past its own ladder. Below that the "Rank N" spells win - they state a cost
+		// and a cast time per rank, which the tree does not - and a family the resolver refused
+		// stays refused, since a tree node that grants an ability does not describe its ranks.
+		if t, ok := traits[name]; ok && resolveErr == nil && int(t.MaxRanks) > len(ladder) {
+			ladder, points = map[int32]int32{}, t.Points
+			for rank := int32(1); rank <= t.MaxRanks; rank++ {
+				ladder[rank] = t.SpellID
+			}
+			if note := traitPartial[name]; note != "" {
+				partial = append(partial, fmt.Sprintf("%s: %s", name, note))
+			}
+		}
+
+		if resolveErr != nil {
+			skipped = append(skipped, fmt.Sprintf("%s: %s", name, resolveErr))
 			continue
 		}
 		if len(ladder) == 0 {
+			if reason := traitSkipped[name]; reason != "" {
+				skipped = append(skipped, fmt.Sprintf("%s: %s", name, reason))
+			}
 			continue
 		}
 
 		taken[field] = name
-		ladders = append(ladders, rankLadder{Name: name, Field: field, Ranks: ladder})
+		ladders = append(ladders, rankLadder{Name: name, Field: field, Ranks: ladder, Points: points})
 	}
 
-	return ladders, skipped, nil
+	return ladders, skipped, partial, nil
+}
+
+func keysOf[V any](m map[string]V) map[string]bool {
+	keys := make(map[string]bool, len(m))
+	for k := range m {
+		keys[k] = true
+	}
+	return keys
+}
+
+// Every talent in one class's tree, by name, plus the ones that had to be left out and the ones that
+// came out short an effect. The tree states one spell per talent and a curve per effect, where the
+// curve reads rank -> value, so a rank's numbers are the curve's and never the spell's own: those
+// hold the top rank on some talents and a stale number on others, and 240 of the 640 curves in this
+// build disagree with them.
+func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[string]string, map[string]string, error) {
+	rows, err := db.Query(`
+		SELECT DISTINCT d.ID, COALESCE(d.SpellID, 0), e.MaxRanks,
+		       COALESCE(NULLIF(sn.Name_lang, ''), d.OverrideName_lang, '')
+		FROM TraitNode tn
+		JOIN TraitNodeXTraitNodeEntry x ON x.TraitNodeID = tn.ID
+		JOIN TraitNodeEntry e ON e.ID = x.TraitNodeEntryID
+		JOIN TraitDefinition d ON d.ID = e.TraitDefinitionID
+		LEFT JOIN SpellName sn ON sn.ID = d.SpellID
+		WHERE tn.TraitTreeID = ?
+		ORDER BY d.ID`, treeID)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	defer rows.Close()
+
+	type traitDef struct {
+		ID       int32
+		SpellID  int32
+		MaxRanks int32
+		Name     string
+	}
+	var defs []traitDef
+	for rows.Next() {
+		var d traitDef
+		if err := rows.Scan(&d.ID, &d.SpellID, &d.MaxRanks, &d.Name); err != nil {
+			return nil, nil, nil, err
+		}
+		defs = append(defs, d)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, nil, nil, err
+	}
+
+	ladders := map[string]traitLadder{}
+	skipped := map[string]string{}
+	partial := map[string]string{}
+	spellOf := map[string]int32{}
+
+	for _, d := range defs {
+		if d.Name == "" || d.SpellID == 0 {
+			continue
+		}
+		// A node appears once per entry, and the client keeps retired twins around, so a second
+		// definition on the same spell is the same talent and a second one on another spell is two
+		// talents the generated file could only reach by one name.
+		if first, ok := spellOf[d.Name]; ok {
+			if first != d.SpellID {
+				delete(ladders, d.Name)
+				skipped[d.Name] = fmt.Sprintf(
+					"two talent tree nodes carry the name, on spells %d and %d", first, d.SpellID)
+			}
+			continue
+		}
+		spellOf[d.Name] = d.SpellID
+
+		// A one-rank node grants an ability rather than describing a ladder - Hemorrhage and Water
+		// Shield are nodes on a spell the game teaches - and the one row it would yield names the
+		// node's spell, which is not the spell the ability's own ranks are keyed on.
+		if d.MaxRanks <= 1 {
+			continue
+		}
+
+		effects, err := effectIndicesOf(db, d.SpellID)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+		if len(effects) == 0 {
+			skipped[d.Name] = fmt.Sprintf("the client states no effects for spell %d", d.SpellID)
+			continue
+		}
+
+		curves, err := traitCurves(db, d.ID)
+		if err != nil {
+			return nil, nil, nil, err
+		}
+
+		points := map[int32]map[int32]float64{}
+		var uncovered []string
+		for _, index := range effects {
+			values, ok := curveRanks(curves[index], d.MaxRanks)
+			if !ok {
+				uncovered = append(uncovered, strconv.Itoa(int(index)))
+				continue
+			}
+			for rank, value := range values {
+				if points[rank] == nil {
+					points[rank] = map[int32]float64{}
+				}
+				points[rank][index] = value
+			}
+		}
+
+		if len(points) == 0 {
+			skipped[d.Name] = fmt.Sprintf("the talent tree states no per-rank value for spell %d", d.SpellID)
+			continue
+		}
+		if len(uncovered) > 0 {
+			partial[d.Name] = fmt.Sprintf("effect %s of spell %d has no rank curve and is left out",
+				strings.Join(uncovered, ", "), d.SpellID)
+		}
+		ladders[d.Name] = traitLadder{SpellID: d.SpellID, MaxRanks: d.MaxRanks, Points: points}
+	}
+
+	return ladders, skipped, partial, nil
+}
+
+func effectIndicesOf(db *sql.DB, spellID int32) ([]int32, error) {
+	rows, err := db.Query(`SELECT EffectIndex FROM SpellEffect WHERE SpellID = ? ORDER BY EffectIndex`, spellID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var indices []int32
+	for rows.Next() {
+		var index int32
+		if err := rows.Scan(&index); err != nil {
+			return nil, err
+		}
+		indices = append(indices, index)
+	}
+	return indices, rows.Err()
+}
+
+// Each curve as rank -> value. OperationType is 0 on all 640 rows in this build, meaning the point is
+// the value the rank is set to; anything else would modify the spell's own number instead, and is
+// dropped rather than guessed at - the effect then reads as having no curve.
+func traitCurves(db *sql.DB, defID int32) (map[int32]map[int32]float64, error) {
+	rows, err := db.Query(`
+		SELECT p.EffectIndex, p.OperationType, cp.Pos_0, cp.Pos_1
+		FROM TraitDefinitionEffectPoints p
+		JOIN CurvePoint cp ON cp.CurveID = p.CurveID
+		WHERE p.TraitDefinitionID = ?
+		ORDER BY p.EffectIndex, cp.Pos_0`, defID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	curves := map[int32]map[int32]float64{}
+	for rows.Next() {
+		var index, operation int32
+		var at, value float64
+		if err := rows.Scan(&index, &operation, &at, &value); err != nil {
+			return nil, err
+		}
+		rank := int32(at)
+		if operation != 0 || float64(rank) != at {
+			continue
+		}
+		if curves[index] == nil {
+			curves[index] = map[int32]float64{}
+		}
+		curves[index][rank] = value
+	}
+	return curves, rows.Err()
+}
+
+func curveRanks(curve map[int32]float64, maxRanks int32) (map[int32]float64, bool) {
+	values := make(map[int32]float64, maxRanks)
+	for rank := int32(1); rank <= maxRanks; rank++ {
+		value, ok := curve[rank]
+		if !ok {
+			return nil, false
+		}
+		values[rank] = value
+	}
+	return values, true
 }
 
 // The skill lines only this class appears in. 11 are shared: "Holy" carries both the paladin and the
@@ -397,10 +630,33 @@ func castableOf(db *sql.DB, ids map[int32]bool) (int32, error) {
 // Which effect supplies which field. Derived from the effect types rather than declared per family,
 // because the client data already says it: a SCHOOL_DAMAGE effect is direct damage, a HEAL effect is a
 // heal, an ENERGIZE effect is Lay on Hands' mana restore, a periodic aura is a tick.
-func buildRow(db *sql.DB, rank int32, spellID int32, mask int) (generatedRow, error) {
-	spell, candidates, err := RankCandidates(db, spellID, mask)
+// Where points is set the rank's numbers come from the talent tree's curves, and only the effects it
+// prices are kept: the rest would have to be read off a spell that states one rank for all of them.
+// The same-name sibling search is not wanted there either - it exists for the ability dispatchers,
+// and a talent priced per rank has nothing to borrow.
+func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]float64) (generatedRow, error) {
+	var spell RankSpell
+	var candidates []RankEffect
+	var err error
+	if points != nil {
+		spell, err = LoadRankSpell(db, spellID)
+		candidates = spell.Effects
+	} else {
+		spell, candidates, err = RankCandidates(db, spellID, mask)
+	}
 	if err != nil {
 		return generatedRow{}, err
+	}
+	if points != nil {
+		spell.Effects = pricedEffects(spell.Effects, points)
+		candidates = spell.Effects
+	}
+
+	derive := func(e RankEffect) (float64, float64) {
+		if value, ok := points[e.Index]; ok {
+			return value, value
+		}
+		return DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
 	}
 
 	row := generatedRow{
@@ -414,7 +670,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int) (generatedRow, er
 	}
 
 	amountOf := func(e RankEffect) *generatedAmount {
-		min, max := DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
+		min, max := derive(e)
 		a := &generatedAmount{Min: min, Max: max, Coef: e.Coefficient, APCoef: e.APCoef}
 
 		// A tick count is the duration over the period, which is how every hand-written
@@ -429,7 +685,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int) (generatedRow, er
 	}
 
 	for _, e := range spell.Effects {
-		min, max := DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
+		min, max := derive(e)
 		if max == min {
 			max = 0
 		}
@@ -447,7 +703,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int) (generatedRow, er
 		case e.Effect == dbc.E_ENERGIZE && row.Energize == nil:
 			row.Energize = amountOf(e)
 		case IsThreatEffect(e.Effect) && row.FlatThreatBonus == 0:
-			min, _ := DeriveRankAmount(e, spell.SpellLevel, spell.MaxLevel)
+			min, _ := derive(e)
 			row.FlatThreatBonus = min
 		case IsPeriodicAura(e.Aura) && row.Periodic == nil:
 			row.Periodic = amountOf(e)
@@ -488,6 +744,16 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int) (generatedRow, er
 	return row, nil
 }
 
+func pricedEffects(effects []RankEffect, points map[int32]float64) []RankEffect {
+	var kept []RankEffect
+	for _, e := range effects {
+		if _, ok := points[e.Index]; ok {
+			kept = append(kept, e)
+		}
+	}
+	return kept
+}
+
 // A low rank can legitimately carry no numbers at all - Lay on Hands rank 1 heals a share of max health
 // and restores no mana, so it has no ENERGIZE effect where ranks 2-4 do.
 func (row generatedRow) hasValue() bool {
@@ -506,10 +772,21 @@ func GenerateSpellDataFiles(helper *DBHelper) error {
 		return err
 	}
 
+	// One tree per class, picked the same way the talent protos pick it, so the rank caps here and the
+	// ones the sim's Talents message carries are the same numbers.
+	trees, err := selectTraitTrees(helper)
+	if err != nil {
+		return err
+	}
+
 	rendered := map[string][]byte{}
 	for _, class := range dbc.Classes {
 		pkg := strings.ToLower(dbc.ClassNameFromDBC(class))
-		out, err := renderClassFile(helper.db, pkg, class, namer)
+		tree, ok := trees[classMaskOf(class)]
+		if !ok {
+			return fmt.Errorf("%s: the client database holds no talent tree for this class", pkg)
+		}
+		out, err := renderClassFile(helper.db, pkg, class, namer, tree)
 		if err != nil {
 			return fmt.Errorf("%s: %w", pkg, err)
 		}
@@ -532,8 +809,8 @@ func GenerateSpellDataFiles(helper *DBHelper) error {
 	return os.WriteFile("sim/common/shared/spell_data_enums_auto_gen.go", enums, 0644)
 }
 
-func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnumNamer) ([]byte, error) {
-	ladders, skipped, err := discoverLadders(db, class)
+func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnumNamer, treeID int) ([]byte, error) {
+	ladders, skipped, partial, err := discoverLadders(db, class, treeID)
 	if err != nil {
 		return nil, err
 	}
@@ -542,9 +819,18 @@ func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnum
 	// here instead of merely absent. Kept out of the body below, whose text decides which imports the
 	// file needs - a family name containing "time." would otherwise add an unused one.
 	var notGenerated strings.Builder
-	if len(skipped) > 0 {
-		notGenerated.WriteString("// Not generated:\n")
-		for _, s := range skipped {
+	for _, block := range []struct {
+		header string
+		lines  []string
+	}{
+		{"// Not generated:\n", skipped},
+		{"// Generated without an effect the talent tree states no rank value for:\n", partial},
+	} {
+		if len(block.lines) == 0 {
+			continue
+		}
+		notGenerated.WriteString(block.header)
+		for _, s := range block.lines {
 			fmt.Fprintf(&notGenerated, "//   %s\n", s)
 		}
 		notGenerated.WriteString("\n")
@@ -567,7 +853,7 @@ func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnum
 
 		fmt.Fprintf(&b, "\t%s: shared.SpellDataTable{\n", l.Field)
 		for _, rank := range ranks {
-			row, err := buildRow(db, rank, l.Ranks[rank], mask)
+			row, err := buildRow(db, rank, l.Ranks[rank], mask, l.Points[rank])
 			if err != nil {
 				return nil, fmt.Errorf("%s rank %d: %w", l.Name, rank, err)
 			}

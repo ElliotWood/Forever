@@ -3,7 +3,6 @@ package rogue
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -21,8 +20,10 @@ func (rogue *Rogue) registerEnvenom() {
 		ClassSpellMask: RogueSpellEnvenom,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost:          35,
-			Refund:        spellData.QuickRecovery.Effect(shared.A_DUMMY, 0).FractionAt(rogue.Talents.QuickRecovery),
+			Cost: 35,
+			// TODO: Forever drops Quick Recovery; no energy refund until we know whether the
+			// effect moved onto another talent.
+			Refund:        0,
 			RefundMetrics: rogue.EnergyRefundMetrics,
 		},
 		Cast: core.CastConfig{

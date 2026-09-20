@@ -123,19 +123,21 @@ func processEnchantmentEffects(
 			}
 			outStats[stat] = float64(effectPoints[i])
 		case ITEM_ENCHANTMENT_STAT:
-			stat, success := MapBonusStatIndexToStat(effectArgs[i])
+			mapped, success := MapBonusStatIndexToStats(effectArgs[i])
 			if !success {
 				continue
 			}
-			if effectPoints[i] == 0 && spellEffectPoints != nil {
-				// This might be stored in a SpellEffect row
-				outStats[stat] = float64(spellEffectPoints[i] + 1)
-			} else {
-				outStats[stat] = float64(effectPoints[i])
+			for _, stat := range mapped {
+				if effectPoints[i] == 0 && spellEffectPoints != nil {
+					// This might be stored in a SpellEffect row
+					outStats[stat] = float64(spellEffectPoints[i] + 1)
+				} else {
+					outStats[stat] = float64(effectPoints[i])
 
-				// If the bonus stat is attack power, copy it to ranged attack power
-				if addRanged && stat == proto.Stat_StatAttackPower {
-					outStats[proto.Stat_StatRangedAttackPower] = float64(effectPoints[i])
+					// If the bonus stat is attack power, copy it to ranged attack power
+					if addRanged && stat == proto.Stat_StatAttackPower {
+						outStats[proto.Stat_StatRangedAttackPower] = float64(effectPoints[i])
+					}
 				}
 			}
 		case ITEM_ENCHANTMENT_EQUIP_SPELL: //Buff
@@ -170,12 +172,12 @@ func processEnchantmentEffects(
 					stat := ConvertEffectAuraToStatIndex(spellEffect.EffectAura, spellEffect.EffectMiscValues[0])
 					if stat >= 0 || stat == -2 {
 						value := float64(points)
-						if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPenetration {
+						if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPiercing {
 							// Make sure it's not Feral AP
 							if strings.Contains(dbcInstance.Spells[spellEffect.SpellID].Description, "forms only") {
 								stat = proto.Stat_StatFeralAttackPower
 							}
-							if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPenetration {
+							if stat == proto.Stat_StatArmorPenetration || stat == proto.Stat_StatSpellPiercing {
 								// Make these not negative
 								value = math.Abs(value)
 							}
@@ -239,7 +241,7 @@ func ConvertTargetResistanceFlagToPenetrationStat(flag int) proto.Stat {
 	case 1:
 		return proto.Stat_StatArmorPenetration
 	default:
-		return proto.Stat_StatSpellPenetration
+		return proto.Stat_StatSpellPiercing
 	}
 }
 
