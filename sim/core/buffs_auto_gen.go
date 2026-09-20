@@ -653,6 +653,8 @@ func GiftOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Thorns - https://www.wowhead.com/forever/spell=9910
+var ThornsCategory = "Thorns"
+
 func ThornsValue(talentPoints int32) float64 {
 	return 22.0
 }
@@ -661,10 +663,12 @@ func ThornsDuration(talentPoints int32) time.Duration {
 }
 func ThornsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedDamageShield(unit, GeneratedBuff{
-		Label:    "Thorns (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 9910}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration: ThornsDuration(talentPoints),
-		IsPlayer: isPlayer,
+		Label:      "Thorns (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 9910}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   ThornsDuration(talentPoints),
+		Category:   ThornsCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
 	}, SpellSchoolNature, ThornsValue(talentPoints))
 }
 

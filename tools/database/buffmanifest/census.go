@@ -219,6 +219,7 @@ var Manifest = []BuffSpec{
 	{
 		Field: "thorns", Number: 6, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindDamageShield,
 		Go: "Thorns", Name: "Thorns", Owner: proto.Class_ClassDruid, Pet: PetStrip,
+		Category: "Thorns", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatResilienceRating, proto.Stat_StatDefenseRating, proto.Stat_StatStamina},
 		Notes: "no Brambles node in druid tree 1089; the only matching trait is Moonglow (16845), which modifies cost (misc 14).",
 	},
