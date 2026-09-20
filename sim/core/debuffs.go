@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/wowsims/forever/sim/core/proto"
@@ -17,19 +16,8 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		MakePermanent(BloodFrenzyAura(target, 2))
 	}
 
-	if debuffs.ExposeWeaknessUptime > 0.0 {
-		aura := ExposeWeaknessAura(target, func() float64 {
-			return debuffs.ExposeWeaknessHunterAgility
-		})
-		ApplyFixedUptimeAura(aura, debuffs.ExposeWeaknessUptime, aura.Duration, 1)
-	}
-
 	if debuffs.ImprovedSealOfTheCrusader {
 		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, 0, 0.0, Ternary(debuffs.JocRetribution_2Pt4, 1.15, 1.0)))
-	}
-
-	if debuffs.IsbUptime > 0.0 {
-		ImprovedShadowBoltAura(target, debuffs.IsbUptime, 5)
 	}
 
 	if debuffs.Mangle {
@@ -87,29 +75,6 @@ func castSlowReductionAura(target *Unit, label string, spellID int32, multiplier
 	return aura
 }
 
-type ExposeWeaknessAgiFunc func() float64
-
-func ExposeWeaknessAura(target *Unit, agilityFunc ExposeWeaknessAgiFunc) *Aura {
-	aura := target.GetOrRegisterAura(Aura{
-		Label:     "Expose Weakness",
-		Tag:       "ExposeWeakness",
-		ActionID:  ActionID{SpellID: 34503},
-		Duration:  time.Second * 7,
-		MaxStacks: 10000,
-		OnGain: func(aura *Aura, sim *Simulation) {
-			aura.SetStacks(sim, int32(agilityFunc()*0.25))
-		},
-		OnStacksChange: func(aura *Aura, sim *Simulation, oldStacks int32, newStacks int32) {
-			newValue := float64(newStacks - oldStacks)
-			target.PseudoStats.BonusAttackPower += newValue
-			target.PseudoStats.BonusRangedAttackPower += newValue
-		},
-	})
-
-	return aura
-
-}
-
 // points is number of talent points in improved seal of the crusader
 //
 // flatBonus is used when the character has a flat bonus to the holy damage taken
@@ -142,37 +107,6 @@ func ImprovedSealOfTheCrusaderAura(target *Unit, casterIndex, points int32, flat
 			target.PseudoStats.SchoolBonusSpellDamage[stats.SchoolIndexHoly] -= holySpellDamageBonus
 		},
 	})
-
-	return aura
-}
-
-func ImprovedShadowBoltAura(target *Unit, uptime float64, points int32) *Aura {
-	bonus := 0.04 * float64(points)
-	multiplier := 1 + bonus
-
-	config := Aura{
-		Label:     "ImprovedShadowBolt-" + strconv.Itoa(int(points)),
-		Tag:       "ImprovedShadowBolt",
-		ActionID:  ActionID{SpellID: 17800},
-		Duration:  time.Second * 12,
-		MaxStacks: 4,
-	}
-
-	if uptime == 0 {
-		config.OnSpellHitTaken = func(aura *Aura, sim *Simulation, spell *Spell, result *SpellResult) {
-			if !spell.SpellSchool.Matches(SpellSchoolShadow) || !result.Landed() || result.Damage == 0 || !spell.ProcMask.Matches(ProcMaskSpellDamage) {
-				return
-			}
-			aura.RemoveStack(sim)
-		}
-	}
-
-	hasAura := target.HasAura(config.Label)
-	aura := target.GetOrRegisterAura(config)
-	if !hasAura {
-		aura.AttachMultiplicativePseudoStatBuff(&target.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexShadow], multiplier)
-		ApplyFixedUptimeAura(aura, uptime, aura.Duration, 1)
-	}
 
 	return aura
 }
