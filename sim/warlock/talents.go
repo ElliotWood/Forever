@@ -27,6 +27,9 @@ func (warlock *Warlock) applyAfflictionTalents() {
 	warlock.applyCurseOfExhaustion()
 	warlock.applySiphonLife()
 	warlock.applyWrack()
+
+	// Soul Siphon has no registrar of its own -- it lives inside Drain Life, which is
+	// stubbed; see registerDrainLife.
 }
 
 func (warlock *Warlock) applyDemonologyTalents() {
