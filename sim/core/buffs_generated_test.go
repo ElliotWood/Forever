@@ -190,25 +190,37 @@ func TestGeneratedPaladinAuraJoinsTheSharedCategoryOnThePlayerCopyOnly(t *testin
 
 	applyBuffEffects(generatedBuffTestAgent{char},
 		&proto.RaidBuffs{}, &proto.PartyBuffs{DevotionAura: true}, &proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
-
-	if got := char.stats[stats.Armor]; got != 735 {
-		t.Errorf("Devotion Aura applied %v armor, want the client's 735", got)
-	}
 
 	shared := char.ExclusiveEffectManager.GetExclusiveEffectCategory("PaladinAura")
 	if len(shared.effects) != 0 {
 		t.Errorf("the external copy joined the shared category with %d effects, want none", len(shared.effects))
 	}
 
+	player := DevotionAuraAura(&char.Unit, true, 0)
+	if len(shared.effects) != 1 {
+		t.Errorf("the player's copy put %d effects in the shared category, want one", len(shared.effects))
+	}
+	player.BuildPhase = CharacterBuildPhaseBuffs
+
+	measureGeneratedBuffStats(char)
+
 	own := char.ExclusiveEffectManager.GetExclusiveEffectCategory(DevotionAuraCategory)
 	if !own.SingleAura {
 		t.Error("the aura's own category is not single-aura, so a second copy could sit next to it")
 	}
 
-	DevotionAuraAura(&char.Unit, true, 0)
-	if len(shared.effects) != 1 {
-		t.Errorf("the player's copy put %d effects in the shared category, want one", len(shared.effects))
+	// Both copies bid the same 735 and both are permanent, so the paladin's own
+	// cast takes the slot by activating after the external one, and the armor on
+	// the character sheet does not move.
+	external := char.GetAura("Devotion Aura (External)")
+	if !player.IsActive() {
+		t.Error("the paladin's own aura did not activate next to the external one")
+	}
+	if external.IsActive() {
+		t.Error("the external copy stayed active, so both copies of the aura are on the character")
+	}
+	if got := char.stats[stats.Armor]; got != 735 {
+		t.Errorf("both copies together applied %v armor, want the client's 735", got)
 	}
 }
 
