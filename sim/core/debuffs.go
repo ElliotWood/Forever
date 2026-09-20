@@ -827,7 +827,9 @@ func ThunderClapAura(target *Unit, points int32) *Aura {
 
 func AtkSpeedReductionEffect(aura *Aura, speedMultiplier float64) *ExclusiveEffect {
 	return aura.NewExclusiveEffect("AtkSpdReduction", false, ExclusiveEffect{
-		Priority: speedMultiplier,
+		// How far from 1 the multiplier is, which is the scale every member of
+		// the category bids on: a 20% slow outbids a 10% one.
+		Priority: speedMultiplier - 1,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
 			ee.Aura.Unit.MultiplyAttackSpeed(sim, 1/speedMultiplier)
 		},

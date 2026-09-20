@@ -256,6 +256,57 @@ func TestGeneratedBuffPseudoStatsCoverEveryField(t *testing.T) {
 	}
 }
 
+// Every member of the attack-speed category bids how far from 1 its multiplier
+// is, so that the strongest slow on the target is the one that applies whatever
+// form its source states it in. The generated one changes the melee speed
+// through the unit's own method, because the swing timers are computed from it.
+func TestGeneratedAttackSpeedDebuffBidsAgainstTheHandWrittenOnes(t *testing.T) {
+	sim := &Simulation{}
+	target := newExclusiveTestTarget()
+	target.Env = &Environment{MeasuringStats: true}
+	target.PseudoStats = stats.NewPseudoStats()
+
+	clap := MakePermanent(newGeneratedDebuff(target, GeneratedBuff{
+		Label:    "Generated Thunder Clap",
+		ActionID: ActionID{SpellID: 11581},
+		Duration: time.Second * 30,
+		Category: "AtkSpdReduction",
+		Pseudo: []PseudoConfig{
+			{Kind: PseudoStatMeleeSpeedMultiplier, Amount: 0.8, IsMultiplicative: true},
+		},
+	}))
+
+	clap.Activate(sim)
+	if got := target.PseudoStats.MeleeSpeedMultiplier; got != 0.8 {
+		t.Fatalf("the melee speed multiplier is %v, want the client's 0.8", got)
+	}
+	if got := target.TotalMeleeHasteMultiplier(); got != 0.8 {
+		t.Errorf("the target swings at %v times its speed, want the slow to have reached the swing timers", got)
+	}
+
+	cyclone := target.GetOrRegisterAura(Aura{
+		Label:    "Cyclone",
+		ActionID: ActionID{SpellID: 27648},
+		Duration: time.Second * 12,
+	})
+	stronger := AtkSpeedReductionEffect(cyclone, 1.25)
+	if stronger.Priority != 0.25 {
+		t.Errorf("a hand-written 25%% slow bids %v, want the magnitude 0.25", stronger.Priority)
+	}
+
+	cyclone.Activate(sim)
+
+	if got := target.PseudoStats.MeleeSpeedMultiplier; got != 1 {
+		t.Errorf("the melee speed multiplier is %v, want the weaker slow taken back", got)
+	}
+	if got := target.PseudoStats.AttackSpeedMultiplier; got != 0.8 {
+		t.Errorf("the attack speed multiplier is %v, want the stronger slow's 1/1.25", got)
+	}
+	if !clap.IsActive() {
+		t.Error("losing the category pushed the weaker aura off, which only a single-aura category may do")
+	}
+}
+
 // A debuff bids once for everything it applies, its resistances included: the
 // school-by-school competition is what keeps two sources of a resistance from
 // adding up on a player, while two resistance-reducing curses exclude each

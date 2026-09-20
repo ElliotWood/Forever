@@ -381,12 +381,29 @@ func applyGeneratedAmounts(unit *Unit, sim *Simulation, config GeneratedBuff, mu
 		unit.AddStatDynamic(sim, statConfig.Stat, statConfig.Amount*factor)
 	}
 	for _, pseudoConfig := range config.Pseudo {
-		for _, field := range generatedPseudoStatFields(unit, pseudoConfig) {
-			if pseudoConfig.IsMultiplicative {
-				applyGeneratedMultiplier(field, pseudoConfig.Amount, factor)
-			} else {
-				*field += pseudoConfig.Amount * factor
-			}
+		applyGeneratedPseudoMod(unit, sim, pseudoConfig, factor)
+	}
+}
+
+// One pseudo-stat change, applied as many times over as the factor says. The
+// melee speed multiplier feeds swing timers the unit caches, so it goes through
+// the unit's own method; every other field is only the number it holds.
+func applyGeneratedPseudoMod(unit *Unit, sim *Simulation, config PseudoConfig, factor float64) {
+	if config.Kind == PseudoStatMeleeSpeedMultiplier {
+		for i := float64(0); i < factor; i++ {
+			unit.MultiplyMeleeSpeed(sim, config.Amount)
+		}
+		for i := float64(0); i > factor; i-- {
+			unit.MultiplyMeleeSpeed(sim, 1/config.Amount)
+		}
+		return
+	}
+
+	for _, field := range generatedPseudoStatFields(unit, config) {
+		if config.IsMultiplicative {
+			applyGeneratedMultiplier(field, config.Amount, factor)
+		} else {
+			*field += config.Amount * factor
 		}
 	}
 }
@@ -412,15 +429,8 @@ func attachGeneratedPseudoStats(aura *Aura, config GeneratedBuff) {
 	}
 
 	for _, pseudoConfig := range config.Pseudo {
-		fields := generatedPseudoStatFields(aura.Unit, pseudoConfig)
 		if category == "" {
-			for _, field := range fields {
-				if pseudoConfig.IsMultiplicative {
-					aura.AttachMultiplicativePseudoStatBuff(field, pseudoConfig.Amount)
-				} else {
-					aura.AttachAdditivePseudoStatBuff(field, pseudoConfig.Amount)
-				}
-			}
+			attachGeneratedPseudoStat(aura, pseudoConfig)
 			continue
 		}
 
@@ -431,29 +441,32 @@ func attachGeneratedPseudoStats(aura *Aura, config GeneratedBuff) {
 		if pseudoConfig.IsMultiplicative {
 			suffix = "Mul"
 		}
-		amount := pseudoConfig.Amount
-		multiplicative := pseudoConfig.IsMultiplicative
+		mod := pseudoConfig
 		aura.NewExclusiveEffect(category+pseudoConfig.Kind.Name()+suffix, false, ExclusiveEffect{
 			Priority: generatedMagnitude(GeneratedBuff{Pseudo: []PseudoConfig{pseudoConfig}}),
-			OnGain: func(_ *ExclusiveEffect, _ *Simulation) {
-				for _, field := range fields {
-					if multiplicative {
-						*field *= amount
-					} else {
-						*field += amount
-					}
-				}
+			OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
+				applyGeneratedPseudoMod(ee.Aura.Unit, sim, mod, 1)
 			},
-			OnExpire: func(_ *ExclusiveEffect, _ *Simulation) {
-				for _, field := range fields {
-					if multiplicative {
-						*field /= amount
-					} else {
-						*field -= amount
-					}
-				}
+			OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
+				applyGeneratedPseudoMod(ee.Aura.Unit, sim, mod, -1)
 			},
 		})
+	}
+}
+
+// A pseudo-stat nothing competes for, attached to the aura itself.
+func attachGeneratedPseudoStat(aura *Aura, config PseudoConfig) {
+	if config.Kind == PseudoStatMeleeSpeedMultiplier {
+		aura.AttachMultiplyMeleeSpeed(config.Amount)
+		return
+	}
+
+	for _, field := range generatedPseudoStatFields(aura.Unit, config) {
+		if config.IsMultiplicative {
+			aura.AttachMultiplicativePseudoStatBuff(field, config.Amount)
+		} else {
+			aura.AttachAdditivePseudoStatBuff(field, config.Amount)
+		}
 	}
 }
 
