@@ -18,24 +18,6 @@ type reforgeSoftCap struct {
 	capType     proto.StatCapType
 }
 
-// buildDebuffUnitStats returns the pseudo-stat contributions from raid debuffs that the
-// UI adds to the character-sheet display. Seal of the Crusader lowers the target's
-// effective crit chance rather than raising the player's stats, so it is absent from
-// FinalStats. Soft-cap breakpoints configured by the user are based on the UI display
-// values (which include the debuff contribution), so we add these offsets to the base
-// stats before computing the gap to each cap. The offsets mirror Player.getDebuffStats
-// in ui/sim/player/player.ts.
-func buildDebuffUnitStats(raid *proto.Raid) core.UnitStats {
-	debuffs := raid.GetDebuffs()
-	result := core.NewUnitStats()
-	if debuffs.GetImprovedSealOfTheCrusader() {
-		result = setUnitStat(result, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatMeleeCritPercent), 3)
-		result = setUnitStat(result, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatRangedCritPercent), 3)
-		result = setUnitStat(result, stats.UnitStatFromPseudoStat(proto.PseudoStat_PseudoStatSpellCritPercent), 3)
-	}
-	return result
-}
-
 // ---------------------------------------------------------------------------
 // LP-path cap computation (mirrors the reference solver). These run alongside the legacy
 // buildReforgeHardCaps/buildReforgeSoftCaps/validateReforgeWeights until the MIP path is removed.

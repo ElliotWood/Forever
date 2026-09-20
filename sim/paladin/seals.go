@@ -645,21 +645,15 @@ func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
 	panic("To be implemented")
 
 	// percentBonus := core.Ternary(paladin.CouldHaveSetBonus(ItemSetJusticarBattlegear, 2), 1.15, 1.0)
-	// flatBonus := 0.0
-	// if paladin.Ranged().ID == 23203 { //https://www.wowhead.com/forever/item=23203/libram-of-fervor
-	// 	flatBonus += 33.0
-	// } else if paladin.Ranged().ID == 27949 || paladin.Ranged().ID == 27983 { //https://www.wowhead.com/forever/item=27949/libram-of-zeal
-	// 	flatBonus += 47.0
-	// }
 	//
 	// judgementOfTheCrusaderAuras := paladin.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-	// 	// TODO: Forever drops Improved Seal of the Crusader; untalented (0 points) until
-	// 	// we know whether the effect moved onto another talent.
 	// 	// TODO: core.ImprovedSealOfTheCrusaderAura hardcodes 219.0 as the TBC rank-7 holy damage
 	// 	// bonus (219 = "Max Rank Seal Of Crusader (Rank 7)" per its own comment). Forever's
 	// 	// SealOfTheCrusader table tops out at rank 6, and spellData does not state what a
 	// 	// rank-6-capped version of this aura's bonus should be, so the TBC rank-7 number stays.
-	// 	return core.ImprovedSealOfTheCrusaderAura(target, 1, 0, flatBonus, percentBonus)
+	// 	// TODO: the librams that add flat holy damage taken (23203 Libram of Fervor, 27949 and
+	// 	// 27983 Libram of Zeal) need a parameter for it; the aura takes the percent bonus alone.
+	// 	return core.ImprovedSealOfTheCrusaderAura(target, 1, percentBonus)
 	// })
 	//
 	// paladin.JudgementAuras = append(paladin.JudgementAuras, judgementOfTheCrusaderAuras)

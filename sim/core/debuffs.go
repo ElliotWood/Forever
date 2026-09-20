@@ -13,7 +13,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	applyGeneratedDebuffs(target, debuffs, raid)
 
 	if debuffs.ImprovedSealOfTheCrusader {
-		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, 0, 0.0, 1.0))
+		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, 1.0))
 	}
 
 	if debuffs.Mangle {
@@ -51,13 +51,9 @@ func castSlowReductionAura(target *Unit, label string, spellID int32, multiplier
 	return aura
 }
 
-// points is number of talent points in improved seal of the crusader
-//
-// flatBonus is used when the character has a flat bonus to the holy damage taken
-//
 // percentBonus is used when the character has a percent bonus to the holy damage taken
-func ImprovedSealOfTheCrusaderAura(target *Unit, casterIndex, points int32, flatBonus, percentBonus float64) *Aura {
-	holySpellDamageBonus := 219.0*percentBonus + flatBonus //assumed Max Rank Seal Of Crusader (Rank 7)
+func ImprovedSealOfTheCrusaderAura(target *Unit, casterIndex int32, percentBonus float64) *Aura {
+	holySpellDamageBonus := 219.0 * percentBonus //assumed Max Rank Seal Of Crusader (Rank 7)
 
 	auraLabel := fmt.Sprintf("Improved Seal of the Crusader (%s)", Ternary(casterIndex == -1, "External", "Self"))
 
@@ -75,11 +71,9 @@ func ImprovedSealOfTheCrusaderAura(target *Unit, casterIndex, points int32, flat
 	aura.NewExclusiveEffect("Improved Seal of the Crusader", true, ExclusiveEffect{
 		Priority: holySpellDamageBonus + float64(casterIndex),
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			target.AddReducedCritTakenPercent(float64(-1 * points))
 			target.PseudoStats.SchoolBonusSpellDamage[stats.SchoolIndexHoly] += holySpellDamageBonus
 		},
 		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			target.AddReducedCritTakenPercent(float64(1 * points))
 			target.PseudoStats.SchoolBonusSpellDamage[stats.SchoolIndexHoly] -= holySpellDamageBonus
 		},
 	})
