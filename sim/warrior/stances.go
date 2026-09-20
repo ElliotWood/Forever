@@ -111,29 +111,19 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 		// the multiplier follows both the stance and the off-hand.
 		defiance := spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance)
 		applied := false
-		apply := func(sim *core.Simulation) {
-			if !applied && warrior.PseudoStats.CanBlock {
+		refresh := func(inStance bool) {
+			want := inStance && warrior.PseudoStats.CanBlock
+			if want && !applied {
 				warrior.PseudoStats.ThreatMultiplier *= defiance
-				applied = true
-			}
-		}
-		remove := func(sim *core.Simulation) {
-			if applied {
+			} else if !want && applied {
 				warrior.PseudoStats.ThreatMultiplier /= defiance
-				applied = false
 			}
+			applied = want
 		}
-		aura.ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) { apply(sim) })
-		aura.ApplyOnExpire(func(aura *core.Aura, sim *core.Simulation) { remove(sim) })
-		warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
-			if !aura.IsActive() {
-				return
-			}
-			if warrior.PseudoStats.CanBlock {
-				apply(sim)
-			} else {
-				remove(sim)
-			}
+		aura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) { refresh(true) })
+		aura.ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) { refresh(false) })
+		warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(_ *core.Simulation, _ proto.ItemSlot) {
+			refresh(aura.IsActive())
 		})
 	}
 
