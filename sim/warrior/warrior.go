@@ -172,7 +172,7 @@ func (warrior *Warrior) Initialize() {
 	// warrior.registerShieldBash()
 
 	// warrior.registerStances()
-	// warrior.registerShouts()
+	warrior.registerShouts()
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {
