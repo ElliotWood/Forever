@@ -421,7 +421,11 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 // A neck is inherited by standing next to the owner who wears it.
 func TestGeneratedPetBuffsInheritTheOwnersNecks(t *testing.T) {
 	owner := newGeneratedBuffTestCharacter()
-	MakePermanent(BraidedEterniumChainAura(owner))
+	MakePermanent(owner.GetOrRegisterAura(Aura{
+		Label:      BraidedEterniumChainAuraLabel,
+		ActionID:   ActionID{SpellID: 31025},
+		BuildPhase: CharacterBuildPhaseBuffs,
+	}))
 	owner.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 
 	pet := &Pet{Character: *newGeneratedBuffTestCharacter(), Owner: owner, enabledOnStart: true}

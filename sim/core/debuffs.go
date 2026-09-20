@@ -12,28 +12,12 @@ import (
 func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, raid *proto.Raid) {
 	applyGeneratedDebuffs(target, debuffs, raid)
 
-	if debuffs.BloodFrenzy {
-		MakePermanent(BloodFrenzyAura(target, 2))
-	}
-
 	if debuffs.ImprovedSealOfTheCrusader {
-		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, 0, 0.0, Ternary(debuffs.JocRetribution_2Pt4, 1.15, 1.0)))
+		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, 0, 0.0, 1.0))
 	}
 
 	if debuffs.Mangle {
 		MakePermanent(MangleAura(target))
-	}
-
-	if debuffs.Misery {
-		MakePermanent(MiseryAura(target, 5))
-	}
-
-	if debuffs.Screech {
-		MakePermanent(ScreechAura(target))
-	}
-
-	if debuffs.ShadowEmbrace {
-		MakePermanent(ShadowEmbraceAura(target, 5))
 	}
 }
 
@@ -44,17 +28,6 @@ func ScheduledAura(aura *Aura, options PeriodicActionOptions) {
 	}
 }
 
-// Physical and Armor Related Debuffs
-func BloodFrenzyAura(target *Unit, points int32) *Aura {
-	return damageTakenDebuff(target, 0,
-		"Blood Frenzy",
-		29859,
-		[]stats.SchoolIndex{stats.SchoolIndexPhysical},
-		1+0.02*float64(points),
-		NeverExpires,
-	)
-}
-
 func SlowAura(target *Unit) *Aura {
 	return castSlowReductionAura(target, "Slow", 31589, 1.5, time.Second*15)
 }
@@ -62,7 +35,10 @@ func SlowAura(target *Unit) *Aura {
 func castSlowReductionAura(target *Unit, label string, spellID int32, multiplier float64, duration time.Duration) *Aura {
 	aura := target.GetOrRegisterAura(Aura{Label: label, ActionID: ActionID{SpellID: spellID}, Duration: duration})
 	aura.NewExclusiveEffect("CastSpdReduction", false, ExclusiveEffect{
-		Priority: multiplier,
+		// How far from 1 the applied factor is, which is the scale every member
+		// of the category bids on: a 33% slow outbids a 20% one. The factor is
+		// 1/multiplier, so a caller stating 1.5 is a 33.3% slow.
+		Priority: 1 - 1/multiplier,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
 			ee.Aura.Unit.MultiplyCastSpeed(sim, 1/multiplier)
 			ee.Aura.Unit.MultiplyRangedSpeed(sim, 1/multiplier)
@@ -133,54 +109,8 @@ func MangleAura(target *Unit) *Aura {
 	return aura
 }
 
-func MiseryAura(target *Unit, ranks int32) *Aura {
-	multiplier := 1.0 + 0.01*float64(ranks)
-	schools := []stats.SchoolIndex{
-		stats.SchoolIndexArcane, stats.SchoolIndexFire, stats.SchoolIndexFrost,
-		stats.SchoolIndexHoly, stats.SchoolIndexNature, stats.SchoolIndexShadow,
-	}
-	aura := target.GetOrRegisterAura(Aura{
-		Label:    "Misery",
-		ActionID: ActionID{SpellID: 33195},
-		Duration: NeverExpires,
-	})
-	effect := aura.NewExclusiveEffect("MiseryBonus", true, ExclusiveEffect{
-		Priority: multiplier,
-		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			for _, school := range schools {
-				target.PseudoStats.SchoolDamageTakenMultiplier[school] *= ee.Priority
-			}
-		},
-		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			for _, school := range schools {
-				target.PseudoStats.SchoolDamageTakenMultiplier[school] /= ee.Priority
-			}
-		},
-	})
-	if effect.Priority < multiplier {
-		effect.Priority = multiplier
-	}
-	return aura
-}
-
 func ScreechAura(target *Unit) *Aura {
 	return statsDebuff(target, 0, "Screech", 27051, stats.Stats{stats.AttackPower: -210}, time.Second*4)
-}
-
-func ShadowEmbraceAura(target *Unit, ranks int32) *Aura {
-	return damageDealtDebuff(target, "Shadow Embrace", 32394, []stats.SchoolIndex{stats.SchoolIndexPhysical}, 1.0-(.01*float64(ranks)), NeverExpires)
-}
-
-func StormstrikeAura(target *Unit, uptime float64) *Aura {
-	multiplier := 1.20
-	hasAura := target.HasAura("Stormstrike")
-	aura := damageTakenDebuff(target, 0, "Stormstrike", 17364, []stats.SchoolIndex{stats.SchoolIndexNature}, multiplier, time.Second*12)
-
-	if !hasAura {
-		ApplyFixedUptimeAura(aura, uptime, aura.Duration, 1)
-	}
-
-	return aura
 }
 
 func AtkSpeedReductionEffect(aura *Aura, speedMultiplier float64) *ExclusiveEffect {
@@ -194,50 +124,6 @@ func AtkSpeedReductionEffect(aura *Aura, speedMultiplier float64) *ExclusiveEffe
 		},
 		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
 			ee.Aura.Unit.MultiplyAttackSpeed(sim, speedMultiplier)
-		},
-	})
-}
-
-func damageTakenDebuff(target *Unit, casterIndex int32, label string, spellID int32, schools []stats.SchoolIndex, multiplier float64, duration time.Duration) *Aura {
-	actionID := ActionID{SpellID: spellID}
-	if casterIndex != 0 {
-		actionID = actionID.WithTag(casterIndex)
-	}
-
-	return target.GetOrRegisterAura(Aura{
-		Label:    label,
-		ActionID: actionID,
-		Duration: duration,
-		OnGain: func(aura *Aura, sim *Simulation) {
-			for _, school := range schools {
-				target.PseudoStats.SchoolDamageTakenMultiplier[school] *= multiplier
-			}
-		},
-
-		OnExpire: func(aura *Aura, sim *Simulation) {
-			for _, school := range schools {
-				target.PseudoStats.SchoolDamageTakenMultiplier[school] /= multiplier
-			}
-		},
-	})
-}
-
-func damageDealtDebuff(target *Unit, label string, spellID int32, schools []stats.SchoolIndex, multiplier float64, duration time.Duration) *Aura {
-	return target.GetOrRegisterAura(Aura{
-		Label:    label,
-		ActionID: ActionID{SpellID: spellID},
-		Duration: duration,
-
-		OnGain: func(aura *Aura, sim *Simulation) {
-			for _, school := range schools {
-				target.PseudoStats.SchoolDamageDealtMultiplier[school] *= multiplier
-			}
-		},
-
-		OnExpire: func(aura *Aura, sim *Simulation) {
-			for _, school := range schools {
-				target.PseudoStats.SchoolDamageDealtMultiplier[school] /= multiplier
-			}
 		},
 	})
 }

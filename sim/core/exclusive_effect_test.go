@@ -123,7 +123,7 @@ func TestNewExclusiveEffectDedupsPerAura(t *testing.T) {
 		t.Fatalf("expected 1 exclusive effect, got %d", len(aura.ExclusiveEffects))
 	}
 	// The dedup keeps the first registrant's priority; callers that need a
-	// higher value must bump it manually (see MiseryAura).
+	// higher value must bump it manually.
 	if first.Priority != 5 {
 		t.Fatalf("expected priority 5, got %f", first.Priority)
 	}

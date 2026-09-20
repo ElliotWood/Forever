@@ -93,8 +93,7 @@ func (cat *FeralDruid) ApplyTalents() {
 	cat.Druid.ApplyTalents()
 }
 
-// DrumsOfBattleActionID is the player's own Drums of Battle consumable. The
-// party-provided version shares this spell id but carries tag -1.
+// DrumsOfBattleActionID is the player's own Drums of Battle consumable.
 var DrumsOfBattleActionID = core.ActionID{SpellID: 35476}
 
 func (cat *FeralDruid) Reset(sim *core.Simulation) {
@@ -104,12 +103,7 @@ func (cat *FeralDruid) Reset(sim *core.Simulation) {
 	cat.readyToShift = false
 	cat.waitingForTick = false
 
-	drums := cat.majorCooldown(DrumsOfBattleActionID)
-	if drums == nil {
-		drums = cat.majorCooldown(DrumsOfBattleActionID.WithTag(-1))
-	}
-
-	cat.scheduleRecurringMCD(sim, drums, 0)
+	cat.scheduleRecurringMCD(sim, cat.majorCooldown(DrumsOfBattleActionID), 0)
 	cat.scheduleFixedMCD(sim, cat.majorCooldownBySpellID(core.BloodlustActionID.SpellID), 5*time.Second)
 }
 

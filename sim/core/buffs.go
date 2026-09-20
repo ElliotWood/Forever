@@ -1,7 +1,6 @@
 package core
 
 import (
-	"fmt"
 	"slices"
 	"time"
 
@@ -100,6 +99,7 @@ func registerExlusiveEffects(aura *Aura, config []StatConfig, exclusiveCategory 
 	}
 }
 
+// The caller states the action tag: -1 for a copy the build phase measures.
 func makeStatBuff(char *Character, config BuffConfig) *Aura {
 	if config.Label == "" {
 		panic("Buff without label.")
@@ -107,10 +107,6 @@ func makeStatBuff(char *Character, config BuffConfig) *Aura {
 
 	if ActionID.IsEmptyAction(config.ActionID) {
 		panic("Buff without ActionID")
-	}
-
-	if config.ActionID.Tag == 0 {
-		config.ActionID = config.ActionID.WithTag(-1)
 	}
 
 	baseAura := char.GetOrRegisterAura(Aura{
@@ -134,64 +130,9 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 
 	applyGeneratedBuffs(char, raidBuffs, partyBuffs, individual)
 
-	// Raid Buffs
 	if raidBuffs.Bloodlust {
 		registerBloodlustCD(char)
 	}
-
-	// Party Buffs
-	if partyBuffs.BraidedEterniumChain {
-		MakePermanent(BraidedEterniumChainAura(char))
-	}
-
-	if partyBuffs.ChainOfTheTwilightOwl {
-		MakePermanent(ChainOfTheTwilightOwlAura(char))
-	}
-
-	if partyBuffs.EyeOfTheNight {
-		MakePermanent(EyeOfTheNightAura(char))
-	}
-
-	if partyBuffs.JadePendantOfBlasting {
-		MakePermanent(JadePendantOfBlastingAura(char))
-	}
-
-	if partyBuffs.DraeneiRacialCaster {
-		DraneiRacialAura(char, true)
-	}
-
-	if partyBuffs.DraeneiRacialMelee {
-		DraneiRacialAura(char, false)
-	}
-
-	if partyBuffs.FerociousInspiration > 0 {
-		MakePermanent(FerociousInspiration(char, partyBuffs.FerociousInspiration))
-	}
-
-	if partyBuffs.TotemOfWrath > 0 {
-		MakePermanent(TotemOfWrathAura(char, partyBuffs.TotemOfWrath))
-	}
-
-	if partyBuffs.TranquilAirTotem {
-		MakePermanent(TranquilAirTotemAura(char))
-	}
-
-	if partyBuffs.WrathOfAirTotem != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(WrathOfAirTotemAura(char, IsImproved(partyBuffs.WrathOfAirTotem)))
-	}
-	if partyBuffs.Drums > 0 {
-		DrumsBuff(char, partyBuffs.Drums)
-	}
-
-	// Individual Buffs
-	if individual.BlessingOfSanctuary {
-		MakePermanent(BlessingOfSanctuaryAura(char))
-	}
-
-	if individual.UnleashedRage {
-		MakePermanent(UnleashedRageAura(char, -1, 5))
-	}
-
 }
 
 // /////////////////////////////////////////////////////////////////////////
@@ -238,127 +179,6 @@ func ApplyFixedShoutAura(char *Character, aura *Aura, category string) {
 
 var PaladinAuraCategory = "PaladinAura"
 
-func FerociousInspiration(char *Character, count int32) *Aura {
-	dmgBuff := 0.03 * float64(count)
-
-	return char.GetOrRegisterAura(Aura{
-		Label:    "Ferocious Inspiration",
-		ActionID: ActionID{SpellID: 34460},
-		Duration: time.Second * 10,
-	}).AttachMultiplicativePseudoStatBuff(&char.PseudoStats.DamageDealtMultiplier, 1+dmgBuff)
-}
-
-var UnleashedRageCategory = "UnleashedRage"
-
-func UnleashedRageAura(char *Character, casterIdx int32, points int32) *Aura {
-	return makeStatBuff(char, BuffConfig{
-		Label:    fmt.Sprintf("Unleashed Rage-%d", casterIdx),
-		Duration: time.Second * 10,
-		ActionID: ActionID{SpellID: 30809}.WithTag(casterIdx),
-		Stats: []StatConfig{
-			{stats.AttackPower, 1 + 0.02*float64(points), true},
-		},
-		ExclusiveCategory: UnleashedRageCategory,
-	})
-}
-
-// //////////////////////////
-//
-//	Totems
-//
-// //////////////////////////
-func TotemOfWrathAura(char *Character, count int32) *Aura {
-	modValue := 3.0 * float64(count)
-
-	return makeStatBuff(char, BuffConfig{
-		Label:    "Totem of Wrath",
-		ActionID: ActionID{SpellID: 30706},
-		Stats: []StatConfig{
-			{stats.SpellCritPercent, modValue, false},
-			{stats.SpellHitPercent, modValue, false},
-		},
-	})
-}
-
-func TranquilAirTotemAura(char *Character) *Aura {
-	return char.GetOrRegisterAura(Aura{
-		Label:    "Tranquil Air Totem",
-		ActionID: ActionID{SpellID: 25909},
-	}).AttachMultiplicativePseudoStatBuff(&char.PseudoStats.ThreatMultiplier, 0.8)
-}
-
-const (
-	WrathOfAirTotemCategory      = "WrathOfAirTotem"
-	WrathOfAirTotemBaseValue     = 101.0
-	WrathOfAirTotemImprovedValue = 20.0
-)
-
-func WrathOfAirTotemValue(improved bool) float64 {
-	return WrathOfAirTotemBaseValue + TernaryFloat64(improved, WrathOfAirTotemImprovedValue, 0)
-}
-
-func WrathOfAirTotemAura(char *Character, improved bool) *Aura {
-	buff := WrathOfAirTotemValue(improved)
-
-	return makeStatBuff(char, BuffConfig{
-		Label:    "Wrath of Air Totem",
-		ActionID: ActionID{SpellID: 3738},
-		Stats: []StatConfig{
-			{stats.SpellDamage, buff, false},
-			{stats.HealingPower, buff, false},
-		},
-		ExclusiveCategory: WrathOfAirTotemCategory,
-	})
-}
-
-////////////////////////////
-//	Item Buffs
-////////////////////////////
-
-func BraidedEterniumChainAura(char *Character) *Aura {
-	return makeStatBuff(char, BuffConfig{
-		Label:             BraidedEterniumChainAuraLabel,
-		ActionID:          ActionID{SpellID: 31025},
-		ExclusiveCategory: BraidedEterniumChainAuraLabel,
-		Stats: []StatConfig{
-			{stats.MeleeCritRating, 28, false},
-		},
-	})
-}
-
-func ChainOfTheTwilightOwlAura(char *Character) *Aura {
-	return makeStatBuff(char, BuffConfig{
-		Label:             ChainOfTheTwilightOwlAuraLabel,
-		ActionID:          ActionID{SpellID: 31035},
-		ExclusiveCategory: ChainOfTheTwilightOwlAuraLabel,
-		Stats: []StatConfig{
-			{stats.SpellCritPercent, 2, false},
-		},
-	})
-}
-
-func EyeOfTheNightAura(char *Character) *Aura {
-	return makeStatBuff(char, BuffConfig{
-		Label:             EyeOfTheNightAuraLabel,
-		ActionID:          ActionID{SpellID: 31033},
-		ExclusiveCategory: EyeOfTheNightAuraLabel,
-		Stats: []StatConfig{
-			{stats.SpellDamage, 34, false},
-		},
-	})
-}
-
-func JadePendantOfBlastingAura(char *Character) *Aura {
-	return makeStatBuff(char, BuffConfig{
-		Label:             JadePendantOfBlastingAuraLabel,
-		ActionID:          ActionID{SpellID: 25607},
-		ExclusiveCategory: JadePendantOfBlastingAuraLabel,
-		Stats: []StatConfig{
-			{stats.SpellDamage, 15, false},
-		},
-	})
-}
-
 func DraneiRacialAura(char *Character, caster bool) *Aura {
 	alliance := []proto.Race{
 		proto.Race_RaceDraenei,
@@ -374,7 +194,7 @@ func DraneiRacialAura(char *Character, caster bool) *Aura {
 	if caster {
 		aura = makeStatBuff(char, BuffConfig{
 			Label:    "Inspiring Presence",
-			ActionID: ActionID{SpellID: 28878},
+			ActionID: ActionID{SpellID: 28878}.WithTag(-1),
 			Stats: []StatConfig{
 				{stats.SpellHitPercent, 1, false},
 			},
@@ -383,7 +203,7 @@ func DraneiRacialAura(char *Character, caster bool) *Aura {
 	} else {
 		aura = makeStatBuff(char, BuffConfig{
 			Label:    "Heroic Presence",
-			ActionID: ActionID{SpellID: 6562},
+			ActionID: ActionID{SpellID: 6562}.WithTag(-1),
 			Stats: []StatConfig{
 				{stats.PhysicalHitPercent, 1, false},
 			},
@@ -392,135 +212,6 @@ func DraneiRacialAura(char *Character, caster bool) *Aura {
 	}
 
 	return MakePermanent(aura)
-}
-
-const TinnitusAuraLabel = "Tinnitus"
-
-func drumsSpellConfig(character *Character, drum proto.Drums, isExternal bool) SpellConfig {
-	var drumLabel string
-	var drumStats stats.Stats
-	var duration time.Duration
-	var actionID ActionID
-	switch drum {
-	case proto.Drums_GreaterDrumsOfBattle, proto.Drums_LesserDrumsOfBattle:
-		drumLabel = "Drums of Battle"
-		drumStats = stats.Stats{stats.MeleeHasteRating: 80, stats.SpellHasteRating: 80}
-		duration = time.Second * 30
-		actionID = ActionID{SpellID: 35476}
-	case proto.Drums_GreaterDrumsOfWar, proto.Drums_LesserDrumsOfWar:
-		drumLabel = "Drums of War"
-		drumStats = stats.Stats{stats.AttackPower: 60, stats.RangedAttackPower: 60, stats.SpellDamage: 30}
-		duration = time.Second * 30
-		actionID = ActionID{SpellID: 35475}
-	case proto.Drums_GreaterDrumsOfRestoration, proto.Drums_LesserDrumsOfRestoration:
-		drumLabel = "Drums of Restoration"
-		drumStats = stats.Stats{stats.MP5: 200}
-		duration = time.Second * 15
-		actionID = ActionID{SpellID: 35478}
-	}
-
-	if isExternal {
-		actionID = actionID.WithTag(-1)
-		drumLabel = drumLabel + " (External)"
-	}
-
-	aura := character.NewTemporaryStatsAura(drumLabel, actionID, drumStats, duration)
-
-	tinnitus := character.GetOrRegisterAura(Aura{
-		Label:    TinnitusAuraLabel,
-		ActionID: ActionID{SpellID: 369770},
-		Duration: time.Minute * 2,
-	})
-
-	aura.ApplyOnGain(func(_ *Aura, sim *Simulation) {
-		tinnitus.Activate(sim)
-	})
-
-	spellConfig := SpellConfig{
-		ActionID: actionID,
-		Flags:    SpellFlagNoOnCastComplete,
-		ProcMask: ProcMaskEmpty,
-		ExtraCastCondition: func(sim *Simulation, target *Unit) bool {
-			if !character.HasActiveAura(TinnitusAuraLabel) {
-				return true
-			}
-			return false
-		},
-		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
-			if !character.HasActiveAura(TinnitusAuraLabel) {
-				aura.Activate(sim)
-			}
-		},
-
-		RelatedSelfBuff: aura.Aura,
-	}
-
-	return spellConfig
-}
-
-func DrumsBuff(character *Character, drum proto.Drums) {
-	config := drumsSpellConfig(character, drum, true)
-	config.Cast = CastConfig{
-		CD: Cooldown{
-			Timer:    character.NewTimer(),
-			Duration: time.Minute * 2,
-		},
-	}
-	spell := character.RegisterSpell(config)
-
-	character.AddMajorCooldown(MajorCooldown{
-		Spell:    spell,
-		Type:     CooldownTypeDPS,
-		Priority: CooldownPriorityDrums,
-	})
-}
-
-///////////////////////////////////////////////////////////////////////////
-//							Individual Buffs
-///////////////////////////////////////////////////////////////////////////
-
-func AmplifyMagicAura(char *Character, improved bool) *Aura {
-	baseMod := 120.0
-	if improved {
-		baseMod *= 1.50
-	}
-	return char.GetOrRegisterAura(Aura{
-		Label:    "Amplify Magic",
-		ActionID: ActionID{SpellID: 33946},
-		Duration: time.Minute * 10,
-
-		OnGain: func(aura *Aura, sim *Simulation) {
-			aura.Unit.PseudoStats.BonusHealingTaken += baseMod * 2
-			aura.Unit.PseudoStats.BonusPhysicalDamageTaken += baseMod
-		},
-
-		OnExpire: func(aura *Aura, sim *Simulation) {
-			aura.Unit.PseudoStats.BonusHealingTaken -= baseMod * 2
-			aura.Unit.PseudoStats.BonusPhysicalDamageTaken -= baseMod
-		},
-	})
-}
-
-func DampenMagicAura(char *Character, improved bool) *Aura {
-	baseMod := 120.0
-	if improved {
-		baseMod *= 1.50
-	}
-	return char.GetOrRegisterAura(Aura{
-		Label:    "Amplify Magic",
-		ActionID: ActionID{SpellID: 33946},
-		Duration: time.Minute * 10,
-
-		OnGain: func(aura *Aura, sim *Simulation) {
-			aura.Unit.PseudoStats.BonusHealingTaken -= baseMod * 2
-			aura.Unit.PseudoStats.BonusSpellDamageTaken -= baseMod
-		},
-
-		OnExpire: func(aura *Aura, sim *Simulation) {
-			aura.Unit.PseudoStats.BonusHealingTaken += baseMod * 2
-			aura.Unit.PseudoStats.BonusSpellDamageTaken += baseMod
-		},
-	})
 }
 
 // func BlessingOfLight(char *Character) *Aura {
@@ -553,39 +244,6 @@ func DampenMagicAura(char *Character, improved bool) *Aura {
 // 		},
 // 	})
 // }
-
-func BlessingOfSanctuaryAura(char *Character) *Aura {
-	actionID := ActionID{SpellID: 27169}
-
-	procSpell := char.RegisterSpell(SpellConfig{
-		ActionID:    actionID,
-		SpellSchool: SpellSchoolHoly,
-		Flags:       SpellFlagBinary | SpellFlagPassiveSpell,
-		ProcMask:    ProcMaskEmpty,
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
-			spell.CalcAndDealDamage(sim, target, 46, spell.OutcomeMagicHit)
-		},
-	})
-
-	return char.MakeProcTriggerAura(ProcTrigger{
-		Name:     "Blessing of Sanctuary",
-		ActionID: actionID,
-		Duration: time.Minute * 10,
-		Outcome:  OutcomeBlock,
-		Callback: CallbackOnSpellHitTaken,
-		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
-			procSpell.Cast(sim, spell.Unit)
-		},
-	}).AttachMultiplicativePseudoStatBuff(&char.PseudoStats.BonusPhysicalDamageTaken, -80)
-}
-
-////////////////////////////
-//  Individual Buffs
-////////////////////////////
 
 ////////////////////////////
 //  Cooldowns
@@ -801,48 +459,4 @@ func BloodlustAura(character *Character, actionTag int32) *Aura {
 	})
 	multiplyCastSpeedEffect(aura, 1.3)
 	return aura
-}
-
-var PainSuppressionAuraTag = "PainSuppression"
-
-const PainSuppressionDuration = time.Second * 8
-const PainSuppressionCD = time.Minute * 3
-
-func registerPainSuppressionCD(char *Character, numPainSuppressions int32) {
-	if numPainSuppressions == 0 {
-		return
-	}
-
-	psAura := PainSuppressionAura(char, -1)
-
-	registerExternalConsecutiveCDApproximation(
-		char,
-		externalConsecutiveCDApproximation{
-			ActionID:         ActionID{SpellID: 33206, Tag: -1},
-			AuraTag:          PainSuppressionAuraTag,
-			CooldownPriority: CooldownPriorityDefault,
-			RelatedSelfBuff:  psAura,
-			AuraDuration:     PainSuppressionDuration,
-			AuraCD:           PainSuppressionCD,
-			Type:             CooldownTypeSurvival,
-
-			ShouldActivate: func(sim *Simulation, character *Character) bool {
-				return true
-			},
-			AddAura: func(sim *Simulation, character *Character) {
-				psAura.Activate(sim)
-			},
-		},
-		numPainSuppressions)
-}
-
-func PainSuppressionAura(character *Character, actionTag int32) *Aura {
-	actionID := ActionID{SpellID: 33206, Tag: actionTag}
-
-	return character.GetOrRegisterAura(Aura{
-		Label:    "PainSuppression-" + actionID.String(),
-		Tag:      PainSuppressionAuraTag,
-		ActionID: actionID,
-		Duration: PainSuppressionDuration,
-	}).AttachMultiplicativePseudoStatBuff(&character.PseudoStats.DamageTakenMultiplier, 0.6)
 }
