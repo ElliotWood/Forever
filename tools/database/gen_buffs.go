@@ -110,11 +110,6 @@ type ResolvedBuff struct {
 	OwnerClassMask int32
 	ScopeFromDB    buffmanifest.BuffScope
 
-	// StatCategory is what the row's stats compete under, which for a resistance
-	// buff is the school every other source of that resistance also bids in. The
-	// manifest's Category stays the aura's own.
-	StatCategory string
-
 	DBName string
 
 	// Note is what the generated file says about the row above its constructor,
@@ -960,14 +955,11 @@ func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 		}
 	}
 
-	if row.Kind == buffmanifest.KindResistance && len(row.Stats) > 0 {
-		row.StatCategory = resistanceCategoryOf(row.Stats[0].Stat)
-		// A row whose manifest category is the school itself states the same
-		// thing twice: the school is the competition, and the aura has no
-		// exclusivity of its own beyond it.
-		if row.StatCategory == row.Category {
-			row.Category = ""
-		}
+	// The sim puts every resistance stat into its school's category by itself, so
+	// a row whose manifest category is that school says the same thing twice and
+	// has no exclusivity of its own beyond it.
+	if isSchoolResistanceCategory(row.Category) {
+		row.Category = ""
 	}
 
 	switch row.Kind {
@@ -1146,22 +1138,15 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 	return nil, false
 }
 
-// The exclusive category a resistance stat competes under, spelled the way
-// sim/core spells it. Armor is not a resistance school and has none.
-func resistanceCategoryOf(stat stats.Stat) string {
-	switch stat {
-	case stats.ArcaneResistance:
-		return "ResistanceArcane"
-	case stats.FireResistance:
-		return "ResistanceFire"
-	case stats.FrostResistance:
-		return "ResistanceFrost"
-	case stats.NatureResistance:
-		return "ResistanceNature"
-	case stats.ShadowResistance:
-		return "ResistanceShadow"
+// Whether a manifest category names a resistance school, which is the category
+// registerGeneratedSchoolResistances puts that school's stat into anyway. The
+// names are sim/core's ResistanceCategory* constants.
+func isSchoolResistanceCategory(category string) bool {
+	switch category {
+	case "ResistanceArcane", "ResistanceFire", "ResistanceFrost", "ResistanceNature", "ResistanceShadow":
+		return true
 	}
-	return ""
+	return false
 }
 
 // Holy, fire, nature, frost, shadow and arcane together, which is every school
@@ -1190,6 +1175,11 @@ func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
 		// for the magic schools does not raise a melee swing.
 		if e.Misc == everySchoolMask {
 			return []PseudoMod{{Kind: "DamageDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
+		}
+		// A mask of 0 names no school, so the effect raises nothing: emitting it
+		// would be a no-op the reader of the generated file has to work out.
+		if e.Misc == 0 {
+			return nil, false
 		}
 		return []PseudoMod{{
 			Kind: "SchoolDamageDealtMultiplier", Amount: 1 + e.Value/100,
@@ -1924,9 +1914,6 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 	fmt.Fprintf(&b, "Duration: %sDuration(talentPoints),\n", row.Go)
 	if row.MaxStacks > 0 {
 		fmt.Fprintf(&b, "MaxStacks: %d,\n", row.MaxStacks)
-	}
-	if row.StatCategory != "" {
-		fmt.Fprintf(&b, "StatCategory: %q,\n", row.StatCategory)
 	}
 	if rendered.CategoryVar != "" {
 		fmt.Fprintf(&b, "Category: %s,\n", rendered.CategoryVar)

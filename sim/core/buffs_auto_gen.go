@@ -375,11 +375,10 @@ func FrostResistanceTotemDuration(talentPoints int32) time.Duration {
 }
 func FrostResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:        "Frost Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:     ActionID{SpellID: 10477}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:     FrostResistanceTotemDuration(talentPoints),
-		StatCategory: "ResistanceFrost",
-		IsPlayer:     isPlayer,
+		Label:    "Frost Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10477}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: FrostResistanceTotemDuration(talentPoints),
+		IsPlayer: isPlayer,
 		Stats: []StatConfig{
 			{stats.FrostResistance, FrostResistanceTotemValue(talentPoints), false},
 		},
@@ -395,11 +394,10 @@ func NatureResistanceTotemDuration(talentPoints int32) time.Duration {
 }
 func NatureResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:        "Nature Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:     ActionID{SpellID: 10599}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:     NatureResistanceTotemDuration(talentPoints),
-		StatCategory: "ResistanceNature",
-		IsPlayer:     isPlayer,
+		Label:    "Nature Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10599}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: NatureResistanceTotemDuration(talentPoints),
+		IsPlayer: isPlayer,
 		Stats: []StatConfig{
 			{stats.NatureResistance, NatureResistanceTotemValue(talentPoints), false},
 		},
@@ -415,11 +413,10 @@ func FireResistanceTotemDuration(talentPoints int32) time.Duration {
 }
 func FireResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:        "Fire Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:     ActionID{SpellID: 10535}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:     FireResistanceTotemDuration(talentPoints),
-		StatCategory: "ResistanceFire",
-		IsPlayer:     isPlayer,
+		Label:    "Fire Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10535}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: FireResistanceTotemDuration(talentPoints),
+		IsPlayer: isPlayer,
 		Stats: []StatConfig{
 			{stats.FireResistance, FireResistanceTotemValue(talentPoints), false},
 		},
@@ -440,7 +437,6 @@ func FrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aur
 		Label:          "Frost Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
 		ActionID:       ActionID{SpellID: 19898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       FrostResistanceAuraDuration(talentPoints),
-		StatCategory:   "ResistanceFrost",
 		Category:       FrostResistanceAuraCategory,
 		SharedCategory: "PaladinAura",
 		SingleAura:     true,
@@ -465,7 +461,6 @@ func FireResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura
 		Label:          "Fire Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
 		ActionID:       ActionID{SpellID: 19900}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       FireResistanceAuraDuration(talentPoints),
-		StatCategory:   "ResistanceFire",
 		Category:       FireResistanceAuraCategory,
 		SharedCategory: "PaladinAura",
 		SingleAura:     true,
@@ -490,7 +485,6 @@ func ShadowResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Au
 		Label:          "Shadow Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
 		ActionID:       ActionID{SpellID: 19896}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       ShadowResistanceAuraDuration(talentPoints),
-		StatCategory:   "ResistanceShadow",
 		Category:       ShadowResistanceAuraCategory,
 		SharedCategory: "PaladinAura",
 		SingleAura:     true,
@@ -510,11 +504,10 @@ func AspectOfTheWildDuration(talentPoints int32) time.Duration {
 }
 func AspectOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:        "Aspect of the Wild (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:     ActionID{SpellID: 20190}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:     AspectOfTheWildDuration(talentPoints),
-		StatCategory: "ResistanceNature",
-		IsPlayer:     isPlayer,
+		Label:    "Aspect of the Wild (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 20190}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: AspectOfTheWildDuration(talentPoints),
+		IsPlayer: isPlayer,
 		Stats: []StatConfig{
 			{stats.NatureResistance, AspectOfTheWildValue(talentPoints), false},
 		},
@@ -760,11 +753,10 @@ func ShadowProtectionDuration(talentPoints int32) time.Duration {
 }
 func ShadowProtectionAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:        "Shadow Protection (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:     ActionID{SpellID: 10958}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:     ShadowProtectionDuration(talentPoints),
-		StatCategory: "ResistanceShadow",
-		IsPlayer:     isPlayer,
+		Label:    "Shadow Protection (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10958}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: ShadowProtectionDuration(talentPoints),
+		IsPlayer: isPlayer,
 		Stats: []StatConfig{
 			{stats.ShadowResistance, ShadowProtectionValue(talentPoints), false},
 		},

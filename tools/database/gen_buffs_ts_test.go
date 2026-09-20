@@ -94,22 +94,22 @@ func TestRenderBuffsDebuffsTSShapes(t *testing.T) {
 	fieldName: 'manaTideTotems',
 	label: 'Mana Tide Totem',
 });`,
-		`export const GENERATED_RAID_BUFFS_CONFIG: GeneratedStatOption[] = [
+		`export const GENERATED_RAID_BUFFS_CONFIG: RenderableStatOptions[] = [
 	{
 		config: ShadowProtection,
 		stats: [Stat.StatShadowResistance, Stat.StatStamina],
 		ownerClass: Class.ClassPriest,
 	},
 ];`,
-		`export const GENERATED_PARTY_BUFFS_CONFIG: GeneratedStatOption[] = [
+		`export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 	{
 		config: ManaTideTotems,
 		stats: [Stat.StatMP5],
 		ownerClass: Class.ClassShaman,
 	},
 ];`,
-		`export const GENERATED_INDIVIDUAL_BUFFS_CONFIG: GeneratedStatOption[] = [];`,
-		`export const GENERATED_DEBUFFS_CONFIG: GeneratedStatOption[] = [
+		`export const GENERATED_INDIVIDUAL_BUFFS_CONFIG: RenderableStatOptions[] = [];`,
+		`export const GENERATED_DEBUFFS_CONFIG: RenderableStatOptions[] = [
 	{
 		config: HuntersMark,
 		stats: [Stat.StatRangedAttackPower],

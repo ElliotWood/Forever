@@ -81,7 +81,7 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthFrostResistanceAura", Name: "Frost Resistance Aura",
 				Category: "FrostResistanceAura", SharedCategory: "PaladinAura", SingleAura: true,
 			},
-			SpellID: 19898, Supported: true, StatCategory: "ResistanceFrost",
+			SpellID: 19898, Supported: true,
 			Stats: []StatAmount{{Stat: stats.FrostResistance, Amount: 60}},
 		},
 		{

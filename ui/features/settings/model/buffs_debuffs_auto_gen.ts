@@ -14,9 +14,6 @@ import {
 
 import type { RenderableStatOptions } from './stat_options';
 
-// StatOption does not declare ownerClass, so the generated rows widen it here.
-export type GeneratedStatOption = RenderableStatOptions & { ownerClass?: Class };
-
 export const BloodPact = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(11767),
 	fieldName: 'bloodPact',
@@ -335,7 +332,7 @@ export const ScorpidSting = makeBooleanDebuffInput({
 	label: 'Scorpid Sting',
 });
 
-export const GENERATED_RAID_BUFFS_CONFIG: GeneratedStatOption[] = [
+export const GENERATED_RAID_BUFFS_CONFIG: RenderableStatOptions[] = [
 	{
 		config: ArcaneBrilliance,
 		stats: [Stat.StatIntellect],
@@ -368,7 +365,7 @@ export const GENERATED_RAID_BUFFS_CONFIG: GeneratedStatOption[] = [
 	},
 ];
 
-export const GENERATED_PARTY_BUFFS_CONFIG: GeneratedStatOption[] = [
+export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 	{
 		config: BloodPact,
 		stats: [Stat.StatStamina],
@@ -486,7 +483,7 @@ export const GENERATED_PARTY_BUFFS_CONFIG: GeneratedStatOption[] = [
 	},
 ];
 
-export const GENERATED_INDIVIDUAL_BUFFS_CONFIG: GeneratedStatOption[] = [
+export const GENERATED_INDIVIDUAL_BUFFS_CONFIG: RenderableStatOptions[] = [
 	{
 		config: BlessingOfKings,
 		stats: [Stat.StatAgility, Stat.StatIntellect, Stat.StatSpirit, Stat.StatStamina, Stat.StatStrength],
@@ -514,7 +511,7 @@ export const GENERATED_INDIVIDUAL_BUFFS_CONFIG: GeneratedStatOption[] = [
 	},
 ];
 
-export const GENERATED_DEBUFFS_CONFIG: GeneratedStatOption[] = [
+export const GENERATED_DEBUFFS_CONFIG: RenderableStatOptions[] = [
 	{
 		config: HuntersMark,
 		stats: [Stat.StatRangedAttackPower, Stat.StatAttackPower],

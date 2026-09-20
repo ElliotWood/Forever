@@ -75,13 +75,10 @@ type GeneratedBuff struct {
 	Duration  time.Duration
 	MaxStacks int32
 
-	// Three separate roles. StatCategory is what the individual stats compete
-	// under, so that a paladin's resistance aura and a shaman's totem of the same
-	// school do not both apply. Category is the aura's own, which decides whether
-	// a second copy of this buff can sit next to it. SharedCategory is one it
-	// joins as a member without an effect of its own, which is how the paladin
-	// auras exclude each other across schools.
-	StatCategory   string
+	// Category is the aura's own, which decides whether a second copy of this
+	// buff can sit next to it. SharedCategory is one it joins as a member without
+	// an effect of its own, which is how the paladin auras exclude each other
+	// across schools.
 	Category       string
 	SharedCategory string
 	SingleAura     bool
@@ -120,27 +117,16 @@ func newGeneratedStatAura(unit *Unit, config GeneratedBuff) *Aura {
 
 // Where a buff's amounts are applied and what it bids for them.
 //
-// A buff that states a StatCategory competes stat by stat, the way every
-// hand-written resistance source does, and its own category is then only the
-// bid that decides whether a second copy may sit next to it. A buff whose
-// category holds one aura at a time competes as a whole instead, bidding once
-// for everything it applies, which is also what every debuff does. Anything
-// else applies its amounts outright.
+// A buff whose category holds one aura at a time competes as a whole, bidding
+// once for everything it applies, which is also what every debuff does. A buff
+// that only names a category competes stat by stat under it. Anything else
+// applies its amounts outright.
 func registerGeneratedEffects(aura *Aura, config GeneratedBuff, perStack float64, bareWhenCategory bool) *ExclusiveEffect {
 	// An aura that bids for everything it applies at once keeps its resistances
 	// with the rest: two resistance-reducing debuffs exclude each other in that
 	// category, and pulling the schools out of it would put both on the target.
 	if !bareWhenCategory {
 		config.Stats = registerGeneratedSchoolResistances(aura, config.Stats)
-	}
-
-	if config.StatCategory != "" {
-		registerExlusiveEffects(aura, config.Stats, config.StatCategory)
-		attachGeneratedPseudoStats(aura, config)
-		if config.Category == "" {
-			return nil
-		}
-		return aura.NewExclusiveEffect(config.Category, config.SingleAura, ExclusiveEffect{Priority: perStack})
 	}
 
 	if generatedHasCategoryEffect(config, bareWhenCategory) {
@@ -192,7 +178,7 @@ func resistanceCategoryOfStat(stat stats.Stat) string {
 // Whether the aura will bid under its own category, which is what the stack
 // pricing re-prices.
 func generatedHasCategoryEffect(config GeneratedBuff, bareWhenCategory bool) bool {
-	return config.Category != "" && (bareWhenCategory || config.SingleAura || config.StatCategory != "")
+	return config.Category != "" && (bareWhenCategory || config.SingleAura)
 }
 
 // The aura a generated debuff registers on the target. Its exclusive effect
@@ -447,9 +433,6 @@ func applyGeneratedMultiplier(field *float64, amount float64, factor float64) {
 // apply, while the fields of one buff always move together.
 func attachGeneratedPseudoStats(aura *Aura, config GeneratedBuff) {
 	category := config.Category
-	if config.StatCategory != "" {
-		category = config.StatCategory
-	}
 
 	for _, pseudoConfig := range config.Pseudo {
 		if category == "" {

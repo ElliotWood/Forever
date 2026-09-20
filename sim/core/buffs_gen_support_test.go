@@ -97,14 +97,13 @@ func TestGeneratedResistanceAuraCompetesForTheSchool(t *testing.T) {
 	target.Env = &Environment{MeasuringStats: true}
 
 	generated := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
-		Label:        "Generated Frost Resistance Aura",
-		ActionID:     ActionID{SpellID: 19898},
-		Duration:     NeverExpires,
-		StatCategory: ResistanceCategoryFrost,
-		Category:     FrostResistanceAuraCategory,
-		SingleAura:   true,
-		IsPlayer:     true,
-		Stats:        []StatConfig{{stats.FrostResistance, 60, false}},
+		Label:      "Generated Frost Resistance Aura",
+		ActionID:   ActionID{SpellID: 19898},
+		Duration:   NeverExpires,
+		Category:   FrostResistanceAuraCategory,
+		SingleAura: true,
+		IsPlayer:   true,
+		Stats:      []StatConfig{{stats.FrostResistance, 60, false}},
 	}))
 
 	weaker := target.GetOrRegisterAura(Aura{
@@ -163,11 +162,10 @@ func TestGeneratedBuffCompetesPerSchoolForItsResistances(t *testing.T) {
 	}))
 
 	shadowProtection := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
-		Label:        "Generated Shadow Protection",
-		ActionID:     ActionID{SpellID: 10958},
-		Duration:     time.Minute * 10,
-		StatCategory: ResistanceCategoryShadow,
-		Stats:        []StatConfig{{stats.ShadowResistance, 60, false}},
+		Label:    "Generated Shadow Protection",
+		ActionID: ActionID{SpellID: 10958},
+		Duration: time.Minute * 10,
+		Stats:    []StatConfig{{stats.ShadowResistance, 60, false}},
 	}))
 
 	giftOfTheWild.Activate(sim)

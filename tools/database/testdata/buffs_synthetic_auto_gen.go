@@ -112,7 +112,6 @@ func SynthFrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32)
 		Label:          "Frost Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
 		ActionID:       ActionID{SpellID: 19898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       SynthFrostResistanceAuraDuration(talentPoints),
-		StatCategory:   "ResistanceFrost",
 		Category:       SynthFrostResistanceAuraCategory,
 		SharedCategory: "PaladinAura",
 		SingleAura:     true,

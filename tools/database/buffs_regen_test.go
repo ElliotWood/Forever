@@ -122,10 +122,8 @@ func TestResolvedBuffInvariants(t *testing.T) {
 		if want, pinned := pinnedTalentCurves[row.Field]; pinned && !slices.Equal(row.TalentCurve, want) {
 			t.Errorf("%s: talent curve is %v, want %v", row.Field, row.TalentCurve, want)
 		}
-		if want, pinned := pinnedCategories[row.Field]; pinned &&
-			(row.StatCategory != want[0] || row.Category != want[1]) {
-			t.Errorf("%s: competes under (%q, %q), want (%q, %q)",
-				row.Field, row.StatCategory, row.Category, want[0], want[1])
+		if want, pinned := pinnedCategories[row.Field]; pinned && row.Category != want {
+			t.Errorf("%s: the aura competes under %q, want %q", row.Field, row.Category, want)
 		}
 		if want, pinned := pinnedStatAmounts[row.Field]; pinned {
 			got := map[string]float64{}
@@ -167,13 +165,15 @@ var pinnedTalentCurves = map[string][]float64{
 // how every totem, Aspect of the Wild and Shadow Protection read; a paladin aura
 // also holds its own slot. Armor is not a school, so Devotion Aura has only the
 // slot. Nothing else can see this while every row renders as a shell.
-var pinnedCategories = map[string][2]string{
-	"frost_resistance_totem": {"ResistanceFrost", ""},
-	"aspect_of_the_wild":     {"ResistanceNature", ""},
-	"shadow_protection":      {"ResistanceShadow", ""},
-	"frost_resistance_aura":  {"ResistanceFrost", "FrostResistanceAura"},
-	"shadow_resistance_aura": {"ResistanceShadow", "ShadowResistanceAura"},
-	"devotion_aura":          {"", "DevotionAura"},
+// A row whose manifest category is the resistance school itself keeps none of its
+// own: the school category the sim puts the stat into is the whole competition.
+var pinnedCategories = map[string]string{
+	"frost_resistance_totem": "",
+	"aspect_of_the_wild":     "",
+	"shadow_protection":      "",
+	"frost_resistance_aura":  "FrostResistanceAura",
+	"shadow_resistance_aura": "ShadowResistanceAura",
+	"devotion_aura":          "DevotionAura",
 }
 
 // The first differing line of each file with a little context, which is all a
