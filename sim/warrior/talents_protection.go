@@ -5,11 +5,10 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerProtectionTalents() {
 	// Tier 1
 	warrior.registerShieldSpecialization()
@@ -44,17 +43,13 @@ func (warrior *Warrior) registerProtectionTalents() {
 	warrior.registerShieldSlam()
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerDefiance() {
 	if warrior.Talents.Defiance == 0 {
 		return
 	}
 
-	// TODO: Forever drops Defiance's expertise; the spell carries only the threat modifier
-	// applied below (A_MOD_THREAT, +5/10/15%), so expertise is pinned to the untalented 0.
-	expertiseBonus := 0.0
-	warrior.AddStat(stats.ExpertiseRating, expertiseBonus)
+	// Spell 12792 carries one effect, the threat modifier applied below (A_MOD_THREAT, +5/10/15%).
+	// TODO: the client also requires a shield equipped, which needs a condition in stances.go.
 	warrior.OnSpellRegistered(func(spell *core.Spell) {
 		if !spell.Matches(SpellMaskDefensiveStance) {
 			return
@@ -72,8 +67,6 @@ func (warrior *Warrior) registerAnticipation() {
 	warrior.AddStat(stats.DefenseRating, spellData.Anticipation.ValueAt(warrior.Talents.Anticipation)*core.DefenseRatingPerDefenseLevel)
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerShieldSpecialization() {
 	if warrior.Talents.ShieldSpecialization == 0 {
 		return
@@ -81,29 +74,30 @@ func (warrior *Warrior) registerShieldSpecialization() {
 
 	warrior.AddStat(stats.BlockPercent, spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_PERCENT, 0).FractionAt(warrior.Talents.ShieldSpecialization))
 
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 23602})
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 1310318})
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name: "Shield Specialization",
-		// Effect 0 is the block bonus; effect 1 is the proc chance. ProcChanceAt reads a flat 100%.
+		// Effect 0 is the block bonus; the tooltip states the chance as $m2%, so effect 1's
+		// ladder is the chance and the 100 in the proc chance column is noise.
 		ProcChance:         spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization),
 		TriggerImmediately: true,
 		Outcome:            core.OutcomeBlock,
 		Callback:           core.CallbackOnSpellHitTaken,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			warrior.AddRage(sim, 1, rageMetrics)
+			// TODO: Manual review needed -- spell 1310318 generates 5 Rage on a block ($m1/10).
+			warrior.AddRage(sim, 5, rageMetrics)
 		},
 	})
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerToughness() {
 	if warrior.Talents.Toughness == 0 {
 		return
 	}
 
-	// The bonus-armor effect carries the same ladder; this multiplies base armor only.
+	// The client states the ladder twice, once on base armor and once on bonus armor; the sim's
+	// single Armor stat takes one multiplier.
 	warrior.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness))
 }
 
@@ -119,8 +113,10 @@ func (warrior *Warrior) registerLastStand() {
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Last Stand",
 		ActionID: actionID,
+		// TODO: Manual review needed -- spell 12976 lasts 20 seconds.
 		Duration: time.Second * 20,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			// TODO: Manual review needed -- spell 12976 grants 30% of maximum health.
 			bonusHealth = warrior.MaxHealth() * 0.3
 			warrior.AddStatsDynamic(sim, stats.Stats{stats.Health: bonusHealth})
 			warrior.GainHealth(sim, bonusHealth, healthMetrics)
@@ -136,8 +132,9 @@ func (warrior *Warrior) registerLastStand() {
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: time.Minute * 8,
+				Timer: warrior.NewTimer(),
+				// TODO: Manual review needed -- spell 12975 has a 3 minute cooldown.
+				Duration: time.Minute * 3,
 			},
 		},
 
@@ -158,22 +155,16 @@ func (warrior *Warrior) registerLastStand() {
 	})
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) registerImprovedSunderArmor() {
 	if warrior.Talents.ImprovedSunderArmor == 0 {
 		return
 	}
 
-	// Retained rage when swapping stances implemented in stances.go
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskSunderArmor,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		// TODO: this read warrior.Talents.TacticalMastery, which looks like a long-standing
-		// copy-paste bug -- the registrar guards ImprovedSunderArmor. Forever drops
-		// Tactical Mastery entirely, so it now scales off its own talent; the per-rank
-		// rage reduction needs confirming against the Forever tooltip.
-		IntValue: -warrior.Talents.ImprovedSunderArmor,
+		// The client states the rage reduction on a 0-1000 bar, so the ladder is tenths.
+		IntValue: int32(spellData.ImprovedSunderArmor.ValueAt(warrior.Talents.ImprovedSunderArmor) / 10),
 	})
 }
 
@@ -182,12 +173,10 @@ func (warrior *Warrior) registerImprovedShieldWall() {
 		return
 	}
 
-	duration := []time.Duration{0, 3, 5}[warrior.Talents.ImprovedShieldWall]
-
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskShieldWall,
-		Kind:      core.SpellMod_BuffDuration_Flat,
-		TimeValue: time.Second * duration,
+		Kind:      core.SpellMod_Cooldown_Flat,
+		TimeValue: time.Duration(spellData.ImprovedShieldWall.ValueAt(warrior.Talents.ImprovedShieldWall)) * time.Millisecond,
 	})
 }
 
@@ -206,7 +195,8 @@ func (warrior *Warrior) registerConcussionBlow() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   15,
+			// TODO: Manual review needed -- spell 12809 costs 10 Rage.
+			Cost:   10,
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -215,7 +205,8 @@ func (warrior *Warrior) registerConcussionBlow() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
+				Timer: warrior.NewTimer(),
+				// TODO: Manual review needed -- spell 12809 has a 45 second cooldown.
 				Duration: time.Second * 45,
 			},
 		},
@@ -230,7 +221,9 @@ func (warrior *Warrior) registerConcussionBlow() {
 	})
 }
 
-var shieldSlamRank = spellData.ShieldSlam.HighestRank()
+// TODO: Manual review needed -- spell 23922 states only "a very high amount of threat", so the
+// flat threat is hand-supplied.
+var shieldSlamRank = shared.WithSpellDataFlatThreat(spellData.ShieldSlam, 305).HighestRank()
 
 func (warrior *Warrior) registerShieldSlam() {
 	if !warrior.Talents.ShieldSlam {
@@ -266,7 +259,7 @@ func (warrior *Warrior) registerShieldSlam() {
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  305,
+		FlatThreatBonus:  shieldSlamRank.FlatThreatBonus,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := shieldSlamRank.Direct.Damage(sim) + warrior.BlockDamageReduction()
@@ -287,50 +280,122 @@ func (warrior *Warrior) registerFocusedRage() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: WarriorSpellsAll ^ (SpellMaskDeathWish | SpellMaskBattleShout),
 		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  -warrior.Talents.FocusedRage,
+		// The client states the rage reduction on a 0-1000 bar, so the ladder is tenths.
+		IntValue: int32(spellData.FocusedRage.ValueAt(warrior.Talents.FocusedRage) / 10),
 	})
 }
 
-// TODO: registerMasterOfDefense models nothing yet; spellData.MasterOfDefense carries the ranks.
 func (warrior *Warrior) registerMasterOfDefense() {
 	if warrior.Talents.MasterOfDefense == 0 {
 		return
 	}
+
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 23602})
+
+	warrior.MakeProcTriggerAura(core.ProcTrigger{
+		Name: "Master of Defense",
+		// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100
+		// in the proc chance column is noise.
+		ProcChance:         spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense),
+		TriggerImmediately: true,
+		Outcome:            core.OutcomeDodge | core.OutcomeParry,
+		Callback:           core.CallbackOnSpellHitTaken,
+		ExtraCondition: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {
+			return warrior.PseudoStats.CanBlock
+		},
+		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			// TODO: Manual review needed -- spell 23602 generates 5 Rage on a dodge or parry ($m1/10).
+			warrior.AddRage(sim, 5, rageMetrics)
+		},
+	})
 }
 
-// TODO: registerImprovedRevenge models nothing yet; spellData.ImprovedRevenge carries the ranks.
 func (warrior *Warrior) registerImprovedRevenge() {
 	if warrior.Talents.ImprovedRevenge == 0 {
 		return
 	}
+
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask:  SpellMaskRevenge,
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: spellData.ImprovedRevenge.FractionAt(warrior.Talents.ImprovedRevenge),
+	})
 }
 
-// TODO: registerImprovedDisarm models nothing yet; spellData.ImprovedDisarm carries the ranks.
 func (warrior *Warrior) registerImprovedDisarm() {
 	if warrior.Talents.ImprovedDisarm == 0 {
 		return
 	}
+
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskDisarm,
+		Kind:      core.SpellMod_Cooldown_Flat,
+		TimeValue: time.Duration(spellData.ImprovedDisarm.ValueAt(warrior.Talents.ImprovedDisarm)) * time.Millisecond,
+	})
 }
 
-// TODO: registerVanguard models nothing yet; the client has no ladder for it, so the tooltip is the source.
+// TODO: Vanguard makes Charge usable in Defensive Stance -- spell 1310317 overrides each Charge
+// rank with 1240287/1240288/1240289, which carry the same rage and cooldown. That needs the stance
+// condition in charge.go.
 func (warrior *Warrior) registerVanguard() {
 	if !warrior.Talents.Vanguard {
 		return
 	}
 }
 
-// TODO: registerImprovedShieldBash models nothing yet; spellData.ImprovedShieldBash carries the ranks.
 func (warrior *Warrior) registerImprovedShieldBash() {
 	if warrior.Talents.ImprovedShieldBash == 0 {
 		return
 	}
+
+	// TODO: nothing in the sim reads a silence on an enemy, so the aura only shows up in metrics.
+	silenceAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		return target.GetOrRegisterAura(core.Aura{
+			Label:    "Shield Bash - Silence",
+			ActionID: core.ActionID{SpellID: 18498},
+			// TODO: Manual review needed -- spell 18498 silences for 3 seconds.
+			Duration: time.Second * 3,
+		})
+	})
+
+	warrior.MakeProcTriggerAura(core.ProcTrigger{
+		Name: "Improved Shield Bash",
+		// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100
+		// in the proc chance column is noise.
+		ProcChance:         spellData.ImprovedShieldBash.FractionAt(warrior.Talents.ImprovedShieldBash),
+		TriggerImmediately: true,
+		ClassSpellMask:     SpellMaskShieldBash,
+		Outcome:            core.OutcomeLanded,
+		Callback:           core.CallbackOnSpellHitDealt,
+		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			silenceAuras.Get(result.Target).Activate(sim)
+		},
+	})
 }
 
-// TODO: registerBastion models nothing yet; spellData.Bastion carries the ranks.
 func (warrior *Warrior) registerBastion() {
 	if warrior.Talents.Bastion == 0 {
 		return
 	}
+
+	// The client applies the bonus to the physical school (A_MOD_DAMAGE_PERCENT_DONE, mask 1).
+	damageMod := warrior.AddDynamicMod(core.SpellModConfig{
+		School:     core.SpellSchoolPhysical,
+		Kind:       core.SpellMod_DamageDone_Pct,
+		FloatValue: spellData.Bastion.FractionAt(warrior.Talents.Bastion),
+	})
+
+	if warrior.PseudoStats.CanBlock {
+		damageMod.Activate()
+	}
+
+	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
+		if warrior.PseudoStats.CanBlock {
+			damageMod.Activate()
+		} else {
+			damageMod.Deactivate()
+		}
+	})
 }
 
 func (warrior *Warrior) registerImprovedThunderClap() {
@@ -340,18 +405,10 @@ func (warrior *Warrior) registerImprovedThunderClap() {
 
 	// Slowing effect implemented in core/debuffs.go
 
-	rageCostReduction := []int32{0, 1, 2, 4}[warrior.Talents.ImprovedThunderClap]
-	damageGain := []float64{0, 0.4, 0.7, 1.0}[warrior.Talents.ImprovedThunderClap]
-
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskThunderClap,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: damageGain,
-	})
-
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskThunderClap,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  -rageCostReduction,
+		// The client states the rage reduction on a 0-1000 bar, so the ladder is tenths.
+		IntValue: int32(spellData.ImprovedThunderClap.ValueAt(warrior.Talents.ImprovedThunderClap) / 10),
 	})
 }
