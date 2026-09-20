@@ -16,8 +16,7 @@ import {
 } from './input_helpers';
 
 // A quadstate input spreads four states over a numeric field and a second, boolean one. No buff row
-// is shaped that way any more - api version 17 retired the companion fields - so the fixture pairs
-// two live party fields to exercise the helper.
+// is shaped that way, so the fixture pairs two live party fields to exercise the helper.
 const quadstate = (extra: { showWhen?: (modObj: PartyBuffs) => boolean } = {}) =>
 	makeQuadstateIconInput<any, PartyBuffs, PartyBuffs>(
 		{

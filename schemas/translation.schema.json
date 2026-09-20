@@ -1782,59 +1782,7 @@
 							"additionalProperties": false,
 							"required": ["label", "tooltip"]
 						},
-						"isb_uptime": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
-						"hemo_uptime": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
 						"shadow_priest_dps": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
-						"expose_weakness_uptime": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
-						"expose_weakness_hunter_agility": {
 							"type": "object",
 							"properties": {
 								"label": {
@@ -2328,11 +2276,7 @@
 						"absorb_frac",
 						"burst_window",
 						"hp_percent_for_defensives",
-						"isb_uptime",
-						"hemo_uptime",
 						"shadow_priest_dps",
-						"expose_weakness_uptime",
-						"expose_weakness_hunter_agility",
 						"totem_twisting",
 						"pet_uptime",
 						"pet_single_ability",
