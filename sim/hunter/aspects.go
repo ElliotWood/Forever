@@ -103,9 +103,6 @@ func (hunter *Hunter) OnManaTick(sim *core.Simulation) {
 
 		percentMana := math.Max(0.2, math.Min(0.9, currentMana))
 		scaling := 22.0/35.0*(0.9-percentMana) + 0.11
-		if hunter.GronnStalker2PcAura.IsActive() {
-			scaling += 0.05
-		}
 
 		bonusPer5Seconds := hunter.GetStat(stats.Intellect)*scaling + 0.35*70
 		manaGain := bonusPer5Seconds * 2 / 5

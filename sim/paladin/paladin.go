@@ -34,8 +34,6 @@ type Paladin struct {
 	avengersShieldTimer *core.Timer
 
 	JudgementAuras []core.AuraArray
-
-	T6_4pcAura *core.Aura
 }
 
 // Implemented by each Paladin spec.

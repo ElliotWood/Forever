@@ -39,8 +39,6 @@ type Mage struct {
 	Pyroblast            *core.Spell
 	SummonWaterElemental *core.Spell
 	IcyVeins             *core.Spell
-
-	SerpentCoilBraid *core.Aura
 }
 
 func (mage *Mage) GetCharacter() *core.Character {

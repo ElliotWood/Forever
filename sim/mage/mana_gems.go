@@ -52,9 +52,6 @@ func (mage *Mage) registerManaGems() {
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
 			manaGemAura.RemoveStack(sim)
 			manaGain = sim.Roll(minManaGain, maxManaGain)
-			if mage.SerpentCoilBraid.IsActive() {
-				manaGain *= 1.25
-			}
 			mage.AddMana(sim, manaGain, manaMetrics)
 		},
 	})
@@ -64,9 +61,6 @@ func (mage *Mage) registerManaGems() {
 		Type:  core.CooldownTypeMana,
 		ShouldActivate: func(sim *core.Simulation, char *core.Character) bool {
 			manaGain = sim.Roll(minManaGain, maxManaGain)
-			if mage.SerpentCoilBraid.IsActive() {
-				manaGain *= 1.25
-			}
 
 			return char.CurrentMana()+manaGain+char.SpiritManaRegenPerSecond() <= char.MaxMana()
 		},

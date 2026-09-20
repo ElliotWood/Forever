@@ -140,7 +140,7 @@ func (shaman *Shaman) registerWindfuryTotemSpell() {
 func (shaman *Shaman) registerStrengthOfEarthTotemSpell() {
 	duration := time.Second * 120
 	// TODO: Forever drops Enhancing Totems; untalented Strength of Earth Totem value only.
-	value := core.StrengthOfEarthTotemValue(0, shaman.CouldHaveSetBonus(ItemSetCycloneHarness, 2))
+	value := core.StrengthOfEarthTotemValue(0, false)
 	config := shaman.newTotemSpellConfig(strengthOfEarthTotemRank.Cost, strengthOfEarthTotemRank.SpellID, SpellMaskBasicTotem, strengthOfEarthTotemRank.GCD)
 	buffAura := shaman.RegisterAura(core.Aura{
 		Label:    "Strength Of Earth Totem (Self)",

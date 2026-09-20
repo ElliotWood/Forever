@@ -69,8 +69,7 @@ func (shaman *Shaman) applyFlurry() {
 	}
 
 	attackSpeed := 1.05 +
-		0.05*float64(shaman.Talents.Flurry) +
-		core.TernaryFloat64(shaman.CouldHaveSetBonus(ItemSetCataclysmHarness, 4), 0.05, 0)
+		0.05*float64(shaman.Talents.Flurry)
 
 	flurryAura := shaman.RegisterAura(core.Aura{
 		ActionID:  core.ActionID{SpellID: 16284},

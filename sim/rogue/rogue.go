@@ -84,8 +84,6 @@ type Rogue struct {
 	HasPvpEnergy              bool
 	DeathmantleBonus          float64
 	SliceAndDiceBonusDuration time.Duration
-
-	LastFinisherPointSpend int32
 }
 
 // ApplyTalents implements core.Agent.
@@ -109,7 +107,6 @@ func (rogue *Rogue) AddPartyBuffs(_ *proto.PartyBuffs) {}
 // Apply the effect of successfully casting a finisher to combo points
 func (rogue *Rogue) ApplyFinisher(sim *core.Simulation, spell *core.Spell) {
 	numPoints := rogue.ComboPoints()
-	rogue.LastFinisherPointSpend = numPoints
 	rogue.SpendComboPoints(sim, spell.ComboPointMetrics())
 
 	// Relentless Strikes
