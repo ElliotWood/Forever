@@ -23,13 +23,11 @@ func (warrior *Warrior) StanceMatches(other Stance) bool {
 	return (warrior.Stance & other) != 0
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
 func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, defenseType core.DefenseType, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
-	// TODO: Forever drops Tactical Mastery and adds Improved Tactical Mastery, which is
-	// probably its replacement -- but the new talent's effect is not modelled yet, so
-	// this is the untalented base only.
-	maxRetainedRage := 10.0
+	// Tactical Mastery (1310185) is a baseline passive that keeps 10 rage on a stance change, and
+	// Improved Tactical Mastery adds its ladder on top.
+	// TODO: Manual review needed -- the passive has one rank and no table; 10 is its effect value.
+	maxRetainedRage := 10.0 + spellData.ImprovedTacticalMastery.ValueAt(warrior.Talents.ImprovedTacticalMastery)
 	actionID := aura.ActionID
 	rageMetrics := warrior.NewRageMetrics(actionID)
 
@@ -80,13 +78,18 @@ func (warrior *Warrior) registerBattleStanceAura() *core.Aura {
 		ActionID:   actionID,
 		Duration:   core.NeverExpires,
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
-	}).AttachMultiplicativePseudoStatBuff(&warrior.PseudoStats.ThreatMultiplier, 0.8)
+	}).AttachMultiplicativePseudoStatBuff(
+		// TODO: Manual review needed -- Battle Stance Passive (21156) states -20% threat.
+		&warrior.PseudoStats.ThreatMultiplier, 0.8,
+	)
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
 
 	return aura
 }
 
+// TODO: Manual review needed -- Defensive Stance Passive (7376) states -10% damage taken, -10% damage
+// done and +30% threat.
 func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 	actionID := core.ActionID{SpellID: 71}
 
@@ -108,12 +111,10 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 	return aura
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
+// TODO: Manual review needed -- Berserker Stance Passive (7381) states +3% crit, +10% damage taken
+// and -20% threat.
 func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
 	actionId := core.ActionID{SpellID: 2458}
-	// TODO: Forever drops Improved Berserker Stance; untalented threat modifier only.
-	threatMultiplier := 0.8
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:      "Berserker Stance",
@@ -121,7 +122,9 @@ func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
 		Duration:   core.NeverExpires,
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBerserker, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
 	}).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.ThreatMultiplier, threatMultiplier,
+		&warrior.PseudoStats.ThreatMultiplier, 0.8,
+	).AttachMultiplicativePseudoStatBuff(
+		&warrior.PseudoStats.DamageTakenMultiplier, 1.1,
 	).AttachStatBuff(stats.PhysicalCritPercent, 3)
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})

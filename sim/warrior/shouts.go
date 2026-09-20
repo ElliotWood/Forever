@@ -55,11 +55,12 @@ func (warrior *Warrior) MakeShoutSpellHelper(config ShoutHelperConfig) *core.Spe
 
 var battleShoutRank = spellData.BattleShout.HighestRank()
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
+// TODO: The core Battle Shout aura still takes Booming Voice points, a Commanding Presence
+// multiplier and two item flags. In the client Booming Voice (12321) widens the radius only,
+// Commanding Presence does not exist, Solarian's Sapphire (30446) is not an item, and the shout
+// itself states 139 attack power for 3 minutes (25289). Pending the shared shout aura rework, the
+// talent and multiplier are passed as neutral.
 func (warrior *Warrior) registerShouts() {
-	// TODO: Forever drops Commanding Presence. Neutral multiplier until we know whether
-	// the shout scaling moved to another talent.
 	commandingPresenceMultiplier := 1.0
 
 	warrior.registerDemoralizingShout()
@@ -68,7 +69,7 @@ func (warrior *Warrior) registerShouts() {
 		aura := core.BattleShoutAura(
 			warrior.GetCharacter(),
 			warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone,
-			warrior.Talents.BoomingVoice,
+			0,
 			commandingPresenceMultiplier,
 			warrior.HasBsSolarianSapphire,
 			warrior.HasBsT2,
@@ -84,7 +85,7 @@ func (warrior *Warrior) registerShouts() {
 		ThreatBonus: 69,
 		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
 			aura := battleShoutAuras.Get(&warrior.Unit)
-			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= core.GetBattleShoutValue(warrior.Talents.BoomingVoice, commandingPresenceMultiplier, warrior.HasBsSolarianSapphire, warrior.HasBsT2, sim.CurrentTime < 0)
+			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= core.GetBattleShoutValue(0, commandingPresenceMultiplier, warrior.HasBsSolarianSapphire, warrior.HasBsT2, sim.CurrentTime < 0)
 		},
 		AllyAuras: battleShoutAuras,
 	})

@@ -5,16 +5,17 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
+// TODO: Manual review needed -- the client states no threat for Demoralizing Shout (11556); 56 is
+// not from the client.
 var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 56).HighestRank()
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
+// TODO: The core Demoralizing Shout aura still takes Booming Voice and Improved Demoralizing
+// Shout points. In the client Booming Voice (12321) widens the radius only, the improved talent
+// does not exist, and the shout states -205 attack power for 45 seconds (11556). Pending the
+// shared shout aura rework, both are passed as 0.
 func (warrior *Warrior) registerDemoralizingShout() {
 	warrior.DemoralizingShoutAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		// TODO: Forever drops Improved Demoralizing Shout; the core aura still takes a
-		// rank for it, so it is pinned to 0 until we know whether the effect moved onto
-		// another talent or was removed outright.
-		return core.DemoralizingShoutAura(target, warrior.Talents.BoomingVoice, 0)
+		return core.DemoralizingShoutAura(target, 0, 0)
 	})
 
 	warrior.DemoralizingShout = warrior.RegisterSpell(core.SpellConfig{
