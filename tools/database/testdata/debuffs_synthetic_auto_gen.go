@@ -59,7 +59,7 @@ func SynthSunderArmorAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 var SynthCurseOfElementsCategory = "CurseOfElements"
 
 func SynthCurseOfElementsValue(talentPoints int32) float64 {
-	return 1.1
+	return -75.0
 }
 func SynthCurseOfElementsDuration(talentPoints int32) time.Duration {
 	return 300000 * time.Millisecond
@@ -72,8 +72,15 @@ func SynthCurseOfElementsAura(unit *Unit, isPlayer bool, talentPoints int32) *Au
 		Category:   SynthCurseOfElementsCategory,
 		SingleAura: true,
 		IsPlayer:   isPlayer,
+		Stats: []StatConfig{
+			{stats.FireResistance, SynthCurseOfElementsValue(talentPoints), false},
+			{stats.NatureResistance, -75.0, false},
+			{stats.FrostResistance, -75.0, false},
+			{stats.ShadowResistance, -75.0, false},
+			{stats.ArcaneResistance, -75.0, false},
+		},
 		Pseudo: []PseudoConfig{
-			{PseudoStatSchoolDamageTakenMultiplier, SynthCurseOfElementsValue(talentPoints), true, 126},
+			{PseudoStatSchoolDamageTakenMultiplier, 1.1, true, 126},
 		},
 	})
 }

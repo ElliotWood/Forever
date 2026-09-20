@@ -255,3 +255,69 @@ func TestGeneratedBuffPseudoStatsCoverEveryField(t *testing.T) {
 		t.Errorf("the pseudo-stat category holds %d effects, want one covering every school", len(category.effects))
 	}
 }
+
+// A debuff bids once for everything it applies, its resistances included: the
+// school-by-school competition is what keeps two sources of a resistance from
+// adding up on a player, while two resistance-reducing curses exclude each
+// other in their own category instead.
+func TestGeneratedDebuffKeepsItsResistancesInItsOwnCategory(t *testing.T) {
+	sim := &Simulation{}
+	target := newExclusiveTestTarget()
+	target.Env = &Environment{MeasuringStats: true}
+	target.PseudoStats = stats.NewPseudoStats()
+
+	curse := MakePermanent(newGeneratedDebuff(target, GeneratedBuff{
+		Label:      "Generated Curse of the Elements",
+		ActionID:   ActionID{SpellID: 1311680},
+		Duration:   time.Minute * 5,
+		Category:   "CurseOfElements",
+		SingleAura: true,
+		Stats: []StatConfig{
+			{stats.FireResistance, -75, false},
+			{stats.ShadowResistance, -75, false},
+		},
+		Pseudo: []PseudoConfig{{
+			Kind: PseudoStatSchoolDamageTakenMultiplier, Amount: 1.1,
+			IsMultiplicative: true, SchoolMask: 126,
+		}},
+	}))
+
+	stronger := target.GetOrRegisterAura(Aura{
+		Label:    "Curse of Shadow",
+		ActionID: ActionID{SpellID: 11722},
+		Duration: time.Minute * 5,
+	})
+	stronger.NewExclusiveEffect("CurseOfElements", true, ExclusiveEffect{
+		Priority: 100,
+		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
+			ee.Aura.Unit.AddStatDynamic(sim, stats.ShadowResistance, -100)
+		},
+		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
+			ee.Aura.Unit.AddStatDynamic(sim, stats.ShadowResistance, 100)
+		},
+	})
+
+	curse.Activate(sim)
+	if got := target.stats[stats.ShadowResistance]; got != -75 {
+		t.Fatalf("the curse alone reduced shadow resistance by %v, want the client's -75", got)
+	}
+
+	stronger.Activate(sim)
+
+	if got := target.stats[stats.ShadowResistance]; got != -100 {
+		t.Errorf("shadow resistance is %v, want only the stronger curse's -100", got)
+	}
+	if got := target.stats[stats.FireResistance]; got != 0 {
+		t.Errorf("fire resistance is %v, want the weaker curse to have taken its -75 back", got)
+	}
+	if curse.IsActive() {
+		t.Error("both curses are on the target, so two resistance reductions apply at once")
+	}
+
+	school := target.ExclusiveEffectManager.GetExclusiveEffectCategory(
+		ResistanceCategoryShadow + stats.ShadowResistance.StatName() + "Add")
+	if len(school.effects) != 0 {
+		t.Errorf("the curse put %d effects in the shadow school, where nothing can outbid them",
+			len(school.effects))
+	}
+}

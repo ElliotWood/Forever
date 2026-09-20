@@ -121,7 +121,12 @@ func newGeneratedStatAura(unit *Unit, config GeneratedBuff) *Aura {
 // for everything it applies, which is also what every debuff does. Anything
 // else applies its amounts outright.
 func registerGeneratedEffects(aura *Aura, config GeneratedBuff, perStack float64, bareWhenCategory bool) *ExclusiveEffect {
-	config.Stats = registerGeneratedSchoolResistances(aura, config.Stats)
+	// An aura that bids for everything it applies at once keeps its resistances
+	// with the rest: two resistance-reducing debuffs exclude each other in that
+	// category, and pulling the schools out of it would put both on the target.
+	if !bareWhenCategory {
+		config.Stats = registerGeneratedSchoolResistances(aura, config.Stats)
+	}
 
 	if config.StatCategory != "" {
 		registerExlusiveEffects(aura, config.Stats, config.StatCategory)

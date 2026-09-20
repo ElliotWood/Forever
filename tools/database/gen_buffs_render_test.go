@@ -134,6 +134,13 @@ func syntheticBuffRows() []ResolvedBuff {
 				SingleAura: true,
 			},
 			SpellID: 1311680, DurationMs: 300000, Supported: true,
+			Stats: []StatAmount{
+				{Stat: stats.FireResistance, Amount: -75},
+				{Stat: stats.NatureResistance, Amount: -75},
+				{Stat: stats.FrostResistance, Amount: -75},
+				{Stat: stats.ShadowResistance, Amount: -75},
+				{Stat: stats.ArcaneResistance, Amount: -75},
+			},
 			Pseudo: []PseudoMod{
 				{Kind: "SchoolDamageTakenMultiplier", Amount: 1.1, Multiplicative: true, SchoolMask: 126},
 			},
