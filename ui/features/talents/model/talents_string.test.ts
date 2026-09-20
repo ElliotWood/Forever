@@ -1,3 +1,5 @@
+import { MageTalents } from '@generated/proto/mage';
+import { talentStringToProto } from '@sim/talents/factory';
 import { mageTalentsConfig } from '@sim/talents/mage';
 import { describe, expect, it } from 'vitest';
 
@@ -75,4 +77,23 @@ describe('talents string codec', () => {
 	it('counts every point in a full default build', () => {
 		expect(totalPointsSpent(parseTalentsString(mageTalentsConfig, MAGE_DEFAULT))).toBe(51);
 	});
+
+	// A build saved before the trees changed shape is longer than the tree it is read
+	// into. Walking the string and indexing the config read past the end and threw on
+	// undefined.fieldName, during page load, taking the whole UI down with it.
+	it('reads a build longer than the tree without throwing', () => {
+		// Arcane holds 18 talents, so pad to exactly 18 before overflowing -- extra digits
+		// inside the tree would be read legitimately and would not test anything.
+		const overlong = MAGE_DEFAULT.replace('2552252231221', '2552252231221' + '0'.repeat(5) + '555555');
+		expect(() => talentStringToProto(MageTalents.create(), overlong, mageTalentsConfig)).not.toThrow();
+		expect(talentStringToProto(MageTalents.create(), overlong, mageTalentsConfig)).toEqual(
+			talentStringToProto(MageTalents.create(), MAGE_DEFAULT, mageTalentsConfig),
+		);
+	});
+
+	it('reads a build shorter than the tree, and an empty one', () => {
+		expect(() => talentStringToProto(MageTalents.create(), '25', mageTalentsConfig)).not.toThrow();
+		expect(talentStringToProto(MageTalents.create(), '', mageTalentsConfig)).toEqual(MageTalents.create());
+	});
+
 });

@@ -66,13 +66,20 @@ export function playerTalentStringToProto<SpecType extends Spec>(playerSpec: Pla
 	return talentStringToProto(proto, talentString, talentsConfig);
 }
 
+// Walks the config and reads the string by index, rather than walking the string and
+// indexing the config. A saved build predating a tree change is longer than the tree it
+// is being read into -- a TBC warrior string against Forever's trees, say -- and indexing
+// the config by the string's length reads past the end and throws on undefined.fieldName,
+// which happens during page load and takes the whole UI down. Extra characters are now
+// ignored and a short string leaves the remaining talents at zero, matching
+// parseTalentsString in features/talents/model/talents_string.ts.
 export function talentStringToProto<TalentsProto>(proto: TalentsProto, talentString: string, talentsConfig: TalentsConfig<TalentsProto>): TalentsProto {
-	talentString.split('-').forEach((treeString, treeIdx) => {
-		const treeConfig = talentsConfig[treeIdx];
-		[...treeString].forEach((talentString, i) => {
-			const talentConfig = treeConfig.talents[i];
-			const points = parseInt(talentString);
-			if (talentConfig.fieldName) {
+	const treeStrings = talentString.split('-');
+	talentsConfig.forEach((treeConfig, treeIdx) => {
+		const treeString = treeStrings[treeIdx] ?? '';
+		treeConfig.talents.forEach((talentConfig, i) => {
+			const points = parseInt(treeString.charAt(i));
+			if (!isNaN(points) && talentConfig.fieldName) {
 				if (talentConfig.maxPoints == 1) {
 					(proto[talentConfig.fieldName as keyof TalentsProto] as unknown as boolean) = points == 1;
 				} else {
