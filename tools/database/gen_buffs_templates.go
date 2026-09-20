@@ -5,6 +5,12 @@ package database
 // effects file uses, so a reader of the generated file sees every manifest row.
 
 const tmplStrBuffRows = `
+{{- range .SharedCategories}}
+
+// The category the rows that name it join without an effect of their own, so
+// that a player's own copy of one of them shuts the others off.
+var {{.Var}} = "{{.Name}}"
+{{- end}}
 {{- range .Rows}}
 {{- if .OwnerAuraVar}}
 

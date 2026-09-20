@@ -1691,6 +1691,7 @@ func renderBuffFiles(rows []ResolvedBuff) (map[string][]byte, error) {
 
 func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 	var rows []buffRow
+	var shared []sharedCategoryRow
 	needsTime, needsStats := false, false
 	for _, row := range resolved {
 		if (row.Scope == buffmanifest.ScopeDebuff) != debuffs {
@@ -1700,9 +1701,13 @@ func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 		if rendered.Supported {
 			needsTime = true
 			needsStats = needsStats || len(row.Stats) > 0
+			if row.SharedCategory != "" && !slices.ContainsFunc(shared, func(c sharedCategoryRow) bool { return c.Name == row.SharedCategory }) {
+				shared = append(shared, sharedCategoryRow{Var: sharedCategoryVar(row.SharedCategory), Name: row.SharedCategory})
+			}
 		}
 		rows = append(rows, rendered)
 	}
+	slices.SortFunc(shared, func(a, b sharedCategoryRow) int { return strings.Compare(a.Name, b.Name) })
 
 	name := "buffs"
 	tmplStr := TmplStrBuffs
@@ -1718,7 +1723,7 @@ func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 	var rendered bytes.Buffer
 	if err := tmpl.Execute(&rendered, map[string]any{
 		"Rows": rows, "NeedsTime": needsTime, "NeedsStats": needsStats,
-		"PetRows": petBuffRows(resolved),
+		"SharedCategories": shared, "PetRows": petBuffRows(resolved),
 	}); err != nil {
 		return nil, fmt.Errorf("rendering %s: %w", name, err)
 	}
@@ -1776,6 +1781,19 @@ func petOwnerAura(row ResolvedBuff) string {
 		return label
 	}
 	return row.Category
+}
+
+// sharedCategoryRow is one `var <Name>Category = "<Name>"` line: several rows
+// name the same shared category, so the generated file declares it once.
+type sharedCategoryRow struct {
+	Var  string
+	Name string
+}
+
+// The identifier the generated file gives a shared category, which every row
+// that joins it and every caller in sim/core name.
+func sharedCategoryVar(category string) string {
+	return category + "Category"
 }
 
 // The identifier the generated file gives that label, which the buff's own
@@ -1919,7 +1937,7 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 		fmt.Fprintf(&b, "Category: %s,\n", rendered.CategoryVar)
 	}
 	if row.SharedCategory != "" {
-		fmt.Fprintf(&b, "SharedCategory: %q,\n", row.SharedCategory)
+		fmt.Fprintf(&b, "SharedCategory: %s,\n", sharedCategoryVar(row.SharedCategory))
 	}
 	if row.SingleAura {
 		b.WriteString("SingleAura: true,\n")

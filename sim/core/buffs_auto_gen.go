@@ -9,6 +9,10 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+// The category the rows that name it join without an effect of their own, so
+// that a player's own copy of one of them shuts the others off.
+var PaladinAuraCategory = "PaladinAura"
+
 // Blood Pact - https://www.wowhead.com/forever/spell=11767
 func BloodPactValue(talentPoints int32) float64 {
 	return 54.0
@@ -89,7 +93,7 @@ func DevotionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		ActionID:       ActionID{SpellID: 10293}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       DevotionAuraDuration(talentPoints),
 		Category:       DevotionAuraCategory,
-		SharedCategory: "PaladinAura",
+		SharedCategory: PaladinAuraCategory,
 		SingleAura:     true,
 		IsPlayer:       isPlayer,
 		Stats: []StatConfig{
@@ -211,7 +215,7 @@ func RetributionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		ActionID:       ActionID{SpellID: 10301}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       RetributionAuraDuration(talentPoints),
 		Category:       RetributionAuraCategory,
-		SharedCategory: "PaladinAura",
+		SharedCategory: PaladinAuraCategory,
 		SingleAura:     true,
 		IsPlayer:       isPlayer,
 	}, SpellSchoolHoly, RetributionAuraValue(talentPoints))
@@ -232,7 +236,7 @@ func ConcentrationAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 		ActionID:       ActionID{SpellID: 19746}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       ConcentrationAuraDuration(talentPoints),
 		Category:       ConcentrationAuraCategory,
-		SharedCategory: "PaladinAura",
+		SharedCategory: PaladinAuraCategory,
 		SingleAura:     true,
 		IsPlayer:       isPlayer,
 		Pseudo: []PseudoConfig{
@@ -438,7 +442,7 @@ func FrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aur
 		ActionID:       ActionID{SpellID: 19898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       FrostResistanceAuraDuration(talentPoints),
 		Category:       FrostResistanceAuraCategory,
-		SharedCategory: "PaladinAura",
+		SharedCategory: PaladinAuraCategory,
 		SingleAura:     true,
 		IsPlayer:       isPlayer,
 		Stats: []StatConfig{
@@ -462,7 +466,7 @@ func FireResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura
 		ActionID:       ActionID{SpellID: 19900}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       FireResistanceAuraDuration(talentPoints),
 		Category:       FireResistanceAuraCategory,
-		SharedCategory: "PaladinAura",
+		SharedCategory: PaladinAuraCategory,
 		SingleAura:     true,
 		IsPlayer:       isPlayer,
 		Stats: []StatConfig{
@@ -486,7 +490,7 @@ func ShadowResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Au
 		ActionID:       ActionID{SpellID: 19896}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       ShadowResistanceAuraDuration(talentPoints),
 		Category:       ShadowResistanceAuraCategory,
-		SharedCategory: "PaladinAura",
+		SharedCategory: PaladinAuraCategory,
 		SingleAura:     true,
 		IsPlayer:       isPlayer,
 		Stats: []StatConfig{

@@ -9,6 +9,10 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+// The category the rows that name it join without an effect of their own, so
+// that a player's own copy of one of them shuts the others off.
+var SynthPaladinAuraCategory = "SynthPaladinAura"
+
 // Mana Spring Totem - https://www.wowhead.com/forever/spell=10494
 var SynthManaSpringCategory = "ManaSpringTotem"
 
@@ -89,7 +93,7 @@ func SynthDevotionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 		ActionID:       ActionID{SpellID: 10293}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       SynthDevotionAuraDuration(talentPoints),
 		Category:       SynthDevotionAuraCategory,
-		SharedCategory: "PaladinAura",
+		SharedCategory: SynthPaladinAuraCategory,
 		SingleAura:     true,
 		IsPlayer:       isPlayer,
 		Stats: []StatConfig{
@@ -113,7 +117,7 @@ func SynthFrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32)
 		ActionID:       ActionID{SpellID: 19898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration:       SynthFrostResistanceAuraDuration(talentPoints),
 		Category:       SynthFrostResistanceAuraCategory,
-		SharedCategory: "PaladinAura",
+		SharedCategory: SynthPaladinAuraCategory,
 		SingleAura:     true,
 		IsPlayer:       isPlayer,
 		Stats: []StatConfig{

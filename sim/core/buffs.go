@@ -177,8 +177,6 @@ func ApplyFixedShoutAura(char *Character, aura *Aura, category string) {
 	ApplyFixedUptimeAura(aura, 1, aura.Duration+1, -1)
 }
 
-var PaladinAuraCategory = "PaladinAura"
-
 func DraneiRacialAura(char *Character, caster bool) *Aura {
 	alliance := []proto.Race{
 		proto.Race_RaceDraenei,
