@@ -184,6 +184,10 @@ const (
 	MageSpellManaGem
 	MageSpellCombustion
 	MageWaterElementalSpellWaterBolt
+
+	// Forever abilities the sim does not model yet; see the stub file named for each.
+	MageSpellFrostfireBolt
+
 	MageSpellLast
 	MageSpellsAll  = MageSpellLast<<1 - 1
 	MageSpellFrost = MageSpellFrostbolt | MageSpellBlizzard | MageSpellFrostNova | MageSpellConeOfCold | MageSpellIceLance
@@ -196,7 +200,4 @@ const (
 		MageSpellCombustion | MageSpellConeOfCold | MageSpellDragonsBreath | MageSpellIceLance | MageSpellManaGems | MageSpellPresenceOfMind
 	MageSpellExtraResult = MageSpellArcaneMissilesTick | MageSpellBlizzard
 	FireSpellIgnitable   = MageSpellFireball | MageSpellScorch | MageSpellPyroblast
-
-	// Forever abilities the sim does not model yet; see the stub file named for each.
-	MageSpellFrostfireBolt
 )

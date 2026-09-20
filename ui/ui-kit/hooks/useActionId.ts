@@ -10,7 +10,9 @@ export interface ActionIdState {
 	ready: boolean;
 }
 
-const keyOf = (actionId: ActionId | undefined) => (actionId ? actionId.equalityKey() : '');
+// Rank and trait definition steer the wowhead request but are not part of ActionId identity,
+// so they are keyed here rather than in equalityKey(), which equals() must keep matching.
+const keyOf = (actionId: ActionId | undefined) => (actionId ? `${actionId.equalityKey()}|${actionId.rank}|${actionId.definitionId}` : '');
 
 const hrefOf = (actionId: ActionId) => {
 	if (actionId.itemId) return ActionId.makeItemUrl(actionId.itemId, actionId.randomSuffixId);

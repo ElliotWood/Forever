@@ -11,8 +11,6 @@ import { PresetConfigurationPicker } from '../PresetConfigurationPicker';
 
 const TALENT_PRESETS = [PresetConfigurationCategory.Talents];
 
-// TBC's tier gate is five points per row of the tree (talents_tab.tsx:47), not a character level.
-
 export const TalentsTabBody = () => {
 	const host = useSimHost();
 	const player = host.player;

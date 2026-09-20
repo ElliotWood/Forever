@@ -311,16 +311,6 @@ const (
 	HunterSpellSteadyShot
 	HunterSpellVolley
 	HunterPetDamage
-	HunterSpellsAll = HunterSpellAimedShot |
-		HunterSpellArcaneShot | HunterSpellBestialWrath |
-		HunterSpellKillCommand | HunterSpellMultiShot |
-		HunterSpellRapidFire | HunterSpellRaptorStrike |
-		HunterSpellScorpidSting | HunterSpellSerpentSting |
-		HunterSpellSteadyShot | HunterSpellVolley
-	HunterSpellsShotsAndStings = HunterSpellAimedShot |
-		HunterSpellArcaneShot | HunterSpellMultiShot |
-		HunterSpellScorpidSting | HunterSpellSerpentSting |
-		HunterSpellSteadyShot | HunterSpellVolley
 
 	// Forever abilities the sim does not model yet; see the stub file named for each.
 	HunterSpellDismember
@@ -332,6 +322,17 @@ const (
 	HunterSpellSwipe
 	HunterSpellTendonRip
 	HunterSpellWeb
+
+	HunterSpellsAll = HunterSpellAimedShot |
+		HunterSpellArcaneShot | HunterSpellBestialWrath |
+		HunterSpellKillCommand | HunterSpellMultiShot |
+		HunterSpellRapidFire | HunterSpellRaptorStrike |
+		HunterSpellScorpidSting | HunterSpellSerpentSting |
+		HunterSpellSteadyShot | HunterSpellVolley
+	HunterSpellsShotsAndStings = HunterSpellAimedShot |
+		HunterSpellArcaneShot | HunterSpellMultiShot |
+		HunterSpellScorpidSting | HunterSpellSerpentSting |
+		HunterSpellSteadyShot | HunterSpellVolley
 )
 
 // Agent is a generic way to access underlying hunter on any of the agents.

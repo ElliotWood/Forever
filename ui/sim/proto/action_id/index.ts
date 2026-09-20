@@ -206,7 +206,7 @@ export class ActionId {
 
 	// equalityKey() without the tag, matching equalsIgnoringTag below.
 	equalityKeyIgnoringTag(): string {
-		return (this.cachedEqualityKeyIgnoringTag ??= `${this.itemId}|${this.randomSuffixId}|${this.spellId}|${this.otherId}|${this.rank}|${this.definitionId}`);
+		return (this.cachedEqualityKeyIgnoringTag ??= `${this.itemId}|${this.randomSuffixId}|${this.spellId}|${this.otherId}`);
 	}
 
 	equalsIgnoringTag(other: ActionId): boolean {

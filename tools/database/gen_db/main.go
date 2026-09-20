@@ -8,6 +8,7 @@ import (
 	"log"
 	"maps"
 	"os"
+	"runtime/debug"
 	"slices"
 	"strings"
 
@@ -658,6 +659,7 @@ func GetAllTalentSpellIds(inputsDir *string) map[string][]int32 {
 func CreateTempAgent(r *proto.Raid) (agent core.Agent) {
 	defer func() {
 		if err := recover(); err != nil {
+			fmt.Fprintf(os.Stderr, "[rotation] spec skipped: %v\n%s\n", err, debug.Stack())
 			agent = nil
 		}
 	}()

@@ -395,6 +395,11 @@ export class Database {
 	static async getSpellIconData(spellId: number, rank = 0, definitionId = 0): Promise<IconData> {
 		const db = await Database.get();
 		if (rank > 0) {
+			// The icon is the same at every rank, so the bundled one answers without a round trip;
+			// only an id the database does not carry needs the ranked wowhead request.
+			const bundled = db.spellIcons[spellId];
+			if (bundled?.icon) return bundled;
+
 			const key = `${spellId}-${rank}-${definitionId}`;
 			const cached = db.rankedSpellIcons.get(key);
 			if (cached?.icon) return cached;
@@ -439,10 +444,10 @@ export class Database {
 		try {
 			const response = await fetch(url);
 			const json = await response.json();
-			let rank = 0;
+			let reportedRank = 0;
 			if (tooltipPostfix === 'spell') {
 				const rankMatches = [...(json['tooltip'] as string).matchAll(RANK_REGEX)];
-				rank = rankMatches.length ? parseInt(rankMatches[0][1]) : 0;
+				reportedRank = rankMatches.length ? parseInt(rankMatches[0][1]) : 0;
 			}
 
 			return IconData.create({
@@ -450,7 +455,7 @@ export class Database {
 				name: json['name'],
 				icon: json['icon'],
 				hasBuff: json['buff'] !== '',
-				rank,
+				rank: reportedRank,
 			});
 		} catch (e) {
 			console.error('Error while fetching url: ' + url + '\n\n' + e);

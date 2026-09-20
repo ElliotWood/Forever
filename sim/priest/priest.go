@@ -151,6 +151,13 @@ const (
 	PriestSpellFade
 	PriestSpellSmite
 
+	// Forever abilities the sim does not model yet; see the stub file named for each.
+	PriestSpellChastise
+	PriestSpellConfoundingFlash
+	PriestSpellContingencyPlan
+	PriestSpellDarkSacrifice
+	PriestSpellDivineGrace
+
 	PriestSpellLast
 	PriestSpellsAll    = PriestSpellLast<<1 - 1
 	PriestSpellDoT     = PriestSpellDevouringPlague | PriestSpellHolyFire | PriestSpellMindFlay | PriestSpellShadowWordPain | PriestSpellVampiricTouch | PriestSpellStarshards
@@ -175,11 +182,4 @@ const (
 		PriestSpellShadowFiend |
 		PriestSpellVampiricEmbrace
 	PriestHolySpells = PriestSpellSmite | PriestSpellHolyFire | PriestSpellHolyNova
-
-	// Forever abilities the sim does not model yet; see the stub file named for each.
-	PriestSpellChastise
-	PriestSpellConfoundingFlash
-	PriestSpellContingencyPlan
-	PriestSpellDarkSacrifice
-	PriestSpellDivineGrace
 )

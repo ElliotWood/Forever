@@ -122,6 +122,9 @@ const (
 	DruidSpellSwiftmend
 	DruidSpellCenarionWard
 
+	// Forever abilities the sim does not model yet; see the stub file named for each.
+	DruidSpellRevive
+
 	DruidSpellLast
 	DruidSpellsAll = DruidSpellLast<<1 - 1
 
@@ -137,9 +140,6 @@ const (
 	DruidHealingNonInstantSpells = DruidSpellHealingTouch | DruidSpellRegrowth
 	DruidHealingSpells           = DruidHealingNonInstantSpells | DruidSpellRejuvenation | DruidSpellLifebloom | DruidSpellSwiftmend
 	DruidDamagingSpells          = DruidArcaneSpells | DruidNatureSpells
-
-	// Forever abilities the sim does not model yet; see the stub file named for each.
-	DruidSpellRevive
 )
 
 type SelfBuffs struct {

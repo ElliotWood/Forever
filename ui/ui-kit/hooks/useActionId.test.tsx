@@ -123,8 +123,13 @@ describe('useActionId', () => {
 		expect(ActionId.makeSpellUrl(12297, 0, 0)).not.toContain('def=');
 	});
 
-	it('treats two talents sharing a spell id as different ids', () => {
-		expect(ActionId.fromTalent(12297, 1, 135506).equalityKey()).not.toBe(ActionId.fromTalent(12297, 1, 999999).equalityKey());
+	it('refetches when two talents share a spell id but not a trait definition', () => {
+		const { spy } = deferFill();
+		const { rerender } = render(<Probe actionId={ActionId.fromTalent(12297, 1, 135506)} />);
+		expect(spy).toHaveBeenCalledTimes(1);
+
+		rerender(<Probe actionId={ActionId.fromTalent(12297, 1, 999999)} />);
+		expect(spy).toHaveBeenCalledTimes(2);
 	});
 
 	it('previews rank 1 for an unspent talent rather than letting wowhead pick a default', () => {
@@ -144,8 +149,23 @@ describe('useActionId', () => {
 		expect(ActionId.makeSpellUrl(resolved.spellId, resolved.rank, resolved.definitionId)).toContain('def=135506');
 	});
 
-	it('treats two ranks of one spell as different ids, so the tooltip refetches', () => {
-		expect(ActionId.fromSpellId(12297, 1).equalityKey()).not.toBe(ActionId.fromSpellId(12297, 2).equalityKey());
-		expect(ActionId.fromSpellId(12297, 1).equalityKey()).toBe(ActionId.fromSpellId(12297, 1).equalityKey());
+	it('refetches when the rank changes, and stands pat when it does not', () => {
+		const { spy } = deferFill();
+		const { rerender } = render(<Probe actionId={ActionId.fromSpellId(12297, 1)} />);
+		expect(spy).toHaveBeenCalledTimes(1);
+
+		rerender(<Probe actionId={ActionId.fromSpellId(12297, 1)} />);
+		expect(spy).toHaveBeenCalledTimes(1);
+
+		rerender(<Probe actionId={ActionId.fromSpellId(12297, 2)} />);
+		expect(spy).toHaveBeenCalledTimes(2);
+	});
+
+	it('leaves rank and definition out of ActionId identity, so equals() and equalityKey() agree', () => {
+		const talent = ActionId.fromTalent(12297, 3, 135506);
+		const plain = ActionId.fromSpellId(12297);
+
+		expect(talent.equals(plain)).toBe(true);
+		expect(talent.equalityKey()).toBe(plain.equalityKey());
 	});
 });
