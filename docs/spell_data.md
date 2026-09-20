@@ -456,7 +456,7 @@ the values.
 | `Owner`                    | the class that casts it, which narrows the `SkillLineAbility` lookup and marks the row "(External)" on that class's settings tab                                                                                                                                  |
 | `Talent`                   | the improving talent family, its effect index, and whether it scales the value, the duration or adds a stat. Only a `ProtoTristate` row may state one                                                                                                             |
 | `Category`                 | the exclusive-effect category the aura bids in, `""` for none                                                                                                                                                                                                     |
-| `SharedCategory`           | a second category the aura joins without an effect of its own, which is how the paladin auras exclude each other across schools. Applied to the player's copy only                                                                                                |
+| `SharedCategory`           | a second category the aura joins without an effect of its own, which is how the paladin auras exclude each other across schools. Applied to the player's copy only, and declared once in the generated file as `<Name>Category`                                   |
 | `SingleAura`               | the category holds one aura at a time, so the loser is deactivated rather than outbid                                                                                                                                                                             |
 | `Driver`                   | the apply block hands the row to `drive<Go>` instead of activating the aura outright                                                                                                                                                                              |
 | `Pet`                      | `PetNormal`, `PetStrip`, `PetInheritOwnerAura`, `PetCapAtRegular` or `PetStripWhenSummonedLate`                                                                                                                                                                   |
@@ -562,8 +562,11 @@ need the generator extended; nothing in the manifest does today.
 the row's `isPlayer=false` copy whenever the proto field is set, so a class port that registers its own
 `isPlayer=true` copy has two copies on the character. It either stops setting the flag in
 `AddPartyBuffs`/`AddRaidBuffs`, or the row states a `Category` with `SingleAura` and the two copies bid
-against each other - the loser is deactivated, so the character sheet shows the buff once. Battle Shout
-is the worked example: both copies are worth the same, and
+against each other, so the character sheet shows the buff once. The higher bid deactivates the other
+copy; on a tie the incumbent keeps the category when its remaining duration is the longer one, which
+is why a druid casting its own Thorns is turned away while the raid's permanent copy is up - both deal
+the same 22, so the character strikes back for the same either way. Battle Shout is the worked example:
+both copies are worth the same and neither is permanent, and
 `TestPlayerBattleShoutTakesTheCategoryOnATie` holds the player's own to the tie. The rows this decides
 are `thorns`, `leader_of_the_pack`, `moonkin_aura` and `trueshot_aura`: `sim/druid/druid.go`,
 `sim/druid/feralcat` and `sim/druid/feralbear` raise the party's Leader of the Pack or Moonkin Aura
