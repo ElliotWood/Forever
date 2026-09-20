@@ -8,6 +8,7 @@ hand-transcribed literals.
 - [The value shapes](#the-value-shapes)
 - [Reaching a single effect](#reaching-a-single-effect)
 - [A tick the client keeps on another spell](#a-tick-the-client-keeps-on-another-spell)
+- [A number the client keeps on the judgement](#a-number-the-client-keeps-on-the-judgement)
 - [Talents](#talents)
 - [Worked examples](#worked-examples)
 - [Attack power](#attack-power)
@@ -181,6 +182,31 @@ bonusTargets := int(rank.Effect(shared.A_PERIODIC_DUMMY, 0).Value)   // 4
 
 Before the generator followed the description, that 4 was filed as the tick and the AoE families
 above had no tick at all.
+
+## A number the client keeps on the judgement
+
+Seal of Righteousness states no value. Rank 8 is an aura dummy at 1880, the damage each hit adds,
+and a second aura dummy whose points are 20286, its judgement. The tooltip renders the hit off the
+judgement - `$/87;20286s3 to $/25;20286s3` - and effect 3 of 20286 is a dummy the judgement does
+nothing with itself: the same 1880, with the coefficient the seal's own copy lacks. The seal carries
+0.1 on ranks 1-7 and nothing on rank 8; the judgement's dummy carries 0.058 on rank 1 rising to 0.2
+from rank 4.
+
+The generator follows that reference too. When a rank states no value and its description names an
+effect of a spell one of its own dummies points at, a dummy at that index is the rank's number and
+lands in `Direct`:
+
+```go
+d := spellData.SealOfRighteousness.BySpellID(20293).Direct.(shared.SpellDataFlat)
+d.Value   // 1880, which the seal's own effect 0 also says
+d.Coef    // 0.2, which only the judgement's dummy states
+```
+
+The `/87` and `/25` are the tooltip's rendering and are not applied: the value is kept whole and the
+proc's formula decides what a swing does with it. A named effect that is not a dummy is the pointed
+spell's own - Seal of Fury and Seal of the Crusader both name their judgement's damage or aura - and
+stays with it. A flat value does not say where it came from the way a tick does, so a Seal of
+Righteousness row whose `Coef` is the seal's own 0.1, or 0, is one where the reference did not resolve.
 
 ## Talents
 

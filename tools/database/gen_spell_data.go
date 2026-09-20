@@ -773,6 +773,10 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 				return generatedRow{}, fmt.Errorf("spell %d names a third ticking value on spell %d, and the row holds two",
 					spellID, e.OwnerSpellID)
 			}
+		// A dummy the description names on a spell the rank's own dummy points at is the rank's number
+		// kept there with its coefficient: Seal of Righteousness' per-hit damage, on its judgement.
+		case e.Effect == dbc.E_DUMMY && e.Named && row.Direct == nil:
+			row.Direct = amountOf(e)
 		case (e.Effect == dbc.E_SCHOOL_DAMAGE || IsWeaponDamageEffect(e.Effect)) && row.Direct == nil:
 			row.Direct = amountOf(e)
 		case e.Effect == dbc.E_HEAL && row.Heal == nil:
