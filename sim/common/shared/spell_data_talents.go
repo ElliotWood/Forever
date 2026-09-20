@@ -54,6 +54,12 @@ func (t SpellDataTableOf[T]) ProcChanceAt(rank int32) float64 {
 	return ladderValue(t, rank, func(row SpellData) float64 { return float64(row.ProcChance) }) / 100
 }
 
+// The procs per minute WithSpellDataPPM gave the rank, for NewLegacyPPMManager and its static form.
+// Rank 0 is untaken and answers 0.
+func (t SpellDataTableOf[T]) PPMAt(rank int32) float64 {
+	return ladderValue(t, rank, func(row SpellData) float64 { return row.PPM })
+}
+
 // For the case Effect cannot serve: two effects sharing an aura and misc value, as Tactical Mastery's
 // two threat modifiers do. The index is the client's EffectIndex, not the slice position.
 func (t SpellDataTableOf[T]) EffectAt(index int32) SpellDataEffectLadder[T] {

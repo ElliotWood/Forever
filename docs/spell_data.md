@@ -197,15 +197,35 @@ client's two. Either aura reads the same number; `SPELLMOD_DAMAGE` is the conven
 ### Proc chances
 
 `SpellAuraOptions.ProcChance` is a separate source from the effects, and `ProcChanceAt` reads it as the
-fraction a `ProcTrigger` takes:
+fraction a `ProcTrigger` takes. It is one input of three; the tooltip (`Spell.Description_lang`, colour
+codes stripped) and the effect ladders are the others, and together they put every proc in one of four
+shapes. Nothing about a proc is carried over from an earlier expansion on trust: a proc that was PPM
+may state a percentage now, and the other way round.
 
-```go
-ProcChance: spellData.SealFate.ProcChanceAt(rogue.Talents.SealFate)   // 0.20 at 1/5, 1.00 at 5/5
-```
+1. **The tooltip carries `$h%`.** The column is the chance:
+   `ProcChance: spellData.SealFate.ProcChanceAt(rogue.Talents.SealFate)` reads 0.20 at 1/5 and 1.00
+   at 5/5. Enrage is this shape too: a real 30% roll on damage taken.
+2. **The tooltip carries `$mN%` or `$sN%`.** The chance is that effect's ladder,
+   `Effect(...).FractionAt(rank)`, and the column is noise: Unbridled Wrath states 12/24/36/48/60 by
+   rank on its effect while the column reads a flat 60.
+3. **No chance in the tooltip and the column reads 100 or 101.** The aura fires on its own condition
+   and there is no roll: Flurry and Deep Wounds on a crit, Dual Wield Specialization on every hit. A
+   101 on something that is not a proc at all (Sunder Armor, Demoralizing Shout) means nothing.
+4. **No chance in the tooltip, no condition, and a value the tooltip contradicts.** A procs-per-minute
+   proc the client does not carry (`SpellProcsPerMinuteID` is 0 on every row). The PPM is
+   hand-supplied the way threat and attack power coefficients are, with the manual-review TODO
+   quoting the raw column on the line:
 
-**A 100 does not always mean a 100% roll.** Flurry and Enrage read 100 because they fire on their own
-condition - a crit - rather than on a chance, and the number the sim wants for those is somewhere else
-entirely. Check what the talent actually does before wiring it.
+   ```go
+   var windfuryWeapon = shared.WithSpellDataPPM(spellData.WindfuryWeapon, 2)      // one PPM, every rank
+   var stormstrike = shared.WithSpellDataPPMs(spellData.Stormstrike, map[int32]float64{1: 1, 2: 1.5})
+   dpm := shaman.NewLegacyPPMManager(windfuryWeapon.PPMAt(rank), core.ProcMaskMelee)
+   ```
+
+   The per-rank form has to name every rank, and both panic on a table that already carries a PPM.
+
+A `$<id>h` in a tooltip reads another spell's column, so the chance sits on that spell's table, not on
+the one the tooltip belongs to.
 
 ### The high end of an effect
 
