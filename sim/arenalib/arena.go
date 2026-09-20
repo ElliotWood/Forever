@@ -29,6 +29,7 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"github.com/wowsims/classic/sim/core"
@@ -47,6 +48,11 @@ const optimiseEnv = "ARENA_OPTIMISE"
 // Sim runs the talent search may spend per spec. The wall clock, not the answer, is what
 // this protects: the climb stops on its own when no single point move helps.
 const optimiseBudget = 900
+
+// Writes each spec's DPS-relevant talents and stops, without running the arena at all.
+// A survey rather than a search: one probe per talent, a couple of minutes a spec, and the
+// answer to "how much of the tree could an exhaustive pass actually have to visit".
+const relevanceEnv = "ARENA_RELEVANCE"
 
 // Enough that two builds a few DPS apart are distinguishable, and the whole arena still
 // finishes inside a CI job. A single-player run is far cheaper than the rankings page's
@@ -125,6 +131,10 @@ func Run(t *testing.T, spec Spec) {
 	}
 	gearSets := namesIn(t, filepath.Join(uiDir, "gear_sets"), ".gear.json")
 	rotations := namesIn(t, filepath.Join(uiDir, "apls"), ".apl.json")
+	if os.Getenv(relevanceEnv) != "" {
+		surveyRelevance(t, spec, uiDir, outDir, talents, gearSets, rotations)
+		return
+	}
 	if len(talents) == 0 || len(gearSets) == 0 {
 		t.Fatalf("%s: %d talent builds and %d gear sets, so there is nothing to rank", spec.Dir, len(talents), len(gearSets))
 	}
@@ -133,14 +143,22 @@ func Run(t *testing.T, spec Spec) {
 		rotations = []string{""}
 	}
 
-	results := []Result{}
+	type combo struct {
+		talent   TalentBuild
+		gear     string
+		rotation string
+	}
+	combos := []combo{}
 	for _, talent := range talents {
 		for _, gear := range gearSets {
 			for _, rotation := range rotations {
-				results = append(results, run(spec, uiDir, talent, gear, rotation))
+				combos = append(combos, combo{talent, gear, rotation})
 			}
 		}
 	}
+	results := parallelMap(len(combos), func(i int) Result {
+		return run(spec, uiDir, combos[i].talent, combos[i].gear, combos[i].rotation)
+	})
 
 	for i := range results {
 		results[i].Optimised = wasOptimised[results[i].Talents]
@@ -188,13 +206,34 @@ func Run(t *testing.T, spec Spec) {
 
 		found := map[string]string{}
 		totalRuns := 0
+
+		// Before climbing from anywhere, look everywhere worth looking. Only 15 to 28 talents
+		// per spec can move the number, and restricting to builds that max a talent or leave
+		// it alone puts the whole space in reach: a mage goes from 1,261,940,421 candidates to
+		// 130,983. What comes back is both a row of its own and the best possible place for a
+		// climb to start.
+		if best, considered, simulated, err := searchEverything(spec, uiDir, top, starts[0]); err != nil {
+			t.Fatalf("%s: %s", spec.Dir, err)
+		} else if best.Talents != "" {
+			totalRuns += simulated
+			found[best.Talents] = "best of every combination"
+			starts = append(starts, best)
+			t.Logf("%s: considered %d combinations, simulated %d, best %s", spec.Dir, considered, simulated, best.Talents)
+		}
+
 		for _, start := range starts {
 			build, runs, err := optimise(spec, uiDir, start, top.Gear, top.Rotation, share)
 			totalRuns += runs
 			if err != nil {
 				t.Fatalf("%s: %s", spec.Dir, err)
 			}
-			found[build.Talents] = build.Name
+			// First name wins. The enumeration runs before the climbs and labels its result
+			// "best of every combination", which is a much stronger statement than "found by
+			// climbing" - and when both land on the same build, which happens often, the
+			// stronger label is the true one and the one worth keeping.
+			if _, taken := found[build.Talents]; !taken {
+				found[build.Talents] = build.Name
+			}
 		}
 		for _, hold := range anchors {
 			build, runs, err := optimiseAnchored(spec, uiDir, starts[0], top.Gear, top.Rotation, share, &hold)
@@ -382,7 +421,7 @@ func namesIn(t *testing.T, dir string, suffix string) []string {
 	return names
 }
 
-func write(t *testing.T, path string, results []Result) {
+func write(t *testing.T, path string, results any) {
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatal(err)
 	}
@@ -453,4 +492,107 @@ func anchorsFor(class proto.Class) ([]anchor, error) {
 		}
 	}
 	return anchors, nil
+}
+
+// What the exhaustive question actually needs answering first: which talents can move this
+// spec's damage at all.
+//
+// Points in a talent that changes nothing are interchangeable - every legal way of dumping
+// them gives the same number - so they are not choices, they are filler. Only the talents
+// that do something multiply the space, and counting them is what says whether visiting all
+// of it is a job or a fantasy.
+func surveyRelevance(t *testing.T, spec Spec, uiDir string, outDir string, talents []TalentBuild, gearSets []string, rotations []string) {
+	if len(talents) == 0 || len(gearSets) == 0 {
+		t.Fatalf("%s: nothing to survey", spec.Dir)
+	}
+	rotation := ""
+	if len(rotations) > 0 {
+		rotation = rotations[0]
+	}
+	gear := gearSets[0]
+	for _, name := range gearSets {
+		if strings.Contains(name, "launch") {
+			gear = name
+			break
+		}
+	}
+
+	trees, err := loadTrees(spec.Class)
+	if err != nil {
+		t.Fatal(err)
+	}
+	base := parseTalents(trees, talents[0].Talents)
+
+	runs := atomic.Int64{}
+	measure := func(points allocation) float64 {
+		runs.Add(1)
+		return runAt(spec, uiDir, TalentBuild{Talents: points.String()}, gear, rotation, searchIterations).Dps
+	}
+
+	relevant, _ := relevantTalents(trees, base, measure, measure(base))
+
+	type survey struct {
+		Spec  string   `json:"spec"`
+		Class string   `json:"class"`
+		Trees []string `json:"trees"`
+		// Relevant talents per tree, by their index in row-major order - the same order the
+		// talents string uses, so a counting script can line them up without the sim.
+		Relevant map[string][]int `json:"relevant"`
+		Total    int              `json:"total"`
+		Runs     int              `json:"runs"`
+	}
+
+	out := survey{Spec: spec.Dir, Class: spec.Class.String(), Relevant: map[string][]int{}}
+	for i, tree := range trees {
+		out.Trees = append(out.Trees, tree.Name)
+		indices := []int{}
+		for j := range tree.Talents {
+			if relevant[[2]int{i, j}] {
+				indices = append(indices, j)
+			}
+			out.Total++
+		}
+		sort.Ints(indices)
+		out.Relevant[fmt.Sprint(i)] = indices
+	}
+
+	write(t, filepath.Join(outDir, spec.Dir+".relevance.json"), out)
+	counted := 0
+	for _, indices := range out.Relevant {
+		counted += len(indices)
+	}
+	t.Logf("%s: %d of %d talents can move the number, found in %d runs", spec.Dir, counted, out.Total, runs.Load())
+}
+
+// Enumerates every all-or-nothing build over the talents that can move this spec's damage,
+// and returns the best of them.
+//
+// See sim/arenalib/exhaustive.go for what that does and does not claim. In short: every one
+// of them is considered, the plausible ones are simulated, and the climb still runs
+// afterwards to catch what the scoring underrated.
+func searchEverything(spec Spec, uiDir string, top Result, start TalentBuild) (TalentBuild, int, int, error) {
+	trees, err := loadTrees(spec.Class)
+	if err != nil {
+		return TalentBuild{}, 0, 0, err
+	}
+	base := parseTalents(trees, start.Talents)
+
+	runs := atomic.Int64{}
+	measure := func(points allocation, iterations int32) float64 {
+		runs.Add(1)
+		return runAt(spec, uiDir, TalentBuild{Talents: points.String()}, top.Gear, top.Rotation, iterations).Dps
+	}
+
+	relevant, value := relevantTalents(trees, base, func(points allocation) float64 {
+		return measure(points, searchIterations)
+	}, measure(base, searchIterations))
+	if len(relevant) == 0 {
+		return TalentBuild{}, 0, int(runs.Load()), nil
+	}
+
+	points, considered, simulated := exhaustive(trees, relevant, value, measure)
+	if points == nil {
+		return TalentBuild{}, considered, int(runs.Load()), nil
+	}
+	return TalentBuild{Name: "best of every combination", Talents: points.String()}, considered, int(runs.Load()) + simulated, nil
 }

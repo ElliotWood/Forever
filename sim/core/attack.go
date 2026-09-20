@@ -22,6 +22,9 @@ type Weapon struct {
 	SwingSpeed           float64
 	NormalizedSwingSpeed float64
 	SpellSchool          SpellSchool
+	// Forever pays rage per swing at a rate that depends on this, so it has to survive the
+	// trip from the item into the abstraction. Nothing else reads it.
+	TwoHand bool
 }
 
 func (weapon *Weapon) DPS() float64 {
@@ -57,6 +60,7 @@ func newWeaponFromItem(item *Item, bonusDps float64) Weapon {
 		BaseDamageMax:        item.WeaponDamageMax + bonusDps*item.SwingSpeed,
 		SwingSpeed:           item.SwingSpeed,
 		NormalizedSwingSpeed: normalizedWeaponSpeed,
+		TwoHand:              item.HandType == proto.HandType_HandTypeTwoHand,
 		AttackPowerPerDPS:    DefaultAttackPowerPerDPS,
 	}
 }

@@ -85,13 +85,27 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 				return
 			}
 
-			damage := result.Damage
-			if result.Outcome.Matches(OutcomeDodge | OutcomeParry) {
-				// Rage is still generated for dodges/parries, based on the damage it WOULD have done.
-				damage = result.PreOutcomeDamage
+			var generatedRage float64
+			if sim.IsForever() {
+				// Flat per swing, and nothing for a swing that did not land - which includes
+				// dodges and parries, where Classic still pays out on the damage it would
+				// have done. See ForeverWhiteHitRage.
+				if result.Outcome.Matches(OutcomeDodge | OutcomeParry) {
+					return
+				}
+				weapon := unit.AutoAttacks.MH()
+				if spell.ProcMask == ProcMaskMeleeOHAuto {
+					weapon = unit.AutoAttacks.OH()
+				}
+				generatedRage = ForeverWhiteHitRage(weapon)
+			} else {
+				damage := result.Damage
+				if result.Outcome.Matches(OutcomeDodge | OutcomeParry) {
+					// Rage is still generated for dodges/parries, based on the damage it WOULD have done.
+					damage = result.PreOutcomeDamage
+				}
+				generatedRage = damage * 7.5 / rageConversion
 			}
-
-			generatedRage := damage * 7.5 / rageConversion
 			generatedRage *= unit.rageBar.damageDealtMultiplier
 			if spell.ProcMask == ProcMaskMeleeOHAuto {
 				generatedRage *= unit.rageBar.offHandDealtMultiplier

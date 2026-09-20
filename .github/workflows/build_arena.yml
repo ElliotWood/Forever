@@ -18,16 +18,7 @@ on:
       - 'ui/core/spells/**'
       - 'tools/arena/**'
       - '.github/workflows/build_arena.yml'
-  # The talent search is hours of work, so it gets its own slot rather than riding on every
-  # push. Sunday morning UTC, and on demand.
-  schedule:
-    - cron: '0 4 * * 0'
   workflow_dispatch:
-    inputs:
-      optimise:
-        description: 'Search the talent trees as well (hours, not minutes)'
-        type: boolean
-        default: false
 
 # Each run commits to master, so two of them racing means the loser is rejected as a
 # non fast forward. Queued rather than cancelled: a cancelled run leaves the leaderboard
@@ -42,9 +33,13 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     # Several hundred runs at five thousand iterations each. The specs go in parallel, but
-    # rogue alone is most of it: nine gear sets times seven rotations. The talent search adds
-    # up to nine hundred runs per spec on top, which is why it does not run on every push.
-    timeout-minutes: 350
+    # rogue alone is most of it: nine gear sets times seven rotations.
+    #
+    # The talent search does NOT run here. A GitHub-hosted job is hard-capped at six hours,
+    # which the exhaustive pass does not fit inside at any spec size worth doing, so the
+    # searches run on a host with no ceiling (tools/arena/run-local.ps1) and this workflow is
+    # only the fast rebuild that keeps the leaderboard honest after a push.
+    timeout-minutes: 120
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -77,9 +72,9 @@ jobs:
         run: go test --tags=with_db -timeout 340m -run TestArena $(go list ./sim/... | grep -v '/sim/web')
         env:
           ARENA_OUT: ${{ github.workspace }}/arena-out
-          # Empty on a push, set on the schedule and when asked for. An env var that is the
-          # empty string is the same as unset to the runner, which is what the flag checks.
-          ARENA_OPTIMISE: ${{ (github.event_name == 'schedule' || inputs.optimise) && '1' || '' }}
+          # Never set here. Searching is the part that does not fit in a six hour job, and a
+          # search that runs out of time commits nothing, so this workflow deliberately only
+          # re-simulates builds that already exist.
 
       - name: Merge and score
         run: go run ./tools/arena arena-out ui/arena/results.json

@@ -33,6 +33,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync/atomic"
 
 	"github.com/wowsims/classic/sim/core/proto"
 )
@@ -228,25 +229,52 @@ func (points allocation) valid(trees []tree) bool {
 //
 // Conservative in the direction that matters: a talent is dropped only when the number does
 // not move at all, so anything with the faintest effect stays in the search.
-func relevantTalents(trees []tree, base allocation, measure func(allocation) float64, baseDps float64) map[[2]int]bool {
+func relevantTalents(trees []tree, base allocation, measure func(allocation) float64, baseDps float64) (map[[2]int]bool, map[[2]int]float64) {
 	relevant := map[[2]int]bool{}
+	// How much the number moved, kept because it is the only free estimate of a talent's
+	// worth available - and free is what makes scoring a hundred thousand builds possible.
+	value := map[[2]int]float64{}
+
+	// One probe per talent, and every probe is independent, so they go out together. Fifty
+	// odd sim runs is the cheapest part of a search but it is paid once per start and once
+	// per anchor, which adds up to real minutes a spec.
+	type probe struct {
+		at       [2]int
+		points   allocation
+		emptying bool
+	}
+	probes := []probe{}
 	for i, tree := range trees {
 		for j, t := range tree.Talents {
 			if t.NotSimulated {
 				continue
 			}
-			probe := base.clone()
-			if probe[i][j] < t.MaxPoints {
-				probe[i][j] = t.MaxPoints
+			points := base.clone()
+			// Maxed where it was not, emptied where it was, so the delta is always between
+			// having the talent and not having it rather than between two partial ranks.
+			emptying := points[i][j] >= t.MaxPoints
+			if emptying {
+				points[i][j] = 0
 			} else {
-				probe[i][j] = 0
+				points[i][j] = t.MaxPoints
 			}
-			if measure(probe) != baseDps {
-				relevant[[2]int{i, j}] = true
-			}
+			probes = append(probes, probe{at: [2]int{i, j}, points: points, emptying: emptying})
 		}
 	}
-	return relevant
+
+	dps := parallelMap(len(probes), func(k int) float64 { return measure(probes[k].points) })
+	for k, p := range probes {
+		moved := dps[k] - baseDps
+		if moved == 0 {
+			continue
+		}
+		relevant[p.at] = true
+		if p.emptying {
+			moved = -moved
+		}
+		value[p.at] = moved
+	}
+	return relevant, value
 }
 
 // One evaluated build.
@@ -289,9 +317,9 @@ func optimiseAnchored(spec Spec, uiDir string, start TalentBuild, gear string, r
 		return start, 0, fmt.Errorf("%s is not a legal build to start from", start.Name)
 	}
 
-	runs := 0
+	runs := atomic.Int64{}
 	measure := func(points allocation) float64 {
-		runs++
+		runs.Add(1)
 		return runAt(spec, uiDir, TalentBuild{Talents: points.String()}, gear, rotation, searchIterations).Dps
 	}
 
@@ -314,14 +342,14 @@ func optimiseAnchored(spec Spec, uiDir string, start TalentBuild, gear string, r
 	}
 
 	best := candidate{points: current, dps: measure(current)}
-	relevant := relevantTalents(trees, current, measure, best.dps)
+	relevant, _ := relevantTalents(trees, current, measure, best.dps)
 
 	// Spend anything the starting build left on the table before trading points around.
 	// Not hypothetical: the mage Frost community build spends 49 of its 51 points, and
 	// every run of it on this site has been two points short of a character. A trade-only
 	// search would have carried that forward forever, because moving a point never notices
 	// that there is a point nobody moved.
-	for best.points.total() < talentBudget && runs < budget {
+	for best.points.total() < talentBudget && int(runs.Load()) < budget {
 		added := false
 		for _, add := range rank(trees, best.points, measure, best.dps, true, relevant) {
 			trial := best.points.clone()
@@ -338,7 +366,7 @@ func optimiseAnchored(spec Spec, uiDir string, start TalentBuild, gear string, r
 		}
 	}
 
-	for step := 0; step < maxSteps && runs < budget; step++ {
+	for step := 0; step < maxSteps && int(runs.Load()) < budget; step++ {
 		removals := rank(trees, best.points, measure, best.dps, false, relevant)
 		additions := rank(trees, best.points, measure, best.dps, true, relevant)
 
@@ -347,7 +375,7 @@ func optimiseAnchored(spec Spec, uiDir string, start TalentBuild, gear string, r
 		improved := false
 		for _, add := range topN(additions, 3) {
 			for _, remove := range topN(removals, 3) {
-				if runs >= budget {
+				if int(runs.Load()) >= budget {
 					break
 				}
 				if add.tree == remove.tree && add.talent == remove.talent {
@@ -382,7 +410,7 @@ func optimiseAnchored(spec Spec, uiDir string, start TalentBuild, gear string, r
 	if best.points.String() != start.Talents {
 		name = fmt.Sprintf("%s, optimised", start.Name)
 	}
-	return TalentBuild{Name: name, Talents: best.points.String()}, runs, nil
+	return TalentBuild{Name: name, Talents: best.points.String()}, int(runs.Load()), nil
 }
 
 type scoredMove struct {
