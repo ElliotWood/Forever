@@ -26,7 +26,7 @@ func (warrior *Warrior) registerRevenge() {
 		Name:               "Revenge - Trigger",
 		TriggerImmediately: true,
 		Outcome:            core.OutcomeBlock | core.OutcomeDodge | core.OutcomeParry,
-		Callback:           core.CallbackOnSpellHitDealt,
+		Callback:           core.CallbackOnSpellHitTaken,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			aura.Activate(sim)
 		},
