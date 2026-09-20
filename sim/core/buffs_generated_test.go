@@ -317,6 +317,92 @@ func measureGeneratedBuffStats(char *Character) {
 	char.stats = char.SortAndApplyStatDependencies(char.stats).FloorGameStats()
 }
 
+// Every buff a pet is given or denied, field by field, for a pet that is out
+// when the fight starts and one that is summoned during it.
+func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
+	ticked := func() (*proto.RaidBuffs, *proto.PartyBuffs, *proto.IndividualBuffs) {
+		return &proto.RaidBuffs{
+				Bloodlust: true, Thorns: true, ArcaneBrilliance: true, DivineSpirit: true,
+				GiftOfTheWild: true, PowerWordFortitude: true, ShadowProtection: true,
+			},
+			&proto.PartyBuffs{
+				WindfuryTotem: true, Drums: proto.Drums_GreaterDrumsOfBattle,
+				BattleShout: true, GraceOfAirTotem: true, MoonkinAura: true, LeaderOfThePack: true,
+				AtieshMage: 2,
+			},
+			&proto.IndividualBuffs{
+				Innervates: 1, PowerInfusions: 1, ShadowPriestDps: 500,
+				BlessingOfKings: true, BlessingOfMight: true, BlessingOfWisdom: true,
+				BlessingOfSanctuary: true, BlessingOfSalvation: true, UnleashedRage: true,
+			}
+	}
+
+	owner := newGeneratedBuffTestCharacter()
+	pet := &Pet{Character: *newGeneratedBuffTestCharacter(), Owner: owner, enabledOnStart: true}
+
+	raid, party, individual := ticked()
+	applyGeneratedPetBuffs(pet, raid, party, individual)
+
+	// Stripped whenever the pet is out: the owner casts Bloodlust on it during
+	// the fight, Thorns and the drums are not given to it, it cannot gain an
+	// extra attack, and nobody spends a cooldown on a pet.
+	if raid.Bloodlust || raid.Thorns || party.WindfuryTotem ||
+		party.Drums != proto.Drums_DrumsUnknown || individual.Innervates != 0 || individual.PowerInfusions != 0 {
+		t.Errorf("a pet out from the start kept %v, %v, %v", raid, party, individual)
+	}
+
+	// Everything else the party grants is still the pet's.
+	if !party.BattleShout || !party.GraceOfAirTotem || !party.MoonkinAura ||
+		!party.LeaderOfThePack || party.AtieshMage != 2 || !individual.UnleashedRage {
+		t.Errorf("a pet out from the start lost a buff no policy strips: %v, %v", party, individual)
+	}
+	// A pet that was there from the start keeps every targeted buff.
+	if !raid.ArcaneBrilliance || !raid.DivineSpirit || !raid.GiftOfTheWild ||
+		!raid.PowerWordFortitude || !raid.ShadowProtection || !individual.BlessingOfKings ||
+		!individual.BlessingOfMight || !individual.BlessingOfWisdom ||
+		!individual.BlessingOfSanctuary || !individual.BlessingOfSalvation ||
+		individual.ShadowPriestDps != 500 {
+		t.Errorf("a pet out from the start lost a targeted buff: %v, %v", raid, individual)
+	}
+
+	late := &Pet{Character: *newGeneratedBuffTestCharacter(), Owner: owner}
+	raid, party, individual = ticked()
+	applyGeneratedPetBuffs(late, raid, party, individual)
+
+	if raid.ArcaneBrilliance || raid.DivineSpirit || raid.GiftOfTheWild ||
+		raid.PowerWordFortitude || raid.ShadowProtection {
+		t.Errorf("a pet summoned late kept a raid buff cast at the pull: %v", raid)
+	}
+	if individual.BlessingOfKings || individual.BlessingOfMight || individual.BlessingOfWisdom ||
+		individual.BlessingOfSanctuary || individual.BlessingOfSalvation || individual.ShadowPriestDps != 0 {
+		t.Errorf("a pet summoned late kept a targeted individual buff: %v", individual)
+	}
+	if !individual.UnleashedRage {
+		t.Error("a pet summoned late lost Unleashed Rage, which no policy strips")
+	}
+	if !party.BattleShout || !party.GraceOfAirTotem {
+		t.Error("a pet summoned late lost a party aura, which no policy strips")
+	}
+}
+
+// A neck is inherited by standing next to the owner who wears it.
+func TestGeneratedPetBuffsInheritTheOwnersNecks(t *testing.T) {
+	owner := newGeneratedBuffTestCharacter()
+	MakePermanent(BraidedEterniumChainAura(owner))
+	owner.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+	pet := &Pet{Character: *newGeneratedBuffTestCharacter(), Owner: owner, enabledOnStart: true}
+	party := &proto.PartyBuffs{}
+	applyGeneratedPetBuffs(pet, &proto.RaidBuffs{}, party, &proto.IndividualBuffs{})
+
+	if !party.BraidedEterniumChain {
+		t.Error("the pet did not inherit the neck its owner wears")
+	}
+	if party.EyeOfTheNight || party.ChainOfTheTwilightOwl || party.JadePendantOfBlasting {
+		t.Errorf("the pet inherited a neck the owner does not wear: %v", party)
+	}
+}
+
 // Grace of Air is the row whose uptime another field decides: with totem
 // twisting on it is 9 seconds long and re-cast every 10, and without it the
 // totem simply stands.

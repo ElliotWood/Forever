@@ -142,6 +142,8 @@ func SynthInnervatesAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
+// func SynthBraidedEterniumChainAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // braided_eternium_chain, KindAbsent: the neck has no Item row
+
 // Atiesh - Mage - https://www.wowhead.com/forever/spell=28142
 func SynthAtieshMageValue(talentPoints int32) float64 {
 	return 2.0
@@ -204,5 +206,22 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if raid.Thorns {
 		MakePermanent(SynthThornsAura(&char.Unit, false, 0))
+	}
+}
+
+// What a pet is given of its owner's buffs, by the policy each manifest row
+// states. A buff the owner's raid casts on the party reaches the pet as well
+// unless the row says otherwise: PetStrip is for one the pet cannot use or is
+// given during the fight instead, PetInheritOwnerAura for a neck the pet picks
+// up by standing next to the wearer, and PetStripWhenSummonedLate for one that
+// is cast on whoever is there when the fight starts. PetCapAtRegular says a
+// pet's share of the buff is the unimproved amount, which every row that states
+// it now grants anyway, so nothing is emitted for it.
+func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
+	raid.Thorns = false
+	party.BraidedEterniumChain = party.BraidedEterniumChain || pet.Owner.HasAura("Braided Eternium Chain")
+
+	if !pet.enabledOnStart {
+		individual.BlessingOfKings = false
 	}
 }

@@ -366,6 +366,12 @@ func (res *buffResolver) resolve(spec buffmanifest.BuffSpec) (ResolvedBuff, erro
 		return row, err
 	}
 
+	// A pet inherits the buff by finding the aura on its owner, so the row has
+	// to name it whether or not the client describes the buff at all.
+	if spec.Pet == buffmanifest.PetInheritOwnerAura && spec.Label == "" && spec.Name == "" && spec.Category == "" {
+		return row, fmt.Errorf("states %s but names no aura for the pet to find on its owner", spec.Pet)
+	}
+
 	switch spec.Kind {
 	case buffmanifest.KindAbsent:
 		row.unsupported("%s", spec.Notes)
@@ -1690,6 +1696,7 @@ func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 	var rendered bytes.Buffer
 	if err := tmpl.Execute(&rendered, map[string]any{
 		"Rows": rows, "NeedsTime": needsTime, "NeedsStats": needsStats,
+		"PetRows": petBuffRows(resolved),
 	}); err != nil {
 		return nil, fmt.Errorf("rendering %s: %w", name, err)
 	}
@@ -1701,6 +1708,76 @@ func renderBuffFile(resolved []ResolvedBuff, debuffs bool) ([]byte, error) {
 		return nil, fmt.Errorf("generated %s is not valid Go: %w", name, err)
 	}
 	return out, nil
+}
+
+// petBuffRow is one line of applyGeneratedPetBuffs: the field the policy reads,
+// what the field is set to when the pet does not get the buff, and the aura the
+// pet inherits by standing next to its owner.
+type petBuffRow struct {
+	Access    string
+	Zero      string
+	OwnerAura string
+	Strip     bool
+	Inherit   bool
+	StripLate bool
+}
+
+// Every row whose pet policy says something, in manifest order. A row the
+// generator could not express is included too: the policy is about the proto
+// field, which the hand-written apply block reads just the same.
+func petBuffRows(resolved []ResolvedBuff) []petBuffRow {
+	var rows []petBuffRow
+	for _, row := range resolved {
+		if row.Scope == buffmanifest.ScopeDebuff || row.Pet == buffmanifest.PetNormal {
+			continue
+		}
+		out := petBuffRow{
+			Access:    buffScopeField(row.Scope) + "." + row.GoField(),
+			Zero:      buffProtoZero(row.Proto),
+			Strip:     row.Pet == buffmanifest.PetStrip,
+			Inherit:   row.Pet == buffmanifest.PetInheritOwnerAura,
+			StripLate: row.Pet == buffmanifest.PetStripWhenSummonedLate,
+		}
+		if out.Inherit {
+			out.OwnerAura = strconv.Quote(petOwnerAura(row))
+		}
+		rows = append(rows, out)
+	}
+	return rows
+}
+
+// The label of the aura the owner carries, which for a row the client does not
+// describe is the name its hand-written constructor registers, and the manifest
+// keeps that as the row's exclusive category.
+func petOwnerAura(row ResolvedBuff) string {
+	if label := buffLabel(row); label != "" {
+		return label
+	}
+	return row.Category
+}
+
+func buffProtoZero(protoType buffmanifest.BuffProtoType) string {
+	switch protoType {
+	case buffmanifest.ProtoBool:
+		return "false"
+	case buffmanifest.ProtoTristate:
+		return "proto.TristateEffect_TristateEffectMissing"
+	case buffmanifest.ProtoEnumDrums:
+		return "proto.Drums_DrumsUnknown"
+	}
+	return "0"
+}
+
+func buffScopeField(scope buffmanifest.BuffScope) string {
+	switch scope {
+	case buffmanifest.ScopeRaid:
+		return "raid"
+	case buffmanifest.ScopeParty:
+		return "party"
+	case buffmanifest.ScopeDebuff:
+		return "debuffs"
+	}
+	return "individual"
 }
 
 func renderRow(row ResolvedBuff) buffRow {
@@ -1863,14 +1940,9 @@ func buffConfigLiteral(row ResolvedBuff, rendered buffRow) string {
 // scope message rather than its own field, because a driven buff often reads a
 // second one: Grace of Air is 9 seconds long while the party is twisting totems.
 func buffApply(row ResolvedBuff) (string, string, bool) {
-	unit, field := "char", "individual"
-	switch row.Scope {
-	case buffmanifest.ScopeRaid:
-		field = "raid"
-	case buffmanifest.ScopeParty:
-		field = "party"
-	case buffmanifest.ScopeDebuff:
-		field, unit = "debuffs", "target"
+	unit, field := "char", buffScopeField(row.Scope)
+	if row.Scope == buffmanifest.ScopeDebuff {
+		unit = "target"
 	}
 	access := field + "." + row.GoField()
 

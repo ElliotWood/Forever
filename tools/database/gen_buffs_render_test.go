@@ -44,6 +44,7 @@ func syntheticBuffRows() []ResolvedBuff {
 				Field: "blessing_of_kings", Scope: buffmanifest.ScopeIndividual,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindStatPct,
 				Go: "SynthBlessingOfKings", Name: "Blessing of Kings",
+				Pet: buffmanifest.PetStripWhenSummonedLate,
 			},
 			SpellID: 20217, DurationMs: 3600000, Supported: true,
 			Stats: []StatAmount{
@@ -108,6 +109,15 @@ func syntheticBuffRows() []ResolvedBuff {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
+				Field: "braided_eternium_chain", Scope: buffmanifest.ScopeParty,
+				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindAbsent,
+				Go: "SynthBraidedEterniumChain", Category: "Braided Eternium Chain",
+				Pet: buffmanifest.PetInheritOwnerAura,
+			},
+			Reason: "the neck has no Item row",
+		},
+		{
+			BuffSpec: buffmanifest.BuffSpec{
 				Field: "atiesh_mage", Scope: buffmanifest.ScopeParty,
 				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindItemCount,
 				Go: "SynthAtieshMage", Anchor: 28142, Label: "Atiesh - Mage",
@@ -120,6 +130,7 @@ func syntheticBuffRows() []ResolvedBuff {
 				Field: "thorns", Scope: buffmanifest.ScopeRaid,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindDamageShield,
 				Go: "SynthThorns", Name: "Thorns", Category: "Thorns",
+				Pet: buffmanifest.PetStrip,
 			},
 			SpellID: 9910, DurationMs: 600000, SchoolMask: 8, Supported: true,
 			Effects:       []ResolvedEffect{{Index: 0, Effect: 6, Aura: 15, Value: 22}},

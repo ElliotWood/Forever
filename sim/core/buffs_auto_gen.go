@@ -954,3 +954,38 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 		drivePowerInfusions(char, individual)
 	}
 }
+
+// What a pet is given of its owner's buffs, by the policy each manifest row
+// states. A buff the owner's raid casts on the party reaches the pet as well
+// unless the row says otherwise: PetStrip is for one the pet cannot use or is
+// given during the fight instead, PetInheritOwnerAura for a neck the pet picks
+// up by standing next to the wearer, and PetStripWhenSummonedLate for one that
+// is cast on whoever is there when the fight starts. PetCapAtRegular says a
+// pet's share of the buff is the unimproved amount, which every row that states
+// it now grants anyway, so nothing is emitted for it.
+func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
+	party.WindfuryTotem = false
+	party.Drums = proto.Drums_DrumsUnknown
+	raid.Bloodlust = false
+	raid.Thorns = false
+	individual.Innervates = 0
+	individual.PowerInfusions = 0
+	party.BraidedEterniumChain = party.BraidedEterniumChain || pet.Owner.HasAura("Braided Eternium Chain")
+	party.ChainOfTheTwilightOwl = party.ChainOfTheTwilightOwl || pet.Owner.HasAura("Chain of the Twilight Owl")
+	party.EyeOfTheNight = party.EyeOfTheNight || pet.Owner.HasAura("Eye of the Night")
+	party.JadePendantOfBlasting = party.JadePendantOfBlasting || pet.Owner.HasAura("Jade Pendant of Blasting")
+
+	if !pet.enabledOnStart {
+		individual.ShadowPriestDps = 0
+		raid.ArcaneBrilliance = false
+		individual.BlessingOfKings = false
+		raid.DivineSpirit = false
+		raid.GiftOfTheWild = false
+		raid.PowerWordFortitude = false
+		individual.BlessingOfMight = false
+		individual.BlessingOfWisdom = false
+		individual.BlessingOfSanctuary = false
+		individual.BlessingOfSalvation = false
+		raid.ShadowProtection = false
+	}
+}

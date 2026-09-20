@@ -650,52 +650,20 @@ func ApplyInspiration(character *Character, uptime float64) {
 	ApplyFixedUptimeAura(inspirationAura, uptime, time.Millisecond*2500, 1)
 }
 
-// Applies buffs to pets.
+// Applies buffs to pets. Which of the owner's buffs a pet is given is each
+// manifest row's pet policy, so the copies below are only there to keep
+// applyGeneratedPetBuffs from writing into the raid's own configuration.
 func applyPetBuffEffects(petAgent PetAgent, raidBuffs *proto.RaidBuffs, partyBuffs *proto.PartyBuffs, individualBuffs *proto.IndividualBuffs) {
 	// Summoned pets, like Mage Water Elemental, aren't around to receive raid buffs.
 	if petAgent.GetPet().IsGuardian() {
 		return
 	}
 
-	// We need to modify the buffs a bit because some things are applied to pets by
-	// the owner during combat (Bloodlust) or don't make sense for a pet.
 	raidBuffs = googleProto.Clone(raidBuffs).(*proto.RaidBuffs)
-	raidBuffs.Bloodlust = false
-	raidBuffs.Thorns = false
-
 	partyBuffs = googleProto.Clone(partyBuffs).(*proto.PartyBuffs)
-	// Pets can't get extra attacks, doh!
-	partyBuffs.WindfuryTotem = false
-	// Neck auras are automatically inherited when a unit gets into range (40 yds)
-	partyBuffs.ChainOfTheTwilightOwl = partyBuffs.ChainOfTheTwilightOwl || petAgent.GetPet().Owner.HasAura(ChainOfTheTwilightOwlAuraLabel)
-	partyBuffs.EyeOfTheNight = partyBuffs.EyeOfTheNight || petAgent.GetPet().Owner.HasAura(EyeOfTheNightAuraLabel)
-	partyBuffs.BraidedEterniumChain = partyBuffs.BraidedEterniumChain || petAgent.GetPet().Owner.HasAura(BraidedEterniumChainAuraLabel)
-	partyBuffs.JadePendantOfBlasting = partyBuffs.JadePendantOfBlasting || petAgent.GetPet().Owner.HasAura(JadePendantOfBlastingAuraLabel)
-
 	individualBuffs = googleProto.Clone(individualBuffs).(*proto.IndividualBuffs)
-	individualBuffs.Innervates = 0
-	individualBuffs.PowerInfusions = 0
 
-	partyBuffs.Drums = proto.Drums_DrumsUnknown
-
-	if !petAgent.GetPet().enabledOnStart {
-		// Auras etc still apply, but not targeted buffs (usually)
-		// Strip targeted buffs that require presence at fight start
-		raidBuffs.ArcaneBrilliance = false
-		raidBuffs.DivineSpirit = false
-		raidBuffs.GiftOfTheWild = false
-		raidBuffs.PowerWordFortitude = false
-		raidBuffs.ShadowProtection = false
-		raidBuffs.Thorns = false
-		individualBuffs.BlessingOfMight = false
-		individualBuffs.BlessingOfKings = false
-		individualBuffs.BlessingOfWisdom = false
-
-		// Only individual buff that would apply is Unleashed Rage.
-		unleashedRage := individualBuffs.UnleashedRage
-		individualBuffs = &proto.IndividualBuffs{}
-		individualBuffs.UnleashedRage = unleashedRage
-	}
+	applyGeneratedPetBuffs(petAgent.GetPet(), raidBuffs, partyBuffs, individualBuffs)
 
 	applyBuffEffects(petAgent, raidBuffs, partyBuffs, individualBuffs)
 }
