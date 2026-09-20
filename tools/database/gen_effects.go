@@ -258,12 +258,17 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 	groupMapProc := map[string]Group{}
 	enchantSpellEffects := map[int]*dbc.SpellEffect{}
 
-	// Several spells can enchant the same item -- 20033 and 27102 both apply Unholy Weapon --
-	// and SpellEffectsById is a map, so whichever landed last changed from run to run and the
-	// generated file churned. Take the lowest spell id, which is the original rank.
+	// Several spells can grant the same enchant -- an enchant that was re-taught
+	// by a later expansion's recipe has one spell per version, up to five here.
+	// Map iteration order is randomized, so keep the lowest spell ID rather than
+	// letting whichever one is visited last win and churn the generated file.
 	for _, effect := range instance.SpellEffectsById {
-		if effect.EffectType != dbc.E_ENCHANT_ITEM {
-			continue
+		if effect.EffectType == dbc.E_ENCHANT_ITEM {
+			enchantID := effect.EffectMiscValues[0]
+			if existing, ok := enchantSpellEffects[enchantID]; ok && existing.SpellID <= effect.SpellID {
+				continue
+			}
+			enchantSpellEffects[enchantID] = &effect
 		}
 		enchantID := effect.EffectMiscValues[0]
 		if existing, ok := enchantSpellEffects[enchantID]; ok && existing.SpellID <= effect.SpellID {

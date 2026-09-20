@@ -89,6 +89,7 @@
 		"TraitSubTree",
 		"TraitEdge",
 		"TraitNodeGroupXTraitCond",
+		"PlayerExpectedStat",
 		"SpellCastTimes",
 		"SpellCastingRequirements"
 	]

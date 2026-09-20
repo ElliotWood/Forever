@@ -59,7 +59,7 @@ func RegisterMage() {
 		func(player *proto.Player, spec interface{}) {
 			playerSpec, ok := spec.(*proto.Player_Mage)
 			if !ok {
-				panic("Invalid spec value for Survival Hunter!")
+				panic("Invalid spec value for Mage!")
 			}
 			player.Spec = playerSpec
 		},

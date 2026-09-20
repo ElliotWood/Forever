@@ -34,12 +34,12 @@ describe('UnitStat', () => {
 		}
 	});
 
-	// TBC splits melee and spell ratings where MoP unifies them; a shared conversion constant here
-	// is the kind of wrong answer that never fails to compile.
-	it('converts melee and spell ratings with their own TBC constants', () => {
+	// Melee and spell hit each convert through their own constant. Forever's CombatRatings
+	// gametable happens to give both the same value at level 60, where TBC's differed, so an
+	// accidentally shared constant would pass unnoticed today and break on the next retune.
+	it('converts melee and spell ratings through their own constants', () => {
 		expect(UnitStat.fromStat(Stat.StatMeleeHitRating).convertRatingToPercent(Mechanics.PHYSICAL_HIT_RATING_PER_HIT_PERCENT)).toBeCloseTo(1);
 		expect(UnitStat.fromStat(Stat.StatSpellHitRating).convertRatingToPercent(Mechanics.SPELL_HIT_RATING_PER_HIT_PERCENT)).toBeCloseTo(1);
-		expect(Mechanics.PHYSICAL_HIT_RATING_PER_HIT_PERCENT).not.toBe(Mechanics.SPELL_HIT_RATING_PER_HIT_PERCENT);
 	});
 
 	// TBC-only second parameter: ReducedCritTakenPercent has two possible rating sources.

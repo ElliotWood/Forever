@@ -215,9 +215,10 @@ var ClassBaseStats = map[proto.Class]stats.Stats{
 // values used to be computed off the level 90 row -- a MoP-port leftover that was never
 // updated for TBC and was wrong by two expansions at level 60.
 //
-// TODO: that file is MoP-era, not a beta extraction. The beta ships its own
-// spellscaling.txt but every class column in it is 0 at every level, so there is no
-// build-native confirmation of these numbers and none is currently obtainable.
+// TODO: these numbers came from a MoP-era copy of that gametable. The checked-in
+// assets/db_inputs/basestats/SpellScaling.txt is now the beta's own extraction, and
+// every class column in it is 0 at every level, so there is no build-native
+// confirmation of these numbers and none is currently obtainable.
 var ClassBaseScaling = map[proto.Class]float64{
 	proto.Class_ClassUnknown: 49.000000,
 	proto.Class_ClassWarrior: 491.949980,

@@ -33,12 +33,12 @@ describe('statDisplayString, defense rating', () => {
 
 	it('renders as a skill level with no percent suffix and no decimals', () => {
 		const stats = new Stats().withStat(Stat.StatDefenseRating, Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL * 10);
-		expect(show(stats, defense)).toBe('15 (10)');
+		expect(show(stats, defense)).toBe(`${Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL * 10} (10)`);
 	});
 
 	it('adds the base defense skill when the delta includes the base stage', () => {
 		const stats = new Stats().withStat(Stat.StatDefenseRating, Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL * 10);
-		expect(show(stats, defense, true)).toBe('15 (310)');
+		expect(show(stats, defense, true)).toBe(`${Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL * 10} (310)`);
 	});
 
 	it('shows the skill level at zero, which the percent-bearing stats hide', () => {

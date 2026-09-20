@@ -287,6 +287,10 @@ func (shaman *Shaman) registerManaSpringTotemSpell() {
 	// shaman.RegisterSpell(config)
 }
 
+// Commented out upstream of this fork by "only 1 totem per type" (53970b1d84), not by
+// the Forever stubbing pass, and never called since. It is kept rather than reduced to
+// the usual empty-body no-op because the body is the only record of how the totem was
+// modelled; shaman.HealingStreamTotem stays nil until someone revisits totem slots.
 /* func (shaman *Shaman) registerHealingStreamTotemSpell() {
 	config := shaman.newTotemSpellConfig(3, 5394, SpellMaskBasicTotem, time.Second)
 	hsHeal := shaman.RegisterSpell(core.SpellConfig{

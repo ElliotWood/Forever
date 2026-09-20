@@ -10,12 +10,12 @@ import (
 )
 
 const ExpertisePerQuarterPercentReduction = 2.5
-const DefenseRatingPerDefenseLevel = 1.500000
+const DefenseRatingPerDefenseLevel = 1.000000
 const DodgeRatingPerDodgePercent = 12.000000
 const ParryRatingPerParryPercent = 15.000000
 const BlockRatingPerBlockPercent = 5.000000
 const PhysicalHitRatingPerHitPercent = 10.000000
-const SpellHitRatingPerHitPercent = 8.000000
+const SpellHitRatingPerHitPercent = 10.000000
 const PhysicalCritRatingPerCritPercent = 14.000000
 const SpellCritRatingPerCritPercent = 14.000000
 const PhysicalHasteRatingPerHastePercent = 10.000000
@@ -24,26 +24,26 @@ const SpellHasteRatingPerHastePercent = 10.000000
 var CritPerAgiMaxLevel = map[proto.Class]float64{
 	proto.Class_ClassUnknown: 0.0,
 	proto.Class_ClassWarrior: 0.05000000,
-	proto.Class_ClassPaladin: 0.05120000,
-	proto.Class_ClassHunter:  0.03010000,
-	proto.Class_ClassRogue:   0.03550000,
-	proto.Class_ClassPriest:  0.04540000,
-	proto.Class_ClassShaman:  0.05120000,
-	proto.Class_ClassMage:    0.04410000,
+	proto.Class_ClassPaladin: 0.05060000,
+	proto.Class_ClassHunter:  0.01890000,
+	proto.Class_ClassRogue:   0.03450000,
+	proto.Class_ClassPriest:  0.05000000,
+	proto.Class_ClassShaman:  0.05080000,
+	proto.Class_ClassMage:    0.05140000,
 	proto.Class_ClassWarlock: 0.05000000,
-	proto.Class_ClassDruid:   0.04930000,
+	proto.Class_ClassDruid:   0.05000000,
 }
 var CritPerIntMaxLevel = map[proto.Class]float64{
 	proto.Class_ClassUnknown: 0.0,
 	proto.Class_ClassWarrior: 0.00000000,
-	proto.Class_ClassPaladin: 0.01850000,
-	proto.Class_ClassHunter:  0.01640000,
+	proto.Class_ClassPaladin: 0.01670000,
+	proto.Class_ClassHunter:  0.01650000,
 	proto.Class_ClassRogue:   0.00000000,
-	proto.Class_ClassPriest:  0.01510000,
-	proto.Class_ClassShaman:  0.01750000,
-	proto.Class_ClassMage:    0.01430000,
+	proto.Class_ClassPriest:  0.01680000,
+	proto.Class_ClassShaman:  0.01690000,
+	proto.Class_ClassMage:    0.01680000,
 	proto.Class_ClassWarlock: 0.01650000,
-	proto.Class_ClassDruid:   0.01640000,
+	proto.Class_ClassDruid:   0.01670000,
 }
 var ExtraClassBaseStats = map[proto.Class]stats.Stats{
 	proto.Class_ClassUnknown: {},
