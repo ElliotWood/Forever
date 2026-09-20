@@ -124,14 +124,20 @@ func SynthFrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32)
 }
 
 // Innervates - https://www.wowhead.com/forever/spell=29166
+var SynthInnervatesCategory = "Innervate"
+
 func SynthInnervatesDuration(talentPoints int32) time.Duration {
 	return 20000 * time.Millisecond
+}
+func SynthInnervatesCooldown() time.Duration {
+	return 360000 * time.Millisecond
 }
 func SynthInnervatesAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
 		Label:    "Innervates (" + Ternary(isPlayer, "Player", "External") + ")",
 		ActionID: ActionID{SpellID: 29166}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration: SynthInnervatesDuration(talentPoints),
+		Category: SynthInnervatesCategory,
 		IsPlayer: isPlayer,
 	})
 }

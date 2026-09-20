@@ -17,6 +17,7 @@ type PseudoStatKind int
 const (
 	PseudoStatThreatMultiplier PseudoStatKind = iota
 	PseudoStatDamageDealtMultiplier
+	PseudoStatHealingDealtMultiplier
 	PseudoStatDamageTakenMultiplier
 	PseudoStatSchoolDamageTakenMultiplier
 	PseudoStatMeleeSpeedMultiplier
@@ -33,6 +34,8 @@ func (kind PseudoStatKind) Name() string {
 		return "ThreatMultiplier"
 	case PseudoStatDamageDealtMultiplier:
 		return "DamageDealtMultiplier"
+	case PseudoStatHealingDealtMultiplier:
+		return "HealingDealtMultiplier"
 	case PseudoStatDamageTakenMultiplier:
 		return "DamageTakenMultiplier"
 	case PseudoStatSchoolDamageTakenMultiplier:
@@ -302,25 +305,42 @@ func newGeneratedDamageShield(unit *Unit, config GeneratedBuff, school SpellScho
 	return aura
 }
 
-// A buff other players cast on this one on their own cooldown, approximated by
-// numSources casters taking turns.
-func newGeneratedExternalCD(char *Character, config GeneratedBuff, numSources int32, cooldown time.Duration, shouldActivate CooldownActivationCondition) {
-	if numSources == 0 {
+// What a driver decides about a buff other players cast on this one: how many
+// of them take turns, how long each waits before casting again, whether the
+// cooldown is worth a mana, a damage or a survival slot, and when the sim
+// should spend it.
+type GeneratedExternalCD struct {
+	NumSources     int32
+	Cooldown       time.Duration
+	Type           CooldownType
+	ShouldActivate CooldownActivationCondition
+}
+
+// The external cooldown around a generated aura, approximated by NumSources
+// casters taking turns. The aura carries the buff's own label, duration and
+// effects; its tag is what tells the sim the buff is already up, so a row whose
+// cooldown is driven states a category for the generator to tag it with.
+func newGeneratedExternalCD(char *Character, aura *Aura, config GeneratedExternalCD) {
+	if config.NumSources == 0 {
 		return
 	}
 
-	aura := newGeneratedStatAura(&char.Unit, config)
+	// The external caster's copy of a permanent buff is up while the character
+	// sheet is measured; a cooldown is not, so it keeps its effects out of the
+	// stats the build phase collects.
+	aura.BuildPhase = CharacterBuildPhaseNone
+
 	registerExternalConsecutiveCDApproximation(char, externalConsecutiveCDApproximation{
-		ActionID:         config.ActionID,
-		AuraTag:          config.Label,
+		ActionID:         aura.ActionID,
+		AuraTag:          aura.Tag,
 		CooldownPriority: CooldownPriorityDefault,
-		Type:             CooldownTypeDPS,
-		AuraDuration:     config.Duration,
-		AuraCD:           cooldown,
-		ShouldActivate:   shouldActivate,
+		Type:             config.Type,
+		AuraDuration:     aura.Duration,
+		AuraCD:           config.Cooldown,
+		ShouldActivate:   config.ShouldActivate,
 		AddAura:          func(sim *Simulation, _ *Character) { aura.Activate(sim) },
 		RelatedSelfBuff:  aura,
-	}, numSources)
+	}, config.NumSources)
 }
 
 // The second category the aura joins without an effect of its own. Only the
@@ -476,6 +496,8 @@ func generatedPseudoStatFields(unit *Unit, config PseudoConfig) []*float64 {
 		return []*float64{&unit.PseudoStats.ThreatMultiplier}
 	case PseudoStatDamageDealtMultiplier:
 		return []*float64{&unit.PseudoStats.DamageDealtMultiplier}
+	case PseudoStatHealingDealtMultiplier:
+		return []*float64{&unit.PseudoStats.HealingDealtMultiplier}
 	case PseudoStatDamageTakenMultiplier:
 		return []*float64{&unit.PseudoStats.DamageTakenMultiplier}
 	case PseudoStatMeleeSpeedMultiplier:

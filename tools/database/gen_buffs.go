@@ -80,12 +80,14 @@ type ResolvedEffect struct {
 type ResolvedBuff struct {
 	buffmanifest.BuffSpec
 
-	SpellID    int32 // the anchor rank, or the aura family member when AuraName is set
-	Rank       int32 // 0 when the family has no rank subtext
-	DurationMs int32 // -1 or 0 never expires
-	MaxStacks  int32
-	SchoolMask int32
-	Effects    []ResolvedEffect
+	SpellID     int32 // the anchor rank, or the aura family member when AuraName is set
+	CastSpellID int32 // the anchor rank itself, which is the cast when AuraName is set
+	Rank        int32 // 0 when the family has no rank subtext
+	DurationMs  int32 // -1 or 0 never expires
+	CooldownMs  int32 // 0 when the client states none; read from the cast
+	MaxStacks   int32
+	SchoolMask  int32
+	Effects     []ResolvedEffect
 
 	Stats  []StatAmount
 	Pseudo []PseudoMod
@@ -475,6 +477,8 @@ func (res *buffResolver) resolveSpell(row *ResolvedBuff) error {
 		return nil
 	}
 
+	row.CastSpellID = row.SpellID
+
 	if row.AuraName != "" {
 		id, warning, err := res.resolveAuraFamily(row.AuraName, subtext)
 		if err != nil {
@@ -495,7 +499,46 @@ func (res *buffResolver) resolveSpell(row *ResolvedBuff) error {
 		return nil
 	}
 
-	return res.loadSpellData(row)
+	if err := res.loadSpellData(row); err != nil {
+		return err
+	}
+	return res.loadExternalTiming(row)
+}
+
+// A buff other players cast on their own cooldown is timed by the cast: the
+// shared timer the sim hands the next source is the cooldown, and a totem's
+// aura states neither how long the totem stands nor when the next one may be
+// dropped. Mana Tide is that row - 17360 carries the mana, 17359 the 13 seconds
+// and the 5 minutes.
+func (res *buffResolver) loadExternalTiming(row *ResolvedBuff) error {
+	if row.Kind != buffmanifest.KindExternalCD {
+		return nil
+	}
+
+	var recovery, categoryRecovery int32
+	if err := scanOptional(res.db, `
+		SELECT COALESCE(RecoveryTime, 0), COALESCE(CategoryRecoveryTime, 0)
+		FROM SpellCooldowns WHERE SpellID = ?`, row.CastSpellID, &recovery, &categoryRecovery); err != nil {
+		return fmt.Errorf("cooldown of spell %d: %w", row.CastSpellID, err)
+	}
+	row.CooldownMs = max(recovery, categoryRecovery)
+	if row.CooldownMs == 0 {
+		row.unsupported("spell %d states no cooldown, which an external cooldown is scheduled by", row.CastSpellID)
+		return nil
+	}
+
+	if row.DurationMs <= 0 && row.CastSpellID != row.SpellID {
+		if err := scanOptional(res.db, `
+			SELECT COALESCE(d.Duration, 0)
+			FROM SpellMisc m LEFT JOIN SpellDuration d ON d.ID = m.DurationIndex
+			WHERE m.SpellID = ?`, row.CastSpellID, &row.DurationMs); err != nil {
+			return fmt.Errorf("duration of spell %d: %w", row.CastSpellID, err)
+		}
+	}
+	if row.DurationMs <= 0 {
+		row.unsupported("spell %d states no duration, which the external cooldown's aura needs", row.SpellID)
+	}
+	return nil
 }
 
 func (res *buffResolver) spellExists(spellID int32) (bool, error) {
@@ -1101,6 +1144,8 @@ func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
 		return []PseudoMod{{Kind: "ThreatMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
 	case dbc.A_MOD_DAMAGE_PERCENT_DONE:
 		return []PseudoMod{{Kind: "DamageDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
+	case dbc.A_MOD_HEALING_DONE_PERCENT:
+		return []PseudoMod{{Kind: "HealingDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
 	case dbc.A_REDUCE_PUSHBACK:
 		// PseudoStats.PushbackChance is the chance of being pushed back and
 		// starts at 1, so the client's "35% less pushback" is -0.35 there.
@@ -1571,6 +1616,8 @@ type buffRow struct {
 	HasValue      bool
 	ValueOnPseudo bool
 	Duration      string
+	Cooldown      string
+	HasCooldown   bool
 	Constructor   string
 	ApplyIf       string
 	ApplyBody     string
@@ -1659,6 +1706,9 @@ func renderRow(row ResolvedBuff) buffRow {
 	}
 	out.ValueExpr, out.ValueOnPseudo, out.HasValue = buffValueExpr(row)
 	out.Duration = buffDurationExpr(row)
+	if row.CooldownMs > 0 {
+		out.Cooldown, out.HasCooldown = fmt.Sprintf("%d * time.Millisecond", row.CooldownMs), true
+	}
 	out.Constructor = buffConstructor(row, out)
 	out.ApplyIf, out.ApplyBody, out.HasApply = buffApply(row)
 	return out

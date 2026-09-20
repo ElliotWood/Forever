@@ -64,8 +64,10 @@ var Manifest = []BuffSpec{
 	},
 	{
 		Field: "mana_tide_totems", Number: 19, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindExternalCD,
-		Go: "ManaTideTotems", Name: "Mana Tide Totem", Owner: proto.Class_ClassShaman,
+		Go: "ManaTideTotems", Name: "Mana Tide Totem", AuraName: "Mana Tide",
+		Owner: proto.Class_ClassShaman, Category: "ManaTideTotem",
 		Stats: []proto.Stat{proto.Stat_StatMP5}, Label: "Mana Tide Totem",
+		Notes: "the totem cast 17359 states the 13 s life and the 5 min cooldown; the aura 17360 states the mana.",
 	},
 	{
 		Field: "shadow_priest_dps", Number: 6, Scope: ScopeIndividual, Proto: ProtoInt32, Kind: KindManual,
@@ -372,12 +374,15 @@ var Manifest = []BuffSpec{
 	{
 		Field: "innervates", Number: 8, Scope: ScopeIndividual, Proto: ProtoInt32, Kind: KindExternalCD,
 		Go: "Innervates", Name: "Innervate", Owner: proto.Class_ClassDruid, Pet: PetStrip,
-		Stats: []proto.Stat{proto.Stat_StatMP5}, Label: "Innervates",
+		Category: "Innervate",
+		Stats:    []proto.Stat{proto.Stat_StatMP5}, Label: "Innervates",
+		Notes: "auras 134 and 110 of spell 29166 are the spirit regen the driver applies; no Improved Innervate node in druid tree 1089.",
 	},
 	{
 		Field: "power_infusions", Number: 9, Scope: ScopeIndividual, Proto: ProtoInt32, Kind: KindExternalCD,
 		Go: "PowerInfusions", Name: "Power Infusion", Owner: proto.Class_ClassPriest, Pet: PetStrip,
-		Stats: []proto.Stat{proto.Stat_StatSpellHasteRating}, Label: "Power Infusions",
+		Category: "PowerInfusion",
+		Stats:    []proto.Stat{proto.Stat_StatSpellHasteRating}, Label: "Power Infusions",
 		Notes: "Power Infusion (10060) grants +20% damage and healing done for 15 s.",
 	},
 	{

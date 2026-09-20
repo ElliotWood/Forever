@@ -23,6 +23,11 @@ func {{.Go}}Value(talentPoints int32) float64 {
 func {{.Go}}Duration(talentPoints int32) time.Duration {
 	return {{.Duration}}
 }
+{{- if .HasCooldown}}
+func {{.Go}}Cooldown() time.Duration {
+	return {{.Cooldown}}
+}
+{{- end}}
 func {{.Go}}Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	{{.Constructor}}
 }

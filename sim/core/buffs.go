@@ -193,10 +193,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 		GraceOfAirTotemAura(char, false, partyBuffs.TotemTwisting)
 	}
 
-	if partyBuffs.ManaTideTotems > 0 {
-		registerManaTideTotemCD(char, partyBuffs.ManaTideTotems)
-	}
-
 	if partyBuffs.RetributionAura {
 		MakePermanent(RetributionAuraBuff(char, false, 0))
 	}
@@ -227,14 +223,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 	// Individual Buffs
 	if individual.BlessingOfSanctuary {
 		MakePermanent(BlessingOfSanctuaryAura(char))
-	}
-
-	if individual.Innervates > 0 {
-		registerInnervateCD(char, individual.Innervates)
-	}
-
-	if individual.PowerInfusions > 0 {
-		registerPowerInfusionCD(char, individual.PowerInfusions)
 	}
 
 	if individual.ShadowPriestDps > 0 {
@@ -939,64 +927,6 @@ func ShadowPriestDPSManaAura(char *Character, dps float64) *Aura {
 //  Cooldowns
 ////////////////////////////
 
-var PowerInfusionAuraTag = "PowerInfusion"
-
-const PowerInfusionDuration = time.Second * 15
-const PowerInfusionCD = time.Minute * 3
-
-func registerPowerInfusionCD(char *Character, numPowerInfusions int32) {
-	if numPowerInfusions == 0 {
-		return
-	}
-
-	piAura := PowerInfusionAura(char, -1)
-
-	registerExternalConsecutiveCDApproximation(
-		char,
-		externalConsecutiveCDApproximation{
-			ActionID:         ActionID{SpellID: 10060, Tag: -1},
-			AuraTag:          PowerInfusionAuraTag,
-			CooldownPriority: CooldownPriorityDefault,
-			AuraDuration:     PowerInfusionDuration,
-			AuraCD:           PowerInfusionCD,
-			Type:             CooldownTypeDPS,
-
-			ShouldActivate: func(sim *Simulation, character *Character) bool {
-				// Haste portion doesn't stack with Bloodlust, so prefer to wait.
-				return !character.HasActiveAuraWithTag(BloodlustAuraTag)
-			},
-			AddAura: func(sim *Simulation, character *Character) { piAura.Activate(sim) },
-		},
-		numPowerInfusions)
-}
-
-func PowerInfusionAura(char *Character, actionTag int32) *Aura {
-	actionID := ActionID{SpellID: 10060, Tag: actionTag}
-
-	aura := char.GetOrRegisterAura(Aura{
-		Label:    "PowerInfusion-" + actionID.String(),
-		Tag:      PowerInfusionAuraTag,
-		ActionID: actionID,
-		Duration: PowerInfusionDuration,
-	})
-
-	aura.NewExclusiveEffect("ManaCost", true, ExclusiveEffect{
-		Priority: -20,
-		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			if ee.Aura.Unit.HasManaBar() {
-				ee.Aura.Unit.PseudoStats.SpellCostPercentModifier -= 20
-			}
-		},
-		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			if ee.Aura.Unit.HasManaBar() {
-				ee.Aura.Unit.PseudoStats.SpellCostPercentModifier += 20
-			}
-		},
-	})
-	multiplyCastSpeedEffect(aura, 1.2)
-	return aura
-}
-
 func multiplyCastSpeedEffect(aura *Aura, multiplier float64) *ExclusiveEffect {
 	return aura.NewExclusiveEffect("MultiplyCastSpeed", false, ExclusiveEffect{
 		Priority: multiplier,
@@ -1005,94 +935,6 @@ func multiplyCastSpeedEffect(aura *Aura, multiplier float64) *ExclusiveEffect {
 		},
 		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
 			ee.Aura.Unit.MultiplyCastSpeed(sim, 1/multiplier)
-		},
-	})
-}
-
-var InnervateAuraTag = "Innervate"
-
-const InnervateDuration = time.Second * 20
-const InnervateCD = time.Minute * 6
-
-func InnervateManaThreshold(character *Character) float64 {
-	if character.Class == proto.Class_ClassMage {
-		// Mages burn mana really fast so they need a higher threshold.
-		return character.MaxMana() * 0.4
-	} else {
-		return 1000
-	}
-}
-
-func registerInnervateCD(char *Character, numInnervates int32) {
-	if numInnervates == 0 {
-		return
-	}
-
-	innervateThreshold := 0.0
-	expectedManaPerInnervate := 0.0
-	var innervateAura *Aura
-
-	char.Env.RegisterPostFinalizeEffect(func() {
-		innervateThreshold = InnervateManaThreshold(char)
-		expectedManaPerInnervate = char.SpiritManaRegenPerSecond() * 5 * 20
-		innervateAura = InnervateAura(char, expectedManaPerInnervate, -1)
-	})
-
-	registerExternalConsecutiveCDApproximation(
-		char,
-		externalConsecutiveCDApproximation{
-			ActionID:         ActionID{SpellID: 29166, Tag: -1},
-			AuraTag:          InnervateAuraTag,
-			CooldownPriority: CooldownPriorityDefault,
-			AuraDuration:     InnervateDuration,
-			AuraCD:           InnervateCD,
-			Type:             CooldownTypeMana,
-			ShouldActivate: func(sim *Simulation, character *Character) bool {
-				// Only cast innervate when very low on mana, to make sure all other mana CDs are prioritized.
-				if character.CurrentMana() > innervateThreshold {
-					return false
-				}
-				return true
-			},
-			AddAura: func(sim *Simulation, character *Character) {
-				innervateAura.Activate(sim)
-
-				// newRemainingUsages := int(sim.GetRemainingDuration() / InnervateCD)
-				// AddInnervateAura already accounts for 1 usage, which is why we subtract 1 less.
-				// character.ExpectedBonusMana -= expectedManaPerInnervate * MaxFloat(0, float64(remainingInnervateUsages-newRemainingUsages-1))
-				// remainingInnervateUsages = newRemainingUsages
-
-			},
-		},
-		numInnervates)
-}
-
-func InnervateAura(character *Character, expectedBonusManaReduction float64, actionTag int32) *Aura {
-	actionID := ActionID{SpellID: 29166, Tag: actionTag}
-	manaMetrics := character.NewManaMetrics(actionID)
-	return character.GetOrRegisterAura(Aura{
-		Label:    "Innervate-" + actionID.String(),
-		Tag:      InnervateAuraTag,
-		ActionID: actionID,
-		Duration: InnervateDuration,
-		OnGain: func(aura *Aura, sim *Simulation) {
-			character.PseudoStats.ForceFullSpiritRegen = true
-			character.PseudoStats.SpiritRegenMultiplier *= 5.0
-			character.UpdateManaRegenRates()
-
-			expectedBonusManaPerTick := expectedBonusManaReduction / 10
-			StartPeriodicAction(sim, PeriodicActionOptions{
-				Period:   InnervateDuration / 10,
-				NumTicks: 10,
-				OnAction: func(sim *Simulation) {
-					manaMetrics.AddEvent(expectedBonusManaPerTick, expectedBonusManaPerTick)
-				},
-			})
-		},
-		OnExpire: func(aura *Aura, sim *Simulation) {
-			character.PseudoStats.ForceFullSpiritRegen = false
-			character.PseudoStats.SpiritRegenMultiplier /= 5.0
-			character.UpdateManaRegenRates()
 		},
 	})
 }
@@ -1287,8 +1129,7 @@ func registerBloodlustCD(character *Character) {
 		Priority: CooldownPriorityBloodlust,
 		Type:     CooldownTypeDPS,
 		ShouldActivate: func(sim *Simulation, character *Character) bool {
-			// Haste portion doesn't stack with Power Infusion, so prefer to wait.
-			return !character.HasActiveAuraWithTag(PowerInfusionAuraTag) && !character.HasActiveAura(SatedAuraLabel)
+			return !character.HasActiveAura(SatedAuraLabel)
 		},
 	})
 }
@@ -1372,67 +1213,4 @@ func PainSuppressionAura(character *Character, actionTag int32) *Aura {
 		ActionID: actionID,
 		Duration: PainSuppressionDuration,
 	}).AttachMultiplicativePseudoStatBuff(&character.PseudoStats.DamageTakenMultiplier, 0.6)
-}
-
-var ManaTideTotemActionID = ActionID{SpellID: 16190}
-var ManaTideTotemAuraTag = "ManaTideTotem"
-
-const ManaTideTotemDuration = time.Second * 12
-const ManaTideTotemCD = time.Minute * 5
-
-func registerManaTideTotemCD(char *Character, numManaTideTotems int32) {
-	if numManaTideTotems == 0 {
-		return
-	}
-
-	initialDelay := time.Duration(0)
-	var mttAura *Aura
-
-	mttAura = ManaTideTotemAura(char, -1)
-
-	char.Env.RegisterPostFinalizeEffect(func() {
-		// Use first MTT at 40s, or halfway through the fight, whichever comes first.
-		initialDelay = min(char.Env.BaseDuration/2, time.Second*40)
-	})
-
-	registerExternalConsecutiveCDApproximation(
-		char,
-		externalConsecutiveCDApproximation{
-			ActionID:         ManaTideTotemActionID.WithTag(-1),
-			AuraTag:          ManaTideTotemAuraTag,
-			CooldownPriority: CooldownPriorityDefault,
-			RelatedSelfBuff:  mttAura,
-			AuraDuration:     ManaTideTotemDuration,
-			AuraCD:           ManaTideTotemCD,
-			Type:             CooldownTypeMana,
-			ShouldActivate: func(sim *Simulation, character *Character) bool {
-				// A normal resto shaman would wait to use MTT.
-				return sim.CurrentTime >= initialDelay
-			},
-			AddAura: func(sim *Simulation, character *Character) {
-				mttAura.Activate(sim)
-			},
-		},
-		numManaTideTotems)
-}
-
-func ManaTideTotemAura(character *Character, actionTag int32) *Aura {
-	actionID := ManaTideTotemActionID.WithTag(actionTag)
-	manaTideManaMetrics := character.NewManaMetrics(actionID)
-
-	return character.GetOrRegisterAura(Aura{
-		Label:    "ManaTideTotem-" + actionID.String(),
-		Tag:      ManaTideTotemAuraTag,
-		ActionID: actionID,
-		Duration: ManaTideTotemDuration,
-		OnGain: func(aura *Aura, sim *Simulation) {
-			StartPeriodicAction(sim, PeriodicActionOptions{
-				Period:   ManaTideTotemDuration / 4,
-				NumTicks: 4,
-				OnAction: func(s *Simulation) {
-					character.AddMana(sim, 0.06*character.MaxMana(), manaTideManaMetrics)
-				},
-			})
-		},
-	})
 }

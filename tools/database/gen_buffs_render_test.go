@@ -102,8 +102,9 @@ func syntheticBuffRows() []ResolvedBuff {
 				Field: "innervates", Scope: buffmanifest.ScopeIndividual,
 				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindExternalCD,
 				Go: "SynthInnervates", Name: "Innervate", Label: "Innervates",
+				Category: "Innervate",
 			},
-			SpellID: 29166, DurationMs: 20000, Supported: true,
+			SpellID: 29166, DurationMs: 20000, CooldownMs: 360000, Supported: true,
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -273,8 +274,9 @@ func TestRenderedBuffFilesCompile(t *testing.T) {
 	if err := os.WriteFile(drivers, []byte("package core\n\n"+
 		"import \"github.com/wowsims/forever/sim/core/proto\"\n\n"+
 		"func driveSynthInnervates(char *Character, individual *proto.IndividualBuffs) {\n"+
-		"\tnewGeneratedExternalCD(char, GeneratedBuff{ActionID: ActionID{SpellID: 29166}},"+
-		" individual.Innervates, 0, nil)\n}\n\n"+
+		"\tnewGeneratedExternalCD(char, SynthInnervatesAura(&char.Unit, false, 0),"+
+		" GeneratedExternalCD{NumSources: individual.Innervates,"+
+		" Cooldown: SynthInnervatesCooldown(), Type: CooldownTypeMana})\n}\n\n"+
 		"func driveSynthBattleShout(char *Character, _ *proto.PartyBuffs) {\n"+
 		"\tApplyFixedShoutAura(char, SynthBattleShoutAura(&char.Unit, false, 0),"+
 		" SynthBattleShoutCategory)\n}\n\n"+

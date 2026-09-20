@@ -143,8 +143,30 @@ func ManaSpringTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// Mana Tide Totem - https://www.wowhead.com/forever/spell=17359
-// func ManaTideTotemsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // mana_tide_totems, KindExternalCD: hand-written apply block still present
+// Mana Tide Totem - https://www.wowhead.com/forever/spell=17360
+var ManaTideTotemsCategory = "ManaTideTotem"
+
+func ManaTideTotemsValue(talentPoints int32) float64 {
+	return 483.0
+}
+func ManaTideTotemsDuration(talentPoints int32) time.Duration {
+	return 13000 * time.Millisecond
+}
+func ManaTideTotemsCooldown() time.Duration {
+	return 300000 * time.Millisecond
+}
+func ManaTideTotemsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Mana Tide Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 17360}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: ManaTideTotemsDuration(talentPoints),
+		Category: ManaTideTotemsCategory,
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.MP5, ManaTideTotemsValue(talentPoints), false},
+		},
+	})
+}
 
 // Vampiric Touch - https://www.wowhead.com/forever/spell=402668
 // func ShadowPriestDpsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // shadow_priest_dps, KindManual: hand-written apply block still present
@@ -631,10 +653,49 @@ func ShadowProtectionAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Innervates - https://www.wowhead.com/forever/spell=29166
-// func InnervatesAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // innervates, KindExternalCD: hand-written apply block still present
+var InnervatesCategory = "Innervate"
+
+func InnervatesDuration(talentPoints int32) time.Duration {
+	return 20000 * time.Millisecond
+}
+func InnervatesCooldown() time.Duration {
+	return 360000 * time.Millisecond
+}
+func InnervatesAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Innervates (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 29166}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: InnervatesDuration(talentPoints),
+		Category: InnervatesCategory,
+		IsPlayer: isPlayer,
+	})
+}
 
 // Power Infusions - https://www.wowhead.com/forever/spell=10060
-// func PowerInfusionsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // power_infusions, KindExternalCD: hand-written apply block still present
+var PowerInfusionsCategory = "PowerInfusion"
+
+func PowerInfusionsValue(talentPoints int32) float64 {
+	return 1.2
+}
+func PowerInfusionsDuration(talentPoints int32) time.Duration {
+	return 15000 * time.Millisecond
+}
+func PowerInfusionsCooldown() time.Duration {
+	return 180000 * time.Millisecond
+}
+func PowerInfusionsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Power Infusions (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10060}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: PowerInfusionsDuration(talentPoints),
+		Category: PowerInfusionsCategory,
+		IsPlayer: isPlayer,
+		Pseudo: []PseudoConfig{
+			{PseudoStatHealingDealtMultiplier, PowerInfusionsValue(talentPoints), true, 0},
+			{PseudoStatDamageDealtMultiplier, 1.2, true, 0},
+		},
+	})
+}
 
 func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
 	if party.BloodPact {
@@ -654,6 +715,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if party.ManaSpringTotem != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(ManaSpringTotemAura(&char.Unit, false, GetTristateValueInt32(party.ManaSpringTotem, 0, 5)))
+	}
+	if party.ManaTideTotems > 0 {
+		driveManaTideTotems(char, party)
 	}
 	if party.MoonkinAura {
 		MakePermanent(MoonkinAuraAura(&char.Unit, false, 0))
@@ -711,5 +775,11 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if raid.ShadowProtection {
 		MakePermanent(ShadowProtectionAura(&char.Unit, false, 0))
+	}
+	if individual.Innervates > 0 {
+		driveInnervates(char, individual)
+	}
+	if individual.PowerInfusions > 0 {
+		drivePowerInfusions(char, individual)
 	}
 }

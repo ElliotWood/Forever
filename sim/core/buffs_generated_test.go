@@ -2,8 +2,10 @@ package core
 
 import (
 	"testing"
+	"time"
 
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/simsignals"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -313,6 +315,172 @@ func TestGeneratedPartyAurasApplyTheStatsTheManifestNames(t *testing.T) {
 func measureGeneratedBuffStats(char *Character) {
 	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 	char.stats = char.SortAndApplyStatDependencies(char.stats).FloorGameStats()
+}
+
+// A whole environment, because an external cooldown registers a spell, a timer
+// per source and a major cooldown, none of which a bare Character has.
+func setupFakeSimWithBuffs(party *proto.PartyBuffs, individual *proto.IndividualBuffs) *Simulation {
+	sim := NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 100},
+		Raid: &proto.Raid{
+			Parties: []*proto.Party{
+				{
+					Players: []*proto.Player{
+						{
+							Name:      "Caster",
+							Class:     proto.Class_ClassShaman,
+							Buffs:     individual,
+							Spec:      &proto.Player_ElementalShaman{},
+							Equipment: &proto.EquipmentSpec{},
+						},
+					},
+					Buffs: party,
+				},
+			},
+		},
+		Encounter: &proto.Encounter{
+			Targets:  []*proto.Target{{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}},
+			Duration: 180,
+		},
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	return sim
+}
+
+// Two druids innervating one character take turns: the second waits for the
+// first one's aura to fall off, and a third cast waits for the six minutes the
+// client states.
+func TestGeneratedInnervatesTakeTurnsBetweenTheirSources(t *testing.T) {
+	sim := setupFakeSimWithBuffs(&proto.PartyBuffs{}, &proto.IndividualBuffs{Innervates: 2})
+	char := sim.Raid.Parties[0].Players[0].GetCharacter()
+
+	aura := char.GetAura("Innervates (External)")
+	if aura == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Innervates (External)", auraLabels(char))
+	}
+	if aura.Duration != InnervatesDuration(0) || aura.Duration != time.Second*20 {
+		t.Errorf("the innervate lasts %v, want the client's 20 seconds", aura.Duration)
+	}
+	if InnervatesCooldown() != time.Minute*6 {
+		t.Errorf("the innervate's cooldown is %v, want the client's 6 minutes", InnervatesCooldown())
+	}
+
+	spell := char.GetSpell(ActionID{SpellID: 29166, Tag: -1})
+	if spell == nil {
+		t.Fatal("no spell stands for the external innervates")
+	}
+
+	// What the sim asks before it spends one of the sources: its own timer and
+	// the condition the external approximation installs.
+	ready := func() bool {
+		return spell.CD.Timer.IsReady(sim) && spell.ExtraCastCondition(sim, &char.Unit)
+	}
+
+	if !ready() {
+		t.Fatal("the first of two innervates cannot be cast at the start of the fight")
+	}
+	spell.SkipCastAndApplyEffects(sim, &char.Unit)
+	if !aura.IsActive() {
+		t.Fatal("casting the first innervate left the character without the aura")
+	}
+	if ready() {
+		t.Error("a second innervate lands while the first one is still up")
+	}
+
+	sim.CurrentTime = aura.Duration + time.Second
+	aura.Deactivate(sim)
+	if !ready() {
+		t.Fatal("the second druid cannot innervate once the first aura has fallen off")
+	}
+	spell.SkipCastAndApplyEffects(sim, &char.Unit)
+
+	sim.CurrentTime += aura.Duration + time.Second
+	aura.Deactivate(sim)
+	if ready() {
+		t.Error("a third innervate lands before either druid's six minutes are up")
+	}
+
+	sim.CurrentTime = InnervatesCooldown() + time.Minute
+	if !ready() {
+		t.Error("the first druid cannot innervate again six minutes later")
+	}
+}
+
+// Power Infusion is +20% damage and healing done while it is up, and nothing
+// once it has expired.
+func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
+	sim := setupFakeSimWithBuffs(&proto.PartyBuffs{}, &proto.IndividualBuffs{PowerInfusions: 1})
+	char := sim.Raid.Parties[0].Players[0].GetCharacter()
+
+	aura := char.GetAura("Power Infusions (External)")
+	if aura == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Power Infusions (External)", auraLabels(char))
+	}
+	if aura.Duration != time.Second*15 || PowerInfusionsCooldown() != time.Minute*3 {
+		t.Errorf("the infusion lasts %v on a %v cooldown, want the client's 15 seconds and 3 minutes",
+			aura.Duration, PowerInfusionsCooldown())
+	}
+
+	damage, healing := char.PseudoStats.DamageDealtMultiplier, char.PseudoStats.HealingDealtMultiplier
+	aura.Activate(sim)
+	if got := char.PseudoStats.DamageDealtMultiplier; got != damage*1.2 {
+		t.Errorf("the infusion multiplies damage dealt by %v, want the client's 1.2", got/damage)
+	}
+	if got := char.PseudoStats.HealingDealtMultiplier; got != healing*1.2 {
+		t.Errorf("the infusion multiplies healing dealt by %v, want the client's 1.2", got/healing)
+	}
+
+	aura.Deactivate(sim)
+	if char.PseudoStats.DamageDealtMultiplier != damage || char.PseudoStats.HealingDealtMultiplier != healing {
+		t.Error("the infusion left part of itself behind when it expired")
+	}
+}
+
+// Mana Tide's aura states 290 mana every 3 seconds, which reaches the sim as
+// the mana per 5 seconds it is worth; the totem cast states how long it stands.
+func TestGeneratedManaTideTotemRestoresTheClientsMana(t *testing.T) {
+	sim := setupFakeSimWithBuffs(&proto.PartyBuffs{ManaTideTotems: 1}, &proto.IndividualBuffs{})
+	char := sim.Raid.Parties[0].Players[0].GetCharacter()
+
+	aura := char.GetAura("Mana Tide Totem (External)")
+	if aura == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Mana Tide Totem (External)", auraLabels(char))
+	}
+	if aura.Duration != time.Second*13 || ManaTideTotemsCooldown() != time.Minute*5 {
+		t.Errorf("the totem stands for %v on a %v cooldown, want the client's 13 seconds and 5 minutes",
+			aura.Duration, ManaTideTotemsCooldown())
+	}
+	if ManaTideTotemsValue(0) != 483 {
+		t.Errorf("the totem is worth %v MP5, want the 290 per 3 seconds the client states",
+			ManaTideTotemsValue(0))
+	}
+
+	before := char.stats[stats.MP5]
+	aura.Activate(sim)
+	if got := char.stats[stats.MP5] - before; got != 483 {
+		t.Errorf("the totem applied %v MP5, want 483", got)
+	}
+}
+
+// A cooldown is not up while the character sheet is measured, so its aura stays
+// out of the build phase the external copy of a permanent buff joins.
+func TestGeneratedExternalCooldownsAreNotBuildPhaseAuras(t *testing.T) {
+	sim := setupFakeSimWithBuffs(&proto.PartyBuffs{ManaTideTotems: 1},
+		&proto.IndividualBuffs{Innervates: 1, PowerInfusions: 1})
+	char := sim.Raid.Parties[0].Players[0].GetCharacter()
+
+	for _, label := range []string{
+		"Innervates (External)", "Power Infusions (External)", "Mana Tide Totem (External)",
+	} {
+		aura := char.GetAura(label)
+		if aura == nil {
+			t.Fatalf("no aura is labelled %q; the unit has %v", label, auraLabels(char))
+		}
+		if aura.BuildPhase != CharacterBuildPhaseNone {
+			t.Errorf("%s is measured in build phase %v, want none of them", label, aura.BuildPhase)
+		}
+	}
 }
 
 func auraLabels(char *Character) []string {
