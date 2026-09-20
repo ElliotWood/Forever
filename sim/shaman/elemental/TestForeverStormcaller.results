@@ -1,41 +1,41 @@
 character_stats_results: {
  key: "TestForeverStormcaller-Phase1-CharacterStats-Default"
  value: {
-  final_stats: 174
-  final_stats: 175
-  final_stats: 353
-  final_stats: 269.5
-  final_stats: 177
-  final_stats: 558.85
+  final_stats: 191.4
+  final_stats: 192.5
+  final_stats: 388.3
+  final_stats: 296.45
+  final_stats: 194.7
+  final_stats: 566.935
   final_stats: 0
   final_stats: 40
   final_stats: 0
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 39.25
+  final_stats: 87.25
   final_stats: 11
-  final_stats: 22.85455
+  final_stats: 23.31001
   final_stats: 0
   final_stats: 0
-  final_stats: 890.5
+  final_stats: 1111.25
   final_stats: 11
-  final_stats: 26.59
+  final_stats: 27.479
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 5282.5
+  final_stats: 5686.75
   final_stats: 0
   final_stats: 0
-  final_stats: 1745
+  final_stats: 1780
   final_stats: 50
   final_stats: 0
   final_stats: 5
   final_stats: 0
-  final_stats: 10.59
+  final_stats: 11.479
   final_stats: 5
   final_stats: 0
-  final_stats: 4630
+  final_stats: 4983
   final_stats: 36
   final_stats: 60
   final_stats: 60
@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.39255
+  weights: 0.38808
   weights: 0
-  weights: 0.45258
+  weights: 0.4549
   weights: 0
-  weights: 0.07482
-  weights: 0
-  weights: 0
-  weights: 0.37186
+  weights: 0.07548
   weights: 0
   weights: 0
-  weights: 4.28701
-  weights: 3.00761
+  weights: 0.37351
+  weights: 0
+  weights: 0
+  weights: 4.33411
+  weights: 3.14067
   weights: 0
   weights: 0
   weights: 0
@@ -99,85 +99,85 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 311.50968
-  tps: 292.66307
+  dps: 326.26655
+  tps: 306.29146
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 321.27073
-  tps: 300.8675
+  dps: 337.31744
+  tps: 315.75357
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 374.586
-  tps: 351.61344
+  dps: 388.71395
+  tps: 363.61204
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 372.86829
-  tps: 349.67949
+  dps: 385.64676
+  tps: 360.16485
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 302.22816
-  tps: 284.20513
+  dps: 316.6772
+  tps: 297.0183
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 327.34273
-  tps: 307.66714
+  dps: 340.74549
+  tps: 318.67805
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 367.36104
-  tps: 343.74915
+  dps: 381.53913
+  tps: 355.82508
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 340.14999
-  tps: 319.15718
+  dps: 356.03682
+  tps: 333.48866
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Average-Default"
  value: {
-  dps: 380.65688
-  tps: 356.46542
+  dps: 394.31892
+  tps: 368.0373
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 1022.48334
-  tps: 768.05616
+  dps: 1123.61518
+  tps: 810.68771
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 373.02545
-  tps: 348.90466
+  dps: 385.38214
+  tps: 359.53502
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Settings-Orc-launch-Adaptive-default-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 426.18144
-  tps: 413.41516
+  dps: 436.4175
+  tps: 423.69447
  }
 }
 dps_results: {
@@ -204,7 +204,7 @@ dps_results: {
 dps_results: {
  key: "TestForeverStormcaller-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 378.04319
-  tps: 354.3683
+  dps: 391.2954
+  tps: 365.33814
  }
 }

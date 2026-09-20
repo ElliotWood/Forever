@@ -291,7 +291,7 @@ func (druid *Druid) registerBearFormSpell() {
 				druid.EnableDynamicStatDep(sim, hotwDep)
 			}
 			if sim.CurrentTime > 0 {
-				druid.GainHealth(sim, healthFrac*druid.MaxHealth()-druid.CurrentHealth(), healthMetrics)
+				druid.restoreHealthFraction(sim, healthFrac, healthMetrics)
 			}
 
 			if !druid.Env.MeasuringStats {
@@ -320,7 +320,7 @@ func (druid *Druid) registerBearFormSpell() {
 				druid.DisableDynamicStatDep(sim, hotwDep)
 			}
 			if sim.CurrentTime > 0 {
-				druid.RemoveHealth(sim, druid.CurrentHealth()-healthFrac*druid.MaxHealth())
+				druid.restoreHealthFraction(sim, healthFrac, healthMetrics)
 			}
 
 			if !druid.Env.MeasuringStats {
@@ -451,4 +451,18 @@ func (druid *Druid) registerMoonkinFormSpell() {
 			druid.MoonkinFormAura.Activate(sim)
 		},
 	})
+}
+
+// Puts health back at the same fraction of max health it was at before a shift changed max
+// health. Gains or removes depending on which way max health moved, rather than assuming:
+// the two call sites used to assume entering Bear always raises it and leaving always lowers
+// it, which held until a second stamina multiplier arrived. Giving Horde characters Blessing
+// of Kings made leaving Bear Form raise max health, and RemoveHealth panicked on a negative.
+func (druid *Druid) restoreHealthFraction(sim *core.Simulation, fraction float64, metrics *core.ResourceMetrics) {
+	delta := fraction*druid.MaxHealth() - druid.CurrentHealth()
+	if delta > 0 {
+		druid.GainHealth(sim, delta, metrics)
+	} else if delta < 0 {
+		druid.RemoveHealth(sim, -delta)
+	}
 }

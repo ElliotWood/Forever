@@ -320,11 +320,16 @@ func applyBuffEffects(agent Agent, playerFaction proto.Faction, raidBuffs *proto
 		character.AddStats(BuffSpellValues[ScrollOfSpirit])
 	}
 
-	if individualBuffs.BlessingOfKings && isAlliance {
+	// No faction gates on class buffs. Classic had Paladins only on Alliance and Shamans only on
+	// Horde, so a Horde character asking for Blessing of Kings got nothing and an Alliance one
+	// asking for Strength of Earth got nothing. Forever's client lets Undead be Paladins and
+	// Dwarves be Shamans (CharBaseInfo), so both factions field both classes and either can have
+	// either set of buffs. The gates silently gave 3 of the arena's 15 specs +10% all stats.
+	if individualBuffs.BlessingOfKings {
 		MakePermanent(BlessingOfKingsAura(character))
 	}
 
-	if raidBuffs.SanctityAura && isAlliance {
+	if raidBuffs.SanctityAura {
 		MakePermanent(SanctityAuraAura(character))
 	}
 
@@ -335,15 +340,15 @@ func applyBuffEffects(agent Agent, playerFaction proto.Faction, raidBuffs *proto
 		}
 	*/
 
-	if raidBuffs.DevotionAura != proto.TristateEffect_TristateEffectMissing && isAlliance {
+	if raidBuffs.DevotionAura != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(DevotionAuraAura(&character.Unit, GetTristateValueInt32(raidBuffs.DevotionAura, 0, 2)))
 	}
 
-	if raidBuffs.StoneskinTotem != proto.TristateEffect_TristateEffectMissing && isHorde {
+	if raidBuffs.StoneskinTotem != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(StoneskinTotemAura(&character.Unit, GetTristateValueInt32(raidBuffs.StoneskinTotem, 0, 2)))
 	}
 
-	if raidBuffs.RetributionAura != proto.TristateEffect_TristateEffectMissing && isAlliance {
+	if raidBuffs.RetributionAura != proto.TristateEffect_TristateEffectMissing {
 		RetributionAura(character, GetTristateValueInt32(raidBuffs.RetributionAura, 0, 2))
 	}
 
@@ -351,27 +356,29 @@ func applyBuffEffects(agent Agent, playerFaction proto.Faction, raidBuffs *proto
 		MakePermanent(BattleShoutAura(&character.Unit, GetTristateValueInt32(raidBuffs.BattleShout, 0, 5), 0, false)) // Do we implement 3pc wrath for the other sims?
 	}
 
-	if individualBuffs.BlessingOfMight != proto.TristateEffect_TristateEffectMissing && isAlliance {
+	if individualBuffs.BlessingOfMight != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(BlessingOfMightAura(&character.Unit, GetTristateValueInt32(individualBuffs.BlessingOfMight, 0, 5)))
 	}
 
-	if raidBuffs.StrengthOfEarthTotem != proto.TristateEffect_TristateEffectMissing && isHorde {
+	if raidBuffs.StrengthOfEarthTotem != proto.TristateEffect_TristateEffectMissing {
 		multiplier := GetTristateValueFloat(raidBuffs.StrengthOfEarthTotem, 1, 1.15)
 		MakePermanent(StrengthOfEarthTotemAura(&character.Unit, multiplier))
 	}
 
-	if raidBuffs.GraceOfAirTotem > 0 && isHorde {
+	if raidBuffs.GraceOfAirTotem > 0 {
 		multiplier := GetTristateValueFloat(raidBuffs.GraceOfAirTotem, 1, 1.15)
 		MakePermanent(GraceOfAirTotemAura(&character.Unit, multiplier))
 	}
 
-	if individualBuffs.BlessingOfWisdom > 0 && isAlliance {
+	if individualBuffs.BlessingOfWisdom > 0 {
 		updateStats := BuffSpellValues[BlessingOfWisdom]
 		if individualBuffs.BlessingOfWisdom == proto.TristateEffect_TristateEffectImproved {
 			updateStats = updateStats.Multiply(1.2)
 		}
 		character.AddStats(updateStats)
-	} else if raidBuffs.ManaSpringTotem > 0 && isHorde {
+	}
+	// Its own if, not an else: the else only existed because one faction could not have both.
+	if raidBuffs.ManaSpringTotem > 0 {
 		updateStats := BuffSpellValues[ManaSpring]
 		if raidBuffs.ManaSpringTotem == proto.TristateEffect_TristateEffectImproved {
 			updateStats = updateStats.Multiply(1.25)
