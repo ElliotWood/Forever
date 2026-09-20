@@ -42,10 +42,30 @@ func HuntersMarkAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 // func JocRetribution2Pt4Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // joc_retribution_2pt4, KindAbsent: second state of the Seal of the Crusader quadstate input; set-bonus spell 37186 has no SpellName row.
 
 // Judgement of Light - https://www.wowhead.com/forever/spell=20346
-// func JudgementOfLightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // judgement_of_light, KindProc: hand-written constructor still present
+func JudgementOfLightDuration(talentPoints int32) time.Duration {
+	return 40000 * time.Millisecond
+}
+func JudgementOfLightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:    "Judgement of Light (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 20346}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: JudgementOfLightDuration(talentPoints),
+		IsPlayer: isPlayer,
+	})
+}
 
 // Judgement of Wisdom - https://www.wowhead.com/forever/spell=20355
-// func JudgementOfWisdomAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // judgement_of_wisdom, KindProc: hand-written constructor still present
+func JudgementOfWisdomDuration(talentPoints int32) time.Duration {
+	return 40000 * time.Millisecond
+}
+func JudgementOfWisdomAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedDebuff(unit, GeneratedBuff{
+		Label:    "Judgement of Wisdom (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 20355}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: JudgementOfWisdomDuration(talentPoints),
+		IsPlayer: isPlayer,
+	})
+}
 
 // Mangle - https://www.wowhead.com/forever/spell=1238073
 // func MangleAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // mangle, KindDebuffDamageTaken: spell 1238073 states no aura effect this generator maps (auras )
@@ -324,6 +344,12 @@ func ScorpidStingAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 func applyGeneratedDebuffs(target *Unit, debuffs *proto.Debuffs, raid *proto.Raid) {
 	if debuffs.HuntersMark {
 		MakePermanent(HuntersMarkAura(target, false, 0))
+	}
+	if debuffs.JudgementOfLight {
+		driveJudgementOfLight(target, debuffs, raid)
+	}
+	if debuffs.JudgementOfWisdom {
+		driveJudgementOfWisdom(target, debuffs, raid)
 	}
 	if debuffs.CurseOfElements {
 		MakePermanent(CurseOfElementsAura(target, false, 0))

@@ -292,7 +292,26 @@ func StrengthOfEarthTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Au
 // func GraceOfAirTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // grace_of_air_totem, KindStatFlat: hand-written constructor still present
 
 // Windfury Totem - https://www.wowhead.com/forever/spell=10610
-// func WindfuryTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // windfury_totem, KindProc: hand-written constructor still present
+var WindfuryTotemCategory = "WindfuryTotem"
+
+func WindfuryTotemValue(talentPoints int32) float64 {
+	return 246.0
+}
+func WindfuryTotemDuration(talentPoints int32) time.Duration {
+	return 1000 * time.Millisecond
+}
+func WindfuryTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Windfury Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10610}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: WindfuryTotemDuration(talentPoints),
+		Category: WindfuryTotemCategory,
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.AttackPower, WindfuryTotemValue(talentPoints), false},
+		},
+	})
+}
 
 // func DrumsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // drums, KindEnum: the drum items are not in the client; the UI keeps a hand-written swatch row over this field.
 
@@ -761,6 +780,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if party.StrengthOfEarthTotem {
 		MakePermanent(StrengthOfEarthTotemAura(&char.Unit, false, 0))
+	}
+	if party.WindfuryTotem {
+		driveWindfuryTotem(char, party)
 	}
 	if party.FrostResistanceTotem {
 		MakePermanent(FrostResistanceTotemAura(&char.Unit, false, 0))

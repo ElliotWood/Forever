@@ -317,6 +317,44 @@ func measureGeneratedBuffStats(char *Character) {
 	char.stats = char.SortAndApplyStatDependencies(char.stats).FloorGameStats()
 }
 
+// The windfury proc grants the attack power the client states for the second
+// the aura lasts; the totem aura around it holds the category and the trigger.
+func TestGeneratedWindfuryTotemProcAppliesTheClientsAttackPower(t *testing.T) {
+	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{}, &proto.PartyBuffs{WindfuryTotem: true}, &proto.IndividualBuffs{})
+	char := sim.Raid.Parties[0].Players[0].GetCharacter()
+
+	proc := char.GetAura("Windfury Totem (External)")
+	if proc == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Windfury Totem (External)", auraLabels(char))
+	}
+	if proc.Duration != time.Second {
+		t.Errorf("the proc buff lasts %v, want the client's 1 second", proc.Duration)
+	}
+
+	before := char.stats[stats.AttackPower]
+	proc.Activate(sim)
+	if got := char.stats[stats.AttackPower] - before; got != 246 {
+		t.Errorf("the proc applied %v attack power, want the client's 246", got)
+	}
+	proc.Deactivate(sim)
+	if got := char.stats[stats.AttackPower]; got != before {
+		t.Errorf("the proc left %v attack power behind when it expired", got-before)
+	}
+
+	totem := char.GetAura("Windfury Totem")
+	if totem == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Windfury Totem", auraLabels(char))
+	}
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(WindfuryTotemCategory)
+	if len(category.effects) != 1 || category.effects[0].Priority != WindfuryTotemValue(0) {
+		t.Errorf("the category holds %d effects, first bid %v; want one bidding 246",
+			len(category.effects), category.effects[0].Priority)
+	}
+	if char.GetAura("Windfury Totem Trigger") == nil {
+		t.Error("the driver registered no proc trigger for the totem")
+	}
+}
+
 // A generated damage shield deals the client's damage back to whoever lands a
 // melee hit, and nothing to a spell.
 func TestGeneratedThornsStrikesBackAtAMeleeHit(t *testing.T) {

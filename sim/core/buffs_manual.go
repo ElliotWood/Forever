@@ -109,6 +109,116 @@ func driveManaTideTotems(char *Character, party *proto.PartyBuffs) {
 	})
 }
 
+// The totem's aura is the attack power a windfury proc grants; what the client
+// does not state is the proc itself, so the driver keeps the 20% chance on a
+// main-hand swing, the 1.5 second internal cooldown and the extra attack the
+// proc lands, and the totem aura that holds the category.
+func driveWindfuryTotem(char *Character, _ *proto.PartyBuffs) {
+	procAura := WindfuryTotemAura(&char.Unit, false, 0)
+
+	var windfurySpell *Spell
+	procTrigger := char.MakeProcTriggerAura(ProcTrigger{
+		Name:               "Windfury Totem Trigger",
+		MetricsActionID:    ActionID{SpellID: 25580, Tag: -1},
+		IsWeaponProc:       true,
+		ProcChance:         0.2,
+		Duration:           NeverExpires,
+		Outcome:            OutcomeLanded,
+		Callback:           CallbackOnSpellHitDealt,
+		ProcMask:           ProcMaskMeleeMHAuto,
+		ICD:                time.Millisecond * 1500,
+		TriggerImmediately: true,
+		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
+			procAura.Activate(sim)
+			char.AutoAttacks.MaybeReplaceMHSwing(sim, windfurySpell).Cast(sim, result.Target)
+		},
+	})
+
+	// The totem stands for 10 seconds and the shaman drops a new one every 5,
+	// so the aura that holds the category is simply refreshed.
+	totemAura := char.GetOrRegisterAura(Aura{
+		Label:    "Windfury Totem",
+		ActionID: ActionID{SpellID: 25587, Tag: -1},
+		Duration: time.Second * 10,
+	}).ApplyOnInit(func(aura *Aura, sim *Simulation) {
+		config := *char.AutoAttacks.MHConfig()
+		config.ActionID = config.ActionID.WithTag(25584)
+		windfurySpell = char.GetOrRegisterSpell(config)
+	}).ApplyOnReset(func(aura *Aura, sim *Simulation) {
+		aura.Activate(sim)
+		StartPeriodicAction(sim, PeriodicActionOptions{
+			Period:   time.Second * 5,
+			Priority: ActionPriorityAuto,
+			OnAction: func(sim *Simulation) {
+				aura.Activate(sim)
+			},
+		})
+	})
+
+	totemAura.NewExclusiveEffect(WindfuryTotemCategory, false, ExclusiveEffect{
+		Priority: WindfuryTotemValue(0),
+		OnGain: func(_ *ExclusiveEffect, sim *Simulation) {
+			procTrigger.Activate(sim)
+		},
+		OnExpire: func(_ *ExclusiveEffect, sim *Simulation) {
+			procTrigger.Deactivate(sim)
+			totemAura.Deactivate(sim)
+		},
+	})
+
+	char.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotMainHand}, func(sim *Simulation, slot proto.ItemSlot) {
+		totemAura.Deactivate(sim)
+	})
+}
+
+// The judgement the paladin leaves on the target heals whoever strikes it; the
+// client's trigger spell 5373 is a dummy, so how much and how often is the
+// driver's.
+func driveJudgementOfLight(target *Unit, _ *proto.Debuffs, _ *proto.Raid) {
+	healthMetrics := target.NewHealthMetrics(ActionID{SpellID: 20346})
+
+	MakePermanent(JudgementOfLightAura(target, false, 0)).AttachProcTrigger(ProcTrigger{
+		Name:     "Judgement of Light - Heal",
+		Callback: CallbackOnSpellHitTaken,
+		ProcMask: ProcMaskMelee,
+		Outcome:  OutcomeLanded,
+		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
+			if sim.Proc(0.5, "Judgement of Light - Heal") {
+				spell.Unit.GainHealth(sim, 95.0, healthMetrics)
+			}
+		},
+	})
+}
+
+// Judgement of Wisdom returns mana to whoever strikes the target, on the same
+// terms: 1826 is a dummy, so the amount and the chance stay here. Melee claim
+// it returns mana on a miss as well.
+func driveJudgementOfWisdom(target *Unit, _ *proto.Debuffs, _ *proto.Raid) {
+	actionID := ActionID{SpellID: 20355}
+
+	MakePermanent(JudgementOfWisdomAura(target, false, 0)).AttachProcTrigger(ProcTrigger{
+		Name:       "Judgement of Wisdom",
+		ActionID:   actionID,
+		ProcChance: 0.5,
+		ProcMask:   ProcMaskDirect,
+		Callback:   CallbackOnSpellHitTaken,
+		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
+			if !spell.ProcMask.Matches(ProcMaskMeleeOrRanged) && !result.Landed() {
+				return
+			}
+
+			unit := spell.Unit
+			if !unit.HasManaBar() {
+				return
+			}
+			if unit.JowManaMetrics == nil {
+				unit.JowManaMetrics = unit.NewManaMetrics(actionID)
+			}
+			unit.AddMana(sim, 74.0, unit.JowManaMetrics)
+		},
+	})
+}
+
 // A stack of Sunder Armor is worth nothing until it is on the target, so the
 // raid's copy is ramped to five over the first five global cooldowns, which is
 // how long a warrior takes to stack it.

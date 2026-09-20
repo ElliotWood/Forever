@@ -198,6 +198,38 @@ func TestGeneratedDemoralizingDebuffsApplyOnce(t *testing.T) {
 	}
 }
 
+// The two judgements are bare 40-second auras in the client; what they do to
+// whoever strikes the target is the driver's proc trigger.
+func TestGeneratedJudgementsCarryTheDriversProcTriggers(t *testing.T) {
+	target := newGeneratedDebuffTestTarget()
+
+	applyGeneratedTestDebuffs(target, &proto.Debuffs{JudgementOfLight: true, JudgementOfWisdom: true})
+
+	for label, want := range map[string]ActionID{
+		"Judgement of Light (External)":  {SpellID: 20346, Tag: -1},
+		"Judgement of Wisdom (External)": {SpellID: 20355, Tag: -1},
+	} {
+		aura := target.GetAura(label)
+		if aura == nil {
+			t.Fatalf("the target has %v, want an aura labelled %q", targetAuraLabels(target), label)
+		}
+		if aura.ActionID != want {
+			t.Errorf("%s is %v, want %v", label, aura.ActionID, want)
+		}
+		if !aura.IsActive() {
+			t.Errorf("%s is not up, want the raid config's copy to be permanent", label)
+		}
+		if aura.OnSpellHitTaken == nil {
+			t.Errorf("%s has no proc trigger, so nothing happens to whoever strikes the target", label)
+		}
+	}
+
+	if JudgementOfLightDuration(0) != time.Second*40 || JudgementOfWisdomDuration(0) != time.Second*40 {
+		t.Errorf("the judgements last %v and %v before they are made permanent, want the client's 40 seconds",
+			JudgementOfLightDuration(0), JudgementOfWisdomDuration(0))
+	}
+}
+
 func targetAuraLabels(target *Unit) []string {
 	labels := make([]string, 0, len(target.auras))
 	for _, aura := range target.auras {

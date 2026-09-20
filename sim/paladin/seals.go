@@ -379,13 +379,15 @@ func (paladin *Paladin) registerSealOfRighteousness(seal seal) {
 // a chance to heal the Paladin. Only one Seal can be active on the Paladin
 // at any one time.
 //
-// Unleashing this Seal's energy will judge an enemy for 20 sec, granting
+// Unleashing this Seal's energy will judge an enemy for 40 sec, granting
 // attacks against the judged enemy a chance to heal the attacker.
 func (paladin *Paladin) registerSealOfLight(seal seal) {
 	panic("To be implemented")
 
 	// The TBC implementation, kept for the port:
-	// judgementOfLightAuras := paladin.NewEnemyAuraArray(core.JudgementOfLightAura)
+	// judgementOfLightAuras := paladin.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+	// 	return core.JudgementOfLightAura(target, true, 0)
+	// })
 	// paladin.JudgementAuras = append(paladin.JudgementAuras, judgementOfLightAuras)
 	//
 	// judgeSpell := paladin.RegisterSpell(core.SpellConfig{
@@ -460,13 +462,15 @@ func (paladin *Paladin) registerSealOfLight(seal seal) {
 // a chance to restore mana to the Paladin. Only one Seal can be active on
 // the Paladin at any one time.
 //
-// Unleashing this Seal's energy will judge an enemy for 20 sec, granting
+// Unleashing this Seal's energy will judge an enemy for 40 sec, granting
 // attacks against the judged enemy a chance to restore mana to the attacker.
 func (paladin *Paladin) registerSealOfWisdom(seal seal) {
 	panic("To be implemented")
 
 	// The TBC implementation, kept for the port:
-	// judgementOfWisdomAuras := paladin.NewEnemyAuraArray(core.JudgementOfWisdomAura)
+	// judgementOfWisdomAuras := paladin.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+	// 	return core.JudgementOfWisdomAura(target, true, 0)
+	// })
 	// paladin.JudgementAuras = append(paladin.JudgementAuras, judgementOfWisdomAuras)
 	//
 	// judgeSpell := paladin.RegisterSpell(core.SpellConfig{

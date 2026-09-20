@@ -32,14 +32,6 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 		ImprovedShadowBoltAura(target, debuffs.IsbUptime, 5)
 	}
 
-	if debuffs.JudgementOfLight {
-		MakePermanent(JudgementOfLightAura(target))
-	}
-
-	if debuffs.JudgementOfWisdom {
-		MakePermanent(JudgementOfWisdomAura(target))
-	}
-
 	if debuffs.Mangle {
 		MakePermanent(MangleAura(target))
 	}
@@ -181,64 +173,6 @@ func ImprovedShadowBoltAura(target *Unit, uptime float64, points int32) *Aura {
 		aura.AttachMultiplicativePseudoStatBuff(&target.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexShadow], multiplier)
 		ApplyFixedUptimeAura(aura, uptime, aura.Duration, 1)
 	}
-
-	return aura
-}
-
-func JudgementOfLightAura(target *Unit) *Aura {
-	healthMetrics := target.NewHealthMetrics(ActionID{SpellID: 27163})
-
-	return target.GetOrRegisterAura(Aura{
-		Label:    "Judgement of Light",
-		ActionID: ActionID{SpellID: 27162},
-		Duration: time.Second * 20,
-		OnSpellHitTaken: func(aura *Aura, sim *Simulation, spell *Spell, result *SpellResult) {
-
-			if !spell.ProcMask.Matches(ProcMaskMelee) || !result.Landed() {
-				return
-			}
-
-			if spell.ActionID.SameAction(ActionID{SpellID: 35395}) {
-				aura.Refresh(sim)
-			}
-
-			if sim.Proc(0.5, "Judgement of Light - Heal") {
-				spell.Unit.GainHealth(sim, 95.0, healthMetrics)
-			}
-		},
-	})
-}
-
-func JudgementOfWisdomAura(target *Unit) *Aura {
-	actionId := ActionID{SpellID: 27164}
-	var aura *Aura
-	aura = target.MakeProcTriggerAura(ProcTrigger{
-		Name:            "Judgement of Wisdom",
-		ActionID:        actionId,
-		MetricsActionID: actionId,
-		Duration:        time.Second * 20,
-		ProcChance:      0.5,
-		ProcMask:        ProcMaskDirect,
-		Callback:        CallbackOnSpellHitTaken,
-		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
-			// Melee claim that wisdom can proc on misses.
-			if !spell.ProcMask.Matches(ProcMaskMeleeOrRanged) && !result.Landed() {
-				return
-			}
-
-			unit := spell.Unit
-			if unit.HasManaBar() {
-				if unit.JowManaMetrics == nil {
-					unit.JowManaMetrics = unit.NewManaMetrics(actionId)
-				}
-				unit.AddMana(sim, 74.0, unit.JowManaMetrics)
-			}
-
-			if spell.ActionID.SameAction(ActionID{SpellID: 35395}) {
-				aura.Refresh(sim)
-			}
-		},
-	})
 
 	return aura
 }
