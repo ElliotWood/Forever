@@ -111,8 +111,6 @@ func (shaman *Shaman) applyImprovedHealingWave() {
 	if shaman.Talents.ImprovedHealingWave == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyMindfulness implements Mindfulness, new in Forever.
@@ -123,8 +121,6 @@ func (shaman *Shaman) applyMindfulness() {
 	if shaman.Talents.Mindfulness == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyNaturalGrace implements Natural Grace, new in Forever.
@@ -135,8 +131,6 @@ func (shaman *Shaman) applyNaturalGrace() {
 	if shaman.Talents.NaturalGrace == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedReincarnation implements Improved Reincarnation, new in Forever.
@@ -147,8 +141,6 @@ func (shaman *Shaman) applyImprovedReincarnation() {
 	if shaman.Talents.ImprovedReincarnation == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyAncestralHealing implements Ancestral Healing, new in Forever.
@@ -159,8 +151,6 @@ func (shaman *Shaman) applyAncestralHealing() {
 	if shaman.Talents.AncestralHealing == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyHealingFocus implements Healing Focus, new in Forever.
@@ -171,8 +161,6 @@ func (shaman *Shaman) applyHealingFocus() {
 	if shaman.Talents.HealingFocus == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyWaterShield implements Water Shield, new in Forever.
@@ -183,8 +171,6 @@ func (shaman *Shaman) applyWaterShield() {
 	if !shaman.Talents.WaterShield {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyManaTideTotem implements Mana Tide Totem, new in Forever.
@@ -195,8 +181,6 @@ func (shaman *Shaman) applyManaTideTotem() {
 	if !shaman.Talents.ManaTideTotem {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyHealingWay implements Healing Way, new in Forever.
@@ -207,8 +191,6 @@ func (shaman *Shaman) applyHealingWay() {
 	if shaman.Talents.HealingWay == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyPurification implements Purification, new in Forever.
@@ -219,8 +201,6 @@ func (shaman *Shaman) applyPurification() {
 	if shaman.Talents.Purification == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyRiptide implements Riptide, new in Forever.
@@ -231,6 +211,4 @@ func (shaman *Shaman) applyRiptide() {
 	if !shaman.Talents.Riptide {
 		return
 	}
-
-	panic("To be implemented")
 }

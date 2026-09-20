@@ -141,8 +141,6 @@ func (warlock *Warlock) applyMoltenSkin() {
 	if warlock.Talents.MoltenSkin == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyAftermath implements Aftermath, new in Forever.
@@ -153,8 +151,6 @@ func (warlock *Warlock) applyAftermath() {
 	if warlock.Talents.Aftermath == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyIntensity implements Intensity, new in Forever.
@@ -165,8 +161,6 @@ func (warlock *Warlock) applyIntensity() {
 	if warlock.Talents.Intensity == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyAgonizingFlames implements Agonizing Flames, new in Forever.
@@ -177,8 +171,6 @@ func (warlock *Warlock) applyAgonizingFlames() {
 	if warlock.Talents.AgonizingFlames == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyPyroclasm implements Pyroclasm, new in Forever.
@@ -189,8 +181,6 @@ func (warlock *Warlock) applyPyroclasm() {
 	if warlock.Talents.Pyroclasm == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyBaneOfHavoc implements Bane of Havoc, new in Forever.
@@ -201,8 +191,6 @@ func (warlock *Warlock) applyBaneOfHavoc() {
 	if !warlock.Talents.BaneOfHavoc {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyFireAndBrimstone implements Fire and Brimstone, new in Forever.
@@ -213,8 +201,6 @@ func (warlock *Warlock) applyFireAndBrimstone() {
 	if warlock.Talents.FireAndBrimstone == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyIncinerate implements Incinerate, new in Forever.
@@ -225,6 +211,4 @@ func (warlock *Warlock) applyIncinerate() {
 	if !warlock.Talents.Incinerate {
 		return
 	}
-
-	panic("To be implemented")
 }

@@ -52,8 +52,6 @@ func (mage *Mage) registerWandSpecialization() {
 	if mage.Talents.WandSpecialization == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerArcaneFocus() {
@@ -72,8 +70,6 @@ func (mage *Mage) registerImprovedChanneling() {
 	if mage.Talents.ImprovedChanneling == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerArcaneSubtlety() {
@@ -97,8 +93,6 @@ func (mage *Mage) registerMagicAbsorption() {
 	if mage.Talents.MagicAbsorption == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerArcaneConcentration() {
@@ -177,8 +171,6 @@ func (mage *Mage) registerArcaneResilience() {
 	if mage.Talents.ArcaneResilience == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerArcaneGeometry implements Arcane Geometry, new in Forever.
@@ -189,8 +181,6 @@ func (mage *Mage) registerArcaneGeometry() {
 	if mage.Talents.ArcaneGeometry == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerArcaneImpact() {
@@ -214,8 +204,6 @@ func (mage *Mage) registerArcaneBlastTalent() {
 	if !mage.Talents.ArcaneBlast {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerArcaneShielding implements Arcane Shielding, new in Forever.
@@ -226,8 +214,6 @@ func (mage *Mage) registerArcaneShielding() {
 	if mage.Talents.ArcaneShielding == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedCounterspell implements Improved Counterspell, new in Forever.
@@ -238,8 +224,6 @@ func (mage *Mage) registerImprovedCounterspell() {
 	if mage.Talents.ImprovedCounterspell == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerArcaneMeditation() {
@@ -259,8 +243,6 @@ func (mage *Mage) registerMissileBarrage() {
 	if !mage.Talents.MissileBarrage {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerArcaneMind() {

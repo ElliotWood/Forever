@@ -311,8 +311,6 @@ func (war *Warrior) registerMasterOfDefense() {
 	if war.Talents.MasterOfDefense == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedRevenge implements Improved Revenge, new in Forever.
@@ -323,8 +321,6 @@ func (war *Warrior) registerImprovedRevenge() {
 	if war.Talents.ImprovedRevenge == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedDisarm implements Improved Disarm, new in Forever.
@@ -335,8 +331,6 @@ func (war *Warrior) registerImprovedDisarm() {
 	if war.Talents.ImprovedDisarm == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerVanguard implements Vanguard, new in Forever.
@@ -347,8 +341,6 @@ func (war *Warrior) registerVanguard() {
 	if !war.Talents.Vanguard {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedShieldBash implements Improved Shield Bash, new in Forever.
@@ -359,8 +351,6 @@ func (war *Warrior) registerImprovedShieldBash() {
 	if war.Talents.ImprovedShieldBash == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerBastion implements Bastion, new in Forever.
@@ -371,6 +361,4 @@ func (war *Warrior) registerBastion() {
 	if war.Talents.Bastion == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }

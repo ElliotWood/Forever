@@ -207,8 +207,6 @@ func (paladin *Paladin) applyChampionOfTheLight() {
 	if paladin.Talents.ChampionOfTheLight == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyEyeForAnEye implements Eye for an Eye, new in Forever.
@@ -219,8 +217,6 @@ func (paladin *Paladin) applyEyeForAnEye() {
 	if paladin.Talents.EyeForAnEye == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyHolyConduit implements Holy Conduit, new in Forever.
@@ -231,8 +227,6 @@ func (paladin *Paladin) applyHolyConduit() {
 	if paladin.Talents.HolyConduit == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyInstrumentOfLaw implements Instrument of Law, new in Forever.
@@ -243,8 +237,6 @@ func (paladin *Paladin) applyInstrumentOfLaw() {
 	if paladin.Talents.InstrumentOfLaw == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyPursuitOfJustice implements Pursuit of Justice, new in Forever.
@@ -255,8 +247,6 @@ func (paladin *Paladin) applyPursuitOfJustice() {
 	if paladin.Talents.PursuitOfJustice == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applySacredArbiter implements Sacred Arbiter, new in Forever.
@@ -267,8 +257,6 @@ func (paladin *Paladin) applySacredArbiter() {
 	if !paladin.Talents.SacredArbiter {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyTwistOfLight implements Twist of Light, new in Forever.
@@ -279,8 +267,6 @@ func (paladin *Paladin) applyTwistOfLight() {
 	if !paladin.Talents.TwistOfLight {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyVindication implements Vindication, new in Forever.
@@ -291,6 +277,4 @@ func (paladin *Paladin) applyVindication() {
 	if paladin.Talents.Vindication == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }

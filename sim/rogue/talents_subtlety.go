@@ -249,7 +249,6 @@ func (rogue *Rogue) registerHemorrhage() {
 	if !rogue.Talents.Hemorrhage {
 		return
 	}
-	panic("To be implemented")
 
 	// The TBC implementation, kept for the port:
 	// if !rogue.Talents.Hemorrhage {
@@ -370,8 +369,6 @@ func (rogue *Rogue) registerCamouflage() {
 	if rogue.Talents.Camouflage == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerCutthroat implements Cutthroat, new in Forever.
@@ -382,8 +379,6 @@ func (rogue *Rogue) registerCutthroat() {
 	if rogue.Talents.Cutthroat == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerDirtyTricks implements Dirty Tricks, new in Forever.
@@ -394,8 +389,6 @@ func (rogue *Rogue) registerDirtyTricks() {
 	if rogue.Talents.DirtyTricks == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerHeightenedSenses implements Heightened Senses, new in Forever.
@@ -406,8 +399,6 @@ func (rogue *Rogue) registerHeightenedSenses() {
 	if rogue.Talents.HeightenedSenses == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedDistract implements Improved Distract, new in Forever.
@@ -418,8 +409,6 @@ func (rogue *Rogue) registerImprovedDistract() {
 	if rogue.Talents.ImprovedDistract == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerMasterOfDeception implements Master of Deception, new in Forever.
@@ -430,8 +419,6 @@ func (rogue *Rogue) registerMasterOfDeception() {
 	if rogue.Talents.MasterOfDeception == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerQuietus implements Quietus, new in Forever.
@@ -442,8 +429,6 @@ func (rogue *Rogue) registerQuietus() {
 	if rogue.Talents.Quietus == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerSetup implements Setup, new in Forever.
@@ -454,8 +439,6 @@ func (rogue *Rogue) registerSetup() {
 	if rogue.Talents.Setup == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerThousandCuts implements Thousand Cuts, new in Forever.
@@ -466,6 +449,4 @@ func (rogue *Rogue) registerThousandCuts() {
 	if !rogue.Talents.ThousandCuts {
 		return
 	}
-
-	panic("To be implemented")
 }

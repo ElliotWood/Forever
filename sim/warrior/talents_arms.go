@@ -369,8 +369,6 @@ func (war *Warrior) registerImprovedTacticalMastery() {
 	if war.Talents.ImprovedTacticalMastery == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerSpearingStrike implements Spearing Strike, new in Forever.
@@ -381,8 +379,6 @@ func (war *Warrior) registerSpearingStrike() {
 	if !war.Talents.SpearingStrike {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerBloodthrill implements Bloodthrill, new in Forever.
@@ -393,8 +389,6 @@ func (war *Warrior) registerBloodthrill() {
 	if war.Talents.Bloodthrill == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerWeaponmaster implements Weaponmaster, new in Forever.
@@ -405,8 +399,6 @@ func (war *Warrior) registerWeaponmaster() {
 	if war.Talents.Weaponmaster == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedHamstring implements Improved Hamstring, new in Forever.
@@ -417,6 +409,4 @@ func (war *Warrior) registerImprovedHamstring() {
 	if war.Talents.ImprovedHamstring == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }

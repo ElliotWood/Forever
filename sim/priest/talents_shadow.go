@@ -60,8 +60,6 @@ func (priest *Priest) applyBlackout() {
 	if priest.Talents.Blackout == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applySpiritTap implements Spirit Tap, new in Forever.
@@ -72,8 +70,6 @@ func (priest *Priest) applySpiritTap() {
 	if priest.Talents.SpiritTap == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyShadowAffinity() {
@@ -110,8 +106,6 @@ func (priest *Priest) applyShadowReach() {
 	if priest.Talents.ShadowReach == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyImprovedMindBlast() {
@@ -134,8 +128,6 @@ func (priest *Priest) applyImprovedPsychicScream() {
 	if priest.Talents.ImprovedPsychicScream == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyMindFlay() {
@@ -217,8 +209,6 @@ func (priest *Priest) applyImprovedMindFlay() {
 	if priest.Talents.ImprovedMindFlay == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedFade implements Improved Fade, new in Forever.
@@ -229,8 +219,6 @@ func (priest *Priest) applyImprovedFade() {
 	if priest.Talents.ImprovedFade == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyVampiricEmbrace() {
@@ -319,8 +307,6 @@ func (priest *Priest) applySilence() {
 	if !priest.Talents.Silence {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyDevouringContagion implements Devouring Contagion, new in Forever.
@@ -331,8 +317,6 @@ func (priest *Priest) applyDevouringContagion() {
 	if priest.Talents.DevouringContagion == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyEarlyDemise implements Early Demise, new in Forever.
@@ -343,8 +327,6 @@ func (priest *Priest) applyEarlyDemise() {
 	if priest.Talents.EarlyDemise == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyDarkness() {

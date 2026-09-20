@@ -51,8 +51,6 @@ func (mage *Mage) registerWakeOfFire() {
 	if mage.Talents.WakeOfFire == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerIncineration() {
@@ -157,8 +155,6 @@ func (mage *Mage) registerFlameThrowing() {
 	if mage.Talents.FlameThrowing == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImpact implements Impact, new in Forever.
@@ -169,8 +165,6 @@ func (mage *Mage) registerImpact() {
 	if mage.Talents.Impact == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerBurningSoul() {
@@ -206,8 +200,6 @@ func (mage *Mage) registerPyroblastTalent() {
 	if !mage.Talents.Pyroblast {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedFireWard implements Improved Fire Ward, new in Forever.
@@ -218,8 +210,6 @@ func (mage *Mage) registerImprovedFireWard() {
 	if mage.Talents.ImprovedFireWard == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerHotStreak implements Hot Streak, new in Forever.
@@ -230,8 +220,6 @@ func (mage *Mage) registerHotStreak() {
 	if !mage.Talents.HotStreak {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerMasterOfElements() {

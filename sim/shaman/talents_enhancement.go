@@ -206,8 +206,6 @@ func (shaman *Shaman) applyEarthsGrasp() {
 	if shaman.Talents.EarthsGrasp == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyGuardianTotems implements Guardian Totems, new in Forever.
@@ -218,8 +216,6 @@ func (shaman *Shaman) applyGuardianTotems() {
 	if shaman.Talents.GuardianTotems == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyMentalDexterity implements Mental Dexterity, new in Forever.
@@ -230,8 +226,6 @@ func (shaman *Shaman) applyMentalDexterity() {
 	if shaman.Talents.MentalDexterity == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedGhostWolf implements Improved Ghost Wolf, new in Forever.
@@ -242,8 +236,6 @@ func (shaman *Shaman) applyImprovedGhostWolf() {
 	if shaman.Talents.ImprovedGhostWolf == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyAnticipation implements Anticipation, new in Forever.
@@ -254,8 +246,6 @@ func (shaman *Shaman) applyAnticipation() {
 	if shaman.Talents.Anticipation == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyToughness implements Toughness, new in Forever.
@@ -266,8 +256,6 @@ func (shaman *Shaman) applyToughness() {
 	if shaman.Talents.Toughness == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedStormstrike implements Improved Stormstrike, new in Forever.
@@ -278,8 +266,6 @@ func (shaman *Shaman) applyImprovedStormstrike() {
 	if shaman.Talents.ImprovedStormstrike == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyMaelstromWeapon implements Maelstrom Weapon, new in Forever.
@@ -290,8 +276,6 @@ func (shaman *Shaman) applyMaelstromWeapon() {
 	if shaman.Talents.MaelstromWeapon == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyRageOfTheFarseer implements Rage of the Farseer, new in Forever.
@@ -302,6 +286,4 @@ func (shaman *Shaman) applyRageOfTheFarseer() {
 	if !shaman.Talents.RageOfTheFarseer {
 		return
 	}
-
-	panic("To be implemented")
 }

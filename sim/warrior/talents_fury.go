@@ -382,8 +382,6 @@ func (war *Warrior) registerIronWill() {
 	if war.Talents.IronWill == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerPiercingHowl implements Piercing Howl, new in Forever.
@@ -394,8 +392,6 @@ func (war *Warrior) registerPiercingHowl() {
 	if !war.Talents.PiercingHowl {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerBloodCraze implements Blood Craze, new in Forever.
@@ -406,8 +402,6 @@ func (war *Warrior) registerBloodCraze() {
 	if war.Talents.BloodCraze == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerBoundlessRage implements Boundless Rage, new in Forever.
@@ -418,8 +412,6 @@ func (war *Warrior) registerBoundlessRage() {
 	if war.Talents.BoundlessRage == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerRagingBlows implements Raging Blows, new in Forever.
@@ -430,6 +422,4 @@ func (war *Warrior) registerRagingBlows() {
 	if !war.Talents.RagingBlows {
 		return
 	}
-
-	panic("To be implemented")
 }

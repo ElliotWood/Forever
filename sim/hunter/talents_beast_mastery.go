@@ -175,8 +175,6 @@ func (hunter *Hunter) registerDeadlyAspects() {
 	if hunter.Talents.DeadlyAspects == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedAspectOfTheMonkey implements Improved Aspect of the Monkey, new in Forever.
@@ -187,8 +185,6 @@ func (hunter *Hunter) registerImprovedAspectOfTheMonkey() {
 	if hunter.Talents.ImprovedAspectOfTheMonkey == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerPathfinding implements Pathfinding, new in Forever.
@@ -199,8 +195,6 @@ func (hunter *Hunter) registerPathfinding() {
 	if hunter.Talents.Pathfinding == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedRevivePet implements Improved Revive Pet, new in Forever.
@@ -211,8 +205,6 @@ func (hunter *Hunter) registerImprovedRevivePet() {
 	if hunter.Talents.ImprovedRevivePet == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerBestialSwiftness implements Bestial Swiftness, new in Forever.
@@ -223,8 +215,6 @@ func (hunter *Hunter) registerBestialSwiftness() {
 	if !hunter.Talents.BestialSwiftness {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedMendPet implements Improved Mend Pet, new in Forever.
@@ -235,8 +225,6 @@ func (hunter *Hunter) registerImprovedMendPet() {
 	if hunter.Talents.ImprovedMendPet == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerSummonHawk implements Summon Hawk, new in Forever.
@@ -247,8 +235,6 @@ func (hunter *Hunter) registerSummonHawk() {
 	if !hunter.Talents.SummonHawk {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerSpiritBond implements Spirit Bond, new in Forever.
@@ -259,8 +245,6 @@ func (hunter *Hunter) registerSpiritBond() {
 	if hunter.Talents.SpiritBond == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerIntimidation implements Intimidation, new in Forever.
@@ -271,6 +255,4 @@ func (hunter *Hunter) registerIntimidation() {
 	if !hunter.Talents.Intimidation {
 		return
 	}
-
-	panic("To be implemented")
 }

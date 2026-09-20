@@ -241,8 +241,6 @@ func (rogue *Rogue) registerDeflection() {
 	if rogue.Talents.Deflection == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerEndurance implements Endurance, new in Forever.
@@ -253,8 +251,6 @@ func (rogue *Rogue) registerEndurance() {
 	if rogue.Talents.Endurance == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerFlawlessExecution implements Flawless Execution, new in Forever.
@@ -265,8 +261,6 @@ func (rogue *Rogue) registerFlawlessExecution() {
 	if !rogue.Talents.FlawlessExecution {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerHackAndSlash implements Hack and Slash, new in Forever.
@@ -277,8 +271,6 @@ func (rogue *Rogue) registerHackAndSlash() {
 	if rogue.Talents.HackAndSlash == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedKick implements Improved Kick, new in Forever.
@@ -289,8 +281,6 @@ func (rogue *Rogue) registerImprovedKick() {
 	if rogue.Talents.ImprovedKick == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedSprint implements Improved Sprint, new in Forever.
@@ -301,8 +291,6 @@ func (rogue *Rogue) registerImprovedSprint() {
 	if rogue.Talents.ImprovedSprint == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerRiposte implements Riposte, new in Forever.
@@ -313,6 +301,4 @@ func (rogue *Rogue) registerRiposte() {
 	if !rogue.Talents.Riposte {
 		return
 	}
-
-	panic("To be implemented")
 }

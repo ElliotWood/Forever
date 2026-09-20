@@ -197,8 +197,6 @@ func (shaman *Shaman) applyElementalAlacrity() {
 	if shaman.Talents.ElementalAlacrity == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyElementalReach implements Elemental Reach, new in Forever.
@@ -209,8 +207,6 @@ func (shaman *Shaman) applyElementalReach() {
 	if shaman.Talents.ElementalReach == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyElementalWarding implements Elemental Warding, new in Forever.
@@ -221,8 +217,6 @@ func (shaman *Shaman) applyElementalWarding() {
 	if shaman.Talents.ElementalWarding == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyEyeOfTheStorm implements Eye of the Storm, new in Forever.
@@ -233,8 +227,6 @@ func (shaman *Shaman) applyEyeOfTheStorm() {
 	if shaman.Talents.EyeOfTheStorm == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedFireNova implements Improved Fire Nova, new in Forever.
@@ -245,8 +237,6 @@ func (shaman *Shaman) applyImprovedFireNova() {
 	if shaman.Talents.ImprovedFireNova == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyEarthbound implements Earthbound, new in Forever.
@@ -257,8 +247,6 @@ func (shaman *Shaman) applyEarthbound() {
 	if !shaman.Talents.Earthbound {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyLavaBurst implements Lava Burst, new in Forever.
@@ -269,6 +257,4 @@ func (shaman *Shaman) applyLavaBurst() {
 	if !shaman.Talents.LavaBurst {
 		return
 	}
-
-	panic("To be implemented")
 }

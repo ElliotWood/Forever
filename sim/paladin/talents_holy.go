@@ -123,8 +123,6 @@ func (paladin *Paladin) applyImprovedHolyStrike() {
 	if paladin.Talents.ImprovedHolyStrike == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedSeals implements Improved Seals, new in Forever.
@@ -135,8 +133,6 @@ func (paladin *Paladin) applyImprovedSeals() {
 	if paladin.Talents.ImprovedSeals == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyInfusionOfLight implements Infusion of Light, new in Forever.
@@ -147,8 +143,6 @@ func (paladin *Paladin) applyInfusionOfLight() {
 	if paladin.Talents.InfusionOfLight == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyLightsVigil implements Light's Vigil, new in Forever.
@@ -159,8 +153,6 @@ func (paladin *Paladin) applyLightsVigil() {
 	if !paladin.Talents.LightsVigil {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyDivinePrecision implements Divine Precision, new in Forever.
@@ -171,8 +163,6 @@ func (paladin *Paladin) applyDivinePrecision() {
 	if paladin.Talents.DivinePrecision == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyConsecratedGround implements Consecrated Ground, new in Forever.
@@ -183,8 +173,6 @@ func (paladin *Paladin) applyConsecratedGround() {
 	if paladin.Talents.ConsecratedGround == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyReverence implements Reverence, new in Forever.
@@ -195,8 +183,6 @@ func (paladin *Paladin) applyReverence() {
 	if paladin.Talents.Reverence == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applySpiritualFocus implements Spiritual Focus, new in Forever.
@@ -207,8 +193,6 @@ func (paladin *Paladin) applySpiritualFocus() {
 	if paladin.Talents.SpiritualFocus == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyUnyieldingFaith implements Unyielding Faith, new in Forever.
@@ -219,8 +203,6 @@ func (paladin *Paladin) applyUnyieldingFaith() {
 	if paladin.Talents.UnyieldingFaith == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyVoiceOfTruth implements Voice of Truth, new in Forever.
@@ -231,6 +213,4 @@ func (paladin *Paladin) applyVoiceOfTruth() {
 	if !paladin.Talents.VoiceOfTruth {
 		return
 	}
-
-	panic("To be implemented")
 }

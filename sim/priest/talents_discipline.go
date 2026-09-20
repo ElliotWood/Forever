@@ -49,8 +49,6 @@ func (priest *Priest) applyPowerInLight() {
 	if priest.Talents.PowerInLight == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyWandSpecialization implements Wand Specialization, new in Forever.
@@ -61,8 +59,6 @@ func (priest *Priest) applyWandSpecialization() {
 	if priest.Talents.WandSpecialization == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyTwinDisciplines implements Twin Disciplines, new in Forever.
@@ -73,8 +69,6 @@ func (priest *Priest) applyTwinDisciplines() {
 	if priest.Talents.TwinDisciplines == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applySilentResolve() {
@@ -98,8 +92,6 @@ func (priest *Priest) applyHolyPrecision() {
 	if priest.Talents.HolyPrecision == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedPowerWordShield implements Improved Power Word: Shield, new in Forever.
@@ -110,8 +102,6 @@ func (priest *Priest) applyImprovedPowerWordShield() {
 	if priest.Talents.ImprovedPowerWordShield == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyMartyrdom implements Martyrdom, new in Forever.
@@ -122,8 +112,6 @@ func (priest *Priest) applyMartyrdom() {
 	if priest.Talents.Martyrdom == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyMentalAgility() {
@@ -214,8 +202,6 @@ func (priest *Priest) applyImprovedInnerFire() {
 	if priest.Talents.ImprovedInnerFire == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyMentalStrength() {
@@ -234,8 +220,6 @@ func (priest *Priest) applySoulWarding() {
 	if !priest.Talents.SoulWarding {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedManaBurn implements Improved Mana Burn, new in Forever.
@@ -246,8 +230,6 @@ func (priest *Priest) applyImprovedManaBurn() {
 	if priest.Talents.ImprovedManaBurn == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyPenance implements Penance, new in Forever.
@@ -258,8 +240,6 @@ func (priest *Priest) applyPenance() {
 	if !priest.Talents.Penance {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyRenewedHope implements Renewed Hope, new in Forever.
@@ -270,8 +250,6 @@ func (priest *Priest) applyRenewedHope() {
 	if priest.Talents.RenewedHope == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyDivineAegis implements Divine Aegis, new in Forever.
@@ -282,8 +260,6 @@ func (priest *Priest) applyDivineAegis() {
 	if priest.Talents.DivineAegis == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyPowerInfusion() {

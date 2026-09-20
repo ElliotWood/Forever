@@ -90,8 +90,6 @@ func (druid *Druid) applyNaturesFocus() {
 	if druid.Talents.NaturesFocus == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (druid *Druid) applyFuror() {
@@ -111,8 +109,6 @@ func (druid *Druid) applyReflection() {
 	if druid.Talents.Reflection == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyGiftOfNature implements Gift of Nature, new in Forever.
@@ -123,8 +119,6 @@ func (druid *Druid) applyGiftOfNature() {
 	if druid.Talents.GiftOfNature == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyGiftOfTheEarthmother implements Gift of the Earthmother, new in Forever.
@@ -135,8 +129,6 @@ func (druid *Druid) applyGiftOfTheEarthmother() {
 	if !druid.Talents.GiftOfTheEarthmother {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyTranquilSpirit implements Tranquil Spirit, new in Forever.
@@ -147,8 +139,6 @@ func (druid *Druid) applyTranquilSpirit() {
 	if druid.Talents.TranquilSpirit == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedRejuvenation implements Improved Rejuvenation, new in Forever.
@@ -159,8 +149,6 @@ func (druid *Druid) applyImprovedRejuvenation() {
 	if druid.Talents.ImprovedRejuvenation == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applySwiftmend implements Swiftmend, new in Forever.
@@ -171,8 +159,6 @@ func (druid *Druid) applySwiftmend() {
 	if !druid.Talents.Swiftmend {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyNaturesSwiftness implements Nature's Swiftness, new in Forever.
@@ -183,8 +169,6 @@ func (druid *Druid) applyNaturesSwiftness() {
 	if !druid.Talents.NaturesSwiftness {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedTranquility implements Improved Tranquility, new in Forever.
@@ -195,8 +179,6 @@ func (druid *Druid) applyImprovedTranquility() {
 	if druid.Talents.ImprovedTranquility == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedRegrowth implements Improved Regrowth, new in Forever.
@@ -207,8 +189,6 @@ func (druid *Druid) applyImprovedRegrowth() {
 	if druid.Talents.ImprovedRegrowth == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyWildGrowth implements Wild Growth, new in Forever.
@@ -219,6 +199,4 @@ func (druid *Druid) applyWildGrowth() {
 	if !druid.Talents.WildGrowth {
 		return
 	}
-
-	panic("To be implemented")
 }

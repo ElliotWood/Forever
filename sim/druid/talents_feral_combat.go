@@ -65,7 +65,6 @@ func (druid *Druid) applyPredatoryInstincts() {
 	if druid.Talents.PredatoryInstincts == 0 {
 		return
 	}
-	panic("To be implemented")
 
 	// The TBC implementation, kept for the port:
 	// if druid.Talents.PredatoryInstincts == 0 {
@@ -237,8 +236,6 @@ func (druid *Druid) applyBrutalImpact() {
 	if druid.Talents.BrutalImpact == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyFeralCharge implements Feral Charge, new in Forever.
@@ -249,8 +246,6 @@ func (druid *Druid) applyFeralCharge() {
 	if !druid.Talents.FeralCharge {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyKingOfTheJungle implements King of the Jungle, new in Forever.
@@ -261,8 +256,6 @@ func (druid *Druid) applyKingOfTheJungle() {
 	if druid.Talents.KingOfTheJungle == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyNaturalReaction implements Natural Reaction, new in Forever.
@@ -273,8 +266,6 @@ func (druid *Druid) applyNaturalReaction() {
 	if druid.Talents.NaturalReaction == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyRendAndTear implements Rend and Tear, new in Forever.
@@ -285,8 +276,6 @@ func (druid *Druid) applyRendAndTear() {
 	if druid.Talents.RendAndTear == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyBerserk implements Berserk, new in Forever.
@@ -297,6 +286,4 @@ func (druid *Druid) applyBerserk() {
 	if !druid.Talents.Berserk {
 		return
 	}
-
-	panic("To be implemented")
 }

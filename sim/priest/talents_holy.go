@@ -49,8 +49,6 @@ func (priest *Priest) applyTwilightFocus() {
 	if priest.Talents.TwilightFocus == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedRenew implements Improved Renew, new in Forever.
@@ -61,8 +59,6 @@ func (priest *Priest) applyImprovedRenew() {
 	if priest.Talents.ImprovedRenew == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyHolySpecialization implements Holy Specialization, new in Forever.
@@ -73,8 +69,6 @@ func (priest *Priest) applyHolySpecialization() {
 	if priest.Talents.HolySpecialization == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applySpellWarding implements Spell Warding, new in Forever.
@@ -85,8 +79,6 @@ func (priest *Priest) applySpellWarding() {
 	if priest.Talents.SpellWarding == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applyDivineFury() {
@@ -153,8 +145,6 @@ func (priest *Priest) applyBlessedRecovery() {
 	if priest.Talents.BlessedRecovery == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyInspiration implements Inspiration, new in Forever.
@@ -165,8 +155,6 @@ func (priest *Priest) applyInspiration() {
 	if priest.Talents.Inspiration == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyHolyReach implements Holy Reach, new in Forever.
@@ -177,8 +165,6 @@ func (priest *Priest) applyHolyReach() {
 	if priest.Talents.HolyReach == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedHealing implements Improved Healing, new in Forever.
@@ -189,8 +175,6 @@ func (priest *Priest) applyImprovedHealing() {
 	if priest.Talents.ImprovedHealing == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (priest *Priest) applySearingLight() {
@@ -213,8 +197,6 @@ func (priest *Priest) applyBindingHeal() {
 	if !priest.Talents.BindingHeal {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyLitanyOfLight implements Litany of Light, new in Forever.
@@ -225,8 +207,6 @@ func (priest *Priest) applyLitanyOfLight() {
 	if priest.Talents.LitanyOfLight == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // Spirit of Redemption's passive half: +5% total Spirit. The on-death form is not modelled.
@@ -254,8 +234,6 @@ func (priest *Priest) applySpiritualHealing() {
 	if priest.Talents.SpiritualHealing == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyPrayerOfMending implements Prayer of Mending, new in Forever.
@@ -266,6 +244,4 @@ func (priest *Priest) applyPrayerOfMending() {
 	if !priest.Talents.PrayerOfMending {
 		return
 	}
-
-	panic("To be implemented")
 }

@@ -175,8 +175,6 @@ func (druid *Druid) applyImprovedWrath() {
 	if druid.Talents.ImprovedWrath == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyGenesis implements Genesis, new in Forever.
@@ -187,8 +185,6 @@ func (druid *Druid) applyGenesis() {
 	if druid.Talents.Genesis == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyNaturesMajesty implements Nature's Majesty, new in Forever.
@@ -199,8 +195,6 @@ func (druid *Druid) applyNaturesMajesty() {
 	if druid.Talents.NaturesMajesty == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedEntanglingRoots implements Improved Entangling Roots, new in Forever.
@@ -211,8 +205,6 @@ func (druid *Druid) applyImprovedEntanglingRoots() {
 	if druid.Talents.ImprovedEntanglingRoots == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyNaturesSplendor implements Nature's Splendor, new in Forever.
@@ -223,8 +215,6 @@ func (druid *Druid) applyNaturesSplendor() {
 	if !druid.Talents.NaturesSplendor {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedStarfire implements Improved Starfire, new in Forever.
@@ -235,8 +225,6 @@ func (druid *Druid) applyImprovedStarfire() {
 	if druid.Talents.ImprovedStarfire == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyOvergrowth implements Overgrowth, new in Forever.
@@ -247,8 +235,6 @@ func (druid *Druid) applyOvergrowth() {
 	if druid.Talents.Overgrowth == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyEclipse implements Eclipse, new in Forever.
@@ -259,6 +245,4 @@ func (druid *Druid) applyEclipse() {
 	if druid.Talents.Eclipse == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }

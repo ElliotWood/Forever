@@ -167,8 +167,6 @@ func (hunter *Hunter) registerImprovedConcussiveShot() {
 	if hunter.Talents.ImprovedConcussiveShot == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerLethalAttacks implements Lethal Attacks, new in Forever.
@@ -179,8 +177,6 @@ func (hunter *Hunter) registerLethalAttacks() {
 	if hunter.Talents.LethalAttacks == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerLoneWolf implements Lone Wolf, new in Forever.
@@ -191,8 +187,6 @@ func (hunter *Hunter) registerLoneWolf() {
 	if !hunter.Talents.LoneWolf {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedSerpentSting implements Improved Serpent Sting, new in Forever.
@@ -203,8 +197,6 @@ func (hunter *Hunter) registerImprovedSerpentSting() {
 	if hunter.Talents.ImprovedSerpentSting == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerRapidRecuperation implements Rapid Recuperation, new in Forever.
@@ -215,8 +207,6 @@ func (hunter *Hunter) registerRapidRecuperation() {
 	if hunter.Talents.RapidRecuperation == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerScatterShot implements Scatter Shot, new in Forever.
@@ -227,8 +217,6 @@ func (hunter *Hunter) registerScatterShot() {
 	if !hunter.Talents.ScatterShot {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerSniperShot implements Sniper Shot, new in Forever.
@@ -239,6 +227,4 @@ func (hunter *Hunter) registerSniperShot() {
 	if !hunter.Talents.SniperShot {
 		return
 	}
-
-	panic("To be implemented")
 }

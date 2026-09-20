@@ -179,8 +179,6 @@ func (warlock *Warlock) applySoulHarvesting() {
 	if warlock.Talents.SoulHarvesting == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedDrains implements Improved Drains, new in Forever.
@@ -191,8 +189,6 @@ func (warlock *Warlock) applyImprovedDrains() {
 	if warlock.Talents.ImprovedDrains == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedBaneOfAgony implements Improved Bane of Agony, new in Forever.
@@ -203,8 +199,6 @@ func (warlock *Warlock) applyImprovedBaneOfAgony() {
 	if warlock.Talents.ImprovedBaneOfAgony == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyFelConcentration implements Fel Concentration, new in Forever.
@@ -215,8 +209,6 @@ func (warlock *Warlock) applyFelConcentration() {
 	if warlock.Talents.FelConcentration == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyPandemic implements Pandemic, new in Forever.
@@ -227,8 +219,6 @@ func (warlock *Warlock) applyPandemic() {
 	if warlock.Talents.Pandemic == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyMalevolence implements Malevolence, new in Forever.
@@ -239,8 +229,6 @@ func (warlock *Warlock) applyMalevolence() {
 	if warlock.Talents.Malevolence == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyCurseOfExhaustion implements Curse of Exhaustion, new in Forever.
@@ -251,8 +239,6 @@ func (warlock *Warlock) applyCurseOfExhaustion() {
 	if !warlock.Talents.CurseOfExhaustion {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applySiphonLife implements Siphon Life, new in Forever.
@@ -263,8 +249,6 @@ func (warlock *Warlock) applySiphonLife() {
 	if !warlock.Talents.SiphonLife {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyWrack implements Wrack, new in Forever.
@@ -275,6 +259,4 @@ func (warlock *Warlock) applyWrack() {
 	if !warlock.Talents.Wrack {
 		return
 	}
-
-	panic("To be implemented")
 }

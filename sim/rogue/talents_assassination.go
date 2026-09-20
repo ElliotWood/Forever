@@ -316,8 +316,6 @@ func (rogue *Rogue) registerImprovedKidneyShot() {
 	if rogue.Talents.ImprovedKidneyShot == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerRemorselessAttacks implements Remorseless Attacks, new in Forever.
@@ -328,8 +326,6 @@ func (rogue *Rogue) registerRemorselessAttacks() {
 	if rogue.Talents.RemorselessAttacks == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerVenom implements Venom, new in Forever.
@@ -340,6 +336,4 @@ func (rogue *Rogue) registerVenom() {
 	if !rogue.Talents.Venom {
 		return
 	}
-
-	panic("To be implemented")
 }

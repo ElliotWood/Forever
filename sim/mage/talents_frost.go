@@ -52,8 +52,6 @@ func (mage *Mage) registerFrostWarding() {
 	if mage.Talents.FrostWarding == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerImprovedFrostbolt() {
@@ -105,8 +103,6 @@ func (mage *Mage) registerPermafrost() {
 	if mage.Talents.Permafrost == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerImprovedFrostNova() {
@@ -129,8 +125,6 @@ func (mage *Mage) registerFrostbite() {
 	if mage.Talents.Frostbite == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerPiercingIce() {
@@ -172,8 +166,6 @@ func (mage *Mage) registerIceLance() {
 	if !mage.Talents.IceLance {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedBlizzard implements Improved Blizzard, new in Forever.
@@ -184,8 +176,6 @@ func (mage *Mage) registerImprovedBlizzard() {
 	if mage.Talents.ImprovedBlizzard == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerArcticReach implements Arctic Reach, new in Forever.
@@ -196,8 +186,6 @@ func (mage *Mage) registerArcticReach() {
 	if mage.Talents.ArcticReach == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerIceBlock implements Ice Block, new in Forever.
@@ -208,8 +196,6 @@ func (mage *Mage) registerIceBlock() {
 	if !mage.Talents.IceBlock {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerShatter implements Shatter, new in Forever.
@@ -220,8 +206,6 @@ func (mage *Mage) registerShatter() {
 	if mage.Talents.Shatter == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerImprovedConeOfCold() {
@@ -244,8 +228,6 @@ func (mage *Mage) registerFingersOfFrost() {
 	if mage.Talents.FingersOfFrost == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 func (mage *Mage) registerWinterChill() {
@@ -290,6 +272,4 @@ func (mage *Mage) registerIceBarrier() {
 	if !mage.Talents.IceBarrier {
 		return
 	}
-
-	panic("To be implemented")
 }

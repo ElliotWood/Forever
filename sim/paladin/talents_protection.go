@@ -225,8 +225,6 @@ func (paladin *Paladin) applyGuardiansFavor() {
 	if paladin.Talents.GuardiansFavor == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedHammerOfJustice implements Improved Hammer of Justice, new in Forever.
@@ -237,8 +235,6 @@ func (paladin *Paladin) applyImprovedHammerOfJustice() {
 	if paladin.Talents.ImprovedHammerOfJustice == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedSealOfFury implements Improved Seal of Fury, new in Forever.
@@ -249,8 +245,6 @@ func (paladin *Paladin) applyImprovedSealOfFury() {
 	if !paladin.Talents.ImprovedSealOfFury {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyIronCreed implements Iron Creed, new in Forever.
@@ -261,8 +255,6 @@ func (paladin *Paladin) applyIronCreed() {
 	if paladin.Talents.IronCreed == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applySwiftJudgement implements Swift Judgement, new in Forever.
@@ -273,8 +265,6 @@ func (paladin *Paladin) applySwiftJudgement() {
 	if !paladin.Talents.SwiftJudgement {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyTemplarsBulwark implements Templar's Bulwark, new in Forever.
@@ -285,6 +275,4 @@ func (paladin *Paladin) applyTemplarsBulwark() {
 	if !paladin.Talents.TemplarsBulwark {
 		return
 	}
-
-	panic("To be implemented")
 }

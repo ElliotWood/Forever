@@ -256,8 +256,6 @@ func (warlock *Warlock) applyImprovedHealthFunnel() {
 	if warlock.Talents.ImprovedHealthFunnel == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedVoidwalker implements Improved Voidwalker, new in Forever.
@@ -268,8 +266,6 @@ func (warlock *Warlock) applyImprovedVoidwalker() {
 	if warlock.Talents.ImprovedVoidwalker == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyFelVitality implements Fel Vitality, new in Forever.
@@ -280,8 +276,6 @@ func (warlock *Warlock) applyFelVitality() {
 	if warlock.Talents.FelVitality == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyDemonicEnergies implements Demonic Energies, new in Forever.
@@ -292,8 +286,6 @@ func (warlock *Warlock) applyDemonicEnergies() {
 	if warlock.Talents.DemonicEnergies == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyMasterSummoner implements Master Summoner, new in Forever.
@@ -304,8 +296,6 @@ func (warlock *Warlock) applyMasterSummoner() {
 	if warlock.Talents.MasterSummoner == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyDecimation implements Decimation, new in Forever.
@@ -316,8 +306,6 @@ func (warlock *Warlock) applyDecimation() {
 	if warlock.Talents.Decimation == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyFelDomination implements Fel Domination, new in Forever.
@@ -328,8 +316,6 @@ func (warlock *Warlock) applyFelDomination() {
 	if !warlock.Talents.FelDomination {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyDemonicBrand implements Demonic Brand, new in Forever.
@@ -340,8 +326,6 @@ func (warlock *Warlock) applyDemonicBrand() {
 	if warlock.Talents.DemonicBrand == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyImprovedFelhunter implements Improved Felhunter, new in Forever.
@@ -352,8 +336,6 @@ func (warlock *Warlock) applyImprovedFelhunter() {
 	if warlock.Talents.ImprovedFelhunter == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // applyDemonicPact implements Demonic Pact, new in Forever.
@@ -364,6 +346,4 @@ func (warlock *Warlock) applyDemonicPact() {
 	if !warlock.Talents.DemonicPact {
 		return
 	}
-
-	panic("To be implemented")
 }

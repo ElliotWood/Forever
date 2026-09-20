@@ -95,8 +95,6 @@ func (hunter *Hunter) registerImprovedTracking() {
 	if hunter.Talents.ImprovedTracking == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerDeflection implements Deflection, new in Forever.
@@ -107,8 +105,6 @@ func (hunter *Hunter) registerDeflection() {
 	if hunter.Talents.Deflection == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerEntrapment implements Entrapment, new in Forever.
@@ -119,8 +115,6 @@ func (hunter *Hunter) registerEntrapment() {
 	if hunter.Talents.Entrapment == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerImprovedWingClip implements Improved Wing Clip, new in Forever.
@@ -131,8 +125,6 @@ func (hunter *Hunter) registerImprovedWingClip() {
 	if hunter.Talents.ImprovedWingClip == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerCleverTraps implements Clever Traps, new in Forever.
@@ -143,8 +135,6 @@ func (hunter *Hunter) registerCleverTraps() {
 	if hunter.Talents.CleverTraps == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerDeterrence implements Deterrence, new in Forever.
@@ -155,8 +145,6 @@ func (hunter *Hunter) registerDeterrence() {
 	if !hunter.Talents.Deterrence {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerSurvivalTactics implements Survival Tactics, new in Forever.
@@ -167,8 +155,6 @@ func (hunter *Hunter) registerSurvivalTactics() {
 	if hunter.Talents.SurvivalTactics == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerPredatorsEdge implements Predator's Edge, new in Forever.
@@ -179,8 +165,6 @@ func (hunter *Hunter) registerPredatorsEdge() {
 	if hunter.Talents.PredatorsEdge == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerCounterattack implements Counterattack, new in Forever.
@@ -191,8 +175,6 @@ func (hunter *Hunter) registerCounterattack() {
 	if !hunter.Talents.Counterattack {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerExposePrey implements Expose Prey, new in Forever.
@@ -203,8 +185,6 @@ func (hunter *Hunter) registerExposePrey() {
 	if hunter.Talents.ExposePrey == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerSurvivalistsDiscipline implements Survivalist's Discipline, new in Forever.
@@ -215,8 +195,6 @@ func (hunter *Hunter) registerSurvivalistsDiscipline() {
 	if hunter.Talents.SurvivalistsDiscipline == 0 {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerStriderKick implements Strider Kick, new in Forever.
@@ -227,8 +205,6 @@ func (hunter *Hunter) registerStriderKick() {
 	if !hunter.Talents.StriderKick {
 		return
 	}
-
-	panic("To be implemented")
 }
 
 // registerLaceratingStrikes implements Lacerating Strikes, new in Forever.
@@ -239,6 +215,4 @@ func (hunter *Hunter) registerLaceratingStrikes() {
 	if !hunter.Talents.LaceratingStrikes {
 		return
 	}
-
-	panic("To be implemented")
 }

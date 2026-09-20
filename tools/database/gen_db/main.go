@@ -603,14 +603,13 @@ func getSpellIdsFromTalentJson(infile *string) []int32 {
 // rotationTalentsString is the talent string GetAllRotationSpellIds registers each spec
 // with, purely to reach the rotation spells whose icons the database needs.
 //
-// It is deliberately EMPTY. Every talent whose behaviour is not yet known is a registrar
-// that panics with "To be implemented" -- 249 of them across the nine classes -- so maxing
-// talents makes this tool abort on the first one. Taking no talents registers every
-// baseline ability, which is what the icon set actually needs today.
+// It is deliberately EMPTY, and it is one string for every spec, so it cannot express a
+// per-class maxed build in the first place.
 //
-// TODO: talent-gated rotation spells therefore contribute no icons. Restore a maxed
-// string, built from ui/sim/talents/trees/<class>.json using each talent's own
-// maxPoints, once the stubs are implemented.
+// TODO: talent-gated rotation spells therefore contribute no icons. Give this a class and
+// build a maxed string from ui/sim/talents/trees/<class>.json using each talent's own
+// maxPoints. An unmodelled talent no longer panics, so the blocker now is only that the
+// abilities such a talent registers may still be stubs.
 func rotationTalentsString() string {
 	return ""
 }
