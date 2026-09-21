@@ -1156,6 +1156,10 @@ const (
 	// and the Sunwell melee neck.
 	ATTR_EX_6_AURA_IS_WEAPON_PROC int = 0x80
 
+	// A periodic effect whose ticks roll a critical strike: Rend, Corruption, Rupture and the
+	// other bleeds and DoTs the client marks, 225 spells in this build.
+	ATTR_EX_8_PERIODIC_CAN_CRIT int = 0x200
+
 	ATTR_EX_11_SCALES_WITH_ITEM_LEVEL int = 0x4
 
 	ATTR_EX_12_ONLY_PROC_FROM_CLASS_ABILITIES int = 0x80000000
@@ -1168,6 +1172,7 @@ const (
 	ATTR_INDEX_EX_3  int = 3
 	ATTR_INDEX_EX_4  int = 4
 	ATTR_INDEX_EX_6  int = 6
+	ATTR_INDEX_EX_8  int = 8
 	ATTR_INDEX_EX_11 int = 11
 	ATTR_INDEX_EX_12 int = 12
 )

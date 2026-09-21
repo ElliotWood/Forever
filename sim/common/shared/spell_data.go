@@ -167,6 +167,10 @@ type SpellData struct {
 	// the spell misses. Rend and Heroic Strike carry it, Cleave and Whirlwind do not.
 	RefundsOnMiss bool
 
+	// The client's Periodic Can Crit attribute: the ticks of the periodic effect roll a critical
+	// strike. Rend and Corruption carry it; Deep Wounds does not.
+	PeriodicCanCrit bool
+
 	// SpellSchool and DefenseType as core names them. The client's school bits are in a different
 	// order - Holy is 2 there and 32 here - so the generator translates rather than copies.
 	SpellSchool core.SpellSchool
