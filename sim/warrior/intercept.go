@@ -16,24 +16,8 @@ func (warrior *Warrior) registerIntercept() {
 	var spell *core.Spell
 	var interceptTarget *core.Unit
 
-	aura := warrior.RegisterAura(core.Aura{
-		Label:    "Intercept",
-		ActionID: actionID,
-		Duration: interceptCD,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			// TODO: Manual review needed -- the run speed and the overshoot below are the sim's movement model.
-			warrior.MultiplyMovementSpeed(sim, 3.0)
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.MultiplyMovementSpeed(sim, 1.0/3.0)
-			spell.CalcAndDealDamage(sim, interceptTarget, interceptStunDamage, spell.OutcomeAlwaysHit)
-		},
-	})
-
-	warrior.RegisterMovementCallback(func(sim *core.Simulation, position float64, kind core.MovementUpdateType) {
-		if kind == core.MovementEnd && aura.IsActive() {
-			aura.Deactivate(sim)
-		}
+	aura := warrior.registerDashAura("Intercept", actionID, interceptCD, func(sim *core.Simulation) {
+		spell.CalcAndDealDamage(sim, interceptTarget, interceptStunDamage, spell.OutcomeAlwaysHit)
 	})
 
 	spell = warrior.RegisterSpell(core.SpellConfig{

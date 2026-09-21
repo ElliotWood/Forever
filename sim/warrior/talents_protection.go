@@ -62,16 +62,16 @@ func (warrior *Warrior) registerShieldSpecialization() {
 
 	warrior.registerRageOnAvoid(
 		"Shield Specialization",
-		shieldSpecializationEnergize.SpellID,
-		shieldSpecializationEnergize.Energize.Tenths(),
+		shieldSpecializationEnergize,
 		spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization),
 		core.OutcomeBlock,
 		nil,
 	)
 }
 
-func (warrior *Warrior) registerRageOnAvoid(name string, spellID int32, rage float64, chance float64, outcome core.HitOutcome, extra core.ProcExtraCondition) {
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: spellID})
+func (warrior *Warrior) registerRageOnAvoid(name string, energize shared.SpellData, chance float64, outcome core.HitOutcome, extra core.ProcExtraCondition) {
+	rage := energize.Energize.Tenths()
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: energize.SpellID})
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               name,
 		ProcChance:         chance,
@@ -285,8 +285,7 @@ func (warrior *Warrior) registerMasterOfDefense() {
 
 	warrior.registerRageOnAvoid(
 		"Master of Defense",
-		masterOfDefenseEnergize.SpellID,
-		masterOfDefenseEnergize.Energize.Tenths(),
+		masterOfDefenseEnergize,
 		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense),
 		core.OutcomeDodge|core.OutcomeParry,
 		func(_ *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {

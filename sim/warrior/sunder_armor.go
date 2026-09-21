@@ -13,9 +13,7 @@ func (warrior *Warrior) registerSunderArmor() {
 
 	actionId := core.ActionID{SpellID: sunderArmorRank.SpellID}
 
-	warrior.SunderArmorAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.SunderArmorAura(target)
-	})
+	warrior.SunderArmorAuras = warrior.NewEnemyAuraArray(core.SunderArmorAura)
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionId,
@@ -51,7 +49,7 @@ func (warrior *Warrior) registerSunderArmor() {
 				aura := warrior.SunderArmorAuras.Get(target)
 				aura.Activate(sim)
 				aura.AddStack(sim)
-			} else if spell.Cost != nil {
+			} else {
 				spell.IssueRefund(sim)
 			}
 

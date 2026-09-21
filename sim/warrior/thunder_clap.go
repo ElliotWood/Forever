@@ -7,12 +7,14 @@ import (
 func (warrior *Warrior) registerThunderClap() {
 	thunderClapRank := spellData.ThunderClap.HighestRank()
 	thunderClapBaseDamage, _ := thunderClapRank.Direct.Range()
-	thunderClapSlow := -thunderClapRank.Effects[1].Fraction()
+	thunderClapSlow := thunderClapRank.Effects[1].Fraction()
 
 	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return core.ThunderClapAura(target).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
-			slow := thunderClapSlow * (1 + warrior.thunderClapEffectBonus)
-			aura.ExclusiveEffects[0].SetPriority(sim, 1/(1-slow))
+			speedMultiplier := 1 / (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus))
+			if ee := aura.ExclusiveEffects[0]; ee.Priority != speedMultiplier {
+				ee.SetPriority(sim, speedMultiplier)
+			}
 		})
 	})
 

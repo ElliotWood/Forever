@@ -1,6 +1,8 @@
 package warrior
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -13,24 +15,7 @@ func (warrior *Warrior) registerCharge() {
 	chargeCD := chargeRank.Cooldown
 	chargeRage := chargeRank.Energize.Tenths() + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 
-	aura := warrior.RegisterAura(core.Aura{
-		Label:    "Charge",
-		ActionID: actionID,
-		Duration: chargeCD,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			// TODO: Manual review needed -- the run speed and the overshoot below are the sim's movement model.
-			warrior.MultiplyMovementSpeed(sim, 3.0)
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.MultiplyMovementSpeed(sim, 1.0/3.0)
-		},
-	})
-
-	warrior.RegisterMovementCallback(func(sim *core.Simulation, position float64, kind core.MovementUpdateType) {
-		if kind == core.MovementEnd && aura.IsActive() {
-			aura.Deactivate(sim)
-		}
-	})
+	aura := warrior.registerDashAura("Charge", actionID, chargeCD, nil)
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
@@ -59,4 +44,31 @@ func (warrior *Warrior) registerCharge() {
 			warrior.MoveTo(spell.MinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
 		},
 	})
+}
+
+// The dash Charge and Intercept share: triple run speed until the movement ends, then onEnd.
+// TODO: Manual review needed -- the run speed and the callers' overshoot are the sim's movement model.
+func (warrior *Warrior) registerDashAura(label string, actionID core.ActionID, duration time.Duration, onEnd func(sim *core.Simulation)) *core.Aura {
+	aura := warrior.RegisterAura(core.Aura{
+		Label:    label,
+		ActionID: actionID,
+		Duration: duration,
+		OnGain: func(_ *core.Aura, sim *core.Simulation) {
+			warrior.MultiplyMovementSpeed(sim, 3.0)
+		},
+		OnExpire: func(_ *core.Aura, sim *core.Simulation) {
+			warrior.MultiplyMovementSpeed(sim, 1.0/3.0)
+			if onEnd != nil {
+				onEnd(sim)
+			}
+		},
+	})
+
+	warrior.RegisterMovementCallback(func(sim *core.Simulation, _ float64, kind core.MovementUpdateType) {
+		if kind == core.MovementEnd && aura.IsActive() {
+			aura.Deactivate(sim)
+		}
+	})
+
+	return aura
 }

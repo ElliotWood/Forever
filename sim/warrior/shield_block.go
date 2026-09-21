@@ -12,25 +12,23 @@ func (warrior *Warrior) registerShieldBlock() {
 
 	actionId := core.ActionID{SpellID: shieldBlockRank.SpellID}
 
-	var spell *core.Spell
 	aura := warrior.RegisterAura(core.Aura{
 		Label:     "Shield Block",
 		ActionID:  actionId,
 		Duration:  shieldBlockRank.Duration,
 		MaxStacks: shieldBlockRank.ProcCharges,
-	}).
-		AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(shared.A_MOD_BLOCK_PERCENT, 0).Fraction()).
-		AttachProcTrigger(core.ProcTrigger{
-			Name:               "Shield Block - Consume",
-			TriggerImmediately: true,
-			Outcome:            core.OutcomeBlock,
-			Callback:           core.CallbackOnSpellHitTaken,
-			Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-				spell.RelatedSelfBuff.RemoveStack(sim)
-			},
-		})
+	}).AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(shared.A_MOD_BLOCK_PERCENT, 0).Fraction())
+	aura.AttachProcTrigger(core.ProcTrigger{
+		Name:               "Shield Block - Consume",
+		TriggerImmediately: true,
+		Outcome:            core.OutcomeBlock,
+		Callback:           core.CallbackOnSpellHitTaken,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			aura.RemoveStack(sim)
+		},
+	})
 
-	spell = warrior.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionId,
 		SpellSchool:    core.SpellSchoolPhysical,
 		ClassSpellMask: SpellMaskShieldBlock,
@@ -56,14 +54,18 @@ func (warrior *Warrior) registerShieldBlock() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.RelatedSelfBuff.Activate(sim)
-			spell.RelatedSelfBuff.SetStacks(sim, spell.RelatedSelfBuff.MaxStacks)
+			aura.Activate(sim)
+			aura.SetStacks(sim, aura.MaxStacks)
 		},
 
 		RelatedSelfBuff: aura,
 	})
 
-	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
+	warrior.deactivateWithoutShield(aura)
+}
+
+func (warrior *Warrior) deactivateWithoutShield(aura *core.Aura) {
+	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, _ proto.ItemSlot) {
 		if !warrior.PseudoStats.CanBlock {
 			aura.Deactivate(sim)
 		}

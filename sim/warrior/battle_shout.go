@@ -6,21 +6,23 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
-var battleShoutRank = spellData.BattleShout.HighestRank()
-var battleShoutAttackPower = battleShoutRank.Effect(shared.A_MOD_ATTACK_POWER, 0).Value
-
-func (warrior *Warrior) battleShoutValue() float64 {
-	return battleShoutAttackPower + core.TernaryFloat64(warrior.HasBsT2, core.BattleShoutWrathBonus, 0)
-}
-
 func (warrior *Warrior) registerBattleShout() {
+	battleShoutRank := spellData.BattleShout.HighestRank()
+	baseAttackPower := battleShoutRank.Effect(shared.A_MOD_ATTACK_POWER, 0).Value
+	attackPower := func() float64 {
+		return baseAttackPower + core.TernaryFloat64(warrior.HasBsT2, core.BattleShoutWrathBonus, 0)
+	}
+
 	auras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
-		aura := core.BattleShoutAura(unit, true, battleShoutAttackPower, battleShoutRank.Duration)
+		aura := core.BattleShoutAura(unit, true, baseAttackPower, battleShoutRank.Duration)
 		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
 		return aura.ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
-			aura.ExclusiveEffects[0].SetPriority(sim, warrior.battleShoutValue())
+			if ee := aura.ExclusiveEffects[0]; ee.Priority != attackPower() {
+				ee.SetPriority(sim, attackPower())
+			}
 		})
 	})
+	selfAura := auras.Get(&warrior.Unit)
 
 	warrior.BattleShout = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: battleShoutRank.SpellID},
@@ -45,8 +47,7 @@ func (warrior *Warrior) registerBattleShout() {
 		FlatThreatBonus: battleShoutRank.FlatThreatBonus,
 
 		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
-			aura := auras.Get(&warrior.Unit)
-			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= warrior.battleShoutValue()
+			return !selfAura.IsActive() || selfAura.ExclusiveEffects[0].Priority <= attackPower()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

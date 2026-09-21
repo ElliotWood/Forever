@@ -61,16 +61,6 @@ func (warrior *Warrior) registerUnbridledWrath() {
 
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: unbridledWrathRank.SpellID})
 
-	// The tooltip of 12322 doubles the rage for a two-handed weapon.
-	rageGain := unbridledWrathRage
-	twoHanded := func() {
-		rageGain = unbridledWrathRage * core.TernaryFloat64(warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand, 2, 1)
-	}
-	twoHanded()
-	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		twoHanded()
-	})
-
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Unbridled Wrath",
 		ProcMask:           core.ProcMaskMeleeWhiteHit,
@@ -79,7 +69,9 @@ func (warrior *Warrior) registerUnbridledWrath() {
 		Outcome:            core.OutcomeLanded,
 		Callback:           core.CallbackOnSpellHitDealt,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			warrior.AddRage(sim, rageGain, rageMetrics)
+			// The tooltip of 12322 doubles the rage for a two-handed weapon.
+			twoHanded := warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand
+			warrior.AddRage(sim, unbridledWrathRage*core.TernaryFloat64(twoHanded, 2, 1), rageMetrics)
 		},
 	})
 }

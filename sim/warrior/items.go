@@ -145,13 +145,7 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 				ClassMask:  SpellMaskThunderClap,
 				Kind:       core.SpellMod_DamageDone_Flat,
 				FloatValue: 0.5,
-			})
-			setBonusAura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) {
-				warrior.thunderClapEffectBonus += 0.5
-			})
-			setBonusAura.ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) {
-				warrior.thunderClapEffectBonus -= 0.5
-			})
+			}).AttachAdditivePseudoStatBuff(&warrior.thunderClapEffectBonus, 0.5)
 		},
 	},
 })
@@ -197,13 +191,7 @@ var ItemSetDreadnaughtsBattlegear = core.NewItemSet(core.ItemSet{
 				Label:    "Cheat Death",
 				ActionID: core.ActionID{SpellID: 28846},
 				Duration: time.Second * 5,
-				OnGain: func(aura *core.Aura, sim *core.Simulation) {
-					warrior.PseudoStats.BonusHealingTaken += cheatDeathHealing
-				},
-				OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-					warrior.PseudoStats.BonusHealingTaken -= cheatDeathHealing
-				},
-			})
+			}).AttachAdditivePseudoStatBuff(&warrior.PseudoStats.BonusHealingTaken, cheatDeathHealing)
 			setBonusAura.AttachProcTrigger(core.ProcTrigger{
 				Name:     "Cheat Death - Trigger",
 				Callback: core.CallbackOnSpellHitTaken | core.CallbackOnPeriodicDamageTaken,
