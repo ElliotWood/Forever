@@ -16,7 +16,7 @@ vi.mock('@i18n/config', () => ({ default: { t: (key: string) => STRINGS[key] ?? 
 const { bonusStatClass, critCapClass, critImmunityCapDisplayString, critImmunityClass, statDisplayString } = await import('./stat_display');
 type RacialBonuses = Parameters<typeof statDisplayString>[1];
 
-const NO_RACIALS: RacialBonuses = { hasRacialHitBonus: false, activeRacialExpertiseBonuses: [false, false], rangedImbueStatOffsets: new Stats() };
+const NO_RACIALS: RacialBonuses = { hasRacialHitBonus: false, rangedImbueStatOffsets: new Stats() };
 
 const fakePlayer = (overrides: Record<string, unknown> = {}) =>
 	({

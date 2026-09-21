@@ -1,4 +1,4 @@
-import { ItemSlot, PseudoStat, Race, Stat, WeaponType } from '@generated/proto/common';
+import { ItemSlot, PseudoStat, Race, Stat } from '@generated/proto/common';
 import i18n from '@i18n/config';
 import * as Mechanics from '@sim/constants/mechanics';
 import type { Player } from '@sim/player/player';
@@ -9,9 +9,6 @@ import { TONE_TEXT } from '@ui-kit/utils/colors';
 const SCOPE_HIT_ENCHANT_EFFECT_ID = 2523;
 /** Enchant that grants +28 ranged crit rating, same story. */
 const SCOPE_CRIT_ENCHANT_EFFECT_ID = 2724;
-/** Human/Orc weapon expertise is 5 expertise rating, which reads as 1.25%. */
-const RACIAL_EXPERTISE_RATING = Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION * 5;
-const RACIAL_EXPERTISE_PERCENT = 5 * 0.25;
 
 const SCHOOL_DAMAGE_STATS = [
 	Stat.StatArcaneDamage,
@@ -29,23 +26,20 @@ const SCHOOL_DAMAGE_STATS = [
 export interface RacialBonuses {
 	/** Draenei: the racial hit is baked into the rating, and is subtracted before it is shown. */
 	hasRacialHitBonus: boolean;
-	/** Human/Orc weapon expertise, main hand then off hand. */
-	activeRacialExpertiseBonuses: boolean[];
 	/** Weapon stones credit melee crit rating that the ranged rows have to offset back out. */
 	rangedImbueStatOffsets: Stats;
 }
 
 export const readRacialBonuses = (player: Player<any>): RacialBonuses => ({
 	hasRacialHitBonus: player.getRace() === Race.RaceDraenei,
-	activeRacialExpertiseBonuses: player.getActiveRacialExpertiseBonuses(),
 	rangedImbueStatOffsets: player.getRangedImbueStatOffsets(),
 });
 
 /**
  * TBC's five-parameter form. `includeBase`/`includeGear`/`includeConsumes` say which stage the
  * delta being rendered covers, because several stats are only correct once the stage that hides
- * them is known: the base defense skill, the Draenei hit rating, the racial expertise rating, the
- * scope enchants, and the weapon-stone crit offset.
+ * them is known: the base defense skill, the Draenei hit rating, the scope
+ * enchants, and the weapon-stone crit offset.
  */
 export const statDisplayString = (
 	player: Player<any>,
@@ -75,32 +69,6 @@ export const statDisplayString = (
 		// Remove the rating display and only show %
 		if (rootRatingValue !== null && rootRatingValue > 0) {
 			rootRatingValue -= Mechanics.PHYSICAL_HIT_RATING_PER_HIT_PERCENT;
-		}
-	} else if (unitStat.equalsStat(Stat.StatExpertiseRating) && includeBase) {
-		const [mhWeaponExpertiseActive, ohWeaponExpertiseActive] = racial.activeRacialExpertiseBonuses;
-
-		// Remove the rating display and only show %
-		if (rootRatingValue !== null && rootRatingValue > 0 && mhWeaponExpertiseActive) {
-			rootRatingValue -= RACIAL_EXPERTISE_RATING;
-		}
-
-		const matchesBothHands = mhWeaponExpertiseActive && ohWeaponExpertiseActive;
-		const offHand = player.getEquippedItem(ItemSlot.ItemSlotOffHand);
-		if (
-			!matchesBothHands &&
-			(mhWeaponExpertiseActive || ohWeaponExpertiseActive) &&
-			offHand !== null &&
-			offHand.item.weaponType !== WeaponType.WeaponTypeShield &&
-			offHand.item.weaponType !== WeaponType.WeaponTypeOffHand
-		) {
-			// The two hands disagree, so the row shows both.
-			const hideRootRating = rootRatingValue === null || (rootRatingValue === 0 && derivedPercentOrPointsValue !== null);
-			const rootRatingString = hideRootRating ? '' : String(Math.round(rootRatingValue!));
-			const mhPercentString = `${derivedPercentOrPointsValue!.toFixed(percentDecimals)}` + displaySuffix;
-			const ohPercentValue = derivedPercentOrPointsValue! + (ohWeaponExpertiseActive ? RACIAL_EXPERTISE_PERCENT : -RACIAL_EXPERTISE_PERCENT);
-			const ohPercentString = `${ohPercentValue.toFixed(percentDecimals)}` + displaySuffix;
-			const wrappedPercentString = hideRootRating ? `${mhPercentString} / ${ohPercentString}` : ` (${mhPercentString} / ${ohPercentString})`;
-			return rootRatingString + wrappedPercentString;
 		}
 	} else if (includeGear && rootRatingValue !== null && unitStat.equalsPseudoStat(PseudoStat.PseudoStatRangedHitPercent)) {
 		if (player.getEquippedItem(ItemSlot.ItemSlotRanged)?.enchant?.effectId === SCOPE_HIT_ENCHANT_EFFECT_ID) {

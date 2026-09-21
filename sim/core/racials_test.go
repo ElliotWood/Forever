@@ -180,11 +180,14 @@ func TestTouchOfTheGraveUsesTheMeleeVariant(t *testing.T) {
 }
 
 func TestSkyborneRacials(t *testing.T) {
+	_, human := setupRacialSim(proto.Race_RaceHuman)
+
 	for _, race := range []proto.Race{proto.Race_RaceHighOrderSkyborne, proto.Race_RaceWindshaperSkyborne} {
 		_, fw := setupRacialSim(race)
 
-		if !WithinToleranceFloat64(1.01, fw.PseudoStats.AttackSpeedMultiplier, 0.0001) {
-			t.Errorf("%s: Wind Blessed should grant 1%% haste, got x%0.4f", race, fw.PseudoStats.AttackSpeedMultiplier)
+		swingRatio := human.AutoAttacks.MainhandSwingSpeed().Seconds() / fw.AutoAttacks.MainhandSwingSpeed().Seconds()
+		if !WithinToleranceFloat64(1.01, swingRatio, 0.001) {
+			t.Errorf("%s: Wind Blessed should swing 1%% faster, got x%0.4f", race, swingRatio)
 		}
 		if at := fw.AttackTables[fw.CurrentTarget.UnitIndex]; !WithinToleranceFloat64(1.05, at.DamageDealtMultiplier, 0.0001) {
 			t.Errorf("%s: Elemental Insight should grant 5%% damage against elementals, got x%0.4f", race, at.DamageDealtMultiplier)
