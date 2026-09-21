@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"math"
 	"reflect"
+	"slices"
 	"time"
 
 	"github.com/wowsims/forever/sim/common/shared"
@@ -61,9 +62,12 @@ func Check(r Reporter, class string, tables any) {
 
 	for _, family := range families(tables) {
 		talent := isTalentLadder(family.table)
+		seenSpells := map[int32]bool{}
 		for _, row := range family.table {
 			rows++
-			mismatches = append(mismatches, compareRow(family.name, row, talent, int32(len(family.table)))...)
+			mismatches = append(mismatches,
+				compareRow(family.name, row, talent, int32(len(family.table)), seenSpells[row.SpellID])...)
+			seenSpells[row.SpellID] = true
 		}
 	}
 
@@ -99,29 +103,20 @@ func Check(r Reporter, class string, tables any) {
 	}
 }
 
-// What a family table states and the store cannot answer today, with what has to change for each.
-// Named rather than tolerated silently: a gap that closes fails this list too, so its entry leaves
-// with the fix.
-//
-// None of the three is a store accessor reading its own row wrongly - the numbers are on spells the
-// store does not carry, or on a curve it does not read - so closing them is a change to the
-// generator's reach in tools/database, not to sim/core/spelldata.
-var knownGaps = []struct {
+// What a family table states and the store cannot answer, with what has to change for each. Empty:
+// the store answers every number the nine tables state. An entry here is tolerated rather than
+// failed, so the list also fails when a gap on it stops happening - a fix takes its entry with it.
+var knownGaps []struct {
 	Class   string
 	SpellID int32
+	Rank    int32
 	Field   string
 	Why     string
-}{
-	{"druid", 22842, "Heal", "the heal is on spell 22845, which the table reaches by name and the " +
-		"store's closure does not reach at all"},
-	{"druid", 5217, "Energize", "the energize is on spell 417045, reached by name the same way"},
-	{"rogue", 1310721, "Effects[0].Value", "the tree prices this one-rank node's effect at 3, and " +
-		"storeCurves reads curves only from nodes of more than one rank"},
 }
 
 func gapFor(class string, m Mismatch) (int, bool) {
 	for i, gap := range knownGaps {
-		if gap.Class == class && gap.SpellID == m.SpellID && gap.Field == m.Field {
+		if gap.Class == class && gap.SpellID == m.SpellID && gap.Rank == m.Rank && gap.Field == m.Field {
 			return i, true
 		}
 	}
@@ -167,7 +162,7 @@ func isTalentLadder(table shared.SpellDataTable) bool {
 	return true
 }
 
-func compareRow(name string, row shared.SpellData, talent bool, ranks int32) []Mismatch {
+func compareRow(name string, row shared.SpellData, talent bool, ranks int32, spellSeen bool) []Mismatch {
 	s := spelldata.Find(row.SpellID)
 	if s == spelldata.Nil {
 		return []Mismatch{{Family: name, Rank: row.Rank, SpellID: row.SpellID, Field: "the row itself",
@@ -188,21 +183,26 @@ func compareRow(name string, row shared.SpellData, talent bool, ranks int32) []M
 
 	c := checker{name: name, row: row, spell: s, rank: rank}
 
-	c.cost()
-	c.positiveDuration("CastTime", row.CastTime, s.CastTime())
-	c.positiveDuration("GCD", row.GCD, s.GCD())
-	c.positiveDuration("Cooldown", row.Cooldown, max(s.Cooldown(), s.CategoryCooldown()))
-	c.durationOrPermanent("Duration", row.Duration, s)
-	c.positiveFloat("MinRange", row.MinRange, float64(s.MinRange))
-	c.positiveFloat("MaxRange", row.MaxRange, float64(s.MaxRange))
-	c.positiveFloat("MissileSpeed", row.MissileSpeed, float64(s.Speed))
-	c.positiveInteger("ProcChance", int64(row.ProcChance), int64(s.ProcChance))
-	c.positiveInteger("ProcCharges", int64(row.ProcCharges), int64(s.ProcCharges))
-	c.positiveInteger("MaxTargets", int64(row.MaxTargets), int64(s.MaxTargets))
-	c.boolean("RefundsOnMiss", row.RefundsOnMiss, s.RefundsOnMiss())
-	c.boolean("PeriodicCanCrit", row.PeriodicCanCrit, s.PeriodicCanCrit())
-	c.integer("SpellSchool", int64(row.SpellSchool), int64(s.SpellSchool()))
-	c.integer("DefenseType", int64(row.DefenseType), int64(s.DefenseTypeCore()))
+	// The fields that belong to the spell rather than to the rank are compared once per spell: a
+	// talent ladder is one spell over and over, and reporting its cost five times would bury the rank
+	// that actually differs.
+	if !spellSeen {
+		c.cost()
+		c.positiveDuration("CastTime", row.CastTime, s.CastTime())
+		c.positiveDuration("GCD", row.GCD, s.GCD())
+		c.positiveDuration("Cooldown", row.Cooldown, max(s.Cooldown(), s.CategoryCooldown()))
+		c.durationOrPermanent("Duration", row.Duration, s)
+		c.positiveFloat("MinRange", row.MinRange, float64(s.MinRange))
+		c.positiveFloat("MaxRange", row.MaxRange, float64(s.MaxRange))
+		c.positiveFloat("MissileSpeed", row.MissileSpeed, float64(s.Speed))
+		c.positiveInteger("ProcChance", int64(row.ProcChance), int64(s.ProcChance))
+		c.positiveInteger("ProcCharges", int64(row.ProcCharges), int64(s.ProcCharges))
+		c.positiveInteger("MaxTargets", int64(row.MaxTargets), int64(s.MaxTargets))
+		c.boolean("RefundsOnMiss", row.RefundsOnMiss, s.RefundsOnMiss())
+		c.boolean("PeriodicCanCrit", row.PeriodicCanCrit, s.PeriodicCanCrit())
+		c.integer("SpellSchool", int64(row.SpellSchool), int64(s.SpellSchool()))
+		c.integer("DefenseType", int64(row.DefenseType), int64(s.DefenseTypeCore()))
+	}
 
 	c.effects()
 	c.threat()
@@ -234,21 +234,21 @@ func talentRank(name string, row shared.SpellData, ranks int32) (rank *spelldata
 // one bar the client states in tenths.
 //
 // A spell with no SpellLevels row states no cost in the table at all: the generator's rank loader
-// reads the cost in the same query as the levels and stops at the missing row, so the four talents
-// that have none - Silence, Ghostly Strike, Riposte, Divine Favor - carry a cost in the store and
-// none in the table. There is nothing to reproduce there, so it is only checked the other way.
+// reads the cost in the same query as the levels and stops at the missing row. Six family rows are
+// on one - Silence, Ghostly Strike, Riposte, Divine Favor, Shadowform and Curse of Exhaustion - and
+// each carries its cost in the store and none in the table. There is nothing to reproduce there, so
+// it is only checked the other way.
+//
+// Named by id rather than read off the row, so that a seventh spell losing its levels row shows up
+// as a mismatch instead of quietly joining the list.
+var costlessInTheTable = []int32{14251, 14278, 15473, 15487, 18223, 20216}
+
 func (c *checker) cost() {
-	if !hasLevelsRow(c.spell) && c.row.Cost == 0 && c.row.PowerCostPct == 0 {
+	if slices.Contains(costlessInTheTable, c.row.SpellID) && c.row.Cost == 0 && c.row.PowerCostPct == 0 {
 		return
 	}
 	c.positiveInteger("Cost", int64(c.row.Cost), int64(powerCost(c.spell)))
 	c.float("PowerCostPct", c.row.PowerCostPct, float64(firstPower(c.spell).CostPct))
-}
-
-// What the store writes for a spell the client states no SpellLevels row for: the rank level, and no
-// level of its own to scale from.
-func hasLevelsRow(s *spelldata.Spell) bool {
-	return s.BaseLevel != 0 || s.MaxLevel != 0 || s.SpellLevel != level
 }
 
 func powerCost(s *spelldata.Spell) float64 {
@@ -441,17 +441,28 @@ func (c *checker) threat() {
 // whether the tree prices it or not. A spell the tree does price more ranks of is not one of these,
 // and says so by panicking rather than by answering a rank it does not have.
 func (c *checker) oneRankLadder() {
-	// A table of one row is also what a talent's triggered spell generates as, and the tree may well
-	// price that spell's own ranks - Tactical Mastery's buff has five. Talent says so by panicking,
-	// and there is no one-rank ladder to check.
-	defer func() { recover() }()
-
-	rank := spelldata.Talent(c.row.SpellID, 1).Rank(1)
+	rank, ok := oneRank(c.row.SpellID)
+	if !ok {
+		return
+	}
 	for i := range c.spell.Effects {
 		if got := rank.EffectN(i + 1).BaseValue(); got != c.spell.Effects[i].BaseValue() {
 			c.add(fmt.Sprintf("Talent(id, 1).Rank(1).EffectN(%d)", i+1), c.spell.Effects[i].BaseValue(), got)
 		}
 	}
+}
+
+// The single rank of a one-rank ladder, and whether there is one to read. A table of one row is also
+// what a talent's triggered spell generates as, and the tree may well price that spell's own ranks -
+// Tactical Mastery's buff has five - which Talent says by panicking rather than by answering a rank
+// it does not have. The recover covers that one call and nothing else.
+func oneRank(spellID int32) (rank *spelldata.Spell, ok bool) {
+	defer func() {
+		if recover() != nil {
+			rank, ok = nil, false
+		}
+	}()
+	return spelldata.Talent(spellID, 1).Rank(1), true
 }
 
 // Procs per minute reach a table through WithSpellDataPPM at the call site, never through the
@@ -478,8 +489,19 @@ func (c *checker) role(field string, value shared.SpellDataValue) {
 		return
 	}
 
-	low, _ := value.Range()
+	low, high := value.Range()
 	periodic, ticks := value.(shared.SpellDataPeriodic)
+
+	// The two ends of a role value always agree in this client: the generator derives the high end
+	// from EffectDieSides, which the client dropped, so it writes a flat value and leaves TickMax
+	// empty. One that did differ would be a spread the store answers out of Variance instead.
+	if high != low {
+		c.add(field+" spread", fmt.Sprintf("%v to %v", low, high),
+			"the store's spread is Variance, and no generated role value carries one")
+	}
+	if ticks && periodic.TickMax != 0 {
+		c.add(field+".TickMax", periodic.TickMax, "the generator derives no high end for a tick")
+	}
 
 	// A tick is looked for among the ticking effects first: Scorpid Poison's threat effect states the
 	// same number as its tick does, and reading the amount back off the threat one would then check

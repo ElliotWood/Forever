@@ -1,5 +1,3 @@
-//go:build with_db
-
 package warlock
 
 import (
