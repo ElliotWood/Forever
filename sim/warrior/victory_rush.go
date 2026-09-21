@@ -1,8 +1,6 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -13,12 +11,8 @@ var victoryRushRank = spellData.VictoryRush.HighestRank()
 var victoryRushAPCoef = victoryRushRank.Effects[2].Value / 100
 var victoryRushHealPercent = victoryRushRank.Effects[1].Value / 100
 
-// TODO: Manual review needed -- the window Victory Rush has to be used in is spell 402975's 20
-// seconds; it is not a ranked row, so it carries no table.
-const (
-	victoriousDuration       = time.Second * 20
-	victoriousSpellID  int32 = 402975
-)
+// The window Victory Rush has to be used in is the Victorious buff the kill grants.
+var victoriousRank = spellData.VictoryRushTriggered.HighestRank()
 
 func (warrior *Warrior) registerVictoryRush() {
 	actionID := core.ActionID{SpellID: victoryRushRank.SpellID}
@@ -28,8 +22,8 @@ func (warrior *Warrior) registerVictoryRush() {
 	// activates it and Victory Rush stays uncastable.
 	victoriousAura := warrior.RegisterAura(core.Aura{
 		Label:    "Victorious",
-		ActionID: core.ActionID{SpellID: victoriousSpellID},
-		Duration: victoriousDuration,
+		ActionID: core.ActionID{SpellID: victoriousRank.SpellID},
+		Duration: victoriousRank.Duration,
 	})
 
 	warrior.VictoryRush = warrior.RegisterSpell(core.SpellConfig{

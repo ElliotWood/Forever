@@ -118,15 +118,19 @@ func (warrior *Warrior) registerAngerManagement() {
 	})
 }
 
+// The bleed the talent (12834) reaches through 12162.
+var deepWoundsBleed = spellData.DeepWoundsTriggered.BySpellID(412609)
+
 func (warrior *Warrior) registerDeepWounds() {
 	if warrior.Talents.DeepWounds == 0 {
 		return
 	}
 
 	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
+	tick := deepWoundsBleed.Periodic.(shared.SpellDataPeriodic)
+
 	warrior.DeepWounds = warrior.RegisterSpell(core.SpellConfig{
-		// The bleed the talent (12834) reaches through 12162.
-		ActionID:       core.ActionID{SpellID: 412609},
+		ActionID:       core.ActionID{SpellID: deepWoundsBleed.SpellID},
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskEmpty,
 		ClassSpellMask: SpellMaskDeepWounds,
@@ -142,10 +146,8 @@ func (warrior *Warrior) registerDeepWounds() {
 			Aura: core.Aura{
 				Label: "DeepWounds",
 			},
-			// TODO: Manual review needed -- 412609 has no generated table; the client states a
-			// 3 second period over a 12 second duration.
-			NumberOfTicks: 4,
-			TickLength:    time.Second * 3,
+			NumberOfTicks: tick.NumberOfTicks,
+			TickLength:    tick.TickLength,
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				baseDamage := warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
@@ -320,12 +322,15 @@ func (warrior *Warrior) registerSpearingStrike() {
 	})
 }
 
+var bloodthrillProc = spellData.BloodthrillTriggered.HighestRank()
+
 func (warrior *Warrior) registerBloodthrill() {
 	if warrior.Talents.Bloodthrill == 0 {
 		return
 	}
 
-	// The proc (1289681) makes Overpower usable for 6 s; the cast consumes it like a dodge would.
+	// The proc makes Overpower usable for the buff's duration; the cast consumes it like a dodge
+	// would.
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:       "Bloodthrill - Trigger",
 		ActionID:   core.ActionID{SpellID: 1289682},
@@ -338,7 +343,7 @@ func (warrior *Warrior) registerBloodthrill() {
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.OverpowerAura.Activate(sim)
-			warrior.OverpowerAura.UpdateExpires(sim.CurrentTime + time.Second*6)
+			warrior.OverpowerAura.UpdateExpires(sim.CurrentTime + bloodthrillProc.Duration)
 		},
 	})
 }
@@ -417,18 +422,20 @@ func (warrior *Warrior) registerWeaponmaster() {
 	})
 }
 
+var improvedHamstringRoot = spellData.ImprovedHamstringTriggered.HighestRank()
+
 func (warrior *Warrior) registerImprovedHamstring() {
 	if warrior.Talents.ImprovedHamstring == 0 {
 		return
 	}
 
-	// TODO: Manual review needed -- 23694 has no generated table; the client states a 5 second
-	// immobilize, which a stationary sim target does not feel.
+	// TODO: a stationary sim target does not feel the immobilize, so the aura only shows up in
+	// metrics.
 	immobilizeAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return target.GetOrRegisterAura(core.Aura{
 			Label:    "Improved Hamstring-" + warrior.Label,
-			ActionID: core.ActionID{SpellID: 23694},
-			Duration: time.Second * 5,
+			ActionID: core.ActionID{SpellID: improvedHamstringRoot.SpellID},
+			Duration: improvedHamstringRoot.Duration,
 		})
 	})
 

@@ -51,6 +51,8 @@ func (warrior *Warrior) registerAnticipation() {
 	warrior.AddStat(stats.DefenseRating, spellData.Anticipation.ValueAt(warrior.Talents.Anticipation)*core.DefenseRatingPerDefenseLevel)
 }
 
+var shieldSpecializationEnergize = spellData.ShieldSpecializationTriggered.HighestRank()
+
 func (warrior *Warrior) registerShieldSpecialization() {
 	if warrior.Talents.ShieldSpecialization == 0 {
 		return
@@ -60,12 +62,13 @@ func (warrior *Warrior) registerShieldSpecialization() {
 
 	// Effect 0 is the block bonus; the tooltip states the chance as $m2%, so effect 1's ladder is
 	// the chance and the 100 in the proc chance column is noise.
-	// TODO: Manual review needed -- spell 1310318 generates 5 Rage on a block ($m1/10).
-	warrior.registerRageOnAvoid("Shield Specialization", 1310318, 5,
+	warrior.registerRageOnAvoid("Shield Specialization", shieldSpecializationEnergize.SpellID,
+		shared.SpellDataMin(shieldSpecializationEnergize.Energize)/10,
 		spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization), core.OutcomeBlock, nil)
 }
 
-// A chance to gain rage when an incoming attack is blocked, dodged or parried.
+// A chance to gain rage when an incoming attack is blocked, dodged or parried. The energize the
+// triggered spell states is on the client's 0-1000 rage bar, so the call site divides it by ten.
 func (warrior *Warrior) registerRageOnAvoid(name string, spellID int32, rage float64, chance float64, outcome core.HitOutcome, extra func() bool) {
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: spellID})
 	trigger := core.ProcTrigger{
@@ -95,6 +98,7 @@ func (warrior *Warrior) registerToughness() {
 }
 
 var lastStandRank = spellData.LastStand.HighestRank()
+var lastStandBuff = spellData.LastStandTriggered.HighestRank()
 
 func (warrior *Warrior) registerLastStand() {
 	if !warrior.Talents.LastStand {
@@ -108,11 +112,9 @@ func (warrior *Warrior) registerLastStand() {
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Last Stand",
 		ActionID: actionID,
-		// TODO: Manual review needed -- spell 12976 lasts 20 seconds.
-		Duration: time.Second * 20,
+		Duration: lastStandBuff.Duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			// TODO: Manual review needed -- spell 12976 grants 30% of maximum health.
-			bonusHealth = warrior.MaxHealth() * 0.3
+			bonusHealth = warrior.MaxHealth() * lastStandBuff.Effect(shared.A_MOD_MAX_HEALTH, 0).Value / 100
 			warrior.UpdateMaxHealth(sim, bonusHealth, healthMetrics)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
@@ -276,6 +278,8 @@ func (warrior *Warrior) registerFocusedRage() {
 	})
 }
 
+var masterOfDefenseEnergize = spellData.MasterOfDefenseTriggered.HighestRank()
+
 func (warrior *Warrior) registerMasterOfDefense() {
 	if warrior.Talents.MasterOfDefense == 0 {
 		return
@@ -283,8 +287,8 @@ func (warrior *Warrior) registerMasterOfDefense() {
 
 	// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100 in
 	// the proc chance column is noise; a shield has to be equipped.
-	// TODO: Manual review needed -- spell 23602 generates 5 Rage on a dodge or parry ($m1/10).
-	warrior.registerRageOnAvoid("Master of Defense", 23602, 5,
+	warrior.registerRageOnAvoid("Master of Defense", masterOfDefenseEnergize.SpellID,
+		shared.SpellDataMin(masterOfDefenseEnergize.Energize)/10,
 		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense), core.OutcomeDodge|core.OutcomeParry,
 		func() bool { return warrior.PseudoStats.CanBlock })
 }
@@ -313,6 +317,8 @@ func (warrior *Warrior) registerImprovedDisarm() {
 	})
 }
 
+var improvedShieldBashSilence = spellData.ImprovedShieldBashTriggered.HighestRank()
+
 func (warrior *Warrior) registerImprovedShieldBash() {
 	if warrior.Talents.ImprovedShieldBash == 0 {
 		return
@@ -322,9 +328,8 @@ func (warrior *Warrior) registerImprovedShieldBash() {
 	silenceAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return target.GetOrRegisterAura(core.Aura{
 			Label:    "Shield Bash - Silence",
-			ActionID: core.ActionID{SpellID: 18498},
-			// TODO: Manual review needed -- spell 18498 silences for 3 seconds.
-			Duration: time.Second * 3,
+			ActionID: core.ActionID{SpellID: improvedShieldBashSilence.SpellID},
+			Duration: improvedShieldBashSilence.Duration,
 		})
 	})
 

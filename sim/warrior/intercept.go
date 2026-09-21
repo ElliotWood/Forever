@@ -8,9 +8,9 @@ import (
 
 var interceptRank = spellData.Intercept.HighestRank()
 
-// TODO: Manual review needed -- Intercept 20617 triggers Intercept Stun 20615, which states
-// 65 damage and is not a ranked row, so it carries no table.
-const interceptStunDamage = 65.0
+// Each Intercept rank triggers a stun of its own, which carries the damage.
+var interceptStunRank = spellData.InterceptTriggered.ByRank(interceptRank.Rank)
+var interceptStunDamage, _ = interceptStunRank.Direct.Range()
 
 func (warrior *Warrior) registerIntercept() {
 	actionID := core.ActionID{SpellID: interceptRank.SpellID}

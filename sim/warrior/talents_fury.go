@@ -52,18 +52,22 @@ func (warrior *Warrior) registerCruelty() {
 	warrior.AddStat(stats.PhysicalCritPercent, spellData.Cruelty.ValueAt(warrior.Talents.Cruelty))
 }
 
+var unbridledWrathRank = spellData.UnbridledWrathTriggered.HighestRank()
+
+// The energize is on the client's 0-1000 rage bar.
+var unbridledWrathRage = shared.SpellDataMin(unbridledWrathRank.Energize) / 10
+
 func (warrior *Warrior) registerUnbridledWrath() {
 	if warrior.Talents.UnbridledWrath == 0 {
 		return
 	}
 
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 12964})
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: unbridledWrathRank.SpellID})
 
-	// TODO: Manual review needed -- 12964 restores 10 rage tenths, which 12322 doubles for a
-	// two-handed weapon.
-	rageGain := 1.0
+	// The tooltip of 12322 doubles the rage for a two-handed weapon.
+	rageGain := unbridledWrathRage
 	twoHanded := func() {
-		rageGain = core.TernaryFloat64(warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand, 2, 1)
+		rageGain = unbridledWrathRage * core.TernaryFloat64(warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand, 2, 1)
 	}
 	twoHanded()
 	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
@@ -117,6 +121,8 @@ func (warrior *Warrior) registerImprovedExecute() {
 	})
 }
 
+var enrageBuff = spellData.EnrageTriggered.HighestRank()
+
 func (warrior *Warrior) registerEnrage() {
 	if warrior.Talents.Enrage == 0 {
 		return
@@ -124,9 +130,8 @@ func (warrior *Warrior) registerEnrage() {
 
 	warrior.EnrageAura = warrior.GetOrRegisterAura(core.Aura{
 		Label:    "Enrage",
-		ActionID: core.ActionID{SpellID: 12880},
-		// TODO: Manual review needed -- 12880 lasts 12 seconds and carries no charge count.
-		Duration: time.Second * 12,
+		ActionID: core.ActionID{SpellID: enrageBuff.SpellID},
+		Duration: enrageBuff.Duration,
 	}).AttachSpellMod(core.SpellModConfig{
 		School:     core.SpellSchoolPhysical,
 		Kind:       core.SpellMod_DamageDone_Pct,
@@ -147,17 +152,18 @@ func (warrior *Warrior) registerEnrage() {
 	})
 }
 
+var flurryBuff = spellData.FlurryTriggered.HighestRank()
+
 func (warrior *Warrior) registerFlurry() {
 	if warrior.Talents.Flurry == 0 {
 		return
 	}
 
 	flurryAura := warrior.RegisterAura(core.Aura{
-		Label:    "Flurry",
-		ActionID: core.ActionID{SpellID: 12966},
-		// TODO: Manual review needed -- 12966 lasts 15 seconds and carries 3 charges.
-		Duration:  15 * time.Second,
-		MaxStacks: 3,
+		Label:     "Flurry",
+		ActionID:  core.ActionID{SpellID: flurryBuff.SpellID},
+		Duration:  flurryBuff.Duration,
+		MaxStacks: flurryBuff.ProcCharges,
 	}).AttachMultiplyMeleeSpeed(spellData.Flurry.MultiplierAt(warrior.Talents.Flurry))
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
@@ -175,7 +181,7 @@ func (warrior *Warrior) registerFlurry() {
 
 			if result.Outcome.Matches(core.OutcomeCrit) {
 				flurryAura.Activate(sim)
-				flurryAura.SetStacks(sim, 3)
+				flurryAura.SetStacks(sim, flurryBuff.ProcCharges)
 				return
 			}
 
@@ -276,15 +282,18 @@ func (warrior *Warrior) registerPiercingHowl() {
 // has to exceed at 20%; the generator leaves that effect out for having no rank curve.
 const bloodCrazeHealthThreshold = 0.2
 
+var bloodCrazeHot = spellData.BloodCrazeTriggered.HighestRank()
+
 func (warrior *Warrior) registerBloodCraze() {
 	if warrior.Talents.BloodCraze == 0 {
 		return
 	}
 
 	healthFraction := spellData.BloodCraze.FractionAt(warrior.Talents.BloodCraze)
+	tick := bloodCrazeHot.Periodic.(shared.SpellDataPeriodic)
 
 	bloodCraze := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 16488},
+		ActionID:    core.ActionID{SpellID: bloodCrazeHot.SpellID},
 		SpellSchool: core.SpellSchoolPhysical,
 		ProcMask:    core.ProcMaskSpellHealing,
 		Flags:       core.SpellFlagPassiveSpell | core.SpellFlagHelpful | core.SpellFlagNoOnCastComplete,
@@ -293,11 +302,10 @@ func (warrior *Warrior) registerBloodCraze() {
 		ThreatMultiplier: 1,
 
 		Hot: core.DotConfig{
-			Aura:     core.Aura{Label: "Blood Craze"},
-			SelfOnly: true,
-			// TODO: Manual review needed -- 16488 ticks every 2 seconds for 6 seconds.
-			NumberOfTicks: 3,
-			TickLength:    time.Second * 2,
+			Aura:          core.Aura{Label: "Blood Craze"},
+			SelfOnly:      true,
+			NumberOfTicks: tick.NumberOfTicks,
+			TickLength:    tick.TickLength,
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				healPerTick := warrior.MaxHealth() * healthFraction / float64(dot.ExpectedTickCount())
 				dot.Spell.CalcAndDealPeriodicHealing(sim, target, healPerTick, dot.OutcomeTick)
