@@ -1,14 +1,13 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (warrior *Warrior) registerBloodrage() {
 	bloodrageRank := spellData.Bloodrage.HighestRank()
-	bloodrageOverTime := spellData.BloodrageTriggered.HighestRank().Energize.(shared.SpellDataPeriodic)
+	bloodrageOverTime := spellData.BloodrageTriggered.HighestRank().Energize.AsPeriodic()
 
 	actionID := core.ActionID{SpellID: bloodrageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)

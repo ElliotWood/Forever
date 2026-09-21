@@ -8,8 +8,8 @@ import (
 )
 
 // A rank's value, by shape. Only a periodic value has a tick schedule, so TickLength and
-// NumberOfTicks are reached by asserting to SpellDataPeriodic rather than through a method Flat and
-// Range would answer with zeroes.
+// NumberOfTicks are reached through AsPeriodic rather than through a method Flat and Range would
+// answer with zeroes.
 type SpellDataValue interface {
 	// Returns the damage range of the spell.
 	// Min/Max are the same if the spell only has a single value.
@@ -31,8 +31,36 @@ type SpellDataValue interface {
 	//	bloodrageOverTime.Tenths()             // 1 rage a tick, from 10
 	Tenths() float64
 
+	// The value as its shape, for the fields only that shape has. Each panics on another shape,
+	// naming both, so a regeneration that changes a role's shape fails where it is read.
+	//
+	//	tick := rendRank.Periodic.AsPeriodic()   // TickLength, NumberOfTicks
+	//	d := sealRank.Direct.AsFlat()            // Value
+	//	r := fireballRank.Direct.AsRange()       // Min, Max
+	AsFlat() SpellDataFlat
+	AsRange() SpellDataRange
+	AsPeriodic() SpellDataPeriodic
+
 	isSpellDataValue()
 }
+
+func (v SpellDataFlat) AsFlat() SpellDataFlat   { return v }
+func (v SpellDataFlat) AsRange() SpellDataRange { panic("spell data value is flat, not a range") }
+func (v SpellDataFlat) AsPeriodic() SpellDataPeriodic {
+	panic("spell data value is flat, not periodic")
+}
+
+func (v SpellDataRange) AsFlat() SpellDataFlat   { panic("spell data value is a range, not flat") }
+func (v SpellDataRange) AsRange() SpellDataRange { return v }
+func (v SpellDataRange) AsPeriodic() SpellDataPeriodic {
+	panic("spell data value is a range, not periodic")
+}
+
+func (v SpellDataPeriodic) AsFlat() SpellDataFlat { panic("spell data value is periodic, not flat") }
+func (v SpellDataPeriodic) AsRange() SpellDataRange {
+	panic("spell data value is periodic, not a range")
+}
+func (v SpellDataPeriodic) AsPeriodic() SpellDataPeriodic { return v }
 
 // A single number: a mana restore, a talent's value, damage the client does not roll.
 type SpellDataFlat struct {

@@ -211,9 +211,7 @@ func (warrior *Warrior) registerBloodthirst() {
 		return
 	}
 
-	bloodthirstRank := spellData.Bloodthirst.BySpellID(23894)
-
-	// The attack power share sits on the second effect; the first is the flat damage added to it.
+	bloodthirstRank := spellData.Bloodthirst.HighestRank()
 	apShare := bloodthirstRank.Effects[1].Fraction()
 
 	warrior.RegisterSpell(core.SpellConfig{
@@ -255,8 +253,7 @@ func (warrior *Warrior) registerBloodthirst() {
 	})
 }
 
-// TODO: The daze itself is not modelled; the encounter's targets do not move, so the -50% movement
-// speed 12323 applies for 6 seconds within 10 yards has nothing to act on.
+// TODO: In-game test required if there's any threat interaction
 func (warrior *Warrior) registerPiercingHowl() {
 	if !warrior.Talents.PiercingHowl {
 		return
@@ -289,10 +286,9 @@ func (warrior *Warrior) registerBloodCraze() {
 	}
 
 	bloodCrazeHot := spellData.BloodCrazeTriggered.HighestRank()
-
 	healthFraction := spellData.BloodCraze.EffectAt(0).FractionAt(warrior.Talents.BloodCraze)
 	hitThreshold := spellData.BloodCraze.EffectAt(1).FractionAt(warrior.Talents.BloodCraze)
-	tick := bloodCrazeHot.Periodic.(shared.SpellDataPeriodic)
+	tick := bloodCrazeHot.Periodic.AsPeriodic()
 
 	bloodCraze := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: bloodCrazeHot.SpellID},
@@ -340,7 +336,6 @@ func (warrior *Warrior) registerBloodCraze() {
 	})
 }
 
-// Raging Blows (1310315): the Cleave discount here, the off-hand Whirlwind strike in whirlwind.go.
 func (warrior *Warrior) registerRagingBlows() {
 	if !warrior.Talents.RagingBlows {
 		return

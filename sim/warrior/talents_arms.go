@@ -122,7 +122,7 @@ func (warrior *Warrior) registerDeepWounds() {
 	deepWoundsBleed := spellData.DeepWoundsTriggered.BySpellID(412609)
 
 	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
-	tick := deepWoundsBleed.Periodic.(shared.SpellDataPeriodic)
+	tick := deepWoundsBleed.Periodic.AsPeriodic()
 
 	// TODO: Test in-game for behavior
 	warrior.DeepWounds = warrior.RegisterSpell(core.SpellConfig{

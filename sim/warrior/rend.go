@@ -9,7 +9,7 @@ import (
 func (warrior *Warrior) registerRend() {
 	rendRank := spellData.Rend.HighestRank()
 
-	tick := rendRank.Periodic.(shared.SpellDataPeriodic)
+	tick := rendRank.Periodic.AsPeriodic()
 
 	warrior.Rend = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rendRank.SpellID},
