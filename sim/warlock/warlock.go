@@ -25,7 +25,8 @@ type Warlock struct {
 
 	LifeTap *core.Spell
 
-	// Curses
+	// Curses and banes. Forever splits them: a curse and a bane hold the target at the same time,
+	// and each replaces only its own kind.
 	CurseOfAgony             *core.Spell
 	CurseOfDoom              *core.Spell
 	CurseOfElements          *core.Spell
@@ -38,17 +39,19 @@ type Warlock struct {
 	Conflagrate  *core.Spell
 	Shadowburn   *core.Spell
 	SiphonLife   *core.Spell
+	Wrack        *core.Spell
 
 	// Auras
-	AmplifyCurseAura       *core.Aura
-	NightfallProcAura      *core.Aura
-	ImpShadowboltAura      *core.Aura
-	ShadowEmbraceAura      *core.Aura
-	DemonicKnowledgeAura   *core.Aura
-	MasterDemonologistAura *core.Aura
+	AmplifyCurseAura        *core.Aura
+	DecimationAura          *core.Aura
+	NightfallProcAura       *core.Aura
+	ImprovedShadowBoltAuras core.AuraArray
+	SoulLinkAura            *core.Aura
+	MasterDemonologistAura  *core.Aura
 
 	// Pets
 	ActivePet  *WarlockPet
+	BasePets   []*WarlockPet
 	Felhunter  *WarlockPet
 	Imp        *WarlockPet
 	Succubus   *WarlockPet
@@ -57,12 +60,8 @@ type Warlock struct {
 	// Armors
 	DemonArmor *core.Aura
 
-	serviceTimer *core.Timer
-
-	DemonicKnowledgeDep   *stats.StatDependency
-	DemonicKnowledgeBonus float64
-
-	currentActiveCurse *core.Spell
+	currentActiveCurse core.AuraArray
+	currentActiveBane  core.AuraArray
 
 	CorruptionTickBaseDamage float64
 	ImmolateTickBaseDamage   float64
@@ -95,8 +94,7 @@ func RegisterWarlock() {
 }
 
 func (warlock *Warlock) Initialize() {
-
-	// Curses
+	// Curses and banes
 	warlock.registerCurseOfElements()
 	warlock.registerCurseOfDoom()
 	warlock.registerCurseOfAgony()
@@ -113,21 +111,25 @@ func (warlock *Warlock) Initialize() {
 	warlock.registerSearingPain()
 	warlock.registerSiphonLifeSpell()
 	warlock.registerSoulfire()
+	warlock.registerWrack()
 
 	warlock.registerArmors()
+	warlock.registerPetAbilities()
 
 	warlock.PseudoStats.SelfHealingMultiplier = 1.0
 }
 
 func (warlock *Warlock) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
-
+	// TODO: the client-generated buff list has no Blood Pact yet, so the imp's raid buff is not
+	// handed out (upstream PR #39).
 }
 
 func (warlock *Warlock) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
-
 }
 
 func (warlock *Warlock) Reset(sim *core.Simulation) {
+	warlock.currentActiveCurse = make(core.AuraArray, len(sim.Environment.AllUnits))
+	warlock.currentActiveBane = make(core.AuraArray, len(sim.Environment.AllUnits))
 }
 
 func (warlock *Warlock) OnEncounterStart(sim *core.Simulation) {}
@@ -169,19 +171,21 @@ func (warlock *Warlock) AfflictionCount(target *core.Unit) float64 {
 	return float64(len(target.GetAurasWithTag("Affliction")))
 }
 
-func (warlock *Warlock) DeactivateOtherCurses(sim *core.Simulation, newCurse *core.Spell, target *core.Unit) {
-	if warlock.currentActiveCurse != nil {
-		if warlock.currentActiveCurse.Dot(target) != nil {
-			warlock.currentActiveCurse.Dot(target).Deactivate(sim)
-		}
-		if warlock.currentActiveCurse.RelatedAuraArrays != nil {
-			for _, auraArray := range warlock.currentActiveCurse.RelatedAuraArrays {
-				auraArray.Get(target).Deactivate(sim)
-			}
-		}
-	}
+// Forever keeps a curse and a bane on the target at once, so each kind only replaces its own.
+// The caller still starts its own effect: a dot wants Apply, a plain debuff wants Activate.
+func (warlock *Warlock) takeCurseSlot(sim *core.Simulation, target *core.Unit, aura *core.Aura) {
+	warlock.takeSlot(sim, warlock.currentActiveCurse, target, aura)
+}
 
-	warlock.currentActiveCurse = newCurse
+func (warlock *Warlock) takeBaneSlot(sim *core.Simulation, target *core.Unit, aura *core.Aura) {
+	warlock.takeSlot(sim, warlock.currentActiveBane, target, aura)
+}
+
+func (warlock *Warlock) takeSlot(sim *core.Simulation, slot core.AuraArray, target *core.Unit, aura *core.Aura) {
+	if active := slot.Get(target); active != nil && active != aura {
+		active.Deactivate(sim)
+	}
+	slot[target.UnitIndex] = aura
 }
 
 // Agent is a generic way to access underlying warlock on any of the agents.
@@ -223,16 +227,18 @@ const (
 	WarlockSpellSiphonLife
 	WarlockSpellDrainSoul
 	WarlockSpellDeathCoil
+	WarlockSpellWrack
 	WarlockSpellAll int64 = 1<<iota - 1
 
 	WarlockShadowDamage = WarlockSpellCorruption | WarlockSpellDrainLife | WarlockSpellCurseOfAgony |
-		WarlockSpellShadowBolt | WarlockSpellShadowBurn | WarlockSpellSiphonLife | WarlockSpellDeathCoil
+		WarlockSpellCurseOfDoom | WarlockSpellShadowBolt | WarlockSpellShadowBurn | WarlockSpellSiphonLife |
+		WarlockSpellDeathCoil | WarlockSpellDrainSoul | WarlockSpellWrack | WarlockSpellLifeTap
 
-	WarlockPeriodicShadowDamage = WarlockSpellCorruption |
-		WarlockSpellDrainLife | WarlockSpellCurseOfAgony
+	WarlockPeriodicShadowDamage = WarlockSpellCorruption | WarlockSpellDrainLife | WarlockSpellCurseOfAgony |
+		WarlockSpellCurseOfDoom | WarlockSpellSiphonLife | WarlockSpellDrainSoul | WarlockSpellWrack
 
 	WarlockFireDamage = WarlockSpellConflagrate | WarlockSpellImmolate | WarlockSpellIncinerate | WarlockSpellSoulFire |
-		WarlockSpellSearingPain | WarlockSpellImmolateDot | WarlockSpellShadowBurn
+		WarlockSpellSearingPain | WarlockSpellImmolateDot | WarlockSpellHellfire | WarlockSpellRainOfFire
 
 	WarlockDoT = WarlockSpellCorruption |
 		WarlockSpellDrainLife | WarlockSpellCurseOfAgony | WarlockSpellImmolateDot
@@ -243,19 +249,24 @@ const (
 
 	WarlockContagionSpells = WarlockSpellCurseOfAgony | WarlockSpellCorruption
 
-	WarlockShadowEmbraceSpells = WarlockSpellCorruption | WarlockSpellCurseOfAgony | WarlockSpellSiphonLife
+	// The drain effects Improved Drains and Soul Siphon pay out on.
+	WarlockDrainSpells = WarlockSpellDrainLife | WarlockSpellDrainSoul | WarlockSpellWrack
 
-	WarlockCurses = WarlockSpellCurseOfAgony | WarlockSpellCurseOfDoom | WarlockSpellCurseOfElements | WarlockSpellCurseOfRecklessness
+	// Nightfall rolls off the periodic damage of these, per the beta client's talent text.
+	WarlockNightfallSpells = WarlockSpellCorruption | WarlockSpellDrainLife | WarlockSpellDrainSoul | WarlockSpellWrack
 
-	WarlockSoulLeechSpells = WarlockSpellShadowBolt | WarlockSpellShadowBurn | WarlockSpellSoulFire |
-		WarlockSpellIncinerate | WarlockSpellSearingPain | WarlockSpellConflagrate
+	WarlockCurses = WarlockSpellCurseOfElements | WarlockSpellCurseOfRecklessness | WarlockSpellCurseOfWeakness
 
-	WarlockAfflictionSpells = WarlockSpellCorruption | WarlockSpellCurseOfAgony | WarlockSpellCurseOfDoom | WarlockSpellCurseOfRecklessness | WarlockSpellCurseOfElements |
-		WarlockSpellDrainLife | WarlockSpellDeathCoil
+	WarlockBanes = WarlockSpellCurseOfAgony | WarlockSpellCurseOfDoom
+
+	WarlockAfflictionSpells = WarlockSpellCorruption | WarlockSpellCurseOfAgony | WarlockSpellCurseOfDoom |
+		WarlockSpellCurseOfRecklessness | WarlockSpellCurseOfElements | WarlockSpellDrainLife | WarlockSpellDrainSoul |
+		WarlockSpellDeathCoil | WarlockSpellSiphonLife | WarlockSpellWrack | WarlockSpellLifeTap
 
 	WarlockDemonologySpells = WarlockAllSummons
 
-	WarlockDestructionSpells = WarlockSpellHellfire | WarlockSpellImmolate | WarlockSpellIncinerate | WarlockSpellRainOfFire | WarlockSpellSearingPain |
+	WarlockDestructionSpells = WarlockSpellHellfire | WarlockSpellImmolate | WarlockSpellImmolateDot |
+		WarlockSpellIncinerate | WarlockSpellRainOfFire | WarlockSpellSearingPain |
 		WarlockSpellShadowBolt | WarlockSpellSoulFire | WarlockSpellConflagrate | WarlockSpellShadowBurn
 )
 

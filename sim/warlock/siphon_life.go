@@ -2,79 +2,73 @@ package warlock
 
 import (
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
-var siphonLifeRank = spellData.SiphonLife.HighestRank()
-var siphonLifeTick = siphonLifeRank.Periodic.(shared.SpellDataPeriodic)
-var siphonLifeCoeff = siphonLifeTick.Coef
-
-// TODO: To be implemented. Port the TBC Siphon Life Spell implementation below; not yet verified against the Forever client.
+// Siphon Life is a Forever Affliction talent: a 30 sec shadow dot that heals the warlock for what
+// it deals.
 func (warlock *Warlock) registerSiphonLifeSpell() {
-	panic("To be implemented")
+	if !warlock.Talents.SiphonLife {
+		return
+	}
 
-	// The TBC implementation, kept for the port:
-	// actionID := core.ActionID{SpellID: siphonLifeRank.SpellID}
-	// baseCost := float64(siphonLifeRank.Cost)
-	//
-	// healthMetrics := warlock.NewHealthMetrics(actionID)
-	//
-	// warlock.SiphonLife = warlock.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       actionID,
-	// 	SpellSchool:    core.SpellSchoolShadow,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	ClassSpellMask: WarlockSpellSiphonLife,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	BaseCost:       baseCost,
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			Cost: baseCost,
-	// 			GCD:  siphonLifeRank.GCD,
-	// 		},
-	// 	},
-	// 	DamageMultiplier: 1,
-	// 	BonusCoefficient: siphonLifeCoeff,
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		result := spell.CalcOutcome(sim, target, spell.OutcomeMagicHit)
-	//
-	// 		if result.Landed() {
-	// 			spell.Dot(target).Apply(sim)
-	// 		}
-	// 		spell.DealOutcome(sim, result)
-	// 	},
-	//
-	// 	Dot: core.DotConfig{
-	// 		Aura: core.Aura{
-	// 			Label: "SiphonLife",
-	// 			Tag:   "Affliction",
-	// 		},
-	// 		NumberOfTicks:    siphonLifeTick.NumberOfTicks,
-	// 		TickLength:       siphonLifeTick.TickLength,
-	// 		BonusCoefficient: siphonLifeCoeff,
-	//
-	// 		OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.Snapshot(target, siphonLifeTick.Tick)
-	// 		},
-	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			result := dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
-	//
-	// 			healthToRegain := result.Damage * (1 * warlock.PseudoStats.BonusHealingTaken)
-	// 			warlock.GainHealth(sim, healthToRegain, healthMetrics)
-	// 			dot.Spell.ApplyAOEThreat(healthToRegain * 0.5)
-	// 		},
-	// 	},
-	//
-	// 	ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
-	// 		dot := spell.Dot(target)
-	// 		if useSnapshot {
-	// 			result := dot.CalcSnapshotDamage(sim, target, dot.OutcomeTick)
-	// 			result.Damage /= dot.TickPeriod().Seconds()
-	// 			return result
-	// 		} else {
-	// 			result := spell.CalcPeriodicDamage(sim, target, siphonLifeTick.Tick*float64(siphonLifeTick.NumberOfTicks), spell.OutcomeExpectedMagicHit)
-	// 			result.Damage /= dot.CalcTickPeriod().Round(time.Millisecond).Seconds()
-	// 			return result
-	// 		}
-	// 	},
-	// })
+	rank := spellData.SiphonLife.HighestRank()
+	tick := rank.Periodic.(shared.SpellDataPeriodic)
+	actionID := core.ActionID{SpellID: rank.SpellID}
+	healthMetrics := warlock.NewHealthMetrics(actionID)
+
+	warlock.SiphonLife = warlock.RegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		SpellSchool:    rank.SpellSchool,
+		DefenseType:    rank.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagBinary,
+		ClassSpellMask: WarlockSpellSiphonLife,
+
+		ManaCost: core.ManaCostOptions{FlatCost: rank.Cost},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: rank.GCD,
+			},
+		},
+
+		DamageMultiplierAdditive: 1,
+		DamageMultiplier:         1,
+		ThreatMultiplier:         1,
+		BonusCoefficient:         tick.Coef,
+
+		Dot: core.DotConfig{
+			Aura: core.Aura{
+				Label: "Siphon Life",
+				Tag:   "Affliction",
+			},
+			NumberOfTicks:    tick.NumberOfTicks,
+			TickLength:       tick.TickLength,
+			BonusCoefficient: tick.Coef,
+
+			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.Snapshot(target, tick.Tick)
+			},
+			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				result := dot.CalcAndDealPeriodicSnapshotDamage(sim, target, shared.PeriodicTickOutcome(rank, dot))
+				warlock.GainHealth(sim, result.Damage*warlock.PseudoStats.SelfHealingMultiplier, healthMetrics)
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcOutcome(sim, target, spell.OutcomeMagicHitNoHitCounter)
+			if result.Landed() {
+				spell.Dot(target).Apply(sim)
+			}
+			spell.DealOutcome(sim, result)
+		},
+
+		ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
+			dot := spell.Dot(target)
+			if useSnapshot {
+				return dot.CalcSnapshotDamage(sim, target, spell.OutcomeExpectedMagicAlwaysHit)
+			}
+			return spell.CalcPeriodicDamage(sim, target, tick.Tick, spell.OutcomeExpectedMagicAlwaysHit)
+		},
+	})
 }

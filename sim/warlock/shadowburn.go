@@ -1,41 +1,38 @@
 package warlock
 
-var shadowBurnRank = spellData.Shadowburn.HighestRank()
-var shadowBurnCoeff = shadowBurnRank.Direct.BonusCoefficient()
+import (
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented. Port the TBC Shadow Burn implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) registerShadowBurn() {
-	panic("To be implemented")
+	rank := spellData.Shadowburn.HighestRank()
 
-	// The TBC implementation, kept for the port:
-	//
-	// warlock.Shadowburn = warlock.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: shadowBurnRank.SpellID},
-	// 	SpellSchool:    shadowBurnRank.SpellSchool,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL | core.SpellFlagBinary,
-	// 	ClassSpellMask: WarlockSpellShadowBurn,
-	//
-	// 	ManaCost: core.ManaCostOptions{FlatCost: shadowBurnRank.Cost},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: shadowBurnRank.GCD,
-	// 		},
-	// 		CD: core.Cooldown{
-	// 			Timer:    warlock.NewTimer(),
-	// 			Duration: shadowBurnRank.Cooldown,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	// 	DefenseType:      shadowBurnRank.DefenseType,
-	// 	ThreatMultiplier: 1,
-	// 	BonusCoefficient: shadowBurnCoeff,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		dmgRoll := shadowBurnRank.Direct.Damage(sim)
-	// 		spell.CalcAndDealDamage(sim, target, dmgRoll, spell.OutcomeMagicHitAndCrit)
-	//
-	// 	},
-	// })
+	warlock.Shadowburn = warlock.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.SpellID},
+		SpellSchool:    rank.SpellSchool,
+		DefenseType:    rank.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagBinary,
+		ClassSpellMask: WarlockSpellShadowBurn,
+
+		ManaCost: core.ManaCostOptions{FlatCost: rank.Cost},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: rank.GCD,
+			},
+			CD: core.Cooldown{
+				Timer:    warlock.NewTimer(),
+				Duration: rank.Cooldown,
+			},
+		},
+
+		DamageMultiplierAdditive: 1,
+		DamageMultiplier:         1,
+		ThreatMultiplier:         1,
+		BonusCoefficient:         rank.Direct.BonusCoefficient(),
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, rank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+		},
+	})
 }

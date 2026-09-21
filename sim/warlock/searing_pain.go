@@ -1,38 +1,36 @@
 package warlock
 
-var searingPainRank = spellData.SearingPain.HighestRank()
-var searingPainCoeff = searingPainRank.Direct.BonusCoefficient()
+import (
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented. Port the TBC Searing Pain implementation below; not yet verified against the Forever client.
 func (warlock *Warlock) registerSearingPain() {
-	panic("To be implemented")
+	rank := spellData.SearingPain.HighestRank()
 
-	// The TBC implementation, kept for the port:
-	//
-	// warlock.Shadowburn = warlock.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: searingPainRank.SpellID},
-	// 	SpellSchool:    searingPainRank.SpellSchool,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: WarlockSpellSearingPain,
-	// 	MaxRange:       searingPainRank.MaxRange,
-	//
-	// 	ManaCost: core.ManaCostOptions{FlatCost: searingPainRank.Cost},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD:      searingPainRank.GCD,
-	// 			CastTime: searingPainRank.CastTime,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	// 	DefenseType:      searingPainRank.DefenseType,
-	// 	ThreatMultiplier: 2,
-	// 	BonusCoefficient: searingPainCoeff,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		dmgRoll := searingPainRank.Direct.Damage(sim)
-	// 		spell.CalcAndDealDamage(sim, target, dmgRoll, spell.OutcomeMagicHitAndCrit)
-	// 	},
-	// })
+	warlock.SearingPain = warlock.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.SpellID},
+		SpellSchool:    rank.SpellSchool,
+		DefenseType:    rank.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: WarlockSpellSearingPain,
+		MaxRange:       rank.MaxRange,
+
+		ManaCost: core.ManaCostOptions{FlatCost: rank.Cost},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD:      rank.GCD,
+				CastTime: rank.CastTime,
+			},
+		},
+
+		DamageMultiplierAdditive: 1,
+		DamageMultiplier:         1,
+		ThreatMultiplier:         2,
+		BonusCoefficient:         rank.Direct.BonusCoefficient(),
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, rank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+		},
+	})
 }
