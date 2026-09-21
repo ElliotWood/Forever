@@ -438,7 +438,7 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 438040, Cooldown: 10000 * time.Millisecond, Duration: 15000 * time.Millisecond, MaxRange: 5, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
 	},
 	RelentlessStrikes: shared.SpellDataTable{
-		{Rank: 1, SpellID: 14179, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 0}}},
+		{Rank: 1, SpellID: 14179, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 1}},
 	},
 	RelentlessStrikesTriggered: shared.SpellDataTable{
 		{Rank: 1, SpellID: 14181, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 25}}},

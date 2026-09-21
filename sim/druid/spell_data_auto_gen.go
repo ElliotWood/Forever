@@ -325,8 +325,8 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 1278759, GCD: 1500 * time.Millisecond, Duration: 10000 * time.Millisecond, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 132}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MELEE_HASTE_3, Misc: 0, Value: -20}}, Direct: shared.SpellDataFlat{Value: 132, Coef: 0.029999999329447746}},
 	},
 	ImprovedEnrage: shared.SpellDataTable{
-		{Rank: 1, SpellID: 17079, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
-		{Rank: 2, SpellID: 17082, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
+		{Rank: 1, SpellID: 17079, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Energize: shared.SpellDataFlat{Value: 50, Coef: 1}},
+		{Rank: 2, SpellID: 17082, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Energize: shared.SpellDataFlat{Value: 100, Coef: 1}},
 	},
 	ImprovedEnrageTriggered: shared.SpellDataTable{
 		{Rank: 1, SpellID: 17080, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 1, Value: 50}}, Energize: shared.SpellDataFlat{Value: 50, Coef: 1}},
