@@ -685,6 +685,13 @@ JSON before `fromJson`, because the parser throws on an enum name in a bool fiel
 long before the version converters run. A retyped field goes in its list, a retired one in the other,
 and every `fromJson` of a settings envelope passes `ignoreUnknownFields`.
 
+**Drums are not a Forever consumable.** The client describes no row for the TBC drums - 35476, 35475
+and 35478, Battle, War and Restoration, nor their Greater variants - so there is nothing to model and
+no manifest row to hang them on. The only "Drums of War" it knows is 1259907, fifteen seconds of party
+movement speed, which is not the buff the party field named. `ConsumesSpec` reserves number 12 and the
+name `drums_id`, the same pre-pass drops the key from an older payload, and the party `drums` buff was
+retired with the other 32.
+
 **A `PetInheritOwnerAura` row must name the aura the pet looks for.** The pet finds it on its owner by
 label, so the row needs a `Label`, a `Name` or a `Category` even when the client describes the buff not
 at all.

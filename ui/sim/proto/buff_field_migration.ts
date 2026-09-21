@@ -1,8 +1,10 @@
-// Api version 17 does two things to the buff messages. It types 25 fields bool where they were a
-// TristateEffect, because the Improved talent behind each of them has no node in a Forever trait
-// tree; the names are pinned by TestRetypedFieldsMatchTheMigration in tools/gen_buffs_proto. And it
-// retires 33 fields outright, because the Forever client describes no spell for them; the numbers
-// they gave up are `reserved` in proto/buffs.proto and listed in buffmanifest.Retired.
+// Api version 17 does two things to the buff messages, and one to the player's consumables. It
+// types 25 fields bool where they were a TristateEffect, because the Improved talent behind each of
+// them has no node in a Forever trait tree; the names are pinned by
+// TestRetypedFieldsMatchTheMigration in tools/gen_buffs_proto. It retires 33 fields outright,
+// because the Forever client describes no spell for them; the numbers they gave up are `reserved`
+// in proto/buffs.proto and listed in buffmanifest.Retired. And it retires the drums consumable for
+// the same reason, which proto/common.proto reserves on ConsumesSpec.
 //
 // The version converters in `proto_migration` run on an already-parsed proto, and protobuf-ts
 // `fromJson` throws on "TristateEffectImproved" in a bool field - and, without
@@ -92,6 +94,11 @@ export const retiredFieldSpellings = (protoName: string): string[] => {
 	return [...new Set([protoName, jsonName, propertyName])];
 };
 
+// Api version 17 also retires the player's own drums: ConsumesSpec reserves field 12 and the name
+// `drums_id`, because the Forever client describes no drum item at all. A settings blob written
+// before the bump still names it, and it sits on the player rather than on a buff message.
+export const retiredConsumesFields = ['drums_id'] as const;
+
 type BuffScope = keyof typeof retypedBuffFields;
 
 type JsonObject = Record<string, unknown>;
@@ -129,10 +136,22 @@ const rewriteBuffs = (buffs: unknown, scope: BuffScope) => {
 	}
 };
 
+const dropRetiredConsumes = (consumables: unknown) => {
+	const message = asObject(consumables);
+	if (!message) return;
+
+	for (const field of retiredConsumesFields) {
+		for (const spelling of retiredFieldSpellings(field)) {
+			delete message[spelling];
+		}
+	}
+};
+
 const migratePlayer = (player: unknown) => {
 	const message = asObject(player);
 	if (!message) return;
 	rewriteBuffs(message.buffs, 'individualBuffs');
+	dropRetiredConsumes(message.consumables);
 };
 
 const migrateParty = (party: unknown) => {

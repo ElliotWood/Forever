@@ -107,6 +107,35 @@ describe('migrateRetypedBuffFields', () => {
 		expect(() => IndividualSimSettings.fromJson(json as never)).not.toThrow();
 	});
 
+	// The drums consumable is the one retired field that does not sit on a buff message. `fromJson`
+	// is called without `ignoreUnknownFields` here on purpose: that is what the share-link importer
+	// does, and it is what makes the key the pre-pass has to drop rather than one it may leave.
+	it('drops a version-16 payload’s drums consumable, which ConsumesSpec no longer has', () => {
+		const json = {
+			apiVersion: 16,
+			player: { consumables: { drumsId: 'LesserDrumsOfBattle', foodId: 27657 }, buffs: { blessingOfKings: true } },
+		} as Record<string, any>;
+
+		migrateRetypedBuffFields(json);
+
+		expect(Object.keys(json.player.consumables)).toEqual(['foodId']);
+
+		const settings = IndividualSimSettings.fromJson(json as never);
+		expect(settings.player?.consumables?.foodId).toBe(27657);
+	});
+
+	it('drops it from every player of a raid, under either spelling', () => {
+		const raid = {
+			apiVersion: 16,
+			parties: [{ players: [{ consumables: { drums_id: 4 } }, { consumables: { drumsId: 4, potId: 22839 } }] }],
+		} as Record<string, any>;
+
+		migrateRetypedBuffFields(raid, 'raid');
+
+		expect(Object.keys(raid.parties[0].players[0].consumables)).toEqual([]);
+		expect(Object.keys(raid.parties[0].players[1].consumables)).toEqual(['potId']);
+	});
+
 	// has_bs_solarian_sapphire was a warrior class option, not a buff field, so the pre-pass has
 	// nothing to do for it: the loaders' `ignoreUnknownFields` skips it wherever it is nested.
 	it('loads a version-16 payload that still carries the warrior class option the proto reserved', () => {

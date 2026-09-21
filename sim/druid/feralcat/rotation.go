@@ -75,11 +75,6 @@ func (cat *FeralDruid) shift(sim *core.Simulation) bool {
 		if !mcd.IsReady(sim) {
 			continue
 		}
-		// Drums are fired at a fixed time via a scheduled pending action - skip
-		// them here so they don't fire opportunistically during powershifts.
-		if mcd.Spell.ActionID.SpellID == 35476 {
-			continue
-		}
 		mcd.TryActivate(sim, &cat.Character)
 	}
 

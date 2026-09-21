@@ -1,8 +1,5 @@
 {
 	"protoVersion": {
-		"7": {
-			"body": "Successfully updated your saved settings to the latest version. Drums under 'Consumables' are personal as Leatherworker, and the party-wide drums your settings named are no longer a buff the sim offers, so that selection was cleared."
-		},
 		"12": {
 			"body": "Successfully updated your saved settings to the latest version. You can now select a Consecration rank as well as an Aura in the rotation settings."
 		}

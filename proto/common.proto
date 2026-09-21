@@ -432,17 +432,10 @@ enum TristateEffect {
 	TristateEffectImproved = 2;
 }
 
-enum Drums {
-	DrumsUnknown = 0;
-	GreaterDrumsOfBattle = 1;
-	GreaterDrumsOfRestoration = 2;
-	GreaterDrumsOfWar = 3;
-	LesserDrumsOfBattle = 4;
-	LesserDrumsOfRestoration = 5;
-	LesserDrumsOfWar = 6;
-}
-
 message ConsumesSpec {
+	reserved 12;
+	reserved "drums_id";
+
 	int32 pot_id = 1;
 	int32 flask_id = 2;
 	int32 battle_elixir_id = 3;
@@ -456,7 +449,6 @@ message ConsumesSpec {
 	bool bogling_root = 25;
 	int32 mhImbue_id = 10;
 	int32 ohImbue_id = 11;
-	Drums drums_id = 12;
 	bool scroll_agi = 13;
 	bool scroll_str = 14;
 	bool scroll_int = 15;
