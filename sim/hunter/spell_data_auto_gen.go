@@ -65,6 +65,10 @@ type generatedSpellData struct {
 	DashTriggered                   shared.SpellDataTable
 	DeadlyAspects                   shared.SpellDataTable
 	DeadlyAspectsTriggered          shared.SpellDataTable
+	DefensiveState                  shared.SpellDataTable
+	DefensiveStateTriggered         shared.SpellDataTable
+	DefensiveState2                 shared.SpellDataTable
+	DefensiveState2Triggered        shared.SpellDataTable
 	Deflection                      shared.SpellDataTable
 	DemoralizingScreech             shared.SpellDataTable
 	DemoralizingScreechTriggered    shared.SpellDataTable
@@ -466,6 +470,18 @@ var spellData = generatedSpellData{
 	DeadlyAspectsTriggered: shared.SpellDataTable{
 		{Rank: 1, SpellID: 6150, Duration: 12000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RANGED_HASTE, Misc: 0, Value: 30}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
 		{Rank: 2, SpellID: 1299448, Duration: 12000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MELEE_HASTE_3, Misc: 0, Value: 30}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
+	},
+	DefensiveState: shared.SpellDataTable{
+		{Rank: 1, SpellID: 13358, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
+	},
+	DefensiveStateTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5302, Duration: 5000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
+	},
+	DefensiveState2: shared.SpellDataTable{
+		{Rank: 1, SpellID: 24949, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
+	},
+	DefensiveState2Triggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 24948, Duration: 5000 * time.Millisecond, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
 	},
 	Deflection: shared.SpellDataTable{
 		{Rank: 1, SpellID: 19295, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_PARRY_PERCENT, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},

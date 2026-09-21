@@ -71,7 +71,15 @@ type generatedAmount struct {
 }
 
 // SkillLineAbility.AcquireMethod: 0 trainer, 1 with the skill, 2 on level, 3 granted by another spell.
-const acquireGranted = 3
+const (
+	acquireOnLevel = 2
+	acquireGranted = 3
+)
+
+// The Defense skill line carries the one-class passives that open a counterattack window - Offensive
+// State (DND) fires the 5 s Overpower aura 1282733 on a melee hit, Defensive State (DND) the Revenge
+// one - beside Parry and Block, which have several classes' bits.
+const skillLineDefense = 95
 
 type rankCandidate struct {
 	SpellID       int32
@@ -109,8 +117,10 @@ func classMaskOf(class dbc.DbcClass) int {
 	return 1 << (class.ID - 1)
 }
 
-// The Go identifier a family is reached by: "Shadow Word: Pain" -> ShadowWordPain.
+// The Go identifier a family is reached by: "Shadow Word: Pain" -> ShadowWordPain. A "(DND)" suffix is
+// the client's do-not-display marker, not part of the name.
 func fieldNameOf(spellName string) string {
+	spellName = strings.TrimSuffix(spellName, " (DND)")
 	var b strings.Builder
 	upper := true
 	for _, r := range spellName {
@@ -156,16 +166,16 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 		JOIN Spell s ON s.ID = sla.Spell
 		LEFT JOIN SpellLevels lv ON lv.SpellID = sla.Spell AND lv.DifficultyID = 0
 		LEFT JOIN SpellMisc sm ON sm.SpellID = sla.Spell AND sm.DifficultyID = 0
-		WHERE sla.SkillLine IN (
+		WHERE (sla.SkillLine IN (
 			SELECT DISTINCT sla2.SkillLine
 			FROM SkillLineAbility sla2
 			JOIN SkillLine sl2 ON sl2.ID = sla2.SkillLine AND sl2.CategoryID = 7
 			WHERE (sla2.ClassMask & ?) != 0
-		)
+		) OR (sla.SkillLine = ? AND sla.ClassMask = ? AND sla.AcquireMethod = ?))
 		AND (s.NameSubtext_lang LIKE 'Rank %' OR s.NameSubtext_lang = '')
 		AND sla.SkillLine NOT IN (2851, 2853)
 		AND NOT EXISTS (SELECT 1 FROM SpellEffect se WHERE se.SpellID = sla.Spell AND se.EffectAura = ?)
-		ORDER BY n.Name_lang, sla.Spell`, mask, dbc.A_MOUNTED)
+		ORDER BY n.Name_lang, sla.Spell`, mask, skillLineDefense, mask, acquireOnLevel, dbc.A_MOUNTED)
 	if err != nil {
 		return nil, nil, nil, err
 	}

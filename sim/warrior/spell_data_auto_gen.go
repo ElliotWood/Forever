@@ -49,6 +49,8 @@ type generatedSpellData struct {
 	DefensiveStanceTriggered        shared.SpellDataTable
 	DefensiveStancePassive          shared.SpellDataTable
 	DefensiveStancePassiveTriggered shared.SpellDataTable
+	DefensiveState                  shared.SpellDataTable
+	DefensiveStateTriggered         shared.SpellDataTable
 	Defiance                        shared.SpellDataTable
 	Deflection                      shared.SpellDataTable
 	DemoralizingShout               shared.SpellDataTable
@@ -104,6 +106,8 @@ type generatedSpellData struct {
 	MasterOfDefenseTriggered        shared.SpellDataTable
 	MockingBlow                     shared.SpellDataTable
 	MortalStrike                    shared.SpellDataTable
+	OffensiveState                  shared.SpellDataTable
+	OffensiveStateTriggered         shared.SpellDataTable
 	Overpower                       shared.SpellDataTable
 	PiercingHowl                    shared.SpellDataTable
 	Precision                       shared.SpellDataTable
@@ -133,6 +137,8 @@ type generatedSpellData struct {
 	UnbridledWrath                  shared.SpellDataTable
 	UnbridledWrathTriggered         shared.SpellDataTable
 	Vanguard                        shared.SpellDataTable
+	VictoriousState                 shared.SpellDataTable
+	VictoriousStateTriggered        shared.SpellDataTable
 	VictoryRush                     shared.SpellDataTable
 	VictoryRushTriggered            shared.SpellDataTable
 	Weaponmaster                    shared.SpellDataTable
@@ -282,6 +288,12 @@ var spellData = generatedSpellData{
 	},
 	DefensiveStancePassiveTriggered: shared.SpellDataTable{
 		{Rank: 1, SpellID: 12792, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_THREAT, Misc: 127, Value: 15}}, Direct: shared.SpellDataFlat{Value: 15, Coef: 0}},
+	},
+	DefensiveState: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5301, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
+	},
+	DefensiveStateTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5302, Duration: 5000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
 	},
 	Defiance: shared.SpellDataTable{
 		{Rank: 1, SpellID: 12792, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_THREAT, Misc: 127, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 0}},
@@ -547,6 +559,12 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 21552, Cost: 30, GCD: 1500 * time.Millisecond, Cooldown: 6000 * time.Millisecond, Duration: 10000 * time.Millisecond, MaxRange: 5, RefundsOnMiss: true, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_HEALING_PCT, Misc: 127, Value: -50}, {Index: 1, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 135}}, Direct: shared.SpellDataFlat{Value: 135, Coef: 1}},
 		{Rank: 4, SpellID: 21553, Cost: 30, GCD: 1500 * time.Millisecond, Cooldown: 6000 * time.Millisecond, Duration: 10000 * time.Millisecond, MaxRange: 5, RefundsOnMiss: true, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_HEALING_PCT, Misc: 127, Value: -50}, {Index: 1, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 160}}, Direct: shared.SpellDataFlat{Value: 160, Coef: 1}},
 	},
+	OffensiveState: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1282735, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
+	},
+	OffensiveStateTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1282733, Duration: 5000 * time.Millisecond, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_RETAIN_COMBO_POINTS, Misc: 0, Value: 5}, {Index: 2, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
+	},
 	Overpower: shared.SpellDataTable{
 		{Rank: 1, SpellID: 7384, Cost: 5, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, RefundsOnMiss: true, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 1}},
 		{Rank: 2, SpellID: 7887, Cost: 5, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, RefundsOnMiss: true, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 15}}, Direct: shared.SpellDataFlat{Value: 15, Coef: 1}},
@@ -682,6 +700,12 @@ var spellData = generatedSpellData{
 	},
 	Vanguard: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1310317, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_OVERRIDE_ACTIONBAR_SPELLS, Misc: 11578, Value: 1240289}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_OVERRIDE_ACTIONBAR_SPELLS, Misc: 6178, Value: 1240288}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_OVERRIDE_ACTIONBAR_SPELLS, Misc: 100, Value: 1240287}}},
+	},
+	VictoriousState: shared.SpellDataTable{
+		{Rank: 1, SpellID: 402974, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
+	},
+	VictoriousStateTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 402975, Duration: 20000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
 	},
 	VictoryRush: shared.SpellDataTable{
 		{Rank: 1, SpellID: 402927, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 1}, {Index: 1, Effect: shared.E_HEAL_PCT, Aura: shared.A_NONE, Misc: 0, Value: 10}, {Index: 2, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 15}}, Direct: shared.SpellDataFlat{Value: 1, Coef: 0}},
