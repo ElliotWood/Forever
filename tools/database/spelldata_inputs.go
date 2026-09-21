@@ -12,13 +12,24 @@ import (
 // store can be rebuilt - and checked - without the client database, which is gitignored and comes
 // from a local WoW install.
 //
-// It holds the tables the loaders in spelldata_store.go read, cut down to the spells the store
-// carries, plus the three things the store's shape depends on that are resolved elsewhere: the root
-// ids the closure starts from (which come from the item, enchant and set-bonus tables), the ladder
-// and tree spells the class files are generated from, and the talent tree's curve points. What is
-// derived from these - the closure, the hand links, the tooltip hints, the overrides and the rows
-// themselves - is left to be re-derived, which is what makes the regeneration a check on the
-// generator rather than a copy of its answer.
+// Raw client rows, copied as the loaders in spelldata_store.go read them:
+//
+//   - every SpellName row, whole. It is the universe the closure tests an edge against, so cutting it
+//     to the store's own ids would make a spell that ought to be reached look like an id this build
+//     does not name. The other tables are cut to the store's ids, which loses nothing: the closure
+//     only ever reads the rows of a spell it has already reached.
+//   - the talent tree's nodes, and the points each definition states.
+//
+// Derived, and captured all the same because re-deriving it needs tables the store does not otherwise
+// read: the root ids. They come from the item, enchant and set-bonus tables, from the ladder and tree
+// spells the class files are built from, and from the sibling-by-name rule, and they are captured
+// wholesale - so a change to how a root is found shows up only once the store is regenerated.
+//
+// Everything else is left to be re-derived from the above: the closure, the hand links, the talent
+// curves, the tooltip hints, the overrides and the rows themselves. That is what makes the
+// regeneration a check on the generator rather than a copy of its answer. The store's own extra ids
+// are re-read from extra_ids.go while rendering for the same reason - adding one without
+// regenerating renders a row the committed store does not carry, and the check fails.
 
 // Beside the client extraction rather than in it: assets/db_inputs/dbc is gitignored, being tens of
 // megabytes rebuilt by `make db`, and this file has to be committed for the check to run without a
@@ -86,14 +97,12 @@ func (in *storeInputs) tables() *spellTables {
 	}
 }
 
-// Everything the store's ids reach, and nothing else. Restricting to those ids is what keeps the
-// file to the size of the store rather than the size of the client: the closure only ever reads the
-// rows of a spell it has already reached, and an edge to a spell outside the set is an edge the
-// closure would have followed, so no such spell exists.
+// The rows of the store's own ids, and every name in the build. Restricting the rest to those ids is
+// what keeps the file to the size of the store rather than the size of the client.
 func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 	nodes []traitNode, points map[int32]map[int32]map[int32]float64) *storeInputs {
 	in := &storeInputs{
-		Names:        map[int32]string{},
+		Names:        t.names,
 		Subtexts:     map[int32]string{},
 		Descriptions: map[int32]string{},
 		Misc:         map[int32]miscRow{},
@@ -115,7 +124,6 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 	}
 
 	for _, id := range ids {
-		in.Names[id] = t.names[id]
 		keepString(in.Subtexts, id, t.subtexts[id])
 		keepString(in.Descriptions, id, t.descriptions[id])
 
@@ -165,7 +173,8 @@ func writeStoreInputs(in *storeInputs) error {
 	if err := dbc.WriteGzipFile(spellStoreInputsPath, out); err != nil {
 		return fmt.Errorf("writing %s: %w", spellStoreInputsPath, err)
 	}
-	fmt.Fprintf(progress, "spelldata: wrote %s, %d spells\n", spellStoreInputsPath, len(in.Names))
+	fmt.Fprintf(progress, "spelldata: wrote %s, %d names and %d roots\n",
+		spellStoreInputsPath, len(in.Names), len(in.Roots))
 	return nil
 }
 

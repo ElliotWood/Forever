@@ -369,7 +369,29 @@ func loadStoreInputs(db *sql.DB, ladderIDs []int32, trees map[int]int) (*storeIn
 	if err != nil {
 		return nil, err
 	}
-	ids := reachableSpells(tables, roots)
+
+	// The store's extra ids are captured as rows but not as roots: the rendering re-reads them from
+	// extra_ids.go, so what is captured has to be everything that rendering will reach - or an extra
+	// id would render as a row with a name and nothing else, whether or not the store was
+	// regenerated - while the roots stay what the client alone says they are.
+	withExtras, err := withExtraIDs(tables, roots)
+	if err != nil {
+		return nil, err
+	}
+
+	// The spells a rank reads a number off by name are roots of their own: nothing inside the closure
+	// points at them, so they are asked for once everything else has been reached.
+	siblings, err := siblingSpells(db, reachableSpells(tables, withExtras))
+	if err != nil {
+		return nil, err
+	}
+	roots = namedIDs(tables, roots, siblings)
+
+	rendered, err := withExtraIDs(tables, roots)
+	if err != nil {
+		return nil, err
+	}
+	ids := reachableSpells(tables, rendered)
 
 	nodes, points, err := traitPoints(db, trees)
 	if err != nil {
@@ -383,7 +405,12 @@ func loadStoreInputs(db *sql.DB, ladderIDs []int32, trees map[int]int) (*storeIn
 // path the regeneration check runs, so what it checks is what the generator writes.
 func renderStore(in *storeInputs, namer *rankEnumNamer) ([]byte, error) {
 	tables := in.tables()
-	ids := reachableSpells(tables, in.Roots)
+
+	roots, err := withExtraIDs(tables, in.Roots)
+	if err != nil {
+		return nil, err
+	}
+	ids := reachableSpells(tables, roots)
 
 	linkHandTriggers(tables, ids)
 
@@ -393,7 +420,7 @@ func renderStore(in *storeInputs, namer *rankEnumNamer) ([]byte, error) {
 	for _, id := range ids {
 		effects += len(tables.effects[id])
 	}
-	fmt.Fprintf(progress, "spelldata: %d roots, %d reachable spells, %d effects\n", len(in.Roots), len(ids), effects)
+	fmt.Fprintf(progress, "spelldata: %d roots, %d reachable spells, %d effects\n", len(roots), len(ids), effects)
 
 	rows := make([]storeSpell, len(ids))
 	for i, id := range ids {
@@ -459,6 +486,10 @@ func linkHandTrigger(t *spellTables, driver int32, triggered int32) {
 //
 // Every node of every class tree is read, not only the ones the class files turned into ladders: a
 // talent the class file could not name is still a spell the sim can register by id.
+//
+// A node of one rank has no ladder to state, and its single priced value goes onto the effect's base
+// points instead: that is the number the class table states for it, and writing it into the row
+// rather than into a curve is what makes Find(id) and Talent(id, 1).Rank(1) agree about it.
 func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]map[int32]float64,
 	ids []int32) map[int32][][]float64 {
 	inStore := map[int32]bool{}
@@ -470,6 +501,15 @@ func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]m
 	pricedBy := map[int32]int32{}
 	for _, node := range nodes {
 		if !inStore[node.SpellID] {
+			continue
+		}
+
+		// The class generator takes the tree's numbers only where the tree states more ranks than the
+		// skill line's own ladder does, so a one-rank node whose spell a skill line teaches is
+		// described by its own rows and not by the tree: Ice Block, Last Stand and Relentless Strikes
+		// are priced by a node and state the client's base all the same. A node no skill line teaches
+		// - a talent Forever added, like Thousand Cuts - has nothing else describing it.
+		if node.MaxRanks == 1 && node.TaughtBySkillLine {
 			continue
 		}
 
@@ -490,18 +530,30 @@ func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]m
 		// definition 134447 and 2/4/6/8/10 on 142605. The lowest definition id within the
 		// first tree by id is the one kept, which is what the class tables generate from, and a
 		// disagreement is named on stderr rather than resolved silently.
-		if seen, ok := curves[node.SpellID]; ok {
-			if !sameCurves(seen, rows) {
+		if seen, ok := pricedBy[node.SpellID]; ok {
+			if existing, isCurve := curves[node.SpellID]; !isCurve || !sameCurves(existing, rows) {
 				fmt.Fprintf(progress,
 					"spelldata: talent definitions %d and %d price spell %d differently, keeping %d\n",
-					pricedBy[node.SpellID], node.DefinitionID, node.SpellID, pricedBy[node.SpellID])
+					seen, node.DefinitionID, node.SpellID, seen)
 			}
 			continue
 		}
-		curves[node.SpellID] = rows
 		pricedBy[node.SpellID] = node.DefinitionID
+
+		if node.MaxRanks == 1 {
+			bakeRank(t.effects[node.SpellID], rows)
+			continue
+		}
+		curves[node.SpellID] = rows
 	}
 	return curves
+}
+
+// The one rank's values onto the effects they belong to, by the position curveRows counted in.
+func bakeRank(effects []storeEffect, rows [][]float64) {
+	for position, row := range rows {
+		effects[position].BasePoints = row[0]
+	}
 }
 
 // Every class tree's nodes in the order the curves are read in - tree by tree, lowest id first, so
@@ -532,25 +584,31 @@ func traitPoints(db *sql.DB, trees map[int]int) ([]traitNode, map[int32]map[int3
 }
 
 // One talent node: the definition its curves hang off, the spell it grants and the rank cap the game
-// enforces. A one-rank node states no ladder, so it has no curve to read.
+// enforces. A one-rank node states no ladder, and its single value is baked into the spell's base
+// points by storeCurves rather than kept as a curve of one.
 type traitNode struct {
 	DefinitionID int32
 	SpellID      int32
 	MaxRanks     int32
+
+	// Whether a skill line teaches the spell, which is what says the tree is not the only thing
+	// describing it - see storeCurves.
+	TaughtBySkillLine bool
 }
 
 func traitNodes(db *sql.DB, treeID int) ([]traitNode, error) {
 	var nodes []traitNode
 	err := eachRow(db, fmt.Sprintf(`
-		SELECT DISTINCT d.ID, COALESCE(d.SpellID, 0), e.MaxRanks
+		SELECT DISTINCT d.ID, COALESCE(d.SpellID, 0), e.MaxRanks,
+		       EXISTS (SELECT 1 FROM SkillLineAbility sla WHERE sla.Spell = d.SpellID)
 		FROM TraitNode tn
 		JOIN TraitNodeXTraitNodeEntry x ON x.TraitNodeID = tn.ID
 		JOIN TraitNodeEntry e ON e.ID = x.TraitNodeEntryID
 		JOIN TraitDefinition d ON d.ID = e.TraitDefinitionID
-		WHERE tn.TraitTreeID = %d AND d.SpellID > 0 AND e.MaxRanks > 1
+		WHERE tn.TraitTreeID = %d AND d.SpellID > 0 AND e.MaxRanks > 0
 		ORDER BY d.ID, e.MaxRanks`, treeID), func(rows *sql.Rows) error {
 		var n traitNode
-		if err := rows.Scan(&n.DefinitionID, &n.SpellID, &n.MaxRanks); err != nil {
+		if err := rows.Scan(&n.DefinitionID, &n.SpellID, &n.MaxRanks, &n.TaughtBySkillLine); err != nil {
 			return err
 		}
 		nodes = append(nodes, n)

@@ -20,19 +20,15 @@ import (
 const extraIDsPath = "sim/core/spelldata/extra_ids.go"
 
 // The spells the sim can reach without anything naming them first: everything the nine class files
-// are built from, the store's own extra ids, and every spell an item, an enchant or a set bonus
-// casts. What those spells trigger is reached from here by reachableSpells.
+// are built from, and every spell an item, an enchant or a set bonus casts. What those spells trigger
+// is reached from here by reachableSpells.
+//
+// The store's own extra ids are not here: they are read out of sim/core/spelldata/extra_ids.go while
+// the store is rendered, so that adding one and forgetting to regenerate fails the regeneration check
+// instead of passing it - see withExtraIDs.
 func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) ([]int32, error) {
 	roots := map[int32]bool{}
 	for _, id := range ladderIDs {
-		roots[id] = true
-	}
-
-	extras, err := parseExtraIDs()
-	if err != nil {
-		return nil, err
-	}
-	for _, id := range extras {
 		roots[id] = true
 	}
 
@@ -56,15 +52,72 @@ func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) ([]int32, error) 
 		}
 	}
 
-	// An id no SpellName row carries is not a spell in this build: ItemEffect keeps rows for spells
-	// the client dropped, and following one would put an empty row in the store.
-	named := map[int32]bool{}
+	ids := make([]int32, 0, len(roots))
 	for id := range roots {
-		if _, ok := t.names[id]; ok {
-			named[id] = true
+		ids = append(ids, id)
+	}
+	return namedIDs(t, ids), nil
+}
+
+// The spells a rank reads its numbers off by name. The class-table generator falls back to them
+// wherever a rank states no amount of its own - Frenzied Regeneration's heal is on 22845, Tiger's
+// Fury's energize on 417045 - and the store has to carry the same spells, or the sim can read a
+// number off the table that it cannot read off the store. Mirrors SiblingRankEffects: same name,
+// same rank subtext, a shared class bit, and taught by a skill line rather than merely existing.
+//
+// One pass over everything already reached is enough: the relation is the name and subtext, so a
+// sibling's siblings are the ones already in hand.
+func siblingSpells(db *sql.DB, ids []int32) ([]int32, error) {
+	list := make([]string, len(ids))
+	for i, id := range ids {
+		list[i] = strconv.Itoa(int(id))
+	}
+
+	var siblings []int32
+	err := eachRow(db, `
+		SELECT DISTINCT b.Spell
+		FROM SkillLineAbility a
+		JOIN SkillLineAbility b ON b.Spell != a.Spell AND (a.ClassMask & b.ClassMask) != 0
+		JOIN SpellName na ON na.ID = a.Spell
+		JOIN SpellName nb ON nb.ID = b.Spell AND nb.Name_lang = na.Name_lang
+		JOIN Spell sa ON sa.ID = a.Spell
+		JOIN Spell sb ON sb.ID = b.Spell AND sb.NameSubtext_lang = sa.NameSubtext_lang
+		WHERE a.Spell IN (`+strings.Join(list, ", ")+`)
+		ORDER BY b.Spell`, func(rows *sql.Rows) error {
+		var id int32
+		if err := rows.Scan(&id); err != nil {
+			return err
+		}
+		siblings = append(siblings, id)
+		return nil
+	})
+	return siblings, err
+}
+
+// The store's hand-kept extra ids, added to the captured roots while the store is rendered rather
+// than while the client tables are read: the ids live in the store's own source, so resolving them
+// here is what makes an id added without a regeneration show up as a row the committed store lacks.
+func withExtraIDs(t *spellTables, roots []int32) ([]int32, error) {
+	extras, err := parseExtraIDs()
+	if err != nil {
+		return nil, err
+	}
+	return namedIDs(t, roots, extras), nil
+}
+
+// The ids of every list that this build names as a spell, deduped and in search order. An id no
+// SpellName row carries is not a spell here: ItemEffect keeps rows for spells the client dropped,
+// and following one would put an empty row in the store.
+func namedIDs(t *spellTables, lists ...[]int32) []int32 {
+	set := map[int32]bool{}
+	for _, list := range lists {
+		for _, id := range list {
+			if _, named := t.names[id]; named {
+				set[id] = true
+			}
 		}
 	}
-	return sortedIDs(named), nil
+	return sortedIDs(set)
 }
 
 // The gear and consumables gen_db ships, which is where the item procs the sim registers come from.
