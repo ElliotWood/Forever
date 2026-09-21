@@ -97,8 +97,6 @@ func (warrior *Warrior) registerCleave() {
 	warrior.makeQueueSpellsAndAura(spell)
 }
 
-// The next main-hand swing casts the queued spell in its place; a swing it cannot afford drops the
-// queue.
 func (warrior *Warrior) makeQueueSpellsAndAura(srcSpell *core.Spell) {
 	queueAura := warrior.RegisterAura(core.Aura{
 		Label:    "HS/Cleave Queue Aura-" + srcSpell.ActionID.String(),
