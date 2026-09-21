@@ -206,6 +206,12 @@
 				},
 				"worgen": {
 					"type": "string"
+				},
+				"high_order_skyborne": {
+					"type": "string"
+				},
+				"windshaper_skyborne": {
+					"type": "string"
 				}
 			},
 			"additionalProperties": false,
@@ -224,7 +230,9 @@
 				"tauren",
 				"troll",
 				"undead",
-				"worgen"
+				"worgen",
+				"high_order_skyborne",
+				"windshaper_skyborne"
 			]
 		},
 		"professions": {

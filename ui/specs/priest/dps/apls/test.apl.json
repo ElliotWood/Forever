@@ -15,7 +15,7 @@
 						]
 					}
 				},
-				"castSpell": { "spellId": { "spellId": 20554, "tag": 2 } }
+				"castSpell": { "spellId": { "spellId": 20554 } }
 			}
 		},
 		{
@@ -29,7 +29,7 @@
 						]
 					}
 				},
-				"castSpell": { "spellId": { "spellId": 20554, "tag": 1 } }
+				"castSpell": { "spellId": { "spellId": 20554 } }
 			}
 		},
 		{
@@ -38,7 +38,7 @@
 				"condition": {
 					"and": { "vals": [{ "dotIsActive": { "spellId": { "spellId": 25368 } } }, { "dotIsActive": { "spellId": { "spellId": 34917 } } }] }
 				},
-				"castSpell": { "spellId": { "spellId": 20554, "tag": 2 } }
+				"castSpell": { "spellId": { "spellId": 20554 } }
 			}
 		},
 		{

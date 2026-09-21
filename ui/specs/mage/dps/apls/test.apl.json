@@ -6,7 +6,7 @@
       ],
       "priorityList": [
         {"hide":true,"action":{"condition":{"cmp":{"op":"OpGt","lhs":{"currentManaPercent":{}},"rhs":{"const":{"val":"70%"}}}},"castSpell":{"spellId":{"spellId":6117}}}},
-        {"hide":true,"action":{"condition":{"spellCanCast":{"spellId":{"spellId":26297}}},"castSpell":{"spellId":{"spellId":26297}}}},
+        {"hide":true,"action":{"condition":{"spellCanCast":{"spellId":{"spellId":20554}}},"castSpell":{"spellId":{"spellId":20554}}}},
         {"hide":true,"action":{"condition":{"auraIsActive":{"auraId":{"spellId":7302},"includeReactionTime":true}},"castSpell":{"spellId":{"spellId":6117}}}},
         {"hide":true,"action":{"condition":{"auraIsActive":{"auraId":{"spellId":6117},"includeReactionTime":true}},"castSpell":{"spellId":{"spellId":7302}}}},
         {"action":{"condition":{"cmp":{"op":"OpLe","lhs":{"currentManaPercent":{}},"rhs":{"const":{"val":"70%"}}}},"castSpell":{"spellId":{"spellId":7302}}}},

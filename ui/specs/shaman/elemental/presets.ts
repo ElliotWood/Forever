@@ -17,7 +17,7 @@ export const OtherDefaults = {
 	distanceFromTarget: 20,
 	profession1: Profession.Leatherworking,
 	profession2: Profession.Enchanting,
-	race: Race.RaceDraenei,
+	race: Race.RaceTroll,
 };
 
 export const DefaultRaidBuffs = RaidBuffs.create({

@@ -81,5 +81,5 @@ export const OtherDefaults = {
 	profession2: Profession.Blacksmithing,
 	distanceFromTarget: 5,
 	iterationCount: 25000,
-	race: Race.RaceBloodElf,
+	race: Race.RaceHuman,
 };

@@ -69,12 +69,14 @@ export const raceToFaction: Record<Race, Faction> = {
 	[Race.RaceGnome]: Faction.Alliance,
 	[Race.RaceHuman]: Faction.Alliance,
 	[Race.RaceNightElf]: Faction.Alliance,
+	[Race.RaceHighOrderSkyborne]: Faction.Alliance,
 
 	[Race.RaceBloodElf]: Faction.Horde,
 	[Race.RaceOrc]: Faction.Horde,
 	[Race.RaceTauren]: Faction.Horde,
 	[Race.RaceTroll]: Faction.Horde,
 	[Race.RaceUndead]: Faction.Horde,
+	[Race.RaceWindshaperSkyborne]: Faction.Horde,
 };
 
 // Returns a copy of playerOptions, with the class field set.

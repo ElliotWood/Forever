@@ -63,7 +63,9 @@
 		"tauren": "Tauren",
 		"troll": "Troll",
 		"undead": "Undead",
-		"worgen": "Worgen"
+		"worgen": "Worgen",
+		"high_order_skyborne": "High Order Skyborne",
+		"windshaper_skyborne": "Windshaper Skyborne"
 	},
 	"professions": {
 		"unknown": "None",
