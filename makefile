@@ -286,6 +286,13 @@ update-tests:
 	find . -name "*.results" -type f -delete
 	find . -name "*.results.tmp" -exec bash -c 'cp "$$1" "$${1%.results.tmp}".results' _ {} \;
 
+# Names the generated spell data files that are not what tools/database/gen_spelldata writes
+# today, and writes nothing. Exits 1 with the paths when the committed files have drifted, which a
+# client update or a hand edit both do. Needs tools/database/wowsims.db.
+.PHONY: spelldata-check
+spelldata-check:
+	go run ./tools/database/gen_spelldata -check
+
 .PHONY: fmt
 fmt: tsfmt
 	gofmt -w ./sim

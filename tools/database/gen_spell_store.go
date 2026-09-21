@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"go/format"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -388,7 +387,7 @@ func renderStore(db *sql.DB, ladderIDs []int32, trees map[int]int) ([]byte, []by
 	for _, id := range ids {
 		effects += len(tables.effects[id])
 	}
-	fmt.Fprintf(os.Stderr, "spelldata: %d roots, %d reachable spells, %d effects\n", len(roots), len(ids), effects)
+	fmt.Fprintf(progress, "spelldata: %d roots, %d reachable spells, %d effects\n", len(roots), len(ids), effects)
 
 	rows := make([]storeSpell, len(ids))
 	for i, id := range ids {
@@ -450,7 +449,7 @@ func linkHandTrigger(t *spellTables, driver int32, triggered int32) {
 	// Every effect of the driver already fires something, so the link has nowhere to go and
 	// Drivers() would not reach the triggered spell. Named rather than dropped, since the entry was
 	// written by hand for exactly that reach.
-	fmt.Fprintf(os.Stderr,
+	fmt.Fprintf(progress,
 		"spelldata: spell %d has no effect free to carry the hand link to %d, so nothing drives it\n",
 		driver, triggered)
 }
@@ -503,7 +502,7 @@ func storeCurves(db *sql.DB, t *spellTables, trees map[int]int, ids []int32) (ma
 			// disagreement is named on stderr rather than resolved silently.
 			if seen, ok := curves[node.SpellID]; ok {
 				if !sameCurves(seen, rows) {
-					fmt.Fprintf(os.Stderr,
+					fmt.Fprintf(progress,
 						"spelldata: talent definitions %d and %d price spell %d differently, keeping %d\n",
 						pricedBy[node.SpellID], node.DefinitionID, node.SpellID, pricedBy[node.SpellID])
 				}
