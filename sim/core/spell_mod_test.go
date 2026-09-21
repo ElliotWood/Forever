@@ -75,3 +75,16 @@ func TestSpellModCustomNeedsApplyAndRemove(t *testing.T) {
 	}()
 	(&Unit{}).AddStaticMod(SpellModConfig{Kind: SpellMod_Custom})
 }
+
+func TestSpellModPeriodicDamageDoneFlat(t *testing.T) {
+	spell := &Spell{PeriodicDamageMultiplierAdditive: 1}
+	mod := &SpellMod{floatValue: 0.03}
+	spellModMap[SpellMod_PeriodicDamageDone_Flat].Apply(mod, spell)
+	if spell.PeriodicDamageMultiplierAdditive != 1.03 {
+		t.Fatalf("periodic additive %v, want 1.03", spell.PeriodicDamageMultiplierAdditive)
+	}
+	spellModMap[SpellMod_PeriodicDamageDone_Flat].Remove(mod, spell)
+	if spell.PeriodicDamageMultiplierAdditive != 1 {
+		t.Fatalf("periodic additive %v after remove, want 1", spell.PeriodicDamageMultiplierAdditive)
+	}
+}

@@ -23,14 +23,15 @@ func (warlock *Warlock) getBaneOfAgonyBaseConfig(rank int) core.SpellConfig {
 	snapshotBaseDmgNoBonus := 0.0
 
 	return core.SpellConfig{
-		SpellCode:     SpellCode_WarlockBaneOfAgony,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolShadow,
-		DefenseType:   core.DefenseTypeMagic,
-		Flags:         core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagPureDot | WarlockFlagAffliction,
-		ProcMask:      core.ProcMaskSpellDamage,
-		RequiredLevel: level,
-		Rank:          rank,
+		SpellCode:      SpellCode_WarlockBaneOfAgony,
+		ClassSpellMask: SpellMaskBaneOfAgony,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolShadow,
+		DefenseType:    core.DefenseTypeMagic,
+		Flags:          core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagPureDot | WarlockFlagAffliction,
+		ProcMask:       core.ProcMaskSpellDamage,
+		RequiredLevel:  level,
+		Rank:           rank,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,
@@ -293,12 +294,13 @@ func (warlock *Warlock) registerBaneOfDoomSpell() {
 	}
 
 	warlock.BaneOfDoom = warlock.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_WarlockBaneOfDoom,
-		ActionID:    core.ActionID{SpellID: 603},
-		SpellSchool: core.SpellSchoolShadow,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       core.SpellFlagAPL | WarlockFlagAffliction,
+		SpellCode:      SpellCode_WarlockBaneOfDoom,
+		ClassSpellMask: SpellMaskBaneOfDoom,
+		ActionID:       core.ActionID{SpellID: 603},
+		SpellSchool:    core.SpellSchoolShadow,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | WarlockFlagAffliction,
 
 		RequiredLevel: 60,
 
