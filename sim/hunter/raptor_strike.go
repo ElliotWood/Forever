@@ -4,68 +4,116 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: To be implemented. spellData.RaptorStrike holds the eight trainer ranks, 2973 to 14266.
-// The client also carries two Season of Discovery ladders under the same name: 415335 to
-// 415343, which the rune passive Melee Specialist (415352) swaps onto the action bar, and
-// 409691 to 409755, a mana-less copy nothing references. The generator drops the first by
-// its override link and the second because only the trainer rank carries a SpellPower row.
+// spellData.RaptorStrike holds the eight trainer ranks, 2973 to 14266. The client also carries two
+// Season of Discovery ladders under the same name: 415335 to 415343, which the rune passive Melee
+// Specialist (415352) swaps onto the action bar, and 409691 to 409755, a mana-less copy nothing
+// references. The generator drops the first by its override link and the second because only the
+// trainer rank carries a SpellPower row.
+//
+// Raptor Strike replaces the next main-hand swing rather than costing a global, so the cast the
+// rotation presses only queues it; the hit lands on the swing.
 func (hunter *Hunter) registerRaptorStrikeSpell() {
-	panic("To be implemented")
+	rank := spellData.RaptorStrike.HighestRank()
+	baseDamage := rank.Direct.Damage
 
-	// hunter.RaptorStrike = hunter.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: raptorStrikeRank.SpellID},
-	// 	SpellSchool:    raptorStrikeRank.SpellSchool,
-	// 	DefenseType:    raptorStrikeRank.DefenseType,
-	// 	ClassSpellMask: HunterSpellRaptorStrike,
-	// 	ProcMask:       core.ProcMaskMeleeMH,
-	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
-	//
-	// 	MaxRange: core.MaxMeleeRange,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: raptorStrikeRank.Cost,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			NonEmpty: true,
-	// 		},
-	// 		CD: core.Cooldown{
-	// 			Timer:    hunter.NewTimer(),
-	// 			Duration: raptorStrikeRank.Cooldown,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		// Emit an "auto delayed" log line whenever the mh auto fired
-	// 		// later than it would have in an uncontested rotation. Below 1ms
-	// 		// is treated as rounding noise so the common case stays silent.
-	// 		delay := hunter.AutoAttacks.MainHandPendingSwingDelay()
-	// 		readyAt := sim.CurrentTime - delay
-	// 		if sim.Log != nil && delay > time.Millisecond && readyAt > 0 {
-	// 			hunter.Log(sim, "%s delayed by %s, was ready at %s", spell.ActionID, delay, readyAt)
-	// 		}
-	//
-	// 		baseDamage := hunter.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) + raptorStrikeRank.Direct.Damage(sim)
-	// 		spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-	// 	},
-	// })
-	//
-	// hunter.RegisterAura(core.Aura{
-	// 	Label:    "Raptor Strike",
-	// 	ActionID: core.ActionID{SpellID: raptorStrikeRank.SpellID}.WithTag(2),
-	// 	Icd:      &hunter.RaptorStrike.CD,
-	// })
+	hunter.RaptorStrikeHit = hunter.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.SpellID}.WithTag(1),
+		SpellSchool:    rank.SpellSchool,
+		DefenseType:    rank.DefenseType,
+		ClassSpellMask: HunterSpellRaptorStrike,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
+		MaxRange:       core.MaxMeleeRange,
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+		BonusCoefficient: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			damage := baseDamage(sim) + hunter.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+		},
+	})
+
+	hunter.RaptorStrike = hunter.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.SpellID},
+		SpellSchool:    rank.SpellSchool,
+		DefenseType:    rank.DefenseType,
+		ClassSpellMask: HunterSpellRaptorStrike,
+		ProcMask:       core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeMHAuto,
+		Flags:          core.SpellFlagMeleeMetrics,
+		MaxRange:       core.MaxMeleeRange,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: rank.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				NonEmpty: true,
+			},
+			CD: core.Cooldown{
+				Timer:    hunter.NewTimer(),
+				Duration: rank.Cooldown,
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			hunter.RaptorStrikeHit.Cast(sim, target)
+
+			if hunter.curQueueAura != nil {
+				hunter.curQueueAura.Deactivate(sim)
+			}
+		},
+	})
+
+	hunter.makeRaptorStrikeQueueSpell()
 }
 
-// Returns true if the regular melee swing should be used, false otherwise.
-func (hunter *Hunter) TryRaptorStrike(sim *core.Simulation, mhSwingSpell *core.Spell) *core.Spell {
-	if mhSwingSpell.ActionID.Tag != 1 || !hunter.RaptorStrike.CanCast(sim, hunter.CurrentTarget) {
-		return mhSwingSpell
-	}
+func (hunter *Hunter) makeRaptorStrikeQueueSpell() {
+	queueAura := hunter.RegisterAura(core.Aura{
+		Label:    "Raptor Strike Queued",
+		ActionID: hunter.RaptorStrike.ActionID.WithTag(3),
+		Duration: core.NeverExpires,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			if hunter.curQueueAura != nil {
+				hunter.curQueueAura.Deactivate(sim)
+			}
+			hunter.PseudoStats.DisableDWMissPenalty = true
+			hunter.curQueueAura = aura
+			hunter.curQueuedAutoSpell = hunter.RaptorStrike
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			hunter.PseudoStats.DisableDWMissPenalty = false
+			hunter.curQueueAura = nil
+			hunter.curQueuedAutoSpell = nil
+		},
+	})
 
-	return hunter.RaptorStrike
+	queueSpell := hunter.RegisterSpell(core.SpellConfig{
+		ActionID:       hunter.RaptorStrike.ActionID.WithTag(3),
+		ClassSpellMask: HunterSpellRaptorStrikeQueue,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return hunter.curQueueAura != queueAura &&
+				hunter.CurrentMana() >= hunter.RaptorStrike.Cost.GetCurrentCost() &&
+				hunter.Hardcast.Expires <= sim.CurrentTime &&
+				hunter.DistanceFromTarget <= core.MaxMeleeRange &&
+				hunter.RaptorStrike.IsReady(sim)
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			queueAura.Activate(sim)
+		},
+	})
+	_ = queueSpell
+}
+
+// Returns the spell the main-hand swing should use: the queued Raptor Strike when one is waiting.
+func (hunter *Hunter) TryRaptorStrike(sim *core.Simulation, mhSwingSpell *core.Spell) *core.Spell {
+	if hunter.curQueuedAutoSpell != nil && hunter.curQueuedAutoSpell.CanCast(sim, hunter.CurrentTarget) {
+		return hunter.curQueuedAutoSpell
+	}
+	return mhSwingSpell
 }

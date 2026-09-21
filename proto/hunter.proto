@@ -37,31 +37,30 @@ message HunterTalents {
     bool lone_wolf = 25;
     bool trueshot_aura = 26;
     int32 mortal_shots = 27;
-    int32 improved_serpent_sting = 28;
-    int32 rapid_recuperation = 29;
-    int32 barrage = 30;
-    bool scatter_shot = 31;
-    int32 ranged_weapon_specialization = 32;
-    bool sniper_shot = 33;
+    int32 rapid_recuperation = 28;
+    int32 barrage = 29;
+    bool scatter_shot = 30;
+    int32 ranged_weapon_specialization = 31;
+    bool sniper_shot = 32;
     // Survival
-    int32 improved_tracking = 34;
-    int32 deflection = 35;
-    int32 entrapment = 36;
-    int32 savage_strikes = 37;
-    int32 survivalist = 38;
-    int32 improved_wing_clip = 39;
-    int32 clever_traps = 40;
-    int32 surefooted = 41;
-    bool deterrence = 42;
-    int32 survival_tactics = 43;
-    int32 predators_edge = 44;
-    bool counterattack = 45;
-    int32 resourcefulness = 46;
-    int32 expose_prey = 47;
-    int32 survivalists_discipline = 48;
-    bool strider_kick = 49;
-    int32 lightning_reflexes = 50;
-    bool lacerating_strikes = 51;
+    int32 improved_tracking = 33;
+    int32 deflection = 34;
+    int32 entrapment = 35;
+    int32 savage_strikes = 36;
+    int32 survivalist = 37;
+    int32 improved_wing_clip = 38;
+    int32 clever_traps = 39;
+    int32 surefooted = 40;
+    bool deterrence = 41;
+    int32 survival_tactics = 42;
+    int32 predators_edge = 43;
+    bool counterattack = 44;
+    int32 resourcefulness = 45;
+    int32 expose_prey = 46;
+    int32 survivalists_discipline = 47;
+    bool strider_kick = 48;
+    int32 lightning_reflexes = 49;
+    bool lacerating_strikes = 50;
 }
 
 // END GENERATED
@@ -84,30 +83,64 @@ message HunterOptions {
 	}
 	QuiverBonus quiver_bonus = 1;
 
+	// Forever is a Classic-era realm: the TBC ammo this message used to list does not exist there.
 	enum Ammo {
 		AmmoNone = 0;
-		TimelessArrow = 1;
-		MysteriousArrow = 2;
-		AdamantiteStinger = 3;
-		WardensArrow = 4;
-		HalaaniRazorshaft = 5;
-		BlackflightArrow = 6;
+		// 25
+		RazorArrow = 1;
+		SolidShot = 2;
+		// 40
+		JaggedArrow = 3;
+		AccurateSlugs = 4;
+		// 50
+		MithrilGyroShot = 5;
+		RockshardPellets = 6;
+		// 60
+		IceThreadedArrow = 7;
+		ThoriumHeadedArrow = 8;
+		Doomshot = 9;
+		IceThreadedBullet = 10;
+		ThoriumShells = 11;
+		MiniatureCannonBalls = 12;
 	}
 	Ammo ammo = 2;
 
 	enum PetType {
-		PetNone     = 0;
-		Bat         = 1;
-		Bear        = 2;
-		Cat         = 3;
-		Crab        = 4;
-		Owl         = 5;
-		Raptor      = 6;
-		Ravager     = 7;
-		WindSerpent = 8;
-		Dragonhawk  = 9;
+		PetNone = 0;
+		Cat = 1;
+		WindSerpent = 2;
+		Wolf = 3;
+		Bat = 4;
+		Bear = 5;
+		Owl = 6;
+		Boar = 7;
+		CarrionBird = 8;
+		Crab = 9;
+		Crocolisk = 10;
+		Gorilla = 11;
+		Hyena = 12;
+		Raptor = 13;
+		Scorpid = 14;
+		Spider = 15;
+		Tallstrider = 16;
+		Turtle = 17;
 	}
 	PetType pet_type = 3;
+
+	// The tamed pet's weapon speed, which sets both its swing timer and its damage range.
+	enum PetAttackSpeed {
+		One = 0;
+		OneTwo = 1;
+		OneThree = 2;
+		OneFour = 3;
+		OneFive = 4;
+		OneSix = 5;
+		OneSeven = 6;
+		Two = 7;
+		TwoFour = 8;
+		TwoFive = 9;
+	}
+	PetAttackSpeed pet_attack_speed = 6;
 
 	bool pet_single_ability = 4;
 	double pet_uptime = 5;

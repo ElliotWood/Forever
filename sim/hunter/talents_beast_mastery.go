@@ -1,8 +1,14 @@
 package hunter
 
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
 func (hunter *Hunter) registerBeastMasteryTalents() {
 	// Tier 1
-	hunter.registerDeadlyAspects()
+	// Deadly Aspects: aspects.go
 	hunter.registerEnduranceTraining()
 
 	// Tier 2
@@ -18,12 +24,12 @@ func (hunter *Hunter) registerBeastMasteryTalents() {
 	// Tier 4
 	hunter.registerImprovedMendPet()
 	hunter.registerFerocity()
-	hunter.registerSummonHawk()
+	// Summon Hawk: summon_hawk.go
 
 	// Tier 5
 	hunter.registerSpiritBond()
 	hunter.registerIntimidation()
-	// Bestial Discipline implemented in pet.go
+	hunter.registerBestialDiscipline()
 
 	// Tier 6
 	hunter.registerFrenzy()
@@ -32,183 +38,208 @@ func (hunter *Hunter) registerBeastMasteryTalents() {
 	hunter.registerBestialWrath()
 }
 
-// TODO: To be implemented.
 func (hunter *Hunter) registerEnduranceTraining() {
 	if hunter.Pet == nil || hunter.Talents.EnduranceTraining == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if hunter.Pet == nil || hunter.Talents.EnduranceTraining == 0 {
-	// 	return
-	// }
-	//
-	// hunter.Pet.StatDependencyManager.EnableDynamicStatDep(
-	// 	hunter.Pet.NewDynamicMultiplyStat(stats.Health, spellData.EnduranceTraining.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).MultiplierAt(hunter.Talents.EnduranceTraining)),
-	// )
-	//
-	// // TODO: Forever drops the hunter's own health bonus from Endurance Training; the spell
-	// // carries only the pet modifier applied above (+3% per rank), so this is pinned to the
-	// // untalented 1.0.
-	// ownHealthMultiplier := 1.0
-	// hunter.StatDependencyManager.EnableDynamicStatDep(
-	// 	hunter.NewDynamicMultiplyStat(stats.Health, ownHealthMultiplier),
-	// )
+	// Forever drops the hunter's own health bonus: the spell carries only the pet modifier,
+	// +3% a rank.
+	hunter.Pet.MultiplyStat(stats.Health, spellData.EnduranceTraining.
+		Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).
+		MultiplierAt(hunter.Talents.EnduranceTraining))
 }
 
-// TODO: To be implemented.
 func (hunter *Hunter) registerFocusedFire() {
 	if hunter.Pet == nil || hunter.Talents.FocusedFire == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if hunter.Pet == nil || hunter.Talents.FocusedFire == 0 {
-	// 	return
-	// }
-	//
-	// // The single dummy effect is the 1% per rank damage bonus.
-	// hunter.PseudoStats.DamageDealtMultiplier *= spellData.FocusedFire.EffectAt(0).MultiplierAt(hunter.Talents.FocusedFire)
-	//
-	// // TODO: Forever drops Focused Fire's Kill Command crit bonus; the spell carries only the
-	// // dummy used above, so the pet crit bonus is pinned to the untalented 0.
-	// killCommandBonusCrit := 0.0
-	// hunter.Pet.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_BonusCrit_Percent,
-	// 	ClassMask:  HunterSpellKillCommandPet,
-	// 	FloatValue: killCommandBonusCrit,
-	// })
+	// The single dummy effect is the 1% per rank damage bonus. Forever drops Focused Fire's Kill
+	// Command crit bonus - there is no Kill Command.
+	hunter.PseudoStats.DamageDealtMultiplier *= spellData.FocusedFire.EffectAt(0).
+		MultiplierAt(hunter.Talents.FocusedFire)
 }
 
-// TODO: To be implemented.
 func (hunter *Hunter) registerUnleashedFury() {
 	if hunter.Pet == nil || hunter.Talents.UnleashedFury == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if hunter.Pet == nil || hunter.Talents.UnleashedFury == 0 {
-	// 	return
-	// }
-	//
-	// hunter.Pet.PseudoStats.DamageDealtMultiplier *= spellData.UnleashedFury.MultiplierAt(hunter.Talents.UnleashedFury)
+	hunter.Pet.PseudoStats.DamageDealtMultiplier *= spellData.UnleashedFury.
+		MultiplierAt(hunter.Talents.UnleashedFury)
 }
 
-// TODO: To be implemented.
 func (hunter *Hunter) registerFerocity() {
 	if hunter.Pet == nil || hunter.Talents.Ferocity == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if hunter.Pet == nil || hunter.Talents.Ferocity == 0 {
-	// 	return
-	// }
-	//
-	// hunter.Pet.AddStats(stats.Stats{
-	// 	stats.PhysicalCritPercent: spellData.Ferocity.ValueAt(hunter.Talents.Ferocity),
-	// 	stats.SpellCritPercent:    spellData.Ferocity.ValueAt(hunter.Talents.Ferocity),
-	// })
+	crit := spellData.Ferocity.ValueAt(hunter.Talents.Ferocity)
+	hunter.Pet.AddStats(stats.Stats{
+		stats.PhysicalCritPercent: crit,
+		stats.SpellCritPercent:    crit,
+	})
 }
 
-// TODO: To be implemented.
+func (hunter *Hunter) registerBestialDiscipline() {
+	if hunter.Talents.BestialDiscipline == 0 {
+		return
+	}
+
+	// The pet's focus regen is handled where the focus bar is enabled, in pet.go. This half is the
+	// hunter's own mana regen while casting.
+	hunter.PseudoStats.SpiritRegenRateCasting += spellData.BestialDiscipline.
+		Effect(shared.A_MOD_MANA_REGEN_INTERRUPT, 0).
+		FractionAt(hunter.Talents.BestialDiscipline)
+}
+
 func (hunter *Hunter) registerFrenzy() {
 	if hunter.Pet == nil || hunter.Talents.Frenzy == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if hunter.Pet == nil || hunter.Talents.Frenzy == 0 {
-	// 	return
-	// }
-	//
-	// frenzy := hunter.Pet.RegisterAura(core.Aura{
-	// 	Label:    "Frenzy Effect",
-	// 	ActionID: core.ActionID{SpellID: 19615},
-	// 	Duration: time.Second * 8,
-	// }).AttachMultiplyMeleeSpeed(1.3)
-	//
-	// hunter.Pet.MakeProcTriggerAura(core.ProcTrigger{
-	// 	Name:       "Frenzy",
-	// 	Callback:   core.CallbackOnSpellHitDealt,
-	// 	Outcome:    core.OutcomeCrit,
-	// 	ProcChance: spellData.Frenzy.FractionAt(hunter.Talents.Frenzy),
-	//
-	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-	// 		frenzy.Activate(sim)
-	// 	},
-	// })
+	frenzyRank := spellData.FrenzyTriggered.HighestRank()
+	const speedMultiplier = 1.3
+
+	frenzy := hunter.Pet.RegisterAura(core.Aura{
+		Label:    "Frenzy Effect",
+		ActionID: core.ActionID{SpellID: frenzyRank.SpellID},
+		Duration: frenzyRank.Duration,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Unit.MultiplyAttackSpeed(sim, speedMultiplier)
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Unit.MultiplyAttackSpeed(sim, 1/speedMultiplier)
+		},
+	})
+
+	hunter.Pet.MakeProcTriggerAura(core.ProcTrigger{
+		Name:       "Frenzy",
+		Callback:   core.CallbackOnSpellHitDealt,
+		Outcome:    core.OutcomeCrit,
+		ProcChance: spellData.Frenzy.FractionAt(hunter.Talents.Frenzy),
+
+		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			frenzy.Activate(sim)
+		},
+	})
 }
 
-// TODO: To be implemented.
+// Bosses are immune to the stun, but the pet's next attack still gets the crit bonus, so
+// Intimidation is worth pressing on cooldown.
+func (hunter *Hunter) registerIntimidation() {
+	if hunter.Pet == nil || !hunter.Talents.Intimidation {
+		return
+	}
+
+	rank := spellData.Intimidation.ByRank(1)
+	actionID := core.ActionID{SpellID: rank.SpellID}
+	const bonusCrit = 100.0
+
+	petAura := hunter.Pet.RegisterAura(core.Aura{
+		Label:    "Intimidation",
+		ActionID: actionID,
+		Duration: rank.Duration,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Unit.AddStatDynamic(sim, stats.PhysicalCritPercent, bonusCrit)
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Unit.AddStatDynamic(sim, stats.PhysicalCritPercent, -bonusCrit)
+		},
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if result.Landed() {
+				aura.Deactivate(sim)
+			}
+		},
+	})
+
+	intimidation := hunter.RegisterSpell(core.SpellConfig{
+		ActionID: actionID,
+		ProcMask: core.ProcMaskEmpty,
+		Flags:    core.SpellFlagAPL,
+
+		// 8% of base mana and a 1 min cooldown in both clients (19577); the generated row carries
+		// neither, so both are kept from our client-verified sim.
+		ManaCost: core.ManaCostOptions{
+			BaseCostPercent: 8,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				NonEmpty: true,
+			},
+			CD: core.Cooldown{
+				Timer:    hunter.NewTimer(),
+				Duration: core.DurationFromSeconds(60),
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			petAura.Activate(sim)
+		},
+	})
+
+	hunter.AddMajorCooldown(core.MajorCooldown{
+		Spell: intimidation,
+		Type:  core.CooldownTypeDPS,
+	})
+}
+
 func (hunter *Hunter) registerBestialWrath() {
 	if hunter.Pet == nil || !hunter.Talents.BestialWrath {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if hunter.Pet == nil || !hunter.Talents.BestialWrath {
-	// 	return
-	// }
-	//
-	// actionID := core.ActionID{SpellID: 19574}
-	//
-	// hunter.Pet.BestialWrathAura = hunter.Pet.RegisterAura(core.Aura{
-	// 	Label:    "Bestial Wrath",
-	// 	ActionID: actionID,
-	// 	Duration: time.Second * 18,
-	// }).AttachMultiplicativePseudoStatBuff(
-	// 	&hunter.Pet.PseudoStats.DamageDealtMultiplier, 1.5,
-	// )
-	//
-	// hunter.BestialWrath = hunter.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       actionID,
-	// 	SpellSchool:    core.SpellSchoolPhysical,
-	// 	ClassSpellMask: HunterSpellBestialWrath,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		BaseCostPercent: 10,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			NonEmpty: true,
-	// 		},
-	// 		CD: core.Cooldown{
-	// 			Timer:    hunter.NewTimer(),
-	// 			Duration: time.Minute * 2,
-	// 		},
-	// 	},
-	//
-	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-	// 		return hunter.GCD.IsReady(sim)
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		hunter.Pet.BestialWrathAura.Activate(sim)
-	// 	},
-	// })
-	//
-	// hunter.AddMajorCooldown(core.MajorCooldown{
-	// 	Spell: hunter.BestialWrath,
-	// 	Type:  core.CooldownTypeDPS,
-	// })
-}
+	rank := spellData.BestialWrath.HighestRank()
+	actionID := core.ActionID{SpellID: rank.SpellID}
+	const damageMultiplier = 1.5
 
-// registerDeadlyAspects implements Deadly Aspects, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (hunter *Hunter) registerDeadlyAspects() {
-	if hunter.Talents.DeadlyAspects == 0 {
-		return
-	}
+	hunter.Pet.BestialWrathAura = hunter.Pet.RegisterAura(core.Aura{
+		Label:    "Bestial Wrath",
+		ActionID: actionID,
+		Duration: rank.Duration,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			hunter.Pet.PseudoStats.DamageDealtMultiplier *= damageMultiplier
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			hunter.Pet.PseudoStats.DamageDealtMultiplier /= damageMultiplier
+		},
+	})
+
+	bwSpell := hunter.RegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		ClassSpellMask: HunterSpellBestialWrath,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          core.SpellFlagAPL,
+
+		ManaCost: core.ManaCostOptions{
+			BaseCostPercent: 12,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				NonEmpty: true,
+			},
+			CD: core.Cooldown{
+				Timer:    hunter.NewTimer(),
+				Duration: rank.Cooldown,
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			hunter.Pet.BestialWrathAura.Activate(sim)
+		},
+	})
+
+	hunter.AddMajorCooldown(core.MajorCooldown{
+		Spell: bwSpell,
+		Type:  core.CooldownTypeDPS,
+	})
 }
 
 // registerImprovedAspectOfTheMonkey implements Improved Aspect of the Monkey, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: dodge while Aspect of the Monkey is up. A ranged hunter holds Aspect of the Hawk, so this
+// never applies in the rotations the sim runs.
 func (hunter *Hunter) registerImprovedAspectOfTheMonkey() {
 	if hunter.Talents.ImprovedAspectOfTheMonkey == 0 {
 		return
@@ -217,8 +248,7 @@ func (hunter *Hunter) registerImprovedAspectOfTheMonkey() {
 
 // registerPathfinding implements Pathfinding, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: movement speed only; no effect on damage.
 func (hunter *Hunter) registerPathfinding() {
 	if hunter.Talents.Pathfinding == 0 {
 		return
@@ -227,8 +257,7 @@ func (hunter *Hunter) registerPathfinding() {
 
 // registerImprovedRevivePet implements Improved Revive Pet, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: out-of-combat pet revival; nothing the sim models.
 func (hunter *Hunter) registerImprovedRevivePet() {
 	if hunter.Talents.ImprovedRevivePet == 0 {
 		return
@@ -237,8 +266,7 @@ func (hunter *Hunter) registerImprovedRevivePet() {
 
 // registerBestialSwiftness implements Bestial Swiftness, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: pet movement speed only.
 func (hunter *Hunter) registerBestialSwiftness() {
 	if !hunter.Talents.BestialSwiftness {
 		return
@@ -247,40 +275,18 @@ func (hunter *Hunter) registerBestialSwiftness() {
 
 // registerImprovedMendPet implements Improved Mend Pet, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: Mend Pet is a heal the sim does not cast.
 func (hunter *Hunter) registerImprovedMendPet() {
 	if hunter.Talents.ImprovedMendPet == 0 {
 		return
 	}
 }
 
-// registerSummonHawk implements Summon Hawk, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (hunter *Hunter) registerSummonHawk() {
-	if !hunter.Talents.SummonHawk {
-		return
-	}
-}
-
 // registerSpiritBond implements Spirit Bond, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: health regen for hunter and pet; no effect on damage.
 func (hunter *Hunter) registerSpiritBond() {
 	if hunter.Talents.SpiritBond == 0 {
-		return
-	}
-}
-
-// registerIntimidation implements Intimidation, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (hunter *Hunter) registerIntimidation() {
-	if !hunter.Talents.Intimidation {
 		return
 	}
 }

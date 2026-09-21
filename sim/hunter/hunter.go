@@ -14,7 +14,10 @@ const (
 	QuiverHasteCategory        = "QuiverHaste"
 )
 
-var TalentTreeSizes = [3]int{16, 17, 18}
+// Marksmanship lost Improved Serpent Sting: node 1091/105003 is parked ten times off the tree's
+// canvas, has no live twin, and is missing from the point-spent groups every other tier-4
+// Marksmanship node belongs to. See tools/database/tables.go.
+var TalentTreeSizes = [3]int{16, 16, 18}
 
 type Hunter struct {
 	core.Character
@@ -31,24 +34,36 @@ type Hunter struct {
 	AmmoDPS         float64
 	AmmoDamageBonus float64
 
-	AimedShot        *core.Spell
-	ArcaneShot       *core.Spell
-	AspectOfTheHawk  *core.Spell
-	AspectOfTheViper *core.Spell
-	BestialWrath     *core.Spell
-	MultiShot        *core.Spell
-	RapidFire        *core.Spell
-	RaptorStrike     *core.Spell
-	Readiness        *core.Spell
-	ScorpidSting     *core.Spell
-	SerpentSting     *core.Spell
-	// HuntersMarkSpell *core.Spell
+	AimedShot         *core.Spell
+	ArcaneShot        *core.Spell
+	AspectOfTheHawk   *core.Spell
+	ExplosiveTrap     *core.Spell
+	FreezingTrap      *core.Spell
+	ImmolationTrap    *core.Spell
+	LaceratingStrikes *core.Spell
+	MongooseBite      *core.Spell
+	MultiShot         *core.Spell
+	RapidFire         *core.Spell
+	RaptorStrike      *core.Spell
+	RaptorStrikeHit   *core.Spell
+	SerpentSting      *core.Spell
+	SniperShot        *core.Spell
+	StriderKick       *core.Spell
+	SummonHawk        *core.Spell
+	Volley            *core.Spell
+	WingClip          *core.Spell
 
-	AspectOfTheHawkAura  *core.Aura
-	AspectOfTheViperAura *core.Aura
-	TalonOfAlarAura      *core.Aura
-	TheBeastWithinAura   *core.Aura
-	quiverBonusAura      *core.Aura
+	AspectOfTheHawkAura *core.Aura
+	RapidFireAura       *core.Aura
+	TalonOfAlarAura     *core.Aura
+	TheBeastWithinAura  *core.Aura
+	quiverBonusAura     *core.Aura
+
+	// Mongoose Bite is only castable in the window a dodge opens.
+	DefensiveState *core.Aura
+
+	curQueueAura       *core.Aura
+	curQueuedAutoSpell *core.Spell
 }
 
 func (hunter *Hunter) GetCharacter() *core.Character {
@@ -89,9 +104,6 @@ func NewHunter(character *core.Character, options *proto.Player, hunterOptions *
 		if hunter.Options.PetType == proto.HunterOptions_Bat || hunter.Options.PetType == proto.HunterOptions_Owl {
 			raid.Debuffs.Screech = false
 		}
-
-		// TODO: Forever drops Expose Weakness; this hunter can no longer self-provide the
-		// debuff, so the raid.Debuffs fallback values are never cleared.
 	}
 
 	hunter.PseudoStats.CanParry = true
@@ -161,58 +173,56 @@ var quiverHasteSpellIDs = map[proto.HunterOptions_QuiverBonus]int32{
 	proto.HunterOptions_Speed15: 29414,
 }
 
-// TODO: To be implemented.
 func (hunter *Hunter) applyQuiverBonus(weapon *core.Item) {
 	if hunter.Options.QuiverBonus == proto.HunterOptions_QuiverNone {
 		return
 	}
-	panic("To be implemented")
 
-	// The TBC implementation, kept for the port:
-	// if hunter.Options.QuiverBonus == proto.HunterOptions_QuiverNone {
-	// 	return
-	// }
-	//
-	// isThoridalEquipped := weapon != nil && weapon.ID == ThoridalTheStarsFuryItemID
-	// buildPhase := core.Ternary(
-	// 	isThoridalEquipped,
-	// 	core.CharacterBuildPhaseNone,
-	// 	core.CharacterBuildPhaseGear)
-	//
-	// hunter.quiverBonusAura = hunter.RegisterAura(core.Aura{
-	// 	Label:      "Haste",
-	// 	ActionID:   core.ActionID{SpellID: quiverHasteSpellIDs[hunter.Options.QuiverBonus]},
-	// 	Duration:   core.NeverExpires,
-	// 	BuildPhase: buildPhase,
-	// }).AttachMultiplicativePseudoStatBuff(
-	// 	&hunter.PseudoStats.RangedSpeedMultiplier,
-	// 	quiverHasteMultipliers[hunter.Options.QuiverBonus],
-	// )
-	//
-	// if !isThoridalEquipped {
-	// 	core.MakePermanent(hunter.quiverBonusAura)
-	// }
+	isThoridalEquipped := weapon != nil && weapon.ID == ThoridalTheStarsFuryItemID
+	buildPhase := core.Ternary(
+		isThoridalEquipped,
+		core.CharacterBuildPhaseNone,
+		core.CharacterBuildPhaseGear)
+
+	multiplier := quiverHasteMultipliers[hunter.Options.QuiverBonus]
+	hunter.quiverBonusAura = hunter.RegisterAura(core.Aura{
+		Label:      "Haste",
+		ActionID:   core.ActionID{SpellID: quiverHasteSpellIDs[hunter.Options.QuiverBonus]},
+		Duration:   core.NeverExpires,
+		BuildPhase: buildPhase,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			hunter.PseudoStats.RangedSpeedMultiplier *= multiplier
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			hunter.PseudoStats.RangedSpeedMultiplier /= multiplier
+		},
+	})
+
+	if !isThoridalEquipped {
+		core.MakePermanent(hunter.quiverBonusAura)
+	}
 }
 
-// TODO: To be implemented.
+// Forever is a Classic-era realm, so these are the Classic ammo values, not TBC's.
 func (hunter *Hunter) applyAmmoDPS() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// switch hunter.Options.Ammo {
-	// case proto.HunterOptions_TimelessArrow:
-	// 	hunter.AmmoDPS = 53
-	// case proto.HunterOptions_MysteriousArrow:
-	// 	hunter.AmmoDPS = 46.5
-	// case proto.HunterOptions_AdamantiteStinger:
-	// 	hunter.AmmoDPS = 43
-	// case proto.HunterOptions_WardensArrow:
-	// 	hunter.AmmoDPS = 37
-	// case proto.HunterOptions_HalaaniRazorshaft:
-	// 	hunter.AmmoDPS = 34
-	// case proto.HunterOptions_BlackflightArrow:
-	// 	hunter.AmmoDPS = 32
-	// }
+	switch hunter.Options.Ammo {
+	case proto.HunterOptions_RazorArrow, proto.HunterOptions_SolidShot:
+		hunter.AmmoDPS = 7.5
+	case proto.HunterOptions_JaggedArrow, proto.HunterOptions_AccurateSlugs:
+		hunter.AmmoDPS = 13
+	case proto.HunterOptions_MithrilGyroShot:
+		hunter.AmmoDPS = 15
+	case proto.HunterOptions_IceThreadedArrow, proto.HunterOptions_IceThreadedBullet:
+		hunter.AmmoDPS = 16.5
+	case proto.HunterOptions_ThoriumHeadedArrow, proto.HunterOptions_ThoriumShells:
+		hunter.AmmoDPS = 17.5
+	case proto.HunterOptions_RockshardPellets:
+		hunter.AmmoDPS = 18
+	case proto.HunterOptions_Doomshot:
+		hunter.AmmoDPS = 20
+	case proto.HunterOptions_MiniatureCannonBalls:
+		hunter.AmmoDPS = 20.5
+	}
 }
 
 func (hunter *Hunter) RegisterRangedSpell(config core.SpellConfig) *core.Spell {
@@ -257,20 +267,40 @@ func (hunter *Hunter) Initialize() {
 }
 
 func (hunter *Hunter) RegisterSpells() {
-	hunter.registerArcaneShotSpell()
+	// Forever pairs Aimed Shot's cooldown with Multi-Shot rather than Arcane Shot: "Aimed Shot
+	// shares its cooldown with Multi-Shot" and the mirror line on Multi-Shot (Xaryu's and Savix's
+	// Hunters, 12 September).
+	multiShotTimer := hunter.NewTimer()
+	arcaneShotTimer := hunter.NewTimer()
+	trapTimer := hunter.NewTimer()
+
 	hunter.registerAspects()
-	hunter.registerMultiShotSpell()
-	hunter.registerRaptorStrikeSpell()
-	hunter.registerRapidFireCD()
-	hunter.registerScorpidStingSpell()
+	hunter.registerArcaneShotSpell(arcaneShotTimer)
+	hunter.registerAimedShotSpell(multiShotTimer)
+	hunter.registerMultiShotSpell(multiShotTimer)
+	hunter.registerSniperShotSpell()
+	hunter.registerSummonHawkSpell(arcaneShotTimer)
 	hunter.registerSerpentStingSpell()
-	// hunter.registerHuntersMarkSpell()
+	hunter.registerVolleySpell()
+
+	hunter.registerRaptorStrikeSpell()
+	hunter.registerMongooseBiteSpell()
+	hunter.registerLaceratingStrikesSpell()
+	hunter.registerWingClipSpell()
+	hunter.registerStriderKickSpell()
+
+	hunter.registerExplosiveTrapSpell(trapTimer)
+	hunter.registerImmolationTrapSpell(trapTimer)
+	hunter.registerFreezingTrapSpell(trapTimer)
+
+	hunter.registerRapidFireCD()
 }
 
 func (hunter *Hunter) AddStatDependencies() {
 	hunter.AddStatDependency(stats.Strength, stats.AttackPower, 1)
 	hunter.AddStatDependency(stats.Agility, stats.AttackPower, 1)
-	hunter.AddStatDependency(stats.Agility, stats.RangedAttackPower, 1)
+	// A Classic hunter gets two ranged attack power per agility, not one.
+	hunter.AddStatDependency(stats.Agility, stats.RangedAttackPower, 2)
 	hunter.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[hunter.Class])
 	hunter.AddStatDependency(stats.Agility, stats.DodgeRating, 1.0/25*core.DodgeRatingPerDodgePercent)
 }
@@ -315,7 +345,17 @@ const (
 	HunterSpellVolley
 	HunterPetDamage
 
-	// TODO: Forever abilities the sim does not model yet; see the stub file named for each.
+	HunterSpellExplosiveTrap
+	HunterSpellFreezingTrap
+	HunterSpellImmolationTrap
+	HunterSpellLaceratingStrikes
+	HunterSpellMongooseBite
+	HunterSpellSniperShot
+	HunterSpellStriderKick
+	HunterSpellSummonHawk
+	HunterSpellWingClip
+
+	// TODO: Forever pet abilities the sim does not model yet; see the stub file named for each.
 	HunterSpellDismember
 	HunterSpellDustCloud
 	HunterSpellEnchantedFlare
@@ -328,14 +368,24 @@ const (
 
 	HunterSpellsAll = HunterSpellAimedShot |
 		HunterSpellArcaneShot | HunterSpellBestialWrath |
-		HunterSpellMultiShot |
-		HunterSpellRapidFire | HunterSpellRaptorStrike |
-		HunterSpellScorpidSting | HunterSpellSerpentSting |
-		HunterSpellVolley
-	HunterSpellsShotsAndStings = HunterSpellAimedShot |
-		HunterSpellArcaneShot | HunterSpellMultiShot |
-		HunterSpellScorpidSting | HunterSpellSerpentSting |
-		HunterSpellVolley
+		HunterSpellMultiShot | HunterSpellRapidFire |
+		HunterSpellRaptorStrike | HunterSpellSerpentSting |
+		HunterSpellSniperShot | HunterSpellSummonHawk |
+		HunterSpellVolley | HunterSpellMongooseBite |
+		HunterSpellStriderKick | HunterSpellWingClip |
+		HunterSpellExplosiveTrap | HunterSpellFreezingTrap |
+		HunterSpellImmolationTrap
+
+	// Efficiency reads "Shots, Stings and melee abilities" off the client tooltip.
+	HunterSpellsShotsAndStings = HunterSpellAimedShot | HunterSpellArcaneShot |
+		HunterSpellMultiShot | HunterSpellSerpentSting | HunterSpellSniperShot |
+		HunterSpellVolley | HunterSpellSummonHawk
+
+	HunterSpellsMelee = HunterSpellRaptorStrike | HunterSpellMongooseBite |
+		HunterSpellStriderKick | HunterSpellWingClip
+
+	HunterSpellsTraps = HunterSpellExplosiveTrap | HunterSpellFreezingTrap |
+		HunterSpellImmolationTrap
 )
 
 // Agent is a generic way to access underlying hunter on any of the agents.

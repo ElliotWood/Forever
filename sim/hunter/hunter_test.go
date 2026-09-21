@@ -1,12 +1,12 @@
 package hunter
 
 import (
+	"testing"
+
 	"github.com/wowsims/forever/sim/common"
 	_ "github.com/wowsims/forever/sim/common" // imported to get item effects included.
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
-
-	"testing"
 )
 
 func init() {
@@ -14,100 +14,82 @@ func init() {
 	common.RegisterAllEffects()
 }
 
-func TestHunter(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
-	weaveRotation := core.GetAplRotation("../../ui/specs/hunter/dps/apls", "default")
-	weaveRotation.Label = "weave"
-
-	turretRotation := core.GetAplRotation("../../ui/specs/hunter/dps/apls", "default").Rotation
-	turretRotation.ValueVariables[2] = &proto.APLValueVariable{
-		Name: "Melee weave",
-		Value: &proto.APLValue{
-			Value: &proto.APLValue_Const{
-				Const: &proto.APLValueConst{
-					Val: "false",
-				},
-			},
-		},
-	}
-
-	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
-		{
-			Class:      proto.Class_ClassHunter,
-			Race:       proto.Race_RaceOrc,
-			OtherRaces: []proto.Race{proto.Race_RaceNightElf},
-			GearSet:    core.GetGearSet("../../ui/specs/hunter/dps/gear_sets/phase_2/bm", "2h_6p"),
-			Talents:    DefaultBMTalents,
-			OtherTalentSets: []core.TalentsCombo{
-				{Label: "SV", Talents: DefaultSVTalents},
-			},
-			Consumables:      DefaultConsumables,
-			SpecOptions:      core.SpecOptionsCombo{Label: "Default", SpecOptions: DefaultOptions},
-			StartingDistance: 7,
-			Profession1:      proto.Profession_Engineering,
-			Profession2:      proto.Profession_Blacksmithing,
-
-			Rotation: weaveRotation,
-			OtherRotations: []core.RotationCombo{
-				{Label: "Turret", Rotation: turretRotation},
-			},
-
-			ItemFilter: core.ItemFilter{
-				ArmorType: proto.ArmorType_ArmorTypeMail,
-				RangedWeaponTypes: []proto.RangedWeaponType{
-					proto.RangedWeaponType_RangedWeaponTypeBow,
-					proto.RangedWeaponType_RangedWeaponTypeCrossbow,
-					proto.RangedWeaponType_RangedWeaponTypeGun,
-				},
-				WeaponTypes: []proto.WeaponType{
-					proto.WeaponType_WeaponTypeAxe,
-					proto.WeaponType_WeaponTypeDagger,
-					proto.WeaponType_WeaponTypeFist,
-					proto.WeaponType_WeaponTypePolearm,
-					proto.WeaponType_WeaponTypeStaff,
-					proto.WeaponType_WeaponTypeSword,
-				},
-				HandTypes: []proto.HandType{
-					proto.HandType_HandTypeMainHand,
-					proto.HandType_HandTypeOffHand,
-					proto.HandType_HandTypeOneHand,
-					proto.HandType_HandTypeTwoHand,
-				},
-			},
-		},
-	}))
+func TestBeastMastery(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{hunterSuite("bm", BeastMasteryTalents)}))
 }
 
-var DefaultOptions = &proto.Player_Hunter{
-	Hunter: &proto.Hunter{
-		Options: &proto.Hunter_Options{
-			ClassOptions: &proto.HunterOptions{
-				Ammo:             proto.HunterOptions_AdamantiteStinger,
-				PetSingleAbility: false,
-				PetType:          proto.HunterOptions_Ravager,
-				PetUptime:        100.0,
-				QuiverBonus:      proto.HunterOptions_Speed15,
-			},
-		},
+func TestMarksmanship(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{hunterSuite("mm", MarksmanshipTalents)}))
+}
+
+func TestSurvival(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{hunterSuite("sv", SurvivalTalents)}))
+}
+
+// The three builds our Forever sim ranks: Beast Mastery 35/16/0, Marksmanship 0/39/12 and
+// Survival 0/15/36.
+var BeastMasteryTalents = "5520001505121251-0050551"
+var MarksmanshipTalents = "-3050552301503151-50024001"
+var SurvivalTalents = "-005055-550230031051220151"
+
+// Weapons only: the generated item database does not carry most of the pre-raid set our Forever sim
+// tests with yet, and gives the rest TBC-shaped stats. A hunter still needs something to shoot with,
+// so the bow and a two-hander are equipped and nothing else.
+var WeaponsOnly = &proto.EquipmentSpec{
+	Items: []*proto.ItemSpec{
+		{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		{Id: 12784}, // Arcanite Reaper
+		{},          //
+		{Id: 18713}, // Rhok'delar, Longbow of the Ancient Keepers
 	},
 }
 
-var DefaultBMTalents = "512002005250122431051-0505201205"
-var DefaultSVTalents = "502-0550201205-333200022003223005103"
+func hunterSuite(apl string, talents string) core.CharacterSuiteConfig {
+	return core.CharacterSuiteConfig{
+		Class:      proto.Class_ClassHunter,
+		Race:       proto.Race_RaceOrc,
+		OtherRaces: []proto.Race{proto.Race_RaceNightElf},
+		GearSet:    core.GearSetCombo{Label: "Weapons", GearSet: WeaponsOnly},
+		Talents:    talents,
+		Rotation:   core.GetAplRotation("../../ui/specs/hunter/dps/apls", apl),
+		SpecOptions: core.SpecOptionsCombo{Label: "Cat", SpecOptions: &proto.Player_Hunter{
+			Hunter: &proto.Hunter{
+				Options: &proto.Hunter_Options{
+					ClassOptions: &proto.HunterOptions{
+						Ammo:           proto.HunterOptions_Doomshot,
+						QuiverBonus:    proto.HunterOptions_Speed15,
+						PetType:        proto.HunterOptions_Cat,
+						PetAttackSpeed: proto.HunterOptions_OneTwo,
+						PetUptime:      1,
+					},
+				},
+			},
+		}},
 
-var DefaultConsumables = &proto.ConsumesSpec{
-	BattleElixirId:   22831, // Elixir of Major Agility
-	GuardianElixirId: 22840, // Elixir of Major Mageblood
-	FoodId:           27659, // Warp Burger
-	PotId:            22838, // Haste Potion
-	ConjuredId:       12662, // Demonic Rune
-	ExplosiveId:      30217, // Adamantite Grenade
-	PetFoodId:        33874, // Kibler's Bits
-	PetScrollAgi:     true,
-	PetScrollStr:     true,
-	SuperSapper:      true,
-	GoblinSapper:     true,
-	ScrollAgi:        true,
-	ScrollStr:        true,
+		// Ranged abilities won't cast inside MinRangedAttackDistance.
+		StartingDistance: 30,
+
+		ItemFilter: core.ItemFilter{
+			ArmorType: proto.ArmorType_ArmorTypeMail,
+			RangedWeaponTypes: []proto.RangedWeaponType{
+				proto.RangedWeaponType_RangedWeaponTypeBow,
+				proto.RangedWeaponType_RangedWeaponTypeCrossbow,
+				proto.RangedWeaponType_RangedWeaponTypeGun,
+			},
+			WeaponTypes: []proto.WeaponType{
+				proto.WeaponType_WeaponTypeAxe,
+				proto.WeaponType_WeaponTypeDagger,
+				proto.WeaponType_WeaponTypeFist,
+				proto.WeaponType_WeaponTypePolearm,
+				proto.WeaponType_WeaponTypeStaff,
+				proto.WeaponType_WeaponTypeSword,
+			},
+			HandTypes: []proto.HandType{
+				proto.HandType_HandTypeMainHand,
+				proto.HandType_HandTypeOffHand,
+				proto.HandType_HandTypeOneHand,
+				proto.HandType_HandTypeTwoHand,
+			},
+		},
+	}
 }

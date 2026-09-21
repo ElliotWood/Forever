@@ -1,6 +1,8 @@
 package hunter
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -15,11 +17,23 @@ type HunterPet struct {
 
 	BestialWrathAura *core.Aura
 
-	primaryAbility   *core.Spell
-	secondaryAbility *core.Spell
-	Dash             *core.Spell
+	specialAbility *core.Spell
+	focusDump      *core.Spell
 
 	uptimePercent float64
+}
+
+var petAttackSpeeds = [...]float64{
+	proto.HunterOptions_One:      1.0,
+	proto.HunterOptions_OneTwo:   1.2,
+	proto.HunterOptions_OneThree: 1.3,
+	proto.HunterOptions_OneFour:  1.4,
+	proto.HunterOptions_OneFive:  1.5,
+	proto.HunterOptions_OneSix:   1.6,
+	proto.HunterOptions_OneSeven: 1.7,
+	proto.HunterOptions_Two:      2.0,
+	proto.HunterOptions_TwoFour:  2.4,
+	proto.HunterOptions_TwoFive:  2.5,
 }
 
 func (hunter *Hunter) NewHunterPet() *HunterPet {
@@ -32,16 +46,20 @@ func (hunter *Hunter) NewHunterPet() *HunterPet {
 	}
 
 	petConfig := DefaultPetConfigs[hunter.Options.PetType]
+	attackSpeed := petAttackSpeeds[hunter.Options.PetAttackSpeed]
+
 	conf := core.PetConfig{
 		Name:  petConfig.Name,
 		Owner: &hunter.Character,
 		BaseStats: stats.Stats{
-			stats.Agility:     127,
-			stats.Strength:    162,
-			stats.AttackPower: -20, // Apparently pets and warriors have a AP penalty.
+			stats.Strength:  136,
+			stats.Agility:   100,
+			stats.Stamina:   274,
+			stats.Intellect: 50,
+			stats.Spirit:    80,
 
-			// Add 1.8% because pets aren't affected by that component of crit suppression.
-			stats.MeleeCritRating: (1.1515 + 1.8) * core.PhysicalCritRatingPerCritPercent,
+			// Apparently pets and warriors have an AP penalty.
+			stats.AttackPower: -20,
 		},
 		StatInheritance:       hunter.makeStatInheritance(),
 		EnabledOnStart:        true,
@@ -49,50 +67,47 @@ func (hunter *Hunter) NewHunterPet() *HunterPet {
 		IsGuardian:            false,
 		StartsAtOwnerDistance: true,
 	}
+
 	hp := &HunterPet{
 		Pet:         core.NewPet(conf),
 		config:      petConfig,
 		hunterOwner: hunter,
 	}
 
-	hp.AddStatDependency(stats.Strength, stats.AttackPower, 2.0)
-	hp.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[proto.Class_ClassWarrior])
+	hp.Pet.MobType = proto.MobType_MobTypeBeast
 
-	hp.EnableFocusBar(1.0 + 0.5*float64(hp.hunterOwner.Talents.BestialDiscipline))
+	hp.AddStatDependency(stats.Strength, stats.AttackPower, 2.0)
+	// Warrior crit scaling.
+	hp.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[proto.Class_ClassWarrior])
+	hp.AddStatDependency(stats.Intellect, stats.SpellCritPercent, core.CritPerIntMaxLevel[proto.Class_ClassWarrior])
+
+	// Bestial Discipline buys the pet 10% focus regen a rank.
+	hp.EnableFocusBar(1.0 + 0.1*float64(hunter.Talents.BestialDiscipline))
 
 	hp.EnableAutoAttacks(hp, core.AutoAttackOptions{
 		MainHand: core.Weapon{
-			BaseDamageMin: 42,
-			BaseDamageMax: 68,
-			SwingSpeed:    2,
+			BaseDamageMin: 18.17 * attackSpeed,
+			BaseDamageMax: 27.66 * attackSpeed,
+			SwingSpeed:    attackSpeed,
 			MaxRange:      core.MaxMeleeRange,
 		},
 		AutoSwingMelee: true,
 	})
 
-	// Pet damage multiplier
-	hp.AutoAttacks.MHConfig().DamageMultiplier *= petConfig.DamageMultiplier
-
-	// Happiness
+	// Happiness.
 	hp.PseudoStats.DamageDealtMultiplier *= 1.25
+
+	// Family scalars.
+	hp.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= petConfig.Damage
+	hp.PseudoStats.ArmorMultiplier *= petConfig.Armor
+	hp.MultiplyStat(stats.Health, petConfig.Health)
 
 	hunter.AddPet(hp)
 	return hp
 }
 
+// Cobra Reflexes is TBC's; Forever's pets do not have it.
 func (hp *HunterPet) ApplyTalents() {
-	core.MakePermanent(hp.RegisterAura(core.Aura{
-		Label:    "Cobra Reflexes",
-		ActionID: core.ActionID{SpellID: 25076},
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			hp.AutoAttacks.MHAuto().DamageMultiplier *= 0.85
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			hp.AutoAttacks.MHAuto().DamageMultiplier /= 0.85
-		},
-	}).AttachMultiplicativePseudoStatBuff(
-		&hp.PseudoStats.MeleeSpeedMultiplier, 1.3,
-	))
 }
 
 func (hp *HunterPet) GetPet() *core.Pet {
@@ -101,20 +116,12 @@ func (hp *HunterPet) GetPet() *core.Pet {
 
 func (hp *HunterPet) Initialize() {
 	hp.Pet.Initialize()
-	cfg := DefaultPetConfigs[hp.hunterOwner.Options.PetType]
 
-	if hp.hunterOwner.Options.PetSingleAbility {
-		hp.primaryAbility = hp.NewPetAbility(cfg.SecondaryAbility)
-		hp.config.RandomSelection = false
-	} else {
-		hp.primaryAbility = hp.NewPetAbility(cfg.PrimaryAbility)
-		hp.secondaryAbility = hp.NewPetAbility(cfg.SecondaryAbility)
-	}
-
-	hp.registerDash()
+	hp.specialAbility = hp.NewPetAbility(hp.config.SpecialAbility)
+	hp.focusDump = hp.NewPetAbility(hp.config.FocusDump)
 }
 
-func (hp *HunterPet) Reset(sim *core.Simulation) {
+func (hp *HunterPet) Reset(_ *core.Simulation) {
 	hp.uptimePercent = min(1, max(0, hp.hunterOwner.Options.PetUptime))
 }
 
@@ -122,76 +129,148 @@ func (hp *HunterPet) OnEncounterStart(_ *core.Simulation) {
 }
 
 func (hp *HunterPet) ExecuteCustomRotation(sim *core.Simulation) {
-	if hp.DistanceFromTarget > core.MaxMeleeRange {
-		if hp.Dash.CanCast(sim, hp.CurrentTarget) {
-			hp.Dash.Cast(sim, hp.CurrentTarget)
-		}
-
-		if !hp.Moving {
-			hp.MoveTo(core.MaxMeleeRange-1, sim)
-		}
-
-		return
-	}
-
 	percentRemaining := sim.GetRemainingDurationPercent()
 	if percentRemaining < 1.0-hp.uptimePercent { // once fight is % completed, disable pet.
 		hp.Disable(sim)
 		return
 	}
 
-	target := hp.CurrentTarget
-
-	if hp.config.RandomSelection {
-		if sim.RandomFloat("Hunter Pet Ability") >= 0.5 {
-			if hp.secondaryAbility.CanCast(sim, target) {
-				hp.secondaryAbility.Cast(sim, target)
-			} else if hp.primaryAbility.CanCast(sim, target) {
-				hp.primaryAbility.Cast(sim, target)
-			}
-
-			return
+	if hp.DistanceFromTarget > core.MaxMeleeRange {
+		if !hp.Moving {
+			hp.MoveTo(core.MaxMeleeRange-1, sim)
 		}
+		return
 	}
 
-	if hp.primaryAbility.CanCast(sim, target) {
-		hp.primaryAbility.Cast(sim, target)
-	} else if hp.secondaryAbility.CanCast(sim, target) {
-		hp.secondaryAbility.Cast(sim, target)
+	target := hp.CurrentTarget
+
+	// Using Cast() directly is expensive, since cast failures are logged, involving string
+	// operations.
+	tryCast := func(spell *core.Spell) bool {
+		if spell == nil || !spell.CanCast(sim, target) {
+			return false
+		}
+		spell.Cast(sim, target)
+		return true
+	}
+
+	if hp.config.CustomRotation != nil {
+		hp.config.CustomRotation(sim, hp, tryCast)
+		return
+	}
+
+	if !tryCast(hp.specialAbility) && !tryCast(hp.focusDump) && hp.GCD.IsReady(sim) {
+		hp.WaitUntil(sim, sim.CurrentTime+time.Millisecond*500)
 	}
 }
 
+// Forever is a Classic-era realm: the pet takes none of its owner's stats, where TBC's does.
 func (hunter *Hunter) makeStatInheritance() core.PetStatInheritance {
 	return func(ownerStats stats.Stats) stats.Stats {
-		return stats.Stats{
-			stats.Stamina:     ownerStats[stats.Stamina] * 0.3,
-			stats.Armor:       ownerStats[stats.Armor] * 0.35,
-			stats.AttackPower: ownerStats[stats.RangedAttackPower] * 0.22,
-			stats.SpellDamage: ownerStats[stats.RangedAttackPower] * 0.128,
-		}
+		return stats.Stats{}
 	}
 }
 
 type PetConfig struct {
 	Name string
 
-	DamageMultiplier float64
+	SpecialAbility PetAbilityType
+	FocusDump      PetAbilityType
 
-	PrimaryAbility   PetAbilityType
-	SecondaryAbility PetAbilityType
+	Health float64
+	Armor  float64
+	Damage float64
 
-	RandomSelection bool
+	CustomRotation func(*core.Simulation, *HunterPet, func(*core.Spell) bool)
 }
 
 var DefaultPetConfigs = [...]PetConfig{
-	proto.HunterOptions_PetNone:     {},
-	proto.HunterOptions_Bat:         {Name: "Bat", DamageMultiplier: 1.07, PrimaryAbility: Bite, SecondaryAbility: Screech},
-	proto.HunterOptions_Bear:        {Name: "Bear", DamageMultiplier: 0.91, PrimaryAbility: Bite, SecondaryAbility: Claw},
-	proto.HunterOptions_Cat:         {Name: "Cat", DamageMultiplier: 1.1, PrimaryAbility: Bite, SecondaryAbility: Claw},
-	proto.HunterOptions_Crab:        {Name: "Crab", DamageMultiplier: 0.95, PrimaryAbility: Claw},
-	proto.HunterOptions_Owl:         {Name: "Owl", DamageMultiplier: 1.07, PrimaryAbility: Claw, SecondaryAbility: Screech, RandomSelection: true},
-	proto.HunterOptions_Raptor:      {Name: "Raptor", DamageMultiplier: 1.1, PrimaryAbility: Bite, SecondaryAbility: Claw},
-	proto.HunterOptions_Ravager:     {Name: "Ravager", DamageMultiplier: 1.1, PrimaryAbility: Bite, SecondaryAbility: Gore},
-	proto.HunterOptions_WindSerpent: {Name: "Wind Serpent", DamageMultiplier: 1.07, PrimaryAbility: Bite, SecondaryAbility: LightningBreath},
-	proto.HunterOptions_Dragonhawk:  {Name: "Dragonhawk", DamageMultiplier: 1.0, PrimaryAbility: Bite, SecondaryAbility: FireBreath},
+	proto.HunterOptions_PetNone: {},
+	proto.HunterOptions_Cat: {
+		Name: "Cat", SpecialAbility: Bite, FocusDump: Claw,
+		Health: 0.98, Armor: 1.00, Damage: 1.10,
+		// Bite is worth more per Focus than Claw, so it goes on cooldown and Claw fills in.
+		CustomRotation: func(sim *core.Simulation, hp *HunterPet, tryCast func(*core.Spell) bool) {
+			if !tryCast(hp.specialAbility) && !tryCast(hp.focusDump) && hp.GCD.IsReady(sim) {
+				hp.WaitUntil(sim, sim.CurrentTime+time.Millisecond*500)
+			}
+		},
+	},
+	proto.HunterOptions_WindSerpent: {
+		Name: "Wind Serpent", SpecialAbility: Bite, FocusDump: LightningBreath,
+		Health: 1.00, Armor: 1.00, Damage: 1.07,
+	},
+	proto.HunterOptions_Wolf: {
+		Name: "Wolf", FocusDump: Bite,
+		Health: 1.00, Armor: 1.05, Damage: 1.00,
+	},
+	proto.HunterOptions_Bat: {
+		Name: "Bat", SpecialAbility: Bite, FocusDump: Screech,
+		Health: 1.00, Armor: 1.00, Damage: 1.07,
+	},
+	proto.HunterOptions_Bear: {
+		Name: "Bear", SpecialAbility: Bite, FocusDump: Claw,
+		Health: 1.08, Armor: 1.05, Damage: 0.91,
+	},
+	proto.HunterOptions_Owl: {
+		Name: "Owl", FocusDump: Claw,
+		Health: 1.00, Armor: 1.00, Damage: 1.07,
+	},
+	proto.HunterOptions_Boar: {
+		Name: "Boar", FocusDump: Bite,
+		Health: 1.04, Armor: 1.09, Damage: 0.90,
+	},
+	proto.HunterOptions_CarrionBird: {
+		Name: "Carrion Bird", SpecialAbility: Bite, FocusDump: Claw,
+		Health: 1.00, Armor: 1.05, Damage: 1.00,
+	},
+	proto.HunterOptions_Crab: {
+		Name: "Crab", FocusDump: Claw,
+		Health: 0.96, Armor: 1.13, Damage: 0.95,
+	},
+	proto.HunterOptions_Crocolisk: {
+		Name: "Crocolisk", FocusDump: Bite,
+		Health: 0.95, Armor: 1.10, Damage: 1.00,
+	},
+	proto.HunterOptions_Gorilla: {
+		Name: "Gorilla", FocusDump: Bite,
+		Health: 1.04, Armor: 1.00, Damage: 1.02,
+	},
+	proto.HunterOptions_Hyena: {
+		Name: "Hyena", FocusDump: Bite,
+		Health: 1.00, Armor: 1.05, Damage: 1.00,
+	},
+	proto.HunterOptions_Raptor: {
+		Name: "Raptor", SpecialAbility: Bite, FocusDump: Claw,
+		Health: 0.95, Armor: 1.03, Damage: 1.10,
+	},
+	proto.HunterOptions_Scorpid: {
+		Name: "Scorpid", SpecialAbility: ScorpidPoison, FocusDump: Claw,
+		Health: 1.00, Armor: 1.10, Damage: 0.94,
+
+		CustomRotation: func(sim *core.Simulation, hp *HunterPet, tryCast func(*core.Spell) bool) {
+			target := hp.CurrentTarget
+			dot := hp.specialAbility.Dot(target)
+
+			if dot.GetStacks() < dot.MaxStacks || dot.RemainingDuration(sim) < time.Second*3 {
+				if !tryCast(hp.specialAbility) && hp.GCD.IsReady(sim) {
+					hp.WaitUntil(sim, sim.CurrentTime+time.Millisecond*500)
+				}
+			} else if !tryCast(hp.focusDump) && hp.GCD.IsReady(sim) {
+				hp.WaitUntil(sim, sim.CurrentTime+time.Millisecond*500)
+			}
+		},
+	},
+	proto.HunterOptions_Spider: {
+		Name: "Spider", FocusDump: Bite,
+		Health: 1.00, Armor: 1.00, Damage: 1.07,
+	},
+	proto.HunterOptions_Tallstrider: {
+		Name: "Tallstrider", FocusDump: Bite,
+		Health: 1.05, Armor: 1.00, Damage: 1.00,
+	},
+	proto.HunterOptions_Turtle: {
+		Name: "Turtle", FocusDump: Bite,
+		Health: 1.00, Armor: 1.13, Damage: 0.90,
+	},
 }

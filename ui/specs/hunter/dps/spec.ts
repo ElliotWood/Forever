@@ -1,22 +1,35 @@
-import * as other_inputs from '@features/settings/model/other_inputs';
-import { StatCapType } from '@generated/proto/api';
-import { APLListItem, APLRotation, APLRotation_Type, APLValueVariable } from '@generated/proto/apl';
-import { Cooldowns, EquipmentSpec, HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
-import { SavedTalents } from '@generated/proto/ui';
-import { PlayerClasses } from '@sim/player/classes';
-import { Player } from '@sim/player/player';
-import * as AplUtils from '@sim/proto/apl_utils';
-import { SpecRotation } from '@sim/proto/spec_types';
-import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
-import { defineSpec } from '@sim/spec_config';
+import * as other_inputs from "@features/settings/model/other_inputs";
+import { StatCapType } from "@generated/proto/api";
+import {
+	APLListItem,
+	APLRotation,
+	APLRotation_Type,
+	APLValueVariable,
+} from "@generated/proto/apl";
+import {
+	Cooldowns,
+	EquipmentSpec,
+	HandType,
+	ItemSlot,
+	PseudoStat,
+	Spec,
+	Stat,
+} from "@generated/proto/common";
+import { SavedTalents } from "@generated/proto/ui";
+import { PlayerClasses } from "@sim/player/classes";
+import { Player } from "@sim/player/player";
+import * as AplUtils from "@sim/proto/apl_utils";
+import { SpecRotation } from "@sim/proto/spec_types";
+import { StatCap, Stats, UnitStat } from "@sim/proto/stats";
+import { defineSpec } from "@sim/spec_config";
 
-import * as HunterInputs from './inputs';
-import * as Presets from './presets';
+import * as HunterInputs from "./inputs";
+import * as Presets from "./presets";
 
 export default defineSpec<Spec.SpecHunter>({
 	spec: Spec.SpecHunter,
 
-	className: 'hunter-sim-ui',
+	className: "hunter-sim-ui",
 	cssScheme: PlayerClasses.getCssScheme(PlayerClasses.Hunter),
 	// List any known bugs / issues here and they'll be shown on the site.
 	knownIssues: [],
@@ -37,7 +50,11 @@ export default defineSpec<Spec.SpecHunter>({
 		Stat.StatPhysicalDamage,
 	],
 	gemStats: [Stat.StatStamina, Stat.StatAgility],
-	epPseudoStats: [PseudoStat.PseudoStatRangedHitPercent, PseudoStat.PseudoStatRangedCritPercent, PseudoStat.PseudoStatRangedDps],
+	epPseudoStats: [
+		PseudoStat.PseudoStatRangedHitPercent,
+		PseudoStat.PseudoStatRangedCritPercent,
+		PseudoStat.PseudoStatRangedDps,
+	],
 	consumableStats: [Stat.StatStamina, Stat.StatHealth, Stat.StatMana],
 	// Reference stat against which to calculate EP.
 	epReferenceStat: Stat.StatAgility,
@@ -70,7 +87,13 @@ export default defineSpec<Spec.SpecHunter>({
 			PseudoStat.PseudoStatRangedHastePercent,
 		],
 	),
-	itemSwapSlots: [ItemSlot.ItemSlotMainHand, ItemSlot.ItemSlotOffHand, ItemSlot.ItemSlotRanged, ItemSlot.ItemSlotTrinket1, ItemSlot.ItemSlotTrinket2],
+	itemSwapSlots: [
+		ItemSlot.ItemSlotMainHand,
+		ItemSlot.ItemSlotOffHand,
+		ItemSlot.ItemSlotRanged,
+		ItemSlot.ItemSlotTrinket1,
+		ItemSlot.ItemSlotTrinket2,
+	],
 	defaults: {
 		// Default equipped gear.
 		gear: EquipmentSpec.create(),
@@ -83,13 +106,14 @@ export default defineSpec<Spec.SpecHunter>({
 				postCapEPs: [0],
 			}),
 		],
-		rotationType: APLRotation_Type.TypeSimple,
-		simpleRotation: Presets.WeaveRotation,
+		rotationType: APLRotation_Type.TypeAPL,
 		other: Presets.OtherDefaults,
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: SavedTalents.create(),
+		talents: SavedTalents.create({
+			talentsString: "-3050552301503151-50024001",
+		}),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -100,9 +124,17 @@ export default defineSpec<Spec.SpecHunter>({
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.
-	playerIconInputs: [HunterInputs.PetTypeInput(), HunterInputs.QuiverInput(), HunterInputs.AmmoInput()],
+	playerIconInputs: [
+		HunterInputs.PetTypeInput(),
+		HunterInputs.QuiverInput(),
+		HunterInputs.AmmoInput(),
+	],
 	// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
-	includeBuffDebuffInputs: [Stat.StatSpirit, Stat.StatSpellCritRating, Stat.StatSpellDamage],
+	includeBuffDebuffInputs: [
+		Stat.StatSpirit,
+		Stat.StatSpellCritRating,
+		Stat.StatSpellDamage,
+	],
 	excludeBuffDebuffInputs: [],
 	rotationInputs: HunterInputs.RotationInputs,
 	// Inputs to include in the 'Other' section on the settings tab.
@@ -111,6 +143,7 @@ export default defineSpec<Spec.SpecHunter>({
 			other_inputs.TotemTwisting,
 			HunterInputs.PetUptime(),
 			HunterInputs.PetSingleAbility(),
+			HunterInputs.PetAttackSpeedInput(),
 			other_inputs.InputDelay,
 			other_inputs.DistanceFromTarget,
 			other_inputs.TankAssignment,
@@ -126,90 +159,28 @@ export default defineSpec<Spec.SpecHunter>({
 		// Preset talents that the user can quickly select.
 		talents: [],
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.WeaveSimple, Presets.TurretSimple, Presets.DefaultRotation],
+		rotations: [
+			Presets.BeastMasteryRotation,
+			Presets.MarksmanshipRotation,
+			Presets.SurvivalRotation,
+		],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],
 	},
 
+	// The build decides the rotation: Sniper Shot is Marksmanship's capstone and Summon Hawk is
+	// Beast Mastery's, so each tree gets the list that uses its own.
 	autoRotation: (player: Player<Spec.SpecHunter>): APLRotation => {
-		const rotation = APLRotation.clone(Presets.DefaultRotation.rotation.rotation!);
-		const gear = player.getGear();
-		const mainHandType = gear.getEquippedItem(ItemSlot.ItemSlotMainHand)?.item.handType;
-		if (mainHandType !== HandType.HandTypeTwoHand) {
-			rotation.valueVariables[2] = APLValueVariable.fromJson({
-				name: 'Melee weave',
-				value: { const: { val: 'false' } },
-			});
-		}
-		return rotation;
-	},
-
-	simpleRotation: (player: Player<Spec.SpecHunter>, simple: SpecRotation<Spec.SpecHunter>, cooldowns: Cooldowns): APLRotation => {
-		const actions = AplUtils.simpleCooldownActions(cooldowns);
-		const rotation = APLRotation.clone(Presets.DefaultRotation.rotation.rotation!);
-
-		const {
-			viperStartManaPercent = 0.05,
-			viperStopManaPercent = 0.25,
-			meleeWeave = player.getEquippedItem(ItemSlot.ItemSlotMainHand)?.item.handType === HandType.HandTypeTwoHand,
-			useMulti = true,
-			useArcane = true,
-			timeToWeave = 400,
-		} = simple;
-
-		const viperStartManaPercentValue = APLValueVariable.fromJson({
-			name: 'Viper start',
-			value: { const: { val: `${viperStartManaPercent * 100}%` } },
-		});
-
-		const viperStopManaPercentValue = APLValueVariable.fromJson({
-			name: 'Viper stop',
-			value: { const: { val: `${viperStopManaPercent * 100}%` } },
-		});
-
-		const meleeWeaveValue = APLValueVariable.fromJson({
-			name: 'Melee weave',
-			value: { const: { val: String(meleeWeave) } },
-		});
-
-		const useMultiValue = APLValueVariable.fromJson({
-			name: 'Use Multi-Shot',
-			value: { const: { val: String(useMulti) } },
-		});
-
-		const useArcaneValue = APLValueVariable.fromJson({
-			name: 'Use Arcane Shot',
-			value: { const: { val: String(useArcane) } },
-		});
-
-		const timeToWeaveValue = APLValueVariable.fromJson({
-			name: 'Time to weave',
-			value: { const: { val: `${timeToWeave}ms` } },
-		});
-
-		const overrides: Record<string, APLValueVariable> = {
-			'Viper start': viperStartManaPercentValue,
-			'Viper stop': viperStopManaPercentValue,
-			'Melee weave': meleeWeaveValue,
-			'Time to weave': timeToWeaveValue,
-			'Use Multi-Shot': useMultiValue,
-			'Use Arcane Shot': useArcaneValue,
-		};
-		rotation.valueVariables = rotation.valueVariables.map(v => overrides[v.name] ?? v);
-
-		return APLRotation.create({
-			prepullActions: rotation.prepullActions,
-			priorityList: [
-				...actions.map(action =>
-					APLListItem.create({
-						action: action,
-					}),
-				),
-				...rotation.priorityList,
-			],
-			groups: rotation.groups,
-			valueVariables: rotation.valueVariables,
-		});
+		const talents = player.getTalents();
+		if (talents.sniperShot)
+			return APLRotation.clone(
+				Presets.MarksmanshipRotation.rotation.rotation!,
+			);
+		if (talents.summonHawk)
+			return APLRotation.clone(
+				Presets.BeastMasteryRotation.rotation.rotation!,
+			);
+		return APLRotation.clone(Presets.SurvivalRotation.rotation.rotation!);
 	},
 
 	reforge: {},

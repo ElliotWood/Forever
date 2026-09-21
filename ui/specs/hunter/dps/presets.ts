@@ -1,43 +1,53 @@
-import * as PresetUtils from '@app/preset_utils';
-import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
+import * as PresetUtils from "@app/preset_utils";
+import {
+	Class,
+	ConsumesSpec,
+	Debuffs,
+	Drums,
+	IndividualBuffs,
+	PartyBuffs,
+	Profession,
+	Race,
+	RaidBuffs,
+	Spec,
+	TristateEffect,
+} from "@generated/proto/common";
 import {
 	Hunter_Options as HunterOptions,
-	Hunter_Rotation,
 	HunterOptions_Ammo,
+	HunterOptions_PetAttackSpeed,
 	HunterOptions_PetType as PetType,
 	HunterOptions_QuiverBonus,
-} from '@generated/proto/hunter';
-import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
+} from "@generated/proto/hunter";
+import {
+	defaultExposeWeaknessSettings,
+	defaultRaidBuffMajorDamageCooldowns,
+} from "@sim/proto/utils";
 
-import DefaultAPL from './apls/default.apl.json';
+import BeastMasteryAPL from "./apls/bm.apl.json";
+import MarksmanshipAPL from "./apls/mm.apl.json";
+import SurvivalAPL from "./apls/sv.apl.json";
 
-export const DefaultRotation = PresetUtils.makePresetAPLRotation('APL', DefaultAPL);
-
-export const TurretRotation = Hunter_Rotation.create({
-	viperStartManaPercent: 0.05,
-	viperStopManaPercent: 0.25,
-	meleeWeave: false,
-	timeToWeave: 400,
-	useMulti: true,
-	useArcane: true,
-});
-export const TurretSimple = PresetUtils.makePresetSimpleRotation('Turret', Spec.SpecHunter, TurretRotation);
-
-export const WeaveRotation = Hunter_Rotation.create({
-	viperStartManaPercent: 0.05,
-	viperStopManaPercent: 0.25,
-	meleeWeave: true,
-	timeToWeave: 400,
-	useMulti: true,
-	useArcane: true,
-});
-export const WeaveSimple = PresetUtils.makePresetSimpleRotation('Weave', Spec.SpecHunter, WeaveRotation);
+export const BeastMasteryRotation = PresetUtils.makePresetAPLRotation(
+	"Beast Mastery",
+	BeastMasteryAPL,
+);
+export const MarksmanshipRotation = PresetUtils.makePresetAPLRotation(
+	"Marksmanship",
+	MarksmanshipAPL,
+);
+export const SurvivalRotation = PresetUtils.makePresetAPLRotation(
+	"Survival",
+	SurvivalAPL,
+);
+export const DefaultRotation = MarksmanshipRotation;
 
 export const DefaultOptions = HunterOptions.create({
 	classOptions: {
-		ammo: HunterOptions_Ammo.WardensArrow,
+		ammo: HunterOptions_Ammo.Doomshot,
 		quiverBonus: HunterOptions_QuiverBonus.Speed15,
-		petType: PetType.Ravager,
+		petType: PetType.Cat,
+		petAttackSpeed: HunterOptions_PetAttackSpeed.OneTwo,
 		petUptime: 1,
 		petSingleAbility: false,
 	},
