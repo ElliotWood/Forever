@@ -19,9 +19,9 @@ import (
 // way to read them back is to parse the source - a Go program cannot ask for a constant's name.
 const dbcEnumsDir = "sim/core/dbcenums"
 
-// The two enums a rank effect names. Their constants are mirrored into the shared package rather than
-// imported from here, because sim must not depend on tools: dbc pulls in embed and the DBC readers,
-// and the wasm build would carry all of it.
+// The two enums a rank effect names. Their constants live in sim/core/dbcenums and are mirrored into
+// sim/common/shared because that mirror is what the generated family tables read; the follow-up that
+// retires those tables for the store retires the mirror with them.
 var rankEnumTypes = []struct {
 	dbcType    string
 	sharedType string

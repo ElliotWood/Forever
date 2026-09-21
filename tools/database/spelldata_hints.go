@@ -6,7 +6,6 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
-	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 // What the tooltip says about a proc that its columns cannot, baked onto the row at generation.
@@ -78,7 +77,7 @@ func isProcEffect(e *storeEffect) bool {
 	if e == nil {
 		return false
 	}
-	aura := dbc.EffectAuraType(e.Aura)
+	aura := dbcenums.EffectAuraType(e.Aura)
 	return aura == dbcenums.A_PROC_TRIGGER_SPELL || aura == dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE ||
 		aura == dbcenums.A_DUMMY
 }
@@ -88,7 +87,7 @@ func isProcEffect(e *storeEffect) bool {
 // Missiles all carry one, and none of them is a proc.
 func (s *storeSpell) triggersAProc() bool {
 	for i := range s.Effects {
-		aura := dbc.EffectAuraType(s.Effects[i].Aura)
+		aura := dbcenums.EffectAuraType(s.Effects[i].Aura)
 		if aura == dbcenums.A_PROC_TRIGGER_SPELL || aura == dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE {
 			return true
 		}
