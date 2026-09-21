@@ -9,6 +9,7 @@ import (
 const FrostboltRanks = 11
 
 var FrostboltSpellId = [FrostboltRanks + 1]int32{0, 116, 205, 837, 7322, 8406, 8407, 8408, 10179, 10180, 10181, 25304}
+
 // Beta client 1.60.1.69893: every rank from 3 up hits for less, and the low ranks lost their
 // downranking penalty.
 var FrostboltBaseDamage = [FrostboltRanks + 1][]float64{{0, 0}, {20, 22}, {33, 38}, {46, 53}, {61, 68}, {97, 105}, {134, 147}, {181, 197}, {243, 264}, {305, 332}, {382, 413}, {457, 493}}
@@ -40,13 +41,14 @@ func (mage *Mage) getFrostboltConfig(rank int) core.SpellConfig {
 	level := FrostboltLevel[rank]
 
 	return core.SpellConfig{
-		ActionID:     core.ActionID{SpellID: spellId},
-		SpellCode:    SpellCode_MageFrostbolt,
-		SpellSchool:  core.SpellSchoolFrost,
-		DefenseType:  core.DefenseTypeMagic,
-		ProcMask:     core.ProcMaskSpellDamage,
-		Flags:        SpellFlagMage | SpellFlagChillSpell | core.SpellFlagBinary | core.SpellFlagAPL,
-		MissileSpeed: 28,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellCode:      SpellCode_MageFrostbolt,
+		ClassSpellMask: SpellMaskFrostbolt,
+		SpellSchool:    core.SpellSchoolFrost,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagMage | SpellFlagChillSpell | core.SpellFlagBinary | core.SpellFlagAPL,
+		MissileSpeed:   28,
 
 		RequiredLevel: level,
 		Rank:          rank,

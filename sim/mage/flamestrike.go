@@ -11,6 +11,7 @@ const FlamestrikeRanks = 6
 
 var FlamestrikeSpellId = [FlamestrikeRanks + 1]int32{0, 2120, 2121, 8422, 8423, 10215, 10216}
 var FlamestrikeBaseDamage = [FlamestrikeRanks + 1][]float64{{0}, {55, 71}, {96, 123}, {159, 197}, {220, 272}, {294, 362}, {381, 466}}
+
 // Beta client 1.60.1.69893. The burn is now an area trigger casting a damage spell every 2 sec
 // (1279983 ... 1279990), 4 times; the dot damage is 4 times that spell's base and the dot
 // coefficient is that spell's, per tick, up from Classic's .02.
@@ -48,12 +49,13 @@ func (mage *Mage) newFlamestrikeSpellConfig(rank int) core.SpellConfig {
 	castTime := time.Second * 3
 
 	return core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagMage | core.SpellFlagAPL,
-		SpellCode:   SpellCode_MageFlamestrike,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagMage | core.SpellFlagAPL,
+		SpellCode:      SpellCode_MageFlamestrike,
+		ClassSpellMask: SpellMaskFlamestrike,
 
 		RequiredLevel: level,
 		Rank:          rank,

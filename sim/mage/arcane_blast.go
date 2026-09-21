@@ -61,12 +61,13 @@ func (mage *Mage) registerArcaneBlastSpell() {
 	})
 
 	mage.ArcaneBlast = mage.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_MageArcaneBlast,
-		ActionID:    actionID,
-		SpellSchool: core.SpellSchoolArcane,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagMage | core.SpellFlagAPL,
+		SpellCode:      SpellCode_MageArcaneBlast,
+		ClassSpellMask: SpellMaskArcaneBlast,
+		ActionID:       actionID,
+		SpellSchool:    core.SpellSchoolArcane,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagMage | core.SpellFlagAPL,
 
 		RequiredLevel: 60,
 		Rank:          1,

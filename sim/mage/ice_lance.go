@@ -21,13 +21,14 @@ func (mage *Mage) registerIceLanceSpell() {
 	manaCost := 160.0
 
 	mage.IceLance = mage.RegisterSpell(core.SpellConfig{
-		SpellCode:    SpellCode_MageIceLance,
-		ActionID:     core.ActionID{SpellID: 30455},
-		SpellSchool:  core.SpellSchoolFrost,
-		DefenseType:  core.DefenseTypeMagic,
-		ProcMask:     core.ProcMaskSpellDamage,
-		Flags:        SpellFlagMage | core.SpellFlagBinary | core.SpellFlagAPL,
-		MissileSpeed: 38,
+		SpellCode:      SpellCode_MageIceLance,
+		ClassSpellMask: SpellMaskIceLance,
+		ActionID:       core.ActionID{SpellID: 30455},
+		SpellSchool:    core.SpellSchoolFrost,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagMage | core.SpellFlagBinary | core.SpellFlagAPL,
+		MissileSpeed:   38,
 
 		RequiredLevel: 60,
 		Rank:          1,
