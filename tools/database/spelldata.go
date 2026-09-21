@@ -183,6 +183,15 @@ func DeriveRankAmount(e RankEffect, spellLevel, maxLevel int32) (min float64, ma
 	return min, max
 }
 
+// Whether the spell carries the Passive attribute: never cast, only applied.
+func SpellIsPassive(db *sql.DB, spellID int32) (bool, error) {
+	var passive bool
+	err := scanOptional(db, fmt.Sprintf(
+		`SELECT (COALESCE(json_extract(Attributes, '$[%d]'), 0) & %d) != 0 FROM SpellMisc WHERE SpellID = ? AND DifficultyID = 0`,
+		dbc.ATTR_INDEX_BASE, dbc.ATTR_PASSIVE), spellID, &passive)
+	return passive, err
+}
+
 func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 	s := RankSpell{SpellID: spellID}
 	err := db.QueryRow(`

@@ -14,10 +14,12 @@ import (
 //   Lightning Mastery: missing rank 1 of 5
 
 // Generated with an effect held at its base points, the talent tree stating no rank value for it:
+//   Earthbound: effect 0 of spell 1222988 has no rank curve and is held at its base points
 //   Improved Ghost Wolf: effect 1, 2 of spell 16262 has no rank curve and is held at its base points
 //   Improved Stormstrike: effect 2 of spell 1223031 has no rank curve and is held at its base points
 //   Maelstrom Weapon: effect 1, 2 of spell 408498 has no rank curve and is held at its base points
 //   Mental Dexterity: effect 1 of spell 415140 has no rank curve and is held at its base points
+//   Shamanistic Focus: effect 0 of spell 1223030 has no rank curve and is held at its base points
 
 type generatedSpellData struct {
 	AncestralFortitude             shared.SpellDataTable
@@ -44,6 +46,8 @@ type generatedSpellData struct {
 	EarthsGrasp                    shared.SpellDataTable
 	EarthbindTotem                 shared.SpellDataTable
 	EarthbindTotemTriggered        shared.SpellDataTable
+	Earthbound                     shared.SpellDataTable
+	EarthboundTriggered            shared.SpellDataTable
 	ElementalAlacrity              shared.SpellDataTable
 	ElementalDevastation           shared.SpellDataTable
 	ElementalDevastationTriggered  shared.SpellDataTable
@@ -127,6 +131,7 @@ type generatedSpellData struct {
 	SearingTotem                   shared.SpellDataTable
 	SearingTotemTriggered          shared.SpellDataTable
 	SentryTotem                    shared.SpellDataTable
+	ShamanisticFocus               shared.SpellDataTable
 	ShieldSpecialization           shared.SpellDataTable
 	SpiritWeapons                  shared.SpellDataTable
 	StoneclawTotem                 shared.SpellDataTable
@@ -265,6 +270,12 @@ var spellData = generatedSpellData{
 	},
 	EarthbindTotemTriggered: shared.SpellDataTable{
 		{Rank: 1, SpellID: 3600, Duration: 5000 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -50}}},
+	},
+	Earthbound: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1222988, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 100}}},
+	},
+	EarthboundTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1238289, Duration: 5000 * time.Millisecond, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
 	},
 	ElementalAlacrity: shared.SpellDataTable{
 		{Rank: 1, SpellID: 16578, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 10, Value: -170}}},
@@ -729,6 +740,9 @@ var spellData = generatedSpellData{
 	},
 	SentryTotem: shared.SpellDataTable{
 		{Rank: 1, SpellID: 6495, Cost: 65, GCD: 1000 * time.Millisecond, Duration: 300000 * time.Millisecond, SpellSchool: core.SpellSchoolNature, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SUMMON, Aura: shared.A_NONE, Misc: 3968, Value: 100}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
+	},
+	ShamanisticFocus: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1223030, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -45}}},
 	},
 	ShieldSpecialization: shared.SpellDataTable{
 		{Rank: 1, SpellID: 16253, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_BLOCK_PERCENT, Misc: 0, Value: 1}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_BLOCK_VALUE_PCT, Misc: 0, Value: 5}}, Direct: shared.SpellDataFlat{Value: 1, Coef: 0}},

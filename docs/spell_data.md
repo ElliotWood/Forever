@@ -313,7 +313,9 @@ client's two. Either aura reads the same number; `SPELLMOD_DAMAGE` is the conven
 An effect the tree states no curve for is the same at every rank, and sits in `Effects` at the spell's
 own base points: Blood Craze's second effect is the 20% of maximum health a hit has to exceed, at 1/3
 as at 3/3. Only the priced effects fill the role fields, so `ValueAt` and the ladder readers never
-see it; reach it through `Effect` or `Effects[i]` on any rank.
+see it; reach it through `Effect` or `Effects[i]` on any rank. A one-rank node on a passive nothing
+teaches - Raging Blows, Vanguard - is a table of one row built the same way, so
+`spellData.RagingBlows.EffectAt(1).TenthsAt(1)` reads its -2 rage on Cleave.
 
 ### Proc chances
 

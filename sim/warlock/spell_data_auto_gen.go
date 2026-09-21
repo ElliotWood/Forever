@@ -12,6 +12,7 @@ import (
 // Generated with an effect held at its base points, the talent tree stating no rank value for it:
 //   Decimation: effect 2 of spell 440870 has no rank curve and is held at its base points
 //   Demonic Embrace: effect 1 of spell 18697 has no rank curve and is held at its base points
+//   Demonic Pact: effect 0 of spell 425464 has no rank curve and is held at its base points
 //   Destructive Reach: effect 1 of spell 17917 has no rank curve and is held at its base points
 //   Pyroclasm: effect 1 of spell 18073 has no rank curve and is held at its base points
 
@@ -54,6 +55,7 @@ type generatedSpellData struct {
 	DemonicEmbrace              shared.SpellDataTable
 	DemonicEnergies             shared.SpellDataTable
 	DemonicKnowledge            shared.SpellDataTable
+	DemonicPact                 shared.SpellDataTable
 	DemonicSacrifice            shared.SpellDataTable
 	DemonicSacrificeTriggered   shared.SpellDataTable
 	DestructiveReach            shared.SpellDataTable
@@ -338,6 +340,9 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 412732, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 33}}, Direct: shared.SpellDataFlat{Value: 33, Coef: 1}},
 		{Rank: 2, SpellID: 412732, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 67}}, Direct: shared.SpellDataFlat{Value: 67, Coef: 1}},
 		{Rank: 3, SpellID: 412732, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 1}},
+	},
+	DemonicPact: shared.SpellDataTable{
+		{Rank: 1, SpellID: 425464, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 10}}},
 	},
 	DemonicSacrifice: shared.SpellDataTable{
 		{Rank: 1, SpellID: 18788, MaxRange: 100, SpellSchool: core.SpellSchoolShadow, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_INSTAKILL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},

@@ -12,6 +12,8 @@ import (
 // Generated with an effect held at its base points, the talent tree stating no rank value for it:
 //   Blood Craze: effect 1 of spell 16487 has no rank curve and is held at its base points
 //   Improved Slam: effect 2, 3, 4, 5, 6 of spell 12862 has no rank curve and is held at its base points
+//   Raging Blows: effect 0, 1 of spell 1310315 has no rank curve and is held at its base points
+//   Vanguard: effect 0, 1, 2 of spell 1310317 has no rank curve and is held at its base points
 
 type generatedSpellData struct {
 	AngerManagement                 shared.SpellDataTable
@@ -106,6 +108,7 @@ type generatedSpellData struct {
 	PiercingHowl                    shared.SpellDataTable
 	Precision                       shared.SpellDataTable
 	Pummel                          shared.SpellDataTable
+	RagingBlows                     shared.SpellDataTable
 	Recklessness                    shared.SpellDataTable
 	Rend                            shared.SpellDataTable
 	Retaliation                     shared.SpellDataTable
@@ -129,6 +132,7 @@ type generatedSpellData struct {
 	TwoHandedWeaponSpecialization   shared.SpellDataTable
 	UnbridledWrath                  shared.SpellDataTable
 	UnbridledWrathTriggered         shared.SpellDataTable
+	Vanguard                        shared.SpellDataTable
 	VictoryRush                     shared.SpellDataTable
 	VictoryRushTriggered            shared.SpellDataTable
 	Weaponmaster                    shared.SpellDataTable
@@ -561,6 +565,9 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 6552, Cost: 10, GCD: 1500 * time.Millisecond, Cooldown: 10000 * time.Millisecond, Duration: 4000 * time.Millisecond, MaxRange: 5, RefundsOnMiss: true, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 20}, {Index: 1, Effect: shared.E_INTERRUPT_CAST, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 1}},
 		{Rank: 2, SpellID: 6554, Cost: 10, GCD: 1500 * time.Millisecond, Cooldown: 10000 * time.Millisecond, Duration: 4000 * time.Millisecond, MaxRange: 5, RefundsOnMiss: true, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 50}, {Index: 1, Effect: shared.E_INTERRUPT_CAST, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 1}},
 	},
+	RagingBlows: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1310315, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 100}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 14, Value: -20}}},
+	},
 	Recklessness: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1719, GCD: 1500 * time.Millisecond, Cooldown: 1800000 * time.Millisecond, Duration: 15000 * time.Millisecond, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CRIT_PCT, Misc: 0, Value: 100}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_TAKEN, Misc: 127, Value: 20}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 5, Value: 0}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
 	},
@@ -672,6 +679,9 @@ var spellData = generatedSpellData{
 	},
 	UnbridledWrathTriggered: shared.SpellDataTable{
 		{Rank: 1, SpellID: 12964, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 1, Value: 10}}, Energize: shared.SpellDataFlat{Value: 10, Coef: 0}},
+	},
+	Vanguard: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1310317, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_OVERRIDE_ACTIONBAR_SPELLS, Misc: 11578, Value: 1240289}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_OVERRIDE_ACTIONBAR_SPELLS, Misc: 6178, Value: 1240288}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_OVERRIDE_ACTIONBAR_SPELLS, Misc: 100, Value: 1240287}}},
 	},
 	VictoryRush: shared.SpellDataTable{
 		{Rank: 1, SpellID: 402927, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 1}, {Index: 1, Effect: shared.E_HEAL_PCT, Aura: shared.A_NONE, Misc: 0, Value: 10}, {Index: 2, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 15}}, Direct: shared.SpellDataFlat{Value: 1, Coef: 0}},

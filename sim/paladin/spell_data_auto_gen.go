@@ -17,6 +17,8 @@ import (
 // Generated with an effect held at its base points, the talent tree stating no rank value for it:
 //   Champion of the Light: effect 1 of spell 1311084 has no rank curve and is held at its base points
 //   Illumination: effect 2, 3 of spell 20210 has no rank curve and is held at its base points
+//   Sacred Arbiter: effect 0 of spell 1311087 has no rank curve and is held at its base points
+//   Twist of Light: effect 0 of spell 1310735 has no rank curve and is held at its base points
 //   Vindication: effect 1 of spell 9452 has no rank curve and is held at its base points
 
 type generatedSpellData struct {
@@ -121,6 +123,7 @@ type generatedSpellData struct {
 	RetributionAura               shared.SpellDataTable
 	Reverence                     shared.SpellDataTable
 	RighteousFury                 shared.SpellDataTable
+	SacredArbiter                 shared.SpellDataTable
 	SacredDuty                    shared.SpellDataTable
 	SanctifiedJudgement           shared.SpellDataTable
 	SealOfCommand                 shared.SpellDataTable
@@ -147,6 +150,7 @@ type generatedSpellData struct {
 	TemplarsBulwarkTriggered      shared.SpellDataTable
 	Toughness                     shared.SpellDataTable
 	TurnUndead                    shared.SpellDataTable
+	TwistOfLight                  shared.SpellDataTable
 	TwoHandedWeaponSpecialization shared.SpellDataTable
 	UnyieldingFaith               shared.SpellDataTable
 	Vengeance                     shared.SpellDataTable
@@ -652,6 +656,9 @@ var spellData = generatedSpellData{
 	RighteousFury: shared.SpellDataTable{
 		{Rank: 1, SpellID: 25780, PowerCostPct: 30, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, ProcChance: 101, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_THREAT, Misc: 2, Value: 90}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_TAKEN, Misc: 127, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 12, Value: -100}}, Direct: shared.SpellDataFlat{Value: 90, Coef: 1}},
 	},
+	SacredArbiter: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1311087, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 10}}},
+	},
 	SacredDuty: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1224697, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_TOTAL_STAT_PERCENTAGE, Misc: 0, Value: 2}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 11, Value: -30000}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 0}},
 		{Rank: 2, SpellID: 1224697, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_TOTAL_STAT_PERCENTAGE, Misc: 0, Value: 4}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 11, Value: -60000}}, Direct: shared.SpellDataFlat{Value: 4, Coef: 0}},
@@ -821,6 +828,9 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 2878, Cost: 35, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 10000 * time.Millisecond, MaxRange: 20, ProcChance: 100, MaxTargets: 1, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
 		{Rank: 2, SpellID: 5627, Cost: 50, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 15000 * time.Millisecond, MaxRange: 20, ProcChance: 100, MaxTargets: 1, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
 		{Rank: 3, SpellID: 10326, Cost: 75, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 20000 * time.Millisecond, MaxRange: 20, ProcChance: 100, MaxTargets: 1, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_FEAR, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
+	},
+	TwistOfLight: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1310735, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 	},
 	TwoHandedWeaponSpecialization: shared.SpellDataTable{
 		{Rank: 1, SpellID: 20111, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_DONE, Misc: 1, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 0}},
