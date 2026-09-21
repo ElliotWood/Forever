@@ -5,10 +5,10 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var rendRank = spellData.Rend.HighestRank()
-
 // TODO: Ingame testing needed if Rend has a coef
 func (warrior *Warrior) registerRend() {
+	rendRank := spellData.Rend.HighestRank()
+
 	tick := rendRank.Periodic.(shared.SpellDataPeriodic)
 
 	warrior.Rend = warrior.RegisterSpell(core.SpellConfig{

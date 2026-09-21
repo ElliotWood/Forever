@@ -4,9 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var intimidatingShoutRank = spellData.IntimidatingShout.HighestRank()
-
 func (warrior *Warrior) registerIntimidatingShout() {
+	intimidatingShoutRank := spellData.IntimidatingShout.HighestRank()
+
 	warrior.IntimidatingShout = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: intimidatingShoutRank.SpellID},
 		SpellSchool:    core.SpellSchoolPhysical,

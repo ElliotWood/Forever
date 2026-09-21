@@ -4,12 +4,11 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var interceptRank = spellData.Intercept.HighestRank()
-
-// The damage sits on the stun the charge triggers, which the generator follows onto the row.
-var interceptStunDamage, _ = interceptRank.Direct.Range()
-
 func (warrior *Warrior) registerIntercept() {
+	interceptRank := spellData.Intercept.HighestRank()
+	// The damage sits on the stun the charge triggers, which the generator follows onto the row.
+	interceptStunDamage, _ := interceptRank.Direct.Range()
+
 	actionID := core.ActionID{SpellID: interceptRank.SpellID}
 	chargeMinRange := interceptRank.MinRange
 	interceptCD := interceptRank.Cooldown

@@ -4,9 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var tauntRank = spellData.Taunt.HighestRank()
-
 func (warrior *Warrior) registerTaunt() {
+	tauntRank := spellData.Taunt.HighestRank()
+
 	warrior.Taunt = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: tauntRank.SpellID},
 		SpellSchool:    core.SpellSchoolPhysical,

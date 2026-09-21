@@ -4,11 +4,11 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var retaliationRank = spellData.Retaliation.HighestRank()
-var retaliationHit = spellData.RetaliationTriggered.HighestRank()
-var retaliationHitBaseDamage, _ = retaliationHit.Direct.Range()
-
 func (warrior *Warrior) registerRetaliation() {
+	retaliationRank := spellData.Retaliation.HighestRank()
+	retaliationHit := spellData.RetaliationTriggered.HighestRank()
+	retaliationHitBaseDamage, _ := retaliationHit.Direct.Range()
+
 	actionID := core.ActionID{SpellID: retaliationRank.SpellID}
 
 	attackSpell := warrior.RegisterSpell(core.SpellConfig{

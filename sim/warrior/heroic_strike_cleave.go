@@ -5,16 +5,12 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Ingame research needed if HS/Cleave still allow for queueing
-// TODO: Ingame research needed if this adds flat threat
-var heroicStrikeRank = shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 0).HighestRank()
-var heroicStrikeBaseDamage, _ = heroicStrikeRank.Direct.Range()
-var cleaveBaseDamage, _ = cleaveRank.Direct.Range()
-
-// TODO: Ingame research needed if this adds flat threat
-var cleaveRank = shared.WithSpellDataFlatThreat(spellData.Cleave, 0).HighestRank()
-
 func (warrior *Warrior) registerHeroicStrike() {
+	// TODO: Ingame research needed if HS/Cleave still allow for queueing
+	// TODO: Ingame research needed if this adds flat threat
+	heroicStrikeRank := shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 0).HighestRank()
+	heroicStrikeBaseDamage, _ := heroicStrikeRank.Direct.Range()
+
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: heroicStrikeRank.SpellID},
 		SpellSchool:    heroicStrikeRank.SpellSchool,
@@ -56,6 +52,10 @@ func (warrior *Warrior) registerHeroicStrike() {
 }
 
 func (warrior *Warrior) registerCleave() {
+	// TODO: Ingame research needed if this adds flat threat
+	cleaveRank := shared.WithSpellDataFlatThreat(spellData.Cleave, 0).HighestRank()
+	cleaveBaseDamage, _ := cleaveRank.Direct.Range()
+
 	const maxTargets int32 = 2
 
 	spell := warrior.RegisterSpell(core.SpellConfig{

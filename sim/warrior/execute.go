@@ -4,16 +4,13 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var executeRank = spellData.Execute.HighestRank()
-
-// TODO: The dummy effect carries the base damage; Execute has no Direct role, and both of its
-// effects share the aura/misc pair Effect() selects on.
-var executeBaseDamage = executeRank.Effects[0].Value
-
-// The tooltip's $*10;F1: the dummy's chain amplitude, times 10, per extra point of rage.
-var executeDamagePerRage = executeRank.Effects[0].ChainAmplitude * 10
-
 func (warrior *Warrior) registerExecute() {
+	executeRank := spellData.Execute.HighestRank()
+	// TODO: The dummy effect carries the base damage; Execute has no Direct role, and both of its
+	// effects share the aura/misc pair Effect() selects on.
+	executeBaseDamage := executeRank.Effects[0].Value
+	// The tooltip's $*10;F1: the dummy's chain amplitude, times 10, per extra point of rage.
+	executeDamagePerRage := executeRank.Effects[0].ChainAmplitude * 10
 
 	var rageMetrics *core.ResourceMetrics
 

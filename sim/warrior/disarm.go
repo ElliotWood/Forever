@@ -4,9 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var disarmRank = spellData.Disarm.HighestRank()
-
 func (warrior *Warrior) registerDisarm() {
+	disarmRank := spellData.Disarm.HighestRank()
+
 	actionID := core.ActionID{SpellID: disarmRank.SpellID}
 
 	// TODO: core has no disarm effect, so the aura only tracks the debuff's uptime.

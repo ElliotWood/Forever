@@ -4,10 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var slamRank = spellData.Slam.HighestRank()
-var slamBaseDamage, _ = slamRank.Direct.Range()
-
 func (warrior *Warrior) registerSlam() {
+	slamRank := spellData.Slam.HighestRank()
+	slamBaseDamage, _ := slamRank.Direct.Range()
 
 	actionID := core.ActionID{SpellID: slamRank.SpellID}
 

@@ -91,14 +91,14 @@ func (warrior *Warrior) registerImprovedOverpower() {
 	})
 }
 
-var angerManagementRank = spellData.AngerManagement.HighestRank()
-var angerManagementRage = angerManagementRank.Effects[1].Value
-var angerManagementPeriod = time.Duration(angerManagementRank.Effects[2].Value) * time.Second
-
 func (warrior *Warrior) registerAngerManagement() {
 	if !warrior.Talents.AngerManagement {
 		return
 	}
+
+	angerManagementRank := spellData.AngerManagement.HighestRank()
+	angerManagementRage := angerManagementRank.Effects[1].Value
+	angerManagementPeriod := time.Duration(angerManagementRank.Effects[2].Value) * time.Second
 
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: angerManagementRank.SpellID})
 
@@ -114,12 +114,12 @@ func (warrior *Warrior) registerAngerManagement() {
 	})
 }
 
-var deepWoundsBleed = spellData.DeepWoundsTriggered.BySpellID(412609)
-
 func (warrior *Warrior) registerDeepWounds() {
 	if warrior.Talents.DeepWounds == 0 {
 		return
 	}
+
+	deepWoundsBleed := spellData.DeepWoundsTriggered.BySpellID(412609)
 
 	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
 	tick := deepWoundsBleed.Periodic.(shared.SpellDataPeriodic)
@@ -209,13 +209,13 @@ func (warrior *Warrior) registerImpale() {
 	})
 }
 
-var mortalStrikeRank = spellData.MortalStrike.HighestRank()
-var mortalStrikeBaseDamage, _ = mortalStrikeRank.Direct.Range()
-
 func (warrior *Warrior) registerMortalStrike() {
 	if !warrior.Talents.MortalStrike {
 		return
 	}
+
+	mortalStrikeRank := spellData.MortalStrike.HighestRank()
+	mortalStrikeBaseDamage, _ := mortalStrikeRank.Direct.Range()
 
 	warrior.MortalStrike = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: mortalStrikeRank.SpellID},
@@ -256,17 +256,16 @@ func (warrior *Warrior) registerMortalStrike() {
 	})
 }
 
-var spearingStrikeRank = spellData.SpearingStrike.HighestRank()
-
-// The tooltip reads "deals $s2% weapon damage" and "an additional ${$s2*$s3}%" against Giants and
-// Dragonkin, and the effects share an aura and misc value, so both are taken by effect index.
-var spearingStrikeWeaponShare = spearingStrikeRank.Effects[1].Fraction()
-var spearingStrikeMobtypeMultiplier = 1 + spearingStrikeRank.Effects[2].Value
-
 func (warrior *Warrior) registerSpearingStrike() {
 	if !warrior.Talents.SpearingStrike {
 		return
 	}
+
+	spearingStrikeRank := spellData.SpearingStrike.HighestRank()
+	// The tooltip reads "deals $s2% weapon damage" and "an additional ${$s2*$s3}%" against Giants and
+	// Dragonkin, and the effects share an aura and misc value, so both are taken by effect index.
+	spearingStrikeWeaponShare := spearingStrikeRank.Effects[1].Fraction()
+	spearingStrikeMobtypeMultiplier := 1 + spearingStrikeRank.Effects[2].Value
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: spearingStrikeRank.SpellID},
@@ -311,12 +310,12 @@ func (warrior *Warrior) registerSpearingStrike() {
 	})
 }
 
-var bloodthrillProc = spellData.BloodthrillTriggered.HighestRank()
-
 func (warrior *Warrior) registerBloodthrill() {
 	if warrior.Talents.Bloodthrill == 0 {
 		return
 	}
+
+	bloodthrillProc := spellData.BloodthrillTriggered.HighestRank()
 
 	// The proc makes Overpower usable for the buff's duration; the cast consumes it like a dodge
 	// would.
@@ -420,15 +419,13 @@ func (warrior *Warrior) registerWeaponmaster() {
 	})
 }
 
-var improvedHamstringRoot = spellData.ImprovedHamstringTriggered.HighestRank()
-
 func (warrior *Warrior) registerImprovedHamstring() {
 	if warrior.Talents.ImprovedHamstring == 0 {
 		return
 	}
 
-	// TODO: a stationary sim target does not feel the immobilize, so the aura only shows up in
-	// metrics.
+	improvedHamstringRoot := spellData.ImprovedHamstringTriggered.HighestRank()
+
 	immobilizeAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return target.GetOrRegisterAura(core.Aura{
 			Label:    "Improved Hamstring-" + warrior.Label,
@@ -468,12 +465,12 @@ func (warrior *Warrior) registerImprovedSlam() {
 	})
 }
 
-var sweepingStrikesRank = spellData.SweepingStrikes.HighestRank()
-
 func (warrior *Warrior) registerSweepingStrikes() {
 	if !warrior.Talents.SweepingStrikes {
 		return
 	}
+
+	sweepingStrikesRank := spellData.SweepingStrikes.HighestRank()
 
 	actionID := core.ActionID{SpellID: 12723}
 
@@ -557,7 +554,6 @@ func (warrior *Warrior) registerSweepingStrikes() {
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			// Sweeping Strikes (12292) is usable in Battle Stance only.
 			return warrior.StanceMatches(BattleStance)
 		},
 

@@ -4,9 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var chargeRank = spellData.Charge.BySpellID(11578)
-
 func (warrior *Warrior) registerCharge() {
+	chargeRank := spellData.Charge.BySpellID(11578)
+
 	actionID := core.ActionID{SpellID: chargeRank.SpellID}
 	metrics := warrior.NewRageMetrics(actionID)
 

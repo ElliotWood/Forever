@@ -6,11 +6,11 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 25288 states "a high amount of threat" with no number;
-// none is modelled until measured in game.
-var revengeRank = spellData.Revenge.HighestRank()
-
 func (warrior *Warrior) registerRevenge() {
+	// TODO: Manual review needed -- spell 25288 states "a high amount of threat" with no number;
+	// none is modelled until measured in game.
+	revengeRank := spellData.Revenge.HighestRank()
+
 	actionID := core.ActionID{SpellID: revengeRank.SpellID}
 
 	// TODO: In-game test needed

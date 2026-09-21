@@ -4,9 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var shieldBashRank = spellData.ShieldBash.HighestRank()
-
 func (warrior *Warrior) registerShieldBash() {
+	shieldBashRank := spellData.ShieldBash.HighestRank()
+
 	actionID := core.ActionID{SpellID: shieldBashRank.SpellID}
 
 	warrior.RegisterSpell(core.SpellConfig{

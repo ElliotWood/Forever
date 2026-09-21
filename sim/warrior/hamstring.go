@@ -5,11 +5,11 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Ingame research needed if this adds flat threat
-var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 0).HighestRank()
-var hamstringBaseDamage, _ = hamstringRank.Direct.Range()
-
 func (warrior *Warrior) registerHamstring() {
+	// TODO: Ingame research needed if this adds flat threat
+	hamstringRank := shared.WithSpellDataFlatThreat(spellData.Hamstring, 0).HighestRank()
+	hamstringBaseDamage, _ := hamstringRank.Direct.Range()
+
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: hamstringRank.SpellID},
 		SpellSchool:    hamstringRank.SpellSchool,

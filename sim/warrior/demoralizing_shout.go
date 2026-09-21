@@ -5,14 +5,14 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Ingame research needed if this adds flat threat
-var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 0).HighestRank()
-
 // TODO: The core Demoralizing Shout aura still takes Booming Voice and Improved Demoralizing
 // Shout points. In the client Booming Voice (12321) widens the radius only, the improved talent
 // does not exist, and the shout states -205 attack power for 45 seconds (11556). Pending the
 // shared shout aura rework, both are passed as 0.
 func (warrior *Warrior) registerDemoralizingShout() {
+	// TODO: Ingame research needed if this adds flat threat
+	demoralizingShoutRank := shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 0).HighestRank()
+
 	warrior.DemoralizingShoutAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return core.DemoralizingShoutAura(target, 0, 0)
 	})

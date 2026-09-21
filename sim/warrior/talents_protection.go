@@ -51,12 +51,12 @@ func (warrior *Warrior) registerAnticipation() {
 	warrior.AddStat(stats.DefenseRating, spellData.Anticipation.ValueAt(warrior.Talents.Anticipation)*core.DefenseRatingPerDefenseLevel)
 }
 
-var shieldSpecializationEnergize = spellData.ShieldSpecializationTriggered.HighestRank()
-
 func (warrior *Warrior) registerShieldSpecialization() {
 	if warrior.Talents.ShieldSpecialization == 0 {
 		return
 	}
+
+	shieldSpecializationEnergize := spellData.ShieldSpecializationTriggered.HighestRank()
 
 	warrior.AddStat(stats.BlockPercent, spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_PERCENT, 0).FractionAt(warrior.Talents.ShieldSpecialization))
 
@@ -98,13 +98,13 @@ func (warrior *Warrior) registerToughness() {
 	warrior.ApplyEquipScaling(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness))
 }
 
-var lastStandRank = spellData.LastStand.HighestRank()
-var lastStandBuff = spellData.LastStandTriggered.HighestRank()
-
 func (warrior *Warrior) registerLastStand() {
 	if !warrior.Talents.LastStand {
 		return
 	}
+
+	lastStandRank := spellData.LastStand.HighestRank()
+	lastStandBuff := spellData.LastStandTriggered.HighestRank()
 
 	actionID := core.ActionID{SpellID: lastStandRank.SpellID}
 	healthMetrics := warrior.NewHealthMetrics(actionID)
@@ -175,12 +175,12 @@ func (warrior *Warrior) registerImprovedShieldWall() {
 	})
 }
 
-var concussionBlowRank = spellData.ConcussionBlow.HighestRank()
-
 func (warrior *Warrior) registerConcussionBlow() {
 	if !warrior.Talents.ConcussionBlow {
 		return
 	}
+
+	concussionBlowRank := spellData.ConcussionBlow.HighestRank()
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: concussionBlowRank.SpellID},
@@ -216,14 +216,14 @@ func (warrior *Warrior) registerConcussionBlow() {
 	})
 }
 
-// TODO: Manual review needed -- spell 23922 states only "a very high amount of threat"; none is
-// modelled until measured in game.
-var shieldSlamRank = spellData.ShieldSlam.HighestRank()
-
 func (warrior *Warrior) registerShieldSlam() {
 	if !warrior.Talents.ShieldSlam {
 		return
 	}
+
+	// TODO: Manual review needed -- spell 23922 states only "a very high amount of threat"; none is
+	// modelled until measured in game.
+	shieldSlamRank := spellData.ShieldSlam.HighestRank()
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: shieldSlamRank.SpellID},
@@ -279,12 +279,12 @@ func (warrior *Warrior) registerFocusedRage() {
 	})
 }
 
-var masterOfDefenseEnergize = spellData.MasterOfDefenseTriggered.HighestRank()
-
 func (warrior *Warrior) registerMasterOfDefense() {
 	if warrior.Talents.MasterOfDefense == 0 {
 		return
 	}
+
+	masterOfDefenseEnergize := spellData.MasterOfDefenseTriggered.HighestRank()
 
 	// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100 in
 	// the proc chance column is noise; a shield has to be equipped.
@@ -318,12 +318,12 @@ func (warrior *Warrior) registerImprovedDisarm() {
 	})
 }
 
-var improvedShieldBashSilence = spellData.ImprovedShieldBashTriggered.HighestRank()
-
 func (warrior *Warrior) registerImprovedShieldBash() {
 	if warrior.Talents.ImprovedShieldBash == 0 {
 		return
 	}
+
+	improvedShieldBashSilence := spellData.ImprovedShieldBashTriggered.HighestRank()
 
 	// TODO: nothing in the sim reads a silence on an enemy, so the aura only shows up in metrics.
 	silenceAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {

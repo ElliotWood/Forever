@@ -4,9 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var whirlwindRank = spellData.Whirlwind.HighestRank()
-
 func (warrior *Warrior) registerWhirlwind() {
+	whirlwindRank := spellData.Whirlwind.HighestRank()
+
 	actionID := core.ActionID{SpellID: whirlwindRank.SpellID}
 
 	// Raging Blows (1310315) adds the off-hand strike.

@@ -4,9 +4,9 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var berserkerRageRank = spellData.BerserkerRage.HighestRank()
-
 func (warrior *Warrior) registerBerserkerRage() {
+	berserkerRageRank := spellData.BerserkerRage.HighestRank()
+
 	actionID := core.ActionID{SpellID: berserkerRageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	rageGain := spellData.ImprovedBerserkerRage.EffectAt(0).TenthsAt(warrior.Talents.ImprovedBerserkerRage)

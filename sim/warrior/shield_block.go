@@ -7,9 +7,9 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var shieldBlockRank = spellData.ShieldBlock.HighestRank()
-
 func (warrior *Warrior) registerShieldBlock() {
+	shieldBlockRank := spellData.ShieldBlock.HighestRank()
+
 	actionId := core.ActionID{SpellID: shieldBlockRank.SpellID}
 
 	var spell *core.Spell

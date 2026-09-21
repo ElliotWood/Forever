@@ -4,10 +4,10 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var pummelRank = spellData.Pummel.BySpellID(6554)
-var pummelBaseDamage, _ = pummelRank.Direct.Range()
-
 func (warrior *Warrior) registerPummel() {
+	pummelRank := spellData.Pummel.BySpellID(6554)
+	pummelBaseDamage, _ := pummelRank.Direct.Range()
+
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: pummelRank.SpellID},
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,

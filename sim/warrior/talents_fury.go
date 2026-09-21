@@ -51,15 +51,13 @@ func (warrior *Warrior) registerCruelty() {
 	warrior.AddStat(stats.PhysicalCritPercent, spellData.Cruelty.ValueAt(warrior.Talents.Cruelty))
 }
 
-var unbridledWrathRank = spellData.UnbridledWrathTriggered.HighestRank()
-
-// The energize is on the client's 0-1000 rage bar.
-var unbridledWrathRage = unbridledWrathRank.Energize.Tenths()
-
 func (warrior *Warrior) registerUnbridledWrath() {
 	if warrior.Talents.UnbridledWrath == 0 {
 		return
 	}
+
+	unbridledWrathRank := spellData.UnbridledWrathTriggered.HighestRank()
+	unbridledWrathRage := unbridledWrathRank.Energize.Tenths()
 
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: unbridledWrathRank.SpellID})
 
@@ -103,12 +101,9 @@ func (warrior *Warrior) registerDualWieldSpecialization() {
 		FloatValue: spellData.DualWieldSpecialization.Effect(shared.A_MOD_HIT_CHANCE, 0).ValueAt(warrior.Talents.DualWieldSpecialization),
 	})
 
-	// The off-hand rage the tooltip's $m2 states is the dummy at index 1.
 	warrior.SetOffHandRageMultiplier(spellData.DualWieldSpecialization.EffectAt(1).MultiplierAt(warrior.Talents.DualWieldSpecialization))
 }
 
-// Iron Will (12962) shortens the stuns and fears the warrior suffers; the client files the fear
-// ladder under mechanic 1 and the stun ladder under mechanic 12.
 func (warrior *Warrior) registerIronWill() {
 	if warrior.Talents.IronWill == 0 {
 		return
@@ -129,12 +124,12 @@ func (warrior *Warrior) registerImprovedExecute() {
 	})
 }
 
-var enrageBuff = spellData.EnrageTriggered.HighestRank()
-
 func (warrior *Warrior) registerEnrage() {
 	if warrior.Talents.Enrage == 0 {
 		return
 	}
+
+	enrageBuff := spellData.EnrageTriggered.HighestRank()
 
 	warrior.EnrageAura = warrior.GetOrRegisterAura(core.Aura{
 		Label:    "Enrage",
@@ -160,12 +155,12 @@ func (warrior *Warrior) registerEnrage() {
 	})
 }
 
-var flurryBuff = spellData.FlurryTriggered.HighestRank()
-
 func (warrior *Warrior) registerFlurry() {
 	if warrior.Talents.Flurry == 0 {
 		return
 	}
+
+	flurryBuff := spellData.FlurryTriggered.HighestRank()
 
 	// TODO: Ingame test needed: the talent ladder gives 5% per point (25% at rank 5) while the
 	// applied buff 12966 carries a flat 30%.
@@ -211,12 +206,12 @@ func (warrior *Warrior) registerPrecision() {
 	warrior.AddStat(stats.SpellHitPercent, spellData.Precision.Effect(shared.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warrior.Talents.Precision))
 }
 
-var bloodthirstRank = spellData.Bloodthirst.BySpellID(23894)
-
 func (warrior *Warrior) registerBloodthirst() {
 	if !warrior.Talents.Bloodthirst {
 		return
 	}
+
+	bloodthirstRank := spellData.Bloodthirst.BySpellID(23894)
 
 	// The attack power share sits on the second effect; the first is the flat damage added to it.
 	apShare := bloodthirstRank.Effects[1].Fraction()
@@ -260,14 +255,14 @@ func (warrior *Warrior) registerBloodthirst() {
 	})
 }
 
-var piercingHowlRank = spellData.PiercingHowl.HighestRank()
-
 // TODO: The daze itself is not modelled; the encounter's targets do not move, so the -50% movement
 // speed 12323 applies for 6 seconds within 10 yards has nothing to act on.
 func (warrior *Warrior) registerPiercingHowl() {
 	if !warrior.Talents.PiercingHowl {
 		return
 	}
+
+	piercingHowlRank := spellData.PiercingHowl.HighestRank()
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: piercingHowlRank.SpellID},
@@ -288,12 +283,12 @@ func (warrior *Warrior) registerPiercingHowl() {
 	})
 }
 
-var bloodCrazeHot = spellData.BloodCrazeTriggered.HighestRank()
-
 func (warrior *Warrior) registerBloodCraze() {
 	if warrior.Talents.BloodCraze == 0 {
 		return
 	}
+
+	bloodCrazeHot := spellData.BloodCrazeTriggered.HighestRank()
 
 	healthFraction := spellData.BloodCraze.EffectAt(0).FractionAt(warrior.Talents.BloodCraze)
 	hitThreshold := spellData.BloodCraze.EffectAt(1).FractionAt(warrior.Talents.BloodCraze)
@@ -358,12 +353,12 @@ func (warrior *Warrior) registerRagingBlows() {
 	})
 }
 
-var deathWishRank = spellData.DeathWish.HighestRank()
-
 func (warrior *Warrior) registerDeathWish() {
 	if !warrior.Talents.DeathWish {
 		return
 	}
+
+	deathWishRank := spellData.DeathWish.HighestRank()
 
 	actionID := core.ActionID{SpellID: deathWishRank.SpellID}
 

@@ -4,12 +4,11 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var thunderClapRank = spellData.ThunderClap.HighestRank()
-
-var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
-var thunderClapSlow = -thunderClapRank.Effects[1].Fraction()
-
 func (warrior *Warrior) registerThunderClap() {
+	thunderClapRank := spellData.ThunderClap.HighestRank()
+	thunderClapBaseDamage, _ := thunderClapRank.Direct.Range()
+	thunderClapSlow := -thunderClapRank.Effects[1].Fraction()
+
 	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return core.ThunderClapAura(target).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
 			slow := thunderClapSlow * (1 + warrior.thunderClapEffectBonus)

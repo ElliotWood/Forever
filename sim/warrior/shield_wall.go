@@ -6,9 +6,9 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
-var shieldWallRank = spellData.ShieldWall.HighestRank()
-
 func (warrior *Warrior) registerShieldWall() {
+	shieldWallRank := spellData.ShieldWall.HighestRank()
+
 	actionID := core.ActionID{SpellID: shieldWallRank.SpellID}
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Shield Wall",

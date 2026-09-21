@@ -6,10 +6,10 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var bloodrageRank = spellData.Bloodrage.HighestRank()
-var bloodrageOverTime = spellData.BloodrageTriggered.HighestRank().Energize.(shared.SpellDataPeriodic)
-
 func (warrior *Warrior) registerBloodrage() {
+	bloodrageRank := spellData.Bloodrage.HighestRank()
+	bloodrageOverTime := spellData.BloodrageTriggered.HighestRank().Energize.(shared.SpellDataPeriodic)
+
 	actionID := core.ActionID{SpellID: bloodrageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	healthCost := warrior.GetBaseStats()[stats.Health] * bloodrageRank.PowerCostPct / 100

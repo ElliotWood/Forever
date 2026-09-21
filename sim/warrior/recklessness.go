@@ -6,9 +6,9 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var recklessnessRank = spellData.Recklessness.HighestRank()
-
 func (warrior *Warrior) registerRecklessness() {
+	recklessnessRank := spellData.Recklessness.HighestRank()
+
 	actionID := core.ActionID{SpellID: recklessnessRank.SpellID}
 	recklessnessCritValue := recklessnessRank.Effect(shared.A_MOD_CRIT_PCT, 0).Value
 	aura := warrior.RegisterAura(core.Aura{

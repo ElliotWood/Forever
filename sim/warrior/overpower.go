@@ -4,13 +4,12 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var overpowerRank = spellData.Overpower.BySpellID(11585)
-var overpowerBaseDamage, _ = overpowerRank.Direct.Range()
-
-// The window a dodge opens: the aura Offensive State (DND) fires on the hit.
-var overpowerWindow = spellData.OffensiveStateTriggered.HighestRank()
-
 func (warrior *Warrior) registerOverpower() {
+	overpowerRank := spellData.Overpower.BySpellID(11585)
+	overpowerBaseDamage, _ := overpowerRank.Direct.Range()
+	// The window a dodge opens: the aura Offensive State (DND) fires on the hit.
+	overpowerWindow := spellData.OffensiveStateTriggered.HighestRank()
+
 	actionID := core.ActionID{SpellID: overpowerRank.SpellID}
 	overpowerCD := overpowerRank.Cooldown
 

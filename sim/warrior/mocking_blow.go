@@ -4,10 +4,10 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var mockingBlowRank = spellData.MockingBlow.HighestRank()
-var mockingBlowBaseDamage, _ = mockingBlowRank.Direct.Range()
-
 func (warrior *Warrior) registerMockingBlow() {
+	mockingBlowRank := spellData.MockingBlow.HighestRank()
+	mockingBlowBaseDamage, _ := mockingBlowRank.Direct.Range()
+
 	warrior.MockingBlow = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: mockingBlowRank.SpellID},
 		SpellSchool:    mockingBlowRank.SpellSchool,
