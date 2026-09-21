@@ -390,6 +390,7 @@ func (warrior *Warrior) registerWeaponmaster() {
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Weaponmaster (Sword)",
 		ActionID:           actionID.WithTag(3),
+		MetricsActionID:    actionID.WithTag(3),
 		Callback:           core.CallbackOnSpellHitDealt,
 		ProcMask:           core.ProcMaskMelee,
 		Outcome:            core.OutcomeLanded,
