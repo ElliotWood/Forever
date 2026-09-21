@@ -129,8 +129,9 @@ func (at *AttackTable) GetArmorDamageModifier(spell *Spell) float64 {
 
 	ignoreArmorFactor := Clamp(at.ArmorIgnoreFactor, 0.0, 1.0)
 
-	// Assume target > 80
-	armorConstant := float64(at.Attacker.Level)*467.5 - 22167.5
+	// Level 60 armor: 400 + 85 x attacker level (5500 for a level 60 attacker). The
+	// 467.5 x level - 22167.5 this engine had is TBC's formula for attackers of level 60+.
+	armorConstant := 400 + 85*float64(at.Attacker.Level)
 	defenderArmor := at.Defender.Armor() - (at.Defender.Armor() * ignoreArmorFactor)
 	// TODO: Forever possibly has different rules as there is Armor Piercing Flat and % values
 	defenderArmor = max(defenderArmor-at.Attacker.stats[stats.ArmorPenetration], 0)
