@@ -26,6 +26,8 @@ type generatedSpellData struct {
 	CoupDeGrace                 shared.SpellDataTable
 	Cutthroat                   shared.SpellDataTable
 	CutthroatTriggered          shared.SpellDataTable
+	DefensiveState              shared.SpellDataTable
+	DefensiveStateTriggered     shared.SpellDataTable
 	Deflection                  shared.SpellDataTable
 	DirtyDeeds                  shared.SpellDataTable
 	DirtyTricks                 shared.SpellDataTable
@@ -86,7 +88,7 @@ type generatedSpellData struct {
 	RemorselessAttacks          shared.SpellDataTable
 	RemorselessAttacksTriggered shared.SpellDataTable
 	Riposte                     shared.SpellDataTable
-	RoguePassiveDND             shared.SpellDataTable
+	RoguePassive                shared.SpellDataTable
 	Rupture                     shared.SpellDataTable
 	Ruthlessness                shared.SpellDataTable
 	RuthlessnessTriggered       shared.SpellDataTable
@@ -169,6 +171,12 @@ var spellData = generatedSpellData{
 	},
 	CutthroatTriggered: shared.SpellDataTable{
 		{Rank: 1, SpellID: 462707, Duration: 10000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_IGNORE_SHAPESHIFT, Misc: 0, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 0}},
+	},
+	DefensiveState: shared.SpellDataTable{
+		{Rank: 1, SpellID: 16092, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
+	},
+	DefensiveStateTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5302, Duration: 5000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
 	},
 	Deflection: shared.SpellDataTable{
 		{Rank: 1, SpellID: 13713, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_PARRY_PERCENT, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},
@@ -455,7 +463,7 @@ var spellData = generatedSpellData{
 	Riposte: shared.SpellDataTable{
 		{Rank: 1, SpellID: 14251, Cooldown: 6000 * time.Millisecond, Duration: 6000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 150}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DISARM, Misc: 0, Value: 0}}},
 	},
-	RoguePassiveDND: shared.SpellDataTable{
+	RoguePassive: shared.SpellDataTable{
 		{Rank: 1, SpellID: 21184, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_THREAT, Misc: 127, Value: -29}}},
 	},
 	Rupture: shared.SpellDataTable{
