@@ -1,13 +1,9 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (warrior *Warrior) registerFuryTalents() {
@@ -49,7 +45,7 @@ func (warrior *Warrior) registerCruelty() {
 		return
 	}
 
-	warrior.AddStat(stats.PhysicalCritPercent, spellData.Cruelty.ValueAt(warrior.Talents.Cruelty))
+	spelldata.ParseStatic(&warrior.Character, spellData.Cruelty.Rank(warrior.Talents.Cruelty))
 }
 
 var unbridledWrathRank = spellData.UnbridledWrathTriggered.Highest()
@@ -92,20 +88,21 @@ func (warrior *Warrior) registerDualWieldSpecialization() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ProcMask:   core.ProcMaskMeleeOH,
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.DualWieldSpecialization.Effect(dbcenums.A_MOD_OFFHAND_DAMAGE_PCT, 0).FractionAt(warrior.Talents.DualWieldSpecialization),
-	})
+	rank := spellData.DualWieldSpecialization.Rank(warrior.Talents.DualWieldSpecialization)
+
+	// Effect 3 states A_MOD_HIT_CHANCE with nothing narrowing it, which the parse reads as hit on
+	// every attack; the tooltip states the chance to hit with off-hand attacks, so it stays a mod
+	// on the off-hand's own hits.
+	spelldata.ParseStatic(&warrior.Character, rank, spelldata.SkipEffects(3))
 
 	warrior.AddStaticMod(core.SpellModConfig{
 		ProcMask:   core.ProcMaskMeleeOH,
 		Kind:       core.SpellMod_BonusHit_Percent,
-		FloatValue: spellData.DualWieldSpecialization.Effect(dbcenums.A_MOD_HIT_CHANCE, 0).ValueAt(warrior.Talents.DualWieldSpecialization),
+		FloatValue: rank.EffectN(3).BaseValue(),
 	})
 
-	// The off-hand rage the tooltip's $m2 states is the dummy at index 1.
-	warrior.SetOffHandRageMultiplier(spellData.DualWieldSpecialization.EffectAt(2).MultiplierAt(warrior.Talents.DualWieldSpecialization))
+	// The off-hand rage the tooltip's $m2 states is the dummy at index 2, which the parse skips.
+	warrior.SetOffHandRageMultiplier(1 + rank.EffectN(2).Percent())
 }
 
 // Iron Will (12962) shortens the stuns and fears the warrior suffers; the client files the fear
@@ -114,8 +111,7 @@ func (warrior *Warrior) registerIronWill() {
 	if warrior.Talents.IronWill == 0 {
 		return
 	}
-	warrior.PseudoStats.FearDurationMultiplier = spellData.IronWill.Effect(dbcenums.A_MECHANIC_DURATION_MOD, 1).MultiplierAt(warrior.Talents.IronWill)
-	warrior.PseudoStats.StunDurationMultiplier = spellData.IronWill.Effect(dbcenums.A_MECHANIC_DURATION_MOD, 12).MultiplierAt(warrior.Talents.IronWill)
+	spelldata.ParseStatic(&warrior.Character, spellData.IronWill.Rank(warrior.Talents.IronWill))
 }
 
 func (warrior *Warrior) registerImprovedExecute() {
@@ -123,11 +119,7 @@ func (warrior *Warrior) registerImprovedExecute() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskExecute,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedExecute.TenthsAt(warrior.Talents.ImprovedExecute)),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedExecute.Rank(warrior.Talents.ImprovedExecute))
 }
 
 var enrageBuff = spellData.EnrageTriggered.Highest()
@@ -208,8 +200,7 @@ func (warrior *Warrior) registerPrecision() {
 		return
 	}
 
-	warrior.AddStat(stats.PhysicalHitPercent, spellData.Precision.Effect(dbcenums.A_MOD_HIT_CHANCE, 0).ValueAt(warrior.Talents.Precision))
-	warrior.AddStat(stats.SpellHitPercent, spellData.Precision.Effect(dbcenums.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warrior.Talents.Precision))
+	spelldata.ParseStatic(&warrior.Character, spellData.Precision.Rank(warrior.Talents.Precision))
 }
 
 var bloodthirstRank = spellData.Bloodthirst.ByID(23894)
@@ -312,11 +303,7 @@ func (warrior *Warrior) registerRagingBlows() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskCleave,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.RagingBlows.EffectAt(2).TenthsAt(1)),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.RagingBlows.Rank(1))
 }
 
 var deathWishRank = spellData.DeathWish.Highest()
@@ -326,18 +313,13 @@ func (warrior *Warrior) registerDeathWish() {
 		return
 	}
 
-	deathWishAura := warrior.RegisterAura(spelldata.AuraConfig(deathWishRank)).
-		// The damage done effect carries the physical school mask, the damage taken one all schools.
-		AttachMultiplicativePseudoStatBuff(
-			&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical],
-			1+deathWishRank.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 1).Percent(),
-		).
-		AttachMultiplicativePseudoStatBuff(
-			&warrior.PseudoStats.DamageTakenMultiplier,
-			1+deathWishRank.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Percent(),
-		).
-		// Grants immunity to Fear effects.
-		AttachFearImmunity()
+	// The damage done effect carries the physical school mask, the damage taken one all schools.
+	deathWishAura := warrior.RegisterAura(spelldata.AuraConfig(deathWishRank))
+	spelldata.ParseEffects(&warrior.Character, deathWishAura, deathWishRank)
+
+	// Grants immunity to Fear effects, which the row states as A_MECHANIC_IMMUNITY and the parse
+	// skips.
+	deathWishAura.AttachFearImmunity()
 
 	config := spelldata.SpellConfig(&warrior.Unit, deathWishRank,
 		spelldata.Flags(core.SpellFlagCastWhileIncapacitated))
@@ -363,11 +345,7 @@ func (warrior *Warrior) registerImprovedIntercept() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskIntercept,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: time.Duration(spellData.ImprovedIntercept.ValueAt(warrior.Talents.ImprovedIntercept)) * time.Millisecond,
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedIntercept.Rank(warrior.Talents.ImprovedIntercept))
 }
 
 // Improved Cleave (12329) states only a rage discount on Cleave.
@@ -375,9 +353,5 @@ func (warrior *Warrior) registerImprovedCleave() {
 	if warrior.Talents.ImprovedCleave == 0 {
 		return
 	}
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskCleave,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedCleave.TenthsAt(warrior.Talents.ImprovedCleave)),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedCleave.Rank(warrior.Talents.ImprovedCleave))
 }
