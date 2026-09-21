@@ -278,7 +278,7 @@ var spellData = generatedSpellData{
 		{Rank: 7, SpellID: 10293, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_RESISTANCE, Misc: 1, Value: 735}, {Index: 1, Effect: shared.E_APPLY_AREA_AURA_PARTY, Aura: shared.A_MOD_HEALING_PCT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 735, Coef: 0}},
 	},
 	DivineFavor: shared.SpellDataTable{
-		{Rank: 1, SpellID: 20216, Cooldown: 120000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
+		{Rank: 1, SpellID: 20216, PowerCostPct: 4, Cooldown: 120000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
 	},
 	DivineIntellect: shared.SpellDataTable{
 		{Rank: 1, SpellID: 20257, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_TOTAL_STAT_PERCENTAGE, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},
