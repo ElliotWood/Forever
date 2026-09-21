@@ -139,11 +139,22 @@ func TestGnomeWarrior(t *testing.T) {
 
 	ability := fw.RegisterSpell(SpellConfig{
 		ActionID:         ActionID{SpellID: 1},
+		ClassSpellMask:   1,
+		ProcMask:         ProcMaskMeleeMHSpecial,
+		SpellSchool:      SpellSchoolPhysical,
+		DamageMultiplier: 1,
+	})
+	itemSpell := fw.RegisterSpell(SpellConfig{
+		ActionID:         ActionID{SpellID: 2},
 		Flags:            SpellFlagAPL,
 		ProcMask:         ProcMaskMeleeMHSpecial,
 		SpellSchool:      SpellSchoolPhysical,
 		DamageMultiplier: 1,
 	})
+	itemSpell.Cast(sim, fw.CurrentTarget)
+	if itemSpell.DamageMultiplier != 1 || eureka.GetStacks() != 3 {
+		t.Fatalf("Eureka! should ignore spells that are not class abilities")
+	}
 	if !WithinToleranceFloat64(1.1, ability.DamageMultiplier, 0.0001) {
 		t.Fatalf("Eureka! should raise ability damage by 10%%, got x%0.2f", ability.DamageMultiplier)
 	}

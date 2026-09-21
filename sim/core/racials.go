@@ -1,6 +1,7 @@
 package core
 
 import (
+	"math"
 	"time"
 
 	"github.com/wowsims/forever/sim/core/proto"
@@ -319,8 +320,7 @@ func applyExpansiveMind(character *Character) {
 }
 
 // The client scopes Eureka! to each class's damaging abilities with a spell family mask. Core cannot
-// see those masks, so this takes every ability the player casts that deals damage (or heals, for a
-// priest).
+// see those masks, so this takes every class ability that deals damage (or heals, for a priest).
 func applyEureka(character *Character) {
 	var spellID int32
 	var costReduction float64
@@ -344,18 +344,19 @@ func applyEureka(character *Character) {
 	}
 
 	actionID := ActionID{SpellID: spellID}
+	const anyClassSpell = math.MaxInt64
 
 	costMod := character.AddDynamicMod(SpellModConfig{
 		Kind:         SpellMod_PowerCost_Pct,
+		ClassMask:    anyClassSpell,
 		ProcMask:     procMask,
-		SpellFlag:    SpellFlagAPL,
 		ResourceType: resourceType,
 		FloatValue:   -costReduction,
 	})
 	damageMod := character.AddDynamicMod(SpellModConfig{
 		Kind:       SpellMod_DamageDone_Pct,
+		ClassMask:  anyClassSpell,
 		ProcMask:   procMask,
-		SpellFlag:  SpellFlagAPL,
 		FloatValue: 0.1,
 	})
 
@@ -374,7 +375,7 @@ func applyEureka(character *Character) {
 			damageMod.Deactivate()
 		},
 		OnCastComplete: func(aura *Aura, sim *Simulation, spell *Spell) {
-			if spell.Flags.Matches(SpellFlagAPL) && spell.ProcMask.Matches(procMask) {
+			if spell.Matches(anyClassSpell) && spell.ProcMask.Matches(procMask) {
 				aura.RemoveStack(sim)
 			}
 		},
