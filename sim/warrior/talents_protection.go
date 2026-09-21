@@ -1,8 +1,6 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
@@ -59,10 +57,12 @@ func (warrior *Warrior) registerShieldSpecialization() {
 		return
 	}
 
-	warrior.AddStat(stats.BlockPercent, spellData.ShieldSpecialization.Effect(dbcenums.A_MOD_BLOCK_PERCENT, 0).FractionAt(warrior.Talents.ShieldSpecialization))
+	// Effect 1 is the block bonus; effect 2 is the proc trigger, which the parse skips.
+	spelldata.ParseStatic(&warrior.Character,
+		spellData.ShieldSpecialization.Rank(warrior.Talents.ShieldSpecialization))
 
-	// Effect 0 is the block bonus; the tooltip states the chance as $m2%, so effect 1's ladder is
-	// the chance and the 100 in the proc chance column is noise.
+	// The tooltip states the chance as $m2%, so effect 2's ladder is the chance and the 100 in the
+	// proc chance column is noise.
 	warrior.registerRageOnAvoid("Shield Specialization", shieldSpecializationEnergize.ID,
 		shieldSpecializationEnergize.EnergizeEffect().Tenths(),
 		spellData.ShieldSpecialization.EffectAt(2).FractionAt(warrior.Talents.ShieldSpecialization), core.OutcomeBlock, nil)
@@ -93,10 +93,10 @@ func (warrior *Warrior) registerToughness() {
 		return
 	}
 
-	// The client states the ladder twice, once on base armor and once on bonus armor; the sim's
-	// single Armor stat takes one multiplier.
-	// The tooltip states armor from items, which is the equipment share of the stat.
-	warrior.ApplyEquipScaling(stats.Armor, spellData.Toughness.Effect(dbcenums.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness))
+	// The client states the ladder twice, once on base armor and once on bonus armor; the parse
+	// takes the base armor effect, which the tooltip words as armor from items, onto the equipment
+	// share of the sim's single Armor stat, and skips the bonus armor one.
+	spelldata.ParseStatic(&warrior.Character, spellData.Toughness.Rank(warrior.Talents.Toughness))
 }
 
 var lastStandRank = spellData.LastStand.Highest()
@@ -150,11 +150,7 @@ func (warrior *Warrior) registerImprovedSunderArmor() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskSunderArmor,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedSunderArmor.TenthsAt(warrior.Talents.ImprovedSunderArmor)),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedSunderArmor.Rank(warrior.Talents.ImprovedSunderArmor))
 }
 
 func (warrior *Warrior) registerImprovedShieldWall() {
@@ -162,11 +158,7 @@ func (warrior *Warrior) registerImprovedShieldWall() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskShieldWall,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: time.Duration(spellData.ImprovedShieldWall.ValueAt(warrior.Talents.ImprovedShieldWall)) * time.Millisecond,
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedShieldWall.Rank(warrior.Talents.ImprovedShieldWall))
 }
 
 var concussionBlowRank = spellData.ConcussionBlow.Highest()
@@ -226,11 +218,7 @@ func (warrior *Warrior) registerFocusedRage() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskOffensiveAbilities,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.FocusedRage.TenthsAt(warrior.Talents.FocusedRage)),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.FocusedRage.Rank(warrior.Talents.FocusedRage))
 }
 
 var masterOfDefenseEnergize = spellData.MasterOfDefenseTriggered.Highest()
@@ -253,11 +241,7 @@ func (warrior *Warrior) registerImprovedRevenge() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskRevenge,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedRevenge.FractionAt(warrior.Talents.ImprovedRevenge),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedRevenge.Rank(warrior.Talents.ImprovedRevenge))
 }
 
 func (warrior *Warrior) registerImprovedDisarm() {
@@ -265,11 +249,7 @@ func (warrior *Warrior) registerImprovedDisarm() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskDisarm,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: time.Duration(spellData.ImprovedDisarm.ValueAt(warrior.Talents.ImprovedDisarm)) * time.Millisecond,
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedDisarm.Rank(warrior.Talents.ImprovedDisarm))
 }
 
 var improvedShieldBashSilence = spellData.ImprovedShieldBashTriggered.Highest()
@@ -308,23 +288,13 @@ func (warrior *Warrior) registerBastion() {
 		return
 	}
 
-	// The client applies the bonus to the physical school (A_MOD_DAMAGE_PERCENT_DONE, mask 1).
-	damageMod := warrior.AddDynamicMod(core.SpellModConfig{
-		School:     core.SpellSchoolPhysical,
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.Bastion.FractionAt(warrior.Talents.Bastion),
-	})
-
-	if warrior.PseudoStats.CanBlock {
-		damageMod.Activate()
-	}
+	// The row raises the physical school and states no shield of its own: the tooltip's shield
+	// requirement is the caller's condition, re-read on an off-hand swap.
+	parsed := spelldata.ParseStatic(&warrior.Character, spellData.Bastion.Rank(warrior.Talents.Bastion),
+		spelldata.Conditional(func() bool { return warrior.PseudoStats.CanBlock }))
 
 	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
-		if warrior.PseudoStats.CanBlock {
-			damageMod.Activate()
-		} else {
-			damageMod.Deactivate()
-		}
+		parsed.Refresh(sim)
 	})
 }
 
@@ -335,9 +305,5 @@ func (warrior *Warrior) registerImprovedThunderClap() {
 
 	// Slowing effect implemented in core/debuffs.go
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskThunderClap,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedThunderClap.TenthsAt(warrior.Talents.ImprovedThunderClap)),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedThunderClap.Rank(warrior.Talents.ImprovedThunderClap))
 }
