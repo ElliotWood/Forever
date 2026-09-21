@@ -29,7 +29,6 @@ func (warrior *Warrior) registerTaunt() {
 
 		ThreatMultiplier: 1,
 
-		// Spell 355's ShapeshiftMask is Defensive Stance only.
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(DefensiveStance)
 		},

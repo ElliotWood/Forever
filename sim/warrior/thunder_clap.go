@@ -47,7 +47,6 @@ func (warrior *Warrior) registerThunderClap() {
 		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			// Thunder Clap (11581) is usable in Battle and Defensive Stance.
 			return warrior.StanceMatches(BattleStance | DefensiveStance)
 		},
 
