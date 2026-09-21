@@ -22,6 +22,7 @@ type generatedRow struct {
 	Rank            int32
 	SpellID         int32
 	Cost            int32
+	PowerCostPct    float64
 	CastTimeMs      int32
 	GCDMs           int32
 	CooldownMs      int32
@@ -47,12 +48,13 @@ type generatedRow struct {
 }
 
 type generatedEffect struct {
-	Index    int32
-	Effect   dbc.SpellEffectType
-	Aura     dbc.EffectAuraType
-	Misc     int32
-	Value    float64
-	ValueMax float64
+	Index          int32
+	Effect         dbc.SpellEffectType
+	Aura           dbc.EffectAuraType
+	Misc           int32
+	Value          float64
+	ValueMax       float64
+	ChainAmplitude float64
 }
 
 type generatedAmount struct {
@@ -580,7 +582,7 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 			continue
 		}
 		if len(uncovered) > 0 {
-			partial[d.Name] = fmt.Sprintf("effect %s of spell %d has no rank curve and is left out",
+			partial[d.Name] = fmt.Sprintf("effect %s of spell %d has no rank curve and is held at its base points",
 				strings.Join(uncovered, ", "), d.SpellID)
 		}
 		ladders[d.Name] = traitLadder{SpellID: d.SpellID, MaxRanks: d.MaxRanks, Points: points}
@@ -942,10 +944,11 @@ func overrideReplacements(db *sql.DB, ids map[int32]bool) (map[int32]bool, error
 // Which effect supplies which field. Derived from the effect types rather than declared per family,
 // because the client data already says it: a SCHOOL_DAMAGE effect is direct damage, a HEAL effect is a
 // heal, an ENERGIZE effect is Lay on Hands' mana restore, a periodic aura is a tick.
-// Where points is set the rank's numbers come from the talent tree's curves, and only the effects it
-// prices are kept: the rest would have to be read off a spell that states one rank for all of them.
-// The same-name sibling search is not wanted there either - it exists for the ability dispatchers,
-// and a talent priced per rank has nothing to borrow.
+// Where points is set the rank's numbers come from the talent tree's curves. Only the effects it prices
+// can fill a role; an effect the tree states no curve for is the same at every rank - Blood Craze's
+// 20% health threshold - and is carried in Effects at the spell's own base points. The same-name
+// sibling search is not wanted there either - it exists for the ability dispatchers, and a talent
+// priced per rank has nothing to borrow.
 func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]float64) (generatedRow, error) {
 	var spell RankSpell
 	var candidates []RankEffect
@@ -960,8 +963,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		return generatedRow{}, err
 	}
 	if points != nil {
-		spell.Effects = pricedEffects(spell.Effects, points)
-		candidates = spell.Effects
+		candidates = pricedEffects(spell.Effects, points)
 	}
 
 	derive := func(e RankEffect) (float64, float64) {
@@ -982,6 +984,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 	if spell.ManaCost.Valid {
 		row.Cost = NormalizePowerCost(int32(spell.ManaCost.Int64), spell.PowerType)
 	}
+	row.PowerCostPct = spell.PowerCostPct
 
 	amountOf := func(e RankEffect) *generatedAmount {
 		min, max := derive(e)
@@ -1008,6 +1011,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		}
 		row.Effects = append(row.Effects, generatedEffect{
 			Index: e.Index, Effect: e.Effect, Aura: e.Aura, Misc: e.MiscValue, Value: min, ValueMax: max,
+			ChainAmplitude: e.ChainAmplitude,
 		})
 	}
 
@@ -1034,7 +1038,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 			row.Direct = amountOf(e)
 		case e.Effect == dbc.E_HEAL && row.Heal == nil:
 			row.Heal = amountOf(e)
-		case e.Effect == dbc.E_ENERGIZE && row.Energize == nil:
+		case (e.Effect == dbc.E_ENERGIZE || e.Aura == dbc.A_PERIODIC_ENERGIZE) && row.Energize == nil:
 			row.Energize = amountOf(e)
 		case IsThreatEffect(e.Effect) && row.FlatThreatBonus == 0:
 			min, _ := derive(e)
@@ -1158,7 +1162,7 @@ func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnum
 		lines  []string
 	}{
 		{"// Not generated:\n", skipped},
-		{"// Generated without an effect the talent tree states no rank value for:\n", partial},
+		{"// Generated with an effect held at its base points, the talent tree stating no rank value for it:\n", partial},
 	} {
 		if len(block.lines) == 0 {
 			continue
@@ -1300,6 +1304,9 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 	if row.Cost > 0 {
 		parts = append(parts, fmt.Sprintf("Cost: %d", row.Cost))
 	}
+	if row.PowerCostPct != 0 {
+		parts = append(parts, fmt.Sprintf("PowerCostPct: %s", num(row.PowerCostPct)))
+	}
 	if row.CastTimeMs > 0 {
 		parts = append(parts, fmt.Sprintf("CastTime: %s", millis(row.CastTimeMs)))
 	}
@@ -1352,6 +1359,9 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 				e.Index, namer.Effect(e.Effect), namer.Aura(e.Aura), e.Misc, num(e.Value))
 			if e.ValueMax > 0 {
 				f += ", ValueMax: " + num(e.ValueMax)
+			}
+			if e.ChainAmplitude != 0 && e.ChainAmplitude != 1 {
+				f += ", ChainAmplitude: " + num(e.ChainAmplitude)
 			}
 			es = append(es, f+"}")
 		}
@@ -1410,5 +1420,5 @@ func millis(ms int32) string {
 }
 
 func num(f float64) string {
-	return strconv.FormatFloat(f, 'g', -1, 64)
+	return strconv.FormatFloat(f, 'f', -1, 64)
 }
