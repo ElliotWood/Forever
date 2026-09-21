@@ -2,6 +2,7 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 var demoralizingShoutRank = spellData.DemoralizingShout.Highest()
@@ -15,38 +16,23 @@ func (warrior *Warrior) registerDemoralizingShout() {
 		return core.DemoralizingShoutAura(target, 0, 0)
 	})
 
-	warrior.DemoralizingShout = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: demoralizingShoutRank.ID},
-		SpellSchool:    demoralizingShoutRank.SpellSchool(),
-		DefenseType:    demoralizingShoutRank.DefenseTypeCore(),
-		ClassSpellMask: SpellMaskDemoralizingShout,
-		ClassFlags:     SpellFlagsDemoralizingShout,
-		ProcMask:       core.ProcMaskEmpty,
-		Flags:          core.SpellFlagAPL,
+	config := spelldata.SpellConfig(&warrior.Unit, demoralizingShoutRank, spelldata.Flags(core.SpellFlagAPL))
+	config.ClassSpellMask = SpellMaskDemoralizingShout
+	config.ProcMask = core.ProcMaskEmpty
+	config.ThreatMultiplier = 1
+	// TODO: Ingame research needed if this adds flat threat
+	config.FlatThreatBonus = 0
 
-		RageCost: core.RageCostOptions{
-			Cost: rageCost(demoralizingShoutRank),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: demoralizingShoutRank.GCD(),
-			},
-			IgnoreHaste: true,
-		},
-
-		ThreatMultiplier: 1,
-		// TODO: Ingame research needed if this adds flat threat
-		FlatThreatBonus: 0,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
-				result := spell.CalcAndDealOutcome(sim, aoeTarget, spell.OutcomeMagicHit)
-				if result.Landed() {
-					warrior.DemoralizingShoutAuras.Get(aoeTarget).Activate(sim)
-				}
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
+			result := spell.CalcAndDealOutcome(sim, aoeTarget, spell.OutcomeMagicHit)
+			if result.Landed() {
+				warrior.DemoralizingShoutAuras.Get(aoeTarget).Activate(sim)
 			}
-		},
+		}
+	}
 
-		RelatedAuraArrays: warrior.DemoralizingShoutAuras.ToMap(),
-	})
+	config.RelatedAuraArrays = warrior.DemoralizingShoutAuras.ToMap()
+
+	warrior.DemoralizingShout = warrior.RegisterSpell(config)
 }

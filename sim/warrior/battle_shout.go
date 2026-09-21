@@ -4,6 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 var battleShoutRank = spellData.BattleShout.Highest()
@@ -22,39 +23,25 @@ func (warrior *Warrior) registerBattleShout() {
 		})
 	})
 
-	warrior.BattleShout = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: battleShoutRank.ID},
-		ClassSpellMask: SpellMaskBattleShout,
-		ClassFlags:     SpellFlagsBattleShout,
-		SpellSchool:    battleShoutRank.SpellSchool(),
-		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
-		ProcMask:       core.ProcMaskEmpty,
+	config := spelldata.SpellConfig(&warrior.Unit, battleShoutRank, spelldata.Flags(core.SpellFlagAPL))
+	config.ClassSpellMask = SpellMaskBattleShout
+	config.ProcMask = core.ProcMaskEmpty
+	config.ThreatMultiplier = 1
+	// TODO: Manual review needed -- spell 25289 carries no threat effect; none is modelled until
+	// measured in game.
+	config.FlatThreatBonus = 0
 
-		RageCost: core.RageCostOptions{
-			Cost: rageCost(battleShoutRank),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: battleShoutRank.GCD(),
-			},
-			IgnoreHaste: true,
-		},
+	config.ExtraCastCondition = func(sim *core.Simulation, _ *core.Unit) bool {
+		aura := auras.Get(&warrior.Unit)
+		return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= warrior.battleShoutValue()
+	}
 
-		ThreatMultiplier: 1,
-		// TODO: Manual review needed -- spell 25289 carries no threat effect; none is modelled until
-		// measured in game.
-		FlatThreatBonus: 0,
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
+		auras.ActivateAllPlayers(sim)
+	}
 
-		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
-			aura := auras.Get(&warrior.Unit)
-			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= warrior.battleShoutValue()
-		},
+	config.RelatedAuraArrays = auras.ToMap()
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
-			auras.ActivateAllPlayers(sim)
-		},
-
-		RelatedAuraArrays: auras.ToMap(),
-	})
+	warrior.BattleShout = warrior.RegisterSpell(config)
 }
