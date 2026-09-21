@@ -586,7 +586,7 @@ export class ActionId {
 			case 'Thorns':
 				// A damage shield's proc is tagged two past the aura that carries it: tag 2 is the
 				// player's own copy, tag 1 the copy an outside caster provides, and that copy's
-				// aura is the tag -1 the default branch names.
+				// aura is the tag -1 this case names below.
 				if (tag === 1 || tag === 2) {
 					name += ' (Hit)';
 				} else if (tag === -1) {

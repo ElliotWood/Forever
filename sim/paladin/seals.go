@@ -657,8 +657,9 @@ func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
 	// 	// bonus (219 = "Max Rank Seal Of Crusader (Rank 7)" per its own comment). Forever's
 	// 	// SealOfTheCrusader table tops out at rank 6, and spellData does not state what a
 	// 	// rank-6-capped version of this aura's bonus should be, so the TBC rank-7 number stays.
-	// 	// TODO: the librams that add flat holy damage taken (23203 Libram of Fervor, 27949 and
-	// 	// 27983 Libram of Zeal) need a parameter for it; the aura takes the percent bonus alone.
+	// 	// TODO: the librams that add flat holy damage taken (23203 Libram of Fervor, 33; 27949
+	// 	// and 27983 Libram of Zeal, 47) need a parameter for it; the aura takes the percent
+	// 	// bonus alone.
 	// 	return core.ImprovedSealOfTheCrusaderAura(target, 1, percentBonus)
 	// })
 	//
