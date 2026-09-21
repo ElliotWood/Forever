@@ -96,7 +96,8 @@ export const retiredFieldSpellings = (protoName: string): string[] => {
 
 // Api version 17 also retires the player's own drums: ConsumesSpec reserves field 12 and the name
 // `drums_id`, because the Forever client describes no drum item at all. A settings blob written
-// before the bump still names it, and it sits on the player rather than on a buff message.
+// before the bump still names it, on a player and on SavedSettings, which carries a ConsumesSpec of
+// its own.
 export const retiredConsumesFields = ['drums_id'] as const;
 
 type BuffScope = keyof typeof retypedBuffFields;
@@ -195,11 +196,13 @@ export function migrateRetypedBuffFields(json: unknown, shape: BuffMessageShape 
 			return;
 	}
 
-	// IndividualSimSettings, and SavedSettings, which names the individual buffs `playerBuffs`.
+	// IndividualSimSettings, and SavedSettings, which names the individual buffs `playerBuffs` and
+	// carries the consumables itself rather than on a player.
 	rewriteBuffs(message.raidBuffs, 'raidBuffs');
 	rewriteBuffs(message.partyBuffs, 'partyBuffs');
 	rewriteBuffs(message.debuffs, 'debuffs');
 	rewriteBuffs(message.playerBuffs, 'individualBuffs');
+	dropRetiredConsumes(message.consumables);
 	migratePlayer(message.player);
 
 	// RaidSimSettings.

@@ -1,6 +1,6 @@
 import { Player } from '@generated/proto/api';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { IndividualSimSettings } from '@generated/proto/ui';
+import { IndividualSimSettings, SavedSettings } from '@generated/proto/ui';
 import { ScalarType, UnknownFieldHandler } from '@protobuf-ts/runtime';
 import { describe, expect, it } from 'vitest';
 
@@ -123,6 +123,23 @@ describe('migrateRetypedBuffFields', () => {
 
 		const settings = IndividualSimSettings.fromJson(json as never);
 		expect(settings.player?.consumables?.foodId).toBe(27657);
+	});
+
+	// SavedSettings carries a ConsumesSpec of its own, beside the buffs rather than under a player,
+	// and no api_version, so it is always rewritten.
+	it('drops it from a saved settings entry, which holds its consumables itself', () => {
+		const json = {
+			consumables: { drumsId: 4, foodId: 27657 },
+			partyBuffs: { battleShout: 'TristateEffectImproved' },
+		} as Record<string, any>;
+
+		migrateRetypedBuffFields(json);
+
+		expect(Object.keys(json.consumables)).toEqual(['foodId']);
+
+		const saved = SavedSettings.fromJson(json as never);
+		expect(saved.consumables?.foodId).toBe(27657);
+		expect(saved.partyBuffs?.battleShout).toBe(true);
 	});
 
 	it('drops it from every player of a raid, under either spelling', () => {
