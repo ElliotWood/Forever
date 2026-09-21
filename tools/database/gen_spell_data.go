@@ -160,8 +160,8 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 		)
 		AND (s.NameSubtext_lang LIKE 'Rank %' OR s.NameSubtext_lang = '')
 		AND sla.SkillLine NOT IN (2851, 2853)
-		AND NOT EXISTS (SELECT 1 FROM SpellEffect se WHERE se.SpellID = sla.Spell AND se.EffectAura = 78)
-		ORDER BY n.Name_lang, sla.Spell`, mask)
+		AND NOT EXISTS (SELECT 1 FROM SpellEffect se WHERE se.SpellID = sla.Spell AND se.EffectAura = ?)
+		ORDER BY n.Name_lang, sla.Spell`, mask, dbc.A_MOUNTED)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -179,10 +179,11 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	byName := map[string]map[int32][]rankCandidate{}
 	// A spell with no subtext is a single-rank family of its own only where no "Rank N" row carries
 	// its name - Execute's granted 20647 is a sub-spell of the ranked Execute, not a rank - and only
-	// when a trainer teaches it or the tree names it (Death Wish, Sweeping Strikes): a grant-only one
-	// is a Season of Discovery rune ability or an internal (Quick Strike, Meathook, the stance
-	// passives). Skill lines 2851 and 2853 are the runes themselves, and aura 78 is Mounted: the
-	// paladin Mounts line is a class line too.
+	// when a trainer teaches it (Death Wish, Sweeping Strikes and the stance passives all have a
+	// trainer row) or a talent the tree could not describe shares its name. A grant-only one is a
+	// Season of Discovery rune ability or an internal (Quick Strike, Meathook). Skill lines 2851 and
+	// 2853 are the runes themselves, and the Mounted aura keeps the paladin Mounts line out, which
+	// is a class line too.
 	unranked := map[string][]rankCandidate{}
 	trainedUnranked := map[string]bool{}
 	for rows.Next() {

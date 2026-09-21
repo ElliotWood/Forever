@@ -209,13 +209,15 @@ func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 		return s, fmt.Errorf("missile speed for spell %d: %w", spellID, err)
 	}
 
+	// Both tables carry a row per DifficultyID on a few spells - 29213 caps 20 targets at 0 and 10 at
+	// 186 - and the base row is the one wanted.
 	if err := scanOptional(db,
-		`SELECT COALESCE(ProcChance, 0), COALESCE(ProcCharges, 0) FROM SpellAuraOptions WHERE SpellID = ?`, spellID, &s.ProcChance, &s.ProcCharges); err != nil {
+		`SELECT COALESCE(ProcChance, 0), COALESCE(ProcCharges, 0) FROM SpellAuraOptions WHERE SpellID = ? ORDER BY DifficultyID`, spellID, &s.ProcChance, &s.ProcCharges); err != nil {
 		return s, fmt.Errorf("proc chance for spell %d: %w", spellID, err)
 	}
 
 	if err := scanOptional(db,
-		`SELECT COALESCE(MaxTargets, 0) FROM SpellTargetRestrictions WHERE SpellID = ?`, spellID, &s.MaxTargets); err != nil {
+		`SELECT COALESCE(MaxTargets, 0) FROM SpellTargetRestrictions WHERE SpellID = ? ORDER BY DifficultyID`, spellID, &s.MaxTargets); err != nil {
 		return s, fmt.Errorf("max targets for spell %d: %w", spellID, err)
 	}
 
