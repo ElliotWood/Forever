@@ -2,51 +2,30 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 var mockingBlowRank = spellData.MockingBlow.Highest()
 var mockingBlowBaseDamage = mockingBlowRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerMockingBlow() {
-	warrior.MockingBlow = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: mockingBlowRank.ID},
-		SpellSchool:    mockingBlowRank.SpellSchool(),
-		DefenseType:    mockingBlowRank.DefenseTypeCore(),
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		ClassSpellMask: SpellMaskMockingBlow,
-		ClassFlags:     SpellFlagsMockingBlow,
-		MaxRange:       float64(mockingBlowRank.MaxRange),
+	config := spelldata.SpellConfig(&warrior.Unit, mockingBlowRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+	config.ClassSpellMask = SpellMaskMockingBlow
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(mockingBlowRank),
-			Refund: mockingBlowRank.MissRefund(),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: mockingBlowRank.GCD(),
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(mockingBlowRank),
-			},
-		},
+	// TODO: Test in-game
+	config.ThreatMultiplier = 1
 
-		DamageMultiplier: 1,
-		// TODO: Test in-game
-		ThreatMultiplier: 1,
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.StanceMatches(BattleStance)
+	}
 
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.StanceMatches(BattleStance)
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		result := spell.CalcAndDealDamage(sim, target, mockingBlowBaseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcAndDealDamage(sim, target, mockingBlowBaseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
 
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	warrior.MockingBlow = warrior.RegisterSpell(config)
 }

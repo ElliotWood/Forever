@@ -7,6 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -130,40 +131,39 @@ func (warrior *Warrior) registerDeepWounds() {
 	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
 	tick := deepWoundsBleed.EffectN(1)
 
-	warrior.DeepWounds = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: deepWoundsBleed.ID},
-		SpellSchool:    core.SpellSchoolPhysical,
-		ProcMask:       core.ProcMaskEmpty,
-		ClassSpellMask: SpellMaskDeepWounds,
-		ClassFlags:     SpellFlagsDeepWounds,
-		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagIgnoreResists | core.SpellFlagProc, // 12162 and 412609 lack Not a Proc.
+	config := spelldata.SpellConfig(&warrior.Unit, deepWoundsBleed,
+		spelldata.Flags(core.SpellFlagNoOnCastComplete|core.SpellFlagIgnoreResists|core.SpellFlagProc)) // 12162 and 412609 lack Not a Proc.
+	config.ClassSpellMask = SpellMaskDeepWounds
+	config.ProcMask = core.ProcMaskEmpty
 
-		// 12162 and 412609 state DefenseType 0. It's a bleed that snapshots on proc; the
-		// application uses OutcomeAlwaysHitNoHitCounter and the DoT ticks with OutcomeTick, so it
-		// never rolls a crit and DefenseType is intentionally left unset.
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
+	// 12162 and 412609 state DefenseType 0. It's a bleed that snapshots on proc; the
+	// application uses OutcomeAlwaysHitNoHitCounter and the DoT ticks with OutcomeTick, so it
+	// never rolls a crit and DefenseType is intentionally left unset.
+	config.DamageMultiplier = 1
+	config.ThreatMultiplier = 1
 
-		Dot: core.DotConfig{
-			Aura: core.Aura{
-				Label: "DeepWounds",
-			},
-			NumberOfTicks: int32(deepWoundsBleed.Duration() / tick.Period()),
-			TickLength:    tick.Period(),
-
-			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				baseDamage := warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
-				dot.Spell.CalcAndDealPeriodicDamage(sim, target, baseDamage/float64(dot.HastedTickCount())*share, deepWoundsBleed.TickOutcome(dot))
-			},
+	// The tick is a share of weapon damage, not the row's amount or its coefficient.
+	config.Dot = core.DotConfig{
+		Aura: core.Aura{
+			Label: "DeepWounds",
 		},
+		NumberOfTicks: int32(deepWoundsBleed.Duration() / tick.Period()),
+		TickLength:    tick.Period(),
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHitNoHitCounter)
-			dot := spell.Dot(target)
-			dot.Deactivate(sim)
-			dot.Apply(sim)
+		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+			baseDamage := warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
+			dot.Spell.CalcAndDealPeriodicDamage(sim, target, baseDamage/float64(dot.HastedTickCount())*share, deepWoundsBleed.TickOutcome(dot))
 		},
-	})
+	}
+
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHitNoHitCounter)
+		dot := spell.Dot(target)
+		dot.Deactivate(sim)
+		dot.Apply(sim)
+	}
+
+	warrior.DeepWounds = warrior.RegisterSpell(config)
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Deep Wounds - Trigger",
@@ -226,44 +226,19 @@ func (warrior *Warrior) registerMortalStrike() {
 		return
 	}
 
-	warrior.MortalStrike = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: mortalStrikeRank.ID},
-		SpellSchool:    mortalStrikeRank.SpellSchool(),
-		DefenseType:    mortalStrikeRank.DefenseTypeCore(),
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
-		ClassSpellMask: SpellMaskMortalStrike,
-		ClassFlags:     SpellFlagsMortalStrike,
-		MaxRange:       core.MaxMeleeRange,
+	config := spelldata.SpellConfig(&warrior.Unit, mortalStrikeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+	config.ClassSpellMask = SpellMaskMortalStrike
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(mortalStrikeRank),
-			Refund: mortalStrikeRank.MissRefund(),
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := mortalStrikeBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: mortalStrikeRank.GCD(),
-			},
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(mortalStrikeRank),
-			},
-			IgnoreHaste: true,
-		},
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := mortalStrikeBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	warrior.MortalStrike = warrior.RegisterSpell(config)
 }
 
 var spearingStrikeRank = spellData.SpearingStrike.Highest()
@@ -278,48 +253,23 @@ func (warrior *Warrior) registerSpearingStrike() {
 		return
 	}
 
-	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: spearingStrikeRank.ID},
-		SpellSchool:    spearingStrikeRank.SpellSchool(),
-		DefenseType:    spearingStrikeRank.DefenseTypeCore(),
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
-		ClassSpellMask: SpellMaskSpearingStrike,
-		ClassFlags:     SpellFlagsSpearingStrike,
-		MaxRange:       float64(spearingStrikeRank.MaxRange),
+	config := spelldata.SpellConfig(&warrior.Unit, spearingStrikeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+	config.ClassSpellMask = SpellMaskSpearingStrike
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(spearingStrikeRank),
-			Refund: spearingStrikeRank.MissRefund(),
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := spearingStrikeWeaponShare * spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+		if target.MobType == proto.MobType_MobTypeGiant || target.MobType == proto.MobType_MobTypeDragonkin {
+			baseDamage *= spearingStrikeGiantMultiplier
+		}
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: spearingStrikeRank.GCD(),
-			},
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(spearingStrikeRank),
-			},
-			IgnoreHaste: true,
-		},
+		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := spearingStrikeWeaponShare * spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			if target.MobType == proto.MobType_MobTypeGiant || target.MobType == proto.MobType_MobTypeDragonkin {
-				baseDamage *= spearingStrikeGiantMultiplier
-			}
-
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	warrior.RegisterSpell(config)
 }
 
 var bloodthrillProc = spellData.BloodthrillTriggered.Highest()
@@ -546,33 +496,24 @@ func (warrior *Warrior) registerSweepingStrikes() {
 	})
 	warrior.SweepingStrikesAura.MaxStacks = int32(sweepingStrikesRank.ProcCharges)
 
-	ssCD := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		ClassSpellMask: SpellMaskSweepingStrikes,
-		ClassFlags:     SpellFlagsSweepingStrikes,
-		SpellSchool:    core.SpellSchoolPhysical,
+	config := spelldata.SpellConfig(&warrior.Unit, sweepingStrikesRank)
+	// The sim casts the ability under the id of the strike it grants, which is what the APL names.
+	config.ActionID = actionID
+	config.ClassSpellMask = SpellMaskSweepingStrikes
 
-		RageCost: core.RageCostOptions{
-			Cost: rageCost(sweepingStrikesRank),
-		},
-		Cast: core.CastConfig{
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(sweepingStrikesRank),
-			},
-		},
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			// Sweeping Strikes (12292) is usable in Battle Stance only.
-			return warrior.StanceMatches(BattleStance)
-		},
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		// Sweeping Strikes (12292) is usable in Battle Stance only.
+		return warrior.StanceMatches(BattleStance)
+	}
 
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.RelatedSelfBuff.Activate(sim)
-			warrior.SweepingStrikesAura.SetStacks(sim, int32(sweepingStrikesRank.ProcCharges))
-		},
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		spell.RelatedSelfBuff.Activate(sim)
+		warrior.SweepingStrikesAura.SetStacks(sim, int32(sweepingStrikesRank.ProcCharges))
+	}
 
-		RelatedSelfBuff: warrior.SweepingStrikesAura,
-	})
+	config.RelatedSelfBuff = warrior.SweepingStrikesAura
+
+	ssCD := warrior.RegisterSpell(config)
 
 	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: ssCD,
