@@ -24,6 +24,7 @@ const (
 	SpellCode_PriestMindBlast
 	SpellCode_PriestMindFlay
 	SpellCode_PriestPenance
+	SpellCode_PriestShadowWordDeath
 	SpellCode_PriestShadowWordPain
 	SpellCode_PriestSmite
 	SpellCode_PriestStarshards
@@ -52,6 +53,7 @@ type Priest struct {
 	PrayerOfMending *core.Spell
 	Renew           []*core.Spell
 	Shadowform      *core.Spell
+	ShadowWordDeath []*core.Spell
 	ShadowWordPain  []*core.Spell
 	Smite           []*core.Spell
 	Starshards      [][]*core.Spell
@@ -89,6 +91,7 @@ func (priest *Priest) AddPartyBuffs(_ *proto.PartyBuffs) {
 
 func (priest *Priest) Initialize() {
 	priest.registerMindBlast()
+	priest.registerShadowWordDeath()
 	priest.registerMindFlay()
 	priest.registerShadowWordPainSpell()
 	// Devouring Plague is an Undead racial in Classic. The Forever beta client teaches it to
