@@ -20,7 +20,6 @@ const (
 	SpellMaskBlessingOfProtection
 	SpellMaskHammerOfWrath
 	SpellMaskHolyWrath
-	SpellMaskAvengingWrath
 
 	// Seals
 	SpellMaskSealOfRighteousness
@@ -29,8 +28,6 @@ const (
 	SpellMaskSealOfWisdom
 	SpellMaskSealOfJustice
 	SpellMaskSealOfTheCrusader
-	SpellMaskSealOfBlood
-	SpellMaskSealOfVengeance
 
 	// Judgement Effects (different from the Judgement spell itself)
 	SpellMaskJudgementOfRighteousness
@@ -39,8 +36,6 @@ const (
 	SpellMaskJudgementOfWisdom
 	SpellMaskJudgementOfJustice
 	SpellMaskJudgementOfTheCrusader
-	SpellMaskJudgementOfBlood
-	SpellMaskJudgementOfVengeance
 
 	// Auras
 	SpellMaskDevotionAura
@@ -49,7 +44,6 @@ const (
 	SpellMaskFireResistanceAura
 	SpellMaskFrostResistanceAura
 	SpellMaskShadowResistanceAura
-	SpellMaskSanctityAura
 
 	// Blessings
 	SpellMaskBlessingOfMight
@@ -60,12 +54,9 @@ const (
 
 	// Talent Abilities
 	SpellMaskDivineFavor
-	SpellMaskDivineIllumination
 	SpellMaskHolyShock
 	SpellMaskHolyShield
 	SpellMaskHolyShieldProc
-	SpellMaskAvengersShield
-	SpellMaskCrusaderStrike
 	SpellMaskRepentance
 	SpellMaskRighteousFury
 )
@@ -77,26 +68,21 @@ const (
 		SpellMaskSealOfLight |
 		SpellMaskSealOfWisdom |
 		SpellMaskSealOfJustice |
-		SpellMaskSealOfTheCrusader |
-		SpellMaskSealOfBlood |
-		SpellMaskSealOfVengeance
+		SpellMaskSealOfTheCrusader
 
 	SpellMaskAllJudgements = SpellMaskJudgementOfRighteousness |
 		SpellMaskJudgementOfCommand |
 		SpellMaskJudgementOfLight |
 		SpellMaskJudgementOfWisdom |
 		SpellMaskJudgementOfJustice |
-		SpellMaskJudgementOfTheCrusader |
-		SpellMaskJudgementOfBlood |
-		SpellMaskJudgementOfVengeance
+		SpellMaskJudgementOfTheCrusader
 
 	SpellMaskAllAuras = SpellMaskDevotionAura |
 		SpellMaskRetributionAura |
 		SpellMaskConcentrationAura |
 		SpellMaskFireResistanceAura |
 		SpellMaskFrostResistanceAura |
-		SpellMaskShadowResistanceAura |
-		SpellMaskSanctityAura
+		SpellMaskShadowResistanceAura
 
 	SpellMaskAllBlessings = SpellMaskBlessingOfMight |
 		SpellMaskBlessingOfWisdom |
@@ -110,18 +96,14 @@ const (
 		SpellMaskHolyShock
 
 	// Spells that can trigger Seal of Command
-	SpellMaskCanTriggerSealOfCommand = SpellMaskCrusaderStrike |
-		SpellMaskJudgement
+	SpellMaskCanTriggerSealOfCommand = SpellMaskJudgement
 
 	SpellMaskCanProcTome = SpellMaskAllAuras |
 		SpellMaskAllBlessings |
 		SpellMaskAllSeals |
 		SpellMaskAllJudgements |
-		SpellMaskAvengersShield |
-		SpellMaskAvengingWrath |
 		SpellMaskConsecration |
 		SpellMaskDivineFavor |
-		SpellMaskDivineIllumination |
 		SpellMaskExorcism |
 		SpellMaskHammerOfWrath |
 		SpellMaskHealingSpells |

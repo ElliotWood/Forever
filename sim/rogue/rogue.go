@@ -32,32 +32,27 @@ type Rogue struct {
 
 	sliceAndDiceDurations [6]time.Duration
 
-	Backstab          *core.Spell
-	BladeFlurry       *core.Spell
-	DeadlyPoison      *core.Spell
-	Feint             *core.Spell
-	Garrote           *core.Spell
-	Ambush            *core.Spell
-	Hemorrhage        *core.Spell
-	GhostlyStrike     *core.Spell
-	WoundPoison       *core.Spell
-	Mutilate          *core.Spell
-	MutilateMH        *core.Spell
-	MutilateOH        *core.Spell
-	Shiv              *core.Spell
-	SinisterStrike    *core.Spell
-	Shadowstep        *core.Spell
-	Preparation       *core.Spell
-	Premeditation     *core.Spell
-	ColdBlood         *core.Spell
-	Vanish            *core.Spell
-	AdrenalineRush    *core.Spell
-	InstantPoison     *core.Spell
-	ShivInstantPoison *core.Spell
-	ShivDeadlyPoison  *core.Spell
-	ShivWoundPoison   *core.Spell
+	Backstab       *core.Spell
+	BladeFlurry    *core.Spell
+	DeadlyPoison   *core.Spell
+	Feint          *core.Spell
+	Garrote        *core.Spell
+	Ambush         *core.Spell
+	Hemorrhage     *core.Spell
+	GhostlyStrike  *core.Spell
+	WoundPoison    *core.Spell
+	Mutilate       *core.Spell
+	MutilateMH     *core.Spell
+	MutilateOH     *core.Spell
+	SinisterStrike *core.Spell
+	Shadowstep     *core.Spell
+	Preparation    *core.Spell
+	Premeditation  *core.Spell
+	ColdBlood      *core.Spell
+	Vanish         *core.Spell
+	AdrenalineRush *core.Spell
+	InstantPoison  *core.Spell
 
-	Envenom      *core.Spell
 	Eviscerate   *core.Spell
 	ExposeArmor  *core.Spell
 	Rupture      *core.Spell
@@ -127,7 +122,6 @@ func (rogue *Rogue) GetBaseDamageFromCoefficient(c float64) float64 {
 func (rogue *Rogue) Initialize() {
 	rogue.registerAmbushSpell()
 	rogue.registerBackstabSpell()
-	rogue.registerEnvenom()
 	rogue.registerEviscerate()
 	rogue.registerExposeArmorSpell()
 	rogue.registerGarrote()
@@ -138,7 +132,6 @@ func (rogue *Rogue) Initialize() {
 	rogue.registerSinisterStrikeSpell()
 	rogue.registerSliceAndDice()
 	rogue.registerVanishSpell()
-	rogue.registerShivSpell()
 	rogue.registerStealthAura()
 
 	rogue.ruthlessnessMetrics = rogue.NewComboPointMetrics(core.ActionID{SpellID: 14161})
@@ -271,14 +264,12 @@ const (
 	RogueSpellFlagNone int64 = 0
 	RogueSpellAmbush   int64 = 1 << iota
 	RogueSpellBackstab
-	RogueSpellEnvenom
 	RogueSpellEviscerate
 	RogueSpellExposeArmor
 	RogueSpellFeint
 	RogueSpellGarrote
 	RogueSpellGouge
 	RogueSpellRupture
-	RogueSpellShiv
 	RogueSpellSinisterStrike
 	RogueSpellSliceAndDice
 	RogueSpellStealth
@@ -302,7 +293,7 @@ const (
 	RogueSpellActives = RogueSpellGhostlyStrike<<1 - 1
 
 	RogueSpellPoisons        = RogueSpellWoundPoison | RogueSpellDeadlyPoison | RogueSpellInstantPoison
-	RogueSpellLethality      = RogueSpellSinisterStrike | RogueSpellGouge | RogueSpellBackstab | RogueSpellGhostlyStrike | RogueSpellMutilateHit | RogueSpellShiv | RogueSpellHemorrhage
-	RogueSpellDirectFinisher = RogueSpellEnvenom | RogueSpellEviscerate
+	RogueSpellLethality      = RogueSpellSinisterStrike | RogueSpellGouge | RogueSpellBackstab | RogueSpellGhostlyStrike | RogueSpellMutilateHit | RogueSpellHemorrhage
+	RogueSpellDirectFinisher = RogueSpellEviscerate
 	RogueSpellFinisher       = RogueSpellDirectFinisher | RogueSpellSliceAndDice | RogueSpellRupture | RogueSpellExposeArmor
 )

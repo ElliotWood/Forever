@@ -30,10 +30,10 @@ var Dungeon3 = core.NewItemSet(core.ItemSet{
 			// NYI
 		},
 		4: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Your Eviscerate and Envenom abilities cost 10 less energy.
+			// Your Eviscerate ability costs 10 less energy.
 			setBonusAura.AttachSpellMod(core.SpellModConfig{
 				Kind:      core.SpellMod_PowerCost_Flat,
-				ClassMask: RogueSpellEviscerate | RogueSpellEnvenom,
+				ClassMask: RogueSpellEviscerate,
 				IntValue:  -10,
 			})
 		},

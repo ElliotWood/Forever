@@ -53,18 +53,6 @@ var petBaseStats = map[proto.WarlockOptions_Summon]*stats.Stats{
 		stats.SpellCritPercent:    5,
 	},
 	proto.WarlockOptions_Felhunter: {},
-	proto.WarlockOptions_Felguard: {
-		stats.Stamina:             280,
-		stats.Mana:                3862,
-		stats.Strength:            153,
-		stats.Agility:             108,
-		stats.Intellect:           133,
-		stats.Spirit:              122,
-		stats.AttackPower:         286,
-		stats.MP5:                 48,
-		stats.PhysicalCritPercent: 5,
-		stats.SpellCritPercent:    5,
-	},
 }
 
 func (warlock *Warlock) SimplePetStatInheritanceWithScale() core.PetStatInheritance {
@@ -169,7 +157,6 @@ func (warlock *Warlock) registerPets() {
 	warlock.Succubus = warlock.registerSuccubus()
 	warlock.Felhunter = warlock.registerFelHunter()
 	warlock.Voidwalker = warlock.registerVoidWalker()
-	warlock.Felguard = warlock.registerFelguard()
 }
 
 // TODO: To be implemented. Port the TBC Imp implementation below; not yet verified against the Forever client.
@@ -252,47 +239,6 @@ func (warlock *Warlock) registerSuccubusWithName(name string, enabledOnStart boo
 	// The TBC implementation, kept for the port:
 	// pet := warlock.RegisterPet(proto.WarlockOptions_Succubus, 173, 216, name, enabledOnStart, isGuardian)
 	// pet.registerLashOfPainSpell()
-	// pet.MinMana = 190
-	// return pet
-}
-
-// TODO: To be implemented. Port the TBC Felguard implementation below; not yet verified against the Forever client.
-func (warlock *Warlock) registerFelguard() *WarlockPet {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// name := proto.WarlockOptions_Summon_name[int32(proto.WarlockOptions_Felguard)]
-	// enabledOnStart := proto.WarlockOptions_Felguard == warlock.Options.Summon
-	// return warlock.registerFelguardWithName(name, enabledOnStart, false)
-}
-
-// TODO: To be implemented. Port the TBC Felguard With Name implementation below; not yet verified against the Forever client.
-func (warlock *Warlock) registerFelguardWithName(name string, enabledOnStart bool, isGuardian bool) *WarlockPet {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// pet := warlock.RegisterPet(proto.WarlockOptions_Felguard, 173, 232, name, enabledOnStart, isGuardian)
-	// pet.registerCleaveSpell()
-	// dfDep := pet.NewDynamicMultiplyStat(stats.AttackPower, 1.5)
-	//
-	// dfAura := pet.GetOrRegisterAura(core.Aura{
-	// 	Label:     "Demonic Frenzy",
-	// 	ActionID:  core.ActionID{SpellID: 32850},
-	// 	MaxStacks: 5,
-	// 	OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
-	// 		aura.AttachStatDependency(dfDep)
-	// 	},
-	// })
-	// pet.MakeProcTriggerAura(core.ProcTrigger{
-	// 	Name:     "Demonic Frenzy",
-	// 	ActionID: core.ActionID{SpellID: 32850},
-	// 	ProcMask: core.ProcMaskMeleeMHAuto | core.ProcMaskMeleeMHSpecial,
-	// 	Outcome:  core.OutcomeLanded,
-	// 	Callback: core.CallbackOnSpellHitDealt,
-	// 	Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
-	// 		dfAura.AddStack(sim)
-	// 	},
-	// })
 	// pet.MinMana = 190
 	// return pet
 }
@@ -462,42 +408,6 @@ func (pet *WarlockPet) registerTormentSpell() {
 	// 	DefenseType: core.DefenseTypeMagic,
 	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 	// 		result := spell.CalcDamage(sim, target, 1000, spell.OutcomeMagicHitAndCrit)
-	// 		spell.DealDamage(sim, result)
-	// 	},
-	// }))
-}
-
-var petActionCleave = core.ActionID{SpellID: 30223}
-
-// TODO: To be implemented. Port the TBC Cleave Spell implementation below; not yet verified against the Forever client.
-func (pet *WarlockPet) registerCleaveSpell() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// pet.AutoCastAbilities = append(pet.AutoCastAbilities, pet.RegisterSpell(core.SpellConfig{
-	// 	ActionID:         petActionCleave,
-	// 	SpellSchool:      core.SpellSchoolPhysical,
-	// 	ProcMask:         core.ProcMaskMeleeMHSpecial,
-	// 	ClassSpellMask:   WarlockSpellFelguardCleave,
-	// 	DamageMultiplier: 1,
-	// 	DefenseType:      core.DefenseTypeMelee,
-	// 	ThreatMultiplier: 1,
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: 295,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: core.GCDDefault,
-	// 		},
-	// 		IgnoreHaste: true,
-	// 		CD: core.Cooldown{
-	// 			Timer:    pet.NewTimer(),
-	// 			Duration: time.Second * 6,
-	// 		},
-	// 	},
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		dmgRoll := pet.CalcAndRollDamageRange(sim, 270, 320) + 78
-	// 		result := spell.CalcDamage(sim, target, dmgRoll, spell.OutcomeMeleeSpecialHitAndCrit)
 	// 		spell.DealDamage(sim, result)
 	// 	},
 	// }))

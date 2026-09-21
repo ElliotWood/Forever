@@ -19,11 +19,12 @@ func (paladin *Paladin) getExorcismTimer() *core.Timer {
 // https://www.wowhead.com/forever/spell=10314
 //
 // Causes X to Y Holy damage to an Undead or Demon target.
-// TODO: To be implemented. Exorcism exists in Forever with a full six-rank ladder
-// (spellData.Exorcism, 879/5614/5615/10312/10313/10314) and ExorcismRankMap below feeds it
-// rank by rank. The implementation is the TBC one, which needed no porting -- every field
-// it reads is present on the recovered ladder -- so bringing it back is uncommenting it.
-// It stays commented until it has been reviewed.
+//
+// TODO: To be implemented. spellData.Exorcism holds the six trainer ranks, 879 to 10314.
+// The client carries a second ladder, 415068 to 415073, that the Season of Discovery
+// passive Exorcist (415076) swaps onto the action bar so the spell can hit any target.
+// The generator drops those stand-ins, and nothing in Forever teaches Exorcist, so the
+// trainer ranks are the ones to build from.
 func (paladin *Paladin) registerExorcism(rankConfig shared.SpellData) {
 	panic("To be implemented")
 

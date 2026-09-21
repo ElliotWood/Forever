@@ -57,6 +57,11 @@ type SpellDataPeriodic struct {
 	// Named for the core.DotConfig fields they feed.
 	TickLength    time.Duration
 	NumberOfTicks int32
+
+	// The spell the tick was read from when it is not the rank's own: Consecration rank 5 ticks
+	// through 1280349, which the client links from nowhere but the tooltip's "$1280349m1". Zero
+	// where the rank's own effect states the tick.
+	SpellID int32
 }
 
 func (v SpellDataFlat) Range() (float64, float64)  { return v.Value, v.Value }
@@ -131,6 +136,10 @@ type SpellData struct {
 	CastTime time.Duration
 	GCD      time.Duration
 	Cooldown time.Duration
+	// The aura or effect the spell leaves, as SpellDuration states it: Shield Wall 12 s, Berserker
+	// Rage 10 s. Zero is instant or permanent. A talent proc's aura is usually a triggered spell of
+	// its own, so its duration sits on that spell's row.
+	Duration time.Duration
 
 	// MinRange gates a cast from too close - the dead zone on a charge - the way MaxRange gates it
 	// from too far. Zero means ungated, which is what core reads a zero as.
@@ -146,6 +155,22 @@ type SpellData struct {
 	// not always the number a ProcTrigger wants.
 	ProcChance int32
 
+	// SpellAuraOptions.ProcCharges: Shield Block blocks 2 attacks, Retaliation answers 30. Zero is
+	// unlimited.
+	ProcCharges int32
+
+	// SpellTargetRestrictions.MaxTargets for an area effect: Whirlwind and Thunder Clap hit 4.
+	// Zero is unlimited.
+	MaxTargets int32
+
+	// The client's Discount Power On Miss attribute: the server gives 80% of the cost back when
+	// the spell misses. Rend and Heroic Strike carry it, Cleave and Whirlwind do not.
+	RefundsOnMiss bool
+
+	// The client's Periodic Can Crit attribute: the ticks of the periodic effect roll a critical
+	// strike. Rend and Corruption carry it; Deep Wounds does not.
+	PeriodicCanCrit bool
+
 	// SpellSchool and DefenseType as core names them. The client's school bits are in a different
 	// order - Holy is 2 there and 32 here - so the generator translates rather than copies.
 	SpellSchool core.SpellSchool
@@ -154,6 +179,10 @@ type SpellData struct {
 	Heal        SpellDataValue
 	Periodic    SpellDataValue
 	Energize    SpellDataValue
+
+	// A second tick the description names after Periodic's. One spell has one: Consecration's is
+	// the extra damage its first $s3 targets take.
+	SecondaryPeriodic SpellDataValue
 
 	// Every effect the client states, in index order. A role field above holds one each, which is not
 	// enough for a talent: Improved Righteous Fury raises threat on one effect and cuts damage taken
@@ -198,6 +227,31 @@ type SpellDataEffect struct {
 // The high end of the effect, which is Value wherever the two agree - ValueMax is only stored where
 // they differ. Seal of the Crusader rank 4's base is a whole number, so it has no ValueMax and its
 // answer is Value; every other rank has both.
+// The share of the cost a miss refunds, for RageCostOptions.Refund: 80% where the client flags
+// Discount Power On Miss, nothing otherwise.
+func (s SpellData) MissRefund() float64 {
+	if s.RefundsOnMiss {
+		return 0.8
+	}
+	return 0
+}
+
+// The outcome a periodic tick rolls, from the row: a tick that can crit where the client marks
+// Periodic Can Crit, a plain tick otherwise, on the hit table the row's defense type names.
+func PeriodicTickOutcome(row SpellData, dot *core.Dot) core.OutcomeApplier {
+	magic := row.DefenseType == core.DefenseTypeMagic
+	switch {
+	case row.PeriodicCanCrit && magic:
+		return dot.Spell.OutcomeTickMagicHitAndCrit
+	case row.PeriodicCanCrit:
+		return dot.Spell.OutcomeTickPhysicalCrit
+	case magic:
+		return dot.OutcomeTickMagicHit
+	default:
+		return dot.OutcomeTick
+	}
+}
+
 func (e SpellDataEffect) High() float64 {
 	if e.ValueMax != 0 {
 		return e.ValueMax

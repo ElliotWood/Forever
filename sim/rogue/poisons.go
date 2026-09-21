@@ -72,37 +72,6 @@ func (rogue *Rogue) registerDeadlyPoisonSpell() {
 	// 		}
 	// 	},
 	// })
-	//
-	// rogue.ShivDeadlyPoison = rogue.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 27187, Tag: 1},
-	// 	SpellSchool:    core.SpellSchoolNature,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	ProcMask:       core.ProcMaskSpellDamageProc,
-	// 	ClassSpellMask: RogueSpellDeadlyPoison,
-	// 	Flags:          core.SpellFlagPoison | core.SpellFlagPassiveSpell | core.SpellFlagProc,
-	//
-	// 	DamageMultiplier:         1,
-	// 	DamageMultiplierAdditive: 1,
-	// 	ThreatMultiplier:         1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMagicHit)
-	// 		if !result.Landed() {
-	// 			return
-	// 		}
-	//
-	// 		dot := rogue.DeadlyPoison.Dot(target)
-	// 		if dot.IsActive() {
-	// 			dot.Refresh(sim)
-	// 			dot.AddStack(sim)
-	// 			dot.TakeSnapshot(sim)
-	// 		} else {
-	// 			dot.Apply(sim)
-	// 			dot.SetStacks(sim, 1)
-	// 			dot.TakeSnapshot(sim)
-	// 		}
-	// 	},
-	// })
 }
 
 // TODO: To be implemented. Wound Poison pins spell 27189 directly in the TBC body; the implementation
@@ -151,9 +120,6 @@ func (rogue *Rogue) registerWoundPoisonSpell() {
 	// }
 	//
 	// rogue.WoundPoison = rogue.RegisterSpell(wpConfig)
-	//
-	// wpConfig.Tag = 1
-	// rogue.ShivWoundPoison = rogue.RegisterSpell(wpConfig)
 }
 
 // TODO: To be implemented. Instant Poison pins spell 26890 directly in the TBC body; the implementation
@@ -187,9 +153,6 @@ func (rogue *Rogue) registerInstantPoisonSpell() {
 	// }
 	//
 	// rogue.InstantPoison = rogue.RegisterSpell(ipConfig)
-	//
-	// ipConfig.Tag = 1
-	// rogue.ShivInstantPoison = rogue.RegisterSpell(ipConfig)
 }
 
 func (rogue *Rogue) getPoisonProcMask(poisonId int32) core.ProcMask {

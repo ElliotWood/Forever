@@ -62,6 +62,13 @@ func (enchant *Enchant) HasEnchantEffect() bool {
 	return false
 }
 
+// SpellItemEnchantment 8203 is "Spirit +$k1", applied by Enchant Bracer/Boots - Lesser Spirit, but
+// its EffectArg is 124, the all-resistances index. The label and the enchant are right and the
+// argument is not, so it is corrected here rather than read as five resistances.
+var enchantEffectArgFixes = map[int]map[int]int{
+	8203: {0: ITEM_MOD_SPIRIT},
+}
+
 func (enchant *Enchant) ToProto() *proto.UIEnchant {
 	uiEnchant := &proto.UIEnchant{
 		Name:               enchant.Name,
@@ -136,8 +143,15 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 		}
 		slices.Sort(uiEnchant.ExtraTypes)
 	}
+	effectArgs := enchant.EffectArgs
+	if fixes, ok := enchantEffectArgFixes[enchant.EffectId]; ok {
+		effectArgs = slices.Clone(effectArgs)
+		for index, arg := range fixes {
+			effectArgs[index] = arg
+		}
+	}
 	stats := stats.Stats{}
-	processEnchantmentEffects(enchant.Effects, enchant.EffectArgs, enchant.EffectPoints, enchant.SpellEffectPoints, &stats, true)
+	processEnchantmentEffects(enchant.Effects, effectArgs, enchant.EffectPoints, enchant.SpellEffectPoints, &stats, true)
 	uiEnchant.Stats = stats.ToProtoArray()
 	return uiEnchant
 }

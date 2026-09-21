@@ -28,7 +28,6 @@ const (
 	SpellMaskNone int64 = 0
 	// Abilities that don't cost rage and aren't attacks
 	SpellMaskBattleShout int64 = 1 << iota
-	SpellMaskCommandingShout
 	SpellMaskBerserkerRage
 	SpellMaskRecklessness
 	SpellMaskDeathWish
@@ -75,7 +74,7 @@ const (
 	WarriorSpellLast
 	WarriorSpellsAll = WarriorSpellLast<<1 - 1
 
-	SpellMaskShouts             = SpellMaskCommandingShout | SpellMaskBattleShout | SpellMaskDemoralizingShout
+	SpellMaskShouts             = SpellMaskBattleShout | SpellMaskDemoralizingShout
 	SpellMaskDirectDamageSpells = SpellMaskSweepingStrikesHit | SpellMaskSweepingStrikesNormalizedHit |
 		SpellMaskCleave | SpellMaskExecute | SpellMaskHeroicStrike | SpellMaskOverpower |
 		SpellMaskRevenge | SpellMaskSlam | SpellMaskShieldBash | SpellMaskSunderArmor |
@@ -102,7 +101,6 @@ type Warrior struct {
 	BerserkerRageRageGain float64
 
 	BattleShout       *core.Spell
-	CommandingShout   *core.Spell
 	DemoralizingShout *core.Spell
 	BattleStance      *core.Spell
 	DefensiveStance   *core.Spell

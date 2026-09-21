@@ -1,10 +1,9 @@
 package warlock
 
-// TODO: To be implemented. Drain Life exists in Forever with a full six-rank ladder
-// (spellData.DrainLife, 689/699/709/7651/11699/11700). The implementation below is the
-// TBC one already ported onto that ladder -- HighestRank() in place of the level-70 rank
-// it used to pin, and Soul Siphon reading spellData.SoulSiphon -- so bringing it back is
-// uncommenting it, not rewriting it. It stays commented until it has been reviewed.
+// TODO: To be implemented. spellData.DrainLife holds the six trainer ranks, 689 to 11700.
+// The client also carries 403677 to 403689, the copies the Season of Discovery rune passive
+// Master Channeler (403668) swaps onto the action bar. That is an Engrave grant with no place
+// in Forever, and the generator drops its stand-ins.
 //
 // Imports and rank pins the implementation needs, kept with it:
 // import (

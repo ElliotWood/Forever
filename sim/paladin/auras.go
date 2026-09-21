@@ -148,17 +148,3 @@ func (paladin *Paladin) registerShadowResistanceAura() {
 	// aura := core.ShadowResistanceAuraAura(&paladin.Unit, true, 0)
 	// paladin.registerAuraSpell(aura, SpellMaskShadowResistanceAura)
 }
-
-// Sanctity Aura (Talent)
-// https://www.wowhead.com/forever/spell=20218
-//
-// Increases Holy damage done by party members within 30 yards by 10%.
-// Players may only have one Aura on them per Paladin at any one time.
-//
-// TODO: uncalled -- no SkillLineAbility row grants spell 20218 and paladin tree 1100
-// has no node for it, so sim/core builds no aura for it either. Re-gate before wiring
-// back into registerTalentSpells.
-// TODO: To be implemented once the client has a spell to read the aura from.
-func (paladin *Paladin) registerSanctityAura() {
-	panic("To be implemented")
-}

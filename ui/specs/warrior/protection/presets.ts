@@ -16,7 +16,7 @@ export const DefaultOptions = ProtectionWarriorOptions.create({
 	classOptions: {
 		queueDelay: 250,
 		startingRage: 100,
-		defaultShout: WarriorShout.WarriorShoutCommanding,
+		defaultShout: WarriorShout.WarriorShoutBattle,
 		defaultStance: WarriorStance.WarriorStanceDefensive,
 		hasBsT2: true,
 		stanceSnapshot: true,

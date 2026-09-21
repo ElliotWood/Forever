@@ -7,6 +7,9 @@ hand-transcribed literals.
 - [Using a rank](#using-a-rank)
 - [The value shapes](#the-value-shapes)
 - [Reaching a single effect](#reaching-a-single-effect)
+- [A tick the client keeps on another spell](#a-tick-the-client-keeps-on-another-spell)
+- [A number the client keeps on the judgement](#a-number-the-client-keeps-on-the-judgement)
+- [A number the client keeps on the spell the rank fires](#a-number-the-client-keeps-on-the-spell-the-rank-fires)
 - [Talents](#talents)
 - [Worked examples](#worked-examples)
 - [Attack power](#attack-power)
@@ -43,6 +46,23 @@ The other accessors:
 | `HighestRank()`    | the highest rank _in the data_, which is not always one the game grants - see [Traps](#traps) |
 | `RegisterAll(f)`   | calls `f` once per rank, in declaration order                                                 |
 
+A single-rank ability (Whirlwind, Shield Wall, Taunt) is a one-row table of its own, rank 1, with the
+same columns; nothing about it is hand-typed. Beside cost, cast time, cooldown and range a row carries
+`Duration` (the aura or effect it leaves), `ProcCharges` (how many times that aura acts) and
+`MaxTargets` (an area effect's cap), each zero where the client states none, and `RefundsOnMiss`, the
+Discount Power On Miss attribute; `row.MissRefund()` turns it into the 0.8 a `RageCostOptions.Refund`
+takes. `PeriodicCanCrit` is the Periodic Can Crit attribute; `shared.PeriodicTickOutcome(row, dot)` picks the tick
+outcome it and the row's defense type call for, so a dot's `OnTick` never names one itself.
+
+A family whose ranks trigger another spell, or whose tooltip reads a number off one, has a second
+table beside it: `spellData.EnrageTriggered` holds the buff 12880 that Enrage's `$12880d` names,
+`FlurryTriggered` the 12966 with its 3 charges, `LastStandTriggered` the 12976 with the 30% and 20 s,
+`InterceptTriggered` the stun of each rank. A spell only a server-side handler casts, with no edge,
+token or skill-line row naming it, is linked by hand in the generator's `handTriggers`:
+`RetaliationTriggered` holds the counterattack 20240 that Retaliation's dummy aura fires. Where every
+rank triggers the same spell the table has one row, rank 1; where each rank triggers its own, the row
+takes the rank's number.
+
 ## The value shapes
 
 A rank's value is discriminated by shape, so a variant only carries fields that mean something for it:
@@ -50,16 +70,17 @@ A rank's value is discriminated by shape, so a variant only carries fields that 
 ```go
 shared.SpellDataFlat     {Value, Coef, APCoef}                          // a mana restore, a talent's number
 shared.SpellDataRange    {Min, Max, Coef, APCoef}                       // damage or healing the client rolls
-shared.SpellDataPeriodic {Tick, TickMax, TickLength, NumberOfTicks, Coef, APCoef} // a tick and its schedule
+shared.SpellDataPeriodic {Tick, TickMax, TickLength, NumberOfTicks, Coef, APCoef, SpellID} // a tick and its schedule
 ```
 
-They sit on the four roles a rank can carry, any of which may be nil:
+They sit on the roles a rank can carry, any of which may be nil:
 
 ```go
-rank.Direct     // Effect = SCHOOL_DAMAGE
-rank.Heal       // Effect = HEAL
-rank.Periodic   // a periodic aura
-rank.Energize   // Effect = ENERGIZE, e.g. Lay on Hands' mana restore
+rank.Direct             // Effect = SCHOOL_DAMAGE
+rank.Heal               // Effect = HEAL
+rank.Periodic           // a periodic aura
+rank.Energize           // Effect = ENERGIZE, e.g. Lay on Hands' mana restore
+rank.SecondaryPeriodic  // a second tick the description names - Consecration alone, see below
 ```
 
 Asking what a value is worth on this cast is a single call, because the question means something for
@@ -148,6 +169,92 @@ talent. Index into `Effects` where the pair cannot tell them apart.
 threat bonus reads `16`, not `0.16` - so the `/100` stays at the call site. It is deliberately not
 folded into the generator the way the rage `/10` is: whether a value is a percentage depends on the
 aura, so a blanket rule would be wrong for some rows and invisible when it was.
+
+## A tick the client keeps on another spell
+
+Forever moves a ground effect's damage onto a spell of its own. Consecration rank 5 states a dummy,
+the area trigger it creates, and a periodic dummy - no damage - and its tooltip reads
+`${$1280349m1*8}`: the tick sits on 1280349, a spell that shares the name and rank subtext and that
+the client links from nowhere but that description. Blizzard, Flamestrike, Rain of Fire, Hurricane
+and Volley are shaped the same way, each rank naming its own sub-spell.
+
+The generator follows the reference. When a rank carries a periodic dummy and no periodic damage of
+its own, it reads the description for `$<spellID>m<n>` and `$<spellID>s<n>`, takes effect `n` of a
+spell with the rank's name, and gives it the dummy's period, so it lands in `Periodic` with the tick
+schedule the rank states. The tick says where it came from:
+
+```go
+p := spellData.Consecration.BySpellID(20924).Periodic.(shared.SpellDataPeriodic)
+p.SpellID   // 1280349; zero on a tick the rank's own effect states
+```
+
+Consecration's description names two, and the second lands in `SecondaryPeriodic`: the extra damage
+its first few targets take, and the only part of the spell the client gives a spell power coefficient.
+A third would fail the generator rather than be dropped.
+
+**The periodic dummy's points are not a tick.** Consecration's reads 4, which is how many targets
+take the second tick, and it stays where the client put it:
+
+```go
+bonusTargets := int(rank.Effect(shared.A_PERIODIC_DUMMY, 0).Value)   // 4
+```
+
+Before the generator followed the description, that 4 was filed as the tick and the AoE families
+above had no tick at all.
+
+## A number the client keeps on the judgement
+
+Seal of Righteousness states no value. Rank 8 is an aura dummy at 1880, the damage each hit adds,
+and a second aura dummy whose points are 20286, its judgement. The tooltip renders the hit off the
+judgement - `$/87;20286s3 to $/25;20286s3` - and effect 3 of 20286 is a dummy the judgement does
+nothing with itself: the same 1880, with the coefficient the seal's own copy lacks. The seal carries
+0.1 on ranks 1-7 and nothing on rank 8; the judgement's dummy carries 0.058 on rank 1 rising to 0.2
+from rank 4.
+
+The generator follows that reference too. When a rank states no value and its description names an
+effect of a spell one of its own dummies points at, a dummy at that index is the rank's number and
+lands in `Direct`:
+
+```go
+d := spellData.SealOfRighteousness.BySpellID(20293).Direct.(shared.SpellDataFlat)
+d.Value   // 1880, which the seal's own effect 0 also says
+d.Coef    // 0.2, which only the judgement's dummy states
+```
+
+The `/87` and `/25` are the tooltip's rendering and are not applied: the value is kept whole and the
+proc's formula decides what a swing does with it. A named effect that is not a dummy is the pointed
+spell's own - Seal of Fury and Seal of the Crusader both name their judgement's damage or aura - and
+stays with it. A flat value does not say where it came from the way a tick does, so a Seal of
+Righteousness row whose `Coef` is the seal's own 0.1, or 0, is one where the reference did not resolve.
+
+## A number the client keeps on the spell the rank fires
+
+Seal of Fury keeps its per-hit damage on the proc its aura dummy triggers. Rank 7's effect 0 is a
+dummy at 1607 gaining 42 a level - Seal of Righteousness' number, left from when the seal was a copy
+of it - whose `EffectTriggerSpell` is 20418, and the tooltip renders the hit off that spell:
+`$20418s1 Holy damage`. 20418's effect 0 is school damage at 35 with a 0.1 coefficient; the seal's
+own dummy carries 0.09 on ranks 1-6, 0.9 on rank 4 and nothing on rank 7. Before the generator
+followed the trigger, the fallback took the dummy, and rank 7 generated at 1691 with `Coef: 0`.
+
+A reference into a spell one of the rank's own effects triggers is followed to the named effect
+whatever its shape, and the effect files by that shape: Seal of Fury's damage lands in `Direct`,
+Seal of Light's heal in `Heal`, Seal of Wisdom's mana in `Energize`. Before this, Seal of Light and
+Seal of Wisdom generated with the judgement's spell ID in `Direct`, read off the pointer dummy by the
+last fallback.
+
+```go
+d := spellData.SealOfFury.BySpellID(20423).Direct.(shared.SpellDataFlat)
+d.Value    // 35, the proc's school damage
+d.Coef     // 0.1, which only the proc states
+```
+
+A flat value does not name its source the way a tick does; the proc's spell ID is on the
+`SealOfFuryTriggered` table beside it.
+
+The trigger is read off every effect, not the dummy alone: rank 5 keeps it on the judgement pointer
+and rank 7 on the damage dummy. The same rule reaches Arcane Missiles' per-missile damage, Intercept's
+damage and the hunter pet abilities whose learn spell names the taught spell's number, so a rank that
+used to carry no value in a role may carry one now.
 
 ## Talents
 
@@ -288,6 +395,31 @@ func (priest *Priest) registerShadowWordPain() {
 			},
 		},
 	})
+}
+```
+
+### A tick, and a second one for the first few targets
+
+Consecration ticks on everyone in the area and again on the first four to enter it, with the spell
+power coefficient on the second tick only, so the bonus is added to the base damage per target rather
+than through the dot's coefficient:
+
+```go
+func (paladin *Paladin) registerConsecration(rankConfig shared.SpellData) {
+	tick := rankConfig.Periodic.(shared.SpellDataPeriodic)
+	bonus := rankConfig.SecondaryPeriodic.(shared.SpellDataPeriodic)
+	bonusTargets := int(rankConfig.Effect(shared.A_PERIODIC_DUMMY, 0).Value)
+
+	dealTick := func(sim *core.Simulation, dot *core.Dot) {
+		for i, target := range sim.Encounter.ActiveTargetUnits {
+			damage := tick.Tick
+			if i < bonusTargets {
+				damage += bonus.Tick + bonus.Coef*dot.Spell.BonusDamage(dot.Spell.Unit.AttackTables[target.UnitIndex])
+			}
+			dot.Spell.CalcAndDealPeriodicDamage(sim, target, damage, dot.OutcomeTickMagicHit)
+		}
+	}
+	// ...
 }
 ```
 

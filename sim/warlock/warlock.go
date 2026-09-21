@@ -34,12 +34,10 @@ type Warlock struct {
 	CurseOfRecklessnessAuras core.AuraArray
 
 	// Talent Tree Spells
-	AmplifyCurse       *core.Spell
-	Conflagrate        *core.Spell
-	Shadowburn         *core.Spell
-	Shadowfury         *core.Spell
-	SiphonLife         *core.Spell
-	UnstableAffliction *core.Spell
+	AmplifyCurse *core.Spell
+	Conflagrate  *core.Spell
+	Shadowburn   *core.Spell
+	SiphonLife   *core.Spell
 
 	// Auras
 	AmplifyCurseAura       *core.Aura
@@ -52,13 +50,11 @@ type Warlock struct {
 	// Pets
 	ActivePet  *WarlockPet
 	Felhunter  *WarlockPet
-	Felguard   *WarlockPet
 	Imp        *WarlockPet
 	Succubus   *WarlockPet
 	Voidwalker *WarlockPet
 
 	// Armors
-	FelArmor   *core.Aura
 	DemonArmor *core.Aura
 
 	serviceTimer *core.Timer
@@ -68,10 +64,9 @@ type Warlock struct {
 
 	currentActiveCurse *core.Spell
 
-	SeedOfCorruptionBonusDamage float64
-	CorruptionTickBaseDamage    float64
-	ImmolateTickBaseDamage      float64
-	T5_4PC_Multiplier           map[int32]map[*core.Spell]float64
+	CorruptionTickBaseDamage float64
+	ImmolateTickBaseDamage   float64
+	T5_4PC_Multiplier        map[int32]map[*core.Spell]float64
 }
 
 func (warlock *Warlock) GetCharacter() *core.Character {
@@ -109,7 +104,6 @@ func (warlock *Warlock) Initialize() {
 
 	warlock.registerCorruption()
 	warlock.registerDeathCoil()
-	warlock.registerSeed()
 	warlock.registerDrainLife()
 	warlock.registerHellfire()
 	warlock.registerImmolate()
@@ -204,18 +198,14 @@ const (
 	WarlockSpellShadowBurn
 	WarlockSpellLifeTap
 	WarlockSpellCorruption
-	WarlockSpellUnstableAffliction
 	WarlockSpellCurseOfAgony
 	WarlockSpellCurseOfElements
 	WarlockSpellDrainLife
-	WarlockSpellSeedOfCorruption
-	WarlockSpellSeedOfCorruptionExplosion
 	WarlockSpellHellfire
 	WarlockSpellImmolationAura
 	WarlockSpellSearingPain
 	WarlockSpellSummonDoomguard
 	WarlockSpellDoomguardDoomBolt
-	WarlockSpellSummonFelguard
 	WarlockSpellSummonImp
 	WarlockSpellImpFireBolt
 	WarlockSpellSummonFelhunter
@@ -230,32 +220,28 @@ const (
 	WarlockSpellCurseOfWeakness
 	WarlockSpellSiphonLife
 	WarlockSpellDrainSoul
-	WarlockSpellShadowFury
 	WarlockSpellDeathCoil
-	WarlockSpellFelguardCleave
 	WarlockSpellAll int64 = 1<<iota - 1
 
-	WarlockShadowDamage = WarlockSpellCorruption | WarlockSpellUnstableAffliction | WarlockSpellDrainLife | WarlockSpellCurseOfAgony |
-		WarlockSpellShadowBolt | WarlockSpellSeedOfCorruptionExplosion | WarlockSpellSeedOfCorruption | WarlockSpellShadowBurn | WarlockSpellSiphonLife |
-		WarlockSpellShadowFury | WarlockSpellDeathCoil
+	WarlockShadowDamage = WarlockSpellCorruption | WarlockSpellDrainLife | WarlockSpellCurseOfAgony |
+		WarlockSpellShadowBolt | WarlockSpellShadowBurn | WarlockSpellSiphonLife | WarlockSpellDeathCoil
 
-	WarlockPeriodicShadowDamage = WarlockSpellCorruption | WarlockSpellUnstableAffliction |
+	WarlockPeriodicShadowDamage = WarlockSpellCorruption |
 		WarlockSpellDrainLife | WarlockSpellCurseOfAgony
 
 	WarlockFireDamage = WarlockSpellConflagrate | WarlockSpellImmolate | WarlockSpellIncinerate | WarlockSpellSoulFire |
 		WarlockSpellSearingPain | WarlockSpellImmolateDot | WarlockSpellShadowBurn
 
-	WarlockDoT = WarlockSpellCorruption | WarlockSpellUnstableAffliction |
+	WarlockDoT = WarlockSpellCorruption |
 		WarlockSpellDrainLife | WarlockSpellCurseOfAgony | WarlockSpellImmolateDot
 
-	WarlockSummonSpells = WarlockSpellSummonImp | WarlockSpellSummonSuccubus | WarlockSpellSummonFelhunter |
-		WarlockSpellSummonFelguard
+	WarlockSummonSpells = WarlockSpellSummonImp | WarlockSpellSummonSuccubus | WarlockSpellSummonFelhunter
 
 	WarlockAllSummons = WarlockSummonSpells | WarlockSpellSummonInfernal | WarlockSpellSummonDoomguard
 
-	WarlockContagionSpells = WarlockSpellCurseOfAgony | WarlockSpellCorruption | WarlockSpellSeedOfCorruption | WarlockSpellSeedOfCorruptionExplosion
+	WarlockContagionSpells = WarlockSpellCurseOfAgony | WarlockSpellCorruption
 
-	WarlockShadowEmbraceSpells = WarlockSpellCorruption | WarlockSpellCurseOfAgony | WarlockSpellSiphonLife | WarlockSpellSeedOfCorruption
+	WarlockShadowEmbraceSpells = WarlockSpellCorruption | WarlockSpellCurseOfAgony | WarlockSpellSiphonLife
 
 	WarlockCurses = WarlockSpellCurseOfAgony | WarlockSpellCurseOfDoom | WarlockSpellCurseOfElements | WarlockSpellCurseOfRecklessness
 
@@ -263,13 +249,12 @@ const (
 		WarlockSpellIncinerate | WarlockSpellSearingPain | WarlockSpellConflagrate
 
 	WarlockAfflictionSpells = WarlockSpellCorruption | WarlockSpellCurseOfAgony | WarlockSpellCurseOfDoom | WarlockSpellCurseOfRecklessness | WarlockSpellCurseOfElements |
-		WarlockSpellDrainLife |
-		WarlockSpellSeedOfCorruption | WarlockSpellDeathCoil
+		WarlockSpellDrainLife | WarlockSpellDeathCoil
 
 	WarlockDemonologySpells = WarlockAllSummons
 
 	WarlockDestructionSpells = WarlockSpellHellfire | WarlockSpellImmolate | WarlockSpellIncinerate | WarlockSpellRainOfFire | WarlockSpellSearingPain |
-		WarlockSpellShadowBolt | WarlockSpellSoulFire | WarlockSpellConflagrate | WarlockSpellShadowFury | WarlockSpellShadowBurn
+		WarlockSpellShadowBolt | WarlockSpellSoulFire | WarlockSpellConflagrate | WarlockSpellShadowBurn
 )
 
 // Called to handle custom resources

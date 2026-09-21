@@ -36,9 +36,6 @@ func NewShaman(character *core.Character, talents string, selfBuffs SelfBuffs) *
 	shaman.AddStatDependency(stats.Strength, stats.AttackPower, 2.0)
 	shaman.AddStat(stats.AttackPower, -20)
 
-	shaman.FireElemental = shaman.NewFireElemental()
-	shaman.EarthElemental = shaman.NewEarthElemental()
-
 	shaman.WindfuryAPBonus = 475.0 //Base Windfury Bonus
 
 	return shaman
@@ -101,15 +98,7 @@ type Shaman struct {
 	FlameShock *core.Spell
 	FrostShock *core.Spell
 
-	FireElementalTotem *core.Spell
-	FireElemental      *FireElemental
-
-	EarthElementalTotem *core.Spell
-	EarthElemental      *EarthElemental
-
 	StormStrikeDebuffAuras core.AuraArray
-
-	ElementalSharedCDTimer *core.Timer
 
 	TotemOfWrath *core.Spell
 	MagmaTotem   *core.Spell
@@ -142,8 +131,6 @@ func (shaman *Shaman) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
 
 func (shaman *Shaman) Initialize() {
 	shaman.registerChainLightningSpell()
-	shaman.registerFireElementalTotem()
-	shaman.registerEarthElementalTotem()
 	shaman.registerLightningBoltSpell()
 	shaman.registerShieldsSpells()
 	shaman.registerMagmaTotemSpell()
@@ -153,9 +140,7 @@ func (shaman *Shaman) Initialize() {
 	shaman.registerStrengthOfEarthTotemSpell()
 	shaman.registerGraceOfAirTotemSpell()
 	shaman.registerManaSpringTotemSpell()
-	shaman.registerWrathOfAirTotemSpell()
 	shaman.registerShocks()
-	shaman.registerBloodlustCD()
 }
 
 func (shaman *Shaman) ApplyTalents() {
@@ -183,11 +168,8 @@ func (shaman *Shaman) GetOverloadChance() float64 {
 }
 
 const (
-	SpellMaskNone               int64 = 0
-	SpellMaskFireElementalTotem int64 = 1 << iota
-	SpellMaskEarthElementalTotem
-	SpellMaskFireElementalMelee
-	SpellMaskFlameShockDirect
+	SpellMaskNone             int64 = 0
+	SpellMaskFlameShockDirect int64 = 1 << iota
 	SpellMaskFlameShockDot
 	SpellMaskLightningBolt
 	SpellMaskLightningBoltOverload
@@ -209,19 +191,17 @@ const (
 	SpellMaskRockbiterWeapon
 	SpellMaskElementalMastery
 	SpellMaskShamanisticRage
-	SpellMaskBloodlust
 	SpellMaskBasicTotem
 	SpellMaskShieldSelfProc
 
-	SpellMaskStormstrike  = SpellMaskStormstrikeCast | SpellMaskStormstrikeDamage
-	SpellMaskFlameShock   = SpellMaskFlameShockDirect | SpellMaskFlameShockDot
-	SpellMaskFire         = SpellMaskFlameShock
-	SpellMaskNature       = SpellMaskLightningBolt | SpellMaskLightningBoltOverload | SpellMaskChainLightning | SpellMaskChainLightningOverload | SpellMaskEarthShock
-	SpellMaskFrost        = SpellMaskFrostShock
-	SpellMaskOverload     = SpellMaskLightningBoltOverload | SpellMaskChainLightningOverload
-	SpellMaskShock        = SpellMaskFlameShock | SpellMaskEarthShock | SpellMaskFrostShock
-	SpellMaskFireTotem    = SpellMaskMagmaTotem | SpellMaskSearingTotem | SpellMaskFireNovaTotem
-	SpellMaskTotem        = SpellMaskFireTotem | SpellMaskFireElementalTotem | SpellMaskEarthElementalTotem | SpellMaskBasicTotem
-	SpellMaskInstantSpell = SpellMaskBloodlust
-	SpellMaskImbue        = SpellMaskFrostbrandWeapon | SpellMaskWindfuryWeapon | SpellMaskFlametongueWeapon | SpellMaskRockbiterWeapon
+	SpellMaskStormstrike = SpellMaskStormstrikeCast | SpellMaskStormstrikeDamage
+	SpellMaskFlameShock  = SpellMaskFlameShockDirect | SpellMaskFlameShockDot
+	SpellMaskFire        = SpellMaskFlameShock
+	SpellMaskNature      = SpellMaskLightningBolt | SpellMaskLightningBoltOverload | SpellMaskChainLightning | SpellMaskChainLightningOverload | SpellMaskEarthShock
+	SpellMaskFrost       = SpellMaskFrostShock
+	SpellMaskOverload    = SpellMaskLightningBoltOverload | SpellMaskChainLightningOverload
+	SpellMaskShock       = SpellMaskFlameShock | SpellMaskEarthShock | SpellMaskFrostShock
+	SpellMaskFireTotem   = SpellMaskMagmaTotem | SpellMaskSearingTotem | SpellMaskFireNovaTotem
+	SpellMaskTotem       = SpellMaskFireTotem | SpellMaskBasicTotem
+	SpellMaskImbue       = SpellMaskFrostbrandWeapon | SpellMaskWindfuryWeapon | SpellMaskFlametongueWeapon | SpellMaskRockbiterWeapon
 )

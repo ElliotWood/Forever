@@ -58,8 +58,8 @@ func sealOf(seals, judges shared.SpellDataTable, rank int32, p proc) seal {
 }
 
 // For the three families whose judgement damage has to be supplied. A seal is three spells for one
-// rank, so it keeps its own row rather than becoming a SpellData. The proc always comes in by hand -
-// no family has its coefficient in the client.
+// rank, so it keeps its own row rather than becoming a SpellData. The proc comes in by hand for every
+// family but Righteousness, whose row's Direct holds it.
 func sealWithJudgement(seals, judges shared.SpellDataTable, rank int32, p proc, j judge) seal {
 	s := seals.ByRank(rank)
 	j.spellID = judges.ByRank(rank).SpellID
@@ -79,21 +79,33 @@ func sealOfTheCrusader(rank shared.SpellData) seal {
 	}
 }
 
+// The seal's rows as the client states them, for the regeneration gate; SealOfRighteousnessRanks is
+// what registers.
+var SealOfRighteousnessTable = spellData.SealOfRighteousness
+
+// The per-hit proc of one Seal of Righteousness rank: the damage spell it fires, and the number and
+// coefficient the row's Direct holds. Those are the judgement's effect 3, a dummy the seal's tooltip
+// renders each hit from ("$/87;20286s3" on rank 8) and the generator follows the description to. The
+// seal's own effect 0 states the same number on every rank but carries 0.1 for a coefficient on ranks
+// 1-7 and nothing on rank 8, where the judgement's dummy says 0.058 on rank 1 rising to 0.2 from rank
+// 4. The proc's damage formula scales with spell power on its own terms, so the coefficient is carried
+// here rather than applied; the hand values it replaces were half the client's on every rank.
+func righteousnessProc(spellID int32, rank int32) proc {
+	d := spellData.SealOfRighteousness.ByRank(rank).Direct
+	return proc{spellID: spellID, value: shared.SpellDataMin(d), coeff: shared.SpellDataCoef(d)}
+}
+
 var SealOfRighteousnessRanks = sealRankMap{
-	// The proc value is the seal's own effect 0, exact on all nine ranks; its coefficient is not in
-	// the client at all. The judgement damage matches the hand rows on ranks 2-9; rank 1 was a flat
-	// 26 against the client's 25-26, the same one-die-side roll Immolate rank 9 and Water Shield
-	// turned out to be, and the client's is taken.
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 1, proc{spellID: 25742, value: spellData.SealOfRighteousness.ByRank(1).Effects[0].Value, coeff: 0.029}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 2, proc{spellID: 25740, value: spellData.SealOfRighteousness.ByRank(2).Effects[0].Value, coeff: 0.063}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 3, proc{spellID: 25739, value: spellData.SealOfRighteousness.ByRank(3).Effects[0].Value, coeff: 0.093}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 4, proc{spellID: 25738, value: spellData.SealOfRighteousness.ByRank(4).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 5, proc{spellID: 25737, value: spellData.SealOfRighteousness.ByRank(5).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 6, proc{spellID: 25736, value: spellData.SealOfRighteousness.ByRank(6).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 7, proc{spellID: 25735, value: spellData.SealOfRighteousness.ByRank(7).Effects[0].Value, coeff: 0.1}),
-	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 8, proc{spellID: 25713, value: spellData.SealOfRighteousness.ByRank(8).Effects[0].Value, coeff: 0.1}),
-	// TODO: Forever drops Seal of Righteousness rank 9; the row is removed rather than
-	// indexing a rank the table does not hold.
+	// The judgement damage matches the hand rows on ranks 2-8; rank 1 was a flat 26 against the
+	// client's 25-26, and the client's is taken.
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 1, righteousnessProc(25742, 1)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 2, righteousnessProc(25740, 2)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 3, righteousnessProc(25739, 3)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 4, righteousnessProc(25738, 4)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 5, righteousnessProc(25737, 5)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 6, righteousnessProc(25736, 6)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 7, righteousnessProc(25735, 7)),
+	sealOf(spellData.SealOfRighteousness, spellData.JudgementOfRighteousness, 8, righteousnessProc(25713, 8)),
 }
 
 var SealOfLightRanks = sealRankMap{
@@ -145,23 +157,17 @@ func (paladin *Paladin) registerSeals() {
 	SealOfWisdomRanks.RegisterAll(paladin.registerSealOfWisdom)
 	paladin.registerSealOfJustice(seal{})
 	SealOfTheCrusaderRanks.RegisterAll(paladin.registerSealOfTheCrusader)
-	paladin.registerSealOfBlood()
-	paladin.registerSealOfVengeance()
 }
 
 // Seal Twist
 const TwistTag = "Twistable"
 
-// Command -> Blood
 // Command -> Righteousness
 // Command -> Wisdom
 // Command -> Light
 // Command -> Justice
 
-// Blood -> X
-
 // Righteous -> Command
-// Righteous -> Blood
 // Righteous -> Wisdom
 // Righteous -> Light
 // Righteous -> Justice
@@ -706,249 +712,6 @@ func (paladin *Paladin) registerSealOfTheCrusader(seal seal) {
 	// 		paladin.applySeal(aura, spell, judgeSpell, sim)
 	// 	},
 	// 	RelatedSelfBuff: aura,
-	// })
-}
-
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
-//
-// Seal of Blood
-// https://www.wowhead.com/forever/spell=31892
-//
-// All melee attacks deal additional Holy damage equal to 35% of normal weapon damage, but the Paladin loses health equal to 10% of the total damage inflicted.
-//
-// Unleashing this Seal's energy will judge an enemy, instantly causing 295 to 325 Holy damage at the cost of health equal to 33% of the damage caused.
-func (paladin *Paladin) registerSealOfBlood() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// judgeSpell := paladin.RegisterSpell(core.SpellConfig{
-	// 	ActionID:         core.ActionID{SpellID: 31898},
-	// 	SpellSchool:      core.SpellSchoolHoly,
-	// 	DefenseType:      core.DefenseTypeMelee,
-	// 	ProcMask:         core.ProcMaskMeleeMHSpecial,
-	// 	Flags:            core.SpellFlagMeleeMetrics,
-	// 	ClassSpellMask:   SpellMaskJudgementOfBlood,
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	// 	BonusCoefficient: 0.429,
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		flags := spell.Flags
-	// 		baseDamage := sim.Roll(295, 325)
-	// 		result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialCritOnly)
-	// 		action := core.NewDelayedAction(core.DelayedActionOptions{
-	// 			DoAt:     sim.CurrentTime + core.SpellBatchWindow,
-	// 			Priority: core.ActionPriorityLow,
-	// 			OnAction: func(sim *core.Simulation) {
-	// 				currentFlags := spell.Flags
-	// 				spell.Flags = flags
-	// 				spell.DealDamage(sim, result)
-	// 				spell.Flags = currentFlags
-	// 			},
-	// 		})
-	// 		sim.AddPendingAction(action)
-	// 	},
-	// })
-	// procSpell := paladin.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 31893},
-	// 	ClassSpellMask: SpellMaskSealOfBlood,
-	// 	SpellSchool:    core.SpellSchoolHoly,
-	// 	DefenseType:    core.DefenseTypeMelee,
-	// 	ProcMask:       core.ProcMaskMeleeMHSpecial,
-	// 	// 31893 carries Suppress Weapon Procs and is a proc, like Seal of Righteousness.
-	// 	Flags:            core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagProc | core.SpellFlagSuppressWeaponProcs,
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := spell.Unit.MHWeaponDamage(sim, spell.MeleeAttackPower(target)) * 0.35
-	// 		result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-	// 		action := core.NewDelayedAction(core.DelayedActionOptions{
-	// 			DoAt:     sim.CurrentTime + core.SpellBatchWindow,
-	// 			Priority: core.ActionPriorityLow,
-	// 			OnAction: func(sim *core.Simulation) {
-	// 				spell.DealDamage(sim, result)
-	// 			},
-	// 		})
-	// 		sim.AddPendingAction(action)
-	// 	},
-	// })
-	// aura := paladin.MakeProcTriggerAura(core.ProcTrigger{
-	// 	Name:            "Seal of Blood" + paladin.Label,
-	// 	ActionID:        core.ActionID{SpellID: 31892},
-	// 	MetricsActionID: core.ActionID{SpellID: 31892},
-	// 	Duration:        time.Second * 30,
-	// 	Callback:        core.CallbackOnSpellHitDealt,
-	// 	Outcome:         core.OutcomeLanded,
-	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-	// 		if !spell.ProcMask.Matches(core.ProcMaskMeleeWhiteHit) && !spell.Matches(SpellMaskSealOfCommand) {
-	// 			return
-	// 		}
-	//
-	// 		procSpell.Cast(sim, result.Target)
-	// 	},
-	// })
-	// paladin.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 31892},
-	// 	ClassSpellMask: SpellMaskSealOfBlood,
-	// 	SpellSchool:    core.SpellSchoolHoly,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	ProcMask:       core.ProcMaskEmpty,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: 210,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: core.GCDDefault,
-	// 		},
-	// 	},
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-	// 		paladin.applySeal(aura, spell, judgeSpell, sim)
-	// 	},
-	// })
-}
-
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
-//
-// Seal of Vengeance
-// https://www.wowhead.com/forever/spell=31801
-//
-// Fills the Paladin with holy power, granting each melee attack a chance to cause 150 Holy damage over 15 sec.
-// This effect can stack up to 5 times.
-// Only one Seal can be active on the Paladin at any one time.
-// Lasts 30 sec.
-//
-// Unleashing this Seal's energy will judge an enemy, instantly causing 120 Holy damage per application of Holy Vengeance.
-func (paladin *Paladin) registerSealOfVengeance() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// holyVengeanceTag := "Holy Vengeance"
-	// judgeSpell := paladin.RegisterSpell(core.SpellConfig{
-	// 	ActionID:         core.ActionID{SpellID: 31804},
-	// 	SpellSchool:      core.SpellSchoolHoly,
-	// 	DefenseType:      core.DefenseTypeMagic,
-	// 	ProcMask:         core.ProcMaskEmpty,
-	// 	Flags:            core.SpellFlagMeleeMetrics,
-	// 	ClassSpellMask:   SpellMaskJudgementOfVengeance,
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	// 	BonusCoefficient: 0.429,
-	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-	// 		return target.GetActiveAuraWithTag(holyVengeanceTag) != nil
-	// 	},
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		damage := 120 * float64(target.GetActiveAuraWithTag(holyVengeanceTag).GetStacks())
-	// 		result := spell.CalcDamage(sim, target, damage, spell.OutcomeMagicHitAndCrit)
-	// 		action := core.NewDelayedAction(core.DelayedActionOptions{
-	// 			DoAt:     sim.CurrentTime + core.SpellBatchWindow,
-	// 			Priority: core.ActionPriorityLow,
-	// 			OnAction: func(sim *core.Simulation) {
-	// 				spell.DealDamage(sim, result)
-	// 			},
-	// 		})
-	// 		sim.AddPendingAction(action)
-	// 	},
-	// })
-	// procSpell := paladin.RegisterSpell(core.SpellConfig{
-	// 	ActionID:         core.ActionID{SpellID: 42463},
-	// 	ClassSpellMask:   SpellMaskSealOfVengeance,
-	// 	SpellSchool:      core.SpellSchoolHoly,
-	// 	DefenseType:      core.DefenseTypeMagic,
-	// 	ProcMask:         core.ProcMaskEmpty,
-	// 	Flags:            core.SpellFlagPassiveSpell | core.SpellFlagProc,
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		attackTable := spell.Unit.AttackTables[target.UnitIndex]
-	// 		damage := (10 + spell.BonusDamage(attackTable)*0.034/3) * paladin.MainHand().SwingSpeed
-	// 		spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMagicHit)
-	// 	},
-	// })
-	// holyVengeanceDot := paladin.RegisterSpell(core.SpellConfig{
-	// 	ActionID:         core.ActionID{SpellID: 31803},
-	// 	ClassSpellMask:   SpellMaskSealOfVengeance,
-	// 	SpellSchool:      core.SpellSchoolHoly,
-	// 	DefenseType:      core.DefenseTypeMagic,
-	// 	ProcMask:         core.ProcMaskEmpty,
-	// 	Flags:            core.SpellFlagPassiveSpell | core.SpellFlagMeleeMetrics | core.SpellFlagProc,
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	// 	Dot: core.DotConfig{
-	// 		Aura: core.Aura{
-	// 			Label:     "Holy Vengeance" + paladin.Label,
-	// 			Tag:       holyVengeanceTag,
-	// 			ActionID:  core.ActionID{SpellID: 31803},
-	// 			MaxStacks: 5,
-	// 		},
-	// 		NumberOfTicks: 5,
-	// 		TickLength:    time.Second * 3,
-	// 		OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			attackTable := dot.Spell.Unit.AttackTables[target.UnitIndex]
-	// 			dot.Snapshot(target, 30+dot.Spell.BonusDamage(attackTable)*0.034*float64(dot.GetStacks()))
-	// 		},
-	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
-	// 		},
-	// 	},
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		hitResult := spell.CalcOutcome(sim, target, spell.OutcomeMagicHit)
-	// 		if !hitResult.Landed() {
-	// 			spell.DealOutcome(sim, hitResult)
-	// 			return
-	// 		}
-	//
-	// 		dot := spell.Dot(target)
-	// 		if dot.IsActive() {
-	// 			dot.AddStack(sim)
-	// 			dot.TakeSnapshot(sim)
-	// 			dot.Refresh(sim)
-	// 		} else {
-	// 			dot.Apply(sim)
-	// 			dot.SetStacks(sim, 1)
-	// 			dot.TakeSnapshot(sim)
-	// 		}
-	// 	},
-	// })
-	// // 20 PPM measured from TBC Anniversary logs (2026-09): 63 paladins, 6.3k landed swings with the seal up,
-	// // 19.9 PPM at 1.6, 1.8 and 2.7 weapon speed alike. Hand counts that miss resisted applications land near 15.
-	// aura := paladin.MakeProcTriggerAura(core.ProcTrigger{
-	// 	Name:            "Seal of Vengeance" + paladin.Label,
-	// 	ActionID:        core.ActionID{SpellID: 31801},
-	// 	MetricsActionID: core.ActionID{SpellID: 31801},
-	// 	Duration:        time.Second * 30,
-	// 	Callback:        core.CallbackOnSpellHitDealt,
-	// 	ProcMask:        core.ProcMaskMeleeWhiteHit,
-	// 	Outcome:         core.OutcomeLanded,
-	// 	DPM:             paladin.NewStaticLegacyPPMManager(20, core.ProcMaskMeleeWhiteHit),
-	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-	// 		dot := holyVengeanceDot.Dot(result.Target)
-	// 		if dot.IsActive() && dot.GetStacks() == 5 {
-	// 			procSpell.Cast(sim, result.Target)
-	// 		}
-	//
-	// 		holyVengeanceDot.Cast(sim, result.Target)
-	// 	},
-	// })
-	// paladin.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 31801},
-	// 	ClassSpellMask: SpellMaskSealOfVengeance,
-	// 	SpellSchool:    core.SpellSchoolHoly,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	ProcMask:       core.ProcMaskEmpty,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: 250,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: core.GCDDefault,
-	// 		},
-	// 	},
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-	// 		paladin.applySeal(aura, spell, judgeSpell, sim)
-	// 	},
 	// })
 }
 

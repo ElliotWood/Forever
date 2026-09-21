@@ -165,13 +165,8 @@ var allResistanceStats = []proto.Stat{
 }
 
 // MapBonusStatIndexToStats is MapBonusStatIndexToStat for callers that have to cope with
-// one index granting several stats. Every index maps to exactly one stat except 124.
-//
-// TODO: SpellItemEnchantment row 8203 is named "Spirit +$k1" but carries EffectArg 124,
-// and is applied by Enchant Bracer/Boots - Lesser Spirit. Going through this function it
-// becomes "+N all resistances". The 124 reading is solid, so 8203 is either a Forever
-// data bug or a stale label; special-casing it needs the enchant id threaded into
-// processEnchantmentEffects, which does not currently receive it.
+// one index granting several stats. Every index maps to exactly one stat except 124. An
+// enchant row whose argument is wrong is corrected before it gets here (enchantEffectArgFixes).
 func MapBonusStatIndexToStats(index int) ([]proto.Stat, bool) {
 	if index == ITEM_MOD_ALL_RESISTANCES {
 		return allResistanceStats, true
