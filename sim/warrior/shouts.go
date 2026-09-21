@@ -83,10 +83,11 @@ func (warrior *Warrior) registerShouts() {
 	})
 
 	// What holds the Battle Shout category decides whether shouting is worth a
-	// global: nothing there, or this warrior's own copy holding it, and the cast
-	// puts the buff up or refreshes it. Anything else has to be outbid first - a
-	// warrior without the set would otherwise keep recasting a 139 shout the
-	// category turns away while an external 169 one is up.
+	// global. Nothing there and the cast puts the buff up. This warrior's own
+	// copy there and the cast only refreshes it, which is worth a global once it
+	// is about to run out. Anything else has to be outbid first - a warrior
+	// without the set would otherwise keep recasting a 139 shout the category
+	// turns away while an external 169 one is up.
 	battleShoutCategory := warrior.GetExclusiveEffectCategory(core.BattleShoutCategory)
 
 	warrior.BattleShout = warrior.MakeShoutSpellHelper(ShoutHelperConfig{
@@ -94,11 +95,15 @@ func (warrior *Warrior) registerShouts() {
 		RageCost:    battleShoutRank.Cost,
 		SpellMask:   SpellMaskBattleShout,
 		ThreatBonus: 69,
-		ExtraCastCondition: func(_ *core.Simulation, _ *core.Unit) bool {
+		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
 			active := battleShoutCategory.GetActiveEffect()
-			return active == nil ||
-				active.Aura == battleShoutAuras.Get(&warrior.Unit) ||
-				battleShoutValue >= active.Priority
+			if active == nil {
+				return true
+			}
+			if active.Aura == battleShoutAuras.Get(&warrior.Unit) {
+				return active.Aura.RemainingDuration(sim) <= ShoutExpirationThreshold
+			}
+			return battleShoutValue >= active.Priority
 		},
 		AllyAuras: battleShoutAuras,
 	})

@@ -2,9 +2,11 @@ package dps
 
 import (
 	"testing"
+	"time"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/warrior"
 )
 
 // The golden suites are skipped while the class is stubbed, so this is what
@@ -147,10 +149,11 @@ func TestTwoWarriorsWearingTheSetShoutForOneBonus(t *testing.T) {
 	}
 }
 
-// What the warrior does when something else holds the Battle Shout category.
-// The buff is the unit's, so a 169 shout from the party or from the warrior
-// standing next to this one is the same category, and a 139 shout the category
-// would turn away is a global and some rage thrown away.
+// What the warrior does about the Battle Shout category. The buff is the
+// unit's, so a 169 shout from the party or from the warrior standing next to
+// this one is the same category: a 139 shout the category would turn away is a
+// global and some rage thrown away, and so is refreshing a copy that still has
+// most of its three minutes to run.
 func TestWarriorShoutsOnlyWhenTheCategoryWillTakeIt(t *testing.T) {
 	warriorProto := func(name string, hasT2 bool) *proto.Player {
 		return &proto.Player{
@@ -207,25 +210,43 @@ func TestWarriorShoutsOnlyWhenTheCategoryWillTakeIt(t *testing.T) {
 		}
 	})
 
-	t.Run("a warrior keeps refreshing the copy that holds the category", func(t *testing.T) {
-		sim := &core.Simulation{}
-		env := build(&proto.PartyBuffs{}, warriorProto("Set", true), warriorProto("Bare", false))
-		bare := env.Raid.Parties[0].Players[1].(*DpsWarrior)
+	// The copy holding the category is the warrior's own, shared with a party
+	// member wearing the set, so it bids 169 while this warrior is worth 139.
+	// What decides the cast is how long it has left, not what it bids.
+	for _, row := range []struct {
+		name      string
+		remaining time.Duration
+		want      bool
+	}{
+		{"a warrior leaves its own copy alone while it has time to run", time.Second * 10, false},
+		{"a warrior refreshes its own copy as it runs out", time.Second * 2, true},
+	} {
+		t.Run(row.name, func(t *testing.T) {
+			sim := &core.Simulation{}
+			env := build(&proto.PartyBuffs{}, warriorProto("Set", true), warriorProto("Bare", false))
+			bare := env.Raid.Parties[0].Players[1].(*DpsWarrior)
 
-		own := bare.GetAura("Battle Shout (Player)")
-		if own == nil {
-			t.Fatal("the warrior carries no aura labelled \"Battle Shout (Player)\"")
-		}
-		own.Activate(sim)
-		if !own.IsActive() || own.ExclusiveEffects[0].Priority != withSet {
-			t.Fatalf("the shared copy is active %v at %v, want it up at the set warrior's %v",
-				own.IsActive(), own.ExclusiveEffects[0].Priority, withSet)
-		}
+			own := bare.GetAura("Battle Shout (Player)")
+			if own == nil {
+				t.Fatal("the warrior carries no aura labelled \"Battle Shout (Player)\"")
+			}
+			own.Activate(sim)
+			if !own.IsActive() || own.ExclusiveEffects[0].Priority != withSet {
+				t.Fatalf("the shared copy is active %v at %v, want it up at the set warrior's %v",
+					own.IsActive(), own.ExclusiveEffects[0].Priority, withSet)
+			}
 
-		if !bare.BattleShout.ExtraCastCondition(sim, &bare.Unit) {
-			t.Error("the warrior stopped refreshing the copy it is keeping up, because the set made it bid more")
-		}
-	})
+			sim.CurrentTime = own.Duration - row.remaining
+			if got := own.RemainingDuration(sim); got != row.remaining {
+				t.Fatalf("the shared copy has %v left, want %v", got, row.remaining)
+			}
+
+			if got := bare.BattleShout.ExtraCastCondition(sim, &bare.Unit); got != row.want {
+				t.Errorf("the warrior would cast: %v, want %v with %v left and a %v threshold",
+					got, row.want, row.remaining, warrior.ShoutExpirationThreshold)
+			}
+		})
+	}
 
 	t.Run("nothing holding the category is always worth a shout", func(t *testing.T) {
 		sim := &core.Simulation{}
