@@ -387,6 +387,15 @@ func generatedStackFactor(effect *ExclusiveEffect, perStack float64, maxStacks i
 // members wearing the same set ask for the same total and get it once: a call
 // against an aura that already carries the bonus does nothing. One that finds
 // some other amount there is reading a different buff's base and says so.
+//
+// The category has to hold one aura at a time. That is what makes attaching the
+// extra amount to the aura the same thing as attaching it to the effect: the
+// copy that loses the category is deactivated outright, so the aura is up
+// exactly while its effect is the one applying.
+//
+// It writes Priority directly, which is only safe before the fight: an effect
+// that is already active has to go through SetPriority to re-apply what it
+// holds. Every caller runs while the character is being built.
 func AddGeneratedFlatBonus(aura *Aura, stat stats.Stat, base float64, bonus float64) {
 	if aura.MaxStacks > 0 {
 		panic("a stacking aura re-prices its category effect on every stack, which would drop the bonus: " + aura.Label)
@@ -395,6 +404,9 @@ func AddGeneratedFlatBonus(aura *Aura, stat stats.Stat, base float64, bonus floa
 	for _, effect := range aura.ExclusiveEffects {
 		if effect.Category.Name != aura.Tag {
 			continue
+		}
+		if !effect.Category.SingleAura {
+			panic("a category that holds more than one aura cannot tell a flat bonus when to apply: " + aura.Label)
 		}
 		if effect.Priority == base+bonus {
 			return

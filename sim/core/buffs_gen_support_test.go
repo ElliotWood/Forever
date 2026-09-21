@@ -529,6 +529,21 @@ func TestAddGeneratedFlatBonusRefusesAnAuraThatCannotCarryOne(t *testing.T) {
 	assertPanics(t, "a base that is not what the buff bids", func() {
 		AddGeneratedFlatBonus(contested, stats.Stamina, 54, 30)
 	})
+
+	// A category that holds several auras at once never deactivates the one it
+	// outbids, so an amount attached to the aura would apply while the effect
+	// holding it did not. No generated row has that shape; the guard is for a
+	// hand-written one that does.
+	shared := char.GetOrRegisterAura(Aura{
+		Label:    "Hand-Written Shout",
+		Tag:      "GeneratedSharedCategory",
+		ActionID: ActionID{SpellID: 25289}.WithTag(-2),
+		Duration: NeverExpires,
+	})
+	shared.NewExclusiveEffect("GeneratedSharedCategory", false, ExclusiveEffect{Priority: 139})
+	assertPanics(t, "a category that holds more than one aura", func() {
+		AddGeneratedFlatBonus(shared, stats.AttackPower, 139, 30)
+	})
 }
 
 func assertPanics(t *testing.T, what string, call func()) {
