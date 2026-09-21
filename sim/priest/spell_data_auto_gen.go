@@ -13,6 +13,7 @@ import (
 //   Blessed Recovery: effect 1 of spell 27811 has no rank curve and is held at its base points
 //   Early Demise: effect 1 of spell 1310076 has no rank curve and is held at its base points
 //   Improved Mind Flay: effect 3 of spell 1225139 has no rank curve and is held at its base points
+//   Soul Warding: effect 0, 1 of spell 402000 has no rank curve and is held at its base points
 
 type generatedSpellData struct {
 	AbolishDisease              shared.SpellDataTable
@@ -126,6 +127,7 @@ type generatedSpellData struct {
 	SilenceTriggered            shared.SpellDataTable
 	SilentResolve               shared.SpellDataTable
 	Smite                       shared.SpellDataTable
+	SoulWarding                 shared.SpellDataTable
 	SpellWarding                shared.SpellDataTable
 	SpiritTap                   shared.SpellDataTable
 	SpiritTapTriggered          shared.SpellDataTable
@@ -766,6 +768,9 @@ var spellData = generatedSpellData{
 		{Rank: 6, SpellID: 6060, Cost: 185, CastTime: 2500 * time.Millisecond, GCD: 1500 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 99}}, Direct: shared.SpellDataFlat{Value: 99, Coef: 0.7139999866485596}},
 		{Rank: 7, SpellID: 10933, Cost: 230, CastTime: 2500 * time.Millisecond, GCD: 1500 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 131}}, Direct: shared.SpellDataFlat{Value: 131, Coef: 0.7139999866485596}},
 		{Rank: 8, SpellID: 10934, Cost: 280, CastTime: 2500 * time.Millisecond, GCD: 1500 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolHoly, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 176}}, Direct: shared.SpellDataFlat{Value: 176, Coef: 0.7139999866485596}},
+	},
+	SoulWarding: shared.SpellDataTable{
+		{Rank: 1, SpellID: 402000, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 11, Value: -4000}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -15}}},
 	},
 	SpellWarding: shared.SpellDataTable{
 		{Rank: 1, SpellID: 27900, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_TAKEN, Misc: 126, Value: -2}}},

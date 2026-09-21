@@ -540,11 +540,23 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 		}
 		spellOf[d.Name] = d.SpellID
 
-		// A one-rank node grants an ability rather than describing a ladder - Hemorrhage and Water
-		// Shield are nodes on a spell the game teaches - and the one row it would yield names the
-		// node's spell, which is not the spell the ability's own ranks are keyed on.
+		// A one-rank node usually grants an ability rather than describing a ladder - Hemorrhage and
+		// Water Shield are nodes on a spell the game teaches - and the one row it would yield names
+		// the node's spell, which is not the spell the ability's own ranks are keyed on. A one-rank
+		// node on a passive nothing teaches is the talent itself - Raging Blows, Vanguard - and
+		// yields its one row at the spell's base points.
 		if d.MaxRanks <= 1 {
-			continue
+			passive, err := SpellIsPassive(db, d.SpellID)
+			if err != nil {
+				return nil, nil, nil, err
+			}
+			taught, err := taughtBySkillLine(db, d.SpellID)
+			if err != nil {
+				return nil, nil, nil, err
+			}
+			if !passive || taught {
+				continue
+			}
 		}
 
 		effects, err := effectIndicesOf(db, d.SpellID)
@@ -577,9 +589,12 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 			}
 		}
 
-		if len(points) == 0 {
+		if len(points) == 0 && d.MaxRanks > 1 {
 			skipped[d.Name] = fmt.Sprintf("the talent tree states no per-rank value for spell %d", d.SpellID)
 			continue
+		}
+		if len(points) == 0 {
+			points[1] = map[int32]float64{}
 		}
 		if len(uncovered) > 0 {
 			partial[d.Name] = fmt.Sprintf("effect %s of spell %d has no rank curve and is held at its base points",
@@ -589,6 +604,13 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 	}
 
 	return ladders, skipped, partial, nil
+}
+
+// Whether a trainer, the skill itself or a level grants the spell (AcquireMethod 0, 1 or 2).
+func taughtBySkillLine(db *sql.DB, spellID int32) (bool, error) {
+	var taught bool
+	err := scanOptional(db, `SELECT COUNT(*) > 0 FROM SkillLineAbility WHERE Spell = ? AND AcquireMethod IN (0, 1, 2)`, spellID, &taught)
+	return taught, err
 }
 
 func effectIndicesOf(db *sql.DB, spellID int32) ([]int32, error) {

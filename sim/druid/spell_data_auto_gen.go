@@ -14,7 +14,9 @@ import (
 
 // Generated with an effect held at its base points, the talent tree stating no rank value for it:
 //   Eclipse: effect 2, 3 of spell 408248 has no rank curve and is held at its base points
+//   Gift of the Earthmother: effect 0 of spell 414673 has no rank curve and is held at its base points
 //   Natural Reaction: effect 2, 3 of spell 417051 has no rank curve and is held at its base points
+//   Nature's Splendor: effect 0, 1, 2 of spell 1223083 has no rank curve and is held at its base points
 //   Predatory Strikes: effect 1 of spell 16972 has no rank curve and is held at its base points
 
 type generatedSpellData struct {
@@ -49,6 +51,7 @@ type generatedSpellData struct {
 	FurorTriggered            shared.SpellDataTable
 	Genesis                   shared.SpellDataTable
 	GiftOfNature              shared.SpellDataTable
+	GiftOfTheEarthmother      shared.SpellDataTable
 	GiftOfTheWild             shared.SpellDataTable
 	Growl                     shared.SpellDataTable
 	HealingTouch              shared.SpellDataTable
@@ -93,6 +96,7 @@ type generatedSpellData struct {
 	NaturesGraspTriggered     shared.SpellDataTable
 	NaturesMajesty            shared.SpellDataTable
 	NaturesReach              shared.SpellDataTable
+	NaturesSplendor           shared.SpellDataTable
 	NaturesSwiftness          shared.SpellDataTable
 	OmenOfClarity             shared.SpellDataTable
 	OmenOfClarityTriggered    shared.SpellDataTable
@@ -281,6 +285,9 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 17104, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 6}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 22, Value: 6}}, Direct: shared.SpellDataFlat{Value: 6, Coef: 1}},
 		{Rank: 4, SpellID: 17104, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 8}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 22, Value: 8}}, Direct: shared.SpellDataFlat{Value: 8, Coef: 1}},
 		{Rank: 5, SpellID: 17104, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 22, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 1}},
+	},
+	GiftOfTheEarthmother: shared.SpellDataTable{
+		{Rank: 1, SpellID: 414673, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 21, Value: -500}}},
 	},
 	GiftOfTheWild: shared.SpellDataTable{
 		{Rank: 1, SpellID: 21849, Cost: 900, GCD: 1500 * time.Millisecond, Duration: 3600000 * time.Millisecond, MaxRange: 40, ProcChance: 101, SpellSchool: core.SpellSchoolNature, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 1, Value: 324}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STAT, Misc: -1, Value: 14}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 2, Value: 20}, {Index: 3, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 4, Value: 20}, {Index: 4, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 8, Value: 20}, {Index: 5, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 16, Value: 20}, {Index: 6, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 32, Value: 20}, {Index: 7, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 64, Value: 20}}, Direct: shared.SpellDataFlat{Value: 324, Coef: 0}},
@@ -530,6 +537,9 @@ var spellData = generatedSpellData{
 	NaturesReach: shared.SpellDataTable{
 		{Rank: 1, SpellID: 16819, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 5, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_HIT_CHANCE, Misc: 0, Value: 2}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_SPELL_HIT_CHANCE, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 1}},
 		{Rank: 2, SpellID: 16819, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 5, Value: 20}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_HIT_CHANCE, Misc: 0, Value: 4}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_SPELL_HIT_CHANCE, Misc: 0, Value: 4}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 1}},
+	},
+	NaturesSplendor: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1223083, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 1, Value: 3000}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 1, Value: 6000}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 1, Value: 2000}}},
 	},
 	NaturesSwiftness: shared.SpellDataTable{
 		{Rank: 1, SpellID: 17116, Cooldown: 180000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 10, Value: -100}}},

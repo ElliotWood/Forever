@@ -99,6 +99,8 @@ type generatedSpellData struct {
 	SliceAndDice                shared.SpellDataTable
 	Sprint                      shared.SpellDataTable
 	Stealth                     shared.SpellDataTable
+	ThousandCuts                shared.SpellDataTable
+	ThousandCutsTriggered       shared.SpellDataTable
 	Vanish                      shared.SpellDataTable
 	VanishTriggered             shared.SpellDataTable
 	Vanished                    shared.SpellDataTable
@@ -521,6 +523,12 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 1785, Cooldown: 10000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_SHAPESHIFT, Misc: 30, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STEALTH, Misc: 0, Value: 195}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -40}}, Direct: shared.SpellDataFlat{Value: 195, Coef: 0}},
 		{Rank: 3, SpellID: 1786, Cooldown: 10000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_SHAPESHIFT, Misc: 30, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STEALTH, Misc: 0, Value: 295}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -35}}, Direct: shared.SpellDataFlat{Value: 295, Coef: 0}},
 		{Rank: 4, SpellID: 1787, Cooldown: 10000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_SHAPESHIFT, Misc: 30, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STEALTH, Misc: 0, Value: 300}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -30}}, Direct: shared.SpellDataFlat{Value: 300, Coef: 0}},
+	},
+	ThousandCuts: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1310721, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 3}}},
+	},
+	ThousandCutsTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1310723, Duration: 10000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 14, Value: -3}}},
 	},
 	Vanish: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1856, Cooldown: 300000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_SANCTUARY, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
