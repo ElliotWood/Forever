@@ -24,10 +24,6 @@ type WarriorInputs struct {
 }
 
 const (
-	SpellFlagBleed = core.SpellFlagAgentReserved1
-)
-
-const (
 	SpellMaskNone int64 = 0
 	// Abilities that don't cost rage and aren't attacks
 	SpellMaskBattleShout int64 = 1 << iota

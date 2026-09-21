@@ -140,8 +140,6 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 			})
 		},
 		5: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 26110 states 50% on all of Thunder Clap's effects: the damage here, the slow
-			// through the bonus thunder_clap.go reads when its aura lands.
 			warrior := agent.(WarriorAgent).GetWarrior()
 			setBonusAura.AttachSpellMod(core.SpellModConfig{
 				ClassMask:  SpellMaskThunderClap,

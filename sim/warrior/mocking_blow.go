@@ -33,6 +33,7 @@ func (warrior *Warrior) registerMockingBlow() {
 		},
 
 		DamageMultiplier: 1,
+		// TODO: Test in-game
 		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
