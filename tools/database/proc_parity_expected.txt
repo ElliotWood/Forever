@@ -1,0 +1,6 @@
+# Where spelldata.ProcTrigger differs from the item procs the generated registrations carry today,
+# one line per item and field as "<item id> <field>: <reason>". A difference this file does not name
+# fails sim/core/spelldata/proc_parity_with_db_test.go, and a line the test never hits fails it too.
+
+234562 ProcChance: the reissued shields carry trigger 1216968, whose Electrostatic Charge is a 20% roll, while the generated call states the 5% of the 13959 the six older shields share. The database states 20% too, so the literal is what is out of date.
+234588 ProcChance: the same reissue as 234562.
