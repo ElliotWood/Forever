@@ -576,10 +576,6 @@
 				"label": "Stance Snapshot",
 				"tooltip": "Ability that is cast at the same time as stance swap will benefit from the bonus of the stance before the swap."
 			},
-			"has_bs_solarian_sapphire": {
-				"label": "Prepull Battle Shout: Solarian Sapphire",
-				"tooltip": "If enabled, Battle Shout during prepull will provide bonus AP from the Solarian Sapphire."
-			},
 			"has_bs_tier_2": {
 				"label": "Prepull Battle Shout: Tier 2",
 				"tooltip": "If enabled, Battle Shout during prepull will provide bonus AP from the Tier 2 set bonus."

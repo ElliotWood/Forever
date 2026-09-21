@@ -107,6 +107,25 @@ describe('migrateRetypedBuffFields', () => {
 		expect(() => IndividualSimSettings.fromJson(json as never)).not.toThrow();
 	});
 
+	// has_bs_solarian_sapphire was a warrior class option, not a buff field, so the pre-pass has
+	// nothing to do for it: the loaders' `ignoreUnknownFields` skips it wherever it is nested.
+	it('loads a version-16 payload that still carries the warrior class option the proto reserved', () => {
+		const json = {
+			apiVersion: 16,
+			player: {
+				dpsWarrior: { options: { classOptions: { hasBsSolarianSapphire: true, hasBsT2: true, stanceSnapshot: true } } },
+			},
+		} as Record<string, any>;
+
+		migrateRetypedBuffFields(json);
+		const settings = IndividualSimSettings.fromJson(json as never, { ignoreUnknownFields: true });
+
+		const spec = settings.player?.spec;
+		expect(spec?.oneofKind).toBe('dpsWarrior');
+		expect(spec?.oneofKind === 'dpsWarrior' && spec.dpsWarrior.options?.classOptions?.hasBsT2).toBe(true);
+		expect(spec?.oneofKind === 'dpsWarrior' && spec.dpsWarrior.options?.classOptions?.stanceSnapshot).toBe(true);
+	});
+
 	it('spells a retired field the three ways a payload may carry it', () => {
 		expect(retiredFieldSpellings('joc_retribution_2pt4')).toEqual(['joc_retribution_2pt4', 'jocRetribution2pt4', 'jocRetribution2Pt4']);
 		expect(retiredFieldSpellings('soe_enhancement_2pt4')).toEqual(['soe_enhancement_2pt4', 'soeEnhancement2pt4', 'soeEnhancement2Pt4']);

@@ -14,11 +14,10 @@ type WarriorInputs struct {
 	DefaultShout  proto.WarriorShout
 	DefaultStance proto.WarriorStance
 
-	StartingRage          float64
-	QueueDelay            int32
-	StanceSnapshot        bool
-	HasBsSolarianSapphire bool
-	HasBsT2               bool
+	StartingRage   float64
+	QueueDelay     int32
+	StanceSnapshot bool
+	HasBsT2        bool
 }
 
 const (
