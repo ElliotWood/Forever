@@ -17,7 +17,8 @@ func (druid *Druid) registerShredSpell() {
 	}[druid.Level]
 
 	druid.Shred = druid.RegisterSpell(Cat, core.SpellConfig{
-		SpellCode: SpellCode_DruidShred,
+		SpellCode:      SpellCode_DruidShred,
+		ClassSpellMask: SpellMaskShred,
 		ActionID: core.ActionID{SpellID: map[int32]int32{
 			25: 5221,
 			40: 8992,

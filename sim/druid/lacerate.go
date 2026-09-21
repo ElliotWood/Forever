@@ -17,12 +17,13 @@ func (druid *Druid) registerLacerateSpell() {
 	results := make([]*core.SpellResult, min(MangleBerserkTargets, druid.Env.GetNumTargets()))
 
 	druid.Lacerate = druid.RegisterSpell(Bear, core.SpellConfig{
-		SpellCode:   SpellCode_DruidLacerate,
-		ActionID:    core.ActionID{SpellID: 414644},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		SpellCode:      SpellCode_DruidLacerate,
+		ClassSpellMask: SpellMaskLacerate,
+		ActionID:       core.ActionID{SpellID: 414644},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
 			Cost:   15 - float64(druid.Talents.ShreddingAttacks),
@@ -71,11 +72,12 @@ func (druid *Druid) registerLacerateBleedSpell() {
 	}
 
 	druid.LacerateBleed = druid.RegisterSpell(Bear, core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 414647},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
+		ClassSpellMask: SpellMaskLacerateBleed,
+		ActionID:       core.ActionID{SpellID: 414647},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 3.33,

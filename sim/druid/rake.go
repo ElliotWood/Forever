@@ -60,12 +60,13 @@ func (druid *Druid) newRakeSpellConfig(rakeRank RakeRankInfo) core.SpellConfig {
 	energyCost := 40 - float64(druid.Talents.Ferocity)
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_DruidRake,
-		ActionID:    core.ActionID{SpellID: rakeRank.id},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagIgnoreResists | core.SpellFlagBinary | core.SpellFlagAPL | SpellFlagBuilder,
+		SpellCode:      SpellCode_DruidRake,
+		ClassSpellMask: SpellMaskRake,
+		ActionID:       core.ActionID{SpellID: rakeRank.id},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagIgnoreResists | core.SpellFlagBinary | core.SpellFlagAPL | SpellFlagBuilder,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   energyCost,

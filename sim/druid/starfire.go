@@ -39,12 +39,13 @@ func (druid *Druid) newStarfireSpellConfig(rank int) core.SpellConfig {
 	castTime := 3500
 
 	return core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellCode:   SpellCode_DruidStarfire,
-		SpellSchool: core.SpellSchoolArcane,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       core.SpellFlagAPL | core.SpellFlagResetAttackSwing,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellCode:      SpellCode_DruidStarfire,
+		ClassSpellMask: SpellMaskStarfire,
+		SpellSchool:    core.SpellSchoolArcane,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagResetAttackSwing,
 
 		RequiredLevel: level,
 		Rank:          rank,

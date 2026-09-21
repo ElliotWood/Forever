@@ -10,12 +10,13 @@ func (druid *Druid) registerClawSpell() {
 	flatDamageBonus := 115.0
 
 	druid.Claw = druid.RegisterSpell(Cat, core.SpellConfig{
-		SpellCode:   SpellCode_DruidClaw,
-		ActionID:    core.ActionID{SpellID: 9850},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagBuilder,
+		SpellCode:      SpellCode_DruidClaw,
+		ClassSpellMask: SpellMaskClaw,
+		ActionID:       core.ActionID{SpellID: 9850},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagBuilder,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   45 - 1*float64(druid.Talents.Ferocity),

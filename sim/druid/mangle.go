@@ -21,12 +21,13 @@ func (druid *Druid) registerMangleCatSpell() {
 	results := make([]*core.SpellResult, min(MangleBerserkTargets, druid.Env.GetNumTargets()))
 
 	druid.MangleCat = druid.RegisterSpell(Cat, core.SpellConfig{
-		SpellCode:   SpellCode_DruidMangle,
-		ActionID:    core.ActionID{SpellID: 33876},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagBuilder,
+		SpellCode:      SpellCode_DruidMangle,
+		ClassSpellMask: SpellMaskMangle,
+		ActionID:       core.ActionID{SpellID: 33876},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagBuilder,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   45 - float64(druid.Talents.Ferocity),
@@ -80,12 +81,13 @@ func (druid *Druid) registerMangleBearSpell() {
 	results := make([]*core.SpellResult, min(MangleBerserkTargets, druid.Env.GetNumTargets()))
 
 	druid.MangleBear = druid.RegisterSpell(Bear, core.SpellConfig{
-		SpellCode:   SpellCode_DruidMangle,
-		ActionID:    core.ActionID{SpellID: 33878},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		SpellCode:      SpellCode_DruidMangle,
+		ClassSpellMask: SpellMaskMangle,
+		ActionID:       core.ActionID{SpellID: 33878},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
 			Cost:   20 - float64(druid.Talents.Ferocity),

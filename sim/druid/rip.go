@@ -71,12 +71,13 @@ func (druid *Druid) newRipSpellConfig(ripRank RipRankInfo) core.SpellConfig {
 	energyCost := 30.0
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_DruidRip,
-		ActionID:    core.ActionID{SpellID: ripRank.id},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPureDot,
+		SpellCode:      SpellCode_DruidRip,
+		ClassSpellMask: SpellMaskRip,
+		ActionID:       core.ActionID{SpellID: ripRank.id},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPureDot,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   energyCost,

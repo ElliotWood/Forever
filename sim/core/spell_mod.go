@@ -270,6 +270,9 @@ const (
 
 	// Adds to spell.PeriodicDamageMultiplierAdditive. Uses FloatValue.
 	SpellMod_PeriodicDamageDone_Flat
+
+	// Adds to spell.BaseDamageMultiplierAdditive. Uses FloatValue.
+	SpellMod_BaseDamageDone_Flat
 )
 
 var spellModMap = map[SpellModType]*SpellModFunctions{
@@ -322,8 +325,12 @@ var spellModMap = map[SpellModType]*SpellModFunctions{
 		Remove: func(mod *SpellMod, spell *Spell) { spell.DefaultCast.CastTime -= mod.timeValue },
 	},
 	SpellMod_BonusCrit_Percent: {
-		Apply:  func(mod *SpellMod, spell *Spell) { spell.BonusCritRating += mod.floatValue * SpellCritRatingPerCritChance },
-		Remove: func(mod *SpellMod, spell *Spell) { spell.BonusCritRating -= mod.floatValue * SpellCritRatingPerCritChance },
+		Apply: func(mod *SpellMod, spell *Spell) {
+			spell.BonusCritRating += mod.floatValue * SpellCritRatingPerCritChance
+		},
+		Remove: func(mod *SpellMod, spell *Spell) {
+			spell.BonusCritRating -= mod.floatValue * SpellCritRatingPerCritChance
+		},
 	},
 	SpellMod_BonusHit_Percent: {
 		Apply:  func(mod *SpellMod, spell *Spell) { spell.BonusHitRating += mod.floatValue * SpellHitRatingPerHitChance },
@@ -345,12 +352,20 @@ var spellModMap = map[SpellModType]*SpellModFunctions{
 		// ApplyCustom/RemoveCustom are wired in buildMod().
 	},
 	SpellMod_DotDamageDone_Pct: {
-		Apply:  func(mod *SpellMod, spell *Spell) { eachDot(spell, func(dot *Dot) { dot.DamageMultiplier *= 1 + mod.floatValue }) },
-		Remove: func(mod *SpellMod, spell *Spell) { eachDot(spell, func(dot *Dot) { dot.DamageMultiplier /= 1 + mod.floatValue }) },
+		Apply: func(mod *SpellMod, spell *Spell) {
+			eachDot(spell, func(dot *Dot) { dot.DamageMultiplier *= 1 + mod.floatValue })
+		},
+		Remove: func(mod *SpellMod, spell *Spell) {
+			eachDot(spell, func(dot *Dot) { dot.DamageMultiplier /= 1 + mod.floatValue })
+		},
 	},
 	SpellMod_DotBonusCoeffecient_Flat: {
-		Apply:  func(mod *SpellMod, spell *Spell) { eachDot(spell, func(dot *Dot) { dot.BonusCoefficient += mod.floatValue }) },
-		Remove: func(mod *SpellMod, spell *Spell) { eachDot(spell, func(dot *Dot) { dot.BonusCoefficient -= mod.floatValue }) },
+		Apply: func(mod *SpellMod, spell *Spell) {
+			eachDot(spell, func(dot *Dot) { dot.BonusCoefficient += mod.floatValue })
+		},
+		Remove: func(mod *SpellMod, spell *Spell) {
+			eachDot(spell, func(dot *Dot) { dot.BonusCoefficient -= mod.floatValue })
+		},
 	},
 	SpellMod_ThreatMultiplier_Pct: {
 		Apply:  func(mod *SpellMod, spell *Spell) { spell.ThreatMultiplier *= 1 + mod.floatValue },
@@ -359,6 +374,10 @@ var spellModMap = map[SpellModType]*SpellModFunctions{
 	SpellMod_PeriodicDamageDone_Flat: {
 		Apply:  func(mod *SpellMod, spell *Spell) { spell.PeriodicDamageMultiplierAdditive += mod.floatValue },
 		Remove: func(mod *SpellMod, spell *Spell) { spell.PeriodicDamageMultiplierAdditive -= mod.floatValue },
+	},
+	SpellMod_BaseDamageDone_Flat: {
+		Apply:  func(mod *SpellMod, spell *Spell) { spell.BaseDamageMultiplierAdditive += mod.floatValue },
+		Remove: func(mod *SpellMod, spell *Spell) { spell.BaseDamageMultiplierAdditive -= mod.floatValue },
 	},
 }
 
