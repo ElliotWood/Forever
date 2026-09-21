@@ -477,7 +477,9 @@ func TestAddGeneratedFlatBonusRaisesTheBidAndTheAmount(t *testing.T) {
 		Stats:      []StatConfig{{stats.AttackPower, 139, false}},
 	})
 
-	AddGeneratedFlatBonus(aura, stats.AttackPower, 30)
+	AddGeneratedFlatBonus(aura, stats.AttackPower, 139, 30)
+	// A second party member wearing the same set asks for the same total.
+	AddGeneratedFlatBonus(aura, stats.AttackPower, 139, 30)
 
 	if priority := aura.ExclusiveEffects[0].Priority; priority != 169 {
 		t.Errorf("the category effect bids %v, want the client's 139 plus the set's 30", priority)
@@ -503,7 +505,7 @@ func TestAddGeneratedFlatBonusRefusesAnAuraThatCannotCarryOne(t *testing.T) {
 		Stats:     []StatConfig{{stats.Armor, -520, false}},
 	})
 	assertPanics(t, "a stacking aura", func() {
-		AddGeneratedFlatBonus(stacking, stats.Armor, -30)
+		AddGeneratedFlatBonus(stacking, stats.Armor, -2600, -30)
 	})
 
 	uncontested := newGeneratedStatAura(&char.Unit, GeneratedBuff{
@@ -513,7 +515,19 @@ func TestAddGeneratedFlatBonusRefusesAnAuraThatCannotCarryOne(t *testing.T) {
 		Stats:    []StatConfig{{stats.Stamina, 54, false}},
 	})
 	assertPanics(t, "an aura with no category", func() {
-		AddGeneratedFlatBonus(uncontested, stats.Stamina, 30)
+		AddGeneratedFlatBonus(uncontested, stats.Stamina, 54, 30)
+	})
+
+	contested := newGeneratedStatAura(&char.Unit, GeneratedBuff{
+		Label:      "Generated Commanding Shout",
+		ActionID:   ActionID{SpellID: 403215}.WithTag(-1),
+		Duration:   NeverExpires,
+		Category:   "GeneratedCommandingShout",
+		SingleAura: true,
+		Stats:      []StatConfig{{stats.Stamina, 42, false}},
+	})
+	assertPanics(t, "a base that is not what the buff bids", func() {
+		AddGeneratedFlatBonus(contested, stats.Stamina, 54, 30)
 	})
 }
 

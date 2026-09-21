@@ -32,7 +32,7 @@ const BattleShoutT2Bonus = 30.0
 func driveBattleShout(char *Character, party *proto.PartyBuffs) {
 	aura := BattleShoutAura(&char.Unit, false, 0)
 	if party.SnapshotBsT2 {
-		AddGeneratedFlatBonus(aura, stats.AttackPower, BattleShoutT2Bonus)
+		AddGeneratedFlatBonus(aura, stats.AttackPower, BattleShoutValue(0), BattleShoutT2Bonus)
 	}
 	ApplyFixedShoutAura(char, aura, BattleShoutCategory)
 }

@@ -96,3 +96,53 @@ func TestWarriorShoutsForTheTierTwoBonus(t *testing.T) {
 		t.Errorf("a warrior wearing the set bids %v, want %v", withSet, want)
 	}
 }
+
+// The ally aura array registers one "Battle Shout (Player)" per unit, which two
+// warriors in the same party share, so the set has to be worth 30 once rather
+// than once per warrior wearing it.
+func TestTwoWarriorsWearingTheSetShoutForOneBonus(t *testing.T) {
+	warriorProto := func(name string) *proto.Player {
+		return &proto.Player{
+			Name:          name,
+			Race:          proto.Race_RaceOrc,
+			Class:         proto.Class_ClassWarrior,
+			Equipment:     &proto.EquipmentSpec{},
+			TalentsString: DefaultFuryTalents,
+			Spec: &proto.Player_DpsWarrior{
+				DpsWarrior: &proto.DpsWarrior{
+					Options: &proto.DpsWarrior_Options{
+						ClassOptions: &proto.WarriorOptions{
+							DefaultShout:  proto.WarriorShout_WarriorShoutBattle,
+							DefaultStance: proto.WarriorStance_WarriorStanceBerserker,
+							HasBsT2:       true,
+						},
+					},
+				},
+			},
+		}
+	}
+
+	raid := &proto.Raid{
+		Parties: []*proto.Party{{
+			Players: []*proto.Player{warriorProto("First"), warriorProto("Second")},
+			Buffs:   &proto.PartyBuffs{},
+		}},
+		Buffs:            &proto.RaidBuffs{},
+		Debuffs:          &proto.Debuffs{},
+		NumActiveParties: 1,
+	}
+
+	env, _, _ := core.NewEnvironment(raid, core.MakeSingleTargetEncounter(0), false, true)
+
+	want := core.BattleShoutValue(0) + core.BattleShoutT2Bonus
+	for _, agent := range env.Raid.Parties[0].Players {
+		war := agent.(*DpsWarrior)
+		aura := war.GetAura("Battle Shout (Player)")
+		if aura == nil {
+			t.Fatalf("%s carries no aura labelled \"Battle Shout (Player)\"", war.Label)
+		}
+		if got := aura.ExclusiveEffects[0].Priority; got != want {
+			t.Errorf("%s reads a shout worth %v, want %v", war.Label, got, want)
+		}
+	}
+}

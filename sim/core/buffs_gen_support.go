@@ -6,6 +6,7 @@ package core
 // compiler does not catch.
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/wowsims/forever/sim/core/stats"
@@ -374,14 +375,19 @@ func generatedStackFactor(effect *ExclusiveEffect, perStack float64, maxStacks i
 	return effect.Priority / perStack
 }
 
-// AddGeneratedFlatBonus adds an amount the client's buff data does not state to
-// a generated buff, and raises what the buff bids for its category by the same
-// amount: three pieces of the warrior's tier 2 set are worth 30 more attack
-// power on Battle Shout, and a shout worth 169 has to outbid one worth 139.
-// The aura grants the extra amount for exactly as long as it holds the
-// category, because a category that holds one aura at a time deactivates the
-// copy it outbids.
-func AddGeneratedFlatBonus(aura *Aura, stat stats.Stat, bonus float64) {
+// AddGeneratedFlatBonus raises a generated buff the client states as worth base
+// to base+bonus, in both of the numbers a buff that does not stack keeps apart:
+// what it applies and what it bids for its category. Three pieces of the
+// warrior's tier 2 set are worth 30 more attack power on Battle Shout, and a
+// shout worth 169 has to outbid one worth 139. The aura grants the extra amount
+// for exactly as long as it holds the category, because a category that holds
+// one aura at a time deactivates the copy it outbids.
+//
+// The aura belongs to the unit rather than to whoever raised it, so two party
+// members wearing the same set ask for the same total and get it once: a call
+// against an aura that already carries the bonus does nothing. One that finds
+// some other amount there is reading a different buff's base and says so.
+func AddGeneratedFlatBonus(aura *Aura, stat stats.Stat, base float64, bonus float64) {
 	if aura.MaxStacks > 0 {
 		panic("a stacking aura re-prices its category effect on every stack, which would drop the bonus: " + aura.Label)
 	}
@@ -390,7 +396,14 @@ func AddGeneratedFlatBonus(aura *Aura, stat stats.Stat, bonus float64) {
 		if effect.Category.Name != aura.Tag {
 			continue
 		}
-		effect.Priority += bonus
+		if effect.Priority == base+bonus {
+			return
+		}
+		if effect.Priority != base {
+			panic(fmt.Sprintf("%s bids %v, which is neither the %v it is worth nor the %v the bonus makes it",
+				aura.Label, effect.Priority, base, base+bonus))
+		}
+		effect.Priority = base + bonus
 		aura.AttachStatBuff(stat, bonus)
 		return
 	}

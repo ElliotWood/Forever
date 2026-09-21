@@ -65,7 +65,8 @@ func (warrior *Warrior) registerShouts() {
 
 	// Three pieces of Battlegear of Wrath add a flat 30 to the shout. HasBsT2 is
 	// the user saying this warrior wears them; the equipped set is not read.
-	battleShoutValue := core.BattleShoutValue(warrior.Talents.BoomingVoice)
+	battleShoutBase := core.BattleShoutValue(warrior.Talents.BoomingVoice)
+	battleShoutValue := battleShoutBase
 	if warrior.HasBsT2 {
 		battleShoutValue += core.BattleShoutT2Bonus
 	}
@@ -75,7 +76,7 @@ func (warrior *Warrior) registerShouts() {
 		// points; they are passed for signature uniformity.
 		aura := core.BattleShoutAura(unit, warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone, warrior.Talents.BoomingVoice)
 		if warrior.HasBsT2 {
-			core.AddGeneratedFlatBonus(aura, stats.AttackPower, core.BattleShoutT2Bonus)
+			core.AddGeneratedFlatBonus(aura, stats.AttackPower, battleShoutBase, core.BattleShoutT2Bonus)
 		}
 		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
 		return aura
