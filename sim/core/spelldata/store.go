@@ -1,0 +1,143 @@
+package spelldata
+
+import (
+	"fmt"
+	"sort"
+
+	"github.com/wowsims/forever/sim/core"
+)
+
+// What the generated half of the package has to provide. tools/database writes spells_auto_gen.go and
+// enums_auto_gen.go; nothing else in the package may assume they exist, so the store starts empty and
+// answers Nil for every id until they are installed.
+//
+// spells_auto_gen.go declares:
+//
+//	var generatedSpells = []Spell{...}                  // every row, by strictly increasing ID
+//	var generatedCurves = map[int32][][]float64{...}     // talent curve values, [effect][rank]
+//	func init() { install(generatedSpells, generatedCurves) }
+//
+// Calling install from the generated file's own init is what keeps the order right: package-level
+// variables are initialised before any init runs, so the data is complete when install indexes it,
+// and no file-name ordering is relied on.
+//
+// Two of the row's fields are named for the id they hold rather than for the accessor that resolves
+// it, because a Go field and a method cannot share a name: Effect.TriggerID feeds Trigger(), and
+// Spell.RefIDs feeds Refs(). The emitter writes those two names.
+//
+// enums_auto_gen.go declares the E_ constants as EffectType and the A_ constants as AuraType.
+var spells = []Spell{}
+
+// Talent curve values by spell id, as [effect index][rank - 1]. A trait talent states one spell and
+// its per-rank numbers live here rather than on ranks of their own.
+var curves = map[int32][][]float64{}
+
+// Every row as a pointer, in the same order as spells, so All hands out a view without rebuilding it.
+var all []*Spell
+
+// Which spells reach a given spell: every effect that triggers it, and every actionbar override that
+// replaces a spell with it.
+var drivers = map[int32][]int32{}
+
+// Which spells carry a given SpellLabel.
+var byLabel = map[int16][]int32{}
+
+// A_OVERRIDE_ACTIONBAR_SPELLS states the replacing spell in its base points, which makes the
+// overriding spell a driver of it the same way a trigger effect is.
+const auraOverrideActionbarSpells AuraType = 332
+
+func install(rows []Spell, rowCurves map[int32][][]float64) {
+	if rowCurves != nil {
+		curves = rowCurves
+	}
+	setSpells(rows)
+}
+
+// Tests build their rows by hand and swap them in here. The indices are rebuilt, the curves are left
+// alone so a test can state its own.
+func replaceForTest(rows []Spell) {
+	setSpells(rows)
+}
+
+func setSpells(rows []Spell) {
+	spells = rows
+
+	all = make([]*Spell, len(spells))
+	drivers = map[int32][]int32{}
+	byLabel = map[int16][]int32{}
+
+	for i := range spells {
+		s := &spells[i]
+		all[i] = s
+
+		// Find binary searches, so an unsorted or duplicated row would silently answer the wrong
+		// spell.
+		if i > 0 && s.ID <= spells[i-1].ID {
+			panic(fmt.Sprintf("spelldata: spell ids are out of order at %d: %d after %d",
+				i, s.ID, spells[i-1].ID))
+		}
+
+		for _, e := range s.Effects {
+			if e.TriggerID != 0 {
+				addDriver(e.TriggerID, s.ID)
+			}
+			if e.Aura == auraOverrideActionbarSpells && e.BasePoints > 0 {
+				addDriver(int32(e.BasePoints), s.ID)
+			}
+		}
+
+		for _, label := range s.Labels {
+			byLabel[label] = append(byLabel[label], s.ID)
+		}
+	}
+}
+
+// Two effects of the same spell can name the same trigger, and the caller wants the spell once.
+func addDriver(triggered int32, driver int32) {
+	ids := drivers[triggered]
+	if len(ids) > 0 && ids[len(ids)-1] == driver {
+		return
+	}
+	drivers[triggered] = append(ids, driver)
+}
+
+// The row for an id, or Nil when the store does not carry it. Nil reads as zeroes rather than
+// crashing, so a caller can ask about a spell this build does not have.
+func Find(id int32) *Spell {
+	i := sort.Search(len(spells), func(i int) bool { return spells[i].ID >= id })
+	if i < len(spells) && spells[i].ID == id {
+		return &spells[i]
+	}
+	return Nil
+}
+
+// For a spell a caller depends on: a missing row is a generator problem, not a runtime condition.
+func MustFind(id int32) *Spell {
+	s := Find(id)
+	if s == Nil {
+		panic(fmt.Sprintf("spelldata: spell %d is not in the store (regenerate or add it to extra_ids.go)", id))
+	}
+	return s
+}
+
+// Every row in id order. The rows are shared, not copied, so callers must not write through them.
+func All() []*Spell {
+	return all
+}
+
+// Every row with this exact name, by linear scan over the whole store. For tests and debugging - a
+// sim should name the spell by id.
+func ByName(name string) []*Spell {
+	var out []*Spell
+	for i := range spells {
+		if spells[i].Name == name {
+			out = append(out, &spells[i])
+		}
+	}
+	return out
+}
+
+// The family and mask of a spell, for a talent effect that has to be matched against it.
+func ClassFlagsOf(id int32) core.ClassFlags {
+	return MustFind(id).ClassFlags
+}
