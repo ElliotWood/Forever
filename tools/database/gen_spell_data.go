@@ -1114,17 +1114,43 @@ func GenerateSpellDataFiles(helper *DBHelper) error {
 	}
 
 	rendered := map[string][]byte{}
+
+	// The store carries every spell the class files are built from, so the discovery runs here and
+	// both consumers read the one result rather than each rediscovering the ladders.
+	var ladderIDs []int32
 	for _, class := range dbc.Classes {
 		pkg := strings.ToLower(dbc.ClassNameFromDBC(class))
 		tree, ok := trees[classMaskOf(class)]
 		if !ok {
 			return fmt.Errorf("%s: the client database holds no talent tree for this class", pkg)
 		}
-		out, err := renderClassFile(helper.db, pkg, class, namer, tree)
+		ladders, skipped, partial, err := discoverLadders(helper.db, class, tree)
+		if err != nil {
+			return fmt.Errorf("%s: %w", pkg, err)
+		}
+		out, err := renderClassFile(helper.db, pkg, class, namer, ladders, skipped, partial)
 		if err != nil {
 			return fmt.Errorf("%s: %w", pkg, err)
 		}
 		rendered[pkg] = out
+
+		for _, l := range ladders {
+			for _, id := range l.Ranks {
+				ladderIDs = append(ladderIDs, id)
+			}
+		}
+
+		// A node the ladders do not describe still grants a spell the sim registers - Hemorrhage is
+		// one - so every spell the tree defines is a root of the store.
+		treeSpells, err := treeSpellIDs(helper.db, tree)
+		if err != nil {
+			return fmt.Errorf("%s: %w", pkg, err)
+		}
+		for id := range treeSpells {
+			if id != 0 {
+				ladderIDs = append(ladderIDs, id)
+			}
+		}
 	}
 
 	// Rendered before any write too: it holds exactly the names the class files above turned out to
@@ -1135,20 +1161,29 @@ func GenerateSpellDataFiles(helper *DBHelper) error {
 		return err
 	}
 
+	// Rendered with a namer of its own: the store's rows name enum values the class tables never
+	// reach, and recording those on the namer above would put constants the shared package has no
+	// reader for into its file.
+	store, storeEnums, err := renderStore(helper.db, ladderIDs, trees)
+	if err != nil {
+		return err
+	}
+
 	for pkg, out := range rendered {
 		if err := os.WriteFile(fmt.Sprintf("sim/%s/spell_data_auto_gen.go", pkg), out, 0644); err != nil {
 			return err
 		}
 	}
-	return os.WriteFile("sim/common/shared/spell_data_enums_auto_gen.go", enums, 0644)
+	if err := os.WriteFile("sim/common/shared/spell_data_enums_auto_gen.go", enums, 0644); err != nil {
+		return err
+	}
+	if err := os.WriteFile("sim/core/spelldata/spells_auto_gen.go", store, 0644); err != nil {
+		return err
+	}
+	return os.WriteFile("sim/core/spelldata/enums_auto_gen.go", storeEnums, 0644)
 }
 
-func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnumNamer, treeID int) ([]byte, error) {
-	ladders, skipped, partial, err := discoverLadders(db, class, treeID)
-	if err != nil {
-		return nil, err
-	}
-
+func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnumNamer, ladders []rankLadder, skipped, partial []string) ([]byte, error) {
 	// Named rather than dropped silently, so a family the resolver could not make sense of is visible
 	// here instead of merely absent. Kept out of the body below, whose text decides which imports the
 	// file needs - a family name containing "time." would otherwise add an unused one.
