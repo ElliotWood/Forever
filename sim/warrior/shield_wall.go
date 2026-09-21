@@ -2,7 +2,6 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
@@ -10,10 +9,8 @@ import (
 var shieldWallRank = spellData.ShieldWall.Highest()
 
 func (warrior *Warrior) registerShieldWall() {
-	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldWallRank)).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.DamageTakenMultiplier,
-		1+shieldWallRank.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Percent(),
-	)
+	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldWallRank))
+	spelldata.ParseEffects(&warrior.Character, aura, shieldWallRank)
 
 	config := spelldata.SpellConfig(&warrior.Unit, shieldWallRank)
 

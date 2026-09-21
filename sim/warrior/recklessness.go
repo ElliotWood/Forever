@@ -2,25 +2,18 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/spelldata"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 var recklessnessRank = spellData.Recklessness.Highest()
 
 func (warrior *Warrior) registerRecklessness() {
-	recklessnessCritValue := recklessnessRank.Effect(dbcenums.A_MOD_CRIT_PCT, 0).Average(core.CharacterLevel)
-	aura := warrior.RegisterAura(spelldata.AuraConfig(recklessnessRank)).AttachStatsBuff(
-		stats.Stats{
-			stats.PhysicalCritPercent: recklessnessCritValue,
-			stats.SpellCritPercent:    recklessnessCritValue,
-		},
-	).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.DamageTakenMultiplier,
-		1+recklessnessRank.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Percent(),
-	).
-		AttachFearImmunity()
+	aura := warrior.RegisterAura(spelldata.AuraConfig(recklessnessRank))
+	spelldata.ParseEffects(&warrior.Character, aura, recklessnessRank)
+
+	// Grants immunity to Fear effects, which the row states as A_MECHANIC_IMMUNITY and the parse
+	// skips.
+	aura.AttachFearImmunity()
 
 	config := spelldata.SpellConfig(&warrior.Unit, recklessnessRank,
 		spelldata.Flags(core.SpellFlagAPL|core.SpellFlagCastWhileIncapacitated))

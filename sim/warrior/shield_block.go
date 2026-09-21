@@ -2,27 +2,28 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 var shieldBlockRank = spellData.ShieldBlock.Highest()
 
 func (warrior *Warrior) registerShieldBlock() {
 	var spell *core.Spell
-	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldBlockRank)).
-		AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(dbcenums.A_MOD_BLOCK_PERCENT, 0).Percent()).
-		AttachProcTrigger(core.ProcTrigger{
-			Name:               "Shield Block - Consume",
-			TriggerImmediately: true,
-			Outcome:            core.OutcomeBlock,
-			Callback:           core.CallbackOnSpellHitTaken,
-			Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-				spell.RelatedSelfBuff.RemoveStack(sim)
-			},
-		})
+	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldBlockRank))
+	spelldata.ParseEffects(&warrior.Character, aura, shieldBlockRank)
+
+	// The block that spends a charge is an outcome no proc mask states, so the listener is the
+	// caller's; the row states the two charges the aura starts with.
+	aura.AttachProcTrigger(core.ProcTrigger{
+		Name:               "Shield Block - Consume",
+		TriggerImmediately: true,
+		Outcome:            core.OutcomeBlock,
+		Callback:           core.CallbackOnSpellHitTaken,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			spell.RelatedSelfBuff.RemoveStack(sim)
+		},
+	})
 
 	config := spelldata.SpellConfig(&warrior.Unit, shieldBlockRank, spelldata.Flags(core.SpellFlagAPL))
 

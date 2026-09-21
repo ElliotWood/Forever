@@ -135,4 +135,3 @@ func ByName(name string) []*Spell {
 	}
 	return out
 }
-
