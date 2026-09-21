@@ -14,11 +14,10 @@ func (mage *Mage) registerArcaneBlastSpell() {
 	}
 
 	// Beta client 1.60.1.69893: rank 5 (1239700), the level 60 rank of five. Forever gives it its own
-	// spell ids; 30451 is kept as the action id the APLs already name.
+	// spell ids; 30451 is kept as the action id the APLs already name. Cost, cast time, school and
+	// coefficient come from the client table; the damage is ours (the table has the centre, 394).
+	row := spellData.ArcaneBlast.ByRank(5)
 	baseDamage := []float64{364, 424}
-	spellCoeff := .714
-	baseManaCost := .15
-	castTime := time.Millisecond * 2500
 
 	actionID := core.ActionID{SpellID: 30451}
 
@@ -64,8 +63,8 @@ func (mage *Mage) registerArcaneBlastSpell() {
 		SpellCode:      SpellCode_MageArcaneBlast,
 		ClassSpellMask: SpellMaskArcaneBlast,
 		ActionID:       actionID,
-		SpellSchool:    core.SpellSchoolArcane,
-		DefenseType:    core.DefenseTypeMagic,
+		SpellSchool:    row.SpellSchool,
+		DefenseType:    row.DefenseType,
 		ProcMask:       core.ProcMaskSpellDamage,
 		Flags:          SpellFlagMage | core.SpellFlagAPL,
 
@@ -73,18 +72,18 @@ func (mage *Mage) registerArcaneBlastSpell() {
 		Rank:          1,
 
 		ManaCost: core.ManaCostOptions{
-			BaseCost: baseManaCost,
+			BaseCost: row.PowerCostPct / 100,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD:      core.GCDDefault,
-				CastTime: castTime,
+				CastTime: row.CastTime,
 			},
 		},
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		BonusCoefficient: spellCoeff,
+		BonusCoefficient: roundCoef(row.Direct.BonusCoefficient()),
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			damage := sim.Roll(baseDamage[0], baseDamage[1])
