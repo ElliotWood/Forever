@@ -97,56 +97,16 @@ const (
 	SpellMaskShouts = SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout
 )
 
-// How the client names each of the families above: SpellClassOptions on the top rank of the ladder,
-// which is the set a talent effect addresses through its own EffectSpellClassMask. Read off the same
-// ladder the ability is registered from rather than from a second copy of its spell id.
-//
-// Only the masks that name one family have one. The sim-only sub-spells take their parent's, the
-// client having no row of its own for a Whirlwind off-hand strike or a Sweeping Strikes copy.
+// The client's SpellClassOptions for the registrations that do not resolve a row of their own: the
+// stance spells, and the sim-only sub-spells that take their parent's flags, the client having no
+// row for a Whirlwind off-hand strike or a Sweeping Strikes copy.
 var (
-	SpellFlagsBattleShout       = spellData.BattleShout.Highest().ClassFlags
-	SpellFlagsBerserkerRage     = spellData.BerserkerRage.Highest().ClassFlags
-	SpellFlagsRecklessness      = spellData.Recklessness.Highest().ClassFlags
-	SpellFlagsDeathWish         = spellData.DeathWish.Highest().ClassFlags
-	SpellFlagsRetaliation       = spellData.Retaliation.Highest().ClassFlags
-	SpellFlagsRetaliationHit    = spellData.RetaliationTriggered.Highest().ClassFlags
-	SpellFlagsShieldWall        = spellData.ShieldWall.Highest().ClassFlags
-	SpellFlagsLastStand         = spellData.LastStand.Highest().ClassFlags
-	SpellFlagsCharge            = spellData.Charge.Highest().ClassFlags
-	SpellFlagsIntercept         = spellData.Intercept.Highest().ClassFlags
-	SpellFlagsDemoralizingShout = spellData.DemoralizingShout.Highest().ClassFlags
-
 	SpellFlagsBattleStance    = spellData.BattleStance.Highest().ClassFlags
 	SpellFlagsBerserkerStance = spellData.BerserkerStance.Highest().ClassFlags
 	SpellFlagsDefensiveStance = spellData.DefensiveStance.Highest().ClassFlags
 
-	SpellFlagsRend              = spellData.Rend.Highest().ClassFlags
-	SpellFlagsDeepWounds        = spellData.DeepWoundsTriggered.ByID(412609).ClassFlags
-	SpellFlagsSweepingStrikes   = spellData.SweepingStrikes.Highest().ClassFlags
-	SpellFlagsHeroicStrike      = spellData.HeroicStrike.Highest().ClassFlags
-	SpellFlagsCleave            = spellData.Cleave.Highest().ClassFlags
-	SpellFlagsExecute           = spellData.Execute.Highest().ClassFlags
-	SpellFlagsOverpower         = spellData.Overpower.Highest().ClassFlags
-	SpellFlagsRevenge           = spellData.Revenge.Highest().ClassFlags
-	SpellFlagsSlam              = spellData.Slam.Highest().ClassFlags
-	SpellFlagsSunderArmor       = spellData.SunderArmor.Highest().ClassFlags
-	SpellFlagsThunderClap       = spellData.ThunderClap.Highest().ClassFlags
-	SpellFlagsWhirlwind         = spellData.Whirlwind.Highest().ClassFlags
-	SpellFlagsShieldSlam        = spellData.ShieldSlam.Highest().ClassFlags
-	SpellFlagsConcussionBlow    = spellData.ConcussionBlow.Highest().ClassFlags
-	SpellFlagsShieldBash        = spellData.ShieldBash.Highest().ClassFlags
-	SpellFlagsBloodthirst       = spellData.Bloodthirst.Highest().ClassFlags
-	SpellFlagsMortalStrike      = spellData.MortalStrike.Highest().ClassFlags
-	SpellFlagsShieldBlock       = spellData.ShieldBlock.Highest().ClassFlags
-	SpellFlagsHamstring         = spellData.Hamstring.Highest().ClassFlags
-	SpellFlagsPummel            = spellData.Pummel.Highest().ClassFlags
-	SpellFlagsMockingBlow       = spellData.MockingBlow.Highest().ClassFlags
-	SpellFlagsChallengingShout  = spellData.ChallengingShout.Highest().ClassFlags
-	SpellFlagsIntimidatingShout = spellData.IntimidatingShout.Highest().ClassFlags
-	SpellFlagsDisarm            = spellData.Disarm.Highest().ClassFlags
-	SpellFlagsTaunt             = spellData.Taunt.Highest().ClassFlags
-	SpellFlagsVictoryRush       = spellData.VictoryRush.Highest().ClassFlags
-	SpellFlagsSpearingStrike    = spellData.SpearingStrike.Highest().ClassFlags
+	SpellFlagsSweepingStrikes = spellData.SweepingStrikes.Highest().ClassFlags
+	SpellFlagsWhirlwind       = spellData.Whirlwind.Highest().ClassFlags
 )
 
 const EnrageTag = "EnrageEffect"
@@ -327,14 +287,6 @@ func (warrior *Warrior) CastNormalizedSweepingStrikesAttack(results core.SpellRe
 // Agent is a generic way to access underlying warrior on any of the agents.
 type WarriorAgent interface {
 	GetWarrior() *Warrior
-}
-
-// SpellPower.PowerType 1 is the rage bar. The client states rage on a 0-1000 bar and core spends
-// whole points, which is the conversion PowerCost makes.
-const powerTypeRage int8 = 1
-
-func rageCost(s *spelldata.Spell) int32 {
-	return int32(s.PowerCost(powerTypeRage))
 }
 
 // The recovery the ability waits out. A warrior ability states it on a shared category - Bloodthirst
