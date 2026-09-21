@@ -715,7 +715,15 @@ export class Player<SpecType extends Spec> {
 	setGear(newGear: Gear, forceUpdate?: boolean) {
 		if (newGear.equals(this.getGear()) && !forceUpdate) return;
 
-		this.patch('gear', newGear);
+		// Weapon stone imbues are corrected in the same write as the gear, so that a subscriber
+		// (including pickers that auto-clear a now-invalid selection) never sees the pair
+		// disagree.
+		const adjustedConsumes = newGear.adjustImbues(this.slice().consumables);
+		if (adjustedConsumes !== this.slice().consumables) {
+			this.write({ gear: newGear, consumables: adjustedConsumes }, ['gear', 'consumables']);
+		} else {
+			this.patch('gear', newGear);
+		}
 	}
 
 	async setGearAsync(newGear: Gear, forceUpdate?: boolean) {

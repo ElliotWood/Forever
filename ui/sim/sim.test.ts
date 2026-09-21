@@ -59,6 +59,7 @@ const makeGear = (label: string) =>
 		// gearAsBackendSpec reads both of these before handing equipment to the backend.
 		getItemSlots: vi.fn(() => []),
 		hasInactiveMetaGem: vi.fn(() => false),
+		adjustImbues: vi.fn((consumables: unknown) => consumables),
 	}) as unknown as Gear;
 
 const runningSignals = (sim: Sim) => (sim.signalManager as unknown as { running: Map<unknown, unknown> }).running;

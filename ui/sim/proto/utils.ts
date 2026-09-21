@@ -95,6 +95,18 @@ export function getPlayerSpecFromPlayer<SpecType extends Spec>(player: Player): 
 	throw new Error('Unable to parse spec from player proto: ' + JSON.stringify(Player.toJson(player), null, 2));
 }
 
+export const DENSE_SHARPENING_STONE_ID = 16138;
+export const DENSE_WEIGHTSTONE_ID = 16622;
+
+// Returns the corrected imbue id for a slot given the equipped weapon's sharp/blunt eligibility.
+// Only rewrites the Dense sharpening/weightstone pair; all other imbue ids pass through unchanged.
+export function adjustWeaponImbueId(imbueId: number, hasSharp: boolean, hasBlunt: boolean): number {
+	if (imbueId !== DENSE_SHARPENING_STONE_ID && imbueId !== DENSE_WEIGHTSTONE_ID) return imbueId;
+	if (hasSharp) return DENSE_SHARPENING_STONE_ID;
+	if (hasBlunt) return DENSE_WEIGHTSTONE_ID;
+	return 0;
+}
+
 export function newUnitReference(raidIndex: number): UnitReference {
 	return UnitReference.create({
 		type: UnitReference_Type.Player,

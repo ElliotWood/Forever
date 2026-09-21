@@ -3,8 +3,77 @@ package bulk
 import (
 	"slices"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 )
+
+const (
+	denseSharpeningStoneID int32 = 16138
+	denseWeightstoneID     int32 = 16622
+)
+
+func isSharpWeaponType(wt proto.WeaponType) bool {
+	switch wt {
+	case proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypeDagger, proto.WeaponType_WeaponTypePolearm, proto.WeaponType_WeaponTypeSword:
+		return true
+	default:
+		return false
+	}
+}
+
+func isBluntWeaponType(wt proto.WeaponType) bool {
+	switch wt {
+	case proto.WeaponType_WeaponTypeFist, proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff:
+		return true
+	default:
+		return false
+	}
+}
+
+// adjustWeaponImbueID rewrites the Dense sharpening/weightstone pair to match the equipped weapon
+// type; all other imbue ids pass through unchanged. Returns 0 when neither stone family is valid
+// for the weapon (no weapon, or a shield / offhand-only item).
+func adjustWeaponImbueID(imbueID int32, weapon *proto.ItemSpec) int32 {
+	if imbueID != denseSharpeningStoneID && imbueID != denseWeightstoneID {
+		return imbueID
+	}
+	if weapon == nil || weapon.Id == 0 {
+		return 0
+	}
+	item := core.GetItemByID(weapon.Id)
+	if item == nil {
+		return 0
+	}
+	if isSharpWeaponType(item.WeaponType) {
+		return denseSharpeningStoneID
+	}
+	if isBluntWeaponType(item.WeaponType) {
+		return denseWeightstoneID
+	}
+	return 0
+}
+
+// adjustCandidateImbues keeps the MH/OH weapon stone imbues in sync with the candidate's equipped
+// weapon types, mirroring the frontend auto-switch so bulk sim combos use the correct stone.
+func adjustCandidateImbues(player *proto.Player) {
+	consumables := player.GetConsumables()
+	if consumables == nil {
+		return
+	}
+	if consumables.MhImbueId == 0 && consumables.OhImbueId == 0 {
+		return
+	}
+	items := player.GetEquipment().GetItems()
+	var mhWeapon, ohWeapon *proto.ItemSpec
+	if int(proto.ItemSlot_ItemSlotMainHand) < len(items) {
+		mhWeapon = items[proto.ItemSlot_ItemSlotMainHand]
+	}
+	if int(proto.ItemSlot_ItemSlotOffHand) < len(items) {
+		ohWeapon = items[proto.ItemSlot_ItemSlotOffHand]
+	}
+	consumables.MhImbueId = adjustWeaponImbueID(consumables.MhImbueId, mhWeapon)
+	consumables.OhImbueId = adjustWeaponImbueID(consumables.OhImbueId, ohWeapon)
+}
 
 func (generator *bulkSimCandidateGenerator) getAllWeaponCombos() [][2]*bulkSimCandidateOption {
 	allWeaponCombos := make([][2]*bulkSimCandidateOption, 0)

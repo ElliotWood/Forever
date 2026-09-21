@@ -98,7 +98,21 @@ export const CrystalCharge = {
 	value: 15239,
 };
 
+export const ThoriumGrenade = {
+	actionId: ActionId.fromItemId(15993),
+	value: 19769,
+	showWhen: (player: Player<any>) => player.hasProfession(Profession.Engineering),
+};
+
+export const DenseDynamite = {
+	actionId: ActionId.fromItemId(18641),
+	value: 23063,
+	showWhen: (player: Player<any>) => player.hasProfession(Profession.Engineering),
+};
+
 export const EXPLOSIVE_CONFIG = [
+	{ config: ThoriumGrenade, stats: [] },
+	{ config: DenseDynamite, stats: [] },
 	{ config: CrystalCharge, stats: [] },
 	{ config: EzThroDynamiteTwo, stats: [] },
 ] as ConsumableStatOption<number>[];
@@ -119,17 +133,55 @@ export const ManaOil = {
 	actionId: ActionId.fromItemId(20748),
 	value: 25123,
 };
+export const WizardOil = {
+	actionId: ActionId.fromItemId(20750),
+	value: 25121,
+};
 export const BrilWizardOil = {
 	actionId: ActionId.fromItemId(20749),
 	value: 25122,
 };
+export const BlessedWizardOil = {
+	actionId: ActionId.fromItemId(23123),
+	value: 28898,
+};
 // Stones
+export const DenseSharpeningStoneMH = {
+	actionId: ActionId.fromItemId(12404),
+	value: 16138,
+	showWhen: (player: Player<any>) => player.getGear().hasSharpMHWeapon(),
+};
+export const DenseWeightstoneMH = {
+	actionId: ActionId.fromItemId(12643),
+	value: 16622,
+	showWhen: (player: Player<any>) => player.getGear().hasBluntMHWeapon(),
+};
+export const ElementalSharpeningStoneMH = {
+	actionId: ActionId.fromItemId(18262),
+	value: 22756,
+	showWhen: (player: Player<any>) => player.getGear().hasMHWeapon(),
+};
 export const ConsecratedSharpeningStoneMH = {
 	actionId: ActionId.fromItemId(23122),
 	value: 28891,
 	showWhen: (player: Player<any>) => player.getGear().hasMHWeapon(),
 };
 
+export const DenseSharpeningStoneOH = {
+	actionId: ActionId.fromItemId(12404),
+	value: 16138,
+	showWhen: (player: Player<any>) => player.getGear().hasSharpOHWeapon(),
+};
+export const DenseWeightstoneOH = {
+	actionId: ActionId.fromItemId(12643),
+	value: 16622,
+	showWhen: (player: Player<any>) => player.getGear().hasBluntOHWeapon(),
+};
+export const ElementalSharpeningStoneOH = {
+	actionId: ActionId.fromItemId(18262),
+	value: 22756,
+	showWhen: (player: Player<any>) => player.getGear().hasOHWeapon(),
+};
 export const ConsecratedSharpeningStoneOH = {
 	actionId: ActionId.fromItemId(23122),
 	value: 28891,
@@ -162,7 +214,12 @@ export const ShamanImbueRockbiter = {
 
 export const IMBUE_CONFIG_MH = [
 	{ config: ManaOil, stats: [Stat.StatHealingPower] },
+	{ config: WizardOil, stats: [Stat.StatSpellDamage] },
 	{ config: BrilWizardOil, stats: [Stat.StatSpellDamage] },
+	{ config: BlessedWizardOil, stats: [Stat.StatSpellDamage] },
+	{ config: DenseSharpeningStoneMH, stats: [Stat.StatAttackPower] },
+	{ config: DenseWeightstoneMH, stats: [Stat.StatAttackPower] },
+	{ config: ElementalSharpeningStoneMH, stats: [Stat.StatAttackPower] },
 	{ config: ConsecratedSharpeningStoneMH, stats: [Stat.StatAttackPower] },
 	{ config: ShamanImbueRockbiter, stats: [] },
 	{ config: ShamanImbueFrostbrand, stats: [] },
@@ -172,7 +229,12 @@ export const IMBUE_CONFIG_MH = [
 
 export const IMBUE_CONFIG_OH = [
 	{ config: ManaOil, stats: [Stat.StatHealingPower] },
+	{ config: WizardOil, stats: [Stat.StatSpellDamage] },
 	{ config: BrilWizardOil, stats: [Stat.StatSpellDamage] },
+	{ config: BlessedWizardOil, stats: [Stat.StatSpellDamage] },
+	{ config: DenseSharpeningStoneOH, stats: [Stat.StatAttackPower] },
+	{ config: DenseWeightstoneOH, stats: [Stat.StatAttackPower] },
+	{ config: ElementalSharpeningStoneOH, stats: [Stat.StatAttackPower] },
 	{ config: ConsecratedSharpeningStoneOH, stats: [Stat.StatAttackPower] },
 	{ config: ShamanImbueRockbiter, stats: [] },
 	{ config: ShamanImbueFrostbrand, stats: [] },
@@ -193,6 +255,56 @@ export const makeMHImbueInput = makeConsumeInputFactory({
 export const makeOHImbueInput = makeConsumeInputFactory({
 	consumesFieldName: 'ohImbueId',
 	showWhen: (player: Player<any>) => player.getGear().getEquippedItem(ItemSlot.ItemSlotOffHand)?.item.weaponSpeed !== undefined,
+});
+
+///////////////////////////////////////////////////////////////////////////
+//                                   PET
+///////////////////////////////////////////////////////////////////////////
+
+export const PetScrollAgi = makeBooleanConsumeInput({
+	actionId: ActionId.fromItemId(10309),
+	fieldName: 'petScrollAgi',
+	showWhen: (player: Player<any>) => [Spec.SpecHunter, Spec.SpecWarlock, Spec.SpecDpsPriest].includes(player.getSpec()),
+});
+
+export const PetScrollStr = makeBooleanConsumeInput({
+	actionId: ActionId.fromItemId(10310),
+	fieldName: 'petScrollStr',
+	showWhen: (player: Player<any>) => [Spec.SpecHunter, Spec.SpecWarlock, Spec.SpecDpsPriest].includes(player.getSpec()),
+});
+
+///////////////////////////////////////////////////////////////////////////
+//                                 SCROLLS
+///////////////////////////////////////////////////////////////////////////
+
+export const ScrollAgi = makeBooleanConsumeInput({
+	actionId: ActionId.fromItemId(10309),
+	fieldName: 'scrollAgi',
+	showWhen: (player: Player<any>) => player.getEpWeights().getStat(Stat.StatAgility) > 0,
+});
+
+export const ScrollStr = makeBooleanConsumeInput({
+	actionId: ActionId.fromItemId(10310),
+	fieldName: 'scrollStr',
+	showWhen: (player: Player<any>) => player.getEpWeights().getStat(Stat.StatStrength) > 0,
+});
+
+export const ScrollInt = makeBooleanConsumeInput({
+	actionId: ActionId.fromItemId(10308),
+	fieldName: 'scrollInt',
+	showWhen: (player: Player<any>) => player.getEpWeights().getStat(Stat.StatIntellect) > 0,
+});
+
+export const ScrollSpi = makeBooleanConsumeInput({
+	actionId: ActionId.fromItemId(10306),
+	fieldName: 'scrollSpi',
+	showWhen: (player: Player<any>) => player.getEpWeights().getStat(Stat.StatSpirit) > 0,
+});
+
+export const ScrollArm = makeBooleanConsumeInput({
+	actionId: ActionId.fromItemId(10305),
+	fieldName: 'scrollArm',
+	showWhen: (player: Player<any>) => player.getEpWeights().getStat(Stat.StatArmor) > 0,
 });
 
 ///////////////////////////////////////////////////////////////////////////

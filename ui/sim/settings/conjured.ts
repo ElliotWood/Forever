@@ -17,6 +17,8 @@ export interface ConsumableOption {
 export const CONJURED_CONFIG: Array<ConsumableOption> = [
 	// Thistle Tea
 	{ value: 7676, stats: [], showWhen: player => player.getClass() == Class.ClassRogue },
+	// Major Healthstone
+	{ value: 9421, stats: [Stat.StatStamina] },
 	// Dark Rune
 	{ value: 12662, stats: [Stat.StatIntellect] },
 ];

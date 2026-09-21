@@ -99,9 +99,28 @@ var ExtraItemIcons = []int32{
 
 	// Potions / In Battle Consumes
 	13442,
+	9421,
 
 	// Thistle Tea
 	7676,
+
+	// Scrolls
+	10305,
+	10306,
+	10308,
+	10309,
+	10310,
+
+	// Weapon Imbues
+	12404,
+	12643,
+	18262,
+	20750,
+	23123,
+
+	// Explosives
+	15993,
+	18641,
 }
 
 // Item Ids of consumables to allow
@@ -110,6 +129,7 @@ var ConsumableAllowList = []int32{
 	9088,  // Gift of Arthas
 	9155,  // Arcane Elixir
 	9224,  // Elixir of Demonslaying
+	9421,  // Major Healthstone
 	13442, // Migty Rage Potion
 	13452, // Elixir of the Mongoose
 	13454, // Greater Arcane Elixir

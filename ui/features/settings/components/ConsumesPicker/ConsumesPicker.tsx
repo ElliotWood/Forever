@@ -85,6 +85,23 @@ export const ConsumesPicker = ({
 					{player.getPlayerSpec().canDualWield && <IconEnumPicker modObject={player} config={configs.ohImbue} />}
 				</PickerGroup>
 			</ConsumeRow>
+			<ConsumeRow
+				name="scrolls"
+				configs={[
+					ConsumablesInputs.ScrollAgi,
+					ConsumablesInputs.ScrollStr,
+					ConsumablesInputs.ScrollInt,
+					ConsumablesInputs.ScrollSpi,
+					ConsumablesInputs.ScrollArm,
+				]}>
+				<PickerGroup variant="icons" className="justify-end" data-testid="consumes-scrolls">
+					<IconPicker modObject={player} config={ConsumablesInputs.ScrollAgi} />
+					<IconPicker modObject={player} config={ConsumablesInputs.ScrollStr} />
+					<IconPicker modObject={player} config={ConsumablesInputs.ScrollInt} />
+					<IconPicker modObject={player} config={ConsumablesInputs.ScrollSpi} />
+					<IconPicker modObject={player} config={ConsumablesInputs.ScrollArm} />
+				</PickerGroup>
+			</ConsumeRow>
 			{encounterConsumes && (
 				<ConsumeRow name="miscellaneous" configs={[ConsumablesInputs.BoglingRoot]}>
 					<PickerGroup variant="icons" className="justify-end" data-testid="consumes-misc">
@@ -95,6 +112,8 @@ export const ConsumesPicker = ({
 			<ConsumeRow name="pet" hidden={!encounterConsumes}>
 				<PickerGroup variant="icons" className="justify-end" data-testid="consumes-pet">
 					<IconEnumPicker modObject={player} config={configs.petFood} />
+					<IconPicker modObject={player} config={ConsumablesInputs.PetScrollAgi} />
+					<IconPicker modObject={player} config={ConsumablesInputs.PetScrollStr} />
 				</PickerGroup>
 			</ConsumeRow>
 		</div>

@@ -55,6 +55,16 @@ describe('statDisplayString, TBC-only stats', () => {
 		expect(show(stats, UnitStat.fromStat(Stat.StatFireDamage))).toBe('250 (+50)');
 	});
 
+	it('shows a weapon stone as melee crit percent only, leaving the ranged crit row at zero', () => {
+		const stats = new Stats()
+			.withPseudoStat(PseudoStat.PseudoStatMeleeCritPercent, 2)
+			.withPseudoStat(PseudoStat.PseudoStatRangedCritPercent, 0)
+			.withStat(Stat.StatMeleeCritRating, 0);
+
+		expect(show(stats, UnitStat.fromPseudoStat(PseudoStat.PseudoStatMeleeCritPercent))).toBe('2.00%');
+		expect(show(stats, UnitStat.fromPseudoStat(PseudoStat.PseudoStatRangedCritPercent))).toBe('0.00%');
+	});
+
 	it('adds the ranged hit enchant rating at the gear stage only', () => {
 		const rangedHit = UnitStat.fromPseudoStat(PseudoStat.PseudoStatRangedHitPercent);
 		const stats = new Stats().withPseudoStat(PseudoStat.PseudoStatRangedHitPercent, 2);

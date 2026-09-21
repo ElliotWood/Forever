@@ -694,6 +694,9 @@
 				"mhImbue": "Main Hand",
 				"ohImbue": "Off Hand"
 			},
+			"scrolls": {
+				"title": "Scrolls"
+			},
 			"miscellaneous": {
 				"title": "Miscellaneous"
 			}

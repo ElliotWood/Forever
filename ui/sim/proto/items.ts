@@ -8,6 +8,14 @@ import { PlayerSpecs } from '../player/specs';
 import { intersection, swap } from '../utils/collections';
 import { Stats } from './stats';
 
+export function isSharpWeaponType(weaponType: WeaponType): boolean {
+	return [WeaponType.WeaponTypeAxe, WeaponType.WeaponTypeDagger, WeaponType.WeaponTypePolearm, WeaponType.WeaponTypeSword].includes(weaponType);
+}
+
+export function isBluntWeaponType(weaponType: WeaponType): boolean {
+	return [WeaponType.WeaponTypeFist, WeaponType.WeaponTypeMace, WeaponType.WeaponTypeStaff].includes(weaponType);
+}
+
 // Custom functions for determining the EP value of meta gem effects.
 // Default meta effect EP value is 0, so just handle the ones relevant to your spec.
 const metaGemEffectEPs: Partial<Record<Spec, (gem: Gem, epWeights: Stats) => number>> = {

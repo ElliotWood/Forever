@@ -8,6 +8,20 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
+// Scrolls share StatBuffCategory with the raid buffs granting the same stat, so a
+// scroll doesn't stack with e.g. Arcane Brilliance or Divine Spirit; only the
+// strongest source of that stat applies.
+func registerScrollAura(character *Character, label string, itemID int32, stat stats.Stat, amount float64) *Aura {
+	aura := character.GetOrRegisterAura(Aura{
+		Label:      label,
+		ActionID:   ActionID{ItemID: itemID},
+		Duration:   NeverExpires,
+		BuildPhase: CharacterBuildPhaseConsumes,
+	})
+	makeExclusiveFlatStatBuff(aura, stat, amount, StatBuffCategory)
+	return MakePermanent(aura)
+}
+
 // Registers all consume-related effects to the Agent.
 func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 	character := agent.GetCharacter()
@@ -80,10 +94,27 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 
 	// Static Imbues
 	if consumables.MhImbueId != 0 && partyBuffs.WindfuryTotem == proto.TristateEffect_TristateEffectMissing {
-		registerStaticImbue(agent, consumables.MhImbueId)
+		registerStaticImbue(agent, consumables.MhImbueId, character.AutoAttacks.MH())
 	}
 	if consumables.OhImbueId != 0 {
-		registerStaticImbue(agent, consumables.OhImbueId)
+		registerStaticImbue(agent, consumables.OhImbueId, character.AutoAttacks.OH())
+	}
+
+	// Scrolls
+	if consumables.ScrollAgi {
+		registerScrollAura(character, "Scroll of Agility IV", 10309, stats.Agility, 17)
+	}
+	if consumables.ScrollStr {
+		registerScrollAura(character, "Scroll of Strength IV", 10310, stats.Strength, 17)
+	}
+	if consumables.ScrollInt {
+		registerScrollAura(character, "Scroll of Intellect IV", 10308, stats.Intellect, 16)
+	}
+	if consumables.ScrollSpi {
+		registerScrollAura(character, "Scroll of Spirit IV", 10306, stats.Spirit, 15)
+	}
+	if consumables.ScrollArm {
+		registerScrollAura(character, "Scroll of Protection IV", 10305, stats.Armor, 240)
 	}
 
 	// Bogling Root: +1 physical damage for 10 min (item 5206, spell 5665).
@@ -97,6 +128,12 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 			continue
 		}
 
+		if consumables.PetScrollAgi {
+			pet.AddStat(stats.Agility, 17)
+		}
+		if consumables.PetScrollStr {
+			pet.AddStat(stats.Strength, 17)
+		}
 		if consumables.PetFoodId != 0 {
 			petFood := GetConsumableByID(consumables.PetFoodId)
 			pet.AddStats(petFood.Stats)
@@ -326,6 +363,11 @@ func registerConjuredCD(agent Agent, consumes *proto.ConsumesSpec) {
 	character := agent.GetCharacter()
 
 	for _, conjuredId := range consumes.ConjuredItems {
+		// The UI sends its whole eligible list, unfiltered by the consumable database.
+		if GetConsumableByID(conjuredId).Id == 0 {
+			continue
+		}
+
 		conjuredMCD := makeConjuredActivationSpell(conjuredId, character)
 
 		if conjuredMCD.Spell != nil {
@@ -463,6 +505,8 @@ func makeConjuredActivationSpellInternal(conjured Consumable, character *Charact
 var GoblinSapperActionID = ActionID{ItemID: 10646}
 var EzThroDynamiteTwoActionID = ActionID{ItemID: 18588}
 var CrystalChargeActionID = ActionID{ItemID: 11566}
+var ThoriumGrenadeActionID = ActionID{ItemID: 15993}
+var DenseDynamiteActionID = ActionID{ItemID: 18641}
 
 func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer *Timer) {
 	character := agent.GetCharacter()
@@ -487,6 +531,10 @@ func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer
 			filler = character.newEzThroDynamiteTwoSpell(sharedTimer)
 		case 15239:
 			filler = character.newCrystalChargeSpell(sharedTimer)
+		case 19769:
+			filler = character.newThoriumGrenadeSpell(sharedTimer)
+		case 23063:
+			filler = character.newDenseDynamiteSpell(sharedTimer)
 		}
 
 		character.AddMajorCooldown(MajorCooldown{
@@ -552,8 +600,14 @@ func (character *Character) newCrystalChargeSpell(sharedTimer *Timer) *Spell {
 func (character *Character) newEzThroDynamiteTwoSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, EzThroDynamiteTwoActionID, SpellSchoolFire, 213, 287, 14, time.Second, Cooldown{}))
 }
+func (character *Character) newThoriumGrenadeSpell(sharedTimer *Timer) *Spell {
+	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, ThoriumGrenadeActionID, SpellSchoolFire, 300, 500, 25, time.Second, Cooldown{}))
+}
+func (character *Character) newDenseDynamiteSpell(sharedTimer *Timer) *Spell {
+	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, DenseDynamiteActionID, SpellSchoolFire, 340, 460, 14, time.Second, Cooldown{}))
+}
 
-func registerStaticImbue(agent Agent, imbueId int32) {
+func registerStaticImbue(agent Agent, imbueId int32, weapon *Weapon) {
 	character := agent.GetCharacter()
 	switch imbueId {
 	case 25123: // Mana Oil
@@ -562,6 +616,24 @@ func registerStaticImbue(agent Agent, imbueId int32) {
 	case 25122: // Briliant Wizard Oil
 		character.AddStat(stats.SpellDamage, 36)
 		character.AddStat(stats.SpellCritRating, 14)
+	case 25121: // Wizard Oil
+		character.AddStat(stats.SpellDamage, 30)
+	case 16138, 16622: // Dense Sharpening Stone / Dense Weightstone
+		weapon.BaseDamageMin += 8
+		weapon.BaseDamageMax += 8
+	case 22756: // Elemental Sharpening Stone
+		// RangedCritPercent is the ranged offset from PhysicalCritPercent, so the melee-only
+		// crit has to be cancelled there.
+		character.AddStat(stats.PhysicalCritPercent, 2)
+		character.AddStat(stats.RangedCritPercent, -2)
+	case 28898: // Blessed Wizard Oil
+		character.Env.RegisterPostFinalizeEffect(func() {
+			for _, at := range character.AttackTables {
+				at.MobTypeBonusStats[proto.MobType_MobTypeUndead] = at.MobTypeBonusStats[proto.MobType_MobTypeUndead].Add(stats.Stats{
+					stats.SpellDamage: 58,
+				})
+			}
+		})
 	case 28891: // Consecrated Sharpening Stone
 		character.Env.RegisterPostFinalizeEffect(func() {
 			for _, at := range character.AttackTables {
