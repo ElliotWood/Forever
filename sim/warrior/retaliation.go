@@ -5,15 +5,17 @@ import (
 )
 
 var retaliationRank = spellData.Retaliation.HighestRank()
+var retaliationHit = spellData.RetaliationTriggered.HighestRank()
+var retaliationHitBaseDamage, _ = retaliationHit.Direct.Range()
 
 func (warrior *Warrior) registerRetaliation() {
 	actionID := core.ActionID{SpellID: retaliationRank.SpellID}
 
 	attackSpell := warrior.RegisterSpell(core.SpellConfig{
 		ClassSpellMask: SpellMaskRetaliationHit,
-		ActionID:       core.ActionID{SpellID: 20240},
-		SpellSchool:    core.SpellSchoolPhysical,
-		DefenseType:    core.DefenseTypeMelee,
+		ActionID:       core.ActionID{SpellID: retaliationHit.SpellID},
+		SpellSchool:    retaliationHit.SpellSchool,
+		DefenseType:    retaliationHit.DefenseType,
 		ProcMask:       core.ProcMaskMeleeMH,
 		Flags:          core.SpellFlagMeleeMetrics,
 
@@ -21,7 +23,7 @@ func (warrior *Warrior) registerRetaliation() {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			baseDamage := retaliationHitBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})
