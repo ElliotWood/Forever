@@ -38,10 +38,11 @@ func (rogue *Rogue) registerVenom() {
 	})
 
 	rogue.Venom = rogue.RegisterSpell(core.SpellConfig{
-		SpellCode:    SpellCode_RogueVenom,
-		ActionID:     actionID,
-		Flags:        rogue.finisherFlags(),
-		MetricSplits: 6,
+		SpellCode:      SpellCode_RogueVenom,
+		ClassSpellMask: SpellMaskVenom,
+		ActionID:       actionID,
+		Flags:          rogue.finisherFlags(),
+		MetricSplits:   6,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost: 25,

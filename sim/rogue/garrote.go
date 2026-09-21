@@ -22,12 +22,13 @@ func (rogue *Rogue) registerGarrote() {
 	}[rogue.Level]
 
 	rogue.Garrote = rogue.GetOrRegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_RogueGarrote,
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       SpellFlagBuilder | core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		SpellCode:      SpellCode_RogueGarrote,
+		ClassSpellMask: SpellMaskGarrote,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          SpellFlagBuilder | core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   50.0 - 10*float64(rogue.Talents.DirtyDeeds),
