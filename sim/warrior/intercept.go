@@ -6,8 +6,8 @@ import (
 
 var interceptRank = spellData.Intercept.HighestRank()
 
-var interceptStunRank = spellData.InterceptTriggered.ByRank(interceptRank.Rank)
-var interceptStunDamage, _ = interceptStunRank.Direct.Range()
+// The damage sits on the stun the charge triggers, which the generator follows onto the row.
+var interceptStunDamage, _ = interceptRank.Direct.Range()
 
 func (warrior *Warrior) registerIntercept() {
 	actionID := core.ActionID{SpellID: interceptRank.SpellID}
