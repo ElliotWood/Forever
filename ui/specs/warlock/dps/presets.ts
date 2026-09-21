@@ -3,23 +3,13 @@ import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, RaidBuf
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
 import { defaultExposeWeaknessSettings, defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
-import AfflictionRot from './apls/affliction.apl.json';
-import BlankAPL from './apls/blank.apl.json';
-import DemoRot from './apls/demonology.apl.json';
-import DestroFireRot from './apls/destro_fire.apl.json';
-import DestroRot from './apls/destruction.apl.json';
+import DefaultApl from './apls/default.apl.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
 // keep them in a separate file.
 
-export const BLANK_APL = PresetUtils.makePresetAPLRotation('Blank', BlankAPL);
-
-// Rotations
-export const AfflictionAPL = PresetUtils.makePresetAPLRotation('Affliction', AfflictionRot);
-export const DemoAPL = PresetUtils.makePresetAPLRotation('Demonology', DemoRot);
-export const DestroAPL = PresetUtils.makePresetAPLRotation('Destruction', DestroRot);
-export const DestroFireAPL = PresetUtils.makePresetAPLRotation('Destruction (Fire)', DestroFireRot);
+export const DEFAULT_APL = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
 // Defaults
 export const DefaultOptions = WarlockOptions.create({

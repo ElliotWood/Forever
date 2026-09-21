@@ -44,10 +44,7 @@ func TestDpsWarrior(t *testing.T) {
 			Profession1:      proto.Profession_Engineering,
 			Profession2:      proto.Profession_Blacksmithing,
 
-			Rotation: core.GetAplRotation("../../../ui/specs/warrior/dps/apls", "fury"),
-			OtherRotations: []core.RotationCombo{
-				core.GetAplRotation("../../../ui/specs/warrior/dps/apls", "arms"),
-			},
+			Rotation: core.GetAplRotation("../../../ui/specs/warrior/dps/apls", "default"),
 
 			ItemFilter: core.ItemFilter{
 				ArmorType: proto.ArmorType_ArmorTypeLeather,

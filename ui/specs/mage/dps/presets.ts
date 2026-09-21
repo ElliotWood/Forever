@@ -1,37 +1,16 @@
 import * as PresetUtils from '@app/preset_utils';
-import { makeSpecChangeWarningToast } from '@features/settings/utils/spec_change_warning_toast';
-import { ConsumesSpec, Debuffs, IndividualBuffs, ItemSlot, PartyBuffs, Profession, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
 import { Mage_Options as MageOptions, Mage_Rotation, MageArmor } from '@generated/proto/mage';
 import { SavedTalents } from '@generated/proto/ui';
-import { Player } from '@sim/player/player';
 import { defaultImprovedShadowBoltSettings } from '@sim/proto/utils';
 
-import ArcaneApl from './apls/arcane.apl.json';
-import ArcaneBraidApl from './apls/arcaneBraid.apl.json';
-import BlankAPL from './apls/blank.apl.json';
+import DefaultApl from './apls/default.apl.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
 // keep them in a separate file.
 
-export const BLANK_APL = PresetUtils.makePresetAPLRotation('Blank', BlankAPL);
-
-export const ROTATION_PRESET_ARCANE = PresetUtils.makePresetAPLRotation('Arcane', ArcaneApl);
-export const doesNotHaveSerpentCoilBraid = (player: Player<Spec.SpecMage>) =>
-	player.getEquippedItem(ItemSlot.ItemSlotTrinket1)?.id != 30720 && player.getEquippedItem(ItemSlot.ItemSlotTrinket2)?.id != 30720;
-export const ROTATION_PRESET_ARCANEBRAID = PresetUtils.makePresetAPLRotation('BraidSimple', ArcaneBraidApl, {
-	onLoad(player: Player<Spec.SpecMage>) {
-		makeSpecChangeWarningToast(
-			[
-				{
-					condition: doesNotHaveSerpentCoilBraid,
-					message: 'Check your gear: You do not have Serpent-Coil Braid equipped, but the selected option is for Serpent-Coil Braid.',
-				},
-			],
-			player,
-		);
-	},
-});
+export const DEFAULT_APL = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
 export const ArcaneMageSimpleRotation = Mage_Rotation.create({
 	conserveStart: 20,
