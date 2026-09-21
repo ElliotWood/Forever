@@ -116,7 +116,7 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 		stacking:    s.MaxStack > 0 && !o.ignoreStacks,
 	}
 
-	folded := foldedDotEffects(s)
+	folded := foldedDotEffects(s, o)
 
 	for i := range s.Effects {
 		e := &s.Effects[i]
@@ -240,8 +240,10 @@ func appliesAura(t dbcenums.SpellEffectType) bool {
 
 // The dot modifiers a spell states twice. A talent that raises a spell's damage states the same
 // number once for the hit and once for the dot, and one SpellMod_DamageDone_Flat already reaches the
-// ticks as well as the hit, so the second effect would double the bonus on the dot.
-func foldedDotEffects(s *Spell) []*Effect {
+// ticks as well as the hit, so the second effect would double the bonus on the dot. Only a hit
+// modifier this parse reads folds the dot one into itself; a parse narrowed to the dot effect alone
+// attaches it.
+func foldedDotEffects(s *Spell, o *parseOptions) []*Effect {
 	var folded []*Effect
 	for i := range s.Effects {
 		dot := &s.Effects[i]
@@ -251,7 +253,8 @@ func foldedDotEffects(s *Spell) []*Effect {
 
 		for j := range s.Effects {
 			hit := &s.Effects[j]
-			if hit.Aura != dbcenums.A_ADD_PCT_MODIFIER ||
+			if hit.Aura != dbcenums.A_ADD_PCT_MODIFIER || !appliesAura(hit.Type) ||
+				!o.reads(int32(j+1)) ||
 				(hit.Misc != SPELLMOD_DAMAGE && hit.Misc != SPELLMOD_ALL_EFFECTS) {
 				continue
 			}

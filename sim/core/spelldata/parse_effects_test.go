@@ -629,6 +629,18 @@ func bonusArmor(amount float64) []float64 {
 	return values
 }
 
+// A parse narrowed to the dot modifier alone has no hit modifier to fold it into.
+func TestParseFoldsOnlyIntoAHitModifierItReads(t *testing.T) {
+	withParseRows(t)
+	character := parseWarrior()
+
+	parsed := ParseStatic(character, Find(1100), Effects(2))
+
+	if kinds := appliedKinds(parsed); len(kinds) != 1 || kinds[0] != "SpellMod_DotDamageDone_Pct" {
+		t.Errorf("Effects(2) attached %v, want the dot modifier", kinds)
+	}
+}
+
 // A cooldown multiplier cannot follow the stacks any more than the other multiplier rows can.
 func TestParseSkipsACooldownMultiplierOnAStackingRow(t *testing.T) {
 	withParseRows(t)
