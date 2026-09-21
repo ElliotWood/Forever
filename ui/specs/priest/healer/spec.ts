@@ -76,7 +76,6 @@ export default defineSpec<Spec.SpecHealerPriest>({
 	// Nothing is simulated, so buffs that only matter inside an encounter (damage, cooldowns,
 	// mana returns over a fight) would only mislead.
 	excludeBuffDebuffInputs: [
-		BuffDebuffInputs.Bloodlust,
 		BuffDebuffInputs.Thorns,
 		BuffDebuffInputs.Innervate,
 		BuffDebuffInputs.PowerInfusion,

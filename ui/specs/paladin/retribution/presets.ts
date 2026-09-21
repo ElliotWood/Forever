@@ -33,7 +33,6 @@ export const DefaultConsumables = ConsumesSpec.create({
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	bloodlust: true,
 	divineSpirit: true,
 	arcaneBrilliance: true,
 	giftOfTheWild: true,

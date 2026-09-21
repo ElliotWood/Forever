@@ -2,7 +2,6 @@ import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
 import { ConsumesSpec, Profession, TristateEffect } from '@generated/proto/common';
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import AfflictionRot from './apls/affliction.apl.json';
 import BlankAPL from './apls/blank.apl.json';
@@ -50,7 +49,6 @@ export const OtherDefaults = {
 };
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(),
 	arcaneBrilliance: true,
 	giftOfTheWild: true,
 	powerWordFortitude: true,

@@ -1532,9 +1532,6 @@
 						"tooltip": {
 							"type": "string"
 						},
-						"bloodlust": {
-							"type": "string"
-						},
 						"skull_banner": {
 							"type": "string"
 						},
@@ -1552,7 +1549,7 @@
 						}
 					},
 					"additionalProperties": false,
-					"required": ["title", "tooltip", "bloodlust", "skull_banner", "stormlash_totem", "tricks_of_the_trade", "unholy_frenzy", "shattering_throw"]
+					"required": ["title", "tooltip", "skull_banner", "stormlash_totem", "tricks_of_the_trade", "unholy_frenzy", "shattering_throw"]
 				},
 				"external_defensive_cooldowns": {
 					"type": "object",

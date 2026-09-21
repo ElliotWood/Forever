@@ -1,8 +1,7 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { Class, ConsumesSpec, Drums, Profession, Race } from '@generated/proto/common';
+import { ConsumesSpec, Drums, Profession, Race } from '@generated/proto/common';
 import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, ShamanSyncType } from '@generated/proto/shaman';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 
@@ -48,7 +47,6 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(Class.ClassShaman),
 	powerWordFortitude: true,
 	giftOfTheWild: true,
 	arcaneBrilliance: true,

@@ -427,7 +427,6 @@
 		"external_damage_cooldowns": {
 			"title": "External Damage Cooldowns",
 			"tooltip": "Major damage cooldowns provided by <strong>other</strong> party/raid members.",
-			"bloodlust": "Bloodlust",
 			"skull_banner": "Skull Banner",
 			"stormlash_totem": "Stormlash Totem",
 			"tricks_of_the_trade": "Tricks of the Trade",

@@ -8,7 +8,6 @@ import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
 import * as Presets from './presets';
@@ -86,7 +85,6 @@ export default defineSpec<Spec.SpecRogue>({
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
 		raidBuffs: RaidBuffs.create({
-			...defaultRaidBuffMajorDamageCooldowns(),
 			giftOfTheWild: true,
 		}),
 		partyBuffs: PartyBuffs.create({

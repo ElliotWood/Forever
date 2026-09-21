@@ -42,7 +42,6 @@ describe('the buff registries', () => {
 		expect(labelsOf(BuffDebuffInputs.BUFFS_CONFIG)).toEqual([
 			'Arcane Brilliance',
 			'Blessing of Kings',
-			'Bloodlust',
 			'Divine Spirit',
 			'Gift of the Wild',
 			'Thorns',
@@ -83,13 +82,12 @@ describe('the buff registries', () => {
 
 	it('puts the hand-written inputs themselves at those positions, not lookalikes', () => {
 		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[7].config).toBe(BuffDebuffInputs.ShadowPriestDPS);
-		expect(BuffDebuffInputs.BUFFS_CONFIG[2].config).toBe(BuffDebuffInputs.Bloodlust);
-		expect(BuffDebuffInputs.BUFFS_CONFIG[9].config).toBe(BuffDebuffInputs.BlessingOfSalvation);
+		expect(BuffDebuffInputs.BUFFS_CONFIG[8].config).toBe(BuffDebuffInputs.BlessingOfSalvation);
 	});
 
 	it('gives the generated rows their owner class, so the settings tab can mark them external', () => {
 		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].config).toBe(BuffDebuffInputs.BattleShout);
 		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].ownerClass).toBe(Class.ClassWarrior);
-		expect(BuffDebuffInputs.BUFFS_CONFIG[2].ownerClass).toBeUndefined();
+		expect(BuffDebuffInputs.BUFFS_CONFIG[8].ownerClass).toBeUndefined();
 	});
 });

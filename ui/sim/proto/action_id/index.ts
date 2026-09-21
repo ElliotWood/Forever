@@ -427,7 +427,6 @@ export class ActionId {
 				}
 				break;
 			// For targetted buffs, tag is the source player's raid index or -1 if none.
-			case 'Bloodlust':
 			case 'Innervate':
 			case 'Focus Magic':
 			case 'Mana Tide Totem':

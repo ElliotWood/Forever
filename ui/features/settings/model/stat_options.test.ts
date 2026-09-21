@@ -100,7 +100,7 @@ describe('applyOwnerClassLabels', () => {
 describe('inDisplayOrder', () => {
 	const prebuiltBattleShout = ownedOption('Battle Shout', Class.ClassWarrior);
 	const prebuiltSunderArmor = ownedOption('Sunder Armor', Class.ClassWarrior);
-	const handWritten = ownedOption('Bloodlust');
+	const handWritten = ownedOption('Blessing of Salvation');
 
 	it('resolves a config to its prebuilt row and keeps the literal rows where they are written', () => {
 		const composed = inDisplayOrder([prebuiltBattleShout, prebuiltSunderArmor], [prebuiltBattleShout.config, handWritten, prebuiltSunderArmor.config]);

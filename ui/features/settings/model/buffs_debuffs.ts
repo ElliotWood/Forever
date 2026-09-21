@@ -1,6 +1,6 @@
 import { Stat } from '@generated/proto/common';
 import { ActionId } from '@sim/proto/action_id';
-import { makeBooleanIndividualBuffInput, makeBooleanRaidBuffInput, makeMultistateIndividualBuffInput } from '@ui-kit/icon_inputs';
+import { makeBooleanIndividualBuffInput, makeMultistateIndividualBuffInput } from '@ui-kit/icon_inputs';
 
 import * as Generated from './buffs_debuffs_auto_gen';
 import { IconPickerStatOption, inDisplayOrder } from './stat_options';
@@ -14,9 +14,6 @@ export * from './buffs_debuffs_auto_gen';
 export const Innervate = Generated.Innervates;
 export const PowerInfusion = Generated.PowerInfusions;
 export const ManaTideTotem = Generated.ManaTideTotems;
-
-// Raid Buffs
-export const Bloodlust = makeBooleanRaidBuffInput({ actionId: ActionId.fromSpellId(2825), fieldName: 'bloodlust', label: 'Bloodlust' });
 
 // Individual Buffs
 export const BlessingOfSalvation = makeBooleanIndividualBuffInput({
@@ -64,7 +61,6 @@ export const BUFFS_CONFIG = inDisplayOrder(
 	[
 		Generated.ArcaneBrilliance,
 		Generated.BlessingOfKings,
-		{ config: Bloodlust, stats: [] },
 		Generated.DivineSpirit,
 		Generated.GiftOfTheWild,
 		Generated.Thorns,

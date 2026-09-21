@@ -118,15 +118,8 @@ export const orderedResourceTypes: Array<ResourceType> = [
 export const AL_CATEGORY_HARD_MODE = 'Hard Mode';
 export const AL_CATEGORY_TITAN_RUNE = 'Titan Rune';
 
-export const defaultRaidBuffMajorDamageCooldowns = (_?: Class): Partial<RaidBuffs> => {
-	return RaidBuffs.create({
-		bloodlust: true,
-	});
-};
-
 // The buffs every healer gear planner starts with: the caster stat buffs, the two caster totems
-// and the blessings. No cooldowns: nothing is simulated, so Bloodlust and the like only mislead.
-// Nothing here depends on the class.
+// and the blessings. Nothing here depends on the class.
 export const defaultHealerRaidBuffs = (): RaidBuffs =>
 	RaidBuffs.create({
 		arcaneBrilliance: true,

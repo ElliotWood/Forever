@@ -1,6 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { Class, ConsumesSpec, Profession, Race, Spec } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	Hunter_Options as HunterOptions,
 	Hunter_Rotation,
@@ -8,7 +8,6 @@ import {
 	HunterOptions_PetType as PetType,
 	HunterOptions_QuiverBonus,
 } from '@generated/proto/hunter';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultAPL from './apls/default.apl.json';
 
@@ -60,7 +59,6 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(Class.ClassWarrior),
 	arcaneBrilliance: true,
 	divineSpirit: true,
 	giftOfTheWild: true,

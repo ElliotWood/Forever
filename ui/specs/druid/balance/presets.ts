@@ -1,8 +1,7 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { Class, ConsumesSpec, Drums, Profession, Race, UnitReference } from '@generated/proto/common';
+import { ConsumesSpec, Drums, Profession, Race, UnitReference } from '@generated/proto/common';
 import { BalanceDruid_Options as BalanceDruidOptions } from '@generated/proto/druid';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultAPL from './apls/default.apl.json';
 
@@ -15,7 +14,6 @@ export const DefaultOptions = BalanceDruidOptions.create({
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(Class.ClassShaman),
 	arcaneBrilliance: true,
 	giftOfTheWild: true,
 	powerWordFortitude: true,

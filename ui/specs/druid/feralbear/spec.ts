@@ -93,7 +93,6 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 			arcaneBrilliance: true,
 			giftOfTheWild: true,
 			powerWordFortitude: true,
-			bloodlust: true,
 			shadowProtection: true,
 			thorns: true,
 			divineSpirit: true,

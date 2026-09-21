@@ -1,6 +1,5 @@
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { Class, ConsumesSpec } from '@generated/proto/common';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
+import { ConsumesSpec } from '@generated/proto/common';
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
@@ -16,7 +15,6 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(Class.ClassWarrior),
 	powerWordFortitude: true,
 	giftOfTheWild: true,
 });

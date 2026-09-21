@@ -9,7 +9,6 @@ import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { Stats, UnitStat } from '@sim/proto/stats';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
 import * as FeralInputs from './inputs';
@@ -87,7 +86,6 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
 		raidBuffs: RaidBuffs.create({
-			...defaultRaidBuffMajorDamageCooldowns(),
 			arcaneBrilliance: true,
 			divineSpirit: true,
 			giftOfTheWild: true,
