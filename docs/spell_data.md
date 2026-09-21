@@ -586,5 +586,9 @@ neither copy is permanent, and the two are worth the same unless one side wears 
 are `thorns`, `leader_of_the_pack`, `moonkin_aura` and `trueshot_aura`: `sim/druid/druid.go`,
 `sim/druid/feralcat` and `sim/druid/feralbear` raise the party's Leader of the Pack or Moonkin Aura
 from a talent, `sim/hunter/hunter.go` raises Trueshot Aura, and the druid's own Thorns waits on the
-druid port. `thorns` and `battle_shout` carry the category; the other three do not, so their ports
-have to choose.
+druid port. `thorns`, `battle_shout`, `leader_of_the_pack` and `moonkin_aura` carry a category, so a
+druid registering its own copy of any of them has nothing to decide: the copy joins the same category
+and the two bid. The last two share one, `DruidCritAura`, because spell 17007 calls Leader of the
+Pack exclusive with Moonkin Aura - a druid's own cast of either joins it, so a party that ticks both
+and a druid who casts one are worth the client's 3 and not two threes. Only `trueshot_aura` is left
+without a category, so the hunter port has to choose.

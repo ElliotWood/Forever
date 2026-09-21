@@ -44,9 +44,10 @@ var Manifest = []BuffSpec{
 		Field: "leader_of_the_pack", Number: 4, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "LeaderOfThePack", Name: "Leader of the Pack", AuraName: "Leader of the Pack",
 		Owner: proto.Class_ClassDruid, Pet: PetCapAtRegular,
+		Category: "DruidCritAura", SingleAura: true,
 		StatOverride: []string{"PhysicalCritPercent", "SpellCritPercent"},
 		Stats:        []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
-		Notes:        "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule cannot separate them: the generator must prefer the party aura 24932 or this row needs an explicit Anchor. No improving talent in druid tree 1089. Spell 24932 reads \"Increases critical strike chance by $s1%\" and names no school, so the 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest.",
+		Notes:        "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule cannot separate them: the generator must prefer the party aura 24932 or this row needs an explicit Anchor. No improving talent in druid tree 1089. Spell 24932 reads \"Increases critical strike chance by $s1%\" and names no school, so the 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. Spell 17007 calls it exclusive with Moonkin Aura, which is the DruidCritAura category the two rows share.",
 	},
 	{
 		Field: "mana_spring_totem", Number: 18, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindStatFlat,
@@ -74,9 +75,10 @@ var Manifest = []BuffSpec{
 	{
 		Field: "moonkin_aura", Number: 3, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "MoonkinAura", Name: "Moonkin Aura", Owner: proto.Class_ClassDruid, Pet: PetCapAtRegular,
+		Category: "DruidCritAura", SingleAura: true,
 		StatOverride: []string{"PhysicalCritPercent", "SpellCritPercent"},
 		Stats:        []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
-		Notes:        "A_MOD_CRIT_PCT names no school, so spell 24907's 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. No improving talent in druid tree 1089.",
+		Notes:        "A_MOD_CRIT_PCT names no school, so spell 24907's 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. It shares the DruidCritAura category with Leader of the Pack, which spell 17007 calls it exclusive with. No improving talent in druid tree 1089.",
 	},
 	{
 		Field: "retribution_aura", Number: 7, Scope: ScopeParty, Proto: ProtoBool, Kind: KindDamageShield,

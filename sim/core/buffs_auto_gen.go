@@ -105,6 +105,8 @@ func DevotionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Leader of the Pack - https://www.wowhead.com/forever/spell=24932
+var LeaderOfThePackCategory = "DruidCritAura"
+
 func LeaderOfThePackValue(talentPoints int32) float64 {
 	return 3.0
 }
@@ -113,10 +115,12 @@ func LeaderOfThePackDuration(talentPoints int32) time.Duration {
 }
 func LeaderOfThePackAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Leader of the Pack (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 24932}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration: LeaderOfThePackDuration(talentPoints),
-		IsPlayer: isPlayer,
+		Label:      "Leader of the Pack (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 24932}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   LeaderOfThePackDuration(talentPoints),
+		Category:   LeaderOfThePackCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
 		Stats: []StatConfig{
 			{stats.PhysicalCritPercent, LeaderOfThePackValue(talentPoints), false},
 			{stats.SpellCritPercent, 3.0, false},
@@ -185,6 +189,8 @@ func ShadowPriestDpsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 }
 
 // Moonkin Aura - https://www.wowhead.com/forever/spell=24907
+var MoonkinAuraCategory = "DruidCritAura"
+
 func MoonkinAuraValue(talentPoints int32) float64 {
 	return 3.0
 }
@@ -193,10 +199,12 @@ func MoonkinAuraDuration(talentPoints int32) time.Duration {
 }
 func MoonkinAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Moonkin Aura (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 24907}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration: MoonkinAuraDuration(talentPoints),
-		IsPlayer: isPlayer,
+		Label:      "Moonkin Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:   ActionID{SpellID: 24907}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:   MoonkinAuraDuration(talentPoints),
+		Category:   MoonkinAuraCategory,
+		SingleAura: true,
+		IsPlayer:   isPlayer,
 		Stats: []StatConfig{
 			{stats.PhysicalCritPercent, MoonkinAuraValue(talentPoints), false},
 			{stats.SpellCritPercent, 3.0, false},

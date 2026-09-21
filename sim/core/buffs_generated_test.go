@@ -364,6 +364,10 @@ func TestPartyCommandingShoutAppliesTheGeneratedAura(t *testing.T) {
 // The two rows whose stats the manifest names. Each is worth the client's 3 on
 // every kind of crit, and neither touches RangedCritPercent, which the sim adds
 // on top of the physical one, so a ranged attack gains 3 and not 6.
+//
+// Spell 17007 calls Leader of the Pack exclusive with Moonkin Aura, so the two
+// share a category that holds one aura: a party with both ticked is worth 3,
+// and the copy that loses stays registered without applying anything.
 func TestGeneratedCritAurasApplyTheClientsThreeToEveryKindOfCrit(t *testing.T) {
 	for _, row := range []struct {
 		name  string
@@ -371,6 +375,7 @@ func TestGeneratedCritAurasApplyTheClientsThreeToEveryKindOfCrit(t *testing.T) {
 	}{
 		{"Leader of the Pack", &proto.PartyBuffs{LeaderOfThePack: true}},
 		{"Moonkin Aura", &proto.PartyBuffs{MoonkinAura: true}},
+		{"both", &proto.PartyBuffs{LeaderOfThePack: true, MoonkinAura: true}},
 	} {
 		t.Run(row.name, func(t *testing.T) {
 			char := newGeneratedBuffTestCharacter()
@@ -388,6 +393,36 @@ func TestGeneratedCritAurasApplyTheClientsThreeToEveryKindOfCrit(t *testing.T) {
 				t.Errorf("%s applied %v on top of the physical crit a ranged attack already reads", row.name, got)
 			}
 		})
+	}
+}
+
+// The loser of the category is still a registered aura on the character, so a
+// class port can find it and a log can name it; it simply holds nothing.
+func TestGeneratedCritAurasLeaveTheOutbidCopyRegisteredAndInert(t *testing.T) {
+	char := newGeneratedBuffTestCharacter()
+
+	applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
+		&proto.PartyBuffs{LeaderOfThePack: true, MoonkinAura: true}, &proto.IndividualBuffs{})
+	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+	pack := char.GetAura("Leader of the Pack (External)")
+	moonkin := char.GetAura("Moonkin Aura (External)")
+	if pack == nil || moonkin == nil {
+		t.Fatalf("the two copies are registered as %v and %v, want both", pack, moonkin)
+	}
+	if pack.IsActive() == moonkin.IsActive() {
+		t.Errorf("both copies are active: %v, want exactly one holding the category", pack.IsActive())
+	}
+
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(LeaderOfThePackCategory)
+	if !category.SingleAura {
+		t.Error("the DruidCritAura category is not single-aura, so both copies could sit on the character")
+	}
+	if len(category.effects) != 2 {
+		t.Errorf("%d effects bid for DruidCritAura, want both copies", len(category.effects))
+	}
+	if active := category.GetActiveEffect(); active == nil || active.Priority != 3 {
+		t.Errorf("the category is held at %v, want the client's 3", active)
 	}
 }
 
