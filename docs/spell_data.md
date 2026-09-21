@@ -48,7 +48,9 @@ The other accessors:
 A single-rank ability (Whirlwind, Shield Wall, Taunt) is a one-row table of its own, rank 1, with the
 same columns; nothing about it is hand-typed. Beside cost, cast time, cooldown and range a row carries
 `Duration` (the aura or effect it leaves), `ProcCharges` (how many times that aura acts) and
-`MaxTargets` (an area effect's cap), each zero where the client states none.
+`MaxTargets` (an area effect's cap), each zero where the client states none, and `RefundsOnMiss`, the
+Discount Power On Miss attribute; `row.MissRefund()` turns it into the 0.8 a `RageCostOptions.Refund`
+takes.
 
 A family whose ranks trigger another spell, or whose tooltip reads a number off one, has a second
 table beside it: `spellData.EnrageTriggered` holds the buff 12880 that Enrage's `$12880d` names,

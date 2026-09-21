@@ -97,6 +97,10 @@ type RankSpell struct {
 	// SpellTargetRestrictions.MaxTargets for an area effect (Whirlwind 4). Zero is unlimited.
 	MaxTargets int32
 
+	// SpellMisc.Attributes[1] carries Discount Power On Miss: the server refunds 80% of the cost
+	// when the spell misses, which is what the rage specials' Refund models.
+	RefundsOnMiss bool
+
 	// SpellMisc.SchoolMask, in the client's bit order, which is not the sim's - see schoolName.
 	SchoolMask int32
 
@@ -223,6 +227,12 @@ func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 	if err := scanOptional(db,
 		`SELECT COALESCE(MaxTargets, 0) FROM SpellTargetRestrictions WHERE SpellID = ? ORDER BY DifficultyID`, spellID, &s.MaxTargets); err != nil {
 		return s, fmt.Errorf("max targets for spell %d: %w", spellID, err)
+	}
+
+	if err := scanOptional(db, fmt.Sprintf(
+		`SELECT (COALESCE(json_extract(Attributes, '$[%d]'), 0) & %d) != 0 FROM SpellMisc WHERE SpellID = ? AND DifficultyID = 0`,
+		dbc.ATTR_INDEX_EX_1, dbc.ATTR_EX_1_DISCOUNT_POWER_ON_MISS), spellID, &s.RefundsOnMiss); err != nil {
+		return s, fmt.Errorf("miss refund for spell %d: %w", spellID, err)
 	}
 
 	if err := scanOptional(db,
