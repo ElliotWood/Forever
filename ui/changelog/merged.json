@@ -1,5 +1,11 @@
 [
 	{
+		"number": 262,
+		"title": "ci: make official an exact mirror of wowsims/forever",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/262"
+	},
+	{
 		"number": 261,
 		"title": "converge(proto): official's generated talent blocks for 8 classes",
 		"mergedAt": "2026-09-21",
