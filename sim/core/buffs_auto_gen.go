@@ -258,7 +258,7 @@ func ConcentrationAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura 
 }
 
 // Trueshot Aura - https://www.wowhead.com/forever/spell=20906
-// the rank ladder is not monotonic: rank 5 (20906) is worth 50 where rank 4 (20905) is worth 75, and the top rank is what the constructor states
+// the rank ladder is not monotonic: rank 5 (20906) is worth 50 where rank 4 (20905) is worth 75, and the top rank is what the constructor states. TODO: confirm in game which rank the client grants
 func TrueshotAuraValue(talentPoints int32) float64 {
 	return 50.0
 }

@@ -687,7 +687,7 @@ func (res *buffResolver) checkLadder(row *ResolvedBuff, byRank map[int32][]buffC
 			continue
 		}
 		if prevValue > math.Inf(-1) && math.Abs(value) < math.Abs(prevValue) {
-			row.warnInFile("the rank ladder is not monotonic: rank %d (%d) is worth %v where rank %d (%d) is worth %v, and the top rank is what the constructor states",
+			row.warnInFile("the rank ladder is not monotonic: rank %d (%d) is worth %v where rank %d (%d) is worth %v, and the top rank is what the constructor states. TODO: confirm in game which rank the client grants",
 				rank, spellID, value, prevRank, prevID, prevValue)
 		}
 		prevRank, prevValue, prevID = rank, value, spellID

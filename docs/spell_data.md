@@ -612,7 +612,9 @@ client describes no spell for. The last three resolve to a commented shell namin
 
 An `Anchor` is taken as it stands. Otherwise `Name` is looked up in `SkillLineAbility` for the owner's
 class, the highest rank is taken, and a non-monotonic ladder is warned about and recorded above the
-constructor. `AuraName` then hops from the cast to the aura family member with the same rank subtext.
+constructor, together with a TODO to confirm in game which rank the client grants. Trueshot Aura is
+the row this applies to: it follows rank 5 (20906), worth 50 ranged attack power, where rank 4 (20905)
+states 75. `AuraName` then hops from the cast to the aura family member with the same rank subtext.
 A spell an engraving rune grants is refused: those are class runes, not raid buffs. A `Talent` is
 matched in the owner's live trait tree and priced per point into a curve; declaring one for a talent
 that is not in the tree is an error, and not declaring one where a value-scaling talent exists is a
