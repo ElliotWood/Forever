@@ -145,10 +145,13 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	}
 
 	rows, err := db.Query(`
-		SELECT n.Name_lang, sla.Spell, s.NameSubtext_lang, sla.ClassMask, sla.SkillLine, sla.AcquireMethod
+		SELECT n.Name_lang, sla.Spell, s.NameSubtext_lang, sla.ClassMask, sla.SkillLine, sla.AcquireMethod,
+		       COALESCE(lv.BaseLevel, 0), (COALESCE(json_extract(sm.Attributes, '$[0]'), 0) & 64) != 0
 		FROM SkillLineAbility sla
 		JOIN SpellName n ON n.ID = sla.Spell
 		JOIN Spell s ON s.ID = sla.Spell
+		LEFT JOIN SpellLevels lv ON lv.SpellID = sla.Spell AND lv.DifficultyID = 0
+		LEFT JOIN SpellMisc sm ON sm.SpellID = sla.Spell AND sm.DifficultyID = 0
 		WHERE sla.SkillLine IN (
 			SELECT DISTINCT sla2.SkillLine
 			FROM SkillLineAbility sla2
@@ -164,6 +167,15 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	}
 	defer rows.Close()
 
+	treeSpells, err := treeSpellIDs(db, treeID)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+	legacyTalents, err := legacyTalentNames(db)
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
 	byName := map[string]map[int32][]rankCandidate{}
 	// A spell with no subtext is a single-rank family of its own only where no "Rank N" row carries
 	// its name - Execute's granted 20647 is a sub-spell of the ranked Execute, not a rank - and only
@@ -176,14 +188,20 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	for rows.Next() {
 		var name, subtext string
 		var c rankCandidate
-		if err := rows.Scan(&name, &c.SpellID, &subtext, &c.ClassMask, &c.SkillLine, &c.AcquireMethod); err != nil {
+		var baseLevel int32
+		var passive bool
+		if err := rows.Scan(&name, &c.SpellID, &subtext, &c.ClassMask, &c.SkillLine, &c.AcquireMethod, &baseLevel, &passive); err != nil {
 			return nil, nil, nil, err
 		}
 		m := rankSubtext.FindStringSubmatch(subtext)
 		if m == nil {
 			c.Rank = 1
 			unranked[name] = append(unranked[name], c)
-			if c.AcquireMethod != acquireGranted {
+			// A passive the legacy Talent table names, with a trainer row at level 1 and no place in
+			// the Forever tree, is a talent that no longer exists (Emberstorm, Deadliness); Anger
+			// Management has the same rows but sits in the tree.
+			legacy := passive && baseLevel <= 1 && legacyTalents[name] && !treeSpells[c.SpellID]
+			if c.AcquireMethod != acquireGranted && !legacy {
 				trainedUnranked[name] = true
 			}
 			continue
@@ -282,6 +300,159 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 	}
 
 	return ladders, skipped, partial, nil
+}
+
+// A $<spellID><token> in a description: "$12880d" on Enrage, "$12976s1" on Last Stand.
+var descriptionSpellRef = regexp.MustCompile(`\$(?:/\d+;)?(\d{4,7})[a-z]`)
+
+// The spells a rank triggers or reads its tooltip from: an EffectTriggerSpell edge (Intercept's
+// stun 20615, Intimidating Shout's fear 20511) or a $<id> token (Enrage's buff 12880, Flurry's
+// 12966, Last Stand's 12976). In id order, without the rank itself and without ids the client has no
+// spell for.
+func triggeredSpells(db *sql.DB, spellID int32) ([]int32, error) {
+	seen := map[int32]bool{}
+	rows, err := db.Query(`SELECT EffectTriggerSpell FROM SpellEffect WHERE SpellID = ? AND EffectTriggerSpell > 0`, spellID)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var id int32
+		if err := rows.Scan(&id); err != nil {
+			rows.Close()
+			return nil, err
+		}
+		seen[id] = true
+	}
+	rows.Close()
+
+	var desc string
+	if err := scanOptional(db, `SELECT COALESCE(Description_lang, '') FROM Spell WHERE ID = ?`, spellID, &desc); err != nil {
+		return nil, err
+	}
+	for _, m := range descriptionSpellRef.FindAllStringSubmatch(desc, -1) {
+		id, _ := strconv.Atoi(m[1])
+		seen[int32(id)] = true
+	}
+	delete(seen, spellID)
+
+	var ids []int32
+	for id := range seen {
+		var name string
+		if err := scanOptional(db, `SELECT Name_lang FROM SpellName WHERE ID = ?`, id, &name); err != nil {
+			return nil, err
+		}
+		if name != "" {
+			ids = append(ids, id)
+		}
+	}
+	sort.Slice(ids, func(i, j int) bool { return ids[i] < ids[j] })
+	return ids, nil
+}
+
+// The rows of a family's triggered table: one per spell the family's ranks trigger. Where every rank
+// triggers the same spell there is one row, rank 1; where each rank triggers its own, the row takes
+// the rank's number; anything else is numbered in id order.
+func triggeredRows(db *sql.DB, l rankLadder, mask int) ([]generatedRow, error) {
+	ranks := make([]int32, 0, len(l.Ranks))
+	for rank := range l.Ranks {
+		ranks = append(ranks, rank)
+	}
+	sort.Slice(ranks, func(i, j int) bool { return ranks[i] < ranks[j] })
+
+	perRank := map[int32][]int32{}
+	distinct := map[int32]bool{}
+	var order []int32
+	for _, rank := range ranks {
+		ids, err := triggeredSpells(db, l.Ranks[rank])
+		if err != nil {
+			return nil, err
+		}
+		perRank[rank] = ids
+		for _, id := range ids {
+			if !distinct[id] {
+				distinct[id] = true
+				order = append(order, id)
+			}
+		}
+	}
+	if len(order) == 0 {
+		return nil, nil
+	}
+
+	numbered := map[int32]int32{}
+	oneEach := true
+	for _, rank := range ranks {
+		if len(perRank[rank]) != 1 {
+			oneEach = false
+			break
+		}
+		numbered[perRank[rank][0]] = rank
+	}
+	switch {
+	case len(order) == 1:
+		numbered[order[0]] = 1
+	case oneEach && len(numbered) == len(order):
+	default:
+		sort.Slice(order, func(i, j int) bool { return order[i] < order[j] })
+		for i, id := range order {
+			numbered[id] = int32(i + 1)
+		}
+	}
+
+	var out []generatedRow
+	for _, id := range order {
+		row, err := buildRow(db, numbered[id], id, mask, nil)
+		if err != nil {
+			return nil, fmt.Errorf("triggered spell %d: %w", id, err)
+		}
+		out = append(out, row)
+	}
+	sort.Slice(out, func(i, j int) bool { return out[i].Rank < out[j].Rank })
+	return out, nil
+}
+
+// Every spell a node of the class's Forever tree defines.
+func treeSpellIDs(db *sql.DB, treeID int) (map[int32]bool, error) {
+	rows, err := db.Query(`
+		SELECT DISTINCT COALESCE(d.SpellID, 0)
+		FROM TraitNode tn
+		JOIN TraitNodeXTraitNodeEntry x ON x.TraitNodeID = tn.ID
+		JOIN TraitNodeEntry e ON e.ID = x.TraitNodeEntryID
+		JOIN TraitDefinition d ON d.ID = e.TraitDefinitionID
+		WHERE tn.TraitTreeID = ?`, treeID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := map[int32]bool{}
+	for rows.Next() {
+		var id int32
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		if id != 0 {
+			out[id] = true
+		}
+	}
+	return out, rows.Err()
+}
+
+// The names the client's legacy Talent table still carries, tree or no tree.
+func legacyTalentNames(db *sql.DB) (map[string]bool, error) {
+	rows, err := db.Query(`SELECT DISTINCT n.Name_lang FROM Talent t JOIN SpellName n ON n.ID = t.SpellRank_0`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	out := map[string]bool{}
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			return nil, err
+		}
+		out[name] = true
+	}
+	return out, rows.Err()
 }
 
 func keysOf[V any](m map[string]V) map[string]bool {
@@ -984,14 +1155,27 @@ func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnum
 		notGenerated.WriteString("\n")
 	}
 
+	mask := classMaskOf(class)
+	triggered := map[string][]generatedRow{}
+	for _, l := range ladders {
+		rows, err := triggeredRows(db, l, mask)
+		if err != nil {
+			return nil, fmt.Errorf("%s: %w", l.Name, err)
+		}
+		if len(rows) > 0 {
+			triggered[l.Field] = rows
+		}
+	}
+
 	var b strings.Builder
 	b.WriteString("type generatedSpellData struct {\n")
 	for _, l := range ladders {
 		fmt.Fprintf(&b, "\t%s shared.SpellDataTable\n", l.Field)
+		if triggered[l.Field] != nil {
+			fmt.Fprintf(&b, "\t%sTriggered shared.SpellDataTable\n", l.Field)
+		}
 	}
 	b.WriteString("}\n\nvar spellData = generatedSpellData{\n")
-
-	mask := classMaskOf(class)
 	for _, l := range ladders {
 		ranks := make([]int32, 0, len(l.Ranks))
 		for rank := range l.Ranks {
@@ -1008,6 +1192,13 @@ func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnum
 			fmt.Fprintf(&b, "\t\t%s\n", formatRow(row, namer))
 		}
 		b.WriteString("\t},\n")
+		if rows := triggered[l.Field]; rows != nil {
+			fmt.Fprintf(&b, "\t%sTriggered: shared.SpellDataTable{\n", l.Field)
+			for _, row := range rows {
+				fmt.Fprintf(&b, "\t\t%s\n", formatRow(row, namer))
+			}
+			b.WriteString("\t},\n")
+		}
 	}
 	b.WriteString("}\n")
 

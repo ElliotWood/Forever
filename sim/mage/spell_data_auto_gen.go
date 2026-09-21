@@ -18,110 +18,130 @@ import (
 //   Piercing Ice: effect 1 of spell 11151 has no rank curve and is left out
 
 type generatedSpellData struct {
-	AmplifyMagic         shared.SpellDataTable
-	ArcaneBlast          shared.SpellDataTable
-	ArcaneBrilliance     shared.SpellDataTable
-	ArcaneConcentration  shared.SpellDataTable
-	ArcaneExplosion      shared.SpellDataTable
-	ArcaneFocus          shared.SpellDataTable
-	ArcaneGeometry       shared.SpellDataTable
-	ArcaneImpact         shared.SpellDataTable
-	ArcaneInstability    shared.SpellDataTable
-	ArcaneIntellect      shared.SpellDataTable
-	ArcaneMeditation     shared.SpellDataTable
-	ArcaneMind           shared.SpellDataTable
-	ArcaneMissiles       shared.SpellDataTable
-	ArcanePower          shared.SpellDataTable
-	ArcaneResilience     shared.SpellDataTable
-	ArcaneShielding      shared.SpellDataTable
-	ArcaneSubtlety       shared.SpellDataTable
-	ArcticReach          shared.SpellDataTable
-	BlastWave            shared.SpellDataTable
-	Blink                shared.SpellDataTable
-	Blizzard             shared.SpellDataTable
-	BurningSoul          shared.SpellDataTable
-	Chilled              shared.SpellDataTable
-	Clearcasting         shared.SpellDataTable
-	ColdSnap             shared.SpellDataTable
-	Combustion           shared.SpellDataTable
-	ConeOfCold           shared.SpellDataTable
-	ConjureFood          shared.SpellDataTable
-	ConjureManaAgate     shared.SpellDataTable
-	ConjureManaCitrine   shared.SpellDataTable
-	ConjureManaJade      shared.SpellDataTable
-	ConjureManaRuby      shared.SpellDataTable
-	ConjureWater         shared.SpellDataTable
-	Counterspell         shared.SpellDataTable
-	CriticalMass         shared.SpellDataTable
-	DampenMagic          shared.SpellDataTable
-	ElementalPrecision   shared.SpellDataTable
-	Evocation            shared.SpellDataTable
-	ExpandedIntellect    shared.SpellDataTable
-	Felfire              shared.SpellDataTable
-	FingersOfFrost       shared.SpellDataTable
-	FireBlast            shared.SpellDataTable
-	FirePower            shared.SpellDataTable
-	FireVulnerability    shared.SpellDataTable
-	FireWard             shared.SpellDataTable
-	Fireball             shared.SpellDataTable
-	FlameThrowing        shared.SpellDataTable
-	Flamestrike          shared.SpellDataTable
-	FrostArmor           shared.SpellDataTable
-	FrostChanneling      shared.SpellDataTable
-	FrostNova            shared.SpellDataTable
-	FrostWard            shared.SpellDataTable
-	FrostWarding         shared.SpellDataTable
-	Frostbite            shared.SpellDataTable
-	Frostbolt            shared.SpellDataTable
-	FrostfireBolt        shared.SpellDataTable
-	IceArmor             shared.SpellDataTable
-	IceBarrier           shared.SpellDataTable
-	IceBlock             shared.SpellDataTable
-	IceLance             shared.SpellDataTable
-	IceShards            shared.SpellDataTable
-	Ignite               shared.SpellDataTable
-	Impact               shared.SpellDataTable
-	ImprovedBlizzard     shared.SpellDataTable
-	ImprovedChanneling   shared.SpellDataTable
-	ImprovedConeOfCold   shared.SpellDataTable
-	ImprovedCounterspell shared.SpellDataTable
-	ImprovedFireWard     shared.SpellDataTable
-	ImprovedFireball     shared.SpellDataTable
-	ImprovedFlamestrike  shared.SpellDataTable
-	ImprovedFrostNova    shared.SpellDataTable
-	ImprovedFrostbolt    shared.SpellDataTable
-	ImprovedScorch       shared.SpellDataTable
-	Incineration         shared.SpellDataTable
-	MageArmor            shared.SpellDataTable
-	MagicAbsorption      shared.SpellDataTable
-	ManaShield           shared.SpellDataTable
-	MasterOfElements     shared.SpellDataTable
-	Permafrost           shared.SpellDataTable
-	PiercingIce          shared.SpellDataTable
-	Polymorph            shared.SpellDataTable
-	PolymorphCow         shared.SpellDataTable
-	PortalDarnassus      shared.SpellDataTable
-	PortalIronforge      shared.SpellDataTable
-	PortalOrgrimmar      shared.SpellDataTable
-	PortalStormwind      shared.SpellDataTable
-	PortalThunderBluff   shared.SpellDataTable
-	PortalUndercity      shared.SpellDataTable
-	PresenceOfMind       shared.SpellDataTable
-	Pyroblast            shared.SpellDataTable
-	RemoveLesserCurse    shared.SpellDataTable
-	Scorch               shared.SpellDataTable
-	Shatter              shared.SpellDataTable
-	SlowFall             shared.SpellDataTable
-	TeleportDalaran      shared.SpellDataTable
-	TeleportDarnassus    shared.SpellDataTable
-	TeleportIronforge    shared.SpellDataTable
-	TeleportOrgrimmar    shared.SpellDataTable
-	TeleportStormwind    shared.SpellDataTable
-	TeleportThunderBluff shared.SpellDataTable
-	TeleportUndercity    shared.SpellDataTable
-	WakeOfFire           shared.SpellDataTable
-	WandSpecialization   shared.SpellDataTable
-	WintersChill         shared.SpellDataTable
+	AmplifyMagic                 shared.SpellDataTable
+	ArcaneBlast                  shared.SpellDataTable
+	ArcaneBlastTriggered         shared.SpellDataTable
+	ArcaneBrilliance             shared.SpellDataTable
+	ArcaneConcentration          shared.SpellDataTable
+	ArcaneConcentrationTriggered shared.SpellDataTable
+	ArcaneExplosion              shared.SpellDataTable
+	ArcaneFocus                  shared.SpellDataTable
+	ArcaneGeometry               shared.SpellDataTable
+	ArcaneImpact                 shared.SpellDataTable
+	ArcaneInstability            shared.SpellDataTable
+	ArcaneIntellect              shared.SpellDataTable
+	ArcaneMeditation             shared.SpellDataTable
+	ArcaneMind                   shared.SpellDataTable
+	ArcaneMissiles               shared.SpellDataTable
+	ArcaneMissilesTriggered      shared.SpellDataTable
+	ArcanePower                  shared.SpellDataTable
+	ArcaneResilience             shared.SpellDataTable
+	ArcaneShielding              shared.SpellDataTable
+	ArcaneSubtlety               shared.SpellDataTable
+	ArcticReach                  shared.SpellDataTable
+	BlastWave                    shared.SpellDataTable
+	Blink                        shared.SpellDataTable
+	Blizzard                     shared.SpellDataTable
+	BlizzardTriggered            shared.SpellDataTable
+	BurningSoul                  shared.SpellDataTable
+	Chilled                      shared.SpellDataTable
+	Clearcasting                 shared.SpellDataTable
+	ColdSnap                     shared.SpellDataTable
+	Combustion                   shared.SpellDataTable
+	CombustionTriggered          shared.SpellDataTable
+	ConeOfCold                   shared.SpellDataTable
+	ConjureFood                  shared.SpellDataTable
+	ConjureManaAgate             shared.SpellDataTable
+	ConjureManaAgateTriggered    shared.SpellDataTable
+	ConjureManaCitrine           shared.SpellDataTable
+	ConjureManaCitrineTriggered  shared.SpellDataTable
+	ConjureManaJade              shared.SpellDataTable
+	ConjureManaJadeTriggered     shared.SpellDataTable
+	ConjureManaRuby              shared.SpellDataTable
+	ConjureManaRubyTriggered     shared.SpellDataTable
+	ConjureWater                 shared.SpellDataTable
+	Counterspell                 shared.SpellDataTable
+	CriticalMass                 shared.SpellDataTable
+	DampenMagic                  shared.SpellDataTable
+	ElementalPrecision           shared.SpellDataTable
+	Evocation                    shared.SpellDataTable
+	ExpandedIntellect            shared.SpellDataTable
+	Felfire                      shared.SpellDataTable
+	FingersOfFrost               shared.SpellDataTable
+	FingersOfFrostTriggered      shared.SpellDataTable
+	FireBlast                    shared.SpellDataTable
+	FirePower                    shared.SpellDataTable
+	FireVulnerability            shared.SpellDataTable
+	FireWard                     shared.SpellDataTable
+	Fireball                     shared.SpellDataTable
+	FlameThrowing                shared.SpellDataTable
+	Flamestrike                  shared.SpellDataTable
+	FlamestrikeTriggered         shared.SpellDataTable
+	FrostArmor                   shared.SpellDataTable
+	FrostArmorTriggered          shared.SpellDataTable
+	FrostChanneling              shared.SpellDataTable
+	FrostNova                    shared.SpellDataTable
+	FrostWard                    shared.SpellDataTable
+	FrostWarding                 shared.SpellDataTable
+	Frostbite                    shared.SpellDataTable
+	FrostbiteTriggered           shared.SpellDataTable
+	Frostbolt                    shared.SpellDataTable
+	FrostfireBolt                shared.SpellDataTable
+	IceArmor                     shared.SpellDataTable
+	IceArmorTriggered            shared.SpellDataTable
+	IceBarrier                   shared.SpellDataTable
+	IceBlock                     shared.SpellDataTable
+	IceLance                     shared.SpellDataTable
+	IceShards                    shared.SpellDataTable
+	Ignite                       shared.SpellDataTable
+	IgniteTriggered              shared.SpellDataTable
+	Impact                       shared.SpellDataTable
+	ImpactTriggered              shared.SpellDataTable
+	ImprovedBlizzard             shared.SpellDataTable
+	ImprovedBlizzardTriggered    shared.SpellDataTable
+	ImprovedChanneling           shared.SpellDataTable
+	ImprovedConeOfCold           shared.SpellDataTable
+	ImprovedCounterspell         shared.SpellDataTable
+	ImprovedFireWard             shared.SpellDataTable
+	ImprovedFireball             shared.SpellDataTable
+	ImprovedFlamestrike          shared.SpellDataTable
+	ImprovedFrostNova            shared.SpellDataTable
+	ImprovedFrostbolt            shared.SpellDataTable
+	ImprovedScorch               shared.SpellDataTable
+	ImprovedScorchTriggered      shared.SpellDataTable
+	Incineration                 shared.SpellDataTable
+	MageArmor                    shared.SpellDataTable
+	MagicAbsorption              shared.SpellDataTable
+	ManaShield                   shared.SpellDataTable
+	MasterOfElements             shared.SpellDataTable
+	Permafrost                   shared.SpellDataTable
+	PiercingIce                  shared.SpellDataTable
+	Polymorph                    shared.SpellDataTable
+	PolymorphCow                 shared.SpellDataTable
+	PortalDarnassus              shared.SpellDataTable
+	PortalIronforge              shared.SpellDataTable
+	PortalOrgrimmar              shared.SpellDataTable
+	PortalStormwind              shared.SpellDataTable
+	PortalThunderBluff           shared.SpellDataTable
+	PortalUndercity              shared.SpellDataTable
+	PresenceOfMind               shared.SpellDataTable
+	Pyroblast                    shared.SpellDataTable
+	RemoveLesserCurse            shared.SpellDataTable
+	Scorch                       shared.SpellDataTable
+	Shatter                      shared.SpellDataTable
+	SlowFall                     shared.SpellDataTable
+	TeleportDalaran              shared.SpellDataTable
+	TeleportDarnassus            shared.SpellDataTable
+	TeleportIronforge            shared.SpellDataTable
+	TeleportOrgrimmar            shared.SpellDataTable
+	TeleportStormwind            shared.SpellDataTable
+	TeleportThunderBluff         shared.SpellDataTable
+	TeleportUndercity            shared.SpellDataTable
+	WakeOfFire                   shared.SpellDataTable
+	WakeOfFireTriggered          shared.SpellDataTable
+	WandSpecialization           shared.SpellDataTable
+	WintersChill                 shared.SpellDataTable
+	WintersChillTriggered        shared.SpellDataTable
 }
 
 var spellData = generatedSpellData{
@@ -138,6 +158,9 @@ var spellData = generatedSpellData{
 		{Rank: 4, SpellID: 1239699, CastTime: 2500 * time.Millisecond, GCD: 1500 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 290}}, Direct: shared.SpellDataFlat{Value: 290, Coef: 0.7139999866485596}},
 		{Rank: 5, SpellID: 1239700, CastTime: 2500 * time.Millisecond, GCD: 1500 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 394}}, Direct: shared.SpellDataFlat{Value: 394, Coef: 0.7139999866485596}},
 	},
+	ArcaneBlastTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 400573, Cooldown: 180000 * time.Millisecond, Duration: 8000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: 175}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 22, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 0}},
+	},
 	ArcaneBrilliance: shared.SpellDataTable{
 		{Rank: 1, SpellID: 23028, Cost: 3400, GCD: 1500 * time.Millisecond, Duration: 3600000 * time.Millisecond, MaxRange: 40, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STAT, Misc: 3, Value: 31}}, Direct: shared.SpellDataFlat{Value: 31, Coef: 0}},
 	},
@@ -147,6 +170,9 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 11213, ProcChance: 100, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 6}}, Direct: shared.SpellDataFlat{Value: 6, Coef: 0}},
 		{Rank: 4, SpellID: 11213, ProcChance: 100, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 8}}, Direct: shared.SpellDataFlat{Value: 8, Coef: 0}},
 		{Rank: 5, SpellID: 11213, ProcChance: 100, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 0}},
+	},
+	ArcaneConcentrationTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 12536, Duration: 15000 * time.Millisecond, MaxRange: 100, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -1000}}},
 	},
 	ArcaneExplosion: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1449, Cost: 75, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 34}}, Direct: shared.SpellDataFlat{Value: 34, Coef: 0.14300000667572021}},
@@ -206,6 +232,16 @@ var spellData = generatedSpellData{
 		{Rank: 7, SpellID: 10212, Cost: 595, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_TRIGGER_SPELL, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
 		{Rank: 8, SpellID: 25345, Cost: 655, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolArcane, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_TRIGGER_SPELL, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
 	},
+	ArcaneMissilesTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 7268, MaxRange: 30, MissileSpeed: 20, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0.28600001335144043}},
+		{Rank: 2, SpellID: 7269, MaxRange: 30, MissileSpeed: 20, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 32}}, Direct: shared.SpellDataFlat{Value: 32, Coef: 0.28600001335144043}},
+		{Rank: 3, SpellID: 7270, MaxRange: 30, MissileSpeed: 20, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 46}}, Direct: shared.SpellDataFlat{Value: 46, Coef: 0.28600001335144043}},
+		{Rank: 4, SpellID: 8419, MaxRange: 30, MissileSpeed: 20, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 68}}, Direct: shared.SpellDataFlat{Value: 68, Coef: 0.28600001335144043}},
+		{Rank: 5, SpellID: 8418, MaxRange: 30, MissileSpeed: 20, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 97}}, Direct: shared.SpellDataFlat{Value: 97, Coef: 0.28600001335144043}},
+		{Rank: 6, SpellID: 10273, MaxRange: 30, MissileSpeed: 20, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 133}}, Direct: shared.SpellDataFlat{Value: 133, Coef: 0.28600001335144043}},
+		{Rank: 7, SpellID: 10274, MaxRange: 30, MissileSpeed: 20, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 174}}, Direct: shared.SpellDataFlat{Value: 174, Coef: 0.28600001335144043}},
+		{Rank: 8, SpellID: 25346, MaxRange: 30, MissileSpeed: 20, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 209}}, Direct: shared.SpellDataFlat{Value: 209, Coef: 0.28600001335144043}},
+	},
 	ArcanePower: shared.SpellDataTable{
 		{Rank: 1, SpellID: 12042, Cooldown: 180000 * time.Millisecond, Duration: 15000 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 30}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: 30}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 22, Value: 30}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 1}},
 	},
@@ -243,6 +279,14 @@ var spellData = generatedSpellData{
 		{Rank: 5, SpellID: 10186, Cost: 1160, GCD: 1500 * time.Millisecond, Duration: 8000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 1}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41265, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Periodic: shared.SpellDataPeriodic{Tick: 115, Coef: 0.041999999433755875, TickLength: 1000 * time.Millisecond, NumberOfTicks: 8, SpellID: 1279980}},
 		{Rank: 6, SpellID: 10187, Cost: 1400, GCD: 1500 * time.Millisecond, Duration: 8000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41260, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Periodic: shared.SpellDataPeriodic{Tick: 146, Coef: 0.041999999433755875, TickLength: 1000 * time.Millisecond, NumberOfTicks: 8, SpellID: 1279949}},
 	},
+	BlizzardTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1279976, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 24}}, Direct: shared.SpellDataFlat{Value: 24, Coef: 0.041999999433755875}},
+		{Rank: 2, SpellID: 1279977, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 43}}, Direct: shared.SpellDataFlat{Value: 43, Coef: 0.041999999433755875}},
+		{Rank: 3, SpellID: 1279978, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 63}}, Direct: shared.SpellDataFlat{Value: 63, Coef: 0.041999999433755875}},
+		{Rank: 4, SpellID: 1279979, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 88}}, Direct: shared.SpellDataFlat{Value: 88, Coef: 0.041999999433755875}},
+		{Rank: 5, SpellID: 1279980, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 115}}, Direct: shared.SpellDataFlat{Value: 115, Coef: 0.041999999433755875}},
+		{Rank: 6, SpellID: 1279949, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 146}}, Direct: shared.SpellDataFlat{Value: 146, Coef: 0.041999999433755875}},
+	},
 	BurningSoul: shared.SpellDataTable{
 		{Rank: 1, SpellID: 11083, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 9, Value: 23}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_THREAT, Misc: 4, Value: -10}}, Direct: shared.SpellDataFlat{Value: 23, Coef: 0}},
 		{Rank: 2, SpellID: 11083, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 9, Value: 47}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_THREAT, Misc: 4, Value: -20}}, Direct: shared.SpellDataFlat{Value: 47, Coef: 0}},
@@ -259,6 +303,9 @@ var spellData = generatedSpellData{
 	},
 	Combustion: shared.SpellDataTable{
 		{Rank: 1, SpellID: 11129, Cooldown: 180000 * time.Millisecond, ProcChance: 100, ProcCharges: 4, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
+	},
+	CombustionTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 28682, ProcChance: 101, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 0}},
 	},
 	ConeOfCold: shared.SpellDataTable{
 		{Rank: 1, SpellID: 120, Cost: 210, GCD: 1500 * time.Millisecond, Cooldown: 10000 * time.Millisecond, Duration: 6000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -40}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 101}}, Direct: shared.SpellDataFlat{Value: 101, Coef: 0.1289999932050705}},
@@ -279,14 +326,26 @@ var spellData = generatedSpellData{
 	ConjureManaAgate: shared.SpellDataTable{
 		{Rank: 1, SpellID: 759, Cost: 530, CastTime: 3000 * time.Millisecond, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_CREATE_ITEM, Aura: shared.A_NONE, Misc: 0, Value: 1}}},
 	},
+	ConjureManaAgateTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 5405, Cooldown: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 0, Value: 400}}, Energize: shared.SpellDataFlat{Value: 400, Coef: 0}},
+	},
 	ConjureManaCitrine: shared.SpellDataTable{
 		{Rank: 1, SpellID: 10053, Cost: 1130, CastTime: 3000 * time.Millisecond, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_CREATE_ITEM, Aura: shared.A_NONE, Misc: 0, Value: 1}}},
+	},
+	ConjureManaCitrineTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 10057, Cooldown: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 0, Value: 850}}, Energize: shared.SpellDataFlat{Value: 850, Coef: 0}},
 	},
 	ConjureManaJade: shared.SpellDataTable{
 		{Rank: 1, SpellID: 3552, Cost: 800, CastTime: 3000 * time.Millisecond, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_CREATE_ITEM, Aura: shared.A_NONE, Misc: 0, Value: 1}}},
 	},
+	ConjureManaJadeTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 10052, Cooldown: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 0, Value: 600}}, Energize: shared.SpellDataFlat{Value: 600, Coef: 0}},
+	},
 	ConjureManaRuby: shared.SpellDataTable{
 		{Rank: 1, SpellID: 10054, Cost: 1470, CastTime: 3000 * time.Millisecond, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_CREATE_ITEM, Aura: shared.A_NONE, Misc: 0, Value: 1}}},
+	},
+	ConjureManaRubyTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 10058, Cooldown: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 0, Value: 1100}}, Energize: shared.SpellDataFlat{Value: 1100, Coef: 0}},
 	},
 	ConjureWater: shared.SpellDataTable{
 		{Rank: 1, SpellID: 5504, Cost: 60, CastTime: 3000 * time.Millisecond, GCD: 1500 * time.Millisecond, SpellSchool: core.SpellSchoolArcane, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_CREATE_ITEM, Aura: shared.A_NONE, Misc: 0, Value: 20}}},
@@ -332,6 +391,9 @@ var spellData = generatedSpellData{
 	FingersOfFrost: shared.SpellDataTable{
 		{Rank: 1, SpellID: 400647, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 1}}, Direct: shared.SpellDataFlat{Value: 1, Coef: 0}},
 		{Rank: 2, SpellID: 400647, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 0}},
+	},
+	FingersOfFrostTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 400669, Duration: 15000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ABILITY_IGNORE_AURASTATE, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 0}},
 	},
 	FireBlast: shared.SpellDataTable{
 		{Rank: 1, SpellID: 2136, Cost: 40, GCD: 1500 * time.Millisecond, Cooldown: 8000 * time.Millisecond, MaxRange: 20, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 31}}, Direct: shared.SpellDataFlat{Value: 31, Coef: 0.42899999022483826}},
@@ -385,10 +447,21 @@ var spellData = generatedSpellData{
 		{Rank: 5, SpellID: 10215, Cost: 815, CastTime: 3000 * time.Millisecond, GCD: 1500 * time.Millisecond, Duration: 8000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 332}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41270, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 332, Coef: 0.15700000524520874}, Periodic: shared.SpellDataPeriodic{Tick: 64, Coef: 0.03200000151991844, TickLength: 2000 * time.Millisecond, NumberOfTicks: 4, SpellID: 1279989}},
 		{Rank: 6, SpellID: 10216, Cost: 990, CastTime: 3000 * time.Millisecond, GCD: 1500 * time.Millisecond, Duration: 8000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 423}, {Index: 1, Effect: shared.E_CREATE_AREATRIGGER, Aura: shared.A_NONE, Misc: 41271, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 423, Coef: 0.15700000524520874}, Periodic: shared.SpellDataPeriodic{Tick: 83, Coef: 0.03200000151991844, TickLength: 2000 * time.Millisecond, NumberOfTicks: 4, SpellID: 1279990}},
 	},
+	FlamestrikeTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1279983, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 11}}, Direct: shared.SpellDataFlat{Value: 11, Coef: 0.03200000151991844}},
+		{Rank: 2, SpellID: 1279985, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 21}}, Direct: shared.SpellDataFlat{Value: 21, Coef: 0.03200000151991844}},
+		{Rank: 3, SpellID: 1279987, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 33}}, Direct: shared.SpellDataFlat{Value: 33, Coef: 0.03200000151991844}},
+		{Rank: 4, SpellID: 1279988, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 47}}, Direct: shared.SpellDataFlat{Value: 47, Coef: 0.03200000151991844}},
+		{Rank: 5, SpellID: 1279989, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 64}}, Direct: shared.SpellDataFlat{Value: 64, Coef: 0.03200000151991844}},
+		{Rank: 6, SpellID: 1279990, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 83}}, Direct: shared.SpellDataFlat{Value: 83, Coef: 0.03200000151991844}},
+	},
 	FrostArmor: shared.SpellDataTable{
 		{Rank: 1, SpellID: 168, Cost: 60, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 1, Value: 30}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
 		{Rank: 2, SpellID: 7300, Cost: 110, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 1, Value: 110}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 110, Coef: 0}},
 		{Rank: 3, SpellID: 7301, Cost: 170, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 1, Value: 200}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 200, Coef: 0}},
+	},
+	FrostArmorTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 6136, Duration: 5000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -30}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MELEE_HASTE_3, Misc: 0, Value: -25}}},
 	},
 	FrostChanneling: shared.SpellDataTable{
 		{Rank: 1, SpellID: 11160, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 14, Value: -5}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_THREAT, Misc: 16, Value: 10}}},
@@ -417,6 +490,9 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 11071, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 0}},
 		{Rank: 3, SpellID: 11071, SpellSchool: core.SpellSchoolFrost, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 15}}, Direct: shared.SpellDataFlat{Value: 15, Coef: 0}},
 	},
+	FrostbiteTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 12494, Duration: 5000 * time.Millisecond, MaxRange: 100, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ROOT, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 15, Coef: 0}},
+	},
 	Frostbolt: shared.SpellDataTable{
 		{Rank: 1, SpellID: 116, Cost: 25, CastTime: 1500 * time.Millisecond, GCD: 1500 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 30, MissileSpeed: 28, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -40}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 21}}, Direct: shared.SpellDataFlat{Value: 21, Coef: 0.40700000524520874}},
 		{Rank: 2, SpellID: 205, Cost: 35, CastTime: 1800 * time.Millisecond, GCD: 1500 * time.Millisecond, Duration: 6000 * time.Millisecond, MaxRange: 30, MissileSpeed: 28, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -40}, {Index: 1, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 35}}, Direct: shared.SpellDataFlat{Value: 35, Coef: 0.48899999260902405}},
@@ -440,6 +516,9 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 7320, Cost: 320, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 1, Value: 380}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 16, Value: 9}}, Direct: shared.SpellDataFlat{Value: 380, Coef: 0}},
 		{Rank: 3, SpellID: 10219, Cost: 410, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 1, Value: 470}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 16, Value: 12}}, Direct: shared.SpellDataFlat{Value: 470, Coef: 0}},
 		{Rank: 4, SpellID: 10220, Cost: 500, GCD: 1500 * time.Millisecond, Duration: 1800000 * time.Millisecond, ProcChance: 100, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 1, Value: 560}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RESISTANCE, Misc: 16, Value: 15}}, Direct: shared.SpellDataFlat{Value: 560, Coef: 0}},
+	},
+	IceArmorTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 7321, Duration: 5000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -30}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MELEE_HASTE_3, Misc: 0, Value: -25}}},
 	},
 	IceBarrier: shared.SpellDataTable{
 		{Rank: 1, SpellID: 11426, Cost: 305, GCD: 1500 * time.Millisecond, Cooldown: 30000 * time.Millisecond, Duration: 60000 * time.Millisecond, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_SCHOOL_ABSORB, Misc: 127, Value: 447}}, Direct: shared.SpellDataFlat{Value: 447, Coef: 0}},
@@ -472,15 +551,24 @@ var spellData = generatedSpellData{
 		{Rank: 4, SpellID: 11119, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 32}}, Direct: shared.SpellDataFlat{Value: 32, Coef: 0}},
 		{Rank: 5, SpellID: 11119, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 40}}, Direct: shared.SpellDataFlat{Value: 40, Coef: 0}},
 	},
+	IgniteTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 412538, Duration: 4000 * time.Millisecond, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_DUMMY, Misc: 0, Value: 0}}},
+	},
 	Impact: shared.SpellDataTable{
 		{Rank: 1, SpellID: 11103, ProcChance: 100, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 0}},
 		{Rank: 2, SpellID: 11103, ProcChance: 100, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 7}}, Direct: shared.SpellDataFlat{Value: 7, Coef: 0}},
 		{Rank: 3, SpellID: 11103, ProcChance: 100, SpellSchool: core.SpellSchoolFire, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 0}},
 	},
+	ImpactTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 12355, Duration: 2000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STUN, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
+	},
 	ImprovedBlizzard: shared.SpellDataTable{
 		{Rank: 1, SpellID: 11185, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: -15}}},
 		{Rank: 2, SpellID: 11185, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: -25}}},
 		{Rank: 3, SpellID: 11185, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: -40}}},
+	},
+	ImprovedBlizzardTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 12484, Duration: 1500 * time.Millisecond, MaxRange: 50000, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -30}}},
 	},
 	ImprovedChanneling: shared.SpellDataTable{
 		{Rank: 1, SpellID: 11237, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 9, Value: 20}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 9, Value: 14}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 0}},
@@ -529,6 +617,9 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 11095, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 33}}, Direct: shared.SpellDataFlat{Value: 33, Coef: 0}},
 		{Rank: 2, SpellID: 11095, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 67}}, Direct: shared.SpellDataFlat{Value: 67, Coef: 0}},
 		{Rank: 3, SpellID: 11095, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 0}},
+	},
+	ImprovedScorchTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 22959, Duration: 30000 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolFire, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER, Misc: 4, Value: 3}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 0}},
 	},
 	Incineration: shared.SpellDataTable{
 		{Rank: 1, SpellID: 18459, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},
@@ -652,6 +743,9 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 11078, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 11, Value: -1000}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
 		{Rank: 2, SpellID: 11078, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 11, Value: -2000}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 0}},
 	},
+	WakeOfFireTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1312934, Duration: 20000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 1}},
+	},
 	WandSpecialization: shared.SpellDataTable{
 		{Rank: 1, SpellID: 6057, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_DONE, Misc: 126, Value: 13}}, Direct: shared.SpellDataFlat{Value: 13, Coef: 0}},
 		{Rank: 2, SpellID: 6057, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_PERCENT_DONE, Misc: 126, Value: 25}}, Direct: shared.SpellDataFlat{Value: 25, Coef: 0}},
@@ -662,5 +756,8 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 11180, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 3}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 60}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 0}},
 		{Rank: 4, SpellID: 11180, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 4}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 80}}, Direct: shared.SpellDataFlat{Value: 4, Coef: 0}},
 		{Rank: 5, SpellID: 11180, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 5}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 0}},
+	},
+	WintersChillTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 12579, Duration: 15000 * time.Millisecond, MaxRange: 100, ProcChance: 101, SpellSchool: core.SpellSchoolFrost, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CRIT_CHANCE_FOR_CASTER_WITH_ABILITIES, Misc: 16, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 0}},
 	},
 }
