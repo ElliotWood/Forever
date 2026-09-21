@@ -1,5 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { DpsPriest_Options as Options } from '@generated/proto/priest';
 import { defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
@@ -14,12 +14,7 @@ export const DefaultOptions = Options.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	flaskId: 22866, // Flask of Pure Death
-	foodId: 27657, // Blackened Basilisk
 	conjuredId: 12662, // Demonic Rune
-	mhImbueId: 22522, // Superior Wizard Oil
-	potId: 22839, // Destruction Potion
-	explosiveId: 30217,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
@@ -35,7 +30,6 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 	wrathOfAirTotem: TristateEffect.TristateEffectImproved,
 	eyeOfTheNight: true,
 	chainOfTheTwilightOwl: true,
-	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({

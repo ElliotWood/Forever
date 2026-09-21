@@ -1,4 +1,4 @@
-import { ConsumesSpec, EquipmentSpec, GemColor, HandType, ItemSlot, ItemSpec, Profession, WeaponType } from '@generated/proto/common';
+import { EquipmentSpec, GemColor, HandType, ItemSlot, ItemSpec, Profession, WeaponType } from '@generated/proto/common';
 import { ItemEffectRandPropPoints, SimDatabase, SimEnchant, SimGem, SimItem } from '@generated/proto/db';
 import { UIEnchant as Enchant, UIGem as Gem, UIItem as Item } from '@generated/proto/ui';
 
@@ -7,9 +7,8 @@ import { sum } from '../utils/math';
 import { Database } from './database';
 import { EquippedItem } from './equipped_item';
 import { gemMatchesSocket, isMetaGemActive } from './gems';
-import { isBluntWeaponType, isSharpWeaponType, validWeaponCombo } from './items';
+import { validWeaponCombo } from './items';
 import { Stats } from './stats';
-import { adjustWeaponImbueId } from './utils';
 
 type InternalGear = Record<ItemSlot, EquippedItem | null>;
 
@@ -369,31 +368,6 @@ export class Gear extends BaseGear {
 			![WeaponType.WeaponTypeOffHand, WeaponType.WeaponTypeShield].includes(weapon.item.weaponType)
 		);
 	}
-	hasBluntMHWeapon(): boolean {
-		const weapon = this.getEquippedItem(ItemSlot.ItemSlotMainHand);
-		return weapon != null && isBluntWeaponType(weapon.item.weaponType);
-	}
-	hasSharpMHWeapon(): boolean {
-		const weapon = this.getEquippedItem(ItemSlot.ItemSlotMainHand);
-		return weapon != null && isSharpWeaponType(weapon.item.weaponType);
-	}
-	hasBluntOHWeapon(): boolean {
-		const weapon = this.getEquippedItem(ItemSlot.ItemSlotOffHand);
-		return weapon != null && isBluntWeaponType(weapon.item.weaponType);
-	}
-	hasSharpOHWeapon(): boolean {
-		const weapon = this.getEquippedItem(ItemSlot.ItemSlotOffHand);
-		return weapon != null && isSharpWeaponType(weapon.item.weaponType);
-	}
-	// Rewrites the MH/OH weapon stone imbues to match the equipped weapon types, returning the
-	// original ConsumesSpec unchanged if nothing needs adjusting.
-	adjustImbues(consumes: ConsumesSpec): ConsumesSpec {
-		const mhImbueId = adjustWeaponImbueId(consumes.mhImbueId, this.hasSharpMHWeapon(), this.hasBluntMHWeapon());
-		const ohImbueId = adjustWeaponImbueId(consumes.ohImbueId, this.hasSharpOHWeapon(), this.hasBluntOHWeapon());
-		if (mhImbueId === consumes.mhImbueId && ohImbueId === consumes.ohImbueId) return consumes;
-		return ConsumesSpec.clone({ ...consumes, mhImbueId, ohImbueId });
-	}
-
 	getProfessionRequirements(): Array<Profession> {
 		return distinct((this.asArray().filter(ei => ei != null) as Array<EquippedItem>).map(ei => ei.getProfessionRequirements()).flat());
 	}

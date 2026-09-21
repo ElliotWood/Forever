@@ -1,5 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
 import { defaultExposeWeaknessSettings, defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
@@ -32,14 +32,8 @@ export const DefaultOptions = WarlockOptions.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	flaskId: 22866, // Flask of Pure Death
-	foodId: 27657, // Blackened Basilisk
 	conjuredId: 12662, // Demonic Rune
 	mhImbueId: 25122, // Brilliant Wizard Oil
-	potId: 22839, // Destruction Potion
-	explosiveId: 30217,
-	petScrollAgi: true,
-	petScrollStr: true,
 });
 
 export const OtherDefaults = {
@@ -63,7 +57,6 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 	wrathOfAirTotem: TristateEffect.TristateEffectImproved,
 	eyeOfTheNight: true,
 	chainOfTheTwilightOwl: true,
-	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({

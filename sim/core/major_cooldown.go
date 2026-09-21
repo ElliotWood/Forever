@@ -11,7 +11,6 @@ import (
 const (
 	CooldownPriorityLow       = -1000
 	CooldownPriorityDefault   = 0
-	CooldownPriorityDrums     = 2000
 	CooldownPriorityBloodlust = 1000
 )
 
@@ -45,8 +44,7 @@ type MajorCooldown struct {
 	BuffAura *StatBuffAura
 
 	// Cooldowns with higher priority get used first. This is important when some
-	// cooldowns have a non-zero cast time. For example, Drums should be used
-	// before Bloodlust.
+	// cooldowns have a non-zero cast time.
 	Priority int32
 
 	// Internal category, used for filtering. For example, mages want to disable

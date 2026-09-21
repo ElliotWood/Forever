@@ -95,18 +95,6 @@ export function getPlayerSpecFromPlayer<SpecType extends Spec>(player: Player): 
 	throw new Error('Unable to parse spec from player proto: ' + JSON.stringify(Player.toJson(player), null, 2));
 }
 
-export const ADAMANTITE_SHARPENING_STONE_ID = 29453;
-export const ADAMANTITE_WEIGHTSTONE_ID = 34340;
-
-// Returns the corrected imbue id for a slot given the equipped weapon's sharp/blunt eligibility.
-// Only rewrites the Adamantite sharpening/weightstone pair; all other imbue ids pass through unchanged.
-export function adjustWeaponImbueId(imbueId: number, hasSharp: boolean, hasBlunt: boolean): number {
-	if (imbueId !== ADAMANTITE_SHARPENING_STONE_ID && imbueId !== ADAMANTITE_WEIGHTSTONE_ID) return imbueId;
-	if (hasSharp) return ADAMANTITE_SHARPENING_STONE_ID;
-	if (hasBlunt) return ADAMANTITE_WEIGHTSTONE_ID;
-	return 0;
-}
-
 export function newUnitReference(raidIndex: number): UnitReference {
 	return UnitReference.create({
 		type: UnitReference_Type.Player,

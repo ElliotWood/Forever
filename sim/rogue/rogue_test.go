@@ -62,9 +62,5 @@ var DefaultOptions = &proto.Player_Rogue{
 var DefaultTalents = "00532012502-023305200005015002321151"
 
 var DefaultConsumables = &proto.ConsumesSpec{
-	FlaskId:    22854,
-	FoodId:     33872,
-	PotId:      22838,
 	ConjuredId: 7676,
-	OhImbueId:  27186,
 }

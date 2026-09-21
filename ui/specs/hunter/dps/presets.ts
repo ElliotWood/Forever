@@ -1,5 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
+import { Class, ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
 import {
 	Hunter_Options as HunterOptions,
 	Hunter_Rotation,
@@ -59,7 +59,6 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 	strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
 	totemTwisting: true,
 	windfuryTotem: TristateEffect.TristateEffectImproved,
-	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
@@ -90,19 +89,8 @@ export const DefaultDebuffs = Debuffs.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	battleElixirId: 22831, // Elixir of Major Agility
-	guardianElixirId: 22840, // Elixir of Major Mageblood
-	foodId: 27659, // Warp Burger
-	potId: 22838, // Haste Potion
 	conjuredId: 12662,
-	explosiveId: 30217,
-	petFoodId: 33874, // Kibler's Bits
-	petScrollAgi: true,
-	petScrollStr: true,
-	superSapper: true,
 	goblinSapper: true,
-	scrollAgi: true,
-	scrollStr: true,
 });
 
 export const OtherDefaults = {

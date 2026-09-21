@@ -24,9 +24,8 @@ export function updateIndividualSimProtoVersion(settingsProto: IndividualSimSett
 		return;
 	}
 
-	// Deliberately empty. TBC's only migration is the drums one at version 7, and it
-	// needs a toast, so it runs from ui/app/proto_version.ts before this function is
-	// reached -- ui/sim cannot import @ui-kit.
+	// Deliberately empty. TBC's own migrations run from ui/app/proto_version.ts before this
+	// function is reached.
 	//
 	// The two migrations this map arrived with are upstream's, for versions 2 and 4,
 	// and they must not run here. TBC's IndividualSimSettings happens to carry every

@@ -8,20 +8,6 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// Scrolls share StatBuffCategory with the raid buffs granting the same stat, so a
-// scroll doesn't stack with e.g. Arcane Brilliance or Divine Spirit; only the
-// strongest source of that stat applies.
-func registerScrollAura(character *Character, label string, itemID int32, stat stats.Stat, amount float64) *Aura {
-	aura := character.GetOrRegisterAura(Aura{
-		Label:      label,
-		ActionID:   ActionID{ItemID: itemID},
-		Duration:   NeverExpires,
-		BuildPhase: CharacterBuildPhaseConsumes,
-	})
-	makeExclusiveFlatStatBuff(aura, stat, amount, StatBuffCategory)
-	return MakePermanent(aura)
-}
-
 // Registers all consume-related effects to the Agent.
 func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 	character := agent.GetCharacter()
@@ -100,23 +86,6 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 		registerStaticImbue(agent, consumables.OhImbueId)
 	}
 
-	// Scrolls
-	if consumables.ScrollAgi {
-		registerScrollAura(character, "Scroll of Agility", 27498, stats.Agility, 20)
-	}
-	if consumables.ScrollStr {
-		registerScrollAura(character, "Scroll of Strength", 27503, stats.Strength, 20)
-	}
-	if consumables.ScrollInt {
-		registerScrollAura(character, "Scroll of Intellect", 27499, stats.Intellect, 20)
-	}
-	if consumables.ScrollSpi {
-		registerScrollAura(character, "Scroll of Spirit", 27501, stats.Spirit, 30)
-	}
-	if consumables.ScrollArm {
-		registerScrollAura(character, "Scroll of Protection", 27500, stats.Armor, 300)
-	}
-
 	// Bogling Root: +1 physical damage for 10 min (item 5206, spell 5665).
 	if consumables.BoglingRoot {
 		character.AddStat(stats.PhysicalDamage, 1)
@@ -128,24 +97,17 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 			continue
 		}
 
-		if consumables.PetScrollAgi {
-			pet.AddStat(stats.Agility, 20)
-		}
-		if consumables.PetScrollStr {
-			pet.AddStat(stats.Strength, 20)
-		}
 		if consumables.PetFoodId != 0 {
 			petFood := GetConsumableByID(consumables.PetFoodId)
 			pet.AddStats(petFood.Stats)
 		}
 	}
 
-	drumsBombsSharedTimer := character.NewTimer()
+	explosivesSharedTimer := character.NewTimer()
 
 	registerPotionCD(agent, consumables)
 	registerConjuredCD(agent, consumables)
-	registerExplosivesCD(agent, consumables, drumsBombsSharedTimer)
-	registerDrumsCD(agent, consumables, drumsBombsSharedTimer)
+	registerExplosivesCD(agent, consumables, explosivesSharedTimer)
 }
 
 var PotionAuraTag = "Potion"
@@ -364,51 +326,7 @@ func registerConjuredCD(agent Agent, consumes *proto.ConsumesSpec) {
 	character := agent.GetCharacter()
 
 	for _, conjuredId := range consumes.ConjuredItems {
-		var conjuredMCD MajorCooldown
-		switch conjuredId {
-		case 22788:
-			conjuredMCD = makeConjuredActivationSpell(conjuredId, character)
-
-			flameCapProc := character.RegisterSpell(SpellConfig{
-				ActionID:    conjuredMCD.Spell.ActionID,
-				SpellSchool: SpellSchoolFire,
-				DefenseType: DefenseTypeMagic, // Flamecap Fire (28715)
-				ProcMask:    ProcMaskSpellDamage,
-				Flags:       SpellFlagProc,
-
-				DamageMultiplier: 1,
-				ThreatMultiplier: 1,
-
-				ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
-					spell.CalcAndDealDamage(sim, target, 40, spell.OutcomeMagicHitAndCrit)
-				},
-			})
-
-			procTrigger := character.MakeProcTriggerAura(ProcTrigger{
-				Name:       "Flame Cap - Proc",
-				ActionID:   conjuredMCD.Spell.ActionID,
-				Duration:   time.Minute * 1,
-				ProcChance: 0.185,
-				ProcMask:   ProcMaskMeleeWhiteHit | ProcMaskRangedAuto,
-				Outcome:    OutcomeLanded,
-				Callback:   CallbackOnSpellHitDealt,
-				Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
-					flameCapProc.Cast(sim, result.Target)
-				},
-			})
-
-			flameCapAura := character.NewTemporaryStatsAura("Flame Cap", conjuredMCD.Spell.ActionID, stats.Stats{stats.FireDamage: 80}, time.Minute)
-			flameCapAura.AttachDependentAura(procTrigger)
-
-			oldApplyEffects := conjuredMCD.Spell.ApplyEffects
-			conjuredMCD.Spell.ApplyEffects = func(sim *Simulation, target *Unit, spell *Spell) {
-				oldApplyEffects(sim, target, spell)
-				flameCapAura.Activate(sim)
-			}
-			conjuredMCD.Spell.RelatedSelfBuff = flameCapAura.Aura
-		default:
-			conjuredMCD = makeConjuredActivationSpell(conjuredId, character)
-		}
+		conjuredMCD := makeConjuredActivationSpell(conjuredId, character)
 
 		if conjuredMCD.Spell != nil {
 			oldShouldActivate := conjuredMCD.ShouldActivate
@@ -542,30 +460,19 @@ func makeConjuredActivationSpellInternal(conjured Consumable, character *Charact
 
 }
 
-var SuperSapperActionID = ActionID{ItemID: 23827}
 var GoblinSapperActionID = ActionID{ItemID: 10646}
 var EzThroDynamiteTwoActionID = ActionID{ItemID: 18588}
 var CrystalChargeActionID = ActionID{ItemID: 11566}
-var FelIronBombActionID = ActionID{ItemID: 23736}
-var AdamantiteGrenadeActionID = ActionID{ItemID: 23737}
-var GnomishFlameTurretActionID = ActionID{ItemID: 23841}
 
 func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer *Timer) {
 	character := agent.GetCharacter()
 	if !character.HasProfession(proto.Profession_Engineering) {
 		return
 	}
-	if !consumes.GoblinSapper && !consumes.SuperSapper && consumes.ExplosiveId == 0 {
+	if !consumes.GoblinSapper && consumes.ExplosiveId == 0 {
 		return
 	}
 
-	if consumes.SuperSapper {
-		character.AddMajorCooldown(MajorCooldown{
-			Spell:    character.newSuperSapperSpell(sharedTimer),
-			Type:     CooldownTypeDPS | CooldownTypeExplosive,
-			Priority: CooldownPriorityLow + 30,
-		})
-	}
 	if consumes.GoblinSapper {
 		character.AddMajorCooldown(MajorCooldown{
 			Spell:    character.newGoblinSapperSpell(sharedTimer),
@@ -580,12 +487,6 @@ func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer
 			filler = character.newEzThroDynamiteTwoSpell(sharedTimer)
 		case 15239:
 			filler = character.newCrystalChargeSpell(sharedTimer)
-		case 30217:
-			filler = character.newAdamantiteGrenadeSpell(sharedTimer)
-		case 30216:
-			filler = character.newFelIronBombSpell(sharedTimer)
-		case 30526:
-			// Summon Gnomish Turret? Just treat it like a DoT? TBD
 		}
 
 		character.AddMajorCooldown(MajorCooldown{
@@ -598,7 +499,7 @@ func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer
 
 // Creates a spell object for the common explosive case.
 func (character *Character) newBasicExplosiveSpellConfig(sharedTimer *Timer, actionID ActionID, school SpellSchool, minDamage float64, maxDamage float64, speed float64, castTime time.Duration, cooldown Cooldown) SpellConfig {
-	dealSelfDamage := actionID.SameAction(SuperSapperActionID) || actionID.SameAction(GoblinSapperActionID)
+	dealSelfDamage := actionID.SameAction(GoblinSapperActionID)
 
 	return SpellConfig{
 		ActionID:     actionID,
@@ -642,59 +543,14 @@ func (character *Character) newBasicExplosiveSpellConfig(sharedTimer *Timer, act
 		},
 	}
 }
-func (character *Character) newSuperSapperSpell(sharedTimer *Timer) *Spell {
-	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, SuperSapperActionID, SpellSchoolFire, 900, 1500, 0, 0, Cooldown{Timer: character.NewTimer(), Duration: time.Minute * 5}))
-}
 func (character *Character) newGoblinSapperSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, GoblinSapperActionID, SpellSchoolFire, 450, 750, 0, 0, Cooldown{Timer: character.NewTimer(), Duration: time.Minute * 5}))
-}
-func (character *Character) newAdamantiteGrenadeSpell(sharedTimer *Timer) *Spell {
-	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, AdamantiteGrenadeActionID, SpellSchoolFire, 450, 750, 14, time.Second, Cooldown{}))
-}
-func (character *Character) newFelIronBombSpell(sharedTimer *Timer) *Spell {
-	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, FelIronBombActionID, SpellSchoolFire, 330, 770, 14, time.Second, Cooldown{}))
 }
 func (character *Character) newCrystalChargeSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, CrystalChargeActionID, SpellSchoolFire, 383, 517, 0, 0, Cooldown{}))
 }
 func (character *Character) newEzThroDynamiteTwoSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, EzThroDynamiteTwoActionID, SpellSchoolFire, 213, 287, 14, time.Second, Cooldown{}))
-}
-
-func registerDrumsCD(agent Agent, consumables *proto.ConsumesSpec, sharedTimer *Timer) {
-	if consumables.DrumsId > 0 && int(consumables.DrumsId) < len(proto.Drums_value) {
-		character := agent.GetCharacter()
-		config := drumsSpellConfig(character, consumables.DrumsId, false)
-		config.Cast = CastConfig{
-			DefaultCast: Cast{
-				CastTime: TernaryDuration(consumables.DrumsId <= proto.Drums_GreaterDrumsOfWar, 0, time.Second),
-				GCD:      GCDDefault,
-			},
-			CD: Cooldown{
-				Timer:    character.NewTimer(),
-				Duration: time.Minute * 2,
-			},
-			SharedCD: Cooldown{
-				Timer:    sharedTimer,
-				Duration: time.Minute * 2,
-			},
-			ModifyCast: func(sim *Simulation, spell *Spell, cast *Cast) {
-				if character.AutoAttacks.AutoSwingRanged {
-					castTime := character.ApplyCastSpeedForSpell(cast.CastTime, spell)
-					if sim.CurrentTime+castTime > character.AutoAttacks.NextAttackAt() {
-						character.AutoAttacks.DelayRangedUntil(sim, sim.CurrentTime+castTime+1)
-					}
-				}
-			},
-		}
-		spell := character.RegisterSpell(config)
-
-		character.AddMajorCooldown(MajorCooldown{
-			Spell:    spell,
-			Type:     CooldownTypeDPS,
-			Priority: CooldownPriorityDrums,
-		})
-	}
 }
 
 func registerStaticImbue(agent Agent, imbueId int32) {
@@ -706,18 +562,6 @@ func registerStaticImbue(agent Agent, imbueId int32) {
 	case 25122: // Briliant Wizard Oil
 		character.AddStat(stats.SpellDamage, 36)
 		character.AddStat(stats.SpellCritRating, 14)
-	case 28017: // Superior Wizard Oil
-		character.AddStat(stats.SpellDamage, 42)
-	case 29453, 34340: // Adamantite Sharpening Stone / Adamantite Weightstone
-		character.AddStat(stats.MeleeCritRating, 14)
-		for _, weapon := range []*Weapon{character.AutoAttacks.MH(), character.AutoAttacks.OH(), character.AutoAttacks.Ranged()} {
-			if weapon != nil {
-				weapon.BaseDamageMin += 12
-				weapon.BaseDamageMax += 12
-			}
-		}
-		// Keep Ranged Crit the same
-		character.AddStat(stats.RangedCritPercent, -(14 / PhysicalCritRatingPerCritPercent))
 	case 28891: // Consecrated Sharpening Stone
 		character.Env.RegisterPostFinalizeEffect(func() {
 			for _, at := range character.AttackTables {

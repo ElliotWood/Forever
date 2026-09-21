@@ -21,7 +21,7 @@ const (
 )
 
 // Exclusive category for flat stat buffs which don't stack with each other
-// e.g. Arcane Brilliance vs Scroll of Intellect.
+// e.g. Arcane Brilliance vs Greater Arcane Elixir.
 const StatBuffCategory = "StatBuff"
 
 type BuffConfig struct {
@@ -318,9 +318,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 	if partyBuffs.WrathOfAirTotem != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(WrathOfAirTotemAura(char, IsImproved(partyBuffs.WrathOfAirTotem)))
 	}
-	if partyBuffs.Drums > 0 {
-		DrumsBuff(char, partyBuffs.Drums)
-	}
 
 	// Individual Buffs
 	if individual.BlessingOfKings {
@@ -433,7 +430,7 @@ func DivineSpiritAura(char *Character, improved bool) *Aura {
 		},
 	})
 
-	// The Spirit is exclusive with other flat Spirit buffs (Scroll of Spirit), so
+	// The Spirit is exclusive with other flat Spirit buffs, so
 	// only the strongest source applies. The Imp. DS conversion is DS-only and stays
 	// tied to the aura itself.
 	makeExclusiveFlatStatBuff(aura, stats.Spirit, 50, StatBuffCategory)
@@ -1281,87 +1278,6 @@ func JadePendantOfBlastingAura(char *Character) *Aura {
 	})
 }
 
-const TinnitusAuraLabel = "Tinnitus"
-
-func drumsSpellConfig(character *Character, drum proto.Drums, isExternal bool) SpellConfig {
-	var drumLabel string
-	var drumStats stats.Stats
-	var duration time.Duration
-	var actionID ActionID
-	switch drum {
-	case proto.Drums_GreaterDrumsOfBattle, proto.Drums_LesserDrumsOfBattle:
-		drumLabel = "Drums of Battle"
-		drumStats = stats.Stats{stats.MeleeHasteRating: 80, stats.SpellHasteRating: 80}
-		duration = time.Second * 30
-		actionID = ActionID{SpellID: 35476}
-	case proto.Drums_GreaterDrumsOfWar, proto.Drums_LesserDrumsOfWar:
-		drumLabel = "Drums of War"
-		drumStats = stats.Stats{stats.AttackPower: 60, stats.RangedAttackPower: 60, stats.SpellDamage: 30}
-		duration = time.Second * 30
-		actionID = ActionID{SpellID: 35475}
-	case proto.Drums_GreaterDrumsOfRestoration, proto.Drums_LesserDrumsOfRestoration:
-		drumLabel = "Drums of Restoration"
-		drumStats = stats.Stats{stats.MP5: 200}
-		duration = time.Second * 15
-		actionID = ActionID{SpellID: 35478}
-	}
-
-	if isExternal {
-		actionID = actionID.WithTag(-1)
-		drumLabel = drumLabel + " (External)"
-	}
-
-	aura := character.NewTemporaryStatsAura(drumLabel, actionID, drumStats, duration)
-
-	tinnitus := character.GetOrRegisterAura(Aura{
-		Label:    TinnitusAuraLabel,
-		ActionID: ActionID{SpellID: 369770},
-		Duration: time.Minute * 2,
-	})
-
-	aura.ApplyOnGain(func(_ *Aura, sim *Simulation) {
-		tinnitus.Activate(sim)
-	})
-
-	spellConfig := SpellConfig{
-		ActionID: actionID,
-		Flags:    SpellFlagNoOnCastComplete,
-		ProcMask: ProcMaskEmpty,
-		ExtraCastCondition: func(sim *Simulation, target *Unit) bool {
-			if !character.HasActiveAura(TinnitusAuraLabel) {
-				return true
-			}
-			return false
-		},
-		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
-			if !character.HasActiveAura(TinnitusAuraLabel) {
-				aura.Activate(sim)
-			}
-		},
-
-		RelatedSelfBuff: aura.Aura,
-	}
-
-	return spellConfig
-}
-
-func DrumsBuff(character *Character, drum proto.Drums) {
-	config := drumsSpellConfig(character, drum, true)
-	config.Cast = CastConfig{
-		CD: Cooldown{
-			Timer:    character.NewTimer(),
-			Duration: time.Minute * 2,
-		},
-	}
-	spell := character.RegisterSpell(config)
-
-	character.AddMajorCooldown(MajorCooldown{
-		Spell:    spell,
-		Type:     CooldownTypeDPS,
-		Priority: CooldownPriorityDrums,
-	})
-}
-
 ///////////////////////////////////////////////////////////////////////////
 //							Individual Buffs
 ///////////////////////////////////////////////////////////////////////////
@@ -1764,7 +1680,6 @@ func applyPetBuffEffects(petAgent PetAgent, raidBuffs *proto.RaidBuffs, partyBuf
 	individualBuffs.Innervates = 0
 	individualBuffs.PowerInfusions = 0
 
-	partyBuffs.Drums = proto.Drums_DrumsUnknown
 	partyBuffs.LeaderOfThePack = MinTristate(partyBuffs.LeaderOfThePack, proto.TristateEffect_TristateEffectRegular)
 	partyBuffs.MoonkinAura = MinTristate(partyBuffs.MoonkinAura, proto.TristateEffect_TristateEffectRegular)
 

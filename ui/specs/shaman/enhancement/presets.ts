@@ -1,5 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { Class, ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, ShamanSyncType } from '@generated/proto/shaman';
 import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
@@ -29,16 +29,7 @@ export const OtherDefaults = {
 };
 
 export const DefaultConsumables = ConsumesSpec.create({
-	potId: 22838, // Haste Potion
-	flaskId: 22854, // Flask of Relentless Assault
-	foodId: 27658, // Roasted Clefthoof
-	drumsId: Drums.LesserDrumsOfBattle,
-	conjuredId: 22788,
-	explosiveId: 30217,
-	superSapper: true,
 	goblinSapper: true,
-	scrollAgi: true,
-	scrollStr: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({

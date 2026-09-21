@@ -338,7 +338,6 @@ export class Sim {
 				const gear = Sim.prepareGear(options.gear, [player.profession1, player.profession2].includes(Profession.Enchanting));
 				player.database = gear.toDatabase(this.db);
 				player.equipment = gearAsBackendSpec(gear);
-				if (player.consumables) player.consumables = gear.adjustImbues(player.consumables);
 			}
 
 			const onProgress = options.onProgress ?? noop;

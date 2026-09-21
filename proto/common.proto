@@ -434,16 +434,6 @@ enum TristateEffect {
 	TristateEffectImproved = 2;
 }
 
-enum Drums {
-	DrumsUnknown = 0;
-	GreaterDrumsOfBattle = 1;
-	GreaterDrumsOfRestoration = 2;
-	GreaterDrumsOfWar = 3;
-	LesserDrumsOfBattle = 4;
-	LesserDrumsOfRestoration = 5;
-	LesserDrumsOfWar = 6;
-}
-
 enum StrengthOfEarthType {
 	None = 0;
 	Basic = 1;
@@ -477,10 +467,7 @@ message PartyBuffs {
 	TristateEffect retribution_aura = 7;
 	TristateEffect concentration_aura = 45;
 	bool trueshot_aura = 8;
-	reserved 9, 10;
-
-	// Drums
-	Drums drums = 11;
+	reserved 9, 10, 11;
 
 	// Item Buffs
 	int32 atiesh_druid = 35;
@@ -590,21 +577,13 @@ message ConsumesSpec {
 	int32 food_id = 5;
 	int32 conjured_id = 6;
 	int32 explosive_id = 7;
-	bool superSapper = 8;
+	reserved 8;
 	bool goblinSapper = 9;
 	reserved 24;
 	bool bogling_root = 25;
 	int32 mhImbue_id = 10;
 	int32 ohImbue_id = 11;
-	Drums drums_id = 12;
-	bool scroll_agi = 13;
-	bool scroll_str = 14;
-	bool scroll_int = 15;
-	bool scroll_spi = 16;
-	bool scroll_arm = 17;
-	bool pet_scroll_agi = 18;
-	bool pet_scroll_str = 19;
-	bool nightmare_seed = 20;
+	reserved 12, 13, 14, 15, 16, 17, 18, 19, 20;
 	int32 pet_food_id = 21;
 	// Contains all available potions
 	repeated int32 potions = 22;

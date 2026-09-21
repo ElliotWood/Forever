@@ -2447,26 +2447,6 @@
 							"additionalProperties": false,
 							"required": ["title", "mhImbue", "ohImbue"]
 						},
-						"drums": {
-							"type": "object",
-							"properties": {
-								"title": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["title"]
-						},
-						"scrolls": {
-							"type": "object",
-							"properties": {
-								"title": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["title"]
-						},
 						"miscellaneous": {
 							"type": "object",
 							"properties": {
@@ -2479,7 +2459,7 @@
 						}
 					},
 					"additionalProperties": false,
-					"required": ["title", "potions", "elixirs", "food", "engineering", "pet", "imbue", "drums", "scrolls", "miscellaneous"]
+					"required": ["title", "potions", "elixirs", "food", "engineering", "pet", "imbue", "miscellaneous"]
 				},
 				"encounter": {
 					"type": "object",

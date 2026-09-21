@@ -4,7 +4,6 @@ import { ResourceType } from '@generated/proto/spell';
 import { IconData, UIItem as Item } from '@generated/proto/ui';
 
 import { CHARACTER_LEVEL } from '../../constants/mechanics';
-import { CURRENT_PHASE, Phase } from '../../constants/other';
 import { Database } from '../database';
 import { buildWowheadTooltipDataset, wowheadEntityUrl, wowheadIconUrl, WowheadTooltipItemParams, WowheadTooltipSpellParams } from '../wowhead';
 
@@ -593,16 +592,6 @@ export class ActionId {
 					name += ' (Cooldown)';
 				}
 				break;
-			case 'Drums of War':
-			case 'Drums of Battle':
-			case 'Drums of Restoration':
-				if (CURRENT_PHASE >= Phase.Phase4) {
-					name = 'Greater ' + name;
-				}
-				if (tag === -1) {
-					name += ' (External)';
-				}
-				break;
 			case 'Retribution Aura':
 			case 'Holy Shield':
 				if (tag == 2) {
@@ -887,7 +876,6 @@ const petNameToActionId: Record<string, ActionId> = {
 	'Frozen Orb': ActionId.fromSpellId(84721),
 	Gargoyle: ActionId.fromSpellId(49206),
 	Ghoul: ActionId.fromSpellId(46584),
-	'Gnomish Flame Turret': ActionId.fromItemId(23841),
 	'Greater Earth Elemental': ActionId.fromSpellId(2062),
 	'Greater Fire Elemental': ActionId.fromSpellId(2894),
 	'Primal Earth Elemental': ActionId.fromSpellId(2062),

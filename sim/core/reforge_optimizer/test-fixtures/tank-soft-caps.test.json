@@ -92,20 +92,10 @@
 							]
 						},
 						"consumables": {
-							"potId": 22849,
-							"flaskId": 22861,
-							"foodId": 27657,
 							"conjuredId": 12662,
-							"explosiveId": 30217,
-							"superSapper": true,
 							"goblinSapper": true,
-							"mhImbueId": 28017,
-							"scrollAgi": true,
-							"scrollStr": true,
-							"scrollArm": true,
-							"nightmareSeed": true,
-							"potions": [13442, 18253, 22828, 22832, 22837, 22838, 22839, 22849, 22850, 28101, 31677, 32948, 33935, 34440],
-							"conjuredItems": [22105, 22797, 12662, 22788, 23334, 23381]
+							"potions": [13442, 18253],
+							"conjuredItems": [12662]
 						},
 						"bonusStats": {
 							"stats": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -168,7 +158,6 @@
 					}
 				],
 				"buffs": {
-					"drums": 4,
 					"manaSpringTotem": 1,
 					"wrathOfAirTotem": 1,
 					"strengthOfEarthTotem": 2

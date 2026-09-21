@@ -15,12 +15,7 @@ export const DefaultOptions = RogueOptions.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	battleElixirId: 22831,
-	guardianElixirId: 32062,
-	foodId: 33872,
-	potId: 22838,
 	conjuredId: 7676,
-	ohImbueId: 27186,
 });
 
 export const OtherDefaults = {

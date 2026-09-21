@@ -110,7 +110,6 @@ func runSingleBulkSimCandidate(request *proto.BulkSimRequest, candidate BulkSimC
 		return &BulkSimCandidateResult{Candidate: candidate, Error: &proto.ErrorOutcome{Message: err}}
 	}
 	player.Equipment = googleProto.Clone(candidate.Gear).(*proto.EquipmentSpec)
-	adjustCandidateImbues(player)
 
 	var simProgress chan *proto.ProgressMetrics
 	var progressWg sync.WaitGroup

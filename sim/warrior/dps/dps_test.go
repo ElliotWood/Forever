@@ -82,14 +82,4 @@ var DefaultOptions = &proto.Player_DpsWarrior{
 var DefaultFuryTalents = "3500501130201-05050005505012050115"
 var DefaultArmsTalents = "32005011352010500221-0550000500521203"
 
-var DefaultConsumables = &proto.ConsumesSpec{
-	PotId:       22838,
-	FlaskId:     22854,
-	FoodId:      27658,
-	ConjuredId:  22788,
-	ExplosiveId: 30217,
-	SuperSapper: true,
-	OhImbueId:   29453,
-	ScrollAgi:   true,
-	ScrollStr:   true,
-}
+var DefaultConsumables = &proto.ConsumesSpec{}

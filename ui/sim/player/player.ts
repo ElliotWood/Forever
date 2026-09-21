@@ -53,15 +53,7 @@ import { migrateOldProto, ProtoConversionMap } from '../proto/proto_migration';
 import { specTypeFunctions, withSpec } from '../proto/spec_functions';
 import type { ClassOptions, ClassSpecs, SpecClasses, SpecOptions, SpecRotation, SpecTalents, SpecTypeFunctions } from '../proto/spec_types';
 import { Stats, UnitStat } from '../proto/stats';
-import {
-	ADAMANTITE_SHARPENING_STONE_ID,
-	ADAMANTITE_WEIGHTSTONE_ID,
-	AL_CATEGORY_HARD_MODE,
-	emptyUnitReference,
-	getTalentTreePoints,
-	newUnitReference,
-	raceToFaction,
-} from '../proto/utils';
+import { AL_CATEGORY_HARD_MODE, emptyUnitReference, getTalentTreePoints, newUnitReference, raceToFaction } from '../proto/utils';
 import { MAX_PARTY_SIZE, Party } from '../raid/party';
 import { Raid } from '../raid/raid';
 import { CONJURED_CONFIG, relevantConsumableOptions } from '../settings/conjured';
@@ -697,25 +689,6 @@ export class Player<SpecType extends Spec> {
 		return ConsumesSpec.clone(this.slice().consumables);
 	}
 
-	// Weapon stones grant their crit rating to a melee weapon only, but the back-end tracks a
-	// single physical crit rating stat shared by melee and ranged, so ranged stat displays have to
-	// offset them back out.
-	getRangedImbueStatOffsets(): Stats {
-		const isWeaponStone = (imbueId: number) => imbueId === ADAMANTITE_SHARPENING_STONE_ID || imbueId === ADAMANTITE_WEIGHTSTONE_ID;
-		const consumables = this.slice().consumables;
-		const party = this.getParty();
-		const mhImbueApplied = !party || party.getBuffs().windfuryTotem === TristateEffect.TristateEffectMissing;
-
-		let offsets = new Stats();
-		if (mhImbueApplied && isWeaponStone(consumables.mhImbueId)) {
-			offsets = offsets.addStat(Stat.StatMeleeCritRating, -14);
-		}
-		if (isWeaponStone(consumables.ohImbueId)) {
-			offsets = offsets.addStat(Stat.StatMeleeCritRating, -14);
-		}
-		return offsets;
-	}
-
 	setConsumes(newConsumes: ConsumesSpec) {
 		if (ConsumesSpec.equals(this.slice().consumables, newConsumes)) return;
 
@@ -742,15 +715,7 @@ export class Player<SpecType extends Spec> {
 	setGear(newGear: Gear, forceUpdate?: boolean) {
 		if (newGear.equals(this.getGear()) && !forceUpdate) return;
 
-		// Weapon stone imbues are corrected in the same write as the gear, so that a subscriber
-		// (including pickers that auto-clear a now-invalid selection) never sees the pair
-		// disagree.
-		const adjustedConsumes = newGear.adjustImbues(this.slice().consumables);
-		if (adjustedConsumes !== this.slice().consumables) {
-			this.write({ gear: newGear, consumables: adjustedConsumes }, ['gear', 'consumables']);
-		} else {
-			this.patch('gear', newGear);
-		}
+		this.patch('gear', newGear);
 	}
 
 	async setGearAsync(newGear: Gear, forceUpdate?: boolean) {

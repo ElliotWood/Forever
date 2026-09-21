@@ -25,16 +25,8 @@ export const DefaultOptions = ProtectionWarriorOptions.create({
 
 export const DefaultConsumables = ConsumesSpec.create({
 	...WarriorPresets.DefaultConsumables,
-	conjuredId: 22105,
-	foodId: 27667,
 	flaskId: undefined,
-	battleElixirId: 22831,
 	guardianElixirId: 9088,
-	potId: 22849,
-	nightmareSeed: true,
-	scrollStr: true,
-	scrollAgi: true,
-	scrollArm: true,
 });
 
 export const OtherDefaults: Partial<SimUIOtherDefaults> = {
