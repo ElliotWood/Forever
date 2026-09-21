@@ -15,7 +15,10 @@ SpellMod implementation.
 */
 
 type SpellModConfig struct {
-	ClassMask         int64
+	ClassMask int64
+	// The client's EffectSpellClassMask: the spells this mod names. A mod that sets both this and
+	// ClassMask applies only to the spells both name.
+	ClassFlags        ClassFlags
 	Kind              SpellModType
 	School            SpellSchool
 	DefenseType       DefenseType // Only apply to spells with a matching DefenseType
@@ -34,6 +37,7 @@ type SpellModConfig struct {
 
 type SpellMod struct {
 	ClassMask      int64
+	ClassFlags     ClassFlags
 	Kind           SpellModType
 	School         SpellSchool
 	DefenseType    DefenseType
@@ -96,6 +100,7 @@ func buildMod(unit *Unit, config SpellModConfig) *SpellMod {
 
 	mod := &SpellMod{
 		ClassMask:    config.ClassMask,
+		ClassFlags:   config.ClassFlags,
 		Kind:         config.Kind,
 		School:       config.School,
 		DefenseType:  config.DefenseType,
@@ -180,6 +185,10 @@ func shouldApply(spell *Spell, mod *SpellMod) bool {
 	}
 
 	if mod.ClassMask > 0 && !spell.Matches(mod.ClassMask) {
+		return false
+	}
+
+	if !mod.ClassFlags.IsZero() && !spell.MatchesFlags(mod.ClassFlags) {
 		return false
 	}
 
