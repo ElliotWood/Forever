@@ -20,12 +20,13 @@ func (warlock *Warlock) registerWrackSpell() {
 	manaCost := 200.0
 
 	warlock.Wrack = warlock.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_WarlockWrack,
-		ActionID:    core.ActionID{SpellID: 11704},
-		SpellSchool: core.SpellSchoolShadow,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       core.SpellFlagAPL | core.SpellFlagChanneled | core.SpellFlagResetAttackSwing | WarlockFlagAffliction,
+		SpellCode:      SpellCode_WarlockWrack,
+		ClassSpellMask: SpellMaskWrack,
+		ActionID:       core.ActionID{SpellID: 11704},
+		SpellSchool:    core.SpellSchoolShadow,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagChanneled | core.SpellFlagResetAttackSwing | WarlockFlagAffliction,
 
 		RequiredLevel: 60,
 

@@ -22,14 +22,15 @@ func (warlock *Warlock) getCorruptionConfig(rank int) core.SpellConfig {
 	castTime := time.Millisecond * (2000 - (400 * time.Duration(warlock.Talents.ImprovedCorruption)))
 
 	return core.SpellConfig{
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolShadow,
-		SpellCode:     SpellCode_WarlockCorruption,
-		ProcMask:      core.ProcMaskSpellDamage,
-		DefenseType:   core.DefenseTypeMagic,
-		Flags:         core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagPureDot | WarlockFlagAffliction,
-		Rank:          rank,
-		RequiredLevel: level,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolShadow,
+		SpellCode:      SpellCode_WarlockCorruption,
+		ClassSpellMask: SpellMaskCorruption,
+		ProcMask:       core.ProcMaskSpellDamage,
+		DefenseType:    core.DefenseTypeMagic,
+		Flags:          core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagPureDot | WarlockFlagAffliction,
+		Rank:           rank,
+		RequiredLevel:  level,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

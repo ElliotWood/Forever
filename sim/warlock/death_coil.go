@@ -16,7 +16,6 @@ func (warlock *Warlock) getDeathCoilBaseConfig(rank int) core.SpellConfig {
 	level := [DeathCoilRanks + 1]int{0, 42, 50, 58}[rank]
 	spellCoeff := 0.214
 
-
 	healingSpell := warlock.GetOrRegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: spellId}.WithTag(1),
 		SpellSchool: core.SpellSchoolPhysical,
@@ -28,15 +27,16 @@ func (warlock *Warlock) getDeathCoilBaseConfig(rank int) core.SpellConfig {
 	})
 
 	return core.SpellConfig{
-		SpellCode:     SpellCode_WarlockDeathCoil,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolShadow,
-		DefenseType:   core.DefenseTypeMagic,
-		ProcMask:      core.ProcMaskSpellDamage,
-		Flags:         core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagBinary | WarlockFlagAffliction,
-		RequiredLevel: level,
-		Rank:          rank,
-		MissileSpeed:  24,
+		SpellCode:      SpellCode_WarlockDeathCoil,
+		ClassSpellMask: SpellMaskDeathCoil,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolShadow,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagBinary | WarlockFlagAffliction,
+		RequiredLevel:  level,
+		Rank:           rank,
+		MissileSpeed:   24,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

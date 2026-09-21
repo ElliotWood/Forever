@@ -267,6 +267,9 @@ const (
 
 	// Multiplies spell.ThreatMultiplier. -15% = -0.15. Uses FloatValue.
 	SpellMod_ThreatMultiplier_Pct
+
+	// Adds to spell.PeriodicDamageMultiplierAdditive. Uses FloatValue.
+	SpellMod_PeriodicDamageDone_Flat
 )
 
 var spellModMap = map[SpellModType]*SpellModFunctions{
@@ -352,6 +355,10 @@ var spellModMap = map[SpellModType]*SpellModFunctions{
 	SpellMod_ThreatMultiplier_Pct: {
 		Apply:  func(mod *SpellMod, spell *Spell) { spell.ThreatMultiplier *= 1 + mod.floatValue },
 		Remove: func(mod *SpellMod, spell *Spell) { spell.ThreatMultiplier /= 1 + mod.floatValue },
+	},
+	SpellMod_PeriodicDamageDone_Flat: {
+		Apply:  func(mod *SpellMod, spell *Spell) { spell.PeriodicDamageMultiplierAdditive += mod.floatValue },
+		Remove: func(mod *SpellMod, spell *Spell) { spell.PeriodicDamageMultiplierAdditive -= mod.floatValue },
 	},
 }
 

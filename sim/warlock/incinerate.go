@@ -26,15 +26,16 @@ func (warlock *Warlock) registerIncinerateSpell() {
 	castTime := time.Millisecond * 2500
 
 	warlock.Incinerate = warlock.RegisterSpell(core.SpellConfig{
-		SpellCode:     SpellCode_WarlockIncinerate,
-		ActionID:      core.ActionID{SpellID: spellID},
-		SpellSchool:   core.SpellSchoolFire,
-		DefenseType:   core.DefenseTypeMagic,
-		ProcMask:      core.ProcMaskSpellDamage,
-		Flags:         core.SpellFlagAPL | core.SpellFlagResetAttackSwing | WarlockFlagDestruction,
-		RequiredLevel: int(warlock.Level),
-		Rank:          rank,
-		MissileSpeed:  24,
+		SpellCode:      SpellCode_WarlockIncinerate,
+		ClassSpellMask: SpellMaskIncinerate,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagResetAttackSwing | WarlockFlagDestruction,
+		RequiredLevel:  int(warlock.Level),
+		Rank:           rank,
+		MissileSpeed:   24,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

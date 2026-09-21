@@ -20,16 +20,16 @@ func (warlock *Warlock) getSiphonLifeBaseConfig(rank int) core.SpellConfig {
 	actionID := core.ActionID{SpellID: spellId}
 	healthMetrics := warlock.NewHealthMetrics(actionID)
 
-
 	return core.SpellConfig{
-		SpellCode:     SpellCode_WarlockSiphonLife,
-		ActionID:      actionID,
-		SpellSchool:   core.SpellSchoolShadow,
-		DefenseType:   core.DefenseTypeMagic,
-		ProcMask:      core.ProcMaskSpellDamage,
-		Flags:         core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagBinary | WarlockFlagAffliction,
-		RequiredLevel: level,
-		Rank:          rank,
+		SpellCode:      SpellCode_WarlockSiphonLife,
+		ClassSpellMask: SpellMaskSiphonLife,
+		ActionID:       actionID,
+		SpellSchool:    core.SpellSchoolShadow,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagBinary | WarlockFlagAffliction,
+		RequiredLevel:  level,
+		Rank:           rank,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

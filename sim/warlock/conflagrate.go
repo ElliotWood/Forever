@@ -25,14 +25,15 @@ func (warlock *Warlock) getConflagrateConfig(rank int) core.SpellConfig {
 	keepImmolateChance := 0.2 * float64(warlock.Talents.ShadowAndFlame)
 
 	return core.SpellConfig{
-		SpellCode:     SpellCode_WarlockConflagrate,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolFire,
-		DefenseType:   core.DefenseTypeMagic,
-		ProcMask:      core.ProcMaskSpellDamage,
-		Flags:         core.SpellFlagAPL | WarlockFlagDestruction,
-		Rank:          rank,
-		RequiredLevel: level,
+		SpellCode:      SpellCode_WarlockConflagrate,
+		ClassSpellMask: SpellMaskConflagrate,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | WarlockFlagDestruction,
+		Rank:           rank,
+		RequiredLevel:  level,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

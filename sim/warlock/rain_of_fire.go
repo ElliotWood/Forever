@@ -22,13 +22,14 @@ func (warlock *Warlock) getRainOfFireBaseConfig(rank int) core.SpellConfig {
 	flags := core.SpellFlagAPL | core.SpellFlagResetAttackSwing | WarlockFlagDestruction | core.SpellFlagChanneled
 
 	config := core.SpellConfig{
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolFire,
-		DefenseType:   core.DefenseTypeMagic,
-		ProcMask:      core.ProcMaskSpellDamage,
-		Flags:         flags,
-		RequiredLevel: level,
-		Rank:          rank,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		ClassSpellMask: SpellMaskRainOfFire,
+		Flags:          flags,
+		RequiredLevel:  level,
+		Rank:           rank,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
