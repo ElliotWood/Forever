@@ -1,5 +1,17 @@
 [
 	{
+		"number": 270,
+		"title": "ci: auto-merge PRs into master when tests are green",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/270"
+	},
+	{
+		"number": 268,
+		"title": "converge(core): SpellMod system beside SpellCode, mage talents migrated",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/268"
+	},
+	{
 		"number": 267,
 		"title": "ci(data-watch): merge the data PRs automatically",
 		"mergedAt": "2026-09-21",
