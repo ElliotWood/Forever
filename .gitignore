@@ -56,3 +56,8 @@ tools/db2tool/caches/
 tools/database/*.db
 
 __pycache__/
+
+# Local caches for tools/data_watch.
+tools/data_watch/.cache/
+tools/data_watch/dbd_manifest.json
+tools/data_watch/dbd_cache/
