@@ -19,7 +19,26 @@ const (
 	healProcBuff    int32 = 1249119
 )
 
+// core skips an effect whose item this client does not ship, which every id below is: the test's own
+// ids are chosen to be absent from the shipped database so that registering them cannot collide with
+// a real effect. Putting them in the database first is what lets the registration run under the
+// with_db build tag as it does without it.
+func withTestItems(ids ...int32) {
+	items := make([]*proto.SimItem, 0, len(ids))
+	for _, id := range ids {
+		items = append(items, &proto.SimItem{Id: id, Name: "Test Trinket"})
+	}
+	core.AddToDatabase(&proto.SimDatabase{Items: items})
+}
+
+func withTestEnchant(effectID int32) {
+	core.AddToDatabase(&proto.SimDatabase{
+		Enchants: []*proto.SimEnchant{{EffectId: effectID, Name: "Test Enchant"}},
+	})
+}
+
 func TestSpellDataProcRegistersEveryVariant(t *testing.T) {
+	withTestItems(990001, 990002)
 	NewSpellDataProc(SpellDataProc{TriggerSpellID: healProcTrigger, BuffSpellID: healProcBuff},
 		[]ItemVariant{
 			{ItemID: 990001, ItemName: "Reissued Test Trinket"},
@@ -46,6 +65,7 @@ func TestSpellDataProcRegistersEveryVariant(t *testing.T) {
 // A row that names no hits the sim hears would register a listener that can never fire. 1249119 is
 // the buff half of the pair above: it carries the stats and no proc flags at all.
 func TestSpellDataProcSkipsARowWithNoListener(t *testing.T) {
+	withTestItems(990003)
 	NewSpellDataProc(SpellDataProc{TriggerSpellID: healProcBuff},
 		[]ItemVariant{{ItemID: 990003, ItemName: "Listenerless Test Trinket"}})
 
@@ -56,6 +76,7 @@ func TestSpellDataProcSkipsARowWithNoListener(t *testing.T) {
 
 // An enchant states its own name and registers through the enchant registry instead.
 func TestSpellDataProcRegistersAnEnchant(t *testing.T) {
+	withTestEnchant(990004)
 	NewSpellDataProc(SpellDataProc{
 		Name:           "Test Enchant",
 		EnchantID:      990004,
