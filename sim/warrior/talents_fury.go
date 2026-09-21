@@ -11,7 +11,7 @@ import (
 
 func (warrior *Warrior) registerFuryTalents() {
 	// Tier 1
-	// Booming Voice: shouts.go
+	// Booming Voice (12321) widens the shout radius only, which the sim does not model.
 	warrior.registerCruelty()
 
 	// Tier 2
