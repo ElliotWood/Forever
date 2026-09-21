@@ -26,12 +26,13 @@ func (warrior *Warrior) registerRendSpell() {
 	damageMultiplier := []float64{1, 1.12, 1.23, 1.35}[warrior.Talents.ImprovedRend]
 
 	warrior.Rend = warrior.RegisterSpell(BattleStance|DefensiveStance, core.SpellConfig{
-		SpellCode:   SpellCode_WarriorRend,
-		ActionID:    core.ActionID{SpellID: rend.spellID},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagAPL | core.SpellFlagNoOnCastComplete | SpellFlagOffensive,
+		SpellCode:      SpellCode_WarriorRend,
+		ClassSpellMask: SpellMaskRend,
+		ActionID:       core.ActionID{SpellID: rend.spellID},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagAPL | core.SpellFlagNoOnCastComplete | SpellFlagOffensive,
 
 		RageCost: core.RageCostOptions{
 			Cost:   10,

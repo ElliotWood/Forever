@@ -35,6 +35,11 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, aura *core.Aura, stanceCD
 		DefensiveStance: SpellCode_WarriorStanceDefensive,
 		BerserkerStance: SpellCode_WarriorStanceBerserker,
 	}[stance]
+	classMask := map[Stance]int64{
+		BattleStance:    SpellMaskBattleStance,
+		DefensiveStance: SpellMaskDefensiveStance,
+		BerserkerStance: SpellMaskBerserkerStance,
+	}[stance]
 	actionID := aura.ActionID
 	// Tactical Mastery is a baseline passive in the Arms tab under Forever, not a talent,
 	// and keeps 10 Rage on its own; Improved Tactical Mastery adds 3 per point on top.
@@ -46,9 +51,10 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, aura *core.Aura, stanceCD
 	rageMetrics := warrior.NewRageMetrics(actionID)
 
 	stanceSpell := warrior.RegisterSpell(AnyStance, core.SpellConfig{
-		SpellCode: spellCode,
-		ActionID:  actionID,
-		Flags:     core.SpellFlagAPL,
+		SpellCode:      spellCode,
+		ClassSpellMask: classMask,
+		ActionID:       actionID,
+		Flags:          core.SpellFlagAPL,
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
