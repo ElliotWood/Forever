@@ -5,6 +5,7 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 const ShoutExpirationThreshold = time.Second * 3
@@ -62,10 +63,20 @@ var battleShoutRank = spellData.BattleShout.BySpellID(25289)
 func (warrior *Warrior) registerShouts() {
 	warrior.registerDemoralizingShout()
 
+	// Three pieces of Battlegear of Wrath add a flat 30 to the shout. HasBsT2 is
+	// the user saying this warrior wears them; the equipped set is not read.
+	battleShoutValue := core.BattleShoutValue(warrior.Talents.BoomingVoice)
+	if warrior.HasBsT2 {
+		battleShoutValue += core.BattleShoutT2Bonus
+	}
+
 	battleShoutAuras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
 		// Booming Voice modifies the radius only, so the generated aura ignores the
 		// points; they are passed for signature uniformity.
 		aura := core.BattleShoutAura(unit, warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone, warrior.Talents.BoomingVoice)
+		if warrior.HasBsT2 {
+			core.AddGeneratedFlatBonus(aura, stats.AttackPower, core.BattleShoutT2Bonus)
+		}
 		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
 		return aura
 	})
@@ -77,7 +88,7 @@ func (warrior *Warrior) registerShouts() {
 		ThreatBonus: 69,
 		ExtraCastCondition: func(_ *core.Simulation, _ *core.Unit) bool {
 			aura := battleShoutAuras.Get(&warrior.Unit)
-			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= core.BattleShoutValue(warrior.Talents.BoomingVoice)
+			return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= battleShoutValue
 		},
 		AllyAuras: battleShoutAuras,
 	})

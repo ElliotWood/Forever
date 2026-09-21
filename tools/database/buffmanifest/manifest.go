@@ -301,7 +301,6 @@ var Retired = map[BuffScope][]RetiredField{
 		{26, "tranquil_air_totem"},
 		{29, "bs_solarian_sapphire"},
 		{30, "snapshot_bs_solarian_sapphire"},
-		{31, "snapshot_bs_t2"},
 		{32, "snapshot_bs_booming_voice_rank"},
 		{37, "soe_enhancement_2pt4"},
 	},

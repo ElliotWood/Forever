@@ -29,6 +29,11 @@ var Manifest = []BuffSpec{
 		Notes: "Booming Voice (12321) is in warrior tree 1117 but modifies radius only (misc 6), so there is no improved state. The single A_MOD_ATTACK_POWER effect is melee attack power, which is why the row tags that alone.",
 	},
 	{
+		Field: "snapshot_bs_t2", Number: 31, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
+		Go:    "SnapshotBsT2",
+		Notes: "says the warrior who shouted for the party wears three pieces of Battlegear of Wrath, whose ItemSetSpell at three is 23563: +30 on every effect of the Battle Shout family. The resolver does not read ItemSetSpell, so driveBattleShout adds the amount; the UI input for it is hand-written next to Battle Shout.",
+	},
+	{
 		Field: "devotion_aura", Number: 6, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
 		Go: "DevotionAura", Name: "Devotion Aura", Owner: proto.Class_ClassPaladin,
 		Category: "DevotionAura", SharedCategory: "PaladinAura", SingleAura: true,

@@ -1,6 +1,6 @@
-import { Stat } from '@generated/proto/common';
+import { Class, Stat } from '@generated/proto/common';
 import { ActionId } from '@sim/proto/action_id';
-import { makeBooleanIndividualBuffInput, makeMultistateIndividualBuffInput } from '@ui-kit/icon_inputs';
+import { makeBooleanIndividualBuffInput, makeBooleanPartyBuffInput, makeMultistateIndividualBuffInput } from '@ui-kit/icon_inputs';
 
 import * as Generated from './buffs_debuffs_auto_gen';
 import { IconPickerStatOption, inDisplayOrder } from './stat_options';
@@ -14,6 +14,15 @@ export * from './buffs_debuffs_auto_gen';
 export const Innervate = Generated.Innervates;
 export const PowerInfusion = Generated.PowerInfusions;
 export const ManaTideTotem = Generated.ManaTideTotems;
+
+// Party Buffs
+// A sim toggle rather than a buff of its own: it says the warrior who shouted for the party wears
+// three pieces of Battlegear of Wrath, which is worth 30 more attack power on the shout.
+export const EnhancedBattleShout = makeBooleanPartyBuffInput({
+	actionId: ActionId.fromSpellId(23563),
+	fieldName: 'snapshotBsT2',
+	label: 'Enhanced Battle Shout',
+});
 
 // Individual Buffs
 export const BlessingOfSalvation = makeBooleanIndividualBuffInput({
@@ -33,6 +42,7 @@ export const PARTY_BUFFS_CONFIG = inDisplayOrder(Generated.GENERATED_PARTY_BUFFS
 	Generated.BloodPact,
 	Generated.CommandingShout,
 	Generated.BattleShout,
+	{ config: EnhancedBattleShout, stats: [Stat.StatAttackPower], ownerClass: Class.ClassWarrior },
 	Generated.DevotionAura,
 	Generated.LeaderOfThePack,
 	Generated.ManaSpringTotem,

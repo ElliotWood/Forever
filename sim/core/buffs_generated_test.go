@@ -114,6 +114,74 @@ func TestPlayerBattleShoutTakesTheCategoryOnATie(t *testing.T) {
 	}
 }
 
+// The party's snapshot flag says the warrior who shouted for the party wears
+// three pieces of Battlegear of Wrath, so the external copy is worth the
+// client's 139 plus the set's 30.
+func TestPartyBattleShoutSnapshotsTheTierTwoBonus(t *testing.T) {
+	for _, row := range []struct {
+		name  string
+		party *proto.PartyBuffs
+		want  float64
+	}{
+		{"with the set", &proto.PartyBuffs{BattleShout: true, SnapshotBsT2: true}, 169},
+		{"without it", &proto.PartyBuffs{BattleShout: true}, 139},
+	} {
+		t.Run(row.name, func(t *testing.T) {
+			char := newGeneratedBuffTestCharacter()
+
+			applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
+			char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+			if got := char.stats[stats.AttackPower]; got != row.want {
+				t.Errorf("the party's Battle Shout applied %v attack power, want %v", got, row.want)
+			}
+			if got := char.GetAura("Battle Shout (External)").ExclusiveEffects[0].Priority; got != row.want {
+				t.Errorf("the external copy bids %v, want %v", got, row.want)
+			}
+		})
+	}
+}
+
+// Two copies of the shout that are no longer worth the same: the stronger one
+// takes the category whichever side it is on, and the character sheet reads it
+// once rather than both added up.
+func TestTheStrongerBattleShoutTakesTheCategory(t *testing.T) {
+	for _, row := range []struct {
+		name         string
+		party        *proto.PartyBuffs
+		playerBonus  float64
+		wantPlayerUp bool
+	}{
+		{"the player wears the set", &proto.PartyBuffs{BattleShout: true}, BattleShoutT2Bonus, true},
+		{"the external warrior does", &proto.PartyBuffs{BattleShout: true, SnapshotBsT2: true}, 0, false},
+	} {
+		t.Run(row.name, func(t *testing.T) {
+			char := newGeneratedBuffTestCharacter()
+
+			applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
+
+			player := BattleShoutAura(&char.Unit, true, 0)
+			if row.playerBonus != 0 {
+				AddGeneratedFlatBonus(player, stats.AttackPower, row.playerBonus)
+			}
+			player.BuildPhase = CharacterBuildPhaseBuffs
+
+			char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+			external := char.GetAura("Battle Shout (External)")
+			if player.IsActive() != row.wantPlayerUp {
+				t.Errorf("the player's copy is active: %v, want %v", player.IsActive(), row.wantPlayerUp)
+			}
+			if external.IsActive() == row.wantPlayerUp {
+				t.Errorf("the external copy is active: %v, want %v", external.IsActive(), !row.wantPlayerUp)
+			}
+			if got := char.stats[stats.AttackPower]; got != 169 {
+				t.Errorf("both copies together applied %v attack power, want the stronger one's 169", got)
+			}
+		})
+	}
+}
+
 // A flat stat row: no category at all, so the two sources of stamina add up.
 func TestGeneratedFlatStatBuffsAddUp(t *testing.T) {
 	char := newGeneratedBuffTestCharacter()

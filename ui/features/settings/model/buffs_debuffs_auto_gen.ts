@@ -32,6 +32,10 @@ export const BattleShout = makeBooleanPartyBuffInput({
 	label: 'Battle Shout',
 });
 
+// snapshot_bs_t2: says the warrior who shouted for the party wears three pieces of Battlegear of Wrath, whose ItemSetSpell at three is 23563: +30 on every
+// effect of the Battle Shout family. The resolver does not read ItemSetSpell, so driveBattleShout adds the amount; the UI input for it is hand-written next to
+// Battle Shout.
+
 export const DevotionAura = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(10293),
 	fieldName: 'devotionAura',

@@ -14,6 +14,7 @@ describe('the buff registries', () => {
 			'Blood Pact',
 			'Commanding Shout',
 			'Battle Shout',
+			'Enhanced Battle Shout',
 			'Devotion Aura',
 			'Leader of the Pack',
 			'Mana Spring',
@@ -81,7 +82,8 @@ describe('the buff registries', () => {
 	});
 
 	it('puts the hand-written inputs themselves at those positions, not lookalikes', () => {
-		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[7].config).toBe(BuffDebuffInputs.ShadowPriestDPS);
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[3].config).toBe(BuffDebuffInputs.EnhancedBattleShout);
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[8].config).toBe(BuffDebuffInputs.ShadowPriestDPS);
 		expect(BuffDebuffInputs.BUFFS_CONFIG[8].config).toBe(BuffDebuffInputs.BlessingOfSalvation);
 	});
 

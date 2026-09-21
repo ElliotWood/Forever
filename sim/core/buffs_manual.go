@@ -13,16 +13,28 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // Spell 29166 states 100% mana regen while casting (aura 134) and +400% of it
 // (aura 110); neither is a stat or a pseudo-stat, so the regen is the driver's.
 const innervateSpiritRegenMultiplier = 5.0
 
+// Three pieces of Battlegear of Wrath are worth 30 more attack power on Battle
+// Shout: item set 218's ItemSetSpell at three pieces is 23563, "Enhanced Battle
+// Shout", which adds a flat 30 to every effect of the Battle Shout family. The
+// resolver reads no ItemSetSpell, so the amount is stated here.
+const BattleShoutT2Bonus = 30.0
+
 // The party's Battle Shout is the external caster's copy, which chains behind
-// the player's own shout rather than being up from the start.
-func driveBattleShout(char *Character, _ *proto.PartyBuffs) {
-	ApplyFixedShoutAura(char, BattleShoutAura(&char.Unit, false, 0), BattleShoutCategory)
+// the player's own shout rather than being up from the start. The party's
+// snapshot flag says that warrior shouted with the set on.
+func driveBattleShout(char *Character, party *proto.PartyBuffs) {
+	aura := BattleShoutAura(&char.Unit, false, 0)
+	if party.SnapshotBsT2 {
+		AddGeneratedFlatBonus(aura, stats.AttackPower, BattleShoutT2Bonus)
+	}
+	ApplyFixedShoutAura(char, aura, BattleShoutCategory)
 }
 
 // The party's Commanding Shout chains the same way its sibling does.

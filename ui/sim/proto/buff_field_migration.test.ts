@@ -101,7 +101,7 @@ describe('migrateRetypedBuffFields', () => {
 
 		migrateRetypedBuffFields(json);
 
-		expect(Object.keys(json.partyBuffs)).toEqual(['battleShout']);
+		expect(Object.keys(json.partyBuffs)).toEqual(['snapshotBsT2', 'battleShout']);
 		expect(Object.keys(json.debuffs)).toEqual([]);
 		expect(Object.keys(json.player.buffs)).toEqual(['blessingOfKings']);
 		expect(() => IndividualSimSettings.fromJson(json as never)).not.toThrow();
@@ -129,15 +129,15 @@ describe('migrateRetypedBuffFields', () => {
 	it('spells a retired field the three ways a payload may carry it', () => {
 		expect(retiredFieldSpellings('joc_retribution_2pt4')).toEqual(['joc_retribution_2pt4', 'jocRetribution2pt4', 'jocRetribution2Pt4']);
 		expect(retiredFieldSpellings('soe_enhancement_2pt4')).toEqual(['soe_enhancement_2pt4', 'soeEnhancement2pt4', 'soeEnhancement2Pt4']);
-		expect(retiredFieldSpellings('snapshot_bs_t2')).toEqual(['snapshot_bs_t2', 'snapshotBsT2']);
+		expect(retiredFieldSpellings('totem_of_wrath')).toEqual(['totem_of_wrath', 'totemOfWrath']);
 		expect(retiredFieldSpellings('drums')).toEqual(['drums']);
 	});
 
-	it('names 34 retired fields, the ones the proto reserved', () => {
+	it('names 33 retired fields, the ones the proto reserved', () => {
 		const fields = Object.values(retiredBuffFields).flat();
 
-		expect(fields).toHaveLength(34);
-		expect(new Set(fields).size).toBe(34);
+		expect(fields).toHaveLength(33);
+		expect(new Set(fields).size).toBe(33);
 	});
 
 	it('names 25 fields, the ones the proto retyped', () => {
