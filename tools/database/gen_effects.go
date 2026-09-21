@@ -784,8 +784,8 @@ var namedAbilityMatcher = regexp.MustCompile(`[Yy]our [A-Z][A-Za-z']*( [A-Z][A-Z
 
 // What core.DecodeProcTypeMask cannot read off the mask: the trigger wording around it. The named
 // ability and outcome condition bits are read here as well, for the store's rows, and say nothing
-// new to the item generator: DecodeProcTypeMask tests neither, and BuildSpellProcInfo refuses a
-// tooltip carrying either before it decodes anything.
+// new to the item generator: BuildSpellProcInfo refuses a tooltip carrying either before it decodes
+// anything, so the outcome bit the decode does read never reaches an item.
 func procTooltipHints(tooltip string) core.ProcHint {
 	var hints core.ProcHint
 

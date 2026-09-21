@@ -94,13 +94,21 @@ func TestDecodeProcTypeMask(t *testing.T) {
 			requireDamageDealt: true,
 		},
 		{
-			name:               "hints the decoder leaves to the caller",
+			name:               "a named ability, the hint the decoder leaves to the caller",
 			mask:               [2]uint32{0x222A8, 0},
-			hint:               ProcHintNamedAbility | ProcHintOutcomeTaken,
+			hint:               ProcHintNamedAbility,
 			callback:           CallbackOnSpellHitTaken,
 			procMask:           ProcMaskMeleeWhiteHit | ProcMaskMeleeSpecial | ProcMaskRangedAuto | ProcMaskRangedSpecial | ProcMaskSpellDamage,
 			outcome:            OutcomeLanded,
 			requireDamageDealt: true,
+		},
+		{
+			name:     "Battlegear of Wrath 23548, whose trigger is a block",
+			mask:     [2]uint32{0x2A8, 0},
+			hint:     ProcHintOutcomeTaken,
+			callback: CallbackOnSpellHitTaken,
+			procMask: ProcMaskMeleeWhiteHit | ProcMaskMeleeSpecial | ProcMaskRangedAuto | ProcMaskRangedSpecial,
+			outcome:  OutcomeLanded,
 		},
 		{
 			name:               "a word-1 bit",

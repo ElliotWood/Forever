@@ -62,9 +62,10 @@ type ProcTypeInfo struct {
 
 // DecodeProcTypeMask reads SpellAuraOptions.ProcTypeMask (two 32-bit words).
 //
-// ProcHintNamedAbility and ProcHintOutcomeTaken are decoded past: a trigger restricted to one
-// named ability, or to an outcome the mask has no bit for, is a shape no ProcTypeMask can state,
-// so the caller refuses those spells rather than the decoder.
+// ProcHintNamedAbility is decoded past: a trigger restricted to one named ability is a shape no
+// ProcTypeMask can state, so the caller refuses those spells rather than the decoder. Which
+// outcome ProcHintOutcomeTaken names is the caller's too, for the same reason; all the decode
+// takes from that hint is that the trigger is an outcome carrying no damage.
 func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	info := ProcTypeInfo{RequireDamageDealt: true}
 	word := mask[0]
@@ -191,6 +192,13 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 		info.ProcMask &= ^ProcMaskMeleeOH
 	case dbcenums.PROC_FLAG_OFF_HAND_WEAPON_SWING:
 		info.ProcMask &= ^ProcMaskMeleeMH
+	}
+
+	// An avoidance outcome - a dodge, a parry, a miss, a full block or a resist - is a hit that
+	// landed on nothing, so a listener whose trigger is one hears a hit that dealt no damage.
+	// Which of them it is stays the caller's: no ProcTypeMask has a bit for any of them.
+	if hint.Matches(ProcHintOutcomeTaken) {
+		info.RequireDamageDealt = false
 	}
 
 	// An outcome the listener can be given. Only the crit hint names one: the mask itself states
