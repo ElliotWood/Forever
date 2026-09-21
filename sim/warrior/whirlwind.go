@@ -9,7 +9,6 @@ func (warrior *Warrior) registerWhirlwind() {
 
 	actionID := core.ActionID{SpellID: whirlwindRank.SpellID}
 
-	// Raging Blows (1310315) adds the off-hand strike.
 	var whirlwindOH *core.Spell
 	if warrior.Talents.RagingBlows {
 		whirlwindOH = warrior.RegisterSpell(core.SpellConfig{
@@ -21,7 +20,7 @@ func (warrior *Warrior) registerWhirlwind() {
 			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
 
 			DamageMultiplier: 1,
-			// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+			// TODO: In-game testing required for threat multiplier / threat bonus
 			ThreatMultiplier: 1,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
@@ -55,7 +54,7 @@ func (warrior *Warrior) registerWhirlwind() {
 		},
 
 		DamageMultiplier: 1,
-		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		// TODO: In-game testing required for threat multiplier / threat bonus.
 		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {

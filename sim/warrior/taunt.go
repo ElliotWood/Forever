@@ -33,8 +33,6 @@ func (warrior *Warrior) registerTaunt() {
 			return warrior.StanceMatches(DefensiveStance)
 		},
 
-		// TODO: taunt sets the caster's threat to the highest on the target, which the sim has no
-		// threat table to do; the cast is modelled and the threat is not.
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
 		},

@@ -43,7 +43,7 @@ func (warrior *Warrior) registerThunderClap() {
 		},
 
 		DamageMultiplier: 1,
-		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		// TODO: In-game verification needed for threat multiplier / flat threat.
 		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {

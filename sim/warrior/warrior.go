@@ -86,8 +86,7 @@ const (
 		SpellMaskHamstring | SpellMaskPummel
 
 	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
-	// The offensive abilities the client enumerates on Warrior's Wrath (21887), which is also the set
-	// Focused Rage discounts.
+
 	SpellMaskOffensiveAbilities = SpellMaskHeroicStrike | SpellMaskRend | SpellMaskShieldBash |
 		SpellMaskCleave | SpellMaskDisarm | SpellMaskWhirlwind | SpellMaskSunderArmor | SpellMaskSlam |
 		SpellMaskHamstring | SpellMaskExecute | SpellMaskPummel | SpellMaskRevenge | SpellMaskOverpower |
@@ -95,8 +94,6 @@ const (
 		SpellMaskShieldSlam | SpellMaskRetaliation | SpellMaskIntercept | SpellMaskBloodthirst
 	SpellMaskShouts = SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout
 )
-
-const EnrageTag = "EnrageEffect"
 
 type Warrior struct {
 	core.Character
@@ -224,7 +221,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	core.FillTalentsProto(warrior.Talents.ProtoReflect(), talents, TalentTreeSizes)
 
 	warrior.EnableRageBar(core.RageBarOptions{
-		// Boundless Rage (1310236) raises the cap by 10 per rank.
 		MaxRage:            100 + spellData.BoundlessRage.TenthsAt(warrior.Talents.BoundlessRage),
 		BaseRageMultiplier: 1,
 		StartingRage:       inputs.StartingRage,
@@ -238,7 +234,7 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	})
 
 	warrior.PseudoStats.CanParry = true
-	// TODO: Manual review needed -- the base dodge, parry, block and stat dependencies below are not read from the client's game tables.
+	// TODO: In-game testing required
 	warrior.PseudoStats.BaseDodgeChance += 0.0075
 	warrior.PseudoStats.BaseParryChance += 0.05
 	warrior.PseudoStats.BaseBlockChance += 0.05
