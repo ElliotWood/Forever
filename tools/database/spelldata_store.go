@@ -42,6 +42,12 @@ type storeSpell struct {
 	ProcFlags   [2]uint32
 	ICDMs       int32
 
+	// Procs per minute, which no client row states: it is here only when an override supplies it.
+	RPPM float64
+
+	// A flat threat bonus for a spell the client states no E_THREAT effect on, from an override.
+	FlatThreat float64
+
 	ClassFlags storeClassFlags
 
 	AuraInterrupt, ChannelInterrupt [2]uint32
@@ -64,6 +70,13 @@ type storeSpell struct {
 
 	Effects []storeEffect
 	Powers  []storePower
+
+	// The generator's own bookkeeping, which the store has no field for. The procs-per-minute id is
+	// what a PPM override is checked against, the tooltip flag what a proc chance override is, and
+	// the notes are the reasons the emitted row states next to a hand-supplied value.
+	procsPerMinuteID    int32
+	tooltipStatesChance bool
+	overrideNotes       []string
 }
 
 // core.ClassFlags: the family a spell belongs to and the four mask words naming it.
@@ -171,11 +184,12 @@ type categoryRow struct {
 }
 
 type auraOptionRow struct {
-	MaxStack    int16
-	ProcChance  uint8
-	ProcCharges int16
-	ProcFlags   [2]uint32
-	ICDMs       int32
+	MaxStack         int16
+	ProcChance       uint8
+	ProcCharges      int16
+	ProcFlags        [2]uint32
+	ICDMs            int32
+	ProcsPerMinuteID int32
 }
 
 type interruptRow struct {
@@ -284,6 +298,7 @@ func (t *spellTables) row(id int32) storeSpell {
 	a := t.auraOptions[id]
 	s.MaxStack, s.ProcChance, s.ProcCharges = a.MaxStack, a.ProcChance, a.ProcCharges
 	s.ProcFlags, s.ICDMs = a.ProcFlags, a.ICDMs
+	s.procsPerMinuteID = a.ProcsPerMinuteID
 
 	s.ClassFlags = t.classOptions[id]
 
@@ -449,12 +464,14 @@ func (t *spellTables) loadAuraOptions(db *sql.DB) error {
 	// than reached through SELECT *.
 	return eachRow(db, `
 		SELECT SpellID, COALESCE(CumulativeAura, 0), COALESCE(ProcChance, 0), COALESCE(ProcCharges, 0),
-		       COALESCE(ProcTypeMask_0, 0), COALESCE(ProcTypeMask_1, 0), COALESCE(ProcCategoryRecovery, 0)
+		       COALESCE(ProcTypeMask_0, 0), COALESCE(ProcTypeMask_1, 0), COALESCE(ProcCategoryRecovery, 0),
+		       COALESCE(SpellProcsPerMinuteID, 0)
 		FROM SpellAuraOptions WHERE DifficultyID = 0 ORDER BY SpellID`, func(rows *sql.Rows) error {
 		var id int32
 		var a auraOptionRow
 		var chance, mask0, mask1 int64
-		if err := rows.Scan(&id, &a.MaxStack, &chance, &a.ProcCharges, &mask0, &mask1, &a.ICDMs); err != nil {
+		if err := rows.Scan(&id, &a.MaxStack, &chance, &a.ProcCharges, &mask0, &mask1, &a.ICDMs,
+			&a.ProcsPerMinuteID); err != nil {
 			return err
 		}
 		a.ProcChance = uint8(chance)

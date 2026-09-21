@@ -31,6 +31,7 @@ func applyTooltipHints(t *spellTables, s *storeSpell) {
 
 	s.ProcHint = procTooltipHints(description)
 	s.ProcChanceSource, s.ProcChanceEffect = procChanceSource(description, s)
+	s.tooltipStatesChance = tooltipOwnChance.MatchString(description) || s.ProcChanceSource == procChanceEffectN
 }
 
 func procChanceSource(description string, s *storeSpell) (storeProcChanceSource, int8) {

@@ -32,9 +32,8 @@ var mirroredTypes = []struct {
 	generatorOnly []string
 }{
 	{
-		storeType:     "Spell",
-		mirror:        storeSpell{},
-		notYetEmitted: []string{"RPPM"},
+		storeType: "Spell",
+		mirror:    storeSpell{},
 	},
 	{
 		storeType:     "Effect",

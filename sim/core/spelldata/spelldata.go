@@ -78,6 +78,11 @@ type Spell struct {
 	// zero unless an override fills it.
 	RPPM float32
 
+	// The threat an ability adds beyond its damage, where the tooltip states threat without a
+	// number: "causes a high amount of threat". The amounts the client does state are an E_THREAT
+	// effect, so this is zero unless an override fills it.
+	FlatThreat float32
+
 	// SpellClassOptions.SpellClassSet and SpellClassMask_0..3: the set of spells a talent effect
 	// naming this family reaches.
 	ClassFlags core.ClassFlags

@@ -8,6 +8,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/wowsims/forever/tools/database/overrides"
 )
 
 // The generated half of sim/core/spelldata: every spell the sim can reach, with its effects and
@@ -144,6 +146,12 @@ func formatStoreRow(s storeSpell, namer *rankEnumNamer) string {
 	if s.ICDMs != 0 {
 		add("ICDMs: %d", s.ICDMs)
 	}
+	if s.RPPM != 0 {
+		add("RPPM: %s", num32(s.RPPM))
+	}
+	if s.FlatThreat != 0 {
+		add("FlatThreat: %s", num32(s.FlatThreat))
+	}
 	if !s.ClassFlags.isZero() {
 		add("ClassFlags: %s", formatClassFlags(s.ClassFlags))
 	}
@@ -208,7 +216,11 @@ func formatStoreRow(s storeSpell, namer *rankEnumNamer) string {
 		}
 		fmt.Fprintf(&b, ",\nPowers: []Power{%s}", strings.Join(powers, ", "))
 	}
-	b.WriteString("},\n")
+	b.WriteString("},")
+	for _, note := range s.overrideNotes {
+		fmt.Fprintf(&b, " // %s", note)
+	}
+	b.WriteString("\n")
 	return b.String()
 }
 
@@ -382,6 +394,9 @@ func renderStore(db *sql.DB, ladderIDs []int32, trees map[int]int) ([]byte, []by
 	for i, id := range ids {
 		rows[i] = tables.row(id)
 		applyTooltipHints(tables, &rows[i])
+	}
+	if err := applyOverrides(rows, overrides.Spells); err != nil {
+		return nil, nil, err
 	}
 
 	spells, err := renderStoreFile(rows, curves, namer)
