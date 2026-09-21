@@ -50,7 +50,6 @@ func (warrior *Warrior) registerImprovedHeroicStrike() {
 		return
 	}
 
-	// The client states the cost on the 0-1000 rage bar, so the ladder is -10/-20/-30.
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskHeroicStrike,
 		Kind:      core.SpellMod_PowerCost_Flat,
@@ -93,9 +92,6 @@ func (warrior *Warrior) registerImprovedOverpower() {
 }
 
 var angerManagementRank = spellData.AngerManagement.HighestRank()
-
-// The tooltip reads "Generates $m2 Rage every $m3 sec", and the three dummies share an aura and misc
-// value, so the rage and its period are taken by effect index.
 var angerManagementRage = angerManagementRank.Effects[1].Value
 var angerManagementPeriod = time.Duration(angerManagementRank.Effects[2].Value) * time.Second
 
@@ -118,7 +114,6 @@ func (warrior *Warrior) registerAngerManagement() {
 	})
 }
 
-// The bleed the talent (12834) reaches through 12162.
 var deepWoundsBleed = spellData.DeepWoundsTriggered.BySpellID(412609)
 
 func (warrior *Warrior) registerDeepWounds() {
@@ -129,6 +124,7 @@ func (warrior *Warrior) registerDeepWounds() {
 	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
 	tick := deepWoundsBleed.Periodic.(shared.SpellDataPeriodic)
 
+	// TODO: Test in-game for behavior
 	warrior.DeepWounds = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: deepWoundsBleed.SpellID},
 		SpellSchool:    core.SpellSchoolPhysical,
@@ -136,9 +132,6 @@ func (warrior *Warrior) registerDeepWounds() {
 		ClassSpellMask: SpellMaskDeepWounds,
 		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagIgnoreResists | core.SpellFlagProc, // 12162 and 412609 lack Not a Proc.
 
-		// 12162 and 412609 state DefenseType 0. It's a bleed that snapshots on proc; the
-		// application uses OutcomeAlwaysHitNoHitCounter and the DoT ticks with OutcomeTick, so it
-		// never rolls a crit and DefenseType is intentionally left unset.
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
 
@@ -268,7 +261,7 @@ var spearingStrikeRank = spellData.SpearingStrike.HighestRank()
 // The tooltip reads "deals $s2% weapon damage" and "an additional ${$s2*$s3}%" against Giants and
 // Dragonkin, and the effects share an aura and misc value, so both are taken by effect index.
 var spearingStrikeWeaponShare = spearingStrikeRank.Effects[1].Fraction()
-var spearingStrikeGiantMultiplier = 1 + spearingStrikeRank.Effects[2].Value
+var spearingStrikeMobtypeMultiplier = 1 + spearingStrikeRank.Effects[2].Value
 
 func (warrior *Warrior) registerSpearingStrike() {
 	if !warrior.Talents.SpearingStrike {
@@ -306,7 +299,7 @@ func (warrior *Warrior) registerSpearingStrike() {
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := spearingStrikeWeaponShare * spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
 			if target.MobType == proto.MobType_MobTypeGiant || target.MobType == proto.MobType_MobTypeDragonkin {
-				baseDamage *= spearingStrikeGiantMultiplier
+				baseDamage *= spearingStrikeMobtypeMultiplier
 			}
 
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
@@ -352,8 +345,6 @@ func (warrior *Warrior) registerWeaponmaster() {
 	rank := warrior.Talents.Weaponmaster
 	actionID := core.ActionID{SpellID: 1290261}
 
-	// The three branches share A_DUMMY and misc 0, so each is named by its effect index. Which
-	// branch applies follows the main hand, re-read on a weapon swap.
 	mainHandIs := func(weaponTypes ...proto.WeaponType) bool {
 		return warrior.GetProcMaskForTypes(weaponTypes...).Matches(core.ProcMaskMeleeMH)
 	}
@@ -374,16 +365,26 @@ func (warrior *Warrior) registerWeaponmaster() {
 		core.MakePermanent(critAura)
 	}
 
-	// The attack tables exist only once the environment is built, so the factor is written on reset.
 	armorIgnore := spellData.Weaponmaster.EffectAt(1).FractionAt(rank)
-	applyArmorIgnore := func() {
+	setArmorIgnore := func(factor float64) {
 		for _, attackTable := range warrior.AttackTables {
-			attackTable.ArmorIgnoreFactor = core.TernaryFloat64(armorIgnoreOn, armorIgnore, 0)
+			attackTable.ArmorIgnoreFactor = factor
 		}
 	}
-	warrior.RegisterResetEffect(func(sim *core.Simulation) {
-		applyArmorIgnore()
+	armorIgnoreAura := warrior.RegisterAura(core.Aura{
+		Label:    "Weaponmaster (Mace/Staff)",
+		ActionID: actionID.WithTag(2),
+		Duration: core.NeverExpires,
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			setArmorIgnore(armorIgnore)
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			setArmorIgnore(0)
+		},
 	})
+	if armorIgnoreOn {
+		core.MakePermanent(armorIgnoreAura)
+	}
 
 	var extraAttack *core.Spell
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
@@ -395,7 +396,6 @@ func (warrior *Warrior) registerWeaponmaster() {
 		ProcChance:         spellData.Weaponmaster.EffectAt(2).FractionAt(rank),
 		TriggerImmediately: true,
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
-			// An extra attack does not give another one.
 			return swordOn && spell != extraAttack
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
@@ -409,12 +409,13 @@ func (warrior *Warrior) registerWeaponmaster() {
 
 	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
 		readMainHand()
-		if critOn {
-			critAura.Activate(sim)
-		} else {
-			critAura.Deactivate(sim)
+		for aura, on := range map[*core.Aura]bool{critAura: critOn, armorIgnoreAura: armorIgnoreOn} {
+			if on {
+				aura.Activate(sim)
+			} else {
+				aura.Deactivate(sim)
+			}
 		}
-		applyArmorIgnore()
 	})
 }
 
