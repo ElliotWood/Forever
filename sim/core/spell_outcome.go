@@ -157,8 +157,6 @@ func (spell *Spell) OutcomeTickMagicHitNoHitCounter(sim *Simulation, result *Spe
 	}
 }
 
-// A physical tick that never misses and rolls a critical strike, for a bleed the client marks
-// Periodic Can Crit.
 func (spell *Spell) OutcomeTickPhysicalCrit(sim *Simulation, result *SpellResult, attackTable *AttackTable) {
 	if spell.PhysicalCritCheck(sim, attackTable) {
 		result.Outcome = OutcomeCrit
