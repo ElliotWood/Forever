@@ -8,6 +8,13 @@ import (
 var rendRank = spellData.Rend.HighestRank()
 
 // TODO: Ingame testing needed if Rend has a coef
+func rendTickOutcome(dot *core.Dot) core.OutcomeApplier {
+	if rendRank.PeriodicCanCrit {
+		return dot.Spell.OutcomeTickPhysicalCrit
+	}
+	return dot.OutcomeTick
+}
+
 func (warrior *Warrior) registerRend() {
 	tick := rendRank.Periodic.(shared.SpellDataPeriodic)
 
@@ -44,7 +51,7 @@ func (warrior *Warrior) registerRend() {
 			NumberOfTicks: tick.NumberOfTicks,
 			TickLength:    tick.TickLength,
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.Spell.CalcAndDealPeriodicDamage(sim, target, tick.Tick, dot.OutcomeTick)
+				dot.Spell.CalcAndDealPeriodicDamage(sim, target, tick.Tick, rendTickOutcome(dot))
 			},
 		},
 
