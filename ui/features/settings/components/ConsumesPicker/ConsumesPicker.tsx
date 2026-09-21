@@ -114,10 +114,9 @@ export const ConsumesPicker = ({
 				</PickerGroup>
 			</ConsumeRow>
 			{encounterConsumes && (
-				<ConsumeRow name="miscellaneous" configs={[ConsumablesInputs.NightmareSeed, ConsumablesInputs.Bloodthistle, ConsumablesInputs.BoglingRoot]}>
+				<ConsumeRow name="miscellaneous" configs={[ConsumablesInputs.NightmareSeed, ConsumablesInputs.BoglingRoot]}>
 					<PickerGroup variant="icons" className="justify-end" data-testid="consumes-misc">
 						<IconPicker modObject={player} config={ConsumablesInputs.NightmareSeed} />
-						<IconPicker modObject={player} config={ConsumablesInputs.Bloodthistle} />
 						<IconPicker modObject={player} config={ConsumablesInputs.BoglingRoot} />
 					</PickerGroup>
 				</ConsumeRow>

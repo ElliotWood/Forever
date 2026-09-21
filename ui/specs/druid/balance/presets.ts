@@ -35,7 +35,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	chainOfTheTwilightOwl: true,
-	draeneiRacialCaster: true,
 	drums: Drums.LesserDrumsOfBattle,
 	eyeOfTheNight: true,
 	totemOfWrath: 1,

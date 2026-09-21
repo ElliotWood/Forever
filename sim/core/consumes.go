@@ -117,12 +117,6 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 		registerScrollAura(character, "Scroll of Protection", 27500, stats.Armor, 300)
 	}
 
-	// Bloodthistle (Blood Elf only): +10 spell damage and healing for 10 min.
-	if consumables.Bloodthistle && character.Race == proto.Race_RaceBloodElf {
-		character.AddStat(stats.SpellDamage, 10)
-		character.AddStat(stats.HealingPower, 10)
-	}
-
 	// Bogling Root: +1 physical damage for 10 min (item 5206, spell 5665).
 	if consumables.BoglingRoot {
 		character.AddStat(stats.PhysicalDamage, 1)

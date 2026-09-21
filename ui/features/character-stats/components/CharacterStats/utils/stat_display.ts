@@ -1,6 +1,5 @@
-import { ItemSlot, PseudoStat, Race, Stat } from '@generated/proto/common';
+import { ItemSlot, PseudoStat, Stat } from '@generated/proto/common';
 import i18n from '@i18n/config';
-import * as Mechanics from '@sim/constants/mechanics';
 import type { Player } from '@sim/player/player';
 import type { Stats, UnitStat } from '@sim/proto/stats';
 import { TONE_TEXT } from '@ui-kit/utils/colors';
@@ -24,22 +23,19 @@ const SCHOOL_DAMAGE_STATS = [
  * Read once per snapshot so a row never re-derives them.
  */
 export interface RacialBonuses {
-	/** Draenei: the racial hit is baked into the rating, and is subtracted before it is shown. */
-	hasRacialHitBonus: boolean;
 	/** Weapon stones credit melee crit rating that the ranged rows have to offset back out. */
 	rangedImbueStatOffsets: Stats;
 }
 
 export const readRacialBonuses = (player: Player<any>): RacialBonuses => ({
-	hasRacialHitBonus: player.getRace() === Race.RaceDraenei,
 	rangedImbueStatOffsets: player.getRangedImbueStatOffsets(),
 });
 
 /**
  * TBC's five-parameter form. `includeBase`/`includeGear`/`includeConsumes` say which stage the
  * delta being rendered covers, because several stats are only correct once the stage that hides
- * them is known: the base defense skill, the Draenei hit rating, the scope
- * enchants, and the weapon-stone crit offset.
+ * them is known: the base defense skill, the scope enchants, and the weapon-stone
+ * crit offset.
  */
 export const statDisplayString = (
 	player: Player<any>,
@@ -64,11 +60,6 @@ export const statDisplayString = (
 		percentDecimals = 0;
 		if (includeBase) {
 			derivedPercentOrPointsValue! += player.getBaseDefense();
-		}
-	} else if (rootStat === Stat.StatMeleeHitRating && includeBase && racial.hasRacialHitBonus) {
-		// Remove the rating display and only show %
-		if (rootRatingValue !== null && rootRatingValue > 0) {
-			rootRatingValue -= Mechanics.PHYSICAL_HIT_RATING_PER_HIT_PERCENT;
 		}
 	} else if (includeGear && rootRatingValue !== null && unitStat.equalsPseudoStat(PseudoStat.PseudoStatRangedHitPercent)) {
 		if (player.getEquippedItem(ItemSlot.ItemSlotRanged)?.enchant?.effectId === SCOPE_HIT_ENCHANT_EFFECT_ID) {

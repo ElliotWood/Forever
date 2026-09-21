@@ -168,9 +168,6 @@
 				"blood_elf": {
 					"type": "string"
 				},
-				"draenei": {
-					"type": "string"
-				},
 				"dwarf": {
 					"type": "string"
 				},
@@ -218,7 +215,6 @@
 			"required": [
 				"unknown",
 				"blood_elf",
-				"draenei",
 				"dwarf",
 				"gnome",
 				"goblin",

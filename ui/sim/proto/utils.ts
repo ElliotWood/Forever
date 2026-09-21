@@ -64,7 +64,6 @@ export function textClassNameForSpec<SpecType extends Spec>(playerSpec: PlayerSp
 export const raceToFaction: Record<Race, Faction> = {
 	[Race.RaceUnknown]: Faction.Unknown,
 
-	[Race.RaceDraenei]: Faction.Alliance,
 	[Race.RaceDwarf]: Faction.Alliance,
 	[Race.RaceGnome]: Faction.Alliance,
 	[Race.RaceHuman]: Faction.Alliance,

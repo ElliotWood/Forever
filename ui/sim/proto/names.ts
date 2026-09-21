@@ -14,7 +14,6 @@ export const armorTypeNames: Map<ArmorType, string> = new Map([
 export const raceNames: Map<Race, string> = new Map([
 	[Race.RaceUnknown, 'None'],
 	[Race.RaceBloodElf, 'Blood Elf'],
-	[Race.RaceDraenei, 'Draenei'],
 	[Race.RaceDwarf, 'Dwarf'],
 	[Race.RaceGnome, 'Gnome'],
 	[Race.RaceHuman, 'Human'],

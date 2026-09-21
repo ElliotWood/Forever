@@ -1,7 +1,6 @@
-import { Drums, Race, Stat } from '@generated/proto/common';
+import { Drums, Stat } from '@generated/proto/common';
 import { Player } from '@sim/player/player';
 import { ActionId } from '@sim/proto/action_id';
-import { Party } from '@sim/raid/party';
 import {
 	makeBooleanDebuffInput,
 	makeBooleanIndividualBuffInput,
@@ -122,18 +121,6 @@ export const ShadowResistanceAura = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(27151),
 	fieldName: 'shadowResistanceAura',
 	label: 'Shadow Resistance Aura',
-});
-export const DraeneiRacialCaster = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(28878),
-	fieldName: 'draeneiRacialCaster',
-	label: 'Inspiring Presense - Caster',
-	showWhen: (party: Party) => [Race.RaceDraenei, Race.RaceDwarf, Race.RaceGnome, Race.RaceHuman, Race.RaceNightElf].includes(party.getPlayer(0)!.getRace()),
-});
-export const DraeneiRacialMelee = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(6562),
-	fieldName: 'draeneiRacialMelee',
-	label: 'Inspiring Presense - Melee',
-	showWhen: (party: Party) => [Race.RaceDraenei, Race.RaceDwarf, Race.RaceGnome, Race.RaceHuman, Race.RaceNightElf].includes(party.getPlayer(0)!.getRace()),
 });
 export const EyeOfTheNight = makeBooleanPartyBuffInput({ actionId: ActionId.fromSpellId(31033), fieldName: 'eyeOfTheNight', label: 'Eye of the Night' });
 export const FerociousInspiration = makeMultistatePartyBuffInput({
@@ -344,8 +331,6 @@ export const PARTY_BUFFS_CONFIG = [
 	{ config: AtieshWarlock, stats: [Stat.StatSpellDamage, Stat.StatHealingPower] },
 	{ config: BraidedEterniumChain, stats: [Stat.StatMeleeCritRating] },
 	{ config: ChainOfTheTwilightOwl, stats: [Stat.StatSpellCritRating] },
-	{ config: DraeneiRacialCaster, stats: [Stat.StatSpellHitRating] },
-	{ config: DraeneiRacialMelee, stats: [Stat.StatMeleeHitRating] },
 	{ config: EyeOfTheNight, stats: [Stat.StatSpellDamage] },
 	{ config: JadePendantOfBlasting, stats: [Stat.StatSpellDamage] },
 	{ config: StrengthOfEarthTotem, stats: [Stat.StatStrength] },

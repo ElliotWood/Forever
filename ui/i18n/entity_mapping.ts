@@ -263,7 +263,6 @@ export const mobTypeI18nKeys: Record<MobType, string> = {
 export const raceI18nKeys: Record<Race, string> = {
 	[Race.RaceUnknown]: 'unknown',
 	[Race.RaceBloodElf]: 'blood_elf',
-	[Race.RaceDraenei]: 'draenei',
 	[Race.RaceDwarf]: 'dwarf',
 	[Race.RaceGnome]: 'gnome',
 	[Race.RaceHuman]: 'human',

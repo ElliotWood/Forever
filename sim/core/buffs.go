@@ -3,7 +3,6 @@ package core
 import (
 	"fmt"
 	"math"
-	"slices"
 	"time"
 
 	googleProto "google.golang.org/protobuf/proto"
@@ -230,14 +229,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 
 	if partyBuffs.DevotionAura != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(DevotionAuraBuff(char, false, GetTristateValueInt32(partyBuffs.DevotionAura, 0, 5)))
-	}
-
-	if partyBuffs.DraeneiRacialCaster {
-		DraneiRacialAura(char, true)
-	}
-
-	if partyBuffs.DraeneiRacialMelee {
-		DraneiRacialAura(char, false)
 	}
 
 	if partyBuffs.FerociousInspiration > 0 {
@@ -1288,41 +1279,6 @@ func JadePendantOfBlastingAura(char *Character) *Aura {
 			{stats.SpellDamage, 15, false},
 		},
 	})
-}
-
-func DraneiRacialAura(char *Character, caster bool) *Aura {
-	alliance := []proto.Race{
-		proto.Race_RaceDraenei,
-		proto.Race_RaceDwarf,
-		proto.Race_RaceGnome,
-		proto.Race_RaceHuman,
-		proto.Race_RaceNightElf,
-	}
-	if !slices.Contains(alliance, char.Race) {
-		return nil
-	}
-	var aura *Aura
-	if caster {
-		aura = makeStatBuff(char, BuffConfig{
-			Label:    "Inspiring Presence",
-			ActionID: ActionID{SpellID: 28878},
-			Stats: []StatConfig{
-				{stats.SpellHitPercent, 1, false},
-			},
-			ExclusiveCategory: "Inspiring Presence",
-		})
-	} else {
-		aura = makeStatBuff(char, BuffConfig{
-			Label:    "Heroic Presence",
-			ActionID: ActionID{SpellID: 6562},
-			Stats: []StatConfig{
-				{stats.PhysicalHitPercent, 1, false},
-			},
-			ExclusiveCategory: "Heroic Presence",
-		})
-	}
-
-	return MakePermanent(aura)
 }
 
 const TinnitusAuraLabel = "Tinnitus"

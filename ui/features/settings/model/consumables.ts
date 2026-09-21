@@ -1,4 +1,4 @@
-import { Class, ConsumesSpec, Drums, ItemSlot, Profession, Race, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { Class, ConsumesSpec, Drums, ItemSlot, Profession, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import { Consumable } from '@generated/proto/db';
 import i18n from '@i18n/config';
 import { CURRENT_PHASE, Phase } from '@sim/constants/other';
@@ -375,12 +375,6 @@ export const NightmareSeed = makeBooleanConsumeInput({
 	actionId: ActionId.fromItemId(22797),
 	fieldName: 'nightmareSeed',
 	showWhen: (player: Player<any>) => player.getPlayerSpec().isTankSpec,
-});
-
-export const Bloodthistle = makeBooleanConsumeInput({
-	actionId: ActionId.fromItemId(22710),
-	fieldName: 'bloodthistle',
-	showWhen: (player: Player<any>) => player.getRace() === Race.RaceBloodElf,
 });
 
 export const BoglingRoot = makeBooleanConsumeInput({

@@ -58,7 +58,7 @@ func castRacial(t *testing.T, sim *Simulation, fw *FakeRageWarrior, spellID int3
 func TestPlayableRaces(t *testing.T) {
 	for class, races := range ClassRaceCapabilities {
 		for _, race := range races {
-			if race == proto.Race_RaceBloodElf || race == proto.Race_RaceDraenei {
+			if race == proto.Race_RaceBloodElf {
 				t.Errorf("%s is not playable, but %s lists it", race, class)
 			}
 			if _, ok := BaseStats[BaseStatsKey{Race: race, Class: class}]; !ok {

@@ -72,8 +72,6 @@ var FullPartyBuffs = &proto.PartyBuffs{
 	RetributionAura:       proto.TristateEffect_TristateEffectImproved,
 	ConcentrationAura:     proto.TristateEffect_TristateEffectImproved,
 	TrueshotAura:          true,
-	DraeneiRacialMelee:    true,
-	DraeneiRacialCaster:   true,
 	AtieshDruid:           1,
 	AtieshMage:            1,
 	AtieshPriest:          1,

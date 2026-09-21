@@ -16,7 +16,7 @@ vi.mock('@i18n/config', () => ({ default: { t: (key: string) => STRINGS[key] ?? 
 const { bonusStatClass, critCapClass, critImmunityCapDisplayString, critImmunityClass, statDisplayString } = await import('./stat_display');
 type RacialBonuses = Parameters<typeof statDisplayString>[1];
 
-const NO_RACIALS: RacialBonuses = { hasRacialHitBonus: false, rangedImbueStatOffsets: new Stats() };
+const NO_RACIALS: RacialBonuses = { rangedImbueStatOffsets: new Stats() };
 
 const fakePlayer = (overrides: Record<string, unknown> = {}) =>
 	({
@@ -76,17 +76,6 @@ describe('statDisplayString, TBC-only stats', () => {
 
 		expect(statDisplayString(scoped, NO_RACIALS, stats, rangedHit, false, true)).toBe('30 (2.00%)');
 		expect(statDisplayString(scoped, NO_RACIALS, stats, rangedHit)).toBe('2.00%');
-	});
-
-	it('strips the Draenei racial hit rating from the base row', () => {
-		const meleeHit = UnitStat.fromPseudoStat(PseudoStat.PseudoStatMeleeHitPercent);
-		const stats = new Stats()
-			.withStat(Stat.StatMeleeHitRating, Mechanics.PHYSICAL_HIT_RATING_PER_HIT_PERCENT * 2)
-			.withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 2);
-		const racial = { ...NO_RACIALS, hasRacialHitBonus: true };
-
-		expect(show(stats, meleeHit, true, false, false, racial)).toBe('10 (2.00%)');
-		expect(show(stats, meleeHit, false, false, false, racial)).toBe('20 (2.00%)');
 	});
 });
 
