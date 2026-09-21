@@ -56,8 +56,11 @@ outcome it and the row's defense type call for, so a dot's `OnTick` never names 
 A family whose ranks trigger another spell, or whose tooltip reads a number off one, has a second
 table beside it: `spellData.EnrageTriggered` holds the buff 12880 that Enrage's `$12880d` names,
 `FlurryTriggered` the 12966 with its 3 charges, `LastStandTriggered` the 12976 with the 30% and 20 s,
-`InterceptTriggered` the stun of each rank. Where every rank triggers the same spell the table has one
-row, rank 1; where each rank triggers its own, the row takes the rank's number.
+`InterceptTriggered` the stun of each rank. A spell only a server-side handler casts, with no edge,
+token or skill-line row naming it, is linked by hand in the generator's `handTriggers`:
+`RetaliationTriggered` holds the counterattack 20240 that Retaliation's dummy aura fires. Where every
+rank triggers the same spell the table has one row, rank 1; where each rank triggers its own, the row
+takes the rank's number.
 
 ## The value shapes
 

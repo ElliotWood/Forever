@@ -308,12 +308,23 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 // A $<spellID><token> in a description: "$12880d" on Enrage, "$12976s1" on Last Stand.
 var descriptionSpellRef = regexp.MustCompile(`\$(?:/\d+;)?(\d{4,7})[a-z]`)
 
+// Spells the client's server-side handlers cast, which no effect edge, $<id> token or skill-line row
+// names. Each entry says what links the two.
+var handTriggers = map[int32][]int32{
+	// Retaliation's dummy aura (aura 4) casts the counterattack 20240: same name, class set and icon,
+	// 1 rage, weapon damage with no base.
+	20230: {20240},
+}
+
 // The spells a rank triggers or reads its tooltip from: an EffectTriggerSpell edge (Intercept's
-// stun 20615, Intimidating Shout's fear 20511) or a $<id> token (Enrage's buff 12880, Flurry's
-// 12966, Last Stand's 12976). In id order, without the rank itself and without ids the client has no
-// spell for.
+// stun 20615, Intimidating Shout's fear 20511), a $<id> token (Enrage's buff 12880, Flurry's
+// 12966, Last Stand's 12976) or a handTriggers entry. In id order, without the rank itself and
+// without ids the client has no spell for.
 func triggeredSpells(db *sql.DB, spellID int32) ([]int32, error) {
 	seen := map[int32]bool{}
+	for _, id := range handTriggers[spellID] {
+		seen[id] = true
+	}
 	rows, err := db.Query(`SELECT EffectTriggerSpell FROM SpellEffect WHERE SpellID = ? AND EffectTriggerSpell > 0`, spellID)
 	if err != nil {
 		return nil, err
