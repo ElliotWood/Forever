@@ -53,7 +53,6 @@ func FreshDefaultTargetConfig() *proto.Target {
 var DefaultTargetProto = FreshDefaultTargetConfig()
 
 var FullRaidBuffs = &proto.RaidBuffs{
-	Bloodlust:          true,
 	ArcaneBrilliance:   true,
 	PowerWordFortitude: true,
 	DivineSpirit:       true,

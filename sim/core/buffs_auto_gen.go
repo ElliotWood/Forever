@@ -603,8 +603,6 @@ func BlessingOfKingsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// func BloodlustAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // bloodlust, KindManual: no SkillLineAbility row grants "Bloodlust" to ClassShaman
-
 // Divine Spirit - https://www.wowhead.com/forever/spell=27841
 var DivineSpiritCategory = "StatBuff"
 
@@ -943,7 +941,6 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 // it now grants anyway, so nothing is emitted for it.
 func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) {
 	party.WindfuryTotem = false
-	raid.Bloodlust = false
 	raid.Thorns = false
 	individual.Innervates = 0
 	individual.PowerInfusions = 0

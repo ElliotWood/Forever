@@ -39,7 +39,6 @@ var buffInputNumStates = map[string]int{
 var manualBuffInputs = map[string]string{
 	"blessing_of_salvation": "the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.",
 	"shadow_priest_dps":     "the returned mana is typed in by hand and the input renders in the party registry over an individual-buff field.",
-	"bloodlust":             "the raid cooldown keeps its hand-written input and driver; no SkillLineAbility row anchors the name to a shaman.",
 	"atiesh_druid":          "no settings input over this field.",
 	"atiesh_priest":         "no settings input over this field.",
 }

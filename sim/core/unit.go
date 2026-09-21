@@ -639,7 +639,7 @@ func (unit *Unit) updateMeleeAndRangedHaste() {
 	}
 }
 
-// Helper for when true haste effects are multiplied for i.E. Bloodlust
+// Helper for when true haste effects are multiplied.
 // Seems to also always impact the regen rate
 func (unit *Unit) MultiplyAttackSpeed(sim *Simulation, amount float64) {
 	unit.PseudoStats.AttackSpeedMultiplier *= amount

@@ -129,10 +129,6 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 	char := agent.GetCharacter()
 
 	applyGeneratedBuffs(char, raidBuffs, partyBuffs, individual)
-
-	if raidBuffs.Bloodlust {
-		registerBloodlustCD(char)
-	}
 }
 
 // /////////////////////////////////////////////////////////////////////////
@@ -301,7 +297,7 @@ func applyPetBuffEffects(petAgent PetAgent, raidBuffs *proto.RaidBuffs, partyBuf
 }
 
 // Used for approximating cooldowns applied by other players to you, such as
-// bloodlust, innervate, power infusion, etc. This is specifically for buffs
+// innervate, power infusion, etc. This is specifically for buffs
 // which can be consecutively applied multiple times to a single player.
 type externalConsecutiveCDApproximation struct {
 	ActionID         ActionID
@@ -321,7 +317,7 @@ type externalConsecutiveCDApproximation struct {
 }
 
 // numSources is the number of other players assigned to apply the buff to this player.
-// E.g. the number of other shaman in the group using bloodlust.
+// E.g. the number of other druids in the group casting innervate.
 func registerExternalConsecutiveCDApproximation(char *Character, config externalConsecutiveCDApproximation, numSources int32) {
 	if numSources == 0 {
 		panic("Need at least 1 source!")
@@ -380,81 +376,4 @@ func registerExternalConsecutiveCDApproximation(char *Character, config external
 
 		ShouldActivate: config.ShouldActivate,
 	})
-}
-
-var BloodlustActionID = ActionID{SpellID: 2825}
-
-const SatedAuraLabel = "Sated"
-const BloodlustAuraTag = "Bloodlust"
-const BloodlustDuration = time.Second * 40
-const BloodlustCD = time.Minute * 10
-
-func registerBloodlustCD(character *Character) {
-	bloodlustAura := BloodlustAura(character, -1)
-
-	spell := character.RegisterSpell(SpellConfig{
-		ActionID: bloodlustAura.ActionID,
-		Flags:    SpellFlagAPL | SpellFlagNoOnCastComplete | SpellFlagNoMetrics | SpellFlagNoLogs,
-
-		Cast: CastConfig{
-			CD: Cooldown{
-				Timer:    character.NewTimer(),
-				Duration: BloodlustCD,
-			},
-		},
-
-		ApplyEffects: func(sim *Simulation, _ *Unit, _ *Spell) {
-			if !character.HasActiveAura(SatedAuraLabel) {
-				bloodlustAura.Activate(sim)
-			}
-		},
-
-		RelatedSelfBuff: bloodlustAura,
-	})
-
-	character.AddMajorCooldown(MajorCooldown{
-		Spell:    spell,
-		Priority: CooldownPriorityBloodlust,
-		Type:     CooldownTypeDPS,
-		ShouldActivate: func(sim *Simulation, character *Character) bool {
-			return !character.HasActiveAura(SatedAuraLabel)
-		},
-	})
-}
-
-func BloodlustAura(character *Character, actionTag int32) *Aura {
-	actionID := BloodlustActionID.WithTag(actionTag)
-
-	sated := character.GetOrRegisterAura(Aura{
-		Label:    SatedAuraLabel,
-		ActionID: ActionID{SpellID: 57724},
-		Duration: time.Minute * 10,
-	})
-
-	for _, pet := range character.Pets {
-		if !pet.IsGuardian() {
-			BloodlustAura(&pet.Character, actionTag)
-		}
-	}
-
-	aura := character.GetOrRegisterAura(Aura{
-		Label:    "Bloodlust-" + actionID.String(),
-		Tag:      BloodlustAuraTag,
-		ActionID: actionID,
-		Duration: BloodlustDuration,
-		OnGain: func(aura *Aura, sim *Simulation) {
-			aura.Unit.MultiplyAttackSpeed(sim, 1.3)
-			for _, pet := range character.Pets {
-				if pet.IsEnabled() && !pet.IsGuardian() {
-					pet.GetAura(aura.Label).Activate(sim)
-				}
-			}
-			sated.Activate(sim)
-		},
-		OnExpire: func(aura *Aura, sim *Simulation) {
-			aura.Unit.MultiplyAttackSpeed(sim, 1/1.3)
-		},
-	})
-	multiplyCastSpeedEffect(aura, 1.3)
-	return aura
 }

@@ -176,8 +176,6 @@ export const BlessingOfKings = makeBooleanIndividualBuffInput({
 	label: 'Blessing of Kings',
 });
 
-// bloodlust: the raid cooldown keeps its hand-written input and driver; no SkillLineAbility row anchors the name to a shaman.
-
 export const DivineSpirit = makeBooleanRaidBuffInput({
 	actionId: ActionId.fromSpellId(27841),
 	fieldName: 'divineSpirit',

@@ -8,13 +8,14 @@ import "common.proto";
 // Buffs that affect the entire raid.
 // Next index: 8
 message RaidBuffs {
+	reserved 7;
+	reserved "bloodlust";
 	bool arcane_brilliance = 1;
 	bool power_word_fortitude = 2;
 	bool shadow_protection = 3;
 	bool divine_spirit = 4;
 	bool gift_of_the_wild = 5;
 	bool thorns = 6;
-	bool bloodlust = 7;
 }
 
 // Buffs that affect a single party.

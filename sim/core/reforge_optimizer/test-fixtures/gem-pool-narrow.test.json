@@ -242,8 +242,7 @@
 			"arcaneBrilliance": true,
 			"powerWordFortitude": 2,
 			"divineSpirit": 2,
-			"giftOfTheWild": 2,
-			"bloodlust": true
+			"giftOfTheWild": 2
 		},
 		"debuffs": {
 			"judgementOfWisdom": true,

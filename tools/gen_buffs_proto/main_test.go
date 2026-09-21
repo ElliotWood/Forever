@@ -176,8 +176,8 @@ func TestRetiredFieldsMatchTheMigration(t *testing.T) {
 			t.Errorf("the migration retires %s %v, want %v", group, got, sorted)
 		}
 	}
-	if total != 33 {
-		t.Errorf("the manifest retires %d fields, want the 33 api version 17 declares", total)
+	if total != 34 {
+		t.Errorf("the manifest retires %d fields, want the 34 the migration lists", total)
 	}
 }
 

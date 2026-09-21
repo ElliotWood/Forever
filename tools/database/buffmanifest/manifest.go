@@ -281,6 +281,9 @@ type RetiredField struct {
 // into a `reserved` number and a `reserved` name, and
 // ui/sim/proto/buff_field_migration.ts drops the same names from an older payload.
 var Retired = map[BuffScope][]RetiredField{
+	ScopeRaid: {
+		{7, "bloodlust"},
+	},
 	ScopeParty: {
 		{1, "ferocious_inspiration"},
 		{5, "sanctity_aura"},

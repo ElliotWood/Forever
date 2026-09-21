@@ -9,10 +9,9 @@ import (
 )
 
 const (
-	CooldownPriorityLow       = -1000
-	CooldownPriorityDefault   = 0
-	CooldownPriorityDrums     = 2000
-	CooldownPriorityBloodlust = 1000
+	CooldownPriorityLow     = -1000
+	CooldownPriorityDefault = 0
+	CooldownPriorityDrums   = 2000
 )
 
 type CooldownType byte
@@ -46,7 +45,7 @@ type MajorCooldown struct {
 
 	// Cooldowns with higher priority get used first. This is important when some
 	// cooldowns have a non-zero cast time. For example, Drums should be used
-	// before Bloodlust.
+	// before an instant one.
 	Priority int32
 
 	// Internal category, used for filtering. For example, mages want to disable
@@ -304,7 +303,7 @@ func (mcdm *majorCooldownManager) removeInitialMajorCooldown(actionID ActionID) 
 	// Also remove any other MCDs that share the same CD timer pointer (e.g.
 	// Berserking 10%/15%/20%/25%/30% all share one timer).  This prevents
 	// auto-casting a different variant while the player controls one manually.
-	// Spells with independent timers (e.g. Bloodlust from different casters)
+	// Spells with independent timers (e.g. two trinkets that share no cooldown)
 	// are left alone.
 	for i := len(mcdm.initialMajorCooldowns) - 1; i >= 0; i-- {
 		mcd := &mcdm.initialMajorCooldowns[i]

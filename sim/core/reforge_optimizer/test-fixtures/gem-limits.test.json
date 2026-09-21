@@ -239,8 +239,7 @@
 		],
 		"numActiveParties": 5,
 		"buffs": {
-			"giftOfTheWild": 2,
-			"bloodlust": true
+			"giftOfTheWild": 2
 		},
 		"debuffs": {
 			"improvedSealOfTheCrusader": 2,

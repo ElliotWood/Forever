@@ -10,10 +10,10 @@ const option = (stats: Array<Stat>) => ({ config: { label: stats.join('/') }, st
 
 const manaSpring = option([Stat.StatMP5]);
 const manaTide = option([Stat.StatMP5]);
-const bloodlust = option([]);
+const untagged = option([]);
 const strengthOfEarth = option([Stat.StatStrength]);
 const fortitude = option([Stat.StatStamina]);
-const options = [manaSpring, manaTide, bloodlust, strengthOfEarth, fortitude];
+const options = [manaSpring, manaTide, untagged, strengthOfEarth, fortitude];
 
 const host = (parts: { epStats?: Array<Stat>; displayStats?: Array<UnitStat>; include?: Array<unknown>; exclude?: Array<unknown> }) =>
 	fakeHost({
@@ -28,21 +28,21 @@ const host = (parts: { epStats?: Array<Stat>; displayStats?: Array<UnitStat>; in
 describe('relevantStatOptions', () => {
 	it('keeps an option tagged with an EP stat or a displayed stat, and every untagged option', () => {
 		const shown = relevantStatOptions(options, host({ epStats: [Stat.StatMP5], displayStats: [UnitStat.fromStat(Stat.StatStamina)] }));
-		expect(shown).toEqual([manaSpring, manaTide, bloodlust, fortitude]);
+		expect(shown).toEqual([manaSpring, manaTide, untagged, fortitude]);
 	});
 
 	it('includes by stat, the way every TBC spec lists them', () => {
-		expect(relevantStatOptions(options, host({ include: [Stat.StatStrength] }))).toEqual([bloodlust, strengthOfEarth]);
+		expect(relevantStatOptions(options, host({ include: [Stat.StatStrength] }))).toEqual([untagged, strengthOfEarth]);
 	});
 
 	it('excludes by stat, the sentinel way the feral specs drop Windfury', () => {
-		expect(relevantStatOptions(options, host({ epStats: [Stat.StatMP5], exclude: [Stat.StatMP5] }))).toEqual([bloodlust]);
+		expect(relevantStatOptions(options, host({ epStats: [Stat.StatMP5], exclude: [Stat.StatMP5] }))).toEqual([untagged]);
 	});
 
 	it('includes and excludes a single input by its config, so one MP5 buff can go while the other stays', () => {
 		const shown = relevantStatOptions(
 			options,
-			host({ epStats: [Stat.StatMP5], include: [fortitude.config], exclude: [manaTide.config, bloodlust.config] }),
+			host({ epStats: [Stat.StatMP5], include: [fortitude.config], exclude: [manaTide.config, untagged.config] }),
 		);
 		expect(shown).toEqual([manaSpring, fortitude]);
 	});

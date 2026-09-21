@@ -264,8 +264,7 @@
 			"shadowProtection": true,
 			"divineSpirit": 2,
 			"giftOfTheWild": 2,
-			"thorns": 2,
-			"bloodlust": true
+			"thorns": 2
 		},
 		"debuffs": {
 			"judgementOfWisdom": true,

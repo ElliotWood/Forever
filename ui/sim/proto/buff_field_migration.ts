@@ -1,7 +1,7 @@
 // Api version 17 does two things to the buff messages. It types 25 fields bool where they were a
 // TristateEffect, because the Improved talent behind each of them has no node in a Forever trait
 // tree; the names are pinned by TestRetypedFieldsMatchTheMigration in tools/gen_buffs_proto. And it
-// retires 33 fields outright, because the Forever client describes no spell for them; the numbers
+// retires 34 fields outright, because the Forever client describes no spell for them; the numbers
 // they gave up are `reserved` in proto/buffs.proto and listed in buffmanifest.Retired.
 //
 // The version converters in `proto_migration` run on an already-parsed proto, and protobuf-ts
@@ -41,10 +41,10 @@ export const retypedBuffFields = {
 	],
 } as const;
 
-// The proto names of the 33 fields api version 17 retired, which is how buffmanifest.Retired and
+// The proto names of the 34 retired fields, which is how buffmanifest.Retired and
 // proto/buffs.proto's `reserved` lines spell them.
 export const retiredBuffFields = {
-	raidBuffs: [],
+	raidBuffs: ['bloodlust'],
 	partyBuffs: [
 		'braided_eternium_chain',
 		'bs_solarian_sapphire',

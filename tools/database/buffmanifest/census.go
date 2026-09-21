@@ -198,11 +198,6 @@ var Manifest = []BuffSpec{
 		Notes: "SkillLineAbility resolves the name to 20217 and Greater Blessing of Kings to 25898; the ungranted twin 1213408 has no SkillLineAbility row.",
 	},
 	{
-		Field: "bloodlust", Number: 7, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindManual,
-		Go: "Bloodlust", Name: "Bloodlust", Owner: proto.Class_ClassShaman, Pet: PetStrip,
-		Notes: "no SkillLineAbility row for 1245940 / 1222564 / 468408; keeps registerBloodlustCD.",
-	},
-	{
 		Field: "divine_spirit", Number: 4, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindStatFlat,
 		Go: "DivineSpirit", Name: "Divine Spirit", Owner: proto.Class_ClassPriest,
 		Category: "StatBuff", Pet: PetStripWhenSummonedLate,

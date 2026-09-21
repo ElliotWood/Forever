@@ -355,7 +355,7 @@ func measureGeneratedBuffStats(char *Character) {
 func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 	ticked := func() (*proto.RaidBuffs, *proto.PartyBuffs, *proto.IndividualBuffs) {
 		return &proto.RaidBuffs{
-				Bloodlust: true, Thorns: true, ArcaneBrilliance: true, DivineSpirit: true,
+				Thorns: true, ArcaneBrilliance: true, DivineSpirit: true,
 				GiftOfTheWild: true, PowerWordFortitude: true, ShadowProtection: true,
 			},
 			&proto.PartyBuffs{
@@ -376,10 +376,9 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 	raid, party, individual := ticked()
 	applyGeneratedPetBuffs(pet, raid, party, individual)
 
-	// Stripped whenever the pet is out: the owner casts Bloodlust on it during
-	// the fight, Thorns is not given to it, it cannot gain an extra attack, and
-	// nobody spends a cooldown on a pet.
-	if raid.Bloodlust || raid.Thorns || party.WindfuryTotem ||
+	// Stripped whenever the pet is out: Thorns is not given to it, it cannot
+	// gain an extra attack, and nobody spends a cooldown on a pet.
+	if raid.Thorns || party.WindfuryTotem ||
 		individual.Innervates != 0 || individual.PowerInfusions != 0 {
 		t.Errorf("a pet out from the start kept %v, %v, %v", raid, party, individual)
 	}

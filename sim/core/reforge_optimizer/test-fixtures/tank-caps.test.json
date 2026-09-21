@@ -270,8 +270,7 @@
 			"powerWordFortitude": 2,
 			"shadowProtection": true,
 			"giftOfTheWild": 2,
-			"thorns": 1,
-			"bloodlust": true
+			"thorns": 1
 		},
 		"debuffs": {
 			"improvedSealOfTheCrusader": 2,

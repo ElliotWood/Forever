@@ -114,11 +114,11 @@ describe('migrateRetypedBuffFields', () => {
 		expect(retiredFieldSpellings('drums')).toEqual(['drums']);
 	});
 
-	it('names 33 retired fields, the ones the proto reserved', () => {
+	it('names 34 retired fields, the ones the proto reserved', () => {
 		const fields = Object.values(retiredBuffFields).flat();
 
-		expect(fields).toHaveLength(33);
-		expect(new Set(fields).size).toBe(33);
+		expect(fields).toHaveLength(34);
+		expect(new Set(fields).size).toBe(34);
 	});
 
 	it('names 25 fields, the ones the proto retyped', () => {
