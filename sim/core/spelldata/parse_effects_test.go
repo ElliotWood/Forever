@@ -507,7 +507,7 @@ func TestEveryTableRow(t *testing.T) {
 		{dbcenums.A_MOD_INCREASE_HEALTH_PERCENT, 0, 10, "multiply-stat Health", 1.1, false},
 		{dbcenums.A_MOD_PARRY_PERCENT, 0, 5, "stat ParryRating", 5 * core.ParryRatingPerParryPercent, false},
 		{dbcenums.A_MOD_DODGE_PERCENT, 0, 5, "stat DodgeRating", 5 * core.DodgeRatingPerDodgePercent, false},
-		{dbcenums.A_MOD_BLOCK_PERCENT, 0, 5, "stat BlockPercent", 5, false},
+		{dbcenums.A_MOD_BLOCK_PERCENT, 0, 5, "stat BlockPercent", 0.05, false},
 		{dbcenums.A_MOD_WEAPON_CRIT_PERCENT, 0, 5, "stat PhysicalCritPercent", 5, false},
 		{dbcenums.A_MOD_HIT_CHANCE, 0, 3, "stat PhysicalHitPercent", 3, false},
 		{dbcenums.A_MOD_SPELL_HIT_CHANCE, 0, 3, "stat SpellHitPercent", 3, false},
@@ -566,6 +566,40 @@ func oneEffectRow(aura dbcenums.EffectAuraType, misc int32, points float64) *Spe
 	return &Spell{ID: 6000, Name: "One Effect", DurationMs: 10000, ClassFlags: parseFamily,
 		Effects: []Effect{{Type: dbcenums.E_APPLY_AURA, Aura: aura, Misc: misc, BasePoints: points,
 			ClassFlags: parseTargetMask}}}
+}
+
+// Each stat the table writes is stored in the units core reads it in, and those units differ: a
+// rating, a percentage point and a fraction all come out of a client percentage.
+func TestParseStaticStatConventions(t *testing.T) {
+	withParseRows(t)
+
+	dodge := parseWarrior()
+	ParseStatic(dodge, oneEffectRow(dbcenums.A_MOD_DODGE_PERCENT, 0, 5))
+	if got := dodge.GetDodgeFromRating(); math.Abs(got-0.05) > 1e-9 {
+		t.Errorf("dodge from a 5 point row: %v, want 0.05", got)
+	}
+
+	block := parseWarrior()
+	ParseStatic(block, oneEffectRow(dbcenums.A_MOD_BLOCK_PERCENT, 0, 5))
+	if got := block.GetBlockFromRating(); math.Abs(got-0.05) > 1e-9 {
+		t.Errorf("block from a 5 point row: %v, want 0.05", got)
+	}
+
+	crit := parseWarrior()
+	baseCrit := crit.GetStat(stats.PhysicalCritPercent)
+	if baseCrit < 1 {
+		t.Fatalf("base physical crit is %v, so the stat is not on the 0-100 scale this pins", baseCrit)
+	}
+	ParseStatic(crit, oneEffectRow(dbcenums.A_MOD_WEAPON_CRIT_PERCENT, 0, 5))
+	if got := crit.GetStat(stats.PhysicalCritPercent) - baseCrit; math.Abs(got-5) > 1e-9 {
+		t.Errorf("crit from a 5 point row: %v percentage points, want 5", got)
+	}
+
+	expertise := parseWarrior()
+	ParseStatic(expertise, oneEffectRow(dbcenums.A_MOD_EXPERTISE, 0, 5))
+	if got := expertise.GetStat(stats.ExpertiseRating); math.Abs(got-12.5) > 1e-9 {
+		t.Errorf("expertise from a 5 point row: %v rating, want 12.5", got)
+	}
 }
 
 // The armor modifier scales the equipment share of the stat, which is what the tooltip states.
