@@ -1,8 +1,6 @@
 package priest
 
 import (
-	"time"
-
 	"github.com/wowsims/classic/sim/core"
 )
 
@@ -20,14 +18,13 @@ import (
 //     shadow priest's DPS.
 const ShadowWordDeathRanks = 4
 
-var ShadowWordDeathSpellId = [ShadowWordDeathRanks + 1]int32{0, 1309595, 1309633, 1309635, 1309636}
 var ShadowWordDeathLevel = [ShadowWordDeathRanks + 1]int{0, 32, 40, 48, 56}
 var ShadowWordDeathMaxLevel = [ShadowWordDeathRanks + 1]int{0, 37, 45, 53, 61}
+
+// Spell ID, cost, cooldown, coefficient and school come from the client table (see
+// shadow_word_pain.go). The damage stays ours: the table holds only its truncated value at level 60.
 var ShadowWordDeathBaseDamage = [ShadowWordDeathRanks + 1]float64{0, 295, 370, 403, 448}
 var ShadowWordDeathPerLevel = [ShadowWordDeathRanks + 1]float64{0, 1.5, 1.9, 2.2, 2.5}
-var ShadowWordDeathManaCost = [ShadowWordDeathRanks + 1]float64{0, 175, 205, 250, 340}
-
-const ShadowWordDeathSpellCoef = 0.429
 
 // Early Demise (1310076): +15% crit per rank on Shadow Word: Death against a target at or
 // below 20% health.
@@ -50,14 +47,15 @@ func (priest *Priest) registerShadowWordDeath() {
 func (priest *Priest) shadowWordDeathConfig(rank int, cdTimer *core.Timer) core.SpellConfig {
 	level := min(int(priest.Level), ShadowWordDeathMaxLevel[rank])
 	baseDamage := ShadowWordDeathBaseDamage[rank] + ShadowWordDeathPerLevel[rank]*float64(level-ShadowWordDeathLevel[rank])
+	row := spellData.ShadowWordDeath.ByRank(int32(rank))
 	earlyDemise := earlyDemiseCritPerRank * float64(priest.Talents.EarlyDemise) * core.SpellCritRatingPerCritChance
 
 	return core.SpellConfig{
 		SpellCode:      SpellCode_PriestShadowWordDeath,
 		ClassSpellMask: SpellMaskShadowWordDeath,
-		ActionID:       core.ActionID{SpellID: ShadowWordDeathSpellId[rank]},
-		SpellSchool:    core.SpellSchoolShadow,
-		DefenseType:    core.DefenseTypeMagic,
+		ActionID:       core.ActionID{SpellID: row.SpellID},
+		SpellSchool:    row.SpellSchool,
+		DefenseType:    row.DefenseType,
 		ProcMask:       core.ProcMaskSpellDamage,
 		Flags:          SpellFlagPriest | core.SpellFlagAPL,
 
@@ -65,7 +63,7 @@ func (priest *Priest) shadowWordDeathConfig(rank int, cdTimer *core.Timer) core.
 		Rank:          rank,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: ShadowWordDeathManaCost[rank],
+			FlatCost: float64(row.Cost),
 		},
 
 		Cast: core.CastConfig{
@@ -74,13 +72,13 @@ func (priest *Priest) shadowWordDeathConfig(rank int, cdTimer *core.Timer) core.
 			},
 			CD: core.Cooldown{
 				Timer:    cdTimer,
-				Duration: time.Second * 15,
+				Duration: row.Cooldown,
 			},
 		},
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		BonusCoefficient: ShadowWordDeathSpellCoef,
+		BonusCoefficient: roundCoef(row.Direct.BonusCoefficient()),
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			bonus := 0.0
