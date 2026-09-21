@@ -21,15 +21,16 @@ func (hunter *Hunter) getExplosiveTrapConfig(rank int, timer *core.Timer) core.S
 	numHits := hunter.Env.GetNumTargets()
 
 	return core.SpellConfig{
-		SpellCode:     SpellCode_HunterExplosiveTrap,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolFire,
-		DefenseType:   core.DefenseTypeMagic,
-		ProcMask:      core.ProcMaskSpellDamage,
-		Flags:         core.SpellFlagAPL | SpellFlagTrap,
-		Rank:          rank,
-		RequiredLevel: level,
-		MissileSpeed:  24,
+		SpellCode:      SpellCode_HunterExplosiveTrap,
+		ClassSpellMask: SpellMaskExplosiveTrap,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | SpellFlagTrap,
+		Rank:           rank,
+		RequiredLevel:  level,
+		MissileSpeed:   24,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

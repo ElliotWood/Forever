@@ -24,15 +24,16 @@ func (hunter *Hunter) registerSniperShotSpell() {
 	flatDamageBonus := [4]float64{0, 160, 225, 295}[rank]
 
 	hunter.SniperShot = hunter.RegisterSpell(core.SpellConfig{
-		SpellCode:    SpellCode_HunterSniperShot,
-		ActionID:     core.ActionID{SpellID: spellId},
-		Rank:         rank,
-		SpellSchool:  core.SpellSchoolPhysical,
-		DefenseType:  core.DefenseTypeRanged,
-		ProcMask:     core.ProcMaskRangedSpecial,
-		Flags:        core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagShot,
-		CastType:     proto.CastType_CastTypeRanged,
-		MissileSpeed: 24,
+		SpellCode:      SpellCode_HunterSniperShot,
+		ClassSpellMask: SpellMaskSniperShot,
+		ActionID:       core.ActionID{SpellID: spellId},
+		Rank:           rank,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeRanged,
+		ProcMask:       core.ProcMaskRangedSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagShot,
+		CastType:       proto.CastType_CastTypeRanged,
+		MissileSpeed:   24,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: 365,

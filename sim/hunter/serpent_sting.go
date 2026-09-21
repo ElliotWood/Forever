@@ -17,16 +17,17 @@ func (hunter *Hunter) getSerpentStingConfig(rank int) core.SpellConfig {
 	level := [10]int{0, 4, 10, 18, 26, 34, 42, 50, 58, 60}[rank]
 
 	return core.SpellConfig{
-		SpellCode:     SpellCode_HunterSerpentSting,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolNature,
-		DefenseType:   core.DefenseTypeRanged,
-		ProcMask:      core.ProcMaskRangedSpecial,
-		Flags:         core.SpellFlagAPL | core.SpellFlagPureDot | core.SpellFlagPoison | SpellFlagSting,
-		CastType:      proto.CastType_CastTypeRanged,
-		Rank:          rank,
-		RequiredLevel: level,
-		MissileSpeed:  24,
+		SpellCode:      SpellCode_HunterSerpentSting,
+		ClassSpellMask: SpellMaskSerpentSting,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolNature,
+		DefenseType:    core.DefenseTypeRanged,
+		ProcMask:       core.ProcMaskRangedSpecial,
+		Flags:          core.SpellFlagAPL | core.SpellFlagPureDot | core.SpellFlagPoison | SpellFlagSting,
+		CastType:       proto.CastType_CastTypeRanged,
+		Rank:           rank,
+		RequiredLevel:  level,
+		MissileSpeed:   24,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

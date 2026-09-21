@@ -18,15 +18,16 @@ func (hunter *Hunter) getMultiShotConfig(timer *core.Timer) core.SpellConfig {
 	results := make([]*core.SpellResult, numHits)
 
 	return core.SpellConfig{
-		SpellCode:     SpellCode_HunterMultiShot,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolPhysical,
-		DefenseType:   core.DefenseTypeRanged,
-		ProcMask:      core.ProcMaskRangedSpecial,
-		Flags:         core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagShot,
-		CastType:      proto.CastType_CastTypeRanged,
-		RequiredLevel: level,
-		MissileSpeed:  24,
+		SpellCode:      SpellCode_HunterMultiShot,
+		ClassSpellMask: SpellMaskMultiShot,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeRanged,
+		ProcMask:       core.ProcMaskRangedSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagShot,
+		CastType:       proto.CastType_CastTypeRanged,
+		RequiredLevel:  level,
+		MissileSpeed:   24,
 
 		ManaCost: core.ManaCostOptions{
 			BaseCost: 0.139,
