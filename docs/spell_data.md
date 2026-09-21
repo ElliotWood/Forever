@@ -567,8 +567,10 @@ warrior's own cast reads the `has_bs_t2` class option - the user's word that thi
 set, not the equipped gear - and the party's copy reads the `snapshot_bs_t2` flag, a `KindFlag` row
 saying the warrior who shouted for the party wore it. Both call `AddGeneratedFlatBonus`, which raises
 what the aura applies and what it bids for its category together, so the stronger of the two copies
-is the one the character sheet shows. The 30 itself lives in `core.BattleShoutT2Bonus`, with the set
-and the spell it came from written next to it.
+is the one the character sheet shows. It is told what the buff is worth without the bonus, because
+the aura belongs to the unit rather than to whoever raised it: two warriors in a party wearing the
+same set ask for the same total and the second call does nothing. The 30 itself lives in
+`core.BattleShoutT2Bonus`, with the set and the spell it came from written next to it.
 
 **A party or raid flag means an external caster provides the buff.** The generated apply block builds
 the row's `isPlayer=false` copy whenever the proto field is set, so a class port that registers its own
