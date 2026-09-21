@@ -167,6 +167,8 @@ func (warrior *Warrior) registerFlurry() {
 		return
 	}
 
+	// TODO: Ingame test needed: the talent ladder gives 5% per point (25% at rank 5) while the
+	// applied buff 12966 carries a flat 30%.
 	flurryAura := warrior.RegisterAura(core.Aura{
 		Label:     "Flurry",
 		ActionID:  core.ActionID{SpellID: flurryBuff.SpellID},
