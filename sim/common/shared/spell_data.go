@@ -250,8 +250,8 @@ type SpellDataEffect struct {
 // The share of the cost a miss gives back, for RageCostOptions.Refund: 80% where the client flags
 // Discount Power On Miss, nothing otherwise.
 //
-//	rendRank.MissRefund()    // 0.8
-//	cleaveRank.MissRefund()  // 0, Cleave lacks the flag
+// e.g. rendRank.MissRefund() is 0.8
+// e.g. cleaveRank.MissRefund() is 0, Cleave lacks the flag
 func (s SpellData) MissRefund() float64 {
 	if s.RefundsOnMiss {
 		return 0.8
@@ -279,7 +279,7 @@ func PeriodicTickOutcome(row SpellData, dot *core.Dot) core.OutcomeApplier {
 // they differ. Seal of the Crusader rank 4's base is a whole number, so it has no ValueMax and its
 // answer is Value; every other rank has both.
 //
-//	sealOfTheCrusaderRank.Effects[0].High()   // 41 on rank 1, where Value reads 39.2
+// e.g. sealOfTheCrusaderRank.Effects[0].High() is 41 on rank 1, where Value reads 39.2
 func (e SpellDataEffect) High() float64 {
 	if e.ValueMax != 0 {
 		return e.ValueMax
@@ -289,18 +289,18 @@ func (e SpellDataEffect) High() float64 {
 
 // The client's percentage as a fraction; it states one as an integer.
 //
-//	shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Fraction()   // -0.6, from -60
-//	spearingStrikeRank.Effects[1].Fraction()                                   //  0.4, from 40
+// e.g. shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Fraction() is -0.6, from -60
+// e.g. spearingStrikeRank.Effects[1].Fraction() is 0.4, from 40
 func (e SpellDataEffect) Fraction() float64 { return e.Value / 100 }
 
 // 1 plus the fraction, with the sign the data gives it.
 //
-//	shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier()   // 0.4, from -60
+// e.g. shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier() is 0.4, from -60
 func (e SpellDataEffect) Multiplier() float64 { return 1 + e.Fraction() }
 
 // The value in rage or energy, which the client states on a 0-1000 bar.
 //
-//	ragingBlowsRank.Effects[1].Tenths()   // -2 rage on Cleave, from -20
+// e.g. ragingBlowsRank.Effects[1].Tenths() is -2 rage on Cleave, from -20
 func (e SpellDataEffect) Tenths() float64 { return e.Value / 10 }
 
 // Panics when no effect matches, and when two do - 186 ranked spells carry a duplicate aura/misc
