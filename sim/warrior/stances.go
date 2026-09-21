@@ -4,10 +4,8 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 type Stance uint8
@@ -24,6 +22,11 @@ const stanceEffectCategory = "Stance"
 var battleStanceRank = spellData.BattleStance.Highest()
 var defensiveStanceRank = spellData.DefensiveStance.Highest()
 var berserkerStanceRank = spellData.BerserkerStance.Highest()
+
+// The passive each stance carries, which is where the client states what standing in it is worth.
+var battleStancePassive = spellData.BattleStancePassive.Highest()
+var defensiveStancePassive = spellData.DefensiveStancePassive.Highest()
+var berserkerStancePassive = spellData.BerserkerStancePassive.Highest()
 
 func (warrior *Warrior) StanceMatches(other Stance) bool {
 	return (warrior.Stance & other) != 0
@@ -85,10 +88,8 @@ func (warrior *Warrior) registerBattleStanceAura() *core.Aura {
 		ActionID:   actionID,
 		Duration:   core.NeverExpires,
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
-	}).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.ThreatMultiplier,
-		spellData.BattleStancePassive.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(1),
-	)
+	})
+	spelldata.ParseEffects(&warrior.Character, aura, battleStancePassive)
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
 
@@ -103,32 +104,19 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 		ActionID:   actionID,
 		Duration:   core.NeverExpires,
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceDefensive, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
-	}).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.ThreatMultiplier,
-		spellData.DefensiveStancePassive.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(1),
-	).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.DamageTakenMultiplier,
-		spellData.DefensiveStancePassive.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).MultiplierAt(1),
-	).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.DamageDealtMultiplier,
-		spellData.DefensiveStancePassive.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(1),
-	)
+	})
+	spelldata.ParseEffects(&warrior.Character, aura, defensiveStancePassive)
+
 	if warrior.Talents.Defiance > 0 {
-		defiance := spellData.Defiance.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance)
-		applied := false
-		refresh := func(inStance bool) {
-			want := inStance && warrior.PseudoStats.CanBlock
-			if want && !applied {
-				warrior.PseudoStats.ThreatMultiplier *= defiance
-			} else if !want && applied {
-				warrior.PseudoStats.ThreatMultiplier /= defiance
-			}
-			applied = want
-		}
-		aura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) { refresh(true) })
-		aura.ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) { refresh(false) })
-		warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(_ *core.Simulation, _ proto.ItemSlot) {
-			refresh(aura.IsActive())
+		// The stance the talent's threat applies in is the aura it hangs on; the shield the
+		// tooltip asks for is stated nowhere in the row, so it is the caller's condition, re-read
+		// on an off-hand swap.
+		defiance := spelldata.ParseEffects(&warrior.Character, aura,
+			spellData.Defiance.Rank(warrior.Talents.Defiance),
+			spelldata.Conditional(func() bool { return warrior.PseudoStats.CanBlock }))
+
+		warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, _ proto.ItemSlot) {
+			defiance.Refresh(sim)
 		})
 	}
 
@@ -145,13 +133,10 @@ func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
 		ActionID:   actionId,
 		Duration:   core.NeverExpires,
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBerserker, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
-	}).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.ThreatMultiplier,
-		spellData.BerserkerStancePassive.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(1),
-	).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.DamageTakenMultiplier,
-		spellData.BerserkerStancePassive.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).MultiplierAt(1),
-	).AttachStatBuff(stats.PhysicalCritPercent, spellData.BerserkerStancePassive.Effect(dbcenums.A_MOD_CRIT_PCT, 0).ValueAt(1))
+	})
+	// The row's fourth effect is an attack power percentage of 0, which has no sim kind and nothing
+	// to apply either way.
+	spelldata.ParseEffects(&warrior.Character, aura, berserkerStancePassive)
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
 
