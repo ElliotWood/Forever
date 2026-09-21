@@ -42,17 +42,11 @@ var ItemSetBattlegearOfMight = core.NewItemSet(core.ItemSet{
 		},
 		8: func(agent core.Agent, setBonusAura *core.Aura) {
 			// Spell 23561 states 15% more Sunder Armor threat. Sunder Armor deals no damage, so
-			// all of its threat is the flat bonus, which the threat multiplier mods do not reach.
+			// all of its threat is the flat bonus.
 			setBonusAura.AttachSpellMod(core.SpellModConfig{
 				ClassMask:  SpellMaskSunderArmor,
-				Kind:       core.SpellMod_Custom,
+				Kind:       core.SpellMod_FlatThreatBonus_Pct,
 				FloatValue: 0.15,
-				ApplyCustom: func(mod *core.SpellMod, spell *core.Spell) {
-					spell.FlatThreatBonus *= 1 + mod.GetFloatValue()
-				},
-				RemoveCustom: func(mod *core.SpellMod, spell *core.Spell) {
-					spell.FlatThreatBonus /= 1 + mod.GetFloatValue()
-				},
 			})
 		},
 	},
@@ -198,9 +192,32 @@ var ItemSetDreadnaughtsBattlegear = core.NewItemSet(core.ItemSet{
 		},
 		8: func(agent core.Agent, setBonusAura *core.Aura) {
 			// Spell 28845 states that below 20% health, healing spells cast on you gain up to 160
-			// healing (spell 28846) for 5 seconds.
-			// TODO: not modelled. The sim has no hook on healing received, and the warrior takes
-			// no incoming heals to apply it to.
+			// healing (spell 28846) for 5 seconds. The modelled incoming healing of the tank sim
+			// bypasses the healing bonus; heals a healer unit casts on the warrior take it.
+			warrior := agent.(WarriorAgent).GetWarrior()
+			const cheatDeathHealing = 160
+			cheatDeath := warrior.RegisterAura(core.Aura{
+				Label:    "Cheat Death",
+				ActionID: core.ActionID{SpellID: 28846},
+				Duration: time.Second * 5,
+				OnGain: func(aura *core.Aura, sim *core.Simulation) {
+					warrior.PseudoStats.BonusHealingTaken += cheatDeathHealing
+				},
+				OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+					warrior.PseudoStats.BonusHealingTaken -= cheatDeathHealing
+				},
+			})
+			setBonusAura.AttachProcTrigger(core.ProcTrigger{
+				Name:     "Cheat Death - Trigger",
+				Callback: core.CallbackOnSpellHitTaken | core.CallbackOnPeriodicDamageTaken,
+				Outcome:  core.OutcomeLanded,
+				ExtraCondition: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {
+					return warrior.CurrentHealthPercent() < 0.2
+				},
+				Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+					cheatDeath.Activate(sim)
+				},
+			})
 		},
 	},
 })

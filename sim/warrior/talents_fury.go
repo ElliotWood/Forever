@@ -15,8 +15,7 @@ func (warrior *Warrior) registerFuryTalents() {
 	warrior.registerCruelty()
 
 	// Tier 2
-	// TODO: Iron Will (12962) shortens stuns and fears by 3% per rank; core registers them at a
-	// fixed duration with no per-unit modifier to hang the talent on.
+	warrior.registerIronWill()
 	warrior.registerUnbridledWrath()
 
 	// Tier 3
@@ -104,9 +103,18 @@ func (warrior *Warrior) registerDualWieldSpecialization() {
 		FloatValue: spellData.DualWieldSpecialization.Effect(shared.A_MOD_HIT_CHANCE, 0).ValueAt(warrior.Talents.DualWieldSpecialization),
 	})
 
-	// TODO: The off-hand Rage generation the talent's second effect states is not modelled; the
-	// rage bar halves the hit factor for off-hand swings inside sim/core/rage.go and takes no
-	// per-hand multiplier.
+	// The off-hand rage the tooltip's $m2 states is the dummy at index 1.
+	warrior.SetOffHandRageMultiplier(spellData.DualWieldSpecialization.EffectAt(1).MultiplierAt(warrior.Talents.DualWieldSpecialization))
+}
+
+// Iron Will (12962) shortens the stuns and fears the warrior suffers; the client files the fear
+// ladder under mechanic 1 and the stun ladder under mechanic 12.
+func (warrior *Warrior) registerIronWill() {
+	if warrior.Talents.IronWill == 0 {
+		return
+	}
+	warrior.PseudoStats.FearDurationMultiplier = spellData.IronWill.Effect(shared.A_MECHANIC_DURATION_MOD, 1).MultiplierAt(warrior.Talents.IronWill)
+	warrior.PseudoStats.StunDurationMultiplier = spellData.IronWill.Effect(shared.A_MECHANIC_DURATION_MOD, 12).MultiplierAt(warrior.Talents.IronWill)
 }
 
 func (warrior *Warrior) registerImprovedExecute() {
