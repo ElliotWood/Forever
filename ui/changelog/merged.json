@@ -1,5 +1,17 @@
 [
 	{
+		"number": 283,
+		"title": "converge(data): the rest of the mage's damage spells read from the client tables",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/283"
+	},
+	{
+		"number": 282,
+		"title": "converge(warlock): warlock talents on the SpellMod system",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/282"
+	},
+	{
 		"number": 281,
 		"title": "converge(priest): talent and aura modifiers on SpellMods",
 		"mergedAt": "2026-09-21",
