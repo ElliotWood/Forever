@@ -18,6 +18,12 @@
 		"url": "https://github.com/ElliotWood/Forever/pull/261"
 	},
 	{
+		"number": 260,
+		"title": "Wowhead Forever data changed (2026-09-21)",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/260"
+	},
+	{
 		"number": 254,
 		"title": "The arena decides the consumables, not each spec's test fixture",
 		"mergedAt": "2026-09-20",
