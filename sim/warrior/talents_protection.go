@@ -70,22 +70,19 @@ func (warrior *Warrior) registerShieldSpecialization() {
 	)
 }
 
-func (warrior *Warrior) registerRageOnAvoid(name string, spellID int32, rage float64, chance float64, outcome core.HitOutcome, extra func() bool) {
+func (warrior *Warrior) registerRageOnAvoid(name string, spellID int32, rage float64, chance float64, outcome core.HitOutcome, extra core.ProcExtraCondition) {
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: spellID})
-	trigger := core.ProcTrigger{
+	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               name,
 		ProcChance:         chance,
 		TriggerImmediately: true,
 		Outcome:            outcome,
 		Callback:           core.CallbackOnSpellHitTaken,
+		ExtraCondition:     extra,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.AddRage(sim, rage, rageMetrics)
 		},
-	}
-	if extra != nil {
-		trigger.ExtraCondition = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool { return extra() }
-	}
-	warrior.MakeProcTriggerAura(trigger)
+	})
 }
 
 func (warrior *Warrior) registerToughness() {
@@ -293,7 +290,7 @@ func (warrior *Warrior) registerMasterOfDefense() {
 		masterOfDefenseEnergize.Energize.Tenths(),
 		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense),
 		core.OutcomeDodge|core.OutcomeParry,
-		func() bool { return warrior.PseudoStats.CanBlock },
+		func(_ *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool { return warrior.PseudoStats.CanBlock },
 	)
 }
 
