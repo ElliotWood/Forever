@@ -398,6 +398,10 @@ const (
 	// Add/subtract base damage
 	// Uses: FloatValue
 	SpellMod_BaseDamage_Flat
+
+	// Will multiply the spell.FlatThreatBonus. +5% = 0.05
+	// Uses FloatValue
+	SpellMod_FlatThreatBonus_Pct
 )
 
 var spellModMap = map[SpellModType]*SpellModFunctions{
@@ -543,6 +547,11 @@ var spellModMap = map[SpellModType]*SpellModFunctions{
 	SpellMod_BaseDamage_Flat: {
 		Apply:  applyBaseDamageFlat,
 		Remove: removeBaseDamageFlat,
+	},
+
+	SpellMod_FlatThreatBonus_Pct: {
+		Apply:  applyFlatThreatBonusPercent,
+		Remove: removeFlatThreatBonusPercent,
 	},
 }
 
@@ -930,4 +939,12 @@ func applyBaseDamageFlat(mod *SpellMod, spell *Spell) {
 
 func removeBaseDamageFlat(mod *SpellMod, spell *Spell) {
 	spell.BonusBaseDamage -= mod.floatValue
+}
+
+func applyFlatThreatBonusPercent(mod *SpellMod, spell *Spell) {
+	spell.FlatThreatBonus *= (1 + mod.floatValue)
+}
+
+func removeFlatThreatBonusPercent(mod *SpellMod, spell *Spell) {
+	spell.FlatThreatBonus /= (1 + mod.floatValue)
 }

@@ -24,6 +24,10 @@ type rageBar struct {
 	startingHitFactor float64
 	currentHitFactor  float64
 
+	// Scales the Rage an OH swing generates, on top of the half an OH swing
+	// already generates. Set by SetOffHandRageMultiplier().
+	offHandRageMultiplier float64
+
 	RageRefundMetrics     *ResourceMetrics
 	EncounterStartMetrics *ResourceMetrics
 }
@@ -56,12 +60,14 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 			}
 
 			hitFactor := unit.rageBar.currentHitFactor
+			handMultiplier := 1.0
 			var speed float64
 			if spell.ProcMask == ProcMaskMeleeMHAuto {
 				speed = unit.AutoAttacks.MH().SwingSpeed
 			} else if spell.ProcMask == ProcMaskMeleeOHAuto {
 				// OH hits generate 50% of the rage they would if they were MH hits
 				hitFactor /= 2
+				handMultiplier = unit.rageBar.offHandRageMultiplier
 				speed = unit.AutoAttacks.OH().SwingSpeed
 			} else {
 				return
@@ -78,7 +84,7 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 			}
 
 			// generatedRage is capped for very low damage swings
-			generatedRage := min((damage*7.5/RageFactor+hitFactor*speed)/2, damage*15/RageFactor)
+			generatedRage := min((damage*7.5/RageFactor+hitFactor*speed)/2, damage*15/RageFactor) * handMultiplier
 
 			var metrics *ResourceMetrics
 			if spell.Cost != nil {
@@ -113,6 +119,7 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 		startingRage:          max(0, min(options.StartingRage, maxRage)),
 		totalRageMultiplier:   1.0,
 		startingHitFactor:     BaseRageHitFactor * options.BaseRageMultiplier,
+		offHandRageMultiplier: 1.0,
 		RageRefundMetrics:     unit.NewRageMetrics(ActionID{OtherID: proto.OtherAction_OtherActionRefund}),
 		EncounterStartMetrics: unit.NewRageMetrics(ActionID{OtherID: proto.OtherAction_OtherActionEncounterStart}),
 	}
@@ -134,6 +141,14 @@ func (rb *rageBar) MaximumRage() float64 {
 // Whirlwind, etc.
 func (rb *rageBar) MultiplyAutoAttackRageGen(multiplier float64) {
 	rb.currentHitFactor *= multiplier
+}
+
+// Sets how much Rage OH swings generate, e.g. the Warrior talent Dual Wield
+// Specialization, which increases off-hand Rage generation by a %. Unlike the
+// Multiply* calls this survives the iteration reset, so call it once at setup,
+// after EnableRageBar().
+func (rb *rageBar) SetOffHandRageMultiplier(multiplier float64) {
+	rb.offHandRageMultiplier = multiplier
 }
 
 func (rb *rageBar) MultiplyRageGen(multiplier float64) {

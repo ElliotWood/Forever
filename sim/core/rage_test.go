@@ -33,7 +33,7 @@ type FakeRageWarrior struct {
 
 func (fw *FakeRageWarrior) GetCharacter() *Character { return &fw.Character }
 
-func (fw *FakeRageWarrior) Initialize()                    {}
+func (fw *FakeRageWarrior) Initialize()                    { fw.registerFakeThreatSpell() }
 func (fw *FakeRageWarrior) ApplyTalents()                  {}
 func (fw *FakeRageWarrior) Reset(_ *Simulation)            {}
 func (fw *FakeRageWarrior) OnGCDReady(_ *Simulation)       {}
@@ -185,5 +185,31 @@ func TestOffHandAutoAttackRageGeneration(t *testing.T) {
 	dodgeRage := rageFromAutoAttack(sim, fw, ohAuto, OutcomeDodge, swingDamage)
 	if !WithinToleranceFloat64(hitRage, dodgeRage, 0.01) {
 		t.Fatalf("Dodged OH swing generated %0.3f Rage, expected the same as a hit (%0.3f)", dodgeRage, hitRage)
+	}
+}
+
+func TestOffHandRageMultiplier(t *testing.T) {
+	// The multiplier scales all of the Rage an OH swing generates: 8.401 * 1.5 = 12.602.
+	const swingDamage = 500.0
+
+	sim := SetupFakeRageSim()
+	fw := sim.Raid.Parties[0].Players[0].(*FakeRageWarrior)
+
+	unmodified := rageFromAutoAttack(sim, fw, fw.AutoAttacks.OHAuto(), OutcomeHit, swingDamage)
+	if !WithinToleranceFloat64(8.401, unmodified, 0.01) {
+		t.Fatalf("Incorrect Rage generated on OH hit: Expected: %0.3f, Actual: %0.3f", 8.401, unmodified)
+	}
+
+	fw.SetOffHandRageMultiplier(1.5)
+
+	modified := rageFromAutoAttack(sim, fw, fw.AutoAttacks.OHAuto(), OutcomeHit, swingDamage)
+	if !WithinToleranceFloat64(12.602, modified, 0.01) {
+		t.Fatalf("Incorrect Rage generated on multiplied OH hit: Expected: %0.3f, Actual: %0.3f", 12.602, modified)
+	}
+
+	// MH swings generate the same Rage as they did before.
+	mhRage := rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, swingDamage)
+	if !WithinToleranceFloat64(11.376, mhRage, 0.01) {
+		t.Fatalf("Incorrect Rage generated on MH hit: Expected: %0.3f, Actual: %0.3f", 11.376, mhRage)
 	}
 }
