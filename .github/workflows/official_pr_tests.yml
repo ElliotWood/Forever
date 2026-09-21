@@ -1,0 +1,13 @@
+name: Run Tests (official)
+
+# ElliotWood/Forever keeps wowsims/forever on the `official` branch. Upstream's run_tests.yml only
+# fires for pull requests into master, so this runs the same tests for pull requests into `official`.
+# Nothing here builds or deploys the site.
+on:
+    pull_request:
+        branches:
+            - official
+
+jobs:
+    tests:
+        uses: ./.github/workflows/run_tests.yml
