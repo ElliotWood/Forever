@@ -63,19 +63,27 @@ var battleShoutRank = spellData.BattleShout.BySpellID(25289)
 func (warrior *Warrior) registerShouts() {
 	warrior.registerDemoralizingShout()
 
+	// A warrior that shouts builds a copy of its own; one that shouts nothing
+	// gets the isPlayer=false constructor, whose aura is the party's external
+	// copy, and what that copy is worth is the party's snapshot flag's to say.
+	castsOwnShout := warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone
+
 	// Three pieces of Battlegear of Wrath add a flat 30 to the shout. HasBsT2 is
-	// the user saying this warrior wears them; the equipped set is not read.
+	// the user saying this warrior wears them; the equipped set is not read. The
+	// set is worth the 30 on the shout this warrior makes, so it raises what that
+	// copy applies and what the cast is worth to the category together.
 	battleShoutBase := core.BattleShoutValue(warrior.Talents.BoomingVoice)
 	battleShoutValue := battleShoutBase
-	if warrior.HasBsT2 {
+	shoutsWithTheSet := castsOwnShout && warrior.HasBsT2
+	if shoutsWithTheSet {
 		battleShoutValue += core.BattleShoutT2Bonus
 	}
 
 	battleShoutAuras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
 		// Booming Voice modifies the radius only, so the generated aura ignores the
 		// points; they are passed for signature uniformity.
-		aura := core.BattleShoutAura(unit, warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone, warrior.Talents.BoomingVoice)
-		if warrior.HasBsT2 {
+		aura := core.BattleShoutAura(unit, castsOwnShout, warrior.Talents.BoomingVoice)
+		if shoutsWithTheSet {
 			core.AddGeneratedFlatBonus(aura, stats.AttackPower, battleShoutBase, core.BattleShoutT2Bonus)
 		}
 		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)

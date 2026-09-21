@@ -99,6 +99,57 @@ func TestWarriorShoutsForTheTierTwoBonus(t *testing.T) {
 	}
 }
 
+// A warrior whose default shout is none builds the isPlayer=false copy through
+// its ally array, so the aura it holds is the party's "Battle Shout (External)"
+// one. The set is worth 30 on the shout this warrior makes, and it makes none,
+// so what that copy is worth is the party's snapshot flag's to say.
+func TestAWarriorThatShoutsNothingLeavesTheExternalCopyAlone(t *testing.T) {
+	priorityOf := func(party *proto.PartyBuffs) float64 {
+		t.Helper()
+
+		player := &proto.Player{
+			Name:          "Silent",
+			Race:          proto.Race_RaceOrc,
+			Class:         proto.Class_ClassWarrior,
+			Equipment:     &proto.EquipmentSpec{},
+			TalentsString: DefaultFuryTalents,
+			Spec: &proto.Player_DpsWarrior{
+				DpsWarrior: &proto.DpsWarrior{
+					Options: &proto.DpsWarrior_Options{
+						ClassOptions: &proto.WarriorOptions{
+							DefaultShout:  proto.WarriorShout_WarriorShoutNone,
+							DefaultStance: proto.WarriorStance_WarriorStanceBerserker,
+							HasBsT2:       true,
+						},
+					},
+				},
+			},
+		}
+
+		env, _, _ := core.NewEnvironment(
+			core.SinglePlayerRaidProto(player, party, &proto.RaidBuffs{}, &proto.Debuffs{}),
+			core.MakeSingleTargetEncounter(0), false, true)
+
+		war := env.Raid.Parties[0].Players[0].(*DpsWarrior)
+		if own := war.GetAura("Battle Shout (Player)"); own != nil {
+			t.Fatal("a warrior that shouts nothing registered a copy of its own")
+		}
+		external := war.GetAura("Battle Shout (External)")
+		if external == nil {
+			t.Fatal("the party's copy is not registered")
+		}
+		return external.ExclusiveEffects[0].Priority
+	}
+
+	if got, want := priorityOf(&proto.PartyBuffs{BattleShout: true}), core.BattleShoutValue(0); got != want {
+		t.Errorf("the party's copy bids %v, want the %v it is worth without the set", got, want)
+	}
+	want := core.BattleShoutValue(0) + core.BattleShoutT2Bonus
+	if got := priorityOf(&proto.PartyBuffs{BattleShout: true, SnapshotBsT2: true}); got != want {
+		t.Errorf("the party's copy bids %v with the snapshot on, want %v", got, want)
+	}
+}
+
 // The ally aura array registers one "Battle Shout (Player)" per unit, which two
 // warriors in the same party share, so the set has to be worth 30 once rather
 // than once per warrior wearing it.
