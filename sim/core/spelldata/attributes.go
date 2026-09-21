@@ -39,6 +39,13 @@ func (s *Spell) SuppressesWeaponProcs() bool {
 	return s.HasAttr(dbcenums.ATTR_INDEX_EX_4, dbcenums.ATTR_EX_4_SUPPRESS_WEAPON_PROCS)
 }
 
+// Whether the spell's aura hears hits the way a weapon proc does, which means skipping the hits of
+// a spell flagged Suppress Weapon Procs. The flag sits on the listener; SuppressesWeaponProcs above
+// sits on the spell whose hits are skipped.
+func (s *Spell) IsWeaponProcAura() bool {
+	return s.HasAttr(dbcenums.ATTR_INDEX_EX_6, dbcenums.ATTR_EX_6_AURA_IS_WEAPON_PROC)
+}
+
 // The share of the cost a miss refunds, for RageCostOptions.Refund: 80% where the client flags
 // Discount Power On Miss, nothing otherwise.
 func (s *Spell) MissRefund() float64 {
