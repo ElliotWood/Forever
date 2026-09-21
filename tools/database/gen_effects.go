@@ -935,9 +935,16 @@ func BuildSpellProcInfo(procSpell *dbc.Spell, tooltip string, itemType proto.Ite
 		return info, false
 	}
 
-	// The bit table, decoded in core so the sim reads the same mask the same way. Unsupported bits
-	// are left to the caller and this one ignores them: the shapes they name are refused above or
-	// carry no hit at all, so a listener is never generated for one.
+	// The bit table, decoded in core so the sim reads the same mask the same way. Bits the decode
+	// does not model come back in Unsupported and are dropped here rather than refused: a mask
+	// naming one next to bits that do model something still generates a listener, and that
+	// listener is deliberately the narrower trigger: it hears the hits the sim knows and stays
+	// silent on the rest.
+	//
+	// One rule of the bit table cannot live in core. The heal branch's cleanup for a helpful-only
+	// mask also has to clear the OnSpellHitDealt seeded above for a ranged item, which the decode
+	// cannot see and this merge cannot undo. No ranged item carries a helpful-only mask with a
+	// healing tooltip, and the pureHeal strip below still covers the "healing spells" wording.
 	if !onHitProc && len(procSpell.ProcTypeMask) > 0 {
 		decoded := core.DecodeProcTypeMask(
 			[2]uint32{uint32(procSpell.ProcTypeMask[0]), uint32(procSpell.ProcTypeMask[1])},

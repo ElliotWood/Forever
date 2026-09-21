@@ -37,8 +37,9 @@ const (
 	ProcFlagLooted              uint32 = 1 << 30 // 30 The caster looted
 )
 
-// Every direct hit taken that names the kind of hit. The helpful and any-damage takes are
-// deliberately out: they name no hit kind, so they cannot contribute a ProcMask.
+// The taken bits that name a direct hit arriving on the character. The two helpful takes are out
+// because the sim models neither - one comes back as unsupported, the other is ignored - and the
+// any-damage take has a rule of its own below.
 const procFlagAnyDirectTaken = ProcFlagTakeMeleeSwing |
 	ProcFlagTakeMeleeAbility |
 	ProcFlagTakeRangedAttack |
@@ -115,11 +116,7 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 		info.ProcMask |= ProcMaskRangedSpecial
 	}
 
-	if word&ProcFlagDealHarmfulPeriodic != 0 {
-		info.ProcMask |= ProcMaskSpellDamage
-	}
-
-	if word&ProcFlagDealHarmfulSpell != 0 {
+	if word&(ProcFlagDealHarmfulPeriodic|ProcFlagDealHarmfulSpell) != 0 {
 		info.ProcMask |= ProcMaskSpellDamage
 	}
 
@@ -152,10 +149,10 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	}
 
 	// Damage of any kind, however it arrived, which is both of the taken callbacks. The bit names
-	// damage rather than a hit, so a landed hit dealing none does not count.
+	// damage rather than a hit, so a landed hit dealing none does not count - the default this
+	// decode starts from, and no client mask pairs this bit with one that clears it.
 	if word&ProcFlagTakeAnyDamage != 0 {
 		info.Callback |= CallbackOnSpellHitTaken | CallbackOnPeriodicDamageTaken
-		info.RequireDamageDealt = true
 	}
 
 	// A mask made of nothing but the spell-cast bits. The harmful one has to be present: a
@@ -191,7 +188,7 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 		info.Callback |= CallbackOnPeriodicDamageDealt
 	}
 
-	if word&ProcFlagDealHelpfulSpell != 0 && hint.Matches(ProcHintHeals|ProcHintPureHeal) {
+	if word&ProcFlagDealHelpfulSpell != 0 && hint.Matches(ProcHintHeals) {
 		info.RequireDamageDealt = false
 		info.ProcMask |= ProcMaskSpellHealing
 
@@ -215,8 +212,11 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 		}
 	}
 
-	// A mask naming one hand hears that hand's melee hits only. Naming both is the same as naming
-	// neither, so only a mask with exactly one of the two restricts anything.
+	// A mask naming one hand hears that hand's melee hits only. The bit restricts melee and
+	// nothing else: a mask pairing it with a spell or ranged bit keeps those hits, so this drops
+	// the other hand's melee bits rather than intersecting the whole proc mask. Naming both hands
+	// is the same as naming neither, so only a mask with exactly one of the two restricts
+	// anything.
 	switch word & (ProcFlagMainHandWeaponSwing | ProcFlagOffHandWeaponSwing) {
 	case ProcFlagMainHandWeaponSwing:
 		info.ProcMask &= ^ProcMaskMeleeOH
@@ -246,22 +246,22 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	return info
 }
 
+var unsupportedProcFlagNames = map[uint32]string{
+	ProcFlagKilled:           "KILLED",
+	ProcFlagKill:             "KILL",
+	ProcFlagTakeHelpfulSpell: "TAKE_HELPFUL_SPELL",
+	ProcFlagDeath:            "DEATH",
+	ProcFlagJump:             "JUMP",
+	ProcFlagEnterCombat:      "ENTER_COMBAT",
+	ProcFlagEncounterStart:   "ENCOUNTER_START",
+	ProcFlagCastEnded:        "CAST_ENDED",
+	ProcFlagLooted:           "LOOTED",
+}
+
 // The bits the shape above says nothing about. The three damage-class-none bits (0x400 and 0x1000
 // dealt, 0x800 taken) are left out on purpose: next to real bits they change nothing the decode
 // says, and on their own they leave the callback empty, which the caller refuses anyway.
 func unsupportedProcFlags(mask [2]uint32) []string {
-	named := map[uint32]string{
-		ProcFlagKilled:           "KILLED",
-		ProcFlagKill:             "KILL",
-		ProcFlagTakeHelpfulSpell: "TAKE_HELPFUL_SPELL",
-		ProcFlagDeath:            "DEATH",
-		ProcFlagJump:             "JUMP",
-		ProcFlagEnterCombat:      "ENTER_COMBAT",
-		ProcFlagEncounterStart:   "ENCOUNTER_START",
-		ProcFlagCastEnded:        "CAST_ENDED",
-		ProcFlagLooted:           "LOOTED",
-	}
-
 	// Everything from the death bit up is a state change rather than a hit, and word 1 names
 	// nothing the sim models.
 	unsupported := mask[0] & (ProcFlagKilled | ProcFlagKill | ProcFlagTakeHelpfulSpell | ^(ProcFlagDeath - 1))
@@ -272,7 +272,7 @@ func unsupportedProcFlags(mask [2]uint32) []string {
 			continue
 		}
 
-		if name, ok := named[1<<bit]; ok {
+		if name, ok := unsupportedProcFlagNames[1<<bit]; ok {
 			names = append(names, name)
 		} else {
 			names = append(names, fmt.Sprintf("bit %d", bit))
