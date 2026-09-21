@@ -45,12 +45,13 @@ func (shaman *Shaman) newLavaBurstSpellConfig(rank int, cdTimer *core.Timer) cor
 	castTime := time.Millisecond * 2500
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_ShamanLavaBurst,
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagShaman | core.SpellFlagAPL,
+		SpellCode:      SpellCode_ShamanLavaBurst,
+		ClassSpellMask: SpellMaskLavaBurst,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagShaman | core.SpellFlagAPL,
 
 		RequiredLevel: level,
 		Rank:          rank,

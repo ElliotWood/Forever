@@ -47,12 +47,13 @@ func (shaman *Shaman) registerStormstrikeSpell() {
 	}
 
 	shaman.Stormstrike = shaman.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_ShamanStormstrike,
-		ActionID:    core.ActionID{SpellID: 17364},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       SpellFlagShaman | core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
+		SpellCode:      SpellCode_ShamanStormstrike,
+		ClassSpellMask: SpellMaskStormstrike,
+		ActionID:       core.ActionID{SpellID: 17364},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          SpellFlagShaman | core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
 
 		ManaCost: core.ManaCostOptions{
 			BaseCost: core.TernaryFloat64(forever, 0, .21),

@@ -49,6 +49,7 @@ func (shaman *Shaman) newFlameShockSpell(rank int, shockTimer *core.Timer) core.
 	)
 
 	spell.SpellCode = SpellCode_ShamanFlameShock
+	spell.ClassSpellMask = SpellMaskFlameShock
 	spell.RequiredLevel = level
 	spell.Rank = rank
 	// Call of Flame names Flame Shock alongside the fire totems under Forever.

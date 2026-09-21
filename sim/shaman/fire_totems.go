@@ -47,12 +47,13 @@ func (shaman *Shaman) newSearingTotemSpellConfig(rank int) core.SpellConfig {
 	attackInterval := time.Millisecond * 2500
 
 	attackSpell := shaman.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_ShamanSearingTotem,
-		ActionID:    core.ActionID{SpellID: SearingTotemAttackSpellId[rank]},
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       SpellFlagTotem,
+		SpellCode:      SpellCode_ShamanSearingTotem,
+		ClassSpellMask: SpellMaskSearingTotem,
+		ActionID:       core.ActionID{SpellID: SearingTotemAttackSpellId[rank]},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          SpellFlagTotem,
 
 		DamageMultiplier: shaman.callOfFlameMultiplier(),
 		BonusCoefficient: spellCoeff,
@@ -64,12 +65,13 @@ func (shaman *Shaman) newSearingTotemSpellConfig(rank int) core.SpellConfig {
 	})
 
 	spell := core.SpellConfig{
-		SpellCode:   SpellCode_ShamanSearingTotem,
-		ActionID:    core.ActionID{SpellID: totemSpellId},
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       SpellFlagTotem | core.SpellFlagAPL,
+		SpellCode:      SpellCode_ShamanSearingTotem,
+		ClassSpellMask: SpellMaskSearingTotem,
+		ActionID:       core.ActionID{SpellID: totemSpellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          SpellFlagTotem | core.SpellFlagAPL,
 
 		RequiredLevel: level,
 		Rank:          rank,
@@ -154,12 +156,13 @@ func (shaman *Shaman) newMagmaTotemSpellConfig(rank int) core.SpellConfig {
 	attackInterval := time.Second * 2
 
 	aoeSpell := shaman.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_ShamanMagmaTotem,
-		ActionID:    core.ActionID{SpellID: MagmaTotemAoeSpellId[rank]},
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       SpellFlagTotem,
+		SpellCode:      SpellCode_ShamanMagmaTotem,
+		ClassSpellMask: SpellMaskMagmaTotem,
+		ActionID:       core.ActionID{SpellID: MagmaTotemAoeSpellId[rank]},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          SpellFlagTotem,
 
 		DamageMultiplier: shaman.callOfFlameMultiplier(),
 		BonusCoefficient: spellCoeff,
@@ -172,12 +175,13 @@ func (shaman *Shaman) newMagmaTotemSpellConfig(rank int) core.SpellConfig {
 	})
 
 	spell := core.SpellConfig{
-		SpellCode:   SpellCode_ShamanMagmaTotem,
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       SpellFlagTotem | core.SpellFlagAPL,
+		SpellCode:      SpellCode_ShamanMagmaTotem,
+		ClassSpellMask: SpellMaskMagmaTotem,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          SpellFlagTotem | core.SpellFlagAPL,
 
 		RequiredLevel: level,
 		Rank:          rank,
@@ -255,12 +259,13 @@ func (shaman *Shaman) newFireNovaSpellConfig(rank int, cdTimer *core.Timer) core
 	level := FireNovaLevel[rank]
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_ShamanFireNova,
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagShaman | core.SpellFlagAPL,
+		SpellCode:      SpellCode_ShamanFireNova,
+		ClassSpellMask: SpellMaskFireNova,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagShaman | core.SpellFlagAPL,
 
 		RequiredLevel: level,
 		Rank:          rank,
