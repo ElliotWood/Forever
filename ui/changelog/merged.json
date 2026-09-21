@@ -1,5 +1,53 @@
 [
 	{
+		"number": 292,
+		"title": "converge(data): the rogue's abilities read from the client tables",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/292"
+	},
+	{
+		"number": 291,
+		"title": "converge(data): the priest's spells read from the client tables",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/291"
+	},
+	{
+		"number": 290,
+		"title": "converge(hunter): hunter talents on the SpellMod system",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/290"
+	},
+	{
+		"number": 289,
+		"title": "converge(paladin): paladin talents on the SpellMod system",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/289"
+	},
+	{
+		"number": 288,
+		"title": "converge(warrior): warrior talents on the SpellMod system",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/288"
+	},
+	{
+		"number": 287,
+		"title": "converge(data): the warlock's spells read from the client tables",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/287"
+	},
+	{
+		"number": 286,
+		"title": "converge(druid): druid talents on the SpellMod system",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/286"
+	},
+	{
+		"number": 285,
+		"title": "converge(shaman): shaman talents on the SpellMod system",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/285"
+	},
+	{
 		"number": 284,
 		"title": "converge(rogue): rogue talents on the SpellMod system",
 		"mergedAt": "2026-09-21",
