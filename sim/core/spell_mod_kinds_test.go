@@ -15,6 +15,7 @@ func newTestMod(config SpellModConfig, spells ...*Spell) *SpellMod {
 		floatValue:     config.FloatValue,
 		intValue:       config.IntValue,
 		timeValue:      config.TimeValue,
+		keyValue:       config.KeyValue,
 		Apply:          functions.Apply,
 		Remove:         functions.Remove,
 		OnReset:        functions.OnReset,
@@ -242,5 +243,66 @@ func TestTwoAuraMutatingModsBothReachOneAura(t *testing.T) {
 
 	if got := buff.Duration; got != time.Second*19 {
 		t.Errorf("the aura's duration under two mods: %v, want 19s", got)
+	}
+}
+
+// Three ranks pointing at one self-buff, which the buff duration mod has to reach once.
+func TestBuffDurationFlatModReachesASharedAuraOnce(t *testing.T) {
+	buff := &Aura{Label: "Shared Buff", Duration: time.Second * 10}
+	ranks := []*Spell{{RelatedSelfBuff: buff}, {RelatedSelfBuff: buff}, {RelatedSelfBuff: buff}}
+
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_BuffDuration_Flat, TimeValue: time.Second * 4}, ranks...)
+
+	mod.Activate()
+	if got := buff.Duration; got != time.Second*14 {
+		t.Errorf("the shared buff's duration with the mod active: %v, want 14s", got)
+	}
+
+	mod.Deactivate()
+	if got := buff.Duration; got != time.Second*10 {
+		t.Errorf("the shared buff's duration after removing the mod: %v, want 10s", got)
+	}
+}
+
+// The same for the debuff array every rank of a family hands out.
+func TestDebuffDurationFlatModReachesASharedAuraOnce(t *testing.T) {
+	debuff := &Aura{Label: "Shared Debuff", Duration: time.Second * 12}
+	arrays := LabeledAuraArrays{"debuff": AuraArray{debuff, nil}}
+	ranks := []*Spell{{RelatedAuraArrays: arrays}, {RelatedAuraArrays: arrays}, {RelatedAuraArrays: arrays}}
+
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_DebuffDuration_Flat, KeyValue: "debuff",
+		TimeValue: time.Second * 3}, ranks...)
+
+	mod.Activate()
+	if got := debuff.Duration; got != time.Second*15 {
+		t.Errorf("the shared debuff's duration with the mod active: %v, want 15s", got)
+	}
+
+	mod.Deactivate()
+	if got := debuff.Duration; got != time.Second*12 {
+		t.Errorf("the shared debuff's duration after removing the mod: %v, want 12s", got)
+	}
+}
+
+// A spell registered after the mod was turned on has the mod applied to it, which is what
+// OnSpellRegistered does on a unit's mod, and the aura it shares must not take the value again.
+func TestAuraMutatingModReachesALateSpellOnce(t *testing.T) {
+	buff := &Aura{Label: "Shared Buff", Duration: time.Second * 10}
+	first := &Spell{RelatedSelfBuff: buff}
+
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_Duration_Flat, TimeValue: time.Second * 6}, first)
+	mod.Activate()
+
+	late := &Spell{RelatedSelfBuff: buff}
+	mod.AffectedSpells = append(mod.AffectedSpells, late)
+	mod.Apply(mod, late)
+
+	if got := buff.Duration; got != time.Second*16 {
+		t.Errorf("the shared aura's duration after a late rank: %v, want 16s", got)
+	}
+
+	mod.Deactivate()
+	if got := buff.Duration; got != time.Second*10 {
+		t.Errorf("the shared aura's duration after removing the mod: %v, want 10s", got)
 	}
 }
