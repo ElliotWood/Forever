@@ -198,3 +198,49 @@ func TestRangeFlatModRefusesToEmptyTheRange(t *testing.T) {
 	spell := &Spell{MaxRange: 5}
 	newTestMod(SpellModConfig{Kind: SpellMod_Range_Flat, FloatValue: -5}, spell).Activate()
 }
+
+// Every rank of a family points at one aura and a class mask names every rank, so the value lands on
+// that aura once however many ranks the mod reaches.
+func TestAuraMutatingModsReachAnAuraOnce(t *testing.T) {
+	buff := &Aura{Label: "Shared Buff", Duration: time.Second * 10, MaxStacks: 2}
+	ranks := []*Spell{{RelatedSelfBuff: buff}, {RelatedSelfBuff: buff}, {RelatedSelfBuff: buff}}
+
+	duration := newTestMod(SpellModConfig{Kind: SpellMod_Duration_Flat, TimeValue: time.Second * 6}, ranks...)
+	stacks := newTestMod(SpellModConfig{Kind: SpellMod_BuffMaxStacks_Flat, IntValue: 2}, ranks...)
+
+	duration.Activate()
+	stacks.Activate()
+	if got := buff.Duration; got != time.Second*16 {
+		t.Errorf("the shared aura's duration with the mod active: %v, want 16s", got)
+	}
+	if got := buff.MaxStacks; got != 4 {
+		t.Errorf("the shared aura's max stacks with the mod active: %d, want 4", got)
+	}
+
+	duration.Deactivate()
+	stacks.Deactivate()
+	if got := buff.Duration; got != time.Second*10 {
+		t.Errorf("the shared aura's duration after removing the mod: %v, want 10s", got)
+	}
+	if got := buff.MaxStacks; got != 2 {
+		t.Errorf("the shared aura's max stacks after removing the mod: %d, want 2", got)
+	}
+
+	duration.Activate()
+	if got := buff.Duration; got != time.Second*16 {
+		t.Errorf("the shared aura's duration on turning the mod on again: %v, want 16s", got)
+	}
+}
+
+// Two mods of the same kind each reach the aura, since the dedupe is one mod's own bookkeeping.
+func TestTwoAuraMutatingModsBothReachOneAura(t *testing.T) {
+	buff := &Aura{Label: "Shared Buff", Duration: time.Second * 10}
+	spell := &Spell{RelatedSelfBuff: buff}
+
+	newTestMod(SpellModConfig{Kind: SpellMod_Duration_Flat, TimeValue: time.Second * 6}, spell).Activate()
+	newTestMod(SpellModConfig{Kind: SpellMod_Duration_Flat, TimeValue: time.Second * 3}, spell).Activate()
+
+	if got := buff.Duration; got != time.Second*19 {
+		t.Errorf("the aura's duration under two mods: %v, want 19s", got)
+	}
+}
