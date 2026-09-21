@@ -108,3 +108,42 @@ func TestCompletionRefusesTheImpossible(t *testing.T) {
 		t.Skip("this class has no prerequisite arrows")
 	})
 }
+
+// minimumSpend decides what never reaches the simulator, so the only way it can be wrong that
+// matters is by throwing out a build that could have been played. Walk the same warrior space
+// as above and check both directions: nothing it rejects completes, and it does reject some -
+// otherwise it is not doing the job it exists for.
+func TestMinimumSpendNeverRejectsAPlayableBuild(t *testing.T) {
+	trees, err := loadTrees(proto.Class_ClassWarrior)
+	if err != nil {
+		t.Fatal(err)
+	}
+	relevant := map[[2]int]bool{}
+	value := map[[2]int]float64{}
+	for i, tree := range trees {
+		for j := range tree.Talents {
+			if j%3 == 0 {
+				relevant[[2]int{i, j}] = true
+				value[[2]int{i, j}] = float64(j)
+			}
+		}
+	}
+
+	rejected, wronglyRejected := 0, 0
+	enumerate(trees, relevant, value, func(candidate scored) {
+		if minimumSpend(trees, candidate.points) <= talentBudget {
+			return
+		}
+		rejected++
+		if built, ok := complete(trees, candidate.points); ok {
+			wronglyRejected++
+			if wronglyRejected < 4 {
+				t.Errorf("rejected an assignment that completes to %s", built)
+			}
+		}
+	})
+	if rejected == 0 {
+		t.Fatal("rejected nothing, so on this space it is not screening anything out")
+	}
+	t.Logf("%d rejected before simulation, %d of them wrongly", rejected, wronglyRejected)
+}

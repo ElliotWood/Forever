@@ -275,6 +275,13 @@ func exhaustive(
 	considered := 0
 	enumerate(trees, relevant, value, func(candidate scored) {
 		considered++
+		// Screened before it can take a place in the top N, not after. The additive score
+		// ranks highest exactly the builds that put every point into deep, valuable talents
+		// and leave none for the row gates under them - so on the seven biggest trees all
+		// 2,000 places went to builds complete() then threw out, and nothing was simulated.
+		if minimumSpend(trees, candidate.points) > talentBudget {
+			return
+		}
 		keep.add(candidate)
 	})
 	if considered == 0 {
@@ -326,4 +333,52 @@ func exhaustive(
 	sort.Slice(screened, func(a, b int) bool { return screened[a].score > screened[b].score })
 
 	return screened[0].points, considered, simulated
+}
+
+// The fewest points any legal build containing this assignment could spend: what is chosen,
+// plus the row gates beneath the deepest choice in each tree, plus any prerequisite that was
+// not chosen. A lower bound, never an estimate - it only rules out what complete() would
+// certainly reject, so it cannot lose a build that could have been played.
+//
+// Cheap on purpose. It runs once per candidate, which is forty-seven million times for a
+// warlock, where complete() is a third of a millisecond each and would be four hours.
+func minimumSpend(trees []tree, points allocation) int {
+	total := 0
+	for i, tree := range trees {
+		byLocation := map[[2]int]int{}
+		for j, t := range tree.Talents {
+			byLocation[[2]int{t.Location.RowIdx, t.Location.ColIdx}] = j
+		}
+		spend := make([]int, len(tree.Talents))
+		copy(spend, points[i])
+		for j, t := range tree.Talents {
+			if points[i][j] == 0 || t.PrereqLocation == nil {
+				continue
+			}
+			if prereq, ok := byLocation[[2]int{t.PrereqLocation.RowIdx, t.PrereqLocation.ColIdx}]; ok && spend[prereq] < tree.Talents[prereq].MaxPoints {
+				spend[prereq] = tree.Talents[prereq].MaxPoints
+			}
+		}
+
+		// A point in row N needs 5N points in the rows above it. Whatever is chosen at or
+		// below the deepest row cannot help pay for that row, so it is added on top.
+		inTree, need := 0, 0
+		for j, t := range tree.Talents {
+			inTree += spend[j]
+			if spend[j] == 0 {
+				continue
+			}
+			atOrBelow := 0
+			for k, other := range tree.Talents {
+				if other.Location.RowIdx >= t.Location.RowIdx {
+					atOrBelow += spend[k]
+				}
+			}
+			if gate := 5*t.Location.RowIdx + atOrBelow; gate > need {
+				need = gate
+			}
+		}
+		total += max(inTree, need)
+	}
+	return total
 }
