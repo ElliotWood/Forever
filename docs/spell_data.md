@@ -51,7 +51,8 @@ same columns; nothing about it is hand-typed. Beside cost, cast time, cooldown a
 `MaxTargets` (an area effect's cap), each zero where the client states none, and `RefundsOnMiss`, the
 Discount Power On Miss attribute; `row.MissRefund()` turns it into the 0.8 a `RageCostOptions.Refund`
 takes. `PeriodicCanCrit` is the Periodic Can Crit attribute; `shared.PeriodicTickOutcome(row, dot)` picks the tick
-outcome it and the row's defense type call for, so a dot's `OnTick` never names one itself.
+outcome it and the row's defense type call for, so a dot's `OnTick` never names one itself. `PowerCostPct`
+is a cost stated as a share of the pool: Bloodrage reads 20, of health; Arcane Blast 15, of mana.
 
 A family whose ranks trigger another spell, or whose tooltip reads a number off one, has a second
 table beside it: `spellData.EnrageTriggered` holds the buff 12880 that Enrage's `$12880d` names,
@@ -168,6 +169,10 @@ talent. Index into `Effects` where the pair cannot tell them apart.
 threat bonus reads `16`, not `0.16` - so the `/100` stays at the call site. It is deliberately not
 folded into the generator the way the rage `/10` is: whether a value is a percentage depends on the
 aura, so a blanket rule would be wrong for some rows and invisible when it was.
+
+`ChainAmplitude` is the client's EffectChainAmplitude where it is not 1, which the client uses for more
+than chain falloff: Execute's dummy carries 1.5, and its tooltip multiplies that by 10 for the damage
+each extra rage adds. Zero on the effects that state 1.
 
 ## A tick the client keeps on another spell
 
@@ -301,6 +306,11 @@ takes `SPELLMOD_DAMAGE` and the other `SPELLMOD_CRITICAL_CHANCE`.
 Where a talent modifies damage and its DoT with the same ladder, the sim has one mod against the
 client's two. Either aura reads the same number; `SPELLMOD_DAMAGE` is the convention here.
 
+An effect the tree states no curve for is the same at every rank, and sits in `Effects` at the spell's
+own base points: Blood Craze's second effect is the 20% of maximum health a hit has to exceed, at 1/3
+as at 3/3. Only the priced effects fill the role fields, so `ValueAt` and the ladder readers never
+see it; reach it through `Effect` or `Effects[i]` on any rank.
+
 ### Proc chances
 
 `SpellAuraOptions.ProcChance` is a separate source from the effects, and `ProcChanceAt` reads it as the
@@ -430,6 +440,14 @@ low, high := holyLight.Heal.Range()          // both ends in one call
 
 layOnHands := spellData.LayOnHands.BySpellID(27154)
 mana := shared.SpellDataMin(layOnHands.Energize)   // 900; rank 1 has no Energize at all, and reads 0
+```
+
+A restore that ticks is an `Energize` of the periodic shape, with the schedule a `Hot` or a periodic
+action wants: Bloodrage's 29131 ticks 10 rage-tenths every second for 10 ticks.
+
+```go
+over := spellData.BloodrageTriggered.HighestRank().Energize.(shared.SpellDataPeriodic)
+over.Tick / 10, over.TickLength, over.NumberOfTicks   // 1 rage, 1 s, 10
 ```
 
 ### Registering several ranks
