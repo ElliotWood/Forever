@@ -1,49 +1,81 @@
 package mage
 
-var scorchRank = spellData.Scorch.HighestRank()
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
+// Every rank is registered: the fire rotation drops to rank 1 when mana runs short.
 func (mage *Mage) registerScorchSpell() {
-	panic("To be implemented")
+	mage.registerImprovedScorch()
+	spellData.Scorch.RegisterAll(mage.registerScorchRank)
+}
 
-	// The TBC implementation, kept for the port:
-	//
-	// procChance := []float64{0, 0.33, 0.66, 1}[mage.Talents.ImprovedScorch]
-	//
-	// mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: scorchRank.SpellID},
-	// 	SpellSchool:    scorchRank.SpellSchool,
-	// 	DefenseType:    scorchRank.DefenseType,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: MageSpellScorch,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: scorchRank.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD:      scorchRank.GCD,
-	// 			CastTime: scorchRank.CastTime,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplierAdditive: 1,
-	// 	BonusCoefficient:         scorchRank.Direct.BonusCoefficient(),
-	// 	ThreatMultiplier:         1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := scorchRank.Direct.Damage(sim)
-	// 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-	// 		if result.Landed() && mage.Talents.ImprovedScorch > 0 {
-	// 			if sim.Proc(procChance, "Improved Scorch") {
-	// 				aura := mage.ImprovedScorchAuras.Get(target)
-	// 				aura.Activate(sim)
-	// 				aura.AddStack(sim)
-	// 			}
-	// 		}
-	// 	},
-	//
-	// 	RelatedAuraArrays: mage.ImprovedScorchAuras.ToMap(),
-	// })
+func (mage *Mage) registerScorchRank(scorchRank shared.SpellData) {
+	procChance := spellData.ImprovedScorch.FractionAt(mage.Talents.ImprovedScorch)
+
+	mage.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: scorchRank.SpellID},
+		SpellSchool:    scorchRank.SpellSchool,
+		DefenseType:    scorchRank.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: MageSpellScorch,
+		Rank:           scorchRank.Rank,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: scorchRank.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD:      scorchRank.GCD,
+				CastTime: scorchRank.CastTime,
+			},
+		},
+
+		DamageMultiplier: 1,
+		BonusCoefficient: scorchRank.Direct.BonusCoefficient(),
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcAndDealDamage(sim, target, scorchRank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+			if result.Landed() && mage.ImprovedScorchAura != nil && sim.Proc(procChance, "Improved Scorch") {
+				mage.ImprovedScorchAura.Activate(sim)
+				mage.ImprovedScorchAura.AddStack(sim)
+			}
+		},
+	})
+}
+
+// In Forever the Fire Vulnerability Improved Scorch stacks only raises the fire damage of the mage
+// who applied it (beta client 1.60.1), where Classic and TBC made it a raid debuff.
+func (mage *Mage) registerImprovedScorch() {
+	if mage.Talents.ImprovedScorch == 0 {
+		return
+	}
+
+	vulnerabilityRank := spellData.ImprovedScorchTriggered.HighestRank()
+	damagePerStack := vulnerabilityRank.Effects[0].Value / 100
+
+	damageMod := mage.AddDynamicMod(core.SpellModConfig{
+		ClassMask: MageSpellsAll,
+		School:    core.SpellSchoolFire,
+		Kind:      core.SpellMod_DamageDone_Pct,
+	})
+
+	mage.ImprovedScorchAura = mage.RegisterAura(core.Aura{
+		Label:     "Fire Vulnerability",
+		ActionID:  core.ActionID{SpellID: vulnerabilityRank.SpellID},
+		Duration:  vulnerabilityRank.Duration,
+		MaxStacks: 5,
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			damageMod.Activate()
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			damageMod.Deactivate()
+		},
+		OnStacksChange: func(_ *core.Aura, _ *core.Simulation, _ int32, newStacks int32) {
+			damageMod.UpdateFloatValue(damagePerStack * float64(newStacks))
+		},
+	})
 }

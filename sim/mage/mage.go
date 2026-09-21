@@ -13,26 +13,22 @@ var TalentTreeSizes = [3]int{18, 17, 19}
 type Mage struct {
 	core.Character
 
-	ClassSpellScaling float64
-
 	Talents *proto.MageTalents
 	Options *proto.MageOptions
 
-	ArcaneChargesAura  *core.Aura
-	ClearCasting       *core.Aura
-	PresenceOfMindAura *core.Aura
+	ArcaneBlastAura    *core.Aura
 	ArcanePowerAura    *core.Aura
+	ClearcastingAura   *core.Aura
+	FingersOfFrostAura *core.Aura
+	HotStreakAura      *core.Aura
+	ImprovedScorchAura *core.Aura
+	MissileBarrageAura *core.Aura
+	PresenceOfMindAura *core.Aura
+	WintersChillAura   *core.Aura
 
-	ImprovedScorchAuras core.AuraArray
-
-	ArcaneBlast     *core.Spell
-	Ignite          *core.Spell
-	FireBlast       *core.Spell
-	FlameOrbExplode *core.Spell
-	Flamestrike     []*core.Spell
-	FlamestrikeBW   *core.Spell
-	FrostfireOrb    *core.Spell
-	Pyroblast       *core.Spell
+	ArcaneBlast *core.Spell
+	Ignite      *core.Spell
+	Flamestrike []*core.Spell
 }
 
 func (mage *Mage) GetCharacter() *core.Character {
@@ -68,8 +64,6 @@ func (mage *Mage) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
 }
 
 func (mage *Mage) Initialize() {
-	mage.ImprovedScorchAuras = mage.NewEnemyAuraArray(core.ImprovedScorchAura)
-
 	mage.registerPassives()
 	mage.registerSpells()
 }
@@ -90,6 +84,7 @@ func (mage *Mage) registerSpells() {
 	mage.registerFireballSpell()
 	mage.registerFireBlastSpell()
 	mage.registerFrostNovaSpell()
+	mage.registerIceLanceSpell()
 	mage.registerManaGems()
 	mage.registerScorchSpell()
 
@@ -169,6 +164,7 @@ const (
 	MageSpellScorch
 	MageSpellManaGem
 	MageSpellCombustion
+	MageSpellImprovedBlizzard
 
 	// TODO: Forever abilities the sim does not model yet; see the stub file named for each.
 	MageSpellFrostfireBolt
@@ -180,9 +176,15 @@ const (
 		MageSpellFireBlast | MageSpellFlamestrike | MageSpellIgnite | MageSpellPyroblast | MageSpellScorch
 	MageSpellsAllDamaging = MageSpellArcaneBlast | MageSpellArcaneExplosion | MageSpellArcaneMissilesTick | MageSpellBlizzard |
 		MageSpellFireBlast | MageSpellFireball | MageSpellFlamestrike | MageSpellFrostbolt |
-		MageSpellIceLance | MageSpellPyroblast | MageSpellPyroblastDot | MageSpellScorch
+		MageSpellIceLance | MageSpellPyroblast | MageSpellPyroblastDot | MageSpellScorch |
+		MageSpellBlastWave | MageSpellConeOfCold | MageSpellFrostNova
 	MageSpellInstantCast = MageSpellArcaneMissilesCast | MageSpellArcaneMissilesTick | MageSpellFireBlast | MageSpellArcaneExplosion | MageSpellPyroblastDot |
 		MageSpellCombustion | MageSpellConeOfCold | MageSpellIceLance | MageSpellManaGems | MageSpellPresenceOfMind
-	MageSpellExtraResult = MageSpellArcaneMissilesTick | MageSpellBlizzard
-	FireSpellIgnitable   = MageSpellFireball | MageSpellScorch | MageSpellPyroblast
+	MageSpellExtraResult    = MageSpellArcaneMissilesTick | MageSpellBlizzard
+	FireSpellIgnitable      = MageSpellFireball | MageSpellScorch | MageSpellPyroblast
+	MageSpellArcaneMissiles = MageSpellArcaneMissilesCast | MageSpellArcaneMissilesTick
+
+	// The chill effects Fingers of Frost rolls on: Frostbolt's slow, Cone of Cold's, and Improved
+	// Blizzard's.
+	MageSpellChill = MageSpellFrostbolt | MageSpellConeOfCold | MageSpellImprovedBlizzard
 )

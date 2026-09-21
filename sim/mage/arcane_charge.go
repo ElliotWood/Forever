@@ -1,41 +1,57 @@
 package mage
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
-func (mage *Mage) registerArcaneCharges() {
-	panic("To be implemented")
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+)
 
-	// The TBC implementation, kept for the port:
-	// powerCostIncrease := 0.75
-	// abCostMod := mage.AddDynamicMod(core.SpellModConfig{
-	// 	ClassMask:  MageSpellArcaneBlast,
-	// 	FloatValue: powerCostIncrease,
-	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
-	// })
-	//
-	// castTimeReduction := time.Millisecond * -334
-	// abCastMod := mage.AddDynamicMod(core.SpellModConfig{
-	// 	ClassMask: MageSpellArcaneBlast,
-	// 	TimeValue: castTimeReduction,
-	// 	Kind:      core.SpellMod_CastTime_Flat,
-	// })
-	//
-	// mage.ArcaneChargesAura = core.BlockPrepull(mage.GetOrRegisterAura(core.Aura{
-	// 	Label:     "Arcane Charges Aura",
-	// 	ActionID:  core.ActionID{SpellID: 36032},
-	// 	Duration:  time.Second * 8,
-	// 	MaxStacks: 3,
-	// 	OnGain: func(aura *core.Aura, sim *core.Simulation) {
-	// 		abCastMod.Activate()
-	// 		abCostMod.Activate()
-	// 	},
-	// 	OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-	// 		abCastMod.Deactivate()
-	// 		abCostMod.Deactivate()
-	// 	},
-	// 	OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
-	// 		stacks := float64(newStacks)
-	// 		abCastMod.UpdateTimeValue(castTimeReduction * time.Duration(newStacks))
-	// 		abCostMod.UpdateFloatValue(powerCostIncrease * stacks)
-	// 	},
-	// }))
+// Four stacks per the beta client tooltip; the aura row states no stack count.
+const ArcaneBlastMaxStacks = 4
+
+// Forever's Arcane Blast buff (400573): each stack raises the damage of the mage's other spells and
+// the cost of Arcane Blast itself. The next other damaging spell spends every stack; Arcane Missiles
+// holds them for the whole channel and spends them when it ends (arcane_missiles.go).
+func (mage *Mage) registerArcaneCharges() {
+	if !mage.Talents.ArcaneBlast {
+		return
+	}
+
+	buffRank := spellData.ArcaneBlastTriggered.HighestRank()
+	damagePerStack := buffRank.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).Value / 100
+	costPerStack := buffRank.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).Value / 100
+
+	damageMod := mage.AddDynamicMod(core.SpellModConfig{
+		ClassMask: MageSpellsAll &^ MageSpellArcaneBlast,
+		Kind:      core.SpellMod_DamageDone_Flat,
+	})
+	costMod := mage.AddDynamicMod(core.SpellModConfig{
+		ClassMask: MageSpellArcaneBlast,
+		Kind:      core.SpellMod_PowerCost_Pct_Add,
+	})
+
+	mage.ArcaneBlastAura = mage.RegisterAura(core.Aura{
+		Label:     "Arcane Blast",
+		ActionID:  core.ActionID{SpellID: buffRank.SpellID},
+		Duration:  buffRank.Duration,
+		MaxStacks: ArcaneBlastMaxStacks,
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			damageMod.Activate()
+			costMod.Activate()
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			damageMod.Deactivate()
+			costMod.Deactivate()
+		},
+		OnStacksChange: func(_ *core.Aura, _ *core.Simulation, _ int32, newStacks int32) {
+			damageMod.UpdateFloatValue(damagePerStack * float64(newStacks))
+			costMod.UpdateFloatValue(costPerStack * float64(newStacks))
+		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			// OnCastComplete runs after the damage is rolled, so the spell that drops the stacks is
+			// still buffed by them.
+			if spell.Matches(MageSpellsAllDamaging &^ (MageSpellArcaneBlast | MageSpellArcaneMissiles)) {
+				aura.Deactivate(sim)
+			}
+		},
+	})
 }

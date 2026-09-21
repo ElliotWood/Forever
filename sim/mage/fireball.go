@@ -1,63 +1,60 @@
 package mage
 
-var fireballRank = spellData.Fireball.HighestRank()
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
 func (mage *Mage) registerFireballSpell() {
-	panic("To be implemented")
+	fireballRank := spellData.Fireball.HighestRank()
+	fireballTick := fireballRank.Periodic.(shared.SpellDataPeriodic)
 
-	// The TBC implementation, kept for the port:
-	// fireballTick := fireballRank.Periodic.(shared.SpellDataPeriodic)
-	//
-	// mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: fireballRank.SpellID},
-	// 	SpellSchool:    fireballRank.SpellSchool,
-	// 	DefenseType:    fireballRank.DefenseType,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: MageSpellFireball,
-	// 	MissileSpeed:   fireballRank.MissileSpeed,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: fireballRank.Cost,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD:      fireballRank.GCD,
-	// 			CastTime: fireballRank.CastTime,
-	// 		},
-	// 	},
-	//
-	// 	Dot: core.DotConfig{
-	// 		Aura: core.Aura{
-	// 			Label: "FireballDoT",
-	// 		},
-	// 		NumberOfTicks: fireballTick.NumberOfTicks,
-	// 		TickLength:    fireballTick.TickLength,
-	// 		OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.Snapshot(target, fireballTick.Tick)
-	// 		},
-	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	// 	BonusCoefficient: fireballRank.Direct.BonusCoefficient(),
-	// 	ThreatMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := fireballRank.Direct.Damage(sim)
-	// 		result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-	//
-	// 		spell.WaitTravelTime(sim, func(s *core.Simulation) {
-	// 			spell.DealDamage(sim, result)
-	// 			if result.Landed() {
-	// 				spell.Dot(target).Apply(sim)
-	// 			}
-	// 		})
-	//
-	// 	},
-	// })
+	mage.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: fireballRank.SpellID},
+		SpellSchool:    fireballRank.SpellSchool,
+		DefenseType:    fireballRank.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: MageSpellFireball,
+		MissileSpeed:   fireballRank.MissileSpeed,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: fireballRank.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD:      fireballRank.GCD,
+				CastTime: fireballRank.CastTime,
+			},
+		},
+
+		Dot: core.DotConfig{
+			Aura: core.Aura{
+				Label: "FireballDoT",
+			},
+			NumberOfTicks:    fireballTick.NumberOfTicks,
+			TickLength:       fireballTick.TickLength,
+			BonusCoefficient: fireballTick.Coef,
+			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.Snapshot(target, fireballTick.Tick)
+			},
+			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, shared.PeriodicTickOutcome(fireballRank, dot))
+			},
+		},
+
+		DamageMultiplier: 1,
+		BonusCoefficient: fireballRank.Direct.BonusCoefficient(),
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcDamage(sim, target, fireballRank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
+				spell.DealDamage(sim, result)
+				if result.Landed() {
+					spell.Dot(target).Apply(sim)
+				}
+			})
+		},
+	})
 }

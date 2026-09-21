@@ -1,133 +1,54 @@
 package mage
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
-func (mage *Mage) registerArmorSpells() {
-	panic("To be implemented")
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
+)
 
-	// The TBC implementation, kept for the port:
-	//
-	// mageArmorEffectCategory := "MageArmors"
-	//
-	// moltenArmorActionId := core.ActionID{SpellID: 30482}
-	// moltenArmor := mage.RegisterAura(core.Aura{
-	// 	Label:    "Molten Armor",
-	// 	ActionID: moltenArmorActionId,
-	// 	Duration: time.Minute * 30,
-	// }).AttachStatBuff(stats.SpellCritPercent, 3)
-	//
-	// moltenArmor.NewExclusiveEffect(mageArmorEffectCategory, true, core.ExclusiveEffect{})
-	//
-	// mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       moltenArmorActionId,
-	// 	SpellSchool:    core.SpellSchoolFire,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
-	// 	ClassSpellMask: MageSpellMoltenArmor,
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: 630,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: core.GCDDefault,
-	// 		},
-	// 	},
-	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-	// 		return !moltenArmor.IsActive()
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		moltenArmor.Activate(sim)
-	// 	},
-	// })
-	//
-	// mageArmorActionId := core.ActionID{SpellID: 27125}
-	// mageArmor := mage.RegisterAura(core.Aura{
-	// 	ActionID: mageArmorActionId,
-	// 	Label:    "Mage Armor",
-	// 	Duration: time.Minute * 30,
-	// 	OnGain: func(aura *core.Aura, sim *core.Simulation) {
-	// 		mage.PseudoStats.SpiritRegenRateCasting += .3
-	// 		mage.UpdateManaRegenRates()
-	// 	},
-	// 	OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-	// 		mage.PseudoStats.SpiritRegenRateCasting -= .3
-	// 		mage.UpdateManaRegenRates()
-	// 	},
-	// })
-	//
-	// mageArmor.NewExclusiveEffect(mageArmorEffectCategory, true, core.ExclusiveEffect{})
-	//
-	// mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       mageArmorActionId,
-	// 	SpellSchool:    core.SpellSchoolArcane,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
-	// 	ClassSpellMask: MageSpellMageArmor,
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: 575,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: core.GCDDefault,
-	// 		},
-	// 	},
-	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-	// 		return !mageArmor.IsActive()
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		mageArmor.Activate(sim)
-	// 	},
-	// })
-	//
-	// //Frost armor/IceArmor gives no benefit to dps, merely armor and slow on hit
-	// iceArmorActionId := core.ActionID{SpellID: 27124}
-	// iceArmor := mage.RegisterAura(core.Aura{
-	// 	ActionID: iceArmorActionId,
-	// 	Label:    "Frost Armor",
-	// 	Duration: time.Minute * 30,
-	// })
-	//
-	// iceArmor.NewExclusiveEffect(mageArmorEffectCategory, true, core.ExclusiveEffect{})
-	//
-	// mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       iceArmorActionId,
-	// 	SpellSchool:    core.SpellSchoolFrost,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
-	// 	ClassSpellMask: MageSpellFrostArmor,
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: 630,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: core.GCDDefault,
-	// 		},
-	// 	},
-	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-	// 		return !iceArmor.IsActive()
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		iceArmor.Activate(sim)
-	// 	},
-	// })
-	//
-	// if mage.Options.DefaultMageArmor != proto.MageArmor_MageArmorNone {
-	// 	var defaultArmor *core.Aura
-	// 	switch mage.Options.DefaultMageArmor {
-	// 	case proto.MageArmor_MageArmorFrostArmor:
-	// 		defaultArmor = iceArmor
-	// 	case proto.MageArmor_MageArmorMageArmor:
-	// 		defaultArmor = mageArmor
-	// 	case proto.MageArmor_MageArmorMoltenArmor:
-	// 		defaultArmor = moltenArmor
-	// 	}
-	//
-	// 	core.MakePermanent(defaultArmor)
-	// 	defaultArmor.BuildPhase = core.CharacterBuildPhaseBuffs
-	// }
+// The chosen armor is up for the whole fight. Forever has no Molten Armor, so that option, like None,
+// applies nothing; Frost Armor picks the top rank of the line, Ice Armor.
+func (mage *Mage) registerArmorSpells() {
+	var armorRank shared.SpellData
+	var buff stats.Stats
+	var label string
+	castingRegen := 0.0
+
+	switch mage.Options.DefaultMageArmor {
+	case proto.MageArmor_MageArmorFrostArmor:
+		armorRank = spellData.IceArmor.HighestRank()
+		label = "Ice Armor"
+		buff = stats.Stats{
+			stats.Armor:           armorRank.Effect(shared.A_MOD_RESISTANCE, 1).Value,
+			stats.FrostResistance: armorRank.Effect(shared.A_MOD_RESISTANCE, 16).Value,
+		}
+	case proto.MageArmor_MageArmorMageArmor:
+		armorRank = spellData.MageArmor.HighestRank()
+		label = "Mage Armor"
+		resist := armorRank.Effect(shared.A_MOD_RESISTANCE, 126).Value
+		buff = stats.Stats{
+			stats.ArcaneResistance: resist,
+			stats.FireResistance:   resist,
+			stats.FrostResistance:  resist,
+			stats.NatureResistance: resist,
+			stats.ShadowResistance: resist,
+		}
+		castingRegen = armorRank.Effect(shared.A_MOD_MANA_REGEN_INTERRUPT, 0).Value / 100
+	default:
+		return
+	}
+
+	core.MakePermanent(mage.RegisterAura(core.Aura{
+		Label:    label,
+		ActionID: core.ActionID{SpellID: armorRank.SpellID},
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			mage.PseudoStats.SpiritRegenRateCasting += castingRegen
+			mage.UpdateManaRegenRates()
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			mage.PseudoStats.SpiritRegenRateCasting -= castingRegen
+			mage.UpdateManaRegenRates()
+		},
+	}).AttachStatsBuff(buff))
 }
