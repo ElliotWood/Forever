@@ -2,6 +2,7 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 // TODO: Ingame research needed if HS/Cleave still allow for queueing
@@ -12,91 +13,55 @@ var cleaveRank = spellData.Cleave.Highest()
 var cleaveBaseDamage = cleaveRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerHeroicStrike() {
-	spell := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: heroicStrikeRank.ID},
-		SpellSchool:    heroicStrikeRank.SpellSchool(),
-		DefenseType:    heroicStrikeRank.DefenseTypeCore(),
-		ProcMask:       core.ProcMaskMeleeMH,
-		Flags:          core.SpellFlagMeleeMetrics,
-		ClassSpellMask: SpellMaskHeroicStrike,
-		ClassFlags:     SpellFlagsHeroicStrike,
-		MaxRange:       core.MaxMeleeRange,
+	config := spelldata.SpellConfig(&warrior.Unit, heroicStrikeRank, spelldata.Flags(core.SpellFlagMeleeMetrics))
+	config.ClassSpellMask = SpellMaskHeroicStrike
+	config.ProcMask = core.ProcMaskMeleeMH
+	config.DamageMultiplier = 1
+	config.ThreatMultiplier = 1
+	// TODO: Ingame research needed if this adds flat threat
+	config.FlatThreatBonus = 0
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(heroicStrikeRank),
-			Refund: heroicStrikeRank.MissRefund(),
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := heroicStrikeBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-		},
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		// TODO: Ingame research needed if this adds flat threat
-		FlatThreatBonus: 0,
+		if warrior.curQueueAura != nil {
+			warrior.curQueueAura.Deactivate(sim)
+		}
+	}
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := heroicStrikeBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-
-			if warrior.curQueueAura != nil {
-				warrior.curQueueAura.Deactivate(sim)
-			}
-		},
-	})
-	warrior.makeQueueSpellsAndAura(spell)
+	warrior.makeQueueSpellsAndAura(warrior.RegisterSpell(config))
 }
 
 func (warrior *Warrior) registerCleave() {
 	const maxTargets int32 = 2
 
-	spell := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: cleaveRank.ID},
-		SpellSchool:    cleaveRank.SpellSchool(),
-		DefenseType:    cleaveRank.DefenseTypeCore(),
-		ProcMask:       core.ProcMaskMeleeMH,
-		Flags:          core.SpellFlagMeleeMetrics,
-		ClassSpellMask: SpellMaskCleave,
-		ClassFlags:     SpellFlagsCleave,
-		MaxRange:       core.MaxMeleeRange,
+	config := spelldata.SpellConfig(&warrior.Unit, cleaveRank, spelldata.Flags(core.SpellFlagMeleeMetrics))
+	config.ClassSpellMask = SpellMaskCleave
+	config.ProcMask = core.ProcMaskMeleeMH
+	config.DamageMultiplier = 1
+	config.ThreatMultiplier = 1
+	// TODO: Ingame research needed if this adds flat threat
+	config.FlatThreatBonus = 0
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(cleaveRank),
-			Refund: cleaveRank.MissRefund(),
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := cleaveBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+		results := spell.CalcCleaveDamage(sim, target, maxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+		spell.DealBatchedAoeDamage(sim)
+		if !results[0].Landed() {
+			spell.IssueRefund(sim)
+		}
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-		},
+		if warrior.curQueueAura != nil {
+			warrior.curQueueAura.Deactivate(sim)
+		}
+	}
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		// TODO: Ingame research needed if this adds flat threat
-		FlatThreatBonus: 0,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := cleaveBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
-			results := spell.CalcCleaveDamage(sim, target, maxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-			spell.DealBatchedAoeDamage(sim)
-			if !results[0].Landed() {
-				spell.IssueRefund(sim)
-			}
-
-			if warrior.curQueueAura != nil {
-				warrior.curQueueAura.Deactivate(sim)
-			}
-		},
-	})
-	warrior.makeQueueSpellsAndAura(spell)
+	warrior.makeQueueSpellsAndAura(warrior.RegisterSpell(config))
 }
 
 func (warrior *Warrior) makeQueueSpellsAndAura(srcSpell *core.Spell) *core.Spell {

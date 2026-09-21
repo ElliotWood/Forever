@@ -6,6 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -211,9 +212,6 @@ func (warrior *Warrior) registerPrecision() {
 	warrior.AddStat(stats.SpellHitPercent, spellData.Precision.Effect(dbcenums.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warrior.Talents.Precision))
 }
 
-// Rank 4 is 23894, and core states the rank number beside the spell.
-const bloodthirstRankNumber int32 = 4
-
 var bloodthirstRank = spellData.Bloodthirst.ByID(23894)
 
 func (warrior *Warrior) registerBloodthirst() {
@@ -224,44 +222,18 @@ func (warrior *Warrior) registerBloodthirst() {
 	// The attack power share sits on the second effect; the first is the flat damage added to it.
 	apShare := bloodthirstRank.EffectN(2).Percent()
 
-	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: bloodthirstRank.ID},
-		Rank:           bloodthirstRankNumber,
-		SpellSchool:    bloodthirstRank.SpellSchool(),
-		DefenseType:    bloodthirstRank.DefenseTypeCore(),
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		ClassSpellMask: SpellMaskBloodthirst,
-		ClassFlags:     SpellFlagsBloodthirst,
-		MaxRange:       float64(bloodthirstRank.MaxRange),
+	config := spelldata.SpellConfig(&warrior.Unit, bloodthirstRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+	config.ClassSpellMask = SpellMaskBloodthirst
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(bloodthirstRank),
-			Refund: bloodthirstRank.MissRefund(),
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := spell.MeleeAttackPower(target)*apShare + bloodthirstRank.DamageEffect().Average(core.CharacterLevel)
+		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: bloodthirstRank.GCD(),
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(bloodthirstRank),
-			},
-		},
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := spell.MeleeAttackPower(target)*apShare + bloodthirstRank.DamageEffect().Average(core.CharacterLevel)
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	warrior.RegisterSpell(config)
 }
 
 var piercingHowlRank = spellData.PiercingHowl.Highest()
@@ -273,23 +245,10 @@ func (warrior *Warrior) registerPiercingHowl() {
 		return
 	}
 
-	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: piercingHowlRank.ID},
-		SpellSchool:    core.SpellSchoolPhysical,
-		ProcMask:       core.ProcMaskEmpty,
-		Flags:          core.SpellFlagAPL,
-		ClassSpellMask: SpellMaskNone,
+	config := spelldata.SpellConfig(&warrior.Unit, piercingHowlRank, spelldata.Flags(core.SpellFlagAPL))
+	config.ProcMask = core.ProcMaskEmpty
 
-		RageCost: core.RageCostOptions{
-			Cost: rageCost(piercingHowlRank),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: piercingHowlRank.GCD(),
-			},
-			IgnoreHaste: true,
-		},
-	})
+	warrior.RegisterSpell(config)
 }
 
 var bloodCrazeHot = spellData.BloodCrazeTriggered.Highest()
@@ -303,26 +262,20 @@ func (warrior *Warrior) registerBloodCraze() {
 	hitThreshold := spellData.BloodCraze.EffectAt(2).FractionAt(warrior.Talents.BloodCraze)
 	tick := bloodCrazeHot.PeriodicEffect()
 
-	bloodCraze := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: bloodCrazeHot.ID},
-		SpellSchool: core.SpellSchoolPhysical,
-		ProcMask:    core.ProcMaskSpellHealing,
-		Flags:       core.SpellFlagPassiveSpell | core.SpellFlagHelpful | core.SpellFlagNoOnCastComplete,
+	config := spelldata.SpellConfig(&warrior.Unit, bloodCrazeHot, spelldata.Proc())
+	config.ProcMask = core.ProcMaskSpellHealing
+	config.DamageMultiplier = 1
+	config.ThreatMultiplier = 1
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
+	config.Hot = spelldata.DotConfig(bloodCrazeHot, tick)
+	config.Hot.SelfOnly = true
+	config.Hot.OnSnapshot = nil
+	config.Hot.OnTick = func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+		healPerTick := warrior.MaxHealth() * healthFraction / float64(dot.ExpectedTickCount())
+		dot.Spell.CalcAndDealPeriodicHealing(sim, target, healPerTick, dot.OutcomeTick)
+	}
 
-		Hot: core.DotConfig{
-			Aura:          core.Aura{Label: "Blood Craze"},
-			SelfOnly:      true,
-			NumberOfTicks: int32(bloodCrazeHot.Duration() / tick.Period()),
-			TickLength:    tick.Period(),
-			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				healPerTick := warrior.MaxHealth() * healthFraction / float64(dot.ExpectedTickCount())
-				dot.Spell.CalcAndDealPeriodicHealing(sim, target, healPerTick, dot.OutcomeTick)
-			},
-		},
-	})
+	bloodCraze := warrior.RegisterSpell(config)
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Blood Craze - Damage Taken",
@@ -369,13 +322,7 @@ func (warrior *Warrior) registerDeathWish() {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: deathWishRank.ID}
-
-	deathWishAura := warrior.RegisterAura(core.Aura{
-		Label:    "Death Wish",
-		ActionID: actionID,
-		Duration: deathWishRank.Duration(),
-	}).
+	deathWishAura := warrior.RegisterAura(spelldata.AuraConfig(deathWishRank)).
 		// The damage done effect carries the physical school mask, the damage taken one all schools.
 		AttachMultiplicativePseudoStatBuff(
 			&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical],
@@ -388,33 +335,18 @@ func (warrior *Warrior) registerDeathWish() {
 		// Grants immunity to Fear effects.
 		AttachFearImmunity()
 
-	deathWishSpell := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		ClassSpellMask: SpellMaskDeathWish,
-		ClassFlags:     SpellFlagsDeathWish,
-		Flags:          core.SpellFlagCastWhileIncapacitated,
+	config := spelldata.SpellConfig(&warrior.Unit, deathWishRank,
+		spelldata.Flags(core.SpellFlagCastWhileIncapacitated))
+	config.ClassSpellMask = SpellMaskDeathWish
 
-		RageCost: core.RageCostOptions{
-			Cost: rageCost(deathWishRank),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(deathWishRank),
-			},
-		},
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		deathWishAura.Activate(sim)
+		warrior.WaitUntil(sim, sim.CurrentTime+core.GCDDefault)
+	}
 
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			deathWishAura.Activate(sim)
-			warrior.WaitUntil(sim, sim.CurrentTime+core.GCDDefault)
-		},
+	config.RelatedSelfBuff = deathWishAura
 
-		RelatedSelfBuff: deathWishAura,
-	})
+	deathWishSpell := warrior.RegisterSpell(config)
 
 	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: deathWishSpell,
