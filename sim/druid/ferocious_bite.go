@@ -1,70 +1,73 @@
 package druid
 
+import (
+	"github.com/wowsims/forever/sim/core"
+)
+
 var ferociousBiteRank = spellData.FerociousBite.HighestRank()
-var ferociousBiteMin, ferociousBiteMax = ferociousBiteRank.Direct.Range()
 
-// TODO: To be implemented.
+// The client states the damage a point of excess Energy adds on the rank's second effect (270 at
+// rank 5, in its own units). The per-combo-point damage and the attack power share are not in the
+// generated table, so they stay the sim's client-read values.
+var ferociousBiteDamagePerEnergy = spellData.FerociousBite.EffectAt(1).FractionAt(ferociousBiteRank.Rank)
+
+const ferociousBiteDamagePerComboPoint = 147.0
+const ferociousBiteAPPerComboPoint = 0.03
+
 func (druid *Druid) registerFerociousBiteSpell() {
-	panic("To be implemented")
+	druid.FerociousBite = druid.RegisterSpell(Cat, core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: ferociousBiteRank.SpellID},
+		SpellSchool:    ferociousBiteRank.SpellSchool,
+		DefenseType:    ferociousBiteRank.DefenseType,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		ClassSpellMask: DruidSpellFerociousBite,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		Rank:           ferociousBiteRank.Rank,
 
-	// The TBC implementation, kept for the port:
-	// var energyMetrics *core.ResourceMetrics
-	//
-	// druid.FerociousBite = druid.RegisterSpell(Cat, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: ferociousBiteRank.SpellID},
-	// 	SpellSchool:    ferociousBiteRank.SpellSchool,
-	// 	DefenseType:    ferociousBiteRank.DefenseType,
-	// 	ProcMask:       core.ProcMaskMeleeMHSpecial,
-	// 	ClassSpellMask: DruidSpellFerociousBite,
-	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-	//
-	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: ferociousBiteRank.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: ferociousBiteRank.GCD,
-	// 		},
-	// 		IgnoreHaste: true,
-	// 	},
-	// 	ExtraCastCondition: func(_ *core.Simulation, _ *core.Unit) bool {
-	// 		return druid.ComboPoints() > 0
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	// 	MaxRange:         core.MaxMeleeRange,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		cp := float64(druid.ComboPoints())
-	// 		ap := spell.MeleeAttackPower(target)
-	// 		excessEnergy := druid.CurrentEnergy()
-	// 		if excessEnergy > 0 {
-	// 			druid.SpendEnergy(sim, excessEnergy, energyMetrics)
-	// 			energyMetrics.Events--
-	// 		}
-	//
-	// 		dmgPerCP := 169.0
-	// 		baseDamage := ferociousBiteMin + dmgPerCP*cp + 4.1*excessEnergy + 0.05*cp*ap
-	// 		baseDamage += sim.RandomFloat("Ferocious Bite") * (ferociousBiteMax - ferociousBiteMin)
-	//
-	// 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-	//
-	// 		if result.Landed() {
-	// 			druid.SpendComboPoints(sim, spell.ComboPointMetrics())
-	// 		}
-	// 	},
-	//
-	// 	ExpectedInitialDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
-	// 		cp := float64(druid.ComboPoints())
-	// 		ap := spell.MeleeAttackPower(target)
-	// 		dmgPerCP := 169.0
-	// 		baseDamage := ferociousBiteMin + dmgPerCP*cp + (ferociousBiteMax-ferociousBiteMin)/2 + 0.05*cp*ap
-	// 		return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
-	// 	},
-	// })
-	//
-	// energyMetrics = druid.FerociousBite.Cost.ResourceCostImpl.(*core.EnergyCost).ResourceMetrics
+		EnergyCost: core.EnergyCostOptions{
+			Cost:   ferociousBiteRank.Cost,
+			Refund: ferociousBiteRank.MissRefund(),
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: ferociousBiteRank.GCD,
+			},
+			IgnoreHaste: true,
+		},
+		ExtraCastCondition: func(_ *core.Simulation, _ *core.Unit) bool {
+			return druid.ComboPoints() > 0
+		},
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+		MaxRange:         core.MaxMeleeRange,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			cp := float64(druid.ComboPoints())
+			excessEnergy := druid.CurrentEnergy()
+			baseDamage := ferociousBiteDamage(sim, cp, spell.MeleeAttackPower(target)) + ferociousBiteDamagePerEnergy*excessEnergy
+
+			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+
+			if result.Landed() {
+				druid.SpendEnergy(sim, excessEnergy, spell.EnergyMetrics())
+				druid.SpendComboPoints(sim, spell.ComboPointMetrics())
+			} else {
+				spell.IssueRefund(sim)
+			}
+		},
+
+		ExpectedInitialDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, _ bool) *core.SpellResult {
+			baseDamage := ferociousBiteDamage(sim, float64(druid.ComboPoints()), spell.MeleeAttackPower(target))
+			return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
+		},
+	})
+}
+
+func ferociousBiteDamage(sim *core.Simulation, comboPoints float64, attackPower float64) float64 {
+	return ferociousBiteRank.Direct.Damage(sim) +
+		ferociousBiteDamagePerComboPoint*comboPoints +
+		ferociousBiteAPPerComboPoint*comboPoints*attackPower
 }
 
 func (druid *Druid) CurrentFerociousBiteCost() float64 {

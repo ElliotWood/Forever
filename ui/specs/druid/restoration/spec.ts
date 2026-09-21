@@ -97,7 +97,7 @@ export default defineSpec<Spec.SpecRestorationDruid>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: [Presets.RestorationTalents],
 		// Preset rotations that the user can quickly select.
 		rotations: [],
 		// Preset gear configurations that the user can quickly select.

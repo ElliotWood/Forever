@@ -1,63 +1,72 @@
 package druid
 
-// Package-level state the commented-out implementations used:
-// var frenziedRegenerationRank = spellData.FrenziedRegeneration.BySpellID(26999)
-// var frenziedRegenerationTick = frenziedRegenerationRank.Periodic.(shared.SpellDataPeriodic)
+import (
+	"time"
 
-// TODO: To be implemented. The ability exists: spells 22842 and 22845 on the Feral Combat line. No rank
-// subtext, so no generated table -- pin the id directly.
+	"github.com/wowsims/forever/sim/core"
+)
+
+var frenziedRegenerationRank = spellData.FrenziedRegeneration.HighestRank()
+
+// Converts up to 10 Rage a second into health for 10 sec. Forever keeps one rank and heals 1% of
+// maximum health a point of Rage instead of Classic's flat 10 / 15 / 20; the client's periodic
+// effect states only the trigger, so the share is the sim's client-read value.
 func (druid *Druid) registerFrenziedRegenerationSpell() {
-	panic("To be implemented")
+	actionID := core.ActionID{SpellID: frenziedRegenerationRank.SpellID}
+	rageMetrics := druid.NewRageMetrics(actionID)
+	healthMetrics := druid.NewHealthMetrics(actionID)
 
-	// The TBC implementation, kept for the port:
-	// actionID := core.ActionID{SpellID: frenziedRegenerationRank.SpellID}
-	// rageMetrics := druid.NewRageMetrics(actionID)
-	//
-	// druid.FrenziedRegenerationAura = druid.RegisterAura(core.Aura{
-	// 	Label:    "Frenzied Regeneration",
-	// 	ActionID: actionID,
-	// 	Duration: 10 * time.Second,
-	// })
-	//
-	// // Deactivate when leaving Bear Form.
-	// druid.BearFormAura.ApplyOnExpire(func(_ *core.Aura, sim *core.Simulation) {
-	// 	druid.FrenziedRegenerationAura.Deactivate(sim)
-	// })
-	//
-	// druid.FrenziedRegeneration = druid.RegisterSpell(Bear, core.SpellConfig{
-	// 	ActionID:         actionID,
-	// 	SpellSchool:      core.SpellSchoolPhysical,
-	// 	ProcMask:         core.ProcMaskEmpty,
-	// 	ClassSpellMask:   DruidSpellFrenziedRegeneration,
-	// 	Flags:            core.SpellFlagAPL,
-	// 	DamageMultiplier: 1,
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: frenziedRegenerationRank.GCD,
-	// 		},
-	// 		CD: core.Cooldown{
-	// 			Timer:    druid.NewTimer(),
-	// 			Duration: frenziedRegenerationRank.Cooldown,
-	// 		},
-	// 		IgnoreHaste: true,
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		druid.FrenziedRegenerationAura.Activate(sim)
-	// 		// Converts up to 10 rage per second into 25 health per rage, for 10 sec.
-	// 		core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-	// 			Period:   frenziedRegenerationTick.TickLength,
-	// 			NumTicks: int(frenziedRegenerationTick.NumberOfTicks),
-	// 			Priority: core.ActionPriorityDOT,
-	// 			OnAction: func(sim *core.Simulation) {
-	// 				rage := min(druid.CurrentRage(), 10)
-	// 				if rage > 0 {
-	// 					druid.SpendRage(sim, rage, rageMetrics)
-	// 					spell.CalcAndDealPeriodicHealing(sim, &druid.Unit, rage*frenziedRegenerationTick.Tick, spell.OutcomeHealing)
-	// 				}
-	// 			},
-	// 		})
-	// 	},
-	// })
+	numTicks := int(frenziedRegenerationRank.Duration / time.Second)
+
+	druid.FrenziedRegenerationAura = druid.RegisterAura(core.Aura{
+		Label:    "Frenzied Regeneration",
+		ActionID: actionID,
+		Duration: frenziedRegenerationRank.Duration,
+	})
+
+	druid.FrenziedRegeneration = druid.RegisterSpell(Bear, core.SpellConfig{
+		ActionID:       actionID,
+		SpellSchool:    frenziedRegenerationRank.SpellSchool,
+		ProcMask:       core.ProcMaskEmpty,
+		ClassSpellMask: DruidSpellFrenziedRegeneration,
+		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
+
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: frenziedRegenerationRank.GCD,
+			},
+			CD: core.Cooldown{
+				Timer:    druid.NewTimer(),
+				Duration: frenziedRegenerationRank.Cooldown,
+			},
+			IgnoreHaste: true,
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			druid.FrenziedRegenerationAura.Activate(sim)
+
+			core.StartPeriodicAction(sim, core.PeriodicActionOptions{
+				Period:   time.Second,
+				NumTicks: numTicks,
+				Priority: core.ActionPriorityDOT,
+				OnAction: func(sim *core.Simulation) {
+					if !druid.FrenziedRegenerationAura.IsActive() {
+						return
+					}
+					rage := min(druid.CurrentRage(), 10)
+					if rage > 0 {
+						druid.SpendRage(sim, rage, rageMetrics)
+						druid.GainHealth(sim, rage*0.01*druid.MaxHealth()*druid.PseudoStats.HealingTakenMultiplier, healthMetrics)
+					}
+				},
+			})
+		},
+
+		RelatedSelfBuff: druid.FrenziedRegenerationAura,
+	})
+
+	druid.AddMajorCooldown(core.MajorCooldown{
+		Spell: druid.FrenziedRegeneration.Spell,
+		Type:  core.CooldownTypeSurvival,
+	})
 }

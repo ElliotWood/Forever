@@ -14,49 +14,24 @@ func init() {
 }
 
 func TestFeralCat(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
 		{
 			Class:      proto.Class_ClassDruid,
 			Race:       proto.Race_RaceNightElf,
 			OtherRaces: []proto.Race{proto.Race_RaceTauren},
 
-			GearSet: core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p1_realistic_6p"),
-			OtherGearSets: []core.GearSetCombo{
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "pre_raid"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p1_realistic_9p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p1_bis_6p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p1_bis_9p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p1_alt_6p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p1_alt_9p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p2_6p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p2_9p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p2_alt_6p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p2_alt_9p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p3_6p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p3_9p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p4_6p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p4_9p"),
-				core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p5"),
-			},
+			// Naked: the generated item database does not carry the Forever gear our sim tests
+			// with yet, and gives the rest TBC-shaped stats.
+			GearSet: core.GearSetCombo{Label: "Naked", GearSet: &proto.EquipmentSpec{}},
 
 			Talents: DefaultTalents,
 			OtherTalentSets: []core.TalentsCombo{
-				{Label: "Monocat", Talents: MonocatTalents},
+				{Label: "FeralCat", Talents: FeralCatTalents},
 			},
 
 			SpecOptions: core.SpecOptionsCombo{Label: "Standard", SpecOptions: DefaultSpecOptions},
 
 			Rotation: core.GetAplRotation("../../../ui/specs/druid/feralcat/apls", "default"),
-			OtherRotations: []core.RotationCombo{
-				{
-					Label: "Simple",
-					Rotation: &proto.APLRotation{
-						Type: proto.APLRotation_TypeSimple,
-					},
-				},
-			},
 
 			Consumables: DefaultConsumables,
 
@@ -92,34 +67,9 @@ func TestFeralCat(t *testing.T) {
 	}))
 }
 
-func BenchmarkSimulate(b *testing.B) {
-	rsr := &proto.RaidSimRequest{
-		Raid: core.SinglePlayerRaidProto(
-			&proto.Player{
-				Class:         proto.Class_ClassDruid,
-				Race:          proto.Race_RaceNightElf,
-				TalentsString: DefaultTalents,
-				Equipment:     core.GetGearSet("../../../ui/specs/druid/feralcat/gear_sets", "p1_realistic_6p").GearSet,
-				Consumables:   DefaultConsumables,
-				Spec:          DefaultSpecOptions,
-				Rotation: &proto.APLRotation{
-					Type: proto.APLRotation_TypeSimple,
-				},
-			},
-			nil, nil, nil,
-		),
-		Encounter: &proto.Encounter{
-			Duration: 300,
-			Targets:  []*proto.Target{core.NewDefaultTarget()},
-		},
-		SimOptions: core.AverageDefaultSimTestOptions,
-	}
-
-	core.RaidBenchmark(b, rsr)
-}
-
-const DefaultTalents = "-503032132322105301251-05503301"
-const MonocatTalents = "-553002132322105301051-05503301"
+// Our Forever sim's feral builds.
+const DefaultTalents = "-5521002023132213051-05503"
+const FeralCatTalents = "050022-5500002123032213051-052"
 
 var DefaultSpecOptions = &proto.Player_FeralCatDruid{
 	FeralCatDruid: &proto.FeralCatDruid{

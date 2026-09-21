@@ -96,7 +96,7 @@ export default defineSpec<Spec.SpecBalanceDruid>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: [Presets.BalanceTalents, Presets.MoonkinTalents],
 		rotations: [Presets.StandardRotation],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],

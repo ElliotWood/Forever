@@ -1,5 +1,13 @@
 package druid
 
+import (
+	"time"
+
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
 func (druid *Druid) registerBalanceTalents() {
 	// Tier 1
 	druid.applyImprovedWrath()
@@ -32,128 +40,87 @@ func (druid *Druid) registerBalanceTalents() {
 	// Moonkin Form implemented in forms.go
 }
 
-// TODO: To be implemented.
 func (druid *Druid) applyMoonfury() {
 	if druid.Talents.Moonfury == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.Moonfury == 0 {
-	// 	return
-	// }
-	//
-	// // Forever states Moonfury as +2% damage per rank to the Arcane|Nature schools (mask 72)
-	// // rather than as a spell modifier; the class mask keeps it on the TBC spell list.
-	// druid.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  DruidSpellWrath | DruidSpellStarfire | DruidSpellMoonfire,
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	FloatValue: spellData.Moonfury.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 72).FractionAt(druid.Talents.Moonfury),
-	// })
+	// Forever states Moonfury as +2% damage a rank to the Arcane|Nature schools (mask 72) rather
+	// than as a spell modifier; the class mask keeps it on the Balance spell list.
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidDamagingSpells,
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: spellData.Moonfury.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 72).FractionAt(druid.Talents.Moonfury),
+	})
 }
 
-// TODO: To be implemented.
 func (druid *Druid) applyMoonglow() {
 	if druid.Talents.Moonglow == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.Moonglow == 0 {
-	// 	return
-	// }
-	//
-	// druid.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  DruidSpellMoonfire | DruidSpellStarfire | DruidSpellWrath | DruidSpellHealingTouch | DruidSpellRegrowth | DruidSpellRejuvenation,
-	// 	FloatValue: -0.03 * float64(druid.Talents.Moonglow),
-	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
-	// })
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidSpellMoonfire | DruidSpellStarfire | DruidSpellWrath | DruidHealingSpells,
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+		FloatValue: spellData.Moonglow.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(druid.Talents.Moonglow),
+	})
 }
 
-// TODO: To be implemented.
+// Forever replaces the cast time reduction on the next cast with a short haste buff.
 func (druid *Druid) applyNaturesGrace() {
 	if !druid.Talents.NaturesGrace {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if !druid.Talents.NaturesGrace {
-	// 	return
-	// }
-	//
-	// lastProcAt := time.Duration(-1)
-	//
-	// aura := druid.RegisterAura(core.Aura{
-	// 	Label:    "Nature's Grace",
-	// 	ActionID: core.ActionID{SpellID: 16886},
-	// 	Duration: time.Second * 15,
-	// 	OnReset: func(aura *core.Aura, sim *core.Simulation) {
-	// 		lastProcAt = -1
-	// 	},
-	// 	OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
-	// 		if spell.CurCast.CastTime == 0 {
-	// 			return
-	// 		}
-	// 		// Only consume if the aura was already active when this cast started;
-	// 		// a cast in flight when the proc landed did not benefit from it.
-	// 		if aura.TimeActive(sim) < spell.CurCast.CastTime {
-	// 			return
-	// 		}
-	// 		// A proc that landed during this cast re-arms the buff for the next
-	// 		// cast instead of being consumed by this one.
-	// 		if lastProcAt > sim.CurrentTime-spell.CurCast.CastTime {
-	// 			return
-	// 		}
-	//
-	// 		aura.Deactivate(sim)
-	// 	},
-	// }).AttachSpellMod(core.SpellModConfig{
-	// 	ClassMask: DruidSpellStarfire | DruidSpellWrath,
-	// 	Kind:      core.SpellMod_CastTime_Flat,
-	// 	TimeValue: time.Millisecond * -500,
-	// })
-	//
-	// druid.MakeProcTriggerAura(core.ProcTrigger{
-	// 	Name:               "Nature's Grace Trigger",
-	// 	Callback:           core.CallbackOnSpellHitDealt,
-	// 	ClassSpellMask:     DruidSpellWrath | DruidSpellStarfire,
-	// 	Outcome:            core.OutcomeCrit,
-	// 	TriggerImmediately: true,
-	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-	// 		lastProcAt = sim.CurrentTime
-	// 		aura.Activate(sim)
-	// 	},
-	// })
+	triggered := spellData.NaturesGraceTriggered.HighestRank()
+	hasteMultiplier := 1 + triggered.Effect(shared.A_MOD_CASTING_SPEED_NOT_STACK, 0).Value/100
+
+	aura := druid.RegisterAura(core.Aura{
+		Label:    "Nature's Grace",
+		ActionID: core.ActionID{SpellID: triggered.SpellID},
+		Duration: triggered.Duration,
+		OnGain: func(_ *core.Aura, sim *core.Simulation) {
+			druid.MultiplyCastSpeed(sim, hasteMultiplier)
+		},
+		OnExpire: func(_ *core.Aura, sim *core.Simulation) {
+			druid.MultiplyCastSpeed(sim, 1/hasteMultiplier)
+		},
+	})
+
+	druid.MakeProcTriggerAura(core.ProcTrigger{
+		Name:               "Nature's Grace Trigger",
+		ActionID:           core.ActionID{SpellID: spellData.NaturesGrace.HighestRank().SpellID},
+		Callback:           core.CallbackOnSpellHitDealt,
+		ClassSpellMask:     DruidDamagingSpells,
+		Outcome:            core.OutcomeCrit,
+		TriggerImmediately: true,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			aura.Activate(sim)
+		},
+	})
 }
 
-// TODO: To be implemented.
 func (druid *Druid) applyVengeance() {
 	if druid.Talents.Vengeance == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.Vengeance == 0 {
-	// 	return
-	// }
-	//
-	// druid.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  DruidSpellWrath | DruidSpellStarfire | DruidSpellMoonfire,
-	// 	Kind:       core.SpellMod_CritMultiplier_Flat,
-	// 	FloatValue: spellData.Vengeance.FractionAt(druid.Talents.Vengeance),
-	// })
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidDamagingSpells,
+		Kind:       core.SpellMod_CritMultiplier_Flat,
+		FloatValue: spellData.Vengeance.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_CRIT_DAMAGE_BONUS).FractionAt(druid.Talents.Vengeance),
+	})
 }
 
+// The client states a bonus range, which the sim does not model.
 func (druid *Druid) applyNaturesReach() {
 	if druid.Talents.NaturesReach == 0 {
 		return
 	}
 
-	// druid.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  DruidSpellsBalance | DruidSpellFearieFireFeral,
-	// 	Kind:       ****BONUS RANGE**** most likely irrelevant for sim
-	// 	FloatValue: 10.0 * float64(druid.Talents.NaturesReach),
-	// })
+	hit := spellData.NaturesReach.Effect(shared.A_MOD_HIT_CHANCE, 0).ValueAt(druid.Talents.NaturesReach)
+	druid.AddStat(stats.PhysicalHitPercent, hit)
+	druid.AddStat(stats.SpellHitPercent, spellData.NaturesReach.Effect(shared.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(druid.Talents.NaturesReach))
 }
 
 func (druid *Druid) applyInsectSwarm() {
@@ -164,108 +131,149 @@ func (druid *Druid) applyInsectSwarm() {
 	druid.registerInsectSwarmSpell()
 }
 
-// TODO: To be implemented.
 func (druid *Druid) applyImprovedMoonfire() {
 	if druid.Talents.ImprovedMoonfire == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.ImprovedMoonfire == 0 {
-	// 	return
-	// }
-	//
-	// // 5% per point damage increase to Moonfire and its DoT
-	// druid.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  DruidSpellMoonfire,
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	FloatValue: spellData.ImprovedMoonfire.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(druid.Talents.ImprovedMoonfire),
-	// })
-	//
-	// // 5% per point chance to crit with Moonfire
-	// druid.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  DruidSpellMoonfire,
-	// 	Kind:       core.SpellMod_BonusCrit_Percent,
-	// 	FloatValue: spellData.ImprovedMoonfire.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(druid.Talents.ImprovedMoonfire),
-	// })
+	// 5% a point damage increase to Moonfire and its DoT.
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidSpellMoonfire,
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: spellData.ImprovedMoonfire.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(druid.Talents.ImprovedMoonfire),
+	})
+
+	// 5% a point chance to crit with Moonfire.
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidSpellMoonfire,
+		Kind:       core.SpellMod_BonusCrit_Percent,
+		FloatValue: spellData.ImprovedMoonfire.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(druid.Talents.ImprovedMoonfire),
+	})
 }
 
-// applyImprovedWrath implements Improved Wrath, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Improved Wrath, new in Forever: 0.1 sec off the cast and 10% off the cost a rank.
 func (druid *Druid) applyImprovedWrath() {
 	if druid.Talents.ImprovedWrath == 0 {
 		return
 	}
+
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask: DruidSpellWrath,
+		Kind:      core.SpellMod_CastTime_Flat,
+		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedWrath.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CASTING_TIME).ValueAt(druid.Talents.ImprovedWrath)),
+	})
+
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidSpellWrath,
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+		FloatValue: spellData.ImprovedWrath.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(druid.Talents.ImprovedWrath),
+	})
 }
 
-// applyGenesis implements Genesis, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Genesis, new in Forever: +1% periodic damage and healing a rank.
 func (druid *Druid) applyGenesis() {
 	if druid.Talents.Genesis == 0 {
 		return
 	}
+
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidSpellDoT | DruidSpellHoT,
+		Kind:       core.SpellMod_DotDamageDone_Pct,
+		FloatValue: spellData.Genesis.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DOT).FractionAt(druid.Talents.Genesis),
+	})
 }
 
-// applyNaturesMajesty implements Nature's Majesty, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Nature's Majesty, new in Forever: +2% critical strike chance a rank.
 func (druid *Druid) applyNaturesMajesty() {
 	if druid.Talents.NaturesMajesty == 0 {
 		return
 	}
+
+	crit := spellData.NaturesMajesty.Effect(shared.A_MOD_CRIT_PCT, 0).ValueAt(druid.Talents.NaturesMajesty)
+	druid.AddStat(stats.SpellCritPercent, crit)
+	druid.AddStat(stats.PhysicalCritPercent, crit)
 }
 
 // applyImprovedEntanglingRoots implements Improved Entangling Roots, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the client states a duration modifier on a spell the sim does not cast.
 func (druid *Druid) applyImprovedEntanglingRoots() {
 	if druid.Talents.ImprovedEntanglingRoots == 0 {
 		return
 	}
 }
 
-// applyNaturesSplendor implements Nature's Splendor, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Moonfire ticks every 3 sec and Insect Swarm every 2 sec, so the added duration is one extra tick
+// on each. The talent has no generated ladder, so the extra tick is the sim's client-read value.
 func (druid *Druid) applyNaturesSplendor() {
 	if !druid.Talents.NaturesSplendor {
 		return
 	}
+
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask: DruidSpellDoT,
+		Kind:      core.SpellMod_DotNumberOfTicks_Flat,
+		IntValue:  1,
+	})
 }
 
-// applyImprovedStarfire implements Improved Starfire, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Improved Starfire, new in Forever: 0.1 sec off the cast a rank. The stun proc is not modelled.
 func (druid *Druid) applyImprovedStarfire() {
 	if druid.Talents.ImprovedStarfire == 0 {
 		return
 	}
+
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask: DruidSpellStarfire,
+		Kind:      core.SpellMod_CastTime_Flat,
+		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedStarfire.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CASTING_TIME).ValueAt(druid.Talents.ImprovedStarfire)),
+	})
 }
 
 // applyOvergrowth implements Overgrowth, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. The client's ladder is a bare dummy (1/2) with no tooltip to read it
+// against, so there is nothing to model yet.
 func (druid *Druid) applyOvergrowth() {
 	if druid.Talents.Overgrowth == 0 {
 		return
 	}
 }
 
-// applyEclipse implements Eclipse, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Eclipse, new in Forever: every Wrath banks charges that each shorten one Starfire cast.
 func (druid *Druid) applyEclipse() {
 	if druid.Talents.Eclipse == 0 {
 		return
 	}
+
+	triggered := spellData.EclipseTriggered.HighestRank()
+	// The client's curve is 0.17 / 0.33 / 0.5 sec.
+	castTimeReduction := time.Millisecond * time.Duration(spellData.Eclipse.EffectAt(1).ValueAt(druid.Talents.Eclipse))
+	const chargesPerWrath = 2
+
+	druid.EclipseAura = druid.RegisterAura(core.Aura{
+		Label:     "Eclipse",
+		ActionID:  core.ActionID{SpellID: triggered.SpellID},
+		Duration:  triggered.Duration,
+		MaxStacks: 4,
+	}).AttachSpellMod(core.SpellModConfig{
+		ClassMask: DruidSpellStarfire,
+		Kind:      core.SpellMod_CastTime_Flat,
+		TimeValue: castTimeReduction,
+	})
+
+	core.MakePermanent(druid.RegisterAura(core.Aura{
+		Label: "Eclipse Trigger",
+		OnCastComplete: func(_ *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			switch {
+			case spell.Matches(DruidSpellWrath):
+				druid.EclipseAura.Activate(sim)
+				druid.EclipseAura.AddStacks(sim, chargesPerWrath)
+			case spell.Matches(DruidSpellStarfire):
+				if druid.EclipseAura.IsActive() {
+					druid.EclipseAura.RemoveStack(sim)
+				}
+			}
+		},
+	}))
 }

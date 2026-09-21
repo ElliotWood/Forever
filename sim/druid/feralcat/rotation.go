@@ -125,11 +125,10 @@ func (cat *FeralDruid) doRotation(sim *core.Simulation) bool {
 	rotation := &cat.Rotation
 
 	// Maintain Faerie Fire (Feral) before other decisions.
-	if rotation.MaintainFaerieFire && cat.FaerieFireFeral != nil &&
-		cat.FaerieFireAuras != nil &&
+	if rotation.MaintainFaerieFire && cat.FaerieFire != nil &&
 		!cat.FaerieFireAuras.Get(cat.CurrentTarget).IsActive() &&
-		cat.FaerieFireFeral.CanCast(sim, cat.CurrentTarget) {
-		return cat.FaerieFireFeral.Cast(sim, cat.CurrentTarget)
+		cat.FaerieFire.CanCast(sim, cat.CurrentTarget) {
+		return cat.FaerieFire.Cast(sim, cat.CurrentTarget)
 	}
 
 	energy := cat.CurrentEnergy()

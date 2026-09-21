@@ -1,49 +1,54 @@
 package druid
 
-// Package-level state the commented-out implementations used:
-// var tigersFuryRank = spellData.TigersFury.BySpellID(9846)
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
+)
 
-// TODO: To be implemented. The ability exists: spells 5217 and 417045 on the Feral Combat line. No rank
-// subtext, so no generated table -- pin the id directly.
+var tigersFuryRank = spellData.TigersFury.HighestRank()
+
+// Forever pays a share of Physical damage rather than Classic's flat amount, so it scales with the
+// cat's weapon and attack power instead of fading as gear improves: the client states 15% on the
+// rank's dummy effect, with no Energy cost and a 30 second cooldown.
 func (druid *Druid) registerTigersFurySpell() {
-	panic("To be implemented")
+	actionID := core.ActionID{SpellID: tigersFuryRank.SpellID}
+	multiplier := 1 + tigersFuryRank.Effect(shared.A_DUMMY, 0).Value/100
 
-	// The TBC implementation, kept for the port:
-	// weaponDamageBonus := shared.SpellDataMin(tigersFuryRank.Direct)
-	//
-	// druid.TigersFuryAura = druid.RegisterAura(core.Aura{
-	// 	Label:    "Tiger's Fury",
-	// 	ActionID: core.ActionID{SpellID: tigersFuryRank.SpellID},
-	// 	Duration: time.Second * 6,
-	//
-	// 	OnGain: func(aura *core.Aura, sim *core.Simulation) {
-	// 		druid.AutoAttacks.MH().BaseDamageMin += weaponDamageBonus
-	// 		druid.AutoAttacks.MH().BaseDamageMax += weaponDamageBonus
-	// 	},
-	// 	OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-	// 		druid.AutoAttacks.MH().BaseDamageMin -= weaponDamageBonus
-	// 		druid.AutoAttacks.MH().BaseDamageMax -= weaponDamageBonus
-	// 	},
-	// })
-	//
-	// druid.TigersFury = druid.RegisterSpell(Cat, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: tigersFuryRank.SpellID},
-	// 	ClassSpellMask: DruidSpellTigersFury,
-	// 	Flags:          core.SpellFlagAPL,
-	//
-	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: tigersFuryRank.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		IgnoreHaste: true,
-	// 		CD: core.Cooldown{
-	// 			Timer:    druid.NewTimer(),
-	// 			Duration: tigersFuryRank.Cooldown,
-	// 		},
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		druid.TigersFuryAura.Activate(sim)
-	// 	},
-	// })
+	// King of the Jungle: Tiger's Fury instantly grants 20 Energy a rank.
+	energyGain := spellData.KingOfTheJungle.EffectAt(0).ValueAt(druid.Talents.KingOfTheJungle)
+	// Tagged so it does not collide with the metrics the cost would register under the same action.
+	energyMetrics := druid.NewEnergyMetrics(actionID.WithTag(1))
+
+	druid.TigersFuryAura = druid.RegisterAura(core.Aura{
+		Label:    "Tiger's Fury",
+		ActionID: actionID,
+		Duration: tigersFuryRank.Duration,
+	}).AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical], multiplier)
+
+	druid.TigersFury = druid.RegisterSpell(Cat, core.SpellConfig{
+		ActionID:       actionID,
+		ClassSpellMask: DruidSpellTigersFury,
+		Flags:          core.SpellFlagAPL,
+
+		EnergyCost: core.EnergyCostOptions{
+			Cost: tigersFuryRank.Cost,
+		},
+		Cast: core.CastConfig{
+			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    druid.NewTimer(),
+				Duration: tigersFuryRank.Cooldown,
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			if energyGain > 0 {
+				druid.AddEnergy(sim, energyGain, energyMetrics)
+			}
+			druid.TigersFuryAura.Activate(sim)
+		},
+
+		RelatedSelfBuff: druid.TigersFuryAura,
+	})
 }

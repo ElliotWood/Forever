@@ -42,11 +42,10 @@ func (bear *GuardianDruid) doRotation(sim *core.Simulation) {
 	}
 
 	// Maintain Faerie Fire.
-	if rot.MaintainFaerieFire && bear.FaerieFireFeral != nil &&
-		bear.FaerieFireAuras != nil &&
+	if rot.MaintainFaerieFire && bear.FaerieFire != nil &&
 		!bear.FaerieFireAuras.Get(bear.CurrentTarget).IsActive() &&
-		bear.FaerieFireFeral.CanCast(sim, bear.CurrentTarget) {
-		bear.FaerieFireFeral.Cast(sim, bear.CurrentTarget)
+		bear.FaerieFire.CanCast(sim, bear.CurrentTarget) {
+		bear.FaerieFire.Cast(sim, bear.CurrentTarget)
 		bear.tryQueueMaul(sim)
 		return
 	}

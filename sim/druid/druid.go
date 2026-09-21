@@ -1,6 +1,8 @@
 package druid
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -64,6 +66,7 @@ type Druid struct {
 	FaerieFireAuras          core.AuraArray
 	MangleAuras              core.AuraArray
 	MoonkinFormAura          *core.Aura
+	EclipseAura              *core.Aura
 	ProwlAura                *core.Aura
 	TigersFuryAura           *core.Aura
 
@@ -78,6 +81,11 @@ type Druid struct {
 	maulQueueAura  *core.Aura
 	maulQueueSpell *core.Spell
 	maulRealismICD *core.Cooldown
+
+	// Forever's Furor carries Energy across a powershift, so the shift needs to know how much
+	// was left behind and when.
+	lastCatFormEnergy float64
+	lastCatFormExitAt time.Duration
 }
 
 const (
@@ -209,30 +217,26 @@ func (druid *Druid) RegisterBaselineSpells() {
 	druid.registerFormBreakingConsumes()
 }
 
-// TODO: To be implemented.
 // registerFormBreakingConsumes patches ApplyEffects on potions, conjured items,
 // and engineering explosives to drop Bear/Cat form when used. These spells all
 // carry SpellFlagNoOnCastComplete, so OnCastComplete aura hooks never fire for
-// them — we must wrap ApplyEffects directly instead.
+// them - we must wrap ApplyEffects directly instead.
 func (druid *Druid) registerFormBreakingConsumes() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// druid.Env.RegisterPostFinalizeEffect(func() {
-	// 	breakFlags := core.SpellFlagPotion | core.SpellFlagConjured | core.SpellFlagExplosive
-	// 	for _, spell := range druid.Spellbook {
-	// 		if !spell.Flags.Matches(breakFlags) {
-	// 			continue
-	// 		}
-	// 		prev := spell.ApplyEffects
-	// 		spell.ApplyEffects = func(sim *core.Simulation, target *core.Unit, sp *core.Spell) {
-	// 			prev(sim, target, sp)
-	// 			if druid.InForm(Bear) || druid.InForm(Cat) {
-	// 				druid.ClearForm(sim)
-	// 			}
-	// 		}
-	// 	}
-	// })
+	druid.Env.RegisterPostFinalizeEffect(func() {
+		breakFlags := core.SpellFlagPotion | core.SpellFlagConjured | core.SpellFlagExplosive
+		for _, spell := range druid.Spellbook {
+			if !spell.Flags.Matches(breakFlags) {
+				continue
+			}
+			prev := spell.ApplyEffects
+			spell.ApplyEffects = func(sim *core.Simulation, target *core.Unit, sp *core.Spell) {
+				prev(sim, target, sp)
+				if druid.InForm(Bear) || druid.InForm(Cat) {
+					druid.ClearForm(sim)
+				}
+			}
+		}
+	})
 }
 
 func (druid *Druid) RegisterBalanceSpells() {
@@ -250,7 +254,8 @@ func (druid *Druid) RegisterFeralCatSpells() {
 	druid.registerRakeSpell()
 	druid.registerRipSpell()
 	druid.registerFerociousBiteSpell()
-	// TODO: Forever drops Faerie Fire (Feral); see registerFaerieFireFeralSpell.
+	// Forever drops Faerie Fire (Feral); the Balance version is the only one.
+	druid.registerFaerieFireSpell()
 	druid.registerShredSpell()
 	druid.registerTigersFurySpell()
 }
@@ -259,7 +264,8 @@ func (druid *Druid) RegisterFeralTankSpells() {
 	druid.registerBearFormSpell()
 	druid.registerBarkskin()
 	druid.registerDemoralizingRoarSpell()
-	// TODO: Forever drops Faerie Fire (Feral); see registerFaerieFireFeralSpell.
+	// Forever drops Faerie Fire (Feral); the Balance version is the only one.
+	druid.registerFaerieFireSpell()
 	druid.registerEnrageSpell()
 	druid.registerFrenziedRegenerationSpell()
 	druid.registerLacerateSpell()

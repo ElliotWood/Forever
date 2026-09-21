@@ -1,5 +1,11 @@
 package druid
 
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
 func (druid *Druid) registerRestorationTalents() {
 	// Tier 1
 	druid.applyNaturesFocus()
@@ -32,113 +38,80 @@ func (druid *Druid) registerRestorationTalents() {
 	druid.applyWildGrowth()
 }
 
-// TODO: To be implemented.
 func (druid *Druid) applyNaturalShapeshifter() {
 	if druid.Talents.NaturalShapeshifter == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.NaturalShapeshifter == 0 {
-	// 	return
-	// }
-	//
-	// druid.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  DruidSpellCatForm | DruidSpellBearForm,
-	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
-	// 	FloatValue: -0.1 * float64(druid.Talents.NaturalShapeshifter),
-	// })
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidSpellCatForm | DruidSpellBearForm,
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+		FloatValue: spellData.NaturalShapeshifter.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(druid.Talents.NaturalShapeshifter),
+	})
 }
 
-// TODO: To be implemented.
 func (druid *Druid) applyNaturalist() {
 	if druid.Talents.Naturalist == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.Naturalist == 0 {
-	// 	return
-	// }
-	//
-	// // Forever states the damage bonus against every school (mask 127) instead of physical
-	// // only; the sim keeps it on physical, which is all a feral druid deals.
-	// druid.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(druid.Talents.Naturalist)
+	// Forever states the damage bonus against every school (mask 127), not physical only.
+	druid.PseudoStats.DamageDealtMultiplier *= spellData.Naturalist.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(druid.Talents.Naturalist)
 }
 
-// TODO: To be implemented.
 func (druid *Druid) applySubtlety() {
 	if druid.Talents.Subtlety == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.Subtlety == 0 {
-	// 	return
-	// }
-	//
-	// // Reduces the threat caused by healing/damage spells by 4/8/12/16/20% per rank.
-	// druid.AddStaticMod(core.SpellModConfig{
-	// 	ClassMask:  DruidHealingSpells | DruidDamagingSpells,
-	// 	Kind:       core.SpellMod_ThreatMultiplier_Pct,
-	// 	FloatValue: -0.04 * float64(druid.Talents.Subtlety),
-	// })
+	// Reduces the threat of the Arcane and Nature spells (mask 72) by 10% a rank.
+	druid.AddStaticMod(core.SpellModConfig{
+		ClassMask:  DruidHealingSpells | DruidDamagingSpells,
+		Kind:       core.SpellMod_ThreatMultiplier_Pct,
+		FloatValue: spellData.Subtlety.Effect(shared.A_MOD_THREAT, 72).FractionAt(druid.Talents.Subtlety),
+	})
 }
 
-// TODO: To be implemented.
 func (druid *Druid) applyLivingSpirit() {
 	if druid.Talents.LivingSpirit == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.LivingSpirit == 0 {
-	// 	return
-	// }
-	//
-	// // Increases total Spirit by 5/10/15% per rank.
-	// druid.MultiplyStat(stats.Spirit, spellData.LivingSpirit.MultiplierAt(druid.Talents.LivingSpirit))
+	druid.MultiplyStat(stats.Spirit, spellData.LivingSpirit.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(druid.Talents.LivingSpirit))
 }
 
 // applyNaturesFocus implements Nature's Focus, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the client states spell pushback, which the sim does not simulate.
 func (druid *Druid) applyNaturesFocus() {
 	if druid.Talents.NaturesFocus == 0 {
 		return
 	}
 }
 
-// TODO: To be implemented.
+// Furor: a 20% chance a rank at 10 Rage when shifting into Bear Form, and Forever's Energy
+// carry-over on a Cat powershift. Both halves are read in forms.go; the chance is kept here.
 func (druid *Druid) applyFuror() {
 	if druid.Talents.Furor == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if druid.Talents.Furor == 0 {
-	// 	return
-	// }
-	//
-	// // Both dummy effects carry the same ladder, one per form, so either answers the chance.
-	// druid.FurorProcChance = spellData.Furor.EffectAt(0).FractionAt(druid.Talents.Furor)
+	// Both dummy effects carry the same ladder, one per form, so either answers the chance.
+	druid.FurorProcChance = spellData.Furor.EffectAt(0).FractionAt(druid.Talents.Furor)
 }
 
-// applyReflection implements Reflection, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Reflection, new in Forever: a share of Spirit regeneration continues while casting.
 func (druid *Druid) applyReflection() {
 	if druid.Talents.Reflection == 0 {
 		return
 	}
+
+	druid.PseudoStats.SpiritRegenRateCasting += spellData.Reflection.Effect(shared.A_MOD_MANA_REGEN_INTERRUPT, 0).FractionAt(druid.Talents.Reflection)
 }
 
 // applyGiftOfNature implements Gift of Nature, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applyGiftOfNature() {
 	if druid.Talents.GiftOfNature == 0 {
 		return
@@ -147,8 +120,7 @@ func (druid *Druid) applyGiftOfNature() {
 
 // applyGiftOfTheEarthmother implements Gift of the Earthmother, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applyGiftOfTheEarthmother() {
 	if !druid.Talents.GiftOfTheEarthmother {
 		return
@@ -157,8 +129,7 @@ func (druid *Druid) applyGiftOfTheEarthmother() {
 
 // applyTranquilSpirit implements Tranquil Spirit, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applyTranquilSpirit() {
 	if druid.Talents.TranquilSpirit == 0 {
 		return
@@ -167,8 +138,7 @@ func (druid *Druid) applyTranquilSpirit() {
 
 // applyImprovedRejuvenation implements Improved Rejuvenation, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applyImprovedRejuvenation() {
 	if druid.Talents.ImprovedRejuvenation == 0 {
 		return
@@ -177,8 +147,7 @@ func (druid *Druid) applyImprovedRejuvenation() {
 
 // applySwiftmend implements Swiftmend, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applySwiftmend() {
 	if !druid.Talents.Swiftmend {
 		return
@@ -187,8 +156,7 @@ func (druid *Druid) applySwiftmend() {
 
 // applyNaturesSwiftness implements Nature's Swiftness, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applyNaturesSwiftness() {
 	if !druid.Talents.NaturesSwiftness {
 		return
@@ -197,8 +165,7 @@ func (druid *Druid) applyNaturesSwiftness() {
 
 // applyImprovedTranquility implements Improved Tranquility, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applyImprovedTranquility() {
 	if druid.Talents.ImprovedTranquility == 0 {
 		return
@@ -207,8 +174,7 @@ func (druid *Druid) applyImprovedTranquility() {
 
 // applyImprovedRegrowth implements Improved Regrowth, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applyImprovedRegrowth() {
 	if druid.Talents.ImprovedRegrowth == 0 {
 		return
@@ -217,8 +183,7 @@ func (druid *Druid) applyImprovedRegrowth() {
 
 // applyWildGrowth implements Wild Growth, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: not modelled - the sim has no healing rotation for this spec.
 func (druid *Druid) applyWildGrowth() {
 	if !druid.Talents.WildGrowth {
 		return

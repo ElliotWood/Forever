@@ -1,4 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
+import { SavedTalents } from '@generated/proto/ui';
 import { ConsumesSpec, Drums, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	FeralCatDruid_Options as FeralDruidOptions,
@@ -44,3 +45,6 @@ export const DefaultRotation = FeralCatDruidRotation.create({
 export const SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.SpecFeralCatDruid, DefaultRotation);
 
 export const APL = PresetUtils.makePresetAPLRotation('APL', DefaultApl);
+
+export const FeralTalents = PresetUtils.makePresetTalents('Feral', SavedTalents.create({ talentsString: '-5521002023132213051-05503' }));
+export const FeralCatTalents = PresetUtils.makePresetTalents('Feral Cat 9/35/7', SavedTalents.create({ talentsString: '050022-5500002123032213051-052' }));

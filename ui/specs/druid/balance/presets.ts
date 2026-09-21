@@ -1,4 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
+import { SavedTalents } from '@generated/proto/ui';
 import {
 	Class,
 	ConsumesSpec,
@@ -18,6 +19,9 @@ import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 import DefaultAPL from './apls/default.apl.json';
 
 export const StandardRotation = PresetUtils.makePresetAPLRotation('Default', DefaultAPL);
+
+export const BalanceTalents = PresetUtils.makePresetTalents('Balance', SavedTalents.create({ talentsString: '5532220115001351--505302' }));
+export const MoonkinTalents = PresetUtils.makePresetTalents('Moonkin 38/0/13', SavedTalents.create({ talentsString: '5502220115501351--055003' }));
 
 export const DefaultOptions = BalanceDruidOptions.create({
 	classOptions: {
