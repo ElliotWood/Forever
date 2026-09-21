@@ -33,6 +33,7 @@ type generatedRow struct {
 	ProcCharges     int32
 	MaxTargets      int32
 	RefundsOnMiss   bool
+	PeriodicCanCrit bool
 	FlatThreatBonus float64
 	SchoolMask      int32
 	DefenseType     int32
@@ -964,7 +965,8 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		CastTimeMs: spell.CastTimeMs, GCDMs: spell.GCDMs, CooldownMs: spell.CooldownMs,
 		MinRange: spell.MinRange, MaxRange: spell.MaxRange, MissileSpeed: spell.MissileSpeed,
 		ProcChance: spell.ProcChance, ProcCharges: spell.ProcCharges, MaxTargets: spell.MaxTargets, RefundsOnMiss: spell.RefundsOnMiss,
-		DurationMs: spell.DurationMs, SchoolMask: spell.SchoolMask, DefenseType: spell.DefenseType,
+		PeriodicCanCrit: spell.PeriodicCanCrit,
+		DurationMs:      spell.DurationMs, SchoolMask: spell.SchoolMask, DefenseType: spell.DefenseType,
 	}
 	if spell.ManaCost.Valid {
 		row.Cost = NormalizePowerCost(int32(spell.ManaCost.Int64), spell.PowerType)
@@ -1319,6 +1321,9 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 	}
 	if row.RefundsOnMiss {
 		parts = append(parts, "RefundsOnMiss: true")
+	}
+	if row.PeriodicCanCrit {
+		parts = append(parts, "PeriodicCanCrit: true")
 	}
 	if row.FlatThreatBonus != 0 {
 		parts = append(parts, fmt.Sprintf("FlatThreatBonus: %s", num(row.FlatThreatBonus)))
