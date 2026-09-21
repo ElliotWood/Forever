@@ -60,15 +60,16 @@ func (warrior *Warrior) registerShieldSpecialization() {
 
 	warrior.AddStat(stats.BlockPercent, spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_PERCENT, 0).FractionAt(warrior.Talents.ShieldSpecialization))
 
-	// Effect 0 is the block bonus; the tooltip states the chance as $m2%, so effect 1's ladder is
-	// the chance and the 100 in the proc chance column is noise.
-	warrior.registerRageOnAvoid("Shield Specialization", shieldSpecializationEnergize.SpellID,
+	warrior.registerRageOnAvoid(
+		"Shield Specialization",
+		shieldSpecializationEnergize.SpellID,
 		shieldSpecializationEnergize.Energize.Tenths(),
-		spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization), core.OutcomeBlock, nil)
+		spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization),
+		core.OutcomeBlock,
+		nil,
+	)
 }
 
-// A chance to gain rage when an incoming attack is blocked, dodged or parried. The energize the
-// triggered spell states is on the client's 0-1000 rage bar, so the call site divides it by ten.
 func (warrior *Warrior) registerRageOnAvoid(name string, spellID int32, rage float64, chance float64, outcome core.HitOutcome, extra func() bool) {
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: spellID})
 	trigger := core.ProcTrigger{
@@ -286,12 +287,14 @@ func (warrior *Warrior) registerMasterOfDefense() {
 
 	masterOfDefenseEnergize := spellData.MasterOfDefenseTriggered.HighestRank()
 
-	// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100 in
-	// the proc chance column is noise; a shield has to be equipped.
-	warrior.registerRageOnAvoid("Master of Defense", masterOfDefenseEnergize.SpellID,
+	warrior.registerRageOnAvoid(
+		"Master of Defense",
+		masterOfDefenseEnergize.SpellID,
 		masterOfDefenseEnergize.Energize.Tenths(),
-		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense), core.OutcomeDodge|core.OutcomeParry,
-		func() bool { return warrior.PseudoStats.CanBlock })
+		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense),
+		core.OutcomeDodge|core.OutcomeParry,
+		func() bool { return warrior.PseudoStats.CanBlock },
+	)
 }
 
 func (warrior *Warrior) registerImprovedRevenge() {
