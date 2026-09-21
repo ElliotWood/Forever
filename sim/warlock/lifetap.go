@@ -6,12 +6,13 @@ import (
 
 const LifeTapRanks = 6
 
-var LifeTapSpellId = [LifeTapRanks + 1]int32{0, 1454, 1455, 1456, 11687, 11688, 11689}
-
+// Spell ID and school come from the client table; it reads no health or mana value (a dummy effect),
+// so those stay ours.
 var LifeTapBaseDamage = [LifeTapRanks + 1]float64{0, 30, 75, 140, 220, 310, 424}
 
 func (warlock *Warlock) getLifeTapBaseConfig(rank int) core.SpellConfig {
-	spellId := LifeTapSpellId[rank]
+	row := spellData.LifeTap.ByRank(int32(rank))
+	spellId := row.SpellID
 	baseDamage := LifeTapBaseDamage[rank]
 	spellCoef := [LifeTapRanks + 1]float64{0, 0.68, 0.8, 0.8, 0.8, 0.8, 0.8}[rank]
 
@@ -27,10 +28,10 @@ func (warlock *Warlock) getLifeTapBaseConfig(rank int) core.SpellConfig {
 
 	return core.SpellConfig{
 		ActionID:       actionID,
-		SpellSchool:    core.SpellSchoolShadow,
+		SpellSchool:    row.SpellSchool,
 		SpellCode:      SpellCode_WarlockLifeTap,
 		ClassSpellMask: SpellMaskLifeTap,
-		DefenseType:    core.DefenseTypeMagic,
+		DefenseType:    row.DefenseType,
 		ProcMask:       core.ProcMaskSpellDamage,
 		Flags:          core.SpellFlagAPL | core.SpellFlagResetAttackSwing | core.SpellFlagBinary | WarlockFlagAffliction,
 		RequiredLevel:  level,
