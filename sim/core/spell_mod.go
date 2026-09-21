@@ -1033,16 +1033,27 @@ func removeDurationFlat(mod *SpellMod, spell *Spell) {
 // An aura the client never gives stacks stays at MaxStacks 0, which is what SetStacks refuses to touch.
 func modBuffMaxStacksFlat(spell *Spell, value int32) {
 	if spell.RelatedSelfBuff != nil && spell.RelatedSelfBuff.MaxStacks > 0 {
-		spell.RelatedSelfBuff.MaxStacks += value
+		spell.RelatedSelfBuff.MaxStacks = addBuffMaxStacks(spell.RelatedSelfBuff, value)
 	}
 
 	for _, auraArray := range spell.RelatedAuraArrays {
 		for _, aura := range auraArray {
 			if aura != nil && aura.MaxStacks > 0 {
-				aura.MaxStacks += value
+				aura.MaxStacks = addBuffMaxStacks(aura, value)
 			}
 		}
 	}
+}
+
+// Both loops above skip an aura at 0 stacks, so a mod that took one there could not give them back
+// when it is removed. Refusing it keeps apply and remove symmetric, the way applyModChargesFlat does.
+func addBuffMaxStacks(aura *Aura, value int32) int32 {
+	stacks := aura.MaxStacks + value
+	if stacks <= 0 {
+		panic(fmt.Sprintf("Spell mod would leave the aura %s at %d max stacks. Something seems wrong.",
+			aura.Label, stacks))
+	}
+	return stacks
 }
 
 func applyBuffMaxStacksFlat(mod *SpellMod, spell *Spell) {
@@ -1053,7 +1064,13 @@ func removeBuffMaxStacksFlat(mod *SpellMod, spell *Spell) {
 	modBuffMaxStacksFlat(spell, -mod.intValue)
 }
 
+// MaxRange 0 is no range check at all, so a mod that takes the range there widens the spell instead
+// of shortening it, and removing the mod cannot tell the two apart.
 func applyRangeFlat(mod *SpellMod, spell *Spell) {
+	if spell.MaxRange+mod.floatValue <= 0 {
+		panic(fmt.Sprintf("Spell mod would leave %s at %0.1f yards of range. Something seems wrong.",
+			spell.ActionID, spell.MaxRange+mod.floatValue))
+	}
 	spell.MaxRange += mod.floatValue
 }
 

@@ -174,3 +174,27 @@ func TestDirectDamageDoneFlatMod(t *testing.T) {
 		t.Errorf("direct multiplier after removing the mod: %0.3f, want 1.500", got)
 	}
 }
+
+// Stacks the mod took to 0 could not come back: the aura would be skipped as one that never stacked.
+func TestBuffMaxStacksFlatModRefusesToEmptyTheStacks(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fatal("a mod taking the stacks to 0 did not panic")
+		}
+	}()
+
+	spell := &Spell{RelatedSelfBuff: &Aura{Label: "Test Buff", MaxStacks: 2}}
+	newTestMod(SpellModConfig{Kind: SpellMod_BuffMaxStacks_Flat, IntValue: -2}, spell).Activate()
+}
+
+// A range of 0 is no range check at all, so a mod may not take the range there.
+func TestRangeFlatModRefusesToEmptyTheRange(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fatal("a mod taking the range to 0 did not panic")
+		}
+	}()
+
+	spell := &Spell{MaxRange: 5}
+	newTestMod(SpellModConfig{Kind: SpellMod_Range_Flat, FloatValue: -5}, spell).Activate()
+}
