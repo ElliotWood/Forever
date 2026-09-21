@@ -50,6 +50,7 @@ import { Gear, ItemSwapGear } from '../proto/gear';
 import { gemMatchesSocket, isUnrestrictedGem } from '../proto/gems';
 import { canEquipEnchant, canEquipItem, enchantAppliesToItem, getMetaGemEffectEP, isPVPItem } from '../proto/items';
 import { migrateOldProto, ProtoConversionMap } from '../proto/proto_migration';
+import { dropRetiredRotationFields } from '../proto/rotation_field_migration';
 import { specTypeFunctions, withSpec } from '../proto/spec_functions';
 import type { ClassOptions, ClassSpecs, SpecClasses, SpecOptions, SpecRotation, SpecTalents, SpecTypeFunctions } from '../proto/spec_types';
 import { Stats, UnitStat } from '../proto/stats';
@@ -1646,23 +1647,10 @@ export class Player<SpecType extends Spec> {
 			[
 				17,
 				(oldProto: PlayerProto) => {
-					// v17 also reserves the warrior's bloodlustTiming. The simple rotation is a JSON
-					// string that `DpsWarrior_Rotation.fromJson` reads without ignoreUnknownFields, so
-					// leaving the key in would throw away the whole simple rotation, not just the key.
-					if (oldProto.spec?.oneofKind === 'dpsWarrior') {
-						const jsonStr = oldProto.rotation?.simple?.specRotationJson;
-						if (jsonStr) {
-							try {
-								const parsed = JSON.parse(jsonStr);
-
-								delete parsed.bloodlustTiming;
-								delete parsed.bloodlust_timing;
-
-								oldProto.rotation!.simple!.specRotationJson = JSON.stringify(parsed);
-							} catch {
-								// Malformed JSON - nothing to migrate.
-							}
-						}
+					// v17 also reserves the warrior's bloodlust_timing, which a saved simple rotation
+					// still spells out; `dropRetiredRotationFields` says what leaving it in costs.
+					if (oldProto.rotation?.simple) {
+						oldProto.rotation.simple.specRotationJson = dropRetiredRotationFields(oldProto.rotation.simple.specRotationJson);
 					}
 
 					return oldProto;
