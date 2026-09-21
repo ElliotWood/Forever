@@ -314,7 +314,7 @@ var descriptionSpellRef = regexp.MustCompile(`\$(?:/\d+;)?(\d{4,7})[a-z]`)
 // names. Each entry says what links the two.
 var handTriggers = map[int32][]int32{
 	// Retaliation's dummy aura (aura 4) casts the counterattack 20240: same name, class set and icon,
-	// 1 rage, weapon damage with no base.
+	// weapon damage with no base, a cost of 1 in SpellPower that is a tenth of a rage.
 	20230: {20240},
 }
 
