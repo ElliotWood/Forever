@@ -278,7 +278,7 @@ func (mod *SpellMod) Deactivate() {
 }
 
 // Mod implmentations
-type SpellModType uint32
+type SpellModType uint64
 
 const (
 	// Will multiply the spell.DamageDoneMultiplier. +5% = 0.05
@@ -411,6 +411,25 @@ const (
 	// Will multiply the spell.FlatThreatBonus. +5% = 0.05
 	// Uses FloatValue
 	SpellMod_FlatThreatBonus_Pct
+
+	// Add/subtract duration from every duration the spell has: its dots and hots, its self-buff
+	// and every aura array it is related to. Targets the spell does not have are left alone.
+	// Uses: TimeValue
+	SpellMod_Duration_Flat
+
+	// Add/subtract to the maximum stacks of the spell's self-buff and of the stacking auras in
+	// its aura arrays. Auras that do not stack stay non-stacking.
+	// Uses: IntValue
+	SpellMod_BuffMaxStacks_Flat
+
+	// Add/subtract to the spell's maximum range in yards. Only spells registered with a range
+	// constraint check their range at all, so the mod is inert on the others.
+	// Uses: FloatValue
+	SpellMod_Range_Flat
+
+	// Will add the value to spell.DirectDamageMultiplierAdditive, which only direct hits read.
+	// Uses FloatValue
+	SpellMod_DirectDamageDone_Flat
 )
 
 var spellModMap = map[SpellModType]*SpellModFunctions{
@@ -561,6 +580,27 @@ var spellModMap = map[SpellModType]*SpellModFunctions{
 	SpellMod_FlatThreatBonus_Pct: {
 		Apply:  applyFlatThreatBonusPercent,
 		Remove: removeFlatThreatBonusPercent,
+	},
+
+	SpellMod_Duration_Flat: {
+		Apply:  applyDurationFlat,
+		Remove: removeDurationFlat,
+	},
+
+	SpellMod_BuffMaxStacks_Flat: {
+		Apply:  applyBuffMaxStacksFlat,
+		Remove: removeBuffMaxStacksFlat,
+	},
+
+	SpellMod_Range_Flat: {
+		Apply:  applyRangeFlat,
+		Remove: removeRangeFlat,
+	},
+
+	SpellMod_DirectDamageDone_Flat: {
+		Apply:   applyDirectDamageDoneAdd,
+		Remove:  removeDirectDamageDoneAdd,
+		OnReset: onResetDirectDamageDoneAdd,
 	},
 }
 
@@ -956,4 +996,82 @@ func applyFlatThreatBonusPercent(mod *SpellMod, spell *Spell) {
 
 func removeFlatThreatBonusPercent(mod *SpellMod, spell *Spell) {
 	spell.FlatThreatBonus /= (1 + mod.floatValue)
+}
+
+func modDurationFlat(spell *Spell, value time.Duration) {
+	for _, dot := range spell.dots {
+		if dot != nil {
+			dot.BaseDurationFlat += value
+		}
+	}
+
+	if spell.aoeDot != nil {
+		spell.aoeDot.BaseDurationFlat += value
+	}
+
+	if spell.RelatedSelfBuff != nil {
+		spell.RelatedSelfBuff.Duration += value
+	}
+
+	for _, auraArray := range spell.RelatedAuraArrays {
+		for _, aura := range auraArray {
+			if aura != nil {
+				aura.Duration += value
+			}
+		}
+	}
+}
+
+func applyDurationFlat(mod *SpellMod, spell *Spell) {
+	modDurationFlat(spell, mod.timeValue)
+}
+
+func removeDurationFlat(mod *SpellMod, spell *Spell) {
+	modDurationFlat(spell, -mod.timeValue)
+}
+
+// An aura the client never gives stacks stays at MaxStacks 0, which is what SetStacks refuses to touch.
+func modBuffMaxStacksFlat(spell *Spell, value int32) {
+	if spell.RelatedSelfBuff != nil && spell.RelatedSelfBuff.MaxStacks > 0 {
+		spell.RelatedSelfBuff.MaxStacks += value
+	}
+
+	for _, auraArray := range spell.RelatedAuraArrays {
+		for _, aura := range auraArray {
+			if aura != nil && aura.MaxStacks > 0 {
+				aura.MaxStacks += value
+			}
+		}
+	}
+}
+
+func applyBuffMaxStacksFlat(mod *SpellMod, spell *Spell) {
+	modBuffMaxStacksFlat(spell, mod.intValue)
+}
+
+func removeBuffMaxStacksFlat(mod *SpellMod, spell *Spell) {
+	modBuffMaxStacksFlat(spell, -mod.intValue)
+}
+
+func applyRangeFlat(mod *SpellMod, spell *Spell) {
+	spell.MaxRange += mod.floatValue
+}
+
+func removeRangeFlat(mod *SpellMod, spell *Spell) {
+	spell.MaxRange -= mod.floatValue
+}
+
+func applyDirectDamageDoneAdd(mod *SpellMod, spell *Spell) {
+	spell.DirectDamageMultiplierAdditive += mod.floatValue
+}
+
+func removeDirectDamageDoneAdd(mod *SpellMod, spell *Spell) {
+	spell.DirectDamageMultiplierAdditive -= mod.floatValue
+}
+
+// Required to round floating point errors that might leak between iterations
+func onResetDirectDamageDoneAdd(mod *SpellMod) {
+	for _, spell := range mod.AffectedSpells {
+		spell.DirectDamageMultiplierAdditive = math.Round(spell.DirectDamageMultiplierAdditive*10000) / 10000
+	}
 }

@@ -1,0 +1,176 @@
+package core
+
+import (
+	"testing"
+	"time"
+)
+
+// A mod built straight from the kind's registered functions, so Activate, Deactivate and the
+// UpdateXValue paths run exactly as they do on a unit's mod.
+func newTestMod(config SpellModConfig, spells ...*Spell) *SpellMod {
+	functions := spellModMap[config.Kind]
+
+	return &SpellMod{
+		Kind:           config.Kind,
+		floatValue:     config.FloatValue,
+		intValue:       config.IntValue,
+		timeValue:      config.TimeValue,
+		Apply:          functions.Apply,
+		Remove:         functions.Remove,
+		OnReset:        functions.OnReset,
+		AffectedSpells: spells,
+	}
+}
+
+// A spell carrying one of each duration target: a dot, an aoe dot, a self-buff and an aura array.
+func newDurationTargetSpell() *Spell {
+	spell := &Spell{
+		RelatedSelfBuff:   &Aura{Duration: time.Second * 10, MaxStacks: 3},
+		RelatedAuraArrays: LabeledAuraArrays{"debuff": AuraArray{{Duration: time.Second * 12, MaxStacks: 2}, nil}},
+	}
+	spell.dots = DotArray{{Aura: &Aura{}, BaseTickCount: 6, BaseTickLength: time.Second * 3, BaseDurationMultiplier: 1}, nil}
+	spell.aoeDot = &Dot{Aura: &Aura{}, BaseTickCount: 4, BaseTickLength: time.Second * 2, BaseDurationMultiplier: 1}
+
+	return spell
+}
+
+func TestDurationFlatMod(t *testing.T) {
+	spell := newDurationTargetSpell()
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_Duration_Flat, TimeValue: time.Second * 6}, spell)
+
+	mod.Activate()
+	if got := spell.dots[0].BaseDuration(); got != time.Second*24 {
+		t.Errorf("dot duration with the mod active: %v, want %v", got, time.Second*24)
+	}
+	if got := spell.aoeDot.BaseDuration(); got != time.Second*14 {
+		t.Errorf("aoe dot duration with the mod active: %v, want %v", got, time.Second*14)
+	}
+	if got := spell.RelatedSelfBuff.Duration; got != time.Second*16 {
+		t.Errorf("self-buff duration with the mod active: %v, want %v", got, time.Second*16)
+	}
+	if got := spell.RelatedAuraArrays["debuff"][0].Duration; got != time.Second*18 {
+		t.Errorf("aura array duration with the mod active: %v, want %v", got, time.Second*18)
+	}
+
+	mod.Deactivate()
+	if got := spell.dots[0].BaseDuration(); got != time.Second*18 {
+		t.Errorf("dot duration after removing the mod: %v, want %v", got, time.Second*18)
+	}
+	if got := spell.aoeDot.BaseDuration(); got != time.Second*8 {
+		t.Errorf("aoe dot duration after removing the mod: %v, want %v", got, time.Second*8)
+	}
+	if got := spell.RelatedSelfBuff.Duration; got != time.Second*10 {
+		t.Errorf("self-buff duration after removing the mod: %v, want %v", got, time.Second*10)
+	}
+	if got := spell.RelatedAuraArrays["debuff"][0].Duration; got != time.Second*12 {
+		t.Errorf("aura array duration after removing the mod: %v, want %v", got, time.Second*12)
+	}
+}
+
+// The extra duration turns into whole extra ticks when the dot is next applied.
+func TestDurationFlatModAddsTicks(t *testing.T) {
+	sim := SetupFakeSim()
+	fa := sim.Raid.Parties[0].Players[0].(*FakeAgent)
+
+	fa.Dot.Apply(sim)
+	if got := fa.Dot.RemainingTicks(); got != 6 {
+		t.Fatalf("ticks without the mod: %d, want 6", got)
+	}
+
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_Duration_Flat, TimeValue: time.Second * 6}, fa.Spell)
+	mod.Activate()
+
+	fa.Dot.Deactivate(sim)
+	fa.Dot.Apply(sim)
+	if got := fa.Dot.RemainingTicks(); got != 8 {
+		t.Errorf("ticks with the mod active: %d, want 8", got)
+	}
+}
+
+// A spell with none of the duration targets is left alone rather than panicking.
+func TestDurationFlatModOnSpellWithoutTargets(t *testing.T) {
+	spell := &Spell{}
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_Duration_Flat, TimeValue: time.Second * 6}, spell)
+
+	mod.Activate()
+	mod.Deactivate()
+}
+
+func TestBuffMaxStacksFlatMod(t *testing.T) {
+	spell := newDurationTargetSpell()
+	// An aura the client never gives stacks, which the mod has to leave non-stacking.
+	spell.RelatedAuraArrays["debuff"] = append(spell.RelatedAuraArrays["debuff"], &Aura{})
+
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_BuffMaxStacks_Flat, IntValue: 2}, spell)
+
+	mod.Activate()
+	if got := spell.RelatedSelfBuff.MaxStacks; got != 5 {
+		t.Errorf("self-buff max stacks with the mod active: %d, want 5", got)
+	}
+	if got := spell.RelatedAuraArrays["debuff"][0].MaxStacks; got != 4 {
+		t.Errorf("aura array max stacks with the mod active: %d, want 4", got)
+	}
+	if got := spell.RelatedAuraArrays["debuff"][2].MaxStacks; got != 0 {
+		t.Errorf("non-stacking aura max stacks with the mod active: %d, want 0", got)
+	}
+
+	mod.UpdateIntValue(4)
+	if got := spell.RelatedSelfBuff.MaxStacks; got != 7 {
+		t.Errorf("self-buff max stacks after updating the mod: %d, want 7", got)
+	}
+
+	mod.Deactivate()
+	if got := spell.RelatedSelfBuff.MaxStacks; got != 3 {
+		t.Errorf("self-buff max stacks after removing the mod: %d, want 3", got)
+	}
+	if got := spell.RelatedAuraArrays["debuff"][0].MaxStacks; got != 2 {
+		t.Errorf("aura array max stacks after removing the mod: %d, want 2", got)
+	}
+}
+
+func TestRangeFlatMod(t *testing.T) {
+	spell := &Spell{MaxRange: 30}
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_Range_Flat, FloatValue: 5}, spell)
+
+	mod.Activate()
+	if spell.MaxRange != 35 {
+		t.Errorf("max range with the mod active: %v, want 35", spell.MaxRange)
+	}
+
+	mod.UpdateFloatValue(8)
+	if spell.MaxRange != 38 {
+		t.Errorf("max range after updating the mod: %v, want 38", spell.MaxRange)
+	}
+
+	mod.Deactivate()
+	if spell.MaxRange != 30 {
+		t.Errorf("max range after removing the mod: %v, want 30", spell.MaxRange)
+	}
+}
+
+// The direct-only bucket reaches direct hits and leaves ticks at the shared additive bucket.
+func TestDirectDamageDoneFlatMod(t *testing.T) {
+	sim := SetupFakeSim()
+	fa := sim.Raid.Parties[0].Players[0].(*FakeAgent)
+	attackTable := fa.AttackTables[sim.Encounter.ActiveTargetUnits[0].UnitIndex]
+
+	mod := newTestMod(SpellModConfig{Kind: SpellMod_DirectDamageDone_Flat, FloatValue: 0.2}, fa.Spell)
+	mod.Activate()
+
+	if got := fa.Spell.AttackerDamageMultiplier(attackTable, false); !WithinToleranceFloat64(1.8, got, 0.001) {
+		t.Errorf("direct multiplier with the mod active: %0.3f, want 1.800", got)
+	}
+	if got := fa.Spell.AttackerDamageMultiplier(attackTable, true); !WithinToleranceFloat64(1.5, got, 0.001) {
+		t.Errorf("tick multiplier with the mod active: %0.3f, want 1.500", got)
+	}
+
+	mod.UpdateFloatValue(0.4)
+	if got := fa.Spell.AttackerDamageMultiplier(attackTable, false); !WithinToleranceFloat64(2.1, got, 0.001) {
+		t.Errorf("direct multiplier after updating the mod: %0.3f, want 2.100", got)
+	}
+
+	mod.Deactivate()
+	if got := fa.Spell.AttackerDamageMultiplier(attackTable, false); !WithinToleranceFloat64(1.5, got, 0.001) {
+		t.Errorf("direct multiplier after removing the mod: %0.3f, want 1.500", got)
+	}
+}

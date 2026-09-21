@@ -153,8 +153,11 @@ type Spell struct {
 	CdMultiplier             float64
 	DamageMultiplier         float64
 	DamageMultiplierAdditive float64
-	CritMultiplierPct        float64 // Multiplies the base crit multiplier, 1 = unmodified. Fed by SpellMod_CritMultiplier_Pct.
-	CritMultiplierAdditive   float64 // Additive critical damage bonus
+	// Added to DamageMultiplierAdditive on direct hits only. Unlike that bucket this one is 0
+	// when nothing feeds it.
+	DirectDamageMultiplierAdditive float64
+	CritMultiplierPct              float64 // Multiplies the base crit multiplier, 1 = unmodified. Fed by SpellMod_CritMultiplier_Pct.
+	CritMultiplierAdditive         float64 // Additive critical damage bonus
 
 	BonusBaseDamage  float64 // Certain items can increase the base damage of a spell e.g. https://www.wowhead.com/forever/item=28248/totem-of-the-void
 	BonusCoefficient float64 // EffectBonusCoefficient in SpellEffect client DB table, "SP mod" on Wowhead (not necessarily shown there even if > 0)
