@@ -4,6 +4,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (warrior *Warrior) registerFuryTalents() {
@@ -70,17 +71,13 @@ func (warrior *Warrior) registerUnbridledWrath() {
 		twoHanded()
 	})
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Unbridled Wrath",
-		ProcMask:           core.ProcMaskMeleeWhiteHit,
-		ProcChance:         spellData.UnbridledWrath.FractionAt(warrior.Talents.UnbridledWrath),
-		RequireDamageDealt: true,
-		Outcome:            core.OutcomeLanded,
-		Callback:           core.CallbackOnSpellHitDealt,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// The rate is the effect ladder the tooltip's $m1 names - 12/24/36/48/60 by rank, where the
+	// proc chance column reads a flat 60 - and the row's mask is the white hits the tooltip means.
+	warrior.MakeProcTriggerAura(spelldata.ProcTrigger(&warrior.Character,
+		spellData.UnbridledWrath.Rank(warrior.Talents.UnbridledWrath),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.AddRage(sim, rageGain, rageMetrics)
-		},
-	})
+		}))
 }
 
 func (warrior *Warrior) registerDualWieldSpecialization() {
@@ -129,28 +126,28 @@ func (warrior *Warrior) registerEnrage() {
 		return
 	}
 
-	warrior.EnrageAura = warrior.GetOrRegisterAura(core.Aura{
-		Label:    "Enrage",
-		ActionID: core.ActionID{SpellID: enrageBuff.ID},
-		Duration: enrageBuff.Duration(),
-	}).AttachSpellMod(core.SpellModConfig{
-		School:     core.SpellSchoolPhysical,
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.Enrage.FractionAt(warrior.Talents.Enrage),
-	})
+	warrior.EnrageAura = warrior.GetOrRegisterAura(spelldata.AuraConfig(enrageBuff))
+
+	// 12880 states the bucket and the duration, and the sim's only Enrage buff row states a flat
+	// 10; the percentage per rank is the talent's own ladder, which is what 12317's tooltip reads
+	// as $m1%. So the value is the talent's and only the bucket - the physical school's damage
+	// dealt multiplier, not a per-spell mod - comes off the buff row.
+	warrior.EnrageAura.AttachMultiplicativePseudoStatBuff(
+		&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical],
+		spellData.Enrage.MultiplierAt(warrior.Talents.Enrage),
+	)
 
 	warrior.EnrageAura.NewExclusiveEffect("Enrage", true, core.ExclusiveEffect{Priority: spellData.Enrage.ValueAt(warrior.Talents.Enrage)})
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Enrage - Trigger",
-		Callback:           core.CallbackOnSpellHitTaken,
-		Outcome:            core.OutcomeLanded,
-		RequireDamageDealt: true,
-		ProcChance:         spellData.Enrage.ProcChanceAt(warrior.Talents.Enrage),
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// The rate is the shape where the tooltip carries $h%: a real 30% roll on damage taken, which
+	// is the proc chance column.
+	trigger := spelldata.ProcTrigger(&warrior.Character, spellData.Enrage.Rank(warrior.Talents.Enrage),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.EnrageAura.Activate(sim)
-		},
-	})
+		})
+	trigger.Name = "Enrage - Trigger"
+
+	warrior.MakeProcTriggerAura(trigger)
 }
 
 var flurryBuff = spellData.FlurryTriggered.Highest()
@@ -160,24 +157,21 @@ func (warrior *Warrior) registerFlurry() {
 		return
 	}
 
+	// 12966 supplies the duration and the three charges. The haste is the talent's own ladder:
+	// 12319 reads "Increases your melee attack speed by $m1% for your next $12966n swings", so the
+	// buff row is named for the swing count alone.
+	//
 	// TODO: Ingame test needed: the talent ladder gives 5% per point (25% at rank 5) while the
 	// applied buff 12966 carries a flat 30%.
-	flurryAura := warrior.RegisterAura(core.Aura{
-		Label:     "Flurry",
-		ActionID:  core.ActionID{SpellID: flurryBuff.ID},
-		Duration:  flurryBuff.Duration(),
-		MaxStacks: int32(flurryBuff.ProcCharges),
-	}).AttachMultiplyMeleeSpeed(spellData.Flurry.MultiplierAt(warrior.Talents.Flurry))
+	flurryAura := warrior.RegisterAura(spelldata.AuraConfig(flurryBuff)).
+		AttachMultiplyMeleeSpeed(spellData.Flurry.MultiplierAt(warrior.Talents.Flurry))
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Flurry - Trigger",
-		ActionID:           core.ActionID{SpellID: 12319},
-		ProcMask:           core.ProcMaskMelee,
-		TriggerImmediately: true,
-		Callback:           core.CallbackOnSpellHitDealt,
-		Outcome:            core.OutcomeLanded,
-
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// The proc shape with no roll: 12319 states its rate as "always" and the crit is the
+	// condition, which this handler reads off the result rather than the trigger because the same
+	// listener has to see the white hits that spend a charge. The row's mask reaches ranged and
+	// spell hits too; the tooltip says a melee critical strike, so the mask stays the caller's.
+	trigger := spelldata.ProcTrigger(&warrior.Character, spellData.Flurry.Rank(warrior.Talents.Flurry),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if spell.Matches(SpellMaskWhirlwindOh) {
 				return
 			}
@@ -191,8 +185,12 @@ func (warrior *Warrior) registerFlurry() {
 			if flurryAura.IsActive() && spell.ProcMask.Matches(core.ProcMaskMeleeWhiteHit) {
 				flurryAura.RemoveStack(sim)
 			}
-		},
-	})
+		})
+	trigger.Name = "Flurry - Trigger"
+	trigger.ProcMask = core.ProcMaskMelee
+	trigger.TriggerImmediately = true
+
+	warrior.MakeProcTriggerAura(trigger)
 }
 
 func (warrior *Warrior) registerPrecision() {
@@ -272,29 +270,30 @@ func (warrior *Warrior) registerBloodCraze() {
 
 	bloodCraze := warrior.RegisterSpell(config)
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Blood Craze - Damage Taken",
-		Callback:           core.CallbackOnSpellHitTaken,
-		Outcome:            core.OutcomeLanded,
-		RequireDamageDealt: true,
-		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
-			return result.Outcome.Matches(core.OutcomeCrit) || result.Damage > warrior.MaxHealth()*hitThreshold
-		},
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			bloodCraze.SelfHot().Apply(sim)
-		},
-	})
+	// One row, two listeners: 16487 decodes to hits taken and hits dealt at once, and the tooltip
+	// gives each its own condition. Its crit hint covers only half of the taken one - a crit taken
+	// or a hit over a share of maximum health - so both take the landed outcome and the condition
+	// by hand, and the dealt one is narrowed to the Bloodthirst the tooltip names.
+	apply := func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+		bloodCraze.SelfHot().Apply(sim)
+	}
+	rank := spellData.BloodCraze.Rank(warrior.Talents.BloodCraze)
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Blood Craze - Bloodthirst",
-		Callback:           core.CallbackOnSpellHitDealt,
-		ClassSpellMask:     SpellMaskBloodthirst,
-		Outcome:            core.OutcomeLanded,
-		RequireDamageDealt: true,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			bloodCraze.SelfHot().Apply(sim)
-		},
-	})
+	taken := spelldata.ProcTrigger(&warrior.Character, rank, apply)
+	taken.Name = "Blood Craze - Damage Taken"
+	taken.Callback = core.CallbackOnSpellHitTaken
+	taken.Outcome = core.OutcomeLanded
+	taken.ExtraCondition = func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
+		return result.Outcome.Matches(core.OutcomeCrit) || result.Damage > warrior.MaxHealth()*hitThreshold
+	}
+	warrior.MakeProcTriggerAura(taken)
+
+	dealt := spelldata.ProcTrigger(&warrior.Character, rank, apply)
+	dealt.Name = "Blood Craze - Bloodthirst"
+	dealt.Callback = core.CallbackOnSpellHitDealt
+	dealt.Outcome = core.OutcomeLanded
+	dealt.ClassSpellMask = SpellMaskBloodthirst
+	warrior.MakeProcTriggerAura(dealt)
 }
 
 // Raging Blows (1310315): the Cleave discount here, the off-hand Whirlwind strike in whirlwind.go.

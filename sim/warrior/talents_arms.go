@@ -154,20 +154,22 @@ func (warrior *Warrior) registerDeepWounds() {
 
 	warrior.DeepWounds = warrior.RegisterSpell(config)
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Deep Wounds - Trigger",
-		TriggerImmediately: true,
-		ProcMaskExclude:    core.ProcMaskEmpty,
-		Outcome:            core.OutcomeCrit,
-		Callback:           core.CallbackOnSpellHitDealt,
-		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
-			return spell.SpellSchool.Matches(core.SpellSchoolPhysical)
-		},
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// The proc shape with no roll: 12834 states its rate as "always" and the tooltip's critical
+	// strike is the condition. No proc mask can state an outcome, so the crit is the caller's, and
+	// so is the physical school the tooltip's melee weapon means.
+	trigger := spelldata.ProcTrigger(&warrior.Character,
+		spellData.DeepWounds.Rank(warrior.Talents.DeepWounds),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.DeepWounds.Cast(sim, result.Target)
-		},
-	})
+		})
+	trigger.Name = "Deep Wounds - Trigger"
+	trigger.Outcome = core.OutcomeCrit
+	trigger.TriggerImmediately = true
+	trigger.ExtraCondition = func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
+		return spell.SpellSchool.Matches(core.SpellSchoolPhysical)
+	}
 
+	warrior.MakeProcTriggerAura(trigger)
 }
 
 func (warrior *Warrior) registerTwoHandedWeaponSpecialization() {
@@ -258,22 +260,20 @@ func (warrior *Warrior) registerBloodthrill() {
 	}
 
 	// The proc makes Overpower usable for the buff's duration; the cast consumes it like a dodge
-	// would.
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:       "Bloodthrill - Trigger",
-		ActionID:   core.ActionID{SpellID: 1289682},
-		Callback:   core.CallbackOnSpellHitDealt,
-		ProcMask:   core.ProcMaskMeleeWhiteHit,
-		Outcome:    core.OutcomeLanded,
-		ProcChance: spellData.Bloodthrill.FractionAt(warrior.Talents.Bloodthrill),
-		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
-			return warrior.Rend.Dot(result.Target).IsActive()
-		},
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// would. The rate is the shape where the tooltip's $s1 names an effect, so the row's own
+	// ProcChanceEffectN reads the ladder; the Rend the tooltip asks for is the caller's.
+	trigger := spelldata.ProcTrigger(&warrior.Character,
+		spellData.Bloodthrill.Rank(warrior.Talents.Bloodthrill),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.OverpowerAura.Activate(sim)
 			warrior.OverpowerAura.UpdateExpires(sim.CurrentTime + bloodthrillProc.Duration())
-		},
-	})
+		})
+	trigger.Name = "Bloodthrill - Trigger"
+	trigger.ExtraCondition = func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
+		return warrior.Rend.Dot(result.Target).IsActive()
+	}
+
+	warrior.MakeProcTriggerAura(trigger)
 }
 
 func (warrior *Warrior) registerWeaponmaster() {
@@ -317,6 +317,8 @@ func (warrior *Warrior) registerWeaponmaster() {
 		applyArmorIgnore()
 	})
 
+	// 1290261 states no proc flags at all, so the row decodes to a listener that hears nothing:
+	// the shape, the mask and the rate's effect are all the caller's.
 	var extraAttack *core.Spell
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Weaponmaster (Sword)",
@@ -367,17 +369,17 @@ func (warrior *Warrior) registerImprovedHamstring() {
 		})
 	})
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Improved Hamstring - Trigger",
-		ActionID:       core.ActionID{SpellID: 12289},
-		Callback:       core.CallbackOnSpellHitDealt,
-		ClassSpellMask: SpellMaskHamstring,
-		Outcome:        core.OutcomeLanded,
-		ProcChance:     spellData.ImprovedHamstring.FractionAt(warrior.Talents.ImprovedHamstring),
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// The rate is the effect ladder the tooltip's $m1 names. The one ability it fires on is a
+	// shape no proc mask states, so the row's listener is narrowed to Hamstring by hand.
+	trigger := spelldata.ProcTrigger(&warrior.Character,
+		spellData.ImprovedHamstring.Rank(warrior.Talents.ImprovedHamstring),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			immobilizeAuras.Get(result.Target).Activate(sim)
-		},
-	})
+		})
+	trigger.Name = "Improved Hamstring - Trigger"
+	trigger.ClassSpellMask = SpellMaskHamstring
+
+	warrior.MakeProcTriggerAura(trigger)
 }
 
 func (warrior *Warrior) registerImprovedSlam() {
@@ -434,17 +436,11 @@ func (warrior *Warrior) registerSweepingStrikes() {
 		},
 	})
 
-	warrior.SweepingStrikesAura = warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Sweeping Strikes",
-		ActionID:           actionID,
-		MetricsActionID:    actionID,
-		Duration:           sweepingStrikesRank.Duration(),
-		Callback:           core.CallbackOnSpellHitDealt,
-		ProcMask:           core.ProcMaskMelee,
-		Outcome:            core.OutcomeLanded,
-		TriggerImmediately: true,
-
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// The proc shape with no roll: 12292 states its rate as "always" and the buff's charges are
+	// what run out. The duration and the charge count are the row's; which hits spend a charge is
+	// the handler's.
+	sweepingStrikes := spelldata.ProcTrigger(&warrior.Character, sweepingStrikesRank,
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if warrior.Env.ActiveTargetCount() < 2 || warrior.SweepingStrikesAura.GetStacks() == 0 || result.PostOutcomeDamage <= 0 {
 				return
 			}
@@ -462,8 +458,12 @@ func (warrior *Warrior) registerSweepingStrikes() {
 			}
 
 			warrior.SweepingStrikesAura.RemoveStack(sim)
-		},
-	})
+		})
+	sweepingStrikes.MetricsActionID = actionID
+	sweepingStrikes.Duration = sweepingStrikesRank.Duration()
+	sweepingStrikes.TriggerImmediately = true
+
+	warrior.SweepingStrikesAura = warrior.MakeProcTriggerAura(sweepingStrikes)
 	warrior.SweepingStrikesAura.MaxStacks = int32(sweepingStrikesRank.ProcCharges)
 
 	config := spelldata.SpellConfig(&warrior.Unit, sweepingStrikesRank)

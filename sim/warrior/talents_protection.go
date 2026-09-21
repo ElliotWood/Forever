@@ -61,30 +61,31 @@ func (warrior *Warrior) registerShieldSpecialization() {
 	spelldata.ParseStatic(&warrior.Character,
 		spellData.ShieldSpecialization.Rank(warrior.Talents.ShieldSpecialization))
 
-	// The tooltip states the chance as $m2%, so effect 2's ladder is the chance and the 100 in the
-	// proc chance column is noise.
-	warrior.registerRageOnAvoid("Shield Specialization", shieldSpecializationEnergize.ID,
-		shieldSpecializationEnergize.EnergizeEffect().Tenths(),
-		spellData.ShieldSpecialization.EffectAt(2).FractionAt(warrior.Talents.ShieldSpecialization), core.OutcomeBlock, nil)
+	warrior.registerRageOnAvoid(spellData.ShieldSpecialization.Rank(warrior.Talents.ShieldSpecialization),
+		shieldSpecializationEnergize, core.OutcomeBlock, nil)
 }
 
-// A chance to gain rage when an incoming attack is blocked, dodged or parried. The energize the
-// triggered spell states is on the client's 0-1000 rage bar, so the call site divides it by ten.
-func (warrior *Warrior) registerRageOnAvoid(name string, spellID int32, rage float64, chance float64, outcome core.HitOutcome, extra func() bool) {
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: spellID})
-	trigger := core.ProcTrigger{
-		Name:               name,
-		ProcChance:         chance,
-		TriggerImmediately: true,
-		Outcome:            outcome,
-		Callback:           core.CallbackOnSpellHitTaken,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+// A chance to gain rage when an incoming attack is blocked, dodged or parried. The rate is the
+// effect ladder the tooltip's $m names, and the 100 in the proc chance column is noise; the
+// energize the triggered spell states is on the client's 0-1000 rage bar.
+//
+// No proc mask states an outcome, so the block, dodge or parry is the caller's, and the row's
+// RequireDamageDealt goes with it: a dodge or a parry deals none.
+func (warrior *Warrior) registerRageOnAvoid(driver *spelldata.Spell, energize *spelldata.Spell, outcome core.HitOutcome, extra func() bool) {
+	rage := energize.EnergizeEffect().Tenths()
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: energize.ID})
+
+	trigger := spelldata.ProcTrigger(&warrior.Character, driver,
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.AddRage(sim, rage, rageMetrics)
-		},
-	}
+		})
+	trigger.Outcome = outcome
+	trigger.RequireDamageDealt = false
+	trigger.TriggerImmediately = true
 	if extra != nil {
 		trigger.ExtraCondition = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool { return extra() }
 	}
+
 	warrior.MakeProcTriggerAura(trigger)
 }
 
@@ -228,11 +229,9 @@ func (warrior *Warrior) registerMasterOfDefense() {
 		return
 	}
 
-	// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100 in
-	// the proc chance column is noise; a shield has to be equipped.
-	warrior.registerRageOnAvoid("Master of Defense", masterOfDefenseEnergize.ID,
-		masterOfDefenseEnergize.EnergizeEffect().Tenths(),
-		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense), core.OutcomeDodge|core.OutcomeParry,
+	// A shield has to be equipped, which the row does not state.
+	warrior.registerRageOnAvoid(spellData.MasterOfDefense.Rank(warrior.Talents.MasterOfDefense),
+		masterOfDefenseEnergize, core.OutcomeDodge|core.OutcomeParry,
 		func() bool { return warrior.PseudoStats.CanBlock })
 }
 
@@ -268,19 +267,18 @@ func (warrior *Warrior) registerImprovedShieldBash() {
 		})
 	})
 
-	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name: "Improved Shield Bash",
-		// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100
-		// in the proc chance column is noise.
-		ProcChance:         spellData.ImprovedShieldBash.FractionAt(warrior.Talents.ImprovedShieldBash),
-		TriggerImmediately: true,
-		ClassSpellMask:     SpellMaskShieldBash,
-		Outcome:            core.OutcomeLanded,
-		Callback:           core.CallbackOnSpellHitDealt,
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+	// The rate is the effect ladder the tooltip's $m1 names, and the 100 in the proc chance column
+	// is noise. The one ability it fires on is a shape no proc mask states, so the row's listener
+	// is narrowed to Shield Bash by hand.
+	trigger := spelldata.ProcTrigger(&warrior.Character,
+		spellData.ImprovedShieldBash.Rank(warrior.Talents.ImprovedShieldBash),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			silenceAuras.Get(result.Target).Activate(sim)
-		},
-	})
+		})
+	trigger.ClassSpellMask = SpellMaskShieldBash
+	trigger.TriggerImmediately = true
+
+	warrior.MakeProcTriggerAura(trigger)
 }
 
 func (warrior *Warrior) registerBastion() {
