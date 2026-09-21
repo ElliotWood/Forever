@@ -94,16 +94,15 @@ export function getStatName(stat: Stat): string {
 	}
 }
 
-// TODO: Make sure BE exports the spell schools properly
 export enum SpellSchool {
 	None = 0,
-	Physical = 1 << 1,
-	Arcane = 1 << 2,
-	Fire = 1 << 3,
-	Frost = 1 << 4,
-	Holy = 1 << 5,
-	Nature = 1 << 6,
-	Shadow = 1 << 7,
+	Physical = 1,
+	Holy = 2,
+	Fire = 4,
+	Nature = 8,
+	Frost = 16,
+	Shadow = 32,
+	Arcane = 64,
 }
 
 export const spellSchoolNames: Map<number, string> = new Map([
