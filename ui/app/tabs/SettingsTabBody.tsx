@@ -35,7 +35,6 @@ export const SettingsTabBody = () => {
 			explosive: relevantStatOptions(ConsumablesInputs.EXPLOSIVE_CONFIG, host),
 			imbueMH: relevantStatOptions(ConsumablesInputs.IMBUE_CONFIG_MH, host),
 			imbueOH: relevantStatOptions(ConsumablesInputs.IMBUE_CONFIG_OH, host),
-			drums: relevantStatOptions(ConsumablesInputs.DRUMS_CONFIG, host),
 		}),
 		[host, config, player],
 	);
@@ -83,7 +82,6 @@ export const SettingsTabBody = () => {
 									explosiveOptions={options.explosive}
 									imbueMHOptions={options.imbueMH}
 									imbueOHOptions={options.imbueOH}
-									drumsOptions={options.drums}
 									encounterConsumes={!gearPlanner}
 								/>
 							</ContentBlock>

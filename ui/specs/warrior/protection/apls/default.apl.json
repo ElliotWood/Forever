@@ -7,7 +7,6 @@
 	],
 	"priorityList": [
 		{"action":{"groupReference":{"groupName":"Encounter - Archimonde"}}},
-		{"action":{"condition":{"cmp":{"op":"OpGe","lhs":{"currentTime":{}},"rhs":{"const":{"val":"5s"}}}},"groupReference":{"groupName":"Drums"}}},
 		{"action":{"groupReference":{"groupName":"Engineering"}}},
 		{"action":{"groupReference":{"groupName":"CD: Offensive Trinkets"}}},
 		{"action":{"condition":{"cmp":{"op":"OpLe","lhs":{"currentHealthPercent":{}},"rhs":{"const":{"val":"40%"}}}},"groupReference":{"groupName":"CD: Defensive Trinkets"}}},
@@ -49,7 +48,6 @@
 	"groups": [
 		{"name":"Encounter - Archimonde","actions":[{"action":{"condition":{"variableRef":{"name":"Encounter: Archimonde - Fear Casting"}},"castSpell":{"spellId":{"spellId":2458}}}},{"action":{"condition":{"variableRef":{"name":"Encounter: Archimonde - Fear Casting"}},"strictSequence":{"actions":[{"castSpell":{"spellId":{"spellId":18499}}},{"castSpell":{"spellId":{"spellId":71}}}]}}}]},
 		{"name":"Recklessness ON/OFF","actions":[{"action":{}}]},
-		{"name":"Drums","actions":[{"action":{"castSpell":{"spellId":{"spellId":35476}}}},{"action":{"castSpell":{"spellId":{"spellId":35476,"tag":-1}}}}]},
 		{"name":"Engineering","actions":[{"action":{"castSpell":{"spellId":{"itemId":23827}}}},{"action":{"castSpell":{"spellId":{"itemId":10646}}}},{"action":{"castSpell":{"spellId":{"itemId":23737}}}},{"action":{"castSpell":{"spellId":{"itemId":23736}}}},{"action":{"castSpell":{"spellId":{"itemId":11566}}}},{"action":{"castSpell":{"spellId":{"itemId":18588}}}}]},
 		{"name":"CD: Offensive Trinkets","actions":[{"action":{"castSpell":{"spellId":{"itemId":21670}}}},{"action":{"castSpell":{"spellId":{"itemId":22954}}}},{"action":{"castSpell":{"spellId":{"itemId":28041}}}},{"action":{"castSpell":{"spellId":{"itemId":23041}}}},{"action":{"castSpell":{"spellId":{"itemId":29383}}}},{"action":{"castSpell":{"spellId":{"itemId":38287}}}},{"action":{"castSpell":{"spellId":{"itemId":28288}}}},{"action":{"castSpell":{"spellId":{"itemId":28121}}}},{"action":{"castSpell":{"spellId":{"itemId":24128}}}},{"action":{"castSpell":{"spellId":{"itemId":35702}}}},{"action":{"castSpell":{"spellId":{"itemId":33831}}}},{"action":{"castSpell":{"spellId":{"itemId":29387}}}}]},
 		{"name":"CD: Racials","actions":[{"action":{"castSpell":{"spellId":{"spellId":33697}}}},{"action":{"castSpell":{"spellId":{"spellId":26296,"tag":1}}}},{"hide":true,"action":{"castSpell":{"spellId":{"spellId":26296,"tag":2}}}},{"hide":true,"action":{"castSpell":{"spellId":{"spellId":26296,"tag":3}}}},{"hide":true,"action":{"castSpell":{"spellId":{"spellId":26296,"tag":4}}}},{"hide":true,"action":{"castSpell":{"spellId":{"spellId":26296,"tag":5}}}}]},

@@ -1,6 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Drums, Profession, Race } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race } from '@generated/proto/common';
 import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, ShamanSyncType } from '@generated/proto/shaman';
 
 import DefaultApl from './apls/default.apl.json';
@@ -32,7 +32,6 @@ export const DefaultConsumables = ConsumesSpec.create({
 	potId: 22838, // Haste Potion
 	flaskId: 22854, // Flask of Relentless Assault
 	foodId: 27658, // Roasted Clefthoof
-	drumsId: Drums.LesserDrumsOfBattle,
 	conjuredId: 22788,
 	explosiveId: 30217,
 	superSapper: true,

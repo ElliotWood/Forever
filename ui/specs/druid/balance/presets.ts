@@ -1,6 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Drums, Profession, Race, UnitReference } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race, UnitReference } from '@generated/proto/common';
 import { BalanceDruid_Options as BalanceDruidOptions } from '@generated/proto/druid';
 
 import DefaultAPL from './apls/default.apl.json';
@@ -42,7 +42,6 @@ export const DefaultDebuffs = Debuffs.create({
 
 export const DefaultConsumables = ConsumesSpec.create({
 	conjuredId: 12662, // Demonic Rune
-	drumsId: Drums.LesserDrumsOfBattle,
 	flaskId: 22861, // Flask of Blinding Light
 	foodId: 27657, // Blackened Basilisk
 	mhImbueId: 25122, // Brilliant Wizard Oil
