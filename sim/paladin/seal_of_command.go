@@ -22,12 +22,12 @@ import (
 func (paladin *Paladin) registerSealOfCommand(row shared.SpellData) {
 	judgeRow := spellData.JudgementOfCommand.ByRank(row.Rank)
 
+	// Melee in SpellCategories with No Active Defense: hit and crit on the melee table, never
+	// dodged, parried or blocked.
 	judgement := paladin.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: judgeRow.SpellID},
-		SpellSchool: core.SpellSchoolHoly,
-		// The judgement is a dummy that triggers the damage spell, and that one is Melee in
-		// SpellCategories: it crits on the melee table.
-		DefenseType:    core.DefenseTypeMelee,
+		ActionID:       core.ActionID{SpellID: judgeRow.SpellID},
+		SpellSchool:    judgeRow.SpellSchool,
+		DefenseType:    judgeRow.DefenseType,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskJudgementOfCommand,
@@ -41,7 +41,7 @@ func (paladin *Paladin) registerSealOfCommand(row shared.SpellData) {
 			if !target.PseudoStats.Stunned {
 				baseDamage /= 2
 			}
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialCritOnly)
+			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialNoBlockDodgeParry)
 		},
 	})
 

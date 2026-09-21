@@ -25,11 +25,13 @@ var sealOfRighteousnessProcIDs = map[int32]int32{1: 25742, 2: 25740, 3: 25739, 4
 func (paladin *Paladin) registerSealOfRighteousness(row shared.SpellData) {
 	judgeRow := spellData.JudgementOfRighteousness.BySpellID(int32(effectAt(row, 2).Value))
 
+	// The judgement is Melee in SpellCategories and carries No Active Defense: it rolls hit and
+	// crit on the melee table and cannot be dodged, parried or blocked.
 	judgement := paladin.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: judgeRow.SpellID},
-		SpellSchool:    core.SpellSchoolHoly,
-		DefenseType:    core.DefenseTypeMagic,
-		ProcMask:       core.ProcMaskSpellDamage,
+		SpellSchool:    judgeRow.SpellSchool,
+		DefenseType:    judgeRow.DefenseType,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagBinary,
 		ClassSpellMask: SpellMaskJudgementOfRighteousness,
 
@@ -38,8 +40,7 @@ func (paladin *Paladin) registerSealOfRighteousness(row shared.SpellData) {
 		BonusCoefficient: judgeRow.Direct.BonusCoefficient(),
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			// Judgement itself rolled the hit; the seal's judgement rolls the crit.
-			spell.CalcAndDealDamage(sim, target, judgeRow.Direct.Damage(sim), spell.OutcomeMagicCrit)
+			spell.CalcAndDealDamage(sim, target, judgeRow.Direct.Damage(sim), spell.OutcomeMeleeSpecialNoBlockDodgeParry)
 		},
 	})
 

@@ -12,17 +12,17 @@ var JudgementRankMap = spellData.Judgement
 // Unleash the energy of a Seal spell upon an enemy. Does not consume the Seal. Refer to individual
 // Seals for Judgement effect.
 //
-// The spell itself is a dummy that rolls on the spell hit table; the seal's own judgement spell
-// carries the effect and, for the damaging ones, the crit roll.
+// The spell itself has no defense type and rolls nothing: the seal's own judgement spell is Melee in
+// SpellCategories and carries the hit roll along with the effect.
 func (paladin *Paladin) registerJudgement() {
 	row := JudgementRankMap.HighestRank()
 
 	paladin.Judgement = paladin.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: row.SpellID},
-		SpellSchool:    core.SpellSchoolHoly,
-		DefenseType:    core.DefenseTypeMagic,
+		SpellSchool:    row.SpellSchool,
+		DefenseType:    row.DefenseType,
 		ProcMask:       core.ProcMaskEmpty,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+		Flags:          core.SpellFlagAPL | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
 		ClassSpellMask: SpellMaskJudgement,
 		MaxRange:       row.MaxRange,
 
@@ -46,11 +46,7 @@ func (paladin *Paladin) registerJudgement() {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			seal := paladin.activeSeal()
-			result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMagicHit)
-			if result.Landed() {
-				seal.judgement.Cast(sim, target)
-			}
+			paladin.activeSeal().judgement.Cast(sim, target)
 
 			// Let the rotation react when the cooldown ends, since nothing on the GCD marks it.
 			pa := sim.GetConsumedPendingActionFromPool()

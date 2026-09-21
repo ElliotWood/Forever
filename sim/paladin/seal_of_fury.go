@@ -28,11 +28,13 @@ var sealOfFuryProcIDs = map[int32]int32{1: 1311647, 2: 1311654, 3: 20231, 4: 204
 func (paladin *Paladin) registerSealOfFury(row shared.SpellData) {
 	judgementRow := spellData.SealOfFuryTriggered.BySpellID(int32(effectAt(row, 2).Value))
 
+	// Melee in SpellCategories with No Active Defense: hit and crit on the melee table, never
+	// dodged, parried or blocked.
 	judgement := paladin.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: judgementRow.SpellID},
-		SpellSchool:    core.SpellSchoolHoly,
-		DefenseType:    core.DefenseTypeMagic,
-		ProcMask:       core.ProcMaskSpellDamage,
+		SpellSchool:    judgementRow.SpellSchool,
+		DefenseType:    judgementRow.DefenseType,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagBinary,
 		ClassSpellMask: SpellMaskJudgementOfFury,
 
@@ -41,7 +43,7 @@ func (paladin *Paladin) registerSealOfFury(row shared.SpellData) {
 		BonusCoefficient: judgementRow.Direct.BonusCoefficient(),
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealDamage(sim, target, judgementRow.Direct.Damage(sim), spell.OutcomeMagicCrit)
+			spell.CalcAndDealDamage(sim, target, judgementRow.Direct.Damage(sim), spell.OutcomeMeleeSpecialNoBlockDodgeParry)
 		},
 	})
 

@@ -29,12 +29,13 @@ func (paladin *Paladin) registerSealOfJustice(row shared.SpellData) {
 		})
 	})
 
+	// Melee in SpellCategories and Always Hit: the debuff lands without a roll.
 	judgement := paladin.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: judgementRow.SpellID},
-		SpellSchool:    core.SpellSchoolHoly,
-		DefenseType:    core.DefenseTypeMagic,
+		SpellSchool:    judgementRow.SpellSchool,
+		DefenseType:    judgementRow.DefenseType,
 		ProcMask:       core.ProcMaskEmpty,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagBinary,
+		Flags:          core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskJudgementOfJustice,
 
 		DamageMultiplier: 1,
