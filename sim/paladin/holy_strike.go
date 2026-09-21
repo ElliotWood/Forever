@@ -23,7 +23,7 @@ const holyStrikeCooldown = time.Second * 12
 func (paladin *Paladin) registerHolyStrike() {
 	// Rank 2 takes off 2 sec, so the linear reading was right. Confirmed on the beta.
 	cd := core.Cooldown{
-		Timer:    paladin.NewTimer(),
+		Timer:    paladin.strikeTimer(),
 		Duration: holyStrikeCooldown - time.Second*time.Duration(paladin.Talents.ImprovedHolyStrike),
 	}
 

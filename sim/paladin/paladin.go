@@ -27,6 +27,7 @@ const (
 	SpellCode_PaladinLayOnHands
 	SpellCode_PaladinHammerOfWrath
 	SpellCode_PaladinHolyStrike
+	SpellCode_PaladinHammerOfTheRighteous
 )
 
 type SealJudgeCode uint8
@@ -47,6 +48,10 @@ type Paladin struct {
 	primarySeal        *core.Spell // the seal configured in options, available via "Cast Primary Seal"
 	primaryPaladinAura proto.PaladinAura
 	currentPaladinAura *core.Aura
+
+	// Holy Strike and Hammer of the Righteous share client cooldown category 2404, so casting
+	// either puts both on cooldown for the one cast's own duration.
+	strikeCategory *core.Timer
 
 	currentSeal      *core.Aura
 	currentSealSpell *core.Spell
@@ -121,6 +126,7 @@ func (paladin *Paladin) Initialize() {
 	// Active abilities
 	paladin.registerForbearance()
 	paladin.registerHolyStrike()
+	paladin.registerHammerOfTheRighteous()
 	paladin.registerTemplarsBulwark()
 	paladin.registerConsecration()
 	paladin.registerHolyShock()
@@ -233,4 +239,12 @@ func (paladin *Paladin) getLibramSealCostReduction() float64 {
 		return 20
 	}
 	return 0
+}
+
+// The cooldown timer Holy Strike and Hammer of the Righteous share.
+func (paladin *Paladin) strikeTimer() *core.Timer {
+	if paladin.strikeCategory == nil {
+		paladin.strikeCategory = paladin.NewTimer()
+	}
+	return paladin.strikeCategory
 }
