@@ -9,15 +9,15 @@ import (
 	"testing"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/tools/database/dbc"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/tools/database/overrides"
 )
 
 func TestOverridesBakeOntoTheRow(t *testing.T) {
 	rows := []storeSpell{
 		{ID: 10, Effects: []storeEffect{
-			{Index: 0, Type: int32(dbc.E_SCHOOL_DAMAGE)},
-			{Index: 1, Type: int32(dbc.E_APPLY_AURA), Aura: int32(dbc.A_PERIODIC_DAMAGE)},
+			{Index: 0, Type: int32(dbcenums.E_SCHOOL_DAMAGE)},
+			{Index: 1, Type: int32(dbcenums.E_APPLY_AURA), Aura: int32(dbcenums.A_PERIODIC_DAMAGE)},
 		}},
 	}
 
@@ -102,14 +102,14 @@ func TestOverridesRefuseWhatTheClientNowStates(t *testing.T) {
 		},
 		{
 			name:  "a client threat effect",
-			rows:  []storeSpell{{ID: 10, Effects: []storeEffect{{Index: 1, Type: int32(dbc.E_THREAT)}}}},
+			rows:  []storeSpell{{ID: 10, Effects: []storeEffect{{Index: 1, Type: int32(dbcenums.E_THREAT)}}}},
 			list:  []overrides.Override{{SpellID: 10, Field: overrides.FlatThreat, Value: 200, Reason: "measured"}},
 			wants: "now states threat on effect 1",
 		},
 		{
 			name: "a client attack-power coefficient",
 			rows: []storeSpell{{ID: 10, Effects: []storeEffect{
-				{Index: 0, Type: int32(dbc.E_SCHOOL_DAMAGE), APCoef: 0.5},
+				{Index: 0, Type: int32(dbcenums.E_SCHOOL_DAMAGE), APCoef: 0.5},
 			}}},
 			list:  []overrides.Override{{SpellID: 10, Field: overrides.APCoefDirect, Value: 0.2, Reason: "measured"}},
 			wants: "now states 0.5 attack power on its direct effect",

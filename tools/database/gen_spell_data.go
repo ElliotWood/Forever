@@ -12,6 +12,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/tools/database/dbc"
 )
 
@@ -174,7 +175,7 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 		AND (s.NameSubtext_lang LIKE 'Rank %' OR s.NameSubtext_lang = '')
 		AND sla.SkillLine NOT IN (2851, 2853)
 		AND NOT EXISTS (SELECT 1 FROM SpellEffect se WHERE se.SpellID = sla.Spell AND se.EffectAura = ?)
-		ORDER BY n.Name_lang, sla.Spell`, mask, skillLineDefense, mask, acquireOnLevel, dbc.A_MOUNTED)
+		ORDER BY n.Name_lang, sla.Spell`, mask, skillLineDefense, mask, acquireOnLevel, dbcenums.A_MOUNTED)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -900,12 +901,12 @@ func dispatcherOf(db *sql.DB, ids map[int32]bool) (int32, error) {
 			return 0, err
 		}
 		switch effect {
-		case dbc.E_DUMMY:
+		case dbcenums.E_DUMMY:
 			if dummy != 0 {
 				return 0, nil
 			}
 			dummy = id
-		case dbc.E_SCHOOL_DAMAGE:
+		case dbcenums.E_SCHOOL_DAMAGE:
 			if damage != 0 {
 				return 0, nil
 			}
@@ -949,7 +950,7 @@ func overrideReplacements(db *sql.DB, ids map[int32]bool) (map[int32]bool, error
 		rows, err := db.Query(`
 			SELECT CAST(EffectBasePointsF AS INTEGER)
 			FROM SpellEffect
-			WHERE EffectAura = ? AND EffectMiscValue_0 = ?`, int(dbc.A_OVERRIDE_ACTIONBAR_SPELLS), id)
+			WHERE EffectAura = ? AND EffectMiscValue_0 = ?`, int(dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS), id)
 		if err != nil {
 			return nil, err
 		}
@@ -1051,7 +1052,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		// A damage effect with a period is one the description reached and the rank's periodic
 		// dummy times, so it ticks; the rank's own damage effects never carry one. Consecration
 		// names a second, the extra damage on the first few targets.
-		case e.Effect == dbc.E_SCHOOL_DAMAGE && e.AuraPeriod > 0:
+		case e.Effect == dbcenums.E_SCHOOL_DAMAGE && e.AuraPeriod > 0:
 			switch {
 			case row.Periodic == nil:
 				row.Periodic = amountOf(e)
@@ -1063,13 +1064,13 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 			}
 		// A dummy the description names on a spell the rank's own dummy points at is the rank's number
 		// kept there with its coefficient: Seal of Righteousness' per-hit damage, on its judgement.
-		case e.Effect == dbc.E_DUMMY && e.Named && row.Direct == nil:
+		case e.Effect == dbcenums.E_DUMMY && e.Named && row.Direct == nil:
 			row.Direct = amountOf(e)
-		case (e.Effect == dbc.E_SCHOOL_DAMAGE || IsWeaponDamageEffect(e.Effect)) && row.Direct == nil:
+		case (e.Effect == dbcenums.E_SCHOOL_DAMAGE || IsWeaponDamageEffect(e.Effect)) && row.Direct == nil:
 			row.Direct = amountOf(e)
-		case e.Effect == dbc.E_HEAL && row.Heal == nil:
+		case e.Effect == dbcenums.E_HEAL && row.Heal == nil:
 			row.Heal = amountOf(e)
-		case (e.Effect == dbc.E_ENERGIZE || e.Aura == dbc.A_PERIODIC_ENERGIZE) && row.Energize == nil:
+		case (e.Effect == dbcenums.E_ENERGIZE || e.Aura == dbcenums.A_PERIODIC_ENERGIZE) && row.Energize == nil:
 			row.Energize = amountOf(e)
 		case IsThreatEffect(e.Effect) && row.FlatThreatBonus == 0:
 			min, _ := derive(e)

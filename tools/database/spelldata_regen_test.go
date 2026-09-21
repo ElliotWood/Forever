@@ -14,12 +14,12 @@ import (
 	"testing"
 
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/druid"
 	"github.com/wowsims/forever/sim/mage"
 	"github.com/wowsims/forever/sim/paladin"
 	"github.com/wowsims/forever/sim/priest"
 	"github.com/wowsims/forever/sim/shaman"
-	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 const (
@@ -186,7 +186,7 @@ func compareRow(t *testing.T, db *sql.DB, fam rankFamily, row shared.SpellData) 
 func directCandidates(effects []RankEffect) []RankEffect {
 	var out []RankEffect
 	for _, e := range effects {
-		if e.Effect == dbc.E_SCHOOL_DAMAGE || e.Effect == dbc.E_HEAL || e.Effect == dbc.E_ENERGIZE || e.Aura != 0 {
+		if e.Effect == dbcenums.E_SCHOOL_DAMAGE || e.Effect == dbcenums.E_HEAL || e.Effect == dbcenums.E_ENERGIZE || e.Aura != 0 {
 			out = append(out, e)
 		}
 	}

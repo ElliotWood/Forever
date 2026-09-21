@@ -5,6 +5,7 @@ import (
 	"math"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/tools/database/dbc"
 	"github.com/wowsims/forever/tools/database/overrides"
 )
@@ -133,7 +134,7 @@ func (s *storeSpell) directEffect() *storeEffect {
 			continue
 		}
 		effect := dbc.SpellEffectType(e.Type)
-		if effect == dbc.E_SCHOOL_DAMAGE || effect == dbc.E_HEAL || IsWeaponDamageEffect(effect) {
+		if effect == dbcenums.E_SCHOOL_DAMAGE || effect == dbcenums.E_HEAL || IsWeaponDamageEffect(effect) {
 			return e
 		}
 	}
@@ -146,7 +147,7 @@ func (s *storeSpell) periodicEffect() *storeEffect {
 	for i := range s.Effects {
 		e := &s.Effects[i]
 		if IsPeriodicAura(dbc.EffectAuraType(e.Aura)) ||
-			(dbc.SpellEffectType(e.Type) == dbc.E_SCHOOL_DAMAGE && e.PeriodMs > 0) {
+			(dbc.SpellEffectType(e.Type) == dbcenums.E_SCHOOL_DAMAGE && e.PeriodMs > 0) {
 			return e
 		}
 	}

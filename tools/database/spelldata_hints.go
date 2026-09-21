@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/tools/database/dbc"
 )
 
@@ -78,8 +79,8 @@ func isProcEffect(e *storeEffect) bool {
 		return false
 	}
 	aura := dbc.EffectAuraType(e.Aura)
-	return aura == dbc.A_PROC_TRIGGER_SPELL || aura == dbc.A_PROC_TRIGGER_SPELL_WITH_VALUE ||
-		aura == dbc.A_DUMMY
+	return aura == dbcenums.A_PROC_TRIGGER_SPELL || aura == dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE ||
+		aura == dbcenums.A_DUMMY
 }
 
 // Whether the spell fires something through the client's own proc machinery, which is what makes a
@@ -88,7 +89,7 @@ func isProcEffect(e *storeEffect) bool {
 func (s *storeSpell) triggersAProc() bool {
 	for i := range s.Effects {
 		aura := dbc.EffectAuraType(s.Effects[i].Aura)
-		if aura == dbc.A_PROC_TRIGGER_SPELL || aura == dbc.A_PROC_TRIGGER_SPELL_WITH_VALUE {
+		if aura == dbcenums.A_PROC_TRIGGER_SPELL || aura == dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE {
 			return true
 		}
 	}

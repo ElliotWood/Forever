@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
@@ -200,7 +201,7 @@ func (w *chainWalker) findStackingContainer(spellID, statAuraID int) int {
 }
 
 func isProcTriggerAura(aura EffectAuraType) bool {
-	return aura == A_PROC_TRIGGER_SPELL || aura == A_PROC_TRIGGER_SPELL_WITH_VALUE
+	return aura == dbcenums.A_PROC_TRIGGER_SPELL || aura == dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE
 }
 
 // Attaches an accumulating aura to the effect that bounds it.

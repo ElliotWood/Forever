@@ -6,6 +6,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -256,7 +257,7 @@ func buildBaseStatScalingProps(spellID int, itemSpellID int) *proto.ScalingItemE
 					value = math.Abs(value)
 				}
 
-				if se.EffectAura == A_MOD_RESISTANCE && stat == -2 {
+				if se.EffectAura == dbcenums.A_MOD_RESISTANCE && stat == -2 {
 					// All Resists
 					total[stats.ArcaneResistance] += value
 					total[stats.FireResistance] += value
@@ -270,7 +271,7 @@ func buildBaseStatScalingProps(spellID int, itemSpellID int) *proto.ScalingItemE
 				continue
 			}
 
-			if se.EffectAura == A_PROC_TRIGGER_SPELL_WITH_VALUE && spellID == se.EffectTriggerSpell {
+			if se.EffectAura == dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE && spellID == se.EffectTriggerSpell {
 				for idx := range total {
 					if total[idx] == 0 {
 						continue
@@ -296,7 +297,7 @@ func (w *chainWalker) collectStats(spellID, itemLevel int, total *stats.Stats) {
 	for _, se := range w.effects(spellID) {
 		if s, resolved := se.ParseStatEffect(sp.ScalesWithItemLevel(), itemLevel); resolved {
 			total.AddInplace(&s)
-		} else if se.EffectAura == A_PROC_TRIGGER_SPELL {
+		} else if se.EffectAura == dbcenums.A_PROC_TRIGGER_SPELL {
 			// Deliberately narrower than IsProcTrigger: descending through an
 			// A_PROC_TRIGGER_SPELL_WITH_VALUE would collect the triggered spell's own amounts,
 			// past the point where the caller can still override them with the value the

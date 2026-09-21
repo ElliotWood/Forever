@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/tools/database/dbc"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // Where the store's hand-kept extra ids live. Parsed rather than imported: package database is what
@@ -161,7 +161,7 @@ func spellEdges(t *spellTables, id int32) []int32 {
 		if e.TriggerID > 0 {
 			next = append(next, e.TriggerID)
 		}
-		if e.Aura == int32(dbc.A_OVERRIDE_ACTIONBAR_SPELLS) && e.BasePoints > 0 {
+		if e.Aura == int32(dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS) && e.BasePoints > 0 {
 			next = append(next, int32(e.BasePoints))
 		}
 	}

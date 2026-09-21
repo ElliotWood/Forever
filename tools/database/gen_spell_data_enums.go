@@ -6,16 +6,18 @@ import (
 	"go/format"
 	"go/parser"
 	"go/token"
+	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
 
-	"github.com/wowsims/forever/tools/database/dbc"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // Where the aura and effect names live. They are Go constants rather than a client table, so the only
 // way to read them back is to parse the source - a Go program cannot ask for a constant's name.
-const dbcEnumsPath = "tools/database/dbc/enums.go"
+const dbcEnumsDir = "sim/core/dbcenums"
 
 // The two enums a rank effect names. Their constants are mirrored into the shared package rather than
 // imported from here, because sim must not depend on tools: dbc pulls in embed and the DBC readers,
@@ -32,10 +34,9 @@ var rankEnumTypes = []struct {
 
 // Parsed rather than hand-copied, so these names cannot drift from the ones the extractor reads.
 func parseDBCEnums() (map[string]map[int32]string, error) {
-	fset := token.NewFileSet()
-	file, err := parser.ParseFile(fset, dbcEnumsPath, nil, 0)
+	entries, err := os.ReadDir(dbcEnumsDir)
 	if err != nil {
-		return nil, fmt.Errorf("parsing %s: %w", dbcEnumsPath, err)
+		return nil, fmt.Errorf("reading %s: %w", dbcEnumsDir, err)
 	}
 
 	wanted := map[string]bool{}
@@ -43,7 +44,25 @@ func parseDBCEnums() (map[string]map[int32]string, error) {
 		wanted[t.dbcType] = true
 	}
 
+	fset := token.NewFileSet()
 	out := map[string]map[int32]string{}
+	for _, entry := range entries {
+		if !strings.HasSuffix(entry.Name(), ".go") || strings.HasSuffix(entry.Name(), "_test.go") {
+			continue
+		}
+		path := filepath.Join(dbcEnumsDir, entry.Name())
+		file, err := parser.ParseFile(fset, path, nil, 0)
+		if err != nil {
+			return nil, fmt.Errorf("parsing %s: %w", path, err)
+		}
+		if err := collectEnumNames(file, wanted, out); err != nil {
+			return nil, fmt.Errorf("%s: %w", path, err)
+		}
+	}
+	return out, nil
+}
+
+func collectEnumNames(file *ast.File, wanted map[string]bool, out map[string]map[int32]string) error {
 	for _, decl := range file.Decls {
 		gen, ok := decl.(*ast.GenDecl)
 		if !ok || gen.Tok != token.CONST {
@@ -66,15 +85,15 @@ func parseDBCEnums() (map[string]map[int32]string, error) {
 			if out[ident.Name] == nil {
 				out[ident.Name] = map[int32]string{}
 			}
-			// Every constant in this file carries an explicit value and no two share one, so a
-			// collision means the file changed shape and the mapping can no longer be trusted.
+			// Every constant of these types carries an explicit value and no two share one, so a
+			// collision means the package changed shape and the mapping can no longer be trusted.
 			if prev, dup := out[ident.Name][value]; dup {
-				return nil, fmt.Errorf("%s has two names for %d: %s and %s", ident.Name, value, prev, name)
+				return fmt.Errorf("%s has two names for %d: %s and %s", ident.Name, value, prev, name)
 			}
 			out[ident.Name][value] = name
 		}
 	}
-	return out, nil
+	return nil
 }
 
 func constInt(expr ast.Expr) (int32, bool) {
@@ -108,7 +127,7 @@ func newRankEnumNamer() (*rankEnumNamer, error) {
 	}
 	for _, t := range rankEnumTypes {
 		if len(byType[t.dbcType]) == 0 {
-			return nil, fmt.Errorf("no %s constants found in %s", t.dbcType, dbcEnumsPath)
+			return nil, fmt.Errorf("no %s constants found in %s", t.dbcType, dbcEnumsDir)
 		}
 	}
 	return &rankEnumNamer{byType: byType, used: map[string]map[int32]bool{}}, nil
@@ -126,11 +145,11 @@ func (n *rankEnumNamer) name(dbcType string, value int32) string {
 	return "shared." + n.byType[dbcType][value]
 }
 
-func (n *rankEnumNamer) Effect(value dbc.SpellEffectType) string {
+func (n *rankEnumNamer) Effect(value dbcenums.SpellEffectType) string {
 	return n.name("SpellEffectType", int32(value))
 }
 
-func (n *rankEnumNamer) Aura(value dbc.EffectAuraType) string {
+func (n *rankEnumNamer) Aura(value dbcenums.EffectAuraType) string {
 	return n.name("EffectAuraType", int32(value))
 }
 

@@ -14,6 +14,7 @@ import (
 
 	_ "github.com/wowsims/forever/sim/common"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/tools/database/dbc"
 	"github.com/wowsims/forever/tools/tooltip"
@@ -263,7 +264,7 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 	// Map iteration order is randomized, so keep the lowest spell ID rather than
 	// letting whichever one is visited last win and churn the generated file.
 	for _, effect := range instance.SpellEffectsById {
-		if effect.EffectType == dbc.E_ENCHANT_ITEM {
+		if effect.EffectType == dbcenums.E_ENCHANT_ITEM {
 			enchantID := effect.EffectMiscValues[0]
 			if existing, ok := enchantSpellEffects[enchantID]; ok && existing.SpellID <= effect.SpellID {
 				continue
