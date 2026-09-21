@@ -461,3 +461,68 @@ func TestGeneratedDebuffKeepsItsResistancesInItsOwnCategory(t *testing.T) {
 			len(school.effects))
 	}
 }
+
+// A flat bonus the client's buff data does not state raises two numbers that a
+// non-stacking buff keeps apart: what the aura applies and what it bids for its
+// category. A stacking buff prices the one off the other, so it refuses one.
+func TestAddGeneratedFlatBonusRaisesTheBidAndTheAmount(t *testing.T) {
+	char := newGeneratedBuffTestCharacter()
+
+	aura := newGeneratedStatAura(&char.Unit, GeneratedBuff{
+		Label:      "Generated Battle Shout",
+		ActionID:   ActionID{SpellID: 25289}.WithTag(-1),
+		Duration:   NeverExpires,
+		Category:   "GeneratedBattleShout",
+		SingleAura: true,
+		Stats:      []StatConfig{{stats.AttackPower, 139, false}},
+	})
+
+	AddGeneratedFlatBonus(aura, stats.AttackPower, 30)
+
+	if priority := aura.ExclusiveEffects[0].Priority; priority != 169 {
+		t.Errorf("the category effect bids %v, want the client's 139 plus the set's 30", priority)
+	}
+
+	MakePermanent(aura)
+	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+	if got := char.stats[stats.AttackPower]; got != 169 {
+		t.Errorf("the aura applied %v attack power, want the client's 139 plus the set's 30", got)
+	}
+}
+
+func TestAddGeneratedFlatBonusRefusesAnAuraThatCannotCarryOne(t *testing.T) {
+	char := newGeneratedBuffTestCharacter()
+
+	stacking := newGeneratedDebuff(&char.Unit, GeneratedBuff{
+		Label:     "Generated Sunder Armor",
+		ActionID:  ActionID{SpellID: 25225},
+		Duration:  time.Second * 30,
+		MaxStacks: 5,
+		Category:  "GeneratedArmorReduction",
+		Stats:     []StatConfig{{stats.Armor, -520, false}},
+	})
+	assertPanics(t, "a stacking aura", func() {
+		AddGeneratedFlatBonus(stacking, stats.Armor, -30)
+	})
+
+	uncontested := newGeneratedStatAura(&char.Unit, GeneratedBuff{
+		Label:    "Generated Blood Pact",
+		ActionID: ActionID{SpellID: 11767}.WithTag(-1),
+		Duration: NeverExpires,
+		Stats:    []StatConfig{{stats.Stamina, 54, false}},
+	})
+	assertPanics(t, "an aura with no category", func() {
+		AddGeneratedFlatBonus(uncontested, stats.Stamina, 30)
+	})
+}
+
+func assertPanics(t *testing.T, what string, call func()) {
+	t.Helper()
+	defer func() {
+		if recover() == nil {
+			t.Errorf("%s took a flat bonus, which it cannot carry", what)
+		}
+	}()
+	call()
+}

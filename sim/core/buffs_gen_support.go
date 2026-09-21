@@ -245,10 +245,10 @@ func registerGeneratedCategoryEffect(aura *Aura, config GeneratedBuff, perStack 
 	return aura.NewExclusiveEffect(config.Category, config.SingleAura, ExclusiveEffect{
 		Priority: priority,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			applyGeneratedAmounts(ee.Aura.Unit, sim, config, multipliers, generatedStackFactor(ee, perStack))
+			applyGeneratedAmounts(ee.Aura.Unit, sim, config, multipliers, generatedStackFactor(ee, perStack, config.MaxStacks))
 		},
 		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			applyGeneratedAmounts(ee.Aura.Unit, sim, config, multipliers, -generatedStackFactor(ee, perStack))
+			applyGeneratedAmounts(ee.Aura.Unit, sim, config, multipliers, -generatedStackFactor(ee, perStack, config.MaxStacks))
 		},
 	})
 }
@@ -364,12 +364,38 @@ func generatedMagnitude(config GeneratedBuff) float64 {
 	return 0
 }
 
-// How many stacks the effect is currently priced at.
-func generatedStackFactor(effect *ExclusiveEffect, perStack float64) float64 {
-	if perStack == 0 {
+// How many stacks the effect is currently priced at. A buff that does not stack
+// applies its amounts once whatever it bids, so that a flat bonus can raise the
+// bid without also scaling what the buff grants.
+func generatedStackFactor(effect *ExclusiveEffect, perStack float64, maxStacks int32) float64 {
+	if maxStacks <= 0 || perStack == 0 {
 		return 1
 	}
 	return effect.Priority / perStack
+}
+
+// AddGeneratedFlatBonus adds an amount the client's buff data does not state to
+// a generated buff, and raises what the buff bids for its category by the same
+// amount: three pieces of the warrior's tier 2 set are worth 30 more attack
+// power on Battle Shout, and a shout worth 169 has to outbid one worth 139.
+// The aura grants the extra amount for exactly as long as it holds the
+// category, because a category that holds one aura at a time deactivates the
+// copy it outbids.
+func AddGeneratedFlatBonus(aura *Aura, stat stats.Stat, bonus float64) {
+	if aura.MaxStacks > 0 {
+		panic("a stacking aura re-prices its category effect on every stack, which would drop the bonus: " + aura.Label)
+	}
+
+	for _, effect := range aura.ExclusiveEffects {
+		if effect.Category.Name != aura.Tag {
+			continue
+		}
+		effect.Priority += bonus
+		aura.AttachStatBuff(stat, bonus)
+		return
+	}
+
+	panic("a flat bonus needs a buff that bids for its whole category: " + aura.Label)
 }
 
 // Applies every stat and pseudo-stat the buff holds, scaled by the stack count
