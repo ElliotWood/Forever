@@ -40,10 +40,7 @@ describe('relevantStatOptions', () => {
 	});
 
 	it('includes and excludes a single input by its config, so one MP5 buff can go while the other stays', () => {
-		const shown = relevantStatOptions(
-			options,
-			host({ epStats: [Stat.StatMP5], include: [fortitude.config], exclude: [manaTide.config, untagged.config] }),
-		);
+		const shown = relevantStatOptions(options, host({ epStats: [Stat.StatMP5], include: [fortitude.config], exclude: [manaTide.config, untagged.config] }));
 		expect(shown).toEqual([manaSpring, fortitude]);
 	});
 });
