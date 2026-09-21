@@ -1,20 +1,20 @@
 package shaman
 
 import (
-	"time"
-
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var StormstrikeActionID = core.ActionID{SpellID: 17364}
+var stormstrikeRank = spellData.Stormstrike.HighestRank()
+var StormstrikeActionID = core.ActionID{SpellID: stormstrikeRank.SpellID}
 
 func (shaman *Shaman) StormstrikeDebuffAura(target *core.Unit) *core.Aura {
 	aura := target.GetOrRegisterAura(core.Aura{
 		Label:     "Stormstrike-" + shaman.Label,
 		ActionID:  StormstrikeActionID,
-		Duration:  time.Second * 12,
-		MaxStacks: 2,
+		Duration:  stormstrikeRank.Duration,
+		MaxStacks: stormstrikeRank.ProcCharges,
 		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if !spell.SpellSchool.Matches(core.SpellSchoolNature) {
 				return
@@ -27,7 +27,7 @@ func (shaman *Shaman) StormstrikeDebuffAura(target *core.Unit) *core.Aura {
 	})
 	return aura.AttachMultiplicativePseudoStatBuff(
 		&target.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexNature],
-		1.2,
+		1+stormstrikeRank.Effect(shared.A_MOD_SPELL_DAMAGE_FROM_CASTER, 0).Value/100,
 	)
 }
 
@@ -56,7 +56,7 @@ func (shaman *Shaman) newStormstrikeHitSpellConfig(spellID int32, isMH bool) cor
 }
 
 func (shaman *Shaman) newStormstrikeHitSpell(isMH bool) *core.Spell {
-	return shaman.RegisterSpell(shaman.newStormstrikeHitSpellConfig(17364, isMH))
+	return shaman.RegisterSpell(shaman.newStormstrikeHitSpellConfig(stormstrikeRank.SpellID, isMH))
 }
 
 func (shaman *Shaman) newStormstrikeSpellConfig(spellID int32, ssDebuffAuras *core.AuraArray, mhHit *core.Spell, ohHit *core.Spell) core.SpellConfig {
@@ -68,7 +68,7 @@ func (shaman *Shaman) newStormstrikeSpellConfig(spellID int32, ssDebuffAuras *co
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskStormstrikeCast,
 		ManaCost: core.ManaCostOptions{
-			BaseCostPercent: 8,
+			FlatCost: stormstrikeRank.Cost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -77,7 +77,7 @@ func (shaman *Shaman) newStormstrikeSpellConfig(spellID int32, ssDebuffAuras *co
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    shaman.NewTimer(),
-				Duration: time.Second * 10,
+				Duration: stormstrikeRank.Cooldown,
 			},
 		},
 
@@ -86,7 +86,7 @@ func (shaman *Shaman) newStormstrikeSpellConfig(spellID int32, ssDebuffAuras *co
 			if shaman.StormstrikeCastResult.Landed() {
 				ssDebuffAura := ssDebuffAuras.Get(target)
 				ssDebuffAura.Activate(sim)
-				ssDebuffAura.SetStacks(sim, 2)
+				ssDebuffAura.SetStacks(sim, ssDebuffAura.MaxStacks)
 
 				if shaman.HasMHWeapon() {
 					mhHit.Cast(sim, target)
@@ -105,15 +105,11 @@ func (shaman *Shaman) newStormstrikeSpellConfig(spellID int32, ssDebuffAuras *co
 	return stormstrikeSpellConfig
 }
 
-// TODO: To be implemented. Port the TBC Stormstrike Spell implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerStormstrikeSpell() {
-	panic("To be implemented")
+	mhHit := shaman.newStormstrikeHitSpell(true)
+	ohHit := shaman.newStormstrikeHitSpell(false)
 
-	// The TBC implementation, kept for the port:
-	// mhHit := shaman.newStormstrikeHitSpell(true)
-	// ohHit := shaman.newStormstrikeHitSpell(false)
-	//
-	// shaman.StormStrikeDebuffAuras = shaman.NewEnemyAuraArray(shaman.StormstrikeDebuffAura)
-	//
-	// shaman.Stormstrike = shaman.RegisterSpell(shaman.newStormstrikeSpellConfig(17364, &shaman.StormStrikeDebuffAuras, mhHit, ohHit))
+	shaman.StormStrikeDebuffAuras = shaman.NewEnemyAuraArray(shaman.StormstrikeDebuffAura)
+
+	shaman.Stormstrike = shaman.RegisterSpell(shaman.newStormstrikeSpellConfig(stormstrikeRank.SpellID, &shaman.StormStrikeDebuffAuras, mhHit, ohHit))
 }

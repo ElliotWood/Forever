@@ -106,7 +106,6 @@ type Shaman struct {
 	HealingStreamTotem *core.Spell
 	SearingTotem       *core.Spell
 	TremorTotem        *core.Spell
-	FireNovaTotemPA    *core.PendingAction
 	SearingReplaced    bool // Used for cancelling searing dot if the totem is replaced during prepull
 
 	EarthTotemAura *core.Aura
@@ -135,7 +134,7 @@ func (shaman *Shaman) Initialize() {
 	shaman.registerShieldsSpells()
 	shaman.registerMagmaTotemSpell()
 	shaman.registerSearingTotemSpell()
-	shaman.registerFireNovaTotemSpell()
+	shaman.registerFireNovaSpell()
 	shaman.registerWindfuryTotemSpell()
 	shaman.registerStrengthOfEarthTotemSpell()
 	shaman.registerGraceOfAirTotemSpell()
@@ -179,7 +178,7 @@ const (
 	SpellMaskLightningShield
 	SpellMaskMagmaTotem
 	SpellMaskSearingTotem
-	SpellMaskFireNovaTotem
+	SpellMaskFireNova
 	SpellMaskFlametongueTotem
 	SpellMaskStormstrikeCast
 	SpellMaskStormstrikeDamage
@@ -193,15 +192,16 @@ const (
 	SpellMaskShamanisticRage
 	SpellMaskBasicTotem
 	SpellMaskShieldSelfProc
+	SpellMaskLavaBurst
 
 	SpellMaskStormstrike = SpellMaskStormstrikeCast | SpellMaskStormstrikeDamage
 	SpellMaskFlameShock  = SpellMaskFlameShockDirect | SpellMaskFlameShockDot
-	SpellMaskFire        = SpellMaskFlameShock
+	SpellMaskFire        = SpellMaskFlameShock | SpellMaskFireNova | SpellMaskLavaBurst
 	SpellMaskNature      = SpellMaskLightningBolt | SpellMaskLightningBoltOverload | SpellMaskChainLightning | SpellMaskChainLightningOverload | SpellMaskEarthShock
 	SpellMaskFrost       = SpellMaskFrostShock
 	SpellMaskOverload    = SpellMaskLightningBoltOverload | SpellMaskChainLightningOverload
 	SpellMaskShock       = SpellMaskFlameShock | SpellMaskEarthShock | SpellMaskFrostShock
-	SpellMaskFireTotem   = SpellMaskMagmaTotem | SpellMaskSearingTotem | SpellMaskFireNovaTotem
+	SpellMaskFireTotem   = SpellMaskMagmaTotem | SpellMaskSearingTotem
 	SpellMaskTotem       = SpellMaskFireTotem | SpellMaskBasicTotem
 	SpellMaskImbue       = SpellMaskFrostbrandWeapon | SpellMaskWindfuryWeapon | SpellMaskFlametongueWeapon | SpellMaskRockbiterWeapon
 )

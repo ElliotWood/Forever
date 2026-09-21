@@ -1,24 +1,18 @@
 package shaman
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
 var LightningBoltRankMap = spellData.LightningBolt
 
-// TODO: To be implemented. Port the TBC Lightning Bolt Spell implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerLightningBoltSpell() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// shaman.LightningBoltOverloads = make(map[int32]*core.Spell, len(LightningBoltRankMap))
-	// LightningBoltRankMap.RegisterAll(func(config shared.SpellData) {
-	// 	shaman.RegisterSpell(shaman.newLightningBoltSpellConfig(config, false))
-	// 	shaman.LightningBoltOverloads[config.Rank] = shaman.RegisterSpell(shaman.newLightningBoltSpellConfig(config, true))
-	// })
+	shaman.LightningBoltOverloads = make(map[int32]*core.Spell, len(LightningBoltRankMap))
+	LightningBoltRankMap.RegisterAll(func(config shared.SpellData) {
+		shaman.RegisterSpell(shaman.newLightningBoltSpellConfig(config, false))
+		shaman.LightningBoltOverloads[config.Rank] = shaman.RegisterSpell(shaman.newLightningBoltSpellConfig(config, true))
+	})
 }
 
 func (shaman *Shaman) newLightningBoltSpellConfig(config shared.SpellData, isElementalOverload bool) core.SpellConfig {
@@ -28,7 +22,7 @@ func (shaman *Shaman) newLightningBoltSpellConfig(config shared.SpellData, isEle
 		IsElementalOverload: isElementalOverload,
 		BaseFlatCost:        config.Cost,
 		BonusCoefficient:    config.Direct.BonusCoefficient(),
-		BaseCastTime:        time.Millisecond * 2500,
+		BaseCastTime:        config.CastTime,
 	}
 	spellConfig := shaman.newElectricSpellConfig(shamConfig)
 

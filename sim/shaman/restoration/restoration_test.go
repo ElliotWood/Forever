@@ -18,15 +18,15 @@ func init() {
 // rotation and the fake prepull (no SkipRotation) make it exercise a full environment reset, the
 // path the UI's stats request takes.
 func TestRestorationShaman(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	var generators []core.TestGenerator
-	for _, gearSet := range []string{"preraid", "p3"} {
+	// Naked, for the same reason as the DPS specs: the generated item database does not carry the
+	// Forever gear our sim tests with yet.
+	for _, gearSet := range []string{"naked"} {
 		player := core.WithSpec(
 			&proto.Player{
 				Class:         proto.Class_ClassShaman,
 				Race:          proto.Race_RaceDraenei,
-				Equipment:     core.GetGearSet("../../../ui/specs/shaman/restoration/gear_sets", gearSet).GearSet,
+				Equipment:     &proto.EquipmentSpec{},
 				Consumables:   FullConsumes,
 				Buffs:         core.FullIndividualBuffs,
 				TalentsString: StandardTalents,
@@ -46,8 +46,8 @@ func TestRestorationShaman(t *testing.T) {
 	core.RunTestSuite(t, t.Name(), generators)
 }
 
-// Elemental Warding 8/0/53, wowhead's TBC raid build.
-var StandardTalents = "5003--55035051355310510321"
+// Forever's Restoration tree, from our sim's level 60 preset.
+var StandardTalents = "-5-5503505135531051"
 
 var FullConsumes = &proto.ConsumesSpec{
 	FlaskId: 22853, // Flask of Mighty Restoration

@@ -1,5 +1,13 @@
 package shaman
 
+import (
+	"time"
+
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
 func (shaman *Shaman) registerEnhancementTalents() {
 	// Tier 1
 	shaman.applyEarthsGrasp()
@@ -34,172 +42,135 @@ func (shaman *Shaman) registerEnhancementTalents() {
 	shaman.applyRageOfTheFarseer()
 }
 
-// TODO: To be implemented. Port the TBC Ancestral Knowledge implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyAncestralKnowledge() {
 	if shaman.Talents.AncestralKnowledge == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if shaman.Talents.AncestralKnowledge == 0 {
-	// 	return
-	// }
-	// shaman.MultiplyStat(stats.Mana, spellData.AncestralKnowledge.MultiplierAt(shaman.Talents.AncestralKnowledge))
+	shaman.MultiplyStat(stats.Mana, spellData.AncestralKnowledge.MultiplierAt(shaman.Talents.AncestralKnowledge))
 }
 
-// TODO: To be implemented. Port the TBC Elemental Weapons implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyElementalWeapons() {
 	if shaman.Talents.ElementalWeapons == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if shaman.Talents.ElementalWeapons == 0 {
-	// 	return
-	// }
-	// shaman.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	FloatValue: [4]float64{0.0, 0.07, 0.14, 0.2}[shaman.Talents.ElementalWeapons],
-	// 	ClassMask:  SpellMaskRockbiterWeapon,
-	// })
-	// shaman.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	FloatValue: [4]float64{0.0, 0.13, 0.27, 0.4}[shaman.Talents.ElementalWeapons],
-	// 	ClassMask:  SpellMaskWindfuryWeapon,
-	// })
-	// shaman.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	FloatValue: 0.05 * float64(shaman.Talents.ElementalWeapons),
-	// 	ClassMask:  SpellMaskFlametongueWeapon | SpellMaskFrostbrandWeapon,
-	// })
+	points := shaman.Talents.ElementalWeapons
+	shaman.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: spellData.ElementalWeapons.EffectAt(0).FractionAt(points),
+		ClassMask:  SpellMaskRockbiterWeapon,
+	})
+	shaman.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: spellData.ElementalWeapons.EffectAt(2).FractionAt(points),
+		ClassMask:  SpellMaskWindfuryWeapon,
+	})
+	shaman.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: spellData.ElementalWeapons.EffectAt(1).FractionAt(points),
+		ClassMask:  SpellMaskFlametongueWeapon | SpellMaskFrostbrandWeapon,
+	})
 }
 
-// TODO: To be implemented. Port the TBC Flurry implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyFlurry() {
 	if shaman.Talents.Flurry == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if shaman.Talents.Flurry == 0 {
-	// 	return
-	// }
-	//
-	// flurryICD := &core.Cooldown{
-	// 	Timer:    shaman.NewTimer(),
-	// 	Duration: 500 * time.Millisecond,
-	// }
-	//
-	// attackSpeed := 1.05 +
-	// 	0.05*float64(shaman.Talents.Flurry)
-	//
-	// flurryAura := shaman.RegisterAura(core.Aura{
-	// 	ActionID:  core.ActionID{SpellID: 16284},
-	// 	Label:     "Flurry",
-	// 	Duration:  time.Second * 15,
-	// 	MaxStacks: 3,
-	// }).AttachMultiplyMeleeSpeed(attackSpeed)
-	//
-	// shaman.MakeProcTriggerAura(core.ProcTrigger{
-	// 	Name:             "Flurry Trigger",
-	// 	Callback:         core.CallbackOnSpellHitDealt,
-	// 	ProcMask:         core.ProcMaskMelee,
-	// 	CanProcFromProcs: true, // 16256, 16281-16284 carry the bit.
-	// 	Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-	// 		if result.Outcome.Matches(core.OutcomeCrit) {
-	// 			flurryAura.Activate(sim)
-	// 			flurryAura.SetStacks(sim, 3)
-	// 			return
-	// 		}
-	//
-	// 		// Remove a stack.
-	// 		if flurryAura.IsActive() && spell.ProcMask.Matches(core.ProcMaskMeleeWhiteHit) && flurryICD.IsReady(sim) {
-	// 			flurryICD.Use(sim)
-	// 			flurryAura.RemoveStack(sim)
-	// 		}
-	// 	},
-	// })
-	//
+	flurryICD := &core.Cooldown{
+		Timer:    shaman.NewTimer(),
+		Duration: 500 * time.Millisecond,
+	}
+
+	flurryBuff := spellData.FlurryTriggered.HighestRank()
+	attackSpeed := spellData.Flurry.MultiplierAt(shaman.Talents.Flurry)
+
+	flurryAura := shaman.RegisterAura(core.Aura{
+		ActionID:  core.ActionID{SpellID: flurryBuff.SpellID},
+		Label:     "Flurry",
+		Duration:  flurryBuff.Duration,
+		MaxStacks: flurryBuff.ProcCharges,
+	}).AttachMultiplyMeleeSpeed(attackSpeed)
+
+	shaman.MakeProcTriggerAura(core.ProcTrigger{
+		Name:             "Flurry Trigger",
+		Callback:         core.CallbackOnSpellHitDealt,
+		ProcMask:         core.ProcMaskMelee,
+		CanProcFromProcs: true, // 16256, 16281-16284 carry the bit.
+		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if result.Outcome.Matches(core.OutcomeCrit) {
+				flurryAura.Activate(sim)
+				flurryAura.SetStacks(sim, flurryAura.MaxStacks)
+				return
+			}
+
+			// Remove a stack.
+			if flurryAura.IsActive() && spell.ProcMask.Matches(core.ProcMaskMeleeWhiteHit) && flurryICD.IsReady(sim) {
+				flurryICD.Use(sim)
+				flurryAura.RemoveStack(sim)
+			}
+		},
+	})
 }
 
-// TODO: To be implemented. Port the TBC Improved Lightning Shield implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyImprovedLightningShield() {
 	if shaman.Talents.ImprovedLightningShield == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if shaman.Talents.ImprovedLightningShield == 0 {
-	// 	return
-	// }
-	// shaman.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	FloatValue: spellData.ImprovedLightningShield.FractionAt(shaman.Talents.ImprovedLightningShield),
-	// 	ClassMask:  SpellMaskLightningShield,
-	// })
+	shaman.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: spellData.ImprovedLightningShield.FractionAt(shaman.Talents.ImprovedLightningShield),
+		ClassMask:  SpellMaskLightningShield,
+	})
 }
 
-// TODO: To be implemented. Port the TBC Mental Quickness implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyMentalQuickness() {
 	if shaman.Talents.MentalQuickness == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if shaman.Talents.MentalQuickness == 0 {
-	// 	return
-	// }
-	// shaman.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
-	// 	FloatValue: -0.02 * float64(shaman.Talents.MentalQuickness),
-	// 	SpellFlag:  SpellFlagInstant,
-	// })
-	//
-	// // TODO: To be implemented. Forever's regenerated aura enum no longer carries the
-	// // attack-power-to-spell-damage aura this talent's rank data used
-	// // (A_MOD_SPELL_DAMAGE_OF_ATTACK_POWER is gone from the auto-generated table), so the
-	// // spell damage conversion below is not applied.
+	// TBC's Mental Quickness turned attack power into spell damage and cut instant costs. Forever's
+	// (30812) does neither: it states Intellect to spell damage and Intellect to spell healing.
+	shaman.AddStatDependency(stats.Intellect, stats.SpellDamage,
+		spellData.MentalQuickness.Effect(shared.A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT, 126).FractionAt(shaman.Talents.MentalQuickness))
 }
 
-// TODO: To be implemented. Port the TBC Shamanistic Focus implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyShamanisticFocus() {
 	if !shaman.Talents.ShamanisticFocus {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if !shaman.Talents.ShamanisticFocus {
-	// 	return
-	// }
-	// sfAura := shaman.RegisterAura(core.Aura{
-	// 	Label:    "Focused",
-	// 	ActionID: core.ActionID{SpellID: 43339},
-	// 	Duration: time.Second * 15,
-	// }).AttachSpellMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_PowerCost_Pct_Add,
-	// 	FloatValue: -0.6,
-	// 	ClassMask:  SpellMaskShock,
-	// })
-	//
-	// shaman.MakeProcTriggerAura(core.ProcTrigger{
-	// 	Name:             "Shamanistic Focus Trigger",
-	// 	Callback:         core.CallbackOnSpellHitDealt,
-	// 	ProcMask:         core.ProcMaskMelee,
-	// 	CanProcFromProcs: true, // 43338 carries the bit.
-	// 	Outcome:          core.OutcomeCrit,
-	// 	Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-	// 		sfAura.Activate(sim)
-	// 	},
-	// })
-	//
-	// shaman.MakeProcTriggerAura(core.ProcTrigger{
-	// 	Name:           "Shamanistic Focus Untrigger",
-	// 	Callback:       core.CallbackOnCastComplete,
-	// 	ClassSpellMask: SpellMaskShock,
-	// 	Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
-	// 		sfAura.Deactivate(sim)
-	// 	},
-	// })
+	sfAura := shaman.RegisterAura(core.Aura{
+		Label:    "Focused",
+		ActionID: core.ActionID{SpellID: 43339},
+		Duration: time.Second * 15,
+	}).AttachSpellMod(core.SpellModConfig{
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+		FloatValue: -0.6,
+		ClassMask:  SpellMaskShock,
+	})
+
+	shaman.MakeProcTriggerAura(core.ProcTrigger{
+		Name:             "Shamanistic Focus Trigger",
+		Callback:         core.CallbackOnSpellHitDealt,
+		ProcMask:         core.ProcMaskMelee,
+		CanProcFromProcs: true, // 43338 carries the bit.
+		Outcome:          core.OutcomeCrit,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			sfAura.Activate(sim)
+		},
+	})
+
+	shaman.MakeProcTriggerAura(core.ProcTrigger{
+		Name:           "Shamanistic Focus Untrigger",
+		Callback:       core.CallbackOnCastComplete,
+		ClassSpellMask: SpellMaskShock,
+		Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
+			sfAura.Deactivate(sim)
+		},
+	})
 }
 
 func (shaman *Shaman) applySpiritWeapons() {
@@ -216,21 +187,16 @@ func (shaman *Shaman) applyStormstrike() {
 	shaman.registerStormstrikeSpell()
 }
 
-// TODO: To be implemented. Port the TBC Thundering Strikes implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) applyThunderingStrikes() {
 	if shaman.Talents.ThunderingStrikes == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if shaman.Talents.ThunderingStrikes == 0 {
-	// 	return
-	// }
-	// shaman.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_BonusCrit_Percent,
-	// 	FloatValue: spellData.ThunderingStrikes.ValueAt(shaman.Talents.ThunderingStrikes),
-	// 	ProcMask:   core.ProcMaskMelee,
-	// })
+	shaman.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_BonusCrit_Percent,
+		FloatValue: spellData.ThunderingStrikes.ValueAt(shaman.Talents.ThunderingStrikes),
+		ProcMask:   core.ProcMaskMelee,
+	})
 }
 
 // applyEarthsGrasp implements Earth's Grasp, new in Forever.
@@ -253,14 +219,14 @@ func (shaman *Shaman) applyGuardianTotems() {
 	}
 }
 
-// applyMentalDexterity implements Mental Dexterity, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// applyMentalDexterity implements Mental Dexterity, new in Forever: Intellect into attack power.
 func (shaman *Shaman) applyMentalDexterity() {
 	if shaman.Talents.MentalDexterity == 0 {
 		return
 	}
+
+	shaman.AddStatDependency(stats.Intellect, stats.AttackPower,
+		spellData.MentalDexterity.FractionAt(shaman.Talents.MentalDexterity))
 }
 
 // applyImprovedGhostWolf implements Improved Ghost Wolf, new in Forever.
@@ -273,52 +239,163 @@ func (shaman *Shaman) applyImprovedGhostWolf() {
 	}
 }
 
-// applyAnticipation implements Anticipation, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// applyAnticipation implements Anticipation, new in Forever: flat dodge.
 func (shaman *Shaman) applyAnticipation() {
 	if shaman.Talents.Anticipation == 0 {
 		return
 	}
+
+	shaman.AddStat(stats.DodgeRating, core.DodgeRatingPerDodgePercent*
+		spellData.Anticipation.Effect(shared.A_MOD_DODGE_PERCENT, 0).ValueAt(shaman.Talents.Anticipation))
 }
 
-// applyToughness implements Toughness, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// applyToughness implements Toughness, new in Forever: more Stamina.
 func (shaman *Shaman) applyToughness() {
 	if shaman.Talents.Toughness == 0 {
 		return
 	}
+
+	shaman.MultiplyStat(stats.Stamina,
+		spellData.Toughness.Effect(shared.A_MOD_TOTAL_STAT_PERCENTAGE, 0).MultiplierAt(shaman.Talents.Toughness))
 }
 
-// applyImprovedStormstrike implements Improved Stormstrike, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// applyImprovedStormstrike implements Improved Stormstrike, new in Forever: a chance on Stormstrike
+// to regain mana while casting, and a chance for a dodge or parry taken to reset its cooldown. The
+// buff (1238931) is the same at both ranks; only the chances scale.
 func (shaman *Shaman) applyImprovedStormstrike() {
-	if shaman.Talents.ImprovedStormstrike == 0 {
+	if !shaman.Talents.Stormstrike || shaman.Talents.ImprovedStormstrike == 0 {
 		return
 	}
+
+	chance := spellData.ImprovedStormstrike.EffectAt(0).FractionAt(shaman.Talents.ImprovedStormstrike)
+	buff := spellData.ImprovedStormstrikeTriggered.HighestRank()
+	regenRate := buff.Effect(shared.A_MOD_MANA_REGEN_INTERRUPT, 0).Value / 100
+
+	focusAura := shaman.RegisterAura(core.Aura{
+		Label:    "Improved Stormstrike",
+		ActionID: core.ActionID{SpellID: buff.SpellID},
+		Duration: buff.Duration,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			shaman.PseudoStats.SpiritRegenRateCasting += regenRate
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			shaman.PseudoStats.SpiritRegenRateCasting -= regenRate
+		},
+	})
+
+	shaman.MakeProcTriggerAura(core.ProcTrigger{
+		Name:           "Improved Stormstrike Trigger",
+		Callback:       core.CallbackOnCastComplete,
+		ClassSpellMask: SpellMaskStormstrikeCast,
+		ProcChance:     chance,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			focusAura.Activate(sim)
+		},
+	})
+
+	shaman.MakeProcTriggerAura(core.ProcTrigger{
+		Name:       "Improved Stormstrike Reset",
+		Callback:   core.CallbackOnSpellHitTaken,
+		Outcome:    core.OutcomeDodge | core.OutcomeParry,
+		ProcChance: chance,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			shaman.Stormstrike.CD.Reset()
+		},
+	})
 }
 
-// applyMaelstromWeapon implements Maelstrom Weapon, new in Forever.
+// applyMaelstromWeapon implements Maelstrom Weapon, new in Forever: melee hits stack a buff that
+// makes the next Lightning Bolt faster and cheaper, and the cast consumes it.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// The client states the per-point, per-stack value (408498) and the buff (408505, 30 sec, -20% cast
+// and cost at five stacks) but no proc rate at all: no procs-per-minute entry and no proc chance
+// below 100. 2 PPM per point is ours, from master; it puts 5/5 at a full stack roughly every 30 sec.
 func (shaman *Shaman) applyMaelstromWeapon() {
 	if shaman.Talents.MaelstromWeapon == 0 {
 		return
 	}
+
+	buff := spellData.MaelstromWeaponTriggered.HighestRank()
+	maxStacks := int32(5)
+	perStack := -spellData.MaelstromWeapon.FractionAt(shaman.Talents.MaelstromWeapon)
+
+	ppmm := shaman.NewLegacyPPMManager(2*float64(shaman.Talents.MaelstromWeapon), core.ProcMaskMelee)
+
+	castMod := shaman.AddDynamicMod(core.SpellModConfig{
+		Kind:      core.SpellMod_CastTime_Pct,
+		ClassMask: SpellMaskLightningBolt,
+	})
+	costMod := shaman.AddDynamicMod(core.SpellModConfig{
+		Kind:      core.SpellMod_PowerCost_Pct_Add,
+		ClassMask: SpellMaskLightningBolt,
+	})
+
+	aura := shaman.RegisterAura(core.Aura{
+		Label:     "Maelstrom Weapon",
+		ActionID:  core.ActionID{SpellID: buff.SpellID},
+		Duration:  buff.Duration,
+		MaxStacks: maxStacks,
+		OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
+			castMod.UpdateFloatValue(100 * perStack * float64(newStacks))
+			costMod.UpdateFloatValue(perStack * float64(newStacks))
+			castMod.Activate()
+			costMod.Activate()
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			castMod.Deactivate()
+			costMod.Deactivate()
+		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			if spell.Matches(SpellMaskLightningBolt) {
+				aura.Deactivate(sim)
+			}
+		},
+	})
+
+	shaman.MakeProcTriggerAura(core.ProcTrigger{
+		Name:     "Maelstrom Weapon Trigger",
+		Callback: core.CallbackOnSpellHitDealt,
+		ProcMask: core.ProcMaskMelee,
+		Outcome:  core.OutcomeLanded,
+		DPM:      ppmm,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			aura.Activate(sim)
+			aura.AddStack(sim)
+		},
+	})
+
 }
 
-// applyRageOfTheFarseer implements Rage of the Farseer, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// applyRageOfTheFarseer implements Rage of the Farseer, new in Forever: a melee and cast haste
+// cooldown (425336).
 func (shaman *Shaman) applyRageOfTheFarseer() {
 	if !shaman.Talents.RageOfTheFarseer {
 		return
 	}
+
+	rank := spellData.RageOfTheFarseer.HighestRank()
+	multiplier := 1 + rank.Effect(shared.A_MOD_MELEE_RANGED_HASTE_2, 0).Value/100
+
+	buffAura := shaman.RegisterAura(core.Aura{
+		Label:    "Rage of the Farseer",
+		ActionID: core.ActionID{SpellID: rank.SpellID},
+		Duration: rank.Duration,
+	}).AttachMultiplyMeleeSpeed(multiplier).AttachMultiplyCastSpeed(multiplier)
+
+	spell := shaman.RegisterSpell(core.SpellConfig{
+		ActionID: core.ActionID{SpellID: rank.SpellID},
+		Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    shaman.NewTimer(),
+				Duration: rank.Cooldown,
+			},
+		},
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			buffAura.Activate(sim)
+		},
+		RelatedSelfBuff: buffAura,
+	})
+
+	shaman.AddMajorCooldown(core.MajorCooldown{Spell: spell, Type: core.CooldownTypeDPS})
 }
