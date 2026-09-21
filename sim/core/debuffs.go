@@ -827,14 +827,16 @@ func ThunderClapAura(target *Unit) *Aura {
 	return aura
 }
 
+// The priority is the slow, so SetPriority from an aura's OnGain can rescale it: the Conqueror's
+// set raises Thunder Clap's by half.
 func AtkSpeedReductionEffect(aura *Aura, speedMultiplier float64) *ExclusiveEffect {
 	return aura.NewExclusiveEffect("AtkSpdReduction", false, ExclusiveEffect{
 		Priority: speedMultiplier,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.MultiplyAttackSpeed(sim, 1/speedMultiplier)
+			ee.Aura.Unit.MultiplyAttackSpeed(sim, 1/ee.Priority)
 		},
 		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.MultiplyAttackSpeed(sim, speedMultiplier)
+			ee.Aura.Unit.MultiplyAttackSpeed(sim, ee.Priority)
 		},
 	})
 }
