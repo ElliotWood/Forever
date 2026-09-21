@@ -57,18 +57,28 @@ type Rogue struct {
 	ExposeArmor  *core.Spell
 	Rupture      *core.Spell
 	SliceAndDice *core.Spell
+	Venom        *core.Spell
 
+	deadlyPoisonTick  *core.Spell
 	deadlyPoisonPPHM  *core.DynamicProcManager
 	woundPoisonPPHM   *core.DynamicProcManager
 	instantPoisonPPHM *core.DynamicProcManager
 
+	// Improved Poisons and Venom both add to the poison application chance, so the procs read a
+	// running total rather than each talent rebuilding the proc manager.
+	additivePoisonBonusChance float64
+
 	AdrenalineRushAura   *core.Aura
 	BladeFlurryAura      *core.Aura
+	CutthroatAura        *core.Aura
 	ExposeArmorAuras     core.AuraArray
+	HemorrhageAuras      core.AuraArray
 	SliceAndDiceAura     *core.Aura
 	MasterOfSubtletyAura *core.Aura
 	ShadowstepAura       *core.Aura
 	StealthAura          *core.Aura
+	ThousandCutsAura     *core.Aura
+	VenomAura            *core.Aura
 
 	WoundPoisonDebuffAuras core.AuraArray
 
@@ -169,17 +179,25 @@ func NewRogue(character *core.Character, options *proto.Player, talents string) 
 
 	core.FillTalentsProto(rogue.Talents.ProtoReflect(), talents, TalentTreeSizes)
 
+	// Slice and Dice and Venom share this ladder, and talents are applied before Initialize, so
+	// it is filled here rather than in the spell that owns it.
+	rogue.sliceAndDiceDurations = [6]time.Duration{
+		0,
+		time.Second * 9,
+		time.Second * 12,
+		time.Second * 15,
+		time.Second * 18,
+		time.Second * 21,
+	}
+
 	// Passive rogue threat reduction: https://wotlk.wowhead.com/spell=21184/rogue-passive-dnd
 	rogue.PseudoStats.ThreatMultiplier *= 0.71
 	rogue.PseudoStats.CanParry = true
 
 	maxEnergy := 100.0
 
-	// TODO: Forever expands Vigor from 1 rank to 2; the per-rank max-energy bonus is
-	// unconfirmed, so it is pinned to 0 until the Forever tooltip is known.
-	if rogue.Talents.Vigor > 0 {
-		maxEnergy += 0
-	}
+	// Forever expands Vigor from 1 rank to 2; the client states 5 then 10 extra energy.
+	maxEnergy += spellData.Vigor.ValueAt(rogue.Talents.Vigor)
 	if rogue.HasPvpEnergy {
 		maxEnergy += 10
 	}
@@ -287,13 +305,17 @@ const (
 	RogueSpellInstantPoison
 	RogueSpellWoundPoison
 	RogueSpellDeadlyPoison
+	RogueSpellVenom
+	RogueSpellRiposte
 
 	RogueSpellLast
 	RogueSpellsAll    = RogueSpellLast<<1 - 1
 	RogueSpellActives = RogueSpellGhostlyStrike<<1 - 1
 
 	RogueSpellPoisons        = RogueSpellWoundPoison | RogueSpellDeadlyPoison | RogueSpellInstantPoison
-	RogueSpellLethality      = RogueSpellSinisterStrike | RogueSpellGouge | RogueSpellBackstab | RogueSpellGhostlyStrike | RogueSpellMutilateHit | RogueSpellHemorrhage
+	RogueSpellLethality      = RogueSpellSinisterStrike | RogueSpellGouge | RogueSpellBackstab | RogueSpellGhostlyStrike | RogueSpellMutilate | RogueSpellMutilateHit | RogueSpellHemorrhage
 	RogueSpellDirectFinisher = RogueSpellEviscerate
-	RogueSpellFinisher       = RogueSpellDirectFinisher | RogueSpellSliceAndDice | RogueSpellRupture | RogueSpellExposeArmor
+	RogueSpellFinisher       = RogueSpellDirectFinisher | RogueSpellSliceAndDice | RogueSpellRupture | RogueSpellExposeArmor | RogueSpellVenom
+	// Quietus reads as an execute bonus on the rogue's strikes, not on the finishers.
+	RogueSpellStrikes = RogueSpellSinisterStrike | RogueSpellBackstab | RogueSpellHemorrhage | RogueSpellGhostlyStrike | RogueSpellAmbush | RogueSpellMutilate | RogueSpellMutilateHit
 )

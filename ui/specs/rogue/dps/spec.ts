@@ -150,15 +150,15 @@ export default defineSpec<Spec.SpecRogue>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: [Presets.CombatTalents, Presets.AssassinationTalents, Presets.SubtletyTalents],
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.SINSITER_APL],
+		rotations: [Presets.ROTATION_PRESET_COMBAT, Presets.ROTATION_PRESET_MUTILATE, Presets.ROTATION_PRESET_HEMORRHAGE],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecRogue>): APLRotation => {
-		return Presets.SINSITER_APL.rotation.rotation!;
+		return Presets.ROTATION_PRESET_COMBAT.rotation.rotation!;
 	},
 
 	reforge: {},

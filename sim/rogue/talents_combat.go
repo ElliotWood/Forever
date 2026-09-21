@@ -1,5 +1,12 @@
 package rogue
 
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
 func (rogue *Rogue) registerCombatTalents() {
 	// Tier 1
 	rogue.registerImprovedGouge()
@@ -8,353 +15,376 @@ func (rogue *Rogue) registerCombatTalents() {
 
 	// Tier 2
 	// Improved Slice and Dice implemented in slice_and_dice.go
-	// Deflection NYI
+	rogue.registerDeflection()
 	rogue.registerPrecision()
 
 	// Tier 3
-	// None in this tier implemented
+	rogue.registerEndurance()
+	rogue.registerRiposte()
 
 	// Tier 4
-	// Improved Kick NYI
+	rogue.registerImprovedSprint()
+	rogue.registerImprovedKick()
+	rogue.registerFlawlessExecution()
 	rogue.registerDualWieldSpecialization()
 
 	// Tier 5
 	rogue.registerBladeFlurry()
+	rogue.registerHackAndSlash()
 
 	// Tier 6
-	// Blade Twisting NYI
 	rogue.registerWeaponExpertise()
 	rogue.registerAggression()
 
 	// Tier 7
 	rogue.registerAdrenalineRush()
-	// Nerves of Steel NYI
-
-	// Forever additions, not yet implemented.
-	rogue.registerDeflection()
-	rogue.registerEndurance()
-	rogue.registerFlawlessExecution()
-	rogue.registerHackAndSlash()
-	rogue.registerImprovedKick()
-	rogue.registerImprovedSprint()
-	rogue.registerRiposte()
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
-func (rogue *Rogue) registerImprovedGouge() {
-	if rogue.Talents.ImprovedGouge == 0 {
-		return
-	}
+// registerImprovedGouge implements Improved Gouge.
+//
+// TODO: Not modelled. The talent lengthens Gouge, which our sim does not cast.
+func (rogue *Rogue) registerImprovedGouge() {}
 
-	// The TBC implementation, kept for the port:
-	// if rogue.Talents.ImprovedGouge == 0 {
-	// 	return
-	// }
-	//
-	// rogue.AddStaticMod(core.SpellModConfig{
-	// 	Kind:      core.SpellMod_Cooldown_Flat,
-	// 	ClassMask: RogueSpellGouge,
-	// 	TimeValue: time.Millisecond * 500 * time.Duration(rogue.Talents.ImprovedGouge),
-	// })
-}
-
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
 func (rogue *Rogue) registerImprovedSinisterStrike() {
 	if rogue.Talents.ImprovedSinisterStrike == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if rogue.Talents.ImprovedSinisterStrike == 0 {
-	// 	return
-	// }
-	//
-	// rogue.AddStaticMod(core.SpellModConfig{
-	// 	Kind:      core.SpellMod_PowerCost_Flat,
-	// 	ClassMask: RogueSpellSinisterStrike,
-	// 	IntValue:  []int32{0, -3, -5}[rogue.Talents.ImprovedSinisterStrike],
-	// })
+	rogue.AddStaticMod(core.SpellModConfig{
+		Kind:      core.SpellMod_PowerCost_Flat,
+		ClassMask: RogueSpellSinisterStrike,
+		IntValue:  int32(spellData.ImprovedSinisterStrike.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_COST).ValueAt(rogue.Talents.ImprovedSinisterStrike)),
+	})
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
 func (rogue *Rogue) registerLightningReflexes() {
 	if rogue.Talents.LightningReflexes == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if rogue.Talents.LightningReflexes == 0 {
-	// 	return
-	// }
-	//
-	// rogue.AddStat(stats.DodgeRating, float64(rogue.Talents.LightningReflexes)*core.DodgeRatingPerDodgePercent)
+	rogue.AddStat(stats.DodgeRating, spellData.LightningReflexes.ValueAt(rogue.Talents.LightningReflexes)*core.DodgeRatingPerDodgePercent)
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
+func (rogue *Rogue) registerDeflection() {
+	if rogue.Talents.Deflection == 0 {
+		return
+	}
+
+	rogue.AddStat(stats.ParryRating, spellData.Deflection.ValueAt(rogue.Talents.Deflection)*core.ParryRatingPerParryPercent)
+}
+
 func (rogue *Rogue) registerPrecision() {
 	if rogue.Talents.Precision == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if rogue.Talents.Precision == 0 {
-	// 	return
-	// }
-	//
-	// rogue.AddStat(stats.PhysicalHitPercent, float64(rogue.Talents.Precision))
+	// Precision covers Poisons in Forever, and those roll against the spell hit table.
+	hit := spellData.Precision.EffectAt(0).ValueAt(rogue.Talents.Precision)
+	rogue.AddStat(stats.PhysicalHitPercent, hit)
+	rogue.AddStat(stats.SpellHitPercent, spellData.Precision.EffectAt(1).ValueAt(rogue.Talents.Precision))
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
+// registerEndurance implements Endurance.
+//
+// TODO: Not modelled. The talent shortens Sprint and Evasion, neither of which our sim casts.
+func (rogue *Rogue) registerEndurance() {}
+
+// registerImprovedSprint implements Improved Sprint.
+//
+// TODO: Not modelled. Movement only.
+func (rogue *Rogue) registerImprovedSprint() {}
+
+// registerImprovedKick implements Improved Kick.
+//
+// TODO: Not modelled. The talent silences on a successful interrupt, which our sim does not do.
+func (rogue *Rogue) registerImprovedKick() {}
+
+// Flawless Execution, new in Forever: the client states a flat cost reduction, which our
+// Forever sim reads as ten energy off Eviscerate.
+func (rogue *Rogue) registerFlawlessExecution() {
+	if !rogue.Talents.FlawlessExecution {
+		return
+	}
+
+	rogue.AddStaticMod(core.SpellModConfig{
+		Kind:      core.SpellMod_PowerCost_Flat,
+		ClassMask: RogueSpellEviscerate,
+		IntValue:  int32(spellData.FlawlessExecution.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_COST).ValueAt(1)),
+	})
+}
+
 func (rogue *Rogue) registerDualWieldSpecialization() {
 	if rogue.Talents.DualWieldSpecialization == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if rogue.Talents.DualWieldSpecialization == 0 {
-	// 	return
-	// }
-	//
-	// rogue.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	ProcMask:   core.ProcMaskMeleeOH,
-	// 	FloatValue: spellData.DualWieldSpecialization.FractionAt(rogue.Talents.DualWieldSpecialization),
-	// })
+	rogue.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_DamageDone_Flat,
+		ProcMask:   core.ProcMaskMeleeOH,
+		FloatValue: spellData.DualWieldSpecialization.FractionAt(rogue.Talents.DualWieldSpecialization),
+	})
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
 func (rogue *Rogue) registerBladeFlurry() {
 	if !rogue.Talents.BladeFlurry {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if !rogue.Talents.BladeFlurry {
-	// 	return
-	// }
-	//
-	// var curDmg float64
-	// bfHit := rogue.GetOrRegisterSpell(core.SpellConfig{
-	// 	ActionID:    core.ActionID{SpellID: 22482},
-	// 	SpellSchool: core.SpellSchoolPhysical,
-	// 	ProcMask:    core.ProcMaskEmpty, // No proc mask, so it won't proc itself.
-	// 	Flags:       core.SpellFlagIgnoreResists | core.SpellFlagIgnoreModifiers | core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
-	//
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		spell.CalcAndDealDamage(sim, target, curDmg, spell.OutcomeAlwaysHit)
-	// 	},
-	// })
-	//
-	// rogue.BladeFlurryAura = rogue.GetOrRegisterAura(core.Aura{
-	// 	Label:    "Blade Flurry",
-	// 	ActionID: core.ActionID{SpellID: 13877},
-	// 	Duration: time.Second * 15,
-	//
-	// 	OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-	// 		if sim.ActiveTargetCount() < 2 {
-	// 			return
-	// 		}
-	//
-	// 		if result.Damage == 0 || !spell.ProcMask.Matches(core.ProcMaskMelee) {
-	// 			return
-	// 		}
-	//
-	// 		curDmg = result.Damage
-	// 		bfHit.Cast(sim, rogue.Env.NextActiveTargetUnit(result.Target))
-	// 		bfHit.SpellMetrics[result.Target.UnitIndex].Casts--
-	// 	},
-	// }).AttachMultiplyAttackSpeed(1.2)
-	//
-	// rogue.BladeFlurry = rogue.GetOrRegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 13877},
-	// 	ClassSpellMask: RogueSpellBladeFlurry,
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: time.Second,
-	// 		},
-	// 		CD: core.Cooldown{
-	// 			Timer:    rogue.NewTimer(),
-	// 			Duration: time.Minute * 2,
-	// 		},
-	// 		IgnoreHaste: true,
-	// 	},
-	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: 25,
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		rogue.BladeFlurryAura.Activate(sim)
-	// 	},
-	// })
-	//
-	// rogue.AddMajorCooldown(core.MajorCooldown{
-	// 	Spell: rogue.BladeFlurry,
-	// 	Type:  core.CooldownTypeDPS,
-	// })
+	bladeFlurryRank := spellData.BladeFlurry.HighestRank()
+	actionID := core.ActionID{SpellID: bladeFlurryRank.SpellID}
+	attackSpeed := 1 + bladeFlurryRank.Effect(shared.A_MOD_MELEE_HASTE_3, 0).Value/100
+
+	var curDmg float64
+	bfHit := rogue.GetOrRegisterSpell(core.SpellConfig{
+		ActionID:    core.ActionID{SpellID: 22482},
+		SpellSchool: core.SpellSchoolPhysical,
+		ProcMask:    core.ProcMaskEmpty, // No proc mask, so it won't proc itself.
+		Flags:       core.SpellFlagIgnoreResists | core.SpellFlagIgnoreModifiers | core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, curDmg, spell.OutcomeAlwaysHit)
+		},
+	})
+
+	rogue.BladeFlurryAura = rogue.GetOrRegisterAura(core.Aura{
+		Label:    "Blade Flurry",
+		ActionID: actionID,
+		Duration: bladeFlurryRank.Duration,
+
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if sim.ActiveTargetCount() < 2 {
+				return
+			}
+
+			if result.Damage == 0 || !spell.ProcMask.Matches(core.ProcMaskMelee) {
+				return
+			}
+
+			curDmg = result.Damage
+			bfHit.Cast(sim, rogue.Env.NextActiveTargetUnit(result.Target))
+			bfHit.SpellMetrics[result.Target.UnitIndex].Casts--
+		},
+	}).AttachMultiplyAttackSpeed(attackSpeed)
+
+	rogue.BladeFlurry = rogue.GetOrRegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: RogueSpellBladeFlurry,
+
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: bladeFlurryRank.GCD,
+			},
+			CD: core.Cooldown{
+				Timer:    rogue.NewTimer(),
+				Duration: bladeFlurryRank.Cooldown,
+			},
+			IgnoreHaste: true,
+		},
+		EnergyCost: core.EnergyCostOptions{
+			Cost: bladeFlurryRank.Cost,
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			rogue.BreakStealth(sim)
+			rogue.BladeFlurryAura.Activate(sim)
+		},
+	})
+
+	rogue.AddMajorCooldown(core.MajorCooldown{
+		Spell: rogue.BladeFlurry,
+		Type:  core.CooldownTypeDPS,
+	})
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
+// Hack and Slash folds the four Classic weapon specialization talents into one and picks its
+// effect from the weapons equipped: 1% extra attack per rank on axes and swords, 1% crit per
+// rank on daggers and fists, 3% of the target's armor ignored per rank on maces.
+//
+// The extra attack is not modelled: this engine has no extra-attack hook (MoP dropped them),
+// so an axe or sword rogue is short that share of its damage. Logged in the PR.
+func (rogue *Rogue) registerHackAndSlash() {
+	if rogue.Talents.HackAndSlash == 0 {
+		return
+	}
+
+	points := rogue.Talents.HackAndSlash
+	crit := spellData.HackAndSlash.EffectAt(2).ValueAt(points)
+	armorIgnore := spellData.HackAndSlash.EffectAt(1).ValueAt(points) / 100
+
+	// Daggers and fists: crit. The character pane shows the bonus for the main hand, so an
+	// off-hand-only qualifier gets it on off-hand hits alone.
+	switch rogue.GetProcMaskForTypes(proto.WeaponType_WeaponTypeDagger, proto.WeaponType_WeaponTypeFist) {
+	case core.ProcMaskMelee:
+		rogue.AddStat(stats.PhysicalCritPercent, crit)
+	case core.ProcMaskMeleeMH:
+		rogue.AddStaticMod(core.SpellModConfig{
+			Kind:       core.SpellMod_BonusCrit_Percent,
+			ProcMask:   core.ProcMaskMeleeMH,
+			FloatValue: crit,
+		})
+	case core.ProcMaskMeleeOH:
+		rogue.AddStaticMod(core.SpellModConfig{
+			Kind:       core.SpellMod_BonusCrit_Percent,
+			ProcMask:   core.ProcMaskMeleeOH,
+			FloatValue: crit,
+		})
+	}
+
+	// Maces: a share of the target's armor ignored.
+	if rogue.GetProcMaskForTypes(proto.WeaponType_WeaponTypeMace) != core.ProcMaskUnknown {
+		rogue.addArmorIgnore(armorIgnore)
+	}
+}
+
+// Armor ignored as a share of the target's, which lives on the attack table rather than on a
+// stat, so it has to wait until the tables exist.
+func (rogue *Rogue) addArmorIgnore(factor float64) {
+	rogue.Env.RegisterPostFinalizeEffect(func() {
+		for _, at := range rogue.AttackTables {
+			at.ArmorIgnoreFactor += factor
+		}
+	})
+}
+
+// Weapon Expertise no longer grants weapon skill; it takes the chance for the rogue's attacks
+// to be dodged or parried off the attack table directly.
 func (rogue *Rogue) registerWeaponExpertise() {
 	if rogue.Talents.WeaponExpertise == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if rogue.Talents.WeaponExpertise == 0 {
-	// 	return
-	// }
-	//
-	// rogue.AddStat(stats.ExpertiseRating, core.ExpertisePerQuarterPercentReduction*spellData.WeaponExpertise.ValueAt(rogue.Talents.WeaponExpertise))
+	rogue.AddStat(stats.ExpertiseRating, core.ExpertisePerQuarterPercentReduction*4*spellData.WeaponExpertise.ValueAt(rogue.Talents.WeaponExpertise))
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
 func (rogue *Rogue) registerAggression() {
 	if rogue.Talents.Aggression == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if rogue.Talents.Aggression == 0 {
-	// 	return
-	// }
-	//
-	// rogue.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	ClassMask:  RogueSpellSinisterStrike | RogueSpellBackstab | RogueSpellEviscerate,
-	// 	FloatValue: spellData.Aggression.FractionAt(rogue.Talents.Aggression),
-	// })
+	rogue.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_DamageDone_Flat,
+		ClassMask:  RogueSpellSinisterStrike | RogueSpellBackstab | RogueSpellEviscerate,
+		FloatValue: spellData.Aggression.FractionAt(rogue.Talents.Aggression),
+	})
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
 func (rogue *Rogue) registerAdrenalineRush() {
 	if !rogue.Talents.AdrenalineRush {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if !rogue.Talents.AdrenalineRush {
-	// 	return
-	// }
-	//
-	// rogue.AdrenalineRushAura = rogue.GetOrRegisterAura(core.Aura{
-	// 	Label:    "Adrenaline Rush",
-	// 	ActionID: core.ActionID{SpellID: 13750},
-	// 	Duration: time.Second * 15,
-	//
-	// 	OnGain: func(aura *core.Aura, sim *core.Simulation) {
-	// 		rogue.MultiplyEnergyRegenSpeed(sim, 2)
-	// 	},
-	// 	OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-	// 		rogue.MultiplyEnergyRegenSpeed(sim, 0.5)
-	// 	},
-	// })
-	//
-	// rogue.AdrenalineRush = rogue.GetOrRegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 13750},
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: RogueSpellAdrenalineRush,
-	//
-	// 	Cast: core.CastConfig{
-	// 		IgnoreHaste: true,
-	// 		CD: core.Cooldown{
-	// 			Timer:    rogue.NewTimer(),
-	// 			Duration: time.Minute * 5,
-	// 		},
-	// 		DefaultCast: core.Cast{
-	// 			GCD: time.Second,
-	// 		},
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		rogue.AdrenalineRushAura.Activate(sim)
-	// 	},
-	// })
-	//
-	// rogue.AddMajorCooldown(core.MajorCooldown{
-	// 	Spell: rogue.AdrenalineRush,
-	// 	Type:  core.CooldownTypeDPS,
-	// })
+	adrenalineRushRank := spellData.AdrenalineRush.HighestRank()
+	actionID := core.ActionID{SpellID: adrenalineRushRank.SpellID}
+	regenMultiplier := 1 + adrenalineRushRank.Effect(shared.A_MOD_POWER_REGEN_PERCENT, 3).Value/100
+
+	rogue.AdrenalineRushAura = rogue.GetOrRegisterAura(core.Aura{
+		Label:    "Adrenaline Rush",
+		ActionID: actionID,
+		Duration: adrenalineRushRank.Duration,
+
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			rogue.MultiplyEnergyRegenSpeed(sim, regenMultiplier)
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			rogue.MultiplyEnergyRegenSpeed(sim, 1/regenMultiplier)
+		},
+	})
+
+	rogue.AdrenalineRush = rogue.GetOrRegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: RogueSpellAdrenalineRush,
+
+		Cast: core.CastConfig{
+			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    rogue.NewTimer(),
+				Duration: adrenalineRushRank.Cooldown,
+			},
+			DefaultCast: core.Cast{
+				GCD: adrenalineRushRank.GCD,
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			rogue.BreakStealth(sim)
+			rogue.AdrenalineRushAura.Activate(sim)
+		},
+	})
+
+	rogue.AddMajorCooldown(core.MajorCooldown{
+		Spell: rogue.AdrenalineRush,
+		Type:  core.CooldownTypeDPS,
+		ShouldActivate: func(sim *core.Simulation, character *core.Character) bool {
+			return rogue.CurrentEnergy() <= 45.0
+		},
+	})
 }
 
-// registerDeflection implements Deflection, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (rogue *Rogue) registerDeflection() {
-	if rogue.Talents.Deflection == 0 {
-		return
-	}
-}
-
-// registerEndurance implements Endurance, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (rogue *Rogue) registerEndurance() {
-	if rogue.Talents.Endurance == 0 {
-		return
-	}
-}
-
-// registerFlawlessExecution implements Flawless Execution, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (rogue *Rogue) registerFlawlessExecution() {
-	if !rogue.Talents.FlawlessExecution {
-		return
-	}
-}
-
-// registerHackAndSlash implements Hack and Slash, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (rogue *Rogue) registerHackAndSlash() {
-	if rogue.Talents.HackAndSlash == 0 {
-		return
-	}
-}
-
-// registerImprovedKick implements Improved Kick, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (rogue *Rogue) registerImprovedKick() {
-	if rogue.Talents.ImprovedKick == 0 {
-		return
-	}
-}
-
-// registerImprovedSprint implements Improved Sprint, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (rogue *Rogue) registerImprovedSprint() {
-	if rogue.Talents.ImprovedSprint == 0 {
-		return
-	}
-}
-
-// registerRiposte implements Riposte, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Riposte answers a parried attack. The rogue is not the one being hit in a DPS sim, so it only
+// fires when the encounter swings back.
 func (rogue *Rogue) registerRiposte() {
 	if !rogue.Talents.Riposte {
 		return
 	}
+
+	riposteRank := spellData.Riposte.HighestRank()
+	actionID := core.ActionID{SpellID: riposteRank.SpellID}
+	weaponDamage := riposteRank.Effect(shared.A_NONE, 0).Value / 100
+
+	var riposteReady *core.Aura
+
+	rogue.GetOrRegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		SpellSchool:    riposteRank.SpellSchool,
+		DefenseType:    riposteRank.DefenseType,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		ClassSpellMask: RogueSpellRiposte,
+		MaxRange:       core.MaxMeleeRange,
+
+		EnergyCost: core.EnergyCostOptions{
+			Cost: 10,
+		},
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    rogue.NewTimer(),
+				Duration: riposteRank.Cooldown,
+			},
+		},
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return riposteReady.IsActive()
+		},
+
+		DamageMultiplier:         weaponDamage,
+		DamageMultiplierAdditive: 1,
+		ThreatMultiplier:         1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			riposteReady.Deactivate(sim)
+
+			damage := rogue.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+		},
+	})
+
+	riposteReady = rogue.RegisterAura(core.Aura{
+		Label:    "Riposte Ready",
+		ActionID: actionID,
+		Duration: riposteRank.Duration,
+	})
+
+	rogue.MakeProcTriggerAura(core.ProcTrigger{
+		Name:               "Riposte Trigger",
+		Callback:           core.CallbackOnSpellHitTaken,
+		Outcome:            core.OutcomeParry,
+		TriggerImmediately: true,
+		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			riposteReady.Activate(sim)
+		},
+	})
 }

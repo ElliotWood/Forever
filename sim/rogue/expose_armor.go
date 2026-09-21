@@ -6,73 +6,79 @@ import (
 
 var exposeArmorRank = spellData.ExposeArmor.HighestRank()
 
-// TODO: To be implemented. Expose Armor already resolves against Forever data
-// (spellData.ExposeArmor.HighestRank()); the TBC body needs review before it's uncommented.
+// Forever repurposes Improved Expose Armor: the client states an energy cost reduction
+// (SPELLMOD_COST -5/-10) and a dummy of 1/2, which our Forever sim reads as combo points handed
+// back on a full five point spend. The armor the debuff removes no longer scales with the talent.
 func (rogue *Rogue) registerExposeArmorSpell() {
-	panic("To be implemented")
+	rogue.ExposeArmorAuras = rogue.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		return core.ExposeArmorAura(target, rogue.ComboPoints, 0)
+	})
 
-	// The TBC implementation, kept for the port:
-	// rogue.ExposeArmorAuras = rogue.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-	// 	return core.ExposeArmorAura(target, rogue.ComboPoints, rogue.Talents.ImprovedExposeArmor)
-	// })
-	//
-	// rogue.ExposeArmor = rogue.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: exposeArmorRank.SpellID},
-	// 	SpellSchool:    exposeArmorRank.SpellSchool,
-	// 	DefenseType:    exposeArmorRank.DefenseType,
-	// 	ProcMask:       core.ProcMaskMeleeMHSpecial,
-	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-	// 	MetricSplits:   6,
-	// 	ClassSpellMask: RogueSpellExposeArmor,
-	//
-	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: exposeArmorRank.Cost,
-	// 		// TODO: Forever drops Quick Recovery; no energy refund until we know whether the
-	// 		// effect moved onto another talent.
-	// 		Refund:        0,
-	// 		RefundMetrics: rogue.EnergyRefundMetrics,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: exposeArmorRank.GCD,
-	// 		},
-	// 		IgnoreHaste: true,
-	// 		ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
-	// 			spell.SetMetricsSplit(rogue.ComboPoints())
-	// 		},
-	// 	},
-	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-	// 		return rogue.ComboPoints() > 0
-	// 	},
-	//
-	// 	ThreatMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		if rogue.CanApplyExposeArmorAura(target) {
-	// 			rogue.BreakStealth(sim)
-	// 			result := spell.CalcOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
-	// 			if result.Landed() {
-	// 				rogue.ExposeArmorAuras.Get(target).Activate(sim)
-	// 				rogue.ApplyFinisher(sim, spell)
-	// 			} else {
-	// 				spell.IssueRefund(sim)
-	// 			}
-	// 			spell.DealOutcome(sim, result)
-	// 		}
-	// 	},
-	//
-	// 	RelatedAuraArrays: rogue.ExposeArmorAuras.ToMap(),
-	// })
+	cpMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 14169})
+	pointsBack := spellData.ImprovedExposeArmor.EffectAt(1).ValueAt(rogue.Talents.ImprovedExposeArmor)
+
+	rogue.ExposeArmor = rogue.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: exposeArmorRank.SpellID},
+		SpellSchool:    exposeArmorRank.SpellSchool,
+		DefenseType:    exposeArmorRank.DefenseType,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | SpellFlagFinisher | core.SpellFlagAPL,
+		MetricSplits:   6,
+		ClassSpellMask: RogueSpellExposeArmor,
+		MaxRange:       core.MaxMeleeRange,
+
+		EnergyCost: core.EnergyCostOptions{
+			Cost:          exposeArmorRank.Cost,
+			Refund:        0,
+			RefundMetrics: rogue.EnergyRefundMetrics,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: exposeArmorRank.GCD,
+			},
+			IgnoreHaste: true,
+			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
+				spell.SetMetricsSplit(rogue.ComboPoints())
+			},
+		},
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return rogue.ComboPoints() > 0 && rogue.CanApplyExposeArmorAura(target)
+		},
+
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			rogue.BreakStealth(sim)
+
+			comboPoints := rogue.ComboPoints()
+			result := spell.CalcOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
+			if result.Landed() {
+				rogue.ExposeArmorAuras.Get(target).Activate(sim)
+				rogue.ApplyFinisher(sim, spell)
+				if pointsBack > 0 && comboPoints == 5 {
+					rogue.AddComboPoints(sim, int32(pointsBack), cpMetrics)
+				}
+			} else {
+				spell.IssueRefund(sim)
+			}
+			spell.DealOutcome(sim, result)
+		},
+
+		RelatedAuraArrays: rogue.ExposeArmorAuras.ToMap(),
+	})
 }
 
+// core's Expose Armor debuff is worth 410 armor per combo point. Our Forever sim reads 450 off
+// the beta client for the rank the table gives, but the number lives on the shared raid debuff,
+// so it is left alone here rather than moved under every other class at the same time.
 func (rogue *Rogue) GetExposeArmorValue() float64 {
-	// TODO: Forever repurposes Improved Expose Armor: the spell now carries an energy cost
-	// reduction (SPELLMOD_COST -5/-10) and a dummy of 1/2, neither of which is the 25/50%
-	// armor bonus this call wants, so the armor value is pinned to the untalented one.
-	improvedExposeArmorMultiplier := 1.0
-	return 410.0 * float64(rogue.ComboPoints()) * improvedExposeArmorMultiplier
+	return 410.0 * float64(rogue.ComboPoints())
 }
 
 func (rogue *Rogue) CanApplyExposeArmorAura(target *core.Unit) bool {
-	return !rogue.ExposeArmorAuras.Get(target).IsActive() || rogue.ExposeArmorAuras.Get(target).ExclusiveEffects[0].Priority <= rogue.GetExposeArmorValue()
+	aura := rogue.ExposeArmorAuras.Get(target)
+	if curActive := aura.ExclusiveEffects[0].Category.GetActiveEffect(); curActive != nil {
+		return rogue.GetExposeArmorValue() >= curActive.Priority
+	}
+	return true
 }
