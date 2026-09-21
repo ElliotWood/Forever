@@ -6,6 +6,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -123,24 +124,16 @@ func (warrior *Warrior) registerLastStand() {
 		},
 	})
 
-	spell := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		ClassSpellMask: SpellMaskLastStand,
-		ClassFlags:     SpellFlagsLastStand,
+	config := spelldata.SpellConfig(&warrior.Unit, lastStandRank)
+	config.ClassSpellMask = SpellMaskLastStand
 
-		Cast: core.CastConfig{
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(lastStandRank),
-			},
-		},
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		aura.Activate(sim)
+	}
 
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			aura.Activate(sim)
-		},
+	config.RelatedSelfBuff = aura
 
-		RelatedSelfBuff: aura,
-	})
+	spell := warrior.RegisterSpell(config)
 
 	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
@@ -183,39 +176,20 @@ func (warrior *Warrior) registerConcussionBlow() {
 		return
 	}
 
-	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: concussionBlowRank.ID},
-		ClassSpellMask: SpellMaskConcussionBlow,
-		ClassFlags:     SpellFlagsConcussionBlow,
-		SpellSchool:    core.SpellSchoolPhysical,
-		DefenseType:    core.DefenseTypeMelee,
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		MaxRange:       core.MaxMeleeRange,
+	config := spelldata.SpellConfig(&warrior.Unit, concussionBlowRank,
+		spelldata.Flags(core.SpellFlagMeleeMetrics|core.SpellFlagAPL))
+	config.ClassSpellMask = SpellMaskConcussionBlow
+	config.ProcMask = core.ProcMaskMeleeMHSpecial
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(concussionBlowRank),
-			Refund: concussionBlowRank.MissRefund(),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(concussionBlowRank),
-			},
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
 
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	warrior.RegisterSpell(config)
 }
 
 // TODO: Manual review needed -- spell 23922 states only "a very high amount of threat"; none is
@@ -227,47 +201,24 @@ func (warrior *Warrior) registerShieldSlam() {
 		return
 	}
 
-	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: shieldSlamRank.ID},
-		ClassSpellMask: SpellMaskShieldSlam,
-		ClassFlags:     SpellFlagsShieldSlam,
-		SpellSchool:    shieldSlamRank.SpellSchool(),
-		DefenseType:    shieldSlamRank.DefenseTypeCore(),
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		MaxRange:       core.MaxMeleeRange,
+	config := spelldata.SpellConfig(&warrior.Unit, shieldSlamRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+	config.ClassSpellMask = SpellMaskShieldSlam
+	config.FlatThreatBonus = 0
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(shieldSlamRank),
-			Refund: shieldSlamRank.MissRefund(),
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: shieldSlamRank.GCD(),
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(shieldSlamRank),
-			},
-		},
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.PseudoStats.CanBlock
-		},
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.PseudoStats.CanBlock
+	}
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		FlatThreatBonus:  0,
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := shieldSlamRank.DamageEffect().Average(core.CharacterLevel) + warrior.BlockDamageReduction()
+		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := shieldSlamRank.DamageEffect().Average(core.CharacterLevel) + warrior.BlockDamageReduction()
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
 
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	warrior.RegisterSpell(config)
 }
 
 func (warrior *Warrior) registerFocusedRage() {

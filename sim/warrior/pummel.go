@@ -2,47 +2,28 @@ package warrior
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 var pummelRank = spellData.Pummel.ByID(6554)
 var pummelBaseDamage = pummelRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerPummel() {
-	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: pummelRank.ID},
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		ClassSpellMask: SpellMaskPummel,
-		ClassFlags:     SpellFlagsPummel,
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		SpellSchool:    pummelRank.SpellSchool(),
-		DefenseType:    pummelRank.DefenseTypeCore(),
-		MaxRange:       core.MaxMeleeRange,
+	config := spelldata.SpellConfig(&warrior.Unit, pummelRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+	config.ClassSpellMask = SpellMaskPummel
+	config.Cast.CD.Timer = warrior.NewTimer()
 
-		RageCost: core.RageCostOptions{
-			Cost:   rageCost(pummelRank),
-			Refund: pummelRank.MissRefund(),
-		},
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.StanceMatches(BerserkerStance)
+	}
 
-		Cast: core.CastConfig{
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(pummelRank),
-			},
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		result := spell.CalcAndDealDamage(sim, target, pummelBaseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
 
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.StanceMatches(BerserkerStance)
-		},
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcAndDealDamage(sim, target, pummelBaseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	warrior.RegisterSpell(config)
 }

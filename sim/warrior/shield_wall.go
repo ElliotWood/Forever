@@ -4,46 +4,31 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 var shieldWallRank = spellData.ShieldWall.Highest()
 
 func (warrior *Warrior) registerShieldWall() {
-	actionID := core.ActionID{SpellID: shieldWallRank.ID}
-	aura := warrior.RegisterAura(core.Aura{
-		Label:    "Shield Wall",
-		ActionID: actionID,
-		Duration: shieldWallRank.Duration(),
-	}).AttachMultiplicativePseudoStatBuff(
+	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldWallRank)).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.DamageTakenMultiplier,
 		1+shieldWallRank.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Percent(),
 	)
 
-	spell := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		DefenseType:    core.DefenseTypeMelee,
-		ClassSpellMask: SpellMaskShieldWall,
-		ClassFlags:     SpellFlagsShieldWall,
+	config := spelldata.SpellConfig(&warrior.Unit, shieldWallRank)
+	config.ClassSpellMask = SpellMaskShieldWall
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: shieldWallRank.GCD(),
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(shieldWallRank),
-			},
-		},
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.StanceMatches(DefensiveStance) && warrior.PseudoStats.CanBlock
-		},
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.StanceMatches(DefensiveStance) && warrior.PseudoStats.CanBlock
+	}
 
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			aura.Activate(sim)
-		},
-		RelatedSelfBuff: aura,
-	})
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		aura.Activate(sim)
+	}
+
+	config.RelatedSelfBuff = aura
+
+	spell := warrior.RegisterSpell(config)
 
 	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
 		if !warrior.PseudoStats.CanBlock {

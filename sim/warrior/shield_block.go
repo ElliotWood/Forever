@@ -4,21 +4,15 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 var shieldBlockRank = spellData.ShieldBlock.Highest()
 
 func (warrior *Warrior) registerShieldBlock() {
-	actionId := core.ActionID{SpellID: shieldBlockRank.ID}
-
 	var spell *core.Spell
-	aura := warrior.RegisterAura(core.Aura{
-		Label:     "Shield Block",
-		ActionID:  actionId,
-		Duration:  shieldBlockRank.Duration(),
-		MaxStacks: int32(shieldBlockRank.ProcCharges),
-	}).
+	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldBlockRank)).
 		AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(dbcenums.A_MOD_BLOCK_PERCENT, 0).Percent()).
 		AttachProcTrigger(core.ProcTrigger{
 			Name:               "Shield Block - Consume",
@@ -30,39 +24,21 @@ func (warrior *Warrior) registerShieldBlock() {
 			},
 		})
 
-	spell = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       actionId,
-		SpellSchool:    core.SpellSchoolPhysical,
-		ClassSpellMask: SpellMaskShieldBlock,
-		ClassFlags:     SpellFlagsShieldBlock,
-		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
+	config := spelldata.SpellConfig(&warrior.Unit, shieldBlockRank, spelldata.Flags(core.SpellFlagAPL))
+	config.ClassSpellMask = SpellMaskShieldBlock
 
-		RageCost: core.RageCostOptions{
-			Cost: rageCost(shieldBlockRank),
-		},
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.PseudoStats.CanBlock && warrior.StanceMatches(DefensiveStance)
+	}
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    warrior.NewTimer(),
-				Duration: cooldownOf(shieldBlockRank),
-			},
-		},
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		spell.RelatedSelfBuff.Activate(sim)
+		spell.RelatedSelfBuff.SetStacks(sim, spell.RelatedSelfBuff.MaxStacks)
+	}
 
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.PseudoStats.CanBlock && warrior.StanceMatches(DefensiveStance)
-		},
+	config.RelatedSelfBuff = aura
 
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.RelatedSelfBuff.Activate(sim)
-			spell.RelatedSelfBuff.SetStacks(sim, spell.RelatedSelfBuff.MaxStacks)
-		},
-
-		RelatedSelfBuff: aura,
-	})
+	spell = warrior.RegisterSpell(config)
 
 	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
 		if !warrior.PseudoStats.CanBlock {
