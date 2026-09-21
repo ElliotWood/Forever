@@ -16,12 +16,13 @@ func (warrior *Warrior) registerSlamSpell() {
 	castReduction := time.Millisecond * 250 * time.Duration(warrior.Talents.ImprovedSlam)
 
 	warrior.Slam = warrior.RegisterSpell(AnyStance, core.SpellConfig{
-		SpellCode:   SpellCode_WarriorSlam,
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagOffensive,
+		SpellCode:      SpellCode_WarriorSlam,
+		ClassSpellMask: SpellMaskSlam,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagOffensive,
 
 		RequiredLevel: requiredLevel,
 

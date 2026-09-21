@@ -12,12 +12,13 @@ func (warrior *Warrior) registerExecuteSpell() {
 
 	var rageMetrics *core.ResourceMetrics
 	warrior.Execute = warrior.RegisterSpell(BattleStance|BerserkerStance, core.SpellConfig{
-		SpellCode:   SpellCode_WarriorExecute,
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPassiveSpell | SpellFlagOffensive,
+		SpellCode:      SpellCode_WarriorExecute,
+		ClassSpellMask: SpellMaskExecute,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPassiveSpell | SpellFlagOffensive,
 
 		RageCost: core.RageCostOptions{
 			// Rank 2 takes 5 off, not the 6 that doubling rank 1 gives. Both the tree and

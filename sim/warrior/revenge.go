@@ -40,12 +40,13 @@ func (warrior *Warrior) registerRevengeSpell(cdTimer *core.Timer) {
 	})
 
 	warrior.Revenge = warrior.RegisterSpell(DefensiveStance, core.SpellConfig{
-		SpellCode:   SpellCode_WarriorRevenge,
-		ActionID:    actionID,
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagOffensive,
+		SpellCode:      SpellCode_WarriorRevenge,
+		ClassSpellMask: SpellMaskRevenge,
+		ActionID:       actionID,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagOffensive,
 
 		RageCost: core.RageCostOptions{
 			Cost:   5,

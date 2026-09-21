@@ -17,12 +17,13 @@ func (warrior *Warrior) registerWhirlwindSpell() {
 	}
 
 	warrior.Whirlwind = warrior.RegisterSpell(BerserkerStance, core.SpellConfig{
-		SpellCode:   SpellCode_WarriorWhirlwind,
-		ActionID:    core.ActionID{SpellID: 1680},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagAPL | SpellFlagOffensive,
+		SpellCode:      SpellCode_WarriorWhirlwind,
+		ClassSpellMask: SpellMaskWhirlwind,
+		ActionID:       core.ActionID{SpellID: 1680},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagAPL | SpellFlagOffensive,
 
 		RageCost: core.RageCostOptions{
 			Cost: 25,

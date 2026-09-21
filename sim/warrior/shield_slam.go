@@ -19,12 +19,13 @@ func (warrior *Warrior) registerShieldSlamSpell() {
 	threat := 254.0
 
 	warrior.ShieldSlam = warrior.RegisterSpell(AnyStance, core.SpellConfig{
-		SpellCode:   SpellCode_WarriorShieldSlam,
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial, // TODO really?
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagOffensive,
+		SpellCode:      SpellCode_WarriorShieldSlam,
+		ClassSpellMask: SpellMaskShieldSlam,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial, // TODO really?
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagOffensive,
 
 		RageCost: core.RageCostOptions{
 			Cost:   20,
