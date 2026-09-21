@@ -185,11 +185,16 @@ func DeriveRankAmount(e RankEffect, spellLevel, maxLevel int32) (min float64, ma
 
 // Whether the spell carries the Passive attribute: never cast, only applied.
 func SpellIsPassive(db *sql.DB, spellID int32) (bool, error) {
-	var passive bool
+	return spellHasAttribute(db, spellID, dbc.ATTR_INDEX_BASE, dbc.ATTR_PASSIVE)
+}
+
+// Whether the flag is set in SpellMisc.Attributes[attrIndex]; false for a spell with no SpellMisc row.
+func spellHasAttribute(db *sql.DB, spellID int32, attrIndex int, flag int) (bool, error) {
+	var set bool
 	err := scanOptional(db, fmt.Sprintf(
 		`SELECT (COALESCE(json_extract(Attributes, '$[%d]'), 0) & %d) != 0 FROM SpellMisc WHERE SpellID = ? AND DifficultyID = 0`,
-		dbc.ATTR_INDEX_BASE, dbc.ATTR_PASSIVE), spellID, &passive)
-	return passive, err
+		attrIndex, flag), spellID, &set)
+	return set, err
 }
 
 func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
@@ -251,15 +256,11 @@ func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 		return s, fmt.Errorf("max targets for spell %d: %w", spellID, err)
 	}
 
-	if err := scanOptional(db, fmt.Sprintf(
-		`SELECT (COALESCE(json_extract(Attributes, '$[%d]'), 0) & %d) != 0 FROM SpellMisc WHERE SpellID = ? AND DifficultyID = 0`,
-		dbc.ATTR_INDEX_EX_1, dbc.ATTR_EX_1_DISCOUNT_POWER_ON_MISS), spellID, &s.RefundsOnMiss); err != nil {
+	if s.RefundsOnMiss, err = spellHasAttribute(db, spellID, dbc.ATTR_INDEX_EX_1, dbc.ATTR_EX_1_DISCOUNT_POWER_ON_MISS); err != nil {
 		return s, fmt.Errorf("miss refund for spell %d: %w", spellID, err)
 	}
 
-	if err := scanOptional(db, fmt.Sprintf(
-		`SELECT (COALESCE(json_extract(Attributes, '$[%d]'), 0) & %d) != 0 FROM SpellMisc WHERE SpellID = ? AND DifficultyID = 0`,
-		dbc.ATTR_INDEX_EX_8, dbc.ATTR_EX_8_PERIODIC_CAN_CRIT), spellID, &s.PeriodicCanCrit); err != nil {
+	if s.PeriodicCanCrit, err = spellHasAttribute(db, spellID, dbc.ATTR_INDEX_EX_8, dbc.ATTR_EX_8_PERIODIC_CAN_CRIT); err != nil {
 		return s, fmt.Errorf("periodic crit for spell %d: %w", spellID, err)
 	}
 
