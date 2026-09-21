@@ -4,8 +4,6 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 1672 carries no threat effect; none is modelled until
-// measured in game.
 var shieldBashRank = spellData.ShieldBash.HighestRank()
 
 func (warrior *Warrior) registerShieldBash() {
@@ -38,7 +36,8 @@ func (warrior *Warrior) registerShieldBash() {
 		DamageMultiplier: 1,
 		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  shieldBashRank.FlatThreatBonus,
+		// TODO: In-game test required
+		FlatThreatBonus: 0,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.PseudoStats.CanBlock && warrior.StanceMatches(DefensiveStance|BattleStance)

@@ -29,11 +29,12 @@ func (warrior *Warrior) StanceMatches(other Stance) bool {
 }
 
 func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, rank shared.SpellData, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
-	// Tactical Mastery (1310185) is a baseline passive that keeps rage on a stance change, and
-	// Improved Tactical Mastery adds its ladder on top.
-	maxRetainedRage := spellData.TacticalMastery.ValueAt(1) + spellData.ImprovedTacticalMastery.ValueAt(warrior.Talents.ImprovedTacticalMastery)
 	actionID := aura.ActionID
 	rageMetrics := warrior.NewRageMetrics(actionID)
+	maxRetainedRage := spellData.TacticalMastery.ValueAt(1)
+	if warrior.Talents.ImprovedTacticalMastery > 0 {
+		maxRetainedRage += spellData.ImprovedTacticalMastery.ValueAt(warrior.Talents.ImprovedTacticalMastery)
+	}
 
 	return warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
@@ -83,7 +84,6 @@ func (warrior *Warrior) registerBattleStanceAura() *core.Aura {
 		Duration:   core.NeverExpires,
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
 	}).AttachMultiplicativePseudoStatBuff(
-		// Battle Stance Passive (21156) carries the stance's threat.
 		&warrior.PseudoStats.ThreatMultiplier,
 		spellData.BattleStancePassive.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(1),
 	)
@@ -93,7 +93,6 @@ func (warrior *Warrior) registerBattleStanceAura() *core.Aura {
 	return aura
 }
 
-// Defensive Stance Passive (7376) carries the stance's threat, damage taken and damage done.
 func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 	actionID := core.ActionID{SpellID: defensiveStanceRank.SpellID}
 
@@ -113,8 +112,6 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 		spellData.DefensiveStancePassive.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(1),
 	)
 	if warrior.Talents.Defiance > 0 {
-		// Defiance (12792) raises the stance's threat by 5% per rank while a shield is equipped, so
-		// the multiplier follows both the stance and the off-hand.
 		defiance := spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance)
 		applied := false
 		refresh := func(inStance bool) {
@@ -138,8 +135,6 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 	return aura
 }
 
-// Berserker Stance Passive (7381) carries the stance's threat, damage taken and critical strike
-// chance.
 func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
 	actionId := core.ActionID{SpellID: berserkerStanceRank.SpellID}
 

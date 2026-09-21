@@ -13,8 +13,7 @@ var revengeRank = spellData.Revenge.HighestRank()
 func (warrior *Warrior) registerRevenge() {
 	actionID := core.ActionID{SpellID: revengeRank.SpellID}
 
-	// TODO: Manual review needed -- spell 25288 states only that Revenge must follow a block,
-	// dodge or parry, so the 5 second window is hand-supplied.
+	// TODO: In-game test needed
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Revenge",
 		Duration: 5 * time.Second,
