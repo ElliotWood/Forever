@@ -63,7 +63,7 @@ func (warrior *Warrior) registerShieldSpecialization() {
 	// Effect 0 is the block bonus; the tooltip states the chance as $m2%, so effect 1's ladder is
 	// the chance and the 100 in the proc chance column is noise.
 	warrior.registerRageOnAvoid("Shield Specialization", shieldSpecializationEnergize.SpellID,
-		shared.SpellDataMin(shieldSpecializationEnergize.Energize)/10,
+		shieldSpecializationEnergize.Energize.Tenths(),
 		spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization), core.OutcomeBlock, nil)
 }
 
@@ -289,7 +289,7 @@ func (warrior *Warrior) registerMasterOfDefense() {
 	// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100 in
 	// the proc chance column is noise; a shield has to be equipped.
 	warrior.registerRageOnAvoid("Master of Defense", masterOfDefenseEnergize.SpellID,
-		shared.SpellDataMin(masterOfDefenseEnergize.Energize)/10,
+		masterOfDefenseEnergize.Energize.Tenths(),
 		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense), core.OutcomeDodge|core.OutcomeParry,
 		func() bool { return warrior.PseudoStats.CanBlock })
 }

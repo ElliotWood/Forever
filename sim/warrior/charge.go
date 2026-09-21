@@ -1,7 +1,6 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -12,7 +11,7 @@ func (warrior *Warrior) registerCharge() {
 	metrics := warrior.NewRageMetrics(actionID)
 
 	chargeCD := chargeRank.Cooldown
-	chargeRage := shared.SpellDataMin(chargeRank.Energize) / 10
+	chargeRage := chargeRank.Energize.Tenths()
 	if warrior.Talents.ImprovedCharge > 0 {
 		chargeRage += spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 	}

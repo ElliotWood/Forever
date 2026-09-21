@@ -25,6 +25,12 @@ type SpellDataValue interface {
 	// Returns a static damage value or rolls between the min/max of the range.
 	Damage(sim *core.Simulation) float64
 
+	// The value in rage or energy, which the client states on a 0-1000 bar.
+	//
+	//	unbridledWrathRank.Energize.Tenths()   // 1 rage, from the row's 10
+	//	bloodrageOverTime.Tenths()             // 1 rage a tick, from 10
+	Tenths() float64
+
 	isSpellDataValue()
 }
 
@@ -81,6 +87,10 @@ func (v SpellDataPeriodic) Damage(sim *core.Simulation) float64 {
 	}
 	return v.Tick
 }
+
+func (v SpellDataFlat) Tenths() float64     { return v.Value / 10 }
+func (v SpellDataRange) Tenths() float64    { return v.Min / 10 }
+func (v SpellDataPeriodic) Tenths() float64 { return v.Tick / 10 }
 
 func (v SpellDataFlat) BonusCoefficient() float64     { return v.Coef }
 func (v SpellDataRange) BonusCoefficient() float64    { return v.Coef }
@@ -237,11 +247,11 @@ type SpellDataEffect struct {
 	ChainAmplitude float64
 }
 
-// The high end of the effect, which is Value wherever the two agree - ValueMax is only stored where
-// they differ. Seal of the Crusader rank 4's base is a whole number, so it has no ValueMax and its
-// answer is Value; every other rank has both.
-// The share of the cost a miss refunds, for RageCostOptions.Refund: 80% where the client flags
+// The share of the cost a miss gives back, for RageCostOptions.Refund: 80% where the client flags
 // Discount Power On Miss, nothing otherwise.
+//
+//	rendRank.MissRefund()    // 0.8
+//	cleaveRank.MissRefund()  // 0, Cleave lacks the flag
 func (s SpellData) MissRefund() float64 {
 	if s.RefundsOnMiss {
 		return 0.8
@@ -265,6 +275,11 @@ func PeriodicTickOutcome(row SpellData, dot *core.Dot) core.OutcomeApplier {
 	}
 }
 
+// The high end of the effect, which is Value wherever the two agree - ValueMax is only stored where
+// they differ. Seal of the Crusader rank 4's base is a whole number, so it has no ValueMax and its
+// answer is Value; every other rank has both.
+//
+//	sealOfTheCrusaderRank.Effects[0].High()   // 41 on rank 1, where Value reads 39.2
 func (e SpellDataEffect) High() float64 {
 	if e.ValueMax != 0 {
 		return e.ValueMax
@@ -272,11 +287,21 @@ func (e SpellDataEffect) High() float64 {
 	return e.Value
 }
 
-// The same readers a talent ladder has, for one row's effect: the client states a percentage as an
-// integer (Shield Wall's -60), and rage on a 0-1000 bar.
-func (e SpellDataEffect) Fraction() float64   { return e.Value / 100 }
+// The client's percentage as a fraction; it states one as an integer.
+//
+//	shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Fraction()   // -0.6, from -60
+//	spearingStrikeRank.Effects[1].Fraction()                                   //  0.4, from 40
+func (e SpellDataEffect) Fraction() float64 { return e.Value / 100 }
+
+// 1 plus the fraction, with the sign the data gives it.
+//
+//	shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier()   // 0.4, from -60
 func (e SpellDataEffect) Multiplier() float64 { return 1 + e.Fraction() }
-func (e SpellDataEffect) Tenths() float64     { return e.Value / 10 }
+
+// The value in rage or energy, which the client states on a 0-1000 bar.
+//
+//	ragingBlowsRank.Effects[1].Tenths()   // -2 rage on Cleave, from -20
+func (e SpellDataEffect) Tenths() float64 { return e.Value / 10 }
 
 // Panics when no effect matches, and when two do - 186 ranked spells carry a duplicate aura/misc
 // pair. Index into Effects where the pair cannot tell them apart.

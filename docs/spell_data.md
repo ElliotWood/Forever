@@ -475,7 +475,7 @@ action wants: Bloodrage's 29131 ticks 10 rage-tenths every second for 10 ticks.
 
 ```go
 over := spellData.BloodrageTriggered.HighestRank().Energize.(shared.SpellDataPeriodic)
-over.Tick / 10, over.TickLength, over.NumberOfTicks   // 1 rage, 1 s, 10
+over.Tenths(), over.TickLength, over.NumberOfTicks   // 1 rage, 1 s, 10
 ```
 
 ### Registering several ranks

@@ -37,7 +37,7 @@ func (warrior *Warrior) registerBloodrage() {
 				NumTicks: int(bloodrageOverTime.NumberOfTicks),
 				Period:   bloodrageOverTime.TickLength,
 				OnAction: func(sim *core.Simulation) {
-					warrior.AddRage(sim, bloodrageOverTime.Tick/10*improvedBloodrage, rageMetrics)
+					warrior.AddRage(sim, bloodrageOverTime.Tenths()*improvedBloodrage, rageMetrics)
 				},
 			})
 		},

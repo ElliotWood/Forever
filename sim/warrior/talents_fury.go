@@ -54,7 +54,7 @@ func (warrior *Warrior) registerCruelty() {
 var unbridledWrathRank = spellData.UnbridledWrathTriggered.HighestRank()
 
 // The energize is on the client's 0-1000 rage bar.
-var unbridledWrathRage = shared.SpellDataMin(unbridledWrathRank.Energize) / 10
+var unbridledWrathRage = unbridledWrathRank.Energize.Tenths()
 
 func (warrior *Warrior) registerUnbridledWrath() {
 	if warrior.Talents.UnbridledWrath == 0 {
