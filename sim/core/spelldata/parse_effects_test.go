@@ -127,7 +127,7 @@ func TestParseStaticBuildsTheModTable(t *testing.T) {
 	character := parseWarrior()
 	character.EnableRageBar(core.RageBarOptions{})
 
-	parsed := ParseStatic(&character.Unit, Find(1000))
+	parsed := ParseStatic(character, Find(1000))
 
 	want := []string{"SpellMod_DamageDone_Flat", "SpellMod_PowerCost_Flat", "SpellMod_CastTime_Flat"}
 	if len(parsed.Applied) != len(want) {
@@ -163,7 +163,7 @@ func TestParseStaticCostOnAManaBar(t *testing.T) {
 		Spec:  &proto.Player_Mage{Mage: &proto.Mage{}},
 	})
 
-	parsed := ParseStatic(&character.Unit, Find(1000))
+	parsed := ParseStatic(character, Find(1000))
 
 	if parsed.Applied[1].Value != -30 {
 		t.Errorf("a mana cost modifier is worth %v, want the row's -30", parsed.Applied[1].Value)
@@ -179,7 +179,7 @@ func TestParseStaticCarriesTheClassFlags(t *testing.T) {
 	named := parseSpell(character, 2100, parseTargetMask)
 	elsewhere := parseSpell(character, 2101, parseOtherMask)
 
-	ParseStatic(&character.Unit, Find(1000))
+	ParseStatic(character, Find(1000))
 
 	if got := named.DamageMultiplierAdditive; got != 1.15 {
 		t.Errorf("the spell the effect names: %v, want 1.15", got)
@@ -201,7 +201,7 @@ func TestParseStaticFallsBackToTheWholeFamily(t *testing.T) {
 	row.Effects = []Effect{{SpellID: 1100, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_PCT_MODIFIER,
 		Misc: SPELLMOD_DAMAGE, BasePoints: 10}}
 
-	ParseStatic(&character.Unit, &row)
+	ParseStatic(character, &row)
 
 	if got := family.DamageMultiplierAdditive; got != 1.1 {
 		t.Errorf("a spell of the caster's family: %v, want 1.1", got)
@@ -217,7 +217,7 @@ func TestParseFoldsTheDotModifier(t *testing.T) {
 	withParseRows(t)
 	character := parseWarrior()
 
-	parsed := ParseStatic(&character.Unit, Find(1100))
+	parsed := ParseStatic(character, Find(1100))
 
 	kinds := appliedKinds(parsed)
 	if len(kinds) != 2 || kinds[0] != "SpellMod_DamageDone_Flat" ||
@@ -237,7 +237,7 @@ func TestParseKeepsAnUnpairedDotModifier(t *testing.T) {
 	row := *Find(1100)
 	row.Effects = []Effect{row.Effects[1]}
 
-	parsed := ParseStatic(&character.Unit, &row)
+	parsed := ParseStatic(character, &row)
 
 	if kinds := appliedKinds(parsed); len(kinds) != 1 || kinds[0] != "SpellMod_DotDamageDone_Pct" {
 		t.Errorf("the lone dot modifier became %v, want SpellMod_DotDamageDone_Pct", kinds)
@@ -249,7 +249,7 @@ func TestParseReadsOnlyTheNamedEffects(t *testing.T) {
 	character := parseWarrior()
 	character.EnableRageBar(core.RageBarOptions{})
 
-	only := ParseStatic(&character.Unit, Find(1000), Effects(2))
+	only := ParseStatic(character, Find(1000), Effects(2))
 	if kinds := appliedKinds(only); len(kinds) != 1 || kinds[0] != "SpellMod_PowerCost_Flat" {
 		t.Errorf("Effects(2) attached %v, want the cost modifier alone", kinds)
 	}
@@ -257,7 +257,7 @@ func TestParseReadsOnlyTheNamedEffects(t *testing.T) {
 		t.Errorf("Effects(2) reported %d skipped effects, want none", len(only.Skipped))
 	}
 
-	rest := ParseStatic(&character.Unit, Find(1000), SkipEffects(1, 4))
+	rest := ParseStatic(character, Find(1000), SkipEffects(1, 4))
 	if kinds := appliedKinds(rest); len(kinds) != 2 {
 		t.Errorf("SkipEffects(1, 4) attached %v, want the two middle effects", kinds)
 	}
@@ -271,7 +271,7 @@ func TestParseConditionalAndRefresh(t *testing.T) {
 	baseAttackPower := character.GetStat(stats.AttackPower)
 
 	allowed := false
-	parsed := ParseStatic(&character.Unit, Find(1400), Conditional(func() bool { return allowed }))
+	parsed := ParseStatic(character, Find(1400), Conditional(func() bool { return allowed }))
 
 	if len(parsed.Applied) != 4 {
 		t.Fatalf("attached %v, want the four the table knows", appliedKinds(parsed))
@@ -313,7 +313,7 @@ func TestParseSkipsWhatTheTableDoesNotKnow(t *testing.T) {
 	withParseRows(t)
 	character := parseWarrior()
 
-	parsed := ParseStatic(&character.Unit, Find(1400))
+	parsed := ParseStatic(character, Find(1400))
 
 	if len(parsed.Skipped) != 1 || parsed.Skipped[0].Aura != dbcenums.A_PROC_TRIGGER_SPELL {
 		t.Errorf("skipped %v, want the proc trigger alone", parsed.Skipped)
@@ -325,13 +325,13 @@ func TestParseNilSpell(t *testing.T) {
 	withParseRows(t)
 	character := parseWarrior()
 
-	parsed := ParseStatic(&character.Unit, Nil)
+	parsed := ParseStatic(character, Nil)
 	if len(parsed.Applied) != 0 || len(parsed.Skipped) != 0 {
 		t.Errorf("the empty row attached %v and skipped %v", parsed.Applied, parsed.Skipped)
 	}
 	parsed.Refresh(nil)
 
-	if empty := ParseEffects(nil, Find(1000)); len(empty.Applied) != 0 {
+	if empty := ParseEffects(character, nil, Find(1000)); len(empty.Applied) != 0 {
 		t.Errorf("a parse without an aura attached %v", appliedKinds(empty))
 	}
 }
@@ -343,7 +343,7 @@ func TestParseEffectsFollowsTheAuraAndItsStacks(t *testing.T) {
 
 	spell := parseSpell(character, 2300, parseTargetMask)
 	aura := character.RegisterAura(AuraConfig(Find(1200)))
-	parsed := ParseEffects(aura, Find(1200))
+	parsed := ParseEffects(character, aura, Find(1200))
 
 	if kinds := appliedKinds(parsed); len(kinds) != 1 || kinds[0] != "SpellMod_DamageDone_Flat" {
 		t.Fatalf("attached %v, want the damage modifier alone", kinds)
@@ -381,7 +381,7 @@ func TestParseEffectsChargesAreNotStacks(t *testing.T) {
 	character := parseWarrior()
 
 	aura := character.RegisterAura(AuraConfig(Find(1300)))
-	parsed := ParseEffects(aura, Find(1300))
+	parsed := ParseEffects(character, aura, Find(1300))
 
 	if kinds := appliedKinds(parsed); len(kinds) != 1 || kinds[0] != "melee-speed" {
 		t.Fatalf("attached %v, want the haste row", kinds)
@@ -404,12 +404,12 @@ func TestParseEffectsSkipsWhatCannotFollowTheStacks(t *testing.T) {
 	row := *Find(1300)
 	row.MaxStack = 3
 
-	parsed := ParseEffects(character.RegisterAura(AuraConfig(&row)), &row)
+	parsed := ParseEffects(character, character.RegisterAura(AuraConfig(&row)), &row)
 	if len(parsed.Applied) != 0 || len(parsed.Skipped) != 1 {
 		t.Errorf("a haste row on a stacking aura attached %v", appliedKinds(parsed))
 	}
 
-	ignored := ParseEffects(character.RegisterAura(core.Aura{Label: "Ignored Stacks"}), &row, IgnoreStacks())
+	ignored := ParseEffects(character, character.RegisterAura(core.Aura{Label: "Ignored Stacks"}), &row, IgnoreStacks())
 	if len(ignored.Applied) != 1 {
 		t.Errorf("IgnoreStacks attached %v, want the haste row", appliedKinds(ignored))
 	}
@@ -438,7 +438,7 @@ func TestParseStaticDurationModOnASharedAura(t *testing.T) {
 			Misc: SPELLMOD_DURATION, BasePoints: 5000, ClassFlags: parseTargetMask}},
 	}
 
-	ParseStatic(&character.Unit, &row)
+	ParseStatic(character, &row)
 
 	if got := buff.Duration; got != time.Second*15 {
 		t.Errorf("the shared aura's duration: %v, want 15s", got)
@@ -497,6 +497,7 @@ func TestEveryTableRow(t *testing.T) {
 		{dbcenums.A_MOD_DAMAGE_DONE, 127, 20, "stat PhysicalDamage+SpellDamage", 20, false},
 		{dbcenums.A_MOD_DAMAGE_DONE, 4, 20, "stat FireDamage", 20, false},
 		{dbcenums.A_MOD_RESISTANCE, 1, 100, "stat Armor", 100, false},
+		{dbcenums.A_MOD_BASE_RESISTANCE_PCT, 1, 10, "equip-scaling Armor", 1.1, false},
 		{dbcenums.A_MOD_RESISTANCE, 16, 30, "stat FrostResistance", 30, false},
 		{dbcenums.A_MOD_RESISTANCE, 127, 30,
 			"stat Armor+FireResistance+NatureResistance+FrostResistance+ShadowResistance+ArcaneResistance", 30, false},
@@ -542,9 +543,9 @@ func TestEveryTableRow(t *testing.T) {
 
 			var parsed *Parsed
 			if c.onAura {
-				parsed = ParseEffects(character.RegisterAura(AuraConfig(&row)), &row)
+				parsed = ParseEffects(character, character.RegisterAura(AuraConfig(&row)), &row)
 			} else {
-				parsed = ParseStatic(&character.Unit, &row)
+				parsed = ParseStatic(character, &row)
 			}
 
 			if len(parsed.Applied) != 1 {
@@ -557,5 +558,85 @@ func TestEveryTableRow(t *testing.T) {
 				t.Errorf("value = %v, want %v", got, c.value)
 			}
 		})
+	}
+}
+
+// A row of one aura effect, in the shape the table reads.
+func oneEffectRow(aura dbcenums.EffectAuraType, misc int32, points float64) *Spell {
+	return &Spell{ID: 6000, Name: "One Effect", DurationMs: 10000, ClassFlags: parseFamily,
+		Effects: []Effect{{Type: dbcenums.E_APPLY_AURA, Aura: aura, Misc: misc, BasePoints: points,
+			ClassFlags: parseTargetMask}}}
+}
+
+// The armor modifier scales the equipment share of the stat, which is what the tooltip states.
+func TestParseStaticScalesEquippedArmor(t *testing.T) {
+	withParseRows(t)
+
+	character := parseCharacter(&proto.Player{
+		Class:      proto.Class_ClassWarrior,
+		Spec:       &proto.Player_ProtectionWarrior{ProtectionWarrior: &proto.ProtectionWarrior{}},
+		BonusStats: &proto.UnitStats{Stats: bonusArmor(1000)},
+	})
+
+	if got := character.EquipStats()[stats.Armor]; got != 1000 {
+		t.Fatalf("armor before the row: %v, want the bonus 1000", got)
+	}
+
+	ParseStatic(character, oneEffectRow(dbcenums.A_MOD_BASE_RESISTANCE_PCT, 1, 10))
+
+	if got := character.EquipStats()[stats.Armor]; got != 1100 {
+		t.Errorf("armor after the row: %v, want 1100", got)
+	}
+}
+
+func bonusArmor(amount float64) []float64 {
+	values := make([]float64, len(proto.Stat_name))
+	values[proto.Stat_StatArmor] = amount
+	return values
+}
+
+// A cooldown multiplier cannot follow the stacks any more than the other multiplier rows can.
+func TestParseSkipsACooldownMultiplierOnAStackingRow(t *testing.T) {
+	withParseRows(t)
+	character := parseWarrior()
+
+	row := oneEffectRow(dbcenums.A_ADD_PCT_MODIFIER, SPELLMOD_COOLDOWN, -20)
+	row.MaxStack = 3
+
+	parsed := ParseEffects(character, character.RegisterAura(AuraConfig(row)), row)
+
+	if len(parsed.Applied) != 0 || len(parsed.Skipped) != 1 {
+		t.Errorf("a cooldown multiplier on a stacking aura attached %v", appliedKinds(parsed))
+	}
+}
+
+// An aura that is already up when it is parsed takes what the rows say at once, except for the rows
+// that read a Simulation to act.
+func TestParseEffectsCatchesUpAnActiveAura(t *testing.T) {
+	withParseRows(t)
+	sim := &core.Simulation{}
+	character := parseWarrior()
+	spell := parseSpell(character, 2500, parseTargetMask)
+
+	row := *Find(1200)
+	row.MaxStack = 0
+
+	aura := character.RegisterAura(AuraConfig(&row))
+	aura.Activate(sim)
+	ParseEffects(character, aura, &row)
+
+	if got := spell.DamageMultiplierAdditive; got != 1.05 {
+		t.Errorf("the modifier on an aura that was already up: %v, want 1.05", got)
+	}
+	if got := character.PseudoStats.ThreatMultiplier; got != 1.3 {
+		t.Errorf("the threat multiplier on an aura that was already up: %v, want 1.3", got)
+	}
+
+	haste := character.RegisterAura(AuraConfig(Find(1300)))
+	haste.Activate(sim)
+	ParseEffects(character, haste, Find(1300))
+
+	if got := character.PseudoStats.MeleeSpeedMultiplier; got != 1 {
+		t.Errorf("melee speed on an aura that was already up: %v, want 1 until it is applied again", got)
 	}
 }

@@ -53,6 +53,11 @@ type parser struct {
 	unit  *core.Unit
 	spell *Spell
 
+	// The character the unit belongs to, for the rows whose helper is a character's rather than a
+	// unit's. An aura on a unit with no character of its own - an enemy's debuff - leaves it nil,
+	// and those rows are skipped there.
+	character *core.Character
+
 	// ParseStatic: there is no aura whose gain hands a Simulation to the attachment, so the rows
 	// that need one to act are skipped instead of attached.
 	static bool
@@ -73,6 +78,10 @@ type attachment struct {
 	kind  string
 	value float64
 	set   func(sim *core.Simulation, level float64)
+
+	// The operation reads the Simulation it is handed, so it cannot act on an aura that was already
+	// up when the parse ran.
+	needsSim bool
 }
 
 // What the parser does with one effect, by the aura it applies. A row answers nil for an effect it
@@ -187,6 +196,15 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 	// Armor is school 1 of the resistance aura; the other bits are the five magic resistances.
 	dbcenums.A_MOD_RESISTANCE: func(p *parser, e *Effect, v float64) *attachment {
 		return p.statsBuff(resistanceStats(e.Misc), v)
+	},
+
+	// The client states the armor ladder twice, once on base armor and once on bonus armor, and the
+	// tooltip states armor from items, which is the equipment share the sim scales.
+	dbcenums.A_MOD_BASE_RESISTANCE_PCT: func(p *parser, e *Effect, v float64) *attachment {
+		if e.Misc&miscArmor == 0 {
+			return nil
+		}
+		return p.equipScaling(stats.Armor, percentMultiplier(v))
 	},
 
 	// Avoidance. The sim keeps block as a percentage and dodge and parry as ratings, so the two
@@ -400,12 +418,17 @@ func (p *parser) modTime(kind string, cfg core.SpellModConfig, ms float64) *atta
 	})
 }
 
-// A mod whose field is the multiplier itself rather than a bonus on top of one, so a second stack
-// multiplies where an additive mod would add.
+// A mod whose field is the multiplier itself rather than a bonus on top of one. Whether a second
+// stack multiplies again or adds again is not stated anywhere, so a stacking row is skipped the way
+// the other multiplier rows are.
 func (p *parser) modMultiplier(kind string, cfg core.SpellModConfig, mult float64) *attachment {
+	if p.stacking {
+		return nil
+	}
+
 	cfg.FloatValue = mult
-	return p.mod(kind, cfg, mult, func(mod *core.SpellMod, level float64) {
-		mod.UpdateFloatValue(math.Pow(mult, level))
+	return p.mod(kind, cfg, mult, func(mod *core.SpellMod, _ float64) {
+		mod.UpdateFloatValue(mult)
 	})
 }
 
@@ -487,6 +510,34 @@ func (p *parser) statMultiplier(sts []stats.Stat, mult float64) *attachment {
 	}}
 }
 
+// A multiplier on the equipment share of a stat, which is what the client's base-resistance modifier
+// states. The character keeps one multiplier per stat, so the value cannot follow stacks, and the
+// static path has no Simulation for a later Refresh to hand over.
+func (p *parser) equipScaling(stat stats.Stat, mult float64) *attachment {
+	if p.character == nil || p.stacking || (p.static && p.conditional) {
+		return nil
+	}
+
+	applied := false
+	return &attachment{kind: "equip-scaling " + stat.StatName(), value: mult,
+		set: func(sim *core.Simulation, level float64) {
+			if (level > 0) == applied {
+				return
+			}
+			applied = level > 0
+
+			factor := mult
+			if !applied {
+				factor = 1 / mult
+			}
+			if sim == nil {
+				p.character.ApplyEquipScaling(stat, factor)
+			} else {
+				p.character.ApplyDynamicEquipScaling(sim, stat, factor)
+			}
+		}}
+}
+
 // A pseudo-stat the sim multiplies rather than adds. A stack multiplies again, which the parser
 // refuses to assume: a stacking row is skipped unless the caller says the value does not follow the
 // stacks.
@@ -530,7 +581,7 @@ func (p *parser) speed(kind string, apply func(*core.Unit, *core.Simulation, flo
 	}
 
 	current := 0.0
-	return &attachment{kind: kind, value: mult, set: func(sim *core.Simulation, level float64) {
+	return &attachment{kind: kind, value: mult, needsSim: true, set: func(sim *core.Simulation, level float64) {
 		if level == current {
 			return
 		}

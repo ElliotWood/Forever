@@ -72,20 +72,31 @@ type Parsed struct {
 // Everything the row's aura effects say, attached to an aura: the mods, stat buffs and pseudo-stat
 // multipliers follow the aura's gain and expiry, and their values follow its stacks where the row
 // states cumulative ones.
-func ParseEffects(aura *core.Aura, s *Spell, opts ...ParseOpt) *Parsed {
+//
+// The effects act on the aura's own unit, and the character is that unit's, for the few rows whose
+// helper lives on a character rather than on a unit. An aura on a unit with no character of its own -
+// a debuff on an enemy - takes a nil character and has those rows skipped and reported.
+//
+// An aura that is already up when it is parsed is caught up the way core's Attach helpers catch one
+// up, except for the rows that need a Simulation to act: the haste multipliers stay off until the
+// aura is applied again.
+func ParseEffects(character *core.Character, aura *core.Aura, s *Spell, opts ...ParseOpt) *Parsed {
 	if aura == nil {
 		return &Parsed{}
 	}
-	return parse(aura.Unit, aura, s, opts)
+	return parse(aura.Unit, character, aura, s, opts)
 }
 
-// Everything the row's aura effects say, applied to the unit now: a talent or a passive, which the
-// client states as an aura the unit is never without.
-func ParseStatic(unit *core.Unit, s *Spell, opts ...ParseOpt) *Parsed {
-	return parse(unit, nil, s, opts)
+// Everything the row's aura effects say, applied to the character now: a talent or a passive, which
+// the client states as an aura the unit is never without.
+func ParseStatic(character *core.Character, s *Spell, opts ...ParseOpt) *Parsed {
+	if character == nil {
+		return &Parsed{}
+	}
+	return parse(&character.Unit, character, nil, s, opts)
 }
 
-func parse(unit *core.Unit, aura *core.Aura, s *Spell, opts []ParseOpt) *Parsed {
+func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell, opts []ParseOpt) *Parsed {
 	parsed := &Parsed{}
 	if unit == nil || s == nil || s == Nil || len(s.Effects) == 0 {
 		return parsed
@@ -98,6 +109,7 @@ func parse(unit *core.Unit, aura *core.Aura, s *Spell, opts []ParseOpt) *Parsed 
 
 	p := &parser{
 		unit:        unit,
+		character:   character,
 		spell:       s,
 		static:      aura == nil,
 		conditional: o.cond != nil,
@@ -158,6 +170,10 @@ func parse(unit *core.Unit, aura *core.Aura, s *Spell, opts []ParseOpt) *Parsed 
 		})
 	}
 
+	if aura.IsActive() {
+		parsed.catchUp(parsed.level())
+	}
+
 	return parsed
 }
 
@@ -192,6 +208,16 @@ func (p *Parsed) set(sim *core.Simulation, level float64) {
 	}
 }
 
+// What core's Attach helpers do for an aura that is already up when they are attached: apply now,
+// with no Simulation in hand. The rows that read one are left for the aura's next application.
+func (p *Parsed) catchUp(level float64) {
+	for _, a := range p.attachments {
+		if a != nil && !a.needsSim {
+			a.set(nil, level)
+		}
+	}
+}
+
 func (p *Parsed) skip(s *Spell, i int, e *Effect) {
 	p.Skipped = append(p.Skipped, e)
 	report(s, i+1, e)
@@ -213,8 +239,8 @@ func appliesAura(t dbcenums.SpellEffectType) bool {
 }
 
 // The dot modifiers a spell states twice. A talent that raises a spell's damage states the same
-// number once for the hit and once for the dot, and the sim's additive damage bucket already reaches
-// both, so the second effect would double the bonus on the dot.
+// number once for the hit and once for the dot, and one SpellMod_DamageDone_Flat already reaches the
+// ticks as well as the hit, so the second effect would double the bonus on the dot.
 func foldedDotEffects(s *Spell) []*Effect {
 	var folded []*Effect
 	for i := range s.Effects {
