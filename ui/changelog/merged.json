@@ -1,5 +1,17 @@
 [
 	{
+		"number": 267,
+		"title": "ci(data-watch): merge the data PRs automatically",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/267"
+	},
+	{
+		"number": 265,
+		"title": "converge(core): adopt official's near-identical runtime files",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/265"
+	},
+	{
 		"number": 263,
 		"title": "converge(site): credit WoWSims and link the MIT licence",
 		"mergedAt": "2026-09-21",
