@@ -16,6 +16,9 @@ const FrostboltRanks = 11
 // number where the game rolls a range. Until it carries the spread we keep ours: beta client
 // 1.60.1.69893, base plus EffectRealPointsPerLevel to the rank's max level, capped at 60.
 // frostbolt_test.go checks every range here still contains the table's value.
+//
+// Beta client 1.60.1.69893: every rank from 3 up hits for less, and the low ranks lost their
+// downranking penalty.
 var FrostboltBaseDamage = [FrostboltRanks + 1][]float64{{0, 0}, {20, 22}, {33, 38}, {46, 53}, {61, 68}, {97, 105}, {134, 147}, {181, 197}, {243, 264}, {305, 332}, {382, 413}, {457, 493}}
 var FrostboltLevel = [FrostboltRanks + 1]int{0, 4, 8, 14, 20, 26, 32, 38, 44, 50, 56, 60}
 
@@ -39,13 +42,14 @@ func (mage *Mage) getFrostboltConfig(rank int) core.SpellConfig {
 	level := FrostboltLevel[rank]
 
 	return core.SpellConfig{
-		ActionID:     core.ActionID{SpellID: row.SpellID},
-		SpellCode:    SpellCode_MageFrostbolt,
-		SpellSchool:  row.SpellSchool,
-		DefenseType:  row.DefenseType,
-		ProcMask:     core.ProcMaskSpellDamage,
-		Flags:        SpellFlagMage | SpellFlagChillSpell | core.SpellFlagBinary | core.SpellFlagAPL,
-		MissileSpeed: row.MissileSpeed,
+		ActionID:       core.ActionID{SpellID: row.SpellID},
+		SpellCode:      SpellCode_MageFrostbolt,
+		ClassSpellMask: SpellMaskFrostbolt,
+		SpellSchool:    row.SpellSchool,
+		DefenseType:    row.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagMage | SpellFlagChillSpell | core.SpellFlagBinary | core.SpellFlagAPL,
+		MissileSpeed:   row.MissileSpeed,
 
 		RequiredLevel: level,
 		Rank:          rank,
