@@ -11,11 +11,10 @@ func (paladin *Paladin) registerDivineFavor() {
 		return
 	}
 
-	var affectedSpells []*core.Spell
-	paladin.OnSpellRegistered(func(spell *core.Spell) {
-		if spell.SpellCode == SpellCode_PaladinHolyShock {
-			affectedSpells = append(affectedSpells, spell)
-		}
+	critMod := paladin.AddDynamicMod(core.SpellModConfig{
+		Kind:       core.SpellMod_BonusCrit_Percent,
+		ClassMask:  SpellMaskHolyShock,
+		FloatValue: 100,
 	})
 
 	cd := core.Cooldown{
@@ -28,14 +27,10 @@ func (paladin *Paladin) registerDivineFavor() {
 		ActionID: core.ActionID{SpellID: 20216},
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			core.Each(affectedSpells, func(spell *core.Spell) {
-				spell.BonusCritRating += core.SpellCritRatingPerCritChance * 100
-			})
+			critMod.Activate()
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			core.Each(affectedSpells, func(spell *core.Spell) {
-				spell.BonusCritRating -= core.SpellCritRatingPerCritChance * 100
-			})
+			critMod.Deactivate()
 		},
 		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if spell.SpellCode != SpellCode_PaladinHolyShock {

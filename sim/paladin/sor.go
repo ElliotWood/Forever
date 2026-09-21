@@ -74,12 +74,13 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 		maxDamage := rank.judge.maxDamage + rank.judge.scale*float64(min(paladin.Level, rank.scaleLevel)-rank.level)
 
 		judgeSpell := paladin.RegisterSpell(core.SpellConfig{
-			SpellCode:   SpellCode_PaladinJudgementOfRighteousness,
-			ActionID:    core.ActionID{SpellID: rank.judge.spellID},
-			SpellSchool: core.SpellSchoolHoly,
-			DefenseType: core.DefenseTypeMagic,
-			ProcMask:    core.ProcMaskSpellDamage,
-			Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagSuppressWeaponProcs | core.SpellFlagSuppressEquipProcs | core.SpellFlagBinary,
+			SpellCode:      SpellCode_PaladinJudgementOfRighteousness,
+			ClassSpellMask: SpellMaskJudgementOfRighteousness,
+			ActionID:       core.ActionID{SpellID: rank.judge.spellID},
+			SpellSchool:    core.SpellSchoolHoly,
+			DefenseType:    core.DefenseTypeMagic,
+			ProcMask:       core.ProcMaskSpellDamage,
+			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagSuppressWeaponProcs | core.SpellFlagSuppressEquipProcs | core.SpellFlagBinary,
 
 			// Improved Seals is a percent modifier (aura 108), so it scales the whole spell, spell
 			// power included. Multiplying the base roll by it left the coefficient's share out.

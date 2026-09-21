@@ -26,11 +26,12 @@ func (paladin *Paladin) registerLayOnHands() {
 	layOnHandsManaMetrics := paladin.NewManaMetrics(actionID)
 	layOnHandsHealthMetrics := paladin.NewHealthMetrics(actionID)
 	layOnHands := paladin.RegisterSpell(core.SpellConfig{
-		ActionID:    actionID,
-		ProcMask:    core.ProcMaskSpellHealing,
-		Flags:       core.SpellFlagAPL | core.SpellFlagMCD,
-		SpellSchool: core.SpellSchoolHoly,
-		SpellCode:   SpellCode_PaladinLayOnHands,
+		ActionID:       actionID,
+		ProcMask:       core.ProcMaskSpellHealing,
+		Flags:          core.SpellFlagAPL | core.SpellFlagMCD,
+		SpellSchool:    core.SpellSchoolHoly,
+		SpellCode:      SpellCode_PaladinLayOnHands,
+		ClassSpellMask: SpellMaskLayOnHands,
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,

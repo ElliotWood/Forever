@@ -16,15 +16,21 @@ func (paladin *Paladin) registerSwiftJudgement() {
 
 	actionID := core.ActionID{SpellID: 53671}
 
+	freeMod := paladin.AddDynamicMod(core.SpellModConfig{
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+		ClassMask:  SpellMaskJudgement,
+		FloatValue: -1,
+	})
+
 	freeJudgementAura := paladin.RegisterAura(core.Aura{
 		Label:    "Swift Judgement",
 		ActionID: actionID,
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			paladin.judgement.Cost.Multiplier -= 100
+			freeMod.Activate()
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			paladin.judgement.Cost.Multiplier += 100
+			freeMod.Deactivate()
 		},
 		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
 			if spell == paladin.judgement {

@@ -70,12 +70,13 @@ func (paladin *Paladin) registerSealOfCommand() {
 		maxDamage := rank.judge.maxDamage + float64(min(paladin.Level, rank.scaleLevel)-rank.level)*rank.judge.scale
 
 		judgeSpell := paladin.RegisterSpell(core.SpellConfig{
-			SpellCode:   SpellCode_PaladinJudgementOfCommand, // used in judgement.go
-			ActionID:    core.ActionID{SpellID: rank.judge.spellID},
-			SpellSchool: core.SpellSchoolHoly,
-			DefenseType: core.DefenseTypeMelee,
-			ProcMask:    core.ProcMaskMeleeMHSpecial,
-			Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
+			SpellCode:      SpellCode_PaladinJudgementOfCommand, // used in judgement.go
+			ClassSpellMask: SpellMaskJudgementOfCommand,
+			ActionID:       core.ActionID{SpellID: rank.judge.spellID},
+			SpellSchool:    core.SpellSchoolHoly,
+			DefenseType:    core.DefenseTypeMelee,
+			ProcMask:       core.ProcMaskMeleeMHSpecial,
+			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete,
 
 			// Improved Seals is a percent modifier, so it belongs on the whole spell rather than on
 			// the base roll, which left the coefficient's share of the damage out of it.
