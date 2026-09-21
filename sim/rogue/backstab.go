@@ -30,12 +30,13 @@ func (rogue *Rogue) registerBackstabSpell() {
 	cpMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 13866})
 
 	rogue.Backstab = rogue.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_RogueBackstab,
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       rogue.builderFlags(),
+		SpellCode:      SpellCode_RogueBackstab,
+		ClassSpellMask: SpellMaskBackstab,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          rogue.builderFlags(),
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   60,

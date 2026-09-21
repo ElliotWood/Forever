@@ -49,12 +49,13 @@ func (rogue *Rogue) registerMutilateSpell() {
 	})
 
 	rogue.Mutilate = rogue.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_RogueMutilate,
-		ActionID:    actionID,
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       rogue.builderFlags(),
+		SpellCode:      SpellCode_RogueMutilate,
+		ClassSpellMask: SpellMaskMutilate,
+		ActionID:       actionID,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          rogue.builderFlags(),
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   60,

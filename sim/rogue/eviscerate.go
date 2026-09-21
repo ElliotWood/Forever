@@ -36,13 +36,14 @@ func (rogue *Rogue) registerEviscerate() {
 	}[rogue.Level]
 
 	rogue.Eviscerate = rogue.RegisterSpell(core.SpellConfig{
-		SpellCode:    SpellCode_RogueEviscerate,
-		ActionID:     core.ActionID{SpellID: spellID},
-		SpellSchool:  core.SpellSchoolPhysical,
-		DefenseType:  core.DefenseTypeMelee,
-		ProcMask:     core.ProcMaskMeleeMHSpecial,
-		Flags:        rogue.finisherFlags() | SpellFlagColdBlooded,
-		MetricSplits: 6,
+		SpellCode:      SpellCode_RogueEviscerate,
+		ClassSpellMask: SpellMaskEviscerate,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          rogue.finisherFlags() | SpellFlagColdBlooded,
+		MetricSplits:   6,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   35 - core.TernaryFloat64(rogue.Talents.FlawlessExecution, 10, 0),

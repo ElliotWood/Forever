@@ -39,13 +39,14 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 	var eaAura *core.Aura
 
 	rogue.ExposeArmor = rogue.RegisterSpell(core.SpellConfig{
-		SpellCode:    SpellCode_RogueExposeArmor,
-		ActionID:     core.ActionID{SpellID: spellID},
-		SpellSchool:  core.SpellSchoolPhysical,
-		DefenseType:  core.DefenseTypeMelee,
-		ProcMask:     core.ProcMaskMeleeMHSpecial,
-		Flags:        rogue.finisherFlags(),
-		MetricSplits: 6,
+		SpellCode:      SpellCode_RogueExposeArmor,
+		ClassSpellMask: SpellMaskExposeArmor,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          rogue.finisherFlags(),
+		MetricSplits:   6,
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:   energyCost,
