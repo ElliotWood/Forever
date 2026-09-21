@@ -48,37 +48,22 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 			if unit.GetCurrentPowerBar() != RageBar {
 				return
 			}
-			// Dodges and parries don't count as "landed", but they do still
-			// generate Rage (see below), so they can't be filtered out here.
-			// Misses generate no Rage.
-			if !result.Landed() && !result.Outcome.Matches(OutcomeDodge|OutcomeParry) {
+			// Forever: nothing for a swing that did not land, dodges and parries included.
+			if !result.Landed() {
 				return
 			}
 
-			hitFactor := unit.rageBar.currentHitFactor
-			var speed float64
+			var weapon *Weapon
 			if spell.ProcMask == ProcMaskMeleeMHAuto {
-				speed = unit.AutoAttacks.MH().SwingSpeed
+				weapon = unit.AutoAttacks.MH()
 			} else if spell.ProcMask == ProcMaskMeleeOHAuto {
-				// OH hits generate 50% of the rage they would if they were MH hits
-				hitFactor /= 2
-				speed = unit.AutoAttacks.OH().SwingSpeed
+				weapon = unit.AutoAttacks.OH()
 			} else {
 				return
 			}
 
-			if result.Outcome.Matches(OutcomeCrit) {
-				hitFactor *= 2
-			}
-
-			damage := result.Damage
-			if result.Outcome.Matches(OutcomeDodge | OutcomeParry) {
-				// Rage is still generated for dodges/parries, based on the damage it WOULD have done.
-				damage = result.PostArmorAndResistanceMultiplier
-			}
-
-			// generatedRage is capped for very low damage swings
-			generatedRage := min((damage*7.5/RageFactor+hitFactor*speed)/2, damage*15/RageFactor)
+			// Stance and talent modifiers (MultiplyAutoAttackRageGen) scale the flat amount.
+			generatedRage := ForeverWhiteHitRage(weapon) * unit.rageBar.currentHitFactor / BaseRageHitFactor
 
 			var metrics *ResourceMetrics
 			if spell.Cost != nil {
