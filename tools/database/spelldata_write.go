@@ -153,9 +153,26 @@ func CheckSpellDataFiles(helper *DBHelper) ([]string, error) {
 	progress = io.Discard
 	defer func() { progress = os.Stderr }()
 
-	files, _, err := renderSpellDataFiles(helper)
+	files, inputs, err := renderSpellDataFiles(helper)
 	if err != nil {
 		return nil, err
 	}
-	return checkSpellDataFiles(files)
+
+	stale, err := checkSpellDataFiles(files)
+	if err != nil {
+		return nil, err
+	}
+
+	// The committed inputs are checked too, and not only the store they render: a capture that no
+	// longer matches the database renders the committed store all the same - it was written from that
+	// capture - so nothing else here would notice it going stale.
+	current, err := storeInputsAreCurrent(inputs)
+	if err != nil {
+		return nil, err
+	}
+	if !current {
+		stale = append(stale, spellStoreInputsPath)
+		sort.Strings(stale)
+	}
+	return stale, nil
 }

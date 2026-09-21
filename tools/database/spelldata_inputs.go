@@ -1,8 +1,10 @@
 package database
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 	"slices"
 
 	"github.com/wowsims/forever/tools/database/dbc"
@@ -176,6 +178,26 @@ func writeStoreInputs(in *storeInputs) error {
 	fmt.Fprintf(progress, "spelldata: wrote %s, %d names and %d roots\n",
 		spellStoreInputsPath, len(in.Names), len(in.Roots))
 	return nil
+}
+
+// Whether the committed capture is the one the database gives today. Compared as the encoded bytes
+// rather than through the decoded values, since a map is written in key order and a slice the client
+// states as empty decodes as nil - neither of which the rendered store can tell apart, but both of
+// which a comparison of the values would trip over.
+func storeInputsAreCurrent(fresh *storeInputs) (bool, error) {
+	committed, err := dbc.ReadGzipFile(spellStoreInputsPath)
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	if err != nil {
+		return false, fmt.Errorf("reading %s: %w", spellStoreInputsPath, err)
+	}
+
+	out, err := json.Marshal(fresh)
+	if err != nil {
+		return false, fmt.Errorf("encoding the store's inputs: %w", err)
+	}
+	return bytes.Equal(committed, out), nil
 }
 
 // The committed inputs, for a caller with no client database. The path is relative to the repository
