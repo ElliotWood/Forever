@@ -10,6 +10,7 @@ import (
 const HolyFireRanks = 8
 
 var HolyFireSpellId = [HolyFireRanks + 1]int32{0, 14914, 15262, 15263, 15264, 15265, 15266, 15267, 15261}
+
 // Forever beta client 1.60.1.69893. The client's rank 5 dot (13 a tick) is larger than rank 6's (10 a tick); taken as it is.
 var HolyFireBaseDamage = [HolyFireRanks + 1][]float64{{0}, {56, 71}, {64, 79}, {80, 98}, {90, 112}, {103, 127}, {133, 166}, {163, 206}, {184, 232}}
 var HolyFireDotDamage = [HolyFireRanks + 1]float64{0, 20, 25, 30, 35, 65, 50, 65, 75}
@@ -43,12 +44,13 @@ func (priest *Priest) getHolyFireConfig(rank int) core.SpellConfig {
 	castTime := time.Millisecond * 3500
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_PriestHolyFire,
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellSchool: core.SpellSchoolHoly,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagPriest | core.SpellFlagAPL,
+		SpellCode:      SpellCode_PriestHolyFire,
+		ClassSpellMask: SpellMaskHolyFire,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolHoly,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagPriest | core.SpellFlagAPL,
 
 		RequiredLevel: level,
 		Rank:          rank,

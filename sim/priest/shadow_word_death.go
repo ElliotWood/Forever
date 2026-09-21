@@ -53,12 +53,13 @@ func (priest *Priest) shadowWordDeathConfig(rank int, cdTimer *core.Timer) core.
 	earlyDemise := earlyDemiseCritPerRank * float64(priest.Talents.EarlyDemise) * core.SpellCritRatingPerCritChance
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_PriestShadowWordDeath,
-		ActionID:    core.ActionID{SpellID: ShadowWordDeathSpellId[rank]},
-		SpellSchool: core.SpellSchoolShadow,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagPriest | core.SpellFlagAPL,
+		SpellCode:      SpellCode_PriestShadowWordDeath,
+		ClassSpellMask: SpellMaskShadowWordDeath,
+		ActionID:       core.ActionID{SpellID: ShadowWordDeathSpellId[rank]},
+		SpellSchool:    core.SpellSchoolShadow,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagPriest | core.SpellFlagAPL,
 
 		RequiredLevel: ShadowWordDeathLevel[rank],
 		Rank:          rank,

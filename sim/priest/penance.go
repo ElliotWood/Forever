@@ -20,12 +20,13 @@ func (priest *Priest) registerPenanceSpell() {
 	spellCoeff := 0.285
 
 	priest.Penance = priest.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_PriestPenance,
-		ActionID:    core.ActionID{SpellID: 1316995},
-		SpellSchool: core.SpellSchoolHoly,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagPriest | core.SpellFlagAPL | core.SpellFlagChanneled,
+		SpellCode:      SpellCode_PriestPenance,
+		ClassSpellMask: SpellMaskPenance,
+		ActionID:       core.ActionID{SpellID: 1316995},
+		SpellSchool:    core.SpellSchoolHoly,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagPriest | core.SpellFlagAPL | core.SpellFlagChanneled,
 
 		RequiredLevel: 60,
 		Rank:          1,

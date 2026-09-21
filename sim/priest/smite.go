@@ -9,6 +9,7 @@ import (
 const SmiteRanks = 8
 
 var SmiteSpellId = [SmiteRanks + 1]int32{0, 585, 591, 598, 984, 1004, 6060, 10933, 10934}
+
 // Forever beta client 1.60.1.69893: ranks 3 and up hit for less, and there is no downranking penalty.
 var SmiteBaseDamage = [SmiteRanks + 1][]float64{{0}, {15, 20}, {28, 34}, {47, 53}, {60, 68}, {81, 91}, {93, 106}, {124, 139}, {166, 187}}
 var SmiteSpellCoef = [SmiteRanks + 1]float64{0, 0.429, 0.571, 0.714, 0.714, 0.714, 0.714, 0.714, 0.714}
@@ -38,12 +39,13 @@ func (priest *Priest) getSmiteBaseConfig(rank int) core.SpellConfig {
 	level := SmiteLevel[rank]
 
 	return core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellCode:   SpellCode_PriestSmite,
-		SpellSchool: core.SpellSchoolHoly,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagPriest | core.SpellFlagAPL,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellCode:      SpellCode_PriestSmite,
+		ClassSpellMask: SpellMaskSmite,
+		SpellSchool:    core.SpellSchoolHoly,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagPriest | core.SpellFlagAPL,
 
 		RequiredLevel: level,
 		Rank:          rank,
