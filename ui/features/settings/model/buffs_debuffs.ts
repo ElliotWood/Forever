@@ -94,12 +94,10 @@ export const CommandingShout = makeTristatePartyBuffInput({
 	fieldName: 'commandingShout',
 	label: 'Commanding Shout',
 });
-export const BattleShout = makeQuadstatePartyBuffInput({
-	actionId: ActionId.fromSpellId(2048),
-	impId: ActionId.fromSpellId(12861),
-	impId2: ActionId.fromItemId(30446),
+export const BattleShout = makeTristatePartyBuffInput({
+	actionId: ActionId.fromSpellId(25289),
+	impId: ActionId.fromSpellId(23563),
 	fieldName: 'battleShout',
-	fieldNameImp2: 'bsSolarianSapphire',
 	label: 'Battle Shout',
 });
 export const DevotionAura = makeTristatePartyBuffInput({

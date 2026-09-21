@@ -45,7 +45,7 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 	ID:   218,
 	Bonuses: map[int32]core.ApplySetBonus{
 		3: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 23563 states 30 attack power on Battle Shout, which shouts.go adds through
+			// Spell 23563 states 30 attack power on Battle Shout, which battle_shout.go adds through
 			// the same flag the HasBsT2 option sets. The set aura toggles it so an item swap
 			// that removes the pieces takes the bonus with them.
 			warrior := agent.(WarriorAgent).GetWarrior()

@@ -15,9 +15,9 @@ import {
 	makeSpecOptionsEnumIconInput,
 } from './input_helpers';
 
-// Battle Shout is the shipped example: the base buff is a tristate field and the fourth state
-// is a second, boolean field (the Solarian's Sapphire item).
-const battleShout = (extra: { showWhen?: (modObj: PartyBuffs) => boolean } = {}) =>
+// Strength of Earth Totem is the shipped example: the base buff is a tristate field and the
+// fourth state is a second, boolean field (the Enhancement 2.4 set bonus).
+const strengthOfEarth = (extra: { showWhen?: (modObj: PartyBuffs) => boolean } = {}) =>
 	makeQuadstateIconInput<any, PartyBuffs, PartyBuffs>(
 		{
 			getModObject: (modObj: any) => modObj as PartyBuffs,
@@ -26,24 +26,24 @@ const battleShout = (extra: { showWhen?: (modObj: PartyBuffs) => boolean } = {})
 			storeField: 'raid:partyBuffs',
 			...extra,
 		},
-		ActionId.fromSpellId(2048),
-		ActionId.fromSpellId(12861),
-		ActionId.fromItemId(30446),
-		'battleShout',
-		'bsSolarianSapphire',
+		ActionId.fromSpellId(25528),
+		ActionId.fromSpellId(16295),
+		ActionId.fromSpellId(37223),
+		'strengthOfEarthTotem',
+		'soeEnhancement2Pt4',
 	);
 
 describe('makeQuadstateIconInput', () => {
 	it('spreads its four states across the buff field and the second improved flag', () => {
-		const buffs = { battleShout: 0, bsSolarianSapphire: false } as unknown as PartyBuffs;
-		const input = battleShout();
+		const buffs = { strengthOfEarthTotem: 0, soeEnhancement2Pt4: false } as unknown as PartyBuffs;
+		const input = strengthOfEarth();
 		const player = buffs as unknown as Player<any>;
 
 		expect(input.states).toBe(4);
 
 		const roundTrip = [0, 1, 2, 3].map(value => {
 			input.setValue(player, value);
-			return [buffs.battleShout, buffs.bsSolarianSapphire, input.getValue(player)];
+			return [buffs.strengthOfEarthTotem, buffs.soeEnhancement2Pt4, input.getValue(player)];
 		});
 
 		expect(roundTrip).toEqual([
@@ -57,13 +57,13 @@ describe('makeQuadstateIconInput', () => {
 	// Every tristate, quadstate and multistate buff factory routes through makeNumberIconInput, so a
 	// predicate it drops takes the faction gate on all of them with it.
 	it('keeps showWhen, which the picker hides on', () => {
-		const player = { battleShout: 0, bsSolarianSapphire: false } as unknown as Player<any>;
+		const player = { strengthOfEarthTotem: 0, soeEnhancement2Pt4: false } as unknown as Player<any>;
 		const seen: PartyBuffs[] = [];
 
-		expect(battleShout({ showWhen: modObj => (seen.push(modObj), false) }).showWhen!(player)).toBe(false);
+		expect(strengthOfEarth({ showWhen: modObj => (seen.push(modObj), false) }).showWhen!(player)).toBe(false);
 		expect(seen).toEqual([player]);
-		expect(battleShout({ showWhen: () => true }).showWhen!(player)).toBe(true);
-		expect(battleShout().showWhen!(player)).toBe(true);
+		expect(strengthOfEarth({ showWhen: () => true }).showWhen!(player)).toBe(true);
+		expect(strengthOfEarth().showWhen!(player)).toBe(true);
 	});
 });
 

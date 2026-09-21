@@ -89,7 +89,7 @@ message WarriorOptions {
 	double starting_rage = 3;
 	int32 queue_delay = 4;
 	bool stance_snapshot = 5;
-	bool has_bs_solarian_sapphire = 6;
+	reserved 6;
 	bool has_bs_t2 = 7;
 }
 

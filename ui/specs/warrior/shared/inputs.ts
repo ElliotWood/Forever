@@ -48,14 +48,6 @@ export const QueueDelay = <SpecType extends WarriorSpecs>() =>
 		labelTooltip: i18n.t('settings_tab.other.queue_delay.tooltip'),
 	});
 
-export const BattleShoutSolarianSapphire = <SpecType extends WarriorSpecs>() =>
-	InputHelpers.makeClassOptionsBooleanIconInput<SpecType>({
-		fieldName: 'hasBsSolarianSapphire',
-		label: i18n.t('settings_tab.other.has_bs_solarian_sapphire.label'),
-		labelTooltip: i18n.t('settings_tab.other.has_bs_solarian_sapphire.tooltip'),
-		id: ActionId.fromItemId(30446),
-	});
-
 export const BattleShoutT2 = <SpecType extends WarriorSpecs>() =>
 	InputHelpers.makeClassOptionsBooleanIconInput<SpecType>({
 		fieldName: 'hasBsT2',
