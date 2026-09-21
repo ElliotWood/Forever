@@ -10,6 +10,9 @@ var retaliationHit = spellData.RetaliationTriggered.Highest()
 var retaliationHitBaseDamage = retaliationHit.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerRetaliation() {
+	// The aura casts the counterattack, but it does not take spelldata.Proc(): that marks the spell
+	// passive, and the metrics aggregator counts no cast for a passive spell, while the sim reports
+	// every counterattack as a cast.
 	hitConfig := spelldata.SpellConfig(&warrior.Unit, retaliationHit, spelldata.Flags(core.SpellFlagMeleeMetrics))
 	hitConfig.ClassSpellMask = SpellMaskRetaliationHit
 	hitConfig.ProcMask = core.ProcMaskMeleeMH

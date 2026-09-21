@@ -81,8 +81,10 @@ func Magic(mask core.ProcMask) SpellOpt {
 }
 
 // A spell another spell or an aura casts: it is out of the rotation Melee and Magic put it in and it
-// does not feed on-cast effects. It keeps its metrics, the way the warrior's Deep Wounds, Whirlwind
-// off-hand and Blood Craze sub-spells do.
+// does not feed on-cast effects, the way the warrior's Blood Craze heal is registered. Its damage
+// and healing are still measured, its casts are not: the metrics aggregator counts no cast for a
+// passive spell, so a sub-spell whose casts the sim reports - the warrior's Deep Wounds and
+// Retaliation's counterattack - sets the flags itself instead.
 func Proc() SpellOpt {
 	return func(config *core.SpellConfig, _ *Spell) {
 		config.Flags |= core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete

@@ -131,6 +131,9 @@ func (warrior *Warrior) registerDeepWounds() {
 	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
 	tick := deepWoundsBleed.EffectN(1)
 
+	// A crit casts the bleed, but it does not take spelldata.Proc(): that marks the spell passive,
+	// and the metrics aggregator counts no cast for a passive spell, while the sim reports every
+	// application as a cast.
 	config := spelldata.SpellConfig(&warrior.Unit, deepWoundsBleed,
 		spelldata.Flags(core.SpellFlagNoOnCastComplete|core.SpellFlagIgnoreResists|core.SpellFlagProc)) // 12162 and 412609 lack Not a Proc.
 	config.ClassSpellMask = SpellMaskDeepWounds
