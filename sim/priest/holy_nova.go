@@ -49,12 +49,13 @@ func (priest *Priest) registerHolyNovaSpell() {
 	})
 
 	priest.HolyNova = priest.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_PriestHolyNova,
-		ActionID:    core.ActionID{SpellID: HolyNovaSpellId[rank]},
-		SpellSchool: core.SpellSchoolHoly,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagPriest | core.SpellFlagAPL,
+		SpellCode:      SpellCode_PriestHolyNova,
+		ClassSpellMask: SpellMaskHolyNova,
+		ActionID:       core.ActionID{SpellID: HolyNovaSpellId[rank]},
+		SpellSchool:    core.SpellSchoolHoly,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagPriest | core.SpellFlagAPL,
 
 		RequiredLevel: HolyNovaLevel[rank],
 		Rank:          rank,

@@ -58,12 +58,13 @@ func (priest *Priest) newMindFlaySpellConfig(rank int, tickIdx int32) core.Spell
 	tickLength := time.Second
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_PriestMindFlay,
-		ActionID:    core.ActionID{SpellID: spellId}.WithTag(tickIdx),
-		SpellSchool: core.SpellSchoolShadow,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       flags,
+		SpellCode:      SpellCode_PriestMindFlay,
+		ClassSpellMask: SpellMaskMindFlay,
+		ActionID:       core.ActionID{SpellID: spellId}.WithTag(tickIdx),
+		SpellSchool:    core.SpellSchoolShadow,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          flags,
 
 		RequiredLevel: level,
 		Rank:          rank,
