@@ -134,7 +134,7 @@ func (warrior *Warrior) registerDeepWounds() {
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskEmpty,
 		ClassSpellMask: SpellMaskDeepWounds,
-		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagIgnoreResists | core.SpellFlagProc, // 12162 and 412609 lack Not a Proc.
+		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagIgnoreResists | core.SpellFlagProc | SpellFlagBleed, // 12162 and 412609 lack Not a Proc.
 
 		// 12162 and 412609 state DefenseType 0. It's a bleed that snapshots on proc; the
 		// application uses OutcomeAlwaysHitNoHitCounter and the DoT ticks with OutcomeTick, so it
@@ -188,8 +188,8 @@ func (warrior *Warrior) registerTwoHandedWeaponSpecialization() {
 		return
 	}
 
+	// The effect is all physical damage, auto attacks included, so no mask narrows it.
 	weaponMod := warrior.AddDynamicMod(core.SpellModConfig{
-		ClassMask:  SpellMaskDirectDamageSpells,
 		School:     core.SpellSchoolPhysical,
 		Kind:       core.SpellMod_DamageDone_Pct,
 		FloatValue: spellData.TwoHandedWeaponSpecialization.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).FractionAt(warrior.Talents.TwoHandedWeaponSpecialization),

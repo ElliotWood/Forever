@@ -67,7 +67,8 @@ func (warrior *Warrior) registerCleave() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: cleaveRank.Cost,
+			Cost:   cleaveRank.Cost,
+			Refund: 0.8,
 		},
 
 		Cast: core.CastConfig{
@@ -82,8 +83,11 @@ func (warrior *Warrior) registerCleave() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := cleaveBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
-			spell.CalcCleaveDamage(sim, target, maxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			results := spell.CalcCleaveDamage(sim, target, maxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			spell.DealBatchedAoeDamage(sim)
+			if !results[0].Landed() {
+				spell.IssueRefund(sim)
+			}
 
 			if warrior.curQueueAura != nil {
 				warrior.curQueueAura.Deactivate(sim)

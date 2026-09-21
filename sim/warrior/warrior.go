@@ -85,10 +85,18 @@ const (
 		SpellMaskRevenge | SpellMaskSlam | SpellMaskShieldBash | SpellMaskSunderArmor |
 		SpellMaskThunderClap | SpellMaskWhirlwind | SpellMaskWhirlwindOh | SpellMaskShieldSlam |
 		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskRetaliationHit |
-		SpellMaskMockingBlow | SpellMaskVictoryRush | SpellMaskSpearingStrike
+		SpellMaskMockingBlow | SpellMaskVictoryRush | SpellMaskSpearingStrike |
+		SpellMaskHamstring | SpellMaskPummel
 
 	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
-	SpellMaskShouts       = SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout
+	// The offensive abilities the client enumerates on Warrior's Wrath (21887), which is also the set
+	// Focused Rage discounts.
+	SpellMaskOffensiveAbilities = SpellMaskHeroicStrike | SpellMaskRend | SpellMaskShieldBash |
+		SpellMaskCleave | SpellMaskDisarm | SpellMaskWhirlwind | SpellMaskSunderArmor | SpellMaskSlam |
+		SpellMaskHamstring | SpellMaskExecute | SpellMaskPummel | SpellMaskRevenge | SpellMaskOverpower |
+		SpellMaskThunderClap | SpellMaskMockingBlow | SpellMaskMortalStrike | SpellMaskConcussionBlow |
+		SpellMaskShieldSlam | SpellMaskRetaliation | SpellMaskIntercept | SpellMaskBloodthirst
+	SpellMaskShouts = SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout
 )
 
 const EnrageTag = "EnrageEffect"
@@ -127,7 +135,6 @@ type Warrior struct {
 	curQueueAura       *core.Aura
 	curQueuedAutoSpell *core.Spell
 
-	sharedShoutsCD   *core.Timer
 	queuedRealismICD *core.Cooldown
 
 	EnrageAura *core.Aura
@@ -243,7 +250,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.Agility, stats.DodgeRating, 1/30.0*core.DodgeRatingPerDodgePercent)
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 
-	warrior.sharedShoutsCD = warrior.NewTimer()
 	// The sim often re-enables heroic strike in an unrealistic amount of time.
 	// This can cause an unrealistic immediate double-hit around wild strikes procs
 	warrior.queuedRealismICD = &core.Cooldown{

@@ -12,7 +12,8 @@ var bloodrageRank = spellData.Bloodrage.HighestRank()
 func (warrior *Warrior) registerBloodrage() {
 	actionID := core.ActionID{SpellID: bloodrageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
-	healthCost := warrior.GetBaseStats()[stats.Health] * 0.16
+	// The tooltip states the cost as 20% of base health.
+	healthCost := warrior.GetBaseStats()[stats.Health] * 0.20
 	// Improved Bloodrage (12301) raises every rage amount Bloodrage generates by 25% per rank.
 	improvedBloodrage := spellData.ImprovedBloodrage.MultiplierAt(warrior.Talents.ImprovedBloodrage)
 	// Bloodrage (2687) energizes 100 on the cast, which is 10 rage; its other effect triggers the

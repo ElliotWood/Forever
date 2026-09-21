@@ -94,7 +94,8 @@ func (warrior *Warrior) registerToughness() {
 
 	// The client states the ladder twice, once on base armor and once on bonus armor; the sim's
 	// single Armor stat takes one multiplier.
-	warrior.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness))
+	// The tooltip states armor from items, which is the equipment share of the stat.
+	warrior.ApplyEquipScaling(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness))
 }
 
 var lastStandRank = spellData.LastStand.HighestRank()
@@ -272,7 +273,7 @@ func (warrior *Warrior) registerFocusedRage() {
 	}
 
 	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: WarriorSpellsAll ^ (SpellMaskDeathWish | SpellMaskBattleShout),
+		ClassMask: SpellMaskOffensiveAbilities,
 		Kind:      core.SpellMod_PowerCost_Flat,
 		IntValue:  int32(spellData.FocusedRage.TenthsAt(warrior.Talents.FocusedRage)),
 	})

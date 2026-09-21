@@ -8,12 +8,6 @@ import (
 )
 
 // The abilities spell 21887's class mask lists.
-const warriorsWrathSpells = SpellMaskHeroicStrike | SpellMaskRend | SpellMaskShieldBash |
-	SpellMaskCleave | SpellMaskDisarm | SpellMaskWhirlwind | SpellMaskSunderArmor | SpellMaskSlam |
-	SpellMaskHamstring | SpellMaskExecute | SpellMaskPummel | SpellMaskRevenge | SpellMaskOverpower |
-	SpellMaskThunderClap | SpellMaskMockingBlow | SpellMaskMortalStrike | SpellMaskConcussionBlow |
-	SpellMaskShieldSlam | SpellMaskRetaliation | SpellMaskIntercept | SpellMaskBloodthirst
-
 var ItemSetBattlegearOfMight = core.NewItemSet(core.ItemSet{
 	Name: "Battlegear of Might",
 	ID:   209,
@@ -73,12 +67,12 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 				ActionID: core.ActionID{SpellID: 21887},
 				Duration: time.Second * 10,
 			}).AttachSpellMod(core.SpellModConfig{
-				ClassMask: warriorsWrathSpells,
+				ClassMask: SpellMaskOffensiveAbilities,
 				Kind:      core.SpellMod_PowerCost_Flat,
 				IntValue:  -5,
 			}).AttachProcTrigger(core.ProcTrigger{
 				Name:               "Warrior's Wrath - Consume",
-				ClassSpellMask:     warriorsWrathSpells,
+				ClassSpellMask:     SpellMaskOffensiveAbilities,
 				Callback:           core.CallbackOnCastComplete,
 				TriggerImmediately: true,
 				Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
@@ -89,7 +83,7 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 			setBonusAura.AttachProcTrigger(core.ProcTrigger{
 				Name:           "Battlegear of Wrath - 5PC",
 				ActionID:       core.ActionID{SpellID: 21890},
-				ClassSpellMask: warriorsWrathSpells,
+				ClassSpellMask: SpellMaskOffensiveAbilities,
 				Callback:       core.CallbackOnSpellHitDealt,
 				Outcome:        core.OutcomeLanded,
 				ProcChance:     0.2,

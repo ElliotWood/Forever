@@ -3,6 +3,7 @@ package warrior
 import (
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 var recklessnessRank = spellData.Recklessness.HighestRank()
@@ -14,11 +15,10 @@ func (warrior *Warrior) registerRecklessness() {
 		Label:    "Recklessness",
 		ActionID: actionID,
 		Duration: recklessnessRank.Duration,
-	}).AttachSpellMod(core.SpellModConfig{
-		ProcMask:   core.ProcMaskMeleeSpecial,
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: recklessnessRank.Effect(shared.A_MOD_CRIT_PCT, 0).Value,
-	}).AttachMultiplicativePseudoStatBuff(
+	}).AttachStatBuff(
+		// The crit effect carries no school or mask: every attack, auto attacks included.
+		stats.PhysicalCritPercent, recklessnessRank.Effect(shared.A_MOD_CRIT_PCT, 0).Value,
+	).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.DamageTakenMultiplier,
 		1+recklessnessRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Value/100,
 	).

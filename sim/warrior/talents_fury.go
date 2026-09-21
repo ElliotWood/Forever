@@ -346,9 +346,7 @@ func (warrior *Warrior) registerBloodCraze() {
 	})
 }
 
-// TODO: The other half of 1310315, Whirlwind striking with the off-hand as well, is not gated on the
-// talent: whirlwind.go casts its off-hand hit off every Whirlwind the warrior lands with an off-hand
-// weapon equipped.
+// Raging Blows (1310315): the Cleave discount here, the off-hand Whirlwind strike in whirlwind.go.
 func (warrior *Warrior) registerRagingBlows() {
 	if !warrior.Talents.RagingBlows {
 		return
