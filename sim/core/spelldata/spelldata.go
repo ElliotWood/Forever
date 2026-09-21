@@ -224,6 +224,7 @@ type Power struct {
 }
 
 // What an unknown spell and an out-of-range effect answer with: every accessor reads zero off them,
-// so a caller can chain through a spell the store does not carry.
+// so a caller can chain through a spell the store does not carry. Both are shared by every caller
+// that lands on them, so neither may be written through.
 var Nil = &Spell{}
 var NilEffect = &Effect{}

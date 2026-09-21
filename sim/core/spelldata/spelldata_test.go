@@ -10,9 +10,10 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// Three rows in the shape the client states them, standing in for the generated store: a ranked
-// direct-damage spell with a slow on it, a proc aura that fires a triggered spell, and the spell it
-// fires. Ids ascend, as the generated slice's do.
+// Rows in the shape the client states them, standing in for the generated store: a ranked
+// direct-damage spell with a slow on it, a proc aura that fires a triggered spell, the spell it
+// fires, and two carrying the fractional EffectBasePointsF about one effect in 55 has. Ids ascend,
+// as the generated slice's do.
 func fixture() []Spell {
 	return []Spell{
 		{
@@ -44,6 +45,23 @@ func fixture() []Spell {
 				{SpellID: 324, Index: 0, Type: effectApplyAura, Aura: 42, TriggerID: 26364},
 			},
 			Powers: []Power{{Type: 0, Cost: 750}},
+		},
+		{
+			ID:         700,
+			Name:       "Fractional Base",
+			SpellLevel: 60,
+			Effects: []Effect{
+				{SpellID: 700, Index: 0, Type: effectApplyAura, Aura: 13, BasePoints: -58.4697},
+			},
+		},
+		{
+			ID:         800,
+			Name:       "Fractional Base Per Level",
+			SpellLevel: 4,
+			MaxLevel:   7,
+			Effects: []Effect{
+				{SpellID: 800, Index: 0, Type: effectSchoolDamage, BasePoints: 19.7, PPL: 0.5},
+			},
 		},
 		{
 			ID:     26364,
@@ -94,6 +112,21 @@ func TestEffectAverage(t *testing.T) {
 	}
 	if got := damage.Max(60); math.Abs(got-wantMax) > 1e-9 {
 		t.Errorf("Max(60) = %v, want %v", got, wantMax)
+	}
+}
+
+// The rank tables read the base as an integer, so the store answers the same for the same effect:
+// -58.4697 is -58, not the -59 a floor over the whole value would give, and 19.7 gaining 0.5 over
+// three levels is 19 + 1.5 floored to 20.
+func TestEffectAverageTruncatesTheBase(t *testing.T) {
+	if got := Find(700).EffectN(1).Average(60); got != -58 {
+		t.Errorf("Average(60) of a fractional negative base = %v, want -58", got)
+	}
+	if got := Find(800).EffectN(1).Average(60); got != 20 {
+		t.Errorf("Average(60) of a fractional base gaining 1.5 = %v, want 20", got)
+	}
+	if got := Find(800).EffectN(1).Average(4); got != 19 {
+		t.Errorf("Average(4) at the spell's own level = %v, want 19", got)
 	}
 }
 
@@ -210,6 +243,26 @@ func TestTalentLadderWithoutCurve(t *testing.T) {
 	if got := ladder.Rank(2).EffectN(2).BaseValue(); got != 19 {
 		t.Errorf("rank 2 damage without a curve = %v, want the base 19", got)
 	}
+}
+
+// A curve that does not state every rank of the talent it belongs to.
+func TestTalentCurveLengthPanics(t *testing.T) {
+	curves[116] = [][]float64{{-40, -45, -50}, {19, 20}}
+	defer delete(curves, 116)
+
+	requirePanic(t, "spelldata: spell 116 curve row 1 has 2 ranks, want 3", func() { Talent(116, 3) })
+}
+
+// Find binary searches, so the store refuses rows it could not search.
+func TestOutOfOrderIDsPanic(t *testing.T) {
+	defer replaceForTest(fixture())
+
+	requirePanic(t, "spelldata: spell ids are out of order at 1: 116 after 324", func() {
+		replaceForTest([]Spell{{ID: 324}, {ID: 116}})
+	})
+	requirePanic(t, "spelldata: spell ids are out of order at 1: 116 after 116", func() {
+		replaceForTest([]Spell{{ID: 116}, {ID: 116}})
+	})
 }
 
 func TestMustFindPanics(t *testing.T) {

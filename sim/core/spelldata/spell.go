@@ -2,6 +2,7 @@ package spelldata
 
 import (
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
@@ -34,6 +35,8 @@ const (
 // mana, focus and energy are stated in whole points - see NormalizePowerCost in tools/database.
 const powerTypeRage int8 = 1
 
+// What Power answers for a bar the spell does not use. Shared, like Nil and NilEffect, so a caller
+// must not write through it.
 var nilPower = &Power{}
 
 func (s *Spell) CastTime() time.Duration {
@@ -185,12 +188,7 @@ func (s *Spell) PowerCost(t int8) float64 {
 }
 
 func (s *Spell) HasLabel(id int16) bool {
-	for _, label := range s.Labels {
-		if label == id {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(s.Labels, id)
 }
 
 // Whether the modifier effect names this spell. A label-keyed modifier aura names its spells through
@@ -223,7 +221,7 @@ func (s *Spell) Triggered() []*Spell {
 		if e.TriggerID == 0 {
 			continue
 		}
-		if !contains(ids, e.TriggerID) {
+		if !slices.Contains(ids, e.TriggerID) {
 			ids = append(ids, e.TriggerID)
 		}
 	}
@@ -274,15 +272,6 @@ func resolve(ids []int32) []*Spell {
 		}
 	}
 	return out
-}
-
-func contains(ids []int32, id int32) bool {
-	for _, have := range ids {
-		if have == id {
-			return true
-		}
-	}
-	return false
 }
 
 func millis(ms int32) time.Duration {

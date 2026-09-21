@@ -28,12 +28,22 @@ func Talent(spellID int32, maxRanks int32) Ladder {
 	base := MustFind(spellID)
 	curve := curves[spellID]
 
+	// A curve row states one value per rank. A row of another length means the curve and the talent
+	// disagree about how many ranks there are, and the ranks past the shorter of the two would
+	// silently keep the base value.
+	for i, row := range curve {
+		if int32(len(row)) != maxRanks {
+			panic(fmt.Sprintf("spelldata: spell %d curve row %d has %d ranks, want %d",
+				spellID, i, len(row), maxRanks))
+		}
+	}
+
 	ranks := make([]*Spell, 0, maxRanks)
 	for n := int32(1); n <= maxRanks; n++ {
 		rank := *base
 		rank.Effects = slices.Clone(base.Effects)
 		for i := range rank.Effects {
-			if i < len(curve) && int(n) <= len(curve[i]) {
+			if i < len(curve) {
 				rank.Effects[i].BasePoints = curve[i][n-1]
 			}
 		}

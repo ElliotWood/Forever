@@ -49,10 +49,14 @@ func (e *Effect) Trigger() *Spell {
 // The amount at a caster level: the base points plus the per-level gain over the spell's own level,
 // stopping at the level the spell stops scaling at.
 //
+// The base is read as an integer, so the store answers what the generated rank tables answer for the
+// same effect: DeriveRankAmount in tools/database/spelldata.go is fed a base that SQL already cast to
+// an integer. The row keeps the client's own EffectBasePointsF, which is fractional on about one
+// effect in 55, and the truncation happens here.
+//
 // float32 is load-bearing: EffectRealPointsPerLevel is a float32 widened into the DB
 // (3.79999995231628), and multiplying in float64 moves the result off the tooltip on six rows. The
-// client resolves the amount to a whole number, which is the floor below. Same arithmetic as
-// DeriveRankAmount in tools/database/spelldata.go, which the generated rank tables are built with.
+// client resolves the amount to a whole number, which is the floor below.
 func (e *Effect) Average(level int32) float64 {
 	owner := Find(e.SpellID)
 
@@ -67,7 +71,7 @@ func (e *Effect) Average(level int32) float64 {
 		delta = 0
 	}
 
-	base := float32(e.BasePoints) + float32(float32(delta)*float32(e.PPL))
+	base := float32(math.Trunc(e.BasePoints)) + float32(float32(delta)*float32(e.PPL))
 	return math.Floor(float64(base))
 }
 

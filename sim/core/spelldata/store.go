@@ -14,7 +14,7 @@ import (
 // spells_auto_gen.go declares:
 //
 //	var generatedSpells = []Spell{...}                  // every row, by strictly increasing ID
-//	var generatedCurves = map[int32][][]float64{...}     // talent curve values, [effect][rank]
+//	var generatedCurves = map[int32][][]float64{...}     // talent curve values, [effect position][rank - 1]
 //	func init() { install(generatedSpells, generatedCurves) }
 //
 // Calling install from the generated file's own init is what keeps the order right: package-level
@@ -28,8 +28,9 @@ import (
 // enums_auto_gen.go declares the E_ constants as EffectType and the A_ constants as AuraType.
 var spells = []Spell{}
 
-// Talent curve values by spell id, as [effect index][rank - 1]. A trait talent states one spell and
-// its per-rank numbers live here rather than on ranks of their own.
+// Talent curve values by spell id, as [effect position][rank - 1]. The effect is at the position
+// EffectN counts by, not at the client's EffectIndex, which has gaps. A trait talent states one spell
+// and its per-rank numbers live here rather than on ranks of their own.
 var curves = map[int32][][]float64{}
 
 // Every row as a pointer, in the same order as spells, so All hands out a view without rebuilding it.
@@ -102,7 +103,8 @@ func addDriver(triggered int32, driver int32) {
 }
 
 // The row for an id, or Nil when the store does not carry it. Nil reads as zeroes rather than
-// crashing, so a caller can ask about a spell this build does not have.
+// crashing, so a caller can ask about a spell this build does not have. The row is the store's own,
+// not a copy: callers must not write through it.
 func Find(id int32) *Spell {
 	i := sort.Search(len(spells), func(i int) bool { return spells[i].ID >= id })
 	if i < len(spells) && spells[i].ID == id {
@@ -111,7 +113,8 @@ func Find(id int32) *Spell {
 	return Nil
 }
 
-// For a spell a caller depends on: a missing row is a generator problem, not a runtime condition.
+// For a spell a caller depends on: a missing row is a generator problem, not a runtime condition. The
+// row is the store's own, not a copy.
 func MustFind(id int32) *Spell {
 	s := Find(id)
 	if s == Nil {
