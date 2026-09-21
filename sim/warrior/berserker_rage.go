@@ -11,10 +11,18 @@ func (warrior *Warrior) registerBerserkerRage() {
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	rageGain := spellData.ImprovedBerserkerRage.EffectAt(0).TenthsAt(warrior.Talents.ImprovedBerserkerRage)
 
+	// TODO: Ingame test needed -- the client states no amount for the extra rage a hit taken
+	// generates; doubled here.
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Berserker Rage",
 		ActionID: actionID,
 		Duration: berserkerRageRank.Duration,
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			warrior.MultiplyDamageTakenRageGen(2)
+		},
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			warrior.MultiplyDamageTakenRageGen(0.5)
+		},
 	}).
 		AttachFearImmunity()
 

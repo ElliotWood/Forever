@@ -40,8 +40,8 @@ func (warrior *Warrior) registerThunderClap() {
 		},
 
 		DamageMultiplier: 1,
-		// TODO: Manual review needed -- the threat coefficient is not in the client.
-		ThreatMultiplier: 1.75,
+		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			// Thunder Clap (11581) is usable in Battle and Defensive Stance.

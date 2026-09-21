@@ -54,8 +54,8 @@ func (warrior *Warrior) registerOverpower() {
 
 		DamageMultiplier: 1,
 		// TODO: Ingame validation needed
-		// TODO: Manual review needed -- the threat coefficient is not in the client.
-		ThreatMultiplier: 0.75,
+		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(BattleStance) && warrior.OverpowerAura.IsActive()

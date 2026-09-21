@@ -3,13 +3,12 @@ package warrior
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 25288 states "a high amount of threat" with no number,
-// so the 200 is hand-supplied.
-var revengeRank = shared.WithSpellDataFlatThreat(spellData.Revenge, 200).HighestRank()
+// TODO: Manual review needed -- spell 25288 states "a high amount of threat" with no number;
+// none is modelled until measured in game.
+var revengeRank = spellData.Revenge.HighestRank()
 
 func (warrior *Warrior) registerRevenge() {
 	actionID := core.ActionID{SpellID: revengeRank.SpellID}
