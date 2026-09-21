@@ -1,6 +1,8 @@
 package shaman
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
@@ -38,107 +40,91 @@ func (shaman *Shaman) newShockSpellConfig(rank shared.SpellData, spellSchool cor
 	}
 }
 
-// TODO: To be implemented. Port the TBC Earth Shock Spell implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerEarthShockSpell(shockTimer *core.Timer) {
-	panic("To be implemented")
+	config := shaman.newShockSpellConfig(earthShockRank, core.SpellSchoolNature, shockTimer)
+	config.ClassSpellMask = SpellMaskEarthShock
+	config.Flags |= core.SpellFlagBinary
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := earthShockRank.Direct.Damage(sim)
+		spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
+	}
 
-	// The TBC implementation, kept for the port:
-	// config := shaman.newShockSpellConfig(earthShockRank, core.SpellSchoolNature, shockTimer)
-	// config.ClassSpellMask = SpellMaskEarthShock
-	// config.Flags |= core.SpellFlagBinary
-	// config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 	baseDamage := earthShockRank.Direct.Damage(sim)
-	// 	spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-	// }
-	//
-	// shaman.EarthShock = shaman.RegisterSpell(config)
+	shaman.EarthShock = shaman.RegisterSpell(config)
 }
 
-// TODO: To be implemented. Port the TBC Flame Shock Spell implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerFlameShockSpell(shockTimer *core.Timer) {
-	panic("To be implemented")
+	tick := flameShockRank.Periodic.(shared.SpellDataPeriodic)
 
-	// The TBC implementation, kept for the port:
-	// tick := flameShockRank.Periodic.(shared.SpellDataPeriodic)
-	//
-	// config := shaman.newShockSpellConfig(flameShockRank, core.SpellSchoolFire, shockTimer)
-	// config.ClassSpellMask = SpellMaskFlameShockDirect
-	// config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 	baseDamage := flameShockRank.Direct.Damage(sim)
-	// 	result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-	// 	if result.Landed() {
-	// 		spell.RelatedDotSpell.Cast(sim, target)
-	// 	}
-	// 	spell.DealDamage(sim, result)
-	// }
-	// shaman.FlameShock = shaman.RegisterSpell(config)
-	//
-	// shaman.FlameShock.RelatedDotSpell = shaman.RegisterSpell(core.SpellConfig{
-	// 	ActionID:         core.ActionID{SpellID: flameShockRank.SpellID, Tag: 1},
-	// 	SpellSchool:      flameShockRank.SpellSchool,
-	// 	DefenseType:      flameShockRank.DefenseType,
-	// 	ProcMask:         core.ProcMaskSpellDamage,
-	// 	Flags:            config.Flags & ^core.SpellFlagAPL | core.SpellFlagPassiveSpell,
-	// 	ClassSpellMask:   SpellMaskFlameShockDot,
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	//
-	// 	Dot: core.DotConfig{
-	// 		Aura: core.Aura{
-	// 			Label: "Flame Shock",
-	// 		},
-	// 		NumberOfTicks:    tick.NumberOfTicks,
-	// 		TickLength:       tick.TickLength,
-	// 		BonusCoefficient: tick.Coef,
-	// 		OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.Snapshot(target, tick.Tick)
-	// 		},
-	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
-	// 		},
-	// 	},
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		spell.Dot(target).Apply(sim)
-	// 	},
-	// 	ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
-	// 		dot := spell.Dot(target)
-	// 		if useSnapshot {
-	// 			result := dot.CalcSnapshotDamage(sim, target, dot.OutcomeTick)
-	// 			result.Damage /= dot.TickPeriod().Seconds()
-	// 			return result
-	// 		} else {
-	// 			result := spell.CalcPeriodicDamage(sim, target, tick.Tick, spell.OutcomeExpectedMagicCrit)
-	// 			result.Damage /= dot.CalcTickPeriod().Round(time.Millisecond).Seconds()
-	// 			return result
-	// 		}
-	// 	},
-	// })
+	config := shaman.newShockSpellConfig(flameShockRank, core.SpellSchoolFire, shockTimer)
+	config.ClassSpellMask = SpellMaskFlameShockDirect
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := flameShockRank.Direct.Damage(sim)
+		result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
+		if result.Landed() {
+			spell.RelatedDotSpell.Cast(sim, target)
+		}
+		spell.DealDamage(sim, result)
+	}
+	shaman.FlameShock = shaman.RegisterSpell(config)
+
+	shaman.FlameShock.RelatedDotSpell = shaman.RegisterSpell(core.SpellConfig{
+		ActionID:         core.ActionID{SpellID: flameShockRank.SpellID, Tag: 1},
+		SpellSchool:      flameShockRank.SpellSchool,
+		DefenseType:      flameShockRank.DefenseType,
+		ProcMask:         core.ProcMaskSpellDamage,
+		Flags:            config.Flags & ^core.SpellFlagAPL | core.SpellFlagPassiveSpell,
+		ClassSpellMask:   SpellMaskFlameShockDot,
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		Dot: core.DotConfig{
+			Aura: core.Aura{
+				Label: "Flame Shock",
+			},
+			NumberOfTicks:    tick.NumberOfTicks,
+			TickLength:       tick.TickLength,
+			BonusCoefficient: tick.Coef,
+			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.Snapshot(target, tick.Tick)
+			},
+			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+			},
+		},
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.Dot(target).Apply(sim)
+		},
+		ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
+			dot := spell.Dot(target)
+			if useSnapshot {
+				result := dot.CalcSnapshotDamage(sim, target, dot.OutcomeTick)
+				result.Damage /= dot.TickPeriod().Seconds()
+				return result
+			} else {
+				result := spell.CalcPeriodicDamage(sim, target, tick.Tick, spell.OutcomeExpectedMagicCrit)
+				result.Damage /= dot.CalcTickPeriod().Round(time.Millisecond).Seconds()
+				return result
+			}
+		},
+	})
 }
 
-// TODO: To be implemented. Port the TBC Frost Shock Spell implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerFrostShockSpell(shockTimer *core.Timer) {
-	panic("To be implemented")
+	config := shaman.newShockSpellConfig(frostShockRank, core.SpellSchoolFrost, shockTimer)
+	config.ClassSpellMask = SpellMaskFrostShock
+	config.Flags |= core.SpellFlagBinary
+	config.ThreatMultiplier *= 2
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := frostShockRank.Direct.Damage(sim)
+		spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
+	}
 
-	// The TBC implementation, kept for the port:
-	// config := shaman.newShockSpellConfig(frostShockRank, core.SpellSchoolFrost, shockTimer)
-	// config.ClassSpellMask = SpellMaskFrostShock
-	// config.Flags |= core.SpellFlagBinary
-	// config.ThreatMultiplier *= 2
-	// config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 	baseDamage := frostShockRank.Direct.Damage(sim)
-	// 	spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-	// }
-	//
-	// shaman.FrostShock = shaman.RegisterSpell(config)
+	shaman.FrostShock = shaman.RegisterSpell(config)
 }
 
-// TODO: To be implemented. Port the TBC Shocks implementation below; not yet verified against the Forever client.
 func (shaman *Shaman) registerShocks() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// shockTimer := shaman.NewTimer()
-	// shaman.registerEarthShockSpell(shockTimer)
-	// shaman.registerFlameShockSpell(shockTimer)
-	// shaman.registerFrostShockSpell(shockTimer)
+	shockTimer := shaman.NewTimer()
+	shaman.registerEarthShockSpell(shockTimer)
+	shaman.registerFlameShockSpell(shockTimer)
+	shaman.registerFrostShockSpell(shockTimer)
 }

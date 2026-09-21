@@ -6,27 +6,30 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// Package-level state the commented-out implementations used:
-// var waterShieldRank = spellData.WaterShield.BySpellID(33736)
-
 func (shaman *Shaman) registerShieldsSpells() {
 	shaman.registerWaterShieldSpell()
 	shaman.registerLightningShieldSpell()
 	shaman.registerShieldEffectTriggerSpell()
 }
 
-// TODO: To be implemented. Port the TBC Shield Effect Trigger Spell implementation below; not yet verified against the Forever client.
-func (shaman *Shaman) registerShieldEffectTriggerSpell() {
-	panic("To be implemented")
+// Only one shield can be up at a time, and either aura may be unregistered (Water Shield is a talent).
+func (shaman *Shaman) deactivateShields(sim *core.Simulation) {
+	if shaman.LightningShieldAura != nil {
+		shaman.LightningShieldAura.Deactivate(sim)
+	}
+	if shaman.WaterShieldAura != nil {
+		shaman.WaterShieldAura.Deactivate(sim)
+	}
+}
 
-	// The TBC implementation, kept for the port:
-	// shaman.ShieldSelfProcSpell = shaman.RegisterSpell(core.SpellConfig{
-	// 	Flags:          core.SpellFlagNoMetrics | core.SpellFlagNoLogs,
-	// 	ClassSpellMask: SpellMaskShieldSelfProc,
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		spell.CalcAndDealDamage(sim, target, 0, spell.OutcomeAlwaysHit)
-	// 	},
-	// })
+func (shaman *Shaman) registerShieldEffectTriggerSpell() {
+	shaman.ShieldSelfProcSpell = shaman.RegisterSpell(core.SpellConfig{
+		Flags:          core.SpellFlagNoMetrics | core.SpellFlagNoLogs,
+		ClassSpellMask: SpellMaskShieldSelfProc,
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, 0, spell.OutcomeAlwaysHit)
+		},
+	})
 }
 
 func (shaman *Shaman) startShieldProcPeriodicAction(sim *core.Simulation) {
@@ -41,115 +44,119 @@ func (shaman *Shaman) startShieldProcPeriodicAction(sim *core.Simulation) {
 	}
 }
 
-// TODO: To be implemented. The ability exists: spell 408510 on the Restoration line. No rank subtext,
-// so no generated table -- pin the id directly.
-func (shaman *Shaman) registerWaterShieldSpell() {
-	panic("To be implemented")
+// Water Shield (408510) sits on the Restoration talent line with no rank subtext, so gen_spelldata
+// makes no table for it and the ids and values are pinned from the client: three globes of 2% maximum
+// mana, one every 3.5 sec at most, no mana cost, 15 sec cooldown.
+const waterShieldSpellID = 408510
+const waterShieldGlobes = 3
+const waterShieldManaFraction = 0.02
 
-	// The TBC implementation, kept for the port:
-	// bonusManaReturned := 0.0
-	// mp5 := 50.0
-	// if shaman.CouldHaveSetBonus(ItemSetTidefuryRaiment, 4) {
-	// 	bonusManaReturned = 56
-	// }
-	//
-	// actionID := core.ActionID{SpellID: waterShieldRank.SpellID}
-	// waterShieldManaMetrics := shaman.NewManaMetrics(actionID)
-	//
-	// shaman.WaterShieldAura = shaman.RegisterAura(core.Aura{
-	// 	Label:     "Water Shield",
-	// 	ActionID:  actionID,
-	// 	Duration:  10 * time.Minute,
-	// 	MaxStacks: 3,
-	// }).AttachProcTrigger(core.ProcTrigger{
-	// 	Name:           "Water Shield Trigger",
-	// 	Callback:       core.CallbackOnSpellHitTaken,
-	// 	ICD:            3500 * time.Millisecond,
-	// 	ClassSpellMask: SpellMaskShieldSelfProc,
-	// 	Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-	// 		shaman.WaterShieldAura.RemoveStack(sim)
-	// 		shaman.AddMana(sim, waterShieldRank.Direct.Damage(sim)+bonusManaReturned, waterShieldManaMetrics)
-	// 	},
-	// }).AttachStatBuff(stats.MP5, mp5)
-	//
-	// shaman.RegisterSpell(core.SpellConfig{
-	// 	ActionID:    actionID,
-	// 	SpellSchool: core.SpellSchoolNature,
-	// 	DefenseType: core.DefenseTypeMagic,
-	// 	Flags:       core.SpellFlagAPL | SpellFlagInstant,
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: waterShieldRank.GCD,
-	// 		},
-	// 	},
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		shaman.LightningShieldAura.Deactivate(sim)
-	// 		shaman.WaterShieldAura.Activate(sim)
-	// 		shaman.WaterShieldAura.SetStacks(sim, 3)
-	// 	},
-	// 	RelatedSelfBuff: shaman.WaterShieldAura,
-	// })
+func (shaman *Shaman) registerWaterShieldSpell() {
+	if !shaman.Talents.WaterShield {
+		return
+	}
+
+	actionID := core.ActionID{SpellID: waterShieldSpellID}
+	waterShieldManaMetrics := shaman.NewManaMetrics(actionID)
+
+	shaman.WaterShieldAura = shaman.RegisterAura(core.Aura{
+		Label:     "Water Shield",
+		ActionID:  actionID,
+		Duration:  10 * time.Minute,
+		MaxStacks: waterShieldGlobes,
+	}).AttachProcTrigger(core.ProcTrigger{
+		Name:           "Water Shield Trigger",
+		Callback:       core.CallbackOnSpellHitTaken,
+		ICD:            3500 * time.Millisecond,
+		ClassSpellMask: SpellMaskShieldSelfProc,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			shaman.WaterShieldAura.RemoveStack(sim)
+			shaman.AddMana(sim, shaman.MaxMana()*waterShieldManaFraction, waterShieldManaMetrics)
+		},
+	})
+
+	shaman.RegisterSpell(core.SpellConfig{
+		ActionID:    actionID,
+		SpellSchool: core.SpellSchoolNature,
+		DefenseType: core.DefenseTypeMagic,
+		Flags:       core.SpellFlagAPL | SpellFlagInstant,
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: core.GCDDefault,
+			},
+			CD: core.Cooldown{
+				Timer:    shaman.NewTimer(),
+				Duration: time.Second * 15,
+			},
+		},
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			shaman.deactivateShields(sim)
+			shaman.WaterShieldAura.Activate(sim)
+			shaman.WaterShieldAura.SetStacks(sim, waterShieldGlobes)
+		},
+		RelatedSelfBuff: shaman.WaterShieldAura,
+	})
 }
 
 var lightningShieldRank = spellData.LightningShield.HighestRank()
 
-// TODO: To be implemented. Port the TBC Lightning Shield Spell implementation below; not yet verified against the Forever client.
-func (shaman *Shaman) registerLightningShieldSpell() {
-	panic("To be implemented")
+// The shield spell itself carries no damage (its Direct row is the placeholder 1 with a 0 coefficient);
+// the orb that fires is a separate spell, and rank 7's is 26363.
+var lightningShieldOrb = spellData.LightningShieldTriggered.BySpellID(26363)
 
-	// The TBC implementation, kept for the port:
-	// actionID := core.ActionID{SpellID: lightningShieldRank.SpellID}
-	//
-	// lsDamage := shaman.RegisterSpell(core.SpellConfig{
-	// 	ActionID:         core.ActionID{SpellID: lightningShieldRank.SpellID},
-	// 	SpellSchool:      lightningShieldRank.SpellSchool,
-	// 	DefenseType:      lightningShieldRank.DefenseType,
-	// 	ProcMask:         core.ProcMaskEmpty,
-	// 	Flags:            SpellFlagShamanSpell,
-	// 	ClassSpellMask:   SpellMaskLightningShield,
-	// 	DamageMultiplier: 1,
-	// 	ThreatMultiplier: 1,
-	// 	BonusCoefficient: lightningShieldRank.Direct.BonusCoefficient(),
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := lightningShieldRank.Direct.Damage(sim)
-	// 		spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-	// 	},
-	// })
-	//
-	// shaman.LightningShieldAura = shaman.RegisterAura(core.Aura{
-	// 	Label:     "Lightning Shield",
-	// 	ActionID:  actionID,
-	// 	Duration:  10 * time.Minute,
-	// 	MaxStacks: 3,
-	// }).AttachProcTrigger(core.ProcTrigger{
-	// 	Name:           "Lightning Shield Trigger",
-	// 	Callback:       core.CallbackOnSpellHitTaken,
-	// 	ICD:            3500 * time.Millisecond,
-	// 	ClassSpellMask: SpellMaskShieldSelfProc,
-	// 	Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
-	// 		shaman.LightningShieldAura.RemoveStack(sim)
-	// 		lsDamage.Cast(sim, shaman.CurrentTarget)
-	// 	},
-	// })
-	//
-	// shaman.RegisterSpell(core.SpellConfig{
-	// 	ActionID:    actionID,
-	// 	SpellSchool: core.SpellSchoolNature,
-	// 	DefenseType: core.DefenseTypeMagic,
-	// 	Flags:       core.SpellFlagAPL | SpellFlagInstant,
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: lightningShieldRank.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: lightningShieldRank.GCD,
-	// 		},
-	// 	},
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		shaman.WaterShieldAura.Deactivate(sim)
-	// 		shaman.LightningShieldAura.Activate(sim)
-	// 		shaman.LightningShieldAura.SetStacks(sim, 3)
-	// 	},
-	// 	RelatedSelfBuff: shaman.LightningShieldAura,
-	// })
+func (shaman *Shaman) registerLightningShieldSpell() {
+	actionID := core.ActionID{SpellID: lightningShieldRank.SpellID}
+
+	lsDamage := shaman.RegisterSpell(core.SpellConfig{
+		ActionID:         core.ActionID{SpellID: lightningShieldOrb.SpellID},
+		SpellSchool:      lightningShieldOrb.SpellSchool,
+		DefenseType:      lightningShieldOrb.DefenseType,
+		ProcMask:         core.ProcMaskEmpty,
+		Flags:            SpellFlagShamanSpell | core.SpellFlagPassiveSpell,
+		ClassSpellMask:   SpellMaskLightningShield,
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+		BonusCoefficient: lightningShieldOrb.Direct.BonusCoefficient(),
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			baseDamage := lightningShieldOrb.Direct.Damage(sim)
+			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
+		},
+	})
+
+	shaman.LightningShieldAura = shaman.RegisterAura(core.Aura{
+		Label:     "Lightning Shield",
+		ActionID:  actionID,
+		Duration:  lightningShieldRank.Duration,
+		MaxStacks: lightningShieldRank.ProcCharges,
+	}).AttachProcTrigger(core.ProcTrigger{
+		Name:           "Lightning Shield Trigger",
+		Callback:       core.CallbackOnSpellHitTaken,
+		ICD:            3500 * time.Millisecond,
+		ClassSpellMask: SpellMaskShieldSelfProc,
+		Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
+			shaman.LightningShieldAura.RemoveStack(sim)
+			lsDamage.Cast(sim, shaman.CurrentTarget)
+		},
+	})
+
+	shaman.RegisterSpell(core.SpellConfig{
+		ActionID:    actionID,
+		SpellSchool: core.SpellSchoolNature,
+		DefenseType: core.DefenseTypeMagic,
+		Flags:       core.SpellFlagAPL | SpellFlagInstant,
+		ManaCost: core.ManaCostOptions{
+			FlatCost: lightningShieldRank.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: lightningShieldRank.GCD,
+			},
+		},
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			shaman.deactivateShields(sim)
+			shaman.LightningShieldAura.Activate(sim)
+			shaman.LightningShieldAura.SetStacks(sim, lightningShieldRank.ProcCharges)
+		},
+		RelatedSelfBuff: shaman.LightningShieldAura,
+	})
 }

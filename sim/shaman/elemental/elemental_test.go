@@ -14,8 +14,6 @@ func init() {
 }
 
 func TestElemental(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
 		{
 			Class:      proto.Class_ClassShaman,
@@ -30,15 +28,11 @@ func TestElemental(t *testing.T) {
 					},
 				},
 			}},
-			GearSet: core.GetGearSet("../../../ui/specs/shaman/elemental/gear_sets", "p1_a"),
-			OtherGearSets: []core.GearSetCombo{
-				core.GetGearSet("../../../ui/specs/shaman/elemental/gear_sets", "p2"),
-				core.GetGearSet("../../../ui/specs/shaman/elemental/gear_sets", "p3"),
-				core.GetGearSet("../../../ui/specs/shaman/elemental/gear_sets", "p4"),
-				core.GetGearSet("../../../ui/specs/shaman/elemental/gear_sets", "p5"),
-			},
+			// Naked: the generated item database does not carry the Forever gear our sim tests with
+			// yet, and gives the rest TBC-shaped stats. Same call as the merged Mage port.
+			GearSet:  core.GearSetCombo{Label: "Naked", GearSet: &proto.EquipmentSpec{}},
 			Talents:  DefaultTalents,
-			Rotation: core.GetAplRotation("../../../ui/specs/shaman/elemental/apls", "default"),
+			Rotation: core.GetAplRotation("../../../ui/specs/shaman/elemental/apls", "forever"),
 			ItemFilter: core.ItemFilter{
 				WeaponTypes:       DefaultWeaponTypes,
 				ArmorType:         DefaultArmorType,
@@ -48,7 +42,8 @@ func TestElemental(t *testing.T) {
 	}))
 }
 
-const DefaultTalents = "55003105100213351051--05105301005"
+// The community build our Forever sim ranks Elemental with.
+const DefaultTalents = "5505301500103031--503352001"
 
 const DefaultArmorType = proto.ArmorType_ArmorTypeMail
 
