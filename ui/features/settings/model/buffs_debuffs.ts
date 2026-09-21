@@ -22,6 +22,7 @@ export const EnhancedBattleShout = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(23563),
 	fieldName: 'snapshotBsT2',
 	label: 'Enhanced Battle Shout',
+	enableWhen: party => party.getBuffs().battleShout,
 });
 
 // Individual Buffs
