@@ -23,6 +23,7 @@ type Weapon struct {
 	SpellSchool          SpellSchool
 	MinRange             float64
 	MaxRange             float64
+	TwoHand              bool
 }
 
 func (weapon *Weapon) DPS() float64 {
@@ -89,6 +90,7 @@ func newWeaponFromItem(item *Item, bonusDps float64) Weapon {
 		AttackPowerPerDPS:    DefaultAttackPowerPerDPS,
 		MinRange:             getWeaponMinRange(item),
 		MaxRange:             getWeaponMaxRange(item),
+		TwoHand:              item.HandType == proto.HandType_HandTypeTwoHand,
 	}
 }
 
