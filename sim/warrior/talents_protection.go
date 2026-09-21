@@ -90,10 +90,10 @@ func (warrior *Warrior) registerToughness() {
 		return
 	}
 
-	// The client states the ladder twice, once on base armor and once on bonus armor; the sim's
-	// single Armor stat takes one multiplier.
-	// The tooltip states armor from items, which is the equipment share of the stat.
-	warrior.ApplyEquipScaling(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness))
+	warrior.ApplyEquipScaling(
+		stats.Armor,
+		spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness),
+	)
 }
 
 func (warrior *Warrior) registerLastStand() {
@@ -103,7 +103,6 @@ func (warrior *Warrior) registerLastStand() {
 
 	lastStandRank := spellData.LastStand.HighestRank()
 	lastStandBuff := spellData.LastStandTriggered.HighestRank()
-
 	actionID := core.ActionID{SpellID: lastStandRank.SpellID}
 	healthMetrics := warrior.NewHealthMetrics(actionID)
 
@@ -173,6 +172,7 @@ func (warrior *Warrior) registerImprovedShieldWall() {
 	})
 }
 
+// TODO: In-game testing if this generates threat
 func (warrior *Warrior) registerConcussionBlow() {
 	if !warrior.Talents.ConcussionBlow {
 		return
@@ -219,8 +219,6 @@ func (warrior *Warrior) registerShieldSlam() {
 		return
 	}
 
-	// TODO: Manual review needed -- spell 23922 states only "a very high amount of threat"; none is
-	// modelled until measured in game.
 	shieldSlamRank := spellData.ShieldSlam.HighestRank()
 
 	warrior.RegisterSpell(core.SpellConfig{
@@ -251,6 +249,7 @@ func (warrior *Warrior) registerShieldSlam() {
 		},
 
 		DamageMultiplier: 1,
+		// TODO: In-game testing needed for threat multiplier / flat threat
 		ThreatMultiplier: 1,
 		FlatThreatBonus:  shieldSlamRank.FlatThreatBonus,
 
@@ -290,7 +289,9 @@ func (warrior *Warrior) registerMasterOfDefense() {
 		masterOfDefenseEnergize.Energize.Tenths(),
 		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense),
 		core.OutcomeDodge|core.OutcomeParry,
-		func(_ *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool { return warrior.PseudoStats.CanBlock },
+		func(_ *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {
+			return warrior.PseudoStats.CanBlock
+		},
 	)
 }
 
@@ -335,9 +336,7 @@ func (warrior *Warrior) registerImprovedShieldBash() {
 	})
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
-		Name: "Improved Shield Bash",
-		// The tooltip states the chance as $m1%, so the talent's ladder is the chance and the 100
-		// in the proc chance column is noise.
+		Name:               "Improved Shield Bash",
 		ProcChance:         spellData.ImprovedShieldBash.FractionAt(warrior.Talents.ImprovedShieldBash),
 		TriggerImmediately: true,
 		ClassSpellMask:     SpellMaskShieldBash,
@@ -354,7 +353,6 @@ func (warrior *Warrior) registerBastion() {
 		return
 	}
 
-	// The client applies the bonus to the physical school (A_MOD_DAMAGE_PERCENT_DONE, mask 1).
 	damageMod := warrior.AddDynamicMod(core.SpellModConfig{
 		School:     core.SpellSchoolPhysical,
 		Kind:       core.SpellMod_DamageDone_Pct,
@@ -379,8 +377,7 @@ func (warrior *Warrior) registerImprovedThunderClap() {
 		return
 	}
 
-	// Slowing effect implemented in core/debuffs.go
-
+	// Slowing effect implemented in thunder_clap.go
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskThunderClap,
 		Kind:      core.SpellMod_PowerCost_Flat,
