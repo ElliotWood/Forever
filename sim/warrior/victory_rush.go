@@ -33,6 +33,7 @@ func (warrior *Warrior) registerVictoryRush() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskVictoryRush,
+		ClassFlags:     SpellFlagsVictoryRush,
 		MaxRange:       float64(victoryRushRank.MaxRange),
 
 		Cast: core.CastConfig{

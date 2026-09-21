@@ -14,6 +14,7 @@ func (warrior *Warrior) registerChallengingShout() {
 		ProcMask:       core.ProcMaskEmpty,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskChallengingShout,
+		ClassFlags:     SpellFlagsChallengingShout,
 
 		RageCost: core.RageCostOptions{
 			Cost: rageCost(challengingShoutRank),

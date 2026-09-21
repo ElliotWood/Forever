@@ -29,6 +29,7 @@ func (warrior *Warrior) registerBerserkerRage() {
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskBerserkerRage,
+		ClassFlags:     SpellFlagsBerserkerRage,
 		Flags:          core.SpellFlagAPL | core.SpellFlagCastWhileIncapacitated,
 
 		Cast: core.CastConfig{

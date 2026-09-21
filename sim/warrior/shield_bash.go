@@ -12,6 +12,7 @@ func (warrior *Warrior) registerShieldBash() {
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskShieldBash,
+		ClassFlags:     SpellFlagsShieldBash,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,

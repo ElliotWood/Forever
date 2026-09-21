@@ -232,6 +232,7 @@ func (warrior *Warrior) registerBloodthirst() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskBloodthirst,
+		ClassFlags:     SpellFlagsBloodthirst,
 		MaxRange:       float64(bloodthirstRank.MaxRange),
 
 		RageCost: core.RageCostOptions{
@@ -390,6 +391,7 @@ func (warrior *Warrior) registerDeathWish() {
 	deathWishSpell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskDeathWish,
+		ClassFlags:     SpellFlagsDeathWish,
 		Flags:          core.SpellFlagCastWhileIncapacitated,
 
 		RageCost: core.RageCostOptions{

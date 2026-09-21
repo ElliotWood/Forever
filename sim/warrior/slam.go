@@ -18,6 +18,7 @@ func (warrior *Warrior) registerSlam() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskSlam,
+		ClassFlags:     SpellFlagsSlam,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{

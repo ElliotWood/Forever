@@ -15,6 +15,7 @@ func (warrior *Warrior) registerRend() {
 		SpellSchool:    rendRank.SpellSchool(),
 		DefenseType:    rendRank.DefenseTypeCore(),
 		ClassSpellMask: SpellMaskRend,
+		ClassFlags:     SpellFlagsRend,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 

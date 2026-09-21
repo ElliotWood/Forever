@@ -31,6 +31,7 @@ func (warrior *Warrior) registerRecklessness() {
 		DefenseType:    core.DefenseTypeMelee,
 		Flags:          core.SpellFlagAPL | core.SpellFlagCastWhileIncapacitated,
 		ClassSpellMask: SpellMaskRecklessness,
+		ClassFlags:     SpellFlagsRecklessness,
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

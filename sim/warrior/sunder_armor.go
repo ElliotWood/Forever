@@ -25,6 +25,7 @@ func (warrior *Warrior) registerSunderArmor() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskSunderArmor,
+		ClassFlags:     SpellFlagsSunderArmor,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{

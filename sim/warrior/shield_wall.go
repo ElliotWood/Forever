@@ -23,6 +23,7 @@ func (warrior *Warrior) registerShieldWall() {
 		ActionID:       actionID,
 		DefenseType:    core.DefenseTypeMelee,
 		ClassSpellMask: SpellMaskShieldWall,
+		ClassFlags:     SpellFlagsShieldWall,
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

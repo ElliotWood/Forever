@@ -25,6 +25,7 @@ func (warrior *Warrior) registerBattleShout() {
 	warrior.BattleShout = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: battleShoutRank.ID},
 		ClassSpellMask: SpellMaskBattleShout,
+		ClassFlags:     SpellFlagsBattleShout,
 		SpellSchool:    battleShoutRank.SpellSchool(),
 		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
 		ProcMask:       core.ProcMaskEmpty,

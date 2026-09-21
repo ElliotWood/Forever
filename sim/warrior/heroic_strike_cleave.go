@@ -19,6 +19,7 @@ func (warrior *Warrior) registerHeroicStrike() {
 		ProcMask:       core.ProcMaskMeleeMH,
 		Flags:          core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskHeroicStrike,
+		ClassFlags:     SpellFlagsHeroicStrike,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
@@ -63,6 +64,7 @@ func (warrior *Warrior) registerCleave() {
 		ProcMask:       core.ProcMaskMeleeMH,
 		Flags:          core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskCleave,
+		ClassFlags:     SpellFlagsCleave,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{

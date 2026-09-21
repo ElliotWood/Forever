@@ -14,6 +14,7 @@ func (warrior *Warrior) registerIntimidatingShout() {
 		ProcMask:       core.ProcMaskEmpty,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskIntimidatingShout,
+		ClassFlags:     SpellFlagsIntimidatingShout,
 		MaxRange:       float64(intimidatingShoutRank.MaxRange),
 
 		RageCost: core.RageCostOptions{

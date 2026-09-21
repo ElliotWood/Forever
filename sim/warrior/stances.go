@@ -29,7 +29,7 @@ func (warrior *Warrior) StanceMatches(other Stance) bool {
 	return (warrior.Stance & other) != 0
 }
 
-func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, rank *spelldata.Spell, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
+func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, flags core.ClassFlags, rank *spelldata.Spell, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
 	actionID := aura.ActionID
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	maxRetainedRage := spellData.TacticalMastery.ValueAt(1)
@@ -41,6 +41,7 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, rank *spellda
 		ActionID:       actionID,
 		DefenseType:    rank.DefenseTypeCore(),
 		ClassSpellMask: mask,
+		ClassFlags:     flags,
 		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 
 		Cast: core.CastConfig{
@@ -162,9 +163,9 @@ func (warrior *Warrior) registerStances() {
 	battleStanceAura := warrior.registerBattleStanceAura()
 	defensiveStanceAura := warrior.registerDefensiveStanceAura()
 	berserkerStanceAura := warrior.registerBerserkerStanceAura()
-	warrior.BattleStance = warrior.makeStanceSpell(BattleStance, SpellMaskBattleStance, battleStanceRank, battleStanceAura, stanceCD)
-	warrior.DefensiveStance = warrior.makeStanceSpell(DefensiveStance, SpellMaskDefensiveStance, defensiveStanceRank, defensiveStanceAura, stanceCD)
-	warrior.BerserkerStance = warrior.makeStanceSpell(BerserkerStance, SpellMaskBerserkerStance, berserkerStanceRank, berserkerStanceAura, stanceCD)
+	warrior.BattleStance = warrior.makeStanceSpell(BattleStance, SpellMaskBattleStance, SpellFlagsBattleStance, battleStanceRank, battleStanceAura, stanceCD)
+	warrior.DefensiveStance = warrior.makeStanceSpell(DefensiveStance, SpellMaskDefensiveStance, SpellFlagsDefensiveStance, defensiveStanceRank, defensiveStanceAura, stanceCD)
+	warrior.BerserkerStance = warrior.makeStanceSpell(BerserkerStance, SpellMaskBerserkerStance, SpellFlagsBerserkerStance, berserkerStanceRank, berserkerStanceAura, stanceCD)
 
 	switch warrior.DefaultStance {
 	case proto.WarriorStance_WarriorStanceBattle:

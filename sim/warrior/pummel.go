@@ -12,6 +12,7 @@ func (warrior *Warrior) registerPummel() {
 		ActionID:       core.ActionID{SpellID: pummelRank.ID},
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskPummel,
+		ClassFlags:     SpellFlagsPummel,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		SpellSchool:    pummelRank.SpellSchool(),
 		DefenseType:    pummelRank.DefenseTypeCore(),

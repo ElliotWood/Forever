@@ -25,6 +25,7 @@ func (warrior *Warrior) registerDisarm() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskDisarm,
+		ClassFlags:     SpellFlagsDisarm,
 		MaxRange:       float64(disarmRank.MaxRange),
 
 		RageCost: core.RageCostOptions{

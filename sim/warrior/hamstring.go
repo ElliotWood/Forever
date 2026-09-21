@@ -15,6 +15,7 @@ func (warrior *Warrior) registerHamstring() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskHamstring,
+		ClassFlags:     SpellFlagsHamstring,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{

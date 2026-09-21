@@ -28,6 +28,7 @@ func (warrior *Warrior) registerThunderClap() {
 		ProcMask:       core.ProcMaskRangedSpecial,
 		Flags:          core.SpellFlagAPL | core.SpellFlagBinary,
 		ClassSpellMask: SpellMaskThunderClap,
+		ClassFlags:     SpellFlagsThunderClap,
 
 		RageCost: core.RageCostOptions{
 			Cost: rageCost(thunderClapRank),

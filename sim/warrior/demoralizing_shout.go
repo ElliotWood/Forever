@@ -20,6 +20,7 @@ func (warrior *Warrior) registerDemoralizingShout() {
 		SpellSchool:    demoralizingShoutRank.SpellSchool(),
 		DefenseType:    demoralizingShoutRank.DefenseTypeCore(),
 		ClassSpellMask: SpellMaskDemoralizingShout,
+		ClassFlags:     SpellFlagsDemoralizingShout,
 		ProcMask:       core.ProcMaskEmpty,
 		Flags:          core.SpellFlagAPL,
 

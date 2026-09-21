@@ -135,6 +135,7 @@ func (warrior *Warrior) registerDeepWounds() {
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskEmpty,
 		ClassSpellMask: SpellMaskDeepWounds,
+		ClassFlags:     SpellFlagsDeepWounds,
 		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagIgnoreResists | core.SpellFlagProc, // 12162 and 412609 lack Not a Proc.
 
 		// 12162 and 412609 state DefenseType 0. It's a bleed that snapshots on proc; the
@@ -232,6 +233,7 @@ func (warrior *Warrior) registerMortalStrike() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskMortalStrike,
+		ClassFlags:     SpellFlagsMortalStrike,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
@@ -283,6 +285,7 @@ func (warrior *Warrior) registerSpearingStrike() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskSpearingStrike,
+		ClassFlags:     SpellFlagsSpearingStrike,
 		MaxRange:       float64(spearingStrikeRank.MaxRange),
 
 		RageCost: core.RageCostOptions{
@@ -480,6 +483,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 	hitSpell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskSweepingStrikesHit,
+		ClassFlags:     SpellFlagsSweepingStrikes,
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskMeleeSpecial,
 		Flags:          core.SpellFlagIgnoreModifiers | core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
@@ -495,6 +499,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 	warrior.SweepingStrikesNormalizedAttack = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID.WithTag(1), // Real SpellID: 26654
 		ClassSpellMask: SpellMaskSweepingStrikesNormalizedHit,
+		ClassFlags:     SpellFlagsSweepingStrikes,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
 		ProcMask:       core.ProcMaskMeleeSpecial,
@@ -544,6 +549,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 	ssCD := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskSweepingStrikes,
+		ClassFlags:     SpellFlagsSweepingStrikes,
 		SpellSchool:    core.SpellSchoolPhysical,
 
 		RageCost: core.RageCostOptions{

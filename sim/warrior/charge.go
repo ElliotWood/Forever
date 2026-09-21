@@ -40,6 +40,7 @@ func (warrior *Warrior) registerCharge() {
 		SpellSchool:    core.SpellSchoolPhysical,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskCharge,
+		ClassFlags:     SpellFlagsCharge,
 		MinRange:       float64(chargeRank.MinRange),
 		MaxRange:       float64(chargeRank.MaxRange),
 

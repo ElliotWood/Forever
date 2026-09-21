@@ -24,6 +24,7 @@ func (warrior *Warrior) registerExecute() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskExecute,
+		ClassFlags:     SpellFlagsExecute,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{

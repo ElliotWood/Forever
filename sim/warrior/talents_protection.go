@@ -126,6 +126,7 @@ func (warrior *Warrior) registerLastStand() {
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskLastStand,
+		ClassFlags:     SpellFlagsLastStand,
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
@@ -185,6 +186,7 @@ func (warrior *Warrior) registerConcussionBlow() {
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: concussionBlowRank.ID},
 		ClassSpellMask: SpellMaskConcussionBlow,
+		ClassFlags:     SpellFlagsConcussionBlow,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
@@ -228,6 +230,7 @@ func (warrior *Warrior) registerShieldSlam() {
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: shieldSlamRank.ID},
 		ClassSpellMask: SpellMaskShieldSlam,
+		ClassFlags:     SpellFlagsShieldSlam,
 		SpellSchool:    shieldSlamRank.SpellSchool(),
 		DefenseType:    shieldSlamRank.DefenseTypeCore(),
 		ProcMask:       core.ProcMaskMeleeMHSpecial,

@@ -34,6 +34,7 @@ func (warrior *Warrior) registerShieldBlock() {
 		ActionID:       actionId,
 		SpellSchool:    core.SpellSchoolPhysical,
 		ClassSpellMask: SpellMaskShieldBlock,
+		ClassFlags:     SpellFlagsShieldBlock,
 		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
 
 		RageCost: core.RageCostOptions{

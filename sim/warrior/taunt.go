@@ -14,6 +14,7 @@ func (warrior *Warrior) registerTaunt() {
 		ProcMask:       core.ProcMaskEmpty,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskTaunt,
+		ClassFlags:     SpellFlagsTaunt,
 		MaxRange:       float64(tauntRank.MaxRange),
 
 		Cast: core.CastConfig{

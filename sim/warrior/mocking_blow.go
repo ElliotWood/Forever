@@ -15,6 +15,7 @@ func (warrior *Warrior) registerMockingBlow() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskMockingBlow,
+		ClassFlags:     SpellFlagsMockingBlow,
 		MaxRange:       float64(mockingBlowRank.MaxRange),
 
 		RageCost: core.RageCostOptions{

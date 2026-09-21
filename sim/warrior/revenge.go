@@ -37,6 +37,7 @@ func (warrior *Warrior) registerRevenge() {
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskRevenge,
+		ClassFlags:     SpellFlagsRevenge,
 		MaxRange:       core.MaxMeleeRange,
 
 		Cast: core.CastConfig{

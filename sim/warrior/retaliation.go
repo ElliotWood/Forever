@@ -13,6 +13,7 @@ func (warrior *Warrior) registerRetaliation() {
 
 	attackSpell := warrior.RegisterSpell(core.SpellConfig{
 		ClassSpellMask: SpellMaskRetaliationHit,
+		ClassFlags:     SpellFlagsRetaliationHit,
 		ActionID:       core.ActionID{SpellID: retaliationHit.ID},
 		SpellSchool:    retaliationHit.SpellSchool(),
 		DefenseType:    retaliationHit.DefenseTypeCore(),
@@ -45,6 +46,7 @@ func (warrior *Warrior) registerRetaliation() {
 		ActionID:       actionID,
 		DefenseType:    core.DefenseTypeMelee,
 		ClassSpellMask: SpellMaskRetaliation,
+		ClassFlags:     SpellFlagsRetaliation,
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: retaliationRank.GCD(),

@@ -42,6 +42,7 @@ func (warrior *Warrior) registerIntercept() {
 		SpellSchool:    core.SpellSchoolPhysical,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskIntercept,
+		ClassFlags:     SpellFlagsIntercept,
 		MinRange:       chargeMinRange,
 		MaxRange:       float64(interceptRank.MaxRange),
 
