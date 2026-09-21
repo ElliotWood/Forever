@@ -3,9 +3,7 @@ package warrior
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -52,19 +50,17 @@ func (warrior *Warrior) registerImprovedHeroicStrike() {
 		return
 	}
 
-	// The client states the cost on the 0-1000 rage bar, so the ladder is -10/-20/-30.
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskHeroicStrike,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.ImprovedHeroicStrike.TenthsAt(warrior.Talents.ImprovedHeroicStrike)),
-	})
+	spelldata.ParseStatic(&warrior.Character,
+		spellData.ImprovedHeroicStrike.Rank(warrior.Talents.ImprovedHeroicStrike))
 }
 func (warrior *Warrior) registerDeflection() {
 	if warrior.Talents.Deflection == 0 {
 		return
 	}
 
-	warrior.PseudoStats.BaseParryChance += spellData.Deflection.FractionAt(warrior.Talents.Deflection)
+	// The row states parry as a percentage, which the parse stores as the rating the sim sums with
+	// the base chance.
+	spelldata.ParseStatic(&warrior.Character, spellData.Deflection.Rank(warrior.Talents.Deflection))
 }
 
 func (warrior *Warrior) registerImprovedRend() {
@@ -72,11 +68,7 @@ func (warrior *Warrior) registerImprovedRend() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskRend,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedRend.FractionAt(warrior.Talents.ImprovedRend),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedRend.Rank(warrior.Talents.ImprovedRend))
 }
 
 func (warrior *Warrior) registerImprovedOverpower() {
@@ -84,14 +76,8 @@ func (warrior *Warrior) registerImprovedOverpower() {
 		return
 	}
 
-	core.MakePermanent(warrior.RegisterAura(core.Aura{
-		Label:    "Improved Overpower",
-		ActionID: core.ActionID{SpellID: 12963}.WithTag(warrior.Talents.ImprovedOverpower),
-	})).AttachSpellMod(core.SpellModConfig{
-		ClassMask:  SpellMaskOverpower,
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.ImprovedOverpower.ValueAt(warrior.Talents.ImprovedOverpower),
-	})
+	spelldata.ParseStatic(&warrior.Character,
+		spellData.ImprovedOverpower.Rank(warrior.Talents.ImprovedOverpower))
 }
 
 var angerManagementRank = spellData.AngerManagement.Highest()
@@ -189,23 +175,16 @@ func (warrior *Warrior) registerTwoHandedWeaponSpecialization() {
 		return
 	}
 
-	// The effect is all physical damage, auto attacks included, so no mask narrows it.
-	weaponMod := warrior.AddDynamicMod(core.SpellModConfig{
-		School:     core.SpellSchoolPhysical,
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.TwoHandedWeaponSpecialization.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 1).FractionAt(warrior.Talents.TwoHandedWeaponSpecialization),
-	})
-
-	if warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand {
-		weaponMod.Activate()
-	}
+	// The row raises the physical school, auto attacks included, and states no weapon of its own:
+	// the tooltip's two-handed requirement is the caller's condition, re-read on a weapon swap.
+	parsed := spelldata.ParseStatic(&warrior.Character,
+		spellData.TwoHandedWeaponSpecialization.Rank(warrior.Talents.TwoHandedWeaponSpecialization),
+		spelldata.Conditional(func() bool {
+			return warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand
+		}))
 
 	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		if warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand {
-			weaponMod.Activate()
-		} else {
-			weaponMod.Deactivate()
-		}
+		parsed.Refresh(sim)
 	})
 }
 
@@ -214,11 +193,7 @@ func (warrior *Warrior) registerImpale() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskDamageSpells,
-		Kind:       core.SpellMod_CritMultiplier_Flat,
-		FloatValue: spellData.Impale.FractionAt(warrior.Talents.Impale),
-	})
+	spelldata.ParseStatic(&warrior.Character, spellData.Impale.Rank(warrior.Talents.Impale))
 }
 
 var mortalStrikeRank = spellData.MortalStrike.Highest()
@@ -410,17 +385,9 @@ func (warrior *Warrior) registerImprovedSlam() {
 		return
 	}
 
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskSlam,
-		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.Effect(dbcenums.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CASTING_TIME).ValueAt(warrior.Talents.ImprovedSlam)),
-	})
-
-	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskSlam,
-		Kind:      core.SpellMod_GlobalCooldown_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.Effect(dbcenums.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_GLOBAL_COOLDOWN).ValueAt(warrior.Talents.ImprovedSlam)),
-	})
+	// The five rank-swap effects the row states past the cast time and the global cooldown have no
+	// sim kind and are reported as skipped.
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedSlam.Rank(warrior.Talents.ImprovedSlam))
 }
 
 var sweepingStrikesRank = spellData.SweepingStrikes.Highest()
