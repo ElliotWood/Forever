@@ -107,9 +107,10 @@ describe('migrateRetypedBuffFields', () => {
 		expect(() => IndividualSimSettings.fromJson(json as never)).not.toThrow();
 	});
 
-	// The drums consumable is the one retired field that does not sit on a buff message. `fromJson`
-	// is called without `ignoreUnknownFields` here on purpose: that is what the share-link importer
-	// does, and it is what makes the key the pre-pass has to drop rather than one it may leave.
+	// The drums consumable is the one retired field that does not sit on a buff message. Every
+	// settings loader passes `ignoreUnknownFields`, so a leftover key would be forgiven there;
+	// `fromJson` is called strictly here because that is the sharpest check that the pre-pass
+	// dropped it.
 	it('drops a version-16 payload’s drums consumable, which ConsumesSpec no longer has', () => {
 		const json = {
 			apiVersion: 16,
