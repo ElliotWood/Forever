@@ -11,7 +11,10 @@ func (rogue *Rogue) registerVenom() {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 1310703}
+	// Forever beta client 1.60.1.69893: id and cost come from the client table. Its 6s duration is the
+	// base before the per combo point step, so the durations stay ours.
+	row := spellData.Venom.ByRank(1)
+	actionID := core.ActionID{SpellID: row.SpellID}
 
 	durations := [6]time.Duration{
 		0,
@@ -45,7 +48,7 @@ func (rogue *Rogue) registerVenom() {
 		MetricSplits:   6,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost: 25,
+			Cost: float64(row.Cost),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

@@ -340,10 +340,13 @@ func (rogue *Rogue) registerBladeFlurryCD() {
 		},
 	})
 
+	// Forever beta client 1.60.1.69893: id, cost, cooldown and duration come from the client table.
+	bfRow := spellData.BladeFlurry.ByRank(1)
+
 	rogue.BladeFlurryAura = rogue.RegisterAura(core.Aura{
 		Label:    "Blade Flurry",
-		ActionID: core.ActionID{SpellID: 13877},
-		Duration: time.Second * 15,
+		ActionID: core.ActionID{SpellID: bfRow.SpellID},
+		Duration: bfRow.Duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			rogue.MultiplyMeleeSpeed(sim, 1.2)
 		},
@@ -367,15 +370,15 @@ func (rogue *Rogue) registerBladeFlurryCD() {
 		},
 	})
 
-	cooldownDur := time.Minute * 2
+	cooldownDur := bfRow.Cooldown
 	rogue.BladeFlurry = rogue.RegisterSpell(core.SpellConfig{
 		SpellCode:      SpellCode_RogueBladeFlurry,
 		ClassSpellMask: SpellMaskBladeFlurry,
-		ActionID:       core.ActionID{SpellID: 13877},
+		ActionID:       core.ActionID{SpellID: bfRow.SpellID},
 		Flags:          core.SpellFlagAPL,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost: 25,
+			Cost: float64(bfRow.Cost),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -418,10 +421,13 @@ func (rogue *Rogue) registerAdrenalineRushCD() {
 		return
 	}
 
+	// Forever beta client 1.60.1.69893: duration and cooldown come from the client table.
+	arRow := spellData.AdrenalineRush.BySpellID(AdrenalineRushActionID.SpellID)
+
 	rogue.AdrenalineRushAura = rogue.RegisterAura(core.Aura{
 		Label:    "Adrenaline Rush",
 		ActionID: AdrenalineRushActionID,
-		Duration: time.Second * 15,
+		Duration: arRow.Duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			rogue.ApplyEnergyTickMultiplier(1.0)
 		},
@@ -441,7 +447,7 @@ func (rogue *Rogue) registerAdrenalineRushCD() {
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    rogue.NewTimer(),
-				Duration: time.Minute * 5,
+				Duration: arRow.Cooldown,
 			},
 		},
 
