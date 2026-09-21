@@ -40,7 +40,7 @@ func (warrior *Warrior) registerRevenge() {
 	}
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		baseDamage := revengeRank.DamageEffect().Average(core.CharacterLevel)
+		baseDamage := revengeRank.DamageEffect().Roll(sim, core.CharacterLevel)
 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 		aura.Deactivate(sim)
 

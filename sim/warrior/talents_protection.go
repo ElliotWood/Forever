@@ -210,7 +210,7 @@ func (warrior *Warrior) registerShieldSlam() {
 	}
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		baseDamage := shieldSlamRank.DamageEffect().Average(core.CharacterLevel) + warrior.BlockDamageReduction()
+		baseDamage := shieldSlamRank.DamageEffect().Roll(sim, core.CharacterLevel) + warrior.BlockDamageReduction()
 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
 		if !result.Landed() {
