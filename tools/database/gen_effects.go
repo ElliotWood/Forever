@@ -781,6 +781,33 @@ var castTriggerMatcher = regexp.MustCompile(`(?i)you cast|on spell ?cast|spellca
 // strikes" or "each time you cast a spell", with nothing capitalized to name.
 var namedAbilityMatcher = regexp.MustCompile(`[Yy]our [A-Z][A-Za-z']*( [A-Z][A-Za-z']*)* (spell|spells|ability|abilities)`)
 
+// What core.DecodeProcTypeMask cannot read off the mask: the trigger wording around it. The named
+// ability and outcome condition hints stay unset, because BuildSpellProcInfo refuses a tooltip
+// carrying either before it decodes anything.
+func procTooltipHints(tooltip string) core.ProcHint {
+	var hints core.ProcHint
+
+	if castTriggerMatcher.MatchString(tooltip) {
+		hints |= core.ProcHintCastTrigger
+	}
+
+	if critMatcher.MatchString(tooltip) {
+		hints |= core.ProcHintCrit
+	}
+
+	// An unrestricted "a spell" counts as heal evidence too: next to a helpful-spell bit it is the
+	// wording of a proc that fires off any spell the character casts, healing included.
+	if hasHealMatcher.MatchString(tooltip) || hasGenericMatcher.MatchString(tooltip) {
+		hints |= core.ProcHintHeals
+	}
+
+	if pureHealMatcher.MatchString(tooltip) {
+		hints |= core.ProcHintPureHeal
+	}
+
+	return hints
+}
+
 // Derives what adds a stack to an accumulating aura, from the container spell rather than from
 // the one that opens the window. buff_id is the container by then: the parser rebases the effect
 // onto it precisely because that is where the duration and these proc flags live.
@@ -908,115 +935,20 @@ func BuildSpellProcInfo(procSpell *dbc.Spell, tooltip string, itemType proto.Ite
 		return info, false
 	}
 
+	// The bit table, decoded in core so the sim reads the same mask the same way. Unsupported bits
+	// are left to the caller and this one ignores them: the shapes they name are refused above or
+	// carry no hit at all, so a listener is never generated for one.
 	if !onHitProc && len(procSpell.ProcTypeMask) > 0 {
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_MELEE_SWING > 0 {
-			info.ProcMask |= core.ProcMaskMeleeWhiteHit
-		}
+		decoded := core.DecodeProcTypeMask(
+			[2]uint32{uint32(procSpell.ProcTypeMask[0]), uint32(procSpell.ProcTypeMask[1])},
+			procTooltipHints(tooltip),
+		)
 
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_MELEE_ABILITY > 0 {
-			info.ProcMask |= core.ProcMaskMeleeSpecial
-		}
-
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_RANGED_ATTACK > 0 {
-			info.ProcMask |= core.ProcMaskRangedAuto
-		}
-
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_RANGED_ABILITY > 0 {
-			info.ProcMask |= core.ProcMaskRangedSpecial
-		}
-
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_HARMFUL_PERIODIC > 0 {
-			info.ProcMask |= core.ProcMaskSpellDamage
-		}
-
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_HARMFUL_SPELL > 0 {
-			info.ProcMask |= core.ProcMaskSpellDamage
-		}
-
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_ANY_DIRECT_TAKEN > 0 {
-			info.Callback |= core.CallbackOnSpellHitTaken
-			info.Outcome = core.OutcomeLanded
-
-			if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_TAKE_MELEE_SWING > 0 {
-				info.ProcMask |= core.ProcMaskMeleeWhiteHit
-			}
-
-			if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_TAKE_MELEE_ABILITY > 0 {
-				info.ProcMask |= core.ProcMaskMeleeSpecial
-			}
-
-			if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_TAKE_RANGED_ATTACK > 0 {
-				info.ProcMask |= core.ProcMaskRangedAuto
-			}
-
-			if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_TAKE_RANGED_ABILITY > 0 {
-				info.ProcMask |= core.ProcMaskRangedSpecial
-			}
-
-			if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_TAKE_HARMFUL_SPELL > 0 {
-				info.ProcMask |= core.ProcMaskSpellDamage
-			}
-		}
-
-		// A mask made of nothing but the spell-cast bits. The harmful one has to be present: a
-		// helpful-only mask carries no evidence that casting is the trigger at all, and the helpful
-		// branch below already demands tooltip evidence before it believes one - the PvP Librams
-		// that buff a heal target read "Causes your Flash of Light to increase the target's
-		// Resilience" and are neither a self buff nor unrestricted.
-		spellCastMask := procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_HARMFUL_SPELL > 0 &&
-			procSpell.ProcTypeMask[0]&^(dbc.PROC_FLAG_DEAL_HARMFUL_SPELL|dbc.PROC_FLAG_DEAL_HELPFUL_SPELL) == 0
-
-		// Whether the cast itself is the trigger. In TBC a mask of only the harmful-spell bit does
-		// not care whether the spell landed. Adding the helpful bit settles nothing either way, and
-		// the two items that pin it down disagree despite carrying the identical mask: Memento of
-		// Tyrande procs off resists in logs, while Band of the Eternal Restorer does not proc on a
-		// miss or a full resist. What separates them is that the first names the cast as the
-		// trigger and the second does not, so for that pair the tooltip decides.
-		castOnly := spellCastMask &&
-			(procSpell.ProcTypeMask[0] == dbc.PROC_FLAG_DEAL_HARMFUL_SPELL || castTriggerMatcher.MatchString(tooltip))
-
-		// A tooltip naming an outcome is the exception to all of it: a crit is only known once the
-		// hit resolves, so those stay on hit-dealt.
-		if castOnly && !critMatcher.MatchString(tooltip) {
-			info.Callback |= core.CallbackOnCastComplete
-			info.RequireDamageDealt = false
-			requiresOutcome = false
-		} else if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_ANY_DIRECT_DEALT > 0 {
-			info.Callback |= core.CallbackOnSpellHitDealt
-
-			if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_HARMFUL_SPELL > 0 {
-				info.RequireDamageDealt = false
-			}
-		}
-
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_HARMFUL_PERIODIC > 0 {
-			info.Callback |= core.CallbackOnPeriodicDamageDealt
-		}
-
-		if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_HELPFUL_SPELL > 0 &&
-			(hasHealMatcher.MatchString(tooltip) || hasGenericMatcher.MatchString(tooltip)) {
-			info.RequireDamageDealt = false
-			info.ProcMask |= core.ProcMaskSpellHealing
-
-			// Casting the heal is already the trigger above, so adding heal-dealt on top would
-			// proc twice for one heal.
-			if !info.Callback.Matches(core.CallbackOnCastComplete) {
-				info.Callback |= core.CallbackOnHealDealt
-
-				// handle HoTs only with direct heals for now, there are some odd cases with HoT / DoT overlaps
-				if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_DEAL_HELPFUL_PERIODIC > 0 {
-					info.Callback |= core.CallbackOnPeriodicHealDealt
-				}
-
-				// Check if we have periodic damage flag but only heal paired with it
-				// This usually indicates a pure heal proc mask
-				if procSpell.ProcTypeMask[0]&dbc.PROC_FLAG_ANY_DIRECT_DEALT == 0 {
-					info.Callback &= ^core.CallbackOnPeriodicDamageDealt
-					info.Callback &= ^core.CallbackOnSpellHitDealt
-					info.ProcMask &= ^core.ProcMaskSpellDamage
-				}
-			}
-		}
+		info.Callback |= decoded.Callback
+		info.ProcMask |= decoded.ProcMask
+		info.RequireDamageDealt = decoded.RequireDamageDealt
+		info.Outcome = decoded.Outcome
+		requiresOutcome = false
 	}
 
 	// Proc-ness is a flag on the listener, not a hit kind in the mask. ProcMaskSpellDamageProc is
