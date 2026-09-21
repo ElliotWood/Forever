@@ -10,12 +10,12 @@ func (warrior *Warrior) registerHeroicStrike() {
 	heroicStrikeRank := shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 0).HighestRank()
 	heroicStrikeBaseDamage, _ := heroicStrikeRank.Direct.Range()
 
-	spell := warrior.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: heroicStrikeRank.SpellID},
 		SpellSchool:    heroicStrikeRank.SpellSchool,
 		DefenseType:    heroicStrikeRank.DefenseType,
-		ProcMask:       core.ProcMaskMeleeMH,
-		Flags:          core.SpellFlagMeleeMetrics,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskHeroicStrike,
 		MaxRange:       core.MaxMeleeRange,
 
@@ -23,7 +23,6 @@ func (warrior *Warrior) registerHeroicStrike() {
 			Cost:   heroicStrikeRank.Cost,
 			Refund: heroicStrikeRank.MissRefund(),
 		},
-
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				NonEmpty: true,
@@ -41,13 +40,8 @@ func (warrior *Warrior) registerHeroicStrike() {
 			if !result.Landed() {
 				spell.IssueRefund(sim)
 			}
-
-			if warrior.curQueueAura != nil {
-				warrior.curQueueAura.Deactivate(sim)
-			}
 		},
 	})
-	warrior.makeQueueSpellsAndAura(spell)
 }
 
 func (warrior *Warrior) registerCleave() {
@@ -57,12 +51,12 @@ func (warrior *Warrior) registerCleave() {
 
 	const maxTargets int32 = 2
 
-	spell := warrior.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: cleaveRank.SpellID},
 		SpellSchool:    cleaveRank.SpellSchool,
 		DefenseType:    cleaveRank.DefenseType,
-		ProcMask:       core.ProcMaskMeleeMH,
-		Flags:          core.SpellFlagMeleeMetrics,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskCleave,
 		MaxRange:       core.MaxMeleeRange,
 
@@ -70,7 +64,6 @@ func (warrior *Warrior) registerCleave() {
 			Cost:   cleaveRank.Cost,
 			Refund: cleaveRank.MissRefund(),
 		},
-
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				NonEmpty: true,
@@ -88,64 +81,6 @@ func (warrior *Warrior) registerCleave() {
 			if !results[0].Landed() {
 				spell.IssueRefund(sim)
 			}
-
-			if warrior.curQueueAura != nil {
-				warrior.curQueueAura.Deactivate(sim)
-			}
 		},
 	})
-	warrior.makeQueueSpellsAndAura(spell)
-}
-
-func (warrior *Warrior) makeQueueSpellsAndAura(srcSpell *core.Spell) {
-	queueAura := warrior.RegisterAura(core.Aura{
-		Label:    "HS/Cleave Queue Aura-" + srcSpell.ActionID.String(),
-		ActionID: srcSpell.ActionID.WithTag(1),
-		Duration: core.NeverExpires,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			if warrior.curQueueAura != nil {
-				warrior.curQueueAura.Deactivate(sim)
-			}
-			warrior.curQueueAura = aura
-			warrior.curQueuedAutoSpell = srcSpell
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.curQueueAura = nil
-			warrior.curQueuedAutoSpell = nil
-		},
-	})
-
-	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:    srcSpell.ActionID.WithTag(1),
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: srcSpell.DefenseType,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagNoMetrics,
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-		},
-
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return !queueAura.IsActive() && warrior.CurrentRage() >= srcSpell.Cost.GetCurrentCost()
-		},
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			queueAura.Activate(sim)
-		},
-	})
-}
-
-func (warrior *Warrior) TryHSOrCleave(sim *core.Simulation, mhSwingSpell *core.Spell) *core.Spell {
-	if !warrior.curQueueAura.IsActive() || (mhSwingSpell.ActionID.Tag != 1 && mhSwingSpell.ActionID.Tag != 1290261) {
-		return mhSwingSpell
-	}
-
-	if !warrior.curQueuedAutoSpell.CanCast(sim, warrior.CurrentTarget) {
-		warrior.curQueueAura.Deactivate(sim)
-		return mhSwingSpell
-	}
-
-	return warrior.curQueuedAutoSpell
 }

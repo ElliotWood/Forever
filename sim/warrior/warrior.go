@@ -115,16 +115,14 @@ type Warrior struct {
 	MortalStrike                    *core.Spell
 	SweepingStrikesNormalizedAttack *core.Spell
 
-	HeroicStrike       *core.Spell
-	Cleave             *core.Spell
-	MockingBlow        *core.Spell
-	ChallengingShout   *core.Spell
-	IntimidatingShout  *core.Spell
-	Disarm             *core.Spell
-	Taunt              *core.Spell
-	VictoryRush        *core.Spell
-	curQueueAura       *core.Aura
-	curQueuedAutoSpell *core.Spell
+	HeroicStrike      *core.Spell
+	Cleave            *core.Spell
+	MockingBlow       *core.Spell
+	ChallengingShout  *core.Spell
+	IntimidatingShout *core.Spell
+	Disarm            *core.Spell
+	Taunt             *core.Spell
+	VictoryRush       *core.Spell
 
 	EnrageAura *core.Aura
 
@@ -182,9 +180,6 @@ func (warrior *Warrior) Initialize() {
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {
-	warrior.curQueueAura = nil
-	warrior.curQueuedAutoSpell = nil
-
 	switch warrior.DefaultStance {
 	case proto.WarriorStance_WarriorStanceBattle:
 		warrior.Stance = BattleStance
@@ -225,7 +220,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 		MainHand:       warrior.WeaponFromMainHand(),
 		OffHand:        warrior.WeaponFromOffHand(),
 		AutoSwingMelee: true,
-		ReplaceMHSwing: warrior.TryHSOrCleave,
 	})
 
 	warrior.PseudoStats.CanParry = true
