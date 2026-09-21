@@ -175,6 +175,27 @@ func TestProcTriggerOverriddenProcsPerMinute(t *testing.T) {
 	})
 }
 
+// The manager measures the mask the trigger ends on. An option that blanks it - the weapon-proc
+// shape, where the weapon says which hits count - leaves nothing to measure, so the row's own rate
+// cannot stand in for one.
+func TestProcTriggerRateFollowsTheOptionsMask(t *testing.T) {
+	withProcRows(t)
+
+	requirePanic(t, "no proc mask", func() {
+		ProcTrigger(testCharacter(), Find(2400), noopHandler, func(_ *core.Character, trigger *core.ProcTrigger) {
+			trigger.ProcMask = core.ProcMaskUnknown
+		})
+	})
+
+	// Narrowing the mask is not blanking it: the rate is still measurable, on the narrower mask.
+	narrowed := ProcTrigger(testCharacter(), Find(2400), noopHandler, func(_ *core.Character, trigger *core.ProcTrigger) {
+		trigger.ProcMask = core.ProcMaskMeleeMH
+	})
+	if narrowed.DPM == nil {
+		t.Error("narrowing the mask lost the proc manager")
+	}
+}
+
 // A weapon proc's mask comes from the weapon rather than from the row, so the caller supplies the
 // manager and the rate check is satisfied by it.
 func TestProcTriggerMasklessRateFromTheCaller(t *testing.T) {

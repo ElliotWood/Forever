@@ -43,7 +43,7 @@ func ProcTrigger(character *core.Character, s *Spell, handler core.ProcHandler, 
 		trigger.SpellFlagsExclude |= core.SpellFlagSuppressWeaponProcs
 	}
 
-	fillProcRate(character, s, &trigger)
+	fillProcChance(s, &trigger)
 
 	// The row first and the caller's options on top, so an option sees the mask the row decoded to
 	// and can override a rate the row states wrongly or not at all.
@@ -51,7 +51,7 @@ func ProcTrigger(character *core.Character, s *Spell, handler core.ProcHandler, 
 		opt(character, &trigger)
 	}
 
-	requireProcRate(s, &trigger)
+	settleProcRate(character, s, &trigger)
 
 	return trigger
 }
@@ -118,17 +118,14 @@ func procClassFlags(s *Spell) core.ClassFlags {
 	return core.ClassFlags{}
 }
 
-// The rate the row states, by the source that says where it is stated. The ProcChance column is the
+// The roll the row states, by the source that says where it is stated. The ProcChance column is the
 // roll only under ProcChanceColumn; under the others it means nothing, which is why reading it
 // directly is the bug ProcChanceSource exists to prevent.
-func fillProcRate(character *core.Character, s *Spell, trigger *core.ProcTrigger) {
-	// An override-supplied procs-per-minute rate wins over every column: the rows that carry one
-	// are the rows whose stated chance the tooltip contradicts. It needs a mask to measure hits
-	// against, and a row stating none leaves the manager to whoever knows what carries the proc.
+//
+// A row whose rate is procs per minute states no roll: that rate is a manager, and settleProcRate
+// builds it once the options have had their say about the mask it measures hits on.
+func fillProcChance(s *Spell, trigger *core.ProcTrigger) {
 	if s.RPPM > 0 {
-		if trigger.ProcMask != core.ProcMaskUnknown {
-			trigger.DPM = character.NewLegacyPPMManager(float64(s.RPPM), trigger.ProcMask)
-		}
 		return
 	}
 
@@ -145,16 +142,29 @@ func fillProcRate(character *core.Character, s *Spell, trigger *core.ProcTrigger
 	}
 }
 
-// A trigger with neither a chance nor a manager fires on every qualifying hit, which is never what a
-// row with no stated rate means.
-func requireProcRate(s *Spell, trigger *core.ProcTrigger) {
+// The rate the trigger ends up with. An override-supplied procs-per-minute rate wins over every
+// column - the rows that carry one are the rows whose stated chance the tooltip contradicts - but it
+// is measured against the mask the trigger *ends* on rather than the one the row decoded to: an
+// option that narrows or blanks the mask, as a weapon proc's shape does, would otherwise be handed a
+// manager counting hits the listener no longer hears.
+//
+// A trigger left with neither a chance nor a manager fires on every qualifying hit, which is never
+// what a row with no stated rate means.
+func settleProcRate(character *core.Character, s *Spell, trigger *core.ProcTrigger) {
 	if trigger.ProcChance != 0 || trigger.DPM != nil {
 		return
 	}
 
 	if s.RPPM > 0 {
-		panic(fmt.Sprintf("spelldata: spell %d (%s) states %g procs per minute but no proc mask to measure them on; pass PPM() or a manager bound to what carries it",
-			s.ID, s.Name, s.RPPM))
+		// A mask of nothing is the weapon-proc shape, where which hits count is the weapon's to say
+		// and the manager has to be bound to it by whoever knows which weapon that is.
+		if trigger.ProcMask == core.ProcMaskUnknown {
+			panic(fmt.Sprintf("spelldata: spell %d (%s) states %g procs per minute but no proc mask to measure them on; pass a manager bound to what carries it",
+				s.ID, s.Name, s.RPPM))
+		}
+
+		trigger.DPM = character.NewLegacyPPMManager(float64(s.RPPM), trigger.ProcMask)
+		return
 	}
 
 	panic(fmt.Sprintf("spelldata: spell %d (%s) states no proc chance; pass PPM()", s.ID, s.Name))
