@@ -50,8 +50,8 @@ same columns; nothing about it is hand-typed. Beside cost, cast time, cooldown a
 `Duration` (the aura or effect it leaves), `ProcCharges` (how many times that aura acts) and
 `MaxTargets` (an area effect's cap), each zero where the client states none, and `RefundsOnMiss`, the
 Discount Power On Miss attribute; `row.MissRefund()` turns it into the 0.8 a `RageCostOptions.Refund`
-takes. `PeriodicCanCrit` is the Periodic Can Crit attribute: a dot whose row carries it ticks with
-`spell.OutcomeTickPhysicalCrit` (or the magic hit-and-crit outcome) instead of `dot.OutcomeTick`.
+takes. `PeriodicCanCrit` is the Periodic Can Crit attribute; `shared.PeriodicTickOutcome(row, dot)` picks the tick
+outcome it and the row's defense type call for, so a dot's `OnTick` never names one itself.
 
 A family whose ranks trigger another spell, or whose tooltip reads a number off one, has a second
 table beside it: `spellData.EnrageTriggered` holds the buff 12880 that Enrage's `$12880d` names,
