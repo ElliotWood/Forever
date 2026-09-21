@@ -13,8 +13,8 @@ import (
 // What the committed spells_auto_gen.go holds today. The bounds are wide enough that adding a class
 // or a patch's spells does not fail the gate, and the exact numbers are here so drift is visible.
 const (
-	generatedSpellCount  = 6981
-	generatedEffectCount = 9581
+	generatedSpellCount  = 7035
+	generatedEffectCount = 9636
 )
 
 // The client's EffectIndex has gaps: 46 of the store's rows state an index that is not the
@@ -74,15 +74,16 @@ func TestGeneratedStoreShape(t *testing.T) {
 	}
 
 	if effects != generatedEffectCount {
-		t.Errorf("the store holds %d effects, the snapshot pins %d", effects, generatedEffectCount)
+		t.Errorf("the store holds %d effects, the snapshot pins %d - update the constant if the "+
+			"regeneration is the intended one", effects, generatedEffectCount)
 	}
 	if effects < 6000 || effects > 16000 {
 		t.Errorf("the store holds %d effects, which is outside the [6000, 16000] a whole store has",
 			effects)
 	}
 	if gapped != gappedIndexRows {
-		t.Errorf("%d rows state an EffectIndex that is not its position, the snapshot pins %d",
-			gapped, gappedIndexRows)
+		t.Errorf("%d rows state an EffectIndex that is not its position, the snapshot pins %d - "+
+			"update the constant if the regeneration is the intended one", gapped, gappedIndexRows)
 	}
 }
 
