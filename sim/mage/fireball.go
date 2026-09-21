@@ -10,6 +10,7 @@ import (
 const FireballRanks = 12
 
 var FireballSpellId = [FireballRanks + 1]int32{0, 133, 143, 145, 3140, 8400, 8401, 8402, 10148, 10149, 10150, 10151, 25306}
+
 // Beta client 1.60.1.69893. Damage is the client's base plus its per level growth up to the rank's
 // max level (capped at 60), the same way the Classic numbers were read. Forever lowered every rank
 // from 2 up and dropped the downranking penalty from the coefficients. The dot is the client's per
@@ -50,13 +51,14 @@ func (mage *Mage) newFireballSpellConfig(rank int) core.SpellConfig {
 	actionID := core.ActionID{SpellID: spellId}
 
 	return core.SpellConfig{
-		ActionID:     actionID,
-		SpellCode:    SpellCode_MageFireball,
-		SpellSchool:  core.SpellSchoolFire,
-		DefenseType:  core.DefenseTypeMagic,
-		ProcMask:     core.ProcMaskSpellDamage,
-		Flags:        core.SpellFlagAPL | SpellFlagMage,
-		MissileSpeed: 24,
+		ActionID:       actionID,
+		SpellCode:      SpellCode_MageFireball,
+		ClassSpellMask: SpellMaskFireball,
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | SpellFlagMage,
+		MissileSpeed:   24,
 
 		RequiredLevel: level,
 		Rank:          rank,

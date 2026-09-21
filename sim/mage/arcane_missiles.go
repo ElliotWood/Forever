@@ -10,6 +10,7 @@ import (
 const ArcaneMissilesRanks = 8
 
 var ArcaneMissilesSpellId = [ArcaneMissilesRanks + 1]int32{0, 5143, 5144, 5145, 8416, 8417, 10211, 10212, 25345}
+
 // Beta client 1.60.1.69893, read off the missile each rank triggers (7268 ... 25346): less damage per
 // missile, but every rank scales at .286 per missile against Classic's .24.
 var ArcaneMissilesBaseTickDamage = [ArcaneMissilesRanks + 1]float64{0, 26, 33, 46, 69, 98, 134, 175, 209}
@@ -49,12 +50,13 @@ func (mage *Mage) getArcaneMissilesSpellConfig(rank int) core.SpellConfig {
 	mage.ArcaneMissilesTickSpell[rank] = tickSpell
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_MageArcaneMissiles,
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellSchool: core.SpellSchoolArcane,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       SpellFlagMage | core.SpellFlagAPL | core.SpellFlagChanneled | core.SpellFlagNoMetrics,
+		SpellCode:      SpellCode_MageArcaneMissiles,
+		ClassSpellMask: SpellMaskArcaneMissiles,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolArcane,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagMage | core.SpellFlagAPL | core.SpellFlagChanneled | core.SpellFlagNoMetrics,
 
 		RequiredLevel: level,
 		Rank:          rank,
@@ -111,13 +113,14 @@ func (mage *Mage) getArcaneMissilesTickSpell(rank int) *core.Spell {
 	spellCoeff := ArcaneMissilesSpellCoeff[rank]
 
 	return mage.RegisterSpell(core.SpellConfig{
-		SpellCode:    SpellCode_MageArcaneMissilesTick,
-		ActionID:     core.ActionID{SpellID: spellId}.WithTag(1),
-		SpellSchool:  core.SpellSchoolArcane,
-		DefenseType:  core.DefenseTypeMagic,
-		ProcMask:     core.ProcMaskSpellDamage,
-		Flags:        SpellFlagMage,
-		MissileSpeed: 20,
+		SpellCode:      SpellCode_MageArcaneMissilesTick,
+		ClassSpellMask: SpellMaskArcaneMissilesTick,
+		ActionID:       core.ActionID{SpellID: spellId}.WithTag(1),
+		SpellSchool:    core.SpellSchoolArcane,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          SpellFlagMage,
+		MissileSpeed:   20,
 
 		Rank: 1,
 

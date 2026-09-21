@@ -9,6 +9,7 @@ import (
 const FireBlastRanks = 7
 
 var FireBlastSpellId = [FireBlastRanks + 1]int32{0, 2136, 2137, 2138, 8412, 8413, 10197, 10199}
+
 // Beta client 1.60.1.69893.
 var FireBlastBaseDamage = [FireBlastRanks + 1][]float64{{0}, {27, 35}, {57, 69}, {97, 117}, {157, 187}, {226, 268}, {316, 372}, {417, 489}}
 var FireBlastSpellCoeff = [FireBlastRanks + 1]float64{0, .429, .429, .429, .429, .429, .429, .429}
@@ -42,12 +43,13 @@ func (mage *Mage) newFireBlastSpellConfig(rank int, cdTimer *core.Timer) core.Sp
 	flags := SpellFlagMage | core.SpellFlagAPL
 
 	return core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellCode:   SpellCode_MageFireBlast,
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       flags,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellCode:      SpellCode_MageFireBlast,
+		ClassSpellMask: SpellMaskFireBlast,
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          flags,
 
 		Rank:          rank,
 		RequiredLevel: level,

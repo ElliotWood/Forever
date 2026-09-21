@@ -9,6 +9,7 @@ import (
 const ScorchRanks = 7
 
 var ScorchSpellId = [ScorchRanks + 1]int32{0, 2948, 8444, 8445, 8446, 10205, 10206, 10207}
+
 // Beta client 1.60.1.69893, about 30% below Classic at every rank.
 var ScorchBaseDamage = [ScorchRanks + 1][]float64{{0}, {38, 47}, {54, 64}, {67, 79}, {89, 106}, {111, 132}, {143, 169}, {166, 197}}
 var ScorchManaCost = [ScorchRanks + 1]float64{0, 50, 65, 80, 100, 115, 135, 150}
@@ -37,12 +38,13 @@ func (mage *Mage) getScorchConfig(rank int) core.SpellConfig {
 	debuffProcChance := []float64{0, .33, .66, 1}[mage.Talents.ImprovedScorch]
 
 	return core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellCode:   SpellCode_MageScorch,
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       core.SpellFlagAPL | SpellFlagMage,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellCode:      SpellCode_MageScorch,
+		ClassSpellMask: SpellMaskScorch,
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | SpellFlagMage,
 
 		RequiredLevel: level,
 		Rank:          rank,
