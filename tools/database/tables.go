@@ -1319,22 +1319,10 @@ ORDER BY tn.TraitTreeID, sla.ClassMask
 	return live, nil
 }
 
-// repairTraitCoord undoes the 10x transcription typos the client data carries
-// on a handful of nodes (a PosY of 39300 where every other node in the tree
-// sits between 2130 and 5730). A coordinate is only rewritten when it is off
-// the tree's lattice while a tenth of it lands back on it.
-// repairTraitCoord rescues a node parked 10x off canvas, which the beta data does by
-// authoring accident: 1091/104982 PosX 102800, 1091/105003 PosY 39300, 1114/105865
-// PosY 21300. It only fires when the value is off the tree's lattice AND a tenth of it
-// lands back on it, so it cannot move a node that was placed deliberately.
-//
-// TODO: two of those three (104982 Lightning Reflexes, 105865 Holy Specialization) turned
-// out to be retired duplicates whose live twins were re-added at new positions, and are
-// dropped by the dedupe downstream. 1091/105003 "Improved Serpent Sting" has NO twin, so
-// it is either a live talent with a typo -- the reading taken here -- or a retired one
-// being revived. The database cannot distinguish the two. If it should be dropped
-// instead, discard candidates whose residual exceeds 300 and delete this function; note
-// that renumbers every hunter proto field after it.
+// repairTraitCoord reports a node parked 10x off canvas, which the beta data does on retired
+// copies: 1091/104982 PosX 102800, 1091/105003 PosY 39300, 1114/105865 PosY 21300. It only fires
+// when the value is off the tree's lattice AND a tenth of it lands back on it, so it cannot flag a
+// node that was placed deliberately. The caller drops such nodes.
 func repairTraitCoord(value int, others []int) (int, bool) {
 	nearLattice := func(v int) bool {
 		for _, o := range others {
@@ -1549,16 +1537,24 @@ ORDER BY x.TraitNodeID, sl.DisplayName_lang
 			xs = append(xs, treeNodes[i].PosX)
 			ys = append(ys, treeNodes[i].PosY)
 		}
+		// A node parked 10x off the canvas is a retired copy the client never deleted, not a typo
+		// on a live talent: all three in the beta data are. 1091/104982 Lightning Reflexes and
+		// 1114/105865 Holy Specialization have live twins on the same spell. 1091/105003 Improved
+		// Serpent Sting (spell 19464) has none, but its effect lives on in Improved Stings
+		// (142622, spell 1310661), and it is missing from the point-spent groups 12720/12721 that
+		// every other tier-4 Marksmanship node belongs to (TraitNodeGroupXTraitNode, 1.60.1.69913),
+		// so points in it could not count toward the tiers below. Dropped, not repaired.
+		live := treeNodes[:0]
 		for i := range treeNodes {
-			if x, fixed := repairTraitCoord(treeNodes[i].PosX, xs); fixed {
-				fmt.Fprintf(os.Stderr, "[traits] tree %d node %d: repaired PosX %d -> %d\n", treeID, treeNodes[i].NodeID, treeNodes[i].PosX, x)
-				treeNodes[i].PosX = x
+			_, offX := repairTraitCoord(treeNodes[i].PosX, xs)
+			_, offY := repairTraitCoord(treeNodes[i].PosY, ys)
+			if offX || offY {
+				fmt.Fprintf(os.Stderr, "[traits] tree %d node %d: skipped, parked off canvas at %d/%d\n", treeID, treeNodes[i].NodeID, treeNodes[i].PosX, treeNodes[i].PosY)
+				continue
 			}
-			if y, fixed := repairTraitCoord(treeNodes[i].PosY, ys); fixed {
-				fmt.Fprintf(os.Stderr, "[traits] tree %d node %d: repaired PosY %d -> %d\n", treeID, treeNodes[i].NodeID, treeNodes[i].PosY, y)
-				treeNodes[i].PosY = y
-			}
+			live = append(live, treeNodes[i])
 		}
+		treeNodes = live
 
 		// Split the tree into the spec blocks that sit next to each other.
 		distinctX := []int{}

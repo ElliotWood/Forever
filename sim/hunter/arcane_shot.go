@@ -1,41 +1,43 @@
 package hunter
 
-var arcaneShotRank = spellData.ArcaneShot.HighestRank()
+import (
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented.
-func (hunter *Hunter) registerArcaneShotSpell() {
-	panic("To be implemented")
+// The beta client carries no spell power coefficient on Arcane Shot at all, so Classic's stand.
+var arcaneShotCoefficients = [9]float64{0, .204, .3, .429, .429, .429, .429, .429, .429}
 
-	// The TBC implementation, kept for the port:
-	// hunter.ArcaneShot = hunter.RegisterRangedSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: arcaneShotRank.SpellID},
-	// 	SpellSchool:    arcaneShotRank.SpellSchool,
-	// 	DefenseType:    arcaneShotRank.DefenseType,
-	// 	ClassSpellMask: HunterSpellArcaneShot,
-	// 	ProcMask:       core.ProcMaskRangedSpecial,
-	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: arcaneShotRank.Cost,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		CD: core.Cooldown{
-	// 			Timer:    hunter.NewTimer(),
-	// 			Duration: arcaneShotRank.Cooldown,
-	// 		},
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := spell.RangedAttackPower(target)*0.15 +
-	// 			hunter.talonOfAlarBonus() +
-	// 			arcaneShotRank.Direct.Damage(sim)
-	//
-	// 		result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeRangedHitAndCrit)
-	//
-	// 		spell.WaitTravelTime(sim, func(sim *core.Simulation) {
-	// 			spell.DealDamage(sim, result)
-	// 		})
-	// 	},
-	// })
+func (hunter *Hunter) registerArcaneShotSpell(timer *core.Timer) {
+	rank := spellData.ArcaneShot.HighestRank()
+	baseDamage := rank.Direct.Damage
+
+	hunter.ArcaneShot = hunter.RegisterRangedSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.SpellID},
+		SpellSchool:    rank.SpellSchool,
+		DefenseType:    rank.DefenseType,
+		ClassSpellMask: HunterSpellArcaneShot,
+		ProcMask:       core.ProcMaskRangedSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		MissileSpeed:   rank.MissileSpeed,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: rank.Cost,
+		},
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    timer,
+				Duration: rank.Cooldown,
+			},
+		},
+
+		BonusCoefficient: arcaneShotCoefficients[rank.Rank],
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcDamage(sim, target, baseDamage(sim), spell.OutcomeRangedHitAndCrit)
+
+			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
+				spell.DealDamage(sim, result)
+			})
+		},
+	})
 }

@@ -543,24 +543,38 @@
 				"no_pet": "No Pet",
 				"bat": "Bat",
 				"bear": "Bear",
+				"boar": "Boar",
+				"carrion_bird": "Carrion Bird",
 				"cat": "Cat",
 				"crab": "Crab",
+				"crocolisk": "Crocolisk",
+				"gorilla": "Gorilla",
+				"hyena": "Hyena",
 				"owl": "Owl",
 				"raptor": "Raptor",
-				"ravager": "Ravager",
+				"scorpid": "Scorpid",
+				"spider": "Spider",
+				"tallstrider": "Tallstrider",
+				"turtle": "Turtle",
 				"wind_serpent": "Wind Serpent",
-				"dragonhawk": "Dragonhawk"
+				"wolf": "Wolf"
 			},
 			"ammo": {
 				"label": "Ammo",
 				"tooltip": "Ammo type",
 				"no_ammo": "No Ammo",
-				"timeless_arrow": "Timeless Arrow",
-				"mysterious_arrow": "Mysterious Arrow",
-				"adamantite_stinger": "Adamantite Stinger",
-				"halaani_razorshaft": "Halaani Razorshaft",
-				"blackflight_arrow": "Blackflight Arrow",
-				"wardens_arrow": "Warden's Arrow"
+				"razor_arrow": "Razor Arrow",
+				"solid_shot": "Solid Shot",
+				"jagged_arrow": "Jagged Arrow",
+				"accurate_slugs": "Accurate Slugs",
+				"mithril_gyro_shot": "Mithril Gyro-Shot",
+				"rockshard_pellets": "Rockshard Pellets",
+				"ice_threaded_arrow": "Ice Threaded Arrow",
+				"thorium_headed_arrow": "Thorium Headed Arrow",
+				"doomshot": "Doomshot",
+				"ice_threaded_bullet": "Ice Threaded Bullet",
+				"thorium_shells": "Thorium Shells",
+				"miniature_cannon_balls": "Miniature Cannon Balls"
 			},
 			"quiver": {
 				"label": "Quiver",
@@ -666,6 +680,10 @@
 			"warlock_assigned_curse": {
 				"title": "Assigned Curse",
 				"description": "The selected curse will prevent the selected external debuff from being cast."
+			},
+			"pet_attack_speed": {
+				"label": "Pet Attack Speed",
+				"tooltip": "The tamed pet's weapon speed, which sets both its swing timer and its damage range."
 			}
 		},
 		"consumables": {

@@ -8,33 +8,31 @@ import (
 
 type PetAbilityType int
 
+// Pet AI doesn't use abilities immediately, so model this with a 1.6s GCD.
+const PetGCD = time.Millisecond * 1600
+
 const (
 	Unknown PetAbilityType = iota
 
 	Bite
 	Claw
-	Gore
 	LightningBreath
 	Screech
-	FireBreath
+	ScorpidPoison
 )
 
 func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 	switch abilityType {
-
 	case Bite:
 		return hp.newBite()
 	case Claw:
 		return hp.newClaw()
-	case Gore:
-		return hp.newGore()
 	case LightningBreath:
 		return hp.newLightningBreath()
 	case Screech:
 		return hp.newScreech()
-	case FireBreath:
-		return hp.newFireBreath()
-
+	case ScorpidPoison:
+		return hp.newScorpidPoison()
 	case Unknown:
 		return nil
 	default:
@@ -44,219 +42,134 @@ func (hp *HunterPet) NewPetAbility(abilityType PetAbilityType) *core.Spell {
 
 func (hp *HunterPet) newBite() *core.Spell {
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 27050},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics,
-		MaxRange:    core.MaxMeleeRange,
+		ActionID:       core.ActionID{SpellID: 17261},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
+		MaxRange:       core.MaxMeleeRange,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 35,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: PetGCD,
 			},
 			CD: core.Cooldown{
 				Timer:    hp.NewTimer(),
-				Duration: time.Second * 10,
+				Duration: 10 * time.Second,
 			},
 			IgnoreHaste: true,
 		},
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
+		BonusCoefficient: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return hp.IsEnabled()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := hp.CalcAndRollDamageRange(sim, 108, 132)
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+			spell.CalcAndDealDamage(sim, target, sim.Roll(81, 91), spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})
 }
 
 func (hp *HunterPet) newClaw() *core.Spell {
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 27049},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics,
-		MaxRange:    core.MaxMeleeRange,
+		ActionID:       core.ActionID{SpellID: 3009},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
+		MaxRange:       core.MaxMeleeRange,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 25,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: PetGCD,
 			},
 			IgnoreHaste: true,
 		},
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
+		BonusCoefficient: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return hp.IsEnabled()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := hp.CalcAndRollDamageRange(sim, 54, 76)
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+			spell.CalcAndDealDamage(sim, target, sim.Roll(43, 59), spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})
 }
 
-func (hp *HunterPet) newGore() *core.Spell {
-	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 35298},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics,
-		MaxRange:    core.MaxMeleeRange,
-
-		FocusCost: core.FocusCostOptions{
-			Cost: 25,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-		},
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return hp.IsEnabled()
-		},
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := hp.CalcAndRollDamageRange(sim, 37, 61)
-			if sim.Proc(0.5, "Gore") {
-				baseDamage *= 2
-			}
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-		},
-	})
-}
-
+// Beta client: every rank lower than Classic's, and no more growth per level. Rank 6 is 86-98.
 func (hp *HunterPet) newLightningBreath() *core.Spell {
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 25012},
-		SpellSchool: core.SpellSchoolNature,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		MaxRange:    20,
+		ActionID:       core.ActionID{SpellID: 25012},
+		SpellSchool:    core.SpellSchoolNature,
+		DefenseType:    core.DefenseTypeMagic,
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskSpellDamage,
+		MaxRange:       20,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 50,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: PetGCD,
 			},
 			IgnoreHaste: true,
 		},
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		BonusCoefficient: 0.05,
+		BonusCoefficient: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return hp.IsEnabled()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := hp.CalcAndRollDamageRange(sim, 101, 116)
-			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
+			spell.CalcAndDealDamage(sim, target, sim.Roll(86, 98), spell.OutcomeMagicHitAndCrit)
 		},
 	})
 }
 
-func (hp *HunterPet) newFireBreath() *core.Spell {
-	baseDmg := 43.5 // 37 + 0.65 * (pet level - spell level)
-
-	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 35323},
-		SpellSchool: core.SpellSchoolFire,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		MaxRange:    10,
-
-		FocusCost: core.FocusCostOptions{
-			Cost: 50,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			CD: core.Cooldown{
-				Timer:    hp.NewTimer(),
-				Duration: time.Second * 10,
-			},
-			IgnoreHaste: true,
-		},
-
-		Dot: core.DotConfig{
-			Aura: core.Aura{
-				Label: "Fire Breath",
-			},
-
-			NumberOfTicks:    2,
-			TickLength:       time.Second * 1,
-			IsAOE:            true,
-			BonusCoefficient: 0.05,
-
-			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.Snapshot(target, baseDmg)
-			},
-			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.Spell.CalcAndDealPeriodicAoeDamage(sim, baseDmg, dot.OutcomeTick)
-			},
-		},
-
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
-		BonusCoefficient: 0.05,
-
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return hp.IsEnabled()
-		},
-
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			dot := spell.AOEDot()
-			dot.Apply(sim)
-			dot.TickOnce(sim)
-		},
-	})
-}
-
+// Demoralizing Screech in the beta client: new damage, and a 10 sec cooldown Classic did not have.
+// The attack power reduction it also applies is left out.
 func (hp *HunterPet) newScreech() *core.Spell {
-	auraArray := hp.NewEnemyAuraArray(core.ScreechAura)
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 27051},
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics,
-		MaxRange:    core.MaxMeleeRange,
+		ActionID:       core.ActionID{SpellID: 24582},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskMeleeSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
+		MaxRange:       core.MaxMeleeRange,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 20,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: PetGCD,
 			},
 			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    hp.NewTimer(),
+				Duration: time.Second * 10,
+			},
 		},
 
 		DamageMultiplier: 1,
@@ -267,58 +180,79 @@ func (hp *HunterPet) newScreech() *core.Spell {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := hp.CalcAndRollDamageRange(sim, 33, 61)
-			result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
-
-			if result.Landed() {
-				aura := auraArray.Get(target)
-				aura.Activate(sim)
-			}
-
-			spell.DealDamage(sim, result)
+			spell.CalcAndDealDamage(sim, target, sim.Roll(24, 42), spell.OutcomeMeleeSpecialHitAndCrit)
 		},
-
-		RelatedAuraArrays: auraArray.ToMap(),
 	})
 }
 
-// TODO: To be implemented.
-func (hp *HunterPet) registerDash() {
-	panic("To be implemented")
+// Beta client: 5 a tick at rank 4, down from 8.
+func (hp *HunterPet) newScorpidPoison() *core.Spell {
+	const baseDamageTick = 5.0
 
-	// The TBC implementation, kept for the port:
-	// actionID := core.ActionID{SpellID: 23110}
-	//
-	// dashAura := hp.RegisterAura(core.Aura{
-	// 	Label:    "Dash",
-	// 	ActionID: actionID,
-	// 	Duration: time.Second * 15,
-	// })
-	// dashAura.NewActiveMovementSpeedEffect(0.8)
-	//
-	// hp.Dash = hp.RegisterSpell(core.SpellConfig{
-	// 	ActionID: actionID,
-	//
-	// 	FocusCost: core.FocusCostOptions{
-	// 		Cost: 20,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: core.GCDDefault,
-	// 		},
-	// 		CD: core.Cooldown{
-	// 			Timer:    hp.NewTimer(),
-	// 			Duration: time.Second * 30,
-	// 		},
-	// 	},
-	//
-	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-	// 		return hp.IsEnabled()
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		dashAura.Activate(sim)
-	// 	},
-	// })
+	return hp.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: 24587},
+		SpellSchool:    core.SpellSchoolNature,
+		DefenseType:    core.DefenseTypeMelee,
+		ClassSpellMask: HunterPetDamage,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagPassiveSpell | core.SpellFlagPoison,
+		MaxRange:       core.MaxMeleeRange,
+
+		FocusCost: core.FocusCostOptions{
+			Cost: 30,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: PetGCD,
+			},
+			IgnoreHaste: true,
+			CD: core.Cooldown{
+				Timer:    hp.NewTimer(),
+				Duration: time.Second * 4,
+			},
+		},
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		Dot: core.DotConfig{
+			Aura: core.Aura{
+				Label:     "Scorpid Poison",
+				MaxStacks: 5,
+				Duration:  time.Second * 10,
+			},
+			NumberOfTicks: 5,
+			TickLength:    time.Second * 2,
+
+			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				// Only the first stack snapshots the multiplier.
+				if dot.GetStacks() <= 1 {
+					dot.SnapshotAttackerMultiplier = dot.Spell.AttackerDamageMultiplier(dot.Spell.Unit.AttackTables[target.Index], true)
+					dot.SnapshotBaseDamage = 0
+				}
+				dot.SnapshotBaseDamage += baseDamageTick
+			},
+			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+			},
+		},
+
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return hp.IsEnabled()
+		},
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcAndDealOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
+			if !result.Landed() {
+				return
+			}
+
+			dot := spell.Dot(target)
+			dot.Apply(sim)
+			if dot.GetStacks() < dot.MaxStacks {
+				dot.AddStack(sim)
+				dot.TakeSnapshot(sim)
+			}
+		},
+	})
 }
