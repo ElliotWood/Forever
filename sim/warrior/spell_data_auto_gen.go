@@ -109,6 +109,7 @@ type generatedSpellData struct {
 	Recklessness                    shared.SpellDataTable
 	Rend                            shared.SpellDataTable
 	Retaliation                     shared.SpellDataTable
+	RetaliationTriggered            shared.SpellDataTable
 	Revenge                         shared.SpellDataTable
 	ShieldBash                      shared.SpellDataTable
 	ShieldBlock                     shared.SpellDataTable
@@ -574,6 +575,9 @@ var spellData = generatedSpellData{
 	},
 	Retaliation: shared.SpellDataTable{
 		{Rank: 1, SpellID: 20230, GCD: 1500 * time.Millisecond, Cooldown: 900000 * time.Millisecond, Duration: 15000 * time.Millisecond, ProcChance: 100, ProcCharges: 30, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 0}}},
+	},
+	RetaliationTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 20240, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_WEAPON_DAMAGE_NOSCHOOL, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 0, Coef: 1}},
 	},
 	Revenge: shared.SpellDataTable{
 		{Rank: 1, SpellID: 6572, Cost: 5, GCD: 1500 * time.Millisecond, Cooldown: 5000 * time.Millisecond, MaxRange: 5, RefundsOnMiss: true, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 22}}, Direct: shared.SpellDataFlat{Value: 22, Coef: 1}},
