@@ -9,6 +9,7 @@ hand-transcribed literals.
 - [Reaching a single effect](#reaching-a-single-effect)
 - [A tick the client keeps on another spell](#a-tick-the-client-keeps-on-another-spell)
 - [A number the client keeps on the judgement](#a-number-the-client-keeps-on-the-judgement)
+- [A number the client keeps on the spell the rank fires](#a-number-the-client-keeps-on-the-spell-the-rank-fires)
 - [Talents](#talents)
 - [Worked examples](#worked-examples)
 - [Attack power](#attack-power)
@@ -218,6 +219,35 @@ proc's formula decides what a swing does with it. A named effect that is not a d
 spell's own - Seal of Fury and Seal of the Crusader both name their judgement's damage or aura - and
 stays with it. A flat value does not say where it came from the way a tick does, so a Seal of
 Righteousness row whose `Coef` is the seal's own 0.1, or 0, is one where the reference did not resolve.
+
+## A number the client keeps on the spell the rank fires
+
+Seal of Fury keeps its per-hit damage on the proc its aura dummy triggers. Rank 7's effect 0 is a
+dummy at 1607 gaining 42 a level - Seal of Righteousness' number, left from when the seal was a copy
+of it - whose `EffectTriggerSpell` is 20418, and the tooltip renders the hit off that spell:
+`$20418s1 Holy damage`. 20418's effect 0 is school damage at 35 with a 0.1 coefficient; the seal's
+own dummy carries 0.09 on ranks 1-6, 0.9 on rank 4 and nothing on rank 7. Before the generator
+followed the trigger, the fallback took the dummy, and rank 7 generated at 1691 with `Coef: 0`.
+
+A reference into a spell one of the rank's own effects triggers is followed to the named effect
+whatever its shape, and the effect files by that shape: Seal of Fury's damage lands in `Direct`,
+Seal of Light's heal in `Heal`, Seal of Wisdom's mana in `Energize`. Before this, Seal of Light and
+Seal of Wisdom generated with the judgement's spell ID in `Direct`, read off the pointer dummy by the
+last fallback.
+
+```go
+d := spellData.SealOfFury.BySpellID(20423).Direct.(shared.SpellDataFlat)
+d.Value    // 35, the proc's school damage
+d.Coef     // 0.1, which only the proc states
+```
+
+A flat value does not name its source the way a tick does; the proc's spell ID is on the
+`SealOfFuryTriggered` table beside it.
+
+The trigger is read off every effect, not the dummy alone: rank 5 keeps it on the judgement pointer
+and rank 7 on the damage dummy. The same rule reaches Arcane Missiles' per-missile damage, Intercept's
+damage and the hunter pet abilities whose learn spell names the taught spell's number, so a rank that
+used to carry no value in a role may carry one now.
 
 ## Talents
 

@@ -55,6 +55,10 @@ type RankEffect struct {
 	AuraPeriod   int32
 	OwnerSpellID int32
 
+	// SpellEffect.EffectTriggerSpell: the spell this effect fires, which for a seal's aura dummy is
+	// the per-hit proc. Zero when it fires nothing.
+	TriggerSpell int32
+
 	// SpellLevels of the spell the effect belongs to, which is not always the rank's own: Blizzard
 	// rank 1's damage sits on 1279976, a level 20-25 spell gaining 0.1 a level, whatever spell 10 says.
 	SpellLevel int32
@@ -277,11 +281,22 @@ var descriptionValueRef = regexp.MustCompile(`\$(?:/\d+;)?(\d{4,7})[ms](\d)`)
 // A named damage or aura effect on the pointed spell is that spell's own - Seal of Fury and Seal of
 // the Crusader both name their judgement's - and stays with it.
 //
+// Seal of Fury keeps its per-hit damage on the spell its aura dummy fires. Rank 7's effect 0 is a
+// dummy at 1607 gaining 42 a level - Seal of Righteousness' number, left over from when the seal
+// was a copy of it - with EffectTriggerSpell 20418, and the description renders the hit off that
+// spell: "$20418s1 Holy damage", a school damage effect at 35 with the 0.1 coefficient the dummy
+// lacks (0.09 on ranks 1-6, none on rank 7). So a reference into a spell one of the rank's own
+// effects triggers is followed to the named effect whatever its shape, and it files by that shape:
+// the proc's damage is the seal's direct value. Rank 4's judgement pointer names the judgement as
+// its trigger too, so a spell the rank points at is read by the paragraph above first, and its
+// damage stays with it.
+//
 // Nil for a rank that is neither shape, which is everything outside the ground-effect families and
 // the seals.
 func ReferencedEffects(db *sql.DB, spell RankSpell) ([]RankEffect, error) {
 	var period int32
 	pointed := map[int32]bool{}
+	triggered := map[int32]bool{}
 	for _, e := range spell.Effects {
 		if IsPeriodicAura(e.Aura) {
 			return nil, nil
@@ -294,8 +309,13 @@ func ReferencedEffects(db *sql.DB, spell RankSpell) ([]RankEffect, error) {
 		if (e.Effect == dbc.E_DUMMY || e.Aura == dbc.A_DUMMY) && e.PointsPerLvl == 0 && e.BasePoints > 0 {
 			pointed[e.BasePoints] = true
 		}
+		// The client is not consistent about which effect carries the trigger - Seal of Fury rank 5
+		// keeps it on the judgement pointer, rank 7 on the damage dummy - so every effect is read.
+		if e.TriggerSpell > 0 {
+			triggered[e.TriggerSpell] = true
+		}
 	}
-	if period == 0 && (len(pointed) == 0 || HasValueEffect(spell.Effects)) {
+	if period == 0 && (len(pointed)+len(triggered) == 0 || HasValueEffect(spell.Effects)) {
 		return nil, nil
 	}
 
@@ -318,7 +338,10 @@ func ReferencedEffects(db *sql.DB, spell RankSpell) ([]RankEffect, error) {
 		}
 		seen[key] = true
 
+		// The effect type the reference must land on; anyShape for a triggered spell, whose named
+		// effect is taken as it is.
 		var want dbc.SpellEffectType
+		anyShape := false
 		switch {
 		case period > 0:
 			var sameName int
@@ -332,6 +355,8 @@ func ReferencedEffects(db *sql.DB, spell RankSpell) ([]RankEffect, error) {
 			want = dbc.E_SCHOOL_DAMAGE
 		case pointed[int32(id)]:
 			want = dbc.E_DUMMY
+		case triggered[int32(id)]:
+			anyShape = true
 		default:
 			continue
 		}
@@ -341,7 +366,7 @@ func ReferencedEffects(db *sql.DB, spell RankSpell) ([]RankEffect, error) {
 			return nil, err
 		}
 		for _, e := range effects {
-			if e.Index == key[1] && e.Effect == want {
+			if e.Index == key[1] && (anyShape || e.Effect == want) {
 				e.AuraPeriod = period
 				e.Named = true
 				out = append(out, e)
@@ -375,7 +400,7 @@ func RankEffectsOf(db *sql.DB, spellID int32) ([]RankEffect, error) {
 		-- onto the same value, so generated rank tables no longer carry a damage range.
 		SELECT EffectIndex, Effect, EffectAura, CAST(EffectBasePointsF AS INTEGER), 0,
 		       EffectRealPointsPerLevel, EffectBonusCoefficient, BonusCoefficientFromAP, EffectAuraPeriod,
-		       COALESCE(EffectMiscValue_0, 0)
+		       COALESCE(EffectMiscValue_0, 0), COALESCE(EffectTriggerSpell, 0)
 		FROM SpellEffect WHERE SpellID = ? ORDER BY EffectIndex`, spellID)
 	if err != nil {
 		return nil, err
@@ -390,7 +415,7 @@ func RankEffectsOf(db *sql.DB, spellID int32) ([]RankEffect, error) {
 	var out []RankEffect
 	for rows.Next() {
 		e := RankEffect{OwnerSpellID: spellID, SpellLevel: spellLevel, MaxLevel: maxLevel}
-		if err := rows.Scan(&e.Index, &e.Effect, &e.Aura, &e.BasePoints, &e.DieSides, &e.PointsPerLvl, &e.Coefficient, &e.APCoef, &e.AuraPeriod, &e.MiscValue); err != nil {
+		if err := rows.Scan(&e.Index, &e.Effect, &e.Aura, &e.BasePoints, &e.DieSides, &e.PointsPerLvl, &e.Coefficient, &e.APCoef, &e.AuraPeriod, &e.MiscValue, &e.TriggerSpell); err != nil {
 			return nil, err
 		}
 		out = append(out, e)
