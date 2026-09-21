@@ -9,10 +9,8 @@ import {
 	makeBooleanRaidBuffInput,
 	makeMultistateIndividualBuffInput,
 	makeMultistatePartyBuffInput,
-	makeQuadstateDebuffInput,
 	makeQuadstatePartyBuffInput,
 	makeTristateDebuffInput,
-	makeTristateIndividualBuffInput,
 	makeTristatePartyBuffInput,
 	makeTristateRaidBuffInput,
 } from '@ui-kit/icon_inputs';
@@ -100,24 +98,23 @@ export const BattleShout = makeTristatePartyBuffInput({
 	fieldName: 'battleShout',
 	label: 'Battle Shout',
 });
-export const DevotionAura = makeTristatePartyBuffInput({
-	actionId: ActionId.fromSpellId(27149),
-	impId: ActionId.fromSpellId(20142),
+export const DevotionAura = makeBooleanPartyBuffInput({
+	actionId: ActionId.fromSpellId(10293),
 	fieldName: 'devotionAura',
 	label: 'Devotion Aura',
 });
 export const FrostResistanceAura = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(27152),
+	actionId: ActionId.fromSpellId(19898),
 	fieldName: 'frostResistanceAura',
 	label: 'Frost Resistance Aura',
 });
 export const FireResistanceAura = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(27153),
+	actionId: ActionId.fromSpellId(19900),
 	fieldName: 'fireResistanceAura',
 	label: 'Fire Resistance Aura',
 });
 export const ShadowResistanceAura = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(27151),
+	actionId: ActionId.fromSpellId(19896),
 	fieldName: 'shadowResistanceAura',
 	label: 'Shadow Resistance Aura',
 });
@@ -175,23 +172,15 @@ export const MoonkinAura = makeTristatePartyBuffInput({
 	fieldName: 'moonkinAura',
 	label: 'Moonkin Aura',
 });
-export const RetributionAura = makeTristatePartyBuffInput({
-	actionId: ActionId.fromSpellId(27150),
-	impId: ActionId.fromSpellId(20092),
+export const RetributionAura = makeBooleanPartyBuffInput({
+	actionId: ActionId.fromSpellId(10301),
 	fieldName: 'retributionAura',
 	label: 'Retribution Aura',
 });
-export const ConcentrationAura = makeTristatePartyBuffInput({
+export const ConcentrationAura = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(19746),
-	impId: ActionId.fromSpellId(20256),
 	fieldName: 'concentrationAura',
 	label: 'Concentration Aura',
-});
-export const SanctityAura = makeTristatePartyBuffInput({
-	actionId: ActionId.fromSpellId(20218),
-	impId: ActionId.fromSpellId(31870),
-	fieldName: 'sanctityAura',
-	label: 'Sanctity Aura',
 });
 export const StrengthOfEarthTotem = makeQuadstatePartyBuffInput({
 	actionId: ActionId.fromSpellId(25528),
@@ -273,9 +262,8 @@ export const BlessingOfKings = makeBooleanIndividualBuffInput({
 	fieldName: 'blessingOfKings',
 	label: 'Blessing of Kings',
 });
-export const BlessingOfMight = makeTristateIndividualBuffInput({
-	actionId: ActionId.fromSpellId(27141),
-	impId: ActionId.fromSpellId(20048),
+export const BlessingOfMight = makeBooleanIndividualBuffInput({
+	actionId: ActionId.fromSpellId(25916),
 	fieldName: 'blessingOfMight',
 	label: 'Blessing of Might',
 });
@@ -285,16 +273,16 @@ export const BlessingOfSalvation = makeBooleanIndividualBuffInput({
 	label: 'Blessing of Salvation',
 	showWhen: player => !player.getPlayerSpec().isTankSpec && !player.getPlayerSpec().isHealingSpec,
 });
-export const BlessingOfSanctuary = makeBooleanIndividualBuffInput({
-	actionId: ActionId.fromSpellId(27169),
-	fieldName: 'blessingOfSanctuary',
-	label: 'Blessing of Sanctuary',
-});
-export const BlessingOfWisdom = makeTristateIndividualBuffInput({
-	actionId: ActionId.fromSpellId(27143),
-	impId: ActionId.fromSpellId(20245),
+export const BlessingOfWisdom = makeBooleanIndividualBuffInput({
+	actionId: ActionId.fromSpellId(25918),
 	fieldName: 'blessingOfWisdom',
 	label: 'Blessing of Wisdom',
+});
+export const BlessingOfLight = makeBooleanIndividualBuffInput({
+	actionId: ActionId.fromSpellId(25890),
+	fieldName: 'blessingOfLight',
+	label: 'Blessing of Light',
+	showWhen: player => player.getPlayerSpec().isHealingSpec || player.getPlayerSpec().isTankSpec,
 });
 export const Innervate = makeMultistateIndividualBuffInput({
 	actionId: ActionId.fromSpellId(29166),
@@ -331,9 +319,8 @@ export const PARTY_BUFFS_CONFIG = [
 	{ config: ManaTideTotem, stats: [Stat.StatMP5] },
 	{ config: ShadowPriestDPS, stats: [Stat.StatMP5] },
 	{ config: MoonkinAura, stats: [Stat.StatSpellCritRating] },
-	{ config: RetributionAura, stats: [Stat.StatResilienceRating, Stat.StatArmor, Stat.StatDefenseRating] },
-	{ config: ConcentrationAura, stats: [Stat.StatDefenseRating] },
-	{ config: SanctityAura, stats: [] },
+	{ config: RetributionAura, stats: [Stat.StatArmor, Stat.StatDefenseRating] },
+	{ config: ConcentrationAura, stats: [] },
 	{ config: TotemOfWrath, stats: [Stat.StatSpellCritRating, Stat.StatSpellHitRating] },
 	{ config: TrueshotAura, stats: [Stat.StatAttackPower, Stat.StatRangedAttackPower] },
 	{ config: WrathOfAirTotem, stats: [Stat.StatSpellDamage] },
@@ -375,7 +362,7 @@ export const BUFFS_CONFIG = [
 	{ config: PowerWordFortitude, stats: [Stat.StatStamina] },
 	{ config: BlessingOfMight, stats: [Stat.StatAttackPower] },
 	{ config: BlessingOfWisdom, stats: [Stat.StatMP5] },
-	{ config: BlessingOfSanctuary, stats: [Stat.StatStamina, Stat.StatArmor] },
+	{ config: BlessingOfLight, stats: [Stat.StatHealingPower] },
 	{ config: BlessingOfSalvation, stats: [] },
 	{ config: ShadowProtection, stats: [Stat.StatShadowResistance, Stat.StatStamina] },
 	{ config: Innervate, stats: [Stat.StatMP5] },
@@ -391,21 +378,18 @@ export const HuntersMark = makeTristateDebuffInput({
 	label: "Hunter's Mark",
 });
 export const ImprovedScorch = makeBooleanDebuffInput({ actionId: ActionId.fromSpellId(12873), fieldName: 'improvedScorch', label: 'Improved Scorch' });
-export const ImprovedSealOfTheCrusader = makeQuadstateDebuffInput({
-	actionId: ActionId.fromSpellId(27158),
-	impId: ActionId.fromSpellId(20337),
-	impId2: ActionId.fromSpellId(37186),
-	fieldName: 'improvedSealOfTheCrusader',
-	fieldNameImp2: 'jocRetribution2Pt4',
-	label: 'Seal of the Crusader',
+export const JudgementOfTheCrusader = makeBooleanDebuffInput({
+	actionId: ActionId.fromSpellId(20303),
+	fieldName: 'judgementOfTheCrusader',
+	label: 'Judgement of the Crusader',
 });
 export const JudgementOfWisdom = makeBooleanDebuffInput({
-	actionId: ActionId.fromSpellId(27164),
+	actionId: ActionId.fromSpellId(20355),
 	fieldName: 'judgementOfWisdom',
 	label: 'Judgement of Wisdom',
 });
 export const JudgementOfLight = makeBooleanDebuffInput({
-	actionId: ActionId.fromSpellId(27163),
+	actionId: ActionId.fromSpellId(20346),
 	fieldName: 'judgementOfLight',
 	label: 'Judgement of Light',
 });
@@ -465,7 +449,7 @@ export const DEBUFFS_CONFIG = [
 	{ config: BloodFrenzy, stats: [Stat.StatAttackPower] },
 	{ config: HuntersMark, stats: [Stat.StatRangedAttackPower, Stat.StatAttackPower] },
 	{ config: ImprovedScorch, stats: [Stat.StatFireDamage] },
-	{ config: ImprovedSealOfTheCrusader, stats: [Stat.StatMeleeCritRating, Stat.StatSpellCritRating] },
+	{ config: JudgementOfTheCrusader, stats: [Stat.StatHolyDamage, Stat.StatSpellDamage] },
 	{ config: JudgementOfLight, stats: [Stat.StatResilienceRating] },
 	{ config: JudgementOfWisdom, stats: [Stat.StatMP5] },
 	{ config: Mangle, stats: [] },

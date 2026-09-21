@@ -156,7 +156,8 @@ export const defaultHealerPartyBuffs = (): PartyBuffs =>
 export const defaultHealerIndividualBuffs = (): IndividualBuffs =>
 	IndividualBuffs.create({
 		blessingOfKings: true,
-		blessingOfWisdom: TristateEffect.TristateEffectImproved,
+		blessingOfWisdom: true,
+		blessingOfLight: true,
 	});
 
 const exposeWeaknessPhaseSettings: Map<Phase, Pick<Debuffs, 'exposeWeaknessUptime' | 'exposeWeaknessHunterAgility'>> = new Map([

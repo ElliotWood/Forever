@@ -470,10 +470,9 @@ message PartyBuffs {
 	TristateEffect blood_pact = 2;
 	TristateEffect moonkin_aura = 3;
 	TristateEffect leader_of_the_pack = 4;
-	TristateEffect sanctity_aura = 5;
-	TristateEffect devotion_aura = 6;
-	TristateEffect retribution_aura = 7;
-	TristateEffect concentration_aura = 45;
+	bool devotion_aura = 6;
+	bool retribution_aura = 7;
+	bool concentration_aura = 45;
 	bool trueshot_aura = 8;
 	bool draenei_racial_melee = 9;
 	bool draenei_racial_caster = 10;
@@ -529,9 +528,9 @@ message IndividualBuffs {
 
 	bool blessing_of_kings = 1;
 	bool blessing_of_salvation = 2;
-	bool blessing_of_sanctuary = 3;
-	TristateEffect blessing_of_wisdom = 4;
-	TristateEffect blessing_of_might = 5;
+	bool blessing_of_wisdom = 4;
+	bool blessing_of_might = 5;
+	bool blessing_of_light = 10;
 
 	int32 shadow_priest_dps = 6;
 
@@ -545,8 +544,7 @@ message IndividualBuffs {
 message Debuffs {
 	bool judgement_of_wisdom = 1;
 	bool judgement_of_light = 2;
-	TristateEffect improved_seal_of_the_crusader = 3;
-	bool joc_retribution_2pt4 = 28;
+	bool judgement_of_the_crusader = 3;
 	bool misery = 4;
 	TristateEffect curse_of_elements = 5;
 	double isb_uptime = 6;
