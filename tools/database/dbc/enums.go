@@ -1136,6 +1136,10 @@ const (
 // Spell attribute flags, named after the Attributes column they live in: ATTR_EX_3 is a flag
 // in Attributes[3]. Read them through the Spell helpers rather than indexing Attributes.
 const (
+	// The server refunds 80% of the power cost when the spell misses: every rage special that
+	// costs rage up front, Heroic Strike and Rend among them. Cleave and Whirlwind lack it.
+	ATTR_EX_1_DISCOUNT_POWER_ON_MISS int = 0x8000000
+
 	ATTR_EX_2_CANT_CRIT int = 0x20000000
 
 	// On a triggered spell: aura listeners treat its hits like a normal ability hit. Seal of
@@ -1159,6 +1163,7 @@ const (
 
 // Attributes index each ATTR_EX_ flag above belongs to.
 const (
+	ATTR_INDEX_EX_1  int = 1
 	ATTR_INDEX_EX_2  int = 2
 	ATTR_INDEX_EX_3  int = 3
 	ATTR_INDEX_EX_4  int = 4

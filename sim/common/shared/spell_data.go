@@ -163,6 +163,10 @@ type SpellData struct {
 	// Zero is unlimited.
 	MaxTargets int32
 
+	// The client's Discount Power On Miss attribute: the server gives 80% of the cost back when
+	// the spell misses. Rend and Heroic Strike carry it, Cleave and Whirlwind do not.
+	RefundsOnMiss bool
+
 	// SpellSchool and DefenseType as core names them. The client's school bits are in a different
 	// order - Holy is 2 there and 32 here - so the generator translates rather than copies.
 	SpellSchool core.SpellSchool
@@ -219,6 +223,15 @@ type SpellDataEffect struct {
 // The high end of the effect, which is Value wherever the two agree - ValueMax is only stored where
 // they differ. Seal of the Crusader rank 4's base is a whole number, so it has no ValueMax and its
 // answer is Value; every other rank has both.
+// The share of the cost a miss refunds, for RageCostOptions.Refund: 80% where the client flags
+// Discount Power On Miss, nothing otherwise.
+func (s SpellData) MissRefund() float64 {
+	if s.RefundsOnMiss {
+		return 0.8
+	}
+	return 0
+}
+
 func (e SpellDataEffect) High() float64 {
 	if e.ValueMax != 0 {
 		return e.ValueMax
