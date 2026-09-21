@@ -2,7 +2,6 @@ package core
 
 import (
 	"fmt"
-	"math"
 	"time"
 
 	"github.com/wowsims/forever/sim/core/proto"
@@ -18,6 +17,10 @@ type manaBar struct {
 	currentMana float64
 
 	manaRegenMultiplier float64
+
+	// Mana per second from spirit is spiritRegenBase + Spirit*spiritRegenPerSpirit.
+	spiritRegenBase      float64
+	spiritRegenPerSpirit float64
 
 	manaCastingMetrics    *ResourceMetrics
 	manaNotCastingMetrics *ResourceMetrics
@@ -58,6 +61,8 @@ func (character *Character) EnableManaBarWithModifier() {
 	character.RegisterSpell(SpellConfig{
 		ActionID: ActionID{OtherID: proto.OtherAction_OtherActionManaGain},
 	})
+
+	character.spiritRegenBase, character.spiritRegenPerSpirit = spiritRegenCoefficients(character.Class)
 
 	character.BaseMana = character.GetBaseStats()[stats.Mana]
 	character.Unit.manaBar.unit = &character.Unit
@@ -153,9 +158,19 @@ func (unit *Unit) MP5ManaRegenPerSecond() float64 {
 	return unit.stats[stats.MP5] / 5.0
 }
 
+// Forever keeps the level 60 spirit regen: 15 + Spirit/5 mana every 2s tick, and
+// 12.5 + Spirit/4 for priests and mages. Intellect plays no part; the spirit x sqrt(int)
+// formula this engine carried is TBC's.
+func spiritRegenCoefficients(class proto.Class) (base float64, perSpirit float64) {
+	if class == proto.Class_ClassPriest || class == proto.Class_ClassMage {
+		return 6.25, 1.0 / 8
+	}
+	return 7.5, 1.0 / 10
+}
+
 // Returns the rate of mana regen per second from spirit.
 func (unit *Unit) SpiritManaRegenPerSecond() float64 {
-	return 0.001 + unit.stats[stats.Spirit]*math.Sqrt(unit.stats[stats.Intellect])*0.009327
+	return unit.spiritRegenBase + unit.stats[stats.Spirit]*unit.spiritRegenPerSpirit
 }
 
 // Returns the rate of mana regen per second, assuming this unit is

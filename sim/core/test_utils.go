@@ -37,16 +37,17 @@ func FreshDefaultTargetConfig() *proto.Target {
 	return &proto.Target{
 		Level: CharacterLevel + 3,
 		Stats: stats.Stats{
-			stats.Armor:       7685,
+			// Level 63 raid boss armor, as in our Forever encounter presets. 7685 was TBC's.
+			stats.Armor:       3731,
 			stats.AttackPower: 320,
 		}.ToProtoArray(),
 		MobType: proto.MobType_MobTypeMechanical,
 
 		SwingSpeed:    2,
-		MinBaseDamage: 15113,
+		MinBaseDamage: 4192.05,
 		ParryHaste:    true,
 		CanCrush:      true,
-		DamageSpread:  0.5,
+		DamageSpread:  0.3333,
 	}
 }
 

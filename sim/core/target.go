@@ -395,9 +395,12 @@ func NewAttackTable(attacker *Unit, defender *Unit) *AttackTable {
 		table.BaseBlockChance = 0.05
 		table.BaseDodgeChance = UnitLevelFloat64(defender.Level, 0.04, 0.05, 0.055, 0.06, 0.065)
 		table.BaseParryChance = UnitLevelFloat64(defender.Level, 0.04, 0.05, 0.055, 0.06, 0.14)
-		table.BaseGlanceChance = UnitLevelFloat64(defender.Level, 0, 0.06, 0.12, 0.18, 0.24)
+		// Level 60 glancing blows at a full 300 weapon skill: 10% + 2% per point of the
+		// target's defense above it, so 40% against a boss, for 55-75% (average 65%) damage.
+		// The 24% / 75% this engine had are TBC's.
+		table.BaseGlanceChance = UnitLevelFloat64(defender.Level, 0, 0.10, 0.20, 0.30, 0.40)
 
-		table.GlanceMultiplier = UnitLevelFloat64(defender.Level, 0.95, 0.95, 0.95, 0.85, 0.75)
+		table.GlanceMultiplier = UnitLevelFloat64(defender.Level, 0.95, 0.95, 0.95, 0.85, 0.65)
 		table.HitSuppression = UnitLevelFloat64(defender.Level, 0, 0, 0, 0, 0.01)
 		table.MeleeCritSuppression = UnitLevelFloat64(defender.Level, 0, 0, 0.01, 0.02, 0.048)
 		table.SpellCritSuppression = UnitLevelFloat64(defender.Level, 0, 0, 0, 0.003, 0.021)
