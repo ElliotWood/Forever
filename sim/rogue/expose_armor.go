@@ -22,6 +22,10 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 		60: 11198,
 	}[rogue.Level]
 
+	// Cost, school and defense type come from the client table; the id stays ours (see
+	// sinister_strike.go). The armor reads 0 in the table, so it stays ours.
+	row := spellData.ExposeArmor.BySpellID(spellID)
+
 	arpenPerCombo := map[int32]float64{
 		25: 90,
 		40: 270,
@@ -31,7 +35,7 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 
 	// Improved Expose Armor takes 5 Energy off and hands 1 combo point back per rank, on a 5
 	// point spend.
-	energyCost := 25.0 - 5*float64(rogue.Talents.ImprovedExposeArmor)
+	energyCost := float64(row.Cost) - 5*float64(rogue.Talents.ImprovedExposeArmor)
 	cpMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 14169})
 
 	// share ExtraCastCondition() state with ApplyEffects()
@@ -42,8 +46,8 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 		SpellCode:      SpellCode_RogueExposeArmor,
 		ClassSpellMask: SpellMaskExposeArmor,
 		ActionID:       core.ActionID{SpellID: spellID},
-		SpellSchool:    core.SpellSchoolPhysical,
-		DefenseType:    core.DefenseTypeMelee,
+		SpellSchool:    row.SpellSchool,
+		DefenseType:    row.DefenseType,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          rogue.finisherFlags(),
 		MetricSplits:   6,
