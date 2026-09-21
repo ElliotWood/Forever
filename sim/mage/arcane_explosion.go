@@ -1,38 +1,35 @@
 package mage
 
-var arcaneExplosionRank = spellData.ArcaneExplosion.HighestRank()
+import (
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
 func (mage *Mage) registerArcaneExplosionSpell() {
-	panic("To be implemented")
+	arcaneExplosionRank := spellData.ArcaneExplosion.HighestRank()
 
-	// The TBC implementation, kept for the port:
-	// arcaneExplosionCoefficient := 0.21400000155
-	//
-	// mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: arcaneExplosionRank.SpellID},
-	// 	SpellSchool:    arcaneExplosionRank.SpellSchool,
-	// 	DefenseType:    arcaneExplosionRank.DefenseType,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: MageSpellArcaneExplosion,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: arcaneExplosionRank.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: arcaneExplosionRank.GCD,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	// 	BonusCoefficient: arcaneExplosionCoefficient,
-	// 	ThreatMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := arcaneExplosionRank.Direct.Damage(sim)
-	// 		spell.CalcAndDealAoeDamage(sim, baseDamage, spell.OutcomeMagicHitAndCrit)
-	// 	},
-	// })
+	mage.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: arcaneExplosionRank.SpellID},
+		SpellSchool:    arcaneExplosionRank.SpellSchool,
+		DefenseType:    arcaneExplosionRank.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: MageSpellArcaneExplosion,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: arcaneExplosionRank.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: arcaneExplosionRank.GCD,
+			},
+		},
+
+		DamageMultiplier: 1,
+		BonusCoefficient: arcaneExplosionRank.Direct.BonusCoefficient(),
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealAoeDamage(sim, arcaneExplosionRank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+		},
+	})
 }

@@ -1,44 +1,44 @@
 package mage
 
-var arcaneBlastRank = spellData.ArcaneBlast.HighestRank()
+import (
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
 func (mage *Mage) registerArcaneBlastSpell() {
-	panic("To be implemented")
+	if !mage.Talents.ArcaneBlast {
+		return
+	}
 
-	// The TBC implementation, kept for the port:
-	//
-	// //https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=30451
-	// arcaneBlastCoefficient := 0.71399998665
-	//
-	// mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: arcaneBlastRank.SpellID},
-	// 	SpellSchool:    arcaneBlastRank.SpellSchool,
-	// 	DefenseType:    arcaneBlastRank.DefenseType,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: MageSpellArcaneBlast,
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: arcaneBlastRank.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD:      arcaneBlastRank.GCD,
-	// 			CastTime: arcaneBlastRank.CastTime,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	// 	BonusCoefficient: arcaneBlastCoefficient,
-	// 	ThreatMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := arcaneBlastRank.Direct.Damage(sim)
-	// 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-	// 		if result.Landed() {
-	// 			mage.ArcaneChargesAura.Activate(sim)
-	// 			mage.ArcaneChargesAura.AddStack(sim)
-	// 		}
-	// 	},
-	// })
+	arcaneBlastRank := spellData.ArcaneBlast.HighestRank()
+
+	mage.ArcaneBlast = mage.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: arcaneBlastRank.SpellID},
+		SpellSchool:    arcaneBlastRank.SpellSchool,
+		DefenseType:    arcaneBlastRank.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: MageSpellArcaneBlast,
+
+		// The generated row carries no cost: Forever prices it at 15% of base mana (beta client
+		// 1.60.1.69893), a PowerCostPct the generator does not read yet.
+		ManaCost: core.ManaCostOptions{
+			BaseCostPercent: 15,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD:      arcaneBlastRank.GCD,
+				CastTime: arcaneBlastRank.CastTime,
+			},
+		},
+
+		DamageMultiplier: 1,
+		BonusCoefficient: arcaneBlastRank.Direct.BonusCoefficient(),
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, arcaneBlastRank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+			mage.ArcaneBlastAura.Activate(sim)
+			mage.ArcaneBlastAura.AddStack(sim)
+		},
+	})
 }

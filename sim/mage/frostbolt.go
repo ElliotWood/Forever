@@ -4,61 +4,37 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-const frostboltCoefficient = 0.81400001049 // Per https://wago.tools/db2/SpellEffect?build=2.5.5.65295&filter%5BSpellID%5D=exact%253A38697 Field: "BonusCoefficient"
+func (mage *Mage) registerFrostboltSpell() {
+	frostboltRank := spellData.Frostbolt.HighestRank()
 
-func (mage *Mage) frostBoltConfig(config core.SpellConfig) core.SpellConfig {
-	return core.SpellConfig{
-		ActionID:       config.ActionID,
-		SpellSchool:    core.SpellSchoolFrost,
-		DefenseType:    core.DefenseTypeMagic,
+	mage.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: frostboltRank.SpellID},
+		SpellSchool:    frostboltRank.SpellSchool,
+		DefenseType:    frostboltRank.DefenseType,
 		ProcMask:       core.ProcMaskSpellDamage,
-		Flags:          config.Flags,
+		Flags:          core.SpellFlagAPL | core.SpellFlagBinary,
 		ClassSpellMask: MageSpellFrostbolt,
 		MissileSpeed:   frostboltRank.MissileSpeed,
 
-		ManaCost: config.ManaCost,
-		Cast:     config.Cast,
+		ManaCost: core.ManaCostOptions{
+			FlatCost: frostboltRank.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD:      frostboltRank.GCD,
+				CastTime: frostboltRank.CastTime,
+			},
+		},
 
-		DamageMultiplier: config.DamageMultiplier,
+		DamageMultiplier: 1,
 		BonusCoefficient: frostboltRank.Direct.BonusCoefficient(),
 		ThreatMultiplier: 1,
 
-		ApplyEffects: config.ApplyEffects,
-	}
-}
-
-var frostboltRank = spellData.Frostbolt.HighestRank()
-
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
-func (mage *Mage) registerFrostboltSpell() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// actionID := core.ActionID{SpellID: frostboltRank.SpellID}
-	//
-	// mage.RegisterSpell(mage.frostBoltConfig(core.SpellConfig{
-	// 	ActionID: actionID,
-	// 	Flags:    core.SpellFlagAPL | core.SpellFlagBinary,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: frostboltRank.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD:      frostboltRank.GCD,
-	// 			CastTime: frostboltRank.CastTime,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier: 1,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := frostboltRank.Direct.Damage(sim)
-	// 		result := spell.CalcDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
-	//
-	// 		spell.WaitTravelTime(sim, func(sim *core.Simulation) {
-	// 			spell.DealDamage(sim, result)
-	// 		})
-	// 	},
-	// }))
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcDamage(sim, target, frostboltRank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
+				spell.DealDamage(sim, result)
+			})
+		},
+	})
 }

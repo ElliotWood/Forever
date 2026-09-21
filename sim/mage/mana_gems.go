@@ -1,66 +1,81 @@
 package mage
 
-// TODO: To be implemented. TBC body below needs no porting; kept commented until this class's port is reviewed.
-func (mage *Mage) registerManaGems() {
-	panic("To be implemented")
+import (
+	"time"
 
-	// The TBC implementation, kept for the port:
-	//
-	// var manaGain float64
-	// actionID := core.ActionID{ItemID: 22044}
-	// manaMetrics := mage.NewManaMetrics(actionID)
-	//
-	// minManaGain := 2340.0
-	// maxManaGain := 2460.0
-	//
-	// manaGemAura := core.MakePermanent(mage.GetOrRegisterAura(core.Aura{
-	// 	Label:     "Mana Gem Charges",
-	// 	ActionID:  actionID,
-	// 	MaxStacks: 3,
-	// })).ApplyOnReset(func(aura *core.Aura, sim *core.Simulation) {
-	// 	aura.SetStacks(sim, 3)
-	// })
-	//
-	// manaGem := mage.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       actionID,
-	// 	DefenseType:    core.DefenseTypeMagic, // Replenish Mana (27103), the spell behind this item's use effect
-	// 	ProcMask:       core.ProcMaskEmpty,
-	// 	Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
-	// 	ClassSpellMask: MageSpellManaGem,
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			NonEmpty: true,
-	// 		},
-	// 		CD: core.Cooldown{
-	// 			Timer:    mage.GetConjuredCD(),
-	// 			Duration: time.Minute * 2,
-	// 		},
-	// 		SharedCD: core.Cooldown{
-	// 			Timer:    mage.GetCombatConsumableCD(),
-	// 			Duration: time.Minute * 2,
-	// 		},
-	// 	},
-	//
-	// 	// Don't use if we don't have any gems remaining!
-	// 	ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-	// 		return manaGemAura.GetStacks() > 0
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		manaGemAura.RemoveStack(sim)
-	// 		manaGain = sim.Roll(minManaGain, maxManaGain)
-	// 		mage.AddMana(sim, manaGain, manaMetrics)
-	// 	},
-	// })
-	//
-	// mage.AddMajorCooldown(core.MajorCooldown{
-	// 	Spell: manaGem,
-	// 	Type:  core.CooldownTypeMana,
-	// 	ShouldActivate: func(sim *core.Simulation, char *core.Character) bool {
-	// 		manaGain = sim.Roll(minManaGain, maxManaGain)
-	//
-	// 		return char.CurrentMana()+manaGain+char.SpiritManaRegenPerSecond() <= char.MaxMana()
-	// 	},
-	// })
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+)
+
+// One of each gem is carried and all four share the conjured cooldown, so a small gem that goes off
+// early spends the whole cooldown. Each gem waits until every larger one has been used, which
+// leaves the biggest for the first deficit that can hold it.
+func (mage *Mage) registerManaGems() {
+	gems := []struct {
+		itemID int32
+		row    shared.SpellData
+	}{
+		{5514, spellData.ConjureManaAgateTriggered.HighestRank()},
+		{5513, spellData.ConjureManaJadeTriggered.HighestRank()},
+		{8007, spellData.ConjureManaCitrineTriggered.HighestRank()},
+		{8008, spellData.ConjureManaRubyTriggered.HighestRank()},
+	}
+
+	used := make([]bool, len(gems))
+	mage.RegisterResetEffect(func(_ *core.Simulation) {
+		clear(used)
+	})
+
+	largerGemLeft := func(idx int) bool {
+		for larger := idx + 1; larger < len(gems); larger++ {
+			if !used[larger] {
+				return true
+			}
+		}
+		return false
+	}
+
+	for idx, gem := range gems {
+		actionID := core.ActionID{ItemID: gem.itemID}
+		manaMetrics := mage.NewManaMetrics(actionID)
+		manaGain := gem.row.Energize.Damage(nil)
+
+		spell := mage.RegisterSpell(core.SpellConfig{
+			ActionID:       actionID,
+			Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL | core.SpellFlagHelpful,
+			ClassSpellMask: MageSpellManaGem,
+
+			Cast: core.CastConfig{
+				CD: core.Cooldown{
+					// Our client-verified 2 minutes (the item's category cooldown); the generated
+					// row of the triggered spell states 1 minute.
+					Timer:    mage.GetConjuredCD(),
+					Duration: time.Minute * 2,
+				},
+			},
+
+			ExtraCastCondition: func(_ *core.Simulation, _ *core.Unit) bool {
+				return !used[idx]
+			},
+
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+				mage.AddMana(sim, manaGain, manaMetrics)
+				used[idx] = true
+			},
+		})
+
+		mage.AddMajorCooldown(core.MajorCooldown{
+			Spell:    spell,
+			Priority: int32(manaGain),
+			Type:     core.CooldownTypeMana,
+			ShouldActivate: func(_ *core.Simulation, character *core.Character) bool {
+				if largerGemLeft(idx) {
+					return false
+				}
+				// Only when the whole gem fits under max mana, one regen tick included.
+				totalRegen := character.ManaRegenPerSecondWhileCasting() * 2
+				return character.MaxMana()-(character.CurrentMana()+totalRegen) >= manaGain
+			},
+		})
+	}
 }

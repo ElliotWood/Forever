@@ -111,7 +111,7 @@ export default defineSpec<Spec.SpecMage>({
 		partyBuffs: DefaultPartyBuffs,
 		individualBuffs: DefaultIndividualBuffs,
 
-		rotationType: APLRotation_Type.TypeSimple,
+		rotationType: APLRotation_Type.TypeAuto,
 		simpleRotation: Presets.ArcaneMageSimpleRotation,
 		debuffs: DefaultDebuffs,
 	},
@@ -135,20 +135,21 @@ export default defineSpec<Spec.SpecMage>({
 	presets: {
 		epWeights: [],
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.ROTATION_PRESET_ARCANE, Presets.APL_ARCANE_SIMPLE, Presets.ROTATION_PRESET_ARCANEBRAID],
+		rotations: [Presets.ROTATION_PRESET_ARCANE, Presets.ROTATION_PRESET_FIRE, Presets.ROTATION_PRESET_FROST],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: [Presets.ArcaneTalents, Presets.FireTalents, Presets.FrostTalents],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],
 	},
 
-	autoRotation: (_player: Player<Spec.SpecMage>): APLRotation => {
-		// const numTargets = player.sim.encounter.targets.length;
-		// if (numTargets >= 2) {
-		// 	return Presets.ROTATION_PRESET_CLEAVE.rotation.rotation!;
-		// } else {
+	autoRotation: (player: Player<Spec.SpecMage>): APLRotation => {
+		const talents = player.getTalents();
+		if (talents.pyroblast) {
+			return Presets.ROTATION_PRESET_FIRE.rotation.rotation!;
+		} else if (talents.iceLance) {
+			return Presets.ROTATION_PRESET_FROST.rotation.rotation!;
+		}
 		return Presets.ROTATION_PRESET_ARCANE.rotation.rotation!;
-		// }
 	},
 
 	simpleRotation: (_player: Player<Spec.SpecMage>, simple: SpecRotation<Spec.SpecMage>, cooldowns: Cooldowns): APLRotation => {
