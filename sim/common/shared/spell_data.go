@@ -241,6 +241,22 @@ func (s SpellData) MissRefund() float64 {
 	return 0
 }
 
+// The outcome a periodic tick rolls, from the row: a tick that can crit where the client marks
+// Periodic Can Crit, a plain tick otherwise, on the hit table the row's defense type names.
+func PeriodicTickOutcome(row SpellData, dot *core.Dot) core.OutcomeApplier {
+	magic := row.DefenseType == core.DefenseTypeMagic
+	switch {
+	case row.PeriodicCanCrit && magic:
+		return dot.Spell.OutcomeTickMagicHitAndCrit
+	case row.PeriodicCanCrit:
+		return dot.Spell.OutcomeTickPhysicalCrit
+	case magic:
+		return dot.OutcomeTickMagicHit
+	default:
+		return dot.OutcomeTick
+	}
+}
+
 func (e SpellDataEffect) High() float64 {
 	if e.ValueMax != 0 {
 		return e.ValueMax

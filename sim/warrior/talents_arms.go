@@ -151,7 +151,7 @@ func (warrior *Warrior) registerDeepWounds() {
 
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				baseDamage := warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
-				dot.Spell.CalcAndDealPeriodicDamage(sim, target, baseDamage/float64(dot.HastedTickCount())*share, dot.OutcomeTick)
+				dot.Spell.CalcAndDealPeriodicDamage(sim, target, baseDamage/float64(dot.HastedTickCount())*share, shared.PeriodicTickOutcome(deepWoundsBleed, dot))
 			},
 		},
 
