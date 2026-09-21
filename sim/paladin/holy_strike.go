@@ -65,12 +65,13 @@ func (paladin *Paladin) registerHolyStrike() {
 		}
 
 		paladin.RegisterSpell(core.SpellConfig{
-			ActionID:    core.ActionID{SpellID: spellID},
-			SpellCode:   SpellCode_PaladinHolyStrike,
-			SpellSchool: core.SpellSchoolHoly,
-			DefenseType: core.DefenseTypeMelee,
-			ProcMask:    core.ProcMaskMeleeMHSpecial,
-			Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+			ActionID:       core.ActionID{SpellID: spellID},
+			SpellCode:      SpellCode_PaladinHolyStrike,
+			ClassSpellMask: SpellMaskHolyStrike,
+			SpellSchool:    core.SpellSchoolHoly,
+			DefenseType:    core.DefenseTypeMelee,
+			ProcMask:       core.ProcMaskMeleeMHSpecial,
+			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 			RequiredLevel: int(rank.level),
 			Rank:          i + 1,

@@ -14,10 +14,11 @@ func (paladin *Paladin) registerJudgement() {
 	// It is still a cast the paladin makes, and Sanctified Judgement and Swift Judgement both
 	// listen for it through OnCastComplete, so it must not carry SpellFlagNoOnCastComplete.
 	paladin.judgement = paladin.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 20271},
-		SpellSchool: core.SpellSchoolHoly,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPassiveSpell | core.SpellFlagCastTimeNoGCD,
+		ClassSpellMask: SpellMaskJudgement,
+		ActionID:       core.ActionID{SpellID: 20271},
+		SpellSchool:    core.SpellSchoolHoly,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | core.SpellFlagPassiveSpell | core.SpellFlagCastTimeNoGCD,
 
 		ManaCost: core.ManaCostOptions{
 			BaseCost:   0.06,

@@ -23,12 +23,13 @@ func (paladin *Paladin) registerHammerOfTheRighteous() {
 	}
 
 	paladin.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: 407632},
-		SpellCode:   SpellCode_PaladinHammerOfTheRighteous,
-		SpellSchool: core.SpellSchoolHoly,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		ActionID:       core.ActionID{SpellID: 407632},
+		SpellCode:      SpellCode_PaladinHammerOfTheRighteous,
+		ClassSpellMask: SpellMaskHammerOfTheRighteous,
+		SpellSchool:    core.SpellSchoolHoly,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RequiredLevel: 40,
 

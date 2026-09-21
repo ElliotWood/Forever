@@ -30,6 +30,27 @@ const (
 	SpellCode_PaladinHammerOfTheRighteous
 )
 
+// One class mask per SpellCode_Paladin*, for the SpellMod system, named like wowsims/forever's.
+// Judgement has no SpellCode. HammerOfTheRighteous has no upstream counterpart.
+const (
+	SpellMaskNone     int64 = 0
+	SpellMaskExorcism int64 = 1 << iota
+	SpellMaskHolyShock
+	SpellMaskHolyWrath
+	SpellMaskJudgementOfCommand
+	SpellMaskJudgementOfRighteousness
+	SpellMaskConsecration
+	SpellMaskHolyShield
+	SpellMaskHolyShieldProc
+	SpellMaskLayOnHands
+	SpellMaskHammerOfWrath
+	SpellMaskHolyStrike
+	SpellMaskHammerOfTheRighteous
+	SpellMaskJudgement
+
+	SpellMaskAll = SpellMaskJudgement<<1 - SpellMaskExorcism // every bit from Exorcism to Judgement
+)
+
 type SealJudgeCode uint8
 
 const (
