@@ -508,7 +508,6 @@ message PartyBuffs {
 	bool totem_twisting = 34;
 
 	TristateEffect battle_shout = 28;
-	reserved 29 to 32;
 
 	// Mitigation buffs
 	TristateEffect commanding_shout = 33;

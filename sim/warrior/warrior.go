@@ -1,8 +1,6 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -15,7 +13,6 @@ type WarriorInputs struct {
 	DefaultStance proto.WarriorStance
 
 	StartingRage   float64
-	QueueDelay     int32
 	StanceSnapshot bool
 	HasBsT2        bool
 
@@ -128,8 +125,6 @@ type Warrior struct {
 	VictoryRush        *core.Spell
 	curQueueAura       *core.Aura
 	curQueuedAutoSpell *core.Spell
-
-	queuedRealismICD *core.Cooldown
 
 	EnrageAura *core.Aura
 
@@ -244,13 +239,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
 	warrior.AddStatDependency(stats.Agility, stats.DodgeRating, 1/30.0*core.DodgeRatingPerDodgePercent)
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
-
-	// The sim often re-enables heroic strike in an unrealistic amount of time.
-	// This can cause an unrealistic immediate double-hit around wild strikes procs
-	warrior.queuedRealismICD = &core.Cooldown{
-		Timer:    warrior.NewTimer(),
-		Duration: time.Millisecond * time.Duration(warrior.WarriorInputs.QueueDelay),
-	}
 
 	return warrior
 }

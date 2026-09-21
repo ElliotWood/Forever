@@ -14,7 +14,6 @@ export const ROTATION_DEFAULT = PresetUtils.makePresetAPLRotation('Generic', Gen
 
 export const DefaultOptions = ProtectionWarriorOptions.create({
 	classOptions: {
-		queueDelay: 250,
 		startingRage: 100,
 		defaultShout: WarriorShout.WarriorShoutBattle,
 		defaultStance: WarriorStance.WarriorStanceDefensive,

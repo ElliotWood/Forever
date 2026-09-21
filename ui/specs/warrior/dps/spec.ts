@@ -109,7 +109,6 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 			WarriorInputs.StartingRage(),
 			WarriorInputs.StanceSnapshot(),
 			OtherInputs.DistanceFromTarget,
-			WarriorInputs.QueueDelay(),
 			OtherInputs.InputDelay,
 			OtherInputs.TankAssignment,
 			OtherInputs.InFrontOfTarget,

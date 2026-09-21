@@ -6,7 +6,6 @@ import (
 )
 
 func (warrior *Warrior) registerHeroicStrike() {
-	// TODO: Ingame research needed if HS/Cleave still allow for queueing
 	// TODO: Ingame research needed if this adds flat threat
 	heroicStrikeRank := shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 0).HighestRank()
 	heroicStrikeBaseDamage, _ := heroicStrikeRank.Direct.Range()
@@ -98,32 +97,27 @@ func (warrior *Warrior) registerCleave() {
 	warrior.makeQueueSpellsAndAura(spell)
 }
 
-func (warrior *Warrior) makeQueueSpellsAndAura(srcSpell *core.Spell) *core.Spell {
-	isQueueQueued := false
-
+// The next main-hand swing casts the queued spell in its place; a swing it cannot afford drops the
+// queue.
+func (warrior *Warrior) makeQueueSpellsAndAura(srcSpell *core.Spell) {
 	queueAura := warrior.RegisterAura(core.Aura{
 		Label:    "HS/Cleave Queue Aura-" + srcSpell.ActionID.String(),
 		ActionID: srcSpell.ActionID.WithTag(1),
 		Duration: core.NeverExpires,
-		OnReset: func(aura *core.Aura, sim *core.Simulation) {
-			isQueueQueued = false
-		},
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			if warrior.curQueueAura != nil {
 				warrior.curQueueAura.Deactivate(sim)
 			}
-			warrior.PseudoStats.DisableDWMissPenalty = true
 			warrior.curQueueAura = aura
 			warrior.curQueuedAutoSpell = srcSpell
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.PseudoStats.DisableDWMissPenalty = false
 			warrior.curQueueAura = nil
 			warrior.curQueuedAutoSpell = nil
 		},
 	})
 
-	queueSpell := warrior.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:    srcSpell.ActionID.WithTag(1),
 		SpellSchool: core.SpellSchoolPhysical,
 		DefenseType: srcSpell.DefenseType,
@@ -137,33 +131,16 @@ func (warrior *Warrior) makeQueueSpellsAndAura(srcSpell *core.Spell) *core.Spell
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.curQueueAura == nil &&
-				!isQueueQueued &&
-				warrior.CurrentRage() >= srcSpell.Cost.GetCurrentCost() &&
-				warrior.queuedRealismICD.IsReady(sim)
+			return !queueAura.IsActive() && warrior.CurrentRage() >= srcSpell.Cost.GetCurrentCost()
 		},
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			if warrior.queuedRealismICD.IsReady(sim) {
-				isQueueQueued = true
-				warrior.queuedRealismICD.Use(sim)
-				sim.AddPendingAction(&core.PendingAction{
-					NextActionAt: sim.CurrentTime + warrior.queuedRealismICD.Duration,
-					OnAction: func(sim *core.Simulation) {
-						queueAura.Activate(sim)
-						isQueueQueued = false
-					},
-				})
-			}
+			queueAura.Activate(sim)
 		},
 	})
-
-	return queueSpell
 }
 
-// Returns true if the regular melee swing should be used, false otherwise.
 func (warrior *Warrior) TryHSOrCleave(sim *core.Simulation, mhSwingSpell *core.Spell) *core.Spell {
 	if !warrior.curQueueAura.IsActive() || (mhSwingSpell.ActionID.Tag != 1 && mhSwingSpell.ActionID.Tag != 1290261) {
-		warrior.PseudoStats.DisableDWMissPenalty = false
 		return mhSwingSpell
 	}
 

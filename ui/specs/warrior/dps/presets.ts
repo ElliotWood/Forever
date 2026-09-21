@@ -46,7 +46,6 @@ export const SIMPLE_ARMS_DEFAULT_ROTATION = PresetUtils.makePresetSimpleRotation
 
 export const DefaultOptions = WarriorOptions.create({
 	classOptions: {
-		queueDelay: 250,
 		startingRage: 50,
 		defaultShout: WarriorShout.WarriorShoutBattle,
 		defaultStance: WarriorStance.WarriorStanceBerserker,
