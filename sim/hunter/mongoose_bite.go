@@ -13,14 +13,15 @@ func (hunter *Hunter) getMongooseBiteConfig(rank int) core.SpellConfig {
 	level := [5]int{0, 16, 30, 44, 58}[rank]
 
 	spellConfig := core.SpellConfig{
-		SpellCode:     SpellCode_HunterMongooseBite,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolPhysical,
-		DefenseType:   core.DefenseTypeMelee,
-		ProcMask:      core.ProcMaskMeleeSpecial,
-		Flags:         core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		Rank:          rank,
-		RequiredLevel: level,
+		SpellCode:      SpellCode_HunterMongooseBite,
+		ClassSpellMask: SpellMaskMongooseBite,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		Rank:           rank,
+		RequiredLevel:  level,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

@@ -17,15 +17,16 @@ func (hunter *Hunter) getImmolationTrapConfig(rank int, timer *core.Timer) core.
 	level := [6]int{0, 16, 26, 36, 46, 56}[rank]
 
 	return core.SpellConfig{
-		SpellCode:     SpellCode_HunterImmolationTrap,
-		ActionID:      core.ActionID{SpellID: spellId},
-		SpellSchool:   core.SpellSchoolFire,
-		DefenseType:   core.DefenseTypeMagic,
-		ProcMask:      core.ProcMaskSpellDamage,
-		Flags:         core.SpellFlagAPL | core.SpellFlagPassiveSpell | SpellFlagTrap,
-		Rank:          rank,
-		RequiredLevel: level,
-		MissileSpeed:  24,
+		SpellCode:      SpellCode_HunterImmolationTrap,
+		ClassSpellMask: SpellMaskImmolationTrap,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolFire,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagPassiveSpell | SpellFlagTrap,
+		Rank:           rank,
+		RequiredLevel:  level,
+		MissileSpeed:   24,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,

@@ -28,12 +28,13 @@ func (hunter *Hunter) getVolleyConfig(rank int) core.SpellConfig {
 	level := [4]int{0, 40, 50, 58}[rank]
 
 	return core.SpellConfig{
-		SpellCode:   SpellCode_HunterVolley,
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellSchool: core.SpellSchoolArcane,
-		DefenseType: core.DefenseTypeRanged,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       core.SpellFlagChanneled | core.SpellFlagAPL,
+		SpellCode:      SpellCode_HunterVolley,
+		ClassSpellMask: SpellMaskVolley,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellSchool:    core.SpellSchoolArcane,
+		DefenseType:    core.DefenseTypeRanged,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagChanneled | core.SpellFlagAPL,
 
 		RequiredLevel: level,
 		Rank:          rank,

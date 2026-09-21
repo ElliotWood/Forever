@@ -14,12 +14,13 @@ func (hunter *Hunter) registerLaceratingStrikesSpell() {
 	}
 
 	hunter.LaceratingStrikes = hunter.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_HunterLaceratingStrikes,
-		ActionID:    hunter.MongooseBite.WithTag(1),
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete | core.SpellFlagPureDot,
+		SpellCode:      SpellCode_HunterLaceratingStrikes,
+		ClassSpellMask: SpellMaskLaceratingStrikes,
+		ActionID:       hunter.MongooseBite.WithTag(1),
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagNoOnCastComplete | core.SpellFlagPureDot,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,

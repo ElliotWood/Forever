@@ -67,12 +67,13 @@ func (hp *HunterPet) newClaw() *core.Spell {
 	}[hp.Owner.Level]
 
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellCode:   SpellCode_HunterPetClaw,
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellCode:      SpellCode_HunterPetClaw,
+		ClassSpellMask: SpellMaskPetClaw,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 25,
@@ -118,12 +119,13 @@ func (hp *HunterPet) newBite() *core.Spell {
 	}[hp.Owner.Level]
 
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellCode:   SpellCode_HunterPetBite,
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagMeleeMetrics,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellCode:      SpellCode_HunterPetBite,
+		ClassSpellMask: SpellMaskPetBite,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 35,
@@ -174,11 +176,12 @@ func (hp *HunterPet) newLightningBreath() *core.Spell {
 	}[hp.Owner.Level]
 
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellCode:   SpellCode_HunterPetLightningBreath,
-		SpellSchool: core.SpellSchoolNature,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellCode:      SpellCode_HunterPetLightningBreath,
+		ClassSpellMask: SpellMaskPetLightningBreath,
+		SpellSchool:    core.SpellSchoolNature,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 50,
@@ -226,12 +229,13 @@ func (hp *HunterPet) newScreech() *core.Spell {
 	}[hp.Owner.Level]
 
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellCode:   SpellCode_HunterPetScreech,
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeSpecial,
-		Flags:       core.SpellFlagMeleeMetrics,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellCode:      SpellCode_HunterPetScreech,
+		ClassSpellMask: SpellMaskPetScreech,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeSpecial,
+		Flags:          core.SpellFlagMeleeMetrics,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 20,
@@ -320,12 +324,13 @@ func (hp *HunterPet) newScorpidPoison() *core.Spell {
 	}[hp.Owner.Level]
 
 	return hp.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellID},
-		SpellCode:   SpellCode_HunterPetScorpidPoison,
-		SpellSchool: core.SpellSchoolNature,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskMeleeMHSpecial,
-		Flags:       core.SpellFlagPassiveSpell | core.SpellFlagPoison,
+		ActionID:       core.ActionID{SpellID: spellID},
+		SpellCode:      SpellCode_HunterPetScorpidPoison,
+		ClassSpellMask: SpellMaskPetScorpidPoison,
+		SpellSchool:    core.SpellSchoolNature,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagPassiveSpell | core.SpellFlagPoison,
 
 		FocusCost: core.FocusCostOptions{
 			Cost: 30,

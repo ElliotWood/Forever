@@ -32,13 +32,14 @@ func (hunter *Hunter) registerSummonHawkSpell(timer *core.Timer) {
 	manaCost := [5]float64{0, 80, 105, 135, 190}[rank]
 
 	hunter.SummonHawk = hunter.RegisterSpell(core.SpellConfig{
-		SpellCode:   SpellCode_HunterSummonHawk,
-		ActionID:    core.ActionID{SpellID: spellId},
-		Rank:        rank,
-		SpellSchool: core.SpellSchoolPhysical,
-		DefenseType: core.DefenseTypeMelee,
-		ProcMask:    core.ProcMaskEmpty,
-		Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		SpellCode:      SpellCode_HunterSummonHawk,
+		ClassSpellMask: SpellMaskSummonHawk,
+		ActionID:       core.ActionID{SpellID: spellId},
+		Rank:           rank,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: manaCost,
