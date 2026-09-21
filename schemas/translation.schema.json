@@ -6878,19 +6878,6 @@
 									"additionalProperties": false,
 									"required": ["label", "none", "help", "maintain"]
 								},
-								"bloodlust_timing": {
-									"type": "object",
-									"properties": {
-										"label": {
-											"type": "string"
-										},
-										"tooltip": {
-											"type": "string"
-										}
-									},
-									"additionalProperties": false,
-									"required": ["label", "tooltip"]
-								},
 								"dps": {
 									"type": "object",
 									"properties": {
@@ -6936,7 +6923,7 @@
 								}
 							},
 							"additionalProperties": false,
-							"required": ["sunder_armor", "bloodlust_timing", "dps"]
+							"required": ["sunder_armor", "dps"]
 						}
 					},
 					"additionalProperties": false,

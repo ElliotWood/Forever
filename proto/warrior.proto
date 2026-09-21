@@ -109,13 +109,15 @@ enum WarriorSunder {
 
 message DpsWarrior {
 	message Rotation {
+		reserved 6;
+		reserved "bloodlust_timing";
+
 		RotationType type = 1;
 
 		DpsWarriorSpec spec = 2;
 		bool use_recklessness = 3;
 		bool use_overpower = 4;
 		WarriorSunder sunder_armor = 5;
-		int32 bloodlust_timing = 6;
 	}
 
 	message Options {

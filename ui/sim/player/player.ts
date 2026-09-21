@@ -1641,9 +1641,33 @@ export class Player<SpecType extends Spec> {
 				},
 			],
 			// v17 types the ghost-talent buff fields bool. A JSON payload is rewritten before it is
-			// parsed (`migrateRetypedBuffFields`) and a binary one decodes 1 or 2 as true, so this
-			// entry only stamps the version.
-			[17, (oldProto: PlayerProto) => oldProto],
+			// parsed (`migrateRetypedBuffFields`) and a binary one decodes 1 or 2 as true, so the
+			// buff fields need nothing here.
+			[
+				17,
+				(oldProto: PlayerProto) => {
+					// v17 also reserves the warrior's bloodlustTiming. The simple rotation is a JSON
+					// string that `DpsWarrior_Rotation.fromJson` reads without ignoreUnknownFields, so
+					// leaving the key in would throw away the whole simple rotation, not just the key.
+					if (oldProto.spec?.oneofKind === 'dpsWarrior') {
+						const jsonStr = oldProto.rotation?.simple?.specRotationJson;
+						if (jsonStr) {
+							try {
+								const parsed = JSON.parse(jsonStr);
+
+								delete parsed.bloodlustTiming;
+								delete parsed.bloodlust_timing;
+
+								oldProto.rotation!.simple!.specRotationJson = JSON.stringify(parsed);
+							} catch {
+								// Malformed JSON - nothing to migrate.
+							}
+						}
+					}
+
+					return oldProto;
+				},
+			],
 		]);
 
 		// Run the migration utility using the above map.

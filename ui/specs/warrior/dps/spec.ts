@@ -140,7 +140,7 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 	},
 
 	simpleRotation: (player: Player<Spec.SpecDpsWarrior>, simple: SpecRotation<Spec.SpecDpsWarrior>, _: Cooldowns): APLRotation => {
-		let { spec, sunderArmor = WarriorSunder.WarriorSunderHelp, useOverpower = true, useRecklessness = false, bloodlustTiming = 5 } = simple;
+		let { spec, sunderArmor = WarriorSunder.WarriorSunderHelp, useOverpower = true, useRecklessness = false } = simple;
 
 		if (!spec) {
 			if (Presets.isArmsSpec(player) || Presets.isArmsKebabSpec(player)) {
@@ -153,10 +153,6 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 		const rotation = APLRotation.clone(
 			spec == DpsWarriorSpec.DpsWarriorSpecFury ? Presets.FURY_DEFAULT_ROTATION.rotation.rotation! : Presets.ARMS_DEFAULT_ROTATION.rotation.rotation!,
 		);
-
-		const bloodlustTimingVariable = rotation.valueVariables.find(variable => variable.name === 'Bloodlust time');
-		if (bloodlustTimingVariable && bloodlustTimingVariable.value?.value.oneofKind === 'const')
-			bloodlustTimingVariable.value.value.const.val = String(bloodlustTiming);
 
 		const recklessnessAction = rotation.priorityList.find(
 			action => action.action?.action.oneofKind === 'groupReference' && action.action.action.groupReference.groupName === 'Recklessness ON/OFF',

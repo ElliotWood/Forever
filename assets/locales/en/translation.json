@@ -1953,10 +1953,6 @@
 					"help": "Help stack",
 					"maintain": "Maintain debuff"
 				},
-				"bloodlust_timing": {
-					"label": "Bloodlust timing (Seconds)",
-					"tooltip": "When, in seconds, to use Bloodlust/Heroism."
-				},
 				"dps": {
 					"spec": {
 						"label": "Rotation",
