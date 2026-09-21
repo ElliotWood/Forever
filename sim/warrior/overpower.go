@@ -38,9 +38,8 @@ func (warrior *Warrior) registerOverpower() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: overpowerRank.Cost,
-			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
-			Refund: 0.8,
+			Cost:   overpowerRank.Cost,
+			Refund: overpowerRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

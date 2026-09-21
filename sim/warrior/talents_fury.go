@@ -230,9 +230,8 @@ func (warrior *Warrior) registerBloodthirst() {
 		MaxRange:       bloodthirstRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: bloodthirstRank.Cost,
-			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
-			Refund: 0.8,
+			Cost:   bloodthirstRank.Cost,
+			Refund: bloodthirstRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{

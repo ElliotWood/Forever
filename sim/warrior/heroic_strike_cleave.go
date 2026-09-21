@@ -25,9 +25,8 @@ func (warrior *Warrior) registerHeroicStrike() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: heroicStrikeRank.Cost,
-			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
-			Refund: 0.8,
+			Cost:   heroicStrikeRank.Cost,
+			Refund: heroicStrikeRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{
@@ -69,9 +68,8 @@ func (warrior *Warrior) registerCleave() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: cleaveRank.Cost,
-			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
-			Refund: 0.8,
+			Cost:   cleaveRank.Cost,
+			Refund: cleaveRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{

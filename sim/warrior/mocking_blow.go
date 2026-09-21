@@ -18,9 +18,8 @@ func (warrior *Warrior) registerMockingBlow() {
 		MaxRange:       mockingBlowRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: mockingBlowRank.Cost,
-			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
-			Refund: 0.8,
+			Cost:   mockingBlowRank.Cost,
+			Refund: mockingBlowRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

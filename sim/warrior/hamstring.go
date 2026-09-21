@@ -20,9 +20,8 @@ func (warrior *Warrior) registerHamstring() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: hamstringRank.Cost,
-			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
-			Refund: 0.8,
+			Cost:   hamstringRank.Cost,
+			Refund: hamstringRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

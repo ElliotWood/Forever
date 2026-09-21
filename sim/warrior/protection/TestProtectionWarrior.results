@@ -423,8 +423,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Human-p1_bis-Protection-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1055.87823
-  tps: 947.12106
+  dps: 1055.53515
+  tps: 946.95965
   dtps: 116776.3853
  }
 }
@@ -447,8 +447,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Human-p1_bis-Protection-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 64.84848
-  tps: 59.37397
+  dps: 64.8545
+  tps: 59.37878
   dtps: 181817.31531
  }
 }
@@ -471,8 +471,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Human-preraid-Protection-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1055.87823
-  tps: 947.12106
+  dps: 1055.53515
+  tps: 946.95965
   dtps: 116776.3853
  }
 }
@@ -495,8 +495,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Human-preraid-Protection-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 64.84848
-  tps: 59.37397
+  dps: 64.8545
+  tps: 59.37878
   dtps: 181817.31531
  }
 }
@@ -519,8 +519,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Orc-p1_bis-Protection-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1049.93549
-  tps: 942.32843
+  dps: 1049.38184
+  tps: 941.96885
   dtps: 116899.279
  }
 }
@@ -543,8 +543,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Orc-p1_bis-Protection-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 65.08458
-  tps: 59.56007
+  dps: 65.09061
+  tps: 59.56489
   dtps: 182236.64193
  }
 }
@@ -567,8 +567,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Orc-preraid-Protection-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1049.93549
-  tps: 942.32843
+  dps: 1049.38184
+  tps: 941.96885
   dtps: 116899.279
  }
 }
@@ -591,8 +591,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-Settings-Orc-preraid-Protection-default-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 65.08458
-  tps: 59.56007
+  dps: 65.09061
+  tps: 59.56489
   dtps: 182236.64193
  }
 }

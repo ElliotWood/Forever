@@ -238,9 +238,8 @@ func (warrior *Warrior) registerMortalStrike() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: mortalStrikeRank.Cost,
-			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
-			Refund: 0.8,
+			Cost:   mortalStrikeRank.Cost,
+			Refund: mortalStrikeRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{
@@ -290,9 +289,8 @@ func (warrior *Warrior) registerSpearingStrike() {
 		MaxRange:       spearingStrikeRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost: spearingStrikeRank.Cost,
-			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
-			Refund: 0.8,
+			Cost:   spearingStrikeRank.Cost,
+			Refund: spearingStrikeRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{
