@@ -5,6 +5,7 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -92,19 +93,19 @@ func (warrior *Warrior) registerImprovedOverpower() {
 	})
 }
 
-var angerManagementRank = spellData.AngerManagement.HighestRank()
+var angerManagementRank = spellData.AngerManagement.Highest()
 
 // The tooltip reads "Generates $m2 Rage every $m3 sec", and the three dummies share an aura and misc
 // value, so the rage and its period are taken by effect index.
-var angerManagementRage = angerManagementRank.Effects[1].Value
-var angerManagementPeriod = time.Duration(angerManagementRank.Effects[2].Value) * time.Second
+var angerManagementRage = angerManagementRank.EffectN(2).Average(core.CharacterLevel)
+var angerManagementPeriod = time.Duration(angerManagementRank.EffectN(3).Average(core.CharacterLevel)) * time.Second
 
 func (warrior *Warrior) registerAngerManagement() {
 	if !warrior.Talents.AngerManagement {
 		return
 	}
 
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: angerManagementRank.SpellID})
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: angerManagementRank.ID})
 
 	warrior.RegisterResetEffect(func(sim *core.Simulation) {
 		core.StartPeriodicAction(sim, core.PeriodicActionOptions{
@@ -119,7 +120,7 @@ func (warrior *Warrior) registerAngerManagement() {
 }
 
 // The bleed the talent (12834) reaches through 12162.
-var deepWoundsBleed = spellData.DeepWoundsTriggered.BySpellID(412609)
+var deepWoundsBleed = spellData.DeepWoundsTriggered.ByID(412609)
 
 func (warrior *Warrior) registerDeepWounds() {
 	if warrior.Talents.DeepWounds == 0 {
@@ -127,10 +128,10 @@ func (warrior *Warrior) registerDeepWounds() {
 	}
 
 	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
-	tick := deepWoundsBleed.Periodic.(shared.SpellDataPeriodic)
+	tick := deepWoundsBleed.EffectN(1)
 
 	warrior.DeepWounds = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: deepWoundsBleed.SpellID},
+		ActionID:       core.ActionID{SpellID: deepWoundsBleed.ID},
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskEmpty,
 		ClassSpellMask: SpellMaskDeepWounds,
@@ -146,12 +147,12 @@ func (warrior *Warrior) registerDeepWounds() {
 			Aura: core.Aura{
 				Label: "DeepWounds",
 			},
-			NumberOfTicks: tick.NumberOfTicks,
-			TickLength:    tick.TickLength,
+			NumberOfTicks: int32(deepWoundsBleed.Duration() / tick.Period()),
+			TickLength:    tick.Period(),
 
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				baseDamage := warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
-				dot.Spell.CalcAndDealPeriodicDamage(sim, target, baseDamage/float64(dot.HastedTickCount())*share, shared.PeriodicTickOutcome(deepWoundsBleed, dot))
+				dot.Spell.CalcAndDealPeriodicDamage(sim, target, baseDamage/float64(dot.HastedTickCount())*share, deepWoundsBleed.TickOutcome(dot))
 			},
 		},
 
@@ -188,7 +189,7 @@ func (warrior *Warrior) registerTwoHandedWeaponSpecialization() {
 	weaponMod := warrior.AddDynamicMod(core.SpellModConfig{
 		School:     core.SpellSchoolPhysical,
 		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.TwoHandedWeaponSpecialization.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).FractionAt(warrior.Talents.TwoHandedWeaponSpecialization),
+		FloatValue: spellData.TwoHandedWeaponSpecialization.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 1).FractionAt(warrior.Talents.TwoHandedWeaponSpecialization),
 	})
 
 	if warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand {
@@ -216,8 +217,8 @@ func (warrior *Warrior) registerImpale() {
 	})
 }
 
-var mortalStrikeRank = spellData.MortalStrike.HighestRank()
-var mortalStrikeBaseDamage, _ = mortalStrikeRank.Direct.Range()
+var mortalStrikeRank = spellData.MortalStrike.Highest()
+var mortalStrikeBaseDamage = mortalStrikeRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerMortalStrike() {
 	if !warrior.Talents.MortalStrike {
@@ -225,26 +226,26 @@ func (warrior *Warrior) registerMortalStrike() {
 	}
 
 	warrior.MortalStrike = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: mortalStrikeRank.SpellID},
-		SpellSchool:    mortalStrikeRank.SpellSchool,
-		DefenseType:    mortalStrikeRank.DefenseType,
+		ActionID:       core.ActionID{SpellID: mortalStrikeRank.ID},
+		SpellSchool:    mortalStrikeRank.SpellSchool(),
+		DefenseType:    mortalStrikeRank.DefenseTypeCore(),
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskMortalStrike,
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   mortalStrikeRank.Cost,
+			Cost:   rageCost(mortalStrikeRank),
 			Refund: mortalStrikeRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: mortalStrikeRank.GCD,
+				GCD: mortalStrikeRank.GCD(),
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: mortalStrikeRank.Cooldown,
+				Duration: cooldownOf(mortalStrikeRank),
 			},
 			IgnoreHaste: true,
 		},
@@ -263,12 +264,12 @@ func (warrior *Warrior) registerMortalStrike() {
 	})
 }
 
-var spearingStrikeRank = spellData.SpearingStrike.HighestRank()
+var spearingStrikeRank = spellData.SpearingStrike.Highest()
 
 // The tooltip reads "deals $s2% weapon damage" and "an additional ${$s2*$s3}%" against Giants and
 // Dragonkin, and the effects share an aura and misc value, so both are taken by effect index.
-var spearingStrikeWeaponShare = spearingStrikeRank.Effects[1].Fraction()
-var spearingStrikeGiantMultiplier = 1 + spearingStrikeRank.Effects[2].Value
+var spearingStrikeWeaponShare = spearingStrikeRank.EffectN(2).Percent()
+var spearingStrikeGiantMultiplier = 1 + spearingStrikeRank.EffectN(3).Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerSpearingStrike() {
 	if !warrior.Talents.SpearingStrike {
@@ -276,26 +277,26 @@ func (warrior *Warrior) registerSpearingStrike() {
 	}
 
 	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: spearingStrikeRank.SpellID},
-		SpellSchool:    spearingStrikeRank.SpellSchool,
-		DefenseType:    spearingStrikeRank.DefenseType,
+		ActionID:       core.ActionID{SpellID: spearingStrikeRank.ID},
+		SpellSchool:    spearingStrikeRank.SpellSchool(),
+		DefenseType:    spearingStrikeRank.DefenseTypeCore(),
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
 		ClassSpellMask: SpellMaskSpearingStrike,
-		MaxRange:       spearingStrikeRank.MaxRange,
+		MaxRange:       float64(spearingStrikeRank.MaxRange),
 
 		RageCost: core.RageCostOptions{
-			Cost:   spearingStrikeRank.Cost,
+			Cost:   rageCost(spearingStrikeRank),
 			Refund: spearingStrikeRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: spearingStrikeRank.GCD,
+				GCD: spearingStrikeRank.GCD(),
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: spearingStrikeRank.Cooldown,
+				Duration: cooldownOf(spearingStrikeRank),
 			},
 			IgnoreHaste: true,
 		},
@@ -318,7 +319,7 @@ func (warrior *Warrior) registerSpearingStrike() {
 	})
 }
 
-var bloodthrillProc = spellData.BloodthrillTriggered.HighestRank()
+var bloodthrillProc = spellData.BloodthrillTriggered.Highest()
 
 func (warrior *Warrior) registerBloodthrill() {
 	if warrior.Talents.Bloodthrill == 0 {
@@ -339,7 +340,7 @@ func (warrior *Warrior) registerBloodthrill() {
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.OverpowerAura.Activate(sim)
-			warrior.OverpowerAura.UpdateExpires(sim.CurrentTime + bloodthrillProc.Duration)
+			warrior.OverpowerAura.UpdateExpires(sim.CurrentTime + bloodthrillProc.Duration())
 		},
 	})
 }
@@ -369,13 +370,13 @@ func (warrior *Warrior) registerWeaponmaster() {
 		Label:    "Weaponmaster (Axe/Polearm)",
 		ActionID: actionID.WithTag(1),
 		Duration: core.NeverExpires,
-	}).AttachStatBuff(stats.PhysicalCritPercent, spellData.Weaponmaster.EffectAt(0).ValueAt(rank))
+	}).AttachStatBuff(stats.PhysicalCritPercent, spellData.Weaponmaster.EffectAt(1).ValueAt(rank))
 	if critOn {
 		core.MakePermanent(critAura)
 	}
 
 	// The attack tables exist only once the environment is built, so the factor is written on reset.
-	armorIgnore := spellData.Weaponmaster.EffectAt(1).FractionAt(rank)
+	armorIgnore := spellData.Weaponmaster.EffectAt(2).FractionAt(rank)
 	applyArmorIgnore := func() {
 		for _, attackTable := range warrior.AttackTables {
 			attackTable.ArmorIgnoreFactor = core.TernaryFloat64(armorIgnoreOn, armorIgnore, 0)
@@ -392,7 +393,7 @@ func (warrior *Warrior) registerWeaponmaster() {
 		Callback:           core.CallbackOnSpellHitDealt,
 		ProcMask:           core.ProcMaskMelee,
 		Outcome:            core.OutcomeLanded,
-		ProcChance:         spellData.Weaponmaster.EffectAt(2).FractionAt(rank),
+		ProcChance:         spellData.Weaponmaster.EffectAt(3).FractionAt(rank),
 		TriggerImmediately: true,
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
 			// An extra attack does not give another one.
@@ -418,7 +419,7 @@ func (warrior *Warrior) registerWeaponmaster() {
 	})
 }
 
-var improvedHamstringRoot = spellData.ImprovedHamstringTriggered.HighestRank()
+var improvedHamstringRoot = spellData.ImprovedHamstringTriggered.Highest()
 
 func (warrior *Warrior) registerImprovedHamstring() {
 	if warrior.Talents.ImprovedHamstring == 0 {
@@ -430,8 +431,8 @@ func (warrior *Warrior) registerImprovedHamstring() {
 	immobilizeAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return target.GetOrRegisterAura(core.Aura{
 			Label:    "Improved Hamstring-" + warrior.Label,
-			ActionID: core.ActionID{SpellID: improvedHamstringRoot.SpellID},
-			Duration: improvedHamstringRoot.Duration,
+			ActionID: core.ActionID{SpellID: improvedHamstringRoot.ID},
+			Duration: improvedHamstringRoot.Duration(),
 		})
 	})
 
@@ -456,17 +457,17 @@ func (warrior *Warrior) registerImprovedSlam() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskSlam,
 		Kind:      core.SpellMod_CastTime_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CASTING_TIME).ValueAt(warrior.Talents.ImprovedSlam)),
+		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.Effect(dbcenums.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CASTING_TIME).ValueAt(warrior.Talents.ImprovedSlam)),
 	})
 
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskSlam,
 		Kind:      core.SpellMod_GlobalCooldown_Flat,
-		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_GLOBAL_COOLDOWN).ValueAt(warrior.Talents.ImprovedSlam)),
+		TimeValue: time.Millisecond * time.Duration(spellData.ImprovedSlam.Effect(dbcenums.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_GLOBAL_COOLDOWN).ValueAt(warrior.Talents.ImprovedSlam)),
 	})
 }
 
-var sweepingStrikesRank = spellData.SweepingStrikes.HighestRank()
+var sweepingStrikesRank = spellData.SweepingStrikes.Highest()
 
 func (warrior *Warrior) registerSweepingStrikes() {
 	if !warrior.Talents.SweepingStrikes {
@@ -512,7 +513,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 		Name:               "Sweeping Strikes",
 		ActionID:           actionID,
 		MetricsActionID:    actionID,
-		Duration:           sweepingStrikesRank.Duration,
+		Duration:           sweepingStrikesRank.Duration(),
 		Callback:           core.CallbackOnSpellHitDealt,
 		ProcMask:           core.ProcMaskMelee,
 		Outcome:            core.OutcomeLanded,
@@ -538,7 +539,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 			warrior.SweepingStrikesAura.RemoveStack(sim)
 		},
 	})
-	warrior.SweepingStrikesAura.MaxStacks = sweepingStrikesRank.ProcCharges
+	warrior.SweepingStrikesAura.MaxStacks = int32(sweepingStrikesRank.ProcCharges)
 
 	ssCD := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
@@ -546,12 +547,12 @@ func (warrior *Warrior) registerSweepingStrikes() {
 		SpellSchool:    core.SpellSchoolPhysical,
 
 		RageCost: core.RageCostOptions{
-			Cost: sweepingStrikesRank.Cost,
+			Cost: rageCost(sweepingStrikesRank),
 		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: sweepingStrikesRank.Cooldown,
+				Duration: cooldownOf(sweepingStrikesRank),
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
@@ -561,7 +562,7 @@ func (warrior *Warrior) registerSweepingStrikes() {
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 			spell.RelatedSelfBuff.Activate(sim)
-			warrior.SweepingStrikesAura.SetStacks(sim, sweepingStrikesRank.ProcCharges)
+			warrior.SweepingStrikesAura.SetStacks(sim, int32(sweepingStrikesRank.ProcCharges))
 		},
 
 		RelatedSelfBuff: warrior.SweepingStrikesAura,

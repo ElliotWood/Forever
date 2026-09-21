@@ -4,19 +4,19 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var berserkerRageRank = spellData.BerserkerRage.HighestRank()
+var berserkerRageRank = spellData.BerserkerRage.Highest()
 
 func (warrior *Warrior) registerBerserkerRage() {
-	actionID := core.ActionID{SpellID: berserkerRageRank.SpellID}
+	actionID := core.ActionID{SpellID: berserkerRageRank.ID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
-	rageGain := spellData.ImprovedBerserkerRage.EffectAt(0).TenthsAt(warrior.Talents.ImprovedBerserkerRage)
+	rageGain := spellData.ImprovedBerserkerRage.EffectAt(1).TenthsAt(warrior.Talents.ImprovedBerserkerRage)
 
 	// TODO: Ingame test needed -- the client states no amount for the extra rage a hit taken
 	// generates; doubled here.
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Berserker Rage",
 		ActionID: actionID,
-		Duration: berserkerRageRank.Duration,
+		Duration: berserkerRageRank.Duration(),
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			warrior.MultiplyDamageTakenRageGen(2)
 		},
@@ -33,12 +33,12 @@ func (warrior *Warrior) registerBerserkerRage() {
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: berserkerRageRank.GCD,
+				GCD: berserkerRageRank.GCD(),
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: berserkerRageRank.Cooldown,
+				Duration: cooldownOf(berserkerRageRank),
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {

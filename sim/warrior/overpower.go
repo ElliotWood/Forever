@@ -4,20 +4,20 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var overpowerRank = spellData.Overpower.BySpellID(11585)
-var overpowerBaseDamage, _ = overpowerRank.Direct.Range()
+var overpowerRank = spellData.Overpower.ByID(11585)
+var overpowerBaseDamage = overpowerRank.DamageEffect().Average(core.CharacterLevel)
 
 // The window a dodge opens: the aura Offensive State (DND) fires on the hit.
-var overpowerWindow = spellData.OffensiveStateTriggered.HighestRank()
+var overpowerWindow = spellData.OffensiveStateTriggered.Highest()
 
 func (warrior *Warrior) registerOverpower() {
-	actionID := core.ActionID{SpellID: overpowerRank.SpellID}
-	overpowerCD := overpowerRank.Cooldown
+	actionID := core.ActionID{SpellID: overpowerRank.ID}
+	overpowerCD := cooldownOf(overpowerRank)
 
 	warrior.OverpowerAura = warrior.RegisterAura(core.Aura{
-		ActionID: core.ActionID{SpellID: overpowerWindow.SpellID},
+		ActionID: core.ActionID{SpellID: overpowerWindow.ID},
 		Label:    "Overpower Aura",
-		Duration: overpowerWindow.Duration,
+		Duration: overpowerWindow.Duration(),
 	})
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
@@ -40,12 +40,12 @@ func (warrior *Warrior) registerOverpower() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   overpowerRank.Cost,
+			Cost:   rageCost(overpowerRank),
 			Refund: overpowerRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: overpowerRank.GCD,
+				GCD: overpowerRank.GCD(),
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
@@ -65,7 +65,7 @@ func (warrior *Warrior) registerOverpower() {
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := overpowerBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialNoBlockDodgeParry)
-			warrior.OverpowerAura.Duration = overpowerWindow.Duration
+			warrior.OverpowerAura.Duration = overpowerWindow.Duration()
 			warrior.OverpowerAura.Deactivate(sim)
 
 			if !result.Landed() {

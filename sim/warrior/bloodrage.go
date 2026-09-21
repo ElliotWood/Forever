@@ -1,20 +1,20 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var bloodrageRank = spellData.Bloodrage.HighestRank()
-var bloodrageOverTime = spellData.BloodrageTriggered.HighestRank().Energize.(shared.SpellDataPeriodic)
+var bloodrageRank = spellData.Bloodrage.Highest()
+var bloodrageOverTime = spellData.BloodrageTriggered.Highest()
+var bloodrageOverTimeTick = bloodrageOverTime.PeriodicEffect()
 
 func (warrior *Warrior) registerBloodrage() {
-	actionID := core.ActionID{SpellID: bloodrageRank.SpellID}
+	actionID := core.ActionID{SpellID: bloodrageRank.ID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
-	healthCost := warrior.GetBaseStats()[stats.Health] * bloodrageRank.PowerCostPct / 100
+	healthCost := warrior.GetBaseStats()[stats.Health] * float64(bloodrageRank.Powers[0].CostPct) / 100
 	improvedBloodrage := spellData.ImprovedBloodrage.MultiplierAt(warrior.Talents.ImprovedBloodrage)
-	instantRage := spellData.Bloodrage.EffectAt(0).TenthsAt(1) * improvedBloodrage
+	instantRage := spellData.Bloodrage.EffectAt(1).TenthsAt(1) * improvedBloodrage
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID: actionID,
@@ -25,7 +25,7 @@ func (warrior *Warrior) registerBloodrage() {
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: bloodrageRank.Cooldown,
+				Duration: cooldownOf(bloodrageRank),
 			},
 		},
 
@@ -34,10 +34,10 @@ func (warrior *Warrior) registerBloodrage() {
 			warrior.RemoveHealth(sim, healthCost)
 
 			core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-				NumTicks: int(bloodrageOverTime.NumberOfTicks),
-				Period:   bloodrageOverTime.TickLength,
+				NumTicks: int(bloodrageOverTime.Duration() / bloodrageOverTimeTick.Period()),
+				Period:   bloodrageOverTimeTick.Period(),
 				OnAction: func(sim *core.Simulation) {
-					warrior.AddRage(sim, bloodrageOverTime.Tick/10*improvedBloodrage, rageMetrics)
+					warrior.AddRage(sim, bloodrageOverTimeTick.Tenths()*improvedBloodrage, rageMetrics)
 				},
 			})
 		},

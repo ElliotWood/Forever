@@ -4,28 +4,28 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var pummelRank = spellData.Pummel.BySpellID(6554)
-var pummelBaseDamage, _ = pummelRank.Direct.Range()
+var pummelRank = spellData.Pummel.ByID(6554)
+var pummelBaseDamage = pummelRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerPummel() {
 	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: pummelRank.SpellID},
+		ActionID:       core.ActionID{SpellID: pummelRank.ID},
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskPummel,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		SpellSchool:    pummelRank.SpellSchool,
-		DefenseType:    pummelRank.DefenseType,
+		SpellSchool:    pummelRank.SpellSchool(),
+		DefenseType:    pummelRank.DefenseTypeCore(),
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   pummelRank.Cost,
+			Cost:   rageCost(pummelRank),
 			Refund: pummelRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: pummelRank.Cooldown,
+				Duration: cooldownOf(pummelRank),
 			},
 		},
 

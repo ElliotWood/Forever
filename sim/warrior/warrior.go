@@ -5,6 +5,7 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -274,4 +275,19 @@ func (warrior *Warrior) CastNormalizedSweepingStrikesAttack(results core.SpellRe
 // Agent is a generic way to access underlying warrior on any of the agents.
 type WarriorAgent interface {
 	GetWarrior() *Warrior
+}
+
+// SpellPower.PowerType 1 is the rage bar. The client states rage on a 0-1000 bar and core spends
+// whole points, which is the conversion PowerCost makes.
+const powerTypeRage int8 = 1
+
+func rageCost(s *spelldata.Spell) int32 {
+	return int32(s.PowerCost(powerTypeRage))
+}
+
+// The recovery the ability waits out. A warrior ability states it on a shared category - Bloodthirst
+// and Mortal Strike both run off category 971 - and leaves its own column at zero, so the cooldown
+// is whichever of the two the client filled in.
+func cooldownOf(s *spelldata.Spell) time.Duration {
+	return max(s.Cooldown(), s.CategoryCooldown())
 }

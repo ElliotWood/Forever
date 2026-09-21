@@ -4,31 +4,31 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var mockingBlowRank = spellData.MockingBlow.HighestRank()
-var mockingBlowBaseDamage, _ = mockingBlowRank.Direct.Range()
+var mockingBlowRank = spellData.MockingBlow.Highest()
+var mockingBlowBaseDamage = mockingBlowRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerMockingBlow() {
 	warrior.MockingBlow = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: mockingBlowRank.SpellID},
-		SpellSchool:    mockingBlowRank.SpellSchool,
-		DefenseType:    mockingBlowRank.DefenseType,
+		ActionID:       core.ActionID{SpellID: mockingBlowRank.ID},
+		SpellSchool:    mockingBlowRank.SpellSchool(),
+		DefenseType:    mockingBlowRank.DefenseTypeCore(),
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskMockingBlow,
-		MaxRange:       mockingBlowRank.MaxRange,
+		MaxRange:       float64(mockingBlowRank.MaxRange),
 
 		RageCost: core.RageCostOptions{
-			Cost:   mockingBlowRank.Cost,
+			Cost:   rageCost(mockingBlowRank),
 			Refund: mockingBlowRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: mockingBlowRank.GCD,
+				GCD: mockingBlowRank.GCD(),
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: mockingBlowRank.Cooldown,
+				Duration: cooldownOf(mockingBlowRank),
 			},
 		},
 

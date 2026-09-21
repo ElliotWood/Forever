@@ -4,10 +4,10 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var whirlwindRank = spellData.Whirlwind.HighestRank()
+var whirlwindRank = spellData.Whirlwind.Highest()
 
 func (warrior *Warrior) registerWhirlwind() {
-	actionID := core.ActionID{SpellID: whirlwindRank.SpellID}
+	actionID := core.ActionID{SpellID: whirlwindRank.ID}
 
 	// Raging Blows (1310315) adds the off-hand strike.
 	var whirlwindOH *core.Spell
@@ -26,7 +26,7 @@ func (warrior *Warrior) registerWhirlwind() {
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-				spell.CalcCleaveDamage(sim, target, whirlwindRank.MaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+				spell.CalcCleaveDamage(sim, target, int32(whirlwindRank.MaxTargets), baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 				spell.DealBatchedAoeDamage(sim)
 			},
 		})
@@ -41,15 +41,15 @@ func (warrior *Warrior) registerWhirlwind() {
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
-			Cost: whirlwindRank.Cost,
+			Cost: rageCost(whirlwindRank),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: whirlwindRank.GCD,
+				GCD: whirlwindRank.GCD(),
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: whirlwindRank.Cooldown,
+				Duration: cooldownOf(whirlwindRank),
 			},
 			IgnoreHaste: true,
 		},
@@ -64,7 +64,7 @@ func (warrior *Warrior) registerWhirlwind() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := warrior.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			results := spell.CalcCleaveDamage(sim, target, whirlwindRank.MaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			results := spell.CalcCleaveDamage(sim, target, int32(whirlwindRank.MaxTargets), baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 			spell.DealBatchedAoeDamage(sim)
 

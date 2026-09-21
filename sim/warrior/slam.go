@@ -4,12 +4,12 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var slamRank = spellData.Slam.HighestRank()
-var slamBaseDamage, _ = slamRank.Direct.Range()
+var slamRank = spellData.Slam.Highest()
+var slamBaseDamage = slamRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerSlam() {
 
-	actionID := core.ActionID{SpellID: slamRank.SpellID}
+	actionID := core.ActionID{SpellID: slamRank.ID}
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
@@ -21,17 +21,17 @@ func (warrior *Warrior) registerSlam() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   slamRank.Cost,
+			Cost:   rageCost(slamRank),
 			Refund: slamRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD:      slamRank.GCD,
-				CastTime: slamRank.CastTime,
+				GCD:      slamRank.GCD(),
+				CastTime: slamRank.CastTime(),
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: slamRank.Cooldown,
+				Duration: cooldownOf(slamRank),
 			},
 			IgnoreHaste: true,
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {

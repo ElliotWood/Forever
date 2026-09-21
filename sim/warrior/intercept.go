@@ -4,15 +4,15 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var interceptRank = spellData.Intercept.HighestRank()
+var interceptRank = spellData.Intercept.Highest()
 
-// The damage sits on the stun the charge triggers, which the generator follows onto the row.
-var interceptStunDamage, _ = interceptRank.Direct.Range()
+// The damage sits on the stun the charge triggers, not on Intercept itself.
+var interceptStunDamage = spellData.InterceptTriggered.Highest().DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerIntercept() {
-	actionID := core.ActionID{SpellID: interceptRank.SpellID}
-	chargeMinRange := interceptRank.MinRange
-	interceptCD := interceptRank.Cooldown
+	actionID := core.ActionID{SpellID: interceptRank.ID}
+	chargeMinRange := float64(interceptRank.MinRange)
+	interceptCD := cooldownOf(interceptRank)
 
 	var spell *core.Spell
 	var interceptTarget *core.Unit
@@ -43,10 +43,10 @@ func (warrior *Warrior) registerIntercept() {
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskIntercept,
 		MinRange:       chargeMinRange,
-		MaxRange:       interceptRank.MaxRange,
+		MaxRange:       float64(interceptRank.MaxRange),
 
 		RageCost: core.RageCostOptions{
-			Cost: interceptRank.Cost,
+			Cost: rageCost(interceptRank),
 		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{

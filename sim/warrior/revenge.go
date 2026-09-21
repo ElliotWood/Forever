@@ -8,10 +8,10 @@ import (
 
 // TODO: Manual review needed -- spell 25288 states "a high amount of threat" with no number;
 // none is modelled until measured in game.
-var revengeRank = spellData.Revenge.HighestRank()
+var revengeRank = spellData.Revenge.Highest()
 
 func (warrior *Warrior) registerRevenge() {
-	actionID := core.ActionID{SpellID: revengeRank.SpellID}
+	actionID := core.ActionID{SpellID: revengeRank.ID}
 
 	// TODO: In-game test needed
 	aura := warrior.RegisterAura(core.Aura{
@@ -41,30 +41,30 @@ func (warrior *Warrior) registerRevenge() {
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: revengeRank.GCD,
+				GCD: revengeRank.GCD(),
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: revengeRank.Cooldown,
+				Duration: cooldownOf(revengeRank),
 			},
 		},
 
 		RageCost: core.RageCostOptions{
-			Cost:   revengeRank.Cost,
+			Cost:   rageCost(revengeRank),
 			Refund: revengeRank.MissRefund(),
 		},
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  revengeRank.FlatThreatBonus,
+		FlatThreatBonus:  0,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(DefensiveStance) && aura.IsActive()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := revengeRank.Direct.Damage(sim)
+			baseDamage := revengeRank.DamageEffect().Average(core.CharacterLevel)
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 			aura.Deactivate(sim)
 

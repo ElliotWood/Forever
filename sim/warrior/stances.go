@@ -3,9 +3,10 @@ package warrior
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -20,15 +21,15 @@ const (
 
 const stanceEffectCategory = "Stance"
 
-var battleStanceRank = spellData.BattleStance.HighestRank()
-var defensiveStanceRank = spellData.DefensiveStance.HighestRank()
-var berserkerStanceRank = spellData.BerserkerStance.HighestRank()
+var battleStanceRank = spellData.BattleStance.Highest()
+var defensiveStanceRank = spellData.DefensiveStance.Highest()
+var berserkerStanceRank = spellData.BerserkerStance.Highest()
 
 func (warrior *Warrior) StanceMatches(other Stance) bool {
 	return (warrior.Stance & other) != 0
 }
 
-func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, rank shared.SpellData, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
+func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, rank *spelldata.Spell, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
 	actionID := aura.ActionID
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	maxRetainedRage := spellData.TacticalMastery.ValueAt(1)
@@ -38,14 +39,14 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, rank shared.S
 
 	return warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
-		DefenseType:    rank.DefenseType,
+		DefenseType:    rank.DefenseTypeCore(),
 		ClassSpellMask: mask,
 		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    stanceCD,
-				Duration: rank.Cooldown,
+				Duration: cooldownOf(rank),
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
@@ -76,7 +77,7 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, rank shared.S
 }
 
 func (warrior *Warrior) registerBattleStanceAura() *core.Aura {
-	actionID := core.ActionID{SpellID: battleStanceRank.SpellID}
+	actionID := core.ActionID{SpellID: battleStanceRank.ID}
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:      "Battle Stance",
@@ -85,7 +86,7 @@ func (warrior *Warrior) registerBattleStanceAura() *core.Aura {
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
 	}).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.ThreatMultiplier,
-		spellData.BattleStancePassive.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(1),
+		spellData.BattleStancePassive.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(1),
 	)
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
@@ -94,7 +95,7 @@ func (warrior *Warrior) registerBattleStanceAura() *core.Aura {
 }
 
 func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
-	actionID := core.ActionID{SpellID: defensiveStanceRank.SpellID}
+	actionID := core.ActionID{SpellID: defensiveStanceRank.ID}
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:      "Defensive Stance",
@@ -103,16 +104,16 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceDefensive, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
 	}).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.ThreatMultiplier,
-		spellData.DefensiveStancePassive.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(1),
+		spellData.DefensiveStancePassive.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(1),
 	).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.DamageTakenMultiplier,
-		spellData.DefensiveStancePassive.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).MultiplierAt(1),
+		spellData.DefensiveStancePassive.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).MultiplierAt(1),
 	).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.DamageDealtMultiplier,
-		spellData.DefensiveStancePassive.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(1),
+		spellData.DefensiveStancePassive.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(1),
 	)
 	if warrior.Talents.Defiance > 0 {
-		defiance := spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance)
+		defiance := spellData.Defiance.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance)
 		applied := false
 		refresh := func(inStance bool) {
 			want := inStance && warrior.PseudoStats.CanBlock
@@ -136,7 +137,7 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 }
 
 func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
-	actionId := core.ActionID{SpellID: berserkerStanceRank.SpellID}
+	actionId := core.ActionID{SpellID: berserkerStanceRank.ID}
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:      "Berserker Stance",
@@ -145,11 +146,11 @@ func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBerserker, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
 	}).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.ThreatMultiplier,
-		spellData.BerserkerStancePassive.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(1),
+		spellData.BerserkerStancePassive.Effect(dbcenums.A_MOD_THREAT, 127).MultiplierAt(1),
 	).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.DamageTakenMultiplier,
-		spellData.BerserkerStancePassive.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).MultiplierAt(1),
-	).AttachStatBuff(stats.PhysicalCritPercent, spellData.BerserkerStancePassive.Effect(shared.A_MOD_CRIT_PCT, 0).ValueAt(1))
+		spellData.BerserkerStancePassive.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).MultiplierAt(1),
+	).AttachStatBuff(stats.PhysicalCritPercent, spellData.BerserkerStancePassive.Effect(dbcenums.A_MOD_CRIT_PCT, 0).ValueAt(1))
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
 

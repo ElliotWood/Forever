@@ -1,25 +1,25 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-var shieldBlockRank = spellData.ShieldBlock.HighestRank()
+var shieldBlockRank = spellData.ShieldBlock.Highest()
 
 func (warrior *Warrior) registerShieldBlock() {
-	actionId := core.ActionID{SpellID: shieldBlockRank.SpellID}
+	actionId := core.ActionID{SpellID: shieldBlockRank.ID}
 
 	var spell *core.Spell
 	aura := warrior.RegisterAura(core.Aura{
 		Label:     "Shield Block",
 		ActionID:  actionId,
-		Duration:  shieldBlockRank.Duration,
-		MaxStacks: shieldBlockRank.ProcCharges,
+		Duration:  shieldBlockRank.Duration(),
+		MaxStacks: int32(shieldBlockRank.ProcCharges),
 	}).
-		AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(shared.A_MOD_BLOCK_PERCENT, 0).Fraction()).
+		AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(dbcenums.A_MOD_BLOCK_PERCENT, 0).Percent()).
 		AttachProcTrigger(core.ProcTrigger{
 			Name:               "Shield Block - Consume",
 			TriggerImmediately: true,
@@ -37,7 +37,7 @@ func (warrior *Warrior) registerShieldBlock() {
 		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
 
 		RageCost: core.RageCostOptions{
-			Cost: shieldBlockRank.Cost,
+			Cost: rageCost(shieldBlockRank),
 		},
 
 		Cast: core.CastConfig{
@@ -47,7 +47,7 @@ func (warrior *Warrior) registerShieldBlock() {
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: shieldBlockRank.Cooldown,
+				Duration: cooldownOf(shieldBlockRank),
 			},
 		},
 

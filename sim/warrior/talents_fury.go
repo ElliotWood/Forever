@@ -3,8 +3,8 @@ package warrior
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -51,17 +51,17 @@ func (warrior *Warrior) registerCruelty() {
 	warrior.AddStat(stats.PhysicalCritPercent, spellData.Cruelty.ValueAt(warrior.Talents.Cruelty))
 }
 
-var unbridledWrathRank = spellData.UnbridledWrathTriggered.HighestRank()
+var unbridledWrathRank = spellData.UnbridledWrathTriggered.Highest()
 
 // The energize is on the client's 0-1000 rage bar.
-var unbridledWrathRage = shared.SpellDataMin(unbridledWrathRank.Energize) / 10
+var unbridledWrathRage = unbridledWrathRank.EnergizeEffect().Tenths()
 
 func (warrior *Warrior) registerUnbridledWrath() {
 	if warrior.Talents.UnbridledWrath == 0 {
 		return
 	}
 
-	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: unbridledWrathRank.SpellID})
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: unbridledWrathRank.ID})
 
 	// The tooltip of 12322 doubles the rage for a two-handed weapon.
 	rageGain := unbridledWrathRage
@@ -94,17 +94,17 @@ func (warrior *Warrior) registerDualWieldSpecialization() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ProcMask:   core.ProcMaskMeleeOH,
 		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.DualWieldSpecialization.Effect(shared.A_MOD_OFFHAND_DAMAGE_PCT, 0).FractionAt(warrior.Talents.DualWieldSpecialization),
+		FloatValue: spellData.DualWieldSpecialization.Effect(dbcenums.A_MOD_OFFHAND_DAMAGE_PCT, 0).FractionAt(warrior.Talents.DualWieldSpecialization),
 	})
 
 	warrior.AddStaticMod(core.SpellModConfig{
 		ProcMask:   core.ProcMaskMeleeOH,
 		Kind:       core.SpellMod_BonusHit_Percent,
-		FloatValue: spellData.DualWieldSpecialization.Effect(shared.A_MOD_HIT_CHANCE, 0).ValueAt(warrior.Talents.DualWieldSpecialization),
+		FloatValue: spellData.DualWieldSpecialization.Effect(dbcenums.A_MOD_HIT_CHANCE, 0).ValueAt(warrior.Talents.DualWieldSpecialization),
 	})
 
 	// The off-hand rage the tooltip's $m2 states is the dummy at index 1.
-	warrior.SetOffHandRageMultiplier(spellData.DualWieldSpecialization.EffectAt(1).MultiplierAt(warrior.Talents.DualWieldSpecialization))
+	warrior.SetOffHandRageMultiplier(spellData.DualWieldSpecialization.EffectAt(2).MultiplierAt(warrior.Talents.DualWieldSpecialization))
 }
 
 // Iron Will (12962) shortens the stuns and fears the warrior suffers; the client files the fear
@@ -113,8 +113,8 @@ func (warrior *Warrior) registerIronWill() {
 	if warrior.Talents.IronWill == 0 {
 		return
 	}
-	warrior.PseudoStats.FearDurationMultiplier = spellData.IronWill.Effect(shared.A_MECHANIC_DURATION_MOD, 1).MultiplierAt(warrior.Talents.IronWill)
-	warrior.PseudoStats.StunDurationMultiplier = spellData.IronWill.Effect(shared.A_MECHANIC_DURATION_MOD, 12).MultiplierAt(warrior.Talents.IronWill)
+	warrior.PseudoStats.FearDurationMultiplier = spellData.IronWill.Effect(dbcenums.A_MECHANIC_DURATION_MOD, 1).MultiplierAt(warrior.Talents.IronWill)
+	warrior.PseudoStats.StunDurationMultiplier = spellData.IronWill.Effect(dbcenums.A_MECHANIC_DURATION_MOD, 12).MultiplierAt(warrior.Talents.IronWill)
 }
 
 func (warrior *Warrior) registerImprovedExecute() {
@@ -129,7 +129,7 @@ func (warrior *Warrior) registerImprovedExecute() {
 	})
 }
 
-var enrageBuff = spellData.EnrageTriggered.HighestRank()
+var enrageBuff = spellData.EnrageTriggered.Highest()
 
 func (warrior *Warrior) registerEnrage() {
 	if warrior.Talents.Enrage == 0 {
@@ -138,8 +138,8 @@ func (warrior *Warrior) registerEnrage() {
 
 	warrior.EnrageAura = warrior.GetOrRegisterAura(core.Aura{
 		Label:    "Enrage",
-		ActionID: core.ActionID{SpellID: enrageBuff.SpellID},
-		Duration: enrageBuff.Duration,
+		ActionID: core.ActionID{SpellID: enrageBuff.ID},
+		Duration: enrageBuff.Duration(),
 	}).AttachSpellMod(core.SpellModConfig{
 		School:     core.SpellSchoolPhysical,
 		Kind:       core.SpellMod_DamageDone_Pct,
@@ -160,7 +160,7 @@ func (warrior *Warrior) registerEnrage() {
 	})
 }
 
-var flurryBuff = spellData.FlurryTriggered.HighestRank()
+var flurryBuff = spellData.FlurryTriggered.Highest()
 
 func (warrior *Warrior) registerFlurry() {
 	if warrior.Talents.Flurry == 0 {
@@ -171,9 +171,9 @@ func (warrior *Warrior) registerFlurry() {
 	// applied buff 12966 carries a flat 30%.
 	flurryAura := warrior.RegisterAura(core.Aura{
 		Label:     "Flurry",
-		ActionID:  core.ActionID{SpellID: flurryBuff.SpellID},
-		Duration:  flurryBuff.Duration,
-		MaxStacks: flurryBuff.ProcCharges,
+		ActionID:  core.ActionID{SpellID: flurryBuff.ID},
+		Duration:  flurryBuff.Duration(),
+		MaxStacks: int32(flurryBuff.ProcCharges),
 	}).AttachMultiplyMeleeSpeed(spellData.Flurry.MultiplierAt(warrior.Talents.Flurry))
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
@@ -191,7 +191,7 @@ func (warrior *Warrior) registerFlurry() {
 
 			if result.Outcome.Matches(core.OutcomeCrit) {
 				flurryAura.Activate(sim)
-				flurryAura.SetStacks(sim, flurryBuff.ProcCharges)
+				flurryAura.SetStacks(sim, int32(flurryBuff.ProcCharges))
 				return
 			}
 
@@ -207,11 +207,14 @@ func (warrior *Warrior) registerPrecision() {
 		return
 	}
 
-	warrior.AddStat(stats.PhysicalHitPercent, spellData.Precision.Effect(shared.A_MOD_HIT_CHANCE, 0).ValueAt(warrior.Talents.Precision))
-	warrior.AddStat(stats.SpellHitPercent, spellData.Precision.Effect(shared.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warrior.Talents.Precision))
+	warrior.AddStat(stats.PhysicalHitPercent, spellData.Precision.Effect(dbcenums.A_MOD_HIT_CHANCE, 0).ValueAt(warrior.Talents.Precision))
+	warrior.AddStat(stats.SpellHitPercent, spellData.Precision.Effect(dbcenums.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warrior.Talents.Precision))
 }
 
-var bloodthirstRank = spellData.Bloodthirst.BySpellID(23894)
+// Rank 4 is 23894, and core states the rank number beside the spell.
+const bloodthirstRankNumber int32 = 4
+
+var bloodthirstRank = spellData.Bloodthirst.ByID(23894)
 
 func (warrior *Warrior) registerBloodthirst() {
 	if !warrior.Talents.Bloodthirst {
@@ -219,31 +222,31 @@ func (warrior *Warrior) registerBloodthirst() {
 	}
 
 	// The attack power share sits on the second effect; the first is the flat damage added to it.
-	apShare := bloodthirstRank.Effects[1].Fraction()
+	apShare := bloodthirstRank.EffectN(2).Percent()
 
 	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: bloodthirstRank.SpellID},
-		Rank:           bloodthirstRank.Rank,
-		SpellSchool:    bloodthirstRank.SpellSchool,
-		DefenseType:    bloodthirstRank.DefenseType,
+		ActionID:       core.ActionID{SpellID: bloodthirstRank.ID},
+		Rank:           bloodthirstRankNumber,
+		SpellSchool:    bloodthirstRank.SpellSchool(),
+		DefenseType:    bloodthirstRank.DefenseTypeCore(),
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskBloodthirst,
-		MaxRange:       bloodthirstRank.MaxRange,
+		MaxRange:       float64(bloodthirstRank.MaxRange),
 
 		RageCost: core.RageCostOptions{
-			Cost:   bloodthirstRank.Cost,
+			Cost:   rageCost(bloodthirstRank),
 			Refund: bloodthirstRank.MissRefund(),
 		},
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: bloodthirstRank.GCD,
+				GCD: bloodthirstRank.GCD(),
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: bloodthirstRank.Cooldown,
+				Duration: cooldownOf(bloodthirstRank),
 			},
 		},
 
@@ -251,7 +254,7 @@ func (warrior *Warrior) registerBloodthirst() {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := spell.MeleeAttackPower(target)*apShare + bloodthirstRank.Direct.Damage(sim)
+			baseDamage := spell.MeleeAttackPower(target)*apShare + bloodthirstRank.DamageEffect().Average(core.CharacterLevel)
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 			if !result.Landed() {
 				spell.IssueRefund(sim)
@@ -260,7 +263,7 @@ func (warrior *Warrior) registerBloodthirst() {
 	})
 }
 
-var piercingHowlRank = spellData.PiercingHowl.HighestRank()
+var piercingHowlRank = spellData.PiercingHowl.Highest()
 
 // TODO: The daze itself is not modelled; the encounter's targets do not move, so the -50% movement
 // speed 12323 applies for 6 seconds within 10 yards has nothing to act on.
@@ -270,37 +273,37 @@ func (warrior *Warrior) registerPiercingHowl() {
 	}
 
 	warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: piercingHowlRank.SpellID},
+		ActionID:       core.ActionID{SpellID: piercingHowlRank.ID},
 		SpellSchool:    core.SpellSchoolPhysical,
 		ProcMask:       core.ProcMaskEmpty,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskNone,
 
 		RageCost: core.RageCostOptions{
-			Cost: piercingHowlRank.Cost,
+			Cost: rageCost(piercingHowlRank),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: piercingHowlRank.GCD,
+				GCD: piercingHowlRank.GCD(),
 			},
 			IgnoreHaste: true,
 		},
 	})
 }
 
-var bloodCrazeHot = spellData.BloodCrazeTriggered.HighestRank()
+var bloodCrazeHot = spellData.BloodCrazeTriggered.Highest()
 
 func (warrior *Warrior) registerBloodCraze() {
 	if warrior.Talents.BloodCraze == 0 {
 		return
 	}
 
-	healthFraction := spellData.BloodCraze.EffectAt(0).FractionAt(warrior.Talents.BloodCraze)
-	hitThreshold := spellData.BloodCraze.EffectAt(1).FractionAt(warrior.Talents.BloodCraze)
-	tick := bloodCrazeHot.Periodic.(shared.SpellDataPeriodic)
+	healthFraction := spellData.BloodCraze.EffectAt(1).FractionAt(warrior.Talents.BloodCraze)
+	hitThreshold := spellData.BloodCraze.EffectAt(2).FractionAt(warrior.Talents.BloodCraze)
+	tick := bloodCrazeHot.PeriodicEffect()
 
 	bloodCraze := warrior.RegisterSpell(core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: bloodCrazeHot.SpellID},
+		ActionID:    core.ActionID{SpellID: bloodCrazeHot.ID},
 		SpellSchool: core.SpellSchoolPhysical,
 		ProcMask:    core.ProcMaskSpellHealing,
 		Flags:       core.SpellFlagPassiveSpell | core.SpellFlagHelpful | core.SpellFlagNoOnCastComplete,
@@ -311,8 +314,8 @@ func (warrior *Warrior) registerBloodCraze() {
 		Hot: core.DotConfig{
 			Aura:          core.Aura{Label: "Blood Craze"},
 			SelfOnly:      true,
-			NumberOfTicks: tick.NumberOfTicks,
-			TickLength:    tick.TickLength,
+			NumberOfTicks: int32(bloodCrazeHot.Duration() / tick.Period()),
+			TickLength:    tick.Period(),
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				healPerTick := warrior.MaxHealth() * healthFraction / float64(dot.ExpectedTickCount())
 				dot.Spell.CalcAndDealPeriodicHealing(sim, target, healPerTick, dot.OutcomeTick)
@@ -354,32 +357,32 @@ func (warrior *Warrior) registerRagingBlows() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskCleave,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  int32(spellData.RagingBlows.EffectAt(1).TenthsAt(1)),
+		IntValue:  int32(spellData.RagingBlows.EffectAt(2).TenthsAt(1)),
 	})
 }
 
-var deathWishRank = spellData.DeathWish.HighestRank()
+var deathWishRank = spellData.DeathWish.Highest()
 
 func (warrior *Warrior) registerDeathWish() {
 	if !warrior.Talents.DeathWish {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: deathWishRank.SpellID}
+	actionID := core.ActionID{SpellID: deathWishRank.ID}
 
 	deathWishAura := warrior.RegisterAura(core.Aura{
 		Label:    "Death Wish",
 		ActionID: actionID,
-		Duration: deathWishRank.Duration,
+		Duration: deathWishRank.Duration(),
 	}).
 		// The damage done effect carries the physical school mask, the damage taken one all schools.
 		AttachMultiplicativePseudoStatBuff(
 			&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical],
-			deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).Multiplier(),
+			1+deathWishRank.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_DONE, 1).Percent(),
 		).
 		AttachMultiplicativePseudoStatBuff(
 			&warrior.PseudoStats.DamageTakenMultiplier,
-			deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier(),
+			1+deathWishRank.Effect(dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Percent(),
 		).
 		// Grants immunity to Fear effects.
 		AttachFearImmunity()
@@ -390,7 +393,7 @@ func (warrior *Warrior) registerDeathWish() {
 		Flags:          core.SpellFlagCastWhileIncapacitated,
 
 		RageCost: core.RageCostOptions{
-			Cost: deathWishRank.Cost,
+			Cost: rageCost(deathWishRank),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -399,7 +402,7 @@ func (warrior *Warrior) registerDeathWish() {
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: deathWishRank.Cooldown,
+				Duration: cooldownOf(deathWishRank),
 			},
 		},
 

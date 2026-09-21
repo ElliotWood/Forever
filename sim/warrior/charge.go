@@ -1,18 +1,17 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-var chargeRank = spellData.Charge.BySpellID(11578)
+var chargeRank = spellData.Charge.ByID(11578)
 
 func (warrior *Warrior) registerCharge() {
-	actionID := core.ActionID{SpellID: chargeRank.SpellID}
+	actionID := core.ActionID{SpellID: chargeRank.ID}
 	metrics := warrior.NewRageMetrics(actionID)
 
-	chargeCD := chargeRank.Cooldown
-	chargeRage := shared.SpellDataMin(chargeRank.Energize) / 10
+	chargeCD := cooldownOf(chargeRank)
+	chargeRage := chargeRank.EnergizeEffect().Tenths()
 	if warrior.Talents.ImprovedCharge > 0 {
 		chargeRage += spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 	}
@@ -41,8 +40,8 @@ func (warrior *Warrior) registerCharge() {
 		SpellSchool:    core.SpellSchoolPhysical,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskCharge,
-		MinRange:       chargeRank.MinRange,
-		MaxRange:       chargeRank.MaxRange,
+		MinRange:       float64(chargeRank.MinRange),
+		MaxRange:       float64(chargeRank.MaxRange),
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{

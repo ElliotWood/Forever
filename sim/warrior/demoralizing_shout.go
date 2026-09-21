@@ -1,12 +1,10 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Ingame research needed if this adds flat threat
-var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 0).HighestRank()
+var demoralizingShoutRank = spellData.DemoralizingShout.Highest()
 
 // TODO: The core Demoralizing Shout aura still takes Booming Voice and Improved Demoralizing
 // Shout points. In the client Booming Voice (12321) widens the radius only, the improved talent
@@ -18,25 +16,26 @@ func (warrior *Warrior) registerDemoralizingShout() {
 	})
 
 	warrior.DemoralizingShout = warrior.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: demoralizingShoutRank.SpellID},
-		SpellSchool:    demoralizingShoutRank.SpellSchool,
-		DefenseType:    demoralizingShoutRank.DefenseType,
+		ActionID:       core.ActionID{SpellID: demoralizingShoutRank.ID},
+		SpellSchool:    demoralizingShoutRank.SpellSchool(),
+		DefenseType:    demoralizingShoutRank.DefenseTypeCore(),
 		ClassSpellMask: SpellMaskDemoralizingShout,
 		ProcMask:       core.ProcMaskEmpty,
 		Flags:          core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
-			Cost: demoralizingShoutRank.Cost,
+			Cost: rageCost(demoralizingShoutRank),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: demoralizingShoutRank.GCD,
+				GCD: demoralizingShoutRank.GCD(),
 			},
 			IgnoreHaste: true,
 		},
 
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  demoralizingShoutRank.FlatThreatBonus,
+		// TODO: Ingame research needed if this adds flat threat
+		FlatThreatBonus: 0,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
