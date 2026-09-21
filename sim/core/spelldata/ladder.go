@@ -3,6 +3,8 @@ package spelldata
 import (
 	"fmt"
 	"slices"
+
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // A spell's ranks in rank order, whether the client states them as one spell per rank or as one spell
@@ -126,7 +128,7 @@ func (l Ladder) EffectAt(index int32) LadderEffect {
 }
 
 // The effect with this aura and misc value, which panics when the rank has two of them.
-func (l Ladder) Effect(aura AuraType, misc int32) LadderEffect {
+func (l Ladder) Effect(aura dbcenums.EffectAuraType, misc int32) LadderEffect {
 	return LadderEffect{ladder: l, pick: func(s *Spell) float64 { return s.Effect(aura, misc).BasePoints }}
 }
 

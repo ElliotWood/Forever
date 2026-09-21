@@ -1199,10 +1199,9 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, error) {
 		return nil, err
 	}
 
-	// Rendered with a namer of its own: the store's rows name enum values the class tables never
-	// reach, and recording those on the namer above would put constants the shared package has no
-	// reader for into its file.
-	store, storeEnums, err := renderStore(helper.db, ladderIDs, trees)
+	// The store's rows name the enum values through dbcenums, so nothing they reach is recorded on
+	// the namer: the shared file above holds the class tables' names and no others.
+	store, err := renderStore(helper.db, ladderIDs, trees, namer)
 	if err != nil {
 		return nil, err
 	}
@@ -1210,7 +1209,6 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, error) {
 	files := map[string][]byte{
 		"sim/common/shared/spell_data_enums_auto_gen.go": enums,
 		"sim/core/spelldata/spells_auto_gen.go":          store,
-		"sim/core/spelldata/enums_auto_gen.go":           storeEnums,
 	}
 	for pkg, out := range rendered {
 		files[fmt.Sprintf("sim/%s/spell_data_auto_gen.go", pkg)] = out

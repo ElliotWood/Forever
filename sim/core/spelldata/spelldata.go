@@ -12,7 +12,10 @@
 // the generator that writes this package's data.
 package spelldata
 
-import "github.com/wowsims/forever/sim/core"
+import (
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
+)
 
 // One spell row. Every field is the client's column, in the client's units.
 type Spell struct {
@@ -152,8 +155,8 @@ type Effect struct {
 	// SpellEffect.EffectIndex, the client's own numbering. EffectN indexes by position instead.
 	Index uint8
 
-	Type EffectType
-	Aura AuraType
+	Type dbcenums.SpellEffectType
+	Aura dbcenums.EffectAuraType
 
 	// EffectBasePointsF as the client states it, which is a percentage as an integer and rage on a
 	// 0-1000 bar. Average() adds the per-level scaling on top.
@@ -209,11 +212,6 @@ type Effect struct {
 	// EffectAttributes.
 	Attributes int32
 }
-
-// SpellEffect.Effect and SpellEffect.EffectAura. The E_ and A_ constants are generated into
-// enums_auto_gen.go; the types are declared here so the package builds before that file exists.
-type EffectType int32
-type AuraType int32
 
 // One SpellPower row: what the spell costs and out of which bar.
 type Power struct {

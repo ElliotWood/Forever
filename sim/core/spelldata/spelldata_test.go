@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // Rows in the shape the client states them, standing in for the generated store: a ranked
@@ -27,8 +28,8 @@ func fixture() []Spell {
 			GCDMs:      1500,
 			DurationMs: 5000,
 			Effects: []Effect{
-				{SpellID: 116, Index: 0, Type: effectApplyAura, Aura: 33, BasePoints: -40},
-				{SpellID: 116, Index: 1, Type: effectSchoolDamage, BasePoints: 19, PPL: 0.5,
+				{SpellID: 116, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: 33, BasePoints: -40},
+				{SpellID: 116, Index: 1, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 19, PPL: 0.5,
 					Variance: 0.105263, SPCoef: 0.407},
 			},
 			Powers: []Power{{Type: 0, Cost: 25}},
@@ -42,7 +43,7 @@ func fixture() []Spell {
 			ProcFlags:   [2]uint32{0x222A8, 0},
 			ICDMs:       3500,
 			Effects: []Effect{
-				{SpellID: 324, Index: 0, Type: effectApplyAura, Aura: 42, TriggerID: 26364},
+				{SpellID: 324, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: 42, TriggerID: 26364},
 			},
 			Powers: []Power{{Type: 0, Cost: 750}},
 		},
@@ -51,7 +52,7 @@ func fixture() []Spell {
 			Name:       "Fractional Base",
 			SpellLevel: 60,
 			Effects: []Effect{
-				{SpellID: 700, Index: 0, Type: effectApplyAura, Aura: 13, BasePoints: -58.4697},
+				{SpellID: 700, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: 13, BasePoints: -58.4697},
 			},
 		},
 		{
@@ -60,7 +61,7 @@ func fixture() []Spell {
 			SpellLevel: 4,
 			MaxLevel:   7,
 			Effects: []Effect{
-				{SpellID: 800, Index: 0, Type: effectSchoolDamage, BasePoints: 19.7, PPL: 0.5},
+				{SpellID: 800, Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 19.7, PPL: 0.5},
 			},
 		},
 		{
@@ -68,7 +69,7 @@ func fixture() []Spell {
 			Name:   "Lightning Shield",
 			School: 8,
 			Effects: []Effect{
-				{SpellID: 26364, Index: 0, Type: effectSchoolDamage, BasePoints: 25},
+				{SpellID: 26364, Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 25},
 			},
 		},
 	}
@@ -279,7 +280,7 @@ func TestEffectPanics(t *testing.T) {
 }
 
 func TestAttributes(t *testing.T) {
-	refunding := &Spell{Attr: [17]uint32{1: ATTR_EX_1_DISCOUNT_POWER_ON_MISS}}
+	refunding := &Spell{Attr: [17]uint32{1: dbcenums.ATTR_EX_1_DISCOUNT_POWER_ON_MISS}}
 	if !refunding.RefundsOnMiss() || refunding.MissRefund() != 0.8 {
 		t.Error("a spell flagged Discount Power On Miss does not refund")
 	}
@@ -287,7 +288,7 @@ func TestAttributes(t *testing.T) {
 		t.Error("an unflagged spell refunds")
 	}
 
-	channel := &Spell{Attr: [17]uint32{1: ATTR_EX_1_IS_SELF_CHANNELLED}}
+	channel := &Spell{Attr: [17]uint32{1: dbcenums.ATTR_EX_1_IS_SELF_CHANNELLED}}
 	if !channel.IsChanneled() {
 		t.Error("a self-channelled spell does not read as channeled")
 	}

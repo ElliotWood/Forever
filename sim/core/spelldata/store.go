@@ -5,11 +5,12 @@ import (
 	"sort"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
-// What the generated half of the package has to provide. tools/database writes spells_auto_gen.go and
-// enums_auto_gen.go; nothing else in the package may assume they exist, so the store starts empty and
-// answers Nil for every id until they are installed.
+// What the generated half of the package has to provide. tools/database writes spells_auto_gen.go;
+// nothing else in the package may assume it exists, so the store starts empty and answers Nil for
+// every id until it is installed.
 //
 // spells_auto_gen.go declares:
 //
@@ -24,8 +25,6 @@ import (
 // Two of the row's fields are named for the id they hold rather than for the accessor that resolves
 // it, because a Go field and a method cannot share a name: Effect.TriggerID feeds Trigger(), and
 // Spell.RefIDs feeds Refs(). The emitter writes those two names.
-//
-// enums_auto_gen.go declares the E_ constants as EffectType and the A_ constants as AuraType.
 var spells = []Spell{}
 
 // Talent curve values by spell id, as [effect position][rank - 1]. The effect is at the position
@@ -42,10 +41,6 @@ var drivers = map[int32][]int32{}
 
 // Which spells carry a given SpellLabel.
 var byLabel = map[int16][]int32{}
-
-// A_OVERRIDE_ACTIONBAR_SPELLS states the replacing spell in its base points, which makes the
-// overriding spell a driver of it the same way a trigger effect is.
-const auraOverrideActionbarSpells AuraType = 332
 
 func install(rows []Spell, rowCurves map[int32][][]float64) {
 	if rowCurves != nil {
@@ -82,7 +77,9 @@ func setSpells(rows []Spell) {
 			if e.TriggerID != 0 {
 				addDriver(e.TriggerID, s.ID)
 			}
-			if e.Aura == auraOverrideActionbarSpells && e.BasePoints > 0 {
+			// A_OVERRIDE_ACTIONBAR_SPELLS states the replacing spell in its base points, which
+			// makes the overriding spell a driver of it the same way a trigger effect is.
+			if e.Aura == dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS && e.BasePoints > 0 {
 				addDriver(int32(e.BasePoints), s.ID)
 			}
 		}

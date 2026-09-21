@@ -6,29 +6,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-)
-
-// SpellEffect.Effect values the accessors below select on, until enums_auto_gen.go names them. A
-// spell's direct damage sits on any of the weapon effects as readily as on school damage: a weapon
-// effect states a multiplier or a flat bonus rather than an amount.
-const (
-	effectSchoolDamage         EffectType = 2
-	effectWeaponDamageNoSchool EffectType = 17
-	effectHeal                 EffectType = 10
-	effectEnergize             EffectType = 30
-	effectWeaponPercentDamage  EffectType = 31
-	effectApplyAura            EffectType = 6
-	effectWeaponDamage         EffectType = 58
-	effectNormalizedWeaponDmg  EffectType = 121
-)
-
-// The auras whose ticks carry a value: damage, healing, mana and the ones that fire a spell each tick.
-const (
-	auraPeriodicDamage       AuraType = 3
-	auraPeriodicHeal         AuraType = 8
-	auraPeriodicTriggerSpell AuraType = 23
-	auraPeriodicEnergize     AuraType = 24
-	auraPeriodicLeech        AuraType = 53
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // SpellPower.PowerType 1. The client states rage on a 0-1000 bar, so a 15 rage cost reads 150 here;
@@ -94,7 +72,7 @@ func (s *Spell) EffectN(i int) *Effect {
 // The one effect with this aura and misc value. Panics when none matches, and when two do: reading
 // the first of several silently is the bug this shape exists to prevent, and EffectN is the way past
 // it.
-func (s *Spell) Effect(aura AuraType, misc int32) *Effect {
+func (s *Spell) Effect(aura dbcenums.EffectAuraType, misc int32) *Effect {
 	found, matches := -1, 0
 	for i := range s.Effects {
 		if s.Effects[i].Aura == aura && s.Effects[i].Misc == misc {
@@ -117,7 +95,7 @@ func (s *Spell) Effect(aura AuraType, misc int32) *Effect {
 
 // The first effect matching all three, or NilEffect. Zero matches anything it is given as: an aura of
 // 0 on a direct effect is what the client states there.
-func (s *Spell) FindEffect(typ EffectType, aura AuraType, misc int32) *Effect {
+func (s *Spell) FindEffect(typ dbcenums.SpellEffectType, aura dbcenums.EffectAuraType, misc int32) *Effect {
 	for i := range s.Effects {
 		e := &s.Effects[i]
 		if e.Type == typ && e.Aura == aura && e.Misc == misc {
@@ -128,36 +106,40 @@ func (s *Spell) FindEffect(typ EffectType, aura AuraType, misc int32) *Effect {
 }
 
 // The effect carrying the spell's direct damage, whether it states an amount or a weapon multiplier.
+// It sits on any of the weapon effects as readily as on school damage: a weapon effect states a
+// multiplier or a flat bonus rather than an amount.
 func (s *Spell) DamageEffect() *Effect {
-	return s.firstOfType(effectSchoolDamage, effectWeaponDamage, effectWeaponPercentDamage,
-		effectNormalizedWeaponDmg, effectWeaponDamageNoSchool)
+	return s.firstOfType(dbcenums.E_SCHOOL_DAMAGE, dbcenums.E_WEAPON_DAMAGE,
+		dbcenums.E_WEAPON_PERCENT_DAMAGE, dbcenums.E_NORMALIZED_WEAPON_DMG,
+		dbcenums.E_WEAPON_DAMAGE_NOSCHOOL)
 }
 
 func (s *Spell) HealEffect() *Effect {
-	return s.firstOfType(effectHeal)
+	return s.firstOfType(dbcenums.E_HEAL)
 }
 
 func (s *Spell) EnergizeEffect() *Effect {
-	return s.firstOfType(effectEnergize)
+	return s.firstOfType(dbcenums.E_ENERGIZE)
 }
 
-// The effect that ticks: an aura application whose aura carries a per-tick value.
+// The effect that ticks: an aura application whose aura carries a per-tick value, which is damage,
+// healing, mana or a spell fired each tick.
 func (s *Spell) PeriodicEffect() *Effect {
 	for i := range s.Effects {
 		e := &s.Effects[i]
-		if e.Type != effectApplyAura {
+		if e.Type != dbcenums.E_APPLY_AURA {
 			continue
 		}
 		switch e.Aura {
-		case auraPeriodicDamage, auraPeriodicHeal, auraPeriodicEnergize, auraPeriodicTriggerSpell,
-			auraPeriodicLeech:
+		case dbcenums.A_PERIODIC_DAMAGE, dbcenums.A_PERIODIC_HEAL, dbcenums.A_PERIODIC_ENERGIZE,
+			dbcenums.A_PERIODIC_TRIGGER_SPELL, dbcenums.A_PERIODIC_LEECH:
 			return e
 		}
 	}
 	return NilEffect
 }
 
-func (s *Spell) firstOfType(types ...EffectType) *Effect {
+func (s *Spell) firstOfType(types ...dbcenums.SpellEffectType) *Effect {
 	for i := range s.Effects {
 		for _, t := range types {
 			if s.Effects[i].Type == t {
