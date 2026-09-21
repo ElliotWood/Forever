@@ -1,58 +1,27 @@
 package core
 
-import "fmt"
+import (
+	"fmt"
 
-// Named bits of SpellAuraOptions.ProcTypeMask word 0, under TrinityCore's names for them. Word 1
-// carries no bit the sim models.
-const (
-	ProcFlagKilled              uint32 = 1 << 0  // 00 The caster was killed
-	ProcFlagKill                uint32 = 1 << 1  // 01 The caster killed the target
-	ProcFlagDealMeleeSwing      uint32 = 1 << 2  // 02 Dealt a melee auto attack
-	ProcFlagTakeMeleeSwing      uint32 = 1 << 3  // 03 Took a melee auto attack
-	ProcFlagDealMeleeAbility    uint32 = 1 << 4  // 04 Dealt a spell of damage class melee
-	ProcFlagTakeMeleeAbility    uint32 = 1 << 5  // 05 Took a spell of damage class melee
-	ProcFlagDealRangedAttack    uint32 = 1 << 6  // 06 Dealt a ranged auto attack
-	ProcFlagTakeRangedAttack    uint32 = 1 << 7  // 07 Took a ranged auto attack
-	ProcFlagDealRangedAbility   uint32 = 1 << 8  // 08 Dealt a spell of damage class ranged
-	ProcFlagTakeRangedAbility   uint32 = 1 << 9  // 09 Took a spell of damage class ranged
-	ProcFlagDealHelpfulAbility  uint32 = 1 << 10 // 10 Dealt a positive spell of damage class none
-	ProcFlagTakeHelpfulAbility  uint32 = 1 << 11 // 11 Took a positive spell of damage class none
-	ProcFlagDealHarmfulAbility  uint32 = 1 << 12 // 12 Dealt a negative spell of damage class none
-	ProcFlagTakeHarmfulAbility  uint32 = 1 << 13 // 13 Took a negative spell of damage class none
-	ProcFlagDealHelpfulSpell    uint32 = 1 << 14 // 14 Dealt a positive spell of damage class magic
-	ProcFlagTakeHelpfulSpell    uint32 = 1 << 15 // 15 Took a positive spell of damage class magic
-	ProcFlagDealHarmfulSpell    uint32 = 1 << 16 // 16 Dealt a negative spell of damage class magic
-	ProcFlagTakeHarmfulSpell    uint32 = 1 << 17 // 17 Took a negative spell of damage class magic
-	ProcFlagDealHarmfulPeriodic uint32 = 1 << 18 // 18 Dealt periodic damage
-	ProcFlagTakeHarmfulPeriodic uint32 = 1 << 19 // 19 Took periodic damage
-	ProcFlagTakeAnyDamage       uint32 = 1 << 20 // 20 Took damage of any kind
-	ProcFlagDealHelpfulPeriodic uint32 = 1 << 21 // 21 Dealt periodic healing
-	ProcFlagMainHandWeaponSwing uint32 = 1 << 22 // 22 Dealt a main-hand melee attack, auto or ability
-	ProcFlagOffHandWeaponSwing  uint32 = 1 << 23 // 23 Dealt an off-hand melee attack, auto or ability
-	ProcFlagDeath               uint32 = 1 << 24 // 24 The caster died
-	ProcFlagJump                uint32 = 1 << 25 // 25 The caster jumped
-	ProcFlagEnterCombat         uint32 = 1 << 27 // 27 The caster entered combat
-	ProcFlagEncounterStart      uint32 = 1 << 28 // 28 The encounter started
-	ProcFlagCastEnded           uint32 = 1 << 29 // 29 A cast ended, however it ended
-	ProcFlagLooted              uint32 = 1 << 30 // 30 The caster looted
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // The taken bits that name a direct hit arriving on the character. The two helpful takes are out
 // because the sim models neither - one comes back as unsupported, the other is ignored - and the
 // any-damage take has a rule of its own below.
-const procFlagAnyDirectTaken = ProcFlagTakeMeleeSwing |
-	ProcFlagTakeMeleeAbility |
-	ProcFlagTakeRangedAttack |
-	ProcFlagTakeRangedAbility |
-	ProcFlagTakeHarmfulAbility |
-	ProcFlagTakeHarmfulSpell
+const procFlagAnyDirectTaken = dbcenums.PROC_FLAG_TAKE_MELEE_SWING |
+	dbcenums.PROC_FLAG_TAKE_MELEE_ABILITY |
+	dbcenums.PROC_FLAG_TAKE_RANGED_ATTACK |
+	dbcenums.PROC_FLAG_TAKE_RANGED_ABILITY |
+	dbcenums.PROC_FLAG_TAKE_HARMFUL_ABILITY |
+	dbcenums.PROC_FLAG_TAKE_HARMFUL_SPELL
 
 // Every direct hit dealt.
-const procFlagAnyDirectDealt = ProcFlagDealMeleeSwing |
-	ProcFlagDealMeleeAbility |
-	ProcFlagDealRangedAttack |
-	ProcFlagDealRangedAbility |
-	ProcFlagDealHarmfulSpell
+const procFlagAnyDirectDealt = dbcenums.PROC_FLAG_DEAL_MELEE_SWING |
+	dbcenums.PROC_FLAG_DEAL_MELEE_ABILITY |
+	dbcenums.PROC_FLAG_DEAL_RANGED_ATTACK |
+	dbcenums.PROC_FLAG_DEAL_RANGED_ABILITY |
+	dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL
 
 // What the mask alone cannot say, read off the spell's tooltip by the caller. The mask states
 // which hits reach the listener; the wording around it states the trigger condition and, for the
@@ -100,58 +69,58 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	info := ProcTypeInfo{RequireDamageDealt: true}
 	word := mask[0]
 
-	if word&ProcFlagDealMeleeSwing != 0 {
+	if word&dbcenums.PROC_FLAG_DEAL_MELEE_SWING != 0 {
 		info.ProcMask |= ProcMaskMeleeWhiteHit
 	}
 
-	if word&ProcFlagDealMeleeAbility != 0 {
+	if word&dbcenums.PROC_FLAG_DEAL_MELEE_ABILITY != 0 {
 		info.ProcMask |= ProcMaskMeleeSpecial
 	}
 
-	if word&ProcFlagDealRangedAttack != 0 {
+	if word&dbcenums.PROC_FLAG_DEAL_RANGED_ATTACK != 0 {
 		info.ProcMask |= ProcMaskRangedAuto
 	}
 
-	if word&ProcFlagDealRangedAbility != 0 {
+	if word&dbcenums.PROC_FLAG_DEAL_RANGED_ABILITY != 0 {
 		info.ProcMask |= ProcMaskRangedSpecial
 	}
 
-	if word&(ProcFlagDealHarmfulPeriodic|ProcFlagDealHarmfulSpell) != 0 {
+	if word&(dbcenums.PROC_FLAG_DEAL_HARMFUL_PERIODIC|dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL) != 0 {
 		info.ProcMask |= ProcMaskSpellDamage
 	}
 
 	if word&procFlagAnyDirectTaken != 0 {
 		info.Callback |= CallbackOnSpellHitTaken
 
-		if word&ProcFlagTakeMeleeSwing != 0 {
+		if word&dbcenums.PROC_FLAG_TAKE_MELEE_SWING != 0 {
 			info.ProcMask |= ProcMaskMeleeWhiteHit
 		}
 
-		if word&ProcFlagTakeMeleeAbility != 0 {
+		if word&dbcenums.PROC_FLAG_TAKE_MELEE_ABILITY != 0 {
 			info.ProcMask |= ProcMaskMeleeSpecial
 		}
 
-		if word&ProcFlagTakeRangedAttack != 0 {
+		if word&dbcenums.PROC_FLAG_TAKE_RANGED_ATTACK != 0 {
 			info.ProcMask |= ProcMaskRangedAuto
 		}
 
-		if word&ProcFlagTakeRangedAbility != 0 {
+		if word&dbcenums.PROC_FLAG_TAKE_RANGED_ABILITY != 0 {
 			info.ProcMask |= ProcMaskRangedSpecial
 		}
 
-		if word&ProcFlagTakeHarmfulSpell != 0 {
+		if word&dbcenums.PROC_FLAG_TAKE_HARMFUL_SPELL != 0 {
 			info.ProcMask |= ProcMaskSpellDamage
 		}
 	}
 
-	if word&ProcFlagTakeHarmfulPeriodic != 0 {
+	if word&dbcenums.PROC_FLAG_TAKE_HARMFUL_PERIODIC != 0 {
 		info.Callback |= CallbackOnPeriodicDamageTaken
 	}
 
 	// Damage of any kind, however it arrived, which is both of the taken callbacks. The bit names
 	// damage rather than a hit, so a landed hit dealing none does not count - the default this
 	// decode starts from, and no client mask pairs this bit with one that clears it.
-	if word&ProcFlagTakeAnyDamage != 0 {
+	if word&dbcenums.PROC_FLAG_TAKE_ANY_DAMAGE != 0 {
 		info.Callback |= CallbackOnSpellHitTaken | CallbackOnPeriodicDamageTaken
 	}
 
@@ -160,8 +129,8 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	// branch below already demands tooltip evidence before it believes one - the PvP Librams
 	// that buff a heal target read "Causes your Flash of Light to increase the target's
 	// Resilience" and are neither a self buff nor unrestricted.
-	spellCastMask := word&ProcFlagDealHarmfulSpell != 0 &&
-		word&^(ProcFlagDealHarmfulSpell|ProcFlagDealHelpfulSpell) == 0
+	spellCastMask := word&dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL != 0 &&
+		word&^(dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL|dbcenums.PROC_FLAG_DEAL_HELPFUL_SPELL) == 0
 
 	// Whether the cast itself is the trigger. A mask of only the harmful-spell bit does not care
 	// whether the spell landed. Adding the helpful bit settles nothing either way, and the two
@@ -169,7 +138,7 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	// procs off resists in logs, while Band of the Eternal Restorer does not proc on a miss or a
 	// full resist. What separates them is that the first names the cast as the trigger and the
 	// second does not, so for that pair the tooltip decides.
-	castOnly := spellCastMask && (word == ProcFlagDealHarmfulSpell || hint.Matches(ProcHintCastTrigger))
+	castOnly := spellCastMask && (word == dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL || hint.Matches(ProcHintCastTrigger))
 
 	// A tooltip naming an outcome is the exception to all of it: a crit is only known once the
 	// hit resolves, so those stay on hit-dealt.
@@ -179,16 +148,16 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	} else if word&procFlagAnyDirectDealt != 0 {
 		info.Callback |= CallbackOnSpellHitDealt
 
-		if word&ProcFlagDealHarmfulSpell != 0 {
+		if word&dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL != 0 {
 			info.RequireDamageDealt = false
 		}
 	}
 
-	if word&ProcFlagDealHarmfulPeriodic != 0 {
+	if word&dbcenums.PROC_FLAG_DEAL_HARMFUL_PERIODIC != 0 {
 		info.Callback |= CallbackOnPeriodicDamageDealt
 	}
 
-	if word&ProcFlagDealHelpfulSpell != 0 && hint.Matches(ProcHintHeals) {
+	if word&dbcenums.PROC_FLAG_DEAL_HELPFUL_SPELL != 0 && hint.Matches(ProcHintHeals) {
 		info.RequireDamageDealt = false
 		info.ProcMask |= ProcMaskSpellHealing
 
@@ -198,7 +167,7 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 			info.Callback |= CallbackOnHealDealt
 
 			// handle HoTs only with direct heals for now, there are some odd cases with HoT / DoT overlaps
-			if word&ProcFlagDealHelpfulPeriodic != 0 {
+			if word&dbcenums.PROC_FLAG_DEAL_HELPFUL_PERIODIC != 0 {
 				info.Callback |= CallbackOnPeriodicHealDealt
 			}
 
@@ -217,10 +186,10 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	// the other hand's melee bits rather than intersecting the whole proc mask. Naming both hands
 	// is the same as naming neither, so only a mask with exactly one of the two restricts
 	// anything.
-	switch word & (ProcFlagMainHandWeaponSwing | ProcFlagOffHandWeaponSwing) {
-	case ProcFlagMainHandWeaponSwing:
+	switch word & (dbcenums.PROC_FLAG_MAIN_HAND_WEAPON_SWING | dbcenums.PROC_FLAG_OFF_HAND_WEAPON_SWING) {
+	case dbcenums.PROC_FLAG_MAIN_HAND_WEAPON_SWING:
 		info.ProcMask &= ^ProcMaskMeleeOH
-	case ProcFlagOffHandWeaponSwing:
+	case dbcenums.PROC_FLAG_OFF_HAND_WEAPON_SWING:
 		info.ProcMask &= ^ProcMaskMeleeMH
 	}
 
@@ -247,15 +216,15 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 }
 
 var unsupportedProcFlagNames = map[uint32]string{
-	ProcFlagKilled:           "KILLED",
-	ProcFlagKill:             "KILL",
-	ProcFlagTakeHelpfulSpell: "TAKE_HELPFUL_SPELL",
-	ProcFlagDeath:            "DEATH",
-	ProcFlagJump:             "JUMP",
-	ProcFlagEnterCombat:      "ENTER_COMBAT",
-	ProcFlagEncounterStart:   "ENCOUNTER_START",
-	ProcFlagCastEnded:        "CAST_ENDED",
-	ProcFlagLooted:           "LOOTED",
+	dbcenums.PROC_FLAG_HEARTBEAT:          "HEARTBEAT",
+	dbcenums.PROC_FLAG_KILL:               "KILL",
+	dbcenums.PROC_FLAG_TAKE_HELPFUL_SPELL: "TAKE_HELPFUL_SPELL",
+	dbcenums.PROC_FLAG_DEATH:              "DEATH",
+	dbcenums.PROC_FLAG_JUMP:               "JUMP",
+	dbcenums.PROC_FLAG_ENTER_COMBAT:       "ENTER_COMBAT",
+	dbcenums.PROC_FLAG_ENCOUNTER_START:    "ENCOUNTER_START",
+	dbcenums.PROC_FLAG_CAST_ENDED:         "CAST_ENDED",
+	dbcenums.PROC_FLAG_LOOTED:             "LOOTED",
 }
 
 // The bits the shape above says nothing about. The three damage-class-none bits (0x400 and 0x1000
@@ -264,7 +233,7 @@ var unsupportedProcFlagNames = map[uint32]string{
 func unsupportedProcFlags(mask [2]uint32) []string {
 	// Everything from the death bit up is a state change rather than a hit, and word 1 names
 	// nothing the sim models.
-	unsupported := mask[0] & (ProcFlagKilled | ProcFlagKill | ProcFlagTakeHelpfulSpell | ^(ProcFlagDeath - 1))
+	unsupported := mask[0] & (dbcenums.PROC_FLAG_HEARTBEAT | dbcenums.PROC_FLAG_KILL | dbcenums.PROC_FLAG_TAKE_HELPFUL_SPELL | ^(dbcenums.PROC_FLAG_DEATH - 1))
 
 	var names []string
 	for bit := 0; bit < 32; bit++ {

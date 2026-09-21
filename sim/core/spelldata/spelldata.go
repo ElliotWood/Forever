@@ -70,7 +70,7 @@ type Spell struct {
 	// SpellAuraOptions.ProcCharges: how many times the aura acts before it drops. Zero is unlimited.
 	ProcCharges int16
 
-	// SpellAuraOptions.ProcTypeMask_0/_1, decoded by core's ProcFlag names.
+	// SpellAuraOptions.ProcTypeMask_0/_1, decoded by the dbcenums.PROC_FLAG_ names.
 	ProcFlags [2]uint32
 
 	// SpellAuraOptions.ProcCategoryRecovery: the internal cooldown between two procs, in ms.
