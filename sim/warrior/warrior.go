@@ -15,8 +15,6 @@ type WarriorInputs struct {
 	StartingRage   float64
 	StanceSnapshot bool
 	HasBsT2        bool
-
-	thunderClapEffectBonus float64
 }
 
 const (
@@ -102,7 +100,8 @@ type Warrior struct {
 	WarriorInputs
 
 	// Current state
-	Stance Stance
+	Stance                 Stance
+	thunderClapEffectBonus float64
 
 	BattleShout       *core.Spell
 	DemoralizingShout *core.Spell

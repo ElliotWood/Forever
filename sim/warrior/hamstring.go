@@ -1,13 +1,12 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
 func (warrior *Warrior) registerHamstring() {
 	// TODO: Ingame research needed if this adds flat threat
-	hamstringRank := shared.WithSpellDataFlatThreat(spellData.Hamstring, 0).HighestRank()
+	hamstringRank := spellData.Hamstring.HighestRank()
 	hamstringBaseDamage, _ := hamstringRank.Direct.Range()
 
 	warrior.RegisterSpell(core.SpellConfig{

@@ -11,10 +11,7 @@ func (warrior *Warrior) registerCharge() {
 	metrics := warrior.NewRageMetrics(actionID)
 
 	chargeCD := chargeRank.Cooldown
-	chargeRage := chargeRank.Energize.Tenths()
-	if warrior.Talents.ImprovedCharge > 0 {
-		chargeRage += spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
-	}
+	chargeRage := chargeRank.Energize.Tenths() + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Charge",

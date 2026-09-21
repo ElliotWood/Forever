@@ -1,7 +1,6 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -11,7 +10,7 @@ import (
 // shared shout aura rework, both are passed as 0.
 func (warrior *Warrior) registerDemoralizingShout() {
 	// TODO: Ingame research needed if this adds flat threat
-	demoralizingShoutRank := shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 0).HighestRank()
+	demoralizingShoutRank := spellData.DemoralizingShout.HighestRank()
 
 	warrior.DemoralizingShoutAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return core.DemoralizingShoutAura(target, 0, 0)

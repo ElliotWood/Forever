@@ -1,13 +1,12 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
 func (warrior *Warrior) registerHeroicStrike() {
 	// TODO: Ingame research needed if this adds flat threat
-	heroicStrikeRank := shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 0).HighestRank()
+	heroicStrikeRank := spellData.HeroicStrike.HighestRank()
 	heroicStrikeBaseDamage, _ := heroicStrikeRank.Direct.Range()
 
 	warrior.RegisterSpell(core.SpellConfig{
@@ -46,7 +45,7 @@ func (warrior *Warrior) registerHeroicStrike() {
 
 func (warrior *Warrior) registerCleave() {
 	// TODO: Ingame research needed if this adds flat threat
-	cleaveRank := shared.WithSpellDataFlatThreat(spellData.Cleave, 0).HighestRank()
+	cleaveRank := spellData.Cleave.HighestRank()
 	cleaveBaseDamage, _ := cleaveRank.Direct.Range()
 
 	const maxTargets int32 = 2

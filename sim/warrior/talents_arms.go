@@ -347,13 +347,14 @@ func (warrior *Warrior) registerWeaponmaster() {
 	mainHandIs := func(weaponTypes ...proto.WeaponType) bool {
 		return warrior.GetProcMaskForTypes(weaponTypes...).Matches(core.ProcMaskMeleeMH)
 	}
-	var critOn, armorIgnoreOn, swordOn bool
-	readMainHand := func() {
+	var critOn, armorIgnoreOn bool
+	var swordMask core.ProcMask
+	readWeapons := func() {
 		critOn = mainHandIs(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypePolearm)
 		armorIgnoreOn = mainHandIs(proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff)
-		swordOn = mainHandIs(proto.WeaponType_WeaponTypeSword)
+		swordMask = warrior.GetProcMaskForTypes(proto.WeaponType_WeaponTypeSword)
 	}
-	readMainHand()
+	readWeapons()
 
 	critAura := warrior.RegisterAura(core.Aura{
 		Label:    "Weaponmaster (Axe/Polearm)",
@@ -365,9 +366,9 @@ func (warrior *Warrior) registerWeaponmaster() {
 	}
 
 	armorIgnore := spellData.Weaponmaster.EffectAt(1).FractionAt(rank)
-	setArmorIgnore := func(factor float64) {
+	addArmorIgnore := func(delta float64) {
 		for _, attackTable := range warrior.AttackTables {
-			attackTable.ArmorIgnoreFactor = factor
+			attackTable.ArmorIgnoreFactor += delta
 		}
 	}
 	armorIgnoreAura := warrior.RegisterAura(core.Aura{
@@ -375,10 +376,10 @@ func (warrior *Warrior) registerWeaponmaster() {
 		ActionID: actionID.WithTag(2),
 		Duration: core.NeverExpires,
 		OnGain: func(_ *core.Aura, _ *core.Simulation) {
-			setArmorIgnore(armorIgnore)
+			addArmorIgnore(armorIgnore)
 		},
 		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
-			setArmorIgnore(0)
+			addArmorIgnore(-armorIgnore)
 		},
 	})
 	if armorIgnoreOn {
@@ -396,7 +397,7 @@ func (warrior *Warrior) registerWeaponmaster() {
 		ProcChance:         spellData.Weaponmaster.EffectAt(2).FractionAt(rank),
 		TriggerImmediately: true,
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
-			return swordOn && spell != extraAttack
+			return spell.ProcMask.Matches(swordMask) && spell != extraAttack
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.AutoAttacks.MaybeReplaceMHSwing(sim, extraAttack).Cast(sim, result.Target)
@@ -407,15 +408,17 @@ func (warrior *Warrior) registerWeaponmaster() {
 		extraAttack = warrior.GetOrRegisterSpell(config)
 	})
 
-	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		readMainHand()
-		for aura, on := range map[*core.Aura]bool{critAura: critOn, armorIgnoreAura: armorIgnoreOn} {
-			if on {
-				aura.Activate(sim)
-			} else {
-				aura.Deactivate(sim)
-			}
+	setActive := func(sim *core.Simulation, aura *core.Aura, on bool) {
+		if on {
+			aura.Activate(sim)
+		} else {
+			aura.Deactivate(sim)
 		}
+	}
+	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
+		readWeapons()
+		setActive(sim, critAura, critOn)
+		setActive(sim, armorIgnoreAura, armorIgnoreOn)
 	})
 }
 
