@@ -1,9 +1,33 @@
 [
 	{
+		"number": 281,
+		"title": "converge(priest): talent and aura modifiers on SpellMods",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/281"
+	},
+	{
+		"number": 273,
+		"title": "fix: Clearcasting is consumed by the next cast",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/273"
+	},
+	{
+		"number": 271,
+		"title": "converge(apl): action groups and variables from official",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/271"
+	},
+	{
 		"number": 270,
 		"title": "ci: auto-merge PRs into master when tests are green",
 		"mergedAt": "2026-09-21",
 		"url": "https://github.com/ElliotWood/Forever/pull/270"
+	},
+	{
+		"number": 269,
+		"title": "converge(data): official client spell tables, Frostbolt reads from them",
+		"mergedAt": "2026-09-21",
+		"url": "https://github.com/ElliotWood/Forever/pull/269"
 	},
 	{
 		"number": 268,
