@@ -362,7 +362,6 @@ func (warrior *Warrior) registerDeathWish() {
 		ActionID: actionID,
 		Duration: deathWishRank.Duration,
 	}).
-		// The damage done effect carries the physical school mask, the damage taken one all schools.
 		AttachMultiplicativePseudoStatBuff(
 			&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical],
 			deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).Multiplier(),
@@ -371,7 +370,6 @@ func (warrior *Warrior) registerDeathWish() {
 			&warrior.PseudoStats.DamageTakenMultiplier,
 			deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier(),
 		).
-		// Grants immunity to Fear effects.
 		AttachFearImmunity()
 
 	deathWishSpell := warrior.RegisterSpell(core.SpellConfig{
@@ -419,7 +417,6 @@ func (warrior *Warrior) registerImprovedIntercept() {
 	})
 }
 
-// Improved Cleave (12329) states only a rage discount on Cleave.
 func (warrior *Warrior) registerImprovedCleave() {
 	if warrior.Talents.ImprovedCleave == 0 {
 		return
