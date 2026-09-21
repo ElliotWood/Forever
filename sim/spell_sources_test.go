@@ -262,6 +262,11 @@ func registeredSpellIDs(t *testing.T) (map[int][]string, []string) {
 				family := map[string][]int{}
 				ast.Inspect(kv.Value, func(node ast.Node) bool {
 					if field, ok := node.(*ast.KeyValueExpr); ok {
+						// A periodic value names the spell its tick is read from (Blizzard's
+						// 1279976), which is not a rank the family registers.
+						if name, ok := field.Key.(*ast.Ident); ok && (name.Name == "Periodic" || name.Name == "SecondaryPeriodic") {
+							return false
+						}
 						if name, ok := field.Key.(*ast.Ident); ok && name.Name == "SpellID" {
 							if id, ok := intLiteral(field.Value); ok {
 								family["SpellID"] = append(family["SpellID"], id)
