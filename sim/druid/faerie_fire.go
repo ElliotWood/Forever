@@ -9,9 +9,11 @@ import (
 func (druid *Druid) registerFaerieFireSpell() {
 	spellCode := SpellCode_DruidFaerieFire
 	classMask := SpellMaskFaerieFire
+	// Rank 4's cost comes from the client table (see wrath.go). Its id stays ours: reading it through the table files
+	// the never-registered ranks 1-3 in sim/spell_sources_test.go. The table's Magic defense type is not used either.
 	actionID := core.ActionID{SpellID: 9907}
 	manaCostOptions := core.ManaCostOptions{
-		FlatCost: 115,
+		FlatCost: float64(spellData.FaerieFire.ByRank(4).Cost),
 	}
 	gcd := core.GCDDefault
 	ignoreHaste := false
