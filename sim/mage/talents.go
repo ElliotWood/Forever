@@ -168,7 +168,9 @@ func (mage *Mage) applyArcaneConcentration() {
 			if !spell.Flags.Matches(SpellFlagMage) {
 				return
 			}
-			if spell.Cost != nil && spell.Cost.GetCurrentCost() == 0 {
+			// Only spells that cost mana use up the proc. Check the base cost: Clearcasting itself
+			// zeroes the current cost, so testing that meant the proc was never consumed.
+			if spell.Cost == nil || spell.Cost.BaseCost == 0 {
 				return
 			}
 			aura.Deactivate(sim)
