@@ -19,6 +19,8 @@ type WarriorInputs struct {
 	StanceSnapshot        bool
 	HasBsSolarianSapphire bool
 	HasBsT2               bool
+
+	thunderClapEffectBonus float64
 }
 
 const (

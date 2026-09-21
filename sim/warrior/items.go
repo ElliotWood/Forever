@@ -140,13 +140,19 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 			})
 		},
 		5: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 26110 states 50% on Thunder Clap's slow effect and damage.
-			// TODO: only the damage half is modelled. Thunder Clap's slow is core.ThunderClapAura,
-			// which takes no set bonus.
+			// Spell 26110 states 50% on all of Thunder Clap's effects: the damage here, the slow
+			// through the bonus thunder_clap.go reads when its aura lands.
+			warrior := agent.(WarriorAgent).GetWarrior()
 			setBonusAura.AttachSpellMod(core.SpellModConfig{
 				ClassMask:  SpellMaskThunderClap,
 				Kind:       core.SpellMod_DamageDone_Flat,
 				FloatValue: 0.5,
+			})
+			setBonusAura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) {
+				warrior.thunderClapEffectBonus += 0.5
+			})
+			setBonusAura.ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) {
+				warrior.thunderClapEffectBonus -= 0.5
 			})
 		},
 	},
