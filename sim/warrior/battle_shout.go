@@ -24,7 +24,6 @@ func (warrior *Warrior) registerBattleShout() {
 	})
 
 	config := spelldata.SpellConfig(&warrior.Unit, battleShoutRank, spelldata.Flags(core.SpellFlagAPL))
-	config.ClassSpellMask = SpellMaskBattleShout
 	config.ProcMask = core.ProcMaskEmpty
 	config.ThreatMultiplier = 1
 	// TODO: Manual review needed -- spell 25289 carries no threat effect; none is modelled until

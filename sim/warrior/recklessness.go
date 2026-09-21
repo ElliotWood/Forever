@@ -24,7 +24,6 @@ func (warrior *Warrior) registerRecklessness() {
 
 	config := spelldata.SpellConfig(&warrior.Unit, recklessnessRank,
 		spelldata.Flags(core.SpellFlagAPL|core.SpellFlagCastWhileIncapacitated))
-	config.ClassSpellMask = SpellMaskRecklessness
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
 		return warrior.StanceMatches(BerserkerStance)

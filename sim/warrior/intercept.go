@@ -18,7 +18,6 @@ func (warrior *Warrior) registerIntercept() {
 	var interceptTarget *core.Unit
 
 	config := spelldata.SpellConfig(&warrior.Unit, interceptRank, spelldata.Flags(core.SpellFlagAPL))
-	config.ClassSpellMask = SpellMaskIntercept
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Intercept",

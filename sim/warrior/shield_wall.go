@@ -16,7 +16,6 @@ func (warrior *Warrior) registerShieldWall() {
 	)
 
 	config := spelldata.SpellConfig(&warrior.Unit, shieldWallRank)
-	config.ClassSpellMask = SpellMaskShieldWall
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
 		return warrior.StanceMatches(DefensiveStance) && warrior.PseudoStats.CanBlock

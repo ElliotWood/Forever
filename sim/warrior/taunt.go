@@ -9,7 +9,6 @@ var tauntRank = spellData.Taunt.Highest()
 
 func (warrior *Warrior) registerTaunt() {
 	config := spelldata.SpellConfig(&warrior.Unit, tauntRank, spelldata.Flags(core.SpellFlagAPL))
-	config.ClassSpellMask = SpellMaskTaunt
 	config.ProcMask = core.ProcMaskEmpty
 	config.ThreatMultiplier = 1
 	config.Cast.DefaultCast.NonEmpty = true

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
@@ -137,7 +136,3 @@ func ByName(name string) []*Spell {
 	return out
 }
 
-// The family and mask of a spell, for a talent effect that has to be matched against it.
-func ClassFlagsOf(id int32) core.ClassFlags {
-	return MustFind(id).ClassFlags
-}

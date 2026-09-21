@@ -10,7 +10,6 @@ var slamBaseDamage = slamRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerSlam() {
 	config := spelldata.SpellConfig(&warrior.Unit, slamRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskSlam
 
 	config.Cast.ModifyCast = func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
 		if cast.CastTime > 0 && warrior.Talents.ImprovedSlam == 0 {

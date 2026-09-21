@@ -10,7 +10,6 @@ var mockingBlowBaseDamage = mockingBlowRank.DamageEffect().Average(core.Characte
 
 func (warrior *Warrior) registerMockingBlow() {
 	config := spelldata.SpellConfig(&warrior.Unit, mockingBlowRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskMockingBlow
 
 	// TODO: Test in-game
 	config.ThreatMultiplier = 1

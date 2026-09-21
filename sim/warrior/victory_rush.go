@@ -23,7 +23,6 @@ func (warrior *Warrior) registerVictoryRush() {
 	victoriousAura := warrior.RegisterAura(spelldata.AuraConfig(victoriousRank))
 
 	config := spelldata.SpellConfig(&warrior.Unit, victoryRushRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskVictoryRush
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
 		return victoriousAura.IsActive()

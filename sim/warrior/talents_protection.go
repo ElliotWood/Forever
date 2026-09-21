@@ -126,7 +126,6 @@ func (warrior *Warrior) registerLastStand() {
 	})
 
 	config := spelldata.SpellConfig(&warrior.Unit, lastStandRank)
-	config.ClassSpellMask = SpellMaskLastStand
 
 	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 		aura.Activate(sim)
@@ -171,7 +170,6 @@ func (warrior *Warrior) registerConcussionBlow() {
 
 	config := spelldata.SpellConfig(&warrior.Unit, concussionBlowRank,
 		spelldata.Flags(core.SpellFlagMeleeMetrics|core.SpellFlagAPL))
-	config.ClassSpellMask = SpellMaskConcussionBlow
 	config.ProcMask = core.ProcMaskMeleeMHSpecial
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
@@ -195,7 +193,6 @@ func (warrior *Warrior) registerShieldSlam() {
 	}
 
 	config := spelldata.SpellConfig(&warrior.Unit, shieldSlamRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskShieldSlam
 	config.FlatThreatBonus = 0
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {

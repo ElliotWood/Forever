@@ -10,7 +10,6 @@ var pummelBaseDamage = pummelRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerPummel() {
 	config := spelldata.SpellConfig(&warrior.Unit, pummelRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskPummel
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
 		return warrior.StanceMatches(BerserkerStance)

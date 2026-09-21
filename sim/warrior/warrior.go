@@ -23,78 +23,25 @@ type WarriorInputs struct {
 	thunderClapEffectBonus float64
 }
 
+// What is left of the sim's own spell masks now that the client's spell class mask addresses the
+// rest: the two Sweeping Strikes copies and the Whirlwind off-hand strike, which have no client row
+// to be named by, and the six abilities a handler or a listener singles out by hand.
 const (
 	SpellMaskNone int64 = 0
-	// Abilities that don't cost rage and aren't attacks
-	SpellMaskBattleShout int64 = 1 << iota
-	SpellMaskBerserkerRage
-	SpellMaskRecklessness
-	SpellMaskDeathWish
-	SpellMaskRetaliation
-	SpellMaskRetaliationHit
-	SpellMaskShieldWall
-	SpellMaskLastStand
-	SpellMaskCharge
-	SpellMaskIntercept
-	SpellMaskDemoralizingShout
 
-	// Stances
-	SpellMaskBattleStance
-	SpellMaskBerserkerStance
-	SpellMaskDefensiveStance
-
-	// Special attacks
-	SpellMaskRend
-	SpellMaskDeepWounds
-	SpellMaskSweepingStrikes
-	SpellMaskSweepingStrikesHit
+	SpellMaskSweepingStrikesHit int64 = 1 << iota
 	SpellMaskSweepingStrikesNormalizedHit
-	SpellMaskHeroicStrike
-	SpellMaskCleave
+	SpellMaskWhirlwindOh
+
 	SpellMaskExecute
-	SpellMaskOverpower
-	SpellMaskRevenge
-	SpellMaskSlam
-	SpellMaskSunderArmor
 	SpellMaskThunderClap
 	SpellMaskWhirlwind
-	SpellMaskWhirlwindOh
-	SpellMaskShieldSlam
-	SpellMaskConcussionBlow
 	SpellMaskShieldBash
 	SpellMaskBloodthirst
-	SpellMaskMortalStrike
-	SpellMaskShieldBlock
 	SpellMaskHamstring
-	SpellMaskPummel
-	SpellMaskMockingBlow
-	SpellMaskChallengingShout
-	SpellMaskIntimidatingShout
-	SpellMaskDisarm
-	SpellMaskTaunt
-	SpellMaskVictoryRush
-	SpellMaskSpearingStrike
 
 	WarriorSpellLast
 	WarriorSpellsAll = WarriorSpellLast<<1 - 1
-
-	SpellMaskDirectDamageSpells = SpellMaskSweepingStrikesHit | SpellMaskSweepingStrikesNormalizedHit |
-		SpellMaskCleave | SpellMaskExecute | SpellMaskHeroicStrike | SpellMaskOverpower |
-		SpellMaskRevenge | SpellMaskSlam | SpellMaskShieldBash | SpellMaskSunderArmor |
-		SpellMaskThunderClap | SpellMaskWhirlwind | SpellMaskWhirlwindOh | SpellMaskShieldSlam |
-		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskRetaliationHit |
-		SpellMaskMockingBlow | SpellMaskVictoryRush | SpellMaskSpearingStrike |
-		SpellMaskHamstring | SpellMaskPummel
-
-	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
-	// The offensive abilities the client enumerates on Warrior's Wrath (21887), which is also the set
-	// Focused Rage discounts.
-	SpellMaskOffensiveAbilities = SpellMaskHeroicStrike | SpellMaskRend | SpellMaskShieldBash |
-		SpellMaskCleave | SpellMaskDisarm | SpellMaskWhirlwind | SpellMaskSunderArmor | SpellMaskSlam |
-		SpellMaskHamstring | SpellMaskExecute | SpellMaskPummel | SpellMaskRevenge | SpellMaskOverpower |
-		SpellMaskThunderClap | SpellMaskMockingBlow | SpellMaskMortalStrike | SpellMaskConcussionBlow |
-		SpellMaskShieldSlam | SpellMaskRetaliation | SpellMaskIntercept | SpellMaskBloodthirst
-	SpellMaskShouts = SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout
 )
 
 // The client's SpellClassOptions for the registrations that do not resolve a row of their own: the

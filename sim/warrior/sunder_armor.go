@@ -18,7 +18,6 @@ func (warrior *Warrior) registerSunderArmor() {
 	})
 
 	config := spelldata.SpellConfig(&warrior.Unit, sunderArmorRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskSunderArmor
 	config.FlatThreatBonus = sunderArmorRank.FindEffect(dbcenums.E_THREAT, 0, 0).Average(core.CharacterLevel)
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {

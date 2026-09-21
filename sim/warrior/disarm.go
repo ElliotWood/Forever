@@ -14,7 +14,6 @@ func (warrior *Warrior) registerDisarm() {
 	})
 
 	config := spelldata.SpellConfig(&warrior.Unit, disarmRank, spelldata.Flags(core.SpellFlagAPL))
-	config.ClassSpellMask = SpellMaskDisarm
 	config.ProcMask = core.ProcMaskMeleeMHSpecial
 	config.ThreatMultiplier = 1
 

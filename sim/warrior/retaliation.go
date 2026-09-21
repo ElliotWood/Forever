@@ -14,7 +14,6 @@ func (warrior *Warrior) registerRetaliation() {
 	// passive, and the metrics aggregator counts no cast for a passive spell, while the sim reports
 	// every counterattack as a cast.
 	hitConfig := spelldata.SpellConfig(&warrior.Unit, retaliationHit, spelldata.Flags(core.SpellFlagMeleeMetrics))
-	hitConfig.ClassSpellMask = SpellMaskRetaliationHit
 	hitConfig.ProcMask = core.ProcMaskMeleeMH
 	hitConfig.DamageMultiplier = 1
 	hitConfig.ThreatMultiplier = 1
@@ -36,7 +35,6 @@ func (warrior *Warrior) registerRetaliation() {
 	aura := warrior.RegisterAura(auraConfig)
 
 	config := spelldata.SpellConfig(&warrior.Unit, retaliationRank)
-	config.ClassSpellMask = SpellMaskRetaliation
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
 		return warrior.StanceMatches(BattleStance)

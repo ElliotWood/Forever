@@ -29,7 +29,6 @@ func (warrior *Warrior) registerOverpower() {
 	})
 
 	config := spelldata.SpellConfig(&warrior.Unit, overpowerRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskOverpower
 
 	// TODO: Ingame validation needed
 	config.ThreatMultiplier = 1

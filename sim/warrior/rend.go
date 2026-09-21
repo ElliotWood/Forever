@@ -13,7 +13,6 @@ func (warrior *Warrior) registerRend() {
 
 	config := spelldata.SpellConfig(&warrior.Unit, rendRank,
 		spelldata.Flags(core.SpellFlagNoOnCastComplete|core.SpellFlagAPL))
-	config.ClassSpellMask = SpellMaskRend
 	config.ProcMask = core.ProcMaskMeleeMHSpecial
 	config.DamageMultiplier = 1
 	config.ThreatMultiplier = 1

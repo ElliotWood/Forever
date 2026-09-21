@@ -32,7 +32,6 @@ func (warrior *Warrior) registerRevenge() {
 	})
 
 	config := spelldata.SpellConfig(&warrior.Unit, revengeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskRevenge
 	config.FlatThreatBonus = 0
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {

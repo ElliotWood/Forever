@@ -24,7 +24,6 @@ func (warrior *Warrior) registerBerserkerRage() {
 
 	config := spelldata.SpellConfig(&warrior.Unit, berserkerRageRank,
 		spelldata.Flags(core.SpellFlagAPL|core.SpellFlagCastWhileIncapacitated))
-	config.ClassSpellMask = SpellMaskBerserkerRage
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
 		return warrior.StanceMatches(BerserkerStance)

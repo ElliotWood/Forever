@@ -322,7 +322,6 @@ func (warrior *Warrior) registerDeathWish() {
 
 	config := spelldata.SpellConfig(&warrior.Unit, deathWishRank,
 		spelldata.Flags(core.SpellFlagCastWhileIncapacitated))
-	config.ClassSpellMask = SpellMaskDeathWish
 
 	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 		deathWishAura.Activate(sim)

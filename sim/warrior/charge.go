@@ -17,7 +17,6 @@ func (warrior *Warrior) registerCharge() {
 	}
 
 	config := spelldata.SpellConfig(&warrior.Unit, chargeRank, spelldata.Flags(core.SpellFlagAPL))
-	config.ClassSpellMask = SpellMaskCharge
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Charge",

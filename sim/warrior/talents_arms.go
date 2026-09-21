@@ -122,7 +122,6 @@ func (warrior *Warrior) registerDeepWounds() {
 	// application as a cast.
 	config := spelldata.SpellConfig(&warrior.Unit, deepWoundsBleed,
 		spelldata.Flags(core.SpellFlagNoOnCastComplete|core.SpellFlagIgnoreResists|core.SpellFlagProc)) // 12162 and 412609 lack Not a Proc.
-	config.ClassSpellMask = SpellMaskDeepWounds
 	config.ProcMask = core.ProcMaskEmpty
 
 	// 12162 and 412609 state DefenseType 0. It's a bleed that snapshots on proc; the
@@ -207,7 +206,6 @@ func (warrior *Warrior) registerMortalStrike() {
 	}
 
 	config := spelldata.SpellConfig(&warrior.Unit, mortalStrikeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskMortalStrike
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 		baseDamage := mortalStrikeBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
@@ -234,7 +232,6 @@ func (warrior *Warrior) registerSpearingStrike() {
 	}
 
 	config := spelldata.SpellConfig(&warrior.Unit, spearingStrikeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
-	config.ClassSpellMask = SpellMaskSpearingStrike
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 		baseDamage := spearingStrikeWeaponShare * spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
@@ -469,7 +466,6 @@ func (warrior *Warrior) registerSweepingStrikes() {
 	config := spelldata.SpellConfig(&warrior.Unit, sweepingStrikesRank)
 	// The sim casts the ability under the id of the strike it grants, which is what the APL names.
 	config.ActionID = actionID
-	config.ClassSpellMask = SpellMaskSweepingStrikes
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
 		// Sweeping Strikes (12292) is usable in Battle Stance only.

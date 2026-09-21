@@ -14,7 +14,6 @@ var cleaveBaseDamage = cleaveRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerHeroicStrike() {
 	config := spelldata.SpellConfig(&warrior.Unit, heroicStrikeRank, spelldata.Flags(core.SpellFlagMeleeMetrics))
-	config.ClassSpellMask = SpellMaskHeroicStrike
 	config.ProcMask = core.ProcMaskMeleeMH
 	config.DamageMultiplier = 1
 	config.ThreatMultiplier = 1
@@ -41,7 +40,6 @@ func (warrior *Warrior) registerCleave() {
 	const maxTargets int32 = 2
 
 	config := spelldata.SpellConfig(&warrior.Unit, cleaveRank, spelldata.Flags(core.SpellFlagMeleeMetrics))
-	config.ClassSpellMask = SpellMaskCleave
 	config.ProcMask = core.ProcMaskMeleeMH
 	config.DamageMultiplier = 1
 	config.ThreatMultiplier = 1

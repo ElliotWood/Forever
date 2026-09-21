@@ -9,7 +9,6 @@ var intimidatingShoutRank = spellData.IntimidatingShout.Highest()
 
 func (warrior *Warrior) registerIntimidatingShout() {
 	config := spelldata.SpellConfig(&warrior.Unit, intimidatingShoutRank, spelldata.Flags(core.SpellFlagAPL))
-	config.ClassSpellMask = SpellMaskIntimidatingShout
 	config.ProcMask = core.ProcMaskEmpty
 	config.ThreatMultiplier = 1
 
