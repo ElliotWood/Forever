@@ -331,11 +331,10 @@ var buffScopeMessages = map[buffmanifest.BuffScope]reflect.Type{
 }
 
 var buffProtoTypeNames = map[buffmanifest.BuffProtoType]string{
-	buffmanifest.ProtoBool:      "bool",
-	buffmanifest.ProtoTristate:  "proto.TristateEffect",
-	buffmanifest.ProtoInt32:     "int32",
-	buffmanifest.ProtoDouble:    "float64",
-	buffmanifest.ProtoEnumDrums: "proto.Drums",
+	buffmanifest.ProtoBool:     "bool",
+	buffmanifest.ProtoTristate: "proto.TristateEffect",
+	buffmanifest.ProtoInt32:    "int32",
+	buffmanifest.ProtoDouble:   "float64",
 }
 
 // The Go type the compiled proto states for a field, spelled the way the manifest
@@ -386,7 +385,7 @@ func (res *buffResolver) resolve(spec buffmanifest.BuffSpec) (ResolvedBuff, erro
 	case buffmanifest.KindAbsent:
 		row.unsupported("%s", spec.Notes)
 		return row, nil
-	case buffmanifest.KindFlag, buffmanifest.KindEnum:
+	case buffmanifest.KindFlag:
 		row.unsupported("%s", spec.Notes)
 		return row, nil
 	}
@@ -1808,8 +1807,6 @@ func buffProtoZero(protoType buffmanifest.BuffProtoType) string {
 		return "false"
 	case buffmanifest.ProtoTristate:
 		return "proto.TristateEffect_TristateEffectMissing"
-	case buffmanifest.ProtoEnumDrums:
-		return "proto.Drums_DrumsUnknown"
 	}
 	return "0"
 }

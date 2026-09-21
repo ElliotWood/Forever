@@ -87,8 +87,7 @@ func TestResolvedBuffInvariants(t *testing.T) {
 	}
 
 	for _, row := range rows {
-		if row.Kind == buffmanifest.KindAbsent || row.Kind == buffmanifest.KindFlag ||
-			row.Kind == buffmanifest.KindEnum {
+		if row.Kind == buffmanifest.KindAbsent || row.Kind == buffmanifest.KindFlag {
 			if row.SpellID != 0 {
 				t.Errorf("%s: %s resolved to spell %d", row.Field, row.Kind, row.SpellID)
 			}

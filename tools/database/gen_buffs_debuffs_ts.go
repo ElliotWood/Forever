@@ -240,9 +240,9 @@ func skipBuffInputReason(row ResolvedBuff) string {
 func uninputtableBuffReason(row ResolvedBuff) string {
 	var fixed string
 	switch {
-	case row.Kind == buffmanifest.KindAbsent, row.Kind == buffmanifest.KindFlag, row.Kind == buffmanifest.KindEnum:
+	case row.Kind == buffmanifest.KindAbsent, row.Kind == buffmanifest.KindFlag:
 		fixed = fmt.Sprintf("%s renders no settings input.", row.Kind)
-	case row.Proto == buffmanifest.ProtoDouble, row.Proto == buffmanifest.ProtoEnumDrums:
+	case row.Proto == buffmanifest.ProtoDouble:
 		fixed = fmt.Sprintf("%s has no settings factory.", row.Proto)
 	default:
 		return ""

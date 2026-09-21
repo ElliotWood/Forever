@@ -31,14 +31,13 @@ option go_package = "./proto";
 import "common.proto";
 `
 
-// protoTypeNames is the proto type each manifest type emits. TristateEffect and Drums
-// are declared in common.proto, which this file imports.
+// protoTypeNames is the proto type each manifest type emits. TristateEffect is declared in
+// common.proto, which this file imports.
 var protoTypeNames = map[buffmanifest.BuffProtoType]string{
-	buffmanifest.ProtoBool:      "bool",
-	buffmanifest.ProtoTristate:  "TristateEffect",
-	buffmanifest.ProtoInt32:     "int32",
-	buffmanifest.ProtoDouble:    "double",
-	buffmanifest.ProtoEnumDrums: "Drums",
+	buffmanifest.ProtoBool:     "bool",
+	buffmanifest.ProtoTristate: "TristateEffect",
+	buffmanifest.ProtoInt32:    "int32",
+	buffmanifest.ProtoDouble:   "double",
 }
 
 // Render emits proto/buffs.proto for the given manifest rows. Field numbers come from

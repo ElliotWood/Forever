@@ -128,14 +128,6 @@ func TestRenderBuffsDebuffsTSSkips(t *testing.T) {
 	rows := []ResolvedBuff{
 		{
 			BuffSpec: buffmanifest.BuffSpec{
-				Field: "drums", Scope: buffmanifest.ScopeParty, Proto: buffmanifest.ProtoEnumDrums,
-				Kind: buffmanifest.KindEnum, Go: "Drums",
-			},
-			SpellID: 35476, DBName: "Drums of Battle",
-			Reason: "the drum items are not in the client.",
-		},
-		{
-			BuffSpec: buffmanifest.BuffSpec{
 				Field: "misery", Scope: buffmanifest.ScopeDebuff, Proto: buffmanifest.ProtoBool,
 				Kind: buffmanifest.KindAbsent, Go: "Misery", Owner: proto.Class_ClassPriest,
 			},
@@ -153,17 +145,16 @@ func TestRenderBuffsDebuffsTSSkips(t *testing.T) {
 
 	rendered, err := RenderBuffsDebuffsTS(rows)
 	if err != nil {
-		t.Fatalf("rendering three skipped rows: %v", err)
+		t.Fatalf("rendering two skipped rows: %v", err)
 	}
 	out := string(rendered)
 
-	for _, name := range []string{"Drums", "Misery", "BlessingOfSalvation"} {
+	for _, name := range []string{"Misery", "BlessingOfSalvation"} {
 		if strings.Contains(out, "export const "+name+" ") {
 			t.Errorf("%s has no settings input but rendered one:\n%s", name, out)
 		}
 	}
 	for _, comment := range []string{
-		"// drums: the drum items are not in the client.",
 		"// misery: no SpellName row for Misery.",
 		"// blessing_of_salvation: " + manualBuffInputs["blessing_of_salvation"],
 	} {

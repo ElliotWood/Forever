@@ -41,7 +41,6 @@ const (
 	ProtoTristate
 	ProtoInt32
 	ProtoDouble
-	ProtoEnumDrums
 )
 
 func (t BuffProtoType) String() string {
@@ -54,8 +53,6 @@ func (t BuffProtoType) String() string {
 		return "ProtoInt32"
 	case ProtoDouble:
 		return "ProtoDouble"
-	case ProtoEnumDrums:
-		return "ProtoEnumDrums"
 	}
 	return "BuffProtoType(unknown)"
 }
@@ -78,7 +75,6 @@ const (
 	KindItemCount
 	KindManual
 	KindFlag
-	KindEnum
 	KindAbsent
 )
 
@@ -114,8 +110,6 @@ func (k BuffKind) String() string {
 		return "KindManual"
 	case KindFlag:
 		return "KindFlag"
-	case KindEnum:
-		return "KindEnum"
 	case KindAbsent:
 		return "KindAbsent"
 	}

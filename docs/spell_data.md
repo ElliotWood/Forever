@@ -579,7 +579,7 @@ the values.
 | Field                      | What it is                                                                                                                                                                                                                                                             |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Field`, `Number`, `Scope` | the proto field, its number and the message it lives on. Nothing else may take a number, and a retired one goes into `Retired`                                                                                                                                         |
-| `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32`, `ProtoDouble` or `ProtoEnumDrums`. Declared, not derived, so the emitter runs while the compiled protos are stale; the resolver checks it against the live trait tree                                                      |
+| `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32` or `ProtoDouble`. Declared, not derived, so the emitter runs while the compiled protos are stale; the resolver checks it against the live trait tree                                                                     |
 | `Kind`                     | what the generator emits, below                                                                                                                                                                                                                                        |
 | `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory`                                                                                                                                           |
 | `Name`                     | the castable family's `SpellName.Name_lang`, resolved through `SkillLineAbility` for the owning class                                                                                                                                                                  |
@@ -604,9 +604,11 @@ the values.
 pseudo-stat; `KindDamageShield` is a retaliation proc; `KindProc` and `KindExternalCD` need a driver
 for the trigger or the cooldown; `KindItemCount` takes a count and applies its amounts per item;
 `KindDebuffStat`, `KindDebuffStacking`, `KindDebuffDamageTaken`, `KindDebuffAtkSpeed` and
-`KindDebuffUptime` are the debuff shapes. `KindManual` is a row the sim models by hand,
-`KindFlag`/`KindEnum` are sim toggles rather than buffs, and `KindAbsent` is a field the Forever
-client describes no spell for. The last three resolve to a commented shell naming the reason.
+`KindDebuffUptime` are the debuff shapes. `KindManual` is a row the sim models by hand, `KindFlag`
+is a sim toggle rather than a buff, and `KindAbsent` is a field the Forever client describes no
+spell for. The last three resolve to a commented shell naming the reason. No `Proto` value is an
+enum: the one that was, the party's drums, is retired, and a field that wants an enum again would
+add its own value and a name for it in both emitters.
 
 ### Resolving a row
 

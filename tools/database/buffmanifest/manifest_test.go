@@ -91,7 +91,7 @@ func TestShellRowsHaveNotes(t *testing.T) {
 func TestResolvableRowsHaveAnchor(t *testing.T) {
 	for _, spec := range Manifest {
 		switch spec.Kind {
-		case KindAbsent, KindFlag, KindEnum, KindManual:
+		case KindAbsent, KindFlag, KindManual:
 			continue
 		}
 		if spec.Name == "" && spec.Anchor == 0 {
@@ -107,10 +107,6 @@ func TestProtoTypeMatchesKind(t *testing.T) {
 			if spec.Proto != ProtoBool {
 				t.Errorf("%s is KindFlag and must be %s, got %s", spec.Field, ProtoBool, spec.Proto)
 			}
-		case KindEnum:
-			if spec.Proto != ProtoEnumDrums {
-				t.Errorf("%s is KindEnum and must be %s, got %s", spec.Field, ProtoEnumDrums, spec.Proto)
-			}
 		case KindDebuffUptime:
 			if spec.Proto != ProtoDouble {
 				t.Errorf("%s is KindDebuffUptime and must be %s, got %s", spec.Field, ProtoDouble, spec.Proto)
@@ -119,9 +115,6 @@ func TestProtoTypeMatchesKind(t *testing.T) {
 			if spec.Proto != ProtoInt32 {
 				t.Errorf("%s is %s and must be %s, got %s", spec.Field, spec.Kind, ProtoInt32, spec.Proto)
 			}
-		}
-		if spec.Proto == ProtoEnumDrums && spec.Kind != KindEnum {
-			t.Errorf("%s is %s but only KindEnum may be %s", spec.Field, spec.Kind, ProtoEnumDrums)
 		}
 	}
 }
@@ -230,8 +223,6 @@ func (f protoField) allows(p BuffProtoType) bool {
 		return p == ProtoInt32
 	case "double":
 		return p == ProtoDouble
-	case "Drums":
-		return p == ProtoEnumDrums
 	case "TristateEffect":
 		return p == ProtoTristate
 	}
