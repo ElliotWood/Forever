@@ -416,6 +416,13 @@ func linkHandTrigger(t *spellTables, driver int32, triggered int32) {
 			return
 		}
 	}
+
+	// Every effect of the driver already fires something, so the link has nowhere to go and
+	// Drivers() would not reach the triggered spell. Named rather than dropped, since the entry was
+	// written by hand for exactly that reach.
+	fmt.Fprintf(os.Stderr,
+		"spelldata: spell %d has no effect free to carry the hand link to %d, so nothing drives it\n",
+		driver, triggered)
 }
 
 // A trait talent is one spell whose per-rank numbers sit on the tree's curves. The store indexes
@@ -461,9 +468,9 @@ func storeCurves(db *sql.DB, t *spellTables, trees map[int]int, ids []int32) (ma
 
 			// The client keeps retired talent nodes around, and a retired twin prices the same
 			// spell as the node the game uses: hunter Lightning Reflexes 19168 is 3/6/9/12/15 on
-			// definition 134447 and 2/4/6/8/10 on 142605. The lowest definition id is the one the
-			// class tables already generate from, so it is the one kept here, and a disagreement is
-			// named on stderr rather than resolved silently.
+			// definition 134447 and 2/4/6/8/10 on 142605. The lowest definition id within the
+			// first tree by id is the one kept, which is what the class tables generate from, and a
+			// disagreement is named on stderr rather than resolved silently.
 			if seen, ok := curves[node.SpellID]; ok {
 				if !sameCurves(seen, rows) {
 					fmt.Fprintf(os.Stderr,

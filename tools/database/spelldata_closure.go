@@ -72,6 +72,11 @@ func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) ([]int32, error) 
 // states the classes LoadAndWriteConsumables selects, whose query cannot be reused as it stands
 // because its own filter reads a subquery alias. Both halves let the allowlists through, as gen_db
 // does: Hand of Justice and the raid consumables are shipped by id rather than by predicate.
+//
+// The predicate runs over Item left-joined to ItemSparse alone, without the inner joins to
+// ItemClass, RandPropPoints and the armour tables that gen_db's own query carries, so this selects
+// at least the items gen_db ships and possibly a few more. Extra rows only add spells to the store,
+// which is the safe direction: a missing one is a spell the sim cannot read.
 func itemEffectSpellQuery() string {
 	return `
 		SELECT DISTINCT ie.SpellID

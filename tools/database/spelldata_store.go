@@ -293,7 +293,9 @@ func (t *spellTables) row(id int32) storeSpell {
 	s.Powers = t.powers[id]
 
 	// The effect's class mask is read against the owning spell's family: the mask words alone name
-	// nothing, since the same bit is a different spell in each family.
+	// nothing, since the same bit is a different spell in each family. The family is carried only
+	// where the effect states a mask, because Matches needs an overlapping mask word as well and a
+	// family on its own can never produce one.
 	s.Effects = make([]storeEffect, len(t.effects[id]))
 	copy(s.Effects, t.effects[id])
 	for i := range s.Effects {
