@@ -1,9 +1,14 @@
 package shared
 
 import (
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 // Eternal Power, the Dormant Heart of the Mountain proc: 1249118 carries the proc flags and 1249119
@@ -63,5 +68,196 @@ func TestSpellDataProcRegistersAnEnchant(t *testing.T) {
 	}
 	if core.HasItemEffect(990004) {
 		t.Error("an enchant proc was registered as an item effect")
+	}
+}
+
+// A row pair in the shape the charge rules read: a trigger that grants the buff and a buff that
+// states its charges and what spends them.
+func chargeRows() (*spelldata.Spell, *spelldata.Spell) {
+	trigger := &spelldata.Spell{
+		ID: 990100, Name: "Charge Trigger", DurationMs: 12000, ProcChance: 100,
+		ProcChanceSource: spelldata.ProcChanceAlways,
+		ProcFlags:        [2]uint32{0: dbcenums.PROC_FLAG_DEAL_MELEE_ABILITY},
+	}
+	buff := &spelldata.Spell{
+		ID: 990101, Name: "Charge Buff", DurationMs: 12000, ProcChance: 100, ProcCharges: 2,
+		ProcChanceSource: spelldata.ProcChanceAlways,
+		ProcFlags:        [2]uint32{0: dbcenums.PROC_FLAG_DEAL_MELEE_SWING},
+	}
+
+	return trigger, buff
+}
+
+func chargeAura() *core.StatBuffAura {
+	return &core.StatBuffAura{Aura: &core.Aura{Label: "Charge Buff Proc"}}
+}
+
+// A buff that is its own trigger hears the hits that granted it, so a spender read off that row
+// would take a charge back on the hit that handed it over.
+func TestSpellDataProcChargeSpenderNeedsABuffOfItsOwn(t *testing.T) {
+	trigger, buff := chargeRows()
+
+	sameRow := chargeAura()
+	attachChargeSpender(&core.Character{}, SpellDataProc{Name: "Test"}, trigger, trigger, sameRow)
+	if sameRow.OnSpellHitDealt != nil {
+		t.Error("a buff that is its own trigger got a charge spender, which would spend the charge it was just given")
+	}
+
+	ownRow := chargeAura()
+	attachChargeSpender(&core.Character{}, SpellDataProc{Name: "Test"}, trigger, buff, ownRow)
+	if ownRow.OnSpellHitDealt == nil {
+		t.Error("a buff stating its own charges and flags got no spender")
+	}
+}
+
+// The rows a trigger cannot be built from are the rows spelldata.ProcTrigger panics on, and asking
+// first is the only thing between a charge spender and that panic.
+func TestSpellDataProcStatesATrigger(t *testing.T) {
+	_, buff := chargeRows()
+	if !statesATrigger(buff) {
+		t.Error("a row stating both a listener and a chance was refused")
+	}
+
+	// Damage of any kind names a listener without naming a hit kind, so this row hears something and
+	// still has no mask a procs-per-minute rate could be measured against.
+	maskless := *buff
+	maskless.ProcFlags = [2]uint32{0: dbcenums.PROC_FLAG_TAKE_ANY_DAMAGE}
+	maskless.ProcChanceSource = spelldata.ProcChancePPM
+	maskless.RPPM = 2
+	if statesATrigger(&maskless) {
+		t.Error("a procs-per-minute row with no mask to measure it on was accepted")
+	}
+
+	pastTheEffects := *buff
+	pastTheEffects.ProcChanceSource = spelldata.ProcChanceEffectN
+	pastTheEffects.ProcChanceEffect = 3
+	if statesATrigger(&pastTheEffects) {
+		t.Error("a row naming an effect it does not carry as its chance was accepted")
+	}
+}
+
+// The client leaves the duration off the buff on a fair few procs and states it on the trigger, and
+// an aura of no duration is one core refuses to activate.
+func TestProcBuffDurationFallsBackToTheTrigger(t *testing.T) {
+	trigger, buff := chargeRows()
+	cfg := SpellDataProc{Name: "Test", ItemID: 990102}
+
+	buff.DurationMs = 0
+	if got := procBuffDuration(cfg, trigger, buff); got != 12*time.Second {
+		t.Errorf("duration = %v, want the trigger's 12s", got)
+	}
+
+	trigger.DurationMs = 0
+	requirePanicContaining(t, "states a duration", func() {
+		procBuffDuration(cfg, trigger, buff)
+	})
+}
+
+func requirePanicContaining(t *testing.T, want string, fn func()) {
+	t.Helper()
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Fatalf("no panic, want one mentioning %q", want)
+		}
+		if msg, ok := r.(string); !ok || !strings.Contains(msg, want) {
+			t.Fatalf("panic %v, want one mentioning %q", r, want)
+		}
+	}()
+	fn()
+}
+
+// A character bare enough to register an effect on: no environment, no raid, no equipment, which is
+// all the registration reads off it.
+type testAgent struct{ character *core.Character }
+
+func (a *testAgent) GetCharacter() *core.Character                                    { return a.character }
+func (a *testAgent) Initialize()                                                      {}
+func (a *testAgent) AddRaidBuffs(_ *proto.RaidBuffs)                                  {}
+func (a *testAgent) AddPartyBuffs(_ *proto.PartyBuffs)                                {}
+func (a *testAgent) ApplyTalents()                                                    {}
+func (a *testAgent) Reset(_ *core.Simulation)                                         {}
+func (a *testAgent) OnManaTick(_ *core.Simulation)                                    {}
+func (a *testAgent) OnEncounterStart(_ *core.Simulation)                              {}
+func (a *testAgent) ExecuteCustomRotation(_ *core.Simulation)                         {}
+func (a *testAgent) NewAPLValue(_ *core.APLRotation, _ *proto.APLValue) core.APLValue { return nil }
+func (a *testAgent) NewAPLAction(_ *core.APLRotation, _ *proto.APLAction) core.APLActionImpl {
+	return nil
+}
+
+func newTestAgent() *testAgent {
+	character := core.NewCharacter(&core.Party{}, 0, &proto.Player{
+		Name:      "Proc Tester",
+		Class:     proto.Class_ClassWarrior,
+		Race:      proto.Race_RaceHuman,
+		Spec:      &proto.Player_ProtectionWarrior{ProtectionWarrior: &proto.ProtectionWarrior{}},
+		Equipment: &proto.EquipmentSpec{Items: []*proto.ItemSpec{}},
+	})
+
+	return &testAgent{character: &character}
+}
+
+func auraByLabel(character *core.Character, label string) *core.Aura {
+	for _, aura := range character.GetAuras() {
+		if aura.Label == label {
+			return aura
+		}
+	}
+
+	return nil
+}
+
+// The whole registration on a character: the buff as the rows describe it, the listener that applies
+// it, and the internal cooldown handed to the buff for the APL values that ask after it.
+func TestSpellDataProcAppliesToACharacter(t *testing.T) {
+	const itemID int32 = 990201
+
+	core.AddToDatabase(&proto.SimDatabase{Items: []*proto.SimItem{{
+		Id:   itemID,
+		Name: "Test Trinket",
+		ItemEffects: []*proto.ItemEffect{{
+			BuffId:           990111,
+			EffectDurationMs: 15000,
+			ScalingOptions: map[int32]*proto.ScalingItemEffectProperties{
+				0: {Stats: map[int32]float64{int32(proto.Stat_StatSpellDamage): 40}},
+			},
+			Effect: &proto.ItemEffect_Proc{Proc: &proto.ProcEffect{}},
+		}},
+	}}})
+
+	trigger := &spelldata.Spell{
+		ID: 990110, Name: "Test Trinket Trigger", ProcChance: 15, ICDMs: 45000,
+		ProcChanceSource: spelldata.ProcChanceColumn,
+		ProcFlags:        [2]uint32{0: dbcenums.PROC_FLAG_DEAL_MELEE_ABILITY},
+	}
+	buff := &spelldata.Spell{ID: 990111, Name: "Test Trinket Buff", DurationMs: 15000}
+
+	cfg := SpellDataProc{Name: "Test Trinket", ItemID: itemID,
+		TriggerSpellID: trigger.ID, BuffSpellID: buff.ID}
+
+	agent := newTestAgent()
+	applySpellDataProc(agent, cfg, cfg.effectSource(), trigger, buff)
+
+	procAura := auraByLabel(agent.character, "Test Trinket Proc")
+	if procAura == nil {
+		t.Fatal("the buff the proc applies was not registered")
+	}
+	if procAura.Duration != 15*time.Second {
+		t.Errorf("buff duration = %v, want the buff row's 15s", procAura.Duration)
+	}
+
+	triggerAura := auraByLabel(agent.character, cfg.Name)
+	if triggerAura == nil {
+		t.Fatal("the listener was not registered")
+	}
+	// MakeProcTriggerAura keeps the action a proc is keyed by apart from the one its metrics use.
+	if triggerAura.ActionIDForProc != (core.ActionID{ItemID: itemID}) {
+		t.Errorf("listener action = %v, want the item's", triggerAura.ActionIDForProc)
+	}
+	if triggerAura.Icd == nil || triggerAura.Icd.Duration != 45*time.Second {
+		t.Fatalf("listener ICD = %v, want the trigger row's 45s", triggerAura.Icd)
+	}
+	if procAura.Icd != triggerAura.Icd {
+		t.Error("the buff was not handed the listener's cooldown, which is what the ICD-aware APL values read")
 	}
 }

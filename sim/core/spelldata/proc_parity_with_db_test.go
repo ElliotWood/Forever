@@ -166,8 +166,16 @@ func TestProcParityWithGeneratedItemProcs(t *testing.T) {
 		if trigger.ICD != icd {
 			report("ICD", trigger.ICD, icd)
 		}
-		if proc.GetPpm() > 0 && trigger.DPM == nil {
-			report("DPM", "no proc manager", fmt.Sprintf("%v procs per minute", proc.GetPpm()))
+		// A rate stated as procs per minute is a manager and no roll at all, so both halves are
+		// asserted: a manager with a chance beside it would be gated by the chance and never
+		// measured, which is the shape a bare "is it non-nil" check would not catch.
+		if proc.GetPpm() > 0 {
+			if trigger.DPM == nil {
+				report("DPM", "no proc manager", fmt.Sprintf("%v procs per minute", proc.GetPpm()))
+			}
+			if trigger.ProcChance != 0 {
+				report("ProcChance", fmt.Sprintf("%v beside a proc manager", trigger.ProcChance), 0)
+			}
 		}
 
 		// The buff the proc applies, for the registrations that build one. A damage proc casts a
@@ -302,6 +310,10 @@ func triggerSpellID(effect *proto.ItemEffect) int32 {
 // The trigger the resolver builds for a live registration, under the two options
 // shared.NewSpellDataProc gives it: the on-hit shape a weapon proc takes instead of a proc mask, and
 // the rate an item's procs per minute reach the sim through.
+//
+// The two options are copied here rather than called: sim/common/shared imports this package, so a
+// test inside it cannot import shared back. Their rules are pinned by the shared package's own
+// tests; what this file is for is the numbers the pair of them ends up producing.
 func resolvedTrigger(t *testing.T, live liveProc, effect *proto.ItemEffect) *core.ProcTrigger {
 	t.Helper()
 

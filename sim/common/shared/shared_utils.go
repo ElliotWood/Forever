@@ -446,29 +446,35 @@ func registerSpellDataProc(cfg SpellDataProc) {
 	}
 
 	source.registerEffect(func(agent core.Agent) {
-		character := agent.GetCharacter()
-		eligibleSlots := source.eligibleSlots(character)
-
-		effect := source.procEffects()[buff.ID]
-		if effect == nil {
-			panic(fmt.Sprintf("Error getting proc effects for item/enchant %v", source.id))
-		}
-
-		procAura := spellDataProcAura(character, cfg, buff, effect)
-		triggerAura := character.MakeProcTriggerAura(spellDataTrigger(character, cfg, source, trigger, buff, effect, procAura))
-
-		attachChargeSpender(character, cfg, buff, procAura)
-
-		// See factory_StatBonusEffect: this is what keeps the ICD-aware APL values from dropping
-		// the effect, not a gate on the proc. It is assigned after the charge spender and whether or
-		// not there is one, since the lockout an APL asks after is the proc's rather than the one
-		// between two charges, which attaching the spender would otherwise leave here.
-		procAura.Icd = triggerAura.Icd
-
-		source.registerProc(character, triggerAura, eligibleSlots)
-		source.registerWeaponEnchantBuff(character, procAura)
-		character.AddStatProcBuff(source.id, procAura, source.isEnchant, eligibleSlots)
+		applySpellDataProc(agent, cfg, source, trigger, buff)
 	})
+}
+
+// The effect on one character: the buff it applies, the listener that applies it, and the
+// registrations that let an item swap and an APL find both.
+func applySpellDataProc(agent core.Agent, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell) {
+	character := agent.GetCharacter()
+	eligibleSlots := source.eligibleSlots(character)
+
+	effect := source.procEffects()[buff.ID]
+	if effect == nil {
+		panic(fmt.Sprintf("Error getting proc effects for item/enchant %v", source.id))
+	}
+
+	procAura := spellDataProcAura(character, cfg, trigger, buff, effect)
+	triggerAura := character.MakeProcTriggerAura(spellDataTrigger(character, cfg, source, trigger, buff, effect, procAura))
+
+	attachChargeSpender(character, cfg, trigger, buff, procAura)
+
+	// See factory_StatBonusEffect: this is what keeps the ICD-aware APL values from dropping the
+	// effect, not a gate on the proc. It is assigned after the charge spender and whether or not
+	// there is one, since the lockout an APL asks after is the proc's rather than the one between
+	// two charges, which attaching the spender would otherwise leave here.
+	procAura.Icd = triggerAura.Icd
+
+	source.registerProc(character, triggerAura, eligibleSlots)
+	source.registerWeaponEnchantBuff(character, procAura)
+	character.AddStatProcBuff(source.id, procAura, source.isEnchant, eligibleSlots)
 }
 
 // The listener the trigger's row describes, plus the three things the row cannot state: the item's
@@ -476,7 +482,7 @@ func registerSpellDataProc(cfg SpellDataProc) {
 // cooldown a handful of procs state through the buff's spell category instead.
 func spellDataTrigger(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell, effect *proto.ItemEffect, procAura *core.StatBuffAura) core.ProcTrigger {
 	config := spelldata.ProcTrigger(character, trigger, spellDataProcHandler(buff, procAura),
-		weaponProcShape(cfg), spellDataProcRate(source, effect.GetProc()))
+		weaponProcShape(cfg), spellDataProcRate(source, trigger, effect.GetProc()))
 
 	config.Name = cfg.Name
 	config.ActionID = source.actionID()
@@ -511,11 +517,19 @@ func weaponProcShape(cfg SpellDataProc) spelldata.ProcOpt {
 	}
 }
 
-// The rate for a proc the client states none for. Procs per minute are not in the spell data - no
-// row carries a SpellProcsPerMinuteID - so an item's reaches the sim through its effect entry.
-func spellDataProcRate(source effectSource, proc *proto.ProcEffect) spelldata.ProcOpt {
+// The rate for a proc the client states none for. Procs per minute are not in the client's spell
+// data - no row carries a SpellProcsPerMinuteID - so an item's reaches the sim through its effect
+// entry, and the store carries one only where an override put it there. Either way the manager is
+// built here rather than by the resolver, since only the effect knows which weapon or enchant slot
+// a rate with no proc mask has to be measured against.
+func spellDataProcRate(source effectSource, row *spelldata.Spell, proc *proto.ProcEffect) spelldata.ProcOpt {
 	return func(character *core.Character, trigger *core.ProcTrigger) {
-		dpm := dpmForMask(character, source, proc.GetPpm(), trigger.ProcMask)
+		ppm := proc.GetPpm()
+		if ppm == 0 {
+			ppm = float64(row.RPPM)
+		}
+
+		dpm := dpmForMask(character, source, ppm, trigger.ProcMask)
 		if dpm == nil {
 			return
 		}
@@ -545,7 +559,7 @@ func spellDataProcHandler(buff *spelldata.Spell, procAura *core.StatBuffAura) co
 // The buff the proc applies. Which shape it takes is the client's to say, and the two counts it
 // keeps in one field are not the same thing: a CumulativeAura count is stacks that each add their
 // own stats, a ProcCharges count is one buff at full stats that the game spends by uses.
-func spellDataProcAura(character *core.Character, cfg SpellDataProc, buff *spelldata.Spell, effect *proto.ItemEffect) *core.StatBuffAura {
+func spellDataProcAura(character *core.Character, cfg SpellDataProc, trigger *spelldata.Spell, buff *spelldata.Spell, effect *proto.ItemEffect) *core.StatBuffAura {
 	// A trinket whose trigger opens a window and whose stats accumulate on a second aura inside it
 	// resolves no stats on the aura the trigger applies, so building one here would grant nothing at
 	// all. That shape needs the window machinery in factory_StatBonusEffect.
@@ -554,23 +568,54 @@ func spellDataProcAura(character *core.Character, cfg SpellDataProc, buff *spell
 	}
 
 	aura := spelldata.AuraConfig(buff, spelldata.Label(cfg.Name+" Proc"))
+	aura.Duration = procBuffDuration(cfg, trigger, buff)
 	buffStats := stats.FromProtoMap(effect.GetScalingOptions()[int32(0)].GetStats())
 
-	if buff.MaxStack > 0 {
+	// The client states the count on whichever of the two rows carries the aura, and the item effect
+	// entry takes the higher of them, so this does too: Idol of the Huntress keeps its 200 on the
+	// trigger while the buff it applies states none.
+	if stacks := max(buff.MaxStack, trigger.MaxStack); stacks > 0 {
+		aura.MaxStacks = int32(stacks)
 		return core.MakeStackingAura(character, core.StackingStatAura{Aura: aura, BonusPerStack: buffStats})
 	}
+
+	// Charges are the buff's own: they count how many times *it* acts before it drops. The trigger's,
+	// where it has any, count how many times the trigger fires, which is a different thing and not
+	// this aura's business.
+	aura.MaxStacks = int32(buff.ProcCharges)
 
 	return character.NewTemporaryStatsAuraWrapped(aura.Label, aura.ActionID, buffStats, aura.Duration, func(config *core.Aura) {
 		config.MaxStacks = aura.MaxStacks
 	})
 }
 
+// How long the buff lasts. The client leaves it off the buff's own row on a fair few procs and states
+// it on the trigger instead, which is the fallback the item effect entry applies as well. An aura of
+// no duration is one core refuses to activate mid-fight, so a pair of rows that states none anywhere
+// is refused here, where the message can name what to look at.
+func procBuffDuration(cfg SpellDataProc, trigger *spelldata.Spell, buff *spelldata.Spell) time.Duration {
+	if buff.DurationMs != 0 {
+		return buff.Duration()
+	}
+
+	if trigger.DurationMs != 0 {
+		return trigger.Duration()
+	}
+
+	panic(fmt.Sprintf("%s (%d): neither the proc's spell %d nor its buff %d states a duration for the aura it applies",
+		cfg.Name, cfg.effectSource().id, trigger.ID, buff.ID))
+}
+
 // What spends a charge. The buff's own row states which hits do - Lightning Shield's three charges
 // go to the melee hits it answers - so it is read as a listener of its own and attached to the buff,
 // where it is live only while the buff is up. A buff whose row states no listener or no rate keeps
 // its charges unspent and runs out its duration instead.
-func attachChargeSpender(character *core.Character, cfg SpellDataProc, buff *spelldata.Spell, procAura *core.StatBuffAura) {
-	if buff.ProcCharges <= 0 || buff.MaxStack > 0 || !statesATrigger(buff) {
+//
+// Only a buff that is a spell of its own can say what spends a charge. Where the buff is the trigger,
+// the flags on the row are the ones that granted the buff, so a spender built from them would take a
+// charge back on the very hit that handed them over and the count would never run down.
+func attachChargeSpender(character *core.Character, cfg SpellDataProc, trigger *spelldata.Spell, buff *spelldata.Spell, procAura *core.StatBuffAura) {
+	if buff.ID == trigger.ID || buff.ProcCharges <= 0 || buff.MaxStack > 0 || !statesATrigger(buff) {
 		return
 	}
 
@@ -583,19 +628,25 @@ func attachChargeSpender(character *core.Character, cfg SpellDataProc, buff *spe
 }
 
 // Whether a trigger can be built from this row at all: it has to name hits the sim hears and a rate
-// to fire at, since a proc with neither would fire on everything.
+// that resolves to something. The conditions are the ones spelldata.ProcTrigger panics on, since the
+// point of asking is to not reach that panic for a row nobody stated a rate for.
 func statesATrigger(s *spelldata.Spell) bool {
-	if decodedCallback(s) == core.CallbackEmpty {
+	decoded := core.DecodeProcTypeMask(s.ProcFlags, s.ProcHint)
+	if decoded.Callback == core.CallbackEmpty {
 		return false
 	}
 
 	switch {
 	case s.RPPM > 0:
-		return true
+		// A procs-per-minute rate is measured against the mask, which an empty one cannot do.
+		return decoded.ProcMask != core.ProcMaskUnknown
 	case s.ProcChanceSource == spelldata.ProcChancePPM:
 		return false
 	case s.ProcChanceSource == spelldata.ProcChanceColumn:
 		return s.ProcChance > 0
+	case s.ProcChanceSource == spelldata.ProcChanceEffectN:
+		// The position the roll is stated at can be past the effects the row carries.
+		return s.EffectN(int(s.ProcChanceEffect)).Percent() != 0
 	default:
 		return true
 	}
