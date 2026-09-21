@@ -178,7 +178,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	}
 
 	if debuffs.ThunderClap != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(ThunderClapAura(target, GetTristateValueInt32(debuffs.ThunderClap, 0, 3)))
+		MakePermanent(ThunderClapAura(target))
 	}
 }
 
@@ -815,13 +815,15 @@ func WintersChillAura(target *Unit, startingStacks int32) *Aura {
 	})
 }
 
-func ThunderClapAura(target *Unit, points int32) *Aura {
+// Spell 11581: -20% melee haste for 30 s on every rank; Improved Thunder Clap discounts the
+// rage cost and leaves the slow alone.
+func ThunderClapAura(target *Unit) *Aura {
 	aura := target.GetOrRegisterAura(Aura{
-		Label:    "ThunderClap-" + strconv.Itoa(int(points)),
-		ActionID: ActionID{SpellID: 25264},
+		Label:    "Thunder Clap",
+		ActionID: ActionID{SpellID: 11581},
 		Duration: time.Second * 30,
 	})
-	AtkSpeedReductionEffect(aura, []float64{1.1, 1.14, 1.17, 1.2}[points])
+	AtkSpeedReductionEffect(aura, 1/0.8)
 	return aura
 }
 

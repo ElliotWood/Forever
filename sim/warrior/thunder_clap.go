@@ -9,7 +9,7 @@ var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
 
 func (war *Warrior) registerThunderClap() {
 	auras := war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ThunderClapAura(target, war.Talents.ImprovedThunderClap)
+		return core.ThunderClapAura(target)
 	})
 
 	war.RegisterSpell(core.SpellConfig{
