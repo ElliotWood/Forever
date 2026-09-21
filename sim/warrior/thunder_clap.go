@@ -8,9 +8,15 @@ var thunderClapRank = spellData.ThunderClap.HighestRank()
 
 var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
 
+<<<<<<< HEAD
 func (warrior *Warrior) registerThunderClap() {
 	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ThunderClapAura(target, warrior.Talents.ImprovedThunderClap)
+		return core.ThunderClapAura(target)
+=======
+func (war *Warrior) registerThunderClap() {
+	auras := war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		return core.ThunderClapAura(target)
+>>>>>>> origin/master
 	})
 
 	warrior.RegisterSpell(core.SpellConfig{
