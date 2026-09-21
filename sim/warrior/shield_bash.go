@@ -10,7 +10,6 @@ var shieldBashRank = spellData.ShieldBash.Highest()
 func (warrior *Warrior) registerShieldBash() {
 	config := spelldata.SpellConfig(&warrior.Unit, shieldBashRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
 	config.ClassSpellMask = SpellMaskShieldBash
-	config.Cast.CD.Timer = warrior.NewTimer()
 
 	// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
 	config.ThreatMultiplier = 1
