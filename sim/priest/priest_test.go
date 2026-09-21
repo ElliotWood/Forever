@@ -13,63 +13,64 @@ func init() {
 	common.RegisterAllEffects()
 }
 
-const defaultTalents = "500230013--503250510240103051451"
+// The community builds the rankings page runs on our Forever sim: Shadow 15/0/36 and Smite 31/17/3.
+var ShadowTalents = "0253000311--550022501201302251"
+var SmiteTalents = "515030031305001031-00505023002-003"
 
 func TestShadowPriest(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
-		{
-			Class:      proto.Class_ClassPriest,
-			Race:       proto.Race_RaceTroll,
-			OtherRaces: []proto.Race{proto.Race_RaceUndead, proto.Race_RaceDwarf},
+		priestSuite("shadow", ShadowTalents, true),
+	}))
+}
 
-			SpecOptions: core.SpecOptionsCombo{
-				Label: "Shadow",
-				SpecOptions: &proto.Player_DpsPriest{
-					DpsPriest: &proto.DpsPriest{
-						Options: &proto.DpsPriest_Options{
-							ClassOptions: &proto.PriestOptions{
-								// Begin the sim already in Shadowform so the opener
-								// doesn't spend a GCD casting it.
-								PreShadowform: true,
-							},
+func TestSmitePriest(t *testing.T) {
+	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
+		priestSuite("smite", SmiteTalents, false),
+	}))
+}
+
+func priestSuite(apl string, talents string, preShadowform bool) core.CharacterSuiteConfig {
+	return core.CharacterSuiteConfig{
+		Class:      proto.Class_ClassPriest,
+		Race:       proto.Race_RaceTroll,
+		OtherRaces: []proto.Race{proto.Race_RaceUndead, proto.Race_RaceNightElf},
+
+		SpecOptions: core.SpecOptionsCombo{
+			Label: "Default",
+			SpecOptions: &proto.Player_DpsPriest{
+				DpsPriest: &proto.DpsPriest{
+					Options: &proto.DpsPriest_Options{
+						ClassOptions: &proto.PriestOptions{
+							Armor: proto.PriestOptions_InnerFire,
+							// Begin the sim already in Shadowform so the opener does not spend a
+							// GCD casting it.
+							PreShadowform: preShadowform,
 						},
 					},
 				},
 			},
-
-			// Primary gear set — update path when higher phase sets are added.
-			GearSet: core.GetGearSet("../../ui/specs/priest/dps/gear_sets", "pre_raid"),
-			OtherGearSets: []core.GearSetCombo{
-				core.GetGearSet("../../ui/specs/priest/dps/gear_sets", "p3"),
-			},
-
-			Talents: defaultTalents,
-
-			// Primary rotation
-			Rotation: core.GetAplRotation("../../ui/specs/priest/dps/apls", "default"),
-
-			// Secondary rotation: casts every implemented spell
-			OtherRotations: []core.RotationCombo{
-				core.GetAplRotation("../../ui/specs/priest/dps/apls", "test"),
-			},
-
-			ItemFilter: core.ItemFilter{
-				WeaponTypes: []proto.WeaponType{
-					proto.WeaponType_WeaponTypeDagger,
-					proto.WeaponType_WeaponTypeStaff,
-					proto.WeaponType_WeaponTypeMace,
-					proto.WeaponType_WeaponTypeOffHand,
-				},
-				ArmorType: proto.ArmorType_ArmorTypeCloth,
-				RangedWeaponTypes: []proto.RangedWeaponType{
-					proto.RangedWeaponType_RangedWeaponTypeWand,
-				},
-				// Blacklist melee enchants that appear on cloth-relevant slots but
-				// are never used by casters.
-				EnchantBlacklist: []int32{2673, 3225, 3273},
-			},
 		},
-	}))
+
+		// Naked: the generated item database does not carry the pre-raid set our Forever sim tests
+		// with yet, and gives the rest TBC-shaped stats.
+		GearSet:  core.GearSetCombo{Label: "Naked", GearSet: &proto.EquipmentSpec{}},
+		Talents:  talents,
+		Rotation: core.GetAplRotation("../../ui/specs/priest/dps/apls", apl),
+
+		ItemFilter: core.ItemFilter{
+			WeaponTypes: []proto.WeaponType{
+				proto.WeaponType_WeaponTypeDagger,
+				proto.WeaponType_WeaponTypeStaff,
+				proto.WeaponType_WeaponTypeMace,
+				proto.WeaponType_WeaponTypeOffHand,
+			},
+			ArmorType: proto.ArmorType_ArmorTypeCloth,
+			RangedWeaponTypes: []proto.RangedWeaponType{
+				proto.RangedWeaponType_RangedWeaponTypeWand,
+			},
+			// Blacklist melee enchants that appear on cloth-relevant slots but are never used by
+			// casters.
+			EnchantBlacklist: []int32{2673, 3225, 3273},
+		},
+	}
 }

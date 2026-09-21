@@ -109,14 +109,14 @@ export default defineSpec<Spec.SpecDpsPriest>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
-		rotations: [Presets.ROTATION_PRESET_DEFAULT],
+		talents: [Presets.ShadowTalents, Presets.SmiteTalents],
+		rotations: [Presets.ROTATION_PRESET_SHADOW, Presets.ROTATION_PRESET_SMITE],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],
 	},
 
-	autoRotation: (_: Player<Spec.SpecDpsPriest>): APLRotation => {
-		return Presets.ROTATION_PRESET_DEFAULT.rotation.rotation!;
+	autoRotation: (player: Player<Spec.SpecDpsPriest>): APLRotation => {
+		return player.getTalents().shadowform ? Presets.ROTATION_PRESET_SHADOW.rotation.rotation! : Presets.ROTATION_PRESET_SMITE.rotation.rotation!;
 	},
 
 	reforge: {},

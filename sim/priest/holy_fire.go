@@ -7,18 +7,20 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var ShadowWordPainRankMap = spellData.ShadowWordPain
+// The Smite build's opener and the trigger Power in Light and Searing Light both read.
+// The client's rank 5 dot (13 a tick) is larger than rank 6's (10 a tick); the table is taken as it is.
+var HolyFireRankMap = spellData.HolyFire
 
-func (priest *Priest) registerShadowWordPainSpell(rank shared.SpellData) {
+func (priest *Priest) registerHolyFireSpell(rank shared.SpellData) {
 	tick := rank.Periodic.(shared.SpellDataPeriodic)
 
-	priest.RegisterSpell(core.SpellConfig{
+	priest.HolyFire = append(priest.HolyFire, priest.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rank.SpellID},
 		SpellSchool:    rank.SpellSchool,
 		DefenseType:    rank.DefenseType,
 		ProcMask:       core.ProcMaskSpellDamage,
 		Flags:          core.SpellFlagAPL,
-		ClassSpellMask: PriestSpellShadowWordPain,
+		ClassSpellMask: PriestSpellHolyFire,
 		Rank:           rank.Rank,
 		MaxRange:       rank.MaxRange,
 
@@ -27,16 +29,18 @@ func (priest *Priest) registerShadowWordPainSpell(rank shared.SpellData) {
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: rank.GCD,
+				GCD:      rank.GCD,
+				CastTime: rank.CastTime,
 			},
 		},
 
 		DamageMultiplier: 1,
+		BonusCoefficient: rank.Direct.BonusCoefficient(),
 		ThreatMultiplier: 1,
 
 		Dot: core.DotConfig{
 			Aura: core.Aura{
-				Label: fmt.Sprintf("ShadowWordPain-%d", rank.Rank),
+				Label: fmt.Sprintf("HolyFire-%d", rank.Rank),
 			},
 			NumberOfTicks:       tick.NumberOfTicks,
 			TickLength:          tick.TickLength,
@@ -52,18 +56,21 @@ func (priest *Priest) registerShadowWordPainSpell(rank shared.SpellData) {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcOutcome(sim, target, spell.OutcomeMagicHitNoHitCounter)
+			result := spell.CalcDamage(sim, target, rank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
 			if result.Landed() {
 				spell.Dot(target).Apply(sim)
 			}
-			spell.DealOutcome(sim, result)
+			spell.DealDamage(sim, result)
 		},
+	}))
+}
 
-		ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
-			if useSnapshot {
-				return spell.Dot(target).CalcSnapshotDamage(sim, target, spell.OutcomeExpectedMagicHit)
-			}
-			return spell.CalcPeriodicDamage(sim, target, tick.Tick, spell.OutcomeExpectedMagicHit)
-		},
-	})
+// Whether this priest's Holy Fire is burning the target, which is what Power in Light asks.
+func (priest *Priest) hasActiveHolyFire(target *core.Unit) bool {
+	for _, spell := range priest.HolyFire {
+		if spell.Dot(target).IsActive() {
+			return true
+		}
+	}
+	return false
 }

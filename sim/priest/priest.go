@@ -23,6 +23,13 @@ type Priest struct {
 	InnerFocusAura *core.Aura
 
 	VampiricEmbrace *core.Spell
+
+	SearingLightAura  *core.Aura
+	ShadowformAura    *core.Aura
+	ShadowWeavingAura *core.Aura
+
+	// Every Holy Fire rank the priest knows, so Power in Light can ask whether its dot is running.
+	HolyFire []*core.Spell
 }
 
 type SelfBuffs struct {
@@ -41,6 +48,15 @@ func (priest *Priest) GetPriest() *Priest {
 func (priest *Priest) AddPartyBuffs(_ *proto.PartyBuffs) {
 }
 
+// Divine Spirit and Improved Power Word: Fortitude are gone from the Forever trees. Both are raid
+// buffs the rest of the raid is built around, so they are assumed to have become baseline.
+// TODO: beta will confirm whether they were made baseline or removed outright.
+func (priest *Priest) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
+	raidBuffs.ShadowProtection = true
+	raidBuffs.DivineSpirit = proto.TristateEffect_TristateEffectRegular
+	raidBuffs.PowerWordFortitude = proto.TristateEffect_TristateEffectImproved
+}
+
 func (priest *Priest) Initialize() {
 	mindblastCDTimer := priest.NewTimer()
 	shadowWordDeathCDTimer := priest.NewTimer()
@@ -53,6 +69,7 @@ func (priest *Priest) Initialize() {
 		priest.registerShadowWordDeathSpell(rank, shadowWordDeathCDTimer)
 	})
 	SmiteRankMap.RegisterAll(priest.registerSmiteSpell)
+	HolyFireRankMap.RegisterAll(priest.registerHolyFireSpell)
 	priest.registerShadowfiendSpell()
 
 	if priest.Race == proto.Race_RaceNightElf {
@@ -61,12 +78,13 @@ func (priest *Priest) Initialize() {
 			priest.registerStarshardsSpell(rank, starshardsCDTimer)
 		})
 	}
-	if priest.Race == proto.Race_RaceUndead {
-		devouringPlagueCDTimer := priest.NewTimer()
-		DevouringPlagueRankMap.RegisterAll(func(rank shared.SpellData) {
-			priest.registerDevouringPlagueSpell(rank, devouringPlagueCDTimer)
-		})
-	}
+
+	// Devouring Plague is an Undead racial in Classic. The Forever beta client teaches it to priests
+	// of every race (SkillLineAbility race mask -1), so it is baseline here.
+	devouringPlagueCDTimer := priest.NewTimer()
+	DevouringPlagueRankMap.RegisterAll(func(rank shared.SpellData) {
+		priest.registerDevouringPlagueSpell(rank, devouringPlagueCDTimer)
+	})
 }
 
 func (priest *Priest) Reset(_ *core.Simulation) {
@@ -98,6 +116,38 @@ func New(char *core.Character, selfBuffs SelfBuffs, talents string) *Priest {
 // Agent is a generic way to access underlying priest on any of the agents.
 type PriestAgent interface {
 	GetPriest() *Priest
+}
+
+// The outcome a priest dot tick rolls. Every priest dot rolls its hit once, when the spell is cast,
+// so a tick only rolls the critical strike the client's Periodic Can Crit attribute allows - Shadow
+// Word: Pain, Mind Flay, Holy Fire and Starshards carry it, Devouring Plague does not.
+// shared.PeriodicTickOutcome cannot serve: its magic branches roll the hit again on every tick, which
+// would charge the miss twice.
+func priestTickOutcome(row shared.SpellData, dot *core.Dot) core.OutcomeApplier {
+	if !row.PeriodicCanCrit {
+		return dot.OutcomeTick
+	}
+
+	return func(sim *core.Simulation, result *core.SpellResult, attackTable *core.AttackTable) {
+		metrics := &dot.Spell.SpellMetrics[result.Target.UnitIndex]
+		isPartialResist := result.DidResist()
+
+		if dot.Spell.MagicCritCheck(sim, result.Target) {
+			result.Outcome = core.OutcomeCrit
+			result.Damage *= dot.Spell.CritDamageMultiplier(attackTable)
+			metrics.CritTicks++
+			if isPartialResist {
+				metrics.ResistedCritTicks++
+			}
+			return
+		}
+
+		result.Outcome = core.OutcomeHit
+		metrics.Ticks++
+		if isPartialResist {
+			metrics.ResistedTicks++
+		}
+	}
 }
 
 func NewPriest(character *core.Character, options *proto.Player) *Priest {
@@ -140,6 +190,7 @@ const (
 	PriestSpellHolyFire
 	PriestSpellMindBlast
 	PriestSpellMindFlay
+	PriestSpellPenance
 	PriestSpellPowerInfusion
 	PriestSpellStarshards
 	PriestSpellShadowform
@@ -160,17 +211,20 @@ const (
 	PriestSpellLast
 	PriestSpellsAll    = PriestSpellLast<<1 - 1
 	PriestSpellDoT     = PriestSpellDevouringPlague | PriestSpellHolyFire | PriestSpellMindFlay | PriestSpellShadowWordPain | PriestSpellStarshards
+	// Everything the client gives a zero cast time, which is what the talents that name "instant
+	// spells" read: the channels start instantly too, so Mind Flay and Penance belong here.
 	PriestSpellInstant = PriestSpellDevouringPlague |
 		PriestSpellFade |
 		PriestSpellHolyNova |
+		PriestSpellMindFlay |
+		PriestSpellPenance |
 		PriestSpellPowerInfusion |
 		PriestSpellShadowWordDeath |
 		PriestSpellShadowWordPain |
 		PriestSpellVampiricEmbrace |
 		PriestSpellShadowFiend |
 		PriestSpellStarshards |
-		PriestSpellShadowform |
-		PriestSpellPowerInfusion
+		PriestSpellShadowform
 	PriestShadowSpells = PriestSpellDevouringPlague |
 		PriestSpellShadowWordDeath |
 		PriestSpellShadowform |
@@ -179,5 +233,5 @@ const (
 		PriestSpellMindBlast |
 		PriestSpellShadowFiend |
 		PriestSpellVampiricEmbrace
-	PriestHolySpells = PriestSpellSmite | PriestSpellHolyFire | PriestSpellHolyNova
+	PriestHolySpells = PriestSpellSmite | PriestSpellHolyFire | PriestSpellHolyNova | PriestSpellPenance
 )

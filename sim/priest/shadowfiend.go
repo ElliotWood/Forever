@@ -1,50 +1,57 @@
 package priest
 
-// Package-level state the commented-out implementations used:
-// var shadowfiendRank = spellData.Shadowfiend.BySpellID(34433)
+import (
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented. The ability exists: spell 401977 on the Shadow Magic line. No rank subtext,
-// so no generated table -- pin the id directly. shadowfiend_pet.go already implements the pet.
+// The ability exists as spell 401977 on the Shadow Magic line. It has no rank subtext, so the
+// generated table holds a single row.
+var ShadowfiendRank = spellData.Shadowfiend.HighestRank()
+
 func (priest *Priest) registerShadowfiendSpell() {
-	panic("To be implemented")
+	if !priest.SelfBuffs.UseShadowfiend {
+		return
+	}
 
-	// The TBC implementation, kept for the port:
-	// actionID := core.ActionID{SpellID: shadowfiendRank.SpellID}
-	//
-	// // Timeline aura
-	// priest.ShadowfiendAura = priest.RegisterAura(core.Aura{
-	// 	ActionID: actionID,
-	// 	Label:    "Shadowfiend",
-	// 	Duration: time.Second * 15,
-	// })
-	//
-	// priest.Shadowfiend = priest.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       actionID,
-	// 	SpellSchool:    core.SpellSchoolShadow,
-	// 	ProcMask:       core.ProcMaskEmpty,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: PriestSpellShadowFiend,
-	// 	Rank:           shadowfiendRank.Rank,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		BaseCostPercent: 6,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: shadowfiendRank.GCD,
-	// 		},
-	// 		CD: core.Cooldown{
-	// 			Timer:    priest.NewTimer(),
-	// 			Duration: time.Minute * 5,
-	// 		},
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		priest.ShadowfiendPet.EnableWithTimeout(sim, priest.ShadowfiendPet, spell.RelatedSelfBuff.Duration)
-	// 		spell.RelatedSelfBuff.Activate(sim)
-	// 	},
-	//
-	// 	RelatedSelfBuff: priest.ShadowfiendAura,
-	// })
+	actionID := core.ActionID{SpellID: ShadowfiendRank.SpellID}
+
+	// Timeline aura, and what the tier 4 two piece lengthens.
+	priest.ShadowfiendAura = priest.RegisterAura(core.Aura{
+		ActionID: actionID,
+		Label:    "Shadowfiend",
+		Duration: ShadowfiendRank.Duration,
+	})
+
+	priest.Shadowfiend = priest.RegisterSpell(core.SpellConfig{
+		ActionID:       actionID,
+		SpellSchool:    core.SpellSchoolShadow,
+		ProcMask:       core.ProcMaskEmpty,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: PriestSpellShadowFiend,
+
+		ManaCost: core.ManaCostOptions{
+			BaseCostPercent: 6,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: core.GCDDefault,
+			},
+			CD: core.Cooldown{
+				Timer:    priest.NewTimer(),
+				Duration: ShadowfiendRank.Cooldown,
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+			priest.ShadowfiendPet.EnableWithTimeout(sim, priest.ShadowfiendPet, spell.RelatedSelfBuff.Duration)
+			spell.RelatedSelfBuff.Activate(sim)
+		},
+
+		RelatedSelfBuff: priest.ShadowfiendAura,
+	})
+
+	priest.AddMajorCooldown(core.MajorCooldown{
+		Spell: priest.Shadowfiend,
+		Type:  core.CooldownTypeMana,
+	})
 }
