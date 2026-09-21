@@ -444,27 +444,27 @@ the values.
 
 `BuffSpec` in `tools/database/buffmanifest/manifest.go`:
 
-| Field                      | What it is                                                                                                                                                                                                                                                        |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Field`, `Number`, `Scope` | the proto field, its number and the message it lives on. Nothing else may take a number, and a retired one goes into `Retired`                                                                                                                                    |
-| `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32`, `ProtoDouble` or `ProtoEnumDrums`. Declared, not derived, so the emitter runs while the compiled protos are stale; the resolver checks it against the live trait tree                                                 |
-| `Kind`                     | what the generator emits, below                                                                                                                                                                                                                                   |
-| `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory`                                                                                                                                      |
-| `Name`                     | the castable family's `SpellName.Name_lang`, resolved through `SkillLineAbility` for the owning class                                                                                                                                                             |
-| `AuraName`                 | the aura family, when the cast is a summon or a dummy: the totem cast names `Strength of Earth Totem` and the aura `Strength of Earth`                                                                                                                            |
-| `Anchor`                   | an explicit spell id, for a row with no castable name at all (the Atiesh staves)                                                                                                                                                                                  |
-| `Owner`                    | the class that casts it, which narrows the `SkillLineAbility` lookup and marks the row "(External)" on that class's settings tab                                                                                                                                  |
-| `Talent`                   | the improving talent family, its effect index, and whether it scales the value, the duration or adds a stat. Only a `ProtoTristate` row may state one                                                                                                             |
-| `Category`                 | the exclusive-effect category the aura bids in, `""` for none                                                                                                                                                                                                     |
-| `SharedCategory`           | a second category the aura joins without an effect of its own, which is how the paladin auras exclude each other across schools. Applied to the player's copy only, and declared once in the generated file as `<Name>Category`                                   |
-| `SingleAura`               | the category holds one aura at a time, so the loser is deactivated rather than outbid                                                                                                                                                                             |
-| `Driver`                   | the apply block hands the row to `drive<Go>` instead of activating the aura outright                                                                                                                                                                              |
-| `Pet`                      | `PetNormal`, `PetStrip`, `PetInheritOwnerAura`, `PetCapAtRegular` or `PetStripWhenSummonedLate`                                                                                                                                                                   |
-| `StatOverride`             | the sim stats the value lands on, for an aura the client states without naming one: `A_MOD_CRIT_PCT` carries no school, so Leader of the Pack says `PhysicalCritPercent` and Moonkin Aura `SpellCritPercent`. A row that states one may have only one aura effect |
-| `Stats`                    | the UI relevance tags a spec's `epStats` and `displayStats` are matched against                                                                                                                                                                                   |
-| `ImpAction`                | the icon the improved state of a tristate input shows, when it is an item rather than the talent                                                                                                                                                                  |
-| `Label`                    | a UI label override; the client's name is the default                                                                                                                                                                                                             |
-| `Notes`                    | why a `KindManual`, `KindAbsent` or `KindFlag` row is one. Required for those three                                                                                                                                                                               |
+| Field                      | What it is                                                                                                                                                                                                                                                             |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Field`, `Number`, `Scope` | the proto field, its number and the message it lives on. Nothing else may take a number, and a retired one goes into `Retired`                                                                                                                                         |
+| `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32`, `ProtoDouble` or `ProtoEnumDrums`. Declared, not derived, so the emitter runs while the compiled protos are stale; the resolver checks it against the live trait tree                                                      |
+| `Kind`                     | what the generator emits, below                                                                                                                                                                                                                                        |
+| `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory`                                                                                                                                           |
+| `Name`                     | the castable family's `SpellName.Name_lang`, resolved through `SkillLineAbility` for the owning class                                                                                                                                                                  |
+| `AuraName`                 | the aura family, when the cast is a summon or a dummy: the totem cast names `Strength of Earth Totem` and the aura `Strength of Earth`                                                                                                                                 |
+| `Anchor`                   | an explicit spell id, for a row with no castable name at all (the Atiesh staves)                                                                                                                                                                                       |
+| `Owner`                    | the class that casts it, which narrows the `SkillLineAbility` lookup and marks the row "(External)" on that class's settings tab                                                                                                                                       |
+| `Talent`                   | the improving talent family, its effect index, and whether it scales the value, the duration or adds a stat. Only a `ProtoTristate` row may state one                                                                                                                  |
+| `Category`                 | the exclusive-effect category the aura bids in, `""` for none                                                                                                                                                                                                          |
+| `SharedCategory`           | a second category the aura joins without an effect of its own, which is how the paladin auras exclude each other across schools. Applied to the player's copy only, and declared once in the generated file as `<Name>Category`                                        |
+| `SingleAura`               | the category holds one aura at a time, so the loser is deactivated rather than outbid                                                                                                                                                                                  |
+| `Driver`                   | the apply block hands the row to `drive<Go>` instead of activating the aura outright                                                                                                                                                                                   |
+| `Pet`                      | `PetNormal`, `PetStrip`, `PetInheritOwnerAura`, `PetCapAtRegular` or `PetStripWhenSummonedLate`                                                                                                                                                                        |
+| `StatOverride`             | the sim stats the value lands on, for an aura the client states without naming one: `A_MOD_CRIT_PCT` carries no school, so Leader of the Pack and Moonkin Aura both say `PhysicalCritPercent`, `SpellCritPercent`. A row that states one may have only one aura effect |
+| `Stats`                    | the UI relevance tags a spec's `epStats` and `displayStats` are matched against                                                                                                                                                                                        |
+| `ImpAction`                | the icon the improved state of a tristate input shows, when it is an item rather than the talent                                                                                                                                                                       |
+| `Label`                    | a UI label override; the client's name is the default                                                                                                                                                                                                                  |
+| `Notes`                    | why a `KindManual`, `KindAbsent` or `KindFlag` row is one. Required for those three                                                                                                                                                                                    |
 
 ### The kinds
 
@@ -558,6 +558,18 @@ at all.
 **A talent curve only scales the row's first stat.** A row whose talent improves a second amount would
 need the generator extended; nothing in the manifest does today.
 
+**A set bonus is not a talent.** The resolver reads `SkillLineAbility`, the trait trees and the spell
+effects; it does not read `ItemSetSpell`, so a set that modifies a buff cannot be a manifest talent
+and there is no row to hang it on. Battlegear of Wrath is the case: item set 218's three-piece spell
+is 23563, an `A_ADD_FLAT_MODIFIER` of 30 against every effect of the Battle Shout family, which makes
+the shout worth 169 attack power rather than 139. The two halves of that are modelled separately. The
+warrior's own cast reads the `has_bs_t2` class option - the user's word that this warrior wears the
+set, not the equipped gear - and the party's copy reads the `snapshot_bs_t2` flag, a `KindFlag` row
+saying the warrior who shouted for the party wore it. Both call `AddGeneratedFlatBonus`, which raises
+what the aura applies and what it bids for its category together, so the stronger of the two copies
+is the one the character sheet shows. The 30 itself lives in `core.BattleShoutT2Bonus`, with the set
+and the spell it came from written next to it.
+
 **A party or raid flag means an external caster provides the buff.** The generated apply block builds
 the row's `isPlayer=false` copy whenever the proto field is set, so a class port that registers its own
 `isPlayer=true` copy has two copies on the character. It either stops setting the flag in
@@ -566,8 +578,9 @@ against each other, so the character sheet shows the buff once. The higher bid d
 copy; on a tie the incumbent keeps the category when its remaining duration is the longer one, which
 is why a druid casting its own Thorns is turned away while the raid's permanent copy is up - both deal
 the same 22, so the character strikes back for the same either way. Battle Shout is the worked example:
-both copies are worth the same and neither is permanent, and
-`TestPlayerBattleShoutTakesTheCategoryOnATie` holds the player's own to the tie. The rows this decides
+neither copy is permanent, and the two are worth the same unless one side wears the tier 2 set, so
+`TestPlayerBattleShoutTakesTheCategoryOnATie` holds the player's own to the tie and
+`TestTheStrongerBattleShoutTakesTheCategory` holds the stronger one to the rest. The rows this decides
 are `thorns`, `leader_of_the_pack`, `moonkin_aura` and `trueshot_aura`: `sim/druid/druid.go`,
 `sim/druid/feralcat` and `sim/druid/feralbear` raise the party's Leader of the Pack or Moonkin Aura
 from a talent, `sim/hunter/hunter.go` raises Trueshot Aura, and the druid's own Thorns waits on the
