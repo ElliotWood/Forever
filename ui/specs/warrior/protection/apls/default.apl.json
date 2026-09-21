@@ -21,7 +21,7 @@
 		{"action":{"condition":{"and":{"vals":[{"not":{"val":{"variableRef":{"name":"Defensive Cooldown Active"}}}},{"cmp":{"op":"OpLe","lhs":{"currentHealthPercent":{}},"rhs":{"const":{"val":"30%"}}}}]}},"castSpell":{"spellId":{"itemId":22797}}}},
 		{"hide":true,"action":{"schedule":{"schedule":"0s, 0s","innerAction":{"castSpell":{"spellId":{"itemId":22797}}}}}},
 		{"action":{"castSpell":{"spellId":{"otherId":"OtherActionPotion"}}}},
-		{"action":{"castSpell":{"spellId":{"spellId":12292}}}},
+		{"action":{"condition":{"multipleCdUsages":{"baseSpellId":{"spellId":35476},"targetSpellId":{"spellId":12292},"offset":{"const":{"val":"5s"}}}},"castSpell":{"spellId":{"spellId":12292}}}},
 		{"hide":true,"action":{"groupReference":{"groupName":"CD: Racials"}}},
 		{"action":{"condition":{"or":{"vals":[{"cmp":{"op":"OpGe","lhs":{"currentRage":{}},"rhs":{"const":{"val":"40"}}}},{"and":{"vals":[{"auraIsInactive":{"auraId":{"spellId":30357},"includeReactionTime":true}},{"cmp":{"op":"OpLe","lhs":{"spellTimeToReady":{"spellId":{"spellId":30357}}},"rhs":{"const":{"val":"1.5s"}}}}]}}]}},"castSpell":{"spellId":{"spellId":2565}}}},
 		{"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpGt","lhs":{"numberTargets":{}},"rhs":{"const":{"val":"1"}}}}]}},"castSpell":{"spellId":{"spellId":12723}}}},
