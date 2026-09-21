@@ -2072,19 +2072,6 @@
 							"additionalProperties": false,
 							"required": ["label", "tooltip"]
 						},
-						"has_bs_solarian_sapphire": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
 						"has_bs_tier_2": {
 							"type": "object",
 							"properties": {
@@ -2344,7 +2331,6 @@
 						"default_stance",
 						"starting_rage",
 						"stance_snapshot",
-						"has_bs_solarian_sapphire",
 						"has_bs_tier_2",
 						"queue_delay",
 						"assume_bleed_active",

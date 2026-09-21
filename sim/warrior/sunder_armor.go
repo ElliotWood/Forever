@@ -1,7 +1,6 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -18,47 +17,14 @@ func (warrior *Warrior) registerSunderArmor() {
 		return core.SunderArmorAura(target)
 	})
 
-	getSunderArmorConfig := func(config core.SpellConfig, outcome shared.OutcomeType) core.SpellConfig {
-		return core.SpellConfig{
-			ActionID:       config.ActionID,
-			SpellSchool:    core.SpellSchoolPhysical,
-			DefenseType:    core.DefenseTypeMelee,
-			ProcMask:       core.ProcMaskMeleeMHSpecial,
-			Flags:          config.Flags,
-			ClassSpellMask: SpellMaskSunderArmor,
-			MaxRange:       core.MaxMeleeRange,
-
-			RageCost: config.RageCost,
-			Cast:     config.Cast,
-			ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-				return warrior.CanApplySunderAura(target)
-			},
-
-			DamageMultiplier: 1,
-			ThreatMultiplier: 1,
-			FlatThreatBonus:  sunderArmorRank.FlatThreatBonus,
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				result := spell.CalcOutcome(sim, target, shared.GetOutcome(spell, outcome))
-
-				if result.Landed() {
-					aura := warrior.SunderArmorAuras.Get(target)
-					aura.Activate(sim)
-					aura.AddStack(sim)
-				} else if spell.Cost != nil {
-					spell.IssueRefund(sim)
-				}
-
-				spell.DealOutcome(sim, result)
-			},
-
-			RelatedAuraArrays: warrior.SunderArmorAuras.ToMap(),
-		}
-	}
-
-	warrior.RegisterSpell(getSunderArmorConfig(core.SpellConfig{
-		ActionID: actionId,
-		Flags:    core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+	warrior.RegisterSpell(core.SpellConfig{
+		ActionID:       actionId,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		ClassSpellMask: SpellMaskSunderArmor,
+		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
 			Cost:   sunderArmorRank.Cost,
@@ -70,8 +36,30 @@ func (warrior *Warrior) registerSunderArmor() {
 			},
 			IgnoreHaste: true,
 		},
-	}, shared.OutcomeMeleeNoCrit))
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return warrior.CanApplySunderAura(target)
+		},
 
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+		FlatThreatBonus:  sunderArmorRank.FlatThreatBonus,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
+
+			if result.Landed() {
+				aura := warrior.SunderArmorAuras.Get(target)
+				aura.Activate(sim)
+				aura.AddStack(sim)
+			} else if spell.Cost != nil {
+				spell.IssueRefund(sim)
+			}
+
+			spell.DealOutcome(sim, result)
+		},
+
+		RelatedAuraArrays: warrior.SunderArmorAuras.ToMap(),
+	})
 }
 
 func (warrior *Warrior) CanApplySunderAura(target *core.Unit) bool {

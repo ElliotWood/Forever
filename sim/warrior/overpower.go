@@ -7,15 +7,17 @@ import (
 var overpowerRank = spellData.Overpower.BySpellID(11585)
 var overpowerBaseDamage, _ = overpowerRank.Direct.Range()
 
+// The window a dodge opens: the aura Offensive State (DND) fires on the hit.
+var overpowerWindow = spellData.OffensiveStateTriggered.HighestRank()
+
 func (warrior *Warrior) registerOverpower() {
 	actionID := core.ActionID{SpellID: overpowerRank.SpellID}
 	overpowerCD := overpowerRank.Cooldown
 
-	// TODO: Test in-game if OP activation only lasts 5 seconds
 	warrior.OverpowerAura = warrior.RegisterAura(core.Aura{
-		ActionID: actionID,
+		ActionID: core.ActionID{SpellID: overpowerWindow.SpellID},
 		Label:    "Overpower Aura",
-		Duration: overpowerCD,
+		Duration: overpowerWindow.Duration,
 	})
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
@@ -54,8 +56,7 @@ func (warrior *Warrior) registerOverpower() {
 
 		DamageMultiplier: 1,
 		// TODO: Ingame validation needed
-		// TODO: Manual review needed -- the threat coefficient is not in the client.
-		ThreatMultiplier: 0.75,
+		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(BattleStance) && warrior.OverpowerAura.IsActive()
@@ -64,7 +65,7 @@ func (warrior *Warrior) registerOverpower() {
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := overpowerBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialNoBlockDodgeParry)
-			warrior.OverpowerAura.Duration = overpowerCD
+			warrior.OverpowerAura.Duration = overpowerWindow.Duration
 			warrior.OverpowerAura.Deactivate(sim)
 
 			if !result.Landed() {

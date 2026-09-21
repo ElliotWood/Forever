@@ -14,16 +14,13 @@ type WarriorInputs struct {
 	DefaultShout  proto.WarriorShout
 	DefaultStance proto.WarriorStance
 
-	StartingRage          float64
-	QueueDelay            int32
-	StanceSnapshot        bool
-	HasBsSolarianSapphire bool
-	HasBsT2               bool
-}
+	StartingRage   float64
+	QueueDelay     int32
+	StanceSnapshot bool
+	HasBsT2        bool
 
-const (
-	SpellFlagBleed = core.SpellFlagAgentReserved1
-)
+	thunderClapEffectBonus float64
+}
 
 const (
 	SpellMaskNone int64 = 0
@@ -186,7 +183,8 @@ func (warrior *Warrior) Initialize() {
 	warrior.registerVictoryRush()
 
 	warrior.registerStances()
-	warrior.registerShouts()
+	warrior.registerBattleShout()
+	warrior.registerDemoralizingShout()
 	warrior.registerChallengingShout()
 	warrior.registerIntimidatingShout()
 }

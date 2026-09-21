@@ -21,6 +21,7 @@ type generatedRow struct {
 	Rank            int32
 	SpellID         int32
 	Cost            int32
+	PowerCostPct    float64
 	CastTimeMs      int32
 	GCDMs           int32
 	CooldownMs      int32
@@ -46,12 +47,13 @@ type generatedRow struct {
 }
 
 type generatedEffect struct {
-	Index    int32
-	Effect   dbc.SpellEffectType
-	Aura     dbc.EffectAuraType
-	Misc     int32
-	Value    float64
-	ValueMax float64
+	Index          int32
+	Effect         dbc.SpellEffectType
+	Aura           dbc.EffectAuraType
+	Misc           int32
+	Value          float64
+	ValueMax       float64
+	ChainAmplitude float64
 }
 
 type generatedAmount struct {
@@ -68,7 +70,15 @@ type generatedAmount struct {
 }
 
 // SkillLineAbility.AcquireMethod: 0 trainer, 1 with the skill, 2 on level, 3 granted by another spell.
-const acquireGranted = 3
+const (
+	acquireOnLevel = 2
+	acquireGranted = 3
+)
+
+// The Defense skill line carries the one-class passives that open a counterattack window - Offensive
+// State (DND) fires the 5 s Overpower aura 1282733 on a melee hit, Defensive State (DND) the Revenge
+// one - beside Parry and Block, which have several classes' bits.
+const skillLineDefense = 95
 
 type rankCandidate struct {
 	SpellID       int32
@@ -106,8 +116,10 @@ func classMaskOf(class dbc.DbcClass) int {
 	return 1 << (class.ID - 1)
 }
 
-// The Go identifier a family is reached by: "Shadow Word: Pain" -> ShadowWordPain.
+// The Go identifier a family is reached by: "Shadow Word: Pain" -> ShadowWordPain. A "(DND)" suffix is
+// the client's do-not-display marker, not part of the name.
 func fieldNameOf(spellName string) string {
+	spellName = strings.TrimSuffix(spellName, " (DND)")
 	var b strings.Builder
 	upper := true
 	for _, r := range spellName {
@@ -153,16 +165,16 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 		JOIN Spell s ON s.ID = sla.Spell
 		LEFT JOIN SpellLevels lv ON lv.SpellID = sla.Spell AND lv.DifficultyID = 0
 		LEFT JOIN SpellMisc sm ON sm.SpellID = sla.Spell AND sm.DifficultyID = 0
-		WHERE sla.SkillLine IN (
+		WHERE (sla.SkillLine IN (
 			SELECT DISTINCT sla2.SkillLine
 			FROM SkillLineAbility sla2
 			JOIN SkillLine sl2 ON sl2.ID = sla2.SkillLine AND sl2.CategoryID = 7
 			WHERE (sla2.ClassMask & ?) != 0
-		)
+		) OR (sla.SkillLine = ? AND sla.ClassMask = ? AND sla.AcquireMethod = ?))
 		AND (s.NameSubtext_lang LIKE 'Rank %' OR s.NameSubtext_lang = '')
 		AND sla.SkillLine NOT IN (2851, 2853)
 		AND NOT EXISTS (SELECT 1 FROM SpellEffect se WHERE se.SpellID = sla.Spell AND se.EffectAura = ?)
-		ORDER BY n.Name_lang, sla.Spell`, mask, dbc.A_MOUNTED)
+		ORDER BY n.Name_lang, sla.Spell`, mask, skillLineDefense, mask, acquireOnLevel, dbc.A_MOUNTED)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -311,7 +323,7 @@ var descriptionSpellRef = regexp.MustCompile(`\$(?:/\d+;)?(\d{4,7})[a-z]`)
 // names. Each entry says what links the two.
 var handTriggers = map[int32][]int32{
 	// Retaliation's dummy aura (aura 4) casts the counterattack 20240: same name, class set and icon,
-	// 1 rage, weapon damage with no base.
+	// weapon damage with no base, a cost of 1 in SpellPower that is a tenth of a rage.
 	20230: {20240},
 }
 
@@ -537,11 +549,23 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 		}
 		spellOf[d.Name] = d.SpellID
 
-		// A one-rank node grants an ability rather than describing a ladder - Hemorrhage and Water
-		// Shield are nodes on a spell the game teaches - and the one row it would yield names the
-		// node's spell, which is not the spell the ability's own ranks are keyed on.
+		// A one-rank node usually grants an ability rather than describing a ladder - Hemorrhage and
+		// Water Shield are nodes on a spell the game teaches - and the one row it would yield names
+		// the node's spell, which is not the spell the ability's own ranks are keyed on. A one-rank
+		// node on a passive nothing teaches is the talent itself - Raging Blows, Vanguard - and
+		// yields its one row at the spell's base points.
 		if d.MaxRanks <= 1 {
-			continue
+			passive, err := SpellIsPassive(db, d.SpellID)
+			if err != nil {
+				return nil, nil, nil, err
+			}
+			taught, err := taughtBySkillLine(db, d.SpellID)
+			if err != nil {
+				return nil, nil, nil, err
+			}
+			if !passive || taught {
+				continue
+			}
 		}
 
 		effects, err := effectIndicesOf(db, d.SpellID)
@@ -574,18 +598,28 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 			}
 		}
 
-		if len(points) == 0 {
+		if len(points) == 0 && d.MaxRanks > 1 {
 			skipped[d.Name] = fmt.Sprintf("the talent tree states no per-rank value for spell %d", d.SpellID)
 			continue
 		}
+		if len(points) == 0 {
+			points[1] = map[int32]float64{}
+		}
 		if len(uncovered) > 0 {
-			partial[d.Name] = fmt.Sprintf("effect %s of spell %d has no rank curve and is left out",
+			partial[d.Name] = fmt.Sprintf("effect %s of spell %d has no rank curve and is held at its base points",
 				strings.Join(uncovered, ", "), d.SpellID)
 		}
 		ladders[d.Name] = traitLadder{SpellID: d.SpellID, MaxRanks: d.MaxRanks, Points: points}
 	}
 
 	return ladders, skipped, partial, nil
+}
+
+// Whether a trainer, the skill itself or a level grants the spell (AcquireMethod 0, 1 or 2).
+func taughtBySkillLine(db *sql.DB, spellID int32) (bool, error) {
+	var taught bool
+	err := scanOptional(db, `SELECT COUNT(*) > 0 FROM SkillLineAbility WHERE Spell = ? AND AcquireMethod IN (0, 1, 2)`, spellID, &taught)
+	return taught, err
 }
 
 func effectIndicesOf(db *sql.DB, spellID int32) ([]int32, error) {
@@ -941,10 +975,11 @@ func overrideReplacements(db *sql.DB, ids map[int32]bool) (map[int32]bool, error
 // Which effect supplies which field. Derived from the effect types rather than declared per family,
 // because the client data already says it: a SCHOOL_DAMAGE effect is direct damage, a HEAL effect is a
 // heal, an ENERGIZE effect is Lay on Hands' mana restore, a periodic aura is a tick.
-// Where points is set the rank's numbers come from the talent tree's curves, and only the effects it
-// prices are kept: the rest would have to be read off a spell that states one rank for all of them.
-// The same-name sibling search is not wanted there either - it exists for the ability dispatchers,
-// and a talent priced per rank has nothing to borrow.
+// Where points is set the rank's numbers come from the talent tree's curves. Only the effects it prices
+// can fill a role; an effect the tree states no curve for is the same at every rank - Blood Craze's
+// 20% health threshold - and is carried in Effects at the spell's own base points. The same-name
+// sibling search is not wanted there either - it exists for the ability dispatchers, and a talent
+// priced per rank has nothing to borrow.
 func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]float64) (generatedRow, error) {
 	var spell RankSpell
 	var candidates []RankEffect
@@ -959,8 +994,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		return generatedRow{}, err
 	}
 	if points != nil {
-		spell.Effects = pricedEffects(spell.Effects, points)
-		candidates = spell.Effects
+		candidates = pricedEffects(spell.Effects, points)
 	}
 
 	derive := func(e RankEffect) (float64, float64) {
@@ -981,6 +1015,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 	if spell.ManaCost.Valid {
 		row.Cost = NormalizePowerCost(int32(spell.ManaCost.Int64), spell.PowerType)
 	}
+	row.PowerCostPct = spell.PowerCostPct
 
 	amountOf := func(e RankEffect) *generatedAmount {
 		min, max := derive(e)
@@ -1007,6 +1042,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 		}
 		row.Effects = append(row.Effects, generatedEffect{
 			Index: e.Index, Effect: e.Effect, Aura: e.Aura, Misc: e.MiscValue, Value: min, ValueMax: max,
+			ChainAmplitude: e.ChainAmplitude,
 		})
 	}
 
@@ -1033,7 +1069,7 @@ func buildRow(db *sql.DB, rank int32, spellID int32, mask int, points map[int32]
 			row.Direct = amountOf(e)
 		case e.Effect == dbc.E_HEAL && row.Heal == nil:
 			row.Heal = amountOf(e)
-		case e.Effect == dbc.E_ENERGIZE && row.Energize == nil:
+		case (e.Effect == dbc.E_ENERGIZE || e.Aura == dbc.A_PERIODIC_ENERGIZE) && row.Energize == nil:
 			row.Energize = amountOf(e)
 		case IsThreatEffect(e.Effect) && row.FlatThreatBonus == 0:
 			min, _ := derive(e)
@@ -1191,7 +1227,7 @@ func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnum
 		lines  []string
 	}{
 		{"// Not generated:\n", skipped},
-		{"// Generated without an effect the talent tree states no rank value for:\n", partial},
+		{"// Generated with an effect held at its base points, the talent tree stating no rank value for it:\n", partial},
 	} {
 		if len(block.lines) == 0 {
 			continue
@@ -1333,6 +1369,9 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 	if row.Cost > 0 {
 		parts = append(parts, fmt.Sprintf("Cost: %d", row.Cost))
 	}
+	if row.PowerCostPct != 0 {
+		parts = append(parts, fmt.Sprintf("PowerCostPct: %s", num(row.PowerCostPct)))
+	}
 	if row.CastTimeMs > 0 {
 		parts = append(parts, fmt.Sprintf("CastTime: %s", millis(row.CastTimeMs)))
 	}
@@ -1385,6 +1424,9 @@ func formatRow(row generatedRow, namer *rankEnumNamer) string {
 				e.Index, namer.Effect(e.Effect), namer.Aura(e.Aura), e.Misc, num(e.Value))
 			if e.ValueMax > 0 {
 				f += ", ValueMax: " + num(e.ValueMax)
+			}
+			if e.ChainAmplitude != 0 && e.ChainAmplitude != 1 {
+				f += ", ChainAmplitude: " + num(e.ChainAmplitude)
 			}
 			es = append(es, f+"}")
 		}
@@ -1443,5 +1485,5 @@ func millis(ms int32) string {
 }
 
 func num(f float64) string {
-	return strconv.FormatFloat(f, 'g', -1, 64)
+	return strconv.FormatFloat(f, 'f', -1, 64)
 }

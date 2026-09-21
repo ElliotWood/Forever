@@ -10,9 +10,8 @@ var executeRank = spellData.Execute.HighestRank()
 // effects share the aura/misc pair Effect() selects on.
 var executeBaseDamage = executeRank.Effects[0].Value
 
-// TODO: Manual review needed -- spell 20662 states 15 damage per extra point of rage
-// ($*10;F1 over its EffectChainAmplitude of 1.5), which no table column carries.
-const executeDamagePerRage = 15.0
+// The tooltip's $*10;F1: the dummy's chain amplitude, times 10, per extra point of rage.
+var executeDamagePerRage = executeRank.Effects[0].ChainAmplitude * 10
 
 func (warrior *Warrior) registerExecute() {
 
@@ -39,8 +38,8 @@ func (warrior *Warrior) registerExecute() {
 		},
 
 		DamageMultiplier: 1,
-		// TODO: Manual review needed -- the threat coefficient is not in the client.
-		ThreatMultiplier: 1.25,
+		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(BerserkerStance|BattleStance) && sim.IsExecutePhase20()

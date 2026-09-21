@@ -45,14 +45,20 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 	ID:   218,
 	Bonuses: map[int32]core.ApplySetBonus{
 		3: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 23563 states 30 attack power on Battle Shout, which shouts.go adds through
-			// the same flag the HasBsT2 option sets.
-			agent.(WarriorAgent).GetWarrior().HasBsT2 = true
+			// Spell 23563 states 30 attack power on Battle Shout, which battle_shout.go adds through
+			// the same flag the HasBsT2 option sets. The set aura toggles it so an item swap
+			// that removes the pieces takes the bonus with them.
+			warrior := agent.(WarriorAgent).GetWarrior()
+			fromOptions := warrior.HasBsT2
+			setBonusAura.
+				ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) {
+					warrior.HasBsT2 = true
+				}).
+				ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) {
+					warrior.HasBsT2 = fromOptions
+				})
 		},
 		5: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 21890 states a 20% chance after an offensive ability requiring rage that the
-			// next one costs less rage; spell 21887 states -50, which is 5 rage, for 10 seconds
-			// and one charge.
 			warrior := agent.(WarriorAgent).GetWarrior()
 
 			var buff *core.Aura
@@ -60,19 +66,21 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 				Label:    "Warrior's Wrath",
 				ActionID: core.ActionID{SpellID: 21887},
 				Duration: time.Second * 10,
-			}).AttachSpellMod(core.SpellModConfig{
-				ClassMask: SpellMaskOffensiveAbilities,
-				Kind:      core.SpellMod_PowerCost_Flat,
-				IntValue:  -5,
-			}).AttachProcTrigger(core.ProcTrigger{
-				Name:               "Warrior's Wrath - Consume",
-				ClassSpellMask:     SpellMaskOffensiveAbilities,
-				Callback:           core.CallbackOnCastComplete,
-				TriggerImmediately: true,
-				Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-					buff.Deactivate(sim)
-				},
-			})
+			}).
+				AttachSpellMod(core.SpellModConfig{
+					ClassMask: SpellMaskOffensiveAbilities,
+					Kind:      core.SpellMod_PowerCost_Flat,
+					IntValue:  -5,
+				}).
+				AttachProcTrigger(core.ProcTrigger{
+					Name:               "Warrior's Wrath - Consume",
+					ClassSpellMask:     SpellMaskOffensiveAbilities,
+					Callback:           core.CallbackOnCastComplete,
+					TriggerImmediately: true,
+					Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+						buff.Deactivate(sim)
+					},
+				})
 
 			setBonusAura.AttachProcTrigger(core.ProcTrigger{
 				Name:           "Battlegear of Wrath - 5PC",
@@ -87,8 +95,6 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 			})
 		},
 		8: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 23548 states a 4% chance to parry the next attack after a block; spell 23547
-			// states 100% parry, lasts until an attack is taken and holds one charge.
 			warrior := agent.(WarriorAgent).GetWarrior()
 
 			var parry *core.Aura
@@ -96,7 +102,8 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 				Label:    "Battlegear of Wrath Parry",
 				ActionID: core.ActionID{SpellID: 23547},
 				Duration: core.NeverExpires,
-			}).AttachStatBuff(stats.ParryRating, 100*core.ParryRatingPerParryPercent).
+			}).
+				AttachStatBuff(stats.ParryRating, 100*core.ParryRatingPerParryPercent).
 				AttachProcTrigger(core.ProcTrigger{
 					Name:               "Battlegear of Wrath - 8PC Consume",
 					ProcMask:           core.ProcMaskMelee,
@@ -126,8 +133,6 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 	ID:   496,
 	Bonuses: map[int32]core.ApplySetBonus{
 		3: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 26109 states -35% rage cost on all warrior shouts, and its class mask lists
-			// Battle Shout, Demoralizing Shout, Intimidating Shout and Challenging Shout.
 			setBonusAura.AttachSpellMod(core.SpellModConfig{
 				ClassMask:  SpellMaskShouts,
 				Kind:       core.SpellMod_PowerCost_Pct_Add,
@@ -135,13 +140,17 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 			})
 		},
 		5: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 26110 states 50% on Thunder Clap's slow effect and damage.
-			// TODO: only the damage half is modelled. Thunder Clap's slow is core.ThunderClapAura,
-			// which takes the Improved Thunder Clap rank and no set bonus.
+			warrior := agent.(WarriorAgent).GetWarrior()
 			setBonusAura.AttachSpellMod(core.SpellModConfig{
 				ClassMask:  SpellMaskThunderClap,
 				Kind:       core.SpellMod_DamageDone_Flat,
 				FloatValue: 0.5,
+			})
+			setBonusAura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) {
+				warrior.thunderClapEffectBonus += 0.5
+			})
+			setBonusAura.ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) {
+				warrior.thunderClapEffectBonus -= 0.5
 			})
 		},
 	},

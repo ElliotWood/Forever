@@ -10,15 +10,15 @@ var recklessnessRank = spellData.Recklessness.HighestRank()
 
 func (warrior *Warrior) registerRecklessness() {
 	actionID := core.ActionID{SpellID: recklessnessRank.SpellID}
-
+	recklessnessCritValue := recklessnessRank.Effect(shared.A_MOD_CRIT_PCT, 0).Value
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Recklessness",
 		ActionID: actionID,
 		Duration: recklessnessRank.Duration,
 	}).AttachStatsBuff(
 		stats.Stats{
-			stats.PhysicalCritPercent: recklessnessRank.Effect(shared.A_MOD_CRIT_PCT, 0).Value,
-			stats.SpellCritPercent:    recklessnessRank.Effect(shared.A_MOD_CRIT_PCT, 0).Value,
+			stats.PhysicalCritPercent: recklessnessCritValue,
+			stats.SpellCritPercent:    recklessnessCritValue,
 		},
 	).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.DamageTakenMultiplier,

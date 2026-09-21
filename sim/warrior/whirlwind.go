@@ -21,8 +21,8 @@ func (warrior *Warrior) registerWhirlwind() {
 			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
 
 			DamageMultiplier: 1,
-			// TODO: Manual review needed -- the threat coefficient is not in the client.
-			ThreatMultiplier: 1.25,
+			// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+			ThreatMultiplier: 1,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
@@ -55,8 +55,8 @@ func (warrior *Warrior) registerWhirlwind() {
 		},
 
 		DamageMultiplier: 1,
-		// TODO: Manual review needed -- the threat coefficient is not in the client.
-		ThreatMultiplier: 1.25,
+		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(BerserkerStance)

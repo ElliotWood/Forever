@@ -4,6 +4,7 @@ package spelldata
 // tools/database/dbc/enums.go names them: ATTR_EX_1 is a bit of Attributes_1.
 const (
 	// The spell is always on rather than cast: a talent's passive aura, a set bonus, an item effect.
+	// The same bit the generator names dbc.ATTR_PASSIVE.
 	ATTR_PASSIVE uint32 = 0x40
 
 	// The two bits the client marks a channel with. Arcane Missiles and Blizzard carry the first,

@@ -1,12 +1,10 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 1672 carries no threat effect, so the 192 is hand-supplied.
-var shieldBashRank = shared.WithSpellDataFlatThreat(spellData.ShieldBash, 192).HighestRank()
+var shieldBashRank = spellData.ShieldBash.HighestRank()
 
 func (warrior *Warrior) registerShieldBash() {
 	actionID := core.ActionID{SpellID: shieldBashRank.SpellID}
@@ -36,9 +34,10 @@ func (warrior *Warrior) registerShieldBash() {
 		},
 
 		DamageMultiplier: 1,
-		// TODO: Manual review needed -- the threat coefficient is not in the client.
-		ThreatMultiplier: 1.5,
-		FlatThreatBonus:  shieldBashRank.FlatThreatBonus,
+		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		ThreatMultiplier: 1,
+		// TODO: In-game test required
+		FlatThreatBonus: 0,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.PseudoStats.CanBlock && warrior.StanceMatches(DefensiveStance|BattleStance)

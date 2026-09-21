@@ -28,6 +28,8 @@ type rageBar struct {
 	// already generates. Set by SetOffHandRageMultiplier().
 	offHandRageMultiplier float64
 
+	damageTakenRageMultiplier float64
+
 	RageRefundMetrics     *ResourceMetrics
 	EncounterStartMetrics *ResourceMetrics
 }
@@ -101,7 +103,7 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 			if unit.GetCurrentPowerBar() != RageBar {
 				return
 			}
-			generatedRage := result.Damage * 2.5 / RageFactor
+			generatedRage := result.Damage * 2.5 / RageFactor * unit.rageBar.damageTakenRageMultiplier
 			unit.AddRage(sim, generatedRage, rageFromDamageTakenMetrics)
 		},
 	})
@@ -120,8 +122,10 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 		totalRageMultiplier:   1.0,
 		startingHitFactor:     BaseRageHitFactor * options.BaseRageMultiplier,
 		offHandRageMultiplier: 1.0,
-		RageRefundMetrics:     unit.NewRageMetrics(ActionID{OtherID: proto.OtherAction_OtherActionRefund}),
-		EncounterStartMetrics: unit.NewRageMetrics(ActionID{OtherID: proto.OtherAction_OtherActionEncounterStart}),
+
+		damageTakenRageMultiplier: 1.0,
+		RageRefundMetrics:         unit.NewRageMetrics(ActionID{OtherID: proto.OtherAction_OtherActionRefund}),
+		EncounterStartMetrics:     unit.NewRageMetrics(ActionID{OtherID: proto.OtherAction_OtherActionEncounterStart}),
 	}
 }
 
@@ -153,6 +157,12 @@ func (rb *rageBar) SetOffHandRageMultiplier(multiplier float64) {
 
 func (rb *rageBar) MultiplyRageGen(multiplier float64) {
 	rb.totalRageMultiplier *= multiplier
+}
+
+// Call this within the OnGain and OnExpire callbacks of Berserker Rage and anything else that
+// changes the rage a hit taken generates.
+func (rb *rageBar) MultiplyDamageTakenRageGen(multiplier float64) {
+	rb.damageTakenRageMultiplier *= multiplier
 }
 
 func (rb *rageBar) AddRage(sim *Simulation, amount float64, metrics *ResourceMetrics) {
@@ -205,6 +215,7 @@ func (rb *rageBar) reset(_ *Simulation) {
 	rb.currentRage = rb.startingRage
 	rb.currentHitFactor = rb.startingHitFactor
 	rb.totalRageMultiplier = 1.0
+	rb.damageTakenRageMultiplier = 1.0
 }
 
 func (rb *rageBar) doneIteration() {

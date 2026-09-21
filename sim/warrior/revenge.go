@@ -3,19 +3,17 @@ package warrior
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 25288 states "a high amount of threat" with no number,
-// so the 200 is hand-supplied.
-var revengeRank = shared.WithSpellDataFlatThreat(spellData.Revenge, 200).HighestRank()
+// TODO: Manual review needed -- spell 25288 states "a high amount of threat" with no number;
+// none is modelled until measured in game.
+var revengeRank = spellData.Revenge.HighestRank()
 
 func (warrior *Warrior) registerRevenge() {
 	actionID := core.ActionID{SpellID: revengeRank.SpellID}
 
-	// TODO: Manual review needed -- spell 25288 states only that Revenge must follow a block,
-	// dodge or parry, so the 5 second window is hand-supplied.
+	// TODO: In-game test needed
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Revenge",
 		Duration: 5 * time.Second,

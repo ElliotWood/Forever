@@ -216,9 +216,9 @@ func (warrior *Warrior) registerConcussionBlow() {
 	})
 }
 
-// TODO: Manual review needed -- spell 23922 states only "a very high amount of threat", so the
-// flat threat is hand-supplied.
-var shieldSlamRank = shared.WithSpellDataFlatThreat(spellData.ShieldSlam, 305).HighestRank()
+// TODO: Manual review needed -- spell 23922 states only "a very high amount of threat"; none is
+// modelled until measured in game.
+var shieldSlamRank = spellData.ShieldSlam.HighestRank()
 
 func (warrior *Warrior) registerShieldSlam() {
 	if !warrior.Talents.ShieldSlam {

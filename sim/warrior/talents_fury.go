@@ -288,10 +288,6 @@ func (warrior *Warrior) registerPiercingHowl() {
 	})
 }
 
-// TODO: Manual review needed -- 16487's second effect sets the share of maximum health a single hit
-// has to exceed at 20%; the generator leaves that effect out for having no rank curve.
-const bloodCrazeHealthThreshold = 0.2
-
 var bloodCrazeHot = spellData.BloodCrazeTriggered.HighestRank()
 
 func (warrior *Warrior) registerBloodCraze() {
@@ -299,7 +295,8 @@ func (warrior *Warrior) registerBloodCraze() {
 		return
 	}
 
-	healthFraction := spellData.BloodCraze.FractionAt(warrior.Talents.BloodCraze)
+	healthFraction := spellData.BloodCraze.EffectAt(0).FractionAt(warrior.Talents.BloodCraze)
+	hitThreshold := spellData.BloodCraze.EffectAt(1).FractionAt(warrior.Talents.BloodCraze)
 	tick := bloodCrazeHot.Periodic.(shared.SpellDataPeriodic)
 
 	bloodCraze := warrior.RegisterSpell(core.SpellConfig{
@@ -329,7 +326,7 @@ func (warrior *Warrior) registerBloodCraze() {
 		Outcome:            core.OutcomeLanded,
 		RequireDamageDealt: true,
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
-			return result.Outcome.Matches(core.OutcomeCrit) || result.Damage > warrior.MaxHealth()*bloodCrazeHealthThreshold
+			return result.Outcome.Matches(core.OutcomeCrit) || result.Damage > warrior.MaxHealth()*hitThreshold
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			bloodCraze.SelfHot().Apply(sim)
@@ -357,8 +354,7 @@ func (warrior *Warrior) registerRagingBlows() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskCleave,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		// TODO: Manual review needed -- 1310315's second effect states -20 rage tenths on Cleave.
-		IntValue: -2,
+		IntValue:  int32(spellData.RagingBlows.EffectAt(1).TenthsAt(1)),
 	})
 }
 

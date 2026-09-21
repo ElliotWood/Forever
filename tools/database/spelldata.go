@@ -55,6 +55,10 @@ type RankEffect struct {
 	AuraPeriod   int32
 	OwnerSpellID int32
 
+	// SpellEffect.EffectChainAmplitude, which the client uses for more than chain falloff: Execute's
+	// tooltip multiplies it by 10 for the damage each extra rage adds. 1 on nearly every effect.
+	ChainAmplitude float64
+
 	// SpellEffect.EffectTriggerSpell: the spell this effect fires, which for a seal's aura dummy is
 	// the per-hit proc. Zero when it fires nothing.
 	TriggerSpell int32
@@ -75,12 +79,16 @@ type RankSpell struct {
 	MaxLevel   int32
 	ManaCost   sql.NullInt64
 	PowerType  int32
-	DurationMs int32
-	CastTimeMs int32
-	GCDMs      int32
-	CooldownMs int32
-	MinRange   float64
-	MaxRange   float64
+
+	// SpellPower.PowerCostPct: the share of the pool the cast costs, as a percentage. Bloodrage
+	// reads 20 against health (PowerType -2), Arcane Blast 15 against mana.
+	PowerCostPct float64
+	DurationMs   int32
+	CastTimeMs   int32
+	GCDMs        int32
+	CooldownMs   int32
+	MinRange     float64
+	MaxRange     float64
 
 	// How fast the projectile flies, in yards per second, which core turns into the delay between
 	// the cast landing and the damage arriving. Zero for a spell that hits the instant it is cast.
@@ -175,13 +183,23 @@ func DeriveRankAmount(e RankEffect, spellLevel, maxLevel int32) (min float64, ma
 	return min, max
 }
 
+// Whether the spell carries the Passive attribute: never cast, only applied.
+func SpellIsPassive(db *sql.DB, spellID int32) (bool, error) {
+	var passive bool
+	err := scanOptional(db, fmt.Sprintf(
+		`SELECT (COALESCE(json_extract(Attributes, '$[%d]'), 0) & %d) != 0 FROM SpellMisc WHERE SpellID = ? AND DifficultyID = 0`,
+		dbc.ATTR_INDEX_BASE, dbc.ATTR_PASSIVE), spellID, &passive)
+	return passive, err
+}
+
 func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 	s := RankSpell{SpellID: spellID}
 	err := db.QueryRow(`
 		SELECT l.SpellLevel, l.MaxLevel,
 		       (SELECT ManaCost FROM SpellPower WHERE SpellID = l.SpellID ORDER BY OrderIndex LIMIT 1),
-		       COALESCE((SELECT PowerType FROM SpellPower WHERE SpellID = l.SpellID ORDER BY OrderIndex LIMIT 1), 0)
-		FROM SpellLevels l WHERE l.SpellID = ?`, spellID).Scan(&s.SpellLevel, &s.MaxLevel, &s.ManaCost, &s.PowerType)
+		       COALESCE((SELECT PowerType FROM SpellPower WHERE SpellID = l.SpellID ORDER BY OrderIndex LIMIT 1), 0),
+		       COALESCE((SELECT PowerCostPct FROM SpellPower WHERE SpellID = l.SpellID ORDER BY OrderIndex LIMIT 1), 0)
+		FROM SpellLevels l WHERE l.SpellID = ?`, spellID).Scan(&s.SpellLevel, &s.MaxLevel, &s.ManaCost, &s.PowerType, &s.PowerCostPct)
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
 		// Passive talents such as the warrior's Blood Craze have no SpellLevels row at all. No level
@@ -422,7 +440,7 @@ func RankEffectsOf(db *sql.DB, spellID int32) ([]RankEffect, error) {
 		-- onto the same value, so generated rank tables no longer carry a damage range.
 		SELECT EffectIndex, Effect, EffectAura, CAST(EffectBasePointsF AS INTEGER), 0,
 		       EffectRealPointsPerLevel, EffectBonusCoefficient, BonusCoefficientFromAP, EffectAuraPeriod,
-		       COALESCE(EffectMiscValue_0, 0), COALESCE(EffectTriggerSpell, 0)
+		       COALESCE(EffectMiscValue_0, 0), COALESCE(EffectTriggerSpell, 0), COALESCE(EffectChainAmplitude, 0)
 		FROM SpellEffect WHERE SpellID = ? ORDER BY EffectIndex`, spellID)
 	if err != nil {
 		return nil, err
@@ -437,9 +455,11 @@ func RankEffectsOf(db *sql.DB, spellID int32) ([]RankEffect, error) {
 	var out []RankEffect
 	for rows.Next() {
 		e := RankEffect{OwnerSpellID: spellID, SpellLevel: spellLevel, MaxLevel: maxLevel}
-		if err := rows.Scan(&e.Index, &e.Effect, &e.Aura, &e.BasePoints, &e.DieSides, &e.PointsPerLvl, &e.Coefficient, &e.APCoef, &e.AuraPeriod, &e.MiscValue, &e.TriggerSpell); err != nil {
+		if err := rows.Scan(&e.Index, &e.Effect, &e.Aura, &e.BasePoints, &e.DieSides, &e.PointsPerLvl, &e.Coefficient, &e.APCoef, &e.AuraPeriod, &e.MiscValue, &e.TriggerSpell, &e.ChainAmplitude); err != nil {
 			return nil, err
 		}
+		// Stored as a float32, so 0.7 arrives as 0.699999988079071.
+		e.ChainAmplitude = math.Round(e.ChainAmplitude*1e6) / 1e6
 		out = append(out, e)
 	}
 	return out, rows.Err()
