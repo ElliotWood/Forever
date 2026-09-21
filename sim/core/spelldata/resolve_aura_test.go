@@ -78,6 +78,57 @@ func TestDotConfigFromARow(t *testing.T) {
 	}
 }
 
+// The dot a caller would register, so the default snapshot has the unit and attack table it reads.
+func dotForSnapshot(level int32) (*core.Dot, *core.Unit) {
+	caster := &core.Unit{Level: level}
+	target := &core.Unit{}
+	caster.AttackTables = []*core.AttackTable{{Attacker: caster, Defender: target}}
+
+	return &core.Dot{Spell: &core.Spell{Unit: caster, SpellSchool: core.SpellSchoolPhysical}}, target
+}
+
+// The default snapshot takes the effect's amount at the caster's level, so the same dot on a level 55
+// caster snapshots less than on a level 60 one.
+func TestDotConfigDefaultSnapshotReadsTheCastersLevel(t *testing.T) {
+	withResolverRows(t)
+	bleed := Find(800)
+	config := DotConfig(bleed, bleed.PeriodicEffect())
+
+	dot, target := dotForSnapshot(60)
+	config.OnSnapshot(nil, target, dot)
+	if dot.SnapshotBaseDamage != 80 {
+		t.Errorf("snapshot at level 60 = %v, want 70 plus 10 levels of scaling", dot.SnapshotBaseDamage)
+	}
+
+	dot, target = dotForSnapshot(55)
+	config.OnSnapshot(nil, target, dot)
+	if dot.SnapshotBaseDamage != 75 {
+		t.Errorf("snapshot at level 55 = %v, want 75", dot.SnapshotBaseDamage)
+	}
+}
+
+// The callbacks are fields, so a caller that needs its own replaces them.
+func TestDotConfigCallerReplacesTheCallbacks(t *testing.T) {
+	withResolverRows(t)
+	bleed := Find(800)
+	config := DotConfig(bleed, bleed.PeriodicEffect())
+
+	snapshots, ticks := 0, 0
+	config.OnSnapshot = func(*core.Simulation, *core.Unit, *core.Dot) { snapshots++ }
+	config.OnTick = func(*core.Simulation, *core.Unit, *core.Dot) { ticks++ }
+
+	dot, target := dotForSnapshot(60)
+	config.OnSnapshot(nil, target, dot)
+	config.OnTick(nil, target, dot)
+
+	if snapshots != 1 || ticks != 1 {
+		t.Errorf("the caller's callbacks ran %d and %d times, want once each", snapshots, ticks)
+	}
+	if dot.SnapshotBaseDamage != 0 {
+		t.Errorf("the default snapshot ran as well: base damage = %v", dot.SnapshotBaseDamage)
+	}
+}
+
 func TestDotConfigTakesAuraOptions(t *testing.T) {
 	withResolverRows(t)
 	bleed := Find(800)

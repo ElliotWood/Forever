@@ -32,10 +32,21 @@ func resolverRows() []Spell {
 			Powers:  []Power{{Type: 1, Cost: 150}},
 		},
 		{
+			ID: 250, Name: "Physical Shout", School: 1, DefenseType: 1,
+			GCDMs: 1500, StartRecoveryCategory: 133,
+			Effects: []Effect{{SpellID: 250, Type: dbcenums.E_APPLY_AURA, Target: [2]uint8{20, 0}}},
+			Powers:  []Power{{Type: 1, Cost: 100}},
+		},
+		{
 			ID: 300, Name: "Own And Category", School: 1, DefenseType: 2,
 			CooldownMs: 30000, CategoryCooldownMs: 6000, GCDMs: 1500, StartRecoveryCategory: 133,
 			Category: testCategory,
 			Effects:  []Effect{{SpellID: 300, Type: dbcenums.E_SCHOOL_DAMAGE, Target: [2]uint8{6, 0}}},
+		},
+		{
+			ID: 350, Name: "Categoryless Cooldown", School: 1, DefenseType: 2,
+			CategoryCooldownMs: 8000, GCDMs: 1500, StartRecoveryCategory: 133,
+			Effects: []Effect{{SpellID: 350, Type: dbcenums.E_SCHOOL_DAMAGE, Target: [2]uint8{6, 0}}},
 		},
 		{
 			ID: 400, Name: "Mana Caster", Rank: "Rank 7", School: 16, DefenseType: 1, Speed: 24,
@@ -68,12 +79,18 @@ func resolverRows() []Spell {
 			Powers: []Power{{Type: 2, Cost: 40}},
 		},
 		{
-			ID: 800, Name: "Bleed", School: 1, DefenseType: 2, DurationMs: 21000, GCDMs: 1500,
+			ID: 750, Name: "Percent Cost Form", School: 1,
+			Effects: []Effect{{SpellID: 750, Type: dbcenums.E_APPLY_AURA, Target: [2]uint8{1, 0}}},
+			Powers:  []Power{{Type: 0, CostPct: 4}},
+		},
+		{
+			ID: 800, Name: "Bleed", School: 1, DefenseType: 2, SpellLevel: 50, DurationMs: 21000,
+			GCDMs:                 1500,
 			StartRecoveryCategory: 133,
 			MaxStack:              5,
 			Effects: []Effect{
 				{SpellID: 800, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_DAMAGE,
-					BasePoints: 70, PeriodMs: 3000, SPCoef: 0.1, Target: [2]uint8{6, 0}},
+					BasePoints: 70, PPL: 1, PeriodMs: 3000, SPCoef: 0.1, Target: [2]uint8{6, 0}},
 			},
 			Powers: []Power{{Type: 1, Cost: 100}},
 		},
@@ -232,6 +249,23 @@ func TestSpellConfigCategoryCooldownSharesTheTimer(t *testing.T) {
 	}
 }
 
+// A category cooldown with no category to share is the spell's own recovery time.
+func TestSpellConfigCategoryCooldownWithoutACategory(t *testing.T) {
+	withResolverRows(t)
+	unit := testUnit()
+	config := SpellConfig(unit, Find(350))
+
+	if config.Cast.CD.Timer == nil {
+		t.Fatal("a categoryless category cooldown got no timer")
+	}
+	if config.Cast.CD.Timer == unit.CategoryTimer(0) {
+		t.Error("a categoryless category cooldown landed on the timer for category 0")
+	}
+	if config.Cast.CD.Duration != time.Second*8 {
+		t.Errorf("cooldown = %v, want 8s", config.Cast.CD.Duration)
+	}
+}
+
 // A spell with both keeps its own cooldown and shares the category's.
 func TestSpellConfigBothCooldowns(t *testing.T) {
 	withResolverRows(t)
@@ -264,16 +298,35 @@ func TestSpellConfigGCDGate(t *testing.T) {
 	}
 }
 
-// A cast that spends a resource without a GCD or a cast time still has to read as a cast, since core
-// takes an empty one for a proc and never charges it.
+// A cast that spends a resource without a GCD or a cast time reads as a cast rather than as the empty
+// one core takes for a proc, whether the row states the cost flat or as a share of the bar.
 func TestSpellConfigMarksACostedOffGCDCastNonEmpty(t *testing.T) {
 	withResolverRows(t)
 
 	if !SpellConfig(testUnit(), Find(700)).Cast.DefaultCast.NonEmpty {
 		t.Error("a focus cost with no GCD resolved to an empty cast")
 	}
+	if !SpellConfig(testUnit(), Find(750)).Cast.DefaultCast.NonEmpty {
+		t.Error("a cost stated only as a percentage of the bar resolved to an empty cast")
+	}
 	if SpellConfig(testUnit(), Find(500)).Cast.DefaultCast.NonEmpty {
 		t.Error("a passive with no cost should be left an empty cast")
+	}
+}
+
+// Haste shortens a cast and its GCD by school, not by the hit table the row files the spell under:
+// the client's shouts are physical spells with the magic defense type.
+func TestSpellConfigIgnoreHasteFollowsTheSchool(t *testing.T) {
+	withResolverRows(t)
+
+	if !SpellConfig(testUnit(), Find(250)).Cast.IgnoreHaste {
+		t.Error("a physical spell with the magic defense type did not ignore haste")
+	}
+	if !SpellConfig(testUnit(), Find(100)).Cast.IgnoreHaste {
+		t.Error("a physical ability did not ignore haste")
+	}
+	if SpellConfig(testUnit(), Find(400)).Cast.IgnoreHaste {
+		t.Error("a frost spell ignored haste")
 	}
 }
 
@@ -361,5 +414,17 @@ func TestSpellConfigProcFlagsAndTag(t *testing.T) {
 	}
 	if config.ActionID.Tag != 2 {
 		t.Errorf("tag = %d, want 2", config.ActionID.Tag)
+	}
+}
+
+// Melee and Magic put a spell in the rotation, and Proc takes the sub-spell they resolve back out of
+// it: the flags the warrior's own proc sub-spells carry today.
+func TestSpellConfigProcLeavesTheRotation(t *testing.T) {
+	withResolverRows(t)
+	config := SpellConfig(testUnit(), Find(100), Melee(core.ProcMaskMeleeMHSpecial), Proc())
+
+	want := core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete
+	if config.Flags != want {
+		t.Errorf("flags = %v, want %v", config.Flags, want)
 	}
 }

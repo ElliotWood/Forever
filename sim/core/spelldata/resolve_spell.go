@@ -80,12 +80,13 @@ func Magic(mask core.ProcMask) SpellOpt {
 	}
 }
 
-// A spell another spell or an aura casts: it is never in a rotation and does not feed on-cast
-// effects. It keeps its metrics, the way the warrior's Deep Wounds, Whirlwind off-hand and Blood
-// Craze sub-spells do.
+// A spell another spell or an aura casts: it is out of the rotation Melee and Magic put it in and it
+// does not feed on-cast effects. It keeps its metrics, the way the warrior's Deep Wounds, Whirlwind
+// off-hand and Blood Craze sub-spells do.
 func Proc() SpellOpt {
 	return func(config *core.SpellConfig, _ *Spell) {
 		config.Flags |= core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete
+		config.Flags &^= core.SpellFlagAPL
 	}
 }
 
@@ -147,33 +148,46 @@ func rowFlags(s *Spell) core.SpellFlag {
 }
 
 func castConfig(unit *core.Unit, s *Spell) core.CastConfig {
+	// Haste shortens a cast and the GCD it spends, which is the school's business rather than the hit
+	// table's: the shouts, Taunt, Piercing Howl and Thunder Clap are physical spells the client files
+	// under the magic defense type, and they ignore haste like every other ability.
 	cast := core.CastConfig{
 		DefaultCast: core.Cast{CastTime: s.CastTime()},
-		IgnoreHaste: s.DefenseTypeCore() != core.DefenseTypeMagic,
+		IgnoreHaste: s.SpellSchool() == core.SpellSchoolPhysical,
 	}
 
 	if s.StartRecoveryCategory == globalCooldownCategory {
 		cast.DefaultCast.GCD = s.GCD()
 	}
 
-	// The category cooldown is the one a whole category of spells shares, so it runs off the unit's
-	// timer for that category rather than off a timer of this spell's own.
 	switch {
 	case s.CooldownMs > 0 && s.CategoryCooldownMs > 0:
 		cast.CD = core.Cooldown{Timer: unit.NewTimer(), Duration: s.Cooldown()}
-		cast.SharedCD = core.Cooldown{Timer: unit.CategoryTimer(int32(s.Category)), Duration: s.CategoryCooldown()}
+		cast.SharedCD = core.Cooldown{Timer: categoryTimer(unit, s), Duration: s.CategoryCooldown()}
 	case s.CooldownMs > 0:
 		cast.CD = core.Cooldown{Timer: unit.NewTimer(), Duration: s.Cooldown()}
 	case s.CategoryCooldownMs > 0:
-		cast.CD = core.Cooldown{Timer: unit.CategoryTimer(int32(s.Category)), Duration: s.CategoryCooldown()}
+		cast.CD = core.Cooldown{Timer: categoryTimer(unit, s), Duration: s.CategoryCooldown()}
 	}
 
 	return cast
 }
 
-// A cast that spends a resource is not an empty one even where the row states no GCD and no cast
-// time: core reads an empty DefaultCast as a proc, which skips the cost. A row that spends nothing
-// is left empty on purpose, so a passive or a proc spell keeps the cast path core gives those.
+// The timer a category cooldown runs off. A category is a set of spells that share one cooldown, so
+// the timer is the unit's for that category; 15 rows state a category cooldown without a category to
+// share it with, and that is the spell's own recovery time.
+func categoryTimer(unit *core.Unit, s *Spell) *core.Timer {
+	if s.Category == 0 {
+		return unit.NewTimer()
+	}
+	return unit.CategoryTimer(int32(s.Category))
+}
+
+// The cost out of the first bar the row states, and NonEmpty where the cast would otherwise read as
+// an empty one, which is what a hand-written config sets on an off-GCD ability that spends a
+// resource. It is not what keeps core's "Empty DefaultCast with a cost" panic away: core fills
+// DefaultCast.Cost from the resolved cost before it tests for an empty cast. A row that spends
+// nothing is left empty on purpose, so a passive or a proc spell keeps the cast path core gives those.
 func applyCost(config *core.SpellConfig, s *Spell) {
 	if len(s.Powers) == 0 {
 		return
@@ -181,12 +195,13 @@ func applyCost(config *core.SpellConfig, s *Spell) {
 
 	powerType := s.Powers[0].Type
 	cost := int32(s.PowerCost(powerType))
+	costPct := float64(s.Powers[0].CostPct)
 
 	switch powerType {
 	case powerTypeMana:
 		config.ManaCost = core.ManaCostOptions{FlatCost: cost}
-		if s.Powers[0].CostPct > 0 {
-			config.ManaCost.BaseCostPercent = float64(s.Powers[0].CostPct)
+		if costPct > 0 {
+			config.ManaCost.BaseCostPercent = costPct
 		}
 	case powerTypeRage:
 		config.RageCost = core.RageCostOptions{Cost: cost, Refund: s.MissRefund()}
@@ -196,7 +211,8 @@ func applyCost(config *core.SpellConfig, s *Spell) {
 		config.FocusCost = core.FocusCostOptions{Cost: cost, Refund: s.MissRefund()}
 	}
 
-	if cost > 0 && config.Cast.DefaultCast.GCD == 0 && config.Cast.DefaultCast.CastTime == 0 {
+	spends := cost > 0 || costPct > 0
+	if spends && config.Cast.DefaultCast.GCD == 0 && config.Cast.DefaultCast.CastTime == 0 {
 		config.Cast.DefaultCast.NonEmpty = true
 	}
 }
