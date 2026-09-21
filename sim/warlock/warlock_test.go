@@ -13,82 +13,63 @@ func init() {
 	common.RegisterAllEffects()
 }
 
+// The community builds our Forever sim ranks: Deep Affliction 35/0/16 keeps its Succubus out, and
+// Shadow and Flame 13/11/27 sacrifices one before the pull for the Fire damage Forever's Demonic
+// Sacrifice leaves behind.
+var AfflictionTalents = "2535002013521105--05000551"
+var DestructionTalents = "25501-0025003001-055035510010002"
+
 func TestAffliction(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
-		{
-			Class:      proto.Class_ClassWarlock,
-			Race:       proto.Race_RaceOrc,
-			OtherRaces: []proto.Race{proto.Race_RaceHuman},
-			SpecOptions: core.SpecOptionsCombo{Label: "Affliction", SpecOptions: &proto.Player_Warlock{
-				Warlock: &proto.Warlock{
-					Options: &proto.Warlock_Options{
-						ClassOptions: &proto.WarlockOptions{
-							Summon:          proto.WarlockOptions_Imp,
-							SacrificeSummon: false,
-							Armor:           proto.WarlockOptions_FelArmor,
-							CurseOptions:    proto.WarlockOptions_Elements,
-						},
-					},
-				},
-			}},
-			GearSet:  core.GetGearSet("../../ui/specs/warlock/dps/gear_sets", "preraid"),
-			Talents:  "05022221112351055003--50500051220001",
-			Rotation: core.GetAplRotation("../../ui/specs/warlock/dps/apls", "affliction"),
-			ItemFilter: core.ItemFilter{
-				WeaponTypes: []proto.WeaponType{
-					proto.WeaponType_WeaponTypeDagger,
-					proto.WeaponType_WeaponTypeStaff,
-					proto.WeaponType_WeaponTypeSword,
-				},
-				ArmorType: proto.ArmorType_ArmorTypeCloth,
-				RangedWeaponTypes: []proto.RangedWeaponType{
-					proto.RangedWeaponType_RangedWeaponTypeWand,
-				},
-				EnchantBlacklist: []int32{2673, 3225, 3273},
-				IDBlacklist:      []int32{28556},
-			},
-		},
+		warlockSuite("affliction", AfflictionTalents, &proto.WarlockOptions{
+			Summon:          proto.WarlockOptions_Succubus,
+			SacrificeSummon: false,
+			Armor:           proto.WarlockOptions_DemonArmor,
+			CurseOptions:    proto.WarlockOptions_Elements,
+		}),
 	}))
 }
 
 func TestDestruction(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
-		{
-			Class:      proto.Class_ClassWarlock,
-			Race:       proto.Race_RaceOrc,
-			OtherRaces: []proto.Race{proto.Race_RaceGnome},
-			SpecOptions: core.SpecOptionsCombo{Label: "Destruction", SpecOptions: &proto.Player_Warlock{
-				Warlock: &proto.Warlock{
-					Options: &proto.Warlock_Options{
-						ClassOptions: &proto.WarlockOptions{
-							Summon:          proto.WarlockOptions_Succubus,
-							SacrificeSummon: true,
-							Armor:           proto.WarlockOptions_FelArmor,
-							CurseOptions:    proto.WarlockOptions_Agony,
-						},
-					},
-				},
-			}},
-			GearSet:  core.GetGearSet("../../ui/specs/warlock/dps/gear_sets", "preraid"),
-			Talents:  "-20500301332101-50500051220051053105",
-			Rotation: core.GetAplRotation("../../ui/specs/warlock/dps/apls", "destruction"),
-			ItemFilter: core.ItemFilter{
-				WeaponTypes: []proto.WeaponType{
-					proto.WeaponType_WeaponTypeDagger,
-					proto.WeaponType_WeaponTypeStaff,
-					proto.WeaponType_WeaponTypeSword,
-				},
-				ArmorType: proto.ArmorType_ArmorTypeCloth,
-				RangedWeaponTypes: []proto.RangedWeaponType{
-					proto.RangedWeaponType_RangedWeaponTypeWand,
-				},
-				EnchantBlacklist: []int32{2673, 3225, 3273},
-				IDBlacklist:      []int32{28556},
-			},
-		},
+		warlockSuite("destruction", DestructionTalents, &proto.WarlockOptions{
+			Summon:          proto.WarlockOptions_Succubus,
+			SacrificeSummon: true,
+			Armor:           proto.WarlockOptions_DemonArmor,
+			CurseOptions:    proto.WarlockOptions_Elements,
+		}),
 	}))
+}
+
+func warlockSuite(apl string, talents string, options *proto.WarlockOptions) core.CharacterSuiteConfig {
+	return core.CharacterSuiteConfig{
+		Class:      proto.Class_ClassWarlock,
+		Race:       proto.Race_RaceOrc,
+		OtherRaces: []proto.Race{proto.Race_RaceGnome},
+		SpecOptions: core.SpecOptionsCombo{Label: "Warlock", SpecOptions: &proto.Player_Warlock{
+			Warlock: &proto.Warlock{
+				Options: &proto.Warlock_Options{
+					ClassOptions: options,
+				},
+			},
+		}},
+		// Naked: the generated item database does not carry the pre-raid set our Forever sim tests
+		// with yet, and gives the rest TBC-shaped stats.
+		GearSet:  core.GearSetCombo{Label: "Naked", GearSet: &proto.EquipmentSpec{}},
+		Talents:  talents,
+		Rotation: core.GetAplRotation("../../ui/specs/warlock/dps/apls", apl),
+		ItemFilter: core.ItemFilter{
+			WeaponTypes: []proto.WeaponType{
+				proto.WeaponType_WeaponTypeDagger,
+				proto.WeaponType_WeaponTypeStaff,
+				proto.WeaponType_WeaponTypeSword,
+			},
+			ArmorType: proto.ArmorType_ArmorTypeCloth,
+			RangedWeaponTypes: []proto.RangedWeaponType{
+				proto.RangedWeaponType_RangedWeaponTypeWand,
+			},
+			EnchantBlacklist: []int32{2673, 3225, 3273},
+			IDBlacklist:      []int32{28556},
+		},
+	}
 }

@@ -1,32 +1,27 @@
 package warlock
 
-// TODO: To be implemented. Port the TBC Armors implementation below; not yet verified against the Forever client.
-func (warlock *Warlock) registerArmors() {
-	panic("To be implemented")
+import (
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
+)
 
-	// The TBC implementation, kept for the port:
-	//
-	// demonArmorBonus := 660.0
-	// demonArmorSRBonus := 18.0
-	//
-	// if warlock.Talents.DemonicAegis > 0 {
-	// 	bonusMultiplier := spellData.DemonicAegis.MultiplierAt(warlock.Talents.DemonicAegis)
-	//
-	// 	demonArmorBonus *= bonusMultiplier
-	// 	demonArmorSRBonus *= bonusMultiplier
-	// }
-	//
-	// warlock.DemonArmor = warlock.RegisterAura(core.Aura{
-	// 	Label:    "Demon Armor",
-	// 	ActionID: core.ActionID{SpellID: 27260},
-	// 	Duration: time.Minute * 30,
-	// }).AttachStatBuff(stats.Armor, demonArmorBonus).AttachStatBuff(stats.ShadowResistance, demonArmorSRBonus)
-	//
-	// // Armor selection
-	// switch warlock.Options.Armor {
-	//
-	// case proto.WarlockOptions_DemonArmor:
-	// 	core.MakePermanent(warlock.DemonArmor)
-	// }
-	//
+// The client ships Demon Skin and Demon Armor and no Fel Armor, so the Fel Armor option buffs
+// nothing. Demonic Aegis raises both halves by 15% a point (1235316).
+func (warlock *Warlock) registerArmors() {
+	rank := spellData.DemonArmor.HighestRank()
+	aegis := spellData.DemonicAegis.MultiplierAt(warlock.Talents.DemonicAegis)
+
+	armorBonus := spellData.DemonArmor.EffectAt(0).ValueAt(rank.Rank) * aegis
+	shadowResBonus := spellData.DemonArmor.EffectAt(1).ValueAt(rank.Rank) * aegis
+
+	warlock.DemonArmor = warlock.RegisterAura(core.Aura{
+		Label:    "Demon Armor",
+		ActionID: core.ActionID{SpellID: rank.SpellID},
+		Duration: core.NeverExpires,
+	}).AttachStatBuff(stats.Armor, armorBonus).AttachStatBuff(stats.ShadowResistance, shadowResBonus)
+
+	if warlock.Options.Armor == proto.WarlockOptions_DemonArmor {
+		core.MakePermanent(warlock.DemonArmor)
+	}
 }
