@@ -237,13 +237,11 @@ var SharedSpellsIcons = []int32{
 	17768, // Wolfshead Helm
 	18803, // Focus
 	19615, // Frenzy Effect
+	20554, // Berserking
+	20572, // Blood Fury
 	20574, // Axe Specialization
-	20575, // Command
-	20576, // Command
 	20594, // Stoneform
-	20595, // Gun Specialization
 	20597, // Sword Specialization
-	20864, // Mace Specialization
 	23110, // Dash
 	23563, // Enhanced Battle Shout
 	25076, // Cobra Reflexes
@@ -253,6 +251,20 @@ var SharedSpellsIcons = []int32{
 	28142, // Power of the Guardian
 	28143, // Power of the Guardian
 	29414, // Haste
+
+	1259686, // Skysight
+	1259688, // Elemental Blessing
+	1259705, // Read Ley Line
+	1259719, // Mace Specialization
+	1259799, // Elune's Light
+	1259812, // Eureka!
+	1259813, // Eureka!
+	1259817, // Eureka!
+	1259821, // Eureka!
+	1259823, // Eureka!
+	1260198, // Touch of the Grave
+	1270842, // Energized
+	1299026, // Shatter Curse
 }
 
 // If any of these match the item name, don't include it.

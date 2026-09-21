@@ -20,29 +20,6 @@
 		},
 		{
 			"action": {
-				"condition": {
-					"and": {
-						"vals": [
-							{ "dotIsActive": { "spellId": { "spellId": 25368 } } },
-							{ "dotIsActive": { "spellId": { "spellId": 34917 } } },
-							{ "cmp": { "op": "OpGe", "lhs": { "currentTime": {} }, "rhs": { "const": { "val": "3s" } } } }
-						]
-					}
-				},
-				"castSpell": { "spellId": { "spellId": 20554 } }
-			}
-		},
-		{
-			"hide": true,
-			"action": {
-				"condition": {
-					"and": { "vals": [{ "dotIsActive": { "spellId": { "spellId": 25368 } } }, { "dotIsActive": { "spellId": { "spellId": 34917 } } }] }
-				},
-				"castSpell": { "spellId": { "spellId": 20554 } }
-			}
-		},
-		{
-			"action": {
 				"condition": { "not": { "val": { "dotIsActive": { "spellId": { "spellId": 25368 } } } } },
 				"castSpell": { "spellId": { "spellId": 25368 } }
 			}
