@@ -386,7 +386,7 @@ export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 	},
 	{
 		config: LeaderOfThePack,
-		stats: [Stat.StatAttackPower, Stat.StatMeleeCritRating],
+		stats: [Stat.StatMeleeCritRating, Stat.StatSpellCritRating],
 		ownerClass: Class.ClassDruid,
 	},
 	{
@@ -401,7 +401,7 @@ export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 	},
 	{
 		config: MoonkinAura,
-		stats: [Stat.StatSpellCritRating],
+		stats: [Stat.StatMeleeCritRating, Stat.StatSpellCritRating],
 		ownerClass: Class.ClassDruid,
 	},
 	{

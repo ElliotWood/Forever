@@ -117,6 +117,7 @@ func LeaderOfThePackAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		IsPlayer: isPlayer,
 		Stats: []StatConfig{
 			{stats.PhysicalCritPercent, LeaderOfThePackValue(talentPoints), false},
+			{stats.SpellCritPercent, 3.0, false},
 		},
 	})
 }
@@ -195,7 +196,8 @@ func MoonkinAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		Duration: MoonkinAuraDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []StatConfig{
-			{stats.SpellCritPercent, MoonkinAuraValue(talentPoints), false},
+			{stats.PhysicalCritPercent, MoonkinAuraValue(talentPoints), false},
+			{stats.SpellCritPercent, 3.0, false},
 		},
 	})
 }

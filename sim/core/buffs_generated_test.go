@@ -293,22 +293,44 @@ func TestPartyCommandingShoutAppliesTheGeneratedAura(t *testing.T) {
 	}
 }
 
-// The two rows whose stat the manifest names, and the one whose only amount is
-// a pseudo-stat the client states as a reduction.
-func TestGeneratedPartyAurasApplyTheStatsTheManifestNames(t *testing.T) {
+// The two rows whose stats the manifest names. Each is worth the client's 3 on
+// every kind of crit, and neither touches RangedCritPercent, which the sim adds
+// on top of the physical one, so a ranged attack gains 3 and not 6.
+func TestGeneratedCritAurasApplyTheClientsThreeToEveryKindOfCrit(t *testing.T) {
+	for _, row := range []struct {
+		name  string
+		party *proto.PartyBuffs
+	}{
+		{"Leader of the Pack", &proto.PartyBuffs{LeaderOfThePack: true}},
+		{"Moonkin Aura", &proto.PartyBuffs{MoonkinAura: true}},
+	} {
+		t.Run(row.name, func(t *testing.T) {
+			char := newGeneratedBuffTestCharacter()
+
+			applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{}, row.party, &proto.IndividualBuffs{})
+			char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
+
+			if got := char.stats[stats.PhysicalCritPercent]; got != 3 {
+				t.Errorf("%s applied %v physical crit, want the client's 3", row.name, got)
+			}
+			if got := char.stats[stats.SpellCritPercent]; got != 3 {
+				t.Errorf("%s applied %v spell crit, want the client's 3", row.name, got)
+			}
+			if got := char.stats[stats.RangedCritPercent]; got != 0 {
+				t.Errorf("%s applied %v on top of the physical crit a ranged attack already reads", row.name, got)
+			}
+		})
+	}
+}
+
+// The row whose only amount is a pseudo-stat the client states as a reduction.
+func TestGeneratedPartyConcentrationAuraReducesPushback(t *testing.T) {
 	char := newGeneratedBuffTestCharacter()
 
 	applyBuffEffects(generatedBuffTestAgent{char}, &proto.RaidBuffs{},
-		&proto.PartyBuffs{LeaderOfThePack: true, MoonkinAura: true, ConcentrationAura: true},
-		&proto.IndividualBuffs{})
+		&proto.PartyBuffs{ConcentrationAura: true}, &proto.IndividualBuffs{})
 	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 
-	if got := char.stats[stats.PhysicalCritPercent]; got != 3 {
-		t.Errorf("Leader of the Pack applied %v physical crit, want the client's 3", got)
-	}
-	if got := char.stats[stats.SpellCritPercent]; got != 3 {
-		t.Errorf("Moonkin Aura applied %v spell crit, want the client's 3", got)
-	}
 	if got := char.PseudoStats.PushbackChance; got != 0.65 {
 		t.Errorf("Concentration Aura left the pushback chance at %v, want 1 reduced by the client's 35%%", got)
 	}

@@ -138,15 +138,15 @@ func TestResolvedBuffInvariants(t *testing.T) {
 }
 
 // The two auras the client states as a bare A_MOD_CRIT_PCT, which carries no
-// school: what they are worth is the client's 3, and which stat they land on is
-// the manifest's StatOverride. Nothing else can see that mapping while both
-// rows render as shells.
+// school: what they are worth is the client's 3, and it lands on every kind of
+// crit, which is what the manifest's StatOverride says. Nothing else can see
+// that mapping while both rows render as shells.
 //
 // Expose Armor states nothing on the effect itself: its -450 armor is per combo
 // point, and the raid config's debuff is the five-point finisher.
 var pinnedStatAmounts = map[string]map[string]float64{
-	"leader_of_the_pack": {"PhysicalCritPercent": 3},
-	"moonkin_aura":       {"SpellCritPercent": 3},
+	"leader_of_the_pack": {"PhysicalCritPercent": 3, "SpellCritPercent": 3},
+	"moonkin_aura":       {"PhysicalCritPercent": 3, "SpellCritPercent": 3},
 	"expose_armor":       {"Armor": -2250},
 }
 

@@ -202,7 +202,7 @@ type BuffSpec struct {
 	// StatOverride names the sim stats the aura's value lands on, spelled the
 	// way stats.Stat.StatName() spells them, for an aura the client states
 	// without saying which stat it means: A_MOD_CRIT_PCT carries no school, so
-	// Leader of the Pack and Moonkin Aura have to be told apart here. The names
+	// Leader of the Pack and Moonkin Aura name both crit stats here. The names
 	// are checked while the row is resolved, and a row that states one may have
 	// only one aura effect, since every effect would otherwise land on the same
 	// stats.
