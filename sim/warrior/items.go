@@ -46,13 +46,18 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 	Bonuses: map[int32]core.ApplySetBonus{
 		3: func(agent core.Agent, setBonusAura *core.Aura) {
 			// Spell 23563 states 30 attack power on Battle Shout, which shouts.go adds through
-			// the same flag the HasBsT2 option sets.
-			agent.(WarriorAgent).GetWarrior().HasBsT2 = true
+			// the same flag the HasBsT2 option sets. The set aura toggles it so an item swap
+			// that removes the pieces takes the bonus with them.
+			warrior := agent.(WarriorAgent).GetWarrior()
+			fromOptions := warrior.HasBsT2
+			setBonusAura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) {
+				warrior.HasBsT2 = true
+			})
+			setBonusAura.ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) {
+				warrior.HasBsT2 = fromOptions
+			})
 		},
 		5: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 21890 states a 20% chance after an offensive ability requiring rage that the
-			// next one costs less rage; spell 21887 states -50, which is 5 rage, for 10 seconds
-			// and one charge.
 			warrior := agent.(WarriorAgent).GetWarrior()
 
 			var buff *core.Aura
