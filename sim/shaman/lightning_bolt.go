@@ -49,6 +49,7 @@ func (shaman *Shaman) newLightningBoltSpellConfig(rank int) core.SpellConfig {
 		time.Millisecond*time.Duration(castTime),
 	)
 	spell.SpellCode = SpellCode_ShamanLightningBolt
+	spell.ClassSpellMask = SpellMaskLightningBolt
 	spell.MissileSpeed = 20
 	spell.RequiredLevel = level
 	spell.Rank = rank
