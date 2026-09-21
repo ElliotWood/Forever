@@ -7,6 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
+// TODO: Manual review needed -- the expiration threshold is the sim's own.
 const ShoutExpirationThreshold = time.Second * 3
 
 type ShoutHelperConfig struct {

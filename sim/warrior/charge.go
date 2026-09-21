@@ -1,8 +1,6 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
@@ -10,21 +8,21 @@ import (
 var chargeRank = spellData.Charge.BySpellID(11578)
 
 func (warrior *Warrior) registerCharge() {
-	// Charge (11578) energizes rage on the cast, on the client's 0-1000 bar; Improved Charge adds
-	// its ladder.
-	chargeRage := shared.SpellDataMin(chargeRank.Energize)/10 + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 	actionID := core.ActionID{SpellID: chargeRank.SpellID}
 	metrics := warrior.NewRageMetrics(actionID)
 
-	chargeMinRange := chargeRank.MinRange
+	chargeCD := chargeRank.Cooldown
+	chargeRage := shared.SpellDataMin(chargeRank.Energize) / 10
+	if warrior.Talents.ImprovedCharge > 0 {
+		chargeRage += spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
+	}
 
-	// TODO: Manual review needed -- spell 11578 states no duration; the 15 seconds covers the
-	// sim's movement to the target and is hand-supplied.
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Charge",
 		ActionID: actionID,
-		Duration: 15 * time.Second,
+		Duration: chargeCD,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			// TODO: Manual review needed -- the run speed and the overshoot below are the sim's movement model.
 			warrior.MultiplyMovementSpeed(sim, 3.0)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
@@ -43,26 +41,26 @@ func (warrior *Warrior) registerCharge() {
 		SpellSchool:    core.SpellSchoolPhysical,
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: SpellMaskCharge,
-		MinRange:       chargeMinRange,
+		MinRange:       chargeRank.MinRange,
 		MaxRange:       chargeRank.MaxRange,
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: chargeRank.Cooldown,
+				Duration: chargeCD,
 			},
 			IgnoreHaste: true,
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			// Vanguard (1310317) replaces Charge with a copy usable in Defensive Stance.
 			return sim.CurrentTime < 0 && (warrior.StanceMatches(BattleStance) || (warrior.Talents.Vanguard && warrior.StanceMatches(DefensiveStance)))
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			aura.Duration = spell.CD.Duration
 			aura.Activate(sim)
 			warrior.AddRage(sim, chargeRage, metrics)
-			warrior.MoveTo(chargeMinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
+			warrior.MoveTo(spell.MinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
 		},
 	})
 }

@@ -244,6 +244,10 @@ scale linearly, so `0.02 * rank` was already right and the table only adds prove
 not are the reason to read it - Improved Righteous Fury is 16 / 33 / 50, not 16 / 32 / 48, and shaman
 Elemental Weapons is 7 / 14 / 20, not 7 / 14 / 21.
 
+A single row's effect has the same readers without a rank: `row.Effect(aura, misc).Fraction()`,
+`.Multiplier()` and `.Tenths()`, so Shield Wall reads `Effect(A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier()`
+for its 0.4 and Bloodrage's energize reads `.Tenths()` for its 10 rage.
+
 ### Picking the effect
 
 A talent with one effect per rank needs nothing further. One with several does, and `ValueAt` panics

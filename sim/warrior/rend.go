@@ -19,7 +19,8 @@ func (warrior *Warrior) registerRend() {
 		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL | SpellFlagBleed,
 
 		RageCost: core.RageCostOptions{
-			Cost:   rendRank.Cost,
+			Cost: rendRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{

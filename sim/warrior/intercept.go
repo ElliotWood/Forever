@@ -1,31 +1,28 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
 var interceptRank = spellData.Intercept.HighestRank()
 
-// Each Intercept rank triggers a stun of its own, which carries the damage.
 var interceptStunRank = spellData.InterceptTriggered.ByRank(interceptRank.Rank)
 var interceptStunDamage, _ = interceptStunRank.Direct.Range()
 
 func (warrior *Warrior) registerIntercept() {
 	actionID := core.ActionID{SpellID: interceptRank.SpellID}
 	chargeMinRange := interceptRank.MinRange
+	interceptCD := interceptRank.Cooldown
 
 	var spell *core.Spell
 	var interceptTarget *core.Unit
 
-	// TODO: Manual review needed -- spell 20617 states no duration; the 15 seconds covers the
-	// sim's movement to the target and is hand-supplied.
 	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Intercept",
 		ActionID: actionID,
-		Duration: 15 * time.Second,
+		Duration: interceptCD,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			// TODO: Manual review needed -- the run speed and the overshoot below are the sim's movement model.
 			warrior.MultiplyMovementSpeed(sim, 3.0)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
@@ -54,7 +51,7 @@ func (warrior *Warrior) registerIntercept() {
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: interceptRank.Cooldown,
+				Duration: interceptCD,
 			},
 			IgnoreHaste: true,
 		},
@@ -65,6 +62,7 @@ func (warrior *Warrior) registerIntercept() {
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			interceptTarget = target
+			aura.Duration = spell.CD.Duration
 			aura.Activate(sim)
 			warrior.MoveTo(chargeMinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
 		},

@@ -7,18 +7,14 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// The abilities spell 21887's class mask lists.
 var ItemSetBattlegearOfMight = core.NewItemSet(core.ItemSet{
 	Name: "Battlegear of Might",
 	ID:   209,
 	Bonuses: map[int32]core.ApplySetBonus{
 		3: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 23562 states 30 block value.
 			setBonusAura.AttachStatBuff(stats.BlockValue, 30)
 		},
 		5: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 21838 states a 20% chance to generate an additional rage point whenever
-			// damage is dealt to you; spell 29478 energizes 10, which is 1 rage.
 			warrior := agent.(WarriorAgent).GetWarrior()
 			rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: 29478})
 
@@ -35,8 +31,6 @@ var ItemSetBattlegearOfMight = core.NewItemSet(core.ItemSet{
 			})
 		},
 		8: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 23561 states 15% more Sunder Armor threat. Sunder Armor deals no damage, so
-			// all of its threat is the flat bonus.
 			setBonusAura.AttachSpellMod(core.SpellModConfig{
 				ClassMask:  SpellMaskSunderArmor,
 				Kind:       core.SpellMod_FlatThreatBonus_Pct,

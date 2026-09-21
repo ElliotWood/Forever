@@ -9,9 +9,6 @@ var berserkerRageRank = spellData.BerserkerRage.HighestRank()
 func (warrior *Warrior) registerBerserkerRage() {
 	actionID := core.ActionID{SpellID: berserkerRageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
-	// Improved Berserker Rage (20500) adds rage on the cast; both of its effects are dummies, so
-	// the rage one is named by its index. Its second effect, shedding movement impairment, has
-	// nothing to act on in the sim.
 	rageGain := spellData.ImprovedBerserkerRage.EffectAt(0).TenthsAt(warrior.Talents.ImprovedBerserkerRage)
 
 	aura := warrior.RegisterAura(core.Aura{
@@ -19,7 +16,6 @@ func (warrior *Warrior) registerBerserkerRage() {
 		ActionID: actionID,
 		Duration: berserkerRageRank.Duration,
 	}).
-		// Grants immunity to Fear, Sap and Incapacitate effects.
 		AttachFearImmunity()
 
 	spell := warrior.RegisterSpell(core.SpellConfig{

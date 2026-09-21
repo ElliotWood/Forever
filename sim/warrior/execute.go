@@ -6,7 +6,7 @@ import (
 
 var executeRank = spellData.Execute.HighestRank()
 
-// The dummy effect carries the base damage; Execute has no Direct role, and both of its
+// TODO: The dummy effect carries the base damage; Execute has no Direct role, and both of its
 // effects share the aura/misc pair Effect() selects on.
 var executeBaseDamage = executeRank.Effects[0].Value
 
@@ -28,7 +28,8 @@ func (warrior *Warrior) registerExecute() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   executeRank.Cost,
+			Cost: executeRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -39,6 +40,7 @@ func (warrior *Warrior) registerExecute() {
 		},
 
 		DamageMultiplier: 1,
+		// TODO: Manual review needed -- the threat coefficient is not in the client.
 		ThreatMultiplier: 1.25,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {

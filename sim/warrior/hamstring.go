@@ -5,8 +5,8 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 7373 carries no threat effect, so the 167.5 is hand-supplied.
-var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 167.5).HighestRank()
+// TODO: Ingame research needed if this adds flat threat
+var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 0).HighestRank()
 var hamstringBaseDamage, _ = hamstringRank.Direct.Range()
 
 func (warrior *Warrior) registerHamstring() {
@@ -20,7 +20,8 @@ func (warrior *Warrior) registerHamstring() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   hamstringRank.Cost,
+			Cost: hamstringRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -31,11 +32,11 @@ func (warrior *Warrior) registerHamstring() {
 		},
 
 		DamageMultiplier: 1,
+		// TODO: Manual review needed -- the threat coefficient is not in the client.
 		ThreatMultiplier: 1.25,
 		FlatThreatBonus:  hamstringRank.FlatThreatBonus,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			// Hamstring (7373) is usable in Battle and Berserker Stance.
 			return warrior.StanceMatches(BattleStance | BerserkerStance)
 		},
 

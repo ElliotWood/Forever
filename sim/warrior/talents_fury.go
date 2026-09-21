@@ -217,7 +217,7 @@ func (warrior *Warrior) registerBloodthirst() {
 	}
 
 	// The attack power share sits on the second effect; the first is the flat damage added to it.
-	apShare := bloodthirstRank.Effects[1].Value / 100
+	apShare := bloodthirstRank.Effects[1].Fraction()
 
 	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: bloodthirstRank.SpellID},
@@ -230,7 +230,8 @@ func (warrior *Warrior) registerBloodthirst() {
 		MaxRange:       bloodthirstRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   bloodthirstRank.Cost,
+			Cost: bloodthirstRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 
@@ -377,11 +378,11 @@ func (warrior *Warrior) registerDeathWish() {
 		// The damage done effect carries the physical school mask, the damage taken one all schools.
 		AttachMultiplicativePseudoStatBuff(
 			&warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical],
-			1+deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).Value/100,
+			deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).Multiplier(),
 		).
 		AttachMultiplicativePseudoStatBuff(
 			&warrior.PseudoStats.DamageTakenMultiplier,
-			1+deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Value/100,
+			deathWishRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier(),
 		).
 		// Grants immunity to Fear effects.
 		AttachFearImmunity()

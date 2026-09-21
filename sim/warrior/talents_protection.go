@@ -115,7 +115,7 @@ func (warrior *Warrior) registerLastStand() {
 		ActionID: actionID,
 		Duration: lastStandBuff.Duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			bonusHealth = warrior.MaxHealth() * lastStandBuff.Effect(shared.A_MOD_MAX_HEALTH, 0).Value / 100
+			bonusHealth = warrior.MaxHealth() * lastStandBuff.Effect(shared.A_MOD_MAX_HEALTH, 0).Fraction()
 			warrior.UpdateMaxHealth(sim, bonusHealth, healthMetrics)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
@@ -192,7 +192,8 @@ func (warrior *Warrior) registerConcussionBlow() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   concussionBlowRank.Cost,
+			Cost: concussionBlowRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -235,7 +236,8 @@ func (warrior *Warrior) registerShieldSlam() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   shieldSlamRank.Cost,
+			Cost: shieldSlamRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{

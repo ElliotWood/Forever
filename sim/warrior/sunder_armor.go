@@ -61,7 +61,8 @@ func (warrior *Warrior) registerSunderArmor() {
 		Flags:    core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
-			Cost:   sunderArmorRank.Cost,
+			Cost: sunderArmorRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{

@@ -40,6 +40,7 @@ func (warrior *Warrior) registerThunderClap() {
 		},
 
 		DamageMultiplier: 1,
+		// TODO: Manual review needed -- the threat coefficient is not in the client.
 		ThreatMultiplier: 1.75,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {

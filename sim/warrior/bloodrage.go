@@ -12,12 +12,9 @@ var bloodrageRank = spellData.Bloodrage.HighestRank()
 func (warrior *Warrior) registerBloodrage() {
 	actionID := core.ActionID{SpellID: bloodrageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
-	// The tooltip states the cost as 20% of base health.
+	// TODO: Manual review needed -- SpellPower states PowerCostPct 20 on 2687, which the generator does not carry yet.
 	healthCost := warrior.GetBaseStats()[stats.Health] * 0.20
-	// Improved Bloodrage (12301) raises every rage amount Bloodrage generates by 25% per rank.
 	improvedBloodrage := spellData.ImprovedBloodrage.MultiplierAt(warrior.Talents.ImprovedBloodrage)
-	// Bloodrage (2687) energizes 100 on the cast, which is 10 rage; its other effect triggers the
-	// rage over time, which is a spell of its own with no table.
 	instantRage := spellData.Bloodrage.EffectAt(0).TenthsAt(1) * improvedBloodrage
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
@@ -38,6 +35,7 @@ func (warrior *Warrior) registerBloodrage() {
 			warrior.RemoveHealth(sim, healthCost)
 
 			core.StartPeriodicAction(sim, core.PeriodicActionOptions{
+				// TODO: Manual review needed -- the tooltip states 10 rage over 10 s; the 1 s period is not in the client.
 				NumTicks: 10,
 				Period:   time.Second * 1,
 				OnAction: func(sim *core.Simulation) {

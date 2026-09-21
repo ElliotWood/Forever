@@ -21,6 +21,7 @@ func (warrior *Warrior) registerWhirlwind() {
 			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
 
 			DamageMultiplier: 1,
+			// TODO: Manual review needed -- the threat coefficient is not in the client.
 			ThreatMultiplier: 1.25,
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
@@ -54,6 +55,7 @@ func (warrior *Warrior) registerWhirlwind() {
 		},
 
 		DamageMultiplier: 1,
+		// TODO: Manual review needed -- the threat coefficient is not in the client.
 		ThreatMultiplier: 1.25,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {

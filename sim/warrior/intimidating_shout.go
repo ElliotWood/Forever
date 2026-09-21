@@ -32,7 +32,6 @@ func (warrior *Warrior) registerIntimidatingShout() {
 
 		ThreatMultiplier: 1,
 
-		// TODO: the fear is not modelled; encounter targets take no crowd control in the sim.
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
 		},

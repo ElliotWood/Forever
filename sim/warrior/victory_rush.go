@@ -8,8 +8,8 @@ var victoryRushRank = spellData.VictoryRush.HighestRank()
 
 // Spell 402927 states ${1+$AP*$m3/100}: the dummy at effect index 2 is the attack power
 // coefficient as a percentage, and the heal at index 1 is a percentage of maximum health.
-var victoryRushAPCoef = victoryRushRank.Effects[2].Value / 100
-var victoryRushHealPercent = victoryRushRank.Effects[1].Value / 100
+var victoryRushAPCoef = victoryRushRank.Effects[2].Fraction()
+var victoryRushHealPercent = victoryRushRank.Effects[1].Fraction()
 
 // The window Victory Rush has to be used in is the Victorious buff the kill grants.
 var victoriousRank = spellData.VictoryRushTriggered.HighestRank()

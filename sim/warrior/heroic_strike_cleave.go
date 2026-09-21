@@ -5,13 +5,14 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- spell 25286 carries no threat effect, so the 194 is hand-supplied.
-var heroicStrikeRank = shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 194).HighestRank()
+// TODO: Ingame research needed if HS/Cleave still allow for queueing
+// TODO: Ingame research needed if this adds flat threat
+var heroicStrikeRank = shared.WithSpellDataFlatThreat(spellData.HeroicStrike, 0).HighestRank()
 var heroicStrikeBaseDamage, _ = heroicStrikeRank.Direct.Range()
 var cleaveBaseDamage, _ = cleaveRank.Direct.Range()
 
-// TODO: Manual review needed -- spell 20569 carries no threat effect, so the 125 is hand-supplied.
-var cleaveRank = shared.WithSpellDataFlatThreat(spellData.Cleave, 125).HighestRank()
+// TODO: Ingame research needed if this adds flat threat
+var cleaveRank = shared.WithSpellDataFlatThreat(spellData.Cleave, 0).HighestRank()
 
 func (warrior *Warrior) registerHeroicStrike() {
 	spell := warrior.RegisterSpell(core.SpellConfig{
@@ -24,7 +25,8 @@ func (warrior *Warrior) registerHeroicStrike() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   heroicStrikeRank.Cost,
+			Cost: heroicStrikeRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 
@@ -67,7 +69,8 @@ func (warrior *Warrior) registerCleave() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   cleaveRank.Cost,
+			Cost: cleaveRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 

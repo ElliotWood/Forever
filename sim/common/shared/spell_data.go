@@ -231,6 +231,12 @@ func (e SpellDataEffect) High() float64 {
 	return e.Value
 }
 
+// The same readers a talent ladder has, for one row's effect: the client states a percentage as an
+// integer (Shield Wall's -60), and rage on a 0-1000 bar.
+func (e SpellDataEffect) Fraction() float64   { return e.Value / 100 }
+func (e SpellDataEffect) Multiplier() float64 { return 1 + e.Fraction() }
+func (e SpellDataEffect) Tenths() float64     { return e.Value / 10 }
+
 // Panics when no effect matches, and when two do - 186 ranked spells carry a duplicate aura/misc
 // pair. Index into Effects where the pair cannot tell them apart.
 func (r SpellData) Effect(aura SpellDataAura, misc int32) SpellDataEffect {

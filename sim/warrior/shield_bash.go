@@ -21,7 +21,8 @@ func (warrior *Warrior) registerShieldBash() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   shieldBashRank.Cost,
+			Cost: shieldBashRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -36,6 +37,7 @@ func (warrior *Warrior) registerShieldBash() {
 		},
 
 		DamageMultiplier: 1,
+		// TODO: Manual review needed -- the threat coefficient is not in the client.
 		ThreatMultiplier: 1.5,
 		FlatThreatBonus:  shieldBashRank.FlatThreatBonus,
 

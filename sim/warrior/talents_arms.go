@@ -238,7 +238,8 @@ func (warrior *Warrior) registerMortalStrike() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   mortalStrikeRank.Cost,
+			Cost: mortalStrikeRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 
@@ -271,7 +272,7 @@ var spearingStrikeRank = spellData.SpearingStrike.HighestRank()
 
 // The tooltip reads "deals $s2% weapon damage" and "an additional ${$s2*$s3}%" against Giants and
 // Dragonkin, and the effects share an aura and misc value, so both are taken by effect index.
-var spearingStrikeWeaponShare = spearingStrikeRank.Effects[1].Value / 100
+var spearingStrikeWeaponShare = spearingStrikeRank.Effects[1].Fraction()
 var spearingStrikeGiantMultiplier = 1 + spearingStrikeRank.Effects[2].Value
 
 func (warrior *Warrior) registerSpearingStrike() {
@@ -289,7 +290,8 @@ func (warrior *Warrior) registerSpearingStrike() {
 		MaxRange:       spearingStrikeRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   spearingStrikeRank.Cost,
+			Cost: spearingStrikeRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 

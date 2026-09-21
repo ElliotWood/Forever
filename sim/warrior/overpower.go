@@ -1,8 +1,6 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
@@ -11,13 +9,13 @@ var overpowerBaseDamage, _ = overpowerRank.Direct.Range()
 
 func (warrior *Warrior) registerOverpower() {
 	actionID := core.ActionID{SpellID: overpowerRank.SpellID}
+	overpowerCD := overpowerRank.Cooldown
 
-	// TODO: Manual review needed -- spell 11585 states only that Overpower is useable after the
-	// target dodges, so the 5 second window is hand-supplied.
+	// TODO: Test in-game if OP activation only lasts 5 seconds
 	warrior.OverpowerAura = warrior.RegisterAura(core.Aura{
 		ActionID: actionID,
 		Label:    "Overpower Aura",
-		Duration: time.Second * 5,
+		Duration: overpowerCD,
 	})
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
@@ -40,7 +38,8 @@ func (warrior *Warrior) registerOverpower() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   overpowerRank.Cost,
+			Cost: overpowerRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -49,12 +48,14 @@ func (warrior *Warrior) registerOverpower() {
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: overpowerRank.Cooldown,
+				Duration: overpowerCD,
 			},
 			IgnoreHaste: true,
 		},
 
 		DamageMultiplier: 1,
+		// TODO: Ingame validation needed
+		// TODO: Manual review needed -- the threat coefficient is not in the client.
 		ThreatMultiplier: 0.75,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
@@ -64,6 +65,7 @@ func (warrior *Warrior) registerOverpower() {
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			baseDamage := overpowerBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialNoBlockDodgeParry)
+			warrior.OverpowerAura.Duration = overpowerCD
 			warrior.OverpowerAura.Deactivate(sim)
 
 			if !result.Landed() {

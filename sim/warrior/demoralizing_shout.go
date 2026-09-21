@@ -5,9 +5,8 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-// TODO: Manual review needed -- the client states no threat for Demoralizing Shout (11556); 56 is
-// not from the client.
-var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 56).HighestRank()
+// TODO: Ingame research needed if this adds flat threat
+var demoralizingShoutRank = shared.WithSpellDataFlatThreat(spellData.DemoralizingShout, 0).HighestRank()
 
 // TODO: The core Demoralizing Shout aura still takes Booming Voice and Improved Demoralizing
 // Shout points. In the client Booming Voice (12321) widens the radius only, the improved talent

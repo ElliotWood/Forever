@@ -31,7 +31,6 @@ func (warrior *Warrior) registerChallengingShout() {
 
 		ThreatMultiplier: 1,
 
-		// TODO: the taunt is not modelled; the sim has no threat table to force the targets onto.
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			for _, aoeTarget := range sim.Encounter.ActiveTargetUnits {
 				spell.CalcAndDealOutcome(sim, aoeTarget, spell.OutcomeAlwaysHit)

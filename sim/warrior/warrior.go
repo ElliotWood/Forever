@@ -240,6 +240,7 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	})
 
 	warrior.PseudoStats.CanParry = true
+	// TODO: Manual review needed -- the base dodge, parry, block and stat dependencies below are not read from the client's game tables.
 	warrior.PseudoStats.BaseDodgeChance += 0.0075
 	warrior.PseudoStats.BaseParryChance += 0.05
 	warrior.PseudoStats.BaseBlockChance += 0.05

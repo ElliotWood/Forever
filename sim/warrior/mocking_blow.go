@@ -18,7 +18,8 @@ func (warrior *Warrior) registerMockingBlow() {
 		MaxRange:       mockingBlowRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   mockingBlowRank.Cost,
+			Cost: mockingBlowRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -35,13 +36,10 @@ func (warrior *Warrior) registerMockingBlow() {
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
 
-		// Spell 20560's ShapeshiftMask is Battle Stance only.
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(BattleStance)
 		},
 
-		// TODO: the taunt half of spell 20560 is not modelled; the sim has no threat table to
-		// force the target onto.
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			result := spell.CalcAndDealDamage(sim, target, mockingBlowBaseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 

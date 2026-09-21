@@ -21,7 +21,7 @@ func (warrior *Warrior) registerShieldBlock() {
 	}).
 		// The client states the block chance as a percentage, so the fraction the stat takes is
 		// that number over 100.
-		AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(shared.A_MOD_BLOCK_PERCENT, 0).Value/100).
+		AttachStatBuff(stats.BlockPercent, shieldBlockRank.Effect(shared.A_MOD_BLOCK_PERCENT, 0).Fraction()).
 		AttachProcTrigger(core.ProcTrigger{
 			Name:               "Shield Block - Consume",
 			TriggerImmediately: true,

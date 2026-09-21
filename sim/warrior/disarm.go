@@ -28,7 +28,8 @@ func (warrior *Warrior) registerDisarm() {
 		MaxRange:       disarmRank.MaxRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   disarmRank.Cost,
+			Cost: disarmRank.Cost,
+			// TODO: Manual review needed -- the 80% rage refund on a miss is the sim's convention; the client states none.
 			Refund: 0.8,
 		},
 		Cast: core.CastConfig{
@@ -44,7 +45,6 @@ func (warrior *Warrior) registerDisarm() {
 
 		ThreatMultiplier: 1,
 
-		// Spell 676's ShapeshiftMask is Defensive Stance only.
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
 			return warrior.StanceMatches(DefensiveStance)
 		},

@@ -16,7 +16,7 @@ func (warrior *Warrior) registerShieldWall() {
 		Duration: shieldWallRank.Duration,
 	}).AttachMultiplicativePseudoStatBuff(
 		&warrior.PseudoStats.DamageTakenMultiplier,
-		1+shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Value/100,
+		shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier(),
 	)
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
@@ -57,6 +57,7 @@ func (warrior *Warrior) registerShieldWall() {
 			if warrior.Spec == proto.Spec_SpecDpsWarrior {
 				return false
 			}
+			// TODO: Manual review needed -- the 40% health trigger is the sim's own cooldown rule.
 			return warrior.CurrentHealthPercent() < 0.4
 		},
 	})
