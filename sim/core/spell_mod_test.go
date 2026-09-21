@@ -88,3 +88,16 @@ func TestSpellModPeriodicDamageDoneFlat(t *testing.T) {
 		t.Fatalf("periodic additive %v after remove, want 1", spell.PeriodicDamageMultiplierAdditive)
 	}
 }
+
+func TestSpellModBaseDamageDoneFlat(t *testing.T) {
+	spell := &Spell{BaseDamageMultiplierAdditive: 1}
+	mod := &SpellMod{floatValue: 0.1}
+	spellModMap[SpellMod_BaseDamageDone_Flat].Apply(mod, spell)
+	if spell.BaseDamageMultiplierAdditive != 1.1 {
+		t.Fatalf("base additive %v, want 1.1", spell.BaseDamageMultiplierAdditive)
+	}
+	spellModMap[SpellMod_BaseDamageDone_Flat].Remove(mod, spell)
+	if spell.BaseDamageMultiplierAdditive != 1 {
+		t.Fatalf("base additive %v after remove, want 1", spell.BaseDamageMultiplierAdditive)
+	}
+}

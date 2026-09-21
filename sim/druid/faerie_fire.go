@@ -8,6 +8,7 @@ import (
 
 func (druid *Druid) registerFaerieFireSpell() {
 	spellCode := SpellCode_DruidFaerieFire
+	classMask := SpellMaskFaerieFire
 	actionID := core.ActionID{SpellID: 9907}
 	manaCostOptions := core.ManaCostOptions{
 		FlatCost: 115,
@@ -28,6 +29,7 @@ func (druid *Druid) registerFaerieFireSpell() {
 	// around it.
 	if druid.InForm(Cat | Bear) {
 		spellCode = SpellCode_DruidFaerieFireFeral
+		classMask = SpellMaskFaerieFireFeral
 		actionID = core.ActionID{SpellID: 17392}
 		manaCostOptions = core.ManaCostOptions{}
 		gcd = time.Second
@@ -44,11 +46,12 @@ func (druid *Druid) registerFaerieFireSpell() {
 	flags |= core.SpellFlagAPL | core.SpellFlagResetAttackSwing
 
 	druid.FaerieFire = druid.RegisterSpell(formMask, core.SpellConfig{
-		SpellCode:   spellCode,
-		ActionID:    actionID,
-		SpellSchool: core.SpellSchoolNature,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       flags,
+		SpellCode:      spellCode,
+		ClassSpellMask: classMask,
+		ActionID:       actionID,
+		SpellSchool:    core.SpellSchoolNature,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          flags,
 
 		ManaCost: manaCostOptions,
 		Cast: core.CastConfig{

@@ -40,12 +40,13 @@ func (druid *Druid) newWrathSpellConfig(rank int) core.SpellConfig {
 	level := WrathLevel[rank]
 
 	return core.SpellConfig{
-		ActionID:    core.ActionID{SpellID: spellId},
-		SpellCode:   SpellCode_DruidWrath,
-		SpellSchool: core.SpellSchoolNature,
-		DefenseType: core.DefenseTypeMagic,
-		ProcMask:    core.ProcMaskSpellDamage,
-		Flags:       core.SpellFlagAPL | core.SpellFlagResetAttackSwing,
+		ActionID:       core.ActionID{SpellID: spellId},
+		SpellCode:      SpellCode_DruidWrath,
+		ClassSpellMask: SpellMaskWrath,
+		SpellSchool:    core.SpellSchoolNature,
+		DefenseType:    core.DefenseTypeMagic,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL | core.SpellFlagResetAttackSwing,
 
 		RequiredLevel: level,
 		Rank:          rank,
