@@ -359,7 +359,7 @@ func num32(f float64) string {
 
 // The store's data, ready to write: the rows and the curves. Everything is rendered before anything
 // is written, the way the class files are.
-func renderStore(db *sql.DB, ladderIDs []int32, trees map[int]int, namer *rankEnumNamer) ([]byte, error) {
+func loadStoreInputs(db *sql.DB, ladderIDs []int32, trees map[int]int) (*storeInputs, error) {
 	tables, err := loadSpellTables(db)
 	if err != nil {
 		return nil, err
@@ -371,18 +371,29 @@ func renderStore(db *sql.DB, ladderIDs []int32, trees map[int]int, namer *rankEn
 	}
 	ids := reachableSpells(tables, roots)
 
-	linkHandTriggers(tables, ids)
-
-	curves, err := storeCurves(db, tables, trees, ids)
+	nodes, points, err := traitPoints(db, trees)
 	if err != nil {
 		return nil, err
 	}
+
+	return captureStoreInputs(tables, roots, ids, nodes, points), nil
+}
+
+// The store's data, from the client rows it is built from rather than from the database: the same
+// path the regeneration check runs, so what it checks is what the generator writes.
+func renderStore(in *storeInputs, namer *rankEnumNamer) ([]byte, error) {
+	tables := in.tables()
+	ids := reachableSpells(tables, in.Roots)
+
+	linkHandTriggers(tables, ids)
+
+	curves := storeCurves(tables, in.TraitNodes, in.TraitPoints, ids)
 
 	effects := 0
 	for _, id := range ids {
 		effects += len(tables.effects[id])
 	}
-	fmt.Fprintf(progress, "spelldata: %d roots, %d reachable spells, %d effects\n", len(roots), len(ids), effects)
+	fmt.Fprintf(progress, "spelldata: %d roots, %d reachable spells, %d effects\n", len(in.Roots), len(ids), effects)
 
 	rows := make([]storeSpell, len(ids))
 	for i, id := range ids {
@@ -448,7 +459,8 @@ func linkHandTrigger(t *spellTables, driver int32, triggered int32) {
 //
 // Every node of every class tree is read, not only the ones the class files turned into ladders: a
 // talent the class file could not name is still a spell the sim can register by id.
-func storeCurves(db *sql.DB, t *spellTables, trees map[int]int, ids []int32) (map[int32][][]float64, error) {
+func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]map[int32]float64,
+	ids []int32) map[int32][][]float64 {
 	inStore := map[int32]bool{}
 	for _, id := range ids {
 		inStore[id] = true
@@ -456,50 +468,67 @@ func storeCurves(db *sql.DB, t *spellTables, trees map[int]int, ids []int32) (ma
 
 	curves := map[int32][][]float64{}
 	pricedBy := map[int32]int32{}
+	for _, node := range nodes {
+		if !inStore[node.SpellID] {
+			continue
+		}
+
+		priced := map[int32]map[int32]float64{}
+		for index, curve := range points[node.DefinitionID] {
+			if values, ok := curveRanks(curve, node.MaxRanks); ok {
+				priced[index] = values
+			}
+		}
+
+		rows := curveRows(t.effects[node.SpellID], priced, node.MaxRanks)
+		if len(rows) == 0 {
+			continue
+		}
+
+		// The client keeps retired talent nodes around, and a retired twin prices the same
+		// spell as the node the game uses: hunter Lightning Reflexes 19168 is 3/6/9/12/15 on
+		// definition 134447 and 2/4/6/8/10 on 142605. The lowest definition id within the
+		// first tree by id is the one kept, which is what the class tables generate from, and a
+		// disagreement is named on stderr rather than resolved silently.
+		if seen, ok := curves[node.SpellID]; ok {
+			if !sameCurves(seen, rows) {
+				fmt.Fprintf(progress,
+					"spelldata: talent definitions %d and %d price spell %d differently, keeping %d\n",
+					pricedBy[node.SpellID], node.DefinitionID, node.SpellID, pricedBy[node.SpellID])
+			}
+			continue
+		}
+		curves[node.SpellID] = rows
+		pricedBy[node.SpellID] = node.DefinitionID
+	}
+	return curves
+}
+
+// Every class tree's nodes in the order the curves are read in - tree by tree, lowest id first, so
+// that the first definition to price a spell is the same one whether the points come from the
+// database or from the committed inputs - and the points each definition states.
+func traitPoints(db *sql.DB, trees map[int]int) ([]traitNode, map[int32]map[int32]map[int32]float64, error) {
+	var all []traitNode
+	points := map[int32]map[int32]map[int32]float64{}
+
 	for _, treeID := range sortedTreeIDs(trees) {
 		nodes, err := traitNodes(db, treeID)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		for _, node := range nodes {
-			if !inStore[node.SpellID] {
+			all = append(all, node)
+			if _, ok := points[node.DefinitionID]; ok {
 				continue
 			}
-
-			points, err := traitCurves(db, node.DefinitionID)
+			curve, err := traitCurves(db, node.DefinitionID)
 			if err != nil {
-				return nil, err
+				return nil, nil, err
 			}
-			priced := map[int32]map[int32]float64{}
-			for index, curve := range points {
-				if values, ok := curveRanks(curve, node.MaxRanks); ok {
-					priced[index] = values
-				}
-			}
-
-			rows := curveRows(t.effects[node.SpellID], priced, node.MaxRanks)
-			if len(rows) == 0 {
-				continue
-			}
-
-			// The client keeps retired talent nodes around, and a retired twin prices the same
-			// spell as the node the game uses: hunter Lightning Reflexes 19168 is 3/6/9/12/15 on
-			// definition 134447 and 2/4/6/8/10 on 142605. The lowest definition id within the
-			// first tree by id is the one kept, which is what the class tables generate from, and a
-			// disagreement is named on stderr rather than resolved silently.
-			if seen, ok := curves[node.SpellID]; ok {
-				if !sameCurves(seen, rows) {
-					fmt.Fprintf(progress,
-						"spelldata: talent definitions %d and %d price spell %d differently, keeping %d\n",
-						pricedBy[node.SpellID], node.DefinitionID, node.SpellID, pricedBy[node.SpellID])
-				}
-				continue
-			}
-			curves[node.SpellID] = rows
-			pricedBy[node.SpellID] = node.DefinitionID
+			points[node.DefinitionID] = curve
 		}
 	}
-	return curves, nil
+	return all, points, nil
 }
 
 // One talent node: the definition its curves hang off, the spell it grants and the rank cap the game

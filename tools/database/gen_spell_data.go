@@ -1132,23 +1132,23 @@ func (row generatedRow) hasValue() bool {
 
 // Every file the generator writes, by the path it is written to, rendered and none written: what
 // happens to them is writeSpellDataFiles' business, and -check's business is that nothing does.
-func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, error) {
+func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, *storeInputs, error) {
 	if err := RequireSpellCastTimes(helper.db); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// Rendered in full before anything is written, so a class that fails validation cannot leave half
 	// the packages regenerated and half stale.
 	namer, err := newRankEnumNamer()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// One tree per class, picked the same way the talent protos pick it, so the rank caps here and the
 	// ones the sim's Talents message carries are the same numbers.
 	trees, err := selectTraitTrees(helper)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	rendered := map[string][]byte{}
@@ -1160,15 +1160,15 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, error) {
 		pkg := strings.ToLower(dbc.ClassNameFromDBC(class))
 		tree, ok := trees[classMaskOf(class)]
 		if !ok {
-			return nil, fmt.Errorf("%s: the client database holds no talent tree for this class", pkg)
+			return nil, nil, fmt.Errorf("%s: the client database holds no talent tree for this class", pkg)
 		}
 		ladders, skipped, partial, err := discoverLadders(helper.db, class, tree)
 		if err != nil {
-			return nil, fmt.Errorf("%s: %w", pkg, err)
+			return nil, nil, fmt.Errorf("%s: %w", pkg, err)
 		}
 		out, err := renderClassFile(helper.db, pkg, class, namer, ladders, skipped, partial)
 		if err != nil {
-			return nil, fmt.Errorf("%s: %w", pkg, err)
+			return nil, nil, fmt.Errorf("%s: %w", pkg, err)
 		}
 		rendered[pkg] = out
 
@@ -1182,7 +1182,7 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, error) {
 		// one - so every spell the tree defines is a root of the store.
 		treeSpells, err := treeSpellIDs(helper.db, tree)
 		if err != nil {
-			return nil, fmt.Errorf("%s: %w", pkg, err)
+			return nil, nil, fmt.Errorf("%s: %w", pkg, err)
 		}
 		for id := range treeSpells {
 			if id != 0 {
@@ -1196,14 +1196,22 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, error) {
 	// with it gen_db, which imports the sim.
 	enums, err := namer.render()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	// The store's rows name the enum values through dbcenums, so nothing they reach is recorded on
 	// the namer: the shared file above holds the class tables' names and no others.
-	store, err := renderStore(helper.db, ladderIDs, trees, namer)
+	//
+	// The client rows it is built from are captured on the way through and handed back, so the
+	// caller can write them next to the store and the regeneration can be checked without the
+	// database - see spelldata_inputs.go.
+	inputs, err := loadStoreInputs(helper.db, ladderIDs, trees)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+	store, err := renderStore(inputs, namer)
+	if err != nil {
+		return nil, nil, err
 	}
 
 	files := map[string][]byte{
@@ -1213,7 +1221,7 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, error) {
 	for pkg, out := range rendered {
 		files[fmt.Sprintf("sim/%s/spell_data_auto_gen.go", pkg)] = out
 	}
-	return files, nil
+	return files, inputs, nil
 }
 
 func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnumNamer, ladders []rankLadder, skipped, partial []string) ([]byte, error) {

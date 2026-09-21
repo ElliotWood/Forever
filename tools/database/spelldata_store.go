@@ -127,8 +127,9 @@ type storeEffect struct {
 
 	// The client states no edge from this effect to the spell it fires, and handTriggers does. Set
 	// on the effect the hand link was written onto, so the emitted row says where the trigger came
-	// from.
-	HandLinked bool
+	// from. Never captured: it is decided while the store is rendered, and a capture that carried it
+	// would hand the regeneration the answer it is meant to re-derive.
+	HandLinked bool `json:"-"`
 }
 
 type storePower struct {

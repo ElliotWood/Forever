@@ -132,13 +132,19 @@ func goTool() string {
 	return "go"
 }
 
-// Regenerates every spell data file, once the sim compiles against all of them.
+// Regenerates every spell data file, once the sim compiles against all of them, and writes the
+// client rows the store was built from beside them: they are what lets the store be regenerated and
+// checked without the client database, so they are written from the same pass that wrote it and
+// only once that pass has landed.
 func GenerateSpellDataFiles(helper *DBHelper) error {
-	files, err := renderSpellDataFiles(helper)
+	files, inputs, err := renderSpellDataFiles(helper)
 	if err != nil {
 		return err
 	}
-	return writeSpellDataFiles(files)
+	if err := writeSpellDataFiles(files); err != nil {
+		return err
+	}
+	return writeStoreInputs(inputs)
 }
 
 // The committed files that no longer match what the generator writes, for a caller that wants to
@@ -147,7 +153,7 @@ func CheckSpellDataFiles(helper *DBHelper) ([]string, error) {
 	progress = io.Discard
 	defer func() { progress = os.Stderr }()
 
-	files, err := renderSpellDataFiles(helper)
+	files, _, err := renderSpellDataFiles(helper)
 	if err != nil {
 		return nil, err
 	}
