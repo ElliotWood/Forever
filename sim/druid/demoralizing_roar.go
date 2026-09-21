@@ -1,54 +1,54 @@
 package druid
 
+import (
+	"github.com/wowsims/forever/sim/core"
+)
+
 var demoralizingRoarRank = spellData.DemoralizingRoar.HighestRank()
 
-// TODO: To be implemented.
 func (druid *Druid) registerDemoralizingRoarSpell() {
-	panic("To be implemented")
+	druid.registerDemoralizingRoarAura()
 
-	// The TBC implementation, kept for the port:
-	// druid.registerDemoralizingRoarAura()
-	//
-	// druid.DemoralizingRoar = druid.RegisterSpell(Bear, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: demoralizingRoarRank.SpellID},
-	// 	SpellSchool:    demoralizingRoarRank.SpellSchool,
-	// 	DefenseType:    demoralizingRoarRank.DefenseType,
-	// 	ProcMask:       core.ProcMaskEmpty,
-	// 	ClassSpellMask: DruidSpellDemoralizingRoar,
-	// 	Flags:          core.SpellFlagAPL,
-	//
-	// 	RageCost: core.RageCostOptions{
-	// 		Cost: demoralizingRoarRank.Cost,
-	// 	},
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: demoralizingRoarRank.GCD,
-	// 		},
-	// 		IgnoreHaste: true,
-	// 	},
-	//
-	// 	ThreatMultiplier: 1,
-	// 	FlatThreatBonus:  62 * 2,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		for _, aoeTarget := range druid.Env.Encounter.AllTargetUnits {
-	// 			result := spell.CalcOutcome(sim, aoeTarget, spell.OutcomeMeleeSpecialHit)
-	// 			if result.Landed() {
-	// 				druid.DemoralizingRoarAuras.Get(aoeTarget).Activate(sim)
-	// 			}
-	// 		}
-	// 	},
-	// })
+	druid.DemoralizingRoar = druid.RegisterSpell(Bear, core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: demoralizingRoarRank.SpellID},
+		SpellSchool:    demoralizingRoarRank.SpellSchool,
+		DefenseType:    demoralizingRoarRank.DefenseType,
+		ProcMask:       core.ProcMaskEmpty,
+		ClassSpellMask: DruidSpellDemoralizingRoar,
+		Flags:          core.SpellFlagAPL,
+
+		RageCost: core.RageCostOptions{
+			Cost: demoralizingRoarRank.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: demoralizingRoarRank.GCD,
+			},
+			IgnoreHaste: true,
+		},
+
+		ThreatMultiplier: 1,
+		// Two threat a level, the sim's long-standing value; the client states none.
+		FlatThreatBonus: 2 * float64(core.CharacterLevel),
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+			for _, aoeTarget := range druid.Env.Encounter.AllTargetUnits {
+				result := spell.CalcAndDealOutcome(sim, aoeTarget, spell.OutcomeMagicHit)
+				if result.Landed() {
+					druid.DemoralizingRoarAuras.Get(aoeTarget).Activate(sim)
+				}
+			}
+		},
+
+		RelatedAuraArrays: druid.DemoralizingRoarAuras.ToMap(),
+	})
 }
 
-// TODO: To be implemented.
 func (druid *Druid) registerDemoralizingRoarAura() {
-	panic("To be implemented")
-
-	// The TBC implementation, kept for the port:
-	// druid.DemoralizingRoarAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-	// 	// TODO: Forever drops Feral Aggression; untalented (0 points) until we know
-	// 	// whether the effect moved onto another talent.
-	// 	return core.DemoralizingRoarAura(target, 0)
-	// })
+	druid.DemoralizingRoarAuras = druid.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		// TODO: Forever drops Feral Aggression and folds it into the base ability - the client's
+		// rank 5 states -205 attack power where core's shared aura is TBC's -411. Untalented (0
+		// points) until the core aura carries the Forever number.
+		return core.DemoralizingRoarAura(target, 0)
+	})
 }

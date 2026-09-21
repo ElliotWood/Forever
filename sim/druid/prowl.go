@@ -1,65 +1,66 @@
 package druid
 
-var prowlRank = spellData.Prowl.BySpellID(5215)
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+)
 
-// TODO: To be implemented.
+var prowlRank = spellData.Prowl.HighestRank()
+
 func (druid *Druid) registerProwlSpell() {
-	panic("To be implemented")
+	actionID := core.ActionID{SpellID: prowlRank.SpellID}
+	movementSpeedMultiplier := 1 + prowlRank.Effect(shared.A_MOD_DECREASE_SPEED, 0).Value/100
 
-	// The TBC implementation, kept for the port:
-	// actionID := core.ActionID{SpellID: prowlRank.SpellID}
-	// movementSpeedMultiplier := 0.7
-	//
-	// icd := core.Cooldown{
-	// 	Timer:    druid.NewTimer(),
-	// 	Duration: prowlRank.Cooldown,
-	// }
-	//
-	// druid.ProwlAura = druid.RegisterAura(core.Aura{
-	// 	Label:    "Prowl",
-	// 	ActionID: actionID,
-	// 	Duration: core.NeverExpires,
-	//
-	// 	OnGain: func(aura *core.Aura, sim *core.Simulation) {
-	// 		aura.Unit.MultiplyMovementSpeed(sim, movementSpeedMultiplier)
-	// 	},
-	//
-	// 	OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-	// 		aura.Deactivate(sim)
-	// 	},
-	//
-	// 	OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-	// 		icd.Use(sim)
-	// 		aura.Unit.MultiplyMovementSpeed(sim, 1.0/movementSpeedMultiplier)
-	// 	},
-	// })
-	//
-	// druid.CatFormAura.ApplyOnExpire(func(_ *core.Aura, sim *core.Simulation) {
-	// 	if druid.ProwlAura.IsActive() {
-	// 		druid.ProwlAura.Deactivate(sim)
-	// 	}
-	// })
-	//
-	// druid.Prowl = druid.RegisterSpell(Any, core.SpellConfig{
-	// 	ActionID:    actionID,
-	// 	SpellSchool: core.SpellSchoolPhysical,
-	// 	ProcMask:    core.ProcMaskEmpty,
-	// 	Flags:       core.SpellFlagAPL,
-	//
-	// 	Cast: core.CastConfig{
-	// 		CD: icd,
-	// 	},
-	//
-	// 	ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
-	// 		return (sim.CurrentTime < 0)
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		if !druid.InForm(Cat) {
-	// 			druid.CatFormAura.Activate(sim)
-	// 		}
-	//
-	// 		druid.ProwlAura.Activate(sim)
-	// 	},
-	// })
+	icd := core.Cooldown{
+		Timer:    druid.NewTimer(),
+		Duration: prowlRank.Cooldown,
+	}
+
+	druid.ProwlAura = druid.RegisterAura(core.Aura{
+		Label:    "Prowl",
+		ActionID: actionID,
+		Duration: core.NeverExpires,
+
+		OnGain: func(aura *core.Aura, sim *core.Simulation) {
+			aura.Unit.MultiplyMovementSpeed(sim, movementSpeedMultiplier)
+		},
+
+		OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			aura.Deactivate(sim)
+		},
+
+		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
+			icd.Use(sim)
+			aura.Unit.MultiplyMovementSpeed(sim, 1.0/movementSpeedMultiplier)
+		},
+	})
+
+	druid.CatFormAura.ApplyOnExpire(func(_ *core.Aura, sim *core.Simulation) {
+		if druid.ProwlAura.IsActive() {
+			druid.ProwlAura.Deactivate(sim)
+		}
+	})
+
+	druid.Prowl = druid.RegisterSpell(Any, core.SpellConfig{
+		ActionID:    actionID,
+		SpellSchool: prowlRank.SpellSchool,
+		ProcMask:    core.ProcMaskEmpty,
+		Flags:       core.SpellFlagAPL,
+
+		Cast: core.CastConfig{
+			CD: icd,
+		},
+
+		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
+			return sim.CurrentTime < 0
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			if !druid.InForm(Cat) {
+				druid.CatFormAura.Activate(sim)
+			}
+
+			druid.ProwlAura.Activate(sim)
+		},
+	})
 }

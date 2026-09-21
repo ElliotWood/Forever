@@ -1,4 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
+import { SavedTalents } from '@generated/proto/ui';
 import { ConsumesSpec, HealingModel, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	FeralBearDruid_Options as DruidOptions,
@@ -18,6 +19,8 @@ export const DefaultSimpleRotation = DruidRotation.create({
 import DefaultApl from './apls/default.apl.json';
 export const ROTATION_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.SpecFeralBearDruid, DefaultSimpleRotation);
 export const ROTATION_DEFAULT = PresetUtils.makePresetAPLRotation('APL', DefaultApl);
+
+export const BearTankTalents = PresetUtils.makePresetTalents('Bear Tank 0/31/20', SavedTalents.create({ talentsString: '-5003232120132010501-0550325' }));
 
 export const DefaultOptions = DruidOptions.create({
 	startingRage: 0,

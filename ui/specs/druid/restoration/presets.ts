@@ -1,5 +1,9 @@
+import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, Profession, UnitReference } from '@generated/proto/common';
 import { RestorationDruid_Options as RestorationDruidOptions } from '@generated/proto/druid';
+import { SavedTalents } from '@generated/proto/ui';
+
+export const RestorationTalents = PresetUtils.makePresetTalents('Restoration 10/0/41', SavedTalents.create({ talentsString: '05302--5053035153113051' }));
 
 export const DefaultOptions = RestorationDruidOptions.create({
 	classOptions: {

@@ -172,7 +172,7 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 
 	presets: {
 		epWeights: [],
-		talents: [],
+		talents: [Presets.BearTankTalents],
 		// ROTATION_SIMPLE is kept in presets.ts for reference but omitted here —
 		// the APL rotation is more user-friendly and handles CDs, re-shifting, and
 		// on-use items more easily.

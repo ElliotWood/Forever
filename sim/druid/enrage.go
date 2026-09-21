@@ -1,56 +1,74 @@
 package druid
 
-// TODO: To be implemented.
-// Enrage (Dire Bear Form): generates 2 Rage/sec for 10 sec (20 total),
-// reduces base armor by 16%. Intensity talent grants instant rage on activation.
-func (druid *Druid) registerEnrageSpell() {
-	panic("To be implemented")
+import (
+	"time"
 
-	// The TBC implementation, kept for the port:
-	// actionID := core.ActionID{SpellID: 5229}
-	// rageMetrics := druid.NewRageMetrics(actionID)
-	//
-	// const armorReduction = 0.16
-	//
-	// druid.EnrageAura = druid.RegisterAura(core.Aura{
-	// 	Label:    "Enrage",
-	// 	ActionID: actionID,
-	// 	Duration: 10 * time.Second,
-	// }).AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.ArmorMultiplier, 1-armorReduction)
-	//
-	// // Deactivate Enrage when leaving Bear Form.
-	// druid.BearFormAura.ApplyOnExpire(func(_ *core.Aura, sim *core.Simulation) {
-	// 	if !druid.Env.MeasuringStats {
-	// 		druid.EnrageAura.Deactivate(sim)
-	// 	}
-	// })
-	//
-	// druid.Enrage = druid.RegisterSpell(Bear, core.SpellConfig{
-	// 	ActionID:       actionID,
-	// 	ClassSpellMask: DruidSpellEnrage,
-	// 	Flags:          core.SpellFlagAPL,
-	//
-	// 	Cast: core.CastConfig{
-	// 		CD: core.Cooldown{
-	// 			Timer:    druid.NewTimer(),
-	// 			Duration: 1 * time.Minute,
-	// 		},
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		// Intensity talent: instantly generate 4/7/10 rage on cast.
-	// 		if druid.IntensityEnrageRageBonus > 0 {
-	// 			druid.AddRage(sim, druid.IntensityEnrageRageBonus, rageMetrics)
-	// 		}
-	// 		druid.EnrageAura.Activate(sim)
-	// 		core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-	// 			Period:   time.Second,
-	// 			NumTicks: 10,
-	// 			Priority: core.ActionPriorityRegen,
-	// 			OnAction: func(sim *core.Simulation) {
-	// 				druid.AddRage(sim, 2, rageMetrics)
-	// 			},
-	// 		})
-	// 	},
-	// })
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
+var enrageRank = spellData.Enrage.HighestRank()
+
+// Enrage: 2 Rage a second for 10 sec, and Forever adds an instant 10 Rage up front (the client's
+// E_ENERGIZE effect, stated as 100 in its own units). Base armor is cut by 27% while it lasts,
+// which the client does not carry.
+func (druid *Druid) registerEnrageSpell() {
+	actionID := core.ActionID{SpellID: enrageRank.SpellID}
+	rageMetrics := druid.NewRageMetrics(actionID)
+
+	const armorMultiplier = 1 - 0.27
+
+	instantRage := shared.SpellDataMin(enrageRank.Energize) / 10
+	ragePerTick := enrageRank.Effect(shared.A_PERIODIC_ENERGIZE, 1).Value / 10
+	numTicks := int(enrageRank.Duration / time.Second)
+
+	druid.EnrageAura = druid.RegisterAura(core.Aura{
+		Label:    "Enrage",
+		ActionID: actionID,
+		Duration: enrageRank.Duration,
+		OnGain: func(_ *core.Aura, sim *core.Simulation) {
+			druid.ApplyDynamicEquipScaling(sim, stats.Armor, armorMultiplier)
+		},
+		OnExpire: func(_ *core.Aura, sim *core.Simulation) {
+			druid.RemoveDynamicEquipScaling(sim, stats.Armor, armorMultiplier)
+		},
+	})
+
+	druid.Enrage = druid.RegisterSpell(Bear, core.SpellConfig{
+		ActionID:       actionID,
+		ClassSpellMask: DruidSpellEnrage,
+		Flags:          core.SpellFlagAPL,
+
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    druid.NewTimer(),
+				Duration: enrageRank.Cooldown,
+			},
+			IgnoreHaste: true,
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			druid.AddRage(sim, instantRage+druid.IntensityEnrageRageBonus, rageMetrics)
+			druid.EnrageAura.Activate(sim)
+
+			core.StartPeriodicAction(sim, core.PeriodicActionOptions{
+				Period:   time.Second,
+				NumTicks: numTicks,
+				Priority: core.ActionPriorityRegen,
+				OnAction: func(sim *core.Simulation) {
+					if druid.EnrageAura.IsActive() {
+						druid.AddRage(sim, ragePerTick, rageMetrics)
+					}
+				},
+			})
+		},
+
+		RelatedSelfBuff: druid.EnrageAura,
+	})
+
+	druid.AddMajorCooldown(core.MajorCooldown{
+		Spell: druid.Enrage.Spell,
+		Type:  core.CooldownTypeDPS,
+	})
 }

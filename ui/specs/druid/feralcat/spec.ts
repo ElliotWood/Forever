@@ -162,7 +162,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: [Presets.FeralTalents, Presets.FeralCatTalents],
 		rotations: [Presets.SIMPLE, Presets.APL],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],

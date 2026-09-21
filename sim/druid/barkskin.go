@@ -1,57 +1,53 @@
 package druid
 
-// TODO: To be implemented.
-func (druid *Druid) registerBarkskin() {
-	panic("To be implemented")
+import (
+	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
+)
 
-	// The TBC implementation, kept for the port:
-	// actionId := core.ActionID{SpellID: 22812}
-	//
-	// barkskinAura := druid.RegisterAura(core.Aura{
-	// 	Label:    "Barkskin",
-	// 	ActionID: actionId,
-	// 	Duration: time.Second * 12,
-	// 	OnGain: func(aura *core.Aura, sim *core.Simulation) {
-	// 		druid.PseudoStats.DamageTakenMultiplier *= 0.8
-	// 	},
-	// 	OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-	// 		druid.PseudoStats.DamageTakenMultiplier /= 0.8
-	// 	},
-	//
-	// 	// pushback?
-	// })
-	//
-	// druid.Barkskin = druid.RegisterSpell(Any, core.SpellConfig{
-	// 	ActionID:    actionId,
-	// 	DefenseType: core.DefenseTypeMagic,
-	// 	Flags:       core.SpellFlagAPL,
-	//
-	// 	Cast: core.CastConfig{
-	// 		CD: core.Cooldown{
-	// 			Timer:    druid.NewTimer(),
-	// 			Duration: time.Second * 60,
-	// 		},
-	// 		DefaultCast: core.Cast{
-	// 			GCD: core.GCDDefault,
-	// 		},
-	// 	},
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-	// 		barkskinAura.Activate(sim)
-	//
-	// 		if sim.CurrentTime > 0 {
-	// 			druid.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime)
-	// 		}
-	// 	},
-	//
-	// 	RelatedSelfBuff: barkskinAura,
-	// })
-	//
-	// druid.AddMajorCooldown(core.MajorCooldown{
-	// 	Spell: druid.Barkskin.Spell,
-	// 	Type:  core.CooldownTypeSurvival,
-	// 	ShouldActivate: func(sim *core.Simulation, character *core.Character) bool {
-	// 		return false // Require manual usage
-	// 	},
-	// })
+var barkskinRank = spellData.Barkskin.HighestRank()
+
+// Barkskin: 20% less Physical damage taken for 15 sec, no cost. The client states the reduction on
+// A_MOD_DAMAGE_PERCENT_TAKEN with school mask 1 (Physical).
+func (druid *Druid) registerBarkskin() {
+	actionID := core.ActionID{SpellID: barkskinRank.SpellID}
+	multiplier := 1 + barkskinRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 1).Value/100
+
+	barkskinAura := druid.RegisterAura(core.Aura{
+		Label:    "Barkskin",
+		ActionID: actionID,
+		Duration: barkskinRank.Duration,
+	}).AttachMultiplicativePseudoStatBuff(&druid.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexPhysical], multiplier)
+
+	druid.Barkskin = druid.RegisterSpell(Any, core.SpellConfig{
+		ActionID:    actionID,
+		SpellSchool: barkskinRank.SpellSchool,
+		DefenseType: barkskinRank.DefenseType,
+		Flags:       core.SpellFlagAPL,
+
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    druid.NewTimer(),
+				Duration: barkskinRank.Cooldown,
+			},
+			DefaultCast: core.Cast{
+				GCD: barkskinRank.GCD,
+			},
+		},
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			barkskinAura.Activate(sim)
+			if sim.CurrentTime > 0 {
+				druid.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime)
+			}
+		},
+
+		RelatedSelfBuff: barkskinAura,
+	})
+
+	druid.AddMajorCooldown(core.MajorCooldown{
+		Spell: druid.Barkskin.Spell,
+		Type:  core.CooldownTypeSurvival,
+	})
 }
