@@ -18,6 +18,7 @@
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -88,6 +89,15 @@ def prepare_worktree():
     else:
         run_git('checkout', '-q', '--detach', 'origin/master')
         run_git('reset', '-q', '--hard', 'origin/master')
+    # The generated protos are gitignored, so a worktree has none and every package fails setup -
+    # which is exactly how the first run from here ended, 30 seconds in. There is no protoc on this
+    # machine to generate them, so they come from the main checkout, which is built from the same
+    # .proto files at the same commit.
+    # ponytail: copies rather than generates; stale if someone edits a .proto without rebuilding.
+    generated = os.path.join('sim', 'core', 'proto')
+    for name in os.listdir(os.path.join(REPO, generated)):
+        if name.endswith('.pb.go'):
+            shutil.copy2(os.path.join(REPO, generated, name), os.path.join(WORK, generated, name))
 
 
 def packages(specs):
