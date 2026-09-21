@@ -14,88 +14,98 @@ import (
 //   Quietus: effect 1 of spell 1310728 has no rank curve and is left out
 
 type generatedSpellData struct {
-	AdrenalineRush           shared.SpellDataTable
-	Aggression               shared.SpellDataTable
-	Ambush                   shared.SpellDataTable
-	Backstab                 shared.SpellDataTable
-	BladeFlurry              shared.SpellDataTable
-	Blind                    shared.SpellDataTable
-	Camouflage               shared.SpellDataTable
-	CheapShot                shared.SpellDataTable
-	ColdBlood                shared.SpellDataTable
-	CoupDeGrace              shared.SpellDataTable
-	Cutthroat                shared.SpellDataTable
-	Deadliness               shared.SpellDataTable
-	Deflection               shared.SpellDataTable
-	DirtyDeeds               shared.SpellDataTable
-	DirtyTricks              shared.SpellDataTable
-	DisarmTrap               shared.SpellDataTable
-	Distract                 shared.SpellDataTable
-	DualWieldSpecialization  shared.SpellDataTable
-	Elusiveness              shared.SpellDataTable
-	Endurance                shared.SpellDataTable
-	Evasion                  shared.SpellDataTable
-	Eviscerate               shared.SpellDataTable
-	ExposeArmor              shared.SpellDataTable
-	Feint                    shared.SpellDataTable
-	FistWeaponSpecialization shared.SpellDataTable
-	FlawlessExecution        shared.SpellDataTable
-	Garrote                  shared.SpellDataTable
-	GhostlyStrike            shared.SpellDataTable
-	Gouge                    shared.SpellDataTable
-	HackAndSlash             shared.SpellDataTable
-	HeightenedSenses         shared.SpellDataTable
-	Hemorrhage               shared.SpellDataTable
-	ImprovedAmbush           shared.SpellDataTable
-	ImprovedDistract         shared.SpellDataTable
-	ImprovedEviscerate       shared.SpellDataTable
-	ImprovedExposeArmor      shared.SpellDataTable
-	ImprovedGouge            shared.SpellDataTable
-	ImprovedKick             shared.SpellDataTable
-	ImprovedKidneyShot       shared.SpellDataTable
-	ImprovedPoisons          shared.SpellDataTable
-	ImprovedSap              shared.SpellDataTable
-	ImprovedSinisterStrike   shared.SpellDataTable
-	ImprovedSliceAndDice     shared.SpellDataTable
-	ImprovedSprint           shared.SpellDataTable
-	Initiative               shared.SpellDataTable
-	Kick                     shared.SpellDataTable
-	KidneyShot               shared.SpellDataTable
-	Lethality                shared.SpellDataTable
-	LightningReflexes        shared.SpellDataTable
-	Malice                   shared.SpellDataTable
-	MasterOfDeception        shared.SpellDataTable
-	Murder                   shared.SpellDataTable
-	Mutilate                 shared.SpellDataTable
-	Opportunity              shared.SpellDataTable
-	PickPocket               shared.SpellDataTable
-	Precision                shared.SpellDataTable
-	Premeditation            shared.SpellDataTable
-	Preparation              shared.SpellDataTable
-	PuncturingWounds         shared.SpellDataTable
-	Quietus                  shared.SpellDataTable
-	Redirect                 shared.SpellDataTable
-	RelentlessStrikes        shared.SpellDataTable
-	RemorselessAttacks       shared.SpellDataTable
-	Riposte                  shared.SpellDataTable
-	RoguePassiveDND          shared.SpellDataTable
-	Rupture                  shared.SpellDataTable
-	Ruthlessness             shared.SpellDataTable
-	Sap                      shared.SpellDataTable
-	SealFate                 shared.SpellDataTable
-	SerratedBlades           shared.SpellDataTable
-	Setup                    shared.SpellDataTable
-	SinisterStrike           shared.SpellDataTable
-	SleightOfHand            shared.SpellDataTable
-	SliceAndDice             shared.SpellDataTable
-	Sprint                   shared.SpellDataTable
-	Stealth                  shared.SpellDataTable
-	Vanish                   shared.SpellDataTable
-	Vanished                 shared.SpellDataTable
-	Venom                    shared.SpellDataTable
-	Vigor                    shared.SpellDataTable
-	VilePoisons              shared.SpellDataTable
-	WeaponExpertise          shared.SpellDataTable
+	AdrenalineRush              shared.SpellDataTable
+	Aggression                  shared.SpellDataTable
+	Ambush                      shared.SpellDataTable
+	Backstab                    shared.SpellDataTable
+	BladeFlurry                 shared.SpellDataTable
+	Blind                       shared.SpellDataTable
+	Camouflage                  shared.SpellDataTable
+	CheapShot                   shared.SpellDataTable
+	ColdBlood                   shared.SpellDataTable
+	CoupDeGrace                 shared.SpellDataTable
+	Cutthroat                   shared.SpellDataTable
+	CutthroatTriggered          shared.SpellDataTable
+	Deflection                  shared.SpellDataTable
+	DirtyDeeds                  shared.SpellDataTable
+	DirtyTricks                 shared.SpellDataTable
+	DisarmTrap                  shared.SpellDataTable
+	Distract                    shared.SpellDataTable
+	DualWieldSpecialization     shared.SpellDataTable
+	Elusiveness                 shared.SpellDataTable
+	Endurance                   shared.SpellDataTable
+	Evasion                     shared.SpellDataTable
+	Eviscerate                  shared.SpellDataTable
+	ExposeArmor                 shared.SpellDataTable
+	Feint                       shared.SpellDataTable
+	FistWeaponSpecialization    shared.SpellDataTable
+	FlawlessExecution           shared.SpellDataTable
+	Garrote                     shared.SpellDataTable
+	GhostlyStrike               shared.SpellDataTable
+	Gouge                       shared.SpellDataTable
+	HackAndSlash                shared.SpellDataTable
+	HeightenedSenses            shared.SpellDataTable
+	Hemorrhage                  shared.SpellDataTable
+	ImprovedAmbush              shared.SpellDataTable
+	ImprovedDistract            shared.SpellDataTable
+	ImprovedEviscerate          shared.SpellDataTable
+	ImprovedExposeArmor         shared.SpellDataTable
+	ImprovedGouge               shared.SpellDataTable
+	ImprovedKick                shared.SpellDataTable
+	ImprovedKickTriggered       shared.SpellDataTable
+	ImprovedKidneyShot          shared.SpellDataTable
+	ImprovedPoisons             shared.SpellDataTable
+	ImprovedSap                 shared.SpellDataTable
+	ImprovedSapTriggered        shared.SpellDataTable
+	ImprovedSinisterStrike      shared.SpellDataTable
+	ImprovedSliceAndDice        shared.SpellDataTable
+	ImprovedSprint              shared.SpellDataTable
+	ImprovedSprintTriggered     shared.SpellDataTable
+	Initiative                  shared.SpellDataTable
+	InitiativeTriggered         shared.SpellDataTable
+	Kick                        shared.SpellDataTable
+	KidneyShot                  shared.SpellDataTable
+	Lethality                   shared.SpellDataTable
+	LightningReflexes           shared.SpellDataTable
+	Malice                      shared.SpellDataTable
+	MasterOfDeception           shared.SpellDataTable
+	Murder                      shared.SpellDataTable
+	Mutilate                    shared.SpellDataTable
+	MutilateTriggered           shared.SpellDataTable
+	Opportunity                 shared.SpellDataTable
+	PickPocket                  shared.SpellDataTable
+	Precision                   shared.SpellDataTable
+	Premeditation               shared.SpellDataTable
+	Preparation                 shared.SpellDataTable
+	PuncturingWounds            shared.SpellDataTable
+	PuncturingWoundsTriggered   shared.SpellDataTable
+	Quietus                     shared.SpellDataTable
+	Redirect                    shared.SpellDataTable
+	RelentlessStrikes           shared.SpellDataTable
+	RelentlessStrikesTriggered  shared.SpellDataTable
+	RemorselessAttacks          shared.SpellDataTable
+	RemorselessAttacksTriggered shared.SpellDataTable
+	Riposte                     shared.SpellDataTable
+	RoguePassiveDND             shared.SpellDataTable
+	Rupture                     shared.SpellDataTable
+	Ruthlessness                shared.SpellDataTable
+	RuthlessnessTriggered       shared.SpellDataTable
+	Sap                         shared.SpellDataTable
+	SealFate                    shared.SpellDataTable
+	SerratedBlades              shared.SpellDataTable
+	Setup                       shared.SpellDataTable
+	SetupTriggered              shared.SpellDataTable
+	SinisterStrike              shared.SpellDataTable
+	SliceAndDice                shared.SpellDataTable
+	Sprint                      shared.SpellDataTable
+	Stealth                     shared.SpellDataTable
+	Vanish                      shared.SpellDataTable
+	VanishTriggered             shared.SpellDataTable
+	Vanished                    shared.SpellDataTable
+	Venom                       shared.SpellDataTable
+	Vigor                       shared.SpellDataTable
+	VilePoisons                 shared.SpellDataTable
+	WeaponExpertise             shared.SpellDataTable
 }
 
 var spellData = generatedSpellData{
@@ -155,8 +165,8 @@ var spellData = generatedSpellData{
 		{Rank: 4, SpellID: 462708, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 12}}, Direct: shared.SpellDataFlat{Value: 12, Coef: 1}},
 		{Rank: 5, SpellID: 462708, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 15}}, Direct: shared.SpellDataFlat{Value: 15, Coef: 1}},
 	},
-	Deadliness: shared.SpellDataTable{
-		{Rank: 1, SpellID: 30902, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACK_POWER_PCT, Misc: 0, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_RANGED_ATTACK_POWER_PCT, Misc: 0, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 0}},
+	CutthroatTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 462707, Duration: 10000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_IGNORE_SHAPESHIFT, Misc: 0, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 0}},
 	},
 	Deflection: shared.SpellDataTable{
 		{Rank: 1, SpellID: 13713, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_PARRY_PERCENT, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},
@@ -289,6 +299,9 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 13754, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 1}},
 		{Rank: 2, SpellID: 13754, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 1}},
 	},
+	ImprovedKickTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 18425, Duration: 2000 * time.Millisecond, MaxRange: 50000, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_SILENCE, Misc: 126, Value: 1}}, Direct: shared.SpellDataFlat{Value: 1, Coef: 0}},
+	},
 	ImprovedKidneyShot: shared.SpellDataTable{
 		{Rank: 1, SpellID: 14174, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 23, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 1}},
 		{Rank: 2, SpellID: 14174, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 23, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 1}},
@@ -305,6 +318,9 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 14094, ProcChance: 60, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 60}}, Direct: shared.SpellDataFlat{Value: 60, Coef: 1}},
 		{Rank: 3, SpellID: 14095, ProcChance: 90, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 90}}, Direct: shared.SpellDataFlat{Value: 90, Coef: 1}},
 	},
+	ImprovedSapTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 14093, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SANCTUARY, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
+	},
 	ImprovedSinisterStrike: shared.SpellDataTable{
 		{Rank: 1, SpellID: 13732, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 14, Value: -3}}},
 		{Rank: 2, SpellID: 13732, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 14, Value: -5}}},
@@ -318,10 +334,16 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 13743, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 50}}, Direct: shared.SpellDataFlat{Value: 50, Coef: 1}},
 		{Rank: 2, SpellID: 13743, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 1}},
 	},
+	ImprovedSprintTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 30918, Duration: 1000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 11, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 7, Value: 0}}},
+	},
 	Initiative: shared.SpellDataTable{
 		{Rank: 1, SpellID: 13976, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 33}}, Direct: shared.SpellDataFlat{Value: 33, Coef: 1}},
 		{Rank: 2, SpellID: 13976, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 67}}, Direct: shared.SpellDataFlat{Value: 67, Coef: 1}},
 		{Rank: 3, SpellID: 13976, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 100}}, Direct: shared.SpellDataFlat{Value: 100, Coef: 1}},
+	},
+	InitiativeTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 13977, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}, {Index: 1, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
 	},
 	Kick: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1766, Cost: 25, GCD: 1000 * time.Millisecond, Cooldown: 10000 * time.Millisecond, Duration: 5000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SCHOOL_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 15}, {Index: 1, Effect: shared.E_INTERRUPT_CAST, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 15, Coef: 1}},
@@ -369,6 +391,16 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 1241582, Cost: 60, GCD: 1000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 2}, {Index: 1, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 3, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 20}}, Energize: shared.SpellDataFlat{Value: 2, Coef: 0}},
 		{Rank: 4, SpellID: 1241584, Cost: 60, GCD: 1000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 2}, {Index: 1, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 3, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 20}}, Energize: shared.SpellDataFlat{Value: 2, Coef: 0}},
 	},
+	MutilateTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 399960, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 33}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 33, Coef: 1}},
+		{Rank: 2, SpellID: 399961, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 33}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 33, Coef: 1}},
+		{Rank: 3, SpellID: 1241585, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 48}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 48, Coef: 1}},
+		{Rank: 4, SpellID: 1241586, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 67}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 67, Coef: 1}},
+		{Rank: 5, SpellID: 1241588, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 48}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 48, Coef: 1}},
+		{Rank: 6, SpellID: 1241590, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 67}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 67, Coef: 1}},
+		{Rank: 7, SpellID: 1310705, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 23}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 23, Coef: 1}},
+		{Rank: 8, SpellID: 1310706, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 23}, {Index: 1, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 75}}, Direct: shared.SpellDataFlat{Value: 23, Coef: 1}},
+	},
 	Opportunity: shared.SpellDataTable{
 		{Rank: 1, SpellID: 14057, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 5}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 22, Value: 5}}, Direct: shared.SpellDataFlat{Value: 5, Coef: 1}},
 		{Rank: 2, SpellID: 14057, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 0, Value: 10}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 22, Value: 10}}, Direct: shared.SpellDataFlat{Value: 10, Coef: 1}},
@@ -392,6 +424,9 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 1224716, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 20}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 30}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 10}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 0}},
 		{Rank: 3, SpellID: 1224716, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 30}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 45}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 15}}, Direct: shared.SpellDataFlat{Value: 30, Coef: 0}},
 	},
+	PuncturingWoundsTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 1310710, MaxRange: 50000, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}, {Index: 1, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
+	},
 	Quietus: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1310728, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 2, Coef: 1}},
 		{Rank: 2, SpellID: 1310728, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 4}}, Direct: shared.SpellDataFlat{Value: 4, Coef: 1}},
@@ -405,9 +440,15 @@ var spellData = generatedSpellData{
 	RelentlessStrikes: shared.SpellDataTable{
 		{Rank: 1, SpellID: 14179, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_TARGET_TRIGGER, Misc: 0, Value: 0}}},
 	},
+	RelentlessStrikesTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 14181, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 25}}},
+	},
 	RemorselessAttacks: shared.SpellDataTable{
 		{Rank: 1, SpellID: 14144, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 20}}},
 		{Rank: 2, SpellID: 14144, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_DUMMY, Misc: 0, Value: 40}}},
+	},
+	RemorselessAttacksTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 14143, Duration: 20000 * time.Millisecond, ProcChance: 100, ProcCharges: 1, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_FLAT_MODIFIER, Misc: 7, Value: 40}}, Direct: shared.SpellDataFlat{Value: 40, Coef: 1}},
 	},
 	Riposte: shared.SpellDataTable{
 		{Rank: 1, SpellID: 14251, Cooldown: 6000 * time.Millisecond, Duration: 6000 * time.Millisecond, MaxRange: 5, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_WEAPON_PERCENT_DAMAGE, Aura: shared.A_NONE, Misc: 0, Value: 150}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DISARM, Misc: 0, Value: 0}}},
@@ -427,6 +468,9 @@ var spellData = generatedSpellData{
 		{Rank: 1, SpellID: 14156, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 1}},
 		{Rank: 2, SpellID: 14156, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 40}}, Direct: shared.SpellDataFlat{Value: 40, Coef: 1}},
 		{Rank: 3, SpellID: 14156, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 60}}, Direct: shared.SpellDataFlat{Value: 60, Coef: 1}},
+	},
+	RuthlessnessTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 14157, MaxRange: 50000, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}, {Index: 1, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
 	},
 	Sap: shared.SpellDataTable{
 		{Rank: 1, SpellID: 6770, Cost: 65, GCD: 1000 * time.Millisecond, Duration: 25000 * time.Millisecond, MaxRange: 5, ProcChance: 101, MaxTargets: 1, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STUN, Misc: 0, Value: 0}}},
@@ -450,6 +494,9 @@ var spellData = generatedSpellData{
 		{Rank: 2, SpellID: 13983, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 67}}},
 		{Rank: 3, SpellID: 13983, ProcChance: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_PROC_TRIGGER_SPELL, Misc: 0, Value: 100}}},
 	},
+	SetupTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 15250, MaxRange: 50000, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}, {Index: 1, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
+	},
 	SinisterStrike: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1752, Cost: 45, GCD: 1000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 3}, {Index: 1, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}}, Direct: shared.SpellDataFlat{Value: 3, Coef: 1}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
 		{Rank: 2, SpellID: 1757, Cost: 45, GCD: 1000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 6}, {Index: 1, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}}, Direct: shared.SpellDataFlat{Value: 6, Coef: 1}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
@@ -459,9 +506,6 @@ var spellData = generatedSpellData{
 		{Rank: 6, SpellID: 8621, Cost: 45, GCD: 1000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 33}, {Index: 1, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}}, Direct: shared.SpellDataFlat{Value: 33, Coef: 1}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
 		{Rank: 7, SpellID: 11293, Cost: 45, GCD: 1000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 52}, {Index: 1, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}}, Direct: shared.SpellDataFlat{Value: 52, Coef: 1}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
 		{Rank: 8, SpellID: 11294, Cost: 45, GCD: 1000 * time.Millisecond, MaxRange: 5, SpellSchool: core.SpellSchoolPhysical, DefenseType: core.DefenseTypeMelee, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_NORMALIZED_WEAPON_DMG, Aura: shared.A_NONE, Misc: 0, Value: 68}, {Index: 1, Effect: shared.E_ENERGIZE, Aura: shared.A_NONE, Misc: 4, Value: 1}}, Direct: shared.SpellDataFlat{Value: 68, Coef: 1}, Energize: shared.SpellDataFlat{Value: 1, Coef: 0}},
-	},
-	SleightOfHand: shared.SpellDataTable{
-		{Rank: 1, SpellID: 30892, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_ATTACKER_SPELL_AND_WEAPON_CRIT_CHANCE, Misc: 0, Value: -2}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_ADD_PCT_MODIFIER, Misc: 8, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 0}},
 	},
 	SliceAndDice: shared.SpellDataTable{
 		{Rank: 1, SpellID: 5171, Cost: 25, GCD: 1000 * time.Millisecond, Duration: 6000 * time.Millisecond, MaxRange: 100, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_DUMMY, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_MELEE_HASTE_3, Misc: 0, Value: 20}}, Direct: shared.SpellDataFlat{Value: 20, Coef: 0}},
@@ -481,6 +525,11 @@ var spellData = generatedSpellData{
 	Vanish: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1856, Cooldown: 300000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_SANCTUARY, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
 		{Rank: 2, SpellID: 1857, Cooldown: 300000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 1, Effect: shared.E_TRIGGER_SPELL, Aura: shared.A_NONE, Misc: 0, Value: 0}, {Index: 2, Effect: shared.E_SANCTUARY, Aura: shared.A_NONE, Misc: 0, Value: 0}}},
+	},
+	VanishTriggered: shared.SpellDataTable{
+		{Rank: 1, SpellID: 11327, Duration: 10000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STEALTH, Misc: 0, Value: 265}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 265, Coef: 0}},
+		{Rank: 2, SpellID: 11329, Duration: 10000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STEALTH, Misc: 0, Value: 360}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_INCREASE_SPEED, Misc: 0, Value: 0}}, Direct: shared.SpellDataFlat{Value: 360, Coef: 0}},
+		{Rank: 3, SpellID: 18461, Duration: 1000 * time.Millisecond, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 7, Value: 0}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MECHANIC_IMMUNITY, Misc: 11, Value: 0}}},
 	},
 	Vanished: shared.SpellDataTable{
 		{Rank: 1, SpellID: 14093, ProcChance: 101, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_SANCTUARY, Aura: shared.A_NONE, Misc: 0, Value: 0}}},

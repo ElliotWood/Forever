@@ -49,6 +49,12 @@ same columns; nothing about it is hand-typed. Beside cost, cast time, cooldown a
 `Duration` (the aura or effect it leaves), `ProcCharges` (how many times that aura acts) and
 `MaxTargets` (an area effect's cap), each zero where the client states none.
 
+A family whose ranks trigger another spell, or whose tooltip reads a number off one, has a second
+table beside it: `spellData.EnrageTriggered` holds the buff 12880 that Enrage's `$12880d` names,
+`FlurryTriggered` the 12966 with its 3 charges, `LastStandTriggered` the 12976 with the 30% and 20 s,
+`InterceptTriggered` the stun of each rank. Where every rank triggers the same spell the table has one
+row, rank 1; where each rank triggers its own, the row takes the rank's number.
+
 ## The value shapes
 
 A rank's value is discriminated by shape, so a variant only carries fields that mean something for it:
