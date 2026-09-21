@@ -43,8 +43,6 @@ func (warrior *Warrior) registerRend() {
 			},
 			NumberOfTicks: tick.NumberOfTicks,
 			TickLength:    tick.TickLength,
-			// Periodic damage does not snapshot in Forever: each tick takes the modifiers of the
-			// moment it lands.
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.Spell.CalcAndDealPeriodicDamage(sim, target, tick.Tick, dot.OutcomeTick)
 			},

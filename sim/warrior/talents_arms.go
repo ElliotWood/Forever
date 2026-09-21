@@ -149,8 +149,6 @@ func (warrior *Warrior) registerDeepWounds() {
 			NumberOfTicks: tick.NumberOfTicks,
 			TickLength:    tick.TickLength,
 
-			// Periodic damage does not snapshot in Forever: each tick reads the weapon, attack power
-			// and modifiers of the moment it lands.
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				baseDamage := warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
 				dot.Spell.CalcAndDealPeriodicDamage(sim, target, baseDamage/float64(dot.HastedTickCount())*share, dot.OutcomeTick)
