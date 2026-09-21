@@ -1,14 +1,22 @@
 import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
-import { DpsPriest_Options as Options } from '@generated/proto/priest';
+import { DpsPriest_Options as Options, PriestOptions_Armor } from '@generated/proto/priest';
+import { SavedTalents } from '@generated/proto/ui';
 import { defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
-import DefaultApl from './apls/default.apl.json';
+import ShadowApl from './apls/shadow.apl.json';
+import SmiteApl from './apls/smite.apl.json';
 
-export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
+export const ROTATION_PRESET_SHADOW = PresetUtils.makePresetAPLRotation('Shadow', ShadowApl);
+export const ROTATION_PRESET_SMITE = PresetUtils.makePresetAPLRotation('Smite', SmiteApl);
+
+// The community builds the rankings page runs on our Forever sim: Shadow 15/0/36 and Smite 31/17/3.
+export const ShadowTalents = PresetUtils.makePresetTalents('Shadow 15/0/36', SavedTalents.create({ talentsString: '0253000311--550022501201302251' }));
+export const SmiteTalents = PresetUtils.makePresetTalents('Smite 31/17/3', SavedTalents.create({ talentsString: '515030031305001031-00505023002-003' }));
 
 export const DefaultOptions = Options.create({
 	classOptions: {
+		armor: PriestOptions_Armor.InnerFire,
 		preShadowform: true,
 	},
 });

@@ -1,7 +1,11 @@
 package priest
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (priest *Priest) registerHolyTalents() {
@@ -39,8 +43,8 @@ func (priest *Priest) registerHolyTalents() {
 
 // applyTwilightFocus implements Twilight Focus, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It is pushback protection (14913, SPELLMOD_NOT_LOSE_CASTING_TIME) and
+// nothing in the sim interrupts a cast.
 func (priest *Priest) applyTwilightFocus() {
 	if priest.Talents.TwilightFocus == 0 {
 		return
@@ -49,121 +53,125 @@ func (priest *Priest) applyTwilightFocus() {
 
 // applyImprovedRenew implements Improved Renew, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. Renew is not modelled.
 func (priest *Priest) applyImprovedRenew() {
 	if priest.Talents.ImprovedRenew == 0 {
 		return
 	}
 }
 
-// applyHolySpecialization implements Holy Specialization, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// Holy Specialization is new in Forever: +1% critical strike per point on Holy spells.
 func (priest *Priest) applyHolySpecialization() {
 	if priest.Talents.HolySpecialization == 0 {
 		return
 	}
+
+	priest.AddStaticMod(core.SpellModConfig{
+		ClassMask:  PriestSpellsAll,
+		School:     core.SpellSchoolHoly,
+		FloatValue: spellData.HolySpecialization.ValueAt(priest.Talents.HolySpecialization),
+		Kind:       core.SpellMod_BonusCrit_Percent,
+	})
 }
 
 // applySpellWarding implements Spell Warding, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It is -2% magic damage taken per point (27900), and nothing in a DPS sim
+// takes damage.
 func (priest *Priest) applySpellWarding() {
 	if priest.Talents.SpellWarding == 0 {
 		return
 	}
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
 func (priest *Priest) applyDivineFury() {
 	if priest.Talents.DivineFury == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if priest.Talents.DivineFury == 0 {
-	// 	return
-	// }
-	// // -0.1s per rank
-	// priest.AddStaticMod(core.SpellModConfig{
-	// 	Kind:      core.SpellMod_CastTime_Flat,
-	// 	TimeValue: time.Millisecond * time.Duration(-100*priest.Talents.DivineFury),
-	// 	ClassMask: PriestSpellSmite | PriestSpellHolyFire,
-	// })
+	priest.AddStaticMod(core.SpellModConfig{
+		ClassMask: PriestSpellSmite | PriestSpellHolyFire,
+		TimeValue: time.Millisecond * time.Duration(spellData.DivineFury.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CASTING_TIME).ValueAt(priest.Talents.DivineFury)),
+		Kind:      core.SpellMod_CastTime_Flat,
+	})
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
 func (priest *Priest) applyHolyNova() {
 	if !priest.Talents.HolyNova {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if !priest.Talents.HolyNova {
-	// 	return
-	// }
-	// HolyNovaRankMap.RegisterAll(priest.registerHolyNovaSpell)
+	HolyNovaRankMap.RegisterAll(priest.registerHolyNovaSpell)
 }
 
 var HolyNovaRankMap = spellData.HolyNova
 
-// TODO: To be implemented. Holy Nova already has a full Forever rank ladder (spellData.HolyNova); the
-// TBC body needs review before it's uncommented.
+// Damage to everything in range and a heal on the priest's own party, both at the same coefficient.
 func (priest *Priest) registerHolyNovaSpell(rank shared.SpellData) {
-	// The TBC implementation, kept for the port:
-	// priest.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: rank.SpellID},
-	// 	SpellSchool:    core.SpellSchoolHoly,
-	// 	DefenseType:    core.DefenseTypeMagic,
-	// 	ProcMask:       core.ProcMaskSpellDamage,
-	// 	Flags:          core.SpellFlagAPL,
-	// 	ClassSpellMask: PriestSpellHolyNova,
-	// 	Rank:           rank.Rank,
-	//
-	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: rank.Cost,
-	// 	},
-	//
-	// 	Cast: core.CastConfig{
-	// 		DefaultCast: core.Cast{
-	// 			GCD: rank.GCD,
-	// 		},
-	// 	},
-	//
-	// 	DamageMultiplier:         1,
-	// 	DamageMultiplierAdditive: 1,
-	// 	BonusCoefficient:         rank.Direct.BonusCoefficient(),
-	// 	ThreatMultiplier:         0,
-	//
-	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-	// 		baseDamage := rank.Direct.Damage(sim)
-	// 		spell.CalcAndDealAoeDamage(sim, baseDamage, spell.OutcomeMagicHitAndCrit)
-	//
-	// 		baseHeal := rank.Direct.Damage(sim)
-	// 		spell.CalcAndDealHealing(sim, spell.Unit, baseHeal, spell.OutcomeHealing)
-	// 	},
-	// })
+	heal := spellData.HolyNovaTriggered.ByRank(rank.Rank)
+	partyPlayers := priest.Party.Players
+
+	healSpell := priest.RegisterSpell(core.SpellConfig{
+		ActionID:    core.ActionID{SpellID: heal.SpellID},
+		SpellSchool: core.SpellSchoolHoly,
+		ProcMask:    core.ProcMaskSpellHealing,
+		Flags:       core.SpellFlagHelpful | core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell,
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 0,
+		BonusCoefficient: rank.Direct.BonusCoefficient(),
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+			for _, player := range partyPlayers {
+				spell.CalcAndDealHealing(sim, &player.GetCharacter().Unit, heal.Direct.Damage(sim), spell.OutcomeHealingCrit)
+			}
+		},
+	})
+
+	priest.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: rank.SpellID},
+		SpellSchool:    rank.SpellSchool,
+		DefenseType:    rank.DefenseType,
+		ProcMask:       core.ProcMaskSpellDamage,
+		Flags:          core.SpellFlagAPL,
+		ClassSpellMask: PriestSpellHolyNova,
+		Rank:           rank.Rank,
+		MaxRange:       rank.MaxRange,
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: rank.Cost,
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: rank.GCD,
+			},
+		},
+
+		DamageMultiplier: 1,
+		BonusCoefficient: rank.Direct.BonusCoefficient(),
+		ThreatMultiplier: 0,
+
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealAoeDamage(sim, rank.Direct.Damage(sim), spell.OutcomeMagicHitAndCrit)
+			healSpell.Cast(sim, &priest.Unit)
+		},
+	})
 }
 
 // applyBlessedRecovery implements Blessed Recovery, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It heals after a critical strike is taken, and nothing in a DPS sim
+// takes one.
 func (priest *Priest) applyBlessedRecovery() {
 	if priest.Talents.BlessedRecovery == 0 {
 		return
 	}
 }
 
-// applyInspiration implements Inspiration, new in Forever.
+// applyInspiration implements Inspiration.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It fires on a healing critical strike, and no healing spell is modelled
+// on this engine yet (see healer/healer.go).
 func (priest *Priest) applyInspiration() {
 	if priest.Talents.Inspiration == 0 {
 		return
@@ -172,8 +180,7 @@ func (priest *Priest) applyInspiration() {
 
 // applyHolyReach implements Holy Reach, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It is range and radius only (27789), which a single-target sim never reads.
 func (priest *Priest) applyHolyReach() {
 	if priest.Talents.HolyReach == 0 {
 		return
@@ -182,37 +189,67 @@ func (priest *Priest) applyHolyReach() {
 
 // applyImprovedHealing implements Improved Healing, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It discounts Heal and Greater Heal, neither of which is modelled.
 func (priest *Priest) applyImprovedHealing() {
 	if priest.Talents.ImprovedHealing == 0 {
 		return
 	}
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
+// Searing Light now buffs every Holy spell and gives Holy Fire ticks a chance to refund the next
+// Holy Nova. The beta client reads 2/5% Holy damage and a 5/10% chance, and the free Holy Nova
+// (Holy Purpose, 1284536) lasts 10 sec.
 func (priest *Priest) applySearingLight() {
 	if priest.Talents.SearingLight == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if priest.Talents.SearingLight == 0 {
-	// 	return
-	// }
-	// // +5% damage per rank
-	// priest.AddStaticMod(core.SpellModConfig{
-	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	FloatValue: spellData.SearingLight.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 0).FractionAt(priest.Talents.SearingLight),
-	// 	ClassMask:  PriestSpellSmite | PriestSpellHolyFire,
-	// })
+	priest.AddStaticMod(core.SpellModConfig{
+		ClassMask:  PriestSpellsAll,
+		School:     core.SpellSchoolHoly,
+		FloatValue: spellData.SearingLight.EffectAt(0).FractionAt(priest.Talents.SearingLight),
+		Kind:       core.SpellMod_DamageDone_Pct,
+	})
+
+	freeNova := spellData.SearingLightTriggered.HighestRank()
+	costMod := priest.AddDynamicMod(core.SpellModConfig{
+		ClassMask:  PriestSpellHolyNova,
+		FloatValue: freeNova.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).Value / 100,
+		Kind:       core.SpellMod_PowerCost_Pct_Add,
+	})
+
+	priest.SearingLightAura = priest.RegisterAura(core.Aura{
+		Label:    "Searing Light",
+		ActionID: core.ActionID{SpellID: freeNova.SpellID},
+		Duration: freeNova.Duration,
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			costMod.Activate()
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			costMod.Deactivate()
+		},
+		OnCastComplete: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell) {
+			if spell.Matches(PriestSpellHolyNova) {
+				aura.Deactivate(sim)
+			}
+		},
+	})
+
+	priest.MakeProcTriggerAura(core.ProcTrigger{
+		Name:               "Searing Light Trigger",
+		Callback:           core.CallbackOnPeriodicDamageDealt,
+		ClassSpellMask:     PriestSpellHolyFire,
+		ProcChance:         spellData.SearingLight.EffectAt(1).FractionAt(priest.Talents.SearingLight),
+		TriggerImmediately: true,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			priest.SearingLightAura.Activate(sim)
+		},
+	})
 }
 
 // applyBindingHeal implements Binding Heal, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It is a healing spell.
 func (priest *Priest) applyBindingHeal() {
 	if !priest.Talents.BindingHeal {
 		return
@@ -221,49 +258,38 @@ func (priest *Priest) applyBindingHeal() {
 
 // applyLitanyOfLight implements Litany of Light, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It is a proc off healing (1317006) with no damage half.
 func (priest *Priest) applyLitanyOfLight() {
 	if priest.Talents.LitanyOfLight == 0 {
 		return
 	}
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
 // Spirit of Redemption's passive half: +5% total Spirit. The on-death form is not modelled.
 func (priest *Priest) applySpiritOfRedemption() {
 	if !priest.Talents.SpiritOfRedemption {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if !priest.Talents.SpiritOfRedemption {
-	// 	return
-	// }
-	// priest.MultiplyStat(stats.Spirit, 1.05)
+	priest.MultiplyStat(stats.Spirit, 1.05)
 }
 
-// TODO: To be implemented. The TBC body needs review against Forever's tooltip/values before it's
-// brought back.
+// The beta client's curves: damage 1/3/5/6/8% of Spirit, healing 5% per point.
 func (priest *Priest) applySpiritualGuidance() {
 	if priest.Talents.SpiritualGuidance == 0 {
 		return
 	}
 
-	// The TBC implementation, kept for the port:
-	// if priest.Talents.SpiritualGuidance == 0 {
-	// 	return
-	// }
-	// // 5% of Spirit added to spell damage per rank
-	// coeff := spellData.SpiritualGuidance.Effect(shared.A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT, 126).FractionAt(priest.Talents.SpiritualGuidance)
-	// priest.AddStatDependency(stats.Spirit, stats.SpellDamage, coeff) // Only scaling damage for now since no healing sim....yet!
+	points := priest.Talents.SpiritualGuidance
+	priest.AddStatDependency(stats.Spirit, stats.SpellDamage,
+		spellData.SpiritualGuidance.Effect(shared.A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT, 126).FractionAt(points))
+	priest.AddStatDependency(stats.Spirit, stats.HealingPower,
+		spellData.SpiritualGuidance.Effect(shared.A_MOD_SPELL_HEALING_OF_STAT_PERCENT, 4).FractionAt(points))
 }
 
-// applySpiritualHealing implements Spiritual Healing, new in Forever.
+// applySpiritualHealing implements Spiritual Healing.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. No healing spell is modelled on this engine yet.
 func (priest *Priest) applySpiritualHealing() {
 	if priest.Talents.SpiritualHealing == 0 {
 		return
@@ -272,8 +298,7 @@ func (priest *Priest) applySpiritualHealing() {
 
 // applyPrayerOfMending implements Prayer of Mending, new in Forever.
 //
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
+// TODO: To be implemented. It is a healing spell.
 func (priest *Priest) applyPrayerOfMending() {
 	if !priest.Talents.PrayerOfMending {
 		return

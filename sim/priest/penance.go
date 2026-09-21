@@ -1,24 +1,29 @@
 package priest
 
 import (
-	"fmt"
+	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-var ShadowWordPainRankMap = spellData.ShadowWordPain
+// Penance is the Discipline talent the Smite build goes deep for: three Holy bolts over the channel,
+// on a 12 second cooldown. Only the level 60 rank is registered, the one the rotation casts.
+//
+// The client's rank 3 bolt (180) is larger than rank 4's (131); the table is taken as it is. The
+// bolts land at 0/1/2 sec in game, the sim spreads them evenly over the channel.
+const PenanceTicks = 3
 
-func (priest *Priest) registerShadowWordPainSpell(rank shared.SpellData) {
-	tick := rank.Periodic.(shared.SpellDataPeriodic)
+func (priest *Priest) registerPenanceSpell() {
+	rank := spellData.Penance.HighestRank()
+	bolt := spellData.PenanceTriggered.BySpellID(1316993)
 
 	priest.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rank.SpellID},
-		SpellSchool:    rank.SpellSchool,
-		DefenseType:    rank.DefenseType,
+		SpellSchool:    core.SpellSchoolHoly,
+		DefenseType:    core.DefenseTypeMagic,
 		ProcMask:       core.ProcMaskSpellDamage,
-		Flags:          core.SpellFlagAPL,
-		ClassSpellMask: PriestSpellShadowWordPain,
+		Flags:          core.SpellFlagAPL | core.SpellFlagChanneled,
+		ClassSpellMask: PriestSpellPenance,
 		Rank:           rank.Rank,
 		MaxRange:       rank.MaxRange,
 
@@ -29,6 +34,10 @@ func (priest *Priest) registerShadowWordPainSpell(rank shared.SpellData) {
 			DefaultCast: core.Cast{
 				GCD: rank.GCD,
 			},
+			CD: core.Cooldown{
+				Timer:    priest.NewTimer(),
+				Duration: rank.Cooldown,
+			},
 		},
 
 		DamageMultiplier: 1,
@@ -36,18 +45,18 @@ func (priest *Priest) registerShadowWordPainSpell(rank shared.SpellData) {
 
 		Dot: core.DotConfig{
 			Aura: core.Aura{
-				Label: fmt.Sprintf("ShadowWordPain-%d", rank.Rank),
+				Label: "Penance",
 			},
-			NumberOfTicks:       tick.NumberOfTicks,
-			TickLength:          tick.TickLength,
+			NumberOfTicks:       PenanceTicks,
+			TickLength:          time.Second * 2 / PenanceTicks,
 			AffectedByCastSpeed: false,
-			BonusCoefficient:    tick.Coef,
+			BonusCoefficient:    bolt.Direct.BonusCoefficient(),
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.Snapshot(target, tick.Tick)
+				dot.Snapshot(target, bolt.Direct.Damage(sim))
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, priestTickOutcome(rank, dot))
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
 			},
 		},
 
@@ -63,7 +72,7 @@ func (priest *Priest) registerShadowWordPainSpell(rank shared.SpellData) {
 			if useSnapshot {
 				return spell.Dot(target).CalcSnapshotDamage(sim, target, spell.OutcomeExpectedMagicHit)
 			}
-			return spell.CalcPeriodicDamage(sim, target, tick.Tick, spell.OutcomeExpectedMagicHit)
+			return spell.CalcPeriodicDamage(sim, target, bolt.Direct.Damage(sim), spell.OutcomeExpectedMagicHit)
 		},
 	})
 }
