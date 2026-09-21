@@ -782,8 +782,9 @@ var castTriggerMatcher = regexp.MustCompile(`(?i)you cast|on spell ?cast|spellca
 var namedAbilityMatcher = regexp.MustCompile(`[Yy]our [A-Z][A-Za-z']*( [A-Z][A-Za-z']*)* (spell|spells|ability|abilities)`)
 
 // What core.DecodeProcTypeMask cannot read off the mask: the trigger wording around it. The named
-// ability and outcome condition hints stay unset, because BuildSpellProcInfo refuses a tooltip
-// carrying either before it decodes anything.
+// ability and outcome condition bits are read here as well, for the store's rows, and say nothing
+// new to the item generator: DecodeProcTypeMask tests neither, and BuildSpellProcInfo refuses a
+// tooltip carrying either before it decodes anything.
 func procTooltipHints(tooltip string) core.ProcHint {
 	var hints core.ProcHint
 
@@ -803,6 +804,14 @@ func procTooltipHints(tooltip string) core.ProcHint {
 
 	if pureHealMatcher.MatchString(tooltip) {
 		hints |= core.ProcHintPureHeal
+	}
+
+	if namedAbilityMatcher.MatchString(tooltip) {
+		hints |= core.ProcHintNamedAbility
+	}
+
+	if outcomeConditionMatcher.MatchString(tooltip) {
+		hints |= core.ProcHintOutcomeTaken
 	}
 
 	return hints

@@ -34,7 +34,7 @@ var mirroredTypes = []struct {
 	{
 		storeType:     "Spell",
 		mirror:        storeSpell{},
-		notYetEmitted: []string{"RPPM", "ProcChanceSource", "ProcChanceEffect", "ProcHint"},
+		notYetEmitted: []string{"RPPM"},
 	},
 	{
 		storeType:     "Effect",

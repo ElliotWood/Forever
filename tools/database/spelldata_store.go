@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"sort"
+
+	"github.com/wowsims/forever/sim/core"
 )
 
 // The store's rows as the generator builds them: the fields sim/core/spelldata.Spell, .Effect and
@@ -53,6 +55,12 @@ type storeSpell struct {
 
 	Labels []int16
 	RefIDs []int32
+
+	// Read off Spell.Description_lang by spelldata_hints.go rather than out of a column: the
+	// tooltip's wording is what says whether ProcChance is a roll at all, and which effect holds it.
+	ProcChanceSource storeProcChanceSource
+	ProcChanceEffect int8
+	ProcHint         core.ProcHint
 
 	Effects []storeEffect
 	Powers  []storePower
