@@ -2220,6 +2220,10 @@ var generatedSpells = []Spell{
 			{ID: 684218, SpellID: 5277, Index: 0, Type: E_APPLY_AURA, Aura: A_MOD_DODGE_PERCENT, BasePoints: 50, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		},
 		Powers: []Power{{Type: 3}}},
+	{ID: 5301, Name: "Defensive State (DND)", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x2a8}, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 683145, SpellID: 5301, Index: 0, Type: E_APPLY_AURA, Aura: A_PROC_TRIGGER_SPELL, PvpMult: 1, TriggerID: 5302, ChainAmp: 1, Target: [2]uint8{1, 0}},
+		}},
 	{ID: 5302, Name: "Defensive State", School: 1, Attr: [17]uint32{0: 0x20000190, 1: 0x400, 15: 0x2000}, SpellLevel: 60, DurationMs: 5000, ProcChance: 100, ProcCharges: 1, ProcFlags: [2]uint32{0: 0x10}, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 683172, SpellID: 5302, Index: 0, Type: E_APPLY_AURA, Aura: A_DUMMY, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -4736,7 +4740,7 @@ var generatedSpells = []Spell{
 		Powers: []Power{{Type: 0, Cost: 195}}},
 	{ID: 8913, Name: "Sacred Cleansing", School: 2, Attr: [17]uint32{15: 0x2000}, SpellLevel: 60, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
-			{ID: 686181, SpellID: 8913, Index: 0, Type: E_DISPEL, BasePoints: 1e+06, PvpMult: 1, RadiusMax: 30, Misc: 8, ChainAmp: 1, Target: [2]uint8{22, 7}},
+			{ID: 686181, SpellID: 8913, Index: 0, Type: E_DISPEL, BasePoints: 1000000, PvpMult: 1, RadiusMax: 30, Misc: 8, ChainAmp: 1, Target: [2]uint8{22, 7}},
 			{ID: 686182, SpellID: 8913, Index: 1, Type: E_DUMMY, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{18, 0}},
 			{ID: 686183, SpellID: 8913, Index: 2, Type: E_THREAT, BasePoints: 1, PvpMult: 1, RadiusMax: 30, ChainAmp: 1, Target: [2]uint8{22, 7}},
 		}},
@@ -8040,11 +8044,11 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 690854, SpellID: 12862, Index: 0, Type: E_APPLY_AURA, Aura: A_ADD_FLAT_MODIFIER, BasePoints: -500, PvpMult: 1, Misc: 10, ClassFlags: core.ClassFlags{Family: 4, Mask: [4]uint32{0: 2097152}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1230916, SpellID: 12862, Index: 1, Type: E_APPLY_AURA, Aura: A_ADD_FLAT_MODIFIER, BasePoints: -500, PvpMult: 1, Misc: 21, ClassFlags: core.ClassFlags{Family: 4, Mask: [4]uint32{0: 2097152}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1339521, SpellID: 12862, Index: 2, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.310196e+06, PvpMult: 1, Misc: 1240193, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1339522, SpellID: 12862, Index: 3, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.310197e+06, PvpMult: 1, Misc: 1464, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1339523, SpellID: 12862, Index: 4, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.310198e+06, PvpMult: 1, Misc: 8820, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1339524, SpellID: 12862, Index: 5, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.310199e+06, PvpMult: 1, Misc: 11604, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1339525, SpellID: 12862, Index: 6, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.3102e+06, PvpMult: 1, Misc: 11605, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1339521, SpellID: 12862, Index: 2, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1310196, PvpMult: 1, Misc: 1240193, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1339522, SpellID: 12862, Index: 3, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1310197, PvpMult: 1, Misc: 1464, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1339523, SpellID: 12862, Index: 4, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1310198, PvpMult: 1, Misc: 8820, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1339524, SpellID: 12862, Index: 5, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1310199, PvpMult: 1, Misc: 11604, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1339525, SpellID: 12862, Index: 6, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1310200, PvpMult: 1, Misc: 11605, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 12876, Name: "Improved Demoralizing Shout", Rank: "Rank 2", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, ClassFlags: core.ClassFlags{Family: 4}, Labels: []int16{25},
 		Effects: []Effect{
@@ -8272,6 +8276,10 @@ var generatedSpells = []Spell{
 			{ID: 690890, SpellID: 13327, Index: 1, Type: E_TRIGGER_SPELL, SPCoef: 1, PvpMult: 1, TriggerID: 22646, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		},
 		Powers: []Power{{Type: 1}}},
+	{ID: 13358, Name: "Defensive State (DND)", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 691317, SpellID: 13358, Index: 0, Type: E_APPLY_AURA, Aura: A_PROC_TRIGGER_SPELL, PvpMult: 1, TriggerID: 5302, ChainAmp: 1, Target: [2]uint8{1, 0}},
+		}},
 	{ID: 13364, Name: "Lesser Agility", School: 1, Attr: [17]uint32{0: 0xc0, 15: 0x2000}, SpellLevel: 60, DurationMs: -1,
 		Effects: []Effect{
 			{ID: 690115, SpellID: 13364, Index: 0, Type: E_APPLY_AURA, Aura: A_MOD_STAT, BasePoints: 3, PvpMult: 1, Misc: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -11609,6 +11617,10 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 693747, SpellID: 16089, Index: 0, Type: E_APPLY_AURA, Aura: A_ADD_PCT_MODIFIER, BasePoints: 100, SPCoef: 1, PvpMult: 1, Misc: 15, ClassFlags: core.ClassFlags{Family: 11, Mask: [4]uint32{0: 3509584899, 1: 4096, 3: 1073741824}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
+	{ID: 16092, Name: "Defensive State (DND)", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 692937, SpellID: 16092, Index: 0, Type: E_APPLY_AURA, Aura: A_PROC_TRIGGER_SPELL, PvpMult: 1, TriggerID: 5302, ChainAmp: 1, Target: [2]uint8{1, 0}},
+		}},
 	{ID: 16120, Name: "Call of Thunder", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, ClassFlags: core.ClassFlags{Family: 11}, Labels: []int16{24}, ProcHint: core.ProcHintCrit,
 		Effects: []Effect{
 			{ID: 693374, SpellID: 16120, Index: 0, Type: E_APPLY_AURA, Aura: A_ADD_FLAT_MODIFIER, BasePoints: 3, SPCoef: 1, PvpMult: 1, Misc: 7, ClassFlags: core.ClassFlags{Family: 11, Mask: [4]uint32{0: 3}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -11741,8 +11753,8 @@ var generatedSpells = []Spell{
 	{ID: 16262, Name: "Improved Ghost Wolf", School: 1, Attr: [17]uint32{0: 0x1d0, 8: 0x1000, 15: 0x2000}, SpellLevel: 60, ClassFlags: core.ClassFlags{Family: 11}, Labels: []int16{24}, ProcHint: core.ProcHintNamedAbility,
 		Effects: []Effect{
 			{ID: 693332, SpellID: 16262, Index: 0, Type: E_APPLY_AURA, Aura: A_ADD_FLAT_MODIFIER, BasePoints: -3000, SPCoef: 1, PvpMult: 1, Misc: 10, ClassFlags: core.ClassFlags{Family: 11, Mask: [4]uint32{0: 2048}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1235857, SpellID: 16262, Index: 1, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.23864e+06, SPCoef: 1, PvpMult: 1, Misc: 2645, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1295861, SpellID: 16262, Index: 2, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.282241e+06, SPCoef: 1, PvpMult: 1, Misc: 1271481, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1235857, SpellID: 16262, Index: 1, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1238640, SPCoef: 1, PvpMult: 1, Misc: 2645, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1295861, SpellID: 16262, Index: 2, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1282241, SPCoef: 1, PvpMult: 1, Misc: 1271481, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 16266, Name: "Elemental Weapons", Rank: "Rank 1", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, ClassFlags: core.ClassFlags{Family: 11}, Labels: []int16{24},
 		Effects: []Effect{
@@ -18178,6 +18190,14 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 702727, SpellID: 24932, Index: 0, Type: E_APPLY_AREA_AURA_PARTY, Aura: A_MOD_CRIT_PCT, BasePoints: 3, SPCoef: 1, PvpMult: 1, RadiusMax: 45, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
+	{ID: 24948, Name: "Defensive State 2", School: 1, Attr: [17]uint32{0: 0x190, 1: 0x400, 15: 0x2000}, SpellLevel: 60, DurationMs: 5000, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 702384, SpellID: 24948, Index: 0, Type: E_APPLY_AURA, Aura: A_DUMMY, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
+		}},
+	{ID: 24949, Name: "Defensive State 2 (DND)", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x28}, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 702385, SpellID: 24949, Index: 0, Type: E_APPLY_AURA, Aura: A_PROC_TRIGGER_SPELL, PvpMult: 1, TriggerID: 24948, ChainAmp: 1, Target: [2]uint8{1, 0}},
+		}},
 	{ID: 24968, Name: "Tranquil Spirit", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, ClassFlags: core.ClassFlags{Family: 7}, Labels: []int16{21},
 		Effects: []Effect{
 			{ID: 701830, SpellID: 24968, Index: 0, Type: E_APPLY_AURA, Aura: A_ADD_PCT_MODIFIER, BasePoints: -2, SPCoef: 1, PvpMult: 1, Misc: 14, ClassFlags: core.ClassFlags{Family: 7, Mask: [4]uint32{0: 160}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -20424,6 +20444,10 @@ var generatedSpells = []Spell{
 			{ID: 1049598, SpellID: 402927, Index: 1, Type: E_HEAL_PCT, BasePoints: 10, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1049640, SpellID: 402927, Index: 2, Type: E_DUMMY, BasePoints: 15, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		}},
+	{ID: 402974, Name: "Victorious State (DND)", School: 1, Attr: [17]uint32{0: 0x1c0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x2}, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 1049652, SpellID: 402974, Index: 0, Type: E_APPLY_AURA, Aura: A_PROC_TRIGGER_SPELL, PvpMult: 1, TriggerID: 402975, ChainAmp: 1, Target: [2]uint8{1, 0}},
+		}},
 	{ID: 402975, Name: "Victorious", School: 1, Attr: [17]uint32{0: 0x20000010, 1: 0x400, 15: 0x2000}, SpellLevel: 60, DurationMs: 20000, ClassFlags: core.ClassFlags{Family: 4, Mask: [4]uint32{1: 262144}},
 		Effects: []Effect{
 			{ID: 1049653, SpellID: 402975, Index: 0, Type: E_APPLY_AURA, Aura: A_DUMMY, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -20991,7 +21015,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1072979, SpellID: 408696, Index: 0, Type: E_APPLY_AURA, Aura: A_MOD_THREAT, BasePoints: 45, PvpMult: 1, Misc: 127, ChainAmp: 1, Target: [2]uint8{21, 0}},
 			{ID: 1075920, SpellID: 408696, Index: 1, Type: E_APPLY_AURA, Aura: A_PERIODIC_DUMMY, PvpMult: 1, PeriodMs: 15000, ChainAmp: 1, Target: [2]uint8{21, 0}},
-			{ID: 1205066, SpellID: 408696, Index: 2, Type: E_APPLY_AURA, Aura: A_SCHOOL_ABSORB, BasePoints: 1e+06, PvpMult: 1, Misc: 127, ChainAmp: 1, Target: [2]uint8{21, 0}},
+			{ID: 1205066, SpellID: 408696, Index: 2, Type: E_APPLY_AURA, Aura: A_SCHOOL_ABSORB, BasePoints: 1000000, PvpMult: 1, Misc: 127, ChainAmp: 1, Target: [2]uint8{21, 0}},
 		},
 		Powers: []Power{{Type: 0, CostPct: 8}}},
 	{ID: 408699, Name: "Waylay", School: 1, Attr: [17]uint32{0: 0x10, 3: 0x40020000, 15: 0x2000}, SpellLevel: 1, DurationMs: 8000, MaxRange: 100, ProcChance: 101, ClassFlags: core.ClassFlags{Family: 8}, ProcChanceSource: ProcChanceAlways,
@@ -22764,7 +22788,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 426444, Name: "Grimoire of Synergy", School: 1, Attr: [17]uint32{0: 0x40, 8: 0x1000, 9: 0x400000, 10: 0x8000, 15: 0x2000}, SpellLevel: 1, ClassFlags: core.ClassFlags{Family: 5},
 		Effects: []Effect{
-			{ID: 1104924, SpellID: 426444, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.226981e+06, PvpMult: 1, Misc: 415449, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1104924, SpellID: 426444, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1226981, PvpMult: 1, Misc: 415449, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 426449, Name: "Shadow and Flame", School: 1, Attr: [17]uint32{0: 0x40, 8: 0x1000, 9: 0x400000, 10: 0x8000, 15: 0x2000}, SpellLevel: 1, ClassFlags: core.ClassFlags{Family: 5},
 		Effects: []Effect{
@@ -26057,7 +26081,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219010, Name: "S03 - Item - Naxxramas - Paladin - Holy 2P Bonus", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 15: 0x2000}, SpellLevel: 1, ClassFlags: core.ClassFlags{Family: 10},
 		Effects: []Effect{
-			{ID: 1204382, SpellID: 1219010, Index: 0, Type: E_APPLY_AURA, Aura: A_ADD_FLAT_MODIFIER, BasePoints: -2.1e+06, PvpMult: 1, Misc: 11, ClassFlags: core.ClassFlags{Family: 10, Mask: [4]uint32{0: 32768}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1204382, SpellID: 1219010, Index: 0, Type: E_APPLY_AURA, Aura: A_ADD_FLAT_MODIFIER, BasePoints: -2100000, PvpMult: 1, Misc: 11, ClassFlags: core.ClassFlags{Family: 10, Mask: [4]uint32{0: 32768}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1204383, SpellID: 1219010, Index: 1, Type: E_APPLY_AURA, Aura: A_DUMMY, BasePoints: 30, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219059, Name: "S03 - Item - Naxxramas - Paladin - Holy 4P Bonus", School: 1, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 60, ProcChance: 10, ProcFlags: [2]uint32{0: 0x4000}, ClassFlags: core.ClassFlags{Family: 10},
@@ -26301,7 +26325,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219956, Name: "Soul of the Tactician", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205877, SpellID: 1219956, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219957e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205877, SpellID: 1219956, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219957, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219957, Name: "Soul of the Tactician", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26313,7 +26337,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219959, Name: "Soul of the War Veteran", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205880, SpellID: 1219959, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219958e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205880, SpellID: 1219959, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219958, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219960, Name: "Soul of the Battle Forecaster", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26321,7 +26345,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219961, Name: "Soul of the Battle Forecaster", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205882, SpellID: 1219961, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.21996e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205882, SpellID: 1219961, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219960, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219962, Name: "Soul of the Bloodseeker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26329,7 +26353,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219963, Name: "Soul of the Bloodseeker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205884, SpellID: 1219963, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219962e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205884, SpellID: 1219963, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219962, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219964, Name: "Soul of the Titan", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26337,7 +26361,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219965, Name: "Soul of the Titan", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205886, SpellID: 1219965, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219964e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205886, SpellID: 1219965, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219964, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219966, Name: "Soul of the Destroyer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26345,23 +26369,23 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219967, Name: "Soul of the Destroyer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205888, SpellID: 1219967, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219966e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205888, SpellID: 1219967, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219966, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219968, Name: "Soul of the Deathbound", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205889, SpellID: 1219968, Index: 0, Type: E_DUMMY, BasePoints: 1.214159e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205889, SpellID: 1219968, Index: 0, Type: E_DUMMY, BasePoints: 1214159, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1219969, Name: "Soul of the Deathbound", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205890, SpellID: 1219969, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219968e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205890, SpellID: 1219969, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219968, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219970, Name: "Soul of the Sanguinist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205891, SpellID: 1219970, Index: 0, Type: E_DUMMY, BasePoints: 1.214163e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205891, SpellID: 1219970, Index: 0, Type: E_DUMMY, BasePoints: 1214163, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1219971, Name: "Soul of the Sanguinist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205892, SpellID: 1219971, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.21997e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205892, SpellID: 1219971, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219970, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219972, Name: "Soul of the Pristine Blocker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26369,7 +26393,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219973, Name: "Soul of the Pristine Blocker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205894, SpellID: 1219973, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219972e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205894, SpellID: 1219973, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219972, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219974, Name: "Soul of the Savage", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26377,7 +26401,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219975, Name: "Soul of the Savage", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205896, SpellID: 1219975, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219974e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205896, SpellID: 1219975, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219974, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219976, Name: "Soul of Enmity", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26385,7 +26409,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219977, Name: "Soul of Enmity", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205898, SpellID: 1219977, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219976e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205898, SpellID: 1219977, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219976, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219978, Name: "Soul of the Deflective", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26393,7 +26417,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219979, Name: "Soul of the Deflective", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205900, SpellID: 1219979, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219978e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205900, SpellID: 1219979, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219978, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219980, Name: "Soul of the Revenger", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26401,7 +26425,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219981, Name: "Soul of the Revenger", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205902, SpellID: 1219981, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.21998e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205902, SpellID: 1219981, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219980, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219982, Name: "Soul of the Incessant", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26409,23 +26433,23 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219983, Name: "Soul of the Incessant", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205904, SpellID: 1219983, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219982e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205904, SpellID: 1219983, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219982, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219984, Name: "Soul of the Thunderbringer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205905, SpellID: 1219984, Index: 0, Type: E_DUMMY, BasePoints: 1.21416e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205905, SpellID: 1219984, Index: 0, Type: E_DUMMY, BasePoints: 1214160, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1219985, Name: "Soul of the Thunderbringer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205906, SpellID: 1219985, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219984e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205906, SpellID: 1219985, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219984, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219986, Name: "Soul of the Sentinel", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205907, SpellID: 1219986, Index: 0, Type: E_DUMMY, BasePoints: 1.214162e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205907, SpellID: 1219986, Index: 0, Type: E_DUMMY, BasePoints: 1214162, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1219987, Name: "Soul of the Sentinel", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205908, SpellID: 1219987, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219986e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205908, SpellID: 1219987, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219986, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219988, Name: "Soul of the Southpaw", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26433,7 +26457,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219989, Name: "Soul of the Southpaw", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205910, SpellID: 1219989, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219988e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205910, SpellID: 1219989, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219988, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219990, Name: "Soul of the Gladiator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26441,15 +26465,15 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219991, Name: "Soul of the Gladiator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205912, SpellID: 1219991, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.21999e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205912, SpellID: 1219991, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219990, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219992, Name: "Soul of the Aftershock", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205913, SpellID: 1219992, Index: 0, Type: E_DUMMY, BasePoints: 1.214165e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205913, SpellID: 1219992, Index: 0, Type: E_DUMMY, BasePoints: 1214165, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1219993, Name: "Soul of the Aftershock", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205914, SpellID: 1219993, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219992e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205914, SpellID: 1219993, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219992, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219994, Name: "Soul of the Avoidant", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26457,7 +26481,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219995, Name: "Soul of the Avoidant", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205916, SpellID: 1219995, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219994e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205916, SpellID: 1219995, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219994, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219996, Name: "Soul of the Toxicologist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26465,7 +26489,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219997, Name: "Soul of the Toxicologist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205918, SpellID: 1219997, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219996e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205918, SpellID: 1219997, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219996, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1219998, Name: "Soul of the Executioner", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26473,7 +26497,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1219999, Name: "Soul of the Executioner", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205920, SpellID: 1219999, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.219998e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205920, SpellID: 1219999, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1219998, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220000, Name: "Soul of the Opportunist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26481,7 +26505,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220001, Name: "Soul of the Opportunist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205922, SpellID: 1220001, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205922, SpellID: 1220001, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220000, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220002, Name: "Soul of the Butcher", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26489,7 +26513,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220003, Name: "Soul of the Butcher", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205924, SpellID: 1220003, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220002e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205924, SpellID: 1220003, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220002, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220004, Name: "Soul of the Phantom", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26497,23 +26521,23 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220005, Name: "Soul of the Phantom", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205926, SpellID: 1220005, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220004e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205926, SpellID: 1220005, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220004, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220006, Name: "Soul of the Scoundrel", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205927, SpellID: 1220006, Index: 0, Type: E_DUMMY, BasePoints: 1.213713e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205927, SpellID: 1220006, Index: 0, Type: E_DUMMY, BasePoints: 1213713, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220007, Name: "Soul of the Scoundrel", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205928, SpellID: 1220007, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220006e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205928, SpellID: 1220007, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220006, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220008, Name: "Soul of the Thrill Seeker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205929, SpellID: 1220008, Index: 0, Type: E_DUMMY, BasePoints: 1.213714e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205929, SpellID: 1220008, Index: 0, Type: E_DUMMY, BasePoints: 1213714, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220009, Name: "Soul of the Thrill Seeker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205930, SpellID: 1220009, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220008e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205930, SpellID: 1220009, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220008, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220010, Name: "Soul of the Shiv Savant", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26521,7 +26545,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220011, Name: "Soul of the Shiv Savant", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205932, SpellID: 1220011, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22001e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205932, SpellID: 1220011, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220010, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220012, Name: "Soul of the Stalker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26529,15 +26553,15 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220013, Name: "Soul of the Stalker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205934, SpellID: 1220013, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220012e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205934, SpellID: 1220013, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220012, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220014, Name: "Soul of the Efficient", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205935, SpellID: 1220014, Index: 0, Type: E_DUMMY, BasePoints: 1.213763e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205935, SpellID: 1220014, Index: 0, Type: E_DUMMY, BasePoints: 1213763, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220015, Name: "Soul of the Efficient", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205936, SpellID: 1220015, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220014e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205936, SpellID: 1220015, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220014, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220016, Name: "Soul of the Knife Juggler", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26545,7 +26569,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220017, Name: "Soul of the Knife Juggler", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205938, SpellID: 1220017, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220016e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205938, SpellID: 1220017, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220016, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220018, Name: "Soul of the Shadow Master", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26553,7 +26577,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220019, Name: "Soul of the Shadow Master", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205940, SpellID: 1220019, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220018e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205940, SpellID: 1220019, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220018, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220020, Name: "Soul of the Equilibrist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26561,7 +26585,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220021, Name: "Soul of the Equilibrist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205942, SpellID: 1220021, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22002e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205942, SpellID: 1220021, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220020, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220022, Name: "Soul of the Poised Brawler", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26573,11 +26597,11 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220024, Name: "Soul of the Poised Brawler", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205945, SpellID: 1220024, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220022e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205945, SpellID: 1220024, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220022, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220025, Name: "Soul of the Black Belt", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205946, SpellID: 1220025, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220023e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205946, SpellID: 1220025, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220023, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220026, Name: "Soul of the Fencer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26585,7 +26609,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220027, Name: "Soul of the Fencer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205948, SpellID: 1220027, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220026e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205948, SpellID: 1220027, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220026, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220028, Name: "Soul of the Swashbuckler", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26593,7 +26617,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220029, Name: "Soul of the Swashbuckler", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205950, SpellID: 1220029, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220028e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205950, SpellID: 1220029, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220028, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220030, Name: "Soul of the Bloodthirsty", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26601,7 +26625,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220031, Name: "Soul of the Bloodthirsty", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205952, SpellID: 1220031, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22003e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205952, SpellID: 1220031, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220030, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220032, Name: "Soul of the Transfusionist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26609,7 +26633,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220033, Name: "Soul of the Transfusionist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205954, SpellID: 1220033, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220032e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205954, SpellID: 1220033, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220032, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220034, Name: "Soul of the Refined", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26621,11 +26645,11 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220036, Name: "Soul of the Refined", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205957, SpellID: 1220036, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220034e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205957, SpellID: 1220036, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220034, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220037, Name: "Soul of the Decimator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205958, SpellID: 1220037, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220035e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205958, SpellID: 1220037, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220035, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220038, Name: "Soul of the Rotbringer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26633,7 +26657,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220039, Name: "Soul of the Rotbringer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205960, SpellID: 1220039, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220038e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205960, SpellID: 1220039, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220038, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220040, Name: "Soul of the Malevolent", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26641,7 +26665,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220041, Name: "Soul of the Malevolent", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205962, SpellID: 1220041, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22004e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205962, SpellID: 1220041, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220040, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220042, Name: "Soul of the Shadowmancer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26649,7 +26673,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220043, Name: "Soul of the Shadowmancer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205964, SpellID: 1220043, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220042e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205964, SpellID: 1220043, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220042, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220044, Name: "Soul of the Chaos Harbinger", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26657,7 +26681,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220045, Name: "Soul of the Chaos Harbinger", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205966, SpellID: 1220045, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220044e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205966, SpellID: 1220045, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220044, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220046, Name: "Soul of the Arsonist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26665,7 +26689,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220047, Name: "Soul of the Arsonist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205968, SpellID: 1220047, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220046e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205968, SpellID: 1220047, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220046, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220048, Name: "Soul of the Infernal Shepherd", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26673,7 +26697,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220049, Name: "Soul of the Infernal Shepherd", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205970, SpellID: 1220049, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220048e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205970, SpellID: 1220049, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220048, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220050, Name: "Soul of the Demonlord", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26681,7 +26705,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220051, Name: "Soul of the Demonlord", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205972, SpellID: 1220051, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22005e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205972, SpellID: 1220051, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220050, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220052, Name: "Soul of the Demonic Exorcist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26689,7 +26713,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220053, Name: "Soul of the Demonic Exorcist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205974, SpellID: 1220053, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220052e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205974, SpellID: 1220053, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220052, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220054, Name: "Soul of the Pained", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26697,7 +26721,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220055, Name: "Soul of the Pained", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205976, SpellID: 1220055, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220054e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205976, SpellID: 1220055, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220054, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220056, Name: "Soul of the Flamewraith", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26705,7 +26729,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220057, Name: "Soul of the Flamewraith", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205978, SpellID: 1220057, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220056e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205978, SpellID: 1220057, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220056, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220058, Name: "Soul of the Fleshfeaster", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26713,7 +26737,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220059, Name: "Soul of the Fleshfeaster", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205980, SpellID: 1220059, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220058e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205980, SpellID: 1220059, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220058, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220060, Name: "Soul of the Abyssal", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26721,7 +26745,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220061, Name: "Soul of the Abyssal", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205982, SpellID: 1220061, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22006e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205982, SpellID: 1220061, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220060, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220062, Name: "Soul of the Voidborne", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
@@ -26729,1215 +26753,1215 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1220063, Name: "Soul of the Voidborne", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205984, SpellID: 1220063, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220062e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205984, SpellID: 1220063, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220062, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220064, Name: "Soul of the Umbral Blade", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205985, SpellID: 1220064, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205985, SpellID: 1220064, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220065, Name: "Soul of the Umbral Blade", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205986, SpellID: 1220065, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220064e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205986, SpellID: 1220065, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220064, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220066, Name: "Soul of the Ritualist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205987, SpellID: 1220066, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205987, SpellID: 1220066, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220067, Name: "Soul of the Ritualist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205988, SpellID: 1220067, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220066e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205988, SpellID: 1220067, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220066, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220068, Name: "Soul of the Pain Spreader", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205989, SpellID: 1220068, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205989, SpellID: 1220068, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220069, Name: "Soul of the Pain Spreader", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205990, SpellID: 1220069, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220068e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205990, SpellID: 1220069, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220068, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220070, Name: "Soul of the Misleader", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205991, SpellID: 1220070, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205991, SpellID: 1220070, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220071, Name: "Soul of the Misleader", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205992, SpellID: 1220071, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22007e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205992, SpellID: 1220071, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220070, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220072, Name: "Soul of the Preyseeker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205993, SpellID: 1220072, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205993, SpellID: 1220072, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220073, Name: "Soul of the Preyseeker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205994, SpellID: 1220073, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220072e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205994, SpellID: 1220073, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220072, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220074, Name: "Soul of the Sharpshooter", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205995, SpellID: 1220074, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205995, SpellID: 1220074, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220075, Name: "Soul of the Sharpshooter", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205996, SpellID: 1220075, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220074e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205996, SpellID: 1220075, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220074, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220076, Name: "Soul of the Hazard Harrier", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205997, SpellID: 1220076, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205997, SpellID: 1220076, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220077, Name: "Soul of the Hazard Harrier", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205998, SpellID: 1220077, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220076e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1205998, SpellID: 1220077, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220076, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220078, Name: "Soul of the Alternator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1205999, SpellID: 1220078, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1205999, SpellID: 1220078, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220079, Name: "Soul of the Alternator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206000, SpellID: 1220079, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220078e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206000, SpellID: 1220079, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220078, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220080, Name: "Soul of the Toxinologist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206001, SpellID: 1220080, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206001, SpellID: 1220080, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220081, Name: "Soul of the Toxinologist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206002, SpellID: 1220081, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22008e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206002, SpellID: 1220081, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220080, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220082, Name: "Soul of the Bounty Hunter", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206003, SpellID: 1220082, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206003, SpellID: 1220082, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220083, Name: "Soul of the Bounty Hunter", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206004, SpellID: 1220083, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220082e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206004, SpellID: 1220083, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220082, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220084, Name: "Soul of the Trick Shooter", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206005, SpellID: 1220084, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206005, SpellID: 1220084, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220085, Name: "Soul of the Trick Shooter", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206006, SpellID: 1220085, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220084e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206006, SpellID: 1220085, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220084, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220086, Name: "Soul of the Beast Tender", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206007, SpellID: 1220086, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206007, SpellID: 1220086, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220087, Name: "Soul of the Beast Tender", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206008, SpellID: 1220087, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220086e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206008, SpellID: 1220087, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220086, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220088, Name: "Soul of the Hound Master", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206009, SpellID: 1220088, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206009, SpellID: 1220088, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220089, Name: "Soul of the Hound Master", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206010, SpellID: 1220089, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220088e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206010, SpellID: 1220089, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220088, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220090, Name: "Soul of the Alpha Tamer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206011, SpellID: 1220090, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206011, SpellID: 1220090, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220091, Name: "Soul of the Alpha Tamer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206012, SpellID: 1220091, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22009e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206012, SpellID: 1220091, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220090, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220092, Name: "Soul of the Huntsman", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206013, SpellID: 1220092, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206013, SpellID: 1220092, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220093, Name: "Soul of the Huntsman", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206014, SpellID: 1220093, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220092e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206014, SpellID: 1220093, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220092, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220094, Name: "Soul of the Retaliator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206015, SpellID: 1220094, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206015, SpellID: 1220094, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220095, Name: "Soul of the Retaliator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206016, SpellID: 1220095, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220094e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206016, SpellID: 1220095, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220094, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220096, Name: "Soul of the Echoes", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206017, SpellID: 1220096, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206017, SpellID: 1220096, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220097, Name: "Soul of the Echoes", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206018, SpellID: 1220097, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220096e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206018, SpellID: 1220097, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220096, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220098, Name: "Soul of the Lethal Lasher", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206019, SpellID: 1220098, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206019, SpellID: 1220098, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220099, Name: "Soul of the Lethal Lasher", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206020, SpellID: 1220099, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220098e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206020, SpellID: 1220099, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220098, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220100, Name: "Soul of the Kineticist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206021, SpellID: 1220100, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206021, SpellID: 1220100, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220101, Name: "Soul of the Kineticist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206022, SpellID: 1220101, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.2201e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206022, SpellID: 1220101, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220100, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220102, Name: "Soul of the Strategist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206023, SpellID: 1220102, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206023, SpellID: 1220102, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220103, Name: "Soul of the Strategist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206024, SpellID: 1220103, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220102e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206024, SpellID: 1220103, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220102, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220104, Name: "Soul of the Deadly Striker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206025, SpellID: 1220104, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206025, SpellID: 1220104, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220105, Name: "Soul of the Deadly Striker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206026, SpellID: 1220105, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220104e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206026, SpellID: 1220105, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220104, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220106, Name: "Soul of the Hastened Healer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206027, SpellID: 1220106, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206027, SpellID: 1220106, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220107, Name: "Soul of the Hastened Healer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206028, SpellID: 1220107, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220106e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206028, SpellID: 1220107, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220106, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220108, Name: "Soul of the Refined", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206029, SpellID: 1220108, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206029, SpellID: 1220108, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220109, Name: "Soul of the Refined", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206030, SpellID: 1220109, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220108e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206030, SpellID: 1220109, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220108, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220110, Name: "Soul of the Celebrant", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206031, SpellID: 1220110, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206031, SpellID: 1220110, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220111, Name: "Soul of the Celebrant", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206032, SpellID: 1220111, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22011e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206032, SpellID: 1220111, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220110, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220112, Name: "Soul of the Faithful", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206033, SpellID: 1220112, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206033, SpellID: 1220112, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220113, Name: "Soul of the Faithful", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206034, SpellID: 1220113, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220112e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206034, SpellID: 1220113, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220112, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220114, Name: "Soul of the Serendipitous", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206035, SpellID: 1220114, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206035, SpellID: 1220114, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220115, Name: "Soul of the Serendipitous", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206036, SpellID: 1220115, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220114e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206036, SpellID: 1220115, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220114, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220116, Name: "Soul of the Resonant", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206037, SpellID: 1220116, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206037, SpellID: 1220116, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220117, Name: "Soul of the Resonant", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206038, SpellID: 1220117, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220116e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206038, SpellID: 1220117, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220116, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220118, Name: "Soul of the Devotee", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206039, SpellID: 1220118, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206039, SpellID: 1220118, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220119, Name: "Soul of the Devotee", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206040, SpellID: 1220119, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220118e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206040, SpellID: 1220119, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220118, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220120, Name: "Soul of the Archbishop", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206041, SpellID: 1220120, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206041, SpellID: 1220120, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220121, Name: "Soul of the Archbishop", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206042, SpellID: 1220121, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22012e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206042, SpellID: 1220121, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220120, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220122, Name: "Soul of the Penitent", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206043, SpellID: 1220122, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206043, SpellID: 1220122, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220123, Name: "Soul of the Penitent", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206044, SpellID: 1220123, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220122e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206044, SpellID: 1220123, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220122, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220124, Name: "Soul of the Soul Warder", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206045, SpellID: 1220124, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206045, SpellID: 1220124, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220125, Name: "Soul of the Soul Warder", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206046, SpellID: 1220125, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220124e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206046, SpellID: 1220125, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220124, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220126, Name: "Soul of the Twilight Walker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206047, SpellID: 1220126, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206047, SpellID: 1220126, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220127, Name: "Soul of the Twilight Walker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206048, SpellID: 1220127, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220126e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206048, SpellID: 1220127, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220126, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220128, Name: "Soul of the Mind Breaker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206049, SpellID: 1220128, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206049, SpellID: 1220128, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220129, Name: "Soul of the Mind Breaker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206050, SpellID: 1220129, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220128e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206050, SpellID: 1220129, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220128, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220130, Name: "Soul of the Deathdealer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206051, SpellID: 1220130, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206051, SpellID: 1220130, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220131, Name: "Soul of the Deathdealer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206052, SpellID: 1220131, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22013e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206052, SpellID: 1220131, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220130, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220132, Name: "Soul of the Spirit Font", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206053, SpellID: 1220132, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206053, SpellID: 1220132, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220133, Name: "Soul of the Spirit Font", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206054, SpellID: 1220133, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220132e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206054, SpellID: 1220133, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220132, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220134, Name: "Soul of the Zealot", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206055, SpellID: 1220134, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206055, SpellID: 1220134, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220135, Name: "Soul of the Zealot", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206056, SpellID: 1220135, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220134e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206056, SpellID: 1220135, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220134, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220136, Name: "Soul of the Unwavering Defiler", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206057, SpellID: 1220136, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206057, SpellID: 1220136, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220137, Name: "Soul of the Unwavering Defiler", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206058, SpellID: 1220137, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220136e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206058, SpellID: 1220137, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220136, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220138, Name: "Soul of the Contemnor", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206059, SpellID: 1220138, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206059, SpellID: 1220138, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220139, Name: "Soul of the Contemnor", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206060, SpellID: 1220139, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220138e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206060, SpellID: 1220139, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220138, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220140, Name: "Soul of the Plaguebringer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206061, SpellID: 1220140, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206061, SpellID: 1220140, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220141, Name: "Soul of the Plaguebringer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206062, SpellID: 1220141, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22014e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206062, SpellID: 1220141, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220140, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220142, Name: "Soul of the Reverberant", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206063, SpellID: 1220142, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206063, SpellID: 1220142, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220143, Name: "Soul of the Reverberant", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206064, SpellID: 1220143, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220142e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206064, SpellID: 1220143, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220142, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220144, Name: "Soul of the Chronohealer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206065, SpellID: 1220144, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206065, SpellID: 1220144, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220145, Name: "Soul of the Chronohealer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206066, SpellID: 1220145, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220144e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206066, SpellID: 1220145, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220144, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220146, Name: "Soul of Temporal Longing", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206067, SpellID: 1220146, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206067, SpellID: 1220146, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220147, Name: "Soul of Temporal Longing", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206068, SpellID: 1220147, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220146e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206068, SpellID: 1220147, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220146, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220148, Name: "Soul of the Precognitive", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206069, SpellID: 1220148, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206069, SpellID: 1220148, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220149, Name: "Soul of the Precognitive", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206070, SpellID: 1220149, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220148e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206070, SpellID: 1220149, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220148, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220150, Name: "Soul of the Arcanist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206071, SpellID: 1220150, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206071, SpellID: 1220150, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220151, Name: "Soul of the Arcanist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206072, SpellID: 1220151, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22015e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206072, SpellID: 1220151, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220150, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220152, Name: "Soul of the Eternal Caretaker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206073, SpellID: 1220152, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206073, SpellID: 1220152, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220153, Name: "Soul of the Eternal Caretaker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206074, SpellID: 1220153, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220152e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206074, SpellID: 1220153, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220152, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220154, Name: "Soul of the Spellbider", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206075, SpellID: 1220154, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206075, SpellID: 1220154, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220155, Name: "Soul of the Spellbider", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206076, SpellID: 1220155, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220154e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206076, SpellID: 1220155, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220154, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220156, Name: "Soul of the Wardshaper", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206077, SpellID: 1220156, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206077, SpellID: 1220156, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220157, Name: "Soul of the Wardshaper", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206078, SpellID: 1220157, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220156e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206078, SpellID: 1220157, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220156, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220158, Name: "Soul of Winter's Grasp", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206079, SpellID: 1220158, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206079, SpellID: 1220158, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220159, Name: "Soul of Winter's Grasp", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206080, SpellID: 1220159, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220158e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206080, SpellID: 1220159, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220158, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220160, Name: "Soul of the Cryomancer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206081, SpellID: 1220160, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206081, SpellID: 1220160, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220161, Name: "Soul of the Cryomancer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206082, SpellID: 1220161, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22016e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206082, SpellID: 1220161, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220160, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220162, Name: "Soul of the Evoker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206083, SpellID: 1220162, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206083, SpellID: 1220162, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220163, Name: "Soul of the Evoker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206084, SpellID: 1220163, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220162e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206084, SpellID: 1220163, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220162, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220164, Name: "Soul of the Elementalist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206085, SpellID: 1220164, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206085, SpellID: 1220164, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220165, Name: "Soul of the Elementalist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206086, SpellID: 1220165, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220164e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206086, SpellID: 1220165, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220164, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220166, Name: "Soul of the Magical Armorer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206087, SpellID: 1220166, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206087, SpellID: 1220166, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220167, Name: "Soul of the Magical Armorer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206088, SpellID: 1220167, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220166e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206088, SpellID: 1220167, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220166, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220168, Name: "Soul of the Kindler", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206089, SpellID: 1220168, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206089, SpellID: 1220168, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220169, Name: "Soul of the Kindler", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206090, SpellID: 1220169, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220168e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206090, SpellID: 1220169, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220168, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220170, Name: "Soul of Fiery Convergence", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206091, SpellID: 1220170, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206091, SpellID: 1220170, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220171, Name: "Soul of Fiery Convergence", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206092, SpellID: 1220171, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22017e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206092, SpellID: 1220171, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220170, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220172, Name: "Soul of the Perpetual Blaze", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206093, SpellID: 1220172, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206093, SpellID: 1220172, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220173, Name: "Soul of the Perpetual Blaze", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206094, SpellID: 1220173, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220172e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206094, SpellID: 1220173, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220172, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220174, Name: "Soul of the Pyromaniac", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206095, SpellID: 1220174, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206095, SpellID: 1220174, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220175, Name: "Soul of the Pyromaniac", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206096, SpellID: 1220175, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220174e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206096, SpellID: 1220175, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220174, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220176, Name: "Soul of the Igniter", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206097, SpellID: 1220176, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206097, SpellID: 1220176, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220177, Name: "Soul of the Igniter", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206098, SpellID: 1220177, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220176e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206098, SpellID: 1220177, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220176, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220178, Name: "Soul of the Torcher", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206099, SpellID: 1220178, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206099, SpellID: 1220178, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220179, Name: "Soul of the Torcher", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206100, SpellID: 1220179, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220178e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206100, SpellID: 1220179, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220178, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220180, Name: "Soul of the Pristine Blocker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206101, SpellID: 1220180, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206101, SpellID: 1220180, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220181, Name: "Soul of the Pristine Blocker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206102, SpellID: 1220181, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22018e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206102, SpellID: 1220181, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220180, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220182, Name: "Soul of the Lightwarden", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206103, SpellID: 1220182, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206103, SpellID: 1220182, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220183, Name: "Soul of the Lightwarden", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206104, SpellID: 1220183, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220182e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206104, SpellID: 1220183, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220182, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220184, Name: "Soul of the Radiant Defender", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206105, SpellID: 1220184, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206105, SpellID: 1220184, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220185, Name: "Soul of the Radiant Defender", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206106, SpellID: 1220185, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220184e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206106, SpellID: 1220185, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220184, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220186, Name: "Soul of the Shieldbearer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206107, SpellID: 1220186, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206107, SpellID: 1220186, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220187, Name: "Soul of the Shieldbearer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206108, SpellID: 1220187, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220186e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206108, SpellID: 1220187, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220186, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220188, Name: "Soul of the Bastion", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206109, SpellID: 1220188, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206109, SpellID: 1220188, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220189, Name: "Soul of the Bastion", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206110, SpellID: 1220189, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220188e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206110, SpellID: 1220189, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220188, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220190, Name: "Soul of the Reckoner", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206111, SpellID: 1220190, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206111, SpellID: 1220190, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220191, Name: "Soul of the Reckoner", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206112, SpellID: 1220191, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22019e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206112, SpellID: 1220191, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220190, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220192, Name: "Soul of the Ironclad", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206113, SpellID: 1220192, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206113, SpellID: 1220192, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220193, Name: "Soul of the Ironclad", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206114, SpellID: 1220193, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220192e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206114, SpellID: 1220193, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220192, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220194, Name: "Soul of the Guardian", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206115, SpellID: 1220194, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206115, SpellID: 1220194, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220195, Name: "Soul of the Guardian", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206116, SpellID: 1220195, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220194e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206116, SpellID: 1220195, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220194, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220196, Name: "Soul of the Peacekeeper", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206117, SpellID: 1220196, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206117, SpellID: 1220196, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220197, Name: "Soul of the Peacekeeper", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206118, SpellID: 1220197, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220196e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206118, SpellID: 1220197, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220196, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220198, Name: "Soul of the Refined", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206119, SpellID: 1220198, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206119, SpellID: 1220198, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220199, Name: "Soul of the Refined", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206120, SpellID: 1220199, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220198e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206120, SpellID: 1220199, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220198, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220200, Name: "Soul of the Exemplar", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206121, SpellID: 1220200, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206121, SpellID: 1220200, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220201, Name: "Soul of the Exemplar", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206122, SpellID: 1220201, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.2202e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206122, SpellID: 1220201, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220200, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220202, Name: "Soul of the Inquisitor", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206123, SpellID: 1220202, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206123, SpellID: 1220202, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220203, Name: "Soul of the Inquisitor", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206124, SpellID: 1220203, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220202e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206124, SpellID: 1220203, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220202, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220204, Name: "Soul of the Sovereign", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206125, SpellID: 1220204, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206125, SpellID: 1220204, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220205, Name: "Soul of the Sovereign", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206126, SpellID: 1220205, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220204e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206126, SpellID: 1220205, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220204, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220206, Name: "Soul of the Dominus", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206127, SpellID: 1220206, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206127, SpellID: 1220206, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220207, Name: "Soul of the Dominus", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206128, SpellID: 1220207, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220206e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206128, SpellID: 1220207, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220206, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220208, Name: "Soul of the Vindicator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206129, SpellID: 1220208, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206129, SpellID: 1220208, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220209, Name: "Soul of the Vindicator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206130, SpellID: 1220209, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220208e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206130, SpellID: 1220209, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220208, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220210, Name: "Soul of the Altruist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206131, SpellID: 1220210, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206131, SpellID: 1220210, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220211, Name: "Soul of the Altruist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206132, SpellID: 1220211, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22021e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206132, SpellID: 1220211, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220210, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220212, Name: "Soul of the Arbiter", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206133, SpellID: 1220212, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206133, SpellID: 1220212, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220213, Name: "Soul of the Arbiter", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206134, SpellID: 1220213, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220212e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206134, SpellID: 1220213, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220212, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220214, Name: "Soul of the Sealbearer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206135, SpellID: 1220214, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206135, SpellID: 1220214, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220215, Name: "Soul of the Sealbearer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206136, SpellID: 1220215, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220214e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206136, SpellID: 1220215, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220214, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220216, Name: "Soul of the Justicar", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206137, SpellID: 1220216, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206137, SpellID: 1220216, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220217, Name: "Soul of the Justicar", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206138, SpellID: 1220217, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220216e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206138, SpellID: 1220217, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220216, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220218, Name: "Soul of the Judicator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206139, SpellID: 1220218, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206139, SpellID: 1220218, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220219, Name: "Soul of the Judicator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206140, SpellID: 1220219, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220218e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206140, SpellID: 1220219, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220218, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220220, Name: "Soul of the Ascendant", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206141, SpellID: 1220220, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206141, SpellID: 1220220, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220221, Name: "Soul of the Ascendant", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206142, SpellID: 1220221, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22022e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206142, SpellID: 1220221, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220220, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220222, Name: "Soul of the Retributor", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206143, SpellID: 1220222, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206143, SpellID: 1220222, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220223, Name: "Soul of the Retributor", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206144, SpellID: 1220223, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220222e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206144, SpellID: 1220223, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220222, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220224, Name: "Soul of the Excommunicator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206145, SpellID: 1220224, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206145, SpellID: 1220224, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220225, Name: "Soul of the Excommunicator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206146, SpellID: 1220225, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220224e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206146, SpellID: 1220225, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220224, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220226, Name: "Soul of the Lightbringer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206147, SpellID: 1220226, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206147, SpellID: 1220226, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220227, Name: "Soul of the Lightbringer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206148, SpellID: 1220227, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220226e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206148, SpellID: 1220227, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220226, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220228, Name: "Soul of the Exile", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206149, SpellID: 1220228, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206149, SpellID: 1220228, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220229, Name: "Soul of the Exile", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206150, SpellID: 1220229, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220228e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206150, SpellID: 1220229, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220228, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220230, Name: "Soul of the Templar", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206151, SpellID: 1220230, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206151, SpellID: 1220230, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220231, Name: "Soul of the Templar", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206152, SpellID: 1220231, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22023e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206152, SpellID: 1220231, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220230, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220232, Name: "Soul of the Windwalker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206153, SpellID: 1220232, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206153, SpellID: 1220232, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220233, Name: "Soul of the Windwalker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206154, SpellID: 1220233, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220232e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206154, SpellID: 1220233, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220232, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220234, Name: "Soul of the Shield Master", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206155, SpellID: 1220234, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206155, SpellID: 1220234, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220235, Name: "Soul of the Shield Master", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206156, SpellID: 1220235, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220234e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206156, SpellID: 1220235, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220234, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220236, Name: "Soul of the Totemic Protector", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206157, SpellID: 1220236, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206157, SpellID: 1220236, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220237, Name: "Soul of the Totemic Protector", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206158, SpellID: 1220237, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220236e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206158, SpellID: 1220237, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220236, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220238, Name: "Soul of the Shock-Absorber", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206159, SpellID: 1220238, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206159, SpellID: 1220238, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220239, Name: "Soul of the Shock-Absorber", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206160, SpellID: 1220239, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220238e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206160, SpellID: 1220239, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220238, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220240, Name: "Soul of the Spiritual Bulwark", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206161, SpellID: 1220240, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206161, SpellID: 1220240, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220241, Name: "Soul of the Spiritual Bulwark", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206162, SpellID: 1220241, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22024e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206162, SpellID: 1220241, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220240, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220242, Name: "Soul of the Maelstrombringer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206163, SpellID: 1220242, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206163, SpellID: 1220242, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220243, Name: "Soul of the Maelstrombringer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206164, SpellID: 1220243, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220242e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206164, SpellID: 1220243, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220242, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220244, Name: "Soul of the Lavawalker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206165, SpellID: 1220244, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206165, SpellID: 1220244, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220245, Name: "Soul of the Lavawalker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206166, SpellID: 1220245, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220244e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206166, SpellID: 1220245, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220244, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220246, Name: "Soul of the True Alpha", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206167, SpellID: 1220246, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206167, SpellID: 1220246, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220247, Name: "Soul of the True Alpha", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206168, SpellID: 1220247, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220246e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206168, SpellID: 1220247, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220246, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220248, Name: "Soul of the Totemkeeper", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206169, SpellID: 1220248, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206169, SpellID: 1220248, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220249, Name: "Soul of the Totemkeeper", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206170, SpellID: 1220249, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220248e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206170, SpellID: 1220249, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220248, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220250, Name: "Soul of the Ancestors", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206171, SpellID: 1220250, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206171, SpellID: 1220250, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220251, Name: "Soul of the Ancestors", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206172, SpellID: 1220251, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22025e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206172, SpellID: 1220251, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220250, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220252, Name: "Soul of the Spiritweaver", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206173, SpellID: 1220252, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206173, SpellID: 1220252, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220253, Name: "Soul of the Spiritweaver", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206174, SpellID: 1220253, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220252e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206174, SpellID: 1220253, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220252, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220254, Name: "Soul of the Waterwalker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206175, SpellID: 1220254, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206175, SpellID: 1220254, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220255, Name: "Soul of the Waterwalker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206176, SpellID: 1220255, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220254e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206176, SpellID: 1220255, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220254, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220256, Name: "Soul of the Stormtender", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206177, SpellID: 1220256, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206177, SpellID: 1220256, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220257, Name: "Soul of the Stormtender", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206178, SpellID: 1220257, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220256e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206178, SpellID: 1220257, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220256, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220258, Name: "Soul of the Elemental Seer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206179, SpellID: 1220258, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206179, SpellID: 1220258, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220259, Name: "Soul of the Elemental Seer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206180, SpellID: 1220259, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220258e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206180, SpellID: 1220259, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220258, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220260, Name: "Soul of the Vitalist", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206181, SpellID: 1220260, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206181, SpellID: 1220260, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220261, Name: "Soul of the Vitalist", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206182, SpellID: 1220261, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22026e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206182, SpellID: 1220261, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220260, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220262, Name: "Soul of the Spirithealer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206183, SpellID: 1220262, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206183, SpellID: 1220262, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220263, Name: "Soul of the Spirithealer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206184, SpellID: 1220263, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220262e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206184, SpellID: 1220263, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220262, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220264, Name: "Soul of the Refined", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206185, SpellID: 1220264, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206185, SpellID: 1220264, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220265, Name: "Soul of the Refined", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206186, SpellID: 1220265, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220264e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206186, SpellID: 1220265, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220264, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220266, Name: "Soul of the Chieftain", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206187, SpellID: 1220266, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206187, SpellID: 1220266, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220267, Name: "Soul of the Chieftain", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206188, SpellID: 1220267, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220266e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206188, SpellID: 1220267, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220266, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220268, Name: "Soul of the Furycharged", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206189, SpellID: 1220268, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206189, SpellID: 1220268, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220269, Name: "Soul of the Furycharged", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206190, SpellID: 1220269, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220268e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206190, SpellID: 1220269, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220268, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220270, Name: "Soul of the Stormbreaker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206191, SpellID: 1220270, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206191, SpellID: 1220270, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220271, Name: "Soul of the Stormbreaker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206192, SpellID: 1220271, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22027e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206192, SpellID: 1220271, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220270, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220272, Name: "Soul of the Tempest", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206193, SpellID: 1220272, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206193, SpellID: 1220272, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220273, Name: "Soul of the Tempest", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206194, SpellID: 1220273, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220272e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206194, SpellID: 1220273, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220272, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220274, Name: "Soul of the Seismic Smasher", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206195, SpellID: 1220274, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206195, SpellID: 1220274, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220275, Name: "Soul of the Seismic Smasher", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206196, SpellID: 1220275, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220274e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206196, SpellID: 1220275, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220274, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220276, Name: "Soul of the Flamebringer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206197, SpellID: 1220276, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206197, SpellID: 1220276, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220277, Name: "Soul of the Flamebringer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206198, SpellID: 1220277, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220276e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206198, SpellID: 1220277, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220276, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220278, Name: "Soul of the Volcano", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206199, SpellID: 1220278, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206199, SpellID: 1220278, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220279, Name: "Soul of the Raging Flame", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206200, SpellID: 1220279, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206200, SpellID: 1220279, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220280, Name: "Soul of the Volcano", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206201, SpellID: 1220280, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220278e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206201, SpellID: 1220280, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220278, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220281, Name: "Soul of the Raging Flame", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206202, SpellID: 1220281, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220279e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206202, SpellID: 1220281, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220279, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220282, Name: "Soul of the Elemental Master", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206203, SpellID: 1220282, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206203, SpellID: 1220282, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220283, Name: "Soul of the Elemental Master", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206204, SpellID: 1220283, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220282e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206204, SpellID: 1220283, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220282, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220284, Name: "Soul of the Tribesman", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206205, SpellID: 1220284, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206205, SpellID: 1220284, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220285, Name: "Soul of the Tribesman", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206206, SpellID: 1220285, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220284e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206206, SpellID: 1220285, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220284, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220286, Name: "Soul of the Spirit Guide", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206207, SpellID: 1220286, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206207, SpellID: 1220286, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220287, Name: "Soul of the Spirit Guide", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206208, SpellID: 1220287, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220286e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206208, SpellID: 1220287, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220286, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220288, Name: "Soul of the Elder", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206209, SpellID: 1220288, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206209, SpellID: 1220288, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220289, Name: "Soul of the Elder", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206210, SpellID: 1220289, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220288e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206210, SpellID: 1220289, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220288, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220291, Name: "Soul of the Elements", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206212, SpellID: 1220291, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206212, SpellID: 1220291, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220292, Name: "Soul of the Elements", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206213, SpellID: 1220292, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220291e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206213, SpellID: 1220292, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220291, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220293, Name: "Soul of the Lava Sage", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206214, SpellID: 1220293, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206214, SpellID: 1220293, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220294, Name: "Soul of the Lava Sage", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206215, SpellID: 1220294, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220293e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206215, SpellID: 1220294, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220293, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220295, Name: "Soul of the Ancestral Warden", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206216, SpellID: 1220295, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206216, SpellID: 1220295, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220296, Name: "Soul of the Ancestral Warden", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206217, SpellID: 1220296, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220295e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206217, SpellID: 1220296, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220295, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220297, Name: "Soul of the Corrupt", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206218, SpellID: 1220297, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206218, SpellID: 1220297, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220298, Name: "Soul of the Corrupt", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206219, SpellID: 1220298, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220297e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206219, SpellID: 1220298, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220297, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220299, Name: "Soul of the Gentle Paw", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206220, SpellID: 1220299, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206220, SpellID: 1220299, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220300, Name: "Soul of the Gentle Paw", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206221, SpellID: 1220300, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220299e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206221, SpellID: 1220300, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220299, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220301, Name: "Soul of the Ferocious", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206222, SpellID: 1220301, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206222, SpellID: 1220301, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220302, Name: "Soul of the Ferocious", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206223, SpellID: 1220302, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220301e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206223, SpellID: 1220302, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220301, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220303, Name: "Soul of the Shifter", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206224, SpellID: 1220303, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206224, SpellID: 1220303, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220304, Name: "Soul of the Shifter", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206225, SpellID: 1220304, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220303e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206225, SpellID: 1220304, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220303, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220305, Name: "Soul of the Territorial", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206227, SpellID: 1220305, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206227, SpellID: 1220305, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220306, Name: "Soul of the Territorial", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206228, SpellID: 1220306, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220305e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206228, SpellID: 1220306, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220305, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220307, Name: "Soul of the Beast", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206229, SpellID: 1220307, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206229, SpellID: 1220307, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220308, Name: "Soul of the Beast", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206230, SpellID: 1220308, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220307e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206230, SpellID: 1220308, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220307, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220310, Name: "Soul of the Lacerator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206232, SpellID: 1220310, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206232, SpellID: 1220310, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220311, Name: "Soul of the Lacerator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206233, SpellID: 1220311, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22031e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206233, SpellID: 1220311, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220310, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220312, Name: "Soul of the Furious", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206234, SpellID: 1220312, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206234, SpellID: 1220312, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220313, Name: "Soul of the Furious", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206235, SpellID: 1220313, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220312e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206235, SpellID: 1220313, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220312, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220314, Name: "Soul of the Mangler", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206236, SpellID: 1220314, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206236, SpellID: 1220314, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220315, Name: "Soul of the Mangler", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206237, SpellID: 1220315, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220314e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206237, SpellID: 1220315, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220314, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220316, Name: "Soul of the Innervator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206238, SpellID: 1220316, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206238, SpellID: 1220316, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220317, Name: "Soul of the Innervator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206239, SpellID: 1220317, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220316e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206239, SpellID: 1220317, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220316, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220318, Name: "Soul of the Nurturer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206240, SpellID: 1220318, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206240, SpellID: 1220318, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220319, Name: "Soul of the Nurturer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206241, SpellID: 1220319, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220318e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206241, SpellID: 1220319, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220318, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220320, Name: "Soul of the Tranquil", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206242, SpellID: 1220320, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206242, SpellID: 1220320, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220321, Name: "Soul of the Tranquil", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206243, SpellID: 1220321, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22032e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206243, SpellID: 1220321, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220320, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220322, Name: "Soul of the Dreamwalker", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206244, SpellID: 1220322, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206244, SpellID: 1220322, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220323, Name: "Soul of the Dreamwalker", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206245, SpellID: 1220323, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220322e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206245, SpellID: 1220323, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220322, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220324, Name: "Soul of the Grove Tender", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206246, SpellID: 1220324, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206246, SpellID: 1220324, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220325, Name: "Soul of the Grove Tender", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206247, SpellID: 1220325, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220324e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206247, SpellID: 1220325, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220324, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220326, Name: "Soul of the Feathered Sage", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206248, SpellID: 1220326, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206248, SpellID: 1220326, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220327, Name: "Soul of the Feathered Sage", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206249, SpellID: 1220327, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220326e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206249, SpellID: 1220327, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220326, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220328, Name: "Soul of the Benevolent Seer", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206250, SpellID: 1220328, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206250, SpellID: 1220328, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220329, Name: "Soul of the Benevolent Seer", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206251, SpellID: 1220329, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220328e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206251, SpellID: 1220329, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220328, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220330, Name: "Soul of the Lifeweaver", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206252, SpellID: 1220330, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206252, SpellID: 1220330, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220331, Name: "Soul of the Lifeweaver", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206253, SpellID: 1220331, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22033e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206253, SpellID: 1220331, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220330, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220332, Name: "Soul of the Illuminator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206254, SpellID: 1220332, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206254, SpellID: 1220332, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220333, Name: "Soul of the Illuminator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206255, SpellID: 1220333, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220332e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206255, SpellID: 1220333, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220332, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220334, Name: "Soul of Predatory Instincts", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206256, SpellID: 1220334, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206256, SpellID: 1220334, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220335, Name: "Soul of Predatory Instincts", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206257, SpellID: 1220335, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220334e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206257, SpellID: 1220335, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220334, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220336, Name: "Soul of the Ripper", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206258, SpellID: 1220336, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206258, SpellID: 1220336, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220337, Name: "Soul of the Ripper", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206259, SpellID: 1220337, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220336e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206259, SpellID: 1220337, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220336, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220338, Name: "Soul of the Claw", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206260, SpellID: 1220338, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206260, SpellID: 1220338, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220339, Name: "Soul of the Claw", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206261, SpellID: 1220339, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220338e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206261, SpellID: 1220339, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220338, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220340, Name: "Soul of the Prideful", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206262, SpellID: 1220340, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206262, SpellID: 1220340, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220341, Name: "Soul of the Prideful", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206263, SpellID: 1220341, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22034e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206263, SpellID: 1220341, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220340, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220342, Name: "Soul of the Barbaric", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206264, SpellID: 1220342, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206264, SpellID: 1220342, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220343, Name: "Soul of the Barbaric", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206265, SpellID: 1220343, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220342e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206265, SpellID: 1220343, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220342, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220344, Name: "Soul of the Frenetic", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206266, SpellID: 1220344, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206266, SpellID: 1220344, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220345, Name: "Soul of the Frenetic", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206267, SpellID: 1220345, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220344e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206267, SpellID: 1220345, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220344, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220346, Name: "Soul of the Exsanguinator", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206268, SpellID: 1220346, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206268, SpellID: 1220346, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220347, Name: "Soul of the Exsanguinator", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206269, SpellID: 1220347, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220346e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206269, SpellID: 1220347, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220346, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220348, Name: "Soul of the Thornkeeper", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206270, SpellID: 1220348, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206270, SpellID: 1220348, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220349, Name: "Soul of the Thornkeeper", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206271, SpellID: 1220349, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220348e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206271, SpellID: 1220349, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220348, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220350, Name: "Soul of the Lunatic", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206272, SpellID: 1220350, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206272, SpellID: 1220350, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220351, Name: "Soul of the Lunatic", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206273, SpellID: 1220351, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22035e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206273, SpellID: 1220351, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220350, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220354, Name: "Soul of the Night", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206276, SpellID: 1220354, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220355e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206276, SpellID: 1220354, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220355, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220355, Name: "Soul of the Night", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206277, SpellID: 1220355, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206277, SpellID: 1220355, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220356, Name: "Soul of the Keepers", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206278, SpellID: 1220356, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206278, SpellID: 1220356, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220357, Name: "Soul of the Keepers", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206279, SpellID: 1220357, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220356e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206279, SpellID: 1220357, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220356, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220358, Name: "Soul of the Wrathful", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206280, SpellID: 1220358, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206280, SpellID: 1220358, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220359, Name: "Soul of the Wrathful", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206281, SpellID: 1220359, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220358e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206281, SpellID: 1220359, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220358, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220360, Name: "Soul of the Graceful", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206282, SpellID: 1220360, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206282, SpellID: 1220360, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220361, Name: "Soul of the Graceful", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206283, SpellID: 1220361, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.22036e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206283, SpellID: 1220361, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220360, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220362, Name: "Soul of the Astral Ascendant", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206284, SpellID: 1220362, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206284, SpellID: 1220362, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220363, Name: "Soul of the Astral Ascendant", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206285, SpellID: 1220363, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220362e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206285, SpellID: 1220363, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220362, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220364, Name: "Soul of the Cometcaller", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206286, SpellID: 1220364, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206286, SpellID: 1220364, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220365, Name: "Soul of the Cometcaller", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206287, SpellID: 1220365, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220364e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206287, SpellID: 1220365, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220364, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220366, Name: "Soul of the Forest", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206288, SpellID: 1220366, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206288, SpellID: 1220366, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220367, Name: "Soul of the Forest", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206289, SpellID: 1220367, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220366e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206289, SpellID: 1220367, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220366, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220368, Name: "Soul of Animalistic Expertise", School: 1, Attr: [17]uint32{0: 0x10040040, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206290, SpellID: 1220368, Index: 0, Type: E_DUMMY, BasePoints: 1.214091e+06, PvpMult: 1, ChainAmp: 1},
+			{ID: 1206290, SpellID: 1220368, Index: 0, Type: E_DUMMY, BasePoints: 1214091, PvpMult: 1, ChainAmp: 1},
 		}},
 	{ID: 1220369, Name: "Soul of Animalistic Expertise", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 8: 0x1000, 9: 0x400000, 15: 0x2000}, SpellLevel: 1,
 		Effects: []Effect{
-			{ID: 1206291, SpellID: 1220369, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.220368e+06, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1206291, SpellID: 1220369, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1220368, PvpMult: 1, Misc: 1219955, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1220596, Name: "Increased Critical 1%", School: 1, Attr: [17]uint32{0: 0xc0, 1: 0x400, 15: 0x2000}, SpellLevel: 60,
 		Effects: []Effect{
@@ -30020,6 +30044,16 @@ var generatedSpells = []Spell{
 			{ID: 1296314, SpellID: 1282503, Index: 0, Type: E_SCHOOL_DAMAGE, BasePoints: 49, Variance: 0.41999998688697815, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
 			{ID: 1313827, SpellID: 1282503, Index: 1, Type: E_DUMMY, BasePoints: 3, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		}},
+	{ID: 1282733, Name: "Overpower", School: 1, Attr: [17]uint32{0: 0x190, 2: 0x4, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, DurationMs: 5000, MaxRange: 50000, MaxStack: 3, ProcChance: 101, Labels: []int16{20}, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 1296673, SpellID: 1282733, Index: 0, Type: E_ENERGIZE, BasePoints: 1, PvpMult: 1, Misc: 4, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1349748, SpellID: 1282733, Index: 1, Type: E_APPLY_AURA, Aura: A_RETAIN_COMBO_POINTS, BasePoints: 5, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1351260, SpellID: 1282733, Index: 2, Type: E_DUMMY, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
+		}},
+	{ID: 1282735, Name: "Offensive State (DND)", School: 1, Attr: [17]uint32{0: 0x1c0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x14}, ProcChanceSource: ProcChanceAlways,
+		Effects: []Effect{
+			{ID: 1296675, SpellID: 1282735, Index: 0, Type: E_APPLY_AURA, Aura: A_PROC_TRIGGER_SPELL, PvpMult: 1, TriggerID: 1282733, ChainAmp: 1, Target: [2]uint8{1, 0}},
+		}},
 	{ID: 1284536, Name: "Holy Purpose", School: 2, Attr: [17]uint32{15: 0x2000}, SpellLevel: 60, DurationMs: 10000, DefenseType: 1, DispelType: 1, PreventionType: 1, ProcChance: 100, ProcCharges: 1, ProcFlags: [2]uint32{0: 0x14000}, ClassFlags: core.ClassFlags{Family: 6}, Labels: []int16{18}, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1299705, SpellID: 1284536, Index: 0, Type: E_APPLY_AURA, Aura: A_ADD_PCT_MODIFIER, BasePoints: -100, PvpMult: 1, Misc: 14, ClassFlags: core.ClassFlags{Family: 6, Mask: [4]uint32{0: 4194304}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -30041,7 +30075,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1287808, Name: "Blood of the Broodmother", School: 1, Attr: [17]uint32{0: 0x8040010, 3: 0x4000000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000, PreventionType: 1,
 		Effects: []Effect{
-			{ID: 1305572, SpellID: 1287808, Index: 0, Type: E_APPLY_AURA, Aura: A_SCHOOL_ABSORB, BasePoints: 1e+10, SPCoef: 1, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1305572, SpellID: 1287808, Index: 0, Type: E_APPLY_AURA, Aura: A_SCHOOL_ABSORB, BasePoints: 10000000000, SPCoef: 1, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1332645, SpellID: 1287808, Index: 1, Type: E_APPLY_AURA, Aura: A_DUMMY, BasePoints: 33, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1289654, Name: "Gift of Galloping", School: 1, Attr: [17]uint32{0: 0xa8000000, 3: 0x100000, 4: 0x4, 15: 0x2000}, SpellLevel: 60, DurationMs: 1296000000,
@@ -31523,9 +31557,9 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 1310317, Name: "Vanguard", School: 1, Attr: [17]uint32{0: 0x1d0, 9: 0x400000, 15: 0x2000}, SpellLevel: 60, ClassFlags: core.ClassFlags{Family: 4}, Labels: []int16{25}, ProcHint: core.ProcHintNamedAbility,
 		Effects: []Effect{
-			{ID: 1339746, SpellID: 1310317, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.240289e+06, PvpMult: 1, Misc: 11578, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1339747, SpellID: 1310317, Index: 1, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.240288e+06, PvpMult: 1, Misc: 6178, ChainAmp: 1, Target: [2]uint8{1, 0}},
-			{ID: 1339748, SpellID: 1310317, Index: 2, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1.240287e+06, PvpMult: 1, Misc: 100, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1339746, SpellID: 1310317, Index: 0, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1240289, PvpMult: 1, Misc: 11578, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1339747, SpellID: 1310317, Index: 1, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1240288, PvpMult: 1, Misc: 6178, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1339748, SpellID: 1310317, Index: 2, Type: E_APPLY_AURA, Aura: A_OVERRIDE_ACTIONBAR_SPELLS, BasePoints: 1240287, PvpMult: 1, Misc: 100, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
 	{ID: 1310318, Name: "Shield Specialization", School: 1, Attr: [17]uint32{0: 0x40010, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, Labels: []int16{25}, ProcHint: core.ProcHintOutcomeTaken,
 		Effects: []Effect{
@@ -31795,7 +31829,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1342092, SpellID: 1311649, Index: 0, Type: E_APPLY_AURA, Aura: A_DUMMY, BasePoints: 194, PPL: 15.300000190734863, SPCoef: 0.09000000357627869, PvpMult: 1, TriggerID: 1311647, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1342093, SpellID: 1311649, Index: 1, BasePoints: 50, PvpMult: 1, ChainAmp: 1},
-			{ID: 1342094, SpellID: 1311649, Index: 2, Type: E_APPLY_AURA, Aura: A_DUMMY, BasePoints: 1.31165e+06, PvpMult: 1, TriggerID: 1311647, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1342094, SpellID: 1311649, Index: 2, Type: E_APPLY_AURA, Aura: A_DUMMY, BasePoints: 1311650, PvpMult: 1, TriggerID: 1311647, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		},
 		Powers: []Power{{Type: 0, Cost: 40}}},
 	{ID: 1311650, Name: "Judgement of Fury", Rank: "Rank 1", School: 2, Attr: [17]uint32{0: 0x250000, 3: 0x200, 15: 0x2000}, SpellLevel: 10, BaseLevel: 10, MaxLevel: 16, MaxRange: 100, DefenseType: 2, PreventionType: 1, ClassFlags: core.ClassFlags{Family: 10, Mask: [4]uint32{2: 64}}, Labels: []int16{26},
@@ -31818,7 +31852,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1342106, SpellID: 1311656, Index: 0, Type: E_APPLY_AURA, Aura: A_DUMMY, BasePoints: 317, PPL: 20.700000762939453, SPCoef: 0.09000000357627869, PvpMult: 1, TriggerID: 1311654, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1342107, SpellID: 1311656, Index: 1, BasePoints: 50, PvpMult: 1, ChainAmp: 1},
-			{ID: 1342108, SpellID: 1311656, Index: 2, Type: E_APPLY_AURA, Aura: A_DUMMY, BasePoints: 1.311655e+06, PvpMult: 1, TriggerID: 1311654, ChainAmp: 1, Target: [2]uint8{1, 0}},
+			{ID: 1342108, SpellID: 1311656, Index: 2, Type: E_APPLY_AURA, Aura: A_DUMMY, BasePoints: 1311655, PvpMult: 1, TriggerID: 1311654, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		},
 		Powers: []Power{{Type: 0, Cost: 60}}},
 	{ID: 1311676, Name: "Curse of the Elements", Rank: "Rank 2", School: 32, Attr: [17]uint32{8: 0x1000, 13: 0x80, 15: 0x2000}, SpellLevel: 30, BaseLevel: 30, DurationMs: 300000, MaxRange: 30, GCDMs: 1500, StartRecoveryCategory: 133, DefenseType: 1, DispelType: 2, PreventionType: 5, ClassFlags: core.ClassFlags{Family: 5, Mask: [4]uint32{0: 4194304}}, Labels: []int16{19},
@@ -32387,7 +32421,7 @@ var generatedCurves = map[int32][][]float64{
 	16179:   {{-1, -2, -3, -4, -5}, {1, 2, 3, 4, 5}, {1, 2, 3, 4, 5}},
 	16181:   {{23, 47, 70}},
 	16182:   {{-100, -200, -300, -400, -500}},
-	16184:   {{-600000, -1.2e+06}, {2, 4}, {10, 20}},
+	16184:   {{-600000, -1200000}, {2, 4}, {10, 20}},
 	16187:   {{5, 10, 15, 20, 25}, {10, 20, 30, 40, 50}},
 	16194:   {{1, 2, 3, 4, 5}},
 	16252:   {{2, 4, 6, 8, 10}},
