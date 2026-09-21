@@ -21,9 +21,12 @@ import (
 // sometimes scaled - "${$h/2}% chance" - which still says the column is where it comes from.
 var tooltipOwnChance = regexp.MustCompile(`\$h`)
 
-// A chance stated as an effect's value: "$m2% chance", "$s1%". Only the first three effects can be
-// named this way, and the digit is the client's EffectIndex plus one.
-var tooltipEffectChance = regexp.MustCompile(`\$[ms]([123])%`)
+// A chance stated as an effect's value: "a $m2% chance to generate Rage". The word has to follow
+// the token, because the same token is how a tooltip states a magnitude: Flurry's "$m1% melee
+// attack speed" and Deep Wounds' "$m1% of your weapon's average damage" are the no-roll shape, and
+// reading either as a chance turns an aura that always fires into a percentage. The digit is the
+// client's EffectIndex plus one.
+var tooltipEffectChance = regexp.MustCompile(`\$[ms]([123])%\s+chance`)
 
 // Reads the proc shape off the tooltip and the aura columns and writes it onto the row.
 func applyTooltipHints(t *spellTables, s *storeSpell) {
@@ -42,10 +45,14 @@ func procChanceSource(description string, s *storeSpell) (storeProcChanceSource,
 	// A tooltip names several effects - Shield Specialization states "$s1% block" and "$m2% chance
 	// to generate rage" - so the one the chance is on is the one carrying the proc aura, not the
 	// first one the text mentions.
+	//
+	// The tooltip counts by the client's EffectIndex and the store by position, which differ on the
+	// 46 rows whose indices have gaps. The position is what is emitted, since EffectN is how the
+	// sim reads the effect back.
 	for _, m := range tooltipEffectChance.FindAllStringSubmatch(description, -1) {
-		index := int8(m[1][0] - '0')
-		if isProcEffect(s.effect(uint8(index - 1))) {
-			return procChanceEffectN, index
+		index := uint8(m[1][0]-'0') - 1
+		if position, ok := s.effectPosition(index); ok && isProcEffect(&s.Effects[position]) {
+			return procChanceEffectN, int8(position + 1)
 		}
 	}
 
@@ -65,7 +72,7 @@ func procChanceSource(description string, s *storeSpell) (storeProcChanceSource,
 }
 
 // An effect a tooltip can state a chance for: the two trigger auras, and the dummy the server hangs
-// a hand-written proc off - Enrage's chance sits on one.
+// a hand-written proc off - Furor's and Unbridled Wrath's chances both sit on one.
 func isProcEffect(e *storeEffect) bool {
 	if e == nil {
 		return false
@@ -88,15 +95,15 @@ func (s *storeSpell) triggersAProc() bool {
 	return false
 }
 
-// The effect the client files under an index, which has gaps: EffectIndex is the tooltip's
-// numbering, while the slice is packed.
-func (s *storeSpell) effect(index uint8) *storeEffect {
+// Where in the row the effect the client files under an index sits: EffectIndex is the tooltip's
+// numbering and has gaps, while the slice is packed.
+func (s *storeSpell) effectPosition(index uint8) (int, bool) {
 	for i := range s.Effects {
 		if s.Effects[i].Index == index {
-			return &s.Effects[i]
+			return i, true
 		}
 	}
-	return nil
+	return 0, false
 }
 
 // The store's ProcChanceSource, mirrored here the way the row structs are. The order is the store's

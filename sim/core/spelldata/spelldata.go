@@ -62,7 +62,9 @@ type Spell struct {
 	MaxStack int16
 
 	// SpellAuraOptions.ProcChance as the client states it, which is not always a roll: 100 and 101
-	// both read as "fires on its own condition". ProcChanceSource says which reading applies.
+	// both read as "fires on its own condition". It is the chance only where ProcChanceSource is
+	// ProcChanceColumn; under any other source the column means nothing and the source says where
+	// the rate is.
 	ProcChance uint8
 
 	// SpellAuraOptions.ProcCharges: how many times the aura acts before it drops. Zero is unlimited.
@@ -112,7 +114,8 @@ type Spell struct {
 	// roll at all.
 	ProcChanceSource ProcChanceSource
 
-	// The 1-based effect whose value is the roll, when ProcChanceSource is ProcChanceEffectN.
+	// The effect whose value is the roll, when ProcChanceSource is ProcChanceEffectN, as the
+	// position EffectN counts by.
 	ProcChanceEffect int8
 
 	// What the tooltip states about the trigger that the proc mask cannot, baked in at generation.

@@ -29,9 +29,8 @@ test_spelldata() {
     git diff --cached --name-only --diff-filter=ACM |
         grep -qE '^(tools/database/|sim/core/spelldata/|sim/common/shared/spell_data_enums_auto_gen\.go|sim/[a-z]+/spell_data_auto_gen\.go)' || return 0
 
-    if ! stale=`go run ./tools/database/gen_spelldata -check`
+    if ! go run ./tools/database/gen_spelldata -check
     then
-        echo >&2 "$stale"
         echo >&2 "The generated spell data above is not what the generator writes."
         echo >&2 "Run 'go run ./tools/database/gen_spelldata' and commit the result."
         exit 1
