@@ -16,6 +16,7 @@
 18826 High Warlord's Shield Wall
 19019 Thunderfury, Blessed Blade of the Windseeker
 19288 Darkmoon Card: Blue Dragon
+19289 Darkmoon Card: Maelstrom
 19345 Aegis of Preservation
 19952 Gri'lek's Charm of Valor
 20636 Hibernation Crystal

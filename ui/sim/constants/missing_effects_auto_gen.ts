@@ -534,12 +534,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		19289, // Darkmoon Card: Maelstrom
-		[
-			"Chance to strike your melee target with lightning for 250 Nature damage.", // 23687 - https://www.wowhead.com/forever/spell=23687
-		]
-	],
-	[
 		19290, // Darkmoon Card: Twisting Nether
 		[
 			"Gives the wearer a 10% chance of being able to resurrect with 20% health and mana.", // 23701 - https://www.wowhead.com/forever/spell=23701
