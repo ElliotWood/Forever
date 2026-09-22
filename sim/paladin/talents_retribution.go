@@ -35,7 +35,6 @@ func (paladin *Paladin) registerRetributionTalents() {
 	// Tier 5
 	paladin.applyTwoHandedWeaponSpecialization()
 	paladin.applyVengeance()
-	// Repentance registered in registerTalentSpells
 
 	// Tier 6
 	paladin.applyChampionOfTheLight()

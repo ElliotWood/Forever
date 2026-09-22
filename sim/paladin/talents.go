@@ -36,7 +36,4 @@ func (paladin *Paladin) registerTalentSpells() {
 	if paladin.Talents.SealOfCommand {
 		SealOfCommandRankMap.RegisterAll(paladin.registerSealOfCommand)
 	}
-	if paladin.Talents.Repentance {
-		paladin.registerRepentance()
-	}
 }

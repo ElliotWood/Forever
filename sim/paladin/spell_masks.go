@@ -26,7 +26,6 @@ const (
 	SpellMaskTemplarsBulwark
 	SpellMaskLightsVigil
 	SpellMaskLightsVigilStrike
-	SpellMaskRepentance
 
 	// Seals
 	SpellMaskSealOfRighteousness
@@ -111,6 +110,5 @@ const (
 		SpellMaskHolyShockHeal |
 		SpellMaskHolyShield |
 		SpellMaskSwiftJudgement |
-		SpellMaskTemplarsBulwark |
-		SpellMaskRepentance
+		SpellMaskTemplarsBulwark
 )
