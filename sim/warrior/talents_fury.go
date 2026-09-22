@@ -215,7 +215,7 @@ func (warrior *Warrior) registerBloodthirst() {
 	config.ClassSpellMask = SpellMaskBloodthirst
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		baseDamage := spell.MeleeAttackPower(target)*apShare + bloodthirstRank.DamageEffect().Average(core.CharacterLevel)
+		baseDamage := spell.MeleeAttackPower(target)*apShare + bloodthirstRank.DamageEffect().Roll(sim, core.CharacterLevel)
 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 		if !result.Landed() {
 			spell.IssueRefund(sim)

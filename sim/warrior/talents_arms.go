@@ -130,7 +130,10 @@ func (warrior *Warrior) registerDeepWounds() {
 	config.DamageMultiplier = 1
 	config.ThreatMultiplier = 1
 
-	// The tick is a share of weapon damage, not the row's amount or its coefficient.
+	// The tick is a share of weapon damage, not the row's amount or its coefficient, which is why the
+	// dot is written out rather than taken from spelldata.DotConfig: 412609's periodic effect is a
+	// dummy of one base point carrying a spell power coefficient of 1, and the resolver would tick
+	// that amount with spell power on top of it.
 	config.Dot = core.DotConfig{
 		Aura: core.Aura{
 			Label: "DeepWounds",

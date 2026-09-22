@@ -239,6 +239,10 @@ type WarriorAgent interface {
 // The recovery the ability waits out. A warrior ability states it on a shared category - Bloodthirst
 // and Mortal Strike both run off category 971 - and leaves its own column at zero, so the cooldown
 // is whichever of the two the client filled in.
+//
+// The category is a timer as well as a number, and spelldata.SpellConfig puts every spell naming one
+// on the unit's timer for it: Revenge and Overpower share category 65, Shield Bash and Pummel share
+// 88, and Mortal Strike, Bloodthirst and Shield Slam share 971.
 func cooldownOf(s *spelldata.Spell) time.Duration {
 	return max(s.Cooldown(), s.CategoryCooldown())
 }
