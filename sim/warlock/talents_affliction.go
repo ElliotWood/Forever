@@ -95,12 +95,9 @@ func (warlock *Warlock) applyMalediction() {
 		return
 	}
 
+	// Periodic damage only ("Increases all periodic damage done"). The row also states the same
+	// value on op 0, but a tick already takes DamageDone, so taking both would count it twice.
 	points := warlock.Talents.Malediction
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Malediction.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(points),
-		ClassMask:  WarlockSpellAll,
-	})
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DotDamageDone_Pct,
 		FloatValue: spellData.Malediction.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DOT).FractionAt(points),
@@ -209,11 +206,8 @@ func (warlock *Warlock) applyShadowMastery() {
 		FloatValue: spellData.ShadowMastery.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(points),
 		ClassMask:  WarlockShadowDamage,
 	})
-	warlock.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DotDamageDone_Pct,
-		FloatValue: spellData.ShadowMastery.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DOT).FractionAt(points),
-		ClassMask:  WarlockPeriodicShadowDamage,
-	})
+	// The row's op 22 (dot) modifier carries the same value as op 0: one bonus stated for both
+	// halves of a spell, not a second one for ticks, which DamageDone already reaches.
 }
 
 func (warlock *Warlock) registerAmplifyCurse() {

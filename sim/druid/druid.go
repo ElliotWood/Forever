@@ -293,7 +293,9 @@ func New(char *core.Character, form DruidForm, selfBuffs SelfBuffs, talents stri
 	core.FillTalentsProto(druid.Talents.ProtoReflect(), talents, TalentTreeSizes)
 	druid.EnableManaBar()
 
-	druid.AddStatDependency(stats.Strength, stats.AttackPower, 1)
+	// Two attack power a point of Strength in every form, as on master (a Classic druid; the 1 was
+	// carried over from the MoP-era engine).
+	druid.AddStatDependency(stats.Strength, stats.AttackPower, 2)
 	druid.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 	druid.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[char.Class])
 	druid.AddStatDependency(stats.Agility, stats.DodgeRating, 1.0/14.7059*core.DodgeRatingPerDodgePercent)

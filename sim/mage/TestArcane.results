@@ -18,8 +18,8 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 206
-  final_stats: 837.1
-  final_stats: 389
+  final_stats: 699.6
+  final_stats: 314
   final_stats: 0
   final_stats: 0
   final_stats: 48
@@ -46,7 +46,7 @@ character_stats_results: {
   final_stats: 1
   final_stats: 4
   final_stats: 20.00727
-  final_stats: 18.30087
+  final_stats: 16.30087
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -55,336 +55,336 @@ character_stats_results: {
 dps_results: {
  key: "TestArcane-AllItems-AegisofPreservation-19345"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-BadgeoftheSwarmguard-21670"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-Biznicks247x128Accurascope-2523"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
-  dps: 531.88678
-  tps: 381.16104
+  dps: 524.47015
+  tps: 375.90777
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-DepletedEyeofInfluence-275630"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-DormantHeartoftheMountain-249473"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-Earthstrike-21180"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-Enchant2HWeapon-GreaterImpact-963"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-EnchantCloak-Subtlety-2621"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-EnchantGloves-Threat-2613"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-EnchantWeapon-Crusader-1900"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-EyeofMoam-21473"
  value: {
-  dps: 538.07382
-  tps: 385.5319
+  dps: 530.54145
+  tps: 380.19761
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-EyeoftheDead-23047"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-FrozenHeartoftheMountain-249469"
  value: {
-  dps: 537.61671
-  tps: 385.08835
+  dps: 529.97827
+  tps: 379.67982
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
-  dps: 535.40584
-  tps: 383.74813
+  dps: 527.95638
+  tps: 378.47187
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-HeartoftheScale-13164"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-HibernationCrystal-20636"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 595.84297
-  tps: 426.28524
+  dps: 587.32244
+  tps: 420.32087
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-JomGabbar-23570"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-LapidisTankardofTidesippe-4696"
  value: {
-  dps: 532.33668
-  tps: 381.71907
+  dps: 524.50416
+  tps: 376.23631
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-Loatheb'sReflection-23042"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-MarkoftheChampion-23206"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-MarkoftheChampion-23207"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-MoltenHeartoftheMountain-249470"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-SerenityField-272439"
  value: {
-  dps: 540.73991
-  tps: 387.52737
+  dps: 532.96321
+  tps: 382.08369
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-Slayer'sCrest-23041"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-SmokingHeartoftheMountain-11811"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-TalismanofAscendance-22678"
  value: {
-  dps: 565.15701
-  tps: 404.04295
+  dps: 557.33377
+  tps: 398.50504
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-TalismanofEphemeralPower-18820"
  value: {
-  dps: 552.29621
-  tps: 395.13852
+  dps: 544.52923
+  tps: 389.64001
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 552.66636
-  tps: 395.37451
+  dps: 544.89414
+  tps: 389.87232
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-Thunderfury,BlessedBladeoftheWindseeker-19019"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-AllItems-WrathofCenarius-21190"
  value: {
-  dps: 546.95998
-  tps: 391.43225
+  dps: 539.27658
+  tps: 385.99224
  }
 }
 dps_results: {
  key: "TestArcane-Average-Default"
  value: {
-  dps: 527.81551
-  tps: 378.17082
+  dps: 520.94771
+  tps: 373.3548
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Gnome-Naked-MageArmor-arcane-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 560.01318
-  tps: 787.74956
+  dps: 552.30166
+  tps: 782.35151
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Gnome-Naked-MageArmor-arcane-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Gnome-Naked-MageArmor-arcane-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 616.68434
-  tps: 450.91172
+  dps: 607.71945
+  tps: 444.6363
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Gnome-Naked-MageArmor-arcane-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 201.81026
-  tps: 292.46053
+  dps: 203.31897
+  tps: 293.53779
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Gnome-Naked-MageArmor-arcane-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 201.81026
-  tps: 189.54386
+  dps: 203.31897
+  tps: 190.62112
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Gnome-Naked-MageArmor-arcane-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 238.86273
-  tps: 235.18183
+  dps: 240.8253
+  tps: 236.62665
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Troll-Naked-MageArmor-arcane-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 555.64979
-  tps: 781.52363
+  dps: 547.64144
+  tps: 775.91779
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Troll-Naked-MageArmor-arcane-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 524.38107
-  tps: 376.15549
+  dps: 516.37271
+  tps: 370.54965
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Troll-Naked-MageArmor-arcane-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 612.6919
-  tps: 448.71618
+  dps: 603.57788
+  tps: 442.33636
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Troll-Naked-MageArmor-arcane-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 198.93898
-  tps: 289.92254
+  dps: 200.79592
+  tps: 291.24986
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Troll-Naked-MageArmor-arcane-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 198.93898
-  tps: 187.00587
+  dps: 200.79592
+  tps: 188.33319
  }
 }
 dps_results: {
  key: "TestArcane-Settings-Troll-Naked-MageArmor-arcane-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 236.13665
-  tps: 231.09132
+  dps: 238.06305
+  tps: 232.49996
  }
 }
 dps_results: {
  key: "TestArcane-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 531.34406
-  tps: 380.90488
+  dps: 523.92602
+  tps: 375.65062
  }
 }

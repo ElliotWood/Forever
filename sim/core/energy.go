@@ -74,6 +74,10 @@ func (eb *energyBar) NextEnergyTickAt() time.Duration {
 }
 
 func (eb *energyBar) MultiplyEnergyRegenSpeed(sim *Simulation, multiplier float64) {
+	// A no-op multiplier (Rogue.Reset passes 1) must not force an early partial tick.
+	if multiplier == 1 {
+		return
+	}
 	eb.ResetEnergyTick(sim)
 	eb.energyRegenMultiplier *= multiplier
 }

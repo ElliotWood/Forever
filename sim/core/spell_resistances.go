@@ -76,7 +76,9 @@ func (unit *Unit) resistCoeff(spell *Spell, attacker *Unit, binary bool) float64
 		if binary {
 			return 0
 		}
-		return unit.levelBasedResist(attacker)
+		// Scaled like the branch below (coef runs 0 to 1, mitigation 0 to 0.75), so a level 63
+		// boss averages 6% as the guide says, not 4.5%.
+		return min(1, unit.levelBasedResist(attacker)/0.75)
 	}
 
 	resistanceCap := float64(attacker.Level * 5)

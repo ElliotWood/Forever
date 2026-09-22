@@ -47,7 +47,7 @@ func (shaman *Shaman) applyAncestralKnowledge() {
 		return
 	}
 
-	shaman.MultiplyStat(stats.Mana, spellData.AncestralKnowledge.MultiplierAt(shaman.Talents.AncestralKnowledge))
+	shaman.MultiplyStat(stats.Intellect, spellData.AncestralKnowledge.MultiplierAt(shaman.Talents.AncestralKnowledge))
 }
 
 func (shaman *Shaman) applyElementalWeapons() {
@@ -60,11 +60,6 @@ func (shaman *Shaman) applyElementalWeapons() {
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.ElementalWeapons.EffectAt(0).FractionAt(points),
 		ClassMask:  SpellMaskRockbiterWeapon,
-	})
-	shaman.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ElementalWeapons.EffectAt(2).FractionAt(points),
-		ClassMask:  SpellMaskWindfuryWeapon,
 	})
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
@@ -141,35 +136,11 @@ func (shaman *Shaman) applyShamanisticFocus() {
 	if !shaman.Talents.ShamanisticFocus {
 		return
 	}
-
-	sfAura := shaman.RegisterAura(core.Aura{
-		Label:    "Focused",
-		ActionID: core.ActionID{SpellID: 43339},
-		Duration: time.Second * 15,
-	}).AttachSpellMod(core.SpellModConfig{
+	// 1223030: Shock and Lightning Shield cost 45% less, always.
+	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		FloatValue: -0.6,
-		ClassMask:  SpellMaskShock,
-	})
-
-	shaman.MakeProcTriggerAura(core.ProcTrigger{
-		Name:             "Shamanistic Focus Trigger",
-		Callback:         core.CallbackOnSpellHitDealt,
-		ProcMask:         core.ProcMaskMelee,
-		CanProcFromProcs: true, // 43338 carries the bit.
-		Outcome:          core.OutcomeCrit,
-		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			sfAura.Activate(sim)
-		},
-	})
-
-	shaman.MakeProcTriggerAura(core.ProcTrigger{
-		Name:           "Shamanistic Focus Untrigger",
-		Callback:       core.CallbackOnCastComplete,
-		ClassSpellMask: SpellMaskShock,
-		Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
-			sfAura.Deactivate(sim)
-		},
+		FloatValue: -0.45,
+		ClassMask:  SpellMaskShock | SpellMaskLightningShield,
 	})
 }
 
@@ -195,7 +166,6 @@ func (shaman *Shaman) applyThunderingStrikes() {
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
 		FloatValue: spellData.ThunderingStrikes.ValueAt(shaman.Talents.ThunderingStrikes),
-		ProcMask:   core.ProcMaskMelee,
 	})
 }
 
@@ -317,7 +287,7 @@ func (shaman *Shaman) applyMaelstromWeapon() {
 
 	buff := spellData.MaelstromWeaponTriggered.HighestRank()
 	maxStacks := int32(5)
-	perStack := -spellData.MaelstromWeapon.FractionAt(shaman.Talents.MaelstromWeapon)
+	perStack := spellData.MaelstromWeapon.FractionAt(shaman.Talents.MaelstromWeapon)
 
 	ppmm := shaman.NewLegacyPPMManager(2*float64(shaman.Talents.MaelstromWeapon), core.ProcMaskMelee)
 
@@ -336,7 +306,7 @@ func (shaman *Shaman) applyMaelstromWeapon() {
 		Duration:  buff.Duration,
 		MaxStacks: maxStacks,
 		OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks, newStacks int32) {
-			castMod.UpdateFloatValue(100 * perStack * float64(newStacks))
+			castMod.UpdateFloatValue(perStack * float64(newStacks))
 			costMod.UpdateFloatValue(perStack * float64(newStacks))
 			castMod.Activate()
 			costMod.Activate()

@@ -70,10 +70,7 @@ func (shaman *Shaman) newWindfuryImbueSpell(isMH bool) *core.Spell {
 		ThreatMultiplier: 1,
 		BonusCoefficient: 1,
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			apBonus := shaman.WindfuryAPBonus
-			if spell.Tag == 2 { //OH Spell
-				apBonus *= 2
-			}
+			apBonus := shaman.WindfuryAPBonus * (1 + spellData.ElementalWeapons.EffectAt(2).FractionAt(shaman.Talents.ElementalWeapons))
 			mAP := spell.MeleeAttackPower(target) + apBonus
 
 			baseDamage1 := weaponDamageFunc(sim, mAP)
@@ -95,7 +92,7 @@ func (shaman *Shaman) makeWFProcTriggerAura(dpm *core.DynamicProcManager, procMa
 		ProcMask:           *procMask,
 		IsWeaponProc:       true,
 		Outcome:            core.OutcomeLanded,
-		ICD:                time.Second * 3,
+		ICD:                time.Millisecond * 1500,
 		DPM:                dpm,
 		TriggerImmediately: true,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
@@ -110,7 +107,7 @@ func (shaman *Shaman) makeWFProcTriggerAura(dpm *core.DynamicProcManager, procMa
 }
 
 func (shaman *Shaman) getWindfuryFixedProcChance(procMask core.ProcMask) float64 {
-	return core.TernaryFloat64(procMask == core.ProcMaskMelee, 0.36, 0.2)
+	return 0.2
 }
 
 // TODO: To be implemented. Not verified against Forever.

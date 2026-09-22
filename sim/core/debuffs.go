@@ -237,10 +237,11 @@ func CurseOfRecklessnessAura(target *Unit, casterIndex int32) *Aura {
 		target,
 		casterIndex,
 		fmt.Sprintf("Curse of Recklessness (%s)", Ternary(casterIndex == -1, "External", "Self")),
-		27226,
+		// Forever client, rank 4 (11717): -505 armor, +90 attack power. TBC's rank 5 was -800/+135.
+		11717,
 		stats.Stats{
-			stats.Armor:       -800,
-			stats.AttackPower: 135,
+			stats.Armor:       -505,
+			stats.AttackPower: 90,
 		},
 		time.Minute*2,
 	)
@@ -250,12 +251,14 @@ func CurseOfRecklessnessAura(target *Unit, casterIndex int32) *Aura {
 	return aura
 }
 
+// Forever client, rank 5 (9898): -193 attack power and -1.4 a level from 52, so -204 at 60.
+// TBC's rank 6 was 248.
 func DemoralizingRoarAura(target *Unit, feralAggressionPoints int32) *Aura {
-	apReduction := 248.0 * (1 + 0.08*float64(feralAggressionPoints))
+	apReduction := 204.0 * (1 + 0.08*float64(feralAggressionPoints))
 
 	aura := target.GetOrRegisterAura(Aura{
 		Label:    "Demoralizing Roar",
-		ActionID: ActionID{SpellID: 26998},
+		ActionID: ActionID{SpellID: 9898},
 		Duration: time.Second * 30,
 	})
 
@@ -349,12 +352,13 @@ func ExposeWeaknessAura(target *Unit, agilityFunc ExposeWeaknessAgiFunc) *Aura {
 
 }
 
+// Forever client, rank 4 (9907): -505 armor. TBC's rank 5 was 610.
 func FaerieFireAura(target *Unit, improvedPoints float64) *Aura {
-	armorValue := 610.0
+	armorValue := 505.0
 
 	aura := target.GetOrRegisterAura(Aura{
 		Label:    "Faerie Fire",
-		ActionID: ActionID{SpellID: 26993},
+		ActionID: ActionID{SpellID: 9907},
 		Duration: time.Second * 40,
 	})
 
@@ -733,10 +737,11 @@ func ExposeArmorAura(target *Unit, getComboPoints func() int32, talents int32) *
 	var effect *ExclusiveEffect
 	aura := target.GetOrRegisterAura(Aura{
 		Label:    "Expose Armor",
-		ActionID: ActionID{SpellID: 26866},
+		ActionID: ActionID{SpellID: 11198},
 		Duration: time.Second * 30,
 		OnGain: func(aura *Aura, sim *Simulation) {
-			eaValue := 410.0 * float64(getComboPoints())
+			// Forever client, rank 5 (11198): -450 armor a combo point. TBC's rank 6 was 410.
+			eaValue := 450.0 * float64(getComboPoints())
 			eaValue *= 1.0 + 0.25*float64(talents)
 			effect.SetPriority(sim, eaValue)
 		},
@@ -756,15 +761,16 @@ func ExposeArmorAura(target *Unit, getComboPoints func() int32, talents int32) *
 
 }
 
+// Forever client, rank 5 (11597): -450 armor a stack. TBC's rank 6 was 520.
 func SunderArmorAura(target *Unit) *Aura {
 	var effect *ExclusiveEffect
 	aura := target.GetOrRegisterAura(Aura{
 		Label:     "Sunder Armor",
-		ActionID:  ActionID{SpellID: 25225},
+		ActionID:  ActionID{SpellID: 11597},
 		Duration:  time.Second * 30,
 		MaxStacks: 5,
 		OnStacksChange: func(aura *Aura, sim *Simulation, oldStacks int32, newStacks int32) {
-			effect.SetPriority(sim, -520*float64(newStacks))
+			effect.SetPriority(sim, -450*float64(newStacks))
 		},
 	})
 

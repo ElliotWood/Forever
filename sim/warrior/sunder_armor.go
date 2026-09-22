@@ -13,9 +13,8 @@ func (warrior *Warrior) registerSunderArmor() {
 
 	actionId := core.ActionID{SpellID: sunderArmorRank.SpellID}
 
-	// core.SunderArmorAura still carries TBC's id (25225) and 520 armor a stack where the client's
-	// rank 5 states 450; the shared debuff is left to their #39. The id is set to the rank's so an APL
-	// can watch the stacks by the spell it casts.
+	// core.SunderArmorAura carries the client's rank 5 (450 armor a stack). The id is set to the
+	// rank's so an APL can watch the stacks by the spell it casts.
 	warrior.SunderArmorAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		aura := core.SunderArmorAura(target)
 		aura.ActionID = actionId

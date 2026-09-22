@@ -162,7 +162,8 @@ func TestDemoralizingRoarSharedAura(t *testing.T) {
 	if configAura != druidAura {
 		t.Fatalf("expected both Demoralizing Roar registrations to share one aura")
 	}
-	expected := 248.0 * (1 + 0.08*5)
+	points := int32(5)
+	expected := 204.0 * (1 + 0.08*float64(points))
 	if prio := configAura.ExclusiveEffects[0].Priority; prio != expected {
 		t.Fatalf("expected Demoralizing Roar priority %f, got %f", expected, prio)
 	}

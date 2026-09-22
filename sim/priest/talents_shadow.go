@@ -150,7 +150,8 @@ func (priest *Priest) registerMindFlaySpell(rank shared.SpellData) {
 		SpellSchool:    rank.SpellSchool,
 		DefenseType:    rank.DefenseType,
 		ProcMask:       core.ProcMaskSpellDamage,
-		Flags:          core.SpellFlagAPL | core.SpellFlagChanneled,
+		// Binary, as on master: the row slows (effect 1), so it resists whole or not at all.
+		Flags:          core.SpellFlagAPL | core.SpellFlagChanneled | core.SpellFlagBinary,
 		ClassSpellMask: PriestSpellMindFlay,
 		Rank:           rank.Rank,
 		MaxRange:       rank.MaxRange,

@@ -403,7 +403,8 @@ func NewAttackTable(attacker *Unit, defender *Unit) *AttackTable {
 		table.GlanceMultiplier = UnitLevelFloat64(defender.Level, 0.95, 0.95, 0.95, 0.85, 0.65)
 		table.HitSuppression = UnitLevelFloat64(defender.Level, 0, 0, 0, 0, 0.01)
 		table.MeleeCritSuppression = UnitLevelFloat64(defender.Level, 0, 0, 0.01, 0.02, 0.048)
-		table.SpellCritSuppression = UnitLevelFloat64(defender.Level, 0, 0, 0, 0.003, 0.021)
+		// No spell crit suppression against a higher level target: that is TBC's (0.3%/2.1%). A
+		// Classic-era caster crits a level 63 boss at the sheet rate, as on master.
 	} else {
 		// Assumes defender (the Player) is level 60.
 		table.BaseSpellMissChance = 0.05

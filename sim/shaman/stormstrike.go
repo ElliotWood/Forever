@@ -92,9 +92,6 @@ func (shaman *Shaman) newStormstrikeSpellConfig(spellID int32, ssDebuffAuras *co
 					mhHit.Cast(sim, target)
 				}
 
-				if shaman.AutoAttacks.IsDualWielding && shaman.HasOHWeapon() {
-					ohHit.Cast(sim, target)
-				}
 			}
 			spell.DisposeResult(shaman.StormstrikeCastResult)
 		},

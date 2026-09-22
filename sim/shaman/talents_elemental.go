@@ -48,7 +48,7 @@ func (shaman *Shaman) applyCallOfFlame() {
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.CallOfFlame.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(shaman.Talents.CallOfFlame),
-		ClassMask:  SpellMaskFireTotem,
+		ClassMask:  SpellMaskFireTotem | SpellMaskFlameShock | SpellMaskFireNova | SpellMaskLavaBurst,
 	})
 }
 
@@ -84,7 +84,7 @@ func (shaman *Shaman) applyConvection() {
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
 		FloatValue: spellData.Convection.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(shaman.Talents.Convection),
-		ClassMask:  SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskOverload | SpellMaskShock,
+		ClassMask:  SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskOverload | SpellMaskShock | SpellMaskLavaBurst,
 	})
 }
 
@@ -122,7 +122,7 @@ func (shaman *Shaman) applyElementalFocus() {
 	var triggeringSpell *core.Spell
 	var triggerTime time.Duration
 
-	canConsumeSpells := SpellMaskLightningBolt | SpellMaskChainLightning | (SpellMaskShock & ^SpellMaskFlameShockDot)
+	canConsumeSpells := SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskLavaBurst | (SpellMaskShock & ^SpellMaskFlameShockDot)
 
 	clearcasting := spellData.ElementalFocusTriggered.HighestRank()
 	maxStacks := clearcasting.ProcCharges
@@ -152,7 +152,7 @@ func (shaman *Shaman) applyElementalFocus() {
 		ProcChance:         spellData.ElementalFocus.ProcChanceAt(1),
 		Callback:           core.CallbackOnSpellHitDealt,
 		CanProcFromProcs:   true, // 16164 carries the bit: Lightning Overload crits count.
-		Outcome:            core.OutcomeCrit,
+		Outcome:            core.OutcomeLanded,
 		TriggerImmediately: true,
 
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
