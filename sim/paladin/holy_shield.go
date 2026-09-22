@@ -39,6 +39,7 @@ func (paladin *Paladin) registerHolyShield() {
 			SpellSchool:    row.SpellSchool,
 			DefenseType:    row.DefenseType,
 			ProcMask:       core.ProcMaskSpellDamage,
+			Flags:          core.SpellFlagBinary,
 
 			RequiredLevel: int(level),
 			Rank:          rank,
@@ -48,8 +49,9 @@ func (paladin *Paladin) registerHolyShield() {
 			BonusCoefficient: roundCoef(row.Direct.BonusCoefficient()),
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				// Spell damage from Holy Shield can crit, but does not miss.
-				spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMagicCrit)
+				// A damage shield (aura 43): no crit and no partial resist. It rolls a spell hit, as
+				// upstream's (wowsims/forever #48) and forever-next's do.
+				spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMagicHit)
 			},
 		})
 
