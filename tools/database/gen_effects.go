@@ -667,12 +667,6 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			entry := Entry{Tooltip: strings.Split(renderedTooltip, "\n"), Variants: []*Variant{{ID: int(parsed.Id), Name: parsed.Name, SpellID: int(itemEffect.BuffId)}}}
 			entry.ProcInfo, entry.Supported = BuildProcInfo(parsed, int(itemEffect.BuffId), instance, renderedTooltip)
 
-			// Naming the items whose rate is owed. The dbc layer reports the ones whose ProcChance
-			// is 0 or the >100 sentinel; only here is the tooltip available to catch the other
-			// shape, a flat 100% the text contradicts.
-			if proc := itemEffect.GetProc(); proc != nil && !procRateIsStated(proc, renderedTooltip) {
-				dbc.ReportMissingPPM(parsed.Id, int(itemEffect.BuffId))
-			}
 			entry.StackProcInfo = buildStackProcInfo(itemEffect, instance, renderedTooltip)
 
 			// entry.Supported speaks only for the trigger that opens the window, so the stack side

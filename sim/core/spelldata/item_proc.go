@@ -45,7 +45,7 @@ func ItemProcUnsupported(trigger *Spell, isWeaponProc bool) []string {
 	// A weapon proc hears the hits of whatever carries it, which is the one shape the row states no
 	// listener for: the game casts a chance-on-hit effect and a combat enchant off the hit itself.
 	if isWeaponProc {
-		if !ProcRateStated(trigger) {
+		if !weaponProcRateStated(trigger) {
 			unsupported = append(unsupported, "states no rate")
 		}
 		return unsupported
@@ -65,6 +65,18 @@ func ItemProcUnsupported(trigger *Spell, isWeaponProc bool) []string {
 	}
 
 	return unsupported
+}
+
+// The same for a weapon proc, where the client's 100 and 101 are no answer. Those mean "fires
+// whenever its own condition is met", and a chance-on-hit effect has no condition: the game casts it
+// off the weapon's hit without consulting the row at all. Arcanite Champion, Annihilator and the
+// combat enchants all read 101, and every one of them is a rate the spell data does not carry.
+func weaponProcRateStated(s *Spell) bool {
+	if s.ProcChanceSource == ProcChanceAlways {
+		return s.RPPM > 0
+	}
+
+	return ProcRateStated(s)
 }
 
 // Whether the row states a rate the trigger can be built from at all: a roll of its own, or the

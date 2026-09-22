@@ -98,18 +98,10 @@ func assignTrigger(e *ItemEffect, statsSpellID int, pe *proto.ItemEffect) {
 		proc := &proto.ProcEffect{
 			IcdMs: procIcdMs(spTop, statsSP),
 		}
-		// If proc chance is above 100 it is most likely a PPM proc
-		// Or if we manually assigned PPM
-		ppm := getPPMForItemID(int32(e.ParentItemID))
-		if spTop.ProcChance == 0 || spTop.ProcChance > 100 || ppm > 0 {
-			if ppm > 0 {
-				proc.ProcRate = &proto.ProcEffect_Ppm{
-					Ppm: ppm,
-				}
-			} else {
-				ReportMissingPPM(int32(e.ParentItemID), e.SpellID)
-			}
-		} else {
+		// The column is the roll only where it is one: 0 means the client states no rate at all and
+		// anything above 100 is its "the rate lives elsewhere" sentinel. A proc whose rate is not in
+		// the spell data reaches the sim through the spell store, where an override answers it.
+		if spTop.ProcChance > 0 && spTop.ProcChance <= 100 {
 			proc.ProcRate = &proto.ProcEffect_ProcChance{
 				ProcChance: float64(spTop.ProcChance) / 100,
 			}
@@ -216,8 +208,8 @@ func resolveTriggerType(topType, spellID int) int {
 	// grant pet stats that way, with no proc mask, no chance and no duration, and promoting them
 	// emitted a proc with no rate at all. Something has to say when it would fire.
 	//
-	// The weapons whose rate lives only in MapItemIdToPPM are unaffected: the database types those
-	// CHANCE_ON_HIT itself, so they return above without being promoted here.
+	// The chance-on-hit weapons are unaffected: the database types those CHANCE_ON_HIT itself, so
+	// they return above without being promoted here.
 	sp := dbcInstance.Spells[spellID]
 	statesAProc := slices.ContainsFunc(sp.ProcTypeMask, func(bits int) bool { return bits != 0 }) || sp.ProcChance != 0
 	if !statesAProc {
@@ -436,7 +428,7 @@ func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 				parsed.ScalingOptions[0].Stats[int32(stat)] += value
 			}
 			continue
-		} else if (e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP) || (e.TriggerType == ITEM_SPELLTRIGGER_CHANCE_ON_HIT && getPPMForItemID(parsed.Id) > 0) || e.CoolDownMSec > 0 {
+		} else if (e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP) || (e.TriggerType == ITEM_SPELLTRIGGER_CHANCE_ON_HIT) || e.CoolDownMSec > 0 {
 			baseEff = e
 		} else {
 			continue

@@ -79,3 +79,15 @@ var Spells = []Override{
 	{23686, PPM, 1, "Darkmoon Card: Maelstrom: column reads 100, tooltip says 'Chance to strike'", "tbc-carryover"},
 	{26480, PPM, 10, "Badge of the Swarmguard: stack accumulator inside the on-use window", "tbc-carryover"},
 }
+
+// The procs-per-minute rate stated for a spell, or zero where none is. The item database reads it
+// for the same spells the store does: a container whose ProcChance column is the "rate lives
+// elsewhere" sentinel has no rate anywhere else either.
+func PPMFor(spellID int32) float64 {
+	for _, override := range Spells {
+		if override.SpellID == spellID && override.Field == PPM {
+			return override.Value
+		}
+	}
+	return 0
+}
