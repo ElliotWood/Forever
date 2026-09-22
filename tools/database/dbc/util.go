@@ -112,6 +112,7 @@ func processEnchantmentEffects(
 	effectArgs []int,
 	effectPoints []int,
 	outStats *stats.Stats,
+	outPseudoStats []float64,
 	addRanged bool,
 ) {
 	for i, effect := range effects {
@@ -136,6 +137,9 @@ func processEnchantmentEffects(
 				}
 			}
 		case ITEM_ENCHANTMENT_EQUIP_SPELL: //Buff
+			if outPseudoStats != nil {
+				AddEquipSpellPseudoStats(outPseudoStats, effectArgs[i])
+			}
 			spellEffects := dbcInstance.SpellEffects[effectArgs[i]]
 			for _, spellEffect := range spellEffects {
 				points := spellEffect.EffectBasePoints + spellEffect.EffectDieSides
@@ -187,6 +191,70 @@ func processEnchantmentEffects(
 			// Not processed
 		}
 	}
+}
+
+const rangedWeaponSubclassMask = rangedMask | ITEM_SUBCLASS_BIT_WEAPON_THROWN | ITEM_SUBCLASS_BIT_WEAPON_WAND
+
+// Adds the percents an equip spell states for hit, crit, block, dodge and parry to pseudoStats, which
+// is indexed by proto.PseudoStat, and reports whether it added any. Only auras on the wearer count:
+// Atiesh's 28142 is a party aura and reaches the sim as a raid buff.
+//
+// A spell that names weapons applies its hit and weapon crit only to attacks with them. Melee is
+// credited when it names no weapon or a melee one and ranged when it names no weapon or a ranged one,
+// and ranged is written as the total the character sheet shows, melee share included, which
+// stats.FromPseudoStatsProto takes back out. So 22780 (Biznicks 247x128 Accurascope, hit restricted to
+// bows, guns and crossbows) is ranged hit alone, and 1310308 (SAF-T Ultra Precision Scope, the all-crit
+// aura under the same restriction) is ranged crit alone, with no spell crit.
+func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
+	spell := dbcInstance.Spells[spellID]
+	namesWeapons := spell.EquippedItemClass == ITEM_CLASS_WEAPON && spell.EquippedItemSubclass != 0
+	melee := !namesWeapons || spell.EquippedItemSubclass&^rangedWeaponSubclassMask != 0
+	ranged := !namesWeapons || spell.EquippedItemSubclass&rangedWeaponSubclassMask != 0
+
+	added := false
+	add := func(pseudoStat proto.PseudoStat, value float64) {
+		pseudoStats[pseudoStat] += value
+		added = true
+	}
+	addWeapon := func(meleeStat, rangedStat proto.PseudoStat, value float64) {
+		if melee {
+			add(meleeStat, value)
+		}
+		if ranged {
+			add(rangedStat, value)
+		}
+	}
+
+	for _, effect := range dbcInstance.SpellEffectsInOrder(spellID) {
+		if effect.EffectType != dbcenums.E_APPLY_AURA {
+			continue
+		}
+		value := effect.EffectBasePoints + effect.EffectDieSides
+
+		switch effect.EffectAura {
+		case dbcenums.A_MOD_HIT_CHANCE:
+			addWeapon(proto.PseudoStat_PseudoStatMeleeHitPercent, proto.PseudoStat_PseudoStatRangedHitPercent, value)
+		case dbcenums.A_MOD_WEAPON_CRIT_PERCENT:
+			addWeapon(proto.PseudoStat_PseudoStatMeleeCritPercent, proto.PseudoStat_PseudoStatRangedCritPercent, value)
+		case dbcenums.A_MOD_CRIT_PCT:
+			addWeapon(proto.PseudoStat_PseudoStatMeleeCritPercent, proto.PseudoStat_PseudoStatRangedCritPercent, value)
+			if !namesWeapons {
+				add(proto.PseudoStat_PseudoStatSpellCritPercent, value)
+			}
+		case dbcenums.A_MOD_SPELL_HIT_CHANCE:
+			add(proto.PseudoStat_PseudoStatSpellHitPercent, value)
+		case dbcenums.A_MOD_SPELL_CRIT_CHANCE:
+			add(proto.PseudoStat_PseudoStatSpellCritPercent, value)
+		case dbcenums.A_MOD_BLOCK_PERCENT:
+			add(proto.PseudoStat_PseudoStatBlockPercent, value)
+		case dbcenums.A_MOD_DODGE_PERCENT:
+			add(proto.PseudoStat_PseudoStatDodgePercent, value)
+		case dbcenums.A_MOD_PARRY_PERCENT:
+			add(proto.PseudoStat_PseudoStatParryPercent, value)
+		}
+	}
+
+	return added
 }
 
 func ConvertEffectAuraToStatIndex(effectAura EffectAuraType, effectMisc int) proto.Stat {

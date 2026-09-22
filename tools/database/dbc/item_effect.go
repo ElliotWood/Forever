@@ -427,6 +427,7 @@ func (w *chainWalker) findTriggerOf(spellIDToMatch int, spellID int) *SpellEffec
 // Parses a UIItem and loops through Scaling Options for that item.
 func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 	var effects []*proto.ItemEffect
+	pseudoStats := make([]float64, stats.PseudoStatsLen)
 
 	for i := range dbcInstance.ItemEffectsByParentID[int(parsed.Id)] {
 		// pick a base effect that has stats if there is more than one effect on the item
@@ -437,8 +438,9 @@ func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 		props := buildBaseStatScalingProps(statsSpell, e.SpellID)
 
 		hasStats := len(props.Stats) > 0
+		hasPseudoStats := e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && AddEquipSpellPseudoStats(pseudoStats, e.SpellID)
 
-		if e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && hasStats {
+		if e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && (hasStats || hasPseudoStats) {
 			if areaType := spelldata.AreaTypeOfGroup(dbcInstance.Spells[e.SpellID].RequiredAreasID); areaType != proto.AreaType_AreaTypeUnknown {
 				addAreaStats(parsed.ScalingOptions[0], areaType, props.Stats)
 				continue
@@ -479,5 +481,6 @@ func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 		effects = append(effects, pe)
 	}
 
+	parsed.PseudoStats = NullFloat(pseudoStats)
 	return effects
 }

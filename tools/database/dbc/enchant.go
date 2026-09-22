@@ -150,8 +150,10 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 			effectArgs[index] = arg
 		}
 	}
-	stats := stats.Stats{}
-	processEnchantmentEffects(enchant.Effects, effectArgs, enchant.EffectPoints, &stats, true)
-	uiEnchant.Stats = stats.ToProtoArray()
+	enchantStats := stats.Stats{}
+	pseudoStats := make([]float64, stats.PseudoStatsLen)
+	processEnchantmentEffects(enchant.Effects, effectArgs, enchant.EffectPoints, &enchantStats, pseudoStats, true)
+	uiEnchant.Stats = enchantStats.ToProtoArray()
+	uiEnchant.PseudoStats = NullFloat(pseudoStats)
 	return uiEnchant
 }

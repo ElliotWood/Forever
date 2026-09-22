@@ -120,6 +120,10 @@ func (db *WowDatabase) MergeEnchant(src *proto.UIEnchant) {
 			dst.Stats = src.Stats
 			src.Stats = nil
 		}
+		if src.PseudoStats != nil {
+			dst.PseudoStats = src.PseudoStats
+			src.PseudoStats = nil
+		}
 		googleProto.Merge(dst, src)
 	} else {
 		db.Enchants[key] = src

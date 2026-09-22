@@ -221,11 +221,6 @@ func init() {
 	})
 
 	// Scopes
-	core.NewEnchantEffect(2523, func(agent core.Agent) {
-		character := agent.GetCharacter()
-		character.AddStat(stats.RangedHitPercent, 30.0/core.PhysicalHitRatingPerHitPercent)
-	})
-
 	core.NewEnchantEffect(2722, func(agent core.Agent) {
 		character := agent.GetCharacter()
 		ranged := character.AutoAttacks.Ranged()
