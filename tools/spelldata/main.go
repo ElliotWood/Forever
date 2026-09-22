@@ -10,6 +10,8 @@
 //	go run ./tools/spelldata -family warrior/Execute   # the ladder's ranks, then its highest in full
 //	go run ./tools/spelldata -expr 'spellData.Execute.Rank(3)' -package warrior   # the row that reaches
 //	go run ./tools/spelldata -expr 'spellData.Execute.Highest().EffectN(1).Average(core.CharacterLevel)' -package warrior   # the value that reads
+//	go run ./tools/spelldata -hover sim/warrior/execute.go 12:40   # the markdown an editor hover shows at line:column, 1-based
+//	go run ./tools/spelldata -lsp            # a language server on stdio answering those hovers
 package main
 
 import (
@@ -24,6 +26,16 @@ import (
 )
 
 func main() {
+	if len(os.Args) == 2 && strings.TrimLeft(os.Args[1], "-") == "lsp" {
+		shutdown, err := serveLSP(os.Stdin, os.Stdout)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "spelldata:", err)
+		}
+		if !shutdown || err != nil {
+			os.Exit(1)
+		}
+		return
+	}
 	if err := run(os.Args[1:], os.Stdout); err != nil {
 		fmt.Fprintln(os.Stderr, "spelldata:", err)
 		os.Exit(1)
@@ -35,6 +47,7 @@ type options struct {
 	family string
 	expr   string
 	pkg    string
+	hover  string
 	json   bool
 	all    bool
 }
@@ -44,7 +57,7 @@ type options struct {
 // the next argument or after an `=`.
 func parseArgs(args []string) (options, error) {
 	var opts options
-	valued := map[string]*string{"family": &opts.family, "expr": &opts.expr, "package": &opts.pkg}
+	valued := map[string]*string{"family": &opts.family, "expr": &opts.expr, "package": &opts.pkg, "hover": &opts.hover}
 
 	for i := 0; i < len(args); i++ {
 		arg := args[i]
@@ -83,11 +96,20 @@ func parseArgs(args []string) (options, error) {
 		opts.query = arg
 	}
 
-	if opts.query != "" && (opts.family != "" || opts.expr != "") || opts.family != "" && opts.expr != "" {
-		return opts, fmt.Errorf("ask for one thing: a spell, -family or -expr")
+	asked := 0
+	for _, mode := range []string{opts.family, opts.expr, opts.hover} {
+		if mode != "" {
+			asked++
+		}
 	}
-	if opts.query == "" && opts.family == "" && opts.expr == "" {
-		return opts, fmt.Errorf("usage: go run ./tools/spelldata <id | name> [-all] [-json] | -family <class>/<Family> | -expr <call> [-package <class>]")
+	if opts.hover != "" && opts.query == "" {
+		return opts, fmt.Errorf("-hover takes a file and a position: -hover <file> <line>:<column>")
+	}
+	if asked > 1 || asked == 1 && opts.query != "" && opts.hover == "" {
+		return opts, fmt.Errorf("ask for one thing: a spell, -family, -expr or -hover")
+	}
+	if opts.query == "" && asked == 0 {
+		return opts, fmt.Errorf("usage: go run ./tools/spelldata <id | name> [-all] [-json] | -family <class>/<Family> | -expr <call> [-package <class>] | -hover <file> <line>:<column> | -lsp")
 	}
 	return opts, nil
 }
@@ -103,6 +125,9 @@ func run(args []string, out io.Writer) error {
 	}
 	if opts.expr != "" {
 		return runExpr(out, opts)
+	}
+	if opts.hover != "" {
+		return runHover(out, opts)
 	}
 
 	if id, err := strconv.ParseInt(opts.query, 10, 32); err == nil {
@@ -198,6 +223,30 @@ func runExpr(out io.Writer, opts options) error {
 
 	writeExprText(out, result, opts.expr)
 	return nil
+}
+
+// The trace goes to stderr, so stdout is the markdown alone.
+func runHover(out io.Writer, opts options) error {
+	lineText, colText, ok := strings.Cut(opts.query, ":")
+	line, lineErr := strconv.Atoi(lineText)
+	col, colErr := strconv.Atoi(colText)
+	if !ok || lineErr != nil || colErr != nil || line < 1 || col < 1 {
+		return fmt.Errorf("%q is not a position: write <line>:<column>, both counted from 1", opts.query)
+	}
+	text, err := os.ReadFile(opts.hover)
+	if err != nil {
+		return err
+	}
+
+	markdown, trace, found := Hover(string(text), line-1, col-1, pathURI(opts.hover))
+	for _, entry := range trace {
+		fmt.Fprintln(os.Stderr, entry)
+	}
+	if !found {
+		return fmt.Errorf("no hover at %s:%s", opts.hover, opts.query)
+	}
+	_, err = io.WriteString(out, markdown)
+	return err
 }
 
 // What the chain answered, then the row it was read off. A pick states the call as the caller wrote it,

@@ -27,9 +27,22 @@ func title(s *spelldata.Spell) string {
 // The spell's own columns, one label per line, leaving out what the row does not state.
 func header(s *spelldata.Spell) []string {
 	var out []string
+	for _, field := range headerFields(s) {
+		out = append(out, fmt.Sprintf("%-9s %s", field.label, field.value))
+	}
+	return out
+}
+
+type headerField struct {
+	label string
+	value string
+}
+
+func headerFields(s *spelldata.Spell) []headerField {
+	var out []headerField
 	add := func(label, value string) {
 		if value != "" {
-			out = append(out, fmt.Sprintf("%-9s %s", label, value))
+			out = append(out, headerField{label, value})
 		}
 	}
 
