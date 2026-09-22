@@ -61,6 +61,17 @@ func TestProcShapeOfNamedSpells(t *testing.T) {
 			0, "the row ships no tooltip, so the parry it is spent on stays the caller's"},
 		{29626, "Shadowbolt Volley", procChancePPM, 0, `a column of 100 next to "Chance to strike" is a rate the client keeps elsewhere`,
 			0, "the wording states a rate, not a trigger the mask cannot carry"},
+		{22618, "Force Reactive Disk", procChanceAlways, 0, `the "chance of damaging the shield" is the shield's durability, in a sentence naming nothing the charge fires on; the charge itself fires on every block`,
+			0, `"when the shield blocks" is the shield's own condition rather than an outcome of the wearer's`},
+		{432042, "Tidal Waves", procChanceAlways, 0, `"increases the critical effect chance of your Lesser Healing Wave" is a magnitude, not a rate`,
+			core.ProcHintCastTrigger | core.ProcHintCrit | core.ProcHintNamedAbility,
+			`"When you cast Chain Heal or Riptide" names the cast, the ability and the critical effect it grants`},
+		{467889, "T2 Shaman Tank 2P", procChanceAlways, 0, `"grants increased chance to Block" is a magnitude, not a rate`,
+			0, `"until you Block an attack" is what spends the buff, not what triggers it`},
+		{1226977, "Scarlet Enclave Elemental 4P", procChanceAlways, 0, `"Chance to trigger Overload increased by an additional" is a magnitude, not a rate`,
+			0, "the wording modifies another spell's chance and states no trigger of its own"},
+		{440529, "Resourcefulness", procChancePPM, 0, `"your critical strikes have a $m3% chance" names effect 3, and the row carries two effects, so no chance resolves`,
+			core.ProcHintCrit | core.ProcHintNamedAbility, `"your critical strikes" names the trigger, "your Trap abilities" the ability`},
 	} {
 		t.Run(want.name, func(t *testing.T) {
 			rows := []storeSpell{tables.row(want.id)}

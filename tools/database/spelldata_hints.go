@@ -64,7 +64,7 @@ func procChanceSource(description string, s *storeSpell) (storeProcChanceSource,
 	// 101 sentinel - the rate lives outside the spell data - so it is a rate somebody owes rather
 	// than a proc on every hit.
 	if s.ProcChance == 100 || s.ProcChance == 101 {
-		if s.triggersAProc() && statedChanceMatcher.MatchString(description) {
+		if s.triggersAProc() && tooltipStatesAnUnknownRate(description) {
 			return procChancePPM, 0
 		}
 		return procChanceAlways, 0

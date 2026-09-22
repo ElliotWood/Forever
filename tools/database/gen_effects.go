@@ -953,6 +953,43 @@ var outcomeConditionMatcher = regexp.MustCompile(`(?i)when .{0,60}?(is|are) resi
 // rate, the real rate is the one thing the data does not carry.
 var statedChanceMatcher = regexp.MustCompile(`(?i)chance (to|of|when)|has a chance`)
 
+// What a sentence names as feeding the proc. A clause stating a chance says nothing about a rate
+// unless it also says what the chance is rolled on or what it does: Force Reactive Disk's "This also
+// has a chance of damaging the shield" is the shield's durability, in a sentence of its own, and the
+// -ing is what keeps it apart from the damage a proc deals.
+var procTriggerClauseMatcher = regexp.MustCompile(`(?i)melee|ranged|attack|swing|strike|cast|spell|whenever|each time|on hit|block|weapon|damage\b`)
+
+// A chance that is the magnitude rather than the rate: "increases the critical effect chance of your
+// Lesser Healing Wave", "grants increased chance to Block", "Chance to trigger Overload increased by
+// an additional 5%". The word the effect modifies sits within a clause of the chance either way.
+var increasedChanceMatcher = regexp.MustCompile(`(?i)increase[sd]?[^.]{0,40}?chance|chance[^.]{0,30}?increase[sd]?`)
+
+// Where one statement ends and the next begins. Crude on purpose: an abbreviation or a decimal
+// splits a sentence in two, and neither changes which half carries the trigger.
+var sentenceBreak = regexp.MustCompile(`[.!?](?:\s|$)|\r?\n`)
+
+// Whether the tooltip says the effect only happens sometimes and leaves the rate unsaid. Read from
+// the sentence that states the trigger rather than from the whole text: "increases your critical
+// strike chance" is a magnitude on hundreds of spells, and a chance in a sentence that names nothing
+// the proc fires on is about something else entirely.
+func tooltipStatesAnUnknownRate(description string) bool {
+	for _, sentence := range sentenceBreak.Split(description, -1) {
+		if !statedChanceMatcher.MatchString(sentence) {
+			continue
+		}
+		if !procTriggerClauseMatcher.MatchString(sentence) {
+			continue
+		}
+		if increasedChanceMatcher.MatchString(sentence) {
+			continue
+		}
+
+		return true
+	}
+
+	return false
+}
+
 // Wording that names the cast itself as the trigger rather than the spell landing:
 // "each time you cast a spell", "chance on successful spellcast", "chance on spell cast".
 var castTriggerMatcher = regexp.MustCompile(`(?i)you cast|on spell ?cast|spellcast`)
