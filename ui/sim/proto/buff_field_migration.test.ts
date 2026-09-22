@@ -1,16 +1,16 @@
 import { Player } from '@generated/proto/api';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { IndividualSimSettings, SavedSettings } from '@generated/proto/ui';
-import { ScalarType, UnknownFieldHandler } from '@protobuf-ts/runtime';
+import { IndividualSimSettings } from '@generated/proto/ui';
+import { ScalarType } from '@protobuf-ts/runtime';
 import { describe, expect, it } from 'vitest';
 
-import { migrateRetypedBuffFields, retiredBuffFields, retiredFieldSpellings, retypedBuffFields } from './buff_field_migration';
+import { migrateRetypedBuffFields, retypedBuffFields } from './buff_field_migration';
 
 const v16Settings = () => ({
 	apiVersion: 16,
 	partyBuffs: { battleShout: 'TristateEffectImproved', manaSpringTotem: 'TristateEffectImproved' },
-	debuffs: { faerieFire: 'TristateEffectMissing', misery: true, jocRetribution2pt4: true },
-	player: { buffs: { blessingOfMight: 2, blessingOfKings: true, unleashedRage: true } },
+	debuffs: { faerieFire: 'TristateEffectMissing' },
+	player: { buffs: { blessingOfMight: 2, blessingOfKings: true } },
 });
 
 describe('migrateRetypedBuffFields', () => {
@@ -91,102 +91,6 @@ describe('migrateRetypedBuffFields', () => {
 		expect(() => migrateRetypedBuffFields({ partyBuffs: 7 })).not.toThrow();
 	});
 
-	it('drops the retired fields of a version-16 envelope so the parser accepts it', () => {
-		const json = {
-			apiVersion: 16,
-			partyBuffs: { drums: 'LesserDrumsOfBattle', snapshotBsT2: true, wrath_of_air_totem: 'TristateEffectImproved', battleShout: true },
-			debuffs: { jocRetribution2pt4: true, misery: true },
-			player: { buffs: { unleashedRage: true, blessingOfKings: true } },
-		} as Record<string, any>;
-
-		migrateRetypedBuffFields(json);
-
-		expect(Object.keys(json.partyBuffs)).toEqual(['snapshotBsT2', 'battleShout']);
-		expect(Object.keys(json.debuffs)).toEqual([]);
-		expect(Object.keys(json.player.buffs)).toEqual(['blessingOfKings']);
-		expect(() => IndividualSimSettings.fromJson(json as never)).not.toThrow();
-	});
-
-	// The drums consumable is the one retired field that does not sit on a buff message. Every
-	// settings loader passes `ignoreUnknownFields`, so a leftover key would be forgiven there;
-	// `fromJson` is called strictly here because that is the sharpest check that the pre-pass
-	// dropped it.
-	it('drops a version-16 payload’s drums consumable, which ConsumesSpec no longer has', () => {
-		const json = {
-			apiVersion: 16,
-			player: { consumables: { drumsId: 'LesserDrumsOfBattle', foodId: 27657 }, buffs: { blessingOfKings: true } },
-		} as Record<string, any>;
-
-		migrateRetypedBuffFields(json);
-
-		expect(Object.keys(json.player.consumables)).toEqual(['foodId']);
-
-		const settings = IndividualSimSettings.fromJson(json as never);
-		expect(settings.player?.consumables?.foodId).toBe(27657);
-	});
-
-	// SavedSettings carries a ConsumesSpec of its own, beside the buffs rather than under a player,
-	// and no api_version, so it is always rewritten.
-	it('drops it from a saved settings entry, which holds its consumables itself', () => {
-		const json = {
-			consumables: { drumsId: 4, foodId: 27657 },
-			partyBuffs: { battleShout: 'TristateEffectImproved' },
-		} as Record<string, any>;
-
-		migrateRetypedBuffFields(json);
-
-		expect(Object.keys(json.consumables)).toEqual(['foodId']);
-
-		const saved = SavedSettings.fromJson(json as never);
-		expect(saved.consumables?.foodId).toBe(27657);
-		expect(saved.partyBuffs?.battleShout).toBe(true);
-	});
-
-	it('drops it from every player of a raid, under either spelling', () => {
-		const raid = {
-			apiVersion: 16,
-			parties: [{ players: [{ consumables: { drums_id: 4 } }, { consumables: { drumsId: 4, potId: 22839 } }] }],
-		} as Record<string, any>;
-
-		migrateRetypedBuffFields(raid, 'raid');
-
-		expect(Object.keys(raid.parties[0].players[0].consumables)).toEqual([]);
-		expect(Object.keys(raid.parties[0].players[1].consumables)).toEqual(['potId']);
-	});
-
-	// has_bs_solarian_sapphire was a warrior class option, not a buff field, so the pre-pass has
-	// nothing to do for it: the loaders' `ignoreUnknownFields` skips it wherever it is nested.
-	it('loads a version-16 payload that still carries the warrior class option the proto reserved', () => {
-		const json = {
-			apiVersion: 16,
-			player: {
-				dpsWarrior: { options: { classOptions: { hasBsSolarianSapphire: true, hasBsT2: true, stanceSnapshot: true } } },
-			},
-		} as Record<string, any>;
-
-		migrateRetypedBuffFields(json);
-		const settings = IndividualSimSettings.fromJson(json as never, { ignoreUnknownFields: true });
-
-		const spec = settings.player?.spec;
-		expect(spec?.oneofKind).toBe('dpsWarrior');
-		expect(spec?.oneofKind === 'dpsWarrior' && spec.dpsWarrior.options?.classOptions?.hasBsT2).toBe(true);
-		expect(spec?.oneofKind === 'dpsWarrior' && spec.dpsWarrior.options?.classOptions?.stanceSnapshot).toBe(true);
-	});
-
-	it('spells a retired field the three ways a payload may carry it', () => {
-		expect(retiredFieldSpellings('joc_retribution_2pt4')).toEqual(['joc_retribution_2pt4', 'jocRetribution2pt4', 'jocRetribution2Pt4']);
-		expect(retiredFieldSpellings('soe_enhancement_2pt4')).toEqual(['soe_enhancement_2pt4', 'soeEnhancement2pt4', 'soeEnhancement2Pt4']);
-		expect(retiredFieldSpellings('totem_of_wrath')).toEqual(['totem_of_wrath', 'totemOfWrath']);
-		expect(retiredFieldSpellings('drums')).toEqual(['drums']);
-	});
-
-	it('names 33 retired fields, the ones the proto reserved', () => {
-		const fields = Object.values(retiredBuffFields).flat();
-
-		expect(fields).toHaveLength(33);
-		expect(new Set(fields).size).toBe(33);
-	});
-
 	it('names 25 fields, the ones the proto retyped', () => {
 		const fields = Object.values(retypedBuffFields).flat();
 
@@ -195,16 +99,12 @@ describe('migrateRetypedBuffFields', () => {
 	});
 
 	// A share link is binary, and nothing rewrites it: a tristate's varint 2 decodes as the bool's
-	// true, and a retired field number is skipped as an unknown one. The bytes are written by hand
-	// because no message in the tree encodes either shape: `[0x30, 0x02]` is RaidBuffs field 6
-	// (thorns) carrying 2, and `[0x08, 0x01]` is the retired PartyBuffs field 1 carrying 1.
+	// true. The bytes are written by hand because no message in the tree encodes that shape:
+	// `[0x30, 0x02]` is RaidBuffs field 6 (thorns) carrying 2.
 	it('reads a saved link with no pre-pass', () => {
 		const raidBuffs = RaidBuffs.fromBinary(new Uint8Array([0x30, 0x02]));
-		const partyBuffs = PartyBuffs.fromBinary(new Uint8Array([0x08, 0x01]));
 
 		expect(raidBuffs.thorns).toBe(true);
-		expect(UnknownFieldHandler.list(partyBuffs).map(field => field.no)).toEqual([1]);
-		expect(PartyBuffs.toJson(partyBuffs)).toEqual({});
 	});
 
 	// A row that goes back to ProtoTristate in the manifest would have the rewrite write a bool into

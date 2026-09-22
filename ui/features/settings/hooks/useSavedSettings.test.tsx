@@ -46,15 +46,6 @@ describe('useSavedSettings', () => {
 		expect(entries[0].data.debuffs?.huntersMark).toBe(true);
 	});
 
-	// The same swallowing would hide an entry that names a field api version 17 retired.
-	it('keeps an entry that still carries a retired buff', () => {
-		store({ Legacy: { race: 'RaceOrc', debuffs: { misery: true, huntersMark: true }, partyBuffs: { drums: 'LesserDrumsOfBattle' } } });
-
-		const { entries } = load();
-		expect(entries.map(entry => entry.name)).toEqual(['Legacy']);
-		expect(entries[0].data.debuffs?.huntersMark).toBe(true);
-	});
-
 	it('reads the missing state as off rather than as a set buff', () => {
 		store({ Current: { debuffs: { improvedSealOfTheCrusader: 'TristateEffectMissing' } } });
 

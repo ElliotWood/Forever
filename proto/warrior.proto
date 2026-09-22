@@ -83,16 +83,13 @@ enum WarriorStance {
 }
 
 message WarriorOptions {
-	reserved 6;
-	reserved "has_bs_solarian_sapphire";
-
 	WarriorShout default_shout = 1;
 	WarriorStance default_stance = 2;
 
 	double starting_rage = 3;
 	int32 queue_delay = 4;
 	bool stance_snapshot = 5;
-	bool has_bs_t2 = 7;
+	bool has_bs_t2 = 6;
 }
 
 enum DpsWarriorSpec {
@@ -109,9 +106,6 @@ enum WarriorSunder {
 
 message DpsWarrior {
 	message Rotation {
-		reserved 6;
-		reserved "bloodlust_timing";
-
 		RotationType type = 1;
 
 		DpsWarriorSpec spec = 2;

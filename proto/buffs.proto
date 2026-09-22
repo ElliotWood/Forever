@@ -6,10 +6,8 @@ option go_package = "./proto";
 import "common.proto";
 
 // Buffs that affect the entire raid.
-// Next index: 8
+// Next index: 7
 message RaidBuffs {
-	reserved 7;
-	reserved "bloodlust";
 	bool arcane_brilliance = 1;
 	bool power_word_fortitude = 2;
 	bool shadow_protection = 3;
@@ -19,71 +17,65 @@ message RaidBuffs {
 }
 
 // Buffs that affect a single party.
-// Next index: 46
+// Next index: 28
 message PartyBuffs {
-	reserved 1, 5, 9, 10, 11, 14, 15, 16, 17, 20, 21, 22, 25, 26, 29, 30, 32, 37;
-	reserved "ferocious_inspiration", "sanctity_aura", "draenei_racial_melee", "draenei_racial_caster", "drums", "braided_eternium_chain", "eye_of_the_night", "chain_of_the_twilight_owl", "jade_pendant_of_blasting", "totem_of_wrath", "wrath_of_air_totem", "snapshot_improved_wrath_of_air_totem", "snapshot_improved_strength_of_earth_totem", "tranquil_air_totem", "bs_solarian_sapphire", "snapshot_bs_solarian_sapphire", "snapshot_bs_booming_voice_rank", "soe_enhancement_2pt4";
-	bool blood_pact = 2;
-	bool moonkin_aura = 3;
-	bool leader_of_the_pack = 4;
-	bool devotion_aura = 6;
-	bool retribution_aura = 7;
-	bool trueshot_aura = 8;
-	int32 atiesh_mage = 12;
-	int32 atiesh_warlock = 13;
-	TristateEffect mana_spring_totem = 18;
-	int32 mana_tide_totems = 19;
-	bool grace_of_air_totem = 23;
-	bool strength_of_earth_totem = 24;
-	bool windfury_totem = 27;
-	bool battle_shout = 28;
-	bool snapshot_bs_t2 = 31;
-	bool commanding_shout = 33;
-	bool totem_twisting = 34;
-	int32 atiesh_druid = 35;
-	int32 atiesh_priest = 36;
-	bool frost_resistance_aura = 38;
-	bool frost_resistance_totem = 39;
-	bool nature_resistance_totem = 40;
-	bool fire_resistance_totem = 41;
-	bool fire_resistance_aura = 42;
-	bool shadow_resistance_aura = 43;
-	bool aspect_of_the_wild = 44;
-	bool concentration_aura = 45;
+	bool blood_pact = 1;
+	bool moonkin_aura = 2;
+	bool leader_of_the_pack = 3;
+	bool devotion_aura = 4;
+	bool retribution_aura = 5;
+	bool trueshot_aura = 6;
+	int32 atiesh_mage = 7;
+	int32 atiesh_warlock = 8;
+	TristateEffect mana_spring_totem = 9;
+	int32 mana_tide_totems = 10;
+	bool grace_of_air_totem = 11;
+	bool strength_of_earth_totem = 12;
+	bool windfury_totem = 13;
+	bool battle_shout = 14;
+	bool snapshot_bs_t2 = 15;
+	bool commanding_shout = 16;
+	bool totem_twisting = 17;
+	int32 atiesh_druid = 18;
+	int32 atiesh_priest = 19;
+	bool frost_resistance_aura = 20;
+	bool frost_resistance_totem = 21;
+	bool nature_resistance_totem = 22;
+	bool fire_resistance_totem = 23;
+	bool fire_resistance_aura = 24;
+	bool shadow_resistance_aura = 25;
+	bool aspect_of_the_wild = 26;
+	bool concentration_aura = 27;
 }
 
 // These are usually individual actions taken by other Characters.
-// Next index: 10
+// Next index: 8
 message IndividualBuffs {
-	reserved 3, 7;
-	reserved "blessing_of_sanctuary", "unleashed_rage";
 	bool blessing_of_kings = 1;
 	bool blessing_of_salvation = 2;
-	bool blessing_of_wisdom = 4;
-	bool blessing_of_might = 5;
-	int32 shadow_priest_dps = 6;
-	int32 innervates = 8;
-	int32 power_infusions = 9;
+	bool blessing_of_wisdom = 3;
+	bool blessing_of_might = 4;
+	int32 shadow_priest_dps = 5;
+	int32 innervates = 6;
+	int32 power_infusions = 7;
 }
 
-// Next index: 29
+// Next index: 17
 message Debuffs {
-	reserved 4, 6, 7, 8, 9, 10, 18, 19, 25, 26, 27, 28;
-	reserved "misery", "isb_uptime", "shadow_weaving", "improved_scorch", "winters_chill", "blood_frenzy", "expose_weakness_uptime", "expose_weakness_hunter_agility", "shadow_embrace", "screech", "hemorrhage_uptime", "joc_retribution_2pt4";
 	bool judgement_of_wisdom = 1;
 	bool judgement_of_light = 2;
 	bool improved_seal_of_the_crusader = 3;
-	bool curse_of_elements = 5;
-	bool gift_of_arthas = 11;
-	bool mangle = 12;
-	bool expose_armor = 13;
-	bool faerie_fire = 14;
-	bool sunder_armor = 15;
-	bool curse_of_recklessness = 16;
-	bool hunters_mark = 17;
-	bool demoralizing_roar = 20;
-	bool demoralizing_shout = 21;
-	bool thunder_clap = 22;
-	bool insect_swarm = 23;
-	bool scorpid_sting = 24;
+	bool curse_of_elements = 4;
+	bool gift_of_arthas = 5;
+	bool mangle = 6;
+	bool expose_armor = 7;
+	bool faerie_fire = 8;
+	bool sunder_armor = 9;
+	bool curse_of_recklessness = 10;
+	bool hunters_mark = 11;
+	bool demoralizing_roar = 12;
+	bool demoralizing_shout = 13;
+	bool thunder_clap = 14;
+	bool insect_swarm = 15;
+	bool scorpid_sting = 16;
 }
