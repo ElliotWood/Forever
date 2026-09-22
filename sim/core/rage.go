@@ -128,7 +128,9 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 			if unit.GetCurrentPowerBar() != RageBar {
 				return
 			}
-			rageConversionDamageTaken := GetRageConversion(spell.Unit.Level)
+			// Kalgan: c is the conversion at the rage user's own level (230.6 at 60), not the attacker's;
+			// upstream (wowsims/forever) does the same.
+			rageConversionDamageTaken := GetRageConversion(unit.Level)
 			generatedRage := result.Damage * 2.5 / rageConversionDamageTaken
 			generatedRage *= unit.rageBar.damageTakenMultiplier
 			generatedRage += unit.rageBar.flatDamageTakenBonusRage
