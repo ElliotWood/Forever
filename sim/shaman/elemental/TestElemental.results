@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-Bashguuder-13204"
+ value: {
+  dps: 276.71656
+  tps: 172.70339
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-BeaststalkerArmor"
  value: {
   dps: 297.40296
@@ -477,6 +484,13 @@ dps_results: {
  value: {
   dps: 292.33076
   tps: 182.00638
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-Rivenspike-13286"
+ value: {
+  dps: 276.71656
+  tps: 172.70339
  }
 }
 dps_results: {

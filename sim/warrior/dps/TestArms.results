@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArms-AllItems-Bashguuder-13204"
+ value: {
+  dps: 503.04712
+  tps: 301.23635
+ }
+}
+dps_results: {
  key: "TestArms-AllItems-BattlegearofHeroism"
  value: {
   dps: 475.89238
@@ -512,6 +519,13 @@ dps_results: {
  value: {
   dps: 414.04446
   tps: 246.09469
+ }
+}
+dps_results: {
+ key: "TestArms-AllItems-Rivenspike-13286"
+ value: {
+  dps: 492.94963
+  tps: 292.80055
  }
 }
 dps_results: {

@@ -67,6 +67,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-Bashguuder-13204"
+ value: {
+  dps: 313.80138
+  tps: 162.60087
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-Biznicks247x128Accurascope-2523"
  value: {
   dps: 313.80138

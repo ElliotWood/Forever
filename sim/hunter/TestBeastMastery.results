@@ -522,6 +522,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Rivenspike-13286"
+ value: {
+  dps: 1023.54983
+  tps: 439.10226
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-SerenityField-272439"
  value: {
   dps: 1024.48162

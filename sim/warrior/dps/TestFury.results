@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-Bashguuder-13204"
+ value: {
+  dps: 725.69532
+  tps: 447.56327
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-BattlegearofHeroism"
  value: {
   dps: 847.50441
@@ -509,6 +516,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFury-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 725.69532
+  tps: 447.56327
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-Rivenspike-13286"
  value: {
   dps: 725.69532
   tps: 447.56327

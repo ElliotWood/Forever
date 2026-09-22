@@ -139,6 +139,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-Bashguuder-13204"
+ value: {
+  dps: 571.34734
+  tps: 596.26231
+  dtps: 772.22453
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-BattlegearofEternalJustice"
  value: {
   dps: 570.77402
@@ -672,6 +680,14 @@ dps_results: {
   dps: 576.78196
   tps: 606.07215
   dtps: 758.05773
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-Rivenspike-13286"
+ value: {
+  dps: 571.34734
+  tps: 596.26231
+  dtps: 772.22453
  }
 }
 dps_results: {

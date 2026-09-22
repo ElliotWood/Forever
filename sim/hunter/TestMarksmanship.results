@@ -522,6 +522,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-Rivenspike-13286"
+ value: {
+  dps: 795.16413
+  tps: 400.43675
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-SerenityField-272439"
  value: {
   dps: 796.13993

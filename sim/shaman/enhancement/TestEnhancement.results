@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-Bashguuder-13204"
+ value: {
+  dps: 536.96106
+  tps: 394.81224
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-BeaststalkerArmor"
  value: {
   dps: 444.90268
@@ -442,6 +449,13 @@ dps_results: {
  value: {
   dps: 399.31825
   tps: 295.3105
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-Rivenspike-13286"
+ value: {
+  dps: 556.18877
+  tps: 405.94428
  }
 }
 dps_results: {
