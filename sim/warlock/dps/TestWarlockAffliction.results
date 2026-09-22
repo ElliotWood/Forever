@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.13729
+  weights: -0.55672
   weights: 0
-  weights: 0.28187
-  weights: 0
-  weights: 0
+  weights: 0.70699
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 5.61297
-  weights: 4.95821
+  weights: 0
+  weights: 0
+  weights: 4.97774
+  weights: 4.36972
   weights: 0
   weights: 0
   weights: 0
@@ -99,133 +99,133 @@ stat_weights_results: {
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Champion'sDreadgear"
  value: {
-  dps: 588.5114
-  tps: 441.67422
+  dps: 577.18027
+  tps: 432.62888
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-DeathmistRaiment"
  value: {
-  dps: 579.61919
-  tps: 432.90302
+  dps: 570.83076
+  tps: 425.76739
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Demoniac'sThreads"
  value: {
-  dps: 567.14036
-  tps: 424.13345
+  dps: 559.79243
+  tps: 418.29647
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Doomcaller'sAttire"
  value: {
-  dps: 576.1276
-  tps: 431.24281
+  dps: 574.52403
+  tps: 430.00969
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-FelheartRaiment"
  value: {
-  dps: 574.47702
-  tps: 423.39824
+  dps: 563.3162
+  tps: 414.43836
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-FieldMarshal'sThreads"
  value: {
-  dps: 602.72131
-  tps: 452.96149
+  dps: 581.39063
+  tps: 435.9708
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Hazza'rah'sCharmofDestruction-19957"
  value: {
-  dps: 542.99972
-  tps: 404.83468
+  dps: 538.64141
+  tps: 401.44574
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 493.16542
-  tps: 364.16664
+  dps: 484.28759
+  tps: 357.08247
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-LieutenantCommander'sDreadgear"
  value: {
-  dps: 588.5114
-  tps: 441.67422
+  dps: 577.18027
+  tps: 432.62888
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-NemesisRaiment"
  value: {
-  dps: 570.02433
-  tps: 426.64077
+  dps: 563.60873
+  tps: 421.40537
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Warlord'sThreads"
  value: {
-  dps: 602.72131
-  tps: 452.96149
+  dps: 581.39063
+  tps: 435.9708
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Average-Default"
  value: {
-  dps: 555.94729
-  tps: 414.72938
+  dps: 551.94488
+  tps: 411.53681
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 549.79149
-  tps: 1317.8265
+  dps: 542.97161
+  tps: 1312.47255
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 549.79149
-  tps: 410.06466
+  dps: 542.97161
+  tps: 404.71071
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-FullBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 565.00258
-  tps: 403.98497
+  dps: 550.42865
+  tps: 392.3749
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 463.34925
-  tps: 1406.57545
+  dps: 462.22513
+  tps: 1405.53949
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 463.34925
-  tps: 386.26469
+  dps: 462.22513
+  tps: 385.22872
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-Settings-Orc-prebis-Affliction Warlock-forever_affliction-NoBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 452.69771
-  tps: 362.82591
+  dps: 456.50779
+  tps: 366.19469
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 547.72801
-  tps: 408.66138
+  dps: 541.79987
+  tps: 403.97251
  }
 }
