@@ -600,7 +600,7 @@ the values.
 
 | Field                      | What it is                                                                                                                                                                                                                                                             |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Field`, `Number`, `Scope` | the proto field, its number and the message it lives on. Nothing else may take a number, and a retired one goes into `Retired`                                                                                                                                         |
+| `Field`, `Number`, `Scope` | the proto field, its number and the message it lives on. Each scope's numbers are dense from 1, so a row that goes away is a renumber of the rows after it                                                                                                             |
 | `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32` or `ProtoDouble`. Declared, not derived, so the emitter runs while the compiled protos are stale; the resolver checks it against the live trait tree                                                                        |
 | `Kind`                     | what the generator emits, below                                                                                                                                                                                                                                        |
 | `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory`                                                                                                                                           |
@@ -629,8 +629,7 @@ for the trigger or the cooldown; `KindItemCount` takes a count and applies its a
 `KindDebuffUptime` are the debuff shapes. `KindManual` is a row the sim models by hand, `KindFlag`
 is a sim toggle rather than a buff, and `KindAbsent` is a field the Forever client describes no
 spell for. The last three resolve to a commented shell naming the reason. No `Proto` value is an
-enum: the one that was, the party's drums, is retired, and a field that wants an enum again would
-add its own value and a name for it in both emitters.
+enum, and a field that wants one would add its own value and a name for it in both emitters.
 
 ### Resolving a row
 
@@ -678,18 +677,17 @@ then run the generator, which writes the whole file back. Running it twice and s
 
 `go test ./tools/database/... ./tools/gen_buffs_proto/...` needs no client database and runs in CI.
 Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`, `TestGeneratedBuffsDebuffsTS`
-and `TestGeneratedRankTablesMatchTheDatabase` skip; the other 27 run.
+and `TestGeneratedRankTablesMatchTheDatabase` skip; the other 25 run.
 
 | Test                                                                                                              | What it holds                                                                                                                   |
 | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | `TestUniqueScopeField`, `TestUniqueScopeNumber`, `TestUniqueGoStem`                                               | no two rows collide                                                                                                             |
-| `TestNoLiveRowTakesARetiredNumberOrName`                                                                          | neither a field number nor a field name api version 17 gave up is ever handed out again                                         |
+| `TestScopeNumbersAreDense`                                                                                        | every scope's field numbers are 1..N with no gap                                                                                |
 | `TestProtoTypeMatchesKind`, `TestTalentImpliesTristate`, `TestShellRowsHaveNotes`, `TestResolvableRowsHaveAnchor` | the schema rules above                                                                                                          |
 | `TestFieldNaming`, `TestFieldNamesRoundTrip`                                                                      | `GoField()` and `TSField()` reproduce protoc's and protobuf-ts's camel case                                                     |
 | `TestRenderMatchesCommittedFile`                                                                                  | `proto/buffs.proto` is what the manifest renders                                                                                |
-| `TestRenderReservesEveryRetiredNumber`, `TestRenderNextIndex`                                                     | both `reserved` lines per message — numbers and names — and the next free number                                                |
+| `TestRenderNextIndex`                                                                                             | the next free number above each message                                                                                         |
 | `TestRetypedFieldsAreBool`, `TestRetypedFieldsMatchTheMigration`                                                  | the 25 fields api version 17 retyped are bool, and `ui/sim/proto/buff_field_migration.ts` names the same 25                     |
-| `TestRetiredFieldsMatchTheMigration`                                                                              | `buff_field_migration.ts` drops the same 33 retired names the manifest retires, scope by scope                                  |
 | `TestRenderedBuffFilesMatchTheFixtures`, `TestRenderedBuffFilesCompile`                                           | synthetic rows render to the committed fixtures, and those fixtures compile against the real `sim/core` through a build overlay |
 | `TestRenderBuffsDebuffsTS*`                                                                                       | the settings inputs each proto type and kind renders                                                                            |
 | `TestGeneratedBuffFiles`, `TestGeneratedBuffsDebuffsTS`                                                           | with a database, the committed files are byte-for-byte what the generator emits                                                 |
@@ -699,22 +697,19 @@ Rewrite the fixtures with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`.
 
 ### Traps
 
-**A retired field number is gone for good.** `buffmanifest.Retired` lists the 33 api version 17 gave
-up; a share link or a saved setting from before the bump still carries them on the wire, and a new row
-reusing one would read the old value. The emitter turns them into `reserved` lines and counts the next
-free index past them.
+**Dropping a row renumbers the ones after it.** Each scope's numbers are dense from 1, so a field that
+goes away shifts every later number down by one and `TestScopeNumbersAreDense` holds that. Nothing is
+live, so no saved payload rides on the old numbers.
 
 **A proto change here is a UI migration too.** `ui/sim/proto/buff_field_migration.ts` runs on the raw
-JSON before `fromJson`, because the parser throws on an enum name in a bool field and on an unknown key
-long before the version converters run. A retyped field goes in its list, a retired one in the other,
-and every `fromJson` of a settings envelope passes `ignoreUnknownFields`.
+JSON before `fromJson`, because the parser throws on an enum name in a bool field long before the
+version converters run. A retyped field goes in its list, and every `fromJson` of a settings envelope
+passes `ignoreUnknownFields`.
 
 **Drums are not a Forever consumable.** The client describes no row for the TBC drums - 35476, 35475
 and 35478, Battle, War and Restoration, nor their Greater variants - so there is nothing to model and
 no manifest row to hang them on. The only "Drums of War" it knows is 1259907, fifteen seconds of party
-movement speed, which is not the buff the party field named. `ConsumesSpec` reserves number 12 and the
-name `drums_id`, the same pre-pass drops the key from an older payload, and the party `drums` buff was
-retired with the other 32.
+movement speed, which is no stat buff at all.
 
 **A `PetInheritOwnerAura` row must name the aura the pet looks for.** The pet finds it on its owner by
 label, so the row needs a `Label`, a `Name` or a `Category` even when the client describes the buff not

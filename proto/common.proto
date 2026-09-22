@@ -433,9 +433,6 @@ enum TristateEffect {
 }
 
 message ConsumesSpec {
-	reserved 12;
-	reserved "drums_id";
-
 	int32 pot_id = 1;
 	int32 flask_id = 2;
 	int32 battle_elixir_id = 3;

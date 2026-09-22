@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"slices"
 	"strconv"
 	"strings"
 	"testing"
@@ -31,30 +32,18 @@ func TestUniqueScopeNumber(t *testing.T) {
 	}
 }
 
-func TestNoLiveRowTakesARetiredNumberOrName(t *testing.T) {
-	for _, spec := range Manifest {
-		for _, retired := range Retired[spec.Scope] {
-			if spec.Number == retired.Number {
-				t.Errorf("%s/%s takes %d, which %s retired", spec.Scope, spec.Field, spec.Number, retired.Field)
-			}
-			if spec.Field == retired.Field {
-				t.Errorf("%s/%s takes a retired field name", spec.Scope, spec.Field)
-			}
+func TestScopeNumbersAreDense(t *testing.T) {
+	for _, scope := range []BuffScope{ScopeRaid, ScopeParty, ScopeIndividual, ScopeDebuff} {
+		rows := ByScope(scope)
+		taken := make([]int32, len(rows))
+		for i, spec := range rows {
+			taken[i] = spec.Number
 		}
-	}
-}
-
-func TestRetiredFieldsAreWellFormed(t *testing.T) {
-	for scope, retired := range Retired {
-		for i, entry := range retired {
-			if i > 0 && entry.Number <= retired[i-1].Number {
-				t.Errorf("%s retires %d after %d, which is not ascending", scope, entry.Number, retired[i-1].Number)
-			}
-			if entry.Number <= 0 {
-				t.Errorf("%s retires %d, which is no proto field number", scope, entry.Number)
-			}
-			if entry.Field == "" {
-				t.Errorf("%s retires number %d under no name", scope, entry.Number)
+		slices.Sort(taken)
+		for i, number := range taken {
+			if number != int32(i+1) {
+				t.Errorf("%s takes the numbers %v, want 1..%d", scope, taken, len(rows))
+				break
 			}
 		}
 	}
@@ -168,8 +157,7 @@ func TestFieldNamesRoundTrip(t *testing.T) {
 // proto/buffs.proto is rendered from this manifest, so this test is not an independent oracle for
 // the field set: it catches a hand edit to the committed proto drifting from the manifest, and
 // nothing more. What the numbers and types are checked against is gen_buffs_proto's
-// TestRenderMatchesCommittedFile (the committed file is what the manifest renders) and
-// `buf breaking` against master (no field number or type changes the API version does not declare).
+// TestRenderMatchesCommittedFile: the committed file is what the manifest renders.
 func TestCensusMatchesProto(t *testing.T) {
 	messages := map[string]BuffScope{
 		"RaidBuffs":       ScopeRaid,
