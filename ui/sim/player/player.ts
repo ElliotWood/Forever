@@ -1194,7 +1194,7 @@ export class Player<SpecType extends Spec> {
 			return this.enchantEPCache.get(enchant.effectId)!;
 		}
 
-		const ep = this.computeStatsEP(new Stats(enchant.stats));
+		const ep = this.computeStatsEP(new Stats(enchant.stats, enchant.pseudoStats));
 		this.enchantEPCache.set(enchant.effectId, ep);
 		return ep;
 	}

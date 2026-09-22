@@ -267,7 +267,7 @@ export class EquippedItem {
 	// if slot is provided it will include slot specific stats like weapon DPS
 	calcStats(slot?: ItemSlot): Stats {
 		const item = this.item;
-		let stats = new Stats(item.stats);
+		let stats = new Stats(item.stats, item.pseudoStats);
 		if (typeof slot === 'number') stats = stats.add(getWeaponStatsBySlot(item, slot, 0));
 		return stats;
 	}
