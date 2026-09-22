@@ -70,8 +70,9 @@ func (rogue *Rogue) registerDeadlyPoisonSpell() {
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.Snapshot(target, deadlyPoisonTickDamage*float64(dot.GetStacks()))
 			},
+			// The dot is 25349, which carries Periodic Can Crit in the client (25347 is the imbue).
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.Spell.OutcomeTickMagicCrit)
 			},
 		},
 
