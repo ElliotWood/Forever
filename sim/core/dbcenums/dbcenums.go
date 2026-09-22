@@ -4,3 +4,5 @@
 // The package imports nothing, so every side can read the same definitions: the extractor in
 // tools/database/dbc, the store in sim/core/spelldata and the decoder in sim/core.
 package dbcenums
+
+//go:generate stringer -type=SpellEffectType,EffectAuraType

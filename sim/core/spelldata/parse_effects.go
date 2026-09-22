@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"slices"
+	"strings"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
@@ -283,76 +284,10 @@ func report(s *Spell, pos int, e *Effect) {
 		s.ID, s.Name, pos, auraName(e.Aura), e.Aura, e.Misc, e.BasePoints)
 }
 
-// The client's name for an aura the parser skipped. Only the auras a modifier or a buff row is
-// expected to carry are named; anything else reads as its number.
+// The client's name for an aura the parser skipped, or its number where the client names none.
 func auraName(a dbcenums.EffectAuraType) string {
-	if name, ok := auraNames[a]; ok {
+	if name := a.String(); !strings.HasPrefix(name, "EffectAuraType(") {
 		return name
 	}
 	return fmt.Sprintf("A_%d", a)
-}
-
-var auraNames = map[dbcenums.EffectAuraType]string{
-	dbcenums.A_PERIODIC_DAMAGE:                  "A_PERIODIC_DAMAGE",
-	dbcenums.A_DUMMY:                            "A_DUMMY",
-	dbcenums.A_MOD_FEAR:                         "A_MOD_FEAR",
-	dbcenums.A_PERIODIC_HEAL:                    "A_PERIODIC_HEAL",
-	dbcenums.A_MOD_ATTACKSPEED:                  "A_MOD_ATTACKSPEED",
-	dbcenums.A_MOD_THREAT:                       "A_MOD_THREAT",
-	dbcenums.A_MOD_TAUNT:                        "A_MOD_TAUNT",
-	dbcenums.A_MOD_STUN:                         "A_MOD_STUN",
-	dbcenums.A_MOD_DAMAGE_DONE:                  "A_MOD_DAMAGE_DONE",
-	dbcenums.A_MOD_DAMAGE_TAKEN:                 "A_MOD_DAMAGE_TAKEN",
-	dbcenums.A_DAMAGE_SHIELD:                    "A_DAMAGE_SHIELD",
-	dbcenums.A_MOD_RESISTANCE:                   "A_MOD_RESISTANCE",
-	dbcenums.A_PERIODIC_TRIGGER_SPELL:           "A_PERIODIC_TRIGGER_SPELL",
-	dbcenums.A_PERIODIC_ENERGIZE:                "A_PERIODIC_ENERGIZE",
-	dbcenums.A_MOD_ROOT:                         "A_MOD_ROOT",
-	dbcenums.A_MOD_SILENCE:                      "A_MOD_SILENCE",
-	dbcenums.A_MOD_STAT:                         "A_MOD_STAT",
-	dbcenums.A_MOD_INCREASE_SPEED:               "A_MOD_INCREASE_SPEED",
-	dbcenums.A_MOD_DECREASE_SPEED:               "A_MOD_DECREASE_SPEED",
-	dbcenums.A_MOD_INCREASE_HEALTH:              "A_MOD_INCREASE_HEALTH",
-	dbcenums.A_MOD_SHAPESHIFT:                   "A_MOD_SHAPESHIFT",
-	dbcenums.A_SCHOOL_IMMUNITY:                  "A_SCHOOL_IMMUNITY",
-	dbcenums.A_PROC_TRIGGER_SPELL:               "A_PROC_TRIGGER_SPELL",
-	dbcenums.A_MOD_PARRY_PERCENT:                "A_MOD_PARRY_PERCENT",
-	dbcenums.A_MOD_DODGE_PERCENT:                "A_MOD_DODGE_PERCENT",
-	dbcenums.A_MOD_BLOCK_PERCENT:                "A_MOD_BLOCK_PERCENT",
-	dbcenums.A_MOD_WEAPON_CRIT_PERCENT:          "A_MOD_WEAPON_CRIT_PERCENT",
-	dbcenums.A_MOD_HIT_CHANCE:                   "A_MOD_HIT_CHANCE",
-	dbcenums.A_MOD_SPELL_HIT_CHANCE:             "A_MOD_SPELL_HIT_CHANCE",
-	dbcenums.A_TRANSFORM:                        "A_TRANSFORM",
-	dbcenums.A_MOD_SPELL_CRIT_CHANCE:            "A_MOD_SPELL_CRIT_CHANCE",
-	dbcenums.A_MOD_CASTING_SPEED_NOT_STACK:      "A_MOD_CASTING_SPEED_NOT_STACK",
-	dbcenums.A_MECHANIC_IMMUNITY:                "A_MECHANIC_IMMUNITY",
-	dbcenums.A_MOD_DAMAGE_PERCENT_DONE:          "A_MOD_DAMAGE_PERCENT_DONE",
-	dbcenums.A_MOD_POWER_REGEN:                  "A_MOD_POWER_REGEN",
-	dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN:         "A_MOD_DAMAGE_PERCENT_TAKEN",
-	dbcenums.A_MOD_ATTACK_POWER:                 "A_MOD_ATTACK_POWER",
-	dbcenums.A_ADD_FLAT_MODIFIER:                "A_ADD_FLAT_MODIFIER",
-	dbcenums.A_ADD_PCT_MODIFIER:                 "A_ADD_PCT_MODIFIER",
-	dbcenums.A_ADD_TARGET_TRIGGER:               "A_ADD_TARGET_TRIGGER",
-	dbcenums.A_MOD_HEALING:                      "A_MOD_HEALING",
-	dbcenums.A_MOD_HEALING_PCT:                  "A_MOD_HEALING_PCT",
-	dbcenums.A_MOD_OFFHAND_DAMAGE_PCT:           "A_MOD_OFFHAND_DAMAGE_PCT",
-	dbcenums.A_MOD_RANGED_ATTACK_POWER:          "A_MOD_RANGED_ATTACK_POWER",
-	dbcenums.A_MOD_INCREASE_HEALTH_PERCENT:      "A_MOD_INCREASE_HEALTH_PERCENT",
-	dbcenums.A_MOD_HEALING_DONE:                 "A_MOD_HEALING_DONE",
-	dbcenums.A_MOD_HEALING_DONE_PERCENT:         "A_MOD_HEALING_DONE_PERCENT",
-	dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE:        "A_MOD_TOTAL_STAT_PERCENTAGE",
-	dbcenums.A_MOD_BASE_RESISTANCE_PCT:          "A_MOD_BASE_RESISTANCE_PCT",
-	dbcenums.A_MOD_CRIT_DAMAGE_BONUS:            "A_MOD_CRIT_DAMAGE_BONUS",
-	dbcenums.A_OVERRIDE_CLASS_SCRIPTS:           "A_OVERRIDE_CLASS_SCRIPTS",
-	dbcenums.A_MOD_IGNORE_SHAPESHIFT:            "A_MOD_IGNORE_SHAPESHIFT",
-	dbcenums.A_MECHANIC_DURATION_MOD:            "A_MECHANIC_DURATION_MOD",
-	dbcenums.A_MOD_EXPERTISE:                    "A_MOD_EXPERTISE",
-	dbcenums.A_MOD_CRIT_PCT:                     "A_MOD_CRIT_PCT",
-	dbcenums.A_MOD_MELEE_HASTE_3:                "A_MOD_MELEE_HASTE_3",
-	dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS:        "A_OVERRIDE_ACTIONBAR_SPELLS",
-	dbcenums.A_MOD_ADDITIONAL_POWER_COST:        "A_MOD_ADDITIONAL_POWER_COST",
-	dbcenums.A_MOD_POWER_COST_SCHOOL_PCT:        "A_MOD_POWER_COST_SCHOOL_PCT",
-	dbcenums.A_MOD_INCREASE_ENERGY:              "A_MOD_INCREASE_ENERGY",
-	dbcenums.A_MOD_SKILL:                        "A_MOD_SKILL",
-	dbcenums.A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT: "A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT",
 }
