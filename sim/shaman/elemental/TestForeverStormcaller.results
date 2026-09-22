@@ -53,7 +53,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.26197
+  weights: 0.2577
   weights: 0
   weights: 0.41235
   weights: 0
@@ -155,8 +155,8 @@ dps_results: {
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Average-Default"
  value: {
-  dps: 369.31037
-  tps: 345.39334
+  dps: 369.31026
+  tps: 345.39322
  }
 }
 dps_results: {
