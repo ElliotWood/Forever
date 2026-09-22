@@ -188,8 +188,8 @@ dps_results: {
 dps_results: {
  key: "TestArms-AllItems-Champion'sBattlearmor"
  value: {
-  dps: 487.56727
-  tps: 288.28925
+  dps: 484.46375
+  tps: 286.45124
  }
 }
 dps_results: {
@@ -419,8 +419,8 @@ dps_results: {
 dps_results: {
  key: "TestArms-AllItems-LieutenantCommander'sBattlearmor"
  value: {
-  dps: 487.56727
-  tps: 288.28925
+  dps: 484.46375
+  tps: 286.45124
  }
 }
 dps_results: {

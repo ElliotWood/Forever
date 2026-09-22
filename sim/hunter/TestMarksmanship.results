@@ -76,8 +76,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-BeastmasterArmor"
  value: {
-  dps: 918.6567
-  tps: 484.04239
+  dps: 926.75946
+  tps: 489.71433
  }
 }
 dps_results: {
@@ -174,15 +174,15 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-Champion'sPursuance"
  value: {
-  dps: 912.12381
-  tps: 478.23037
+  dps: 921.09435
+  tps: 484.50975
  }
 }
 dps_results: {
  key: "TestMarksmanship-AllItems-Champion'sPursuit"
  value: {
-  dps: 853.4435
-  tps: 437.19236
+  dps: 862.92803
+  tps: 443.83153
  }
 }
 dps_results: {
@@ -300,8 +300,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-FieldMarshal'sPursuit"
  value: {
-  dps: 869.12865
-  tps: 448.22167
+  dps: 879.79069
+  tps: 455.68509
  }
 }
 dps_results: {
@@ -335,8 +335,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-GiantstalkerArmor"
  value: {
-  dps: 951.58936
-  tps: 504.86297
+  dps: 960.61364
+  tps: 511.17996
  }
 }
 dps_results: {
@@ -419,15 +419,15 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-LieutenantCommander'sPursuance"
  value: {
-  dps: 912.12381
-  tps: 478.23037
+  dps: 921.09435
+  tps: 484.50975
  }
 }
 dps_results: {
  key: "TestMarksmanship-AllItems-LieutenantCommander'sPursuit"
  value: {
-  dps: 853.4435
-  tps: 437.19236
+  dps: 862.92803
+  tps: 443.83153
  }
 }
 dps_results: {
@@ -489,8 +489,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-Predator'sArmor"
  value: {
-  dps: 849.41471
-  tps: 434.23392
+  dps: 860.92704
+  tps: 442.29255
  }
 }
 dps_results: {
@@ -580,8 +580,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-Striker'sGarb"
  value: {
-  dps: 929.81575
-  tps: 490.53383
+  dps: 936.73305
+  tps: 495.37594
  }
 }
 dps_results: {
@@ -671,8 +671,8 @@ dps_results: {
 dps_results: {
  key: "TestMarksmanship-AllItems-Warlord'sPursuit"
  value: {
-  dps: 869.12865
-  tps: 448.22167
+  dps: 879.79069
+  tps: 455.68509
  }
 }
 dps_results: {
