@@ -177,10 +177,11 @@ func NewPaladin(character *core.Character, talentsStr string, _ *proto.PaladinOp
 
 	core.FillTalentsProto(paladin.Talents.ProtoReflect(), talentsStr, TalentTreeSizes)
 
+	// The attack table already holds the base 5% parry and block (sim/core/target.go); adding them
+	// here too gave the paladin 10% of each. Base dodge 0.7% and 1% dodge per 19.8 Agility are the
+	// Classic paladin's, the same as its crit, as on master.
 	paladin.PseudoStats.CanParry = true
-	paladin.PseudoStats.BaseDodgeChance += 0.0065
-	paladin.PseudoStats.BaseParryChance += 0.05
-	paladin.PseudoStats.BaseBlockChance += 0.05
+	paladin.PseudoStats.BaseDodgeChance += 0.007
 
 	paladin.EnableManaBar()
 
@@ -191,7 +192,7 @@ func NewPaladin(character *core.Character, talentsStr string, _ *proto.PaladinOp
 
 	paladin.AddStatDependency(stats.Strength, stats.AttackPower, 2)
 	paladin.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
-	paladin.AddStatDependency(stats.Agility, stats.DodgeRating, 1/25.0*core.DodgeRatingPerDodgePercent)
+	paladin.AddStatDependency(stats.Agility, stats.DodgeRating, core.CritPerAgiMaxLevel[character.Class]*core.DodgeRatingPerDodgePercent)
 	paladin.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 
 	return paladin

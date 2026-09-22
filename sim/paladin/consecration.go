@@ -20,6 +20,8 @@ func (paladin *Paladin) registerConsecration(row shared.SpellData) {
 	bonus := row.SecondaryPeriodic.(shared.SpellDataPeriodic)
 	bonusTargets := int(row.Effect(shared.A_PERIODIC_DUMMY, 0).Value)
 
+	// Each tick is its own direct School Damage spell in the client (1280345-1280349, no Can't Crit),
+	// so it rolls a spell crit, as on master.
 	// The bonus scales on its own coefficient, so it is added to the base damage here rather than
 	// through the dot's, which is the base tick's. Consecrated Ground marks the same targets.
 	dealTick := func(sim *core.Simulation, dot *core.Dot) {
@@ -31,7 +33,7 @@ func (paladin *Paladin) registerConsecration(row shared.SpellData) {
 					paladin.consecratedGroundAuras.Get(target).Activate(sim)
 				}
 			}
-			dot.Spell.CalcAndDealPeriodicDamage(sim, target, damage, dot.OutcomeTickMagicHit)
+			dot.Spell.CalcAndDealPeriodicDamage(sim, target, damage, dot.Spell.OutcomeTickMagicHitAndCrit)
 		}
 	}
 
