@@ -111,7 +111,6 @@ func processEnchantmentEffects(
 	effects []int,
 	effectArgs []int,
 	effectPoints []int,
-	spellEffectPoints []int,
 	outStats *stats.Stats,
 	addRanged bool,
 ) {
@@ -129,16 +128,11 @@ func processEnchantmentEffects(
 				continue
 			}
 			for _, stat := range mapped {
-				if effectPoints[i] == 0 && spellEffectPoints != nil {
-					// This might be stored in a SpellEffect row
-					outStats[stat] = float64(spellEffectPoints[i] + 1)
-				} else {
-					outStats[stat] = float64(effectPoints[i])
+				outStats[stat] = float64(effectPoints[i])
 
-					// If the bonus stat is attack power, copy it to ranged attack power
-					if addRanged && stat == proto.Stat_StatAttackPower {
-						outStats[proto.Stat_StatRangedAttackPower] = float64(effectPoints[i])
-					}
+				// If the bonus stat is attack power, copy it to ranged attack power
+				if addRanged && stat == proto.Stat_StatAttackPower {
+					outStats[proto.Stat_StatRangedAttackPower] = float64(effectPoints[i])
 				}
 			}
 		case ITEM_ENCHANTMENT_EQUIP_SPELL: //Buff
