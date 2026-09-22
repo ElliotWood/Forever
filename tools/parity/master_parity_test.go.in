@@ -27,6 +27,7 @@ type paritySpec struct {
 	Ranged    int32   `json:"ranged"`
 	Distance  float64 `json:"distance"`
 	Tank      bool    `json:"tank"`
+	Gear      string  `json:"gear"`
 }
 
 type parityResult struct {
@@ -153,6 +154,13 @@ func runParitySpec(spec paritySpec, profile map[string]float64, iterations int32
 	items[proto.ItemSlot_ItemSlotMainHand].Id = spec.MH
 	items[proto.ItemSlot_ItemSlotOffHand].Id = spec.OH
 	items[proto.ItemSlot_ItemSlotRanged].Id = spec.Ranged
+	equipment := &proto.EquipmentSpec{Items: items}
+	if os.Getenv("PARITY_GEAR") != "" {
+		// Real gear: forever-next's default preset for the spec, no bonus stats.
+		root := filepath.Dir(filepath.Dir(filepath.Dir(os.Getenv("PARITY_SPECS"))))
+		equipment = core.GetGearSet(filepath.Join(root, filepath.Dir(spec.Gear)), filepath.Base(spec.Gear)).GearSet
+		profile = nil
+	}
 
 	distance := spec.Distance
 	if distance == 0 {
@@ -161,7 +169,7 @@ func runParitySpec(spec paritySpec, profile map[string]float64, iterations int32
 	player := core.WithSpec(&proto.Player{
 		Class:              class,
 		Race:               proto.Race(proto.Race_value[spec.Race]),
-		Equipment:          &proto.EquipmentSpec{Items: items},
+		Equipment:          equipment,
 		Consumes:           consumes,
 		BonusStats:         &proto.UnitStats{Stats: parityStats(profile).ToFloatArray()},
 		TalentsString:      spec.Talents,
