@@ -45,8 +45,8 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 3
-  final_stats: 19.71157
-  final_stats: 16.16047
+  final_stats: 19.52857
+  final_stats: 15.72297
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -55,504 +55,504 @@ character_stats_results: {
 dps_results: {
  key: "TestSmitePriest-AllItems-AegisofPreservation-19345"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-BadgeoftheSwarmguard-21670"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Biznicks247x128Accurascope-2523"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-BladeofEternalDarkness-17780"
  value: {
-  dps: 386.14891
-  tps: 262.86011
+  dps: 385.48714
+  tps: 262.39687
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-BloodvineGarb"
  value: {
-  dps: 387.98497
-  tps: 264.483
+  dps: 387.57462
+  tps: 264.19576
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
-  dps: 331.52726
-  tps: 224.51842
+  dps: 330.61477
+  tps: 223.87968
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-DepletedEyeofInfluence-275630"
  value: {
-  dps: 333.20425
-  tps: 225.62638
+  dps: 332.53994
+  tps: 225.16136
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-DormantHeartoftheMountain-249473"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-DraconicInfusedEmblem-22268"
  value: {
-  dps: 342.70233
-  tps: 232.31773
+  dps: 342.02139
+  tps: 231.84107
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-DreadmistRaiment"
  value: {
-  dps: 446.85567
-  tps: 307.46957
+  dps: 446.19342
+  tps: 307.00599
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Earthstrike-21180"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Enchant2HWeapon-GreaterImpact-963"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EnchantCloak-Subtlety-2621"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EnchantGloves-Threat-2613"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EnchantWeapon-Crusader-1900"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EnchantWeapon-IcyChill-1894"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EyeofMoam-21473"
  value: {
-  dps: 334.33742
-  tps: 226.28441
+  dps: 333.66963
+  tps: 225.81696
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EyeoftheDead-23047"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-FreezingBand-942"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-FrozenHeartoftheMountain-249469"
  value: {
-  dps: 329.07002
-  tps: 222.73123
+  dps: 328.29744
+  tps: 222.19042
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
-  dps: 328.91418
-  tps: 222.66602
+  dps: 328.30119
+  tps: 222.23693
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-HeartoftheScale-13164"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-HibernationCrystal-20636"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 359.16446
-  tps: 243.94727
+  dps: 358.48385
+  tps: 243.47084
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 385.02578
-  tps: 263.77065
+  dps: 384.44853
+  tps: 263.36657
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-JomGabbar-23570"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-LapidisTankardofTidesippe-4696"
  value: {
-  dps: 350.51121
-  tps: 236.77685
+  dps: 349.72627
+  tps: 236.22739
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Loatheb'sReflection-23042"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Magister'sRegalia"
  value: {
-  dps: 482.86963
-  tps: 336.2503
+  dps: 482.61276
+  tps: 336.07049
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-MarkofTyranny-13966"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-MarkoftheChampion-23206"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-MarkoftheChampion-23207"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-MoltenHeartoftheMountain-249470"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-NecropileRaiment"
  value: {
-  dps: 389.2708
-  tps: 266.15345
+  dps: 388.5864
+  tps: 265.67437
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Prismcharm-15867"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-RaggedJohn'sNeverendingCup-15873"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-RegaliaofUndeadCleansing"
  value: {
-  dps: 353.028
-  tps: 240.06721
+  dps: 352.31498
+  tps: 239.5681
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-SerenityField-272439"
  value: {
-  dps: 336.51602
-  tps: 227.87094
+  dps: 335.84987
+  tps: 227.40463
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-ShardoftheGods"
  value: {
-  dps: 339.0441
-  tps: 229.88885
+  dps: 338.27421
+  tps: 229.34993
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Slayer'sCrest-23041"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-SmokingHeartoftheMountain-11811"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-Spider'sKiss"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-SpireoftheStoneshaper-12532"
  value: {
-  dps: 337.94262
-  tps: 229.32926
+  dps: 337.40144
+  tps: 228.95043
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-TalismanofAscendance-22678"
  value: {
-  dps: 346.09822
-  tps: 234.69485
+  dps: 345.43501
+  tps: 234.2306
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-TalismanofEphemeralPower-18820"
  value: {
-  dps: 343.42587
-  tps: 232.20163
+  dps: 342.75432
+  tps: 231.73155
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-TheLionHornofStormwind-14557"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-ThePostmaster"
  value: {
-  dps: 411.24848
-  tps: 281.92567
+  dps: 410.45039
+  tps: 281.367
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 359.78976
-  tps: 243.67414
+  dps: 359.08362
+  tps: 243.17984
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-VestmentsoftheDevout"
  value: {
-  dps: 470.92906
-  tps: 327.46813
+  dps: 470.26345
+  tps: 327.0022
  }
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-WrathofCenarius-21190"
  value: {
-  dps: 337.64899
-  tps: 228.78039
+  dps: 336.99462
+  tps: 228.32233
  }
 }
 dps_results: {
  key: "TestSmitePriest-Average-Default"
  value: {
-  dps: 330.58587
-  tps: 225.39083
+  dps: 330.07136
+  tps: 225.03068
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-NightElf-Naked-Default-smite-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 329.00433
-  tps: 490.30378
+  dps: 328.33263
+  tps: 489.83359
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-NightElf-Naked-Default-smite-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 329.00433
-  tps: 222.93829
+  dps: 328.33263
+  tps: 222.46809
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-NightElf-Naked-Default-smite-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 582.43736
-  tps: 376.57774
+  dps: 581.25776
+  tps: 375.75202
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-NightElf-Naked-Default-smite-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 54.56414
-  tps: 145.72874
+  dps: 54.45052
+  tps: 145.61513
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-NightElf-Naked-Default-smite-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 54.56414
-  tps: 54.74437
+  dps: 54.45052
+  tps: 54.63076
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-NightElf-Naked-Default-smite-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 122.07344
-  tps: 122.61414
+  dps: 121.74081
+  tps: 122.28151
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Troll-Naked-Default-smite-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 328.02056
-  tps: 490.41179
+  dps: 327.36736
+  tps: 489.95455
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Troll-Naked-Default-smite-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 328.02056
-  tps: 222.04049
+  dps: 327.36736
+  tps: 221.58324
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Troll-Naked-Default-smite-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 592.82876
-  tps: 383.40925
+  dps: 591.19347
+  tps: 382.26454
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Troll-Naked-Default-smite-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 54.23215
-  tps: 158.17568
+  dps: 54.1758
+  tps: 158.11932
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Troll-Naked-Default-smite-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 54.23215
-  tps: 55.02514
+  dps: 54.1758
+  tps: 54.96878
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Troll-Naked-Default-smite-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 123.57926
-  tps: 125.95822
+  dps: 123.41511
+  tps: 125.79407
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Undead-Naked-Default-smite-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 329.43071
-  tps: 490.62322
+  dps: 328.46445
+  tps: 489.94684
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Undead-Naked-Default-smite-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 329.43071
-  tps: 223.2378
+  dps: 328.46445
+  tps: 222.56142
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Undead-Naked-Default-smite-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 582.92787
-  tps: 376.92425
+  dps: 581.86892
+  tps: 376.18298
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Undead-Naked-Default-smite-NoBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 54.83754
-  tps: 145.81117
+  dps: 54.69681
+  tps: 145.67044
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Undead-Naked-Default-smite-NoBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 54.83754
-  tps: 55.00823
+  dps: 54.69681
+  tps: 54.86749
  }
 }
 dps_results: {
  key: "TestSmitePriest-Settings-Undead-Naked-Default-smite-NoBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 121.00204
-  tps: 121.51411
+  dps: 120.5946
+  tps: 121.10666
  }
 }
 dps_results: {
  key: "TestSmitePriest-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 319.73411
-  tps: 220.6873
+  dps: 319.15867
+  tps: 220.28449
  }
 }
