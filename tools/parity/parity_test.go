@@ -299,10 +299,13 @@ func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int
 	result := core.RunRaidSim(&proto.RaidSimRequest{
 		Raid:       raid,
 		Encounter:  encounter,
-		SimOptions: &proto.SimOptions{Iterations: iterations, IsTest: true, RandomSeed: 101},
+		SimOptions: &proto.SimOptions{Iterations: iterations, IsTest: true, RandomSeed: 101, Debug: os.Getenv("PARITY_LOG") != ""},
 	})
 	if result.Error != nil {
 		return parityResult{Error: fmt.Sprintf("%.160s", result.Error.Message)}
+	}
+	if dir := os.Getenv("PARITY_LOG"); dir != "" {
+		os.WriteFile(filepath.Join(dir, spec.Name+".next.log"), []byte(result.Logs), 0o644)
 	}
 	if debugHook != nil {
 		debugHook(result)
@@ -445,6 +448,24 @@ func auraUptimes(unit *proto.UnitMetrics) map[string]float64 {
 		}
 		out[key+" uptime"] = a.UptimeSecondsAvg
 		out[key+" procs"] = a.ProcsAvg
+	}
+	for _, action := range unit.Actions {
+		var crits, resisted, total, damage float64
+		for _, t := range action.Targets {
+			crits += float64(t.Crits + t.CritTicks)
+			resisted += float64(t.ResistedHits + t.ResistedCrits + t.ResistedTicks + t.ResistedCritTicks)
+			total += float64(t.Hits + t.Ticks + t.Crits + t.CritTicks)
+			damage += t.Damage
+		}
+		if total > 0 && action.Id.GetSpellId() != 0 {
+			key := fmt.Sprintf("spell %d", action.Id.GetSpellId())
+			if action.Id.GetTag() != 0 {
+				key += fmt.Sprintf(" tag %d", action.Id.GetTag())
+			}
+			out[key+" crit%"] = 100 * crits / total
+			out[key+" resist%"] = 100 * resisted / total
+			out[key+" dmg/hit"] = damage / total
+		}
 	}
 	for _, r := range unit.Resources {
 		out[fmt.Sprintf("res %v %v gain", r.Type, r.Id)] += r.ActualGain
