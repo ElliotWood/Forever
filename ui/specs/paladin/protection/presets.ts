@@ -1,29 +1,23 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, HealingModel, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
-import {
-	PaladinAura,
-	PaladinJudgement,
-	ProtectionPaladin_Options as ProtectionPaladinOptions,
-	ProtectionPaladin_Rotation as ProtectionPaladinRotation,
-} from '@generated/proto/paladin';
+import { ConsumesSpec, Debuffs, Drums, HealingModel, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { ProtectionPaladin_Options as ProtectionPaladinOptions } from '@generated/proto/paladin';
+import { SavedTalents } from '@generated/proto/ui';
 import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
+import P5Apl from './apls/p5.apl.json';
 
-export const APL_PRESET = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
+// Our Forever sim's rotations.
+export const APL_PRESET = PresetUtils.makePresetAPLRotation('Basic Prot', DefaultApl);
+export const APL_P5 = PresetUtils.makePresetAPLRotation('P5 Prot', P5Apl);
 
-export const DefaultSimpleRotation = ProtectionPaladinRotation.create({
-	prioritizeHolyShield: true,
-	consecrationRank: 6,
-	useExorcism: true,
-	useAvengersShield: false,
-	useHammerOfWrath: false,
-	precastAvengersShield: true,
-	maintainJudgement: PaladinJudgement.JudgementNone,
-	aura: PaladinAura.DevotionAura,
-});
+// Our Forever sim's builds.
+export const P4ProtTalents = PresetUtils.makePresetTalents('P4 Prot', SavedTalents.create({ talentsString: '052003003-5530513321301501' }));
+export const P5ProtTalents = PresetUtils.makePresetTalents('P5 Prot', SavedTalents.create({ talentsString: '055003-5530513321301501' }));
+export const TalentsProtection = PresetUtils.makePresetTalents('Protection 0/45/6', SavedTalents.create({ talentsString: '-5532513321301551-15' }));
 
-export const APL_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.SpecProtectionPaladin, DefaultSimpleRotation);
+export const TalentPresets = [P5ProtTalents, P4ProtTalents, TalentsProtection];
+export const DefaultTalents = P5ProtTalents;
 
 export const DefaultOptions = ProtectionPaladinOptions.create({
 	classOptions: {},

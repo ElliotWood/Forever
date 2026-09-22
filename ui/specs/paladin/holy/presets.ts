@@ -1,5 +1,13 @@
+import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, Profession } from '@generated/proto/common';
 import { HolyPaladin_Options as HolyPaladinOptions } from '@generated/proto/paladin';
+import { SavedTalents } from '@generated/proto/ui';
+
+// Our Forever sim's builds.
+export const StandardTalents = PresetUtils.makePresetTalents('Standard', SavedTalents.create({ talentsString: '005321013025131251-503210302' }));
+export const TalentsHolyHealer = PresetUtils.makePresetTalents('Holy 38/13/0', SavedTalents.create({ talentsString: '205320213225131051-50323' }));
+
+export const TalentPresets = [StandardTalents, TalentsHolyHealer];
 
 export const DefaultOptions = HolyPaladinOptions.create({
 	classOptions: {},

@@ -1,20 +1,20 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, Spec, TristateEffect } from '@generated/proto/common';
-import { PaladinAura, RetributionPaladin_Options as RetributionPaladinOptions, RetributionPaladin_Rotation as PaladinRotation } from '@generated/proto/paladin';
+import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { RetributionPaladin_Options as RetributionPaladinOptions } from '@generated/proto/paladin';
+import { SavedTalents } from '@generated/proto/ui';
 import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 
-export const DefaultSimpleRotation = PaladinRotation.create({
-	useExorcism: false,
-	consecrationRank: 0,
-	delayMajorCDs: 11,
-	prepullSotC: true,
-	aura: PaladinAura.SanctityAura,
-});
+// Our Forever sim's Seal of Command / Seal of Righteousness twist rotation.
+export const APL_PRESET = PresetUtils.makePresetAPLRotation('Basic Ret', DefaultApl);
 
-export const APL_PRESET = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
-export const APL_SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.SpecRetributionPaladin, DefaultSimpleRotation);
+// Our Forever sim's builds.
+export const P4RetTalents = PresetUtils.makePresetTalents('P4/P5 Ret', SavedTalents.create({ talentsString: '0550030022001--052251310002330321' }));
+export const TalentsRetribution = PresetUtils.makePresetTalents('Retribution 10/0/41', SavedTalents.create({ talentsString: '250003--552250312012331321' }));
+
+export const TalentPresets = [P4RetTalents, TalentsRetribution];
+export const DefaultTalents = P4RetTalents;
 
 export const DefaultOptions = RetributionPaladinOptions.create({
 	classOptions: {},

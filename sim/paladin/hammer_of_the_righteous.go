@@ -1,0 +1,52 @@
+package paladin
+
+import (
+	"github.com/wowsims/forever/sim/core"
+)
+
+var HammerOfTheRighteousRankMap = spellData.HammerOfTheRighteous
+
+// Hammer of the Righteous
+// https://www.wowhead.com/forever/spell=407632
+//
+// Hammer the current target and up to 3 additional nearby targets, causing Holy damage equal to 3
+// times your main hand weapon's damage per second.
+//
+// Trained on the Protection line at level 40 (SkillLineAbility AcquireMethod 0). The tooltip says
+// its cooldown is shared with Crusader Strike, a leftover: Forever has no Crusader Strike, and the
+// client's cooldown category 2404 puts it with Holy Strike, so casting either puts both on
+// cooldown. The weapon DPS multiple is the row's effect 2. The three extra targets are not
+// modelled.
+func (paladin *Paladin) registerHammerOfTheRighteous() {
+	row := HammerOfTheRighteousRankMap.HighestRank()
+	weaponDPS := effectAt(row, 2).Value
+
+	paladin.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: row.SpellID},
+		SpellSchool:    row.SpellSchool,
+		DefenseType:    row.DefenseType,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		ClassSpellMask: SpellMaskHammerOfTheRighteous,
+		MaxRange:       core.MaxMeleeRange,
+
+		ManaCost: manaCost(row),
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{
+				GCD: row.GCD,
+			},
+			CD: core.Cooldown{
+				Timer:    paladin.sharedTimer(&paladin.holyStrikeTimer),
+				Duration: row.Cooldown,
+			},
+		},
+
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			baseDamage := weaponDPS * paladin.AutoAttacks.MH().DPS()
+			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+		},
+	})
+}

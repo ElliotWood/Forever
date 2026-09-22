@@ -777,7 +777,12 @@ func (spell *Spell) CritDamageMultiplier(at *AttackTable) float64 {
 	default:
 		base = 2.0
 	}
-	return (base*spell.CritMultiplierPct*spell.Unit.PseudoStats.CritDamageMultiplier*at.CritMultiplier-1)*(spell.CritMultiplierAdditive+1) + 1
+	// Heals roll their crit without an attack table.
+	tableMultiplier := 1.0
+	if at != nil {
+		tableMultiplier = at.CritMultiplier
+	}
+	return (base*spell.CritMultiplierPct*spell.Unit.PseudoStats.CritDamageMultiplier*tableMultiplier-1)*(spell.CritMultiplierAdditive+1) + 1
 }
 
 // Time until either the cast is finished or GCD is ready again, whichever is longer
