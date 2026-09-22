@@ -1,11 +1,7 @@
-import { AreaType } from '@generated/proto/common';
 import i18n from '@i18n/config';
-import { getAreaTypeI18nKey } from '@i18n/entity_mapping';
-import { translateAreaType } from '@i18n/localization';
 import type { Player } from '@sim/player/player';
 import type { Encounter } from '@sim/raid/encounter';
 import type { Raid } from '@sim/raid/raid';
-import type { BooleanPickerConfig } from '@ui-kit/BooleanPicker/types';
 import type { EnumPickerConfig } from '@ui-kit/EnumPicker/types';
 import type { NumberPickerConfig } from '@ui-kit/NumberPicker/types';
 
@@ -132,31 +128,3 @@ export const presetEncounterConfig = (encounter: Encounter): EnumPickerConfig<En
 		},
 	};
 };
-
-const AREA_TYPES: Array<AreaType> = [
-	AreaType.AreaTypeForestGrassland,
-	AreaType.AreaTypeMountainous,
-	AreaType.AreaTypeSnowy,
-	AreaType.AreaTypeDesert,
-	AreaType.AreaTypeSwamp,
-	AreaType.AreaTypeWasteland,
-	AreaType.AreaTypeHaunted,
-	AreaType.AreaTypeCavernous,
-	AreaType.AreaTypeVolcanic,
-	AreaType.AreaTypeStrongholdsCities,
-];
-
-export const areaTypeConfigs = (): Array<BooleanPickerConfig<Encounter>> =>
-	AREA_TYPES.map(areaType => ({
-		id: `encounter-area-${getAreaTypeI18nKey(areaType)}`,
-		label: translateAreaType(areaType),
-		labelTooltip: i18n.t('settings_tab.encounter.area_types.tooltip'),
-		layout: 'inline',
-		reverse: true,
-		storeField: 'encounter:*',
-		getValue: (encounter: Encounter) => encounter.inArea(areaType),
-		setValue: (encounter: Encounter, newValue: boolean) => {
-			trackEvent({ action: 'settings', category: 'area', label: getAreaTypeI18nKey(areaType), value: newValue });
-			encounter.setInArea(areaType, newValue);
-		},
-	}));

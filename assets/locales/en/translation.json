@@ -792,7 +792,9 @@
 			},
 			"area_types": {
 				"label": "Area",
-				"tooltip": "Every kind of area the fight's zone counts as. Effects that only work in certain areas, such as Rune of the Guard Captain's extra attack power in Forest and Grassland areas, apply when their area is checked. A zone can count as several: Redridge Mountains is Forest and Mountainous, Deadwind Pass is Mountainous, Wasteland and Haunted."
+				"placeholder": "Add a kind of area",
+				"remove": "Remove area",
+				"tooltip": "Every kind of area the fight's zone counts as. Effects that only work in certain areas, such as Rune of the Guard Captain's extra attack power in Forest and Grassland areas, apply when their area is picked. A zone can count as several: Redridge Mountains is Forest and Mountainous, Deadwind Pass is Mountainous, Wasteland and Haunted."
 			},
 			"advanced": "Advanced",
 			"target": "Target",

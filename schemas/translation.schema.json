@@ -2776,12 +2776,18 @@
 								"label": {
 									"type": "string"
 								},
+								"placeholder": {
+									"type": "string"
+								},
+								"remove": {
+									"type": "string"
+								},
 								"tooltip": {
 									"type": "string"
 								}
 							},
 							"additionalProperties": false,
-							"required": ["label", "tooltip"]
+							"required": ["label", "placeholder", "remove", "tooltip"]
 						},
 						"advanced": {
 							"type": "string"
