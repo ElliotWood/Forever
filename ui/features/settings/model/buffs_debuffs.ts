@@ -27,13 +27,13 @@ import { IconPickerStatOption, RenderableStatOptions } from './stat_options';
 
 // Raid Buffs
 export const ArcaneBrilliance = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(27127),
+	actionId: ActionId.fromSpellId(23028),
 	fieldName: 'arcaneBrilliance',
 	label: 'Arcane Brilliance',
 });
 export const Bloodlust = makeBooleanRaidBuffInput({ actionId: ActionId.fromSpellId(2825), fieldName: 'bloodlust', label: 'Bloodlust' });
 export const DivineSpirit = makeTristateRaidBuffInput({
-	actionId: ActionId.fromSpellId(25312),
+	actionId: ActionId.fromSpellId(27841),
 	impId: ActionId.fromSpellId(33182),
 	fieldName: 'divineSpirit',
 	label: 'Divine Spirit',

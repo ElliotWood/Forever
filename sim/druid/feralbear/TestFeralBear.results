@@ -4,9 +4,9 @@ character_stats_results: {
   final_stats: 217
   final_stats: 210
   final_stats: 308
-  final_stats: 173
-  final_stats: 235.5
-  final_stats: 222.5
+  final_stats: 163
+  final_stats: 234.4
+  final_stats: 221.4
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -17,7 +17,7 @@ character_stats_results: {
   final_stats: 48
   final_stats: 0
   final_stats: 0
-  final_stats: 195
+  final_stats: 184
   final_stats: 1463
   final_stats: 314
   final_stats: 0
@@ -35,7 +35,7 @@ character_stats_results: {
   final_stats: 3212
   final_stats: 0
   final_stats: 6973
-  final_stats: 3559
+  final_stats: 3409
   final_stats: 122.5
   final_stats: 33
   final_stats: 33
@@ -46,7 +46,7 @@ character_stats_results: {
   final_stats: 1
   final_stats: 4
   final_stats: 25.88957
-  final_stats: 22.16917
+  final_stats: 22.00217
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -141,8 +141,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 175.12753
-  tps: 187.5593
+  dps: 175.12429
+  tps: 187.55606
   dtps: 1085.51669
  }
 }
@@ -285,8 +285,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 242.05129
-  tps: 254.63626
+  dps: 241.94563
+  tps: 254.5306
   dtps: 1086.91302
  }
 }
@@ -445,9 +445,9 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-Average-Default"
  value: {
-  dps: 170.23769
-  tps: 181.78328
-  dtps: 1092.83192
+  dps: 170.22342
+  tps: 181.76528
+  dtps: 1092.82546
  }
 }
 dps_results: {
@@ -501,8 +501,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-Settings-Tauren-Naked-Standard-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 922.28448
-  tps: 1000.20077
+  dps: 922.09583
+  tps: 999.95552
   dtps: 20643.10249
  }
 }

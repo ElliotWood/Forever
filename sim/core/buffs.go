@@ -409,9 +409,9 @@ func ThornsAura(char *Character, points int32) *Aura {
 func ArcaneBrillianceAura(char *Character) *Aura {
 	return makeStatBuff(char, BuffConfig{
 		Label:    "Arcane Brilliance",
-		ActionID: ActionID{SpellID: 27127},
+		ActionID: ActionID{SpellID: 23028}, // client: 31 Intellect (their #39 generates the same)
 		Stats: []StatConfig{
-			{stats.Intellect, 40, false},
+			{stats.Intellect, 31, false},
 		},
 		ExclusiveCategory: StatBuffCategory,
 	})
@@ -423,7 +423,7 @@ func DivineSpiritAura(char *Character, improved bool) *Aura {
 
 	aura := char.GetOrRegisterAura(Aura{
 		Label:      "Divine Spirit Buff",
-		ActionID:   ActionID{SpellID: 25312},
+		ActionID:   ActionID{SpellID: 27841},
 		Duration:   time.Minute * 30,
 		BuildPhase: CharacterBuildPhaseBuffs,
 
@@ -445,7 +445,8 @@ func DivineSpiritAura(char *Character, improved bool) *Aura {
 	// The Spirit is exclusive with other flat Spirit buffs (Scroll of Spirit), so
 	// only the strongest source applies. The Imp. DS conversion is DS-only and stays
 	// tied to the aura itself.
-	makeExclusiveFlatStatBuff(aura, stats.Spirit, 50, StatBuffCategory)
+	// Client 27841: 40 Spirit (their #39 generates the same).
+	makeExclusiveFlatStatBuff(aura, stats.Spirit, 40, StatBuffCategory)
 	return aura
 }
 
