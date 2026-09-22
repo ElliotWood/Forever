@@ -94,6 +94,12 @@ export const EzThroDynamiteTwo = {
 	value: 18588,
 };
 
+export const DenseDynamite = {
+	actionId: ActionId.fromItemId(18641),
+	value: 18641,
+	showWhen: (player: Player<any>) => player.hasProfession(Profession.Engineering),
+};
+
 export const CrystalCharge = {
 	actionId: ActionId.fromItemId(11566),
 	value: 15239,
@@ -120,6 +126,7 @@ export const GnomishFlameTurrent = {
 export const EXPLOSIVE_CONFIG = [
 	{ config: AdamantiteGrenade, stats: [] },
 	{ config: FelIronBomb, stats: [] },
+	{ config: DenseDynamite, stats: [] },
 	{ config: CrystalCharge, stats: [] },
 	{ config: EzThroDynamiteTwo, stats: [] },
 	// { config: GnomishFlameTurrent, stats: [] }, Excluding this thing for now because it's weird and I don't like it
