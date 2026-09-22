@@ -871,7 +871,13 @@ func addSpellIcons(db *database.WowDatabase, spellIds []int32, icons map[int]dat
 // which dbc.Item.GetArmorValue reads) is 0 and the game computes it from the ItemArmor tables.
 // Where the client row wins the merge it would leave the item with no armor at all (3,810 items,
 // Lionheart Helm among them), so ours - Wowhead's Forever gear planner, e.g. Lionheart 565 - fills it.
+// Wowhead's armor is the total, the client's extra armor (ItemSparse stat 50, our BonusArmor)
+// included: Field Marshal's Dragonhide Helmet shows 209 and carries 30 extra, Hammer of Bestial
+// Fury shows 90 and carries 90. So the base is ours less the client's bonus, or the extra counts twice.
+// Feral attack power is an equip spell (the Hammer's 24994, +154) the client does not link to the
+// item, so ours fills that too.
 func FillArmorFromOurs(db *database.WowDatabase, ours *database.WowDatabase) {
+	armor, bonus, feral := int32(proto.Stat_StatArmor), int32(proto.Stat_StatBonusArmor), int32(proto.Stat_StatFeralAttackPower)
 	for id, item := range db.Items {
 		our, ok := ours.Items[id]
 		if !ok || our == item {
@@ -879,13 +885,18 @@ func FillArmorFromOurs(db *database.WowDatabase, ours *database.WowDatabase) {
 		}
 		for key, opt := range item.ScalingOptions {
 			ourOpt, ok := our.ScalingOptions[key]
-			if !ok || opt.Stats[int32(proto.Stat_StatArmor)] != 0 || ourOpt.Stats[int32(proto.Stat_StatArmor)] == 0 {
+			if !ok {
 				continue
 			}
 			if opt.Stats == nil {
 				opt.Stats = map[int32]float64{}
 			}
-			opt.Stats[int32(proto.Stat_StatArmor)] = ourOpt.Stats[int32(proto.Stat_StatArmor)]
+			if opt.Stats[armor] == 0 && ourOpt.Stats[armor] > opt.Stats[bonus] {
+				opt.Stats[armor] = ourOpt.Stats[armor] - opt.Stats[bonus]
+			}
+			if opt.Stats[feral] == 0 && ourOpt.Stats[feral] != 0 {
+				opt.Stats[feral] = ourOpt.Stats[feral]
+			}
 		}
 	}
 }
