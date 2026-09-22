@@ -15,8 +15,6 @@ func init() {
 }
 
 func TestDpsWarrior(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
 		{
 			Class:      proto.Class_ClassWarrior,
@@ -40,7 +38,7 @@ func TestDpsWarrior(t *testing.T) {
 			},
 			Consumables:      DefaultConsumables,
 			SpecOptions:      core.SpecOptionsCombo{Label: "Fury", SpecOptions: DefaultOptions},
-			StartingDistance: 25,
+			StartingDistance: 0,
 			Profession1:      proto.Profession_Engineering,
 			Profession2:      proto.Profession_Blacksmithing,
 
@@ -79,8 +77,8 @@ var DefaultOptions = &proto.Player_DpsWarrior{
 	},
 }
 
-var DefaultFuryTalents = "3500501130201-05050005505012050115"
-var DefaultArmsTalents = "32005011352010500221-0550000500521203"
+var DefaultFuryTalents = "30305003-050530205052310051"
+var DefaultArmsTalents = "30305213032115201-05052030004"
 
 var DefaultConsumables = &proto.ConsumesSpec{
 	PotId:       22838,

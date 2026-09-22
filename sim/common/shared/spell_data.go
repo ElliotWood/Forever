@@ -8,8 +8,8 @@ import (
 )
 
 // A rank's value, by shape. Only a periodic value has a tick schedule, so TickLength and
-// NumberOfTicks are reached by asserting to SpellDataPeriodic rather than through a method Flat and
-// Range would answer with zeroes.
+// NumberOfTicks are reached through AsPeriodic rather than through a method Flat and Range would
+// answer with zeroes.
 type SpellDataValue interface {
 	// Returns the damage range of the spell.
 	// Min/Max are the same if the spell only has a single value.
@@ -25,8 +25,42 @@ type SpellDataValue interface {
 	// Returns a static damage value or rolls between the min/max of the range.
 	Damage(sim *core.Simulation) float64
 
+	// The value in rage or energy, which the client states on a 0-1000 bar.
+	//
+	//	unbridledWrathRank.Energize.Tenths()   // 1 rage, from the row's 10
+	//	bloodrageOverTime.Tenths()             // 1 rage a tick, from 10
+	Tenths() float64
+
+	// The value as its shape, for the fields only that shape has. Each panics on another shape,
+	// naming both, so a regeneration that changes a role's shape fails where it is read.
+	//
+	//	tick := rendRank.Periodic.AsPeriodic()   // TickLength, NumberOfTicks
+	//	d := sealRank.Direct.AsFlat()            // Value
+	//	r := fireballRank.Direct.AsRange()       // Min, Max
+	AsFlat() SpellDataFlat
+	AsRange() SpellDataRange
+	AsPeriodic() SpellDataPeriodic
+
 	isSpellDataValue()
 }
+
+func (v SpellDataFlat) AsFlat() SpellDataFlat   { return v }
+func (v SpellDataFlat) AsRange() SpellDataRange { panic("spell data value is flat, not a range") }
+func (v SpellDataFlat) AsPeriodic() SpellDataPeriodic {
+	panic("spell data value is flat, not periodic")
+}
+
+func (v SpellDataRange) AsFlat() SpellDataFlat   { panic("spell data value is a range, not flat") }
+func (v SpellDataRange) AsRange() SpellDataRange { return v }
+func (v SpellDataRange) AsPeriodic() SpellDataPeriodic {
+	panic("spell data value is a range, not periodic")
+}
+
+func (v SpellDataPeriodic) AsFlat() SpellDataFlat { panic("spell data value is periodic, not flat") }
+func (v SpellDataPeriodic) AsRange() SpellDataRange {
+	panic("spell data value is periodic, not a range")
+}
+func (v SpellDataPeriodic) AsPeriodic() SpellDataPeriodic { return v }
 
 // A single number: a mana restore, a talent's value, damage the client does not roll.
 type SpellDataFlat struct {
@@ -81,6 +115,10 @@ func (v SpellDataPeriodic) Damage(sim *core.Simulation) float64 {
 	}
 	return v.Tick
 }
+
+func (v SpellDataFlat) Tenths() float64     { return v.Value / 10 }
+func (v SpellDataRange) Tenths() float64    { return v.Min / 10 }
+func (v SpellDataPeriodic) Tenths() float64 { return v.Tick / 10 }
 
 func (v SpellDataFlat) BonusCoefficient() float64     { return v.Coef }
 func (v SpellDataRange) BonusCoefficient() float64    { return v.Coef }
@@ -197,6 +235,11 @@ type SpellData struct {
 	// shed or hold threat - E_THREAT on Feint, Cower, Disengage and Distracting Shot - so everything
 	// else arrives through WithSpellDataFlatThreat.
 	FlatThreatBonus float64
+
+	// Procs per minute, for a proc whose tooltip states no chance and whose ProcChance column is
+	// not a roll. The client carries no PPM (SpellProcsPerMinuteID is 0 on every row), so the
+	// generator never sets this and it arrives through WithSpellDataPPM. Zero is not a PPM proc.
+	PPM float64
 }
 
 // Declared here rather than in the generated constant file so that an empty or missing one still
@@ -232,11 +275,11 @@ type SpellDataEffect struct {
 	ChainAmplitude float64
 }
 
-// The high end of the effect, which is Value wherever the two agree - ValueMax is only stored where
-// they differ. Seal of the Crusader rank 4's base is a whole number, so it has no ValueMax and its
-// answer is Value; every other rank has both.
-// The share of the cost a miss refunds, for RageCostOptions.Refund: 80% where the client flags
+// The share of the cost a miss gives back, for RageCostOptions.Refund: 80% where the client flags
 // Discount Power On Miss, nothing otherwise.
+//
+//	rendRank.MissRefund()    // 0.8
+//	cleaveRank.MissRefund()  // 0, Cleave lacks the flag
 func (s SpellData) MissRefund() float64 {
 	if s.RefundsOnMiss {
 		return 0.8
@@ -260,12 +303,33 @@ func PeriodicTickOutcome(row SpellData, dot *core.Dot) core.OutcomeApplier {
 	}
 }
 
+// The high end of the effect, which is Value wherever the two agree - ValueMax is only stored where
+// they differ. Seal of the Crusader rank 4's base is a whole number, so it has no ValueMax and its
+// answer is Value; every other rank has both.
+//
+//	sealOfTheCrusaderRank.Effects[0].High()   // 41 on rank 1, where Value reads 39.2
 func (e SpellDataEffect) High() float64 {
 	if e.ValueMax != 0 {
 		return e.ValueMax
 	}
 	return e.Value
 }
+
+// The client's percentage as a fraction; it states one as an integer.
+//
+//	shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Fraction()   // -0.6, from -60
+//	spearingStrikeRank.Effects[1].Fraction()                                   //  0.4, from 40
+func (e SpellDataEffect) Fraction() float64 { return e.Value / 100 }
+
+// 1 plus the fraction, with the sign the data gives it.
+//
+//	shieldWallRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier()   // 0.4, from -60
+func (e SpellDataEffect) Multiplier() float64 { return 1 + e.Fraction() }
+
+// The value in rage or energy, which the client states on a 0-1000 bar.
+//
+//	ragingBlowsRank.Effects[1].Tenths()   // -2 rage on Cleave, from -20
+func (e SpellDataEffect) Tenths() float64 { return e.Value / 10 }
 
 // Panics when no effect matches, and when two do - 186 ranked spells carry a duplicate aura/misc
 // pair. Index into Effects where the pair cannot tell them apart.
@@ -370,15 +434,37 @@ func WithSpellDataFlatThreats(table SpellDataTable, threats map[int32]float64) S
 	return applyFlatThreat(table, func(r SpellData) float64 { return threats[r.Rank] })
 }
 
+// Procs per minute, the same way. Both forms return a copy and panic if the table already carries
+// a value.
+func WithSpellDataPPM(table SpellDataTable, ppm float64) SpellDataTable {
+	return applyPPM(table, func(SpellData) float64 { return ppm })
+}
+
+// Every rank in the table has to be named, so a ladder that gains one fails loudly instead of
+// leaving the new rank without a PPM.
+func WithSpellDataPPMs(table SpellDataTable, ppms map[int32]float64) SpellDataTable {
+	requireEveryRank(table, ppms)
+	return applyPPM(table, func(r SpellData) float64 { return ppms[r.Rank] })
+}
+
+func applyPPM(table SpellDataTable, ppmOf func(SpellData) float64) SpellDataTable {
+	return applyHandValue(table, "PPM", func(r *SpellData) *float64 { return &r.PPM }, ppmOf)
+}
+
 func applyFlatThreat(table SpellDataTable, threatOf func(SpellData) float64) SpellDataTable {
+	return applyHandValue(table, "flat threat", func(r *SpellData) *float64 { return &r.FlatThreatBonus }, threatOf)
+}
+
+// A hand-supplied value goes onto a copy of the table, and only where the client left the field
+// empty: a row that already carries one is a generator change the caller has to see.
+func applyHandValue(table SpellDataTable, what string, field func(*SpellData) *float64, valueOf func(SpellData) float64) SpellDataTable {
 	out := make(SpellDataTable, len(table))
 	for i, row := range table {
 		out[i] = row
-		if row.FlatThreatBonus != 0 {
-			panic(fmt.Sprintf("spell %d rank %d already has flat threat %v from the client DB",
-				row.SpellID, row.Rank, row.FlatThreatBonus))
+		if existing := *field(&row); existing != 0 {
+			panic(fmt.Sprintf("spell %d rank %d already has %s %v from the client DB", row.SpellID, row.Rank, what, existing))
 		}
-		out[i].FlatThreatBonus = threatOf(row)
+		*field(&out[i]) = valueOf(row)
 	}
 	return out
 }

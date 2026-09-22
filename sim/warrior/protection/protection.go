@@ -30,7 +30,7 @@ type ProtectionWarrior struct {
 }
 
 func (war *ProtectionWarrior) ApplyTalents() {
-	// war.Warrior.ApplyTalents()
+	war.Warrior.ApplyTalents()
 }
 
 func NewProtectionWarrior(character *core.Character, options *proto.Player) *ProtectionWarrior {
@@ -39,13 +39,11 @@ func NewProtectionWarrior(character *core.Character, options *proto.Player) *Pro
 
 	war := &ProtectionWarrior{
 		Warrior: warrior.NewWarrior(character, protOptions.ClassOptions, options.TalentsString, warrior.WarriorInputs{
-			DefaultShout:          classOptions.DefaultShout,
-			DefaultStance:         classOptions.DefaultStance,
-			StartingRage:          classOptions.StartingRage,
-			QueueDelay:            classOptions.QueueDelay,
-			StanceSnapshot:        classOptions.StanceSnapshot,
-			HasBsSolarianSapphire: classOptions.HasBsSolarianSapphire,
-			HasBsT2:               classOptions.HasBsT2,
+			DefaultShout:   classOptions.DefaultShout,
+			DefaultStance:  classOptions.DefaultStance,
+			StartingRage:   classOptions.StartingRage,
+			StanceSnapshot: classOptions.StanceSnapshot,
+			HasBsT2:        classOptions.HasBsT2,
 		}),
 		Options: protOptions,
 	}

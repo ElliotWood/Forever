@@ -1,15 +1,15 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 167.5).HighestRank()
-var hamstringBaseDamage, _ = hamstringRank.Direct.Range()
+func (warrior *Warrior) registerHamstring() {
+	// TODO: Ingame research needed if this adds flat threat
+	hamstringRank := spellData.Hamstring.HighestRank()
+	hamstringBaseDamage, _ := hamstringRank.Direct.Range()
 
-func (war *Warrior) registerHamstring() {
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: hamstringRank.SpellID},
 		SpellSchool:    hamstringRank.SpellSchool,
 		DefenseType:    hamstringRank.DefenseType,
@@ -20,7 +20,7 @@ func (war *Warrior) registerHamstring() {
 
 		RageCost: core.RageCostOptions{
 			Cost:   hamstringRank.Cost,
-			Refund: 0.8,
+			Refund: hamstringRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -30,11 +30,12 @@ func (war *Warrior) registerHamstring() {
 		},
 
 		DamageMultiplier: 1,
-		ThreatMultiplier: 1.25,
+		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		ThreatMultiplier: 1,
 		FlatThreatBonus:  hamstringRank.FlatThreatBonus,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
+			return warrior.StanceMatches(BattleStance | BerserkerStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

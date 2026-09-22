@@ -4,13 +4,17 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var executeRank = spellData.Execute.HighestRank()
-
-func (war *Warrior) registerExecute() {
+func (warrior *Warrior) registerExecute() {
+	executeRank := spellData.Execute.HighestRank()
+	// TODO: The dummy effect carries the base damage; Execute has no Direct role, and both of its
+	// effects share the aura/misc pair Effect() selects on.
+	executeBaseDamage := executeRank.Effects[0].Value
+	// The tooltip's $*10;F1: the dummy's chain amplitude, times 10, per extra point of rage.
+	executeDamagePerRage := executeRank.Effects[0].ChainAmplitude * 10
 
 	var rageMetrics *core.ResourceMetrics
 
-	spell := war.RegisterSpell(core.SpellConfig{
+	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: executeRank.SpellID},
 		SpellSchool:    executeRank.SpellSchool,
 		DefenseType:    executeRank.DefenseType,
@@ -21,7 +25,7 @@ func (war *Warrior) registerExecute() {
 
 		RageCost: core.RageCostOptions{
 			Cost:   executeRank.Cost,
-			Refund: 0.8,
+			Refund: executeRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -31,22 +35,23 @@ func (war *Warrior) registerExecute() {
 		},
 
 		DamageMultiplier: 1,
-		ThreatMultiplier: 1.25,
+		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance|BattleStance) && sim.IsExecutePhase20()
+			return warrior.StanceMatches(BerserkerStance|BattleStance) && sim.IsExecutePhase20()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			extraRage := spell.Unit.CurrentRage()
-			maxRage := war.MaximumRage()
-			if extraRage > maxRage-spell.Cost.GetCurrentCost() {
-				extraRage = maxRage - spell.Cost.GetCurrentCost()
+			maxRage := warrior.MaximumRage() - spell.Cost.GetCurrentCost()
+			if extraRage > maxRage {
+				extraRage = maxRage
 			}
-			war.SpendRage(sim, extraRage, rageMetrics)
+			warrior.SpendRage(sim, extraRage, rageMetrics)
 			rageMetrics.Events--
 
-			baseDamage := 925 + 21*extraRage
+			baseDamage := executeBaseDamage + executeDamagePerRage*extraRage
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
 			if !result.Landed() {

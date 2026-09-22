@@ -33,7 +33,7 @@ type DpsWarrior struct {
 }
 
 func (war *DpsWarrior) ApplyTalents() {
-	// war.Warrior.ApplyTalents()
+	war.Warrior.ApplyTalents()
 }
 
 func NewDpsWarrior(character *core.Character, options *proto.Player) *DpsWarrior {
@@ -42,13 +42,11 @@ func NewDpsWarrior(character *core.Character, options *proto.Player) *DpsWarrior
 
 	war := &DpsWarrior{
 		Warrior: warrior.NewWarrior(character, dpsOptions.ClassOptions, options.TalentsString, warrior.WarriorInputs{
-			DefaultShout:          classOptions.DefaultShout,
-			DefaultStance:         classOptions.DefaultStance,
-			StartingRage:          classOptions.StartingRage,
-			QueueDelay:            classOptions.QueueDelay,
-			StanceSnapshot:        classOptions.StanceSnapshot,
-			HasBsSolarianSapphire: classOptions.HasBsSolarianSapphire,
-			HasBsT2:               classOptions.HasBsT2,
+			DefaultShout:   classOptions.DefaultShout,
+			DefaultStance:  classOptions.DefaultStance,
+			StartingRage:   classOptions.StartingRage,
+			StanceSnapshot: classOptions.StanceSnapshot,
+			HasBsT2:        classOptions.HasBsT2,
 		}),
 		Options: dpsOptions,
 	}

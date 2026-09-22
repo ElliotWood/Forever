@@ -1,33 +1,37 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
-func (war *Warrior) registerWhirlwind() {
-	actionID := core.ActionID{SpellID: 1680}
+func (warrior *Warrior) registerWhirlwind() {
+	whirlwindRank := spellData.Whirlwind.HighestRank()
 
-	whirlwindOH := war.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID.WithTag(2),
-		SpellSchool:    core.SpellSchoolPhysical,
-		DefenseType:    core.DefenseTypeMelee,
-		ProcMask:       core.ProcMaskMeleeOHSpecial,
-		ClassSpellMask: SpellMaskWhirlwindOh,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+	actionID := core.ActionID{SpellID: whirlwindRank.SpellID}
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1.25,
+	var whirlwindOH *core.Spell
+	if warrior.Talents.RagingBlows {
+		whirlwindOH = warrior.RegisterSpell(core.SpellConfig{
+			ActionID:       actionID.WithTag(2),
+			SpellSchool:    core.SpellSchoolPhysical,
+			DefenseType:    core.DefenseTypeMelee,
+			ProcMask:       core.ProcMaskMeleeOHSpecial,
+			ClassSpellMask: SpellMaskWhirlwindOh,
+			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := war.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			spell.CalcCleaveDamage(sim, target, 4, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-			spell.DealBatchedAoeDamage(sim)
-		},
-	})
+			DamageMultiplier: 1,
+			// TODO: In-game testing required for threat multiplier / threat bonus
+			ThreatMultiplier: 1,
 
-	war.RegisterSpell(core.SpellConfig{
+			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+				baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+				spell.CalcCleaveDamage(sim, target, whirlwindRank.MaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+				spell.DealBatchedAoeDamage(sim)
+			},
+		})
+	}
+
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID.WithTag(1),
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
@@ -36,33 +40,34 @@ func (war *Warrior) registerWhirlwind() {
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RageCost: core.RageCostOptions{
-			Cost: 25,
+			Cost: whirlwindRank.Cost,
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: whirlwindRank.GCD,
 			},
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Second * 10,
+				Timer:    warrior.NewTimer(),
+				Duration: whirlwindRank.Cooldown,
 			},
 			IgnoreHaste: true,
 		},
 
 		DamageMultiplier: 1,
-		ThreatMultiplier: 1.25,
+		// TODO: In-game testing required for threat multiplier / threat bonus.
+		ThreatMultiplier: 1,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
+			return warrior.StanceMatches(BerserkerStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := war.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			results := spell.CalcCleaveDamage(sim, target, 4, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-			war.CastNormalizedSweepingStrikesAttack(results, sim)
+			baseDamage := warrior.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+			results := spell.CalcCleaveDamage(sim, target, whirlwindRank.MaxTargets, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 			spell.DealBatchedAoeDamage(sim)
 
-			if war.HasOHWeapon() {
+			if whirlwindOH != nil && warrior.HasOHWeapon() {
 				whirlwindOH.Cast(sim, target)
 			}
 		},

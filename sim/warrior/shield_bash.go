@@ -1,16 +1,15 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-var shieldBashRank = shared.WithSpellDataFlatThreat(spellData.ShieldBash, 192).HighestRank()
+func (warrior *Warrior) registerShieldBash() {
+	shieldBashRank := spellData.ShieldBash.HighestRank()
 
-func (war *Warrior) registerShieldBash() {
 	actionID := core.ActionID{SpellID: shieldBashRank.SpellID}
 
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskShieldBash,
 		SpellSchool:    core.SpellSchoolPhysical,
@@ -21,7 +20,7 @@ func (war *Warrior) registerShieldBash() {
 
 		RageCost: core.RageCostOptions{
 			Cost:   shieldBashRank.Cost,
-			Refund: 0.8,
+			Refund: shieldBashRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -29,17 +28,19 @@ func (war *Warrior) registerShieldBash() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: shieldBashRank.Cooldown,
 			},
 		},
 
 		DamageMultiplier: 1,
-		ThreatMultiplier: 1.5,
-		FlatThreatBonus:  shieldBashRank.FlatThreatBonus,
+		// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+		ThreatMultiplier: 1,
+		// TODO: In-game test required
+		FlatThreatBonus: 0,
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.PseudoStats.CanBlock && war.StanceMatches(DefensiveStance|BattleStance)
+			return warrior.PseudoStats.CanBlock && warrior.StanceMatches(DefensiveStance|BattleStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

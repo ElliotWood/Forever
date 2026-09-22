@@ -119,10 +119,10 @@ shared.SpellDataCoef(rank.Periodic)
 shared.SpellDataAPCoef(rank.Direct)
 ```
 
-Tick length and count live only on the periodic shape, so assert for them:
+Tick length and count live only on the periodic shape, so ask for that shape:
 
 ```go
-p := rank.Periodic.(shared.SpellDataPeriodic)
+p := rank.Periodic.AsPeriodic()
 p.TickLength     // time.Duration, feeds core.DotConfig.TickLength
 p.NumberOfTicks  // duration over the tick length, feeds core.DotConfig.NumberOfTicks
 ```
@@ -190,7 +190,7 @@ spell with the rank's name, and gives it the dummy's period, so it lands in `Per
 schedule the rank states. The tick says where it came from:
 
 ```go
-p := spellData.Consecration.BySpellID(20924).Periodic.(shared.SpellDataPeriodic)
+p := spellData.Consecration.BySpellID(20924).Periodic.AsPeriodic()
 p.SpellID   // 1280349; zero on a tick the rank's own effect states
 ```
 
@@ -222,7 +222,7 @@ effect of a spell one of its own dummies points at, a dummy at that index is the
 lands in `Direct`:
 
 ```go
-d := spellData.SealOfRighteousness.BySpellID(20293).Direct.(shared.SpellDataFlat)
+d := spellData.SealOfRighteousness.BySpellID(20293).Direct.AsFlat()
 d.Value   // 1880, which the seal's own effect 0 also says
 d.Coef    // 0.2, which only the judgement's dummy states
 ```
@@ -249,7 +249,7 @@ Seal of Wisdom generated with the judgement's spell ID in `Direct`, read off the
 last fallback.
 
 ```go
-d := spellData.SealOfFury.BySpellID(20423).Direct.(shared.SpellDataFlat)
+d := spellData.SealOfFury.BySpellID(20423).Direct.AsFlat()
 d.Value    // 35, the proc's school damage
 d.Coef     // 0.1, which only the proc states
 ```
@@ -287,6 +287,10 @@ scale linearly, so `0.02 * rank` was already right and the table only adds prove
 not are the reason to read it - Improved Righteous Fury is 16 / 33 / 50, not 16 / 32 / 48, and shaman
 Elemental Weapons is 7 / 14 / 20, not 7 / 14 / 21.
 
+A single row's effect has the same readers without a rank: `row.Effect(aura, misc).Fraction()`,
+`.Multiplier()` and `.Tenths()`, so Shield Wall reads `Effect(A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier()`
+for its 0.4 and Bloodrage's energize reads `.Tenths()` for its 10 rage.
+
 ### Picking the effect
 
 A talent with one effect per rank needs nothing further. One with several does, and `ValueAt` panics
@@ -318,15 +322,35 @@ teaches - Raging Blows, Vanguard - is a table of one row built the same way, so
 ### Proc chances
 
 `SpellAuraOptions.ProcChance` is a separate source from the effects, and `ProcChanceAt` reads it as the
-fraction a `ProcTrigger` takes:
+fraction a `ProcTrigger` takes. It is one input of three; the tooltip (`Spell.Description_lang`, colour
+codes stripped) and the effect ladders are the others, and together they put every proc in one of four
+shapes. Nothing about a proc is carried over from an earlier expansion on trust: a proc that was PPM
+may state a percentage now, and the other way round.
 
-```go
-ProcChance: spellData.SealFate.ProcChanceAt(rogue.Talents.SealFate)   // 0.20 at 1/5, 1.00 at 5/5
-```
+1. **The tooltip carries `$h%`.** The column is the chance:
+   `ProcChance: spellData.SealFate.ProcChanceAt(rogue.Talents.SealFate)` reads 0.20 at 1/5 and 1.00
+   at 5/5. Enrage is this shape too: a real 30% roll on damage taken.
+2. **The tooltip carries `$mN%` or `$sN%`.** The chance is that effect's ladder,
+   `Effect(...).FractionAt(rank)`, and the column is noise: Unbridled Wrath states 12/24/36/48/60 by
+   rank on its effect while the column reads a flat 60.
+3. **No chance in the tooltip and the column reads 100 or 101.** The aura fires on its own condition
+   and there is no roll: Flurry and Deep Wounds on a crit, Dual Wield Specialization on every hit. A
+   101 on something that is not a proc at all (Sunder Armor, Demoralizing Shout) means nothing.
+4. **No chance in the tooltip, no condition, and a value the tooltip contradicts.** A procs-per-minute
+   proc the client does not carry (`SpellProcsPerMinuteID` is 0 on every row). The PPM is
+   hand-supplied the way threat and attack power coefficients are, with the manual-review TODO
+   quoting the raw column on the line:
 
-**A 100 does not always mean a 100% roll.** Flurry and Enrage read 100 because they fire on their own
-condition - a crit - rather than on a chance, and the number the sim wants for those is somewhere else
-entirely. Check what the talent actually does before wiring it.
+   ```go
+   var imbue = shared.WithSpellDataPPM(spellData.Imbue, 2)                          // one PPM, every rank
+   var strike = shared.WithSpellDataPPMs(spellData.Strike, map[int32]float64{1: 1, 2: 1.5})
+   dpm := character.NewLegacyPPMManager(imbue.PPMAt(rank), core.ProcMaskMelee)
+   ```
+
+   The per-rank form has to name every rank, and both panic on a table that already carries a PPM.
+
+A `$<id>h` in a tooltip reads another spell's column, so the chance sits on that spell's table, not on
+the one the tooltip belongs to.
 
 ### The high end of an effect
 
@@ -392,7 +416,7 @@ hand-written:
 var swpRanks = spellData.ShadowWordPain.BySpellID(25368)
 
 func (priest *Priest) registerShadowWordPain() {
-	tick := swpRanks.Periodic.(shared.SpellDataPeriodic)
+	tick := swpRanks.Periodic.AsPeriodic()
 
 	priest.RegisterSpell(core.SpellConfig{
 		ActionID: core.ActionID{SpellID: swpRanks.SpellID},
@@ -419,8 +443,8 @@ than through the dot's coefficient:
 
 ```go
 func (paladin *Paladin) registerConsecration(rankConfig shared.SpellData) {
-	tick := rankConfig.Periodic.(shared.SpellDataPeriodic)
-	bonus := rankConfig.SecondaryPeriodic.(shared.SpellDataPeriodic)
+	tick := rankConfig.Periodic.AsPeriodic()
+	bonus := rankConfig.SecondaryPeriodic.AsPeriodic()
 	bonusTargets := int(rankConfig.Effect(shared.A_PERIODIC_DUMMY, 0).Value)
 
 	dealTick := func(sim *core.Simulation, dot *core.Dot) {
@@ -450,8 +474,8 @@ A restore that ticks is an `Energize` of the periodic shape, with the schedule a
 action wants: Bloodrage's 29131 ticks 10 rage-tenths every second for 10 ticks.
 
 ```go
-over := spellData.BloodrageTriggered.HighestRank().Energize.(shared.SpellDataPeriodic)
-over.Tick / 10, over.TickLength, over.NumberOfTicks   // 1 rage, 1 s, 10
+over := spellData.BloodrageTriggered.HighestRank().Energize.AsPeriodic()
+over.Tenths(), over.TickLength, over.NumberOfTicks   // 1 rage, 1 s, 10
 ```
 
 ### Registering several ranks

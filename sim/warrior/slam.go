@@ -4,14 +4,13 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var slamRank = spellData.Slam.HighestRank()
-var slamBaseDamage, _ = slamRank.Direct.Range()
-
-func (war *Warrior) registerSlam() {
+func (warrior *Warrior) registerSlam() {
+	slamRank := spellData.Slam.HighestRank()
+	slamBaseDamage, _ := slamRank.Direct.Range()
 
 	actionID := core.ActionID{SpellID: slamRank.SpellID}
 
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
@@ -22,17 +21,21 @@ func (war *Warrior) registerSlam() {
 
 		RageCost: core.RageCostOptions{
 			Cost:   slamRank.Cost,
-			Refund: 0.8,
+			Refund: slamRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD:      slamRank.GCD,
 				CastTime: slamRank.CastTime,
 			},
+			CD: core.Cooldown{
+				Timer:    warrior.NewTimer(),
+				Duration: slamRank.Cooldown,
+			},
 			IgnoreHaste: true,
 			ModifyCast: func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
-				if cast.CastTime > 0 {
-					war.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime+cast.CastTime)
+				if cast.CastTime > 0 && warrior.Talents.ImprovedSlam == 0 {
+					warrior.AutoAttacks.StopMeleeUntil(sim, sim.CurrentTime+cast.CastTime)
 				}
 			},
 		},

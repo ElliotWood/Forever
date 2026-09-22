@@ -1,29 +1,32 @@
 package warrior
 
 import (
-	"time"
-
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
-func (war *Warrior) registerRecklessness() {
-	actionID := core.ActionID{SpellID: 1719}
+func (warrior *Warrior) registerRecklessness() {
+	recklessnessRank := spellData.Recklessness.HighestRank()
 
-	aura := war.RegisterAura(core.Aura{
+	actionID := core.ActionID{SpellID: recklessnessRank.SpellID}
+	recklessnessCritValue := recklessnessRank.Effect(shared.A_MOD_CRIT_PCT, 0).Value
+	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Recklessness",
 		ActionID: actionID,
-		Duration: time.Second * 15,
-	}).AttachSpellMod(core.SpellModConfig{
-		ProcMask:   core.ProcMaskMeleeSpecial,
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: 100,
-	}).AttachMultiplicativePseudoStatBuff(
-		&war.PseudoStats.DamageTakenMultiplier, 1.2,
+		Duration: recklessnessRank.Duration,
+	}).AttachStatsBuff(
+		stats.Stats{
+			stats.PhysicalCritPercent: recklessnessCritValue,
+			stats.SpellCritPercent:    recklessnessCritValue,
+		},
+	).AttachMultiplicativePseudoStatBuff(
+		&warrior.PseudoStats.DamageTakenMultiplier,
+		recklessnessRank.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).Multiplier(),
 	).
-		// Grants immunity to Fear effects.
 		AttachFearImmunity()
 
-	spell := war.RegisterSpell(core.SpellConfig{
+	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		DefenseType:    core.DefenseTypeMelee,
 		Flags:          core.SpellFlagAPL | core.SpellFlagCastWhileIncapacitated,
@@ -31,20 +34,16 @@ func (war *Warrior) registerRecklessness() {
 
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: recklessnessRank.GCD,
 			},
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Minute * 30,
-			},
-			SharedCD: core.Cooldown{
-				Timer:    war.sharedMCD,
-				Duration: time.Minute * 30,
+				Timer:    warrior.NewTimer(),
+				Duration: recklessnessRank.Cooldown,
 			},
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
+			return warrior.StanceMatches(BerserkerStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
@@ -54,7 +53,7 @@ func (war *Warrior) registerRecklessness() {
 		RelatedSelfBuff: aura,
 	})
 
-	war.AddMajorCooldown(core.MajorCooldown{
+	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
 		Type:  core.CooldownTypeDPS,
 	})

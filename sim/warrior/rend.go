@@ -5,12 +5,13 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var rendRank = spellData.Rend.HighestRank()
+// TODO: Ingame testing needed if Rend has a coef
+func (warrior *Warrior) registerRend() {
+	rendRank := spellData.Rend.HighestRank()
 
-func (war *Warrior) registerRend() {
-	tick := rendRank.Periodic.(shared.SpellDataPeriodic)
+	tick := rendRank.Periodic.AsPeriodic()
 
-	war.Rend = war.RegisterSpell(core.SpellConfig{
+	warrior.Rend = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rendRank.SpellID},
 		SpellSchool:    rendRank.SpellSchool,
 		DefenseType:    rendRank.DefenseType,
@@ -20,7 +21,7 @@ func (war *Warrior) registerRend() {
 
 		RageCost: core.RageCostOptions{
 			Cost:   rendRank.Cost,
-			Refund: 0.8,
+			Refund: rendRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -30,7 +31,7 @@ func (war *Warrior) registerRend() {
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BattleStance | DefensiveStance)
+			return warrior.StanceMatches(BattleStance | DefensiveStance)
 		},
 
 		DamageMultiplier: 1,
@@ -42,12 +43,8 @@ func (war *Warrior) registerRend() {
 			},
 			NumberOfTicks: tick.NumberOfTicks,
 			TickLength:    tick.TickLength,
-			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.SnapshotBaseDamage = tick.Tick + war.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))*0.00743
-				dot.SnapshotAttackerMultiplier = dot.Spell.AttackerDamageMultiplier(dot.Spell.Unit.AttackTables[target.UnitIndex], true)
-			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+				dot.Spell.CalcAndDealPeriodicDamage(sim, target, tick.Tick, shared.PeriodicTickOutcome(rendRank, dot))
 			},
 		},
 

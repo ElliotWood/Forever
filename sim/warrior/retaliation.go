@@ -1,19 +1,21 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
-func (war *Warrior) registerRetaliation() {
-	actionID := core.ActionID{SpellID: 20230}
+func (warrior *Warrior) registerRetaliation() {
+	retaliationRank := spellData.Retaliation.HighestRank()
+	retaliationHit := spellData.RetaliationTriggered.HighestRank()
+	retaliationHitBaseDamage, _ := retaliationHit.Direct.Range()
 
-	attackSpell := war.RegisterSpell(core.SpellConfig{
+	actionID := core.ActionID{SpellID: retaliationRank.SpellID}
+
+	attackSpell := warrior.RegisterSpell(core.SpellConfig{
 		ClassSpellMask: SpellMaskRetaliationHit,
-		ActionID:       core.ActionID{SpellID: 20240},
-		SpellSchool:    core.SpellSchoolPhysical,
-		DefenseType:    core.DefenseTypeMelee,
+		ActionID:       core.ActionID{SpellID: retaliationHit.SpellID},
+		SpellSchool:    retaliationHit.SpellSchool,
+		DefenseType:    retaliationHit.DefenseType,
 		ProcMask:       core.ProcMaskMeleeMH,
 		Flags:          core.SpellFlagMeleeMetrics,
 
@@ -21,16 +23,16 @@ func (war *Warrior) registerRetaliation() {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := war.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
+			baseDamage := retaliationHitBaseDamage + warrior.MHWeaponDamage(sim, spell.MeleeAttackPower(target))
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})
 
-	aura := war.RegisterAura(core.Aura{
+	aura := warrior.RegisterAura(core.Aura{
 		ActionID:  actionID,
 		Label:     "Retaliation",
-		Duration:  time.Second * 15,
-		MaxStacks: 30,
+		Duration:  retaliationRank.Duration,
+		MaxStacks: retaliationRank.ProcCharges,
 		OnSpellHitTaken: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			if spell.ProcMask.Matches(core.ProcMaskMelee) && result.Landed() && result.Damage > 0 {
 				attackSpell.Cast(sim, spell.Unit)
@@ -39,37 +41,33 @@ func (war *Warrior) registerRetaliation() {
 		},
 	})
 
-	spell := war.RegisterSpell(core.SpellConfig{
+	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		DefenseType:    core.DefenseTypeMelee,
 		ClassSpellMask: SpellMaskRetaliation,
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
+				GCD: retaliationRank.GCD,
 			},
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Minute * 30,
-			},
-			SharedCD: core.Cooldown{
-				Timer:    war.sharedMCD,
-				Duration: time.Minute * 30,
+				Timer:    warrior.NewTimer(),
+				Duration: retaliationRank.Cooldown,
 			},
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BattleStance)
+			return warrior.StanceMatches(BattleStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
 			aura.Activate(sim)
-			aura.SetStacks(sim, 30)
+			aura.SetStacks(sim, retaliationRank.ProcCharges)
 		},
 
 		RelatedSelfBuff: aura,
 	})
 
-	war.AddMajorCooldown(core.MajorCooldown{
+	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
 		Type:  core.CooldownTypeDPS,
 		// Require manual CD usage
