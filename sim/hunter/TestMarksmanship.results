@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-BeastmasterArmor"
+ value: {
+  dps: 926.75946
+  tps: 489.71433
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-BeaststalkerArmor"
  value: {
   dps: 900.89605
@@ -162,6 +169,20 @@ dps_results: {
  value: {
   dps: 865.07901
   tps: 444.58931
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-Champion'sPursuance"
+ value: {
+  dps: 921.09435
+  tps: 484.50975
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-Champion'sPursuit"
+ value: {
+  dps: 862.92803
+  tps: 443.83153
  }
 }
 dps_results: {
@@ -277,6 +298,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-FieldMarshal'sPursuit"
+ value: {
+  dps: 879.79069
+  tps: 455.68509
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-FreezingBand-942"
  value: {
   dps: 812.3837
@@ -302,6 +330,13 @@ dps_results: {
  value: {
   dps: 830.89301
   tps: 421.29781
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-GiantstalkerArmor"
+ value: {
+  dps: 960.61364
+  tps: 511.17996
  }
 }
 dps_results: {
@@ -382,6 +417,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-LieutenantCommander'sPursuance"
+ value: {
+  dps: 921.09435
+  tps: 484.50975
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-LieutenantCommander'sPursuit"
+ value: {
+  dps: 862.92803
+  tps: 443.83153
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 812.3837
@@ -435,6 +484,13 @@ dps_results: {
  value: {
   dps: 828.87655
   tps: 419.57096
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-Predator'sArmor"
+ value: {
+  dps: 860.92704
+  tps: 442.29255
  }
 }
 dps_results: {
@@ -522,6 +578,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-Striker'sGarb"
+ value: {
+  dps: 936.73305
+  tps: 495.37594
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 815.37144
@@ -603,6 +666,13 @@ dps_results: {
  value: {
   dps: 812.3837
   tps: 408.32466
+ }
+}
+dps_results: {
+ key: "TestMarksmanship-AllItems-Warlord'sPursuit"
+ value: {
+  dps: 879.79069
+  tps: 455.68509
  }
 }
 dps_results: {

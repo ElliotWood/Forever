@@ -186,6 +186,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-Champion'sBattlearmor"
+ value: {
+  dps: 871.74848
+  tps: 533.76661
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Champion'sBattlegear"
  value: {
   dps: 839.64269
@@ -407,6 +414,13 @@ dps_results: {
  value: {
   dps: 769.33046
   tps: 472.71558
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-LieutenantCommander'sBattlearmor"
+ value: {
+  dps: 871.74848
+  tps: 533.76661
  }
 }
 dps_results: {

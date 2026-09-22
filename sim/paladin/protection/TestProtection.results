@@ -123,11 +123,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-Avenger'sBattlegear"
+ value: {
+  dps: 688.72566
+  tps: 722.35307
+  dtps: 1027.91632
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-BadgeoftheSwarmguard-21670"
  value: {
   dps: 582.57153
   tps: 606.75818
   dtps: 1103.10872
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-BattlegearofEternalJustice"
+ value: {
+  dps: 581.59489
+  tps: 619.25184
+  dtps: 1114.06827
  }
 }
 dps_results: {
@@ -363,6 +379,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-FieldMarshal'sAegis"
+ value: {
+  dps: 608.06992
+  tps: 642.25063
+  dtps: 1093.16012
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-FieryPlateGauntlets-12631"
  value: {
   dps: 584.32582
@@ -384,6 +408,14 @@ dps_results: {
   dps: 579.98936
   tps: 604.71905
   dtps: 1092.7705
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-Freethinker'sArmor"
+ value: {
+  dps: 608.22526
+  tps: 628.95221
+  dtps: 1077.12105
  }
 }
 dps_results: {
@@ -512,6 +544,22 @@ dps_results: {
   dps: 593.0088
   tps: 614.41696
   dtps: 1103.10872
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-LawbringerArmor"
+ value: {
+  dps: 608.94241
+  tps: 632.73822
+  dtps: 672.692
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-LieutenantCommander'sRedoubt"
+ value: {
+  dps: 655.98202
+  tps: 688.58392
+  dtps: 1095.41726
  }
 }
 dps_results: {
