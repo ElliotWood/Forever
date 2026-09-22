@@ -8,7 +8,6 @@ import { MAX_NUM_PARTIES } from '@sim/raid/raid';
 import type { Sim } from '@sim/sim';
 import { batch } from '@sim/state/batch';
 
-import launchGear from './launch_gear.json';
 import type { LoadedSpec } from './spec_definitions';
 
 // A raid of every build over a full encounter is not free. The run has to finish while someone
@@ -55,13 +54,11 @@ export function strongestOf<T extends object>(buffs: Array<T>): T {
 	return merged as T;
 }
 
-// The gear a build wears: its spec's own default set when it has one, otherwise the Launch set
-// master's sim shipped for that spec (launch_gear.json).
-// ponytail: a stopgap until the spec presets carry their own launch gear; delete the json then.
-export const gearFor = ({ key, def }: LoadedSpec): EquipmentSpec =>
-	def.defaults.gear.items.some(item => item.id)
-		? def.defaults.gear
-		: EquipmentSpec.fromJson((launchGear as Record<string, { items: Array<{ id: number }> } | undefined>)[key] ?? { items: [] });
+// The gear a build wears: its spec's own Launch preset (the best pre-raid gear in the launch pool,
+// the set master's rankings used), otherwise the spec's default gear.
+export const gearFor = ({ def }: LoadedSpec): EquipmentSpec =>
+	(def.presets.gear.find(preset => /^launch$/i.test(preset.name)) ?? def.presets.gear.find(preset => /launch/i.test(preset.name)))?.gear ??
+	def.defaults.gear;
 
 export type RaidSetup = { builds: Array<RankingBuild>; missingItemIds: Array<number> };
 

@@ -7,10 +7,13 @@ import { describe, expect, it } from 'vitest';
 import { composition } from './confidence';
 import { communityBuilds, gearFor, strongestOf } from './raid';
 
-const def = (spec: Spec, talents: Array<[string, string]>, defaultTalents = '') =>
+const def = (spec: Spec, talents: Array<[string, string]>, defaultTalents = '', gear: Array<[string, number]> = []) =>
 	({
 		spec,
-		presets: { talents: talents.map(([name, talentsString]) => ({ name, data: { talentsString } })) },
+		presets: {
+			talents: talents.map(([name, talentsString]) => ({ name, data: { talentsString } })),
+			gear: gear.map(([name, id]) => ({ name, gear: { items: [{ id }] } })),
+		},
 		defaults: { talents: { talentsString: defaultTalents }, gear: { items: [] } },
 	}) as unknown as SpecDefinition<any>;
 
@@ -52,9 +55,11 @@ describe('communityBuilds', () => {
 		expect(build.name).toMatch(/ 5\/1\/2$/);
 	});
 
-	it('falls back to the master launch set when the spec has no default gear', () => {
-		expect(gearFor({ key: 'warrior/dps', def: def(Spec.SpecDpsWarrior, []) }).items.length).toBeGreaterThan(10);
-		expect(gearFor({ key: 'nobody/here', def: def(Spec.SpecDpsWarrior, []) }).items).toEqual([]);
+	it("wears the spec's own Launch preset, else its default gear", () => {
+		const gear = (presets: Array<[string, number]>) => gearFor({ key: 'warrior/dps', def: def(Spec.SpecDpsWarrior, [], '', presets) }).items;
+		expect(gear([['P1 BiS', 1], ['Launch (Arms)', 2], ['Launch', 3]])).toEqual([{ id: 3 }]);
+		expect(gear([['P1 BiS', 1], ['Backstab Launch', 2]])).toEqual([{ id: 2 }]);
+		expect(gear([['P1 BiS', 1]])).toEqual([]);
 	});
 });
 
