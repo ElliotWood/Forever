@@ -23,6 +23,22 @@ interface WowheadGearPlannerImportJSON {
 	}[];
 }
 
+// Talent digits packed two per byte, 0xf closing each tree.
+function readTalents(bytes: number[]): string {
+	let talents = '';
+	let trees = 0;
+	for (const nibble of bytes.flatMap(b => [b >> 4, b & 15])) {
+		if (trees >= 3) break;
+		if (nibble === 15) {
+			talents += '-';
+			trees++;
+		} else {
+			talents += nibble;
+		}
+	}
+	return talents.replace(/-+$/, '');
+}
+
 // Taken from Wowhead
 function readHash(hash: string): WowheadGearPlannerImportJSON {
 	const enchantOffset = 128;
@@ -55,28 +71,40 @@ function readHash(hash: string): WowheadGearPlannerImportJSON {
 	}
 
 	const r = gearPlannerBits.shift()!;
+	if (r >= 4) {
+		// Wowhead Classic's layout, the one the classic-engine site imported and exported: a gender
+		// byte before the level, and 24-bit enchant spell ids.
+		t.genderId = gearPlannerBits.shift()!;
+		t.level = gearPlannerBits.shift()!;
+		t.talentString = readTalents(gearPlannerBits.splice(0, gearPlannerBits.shift()!));
+		while (gearPlannerBits.length >= 4) {
+			const slotBits = gearPlannerBits.shift()!;
+			const gemBits = gearPlannerBits.shift()!;
+			const item: WowheadGearPlannerImportJSON['items'][number] = {
+				slotId: slotBits & ~enchantOffset & ~randomEnchantOffset,
+				itemId: ((gemBits & 31) << 16) | (gearPlannerBits.shift()! << 8) | gearPlannerBits.shift()!,
+				randomEnchantId: undefined,
+				gemItemIds: [],
+				enchantId: undefined,
+			};
+			if (slotBits & enchantOffset) {
+				item.enchantId = (gearPlannerBits.shift()! << 16) | (gearPlannerBits.shift()! << 8) | gearPlannerBits.shift()!;
+			}
+			if (slotBits & randomEnchantOffset) {
+				const randomEnchantId = (gearPlannerBits.shift()! << 8) | gearPlannerBits.shift()!;
+				item.randomEnchantId = randomEnchantId & 32768 ? randomEnchantId - 65536 : randomEnchantId;
+			}
+			t.items.push(item);
+		}
+		return t;
+	}
 	if (r < 4) {
 		if (r > 0) {
 			t.level = gearPlannerBits.shift()!;
 		}
 		t.talentString = '';
 		if (r > 1) {
-			const e = gearPlannerBits.shift()!;
-			const a = gearPlannerBits.splice(0, e);
-			const s = [];
-			for (let e = 0; e < a.length; e++) {
-				s.push(a[e] >> 4, a[e] & 15);
-			}
-			let n = 0;
-			for (let e = 0; e < s.length && n < 3; e++) {
-				if (s[e] === 15) {
-					t.talentString += '-';
-					n++;
-				} else {
-					t.talentString += '' + s[e];
-				}
-			}
-			t.talentString = t.talentString.replace(/-+$/, '');
+			t.talentString = readTalents(gearPlannerBits.splice(0, gearPlannerBits.shift()!));
 		}
 		while (gearPlannerBits.length >= 3) {
 			let slotIdx = gearPlannerBits.shift()!;
@@ -129,7 +157,7 @@ function readHash(hash: string): WowheadGearPlannerImportJSON {
 }
 
 export function parseWowheadGearLink(link: string): WowheadGearPlannerImportJSON {
-	const match = link.match(new RegExp(`${WOWHEAD_DOMAIN}/gear-planner/(.+)`));
+	const match = link.match(new RegExp(`(?:${WOWHEAD_DOMAIN}|classic)/gear-planner/(.+)`));
 	if (!match) {
 		throw new Error(`Invalid Wowhead Gear Planner URL ${link}, must look like "${WOWHEAD_GEAR_PLANNER_URL}/CLASS/RACE/XXXX"`);
 	}
@@ -160,7 +188,7 @@ export const WOWHEAD_GEAR_PLANNER_IMPORTER: ImporterDefinition = {
 	title: i18n.t('import.wowhead.title'),
 	allowFileUpload: true,
 	onImport: async (host, url) => {
-		const match = url.match(new RegExp(`www\\.wowhead\\.com/${WOWHEAD_DOMAIN}/gear-planner/([a-z\\-]+)/([a-z\\-]+)/([a-zA-Z0-9_\\-]+)`));
+		const match = url.match(new RegExp(`www\\.wowhead\\.com/(?:${WOWHEAD_DOMAIN}|classic)/gear-planner/([a-z\\-]+)/([a-z\\-]+)/([a-zA-Z0-9_\\-]+)`));
 		if (!match) {
 			throw new Error(i18n.t('import.wowhead.error_invalid_url', { url }));
 		}

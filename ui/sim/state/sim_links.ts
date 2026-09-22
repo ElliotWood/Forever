@@ -4,6 +4,7 @@
 import { IndividualSimSettings } from '@generated/proto/ui';
 import pako from 'pako';
 
+import { convertClassicSettingsBinary } from './classic_links';
 import { SIM_CATEGORY_KEYS, SimSettingCategories } from '../constants/sim_settings';
 import { getEnumValues } from '../utils/collections';
 
@@ -38,7 +39,14 @@ export function tryParseUrlLocation(loc: UrlLocation): UrlParseData | null {
 	}
 
 	const settingsBytes = pako.inflate(bytes);
-	const settings = IndividualSimSettings.fromBinary(settingsBytes);
+	// A link from the classic-engine site (no api_version) is another proto: convert it.
+	let settings: IndividualSimSettings | null = null;
+	try {
+		settings = IndividualSimSettings.fromBinary(settingsBytes);
+	} catch {
+		// Master's field numbers can trip our reader; handled below.
+	}
+	if (!settings || !settings.apiVersion) settings = convertClassicSettingsBinary(settingsBytes);
 
 	let exportCategories = LINK_DEFAULT_CATEGORIES;
 	const urlParams = new URLSearchParams(loc.search);

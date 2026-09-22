@@ -62,4 +62,26 @@ describe('parseWowheadGearLink', () => {
 		expect(parsed.classId).toBe('warrior');
 		expect(parsed.items).toEqual([]);
 	});
+
+	// The classic-engine site sent users to wowhead.com/classic/gear-planner. Its exporter wrote this
+	// layout (version 6: gender, level, talents, then items with 24-bit enchant spell ids), so a
+	// link built exactly as it built one has to come back out.
+	it('reads a classic-engine Wowhead Classic link', () => {
+		const talents = '5023000501-0050550501503051';
+		let hex = talents.replaceAll('-', 'f') + 'f';
+		if (hex.length % 2) hex += '0';
+		const bytes = [6, 0, 60, hex.length / 2];
+		for (let i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.substring(i, i + 2), 16));
+		bytes.push(1 | 0x80, 0, 13404 >> 8, 13404 & 255, 0, 20034 >> 8, 20034 & 255); // head, enchanted
+		bytes.push(16, 0, 18725 >> 8, 18725 & 255); // main hand, bare
+		const hash = btoa(String.fromCharCode(...bytes)).replaceAll('/', '_').replaceAll('+', '-').replace(/=+$/, '');
+		const parsed = parseWowheadGearLink(`https://www.wowhead.com/classic/gear-planner/hunter/troll/${hash}`);
+		expect(parsed.classId).toBe('hunter');
+		expect(parsed.level).toBe(60);
+		expect(parsed.talentString).toBe(talents);
+		expect(parsed.items).toEqual([
+			{ slotId: 1, itemId: 13404, enchantId: 20034, randomEnchantId: undefined, gemItemIds: [] },
+			{ slotId: 16, itemId: 18725, enchantId: undefined, randomEnchantId: undefined, gemItemIds: [] },
+		]);
+	});
 });
