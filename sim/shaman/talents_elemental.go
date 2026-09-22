@@ -156,7 +156,8 @@ func (shaman *Shaman) applyElementalFocus() {
 		TriggerImmediately: true,
 
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			if !spell.SpellSchool.Matches(core.SpellSchoolElemental) {
+			// Searing and Magma Totem attacks are the totem's, not the shaman's: they never proc the shaman's talents.
+			if !spell.SpellSchool.Matches(core.SpellSchoolElemental) || spell.Matches(SpellMaskFireTotem) {
 				return
 			}
 			triggeringSpell = spell
