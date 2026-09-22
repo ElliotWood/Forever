@@ -109,14 +109,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestProtectionWarrior-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 263.45374
-  tps: 352.51236
-  dtps: 4333.43763
- }
-}
-dps_results: {
  key: "TestProtectionWarrior-AllItems-Dreadnaught'sBattlegear"
  value: {
   dps: 302.45558
