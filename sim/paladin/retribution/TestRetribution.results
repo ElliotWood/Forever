@@ -319,8 +319,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-EnchantWeapon-Crusader-1900"
  value: {
-  dps: 799.91059
-  tps: 470.74599
+  dps: 806.83308
+  tps: 474.62259
  }
 }
 dps_results: {

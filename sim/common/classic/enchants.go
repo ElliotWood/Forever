@@ -36,7 +36,8 @@ func init() {
 	// PPM: 1, ICD: 0
 	// Permanently enchant a melee weapon so that often when attacking in melee
 	// it heals for 75 to 125 and increases Strength by 100 for 15 sec.
-	// Has a reduced effect for players above level 60.
+	// Level 60 values from the client (20007: 100 Strength, heal 100 +-25%); the 60 Strength and
+	// 45 to 75 heal this carried were TBC's level 70 reduction.
 	core.NewEnchantEffect(1900, func(agent core.Agent) {
 		character := agent.GetCharacter()
 		duration := time.Second * 15
@@ -49,7 +50,7 @@ func init() {
 			aura := character.NewTemporaryStatsAura(
 				fmt.Sprintf("Holy Strength %s", labelSuffix),
 				actionID.WithTag(tag),
-				stats.Stats{stats.Strength: 60},
+				stats.Stats{stats.Strength: 100},
 				duration,
 			)
 			character.AddStatProcBuff(1900, aura, true, []proto.ItemSlot{slot})
@@ -69,7 +70,7 @@ func init() {
 			Callback:     core.CallbackOnSpellHitDealt,
 			Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
 				core.Ternary(spell.IsOH(), ohAura, mhAura).Activate(sim)
-				character.GainHealth(sim, sim.Roll(45, 75), healthMetrics)
+				character.GainHealth(sim, sim.Roll(75, 125), healthMetrics)
 			},
 		})
 	})
