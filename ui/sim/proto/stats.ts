@@ -10,6 +10,25 @@ import { migrateOldProto, ProtoConversionMap } from './proto_migration';
 const STATS_LEN = getEnumValues(Stat).length;
 const PSEUDOSTATS_LEN = getEnumValues(PseudoStat).length;
 
+const RATING_WEIGHTED_PERCENT_PSEUDO_STATS = [
+	PseudoStat.PseudoStatMeleeHitPercent,
+	PseudoStat.PseudoStatMeleeCritPercent,
+	PseudoStat.PseudoStatSpellHitPercent,
+	PseudoStat.PseudoStatSpellCritPercent,
+	PseudoStat.PseudoStatRangedHitPercent,
+	PseudoStat.PseudoStatRangedCritPercent,
+	PseudoStat.PseudoStatDodgePercent,
+	PseudoStat.PseudoStatParryPercent,
+	PseudoStat.PseudoStatBlockPercent,
+];
+
+// A ranged percent is the total the character sheet shows, melee share included, and the melee
+// pseudo stat already counts that share.
+const RANGED_TOTAL_MELEE_SHARE = new Map<PseudoStat, PseudoStat>([
+	[PseudoStat.PseudoStatRangedHitPercent, PseudoStat.PseudoStatMeleeHitPercent],
+	[PseudoStat.PseudoStatRangedCritPercent, PseudoStat.PseudoStatMeleeCritPercent],
+]);
+
 export class UnitStat {
 	private readonly stat: Stat | null;
 	private readonly pseudoStat: PseudoStat | null;
@@ -545,13 +564,24 @@ export class Stats {
 		);
 	}
 
+	// A percent pseudo stat the weights leave at 0 is worth its linked rating's weight.
 	computeEP(epWeights: Stats): number {
 		let total = 0;
 		this.stats.forEach((stat, idx) => {
 			total += stat * epWeights.stats[idx];
 		});
-		this.pseudoStats.forEach((stat, idx) => {
-			total += stat * epWeights.pseudoStats[idx];
+		this.pseudoStats.forEach((value, idx) => {
+			const meleeShare = RANGED_TOTAL_MELEE_SHARE.get(idx);
+			if (meleeShare !== undefined) {
+				value -= this.pseudoStats[meleeShare];
+			}
+
+			if (epWeights.pseudoStats[idx] !== 0 || value === 0 || !RATING_WEIGHTED_PERCENT_PSEUDO_STATS.includes(idx)) {
+				total += value * epWeights.pseudoStats[idx];
+				return;
+			}
+			const unitStat = UnitStat.fromPseudoStat(idx);
+			total += unitStat.convertPercentToRating(value)! * epWeights.stats[unitStat.getRootStat()];
 		});
 		return total;
 	}

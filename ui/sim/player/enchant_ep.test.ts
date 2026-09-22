@@ -7,14 +7,15 @@ vi.mock('@i18n/localization', () => ({
 	translatePseudoStat: (pseudoStat: unknown) => String(pseudoStat),
 }));
 
+import * as Mechanics from '../constants/mechanics';
 import { Stats } from '../proto/stats';
 import { Player } from './player';
 
 const weights = Stats.fromMap({ [Stat.StatStrength]: 2 }, { [PseudoStat.PseudoStatMainHandDps]: 10, [PseudoStat.PseudoStatOffHandDps]: 4 });
 
-const computeEnchantEP = (enchant: Enchant, slot?: ItemSlot, weapon?: Item | null) =>
+const computeEnchantEP = (enchant: Enchant, slot?: ItemSlot, weapon?: Item | null, epWeights: Stats = weights) =>
 	Player.prototype.computeEnchantEP.call(
-		{ enchantEPCache: new Map<number, number>(), computeStatsEP: (stats: Stats) => stats.computeEP(weights) } as unknown as Player<any>,
+		{ enchantEPCache: new Map<number, number>(), computeStatsEP: (stats: Stats) => stats.computeEP(epWeights) } as unknown as Player<any>,
 		enchant,
 		slot,
 		weapon,
@@ -37,5 +38,30 @@ describe('Player.computeEnchantEP', () => {
 	it('gives weapon damage nothing without a weapon to read the speed off', () => {
 		expect(computeEnchantEP(striking, ItemSlot.ItemSlotMainHand, null)).toBe(0);
 		expect(computeEnchantEP(striking)).toBe(0);
+	});
+});
+
+describe('Player.computeEnchantEP on percent pseudo stats', () => {
+	const ratingWeights = Stats.fromMap({ [Stat.StatDodgeRating]: 2, [Stat.StatMeleeCritRating]: 3, [Stat.StatMeleeHitRating]: 5 }, {});
+	const enchantEP = (effectId: number, pseudoStats: Partial<Record<PseudoStat, number>>, epWeights = ratingWeights) =>
+		computeEnchantEP(Enchant.create({ effectId, pseudoStats: Stats.fromMap({}, pseudoStats).toProto().pseudoStats }), undefined, undefined, epWeights);
+
+	it('values 2622 Enchant Cloak - Dodge at the dodge rating weight', () => {
+		expect(enchantEP(2622, { [PseudoStat.PseudoStatDodgePercent]: 1 })).toBeCloseTo(Mechanics.DODGE_RATING_PER_DODGE_PERCENT * 2);
+	});
+
+	it("counts 2717 Might of the Scourge's crit once, though it states melee and the ranged total", () => {
+		expect(enchantEP(2717, { [PseudoStat.PseudoStatMeleeCritPercent]: 1, [PseudoStat.PseudoStatRangedCritPercent]: 1 })).toBeCloseTo(
+			Mechanics.PHYSICAL_CRIT_RATING_PER_CRIT_PERCENT * 3,
+		);
+	});
+
+	it('values the ranged-only 2523 Biznicks 247x128 Accurascope at the hit rating weight', () => {
+		expect(enchantEP(2523, { [PseudoStat.PseudoStatRangedHitPercent]: 3 })).toBeCloseTo(3 * Mechanics.PHYSICAL_HIT_RATING_PER_HIT_PERCENT * 5);
+	});
+
+	it("uses a percent pseudo stat's own weight where it has one", () => {
+		const ownWeight = Stats.fromMap({ [Stat.StatMeleeCritRating]: 3 }, { [PseudoStat.PseudoStatMeleeCritPercent]: 7 });
+		expect(enchantEP(2717, { [PseudoStat.PseudoStatMeleeCritPercent]: 1, [PseudoStat.PseudoStatRangedCritPercent]: 1 }, ownWeight)).toBeCloseTo(7);
 	});
 });
