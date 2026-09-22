@@ -43,8 +43,9 @@ func (druid *Druid) applyNaturalShapeshifter() {
 		return
 	}
 
+	// Client 16833: the mask covers Cat, Bear and Moonkin Form.
 	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellCatForm | DruidSpellBearForm,
+		ClassMask:  DruidSpellCatForm | DruidSpellBearForm | DruidSpellMoonkinForm,
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
 		FloatValue: spellData.NaturalShapeshifter.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(druid.Talents.NaturalShapeshifter),
 	})

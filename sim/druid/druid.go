@@ -116,6 +116,7 @@ const (
 	DruidSpellTigersFury
 	DruidSpellCatForm
 	DruidSpellBearForm
+	DruidSpellMoonkinForm
 
 	DruidSpellHealingTouch
 	DruidSpellRegrowth

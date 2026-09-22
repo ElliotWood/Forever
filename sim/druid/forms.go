@@ -380,8 +380,9 @@ func (druid *Druid) RegisterMoonkinFormSpell() {
 	}
 
 	druid.MoonkinForm = druid.RegisterSpell(Any, core.SpellConfig{
-		ActionID: core.ActionID{SpellID: 24858},
-		Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+		ActionID:       core.ActionID{SpellID: 24858},
+		ClassSpellMask: DruidSpellMoonkinForm,
+		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 
 		ManaCost: core.ManaCostOptions{
 			BaseCostPercent: 35,

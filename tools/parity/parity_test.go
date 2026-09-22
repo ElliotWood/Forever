@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/wowsims/forever/sim"
@@ -43,6 +44,7 @@ type parityResult struct {
 	Stats   map[string]float64 `json:"stats"`
 	Actions map[string]float64 `json:"actions"`
 	Casts   map[string]float64 `json:"casts"`
+	Auras   map[string]float64 `json:"auras"`
 	Oom     float64            `json:"oom"`
 	Dtps    float64            `json:"dtps"`
 	Error   string             `json:"error,omitempty"`
@@ -153,6 +155,9 @@ func TestParity(t *testing.T) {
 
 	fmt.Printf("\n%-20s %9s %9s %8s   %s\n", "spec", "master", "next", "gap", "final stats master | next: ap sd crit%(melee/spell) hit% str/agi/int")
 	for _, spec := range file.Specs {
+		if only := os.Getenv("PARITY_ONLY"); only != "" && !strings.Contains(","+only+",", ","+spec.Name+",") {
+			continue
+		}
 		m := master[spec.Name]
 		var n parityResult
 		if os.Getenv("PARITY_GEAR") != "" {
@@ -199,6 +204,19 @@ func printActions(mr, nr parityResult) {
 	sort.Slice(keys, func(i, j int) bool { return m[keys[i]]+n[keys[i]] > m[keys[j]]+n[keys[j]] })
 	for _, k := range keys {
 		fmt.Printf("    %-28s %9.1f %9.1f   casts %6.1f %6.1f\n", k, m[k], n[k], mr.Casts[k], nr.Casts[k])
+	}
+	auras := []string{}
+	for k := range mr.Auras {
+		auras = append(auras, k)
+	}
+	for k := range nr.Auras {
+		if _, ok := mr.Auras[k]; !ok {
+			auras = append(auras, k)
+		}
+	}
+	sort.Strings(auras)
+	for _, k := range auras {
+		fmt.Printf("    %-28s %9.1f %9.1f\n", k, mr.Auras[k], nr.Auras[k])
 	}
 }
 
@@ -297,6 +315,7 @@ func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int
 		Dps:          result.RaidMetrics.Dps.Avg,
 		Actions:      actions,
 		Casts:        casts,
+		Auras:        auraUptimes(result.RaidMetrics.Parties[0].Players[0]),
 		Oom:          result.RaidMetrics.Parties[0].Players[0].SecondsOomAvg,
 		Dtps:         result.RaidMetrics.Parties[0].Players[0].Dtps.Avg,
 		Stats: map[string]float64{
@@ -415,4 +434,20 @@ func actionDps(unit *proto.UnitMetrics, dps float64, iterations int32) (map[stri
 		out[k] *= dps / total
 	}
 	return out, casts
+}
+
+func auraUptimes(unit *proto.UnitMetrics) map[string]float64 {
+	out := map[string]float64{}
+	for _, a := range unit.Auras {
+		key := fmt.Sprintf("aura %d", a.Id.GetSpellId())
+		if a.Id.GetTag() != 0 {
+			key += fmt.Sprintf(" tag %d", a.Id.GetTag())
+		}
+		out[key+" uptime"] = a.UptimeSecondsAvg
+		out[key+" procs"] = a.ProcsAvg
+	}
+	for _, r := range unit.Resources {
+		out[fmt.Sprintf("res %v %v gain", r.Type, r.Id)] += r.ActualGain
+	}
+	return out
 }
