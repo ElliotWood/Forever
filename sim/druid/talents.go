@@ -74,8 +74,10 @@ func (druid *Druid) applyMoonglow() {
 	}
 
 	druid.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_PowerCost_Pct_Add,
-		CostType:   core.CostTypeMana,
+		Kind: core.SpellMod_PowerCost_Pct_Add,
+		// Client 16845: "your damaging spells", mask 7340807 = Wrath, Moonfire, Starfire, Insect Swarm,
+		// Hurricane and Nature's Grasp. Moonkin Form and Innervate pay full price.
+		ClassMask:  SpellMaskBalance,
 		FloatValue: -[]float64{0, 0.08, 0.17, 0.25}[druid.Talents.Moonglow],
 	})
 }
