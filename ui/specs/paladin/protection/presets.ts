@@ -16,9 +16,7 @@ export const DefaultSimpleRotation = ProtectionPaladinRotation.create({
 	prioritizeHolyShield: true,
 	consecrationRank: 6,
 	useExorcism: true,
-	useAvengersShield: false,
 	useHammerOfWrath: false,
-	precastAvengersShield: true,
 	maintainJudgement: PaladinJudgement.JudgementNone,
 	aura: PaladinAura.DevotionAura,
 });
@@ -62,20 +60,17 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 	windfuryTotem: TristateEffect.TristateEffectMissing,
 	battleShout: TristateEffect.TristateEffectMissing,
 	drums: Drums.LesserDrumsOfBattle,
-	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
-	blessingOfSanctuary: true,
+	blessingOfWisdom: true,
+	blessingOfMight: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	misery: true,
 	curseOfElements: TristateEffect.TristateEffectImproved,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
 	judgementOfWisdom: true,
 	judgementOfLight: true,
 	bloodFrenzy: true,

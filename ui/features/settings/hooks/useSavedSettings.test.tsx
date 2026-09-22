@@ -1,4 +1,4 @@
-import { Race, TristateEffect } from '@generated/proto/common';
+import { Race } from '@generated/proto/common';
 import { SimHostProvider } from '@sim/context/SimHostContext';
 import { fakeHost } from '@sim/testing';
 import { renderHook } from '@testing-library/react';
@@ -34,24 +34,24 @@ describe('useSavedSettings', () => {
 		expect(entries[0].data.race).toBe(Race.RaceOrc);
 	});
 
-	// Saves written before e4d97302e6 hold a bool here, which `SavedSettings.fromJson` throws on;
+	// Saves from before Forever hold the TBC talent field, which `SavedSettings.fromJson` throws on;
 	// `useSavedData` swallows that and the entry would be gone from the panel without a word.
-	it('keeps an entry whose improvedSealOfTheCrusader is a legacy bool', () => {
+	it('keeps an entry whose debuffs carry the legacy improvedSealOfTheCrusader bool', () => {
 		store({ Legacy: { race: 'RaceOrc', debuffs: { improvedSealOfTheCrusader: true, misery: true } } });
 
 		const { entries } = load();
 		expect(entries.map(entry => entry.name)).toEqual(['Legacy']);
-		expect(entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(TristateEffect.TristateEffectImproved);
+		expect(entries[0].data.debuffs?.judgementOfTheCrusader).toBe(true);
 		expect(entries[0].data.debuffs?.misery).toBe(true);
 	});
 
-	// The migration keys on the bool and not on truthiness: `toJson` writes an enum as its name, so
-	// coercing every truthy value the way master's `updateSavedSettings` does would turn a saved
-	// Regular into Improved.
-	it('leaves a current enum name alone', () => {
-		store({ Current: { debuffs: { improvedSealOfTheCrusader: 'TristateEffectRegular' } } });
+	// The later TBC shape was an enum name; any rank of the debuff maps to the one Forever has.
+	it('maps a legacy enum name onto the bool', () => {
+		store({ Current: { debuffs: { improvedSealOfTheCrusader: 'TristateEffectRegular', jocRetribution2Pt4: true } } });
 
-		expect(load().entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(TristateEffect.TristateEffectRegular);
+		const debuffs = load().entries[0].data.debuffs;
+		expect(debuffs?.judgementOfTheCrusader).toBe(true);
+		expect(debuffs).not.toHaveProperty('improvedSealOfTheCrusader');
 	});
 
 	it('does not drop the other entries of the slot', () => {

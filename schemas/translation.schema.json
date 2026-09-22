@@ -1847,6 +1847,19 @@
 							"additionalProperties": false,
 							"required": ["label", "tooltip"]
 						},
+						"retribution_aura_spell_power": {
+							"type": "object",
+							"properties": {
+								"label": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false,
+							"required": ["label", "tooltip"]
+						},
 						"totem_twisting": {
 							"type": "object",
 							"properties": {
@@ -2307,6 +2320,7 @@
 						"shadow_priest_dps",
 						"expose_weakness_uptime",
 						"expose_weakness_hunter_agility",
+						"retribution_aura_spell_power",
 						"totem_twisting",
 						"pet_uptime",
 						"pet_single_ability",
