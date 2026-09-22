@@ -46,7 +46,7 @@ through at most four names, cycles refused), one accessor of a chain on its decl
 ## Editors
 
 - **VS Code**: `.vscode/extensions/wowsims-spelldata`, a workspace extension built from
-  `tools/vscode-spelldata` by `make vscode-spelldata`.
+  `tools/vscode-spelldata` by `make vscode-spelldata` (or `npm run build:lsp` from the root, which also compiles the server).
 - **Zed**: `tools/zed-spelldata`, installed with `zed: install dev extension`.
 
 ### Other editors

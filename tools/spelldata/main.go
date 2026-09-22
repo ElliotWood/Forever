@@ -27,8 +27,21 @@ import (
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
+// An editor's language client may add its own transport flag, such as --stdio.
+func isLSPInvocation(args []string) bool {
+	if len(args) == 0 || strings.TrimLeft(args[0], "-") != "lsp" {
+		return false
+	}
+	for _, arg := range args[1:] {
+		if strings.TrimLeft(arg, "-") != "stdio" {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
-	if len(os.Args) == 2 && strings.TrimLeft(os.Args[1], "-") == "lsp" {
+	if isLSPInvocation(os.Args[1:]) {
 		shutdown, err := serveLSP(os.Stdin, os.Stdout)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, "spelldata:", err)

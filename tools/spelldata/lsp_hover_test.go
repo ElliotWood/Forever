@@ -466,3 +466,16 @@ func TestLSPTraceOff(t *testing.T) {
 		}
 	}
 }
+
+func TestLSPInvocation(t *testing.T) {
+	for _, args := range [][]string{{"-lsp"}, {"--lsp"}, {"-lsp", "--stdio"}} {
+		if !isLSPInvocation(args) {
+			t.Errorf("%q should start the language server", args)
+		}
+	}
+	for _, args := range [][]string{{}, {"11574"}, {"-lsp", "11574"}, {"--stdio", "-lsp"}} {
+		if isLSPInvocation(args) {
+			t.Errorf("%q should not start the language server", args)
+		}
+	}
+}
