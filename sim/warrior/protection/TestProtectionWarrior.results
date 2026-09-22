@@ -135,14 +135,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestProtectionWarrior-AllItems-Enchant2HWeapon-GreaterImpact-963"
- value: {
-  dps: 503.2976
-  tps: 773.20186
-  dtps: 3429.05461
- }
-}
-dps_results: {
  key: "TestProtectionWarrior-AllItems-EnchantCloak-Subtlety-2621"
  value: {
   dps: 498.32356
