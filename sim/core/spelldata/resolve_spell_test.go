@@ -429,6 +429,10 @@ func TestSpellConfigProcFlagsAndTag(t *testing.T) {
 	if config.ActionID.Tag != 2 {
 		t.Errorf("tag = %d, want 2", config.ActionID.Tag)
 	}
+	if config.RageCost.Cost != 0 || config.Cast.DefaultCast.GCD != 0 || config.Cast.CD.Timer != nil {
+		t.Errorf("a proc sub-spell has no cost, GCD or cooldown of its own, got %d rage, %v GCD, timer %v",
+			config.RageCost.Cost, config.Cast.DefaultCast.GCD, config.Cast.CD.Timer)
+	}
 }
 
 // Melee and Magic put a spell in the rotation, and Proc takes the sub-spell they resolve back out of

@@ -8,29 +8,19 @@ import (
 var whirlwindRank = spellData.Whirlwind.Highest()
 
 func (warrior *Warrior) registerWhirlwind() {
-	actionID := core.ActionID{SpellID: whirlwindRank.ID}
-
 	var whirlwindOH *core.Spell
 	if warrior.Talents.RagingBlows {
-		whirlwindOH = warrior.RegisterSpell(core.SpellConfig{
-			ActionID:       actionID.WithTag(2),
-			SpellSchool:    core.SpellSchoolPhysical,
-			DefenseType:    core.DefenseTypeMelee,
-			ProcMask:       core.ProcMaskMeleeOHSpecial,
-			ClassSpellMask: SpellMaskWhirlwindOh,
-			ClassFlags:     SpellFlagsWhirlwind,
-			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
+		config := spelldata.SpellConfig(&warrior.Unit, whirlwindRank,
+			spelldata.Melee(core.ProcMaskMeleeOHSpecial), spelldata.Proc(), spelldata.Tag(2))
+		config.ClassSpellMask = SpellMaskWhirlwindOh
 
-			DamageMultiplier: 1,
-			// TODO: In-game testing required for threat multiplier / threat bonus
-			ThreatMultiplier: 1,
+		config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+			spell.CalcCleaveDamage(sim, target, int32(whirlwindRank.MaxTargets), baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+			spell.DealBatchedAoeDamage(sim)
+		}
 
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				baseDamage := warrior.OHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-				spell.CalcCleaveDamage(sim, target, int32(whirlwindRank.MaxTargets), baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-				spell.DealBatchedAoeDamage(sim)
-			},
-		})
+		whirlwindOH = warrior.RegisterSpell(config)
 	}
 
 	config := spelldata.SpellConfig(&warrior.Unit, whirlwindRank,

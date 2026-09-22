@@ -84,15 +84,21 @@ func Magic(mask core.ProcMask) SpellOpt {
 	}
 }
 
-// A spell another spell or an aura casts: it is out of the rotation Melee and Magic put it in and it
-// does not feed on-cast effects, the way the warrior's Blood Craze heal is registered. Its damage
-// and healing are still measured, its casts are not: the metrics aggregator counts no cast for a
-// passive spell, so a sub-spell whose casts the sim reports - the warrior's Deep Wounds and
-// Retaliation's counterattack - sets the flags itself instead.
+// A spell another spell or an aura casts: it is out of the rotation Melee and Magic put it in, it
+// does not feed on-cast effects, and it has no cast, cost or cooldown of its own even when it shares
+// the row of the ability that casts it, the way the warrior's Blood Craze heal and Whirlwind's
+// off-hand strike are registered. Its damage and healing are still measured, its casts are not: the
+// metrics aggregator counts no cast for a passive spell, so a sub-spell whose casts the sim reports -
+// the warrior's Deep Wounds and Retaliation's counterattack - sets the flags itself instead.
 func Proc() SpellOpt {
 	return func(config *core.SpellConfig, _ *Spell) {
 		config.Flags |= core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete
 		config.Flags &^= core.SpellFlagAPL
+		config.Cast = core.CastConfig{}
+		config.ManaCost = core.ManaCostOptions{}
+		config.RageCost = core.RageCostOptions{}
+		config.EnergyCost = core.EnergyCostOptions{}
+		config.FocusCost = core.FocusCostOptions{}
 	}
 }
 
