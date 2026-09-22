@@ -11,7 +11,7 @@ var exposeArmorRank = spellData.ExposeArmor.HighestRank()
 // back on a full five point spend. The armor the debuff removes no longer scales with the talent.
 func (rogue *Rogue) registerExposeArmorSpell() {
 	rogue.ExposeArmorAuras = rogue.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ExposeArmorAura(target, rogue.ComboPoints, 0)
+		return core.ExposeArmorAura(target, rogue.ComboPoints)
 	})
 
 	cpMetrics := rogue.NewComboPointMetrics(core.ActionID{SpellID: 14169})
