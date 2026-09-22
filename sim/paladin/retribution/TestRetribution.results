@@ -114,6 +114,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-Avenger'sBattlegear"
+ value: {
+  dps: 1026.33264
+  tps: 598.49492
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-BadgeoftheSwarmguard-21670"
  value: {
   dps: 798.73331
@@ -324,6 +331,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-FieldMarshal'sAegis"
+ value: {
+  dps: 892.83597
+  tps: 523.64787
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-FieryPlateGauntlets-12631"
  value: {
   dps: 802.75601
@@ -335,6 +349,13 @@ dps_results: {
  value: {
   dps: 801.02164
   tps: 471.39866
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-Freethinker'sArmor"
+ value: {
+  dps: 864.97216
+  tps: 507.79161
  }
 }
 dps_results: {
@@ -419,6 +440,20 @@ dps_results: {
  value: {
   dps: 814.28811
   tps: 478.7974
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-LawbringerArmor"
+ value: {
+  dps: 931.95306
+  tps: 545.69774
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-LieutenantCommander'sRedoubt"
+ value: {
+  dps: 935.4405
+  tps: 547.38227
  }
 }
 dps_results: {

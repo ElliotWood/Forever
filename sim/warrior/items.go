@@ -310,6 +310,8 @@ var ItemSetChampionsBattlegear = pvpBattlegear("Champion's Battlegear", 2, 6)
 var ItemSetLieutenantCommandersBattlegear = pvpBattlegear("Lieutenant Commander's Battlegear", 2, 6)
 var ItemSetWarlordsBattlegear = pvpBattlegear("Warlord's Battlegear", 6, 2)
 var ItemSetFieldMarshalsBattlegear = pvpBattlegear("Field Marshal's Battlegear", 6, 2)
+var ItemSetChampionsBattlearmor = pvpBattlegear("Champion's Battlearmor", 2, 6)
+var ItemSetLieutenantCommandersBattlearmor = pvpBattlegear("Lieutenant Commander's Battlearmor", 2, 6)
 
 // Item effects our Forever sim models for the warrior, whose items the generated database carries.
 func init() {

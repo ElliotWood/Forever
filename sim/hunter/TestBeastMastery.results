@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-BeastmasterArmor"
+ value: {
+  dps: 1148.64122
+  tps: 521.77107
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-BeaststalkerArmor"
  value: {
   dps: 1128.97857
@@ -162,6 +169,20 @@ dps_results: {
  value: {
   dps: 1095.80734
   tps: 483.33851
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-Champion'sPursuance"
+ value: {
+  dps: 1132.6508
+  tps: 509.06096
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-Champion'sPursuit"
+ value: {
+  dps: 1085.68876
+  tps: 476.25059
  }
 }
 dps_results: {
@@ -277,6 +298,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-FieldMarshal'sPursuit"
+ value: {
+  dps: 1102.042
+  tps: 487.75457
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-FreezingBand-942"
  value: {
   dps: 1044.59946
@@ -302,6 +330,13 @@ dps_results: {
  value: {
   dps: 1061.47768
   tps: 459.13742
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-GiantstalkerArmor"
+ value: {
+  dps: 1177.92292
+  tps: 540.61987
  }
 }
 dps_results: {
@@ -382,6 +417,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-LieutenantCommander'sPursuance"
+ value: {
+  dps: 1132.6508
+  tps: 509.06096
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-LieutenantCommander'sPursuit"
+ value: {
+  dps: 1085.68876
+  tps: 476.25059
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 1044.59946
@@ -435,6 +484,13 @@ dps_results: {
  value: {
   dps: 1062.76644
   tps: 458.72177
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-Predator'sArmor"
+ value: {
+  dps: 1087.54764
+  tps: 478.99134
  }
 }
 dps_results: {
@@ -522,6 +578,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Striker'sGarb"
+ value: {
+  dps: 1155.89347
+  tps: 524.77592
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 1048.09631
@@ -603,6 +666,13 @@ dps_results: {
  value: {
   dps: 1044.59946
   tps: 447.16698
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-Warlord'sPursuit"
+ value: {
+  dps: 1102.042
+  tps: 487.75457
  }
 }
 dps_results: {
