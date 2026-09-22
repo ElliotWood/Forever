@@ -6,3 +6,4 @@
 package dbcenums
 
 //go:generate stringer -type=SpellEffectType,EffectAuraType
+//go:generate stringer -type=Mechanic,PowerType,ImplicitTarget

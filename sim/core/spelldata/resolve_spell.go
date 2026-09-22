@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 // An addition to the resolved config for what the client does not state: the proc mask, the metrics
@@ -16,17 +17,13 @@ type SpellOpt func(*core.SpellConfig, *Spell)
 // carries - 1763 rows state 133 and the rest state nothing - so a row outside it spends no GCD.
 const globalCooldownCategory int16 = 133
 
-// SpellPower.PowerType. Rage is powerTypeRage in spell.go, where the 0-1000 bar is converted.
-const (
-	powerTypeMana   int8 = 0
-	powerTypeFocus  int8 = 2
-	powerTypeEnergy int8 = 3
-)
-
-// ImplicitTarget_0 values that name a friendly unit, by the client's Targets enum: TARGET_UNIT_CASTER,
-// _PET, _CASTER_AREA_PARTY, _TARGET_ALLY, _SRC_AREA_ALLY, _DEST_AREA_ALLY, _SRC_AREA_PARTY,
-// _DEST_AREA_PARTY, _TARGET_PARTY, _TARGET_CHAINHEAL_ALLY, _CASTER_AREA_RAID and _TARGET_RAID.
-var helpfulTargets = []uint8{1, 5, 20, 21, 30, 31, 33, 34, 35, 45, 56, 57}
+// ImplicitTarget_0 values that name a friendly unit.
+var helpfulTargets = []dbcenums.ImplicitTarget{
+	dbcenums.TARGET_UNIT_CASTER, dbcenums.TARGET_UNIT_PET, dbcenums.TARGET_UNIT_CASTER_AREA_PARTY,
+	dbcenums.TARGET_UNIT_TARGET_ALLY, dbcenums.TARGET_UNIT_SRC_AREA_ALLY, dbcenums.TARGET_UNIT_DEST_AREA_ALLY,
+	dbcenums.TARGET_UNIT_SRC_AREA_PARTY, dbcenums.TARGET_UNIT_DEST_AREA_PARTY, dbcenums.TARGET_UNIT_TARGET_PARTY,
+	dbcenums.TARGET_UNIT_TARGET_CHAINHEAL_ALLY, dbcenums.TARGET_UNIT_CASTER_AREA_RAID, dbcenums.TARGET_UNIT_TARGET_RAID,
+}
 
 // What the client states about a spell, as the fields core registers it through. The caller adds the
 // proc mask, ApplyEffects and anything the client does not carry to the returned value before handing
@@ -153,7 +150,7 @@ func rowFlags(s *Spell) core.SpellFlag {
 	}
 	// Helpful decides who the APL casts the spell on, so it follows the first effect's target. An
 	// attack whose first effect is a self side-effect reads as helpful here and the caller clears it.
-	if slices.Contains(helpfulTargets, s.EffectN(1).Target[0]) {
+	if slices.Contains(helpfulTargets, dbcenums.ImplicitTarget(s.EffectN(1).Target[0])) {
 		flags |= core.SpellFlagHelpful
 	}
 	return flags
@@ -217,17 +214,17 @@ func applyCost(config *core.SpellConfig, s *Spell) {
 	cost := int32(s.PowerCost(powerType))
 	costPct := float64(s.Powers[0].CostPct)
 
-	switch powerType {
-	case powerTypeMana:
+	switch dbcenums.PowerType(powerType) {
+	case dbcenums.POWER_MANA:
 		config.ManaCost = core.ManaCostOptions{FlatCost: cost}
 		if costPct > 0 {
 			config.ManaCost.BaseCostPercent = costPct
 		}
-	case powerTypeRage:
+	case dbcenums.POWER_RAGE:
 		config.RageCost = core.RageCostOptions{Cost: cost, Refund: s.MissRefund()}
-	case powerTypeEnergy:
+	case dbcenums.POWER_ENERGY:
 		config.EnergyCost = core.EnergyCostOptions{Cost: cost, Refund: s.MissRefund()}
-	case powerTypeFocus:
+	case dbcenums.POWER_FOCUS:
 		config.FocusCost = core.FocusCostOptions{Cost: cost, Refund: s.MissRefund()}
 	default:
 		return

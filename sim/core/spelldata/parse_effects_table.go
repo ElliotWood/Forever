@@ -33,16 +33,12 @@ const (
 	SPELLMOD_EFFECT3            int32 = 23
 )
 
-// The misc values the stat and school auras key on: the client's power types, its stat order and the
-// mechanics a duration modifier names.
+// The misc values the stat and school auras key on.
 const (
-	miscAllSchools   int32 = 127 // every school bit, which the sim states as one multiplier
-	miscMagicSchool  int32 = 126 // every school but physical, which is what spell damage covers
-	miscArmor        int32 = 1   // A_MOD_RESISTANCE and A_MOD_BASE_RESISTANCE_PCT state armor as school 1
-	miscAllStats     int32 = -1  // A_MOD_STAT and A_MOD_TOTAL_STAT_PERCENTAGE: all five at once
-	miscPowerMana    int32 = 0
-	miscMechanicFear int32 = 1
-	miscMechanicStun int32 = 12
+	miscAllSchools  int32 = 127 // every school bit, which the sim states as one multiplier
+	miscMagicSchool int32 = 126 // every school but physical, which is what spell damage covers
+	miscArmor       int32 = 1   // A_MOD_RESISTANCE and A_MOD_BASE_RESISTANCE_PCT state armor as school 1
+	miscAllStats    int32 = -1  // A_MOD_STAT and A_MOD_TOTAL_STAT_PERCENTAGE: all five at once
 )
 
 // The five stats the client counts in its own order, which is what A_MOD_STAT and
@@ -181,7 +177,7 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 
 	// Mana regen, which the client states per five seconds on the mana bar.
 	dbcenums.A_MOD_POWER_REGEN: func(p *parser, e *Effect, v float64) *attachment {
-		if e.Misc != miscPowerMana {
+		if e.Misc != int32(dbcenums.POWER_MANA) {
 			return nil
 		}
 		return p.statBuff(stats.MP5, v)
@@ -237,10 +233,11 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 	// How long a crowd control effect lasts on the unit, by the mechanic the misc value names.
 	dbcenums.A_MECHANIC_DURATION_MOD: func(p *parser, e *Effect, v float64) *attachment {
 		switch e.Misc {
-		case miscMechanicFear:
+		// Iron Will, the one row naming charm, states fear in its tooltip. The rows naming fear are not read.
+		case int32(dbcenums.MECHANIC_CHARM):
 			return p.pseudoMultiplier("fear-duration",
 				[]*float64{&p.unit.PseudoStats.FearDurationMultiplier}, percentMultiplier(v))
-		case miscMechanicStun:
+		case int32(dbcenums.MECHANIC_STUN):
 			return p.pseudoMultiplier("stun-duration",
 				[]*float64{&p.unit.PseudoStats.StunDurationMultiplier}, percentMultiplier(v))
 		}

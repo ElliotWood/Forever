@@ -9,10 +9,6 @@ import (
 	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
-// SpellPower.PowerType 1. The client states rage on a 0-1000 bar, so a 15 rage cost reads 150 here;
-// mana, focus and energy are stated in whole points - see NormalizePowerCost in tools/database.
-const powerTypeRage int8 = 1
-
 // What Power answers for a bar the spell does not use. Shared, like Nil and NilEffect, so a caller
 // must not write through it.
 var nilPower = &Power{}
@@ -164,7 +160,7 @@ func (s *Spell) Power(t int8) *Power {
 // The cost in the units the sim spends: rage off the client's 0-1000 bar, everything else as stated.
 func (s *Spell) PowerCost(t int8) float64 {
 	cost := float64(s.Power(t).Cost)
-	if t == powerTypeRage {
+	if dbcenums.PowerType(t) == dbcenums.POWER_RAGE {
 		return cost / 10
 	}
 	return cost
