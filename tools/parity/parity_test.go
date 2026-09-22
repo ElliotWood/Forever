@@ -287,6 +287,7 @@ func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int
 			MinBaseDamage: 3000,
 			DamageSpread:  0.3333,
 			ParryHaste:    true,
+			CanCrush:      true, // master always lets a level 63 target crush
 		}},
 	}
 

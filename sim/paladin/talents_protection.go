@@ -238,23 +238,18 @@ func (paladin *Paladin) applyReckoning() {
 		return
 	}
 
-	row := spellData.ReckoningTriggered.HighestRank()
 	blockChance := spellData.Reckoning.FractionAt(paladin.Talents.Reckoning)
 	critChance := blockChance * 2.5
 
-	// The extra attack is a main-hand swing under Reckoning's name.
-	config := *paladin.AutoAttacks.MHConfig()
-	config.ActionID = core.ActionID{SpellID: row.SpellID}
-	config.Flags |= core.SpellFlagPassiveSpell
-	extraAttack := paladin.GetOrRegisterSpell(config)
-
+	// The extra attack (20178) is the Classic one, as on master: it pulls the next main-hand
+	// swing to now rather than adding a free swing.
 	paladin.MakeProcTriggerAura(core.ProcTrigger{
 		Name:       "Reckoning - Block" + paladin.Label,
 		Callback:   core.CallbackOnSpellHitTaken,
 		Outcome:    core.OutcomeBlock,
 		ProcChance: blockChance,
-		Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
-			extraAttack.Cast(sim, spell.Unit)
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			paladin.AutoAttacks.ExtraMHAttack(sim)
 		},
 	})
 
@@ -263,8 +258,8 @@ func (paladin *Paladin) applyReckoning() {
 		Callback:   core.CallbackOnSpellHitTaken,
 		Outcome:    core.OutcomeCrit,
 		ProcChance: critChance,
-		Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
-			extraAttack.Cast(sim, spell.Unit)
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			paladin.AutoAttacks.ExtraMHAttack(sim)
 		},
 	})
 }
