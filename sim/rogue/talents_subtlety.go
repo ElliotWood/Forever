@@ -371,7 +371,7 @@ func (rogue *Rogue) registerQuietus() {
 	}).AttachSpellMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
 		ClassMask:  RogueSpellStrikes,
-		FloatValue: spellData.Quietus.FractionAt(rogue.Talents.Quietus),
+		FloatValue: spellData.Quietus.EffectAt(0).FractionAt(rogue.Talents.Quietus),
 	})
 
 	rogue.RegisterResetEffect(func(sim *core.Simulation) {

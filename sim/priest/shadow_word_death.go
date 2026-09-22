@@ -18,7 +18,7 @@ var ShadowWordDeathRankMap = spellData.ShadowWordDeath
 
 func (priest *Priest) registerShadowWordDeathSpell(rank shared.SpellData, cdTimer *core.Timer) {
 	// Early Demise (1310076): +15% crit per point against a target at or below 20% health.
-	earlyDemise := spellData.EarlyDemise.ValueAt(priest.Talents.EarlyDemise)
+	earlyDemise := spellData.EarlyDemise.EffectAt(0).ValueAt(priest.Talents.EarlyDemise)
 
 	priest.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rank.SpellID},

@@ -22,14 +22,40 @@ Two modes:
 - **Local-CASC mode (default)** — reads the WoW install named by the settings'
   `BaseDir`: `.build.info` picks the build, files come out of local CASC
   storage, and the client's `DBCache.bin` hotfixes for that build are applied
-  to the decoded rows.
+  to the decoded rows. `BaseDir` may be a symlink; the cache scan resolves it
+  first, and the run warns when it finds no cache for the build.
 - **Offline mode (`--build <number|version>`)** — decodes pre-extracted `.db2`
   files (from `dbfilesclient/` or `--db2dir`) instead. No install required, no
   hotfixes unless `--dbcache` is given.
 
 Flags: `--settings/-s`, `--output/-o`, `--build`, `--db2dir`, `--dbddir`,
 `--dbcache <file>` (pin specific hotfix caches for deterministic runs),
-`--no-hotfixes`.
+`--no-hotfixes`, `--keys <file>` (community TACT key list).
+
+## Encrypted sections and TACT keys
+
+Blizzard ships unreleased content inside the normal `.db2` files as sections
+encrypted with per-bundle Salsa20 keys ("TACT keys"). A section's header
+names the key it needs; the bytes only become readable once that key is
+known. Keys reach a client three ways: shipped in `TactKey.db2`, pushed by the
+server as TACTKEY hotfix records into `DBCache.bin`, or published by the
+community at https://github.com/wowdev/TACTKeys.
+
+Local-CASC mode gathers all three before extracting: it decodes
+`TactKeyLookup`/`TactKey` with the hotfix overlay applied, then loads
+`tools/db2tool/TACTKeys.txt`, which is downloaded from the community list when
+missing and refreshed when older than a day (`--keys <file>` points at another
+copy). Every encrypted BLTE chunk whose key is known is decrypted in place, so
+its rows land in the database like any other. Chunks whose key is still
+unknown stay zero-filled and their sections are skipped, and the run prints
+one line per table naming the key and the row count it still hides:
+
+```
+  ItemSparse: 63 rows locked by TACT key DA0E7785727A0A65
+```
+
+Offline mode cannot decrypt: the `.db2` files it reads were written with those
+chunks already zeroed. Re-run local-CASC mode once a key surfaces.
 
 ## Package layout
 

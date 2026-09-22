@@ -169,6 +169,10 @@ type SpellData struct {
 	SpellID int32
 	Cost    int32
 
+	// SpellPower.PowerCostPct: the share of the pool the cast costs, as a percentage of it. Bloodrage
+	// reads 20 against health, Arcane Blast 15 against mana. Zero where the cost is Cost alone.
+	PowerCostPct float64
+
 	// Cast times differ per rank - Fireball is 1.5s at rank 1 and 3.5s at rank 13 - so a downrank
 	// cannot be registered faithfully without them.
 	CastTime time.Duration
@@ -260,6 +264,10 @@ type SpellDataEffect struct {
 	// the Crusader rank 1 states 39.2 attack power and buffs for 41, not 40. ValueAt reads Value, so
 	// an effect wanting the other end has to say so.
 	ValueMax float64
+
+	// SpellEffect.EffectChainAmplitude where it is not the client's default of 1: Execute's 1.5,
+	// which its tooltip multiplies by 10 for the damage each extra rage adds. Zero on the rest.
+	ChainAmplitude float64
 }
 
 // The share of the cost a miss gives back, for RageCostOptions.Refund: 80% where the client flags

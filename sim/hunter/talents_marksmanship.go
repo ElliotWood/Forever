@@ -101,7 +101,7 @@ func (hunter *Hunter) registerBarrage() {
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
 		ClassMask:  HunterSpellMultiShot | HunterSpellAimedShot | HunterSpellVolley,
-		FloatValue: spellData.Barrage.FractionAt(hunter.Talents.Barrage),
+		FloatValue: spellData.Barrage.EffectAt(0).FractionAt(hunter.Talents.Barrage),
 	})
 }
 

@@ -854,7 +854,10 @@ export class ActionMetrics {
 	}
 
 	get totalDamageTakenPercent() {
-		const totalAvgDtps = this.resultData.result.encounterMetrics?.targets?.[this.unit?.unitIndex || 0].dps?.avg;
+		// Self-damage rows carry the player as their unit, whose unitIndex is not
+		// an index into the encounter's targets, so this lookup can come back
+		// undefined rather than merely lacking a dps field.
+		const totalAvgDtps = this.resultData.result.encounterMetrics?.targets?.[this.unit?.unitIndex || 0]?.dps?.avg;
 		if (!totalAvgDtps) return undefined;
 
 		return (this.avgDamage / (totalAvgDtps * this.duration)) * 100;
