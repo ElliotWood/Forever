@@ -320,7 +320,7 @@ func (rogue *Rogue) registerHemorrhage() {
 	// 		IgnoreHaste: true,
 	// 	},
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost:   hemorrhageRank.Cost(),
+	// 		Cost:   int32(hemorrhageRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	//

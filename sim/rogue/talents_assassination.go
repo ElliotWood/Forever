@@ -298,7 +298,7 @@ func (rogue *Rogue) registerMutilate() {
 	// 	ClassSpellMask: RogueSpellMutilate,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost:   mutilateRank.Cost(),
+	// 		Cost:   int32(mutilateRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	// 	Cast: core.CastConfig{

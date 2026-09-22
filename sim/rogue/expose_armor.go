@@ -26,7 +26,7 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 	// 	ClassSpellMask: RogueSpellExposeArmor,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: exposeArmorRank.Cost(),
+	// 		Cost: int32(exposeArmorRank.Cost()),
 	// 		// TODO: Forever drops Quick Recovery; no energy refund until we know whether the
 	// 		// effect moved onto another talent.
 	// 		Refund:        0,
