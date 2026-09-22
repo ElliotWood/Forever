@@ -8,6 +8,8 @@ package spelldata
 import (
 	"strings"
 	"testing"
+
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 // What the committed spells_auto_gen.go holds today. The bounds are wide enough that adding a class
@@ -148,6 +150,23 @@ func TestGeneratedLightningShield(t *testing.T) {
 
 	if !drives(MustFind(26545), 324) {
 		t.Errorf("spell 324 does not drive 26545, so a rank's dispatcher cannot be reached from it")
+	}
+}
+
+// Stolen Power's hidden companion row (Jewel of the Guard Captain) is the one restricted to Forest
+// and Grassland areas; the visible row carries no requirement, and Staff of Westfall's group is a
+// single zone, not a terrain.
+func TestGeneratedRequiredAreas(t *testing.T) {
+	withGeneratedStore(t)
+
+	if s := MustFind(1318002); s.RequiredAreas != 9161 || s.AreaType() != proto.AreaType_AreaTypeForestGrassland {
+		t.Errorf("Stolen Power 1318002 requires area group %d (%v), want 9161 (ForestGrassland)", s.RequiredAreas, s.AreaType())
+	}
+	if s := MustFind(1287561); s.RequiredAreas != 0 || s.AreaType() != proto.AreaType_AreaTypeUnknown {
+		t.Errorf("Stolen Power 1287561 requires area group %d, want none", s.RequiredAreas)
+	}
+	if s := MustFind(1292011); s.RequiredAreas != 9071 || s.AreaType() != proto.AreaType_AreaTypeUnknown {
+		t.Errorf("Staff of Westfall requires area group %d (%v), want 9071 (Unknown)", s.RequiredAreas, s.AreaType())
 	}
 }
 

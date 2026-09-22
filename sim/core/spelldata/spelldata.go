@@ -101,6 +101,10 @@ type Spell struct {
 	// SpellTargetRestrictions.MaxTargets for an area effect. Zero is unlimited.
 	MaxTargets int16
 
+	// SpellCastingRequirements.RequiredAreasID: the AreaGroup the spell only works in. Zero is
+	// anywhere. AreaType() reads the terrain groups; a single-zone group reads as Unknown.
+	RequiredAreas int32
+
 	// SpellEquippedItems: the item class, subclass mask and inventory-type mask the spell requires,
 	// which is how a weapon-specific proc states the weapons it fires from.
 	EquipClass                  int8

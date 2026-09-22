@@ -53,6 +53,7 @@ type storeInputs struct {
 	Interrupts   map[int32]interruptRow
 	Shapeshift   map[int32]uint64
 	Targets      map[int32]int16
+	Requirements map[int32]int32
 	Equipped     map[int32]equippedRow
 
 	Labels  map[int32][]int16
@@ -97,6 +98,7 @@ func (in *storeInputs) tables() *spellTables {
 		interrupts:   in.Interrupts,
 		shapeshift:   in.Shapeshift,
 		targets:      in.Targets,
+		requirements: in.Requirements,
 		equipped:     in.Equipped,
 		labels:       in.Labels,
 		powers:       in.Powers,
@@ -121,6 +123,7 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 		Interrupts:   map[int32]interruptRow{},
 		Shapeshift:   map[int32]uint64{},
 		Targets:      map[int32]int16{},
+		Requirements: map[int32]int32{},
 		Equipped:     map[int32]equippedRow{},
 		Labels:       map[int32][]int16{},
 		Powers:       map[int32][]storePower{},
@@ -143,6 +146,7 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 		keepValue(in.Interrupts, id, t.interrupts)
 		keepValue(in.Shapeshift, id, t.shapeshift)
 		keepValue(in.Targets, id, t.targets)
+		keepValue(in.Requirements, id, t.requirements)
 		keepValue(in.Equipped, id, t.equipped)
 
 		keepSlice(in.Labels, id, t.labels)

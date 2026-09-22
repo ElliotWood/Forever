@@ -2641,7 +2641,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 684690, SpellID: 6297, Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 11, SpellLevel: 45, Variance: 0.3636363744735718, PvpMult: 1, RadiusMax: 3, ChainAmp: 1, Target: [2]uint8{16, 0}},
 		}},
-	{ID: 6298, Name: "Form of the Moonstalker", School: 64, Attr: [17]uint32{0: 0x10110000, 1: 0x100, 15: 0x2000}, SpellLevel: 60, DurationMs: 300000, MaxRange: 20, DispelType: 6, AuraInterrupt: [2]uint32{0: 0x3c07},
+	{ID: 6298, Name: "Form of the Moonstalker", School: 64, Attr: [17]uint32{0: 0x10110000, 1: 0x100, 15: 0x2000}, SpellLevel: 60, DurationMs: 300000, MaxRange: 20, DispelType: 6, AuraInterrupt: [2]uint32{0: 0x3c07}, RequiredAreas: 6581,
 		Effects: []Effect{
 			{ID: 685013, SpellID: 6298, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_TRANSFORM, SpellLevel: 60, PvpMult: 1, Misc: 2237, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 685014, SpellID: 6298, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_INVISIBILITY, BasePoints: 200, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -16714,11 +16714,11 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 698288, SpellID: 22010, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_TARGET_TRIGGER, BasePoints: 100, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ClassFlags: core.ClassFlags{Family: 6, Mask: [4]uint32{0: 4096}}, TriggerID: 22009, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 22563, Name: "Recall", School: 1, Attr: [17]uint32{0: 0x8000, 15: 0x2000}, SpellLevel: 60, CastTimeMs: 10000, Category: 1091, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 22563, Name: "Recall", School: 1, Attr: [17]uint32{0: 0x8000, 15: 0x2000}, SpellLevel: 60, CastTimeMs: 10000, Category: 1091, ProcChance: 101, RequiredAreas: 6589, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 698501, SpellID: 22563, Index: 0, Type: dbcenums.E_TELEPORT_UNITS, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 17}},
 		}},
-	{ID: 22564, Name: "Recall", School: 1, Attr: [17]uint32{0: 0x8000, 15: 0x2000}, SpellLevel: 60, CastTimeMs: 10000, Category: 1091, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 22564, Name: "Recall", School: 1, Attr: [17]uint32{0: 0x8000, 15: 0x2000}, SpellLevel: 60, CastTimeMs: 10000, Category: 1091, ProcChance: 101, RequiredAreas: 6589, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 699387, SpellID: 22564, Index: 0, Type: dbcenums.E_TELEPORT_UNITS, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 17}},
 		}},
@@ -18547,7 +18547,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 701879, SpellID: 25362, Index: 0, Type: dbcenums.E_APPLY_AREA_AURA_PARTY, Aura: dbcenums.A_MOD_STAT, BasePoints: 53, SpellLevel: 60, PvpMult: 1, RadiusMax: 30, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 25688, Name: "Narain!", School: 1, Attr: [17]uint32{0: 0x800000, 2: 0x1, 3: 0x100000, 15: 0x2000}, SpellLevel: 60, CastTimeMs: 3000, DurationMs: 1800000, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 25688, Name: "Narain!", School: 1, Attr: [17]uint32{0: 0x800000, 2: 0x1, 3: 0x100000, 15: 0x2000}, SpellLevel: 60, CastTimeMs: 3000, DurationMs: 1800000, ProcChance: 101, RequiredAreas: 6601, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 703168, SpellID: 25688, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_TRANSFORM, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 11811, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -23314,16 +23314,16 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1114425, SpellID: 429865, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STAT, BasePoints: 12, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 430391, Name: "Hit Weapon +2", School: 1, Attr: [17]uint32{0: 0x500d0, 15: 0x2000}, SpellLevel: 60, EquipClass: 2, EquipSubclass: 42483,
+	{ID: 430391, Name: "Hit Weapon +2", School: 1, Attr: [17]uint32{0: 0x500d0, 15: 0x2000}, SpellLevel: 60, RequiredAreas: 7864, EquipClass: 2, EquipSubclass: 42483,
 		Effects: []Effect{
 			{ID: 1115306, SpellID: 430391, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_HIT_CHANCE, BasePoints: 2, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 430406, Name: "Increased Mana Regen and Spell Hit", School: 64, Attr: [17]uint32{0: 0x1c0, 1: 0x400, 15: 0x2000}, SpellLevel: 1,
+	{ID: 430406, Name: "Increased Mana Regen and Spell Hit", School: 64, Attr: [17]uint32{0: 0x1c0, 1: 0x400, 15: 0x2000}, SpellLevel: 1, RequiredAreas: 7864,
 		Effects: []Effect{
 			{ID: 1115358, SpellID: 430406, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_SPELL_HIT_CHANCE, BasePoints: 2, SpellLevel: 1, PvpMult: 1, ChainAmp: 1},
 			{ID: 1115360, SpellID: 430406, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 12, SpellLevel: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 430432, Name: "Battle Hardened", School: 127, Attr: [17]uint32{0: 0x20000000, 1: 0x88, 15: 0x2000}, SpellLevel: 60, DurationMs: -1,
+	{ID: 430432, Name: "Battle Hardened", School: 127, Attr: [17]uint32{0: 0x20000000, 1: 0x88, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, RequiredAreas: 6588,
 		Effects: []Effect{
 			{ID: 1115415, SpellID: 430432, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, BasePoints: -5, SpellLevel: 60, PvpMult: 1, Misc: 127, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1115416, SpellID: 430432, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_ATTACKER_SPELL_AND_WEAPON_CRIT_CHANCE, BasePoints: -5, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -30269,7 +30269,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1305175, SpellID: 1287571, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STAT, BasePoints: 16, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: -1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1287704, Name: "Authority", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 1287704, Name: "Authority", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, RequiredAreas: 9161, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1305378, SpellID: 1287704, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_ATTACK_POWER, BasePoints: 28, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1305379, SpellID: 1287704, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RANGED_ATTACK_POWER, BasePoints: 28, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -30450,7 +30450,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1311758, SpellID: 1292008, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DAMAGE_TAKEN, BasePoints: 1, PvpMult: 1, Misc: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		}},
-	{ID: 1292011, Name: "Staff of Westfall", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1292011, Name: "Staff of Westfall", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9071,
 		Effects: []Effect{
 			{ID: 1311766, SpellID: 1292011, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_SPEED_ALWAYS, BasePoints: 2, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -30471,7 +30471,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1311799, SpellID: 1292039, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_DAMAGE, BasePoints: 6, SpellLevel: 60, Variance: 0.3499999940395355, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1292121, Name: "Lord of Shadowfang Keep", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1292121, Name: "Lord of Shadowfang Keep", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9073,
 		Effects: []Effect{
 			{ID: 1311963, SpellID: 1292121, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_SPEED_ALWAYS, BasePoints: 2, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -30521,7 +30521,7 @@ var generatedSpells = []Spell{
 			{ID: 1312680, SpellID: 1292546, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MECHANIC_DURATION_MOD, BasePoints: -10, SpellLevel: 60, PvpMult: 1, Misc: 11, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1312681, SpellID: 1292546, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MECHANIC_DURATION_MOD, BasePoints: -10, SpellLevel: 60, PvpMult: 1, Misc: 7, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1292560, Name: "Dig", School: 1, Attr: [17]uint32{0: 0x100, 1: 0x10000000, 15: 0x2000}, SpellLevel: 60, CastTimeMs: 5000,
+	{ID: 1292560, Name: "Dig", School: 1, Attr: [17]uint32{0: 0x100, 1: 0x10000000, 15: 0x2000}, SpellLevel: 60, CastTimeMs: 5000, RequiredAreas: 9079,
 		Effects: []Effect{
 			{ID: 1312711, SpellID: 1292560, Index: 0, Type: dbcenums.E_CREATE_ITEM, SpellLevel: 60, PvpMult: 1, Misc: 13, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -30533,7 +30533,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1312732, SpellID: 1292574, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_MECHANIC_RESISTANCE, BasePoints: 4, SpellLevel: 60, PvpMult: 1, Misc: 5, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1292575, Name: "Nightskulker", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1292575, Name: "Nightskulker", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 8217,
 		Effects: []Effect{
 			{ID: 1312734, SpellID: 1292575, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_SPEED_ALWAYS, BasePoints: 2, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -31473,7 +31473,7 @@ var generatedSpells = []Spell{
 			{ID: 1328524, SpellID: 1302833, Index: 1, Type: dbcenums.E_DUMMY, BasePoints: 25, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1328525, SpellID: 1302833, Index: 2, Type: dbcenums.E_FORCE_CAST, SpellLevel: 60, PvpMult: 1, TriggerID: 1302834, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1302834, Name: "Mirror's Mirage", School: 1, Attr: [17]uint32{0: 0x10000000, 1: 0x20, 2: 0x10004000, 3: 0x30200, 4: 0x801000, 6: 0x4, 11: 0x800}, SpellLevel: 60, DurationMs: 10000, AuraInterrupt: [2]uint32{0: 0x10421406, 1: 0x800},
+	{ID: 1302834, Name: "Mirror's Mirage", School: 1, Attr: [17]uint32{0: 0x10000000, 1: 0x20, 2: 0x10004000, 3: 0x30200, 4: 0x801000, 6: 0x4, 11: 0x800}, SpellLevel: 60, DurationMs: 10000, AuraInterrupt: [2]uint32{0: 0x10421406, 1: 0x800}, RequiredAreas: 9097,
 		Effects: []Effect{
 			{ID: 1328526, SpellID: 1302834, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_INVISIBILITY, BasePoints: 250, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -31484,7 +31484,7 @@ var generatedSpells = []Spell{
 			{ID: 1328586, SpellID: 1302874, Index: 2, Type: dbcenums.E_FORCE_CAST, SpellLevel: 60, PvpMult: 1, TriggerID: 1302875, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1328587, SpellID: 1302874, Index: 3, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_TRANSFORM, SpellLevel: 60, PvpMult: 1, Misc: 268924, Misc2: 8, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1302875, Name: "Photosynthesized", School: 8, Attr: [17]uint32{0: 0x9000000, 1: 0x20, 2: 0x10084000, 3: 0x470200, 4: 0x801000, 5: 0x60008, 6: 0x1004, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000800, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: 600000, AuraInterrupt: [2]uint32{1: 0x800},
+	{ID: 1302875, Name: "Photosynthesized", School: 8, Attr: [17]uint32{0: 0x9000000, 1: 0x20, 2: 0x10084000, 3: 0x470200, 4: 0x801000, 5: 0x60008, 6: 0x1004, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000800, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: 600000, AuraInterrupt: [2]uint32{1: 0x800}, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1328588, SpellID: 1302875, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STAT, BasePoints: 10, SpellLevel: 60, PvpMult: 1, Misc: 2, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -31610,7 +31610,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1338282, SpellID: 1309323, Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 392, SpellLevel: 60, Variance: 0.25, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		}},
-	{ID: 1309369, Name: "Forsaken Weapons", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1309369, Name: "Forsaken Weapons", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9227,
 		Effects: []Effect{
 			{ID: 1338328, SpellID: 1309369, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_SPEED_ALWAYS, BasePoints: 2, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32153,7 +32153,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1347164, SpellID: 1315077, Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 140, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		}},
-	{ID: 1315080, Name: "Mount Speed", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1315080, Name: "Mount Speed", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9317,
 		Effects: []Effect{
 			{ID: 1347167, SpellID: 1315080, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_MOUNTED_SPEED_ALWAYS, BasePoints: 5, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32170,7 +32170,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1348592, SpellID: 1315969, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_TARGET_RESISTANCE, BasePoints: 2, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1315971, Name: "Rune of Perfection", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1315971, Name: "Rune of Perfection", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1348595, SpellID: 1315971, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_TARGET_RESISTANCE, BasePoints: 4, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32178,7 +32178,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1348614, SpellID: 1315989, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 2, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1315990, Name: "Rune of Duty", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1315990, Name: "Rune of Duty", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1348615, SpellID: 1315990, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 4, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32198,7 +32198,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1348678, SpellID: 1316051, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 3, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1316052, Name: "Raider's Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1316052, Name: "Raider's Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1348679, SpellID: 1316052, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 5, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32206,7 +32206,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1348680, SpellID: 1316053, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 3, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1316054, Name: "Enriched Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1316054, Name: "Enriched Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1348681, SpellID: 1316054, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 6, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32214,7 +32214,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1348682, SpellID: 1316055, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 3, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1316056, Name: "Darkspear Voodoo Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1316056, Name: "Darkspear Voodoo Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1348683, SpellID: 1316056, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 6, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32222,7 +32222,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1348684, SpellID: 1316057, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 3, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1316058, Name: "Volunteer's Lucky Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1316058, Name: "Volunteer's Lucky Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1348685, SpellID: 1316058, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 5, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32285,7 +32285,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1350307, SpellID: 1317283, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1317285, Name: "Arena Master", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1317285, Name: "Arena Master", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9337,
 		Effects: []Effect{
 			{ID: 1350310, SpellID: 1317285, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, BasePoints: -5, PvpMult: 1, Misc: 127, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32306,7 +32306,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1350512, SpellID: 1317441, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 3, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1317442, Name: "Rune of Duty", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1317442, Name: "Rune of Duty", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1350513, SpellID: 1317442, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 7, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32314,7 +32314,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1350514, SpellID: 1317443, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_TARGET_RESISTANCE, BasePoints: 3, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1317444, Name: "Rune of Perfection", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1317444, Name: "Rune of Perfection", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1350515, SpellID: 1317444, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_TARGET_RESISTANCE, BasePoints: 7, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32338,7 +32338,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1351227, SpellID: 1317985, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1317999, Name: "Authority", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 1317999, Name: "Authority", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, RequiredAreas: 9161, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1351261, SpellID: 1317999, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_ATTACK_POWER, BasePoints: 28, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1351262, SpellID: 1317999, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RANGED_ATTACK_POWER, BasePoints: 28, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -32353,12 +32353,12 @@ var generatedSpells = []Spell{
 			{ID: 1351265, SpellID: 1318001, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_ATTACK_POWER, BasePoints: 14, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1351266, SpellID: 1318001, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RANGED_ATTACK_POWER, BasePoints: 14, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1318002, Name: "Stolen Power", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 1318002, Name: "Stolen Power", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, RequiredAreas: 9161, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1351267, SpellID: 1318002, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DAMAGE_DONE, BasePoints: 16, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1351268, SpellID: 1318002, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_HEALING_DONE, BasePoints: 16, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1318003, Name: "Stolen Power", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 1318003, Name: "Stolen Power", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, RequiredAreas: 9161, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1351269, SpellID: 1318003, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DAMAGE_DONE, BasePoints: 16, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1351270, SpellID: 1318003, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_HEALING_DONE, BasePoints: 16, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -32396,7 +32396,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1351397, SpellID: 1318102, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 4, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1318103, Name: "Volunteer's Lucky Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1318103, Name: "Volunteer's Lucky Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1351398, SpellID: 1318103, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 8, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32412,7 +32412,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1351429, SpellID: 1318124, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 5, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1318125, Name: "Darkspear Voodoo Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1318125, Name: "Darkspear Voodoo Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1351431, SpellID: 1318125, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 10, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32420,7 +32420,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1351440, SpellID: 1318129, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 4, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1318130, Name: "Relentless Raider's Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1318130, Name: "Relentless Raider's Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1351441, SpellID: 1318130, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE, BasePoints: 8, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32428,7 +32428,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1351442, SpellID: 1318131, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 5, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1318132, Name: "Enriched Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1318132, Name: "Enriched Seal", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9161,
 		Effects: []Effect{
 			{ID: 1351443, SpellID: 1318132, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_POWER_REGEN, BasePoints: 10, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32452,7 +32452,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1351527, SpellID: 1318185, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 100, PvpMult: 1, TriggerID: 1318163, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1318244, Name: "Kalimdor Speed", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1318244, Name: "Kalimdor Speed", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9341,
 		Effects: []Effect{
 			{ID: 1351610, SpellID: 1318244, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_SPEED_ALWAYS, BasePoints: 5, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -32464,7 +32464,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1351730, SpellID: 1318317, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1318318, Name: "Arena Grand Master", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1,
+	{ID: 1318318, Name: "Arena Grand Master", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x20, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, DurationMs: -1, RequiredAreas: 9337,
 		Effects: []Effect{
 			{ID: 1351731, SpellID: 1318318, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN, BasePoints: -6, PvpMult: 1, Misc: 127, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},

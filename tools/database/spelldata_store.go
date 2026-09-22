@@ -61,6 +61,8 @@ type storeSpell struct {
 
 	MaxTargets int16
 
+	RequiredAreas int32
+
 	EquipClass                  int8
 	EquipSubclass, EquipInvType int32
 
@@ -166,6 +168,7 @@ type spellTables struct {
 	interrupts   map[int32]interruptRow
 	shapeshift   map[int32]uint64
 	targets      map[int32]int16
+	requirements map[int32]int32
 	equipped     map[int32]equippedRow
 
 	labels  map[int32][]int16
@@ -228,6 +231,7 @@ func loadSpellTables(db *sql.DB) (*spellTables, error) {
 		interrupts:   map[int32]interruptRow{},
 		shapeshift:   map[int32]uint64{},
 		targets:      map[int32]int16{},
+		requirements: map[int32]int32{},
 		equipped:     map[int32]equippedRow{},
 		labels:       map[int32][]int16{},
 		powers:       map[int32][]storePower{},
@@ -262,6 +266,9 @@ func loadSpellTables(db *sql.DB) (*spellTables, error) {
 		return nil, err
 	}
 	if err := t.loadTargetRestrictions(db); err != nil {
+		return nil, err
+	}
+	if err := t.loadCastingRequirements(db); err != nil {
 		return nil, err
 	}
 	if err := t.loadEquippedItems(db); err != nil {
@@ -318,6 +325,7 @@ func (t *spellTables) row(id int32) storeSpell {
 
 	s.StanceMask = t.shapeshift[id]
 	s.MaxTargets = t.targets[id]
+	s.RequiredAreas = t.requirements[id]
 
 	e := t.equipped[id]
 	s.EquipClass, s.EquipSubclass, s.EquipInvType = e.Class, e.Subclass, e.InvTypes
@@ -573,6 +581,22 @@ func (t *spellTables) loadTargetRestrictions(db *sql.DB) error {
 			return fmt.Errorf("spell %d has two SpellTargetRestrictions rows at difficulty 0", id)
 		}
 		t.targets[id] = maxTargets
+		return nil
+	})
+}
+
+func (t *spellTables) loadCastingRequirements(db *sql.DB) error {
+	return eachRow(db, `
+		SELECT SpellID, COALESCE(RequiredAreasID, 0)
+		FROM SpellCastingRequirements WHERE RequiredAreasID != 0 ORDER BY SpellID`, func(rows *sql.Rows) error {
+		var id, areas int32
+		if err := rows.Scan(&id, &areas); err != nil {
+			return err
+		}
+		if _, dup := t.requirements[id]; dup {
+			return fmt.Errorf("spell %d has two SpellCastingRequirements rows naming an area group", id)
+		}
+		t.requirements[id] = areas
 		return nil
 	})
 }

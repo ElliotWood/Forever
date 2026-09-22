@@ -166,6 +166,9 @@ func formatStoreRow(s storeSpell, namer *rankEnumNamer) string {
 	if s.MaxTargets != 0 {
 		add("MaxTargets: %d", s.MaxTargets)
 	}
+	if s.RequiredAreas != 0 {
+		add("RequiredAreas: %d", s.RequiredAreas)
+	}
 	if s.EquipClass != 0 {
 		add("EquipClass: %d", s.EquipClass)
 	}
