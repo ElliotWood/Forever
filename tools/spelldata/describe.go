@@ -5,14 +5,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-// One effect as both readings: what it does in words where a branch below knows the shape, and the
-// client's own columns, which is what a developer checks the words against. Human is empty on an
-// effect no branch covers, and the literal is then all there is to print.
+// One effect as both readings: what it does in words, and the client's own columns, which is what a
+// developer checks the words against. Human is "unrecognised shape" on an effect no branch covers,
+// and the literal is then all there is to read.
 type Line struct {
 	Human   string `json:"human"`
 	Literal string `json:"literal"`
@@ -36,7 +35,7 @@ func header(s *spelldata.Spell) []string {
 
 	add("school", schoolName(s.School))
 	add("defense", defenseName(s.DefenseType))
-	if dbcenums.Mechanic(s.Mechanic) == dbcenums.MECHANIC_BLEED {
+	if s.IsBleed() {
 		add("mechanic", "bleed")
 	} else if s.Mechanic != 0 {
 		add("mechanic", fmt.Sprintf("mechanic %d", s.Mechanic))
@@ -55,6 +54,21 @@ func header(s *spelldata.Spell) []string {
 	for i := range s.Powers {
 		add("cost", cost(s, &s.Powers[i]))
 	}
+	add("range", rangePhrase(s))
+	add("stance", stanceList(s.StanceMask))
+	add("equip", equipRequirement(s))
+	if s.MaxTargets != 0 {
+		add("targets", fmt.Sprintf("up to %d", s.MaxTargets))
+	}
+	if s.MaxStack != 0 {
+		add("stack", fmt.Sprintf("up to %d", s.MaxStack))
+	}
+	if s.ProcCharges != 0 {
+		add("charges", strconv.Itoa(int(s.ProcCharges)))
+	}
+	add("icd", seconds(s.ICDMs))
+	add("attrs", attributeList(s))
+	add("labels", labelList(s))
 	return out
 }
 
@@ -69,219 +83,100 @@ func cost(s *spelldata.Spell, p *spelldata.Power) string {
 	return join(number(s.PowerCost(p.Type)), powerName(p.Type))
 }
 
-func effectLines(s *spelldata.Spell) []Line {
-	var out []Line
-	for i := range s.Effects {
-		e := &s.Effects[i]
-		out = append(out, Line{Human: humanise(s, e), Literal: literal(e)})
+// SpellRange, with the dead zone a charge states as a minimum.
+func rangePhrase(s *spelldata.Spell) string {
+	if s.MaxRange == 0 {
+		return ""
+	}
+	if s.MinRange != 0 {
+		return fmt.Sprintf("%s-%s yd", number(float64(s.MinRange)), number(float64(s.MaxRange)))
+	}
+	return number(float64(s.MaxRange)) + " yd"
+}
+
+// The attributes sim/core/spelldata/attributes.go names, which are the ones the sim acts on. IsAProc
+// is stated only when the client denies it, since every other row is one.
+func attributeList(s *spelldata.Spell) string {
+	var out []string
+	for _, attr := range []struct {
+		set  bool
+		name string
+	}{
+		{s.IsPassive(), "passive"},
+		{s.IsChanneled(), "channeled"},
+		{s.RefundsOnMiss(), "refund on miss"},
+		{s.PeriodicCanCrit(), "periodic can crit"},
+		{s.CannotCrit(), "cannot crit"},
+		{!s.IsAProc(), "not a proc"},
+		{s.CanProcFromProcs(), "can proc from procs"},
+		{s.SuppressesWeaponProcs(), "suppresses weapon procs"},
+		{s.IsWeaponProcAura(), "hears hits as a weapon proc"},
+		{s.ClassSpellsOnly(), "class abilities only"},
+	} {
+		if attr.set {
+			out = append(out, attr.name)
+		}
+	}
+	return strings.Join(out, ", ")
+}
+
+// What the row says about a proc: where the rate is stated, the rate itself, the hits the mask lets
+// through and what the tooltip added that the mask cannot say.
+//
+// The heartbeat bit alone is the client's default on any aura, so a row carrying nothing else is not a
+// proc and states no summary.
+func procSummary(s *spelldata.Spell) string {
+	if s.ProcFlags[0]&^dbcenums.PROC_FLAG_HEARTBEAT == 0 && s.ProcFlags[1] == 0 && s.RPPM == 0 {
+		return ""
+	}
+
+	var parts []string
+	if flags := procFlagNames(s.ProcFlags); len(flags) > 0 {
+		parts = append(parts, "hears "+strings.Join(flags, ", "))
+	}
+	parts = append(parts, procRate(s))
+	if hints := procHintNames(s.ProcHint); len(hints) > 0 {
+		parts = append(parts, "tooltip says "+strings.Join(hints, ", "))
+	}
+	return strings.Join(parts, "; ")
+}
+
+// The rate by the source that says where it is stated: the ProcChance column is the roll only under
+// ProcChanceColumn, which is what ProcChanceSource exists to say.
+func procRate(s *spelldata.Spell) string {
+	if s.RPPM > 0 {
+		return number(float64(s.RPPM)) + " procs per minute"
+	}
+	switch s.ProcChanceSource {
+	case spelldata.ProcChanceColumn:
+		return fmt.Sprintf("%d%% chance", s.ProcChance)
+	case spelldata.ProcChanceEffectN:
+		return fmt.Sprintf("%s%% chance, from effect %d",
+			number(s.EffectN(int(s.ProcChanceEffect)).BaseValue()), s.ProcChanceEffect)
+	case spelldata.ProcChanceAlways:
+		return "no roll, it fires whenever its condition is met"
+	}
+	return "no stated chance, the rate has to come from an override"
+}
+
+func refList(s *spelldata.Spell) []string {
+	out := []string{}
+	for _, ref := range s.Refs() {
+		out = append(out, fmt.Sprintf("%d %s", ref.ID, ref.Name))
 	}
 	return out
 }
 
+func labelList(s *spelldata.Spell) string {
+	var out []string
+	for _, label := range s.Labels {
+		out = append(out, strconv.Itoa(int(label)))
+	}
+	return strings.Join(out, ", ")
+}
+
 func wowheadURL(id int32) string {
 	return fmt.Sprintf("https://www.wowhead.com/forever/spell=%d", id)
-}
-
-// What the effect does, for the shapes the client states plainly enough to word without reading the
-// tooltip: a tick, a direct hit, a weapon multiplier, a power gain and a stat aura. Anything else
-// answers empty and prints as its columns alone.
-func humanise(s *spelldata.Spell, e *spelldata.Effect) string {
-	switch e.Type {
-	case dbcenums.E_SCHOOL_DAMAGE:
-		return join(number(e.BasePoints), schoolName(s.School), "damage", targetPhrase(e))
-	case dbcenums.E_HEAL:
-		return join(number(e.BasePoints), "healing", targetPhrase(e))
-	case dbcenums.E_WEAPON_PERCENT_DAMAGE:
-		return join(number(e.BasePoints)+"% weapon damage", targetPhrase(e))
-	case dbcenums.E_ENERGIZE:
-		return join("restores", powerAmount(e), targetPhrase(e))
-	case dbcenums.E_APPLY_AURA:
-		return humaniseAura(s, e)
-	}
-	return ""
-}
-
-func humaniseAura(s *spelldata.Spell, e *spelldata.Effect) string {
-	switch e.Aura {
-	case dbcenums.A_PERIODIC_DAMAGE:
-		return join(number(e.BasePoints), schoolName(s.School), "damage", every(e), targetPhrase(e), ticks(s, e))
-	case dbcenums.A_PERIODIC_HEAL:
-		return join(number(e.BasePoints), "healing", every(e), targetPhrase(e), ticks(s, e))
-	case dbcenums.A_PERIODIC_ENERGIZE:
-		return join("restores", powerAmount(e), every(e), targetPhrase(e), ticks(s, e))
-	case dbcenums.A_MOD_STAT:
-		return join(signed(e.BasePoints), statName(e.Misc))
-	case dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE:
-		return join(signed(e.BasePoints)+"%", statName(e.Misc))
-	}
-	return ""
-}
-
-// The effect as the client states it: the columns it fills, in the units the row keeps them in, so the
-// words above can be checked against them.
-func literal(e *spelldata.Effect) string {
-	parts := []string{effectTypeName(e.Type)}
-	if e.Aura != 0 {
-		parts = append(parts, auraName(e.Aura))
-	}
-	parts = append(parts, "base="+number(e.BasePoints))
-
-	add := func(format string, args ...any) {
-		parts = append(parts, fmt.Sprintf(format, args...))
-	}
-	if e.PPL != 0 {
-		add("ppl=%s", number(e.PPL))
-	}
-	if e.Variance != 0 {
-		add("variance=%s", number(e.Variance))
-	}
-	if e.SPCoef != 0 {
-		add("sp=%s", number(e.SPCoef))
-	}
-	if e.APCoef != 0 {
-		add("ap=%s", number(e.APCoef))
-	}
-	if e.PeriodMs != 0 {
-		add("period=%dms", e.PeriodMs)
-	}
-	if e.Misc != 0 {
-		add("misc=%d", e.Misc)
-	}
-	if e.Misc2 != 0 {
-		add("misc2=%d", e.Misc2)
-	}
-	if e.TriggerID != 0 {
-		add("trigger=%d", e.TriggerID)
-	}
-	if e.ChainTargets != 0 {
-		add("chain=%d", e.ChainTargets)
-	}
-	if e.RadiusMax != 0 {
-		add("radius=%s", number(float64(e.RadiusMax)))
-	}
-	if e.Mechanic != 0 {
-		add("mechanic=%d", e.Mechanic)
-	}
-	add("target=[%d,%d]", e.Target[0], e.Target[1])
-	return strings.Join(parts, " ")
-}
-
-func every(e *spelldata.Effect) string {
-	if e.PeriodMs == 0 {
-		return ""
-	}
-	return "every " + seconds(e.PeriodMs)
-}
-
-// How many times the aura ticks over its spell's duration, where both are stated.
-func ticks(s *spelldata.Spell, e *spelldata.Effect) string {
-	if s.DurationMs <= 0 || e.PeriodMs <= 0 {
-		return ""
-	}
-	return fmt.Sprintf("(%d ticks)", s.DurationMs/e.PeriodMs)
-}
-
-// The two implicit targets the store's rows state often enough to word. The rest are left to the
-// literal's target=[a,b].
-func targetPhrase(e *spelldata.Effect) string {
-	switch e.Target[0] {
-	case 1:
-		return "to the caster"
-	case 6:
-		return "to the enemy"
-	}
-	return ""
-}
-
-// EffectMiscValue_0 is the power type on an energize effect, and rage is on the client's 0-1000 bar
-// the way a cost is.
-func powerAmount(e *spelldata.Effect) string {
-	amount := e.BasePoints
-	if int8(e.Misc) == powerTypeRage {
-		amount /= 10
-	}
-	bar := powerName(int8(e.Misc))
-	if amount == 1 {
-		bar = strings.TrimSuffix(bar, "s")
-	}
-	return join(number(amount), bar)
-}
-
-const powerTypeRage int8 = 1
-
-// SpellPower.PowerType, of which the store's rows carry six: the client's health is -2.
-func powerName(t int8) string {
-	switch t {
-	case -2:
-		return "health"
-	case 0:
-		return "mana"
-	case powerTypeRage:
-		return "rage"
-	case 2:
-		return "focus"
-	case 3:
-		return "energy"
-	case 4:
-		return "combo points"
-	}
-	return fmt.Sprintf("power %d", t)
-}
-
-// A_MOD_STAT states the stat in its misc value, and -1 is the client's "every stat".
-func statName(misc int32) string {
-	switch misc {
-	case -1:
-		return "to all stats"
-	case 0:
-		return "strength"
-	case 1:
-		return "agility"
-	case 2:
-		return "stamina"
-	case 3:
-		return "intellect"
-	case 4:
-		return "spirit"
-	}
-	return fmt.Sprintf("stat %d", misc)
-}
-
-// The school mask as the schools it holds, since a row can carry more than one bit.
-func schoolName(mask uint8) string {
-	if mask == 0 {
-		return ""
-	}
-	var names []string
-	for _, s := range []struct {
-		bit  core.SpellSchool
-		name string
-	}{
-		{core.SpellSchoolPhysical, "physical"},
-		{core.SpellSchoolHoly, "holy"},
-		{core.SpellSchoolFire, "fire"},
-		{core.SpellSchoolNature, "nature"},
-		{core.SpellSchoolFrost, "frost"},
-		{core.SpellSchoolShadow, "shadow"},
-		{core.SpellSchoolArcane, "arcane"},
-	} {
-		if core.SpellSchool(mask)&s.bit != 0 {
-			names = append(names, s.name)
-		}
-	}
-	return strings.Join(names, "+")
-}
-
-func defenseName(t uint8) string {
-	switch core.DefenseType(t) {
-	case core.DefenseTypeMagic:
-		return "magic"
-	case core.DefenseTypeMelee:
-		return "melee"
-	case core.DefenseTypeRanged:
-		return "ranged"
-	}
-	return ""
 }
 
 func seconds(ms int32) string {

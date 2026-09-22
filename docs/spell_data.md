@@ -72,8 +72,22 @@ fails at startup, naming the id, instead of registering a spell with no numbers.
 `ByName(name)` exist for tests and debugging; a sim names its spells by id.
 
 An id in hand-written code reads without grepping the table: `go run ./tools/spelldata 11574` prints the
-row's header and one line per effect, each worded where the shape is known and always followed by the
-client's own columns. A name instead of an id lists every row carrying it and then the highest rank, and
+row's header and one line per effect, each worded and then followed by the client's own columns. The
+header names the school, the times and the cost, and also the stances by name, the weapon or slot the
+row requires, the range, the target cap, the stacks and charges, the internal cooldown, the attributes
+`attributes.go` exposes, the proc's rate and flags, the spells the tooltip references and the row's
+labels. The title line names the ladder a class file reaches the id through - `warrior
+spellData.Rend.Highest()` - scanned out of `sim/*/spell_data_auto_gen.go`, and says nothing for a class
+the generator has not put on ladders yet.
+
+The worded line states each number in the unit the sim spends it in, which is also how it names the
+accessor it was read with: a plain amount is `Average(60)` and a range is `Min`/`Max`, a percentage is
+`Percent()`, rage and energy are `Tenths()`, a time is `TimeValue()`, and a share of spell or attack
+power is `Coeff()`/`APCoeff()`. A dummy line states the row's number and nothing about what it means,
+which is the one shape that always needs the tooltip. An effect whose type or aura the printer has no
+wording for says `unrecognised shape`, and the literal beneath it is then the whole answer.
+
+A name instead of an id lists every row carrying it and then the highest rank, and
 `-json` is the same answer for a tool to read. `tools/vscode-spelldata` is that printer as a VS Code
 hover, over the ids Go, APL JSON and TS state - `MustFind(11574)`, `SpellID: 11574`, `"spellId": 11574`,
 `fromSpellId(23563)` - resolved by running the CLI in the checkout the file belongs to, so a hover

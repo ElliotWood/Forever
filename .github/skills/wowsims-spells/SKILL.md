@@ -116,7 +116,7 @@ Where the row and the tooltip disagree, the tooltip can win — Flurry's haste l
 ## Commands
 
 ```
-go run ./tools/spelldata 11574                   # print one row - or a name, which lists its ranks; -json for a tool
+go run ./tools/spelldata 11574                   # one row: header, ladder call, a worded line and the client's columns per effect; -json for a tool
 go run ./tools/database/gen_spelldata            # rewrite the store, the enums and every class file
 go run ./tools/database/gen_spelldata -check     # name what is stale, write nothing (make spelldata-check)
 go test ./sim/core/spelldata/ -count=1           # the store's own tests, no database needed

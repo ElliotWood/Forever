@@ -14,8 +14,12 @@ interface SpellRow {
 	id: number;
 	name: string;
 	rank: string;
+	title: string;
+	ladder: string[];
 	header: string[];
 	effects: EffectLine[];
+	proc: string;
+	refs: string[];
 	wowhead: string;
 }
 
@@ -121,10 +125,18 @@ function readSpell(root: string, id: number, log: vscode.OutputChannel, onMissin
 
 function render(row: SpellRow): vscode.MarkdownString {
 	const md = new vscode.MarkdownString();
-	const title = row.rank === '' ? `${row.id} ${row.name}` : `${row.id} ${row.name} (${row.rank})`;
-	md.appendMarkdown(`**${title}**\n\n`);
+	md.appendMarkdown(`**${row.title}**\n\n`);
+	for (const call of row.ladder) {
+		md.appendMarkdown(`\`${call}\`  \n`);
+	}
 	for (const line of row.header) {
 		md.appendMarkdown(`${line}  \n`);
+	}
+	if (row.proc !== '') {
+		md.appendMarkdown(`proc      ${row.proc}  \n`);
+	}
+	if (row.refs.length > 0) {
+		md.appendMarkdown(`refs      ${row.refs.join(', ')}  \n`);
 	}
 	row.effects.forEach((effect, index) => {
 		md.appendMarkdown(`\neffect ${index + 1}${effect.human === '' ? '' : ` — ${effect.human}`}\n`);

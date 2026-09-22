@@ -124,9 +124,15 @@ func highestRank(matches []*spelldata.Spell) *spelldata.Spell {
 }
 
 func writeText(out io.Writer, s *spelldata.Spell) {
-	fmt.Fprintln(out, title(s))
+	fmt.Fprintln(out, join(title(s), strings.Join(ladderRefs(s.ID), "  ")))
 	for _, line := range header(s) {
 		fmt.Fprintln(out, line)
+	}
+	if proc := procSummary(s); proc != "" {
+		fmt.Fprintf(out, "%-9s %s\n", "proc", proc)
+	}
+	if refs := refList(s); len(refs) > 0 {
+		fmt.Fprintf(out, "%-9s %s\n", "refs", strings.Join(refs, ", "))
 	}
 
 	effects := effectLines(s)
@@ -134,10 +140,6 @@ func writeText(out io.Writer, s *spelldata.Spell) {
 		fmt.Fprintln(out)
 	}
 	for i, line := range effects {
-		if line.Human == "" {
-			fmt.Fprintf(out, "effect %-2d %s\n", i+1, line.Literal)
-			continue
-		}
 		fmt.Fprintf(out, "effect %-2d %s\n", i+1, line.Human)
 		fmt.Fprintf(out, "%9s %s\n", "", line.Literal)
 	}
@@ -147,12 +149,22 @@ func writeText(out io.Writer, s *spelldata.Spell) {
 }
 
 type spellJSON struct {
-	ID      int32    `json:"id"`
-	Name    string   `json:"name"`
-	Rank    string   `json:"rank"`
+	ID   int32  `json:"id"`
+	Name string `json:"name"`
+	Rank string `json:"rank"`
+
+	// The heading the text form prints, and the ladder calls a class file reaches this id through.
+	Title  string   `json:"title"`
+	Ladder []string `json:"ladder"`
+
 	Header  []string `json:"header"`
 	Effects []Line   `json:"effects"`
-	Wowhead string   `json:"wowhead"`
+
+	// Empty on a row that is not a proc and on one the tooltip names no spell from.
+	Proc string   `json:"proc"`
+	Refs []string `json:"refs"`
+
+	Wowhead string `json:"wowhead"`
 }
 
 func asJSON(s *spelldata.Spell) spellJSON {
@@ -160,12 +172,20 @@ func asJSON(s *spelldata.Spell) spellJSON {
 	if effects == nil {
 		effects = []Line{}
 	}
+	ladder := ladderRefs(s.ID)
+	if ladder == nil {
+		ladder = []string{}
+	}
 	return spellJSON{
 		ID:      s.ID,
 		Name:    s.Name,
 		Rank:    s.Rank,
+		Title:   title(s),
+		Ladder:  ladder,
 		Header:  header(s),
 		Effects: effects,
+		Proc:    procSummary(s),
+		Refs:    refList(s),
 		Wowhead: wowheadURL(s.ID),
 	}
 }
