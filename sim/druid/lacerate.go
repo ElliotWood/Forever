@@ -61,11 +61,9 @@ func (druid *Druid) registerLacerateSpell() {
 	// 			if dot.IsActive() {
 	// 				dot.Refresh(sim)
 	// 				dot.AddStack(sim)
-	// 				dot.TakeSnapshot(sim)
 	// 			} else {
 	// 				dot.Apply(sim)
 	// 				dot.SetStacks(sim, 1)
-	// 				dot.TakeSnapshot(sim)
 	// 			}
 	// 		} else {
 	// 			spell.IssueRefund(sim)
