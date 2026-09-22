@@ -4,9 +4,9 @@ character_stats_results: {
   final_stats: 239
   final_stats: 210
   final_stats: 308
-  final_stats: 191
-  final_stats: 235.5
-  final_stats: 222.5
+  final_stats: 180
+  final_stats: 234.4
+  final_stats: 221.4
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -17,7 +17,7 @@ character_stats_results: {
   final_stats: 48
   final_stats: 0
   final_stats: 0
-  final_stats: 195
+  final_stats: 184
   final_stats: 1676.4
   final_stats: 314
   final_stats: 0
@@ -35,7 +35,7 @@ character_stats_results: {
   final_stats: 2084
   final_stats: 0
   final_stats: 5733
-  final_stats: 3829
+  final_stats: 3664
   final_stats: 122.5
   final_stats: 33
   final_stats: 33
@@ -46,7 +46,7 @@ character_stats_results: {
   final_stats: 1
   final_stats: 4
   final_stats: 26.88957
-  final_stats: 22.46977
+  final_stats: 22.28607
   final_stats: 0
   final_stats: 0
   final_stats: -1
@@ -141,8 +141,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralCat-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 173.11434
-  tps: 119.15919
+  dps: 173.11
+  tps: 119.15615
   dtps: 7.21358
  }
 }
@@ -285,8 +285,8 @@ dps_results: {
 dps_results: {
  key: "TestFeralCat-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 255.70113
-  tps: 176.89323
+  dps: 255.55798
+  tps: 176.79302
   dtps: 7.21358
  }
 }
@@ -447,7 +447,7 @@ dps_results: {
  value: {
   dps: 170.70552
   tps: 117.49718
-  dtps: 7.47272
+  dtps: 7.46807
  }
 }
 dps_results: {
