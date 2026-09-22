@@ -203,7 +203,7 @@ func (shaman *Shaman) registerManaSpringTotemSpell() {
 	duration := manaSpringTotemRank.Duration
 	// The buff ticks its value every 2 sec, and MP5 is the form the sim takes; Restorative Totems
 	// raises it by the ladder the client states.
-	tick := manaSpringTotemBuff.Periodic.(shared.SpellDataPeriodic)
+	tick := manaSpringTotemBuff.Energize.(shared.SpellDataPeriodic)
 	value := tick.Tick * (5 / tick.TickLength.Seconds()) *
 		spellData.RestorativeTotems.EffectAt(0).MultiplierAt(shaman.Talents.RestorativeTotems)
 	config := shaman.newTotemSpellConfig(manaSpringTotemRank.Cost, manaSpringTotemRank.SpellID, SpellMaskBasicTotem, manaSpringTotemRank.GCD)

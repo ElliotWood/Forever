@@ -217,7 +217,7 @@ func (mage *Mage) registerFingersOfFrost() {
 		Label:     "Fingers of Frost",
 		ActionID:  core.ActionID{SpellID: fofRank.SpellID},
 		Duration:  fofRank.Duration,
-		MaxStacks: int32(spellData.FingersOfFrost.ValueAt(mage.Talents.FingersOfFrost)),
+		MaxStacks: int32(spellData.FingersOfFrost.EffectAt(0).ValueAt(mage.Talents.FingersOfFrost)),
 		OnGain: func(_ *core.Aura, sim *core.Simulation) {
 			shatterMod.Activate()
 

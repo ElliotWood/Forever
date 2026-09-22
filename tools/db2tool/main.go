@@ -6,7 +6,10 @@
 // community listfile are fetched/cached over plain HTTPS. The client's
 // DBCache.bin hotfixes for the extracted build are applied to the decoded
 // rows; --dbcache <file> pins specific cache files instead of the default
-// scan and --no-hotfixes disables the overlay.
+// scan and --no-hotfixes disables the overlay. Encrypted sections are
+// decrypted with every TACT key the client ships, the server pushed into
+// DBCache.bin, or the community list carries (--keys <file>, default
+// tools/db2tool/TACTKeys.txt, refreshed from wowdev/TACTKeys).
 //
 // With --build (and optionally --db2dir/--dbddir), the offline mode decodes
 // pre-extracted .db2 files instead — no install required and no hotfixes
@@ -14,6 +17,7 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -42,6 +46,7 @@ type options struct {
 	buildNumber  uint32   // nonzero → offline mode
 	dbCaches     []string // explicit DBCache files, overriding the default scan
 	noHotfixes   bool     // skip hotfix application entirely
+	keyFile      string   // community TACT key list; empty → tools/db2tool/TACTKeys.txt
 }
 
 // parseArgs scans the args pairwise. --settings/-s and --output/-output/-o
@@ -76,6 +81,8 @@ func parseArgs(args []string) (options, error) {
 			}
 		case "--no-hotfixes":
 			opts.noHotfixes = true
+		case "--keys":
+			opts.keyFile, err = next()
 		case "--build":
 			var v string
 			if v, err = next(); err == nil {
@@ -147,6 +154,7 @@ func run(args []string) error {
 
 	var buildNumber uint32
 	var openTable func(tableName string) (*wdc.Table, error)
+	var build *tact.Build // local-CASC mode only
 
 	if opts.buildNumber != 0 {
 		// Offline mode: pre-extracted .db2 files.
@@ -163,7 +171,7 @@ func run(args []string) error {
 		if settings.Settings.BaseDir == "" {
 			return fmt.Errorf("settings BaseDir is required (or pass --build for offline mode)")
 		}
-		build, err := tact.Open(settings.Settings.BaseDir, settings.Settings.Product)
+		build, err = tact.Open(settings.Settings.BaseDir, settings.Settings.Product)
 		if err != nil {
 			return err
 		}
@@ -218,53 +226,9 @@ func run(args []string) error {
 		}
 	}
 
-	type loaded struct {
-		def     sqlite.TableDef
-		table   *wdc.Table
-		decoded *wdc.Decoded
-	}
-	tables := make([]loaded, 0, len(settings.Tables))
-	tableDefs := make([]sqlite.TableDef, 0, len(settings.Tables))
-
-	for _, tableName := range settings.Tables {
-		table, err := openTable(tableName)
-		if err != nil {
-			return err
-		}
-		dbdPath, err := dbd.FetchCached(dbdCacheDir, tableName)
-		if err != nil {
-			return err
-		}
-		def, err := dbd.ReadFile(dbdPath, true)
-		if err != nil {
-			return err
-		}
-		version, err := dbd.SelectVersion(def, buildNumber)
-		if err != nil {
-			return fmt.Errorf("table %s: %w", tableName, err)
-		}
-		decoded, err := table.DecodeRows(def, version, buildNumber)
-		if err != nil {
-			return fmt.Errorf("table %s: %w", tableName, err)
-		}
-		td := sqlite.TableDef{Name: tableName, Def: def, Version: version}
-		tables = append(tables, loaded{def: td, table: table, decoded: decoded})
-		tableDefs = append(tableDefs, td)
-	}
-
-	db, err := sqlite.Open(opts.databaseFile)
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	if err := sqlite.CreateTables(db, tableDefs); err != nil {
-		return err
-	}
-
-	// Hotfixes: overlay the client's DBCache.bin records before the inserts.
-	// Only a cache for this exact build applies; having none is not an error.
-	// --dbcache pins specific cache files (deterministic runs); with no
+	// Hotfixes: overlay the client's DBCache.bin records on every decoded
+	// table. Only a cache for this exact build applies; having none is not an
+	// error. --dbcache pins specific cache files (deterministic runs); with no
 	// override, local-CASC mode scans tools/db2tool/caches plus
 	// <BaseDir>/**/DBCache.bin, while the offline --build mode stays
 	// hotfix-free.
@@ -281,19 +245,102 @@ func run(args []string) error {
 			}
 		}
 		hotfixReader = readers[buildNumber]
-		if hotfixReader == nil && len(opts.dbCaches) > 0 {
-			// Pinned caches that hold no records for the extracted build would
-			// otherwise silently produce a hotfix-free run.
+		// A hotfix-free run is easy to miss in the output, and it also means
+		// no server-pushed TACT keys were picked up, so say so.
+		switch {
+		case hotfixReader == nil && len(opts.dbCaches) > 0:
 			fmt.Fprintf(os.Stderr, "db2tool: warning: none of the given --dbcache files hold hotfixes for build %d; continuing without the overlay\n", buildNumber)
+		case hotfixReader == nil && opts.buildNumber == 0:
+			fmt.Fprintf(os.Stderr, "db2tool: warning: no DBCache.bin for build %d found under %s or %s; continuing without the overlay\n", buildNumber, settings.Settings.BaseDir, filepath.Join(toolHome, "caches"))
 		}
 	}
 
-	for _, t := range tables {
+	// decodeTable opens a table, decodes it against its definition for this
+	// build and overlays the hotfixes.
+	decodeTable := func(tableName string) (*wdc.Table, sqlite.TableDef, *wdc.Decoded, error) {
+		var td sqlite.TableDef
+		table, err := openTable(tableName)
+		if err != nil {
+			return nil, td, nil, err
+		}
+		dbdPath, err := dbd.FetchCached(dbdCacheDir, tableName)
+		if err != nil {
+			return nil, td, nil, err
+		}
+		def, err := dbd.ReadFile(dbdPath, true)
+		if err != nil {
+			return nil, td, nil, err
+		}
+		version, err := dbd.SelectVersion(def, buildNumber)
+		if err != nil {
+			return nil, td, nil, fmt.Errorf("table %s: %w", tableName, err)
+		}
+		decoded, err := table.DecodeRows(def, version, buildNumber)
+		if err != nil {
+			return nil, td, nil, fmt.Errorf("table %s: %w", tableName, err)
+		}
 		if hotfixReader != nil {
-			if err := hotfixReader.ApplyHotfixes(t.table, t.def.Def, t.def.Version, buildNumber, t.decoded); err != nil {
-				return fmt.Errorf("table %s: applying hotfixes: %w", t.def.Name, err)
+			if err := hotfixReader.ApplyHotfixes(table, def, version, buildNumber, decoded); err != nil {
+				return nil, td, nil, fmt.Errorf("table %s: applying hotfixes: %w", tableName, err)
 			}
 		}
+		return table, sqlite.TableDef{Name: tableName, Def: def, Version: version}, decoded, nil
+	}
+
+	// TACT keys: the client's own TactKey/TactKeyLookup tables (with any
+	// pushed keys the hotfix overlay adds) plus the community list. Only the
+	// local-CASC mode can use them: offline .db2 files were already written
+	// with their encrypted chunks zero-filled.
+	var keys *tact.KeyStore
+	if build != nil {
+		keys = tact.NewKeyStore()
+		keyPath := opts.keyFile
+		if keyPath == "" {
+			keyPath = filepath.Join(toolHome, "TACTKeys.txt")
+		}
+		fromClient, err := loadClientKeys(keys, decodeTable)
+		if err != nil {
+			return err
+		}
+		community := 0
+		if err := tact.RefreshKeyFile(keyPath, ""); err != nil {
+			fmt.Fprintf(os.Stderr, "db2tool: %v; continuing without the community key list\n", err)
+		} else if community, err = keys.LoadKeyFile(keyPath); err != nil {
+			return err
+		}
+		build.Keys = keys
+		fmt.Printf("TACT keys: %d loaded (%d from the client and its hotfixes, %d more from %s)\n", keys.Len(), fromClient, community, keyPath)
+	}
+
+	type loaded struct {
+		def     sqlite.TableDef
+		table   *wdc.Table
+		decoded *wdc.Decoded
+	}
+	tables := make([]loaded, 0, len(settings.Tables))
+	tableDefs := make([]sqlite.TableDef, 0, len(settings.Tables))
+
+	for _, tableName := range settings.Tables {
+		table, td, decoded, err := decodeTable(tableName)
+		if err != nil {
+			return err
+		}
+		reportLockedSections(tableName, table, keys)
+		tables = append(tables, loaded{def: td, table: table, decoded: decoded})
+		tableDefs = append(tableDefs, td)
+	}
+
+	db, err := sqlite.Open(opts.databaseFile)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	if err := sqlite.CreateTables(db, tableDefs); err != nil {
+		return err
+	}
+
+	for _, t := range tables {
 		if err := sqlite.InsertRows(db, t.def, t.decoded); err != nil {
 			return err
 		}
@@ -301,4 +348,85 @@ func run(args []string) error {
 
 	fmt.Println("Processing completed.")
 	return nil
+}
+
+// loadClientKeys decodes TactKeyLookup (key id → 64-bit name) and TactKey
+// (key id → key) and adds every pair to keys. Both tables take the hotfix
+// overlay, which is how a key the server pushes into DBCache.bin arrives.
+func loadClientKeys(keys *tact.KeyStore, decodeTable func(string) (*wdc.Table, sqlite.TableDef, *wdc.Decoded, error)) (int, error) {
+	_, lookupDef, lookups, err := decodeTable("TactKeyLookup")
+	if err != nil {
+		return 0, err
+	}
+	_, keyDef, tactKeys, err := decodeTable("TactKey")
+	if err != nil {
+		return 0, err
+	}
+	names := make(map[int32]uint64, len(lookups.Rows))
+	col := columnIndex(lookupDef, "TACTID")
+	for _, row := range lookups.Rows {
+		if raw := byteArray(row.Values[col]); len(raw) == 8 {
+			names[row.ID] = binary.LittleEndian.Uint64(raw)
+		}
+	}
+	added := 0
+	col = columnIndex(keyDef, "Key")
+	for _, row := range tactKeys.Rows {
+		raw := byteArray(row.Values[col])
+		name, ok := names[row.ID]
+		if !ok || len(raw) != 16 {
+			continue
+		}
+		var key [16]byte
+		copy(key[:], raw)
+		if !keys.Has(name) {
+			added++
+		}
+		keys.Add(name, key)
+	}
+	return added, nil
+}
+
+func columnIndex(td sqlite.TableDef, name string) int {
+	for i, d := range td.Version.Definitions {
+		if d.Name == name {
+			return i
+		}
+	}
+	panic(fmt.Sprintf("table %s has no column %s", td.Name, name))
+}
+
+// byteArray flattens a decoded u8 array column, which the decoder hands back
+// as []int64 (or []uint64 for 64-bit unsigned elements).
+func byteArray(v any) []byte {
+	switch a := v.(type) {
+	case []int64:
+		out := make([]byte, len(a))
+		for i, x := range a {
+			out[i] = byte(x)
+		}
+		return out
+	case []uint64:
+		out := make([]byte, len(a))
+		for i, x := range a {
+			out[i] = byte(x)
+		}
+		return out
+	}
+	return nil
+}
+
+// reportLockedSections names every key a table's encrypted sections still
+// need, so a run says what it could not read instead of silently dropping
+// rows.
+func reportLockedSections(tableName string, t *wdc.Table, keys *tact.KeyStore) {
+	locked := make(map[uint64]int32)
+	for _, s := range t.Sections {
+		if s.TactKeyLookup != 0 && (keys == nil || !keys.Has(s.TactKeyLookup)) {
+			locked[s.TactKeyLookup] += s.NumRecords
+		}
+	}
+	for name, rows := range locked {
+		fmt.Printf("  %s: %d rows locked by TACT key %s\n", tableName, rows, tact.KeyName(name))
+	}
 }

@@ -139,7 +139,7 @@ func (mage *Mage) registerArcaneConcentration() {
 		Callback:           core.CallbackOnSpellHitDealt,
 		ClassSpellMask:     MageSpellsAllDamaging,
 		Outcome:            core.OutcomeLanded,
-		ProcChance:         spellData.ArcaneConcentration.FractionAt(mage.Talents.ArcaneConcentration),
+		ProcChance:         spellData.ArcaneConcentration.EffectAt(0).FractionAt(mage.Talents.ArcaneConcentration),
 		TriggerImmediately: true,
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 			mage.ClearcastingAura.Activate(sim)

@@ -10,9 +10,8 @@ func (warrior *Warrior) registerThunderClap() {
 	thunderClapSlow := thunderClapRank.Effects[1].Fraction()
 
 	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		// core.ThunderClapAura still takes TBC's Improved Thunder Clap points; 3 picks its 20% row,
-		// and the priority below sets the client's value on top.
-		return core.ThunderClapAura(target, 3).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
+		// The priority below rescales core's flat 20% for the Conqueror's set bonus.
+		return core.ThunderClapAura(target).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
 			speedMultiplier := 1 / (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus))
 			if ee := aura.ExclusiveEffects[0]; ee.Priority != speedMultiplier {
 				ee.SetPriority(sim, speedMultiplier)

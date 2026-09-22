@@ -196,7 +196,7 @@ func (shaman *Shaman) applyMentalDexterity() {
 	}
 
 	shaman.AddStatDependency(stats.Intellect, stats.AttackPower,
-		spellData.MentalDexterity.FractionAt(shaman.Talents.MentalDexterity))
+		spellData.MentalDexterity.EffectAt(0).FractionAt(shaman.Talents.MentalDexterity))
 }
 
 // applyImprovedGhostWolf implements Improved Ghost Wolf, new in Forever.
@@ -287,7 +287,7 @@ func (shaman *Shaman) applyMaelstromWeapon() {
 
 	buff := spellData.MaelstromWeaponTriggered.HighestRank()
 	maxStacks := int32(5)
-	perStack := spellData.MaelstromWeapon.FractionAt(shaman.Talents.MaelstromWeapon)
+	perStack := spellData.MaelstromWeapon.EffectAt(0).FractionAt(shaman.Talents.MaelstromWeapon)
 
 	ppmm := shaman.NewLegacyPPMManager(2*float64(shaman.Talents.MaelstromWeapon), core.ProcMaskMelee)
 

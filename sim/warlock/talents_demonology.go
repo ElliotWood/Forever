@@ -62,7 +62,7 @@ func (warlock *Warlock) applyDemonicEmbrace() {
 		return
 	}
 
-	warlock.MultiplyStat(stats.Stamina, spellData.DemonicEmbrace.MultiplierAt(warlock.Talents.DemonicEmbrace))
+	warlock.MultiplyStat(stats.Stamina, spellData.DemonicEmbrace.EffectAt(0).MultiplierAt(warlock.Talents.DemonicEmbrace))
 }
 
 // 2% more pet damage a point (18769).
