@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.47294
+  weights: -0.50124
   weights: 0
-  weights: 0.40673
-  weights: 0
-  weights: 0
+  weights: 0.42763
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 4.41174
-  weights: 4.80396
+  weights: 0
+  weights: 0
+  weights: 4.51467
+  weights: 4.86277
   weights: 0
   weights: 0
   weights: 0
@@ -99,133 +99,133 @@ stat_weights_results: {
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-Champion'sDreadgear"
  value: {
-  dps: 490.67169
-  tps: 438.96844
+  dps: 491.10216
+  tps: 439.31282
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-DeathmistRaiment"
  value: {
-  dps: 482.4428
-  tps: 430.95642
+  dps: 483.49806
+  tps: 431.80063
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-Demoniac'sThreads"
  value: {
-  dps: 466.44661
-  tps: 419.63615
+  dps: 467.31456
+  tps: 420.33052
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-Doomcaller'sAttire"
  value: {
-  dps: 478.27995
-  tps: 428.93024
+  dps: 479.02835
+  tps: 429.52897
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-FelheartRaiment"
  value: {
-  dps: 470.90425
-  tps: 415.26205
+  dps: 471.83842
+  tps: 416.00939
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-FieldMarshal'sThreads"
  value: {
-  dps: 501.27689
-  tps: 447.18534
+  dps: 501.6114
+  tps: 447.45295
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-Hazza'rah'sCharmofDestruction-19957"
  value: {
-  dps: 450.73692
-  tps: 406.87561
+  dps: 451.30072
+  tps: 407.32665
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 393.67551
-  tps: 360.35767
+  dps: 394.23136
+  tps: 360.80235
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-LieutenantCommander'sDreadgear"
  value: {
-  dps: 490.67169
-  tps: 438.96844
+  dps: 491.10216
+  tps: 439.31282
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-NemesisRaiment"
  value: {
-  dps: 469.61069
-  tps: 422.16964
+  dps: 470.50509
+  tps: 422.88516
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-AllItems-Warlord'sThreads"
  value: {
-  dps: 501.27689
-  tps: 447.18534
+  dps: 501.6114
+  tps: 447.45295
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-Average-Default"
  value: {
-  dps: 457.65583
-  tps: 412.4509
+  dps: 458.43502
+  tps: 413.07425
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-Settings-Orc-prebis-Shadow and Flame Warlock-forever_shadow_and_flame-FullBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 454.74993
-  tps: 1271.34419
+  dps: 455.92846
+  tps: 1272.26328
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-Settings-Orc-prebis-Shadow and Flame Warlock-forever_shadow_and_flame-FullBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 454.74993
-  tps: 410.08601
+  dps: 455.92846
+  tps: 411.02765
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-Settings-Orc-prebis-Shadow and Flame Warlock-forever_shadow_and_flame-FullBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 473.46996
-  tps: 407.59885
+  dps: 475.28673
+  tps: 409.04633
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-Settings-Orc-prebis-Shadow and Flame Warlock-forever_shadow_and_flame-NoBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 417.1286
-  tps: 1361.54528
+  dps: 417.46337
+  tps: 1361.8131
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-Settings-Orc-prebis-Shadow and Flame Warlock-forever_shadow_and_flame-NoBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 417.1286
-  tps: 386.13909
+  dps: 417.46337
+  tps: 386.4069
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-Settings-Orc-prebis-Shadow and Flame Warlock-forever_shadow_and_flame-NoBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 416.48462
-  tps: 381.23675
+  dps: 416.62303
+  tps: 381.34747
  }
 }
 dps_results: {
  key: "TestWarlockShadowAndFlame-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 454.74993
-  tps: 410.08601
+  dps: 455.34403
+  tps: 410.5613
  }
 }
