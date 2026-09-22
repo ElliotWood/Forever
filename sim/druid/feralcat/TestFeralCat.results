@@ -341,9 +341,9 @@ dps_results: {
 dps_results: {
  key: "TestFeralCat-AllItems-HandofJustice-11815"
  value: {
-  dps: 169.99258
-  tps: 116.97514
-  dtps: 7.47288
+  dps: 673.24009
+  tps: 366.11704
+  dtps: 11.67916
  }
 }
 dps_results: {
