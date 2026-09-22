@@ -822,9 +822,10 @@ func FerociousInspiration(char *Character, count int32) *Aura {
 	}).AttachMultiplicativePseudoStatBuff(&char.PseudoStats.DamageDealtMultiplier, 1+dmgBuff)
 }
 
+// Forever client 24932: 3% critical strike (aura 290). TBC's was 5%.
 func LeaderOfThePackAura(char *Character, improved bool) *Aura {
 	statsConfig := []StatConfig{
-		{stats.PhysicalCritPercent, 5, false},
+		{stats.PhysicalCritPercent, 3, false},
 	}
 
 	if improved {

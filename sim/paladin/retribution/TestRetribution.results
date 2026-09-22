@@ -45,7 +45,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 1
   final_stats: 4
-  final_stats: 23.64137
+  final_stats: 21.64137
   final_stats: 17.31667
   final_stats: 0
   final_stats: 0
@@ -56,11 +56,11 @@ stat_weights_results: {
  key: "TestRetribution-StatWeights-Default"
  value: {
   weights: 2.4
-  weights: 2.34117
+  weights: 2.42325
   weights: 0
   weights: 0
   weights: 0
-  weights: 2.19707
+  weights: 2.2124
   weights: 0
   weights: 0
   weights: 0
@@ -75,8 +75,8 @@ stat_weights_results: {
   weights: 1
   weights: 0
   weights: 0
-  weights: 5.2682
-  weights: 2.92927
+  weights: 4.68031
+  weights: 3.08095
   weights: 0
   weights: 0
   weights: 0
@@ -109,603 +109,603 @@ stat_weights_results: {
 dps_results: {
  key: "TestRetribution-AllItems-AegisofPreservation-19345"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Avenger'sBattlegear"
  value: {
-  dps: 1026.63943
-  tps: 598.66672
+  dps: 1006.46654
+  tps: 587.3699
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BadgeoftheSwarmguard-21670"
  value: {
-  dps: 798.73331
-  tps: 470.08671
+  dps: 783.08426
+  tps: 461.32325
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BattlegearofUndeadSlaying"
  value: {
-  dps: 803.03221
-  tps: 472.4941
+  dps: 787.29388
+  tps: 463.68063
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BattlegearofValor"
  value: {
-  dps: 878.28635
-  tps: 514.70342
+  dps: 865.8134
+  tps: 507.71857
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BeaststalkerArmor"
  value: {
-  dps: 922.94867
-  tps: 541.88202
+  dps: 905.91084
+  tps: 532.34084
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Biznicks247x128Accurascope-2523"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BlackDragonMail"
  value: {
-  dps: 852.16453
-  tps: 500.06259
+  dps: 836.88886
+  tps: 491.50821
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 805.71136
-  tps: 474.0249
+  dps: 791.27206
+  tps: 465.93889
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BloodTigerHarness"
  value: {
-  dps: 836.59113
-  tps: 491.71407
+  dps: 820.65936
+  tps: 482.79228
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BloodmailRegalia"
  value: {
-  dps: 902.42999
-  tps: 529.03365
+  dps: 889.76495
+  tps: 521.94122
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BloodsoulEmbrace"
  value: {
-  dps: 839.77904
-  tps: 493.1454
+  dps: 824.1581
+  tps: 484.39768
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BloodvineGarb"
  value: {
-  dps: 897.52848
-  tps: 526.23495
+  dps: 881.66771
+  tps: 517.35291
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-BlueDragonMail"
  value: {
-  dps: 867.08786
-  tps: 509.28485
+  dps: 850.24355
+  tps: 499.85203
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Bonereaver'sEdge-17076"
  value: {
-  dps: 803.60659
-  tps: 472.81575
+  dps: 789.80872
+  tps: 465.08894
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-CadaverousGarb"
  value: {
-  dps: 865.98153
-  tps: 507.94399
+  dps: 851.54848
+  tps: 499.86149
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-CloudkeeperLegplates-14554"
  value: {
-  dps: 816.722
-  tps: 480.16038
+  dps: 802.12411
+  tps: 471.98556
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
-  dps: 799.9897
-  tps: 470.81656
+  dps: 784.39589
+  tps: 462.08402
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-DeathboneGuardian"
  value: {
-  dps: 853.01592
-  tps: 501.45439
+  dps: 839.69967
+  tps: 493.99728
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-DevilsaurArmor"
  value: {
-  dps: 848.03015
-  tps: 497.89122
+  dps: 830.43146
+  tps: 488.03595
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-DormantHeartoftheMountain-249473"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-DraconicInfusedEmblem-22268"
  value: {
-  dps: 808.25173
-  tps: 475.41703
+  dps: 792.51416
+  tps: 466.60399
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-DreadmistRaiment"
  value: {
-  dps: 919.65562
-  tps: 538.83029
+  dps: 903.20195
+  tps: 529.61624
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Earthstrike-21180"
  value: {
-  dps: 810.4647
-  tps: 476.65629
+  dps: 794.3583
+  tps: 467.63671
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Enchant2HWeapon-GreaterImpact-963"
  value: {
-  dps: 801.85331
-  tps: 471.83391
+  dps: 786.14742
+  tps: 463.03861
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-EnchantCloak-Subtlety-2621"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-EnchantGloves-Threat-2613"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-EnchantWeapon-Crusader-1900"
  value: {
-  dps: 808.35752
-  tps: 475.47627
+  dps: 792.42114
+  tps: 466.55189
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-EnchantWeapon-IcyChill-1894"
  value: {
-  dps: 691.96479
-  tps: 408.70861
+  dps: 678.1089
+  tps: 400.94931
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
-  dps: 791.5079
-  tps: 466.04048
+  dps: 776.10195
+  tps: 457.41315
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-EyeofMoam-21473"
  value: {
-  dps: 801.29813
-  tps: 471.52301
+  dps: 785.61891
+  tps: 462.74265
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-EyeoftheDead-23047"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-FieldMarshal'sAegis"
  value: {
-  dps: 892.83597
-  tps: 523.64787
+  dps: 876.92524
+  tps: 514.73787
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-FieryPlateGauntlets-12631"
  value: {
-  dps: 802.75601
-  tps: 472.3699
+  dps: 786.9434
+  tps: 463.51484
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-ForceImbuedGauntlets-18383"
  value: {
-  dps: 801.02164
-  tps: 471.39866
+  dps: 785.20904
+  tps: 462.5436
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Freethinker'sArmor"
  value: {
-  dps: 865.24204
-  tps: 507.94274
+  dps: 853.83691
+  tps: 501.55587
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-FreezingBand-942"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-FrozenHeartoftheMountain-249469"
  value: {
-  dps: 805.60381
-  tps: 474.00435
+  dps: 789.86455
+  tps: 465.19036
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-GarboftheUndeadSlayer"
  value: {
-  dps: 803.03221
-  tps: 472.4941
+  dps: 787.29388
+  tps: 463.68063
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-GreenDragonMail"
  value: {
-  dps: 829.08877
-  tps: 487.20066
+  dps: 812.75891
+  tps: 478.05594
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-HeartoftheScale-13164"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-HibernationCrystal-20636"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 858.37305
-  tps: 503.47103
+  dps: 843.01916
+  tps: 494.87285
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-ImperialPlate"
  value: {
-  dps: 873.97661
-  tps: 512.29312
+  dps: 854.75866
+  tps: 501.53107
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-IronfeatherArmor"
  value: {
-  dps: 844.90744
-  tps: 496.43715
+  dps: 827.86804
+  tps: 486.89509
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-IronweaveBattlesuit"
  value: {
-  dps: 868.59678
-  tps: 510.35747
+  dps: 851.71215
+  tps: 500.90207
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-JomGabbar-23570"
  value: {
-  dps: 814.28811
-  tps: 478.7974
+  dps: 798.00439
+  tps: 469.67852
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-LawbringerArmor"
  value: {
-  dps: 931.95306
-  tps: 545.69774
+  dps: 915.17801
+  tps: 536.30371
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-LieutenantCommander'sRedoubt"
  value: {
-  dps: 935.4405
-  tps: 547.38227
+  dps: 918.49856
+  tps: 537.89479
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-LightforgeArmor"
  value: {
-  dps: 954.88304
-  tps: 558.42214
+  dps: 937.67509
+  tps: 548.78569
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Loatheb'sReflection-23042"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Magister'sRegalia"
  value: {
-  dps: 946.62405
-  tps: 554.59289
+  dps: 930.20839
+  tps: 545.40012
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-MarkofTyranny-13966"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-MarkoftheChampion-23206"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-MarkoftheChampion-23207"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-MoltenHeartoftheMountain-249470"
  value: {
-  dps: 799.44412
-  tps: 470.48476
+  dps: 783.77223
+  tps: 461.70851
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-NecropileRaiment"
  value: {
-  dps: 868.95159
-  tps: 510.27737
+  dps: 851.96427
+  tps: 500.76447
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Prismcharm-15867"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-RaggedJohn'sNeverendingCup-15873"
  value: {
-  dps: 791.5912
-  tps: 466.08713
+  dps: 775.63123
+  tps: 457.14955
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-RegaliaofUndeadCleansing"
  value: {
-  dps: 825.76629
-  tps: 485.64112
+  dps: 809.49723
+  tps: 476.53044
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-SerenityField-272439"
  value: {
-  dps: 808.51113
-  tps: 475.59469
+  dps: 792.46165
+  tps: 466.60698
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-ShadowcraftArmor"
  value: {
-  dps: 902.55168
-  tps: 528.38583
+  dps: 885.60728
+  tps: 518.89697
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-ShardoftheGods"
  value: {
-  dps: 803.19837
-  tps: 472.62976
+  dps: 786.80114
+  tps: 463.44731
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-Slayer'sCrest-23041"
  value: {
-  dps: 821.05169
-  tps: 482.585
+  dps: 804.67233
+  tps: 473.41256
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-SmokingHeartoftheMountain-11811"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-StormGauntlets-12632"
  value: {
-  dps: 818.22887
-  tps: 481.12068
+  dps: 801.23513
+  tps: 471.60418
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-StormshroudArmor"
  value: {
-  dps: 845.37977
-  tps: 496.28842
+  dps: 830.28304
+  tps: 487.83425
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-TalismanofAscendance-22678"
  value: {
-  dps: 815.5805
-  tps: 479.52114
+  dps: 799.67697
+  tps: 470.61516
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-TalismanofEphemeralPower-18820"
  value: {
-  dps: 809.96495
-  tps: 476.37643
+  dps: 794.08486
+  tps: 467.48358
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-TheDarksoul"
  value: {
-  dps: 837.11208
-  tps: 491.89565
+  dps: 821.93852
+  tps: 483.39846
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-TheElements"
  value: {
-  dps: 944.12378
-  tps: 552.53287
+  dps: 928.03929
+  tps: 543.52555
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-TheHighlander'sFortitude"
  value: {
-  dps: 845.68619
-  tps: 496.95954
+  dps: 834.93883
+  tps: 490.94102
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-TheLionHornofStormwind-14557"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-ThePostmaster"
  value: {
-  dps: 890.7272
-  tps: 522.68723
+  dps: 874.46951
+  tps: 513.58292
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 826.26499
-  tps: 485.50445
+  dps: 810.24835
+  tps: 476.53513
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-UndeadSlayer'sArmor"
  value: {
-  dps: 803.03221
-  tps: 472.4941
+  dps: 787.29388
+  tps: 463.68063
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-VestmentsoftheDevout"
  value: {
-  dps: 920.93912
-  tps: 540.02233
+  dps: 902.56872
+  tps: 529.73491
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-VolcanicArmor"
  value: {
-  dps: 803.24817
-  tps: 472.68835
+  dps: 787.70135
+  tps: 463.98213
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-WarbladeofCaerDarrow-13982"
  value: {
-  dps: 817.34908
-  tps: 480.73626
+  dps: 804.94568
+  tps: 473.79036
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-WildheartRaiment"
  value: {
-  dps: 923.68399
-  tps: 541.06749
+  dps: 905.91899
+  tps: 531.11908
  }
 }
 dps_results: {
  key: "TestRetribution-AllItems-WrathofCenarius-21190"
  value: {
-  dps: 799.0488
-  tps: 470.26339
+  dps: 783.45107
+  tps: 461.52866
  }
 }
 dps_results: {
  key: "TestRetribution-Average-Default"
  value: {
-  dps: 813.72953
-  tps: 479.30064
+  dps: 798.49764
+  tps: 470.77079
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Dwarf-Weapon-DefaultTalents-Default-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1194.54731
-  tps: 1127.17283
+  dps: 1177.05339
+  tps: 1117.37623
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Dwarf-Weapon-DefaultTalents-Default-default-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 791.98057
-  tps: 466.43273
+  dps: 775.0584
+  tps: 456.95631
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Dwarf-Weapon-DefaultTalents-Default-default-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 845.55941
-  tps: 502.10922
+  dps: 823.66851
+  tps: 489.85032
  }
 }
 dps_results: {
@@ -732,22 +732,22 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-Settings-Dwarf-Weapon-Retribution 10/0/41-Default-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1121.34569
-  tps: 1085.91781
+  dps: 1105.84038
+  tps: 1077.23483
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Dwarf-Weapon-Retribution 10/0/41-Default-default-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 797.20573
-  tps: 469.37073
+  dps: 783.0594
+  tps: 461.44879
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Dwarf-Weapon-Retribution 10/0/41-Default-default-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 866.95197
-  tps: 513.53542
+  dps: 847.70872
+  tps: 502.7592
  }
 }
 dps_results: {
@@ -774,22 +774,22 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-Settings-Human-Weapon-DefaultTalents-Default-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1201.06697
-  tps: 1129.7865
+  dps: 1184.58098
+  tps: 1120.55435
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Human-Weapon-DefaultTalents-Default-default-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 797.64017
-  tps: 469.47455
+  dps: 782.04697
+  tps: 460.74236
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Human-Weapon-DefaultTalents-Default-default-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 872.77916
-  tps: 517.84557
+  dps: 848.41151
+  tps: 504.19969
  }
 }
 dps_results: {
@@ -816,22 +816,22 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-Settings-Human-Weapon-Retribution 10/0/41-Default-default-FullBuffs-0.0yards-LongMultiTarget"
  value: {
-  dps: 1093.01309
-  tps: 1067.38572
+  dps: 1077.61561
+  tps: 1058.76313
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Human-Weapon-Retribution 10/0/41-Default-default-FullBuffs-0.0yards-LongSingleTarget"
  value: {
-  dps: 789.72563
-  tps: 464.98441
+  dps: 775.67981
+  tps: 457.11875
  }
 }
 dps_results: {
  key: "TestRetribution-Settings-Human-Weapon-Retribution 10/0/41-Default-default-FullBuffs-0.0yards-ShortSingleTarget"
  value: {
-  dps: 868.69926
-  tps: 515.41907
+  dps: 849.33195
+  tps: 504.57338
  }
 }
 dps_results: {
@@ -858,7 +858,7 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 696.91168
-  tps: 412.79503
+  dps: 682.8708
+  tps: 404.93214
  }
 }
