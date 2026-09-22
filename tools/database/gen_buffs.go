@@ -1528,11 +1528,12 @@ func (res *buffResolver) validateScope(row *ResolvedBuff) {
 			switch e.ImplicitTarget {
 			case dbc.TARGET_UNIT_TARGET_ENEMY, dbc.TARGET_UNIT_SRC_AREA_ENEMY, dbc.TARGET_SRC_CASTER:
 				scope, known = buffmanifest.ScopeDebuff, true
-			case dbc.TARGET_UNIT_CASTER_AREA_RAID, dbc.TARGET_UNIT_TARGET_RAID, dbc.TARGET_UNIT_TARGET_ALLY_OR_RAID:
+			case dbc.TARGET_UNIT_CASTER_AREA_RAID:
 				scope, known = buffmanifest.ScopeRaid, true
 			case dbc.TARGET_UNIT_CASTER_AREA_PARTY:
 				scope, known = buffmanifest.ScopeParty, true
-			case dbc.TARGET_UNIT_TARGET_ALLY, dbc.TARGET_UNIT_TARGET_ANY, dbc.TARGET_UNIT_CASTER:
+			case dbc.TARGET_UNIT_TARGET_ALLY, dbc.TARGET_UNIT_TARGET_ANY, dbc.TARGET_UNIT_CASTER,
+				dbc.TARGET_UNIT_TARGET_RAID, dbc.TARGET_UNIT_TARGET_ALLY_OR_RAID:
 				scope, known = buffmanifest.ScopeIndividual, true
 			}
 		}

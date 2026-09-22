@@ -246,8 +246,12 @@ var SharedSpellsIcons = []int32{
 	23110, // Dash
 	23563, // Enhanced Battle Shout
 	25076, // Cobra Reflexes
-	25894, // Greater Blessing of Wisdom
+	21564, // Prayer of Fortitude
 	25895, // Greater Blessing of Salvation
+	25916, // Greater Blessing of Might
+	25918, // Greater Blessing of Wisdom
+	27681, // Prayer of Spirit
+	27683, // Prayer of Shadow Protection
 	26654, // Sweeping Strikes
 	28142, // Power of the Guardian
 	28143, // Power of the Guardian
