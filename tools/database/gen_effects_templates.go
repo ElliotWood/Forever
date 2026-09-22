@@ -61,13 +61,14 @@ func RegisterAllOnUseCds() {
 {{- end }}
 }`
 const TmplStrProc = `package forever
-
+{{ if .HasLive }}
 import (
 {{- if .UsesCore }}
 	"github.com/wowsims/forever/sim/core"
 {{- end }}
  	"github.com/wowsims/forever/sim/common/shared"
 )
+{{- end }}
 
 func RegisterAllProcs() {
 {{- range .Groups }}
@@ -207,7 +208,7 @@ func RegisterAllProcs() {
 }`
 
 const TmplStrEnchant = `package forever
-{{ if .HasEntries }}
+{{ if .HasLive }}
 import (
 {{- if .UsesCore }}
 	"github.com/wowsims/forever/sim/core"
@@ -241,7 +242,34 @@ func RegisterAllEnchants() {
 	{{with index .Variants 0 -}}
 	// https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
-	{{- if .Supported}}
+	{{- if .Proc}}
+		{{- if .Supported}}
+		// {{ .Proc.Summary }}
+		shared.{{ if .Proc.Damage }}NewSpellDataDamageProc{{ else }}NewSpellDataProc{{ end }}(shared.SpellDataProc{
+			{{- with index .Variants 0 }}
+			Name:           "{{ .Name }}",
+			EnchantID:      {{ .ID }},
+			{{- end}}
+			TriggerSpellID: {{ .Proc.TriggerSpellID }},
+			{{- if .Proc.BuffSpellID }}
+			BuffSpellID:    {{ .Proc.BuffSpellID }},
+			{{- end}}
+			{{- if .Proc.IsWeaponProc }}
+			IsWeaponProc:   true,
+			{{- end}}
+		}, nil)
+		{{- else}}
+		// unsupported: {{ .Proc.Reason }}
+		// {{ .Proc.Summary }}
+		// shared.{{ if .Proc.Damage }}NewSpellDataDamageProc{{ else }}NewSpellDataProc{{ end }}(shared.SpellDataProc{
+		{{- with index .Variants 0 }}
+		//	Name:           "{{ .Name }}",
+		//	EnchantID:      {{ .ID }},
+		{{- end}}
+		//	TriggerSpellID: {{ .Proc.TriggerSpellID }},
+		// }, nil)
+		{{- end}}
+	{{- else if .Supported}}
 		shared.NewProcStatBonusEffect(shared.ProcStatBonusEffect{
 			{{with index .Variants 0 -}}
 			Name:               "{{ .Name }}",

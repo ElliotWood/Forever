@@ -274,19 +274,25 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 	// entries are all of that shape must not import core: gen_db links the sim, and an unused import
 	// in a file it just wrote breaks the build the next run needs.
 	usesCore := false
+	// And nothing at all is imported by a file whose every entry is commented out.
+	hasLive := false
 	for _, grp := range groups {
 		for _, entry := range grp.Entries {
 			if entry.StackingOnUse != nil {
 				hasStacking = true
 			}
-			if entry.Supported && entry.Proc == nil {
+			if entry.Skipped || !entry.Supported {
+				continue
+			}
+			hasLive = true
+			if entry.Proc == nil {
 				usesCore = true
 			}
 		}
 	}
 
 	var rendered bytes.Buffer
-	if err := tmpl.Execute(&rendered, map[string]interface{}{"Groups": groups, "HasEntries": hasEntries, "HasStacking": hasStacking, "UsesCore": usesCore}); err != nil {
+	if err := tmpl.Execute(&rendered, map[string]interface{}{"Groups": groups, "HasEntries": hasEntries, "HasStacking": hasStacking, "UsesCore": usesCore, "HasLive": hasLive}); err != nil {
 		return fmt.Errorf("failed to execute template: %w", err)
 	}
 
@@ -827,6 +833,14 @@ func TryParseEnchantEffect(enchant *proto.UIEnchant, enchantEffect *proto.ItemEf
 			renderedTooltip := tooltip.String()
 			entry := Entry{Tooltip: strings.Split(renderedTooltip, "\n"), Variants: []*Variant{{ID: int(enchant.EffectId), Name: enchant.Name, SpellID: int(enchantingSpell.SpellID)}}}
 			entry.ProcInfo, entry.Supported = BuildEnchantProcInfo(enchant, instance, renderedTooltip)
+
+			// The same two ids an item proc carries. An enchant's trigger is the spell the client
+			// hangs on the enchantment; the buff is what the shipped entry says it applies.
+			entry.Proc = routeEnchantProc(enchant, instance)
+			if entry.Proc != nil {
+				entry.Supported = entry.Supported && entry.Proc.Supported()
+			}
+
 			grp.Entries = append(grp.Entries, &entry)
 			groupMapProc["Enchants"] = grp
 
@@ -844,6 +858,42 @@ func TryParseEnchantEffect(enchant *proto.UIEnchant, enchantEffect *proto.ItemEf
 	}
 
 	return EffectParseResultInvalid
+}
+
+// The rows an enchant's proc is resolved from. An enchant applies its effect through one spell, so
+// the trigger is that spell and the buff is whatever the shipped entry names - the same spell again
+// where the client grants the stats through it directly.
+func routeEnchantProc(enchant *proto.UIEnchant, instance *dbc.DBC) *ProcRouting {
+	if enchant.SpellId == 0 {
+		return nil
+	}
+
+	raw, ok := instance.EnchantsByEffectId[int(enchant.EffectId)]
+	isWeaponProc := ok && raw.IsCombatSpell(int(enchant.SpellId))
+
+	buffSpellID := int(enchant.SpellId)
+	for _, effect := range enchant.EnchantEffects {
+		if effect.GetProc() != nil {
+			buffSpellID = int(effect.BuffId)
+			break
+		}
+	}
+
+	routing := routeProc(int(enchant.SpellId), buffSpellID, isWeaponProc)
+
+	if len(enchant.EnchantEffects) == 0 {
+		if damage := dbc.ResolveDamageEffect(int(enchant.SpellId)); damage != nil {
+			routing.asDamage(int32(damage.SpellID))
+			return routing
+		}
+
+		routing.Unsupported = append(routing.Unsupported, "the enchant grants neither stats nor damage")
+		return routing
+	}
+
+	routing.requireABuffDuration()
+
+	return routing
 }
 
 func ParseTooltipForMissingEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMap map[string]Group, groupMapName string) {
