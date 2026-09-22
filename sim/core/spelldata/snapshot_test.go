@@ -170,6 +170,19 @@ func TestGeneratedRequiredAreas(t *testing.T) {
 	}
 }
 
+// Molten Fury's "doubled in Volcanic areas" is an override, since the client states no companion
+// row; Monkey Business doubles its duration too.
+func TestGeneratedAreaBonus(t *testing.T) {
+	withGeneratedStore(t)
+
+	if s := MustFind(1249113); len(s.AreaBonusGroups) != 1 || s.AreaBonusGroups[0] != 9203 || s.AreaMultiplier != 2 || s.AreaDurationMultiplier != 1 {
+		t.Errorf("Molten Fury's area bonus reads %v x%v (duration x%v), want [9203] x2 (duration x1)", s.AreaBonusGroups, s.AreaMultiplier, s.AreaDurationMultiplier)
+	}
+	if s := MustFind(1287571); s.AreaMultiplier != 2 || s.AreaDurationMultiplier != 2 {
+		t.Errorf("Monkey Business's area bonus reads x%v (duration x%v), want x2 (duration x2)", s.AreaMultiplier, s.AreaDurationMultiplier)
+	}
+}
+
 // Arcane Missiles rank 2: a periodic trigger reaches its tick spell through the effect.
 func TestGeneratedTriggerResolves(t *testing.T) {
 	withGeneratedStore(t)

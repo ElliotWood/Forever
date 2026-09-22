@@ -571,6 +571,15 @@ carry, and two overrides of the same field on one spell. Every one that is appli
 `// override: <field> <value> -- <reason>` comment on the row it wrote to, so reading the generated
 store says which numbers are not the client's.
 
+`overrides.AreaBonuses` is the second table in the same file, for an effect whose tooltip says it is
+doubled in some kind of area while the client states no companion row for it ("This effect is doubled
+in Volcanic areas" on Molten Fury). A row names the AreaGroup ids any of which counts, the factor on
+the effect's amounts and the factor on its duration, onto `Spell.AreaBonusGroups`, `AreaMultiplier`
+and `AreaDurationMultiplier`; `row.AreaBonus(&character.Env.Encounter)` reads them against the
+encounter's area set, and is stale once the row states a `RequiredAreasID` of its own. The on-use stat
+actives `shared.NewSimpleStatActive` registers read it; a proc chance the tooltip says is doubled has
+no reader yet.
+
 `sim/core/spelldata/extra_ids.go` is the other hand-kept list: spells the generator force-includes
 although no class, item, enchant or set reaches them. It is empty today, and each entry that joins it
 says why. The generator re-reads that file from source while it renders, so adding an id without

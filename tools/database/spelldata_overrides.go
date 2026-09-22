@@ -141,6 +141,45 @@ func (s *storeSpell) directEffect() *storeEffect {
 	return nil
 }
 
+// Writes the area bonuses onto their rows under the same refusals as applyOverrides. The bonus is
+// stale once the row itself states a RequiredAreasID: then the client has moved the restriction
+// onto the row, and the sim reads it from there.
+func applyAreaBonuses(rows []storeSpell, list []overrides.AreaBonus) error {
+	byID := map[int32]*storeSpell{}
+	for i := range rows {
+		byID[rows[i].ID] = &rows[i]
+	}
+
+	seen := map[int32]bool{}
+	for _, b := range list {
+		if b.Reason == "" {
+			return fmt.Errorf("the area bonus of spell %d states no reason", b.SpellID)
+		}
+		if seen[b.SpellID] {
+			return fmt.Errorf("spell %d carries two area bonuses", b.SpellID)
+		}
+		seen[b.SpellID] = true
+		if len(b.Groups) == 0 || b.Multiplier <= 0 || b.DurationMultiplier <= 0 {
+			return fmt.Errorf("the area bonus of spell %d names no area group or a factor of zero", b.SpellID)
+		}
+
+		row, ok := byID[b.SpellID]
+		if !ok {
+			return fmt.Errorf("the area bonus names spell %d, which the store does not carry", b.SpellID)
+		}
+		if row.RequiredAreas != 0 {
+			return fmt.Errorf("spell %d now states area group %d itself, so its hand-supplied area bonus is stale",
+				b.SpellID, row.RequiredAreas)
+		}
+		row.AreaBonusGroups = b.Groups
+		row.AreaMultiplier, row.AreaDurationMultiplier = b.Multiplier, b.DurationMultiplier
+		row.overrideNotes = append(row.overrideNotes,
+			fmt.Sprintf("override: AreaBonus x%s (duration x%s) in %v -- %s",
+				num(b.Multiplier), num(b.DurationMultiplier), b.Groups, b.Reason))
+	}
+	return nil
+}
+
 // The ticking effect: a periodic aura, or the damage effect the rank's dummy times, which is how
 // the rank tables read a DoT too.
 func (s *storeSpell) periodicEffect() *storeEffect {

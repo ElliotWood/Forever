@@ -70,6 +70,27 @@ type Override struct {
 	Source  string // "tbc-carryover", "tooltip", "wcl:<report>/<fight>", "issue #N"
 }
 
+// An effect the tooltip says is doubled or tripled in some kind of area while the client states no
+// companion row for it: the whole reading is the tooltip's wording, so each row cites it. Groups are
+// the client's AreaGroup ids, any of which counts, the same ids Spell.RequiredAreas carries; the
+// multipliers apply to the effect's amounts and, where the tooltip says so, its duration.
+type AreaBonus struct {
+	SpellID            int32
+	Groups             []int32
+	Multiplier         float64
+	DurationMultiplier float64
+	Reason             string
+	Source             string
+}
+
+var AreaBonuses = []AreaBonus{
+	{1249113, []int32{9203}, 2, 1, "Molten Fury: 'This effect is doubled in Volcanic areas'; no companion row, and 9203 is the Blackrock group no spell requires", "tooltip"},
+	{1249110, []int32{9164}, 2, 1, "Chthonic Power: 'This effect is doubled in Snowy areas'; no companion row", "tooltip"},
+	{1287571, []int32{9161}, 2, 2, "Monkey Business: 'Effect and duration are doubled in Forest and Grassland areas'; no companion row", "tooltip"},
+	{1291105, []int32{9326}, 2, 1, "Stabilized: 'This effect is doubled in Strongholds and Cities'; no companion row", "tooltip"},
+	{1293820, []int32{9326}, 2, 1, "Toy Soldier: 'This effect is doubled in Strongholds and Cities'; no companion row", "tooltip"},
+}
+
 // The item procs whose rate the client keeps outside the spell data. Their ProcChance column reads
 // the 100 or 101 sentinel, which the store would otherwise take for "fires on every hit", and the
 // rates are the ones tools/database/dbc/maps.go MapItemIdToPPM carries for the same items - the

@@ -151,6 +151,15 @@ func formatStoreRow(s storeSpell, namer *rankEnumNamer) string {
 	if s.FlatThreat != 0 {
 		add("FlatThreat: %s", num32(s.FlatThreat))
 	}
+	if len(s.AreaBonusGroups) > 0 {
+		groups := make([]string, len(s.AreaBonusGroups))
+		for i, group := range s.AreaBonusGroups {
+			groups[i] = strconv.Itoa(int(group))
+		}
+		add("AreaBonusGroups: []int32{%s}", strings.Join(groups, ", "))
+		add("AreaMultiplier: %s", num32(s.AreaMultiplier))
+		add("AreaDurationMultiplier: %s", num32(s.AreaDurationMultiplier))
+	}
 	if !s.ClassFlags.isZero() {
 		add("ClassFlags: %s", formatClassFlags(s.ClassFlags))
 	}
@@ -439,6 +448,9 @@ func renderStore(in *storeInputs, namer *rankEnumNamer) ([]byte, error) {
 		applyTooltipHints(tables, &rows[i])
 	}
 	if err := applyOverrides(rows, overrides.Spells); err != nil {
+		return nil, err
+	}
+	if err := applyAreaBonuses(rows, overrides.AreaBonuses); err != nil {
 		return nil, err
 	}
 

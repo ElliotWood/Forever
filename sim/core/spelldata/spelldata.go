@@ -88,6 +88,13 @@ type Spell struct {
 	// effect, so this is zero unless an override fills it.
 	FlatThreat float32
 
+	// An effect the tooltip says is doubled in some kind of area while the client states no
+	// companion row: the AreaGroup ids any of which counts, and the factors on the effect's amounts
+	// and its duration there. Empty unless an override fills it; AreaBonus reads it against an
+	// encounter.
+	AreaBonusGroups                        []int32
+	AreaMultiplier, AreaDurationMultiplier float32
+
 	// SpellClassOptions.SpellClassSet and SpellClassMask_0..3: the set of spells a talent effect
 	// naming this family reaches.
 	ClassFlags core.ClassFlags

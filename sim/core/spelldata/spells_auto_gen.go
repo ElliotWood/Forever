@@ -29341,15 +29341,15 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1252337, SpellID: 1249073, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_SCHOOL_ABSORB, BasePoints: 50, SpellLevel: 60, PvpMult: 1, Misc: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1249110, Name: "Chthonic Power", School: 64, Attr: [17]uint32{8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000, DefenseType: 1, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 1249110, Name: "Chthonic Power", School: 64, Attr: [17]uint32{8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000, DefenseType: 1, ProcChance: 101, AreaBonusGroups: []int32{9164}, AreaMultiplier: 2, AreaDurationMultiplier: 1, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1252390, SpellID: 1249110, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DAMAGE_DONE, BasePoints: 29, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 48, ChainAmp: 1, Target: [2]uint8{1, 0}},
-		}},
-	{ID: 1249113, Name: "Molten Fury", School: 64, Attr: [17]uint32{8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000, DefenseType: 1, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+		}}, // override: AreaBonus x2 (duration x1) in [9164] -- Chthonic Power: 'This effect is doubled in Snowy areas'; no companion row
+	{ID: 1249113, Name: "Molten Fury", School: 64, Attr: [17]uint32{8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000, DefenseType: 1, ProcChance: 101, AreaBonusGroups: []int32{9203}, AreaMultiplier: 2, AreaDurationMultiplier: 1, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1252393, SpellID: 1249113, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_ATTACK_POWER, BasePoints: 55, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1351732, SpellID: 1249113, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RANGED_ATTACK_POWER, BasePoints: 55, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
-		}},
+		}}, // override: AreaBonus x2 (duration x1) in [9203] -- Molten Fury: 'This effect is doubled in Volcanic areas'; no companion row, and 9203 is the Blackrock group no spell requires
 	{ID: 1249118, Name: "Eternal Power", School: 2, Attr: [17]uint32{0: 0x40, 3: 0x4000000, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4000}, RefIDs: []int32{1249119}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintHeals | core.ProcHintNamedAbility,
 		Effects: []Effect{
 			{ID: 1252398, SpellID: 1249118, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, SpellLevel: 60, Variance: 0.5, PvpMult: 1, TriggerID: 1249119, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -30265,10 +30265,10 @@ var generatedSpells = []Spell{
 			{ID: 1305163, SpellID: 1287561, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DAMAGE_DONE, BasePoints: 8, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1305164, SpellID: 1287561, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_HEALING_DONE, BasePoints: 8, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: 126, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1287571, Name: "Monkey Business", School: 1, Attr: [17]uint32{8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000, DefenseType: 1, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 1287571, Name: "Monkey Business", School: 1, Attr: [17]uint32{8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000, DefenseType: 1, ProcChance: 101, AreaBonusGroups: []int32{9161}, AreaMultiplier: 2, AreaDurationMultiplier: 2, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1305175, SpellID: 1287571, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STAT, BasePoints: 16, SpellLevel: 60, SPCoef: 1, PvpMult: 1, Misc: -1, ChainAmp: 1, Target: [2]uint8{1, 0}},
-		}},
+		}}, // override: AreaBonus x2 (duration x2) in [9161] -- Monkey Business: 'Effect and duration are doubled in Forest and Grassland areas'; no companion row
 	{ID: 1287704, Name: "Authority", School: 1, Attr: [17]uint32{0: 0x9800100, 1: 0x20, 2: 0x84001, 3: 0x100000, 5: 0x60008, 6: 0x1000, 8: 0x1020, 9: 0x800, 10: 0x400000, 11: 0x4000000, 13: 0x2, 14: 0x10, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 101, RequiredAreas: 9161, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1305378, SpellID: 1287704, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_ATTACK_POWER, BasePoints: 28, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
@@ -30360,10 +30360,10 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1310294, SpellID: 1291103, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_STAT, BasePoints: 72, SpellLevel: 60, PvpMult: 1, Misc: 4, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1291105, Name: "Stabilized", School: 1, Attr: [17]uint32{4: 0x1000, 8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000,
+	{ID: 1291105, Name: "Stabilized", School: 1, Attr: [17]uint32{4: 0x1000, 8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 15000, AreaBonusGroups: []int32{9326}, AreaMultiplier: 2, AreaDurationMultiplier: 1,
 		Effects: []Effect{
 			{ID: 1310297, SpellID: 1291105, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_BLOCK_PERCENT, BasePoints: 8, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
-		}},
+		}}, // override: AreaBonus x2 (duration x1) in [9326] -- Stabilized: 'This effect is doubled in Strongholds and Cities'; no companion row
 	{ID: 1291551, Name: "Wound", School: 1, Attr: [17]uint32{0: 0x10, 3: 0x10000, 4: 0x800000, 15: 0x2000}, SpellLevel: 50, MaxRange: 100, DefenseType: 3,
 		Effects: []Effect{
 			{ID: 1310981, SpellID: 1291551, Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 14, SpellLevel: 50, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
@@ -30746,10 +30746,10 @@ var generatedSpells = []Spell{
 			{ID: 1314822, SpellID: 1293818, Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 122, PPL: 0.8999999761581421, SpellLevel: 32, MaxLevel: 38, Variance: 0.24175824224948883, SPCoef: 0.42899999022483826, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		},
 		Powers: []Power{{Type: 0, Cost: 130}}},
-	{ID: 1293820, Name: "Toy Soldier", School: 64, Attr: [17]uint32{0: 0x10, 8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 20000, DispelType: 1, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 1293820, Name: "Toy Soldier", School: 64, Attr: [17]uint32{0: 0x10, 8: 0x1000, 15: 0x2000}, SpellLevel: 60, DurationMs: 20000, DispelType: 1, ProcChance: 101, AreaBonusGroups: []int32{9326}, AreaMultiplier: 2, AreaDurationMultiplier: 1, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1314826, SpellID: 1293820, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_DODGE_PERCENT, BasePoints: 3, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
-		}},
+		}}, // override: AreaBonus x2 (duration x1) in [9326] -- Toy Soldier: 'This effect is doubled in Strongholds and Cities'; no companion row
 	{ID: 1294006, Name: "Nutritious Food", School: 1, Attr: [17]uint32{0: 0x18000180, 15: 0x2000}, DurationMs: 10000, CategoryCooldownMs: 1000, Category: 11, AuraInterrupt: [2]uint32{0: 0x40080}, RefIDs: []int32{1294007},
 		Effects: []Effect{
 			{ID: 1315124, SpellID: 1294006, Index: 0, Type: dbcenums.E_TRIGGER_SPELL, PvpMult: 1, Amplitude: 1, TriggerID: 1131, ChainAmp: 1, Target: [2]uint8{1, 0}},
