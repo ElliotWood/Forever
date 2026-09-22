@@ -439,14 +439,21 @@ func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 
 		hasStats := len(props.Stats) > 0
 		hasPseudoStats := e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && AddEquipSpellPseudoStats(pseudoStats, e.SpellID)
+		equipStats := stats.Stats{}
+		hasEquipStats := e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && AddEquipSpellStats(&equipStats, e.SpellID)
 
-		if e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && (hasStats || hasPseudoStats) {
+		if e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && (hasStats || hasPseudoStats || hasEquipStats) {
 			if areaType := spelldata.AreaTypeOfGroup(dbcInstance.Spells[e.SpellID].RequiredAreasID); areaType != proto.AreaType_AreaTypeUnknown {
 				addAreaStats(parsed.ScalingOptions[0], areaType, props.Stats)
 				continue
 			}
 			for stat, value := range props.Stats {
 				parsed.ScalingOptions[0].Stats[int32(stat)] += value
+			}
+			for stat, value := range equipStats {
+				if value != 0 {
+					parsed.ScalingOptions[0].Stats[int32(stat)] += value
+				}
 			}
 			continue
 		} else if (e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP) || (e.TriggerType == ITEM_SPELLTRIGGER_CHANCE_ON_HIT) || e.CoolDownMSec > 0 {

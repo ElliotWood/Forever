@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -140,6 +141,7 @@ func processEnchantmentEffects(
 			if outPseudoStats != nil {
 				AddEquipSpellPseudoStats(outPseudoStats, effectArgs[i])
 			}
+			AddEquipSpellStats(outStats, effectArgs[i])
 			spellEffects := dbcInstance.SpellEffects[effectArgs[i]]
 			for _, spellEffect := range spellEffects {
 				points := spellEffect.EffectBasePoints + spellEffect.EffectDieSides
@@ -252,6 +254,33 @@ func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
 		case dbcenums.A_MOD_PARRY_PERCENT:
 			add(proto.PseudoStat_PseudoStatParryPercent, value)
 		}
+	}
+
+	return added
+}
+
+const skillLineDefense = 95
+
+// Adds the defense skill and flat block value an equip spell states to outStats, and reports whether it
+// added any. 24148 (Presence of Might) states A_MOD_SKILL 7 on the Defense skill line and
+// A_MOD_BLOCK_VALUE_FLAT 15.
+func AddEquipSpellStats(outStats *stats.Stats, spellID int) bool {
+	added := false
+	for _, effect := range dbcInstance.SpellEffectsInOrder(spellID) {
+		if effect.EffectType != dbcenums.E_APPLY_AURA {
+			continue
+		}
+		value := effect.EffectBasePoints + effect.EffectDieSides
+
+		switch {
+		case effect.EffectAura == dbcenums.A_MOD_SKILL && effect.EffectMiscValues[0] == skillLineDefense:
+			outStats[proto.Stat_StatDefenseRating] += value * core.DefenseRatingPerDefenseLevel
+		case effect.EffectAura == dbcenums.A_MOD_BLOCK_VALUE_FLAT:
+			outStats[proto.Stat_StatBlockValue] += value
+		default:
+			continue
+		}
+		added = true
 	}
 
 	return added
