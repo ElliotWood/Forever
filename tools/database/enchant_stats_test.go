@@ -45,6 +45,32 @@ func TestEnchantStats(t *testing.T) {
 	}
 }
 
+func TestEnchantWeaponDamage(t *testing.T) {
+	inRepositoryRoot(t)
+
+	for _, tc := range []struct {
+		effectID int
+		name     string
+		want     float64
+	}{
+		{963, "Enchant 2H Weapon - Greater Impact", 7},
+		{1897, "Enchant Weapon - Superior Striking", 5},
+		{664, "Sniper Scope", 7},
+		{7944, "Poultry Precision Scope", 10},
+		{7655, "Enchant Bracer - Spell Power", 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			enchant := enchantByName(t, tc.effectID, tc.name)
+			if enchant.WeaponDamage != tc.want {
+				t.Errorf("weapon damage %v, want %v", enchant.WeaponDamage, tc.want)
+			}
+			if tc.want != 0 && stats.FromProtoArray(enchant.Stats) != (stats.Stats{}) {
+				t.Errorf("stats %v, want none", enchant.Stats)
+			}
+		})
+	}
+}
+
 func TestEquipSpellStats(t *testing.T) {
 	inRepositoryRoot(t)
 	dbc.GetDBC()

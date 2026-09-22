@@ -155,5 +155,10 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 	processEnchantmentEffects(enchant.Effects, effectArgs, enchant.EffectPoints, &enchantStats, pseudoStats, true)
 	uiEnchant.Stats = enchantStats.ToProtoArray()
 	uiEnchant.PseudoStats = NullFloat(pseudoStats)
+	for i, effect := range enchant.Effects {
+		if effect == ITEM_ENCHANTMENT_DAMAGE {
+			uiEnchant.WeaponDamage += float64(enchant.EffectPoints[i])
+		}
+	}
 	return uiEnchant
 }
