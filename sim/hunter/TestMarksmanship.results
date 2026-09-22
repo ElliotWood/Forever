@@ -634,6 +634,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestMarksmanship-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 780.76509
+  tps: 390.35742
+ }
+}
+dps_results: {
  key: "TestMarksmanship-AllItems-ThePostmaster"
  value: {
   dps: 804.17079

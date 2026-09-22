@@ -773,6 +773,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 482.50523
+  tps: 1080.4472
+  dtps: 769.23936
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-ThePostmaster"
  value: {
   dps: 489.74013

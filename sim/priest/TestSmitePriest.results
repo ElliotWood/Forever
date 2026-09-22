@@ -403,6 +403,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 340.414
+  tps: 232.748
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-ThePostmaster"
  value: {
   dps: 424.97994

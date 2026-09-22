@@ -578,6 +578,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 554.89163
+  tps: 407.31273
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-ThePostmaster"
  value: {
   dps: 419.06928

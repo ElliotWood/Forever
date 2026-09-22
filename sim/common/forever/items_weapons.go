@@ -10,6 +10,30 @@ import (
 )
 
 func init() {
+	// The Lobotomizer: Forever's Brain Damage (client 1290950) wounds for 250 +-40% (200 to 300)
+	// and slows the target's casting. 0.4 PPM and the magic hit table as on master.
+	itemhelpers.CreateWeaponProcSpell(itemhelpers.WeaponProcSpell{
+		ItemID: 19324,
+		Name:   "The Lobotomizer",
+		PPM:    0.4,
+		Spell: func(character *core.Character) *core.Spell {
+			return character.GetOrRegisterSpell(core.SpellConfig{
+				ActionID:    core.ActionID{SpellID: 1290950},
+				ProcMask:    core.ProcMaskEmpty,
+				SpellSchool: core.SpellSchoolPhysical,
+				DefenseType: core.DefenseTypeMelee,
+				Flags:       core.SpellFlagPassiveSpell,
+
+				DamageMultiplier: 1,
+				ThreatMultiplier: 1,
+
+				ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+					spell.CalcAndDealDamage(sim, target, sim.Roll(200, 300), spell.OutcomeMagicHitAndCrit)
+				},
+			})
+		},
+	})
+
 	// Despair
 	itemhelpers.CreateWeaponProcSpell(itemhelpers.WeaponProcSpell{
 		ItemID: 28573,
