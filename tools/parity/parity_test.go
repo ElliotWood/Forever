@@ -154,7 +154,14 @@ func TestParity(t *testing.T) {
 	fmt.Printf("\n%-20s %9s %9s %8s   %s\n", "spec", "master", "next", "gap", "final stats master | next: ap sd crit%(melee/spell) hit% str/agi/int")
 	for _, spec := range file.Specs {
 		m := master[spec.Name]
-		n := runSpec(spec, file.Profiles[spec.Profile], int32(iterations))
+		var n parityResult
+		if os.Getenv("PARITY_GEAR") != "" {
+			// Real gear: the spec's default preset on both engines, no bonus stats.
+			dir := filepath.Join("..", "..", filepath.Dir(spec.Gear))
+			n = runSpecWithGear(spec, nil, int32(iterations), core.GetGearSet(dir, filepath.Base(spec.Gear)).GearSet)
+		} else {
+			n = runSpec(spec, file.Profiles[spec.Profile], int32(iterations))
+		}
 		if arenaOut != "" {
 			writeArena(t, arenaOut, spec, n)
 		}
