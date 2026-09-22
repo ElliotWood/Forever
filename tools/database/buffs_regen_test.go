@@ -16,6 +16,7 @@ import (
 	"bytes"
 	"database/sql"
 	"errors"
+	"fmt"
 	"maps"
 	"os"
 	"path/filepath"
@@ -137,12 +138,14 @@ func TestResolvedBuffInvariants(t *testing.T) {
 	}
 }
 
-// The group the client states a buff reaches, for every row whose spell states
-// one: an area aura names the group in the effect itself, and an aura the client
-// applies over an area names it in the effect's target. A row the client states
-// neither for is exempt, because its scope is then the sim's grouping rather
-// than a game fact: a buff the sim spreads over the raid from a spell cast on
-// one ally, the buff Windfury's proc lands on its wielder, a debuff.
+// The group the client states a buff reaches: an area aura names it in the
+// effect itself, and an aura the client applies over an area or on one ally
+// names it in the effect's target. Every raid and individual row names one, so
+// each is checked two ways: that the client agrees with the scope, and that it
+// states a group at all. A party or debuff row the client states nothing for is
+// exempt, because its scope is then the sim's grouping rather than a game fact:
+// the buff Windfury's proc lands on its wielder, a debuff the client reaches by
+// the area around its caster.
 func TestScopeMatchesTheClientTargeting(t *testing.T) {
 	helper := openBuffTestDB(t)
 
@@ -152,23 +155,60 @@ func TestScopeMatchesTheClientTargeting(t *testing.T) {
 	}
 
 	for _, row := range rows {
-		want, stated := clientScope(row)
-		if !stated || want == row.Scope {
+		if row.SpellID == 0 {
 			continue
 		}
-		t.Errorf("%s: the manifest says %s, spell %d states %s", row.Field, row.Scope, row.SpellID, want)
+		complaint := scopeComplaint(row)
+		if reason, exempt := scopeExemptions[row.Field]; exempt {
+			if complaint == "" {
+				t.Errorf("%s: spell %d now states %s, so the exemption %q is stale",
+					row.Field, row.SpellID, row.Scope, reason)
+			}
+			continue
+		}
+		if complaint != "" {
+			t.Errorf("%s: %s", row.Field, complaint)
+		}
 	}
+}
+
+// The rows whose spell the client targets somewhere else than the scope reaches,
+// each with the reason the scope is still what the sim wants.
+var scopeExemptions = map[string]string{
+	"thorns": "the druid trains no raid-wide spell of the family, so the raid scope is the sim spreading the one cast 9910 states over every player",
+}
+
+// What the client says against the scope the manifest files the row under, and
+// "" when the two agree or the row is one the client may state nothing for.
+func scopeComplaint(row ResolvedBuff) string {
+	scope, stated := clientScope(row)
+	switch {
+	case stated && scope == row.Scope:
+		return ""
+	case stated:
+		return fmt.Sprintf("the manifest says %s, spell %d states %s", row.Scope, row.SpellID, scope)
+	case row.Scope == buffmanifest.ScopeRaid || row.Scope == buffmanifest.ScopeIndividual:
+		return fmt.Sprintf("the manifest says %s, spell %d states no group it reaches", row.Scope, row.SpellID)
+	}
+	return ""
 }
 
 func clientScope(row ResolvedBuff) (buffmanifest.BuffScope, bool) {
 	for _, effect := range row.Effects {
-		switch {
-		case effect.Effect == dbc.E_APPLY_AREA_AURA_RAID,
-			effect.Effect == dbc.E_APPLY_AURA && effect.ImplicitTarget == dbc.TARGET_UNIT_CASTER_AREA_RAID:
+		switch effect.Effect {
+		case dbc.E_APPLY_AREA_AURA_RAID:
 			return buffmanifest.ScopeRaid, true
-		case effect.Effect == dbc.E_APPLY_AREA_AURA_PARTY,
-			effect.Effect == dbc.E_APPLY_AURA && effect.ImplicitTarget == dbc.TARGET_UNIT_CASTER_AREA_PARTY:
+		case dbc.E_APPLY_AREA_AURA_PARTY:
 			return buffmanifest.ScopeParty, true
+		case dbc.E_APPLY_AURA:
+			switch effect.ImplicitTarget {
+			case dbc.TARGET_UNIT_CASTER_AREA_RAID:
+				return buffmanifest.ScopeRaid, true
+			case dbc.TARGET_UNIT_CASTER_AREA_PARTY:
+				return buffmanifest.ScopeParty, true
+			case dbc.TARGET_UNIT_TARGET_ALLY, dbc.TARGET_UNIT_TARGET_ALLY_OR_RAID:
+				return buffmanifest.ScopeIndividual, true
+			}
 		}
 	}
 	return buffmanifest.ScopeIndividual, false

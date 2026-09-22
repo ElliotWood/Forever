@@ -408,7 +408,7 @@ func ArcaneBrillianceAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// Blessing of Kings - https://www.wowhead.com/forever/spell=20217
+// Greater Blessing of Kings - https://www.wowhead.com/forever/spell=25898
 func BlessingOfKingsValue(talentPoints int32) float64 {
 	return 1.1
 }
@@ -417,8 +417,8 @@ func BlessingOfKingsDuration(talentPoints int32) time.Duration {
 }
 func BlessingOfKingsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Blessing of Kings (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 20217}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Label:    "Greater Blessing of Kings (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration: BlessingOfKingsDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []StatConfig{
@@ -431,7 +431,7 @@ func BlessingOfKingsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// Divine Spirit - https://www.wowhead.com/forever/spell=27841
+// Prayer of Spirit - https://www.wowhead.com/forever/spell=27681
 var DivineSpiritCategory = "StatBuff"
 
 func DivineSpiritValue(talentPoints int32) float64 {
@@ -442,8 +442,8 @@ func DivineSpiritDuration(talentPoints int32) time.Duration {
 }
 func DivineSpiritAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Divine Spirit (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 27841}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Label:    "Prayer of Spirit (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 27681}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration: DivineSpiritDuration(talentPoints),
 		Category: DivineSpiritCategory,
 		IsPlayer: isPlayer,
@@ -502,7 +502,7 @@ func ThornsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	}, SpellSchoolNature, ThornsValue(talentPoints))
 }
 
-// Power Word: Fortitude - https://www.wowhead.com/forever/spell=10938
+// Prayer of Fortitude - https://www.wowhead.com/forever/spell=21564
 func PowerWordFortitudeValue(talentPoints int32) float64 {
 	return 70.0
 }
@@ -511,8 +511,8 @@ func PowerWordFortitudeDuration(talentPoints int32) time.Duration {
 }
 func PowerWordFortitudeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Power Word: Fortitude (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 10938}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Label:    "Prayer of Fortitude (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 21564}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration: PowerWordFortitudeDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []StatConfig{
@@ -521,7 +521,7 @@ func PowerWordFortitudeAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura
 	})
 }
 
-// Blessing of Might - https://www.wowhead.com/forever/spell=25291
+// Greater Blessing of Might - https://www.wowhead.com/forever/spell=25916
 func BlessingOfMightValue(talentPoints int32) float64 {
 	return 133.0
 }
@@ -530,8 +530,8 @@ func BlessingOfMightDuration(talentPoints int32) time.Duration {
 }
 func BlessingOfMightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Blessing of Might (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 25291}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Label:    "Greater Blessing of Might (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25916}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration: BlessingOfMightDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []StatConfig{
@@ -540,7 +540,7 @@ func BlessingOfMightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// Blessing of Wisdom - https://www.wowhead.com/forever/spell=25290
+// Greater Blessing of Wisdom - https://www.wowhead.com/forever/spell=25918
 func BlessingOfWisdomValue(talentPoints int32) float64 {
 	return 40.0
 }
@@ -549,8 +549,8 @@ func BlessingOfWisdomDuration(talentPoints int32) time.Duration {
 }
 func BlessingOfWisdomAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Blessing of Wisdom (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 25290}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Label:    "Greater Blessing of Wisdom (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25918}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration: BlessingOfWisdomDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []StatConfig{
@@ -559,7 +559,7 @@ func BlessingOfWisdomAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// Blessing of Salvation - https://www.wowhead.com/forever/spell=1038
+// Greater Blessing of Salvation - https://www.wowhead.com/forever/spell=25895
 func BlessingOfSalvationValue(talentPoints int32) float64 {
 	return 0.7
 }
@@ -568,8 +568,8 @@ func BlessingOfSalvationDuration(talentPoints int32) time.Duration {
 }
 func BlessingOfSalvationAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Blessing of Salvation (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 1038}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Label:    "Greater Blessing of Salvation (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25895}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration: BlessingOfSalvationDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Pseudo: []PseudoConfig{
@@ -578,17 +578,17 @@ func BlessingOfSalvationAura(unit *Unit, isPlayer bool, talentPoints int32) *Aur
 	})
 }
 
-// Shadow Protection - https://www.wowhead.com/forever/spell=10958
+// Prayer of Shadow Protection - https://www.wowhead.com/forever/spell=27683
 func ShadowProtectionValue(talentPoints int32) float64 {
 	return 60.0
 }
 func ShadowProtectionDuration(talentPoints int32) time.Duration {
-	return 600000 * time.Millisecond
+	return 1200000 * time.Millisecond
 }
 func ShadowProtectionAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Shadow Protection (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 10958}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Label:    "Prayer of Shadow Protection (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 27683}.WithTag(TernaryInt32(isPlayer, 0, -1)),
 		Duration: ShadowProtectionDuration(talentPoints),
 		IsPlayer: isPlayer,
 		Stats: []StatConfig{

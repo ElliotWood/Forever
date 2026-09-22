@@ -191,14 +191,14 @@ func TestGeneratedFlatStatBuffsAddUp(t *testing.T) {
 	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 
 	if got := char.stats[stats.Stamina]; got != 124 {
-		t.Errorf("Power Word: Fortitude and Blood Pact applied %v stamina, want the client's 70 + 54", got)
+		t.Errorf("Prayer of Fortitude and Blood Pact applied %v stamina, want the client's 70 + 54", got)
 	}
 
-	fortitude := char.GetAura("Power Word: Fortitude (External)")
+	fortitude := char.GetAura("Prayer of Fortitude (External)")
 	if fortitude == nil {
-		t.Fatalf("no aura is labelled %q; the unit has %v", "Power Word: Fortitude (External)", auraLabels(char))
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Prayer of Fortitude (External)", auraLabels(char))
 	}
-	if want := (ActionID{SpellID: 10938, Tag: -1}); fortitude.ActionID != want {
+	if want := (ActionID{SpellID: 21564, Tag: -1}); fortitude.ActionID != want {
 		t.Errorf("the external copy is %v, want %v", fortitude.ActionID, want)
 	}
 }
@@ -237,7 +237,7 @@ func TestGeneratedResistancesCompeteAcrossBuffs(t *testing.T) {
 	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 
 	if got := char.stats[stats.ShadowResistance]; got != 60 {
-		t.Errorf("shadow resistance is %v, want only Shadow Protection's 60", got)
+		t.Errorf("shadow resistance is %v, want only Prayer of Shadow Protection's 60", got)
 	}
 	if got := char.stats[stats.FrostResistance]; got != 27 {
 		t.Errorf("frost resistance is %v, want Gift of the Wild's 27", got)
