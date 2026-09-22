@@ -587,9 +587,6 @@ func NewPseudoStats() PseudoStats {
 		PeriodicHealingDealtMultiplier: 1,
 		CritDamageMultiplier:           1,
 
-		FearDurationMultiplier: 1,
-		StunDurationMultiplier: 1,
-
 		BlockValueMultiplier:        1,
 		BaseReducedCritTakenPercent: 0,
 		ReducedCritTakenPercent:     0,
@@ -609,6 +606,8 @@ func NewPseudoStats() PseudoStats {
 		ExternalHealingTakenMultiplier: 1,
 		MovementSpeedMultiplier:        1,
 		PushbackChance:                 1,
+		FearDurationMultiplier:         1,
+		StunDurationMultiplier:         1,
 	}
 }
 
