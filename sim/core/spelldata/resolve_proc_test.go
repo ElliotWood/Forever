@@ -6,6 +6,7 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 // One row per shape the proc resolver has to answer for: the four chance sources, an override-baked
@@ -54,6 +55,14 @@ func procRows() []Spell {
 			ID: 2600, Name: "Named Ability", ProcChance: 101, ProcChanceSource: ProcChanceAlways,
 			ProcFlags: [2]uint32{0: dbcenums.PROC_FLAG_DEAL_MELEE_SWING | dbcenums.PROC_FLAG_KILL},
 			ProcHint:  core.ProcHintNamedAbility,
+		},
+		{
+			ID: 2700, Name: "Cheat Death", ProcChance: 100, ProcChanceSource: ProcChanceAlways,
+			ProcFlags: [2]uint32{0: dbcenums.PROC_FLAG_TAKE_MELEE_SWING},
+			Effects: []Effect{
+				{SpellID: 2700, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL,
+					TriggerID: 2900, ClassFlags: core.ClassFlags{Family: 5, Mask: [4]uint32{0: 0x8}}},
+			},
 		},
 	}
 }
@@ -220,11 +229,69 @@ func TestProcTriggerUnsupportedNamesTheBitsAndTheHints(t *testing.T) {
 		t.Errorf("callback = %d, want the supported bits to still build a listener", trigger.Callback)
 	}
 
-	unsupported := ProcTriggerUnsupported(Find(2600))
+	unsupported := ProcTriggerUnsupported(testCharacter(), Find(2600))
 	if len(unsupported) != 2 || unsupported[0] != "KILL" || unsupported[1] != "NAMED_ABILITY" {
 		t.Errorf("unsupported = %v, want the KILL bit and the named-ability hint", unsupported)
 	}
-	if got := ProcTriggerUnsupported(Find(2000)); len(got) != 0 {
+	if got := ProcTriggerUnsupported(testCharacter(), Find(2000)); len(got) != 0 {
 		t.Errorf("unsupported = %v, want none on a row the decode models", got)
+	}
+}
+
+// A class mask is a filter inside one family, so a mask from another family names no spell the
+// character can cast. The row is Dreadnaught's 8pc 28845, whose proc effect sits in the warlock's
+// family 5 and is worn by every class.
+func TestProcTriggerDropsAClassMaskOfAnotherFamily(t *testing.T) {
+	withProcRows(t)
+
+	warrior := &core.Character{Class: proto.Class_ClassWarrior}
+	if got := ProcTrigger(warrior, Find(2700), noopHandler).ClassFlags; !got.IsZero() {
+		t.Errorf("class flags = %v, want none: family 5 names nothing a warrior casts", got)
+	}
+	if got := ProcTriggerUnsupported(warrior, Find(2700)); len(got) != 1 || got[0] != "CLASS_MASK_OTHER_FAMILY" {
+		t.Errorf("unsupported = %v, want the dropped mask reported", got)
+	}
+
+	warlock := &core.Character{Class: proto.Class_ClassWarlock}
+	if got := ProcTrigger(warlock, Find(2700), noopHandler).ClassFlags; got != (core.ClassFlags{Family: 5, Mask: [4]uint32{0: 0x8}}) {
+		t.Errorf("class flags = %v, want the row's, which is the warlock's own family", got)
+	}
+	if got := ProcTriggerUnsupported(warlock, Find(2700)); len(got) != 0 {
+		t.Errorf("unsupported = %v, want none where the family is the character's", got)
+	}
+
+	// A class the client states no family for is no evidence that the mask is somebody else's.
+	if got := ProcTrigger(testCharacter(), Find(2700), noopHandler).ClassFlags; got.IsZero() {
+		t.Error("class flags were dropped for a character whose class states no family")
+	}
+}
+
+// The family every class files its spells under, against one spell of each in the real store.
+func TestClassSpellFamilies(t *testing.T) {
+	withGeneratedStore(t)
+
+	for _, row := range []struct {
+		class   proto.Class
+		spellID int32
+		name    string
+	}{
+		{proto.Class_ClassMage, 10, "Blizzard"},
+		{proto.Class_ClassWarrior, 78, "Heroic Strike"},
+		{proto.Class_ClassWarlock, 686, "Shadow Bolt"},
+		{proto.Class_ClassPriest, 17, "Power Word: Shield"},
+		{proto.Class_ClassDruid, 8921, "Moonfire"},
+		{proto.Class_ClassRogue, 53, "Backstab"},
+		{proto.Class_ClassHunter, 3044, "Arcane Shot"},
+		{proto.Class_ClassPaladin, 20271, "Judgement"},
+		{proto.Class_ClassShaman, 403, "Lightning Bolt"},
+	} {
+		if got := MustFind(row.spellID).ClassFlags.Family; got != classSpellFamilies[row.class] {
+			t.Errorf("%s (%d) files under family %d, and the table says class %v is family %d",
+				row.name, row.spellID, got, row.class, classSpellFamilies[row.class])
+		}
+	}
+
+	if len(classSpellFamilies) != 9 {
+		t.Errorf("the table holds %d classes, and this client has 9", len(classSpellFamilies))
 	}
 }

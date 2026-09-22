@@ -260,8 +260,9 @@ func sweepVerdict(effect *proto.ItemEffect) string {
 		return "no rate stated anywhere"
 	}
 
-	config := ProcTrigger(&core.Character{}, trigger, nil, procRate(effect.GetProc()))
-	if len(ProcTriggerUnsupported(trigger)) > 0 {
+	character := &core.Character{}
+	config := ProcTrigger(character, trigger, nil, procRate(effect.GetProc()))
+	if len(ProcTriggerUnsupported(character, trigger)) > 0 {
 		return "resolved, with unsupported bits"
 	}
 	if config.ICD > 0 {

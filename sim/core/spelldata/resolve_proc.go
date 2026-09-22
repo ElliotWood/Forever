@@ -5,6 +5,7 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 // An addition to the resolved trigger for what the client does not state, which on a proc is the
@@ -35,7 +36,7 @@ func ProcTrigger(character *core.Character, s *Spell, handler core.ProcHandler, 
 		ICD:                s.ICD(),
 		CanProcFromProcs:   s.CanProcFromProcs(),
 		ClassSpellsOnly:    s.ClassSpellsOnly(),
-		ClassFlags:         procClassFlags(s),
+		ClassFlags:         procClassFlags(character, s),
 		Handler:            handler,
 	}
 
@@ -81,10 +82,11 @@ func Chance(chance float64) ProcOpt {
 }
 
 // What a trigger built from this row does not model: the proc flags the decoder names as
-// unsupported, plus the two tooltip shapes it reads past. A trigger is still built for all of them -
-// a listener that hears fewer hits than the client's is deliberately the narrower one - so this is
-// the audit's way of seeing which rows that applies to.
-func ProcTriggerUnsupported(s *Spell) []string {
+// unsupported, the two tooltip shapes it reads past, and a class mask naming a family the wearer's
+// class does not use. A trigger is still built for all of them - a listener that hears fewer hits
+// than the client's is deliberately the narrower one - so this is the audit's way of seeing which
+// rows that applies to.
+func ProcTriggerUnsupported(character *core.Character, s *Spell) []string {
 	unsupported := core.DecodeProcTypeMask(s.ProcFlags, s.ProcHint).Unsupported
 
 	// No ProcTypeMask can state either: a trigger restricted to one named ability, and one
@@ -95,14 +97,27 @@ func ProcTriggerUnsupported(s *Spell) []string {
 	if s.ProcHint.Matches(core.ProcHintOutcomeTaken) {
 		unsupported = append(unsupported, "OUTCOME_TAKEN")
 	}
+	if othersFamily(character, rowClassFlags(s)) {
+		unsupported = append(unsupported, "CLASS_MASK_OTHER_FAMILY")
+	}
 
 	return unsupported
 }
 
 // The spells the listener fires on where the client names them, which is the EffectSpellClassMask of
-// the effect that carries the proc. Only that effect's: another effect of the same spell states the
-// spells it modifies, not the ones that feed the proc.
-func procClassFlags(s *Spell) core.ClassFlags {
+// the effect that carries the proc, read against the class wearing it.
+func procClassFlags(character *core.Character, s *Spell) core.ClassFlags {
+	flags := rowClassFlags(s)
+	if othersFamily(character, flags) {
+		return core.ClassFlags{}
+	}
+
+	return flags
+}
+
+// Only the proc effect's flags: another effect of the same spell states the spells it modifies,
+// not the ones that feed the proc.
+func rowClassFlags(s *Spell) core.ClassFlags {
 	for i := range s.Effects {
 		e := &s.Effects[i]
 
@@ -116,6 +131,30 @@ func procClassFlags(s *Spell) core.ClassFlags {
 	}
 
 	return core.ClassFlags{}
+}
+
+// Whether the mask names spells of a family this character's class never casts, which is how an
+// item shared by every class states the filter of the one class it was written for: Dreadnaught's
+// 8pc 28845 names family 5, the warlock's, and on a warrior that mask matches nothing and silences
+// the listener rather than narrowing it. A class the client states no family for - and the empty
+// mask every non-class spell carries - is no evidence of anything, so both are left alone.
+func othersFamily(character *core.Character, flags core.ClassFlags) bool {
+	family, stated := classSpellFamilies[character.Class]
+	return stated && !flags.IsZero() && flags.Family != family
+}
+
+// The client's SpellClassSet per class: the family every one of that class's spells files its class
+// mask under. Verified row by row against the store in TestClassSpellFamilies.
+var classSpellFamilies = map[proto.Class]int32{
+	proto.Class_ClassMage:    3,
+	proto.Class_ClassWarrior: 4,
+	proto.Class_ClassWarlock: 5,
+	proto.Class_ClassPriest:  6,
+	proto.Class_ClassDruid:   7,
+	proto.Class_ClassRogue:   8,
+	proto.Class_ClassHunter:  9,
+	proto.Class_ClassPaladin: 10,
+	proto.Class_ClassShaman:  11,
 }
 
 // The roll the row states, by the source that says where it is stated. The ProcChance column is the
