@@ -57,9 +57,10 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, aura *core.Aura, stanceCD
 		Flags:          core.SpellFlagAPL,
 
 		Cast: core.CastConfig{
+			// Forever beta client 1.60.1.69893: the three stances share one 1 sec cooldown.
 			CD: core.Cooldown{
 				Timer:    stanceCD,
-				Duration: time.Second,
+				Duration: spellData.BattleStance.ByRank(1).Cooldown,
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
@@ -93,9 +94,11 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, aura *core.Aura, stanceCD
 }
 
 func (warrior *Warrior) registerBattleStanceAura() {
+	// Forever beta client 1.60.1.69893: the id comes from the client table.
+	row := spellData.BattleStance.ByRank(1)
 	warrior.BattleStanceAura = warrior.RegisterAura(core.Aura{
 		Label:    "Battle Stance",
-		ActionID: core.ActionID{SpellID: 2457},
+		ActionID: core.ActionID{SpellID: row.SpellID},
 		Duration: core.NeverExpires,
 	})
 	warrior.BattleStanceAura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{
@@ -113,9 +116,11 @@ func (warrior *Warrior) registerDefensiveStanceAura() {
 	defiance := core.TernaryFloat64(warrior.PseudoStats.CanBlock, 0.05*float64(warrior.Talents.Defiance), 0)
 	warrior.defensiveStanceThreatMultiplier = 1.3 * (1 + defiance)
 
+	// Forever beta client 1.60.1.69893: the id comes from the client table.
+	row := spellData.DefensiveStance.ByRank(1)
 	warrior.DefensiveStanceAura = warrior.RegisterAura(core.Aura{
 		Label:    "Defensive Stance",
-		ActionID: core.ActionID{SpellID: 71},
+		ActionID: core.ActionID{SpellID: row.SpellID},
 		Duration: core.NeverExpires,
 	})
 	warrior.DefensiveStanceAura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{
@@ -133,9 +138,11 @@ func (warrior *Warrior) registerDefensiveStanceAura() {
 }
 
 func (warrior *Warrior) registerBerserkerStanceAura() {
+	// Forever beta client 1.60.1.69893: the id comes from the client table.
+	row := spellData.BerserkerStance.ByRank(1)
 	warrior.BerserkerStanceAura = warrior.RegisterAura(core.Aura{
 		Label:    "Berserker Stance",
-		ActionID: core.ActionID{SpellID: 2458},
+		ActionID: core.ActionID{SpellID: row.SpellID},
 		Duration: core.NeverExpires,
 	})
 	warrior.BerserkerStanceAura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{

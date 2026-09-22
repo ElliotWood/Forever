@@ -422,12 +422,14 @@ func (warrior *Warrior) registerDeathWishCD() {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 12328}
+	// Forever beta client 1.60.1.69893: id, cost, cooldown and duration come from the client table.
+	row := spellData.DeathWish.ByRank(1)
+	actionID := core.ActionID{SpellID: row.SpellID}
 
 	deathWishAura := warrior.RegisterAura(core.Aura{
 		Label:    "Death Wish",
 		ActionID: actionID,
-		Duration: time.Second * 30,
+		Duration: row.Duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			warrior.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical] *= 1.2
 			warrior.PseudoStats.DamageTakenMultiplier *= 1.05
@@ -443,7 +445,7 @@ func (warrior *Warrior) registerDeathWishCD() {
 		ActionID: actionID,
 		Flags:    core.SpellFlagHelpful,
 		RageCost: core.RageCostOptions{
-			Cost: 10,
+			Cost: float64(row.Cost),
 		},
 		Cast: core.CastConfig{
 			IgnoreHaste: true,
@@ -452,7 +454,7 @@ func (warrior *Warrior) registerDeathWishCD() {
 			},
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: time.Minute * 3,
+				Duration: row.Cooldown,
 			},
 		},
 
@@ -472,14 +474,17 @@ func (warrior *Warrior) registerLastStandCD() {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 12975}
+	// Forever beta client 1.60.1.69893: id, cooldown (10 min in Classic) and duration come from the
+	// client table.
+	row := spellData.LastStand.ByRank(1)
+	actionID := core.ActionID{SpellID: row.SpellID}
 	healthMetrics := warrior.NewHealthMetrics(actionID)
 
 	var bonusHealth float64
 	lastStandAura := warrior.RegisterAura(core.Aura{
 		Label:    "Last Stand",
 		ActionID: actionID,
-		Duration: time.Second * 20,
+		Duration: spellData.LastStandTriggered.ByRank(1).Duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			bonusHealth = warrior.MaxHealth() * 0.3
 			warrior.AddStatsDynamic(sim, stats.Stats{stats.Health: bonusHealth})
@@ -496,7 +501,7 @@ func (warrior *Warrior) registerLastStandCD() {
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    warrior.NewTimer(),
-				Duration: time.Minute * 3, // 10 min in Classic
+				Duration: row.Cooldown,
 			},
 		},
 
