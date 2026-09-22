@@ -71,6 +71,35 @@ func TestEnchantWeaponDamage(t *testing.T) {
 	}
 }
 
+func TestEnchantSlot(t *testing.T) {
+	inRepositoryRoot(t)
+
+	for _, tc := range []struct {
+		effectID    int
+		name        string
+		itemType    proto.ItemType
+		enchantType proto.EnchantType
+	}{
+		{7663, "Enchant Shield - Excellent Stamina", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeShield},
+		{7664, "Enchant Shield - Critical Strike", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeShield},
+		{255, "Enchant Shield - Lesser Spirit", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeShield},
+		{848, "Enchant Shield - Lesser Protection", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeShield},
+		{848, "Enchant Cloak - Defense", proto.ItemType_ItemTypeBack, proto.EnchantType_EnchantTypeNormal},
+		{929, "Enchant Shield - Stamina", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeShield},
+		{7659, "Enchant Off-Hand - Superior Intellect", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeOffHand},
+		{7660, "Enchant Off-Hand - Excellent Spirit", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeOffHand},
+		{7661, "Enchant Off-Hand - Wisdom", proto.ItemType_ItemTypeWeapon, proto.EnchantType_EnchantTypeOffHand},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			enchant := enchantByName(t, tc.effectID, tc.name)
+			if enchant.Type != tc.itemType || enchant.EnchantType != tc.enchantType || len(enchant.ExtraTypes) != 0 {
+				t.Errorf("type %v, enchant type %v, extra types %v; want %v, %v, none",
+					enchant.Type, enchant.EnchantType, enchant.ExtraTypes, tc.itemType, tc.enchantType)
+			}
+		})
+	}
+}
+
 func TestEquipSpellStats(t *testing.T) {
 	inRepositoryRoot(t)
 	dbc.GetDBC()

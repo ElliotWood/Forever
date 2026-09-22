@@ -113,12 +113,13 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 		}
 	} else {
 		// Process non-weapon enchants.
-		if enchant.SubClassMask == OffHandValue {
+		if enchant.SubClassMask == OffHandValue || enchant.InventoryType.Has(HOLDABLE) {
 			uiEnchant.EnchantType = proto.EnchantType_EnchantTypeOffHand
 			uiEnchant.Type = proto.ItemType_ItemTypeWeapon
 		}
 		// Shield enchants target the shield subclass alone; shield spikes also set the obsolete buckler bit (mask 96).
-		if enchant.SubClassMask&ITEM_SUBCLASS_BIT_ARMOR_SHIELD != 0 {
+		// Others name the shield inventory type instead (OFF_HAND, 0x4000) with no subclass: 7663.
+		if enchant.SubClassMask&ITEM_SUBCLASS_BIT_ARMOR_SHIELD != 0 || enchant.InventoryType.Has(OFF_HAND) {
 			uiEnchant.EnchantType = proto.EnchantType_EnchantTypeShield
 			uiEnchant.Type = proto.ItemType_ItemTypeWeapon
 		}
