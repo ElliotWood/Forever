@@ -1340,6 +1340,7 @@ func renderClassFile(db *sql.DB, pkg string, class dbc.DbcClass, namer *rankEnum
 // numbers come out of sim/core/spelldata, so the file holds one line per family and no data at all.
 var storeBackedClasses = map[string]bool{
 	"warrior": true,
+	"rogue":   true,
 }
 
 // A class file as references into the store: the same struct, the same field names, and a ladder per
