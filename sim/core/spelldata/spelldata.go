@@ -139,12 +139,12 @@ const (
 	// The value of effect ProcChanceEffect is the roll: the tooltip renders it as "$mN%".
 	ProcChanceEffectN
 
-	// The column reads 100 or 101 and the tooltip states no chance, so the aura fires whenever its
-	// condition is met.
+	// The column reads 100 or 101 and the tooltip's trigger clause states no chance at all, so the
+	// aura fires whenever its condition is met.
 	ProcChanceAlways
 
-	// The client states nothing and the tooltip states nothing, so the rate has to come from an
-	// override into RPPM.
+	// The client states no chance anywhere, or states 100 or 101 beside a trigger clause saying the
+	// effect only sometimes happens, so the rate has to come from an override into RPPM.
 	ProcChancePPM
 )
 
