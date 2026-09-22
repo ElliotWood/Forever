@@ -9,10 +9,10 @@ character_stats_results: {
   final_stats: 315
   final_stats: 0
   final_stats: 0
+  final_stats: 40
   final_stats: 0
   final_stats: 0
-  final_stats: 0
-  final_stats: 221
+  final_stats: 320
   final_stats: 83.25
   final_stats: 1
   final_stats: 10.75264
@@ -53,7 +53,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.12996
+  weights: 0.13922
   weights: 0
   weights: 0.42084
   weights: 0
@@ -63,8 +63,8 @@ stat_weights_results: {
   weights: 0
   weights: 0.42084
   weights: 0
-  weights: 4.22098
-  weights: 5.32058
+  weights: 4.49643
+  weights: 5.69503
   weights: 0
   weights: 0
   weights: 0
@@ -113,8 +113,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-Confessor'sRaiment"
  value: {
-  dps: 564.57107
-  tps: 576.56785
+  dps: 595.16428
+  tps: 607.16106
  }
 }
 dps_results: {
@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-GarmentsoftheOracle"
  value: {
-  dps: 606.64383
-  tps: 618.6947
+  dps: 637.30433
+  tps: 649.3552
  }
 }
 dps_results: {
@@ -162,8 +162,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-AllItems-VestmentsofTranscendence"
  value: {
-  dps: 583.51413
-  tps: 595.56499
+  dps: 625.05247
+  tps: 637.10333
  }
 }
 dps_results: {
@@ -176,98 +176,98 @@ dps_results: {
 dps_results: {
  key: "TestP1Shadow-Phase1-Average-Default"
  value: {
-  dps: 603.10619
-  tps: 615.1379
+  dps: 644.8626
+  tps: 656.89431
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 592.81197
-  tps: 833.63262
+  dps: 634.56489
+  tps: 875.38553
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 592.81197
-  tps: 604.85301
+  dps: 634.56489
+  tps: 646.60592
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 588.50799
-  tps: 594.75216
+  dps: 629.60908
+  tps: 635.85324
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 362.06967
-  tps: 542.81649
+  dps: 387.83042
+  tps: 568.57725
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 362.06967
-  tps: 371.10701
+  dps: 387.83042
+  tps: 396.86776
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Dwarf-p0.bis-Basic-p1-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 519.77594
-  tps: 534.95969
+  dps: 556.0327
+  tps: 571.21646
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 596.29756
-  tps: 837.31487
+  dps: 637.62497
+  tps: 878.64228
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 596.29756
-  tps: 608.34843
+  dps: 637.62497
+  tps: 649.67583
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 584.71753
-  tps: 590.98628
+  dps: 625.0181
+  tps: 631.28685
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 367.081
-  tps: 547.82783
+  dps: 392.88706
+  tps: 573.63388
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 367.081
-  tps: 376.11835
+  dps: 392.88706
+  tps: 401.9244
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-Settings-Undead-p0.bis-Basic-p1-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 513.68653
-  tps: 528.87029
+  dps: 549.16768
+  tps: 564.35144
  }
 }
 dps_results: {
  key: "TestP1Shadow-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 596.29756
-  tps: 608.34843
+  dps: 637.62497
+  tps: 649.67583
  }
 }

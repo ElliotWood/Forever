@@ -12,7 +12,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 143
+  final_stats: 199
   final_stats: 83.25
   final_stats: 2
   final_stats: 11.7094
@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.28651
+  weights: -0.17172
   weights: 0
-  weights: 0.34166
-  weights: 0
-  weights: 0
+  weights: 0.27946
   weights: 0
   weights: 0
   weights: 0
   weights: 0
   weights: 0
-  weights: 4.80689
-  weights: 4.31791
+  weights: 0
+  weights: 0
+  weights: 4.54595
+  weights: 4.61446
   weights: 0
   weights: 0
   weights: 0
@@ -113,15 +113,15 @@ dps_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Demoniac'sThreads"
  value: {
-  dps: 571.96508
-  tps: 497.47648
+  dps: 586.46516
+  tps: 511.53551
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Doomcaller'sAttire"
  value: {
-  dps: 589.1842
-  tps: 513.64562
+  dps: 604.39103
+  tps: 528.56348
  }
 }
 dps_results: {
@@ -141,8 +141,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Hazza'rah'sCharmofDestruction-19957"
  value: {
-  dps: 560.53972
-  tps: 486.35449
+  dps: 581.42157
+  tps: 506.78682
  }
 }
 dps_results: {
@@ -162,8 +162,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-NemesisRaiment"
  value: {
-  dps: 582.66145
-  tps: 507.81546
+  dps: 591.39916
+  tps: 516.08891
  }
 }
 dps_results: {
@@ -176,56 +176,56 @@ dps_results: {
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Average-Default"
  value: {
-  dps: 566.47874
-  tps: 491.03987
+  dps: 591.50474
+  tps: 515.39913
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-FullBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 562.71054
-  tps: 1549.31722
+  dps: 585.58726
+  tps: 1581.16206
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-FullBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 562.71054
-  tps: 488.27255
+  dps: 585.58726
+  tps: 510.64935
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-FullBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 578.74778
-  tps: 480.39723
+  dps: 602.51983
+  tps: 503.2184
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-NoBuffs-Consumes-LongMultiTarget"
  value: {
-  dps: 464.90531
-  tps: 1626.05549
+  dps: 485.47537
+  tps: 1648.59157
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-NoBuffs-Consumes-LongSingleTarget"
  value: {
-  dps: 464.90531
-  tps: 453.19585
+  dps: 485.47537
+  tps: 473.0383
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-Settings-Orc-prebis-Demonic Pact Warlock-forever_pact-NoBuffs-Consumes-ShortSingleTarget"
  value: {
-  dps: 464.058
-  tps: 428.69573
+  dps: 485.44486
+  tps: 449.60078
  }
 }
 dps_results: {
  key: "TestWarlockDemonicPact-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 565.84293
-  tps: 491.44558
+  dps: 588.59694
+  tps: 513.67518
  }
 }
