@@ -109,6 +109,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-CenarionRaiment"
+ value: {
+  dps: 396.4637
+  tps: 205.71127
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-Champion'sRefuge"
+ value: {
+  dps: 389.13408
+  tps: 200.94725
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 317.63907
@@ -214,6 +228,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-FeralheartRaiment"
+ value: {
+  dps: 337.1368
+  tps: 175.24544
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-FieldMarshal'sSanctuary"
+ value: {
+  dps: 328.99118
+  tps: 170.60474
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-FreezingBand-942"
  value: {
   dps: 313.80138
@@ -288,6 +316,13 @@ dps_results: {
  value: {
   dps: 355.6551
   tps: 183.96311
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-LieutenantCommander'sRefuge"
+ value: {
+  dps: 389.13408
+  tps: 200.94725
  }
 }
 dps_results: {
@@ -410,10 +445,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-StormrageRaiment"
+ value: {
+  dps: 358.62434
+  tps: 185.98804
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-StormshroudArmor"
  value: {
   dps: 335.02451
   tps: 173.01768
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-SymbolsofUnendingLife"
+ value: {
+  dps: 346.94421
+  tps: 179.67727
  }
 }
 dps_results: {
@@ -470,6 +519,13 @@ dps_results: {
  value: {
   dps: 313.80138
   tps: 162.60087
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-Warlord'sSanctuary"
+ value: {
+  dps: 328.99118
+  tps: 170.60474
  }
 }
 dps_results: {

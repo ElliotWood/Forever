@@ -151,6 +151,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-Champion'sEarthshaker"
+ value: {
+  dps: 304.39727
+  tps: 188.92132
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-Champion'sStormcaller"
+ value: {
+  dps: 339.48974
+  tps: 209.45564
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 284.03318
@@ -274,6 +288,13 @@ dps_results: {
  value: {
   dps: 281.08982
   tps: 175.22236
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-GiftoftheGatheringStorm"
+ value: {
+  dps: 303.02148
+  tps: 188.07629
  }
 }
 dps_results: {
@@ -522,6 +543,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-Stormcaller'sGarb"
+ value: {
+  dps: 411.90032
+  tps: 251.0967
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-StormshroudArmor"
  value: {
   dps: 297.54715
@@ -543,10 +571,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-TheEarthfury"
+ value: {
+  dps: 354.14149
+  tps: 218.78777
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-TheElements"
  value: {
   dps: 384.54442
   tps: 235.93902
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-TheFiveThunders"
+ value: {
+  dps: 394.05679
+  tps: 241.47984
  }
 }
 dps_results: {
@@ -578,6 +620,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-TheTenStorms"
+ value: {
+  dps: 320.03541
+  tps: 197.81798
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-TotemoftheStorm-23199"
  value: {
   dps: 293.31407
@@ -603,6 +652,13 @@ dps_results: {
  value: {
   dps: 281.08982
   tps: 175.22236
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-Warlord'sEarthshaker"
+ value: {
+  dps: 319.81352
+  tps: 197.97775
  }
 }
 dps_results: {

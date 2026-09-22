@@ -88,6 +88,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-BloodfangArmor"
+ value: {
+  dps: 700.44499
+  tps: 348.12116
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-BloodvineGarb"
  value: {
   dps: 676.93162
@@ -109,10 +116,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-DarkmantleArmor"
+ value: {
+  dps: 824.7373
+  tps: 409.89444
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 643.40889
   tps: 319.77422
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Deathdealer'sEmbrace"
+ value: {
+  dps: 815.16363
+  tps: 405.13633
  }
 }
 dps_results: {
@@ -151,6 +172,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-EmblemsofVeiledShadows"
+ value: {
+  dps: 676.34161
+  tps: 336.14178
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-EnchantWeapon-IcyChill-1894"
  value: {
   dps: 557.44499
@@ -169,6 +197,13 @@ dps_results: {
  value: {
   dps: 643.40889
   tps: 319.77422
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-FieldMarshal'sVestments"
+ value: {
+  dps: 726.46864
+  tps: 361.05491
  }
 }
 dps_results: {
@@ -242,10 +277,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-LieutenantCommander'sGuard"
+ value: {
+  dps: 766.72539
+  tps: 381.06252
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 643.40889
   tps: 319.77422
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Madcap'sOutfit"
+ value: {
+  dps: 728.47731
+  tps: 362.05322
  }
 }
 dps_results: {
@@ -288,6 +337,13 @@ dps_results: {
  value: {
   dps: 645.33545
   tps: 320.73172
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-NightslayerArmor"
+ value: {
+  dps: 815.29315
+  tps: 405.20069
  }
 }
 dps_results: {
@@ -435,6 +491,13 @@ dps_results: {
  value: {
   dps: 648.28002
   tps: 322.19517
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Warlord'sVestments"
+ value: {
+  dps: 726.46864
+  tps: 361.05491
  }
 }
 dps_results: {

@@ -171,6 +171,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-CenarionRaiment"
+ value: {
+  dps: 173.12574
+  tps: 185.42054
+  dtps: 958.04709
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-Champion'sRefuge"
+ value: {
+  dps: 171.2881
+  tps: 183.46901
+  dtps: 1064.39621
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 171.2881
@@ -283,6 +299,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-FeralheartRaiment"
+ value: {
+  dps: 196.54455
+  tps: 208.66132
+  dtps: 918.90161
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-FieldMarshal'sSanctuary"
+ value: {
+  dps: 194.39126
+  tps: 206.23511
+  dtps: 1015.1416
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-FreezingBand-942"
  value: {
   dps: 171.37672
@@ -360,6 +392,14 @@ dps_results: {
   dps: 175.76543
   tps: 187.97366
   dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-LieutenantCommander'sRefuge"
+ value: {
+  dps: 171.2881
+  tps: 183.46901
+  dtps: 1068.08033
  }
 }
 dps_results: {
@@ -507,11 +547,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-StormrageRaiment"
+ value: {
+  dps: 171.2881
+  tps: 183.46901
+  dtps: 1040.33248
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-StormshroudArmor"
  value: {
   dps: 183.47439
   tps: 195.51251
   dtps: 1056.35265
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-SymbolsofUnendingLife"
+ value: {
+  dps: 182.89612
+  tps: 194.58015
+  dtps: 1011.72706
  }
 }
 dps_results: {
@@ -576,6 +632,14 @@ dps_results: {
   dps: 174.48723
   tps: 186.82368
   dtps: 1054.89847
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-Warlord'sSanctuary"
+ value: {
+  dps: 194.39126
+  tps: 206.23511
+  dtps: 1015.1416
  }
 }
 dps_results: {

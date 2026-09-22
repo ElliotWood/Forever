@@ -88,6 +88,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-BloodfangArmor"
+ value: {
+  dps: 741.22075
+  tps: 368.38671
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-BloodvineGarb"
  value: {
   dps: 710.37928
@@ -109,10 +116,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-DarkmantleArmor"
+ value: {
+  dps: 854.35202
+  tps: 424.61295
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 683.88949
   tps: 339.89308
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Deathdealer'sEmbrace"
+ value: {
+  dps: 863.18671
+  tps: 429.00379
  }
 }
 dps_results: {
@@ -151,6 +172,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-EmblemsofVeiledShadows"
+ value: {
+  dps: 716.78379
+  tps: 356.24155
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-EnchantWeapon-IcyChill-1894"
  value: {
   dps: 587.63571
@@ -169,6 +197,13 @@ dps_results: {
  value: {
   dps: 683.88949
   tps: 339.89308
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-FieldMarshal'sVestments"
+ value: {
+  dps: 765.23923
+  tps: 380.3239
  }
 }
 dps_results: {
@@ -242,10 +277,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-LieutenantCommander'sGuard"
+ value: {
+  dps: 800.43502
+  tps: 397.8162
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 683.88949
   tps: 339.89308
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Madcap'sOutfit"
+ value: {
+  dps: 759.1743
+  tps: 377.30963
  }
 }
 dps_results: {
@@ -288,6 +337,13 @@ dps_results: {
  value: {
   dps: 688.28498
   tps: 342.07763
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-NightslayerArmor"
+ value: {
+  dps: 856.43082
+  tps: 425.64612
  }
 }
 dps_results: {
@@ -435,6 +491,13 @@ dps_results: {
  value: {
   dps: 687.54537
   tps: 341.71005
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Warlord'sVestments"
+ value: {
+  dps: 765.23923
+  tps: 380.3239
  }
 }
 dps_results: {

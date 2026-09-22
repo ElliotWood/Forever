@@ -44,6 +44,7 @@ func (shaman *Shaman) newChainLightningSpell(config shared.SpellData, isElementa
 
 	spellConfig.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 		curTarget := target
+		bounce := shamConfig.BounceReduction + shaman.ChainLightningBounceBonus
 
 		// Damage calculation and DealDamage are in separate loops so that e.g. a spell power proc
 		// can't proc on the first target and apply to the second
@@ -54,7 +55,7 @@ func (shaman *Shaman) newChainLightningSpell(config shared.SpellData, isElementa
 			results[hitIndex] = spell.CalcDamage(sim, curTarget, baseDamage, spell.OutcomeMagicHitAndCrit)
 
 			curTarget = sim.Environment.NextActiveTargetUnit(curTarget)
-			spell.DamageMultiplier *= shamConfig.BounceReduction
+			spell.DamageMultiplier *= bounce
 		}
 
 		for hitIndex := range numHits {
@@ -62,7 +63,7 @@ func (shaman *Shaman) newChainLightningSpell(config shared.SpellData, isElementa
 				shamConfig.Overloads[config.Rank][hitIndex].Cast(sim, results[hitIndex].Target)
 			}
 			spell.DealDamage(sim, results[hitIndex])
-			spell.DamageMultiplier /= shamConfig.BounceReduction
+			spell.DamageMultiplier /= bounce
 		}
 	}
 

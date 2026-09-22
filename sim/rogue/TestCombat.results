@@ -88,6 +88,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-BloodfangArmor"
+ value: {
+  dps: 762.12097
+  tps: 378.77412
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-BloodvineGarb"
  value: {
   dps: 722.63743
@@ -109,10 +116,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-DarkmantleArmor"
+ value: {
+  dps: 879.48051
+  tps: 437.10181
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 697.51395
   tps: 346.66443
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Deathdealer'sEmbrace"
+ value: {
+  dps: 875.01793
+  tps: 434.88391
  }
 }
 dps_results: {
@@ -151,6 +172,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-EmblemsofVeiledShadows"
+ value: {
+  dps: 730.18668
+  tps: 362.90278
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-EnchantWeapon-IcyChill-1894"
  value: {
   dps: 583.465
@@ -169,6 +197,13 @@ dps_results: {
  value: {
   dps: 697.51395
   tps: 346.66443
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-FieldMarshal'sVestments"
+ value: {
+  dps: 790.09538
+  tps: 392.6774
  }
 }
 dps_results: {
@@ -242,10 +277,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-LieutenantCommander'sGuard"
+ value: {
+  dps: 816.96216
+  tps: 406.03019
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 697.51395
   tps: 346.66443
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Madcap'sOutfit"
+ value: {
+  dps: 780.98588
+  tps: 388.14998
  }
 }
 dps_results: {
@@ -288,6 +337,13 @@ dps_results: {
  value: {
   dps: 702.22926
   tps: 349.00794
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-NightslayerArmor"
+ value: {
+  dps: 872.02566
+  tps: 433.39676
  }
 }
 dps_results: {
@@ -435,6 +491,13 @@ dps_results: {
  value: {
   dps: 702.76699
   tps: 349.2752
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Warlord'sVestments"
+ value: {
+  dps: 790.09538
+  tps: 392.6774
  }
 }
 dps_results: {
