@@ -60,10 +60,7 @@ func (war *Warrior) registerDefiance() {
 		return
 	}
 
-	// TODO: Forever drops Defiance's expertise; the spell carries only the threat modifier
-	// applied below (A_MOD_THREAT, +5/10/15%), so expertise is pinned to the untalented 0.
-	expertiseBonus := 0.0
-	war.AddStat(stats.ExpertiseRating, expertiseBonus)
+	// Forever drops Defiance's expertise; the spell carries only the threat modifier.
 	war.OnSpellRegistered(func(spell *core.Spell) {
 		if !spell.Matches(SpellMaskDefensiveStance) {
 			return
