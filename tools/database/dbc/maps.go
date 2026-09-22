@@ -103,8 +103,6 @@ func MapBonusStatIndexToStat(index int) (proto.Stat, bool) {
 		return proto.Stat_StatHealingPower, true
 	case ITEM_MOD_SPELL_DAMAGE_DONE:
 		return proto.Stat_StatSpellDamage, true
-	case ITEM_MOD_SPELL_POWER:
-		return 0, false
 	case ITEM_MOD_EXTRA_ARMOR: // ExtraArmor maps to BonusArmor (green armor)
 		return proto.Stat_StatBonusArmor, true
 
@@ -162,12 +160,23 @@ var allResistanceStats = []proto.Stat{
 	proto.Stat_StatShadowResistance,
 }
 
+// spellPowerStats is what ItemModType 45 expands to: 7655 Enchant Bracer - Spell Power reads
+// "+12 Spell Power" for 45 = 12, damage and healing alike. Healing items state their extra
+// healing as a separate 41 on top of it (Atiesh 22631: 45 and 41).
+var spellPowerStats = []proto.Stat{
+	proto.Stat_StatSpellDamage,
+	proto.Stat_StatHealingPower,
+}
+
 // MapBonusStatIndexToStats is MapBonusStatIndexToStat for callers that have to cope with
-// one index granting several stats. Every index maps to exactly one stat except 124. An
-// enchant row whose argument is wrong is corrected before it gets here (enchantEffectArgFixes).
+// one index granting several stats. Every index maps to exactly one stat except 45 and 124.
+// An enchant row whose argument is wrong is corrected before it gets here (enchantEffectArgFixes).
 func MapBonusStatIndexToStats(index int) ([]proto.Stat, bool) {
-	if index == ITEM_MOD_ALL_RESISTANCES {
+	switch index {
+	case ITEM_MOD_ALL_RESISTANCES:
 		return allResistanceStats, true
+	case ITEM_MOD_SPELL_POWER:
+		return spellPowerStats, true
 	}
 	if stat, ok := MapBonusStatIndexToStat(index); ok {
 		return []proto.Stat{stat}, true

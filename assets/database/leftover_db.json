@@ -1272,7 +1272,7 @@
 {"effectId":8487,"itemId":252464,"spellId":1254766,"name":"Armor +32, Stamina +4","icon":"inv_misc_armorkit_07","type":5,"extraTypes":[7,9,10],"stats":[0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,32,0,0,0,0,0,0,0,0,0],"quality":1},
 {"effectId":8490,"itemId":252489,"spellId":1254771,"name":"Armor +40, Stamina +5","icon":"inv_misc_armorkit_09","type":5,"extraTypes":[7,9,10],"stats":[0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,40,0,0,0,0,0,0,0,0,0],"quality":1},
 {"effectId":8691,"itemId":274375,"spellId":1293806,"name":"Warden's Signet of Ferocity","icon":"inv_60pvp_trinket1b","type":1,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,60,60,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
-{"effectId":8692,"itemId":274376,"spellId":1293807,"name":"Warden's Signet of Brilliance","icon":"inv_60pvp_trinket1a","type":1,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
+{"effectId":8692,"itemId":274376,"spellId":1293807,"name":"Warden's Signet of Brilliance","icon":"inv_60pvp_trinket1a","type":1,"stats":[0,0,0,0,35,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
 {"effectId":8693,"itemId":274377,"spellId":1293808,"name":"Warden's Signet of Caution","icon":"inv_60pvp_trinket1c","type":1,"stats":[0,0,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
 {"effectId":8694,"itemId":274378,"spellId":1293809,"name":"Warden's Signet of Recovery","icon":"inv_60pvp_trinket1d","type":1,"stats":[0,0,0,0,66,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1}
 ],
