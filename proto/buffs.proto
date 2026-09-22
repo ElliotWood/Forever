@@ -9,9 +9,9 @@ import "common.proto";
 // Next index: 14
 message RaidBuffs {
 	bool arcane_brilliance = 1;
-	bool power_word_fortitude = 2;
-	bool shadow_protection = 3;
-	bool divine_spirit = 4;
+	bool prayer_of_fortitude = 2;
+	bool prayer_of_shadow_protection = 3;
+	bool prayer_of_spirit = 4;
 	bool gift_of_the_wild = 5;
 	bool thorns = 6;
 	bool fire_resistance_aura = 7;
@@ -50,10 +50,10 @@ message PartyBuffs {
 // These are usually individual actions taken by other Characters.
 // Next index: 7
 message IndividualBuffs {
-	bool blessing_of_kings = 1;
-	bool blessing_of_salvation = 2;
-	bool blessing_of_wisdom = 3;
-	bool blessing_of_might = 4;
+	bool greater_blessing_of_kings = 1;
+	bool greater_blessing_of_salvation = 2;
+	bool greater_blessing_of_wisdom = 3;
+	bool greater_blessing_of_might = 4;
 	int32 innervates = 5;
 	int32 power_infusions = 6;
 }

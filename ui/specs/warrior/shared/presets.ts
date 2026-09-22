@@ -2,8 +2,8 @@ import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/prot
 import { ConsumesSpec } from '@generated/proto/common';
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
-	blessingOfMight: true,
+	greaterBlessingOfKings: true,
+	greaterBlessingOfMight: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
@@ -15,7 +15,7 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	powerWordFortitude: true,
+	prayerOfFortitude: true,
 	giftOfTheWild: true,
 });
 

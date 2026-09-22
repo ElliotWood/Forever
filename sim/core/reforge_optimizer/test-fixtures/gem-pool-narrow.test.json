@@ -128,8 +128,8 @@
 							}
 						},
 						"buffs": {
-							"blessingOfKings": true,
-							"blessingOfWisdom": 2
+							"greaterBlessingOfKings": true,
+							"greaterBlessingOfWisdom": 2
 						},
 						"cooldowns": {},
 						"healingModel": {}
@@ -235,8 +235,8 @@
 		"numActiveParties": 5,
 		"buffs": {
 			"arcaneBrilliance": true,
-			"powerWordFortitude": 2,
-			"divineSpirit": 2,
+			"prayerOfFortitude": 2,
+			"prayerOfSpirit": 2,
 			"giftOfTheWild": 2
 		},
 		"debuffs": {

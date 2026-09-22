@@ -8,8 +8,8 @@ import DefaultApl from './apls/default.apl.json';
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
-	blessingOfMight: true,
+	greaterBlessingOfKings: true,
+	greaterBlessingOfMight: true,
 });
 
 export const DefaultOptions = EnhancementShamanOptions.create({
@@ -38,7 +38,7 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	powerWordFortitude: true,
+	prayerOfFortitude: true,
 	giftOfTheWild: true,
 	arcaneBrilliance: true,
 });

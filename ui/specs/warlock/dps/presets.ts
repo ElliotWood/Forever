@@ -35,8 +35,8 @@ export const OtherDefaults = {
 export const DefaultRaidBuffs = RaidBuffs.create({
 	arcaneBrilliance: true,
 	giftOfTheWild: true,
-	powerWordFortitude: true,
-	divineSpirit: true,
+	prayerOfFortitude: true,
+	prayerOfSpirit: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
@@ -45,8 +45,8 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
-	blessingOfWisdom: true,
+	greaterBlessingOfKings: true,
+	greaterBlessingOfWisdom: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({

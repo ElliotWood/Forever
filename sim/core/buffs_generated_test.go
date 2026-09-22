@@ -187,7 +187,7 @@ func TestGeneratedFlatStatBuffsAddUp(t *testing.T) {
 	char := newGeneratedBuffTestCharacter()
 
 	applyBuffEffects(generatedBuffTestAgent{char},
-		&proto.RaidBuffs{PowerWordFortitude: true}, &proto.PartyBuffs{BloodPact: true}, &proto.IndividualBuffs{})
+		&proto.RaidBuffs{PrayerOfFortitude: true}, &proto.PartyBuffs{BloodPact: true}, &proto.IndividualBuffs{})
 	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 
 	if got := char.stats[stats.Stamina]; got != 124 {
@@ -205,7 +205,7 @@ func TestGeneratedFlatStatBuffsAddUp(t *testing.T) {
 
 // A percentage row: every stat the client's A_MOD_TOTAL_STAT_PERCENTAGE names
 // goes through a multiplying dependency rather than a flat amount.
-func TestGeneratedBlessingOfKingsMultipliesEveryStat(t *testing.T) {
+func TestGeneratedGreaterBlessingOfKingsMultipliesEveryStat(t *testing.T) {
 	char := newGeneratedBuffTestCharacter()
 	char.stats = stats.Stats{
 		stats.Strength: 100, stats.Agility: 100, stats.Stamina: 100,
@@ -213,7 +213,7 @@ func TestGeneratedBlessingOfKingsMultipliesEveryStat(t *testing.T) {
 	}
 
 	applyBuffEffects(generatedBuffTestAgent{char},
-		&proto.RaidBuffs{}, &proto.PartyBuffs{}, &proto.IndividualBuffs{BlessingOfKings: true})
+		&proto.RaidBuffs{}, &proto.PartyBuffs{}, &proto.IndividualBuffs{GreaterBlessingOfKings: true})
 	measureGeneratedBuffStats(char)
 
 	for _, stat := range []stats.Stat{stats.Strength, stats.Agility, stats.Stamina, stats.Intellect, stats.Spirit} {
@@ -232,7 +232,7 @@ func TestGeneratedResistancesCompeteAcrossBuffs(t *testing.T) {
 	char := newGeneratedBuffTestCharacter()
 
 	applyBuffEffects(generatedBuffTestAgent{char},
-		&proto.RaidBuffs{GiftOfTheWild: true, ShadowProtection: true},
+		&proto.RaidBuffs{GiftOfTheWild: true, PrayerOfShadowProtection: true},
 		&proto.PartyBuffs{}, &proto.IndividualBuffs{})
 	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 
@@ -447,8 +447,8 @@ func measureGeneratedBuffStats(char *Character) {
 func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 	ticked := func() (*proto.RaidBuffs, *proto.PartyBuffs, *proto.IndividualBuffs) {
 		return &proto.RaidBuffs{
-				Thorns: true, ArcaneBrilliance: true, DivineSpirit: true,
-				GiftOfTheWild: true, PowerWordFortitude: true, ShadowProtection: true,
+				Thorns: true, ArcaneBrilliance: true, PrayerOfSpirit: true,
+				GiftOfTheWild: true, PrayerOfFortitude: true, PrayerOfShadowProtection: true,
 			},
 			&proto.PartyBuffs{
 				WindfuryTotem: true, BattleShout: true, GraceOfAirTotem: true,
@@ -457,8 +457,8 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 			},
 			&proto.IndividualBuffs{
 				Innervates: 1, PowerInfusions: 1,
-				BlessingOfKings: true, BlessingOfMight: true, BlessingOfWisdom: true,
-				BlessingOfSalvation: true,
+				GreaterBlessingOfKings: true, GreaterBlessingOfMight: true, GreaterBlessingOfWisdom: true,
+				GreaterBlessingOfSalvation: true,
 			}
 	}
 
@@ -481,10 +481,10 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 		t.Errorf("a pet out from the start lost a buff no policy strips: %v, %v", party, individual)
 	}
 	// A pet that was there from the start keeps every targeted buff.
-	if !raid.ArcaneBrilliance || !raid.DivineSpirit || !raid.GiftOfTheWild ||
-		!raid.PowerWordFortitude || !raid.ShadowProtection || !individual.BlessingOfKings ||
-		!individual.BlessingOfMight || !individual.BlessingOfWisdom ||
-		!individual.BlessingOfSalvation {
+	if !raid.ArcaneBrilliance || !raid.PrayerOfSpirit || !raid.GiftOfTheWild ||
+		!raid.PrayerOfFortitude || !raid.PrayerOfShadowProtection || !individual.GreaterBlessingOfKings ||
+		!individual.GreaterBlessingOfMight || !individual.GreaterBlessingOfWisdom ||
+		!individual.GreaterBlessingOfSalvation {
 		t.Errorf("a pet out from the start lost a targeted buff: %v, %v", raid, individual)
 	}
 
@@ -492,12 +492,12 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 	raid, party, individual = ticked()
 	applyGeneratedPetBuffs(late, raid, party, individual)
 
-	if raid.ArcaneBrilliance || raid.DivineSpirit || raid.GiftOfTheWild ||
-		raid.PowerWordFortitude || raid.ShadowProtection {
+	if raid.ArcaneBrilliance || raid.PrayerOfSpirit || raid.GiftOfTheWild ||
+		raid.PrayerOfFortitude || raid.PrayerOfShadowProtection {
 		t.Errorf("a pet summoned late kept a raid buff cast at the pull: %v", raid)
 	}
-	if individual.BlessingOfKings || individual.BlessingOfMight || individual.BlessingOfWisdom ||
-		individual.BlessingOfSalvation {
+	if individual.GreaterBlessingOfKings || individual.GreaterBlessingOfMight || individual.GreaterBlessingOfWisdom ||
+		individual.GreaterBlessingOfSalvation {
 		t.Errorf("a pet summoned late kept a targeted individual buff: %v", individual)
 	}
 	if !party.BattleShout || !party.GraceOfAirTotem {

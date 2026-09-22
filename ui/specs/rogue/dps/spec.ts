@@ -96,8 +96,8 @@ export default defineSpec<Spec.SpecRogue>({
 			totemTwisting: true,
 		}),
 		individualBuffs: IndividualBuffs.create({
-			blessingOfKings: true,
-			blessingOfMight: true,
+			greaterBlessingOfKings: true,
+			greaterBlessingOfMight: true,
 		}),
 		debuffs: Debuffs.create({
 			huntersMark: true,

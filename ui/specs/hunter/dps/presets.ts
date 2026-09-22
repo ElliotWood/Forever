@@ -44,9 +44,9 @@ export const DefaultOptions = HunterOptions.create({
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
-	blessingOfMight: true,
-	blessingOfWisdom: true,
+	greaterBlessingOfKings: true,
+	greaterBlessingOfMight: true,
+	greaterBlessingOfWisdom: true,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
@@ -60,10 +60,10 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 
 export const DefaultRaidBuffs = RaidBuffs.create({
 	arcaneBrilliance: true,
-	divineSpirit: true,
+	prayerOfSpirit: true,
 	giftOfTheWild: true,
-	powerWordFortitude: true,
-	shadowProtection: true,
+	prayerOfFortitude: true,
+	prayerOfShadowProtection: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({

@@ -124,15 +124,15 @@ export const ArcaneBrilliance = makeBooleanRaidBuffInput({
 	label: 'Arcane Brilliance',
 });
 
-export const BlessingOfKings = makeBooleanIndividualBuffInput({
+export const GreaterBlessingOfKings = makeBooleanIndividualBuffInput({
 	actionId: ActionId.fromSpellId(25898),
-	fieldName: 'blessingOfKings',
+	fieldName: 'greaterBlessingOfKings',
 	label: 'Greater Blessing of Kings',
 });
 
-export const DivineSpirit = makeBooleanRaidBuffInput({
+export const PrayerOfSpirit = makeBooleanRaidBuffInput({
 	actionId: ActionId.fromSpellId(27681),
-	fieldName: 'divineSpirit',
+	fieldName: 'prayerOfSpirit',
 	label: 'Prayer of Spirit',
 });
 
@@ -148,29 +148,29 @@ export const Thorns = makeBooleanRaidBuffInput({
 	label: 'Thorns',
 });
 
-export const PowerWordFortitude = makeBooleanRaidBuffInput({
+export const PrayerOfFortitude = makeBooleanRaidBuffInput({
 	actionId: ActionId.fromSpellId(21564),
-	fieldName: 'powerWordFortitude',
+	fieldName: 'prayerOfFortitude',
 	label: 'Prayer of Fortitude',
 });
 
-export const BlessingOfMight = makeBooleanIndividualBuffInput({
+export const GreaterBlessingOfMight = makeBooleanIndividualBuffInput({
 	actionId: ActionId.fromSpellId(25916),
-	fieldName: 'blessingOfMight',
+	fieldName: 'greaterBlessingOfMight',
 	label: 'Greater Blessing of Might',
 });
 
-export const BlessingOfWisdom = makeBooleanIndividualBuffInput({
+export const GreaterBlessingOfWisdom = makeBooleanIndividualBuffInput({
 	actionId: ActionId.fromSpellId(25918),
-	fieldName: 'blessingOfWisdom',
+	fieldName: 'greaterBlessingOfWisdom',
 	label: 'Greater Blessing of Wisdom',
 });
 
-// blessing_of_salvation: the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.
+// greater_blessing_of_salvation: the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.
 
-export const ShadowProtection = makeBooleanRaidBuffInput({
+export const PrayerOfShadowProtection = makeBooleanRaidBuffInput({
 	actionId: ActionId.fromSpellId(27683),
-	fieldName: 'shadowProtection',
+	fieldName: 'prayerOfShadowProtection',
 	label: 'Prayer of Shadow Protection',
 });
 
@@ -333,7 +333,7 @@ export const GENERATED_RAID_BUFFS_CONFIG: RenderableStatOptions[] = [
 		ownerClass: Class.ClassMage,
 	},
 	{
-		config: DivineSpirit,
+		config: PrayerOfSpirit,
 		stats: [Stat.StatSpirit, Stat.StatSpellDamage],
 		ownerClass: Class.ClassPriest,
 	},
@@ -348,12 +348,12 @@ export const GENERATED_RAID_BUFFS_CONFIG: RenderableStatOptions[] = [
 		ownerClass: Class.ClassDruid,
 	},
 	{
-		config: PowerWordFortitude,
+		config: PrayerOfFortitude,
 		stats: [Stat.StatStamina],
 		ownerClass: Class.ClassPriest,
 	},
 	{
-		config: ShadowProtection,
+		config: PrayerOfShadowProtection,
 		stats: [Stat.StatShadowResistance, Stat.StatStamina],
 		ownerClass: Class.ClassPriest,
 	},
@@ -474,17 +474,17 @@ export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 
 export const GENERATED_INDIVIDUAL_BUFFS_CONFIG: RenderableStatOptions[] = [
 	{
-		config: BlessingOfKings,
+		config: GreaterBlessingOfKings,
 		stats: [Stat.StatAgility, Stat.StatIntellect, Stat.StatSpirit, Stat.StatStamina, Stat.StatStrength],
 		ownerClass: Class.ClassPaladin,
 	},
 	{
-		config: BlessingOfMight,
+		config: GreaterBlessingOfMight,
 		stats: [Stat.StatAttackPower],
 		ownerClass: Class.ClassPaladin,
 	},
 	{
-		config: BlessingOfWisdom,
+		config: GreaterBlessingOfWisdom,
 		stats: [Stat.StatMP5],
 		ownerClass: Class.ClassPaladin,
 	},

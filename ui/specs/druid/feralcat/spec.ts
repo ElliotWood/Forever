@@ -87,10 +87,10 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		// Default raid/party buffs settings.
 		raidBuffs: RaidBuffs.create({
 			arcaneBrilliance: true,
-			divineSpirit: true,
+			prayerOfSpirit: true,
 			giftOfTheWild: true,
-			powerWordFortitude: true,
-			shadowProtection: true,
+			prayerOfFortitude: true,
+			prayerOfShadowProtection: true,
 		}),
 		partyBuffs: PartyBuffs.create({
 			battleShout: true,
@@ -101,8 +101,8 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 			totemTwisting: true,
 		}),
 		individualBuffs: IndividualBuffs.create({
-			blessingOfKings: true,
-			blessingOfMight: true,
+			greaterBlessingOfKings: true,
+			greaterBlessingOfMight: true,
 		}),
 		debuffs: Debuffs.create({
 			exposeArmor: true,

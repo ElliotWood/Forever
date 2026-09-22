@@ -245,12 +245,12 @@ var pinnedTalentCurves = map[string][]float64{
 // A row whose manifest category is the resistance school itself keeps none of its
 // own: the school category the sim puts the stat into is the whole competition.
 var pinnedCategories = map[string]string{
-	"frost_resistance_totem": "",
-	"aspect_of_the_wild":     "",
-	"shadow_protection":      "",
-	"frost_resistance_aura":  "FrostResistanceAura",
-	"shadow_resistance_aura": "ShadowResistanceAura",
-	"devotion_aura":          "DevotionAura",
+	"frost_resistance_totem":      "",
+	"aspect_of_the_wild":          "",
+	"prayer_of_shadow_protection": "",
+	"frost_resistance_aura":       "FrostResistanceAura",
+	"shadow_resistance_aura":      "ShadowResistanceAura",
+	"devotion_aura":               "DevotionAura",
 }
 
 // The first differing line of each file with a little context, which is all a

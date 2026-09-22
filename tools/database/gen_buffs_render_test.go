@@ -41,7 +41,7 @@ func syntheticBuffRows() []ResolvedBuff {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
-				Field: "blessing_of_kings", Scope: buffmanifest.ScopeIndividual,
+				Field: "greater_blessing_of_kings", Scope: buffmanifest.ScopeIndividual,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindStatPct,
 				Go: "SynthBlessingOfKings", Name: "Blessing of Kings",
 				Pet: buffmanifest.PetStripWhenSummonedLate,

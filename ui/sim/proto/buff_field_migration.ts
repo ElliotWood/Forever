@@ -11,7 +11,7 @@
 const RETYPED_API_VERSION = 17;
 
 export const retypedBuffFields = {
-	raidBuffs: ['powerWordFortitude', 'divineSpirit', 'giftOfTheWild', 'thorns'],
+	raidBuffs: ['prayerOfFortitude', 'prayerOfSpirit', 'giftOfTheWild', 'thorns'],
 	partyBuffs: [
 		'bloodPact',
 		'moonkinAura',
@@ -24,7 +24,7 @@ export const retypedBuffFields = {
 		'windfuryTotem',
 		'battleShout',
 	],
-	individualBuffs: ['blessingOfWisdom', 'blessingOfMight'],
+	individualBuffs: ['greaterBlessingOfWisdom', 'greaterBlessingOfMight'],
 	debuffs: [
 		'improvedSealOfTheCrusader',
 		'curseOfElements',

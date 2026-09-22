@@ -219,7 +219,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if party.ManaSpringTotem != proto.TristateEffect_TristateEffectMissing {
 		MakePermanent(SynthManaSpringAura(&char.Unit, false, GetTristateValueInt32(party.ManaSpringTotem, 0, 5)))
 	}
-	if individual.BlessingOfKings {
+	if individual.GreaterBlessingOfKings {
 		MakePermanent(SynthBlessingOfKingsAura(&char.Unit, false, 0))
 	}
 	if party.BattleShout {
@@ -258,6 +258,6 @@ func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyB
 	party.TotemTwisting = party.TotemTwisting || pet.Owner.HasAura(SynthInheritedNeckAuraLabel)
 
 	if !pet.enabledOnStart {
-		individual.BlessingOfKings = false
+		individual.GreaterBlessingOfKings = false
 	}
 }
