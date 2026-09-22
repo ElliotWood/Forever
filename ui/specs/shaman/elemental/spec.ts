@@ -67,7 +67,7 @@ export default defineSpec<Spec.SpecElementalShaman>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: SavedTalents.create(),
+		talents: Presets.TalentsLevel60.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,
@@ -95,7 +95,7 @@ export default defineSpec<Spec.SpecElementalShaman>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: Presets.TalentPresets,
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_DEFAULT],
 		// Preset gear configurations that the user can quickly select.

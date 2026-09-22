@@ -27,6 +27,7 @@ import {
 import BeastMasteryAPL from "./apls/bm.apl.json";
 import MarksmanshipAPL from "./apls/mm.apl.json";
 import SurvivalAPL from "./apls/sv.apl.json";
+import { SavedTalents } from '@generated/proto/ui';
 
 export const BeastMasteryRotation = PresetUtils.makePresetAPLRotation(
 	"Beast Mastery",
@@ -122,3 +123,10 @@ export const OtherDefaults = {
 	profession2: Profession.Blacksmithing,
 	race: Race.RaceOrc,
 };
+
+// Talent presets, from master's ui/hunter spec.
+export const TalentsP1 = PresetUtils.makePresetTalents('Marksmanship', SavedTalents.create({ talentsString: '5023000501-0050550501503051' }));
+export const TalentsBeastMastery = PresetUtils.makePresetTalents('Beast Mastery 35/16/0', SavedTalents.create({ talentsString: '5520001505121251-0050551' }));
+export const TalentsMarksmanship = PresetUtils.makePresetTalents('Marksmanship 0/39/12', SavedTalents.create({ talentsString: '-3050552301503151-50024001' }));
+export const TalentsSurvival = PresetUtils.makePresetTalents('Survival 0/15/36', SavedTalents.create({ talentsString: '-005055-550230031051220151' }));
+export const TalentPresets = [TalentsP1, TalentsBeastMastery, TalentsMarksmanship, TalentsSurvival];

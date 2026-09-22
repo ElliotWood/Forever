@@ -4,6 +4,7 @@ import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, Sha
 import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
+import { SavedTalents } from '@generated/proto/ui';
 
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
@@ -71,3 +72,8 @@ export const DefaultDebuffs = Debuffs.create({
 	curseOfRecklessness: true,
 	huntersMark: TristateEffect.TristateEffectImproved,
 });
+
+// Talent presets, from master's ui/shaman spec.
+export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '5505301-053030031005112251' }));
+export const TalentsEnhancement = PresetUtils.makePresetTalents('Enhancement 16/35/0', SavedTalents.create({ talentsString: '05023015-055030030205112251' }));
+export const TalentPresets = [TalentsLevel60, TalentsEnhancement];

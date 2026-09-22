@@ -157,7 +157,7 @@ export default defineSpec<Spec.SpecHunter>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: Presets.TalentPresets,
 		// Preset rotations that the user can quickly select.
 		rotations: [
 			Presets.BeastMasteryRotation,

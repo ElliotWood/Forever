@@ -99,7 +99,7 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 		consumables: Presets.DefaultConsumables,
 		rotationType: APLRotationType.TypeAPL,
 		aplRotation: Presets.ROTATION_DEFAULT.rotation.rotation!,
-		talents: SavedTalents.create(),
+		talents: Presets.BearTankTalents.data,
 		specOptions: Presets.DefaultOptions,
 		raidBuffs: RaidBuffs.create({
 			arcaneBrilliance: true,
