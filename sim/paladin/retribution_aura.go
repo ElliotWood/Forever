@@ -14,7 +14,7 @@ var RetributionAuraRankMap = spellData.RetributionAura
 // only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerRetributionAura() {
 	RetributionAuraRankMap.RegisterAll(func(row shared.SpellData) {
-		aura := core.RetributionAuraBuff(&paladin.Character, true, auraRank(row))
+		aura := core.RetributionAuraBuff(&paladin.Character, true, auraRank(row), 0)
 		paladin.registerAuraSpell(row, aura, SpellMaskRetributionAura)
 	})
 }

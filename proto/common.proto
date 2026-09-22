@@ -472,6 +472,8 @@ message PartyBuffs {
 	TristateEffect leader_of_the_pack = 4;
 	bool devotion_aura = 6;
 	bool retribution_aura = 7;
+	// Holy spell power of the paladin providing Retribution Aura; its damage scales with it in Forever.
+	double retribution_aura_spell_power = 46;
 	bool concentration_aura = 45;
 	bool trueshot_aura = 8;
 	bool draenei_racial_melee = 9;

@@ -256,7 +256,7 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 	}
 
 	if partyBuffs.RetributionAura {
-		MakePermanent(RetributionAuraBuff(char, false, RetributionAuraMaxRank))
+		MakePermanent(RetributionAuraBuff(char, false, RetributionAuraMaxRank, partyBuffs.RetributionAuraSpellPower))
 	}
 
 	if partyBuffs.ConcentrationAura {
@@ -850,20 +850,38 @@ func MoonkinAuraBuff(char *Character, improved bool) *Aura {
 	})
 }
 
-func RetributionAuraBuff(char *Character, isPlayer bool, rank PaladinAuraRank) *Aura {
+// Retribution Aura scales with the casting paladin's Holy spell power in Forever even though its
+// client row carries no coefficient (every rank and Thorns are the same: EffectBonusCoefficient 0
+// in Era, Anniversary and Forever, and the damage still moves with spell power in game). The value
+// here is the vanilla runtime rule: 1.5 s cast-time floor over 3.5, the AoE divisor because the
+// shield hits every attacker, and the 0.95 penalty for the aura effect. Confirmed to about one
+// decimal on level-20 characters; a high-spell-power log could still move it to 0.95² (0.129).
+const RetributionAuraSpellPowerCoefficient = 1.5 / 3.5 / 3 * 0.95
+
+// RetributionAuraBuff is the aura on the unit the shield protects. The self-cast variant reads
+// the paladin's own Holy spell power through the proc spell; the external (party-buff) variant
+// cannot see the providing paladin, so externalSpellPower stands in for it and the recipient's
+// own stats stay out of the damage.
+func RetributionAuraBuff(char *Character, isPlayer bool, rank PaladinAuraRank, externalSpellPower float64) *Aura {
 	actionID := ActionID{SpellID: rank.SpellID}.WithTag(TernaryInt32(isPlayer, 0, -1))
 	damage := rank.Value
+	bonusCoefficient := RetributionAuraSpellPowerCoefficient
+	if !isPlayer {
+		damage += RetributionAuraSpellPowerCoefficient * externalSpellPower
+		bonusCoefficient = 0
+	}
 
-	// The self and external variants of one rank share the damage spell, so its id is the
-	// rank's alone.
+	// Each variant of a rank has its own damage spell: the self one scales with the unit's stats,
+	// the external one carries its spell power in the base damage.
 	procSpell := char.GetOrRegisterSpell(SpellConfig{
-		ActionID:    ActionID{SpellID: rank.SpellID}.WithTag(2),
+		ActionID:    ActionID{SpellID: rank.SpellID}.WithTag(TernaryInt32(isPlayer, 2, 3)),
 		SpellSchool: SpellSchoolHoly,
 		ProcMask:    ProcMaskEmpty,
 		Flags:       SpellFlagBinary | SpellFlagPassiveSpell,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
+		BonusCoefficient: bonusCoefficient,
 
 		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
 			spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeAlwaysHit)
