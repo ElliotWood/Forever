@@ -58,7 +58,7 @@ type stackingAura struct {
 // attack power with no duration of its own, because the client drops it when the window ends.
 // resolveStatsSpell walks straight past the container to reach the stats, so the container has
 // to be recovered by walking the chain a second time.
-func buildStackingAura(rootSpellID, statsSpellID, itemLevel, parentItemID int) *stackingAura {
+func buildStackingAura(rootSpellID, statsSpellID, itemLevel int) *stackingAura {
 	containerID := newChainWalker().findStackingContainer(rootSpellID, statsSpellID)
 	if containerID == 0 {
 		return nil

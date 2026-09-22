@@ -1,7 +1,11 @@
 // Regenerates sim/<class>/spell_data_auto_gen.go from the client database.
 //
-// Its own binary, not a mode of gen_db: gen_db imports the sim, so a stale generated file would stop
-// the generator that fixes it from compiling.
+// Its own binary, not a mode of gen_db: gen_db imports every class package, so a class file that
+// does not compile stops it. This binary imports sim/core, sim/core/spelldata and sim/common - the
+// item-proc routing in tools/database/gen_effects.go reads the store - so the class files are the
+// generated files it can rewrite without compiling them, and a broken store stops it the same way a
+// broken class file stops gen_db. Neither reaches the tree from here: spelldata_write.go
+// type-checks the rendered files in a staging directory and writes none of them until they build.
 //
 //	go run ./tools/database/gen_spelldata
 //	go run ./tools/database/gen_spelldata -check

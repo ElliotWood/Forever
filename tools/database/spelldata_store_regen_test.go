@@ -3,7 +3,7 @@ package database
 // Rebuilds sim/core/spelldata/spells_auto_gen.go from the client rows committed in
 // assets/db_inputs/spell_store_inputs.json and asserts the committed file is what comes out, so a
 // hand-edited or stale store fails here. No client database and no build tag: this is the one gate
-// over the store's 6981 rows that CI can run, since tools/database/wowsims.db is gitignored.
+// over the store's 7035 rows that CI can run, since tools/database/wowsims.db is gitignored.
 //
 // It re-runs everything the generator derives - the closure over triggers, overrides and tooltip
 // references, the hand links, the talent curves, the tooltip hints, the overrides and the emitter -

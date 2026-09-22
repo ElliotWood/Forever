@@ -14,9 +14,9 @@ import (
 	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
-// Where the store's hand-kept extra ids live. Parsed rather than imported: package database is what
-// gen_spelldata runs, and importing the store would let a generated file that does not compile stop
-// the generator that rewrites it.
+// Where the store's hand-kept extra ids live. Parsed out of the source rather than read off the
+// package: the ids a render is built from are then the ones the committed file states, so adding one
+// without regenerating fails the check instead of passing it.
 const extraIDsPath = "sim/core/spelldata/extra_ids.go"
 
 // The spells the sim can reach without anything naming them first: everything the nine class files
@@ -112,6 +112,16 @@ func withExtraIDs(t *spellTables, roots []int32) ([]int32, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	// A hand-kept id this build does not name is dropped like any other unnamed id, and unlike an
+	// item effect pointing at a spell the client retired, it was written down on purpose.
+	for _, id := range extras {
+		if _, named := t.names[id]; !named {
+			fmt.Fprintf(progress, "spelldata: %s names %d, which is no spell in this client, so the store does not carry it\n",
+				extraIDsPath, id)
+		}
+	}
+
 	return namedIDs(t, roots, extras), nil
 }
 
@@ -254,9 +264,13 @@ func parseExtraIDs() ([]int32, error) {
 		}
 		found = true
 		for _, elt := range lit.Elts {
-			if id, ok := constInt(elt); ok {
-				ids = append(ids, id)
+			id, ok := constInt(elt)
+			if !ok {
+				fmt.Fprintf(progress, "spelldata: %s:%d is not a literal id, so the store does not carry it\n",
+					extraIDsPath, fset.Position(elt.Pos()).Line)
+				continue
 			}
+			ids = append(ids, id)
 		}
 		return false
 	})

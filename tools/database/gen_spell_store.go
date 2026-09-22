@@ -507,6 +507,10 @@ func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]m
 
 	curves := map[int32][][]float64{}
 	pricedBy := map[int32]int32{}
+
+	// What each priced spell was priced at, whether that went into a curve or onto the row's base
+	// points, so that a second definition stating the same numbers is not reported as a disagreement.
+	pricedRows := map[int32][][]float64{}
 	for _, node := range nodes {
 		if !inStore[node.SpellID] {
 			continue
@@ -539,7 +543,7 @@ func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]m
 		// first tree by id is the one kept, which is what the class tables generate from, and a
 		// disagreement is named on stderr rather than resolved silently.
 		if seen, ok := pricedBy[node.SpellID]; ok {
-			if existing, isCurve := curves[node.SpellID]; !isCurve || !sameCurves(existing, rows) {
+			if !sameCurves(pricedRows[node.SpellID], rows) {
 				fmt.Fprintf(progress,
 					"spelldata: talent definitions %d and %d price spell %d differently, keeping %d\n",
 					seen, node.DefinitionID, node.SpellID, seen)
@@ -547,6 +551,7 @@ func storeCurves(t *spellTables, nodes []traitNode, points map[int32]map[int32]m
 			continue
 		}
 		pricedBy[node.SpellID] = node.DefinitionID
+		pricedRows[node.SpellID] = rows
 
 		if node.MaxRanks == 1 {
 			bakeRank(t.effects[node.SpellID], rows)

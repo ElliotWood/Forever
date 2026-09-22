@@ -9,9 +9,14 @@ import (
 )
 
 // The store's rows as the generator builds them: the fields sim/core/spelldata.Spell, .Effect and
-// .Power carry, mirrored here rather than imported from that package. gen_spelldata runs this
-// package, so importing the store would let a generated file that does not compile stop the
-// generator that rewrites it.
+// .Power carry, mirrored here rather than imported from that package, with the generator's own
+// bookkeeping alongside them and the JSON shape the captured client rows are read back in.
+//
+// The mirror is not what keeps a generated file that does not compile from stopping the generator
+// that rewrites it: this package imports the store for the item-proc routing in gen_effects.go, so
+// a store that does not build takes gen_spelldata down with it. What keeps one out of the tree is
+// the overlay gate in spelldata_write.go, which writes nothing until the sim compiles against the
+// rendered files.
 //
 // Every value is the client's own column, in the client's units - the conversions live in the
 // store's accessors - and the float fields are kept as the DB states them so the emitted number is
@@ -665,6 +670,14 @@ func (t *spellTables) loadEffects(db *sql.DB) error {
 		}
 		e.Mechanic = uint8(mechanic)
 		e.Target = [2]uint8{uint8(target0), uint8(target1)}
+
+		// The rows arrive in index order, so a second row at one index is the one just read. The
+		// store would carry both, and the position EffectN counts by would answer the first.
+		if prior := t.effects[e.SpellID]; len(prior) > 0 && prior[len(prior)-1].Index == e.Index {
+			return fmt.Errorf("spell %d states effect index %d twice, as rows %d and %d",
+				e.SpellID, e.Index, prior[len(prior)-1].ID, e.ID)
+		}
+
 		t.effects[e.SpellID] = append(t.effects[e.SpellID], e)
 		return nil
 	})

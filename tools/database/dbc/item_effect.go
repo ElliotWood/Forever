@@ -163,7 +163,7 @@ func (e *ItemEffect) ToProto(itemLevel int) (*proto.ItemEffect, bool) {
 
 	// The stats may live on the accumulating aura rather than on the one the trigger applies, in
 	// which case the effect is real even though the scaling options above resolved to nothing.
-	if stacking := buildStackingAura(e.SpellID, statsSpellID, itemLevel, e.ParentItemID); stacking != nil {
+	if stacking := buildStackingAura(e.SpellID, statsSpellID, itemLevel); stacking != nil {
 		stacking.Aura.ScalingOptions[int32(0)] = buildItemEffectScalingProps(int(stacking.Aura.BuffId), itemLevel)
 		applyStackingAura(pe, stacking)
 	}
@@ -446,7 +446,7 @@ func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 
 		// A container aura that accumulates a separate stat aura resolves its amounts at every
 		// state too, and per stack rather than in total.
-		if stacking := buildStackingAura(baseEff.SpellID, statsSpellID, int(parsed.ScalingOptions[0].Ilvl), baseEff.ParentItemID); stacking != nil {
+		if stacking := buildStackingAura(baseEff.SpellID, statsSpellID, int(parsed.ScalingOptions[0].Ilvl)); stacking != nil {
 			for state, opt := range parsed.ScalingOptions {
 				stacking.Aura.ScalingOptions[state] = buildItemEffectScalingProps(int(stacking.Aura.BuffId), int(opt.Ilvl))
 			}

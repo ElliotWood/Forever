@@ -1,8 +1,7 @@
 package database
 
-// The store's rows are mirrored in spelldata_store.go instead of imported from sim/core/spelldata,
-// so that a generated file which does not compile cannot stop the generator that rewrites it. The
-// cost of that is a mirror which can drift: a field added to the store would simply never be
+// The store's rows are mirrored in spelldata_store.go instead of imported from sim/core/spelldata.
+// The cost of that is a mirror which can drift: a field added to the store would simply never be
 // written, and the row would read as a zero the client never stated. This asserts the two sides
 // name the same fields, from the store's own source rather than from a copy of it.
 

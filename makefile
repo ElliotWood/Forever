@@ -240,8 +240,8 @@ CLIENTDATA_OUTPUT   := $(abspath ./tools/database/wowsims.db)
 
 # The spell store is regenerated before the item database, and the order is load-bearing: gen_db
 # classifies every item and enchant proc from the store compiled into it, so running it against a
-# refreshed client and a stale store writes item files from last week's rows. gen_spelldata imports
-# no part of the sim, so it can rewrite the store gen_db is then built against.
+# refreshed client and a stale store writes item files from last week's rows. gen_spelldata reads the
+# store too, and writes nothing the sim does not compile against, so it is what may rewrite it.
 .PHONY: db
 db:
 	@echo "Extracting client data"
@@ -268,6 +268,8 @@ ptrdb:
 	@echo "Running DBC generation tool"
 	go run tools/database/gen_db/*.go -outDir=./assets -gen=db
 
+# The same order as `db`, and for the same reason: this rule depends on tools/database/*.go, so a
+# change to the store generator triggers it, and gen_db has to read a store written by that change.
 sim/core/items/all_items.go: $(call rwildcard,tools/database,*.go) $(call rwildcard,sim/core/proto,*.go)
 	@test -f tools/database/wowsims.db || { \
 		echo "ERROR: tools/database/wowsims.db is missing (gitignored, produced by 'make db')."; \
@@ -276,6 +278,8 @@ sim/core/items/all_items.go: $(call rwildcard,tools/database,*.go) $(call rwildc
 	@test -f tools/db2tool/listfile.csv || { \
 		echo "tools/db2tool/listfile.csv is missing, downloading it..."; \
 		curl -fL -o tools/db2tool/listfile.csv https://github.com/wowdev/wow-listfile/releases/latest/download/community-listfile.csv; }
+	@echo "Regenerating the spell store"
+	go run ./tools/database/gen_spelldata
 	go run tools/database/gen_db/*.go -outDir=./assets -gen=db
 
 # Syncs the HiGHS solver artifacts from the pinned npm `highs` package: copies its wasm to

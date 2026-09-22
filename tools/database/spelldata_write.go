@@ -10,7 +10,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"sort"
-	"strings"
 )
 
 // Where the generator says what it did. -check silences it, so that a clean check prints nothing at
@@ -38,7 +37,10 @@ func writeSpellDataFiles(files map[string][]byte) error {
 		if err != nil {
 			return err
 		}
-		staged := filepath.Join(staging, strings.ReplaceAll(path, string(filepath.Separator), "_"))
+
+		// Numbered rather than named after the path: the staged name has to be unique, and flattening
+		// a path into one cannot promise that.
+		staged := filepath.Join(staging, fmt.Sprintf("%d_%s", len(overlay), filepath.Base(path)))
 		if err := os.WriteFile(staged, out, 0644); err != nil {
 			return err
 		}
