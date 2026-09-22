@@ -238,10 +238,16 @@ CLIENTDATA_SETTINGS := $(abspath ./tools/database/generator-settings.json)
 CLIENTDATAPTR_SETTINGS := $(abspath ./tools/database/ptr-generator-settings.json)
 CLIENTDATA_OUTPUT   := $(abspath ./tools/database/wowsims.db)
 
+# The spell store is regenerated before the item database, and the order is load-bearing: gen_db
+# classifies every item and enchant proc from the store compiled into it, so running it against a
+# refreshed client and a stale store writes item files from last week's rows. gen_spelldata imports
+# no part of the sim, so it can rewrite the store gen_db is then built against.
 .PHONY: db
 db:
 	@echo "Extracting client data"
 	go run ./tools/db2tool -s $(CLIENTDATA_SETTINGS) --output $(CLIENTDATA_OUTPUT)
+	@echo "Regenerating the spell store"
+	go run ./tools/database/gen_spelldata
 	@echo "Running DBC generation tool"
 	go run tools/database/gen_db/*.go -outDir=./assets -gen=db
 
@@ -252,10 +258,13 @@ db:
 basestats:
 	python3 tools/base_stats_parser.py
 
+# Same order as `db` above, and for the same reason.
 .PHONY: ptrdb
 ptrdb:
 	@echo "Extracting client data"
 	go run ./tools/db2tool -s $(CLIENTDATAPTR_SETTINGS) --output $(CLIENTDATA_OUTPUT)
+	@echo "Regenerating the spell store"
+	go run ./tools/database/gen_spelldata
 	@echo "Running DBC generation tool"
 	go run tools/database/gen_db/*.go -outDir=./assets -gen=db
 
