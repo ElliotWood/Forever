@@ -202,14 +202,14 @@ func runFamily(out io.Writer, opts options) error {
 		return err
 	}
 
-	highest, err := familyHighest(family)
-	if err != nil {
-		return err
+	if family.err != nil {
+		return family.err
 	}
+	highest := family.ladder.Highest()
 
 	if opts.json {
-		top := asJSON(highest.spell)
-		top.Title = highest.title()
+		top := asJSON(highest)
+		top.Title = rankTitle(family, highest)
 		return writeJSON(out, familyJSON{
 			Family:  family.key(),
 			Ranks:   familyRows(family),
@@ -218,12 +218,16 @@ func runFamily(out io.Writer, opts options) error {
 	}
 
 	writeFamilyText(out, family)
-	writeTitledText(out, highest.title(), highest.spell, 0)
+	writeTitledText(out, rankTitle(family, highest), highest, 0)
 	return nil
 }
 
 func runExpr(out io.Writer, opts options) error {
-	result, err := evalExpr(ladderFamilies(), opts.expr, opts.pkg)
+	c, err := parseChain(opts.expr, 0)
+	if err != nil {
+		return err
+	}
+	result, err := evalExpr(ladderFamilies(), c, opts.pkg)
 	if err != nil {
 		return err
 	}

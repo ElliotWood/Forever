@@ -16,11 +16,11 @@ func TestFamilyIndex(t *testing.T) {
 	lines := strings.Split(out.String(), "\n")
 	want := []string{
 		"warrior spellData.Execute",
-		"5308     Execute  Rank 1   Rank(1)",
-		"20658    Execute  Rank 2   Rank(2)",
-		"20660    Execute  Rank 3   Rank(3)",
-		"20661    Execute  Rank 4   Rank(4)",
-		"20662    Execute  Rank 5   Highest()",
+		"5308     Execute  Rank 1   Rank(1)   effect 1 = 125",
+		"20658    Execute  Rank 2   Rank(2)   effect 1 = 200",
+		"20660    Execute  Rank 3   Rank(3)   effect 1 = 325",
+		"20661    Execute  Rank 4   Rank(4)   effect 1 = 450",
+		"20662    Execute  Rank 5   Highest() effect 1 = 600",
 		"",
 		"20662 Execute (Rank 5) warrior spellData.Execute.Highest()",
 	}
@@ -105,7 +105,7 @@ func TestFamilyJSON(t *testing.T) {
 	if len(got.Ranks) != 5 {
 		t.Fatalf("%d ranks", len(got.Ranks))
 	}
-	if got.Ranks[0] != (familyRankJSON{ID: 5308, Name: "Execute", Rank: "Rank 1", Accessor: "Rank(1)"}) {
+	if got.Ranks[0] != (familyRankJSON{ID: 5308, Name: "Execute", Rank: "Rank 1", Accessor: "Rank(1)", Value: "effect 1 = 125"}) {
 		t.Errorf("rank 1 is %+v", got.Ranks[0])
 	}
 	if got.Ranks[4].Accessor != "Highest()" {
@@ -236,9 +236,9 @@ func TestExprRefused(t *testing.T) {
 // classes is tested against one that is.
 func TestFamilyAcrossClasses(t *testing.T) {
 	index := map[string]*ladderFamily{
-		"warrior/Execute": {pkg: "warrior", field: "Execute", ranks: []familyRank{{id: 1, accessor: "Highest()"}}},
-		"paladin/Execute": {pkg: "paladin", field: "Execute", ranks: []familyRank{{id: 2, accessor: "Highest()"}}},
-		"rogue/Rupture":   {pkg: "rogue", field: "Rupture", ranks: []familyRank{{id: 3, accessor: "Highest()"}}},
+		"warrior/Execute": {pkg: "warrior", field: "Execute"},
+		"paladin/Execute": {pkg: "paladin", field: "Execute"},
+		"rogue/Rupture":   {pkg: "rogue", field: "Rupture"},
 	}
 
 	if _, err := findFamily(index, "Execute", ""); err == nil ||

@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"go/ast"
-	"go/parser"
 	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -46,90 +45,7 @@ func init() {
 	}
 }
 
-var picks = map[string]bool{"Highest": true, "Rank": true, "ByID": true}
-
 const maxSubstitutions = 4
-
-type chainSegment struct {
-	name  string
-	text  string
-	call  bool
-	start int
-	end   int
-}
-
-type chain struct {
-	head      string
-	headStart int
-	headEnd   int
-	segments  []chainSegment
-}
-
-func (c *chain) text(upTo int) string {
-	var out strings.Builder
-	out.WriteString(c.head)
-	for _, seg := range c.segments[:upTo] {
-		out.WriteString("." + seg.text)
-	}
-	return out.String()
-}
-
-func (c *chain) isPick() bool {
-	return len(c.segments) > 0 && c.segments[0].call && picks[c.segments[0].name]
-}
-
-func parseChainAt(text string, offset int) (*chain, error) {
-	node, err := parser.ParseExpr(text)
-	if err != nil {
-		return nil, fmt.Errorf("%q is not a chain of accessor calls", text)
-	}
-	c := &chain{}
-	if err := walkChain(node, text, offset, c); err != nil {
-		return nil, err
-	}
-	return c, nil
-}
-
-func walkChain(node ast.Expr, text string, offset int, c *chain) error {
-	at := func(pos int) int { return offset + pos - 1 }
-
-	switch n := node.(type) {
-	case *ast.Ident:
-		c.head, c.headStart, c.headEnd = n.Name, at(int(n.Pos())), at(int(n.End()))
-		return nil
-
-	case *ast.SelectorExpr:
-		if err := walkChain(n.X, text, offset, c); err != nil {
-			return err
-		}
-		if c.head == "spellData" && len(c.segments) == 0 {
-			c.head, c.headEnd = "spellData."+n.Sel.Name, at(int(n.End()))
-			return nil
-		}
-		c.segments = append(c.segments, chainSegment{
-			name: n.Sel.Name, text: n.Sel.Name, start: at(int(n.X.End())), end: at(int(n.End())),
-		})
-		return nil
-
-	case *ast.CallExpr:
-		sel, ok := n.Fun.(*ast.SelectorExpr)
-		if !ok {
-			return fmt.Errorf("%s is not an accessor call", nodeText(n.Fun))
-		}
-		if err := walkChain(sel.X, text, offset, c); err != nil {
-			return err
-		}
-		if _, err := readArgs(n.Args); err != nil {
-			return err
-		}
-		c.segments = append(c.segments, chainSegment{
-			name: sel.Sel.Name, text: text[sel.Sel.Pos()-1 : n.End()-1], call: true,
-			start: at(int(sel.X.End())), end: at(int(n.End())),
-		})
-		return nil
-	}
-	return fmt.Errorf("%s is not a chain of accessor calls", nodeText(node))
-}
 
 type declaration struct {
 	name      string
@@ -154,7 +70,7 @@ func declarationOnLine(lineText string) (*declaration, error) {
 	}
 
 	d := &declaration{name: code[match[4]:match[5]], nameStart: match[4], nameEnd: match[5]}
-	c, err := parseChainAt(strings.TrimRight(code[match[8]:match[9]], " \t"), match[8])
+	c, err := parseChain(strings.TrimRight(code[match[8]:match[9]], " \t"), match[8])
 	if err != nil {
 		return d, err
 	}
@@ -279,7 +195,7 @@ func (w *workspace) declarations(folder, current, text string, trace *tracer) ma
 
 type chainHover struct {
 	label   string
-	expr    string
+	chain   *chain
 	segment bool
 }
 
@@ -366,7 +282,10 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 		if err != nil {
 			return trace.fail("%v", err)
 		}
-		trace.add("✓ %s, %d ranks", family.key(), family.rankCount())
+		if family.err != nil {
+			return trace.fail("%v", family.err)
+		}
+		trace.add("✓ %s, %d ranks", family.key(), family.ladder.Len())
 		return familyMarkdown(family), trace.lines, true
 	}
 
@@ -376,8 +295,8 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 		return "", trace.lines, false
 	}
 
-	trace.add("expr %s", hover.expr)
-	result, err := evalExpr(ladderFamilies(), hover.expr, pkg)
+	trace.add("expr %s", hover.chain.text(false))
+	result, err := evalExpr(ladderFamilies(), hover.chain, pkg)
 	if err != nil {
 		return trace.fail("%v", err)
 	}
@@ -411,7 +330,7 @@ func chainHoverAt(lineText string, column int, declarations map[string]declarati
 	}
 	trace.add("ident %s", name)
 	if _, bound := declarations[name]; bound {
-		return resolved(name, name, false, declarations, trace)
+		return resolved(name, &chain{head: name}, false, declarations, trace)
 	}
 	if declErr != nil && name == declared.name {
 		trace.add("✗ %s is bound to no chain the evaluator reads: %v", name, declErr)
@@ -425,71 +344,70 @@ func hoverInDeclaration(declared *declaration, column int, declarations map[stri
 	c := declared.chain
 	if column >= declared.nameStart && column <= declared.nameEnd {
 		trace.add("ident %s", declared.name)
-		trace.add("  %s = %s  (%s)", declared.name, c.text(len(c.segments)), trace.here)
-		hover, ok := resolved(declared.name, c.text(len(c.segments)), false, declarations, trace)
+		trace.add("  %s = %s  (%s)", declared.name, c.text(false), trace.here)
+		hover, ok := resolved(declared.name, c, false, declarations, trace)
 		return hover, true, ok
 	}
 	for i, seg := range c.segments {
 		if column >= seg.start && column <= seg.end {
-			trace.add("segment %s", seg.text)
-			hover, ok := resolved(seg.text, c.text(i+1), true, declarations, trace)
+			trace.add("segment %s", seg.text(false))
+			prefix := &chain{head: c.head, segments: c.segments[:i+1]}
+			hover, ok := resolved(seg.text(false), prefix, true, declarations, trace)
 			return hover, true, ok
 		}
 	}
-	if column >= c.headStart && column <= c.headEnd {
+	if column >= c.start && column <= c.end {
 		trace.add("ident %s", c.head)
-		hover, ok := resolved(c.head, c.head, true, declarations, trace)
+		hover, ok := resolved(c.head, &chain{head: c.head}, true, declarations, trace)
 		return hover, true, ok
 	}
 	return chainHover{}, false, false
 }
 
-func resolved(label, text string, segment bool, declarations map[string]declaration, trace *tracer) (chainHover, bool) {
-	expr, err := resolveChain(text, declarations, maxSubstitutions, map[string]bool{}, trace)
+func resolved(label string, c *chain, segment bool, declarations map[string]declaration, trace *tracer) (chainHover, bool) {
+	resolved, err := resolveChain(c, declarations, trace)
 	if err != nil {
 		trace.add("✗ %v", err)
 		return chainHover{}, false
 	}
-	return chainHover{label: label, expr: expr, segment: segment}, true
+	return chainHover{label: label, chain: resolved, segment: segment}, true
 }
 
-func resolveChain(text string, declarations map[string]declaration, depth int, seen map[string]bool, trace *tracer) (string, error) {
-	c, err := parseChainAt(text, 0)
-	if err != nil {
-		return "", err
-	}
+// The chain with every name the package binds substituted by the chain it stands for, down to a
+// ladder: at most maxSubstitutions names deep, and never through a name twice.
+func resolveChain(c *chain, declarations map[string]declaration, trace *tracer) (*chain, error) {
+	return resolveFrom(c, declarations, maxSubstitutions, map[string]bool{}, trace)
+}
 
+func resolveFrom(c *chain, declarations map[string]declaration, depth int, seen map[string]bool, trace *tracer) (*chain, error) {
 	if strings.HasPrefix(c.head, "spellData.") {
-		if !c.isPick() {
-			return "", fmt.Errorf("%s names a family, not a rank: follow it with Highest(), Rank(n) or ByID(id)", text)
+		if len(c.segments) == 0 {
+			return nil, fmt.Errorf("%s names a family, not a rank: follow it with Highest(), Rank(n) or ByID(id)", c.text(false))
 		}
-		return text, nil
+		return c, nil
 	}
 
 	bound, ok := declarations[c.head]
 	if !ok {
-		if c.isPick() {
-			return "spellData." + text, nil
+		if len(c.segments) > 0 && isFamilyName(c.head) {
+			return &chain{head: "spellData." + c.head, segments: c.segments}, nil
 		}
-		return "", fmt.Errorf("no ladder-shaped declaration of %s in the package", c.head)
+		return nil, fmt.Errorf("no ladder-shaped declaration of %s in the package", c.head)
 	}
 	if seen[c.head] {
-		return "", fmt.Errorf("%s stands on itself", c.head)
+		return nil, fmt.Errorf("%s stands on itself", c.head)
 	}
 	if depth <= 0 {
-		return "", fmt.Errorf("%s stands on more than %d names", text, maxSubstitutions)
+		return nil, fmt.Errorf("%s stands on more than %d names", c.text(false), maxSubstitutions)
 	}
 
 	seen[c.head] = true
-	boundText := bound.chain.text(len(bound.chain.segments))
-	if trace != nil {
-		trace.add("  %s = %s  (%s:%d)", c.head, boundText, trace.rel(bound.file), bound.line)
-	}
-	head, err := resolveChain(boundText, declarations, depth-1, seen, trace)
+	trace.add("  %s = %s  (%s:%d)", c.head, bound.chain.text(false), trace.rel(bound.file), bound.line)
+	head, err := resolveFrom(bound.chain, declarations, depth-1, seen, trace)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return head + strings.TrimPrefix(text, c.head), nil
+	return &chain{head: head.head, segments: append(slices.Clip(head.segments), c.segments...)}, nil
 }
 
 func identifierAt(lineText string, column int) string {

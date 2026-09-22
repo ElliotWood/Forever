@@ -181,3 +181,49 @@ func TestExprChainRefused(t *testing.T) {
 		}
 	}
 }
+
+// A value read off the ladder itself reads the rank its ...At(rank) names, with the effect it read.
+func TestExprLadderAccessors(t *testing.T) {
+	cases := []struct {
+		expr  string
+		trail string
+		value string
+		title string
+		read  int
+	}{
+		{
+			expr:  "spellData.Bloodrage.EffectAt(1).TenthsAt(1)",
+			trail: "spellData.Bloodrage.EffectAt(1).TenthsAt(1)",
+			value: "10",
+			title: "2687 Bloodrage",
+			read:  1,
+		},
+		{
+			expr:  "spellData.ImprovedBloodrage.MultiplierAt(2)",
+			trail: "spellData.ImprovedBloodrage.MultiplierAt(2)",
+			value: "1.5",
+			title: "12301 Improved Bloodrage (rank 2 of 2)",
+			read:  1,
+		},
+		{
+			expr:  "spellData.BattleShout.Highest().Effect(dbcenums.A_MOD_ATTACK_POWER, 0).Average(core.CharacterLevel)",
+			trail: "spellData.BattleShout.Highest().Effect(99, 0).Average(60)",
+			value: "139",
+			title: "25289 Battle Shout (Rank 7)",
+			read:  1,
+		},
+	}
+	for _, c := range cases {
+		got := evalJSON(t, c.expr)
+		if got.Kind != kindValue || got.Trail != c.trail || got.Value != c.value || got.Title != c.title || got.ReadEffect != c.read {
+			t.Errorf("%s answered kind %q trail %q value %q on %q effect %d",
+				c.expr, got.Kind, got.Trail, got.Value, got.Title, got.ReadEffect)
+		}
+	}
+
+	var out bytes.Buffer
+	err := run([]string{"-expr", "spellData.Bloodrage.EffectAt(1)", "-package", "warrior"}, &out)
+	if err == nil || !strings.Contains(err.Error(), "names a ladder, not a rank") {
+		t.Errorf("a chain ending on the ladder answered %q, %v", out.String(), err)
+	}
+}

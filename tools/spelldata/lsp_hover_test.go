@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/textproto"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -107,8 +108,8 @@ func TestHoverColumnIsUTF16(t *testing.T) {
 
 func TestHoverFamily(t *testing.T) {
 	markdown := wantHover(t, executeGo, "Execute.Highest", 3,
-		"### warrior/Execute\n\n| id | name | rank | call |\n|--:|:--|:--|:--|\n",
-		"| 20662 | Execute | Rank 5 | `Highest()` |",
+		"### warrior/Execute\n\n| id | name | rank | call | value |\n|--:|:--|:--|:--|:--|\n",
+		"| 20662 | Execute | Rank 5 | `Highest()` | effect 1 = 600 |",
 		"### 20662 Execute · Rank 5\n")
 	if !strings.Contains(markdown, "| **school** | physical |") {
 		t.Errorf("the family's highest rank states no header table:\n%s", markdown)
@@ -181,6 +182,37 @@ func TestHoverTalentRank(t *testing.T) {
 		"### warrior/Cruelty\n",
 		"| 12320 | Cruelty | rank 3 of 5 | `Rank(3)` | effect 1 = 3 |",
 		"### 12320 Cruelty · rank 5 of 5\n")
+}
+
+const bloodrageGo = `package warrior
+
+var instantRage = spellData.Bloodrage.EffectAt(1).TenthsAt(1)
+`
+
+// A value read off a ladder hovers as the rank it read, like one read off a rank.
+func TestHoverLadderAccessor(t *testing.T) {
+	wantHover(t, bloodrageGo, "instantRage =", 4,
+		"`instantRage` = **10**\n\n`spellData.Bloodrage.EffectAt(1).TenthsAt(1)`",
+		"### 2687 Bloodrage\n",
+		"| 1 ▶ | restores 10 rage to the caster<br>")
+	wantHover(t, bloodrageGo, "TenthsAt(1)", 2, "`TenthsAt(1)` = **10**")
+}
+
+// A class file as it stands on disk, whose argument is a dbcenums constant.
+func TestHoverClassFile(t *testing.T) {
+	root, err := moduleRoot()
+	if err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(root, "sim", "warrior", "battle_shout.go")
+	text, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	markdown, trace, ok := hoverOn(t, newWorkspace(), string(text), pathURI(path), "baseAttackPower :=", 4)
+	if !ok || !strings.HasPrefix(markdown, "`baseAttackPower` = **139**\n\n`spellData.BattleShout.Highest().Effect(99, 0).Average(60)`") {
+		t.Errorf("battle_shout.go hovers as\n%s\n%s", markdown, strings.Join(trace, "\n"))
+	}
 }
 
 func TestHoverSegments(t *testing.T) {
@@ -264,7 +296,7 @@ func TestDeclarations(t *testing.T) {
 
 	found := map[string]string{}
 	for _, d := range declarationsIn(file, "a.go") {
-		found[d.name] = d.chain.text(len(d.chain.segments))
+		found[d.name] = d.chain.text(false)
 	}
 	want := map[string]string{
 		"secondRank":  "spellData.Execute.Rank(2)",
@@ -285,13 +317,25 @@ func TestDeclarations(t *testing.T) {
 func declared(chains map[string]string) map[string]declaration {
 	out := map[string]declaration{}
 	for name, text := range chains {
-		c, err := parseChainAt(text, 0)
+		c, err := parseChain(text, 0)
 		if err != nil {
 			panic(err)
 		}
 		out[name] = declaration{name: name, chain: c, file: "a.go", line: 1}
 	}
 	return out
+}
+
+func resolveText(text string, decls map[string]declaration) (string, error) {
+	c, err := parseChain(text, 0)
+	if err != nil {
+		return "", err
+	}
+	resolved, err := resolveChain(c, decls, &tracer{})
+	if err != nil {
+		return "", err
+	}
+	return resolved.text(false), nil
 }
 
 func TestResolveChain(t *testing.T) {
@@ -307,7 +351,7 @@ func TestResolveChain(t *testing.T) {
 		"spellData.Rend.Highest().EffectN(1).Period()": "spellData.Rend.Highest().EffectN(1).Period()",
 	}
 	for chain, want := range resolves {
-		got, err := resolveChain(chain, decls, maxSubstitutions, map[string]bool{}, &tracer{})
+		got, err := resolveText(chain, decls)
 		if err != nil || got != want {
 			t.Errorf("%s resolved to %q, %v; want %q", chain, got, err, want)
 		}
@@ -319,7 +363,7 @@ func TestResolveChain(t *testing.T) {
 		"executeRank.EffectN(n)": "n is not a literal",
 	}
 	for chain, want := range refuses {
-		if got, err := resolveChain(chain, decls, maxSubstitutions, map[string]bool{}, &tracer{}); err == nil || !strings.Contains(err.Error(), want) {
+		if got, err := resolveText(chain, decls); err == nil || !strings.Contains(err.Error(), want) {
 			t.Errorf("%s resolved to %q, %v; want %q", chain, got, err, want)
 		}
 	}
@@ -333,10 +377,10 @@ func TestResolveChainGuards(t *testing.T) {
 		"d": "c.Min(60)",
 		"e": "d.Min(60)",
 	})
-	if got, err := resolveChain("c", deep, maxSubstitutions, map[string]bool{}, &tracer{}); got != "spellData.Execute.Highest().EffectN(1).Average(60)" {
+	if got, err := resolveText("c", deep); got != "spellData.Execute.Highest().EffectN(1).Average(60)" {
 		t.Errorf("c resolved to %q, %v", got, err)
 	}
-	if _, err := resolveChain("e", deep, maxSubstitutions, map[string]bool{}, &tracer{}); err == nil || !strings.Contains(err.Error(), "more than 4 names") {
+	if _, err := resolveText("e", deep); err == nil || !strings.Contains(err.Error(), "more than 4 names") {
 		t.Errorf("e resolved past the depth limit: %v", err)
 	}
 
@@ -346,7 +390,7 @@ func TestResolveChainGuards(t *testing.T) {
 		"self":  "self.EffectN(1)",
 	})
 	for _, name := range []string{"loop", "self"} {
-		if _, err := resolveChain(name, cyclic, maxSubstitutions, map[string]bool{}, &tracer{}); err == nil || !strings.Contains(err.Error(), "stands on itself") {
+		if _, err := resolveText(name, cyclic); err == nil || !strings.Contains(err.Error(), "stands on itself") {
 			t.Errorf("%s resolved through a cycle: %v", name, err)
 		}
 	}

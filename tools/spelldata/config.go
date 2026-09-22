@@ -7,14 +7,10 @@ import (
 	"go/parser"
 	"go/scanner"
 	"go/token"
-	"go/types"
 	"math/bits"
-	"path/filepath"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
@@ -22,116 +18,6 @@ import (
 )
 
 var spellConfigPattern = regexp.MustCompile(`\bspelldata\.SpellConfig\b`)
-
-var coreConstantFiles = []string{"sim/core/flags.go", "sim/core/constants.go"}
-
-var (
-	loadCoreConstants sync.Once
-	coreFset          = token.NewFileSet()
-	corePackage       *types.Package
-	coreNames         = map[string][]namedConstant{}
-)
-
-type namedConstant struct {
-	name  string
-	value uint64
-}
-
-// No import is followed: type-checking proto and stats from source takes seconds, and the flag
-// constants do not use them. The errors that leaves behind are ignored; the constants still resolve.
-type noImports struct{}
-
-func (noImports) Import(path string) (*types.Package, error) {
-	return nil, fmt.Errorf("%s is not imported", path)
-}
-
-func scanCoreConstants() {
-	root, err := moduleRoot()
-	if err != nil {
-		return
-	}
-	var files []*ast.File
-	for _, name := range coreConstantFiles {
-		file, err := parser.ParseFile(coreFset, filepath.Join(root, name), nil, parser.SkipObjectResolution)
-		if err != nil {
-			return
-		}
-		files = append(files, file)
-	}
-
-	conf := types.Config{Importer: noImports{}, Error: func(error) {}}
-	corePackage, _ = conf.Check("github.com/wowsims/forever/sim/core", coreFset, files, nil)
-
-	scope := corePackage.Scope()
-	for _, name := range scope.Names() {
-		c, ok := scope.Lookup(name).(*types.Const)
-		if !ok {
-			continue
-		}
-		named, ok := c.Type().(*types.Named)
-		if !ok {
-			continue
-		}
-		value, exact := constant.Uint64Val(constant.ToInt(c.Val()))
-		if !exact {
-			continue
-		}
-		typeName := named.Obj().Name()
-		coreNames[typeName] = append(coreNames[typeName], namedConstant{name: name, value: value})
-	}
-	for _, names := range coreNames {
-		sort.SliceStable(names, func(i, j int) bool { return names[i].value < names[j].value })
-	}
-}
-
-func coreConstants(typeName string) []namedConstant {
-	loadCoreConstants.Do(scanCoreConstants)
-	return coreNames[typeName]
-}
-
-func evalCoreConstant(expr ast.Expr) (constant.Value, error) {
-	loadCoreConstants.Do(scanCoreConstants)
-	if corePackage == nil {
-		return nil, fmt.Errorf("sim/core's constants did not load")
-	}
-
-	local, err := unqualify(expr)
-	if err != nil {
-		return nil, err
-	}
-	tv, err := types.Eval(coreFset, corePackage, token.NoPos, nodeText(local))
-	if err != nil || tv.Value == nil {
-		return nil, fmt.Errorf("%s is not a constant of sim/core", nodeText(expr))
-	}
-	return tv.Value, nil
-}
-
-func unqualify(expr ast.Expr) (ast.Expr, error) {
-	switch n := expr.(type) {
-	case *ast.BasicLit:
-		return n, nil
-	case *ast.ParenExpr:
-		return unqualify(n.X)
-	case *ast.SelectorExpr:
-		if pkg, ok := n.X.(*ast.Ident); ok && pkg.Name == "core" {
-			return ast.NewIdent(n.Sel.Name), nil
-		}
-	case *ast.BinaryExpr:
-		if n.Op != token.OR {
-			break
-		}
-		x, err := unqualify(n.X)
-		if err != nil {
-			return nil, err
-		}
-		y, err := unqualify(n.Y)
-		if err != nil {
-			return nil, err
-		}
-		return &ast.BinaryExpr{X: x, Op: token.OR, Y: y}, nil
-	}
-	return nil, fmt.Errorf("%s is not a constant expression over sim/core's names", nodeText(expr))
-}
 
 func exactName(typeName string, value uint64) string {
 	for _, c := range coreConstants(typeName) {
@@ -216,19 +102,19 @@ func readOption(expr ast.Expr) configOption {
 
 	values := make([]uint64, 0, len(call.Args))
 	for _, arg := range call.Args {
-		value, err := evalCoreConstant(arg)
+		value, err := evalConst(arg)
 		if err != nil {
 			option.err = err
 			return option
 		}
 		v, exact := constant.Uint64Val(constant.ToInt(value))
 		if !exact {
-			if i, ok := constant.Int64Val(constant.ToInt(value)); ok {
-				v = uint64(i)
-			} else {
+			i, ok := constant.Int64Val(constant.ToInt(value))
+			if !ok {
 				option.err = fmt.Errorf("%s is not an integer", nodeText(arg))
 				return option
 			}
+			v = uint64(i)
 		}
 		values = append(values, v)
 	}
@@ -311,35 +197,48 @@ func evalSpellConfig(call string, declarations map[string]declaration, pkg strin
 }
 
 func configPick(arg ast.Expr, declarations map[string]declaration, pkg string, trace *tracer) (*spelldata.Spell, string, error) {
-	if call, ok := arg.(*ast.CallExpr); ok {
-		if sel, ok := call.Fun.(*ast.SelectorExpr); ok && (sel.Sel.Name == "MustFind" || sel.Sel.Name == "Find") && len(call.Args) == 1 {
-			if pkgIdent, ok := sel.X.(*ast.Ident); ok && pkgIdent.Name == "spelldata" {
-				if lit, ok := call.Args[0].(*ast.BasicLit); ok && lit.Kind == token.INT {
-					id, _ := strconv.ParseInt(lit.Value, 0, 32)
-					s := spelldata.Find(int32(id))
-					if s == spelldata.Nil {
-						return nil, "", fmt.Errorf("spell %d is not in the store", id)
-					}
-					return s, nodeText(arg), nil
-				}
-			}
+	if id, ok := findCall(arg); ok {
+		s := spelldata.Find(id)
+		if s == spelldata.Nil {
+			return nil, "", fmt.Errorf("spell %d is not in the store", id)
 		}
+		return s, nodeText(arg), nil
 	}
 
-	text := nodeText(arg)
-	trace.add("  row %s", text)
-	expr, err := resolveChain(text, declarations, maxSubstitutions, map[string]bool{}, trace)
+	trace.add("  row %s", nodeText(arg))
+	c, err := walkChain(arg, func(token.Pos) int { return 0 })
 	if err != nil {
 		return nil, "", err
 	}
-	result, err := evalExpr(ladderFamilies(), expr, pkg)
+	c, err = resolveChain(c, declarations, trace)
+	if err != nil {
+		return nil, "", err
+	}
+	result, err := evalExpr(ladderFamilies(), c, pkg)
 	if err != nil {
 		return nil, "", err
 	}
 	if result.kind != kindSpell {
-		return nil, "", fmt.Errorf("%s reads a %s, not a row", text, result.kind)
+		return nil, "", fmt.Errorf("%s reads a %s, not a row", nodeText(arg), result.kind)
 	}
-	return result.spell, expr, nil
+	return result.spell, c.text(false), nil
+}
+
+// The id of a `spelldata.MustFind(id)` or `spelldata.Find(id)`.
+func findCall(arg ast.Expr) (int32, bool) {
+	call, ok := arg.(*ast.CallExpr)
+	if !ok || len(call.Args) != 1 {
+		return 0, false
+	}
+	sel, ok := call.Fun.(*ast.SelectorExpr)
+	if !ok || sel.Sel.Name != "MustFind" && sel.Sel.Name != "Find" {
+		return 0, false
+	}
+	if pkg, ok := sel.X.(*ast.Ident); !ok || pkg.Name != "spelldata" {
+		return 0, false
+	}
+	id, err := evalInt(call.Args[0])
+	return int32(id), err == nil
 }
 
 type configField struct {

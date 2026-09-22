@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 
 	"github.com/wowsims/forever/sim/core/spelldata"
@@ -90,17 +89,16 @@ func familyMarkdown(f *ladderFamily) string {
 		}
 	}
 	md.WriteString("\n")
-	if highest, err := familyHighest(f); err == nil {
-		spellCard(&md, highest.spell, rankLabel(highest.spell, highest.rank, f.talentRanks), 0)
-	}
+	highest := f.ladder.Highest()
+	spellCard(&md, highest, rankLabel(f, highest), 0)
 	return md.String()
 }
 
 func exprMarkdown(result *exprResult, hover chainHover) string {
 	var md strings.Builder
 	s := result.spell
-	rank := rankLabel(s, result.rank, result.ranks)
-	called := lastCall(result.trail)
+	rank := rankLabel(result.family, s)
+	called := result.called
 
 	switch result.kind {
 	case kindSpell:
@@ -133,14 +131,4 @@ func exprMarkdown(result *exprResult, hover chainHover) string {
 		spellCard(&md, s, rank, result.readEffect)
 	}
 	return md.String()
-}
-
-var lastCallPattern = regexp.MustCompile(`\.([A-Za-z_]\w*\([^()]*\))$`)
-
-// `Average(60)` out of a trail ending `.EffectN(1).Average(60)`.
-func lastCall(trail string) string {
-	if match := lastCallPattern.FindStringSubmatch(trail); match != nil {
-		return match[1]
-	}
-	return trail
 }

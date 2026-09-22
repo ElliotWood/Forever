@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"go/ast"
+	"go/constant"
 	"go/parser"
 	"go/printer"
 	"go/token"
@@ -17,64 +18,132 @@ import (
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-// What -expr answers: the ladder pick alone, an effect of it, or a value read off one.
+// What -expr answers: a row, an effect of it, or a value read off one.
 const (
 	kindSpell  = "spell"
 	kindEffect = "effect"
 	kindValue  = "value"
 )
 
-// The identifiers a class file writes into an accessor call, with the value sim/core states for each.
-// Anything else in an argument is refused rather than guessed at.
-var namedValues = map[string]int64{"core.CharacterLevel": core.CharacterLevel}
+// A name followed by selectors and calls, with where each part sits in the text it was read from.
+// `spellData.<Family>` is one head.
+type chain struct {
+	head       string
+	start, end int
+	segments   []segment
+}
 
 // One `.Name(args)` of a chain, or a bare `.Name` where the caller wrote no call.
 type segment struct {
-	name string
-	args []argument
-	call bool
+	name       string
+	args       []argument
+	call       bool
+	start, end int
 }
 
 // An argument as the caller wrote it and as the evaluator reads it: `core.CharacterLevel` is passed as
 // 60 and prints as 60 in the trail, so the trail is the chain with every name resolved.
 type argument struct {
-	source  string
-	literal string
-	value   any
+	source string
+	value  constant.Value
 }
 
-func (s segment) text() string {
+// The segment as written, or with every argument resolved to its value.
+func (s segment) text(resolved bool) string {
 	if !s.call {
 		return s.name
 	}
 	parts := make([]string, 0, len(s.args))
 	for _, arg := range s.args {
-		parts = append(parts, arg.literal)
+		if resolved {
+			parts = append(parts, arg.value.String())
+		} else {
+			parts = append(parts, arg.source)
+		}
 	}
 	return s.name + "(" + strings.Join(parts, ", ") + ")"
+}
+
+func (c *chain) text(resolved bool) string {
+	var out strings.Builder
+	out.WriteString(c.head)
+	for _, seg := range c.segments {
+		out.WriteString("." + seg.text(resolved))
+	}
+	return out.String()
 }
 
 // A chain read to the end: the row the card states, the effect the chain went through, and the value
 // the last accessor answered, with that accessor's own doc comment.
 type exprResult struct {
-	kind  string
-	trail string
+	kind   string
+	trail  string
+	called string
 
+	family     *ladderFamily
 	spell      *spelldata.Spell
 	readEffect int
-
-	// The talent rank the spell is, and how many the talent has; 0 on a row that is not one.
-	rank  int32
-	ranks int32
 
 	value     string
 	doc       string
 	accessors []string
 }
 
-// A ladder pick followed by the store's own accessors, evaluated by name over the exported method
-// set: an accessor added to sim/core/spelldata is readable here without a list to keep in step.
-func evalExpr(index map[string]*ladderFamily, expr, pkg string) (result *exprResult, err error) {
+// The chain a text states, its offsets counted from base.
+func parseChain(text string, base int) (*chain, error) {
+	node, err := parser.ParseExpr(text)
+	if err != nil {
+		return nil, fmt.Errorf("%q is not a chain of accessor calls", text)
+	}
+	return walkChain(node, func(pos token.Pos) int { return base + int(pos) - 1 })
+}
+
+// The chain an expression states, with offset turning a node's position into the caller's offsets.
+// Anything that is not a name followed by selectors and calls - an operator, a conversion, an index - is
+// refused whole, and so is an argument that is not a constant.
+func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
+	switch n := node.(type) {
+	case *ast.Ident:
+		return &chain{head: n.Name, start: offset(n.Pos()), end: offset(n.End())}, nil
+
+	case *ast.SelectorExpr:
+		c, err := walkChain(n.X, offset)
+		if err != nil {
+			return nil, err
+		}
+		if c.head == "spellData" && len(c.segments) == 0 {
+			c.head, c.end = "spellData."+n.Sel.Name, offset(n.End())
+			return c, nil
+		}
+		c.segments = append(c.segments, segment{name: n.Sel.Name, start: offset(n.X.End()), end: offset(n.End())})
+		return c, nil
+
+	case *ast.CallExpr:
+		sel, ok := n.Fun.(*ast.SelectorExpr)
+		if !ok {
+			return nil, fmt.Errorf("%s is not an accessor call", nodeText(n.Fun))
+		}
+		c, err := walkChain(sel.X, offset)
+		if err != nil {
+			return nil, err
+		}
+		seg := segment{name: sel.Sel.Name, call: true, start: offset(sel.X.End()), end: offset(n.End())}
+		for _, arg := range n.Args {
+			value, err := evalConst(arg)
+			if err != nil {
+				return nil, err
+			}
+			seg.args = append(seg.args, argument{source: nodeText(arg), value: value})
+		}
+		c.segments = append(c.segments, seg)
+		return c, nil
+	}
+	return nil, fmt.Errorf("%s is not a chain of accessor calls: write spellData.<Family> and the accessors on it", nodeText(node))
+}
+
+// A ladder followed by the store's own accessors, evaluated by name over the exported method set: an
+// accessor added to sim/core/spelldata is readable here without a list to keep in step.
+func evalExpr(index map[string]*ladderFamily, c *chain, pkg string) (result *exprResult, err error) {
 	// The store panics where a caller asks for a rank or an effect it does not carry, on purpose. The
 	// panic is this reader's answer, as an error.
 	defer func() {
@@ -83,190 +152,124 @@ func evalExpr(index map[string]*ladderFamily, expr, pkg string) (result *exprRes
 		}
 	}()
 
-	root, segments, err := parseChain(expr)
+	field, qualified := strings.CutPrefix(c.head, "spellData.")
+	family, err := findFamily(index, field, pkg)
+	if err != nil && !qualified {
+		return nil, fmt.Errorf("%q is not a ladder call: write spellData.<Family> and the accessors on it", c.text(false))
+	}
 	if err != nil {
 		return nil, err
 	}
-
-	head, used := headExpr(root, segments)
-	picked, err := resolveExpr(index, head, pkg)
-	if err != nil {
-		return nil, err
+	if family.err != nil {
+		return nil, family.err
 	}
-	s := picked.spell
 
-	res := &exprResult{kind: kindSpell, trail: head, spell: s, value: strconv.Itoa(int(s.ID)),
-		rank: picked.rank, ranks: picked.family.talentRanks, accessors: []string{}}
-	current := reflect.ValueOf(s)
+	res := &exprResult{trail: "spellData." + field, family: family, spell: family.ladder.Highest()}
+	current := reflect.ValueOf(family.ladder)
+	var effectOf func(*spelldata.Spell) *spelldata.Effect
 
-	for _, seg := range segments[used:] {
+	for _, seg := range c.segments {
+		if current.Type() == reflect.TypeOf(family.ladder) {
+			if err := family.checkPick(seg); err != nil {
+				return nil, err
+			}
+		}
 		answer, err := callSegment(current, seg)
 		if err != nil {
 			return nil, err
 		}
-		res.trail += "." + seg.text()
+		res.trail += "." + seg.text(true)
+		res.called = seg.text(true)
 		res.doc = methodDoc(baseTypeName(current.Type()), seg.name)
-		current = answer
 
 		switch value := answer.Interface().(type) {
 		case *spelldata.Spell:
 			if value == spelldata.Nil {
 				return nil, fmt.Errorf("%s answers a spell the store does not carry", res.trail)
 			}
-			if value != res.spell {
-				res.rank, res.ranks = 0, 0
-			}
-			res.kind, res.spell, res.readEffect = kindSpell, value, 0
+			res.spell, res.readEffect = value, 0
 		case *spelldata.Effect:
-			res.kind, res.readEffect = kindEffect, effectPosition(res.spell, value)
+			res.readEffect = effectPosition(res.spell, value)
+		case spelldata.LadderEffect:
+			effectOf = spellEffect(seg)
 		default:
-			res.kind = kindValue
+			if rank, ok := rankArgument(current, seg); ok {
+				res.spell = family.ladder.Rank(rank)
+				res.readEffect = 1
+				if effectOf != nil {
+					res.readEffect = effectPosition(res.spell, effectOf(res.spell))
+				}
+			}
 		}
+		current = answer
 	}
 
-	switch res.kind {
-	case kindSpell:
-		res.value = strconv.Itoa(int(res.spell.ID))
-	case kindEffect:
-		effect := current.Interface().(*spelldata.Effect)
-		res.accessors = effectAccessors(effect)
+	switch value := current.Interface().(type) {
+	case *spelldata.Spell:
+		res.kind, res.value = kindSpell, strconv.Itoa(int(value.ID))
+	case *spelldata.Effect:
+		res.kind, res.accessors = kindEffect, effectAccessors(value)
 		res.value = "no effect"
 		if res.readEffect > 0 {
 			res.value = fmt.Sprintf("effect %d", res.readEffect)
 		}
+	case spelldata.Ladder, spelldata.LadderEffect:
+		return nil, fmt.Errorf("%s names a ladder, not a rank: read a rank off it with Highest(), Rank(n), ByID(id) or a ...At(rank)", res.trail)
 	default:
-		value, err := formatValue(current)
+		text, err := formatValue(current)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", res.trail, err)
 		}
-		res.value = value
+		res.kind, res.value = kindValue, text
 	}
 	return res, nil
 }
 
-// The chain as a name and the accessors written on it. Anything that is not a name followed by
-// selectors and calls - an operator, a conversion, an index - is refused whole.
-func parseChain(expr string) (string, []segment, error) {
-	node, err := parser.ParseExpr(strings.TrimSpace(expr))
-	if err != nil {
-		return "", nil, fmt.Errorf("%q is not a chain of accessor calls", expr)
+// Rank and ByID refused in the ladder's own terms, where the store would answer Nil or panic.
+func (f *ladderFamily) checkPick(seg segment) error {
+	if len(seg.args) != 1 || seg.args[0].value.Kind() != constant.Int {
+		return nil
 	}
-	return flattenChain(node)
+	n, _ := constant.Int64Val(seg.args[0].value)
+	switch seg.name {
+	case "Rank":
+		if n < 1 || n > int64(f.ladder.Len()) {
+			return fmt.Errorf("%s spellData.%s has %d ranks, not rank %d", f.pkg, f.field, f.ladder.Len(), n)
+		}
+	case "ByID":
+		carried := false
+		f.ladder.Each(func(_ int32, s *spelldata.Spell) { carried = carried || int64(s.ID) == n })
+		if !carried {
+			return fmt.Errorf("%s spellData.%s has no rank with id %d", f.pkg, f.field, n)
+		}
+	}
+	return nil
 }
 
-func flattenChain(node ast.Expr) (string, []segment, error) {
-	switch n := node.(type) {
-	case *ast.Ident:
-		return n.Name, nil, nil
-
-	case *ast.SelectorExpr:
-		root, segments, err := flattenChain(n.X)
+// The effect of a rank that a LadderEffect reads, found the way the store finds it.
+func spellEffect(seg segment) func(*spelldata.Spell) *spelldata.Effect {
+	method := map[string]string{"EffectAt": "EffectN", "Effect": "Effect"}[seg.name]
+	return func(s *spelldata.Spell) *spelldata.Effect {
+		answer, err := callSegment(reflect.ValueOf(s), segment{name: method, args: seg.args, call: true})
 		if err != nil {
-			return "", nil, err
+			return spelldata.NilEffect
 		}
-		return root, append(segments, segment{name: n.Sel.Name}), nil
-
-	case *ast.CallExpr:
-		sel, ok := n.Fun.(*ast.SelectorExpr)
-		if !ok {
-			return "", nil, fmt.Errorf("%s is not an accessor call", nodeText(n.Fun))
-		}
-		root, segments, err := flattenChain(sel.X)
-		if err != nil {
-			return "", nil, err
-		}
-		args, err := readArgs(n.Args)
-		if err != nil {
-			return "", nil, err
-		}
-		return root, append(segments, segment{name: sel.Sel.Name, args: args, call: true}), nil
+		return answer.Interface().(*spelldata.Effect)
 	}
-	return "", nil, fmt.Errorf("%s is not a chain of accessor calls: write spellData.<Family>.Highest() and the accessors on it", nodeText(node))
 }
 
-// Every argument as a number, a string or one of the names sim/core states. An argument that is
-// anything else - a variable, an arithmetic expression - is refused: -expr reads, it does not run the
-// package around it.
-func readArgs(args []ast.Expr) ([]argument, error) {
-	out := make([]argument, 0, len(args))
-	for _, arg := range args {
-		read, err := readArg(arg)
-		if err != nil {
-			return nil, err
-		}
-		out = append(out, read)
+// The rank a value read off a ladder is at: the one argument of a ...At(rank).
+func rankArgument(recv reflect.Value, seg segment) (int32, bool) {
+	switch recv.Interface().(type) {
+	case spelldata.Ladder, spelldata.LadderEffect:
+	default:
+		return 0, false
 	}
-	return out, nil
-}
-
-func readArg(arg ast.Expr) (argument, error) {
-	source := nodeText(arg)
-
-	if unary, ok := arg.(*ast.UnaryExpr); ok && unary.Op == token.SUB {
-		read, err := readArg(unary.X)
-		if err != nil {
-			return argument{}, err
-		}
-		switch value := read.value.(type) {
-		case int64:
-			return argument{source: source, literal: "-" + read.literal, value: -value}, nil
-		case float64:
-			return argument{source: source, literal: "-" + read.literal, value: -value}, nil
-		}
-		return argument{}, fmt.Errorf("%s is not a number to negate", source)
+	if len(seg.args) != 1 || !strings.HasSuffix(seg.name, "At") {
+		return 0, false
 	}
-
-	if lit, ok := arg.(*ast.BasicLit); ok {
-		switch lit.Kind {
-		case token.INT:
-			value, err := strconv.ParseInt(lit.Value, 0, 64)
-			if err != nil {
-				return argument{}, fmt.Errorf("%s is not an integer this reads", source)
-			}
-			return argument{source: source, literal: lit.Value, value: value}, nil
-		case token.FLOAT:
-			value, err := strconv.ParseFloat(lit.Value, 64)
-			if err != nil {
-				return argument{}, fmt.Errorf("%s is not a number this reads", source)
-			}
-			return argument{source: source, literal: lit.Value, value: value}, nil
-		case token.STRING:
-			value, err := strconv.Unquote(lit.Value)
-			if err != nil {
-				return argument{}, fmt.Errorf("%s is not a string this reads", source)
-			}
-			return argument{source: source, literal: lit.Value, value: value}, nil
-		}
-	}
-
-	if value, ok := namedValues[source]; ok {
-		return argument{source: source, literal: strconv.FormatInt(value, 10), value: value}, nil
-	}
-
-	names := make([]string, 0, len(namedValues))
-	for name := range namedValues {
-		names = append(names, name)
-	}
-	return argument{}, fmt.Errorf("%s is not a literal: an argument is a number, a string or %s",
-		source, strings.Join(names, ", "))
-}
-
-// The ladder call at the head of the chain, in the shape resolveExpr takes, and how many segments it
-// used. A chain that states no pick is handed over as it stands, so resolveExpr says what is missing.
-func headExpr(root string, segments []segment) (string, int) {
-	if root == "spellData" {
-		switch len(segments) {
-		case 0:
-			return root, 0
-		case 1:
-			return "spellData." + segments[0].text(), 1
-		}
-		return "spellData." + segments[0].name + "." + segments[1].text(), 2
-	}
-	if len(segments) == 0 {
-		return root, 0
-	}
-	return "spellData." + root + "." + segments[0].text(), 1
+	n, exact := constant.Int64Val(constant.ToInt(seg.args[0].value))
+	return int32(n), exact
 }
 
 func callSegment(recv reflect.Value, seg segment) (reflect.Value, error) {
@@ -303,21 +306,22 @@ func callSegment(recv reflect.Value, seg segment) (reflect.Value, error) {
 	return method.Call(in)[0], nil
 }
 
-// A literal as the parameter's own type. An integer widens into a float, a fractional number does not
+// A constant as the parameter's own type. An integer widens into a float, a fractional number does not
 // narrow into an integer: truncating it silently is the reading a caller would not notice.
 func convertArg(arg argument, want reflect.Type) (reflect.Value, error) {
-	switch value := arg.value.(type) {
-	case int64:
-		if isInteger(want) || isFloat(want) {
-			return reflect.ValueOf(value).Convert(want), nil
+	switch {
+	case isInteger(want):
+		if n, exact := constant.Int64Val(constant.ToInt(arg.value)); exact {
+			return reflect.ValueOf(n).Convert(want), nil
 		}
-	case float64:
-		if isFloat(want) {
-			return reflect.ValueOf(value).Convert(want), nil
+	case isFloat(want):
+		if v := constant.ToFloat(arg.value); v.Kind() == constant.Float {
+			f, _ := constant.Float64Val(v)
+			return reflect.ValueOf(f).Convert(want), nil
 		}
-	case string:
-		if want.Kind() == reflect.String {
-			return reflect.ValueOf(value).Convert(want), nil
+	case want.Kind() == reflect.String:
+		if arg.value.Kind() == constant.String {
+			return reflect.ValueOf(constant.StringVal(arg.value)).Convert(want), nil
 		}
 	}
 	return reflect.Value{}, fmt.Errorf("%s is not the %s it takes", arg.source, want)
@@ -369,7 +373,7 @@ func formatValue(v reflect.Value) (string, error) {
 }
 
 func (r *exprResult) title() string {
-	return rankTitle(r.spell, r.rank, r.ranks)
+	return rankTitle(r.family, r.spell)
 }
 
 // Where an effect sits in the row the chain came through, counted the way EffectN counts. 0 for an
