@@ -50,13 +50,6 @@ export const PARTY_BUFFS_CONFIG = inDisplayOrder(Generated.GENERATED_PARTY_BUFFS
 	Generated.StrengthOfEarthTotem,
 	Generated.GraceOfAirTotem,
 	Generated.WindfuryTotem,
-	Generated.FrostResistanceTotem,
-	Generated.NatureResistanceTotem,
-	Generated.FireResistanceTotem,
-	Generated.FrostResistanceAura,
-	Generated.FireResistanceAura,
-	Generated.ShadowResistanceAura,
-	Generated.AspectOfTheWild,
 ]);
 
 export const BUFFS_CONFIG = inDisplayOrder(
@@ -72,6 +65,13 @@ export const BUFFS_CONFIG = inDisplayOrder(
 		Generated.BlessingOfWisdom,
 		{ config: BlessingOfSalvation, stats: [] },
 		Generated.ShadowProtection,
+		Generated.FireResistanceAura,
+		Generated.FrostResistanceAura,
+		Generated.ShadowResistanceAura,
+		Generated.FireResistanceTotem,
+		Generated.FrostResistanceTotem,
+		Generated.NatureResistanceTotem,
+		Generated.AspectOfTheWild,
 		Generated.Innervates,
 		Generated.PowerInfusions,
 	],

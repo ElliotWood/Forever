@@ -346,154 +346,6 @@ func WindfuryTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// Frost Resistance Totem - https://www.wowhead.com/forever/spell=10477
-func FrostResistanceTotemValue(talentPoints int32) float64 {
-	return 60.0
-}
-func FrostResistanceTotemDuration(talentPoints int32) time.Duration {
-	return NeverExpires
-}
-func FrostResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Frost Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 10477}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration: FrostResistanceTotemDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []StatConfig{
-			{stats.FrostResistance, FrostResistanceTotemValue(talentPoints), false},
-		},
-	})
-}
-
-// Nature Resistance Totem - https://www.wowhead.com/forever/spell=10599
-func NatureResistanceTotemValue(talentPoints int32) float64 {
-	return 60.0
-}
-func NatureResistanceTotemDuration(talentPoints int32) time.Duration {
-	return NeverExpires
-}
-func NatureResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Nature Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 10599}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration: NatureResistanceTotemDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []StatConfig{
-			{stats.NatureResistance, NatureResistanceTotemValue(talentPoints), false},
-		},
-	})
-}
-
-// Fire Resistance Totem - https://www.wowhead.com/forever/spell=10535
-func FireResistanceTotemValue(talentPoints int32) float64 {
-	return 60.0
-}
-func FireResistanceTotemDuration(talentPoints int32) time.Duration {
-	return NeverExpires
-}
-func FireResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Fire Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 10535}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration: FireResistanceTotemDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []StatConfig{
-			{stats.FireResistance, FireResistanceTotemValue(talentPoints), false},
-		},
-	})
-}
-
-// Frost Resistance Aura - https://www.wowhead.com/forever/spell=19898
-var FrostResistanceAuraCategory = "FrostResistanceAura"
-
-func FrostResistanceAuraValue(talentPoints int32) float64 {
-	return 60.0
-}
-func FrostResistanceAuraDuration(talentPoints int32) time.Duration {
-	return NeverExpires
-}
-func FrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:          "Frost Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       ActionID{SpellID: 19898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:       FrostResistanceAuraDuration(talentPoints),
-		Category:       FrostResistanceAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-		Stats: []StatConfig{
-			{stats.FrostResistance, FrostResistanceAuraValue(talentPoints), false},
-		},
-	})
-}
-
-// Fire Resistance Aura - https://www.wowhead.com/forever/spell=19900
-var FireResistanceAuraCategory = "FireResistanceAura"
-
-func FireResistanceAuraValue(talentPoints int32) float64 {
-	return 60.0
-}
-func FireResistanceAuraDuration(talentPoints int32) time.Duration {
-	return NeverExpires
-}
-func FireResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:          "Fire Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       ActionID{SpellID: 19900}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:       FireResistanceAuraDuration(talentPoints),
-		Category:       FireResistanceAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-		Stats: []StatConfig{
-			{stats.FireResistance, FireResistanceAuraValue(talentPoints), false},
-		},
-	})
-}
-
-// Shadow Resistance Aura - https://www.wowhead.com/forever/spell=19896
-var ShadowResistanceAuraCategory = "ShadowResistanceAura"
-
-func ShadowResistanceAuraValue(talentPoints int32) float64 {
-	return 60.0
-}
-func ShadowResistanceAuraDuration(talentPoints int32) time.Duration {
-	return NeverExpires
-}
-func ShadowResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:          "Shadow Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:       ActionID{SpellID: 19896}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:       ShadowResistanceAuraDuration(talentPoints),
-		Category:       ShadowResistanceAuraCategory,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-		Stats: []StatConfig{
-			{stats.ShadowResistance, ShadowResistanceAuraValue(talentPoints), false},
-		},
-	})
-}
-
-// Aspect of the Wild - https://www.wowhead.com/forever/spell=20190
-func AspectOfTheWildValue(talentPoints int32) float64 {
-	return 60.0
-}
-func AspectOfTheWildDuration(talentPoints int32) time.Duration {
-	return NeverExpires
-}
-func AspectOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Aspect of the Wild (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 20190}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration: AspectOfTheWildDuration(talentPoints),
-		IsPlayer: isPlayer,
-		Stats: []StatConfig{
-			{stats.NatureResistance, AspectOfTheWildValue(talentPoints), false},
-		},
-	})
-}
-
 // Atiesh - Druid - https://www.wowhead.com/forever/spell=28145
 func AtieshDruidValue(talentPoints int32) float64 {
 	return 11.0
@@ -745,6 +597,154 @@ func ShadowProtectionAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
+// Fire Resistance Aura - https://www.wowhead.com/forever/spell=19900
+var FireResistanceAuraCategory = "FireResistanceAura"
+
+func FireResistanceAuraValue(talentPoints int32) float64 {
+	return 60.0
+}
+func FireResistanceAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func FireResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Fire Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 19900}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       FireResistanceAuraDuration(talentPoints),
+		Category:       FireResistanceAuraCategory,
+		SharedCategory: PaladinAuraCategory,
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Stats: []StatConfig{
+			{stats.FireResistance, FireResistanceAuraValue(talentPoints), false},
+		},
+	})
+}
+
+// Frost Resistance Aura - https://www.wowhead.com/forever/spell=19898
+var FrostResistanceAuraCategory = "FrostResistanceAura"
+
+func FrostResistanceAuraValue(talentPoints int32) float64 {
+	return 60.0
+}
+func FrostResistanceAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func FrostResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Frost Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 19898}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       FrostResistanceAuraDuration(talentPoints),
+		Category:       FrostResistanceAuraCategory,
+		SharedCategory: PaladinAuraCategory,
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Stats: []StatConfig{
+			{stats.FrostResistance, FrostResistanceAuraValue(talentPoints), false},
+		},
+	})
+}
+
+// Shadow Resistance Aura - https://www.wowhead.com/forever/spell=19896
+var ShadowResistanceAuraCategory = "ShadowResistanceAura"
+
+func ShadowResistanceAuraValue(talentPoints int32) float64 {
+	return 60.0
+}
+func ShadowResistanceAuraDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func ShadowResistanceAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:          "Shadow Resistance Aura (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID:       ActionID{SpellID: 19896}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration:       ShadowResistanceAuraDuration(talentPoints),
+		Category:       ShadowResistanceAuraCategory,
+		SharedCategory: PaladinAuraCategory,
+		SingleAura:     true,
+		IsPlayer:       isPlayer,
+		Stats: []StatConfig{
+			{stats.ShadowResistance, ShadowResistanceAuraValue(talentPoints), false},
+		},
+	})
+}
+
+// Fire Resistance Totem - https://www.wowhead.com/forever/spell=10535
+func FireResistanceTotemValue(talentPoints int32) float64 {
+	return 60.0
+}
+func FireResistanceTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func FireResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Fire Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10535}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: FireResistanceTotemDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.FireResistance, FireResistanceTotemValue(talentPoints), false},
+		},
+	})
+}
+
+// Frost Resistance Totem - https://www.wowhead.com/forever/spell=10477
+func FrostResistanceTotemValue(talentPoints int32) float64 {
+	return 60.0
+}
+func FrostResistanceTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func FrostResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Frost Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10477}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: FrostResistanceTotemDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.FrostResistance, FrostResistanceTotemValue(talentPoints), false},
+		},
+	})
+}
+
+// Nature Resistance Totem - https://www.wowhead.com/forever/spell=10599
+func NatureResistanceTotemValue(talentPoints int32) float64 {
+	return 60.0
+}
+func NatureResistanceTotemDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func NatureResistanceTotemAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Nature Resistance Totem (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 10599}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: NatureResistanceTotemDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.NatureResistance, NatureResistanceTotemValue(talentPoints), false},
+		},
+	})
+}
+
+// Aspect of the Wild - https://www.wowhead.com/forever/spell=20190
+func AspectOfTheWildValue(talentPoints int32) float64 {
+	return 60.0
+}
+func AspectOfTheWildDuration(talentPoints int32) time.Duration {
+	return NeverExpires
+}
+func AspectOfTheWildAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Aspect of the Wild (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 20190}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: AspectOfTheWildDuration(talentPoints),
+		IsPlayer: isPlayer,
+		Stats: []StatConfig{
+			{stats.NatureResistance, AspectOfTheWildValue(talentPoints), false},
+		},
+	})
+}
+
 // Innervates - https://www.wowhead.com/forever/spell=29166
 var InnervatesCategory = "Innervate"
 
@@ -836,27 +836,6 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if party.WindfuryTotem {
 		driveWindfuryTotem(char, party)
 	}
-	if party.FrostResistanceTotem {
-		MakePermanent(FrostResistanceTotemAura(&char.Unit, false, 0))
-	}
-	if party.NatureResistanceTotem {
-		MakePermanent(NatureResistanceTotemAura(&char.Unit, false, 0))
-	}
-	if party.FireResistanceTotem {
-		MakePermanent(FireResistanceTotemAura(&char.Unit, false, 0))
-	}
-	if party.FrostResistanceAura {
-		MakePermanent(FrostResistanceAuraAura(&char.Unit, false, 0))
-	}
-	if party.FireResistanceAura {
-		MakePermanent(FireResistanceAuraAura(&char.Unit, false, 0))
-	}
-	if party.ShadowResistanceAura {
-		MakePermanent(ShadowResistanceAuraAura(&char.Unit, false, 0))
-	}
-	if party.AspectOfTheWild {
-		MakePermanent(AspectOfTheWildAura(&char.Unit, false, 0))
-	}
 	if party.AtieshDruid > 0 {
 		driveAtieshDruid(char, party)
 	}
@@ -892,6 +871,27 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if raid.ShadowProtection {
 		MakePermanent(ShadowProtectionAura(&char.Unit, false, 0))
+	}
+	if raid.FireResistanceAura {
+		MakePermanent(FireResistanceAuraAura(&char.Unit, false, 0))
+	}
+	if raid.FrostResistanceAura {
+		MakePermanent(FrostResistanceAuraAura(&char.Unit, false, 0))
+	}
+	if raid.ShadowResistanceAura {
+		MakePermanent(ShadowResistanceAuraAura(&char.Unit, false, 0))
+	}
+	if raid.FireResistanceTotem {
+		MakePermanent(FireResistanceTotemAura(&char.Unit, false, 0))
+	}
+	if raid.FrostResistanceTotem {
+		MakePermanent(FrostResistanceTotemAura(&char.Unit, false, 0))
+	}
+	if raid.NatureResistanceTotem {
+		MakePermanent(NatureResistanceTotemAura(&char.Unit, false, 0))
+	}
+	if raid.AspectOfTheWild {
+		MakePermanent(AspectOfTheWildAura(&char.Unit, false, 0))
 	}
 	if individual.Innervates > 0 {
 		driveInnervates(char, individual)

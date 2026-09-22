@@ -27,13 +27,6 @@ describe('the buff registries', () => {
 			'Strength of Earth',
 			'Grace of Air',
 			'Windfury Totem',
-			'Frost Resistance',
-			'Nature Resistance',
-			'Fire Resistance',
-			'Frost Resistance Aura',
-			'Fire Resistance Aura',
-			'Shadow Resistance Aura',
-			'Aspect of the Wild',
 		]);
 	});
 
@@ -49,6 +42,13 @@ describe('the buff registries', () => {
 			'Blessing of Wisdom',
 			'Blessing of Salvation',
 			'Shadow Protection',
+			'Fire Resistance Aura',
+			'Frost Resistance Aura',
+			'Shadow Resistance Aura',
+			'Fire Resistance',
+			'Frost Resistance',
+			'Nature Resistance',
+			'Aspect of the Wild',
 			'Innervates',
 			'Power Infusions',
 		]);

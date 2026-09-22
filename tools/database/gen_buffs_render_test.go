@@ -76,7 +76,7 @@ func syntheticBuffRows() []ResolvedBuff {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
-				Field: "frost_resistance_aura", Scope: buffmanifest.ScopeParty,
+				Field: "frost_resistance_aura", Scope: buffmanifest.ScopeRaid,
 				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindResistance,
 				Go: "SynthFrostResistanceAura", Name: "Frost Resistance Aura",
 				Category: "FrostResistanceAura", SharedCategory: "SynthPaladinAura", SingleAura: true,

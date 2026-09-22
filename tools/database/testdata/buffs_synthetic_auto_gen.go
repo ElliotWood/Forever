@@ -228,7 +228,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if party.DevotionAura {
 		MakePermanent(SynthDevotionAuraAura(&char.Unit, false, 0))
 	}
-	if party.FrostResistanceAura {
+	if raid.FrostResistanceAura {
 		MakePermanent(SynthFrostResistanceAuraAura(&char.Unit, false, 0))
 	}
 	if individual.Innervates > 0 {

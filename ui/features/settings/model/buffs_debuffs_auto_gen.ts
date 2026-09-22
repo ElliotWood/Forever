@@ -112,48 +112,6 @@ export const WindfuryTotem = makeBooleanPartyBuffInput({
 	label: 'Windfury Totem',
 });
 
-export const FrostResistanceTotem = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(10477),
-	fieldName: 'frostResistanceTotem',
-	label: 'Frost Resistance',
-});
-
-export const NatureResistanceTotem = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(10599),
-	fieldName: 'natureResistanceTotem',
-	label: 'Nature Resistance',
-});
-
-export const FireResistanceTotem = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(10535),
-	fieldName: 'fireResistanceTotem',
-	label: 'Fire Resistance',
-});
-
-export const FrostResistanceAura = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(19898),
-	fieldName: 'frostResistanceAura',
-	label: 'Frost Resistance Aura',
-});
-
-export const FireResistanceAura = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(19900),
-	fieldName: 'fireResistanceAura',
-	label: 'Fire Resistance Aura',
-});
-
-export const ShadowResistanceAura = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(19896),
-	fieldName: 'shadowResistanceAura',
-	label: 'Shadow Resistance Aura',
-});
-
-export const AspectOfTheWild = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(20190),
-	fieldName: 'aspectOfTheWild',
-	label: 'Aspect of the Wild',
-});
-
 // atiesh_druid: no settings input over this field.
 
 // atiesh_priest: no settings input over this field.
@@ -214,6 +172,48 @@ export const ShadowProtection = makeBooleanRaidBuffInput({
 	actionId: ActionId.fromSpellId(10958),
 	fieldName: 'shadowProtection',
 	label: 'Shadow Protection',
+});
+
+export const FireResistanceAura = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(19900),
+	fieldName: 'fireResistanceAura',
+	label: 'Fire Resistance Aura',
+});
+
+export const FrostResistanceAura = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(19898),
+	fieldName: 'frostResistanceAura',
+	label: 'Frost Resistance Aura',
+});
+
+export const ShadowResistanceAura = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(19896),
+	fieldName: 'shadowResistanceAura',
+	label: 'Shadow Resistance Aura',
+});
+
+export const FireResistanceTotem = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(10535),
+	fieldName: 'fireResistanceTotem',
+	label: 'Fire Resistance',
+});
+
+export const FrostResistanceTotem = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(10477),
+	fieldName: 'frostResistanceTotem',
+	label: 'Frost Resistance',
+});
+
+export const NatureResistanceTotem = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(10599),
+	fieldName: 'natureResistanceTotem',
+	label: 'Nature Resistance',
+});
+
+export const AspectOfTheWild = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(20190),
+	fieldName: 'aspectOfTheWild',
+	label: 'Aspect of the Wild',
 });
 
 export const Innervates = makeMultistateIndividualBuffInput({
@@ -357,6 +357,41 @@ export const GENERATED_RAID_BUFFS_CONFIG: RenderableStatOptions[] = [
 		stats: [Stat.StatShadowResistance, Stat.StatStamina],
 		ownerClass: Class.ClassPriest,
 	},
+	{
+		config: FireResistanceAura,
+		stats: [Stat.StatFireResistance],
+		ownerClass: Class.ClassPaladin,
+	},
+	{
+		config: FrostResistanceAura,
+		stats: [Stat.StatFrostResistance],
+		ownerClass: Class.ClassPaladin,
+	},
+	{
+		config: ShadowResistanceAura,
+		stats: [Stat.StatShadowResistance],
+		ownerClass: Class.ClassPaladin,
+	},
+	{
+		config: FireResistanceTotem,
+		stats: [Stat.StatFireResistance],
+		ownerClass: Class.ClassShaman,
+	},
+	{
+		config: FrostResistanceTotem,
+		stats: [Stat.StatFrostResistance],
+		ownerClass: Class.ClassShaman,
+	},
+	{
+		config: NatureResistanceTotem,
+		stats: [Stat.StatNatureResistance],
+		ownerClass: Class.ClassShaman,
+	},
+	{
+		config: AspectOfTheWild,
+		stats: [Stat.StatNatureResistance],
+		ownerClass: Class.ClassHunter,
+	},
 ];
 
 export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
@@ -434,41 +469,6 @@ export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 		config: WindfuryTotem,
 		stats: [Stat.StatAttackPower],
 		ownerClass: Class.ClassShaman,
-	},
-	{
-		config: FrostResistanceTotem,
-		stats: [Stat.StatFrostResistance],
-		ownerClass: Class.ClassShaman,
-	},
-	{
-		config: NatureResistanceTotem,
-		stats: [Stat.StatNatureResistance],
-		ownerClass: Class.ClassShaman,
-	},
-	{
-		config: FireResistanceTotem,
-		stats: [Stat.StatFireResistance],
-		ownerClass: Class.ClassShaman,
-	},
-	{
-		config: FrostResistanceAura,
-		stats: [Stat.StatFrostResistance],
-		ownerClass: Class.ClassPaladin,
-	},
-	{
-		config: FireResistanceAura,
-		stats: [Stat.StatFireResistance],
-		ownerClass: Class.ClassPaladin,
-	},
-	{
-		config: ShadowResistanceAura,
-		stats: [Stat.StatShadowResistance],
-		ownerClass: Class.ClassPaladin,
-	},
-	{
-		config: AspectOfTheWild,
-		stats: [Stat.StatNatureResistance],
-		ownerClass: Class.ClassHunter,
 	},
 ];
 
