@@ -85,18 +85,7 @@ type Entry struct {
 	Proc *ProcRouting
 	// Set when the effect deals flat damage instead of granting stats. Those resolve no stats, so
 	// without this they are dropped before they are ever emitted.
-	Damage *dbc.DamageEffect
-	// The rate a damage proc fires at. Stat procs read theirs from the database at runtime, but the
-	// damage helper takes a plain core.ProcTrigger, so it has to be written into the call.
-	DamageProcChance float64
-	DamageIcdMs      int32
-	// Set when the damage spell is barred from critting, which picks a no-crit outcome.
-	DamageCannotCrit bool
-	// Set unless the damage spell carries Not a Proc: its hits are then invisible to aura procs
-	// that cannot proc from procs.
-	DamageIsProc bool
-	// Set when the damage spell carries Suppress Weapon Procs.
-	DamageSuppressesWeaponProcs bool
+	DealsDamage bool
 }
 
 // The literals a stacking on-use needs in the generated call. Everything else - stacks,
@@ -116,6 +105,9 @@ type ProcRouting struct {
 	// A "Chance on hit" item effect or a combat enchant, cast by the game off every eligible weapon
 	// hit whatever the row's proc flags say.
 	IsWeaponProc bool
+	// Set where the spell the proc applies deals damage instead of granting an aura, which is a
+	// constructor of its own: there is no buff to build.
+	Damage bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -144,6 +136,21 @@ func routeProc(triggerSpellID int, buffSpellID int, isWeaponProc bool) *ProcRout
 	routing.Summary = procSummary(trigger, buffSpellID)
 
 	return routing
+}
+
+// A proc whose spell deals damage rather than granting an aura. The spell is named separately
+// because the client hangs it below the trigger rather than on it.
+func (r *ProcRouting) asDamage(damageSpellID int32) {
+	r.Damage = true
+	r.BuffSpellID = int(damageSpellID)
+
+	if damage := spelldata.Find(damageSpellID); damage == spelldata.Nil {
+		r.Unsupported = append(r.Unsupported, "the damage spell has no row in the store")
+	} else if damage.DamageEffect() == spelldata.NilEffect {
+		r.Unsupported = append(r.Unsupported, "the damage spell's row states no damage")
+	}
+
+	r.Summary = procSummary(spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
 }
 
 // The buff the proc applies has to last for something: an aura of no duration is one the sim
@@ -245,12 +252,10 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 	}
 
 	funcMap := map[string]any{
-		"asCoreCallback":    asCoreCallback,
-		"asCoreProcMask":    asCoreProcMask,
-		"asCoreOutcome":     asCoreOutcome,
-		"asCoreSpellSchool": asCoreSpellSchool,
-		"asCoreDefenseType": asCoreDefenseType,
-		"formatStrings":     formatStrings,
+		"asCoreCallback": asCoreCallback,
+		"asCoreProcMask": asCoreProcMask,
+		"asCoreOutcome":  asCoreOutcome,
+		"formatStrings":  formatStrings,
 	}
 	tmpl := template.Must(template.New("effects").Funcs(funcMap).Parse(templateString))
 
@@ -265,23 +270,23 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 	}
 
 	hasStacking := false
-	// Only a damage proc with an internal cooldown writes a time.Millisecond literal, so the import
-	// is gated on one existing rather than on damage procs in general.
-	hasDamageIcd := false
+	// A registration resolved from the client's rows names no core constant, so a file whose live
+	// entries are all of that shape must not import core: gen_db links the sim, and an unused import
+	// in a file it just wrote breaks the build the next run needs.
+	usesCore := false
 	for _, grp := range groups {
 		for _, entry := range grp.Entries {
 			if entry.StackingOnUse != nil {
 				hasStacking = true
 			}
-
-			if entry.Damage != nil && entry.DamageIcdMs > 0 {
-				hasDamageIcd = true
+			if entry.Supported && entry.Proc == nil {
+				usesCore = true
 			}
 		}
 	}
 
 	var rendered bytes.Buffer
-	if err := tmpl.Execute(&rendered, map[string]interface{}{"Groups": groups, "HasEntries": hasEntries, "HasStacking": hasStacking, "HasDamageIcd": hasDamageIcd}); err != nil {
+	if err := tmpl.Execute(&rendered, map[string]interface{}{"Groups": groups, "HasEntries": hasEntries, "HasStacking": hasStacking, "UsesCore": usesCore}); err != nil {
 		return fmt.Errorf("failed to execute template: %w", err)
 	}
 
@@ -342,12 +347,11 @@ func GenerateMissingEffectsFile() error {
 	}
 
 	funcMap := map[string]any{
-		"asCoreCallback":    asCoreCallback,
-		"asCoreProcMask":    asCoreProcMask,
-		"asCoreOutcome":     asCoreOutcome,
-		"asCoreSpellSchool": asCoreSpellSchool,
-		"formatStrings":     formatStrings,
-		"jsString":          jsString,
+		"asCoreCallback": asCoreCallback,
+		"asCoreProcMask": asCoreProcMask,
+		"asCoreOutcome":  asCoreOutcome,
+		"formatStrings":  formatStrings,
+		"jsString":       jsString,
 	}
 	tmpl := template.Must(template.New("missingEffects").Funcs(funcMap).Parse(TmplStrMissingEffects))
 	f, err := os.Create(missingEffectsFileName)
@@ -692,26 +696,20 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			}
 
 			// An effect that resolves no stats may still deal flat damage, which is a shape of its
-			// own rather than a reason to refuse. Only a stated flat chance is taken: a PPM rate
-			// needs a proc manager the generated call has no way to build, and those items are
-			// already held back for want of a MapItemIdToPPM entry.
+			// own rather than a reason to refuse: there is no buff, so the proc casts the spell the
+			// client hangs below its trigger, read from that spell's own row.
 			if len(dbc.EffectStats(itemEffect)) == 0 {
-				// A PPM rate is deliberately excluded: it needs a proc manager the generated call has
-				// no way to build, so only a flat chance can be written as a literal.
-				if proc := itemEffect.GetProc(); proc != nil && proc.GetProcChance() > 0 && procRateIsStated(proc, renderedTooltip) {
-					if damage := dbc.ResolveDamageEffect(int(itemEffect.BuffId)); damage != nil {
-						damageSpell := instance.Spells[damage.SpellID]
-						entry.Damage = damage
-						entry.DamageProcChance = proc.GetProcChance()
-						entry.DamageIcdMs = proc.IcdMs
-						entry.DamageCannotCrit = damageSpell.CannotCrit()
-						entry.DamageIsProc = !damageSpell.NotAProc()
-						entry.DamageSuppressesWeaponProcs = damageSpell.SuppressesWeaponProcs()
+				if damage := dbc.ResolveDamageEffect(int(itemEffect.BuffId)); damage != nil {
+					entry.Proc = routeItemProc(parsed, itemEffect)
+					if entry.Proc != nil {
+						entry.Proc.asDamage(int32(damage.SpellID))
+						entry.Supported = entry.Supported && entry.Proc.Supported()
+						entry.DealsDamage = true
 					}
 				}
 			}
 
-			if (len(dbc.EffectStats(itemEffect)) == 0 && entry.Damage == nil) || !entry.Supported {
+			if (len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage) || !entry.Supported {
 				StoreMissingEffect("ItemEffects", parsed.Name, Variant{
 					ID:      int(parsed.Id),
 					Name:    renderedTooltip,
@@ -1185,46 +1183,6 @@ func StoreMissingEffect(effectType string, name string, variant Variant) {
 		variant,
 	)
 	missingEffectsMap[effectType][id] = itemEntry
-}
-
-// The DBC school mask and core.SpellSchool do not share a bit order - DBC's 0x2 is Holy where
-// core's is Arcane - so the two are matched by name rather than cast across.
-var coreSpellSchoolNames = map[dbc.SpellSchool]string{
-	dbc.PHYSICAL: "core.SpellSchoolPhysical",
-	dbc.HOLY:     "core.SpellSchoolHoly",
-	dbc.FIRE:     "core.SpellSchoolFire",
-	dbc.NATURE:   "core.SpellSchoolNature",
-	dbc.FROST:    "core.SpellSchoolFrost",
-	dbc.SHADOW:   "core.SpellSchoolShadow",
-	dbc.ARCANE:   "core.SpellSchoolArcane",
-}
-
-// The core constant naming a damage spell's school. A mask with more than one school set resolves
-// to its lowest bit; no item damage effect in the data carries one.
-var coreDefenseTypeNames = map[int32]string{
-	0: "core.DefenseTypeNone",
-	1: "core.DefenseTypeMagic",
-	2: "core.DefenseTypeMelee",
-	3: "core.DefenseTypeRanged",
-}
-
-// Renders a SpellCategories.DefenseType as its core constant.
-func asCoreDefenseType(defenseType int32) string {
-	if name, ok := coreDefenseTypeNames[defenseType]; ok {
-		return name
-	}
-
-	panic(fmt.Sprintf("unknown DefenseType %d", defenseType))
-}
-
-func asCoreSpellSchool(mask int32) string {
-	for _, school := range []dbc.SpellSchool{dbc.PHYSICAL, dbc.HOLY, dbc.FIRE, dbc.NATURE, dbc.FROST, dbc.SHADOW, dbc.ARCANE} {
-		if dbc.SpellSchool(mask).Has(school) {
-			return coreSpellSchoolNames[school]
-		}
-	}
-
-	return "core.SpellSchoolPhysical"
 }
 
 func asCoreCallback(callback core.AuraCallback) string {

@@ -1,7 +1,6 @@
 package dbc
 
 import (
-
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
@@ -464,4 +463,3 @@ var Classes = []DbcClass{
 	{proto.Class_ClassWarlock, 9},
 	{proto.Class_ClassDruid, 11},
 }
-

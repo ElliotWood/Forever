@@ -63,11 +63,9 @@ func RegisterAllOnUseCds() {
 const TmplStrProc = `package forever
 
 import (
-{{- if .HasDamageIcd }}
-	"time"
-
-{{ end }}
+{{- if .UsesCore }}
 	"github.com/wowsims/forever/sim/core"
+{{- end }}
  	"github.com/wowsims/forever/sim/common/shared"
 )
 
@@ -99,49 +97,12 @@ func RegisterAllProcs() {
 	{{- if .Supported}}
 		{{- if .Proc}}
 			// {{ .Proc.Summary }}
-			shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
+			shared.{{ if .Proc.Damage }}NewSpellDataDamageProc{{ else }}NewSpellDataProc{{ end }}(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
 				[]shared.ItemVariant{
 				{{- range .Variants }}
 				{ItemID: {{.ID}}, ItemName: "{{.Name}}"},
 				{{- end}}
 			})
-		{{- else if .Damage}}
-			{{- $entry := . }}
-			{{- range .Variants }}
-			shared.NewProcDamageEffect(shared.ProcDamageEffect{
-				ItemID:  {{ .ID }},
-				SpellID: {{ $entry.Damage.SpellID }},
-				School:  {{ $entry.Damage.SchoolMask | asCoreSpellSchool }},
-				DefenseType: {{ $entry.Damage.DefenseType | asCoreDefenseType }},
-				MinDmg:  {{ $entry.Damage.MinDamage }},
-				MaxDmg:  {{ $entry.Damage.MaxDamage }},
-				{{- if $entry.DamageCannotCrit }}
-				CannotCrit: true,
-				{{- end}}
-				Flags:   core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell | core.SpellFlagNoOnDamageDealt{{ if $entry.DamageIsProc }} | core.SpellFlagProc{{ end }}{{ if $entry.DamageSuppressesWeaponProcs }} | core.SpellFlagSuppressWeaponProcs{{ end }},
-				Trigger: core.ProcTrigger{
-					Name:               "{{ .Name }}",
-					ActionID:           core.ActionID{ItemID: {{ .ID }}},
-					Callback:           {{ $entry.ProcInfo.Callback | asCoreCallback }},
-					ProcMask:           {{ $entry.ProcInfo.ProcMask | asCoreProcMask }},
-					Outcome:            {{ $entry.ProcInfo.Outcome | asCoreOutcome }},
-					RequireDamageDealt: {{ $entry.ProcInfo.RequireDamageDealt }},
-					ProcChance:         {{ $entry.DamageProcChance }},
-					{{- if $entry.ProcInfo.CanProcFromProcs }}
-					CanProcFromProcs:   true,
-					{{- end}}
-					{{- if $entry.ProcInfo.IsWeaponProc }}
-					IsWeaponProc:       true,
-					{{- end}}
-					{{- if $entry.ProcInfo.HonoursWeaponProcSuppression }}
-					SpellFlagsExclude:  core.SpellFlagSuppressWeaponProcs,
-					{{- end}}
-					{{- if $entry.DamageIcdMs }}
-					ICD:                time.Millisecond * {{ $entry.DamageIcdMs }},
-					{{- end}}
-				},
-			})
-			{{- end}}
 		{{- else if gt .ProcInfo.MaxCumulativeStacks 0 }}
 			shared.NewStackingStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
 				Callback:           {{ .ProcInfo.Callback | asCoreCallback }},
@@ -203,7 +164,7 @@ func RegisterAllProcs() {
 		{{- if .Proc}}
 			// unsupported: {{ .Proc.Reason }}
 			// {{ .Proc.Summary }}
-			// shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
+			// shared.{{ if .Proc.Damage }}NewSpellDataDamageProc{{ else }}NewSpellDataProc{{ end }}(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
 			//	[]shared.ItemVariant{
 			{{- range .Variants }}
 			//	{ItemID: {{.ID}}, ItemName: "{{.Name}}"},
@@ -248,7 +209,9 @@ func RegisterAllProcs() {
 const TmplStrEnchant = `package forever
 {{ if .HasEntries }}
 import (
+{{- if .UsesCore }}
 	"github.com/wowsims/forever/sim/core"
+{{- end }}
  	"github.com/wowsims/forever/sim/common/shared"
 )
 {{- end }}
