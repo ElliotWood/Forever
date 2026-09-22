@@ -118,6 +118,15 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-Enchant:FieryBlaze-36"
+ value: {
+  dps: 554.90955
+  tps: 317.10644
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-EnchantCloak-Subtlety-2621"
  value: {
   dps: 552.96374
