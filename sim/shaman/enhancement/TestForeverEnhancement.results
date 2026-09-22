@@ -50,16 +50,12 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestForeverEnhancement-Phase1-StatWeights-Default"
  value: {
-  weights: 0.49479
-  weights: 0.31475
+  weights: 0.49374
+  weights: 0.43001
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.21161
-  weights: 0
-  weights: 0
-  weights: 0
-  weights: 0
+  weights: 0.21139
   weights: 0
   weights: 0
   weights: 0
@@ -67,9 +63,13 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.22491
-  weights: 6.01272
-  weights: 6.59805
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.22443
+  weights: 5.48486
+  weights: 7.23874
   weights: 0
   weights: 0
   weights: 0
@@ -99,64 +99,64 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 630.44894
-  tps: 507.60133
+  dps: 635.24257
+  tps: 511.01298
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 651.29876
-  tps: 522.54159
+  dps: 653.38105
+  tps: 523.78299
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 614.25959
-  tps: 495.27863
+  dps: 616.34903
+  tps: 496.6782
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 686.40025
-  tps: 545.32537
+  dps: 687.15754
+  tps: 545.99097
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 611.49507
-  tps: 493.39524
+  dps: 605.40297
+  tps: 486.79431
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 637.7601
-  tps: 514.06931
+  dps: 631.27251
+  tps: 507.12315
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 687.86007
-  tps: 547.31843
+  dps: 688.35404
+  tps: 547.15504
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 669.91276
-  tps: 537.50975
+  dps: 672.38894
+  tps: 538.78836
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Average-Default"
  value: {
-  dps: 692.444
-  tps: 548.8306
+  dps: 691.58861
+  tps: 547.89976
  }
 }
 dps_results: {
@@ -204,7 +204,7 @@ dps_results: {
 dps_results: {
  key: "TestForeverEnhancement-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 518.24878
-  tps: 425.48006
+  dps: 517.44899
+  tps: 425.02701
  }
 }
