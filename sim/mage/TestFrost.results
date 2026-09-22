@@ -403,6 +403,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 524.62585
+  tps: 304.3279
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-ThePostmaster"
  value: {
   dps: 602.93778

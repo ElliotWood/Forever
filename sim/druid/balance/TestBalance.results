@@ -501,6 +501,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 313.80138
+  tps: 162.60087
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-ThePostmaster"
  value: {
   dps: 396.23369

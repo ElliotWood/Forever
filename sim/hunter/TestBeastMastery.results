@@ -634,6 +634,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 1014.16475
+  tps: 432.53271
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-ThePostmaster"
  value: {
   dps: 1043.77265

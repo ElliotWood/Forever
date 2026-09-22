@@ -611,6 +611,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 670.02574
+  tps: 364.14446
+  dtps: 11.70269
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-ThePostmaster"
  value: {
   dps: 670.90876

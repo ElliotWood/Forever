@@ -634,6 +634,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 723.90743
+  tps: 348.75655
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-ThePostmaster"
  value: {
   dps: 744.61747

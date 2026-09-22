@@ -403,6 +403,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 516.94377
+  tps: 370.61624
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-ThePostmaster"
  value: {
   dps: 574.09966

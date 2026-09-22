@@ -611,6 +611,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-TheLobotomizer-19324"
+ value: {
+  dps: 191.60794
+  tps: 203.32512
+  dtps: 1041.52058
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-ThePostmaster"
  value: {
   dps: 169.08758
