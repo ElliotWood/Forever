@@ -3,7 +3,7 @@ character_stats_results: {
  value: {
   final_stats: 381.7
   final_stats: 404.8
-  final_stats: 488.4
+  final_stats: 466.4
   final_stats: 234.3
   final_stats: 229.9
   final_stats: 87
@@ -35,7 +35,7 @@ character_stats_results: {
   final_stats: 28.14
   final_stats: 5
   final_stats: 0
-  final_stats: 9184.35
+  final_stats: 8953.35
   final_stats: 36
   final_stats: 82
   final_stats: 70
@@ -104,31 +104,10 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestP1FeralTank-Phase1-AllItems-Champion'sRefuge"
- value: {
-  dps: 345.48146
-  tps: 720.41124
- }
-}
-dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-FeralheartRaiment"
  value: {
   dps: 332.0032
   tps: 685.11277
- }
-}
-dps_results: {
- key: "TestP1FeralTank-Phase1-AllItems-FieldMarshal'sSanctuary"
- value: {
-  dps: 374.25001
-  tps: 779.01327
- }
-}
-dps_results: {
- key: "TestP1FeralTank-Phase1-AllItems-LieutenantCommander'sRefuge"
- value: {
-  dps: 345.48146
-  tps: 720.41124
  }
 }
 dps_results: {
@@ -143,13 +122,6 @@ dps_results: {
  value: {
   dps: 363.90098
   tps: 760.11433
- }
-}
-dps_results: {
- key: "TestP1FeralTank-Phase1-AllItems-Warlord'sSanctuary"
- value: {
-  dps: 374.25001
-  tps: 779.01327
  }
 }
 dps_results: {

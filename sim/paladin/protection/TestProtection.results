@@ -3,7 +3,7 @@ character_stats_results: {
  value: {
   final_stats: 480.37
   final_stats: 243.1
-  final_stats: 526.24
+  final_stats: 503.36
   final_stats: 215.072
   final_stats: 157.08
   final_stats: 241
@@ -35,7 +35,7 @@ character_stats_results: {
   final_stats: 13.80086
   final_stats: 5.8
   final_stats: 0
-  final_stats: 6463.4
+  final_stats: 6234.6
   final_stats: 36
   final_stats: 60
   final_stats: 60
@@ -108,13 +108,6 @@ dps_results: {
  value: {
   dps: 399.36346
   tps: 600.14669
- }
-}
-dps_results: {
- key: "TestProtection-Phase1-AllItems-FieldMarshal'sAegis"
- value: {
-  dps: 405.85505
-  tps: 608.04909
  }
 }
 dps_results: {

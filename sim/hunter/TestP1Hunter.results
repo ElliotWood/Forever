@@ -127,8 +127,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Hunter-Phase1-AllItems-Champion'sPursuit"
  value: {
-  dps: 473.53219
-  tps: 358.99408
+  dps: 509.89246
+  tps: 397.72083
  }
 }
 dps_results: {
@@ -150,13 +150,6 @@ dps_results: {
  value: {
   dps: 529.01324
   tps: 416.69822
- }
-}
-dps_results: {
- key: "TestP1Hunter-Phase1-AllItems-FieldMarshal'sPursuit"
- value: {
-  dps: 541.43046
-  tps: 428.27781
  }
 }
 dps_results: {
@@ -195,13 +188,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestP1Hunter-Phase1-AllItems-LieutenantCommander'sPursuit"
- value: {
-  dps: 471.90933
-  tps: 357.37122
- }
-}
-dps_results: {
  key: "TestP1Hunter-Phase1-AllItems-Marshal'sChainGrips-16463"
  value: {
   dps: 509.46064
@@ -227,13 +213,6 @@ dps_results: {
  value: {
   dps: 513.86234
   tps: 401.65288
- }
-}
-dps_results: {
- key: "TestP1Hunter-Phase1-AllItems-Warlord'sPursuit"
- value: {
-  dps: 541.43046
-  tps: 428.27781
  }
 }
 dps_results: {

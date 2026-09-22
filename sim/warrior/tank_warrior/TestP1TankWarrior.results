@@ -3,7 +3,7 @@ character_stats_results: {
  value: {
   final_stats: 498.3
   final_stats: 290.4
-  final_stats: 565.4
+  final_stats: 543.4
   final_stats: 86.9
   final_stats: 119.9
   final_stats: 0
@@ -35,7 +35,7 @@ character_stats_results: {
   final_stats: 15.48
   final_stats: 7.96
   final_stats: 0
-  final_stats: 8363
+  final_stats: 8143
   final_stats: 36
   final_stats: 60
   final_stats: 60
@@ -132,13 +132,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestP1TankWarrior-Phase1-AllItems-FieldMarshal'sBattlegear"
- value: {
-  dps: 388.68465
-  tps: 738.57416
- }
-}
-dps_results: {
  key: "TestP1TankWarrior-Phase1-AllItems-LieutenantCommander'sBattlearmor"
  value: {
   dps: 365.05707
@@ -150,13 +143,6 @@ dps_results: {
  value: {
   dps: 391.07099
   tps: 747.74899
- }
-}
-dps_results: {
- key: "TestP1TankWarrior-Phase1-AllItems-Warlord'sBattlegear"
- value: {
-  dps: 388.68465
-  tps: 738.57416
  }
 }
 dps_results: {
