@@ -50,7 +50,7 @@ func TestProcShapeOfNamedSpells(t *testing.T) {
 		{12319, "Flurry", procChanceAlways, 0, `"$m1%" is the attack speed, and a crit is the condition`,
 			0, `"after dealing a melee critical strike" is the crit the caller reads off the result, since the same listener has to see the white hits that spend a charge`},
 		{12834, "Deep Wounds", procChanceAlways, 0, `"$m1%" is the share of weapon damage, and a crit is the condition`,
-			0, `"Your critical strikes" names the trigger`},
+			core.ProcHintCrit, `"Your critical strikes" names the trigger`},
 		{16928, "Armor Shatter", procChancePPM, 0, "the 101 sentinel, answered by an override into RPPM",
 			0, "the tooltip is the armor reduction, not a trigger"},
 		{1308935, "Striking", procChanceColumn, 0, "no tooltip at all, so the column is all there is",

@@ -759,7 +759,13 @@ func ParseTooltipForMissingEffect(parsed *proto.UIItem, itemEffect *proto.ItemEf
 	}
 }
 
-var critMatcher = regexp.MustCompile(`critical ([^\s]+|damage,?)( chance)? [^fbc]`)
+// A critical strike named as the trigger. The first clause reads the wording that puts something
+// after the crit ("critical strikes have a", "critical hits grant"), which is why the character
+// after it may not open "by", "for" or "chance" - those three are how a tooltip states a magnitude
+// instead. The second reads the trigger stated from the caster's side, "your critical strikes",
+// where the plural is what separates it from the magnitudes: those all read "critical strike
+// chance", "critical strike damage" or "critical strike rating", in the singular.
+var critMatcher = regexp.MustCompile(`critical ([^\s]+|damage,?)( chance)? [^fbc]|[Yy]our [a-z ]{0,20}critical strikes`)
 var pureHealMatcher = regexp.MustCompile(`healing spells`)
 var hasHealMatcher = regexp.MustCompile(`heal(ing)?[^,]`)
 var hasGenericMatcher = regexp.MustCompile(`a spell`)

@@ -6933,7 +6933,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 688553, SpellID: 11115, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_FLAT_MODIFIER, BasePoints: 2, PvpMult: 1, Misc: 7, ClassFlags: core.ClassFlags{Family: 3, Mask: [4]uint32{0: 12582935, 1: 4096}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 11119, Name: "Ignite", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10000}, ClassFlags: core.ClassFlags{Family: 3}, Labels: []int16{17}, RefIDs: []int32{412538}, ProcChanceSource: ProcChanceAlways,
+	{ID: 11119, Name: "Ignite", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10000}, ClassFlags: core.ClassFlags{Family: 3}, Labels: []int16{17}, RefIDs: []int32{412538}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintCrit,
 		Effects: []Effect{
 			{ID: 689290, SpellID: 11119, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, BasePoints: 40, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -8023,7 +8023,7 @@ var generatedSpells = []Spell{
 			{ID: 690473, SpellID: 12826, Index: 2, Type: dbcenums.E_DISPEL_MECHANIC, BasePoints: 10, PvpMult: 1, Misc: 21, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		},
 		Powers: []Power{{Type: 0, Cost: 150}}},
-	{ID: 12834, Name: "Deep Wounds", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x11154}, ClassFlags: core.ClassFlags{Family: 4}, EquipClass: 2, EquipSubclass: 173555, Labels: []int16{25}, RefIDs: []int32{412609}, ProcChanceSource: ProcChanceAlways,
+	{ID: 12834, Name: "Deep Wounds", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x11154}, ClassFlags: core.ClassFlags{Family: 4}, EquipClass: 2, EquipSubclass: 173555, Labels: []int16{25}, RefIDs: []int32{412609}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintCrit,
 		Effects: []Effect{
 			{ID: 690385, SpellID: 12834, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, PvpMult: 1, TriggerID: 12162, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -9005,7 +9005,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 691823, SpellID: 14185, Index: 0, Type: dbcenums.E_DUMMY, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 14186, Name: "Seal Fate", School: 1, Attr: [17]uint32{0: 0x1d0, 3: 0x80000, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x15550}, ICDMs: 500, ClassFlags: core.ClassFlags{Family: 8}, Labels: []int16{20}, ProcChanceSource: ProcChanceEffectN, ProcChanceEffect: 1,
+	{ID: 14186, Name: "Seal Fate", School: 1, Attr: [17]uint32{0: 0x1d0, 3: 0x80000, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x15550}, ICDMs: 500, ClassFlags: core.ClassFlags{Family: 8}, Labels: []int16{20}, ProcChanceSource: ProcChanceEffectN, ProcChanceEffect: 1, ProcHint: core.ProcHintCrit,
 		Effects: []Effect{
 			{ID: 691974, SpellID: 14186, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{6, 0}},
 		}},
