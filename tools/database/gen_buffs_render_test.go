@@ -55,7 +55,7 @@ func syntheticBuffRows() []ResolvedBuff {
 		{
 			BuffSpec: buffmanifest.BuffSpec{
 				Field: "battle_shout", Scope: buffmanifest.ScopeParty,
-				Proto: buffmanifest.ProtoBool, Kind: buffmanifest.KindStatFlat,
+				Proto: buffmanifest.ProtoTristate, Kind: buffmanifest.KindStatFlat,
 				Go: "SynthBattleShout", Name: "Battle Shout", Category: "SynthBattleShout",
 				SingleAura: true, Driver: true,
 			},

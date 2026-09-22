@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -107,7 +107,7 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 			strengthOfEarthTotem: true,
 			windfuryTotem: true,
 			totemTwisting: true,
-			battleShout: true,
+			battleShout: TristateEffect.TristateEffectRegular,
 		}),
 		individualBuffs: IndividualBuffs.create({
 			...WarriorPresets.DefaultIndividualBuffs,

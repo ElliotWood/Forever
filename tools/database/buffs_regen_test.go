@@ -117,8 +117,8 @@ func TestResolvedBuffInvariants(t *testing.T) {
 		if runes[row.SpellID] {
 			t.Errorf("%s: resolved to spell %d, which a rune grants", row.Field, row.SpellID)
 		}
-		if row.Proto == buffmanifest.ProtoTristate && len(row.TalentCurve) == 0 {
-			t.Errorf("%s: declared ProtoTristate but no talent in the owner's tree prices it", row.Field)
+		if row.Proto == buffmanifest.ProtoTristate && len(row.TalentCurve) == 0 && row.ImpAction == nil {
+			t.Errorf("%s: declared ProtoTristate but neither a talent in the owner's tree nor an ImpAction prices it", row.Field)
 		}
 		if want, pinned := pinnedTalentCurves[row.Field]; pinned && !slices.Equal(row.TalentCurve, want) {
 			t.Errorf("%s: talent curve is %v, want %v", row.Field, row.TalentCurve, want)

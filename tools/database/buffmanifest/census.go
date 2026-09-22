@@ -15,16 +15,12 @@ var Manifest = []BuffSpec{
 		Notes: "Improved Imp (18694) modifies Firebolt and Fire Shield, not Blood Pact, so the improved state has no source in warlock tree 1116.",
 	},
 	{
-		Field: "battle_shout", Number: 14, Scope: ScopeParty, Proto: ProtoBool, Kind: KindStatFlat,
+		Field: "battle_shout", Number: 14, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindStatFlat,
 		Go: "BattleShout", Name: "Battle Shout", Owner: proto.Class_ClassWarrior,
 		Category: "BattleShout", SingleAura: true, Driver: true,
-		Stats: []proto.Stat{proto.Stat_StatAttackPower},
-		Notes: "Booming Voice (12321) is in warrior tree 1117 but modifies radius only (misc 6), so there is no improved state. The single A_MOD_ATTACK_POWER effect is melee attack power, which is why the row tags that alone.",
-	},
-	{
-		Field: "snapshot_bs_t2", Number: 15, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
-		Go:    "SnapshotBsT2",
-		Notes: "says the warrior who shouted for the party wears three pieces of Battlegear of Wrath, whose ItemSetSpell at three is 23563: +30 on every effect of the Battle Shout family. The resolver does not read ItemSetSpell, so driveBattleShout adds the amount; the UI input for it is hand-written next to Battle Shout.",
+		ImpAction: &ActionRef{SpellID: 23563},
+		Stats:     []proto.Stat{proto.Stat_StatAttackPower},
+		Notes:     "Booming Voice (12321) is in warrior tree 1117 but modifies radius only (misc 6), so no talent prices the improved state: it says the warrior who shouted for the party wears three pieces of Battlegear of Wrath, item set 218, whose ItemSetSpell at three (2336) is 23563 for +30 on every effect of the Battle Shout family. The resolver reads no ItemSetSpell, so driveBattleShout adds the amount. The single A_MOD_ATTACK_POWER effect is melee attack power, which is why the row tags that alone.",
 	},
 	{
 		Field: "devotion_aura", Number: 4, Scope: ScopeParty, Proto: ProtoBool, Kind: KindResistance,
@@ -74,7 +70,7 @@ var Manifest = []BuffSpec{
 		Notes: "the only paladin trait matching Retribution Aura is Benediction (20101), which modifies cost (misc 14).",
 	},
 	{
-		Field: "concentration_aura", Number: 19, Scope: ScopeParty, Proto: ProtoBool, Kind: KindPseudoMult,
+		Field: "concentration_aura", Number: 18, Scope: ScopeParty, Proto: ProtoBool, Kind: KindPseudoMult,
 		Go: "ConcentrationAura", Name: "Concentration Aura", Owner: proto.Class_ClassPaladin,
 		Category: "ConcentrationAura", SharedCategory: "PaladinAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatDefenseRating},
@@ -120,17 +116,17 @@ var Manifest = []BuffSpec{
 		Notes: "the cast family (8512/10613/10614) and the aura family (8516/10608/10610) share the name; the aura carries the proc. Improved Weapon Totems (29193) has no node in shaman tree 1082.",
 	},
 	{
-		Field: "atiesh_druid", Number: 17, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
+		Field: "atiesh_druid", Number: 16, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
 		Go: "AtieshDruid", Anchor: 28145, Owner: proto.Class_ClassDruid, Label: "Atiesh - Druid",
 		Notes: "no UI input today; aura-only spell 28145 is named Power of the Guardian.",
 	},
 	{
-		Field: "atiesh_priest", Number: 18, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
+		Field: "atiesh_priest", Number: 17, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
 		Go: "AtieshPriest", Anchor: 28144, Owner: proto.Class_ClassPriest, Label: "Atiesh - Priest",
 		Notes: "no UI input today; aura-only spell 28144 is named Power of the Guardian.",
 	},
 	{
-		Field: "totem_twisting", Number: 16, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
+		Field: "totem_twisting", Number: 15, Scope: ScopeParty, Proto: ProtoBool, Kind: KindFlag,
 		Go:    "TotemTwisting",
 		Notes: "sim behaviour toggle with no spell source; rendered under Other Inputs.",
 	},

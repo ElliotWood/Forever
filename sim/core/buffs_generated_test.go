@@ -38,7 +38,7 @@ func TestPartyBattleShoutAppliesTheGeneratedAura(t *testing.T) {
 	char := newGeneratedBuffTestCharacter()
 
 	applyBuffEffects(generatedBuffTestAgent{char},
-		&proto.RaidBuffs{}, &proto.PartyBuffs{BattleShout: true}, &proto.IndividualBuffs{})
+		&proto.RaidBuffs{}, &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, &proto.IndividualBuffs{})
 	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 
 	if got := char.stats[stats.AttackPower]; got != 139 {
@@ -85,7 +85,7 @@ func TestPlayerBattleShoutTakesTheCategoryOnATie(t *testing.T) {
 	char := newGeneratedBuffTestCharacter()
 
 	applyBuffEffects(generatedBuffTestAgent{char},
-		&proto.RaidBuffs{}, &proto.PartyBuffs{BattleShout: true}, &proto.IndividualBuffs{})
+		&proto.RaidBuffs{}, &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, &proto.IndividualBuffs{})
 
 	player := BattleShoutAura(&char.Unit, true, 0)
 	if want := (ActionID{SpellID: 25289, Tag: 0}); player.ActionID != want {
@@ -114,17 +114,17 @@ func TestPlayerBattleShoutTakesTheCategoryOnATie(t *testing.T) {
 	}
 }
 
-// The party's snapshot flag says the warrior who shouted for the party wears
-// three pieces of Battlegear of Wrath, so the external copy is worth the
-// client's 139 plus the set's 30.
-func TestPartyBattleShoutSnapshotsTheTierTwoBonus(t *testing.T) {
+// The improved state says the warrior who shouted for the party wears three
+// pieces of Battlegear of Wrath, so the external copy is worth the client's 139
+// plus the set's 30.
+func TestImprovedPartyBattleShoutAddsTheTierTwoBonus(t *testing.T) {
 	for _, row := range []struct {
 		name  string
 		party *proto.PartyBuffs
 		want  float64
 	}{
-		{"with the set", &proto.PartyBuffs{BattleShout: true, SnapshotBsT2: true}, 169},
-		{"without it", &proto.PartyBuffs{BattleShout: true}, 139},
+		{"with the set", &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectImproved}, 169},
+		{"without it", &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, 139},
 	} {
 		t.Run(row.name, func(t *testing.T) {
 			char := newGeneratedBuffTestCharacter()
@@ -152,8 +152,8 @@ func TestTheStrongerBattleShoutTakesTheCategory(t *testing.T) {
 		playerBonus  float64
 		wantPlayerUp bool
 	}{
-		{"the player wears the set", &proto.PartyBuffs{BattleShout: true}, BattleShoutT2Bonus, true},
-		{"the external warrior does", &proto.PartyBuffs{BattleShout: true, SnapshotBsT2: true}, 0, false},
+		{"the player wears the set", &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}, BattleShoutT2Bonus, true},
+		{"the external warrior does", &proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectImproved}, 0, false},
 	} {
 		t.Run(row.name, func(t *testing.T) {
 			char := newGeneratedBuffTestCharacter()
@@ -451,7 +451,7 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 				GiftOfTheWild: true, PrayerOfFortitude: true, PrayerOfShadowProtection: true,
 			},
 			&proto.PartyBuffs{
-				WindfuryTotem: true, BattleShout: true, GraceOfAirTotem: true,
+				WindfuryTotem: true, BattleShout: proto.TristateEffect_TristateEffectRegular, GraceOfAirTotem: true,
 				MoonkinAura: true, LeaderOfThePack: true,
 				AtieshMage: 2,
 			},
@@ -476,7 +476,7 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 	}
 
 	// Everything else the party grants is still the pet's.
-	if !party.BattleShout || !party.GraceOfAirTotem || !party.MoonkinAura ||
+	if party.BattleShout == proto.TristateEffect_TristateEffectMissing || !party.GraceOfAirTotem || !party.MoonkinAura ||
 		!party.LeaderOfThePack || party.AtieshMage != 2 {
 		t.Errorf("a pet out from the start lost a buff no policy strips: %v, %v", party, individual)
 	}
@@ -500,7 +500,7 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 		individual.GreaterBlessingOfSalvation {
 		t.Errorf("a pet summoned late kept a targeted individual buff: %v", individual)
 	}
-	if !party.BattleShout || !party.GraceOfAirTotem {
+	if party.BattleShout == proto.TristateEffect_TristateEffectMissing || !party.GraceOfAirTotem {
 		t.Error("a pet summoned late lost a party aura, which no policy strips")
 	}
 }

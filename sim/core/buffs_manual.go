@@ -21,17 +21,17 @@ import (
 const innervateSpiritRegenMultiplier = 5.0
 
 // Three pieces of Battlegear of Wrath are worth 30 more attack power on Battle
-// Shout: item set 218's ItemSetSpell at three pieces is 23563, "Enhanced Battle
-// Shout", which adds a flat 30 to every effect of the Battle Shout family. The
-// resolver reads no ItemSetSpell, so the amount is stated here.
+// Shout: item set 218's ItemSetSpell at three pieces is 23563, which adds a flat
+// 30 to every effect of the Battle Shout family. The resolver reads no
+// ItemSetSpell, so the amount is stated here.
 const BattleShoutT2Bonus = 30.0
 
 // The party's Battle Shout is the external caster's copy, which chains behind
-// the player's own shout rather than being up from the start. The party's
-// snapshot flag says that warrior shouted with the set on.
+// the player's own shout rather than being up from the start. Its improved state
+// says that warrior shouted with the set on.
 func driveBattleShout(char *Character, party *proto.PartyBuffs) {
 	aura := BattleShoutAura(&char.Unit, false, 0)
-	if party.SnapshotBsT2 {
+	if party.BattleShout == proto.TristateEffect_TristateEffectImproved {
 		AddGeneratedFlatBonus(aura, stats.AttackPower, BattleShoutValue(0), BattleShoutT2Bonus)
 	}
 	ApplyFixedShoutAura(char, aura, BattleShoutCategory)

@@ -81,7 +81,7 @@ var FullPartyBuffs = &proto.PartyBuffs{
 	StrengthOfEarthTotem: true,
 	WindfuryTotem:        true,
 
-	BattleShout: true,
+	BattleShout: proto.TristateEffect_TristateEffectRegular,
 }
 
 var FullIndividualBuffs = &proto.IndividualBuffs{

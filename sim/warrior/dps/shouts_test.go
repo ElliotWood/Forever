@@ -59,7 +59,7 @@ func TestWarriorShoutsForTheTierTwoBonus(t *testing.T) {
 		t.Helper()
 
 		player := &proto.Player{
-			Name:          "Enhanced Battle Shout",
+			Name:          "Battlegear of Wrath",
 			Race:          proto.Race_RaceOrc,
 			Class:         proto.Class_ClassWarrior,
 			Equipment:     &proto.EquipmentSpec{},
@@ -102,7 +102,7 @@ func TestWarriorShoutsForTheTierTwoBonus(t *testing.T) {
 // A warrior whose default shout is none builds the isPlayer=false copy through
 // its ally array, so the aura it holds is the party's "Battle Shout (External)"
 // one. The set is worth 30 on the shout this warrior makes, and it makes none,
-// so what that copy is worth is the party's snapshot flag's to say.
+// so what that copy is worth is the party's Battle Shout state's to say.
 func TestAWarriorThatShoutsNothingLeavesTheExternalCopyAlone(t *testing.T) {
 	priorityOf := func(party *proto.PartyBuffs) float64 {
 		t.Helper()
@@ -141,12 +141,12 @@ func TestAWarriorThatShoutsNothingLeavesTheExternalCopyAlone(t *testing.T) {
 		return external.ExclusiveEffects[0].Priority
 	}
 
-	if got, want := priorityOf(&proto.PartyBuffs{BattleShout: true}), core.BattleShoutValue(0); got != want {
+	if got, want := priorityOf(&proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectRegular}), core.BattleShoutValue(0); got != want {
 		t.Errorf("the party's copy bids %v, want the %v it is worth without the set", got, want)
 	}
 	want := core.BattleShoutValue(0) + core.BattleShoutT2Bonus
-	if got := priorityOf(&proto.PartyBuffs{BattleShout: true, SnapshotBsT2: true}); got != want {
-		t.Errorf("the party's copy bids %v with the snapshot on, want %v", got, want)
+	if got := priorityOf(&proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectImproved}); got != want {
+		t.Errorf("the party's copy bids %v in its improved state, want %v", got, want)
 	}
 }
 
@@ -241,9 +241,9 @@ func TestWarriorShoutsOnlyWhenTheCategoryWillTakeIt(t *testing.T) {
 
 	withSet := core.BattleShoutValue(0) + core.BattleShoutT2Bonus
 
-	t.Run("an external shout that snapshots the set outbids a warrior without it", func(t *testing.T) {
+	t.Run("an improved external shout outbids a warrior without the set", func(t *testing.T) {
 		sim := &core.Simulation{}
-		env := build(&proto.PartyBuffs{BattleShout: true, SnapshotBsT2: true}, warriorProto("Bare", false))
+		env := build(&proto.PartyBuffs{BattleShout: proto.TristateEffect_TristateEffectImproved}, warriorProto("Bare", false))
 		war := env.Raid.Parties[0].Players[0].(*DpsWarrior)
 
 		external := war.GetAura("Battle Shout (External)")

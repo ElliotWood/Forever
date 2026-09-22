@@ -1247,8 +1247,8 @@ func (res *buffResolver) resolveTalent(row *ResolvedBuff) error {
 	}
 
 	if row.Talent == nil {
-		if row.Proto == buffmanifest.ProtoTristate {
-			return fmt.Errorf("declared ProtoTristate but the manifest names no talent")
+		if row.Proto == buffmanifest.ProtoTristate && row.ImpAction == nil {
+			return fmt.Errorf("declared ProtoTristate but the manifest names neither a talent nor an ImpAction")
 		}
 		for _, m := range matches {
 			row.warn("declared %s, but %s (trait definition %d, effect %d, misc %d) modifies spell %d in tree %d",

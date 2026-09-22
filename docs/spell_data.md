@@ -616,7 +616,7 @@ the values.
 | `Pet`                      | `PetNormal`, `PetStrip`, `PetInheritOwnerAura`, `PetCapAtRegular` or `PetStripWhenSummonedLate`                                                                                                                                                                        |
 | `StatOverride`             | the sim stats the value lands on, for an aura the client states without naming one: `A_MOD_CRIT_PCT` carries no school, so Leader of the Pack and Moonkin Aura both say `PhysicalCritPercent`, `SpellCritPercent`. A row that states one may have only one aura effect |
 | `Stats`                    | the UI relevance tags a spec's `epStats` and `displayStats` are matched against                                                                                                                                                                                        |
-| `ImpAction`                | the icon the improved state of a tristate input shows, when it is an item rather than the talent                                                                                                                                                                       |
+| `ImpAction`                | the improved state's source when it is not a talent - an item, or the spell an item set grants at a piece threshold - and the icon that state shows. A `ProtoTristate` row states this or a `Talent`                                                                    |
 | `Label`                    | a UI label override; the client's name is the default                                                                                                                                                                                                                  |
 | `Notes`                    | why a `KindManual`, `KindAbsent` or `KindFlag` row is one. Required for those three                                                                                                                                                                                    |
 
@@ -688,7 +688,7 @@ Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`,
 | `TestFieldNaming`, `TestFieldNamesRoundTrip`                                                                      | `GoField()` and `TSField()` reproduce protoc's and protobuf-ts's camel case                                                     |
 | `TestRenderMatchesCommittedFile`                                                                                  | `proto/buffs.proto` is what the manifest renders                                                                                |
 | `TestRenderNextIndex`                                                                                             | the next free number above each message                                                                                         |
-| `TestRetypedFieldsAreBool`, `TestRetypedFieldsMatchTheMigration`                                                  | the 24 fields api version 17 retyped are bool, and `ui/sim/proto/buff_field_migration.ts` names the same 24                     |
+| `TestRetypedFieldsAreBool`, `TestRetypedFieldsMatchTheMigration`                                                  | the 23 fields api version 17 retyped are bool, and `ui/sim/proto/buff_field_migration.ts` names the same 23                     |
 | `TestRenderedBuffFilesMatchTheFixtures`, `TestRenderedBuffFilesCompile`                                           | synthetic rows render to the committed fixtures, and those fixtures compile against the real `sim/core` through a build overlay |
 | `TestRenderBuffsDebuffsTS*`                                                                                       | the settings inputs each proto type and kind renders                                                                            |
 | `TestGeneratedBuffFiles`, `TestGeneratedBuffsDebuffsTS`                                                           | with a database, the committed files are byte-for-byte what the generator emits                                                 |
@@ -720,18 +720,20 @@ at all.
 **A talent curve only scales the row's first stat.** A row whose talent improves a second amount would
 need the generator extended; nothing in the manifest does today.
 
-**A set bonus is not a talent.** The resolver reads `SkillLineAbility`, the trait trees and the spell
-effects; it does not read `ItemSetSpell`, so a set that modifies a buff cannot be a manifest talent
-and there is no row to hang it on. Battlegear of Wrath is the case: item set 218's three-piece spell
-is 23563, an `A_ADD_FLAT_MODIFIER` of 30 against every effect of the Battle Shout family, which makes
-the shout worth 169 attack power rather than 139. The two halves of that are modelled separately. The
-warrior's own cast reads the `has_bs_t2` class option - the user's word that this warrior wears the
-set, not the equipped gear - and the party's copy reads the `snapshot_bs_t2` flag, a `KindFlag` row
-saying the warrior who shouted for the party wore it. Both call `AddGeneratedFlatBonus`, which raises
-what the aura applies and what it bids for its category together, so the stronger of the two copies
-is the one the character sheet shows. It is told what the buff is worth without the bonus, because
-the aura belongs to the unit rather than to whoever raised it: two warriors in a party wearing the
-same set ask for the same total and the second call does nothing. The 30 itself lives in
+**A set bonus is not a talent, but it can be a tristate.** The resolver reads `SkillLineAbility`, the
+trait trees and the spell effects; it does not read `ItemSetSpell`, so a set that modifies a buff
+cannot be a manifest `Talent`. What it can be is the row's `ImpAction`, which is the improved state a
+tristate row needs when no trait node prices one, and the icon that state shows. Battlegear of Wrath
+is the case: item set 218's `ItemSetSpell` at three pieces (2336) is 23563, an `A_ADD_FLAT_MODIFIER`
+of 30 against every effect of the Battle Shout family, which makes the shout worth 169 attack power
+rather than 139. The two halves of that are modelled separately. The warrior's own cast reads the
+`has_bs_t2` class option - the user's word that this warrior wears the set, not the equipped gear -
+and the party's copy is `battle_shout`'s improved state, which `driveBattleShout` reads because the
+resolver has no curve to give it. Both call `AddGeneratedFlatBonus`, which raises what the aura
+applies and what it bids for its category together, so the stronger of the two copies is the one the
+character sheet shows. It is told what the buff is worth without the bonus, because the aura belongs
+to the unit rather than to whoever raised it: two warriors in a party wearing the same set ask for
+the same total and the second call does nothing. The 30 itself lives in
 `core.BattleShoutT2Bonus`, with the set and the spell it came from written next to it.
 
 **A party or raid flag means an external caster provides the buff.** The generated apply block builds

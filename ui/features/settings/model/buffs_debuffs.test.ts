@@ -1,4 +1,5 @@
 import { Class } from '@generated/proto/common';
+import { ActionId } from '@sim/proto/action_id';
 import { describe, expect, it } from 'vitest';
 
 import * as BuffDebuffInputs from './buffs_debuffs';
@@ -13,7 +14,6 @@ describe('the buff registries', () => {
 		expect(labelsOf(BuffDebuffInputs.PARTY_BUFFS_CONFIG)).toEqual([
 			'Blood Pact',
 			'Battle Shout',
-			'Enhanced Battle Shout',
 			'Devotion Aura',
 			'Leader of the Pack',
 			'Mana Spring',
@@ -80,8 +80,14 @@ describe('the buff registries', () => {
 	});
 
 	it('puts the hand-written inputs themselves at those positions, not lookalikes', () => {
-		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].config).toBe(BuffDebuffInputs.EnhancedBattleShout);
 		expect(BuffDebuffInputs.BUFFS_CONFIG[8].config).toBe(BuffDebuffInputs.GreaterBlessingOfSalvation);
+	});
+
+	// Off, the shout, and the shout from a warrior wearing three pieces of Battlegear of Wrath, whose
+	// set spell 23563 is the improved corner's icon: one picker rather than a second boolean next to it.
+	it('offers Battle Shout as a single three-state icon', () => {
+		expect(BuffDebuffInputs.BattleShout.states).toBe(3);
+		expect(BuffDebuffInputs.BattleShout.improvedId?.equals(ActionId.fromSpellId(23563))).toBe(true);
 	});
 
 	it('gives the generated rows their owner class, so the settings tab can mark them external', () => {
