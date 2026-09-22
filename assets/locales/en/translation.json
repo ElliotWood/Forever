@@ -74,6 +74,17 @@
 			"mechanical": "Mechanical",
 			"undead": "Undead"
 		},
+		"area_types": {
+			"unknown": "None",
+			"forest_grassland": "Forest and Grassland",
+			"mountainous": "Mountainous",
+			"snowy": "Snowy",
+			"desert": "Desert",
+			"swamp": "Marsh and Swamp",
+			"wasteland": "Wasteland",
+			"haunted": "Haunted",
+			"cavernous": "Cavernous or Underground"
+		},
 		"sources": {
 			"unknown": "Unknown",
 			"crafting": "Crafting",
@@ -776,6 +787,10 @@
 			"encounter_preset": {
 				"label": "Encounter",
 				"tooltip": "Selects a preset encounter configuration."
+			},
+			"area_types": {
+				"label": "Area",
+				"tooltip": "Every kind of area the fight's zone counts as. Effects that only work in certain areas, such as Rune of the Guard Captain's extra attack power in Forest and Grassland areas, apply when their area is checked. A zone can count as several: Redridge Mountains is Forest and Mountainous, Deadwind Pass is Mountainous, Wasteland and Haunted."
 			},
 			"advanced": "Advanced",
 			"target": "Target",

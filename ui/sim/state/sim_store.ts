@@ -7,6 +7,7 @@
 // file still lives in its class.
 import type { PlayerStats } from '@generated/proto/api';
 import {
+	type AreaType,
 	ConsumesSpec,
 	Debuffs,
 	Faction,
@@ -57,6 +58,7 @@ export interface EncounterSlice {
 	executeProportion45: number;
 	executeProportion90: number;
 	useHealth: boolean;
+	areaTypes: Array<AreaType>;
 	targets: Array<TargetProto>;
 }
 
@@ -285,6 +287,7 @@ const initialState = (): SimState => ({
 	encounter: {
 		...ENCOUNTER_DEFAULTS,
 		useHealth: false,
+		areaTypes: [],
 		targets: [],
 	},
 	players: {},

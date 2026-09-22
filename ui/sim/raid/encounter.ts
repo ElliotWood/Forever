@@ -1,4 +1,5 @@
 import {
+	AreaType,
 	Encounter as EncounterProto,
 	MobType,
 	PresetEncounter,
@@ -137,6 +138,22 @@ export class Encounter {
 		this.set({ useHealth: newUseHealth });
 	}
 
+	getAreaTypes(): Array<AreaType> {
+		return this.enc.areaTypes;
+	}
+	inArea(areaType: AreaType): boolean {
+		return this.enc.areaTypes.includes(areaType);
+	}
+	setAreaTypes(newAreaTypes: Array<AreaType>) {
+		const areaTypes = [...new Set(newAreaTypes)].filter(areaType => areaType != AreaType.AreaTypeUnknown).sort((a, b) => a - b);
+		const current = this.enc.areaTypes;
+		if (areaTypes.length == current.length && areaTypes.every((areaType, i) => areaType == current[i])) return;
+		this.set({ areaTypes });
+	}
+	setInArea(areaType: AreaType, inArea: boolean) {
+		this.setAreaTypes(inArea ? [...this.enc.areaTypes, areaType] : this.enc.areaTypes.filter(t => t != areaType));
+	}
+
 	matchesPreset(preset: PresetEncounter): boolean {
 		const targets = this.enc.targets;
 		return preset.targets.length == targets.length && targets.every((t, i) => TargetProto.equals(t, preset.targets[i].target));
@@ -165,6 +182,7 @@ export class Encounter {
 			executeProportion45: enc.executeProportion45,
 			executeProportion90: enc.executeProportion90,
 			useHealth: enc.useHealth,
+			areaTypes: enc.areaTypes,
 			targets: enc.targets,
 			apiVersion: CURRENT_API_VERSION,
 		});
@@ -183,6 +201,7 @@ export class Encounter {
 			this.setExecuteProportion45(proto.executeProportion45);
 			this.setExecuteProportion90(proto.executeProportion90);
 			this.setUseHealth(proto.useHealth);
+			this.setAreaTypes(proto.areaTypes);
 			// Clone so edits in the Advanced Encounter picker cannot mutate the
 			// saved entry's (or the config default's) own target protos.
 			this.setTargets(proto.targets.map(t => TargetProto.clone(t)));

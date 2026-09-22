@@ -1,6 +1,7 @@
 import i18n from '@i18n/config';
 import { useSimHost } from '@sim/context/SimHostContext';
 import { useDisplayMetrics } from '@sim/hooks/useDisplayMetrics';
+import { BooleanPicker } from '@ui-kit/BooleanPicker';
 import { Button } from '@ui-kit/Button';
 import { EnumPicker } from '@ui-kit/EnumPicker';
 import { NumberPicker } from '@ui-kit/NumberPicker';
@@ -9,7 +10,7 @@ import { useMemo, useState } from 'react';
 
 import { AdvancedEncounterModal } from '../AdvancedEncounterModal';
 import { TargetInputsPicker } from '../TargetsPicker';
-import { durationConfigs, executeConfigs, minBaseDamageConfig, numAlliesConfig, presetEncounterConfig } from './utils/configs';
+import { areaTypeConfigs, durationConfigs, executeConfigs, minBaseDamageConfig, numAlliesConfig, presetEncounterConfig } from './utils/configs';
 
 export interface EncounterPickerProps {
 	showExecuteProportion: boolean;
@@ -26,6 +27,7 @@ export const EncounterPicker = ({ showExecuteProportion }: EncounterPickerProps)
 	const preset = useMemo(() => presetEncounterConfig(encounter), [encounter]);
 	const allies = useMemo(() => numAlliesConfig(player), [player]);
 	const minBaseDamage = useMemo(() => minBaseDamageConfig(), []);
+	const areas = useMemo(() => areaTypeConfigs(), []);
 
 	const [advancedOpen, setAdvancedOpen] = useState(false);
 
@@ -43,6 +45,14 @@ export const EncounterPicker = ({ showExecuteProportion }: EncounterPickerProps)
 					))}
 				</PickerGroup>
 			)}
+			<PickerGroup
+				className="w-full flex-col flex-nowrap"
+				aria-label={i18n.t('settings_tab.encounter.area_types.label')}
+				data-testid="encounter-area-types">
+				{areas.map(config => (
+					<BooleanPicker key={config.id} modObject={encounter} config={config} />
+				))}
+			</PickerGroup>
 			{showDamage && <EnumPicker modObject={encounter} config={preset} />}
 			{player.canEnableTargetDummies() && <NumberPicker modObject={host.sim.raid} config={allies} />}
 			{player.getPlayerSpec().isTankSpec && <NumberPicker modObject={encounter} config={minBaseDamage} />}
