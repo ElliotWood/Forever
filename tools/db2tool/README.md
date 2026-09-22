@@ -22,7 +22,8 @@ Two modes:
 - **Local-CASC mode (default)** — reads the WoW install named by the settings'
   `BaseDir`: `.build.info` picks the build, files come out of local CASC
   storage, and the client's `DBCache.bin` hotfixes for that build are applied
-  to the decoded rows.
+  to the decoded rows. `BaseDir` may be a symlink; the cache scan resolves it
+  first, and the run warns when it finds no cache for the build.
 - **Offline mode (`--build <number|version>`)** — decodes pre-extracted `.db2`
   files (from `dbfilesclient/` or `--db2dir`) instead. No install required, no
   hotfixes unless `--dbcache` is given.

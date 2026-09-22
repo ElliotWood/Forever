@@ -245,10 +245,13 @@ func run(args []string) error {
 			}
 		}
 		hotfixReader = readers[buildNumber]
-		if hotfixReader == nil && len(opts.dbCaches) > 0 {
-			// Pinned caches that hold no records for the extracted build would
-			// otherwise silently produce a hotfix-free run.
+		// A hotfix-free run is easy to miss in the output, and it also means
+		// no server-pushed TACT keys were picked up, so say so.
+		switch {
+		case hotfixReader == nil && len(opts.dbCaches) > 0:
 			fmt.Fprintf(os.Stderr, "db2tool: warning: none of the given --dbcache files hold hotfixes for build %d; continuing without the overlay\n", buildNumber)
+		case hotfixReader == nil && opts.buildNumber == 0:
+			fmt.Fprintf(os.Stderr, "db2tool: warning: no DBCache.bin for build %d found under %s or %s; continuing without the overlay\n", buildNumber, settings.Settings.BaseDir, filepath.Join(toolHome, "caches"))
 		}
 	}
 
