@@ -11,16 +11,13 @@ import (
 // - A judgement that has a flat damage roll, and scales with spellpower.
 // - A 7ppm on-hit proc with a 1s ICD that deals 70% weapon damage and scales with spellpower.
 
-// Judgement of Command has some unusual behaviour in classic:
-// - The judgement operates via a dummy spell, that likely figures out whether to apply
-//   half damage if the target is not stunned or not (counter to the tooltip, the base damage only is
-//   multiplied by 2 if the target is stunned). These dummy spells are implemented as targetting
-//   magic defense type, and have no flags to prevent misses, meaning they roll on spell hit table
-//   and can miss. If it succeeds, it calls the "actual" Judgement of Command spell.
-// - The actual Judgement of Command has flags to not miss and to avoid block/parry/dodge, but
-//   it targets the melee defense type and so crits for double damage.
-//   The Seal of Command aura watches for the base Judgement spell, and casts the actual
-//   Judgement of Command when it successfully is cast.
+// Judgement of Command in the Forever client (1.60.1.69893):
+// - The judgement is a dummy, 20968, that halves the damage unless the target is stunned (the
+//   base damage only is multiplied by 2 if the target is stunned). It is DefenseType Melee with No
+//   Active Defense (SpellMisc Attributes[0] 0x200000), so it rolls a melee miss but can't be dodged,
+//   parried or blocked. Classic's dummy was Magic and rolled on the spell hit table.
+// - The damage spell, 20966, ignores the hit result (Attributes[3] 0x40000) and is Melee, so it
+//   crits on the melee table for double damage.
 
 // Every rank's aura triggers the same proc, 20424, in both clients; 20944-20947 were Classic's
 // learn-spell dummies and are gone from the beta client (1.60.1.69893). Nothing else moved.
@@ -85,15 +82,10 @@ func (paladin *Paladin) registerSealOfCommand() {
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				baseDamage := sim.Roll(minDamage, maxDamage) * 0.5 // unless stunned
 
-				// Seal of Command requires this spell to act as its intermediary dummy,
-				// rolling on the spell hit table. If it succeeds, the actual Judgement of Command rolls on the
-				// melee special attack crit/hit table, necessitating two discrete spells.
-				// All other judgements are cast directly.
-				// Used to decide between spell.OutcomeMeleeSpecialCritOnly and spell.OutcomeAlwaysMiss
-				dummyJudgeLanded := paladin.judgement.CalcOutcome(sim, target, paladin.judgement.OutcomeMagicHit).Landed()
-
-				outcomeApplier := core.Ternary(dummyJudgeLanded, spell.OutcomeMeleeSpecialCritOnly, spell.OutcomeAlwaysMiss)
-				spell.CalcAndDealDamage(sim, target, baseDamage, outcomeApplier)
+				// The client's dummy, 20968, is DefenseType Melee with No Active Defense: it rolls a melee
+				// miss, never a dodge, parry or block. The damage spell it triggers, 20966, ignores the hit
+				// result and crits on the melee table.
+				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialNoBlockDodgeParry)
 			},
 		})
 

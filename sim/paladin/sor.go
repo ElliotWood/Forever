@@ -36,9 +36,10 @@ type judge struct {
 // coefficient (0.058/0.125/0.185/0.2) is the judgement's effect 2, a tooltip dummy (effect 3) carrying
 // 0.2 times Classic's below-20 penalty; the proc spells that deal the damage (25741, 25740 ... 25713)
 // all read 0.1, which is what the sim applies.
-// The judgement is DefenseType Melee in the client (SpellCategories 2), so it crits for 200%: the beta
-// log's one crit (20280, William) is 69 on a 34 base. It still rolls hit and crit on the spell table
-// (the log shows plain MISSes, no dodge or parry).
+// The judgement is DefenseType Melee in the client (SpellCategories 2), so it rolls hit and crit on the
+// melee table and crits for 200% (the beta log's one crit, 20280 by William, is 69 on a 34 base). It
+// carries No Active Defense (SpellMisc Attributes[0] 0x200000, as Overpower does), so it can't be
+// dodged, parried or blocked: the log shows plain MISSes only.
 var sealOfRighteousnessRanks = []struct {
 	level      int32
 	spellID    int32
@@ -76,7 +77,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 		 * (Judgement of Righteousness):
 		 *   - Deals flat damage that is affected by the Improved Seals talent, and
 		 *     has a spellpower scaling that is unaffected by that talent.
-		 *   - Melee defense type (200% crits), rolls to hit and crit on the spell table.
+		 *   - Melee defense type: melee hit and crit (200%), no dodge, parry or block.
 		 *
 		 * (Seal of Righteousness):
 		 *   - Procs from white hits.
@@ -108,7 +109,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				baseDamage := sim.Roll(minDamage, maxDamage)
-				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMagicHitAndCrit)
+				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialNoBlockDodgeParry)
 			},
 		})
 
