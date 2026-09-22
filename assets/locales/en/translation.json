@@ -83,7 +83,9 @@
 			"swamp": "Marsh and Swamp",
 			"wasteland": "Wasteland",
 			"haunted": "Haunted",
-			"cavernous": "Cavernous or Underground"
+			"cavernous": "Cavernous or Underground",
+			"volcanic": "Volcanic",
+			"strongholds_cities": "Strongholds and Cities"
 		},
 		"sources": {
 			"unknown": "Unknown",

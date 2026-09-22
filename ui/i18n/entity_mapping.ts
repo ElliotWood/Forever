@@ -271,6 +271,8 @@ export const areaTypeI18nKeys: Record<AreaType, string> = {
 	[AreaType.AreaTypeWasteland]: 'wasteland',
 	[AreaType.AreaTypeHaunted]: 'haunted',
 	[AreaType.AreaTypeCavernous]: 'cavernous',
+	[AreaType.AreaTypeVolcanic]: 'volcanic',
+	[AreaType.AreaTypeStrongholdsCities]: 'strongholds_cities',
 };
 
 export const raceI18nKeys: Record<Race, string> = {

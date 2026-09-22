@@ -142,6 +142,8 @@ const AREA_TYPES: Array<AreaType> = [
 	AreaType.AreaTypeWasteland,
 	AreaType.AreaTypeHaunted,
 	AreaType.AreaTypeCavernous,
+	AreaType.AreaTypeVolcanic,
+	AreaType.AreaTypeStrongholdsCities,
 ];
 
 export const areaTypeConfigs = (): Array<BooleanPickerConfig<Encounter>> =>

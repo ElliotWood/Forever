@@ -265,10 +265,16 @@
 						},
 						"cavernous": {
 							"type": "string"
+						},
+						"volcanic": {
+							"type": "string"
+						},
+						"strongholds_cities": {
+							"type": "string"
 						}
 					},
 					"additionalProperties": false,
-					"required": ["unknown", "forest_grassland", "mountainous", "snowy", "desert", "swamp", "wasteland", "haunted", "cavernous"]
+					"required": ["unknown", "forest_grassland", "mountainous", "snowy", "desert", "swamp", "wasteland", "haunted", "cavernous", "volcanic", "strongholds_cities"]
 				},
 				"sources": {
 					"type": "object",

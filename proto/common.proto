@@ -641,6 +641,8 @@ enum AreaType {
 	AreaTypeWasteland = 6;
 	AreaTypeHaunted = 7;
 	AreaTypeCavernous = 8;
+	AreaTypeVolcanic = 9;
+	AreaTypeStrongholdsCities = 10;
 }
 
 enum InputType {
