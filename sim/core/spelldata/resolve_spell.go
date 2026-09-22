@@ -176,7 +176,7 @@ func castConfig(unit *core.Unit, s *Spell) core.CastConfig {
 }
 
 // The timer a category cooldown runs off. A category is a set of spells that share one cooldown, so
-// the timer is the unit's for that category; 15 rows state a category cooldown without a category to
+// the timer is the unit's for that category; 16 rows state a category cooldown without a category to
 // share it with, and that is the spell's own recovery time.
 func categoryTimer(unit *core.Unit, s *Spell) *core.Timer {
 	if s.Category == 0 {
@@ -190,12 +190,20 @@ func categoryTimer(unit *core.Unit, s *Spell) *core.Timer {
 // resource. It is not what keeps core's "Empty DefaultCast with a cost" panic away: core fills
 // DefaultCast.Cost from the resolved cost before it tests for an empty cast. A row that spends
 // nothing is left empty on purpose, so a passive or a proc spell keeps the cast path core gives those.
+//
+// Only the first bar: 45 rows state a second one - 44 of them combo points beside energy - and the
+// sim has one cost per spell, so the caller spends the rest itself. A bar the sim does not model,
+// which is the client's -2 health on Bloodrage, resolves to no cost at all and leaves the cast as it
+// found it rather than declaring a cost the spell does not take.
 func applyCost(config *core.SpellConfig, s *Spell) {
 	if len(s.Powers) == 0 {
 		return
 	}
 
 	powerType := s.Powers[0].Type
+
+	// Truncated rather than rounded, which is what the generated rank tables answer for the same
+	// row: Retaliation states one rage-tenth and so costs nothing.
 	cost := int32(s.PowerCost(powerType))
 	costPct := float64(s.Powers[0].CostPct)
 
@@ -211,6 +219,8 @@ func applyCost(config *core.SpellConfig, s *Spell) {
 		config.EnergyCost = core.EnergyCostOptions{Cost: cost, Refund: s.MissRefund()}
 	case powerTypeFocus:
 		config.FocusCost = core.FocusCostOptions{Cost: cost, Refund: s.MissRefund()}
+	default:
+		return
 	}
 
 	spends := cost > 0 || costPct > 0

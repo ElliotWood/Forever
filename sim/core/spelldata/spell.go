@@ -150,7 +150,8 @@ func (s *Spell) firstOfType(types ...dbcenums.SpellEffectType) *Effect {
 	return NilEffect
 }
 
-// The cost out of this bar, or a zero Power where the spell does not use it.
+// The cost out of this bar, or a zero Power where the spell does not use it. Both the row's own and
+// the shared zero one are the store's, so a caller must not write through what it gets back.
 func (s *Spell) Power(t int8) *Power {
 	for i := range s.Powers {
 		if s.Powers[i].Type == t {

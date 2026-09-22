@@ -42,6 +42,8 @@ func Talent(spellID int32, maxRanks int32) Ladder {
 
 	ranks := make([]*Spell, 0, maxRanks)
 	for n := int32(1); n <= maxRanks; n++ {
+		// Only the effects are copied, since only their base points differ by rank: the powers, the
+		// labels and the tooltip references stay the store's own, and no rank writes through them.
 		rank := *base
 		rank.Effects = slices.Clone(base.Effects)
 		for i := range rank.Effects {
@@ -108,11 +110,6 @@ func (l Ladder) MultiplierAt(rank int32) float64 {
 // The client states rage and energy on a 0-1000 bar.
 func (l Ladder) TenthsAt(rank int32) float64 {
 	return l.ValueAt(rank) / 10
-}
-
-// The client's proc chance as a fraction, which is the form a ProcTrigger takes.
-func (l Ladder) ProcChanceAt(rank int32) float64 {
-	return l.value(rank, func(s *Spell) float64 { return float64(s.ProcChance) }) / 100
 }
 
 // The effect at a position, counted from 1, for the ranks that carry more than one.

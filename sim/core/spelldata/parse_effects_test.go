@@ -534,6 +534,35 @@ func TestEveryTableRow(t *testing.T) {
 		{dbcenums.A_MOD_MELEE_HASTE_3, 0, 25, "melee-speed", 1.25, true},
 	}
 
+	// A row added to one of the three tables and to no case here would be invisible, so the cases
+	// are read back as the coverage they are.
+	auras := map[dbcenums.EffectAuraType]bool{}
+	flatMods, pctMods := map[int32]bool{}, map[int32]bool{}
+	for _, c := range cases {
+		auras[c.aura] = true
+		switch c.aura {
+		case flat:
+			flatMods[c.misc] = true
+		case pct:
+			pctMods[c.misc] = true
+		}
+	}
+	for aura := range auraTable {
+		if !auras[aura] {
+			t.Errorf("the aura table carries %s and no case reads it", auraName(aura))
+		}
+	}
+	for misc := range flatModTable {
+		if !flatMods[misc] {
+			t.Errorf("the flat modifier table carries misc %d and no case reads it", misc)
+		}
+	}
+	for misc := range pctModTable {
+		if !pctMods[misc] {
+			t.Errorf("the percentage modifier table carries misc %d and no case reads it", misc)
+		}
+	}
+
 	for _, c := range cases {
 		t.Run(fmt.Sprintf("%s_misc%d", auraName(c.aura), c.misc), func(t *testing.T) {
 			character := parseWarrior()
@@ -593,6 +622,12 @@ func TestParseStaticStatConventions(t *testing.T) {
 	ParseStatic(crit, oneEffectRow(dbcenums.A_MOD_WEAPON_CRIT_PERCENT, 0, 5))
 	if got := crit.GetStat(stats.PhysicalCritPercent) - baseCrit; math.Abs(got-5) > 1e-9 {
 		t.Errorf("crit from a 5 point row: %v percentage points, want 5", got)
+	}
+
+	parry := parseWarrior()
+	ParseStatic(parry, oneEffectRow(dbcenums.A_MOD_PARRY_PERCENT, 0, 5))
+	if got := parry.GetStat(stats.ParryRating); math.Abs(got-75) > 1e-9 {
+		t.Errorf("parry from a 5 point row: %v rating, want 75", got)
 	}
 
 	expertise := parseWarrior()
@@ -684,5 +719,52 @@ func TestParseEffectsCatchesUpAnActiveAura(t *testing.T) {
 
 	if got := character.PseudoStats.MeleeSpeedMultiplier; got != 1 {
 		t.Errorf("melee speed on an aura that was already up: %v, want 1 until it is applied again", got)
+	}
+}
+
+// A debuff sits on the enemy, and its amount is still the caster's: the value scales by the
+// character's level, not by the level of the unit the aura is on.
+func TestParseEffectsScalesByTheCharactersLevel(t *testing.T) {
+	withParseRows(t)
+	character := parseWarrior()
+
+	row := &Spell{ID: 6100, Name: "Enemy Debuff", DurationMs: 30000,
+		Effects: []Effect{{SpellID: 6100, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_THREAT,
+			Misc: 127, BasePoints: 30, PPL: 1, SpellLevel: 10}}}
+
+	enemy := &core.Unit{Level: character.Level + 3}
+	parsed := ParseEffects(character, &core.Aura{Unit: enemy}, row)
+
+	if len(parsed.Applied) != 1 {
+		t.Fatalf("the debuff attached %v, want the threat multiplier alone", appliedKinds(parsed))
+	}
+	// 30 plus a point for each of the 50 levels between the spell's own 10 and the character's 60.
+	if got := parsed.Applied[0].Value; got != 1.8 {
+		t.Errorf("a debuff on a level %d enemy is worth %v, want the character's 1.8",
+			enemy.Level, got)
+	}
+}
+
+// A multiplier of zero or less cannot be taken back off: expiry divides by it. The row is reported
+// the way an unmapped one is rather than leaving the field at zero or at an infinity.
+func TestParseSkipsANonPositiveMultiplier(t *testing.T) {
+	withParseRows(t)
+	character := parseWarrior()
+
+	row := &Spell{ID: 6200, Name: "Not There", DurationMs: 10000,
+		Effects: []Effect{
+			{SpellID: 6200, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_THREAT,
+				Misc: 127, BasePoints: -100},
+			{SpellID: 6200, Index: 1, Type: dbcenums.E_APPLY_AURA,
+				Aura: dbcenums.A_MOD_BASE_RESISTANCE_PCT, Misc: miscArmor, BasePoints: -100},
+		}}
+
+	parsed := ParseStatic(character, row)
+
+	if len(parsed.Applied) != 0 || len(parsed.Skipped) != 2 {
+		t.Fatalf("the -100%% rows attached %v, want both of them skipped", appliedKinds(parsed))
+	}
+	if got := character.PseudoStats.ThreatMultiplier; got != 1 {
+		t.Errorf("the threat multiplier is %v, want the 1 it started at", got)
 	}
 }

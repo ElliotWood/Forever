@@ -56,7 +56,7 @@ func ItemProcUnsupported(trigger *Spell, isWeaponProc bool) []string {
 	}
 
 	switch {
-	case !ProcRateStated(trigger):
+	case !procRateStated(trigger):
 		unsupported = append(unsupported, "states no rate")
 	case trigger.RPPM > 0 && decoded.ProcMask == core.ProcMaskUnknown:
 		// Procs per minute are measured against the hits the listener hears, and an empty mask
@@ -76,13 +76,13 @@ func weaponProcRateStated(s *Spell) bool {
 		return s.RPPM > 0
 	}
 
-	return ProcRateStated(s)
+	return procRateStated(s)
 }
 
 // Whether the row states a rate the trigger can be built from at all: a roll of its own, or the
 // procs-per-minute an override wrote onto it. A row stating neither would fire on every hit, which
 // is never what the client means.
-func ProcRateStated(s *Spell) bool {
+func procRateStated(s *Spell) bool {
 	if s.RPPM > 0 {
 		return true
 	}

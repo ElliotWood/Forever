@@ -118,13 +118,20 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 
 	folded := foldedDotEffects(s, o)
 
+	// The amount is the caster's, so a debuff on an enemy is still priced at the character's level
+	// and not at the level of the unit it sits on. Without a character there is only the unit.
+	level := unit.Level
+	if character != nil {
+		level = character.Level
+	}
+
 	for i := range s.Effects {
 		e := &s.Effects[i]
 		if !o.reads(int32(i+1)) || !appliesAura(e.Type) {
 			continue
 		}
 
-		value := e.Average(unit.Level)
+		value := e.Average(level)
 
 		if slices.Contains(folded, e) {
 			parsed.Applied = append(parsed.Applied, Applied{Effect: e,

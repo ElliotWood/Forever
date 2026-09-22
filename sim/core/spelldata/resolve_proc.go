@@ -141,8 +141,14 @@ func rowClassFlags(s *Spell) core.ClassFlags {
 //
 // Only another class's family counts. The client files the potions under family 13 and a good deal
 // of generic content under 0 or 1, and a mask in one of those names spells every class can use, so
-// dropping it would silence a listener the wearer really does hear.
+// dropping it would silence a listener the wearer really does hear. With no character there is no
+// class to read the mask against, which ParseEffects answers the same way: the rows that need one
+// are left out rather than guessed at.
 func othersFamily(character *core.Character, flags core.ClassFlags) bool {
+	if character == nil {
+		return false
+	}
+
 	family, stated := classSpellFamilies[character.Class]
 	return stated && !flags.IsZero() && flags.Family != family && isClassFamily(flags.Family)
 }

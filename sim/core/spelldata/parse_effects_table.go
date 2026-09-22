@@ -513,8 +513,11 @@ func (p *parser) statMultiplier(sts []stats.Stat, mult float64) *attachment {
 // A multiplier on the equipment share of a stat, which is what the client's base-resistance modifier
 // states. The character keeps one multiplier per stat, so the value cannot follow stacks, and the
 // static path has no Simulation for a later Refresh to hand over.
+//
+// Expiry undoes the multiplier by dividing by it, so a row that states -100% or worse has no way
+// back and is reported rather than applied.
 func (p *parser) equipScaling(stat stats.Stat, mult float64) *attachment {
-	if p.character == nil || p.stacking || (p.static && p.conditional) {
+	if p.character == nil || p.stacking || (p.static && p.conditional) || mult <= 0 {
 		return nil
 	}
 
@@ -541,8 +544,11 @@ func (p *parser) equipScaling(stat stats.Stat, mult float64) *attachment {
 // A pseudo-stat the sim multiplies rather than adds. A stack multiplies again, which the parser
 // refuses to assume: a stacking row is skipped unless the caller says the value does not follow the
 // stacks.
+//
+// Expiry raises the multiplier to a negative power, so a row that states -100% or worse leaves the
+// field at zero or at an infinity and is reported rather than applied.
 func (p *parser) pseudoMultiplier(kind string, fields []*float64, mult float64) *attachment {
-	if p.stacking {
+	if p.stacking || mult <= 0 {
 		return nil
 	}
 
