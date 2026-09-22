@@ -19,8 +19,8 @@ export interface ConsumesPickerProps {
 	explosiveOptions: ReadonlyArray<ConsumableStatOption<number>>;
 	imbueMHOptions: ReadonlyArray<ConsumableStatOption<number>>;
 	imbueOHOptions: ReadonlyArray<ConsumableStatOption<number>>;
-	// Potions, explosives, pet consumables and the combat-only miscellany matter inside an
-	// encounter; a gear planner never runs one and passes false.
+	// Potions, explosives and the combat-only miscellany matter inside an encounter; a gear
+	// planner never runs one and passes false.
 	encounterConsumes?: boolean;
 }
 

@@ -19,9 +19,8 @@ const SCHOOL_DAMAGE_STATS = [
 ];
 
 /**
- * TBC's five-parameter form. `includeBase`/`includeGear` say which stage the delta being rendered
- * covers, because several stats are only correct once the stage that hides them is known: the base
- * defense skill and the scope enchants.
+ * `includeBase`/`includeGear` say which stage the delta being rendered covers, because the base
+ * defense skill and the scope enchants are only correct once the stage that hides them is known.
  */
 export const statDisplayString = (player: Player<any>, deltaStats: Stats, unitStat: UnitStat, includeBase?: boolean, includeGear?: boolean): string => {
 	const rootStat = unitStat.hasRootStat() ? unitStat.getRootStat() : null;
