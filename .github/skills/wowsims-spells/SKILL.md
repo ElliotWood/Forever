@@ -20,10 +20,10 @@ The full guide is `docs/spell_data.md`; this is the map.
 ## Architecture
 
 - `sim/core/spelldata/spells_auto_gen.go` — generated, checked in: every spell the sim can reach, in the client's own units. 7035 rows, 9636 effects, pinned by `snapshot_test.go`.
-- `sim/core/spelldata/*.go` — hand-written: the accessors (`store.go`, `spell.go`, `effect.go`, `attributes.go`, `ladder.go`) and the resolvers (`resolve_spell.go`, `resolve_aura.go`, `resolve_proc.go`, `parse_effects.go`, `item_proc.go`). `sim/core` must not import this package: `tools/database` imports core, and the cycle would stop the generator.
+- `sim/core/spelldata/*.go` — hand-written: the accessors (`store.go`, `spell.go`, `effect.go`, `attributes.go`, `ladder.go`) and the resolvers (`resolve_spell.go`, `resolve_aura.go`, `resolve_proc.go`, `parse_effects.go`, `item_proc.go`). `sim/core` must not import this package: the store imports core, and the import back would be a cycle.
 - `sim/<class>/spell_data_auto_gen.go` — generated. A `spelldata.Ladder` per family for a store-backed class, a `shared.SpellDataTable` of rows for the rest. `storeBackedClasses` in `tools/database/gen_spell_data.go` decides which.
 - `sim/common/shared/spell_data.go`, `spell_data_talents.go` — hand-written, the family tables' accessors.
-- `sim/common/shared/spell_data_enums_auto_gen.go` — generated: the `A_` and `E_` names, mirrored from `tools/database/dbc/enums.go` by parsing it, because sim must not import tools.
+- `sim/common/shared/spell_data_enums_auto_gen.go` — generated: the `A_` and `E_` names the family tables reference, parsed out of `sim/core/dbcenums` and emitted into `shared` because that is the package the tables read. It retires with them.
 - `tools/database/overrides/spell_overrides.go` — the numbers the client does not state, each with a reason, a source and a rule that makes the generator refuse it once the client catches up.
 - `assets/db_inputs/spell_store_inputs.json` — the client rows the store was built from. Gzipped despite the name; `zcat` to read it. It is what lets the store be regenerated and checked with no client database.
 
@@ -56,7 +56,7 @@ spelldata.MustFind(id)                           // panics instead, for a spell 
 | `Coeff()`, `APCoeff()` | the spell power and attack power shares |
 | `Trigger()` | the spell the effect fires |
 
-A `Ladder` reads per rank: `ValueAt`, `FractionAt`, `MultiplierAt`, `TenthsAt`, `ProcChanceAt`, and `EffectAt(n)` / `Effect(aura, misc)` for a rank with more than one effect. Rank 0 answers 0, so no `if rank > 0` guard.
+A `Ladder` reads per rank: `ValueAt`, `FractionAt`, `MultiplierAt`, `TenthsAt`, and `EffectAt(n)` / `Effect(aura, misc)` for a rank with more than one effect. Rank 0 answers 0, so no `if rank > 0` guard.
 
 ## The resolvers
 

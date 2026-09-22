@@ -55,8 +55,8 @@ says so there.
 
 Every field is the client's column in the client's units: a percentage is the integer 16, rage is on a
 0-1000 bar, times are milliseconds. The conversion is in the accessors, so a row always matches what
-the DBC says. `sim/core` must not import the package: `tools/database` imports core, and a cycle there
-would stop the generator that writes the store.
+the DBC says. `sim/core` must not import the package: the store imports core, and the import back
+would be a cycle.
 
 ### Finding a row
 
@@ -167,7 +167,6 @@ the effects the curve covers, and an effect it has no row for keeps the spell's 
 | `Len()`, `Each(fn)`                                    | how many ranks, and each of them with its number                                      |
 | `ValueAt(rank)`                                        | the rank's only effect in the client's units; panics where the rank has more than one |
 | `FractionAt`, `MultiplierAt`, `TenthsAt`               | the same over 100, as `1 +` that, and over 10                                         |
-| `ProcChanceAt(rank)`                                   | the proc chance column over 100                                                       |
 | `EffectAt(n)`, `Effect(aura, misc)`                    | one named effect across the ranks, carrying the same four readers                     |
 
 `MultiplierAt` takes its sign from the data: a talent the client states as -2/-4/-6 gives 0.94 at rank
@@ -365,7 +364,7 @@ per unit cannot be applied once per stack, and the static path has no aura to fo
 
 |                                             | skips                                                                 |
 | ------------------------------------------- | ----------------------------------------------------------------------- |
-| a stacking aura (`MaxStack` > 0)            | the stat multipliers, the equipment scaling, the pseudo-stat multipliers and the speed multipliers |
+| a stacking aura (`MaxStack` > 0)            | the stat multipliers, the equipment scaling, the pseudo-stat multipliers, the speed multipliers and the cooldown multiplier |
 | `ParseStatic`                               | the speed multipliers, which need the `Simulation` an aura's gain hands over |
 | `ParseStatic` with `Conditional`            | the stat multipliers and the equipment scaling as well                |
 | an aura on a unit with no character         | the equipment scaling, whose helper is a character's                  |
@@ -856,7 +855,7 @@ may state a percentage now, and the other way round.
    tooltip whose *trigger clause* says the effect only happens sometimes - "Chance to strike your
    ranged target", "your melee swings have a chance to" - is shape 4 rather than this one, and on a
    chance-on-hit weapon, where the game consults no condition at all, the 100 and 101 always are.
-4. **No chance in the tooltip, no condition, and a value the tooltip contradicts.** A procs-per-minute
+4. **No chance in the tooltip, and a column the tooltip's trigger clause contradicts.** A procs-per-minute
    proc the client does not carry (`SpellProcsPerMinuteID` is 0 on every row). The PPM is
    hand-supplied the way threat and attack power coefficients are, with the manual-review TODO
    quoting the raw column on the line:
@@ -1118,10 +1117,10 @@ What guards the outputs:
 - `sim/<class>/spell_data_parity_test.go` compares every value a class's family table states with the
   same spell as the store carries it, through `sim/core/spelldata/parity`. That is what has to stay
   green for a class before it ports.
-- `go test ./tools/database/ -run GeneratedRankTables` re-derives amounts and coefficients for the 23
-  families listed in `tools/database/spelldata_regen_test.go` from the database itself - 514 of the
-  3327 family-table rows, so it is no substitute for regenerating and finding the diff empty. It skips
-  when `wowsims.db` is absent.
+- `go test ./tools/database/ -run GeneratedRankTables` re-derives amounts and coefficients for the 20
+  families listed in `tools/database/spelldata_regen_test.go` from the database itself - 405 values out
+  of the 3,435 rows the eight family tables hold, so it is no substitute for regenerating and finding
+  the diff empty. It skips when `wowsims.db` is absent.
 - The repository's `pre-commit` hook runs `-check` when the database is present and the commit touches
   the generator or one of its outputs.
 
@@ -1132,7 +1131,9 @@ was meant to be mechanical and moves a golden is a wrong port, not a new baselin
 ## Porting a class to the store
 
 1. **Flip the class** in `storeBackedClasses` (`tools/database/gen_spell_data.go`) and regenerate. The
-   class file becomes one ladder per family; nothing else changes until the call sites move.
+   class file becomes one ladder per family; nothing else changes until the call sites move. Run
+   `sim/<class>/spell_data_parity_test.go` first: every value the family table states has to match the
+   store's before the class reads the store instead.
 2. **Dump the rows before touching a call site**, three ways: the effects at the rank taken, which
    registered spells each modifier's `EffectSpellClassMask` names, and the whole `ProcTrigger` the row
    decodes to. The mask dump is what turns a golden move into something you knew before you ran it.
@@ -1140,7 +1141,10 @@ was meant to be mechanical and moves a golden is a wrong port, not a new baselin
    talent's per-rank numbers live in the curve, and the base row's effect can read 0.
 4. **Check the cooldown categories.** A category cooldown resolves to `Unit.CategoryTimer`, which is
    one map per unit and the same one consumables and racials use for categories 4, 30, 1141, 1153 and
-   1190. A class row stating one of those would share a cooldown with a potion.
+   1190. A class row stating one of those would share a cooldown with a potion. Two of the class's own
+   abilities sharing a category share the timer, which is what the client does: the warrior's Revenge
+   and Overpower run off 65, Shield Bash and Pummel off 88, and Mortal Strike, Bloodthirst and Shield
+   Slam off 971.
 5. **Read what the resolver picked up.** `SpellFlagHelpful` follows the first effect's target and flips
    `IsFriendly` in the APL editor, so an attack whose first effect is a self side-effect needs it
    cleared. `Rank` comes from "Rank N" and flips `HasRanks` there. `IgnoreHaste` follows the physical
@@ -1164,6 +1168,13 @@ was meant to be mechanical and moves a golden is a wrong port, not a new baselin
     commit look like one inexplicable cause.
 13. **Delete the class masks last**, and only where the constant's sole reader is the `ClassSpellMask`
     write. A handler calling `spell.Matches` is a reader too.
+14. **A gear proc is three calls, not one.** `ProcTrigger` for the listener, `AuraConfig` for the buff
+    it applies and `ParseEffects` for what that buff does - the idiom `sim/warrior/items.go` uses for
+    every set bonus and item buff the class owns.
+15. **`Melee` and `Magic` put the spell in the rotation; `Flags` does not.** A queued or stance-gated
+    ability takes `Flags` so the APL editor does not offer it, and a config that writes
+    `ThreatMultiplier = 1` or `FlatThreatBonus = 0` after the resolver is writing what the resolver
+    already wrote - keep it only where its review marker says the number is still to be measured.
 
 ## Traps
 
@@ -1217,6 +1228,16 @@ rule: `EffectAt(n)` or `EffectN(n)` is how a caller says which.
 regeneration that drops or renumbers an id stops the sim with the id in the message - but it means a
 package-level `var` reaching for a spell this build does not carry takes the whole package down,
 including tests that never touch that spell.
+
+**`SPCoef` of exactly 1 is the column's filler.** 2,112 of the store's 9,636 effects carry it, on
+weapon-damage effects, speed auras and shapeshifts among them, and no physical-school row in this
+client states a fractional coefficient at all. `Magic()` and `DotConfig` hand the row's coefficient
+to core as it stands, so a physical row read through either would take spell power per hit or per
+tick: read the tooltip before you believe a coefficient of 1.
+
+**`Spell.ProcChance` is not always a chance.** 100 and 101 are the client's "fires whenever its own
+condition is met", and the tooltip is what says which the column is: `ProcChanceSource`, baked in at
+generation, is the answer, and `spelldata.ProcTrigger` reads it rather than the column.
 
 **A proc row with no stated rate panics when the trigger is built.** `ProcChancePPM` with no override
 behind it means the client states nothing anywhere, so `spelldata.ProcTrigger` demands a `PPM()` rather
