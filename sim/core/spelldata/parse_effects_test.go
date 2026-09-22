@@ -499,8 +499,8 @@ func TestEveryTableRow(t *testing.T) {
 		{dbcenums.A_MOD_STAT, 2, 10, "stat Stamina", 10, false},
 		{dbcenums.A_MOD_INCREASE_HEALTH, 0, 200, "stat Health", 200, false},
 		{dbcenums.A_MOD_INCREASE_HEALTH_PERCENT, 0, 10, "multiply-stat Health", 1.1, false},
-		{dbcenums.A_MOD_PARRY_PERCENT, 0, 5, "stat ParryRating", 5 * core.ParryRatingPerParryPercent, false},
-		{dbcenums.A_MOD_DODGE_PERCENT, 0, 5, "stat DodgeRating", 5 * core.DodgeRatingPerDodgePercent, false},
+		{dbcenums.A_MOD_PARRY_PERCENT, 0, 5, "stat ParryPercent", 5, false},
+		{dbcenums.A_MOD_DODGE_PERCENT, 0, 5, "stat DodgePercent", 5, false},
 		{dbcenums.A_MOD_BLOCK_PERCENT, 0, 5, "stat BlockPercent", 0.05, false},
 		{dbcenums.A_MOD_WEAPON_CRIT_PERCENT, 0, 5, "stat PhysicalCritPercent", 5, false},
 		{dbcenums.A_MOD_HIT_CHANCE, 0, 3, "stat PhysicalHitPercent", 3, false},
@@ -620,8 +620,8 @@ func TestParseStaticStatConventions(t *testing.T) {
 
 	parry := parseWarrior()
 	ParseStatic(parry, oneEffectRow(dbcenums.A_MOD_PARRY_PERCENT, 0, 5))
-	if got := parry.GetStat(stats.ParryRating); math.Abs(got-75) > 1e-9 {
-		t.Errorf("parry from a 5 point row: %v rating, want 75", got)
+	if got := parry.GetStat(stats.ParryPercent); math.Abs(got-5) > 1e-9 {
+		t.Errorf("parry from a 5 point row: %v percentage points, want 5", got)
 	}
 
 	expertise := parseWarrior()

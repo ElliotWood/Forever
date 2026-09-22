@@ -46,7 +46,7 @@ message UINPC {
 // Contains all information about an Item needed by the UI.
 // Generally this will include everything needed by the sim, plus some
 // additional data for displaying / filtering.
-// Next tag: 34.
+// Next tag: 35.
 message UIItem {
 	int32 id = 1;
 	string name = 2;
@@ -59,6 +59,7 @@ message UIItem {
 	RangedWeaponType ranged_weapon_type = 8;
 
 	repeated double stats = 9;
+	repeated double pseudo_stats = 34; // Indexed by PseudoStat.
 	repeated GemColor gem_sockets = 10;
 	repeated double socketBonus = 11;
 	repeated int32 random_suffix_options = 26;
@@ -206,6 +207,7 @@ message UIEnchant {
 	EnchantType enchant_type = 7;
 
 	repeated double stats = 8;
+	repeated double pseudo_stats = 15; // Indexed by PseudoStat.
 
 	ItemQuality quality = 9;
 	int32 phase = 10;

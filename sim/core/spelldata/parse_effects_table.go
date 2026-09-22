@@ -179,15 +179,15 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 	},
 
 	// Avoidance. The sim keeps block as a fraction (sim/core/unit.go:888 adds the rating share as
-	// rating/per-percent/100) and dodge and parry as ratings, so each takes its own conversion.
+	// rating/per-percent/100) and dodge and parry as percentage points.
 	dbcenums.A_MOD_BLOCK_PERCENT: func(p *parser, e *Effect, v float64) *attachment {
 		return p.statBuff(stats.BlockPercent, v/100)
 	},
 	dbcenums.A_MOD_DODGE_PERCENT: func(p *parser, e *Effect, v float64) *attachment {
-		return p.statBuff(stats.DodgeRating, v*core.DodgeRatingPerDodgePercent)
+		return p.statBuff(stats.DodgePercent, v)
 	},
 	dbcenums.A_MOD_PARRY_PERCENT: func(p *parser, e *Effect, v float64) *attachment {
-		return p.statBuff(stats.ParryRating, v*core.ParryRatingPerParryPercent)
+		return p.statBuff(stats.ParryPercent, v)
 	},
 
 	// The off-hand bonus is a damage modifier on the off-hand's own hits rather than on a family of

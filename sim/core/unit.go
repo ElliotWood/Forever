@@ -682,6 +682,8 @@ func (unit *Unit) addUniversalStatDependencies() {
 	unit.AddStatDependency(stats.SpellHitRating, stats.SpellHitPercent, 1/SpellHitRatingPerHitPercent)
 	unit.AddStatDependency(stats.MeleeCritRating, stats.PhysicalCritPercent, 1/PhysicalCritRatingPerCritPercent)
 	unit.AddStatDependency(stats.SpellCritRating, stats.SpellCritPercent, 1/SpellCritRatingPerCritPercent)
+	unit.AddStatDependency(stats.DodgeRating, stats.DodgePercent, 1/DodgeRatingPerDodgePercent)
+	unit.AddStatDependency(stats.ParryRating, stats.ParryPercent, 1/ParryRatingPerParryPercent)
 }
 
 func (unit *Unit) finalize() {
@@ -879,10 +881,10 @@ func (unit *Unit) ExecuteCustomRotation(sim *Simulation) {
 }
 
 func (unit *Unit) GetDodgeFromRating() float64 {
-	return unit.stats[stats.DodgeRating] / DodgeRatingPerDodgePercent / 100
+	return unit.stats[stats.DodgePercent] / 100
 }
 func (unit *Unit) GetParryFromRating() float64 {
-	return unit.stats[stats.ParryRating] / ParryRatingPerParryPercent / 100
+	return unit.stats[stats.ParryPercent] / 100
 }
 func (unit *Unit) GetBlockFromRating() float64 {
 	return unit.stats[stats.BlockPercent] + unit.stats[stats.BlockRating]/BlockRatingPerBlockPercent/100

@@ -67,7 +67,8 @@ const (
 	// Stats in UnitStats proto messages, since they are not required in the
 	// database files. However, it is valuable to keep these as proper Stats
 	// in the back-end, since they are used in various stat dependencies.
-	// The units for all 7 of these are percentages (between 0 and 100).
+	// The units for all 9 of these are percentages (between 0 and 100),
+	// except BlockPercent, which is a probability (between 0 and 1).
 	PhysicalHitPercent
 	SpellHitPercent
 	PhysicalCritPercent
@@ -75,6 +76,8 @@ const (
 	BlockPercent
 	RangedHitPercent
 	RangedCritPercent
+	DodgePercent
+	ParryPercent
 	// DO NOT add new stats here without discussing it first; new stats come
 	// with a performance penalty.
 
@@ -204,6 +207,14 @@ func (s Stat) StatName() string {
 		return "SpellCritPercent"
 	case BlockPercent:
 		return "BlockPercent"
+	case RangedHitPercent:
+		return "RangedHitPercent"
+	case RangedCritPercent:
+		return "RangedCritPercent"
+	case DodgePercent:
+		return "DodgePercent"
+	case ParryPercent:
+		return "ParryPercent"
 	case DefenseRating:
 		return "DefenseRating"
 	case BlockRating:
@@ -258,6 +269,30 @@ func FromUnitStatsProto(unitStatsMessage *proto.UnitStats) Stats {
 	return simStats
 }
 
+// The percent PseudoStats an item or enchant states, as the back-end Stats that model them. Ranged hit and
+// crit are totals that include the melee share, as in FromUnitStatsProto. Block arrives in percent and is
+// stored as the probability GetBlockFromRating reads.
+func FromPseudoStatsProto(pseudoStats []float64) Stats {
+	get := func(pseudoStat proto.PseudoStat) float64 {
+		if int(pseudoStat) < len(pseudoStats) {
+			return pseudoStats[pseudoStat]
+		}
+		return 0
+	}
+
+	var simStats Stats
+	simStats[PhysicalHitPercent] = get(proto.PseudoStat_PseudoStatMeleeHitPercent)
+	simStats[SpellHitPercent] = get(proto.PseudoStat_PseudoStatSpellHitPercent)
+	simStats[PhysicalCritPercent] = get(proto.PseudoStat_PseudoStatMeleeCritPercent)
+	simStats[SpellCritPercent] = get(proto.PseudoStat_PseudoStatSpellCritPercent)
+	simStats[BlockPercent] = get(proto.PseudoStat_PseudoStatBlockPercent) / 100
+	simStats[RangedHitPercent] = get(proto.PseudoStat_PseudoStatRangedHitPercent) - get(proto.PseudoStat_PseudoStatMeleeHitPercent)
+	simStats[RangedCritPercent] = get(proto.PseudoStat_PseudoStatRangedCritPercent) - get(proto.PseudoStat_PseudoStatMeleeCritPercent)
+	simStats[DodgePercent] = get(proto.PseudoStat_PseudoStatDodgePercent)
+	simStats[ParryPercent] = get(proto.PseudoStat_PseudoStatParryPercent)
+	return simStats
+}
+
 // Adds two Stats together, returning the new Stats.
 func (stats Stats) Add(other Stats) Stats {
 	for k := range stats {
@@ -305,7 +340,7 @@ func (stats Stats) Floor() Stats {
 //
 // Unlike attributes, combat ratings must NOT be floored here: the sim uses
 // rating stats as mixed accumulators that include fractional conversions from
-// talents and racials (e.g. dodge% talents stored as DodgeRating), and TBC has
+// talents and racials (e.g. dodge from Agility stored as DodgeRating), and TBC has
 // no rating multipliers, so real rating totals are already integers.
 var flooredGameStats = []Stat{
 	Strength, Agility, Stamina, Intellect, Spirit,

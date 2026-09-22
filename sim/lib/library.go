@@ -118,6 +118,7 @@ func getDatabase(itemIds *int32, numItems int32, enchantIds *int32, numEnchants 
 			RangedWeaponType: item.RangedWeaponType,
 			GemSockets:       item.GemSockets,
 			SocketBonus:      item.SocketBonus[:],
+			PseudoStats:      item.PseudoStats,
 			WeaponSpeed:      item.SwingSpeed,
 			Unique:           item.Unique,
 			LimitCategory:    item.LimitCategory,
@@ -135,6 +136,7 @@ func getDatabase(itemIds *int32, numItems int32, enchantIds *int32, numEnchants 
 		simDB.Enchants[i] = &proto.SimEnchant{
 			EffectId:       enchant.EffectID,
 			Stats:          enchant.Stats[:],
+			PseudoStats:    enchant.PseudoStats,
 			EnchantEffects: enchant.EnchantEffects,
 			Name:           enchant.Name,
 			Type:           enchant.Type,
