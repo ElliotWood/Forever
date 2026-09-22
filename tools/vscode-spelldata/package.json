@@ -1,0 +1,50 @@
+{
+	"name": "wowsims-spelldata",
+	"displayName": "WoWSims Spelldata",
+	"description": "Hover a spell id in Go, JSON or TypeScript to read the client's row out of sim/core/spelldata.",
+	"version": "0.1.0",
+	"private": true,
+	"publisher": "wowsims",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wowsims/forever"
+	},
+	"engines": {
+		"vscode": "^1.85.0",
+		"node": ">=20"
+	},
+	"categories": [
+		"Other"
+	],
+	"main": "./out/extension.js",
+	"activationEvents": [
+		"onLanguage:go",
+		"onLanguage:json",
+		"onLanguage:typescript",
+		"onLanguage:typescriptreact"
+	],
+	"contributes": {
+		"configuration": {
+			"title": "WoWSims Spelldata",
+			"properties": {
+				"wowsims-spelldata.goBinary": {
+					"type": "string",
+					"default": "go",
+					"description": "The go binary the hover runs `go run ./tools/spelldata` with."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -w -p ./",
+		"test": "npm run compile && node --test test/"
+	},
+	"devDependencies": {
+		"@types/node": "^22.0.0",
+		"@types/vscode": "^1.85.0",
+		"typescript": "^5.9.3"
+	}
+}

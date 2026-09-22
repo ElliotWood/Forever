@@ -71,6 +71,14 @@ other bargain, and it is what a package-level variable takes - a regeneration th
 fails at startup, naming the id, instead of registering a spell with no numbers. `All()` and
 `ByName(name)` exist for tests and debugging; a sim names its spells by id.
 
+An id in hand-written code reads without grepping the table: `go run ./tools/spelldata 11574` prints the
+row's header and one line per effect, each worded where the shape is known and always followed by the
+client's own columns. A name instead of an id lists every row carrying it and then the highest rank, and
+`-json` is the same answer for a tool to read. `tools/vscode-spelldata` is that printer as a VS Code
+hover, over the ids Go, APL JSON and TS state - `MustFind(11574)`, `SpellID: 11574`, `"spellId": 11574`,
+`fromSpellId(23563)` - resolved by running the CLI in the checkout the file belongs to, so a hover
+matches the store being read. Its README has the install.
+
 ### Reaching an effect
 
 ```go

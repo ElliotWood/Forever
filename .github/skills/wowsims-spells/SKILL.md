@@ -116,6 +116,7 @@ Where the row and the tooltip disagree, the tooltip can win — Flurry's haste l
 ## Commands
 
 ```
+go run ./tools/spelldata 11574                   # print one row - or a name, which lists its ranks; -json for a tool
 go run ./tools/database/gen_spelldata            # rewrite the store, the enums and every class file
 go run ./tools/database/gen_spelldata -check     # name what is stale, write nothing (make spelldata-check)
 go test ./sim/core/spelldata/ -count=1           # the store's own tests, no database needed
@@ -123,5 +124,7 @@ go test ./tools/database/ -count=1               # the regeneration from the com
 go test --tags=with_db ./sim/<class>/ -count=1   # a class, parity test included
 git status --porcelain -- '*.results'            # empty unless a number was meant to move
 ```
+
+`tools/vscode-spelldata` is that printer as a VS Code hover over the ids Go, APL JSON and TS state; its README has the install.
 
 Regenerating needs `tools/database/wowsims.db`, which is gitignored and built by `make db` from a local WoW client. The checks that do not need it — the store's tests, the regeneration from `assets/db_inputs/spell_store_inputs.json` — are the ones CI runs.
