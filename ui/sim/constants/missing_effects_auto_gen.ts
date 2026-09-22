@@ -4,6 +4,18 @@
 
 export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
+		2820, // Nifty Stopwatch
+		[
+			"Increases run speed by 40% for 10s.", // 14530 - https://www.wowhead.com/forever/spell=14530
+		]
+	],
+	[
+		4130, // Smotts' Compass
+		[
+			"Finds the nearest treasure chest, if one is nearby. Only outdoors.", // 1317740 - https://www.wowhead.com/forever/spell=1317740
+		]
+	],
+	[
 		6622, // Sword of Zeal
 		[
 			"A burst of energy fills the caster, increasing his damage by 10 and armor by 150 for 15s.", // 8191 - https://www.wowhead.com/forever/spell=8191
@@ -22,6 +34,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		7959, // Blight
+		[
+			"Diseases a target for 100 Nature damage and an additional 360 damage over 1min.", // 9796 - https://www.wowhead.com/forever/spell=9796
+		]
+	],
+	[
 		7960, // Truesilver Champion
 		[
 			"Protects the caster with a holy shield.", // 9800 - https://www.wowhead.com/forever/spell=9800
@@ -34,9 +52,27 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		8348, // Helm of Fire
+		[
+			"Hurls a fiery ball that causes 331 Fire damage and an additional 132 damage over 8s.", // 10578 - https://www.wowhead.com/forever/spell=10578
+		]
+	],
+	[
 		8367, // Dragonscale Breastplate
 		[
 			"Absorbs 600 magical damage. Lasts 2min.", // 10618 - https://www.wowhead.com/forever/spell=10618
+		]
+	],
+	[
+		8708, // Hammer of Expertise
+		[
+			"Deal 112 Fire damage. Deals 3 times as much damage to Earth Elementals, Fire Elementals, and Mountain Giants.", // 1317432 - https://www.wowhead.com/forever/spell=1317432
+		]
+	],
+	[
+		9380, // Jang'thraze the Protector
+		[
+			"Shields the wielder from physical damage, absorbing 84 damage. Lasts 20s.", // 11657 - https://www.wowhead.com/forever/spell=11657
 		]
 	],
 	[
@@ -169,6 +205,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		13262, // Ashbringer
 		[
 			"Blasts a target for 700 Fire damage.", // 18112 - https://www.wowhead.com/forever/spell=18112
+		]
+	],
+	[
+		13503, // Alchemists' Stone
+		[
+			"Increases the effects that healing and mana potions have on the wearer by 20%.", // 17619 - https://www.wowhead.com/forever/spell=17619
 		]
 	],
 	[
@@ -485,6 +527,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		18951, // Evonice's Landin' Pilla
+		[
+			"While equipped, the wearer suffers less damage from falls.", // 23409 - https://www.wowhead.com/forever/spell=23409
+		]
+	],
+	[
 		18986, // Ultrasafe Transporter: Gadgetzan
 		[
 			"Safely transport yourself to Gadgetzan in Tanaris! Emphasis on Safe! Yup, nothing bad could ever happen while using this device!", // 23453 - https://www.wowhead.com/forever/spell=23453
@@ -507,6 +555,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		19100, // Electrified Dagger
 		[
 			"Blasts a target for 45 Nature damage.", // 23592 - https://www.wowhead.com/forever/spell=23592
+		]
+	],
+	[
+		19141, // Luffa
+		[
+			"Removes 1 Bleed effect. While in or on Water, removes all Bleed, Disease, and Poison effects.", // 23595 - https://www.wowhead.com/forever/spell=23595
 		]
 	],
 	[
@@ -1194,6 +1248,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		219345, // Infernal Lasso
+		[
+			"Deals 504 Fire damage over 12s. Demons and Beasts are Rooted in place for 6s.", // 443265 - https://www.wowhead.com/forever/spell=443265
+		]
+	],
+	[
 		220606, // Idol of the Dream
 		[
 			"Increases the duration of Rip by 2 sec.", // 446212 - https://www.wowhead.com/forever/spell=446212
@@ -1215,6 +1275,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		220846, // First Sergeant's Pulsing Greaves
 		[
 			"Increases the speed of your Ghost Wolf ability by 15%.", // 22801 - https://www.wowhead.com/forever/spell=22801
+		]
+	],
+	[
+		220915, // Idol of the Raging Shambler
+		[
+			"", // 408953 - https://www.wowhead.com/forever/spell=408953
 		]
 	],
 	[
