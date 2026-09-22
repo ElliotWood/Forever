@@ -228,6 +228,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-HandofJustice-11815"
+ value: {
+  dps: 637.68433
+  tps: 316.92911
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-HeartoftheScale-13164"
  value: {
   dps: 630.55309

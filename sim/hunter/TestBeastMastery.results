@@ -354,6 +354,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-HandofJustice-11815"
+ value: {
+  dps: 1026.83082
+  tps: 441.39896
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-HeartoftheScale-13164"
  value: {
   dps: 1023.54983

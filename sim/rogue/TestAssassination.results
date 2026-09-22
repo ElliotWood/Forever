@@ -228,6 +228,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-HandofJustice-11815"
+ value: {
+  dps: 674.40603
+  tps: 335.1798
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-HeartoftheScale-13164"
  value: {
   dps: 669.60927

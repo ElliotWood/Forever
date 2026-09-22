@@ -228,6 +228,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-HandofJustice-11815"
+ value: {
+  dps: 516.94377
+  tps: 370.61624
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-HeartoftheScale-13164"
  value: {
   dps: 516.94377

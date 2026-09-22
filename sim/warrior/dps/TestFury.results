@@ -354,6 +354,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-HandofJustice-11815"
+ value: {
+  dps: 728.26686
+  tps: 448.96108
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-HeartoftheScale-13164"
  value: {
   dps: 725.69532

@@ -263,6 +263,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-HandofJustice-11815"
+ value: {
+  dps: 313.80138
+  tps: 162.60087
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-HeartoftheScale-13164"
  value: {
   dps: 313.80138
