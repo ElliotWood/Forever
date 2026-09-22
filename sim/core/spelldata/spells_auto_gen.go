@@ -16733,7 +16733,7 @@ var generatedSpells = []Spell{
 			{ID: 699121, SpellID: 22600, Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 30, Variance: 0.3333333432674408, PvpMult: 1, RadiusMax: 5, ChainAmp: 1, Target: [2]uint8{18, 16}},
 			{ID: 699122, SpellID: 22600, Index: 1, Type: dbcenums.E_TRIGGER_SPELL, SPCoef: 1, PvpMult: 1, TriggerID: 22848, ChainAmp: 1},
 		}},
-	{ID: 22618, Name: "Force Reactive Disk", School: 8, Attr: [17]uint32{0: 0x1000090, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, MaxRange: 10, DefenseType: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x2a8}, ICDMs: 1000, ProcChanceSource: ProcChancePPM,
+	{ID: 22618, Name: "Force Reactive Disk", School: 8, Attr: [17]uint32{0: 0x1000090, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, MaxRange: 10, DefenseType: 1, ProcChance: 100, ProcFlags: [2]uint32{0: 0x2a8}, ICDMs: 1000, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 699352, SpellID: 22618, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 1, SPCoef: 1, PvpMult: 1, TriggerID: 22600, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -23455,7 +23455,7 @@ var generatedSpells = []Spell{
 			{ID: 1120317, SpellID: 432041, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_FLAT_MODIFIER, BasePoints: 25, SPCoef: 1, PvpMult: 1, Misc: 7, ClassFlags: core.ClassFlags{Family: 11, Mask: [4]uint32{0: 128}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1188866, SpellID: 432041, Index: 2, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_PCT_MODIFIER, BasePoints: -15, SPCoef: 1, PvpMult: 1, Misc: 10, ClassFlags: core.ClassFlags{Family: 11, Mask: [4]uint32{0: 256}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 432042, Name: "Tidal Waves", School: 1, Attr: [17]uint32{0: 0x1d0, 2: 0x100, 3: 0x80000, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4400}, ClassFlags: core.ClassFlags{Family: 11}, Labels: []int16{3096, 3100}, RefIDs: []int32{432041}, ProcChanceSource: ProcChancePPM, ProcHint: core.ProcHintCastTrigger | core.ProcHintCrit | core.ProcHintNamedAbility,
+	{ID: 432042, Name: "Tidal Waves", School: 1, Attr: [17]uint32{0: 0x1d0, 2: 0x100, 3: 0x80000, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x4400}, ClassFlags: core.ClassFlags{Family: 11}, Labels: []int16{3096, 3100}, RefIDs: []int32{432041}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintCastTrigger | core.ProcHintCrit | core.ProcHintNamedAbility,
 		Effects: []Effect{
 			{ID: 1120318, SpellID: 432042, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 2, PvpMult: 1, ClassFlags: core.ClassFlags{Family: 11, Mask: [4]uint32{0: 192}}, TriggerID: 432041, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -25375,7 +25375,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1181260, SpellID: 467882, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, BasePoints: 1, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 467889, Name: "S03 - Item - T2 - Shaman - Tank 2P Bonus", School: 1, Attr: [17]uint32{0: 0x1d0, 1: 0x800, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10000}, ClassFlags: core.ClassFlags{Family: 11}, RefIDs: []int32{467891}, ProcChanceSource: ProcChancePPM,
+	{ID: 467889, Name: "S03 - Item - T2 - Shaman - Tank 2P Bonus", School: 1, Attr: [17]uint32{0: 0x1d0, 1: 0x800, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10000}, ClassFlags: core.ClassFlags{Family: 11}, RefIDs: []int32{467891}, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1181270, SpellID: 467889, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 30, SPCoef: 1, PvpMult: 1, TriggerID: 467891, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -28651,7 +28651,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1217085, SpellID: 1226961, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, BasePoints: 100, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 1226977, Name: "S03 - Item - Scarlet Enclave - Shaman - Elemental 4P Bonus", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 3: 0x4000000, 12: 0x2, 15: 0x2000}, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10000}, ClassFlags: core.ClassFlags{Family: 11}, RefIDs: []int32{1233835}, ProcChanceSource: ProcChancePPM,
+	{ID: 1226977, Name: "S03 - Item - Scarlet Enclave - Shaman - Elemental 4P Bonus", School: 1, Attr: [17]uint32{0: 0x150, 2: 0x100, 3: 0x4000000, 12: 0x2, 15: 0x2000}, ProcChance: 100, ProcFlags: [2]uint32{0: 0x10000}, ClassFlags: core.ClassFlags{Family: 11}, RefIDs: []int32{1233835}, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
 			{ID: 1217111, SpellID: 1226977, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_FLAT_MODIFIER, BasePoints: 10, PvpMult: 1, Misc: 18, ClassFlags: core.ClassFlags{Family: 11, Mask: [4]uint32{2: 32768}}, ChainAmp: 1, Target: [2]uint8{1, 0}},
 			{ID: 1227829, SpellID: 1226977, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 100, PvpMult: 1, TriggerID: 1233835, ChainAmp: 1, Target: [2]uint8{1, 0}},

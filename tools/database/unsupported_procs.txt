@@ -6,7 +6,6 @@
 # A row is judged in the kinder of the two shapes an item can put it in: an aura that hears
 # hits through its own proc mask, and a weapon proc whose hits the weapon counts.
 
-22618 states no rate
 23548 an outcome the proc mask has no bit for
 23551 the trigger carries a class mask
 23572 the trigger carries a class mask
@@ -37,7 +36,7 @@
 426953 named ability
 426978 named ability
 428909 named ability; no callback in the proc mask
-432042 named ability; the trigger carries a class mask; states no rate
+432042 named ability; the trigger carries a class mask; no callback in the proc mask
 432259 states no rate
 435097 ProcTypeMask KILL; no callback in the proc mask
 435962 no callback in the proc mask
@@ -50,13 +49,11 @@
 457553 named ability
 457646 ProcTypeMask TAKE_HELPFUL_SPELL; ProcTypeMask bit 31
 461640 ProcTypeMask KILL; no callback in the proc mask
-467889 states no rate
 467983 named ability
 468065 an outcome the proc mask has no bit for
 1213188 an outcome the proc mask has no bit for
 1226407 named ability
 1226956 an outcome the proc mask has no bit for
-1226977 states no rate
 1249118 named ability
 1291796 ProcTypeMask TAKE_HELPFUL_SPELL; ProcTypeMask bit 31
 1291807 states no rate
