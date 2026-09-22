@@ -17,7 +17,7 @@ message RaidBuffs {
 }
 
 // Buffs that affect a single party.
-// Next index: 28
+// Next index: 27
 message PartyBuffs {
 	bool blood_pact = 1;
 	bool moonkin_aura = 2;
@@ -34,30 +34,28 @@ message PartyBuffs {
 	bool windfury_totem = 13;
 	bool battle_shout = 14;
 	bool snapshot_bs_t2 = 15;
-	bool commanding_shout = 16;
-	bool totem_twisting = 17;
-	int32 atiesh_druid = 18;
-	int32 atiesh_priest = 19;
-	bool frost_resistance_aura = 20;
-	bool frost_resistance_totem = 21;
-	bool nature_resistance_totem = 22;
-	bool fire_resistance_totem = 23;
-	bool fire_resistance_aura = 24;
-	bool shadow_resistance_aura = 25;
-	bool aspect_of_the_wild = 26;
-	bool concentration_aura = 27;
+	bool totem_twisting = 16;
+	int32 atiesh_druid = 17;
+	int32 atiesh_priest = 18;
+	bool frost_resistance_aura = 19;
+	bool frost_resistance_totem = 20;
+	bool nature_resistance_totem = 21;
+	bool fire_resistance_totem = 22;
+	bool fire_resistance_aura = 23;
+	bool shadow_resistance_aura = 24;
+	bool aspect_of_the_wild = 25;
+	bool concentration_aura = 26;
 }
 
 // These are usually individual actions taken by other Characters.
-// Next index: 8
+// Next index: 7
 message IndividualBuffs {
 	bool blessing_of_kings = 1;
 	bool blessing_of_salvation = 2;
 	bool blessing_of_wisdom = 3;
 	bool blessing_of_might = 4;
-	int32 shadow_priest_dps = 5;
-	int32 innervates = 6;
-	int32 power_infusions = 7;
+	int32 innervates = 5;
+	int32 power_infusions = 6;
 }
 
 // Next index: 17

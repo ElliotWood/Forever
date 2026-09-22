@@ -504,10 +504,6 @@
 				"label": "HP % for Defensive CDs",
 				"tooltip": "% of Maximum Health, below which defensive cooldowns are allowed to be used. If set to 0, this restriction is disabled."
 			},
-			"shadow_priest_dps": {
-				"label": "Shadow Priest DPS",
-				"tooltip": "Shadow Priest DPS for Mana Battery purposes. 1000 DPS = 50 mana/sec(250 MP5)."
-			},
 			"totem_twisting": {
 				"label": "Totem Twisting",
 				"tooltip": "If both Windfury and Grace of Air are active will alternate between them to keep up both buffs."

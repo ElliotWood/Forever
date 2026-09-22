@@ -37,11 +37,6 @@ func driveBattleShout(char *Character, party *proto.PartyBuffs) {
 	ApplyFixedShoutAura(char, aura, BattleShoutCategory)
 }
 
-// The party's Commanding Shout chains the same way its sibling does.
-func driveCommandingShout(char *Character, _ *proto.PartyBuffs) {
-	ApplyFixedShoutAura(char, CommandingShoutAura(&char.Unit, false, 0), CommandingShoutCategory)
-}
-
 // A druid innervates a character who is nearly out of mana, so that every other
 // mana cooldown is spent first. The aura forces full spirit regen while it is
 // up and the metrics record what the character gains from it.
@@ -183,27 +178,6 @@ func driveWindfuryTotem(char *Character, _ *proto.PartyBuffs) {
 
 	char.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotMainHand}, func(sim *Simulation, slot proto.ItemSlot) {
 		totemAura.Deactivate(sim)
-	})
-}
-
-// The mana a shadow priest returns to the party is entered as the damage that
-// priest does, of which the party gets 5% a second. The client states the
-// priest's side of it, a periodic 65 damage, and nothing about the party's.
-func driveShadowPriestDps(char *Character, individual *proto.IndividualBuffs) {
-	aura := ShadowPriestDpsAura(&char.Unit, false, 0)
-	// What the aura does is give mana away over the fight, which is not a stat
-	// the character sheet is measured with and needs a running fight to do.
-	aura.BuildPhase = CharacterBuildPhaseNone
-	manaMetrics := char.NewManaMetrics(aura.ActionID)
-	manaGain := float64(individual.ShadowPriestDps) * 0.05
-
-	MakePermanent(aura).ApplyOnGain(func(aura *Aura, sim *Simulation) {
-		StartPeriodicAction(sim, PeriodicActionOptions{
-			Period: time.Second,
-			OnAction: func(sim *Simulation) {
-				char.AddMana(sim, manaGain, manaMetrics)
-			},
-		})
 	})
 }
 

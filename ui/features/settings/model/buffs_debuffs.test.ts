@@ -12,14 +12,12 @@ describe('the buff registries', () => {
 	it('shows the party buffs in their settled order', () => {
 		expect(labelsOf(BuffDebuffInputs.PARTY_BUFFS_CONFIG)).toEqual([
 			'Blood Pact',
-			'Commanding Shout',
 			'Battle Shout',
 			'Enhanced Battle Shout',
 			'Devotion Aura',
 			'Leader of the Pack',
 			'Mana Spring',
 			'Mana Tide Totem',
-			'Vampiric Touch',
 			'Moonkin Aura',
 			'Retribution Aura',
 			'Concentration Aura',
@@ -82,14 +80,13 @@ describe('the buff registries', () => {
 	});
 
 	it('puts the hand-written inputs themselves at those positions, not lookalikes', () => {
-		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[3].config).toBe(BuffDebuffInputs.EnhancedBattleShout);
-		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[8].config).toBe(BuffDebuffInputs.ShadowPriestDPS);
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].config).toBe(BuffDebuffInputs.EnhancedBattleShout);
 		expect(BuffDebuffInputs.BUFFS_CONFIG[8].config).toBe(BuffDebuffInputs.BlessingOfSalvation);
 	});
 
 	it('gives the generated rows their owner class, so the settings tab can mark them external', () => {
-		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].config).toBe(BuffDebuffInputs.BattleShout);
-		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].ownerClass).toBe(Class.ClassWarrior);
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[1].config).toBe(BuffDebuffInputs.BattleShout);
+		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[1].ownerClass).toBe(Class.ClassWarrior);
 		expect(BuffDebuffInputs.BUFFS_CONFIG[8].ownerClass).toBeUndefined();
 	});
 });

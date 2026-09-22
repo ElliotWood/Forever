@@ -25,7 +25,6 @@ export const DefaultPartyBuffs = PartyBuffs.create({});
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfWisdom: true,
-	shadowPriestDps: 800,
 });
 
 export const DefaultDebuffs = Debuffs.create({

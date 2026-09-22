@@ -91,11 +91,11 @@ describe('migrateRetypedBuffFields', () => {
 		expect(() => migrateRetypedBuffFields({ partyBuffs: 7 })).not.toThrow();
 	});
 
-	it('names 25 fields, the ones the proto retyped', () => {
+	it('names 24 fields, the ones the proto retyped', () => {
 		const fields = Object.values(retypedBuffFields).flat();
 
-		expect(fields).toHaveLength(25);
-		expect(new Set(fields).size).toBe(25);
+		expect(fields).toHaveLength(24);
+		expect(new Set(fields).size).toBe(24);
 	});
 
 	// A share link is binary, and nothing rewrites it: a tristate's varint 2 decodes as the bool's

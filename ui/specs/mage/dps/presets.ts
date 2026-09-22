@@ -61,7 +61,6 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfWisdom: true,
 	innervates: 1,
 	blessingOfSalvation: true,
-	shadowPriestDps: 1400,
 });
 
 export const DefaultDebuffs = Debuffs.create({

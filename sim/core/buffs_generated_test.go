@@ -328,39 +328,6 @@ func TestGeneratedManaSpringTotemTakesTheTalentedValue(t *testing.T) {
 	}
 }
 
-// Commanding Shout is driven like its sibling: the external copy chains behind
-// the player's own cast, which the driver finds by the aura's tag.
-func TestPartyCommandingShoutAppliesTheGeneratedAura(t *testing.T) {
-	char := newGeneratedBuffTestCharacter()
-
-	applyBuffEffects(generatedBuffTestAgent{char},
-		&proto.RaidBuffs{}, &proto.PartyBuffs{CommandingShout: true}, &proto.IndividualBuffs{})
-	char.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
-
-	if got := char.stats[stats.Stamina]; got != 42 {
-		t.Errorf("the party's Commanding Shout applied %v stamina, want the client's 42", got)
-	}
-
-	aura := char.GetAura("Commanding Shout (External)")
-	if aura == nil {
-		t.Fatalf("no aura is labelled %q; the unit has %v", "Commanding Shout (External)", auraLabels(char))
-	}
-	if want := (ActionID{SpellID: 403215, Tag: -1}); aura.ActionID != want {
-		t.Errorf("the external copy is %v, want %v", aura.ActionID, want)
-	}
-	if aura.Duration != CommandingShoutDuration(0) {
-		t.Errorf("the external copy lasts %v, want %v", aura.Duration, CommandingShoutDuration(0))
-	}
-
-	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(CommandingShoutCategory)
-	if !category.SingleAura {
-		t.Error("the Commanding Shout category is not single-aura, so a second copy could sit next to it")
-	}
-	if tagged := char.GetAurasWithTag(CommandingShoutCategory); len(tagged) != 1 || tagged[0] != aura {
-		t.Errorf("%d auras carry the Commanding Shout tag, want only the external copy", len(tagged))
-	}
-}
-
 // The two rows whose stats the manifest names. Each is worth the client's 3 on
 // every kind of crit, and neither touches RangedCritPercent, which the sim adds
 // on top of the physical one, so a ranged attack gains 3 and not 6.
@@ -489,7 +456,7 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 				AtieshMage: 2,
 			},
 			&proto.IndividualBuffs{
-				Innervates: 1, PowerInfusions: 1, ShadowPriestDps: 500,
+				Innervates: 1, PowerInfusions: 1,
 				BlessingOfKings: true, BlessingOfMight: true, BlessingOfWisdom: true,
 				BlessingOfSalvation: true,
 			}
@@ -517,7 +484,7 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 	if !raid.ArcaneBrilliance || !raid.DivineSpirit || !raid.GiftOfTheWild ||
 		!raid.PowerWordFortitude || !raid.ShadowProtection || !individual.BlessingOfKings ||
 		!individual.BlessingOfMight || !individual.BlessingOfWisdom ||
-		!individual.BlessingOfSalvation || individual.ShadowPriestDps != 500 {
+		!individual.BlessingOfSalvation {
 		t.Errorf("a pet out from the start lost a targeted buff: %v, %v", raid, individual)
 	}
 
@@ -530,7 +497,7 @@ func TestGeneratedPetBuffsStripExactlyTheRowsThePolicyNames(t *testing.T) {
 		t.Errorf("a pet summoned late kept a raid buff cast at the pull: %v", raid)
 	}
 	if individual.BlessingOfKings || individual.BlessingOfMight || individual.BlessingOfWisdom ||
-		individual.BlessingOfSalvation || individual.ShadowPriestDps != 0 {
+		individual.BlessingOfSalvation {
 		t.Errorf("a pet summoned late kept a targeted individual buff: %v", individual)
 	}
 	if !party.BattleShout || !party.GraceOfAirTotem {
@@ -916,17 +883,16 @@ func TestGeneratedManaTideTotemRestoresTheClientsMana(t *testing.T) {
 }
 
 // A buff that is not simply up is not part of the stats the character sheet is
-// measured with: the cooldowns, the windfury proc and the shadow priest's mana,
-// the last of which has a fight to run before it can give any away.
+// measured with: the cooldowns and the windfury proc.
 func TestGeneratedDrivenBuffsAreNotBuildPhaseAuras(t *testing.T) {
 	sim := setupFakeSimWithBuffs(&proto.RaidBuffs{},
 		&proto.PartyBuffs{ManaTideTotems: 1, WindfuryTotem: true},
-		&proto.IndividualBuffs{Innervates: 1, PowerInfusions: 1, ShadowPriestDps: 500})
+		&proto.IndividualBuffs{Innervates: 1, PowerInfusions: 1})
 	char := sim.Raid.Parties[0].Players[0].GetCharacter()
 
 	for _, label := range []string{
 		"Innervates (External)", "Power Infusions (External)", "Mana Tide Totem (External)",
-		"Windfury Totem (External)", "Vampiric Touch (External)",
+		"Windfury Totem (External)",
 	} {
 		aura := char.GetAura(label)
 		if aura == nil {
@@ -936,13 +902,6 @@ func TestGeneratedDrivenBuffsAreNotBuildPhaseAuras(t *testing.T) {
 			t.Errorf("%s is measured in build phase %v, want none of them", label, aura.BuildPhase)
 		}
 	}
-
-	// The build phase runs on a simulation that has no fight in it, which the
-	// mana the shadow priest gives away would otherwise be scheduled against.
-	bare := newGeneratedBuffTestCharacter()
-	applyBuffEffects(generatedBuffTestAgent{bare}, &proto.RaidBuffs{}, &proto.PartyBuffs{},
-		&proto.IndividualBuffs{ShadowPriestDps: 500})
-	bare.applyBuildPhaseAuras(CharacterBuildPhaseBuffs)
 }
 
 func auraLabels(char *Character) []string {

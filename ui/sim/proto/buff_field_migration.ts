@@ -1,4 +1,4 @@
-// Api version 17 types 25 buff fields bool where they were a TristateEffect, because the Improved
+// Api version 17 types 24 buff fields bool where they were a TristateEffect, because the Improved
 // talent behind each of them has no node in a Forever trait tree; the names are pinned by
 // TestRetypedFieldsMatchTheMigration in tools/gen_buffs_proto.
 //
@@ -23,7 +23,6 @@ export const retypedBuffFields = {
 		'strengthOfEarthTotem',
 		'windfuryTotem',
 		'battleShout',
-		'commandingShout',
 	],
 	individualBuffs: ['blessingOfWisdom', 'blessingOfMight'],
 	debuffs: [
