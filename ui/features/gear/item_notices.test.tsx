@@ -34,8 +34,9 @@ describe('the item notice table', () => {
 		expect(heading.className).toBe('font-bold');
 		expect(heading.textContent).toBe('The following item effect (on-use or proc) is not implemented!');
 		const items = container.querySelectorAll('ul > li');
-		expect(items).toHaveLength(1);
-		expect(items[0].textContent).toBe('Deals 5 Fire damage to anyone who strikes you with a melee attack.');
+		expect(items).toHaveLength(2);
+		expect(items[0].textContent).toBe('Hurls a fiery ball that causes 303 Fire damage and an additional 75 damage over 10s.');
+		expect(items[1].textContent).toBe('Deals 5 Fire damage to anyone who strikes you with a melee attack.');
 	});
 
 	it('renders the hand-written trinket notice', () => {
