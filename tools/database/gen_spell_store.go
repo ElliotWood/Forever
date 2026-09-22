@@ -365,7 +365,7 @@ func loadStoreInputs(db *sql.DB, ladderIDs []int32, trees map[int]int) (*storeIn
 		return nil, err
 	}
 
-	roots, err := storeRoots(db, tables, ladderIDs)
+	roots, gearRoots, err := storeRoots(db, tables, ladderIDs)
 	if err != nil {
 		return nil, err
 	}
@@ -398,7 +398,9 @@ func loadStoreInputs(db *sql.DB, ladderIDs []int32, trees map[int]int) (*storeIn
 		return nil, err
 	}
 
-	return captureStoreInputs(tables, roots, ids, nodes, points), nil
+	in := captureStoreInputs(tables, roots, ids, nodes, points)
+	in.ItemRoots = gearRoots
+	return in, nil
 }
 
 // The store's data, from the client rows it is built from rather than from the database: the same

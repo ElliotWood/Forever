@@ -61,6 +61,11 @@ type storeInputs struct {
 
 	Roots []int32
 
+	// The roots that came from the item, enchant and set-bonus tables alone. The store is rendered
+	// from Roots, which holds these and the class ladder both; this subset is what the proc audit
+	// asks its question over, and no reading of a row says which query reached it.
+	ItemRoots []int32
+
 	// The talent nodes of every class tree in the order storeCurves reads them, since the first
 	// definition to price a spell is the one kept, and the points each definition states by the
 	// client's EffectIndex and rank.

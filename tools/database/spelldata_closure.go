@@ -26,12 +26,15 @@ const extraIDsPath = "sim/core/spelldata/extra_ids.go"
 // The store's own extra ids are not here: they are read out of sim/core/spelldata/extra_ids.go while
 // the store is rendered, so that adding one and forgetting to regenerate fails the regeneration check
 // instead of passing it - see withExtraIDs.
-func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) ([]int32, error) {
-	roots := map[int32]bool{}
+// The gear half is returned on its own as well: it is the universe the proc audit asks its question
+// over, and which query a root came from cannot be recovered from the merged list.
+func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) (roots []int32, gear []int32, err error) {
+	all := map[int32]bool{}
 	for _, id := range ladderIDs {
-		roots[id] = true
+		all[id] = true
 	}
 
+	gearRoots := map[int32]bool{}
 	for _, source := range []struct {
 		name  string
 		query string
@@ -45,18 +48,25 @@ func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) ([]int32, error) 
 			if err := rows.Scan(&id); err != nil {
 				return err
 			}
-			roots[id] = true
+			all[id] = true
+			gearRoots[id] = true
 			return nil
 		}); err != nil {
-			return nil, fmt.Errorf("%s: %w", source.name, err)
+			return nil, nil, fmt.Errorf("%s: %w", source.name, err)
 		}
 	}
 
-	ids := make([]int32, 0, len(roots))
-	for id := range roots {
+	ids := make([]int32, 0, len(all))
+	for id := range all {
 		ids = append(ids, id)
 	}
-	return namedIDs(t, ids), nil
+
+	gearIDs := make([]int32, 0, len(gearRoots))
+	for id := range gearRoots {
+		gearIDs = append(gearIDs, id)
+	}
+
+	return namedIDs(t, ids), namedIDs(t, gearIDs), nil
 }
 
 // The spells a rank reads its numbers off by name. The class-table generator falls back to them
