@@ -45,12 +45,9 @@ func (rogue *Rogue) registerDeadlyPoisonSpell() {
 	// 		NumberOfTicks: 4,
 	// 		TickLength:    time.Second * 3,
 	//
-	// 		OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.Snapshot(target, 45.0*float64(dot.GetStacks()))
-	// 		},
-	//
 	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+	// 			base := 45.0 * float64(dot.GetStacks())
+	// 			dot.Spell.CalcAndDealPeriodicDamage(sim, target, base, dot.OutcomeTick)
 	// 		},
 	// 	},
 	//
@@ -64,11 +61,9 @@ func (rogue *Rogue) registerDeadlyPoisonSpell() {
 	// 		if dot.IsActive() {
 	// 			dot.Refresh(sim)
 	// 			dot.AddStack(sim)
-	// 			dot.TakeSnapshot(sim)
 	// 		} else {
 	// 			dot.Apply(sim)
 	// 			dot.SetStacks(sim, 1)
-	// 			dot.TakeSnapshot(sim)
 	// 		}
 	// 	},
 	// })
