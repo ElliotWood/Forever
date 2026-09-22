@@ -74,7 +74,10 @@ describe('parseWowheadGearLink', () => {
 		for (let i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.substring(i, i + 2), 16));
 		bytes.push(1 | 0x80, 0, 13404 >> 8, 13404 & 255, 0, 20034 >> 8, 20034 & 255); // head, enchanted
 		bytes.push(16, 0, 18725 >> 8, 18725 & 255); // main hand, bare
-		const hash = btoa(String.fromCharCode(...bytes)).replaceAll('/', '_').replaceAll('+', '-').replace(/=+$/, '');
+		const hash = btoa(String.fromCharCode(...bytes))
+			.replaceAll('/', '_')
+			.replaceAll('+', '-')
+			.replace(/=+$/, '');
 		const parsed = parseWowheadGearLink(`https://www.wowhead.com/classic/gear-planner/hunter/troll/${hash}`);
 		expect(parsed.classId).toBe('hunter');
 		expect(parsed.level).toBe(60);

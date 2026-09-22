@@ -1,17 +1,17 @@
 import * as PresetUtils from '@app/preset_utils';
-import { SavedTalents } from '@generated/proto/ui';
 import { ConsumesSpec, Drums, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	FeralCatDruid_Options as FeralDruidOptions,
 	FeralCatDruid_Rotation as FeralCatDruidRotation,
 	FeralCatDruid_Rotation_FinishingMove as FinishingMove,
 } from '@generated/proto/druid';
+import { SavedTalents } from '@generated/proto/ui';
 
 import DefaultApl from './apls/default.apl.json';
 import LaunchGear from './gear_sets/launch.gear.json';
 import P0BisGear from './gear_sets/p0.bis.gear.json';
-import P2PreBisGear from './gear_sets/p2.pre-bis.gear.json';
 import P2BisGear from './gear_sets/p2.bis.gear.json';
+import P2PreBisGear from './gear_sets/p2.pre-bis.gear.json';
 
 export const DefaultOptions = FeralDruidOptions.create({});
 

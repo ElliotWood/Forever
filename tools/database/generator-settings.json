@@ -5,10 +5,7 @@
 	},
 	"TargetDirectory": "dbfilesclient",
 	"GameTablesOutDirectory": "../../assets/db_inputs/basestats",
-	"GameTables": [
-		"combatratings",
-		"SpellScaling"
-	],
+	"GameTables": ["combatratings", "SpellScaling"],
 	"Tables": [
 		"Spell",
 		"Item",

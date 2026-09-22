@@ -33,6 +33,11 @@
 		"ui/**/presets/**/*.json",
 		"ui/sim/talents/trees/*.json",
 		"assets/**",
-		"**/test-fixtures/*.json"
+		"**/test-fixtures/*.json",
+		"docs/**",
+		"ui/sim/proto/legacy_classic/**",
+		"tools/data_watch/**",
+		"tools/forever_talents/**",
+		"tools/parity/**"
 	]
 }

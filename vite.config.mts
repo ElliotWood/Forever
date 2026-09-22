@@ -114,7 +114,8 @@ function determineContentType(filePath: string) {
 
 export const getBaseConfig = ({ command, mode }: ConfigEnv) =>
 	({
-		base: '/forever/',
+		// A fork's Pages site serves it elsewhere (deploy.yml sets SITE_BASE, then tools/site_base.sh fixes the hard-coded paths).
+		base: process.env.SITE_BASE || '/forever/',
 		root: BASE_PATH,
 		resolve: {
 			alias: { ...UI_ALIASES },

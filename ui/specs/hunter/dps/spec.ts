@@ -1,34 +1,20 @@
-import * as other_inputs from "@features/settings/model/other_inputs";
-import { StatCapType } from "@generated/proto/api";
-import {
-	APLListItem,
-	APLRotation,
-	APLRotation_Type,
-	APLValueVariable,
-} from "@generated/proto/apl";
-import {
-	Cooldowns,
-	HandType,
-	ItemSlot,
-	PseudoStat,
-	Spec,
-	Stat,
-} from "@generated/proto/common";
-import { SavedTalents } from "@generated/proto/ui";
-import { PlayerClasses } from "@sim/player/classes";
-import { Player } from "@sim/player/player";
-import * as AplUtils from "@sim/proto/apl_utils";
-import { SpecRotation } from "@sim/proto/spec_types";
-import { StatCap, Stats, UnitStat } from "@sim/proto/stats";
-import { defineSpec } from "@sim/spec_config";
+import * as other_inputs from '@features/settings/model/other_inputs';
+import { StatCapType } from '@generated/proto/api';
+import { APLRotation, APLRotation_Type } from '@generated/proto/apl';
+import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
+import { PlayerClasses } from '@sim/player/classes';
+import { Player } from '@sim/player/player';
+import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
+import { defineSpec } from '@sim/spec_config';
 
-import * as HunterInputs from "./inputs";
-import * as Presets from "./presets";
+import * as HunterInputs from './inputs';
+import * as Presets from './presets';
 
 export default defineSpec<Spec.SpecHunter>({
 	spec: Spec.SpecHunter,
 
-	className: "hunter-sim-ui",
+	className: 'hunter-sim-ui',
 	cssScheme: PlayerClasses.getCssScheme(PlayerClasses.Hunter),
 	// List any known bugs / issues here and they'll be shown on the site.
 	knownIssues: [],
@@ -49,11 +35,7 @@ export default defineSpec<Spec.SpecHunter>({
 		Stat.StatPhysicalDamage,
 	],
 	gemStats: [Stat.StatStamina, Stat.StatAgility],
-	epPseudoStats: [
-		PseudoStat.PseudoStatRangedHitPercent,
-		PseudoStat.PseudoStatRangedCritPercent,
-		PseudoStat.PseudoStatRangedDps,
-	],
+	epPseudoStats: [PseudoStat.PseudoStatRangedHitPercent, PseudoStat.PseudoStatRangedCritPercent, PseudoStat.PseudoStatRangedDps],
 	consumableStats: [Stat.StatStamina, Stat.StatHealth, Stat.StatMana],
 	// Reference stat against which to calculate EP.
 	epReferenceStat: Stat.StatAgility,
@@ -86,13 +68,7 @@ export default defineSpec<Spec.SpecHunter>({
 			PseudoStat.PseudoStatRangedHastePercent,
 		],
 	),
-	itemSwapSlots: [
-		ItemSlot.ItemSlotMainHand,
-		ItemSlot.ItemSlotOffHand,
-		ItemSlot.ItemSlotRanged,
-		ItemSlot.ItemSlotTrinket1,
-		ItemSlot.ItemSlotTrinket2,
-	],
+	itemSwapSlots: [ItemSlot.ItemSlotMainHand, ItemSlot.ItemSlotOffHand, ItemSlot.ItemSlotRanged, ItemSlot.ItemSlotTrinket1, ItemSlot.ItemSlotTrinket2],
 	defaults: {
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
@@ -111,7 +87,7 @@ export default defineSpec<Spec.SpecHunter>({
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
 		talents: SavedTalents.create({
-			talentsString: "-3050552301503151-50024001",
+			talentsString: '-3050552301503151-50024001',
 		}),
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
@@ -123,17 +99,9 @@ export default defineSpec<Spec.SpecHunter>({
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.
-	playerIconInputs: [
-		HunterInputs.PetTypeInput(),
-		HunterInputs.QuiverInput(),
-		HunterInputs.AmmoInput(),
-	],
+	playerIconInputs: [HunterInputs.PetTypeInput(), HunterInputs.QuiverInput(), HunterInputs.AmmoInput()],
 	// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
-	includeBuffDebuffInputs: [
-		Stat.StatSpirit,
-		Stat.StatSpellCritRating,
-		Stat.StatSpellDamage,
-	],
+	includeBuffDebuffInputs: [Stat.StatSpirit, Stat.StatSpellCritRating, Stat.StatSpellDamage],
 	excludeBuffDebuffInputs: [],
 	rotationInputs: HunterInputs.RotationInputs,
 	// Inputs to include in the 'Other' section on the settings tab.
@@ -158,11 +126,7 @@ export default defineSpec<Spec.SpecHunter>({
 		// Preset talents that the user can quickly select.
 		talents: Presets.TalentPresets,
 		// Preset rotations that the user can quickly select.
-		rotations: [
-			Presets.BeastMasteryRotation,
-			Presets.MarksmanshipRotation,
-			Presets.SurvivalRotation,
-		],
+		rotations: [Presets.BeastMasteryRotation, Presets.MarksmanshipRotation, Presets.SurvivalRotation],
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GEAR_PRESETS,
 	},
@@ -171,14 +135,8 @@ export default defineSpec<Spec.SpecHunter>({
 	// Beast Mastery's, so each tree gets the list that uses its own.
 	autoRotation: (player: Player<Spec.SpecHunter>): APLRotation => {
 		const talents = player.getTalents();
-		if (talents.sniperShot)
-			return APLRotation.clone(
-				Presets.MarksmanshipRotation.rotation.rotation!,
-			);
-		if (talents.summonHawk)
-			return APLRotation.clone(
-				Presets.BeastMasteryRotation.rotation.rotation!,
-			);
+		if (talents.sniperShot) return APLRotation.clone(Presets.MarksmanshipRotation.rotation.rotation!);
+		if (talents.summonHawk) return APLRotation.clone(Presets.BeastMasteryRotation.rotation.rotation!);
 		return APLRotation.clone(Presets.SurvivalRotation.rotation.rotation!);
 	},
 
