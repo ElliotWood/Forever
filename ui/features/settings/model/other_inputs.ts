@@ -196,21 +196,6 @@ export const HpPercentForDefensives = {
 	},
 };
 
-export const ShadowPriestDPS = {
-	id: 'shadowPriestDps',
-	type: 'number' as const,
-	float: true,
-	label: i18n.t('settings_tab.other.shadow_priest_dps.label'),
-	labelTooltip: i18n.t('settings_tab.other.shadow_priest_dps.tooltip'),
-	storeField: 'buffs' as const,
-	getValue: (player: Player<any>) => player.getBuffs().shadowPriestDps,
-	setValue: (player: Player<any>, newValue: number) => {
-		const buffs = player.getBuffs();
-		buffs.shadowPriestDps = newValue;
-		player.setBuffs(buffs);
-	},
-};
-
 export const TotemTwisting = {
 	id: 'totemTwisting',
 	type: 'boolean' as const,

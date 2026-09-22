@@ -74,13 +74,7 @@ export default defineSpec<Spec.SpecRestorationShaman>({
 	includeBuffDebuffInputs: [BuffDebuffInputs.PowerWordFortitude],
 	// Nothing is simulated, so buffs that only matter inside an encounter (damage, cooldowns,
 	// mana returns over a fight) would only mislead.
-	excludeBuffDebuffInputs: [
-		BuffDebuffInputs.Thorns,
-		BuffDebuffInputs.Innervate,
-		BuffDebuffInputs.PowerInfusion,
-		BuffDebuffInputs.ManaTideTotem,
-		BuffDebuffInputs.ShadowPriestDPS,
-	],
+	excludeBuffDebuffInputs: [BuffDebuffInputs.Thorns, BuffDebuffInputs.Innervate, BuffDebuffInputs.PowerInfusion, BuffDebuffInputs.ManaTideTotem],
 	// Inputs to include in the 'Other' section on the settings tab.
 	otherInputs: {
 		inputs: [],

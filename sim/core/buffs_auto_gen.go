@@ -32,29 +32,6 @@ func BloodPactAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// Commanding Shout - https://www.wowhead.com/forever/spell=403215
-var CommandingShoutCategory = "CommandingShout"
-
-func CommandingShoutValue(talentPoints int32) float64 {
-	return 42.0
-}
-func CommandingShoutDuration(talentPoints int32) time.Duration {
-	return 300000 * time.Millisecond
-}
-func CommandingShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:      "Commanding Shout (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID:   ActionID{SpellID: 403215}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration:   CommandingShoutDuration(talentPoints),
-		Category:   CommandingShoutCategory,
-		SingleAura: true,
-		IsPlayer:   isPlayer,
-		Stats: []StatConfig{
-			{stats.Stamina, CommandingShoutValue(talentPoints), false},
-		},
-	})
-}
-
 // Battle Shout - https://www.wowhead.com/forever/spell=25289
 var BattleShoutCategory = "BattleShout"
 
@@ -172,19 +149,6 @@ func ManaTideTotemsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 		Stats: []StatConfig{
 			{stats.MP5, ManaTideTotemsValue(talentPoints), false},
 		},
-	})
-}
-
-// Vampiric Touch - https://www.wowhead.com/forever/spell=402668
-func ShadowPriestDpsDuration(talentPoints int32) time.Duration {
-	return 15000 * time.Millisecond
-}
-func ShadowPriestDpsAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
-	return newGeneratedStatAura(unit, GeneratedBuff{
-		Label:    "Vampiric Touch (" + Ternary(isPlayer, "Player", "External") + ")",
-		ActionID: ActionID{SpellID: 402668}.WithTag(TernaryInt32(isPlayer, 0, -1)),
-		Duration: ShadowPriestDpsDuration(talentPoints),
-		IsPlayer: isPlayer,
 	})
 }
 
@@ -830,9 +794,6 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if party.BloodPact {
 		MakePermanent(BloodPactAura(&char.Unit, false, 0))
 	}
-	if party.CommandingShout {
-		driveCommandingShout(char, party)
-	}
 	if party.BattleShout {
 		driveBattleShout(char, party)
 	}
@@ -847,9 +808,6 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if party.ManaTideTotems > 0 {
 		driveManaTideTotems(char, party)
-	}
-	if individual.ShadowPriestDps > 0 {
-		driveShadowPriestDps(char, individual)
 	}
 	if party.MoonkinAura {
 		MakePermanent(MoonkinAuraAura(&char.Unit, false, 0))
@@ -958,7 +916,6 @@ func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyB
 	individual.PowerInfusions = 0
 
 	if !pet.enabledOnStart {
-		individual.ShadowPriestDps = 0
 		raid.ArcaneBrilliance = false
 		individual.BlessingOfKings = false
 		raid.DivineSpirit = false

@@ -519,15 +519,15 @@ func TestAddGeneratedFlatBonusRefusesAnAuraThatCannotCarryOne(t *testing.T) {
 	})
 
 	contested := newGeneratedStatAura(&char.Unit, GeneratedBuff{
-		Label:      "Generated Commanding Shout",
-		ActionID:   ActionID{SpellID: 403215}.WithTag(-1),
+		Label:      "Generated Devotion Aura",
+		ActionID:   ActionID{SpellID: 10293}.WithTag(-1),
 		Duration:   NeverExpires,
-		Category:   "GeneratedCommandingShout",
+		Category:   "GeneratedDevotionAura",
 		SingleAura: true,
-		Stats:      []StatConfig{{stats.Stamina, 42, false}},
+		Stats:      []StatConfig{{stats.Armor, 735, false}},
 	})
 	assertPanics(t, "a base that is not what the buff bids", func() {
-		AddGeneratedFlatBonus(contested, stats.Stamina, 54, 30)
+		AddGeneratedFlatBonus(contested, stats.Armor, 620, 30)
 	})
 
 	// A category that holds several auras at once never deactivates the one it

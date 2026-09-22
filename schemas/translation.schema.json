@@ -1779,19 +1779,6 @@
 							"additionalProperties": false,
 							"required": ["label", "tooltip"]
 						},
-						"shadow_priest_dps": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
 						"totem_twisting": {
 							"type": "object",
 							"properties": {
@@ -2260,7 +2247,6 @@
 						"absorb_frac",
 						"burst_window",
 						"hp_percent_for_defensives",
-						"shadow_priest_dps",
 						"totem_twisting",
 						"pet_uptime",
 						"pet_single_ability",

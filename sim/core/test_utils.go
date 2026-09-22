@@ -81,8 +81,7 @@ var FullPartyBuffs = &proto.PartyBuffs{
 	StrengthOfEarthTotem: true,
 	WindfuryTotem:        true,
 
-	BattleShout:     true,
-	CommandingShout: true,
+	BattleShout: true,
 }
 
 var FullIndividualBuffs = &proto.IndividualBuffs{

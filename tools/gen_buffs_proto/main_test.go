@@ -61,13 +61,13 @@ func TestRenderNextIndex(t *testing.T) {
 	}
 }
 
-// The 25 fields api version 17 typed bool where they were a TristateEffect. The
+// The 24 fields api version 17 typed bool where they were a TristateEffect. The
 // list is the one ui/sim/proto/buff_field_migration.ts rewrites before parsing, so
 // the two are checked against each other: a name on one side only would leave a
 // saved payload either unconverted or converted into the wrong type.
 var retypedFields = map[string][]string{
 	"RaidBuffs":       {"power_word_fortitude", "divine_spirit", "gift_of_the_wild", "thorns"},
-	"PartyBuffs":      {"blood_pact", "moonkin_aura", "leader_of_the_pack", "devotion_aura", "retribution_aura", "concentration_aura", "grace_of_air_totem", "strength_of_earth_totem", "windfury_totem", "battle_shout", "commanding_shout"},
+	"PartyBuffs":      {"blood_pact", "moonkin_aura", "leader_of_the_pack", "devotion_aura", "retribution_aura", "concentration_aura", "grace_of_air_totem", "strength_of_earth_totem", "windfury_totem", "battle_shout"},
 	"IndividualBuffs": {"blessing_of_wisdom", "blessing_of_might"},
 	"Debuffs":         {"improved_seal_of_the_crusader", "curse_of_elements", "expose_armor", "faerie_fire", "hunters_mark", "demoralizing_roar", "demoralizing_shout", "thunder_clap"},
 }
@@ -90,8 +90,8 @@ func TestRetypedFieldsAreBool(t *testing.T) {
 			}
 		}
 	}
-	if count != 25 {
-		t.Errorf("the retyped list names %d fields, want the 25 api version 17 declares", count)
+	if count != 24 {
+		t.Errorf("the retyped list names %d fields, want the 24 api version 17 declares", count)
 	}
 }
 
@@ -119,7 +119,7 @@ func readMigration(t *testing.T) string {
 }
 
 // The property protobuf-ts generates for a proto field name, which is how the
-// migration's retyped list spells them. None of the 25 holds a digit.
+// migration's retyped list spells them. None of the 24 holds a digit.
 func tsFieldName(protoName string) string {
 	parts := strings.Split(protoName, "_")
 	for i := 1; i < len(parts); i++ {

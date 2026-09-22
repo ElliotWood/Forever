@@ -1,6 +1,6 @@
 import { Class, Stat } from '@generated/proto/common';
 import { ActionId } from '@sim/proto/action_id';
-import { makeBooleanIndividualBuffInput, makeBooleanPartyBuffInput, makeMultistateIndividualBuffInput } from '@ui-kit/icon_inputs';
+import { makeBooleanIndividualBuffInput, makeBooleanPartyBuffInput } from '@ui-kit/icon_inputs';
 
 import * as Generated from './buffs_debuffs_auto_gen';
 import { IconPickerStatOption, inDisplayOrder } from './stat_options';
@@ -32,23 +32,15 @@ export const BlessingOfSalvation = makeBooleanIndividualBuffInput({
 	label: 'Blessing of Salvation',
 	showWhen: player => !player.getPlayerSpec().isTankSpec && !player.getPlayerSpec().isHealingSpec,
 });
-export const ShadowPriestDPS = makeMultistateIndividualBuffInput({
-	actionId: ActionId.fromSpellId(34917),
-	numStates: 1500,
-	fieldName: 'shadowPriestDps',
-	label: 'Vampiric Touch',
-});
 
 export const PARTY_BUFFS_CONFIG = inDisplayOrder(Generated.GENERATED_PARTY_BUFFS_CONFIG, [
 	Generated.BloodPact,
-	Generated.CommandingShout,
 	Generated.BattleShout,
 	{ config: EnhancedBattleShout, stats: [Stat.StatAttackPower], ownerClass: Class.ClassWarrior },
 	Generated.DevotionAura,
 	Generated.LeaderOfThePack,
 	Generated.ManaSpringTotem,
 	Generated.ManaTideTotems,
-	{ config: ShadowPriestDPS, stats: [Stat.StatMP5] },
 	Generated.MoonkinAura,
 	Generated.RetributionAura,
 	Generated.ConcentrationAura,

@@ -132,8 +132,7 @@
 						},
 						"buffs": {
 							"blessingOfKings": true,
-							"blessingOfWisdom": 2,
-							"shadowPriestDps": 800
+							"blessingOfWisdom": 2
 						},
 						"cooldowns": {},
 						"healingModel": {}

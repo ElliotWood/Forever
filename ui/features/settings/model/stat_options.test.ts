@@ -49,7 +49,7 @@ const ownedOption = (label: string, ownerClass?: Class) => ({ config: { label },
 const playerOf = (playerClass: Class) => ({ getClass: () => playerClass }) as unknown as Player<any>;
 
 const battleShout = ownedOption('Battle Shout', Class.ClassWarrior);
-const commandingShout = ownedOption('Commanding Shout', Class.ClassWarrior);
+const demoralizingShout = ownedOption('Demoralizing Shout', Class.ClassWarrior);
 const arcaneBrilliance = ownedOption('Arcane Brilliance', Class.ClassMage);
 const giftOfArthas = ownedOption('Gift of Arthas');
 const unlabelledWarriorRow = { config: {}, stats: [], ownerClass: Class.ClassWarrior } as unknown as RenderableStatOptions;
@@ -72,9 +72,9 @@ describe('applyOwnerClassLabels', () => {
 	});
 
 	it('marks every row the class owns, not just the first', () => {
-		const shown = applyOwnerClassLabels([battleShout, arcaneBrilliance, commandingShout], playerOf(Class.ClassWarrior));
+		const shown = applyOwnerClassLabels([battleShout, arcaneBrilliance, demoralizingShout], playerOf(Class.ClassWarrior));
 
-		expect(shown.map(option => option.config.label)).toEqual(['Battle Shout (External)', 'Arcane Brilliance', 'Commanding Shout (External)']);
+		expect(shown.map(option => option.config.label)).toEqual(['Battle Shout (External)', 'Arcane Brilliance', 'Demoralizing Shout (External)']);
 		expect(shown[1]).toBe(arcaneBrilliance);
 	});
 

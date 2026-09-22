@@ -38,7 +38,6 @@ var buffInputNumStates = map[string]int{
 // row carries, or the field has no input at all.
 var manualBuffInputs = map[string]string{
 	"blessing_of_salvation": "the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.",
-	"shadow_priest_dps":     "the returned mana is typed in by hand and the input renders in the party registry over an individual-buff field.",
 	"atiesh_druid":          "no settings input over this field.",
 	"atiesh_priest":         "no settings input over this field.",
 }

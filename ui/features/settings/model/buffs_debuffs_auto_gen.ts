@@ -20,12 +20,6 @@ export const BloodPact = makeBooleanPartyBuffInput({
 	label: 'Blood Pact',
 });
 
-export const CommandingShout = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(403215),
-	fieldName: 'commandingShout',
-	label: 'Commanding Shout',
-});
-
 export const BattleShout = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(25289),
 	fieldName: 'battleShout',
@@ -61,8 +55,6 @@ export const ManaTideTotems = makeMultistatePartyBuffInput({
 	fieldName: 'manaTideTotems',
 	label: 'Mana Tide Totem',
 });
-
-// shadow_priest_dps: the returned mana is typed in by hand and the input renders in the party registry over an individual-buff field.
 
 export const MoonkinAura = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(24907),
@@ -372,11 +364,6 @@ export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 		config: BloodPact,
 		stats: [Stat.StatStamina],
 		ownerClass: Class.ClassWarlock,
-	},
-	{
-		config: CommandingShout,
-		stats: [Stat.StatStamina],
-		ownerClass: Class.ClassWarrior,
 	},
 	{
 		config: BattleShout,
