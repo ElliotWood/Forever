@@ -97,7 +97,15 @@ func RegisterAllProcs() {
 	// https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- if .Supported}}
-		{{- if .Damage}}
+		{{- if .Proc}}
+			// {{ .Proc.Summary }}
+			shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
+				[]shared.ItemVariant{
+				{{- range .Variants }}
+				{ItemID: {{.ID}}, ItemName: "{{.Name}}"},
+				{{- end}}
+			})
+		{{- else if .Damage}}
 			{{- $entry := . }}
 			{{- range .Variants }}
 			shared.NewProcDamageEffect(shared.ProcDamageEffect{
@@ -192,7 +200,16 @@ func RegisterAllProcs() {
 			})
 		{{- end}}
 	{{- else}}
-		{{- if gt .ProcInfo.MaxCumulativeStacks 0 }}
+		{{- if .Proc}}
+			// unsupported: {{ .Proc.Reason }}
+			// {{ .Proc.Summary }}
+			// shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
+			//	[]shared.ItemVariant{
+			{{- range .Variants }}
+			//	{ItemID: {{.ID}}, ItemName: "{{.Name}}"},
+			{{- end}}
+			// })
+		{{- else if gt .ProcInfo.MaxCumulativeStacks 0 }}
 			// shared.NewStackingStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
 			//	Callback:           {{ .ProcInfo.Callback | asCoreCallback }},
 			//	ProcMask:           {{ .ProcInfo.ProcMask | asCoreProcMask }},

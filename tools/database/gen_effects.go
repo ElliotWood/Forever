@@ -16,6 +16,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/tools/database/dbc"
 	"github.com/wowsims/forever/tools/tooltip"
 )
@@ -78,6 +79,10 @@ type Entry struct {
 	// Set for effects an ignore list deliberately excludes. These emit a comment only, so that
 	// skipping them is visible in the generated file rather than silent.
 	Skipped bool
+	// Set when the proc is resolved from the client's own rows at run time, which is every proc
+	// but the two shapes that need more than the rows state: a window that accumulates a second
+	// aura, and an effect a hand-written constructor already covers.
+	Proc *ProcRouting
 	// Set when the effect deals flat damage instead of granting stats. Those resolve no stats, so
 	// without this they are dropped before they are ever emitted.
 	Damage *dbc.DamageEffect
@@ -99,6 +104,98 @@ type Entry struct {
 type StackingOnUse struct {
 	Name       string
 	CooldownMs int32
+}
+
+// The two spells an item or enchant proc is resolved from at run time, and what the rows say the
+// sim cannot model. The reasons are the ones sim/core/spelldata answers, so the registration the
+// generator writes and the listener the sim builds come from the same reading.
+type ProcRouting struct {
+	TriggerSpellID int
+	// Zero where the trigger's own row is the buff.
+	BuffSpellID int
+	// A "Chance on hit" item effect or a combat enchant, cast by the game off every eligible weapon
+	// hit whatever the row's proc flags say.
+	IsWeaponProc bool
+	// Empty when the rows state enough to build the listener.
+	Unsupported []string
+	// What the rows resolve to, for the reader of the generated file.
+	Summary string
+}
+
+func (r *ProcRouting) Supported() bool {
+	return len(r.Unsupported) == 0
+}
+
+// Renders the reasons as the generated file states them, one clause per shape.
+func (r *ProcRouting) Reason() string {
+	return strings.Join(r.Unsupported, "; ")
+}
+
+// The rows behind an item effect, by the two ids the sim will look up: the spell carrying the proc
+// and the spell it applies.
+func routeProc(triggerSpellID int, buffSpellID int, isWeaponProc bool) *ProcRouting {
+	routing := &ProcRouting{TriggerSpellID: triggerSpellID, IsWeaponProc: isWeaponProc}
+	if buffSpellID != triggerSpellID {
+		routing.BuffSpellID = buffSpellID
+	}
+
+	trigger := spelldata.Find(int32(triggerSpellID))
+	routing.Unsupported = spelldata.ItemProcUnsupported(trigger, isWeaponProc)
+	routing.Summary = procSummary(trigger, buffSpellID)
+
+	return routing
+}
+
+// The buff the proc applies has to last for something: an aura of no duration is one the sim
+// refuses to activate, and the client states it on either row.
+func (r *ProcRouting) requireABuffDuration() {
+	trigger := spelldata.Find(int32(r.TriggerSpellID))
+	buff := trigger
+	if r.BuffSpellID != 0 {
+		buff = spelldata.Find(int32(r.BuffSpellID))
+	}
+
+	if buff == spelldata.Nil {
+		r.Unsupported = append(r.Unsupported, "the buff has no row in the store")
+		return
+	}
+
+	if buff.DurationMs == 0 && trigger.DurationMs == 0 {
+		r.Unsupported = append(r.Unsupported, "neither row states how long the buff lasts")
+	}
+}
+
+// What the rows resolve to, as the sim's own constants, so the generated file states the reading
+// rather than leaving it to be looked up.
+func procSummary(trigger *spelldata.Spell, buffSpellID int) string {
+	if trigger == spelldata.Nil {
+		return fmt.Sprintf("trigger %d is not in the store", buffSpellID)
+	}
+
+	decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint)
+	summary := fmt.Sprintf("trigger %d (%s, %s, %s)", trigger.ID,
+		procRateSummary(trigger), asCoreCallback(decoded.Callback), asCoreProcMask(decoded.ProcMask))
+
+	if int(trigger.ID) != buffSpellID {
+		summary += fmt.Sprintf(" -> buff %d", buffSpellID)
+	}
+
+	return summary
+}
+
+func procRateSummary(trigger *spelldata.Spell) string {
+	switch {
+	case trigger.RPPM > 0:
+		return fmt.Sprintf("%v ppm", trigger.RPPM)
+	case trigger.ProcChanceSource == spelldata.ProcChanceEffectN:
+		return fmt.Sprintf("effect %d's chance", trigger.ProcChanceEffect)
+	case trigger.ProcChanceSource == spelldata.ProcChanceAlways:
+		return "every time"
+	case trigger.ProcChanceSource == spelldata.ProcChancePPM:
+		return "no stated rate"
+	default:
+		return fmt.Sprintf("%d%%", trigger.ProcChance)
+	}
 }
 
 // Group holds a category of effects.
@@ -124,6 +221,7 @@ const (
 	EffectParseResultInvalid     EffectParseResult = iota // Returned when the effect is invalid for the current parameters
 	EffectParseResultUnsupported                          // Returned when the effect could be parsed but is not supported for effect generation
 	EffectParseResultSuccess                              // Returned when the effect was parsed successfuly
+	EffectParseResultRefused                              // Returned when the effect was parsed, is not supported, and said so in an entry of its own
 )
 
 func GenerateEffectsFile(groups []*Group, outFile string, templateString string) error {
@@ -202,6 +300,16 @@ func GenerateEffectsFile(groups []*Group, outFile string, templateString string)
 	}
 
 	return nil
+}
+
+// Whether two entries are resolved from the same rows, which is what lets them be emitted as one
+// call with a variant list.
+func sameProcRows(a *Entry, b *Entry) bool {
+	if a.Proc == nil || b.Proc == nil {
+		return a.Proc == b.Proc
+	}
+
+	return a.Proc.TriggerSpellID == b.Proc.TriggerSpellID && a.Proc.BuffSpellID == b.Proc.BuffSpellID
 }
 
 // A total order over entries. Sorting on the item or enchant ID alone is not one: an item with
@@ -388,8 +496,13 @@ func GenerateItemEffects(instance *dbc.DBC, db *WowDatabase, itemSources map[int
 				continue
 			}
 
-			if TryParseOnUseEffect(parsed, itemEffect, instance, groupMapOnUse) != EffectParseResultSuccess &&
-				TryParseProcEffect(parsed, itemEffect, instance, groupMapProc) != EffectParseResultSuccess {
+			if TryParseOnUseEffect(parsed, itemEffect, instance, groupMapOnUse) == EffectParseResultSuccess {
+				continue
+			}
+
+			switch TryParseProcEffect(parsed, itemEffect, instance, groupMapProc) {
+			case EffectParseResultSuccess, EffectParseResultRefused:
+			default:
 				ParseTooltipForMissingEffect(parsed, itemEffect, instance, groupMapProc, "Procs")
 			}
 		}
@@ -418,10 +531,12 @@ func GenerateItemEffects(instance *dbc.DBC, db *WowDatabase, itemSources map[int
 			added := false
 
 			// Make sure to only group by name and proc mask, each proc mask will create it's own sub group
+			// A variant set is emitted as one call, so its members also have to name the same rows:
+			// the reissued PvP shields share a name and a buff and carry different triggers.
 			for _, group := range entryGroupings {
 				if group.Variants[0].Name == entry.Variants[0].Name {
 					idx++
-					if group.ProcInfo.ProcMask == entry.ProcInfo.ProcMask {
+					if group.ProcInfo.ProcMask == entry.ProcInfo.ProcMask && sameProcRows(group, entry) {
 						group.AddVariant(entry.Variants[0])
 						added = true
 						break
@@ -570,6 +685,18 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 				entry.Supported = false
 			}
 
+			// A stat-buff proc carries its two spell ids and nothing else: what it hears, how often
+			// and for how long are the rows' to say, at run time, through the same decision this
+			// reads here. The two shapes that need more than the rows state stay where they are -
+			// a window accumulating a second aura, and an effect with no stats at all.
+			if itemEffect.StackingAura == nil && len(dbc.EffectStats(itemEffect)) > 0 {
+				entry.Proc = routeItemProc(parsed, itemEffect)
+				if entry.Proc != nil {
+					entry.Proc.requireABuffDuration()
+					entry.Supported = entry.Supported && entry.Proc.Supported()
+				}
+			}
+
 			// An effect that resolves no stats may still deal flat damage, which is a shape of its
 			// own rather than a reason to refuse. Only a stated flat chance is taken: a PPM rate
 			// needs a proc manager the generated call has no way to build, and those items are
@@ -596,6 +723,15 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 					Name:    renderedTooltip,
 					SpellID: int(itemEffect.BuffId),
 				})
+
+				// A proc the rows themselves refuse is emitted with the reason they gave, so the
+				// generated file says why rather than leaving a shapeless commented block behind.
+				if entry.Proc != nil && !entry.Proc.Supported() {
+					grp.Entries = append(grp.Entries, &entry)
+					groupMapProc["Procs"] = grp
+					return EffectParseResultRefused
+				}
+
 				return EffectParseResultUnsupported
 			}
 
@@ -618,6 +754,17 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 	}
 
 	return EffectParseResultInvalid
+}
+
+// The rows an item effect names: the client's ItemEffect row carries the spell with the proc on it,
+// and the shipped entry carries the spell that applies the stats.
+func routeItemProc(parsed *proto.UIItem, itemEffect *proto.ItemEffect) *ProcRouting {
+	effect := dbc.GetItemEffectForBuffID(int(parsed.Id), int(itemEffect.BuffId))
+	if effect == nil {
+		return nil
+	}
+
+	return routeProc(effect.SpellID, int(itemEffect.BuffId), effect.TriggerType == dbc.ITEM_SPELLTRIGGER_CHANCE_ON_HIT)
 }
 
 func TryParseOnUseEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMap map[string]Group) EffectParseResult {
