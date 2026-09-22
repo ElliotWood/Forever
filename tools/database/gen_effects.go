@@ -691,13 +691,14 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 
 			// A stat-buff proc carries its two spell ids and nothing else: what it hears, how often
 			// and for how long are the rows' to say, at run time, through the same decision this
-			// reads here. The two shapes that need more than the rows state stay where they are -
-			// a window accumulating a second aura, and an effect with no stats at all.
+			// reads here - and that decision is the whole of it, rather than the tooltip reading
+			// BuildProcInfo does for the shapes below. The two that need more than the rows state
+			// stay where they are: a window accumulating a second aura, and an effect with no stats.
 			if itemEffect.StackingAura == nil && len(dbc.EffectStats(itemEffect)) > 0 {
 				entry.Proc = routeItemProc(parsed, itemEffect)
 				if entry.Proc != nil {
 					entry.Proc.requireABuffDuration()
-					entry.Supported = entry.Supported && entry.Proc.Supported()
+					entry.Supported = entry.Proc.Supported()
 				}
 			}
 
@@ -709,7 +710,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 					entry.Proc = routeItemProc(parsed, itemEffect)
 					if entry.Proc != nil {
 						entry.Proc.asDamage(int32(damage.SpellID))
-						entry.Supported = entry.Supported && entry.Proc.Supported()
+						entry.Supported = entry.Proc.Supported()
 						entry.DealsDamage = true
 					}
 				}
@@ -838,7 +839,7 @@ func TryParseEnchantEffect(enchant *proto.UIEnchant, enchantEffect *proto.ItemEf
 			// hangs on the enchantment; the buff is what the shipped entry says it applies.
 			entry.Proc = routeEnchantProc(enchant, instance)
 			if entry.Proc != nil {
-				entry.Supported = entry.Supported && entry.Proc.Supported()
+				entry.Supported = entry.Proc.Supported()
 			}
 
 			grp.Entries = append(grp.Entries, &entry)
