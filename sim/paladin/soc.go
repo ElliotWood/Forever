@@ -78,7 +78,7 @@ func (paladin *Paladin) registerSealOfCommand() {
 
 			// Improved Seals is a percent modifier, so it belongs on the whole spell rather than on
 			// the base roll, which left the coefficient's share of the damage out of it.
-			DamageMultiplier: improvedSeals * paladin.getWeaponSpecializationModifier(),
+			DamageMultiplier: improvedSeals,
 			ThreatMultiplier: 1,
 			BonusCoefficient: roundCoef(judgeRow.Direct.BonusCoefficient()),
 
@@ -104,7 +104,7 @@ func (paladin *Paladin) registerSealOfCommand() {
 			ProcMask:    core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeProc | core.ProcMaskMeleeDamageProc,
 			Flags:       core.SpellFlagMeleeMetrics | core.SpellFlagNotAProc,
 
-			DamageMultiplier: procRow.Effects[0].Value / 100 * improvedSeals * paladin.getWeaponSpecializationModifier(),
+			DamageMultiplier: procRow.Effects[0].Value / 100 * improvedSeals,
 			ThreatMultiplier: 1,
 
 			BonusCoefficient: 0.29,
@@ -141,7 +141,14 @@ func (paladin *Paladin) registerSealOfCommand() {
 		})
 
 		paladin.aurasSoC = append(paladin.aurasSoC, aura)
-		paladin.registerSealProc(aura, procSpell)
+		// Echo of Command (client 1311703) "empowers your next melee attack with a chance to
+		// activate Seal of Command": the Echo rolls the seal's own chance, it does not land for sure.
+		paladin.registerSealProc(aura, func(sim *core.Simulation, target *core.Unit) {
+			if icd.IsReady(sim) && ppmm.Proc(sim, core.ProcMaskMeleeMHAuto, "seal of command echo") {
+				icd.Use(sim)
+				procSpell.Cast(sim, target)
+			}
+		})
 
 		paladin.sealOfCommand = paladin.RegisterSpell(core.SpellConfig{
 			ActionID:    aura.ActionID,
