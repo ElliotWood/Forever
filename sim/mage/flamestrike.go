@@ -21,8 +21,8 @@ func (mage *Mage) registerFlamestrike(rankConfig *spelldata.Spell) {
 	// The ported implementation, kept until this class is done:
 	// actionID := core.ActionID{SpellID: rankConfig.ID}
 	//
-	// // The dump's Periodic role borrows FlamestrikeTriggered's own Direct effect for the same
-	// // rank (via=other): each rank of Flamestrike names a different rank of that family.
+	// // Flamestrike's periodic damage is the spell FlamestrikeTriggered casts each tick, at the
+	// // same rank: each rank of Flamestrike names a different rank of that family.
 	// tick := spellData.FlamestrikeTriggered.Rank(rankConfig.RankNumber()).DamageEffect()
 	// tickLength := rankConfig.Effect(dbcenums.A_PERIODIC_DUMMY, 0).Period()
 	//

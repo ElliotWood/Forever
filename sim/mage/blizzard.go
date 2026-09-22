@@ -4,10 +4,6 @@ package mage
 
 var blizzardRank = spellData.Blizzard.Highest()
 
-// The dump's Periodic role borrows BlizzardTriggered's own Direct effect (via=other), the spell
-// Blizzard casts each tick.
-var blizzardTick = spellData.BlizzardTriggered.Highest().DamageEffect()
-
 // TODO: To be implemented.
 func (mage *Mage) registerBlizzardSpell() {
 	panic("To be implemented")
@@ -15,6 +11,9 @@ func (mage *Mage) registerBlizzardSpell() {
 	// The ported implementation, kept until this class is done:
 	// blizzardActionId := core.ActionID{SpellID: blizzardRank.ID}
 	// tickLength := blizzardRank.Effect(dbcenums.A_PERIODIC_DUMMY, 0).Period()
+	//
+	// // Blizzard's periodic damage is the spell BlizzardTriggered casts each tick.
+	// blizzardTick := spellData.BlizzardTriggered.Highest().DamageEffect()
 	//
 	// blizzardTickSpell := mage.RegisterSpell(core.SpellConfig{
 	// 	ActionID:       blizzardActionId,
