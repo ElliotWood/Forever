@@ -35,7 +35,7 @@ func (paladin *Paladin) registerFlashOfLight(row shared.SpellData) {
 		BonusCoefficient: row.Heal.BonusCoefficient(),
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			heal := row.Heal.Damage(sim)
+			heal := row.Heal.Damage(sim) + paladin.flashOfLightBonusHealing
 			if target.HasActiveAura(core.BlessingOfLightAuraLabel) {
 				heal += blessingOfLightFlashOfLightBonus
 			}

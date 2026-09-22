@@ -1,6 +1,8 @@
 package paladin
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
@@ -33,6 +35,14 @@ type Paladin struct {
 
 	// Light's Vigil: one entry per rank, so Holy Shock can find the vigil it consumes.
 	lightsVigils []*lightsVigil
+
+	// What gear adds to numbers the spells read as they register. Item effects and set bonuses
+	// apply before Initialize, so the spells pick these up.
+	sealOfTheCrusaderBonusAttackPower float64
+	judgementOfTheCrusaderBonus       float64
+	flashOfLightBonusHealing          float64
+	holyShieldBlockValueMultiplier    float64
+	forbearanceReduction              time.Duration
 
 	// Timers shared by the ranks of one ability.
 	judgementTimer     *core.Timer
@@ -135,6 +145,8 @@ func NewPaladin(character *core.Character, talentsStr string, _ *proto.PaladinOp
 	paladin := &Paladin{
 		Character: *character,
 		Talents:   &proto.PaladinTalents{},
+
+		holyShieldBlockValueMultiplier: 1,
 	}
 
 	core.FillTalentsProto(paladin.Talents.ProtoReflect(), talentsStr, TalentTreeSizes)
