@@ -1,3 +1,7 @@
+import { IndividualSimSettings } from '@generated/proto/ui';
+
+import { convertClassicSettingsJson, isClassicSettingsJson } from './classic_links';
+
 // Settings JSON written before a proto rename. Share links are binary, so field numbers carry
 // them across; only the JSON forms (autosaved settings in localStorage and the JSON importer) name
 // fields and need a hand.
@@ -17,4 +21,8 @@ export const migrateLegacySettingsJson = (json: unknown): unknown => {
 };
 
 // JSON text in, migrated object out; a parse failure surfaces to the caller as before.
-export const parseLegacySettingsJson = (text: string): unknown => migrateLegacySettingsJson(JSON.parse(text));
+// Settings from the classic-engine site (master before the switch) are another proto altogether.
+export const parseLegacySettingsJson = (text: string): unknown => {
+	const json = JSON.parse(text);
+	return isClassicSettingsJson(json) ? IndividualSimSettings.toJson(convertClassicSettingsJson(json)) : migrateLegacySettingsJson(json);
+};
