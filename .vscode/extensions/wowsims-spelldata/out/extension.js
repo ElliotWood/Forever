@@ -13,8 +13,8 @@ function activate(context) {
     // One promise per repository and question, so the hovers that arrive while the first `go run` is
     // still compiling wait on that run rather than starting their own.
     const cache = new Map();
-    // The ladder picks each class folder declares, read once per folder and dropped when a file in it
-    // is saved: an identifier the map does not know is not worth a process.
+    // The chains each class folder declares, read once per folder and dropped when a file in it is
+    // saved: an identifier the map does not know is not worth a process.
     const declarations = new Map();
     let warnedMissingGo = false;
     function ask(root, key, args) {
@@ -61,16 +61,13 @@ function activate(context) {
                 const family = await ask(root, `family\u0000${pkg}/${field}`, ['-family', `${pkg}/${field}`, '-json']);
                 return family === undefined ? undefined : new vscode.Hover(familyCard(family));
             }
-            const name = (0, spellIds_1.identifierAt)(line, position.character);
-            if (name === undefined) {
+            const hover = (0, spellIds_1.chainHoverAt)(line, position.character, declaredChains(folder, declarations, log));
+            if (hover === undefined) {
                 return undefined;
             }
-            const expr = declaredLadderPicks(folder, declarations, log).get(name);
-            if (expr === undefined) {
-                return undefined;
-            }
+            const expr = hover.expr;
             const row = await ask(root, `expr\u0000${pkg}\u0000${expr}`, ['-expr', expr, '-package', pkg, '-json']);
-            return row === undefined ? undefined : new vscode.Hover(spellCard(row, `\`${name}\` = ${row.title}`));
+            return row === undefined ? undefined : new vscode.Hover(exprCard(row, hover));
         },
     };
     context.subscriptions.push(log, vscode.languages.registerHoverProvider(LANGUAGES, provider), vscode.workspace.onDidSaveTextDocument(document => declarations.delete((0, node_path_1.dirname)(document.uri.fsPath))));
@@ -91,7 +88,7 @@ function moduleRoot(filePath) {
         dir = parent;
     }
 }
-function declaredLadderPicks(folder, cache, log) {
+function declaredChains(folder, cache, log) {
     let found = cache.get(folder);
     if (found !== undefined) {
         return found;
@@ -102,7 +99,7 @@ function declaredLadderPicks(folder, cache, log) {
             if (!entry.endsWith('.go')) {
                 continue;
             }
-            for (const [name, expr] of (0, spellIds_1.ladderDeclarations)((0, node_fs_1.readFileSync)((0, node_path_1.join)(folder, entry), 'utf8'))) {
+            for (const [name, expr] of (0, spellIds_1.chainDeclarations)((0, node_fs_1.readFileSync)((0, node_path_1.join)(folder, entry), 'utf8'))) {
                 found.set(name, expr);
             }
         }
@@ -145,7 +142,7 @@ function readTool(root, args, log, onMissingGo) {
         });
     });
 }
-function spellCard(row, heading, md = new vscode.MarkdownString()) {
+function spellCard(row, heading, md = new vscode.MarkdownString(), read = 0) {
     md.appendMarkdown(`${heading}\n\n`);
     for (const call of row.ladder) {
         md.appendMarkdown(`\`${call}\`  \n`);
@@ -160,11 +157,48 @@ function spellCard(row, heading, md = new vscode.MarkdownString()) {
         md.appendMarkdown(`refs      ${row.refs.join(', ')}  \n`);
     }
     row.effects.forEach((effect, index) => {
-        md.appendMarkdown(`\neffect ${index + 1}${effect.human === '' ? '' : ` — ${effect.human}`}\n`);
+        const label = index + 1 === read ? `effect ${index + 1} (read)` : `effect ${index + 1}`;
+        md.appendMarkdown(`\n${label}${effect.human === '' ? '' : ` — ${effect.human}`}\n`);
         md.appendCodeblock(effect.literal);
     });
     md.appendMarkdown(`\n[Wowhead](${row.wowhead})`);
     return md;
+}
+// What a chain answered. A pick is the row it names; an accessor call that stopped on an effect is that
+// effect and the accessors that read something off it; a value is the number, the chain it was read
+// through and, where the cursor was on the accessor itself, what the store says that accessor answers.
+function exprCard(row, hover) {
+    if (row.kind === 'spell') {
+        return spellCard(row, `\`${hover.label}\` = ${row.title}`);
+    }
+    const md = new vscode.MarkdownString();
+    const called = lastCall(row.trail);
+    if (row.kind === 'effect') {
+        md.appendMarkdown(`\`${called}\` = **${row.value}** of ${row.title}\n\n`);
+        md.appendMarkdown(`\`${row.trail}\`\n\n`);
+        const effect = row.effects[row.read_effect - 1];
+        if (effect !== undefined) {
+            md.appendMarkdown(`${effect.human}\n`);
+            md.appendCodeblock(effect.literal);
+        }
+        for (const accessor of row.accessors) {
+            md.appendMarkdown(`\`${accessor}\`  \n`);
+        }
+        md.appendMarkdown(`\n[Wowhead](${row.wowhead})`);
+        return md;
+    }
+    md.appendMarkdown(`\`${hover.segment ? called : hover.label}\` = **${row.value}**\n\n`);
+    md.appendMarkdown(`\`${row.trail}\`\n\n`);
+    if (hover.segment && row.doc !== '') {
+        md.appendMarkdown(`${row.doc}\n\n`);
+    }
+    return spellCard(row, `**${row.title}**`, md, row.read_effect);
+}
+// The accessor the chain ends on, as the tool substituted it: `Average(60)` where the file wrote
+// `Average(core.CharacterLevel)`.
+function lastCall(trail) {
+    const match = /\.([A-Za-z_]\w*\([^()]*\))$/.exec(trail);
+    return match === null ? trail : match[1];
 }
 // The whole ladder: every rank with the call that reaches it, then the highest rank in full.
 function familyCard(family) {

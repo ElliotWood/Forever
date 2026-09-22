@@ -3,7 +3,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { basename, dirname, join } from 'node:path';
 import * as vscode from 'vscode';
 
-import { familyFieldAt, identifierAt, ladderDeclarations, spellIdAt } from './spellIds';
+import { ChainHover, chainDeclarations, chainHoverAt, familyFieldAt, spellIdAt } from './spellIds';
 
 interface EffectLine {
 	human: string;
@@ -29,6 +29,18 @@ interface FamilyRow {
 	highest: SpellRow;
 }
 
+// A chain read to its end: the row it reached, what it answered, the chain with every name substituted,
+// the doc comment of the accessor that answered and, where it stopped on an effect, the accessors that
+// read something off that effect.
+interface ExprRow extends SpellRow {
+	kind: 'spell' | 'effect' | 'value';
+	trail: string;
+	value: string;
+	doc: string;
+	read_effect: number;
+	accessors: string[];
+}
+
 const LANGUAGES = ['go', 'json', 'typescript', 'typescriptreact'];
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -36,8 +48,8 @@ export function activate(context: vscode.ExtensionContext): void {
 	// One promise per repository and question, so the hovers that arrive while the first `go run` is
 	// still compiling wait on that run rather than starting their own.
 	const cache = new Map<string, Promise<unknown>>();
-	// The ladder picks each class folder declares, read once per folder and dropped when a file in it
-	// is saved: an identifier the map does not know is not worth a process.
+	// The chains each class folder declares, read once per folder and dropped when a file in it is
+	// saved: an identifier the map does not know is not worth a process.
 	const declarations = new Map<string, Map<string, string>>();
 	let warnedMissingGo = false;
 
@@ -90,16 +102,13 @@ export function activate(context: vscode.ExtensionContext): void {
 				return family === undefined ? undefined : new vscode.Hover(familyCard(family));
 			}
 
-			const name = identifierAt(line, position.character);
-			if (name === undefined) {
+			const hover = chainHoverAt(line, position.character, declaredChains(folder, declarations, log));
+			if (hover === undefined) {
 				return undefined;
 			}
-			const expr = declaredLadderPicks(folder, declarations, log).get(name);
-			if (expr === undefined) {
-				return undefined;
-			}
-			const row = await ask<SpellRow>(root, `expr\u0000${pkg}\u0000${expr}`, ['-expr', expr, '-package', pkg, '-json']);
-			return row === undefined ? undefined : new vscode.Hover(spellCard(row, `\`${name}\` = ${row.title}`));
+			const expr = hover.expr;
+			const row = await ask<ExprRow>(root, `expr\u0000${pkg}\u0000${expr}`, ['-expr', expr, '-package', pkg, '-json']);
+			return row === undefined ? undefined : new vscode.Hover(exprCard(row, hover));
 		},
 	};
 
@@ -128,7 +137,7 @@ function moduleRoot(filePath: string): string | undefined {
 	}
 }
 
-function declaredLadderPicks(folder: string, cache: Map<string, Map<string, string>>, log: vscode.OutputChannel): Map<string, string> {
+function declaredChains(folder: string, cache: Map<string, Map<string, string>>, log: vscode.OutputChannel): Map<string, string> {
 	let found = cache.get(folder);
 	if (found !== undefined) {
 		return found;
@@ -140,7 +149,7 @@ function declaredLadderPicks(folder: string, cache: Map<string, Map<string, stri
 			if (!entry.endsWith('.go')) {
 				continue;
 			}
-			for (const [name, expr] of ladderDeclarations(readFileSync(join(folder, entry), 'utf8'))) {
+			for (const [name, expr] of chainDeclarations(readFileSync(join(folder, entry), 'utf8'))) {
 				found.set(name, expr);
 			}
 		}
@@ -186,7 +195,7 @@ function readTool<T>(root: string, args: string[], log: vscode.OutputChannel, on
 	});
 }
 
-function spellCard(row: SpellRow, heading: string, md = new vscode.MarkdownString()): vscode.MarkdownString {
+function spellCard(row: SpellRow, heading: string, md = new vscode.MarkdownString(), read = 0): vscode.MarkdownString {
 	md.appendMarkdown(`${heading}\n\n`);
 	for (const call of row.ladder) {
 		md.appendMarkdown(`\`${call}\`  \n`);
@@ -201,11 +210,53 @@ function spellCard(row: SpellRow, heading: string, md = new vscode.MarkdownStrin
 		md.appendMarkdown(`refs      ${row.refs.join(', ')}  \n`);
 	}
 	row.effects.forEach((effect, index) => {
-		md.appendMarkdown(`\neffect ${index + 1}${effect.human === '' ? '' : ` — ${effect.human}`}\n`);
+		const label = index + 1 === read ? `effect ${index + 1} (read)` : `effect ${index + 1}`;
+		md.appendMarkdown(`\n${label}${effect.human === '' ? '' : ` — ${effect.human}`}\n`);
 		md.appendCodeblock(effect.literal);
 	});
 	md.appendMarkdown(`\n[Wowhead](${row.wowhead})`);
 	return md;
+}
+
+// What a chain answered. A pick is the row it names; an accessor call that stopped on an effect is that
+// effect and the accessors that read something off it; a value is the number, the chain it was read
+// through and, where the cursor was on the accessor itself, what the store says that accessor answers.
+function exprCard(row: ExprRow, hover: ChainHover): vscode.MarkdownString {
+	if (row.kind === 'spell') {
+		return spellCard(row, `\`${hover.label}\` = ${row.title}`);
+	}
+
+	const md = new vscode.MarkdownString();
+	const called = lastCall(row.trail);
+
+	if (row.kind === 'effect') {
+		md.appendMarkdown(`\`${called}\` = **${row.value}** of ${row.title}\n\n`);
+		md.appendMarkdown(`\`${row.trail}\`\n\n`);
+		const effect = row.effects[row.read_effect - 1];
+		if (effect !== undefined) {
+			md.appendMarkdown(`${effect.human}\n`);
+			md.appendCodeblock(effect.literal);
+		}
+		for (const accessor of row.accessors) {
+			md.appendMarkdown(`\`${accessor}\`  \n`);
+		}
+		md.appendMarkdown(`\n[Wowhead](${row.wowhead})`);
+		return md;
+	}
+
+	md.appendMarkdown(`\`${hover.segment ? called : hover.label}\` = **${row.value}**\n\n`);
+	md.appendMarkdown(`\`${row.trail}\`\n\n`);
+	if (hover.segment && row.doc !== '') {
+		md.appendMarkdown(`${row.doc}\n\n`);
+	}
+	return spellCard(row, `**${row.title}**`, md, row.read_effect);
+}
+
+// The accessor the chain ends on, as the tool substituted it: `Average(60)` where the file wrote
+// `Average(core.CharacterLevel)`.
+function lastCall(trail: string): string {
+	const match = /\.([A-Za-z_]\w*\([^()]*\))$/.exec(trail);
+	return match === null ? trail : match[1];
 }
 
 // The whole ladder: every rank with the call that reaches it, then the highest rank in full.

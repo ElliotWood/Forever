@@ -80,7 +80,10 @@ labels. The title line names the ladder a class file reaches the id through - `w
 spellData.Rend.Highest()` - scanned out of `sim/*/spell_data_auto_gen.go`, and says nothing for a class
 the generator has not put on ladders yet. The same scan reads the other way too: `-family
 warrior/Execute` prints a ladder's ranks with the call that reaches each, then its highest rank in full,
-and `-expr 'spellData.Execute.Rank(3)' -package warrior` prints the row one ladder call names.
+and `-expr 'spellData.Execute.Rank(3)' -package warrior` prints the row one ladder call names. A pick
+followed by the store's own accessors is read too - `-expr
+'spellData.Execute.Highest().EffectN(1).Average(core.CharacterLevel)'` answers the value, the doc comment
+that accessor carries and the row with the effect it read marked `(read)`.
 
 The worded line states each number in the unit the sim spends it in, which is also how it names the
 accessor it was read with: a plain amount is `Average(60)` and a range is `Min`/`Max`, a percentage is

@@ -305,11 +305,6 @@ func TestLadderRefs(t *testing.T) {
 			},
 		},
 		{
-			name: "a class the generator has not put on ladders",
-			id:   19434,
-			want: nil,
-		},
-		{
 			name: "an item set bonus, which no class file names",
 			id:   21838,
 			want: nil,

@@ -9,6 +9,7 @@
 //	go run ./tools/spelldata 11574 -json     # the same as JSON, which tools/vscode-spelldata reads
 //	go run ./tools/spelldata -family warrior/Execute   # the ladder's ranks, then its highest in full
 //	go run ./tools/spelldata -expr 'spellData.Execute.Rank(3)' -package warrior   # the row that reaches
+//	go run ./tools/spelldata -expr 'spellData.Execute.Highest().EffectN(1).Average(core.CharacterLevel)' -package warrior   # the value that reads
 package main
 
 import (
@@ -112,7 +113,7 @@ func run(args []string, out io.Writer) error {
 		if opts.json {
 			return writeJSON(out, asJSON(s))
 		}
-		writeText(out, s)
+		writeText(out, s, 0)
 		return nil
 	}
 
@@ -144,7 +145,7 @@ func run(args []string, out io.Writer) error {
 		if i > 0 {
 			fmt.Fprintln(out)
 		}
-		writeText(out, s)
+		writeText(out, s, 0)
 	}
 	return nil
 }
@@ -171,28 +172,66 @@ func runFamily(out io.Writer, opts options) error {
 	}
 
 	writeFamilyText(out, family)
-	writeText(out, s)
+	writeText(out, s, 0)
 	return nil
 }
 
 func runExpr(out io.Writer, opts options) error {
-	_, id, err := resolveExpr(ladderFamilies(), opts.expr, opts.pkg)
+	result, err := evalExpr(ladderFamilies(), opts.expr, opts.pkg)
 	if err != nil {
 		return err
 	}
 
-	s := spelldata.Find(id)
-	if s == spelldata.Nil {
-		return fmt.Errorf("spell %d is not in the store", id)
-	}
-
 	if opts.json {
-		return writeJSON(out, exprJSON{spellJSON: asJSON(s), Expr: opts.expr, Resolved: id})
+		return writeJSON(out, exprJSON{
+			spellJSON:  asJSON(result.spell),
+			Expr:       opts.expr,
+			Resolved:   result.spell.ID,
+			Kind:       result.kind,
+			Trail:      result.trail,
+			Value:      result.value,
+			Doc:        result.doc,
+			ReadEffect: result.readEffect,
+			Accessors:  result.accessors,
+		})
 	}
 
-	fmt.Fprintf(out, "%s = %d\n\n", opts.expr, id)
-	writeText(out, s)
+	writeExprText(out, result, opts.expr)
 	return nil
+}
+
+// What the chain answered, then the row it was read off. A pick states the call as the caller wrote it,
+// since nothing in it was substituted; a longer chain states the trail, which is that call with every
+// name resolved to the number it stands for.
+func writeExprText(out io.Writer, result *exprResult, expr string) {
+	switch result.kind {
+	case kindSpell:
+		fmt.Fprintf(out, "%s = %s\n\n", expr, result.value)
+	case kindEffect:
+		fmt.Fprintf(out, "%s = %s of %s\n\n", result.trail, result.value, title(result.spell))
+	default:
+		fmt.Fprintf(out, "%s = %s\n\n", result.trail, result.value)
+	}
+
+	if result.doc != "" {
+		for _, line := range strings.Split(result.doc, "\n") {
+			fmt.Fprintln(out, strings.TrimRight("    "+line, " "))
+		}
+		fmt.Fprintln(out)
+	}
+
+	for i, accessor := range result.accessors {
+		label := ""
+		if i == 0 {
+			label = "accessors"
+		}
+		fmt.Fprintf(out, "%-9s %s\n", label, accessor)
+	}
+	if len(result.accessors) > 0 {
+		fmt.Fprintln(out)
+	}
+
+	writeText(out, result.spell, result.readEffect)
 }
 
 // The rank a caller means out of several rows with one name: the highest one the client states, and
@@ -208,7 +247,7 @@ func highestRank(matches []*spelldata.Spell) *spelldata.Spell {
 	return best
 }
 
-func writeText(out io.Writer, s *spelldata.Spell) {
+func writeText(out io.Writer, s *spelldata.Spell, read int) {
 	fmt.Fprintln(out, join(title(s), strings.Join(ladderRefs(s.ID), "  ")))
 	for _, line := range header(s) {
 		fmt.Fprintln(out, line)
@@ -225,7 +264,11 @@ func writeText(out io.Writer, s *spelldata.Spell) {
 		fmt.Fprintln(out)
 	}
 	for i, line := range effects {
-		fmt.Fprintf(out, "effect %-2d %s\n", i+1, line.Human)
+		label := fmt.Sprintf("effect %-2d", i+1)
+		if i+1 == read {
+			label = fmt.Sprintf("effect %d (read)", i+1)
+		}
+		fmt.Fprintf(out, "%s %s\n", label, line.Human)
 		fmt.Fprintf(out, "%9s %s\n", "", line.Literal)
 	}
 
@@ -252,10 +295,20 @@ type spellJSON struct {
 	Wowhead string `json:"wowhead"`
 }
 
+// The row the chain reached, and what the chain itself answered: the kind of value, the chain with
+// every name substituted, the value as it prints, the doc comment of the accessor that answered it, the
+// effect the chain read and, where it stopped on an effect, the accessors that read something off it.
 type exprJSON struct {
 	spellJSON
 	Expr     string `json:"expr"`
 	Resolved int32  `json:"resolved"`
+
+	Kind       string   `json:"kind"`
+	Trail      string   `json:"trail"`
+	Value      string   `json:"value"`
+	Doc        string   `json:"doc"`
+	ReadEffect int      `json:"read_effect"`
+	Accessors  []string `json:"accessors"`
 }
 
 func asJSON(s *spelldata.Spell) spellJSON {
