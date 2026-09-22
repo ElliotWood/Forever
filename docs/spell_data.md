@@ -94,11 +94,27 @@ which is the one shape that always needs the tooltip. An effect whose type or au
 wording for says `unrecognised shape`, and the literal beneath it is then the whole answer.
 
 A name instead of an id lists every row carrying it and then the highest rank, and
-`-json` is the same answer for a tool to read. `.vscode/extensions/wowsims-spelldata` is that printer as a VS Code
-hover, over the ids Go, APL JSON and TS state - `MustFind(11574)`, `SpellID: 11574`, `"spellId": 11574`,
-`fromSpellId(23563)` - resolved by running the CLI in the checkout the file belongs to, so a hover
-matches the store being read. VS Code offers it as a workspace extension when the repository is
-opened; its README has the build.
+`-json` is the same answer for a tool to read. `-config 'spelldata.SpellConfig(&warrior.Unit,
+executeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))' -package warrior` prints the config the
+resolver builds for that call, each field with the step that filled it - the row or the option - and
+the row pick substituted through the package's declarations.
+
+The same reading is an editor hover. `go run ./tools/spelldata -lsp` is a language server on stdio: a
+hover on an id Go, APL JSON and TS state - `MustFind(11574)`, `SpellID: 11574`, `"spellId": 11574`,
+`fromSpellId(23563)` - shows the row, with the header and the effects as tables; in Go a
+`spellData.<Family>` token shows the ladder, a name bound to a ladder chain shows the rank or the value
+it reads (substituted through the names it stands on, read from the open buffers first), each accessor
+on a declaration line answers for itself, and the cursor on `spelldata.SpellConfig` shows the resolved
+config. Each hover logs how it was resolved as a `window/logMessage`. `-hover sim/warrior/execute.go
+12:40` prints the markdown a hover at that line and column shows, for scripts and tests. The server
+compiles the store in, so a hover matches the checkout it was started in.
+
+`.vscode/extensions/wowsims-spelldata` is its VS Code client, a workspace extension VS Code offers to
+install when the repository is opened. It is built, not edited: the source is
+`tools/vscode-spelldata`, and `make vscode-spelldata` bundles it with `vscode-languageclient` and writes
+the manifest; `npm run check` there fails where the committed output is not a fresh build.
+`tools/zed-spelldata` is the Zed extension (`zed: install dev extension`), and
+`tools/spelldata/README.md` has the method table and the Neovim and Helix snippets.
 
 ### Reaching an effect
 
