@@ -241,8 +241,10 @@ put there.
   (`sim/warrior/talents_arms.go`).
 - **A sub-spell whose casts the sim reports does not take `Proc()`.** The option marks the spell
   passive, and the metrics aggregator counts no cast for a passive spell. Blood Craze's heal takes it
-  (`sim/warrior/talents_fury.go`); Deep Wounds and Retaliation's counterattack
-  (`sim/warrior/retaliation.go`) set `SpellFlagNoOnCastComplete` themselves instead.
+  (`sim/warrior/talents_fury.go`); Deep Wounds (`sim/warrior/talents_arms.go`) and Retaliation's
+  counterattack (`sim/warrior/retaliation.go`) name the flags they need by hand instead - the bleed
+  takes `SpellFlagNoOnCastComplete` with `SpellFlagIgnoreResists` and `SpellFlagProc`, the
+  counterattack `SpellFlagMeleeMetrics`.
 - **A sim-only copy of a spell carries the parent's `ClassFlags`.** The Whirlwind off-hand strike has
   no row of its own, and without the parent's family mask the talents that name Whirlwind would not
   reach it.
@@ -357,11 +359,19 @@ client uses for "a script does this", the proc-driver auras (a proc is a `ProcTr
 modifier), the crowd-control auras - stun, fear, root, silence - and `A_MOD_SKILL`. Those are named in
 the report rather than numbered, so a port can see at a glance which ones are its own work.
 
-Three more are skipped by circumstance. A row whose helper lives on a character rather than on a unit
-is skipped on an aura that has no character behind it, such as a debuff on an enemy. The speed
-multipliers are skipped by `ParseStatic`, which has no `Simulation` to hand them, and by a stacking
-aura, whose level they cannot be raised to; `IgnoreStacks()` is how a row that states charges rather
-than stacks gets them back.
+Rows the table does know are skipped by the shape of the parse. A value the sim keeps as one number
+per unit cannot be applied once per stack, and the static path has no aura to follow and no
+`Simulation` to answer a later `Refresh` with:
+
+|                                             | skips                                                                 |
+| ------------------------------------------- | ----------------------------------------------------------------------- |
+| a stacking aura (`MaxStack` > 0)            | the stat multipliers, the equipment scaling, the pseudo-stat multipliers and the speed multipliers |
+| `ParseStatic`                               | the speed multipliers, which need the `Simulation` an aura's gain hands over |
+| `ParseStatic` with `Conditional`            | the stat multipliers and the equipment scaling as well                |
+| an aura on a unit with no character         | the equipment scaling, whose helper is a character's                  |
+
+`IgnoreStacks()` clears the first row of that table for a spell whose column counts charges rather
+than cumulative stacks.
 
 ## Procs
 
@@ -372,8 +382,8 @@ about it into the row as a `ProcChanceSource`. The four shapes:
 | -------------------- | -------------------------------------------------------------------------------------------------- |
 | `ProcChanceColumn`   | the tooltip renders `$h%`, so `SpellAuraOptions.ProcChance` is the roll                          |
 | `ProcChanceEffectN`  | the tooltip renders `$mN%`: the value of the effect at position `ProcChanceEffect` is the roll   |
-| `ProcChanceAlways`   | the column reads 100 or 101 and the tooltip states no chance, so the aura fires whenever its own condition is met |
-| `ProcChancePPM`      | neither the column nor the tooltip states a rate, so it has to come from an override into `RPPM` |
+| `ProcChanceAlways`   | the column reads 100 or 101 and the trigger clause states no chance at all, so the aura fires whenever its own condition is met |
+| `ProcChancePPM`      | the client states no chance anywhere, or a 100/101 column sits beside a trigger clause saying the effect only sometimes happens ("Chance to strike your ranged target"), so the rate has to come from an override into `RPPM` |
 
 Reading `ProcChance` directly is the bug `ProcChanceSource` exists to prevent: 100 and 101 are the
 client's "fires on its own condition" sentinel at least as often as they are a certainty.
@@ -408,9 +418,11 @@ weapon's to say.
 
 `core.DecodeProcTypeMask(row.ProcFlags, row.ProcHint)` turns the client's two proc words into a
 `Callback`, a `ProcMask`, an `Outcome` and `RequireDamageDealt`, and names the bits it does not model
-in `Unsupported`. `RequireDamageDealt` defaults to **true**: a listener that fires on a dodge, a parry,
-a miss or a block has to clear it, and which of those it is stays the caller's, since no `ProcTypeMask`
-has a bit for any of them.
+in `Unsupported`. `RequireDamageDealt` defaults to **true**, and a listener that fires on a dodge, a
+parry, a miss or a block needs it false. Where the tooltip named that outcome the row carries
+`ProcHintOutcomeTaken` and the decoder clears it already; a row whose wording yielded no hint - the
+Battlegear of Wrath consume 23547 is one - has to be cleared by hand. Which outcome it is stays the
+caller's either way, since no `ProcTypeMask` has a bit for any of them.
 
 The mask states which hits reach the listener; it cannot state the condition around them, so the
 generator reads that off the tooltip into `core.ProcHint`:
@@ -1141,7 +1153,9 @@ was meant to be mechanical and moves a golden is a wrong port, not a new baselin
    a school pseudo-stat where the sim had a per-spell mod - is the same number in a different place,
    and a DPS diff will not show it. Diff the `.results` as well as the DPS numbers.
 9. **`RequireDamageDealt` defaults true.** A listener that fires on a dodge, a parry, a miss or a block
-   clears it, and the outcome itself is always the caller's.
+   needs it false, which the decoder has already done where the tooltip named the outcome and the row
+   carries `ProcHintOutcomeTaken`; clear it by hand only where the wording yielded no hint. The outcome
+   itself is always the caller's.
 10. **Rename a trigger whose driver and buff share a name**, and split a row that decodes to hits dealt
     *and* taken into two listeners with a condition each.
 11. **Say which source won.** Where the row and the tooltip disagree, the decision goes in a comment
