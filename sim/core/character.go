@@ -112,7 +112,7 @@ func NewCharacter(party *Party, partyIndex int, player *proto.Player) Character 
 		Class: player.Class,
 		Spec:  PlayerProtoToSpec(player),
 
-		Equipment: ProtoToEquipment(player.Equipment),
+		Equipment: ProtoToEquipment(player.Equipment).inArea(party.areaTypes()),
 
 		professions: [2]proto.Profession{
 			player.Profession1,

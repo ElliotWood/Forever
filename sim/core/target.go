@@ -23,6 +23,10 @@ type Encounter struct {
 	ExecuteProportion_45 float64
 	ExecuteProportion_90 float64
 
+	// Every kind of area the fight's zone counts as, from proto.Encounter.AreaTypes with the
+	// duplicates and the Unknown value dropped.
+	AreaTypes []proto.AreaType
+
 	EndFightAtHealth float64
 	// DamageTaken is used to track health fights instead of duration fights.
 	//  Once primary target has taken its health worth of damage, fight ends.
@@ -32,6 +36,20 @@ type Encounter struct {
 
 	// Value to multiply by, for damage spells which are subject to the aoe cap.
 	aoeCapMultiplier float64
+}
+
+func areaTypeSet(areaTypes []proto.AreaType) []proto.AreaType {
+	var set []proto.AreaType
+	for _, areaType := range areaTypes {
+		if areaType != proto.AreaType_AreaTypeUnknown && !slices.Contains(set, areaType) {
+			set = append(set, areaType)
+		}
+	}
+	return set
+}
+
+func (encounter *Encounter) InArea(areaType proto.AreaType) bool {
+	return slices.Contains(encounter.AreaTypes, areaType)
 }
 
 func NewEncounter(options *proto.Encounter) Encounter {
@@ -48,6 +66,7 @@ func NewEncounter(options *proto.Encounter) Encounter {
 		ExecuteProportion_35: max(options.ExecuteProportion_35, 0),
 		ExecuteProportion_45: max(options.ExecuteProportion_45, 0),
 		ExecuteProportion_90: max(options.ExecuteProportion_90, 0),
+		AreaTypes:            areaTypeSet(options.AreaTypes),
 		AllTargets:           make([]*Target, 0, totalTargetCount),
 		ActiveTargets:        make([]*Target, 0, totalTargetCount),
 		AllTargetUnits:       make([]*Unit, 0, totalTargetCount),
