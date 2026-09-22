@@ -14,13 +14,13 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 79.25
-  final_stats: 10.6
-  final_stats: 20
+  final_stats: 7.3
+  final_stats: 17
   final_stats: 0
   final_stats: 0
   final_stats: 1420
-  final_stats: 10.6
-  final_stats: 39.7606
+  final_stats: 7.3
+  final_stats: 36.7606
   final_stats: 0
   final_stats: 0
   final_stats: 2
@@ -50,8 +50,8 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestCombatSinisterStrike-Phase1-StatWeights-Default"
  value: {
-  weights: 0.27867
-  weights: 0.44995
+  weights: 0.26305
+  weights: 0.41106
   weights: 0
   weights: 0
   weights: 0
@@ -67,9 +67,9 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.25333
-  weights: 4.86288
-  weights: 5.34818
+  weights: 0.23913
+  weights: 5.96773
+  weights: 5.20817
   weights: 0
   weights: 0
   weights: 0
@@ -99,168 +99,168 @@ stat_weights_results: {
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-BloodfangArmor"
  value: {
-  dps: 623.91098
-  tps: 442.97679
+  dps: 587.89857
+  tps: 417.40798
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Champion'sGuard"
  value: {
-  dps: 616.19747
-  tps: 437.5002
+  dps: 566.60624
+  tps: 402.29043
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-DarkmantleArmor"
  value: {
-  dps: 621.61052
-  tps: 441.34347
+  dps: 597.77552
+  tps: 424.42062
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Deathdealer'sEmbrace"
  value: {
-  dps: 604.24779
-  tps: 429.01593
+  dps: 572.51409
+  tps: 406.48501
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-EmblemsofVeiledShadows"
  value: {
-  dps: 609.10547
-  tps: 432.46489
+  dps: 568.03434
+  tps: 403.30438
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-FieldMarshal'sVestments"
  value: {
-  dps: 647.18356
-  tps: 459.50033
+  dps: 591.52531
+  tps: 419.98297
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-LieutenantCommander'sGuard"
  value: {
-  dps: 616.19747
-  tps: 437.5002
+  dps: 566.60624
+  tps: 402.29043
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Madcap'sOutfit"
  value: {
-  dps: 604.64659
-  tps: 429.29908
+  dps: 567.96334
+  tps: 403.25397
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-NightslayerArmor"
  value: {
-  dps: 589.64564
-  tps: 418.6484
+  dps: 572.37621
+  tps: 406.38711
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-AllItems-Warlord'sVestments"
  value: {
-  dps: 647.18356
-  tps: 459.50033
+  dps: 591.52531
+  tps: 419.98297
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Average-Default"
  value: {
-  dps: 599.18111
-  tps: 425.41859
+  dps: 566.08513
+  tps: 401.92044
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 262.63572
-  tps: 186.47136
+  dps: 253.50738
+  tps: 179.99024
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 220.80827
-  tps: 156.77387
+  dps: 213.86014
+  tps: 151.8407
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 285.98439
-  tps: 203.04892
+  dps: 281.25187
+  tps: 199.68883
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 164.29178
-  tps: 116.64717
+  dps: 157.97785
+  tps: 112.16428
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 137.26934
-  tps: 97.46123
+  dps: 132.92991
+  tps: 94.38024
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Human-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 180.54692
-  tps: 128.18832
+  dps: 176.756
+  tps: 125.49676
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 261.89166
-  tps: 185.94308
+  dps: 253.17093
+  tps: 179.75136
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 218.40904
-  tps: 155.07042
+  dps: 212.11592
+  tps: 150.6023
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-FullBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 282.57137
-  tps: 200.62567
+  dps: 275.48674
+  tps: 195.59559
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 162.31755
-  tps: 115.24546
+  dps: 155.73083
+  tps: 110.56889
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 135.03959
-  tps: 95.87811
+  dps: 130.81348
+  tps: 92.87757
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-Settings-Orc-combat_sinister_strike_prebis-Windfury MH-combat_sinister_strike-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 177.28773
-  tps: 125.87429
+  dps: 170.51426
+  tps: 121.06513
  }
 }
 dps_results: {
  key: "TestCombatSinisterStrike-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 485.44094
-  tps: 344.66306
+  dps: 450.35679
+  tps: 319.75332
  }
 }

@@ -99,29 +99,29 @@ stat_weights_results: {
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Champion'sDreadgear"
  value: {
-  dps: 577.18027
-  tps: 432.62888
+  dps: 567.62323
+  tps: 424.98325
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-DeathmistRaiment"
  value: {
-  dps: 570.83076
-  tps: 425.76739
+  dps: 557.19767
+  tps: 415.07867
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Demoniac'sThreads"
  value: {
-  dps: 559.79243
-  tps: 418.29647
+  dps: 552.39508
+  tps: 412.54188
  }
 }
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-Doomcaller'sAttire"
  value: {
-  dps: 574.52403
-  tps: 430.00969
+  dps: 567.42519
+  tps: 424.31326
  }
 }
 dps_results: {
@@ -155,8 +155,8 @@ dps_results: {
 dps_results: {
  key: "TestWarlockAffliction-Phase1-AllItems-LieutenantCommander'sDreadgear"
  value: {
-  dps: 577.18027
-  tps: 432.62888
+  dps: 567.62323
+  tps: 424.98325
  }
 }
 dps_results: {
