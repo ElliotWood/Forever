@@ -2,9 +2,14 @@ import { Spec } from '@generated/proto/common';
 import type { Database } from '@sim/proto/database';
 import { render } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ITEM_NOTICES, MISSING_RANDOM_SUFFIX_WARNING, registerSetBonusNotices, SET_BONUS_NOTICES } from './item_notices';
+import { ITEM_NOTICES, MISSING_RANDOM_SUFFIX_WARNING, registerAreaStatsNotices, registerSetBonusNotices, SET_BONUS_NOTICES } from './item_notices';
+
+vi.mock('@i18n/localization', () => ({
+	translateAreaType: (value: number) => `area-${value}`,
+	translateStat: (value: number) => `stat-${value}`,
+}));
 
 const markup = (itemId: number, spec: Spec = Spec.SpecUnknown) => renderToStaticMarkup(ITEM_NOTICES.get(itemId)?.[spec]);
 const noticeContainer = (itemId: number, spec: Spec = Spec.SpecUnknown) => render(<>{ITEM_NOTICES.get(itemId)?.[spec]}</>).container;
@@ -75,5 +80,37 @@ describe('registerSetBonusNotices', () => {
 					'<ul class="mb-0"><li>2-piece: Not yet implemented</li><li>4-piece: Not yet implemented</li></ul>',
 			);
 		}
+	});
+});
+
+describe('registerAreaStatsNotices', () => {
+	const RUNE = 90010;
+	const PLAIN = 90011;
+	const db = {
+		getAllItems: () => [
+			{ id: RUNE, scalingOptions: { 0: { stats: { 17: 15 }, areaStats: [{ areaType: 1, stats: { 17: 29, 18: 29 } }] } } },
+			{ id: PLAIN, scalingOptions: { 0: { stats: { 17: 15 }, areaStats: [] } } },
+		],
+	} as unknown as Database;
+
+	afterEach(() => {
+		ITEM_NOTICES.delete(RUNE);
+		ITEM_NOTICES.delete(PLAIN);
+	});
+
+	it('writes a notice naming each area and the stats it adds, and none for an item without any', () => {
+		registerAreaStatsNotices(db);
+
+		expect(markup(RUNE)).toBe(
+			'<p class="mb-1">Only while the encounter is in one of these areas:</p>' + '<ul class="mb-0"><li>area-1: +29 stat-17, +29 stat-18</li></ul>',
+		);
+		expect(ITEM_NOTICES.has(PLAIN)).toBe(false);
+	});
+
+	it('keeps a notice the item already carries in front of the area lines', () => {
+		ITEM_NOTICES.set(RUNE, { [Spec.SpecUnknown]: <p>existing</p> });
+		registerAreaStatsNotices(db);
+
+		expect(markup(RUNE).startsWith('<p>existing</p><p class="mb-1">Only while')).toBe(true);
 	});
 });

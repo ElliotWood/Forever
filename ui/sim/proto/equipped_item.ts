@@ -1,4 +1,4 @@
-import { GemColor, ItemRandomSuffix, ItemSlot, ItemSpec, Profession, PseudoStat, ScalingItemProperties } from '@generated/proto/common';
+import { type AreaType, GemColor, ItemRandomSuffix, ItemSlot, ItemSpec, Profession, PseudoStat, ScalingItemProperties } from '@generated/proto/common';
 import { UIEnchant as Enchant, UIGem as Gem, UIItem as Item } from '@generated/proto/ui';
 
 import { distinct } from '../utils/collections';
@@ -235,7 +235,9 @@ export class EquippedItem {
 		});
 	}
 
-	withDynamicStats() {
+	// The item's stats for the given areas: what it grants everywhere plus what it grants only in an
+	// area the encounter is in, the same fold the sim makes while it builds the raid.
+	withDynamicStats(areaTypes: readonly AreaType[] = []) {
 		const item = this.item;
 		const scalingOptions = item.scalingOptions[0];
 
@@ -248,6 +250,10 @@ export class EquippedItem {
 			item.stats = item.stats.map((stat, index) =>
 				this._randomSuffix!.stats[index] > 0 ? Math.floor((this._randomSuffix!.stats[index] * item.randPropPoints) / 10000) : stat,
 			);
+		}
+
+		for (const areaStats of scalingOptions.areaStats.filter(bonus => areaTypes.includes(bonus.areaType))) {
+			item.stats = item.stats.map((stat, index) => stat + (areaStats.stats[index] || 0));
 		}
 
 		return new EquippedItem({

@@ -1,4 +1,5 @@
 import { Spec } from '@generated/proto/common';
+import { translateAreaType, translateStat } from '@i18n/localization';
 import { MISSING_ITEM_EFFECTS } from '@sim/constants/missing_effects_auto_gen';
 import type { Database } from '@sim/proto/database';
 import type { ReactNode } from 'react';
@@ -126,4 +127,32 @@ export const registerSetBonusNotices = (db: Database) => {
 			ITEM_NOTICES.set(id, { [Spec.SpecUnknown]: noticeContent });
 		}
 	});
+};
+
+// The Wowhead tooltip an item shows is the client's, which folds an area-restricted bonus into the
+// item's stats; this is where the sim says which part of it only counts in some kind of area.
+export const registerAreaStatsNotices = (db: Database) => {
+	for (const item of db.getAllItems()) {
+		const areaStats = item.scalingOptions?.[0]?.areaStats ?? [];
+		if (!areaStats.length) continue;
+
+		const existing = ITEM_NOTICES.get(item.id)?.[Spec.SpecUnknown];
+		const noticeContent = (
+			<>
+				{existing}
+				<p className="mb-1">Only while the encounter is in one of these areas:</p>
+				<ul className="mb-0">
+					{areaStats.map(bonus => (
+						<li key={bonus.areaType}>
+							{translateAreaType(bonus.areaType)}:{' '}
+							{Object.entries(bonus.stats)
+								.map(([stat, value]) => `+${value} ${translateStat(Number(stat))}`)
+								.join(', ')}
+						</li>
+					))}
+				</ul>
+			</>
+		);
+		ITEM_NOTICES.set(item.id, { [Spec.SpecUnknown]: noticeContent });
+	}
 };
