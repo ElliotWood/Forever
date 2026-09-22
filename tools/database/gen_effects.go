@@ -787,10 +787,17 @@ var statedChanceMatcher = regexp.MustCompile(`(?i)chance (to|of|when)|has a chan
 // "each time you cast a spell", "chance on successful spellcast", "chance on spell cast".
 var castTriggerMatcher = regexp.MustCompile(`(?i)you cast|on spell ?cast|spellcast`)
 
-// A trigger clause restricted to one named ability: "Your Shock spells", "Your Moonfire ability".
-// The capital is what carries the meaning - an unrestricted trigger reads "your spell critical
-// strikes" or "each time you cast a spell", with nothing capitalized to name.
-var namedAbilityMatcher = regexp.MustCompile(`[Yy]our [A-Z][A-Za-z']*( [A-Z][A-Za-z']*)* (spell|spells|ability|abilities)`)
+// A trigger clause restricted to one named ability: "Your Shock spells", "Your Moonfire ability",
+// "Your casts of Greater Heal", "Your Shadow Bolt has", "When you cast Flash of Light". The capital
+// is what carries the meaning - an unrestricted trigger reads "your spell critical strikes" or
+// "each time you cast a spell", with nothing capitalized to name.
+// The client writes a conditional list where the item shows one name - Eternal Power's "Your casts
+// of $?s2060[Greater Heal]..." - so the "casts of" clause reads the possessive alone and leaves what
+// follows to the tooltip renderer. The other two clauses need the capital: "when you cast a spell"
+// and "your melee attacks have" name no ability.
+var namedAbilityMatcher = regexp.MustCompile(`[Yy]our [A-Z][A-Za-z']*( [A-Z][A-Za-z']*)* (spell|spells|ability|abilities|has|have)` +
+	`|[Yy]our casts of` +
+	`|[Ww]hen you cast [A-Z]`)
 
 // What core.DecodeProcTypeMask cannot read off the mask: the trigger wording around it. The named
 // ability and outcome condition bits are read here as well, for the store's rows, and say nothing
