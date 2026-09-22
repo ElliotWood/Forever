@@ -262,7 +262,7 @@ func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int
 		TalentsString:      spec.Talents,
 		Rotation:           core.GetAplRotation(filepath.Dir(aplPath), filepath.Base(aplPath)).Rotation,
 		DistanceFromTarget: distance,
-		ReactionTimeMs:     150,
+		ReactionTimeMs:     int32(envInt("PARITY_REACTION", 150)),
 		ChannelClipDelayMs: 50,
 	}, options)
 	raid := core.SinglePlayerRaidProto(player, &proto.PartyBuffs{}, &proto.RaidBuffs{}, &proto.Debuffs{})
@@ -311,7 +311,7 @@ func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int
 	result := core.RunRaidSim(&proto.RaidSimRequest{
 		Raid:       raid,
 		Encounter:  encounter,
-		SimOptions: &proto.SimOptions{Iterations: iterations, IsTest: true, RandomSeed: 101, Debug: os.Getenv("PARITY_LOG") != ""},
+		SimOptions: &proto.SimOptions{Iterations: iterations, IsTest: true, RandomSeed: int64(envInt("PARITY_SEED", 101)), Debug: os.Getenv("PARITY_LOG") != ""},
 	})
 	if result.Error != nil {
 		return parityResult{Error: fmt.Sprintf("%.160s", result.Error.Message)}
@@ -483,4 +483,12 @@ func auraUptimes(unit *proto.UnitMetrics) map[string]float64 {
 		out[fmt.Sprintf("res %v %v gain", r.Type, r.Id)] += r.ActualGain
 	}
 	return out
+}
+
+// envInt reads an integer knob (PARITY_SEED, PARITY_REACTION) with a default.
+func envInt(k string, d int) int {
+	if v, err := strconv.Atoi(os.Getenv(k)); err == nil {
+		return v
+	}
+	return d
 }
