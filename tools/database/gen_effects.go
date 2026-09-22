@@ -105,6 +105,8 @@ type ProcRouting struct {
 	// A "Chance on hit" item effect or a combat enchant, cast by the game off every eligible weapon
 	// hit whatever the row's proc flags say.
 	IsWeaponProc bool
+	// A combat enchant's chance, stated on the enchantment's row rather than the spell's.
+	ProcChancePct int
 	// Set where the spell the proc applies deals damage instead of granting an aura, which is a
 	// constructor of its own: there is no buff to build.
 	Damage bool
@@ -330,7 +332,10 @@ func entryOrder(a *Entry, b *Entry) bool {
 	if a.Variants[0].ID != b.Variants[0].ID {
 		return a.Variants[0].ID < b.Variants[0].ID
 	}
-	return a.Variants[0].SpellID < b.Variants[0].SpellID
+	if a.Variants[0].SpellID != b.Variants[0].SpellID || a.Proc == nil || b.Proc == nil {
+		return a.Variants[0].SpellID < b.Variants[0].SpellID
+	}
+	return a.Proc.TriggerSpellID < b.Proc.TriggerSpellID
 }
 
 // Escapes a rendered tooltip for use inside a double-quoted TypeScript string. Tooltips
@@ -377,15 +382,16 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 	groupMapProc := map[string]Group{}
 	enchantSpellEffects := enchantGrantEffects(instance.SpellEffectsById)
 
+	// The raw rows repeat an enchant once per recipe name, and an enchant registers once.
+	generated := map[int32]bool{}
 	for _, enchant := range instance.Enchants {
 		parsed := enchant.ToProto()
-		if _, ok := db.Enchants[EnchantToDBKey(parsed)]; !ok {
+		if _, ok := db.Enchants[EnchantToDBKey(parsed)]; !ok || generated[parsed.EffectId] {
 			continue
 		}
+		generated[parsed.EffectId] = true
 
-		for _, enchantEffect := range parsed.EnchantEffects {
-			TryParseEnchantEffect(parsed, enchantEffect, groupMapProc, instance, enchantSpellEffects)
-		}
+		TryParseEnchantEffect(parsed, enchant.ProcSlots(), groupMapProc, instance, enchantSpellEffects)
 	}
 
 	var procGroups []*Group
@@ -797,87 +803,193 @@ func TryParseOnUseEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, ins
 	return EffectParseResultInvalid
 }
 
-func TryParseEnchantEffect(enchant *proto.UIEnchant, enchantEffect *proto.ItemEffect, groupMapProc map[string]Group, instance *dbc.DBC, enchantSpellEffects map[int]*dbc.SpellEffect) EffectParseResult {
-	if (enchantEffect.GetProc() != nil || EnchantHasDummyEffect(enchant, instance)) && isGeneratableEnchant(enchant.EffectId) {
-
-		// Effect was already manually implemented
-		if core.HasEnchantEffect(enchant.EffectId) {
-			return EffectParseResultSuccess
-		}
-
-		if enchantingSpell, ok := enchantSpellEffects[int(enchant.EffectId)]; ok {
-			tooltipString := instance.Spells[enchantingSpell.SpellID].Description
-			tooltip, _ := tooltip.ParseTooltip(tooltipString, tooltip.DBCTooltipDataProvider{DBC: instance}, int64(enchantingSpell.SpellID))
-
-			grp, exists := groupMapProc["Enchants"]
-			if !exists {
-				grp = Group{Name: "Enchants"}
-			}
-
-			renderedTooltip := tooltip.String()
-			entry := Entry{Tooltip: strings.Split(renderedTooltip, "\n"), Variants: []*Variant{{ID: int(enchant.EffectId), Name: enchant.Name, SpellID: int(enchantingSpell.SpellID)}}}
-			entry.ProcInfo, entry.Supported = BuildEnchantProcInfo(enchant, instance, renderedTooltip)
-
-			// The same two ids an item proc carries. An enchant's trigger is the spell the client
-			// hangs on the enchantment; the buff is what the shipped entry says it applies.
-			entry.Proc = routeEnchantProc(enchant, instance)
-			if entry.Proc != nil {
-				entry.Supported = entry.Proc.Supported()
-			}
-
-			grp.Entries = append(grp.Entries, &entry)
-			groupMapProc["Enchants"] = grp
-
-			if !entry.Supported {
-				StoreMissingEffect("EnchantEffects", enchant.Name, Variant{
-					ID:      int(enchant.EffectId),
-					Name:    renderedTooltip,
-					SpellID: int(enchant.SpellId),
-				})
-				return EffectParseResultUnsupported
-			}
-
-			return EffectParseResultSuccess
-		}
+func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot, groupMapProc map[string]Group, instance *dbc.DBC, enchantSpellEffects map[int]*dbc.SpellEffect) EffectParseResult {
+	if len(slots) == 0 || !isGeneratableEnchant(enchant.EffectId) {
+		return EffectParseResultInvalid
 	}
 
-	return EffectParseResultInvalid
+	// Effect was already manually implemented
+	if core.HasEnchantEffect(enchant.EffectId) {
+		return EffectParseResultSuccess
+	}
+
+	enchantingSpell, ok := enchantSpellEffects[int(enchant.EffectId)]
+	if !ok {
+		return EffectParseResultInvalid
+	}
+
+	renderedTooltip := renderSpellTooltip(instance, enchantingSpell.SpellID)
+
+	grp, exists := groupMapProc["Enchants"]
+	if !exists {
+		grp = Group{Name: "Enchants"}
+	}
+
+	result := EffectParseResultSuccess
+	for _, routing := range routeEnchantProcs(slots, instance, renderedTooltip) {
+		grp.Entries = append(grp.Entries, &Entry{
+			Tooltip:   strings.Split(renderedTooltip, "\n"),
+			Variants:  []*Variant{{ID: int(enchant.EffectId), Name: enchant.Name, SpellID: int(enchantingSpell.SpellID)}},
+			Proc:      routing,
+			Supported: routing.Supported(),
+		})
+
+		if !routing.Supported() {
+			StoreMissingEffect("EnchantEffects", enchant.Name, Variant{
+				ID:      int(enchant.EffectId),
+				Name:    renderedTooltip,
+				SpellID: int(enchant.SpellId),
+			})
+			result = EffectParseResultUnsupported
+		}
+	}
+	groupMapProc["Enchants"] = grp
+
+	return result
 }
 
-// The rows an enchant's proc is resolved from. An enchant applies its effect through one spell, so
-// the trigger is that spell and the buff is whatever the shipped entry names - the same spell again
-// where the client grants the stats through it directly.
-func routeEnchantProc(enchant *proto.UIEnchant, instance *dbc.DBC) *ProcRouting {
-	if enchant.SpellId == 0 {
-		return nil
+// The rows an enchant's procs are resolved from, one per slot. A combat spell and an equip aura that
+// apply the same spell are one proc stated twice (Crusader 1900), so one of the two is kept: the
+// combat spell, unless only the aura states a rate. An enchant registers once, so where two slots
+// could, the first does.
+func routeEnchantProcs(slots []dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip string) []*ProcRouting {
+	routings := make([]*ProcRouting, len(slots))
+	for i, slot := range slots {
+		routings[i] = routeEnchantSlot(slot, instance, grantTooltip)
 	}
 
-	raw, ok := instance.EnchantsByEffectId[int(enchant.EffectId)]
-	isWeaponProc := ok && raw.IsCombatSpell(int(enchant.SpellId))
+	for i, combat := range slots {
+		if !combat.IsCombatSpell {
+			continue
+		}
+		for j, aura := range slots {
+			if aura.IsCombatSpell || routings[j] == nil || aura.AppliesSpellID != combat.AppliesSpellID {
+				continue
+			}
 
-	buffSpellID := int(enchant.SpellId)
-	for _, effect := range enchant.EnchantEffects {
-		if effect.GetProc() != nil {
-			buffSpellID = int(effect.BuffId)
+			kept, dropped := i, j
+			if statesNoRate(routings[i]) && !statesNoRate(routings[j]) {
+				kept, dropped = j, i
+			}
+			routings[kept].Summary += fmt.Sprintf("; slot spell %d applies the same spell and is not registered", slots[dropped].SpellID)
+			routings[dropped] = nil
 			break
 		}
 	}
 
-	routing := routeProc(int(enchant.SpellId), buffSpellID, isWeaponProc)
-
-	if len(enchant.EnchantEffects) == 0 {
-		if damage := dbc.ResolveDamageEffect(int(enchant.SpellId)); damage != nil {
-			routing.asDamage(int32(damage.SpellID))
-			return routing
+	var kept []*ProcRouting
+	registers := false
+	for _, routing := range routings {
+		if routing == nil {
+			continue
 		}
-
-		routing.Unsupported = append(routing.Unsupported, "the enchant grants neither stats nor damage")
-		return routing
+		if routing.Supported() && registers {
+			routing.Unsupported = append(routing.Unsupported, "another slot of the enchant registers")
+		}
+		registers = registers || routing.Supported()
+		kept = append(kept, routing)
 	}
 
-	routing.requireABuffDuration()
+	return kept
+}
+
+func renderSpellTooltip(instance *dbc.DBC, spellID int) string {
+	tooltip, _ := tooltip.ParseTooltip(instance.Spells[spellID].Description, tooltip.DBCTooltipDataProvider{DBC: instance}, int64(spellID))
+	return tooltip.String()
+}
+
+func statesNoRate(routing *ProcRouting) bool {
+	return slices.Contains(routing.Unsupported, spelldata.ReasonStatesNoRate)
+}
+
+// One slot's proc. The trigger is the slot's spell; the buff is what the shipped entry says it
+// applies, where it resolves stats, and otherwise the spell it deals damage through.
+func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip string) *ProcRouting {
+	effect, hasStats := dbc.EnchantSlotEffect(slot.SpellID)
+	buffSpellID := slot.SpellID
+	if hasStats {
+		buffSpellID = int(effect.BuffId)
+	}
+
+	routing := routeProc(slot.SpellID, buffSpellID, slot.IsCombatSpell)
+	if slot.IsCombatSpell {
+		routing.ProcChancePct = slot.ChancePct
+		routing.Unsupported = spelldata.CombatEnchantUnsupported(spelldata.Find(int32(slot.SpellID)), slot.ChancePct > 0)
+	} else {
+		routing.readEnchantTooltip(grantTooltip)
+	}
+
+	damage := dbc.ResolveDamageEffect(slot.SpellID)
+	switch {
+	case hasStats:
+		routing.requireABuffDuration()
+	case damage != nil:
+		routing.asDamage(int32(damage.SpellID))
+		if restriction, ok := creatureTypeDamage[int32(damage.SpellID)]; ok {
+			routing.Unsupported = append(routing.Unsupported, "the damage spell hits "+restriction+" only")
+		}
+	default:
+		applied := slot.AppliesSpellID
+		if applied == 0 {
+			applied = slot.SpellID
+		}
+		routing.Unsupported = append(routing.Unsupported,
+			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))
+	}
+
+	if slot.ChancePct > 0 {
+		routing.Summary += fmt.Sprintf("; the enchantment states %d%%", slot.ChancePct)
+	}
 
 	return routing
+}
+
+// Damage spells the client restricts to one creature type in SpellTargetRestrictions, which neither
+// the store nor the damage proc reads.
+var creatureTypeDamage = map[int32]string{
+	13907:  "demons (TargetCreatureType 4)",
+	439164: "mechanicals (TargetCreatureType 256)",
+}
+
+func spellEffectKinds(instance *dbc.DBC, spellID int) string {
+	var kinds []string
+	for _, effect := range instance.SpellEffectsInOrder(spellID) {
+		if effect.EffectType == dbcenums.E_APPLY_AURA {
+			kinds = append(kinds, effect.EffectAura.String())
+		} else {
+			kinds = append(kinds, effect.EffectType.String())
+		}
+	}
+	return strings.Join(kinds, ", ")
+}
+
+// An equip aura's trigger and rate as the enchant's tooltip states them. The store reads both off the
+// aura's own description, which the client leaves empty on these auras: the wording is on the spell
+// that grants the enchant.
+func (r *ProcRouting) readEnchantTooltip(tooltip string) {
+	trigger := spelldata.Find(int32(r.TriggerSpellID))
+	hints := procTooltipHints(tooltip)
+
+	if hints.Matches(core.ProcHintNamedAbility) && !trigger.ProcHint.Matches(core.ProcHintNamedAbility) {
+		r.Unsupported = append(r.Unsupported, "named ability")
+	}
+	if hints.Matches(core.ProcHintOutcomeTaken) && !trigger.ProcHint.Matches(core.ProcHintOutcomeTaken) {
+		r.Unsupported = append(r.Unsupported, "an outcome the proc mask has no bit for")
+	}
+	if trigger.ProcChanceSource == spelldata.ProcChanceAlways && trigger.RPPM == 0 &&
+		enchantTooltipStatesAnUnknownRate(tooltip) && !statesNoRate(r) {
+		r.Unsupported = append(r.Unsupported, spelldata.ReasonStatesNoRate)
+	}
+}
+
+// "Often", "sometimes" and "occasionally" are how an enchant's tooltip says its proc has a rate the
+// rows do not carry. "No more often than" states a cooldown instead.
+var enchantRateWordMatcher = regexp.MustCompile(`(?i)\b(often|sometimes|occasionally)\b`)
+var cooldownWordingMatcher = regexp.MustCompile(`(?i)more often than`)
+
+func enchantTooltipStatesAnUnknownRate(tooltip string) bool {
+	return tooltipStatesAnUnknownRate(tooltip) ||
+		enchantRateWordMatcher.MatchString(cooldownWordingMatcher.ReplaceAllString(tooltip, ""))
 }
 
 func ParseTooltipForMissingEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMap map[string]Group, groupMapName string) {
@@ -1091,29 +1203,6 @@ func BuildProcInfo(parsed *proto.UIItem, itemEffectID int, instance *dbc.DBC, to
 	procInfo.setIsWeaponProc(isWeaponProc)
 
 	if SpellHasDummyEffect(int(procId), instance) {
-		return procInfo, false
-	}
-
-	return procInfo, supported
-}
-
-func BuildEnchantProcInfo(enchant *proto.UIEnchant, instance *dbc.DBC, tooltip string) (ProcInfo, bool) {
-	procSpellID := enchant.SpellId
-	if procSpellID == 0 {
-		fmt.Printf("WARN: Enchant %d with no spell id", enchant.EffectId)
-		return ProcInfo{}, false
-	}
-
-	procSpell, ok := instance.Spells[int(procSpellID)]
-	if !ok {
-		panic(fmt.Sprintf("Could not find proc aura %d spell for item effect %d.\n", procSpellID, enchant.EffectId))
-	}
-
-	procInfo, supported := BuildSpellProcInfo(&procSpell, tooltip, enchant.Type)
-	raw, ok := instance.EnchantsByEffectId[int(enchant.EffectId)]
-	procInfo.setIsWeaponProc(ok && raw.IsCombatSpell(int(procSpellID)))
-
-	if SpellHasDummyEffect(int(procSpellID), instance) {
 		return procInfo, false
 	}
 

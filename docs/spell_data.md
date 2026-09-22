@@ -533,6 +533,14 @@ the sim's item level scaling lives. `IsWeaponProc` states the one shape no row d
 casts a chance-on-hit effect off the weapon's hit without consulting a proc mask, and there the 100/101
 sentinel is never a rate.
 
+An enchant's procs are read one per slot of its `SpellItemEnchantment` row that casts a combat spell
+(Effect 1) or hangs an equip aura off a hit (Effect 3), and at most one of them registers. A combat spell's chance, where the client states
+one, is on the enchantment rather than on the spell - `EffectPointsMin`, Fiery Blaze's 15 - and
+`ProcChancePct` carries it, rolled on the hits of the enchanted weapon only
+(`spelldata.CombatEnchantUnsupported`). An equip aura's own description is empty, so the generator
+reads its trigger and whether its 100 is a sentinel off the tooltip of the spell granting the enchant.
+A combat spell and an aura applying the same spell (Crusader) register once, as the combat spell.
+
 `spelldata.ItemProcUnsupported(trigger, isWeaponProc)` is the single decision about whether the rows
 say enough. The generator calls it when it writes the item files, the audit calls it, and a test pins
 it, so a proc the generator emits is one the sim can build and a proc it comments out carries the

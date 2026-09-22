@@ -2764,9 +2764,135 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 
 export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 	[
+		43, // Iron Shield Spike
+		[
+			"Attaches an Iron Spike to your shield that deals damage every time you block with it.", // 9784 - https://www.wowhead.com/forever/spell=9784
+		]
+	],
+	[
+		44, // Enchant Chest - Minor Absorption
+		[
+			"Enchant a piece of chest armor so it has a 2% chance per hit of giving you 10 points of damage absorption. Cannot occur more often than once every 5 sec.", // 7445 - https://www.wowhead.com/forever/spell=7445
+		]
+	],
+	[
+		63, // Enchant Chest - Lesser Absorption
+		[
+			"Enchant a piece of chest armor so it has a 5% chance per hit of giving you 25 points of damage absorption. Cannot occur more often than once every 5 sec.", // 7446 - https://www.wowhead.com/forever/spell=7446
+		]
+	],
+	[
+		463, // Mithril Shield Spike
+		[
+			"Attaches a Mithril Spike to your shield that deals damage every time you block with it.", // 9782 - https://www.wowhead.com/forever/spell=9782
+		]
+	],
+	[
+		803, // Enchant Weapon - Fiery Weapon
+		[
+			"Permanently enchant a melee weapon to often strike for 40 additional fire damage.", // 13897 - https://www.wowhead.com/forever/spell=13897
+		]
+	],
+	[
+		912, // Enchant Weapon - Demonslaying
+		[
+			"Permanently enchant a melee weapon to have a chance of stunning and doing heavy damage to demons.", // 13907 - https://www.wowhead.com/forever/spell=13907
+		]
+	],
+	[
+		1704, // Thorium Shield Spike
+		[
+			"Attaches a Thorium Spike to your shield that deals damage every time you block with it.", // 16624 - https://www.wowhead.com/forever/spell=16624
+		]
+	],
+	[
+		1894, // Enchant Weapon - Icy Chill
+		[
+			"Permanently enchant a melee weapon to often chill the target reducing their movement and attack speed.", // 20005 - https://www.wowhead.com/forever/spell=20005
+		]
+	],
+	[
+		1898, // Enchant Weapon - Lifestealing
+		[
+			"Permanently enchant a melee weapon to often steal life from the enemy and give it to the wielder.", // 20004 - https://www.wowhead.com/forever/spell=20004
+		]
+	],
+	[
 		1899, // Enchant Weapon - Unholy Weapon
 		[
 			"Permanently enchant a melee weapon to often inflict a curse on the target reducing their melee damage.", // 20006 - https://www.wowhead.com/forever/spell=20006
+		]
+	],
+	[
+		7124, // Wolfshead Trophy
+		[
+			"Permanently enchant a helm slot item, causing you to gain 20 energy or 5 rage when shapeshifting into Cat or Bear form.", // 17768 - https://www.wowhead.com/forever/spell=17768
+		]
+	],
+	[
+		7210, // Enchant Weapon - Dismantle
+		[
+			"Permanently enchant a Weapon to cause all spells and attacks to sometimes deal 75 additional damage to mechanical creatures.", // 435467 - https://www.wowhead.com/forever/spell=435467
+		]
+	],
+	[
+		7223, // Enchant Chest - Retricutioner
+		[
+			"Teaches you how to permanently enchant a piece of chest armor to reflect 9 damage back to the attacker when the bearer is struck in Melee. ", // 435901 - https://www.wowhead.com/forever/spell=435901
+		]
+	],
+	[
+		7940, // Enchant Weapon - Grand Crusader
+		[
+			"Permanently enchant a melee weapon so that often when attacking in melee it heals for 400 and increases Strength by 120 for 20s.", // 1231124 - https://www.wowhead.com/forever/spell=1231124
+		]
+	],
+	[
+		7941, // Enchant 2H Weapon - Grand Arcanist
+		[
+			"Permanently enchant a two-handed melee weapon so that often when striking with a spell it restores 400 mana and increases Spell Power by 140 for 20s.", // 1231152 - https://www.wowhead.com/forever/spell=1231152
+		]
+	],
+	[
+		7942, // Enchant Weapon - Grand Sorcerer
+		[
+			"Permanently enchant a melee weapon so that often when striking with a spell it restores 400 mana and increases Spell Power by 70 for 20s.", // 1231163 - https://www.wowhead.com/forever/spell=1231163
+		]
+	],
+	[
+		7943, // Enchant 2H Weapon - Grand Inquisitor
+		[
+			"Permanently enchant a two-handed melee weapon so that often when attacking in melee it heals for 400 and increases Strength by 200 for 20s.", // 1232169 - https://www.wowhead.com/forever/spell=1232169
+		]
+	],
+	[
+		8216, // Enchant Weapon - Insight
+		[
+			"Permanently enchant a Melee Weapon to have a chance to grant Insight when you cast a spell, increasing Spirit by 100% for 10s.", // 1248758 - https://www.wowhead.com/forever/spell=1248758
+		]
+	],
+	[
+		8217, // Enchant Weapon - Revelation
+		[
+			"Permanently enchant a Melee Weapon to have a chance to trigger Revelation when a non-periodic spell fails to critically strike. Revelation grants 100% increased critical strike chance to the next spell cast. Revelation's chance to trigger is diminished as your critical strike chance increases.", // 1248806 - https://www.wowhead.com/forever/spell=1248806
+		]
+	],
+	[
+		8220, // Enchant Chest - Absorption
+		[
+			"Enchant a piece of chest armor so it has a 25% chance per hit of giving you 50 points of damage absorption. Cannot occur more often than once every 5 sec.", // 1249072 - https://www.wowhead.com/forever/spell=1249072
+		]
+	],
+	[
+		8695, // Enchant Gloves - Lotus Claw
+		[
+			"Permanently enchant a pair of gloves to give a small chance to acquire Death Lotus when gathering any herb in Hyjal.", // 1294053 - https://www.wowhead.com/forever/spell=1294053
+		]
+	],
+	[
+		8721, // Enchant Weapon - Recovery
+		[
+			"Permanently enchant a Melee Weapon to trigger Recovery when you are Parried or Dodged, healing you for 5% of your maximum health. Cannot occur more often than once every 10 sec.", // 1248761 - https://www.wowhead.com/forever/spell=1248761
 		]
 	],
 ])

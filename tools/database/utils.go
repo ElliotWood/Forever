@@ -149,10 +149,6 @@ func DifficultyToShortName(difficulty proto.DungeonDifficulty) string {
 	}
 }
 
-func EnchantHasDummyEffect(enchant *proto.UIEnchant, instance *dbc.DBC) bool {
-	return SpellHasDummyEffect(int(enchant.SpellId), instance)
-}
-
 func SpellHasDummyEffect(spellId int, instance *dbc.DBC) bool {
 	return anySpellEffect(spellId, instance, isDummyAura)
 }

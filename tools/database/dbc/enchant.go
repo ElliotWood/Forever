@@ -4,6 +4,7 @@ import (
 	"slices"
 	"sort"
 
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -28,38 +29,59 @@ type Enchant struct {
 	IsLive             bool
 }
 
-// Reports whether spellID is cast by this enchant as a combat spell (Effect 1), which the game
-// rolls off every eligible weapon hit, rather than as an equip aura (Effect 3). Checked per slot:
-// Deathfrost carries one of each, and only the combat slot's spell is a weapon proc.
-func (enchant *Enchant) IsCombatSpell(spellID int) bool {
-	for idx, effect := range enchant.Effects {
-		if effect == ITEM_ENCHANTMENT_COMBAT_SPELL && idx < len(enchant.EffectArgs) && enchant.EffectArgs[idx] == spellID {
-			return true
-		}
-	}
-
-	return false
+// A spell an enchant slot casts off a hit, or hangs a listener on.
+type EnchantProcSlot struct {
+	SpellID int
+	// A combat spell (Effect 1), which the game casts off the weapon's hit rather than through a
+	// proc mask.
+	IsCombatSpell bool
+	// The chance a combat spell's slot states in EffectPointsMin: Fiery Blaze's 15 is its "15%
+	// chance". Zero where the slot states none.
+	ChancePct int
+	// What the slot applies: the combat spell itself, or the spell its equip aura triggers.
+	AppliesSpellID int
 }
 
-func (enchant *Enchant) HasEnchantEffect() bool {
-	for idx, effect := range enchant.Effects {
-		if effect == ITEM_ENCHANTMENT_COMBAT_SPELL {
-			return true
-		}
+// The auras through which an equip spell answers a hit: the proc triggers, the retaliation of a
+// damage shield, and the dummy a server-side proc hangs off.
+var enchantProcAuras = []EffectAuraType{
+	dbcenums.A_PROC_TRIGGER_SPELL, dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE, dbcenums.A_PROC_TRIGGER_SPELL_COPY,
+	dbcenums.A_PROC_TRIGGER_DAMAGE, dbcenums.A_DAMAGE_SHIELD, dbcenums.A_DUMMY,
+}
 
-		// We apply a buff here, check if it's a trigger
-		if effect == ITEM_ENCHANTMENT_EQUIP_SPELL {
-			spellId := enchant.EffectArgs[idx]
-			spellEffects := dbcInstance.SpellEffects[spellId]
-			for _, spellEffect := range spellEffects {
-				if spellEffect.IsProcTrigger() {
-					return true
+// Every combat spell (Effect 1) and every equip spell (Effect 3) answering a hit, one per slot.
+func (enchant *Enchant) ProcSlots() []EnchantProcSlot {
+	var slots []EnchantProcSlot
+	for idx, effect := range enchant.Effects {
+		if idx >= len(enchant.EffectArgs) || enchant.EffectArgs[idx] == 0 {
+			continue
+		}
+		spellID := enchant.EffectArgs[idx]
+
+		switch effect {
+		case ITEM_ENCHANTMENT_COMBAT_SPELL:
+			slot := EnchantProcSlot{SpellID: spellID, IsCombatSpell: true, AppliesSpellID: spellID}
+			if idx < len(enchant.EffectPoints) {
+				slot.ChancePct = max(enchant.EffectPoints[idx], 0)
+			}
+			slots = append(slots, slot)
+		case ITEM_ENCHANTMENT_EQUIP_SPELL:
+			for _, spellEffect := range dbcInstance.SpellEffectsInOrder(spellID) {
+				if slices.Contains(enchantProcAuras, spellEffect.EffectAura) {
+					slots = append(slots, EnchantProcSlot{SpellID: spellID, AppliesSpellID: spellEffect.EffectTriggerSpell})
+					break
 				}
 			}
 		}
 	}
 
-	return false
+	return slots
+}
+
+// The effect entry an enchant slot's spell resolves to, where it resolves stats.
+func EnchantSlotEffect(spellID int) (*proto.ItemEffect, bool) {
+	eff := ItemEffect{TriggerType: ITEM_SPELLTRIGGER_CHANCE_ON_HIT, SpellID: spellID}
+	return eff.ToProto(0)
 }
 
 // SpellItemEnchantment 8203 is "Spirit +$k1", applied by Enchant Bracer/Boots - Lesser Spirit, but
@@ -82,15 +104,11 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 		RequiredProfession: GetProfession(enchant.RequiredProfession),
 	}
 
-	if enchant.HasEnchantEffect() {
-		eff := ItemEffect{TriggerType: 2, SpellID: enchant.SpellId}
-		parsedEffect, hasStats := eff.ToProto(0)
-		if hasStats {
+	for _, slot := range enchant.ProcSlots() {
+		parsedEffect, hasStats := EnchantSlotEffect(slot.SpellID)
+		if hasStats && !slices.ContainsFunc(uiEnchant.EnchantEffects, func(e *proto.ItemEffect) bool { return e.BuffId == parsedEffect.BuffId }) {
 			uiEnchant.EnchantEffects = append(uiEnchant.EnchantEffects, parsedEffect)
 		}
-		// if uiEnchant.EnchantEffect.GetOnUse() == nil && uiEnchant.EnchantEffect.GetProc() == nil {
-		// 	uiEnchant.EnchantEffect = nil
-		// }
 	}
 
 	if enchant.FDID == 0 {
