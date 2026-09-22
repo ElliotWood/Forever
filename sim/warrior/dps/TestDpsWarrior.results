@@ -50,6 +50,8 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: -1
+  final_stats: 0
+  final_stats: 0
  }
 }
 dps_results: {
@@ -75,15 +77,6 @@ dps_results: {
  value: {
   dps: 560.73006
   tps: 320.36592
-  dtps: 6.98593
-  hps: 23.89281
- }
-}
-dps_results: {
- key: "TestDpsWarrior-AllItems-Biznicks247x128Accurascope-2523"
- value: {
-  dps: 552.96374
-  tps: 316.01678
   dtps: 6.98593
   hps: 23.89281
  }
