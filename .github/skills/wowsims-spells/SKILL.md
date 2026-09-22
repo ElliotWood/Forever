@@ -77,6 +77,8 @@ func ItemProcUnsupported(trigger *Spell, isWeaponProc bool) []string
 
 Each fills what the row states and nothing else; the caller adds `ApplyEffects`, the proc mask, the conditions and any flag the client does not carry. `ParseEffects` must be called before the aura activates. `*Parsed` carries `Applied` and `Skipped` — `SPELLDATA_REPORT=1` prints the skipped effects, which are what the port still has to wire by hand.
 
+`Proc()` takes a sub-spell out of the rotation and empties the cast, cooldown and every cost the row filled, so it can resolve off the row of the ability that casts it: Whirlwind's off-hand strike takes `Melee(ProcMaskMeleeOHSpecial)`, `Proc()` and `Tag(2)` on the Whirlwind row itself, writing only `ClassSpellMask` and `ApplyEffects` by hand. A bleed row fills its damage and threat multipliers with 1 — `IsBleed` reads `SpellCategories.Mechanic` where the other `attributes.go` accessors read an `Attr` bit.
+
 ## Porting a class
 
 `docs/spell_data.md` has the checklist under "Porting a class to the store". The short form: flip the class in `storeBackedClasses` and regenerate, dump the rows before touching a call site (the effects, the class masks each modifier names, the whole decoded `ProcTrigger`), keep the parity test green, and move goldens only for a cause you isolated by reverting one change.

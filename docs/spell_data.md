@@ -212,7 +212,7 @@ package init.
 | --------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `Melee(mask)`   | the proc mask, `SpellFlagMeleeMetrics` and `SpellFlagAPL`, damage and threat multipliers of 1, and `IgnoreHaste`     |
 | `Magic(mask)`   | the proc mask, `SpellFlagAPL`, the multipliers, and `BonusCoefficient` from the damage effect's spell power share - the heal's where the spell damages nothing |
-| `Proc()`        | `SpellFlagPassiveSpell` and `SpellFlagNoOnCastComplete`, and clears `SpellFlagAPL`                                   |
+| `Proc()`        | `SpellFlagPassiveSpell` and `SpellFlagNoOnCastComplete`, clears `SpellFlagAPL`, and empties the cast - cast time, GCD, cooldowns - and every cost |
 | `Flags(f)`      | ors in flags the client does not state                                                                               |
 | `Tag(n)`        | splits one spell id into several actions                                                                             |
 
@@ -226,8 +226,8 @@ put there.
 2. **The row, then an override of one of its fields.** `sim/warrior/hamstring.go` adds
    `ClassSpellMask` and pins the threat numbers with their review marker, because the client states no
    threat coefficient. Write the override after the call, on its own line, with the reason beside it.
-3. **A hand-written `core.SpellConfig` reading the row's values.** The Whirlwind off-hand strike in
-   `sim/warrior/whirlwind.go` is a spell the sim registers and the client has no row for, so it is
+3. **A hand-written `core.SpellConfig` reading the row's values.** The Sweeping Strikes hit spell in
+   `sim/warrior/talents_arms.go` is a spell the sim registers and the store does not carry, so it is
    built by hand out of the parent's numbers.
 
 ### When not to take a default
@@ -237,14 +237,18 @@ put there.
   put on a weapon-damage tick. Its spell config still resolves; only the dot is by hand
   (`sim/warrior/talents_arms.go`).
 - **A sub-spell whose casts the sim reports does not take `Proc()`.** The option marks the spell
-  passive, and the metrics aggregator counts no cast for a passive spell. Blood Craze's heal takes it
-  (`sim/warrior/talents_fury.go`); Deep Wounds (`sim/warrior/talents_arms.go`) and Retaliation's
-  counterattack (`sim/warrior/retaliation.go`) name the flags they need by hand instead - the bleed
-  takes `SpellFlagNoOnCastComplete` with `SpellFlagIgnoreResists` and `SpellFlagProc`, the
-  counterattack `SpellFlagMeleeMetrics`.
-- **A sim-only copy of a spell carries the parent's `ClassFlags`.** The Whirlwind off-hand strike has
-  no row of its own, and without the parent's family mask the talents that name Whirlwind would not
-  reach it.
+  passive and empties its cast, cooldown and cost, and the metrics aggregator counts no cast for a
+  passive spell. Blood Craze's heal takes it on its own row, `BloodCrazeTriggered`
+  (`sim/warrior/talents_fury.go`); Whirlwind's off-hand strike takes it on the Whirlwind row itself -
+  `Melee(ProcMaskMeleeOHSpecial)`, `Proc()`, `Tag(2)` - which is what lets a spell with a cast time and
+  a cooldown of its own lend its row to a sub-spell that has neither, writing only `ClassSpellMask`
+  and `ApplyEffects` by hand (`sim/warrior/whirlwind.go`). Deep Wounds (`sim/warrior/talents_arms.go`)
+  and Retaliation's counterattack (`sim/warrior/retaliation.go`) name the flags they need by hand
+  instead - the bleed takes `SpellFlagNoOnCastComplete` with `SpellFlagIgnoreResists` and
+  `SpellFlagProc`, the counterattack `SpellFlagMeleeMetrics`.
+- **A sim-only copy of a spell carries the parent's `ClassFlags`.** Sweeping Strikes' hit spell and its
+  normalized-attack copy (`sim/warrior/talents_arms.go`) have no row of their own, and without the
+  parent's family mask the talents that name Sweeping Strikes would not reach them.
 
 ## Auras and dots
 
