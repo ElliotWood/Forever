@@ -342,3 +342,7 @@ endif
 
 webworkers:
 	npx tsx vite.build-workers.mts --watch=$(if $(WATCH),true,false)
+
+.PHONY: vscode-spelldata
+vscode-spelldata:
+	cd tools/vscode-spelldata && npm ci --no-audit --no-fund && npm run build

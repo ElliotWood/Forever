@@ -1,8 +1,11 @@
 {
 	"name": "wowsims-spelldata",
 	"displayName": "WoWSims Spelldata",
+	"description": "Hover a spell id or a ladder chain in Go, JSON or TypeScript to read the client's row out of sim/core/spelldata.",
 	"version": "0.2.0",
+	"private": true,
 	"publisher": "wowsims",
+	"license": "MIT",
 	"engines": {
 		"vscode": "^1.91.0"
 	},
@@ -34,5 +37,16 @@
 			}
 		}
 	},
-	"x-generated": "make vscode-spelldata"
+	"scripts": {
+		"build": "node scripts/build.mjs",
+		"check": "node scripts/build.mjs --check",
+		"test": "node --test test/"
+	},
+	"devDependencies": {
+		"@types/node": "^22.0.0",
+		"@types/vscode": "~1.91.0",
+		"esbuild": "0.28.2",
+		"typescript": "^5.9.3",
+		"vscode-languageclient": "10.1.1"
+	}
 }
