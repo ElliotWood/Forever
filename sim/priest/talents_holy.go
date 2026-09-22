@@ -126,7 +126,7 @@ func (priest *Priest) registerHolyNovaSpell(rank *spelldata.Spell) {
 	// 	Rank:           rank.RankNumber(),
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: rank.Cost(),
+	// 		FlatCost: int32(rank.Cost()),
 	// 	},
 	//
 	// 	Cast: core.CastConfig{

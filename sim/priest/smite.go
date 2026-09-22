@@ -22,7 +22,7 @@ func (priest *Priest) registerSmiteSpell(rank *spelldata.Spell) {
 	// 	Rank:           rank.RankNumber(),
 	// 	MaxRange:       float64(rank.MaxRange),
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: rank.Cost(),
+	// 		FlatCost: int32(rank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

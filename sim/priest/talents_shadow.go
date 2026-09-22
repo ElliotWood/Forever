@@ -187,7 +187,7 @@ func (priest *Priest) registerMindFlaySpell(rank *spelldata.Spell) {
 	// 	MaxRange:       float64(rank.MaxRange),
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: rank.Cost(),
+	// 		FlatCost: int32(rank.Cost()),
 	// 	},
 	//
 	// 	Cast: core.CastConfig{

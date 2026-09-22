@@ -24,7 +24,7 @@ func (priest *Priest) registerMindBlastSpell(rank *spelldata.Spell, cdTimer *cor
 	// 	Rank:           rank.RankNumber(),
 	// 	MaxRange:       float64(rank.MaxRange),
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: rank.Cost(),
+	// 		FlatCost: int32(rank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

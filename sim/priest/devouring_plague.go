@@ -32,7 +32,7 @@ func (priest *Priest) registerDevouringPlagueSpell(rank *spelldata.Spell, cdTime
 	// 	MaxRange:       float64(rank.MaxRange),
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: rank.Cost(),
+	// 		FlatCost: int32(rank.Cost()),
 	// 	},
 	//
 	// 	Cast: core.CastConfig{
