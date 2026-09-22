@@ -197,6 +197,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Champion'sBattlearmor"
+ value: {
+  dps: 554.76016
+  tps: 1202.97694
+  dtps: 1027.90452
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Champion'sBattlegear"
  value: {
   dps: 533.79084
@@ -482,6 +490,14 @@ dps_results: {
   dps: 510.53447
   tps: 1125.23368
   dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-LieutenantCommander'sBattlearmor"
+ value: {
+  dps: 554.76016
+  tps: 1202.97694
+  dtps: 1027.90452
  }
 }
 dps_results: {

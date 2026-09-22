@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-BeastmasterArmor"
+ value: {
+  dps: 843.62176
+  tps: 429.35763
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-BeaststalkerArmor"
  value: {
   dps: 820.52432
@@ -162,6 +169,20 @@ dps_results: {
  value: {
   dps: 785.63506
   tps: 387.31007
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Champion'sPursuance"
+ value: {
+  dps: 830.08651
+  tps: 418.85742
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Champion'sPursuit"
+ value: {
+  dps: 787.75546
+  tps: 389.22738
  }
 }
 dps_results: {
@@ -277,6 +298,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-FieldMarshal'sPursuit"
+ value: {
+  dps: 801.55238
+  tps: 398.89116
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-FreezingBand-942"
  value: {
   dps: 740.30849
@@ -302,6 +330,13 @@ dps_results: {
  value: {
   dps: 754.47725
   tps: 365.91431
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-GiantstalkerArmor"
+ value: {
+  dps: 873.64016
+  tps: 448.65744
  }
 }
 dps_results: {
@@ -382,6 +417,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-LieutenantCommander'sPursuance"
+ value: {
+  dps: 830.08651
+  tps: 418.85742
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-LieutenantCommander'sPursuit"
+ value: {
+  dps: 787.75546
+  tps: 389.22738
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 740.30849
@@ -435,6 +484,13 @@ dps_results: {
  value: {
   dps: 755.43602
   tps: 366.61961
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Predator'sArmor"
+ value: {
+  dps: 774.98005
+  tps: 377.15113
  }
 }
 dps_results: {
@@ -522,6 +578,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Striker'sGarb"
+ value: {
+  dps: 841.75073
+  tps: 426.95412
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 743.73371
@@ -603,6 +666,13 @@ dps_results: {
  value: {
   dps: 740.30849
   tps: 355.99268
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Warlord'sPursuit"
+ value: {
+  dps: 801.55238
+  tps: 398.89116
  }
 }
 dps_results: {
