@@ -202,21 +202,21 @@ export class Encounter {
 	}
 
 	static defaultTargetProto(): TargetProto {
-		// Copy default raid target used as fallback for missing DB.
-		// https://github.com/wowsims/forever/blob/3570c4fcf1a4e2cd81926019d4a1b3182f613de1/sim/encounters/register_all.go#L24
+		// Master's default target, the "Level 60" preset (sim/encounters/forever_raids.go). TBC's
+		// "Raid Target" (4192 base damage, 0.5 spread) hit tanks ~40% harder, so every tank opened
+		// with far more rage/mana from damage taken than on master.
 		return TargetProto.create({
-			id: 31146,
-			name: 'Raid Target',
+			id: 213336,
+			name: 'Level 60',
 			level: Mechanics.BOSS_LEVEL,
-			mobType: MobType.MobTypeMechanical,
+			mobType: MobType.MobTypeUnknown,
 			stats: Stats.fromMap({
 				[Stat.StatArmor]: 3731,
-				[Stat.StatAttackPower]: 320,
-				[Stat.StatBlockValue]: 54,
-				[Stat.StatHealth]: 6070400,
+				[Stat.StatAttackPower]: 805,
+				[Stat.StatHealth]: 127393,
 			}).asProtoArray(),
-			minBaseDamage: 4192.05,
-			damageSpread: 0.5,
+			minBaseDamage: 3000,
+			damageSpread: 0.3333,
 			tankIndex: 0,
 			swingSpeed: 2,
 			suppressDodge: false,

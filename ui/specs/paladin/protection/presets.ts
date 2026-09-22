@@ -27,8 +27,7 @@ export const DefaultOptions = ProtectionPaladinOptions.create({
 // profile); its raid-wide Battle Shout is a party buff here, its personal Blessing of Sanctuary
 // the individual one. Juju Power/Might, R.O.I.D.S., Dragonbreath Chili, Rumsey Rum, Greater Arcane
 // Elixir and Elixir of Fortitude have no slot here; Tender Wolf Steak, Greater Stoneshield, Superior
-// Defense are not in this db. Dense Dynamite is left out: this sim has no such explosive (it
-// panics on the id).
+// Defense are not in this db.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13510, // Flask of the Titans
 	battleElixirId: 13452, // Elixir of the Mongoose
@@ -36,6 +35,7 @@ export const DefaultConsumables = ConsumesSpec.create({
 	foodId: 18045, // Tender Wolf Steak
 	potId: 13455, // Greater Stoneshield Potion
 	conjuredId: 12662, // Demonic Rune
+	explosiveId: 18641, // Dense Dynamite
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
