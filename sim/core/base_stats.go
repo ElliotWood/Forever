@@ -110,10 +110,23 @@ var RaceOffsets = map[proto.Race]stats.Stats{
 		stats.Spirit:    1,
 		stats.Stamina:   1,
 	},
-	// TODO: no source for the Skyborne offsets yet. The client carries no race
-	// attributes (see above), so these need a fitted log like the other rows.
-	proto.Race_RaceHighOrderSkyborne:  stats.Stats{},
-	proto.Race_RaceWindshaperSkyborne: stats.Stats{},
+	// Read from level 1 naked character sheets (2026-09-22): four Human/High
+	// Order pairs (warrior, hunter, mage, rogue) give the same delta, and a
+	// Windshaper warrior matches the High Order one, so both variants share it.
+	proto.Race_RaceHighOrderSkyborne: {
+		stats.Agility:   1,
+		stats.Strength:  -1,
+		stats.Intellect: 1,
+		stats.Spirit:    0,
+		stats.Stamina:   -1,
+	},
+	proto.Race_RaceWindshaperSkyborne: {
+		stats.Agility:   1,
+		stats.Strength:  -1,
+		stats.Intellect: 1,
+		stats.Spirit:    0,
+		stats.Stamina:   -1,
+	},
 }
 
 var ClassBaseStats = map[proto.Class]stats.Stats{
