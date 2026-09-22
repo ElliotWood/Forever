@@ -1904,10 +1904,25 @@
 								"bear": {
 									"type": "string"
 								},
+								"boar": {
+									"type": "string"
+								},
+								"carrion_bird": {
+									"type": "string"
+								},
 								"cat": {
 									"type": "string"
 								},
 								"crab": {
+									"type": "string"
+								},
+								"crocolisk": {
+									"type": "string"
+								},
+								"gorilla": {
+									"type": "string"
+								},
+								"hyena": {
 									"type": "string"
 								},
 								"owl": {
@@ -1916,18 +1931,48 @@
 								"raptor": {
 									"type": "string"
 								},
-								"ravager": {
+								"scorpid": {
+									"type": "string"
+								},
+								"spider": {
+									"type": "string"
+								},
+								"tallstrider": {
+									"type": "string"
+								},
+								"turtle": {
 									"type": "string"
 								},
 								"wind_serpent": {
 									"type": "string"
 								},
-								"dragonhawk": {
+								"wolf": {
 									"type": "string"
 								}
 							},
 							"additionalProperties": false,
-							"required": ["label", "tooltip", "no_pet", "bat", "bear", "cat", "crab", "owl", "raptor", "ravager", "wind_serpent", "dragonhawk"]
+							"required": [
+								"label",
+								"tooltip",
+								"no_pet",
+								"bat",
+								"bear",
+								"boar",
+								"carrion_bird",
+								"cat",
+								"crab",
+								"crocolisk",
+								"gorilla",
+								"hyena",
+								"owl",
+								"raptor",
+								"scorpid",
+								"spider",
+								"tallstrider",
+								"turtle",
+								"wind_serpent",
+								"wolf"
+							]
 						},
 						"ammo": {
 							"type": "object",
@@ -1941,22 +1986,40 @@
 								"no_ammo": {
 									"type": "string"
 								},
-								"timeless_arrow": {
+								"razor_arrow": {
 									"type": "string"
 								},
-								"mysterious_arrow": {
+								"solid_shot": {
 									"type": "string"
 								},
-								"adamantite_stinger": {
+								"jagged_arrow": {
 									"type": "string"
 								},
-								"halaani_razorshaft": {
+								"accurate_slugs": {
 									"type": "string"
 								},
-								"blackflight_arrow": {
+								"mithril_gyro_shot": {
 									"type": "string"
 								},
-								"wardens_arrow": {
+								"rockshard_pellets": {
+									"type": "string"
+								},
+								"ice_threaded_arrow": {
+									"type": "string"
+								},
+								"thorium_headed_arrow": {
+									"type": "string"
+								},
+								"doomshot": {
+									"type": "string"
+								},
+								"ice_threaded_bullet": {
+									"type": "string"
+								},
+								"thorium_shells": {
+									"type": "string"
+								},
+								"miniature_cannon_balls": {
 									"type": "string"
 								}
 							},
@@ -1965,12 +2028,18 @@
 								"label",
 								"tooltip",
 								"no_ammo",
-								"timeless_arrow",
-								"mysterious_arrow",
-								"adamantite_stinger",
-								"halaani_razorshaft",
-								"blackflight_arrow",
-								"wardens_arrow"
+								"razor_arrow",
+								"solid_shot",
+								"jagged_arrow",
+								"accurate_slugs",
+								"mithril_gyro_shot",
+								"rockshard_pellets",
+								"ice_threaded_arrow",
+								"thorium_headed_arrow",
+								"doomshot",
+								"ice_threaded_bullet",
+								"thorium_shells",
+								"miniature_cannon_balls"
 							]
 						},
 						"quiver": {
@@ -2286,6 +2355,19 @@
 							"additionalProperties": false,
 							"required": ["title", "tooltip"]
 						},
+						"pet_attack_speed": {
+							"type": "object",
+							"properties": {
+								"label": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false,
+							"required": ["label", "tooltip"]
+						},
 						"shaman_shield_procrate": {
 							"type": "object",
 							"properties": {
@@ -2359,6 +2441,7 @@
 						"enable_item_swap",
 						"item_swap",
 						"blessings",
+						"pet_attack_speed",
 						"shaman_shield_procrate",
 						"warlock_assigned_curse"
 					]
