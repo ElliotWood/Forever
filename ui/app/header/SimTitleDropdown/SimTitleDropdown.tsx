@@ -13,6 +13,7 @@ import clsx from 'clsx';
 
 export interface SimTitleDropdownProps {
 	currentSpec: PlayerSpec<any>;
+	title?: string;
 }
 
 const SIM_LINK_CLASSES =
@@ -52,7 +53,7 @@ const ClassSubmenu = ({ playerClass }: { playerClass: PlayerClass<Class> }) => (
 	</Menu>
 );
 
-export const SimTitleDropdown = ({ currentSpec }: SimTitleDropdownProps) => (
+export const SimTitleDropdown = ({ currentSpec, title }: SimTitleDropdownProps) => (
 	<div className="h-sim-header-minus" data-testid="sim-title-dropdown-root">
 		<div className="relative h-full" data-testid="sim-link-dropdown">
 			<Menu
@@ -63,7 +64,7 @@ export const SimTitleDropdown = ({ currentSpec }: SimTitleDropdownProps) => (
 						iconPath={currentSpec.getIcon('large')}
 						label={i18n.t('sidebar.header.title')}
 						labelClassName="text-white"
-						title={PlayerSpecs.getFullSpecName(currentSpec)}
+						title={title ?? PlayerSpecs.getFullSpecName(currentSpec)}
 						status={launchLabel(currentSpec.launch)}
 					/>
 				}

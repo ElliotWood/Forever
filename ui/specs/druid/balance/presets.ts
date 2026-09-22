@@ -1,9 +1,7 @@
 import * as PresetUtils from '@app/preset_utils';
 import {
-	Class,
 	ConsumesSpec,
 	Debuffs,
-	Drums,
 	IndividualBuffs,
 	PartyBuffs,
 	Profession,
@@ -14,7 +12,6 @@ import {
 } from '@generated/proto/common';
 import { BalanceDruid_Options as BalanceDruidOptions } from '@generated/proto/druid';
 import { SavedTalents } from '@generated/proto/ui';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultAPL from './apls/default.apl.json';
 import LaunchAPL from './apls/launch.apl.json';
@@ -23,7 +20,7 @@ import P0BisGear from './gear_sets/p0.bis.gear.json';
 import P1BisGear from './gear_sets/p1.bis.gear.json';
 import P2BisGear from './gear_sets/p2.bis.gear.json';
 
-export const StandardRotation = PresetUtils.makePresetAPLRotation('Default', DefaultAPL);
+export const StandardRotation = PresetUtils.makePresetAPLRotation('Default Balance', DefaultAPL);
 // Master's Launch rotation (Wrath-led, Starfire on Eclipse), the one its arena ranks.
 export const LaunchRotation = PresetUtils.makePresetAPLRotation('Launch', LaunchAPL);
 
@@ -36,57 +33,42 @@ export const DefaultOptions = BalanceDruidOptions.create({
 	},
 });
 
+// Defaults below are what master's ui/balance_druid (the Forever site before the switch) opens
+// with: its page drops the Fire Resistance Aura, blessings, Judgement of Wisdom and Stormstrike
+// its presets name.
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(Class.ClassShaman),
 	arcaneBrilliance: true,
+	divineSpirit: TristateEffect.TristateEffectRegular,
 	giftOfTheWild: TristateEffect.TristateEffectImproved,
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	divineSpirit: TristateEffect.TristateEffectImproved,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
-	chainOfTheTwilightOwl: true,
-	draeneiRacialCaster: true,
-	drums: Drums.LesserDrumsOfBattle,
-	eyeOfTheNight: true,
-	totemOfWrath: 1,
-	wrathOfAirTotem: TristateEffect.TristateEffectImproved,
+	fireResistanceTotem: true,
+	manaSpringTotem: TristateEffect.TristateEffectRegular,
+	moonkinAura: TristateEffect.TristateEffectRegular,
 });
 
-export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	shadowPriestDps: 800,
-});
+export const DefaultIndividualBuffs = IndividualBuffs.create({});
 
 export const DefaultDebuffs = Debuffs.create({
-	bloodFrenzy: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
-	curseOfRecklessness: true,
-	exposeArmor: TristateEffect.TristateEffectImproved,
-	giftOfArthas: true,
-	huntersMark: TristateEffect.TristateEffectImproved,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
-	judgementOfWisdom: true,
-	mangle: true,
-	misery: true,
-	sunderArmor: true,
+	faerieFire: TristateEffect.TristateEffectRegular,
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	conjuredId: 12662, // Demonic Rune
-	drumsId: Drums.LesserDrumsOfBattle,
-	flaskId: 22861, // Flask of Blinding Light
-	foodId: 27657, // Blackened Basilisk
-	mhImbueId: 25122, // Brilliant Wizard Oil
-	potId: 22832, // Super Mana Potion
+	flaskId: 13512, // Flask of Supreme Power
+	battleElixirId: 13454, // Greater Arcane Elixir
+	guardianElixirId: 20007, // Mageblood Elixir
+	foodId: 18254, // Runn Tum Tuber Surprise
+	mhImbueId: 20749, // Brilliant Wizard Oil
+	potId: 13444, // Major Mana Potion
 });
 
 export const OtherDefaults = {
-	distanceFromTarget: 20,
-	profession1: Profession.Enchanting,
+	reactionTime: 200, // master's default
+	distanceFromTarget: 15,
+	profession1: Profession.Engineering,
 	profession2: Profession.Tailoring,
-	race: Race.RaceNightElf,
+	race: Race.RaceTauren,
 };
 
 // Our Forever sim's gear presets (master ui/<spec>/gear_sets).

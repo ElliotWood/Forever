@@ -1,15 +1,14 @@
 import * as PresetUtils from '@app/preset_utils';
-import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { ElementalShaman_Options as ElementalShamanOptions } from '@generated/proto/shaman';
 import { SavedTalents } from '@generated/proto/ui';
-import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
-import DefaultApl from './apls/default.apl.json';
+import ForeverApl from './apls/forever.apl.json';
 import LaunchGear from './gear_sets/launch.gear.json';
 import Phase1Gear from './gear_sets/phase_1.gear.json';
 import Phase2Gear from './gear_sets/phase_2.gear.json';
 
-export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
+export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', ForeverApl);
 
 export const DefaultOptions = ElementalShamanOptions.create({
 	classOptions: {
@@ -17,58 +16,45 @@ export const DefaultOptions = ElementalShamanOptions.create({
 	},
 });
 
+// Defaults below are master's ui/elemental_shaman (the Forever site before the switch).
 export const OtherDefaults = {
-	distanceFromTarget: 20,
-	profession1: Profession.Leatherworking,
-	profession2: Profession.Enchanting,
-	race: Race.RaceDraenei,
+	reactionTime: 200, // master's default
+	distanceFromTarget: 15,
+	profession1: Profession.Enchanting,
+	profession2: Profession.Alchemy,
+	race: Race.RaceTroll,
 };
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(Class.ClassShaman),
 	arcaneBrilliance: true,
+	divineSpirit: TristateEffect.TristateEffectRegular,
 	giftOfTheWild: TristateEffect.TristateEffectImproved,
 	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	divineSpirit: TristateEffect.TristateEffectImproved,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
-	moonkinAura: TristateEffect.TristateEffectImproved,
-	chainOfTheTwilightOwl: true,
-	eyeOfTheNight: true,
+	manaSpringTotem: TristateEffect.TristateEffectRegular,
+	moonkinAura: TristateEffect.TristateEffectRegular,
 });
 
-export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	shadowPriestDps: 800,
-});
+export const DefaultIndividualBuffs = IndividualBuffs.create({});
 
+// Master also sets Stormstrike (+20% Nature damage taken), which this engine has no debuff for.
 export const DefaultDebuffs = Debuffs.create({
-	bloodFrenzy: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
-	curseOfRecklessness: true,
-	exposeArmor: TristateEffect.TristateEffectImproved,
-	faerieFire: TristateEffect.TristateEffectImproved,
-	giftOfArthas: true,
-	huntersMark: TristateEffect.TristateEffectImproved,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
-	judgementOfWisdom: true,
-	mangle: true,
-	misery: true,
-	sunderArmor: true,
+	curseOfElements: TristateEffect.TristateEffectRegular,
 });
 
+// Master's Juju Power/Might and Elixir of Firepower/Frost Power and Cerebral Cortex Compound
+// have no slot here (one battle and one guardian elixir).
 export const DefaultConsumables = ConsumesSpec.create({
+	flaskId: 13512, // Flask of Supreme Power
+	battleElixirId: 13454, // Greater Arcane Elixir
+	guardianElixirId: 20007, // Mageblood Elixir
+	foodId: 18254, // Runn Tum Tuber Surprise
+	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune
-	drumsId: Drums.LesserDrumsOfBattle,
-	flaskId: 22861, // Flask of Blinding Light
-	foodId: 27657, // Blackened Basilisk
-	mhImbueId: 25122, // Brilliant Wizard Oil
-	potId: 22839, // Destruction Potion
 });
 
-// Talent presets, from master's ui/shaman spec.
 export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTalents.create({ talentsString: '5505301500103031--503352001' }));
 export const TalentsElemental = PresetUtils.makePresetTalents(
 	'Elemental 31/6/14',
@@ -85,4 +71,4 @@ export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
 export const GEAR_PHASE_1 = PresetUtils.makePresetGear('Phase 1', Phase1Gear);
 export const GEAR_PHASE_2 = PresetUtils.makePresetGear('Phase 2', Phase2Gear);
 export const DEFAULT_GEAR = GEAR_LAUNCH;
-export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_PHASE_1, GEAR_PHASE_2];
+export const GEAR_PRESETS = [GEAR_PHASE_2, GEAR_LAUNCH, GEAR_PHASE_1];

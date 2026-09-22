@@ -344,6 +344,6 @@ export class SimHostObject<SpecType extends Spec> implements IndividualSimHost<S
 	}
 
 	getStorageKey(keyPart: string): string {
-		return specStorageKey(this.player.getPlayerSpec(), keyPart);
+		return specStorageKey(this.player.getPlayerSpec(), (this.individualConfig.storageKeyPart ?? '') + keyPart);
 	}
 }

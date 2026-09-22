@@ -709,7 +709,7 @@ func registerStaticImbue(agent Agent, imbueId int32) {
 	case 25123: // Mana Oil
 		character.AddStat(stats.HealingPower, 25)
 		character.AddStat(stats.MP5, 12)
-	case 25122: // Briliant Wizard Oil
+	case 20749, 25122: // Brilliant Wizard Oil (20749 is the Classic item Forever ships)
 		character.AddStat(stats.SpellDamage, 36)
 		character.AddStat(stats.SpellCritRating, 14)
 	case 28017: // Superior Wizard Oil

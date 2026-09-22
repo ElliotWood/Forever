@@ -100,7 +100,7 @@ export default defineSpec<Spec.SpecMage>({
 		// Default consumes settings.
 		consumables: DefaultConsumables,
 		// Default talents.
-		talents: Presets.ArcaneTalents.data,
+		talents: Presets.DefaultTalents.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,
@@ -134,21 +134,18 @@ export default defineSpec<Spec.SpecMage>({
 	presets: {
 		epWeights: [],
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.ROTATION_PRESET_ARCANE, Presets.ROTATION_PRESET_FIRE, Presets.ROTATION_PRESET_FROST],
+		rotations: Presets.ROTATION_PRESETS,
 		// Preset talents that the user can quickly select.
-		talents: [Presets.ArcaneTalents, Presets.FireTalents, Presets.FrostTalents],
+		talents: Presets.TALENT_PRESETS,
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (player: Player<Spec.SpecMage>): APLRotation => {
-		const talents = player.getTalents();
-		if (talents.pyroblast) {
-			return Presets.ROTATION_PRESET_FIRE.rotation.rotation!;
-		} else if (talents.iceLance) {
-			return Presets.ROTATION_PRESET_FROST.rotation.rotation!;
-		}
-		return Presets.ROTATION_PRESET_ARCANE.rotation.rotation!;
+		// One rotation per tree (master's rule), so a build gets the spells it took talents for.
+		const points = player.getTalentTreePoints();
+		const tree = points.indexOf(Math.max(...points));
+		return [Presets.ROTATION_PRESET_ARCANE, Presets.ROTATION_PRESET_FIRE, Presets.ROTATION_PRESET_FROST][tree].rotation.rotation!;
 	},
 
 	simpleRotation: (_player: Player<Spec.SpecMage>, simple: SpecRotation<Spec.SpecMage>, cooldowns: Cooldowns): APLRotation => {

@@ -93,6 +93,11 @@ export interface IndividualSimUIConfig<SpecType extends Spec> extends PlayerConf
 	className: string;
 	// Used to generate schemed components. E.g. 'shaman', 'druid', 'raid'
 	cssScheme: string;
+	// Keeps a second page of the same spec (the Smite page of the dps priest) out of the first
+	// page's saved settings: it is added to every localStorage key the page writes.
+	storageKeyPart?: string;
+	// The header's name for such a page, in place of the spec's own.
+	pageTitle?: string;
 
 	knownIssues?: Array<ReactNode>;
 	warnings?: Array<(simUI: IndividualSimHost<SpecType>) => SimWarning>;

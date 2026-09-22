@@ -25,7 +25,10 @@ const DEFAULT_ITERATIONS = 1000;
 const TOOLTIP_ID = 'stat-weights-cell';
 
 // Every spec page's definition, the same modules spec_entry.tsx loads one of.
-const defs = Object.values(import.meta.glob<SpecDefinition<any>>('../../specs/*/*/spec.{ts,tsx}', { eager: true, import: 'default' }));
+// A second page of a spec (the Smite page) is the same spec: one row each.
+const defs = Object.values(import.meta.glob<SpecDefinition<any>>('../../specs/*/*/spec.{ts,tsx}', { eager: true, import: 'default' })).filter(
+	def => !def.storageKeyPart,
+);
 defs.forEach(def => registerSpecConfig(def.spec, def));
 
 const playerSpecOf = (def: SpecDefinition<any>) => PlayerSpecs.fromProto(def.spec);

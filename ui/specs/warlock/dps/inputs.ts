@@ -19,7 +19,6 @@ export const PetInput = <SpecType extends WarlockSpecs>() =>
 			{ actionId: ActionId.fromSpellId(688), value: Summon.Imp },
 			{ actionId: ActionId.fromSpellId(712), value: Summon.Succubus },
 			{ actionId: ActionId.fromSpellId(697), value: Summon.Voidwalker },
-			{ actionId: ActionId.fromSpellId(30146), value: Summon.Felguard },
 		],
 		storeField: 'player:*' as const,
 	});
@@ -29,7 +28,6 @@ export const ArmorInput = <SpecType extends WarlockSpecs>() =>
 		fieldName: 'armor',
 		values: [
 			{ value: WarlockOptions_Armor.NoArmor, tooltip: 'No Armor' },
-			{ actionId: ActionId.fromSpellId(28176), value: WarlockOptions_Armor.FelArmor },
 			{ actionId: ActionId.fromSpellId(706), value: WarlockOptions_Armor.DemonArmor },
 		],
 	});
@@ -73,9 +71,9 @@ export const CursesSection: CustomSection<Spec.SpecWarlock> = {
 	title: i18n.t('settings_tab.other.warlock_assigned_curse.title'),
 	description: i18n.t('settings_tab.other.warlock_assigned_curse.description'),
 	iconInputs: [
-		makeCursePicker<Spec.SpecWarlock>(WarlockOptions_CurseOptions.Agony, 27218),
+		makeCursePicker<Spec.SpecWarlock>(WarlockOptions_CurseOptions.Agony, 11713),
 		makeCursePicker<Spec.SpecWarlock>(WarlockOptions_CurseOptions.Doom, 603),
-		makeCursePicker<Spec.SpecWarlock>(WarlockOptions_CurseOptions.Elements, 1490),
+		makeCursePicker<Spec.SpecWarlock>(WarlockOptions_CurseOptions.Elements, 1311680),
 		makeCursePicker<Spec.SpecWarlock>(WarlockOptions_CurseOptions.Recklessness, 704),
 	],
 };
