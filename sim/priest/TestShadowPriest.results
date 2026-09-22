@@ -53,6 +53,13 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-AccurateScope-33"
+ value: {
+  dps: 741.8708
+  tps: 508.98496
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-AegisofPreservation-19345"
  value: {
   dps: 741.8708
@@ -102,10 +109,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-CrudeScope-30"
+ value: {
+  dps: 741.8708
+  tps: 508.98496
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 741.8708
   tps: 508.95935
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-DeadlyScope-663"
+ value: {
+  dps: 741.8708
+  tps: 508.98496
  }
 }
 dps_results: {
@@ -368,6 +389,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-SniperScope-664"
+ value: {
+  dps: 741.8708
+  tps: 508.98496
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-Spider'sKiss"
  value: {
   dps: 741.8708
@@ -379,6 +407,13 @@ dps_results: {
  value: {
   dps: 743.29612
   tps: 510.03358
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-StandardScope-32"
+ value: {
+  dps: 741.8708
+  tps: 508.98496
  }
 }
 dps_results: {

@@ -53,6 +53,13 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-AccurateScope-33"
+ value: {
+  dps: 340.414
+  tps: 232.748
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-AegisofPreservation-19345"
  value: {
   dps: 340.414
@@ -102,10 +109,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-CrudeScope-30"
+ value: {
+  dps: 340.414
+  tps: 232.748
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 344.25167
   tps: 235.46335
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-DeadlyScope-663"
+ value: {
+  dps: 340.414
+  tps: 232.748
  }
 }
 dps_results: {
@@ -368,6 +389,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-SniperScope-664"
+ value: {
+  dps: 340.414
+  tps: 232.748
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-Spider'sKiss"
  value: {
   dps: 340.414
@@ -379,6 +407,13 @@ dps_results: {
  value: {
   dps: 348.02508
   tps: 238.4191
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-StandardScope-32"
+ value: {
+  dps: 340.414
+  tps: 232.748
  }
 }
 dps_results: {

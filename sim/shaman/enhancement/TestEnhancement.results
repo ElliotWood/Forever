@@ -53,6 +53,13 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-AccurateScope-33"
+ value: {
+  dps: 390.80023
+  tps: 289.34788
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-AegisofPreservation-19345"
  value: {
   dps: 390.80023
@@ -172,10 +179,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-CrudeScope-30"
+ value: {
+  dps: 390.80023
+  tps: 289.34788
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 390.92436
   tps: 289.43477
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-DeadlyScope-663"
+ value: {
+  dps: 390.80023
+  tps: 289.34788
  }
 }
 dps_results: {
@@ -494,6 +515,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-SniperScope-664"
+ value: {
+  dps: 390.80023
+  tps: 289.34788
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-Spider'sKiss"
  value: {
   dps: 640.3427
@@ -505,6 +533,13 @@ dps_results: {
  value: {
   dps: 684.98922
   tps: 502.14371
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-StandardScope-32"
+ value: {
+  dps: 390.80023
+  tps: 289.34788
  }
 }
 dps_results: {

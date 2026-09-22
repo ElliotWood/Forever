@@ -53,6 +53,13 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-AccurateScope-33"
+ value: {
+  dps: 445.41829
+  tps: 303.57862
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-AegisofPreservation-19345"
  value: {
   dps: 445.41829
@@ -102,6 +109,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-CrudeScope-30"
+ value: {
+  dps: 445.41829
+  tps: 303.57862
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-Dal'Rend'sArms"
  value: {
   dps: 449.67533
@@ -113,6 +127,13 @@ dps_results: {
  value: {
   dps: 446.93722
   tps: 304.5216
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-DeadlyScope-663"
+ value: {
+  dps: 445.41829
+  tps: 303.57862
  }
 }
 dps_results: {
@@ -361,10 +382,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDestruction-AllItems-SniperScope-664"
+ value: {
+  dps: 445.41829
+  tps: 303.57862
+ }
+}
+dps_results: {
  key: "TestDestruction-AllItems-SpireoftheStoneshaper-12532"
  value: {
   dps: 457.13504
   tps: 310.2849
+ }
+}
+dps_results: {
+ key: "TestDestruction-AllItems-StandardScope-32"
+ value: {
+  dps: 445.41829
+  tps: 303.57862
  }
 }
 dps_results: {

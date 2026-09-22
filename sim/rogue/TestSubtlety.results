@@ -53,6 +53,13 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-AccurateScope-33"
+ value: {
+  dps: 633.97897
+  tps: 315.08755
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-AegisofPreservation-19345"
  value: {
   dps: 633.97897
@@ -116,6 +123,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-CrudeScope-30"
+ value: {
+  dps: 633.97897
+  tps: 315.08755
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Dal'Rend'sArms"
  value: {
   dps: 626.2938
@@ -131,6 +145,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSubtlety-AllItems-DarkmoonCard:BlueDragon-19288"
+ value: {
+  dps: 633.97897
+  tps: 315.08755
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-DeadlyScope-663"
  value: {
   dps: 633.97897
   tps: 315.08755
@@ -424,6 +445,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-SniperScope-664"
+ value: {
+  dps: 633.97897
+  tps: 315.08755
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Spider'sKiss"
  value: {
   dps: 633.97897
@@ -435,6 +463,13 @@ dps_results: {
  value: {
   dps: 645.87242
   tps: 320.99859
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-StandardScope-32"
+ value: {
+  dps: 633.97897
+  tps: 315.08755
  }
 }
 dps_results: {

@@ -110,12 +110,19 @@ func (hunter *Hunter) registerRangedWeaponSpecialization() {
 		return
 	}
 
-	// Serpent Sting is a sting, not a ranged weapon attack, and is left out on master; its dot is
-	// already excluded here because the mod matches on the ranged proc mask.
+	// Serpent Sting is a sting, not a ranged weapon attack, and is left out on master. It carries
+	// the ranged special proc mask, so the shots are named instead: Auto Shot has no class mask.
+	value := spellData.RangedWeaponSpecialization.FractionAt(hunter.Talents.RangedWeaponSpecialization)
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Pct,
-		ProcMask:   core.ProcMaskRanged,
-		FloatValue: spellData.RangedWeaponSpecialization.FractionAt(hunter.Talents.RangedWeaponSpecialization),
+		ProcMask:   core.ProcMaskRangedAuto,
+		FloatValue: value,
+	})
+	hunter.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_DamageDone_Pct,
+		ClassMask:  HunterSpellsAll &^ HunterSpellSerpentSting,
+		ProcMask:   core.ProcMaskRangedSpecial,
+		FloatValue: value,
 	})
 }
 

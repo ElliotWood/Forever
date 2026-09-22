@@ -107,6 +107,14 @@ stat_weights_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-AccurateScope-33"
+ value: {
+  dps: 167.674
+  tps: 179.81618
+  dtps: 1086.96779
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-AegisofPreservation-19345"
  value: {
   dps: 167.674
@@ -195,7 +203,23 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-CrudeScope-30"
+ value: {
+  dps: 167.674
+  tps: 179.81618
+  dtps: 1086.96779
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-DarkmoonCard:BlueDragon-19288"
+ value: {
+  dps: 167.674
+  tps: 179.81618
+  dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-DeadlyScope-663"
  value: {
   dps: 167.674
   tps: 179.81618
@@ -539,6 +563,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-SniperScope-664"
+ value: {
+  dps: 167.674
+  tps: 179.81618
+  dtps: 1086.96779
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-Spider'sKiss"
  value: {
   dps: 179.85471
@@ -560,6 +592,14 @@ dps_results: {
   dps: 201.151
   tps: 212.99719
   dtps: 1038.80205
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-StandardScope-32"
+ value: {
+  dps: 167.674
+  tps: 179.81618
+  dtps: 1086.96779
  }
 }
 dps_results: {

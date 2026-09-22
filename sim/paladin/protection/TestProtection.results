@@ -107,6 +107,14 @@ stat_weights_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-AccurateScope-33"
+ value: {
+  dps: 540.55825
+  tps: 572.15707
+  dtps: 789.10352
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-AegisofPreservation-19345"
  value: {
   dps: 541.23919
@@ -259,6 +267,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-CrudeScope-30"
+ value: {
+  dps: 540.55825
+  tps: 572.15707
+  dtps: 789.10352
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-Dal'Rend'sArms"
  value: {
   dps: 481.5782
@@ -272,6 +288,14 @@ dps_results: {
   dps: 540.28081
   tps: 572.17949
   dtps: 788.44638
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-DeadlyScope-663"
+ value: {
+  dps: 540.55825
+  tps: 572.15707
+  dtps: 789.10352
  }
 }
 dps_results: {
@@ -739,7 +763,23 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-SniperScope-664"
+ value: {
+  dps: 540.55825
+  tps: 572.15707
+  dtps: 789.10352
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-Spider'sKiss"
+ value: {
+  dps: 540.55825
+  tps: 572.15707
+  dtps: 789.10352
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-StandardScope-32"
  value: {
   dps: 540.55825
   tps: 572.15707

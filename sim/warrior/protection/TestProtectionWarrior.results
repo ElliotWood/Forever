@@ -53,6 +53,14 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-AccurateScope-33"
+ value: {
+  dps: 482.50523
+  tps: 1080.4472
+  dtps: 769.23936
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-AegisofPreservation-19345"
  value: {
   dps: 481.49771
@@ -237,6 +245,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-CrudeScope-30"
+ value: {
+  dps: 482.50523
+  tps: 1080.4472
+  dtps: 769.23936
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Dal'Rend'sArms"
  value: {
   dps: 378.72699
@@ -246,6 +262,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-DarkmoonCard:BlueDragon-19288"
+ value: {
+  dps: 482.50523
+  tps: 1080.4472
+  dtps: 769.23936
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-DeadlyScope-663"
  value: {
   dps: 482.50523
   tps: 1080.4472
@@ -693,6 +717,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-SniperScope-664"
+ value: {
+  dps: 482.50523
+  tps: 1080.4472
+  dtps: 769.23936
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Spider'sKiss"
  value: {
   dps: 482.50523
@@ -706,6 +738,14 @@ dps_results: {
   dps: 447.1341
   tps: 839.02129
   dtps: 1163.052
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-StandardScope-32"
+ value: {
+  dps: 482.50523
+  tps: 1080.4472
+  dtps: 769.23936
  }
 }
 dps_results: {
