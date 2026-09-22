@@ -20,7 +20,7 @@ func (hunter *Hunter) registerMultiShotSpell(timer *core.Timer) {
 		MissileSpeed:   rank.MissileSpeed,
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: rank.Cost,
+			BaseCostPercent: 13.9, // client SpellPower 170887: PowerCostPct 13.9, no flat cost
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

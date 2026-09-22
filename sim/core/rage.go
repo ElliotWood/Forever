@@ -8,7 +8,9 @@ import (
 
 const ThreatPerRageGained = 5
 const BaseRageHitFactor = 3.5
-const RageFactor = 274.7
+// Rage conversion value for damage taken, Kalgan's 0.0091107836*L^2 + 3.225598133*L + 4.2652911 at
+// the character's level: 230.6 at 60. TBC's 274.7 was the level 70 value.
+const RageFactor = 230.6
 
 type rageBar struct {
 	unit *Unit

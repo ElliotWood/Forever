@@ -168,6 +168,26 @@ func (spell *Spell) OutcomeTickPhysicalCrit(sim *Simulation, result *SpellResult
 	}
 }
 
+// A tick of a dot that has already landed: it can crit but does not roll to hit again. Classic
+// dots test hit once, when applied (the Forever beta log has no SPELL_PERIODIC_MISSED at all).
+func (spell *Spell) OutcomeTickMagicCrit(sim *Simulation, result *SpellResult, attackTable *AttackTable) {
+	isPartialResist := result.DidResist()
+	if spell.MagicCritCheck(sim, result.Target) {
+		result.Outcome = OutcomeCrit
+		result.Damage *= spell.CritDamageMultiplier(attackTable)
+		spell.SpellMetrics[result.Target.UnitIndex].CritTicks++
+		if isPartialResist {
+			spell.SpellMetrics[result.Target.UnitIndex].ResistedCritTicks++
+		}
+	} else {
+		result.Outcome = OutcomeHit
+		spell.SpellMetrics[result.Target.UnitIndex].Ticks++
+		if isPartialResist {
+			spell.SpellMetrics[result.Target.UnitIndex].ResistedTicks++
+		}
+	}
+}
+
 func (spell *Spell) OutcomeTickMagicHitAndCrit(sim *Simulation, result *SpellResult, attackTable *AttackTable) {
 	if spell.MagicHitCheck(sim, attackTable) {
 		isPartialResist := result.DidResist()

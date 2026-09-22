@@ -209,7 +209,7 @@ export const TotemOfWrath = makeMultistatePartyBuffInput({
 	fieldName: 'totemOfWrath',
 	label: 'Totem of Wrath',
 });
-export const TrueshotAura = makeBooleanPartyBuffInput({ actionId: ActionId.fromSpellId(27066), fieldName: 'trueshotAura', label: 'Trueshot Aura' });
+export const TrueshotAura = makeBooleanPartyBuffInput({ actionId: ActionId.fromSpellId(19506), fieldName: 'trueshotAura', label: 'Trueshot Aura' });
 export const AspectOfTheWild = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(27045),
 	fieldName: 'aspectOfTheWild',
@@ -421,27 +421,27 @@ export const CurseOfElements = makeTristateDebuffInput({
 	label: 'Curse of Elements',
 });
 export const CurseOfRecklessness = makeBooleanDebuffInput({
-	actionId: ActionId.fromSpellId(27226),
+	actionId: ActionId.fromSpellId(11717),
 	fieldName: 'curseOfRecklessness',
 	label: 'Curse of Recklessness',
 });
 export const FaerieFire = makeTristateDebuffInput({
-	actionId: ActionId.fromSpellId(26993),
+	actionId: ActionId.fromSpellId(9907),
 	impId: ActionId.fromSpellId(33602),
 	fieldName: 'faerieFire',
 	label: 'Faerie Fire',
 });
 export const ExposeArmor = makeTristateDebuffInput({
-	actionId: ActionId.fromSpellId(26866),
+	actionId: ActionId.fromSpellId(11198),
 	impId: ActionId.fromSpellId(14169),
 	fieldName: 'exposeArmor',
 	label: 'Expose Armor',
 });
-export const SunderArmor = makeBooleanDebuffInput({ actionId: ActionId.fromSpellId(25225), fieldName: 'sunderArmor', label: 'Sunder Armor' });
+export const SunderArmor = makeBooleanDebuffInput({ actionId: ActionId.fromSpellId(11597), fieldName: 'sunderArmor', label: 'Sunder Armor' });
 export const WintersChill = makeBooleanDebuffInput({ actionId: ActionId.fromSpellId(28595), fieldName: 'wintersChill', label: "Winter's Chill" });
 export const GiftOfArthas = makeBooleanDebuffInput({ actionId: ActionId.fromSpellId(11374), fieldName: 'giftOfArthas', label: 'Gift of Arthas' });
 export const DemoralizingRoar = makeTristateDebuffInput({
-	actionId: ActionId.fromSpellId(26998),
+	actionId: ActionId.fromSpellId(9898),
 	impId: ActionId.fromSpellId(16862),
 	fieldName: 'demoralizingRoar',
 	label: 'Demoralizing Roar',

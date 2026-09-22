@@ -837,9 +837,10 @@ func LeaderOfThePackAura(char *Character, improved bool) *Aura {
 	})
 }
 
+// Forever client 24907: 3% critical strike (aura 290). TBC's was 5%.
 func MoonkinAuraBuff(char *Character, improved bool) *Aura {
 	statsConfig := []StatConfig{
-		{stats.SpellCritPercent, 5, false},
+		{stats.SpellCritPercent, 3, false},
 	}
 	if improved {
 		statsConfig = append(statsConfig, StatConfig{stats.SpellCritRating, 20, false})
@@ -953,14 +954,12 @@ func SanctityAuraBuff(char *Character, isPlayer bool, impSanctityAuraRank int32)
 }
 
 func TrueShotAuraBuff(char *Character) *Aura {
-	apBuff := 125.0
-
+	// Client 19506: party aura, A_MOD_RANGED_ATTACK_POWER 50; no melee attack power.
 	return makeStatBuff(char, BuffConfig{
 		Label:    "Trueshot Aura",
-		ActionID: ActionID{SpellID: 27066},
+		ActionID: ActionID{SpellID: 19506},
 		Stats: []StatConfig{
-			{stats.RangedAttackPower, apBuff, false},
-			{stats.AttackPower, apBuff, false},
+			{stats.RangedAttackPower, 50, false},
 		},
 	})
 }
