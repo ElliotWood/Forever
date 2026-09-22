@@ -18,18 +18,18 @@ func init() {
 // rotation and the fake prepull (no SkipRotation) make it exercise a full environment reset, the
 // path the UI's stats request takes.
 func TestHolyPaladin(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	var generators []core.TestGenerator
-	for _, gearSet := range []string{"preraid", "p3"} {
+	// Naked and one talent build per preset: the generated item database does not carry the Forever
+	// gear our sim plans with, and gives the rest TBC-shaped stats.
+	for _, build := range []struct{ name, talents string }{{"standard", StandardTalents}, {"holy-38-13-0", HolyHealerTalents}} {
 		player := core.WithSpec(
 			&proto.Player{
 				Class:         proto.Class_ClassPaladin,
-				Race:          proto.Race_RaceBloodElf,
-				Equipment:     core.GetGearSet("../../../ui/specs/paladin/holy/gear_sets", gearSet).GearSet,
+				Race:          proto.Race_RaceHuman,
+				Equipment:     &proto.EquipmentSpec{},
 				Consumables:   FullConsumes,
 				Buffs:         core.FullIndividualBuffs,
-				TalentsString: StandardTalents,
+				TalentsString: build.talents,
 				Profession1:   proto.Profession_Enchanting,
 				Profession2:   proto.Profession_Jewelcrafting,
 				Rotation:      &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
@@ -37,7 +37,7 @@ func TestHolyPaladin(t *testing.T) {
 			PlayerOptions,
 		)
 		generators = append(generators, &core.SingleCharacterStatsTestGenerator{
-			Name: gearSet,
+			Name: build.name,
 			Request: &proto.ComputeStatsRequest{
 				Raid: core.SinglePlayerRaidProto(player, core.FullPartyBuffs, core.FullRaidBuffs, core.FullDebuffs),
 			},
@@ -46,8 +46,9 @@ func TestHolyPaladin(t *testing.T) {
 	core.RunTestSuite(t, t.Name(), generators)
 }
 
-// 45/11/5, wowhead's TBC raid build.
-var StandardTalents = "05503121520132531051-500231-5"
+// Our Forever sim's holy builds.
+var StandardTalents = "005321013025131251-503210302"
+var HolyHealerTalents = "205320213225131051-50323"
 
 var FullConsumes = &proto.ConsumesSpec{
 	FlaskId: 22853, // Flask of Mighty Restoration

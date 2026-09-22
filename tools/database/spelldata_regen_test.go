@@ -50,7 +50,7 @@ var rankFamilies = []rankFamily{
 	{"Flash of Light", classPaladin, paladin.FlashOfLightRankMap},
 	{"Lay on Hands", classPaladin, paladin.LayOnHandsRankMap},
 	{"Holy Shield", classPaladin, paladin.HolyShieldRankMap},
-	{"Seal of Righteousness", classPaladin, paladin.SealOfRighteousnessTable},
+	{"Seal of Righteousness", classPaladin, paladin.SealOfRighteousnessRankMap},
 
 	{"Mind Blast", classPriest, priest.MindBlastRankMap},
 	{"Mind Flay", classPriest, priest.MindFlayRankMap},

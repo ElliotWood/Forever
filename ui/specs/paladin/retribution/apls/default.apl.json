@@ -1,31 +1,16 @@
 {
 	"type": "TypeAPL",
 	"prepullActions": [
-		{"action":{"castSpell":{"spellId":{"spellId":20218}}},"doAtValue":{"const":{"val":"-18.5s"}}},
-		{"action":{"groupReference":{"groupName":"PrepullSeal"}},"doAtValue":{"const":{"val":"-1.5s"}}},
-        {"action":{"groupReference":{"groupName":"PrepullJudge"}},"doAtValue":{"const":{"val":"0s"}}},
-        {"action":{"groupReference":{"groupName":"PullSeal"}},"doAtValue":{"const":{"val":"0s"}}}
+		{"action":{"castSpell":{"spellId":{"spellId":20920,"rank":5}}},"doAtValue":{"const":{"val":"-1.5s"}}}
 	],
 	"priorityList": [
-		{"action":{"condition":{"cmp":{"op":"OpGe","lhs":{"currentTime":{}},"rhs":{"variableRef":{"name":"Delay Major CDs"}}}},"autocastOtherCooldowns":{}}},
-		{"action":{"condition":{"and":{"vals":[{"auraIsActive":{"auraId":{"spellId":20375,"rank":1}}},{"cmp":{"op":"OpLe","lhs":{"autoTimeToNext":{"autoType":"MeleeAuto"}},"rhs":{"const":{"val":".4s"}}}}]}},"castSpell":{"spellId":{"spellId":31892,"rank":1}}}},
-		{"action":{"condition":{"auraIsActive":{"auraId":{"spellId":31892,"rank":1}}},"castSpell":{"spellId":{"spellId":35395}}}},
-		{"action":{"condition":{"and":{"vals":[{"auraIsActive":{"auraId":{"spellId":31892,"rank":1}}},{"gcdIsReady":{}},{"cmp":{"op":"OpLe","lhs":{"autoTimeSinceLast":{"autoType":"AnyAuto"}},"rhs":{"const":{"val":".8s"}}}}]}},"castSpell":{"spellId":{"spellId":20271}}}},
-		{"action":{"condition":{"auraIsActive":{"auraId":{"spellId":31892,"rank":1}}},"groupReference":{"groupName":"ExoOrConsec","variables":[{"name":"TargetDemonOrUndead","value":{"variableRef":{"name":"No"}}}]}}},
-		{"action":{"condition":{"and":{"vals":[{"auraIsInactive":{"auraId":{"spellId":20375,"rank":1}}},{"not":{"val":{"spellIsReady":{"spellId":{"spellId":20271}}}}},{"cmp":{"op":"OpLe","lhs":{"spellGcdHastedDuration":{"spellId":{"spellId":20375,"rank":1}}},"rhs":{"math":{"op":"OpAdd","lhs":{"const":{"val":".4s"}},"rhs":{"autoTimeToNext":{"autoType":"MeleeAuto"}}}}}},{"cmp":{"op":"OpGe","lhs":{"autoTimeSinceLast":{"autoType":"MeleeAuto"}},"rhs":{"const":{"val":".5s"}}}}]}},"castSpell":{"spellId":{"spellId":20375,"rank":1}}}}
-	],
-	"groups": [
-		{"name":"ExoOrConsec","actions":[{"action":{"condition":{"variableRef":{"name":"Use Exorcism"}},"castSpell":{"spellId":{"spellId":27138,"rank":7}}}},{"action":{"condition":{"variableRef":{"name":"Use Consecrate"}},"castSpell":{"spellId":{"spellId":27173,"rank":6}}}}]},
-        {"name":"PrepullSeal","actions":[{"action":{"condition":{"variableRef":{"name":"Prepull Seal Of the Crusader"}},"castSpell":{"spellId":{"spellId":27158,"rank":7}}}},{"action":{"condition":{"not":{"val":{"variableRef":{"name":"Prepull Seal Of the Crusader"}}}},"castSpell":{"spellId":{"spellId":20375,"rank":1}}}}]},
-        {"name":"PrepullJudge","actions":[{"action":{"condition":{"variableRef":{"name":"Prepull Seal Of the Crusader"}},"castSpell":{"spellId":{"spellId":20271}}}}]},
-        {"name":"PullSeal","actions":[{"action":{"condition":{"not":{"val":{"variableRef":{"name":"Prepull Seal Of the Crusader"}}}},"castSpell":{"spellId":{"spellId":31892,"rank":1}}}},{"action":{"condition":{"variableRef":{"name":"Prepull Seal Of the Crusader"}},"castSpell":{"spellId":{"spellId":20375,"rank":1}}}}]}
-	],
-	"valueVariables": [
-		{"name":"Yes","value":{"const":{"val":"true"}}},
-		{"name":"No","value":{"const":{"val":"false"}}},
-		{"name":"Use Exorcism","value":{"const":{"val":"false"}}},
-		{"name":"Use Consecrate","value":{"const":{"val":"false"}}},
-		{"name":"Delay Major CDs","value":{"const":{"val":"11s"}}},
-        {"name":"Prepull Seal Of the Crusader","value":{"const":{"val":"true"}}}
+		{"action":{"autocastOtherCooldowns":{}}},
+		{"action":{"condition":{"spellCanCast":{"spellId":{"spellId":20271}}},"castSpell":{"spellId":{"spellId":20271}}}},
+		{"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpLe","lhs":{"auraRemainingTime":{"auraId":{"spellId":20920,"rank":5}}},"rhs":{"const":{"val":"1s"}}}},{"cmp":{"op":"OpLe","lhs":{"auraRemainingTime":{"auraId":{"spellId":20293,"rank":8}}},"rhs":{"const":{"val":"1s"}}}}]}},"castSpell":{"spellId":{"spellId":20920,"rank":5}}}},
+		{"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpGe","lhs":{"currentManaPercent":{}},"rhs":{"const":{"val":"15%"}}}},{"cmp":{"op":"OpLt","lhs":{"autoTimeToNext":{"autoType":"MeleeAuto"}},"rhs":{"const":{"val":"0.4s"}}}},{"auraIsActive":{"auraId":{"spellId":20920,"rank":5}}}]}},"castSpell":{"spellId":{"spellId":20293,"rank":8}}}},
+		{"action":{"condition":{"and":{"vals":[{"cmp":{"op":"OpGe","lhs":{"currentManaPercent":{}},"rhs":{"const":{"val":"15%"}}}},{"cmp":{"op":"OpLt","lhs":{"autoTimeToNext":{"autoType":"MeleeAuto"}},"rhs":{"const":{"val":"0.4s"}}}},{"auraIsActive":{"auraId":{"spellId":20293,"rank":8}}}]}},"castSpell":{"spellId":{"spellId":20920,"rank":5}}}},
+		{"action":{"castSpell":{"spellId":{"spellId":24239,"rank":3}}}},
+		{"action":{"castSpell":{"spellId":{"spellId":10333,"rank":8}}}},
+		{"action":{"condition":{"cmp":{"op":"OpGe","lhs":{"currentManaPercent":{}},"rhs":{"const":{"val":"70%"}}}},"castSpell":{"spellId":{"spellId":20924,"rank":5}}}}
 	]
 }

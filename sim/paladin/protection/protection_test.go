@@ -3,8 +3,7 @@ package protection
 import (
 	"testing"
 
-	"github.com/wowsims/forever/sim/common"
-	_ "github.com/wowsims/forever/sim/common" // imported to get item effects included.
+	"github.com/wowsims/forever/sim/common" // imported to get item effects included.
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 )
@@ -14,52 +13,33 @@ func init() {
 	common.RegisterAllEffects()
 }
 
-func setValueVariable(apl *proto.APLRotation, name string, val string) {
-	for i, v := range apl.ValueVariables {
-		if v.Name == name {
-			apl.ValueVariables[i].Value = &proto.APLValue{
-				Value: &proto.APLValue_Const{
-					Const: &proto.APLValueConst{
-						Val: val,
-					},
-				},
-			}
-			return
-		}
-	}
-
-	panic("value variable " + name + " not found, APL probably changed, fix tests!")
-}
-
 func TestProtection(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
-	// Set all boolean options to true to test everything
-	apl := core.GetAplRotation("../../../ui/specs/paladin/protection/apls", "default")
-	setValueVariable(apl.Rotation, "Prioritize Holy Shield", "true")
-	setValueVariable(apl.Rotation, "Use Exorcism", "true")
-	setValueVariable(apl.Rotation, "Use Avenger's Shield", "true")
-	setValueVariable(apl.Rotation, "Use Hammer of Wrath", "true")
-
 	core.RunTestSuite(t, t.Name(), core.FullCharacterTestSuiteGenerator([]core.CharacterSuiteConfig{
 		{
-			Class:            proto.Class_ClassPaladin,
-			Race:             proto.Race_RaceBloodElf,
-			OtherRaces:       []proto.Race{proto.Race_RaceHuman},
-			GearSet:          core.GetGearSet("../../../ui/specs/paladin/protection/gear_sets", "p2"),
-			Talents:          DefaultProtectionTalents,
-			Consumables:      DefaultConsumables,
-			SpecOptions:      core.SpecOptionsCombo{Label: "Protection", SpecOptions: DefaultOptions},
+			Class:      proto.Class_ClassPaladin,
+			Race:       proto.Race_RaceHuman,
+			OtherRaces: []proto.Race{proto.Race_RaceDwarf},
+
+			GearSet: core.GearSetCombo{Label: "WeaponAndShield", GearSet: WeaponAndShield},
+
+			Talents: ProtTalents,
+			OtherTalentSets: []core.TalentsCombo{
+				{Label: "Protection 0/45/6", Talents: ProtDeepTalents},
+			},
+
+			SpecOptions: core.SpecOptionsCombo{Label: "Protection", SpecOptions: DefaultOptions},
+			Rotation:    core.GetAplRotation("../../../ui/specs/paladin/protection/apls", "default"),
+			OtherRotations: []core.RotationCombo{
+				core.GetAplRotation("../../../ui/specs/paladin/protection/apls", "p5"),
+			},
+
+			Consumables: DefaultConsumables,
+
+			// Without this the boss never attacks, so nothing the spec does in response to being hit
+			// can fire and the damage taken metrics are all zero.
+			IsTank:           true,
+			InFrontOfTarget:  true,
 			StartingDistance: 5,
-			Profession1:      proto.Profession_Engineering,
-			Profession2:      proto.Profession_Enchanting,
-
-			Rotation: apl,
-
-			IndividualBuffs: core.FullTankIndividualBuffs,
-
-			IsTank:          true,
-			InFrontOfTarget: true,
 
 			ItemFilter: core.ItemFilter{
 				ArmorType: proto.ArmorType_ArmorTypePlate,
@@ -78,8 +58,36 @@ func TestProtection(t *testing.T) {
 					proto.RangedWeaponType_RangedWeaponTypeLibram,
 				},
 			},
+
+			EPReferenceStat: proto.Stat_StatAttackPower,
+			StatsToWeigh: []proto.Stat{
+				proto.Stat_StatStrength,
+				proto.Stat_StatStamina,
+				proto.Stat_StatAgility,
+				proto.Stat_StatAttackPower,
+				proto.Stat_StatMeleeHitRating,
+				proto.Stat_StatMeleeCritRating,
+				proto.Stat_StatSpellDamage,
+				proto.Stat_StatArmor,
+				proto.Stat_StatDefenseRating,
+				proto.Stat_StatBlockRating,
+			},
 		},
 	}))
+}
+
+// Our Forever sim's builds: the P4 build it tests with, and the deep Protection preset.
+var ProtTalents = "052003003-5530513321301501"
+var ProtDeepTalents = "-5532513321301551-15"
+
+// A one-hander and a shield, rows both item databases carry. The generated item database does not
+// carry the Forever gear our sim tests with and gives the rest TBC-shaped stats.
+var WeaponAndShield = &proto.EquipmentSpec{
+	Items: []*proto.ItemSpec{
+		{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {},
+		{Id: 12584}, // Grand Marshal's Longsword
+		{Id: 18825}, // Grand Marshal's Aegis
+	},
 }
 
 var DefaultOptions = &proto.Player_ProtectionPaladin{
@@ -90,14 +98,8 @@ var DefaultOptions = &proto.Player_ProtectionPaladin{
 	},
 }
 
-var DefaultProtectionTalents = "-0530513050000142521051-052050003003"
-
 var DefaultConsumables = &proto.ConsumesSpec{
-	FlaskId:    22861, // Flask of Blinding Light
-	FoodId:     27657, // Blackened Basilisk
-	PotId:      22832, // Super Mana Potion
-	ConjuredId: 12662, // Dark Rune
-	ScrollStr:  true,
-	ScrollAgi:  true,
-	ScrollArm:  true,
+	FlaskId: 22854,
+	FoodId:  27658,
+	PotId:   22838,
 }
