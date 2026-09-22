@@ -149,9 +149,7 @@
 					}
 				],
 				"buffs": {
-					"moonkinAura": 2,
-					"eyeOfTheNight": true,
-					"chainOfTheTwilightOwl": true
+					"moonkinAura": 2
 				}
 			},
 			{
@@ -240,15 +238,12 @@
 			"arcaneBrilliance": true,
 			"powerWordFortitude": 2,
 			"divineSpirit": 2,
-			"giftOfTheWild": 2,
-			"bloodlust": true
+			"giftOfTheWild": 2
 		},
 		"debuffs": {
 			"judgementOfWisdom": true,
 			"improvedSealOfTheCrusader": 2,
-			"misery": true,
 			"curseOfElements": 2,
-			"bloodFrenzy": true,
 			"giftOfArthas": true,
 			"mangle": true,
 			"exposeArmor": 2,

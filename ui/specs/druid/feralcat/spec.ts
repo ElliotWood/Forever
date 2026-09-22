@@ -1,25 +1,14 @@
+import * as BuffDebuffInputs from '@features/settings/model/buffs_debuffs';
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLAction, APLListItem, APLRotation, APLRotation_Type as APLRotationType } from '@generated/proto/apl';
-import {
-	Cooldowns,
-	Debuffs,
-	EquipmentSpec,
-	IndividualBuffs,
-	ItemSlot,
-	PartyBuffs,
-	PseudoStat,
-	RaidBuffs,
-	Spec,
-	Stat,
-	TristateEffect,
-} from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Cooldowns, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import { FeralCatDruid_Rotation as DruidRotation } from '@generated/proto/druid';
 import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { Stats, UnitStat } from '@sim/proto/stats';
-import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
 import * as FeralInputs from './inputs';
@@ -97,37 +86,31 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
 		raidBuffs: RaidBuffs.create({
-			...defaultRaidBuffMajorDamageCooldowns(),
 			arcaneBrilliance: true,
-			divineSpirit: TristateEffect.TristateEffectImproved,
-			giftOfTheWild: TristateEffect.TristateEffectImproved,
-			powerWordFortitude: TristateEffect.TristateEffectImproved,
+			divineSpirit: true,
+			giftOfTheWild: true,
+			powerWordFortitude: true,
 			shadowProtection: true,
 		}),
 		partyBuffs: PartyBuffs.create({
-			ferociousInspiration: 2,
-			battleShout: TristateEffect.TristateEffectImproved,
-			graceOfAirTotem: TristateEffect.TristateEffectImproved,
-			windfuryTotem: TristateEffect.TristateEffectImproved,
+			battleShout: true,
+			graceOfAirTotem: true,
+			windfuryTotem: true,
 			manaSpringTotem: TristateEffect.TristateEffectRegular,
-			strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
+			strengthOfEarthTotem: true,
 			totemTwisting: true,
 		}),
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
-			blessingOfMight: TristateEffect.TristateEffectImproved,
-			unleashedRage: true,
+			blessingOfMight: true,
 		}),
 		debuffs: Debuffs.create({
-			...defaultExposeWeaknessSettings(),
-			bloodFrenzy: true,
-			exposeArmor: TristateEffect.TristateEffectImproved,
-			huntersMark: TristateEffect.TristateEffectImproved,
-			improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+			exposeArmor: true,
+			huntersMark: true,
+			improvedSealOfTheCrusader: true,
 			judgementOfWisdom: true,
-			misery: true,
 			curseOfRecklessness: true,
-			faerieFire: TristateEffect.TristateEffectImproved,
+			faerieFire: true,
 			sunderArmor: true,
 			giftOfArthas: true,
 		}),
@@ -139,7 +122,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 	rotationInputs: FeralInputs.FeralDruidRotationConfig,
 	// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
 	includeBuffDebuffInputs: [Stat.StatMP5, Stat.StatIntellect, Stat.StatStamina],
-	excludeBuffDebuffInputs: [Stat.StatParryRating],
+	excludeBuffDebuffInputs: [BuffDebuffInputs.WindfuryTotem],
 	// Inputs to include in the 'Other' section on the settings tab.
 	otherInputs: {
 		inputs: [

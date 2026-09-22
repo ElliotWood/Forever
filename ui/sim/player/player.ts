@@ -7,6 +7,7 @@ import {
 	UnitMetadata as UnitMetadataProto,
 } from '@generated/proto/api';
 import { APLRotation, APLRotation_Type as APLRotationType, SimpleRotation } from '@generated/proto/apl';
+import { IndividualBuffs } from '@generated/proto/buffs';
 import {
 	Class,
 	ConsumableType,
@@ -16,7 +17,6 @@ import {
 	GemColor,
 	HandType,
 	HealingModel,
-	IndividualBuffs,
 	ItemRandomSuffix,
 	ItemSlot,
 	Profession,
@@ -24,7 +24,6 @@ import {
 	Race,
 	Spec,
 	Stat,
-	TristateEffect,
 	UnitReference,
 	UnitStats,
 } from '@generated/proto/common';
@@ -50,6 +49,7 @@ import { Gear, ItemSwapGear } from '../proto/gear';
 import { gemMatchesSocket, isUnrestrictedGem } from '../proto/gems';
 import { canEquipEnchant, canEquipItem, enchantAppliesToItem, getMetaGemEffectEP, isPVPItem } from '../proto/items';
 import { migrateOldProto, ProtoConversionMap } from '../proto/proto_migration';
+import { dropRetiredRotationFields } from '../proto/rotation_field_migration';
 import { specTypeFunctions, withSpec } from '../proto/spec_functions';
 import type { ClassOptions, ClassSpecs, SpecClasses, SpecOptions, SpecRotation, SpecTalents, SpecTypeFunctions } from '../proto/spec_types';
 import { Stats, UnitStat } from '../proto/stats';
@@ -757,34 +757,12 @@ export class Player<SpecType extends Spec> {
 		let debuffStats = new Stats();
 		const debuffs = this.sim.raid.getDebuffs();
 
-		if (debuffs.faerieFire == TristateEffect.TristateEffectImproved) {
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 3);
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatRangedHitPercent, 3);
-		}
-
-		if (debuffs.improvedSealOfTheCrusader) {
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatMeleeCritPercent, 3);
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatRangedCritPercent, 3);
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatSpellCritPercent, 3);
-		}
-
-		if (debuffs.exposeWeaknessUptime && debuffs.exposeWeaknessHunterAgility) {
-			let agi = debuffs.exposeWeaknessHunterAgility;
-
-			// TODO: Forever drops the Expose Weakness talent, so a hunter can no longer
-			// self-provide this debuff and the agility always comes from the raid setting.
-			// Restore the spec branch if Forever reintroduces an equivalent talent.
-
-			debuffStats = debuffStats.addStat(Stat.StatAttackPower, agi * 0.25);
-			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, agi * 0.25);
-		}
-
-		if (debuffs.huntersMark != TristateEffect.TristateEffectMissing) {
-			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, 440);
-
-			if (debuffs.huntersMark == TristateEffect.TristateEffectImproved) {
-				debuffStats = debuffStats.addStat(Stat.StatAttackPower, 110);
-			}
+		// Spell 14325, the top rank the buff generator resolves, which HuntersMarkValue
+		// in sim/core/debuffs_auto_gen.go states. Nothing exports it to TypeScript, so
+		// the sheet repeats the number and this is the second place to change;
+		// TestHuntersMarkOnTheCharacterSheetMatchesTheSim holds the two together.
+		if (debuffs.huntersMark) {
+			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, 71);
 		}
 
 		return debuffStats;
@@ -1630,6 +1608,21 @@ export class Player<SpecType extends Spec> {
 								// Malformed JSON - nothing to migrate.
 							}
 						}
+					}
+
+					return oldProto;
+				},
+			],
+			// v17 types the ghost-talent buff fields bool. A JSON payload is rewritten before it is
+			// parsed (`migrateRetypedBuffFields`) and a binary one decodes 1 or 2 as true, so the
+			// buff fields need nothing here.
+			[
+				17,
+				(oldProto: PlayerProto) => {
+					// v17 also reserves the warrior's bloodlust_timing, which a saved simple rotation
+					// still spells out; `dropRetiredRotationFields` says what leaving it in costs.
+					if (oldProto.rotation?.simple) {
+						oldProto.rotation.simple.specRotationJson = dropRetiredRotationFields(oldProto.rotation.simple.specRotationJson);
 					}
 
 					return oldProto;

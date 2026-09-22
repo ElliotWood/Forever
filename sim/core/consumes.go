@@ -57,7 +57,7 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 		if consumables.GuardianElixirId == 9088 {
 			character.AddStat(stats.ShadowResistance, 10)
 			auras := character.NewEnemyAuraArray(func(target *Unit) *Aura {
-				return GiftOfArthasAura(target)
+				return GiftOfArthasAura(target, true, 0)
 			})
 			procSpell := character.RegisterSpell(SpellConfig{
 				ActionID:    ActionID{SpellID: 11374},
@@ -93,7 +93,7 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 	}
 
 	// Static Imbues
-	if consumables.MhImbueId != 0 && partyBuffs.WindfuryTotem == proto.TristateEffect_TristateEffectMissing {
+	if consumables.MhImbueId != 0 && !partyBuffs.WindfuryTotem {
 		registerStaticImbue(agent, consumables.MhImbueId, character.AutoAttacks.MH())
 	}
 	if consumables.OhImbueId != 0 {

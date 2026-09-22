@@ -1,5 +1,6 @@
-import { APLRotation } from '@generated/proto/apl';
+import { APLRotation, APLRotation_Type } from '@generated/proto/apl';
 import { SavedRotation } from '@generated/proto/ui';
+import { DpsWarrior_Rotation, DpsWarriorSpec, WarriorSunder } from '@generated/proto/warrior';
 import { SimHostProvider } from '@sim/context/SimHostContext';
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
@@ -23,9 +24,21 @@ const withUuids = SavedRotation.create({
 	}),
 });
 
+const withRetiredField = SavedRotation.create({
+	rotation: APLRotation.create({
+		type: APLRotation_Type.TypeSimple,
+		simple: { specRotationJson: '{"spec":"DpsWarriorSpecArms","sunderArmor":"WarriorSunderMaintain","bloodlustTiming":5}' },
+	}),
+});
+
 const Probe = () => {
 	const { entries } = useSavedRotation();
-	return <span data-testid="json">{entries[0]?.json ?? ''}</span>;
+	return (
+		<>
+			<span data-testid="json">{entries[0]?.json ?? ''}</span>
+			<span data-testid="spec-rotation-json">{entries[0]?.data.rotation?.simple?.specRotationJson ?? ''}</span>
+		</>
+	);
 };
 
 const mount = () => {
@@ -47,5 +60,18 @@ describe('useSavedRotation', () => {
 
 		expect(getByTestId('json').textContent).not.toContain('uuid');
 		expect(getByTestId('json').textContent).not.toContain('minted-by-an-older-build');
+	});
+
+	// Nothing versions a saved rotation, so the reserved key survives to `DpsWarrior_Rotation.fromJson`,
+	// which throws over it; `Player.getSimpleRotation` catches and hands back a blank rotation, costing
+	// the spec, the sunder choice and both toggles.
+	it('drops the reserved field a stored simple rotation carries, so the spec parser keeps the rest', () => {
+		window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ Arms: SavedRotation.toJson(withRetiredField) }));
+
+		const { getByTestId } = mount();
+		const rotation = DpsWarrior_Rotation.fromJson(JSON.parse(getByTestId('spec-rotation-json').textContent!));
+
+		expect(rotation.spec).toBe(DpsWarriorSpec.DpsWarriorSpecArms);
+		expect(rotation.sunderArmor).toBe(WarriorSunder.WarriorSunderMaintain);
 	});
 });

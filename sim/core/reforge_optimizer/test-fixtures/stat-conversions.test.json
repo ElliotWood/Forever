@@ -121,8 +121,7 @@
 						},
 						"buffs": {
 							"blessingOfKings": true,
-							"blessingOfMight": 2,
-							"unleashedRage": true
+							"blessingOfMight": 2
 						},
 						"cooldowns": {},
 						"healingModel": {}
@@ -141,7 +140,6 @@
 					}
 				],
 				"buffs": {
-					"ferociousInspiration": 2,
 					"manaSpringTotem": 1,
 					"graceOfAirTotem": 2,
 					"strengthOfEarthTotem": 2,
@@ -237,22 +235,17 @@
 			"powerWordFortitude": 2,
 			"shadowProtection": true,
 			"divineSpirit": 2,
-			"giftOfTheWild": 2,
-			"bloodlust": true
+			"giftOfTheWild": 2
 		},
 		"debuffs": {
 			"judgementOfWisdom": true,
 			"improvedSealOfTheCrusader": 2,
-			"misery": true,
-			"bloodFrenzy": true,
 			"giftOfArthas": true,
 			"exposeArmor": 2,
 			"faerieFire": 2,
 			"sunderArmor": true,
 			"curseOfRecklessness": true,
-			"huntersMark": 2,
-			"exposeWeaknessUptime": 0.9,
-			"exposeWeaknessHunterAgility": 1080
+			"huntersMark": 2
 		}
 	},
 	"preCapEpWeights": {

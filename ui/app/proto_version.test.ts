@@ -1,18 +1,15 @@
 import { Player } from '@generated/proto/api';
-import { ConsumesSpec, PartyBuffs } from '@generated/proto/common';
+import { ConsumesSpec } from '@generated/proto/common';
 import { IndividualSimSettings } from '@generated/proto/ui';
 import { CURRENT_API_VERSION } from '@sim/constants/other';
 import { describe, expect, it } from 'vitest';
 
 const { updateIndividualProtoVersion } = await import('./proto_version');
 
-const DEMONIC_RUNE = 12662;
-
 const settings = (apiVersion: number) =>
 	IndividualSimSettings.create({
 		apiVersion,
-		player: Player.create({ consumables: ConsumesSpec.create({ conjuredId: DEMONIC_RUNE }) }),
-		partyBuffs: PartyBuffs.create(),
+		player: Player.create({ consumables: ConsumesSpec.create({ foodId: 27657 }) }),
 	});
 
 describe('updateIndividualProtoVersion', () => {
@@ -24,12 +21,23 @@ describe('updateIndividualProtoVersion', () => {
 		expect(proto.apiVersion).toBe(CURRENT_API_VERSION);
 	});
 
-	it('stamps a version-14 payload as current without touching it: the priest oneof rename happens before parsing', () => {
+	// Both registered converters only stamp: version 15's oneof rename happens before parsing, and
+	// version 17's retypes and retirements happen in the raw-JSON pre-pass.
+	it('leaves the payload itself alone on the way up', () => {
 		const proto = settings(14);
 
 		updateIndividualProtoVersion(proto);
 
 		expect(proto.apiVersion).toBe(CURRENT_API_VERSION);
-		expect(proto.player?.consumables?.conjuredId).toBe(DEMONIC_RUNE);
+		expect(proto.player?.consumables?.foodId).toBe(27657);
+	});
+
+	it('leaves a payload that is already current alone', () => {
+		const proto = settings(CURRENT_API_VERSION);
+
+		updateIndividualProtoVersion(proto);
+
+		expect(proto.apiVersion).toBe(CURRENT_API_VERSION);
+		expect(proto.player?.consumables?.foodId).toBe(27657);
 	});
 });

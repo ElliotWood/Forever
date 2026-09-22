@@ -149,10 +149,7 @@
 					}
 				],
 				"buffs": {
-					"eyeOfTheNight": true,
-					"chainOfTheTwilightOwl": true,
-					"manaSpringTotem": 1,
-					"wrathOfAirTotem": 2
+					"manaSpringTotem": 1
 				}
 			},
 			{
@@ -241,17 +238,14 @@
 			"arcaneBrilliance": true,
 			"powerWordFortitude": 2,
 			"divineSpirit": 2,
-			"giftOfTheWild": 2,
-			"bloodlust": true
+			"giftOfTheWild": 2
 		},
 		"debuffs": {
 			"judgementOfWisdom": true,
 			"improvedSealOfTheCrusader": 2,
 			"curseOfElements": 2,
-			"isbUptime": 0.59,
 			"exposeArmor": 2,
-			"faerieFire": 2,
-			"shadowEmbrace": true
+			"faerieFire": 2
 		}
 	},
 	"preCapEpWeights": {

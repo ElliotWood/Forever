@@ -134,9 +134,7 @@
 						},
 						"buffs": {
 							"blessingOfKings": true,
-							"blessingOfSanctuary": true,
-							"blessingOfMight": 2,
-							"unleashedRage": true
+							"blessingOfMight": 2
 						},
 						"cooldowns": {},
 						"healingModel": {
@@ -162,8 +160,6 @@
 					}
 				],
 				"buffs": {
-					"sanctityAura": 2,
-					"braidedEterniumChain": true,
 					"graceOfAirTotem": 2,
 					"strengthOfEarthTotem": 2,
 					"windfuryTotem": 2,
@@ -262,24 +258,17 @@
 			"powerWordFortitude": 2,
 			"shadowProtection": true,
 			"giftOfTheWild": 2,
-			"thorns": 1,
-			"bloodlust": true
+			"thorns": 1
 		},
 		"debuffs": {
 			"improvedSealOfTheCrusader": 2,
-			"misery": true,
-			"bloodFrenzy": true,
 			"mangle": true,
 			"exposeArmor": 2,
 			"faerieFire": 2,
 			"sunderArmor": true,
 			"curseOfRecklessness": true,
 			"huntersMark": 2,
-			"exposeWeaknessUptime": 0.9,
-			"exposeWeaknessHunterAgility": 1150,
-			"insectSwarm": true,
-			"shadowEmbrace": true,
-			"screech": true
+			"insectSwarm": true
 		}
 	},
 	"preCapEpWeights": {

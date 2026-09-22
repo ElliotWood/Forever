@@ -1532,9 +1532,6 @@
 						"tooltip": {
 							"type": "string"
 						},
-						"bloodlust": {
-							"type": "string"
-						},
 						"skull_banner": {
 							"type": "string"
 						},
@@ -1552,7 +1549,7 @@
 						}
 					},
 					"additionalProperties": false,
-					"required": ["title", "tooltip", "bloodlust", "skull_banner", "stormlash_totem", "tricks_of_the_trade", "unholy_frenzy", "shattering_throw"]
+					"required": ["title", "tooltip", "skull_banner", "stormlash_totem", "tricks_of_the_trade", "unholy_frenzy", "shattering_throw"]
 				},
 				"external_defensive_cooldowns": {
 					"type": "object",
@@ -1782,59 +1779,7 @@
 							"additionalProperties": false,
 							"required": ["label", "tooltip"]
 						},
-						"isb_uptime": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
-						"hemo_uptime": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
 						"shadow_priest_dps": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
-						"expose_weakness_uptime": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
-						"expose_weakness_hunter_agility": {
 							"type": "object",
 							"properties": {
 								"label": {
@@ -2060,19 +2005,6 @@
 							"required": ["label", "tooltip"]
 						},
 						"stance_snapshot": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
-						"has_bs_solarian_sapphire": {
 							"type": "object",
 							"properties": {
 								"label": {
@@ -2328,11 +2260,7 @@
 						"absorb_frac",
 						"burst_window",
 						"hp_percent_for_defensives",
-						"isb_uptime",
-						"hemo_uptime",
 						"shadow_priest_dps",
-						"expose_weakness_uptime",
-						"expose_weakness_hunter_agility",
 						"totem_twisting",
 						"pet_uptime",
 						"pet_single_ability",
@@ -2344,7 +2272,6 @@
 						"default_stance",
 						"starting_rage",
 						"stance_snapshot",
-						"has_bs_solarian_sapphire",
 						"has_bs_tier_2",
 						"queue_delay",
 						"assume_bleed_active",
@@ -6941,19 +6868,6 @@
 									"additionalProperties": false,
 									"required": ["label", "none", "help", "maintain"]
 								},
-								"bloodlust_timing": {
-									"type": "object",
-									"properties": {
-										"label": {
-											"type": "string"
-										},
-										"tooltip": {
-											"type": "string"
-										}
-									},
-									"additionalProperties": false,
-									"required": ["label", "tooltip"]
-								},
 								"dps": {
 									"type": "object",
 									"properties": {
@@ -6999,7 +6913,7 @@
 								}
 							},
 							"additionalProperties": false,
-							"required": ["sunder_armor", "bloodlust_timing", "dps"]
+							"required": ["sunder_armor", "dps"]
 						}
 					},
 					"additionalProperties": false,

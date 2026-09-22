@@ -39,7 +39,7 @@ const playerOf = (playerClass: Class, spec: Spec) =>
 			explosiveId: 8,
 			mhImbueId: 9,
 			ohImbueId: 10,
-			petFoodId: 12,
+			petFoodId: 11,
 		}),
 	}) as unknown as Player<any>;
 
@@ -85,7 +85,7 @@ describe('consumeConfigs', () => {
 			explosive: 8,
 			mhImbue: 9,
 			ohImbue: 10,
-			petFood: 12,
+			petFood: 11,
 		});
 	});
 

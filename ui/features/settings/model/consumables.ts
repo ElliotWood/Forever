@@ -1,4 +1,4 @@
-import { Class, ConsumesSpec, ItemSlot, Profession, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { Class, ConsumesSpec, ItemSlot, Profession, Spec, Stat } from '@generated/proto/common';
 import { Consumable } from '@generated/proto/db';
 import i18n from '@i18n/config';
 import { Player } from '@sim/player/player';
@@ -247,10 +247,7 @@ const specsWithoutWindfury = [Spec.SpecFeralBearDruid, Spec.SpecFeralCatDruid];
 
 export const makeMHImbueInput = makeConsumeInputFactory({
 	consumesFieldName: 'mhImbueId',
-	showWhen: (player: Player<any>) =>
-		specsWithoutWindfury.includes(player.getSpec()) ||
-		!player.getParty() ||
-		player.getParty()!.getBuffs().windfuryTotem == TristateEffect.TristateEffectMissing,
+	showWhen: (player: Player<any>) => specsWithoutWindfury.includes(player.getSpec()) || !player.getParty() || !player.getParty()!.getBuffs().windfuryTotem,
 });
 export const makeOHImbueInput = makeConsumeInputFactory({
 	consumesFieldName: 'ohImbueId',

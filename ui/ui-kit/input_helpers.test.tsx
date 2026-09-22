@@ -1,4 +1,4 @@
-import type { PartyBuffs } from '@generated/proto/common';
+import type { PartyBuffs } from '@generated/proto/buffs';
 import type { Player } from '@sim/player/player';
 import { ActionId } from '@sim/proto/action_id';
 import { fireEvent, render, screen } from '@testing-library/react';
@@ -15,9 +15,9 @@ import {
 	makeSpecOptionsEnumIconInput,
 } from './input_helpers';
 
-// Battle Shout is the shipped example: the base buff is a tristate field and the fourth state
-// is a second, boolean field (the Solarian's Sapphire item).
-const battleShout = (extra: { showWhen?: (modObj: PartyBuffs) => boolean } = {}) =>
+// A quadstate input spreads four states over a numeric field and a second, boolean one. No buff row
+// is shaped that way, so the fixture pairs two live party fields to exercise the helper.
+const quadstate = (extra: { showWhen?: (modObj: PartyBuffs) => boolean } = {}) =>
 	makeQuadstateIconInput<any, PartyBuffs, PartyBuffs>(
 		{
 			getModObject: (modObj: any) => modObj as PartyBuffs,
@@ -26,24 +26,24 @@ const battleShout = (extra: { showWhen?: (modObj: PartyBuffs) => boolean } = {})
 			storeField: 'raid:partyBuffs',
 			...extra,
 		},
-		ActionId.fromSpellId(2048),
+		ActionId.fromSpellId(25289),
 		ActionId.fromSpellId(12861),
 		ActionId.fromItemId(30446),
 		'battleShout',
-		'bsSolarianSapphire',
+		'totemTwisting',
 	);
 
 describe('makeQuadstateIconInput', () => {
 	it('spreads its four states across the buff field and the second improved flag', () => {
-		const buffs = { battleShout: 0, bsSolarianSapphire: false } as unknown as PartyBuffs;
-		const input = battleShout();
+		const buffs = { battleShout: 0, totemTwisting: false } as unknown as PartyBuffs;
+		const input = quadstate();
 		const player = buffs as unknown as Player<any>;
 
 		expect(input.states).toBe(4);
 
 		const roundTrip = [0, 1, 2, 3].map(value => {
 			input.setValue(player, value);
-			return [buffs.battleShout, buffs.bsSolarianSapphire, input.getValue(player)];
+			return [buffs.battleShout, buffs.totemTwisting, input.getValue(player)];
 		});
 
 		expect(roundTrip).toEqual([
@@ -57,13 +57,13 @@ describe('makeQuadstateIconInput', () => {
 	// Every tristate, quadstate and multistate buff factory routes through makeNumberIconInput, so a
 	// predicate it drops takes the faction gate on all of them with it.
 	it('keeps showWhen, which the picker hides on', () => {
-		const player = { battleShout: 0, bsSolarianSapphire: false } as unknown as Player<any>;
+		const player = { battleShout: 0, totemTwisting: false } as unknown as Player<any>;
 		const seen: PartyBuffs[] = [];
 
-		expect(battleShout({ showWhen: modObj => (seen.push(modObj), false) }).showWhen!(player)).toBe(false);
+		expect(quadstate({ showWhen: modObj => (seen.push(modObj), false) }).showWhen!(player)).toBe(false);
 		expect(seen).toEqual([player]);
-		expect(battleShout({ showWhen: () => true }).showWhen!(player)).toBe(true);
-		expect(battleShout().showWhen!(player)).toBe(true);
+		expect(quadstate({ showWhen: () => true }).showWhen!(player)).toBe(true);
+		expect(quadstate().showWhen!(player)).toBe(true);
 	});
 });
 
@@ -79,7 +79,7 @@ describe('makeBooleanIconInput', () => {
 				storeField: 'raid:partyBuffs',
 				enableWhen,
 			},
-			ActionId.fromSpellId(2048),
+			ActionId.fromSpellId(25289),
 			'battleShout',
 		);
 

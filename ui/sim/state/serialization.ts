@@ -1,4 +1,5 @@
-import { Debuffs, Encounter as EncounterProto, PartyBuffs, RaidBuffs } from '@generated/proto/common';
+import { Debuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Encounter as EncounterProto } from '@generated/proto/common';
 import { IndividualSimSettings } from '@generated/proto/ui';
 
 import { CURRENT_API_VERSION } from '../constants/other';
@@ -24,8 +25,8 @@ export function updateIndividualSimProtoVersion(settingsProto: IndividualSimSett
 		return;
 	}
 
-	// Deliberately empty. TBC's own migrations run from ui/app/proto_version.ts before this
-	// function is reached.
+	// Deliberately empty. TBC's own converters live in ui/app/proto_version.ts and run
+	// before this function is reached.
 	//
 	// The two migrations this map arrived with are upstream's, for versions 2 and 4,
 	// and they must not run here. TBC's IndividualSimSettings happens to carry every

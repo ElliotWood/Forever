@@ -11,9 +11,7 @@ export const ShoutPicker = <SpecType extends WarriorSpecs>() =>
 		fieldName: 'defaultShout',
 		label: i18n.t('settings_tab.other.default_shout.label'),
 		labelTooltip: i18n.t('settings_tab.other.default_shout.tooltip'),
-		values: [
-			{ actionId: ActionId.fromSpellId(2048), value: WarriorShout.WarriorShoutBattle },
-		],
+		values: [{ actionId: ActionId.fromSpellId(25289), value: WarriorShout.WarriorShoutBattle }],
 	});
 export const StancePicker = <SpecType extends WarriorSpecs>() =>
 	InputHelpers.makeClassOptionsEnumIconInput<SpecType, WarriorStance>({
@@ -46,14 +44,6 @@ export const QueueDelay = <SpecType extends WarriorSpecs>() =>
 		fieldName: 'queueDelay',
 		label: i18n.t('settings_tab.other.queue_delay.label'),
 		labelTooltip: i18n.t('settings_tab.other.queue_delay.tooltip'),
-	});
-
-export const BattleShoutSolarianSapphire = <SpecType extends WarriorSpecs>() =>
-	InputHelpers.makeClassOptionsBooleanIconInput<SpecType>({
-		fieldName: 'hasBsSolarianSapphire',
-		label: i18n.t('settings_tab.other.has_bs_solarian_sapphire.label'),
-		labelTooltip: i18n.t('settings_tab.other.has_bs_solarian_sapphire.tooltip'),
-		id: ActionId.fromItemId(30446),
 	});
 
 export const BattleShoutT2 = <SpecType extends WarriorSpecs>() =>

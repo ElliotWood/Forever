@@ -81,4 +81,19 @@ make db
 # Same as make db but from the ptr client
 # Uses tools/database/ptr-generator-settings.json for settings
 make ptrdb
+
+# Regenerate the sim/<class>/spell_data_auto_gen.go tables from the client data
+# Also rewrites the generated buff and debuff files, in sim/core and in the settings UI
+# Needs tools/database/wowsims.db, so run make db at least once first
+make spelldata
+
+# Rewrite proto/buffs.proto from tools/database/buffmanifest
+# Needs no client database; make sim/core/proto/api.pb.go runs it before protoc
+go run ./tools/gen_buffs_proto
+
+# Run one sim from a RaidSimRequest in protojson and print the RaidSimResult
+# An input file written before api version 17 spells the buff fields it retyped as enum names,
+# e.g. "TristateEffectImproved" where the proto now states a bool, and the parser rejects it:
+# export the settings from the UI again to get a file this reads
+go run ./cmd/wowsimcli sim --infile input.json
 ```

@@ -160,7 +160,7 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 
 	rows, err := db.Query(`
 		SELECT n.Name_lang, sla.Spell, s.NameSubtext_lang, sla.ClassMask, sla.SkillLine, sla.AcquireMethod,
-		       COALESCE(lv.BaseLevel, 0), (COALESCE(json_extract(sm.Attributes, '$[0]'), 0) & 64) != 0
+		       COALESCE(lv.BaseLevel, 0), (COALESCE(json_extract(sm.Attributes, '$[0]'), 0) & ?) != 0
 		FROM SkillLineAbility sla
 		JOIN SpellName n ON n.ID = sla.Spell
 		JOIN Spell s ON s.ID = sla.Spell
@@ -175,7 +175,7 @@ func discoverLadders(db *sql.DB, class dbc.DbcClass, treeID int) ([]rankLadder, 
 		AND (s.NameSubtext_lang LIKE 'Rank %' OR s.NameSubtext_lang = '')
 		AND sla.SkillLine NOT IN (2851, 2853)
 		AND NOT EXISTS (SELECT 1 FROM SpellEffect se WHERE se.SpellID = sla.Spell AND se.EffectAura = ?)
-		ORDER BY n.Name_lang, sla.Spell`, mask, skillLineDefense, mask, acquireOnLevel, dbc.A_MOUNTED)
+		ORDER BY n.Name_lang, sla.Spell`, dbc.ATTR_PASSIVE, mask, skillLineDefense, mask, acquireOnLevel, dbc.A_MOUNTED)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -555,18 +555,23 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 		// the node's spell, which is not the spell the ability's own ranks are keyed on. A one-rank
 		// node on a passive nothing teaches is the talent itself - Raging Blows, Vanguard - and
 		// yields its one row at the spell's base points.
+		oneRankPassive := false
 		if d.MaxRanks <= 1 {
 			passive, err := SpellIsPassive(db, d.SpellID)
 			if err != nil {
 				return nil, nil, nil, err
 			}
+			if !passive {
+				continue
+			}
 			taught, err := taughtBySkillLine(db, d.SpellID)
 			if err != nil {
 				return nil, nil, nil, err
 			}
-			if !passive || taught {
+			if taught {
 				continue
 			}
+			oneRankPassive = true
 		}
 
 		effects, err := effectIndicesOf(db, d.SpellID)
@@ -599,11 +604,11 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 			}
 		}
 
-		if len(points) == 0 && d.MaxRanks > 1 {
-			skipped[d.Name] = fmt.Sprintf("the talent tree states no per-rank value for spell %d", d.SpellID)
-			continue
-		}
 		if len(points) == 0 {
+			if !oneRankPassive {
+				skipped[d.Name] = fmt.Sprintf("the talent tree states no per-rank value for spell %d", d.SpellID)
+				continue
+			}
 			points[1] = map[int32]float64{}
 		}
 		if len(uncovered) > 0 {
@@ -619,7 +624,7 @@ func discoverTraitLadders(db *sql.DB, treeID int) (map[string]traitLadder, map[s
 // Whether a trainer, the skill itself or a level grants the spell (AcquireMethod 0, 1 or 2).
 func taughtBySkillLine(db *sql.DB, spellID int32) (bool, error) {
 	var taught bool
-	err := scanOptional(db, `SELECT COUNT(*) > 0 FROM SkillLineAbility WHERE Spell = ? AND AcquireMethod IN (0, 1, 2)`, spellID, &taught)
+	err := scanOptional(db, fmt.Sprintf(`SELECT COUNT(*) > 0 FROM SkillLineAbility WHERE Spell = ? AND AcquireMethod != %d`, acquireGranted), spellID, &taught)
 	return taught, err
 }
 

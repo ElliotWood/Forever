@@ -1,20 +1,8 @@
 import { Player } from '@generated/proto/api';
-import {
-	Class,
-	Debuffs,
-	Faction,
-	IndividualBuffs,
-	PartyBuffs,
-	Race,
-	RaidBuffs,
-	Spec,
-	TristateEffect,
-	UnitReference,
-	UnitReference_Type,
-} from '@generated/proto/common';
+import { IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
+import { Class, Faction, Race, Spec, TristateEffect, UnitReference, UnitReference_Type } from '@generated/proto/common';
 import { ResourceType } from '@generated/proto/spell';
 
-import { CURRENT_PHASE, Phase } from '../constants/other';
 import { PlayerClasses } from '../player/classes';
 import { PlayerClass } from '../player/player_class';
 import { PlayerSpec } from '../player/player_spec';
@@ -131,49 +119,23 @@ export const orderedResourceTypes: Array<ResourceType> = [
 export const AL_CATEGORY_HARD_MODE = 'Hard Mode';
 export const AL_CATEGORY_TITAN_RUNE = 'Titan Rune';
 
-export const defaultRaidBuffMajorDamageCooldowns = (_?: Class): Partial<RaidBuffs> => {
-	return RaidBuffs.create({
-		bloodlust: true,
-	});
-};
-
 // The buffs every healer gear planner starts with: the caster stat buffs, the two caster totems
-// and the blessings. No cooldowns: nothing is simulated, so Bloodlust and the like only mislead.
-// Nothing here depends on the class.
+// and the blessings. Nothing here depends on the class.
 export const defaultHealerRaidBuffs = (): RaidBuffs =>
 	RaidBuffs.create({
 		arcaneBrilliance: true,
-		giftOfTheWild: TristateEffect.TristateEffectImproved,
-		powerWordFortitude: TristateEffect.TristateEffectImproved,
-		divineSpirit: TristateEffect.TristateEffectImproved,
+		giftOfTheWild: true,
+		powerWordFortitude: true,
+		divineSpirit: true,
 	});
 
 export const defaultHealerPartyBuffs = (): PartyBuffs =>
 	PartyBuffs.create({
 		manaSpringTotem: TristateEffect.TristateEffectRegular,
-		wrathOfAirTotem: TristateEffect.TristateEffectRegular,
 	});
 
 export const defaultHealerIndividualBuffs = (): IndividualBuffs =>
 	IndividualBuffs.create({
 		blessingOfKings: true,
-		blessingOfWisdom: TristateEffect.TristateEffectImproved,
+		blessingOfWisdom: true,
 	});
-
-const exposeWeaknessPhaseSettings: Map<Phase, Pick<Debuffs, 'exposeWeaknessUptime' | 'exposeWeaknessHunterAgility'>> = new Map([
-	[Phase.Phase1, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1080 }],
-	[Phase.Phase2, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1150 }],
-	[Phase.Phase3, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1210 }],
-	[Phase.Phase4, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1150 }],
-	[Phase.Phase5, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1250 }],
-]);
-export const defaultExposeWeaknessSettings = (phase?: Phase) => exposeWeaknessPhaseSettings.get(phase || CURRENT_PHASE);
-
-const improvedShadowBoltPhaseSettings: Map<Phase, Pick<Debuffs, 'isbUptime'>> = new Map([
-	[Phase.Phase1, { isbUptime: 0.52 }],
-	[Phase.Phase2, { isbUptime: 0.59 }],
-	[Phase.Phase3, { isbUptime: 0.72 }],
-	[Phase.Phase4, { isbUptime: 0.72 }],
-	[Phase.Phase5, { isbUptime: 0.8 }],
-]);
-export const defaultImprovedShadowBoltSettings = (phase?: Phase) => improvedShadowBoltPhaseSettings.get(phase || CURRENT_PHASE);

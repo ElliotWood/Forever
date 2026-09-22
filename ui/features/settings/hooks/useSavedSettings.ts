@@ -1,27 +1,18 @@
-import { TristateEffect } from '@generated/proto/common';
 import { SavedSettings } from '@generated/proto/ui';
 import { useSimHost } from '@sim/context/SimHostContext';
+import { migrateRetypedBuffFields } from '@sim/proto/buff_field_migration';
 import type { SavedDataCodec } from '@ui-kit/hooks/useSavedData';
 import { useSavedData } from '@ui-kit/hooks/useSavedData';
 
-// `debuffs.improvedSealOfTheCrusader` was a bool before e4d97302e6 made it a TristateEffect, and
-// `fromJson` asserts on a bool where an enum belongs. `useSavedData` drops any entry whose codec
-// throws, so without this an old save would disappear from the panel with only a console warning.
-const migrateLegacyDebuffs = (json: any): any => {
-	const legacy = json?.debuffs?.improvedSealOfTheCrusader;
-	if (typeof legacy !== 'boolean') return json;
-	return {
-		...json,
-		debuffs: {
-			...json.debuffs,
-			improvedSealOfTheCrusader: legacy ? TristateEffect.TristateEffectImproved : TristateEffect.TristateEffectMissing,
-		},
-	};
-};
-
+// SavedSettings carries no api_version, so every entry goes through the buff migration: a save
+// holding "TristateEffectImproved" where the field is now a bool would throw in `fromJson`, and
+// `useSavedData` drops any entry whose codec throws, leaving the panel short of it without a word.
 const savedSettingsCodec: SavedDataCodec<SavedSettings> = {
 	toJson: settings => SavedSettings.toJson(settings),
-	fromJson: json => SavedSettings.fromJson(migrateLegacyDebuffs(json)),
+	fromJson: json => {
+		migrateRetypedBuffFields(json);
+		return SavedSettings.fromJson(json, { ignoreUnknownFields: true });
+	},
 };
 
 export const useSavedSettings = () => useSavedData(useSimHost().getSavedSettingsStorageKey(), savedSettingsCodec);
