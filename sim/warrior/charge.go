@@ -46,7 +46,6 @@ func (warrior *Warrior) registerCharge() {
 	})
 }
 
-// The dash Charge and Intercept share: triple run speed until the movement ends, then onEnd.
 // TODO: Manual review needed -- the run speed and the callers' overshoot are the sim's movement model.
 func (warrior *Warrior) registerDashAura(label string, actionID core.ActionID, duration time.Duration, onEnd func(sim *core.Simulation)) *core.Aura {
 	aura := warrior.RegisterAura(core.Aura{

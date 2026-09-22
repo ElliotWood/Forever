@@ -5,8 +5,6 @@ import (
 )
 
 func (warrior *Warrior) registerSunderArmor() {
-	// The client supplies Sunder Armor's flat threat per rank: 405/608/810/1013 for ranks 2-5.
-	//
 	// TODO: rank 1 reads a flat threat of 1, which looks like placeholder data next to the
 	// rest of the ladder. Harmless while this pins the highest rank, but worth confirming.
 	sunderArmorRank := spellData.SunderArmor.HighestRank()

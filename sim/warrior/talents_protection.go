@@ -376,7 +376,6 @@ func (warrior *Warrior) registerImprovedThunderClap() {
 		return
 	}
 
-	// Slowing effect implemented in thunder_clap.go
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskThunderClap,
 		Kind:      core.SpellMod_PowerCost_Flat,

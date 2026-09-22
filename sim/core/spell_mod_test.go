@@ -8,7 +8,6 @@ const fakeThreatSpellClassMask int64 = 1 << 0
 
 var fakeThreatSpellActionID = ActionID{SpellID: 11597}
 
-// Sunder Armor deals no damage, so all of its threat is the flat bonus.
 func (fw *FakeRageWarrior) registerFakeThreatSpell() {
 	fw.RegisterSpell(SpellConfig{
 		ActionID:        fakeThreatSpellActionID,

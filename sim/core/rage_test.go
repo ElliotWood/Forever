@@ -189,7 +189,6 @@ func TestOffHandAutoAttackRageGeneration(t *testing.T) {
 }
 
 func TestOffHandRageMultiplier(t *testing.T) {
-	// The multiplier scales all of the Rage an OH swing generates: 8.401 * 1.5 = 12.602.
 	const swingDamage = 500.0
 
 	sim := SetupFakeRageSim()
@@ -207,7 +206,6 @@ func TestOffHandRageMultiplier(t *testing.T) {
 		t.Fatalf("Incorrect Rage generated on multiplied OH hit: Expected: %0.3f, Actual: %0.3f", 12.602, modified)
 	}
 
-	// MH swings generate the same Rage as they did before.
 	mhRage := rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, swingDamage)
 	if !WithinToleranceFloat64(11.376, mhRage, 0.01) {
 		t.Fatalf("Incorrect Rage generated on MH hit: Expected: %0.3f, Actual: %0.3f", 11.376, mhRage)

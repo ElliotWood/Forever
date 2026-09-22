@@ -2,8 +2,6 @@ package shared
 
 import "testing"
 
-// A PPM is hand-supplied because the client carries none, so the guards around it are what keeps a
-// ladder that gains a rank from procing at zero.
 func ppmTestTable() SpellDataTable {
 	return SpellDataTable{
 		{Rank: 1, SpellID: 100, ProcChance: 101},

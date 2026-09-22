@@ -177,7 +177,6 @@ func (warrior *Warrior) registerTwoHandedWeaponSpecialization() {
 		return
 	}
 
-	// The effect is all physical damage, auto attacks included, so no mask narrows it.
 	weaponMod := warrior.AddDynamicMod(core.SpellModConfig{
 		School:     core.SpellSchoolPhysical,
 		Kind:       core.SpellMod_DamageDone_Pct,
@@ -317,8 +316,6 @@ func (warrior *Warrior) registerBloodthrill() {
 
 	bloodthrillProc := spellData.BloodthrillTriggered.HighestRank()
 
-	// The proc makes Overpower usable for the buff's duration; the cast consumes it like a dodge
-	// would.
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:       "Bloodthrill - Trigger",
 		ActionID:   core.ActionID{SpellID: 1289682},
