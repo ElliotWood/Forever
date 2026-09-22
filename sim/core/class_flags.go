@@ -1,7 +1,5 @@
 package core
 
-import "fmt"
-
 // ClassFlags is the client's SpellClassOptions: the family (SpellClassSet) and the four
 // 32-bit words of SpellClassMask. A talent effect carries the same shape (EffectSpellClassMask)
 // naming the spells it modifies.
@@ -30,28 +28,4 @@ func (f ClassFlags) Matches(o ClassFlags) bool {
 	}
 
 	return false
-}
-
-// The union of the two sets. A zero set carries no family of its own and takes the other's, which
-// is what makes Or usable as an accumulator; any other family mismatch is a bug in the caller,
-// since the union of two families cannot be expressed in one ClassFlags.
-func (f ClassFlags) Or(o ClassFlags) ClassFlags {
-	if f.IsZero() {
-		return o
-	}
-
-	if o.IsZero() {
-		return f
-	}
-
-	if f.Family != o.Family {
-		panic(fmt.Sprintf("cannot combine ClassFlags of families %d and %d", f.Family, o.Family))
-	}
-
-	union := ClassFlags{Family: f.Family}
-	for i := range union.Mask {
-		union.Mask[i] = f.Mask[i] | o.Mask[i]
-	}
-
-	return union
 }

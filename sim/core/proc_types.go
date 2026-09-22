@@ -125,13 +125,18 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 		info.Callback |= CallbackOnSpellHitTaken | CallbackOnPeriodicDamageTaken
 	}
 
+	// The damage-class-none bit beside the magic one names the same casts a second way and says
+	// nothing about the trigger, so the cast question is asked of the mask without it: 0x11000 is
+	// the same shape as 0x10000, which is what unsupportedProcFlags says of that bit too.
+	castWord := word &^ dbcenums.PROC_FLAG_DEAL_HARMFUL_ABILITY
+
 	// A mask made of nothing but the spell-cast bits. The harmful one has to be present: a
 	// helpful-only mask carries no evidence that casting is the trigger at all, and the helpful
 	// branch below already demands tooltip evidence before it believes one - the PvP Librams
 	// that buff a heal target read "Causes your Flash of Light to increase the target's
 	// Resilience" and are neither a self buff nor unrestricted.
-	spellCastMask := word&dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL != 0 &&
-		word&^(dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL|dbcenums.PROC_FLAG_DEAL_HELPFUL_SPELL) == 0
+	spellCastMask := castWord&dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL != 0 &&
+		castWord&^(dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL|dbcenums.PROC_FLAG_DEAL_HELPFUL_SPELL) == 0
 
 	// Whether the cast itself is the trigger. A mask of only the harmful-spell bit does not care
 	// whether the spell landed. Adding the helpful bit settles nothing either way, and the two
@@ -139,7 +144,7 @@ func DecodeProcTypeMask(mask [2]uint32, hint ProcHint) ProcTypeInfo {
 	// procs off resists in logs, while Band of the Eternal Restorer does not proc on a miss or a
 	// full resist. What separates them is that the first names the cast as the trigger and the
 	// second does not, so for that pair the tooltip decides.
-	castOnly := spellCastMask && (word == dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL || hint.Matches(ProcHintCastTrigger))
+	castOnly := spellCastMask && (castWord == dbcenums.PROC_FLAG_DEAL_HARMFUL_SPELL || hint.Matches(ProcHintCastTrigger))
 
 	// A tooltip naming an outcome is the exception to all of it: a crit is only known once the
 	// hit resolves, so those stay on hit-dealt.

@@ -33,6 +33,20 @@ func TestDecodeProcTypeMask(t *testing.T) {
 			outcome:  OutcomeEmpty,
 		},
 		{
+			name:     "the damage-class-none bit beside the harmful-spell one, the same cast either way",
+			mask:     [2]uint32{0x11000, 0},
+			callback: CallbackOnCastComplete,
+			procMask: ProcMaskSpellDamage,
+			outcome:  OutcomeEmpty,
+		},
+		{
+			name:               "the harmful-ability bit taken, which names no hits of its own",
+			mask:               [2]uint32{0x2000, 0},
+			callback:           CallbackOnSpellHitTaken,
+			outcome:            OutcomeLanded,
+			requireDamageDealt: true,
+		},
+		{
 			name:     "the harmful-spell bit with a crit tooltip",
 			mask:     [2]uint32{0x10000, 0},
 			hint:     ProcHintCrit,

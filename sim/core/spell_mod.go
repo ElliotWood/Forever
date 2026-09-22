@@ -873,7 +873,7 @@ func modBuffDurationFlat(spell *Spell, value time.Duration, claim func(*Aura) bo
 	if spell.SharedCD.Duration != 0 {
 		spell.SharedCD.Duration += value
 	}
-	if claim(spell.RelatedSelfBuff) {
+	if spell.RelatedSelfBuff != nil && claim(spell.RelatedSelfBuff) {
 		spell.RelatedSelfBuff.Duration += value
 	}
 }
@@ -1090,9 +1090,13 @@ func removeBuffMaxStacksFlat(mod *SpellMod, spell *Spell) {
 	modBuffMaxStacksFlat(spell, -mod.intValue, mod.releaseAura)
 }
 
-// MaxRange 0 is no range check at all, so a mod that takes the range there widens the spell instead
-// of shortening it, and removing the mod cannot tell the two apart.
+// MaxRange 0 is no range check at all, so there is nothing for the mod to move: writing to it would
+// hand the spell a range the client never gave it. A spell that does state one may not be shortened
+// past nothing.
 func applyRangeFlat(mod *SpellMod, spell *Spell) {
+	if spell.MaxRange == 0 {
+		return
+	}
 	if spell.MaxRange+mod.floatValue <= 0 {
 		panic(fmt.Sprintf("Spell mod would leave %s at %0.1f yards of range. Something seems wrong.",
 			spell.ActionID, spell.MaxRange+mod.floatValue))
@@ -1101,6 +1105,9 @@ func applyRangeFlat(mod *SpellMod, spell *Spell) {
 }
 
 func removeRangeFlat(mod *SpellMod, spell *Spell) {
+	if spell.MaxRange == 0 {
+		return
+	}
 	spell.MaxRange -= mod.floatValue
 }
 
