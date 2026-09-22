@@ -249,7 +249,10 @@ A bleed row also fills the damage and threat multipliers with 1.
 
 What it does not: `ApplyEffects`, `ProcMask`, the multipliers on any other row, `ClassSpellMask`, `ExtraCastCondition`,
 `Dot`, `RelatedSelfBuff`, the threat numbers the client does not carry - and `MaxTargets`, which has no
-`SpellConfig` field at all, so a caller that caps an area effect reads `row.MaxTargets` itself. A unit
+`SpellConfig` field at all, so a caller that caps an area effect reads `row.MaxTargets` itself. The same
+goes for `RequiredAreas`, the area group a spell only works in: `row.AreaType()` names the kind of
+terrain it stands for (Forest and Grassland, Mountainous, ...) and a caller gates on
+`sim.Encounter.InArea(row.AreaType())`; a group that is a single zone reads as `AreaTypeUnknown`. A unit
 is needed for the cooldown timers, so a config is built where the sim has a character rather than at
 package init.
 
