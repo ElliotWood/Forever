@@ -676,8 +676,9 @@ then run the generator, which writes the whole file back. Running it twice and s
 ### The guard tests
 
 `go test ./tools/database/... ./tools/gen_buffs_proto/...` needs no client database and runs in CI.
-Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`, `TestGeneratedBuffsDebuffsTS`
-and `TestGeneratedRankTablesMatchTheDatabase` skip; the other 25 run.
+Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`,
+`TestScopeMatchesTheClientTargeting`, `TestGeneratedBuffsDebuffsTS` and
+`TestGeneratedRankTablesMatchTheDatabase` skip; the other 25 run.
 
 | Test                                                                                                              | What it holds                                                                                                                   |
 | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -692,6 +693,7 @@ and `TestGeneratedRankTablesMatchTheDatabase` skip; the other 25 run.
 | `TestRenderBuffsDebuffsTS*`                                                                                       | the settings inputs each proto type and kind renders                                                                            |
 | `TestGeneratedBuffFiles`, `TestGeneratedBuffsDebuffsTS`                                                           | with a database, the committed files are byte-for-byte what the generator emits                                                 |
 | `TestResolvedBuffInvariants`                                                                                      | with a database, the pinned talent curves, categories and stat amounts                                                          |
+| `TestScopeMatchesTheClientTargeting`                                                                              | with a database, a row whose spell states an area aura, or an aura aimed over an area, sits in the scope that targeting names   |
 
 Rewrite the fixtures with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`.
 

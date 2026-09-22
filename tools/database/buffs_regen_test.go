@@ -25,6 +25,7 @@ import (
 	"testing"
 
 	"github.com/wowsims/forever/tools/database/buffmanifest"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 func openBuffTestDB(t *testing.T) *DBHelper {
@@ -134,6 +135,43 @@ func TestResolvedBuffInvariants(t *testing.T) {
 			}
 		}
 	}
+}
+
+// The group the client states a buff reaches, for every row whose spell states
+// one: an area aura names the group in the effect itself, and an aura the client
+// applies over an area names it in the effect's target. A row the client states
+// neither for is exempt, because its scope is then the sim's grouping rather
+// than a game fact: a buff the sim spreads over the raid from a spell cast on
+// one ally, the buff Windfury's proc lands on its wielder, a debuff.
+func TestScopeMatchesTheClientTargeting(t *testing.T) {
+	helper := openBuffTestDB(t)
+
+	rows, err := ResolveBuffManifest(helper)
+	if err != nil {
+		t.Fatalf("resolving the manifest: %v", err)
+	}
+
+	for _, row := range rows {
+		want, stated := clientScope(row)
+		if !stated || want == row.Scope {
+			continue
+		}
+		t.Errorf("%s: the manifest says %s, spell %d states %s", row.Field, row.Scope, row.SpellID, want)
+	}
+}
+
+func clientScope(row ResolvedBuff) (buffmanifest.BuffScope, bool) {
+	for _, effect := range row.Effects {
+		switch {
+		case effect.Effect == dbc.E_APPLY_AREA_AURA_RAID,
+			effect.Effect == dbc.E_APPLY_AURA && effect.ImplicitTarget == dbc.TARGET_UNIT_CASTER_AREA_RAID:
+			return buffmanifest.ScopeRaid, true
+		case effect.Effect == dbc.E_APPLY_AREA_AURA_PARTY,
+			effect.Effect == dbc.E_APPLY_AURA && effect.ImplicitTarget == dbc.TARGET_UNIT_CASTER_AREA_PARTY:
+			return buffmanifest.ScopeParty, true
+		}
+	}
+	return buffmanifest.ScopeIndividual, false
 }
 
 // The two auras the client states as a bare A_MOD_CRIT_PCT, which carries no
