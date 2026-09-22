@@ -1,30 +1,20 @@
 package warrior
 
 import (
-	"time"
-
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
 func (warrior *Warrior) registerBloodrage() {
 	bloodrageRank := spellData.Bloodrage.HighestRank()
-	bloodrageTriggered := spellData.BloodrageTriggered.HighestRank()
+	bloodrageOverTime := spellData.BloodrageTriggered.HighestRank().Energize.AsPeriodic()
 
 	actionID := core.ActionID{SpellID: bloodrageRank.SpellID}
 	rageMetrics := warrior.NewRageMetrics(actionID)
-	// The client costs 20% of base health (SpellPower.PowerCostPct); the generator on forever-next
-	// does not carry the column yet.
-	healthCost := warrior.GetBaseStats()[stats.Health] * 20 / 100
+	healthCost := warrior.GetBaseStats()[stats.Health] * bloodrageRank.PowerCostPct / 100
 	improvedBloodrage := spellData.ImprovedBloodrage.MultiplierAt(warrior.Talents.ImprovedBloodrage)
 	instantRage := spellData.Bloodrage.EffectAt(0).TenthsAt(1) * improvedBloodrage
-	// 29131's periodic energize: 1 rage a second for its 10 sec. The generator files it as a flat
-	// Energize of 100 rather than a periodic, so the tick is read off the effect and the schedule off
-	// the duration.
-	ragePerTick := bloodrageTriggered.Effect(shared.A_PERIODIC_ENERGIZE, 1).Tenths() * improvedBloodrage
-	tickLength := time.Second
-	numTicks := int(bloodrageTriggered.Duration / tickLength)
+	ragePerTick := bloodrageOverTime.Tenths() * improvedBloodrage
 
 	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID: actionID,
@@ -44,8 +34,8 @@ func (warrior *Warrior) registerBloodrage() {
 			warrior.RemoveHealth(sim, healthCost)
 
 			core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-				NumTicks: numTicks,
-				Period:   tickLength,
+				NumTicks: int(bloodrageOverTime.NumberOfTicks),
+				Period:   bloodrageOverTime.TickLength,
 				OnAction: func(sim *core.Simulation) {
 					warrior.AddRage(sim, ragePerTick, rageMetrics)
 				},

@@ -72,12 +72,14 @@ func getWeaponMinRange(item *Item) float64 {
 	return 0
 }
 
+const TwoHandNormalizedSwingSpeed = 3.3
+
 func newWeaponFromItem(item *Item, bonusDps float64) Weapon {
 	normalizedWeaponSpeed := 2.4
 	if item.WeaponType == proto.WeaponType_WeaponTypeDagger {
 		normalizedWeaponSpeed = 1.7
 	} else if item.HandType == proto.HandType_HandTypeTwoHand {
-		normalizedWeaponSpeed = 3.3
+		normalizedWeaponSpeed = TwoHandNormalizedSwingSpeed
 	} else if item.RangedWeaponType != proto.RangedWeaponType_RangedWeaponTypeUnknown {
 		normalizedWeaponSpeed = 2.8
 	}

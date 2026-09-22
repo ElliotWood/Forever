@@ -9,9 +9,8 @@ func (warrior *Warrior) registerExecute() {
 	// TODO: The dummy effect carries the base damage; Execute has no Direct role, and both of its
 	// effects share the aura/misc pair Effect() selects on.
 	executeBaseDamage := executeRank.Effects[0].Value
-	// The tooltip's $*10;F1: the dummy's chain amplitude, times 10, per extra point of rage - 15 at
-	// rank 5. The generator on forever-next does not carry chain amplitude yet.
-	executeDamagePerRage := 15.0
+	// The tooltip's $*10;F1: the dummy's chain amplitude, times 10, per extra point of rage.
+	executeDamagePerRage := executeRank.Effects[0].ChainAmplitude * 10
 
 	var rageMetrics *core.ResourceMetrics
 

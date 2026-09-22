@@ -508,10 +508,6 @@ message PartyBuffs {
 	bool totem_twisting = 34;
 
 	TristateEffect battle_shout = 28;
-	bool bs_solarian_sapphire = 29;
-	bool snapshot_bs_solarian_sapphire = 30;
-	bool snapshot_bs_t2 = 31;
-	int32 snapshot_bs_booming_voice_rank = 32;
 
 	// Mitigation buffs
 	TristateEffect commanding_shout = 33;

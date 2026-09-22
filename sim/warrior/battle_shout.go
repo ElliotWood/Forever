@@ -6,27 +6,15 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
-// Battlegear of Wrath's three pieces (23563) add 30 attack power to Battle Shout.
-const battleShoutWrathBonus = 30.0
-
 func (warrior *Warrior) registerBattleShout() {
 	battleShoutRank := spellData.BattleShout.HighestRank()
-	// Rank 7 (25289): 139 attack power for 3 min. core.BattleShoutAura still holds TBC's 306 for
-	// 2 min (the raid buff path, which their #39 rewrites), so the warrior's own shout overrides the
-	// value and the duration with its row.
 	baseAttackPower := battleShoutRank.Effect(shared.A_MOD_ATTACK_POWER, 0).Value
 	attackPower := func() float64 {
-		return baseAttackPower + core.TernaryFloat64(warrior.HasBsT2, battleShoutWrathBonus, 0)
+		return baseAttackPower + core.TernaryFloat64(warrior.HasBsT2, core.BattleShoutWrathBonus, 0)
 	}
 
 	auras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
-		agent := warrior.Env.Raid.GetPlayerFromUnit(unit)
-		if agent == nil {
-			return nil
-		}
-		aura := core.BattleShoutAura(agent.GetCharacter(), true, 0, 1, false, false)
-		aura.ActionID = core.ActionID{SpellID: battleShoutRank.SpellID}
-		aura.Duration = battleShoutRank.Duration
+		aura := core.BattleShoutAura(unit, true, baseAttackPower, battleShoutRank.Duration)
 		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
 		return aura.ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
 			if ee := aura.ExclusiveEffects[0]; ee.Priority != attackPower() {
@@ -54,7 +42,8 @@ func (warrior *Warrior) registerBattleShout() {
 		},
 
 		ThreatMultiplier: 1,
-		// TODO: spell 25289 carries no threat effect; none is modelled until measured in game.
+		// TODO: Manual review needed -- spell 25289 carries no threat effect; none is modelled until
+		// measured in game.
 		FlatThreatBonus: battleShoutRank.FlatThreatBonus,
 
 		// Battle Shout is a single-aura exclusive category: a stronger one from another source (the

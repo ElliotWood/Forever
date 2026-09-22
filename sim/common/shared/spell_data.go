@@ -235,6 +235,11 @@ type SpellData struct {
 	// shed or hold threat - E_THREAT on Feint, Cower, Disengage and Distracting Shot - so everything
 	// else arrives through WithSpellDataFlatThreat.
 	FlatThreatBonus float64
+
+	// Procs per minute, for a proc whose tooltip states no chance and whose ProcChance column is
+	// not a roll. The client carries no PPM (SpellProcsPerMinuteID is 0 on every row), so the
+	// generator never sets this and it arrives through WithSpellDataPPM. Zero is not a PPM proc.
+	PPM float64
 }
 
 // Declared here rather than in the generated constant file so that an empty or missing one still
@@ -428,15 +433,37 @@ func WithSpellDataFlatThreats(table SpellDataTable, threats map[int32]float64) S
 	return applyFlatThreat(table, func(r SpellData) float64 { return threats[r.Rank] })
 }
 
+// Procs per minute, the same way. Both forms return a copy and panic if the table already carries
+// a value.
+func WithSpellDataPPM(table SpellDataTable, ppm float64) SpellDataTable {
+	return applyPPM(table, func(SpellData) float64 { return ppm })
+}
+
+// Every rank in the table has to be named, so a ladder that gains one fails loudly instead of
+// leaving the new rank without a PPM.
+func WithSpellDataPPMs(table SpellDataTable, ppms map[int32]float64) SpellDataTable {
+	requireEveryRank(table, ppms)
+	return applyPPM(table, func(r SpellData) float64 { return ppms[r.Rank] })
+}
+
+func applyPPM(table SpellDataTable, ppmOf func(SpellData) float64) SpellDataTable {
+	return applyHandValue(table, "PPM", func(r *SpellData) *float64 { return &r.PPM }, ppmOf)
+}
+
 func applyFlatThreat(table SpellDataTable, threatOf func(SpellData) float64) SpellDataTable {
+	return applyHandValue(table, "flat threat", func(r *SpellData) *float64 { return &r.FlatThreatBonus }, threatOf)
+}
+
+// A hand-supplied value goes onto a copy of the table, and only where the client left the field
+// empty: a row that already carries one is a generator change the caller has to see.
+func applyHandValue(table SpellDataTable, what string, field func(*SpellData) *float64, valueOf func(SpellData) float64) SpellDataTable {
 	out := make(SpellDataTable, len(table))
 	for i, row := range table {
 		out[i] = row
-		if row.FlatThreatBonus != 0 {
-			panic(fmt.Sprintf("spell %d rank %d already has flat threat %v from the client DB",
-				row.SpellID, row.Rank, row.FlatThreatBonus))
+		if existing := *field(&row); existing != 0 {
+			panic(fmt.Sprintf("spell %d rank %d already has %s %v from the client DB", row.SpellID, row.Rank, what, existing))
 		}
-		out[i].FlatThreatBonus = threatOf(row)
+		*field(&out[i]) = valueOf(row)
 	}
 	return out
 }
