@@ -400,6 +400,9 @@ type SpellDataProc struct {
 	// A "Chance on hit" item effect or a combat enchant. The game casts those off the hit itself
 	// without consulting a proc mask, so the row states no listener and the shape is stated here.
 	IsWeaponProc bool
+	// A weapon proc's chance where the enchantment's row states it rather than the spell's:
+	// SpellItemEnchantment.EffectPointsMin on a combat spell slot.
+	ProcChancePct int32
 }
 
 // Registers the same effect once per item that carries it. Only the highest ID is added to the test
@@ -492,7 +495,7 @@ func applySpellDataProc(agent core.Agent, cfg SpellDataProc, source effectSource
 // cooldown a handful of procs state through the buff's spell category instead.
 func spellDataTrigger(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell, effect *proto.ItemEffect, procAura *core.StatBuffAura) core.ProcTrigger {
 	config := spelldata.ProcTrigger(character, trigger, spellDataProcHandler(buff, procAura),
-		weaponProcShape(cfg), spellDataProcRate(source, trigger, effect.GetProc()))
+		weaponProcShape(cfg), spellDataProcRate(source, trigger, effect.GetProc()), statedWeaponProcChance(cfg, source))
 
 	config.Name = cfg.Name
 	config.ActionID = source.actionID()
@@ -537,6 +540,24 @@ func spellDataProcRate(source effectSource, row *spelldata.Spell, proc *proto.Pr
 		// place next to a manager would gate the rate twice.
 		trigger.ProcChance = 0
 		trigger.DPM = dpm
+	}
+}
+
+// A stated chance rolled on the hits of the weapon carrying the proc only: the weapon shape hears
+// every hit, so a flat chance on the trigger would also roll on the other hand's.
+func statedWeaponProcChance(cfg SpellDataProc, source effectSource) spelldata.ProcOpt {
+	return func(character *core.Character, trigger *core.ProcTrigger) {
+		if cfg.ProcChancePct <= 0 {
+			return
+		}
+
+		chance := float64(cfg.ProcChancePct) / 100
+		trigger.ProcChance = 0
+		if source.isEnchant {
+			trigger.DPM = character.NewDynamicLegacyProcForEnchant(source.id, 0, chance)
+		} else {
+			trigger.DPM = character.NewDynamicLegacyProcForWeapon(source.id, 0, chance)
+		}
 	}
 }
 
@@ -671,7 +692,7 @@ func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effect
 	// The handler is attached after the options, since which unit the damage lands on depends on the
 	// callback the trigger ends up with and a weapon proc's shape rewrites it.
 	config := spelldata.ProcTrigger(character, trigger, nil,
-		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil))
+		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil), statedWeaponProcChance(cfg, source))
 	config.Name = cfg.Name
 	config.ActionID = source.actionID()
 	config.Handler = procDamageHandler(character, damageSpell, config.Callback)

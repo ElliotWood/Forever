@@ -63,3 +63,19 @@ func TestItemProcUnsupportedCoversTheRegistrationsOwnRefusal(t *testing.T) {
 		t.Error("a row the sim would not register was called supported")
 	}
 }
+
+// A combat enchant whose own row states the chance answers the rate its spell's 100 sentinel leaves
+// open, and nothing else.
+func TestCombatEnchantUnsupported(t *testing.T) {
+	withRows(t, procRows())
+
+	if got := CombatEnchantUnsupported(Find(2100), true); got != nil {
+		t.Errorf("unsupported = %v, want none with the enchant stating the chance", got)
+	}
+	if got := CombatEnchantUnsupported(Find(2100), false); !slices.Equal(got, []string{ReasonStatesNoRate}) {
+		t.Errorf("unsupported = %v, want the rate named with no chance stated", got)
+	}
+	if got := CombatEnchantUnsupported(Find(2600), true); !slices.Contains(got, "named ability") {
+		t.Errorf("unsupported = %v, want a stated chance to leave the other refusals in place", got)
+	}
+}

@@ -6,6 +6,10 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
+// The reason given for a proc whose rows state no rate, which the generator also gives where the
+// rows' rate is a sentinel its tooltip contradicts.
+const ReasonStatesNoRate = "states no rate"
+
 // What a proc the client hangs on an item, an enchant or a set bonus does not model, as one reason
 // per shape. An empty answer means the rows state enough to build the listener the client describes.
 //
@@ -18,6 +22,16 @@ import (
 // class, so a class mask on its trigger is the filter of the one class it was written for and names
 // nothing the sim can reproduce. An item proc therefore has no character to weigh the mask against.
 func ItemProcUnsupported(trigger *Spell, isWeaponProc bool) []string {
+	return itemProcUnsupported(trigger, isWeaponProc, false)
+}
+
+// The same for a combat enchant, whose chance the enchantment's own row may state where its spell's
+// row states none: Fiery Blaze's 15 sits in SpellItemEnchantment.EffectPointsMin.
+func CombatEnchantUnsupported(trigger *Spell, enchantStatesAChance bool) []string {
+	return itemProcUnsupported(trigger, true, enchantStatesAChance)
+}
+
+func itemProcUnsupported(trigger *Spell, isWeaponProc bool, rateStatedElsewhere bool) []string {
 	var unsupported []string
 
 	if trigger == Nil || trigger.ID == 0 {
@@ -45,8 +59,8 @@ func ItemProcUnsupported(trigger *Spell, isWeaponProc bool) []string {
 	// A weapon proc hears the hits of whatever carries it, which is the one shape the row states no
 	// listener for: the game casts a chance-on-hit effect and a combat enchant off the hit itself.
 	if isWeaponProc {
-		if !weaponProcRateStated(trigger) {
-			unsupported = append(unsupported, "states no rate")
+		if !rateStatedElsewhere && !weaponProcRateStated(trigger) {
+			unsupported = append(unsupported, ReasonStatesNoRate)
 		}
 		return unsupported
 	}
@@ -57,7 +71,7 @@ func ItemProcUnsupported(trigger *Spell, isWeaponProc bool) []string {
 
 	switch {
 	case !procRateStated(trigger):
-		unsupported = append(unsupported, "states no rate")
+		unsupported = append(unsupported, ReasonStatesNoRate)
 	case trigger.RPPM > 0 && decoded.ProcMask == core.ProcMaskUnknown:
 		// Procs per minute are measured against the hits the listener hears, and an empty mask
 		// counts none of them. On a weapon proc the weapon answers that; nothing else can.
