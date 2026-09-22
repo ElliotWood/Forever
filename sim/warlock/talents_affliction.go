@@ -48,7 +48,7 @@ func (warlock *Warlock) applySuppression() {
 	//
 	// warlock.AddStaticMod(core.SpellModConfig{
 	// 	Kind:       core.SpellMod_BonusHit_Percent,
-	// 	FloatValue: spellData.Suppression.Effect(shared.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warlock.Talents.Suppression),
+	// 	FloatValue: spellData.Suppression.Effect(dbcenums.A_MOD_SPELL_HIT_CHANCE, 0).ValueAt(warlock.Talents.Suppression),
 	// 	ClassMask:  WarlockAfflictionSpells,
 	// })
 }
@@ -147,7 +147,7 @@ func (warlock *Warlock) applyShadowMastery() {
 	//
 	// warlock.AddStaticMod(core.SpellModConfig{
 	// 	Kind:       core.SpellMod_DamageDone_Flat,
-	// 	FloatValue: spellData.ShadowMastery.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.ShadowMastery),
+	// 	FloatValue: spellData.ShadowMastery.Effect(dbcenums.A_ADD_PCT_MODIFIER, spelldata.SPELLMOD_DAMAGE).FractionAt(warlock.Talents.ShadowMastery),
 	// 	ClassMask:  WarlockShadowDamage,
 	// })
 }
