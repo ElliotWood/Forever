@@ -20,7 +20,7 @@ func (hunter *Hunter) registerSniperShotSpell() {
 	} else if hunter.Level >= 48 {
 		rank = 2
 	}
-	// Everything but the missile speed comes from the client table (see aimed_shot.go).
+	// Everything comes from the client table (see aimed_shot.go).
 	row := spellData.SniperShot.ByRank(int32(rank))
 	flatDamageBonus, _ := row.Direct.Range()
 
@@ -34,7 +34,7 @@ func (hunter *Hunter) registerSniperShotSpell() {
 		ProcMask:       core.ProcMaskRangedSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL | SpellFlagShot,
 		CastType:       proto.CastType_CastTypeRanged,
-		MissileSpeed:   24,
+		MissileSpeed:   row.MissileSpeed,
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: float64(row.Cost),
