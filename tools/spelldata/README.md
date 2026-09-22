@@ -69,15 +69,15 @@ By mode:
 
 `-lsp` speaks JSON-RPC 2.0 over stdio with Content-Length framing.
 
-| method                                                |                                                                                                             |
-| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `initialize`                                          | `hoverProvider`, full-text `textDocumentSync`; `initializationOptions.trace` is `"on"` (default) or `"off"` |
-| `initialized`, `$/cancelRequest`, other notifications | ignored                                                                                                     |
-| `textDocument/didOpen`, `didChange`                   | keeps the buffer, so a hover reads unsaved edits; drops the folder's declaration cache                      |
-| `textDocument/didSave`, `didClose`                    | drops the folder's declaration cache (and the buffer, on close)                                             |
-| `textDocument/hover`                                  | markdown `MarkupContent`, or `null`                                                                         |
-| `shutdown`, `exit`                                    | exits 0 after a `shutdown`, 1 without one                                                                   |
-| any other request                                     | `MethodNotFound`                                                                                            |
+| method                                                           |                                                                                                               |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `initialize`                                                     | `hoverProvider`, incremental `textDocumentSync`; `initializationOptions.trace` is `"on"` (default) or `"off"` |
+| `initialized`, `$/cancelRequest`, `didSave`, other notifications | ignored                                                                                                       |
+| `textDocument/didOpen`, `didChange`                              | keeps the buffer, so a hover reads unsaved edits; the next hover re-reads that file's declarations            |
+| `textDocument/didClose`                                          | drops the buffer; the next hover re-reads the file from disk                                                  |
+| `textDocument/hover`                                             | markdown `MarkupContent`, or `null`                                                                           |
+| `shutdown`, `exit`                                               | exits 0 after a `shutdown`, 1 without one                                                                     |
+| any other request                                                | `MethodNotFound`                                                                                              |
 
 Every hover sends its trace as `window/logMessage` of type Log: the position, what matched (`id`,
 `family`, `ident`, `segment`, `SpellConfig`), each substitution with the file and line it came from,
@@ -86,9 +86,10 @@ it stopped (`✗ ...`).
 
 What a hover reads: a spell id in the shapes hand-written code states (`MustFind(n)`, `Find(n)`,
 `.ByID(n)`, `SpellID: n`, `"spellId": n`, `fromSpellId(n)`, `spellId: n`) in any file; in a Go file
-also a `spellData.<Family>` token, a name the package folder binds to a ladder chain (substituted
-through at most four names, cycles refused), one accessor of a chain on its declaration line, and
-`spelldata.SpellConfig`. The server compiles the store in; restart it after regenerating.
+also a `spellData.<Family>` token, a name the package folder binds to a ladder chain with `var`, `=` or
+`:=` (substituted through at most four names, cycles refused), one accessor of a chain anywhere in an
+expression, and `spelldata.SpellConfig`. A package whose class file states no ladder is not read for
+names. The server compiles the store in; restart it after regenerating.
 
 ## Editors
 

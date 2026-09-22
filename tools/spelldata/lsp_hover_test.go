@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"unicode/utf16"
 )
 
 const executeGo = `package warrior
@@ -88,10 +89,10 @@ func TestHoverSpellIDShapes(t *testing.T) {
 		}
 	}
 
-	if _, _, ok := Hover("\tspell.ApplyEffects = nil", 0, 12, "file:///tmp/a.ts"); ok {
+	if _, _, ok := newWorkspace().hover("\tspell.ApplyEffects = nil", 0, 12, "file:///tmp/a.ts"); ok {
 		t.Error("a TS line with no id answered a hover")
 	}
-	if _, _, ok := Hover("\tspelldata.Find(116) // the rank 1", 0, 30, "file:///tmp/a.ts"); ok {
+	if _, _, ok := newWorkspace().hover("\tspelldata.Find(116) // the rank 1", 0, 30, "file:///tmp/a.ts"); ok {
 		t.Error("a column outside the match answered a hover")
 	}
 }
@@ -100,7 +101,7 @@ func TestHoverSpellIDShapes(t *testing.T) {
 func TestHoverColumnIsUTF16(t *testing.T) {
 	line := "// — spelldata.MustFind(11574)"
 	col := len([]rune(line[:strings.Index(line, "11574")]))
-	if markdown, _, ok := Hover(line, 0, col, "file:///tmp/a.go"); !ok || !strings.HasPrefix(markdown, "### 11574 ") {
+	if markdown, _, ok := newWorkspace().hover(line, 0, col, "file:///tmp/a.go"); !ok || !strings.HasPrefix(markdown, "### 11574 ") {
 		t.Errorf("the id after a dash answered %v %q", ok, markdown)
 	}
 }
@@ -213,6 +214,27 @@ func TestHoverEnumArgument(t *testing.T) {
 		"| 1 ▶ | +139 attack power to the party around the caster")
 }
 
+// A line of sim/warrior/stances.go with two ladder reads in one expression, then a declaration split
+// over lines.
+const stancesGo = `package warrior
+
+func (warrior *Warrior) makeStanceSpell() {
+	maxRetainedRage := spellData.TacticalMastery.ValueAt(1) + spellData.ImprovedTacticalMastery.ValueAt(warrior.Talents.ImprovedTacticalMastery)
+	split := spellData.Execute.
+		Highest().
+		EffectN(1)
+}
+`
+
+func TestHoverInsideExpression(t *testing.T) {
+	wantHover(t, stancesGo, "ValueAt(1)", 2,
+		"`ValueAt(1)` = **10**\n\n`spellData.TacticalMastery.ValueAt(1)`",
+		"The rank's only effect",
+		"| 1 ▶ | a dummy aura holding 10<br>")
+	wantHover(t, stancesGo, "split :=", 2, "`EffectN(1)` = **effect 1** of 20662 Execute (Rank 5)")
+	wantHover(t, stancesGo, "\t\tEffectN(1)", 4, "`EffectN(1)` = **effect 1** of 20662 Execute (Rank 5)")
+}
+
 func TestHoverSegments(t *testing.T) {
 	wantHover(t, executeGo, "EffectN(1).Average", 2,
 		"`EffectN(1)` = **effect 1** of 20662 Execute (Rank 5)",
@@ -281,25 +303,35 @@ func TestHoverSilent(t *testing.T) {
 
 func TestDeclarations(t *testing.T) {
 	file := strings.Join([]string{
+		"package warrior",
+		"",
+		"func f() {",
 		"\tsecondRank := spellData.Execute.Rank(2)",
 		"\tnamed := spellData.Execute.ByID(20658)",
 		"\tbare := Cruelty.Rank(3)",
 		"\tif executeRank == spellData.Execute.Highest() {",
+		"\t}",
 		"// var stubbedRank = spellData.MangleBear.ByID(33987)",
 		"\tconfig := spelldata.SpellConfig(&warrior.Unit, executeRank, spelldata.Melee(cost))",
 		"\tmaxRage := warrior.MaximumRage() - spell.Cost.GetCurrentCost()",
 		"\tticks := executeRank.EffectN(1).Average(level)",
+		"\tsplit := spellData.Execute.",
+		"\t\tHighest().",
+		"\t\tEffectN(1)",
+		"}",
+		"",
 		"var executeRank = spellData.Execute.Highest() // the top rank",
 	}, "\n")
 
 	found := map[string]string{}
-	for _, d := range declarationsIn(file, "a.go") {
+	for _, d := range parseGo("a.go", file).decls {
 		found[d.name] = d.chain.text(false)
 	}
 	want := map[string]string{
 		"secondRank":  "spellData.Execute.Rank(2)",
 		"named":       "spellData.Execute.ByID(20658)",
 		"bare":        "Cruelty.Rank(3)",
+		"split":       "spellData.Execute.Highest().EffectN(1)",
 		"executeRank": "spellData.Execute.Highest()",
 	}
 	if len(found) != len(want) {
@@ -397,7 +429,7 @@ func TestResolveChainGuards(t *testing.T) {
 func TestWorkspaceBuffers(t *testing.T) {
 	ws := newWorkspace()
 	other := warriorURI(t, "zz_hover_test_buffer.go")
-	ws.setBuffer(other, "package warrior\n\nvar hoverTestRank = spellData.Rend.Highest()\n")
+	ws.update(other, "package warrior\n\nvar hoverTestRank = spellData.Rend.Highest()\n", true)
 
 	use := "package warrior\n\nvar x = hoverTestRank\n"
 	uri := warriorURI(t, "execute.go")
@@ -411,13 +443,13 @@ func TestWorkspaceBuffers(t *testing.T) {
 		t.Errorf("the second hover missed the cache: %v", trace)
 	}
 
-	ws.setBuffer(other, "package warrior\n\nvar hoverTestRank = spellData.Execute.Highest()\n")
+	ws.update(other, "package warrior\n\nvar hoverTestRank = spellData.Execute.Highest()\n", true)
 	markdown, trace, _ = hoverOn(t, ws, use, uri, "hoverTestRank", 2)
 	if !strings.HasPrefix(trace[1], "declarations sim/warrior: cache miss") || !strings.HasPrefix(markdown, "### 20662 Execute") {
 		t.Errorf("the edit did not reach the hover:\n%s\n%s", markdown, strings.Join(trace, "\n"))
 	}
 
-	ws.dropBuffer(other)
+	ws.update(other, "", false)
 	if _, _, ok := hoverOn(t, ws, use, uri, "hoverTestRank", 2); ok {
 		t.Error("a closed buffer's declaration is still read")
 	}
@@ -505,7 +537,7 @@ func TestLSPRoundTrip(t *testing.T) {
 			} `json:"textDocumentSync"`
 		} `json:"capabilities"`
 	}
-	if err := json.Unmarshal(responses["1"].Result, &initialized); err != nil || !initialized.Capabilities.HoverProvider || initialized.Capabilities.TextDocumentSync.Change != 1 {
+	if err := json.Unmarshal(responses["1"].Result, &initialized); err != nil || !initialized.Capabilities.HoverProvider || initialized.Capabilities.TextDocumentSync.Change != 2 {
 		t.Errorf("initialize answered %s", responses["1"].Result)
 	}
 
@@ -534,6 +566,73 @@ func TestLSPRoundTrip(t *testing.T) {
 	}
 }
 
+// Ranged edits land where their UTF-16 positions say, the dash before the id being one unit and three
+// bytes.
+func TestLSPIncrementalSync(t *testing.T) {
+	uri := warriorURI(t, "execute.go")
+	text := "package warrior\n\n// — spelldata.MustFind(11574)\nvar executeRank = spellData.Execute.Highest()\n"
+	edit := func(line int, lineText, old, replacement string) map[string]any {
+		at := len(utf16.Encode([]rune(lineText[:strings.Index(lineText, old)])))
+		return map[string]any{
+			"range": map[string]any{
+				"start": map[string]any{"line": line, "character": at},
+				"end":   map[string]any{"line": line, "character": at + len(old)},
+			},
+			"text": replacement,
+		}
+	}
+	hover := func(id, line, col int) map[string]any {
+		return map[string]any{"jsonrpc": "2.0", "id": id, "method": "textDocument/hover", "params": map[string]any{
+			"textDocument": map[string]any{"uri": uri}, "position": map[string]any{"line": line, "character": col},
+		}}
+	}
+
+	var in strings.Builder
+	for _, msg := range []map[string]any{
+		{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": map[string]any{"initializationOptions": map[string]any{"trace": "off"}}},
+		{"jsonrpc": "2.0", "method": "textDocument/didOpen", "params": map[string]any{
+			"textDocument": map[string]any{"uri": uri, "languageId": "go", "version": 1, "text": text},
+		}},
+		{"jsonrpc": "2.0", "method": "textDocument/didChange", "params": map[string]any{
+			"textDocument": map[string]any{"uri": uri, "version": 2},
+			"contentChanges": []any{
+				edit(2, "// — spelldata.MustFind(11574)", "11574", "11572"),
+				edit(3, "var executeRank = spellData.Execute.Highest()", "Highest()", "Rank(2)"),
+			},
+		}},
+		hover(2, 2, 26),
+		hover(3, 3, 6),
+		{"jsonrpc": "2.0", "id": 4, "method": "shutdown"},
+		{"jsonrpc": "2.0", "method": "exit"},
+	} {
+		in.WriteString(frame(t, msg))
+	}
+
+	var out bytes.Buffer
+	if _, err := serveLSP(strings.NewReader(in.String()), &out); err != nil {
+		t.Fatal(err)
+	}
+	wants := map[string]string{"2": "### 11572 Rend · Rank 5\n", "3": "### 20658 Execute · Rank 2\n"}
+	for _, msg := range readFrames(t, &out) {
+		want, ok := wants[string(msg.ID)]
+		if !ok {
+			continue
+		}
+		var hover struct {
+			Contents struct {
+				Value string `json:"value"`
+			} `json:"contents"`
+		}
+		if err := json.Unmarshal(msg.Result, &hover); err != nil || !strings.HasPrefix(hover.Contents.Value, want) {
+			t.Errorf("hover %s answered %s, want %q", msg.ID, msg.Result, want)
+		}
+		delete(wants, string(msg.ID))
+	}
+	if len(wants) > 0 {
+		t.Errorf("no answer to hovers %v", wants)
+	}
+}
+
 func TestLSPTraceOff(t *testing.T) {
 	uri := warriorURI(t, "execute.go")
 	var in strings.Builder
@@ -555,12 +654,12 @@ func TestLSPTraceOff(t *testing.T) {
 
 func TestLSPInvocation(t *testing.T) {
 	for _, args := range [][]string{{"-lsp"}, {"--lsp"}, {"-lsp", "--stdio"}} {
-		if !isLSPInvocation(args) {
-			t.Errorf("%q should start the language server", args)
+		if opts, err := parseArgs(args); err != nil || opts.mode != "lsp" {
+			t.Errorf("%q should start the language server: %v", args, err)
 		}
 	}
 	for _, args := range [][]string{{}, {"11574"}, {"-lsp", "11574"}, {"--stdio", "-lsp"}} {
-		if isLSPInvocation(args) {
+		if opts, err := parseArgs(args); err == nil && opts.mode == "lsp" {
 			t.Errorf("%q should not start the language server", args)
 		}
 	}

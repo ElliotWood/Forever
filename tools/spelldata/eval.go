@@ -355,10 +355,6 @@ func formatValue(v reflect.Value) (string, error) {
 	switch value := v.Interface().(type) {
 	case time.Duration:
 		return value.String(), nil
-	case float64:
-		return number(value), nil
-	case float32:
-		return number(float64(value)), nil
 	case bool:
 		return strconv.FormatBool(value), nil
 	case string:

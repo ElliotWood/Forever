@@ -171,10 +171,10 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.A_PERIODIC_TRIGGER_SPELL:
 		return join("casts", triggerPhrase(e), every(e))
 	case dbcenums.A_PROC_TRIGGER_SPELL:
-		return join("casts", triggerPhrase(e), "on its trigger", onSpells(s, e))
+		return join("casts", triggerPhrase(e), "on its trigger", onSpells(e))
 
 	case dbcenums.A_DUMMY, dbcenums.A_PERIODIC_DUMMY:
-		return join(dummyPhrase("aura", e), every(e), onSpells(s, e))
+		return join(dummyPhrase("aura", e), every(e), onSpells(e))
 
 	case dbcenums.A_MOD_DECREASE_SPEED, dbcenums.A_MOD_INCREASE_SPEED:
 		return join(signedPercent(e), "movement speed")
@@ -205,7 +205,7 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.A_MOD_MANA_REGEN_INTERRUPT:
 		return join(signedPercent(e), "mana regen while casting")
 	case dbcenums.A_ADD_TARGET_TRIGGER:
-		return join("casts", triggerPhrase(e), "when the target is hit", onSpells(s, e))
+		return join("casts", triggerPhrase(e), "when the target is hit", onSpells(e))
 	case dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS:
 		return join("replaces an action bar spell with", triggerOrMisc(e))
 	case dbcenums.A_MOD_SHAPESHIFT:
@@ -355,7 +355,7 @@ func modTargets(s *spelldata.Spell, e *spelldata.Effect) string {
 
 // The spells a proc or dummy effect names, where it names any: the same mask, read the way
 // rowClassFlags() reads it.
-func onSpells(s *spelldata.Spell, e *spelldata.Effect) string {
+func onSpells(e *spelldata.Effect) string {
 	if phrase := classFlagsPhrase(e.ClassFlags); phrase != "" {
 		return "from " + phrase
 	}
@@ -553,12 +553,7 @@ func mechanicName(misc int32) string {
 }
 
 func sentence(phrase string, notes ...string) string {
-	var kept []string
-	for _, note := range notes {
-		if note != "" {
-			kept = append(kept, note)
-		}
-	}
+	kept := nonEmpty(notes)
 	if len(kept) == 0 {
 		return phrase
 	}

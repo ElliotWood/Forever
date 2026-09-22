@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"go/ast"
 	"go/constant"
-	"go/parser"
-	"go/scanner"
 	"go/token"
-	"regexp"
+	"io"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -15,8 +14,6 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
-
-var spellConfigPattern = regexp.MustCompile(`\bspelldata\.SpellConfig\b`)
 
 type configOption struct {
 	label  string
@@ -95,29 +92,6 @@ func readOption(expr ast.Expr) configOption {
 	return option
 }
 
-func callText(text string, start int) (string, error) {
-	var s scanner.Scanner
-	fset := token.NewFileSet()
-	file := fset.AddFile("", fset.Base(), len(text)-start)
-	s.Init(file, []byte(text[start:]), nil, scanner.ScanComments)
-
-	depth := 0
-	for {
-		pos, tok, _ := s.Scan()
-		switch tok {
-		case token.EOF:
-			return "", fmt.Errorf("the SpellConfig call is not closed")
-		case token.LPAREN:
-			depth++
-		case token.RPAREN:
-			depth--
-			if depth == 0 {
-				return text[start : start+file.Offset(pos)+1], nil
-			}
-		}
-	}
-}
-
 type configRow struct {
 	field string
 	value string
@@ -131,14 +105,9 @@ type configResult struct {
 	skipped []configOption
 }
 
-func evalSpellConfig(call string, declarations map[string]declaration, pkg string, trace *tracer) (*configResult, error) {
-	node, err := parser.ParseExpr(call)
-	if err != nil {
-		return nil, fmt.Errorf("%q is not a SpellConfig call", call)
-	}
-	expr, ok := node.(*ast.CallExpr)
-	if !ok || len(expr.Args) < 2 {
-		return nil, fmt.Errorf("%q is not a SpellConfig call with a row", call)
+func evalSpellConfig(expr *ast.CallExpr, declarations map[string]declaration, pkg string, trace *tracer) (*configResult, error) {
+	if len(expr.Args) < 2 {
+		return nil, fmt.Errorf("%s is not a SpellConfig call with a row", nodeText(expr))
 	}
 
 	s, pick, err := configPick(expr.Args[1], declarations, pkg, trace)
@@ -171,11 +140,8 @@ func evalSpellConfig(call string, declarations map[string]declaration, pkg strin
 
 func configPick(arg ast.Expr, declarations map[string]declaration, pkg string, trace *tracer) (*spelldata.Spell, string, error) {
 	if id, ok := findCall(arg); ok {
-		s := spelldata.Find(id)
-		if s == spelldata.Nil {
-			return nil, "", fmt.Errorf("spell %d is not in the store", id)
-		}
-		return s, nodeText(arg), nil
+		s, err := findSpell(id)
+		return s, nodeText(arg), err
 	}
 
 	trace.add("  row %s", nodeText(arg))
@@ -283,8 +249,12 @@ func attribute(stages []core.SpellConfig, labels []string) []configRow {
 			}
 			var from []string
 			for i := range stages {
-				added := field.bits(&stages[i]) &^ previousBits(stages, i, field.bits) & value
-				if added != 0 && !contains(from, labels[i]) {
+				var previous uint64
+				if i > 0 {
+					previous = field.bits(&stages[i-1])
+				}
+				added := field.bits(&stages[i]) &^ previous & value
+				if added != 0 && !slices.Contains(from, labels[i]) {
 					from = append(from, labels[i])
 				}
 			}
@@ -310,22 +280,6 @@ func attribute(stages []core.SpellConfig, labels []string) []configRow {
 	return rows
 }
 
-func previousBits(stages []core.SpellConfig, i int, read func(*core.SpellConfig) uint64) uint64 {
-	if i == 0 {
-		return 0
-	}
-	return read(&stages[i-1])
-}
-
-func contains(list []string, s string) bool {
-	for _, item := range list {
-		if item == s {
-			return true
-		}
-	}
-	return false
-}
-
 const configFootnote = "Assignments to the config after the call are not folded in."
 
 func configMarkdown(result *configResult) string {
@@ -345,12 +299,12 @@ func configMarkdown(result *configResult) string {
 	return md.String()
 }
 
-func writeConfigText(out *strings.Builder, result *configResult) {
+func writeConfigText(out io.Writer, result *configResult) {
 	fmt.Fprintf(out, "SpellConfig of %s\n", title(result.spell))
 	if result.pick != "" {
 		fmt.Fprintf(out, "%s\n", result.pick)
 	}
-	out.WriteString("\n")
+	fmt.Fprintln(out)
 	fieldWidth, valueWidth := 0, 0
 	for _, row := range result.rows {
 		fieldWidth = max(fieldWidth, len(row.field))

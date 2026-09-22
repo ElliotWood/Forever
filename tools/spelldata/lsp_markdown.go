@@ -66,13 +66,13 @@ func exprMarkdown(result *exprResult, hover chainHover) string {
 		fmt.Fprintf(&md, "\n[Wowhead](%s)\n", c.Wowhead)
 
 	default:
-		label := hover.label
-		if hover.segment {
-			label = called
+		label := called
+		if hover.name != "" {
+			label = hover.name
 		}
 		fmt.Fprintf(&md, "`%s` = **%s**\n\n", label, result.value)
 		fmt.Fprintf(&md, "`%s`\n\n", result.trail)
-		if hover.segment && result.doc != "" {
+		if hover.name == "" && result.doc != "" {
 			fmt.Fprintf(&md, "%s\n\n", result.doc)
 		}
 		c.writeMarkdown(&md)

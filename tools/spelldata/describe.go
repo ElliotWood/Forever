@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -181,11 +182,9 @@ func signed(v float64) string {
 }
 
 func join(parts ...string) string {
-	var kept []string
-	for _, p := range parts {
-		if p != "" {
-			kept = append(kept, p)
-		}
-	}
-	return strings.Join(kept, " ")
+	return strings.Join(nonEmpty(parts), " ")
+}
+
+func nonEmpty(parts []string) []string {
+	return slices.DeleteFunc(slices.Clone(parts), func(part string) bool { return part == "" })
 }

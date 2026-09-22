@@ -335,7 +335,7 @@ func TestParseArgs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("parseArgs(%q): %v", args, err)
 		}
-		if opts.query != "11574" || !opts.json {
+		if opts.mode != "spell" || opts.arg != "11574" || !opts.json {
 			t.Errorf("parseArgs(%q) = %+v", args, opts)
 		}
 	}
