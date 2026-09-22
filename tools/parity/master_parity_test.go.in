@@ -208,6 +208,17 @@ func runParitySpec(spec paritySpec, profile map[string]float64, iterations int32
 		return parityResult{Error: firstLine(final.ErrorResult)}
 	}
 	s := stats.FromFloatArray(final.RaidStats.Parties[0].Players[0].FinalStats.Stats)
+	if os.Getenv("PARITY_STAGES") != "" {
+		ps := final.RaidStats.Parties[0].Players[0]
+		for _, st := range []struct {
+			n string
+			u *proto.UnitStats
+		}{{"base", ps.BaseStats}, {"gear", ps.GearStats}, {"talents", ps.TalentsStats}, {"buffs", ps.BuffsStats}, {"consumes", ps.ConsumesStats}, {"final", ps.FinalStats}} {
+			x := stats.FromFloatArray(st.u.Stats)
+			fmt.Printf("STAGE master %s %-8s str %.1f agi %.1f ap %.1f rap %.1f hit %.2f crit %.2f scrit %.2f armor %.0f def %.1f dodge %.2f blockv %.1f\n", spec.Name, st.n, x[stats.Strength], x[stats.Agility], x[stats.AttackPower], x[stats.RangedAttackPower], x[stats.MeleeHit], x[stats.MeleeCrit], x[stats.SpellCrit], x[stats.Armor]+x[stats.BonusArmor], x[stats.Defense], x[stats.Dodge], x[stats.BlockValue])
+		}
+		fmt.Printf("STAGE master %s sets %v\n", spec.Name, ps.Sets)
+	}
 
 	result := core.RunRaidSim(&proto.RaidSimRequest{
 		Raid:      raid,
