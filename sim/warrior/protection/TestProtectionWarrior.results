@@ -30,7 +30,7 @@ character_stats_results: {
   final_stats: 0
   final_stats: 58.65
   final_stats: 107.6
-  final_stats: 75
+  final_stats: 0
   final_stats: 0
   final_stats: 2382
   final_stats: 350
@@ -50,6 +50,8 @@ character_stats_results: {
   final_stats: 12.04
   final_stats: 0
   final_stats: -1
+  final_stats: 0
+  final_stats: 0
  }
 }
 dps_results: {
@@ -74,14 +76,6 @@ dps_results: {
   dps: 509.08332
   tps: 782.02185
   dtps: 3480.89646
- }
-}
-dps_results: {
- key: "TestProtectionWarrior-AllItems-Biznicks247x128Accurascope-2523"
- value: {
-  dps: 498.32356
-  tps: 765.76568
-  dtps: 3429.05461
  }
 }
 dps_results: {
