@@ -1094,6 +1094,8 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 		return flat(stats.SpellCritPercent, e.Value)
 	case dbc.A_MOD_HIT_CHANCE:
 		return flat(stats.PhysicalHitPercent, e.Value)
+	case dbc.A_MOD_EXPERTISE:
+		return flat(stats.ExpertisePercent, e.Value)
 	case dbc.A_MOD_RESISTANCE:
 		var out []StatAmount
 		for bit, stat := range resistanceBits {
