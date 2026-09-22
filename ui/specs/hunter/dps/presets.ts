@@ -1,46 +1,22 @@
-import * as PresetUtils from "@app/preset_utils";
-import {
-	Class,
-	ConsumesSpec,
-	Debuffs,
-	Drums,
-	IndividualBuffs,
-	PartyBuffs,
-	Profession,
-	Race,
-	RaidBuffs,
-	Spec,
-	TristateEffect,
-} from "@generated/proto/common";
+import * as PresetUtils from '@app/preset_utils';
+import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import {
 	Hunter_Options as HunterOptions,
 	HunterOptions_Ammo,
 	HunterOptions_PetAttackSpeed,
 	HunterOptions_PetType as PetType,
 	HunterOptions_QuiverBonus,
-} from "@generated/proto/hunter";
-import {
-	defaultExposeWeaknessSettings,
-	defaultRaidBuffMajorDamageCooldowns,
-} from "@sim/proto/utils";
-
-import BeastMasteryAPL from "./apls/bm.apl.json";
-import MarksmanshipAPL from "./apls/mm.apl.json";
-import SurvivalAPL from "./apls/sv.apl.json";
+} from '@generated/proto/hunter';
 import { SavedTalents } from '@generated/proto/ui';
+import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
-export const BeastMasteryRotation = PresetUtils.makePresetAPLRotation(
-	"Beast Mastery",
-	BeastMasteryAPL,
-);
-export const MarksmanshipRotation = PresetUtils.makePresetAPLRotation(
-	"Marksmanship",
-	MarksmanshipAPL,
-);
-export const SurvivalRotation = PresetUtils.makePresetAPLRotation(
-	"Survival",
-	SurvivalAPL,
-);
+import BeastMasteryAPL from './apls/bm.apl.json';
+import MarksmanshipAPL from './apls/mm.apl.json';
+import SurvivalAPL from './apls/sv.apl.json';
+
+export const BeastMasteryRotation = PresetUtils.makePresetAPLRotation('Beast Mastery', BeastMasteryAPL);
+export const MarksmanshipRotation = PresetUtils.makePresetAPLRotation('Marksmanship', MarksmanshipAPL);
+export const SurvivalRotation = PresetUtils.makePresetAPLRotation('Survival', SurvivalAPL);
 export const DefaultRotation = MarksmanshipRotation;
 
 export const DefaultOptions = HunterOptions.create({

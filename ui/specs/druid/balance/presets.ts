@@ -1,5 +1,4 @@
 import * as PresetUtils from '@app/preset_utils';
-import { SavedTalents } from '@generated/proto/ui';
 import {
 	Class,
 	ConsumesSpec,
@@ -14,6 +13,7 @@ import {
 	UnitReference,
 } from '@generated/proto/common';
 import { BalanceDruid_Options as BalanceDruidOptions } from '@generated/proto/druid';
+import { SavedTalents } from '@generated/proto/ui';
 import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultAPL from './apls/default.apl.json';

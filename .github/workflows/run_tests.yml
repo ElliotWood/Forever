@@ -3,6 +3,7 @@ on:
     pull_request:
         branches:
             - master
+            - forever-next
     # Reusable from other workflows (deploy, release). Their runs on master also
     # prime the Go/npm caches that pull request runs restore from.
     workflow_call:

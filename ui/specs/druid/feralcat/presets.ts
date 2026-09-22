@@ -1,11 +1,11 @@
 import * as PresetUtils from '@app/preset_utils';
-import { SavedTalents } from '@generated/proto/ui';
 import { ConsumesSpec, Drums, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	FeralCatDruid_Options as FeralDruidOptions,
 	FeralCatDruid_Rotation as FeralCatDruidRotation,
 	FeralCatDruid_Rotation_FinishingMove as FinishingMove,
 } from '@generated/proto/druid';
+import { SavedTalents } from '@generated/proto/ui';
 
 import DefaultApl from './apls/default.apl.json';
 

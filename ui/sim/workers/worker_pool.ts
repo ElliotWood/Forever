@@ -25,14 +25,13 @@ import {
 } from '@generated/proto/api';
 import { AsyncSimRequest, SimRequest, WorkerReceiveMessage, WorkerSendMessage } from '@worker/types';
 
-import { REPO_NAME } from '../constants/other';
 import { SimSignals } from '../sim_signal_manager';
 import { isDevMode } from '../utils/env';
 import { noop } from '../utils/misc';
 import { WorkerPoolManager } from './concurrent_worker_pool';
 
-const SIM_WORKER_URL = `/${REPO_NAME}/sim_worker.js`;
-const SIM_WASM_URL = `/${REPO_NAME}/lib.wasm.gz`;
+const SIM_WORKER_URL = '/forever/sim_worker.js';
+const SIM_WASM_URL = '/forever/lib.wasm.gz';
 
 // lib.wasm ships gzipped (Cloudflare Pages caps files at 25 MiB; the raw module exceeds it)
 // and is fetched + compiled exactly once here, then shared with every wasm worker as a

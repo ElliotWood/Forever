@@ -51,7 +51,7 @@ export type Social = (typeof SOCIALS)[number];
 // proto <-> player/specs cycle; the evaluation order of that cycle decides
 // whether PlayerSpecs' lookup table is populated.
 export function getSpecSitePath(classString: string, specString: string): string {
-	return `/${REPO_NAME}/${classString}/${specString}/`;
+	return `/forever/${classString}/${specString}/`;
 }
 
 export const LOCAL_STORAGE_PREFIX = '__forever';
