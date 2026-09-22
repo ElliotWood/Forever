@@ -401,8 +401,6 @@ var configFields = []configField{
 	{name: "ClassFlags", read: func(c *core.SpellConfig) string { return classFlagsPhrase(c.ClassFlags) }},
 }
 
-// Each stage is the config with one more option applied than the last; a field is credited to every
-// stage that changed it, and a flag bit to the stage that set it.
 func attribute(stages []core.SpellConfig, labels []string) []configRow {
 	final := &stages[len(stages)-1]
 	var rows []configRow
@@ -471,7 +469,7 @@ func configMarkdown(result *configResult) string {
 		fmt.Fprintf(&md, "| %s | %s | %s |\n", row.field, codeCell(row.value), cell(row.from))
 	}
 	for _, option := range result.skipped {
-		fmt.Fprintf(&md, "\nunevaluated: `%s` (%s)\n", cell(option.source), option.err)
+		fmt.Fprintf(&md, "\nunevaluated: `%s` (%s)\n", option.source, option.err)
 	}
 	fmt.Fprintf(&md, "\n%s\n", configFootnote)
 	return md.String()

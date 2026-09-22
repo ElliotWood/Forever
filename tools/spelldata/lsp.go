@@ -58,9 +58,7 @@ type lspServer struct {
 	shutdown bool
 }
 
-// Reads Content-Length framed JSON-RPC off in until `exit` or the end of the stream, and answers
-// whether a `shutdown` came first.
-func serveLSP(in io.Reader, out io.Writer) (bool, error) {
+func serveLSP(in io.Reader, out io.Writer) (shutdownRequested bool, err error) {
 	server := &lspServer{out: out, ws: newWorkspace(), trace: true}
 	reader := textproto.NewReader(bufio.NewReader(in))
 

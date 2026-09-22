@@ -260,7 +260,6 @@ func runConfig(out io.Writer, opts options) error {
 	return err
 }
 
-// The trace goes to stderr, so stdout is the markdown alone.
 func runHover(out io.Writer, opts options) error {
 	lineText, colText, ok := strings.Cut(opts.query, ":")
 	line, lineErr := strconv.Atoi(lineText)
