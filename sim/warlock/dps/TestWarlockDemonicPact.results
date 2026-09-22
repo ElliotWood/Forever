@@ -132,13 +132,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestWarlockDemonicPact-Phase1-AllItems-FieldMarshal'sThreads"
- value: {
-  dps: 614.40299
-  tps: 538.66641
- }
-}
-dps_results: {
  key: "TestWarlockDemonicPact-Phase1-AllItems-Hazza'rah'sCharmofDestruction-19957"
  value: {
   dps: 581.42157
@@ -164,13 +157,6 @@ dps_results: {
  value: {
   dps: 591.39916
   tps: 516.08891
- }
-}
-dps_results: {
- key: "TestWarlockDemonicPact-Phase1-AllItems-Warlord'sThreads"
- value: {
-  dps: 614.40299
-  tps: 538.66641
  }
 }
 dps_results: {
