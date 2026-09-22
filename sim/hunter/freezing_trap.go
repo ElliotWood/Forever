@@ -22,7 +22,7 @@ func (hunter *Hunter) getFreezingTrapConfig(timer *core.Timer) core.SpellConfig 
 		ProcMask:       core.ProcMaskSpellDamage,
 		Flags:          core.SpellFlagAPL | SpellFlagTrap,
 		RequiredLevel:  20,
-		MissileSpeed:   24,
+		MissileSpeed:   row.MissileSpeed, // 0: the client places traps (SpellMisc.Speed 0), it does not throw them
 
 		ManaCost: core.ManaCostOptions{
 			FlatCost: float64(row.Cost),

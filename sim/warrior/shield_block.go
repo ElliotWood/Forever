@@ -7,8 +7,8 @@ import (
 )
 
 func (warrior *Warrior) RegisterShieldBlockCD() {
-	// Forever beta client 1.60.1.69893: id, cost, cooldown, duration, school and block chance come from
-	// the client table. Its 2 charges are not applied (ours blocks one attack), as before.
+	// Forever beta client 1.60.1.69893: id, cost, cooldown, duration, school, block chance and charges
+	// come from the client table (2565: SpellAuraOptions.ProcCharges 2, so it blocks two attacks).
 	row := spellData.ShieldBlock.ByRank(1)
 	actionID := core.ActionID{SpellID: row.SpellID}
 	cooldownDur := row.Cooldown
@@ -18,7 +18,7 @@ func (warrior *Warrior) RegisterShieldBlockCD() {
 		Label:     "Shield Block",
 		ActionID:  actionID,
 		Duration:  row.Duration, // 5 sec in Classic
-		MaxStacks: 1,
+		MaxStacks: row.ProcCharges,
 
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			aura.SetStacks(sim, aura.MaxStacks)

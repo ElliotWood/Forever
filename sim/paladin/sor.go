@@ -27,12 +27,15 @@ type judge struct {
 // and 0.5 on the judgement (Classic 0.029/0.063/0.093 and 0.144/0.312/0.462), and rank 1's
 // judgement rolls 14-16 instead of a flat 15. Ranks 4-8 are unchanged.
 //
-// The seal's cost and duration and the judgement's coefficient and school come from the client table.
-// The rest stays ours: the ids (rank 1's seal is 21084 there), the per level growth, and the
+// The seal's cost and duration and the judgement's coefficient, school and defense type come from the
+// client table. Rank 1's seal is 21084: its SkillLineAbility row supersedes 20154, and only 21084
+// carries the effect that links Judgement of Righteousness (20187). The judgement is DefenseType 2
+// (melee) in the client, like Judgement of Command, so it crits for the melee multiplier; it still
+// rolls hit and crit on the spell table. The rest stays ours: the per level growth, and the
 // judgement's roll, where the table holds the centre at the rank's max level, truncated; the seal's
 // value there is ours at its max level (spell_damage_test.go checks both). The table's seal
-// coefficient (0.058/0.125/0.185/0.2) is not the 0.1 the sim applies to the proc, and it puts the
-// judgement on the melee table where the sim rolls it on the spell table.
+// coefficient (0.058/0.125/0.185/0.2) is the judgement's effect 2 dummy, not the seal: the client
+// seals and procs (25742..25713) carry 0.1, which the sim applies to the proc.
 var sealOfRighteousnessRanks = []struct {
 	level      int32
 	spellID    int32
@@ -40,7 +43,7 @@ var sealOfRighteousnessRanks = []struct {
 	proc       proc
 	judge      judge
 }{
-	{level: 1, spellID: 20154, scaleLevel: 7, proc: proc{spellID: 25742, value: 108, scale: 18, coeff: 0.1}, judge: judge{spellID: 20187, minDamage: 14, maxDamage: 16, scale: 1.8}},
+	{level: 1, spellID: 21084, scaleLevel: 7, proc: proc{spellID: 25742, value: 108, scale: 18, coeff: 0.1}, judge: judge{spellID: 20187, minDamage: 14, maxDamage: 16, scale: 1.8}},
 	{level: 10, spellID: 20287, scaleLevel: 16, proc: proc{spellID: 25740, value: 216, scale: 17, coeff: 0.1}, judge: judge{spellID: 20280, minDamage: 25, maxDamage: 27, scale: 1.9}},
 	{level: 18, spellID: 20288, scaleLevel: 24, proc: proc{spellID: 25739, value: 352, scale: 23, coeff: 0.1}, judge: judge{spellID: 20281, minDamage: 39, maxDamage: 43, scale: 2.4}},
 	{level: 26, spellID: 20289, scaleLevel: 32, proc: proc{spellID: 25738, value: 541, scale: 31, coeff: 0.1}, judge: judge{spellID: 20282, minDamage: 57, maxDamage: 63, scale: 2.8}},
@@ -70,7 +73,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 		 * (Judgement of Righteousness):
 		 *   - Deals flat damage that is affected by the Improved Seals talent, and
 		 *     has a spellpower scaling that is unaffected by that talent.
-		 *   - Targets magic defense and rolls to hit and crit.
+		 *   - Rolls hit and crit on the spell table; melee defense type (200% crits).
 		 *
 		 * (Seal of Righteousness):
 		 *   - Procs from white hits.
@@ -89,7 +92,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 			ClassSpellMask: SpellMaskJudgementOfRighteousness,
 			ActionID:       core.ActionID{SpellID: rank.judge.spellID},
 			SpellSchool:    judgeRow.SpellSchool,
-			DefenseType:    core.DefenseTypeMagic,
+			DefenseType:    judgeRow.DefenseType,
 			ProcMask:       core.ProcMaskSpellDamage,
 			Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagSuppressWeaponProcs | core.SpellFlagSuppressEquipProcs | core.SpellFlagBinary,
 

@@ -1,8 +1,6 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/classic/sim/core"
 )
 
@@ -47,15 +45,15 @@ func (warrior *Warrior) registerSweepingStrikesCD() {
 		},
 	})
 
-	// Forever beta client 1.60.1.69893: id, cost, cooldown, school and charges come from the client
-	// table. Its duration reads 20s where ours is 10s, so the duration stays ours.
+	// Forever beta client 1.60.1.69893: id, cost, cooldown, duration, school and charges come from the
+	// client table (12292: SpellMisc.DurationIndex 18 = 20 sec, 5 charges, 30 sec cooldown).
 	row := spellData.SweepingStrikes.ByRank(1)
 	actionID := core.ActionID{SpellID: row.SpellID}
 
 	ssAura := warrior.RegisterAura(core.Aura{
 		Label:     "Sweeping Strikes",
 		ActionID:  actionID,
-		Duration:  time.Second * 10,
+		Duration:  row.Duration,
 		MaxStacks: row.ProcCharges,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			aura.SetStacks(sim, row.ProcCharges)

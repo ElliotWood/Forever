@@ -1567,7 +1567,7 @@
 {"effectId":2681,"itemId":22635,"spellId":28161,"name":"Savage Guard","type":1,"extraTypes":[9],"enchantType":3,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0],"quality":3,"phase":4},
 {"effectId":2715,"itemId":23547,"spellId":29475,"name":"Resilience of the Scourge","type":3,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,31,0,0],"quality":4,"phase":6},
 {"effectId":2716,"itemId":23549,"spellId":29480,"name":"Fortitude of the Scourge","type":3,"stats":[0,0,16,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,100,0,0,0],"quality":4,"phase":6},
-{"effectId":2717,"itemId":23548,"spellId":29483,"name":"Might of the Scourge","type":3,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":4,"phase":6},
+{"effectId":2717,"itemId":23548,"spellId":29483,"name":"Might of the Scourge","type":3,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,0,1,0,0,0,0,0,0,0,26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":4,"phase":6},
 {"effectId":2721,"itemId":23545,"spellId":29467,"name":"Power of the Scourge","type":3,"stats":[0,0,0,0,0,15,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":4,"phase":6},
 {"effectId":7210,"spellId":435481,"name":"Enchant Weapon - Dismantle","type":13,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":4},
 {"effectId":7223,"spellId":435903,"name":"Enchant Chest - Retricutioner","type":5,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":4},
