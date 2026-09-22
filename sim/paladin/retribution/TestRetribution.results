@@ -116,8 +116,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-Avenger'sBattlegear"
  value: {
-  dps: 1026.33264
-  tps: 598.49492
+  dps: 1026.63943
+  tps: 598.66672
  }
 }
 dps_results: {
@@ -354,8 +354,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-Freethinker'sArmor"
  value: {
-  dps: 864.97216
-  tps: 507.79161
+  dps: 865.24204
+  tps: 507.94274
  }
 }
 dps_results: {

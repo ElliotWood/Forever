@@ -125,8 +125,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-AllItems-Avenger'sBattlegear"
  value: {
-  dps: 688.66123
-  tps: 722.26738
+  dps: 688.72566
+  tps: 722.35307
   dtps: 1027.91632
  }
 }
@@ -141,8 +141,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-AllItems-BattlegearofEternalJustice"
  value: {
-  dps: 581.07428
-  tps: 618.7421
+  dps: 581.59489
+  tps: 619.25184
   dtps: 1114.06827
  }
 }
@@ -381,8 +381,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-AllItems-FieldMarshal'sAegis"
  value: {
-  dps: 608.0125
-  tps: 642.17426
+  dps: 608.06992
+  tps: 642.25063
   dtps: 1093.16012
  }
 }
@@ -413,8 +413,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-AllItems-Freethinker'sArmor"
  value: {
-  dps: 608.06904
-  tps: 628.74443
+  dps: 608.22526
+  tps: 628.95221
   dtps: 1077.12105
  }
 }
@@ -549,16 +549,16 @@ dps_results: {
 dps_results: {
  key: "TestProtection-AllItems-LawbringerArmor"
  value: {
-  dps: 608.88962
-  tps: 632.66801
+  dps: 608.94241
+  tps: 632.73822
   dtps: 672.692
  }
 }
 dps_results: {
  key: "TestProtection-AllItems-LieutenantCommander'sRedoubt"
  value: {
-  dps: 655.91205
-  tps: 688.49569
+  dps: 655.98202
+  tps: 688.58392
   dtps: 1095.41726
  }
 }
