@@ -1,7 +1,7 @@
 package database
 
 // Re-derives the families below from the client database and asserts the committed table agrees, so
-// a hand-edited or stale generated file fails. Covers 20 of 809 families; regenerating and checking
+// a hand-edited or stale generated file fails. Covers 8 of 809 families; regenerating and checking
 // the diff is empty is the only check that reaches every row.
 //
 // Skips when tools/database/wowsims.db is absent, which is why CI is unaffected.

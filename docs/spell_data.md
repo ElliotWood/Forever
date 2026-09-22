@@ -1463,9 +1463,9 @@ What guards the outputs:
   same spell as the store carries it, through `sim/core/spelldata/parity`. That is what has to stay
   green for paladin before it ports; the eight store-backed classes carry no parity test of their
   own - it retires with the family table it checked.
-- `go test ./tools/database/ -run GeneratedRankTables` re-derives amounts and coefficients for the 20
-  families listed in `tools/database/spelldata_regen_test.go` from the database itself - 405 values out
-  of the rows paladin's family tables hold, so it is no substitute for regenerating and finding
+- `go test ./tools/database/ -run GeneratedRankTables` re-derives amounts and coefficients for the 8
+  families listed in `tools/database/spelldata_regen_test.go` from the database itself - 147 comparisons
+  out of the rows paladin's family tables hold, so it is no substitute for regenerating and finding
   the diff empty. It skips when `wowsims.db` is absent.
 - The repository's `pre-commit` hook runs `-check` when the database is present and the commit touches
   the generator or one of its outputs.

@@ -127,7 +127,7 @@ go run ./tools/database/gen_spelldata            # rewrite the store, the enums 
 go run ./tools/database/gen_spelldata -check     # name what is stale, write nothing (make spelldata-check)
 go test ./sim/core/spelldata/ -count=1           # the store's own tests, no database needed
 go test ./tools/database/ -count=1               # the regeneration from the committed inputs
-go test --tags=with_db ./sim/<class>/ -count=1   # a class, parity test included
+go test --tags=with_db ./sim/<class>/ -count=1   # a class; paladin's run includes its parity test
 git status --porcelain -- '*.results'            # empty unless a number was meant to move
 ```
 
