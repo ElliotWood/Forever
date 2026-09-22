@@ -171,6 +171,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-CenarionRaiment"
+ value: {
+  dps: 171.45929
+  tps: 117.92665
+  dtps: 6.97911
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-Champion'sRefuge"
+ value: {
+  dps: 169.58166
+  tps: 116.68749
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 169.58166
@@ -283,6 +299,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-FeralheartRaiment"
+ value: {
+  dps: 201.58948
+  tps: 139.09297
+  dtps: 7.38194
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-FieldMarshal'sSanctuary"
+ value: {
+  dps: 197.87438
+  tps: 136.4924
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-FreezingBand-942"
  value: {
   dps: 169.58166
@@ -359,6 +391,14 @@ dps_results: {
  value: {
   dps: 174.01593
   tps: 119.79148
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-LieutenantCommander'sRefuge"
+ value: {
+  dps: 169.58166
+  tps: 116.68749
   dtps: 7.47288
  }
 }
@@ -507,11 +547,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-StormrageRaiment"
+ value: {
+  dps: 169.58166
+  tps: 116.68749
+  dtps: 7.38194
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-StormshroudArmor"
  value: {
   dps: 184.49377
   tps: 127.05079
   dtps: 7.61869
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-SymbolsofUnendingLife"
+ value: {
+  dps: 192.13963
+  tps: 132.47807
+  dtps: 7.47288
  }
 }
 dps_results: {
@@ -576,6 +632,14 @@ dps_results: {
   dps: 172.83083
   tps: 118.96192
   dtps: 6.86975
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-Warlord'sSanctuary"
+ value: {
+  dps: 197.87438
+  tps: 136.4924
+  dtps: 7.47288
  }
 }
 dps_results: {

@@ -87,6 +87,9 @@ type Shaman struct {
 
 	ChainLightningOverloads map[int32][]*core.Spell
 
+	// Added to Chain Lightning's per-bounce damage multiplier (Gift of the Gathering Storm).
+	ChainLightningBounceBonus float64
+
 	Stormstrike           *core.Spell
 	StormstrikeCastResult *core.SpellResult
 

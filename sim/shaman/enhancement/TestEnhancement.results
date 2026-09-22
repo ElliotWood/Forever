@@ -151,6 +151,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-Champion'sEarthshaker"
+ value: {
+  dps: 433.71513
+  tps: 317.47794
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-Champion'sStormcaller"
+ value: {
+  dps: 461.50841
+  tps: 337.01633
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 395.51759
@@ -274,6 +288,13 @@ dps_results: {
  value: {
   dps: 399.03253
   tps: 293.24447
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-GiftoftheGatheringStorm"
+ value: {
+  dps: 590.93821
+  tps: 429.67739
  }
 }
 dps_results: {
@@ -473,6 +494,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-Stormcaller'sGarb"
+ value: {
+  dps: 476.24672
+  tps: 346.67933
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-StormshroudArmor"
  value: {
   dps: 429.97996
@@ -494,10 +522,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-TheEarthfury"
+ value: {
+  dps: 439.05458
+  tps: 320.44308
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-TheElements"
  value: {
   dps: 443.45444
   tps: 323.59315
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-TheFiveThunders"
+ value: {
+  dps: 482.99595
+  tps: 351.46739
  }
 }
 dps_results: {
@@ -529,6 +571,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-TheTenStorms"
+ value: {
+  dps: 418.02803
+  tps: 306.29261
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-TotemoftheStorm-23199"
  value: {
   dps: 396.45738
@@ -554,6 +603,13 @@ dps_results: {
  value: {
   dps: 398.23577
   tps: 292.17731
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-Warlord'sEarthshaker"
+ value: {
+  dps: 449.58082
+  tps: 328.38635
  }
 }
 dps_results: {
