@@ -376,3 +376,59 @@ func TestProcDamageTarget(t *testing.T) {
 		}
 	}
 }
+
+func testOneHander(id int32) *proto.SimItem {
+	return &proto.SimItem{
+		Id:             id,
+		Name:           "Test Sword",
+		Type:           proto.ItemType_ItemTypeWeapon,
+		WeaponType:     proto.WeaponType_WeaponTypeSword,
+		HandType:       proto.HandType_HandTypeOneHand,
+		WeaponSpeed:    2.6,
+		ScalingOptions: map[int32]*proto.ScalingItemProperties{0: {WeaponDamageMin: 50, WeaponDamageMax: 90}},
+	}
+}
+
+// Fiery Blaze 36's shape: a combat enchant on the main hand only, whose spell states no chance and
+// whose enchantment states 15%.
+func TestStatedEnchantChanceRollsOnTheEnchantedWeaponOnly(t *testing.T) {
+	const mainHandID, offHandID, enchantID int32 = 990401, 990402, 990403
+	core.AddToDatabase(&proto.SimDatabase{
+		Items:    []*proto.SimItem{testOneHander(mainHandID), testOneHander(offHandID)},
+		Enchants: []*proto.SimEnchant{{EffectId: enchantID, Name: "Test Fiery Blaze"}},
+	})
+
+	items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotOffHand+1)
+	for i := range items {
+		items[i] = &proto.ItemSpec{}
+	}
+	items[proto.ItemSlot_ItemSlotMainHand] = &proto.ItemSpec{Id: mainHandID, Enchant: enchantID}
+	items[proto.ItemSlot_ItemSlotOffHand] = &proto.ItemSpec{Id: offHandID}
+
+	agent := newTestAgent()
+	character := agent.character
+	character.Equipment = core.ProtoToEquipment(&proto.EquipmentSpec{Items: items})
+	character.EnableAutoAttacks(agent, core.AutoAttackOptions{
+		MainHand:       character.WeaponFromMainHand(),
+		OffHand:        character.WeaponFromOffHand(),
+		AutoSwingMelee: true,
+	})
+
+	trigger := &spelldata.Spell{ID: 990410, Name: "Test Fiery Blaze"}
+	cfg := SpellDataProc{Name: "Test Fiery Blaze", EnchantID: enchantID, TriggerSpellID: trigger.ID,
+		BuffSpellID: trigger.ID, IsWeaponProc: true, ProcChancePct: 15}
+	config := spellDataDamageTrigger(character, cfg, cfg.effectSource(), trigger)
+
+	if config.ProcChance != 0 {
+		t.Errorf("flat chance = %v, want none: it would roll on the off hand's hits too", config.ProcChance)
+	}
+	if config.DPM == nil {
+		t.Fatal("no manager bound to the enchanted weapon")
+	}
+	if got := config.DPM.Chance(core.ProcMaskMeleeMHAuto, nil); got != 0.15 {
+		t.Errorf("main hand chance = %v, want 0.15", got)
+	}
+	if got := config.DPM.Chance(core.ProcMaskMeleeOHAuto, nil); got != 0 {
+		t.Errorf("off hand chance = %v, want 0", got)
+	}
+}

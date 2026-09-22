@@ -691,10 +691,7 @@ func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effect
 
 	// The handler is attached after the options, since which unit the damage lands on depends on the
 	// callback the trigger ends up with and a weapon proc's shape rewrites it.
-	config := spelldata.ProcTrigger(character, trigger, nil,
-		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil), statedWeaponProcChance(cfg, source))
-	config.Name = cfg.Name
-	config.ActionID = source.actionID()
+	config := spellDataDamageTrigger(character, cfg, source, trigger)
 	config.Handler = procDamageHandler(character, damageSpell, config.Callback)
 
 	// The proc's damage lands on the hit that caused it rather than on the next one, which is what
@@ -702,6 +699,16 @@ func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effect
 	config.TriggerImmediately = true
 
 	source.registerProc(character, character.MakeProcTriggerAura(config), source.eligibleSlots(character))
+}
+
+// A damage proc's listener as the trigger's row and the effect state it, without the handler.
+func spellDataDamageTrigger(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell) core.ProcTrigger {
+	config := spelldata.ProcTrigger(character, trigger, nil,
+		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil), statedWeaponProcChance(cfg, source))
+	config.Name = cfg.Name
+	config.ActionID = source.actionID()
+
+	return config
 }
 
 // The spell the proc casts, as its row states it: school, defense type, spell power share, travel
