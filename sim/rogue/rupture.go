@@ -20,6 +20,7 @@ func (rogue *Rogue) registerRupture() {
 	// tick := ruptureRank.PeriodicEffect()
 	// tickLength := tick.Period()
 	// baseTickCount := int32(ruptureRank.Duration() / tickLength)
+	// var cp int32
 	//
 	// rogue.Rupture = rogue.RegisterSpell(core.SpellConfig{
 	// 	ActionID:       core.ActionID{SpellID: ruptureRank.ID},
@@ -62,7 +63,7 @@ func (rogue *Rogue) registerRupture() {
 	// 		TickLength:    tickLength,
 	//
 	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.Spell.CalcAndDealPeriodicDamage(sim, target, rogue.ruptureDamage(target, rogue.ComboPoints(), tick.Average(core.CharacterLevel), 11), dot.OutcomeTick)
+	// 			dot.Spell.CalcAndDealPeriodicDamage(sim, target, rogue.ruptureDamage(target, cp, tick.Average(core.CharacterLevel), 11), dot.OutcomeTick)
 	// 		},
 	// 	},
 	//
@@ -70,8 +71,9 @@ func (rogue *Rogue) registerRupture() {
 	// 		rogue.BreakStealth(sim)
 	// 		result := spell.CalcOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
 	// 		if result.Landed() {
+	// 			cp = rogue.ComboPoints()
 	// 			dot := spell.Dot(target)
-	// 			dot.BaseTickCount = baseTickCount + rogue.ComboPoints()
+	// 			dot.BaseTickCount = baseTickCount + cp
 	// 			dot.Apply(sim)
 	// 			rogue.ApplyFinisher(sim, spell)
 	// 			spell.DealOutcome(sim, result)
