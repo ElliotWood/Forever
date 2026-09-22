@@ -117,6 +117,8 @@ Where the row and the tooltip disagree, the tooltip can win — Flurry's haste l
 
 ```
 go run ./tools/spelldata 11574                   # one row: header, ladder call, a worded line and the client's columns per effect; -json for a tool
+go run ./tools/spelldata -family warrior/Execute # the ladder: one line per rank with the call reaching it, then the highest rank's row (<Family> alone where one class states it)
+go run ./tools/spelldata -expr 'spellData.Execute.Rank(3)' -package warrior   # the row a ladder call names, Highest(), Rank(n) or ByID(id)
 go run ./tools/database/gen_spelldata            # rewrite the store, the enums and every class file
 go run ./tools/database/gen_spelldata -check     # name what is stale, write nothing (make spelldata-check)
 go test ./sim/core/spelldata/ -count=1           # the store's own tests, no database needed
@@ -125,6 +127,6 @@ go test --tags=with_db ./sim/<class>/ -count=1   # a class, parity test included
 git status --porcelain -- '*.results'            # empty unless a number was meant to move
 ```
 
-`.vscode/extensions/wowsims-spelldata` is that printer as a VS Code hover over the ids Go, APL JSON and TS state; VS Code offers to install it as a workspace extension when the repository is opened.
+`.vscode/extensions/wowsims-spelldata` is that printer as a VS Code hover over the ids Go, APL JSON and TS state, and in Go over a ladder family and over a name bound to one of its ranks; VS Code offers to install it as a workspace extension when the repository is opened.
 
 Regenerating needs `tools/database/wowsims.db`, which is gitignored and built by `make db` from a local WoW client. The checks that do not need it — the store's tests, the regeneration from `assets/db_inputs/spell_store_inputs.json` — are the ones CI runs.

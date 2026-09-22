@@ -10,43 +10,70 @@ const spellIds_1 = require("./spellIds");
 const LANGUAGES = ['go', 'json', 'typescript', 'typescriptreact'];
 function activate(context) {
     const log = vscode.window.createOutputChannel('WoWSims Spelldata');
-    // One promise per repository and id, so the hovers that arrive while the first `go run` is still
-    // compiling wait on that run rather than starting their own.
+    // One promise per repository and question, so the hovers that arrive while the first `go run` is
+    // still compiling wait on that run rather than starting their own.
     const cache = new Map();
+    // The ladder picks each class folder declares, read once per folder and dropped when a file in it
+    // is saved: an identifier the map does not know is not worth a process.
+    const declarations = new Map();
     let warnedMissingGo = false;
+    function ask(root, key, args) {
+        const full = `${root}\u0000${key}`;
+        let pending = cache.get(full);
+        if (pending === undefined) {
+            pending = readTool(root, args, log, () => {
+                if (!warnedMissingGo) {
+                    warnedMissingGo = true;
+                    void vscode.window.showWarningMessage('WoWSims Spelldata: the go binary was not found. Set wowsims-spelldata.goBinary to its path.');
+                }
+            });
+            cache.set(full, pending);
+        }
+        return pending.then(row => {
+            // A failure is not an answer: a tree that did not compile a moment ago compiles once it is
+            // fixed, and the next hover has to ask again.
+            if (row === undefined) {
+                cache.delete(full);
+            }
+            return row;
+        });
+    }
     const provider = {
         async provideHover(document, position) {
-            const line = document.lineAt(position.line).text;
-            const id = (0, spellIds_1.spellIdAt)(line, position.character);
-            if (id === undefined) {
-                return undefined;
-            }
             const root = moduleRoot(document.uri.fsPath);
             if (root === undefined) {
                 return undefined;
             }
-            const key = `${root}\u0000${id}`;
-            let pending = cache.get(key);
-            if (pending === undefined) {
-                pending = readSpell(root, id, log, () => {
-                    if (!warnedMissingGo) {
-                        warnedMissingGo = true;
-                        void vscode.window.showWarningMessage('WoWSims Spelldata: the go binary was not found. Set wowsims-spelldata.goBinary to its path.');
-                    }
-                });
-                cache.set(key, pending);
+            const line = document.lineAt(position.line).text;
+            const id = (0, spellIds_1.spellIdAt)(line, position.character);
+            if (id !== undefined) {
+                const row = await ask(root, `id\u0000${id}`, ['-json', String(id)]);
+                return row === undefined ? undefined : new vscode.Hover(spellCard(row, `**${row.title}**`));
             }
-            const row = await pending;
-            if (row === undefined) {
-                // A failure is not an answer: a tree that did not compile a moment ago compiles once it
-                // is fixed, and the next hover has to ask again.
-                cache.delete(key);
+            // The rest are Go names, and reading a folder for them only makes sense in a class package.
+            if (document.languageId !== 'go') {
                 return undefined;
             }
-            return new vscode.Hover(render(row));
+            const folder = (0, node_path_1.dirname)(document.uri.fsPath);
+            const pkg = (0, node_path_1.basename)(folder);
+            const field = (0, spellIds_1.familyFieldAt)(line, position.character);
+            if (field !== undefined) {
+                const family = await ask(root, `family\u0000${pkg}/${field}`, ['-family', `${pkg}/${field}`, '-json']);
+                return family === undefined ? undefined : new vscode.Hover(familyCard(family));
+            }
+            const name = (0, spellIds_1.identifierAt)(line, position.character);
+            if (name === undefined) {
+                return undefined;
+            }
+            const expr = declaredLadderPicks(folder, declarations, log).get(name);
+            if (expr === undefined) {
+                return undefined;
+            }
+            const row = await ask(root, `expr\u0000${pkg}\u0000${expr}`, ['-expr', expr, '-package', pkg, '-json']);
+            return row === undefined ? undefined : new vscode.Hover(spellCard(row, `\`${name}\` = ${row.title}`));
         },
     };
-    context.subscriptions.push(log, vscode.languages.registerHoverProvider(LANGUAGES, provider));
+    context.subscriptions.push(log, vscode.languages.registerHoverProvider(LANGUAGES, provider), vscode.workspace.onDidSaveTextDocument(document => declarations.delete((0, node_path_1.dirname)(document.uri.fsPath))));
 }
 function deactivate() { }
 // The repository the file belongs to, which is the folder holding go.mod: the tool is run from there
@@ -64,16 +91,39 @@ function moduleRoot(filePath) {
         dir = parent;
     }
 }
-function readSpell(root, id, log, onMissingGo) {
+function declaredLadderPicks(folder, cache, log) {
+    let found = cache.get(folder);
+    if (found !== undefined) {
+        return found;
+    }
+    found = new Map();
+    try {
+        for (const entry of (0, node_fs_1.readdirSync)(folder)) {
+            if (!entry.endsWith('.go')) {
+                continue;
+            }
+            for (const [name, expr] of (0, spellIds_1.ladderDeclarations)((0, node_fs_1.readFileSync)((0, node_path_1.join)(folder, entry), 'utf8'))) {
+                found.set(name, expr);
+            }
+        }
+    }
+    catch (error) {
+        log.appendLine(`${folder}: ${String(error)}`);
+    }
+    cache.set(folder, found);
+    return found;
+}
+function readTool(root, args, log, onMissingGo) {
     const goBinary = vscode.workspace.getConfiguration('wowsims-spelldata').get('goBinary', 'go');
+    const run = ['run', './tools/spelldata', ...args];
     return new Promise(resolve => {
-        const child = (0, node_child_process_1.spawn)(goBinary, ['run', './tools/spelldata', '-json', String(id)], { cwd: root });
+        const child = (0, node_child_process_1.spawn)(goBinary, run, { cwd: root });
         let stdout = '';
         let stderr = '';
         child.stdout.on('data', chunk => (stdout += chunk));
         child.stderr.on('data', chunk => (stderr += chunk));
         child.on('error', error => {
-            log.appendLine(`${goBinary} run ./tools/spelldata -json ${id}: ${error.message}`);
+            log.appendLine(`${goBinary} ${run.join(' ')}: ${error.message}`);
             if (error.code === 'ENOENT') {
                 onMissingGo();
             }
@@ -81,7 +131,7 @@ function readSpell(root, id, log, onMissingGo) {
         });
         child.on('close', code => {
             if (code !== 0) {
-                log.appendLine(`spell ${id}: the tool exited ${code}: ${stderr.trim()}`);
+                log.appendLine(`${run.join(' ')}: the tool exited ${code}: ${stderr.trim()}`);
                 resolve(undefined);
                 return;
             }
@@ -89,15 +139,14 @@ function readSpell(root, id, log, onMissingGo) {
                 resolve(JSON.parse(stdout));
             }
             catch (error) {
-                log.appendLine(`spell ${id}: ${String(error)}`);
+                log.appendLine(`${run.join(' ')}: ${String(error)}`);
                 resolve(undefined);
             }
         });
     });
 }
-function render(row) {
-    const md = new vscode.MarkdownString();
-    md.appendMarkdown(`**${row.title}**\n\n`);
+function spellCard(row, heading, md = new vscode.MarkdownString()) {
+    md.appendMarkdown(`${heading}\n\n`);
     for (const call of row.ladder) {
         md.appendMarkdown(`\`${call}\`  \n`);
     }
@@ -116,5 +165,16 @@ function render(row) {
     });
     md.appendMarkdown(`\n[Wowhead](${row.wowhead})`);
     return md;
+}
+// The whole ladder: every rank with the call that reaches it, then the highest rank in full.
+function familyCard(family) {
+    const md = new vscode.MarkdownString();
+    md.appendMarkdown(`**${family.family}**\n\n`);
+    md.appendMarkdown('| id | name | rank | call |\n| --- | --- | --- | --- |\n');
+    for (const rank of family.ranks) {
+        md.appendMarkdown(`| ${rank.id} | ${rank.name} | ${rank.rank} | \`${rank.accessor}\` |\n`);
+    }
+    md.appendMarkdown('\n');
+    return spellCard(family.highest, `**${family.highest.title}**`, md);
 }
 //# sourceMappingURL=extension.js.map

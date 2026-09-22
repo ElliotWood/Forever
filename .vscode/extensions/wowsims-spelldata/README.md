@@ -8,11 +8,21 @@ The ids it recognises are the ones hand-written code states: `spelldata.MustFind
 `spelldata.Find(116)`, `spellData.Rend.ByID(11574)`, `core.ActionID{SpellID: 11574}`, an APL file's
 `"spellId": 11574`, `ActionId.fromSpellId(23563)` and a TS `spellId: 23563`.
 
+In a Go file it also answers where no id is written. The family in `spellData.Execute` hovers as the
+whole ladder - every rank with the call that reaches it, then the highest rank's row - and a name bound
+to one rank, `executeRank` in `var executeRank = spellData.Execute.Highest()`, hovers as the rank it
+picks, wherever in the package that name is used. Any other Go name gives no hover.
+
 ## How it answers
 
 The hover runs `go run ./tools/spelldata -json <id>` in the folder holding `go.mod`, so the row always
 matches the store in the checkout being read. A file outside a Go module gets no hover, and so does an
-id the store does not carry.
+id the store does not carry. A family asks `-family <package>/<Family>` and a bound name asks
+`-expr <call> -package <package>`, both with the file's own folder as the package.
+
+A name is looked up in the ladder picks the file's folder declares, which the extension reads out of the
+`.go` files there once and rereads when one of them is saved. A name that is not one of those picks
+costs nothing: no process is started.
 
 VS Code has no way to show a hover and then fill it in, so the first hover of a session waits for the
 tool to compile - a second or two. Every later one is a cached read, and the ids are cached per
@@ -24,7 +34,7 @@ repository for the session.
 cd .vscode/extensions/wowsims-spelldata
 npm install
 npm run compile      # tsc, writes out/extension.js
-npm test             # compiles, then runs the id-matching test under node --test
+npm test             # compiles, then runs the matcher tests under node --test
 ```
 
 ## Install

@@ -23,9 +23,28 @@ func (r ladderRef) String() string {
 	return fmt.Sprintf("%s spellData.%s.%s", r.pkg, r.field, r.call)
 }
 
+// One generated ladder, as the class file states it: the ranks in rank order, each with the call that
+// reaches it. A talent states one rank line, since its ranks are one spell's curve.
+type ladderFamily struct {
+	pkg         string
+	field       string
+	talentRanks int32
+	ranks       []familyRank
+}
+
+type familyRank struct {
+	id       int32
+	accessor string
+}
+
+func (f *ladderFamily) key() string {
+	return f.pkg + "/" + f.field
+}
+
 var (
 	loadLadders sync.Once
 	ladderIndex = map[int32][]ladderRef{}
+	familyIndex = map[string]*ladderFamily{}
 )
 
 // The ladder calls that reach this id, in package and field order. A class whose generated file is
@@ -40,6 +59,12 @@ func ladderRefs(id int32) []string {
 		out = append(out, ref.String())
 	}
 	return out
+}
+
+// Every ladder the generated class files state, keyed `<package>/<field>`.
+func ladderFamilies() map[string]*ladderFamily {
+	loadLadders.Do(scanLadders)
+	return familyIndex
 }
 
 // Every `spelldata.Ranked(...)` and `spelldata.Talent(...)` in the generated class files, read as
@@ -82,8 +107,13 @@ func collectLadders(file *ast.File) {
 			return true
 		}
 
-		for _, ref := range ladderCalls(pkg, field.Name, ctor, args) {
-			ladderIndex[ref.id] = append(ladderIndex[ref.id], ref.ref)
+		family := newLadderFamily(pkg, field.Name, ctor, args)
+		if family == nil {
+			return true
+		}
+		familyIndex[family.key()] = family
+		for _, entry := range family.refs() {
+			ladderIndex[entry.id] = append(ladderIndex[entry.id], entry.ref)
 		}
 		return true
 	})
@@ -124,28 +154,46 @@ type ladderEntry struct {
 	ref ladderRef
 }
 
-// How a class file reaches one rank, by the constructor the generator wrote. Ranked states one spell
-// per rank, so the last id is what Highest() answers and an earlier one is what ByID() names; Talent
-// states one spell whose ranks are a curve, so every rank is that id and Rank(n) is the only way in.
-func ladderCalls(pkg, field, ctor string, args []int32) []ladderEntry {
+// The ladder a constructor states. Ranked states one spell per rank, so the ranks are its arguments in
+// order; Talent states one spell whose ranks are a curve, so the ladder is that one id reached by rank
+// number. Any other call, or one whose arguments are not the integers the generator writes, is none.
+func newLadderFamily(pkg, field, ctor string, args []int32) *ladderFamily {
 	switch ctor {
 	case "Talent":
-		if len(args) != 2 {
+		if len(args) != 2 || args[1] <= 0 {
 			return nil
 		}
-		return []ladderEntry{{id: args[0], ref: ladderRef{pkg: pkg, field: field,
-			call: fmt.Sprintf("Rank(n), n up to %d", args[1])}}}
+		return &ladderFamily{pkg: pkg, field: field, talentRanks: args[1], ranks: []familyRank{
+			{id: args[0], accessor: fmt.Sprintf("Rank(n), n up to %d", args[1])},
+		}}
 
 	case "Ranked":
-		var out []ladderEntry
-		for i, id := range args {
-			call := fmt.Sprintf("ByID(%d)", id)
-			if i == len(args)-1 {
-				call = "Highest()"
-			}
-			out = append(out, ladderEntry{id: id, ref: ladderRef{pkg: pkg, field: field, call: call}})
+		if len(args) == 0 {
+			return nil
 		}
-		return out
+		family := &ladderFamily{pkg: pkg, field: field}
+		for i, id := range args {
+			accessor := fmt.Sprintf("Rank(%d)", i+1)
+			if i == len(args)-1 {
+				accessor = "Highest()"
+			}
+			family.ranks = append(family.ranks, familyRank{id: id, accessor: accessor})
+		}
+		return family
 	}
 	return nil
+}
+
+// How a class file names each of the ladder's ids. A rank below the top is named by its own id rather
+// than by position, which is what a reader holding that id is looking for.
+func (f *ladderFamily) refs() []ladderEntry {
+	out := make([]ladderEntry, 0, len(f.ranks))
+	for i, rank := range f.ranks {
+		call := rank.accessor
+		if f.talentRanks == 0 && i < len(f.ranks)-1 {
+			call = fmt.Sprintf("ByID(%d)", rank.id)
+		}
+		out = append(out, ladderEntry{id: rank.id, ref: ladderRef{pkg: f.pkg, field: f.field, call: call}})
+	}
+	return out
 }
