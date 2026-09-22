@@ -101,7 +101,7 @@ export default defineSpec<Spec.SpecMage>({
 		// Default consumes settings.
 		consumables: DefaultConsumables,
 		// Default talents.
-		talents: SavedTalents.create(),
+		talents: Presets.ArcaneTalents.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,

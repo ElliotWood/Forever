@@ -93,7 +93,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		// Default rotation settings.
 		rotationType: APLRotationType.TypeAuto,
 		// Default talents.
-		talents: SavedTalents.create(),
+		talents: Presets.FeralTalents.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.

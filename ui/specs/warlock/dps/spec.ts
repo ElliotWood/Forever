@@ -69,7 +69,7 @@ export default defineSpec<Spec.SpecWarlock>({
 		consumables: Presets.DefaultConsumables,
 
 		// Default talents.
-		talents: SavedTalents.create(),
+		talents: Presets.TalentsDSRuin.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 
@@ -112,7 +112,7 @@ export default defineSpec<Spec.SpecWarlock>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: Presets.TalentPresets,
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.AfflictionAPL, Presets.DemoAPL, Presets.DestroAPL, Presets.DestroFireAPL],
 
