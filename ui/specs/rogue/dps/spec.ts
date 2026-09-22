@@ -1,12 +1,11 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation } from '@generated/proto/apl';
-import { Debuffs, Drums, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { Debuffs, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
-import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
 import * as Presets from './presets';
@@ -83,36 +82,25 @@ export default defineSpec<Spec.SpecRogue>({
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
+		// Master's page (currentSettings on a fresh profile); its raid-wide Battle Shout, Trueshot,
+		// Leader of the Pack and Fire Resistance Aura are party buffs here.
 		raidBuffs: RaidBuffs.create({
-			...defaultRaidBuffMajorDamageCooldowns(),
 			giftOfTheWild: TristateEffect.TristateEffectImproved,
 		}),
 		partyBuffs: PartyBuffs.create({
 			battleShout: TristateEffect.TristateEffectImproved,
-			ferociousInspiration: 1,
-			strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
-			graceOfAirTotem: TristateEffect.TristateEffectImproved,
-			windfuryTotem: TristateEffect.TristateEffectImproved,
+			trueshotAura: true,
 			leaderOfThePack: TristateEffect.TristateEffectRegular,
-			totemTwisting: true,
-			drums: Drums.LesserDrumsOfBattle,
+			fireResistanceAura: true,
 		}),
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
 			blessingOfMight: TristateEffect.TristateEffectImproved,
-			unleashedRage: true,
 		}),
 		debuffs: Debuffs.create({
-			...defaultExposeWeaknessSettings(),
-			bloodFrenzy: true,
-			huntersMark: TristateEffect.TristateEffectImproved,
-			improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
-			mangle: true,
-			misery: true,
-			curseOfRecklessness: true,
-			faerieFire: TristateEffect.TristateEffectImproved,
-			giftOfArthas: true,
+			faerieFire: TristateEffect.TristateEffectRegular,
 			sunderArmor: true,
+			curseOfRecklessness: true,
 		}),
 	},
 

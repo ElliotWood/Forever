@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
-import { Debuffs, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -95,37 +95,16 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
-		raidBuffs: RaidBuffs.create({
-			...WarriorPresets.DefaultRaidBuffs,
-			thorns: TristateEffect.TristateEffectRegular,
-			shadowProtection: true,
-		}),
-		partyBuffs: PartyBuffs.create({
-			sanctityAura: TristateEffect.TristateEffectImproved,
-			braidedEterniumChain: true,
-			graceOfAirTotem: TristateEffect.TristateEffectImproved,
-			strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
-			windfuryTotem: TristateEffect.TristateEffectImproved,
-			totemTwisting: true,
-			battleShout: TristateEffect.TristateEffectImproved,
-		}),
-		individualBuffs: IndividualBuffs.create({
-			...WarriorPresets.DefaultIndividualBuffs,
-			blessingOfSanctuary: true,
-		}),
-		debuffs: Debuffs.create({
-			...WarriorPresets.DefaultDebuffs,
-			giftOfArthas: false,
-			insectSwarm: true,
-			shadowEmbrace: true,
-			screech: true,
-		}),
+		raidBuffs: Presets.DefaultRaidBuffs,
+		partyBuffs: Presets.DefaultPartyBuffs,
+		individualBuffs: WarriorPresets.DefaultIndividualBuffs,
+		debuffs: Presets.DefaultDebuffs,
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.
 	// The two Battle Shout icon toggles used to sit in `otherInputs`; icon pickers are not part
 	// of the `InputConfig` union any more, so they join the player icon row.
-	playerIconInputs: [WarriorInputs.ShoutPicker(), WarriorInputs.StancePicker(), WarriorInputs.BattleShoutSolarianSapphire(), WarriorInputs.BattleShoutT2()],
+	playerIconInputs: [WarriorInputs.ShoutPicker(), WarriorInputs.StancePicker()],
 	// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
 	includeBuffDebuffInputs: [],
 	excludeBuffDebuffInputs: [],
@@ -160,7 +139,7 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 		// Preset talents that the user can quickly select.
 		talents: [Presets.ProtectionTalents, Presets.DeepProtectionTalents],
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.ROTATION_PRESET_PROTECTION, Presets.ROTATION_DEFAULT],
+		rotations: [Presets.ROTATION_PRESET_PROTECTION, Presets.ROTATION_PRESET_NO_RECK, Presets.ROTATION_PRESET_RECK],
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GEAR_PRESETS,
 	},
