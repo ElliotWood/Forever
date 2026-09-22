@@ -23,7 +23,7 @@ func (warlock *Warlock) registerImmolate() {
 	// 	ClassSpellMask: WarlockSpellImmolate,
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: immolateRank.Cost(),
+	// 		FlatCost: int32(immolateRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

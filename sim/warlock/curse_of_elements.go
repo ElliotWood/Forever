@@ -19,7 +19,7 @@ func (warlock *Warlock) registerCurseOfElements() {
 	// 	ClassSpellMask: WarlockSpellCurseOfElements,
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: curseOfElementsRank.Cost(),
+	// 		FlatCost: int32(curseOfElementsRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

@@ -26,7 +26,7 @@ func (warlock *Warlock) registerCorruption() *core.Spell {
 	// 	ClassSpellMask: WarlockSpellCorruption,
 	//
 	// 	DamageMultiplier: 1,
-	// 	ManaCost:         core.ManaCostOptions{FlatCost: corruptionRank.Cost()},
+	// 	ManaCost:         core.ManaCostOptions{FlatCost: int32(corruptionRank.Cost())},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
 	// 			GCD:      corruptionRank.GCD(),

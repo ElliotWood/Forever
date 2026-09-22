@@ -19,7 +19,7 @@ func (warlock *Warlock) registerCurseOfRecklessness() {
 	// 	ClassSpellMask: WarlockSpellCurseOfRecklessness,
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: curseOfRecklessnessRank.Cost(),
+	// 		FlatCost: int32(curseOfRecklessnessRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
