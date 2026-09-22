@@ -159,15 +159,15 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: [Presets.ProtectionTalents, Presets.DeepProtectionTalents],
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.ROTATION_DEFAULT],
+		rotations: [Presets.ROTATION_PRESET_PROTECTION, Presets.ROTATION_DEFAULT],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],
 	},
 
 	autoRotation: (_player: Player<Spec.SpecProtectionWarrior>): APLRotation => {
-		return Presets.ROTATION_DEFAULT.rotation.rotation!;
+		return Presets.ROTATION_PRESET_PROTECTION.rotation.rotation!;
 	},
 
 	reforge: {},

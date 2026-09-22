@@ -8,11 +8,14 @@ import {
 	WarriorStance,
 	WarriorSunder,
 } from '@generated/proto/warrior';
+import { SavedTalents } from '@generated/proto/ui';
 import { Player } from '@sim/player/player';
 
 import * as WarriorPresets from '../shared/presets';
 import DefaultArmsApl from './apls/arms.apl.json';
 import DefaultFuryApl from './apls/fury.apl.json';
+import ForeverNoReckApl from './apls/dps_no_reck.apl.json';
+import ForeverReckApl from './apls/dps_reck.apl.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -30,6 +33,13 @@ export const isFurySpec = (player: Player<Spec.SpecDpsWarrior>) =>
 
 export const FURY_DEFAULT_ROTATION = PresetUtils.makePresetAPLRotation('Fury', DefaultFuryApl);
 export const ARMS_DEFAULT_ROTATION = PresetUtils.makePresetAPLRotation('Arms', DefaultArmsApl);
+export const ROTATION_PRESET_NO_RECK = PresetUtils.makePresetAPLRotation('DPS (No Reck)', ForeverNoReckApl);
+export const ROTATION_PRESET_RECK = PresetUtils.makePresetAPLRotation('DPS (With Reck)', ForeverReckApl);
+
+// The three builds our Forever sim ships.
+export const DpsTalents = PresetUtils.makePresetTalents('DPS', SavedTalents.create({ talentsString: '30305013-050520035150310051' }));
+export const FuryTalents = PresetUtils.makePresetTalents('Fury 17/34/0', SavedTalents.create({ talentsString: '30305213-550501015050010051' }));
+export const ArmsTalents = PresetUtils.makePresetTalents('Arms 39/12/0', SavedTalents.create({ talentsString: '32305213132515201-5502' }));
 
 export const SIMPLE_ROTATION = DpsWarrior_Rotation.create({
 	spec: DpsWarriorSpec.DpsWarriorSpecFury,

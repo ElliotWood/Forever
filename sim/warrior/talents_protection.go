@@ -5,148 +5,129 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
-func (war *Warrior) registerProtectionTalents() {
+func (warrior *Warrior) registerProtectionTalents() {
 	// Tier 1
-	// Improved Bloodrage implemented in bloodrage.go
-	war.registerAnticipation()
+	warrior.registerShieldSpecialization()
+	warrior.registerAnticipation()
 
 	// Tier 2
-	war.registerShieldSpecialization()
-	war.registerToughness()
+	// Improved Bloodrage: bloodrage.go
+	warrior.registerToughness()
+	warrior.registerImprovedThunderClap()
 
 	// Tier 3
-	war.registerLastStand()
-	// Improved Revenge not implemented
-	war.registerDefiance()
+	warrior.registerLastStand()
+	warrior.registerMasterOfDefense()
+	warrior.registerImprovedRevenge()
+	// Defiance: stances.go
 
 	// Tier 4
-	war.registerImprovedSunderArmor()
-	// Improved Disarm not implemented
-	// Improved Taunt not implemented
+	warrior.registerImprovedSunderArmor()
+	warrior.registerImprovedDisarm()
+	// Vanguard: charge.go
 
 	// Tier 5
-	war.registerImprovedShieldWall()
-	war.registerConcussionBlow()
-	// Improved Shield Bash not implemented
+	warrior.registerImprovedShieldWall()
+	warrior.registerConcussionBlow()
+	warrior.registerImprovedShieldBash()
+	warrior.registerBastion()
 
 	// Tier 6
+	warrior.registerFocusedRage()
 
 	// Tier 7
-	war.registerShieldSlam()
-	war.registerFocusedRage()
-
-	// Tier 8
-
-	// Tier 9
-
-	// Forever additions, not yet implemented.
-	war.registerMasterOfDefense()
-	war.registerImprovedRevenge()
-	war.registerImprovedDisarm()
-	war.registerVanguard()
-	war.registerImprovedShieldBash()
-	war.registerBastion()
+	warrior.registerShieldSlam()
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
-func (war *Warrior) registerDefiance() {
-	if war.Talents.Defiance == 0 {
+func (warrior *Warrior) registerAnticipation() {
+	if warrior.Talents.Anticipation == 0 {
 		return
 	}
 
-	// TODO: Forever drops Defiance's expertise; the spell carries only the threat modifier
-	// applied below (A_MOD_THREAT, +5/10/15%), so expertise is pinned to the untalented 0.
-	expertiseBonus := 0.0
-	war.AddStat(stats.ExpertiseRating, expertiseBonus)
-	war.OnSpellRegistered(func(spell *core.Spell) {
-		if !spell.Matches(SpellMaskDefensiveStance) {
-			return
-		}
-		spell.RelatedSelfBuff.
-			AttachMultiplicativePseudoStatBuff(&war.PseudoStats.ThreatMultiplier, spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(war.Talents.Defiance))
-	})
+	warrior.AddStat(stats.DefenseRating, spellData.Anticipation.ValueAt(warrior.Talents.Anticipation)*core.DefenseRatingPerDefenseLevel)
 }
 
-func (war *Warrior) registerAnticipation() {
-	if war.Talents.Anticipation == 0 {
+func (warrior *Warrior) registerShieldSpecialization() {
+	if warrior.Talents.ShieldSpecialization == 0 {
 		return
 	}
 
-	war.AddStat(stats.DefenseRating, spellData.Anticipation.ValueAt(war.Talents.Anticipation)*core.DefenseRatingPerDefenseLevel)
+	shieldSpecializationEnergize := spellData.ShieldSpecializationTriggered.HighestRank()
+
+	warrior.AddStat(stats.BlockPercent, spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_PERCENT, 0).FractionAt(warrior.Talents.ShieldSpecialization))
+
+	warrior.registerRageOnAvoid(
+		"Shield Specialization",
+		shieldSpecializationEnergize,
+		spellData.ShieldSpecialization.EffectAt(1).FractionAt(warrior.Talents.ShieldSpecialization),
+		core.OutcomeBlock,
+		nil,
+	)
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
-func (war *Warrior) registerShieldSpecialization() {
-	if war.Talents.ShieldSpecialization == 0 {
-		return
-	}
-
-	war.AddStat(stats.BlockPercent, spellData.ShieldSpecialization.Effect(shared.A_MOD_BLOCK_PERCENT, 0).FractionAt(war.Talents.ShieldSpecialization))
-
-	rageMetrics := war.NewRageMetrics(core.ActionID{SpellID: 23602})
-
-	war.MakeProcTriggerAura(core.ProcTrigger{
-		Name: "Shield Specialization",
-		// Effect 0 is the block bonus; effect 1 is the proc chance. ProcChanceAt reads a flat 100%.
-		ProcChance:         spellData.ShieldSpecialization.EffectAt(1).FractionAt(war.Talents.ShieldSpecialization),
+func (warrior *Warrior) registerRageOnAvoid(name string, energize shared.SpellData, chance float64, outcome core.HitOutcome, extra core.ProcExtraCondition) {
+	rage := energize.Energize.Tenths()
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: energize.SpellID})
+	warrior.MakeProcTriggerAura(core.ProcTrigger{
+		Name:               name,
+		ProcChance:         chance,
 		TriggerImmediately: true,
-		Outcome:            core.OutcomeBlock,
+		Outcome:            outcome,
 		Callback:           core.CallbackOnSpellHitTaken,
+		ExtraCondition:     extra,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			war.AddRage(sim, 1, rageMetrics)
+			warrior.AddRage(sim, rage, rageMetrics)
 		},
 	})
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
-func (war *Warrior) registerToughness() {
-	if war.Talents.Toughness == 0 {
+func (warrior *Warrior) registerToughness() {
+	if warrior.Talents.Toughness == 0 {
 		return
 	}
 
-	// The bonus-armor effect carries the same ladder; this multiplies base armor only.
-	war.MultiplyStat(stats.Armor, spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(war.Talents.Toughness))
+	warrior.ApplyEquipScaling(
+		stats.Armor,
+		spellData.Toughness.Effect(shared.A_MOD_BASE_RESISTANCE_PCT, 1).MultiplierAt(warrior.Talents.Toughness),
+	)
 }
 
-func (war *Warrior) registerLastStand() {
-	if !war.Talents.LastStand {
+func (warrior *Warrior) registerLastStand() {
+	if !warrior.Talents.LastStand {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 12975}
-	healthMetrics := war.NewHealthMetrics(actionID)
+	lastStandRank := spellData.LastStand.HighestRank()
+	lastStandBuff := spellData.LastStandTriggered.HighestRank()
+	actionID := core.ActionID{SpellID: lastStandRank.SpellID}
+	healthMetrics := warrior.NewHealthMetrics(actionID)
 
 	var bonusHealth float64
-	aura := war.RegisterAura(core.Aura{
+	aura := warrior.RegisterAura(core.Aura{
 		Label:    "Last Stand",
 		ActionID: actionID,
-		Duration: time.Second * 20,
+		Duration: lastStandBuff.Duration,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			bonusHealth = war.MaxHealth() * 0.3
-			war.AddStatsDynamic(sim, stats.Stats{stats.Health: bonusHealth})
-			war.GainHealth(sim, bonusHealth, healthMetrics)
+			bonusHealth = warrior.MaxHealth() * lastStandBuff.Effect(shared.A_MOD_MAX_HEALTH, 0).Fraction()
+			warrior.UpdateMaxHealth(sim, bonusHealth, healthMetrics)
 		},
 		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			war.AddStatsDynamic(sim, stats.Stats{stats.Health: -bonusHealth})
+			warrior.UpdateMaxHealth(sim, -bonusHealth, healthMetrics)
 		},
 	})
 
-	spell := war.RegisterSpell(core.SpellConfig{
+	spell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		ClassSpellMask: SpellMaskLastStand,
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Minute * 8,
+				Timer:    warrior.NewTimer(),
+				Duration: lastStandRank.Cooldown,
 			},
 		},
 
@@ -157,7 +138,7 @@ func (war *Warrior) registerLastStand() {
 		RelatedSelfBuff: aura,
 	})
 
-	war.AddMajorCooldown(core.MajorCooldown{
+	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
 		Type:  core.CooldownTypeSurvival,
 		BuffAura: &core.StatBuffAura{
@@ -167,46 +148,40 @@ func (war *Warrior) registerLastStand() {
 	})
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
-func (war *Warrior) registerImprovedSunderArmor() {
-	if war.Talents.ImprovedSunderArmor == 0 {
+func (warrior *Warrior) registerImprovedSunderArmor() {
+	if warrior.Talents.ImprovedSunderArmor == 0 {
 		return
 	}
 
-	// Retained rage when swapping stances implemented in stances.go
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskSunderArmor | SpellMaskDevastate,
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskSunderArmor,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		// TODO: this read war.Talents.TacticalMastery, which looks like a long-standing
-		// copy-paste bug -- the registrar guards ImprovedSunderArmor. Forever drops
-		// Tactical Mastery entirely, so it now scales off its own talent; the per-rank
-		// rage reduction needs confirming against the Forever tooltip.
-		IntValue: -war.Talents.ImprovedSunderArmor,
+		IntValue:  int32(spellData.ImprovedSunderArmor.TenthsAt(warrior.Talents.ImprovedSunderArmor)),
 	})
 }
 
-func (war *Warrior) registerImprovedShieldWall() {
-	if war.Talents.ImprovedShieldWall == 0 {
+func (warrior *Warrior) registerImprovedShieldWall() {
+	if warrior.Talents.ImprovedShieldWall == 0 {
 		return
 	}
 
-	duration := []time.Duration{0, 3, 5}[war.Talents.ImprovedShieldWall]
-
-	war.AddStaticMod(core.SpellModConfig{
+	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskShieldWall,
-		Kind:      core.SpellMod_BuffDuration_Flat,
-		TimeValue: time.Second * duration,
+		Kind:      core.SpellMod_Cooldown_Flat,
+		TimeValue: time.Duration(spellData.ImprovedShieldWall.ValueAt(warrior.Talents.ImprovedShieldWall)) * time.Millisecond,
 	})
 }
 
-func (war *Warrior) registerConcussionBlow() {
-	if !war.Talents.ConcussionBlow {
+// TODO: In-game testing if this generates threat
+func (warrior *Warrior) registerConcussionBlow() {
+	if !warrior.Talents.ConcussionBlow {
 		return
 	}
 
-	war.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 12809},
+	concussionBlowRank := spellData.ConcussionBlow.HighestRank()
+
+	warrior.RegisterSpell(core.SpellConfig{
+		ActionID:       core.ActionID{SpellID: concussionBlowRank.SpellID},
 		ClassSpellMask: SpellMaskConcussionBlow,
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
@@ -215,8 +190,8 @@ func (war *Warrior) registerConcussionBlow() {
 		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
-			Cost:   15,
-			Refund: 0.8,
+			Cost:   concussionBlowRank.Cost,
+			Refund: concussionBlowRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -224,8 +199,8 @@ func (war *Warrior) registerConcussionBlow() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Second * 45,
+				Timer:    warrior.NewTimer(),
+				Duration: concussionBlowRank.Cooldown,
 			},
 		},
 
@@ -239,17 +214,14 @@ func (war *Warrior) registerConcussionBlow() {
 	})
 }
 
-var shieldSlamRank = spellData.ShieldSlam.HighestRank()
-
-// Nothing in this package currently consumes a Devastate rank pin (DevastateSunder in
-// warrior.go is declared but never assigned), so there is no registrar body left to stub here.
-
-func (war *Warrior) registerShieldSlam() {
-	if !war.Talents.ShieldSlam {
+func (warrior *Warrior) registerShieldSlam() {
+	if !warrior.Talents.ShieldSlam {
 		return
 	}
 
-	war.RegisterSpell(core.SpellConfig{
+	shieldSlamRank := spellData.ShieldSlam.HighestRank()
+
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: shieldSlamRank.SpellID},
 		ClassSpellMask: SpellMaskShieldSlam,
 		SpellSchool:    shieldSlamRank.SpellSchool,
@@ -260,7 +232,7 @@ func (war *Warrior) registerShieldSlam() {
 
 		RageCost: core.RageCostOptions{
 			Cost:   shieldSlamRank.Cost,
-			Refund: 0.8,
+			Refund: shieldSlamRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -268,20 +240,23 @@ func (war *Warrior) registerShieldSlam() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: shieldSlamRank.Cooldown,
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.PseudoStats.CanBlock
+			return warrior.PseudoStats.CanBlock
 		},
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
-		FlatThreatBonus:  305,
+		// Not in the client table; our Classic value until measured in game.
+		FlatThreatBonus: 254 * 2,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := shieldSlamRank.Direct.Damage(sim) + war.BlockDamageReduction()
+			// Rank 4 rolls 640-670; the generator stores the centre of the range (655), so the range
+			// stays ours.
+			baseDamage := sim.Roll(640, 670) + warrior.BlockDamageReduction()
 			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
 			if !result.Landed() {
@@ -291,74 +266,122 @@ func (war *Warrior) registerShieldSlam() {
 	})
 }
 
-func (war *Warrior) registerFocusedRage() {
-	if war.Talents.FocusedRage == 0 {
+func (warrior *Warrior) registerFocusedRage() {
+	if warrior.Talents.FocusedRage == 0 {
 		return
 	}
 
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: WarriorSpellsAll ^ (SpellMaskRampage | SpellMaskDeathWish | SpellMaskBattleShout),
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskOffensiveAbilities,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  -war.Talents.FocusedRage,
+		IntValue:  int32(spellData.FocusedRage.TenthsAt(warrior.Talents.FocusedRage)),
 	})
 }
 
-// registerMasterOfDefense implements Master of Defense, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerMasterOfDefense() {
-	if war.Talents.MasterOfDefense == 0 {
+func (warrior *Warrior) registerMasterOfDefense() {
+	if warrior.Talents.MasterOfDefense == 0 {
 		return
 	}
+
+	masterOfDefenseEnergize := spellData.MasterOfDefenseTriggered.HighestRank()
+
+	warrior.registerRageOnAvoid(
+		"Master of Defense",
+		masterOfDefenseEnergize,
+		spellData.MasterOfDefense.FractionAt(warrior.Talents.MasterOfDefense),
+		core.OutcomeDodge|core.OutcomeParry,
+		func(_ *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {
+			return warrior.PseudoStats.CanBlock
+		},
+	)
 }
 
-// registerImprovedRevenge implements Improved Revenge, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerImprovedRevenge() {
-	if war.Talents.ImprovedRevenge == 0 {
+func (warrior *Warrior) registerImprovedRevenge() {
+	if warrior.Talents.ImprovedRevenge == 0 {
 		return
 	}
+
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask:  SpellMaskRevenge,
+		Kind:       core.SpellMod_DamageDone_Flat,
+		FloatValue: spellData.ImprovedRevenge.FractionAt(warrior.Talents.ImprovedRevenge),
+	})
 }
 
-// registerImprovedDisarm implements Improved Disarm, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerImprovedDisarm() {
-	if war.Talents.ImprovedDisarm == 0 {
+func (warrior *Warrior) registerImprovedDisarm() {
+	if warrior.Talents.ImprovedDisarm == 0 {
 		return
 	}
+
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskDisarm,
+		Kind:      core.SpellMod_Cooldown_Flat,
+		TimeValue: time.Duration(spellData.ImprovedDisarm.ValueAt(warrior.Talents.ImprovedDisarm)) * time.Millisecond,
+	})
 }
 
-// registerVanguard implements Vanguard, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerVanguard() {
-	if !war.Talents.Vanguard {
+func (warrior *Warrior) registerImprovedShieldBash() {
+	if warrior.Talents.ImprovedShieldBash == 0 {
 		return
 	}
+
+	improvedShieldBashSilence := spellData.ImprovedShieldBashTriggered.HighestRank()
+
+	// TODO: nothing in the sim reads a silence on an enemy, so the aura only shows up in metrics.
+	silenceAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		return target.GetOrRegisterAura(core.Aura{
+			Label:    "Shield Bash - Silence",
+			ActionID: core.ActionID{SpellID: improvedShieldBashSilence.SpellID},
+			Duration: improvedShieldBashSilence.Duration,
+		})
+	})
+
+	warrior.MakeProcTriggerAura(core.ProcTrigger{
+		Name:               "Improved Shield Bash",
+		ProcChance:         spellData.ImprovedShieldBash.FractionAt(warrior.Talents.ImprovedShieldBash),
+		TriggerImmediately: true,
+		ClassSpellMask:     SpellMaskShieldBash,
+		Outcome:            core.OutcomeLanded,
+		Callback:           core.CallbackOnSpellHitDealt,
+		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			silenceAuras.Get(result.Target).Activate(sim)
+		},
+	})
 }
 
-// registerImprovedShieldBash implements Improved Shield Bash, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerImprovedShieldBash() {
-	if war.Talents.ImprovedShieldBash == 0 {
+func (warrior *Warrior) registerBastion() {
+	if warrior.Talents.Bastion == 0 {
 		return
 	}
+
+	damageMod := warrior.AddDynamicMod(core.SpellModConfig{
+		School:     core.SpellSchoolPhysical,
+		Kind:       core.SpellMod_DamageDone_Pct,
+		FloatValue: spellData.Bastion.FractionAt(warrior.Talents.Bastion),
+	})
+
+	if warrior.PseudoStats.CanBlock {
+		damageMod.Activate()
+	}
+
+	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
+		if warrior.PseudoStats.CanBlock {
+			damageMod.Activate()
+		} else {
+			damageMod.Deactivate()
+		}
+	})
 }
 
-// registerBastion implements Bastion, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerBastion() {
-	if war.Talents.Bastion == 0 {
+func (warrior *Warrior) registerImprovedThunderClap() {
+	if warrior.Talents.ImprovedThunderClap == 0 {
 		return
 	}
+
+	// Slowing effect implemented in thunder_clap.go
+	warrior.AddStaticMod(core.SpellModConfig{
+		ClassMask: SpellMaskThunderClap,
+		Kind:      core.SpellMod_PowerCost_Flat,
+		IntValue:  int32(spellData.ImprovedThunderClap.TenthsAt(warrior.Talents.ImprovedThunderClap)),
+	})
 }

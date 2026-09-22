@@ -163,6 +163,62 @@ func TestFearPausesSwingTimerWithoutResetting(t *testing.T) {
 	})
 }
 
+// The duration multipliers are read when the effect lands, not when it is
+// registered, because encounter AIs register their crowd control on every ally
+// before the players' talents have run.
+func TestIncapacitateDurationMultipliers(t *testing.T) {
+	t.Run("a stun lasts its registered duration by default", func(t *testing.T) {
+		sim, fw := setupFakeFearSim()
+
+		ApplyStun(sim, fw.Stun)
+
+		if fw.Stun.ExpiresAt() != stunTestDuration {
+			t.Fatalf("Stun: expected it to expire at %v, got %v", stunTestDuration, fw.Stun.ExpiresAt())
+		}
+		if fw.AutoAttacks.mh.swingAt != stunTestDuration {
+			t.Fatalf("MH swing: expected it held to the end of the Stun (%v), got %v", stunTestDuration, fw.AutoAttacks.mh.swingAt)
+		}
+	})
+
+	t.Run("the stun multiplier shortens the stun and the swing pause", func(t *testing.T) {
+		sim, fw := setupFakeFearSim()
+		fw.PseudoStats.StunDurationMultiplier = 0.85
+
+		ApplyStun(sim, fw.Stun)
+
+		expected := time.Duration(float64(stunTestDuration) * 0.85)
+		if fw.Stun.ExpiresAt() != expected {
+			t.Fatalf("Stun: expected it to expire at %v, got %v", expected, fw.Stun.ExpiresAt())
+		}
+		if fw.AutoAttacks.mh.swingAt != expected {
+			t.Fatalf("MH swing: expected it held to the end of the shortened Stun (%v), got %v", expected, fw.AutoAttacks.mh.swingAt)
+		}
+	})
+
+	t.Run("the fear multiplier shortens the fear", func(t *testing.T) {
+		sim, fw := setupFakeFearSim()
+		fw.PseudoStats.FearDurationMultiplier = 0.5
+
+		ApplyFear(sim, fw.Fear)
+
+		expected := time.Duration(float64(fearTestDuration) * 0.5)
+		if fw.Fear.ExpiresAt() != expected {
+			t.Fatalf("Fear: expected it to expire at %v, got %v", expected, fw.Fear.ExpiresAt())
+		}
+	})
+
+	t.Run("the stun multiplier leaves fears alone", func(t *testing.T) {
+		sim, fw := setupFakeFearSim()
+		fw.PseudoStats.StunDurationMultiplier = 0.85
+
+		ApplyFear(sim, fw.Fear)
+
+		if fw.Fear.ExpiresAt() != fearTestDuration {
+			t.Fatalf("Fear: expected it to expire at %v, got %v", fearTestDuration, fw.Fear.ExpiresAt())
+		}
+	})
+}
+
 // The PseudoStats flags are shared between effects, so an effect ending must not
 // clear a flag another still needs.
 func TestIncapacitateFlagsSurviveOverlappingSources(t *testing.T) {
