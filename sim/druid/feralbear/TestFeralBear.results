@@ -151,7 +151,7 @@ dps_results: {
  value: {
   dps: 177.85568
   tps: 190.06433
-  dtps: 1086.96779
+  dtps: 1047.94289
  }
 }
 dps_results: {
@@ -159,7 +159,7 @@ dps_results: {
  value: {
   dps: 178.90827
   tps: 191.21261
-  dtps: 1079.71718
+  dtps: 1050.65997
  }
 }
 dps_results: {
@@ -199,7 +199,7 @@ dps_results: {
  value: {
   dps: 184.43235
   tps: 196.73828
-  dtps: 1078.14329
+  dtps: 1047.21531
  }
 }
 dps_results: {
@@ -223,7 +223,7 @@ dps_results: {
  value: {
   dps: 173.13966
   tps: 185.29557
-  dtps: 1080.17827
+  dtps: 1021.42412
  }
 }
 dps_results: {
@@ -375,7 +375,7 @@ dps_results: {
  value: {
   dps: 171.2881
   tps: 183.46901
-  dtps: 1086.96779
+  dtps: 1052.08989
  }
 }
 dps_results: {
@@ -415,7 +415,7 @@ dps_results: {
  value: {
   dps: 172.77981
   tps: 184.93572
-  dtps: 1081.66701
+  dtps: 1022.83193
  }
 }
 dps_results: {
@@ -479,7 +479,7 @@ dps_results: {
  value: {
   dps: 171.2881
   tps: 183.46901
-  dtps: 1070.80127
+  dtps: 1063.90725
  }
 }
 dps_results: {
@@ -494,8 +494,8 @@ dps_results: {
  key: "TestFeralBear-AllItems-ShadowcraftArmor"
  value: {
   dps: 190.19455
-  tps: 201.49984
-  dtps: 920.3069
+  tps: 201.50956
+  dtps: 830.66998
  }
 }
 dps_results: {
@@ -558,8 +558,8 @@ dps_results: {
  key: "TestFeralBear-AllItems-StormshroudArmor"
  value: {
   dps: 183.47439
-  tps: 195.51251
-  dtps: 1056.35265
+  tps: 195.52223
+  dtps: 994.21117
  }
 }
 dps_results: {
@@ -567,7 +567,7 @@ dps_results: {
  value: {
   dps: 182.89612
   tps: 194.58015
-  dtps: 1011.72706
+  dtps: 1005.52031
  }
 }
 dps_results: {
@@ -615,7 +615,7 @@ dps_results: {
  value: {
   dps: 173.58118
   tps: 185.7747
-  dtps: 1055.55489
+  dtps: 1042.54944
  }
 }
 dps_results: {
@@ -623,7 +623,7 @@ dps_results: {
  value: {
   dps: 171.2881
   tps: 183.46901
-  dtps: 1086.83711
+  dtps: 1027.73854
  }
 }
 dps_results: {
@@ -631,7 +631,7 @@ dps_results: {
  value: {
   dps: 174.48723
   tps: 186.82368
-  dtps: 1054.89847
+  dtps: 1010.448
  }
 }
 dps_results: {
@@ -646,8 +646,8 @@ dps_results: {
  key: "TestFeralBear-AllItems-WildheartRaiment"
  value: {
   dps: 177.55585
-  tps: 189.97514
-  dtps: 1086.83711
+  tps: 190.05831
+  dtps: 975.84893
  }
 }
 dps_results: {
@@ -655,7 +655,7 @@ dps_results: {
  value: {
   dps: 171.2881
   tps: 183.46901
-  dtps: 1086.96779
+  dtps: 1073.16448
  }
 }
 dps_results: {

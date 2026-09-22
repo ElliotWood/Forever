@@ -367,6 +367,7 @@ func mergeForeverSimDB(db *database.WowDatabase, path string) {
 			db.Items[id] = item
 		}
 	}
+	FillArmorFromOurs(db, ours)
 	effectIDs := map[int32]bool{}
 	for key := range db.Enchants {
 		effectIDs[key.EffectID] = true
@@ -862,6 +863,29 @@ func addSpellIcons(db *database.WowDatabase, spellIds []int32, icons map[int]dat
 			Icon:    strings.ToLower(database.GetIconName(iconsMap, iconEntry.FDID)),
 			HasBuff: iconEntry.HasBuff,
 			Rank:    int32(iconEntry.Rank),
+		}
+	}
+}
+
+// The Forever client stores no armor on its item rows: ItemSparse's armor column (Resistance_0,
+// which dbc.Item.GetArmorValue reads) is 0 and the game computes it from the ItemArmor tables.
+// Where the client row wins the merge it would leave the item with no armor at all (3,810 items,
+// Lionheart Helm among them), so ours - Wowhead's Forever gear planner, e.g. Lionheart 565 - fills it.
+func FillArmorFromOurs(db *database.WowDatabase, ours *database.WowDatabase) {
+	for id, item := range db.Items {
+		our, ok := ours.Items[id]
+		if !ok || our == item {
+			continue
+		}
+		for key, opt := range item.ScalingOptions {
+			ourOpt, ok := our.ScalingOptions[key]
+			if !ok || opt.Stats[int32(proto.Stat_StatArmor)] != 0 || ourOpt.Stats[int32(proto.Stat_StatArmor)] == 0 {
+				continue
+			}
+			if opt.Stats == nil {
+				opt.Stats = map[int32]float64{}
+			}
+			opt.Stats[int32(proto.Stat_StatArmor)] = ourOpt.Stats[int32(proto.Stat_StatArmor)]
 		}
 	}
 }
