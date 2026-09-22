@@ -432,13 +432,12 @@ func applyTouchOfTheGrave(character *Character) {
 	})
 
 	character.MakeProcTriggerAura(ProcTrigger{
-		Name:               "Touch of the Grave",
-		ActionID:           ActionID{SpellID: auraID},
-		ProcMask:           ProcMaskMelee | ProcMaskRanged | ProcMaskSpellDamage,
-		Outcome:            OutcomeLanded,
-		RequireDamageDealt: true,
-		ProcChance:         procChance,
-		ICD:                time.Second,
+		Name:       "Touch of the Grave",
+		ActionID:   ActionID{SpellID: auraID},
+		ProcMask:   ProcMaskMelee | ProcMaskRanged | ProcMaskSpellDamage,
+		Outcome:    OutcomeLanded,
+		ProcChance: procChance,
+		ICD:        time.Second,
 		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
 			drain.Cast(sim, result.Target)
 		},
