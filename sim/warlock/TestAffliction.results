@@ -88,7 +88,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-BloodvineGarb"
+ value: {
+  dps: 773.95974
+  tps: 368.22832
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 678.71588
+  tps: 314.66114
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Dal'Rend'sArms"
  value: {
   dps: 678.71588
   tps: 314.66114
@@ -113,6 +127,13 @@ dps_results: {
  value: {
   dps: 703.49661
   tps: 328.92075
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-DreadmistRaiment"
+ value: {
+  dps: 773.52534
+  tps: 364.6699
  }
 }
 dps_results: {
@@ -221,6 +242,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 714.07796
+  tps: 331.63374
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-JomGabbar-23570"
  value: {
   dps: 674.78347
@@ -232,6 +260,13 @@ dps_results: {
  value: {
   dps: 674.78347
   tps: 312.45898
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Magister'sRegalia"
+ value: {
+  dps: 782.79991
+  tps: 369.52049
  }
 }
 dps_results: {
@@ -263,6 +298,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-NecropileRaiment"
+ value: {
+  dps: 731.36241
+  tps: 343.26069
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-Prismcharm-15867"
  value: {
   dps: 674.78347
@@ -277,10 +319,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 699.94943
+  tps: 326.10051
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-SerenityField-272439"
  value: {
   dps: 685.09917
   tps: 318.45572
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-ShardoftheGods"
+ value: {
+  dps: 677.57521
+  tps: 312.54197
  }
 }
 dps_results: {
@@ -333,6 +389,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-ThePostmaster"
+ value: {
+  dps: 751.0754
+  tps: 353.46401
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 733.26634
@@ -344,6 +407,13 @@ dps_results: {
  value: {
   dps: 674.78347
   tps: 312.45898
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 768.47513
+  tps: 362.2161
  }
 }
 dps_results: {

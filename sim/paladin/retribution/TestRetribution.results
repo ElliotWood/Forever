@@ -121,10 +121,38 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-BattlegearofUndeadSlaying"
+ value: {
+  dps: 802.58564
+  tps: 472.24402
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-BattlegearofValor"
+ value: {
+  dps: 878.00577
+  tps: 514.5463
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-BeaststalkerArmor"
+ value: {
+  dps: 922.76963
+  tps: 541.78176
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-Biznicks247x128Accurascope-2523"
  value: {
   dps: 797.19711
   tps: 469.22644
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-BlackDragonMail"
+ value: {
+  dps: 851.91205
+  tps: 499.92119
  }
 }
 dps_results: {
@@ -135,10 +163,52 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-BloodTigerHarness"
+ value: {
+  dps: 836.59113
+  tps: 491.71407
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-BloodmailRegalia"
+ value: {
+  dps: 902.28748
+  tps: 528.95384
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-BloodsoulEmbrace"
+ value: {
+  dps: 838.62148
+  tps: 492.49718
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-BloodvineGarb"
+ value: {
+  dps: 897.17495
+  tps: 526.03697
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-BlueDragonMail"
+ value: {
+  dps: 866.62173
+  tps: 509.02381
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-Bonereaver'sEdge-17076"
  value: {
   dps: 803.60659
   tps: 472.81575
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-CadaverousGarb"
+ value: {
+  dps: 865.98153
+  tps: 507.94399
  }
 }
 dps_results: {
@@ -156,6 +226,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-DeathboneGuardian"
+ value: {
+  dps: 851.57731
+  tps: 500.64876
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-DevilsaurArmor"
+ value: {
+  dps: 847.39326
+  tps: 497.53456
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-DormantHeartoftheMountain-249473"
  value: {
   dps: 797.19711
@@ -167,6 +251,13 @@ dps_results: {
  value: {
   dps: 807.80311
   tps: 475.1658
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-DreadmistRaiment"
+ value: {
+  dps: 919.35442
+  tps: 538.66162
  }
 }
 dps_results: {
@@ -261,6 +352,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-GarboftheUndeadSlayer"
+ value: {
+  dps: 802.58564
+  tps: 472.24402
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-GreenDragonMail"
+ value: {
+  dps: 828.63744
+  tps: 486.94792
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
   dps: 797.19711
@@ -289,6 +394,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-ImperialPlate"
+ value: {
+  dps: 873.65679
+  tps: 512.11402
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-IronfeatherArmor"
+ value: {
+  dps: 844.44857
+  tps: 496.18018
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 868.13129
+  tps: 510.09679
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-JomGabbar-23570"
  value: {
   dps: 813.7766
@@ -296,10 +422,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-LightforgeArmor"
+ value: {
+  dps: 954.48061
+  tps: 558.19678
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 797.19711
   tps: 469.22644
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-Magister'sRegalia"
+ value: {
+  dps: 946.31174
+  tps: 554.418
  }
 }
 dps_results: {
@@ -331,6 +471,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-NecropileRaiment"
+ value: {
+  dps: 868.6726
+  tps: 510.12113
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-Prismcharm-15867"
  value: {
   dps: 797.19711
@@ -345,10 +492,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 825.31449
+  tps: 485.3881
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-SerenityField-272439"
  value: {
   dps: 808.06585
   tps: 475.34533
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 902.33633
+  tps: 528.26523
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-ShardoftheGods"
+ value: {
+  dps: 802.75532
+  tps: 472.38165
  }
 }
 dps_results: {
@@ -373,6 +541,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-StormshroudArmor"
+ value: {
+  dps: 844.90089
+  tps: 496.02024
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 815.12381
@@ -387,10 +562,38 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-TheDarksoul"
+ value: {
+  dps: 836.77
+  tps: 491.70409
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-TheElements"
+ value: {
+  dps: 943.23245
+  tps: 552.03372
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-TheHighlander'sFortitude"
+ value: {
+  dps: 844.80839
+  tps: 496.46797
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 797.19711
   tps: 469.22644
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-ThePostmaster"
+ value: {
+  dps: 890.43867
+  tps: 522.52565
  }
 }
 dps_results: {
@@ -401,10 +604,38 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 802.58564
+  tps: 472.24402
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 920.45867
+  tps: 539.75328
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-VolcanicArmor"
+ value: {
+  dps: 802.78216
+  tps: 472.42739
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-WarbladeofCaerDarrow-13982"
  value: {
   dps: 817.07333
   tps: 480.58184
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-WildheartRaiment"
+ value: {
+  dps: 923.19612
+  tps: 540.79428
  }
 }
 dps_results: {

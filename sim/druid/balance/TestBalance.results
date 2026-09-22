@@ -88,6 +88,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-BloodTigerHarness"
+ value: {
+  dps: 341.44836
+  tps: 176.94205
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-BloodvineGarb"
+ value: {
+  dps: 395.78152
+  tps: 203.85228
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-CadaverousGarb"
+ value: {
+  dps: 319.25764
+  tps: 165.28402
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 317.72878
@@ -102,6 +123,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-DevilsaurArmor"
+ value: {
+  dps: 326.59158
+  tps: 168.87738
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-DormantHeartoftheMountain-249473"
  value: {
   dps: 313.89109
@@ -113,6 +141,13 @@ dps_results: {
  value: {
   dps: 332.104
   tps: 171.56916
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-DreadmistRaiment"
+ value: {
+  dps: 413.60666
+  tps: 213.6416
  }
 }
 dps_results: {
@@ -228,6 +263,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-IronfeatherArmor"
+ value: {
+  dps: 380.6585
+  tps: 196.30922
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 371.1711
+  tps: 192.57595
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-JomGabbar-23570"
  value: {
   dps: 313.89109
@@ -246,6 +295,13 @@ dps_results: {
  value: {
   dps: 313.89109
   tps: 162.64483
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-Magister'sRegalia"
+ value: {
+  dps: 416.37779
+  tps: 218.07027
  }
 }
 dps_results: {
@@ -277,6 +333,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-NecropileRaiment"
+ value: {
+  dps: 386.3708
+  tps: 199.65408
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-Prismcharm-15867"
  value: {
   dps: 313.89109
@@ -291,10 +354,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 341.85808
+  tps: 177.0409
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-SerenityField-272439"
  value: {
   dps: 322.60413
   tps: 166.99952
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 330.03484
+  tps: 170.47769
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-ShardoftheGods"
+ value: {
+  dps: 323.79676
+  tps: 167.71963
  }
 }
 dps_results: {
@@ -312,10 +396,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-Spider'sKiss"
+ value: {
+  dps: 313.89109
+  tps: 162.64483
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-SpireoftheStoneshaper-12532"
  value: {
   dps: 322.79298
   tps: 167.45326
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-StormshroudArmor"
+ value: {
+  dps: 335.4488
+  tps: 173.19718
  }
 }
 dps_results: {
@@ -340,10 +438,45 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-ThePostmaster"
+ value: {
+  dps: 396.33545
+  tps: 204.8387
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 353.0035
   tps: 181.80991
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 313.89109
+  tps: 162.64483
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 403.97004
+  tps: 211.67936
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-VolcanicArmor"
+ value: {
+  dps: 313.89109
+  tps: 162.64483
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-WildheartRaiment"
+ value: {
+  dps: 404.06876
+  tps: 209.02719
  }
 }
 dps_results: {

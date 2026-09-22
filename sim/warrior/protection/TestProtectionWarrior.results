@@ -93,11 +93,43 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-BattlegearofUndeadSlaying"
+ value: {
+  dps: 501.90681
+  tps: 1111.341
+  dtps: 915.63044
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BattlegearofValor"
+ value: {
+  dps: 542.89938
+  tps: 1184.12668
+  dtps: 977.42215
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-BattlegearofWrath"
  value: {
   dps: 504.96907
   tps: 1122.87927
   dtps: 821.35928
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BeaststalkerArmor"
+ value: {
+  dps: 534.90973
+  tps: 1170.70612
+  dtps: 942.20114
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BlackDragonMail"
+ value: {
+  dps: 533.78937
+  tps: 1165.96794
+  dtps: 1037.80143
  }
 }
 dps_results: {
@@ -114,6 +146,54 @@ dps_results: {
   dps: 504.46495
   tps: 1117.301
   dtps: 1025.72421
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BloodTigerHarness"
+ value: {
+  dps: 513.80444
+  tps: 1130.25727
+  dtps: 1038.44918
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BloodmailRegalia"
+ value: {
+  dps: 534.28108
+  tps: 1170.46107
+  dtps: 836.46636
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BloodsoulEmbrace"
+ value: {
+  dps: 520.32632
+  tps: 1144.14065
+  dtps: 1000.02526
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BloodvineGarb"
+ value: {
+  dps: 525.87993
+  tps: 1169.42407
+  dtps: 1046.98264
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BlueDragonMail"
+ value: {
+  dps: 502.45022
+  tps: 1113.14772
+  dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-CadaverousGarb"
+ value: {
+  dps: 539.94509
+  tps: 1179.06744
+  dtps: 948.24377
  }
 }
 dps_results: {
@@ -141,11 +221,35 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Dal'Rend'sArms"
+ value: {
+  dps: 386.53043
+  tps: 702.36177
+  dtps: 1106.6258
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 502.45022
   tps: 1113.14772
   dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-DeathboneGuardian"
+ value: {
+  dps: 521.39403
+  tps: 1157.11014
+  dtps: 715.39435
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-DevilsaurArmor"
+ value: {
+  dps: 530.16058
+  tps: 1166.88855
+  dtps: 1046.06988
  }
 }
 dps_results: {
@@ -162,6 +266,14 @@ dps_results: {
   dps: 502.45022
   tps: 1113.14772
   dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-DreadmistRaiment"
+ value: {
+  dps: 508.88396
+  tps: 1127.83425
+  dtps: 1036.17782
  }
 }
 dps_results: {
@@ -245,6 +357,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-GarboftheUndeadSlayer"
+ value: {
+  dps: 501.42434
+  tps: 1111.87796
+  dtps: 966.66774
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-GrandMarshal'sAegis-18825"
  value: {
   dps: 506.08651
@@ -258,6 +378,14 @@ dps_results: {
   dps: 506.42351
   tps: 1117.74465
   dtps: 1048.16218
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-GreenDragonMail"
+ value: {
+  dps: 502.51852
+  tps: 1113.0267
+  dtps: 1038.5601
  }
 }
 dps_results: {
@@ -325,6 +453,30 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-ImperialPlate"
+ value: {
+  dps: 541.02138
+  tps: 1179.00723
+  dtps: 1021.82999
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-IronfeatherArmor"
+ value: {
+  dps: 502.45022
+  tps: 1113.14772
+  dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 497.26592
+  tps: 1105.60619
+  dtps: 854.20127
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-JomGabbar-23570"
  value: {
   dps: 510.53447
@@ -341,11 +493,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-LightforgeArmor"
+ value: {
+  dps: 540.13042
+  tps: 1176.4439
+  dtps: 1019.14219
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 502.45022
   tps: 1113.14772
   dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Magister'sRegalia"
+ value: {
+  dps: 506.04312
+  tps: 1123.84729
+  dtps: 1037.92683
  }
 }
 dps_results: {
@@ -381,6 +549,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-NecropileRaiment"
+ value: {
+  dps: 503.77677
+  tps: 1119.05698
+  dtps: 990.94796
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-PremierGrandMarshal'sAegis-272838"
  value: {
   dps: 503.21106
@@ -413,6 +589,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 501.17785
+  tps: 1110.9878
+  dtps: 1020.2222
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-SatchelofDarkIronBombs-285278"
  value: {
   dps: 502.51852
@@ -422,6 +606,22 @@ dps_results: {
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-SerenityField-272439"
+ value: {
+  dps: 502.45022
+  tps: 1113.14772
+  dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 545.36308
+  tps: 1198.66663
+  dtps: 936.84359
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-ShardoftheGods"
  value: {
   dps: 502.45022
   tps: 1113.14772
@@ -453,11 +653,35 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Spider'sKiss"
+ value: {
+  dps: 502.45022
+  tps: 1113.14772
+  dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 455.03984
+  tps: 850.24355
+  dtps: 1163.052
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-StormGauntlets-12632"
  value: {
   dps: 509.98712
   tps: 1130.56386
   dtps: 1037.34045
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-StormshroudArmor"
+ value: {
+  dps: 532.30985
+  tps: 1173.63779
+  dtps: 996.67767
  }
 }
 dps_results: {
@@ -477,11 +701,43 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-TheDarksoul"
+ value: {
+  dps: 527.7169
+  tps: 1171.81704
+  dtps: 986.43793
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-TheElements"
+ value: {
+  dps: 514.20668
+  tps: 1138.50167
+  dtps: 1030.20629
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-TheHighlander'sFortitude"
+ value: {
+  dps: 515.7569
+  tps: 1132.57464
+  dtps: 1014.49771
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 501.49887
   tps: 1111.89913
   dtps: 1011.06043
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-ThePostmaster"
+ value: {
+  dps: 508.04068
+  tps: 1125.77897
+  dtps: 995.22119
  }
 }
 dps_results: {
@@ -501,6 +757,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 503.78321
+  tps: 1115.48023
+  dtps: 1002.92578
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 501.91372
+  tps: 1112.53852
+  dtps: 1037.08019
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Vindicator'sBattlegear"
  value: {
   dps: 528.77233
@@ -509,11 +781,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-VolcanicArmor"
+ value: {
+  dps: 502.93038
+  tps: 1115.04967
+  dtps: 1006.43782
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Warlord'sBattlegear"
  value: {
   dps: 545.34267
   tps: 1180.21575
   dtps: 975.61389
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-WildheartRaiment"
+ value: {
+  dps: 510.72129
+  tps: 1125.61514
+  dtps: 1038.47271
  }
 }
 dps_results: {

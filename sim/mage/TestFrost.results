@@ -88,7 +88,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-BloodvineGarb"
+ value: {
+  dps: 632.84291
+  tps: 365.61455
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 528.85884
+  tps: 306.45939
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-Dal'Rend'sArms"
  value: {
   dps: 528.85884
   tps: 306.45939
@@ -120,6 +134,13 @@ dps_results: {
  value: {
   dps: 546.47721
   tps: 317.05158
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-DreadmistRaiment"
+ value: {
+  dps: 629.24408
+  tps: 368.8177
  }
 }
 dps_results: {
@@ -228,6 +249,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 574.20935
+  tps: 335.44249
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-JomGabbar-23570"
  value: {
   dps: 526.38112
@@ -246,6 +274,13 @@ dps_results: {
  value: {
   dps: 526.38112
   tps: 305.14079
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-Magister'sRegalia"
+ value: {
+  dps: 648.51088
+  tps: 381.8111
  }
 }
 dps_results: {
@@ -277,6 +312,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-NecropileRaiment"
+ value: {
+  dps: 588.11558
+  tps: 343.64854
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-Prismcharm-15867"
  value: {
   dps: 526.38112
@@ -291,10 +333,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 561.26547
+  tps: 326.93584
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-SerenityField-272439"
  value: {
   dps: 538.19698
   tps: 312.18421
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-ShardoftheGods"
+ value: {
+  dps: 537.42654
+  tps: 311.80494
  }
 }
 dps_results: {
@@ -340,6 +396,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFrost-AllItems-ThePostmaster"
+ value: {
+  dps: 605.29993
+  tps: 353.94144
+ }
+}
+dps_results: {
  key: "TestFrost-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 570.15245
@@ -351,6 +414,13 @@ dps_results: {
  value: {
   dps: 526.38112
   tps: 305.14079
+ }
+}
+dps_results: {
+ key: "TestFrost-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 636.65331
+  tps: 374.48534
  }
 }
 dps_results: {
