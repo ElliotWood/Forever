@@ -236,7 +236,8 @@ func CurseOfRecklessnessAura(target *Unit, casterIndex int32) *Aura {
 	aura := statsDebuff(
 		target,
 		casterIndex,
-		fmt.Sprintf("Curse of Recklessness (%s)", Ternary(casterIndex == -1, "External", "Self")),
+		// Tagged by caster past raid slot 0, so two warlocks in one raid do not register one label twice.
+		fmt.Sprintf("Curse of Recklessness (%s)", Ternary(casterIndex == -1, "External", Ternary(casterIndex == 0, "Self", fmt.Sprintf("Self %d", casterIndex)))),
 		// Forever client, rank 4 (11717): -505 armor, +90 attack power. TBC's rank 5 was -800/+135.
 		11717,
 		stats.Stats{

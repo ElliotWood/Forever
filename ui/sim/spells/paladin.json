@@ -1,0 +1,553 @@
+{
+	"10310": {
+		"ability": "Lay on Hands",
+		"file": "sim/paladin/lay_on_hands.go",
+		"note": "Beta client 1.60.1.69893: the cooldown is 20 min at every rank, down from Classic's hour.",
+		"source": "forever",
+		"tooltip": "40 yd range\nInstant\n20 min cooldown\nHeals a friendly target for an amount equal to the Paladin's maximum health and restores 550 of their mana."
+	},
+	"10312": {
+		"ability": "Exorcism",
+		"file": "sim/paladin/exorcism.go",
+		"note": "Beta client 1.60.1.69893: rank 4 damage 316-354 -> 285-321 at its top level; cost, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "235 Mana\n30 yd range\nInstant\n15 sec cooldown\nCauses 285 to 321 Holy damage to an Undead or Demon target."
+	},
+	"10313": {
+		"ability": "Exorcism",
+		"file": "sim/paladin/exorcism.go",
+		"note": "Beta client 1.60.1.69893: rank 5 damage 407-453 -> 376-420 at its top level; cost, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "285 Mana\n30 yd range\nInstant\n15 sec cooldown\nCauses 376 to 420 Holy damage to an Undead or Demon target."
+	},
+	"10314": {
+		"ability": "Exorcism",
+		"file": "sim/paladin/exorcism.go",
+		"note": "Beta client 1.60.1.69893: rank 6 damage 505-563 -> 474-530 at its top level; cost, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "345 Mana\n30 yd range\nInstant\n15 sec cooldown\nCauses 474 to 530 Holy damage to an Undead or Demon target."
+	},
+	"10332": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Beta client 1.60.1.69893: Holy Strike rank 7 of 8, baseline for every paladin. Classic used this id for an NPC spell, so its Wowhead entry describes something else. The client multiplies the flat amount by the weapon percentage, as it does for Backstab, so the sim deals that percentage of (normalized weapon damage + the flat roll), plus 0.429 of spell power.",
+		"source": "forever",
+		"tooltip": "19 Mana\nMelee Range\nInstant\n12 sec cooldown\nAn instant strike that causes 40% weapon damage plus an additional 73 to 91 as Holy damage."
+	},
+	"10333": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Beta client 1.60.1.69893: Holy Strike rank 8 of 8, baseline for every paladin. Classic used this id for an NPC spell, so its Wowhead entry describes something else. The client multiplies the flat amount by the weapon percentage, as it does for Backstab, so the sim deals that percentage of (normalized weapon damage + the flat roll), plus 0.429 of spell power.",
+		"source": "forever",
+		"tooltip": "20 Mana\nMelee Range\nInstant\n12 sec cooldown\nAn instant strike that causes 40% weapon damage plus an additional 81 to 105 as Holy damage."
+	},
+	"1311606": {
+		"ability": "Holy Shock",
+		"file": "sim/paladin/holy_shock.go",
+		"note": "Beta client 1.60.1.69893: Forever adds this level 30 rank, so Classic's database has no entry for the id and the site renders nothing without this tooltip. The 0.429 coefficient is unchanged.",
+		"source": "forever",
+		"tooltip": "160 Mana\n20 yd range\nInstant\n10 sec cooldown\nBlasts the target with Holy energy, causing 128 to 140 Holy damage to an enemy."
+	},
+	"1866": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Beta client 1.60.1.69893: Holy Strike rank 3 of 8, baseline for every paladin. Classic used this id for an NPC spell, so its Wowhead entry describes something else. The client multiplies the flat amount by the weapon percentage, as it does for Backstab, so the sim deals that percentage of (normalized weapon damage + the flat roll), plus 0.429 of spell power.",
+		"source": "forever",
+		"tooltip": "12 Mana\nMelee Range\nInstant\n12 sec cooldown\nAn instant strike that causes 30% weapon damage plus an additional 17 to 23 as Holy damage."
+	},
+	"20059": {
+		"ability": "Vengeance",
+		"file": "sim/paladin/talents.go",
+		"note": "Beta client 1.60.1.69893: 1/2/3% a stack, 5 stacks, 30 sec. Classic gave a flat 3% a point for 8 sec.",
+		"source": "forever",
+		"tooltip": "Landing a critical strike increases your Physical and Holy damage dealt by 1% per talent point for 30 sec.\nStacks up to 5 times."
+	},
+	"20116": {
+		"ability": "Consecration",
+		"file": "sim/paladin/consecration.go",
+		"note": "Beta client 1.60.1.69893: baseline, and each tick now casts a damage spell (1280345-1280349) in two parts. Classic's 120 over 8 sec at 0.042 a tick becomes 24 to every enemy plus 56 at 0.095 a tick to the first 4. ",
+		"source": "forever",
+		"tooltip": "235 Mana\nInstant\n8 sec cooldown\nConsecrates the land beneath the Paladin, doing 24 Holy damage over 8 sec to enemies who enter the area. The first 4 enemies who enter the area will take an additional 56 damage over 8 sec."
+	},
+	"20134": {
+		"ability": "Redoubt",
+		"file": "sim/paladin/talents.go",
+		"note": "Beta client 1.60.1.69893 talent curves: 6/12/18/24/30% block and 2/4/6/8/10% chance, the chance read from the curve on effect index 1, whose rank 5 value is the 10% the spell carries. Forever moved the trigger from being crit to any melee attack that lands.",
+		"source": "forever",
+		"tooltip": "Damaging melee attacks against you have a 2% chance per talent point to increase your chance to block by 6% per talent point.\nLasts 10 sec or 5 blocks."
+	},
+	"20148": {
+		"ability": "Shield Specialization",
+		"file": "sim/paladin/talents.go",
+		"note": "Forever bolted the mana return on block onto Classic's shield absorb. Beta client 1.60.1.69893: 10/20/30% and 33/66/100%.",
+		"source": "forever",
+		"tooltip": "Increases the amount of damage absorbed by your shield by 10% per talent point, and gives your blocks a 33/66/100% chance to restore 6% of your maximum Mana.\nMay only occur once every 3 sec."
+	},
+	"20178": {
+		"ability": "Reckoning",
+		"file": "sim/paladin/talents.go",
+		"note": "The crit half is Classic's 20% a point; Forever added the smaller 8% a point chance to fire off a block.",
+		"source": "forever",
+		"tooltip": "Gives you an 8% chance per talent point to gain an extra attack after blocking a melee attack, and a 20% chance per talent point to gain an extra attack after being the victim of a non-periodic critical strike."
+	},
+	"20187": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893: rank 1's coefficient 0.144 -> 0.5, the same as every higher rank, and its flat 15 becomes 14 to 16.",
+		"source": "forever",
+		"tooltip": "Causes 14 to 16 Holy damage, plus its growth with level."
+	},
+	"20188": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/sotc.go",
+		"note": "Beta client 1.60.1.69893: 30 -> 35, Improved Seal of the Crusader's 15% folded in, and 10 sec -> 40 sec. The sim reads the rank 6 value through core.JudgementOfTheCrusaderAura, which still lasts 10 sec (refreshed by every melee hit).",
+		"source": "forever",
+		"tooltip": "Increases Holy damage done to the target by up to 35. Lasts 40 sec."
+	},
+	"20216": {
+		"ability": "Divine Favor",
+		"file": "sim/paladin/divine_favor.go",
+		"note": "sim/paladin/divine_favor.go is byte for byte upstream wowsims/classic - the 2 minute cooldown and the guaranteed crit are Classic's, and the sim spends it on Holy Shock only because Flash of Light and Holy Light are not modelled.",
+		"source": "classic"
+	},
+	"20280": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893: rank 2's coefficient 0.312 -> 0.5, the same as every higher rank.",
+		"source": "forever",
+		"tooltip": "Causes 25 to 27 Holy damage, plus its growth with level."
+	},
+	"20281": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893: rank 3's coefficient 0.462 -> 0.5, the same as every higher rank.",
+		"source": "forever",
+		"tooltip": "Causes 39 to 43 Holy damage, plus its growth with level."
+	},
+	"20282": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic.",
+		"source": "classic"
+	},
+	"20283": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic.",
+		"source": "classic"
+	},
+	"20284": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic.",
+		"source": "classic"
+	},
+	"20285": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic.",
+		"source": "classic"
+	},
+	"20286": {
+		"ability": "Judgement of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic.",
+		"source": "classic"
+	},
+	"20300": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/sotc.go",
+		"note": "Beta client 1.60.1.69893: 50 -> 58, Improved Seal of the Crusader's 15% folded in, and 10 sec -> 40 sec. The sim reads the rank 6 value through core.JudgementOfTheCrusaderAura, which still lasts 10 sec (refreshed by every melee hit).",
+		"source": "forever",
+		"tooltip": "Increases Holy damage done to the target by up to 58. Lasts 40 sec."
+	},
+	"20301": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/sotc.go",
+		"note": "Beta client 1.60.1.69893: 80 -> 92, Improved Seal of the Crusader's 15% folded in, and 10 sec -> 40 sec. The sim reads the rank 6 value through core.JudgementOfTheCrusaderAura, which still lasts 10 sec (refreshed by every melee hit).",
+		"source": "forever",
+		"tooltip": "Increases Holy damage done to the target by up to 92. Lasts 40 sec."
+	},
+	"20302": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/sotc.go",
+		"note": "Beta client 1.60.1.69893: 110 -> 127, Improved Seal of the Crusader's 15% folded in, and 10 sec -> 40 sec. The sim reads the rank 6 value through core.JudgementOfTheCrusaderAura, which still lasts 10 sec (refreshed by every melee hit).",
+		"source": "forever",
+		"tooltip": "Increases Holy damage done to the target by up to 127. Lasts 40 sec."
+	},
+	"20303": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/sotc.go",
+		"note": "Beta client 1.60.1.69893: 140 -> 161, Improved Seal of the Crusader's 15% folded in, and 10 sec -> 40 sec. The sim reads the rank 6 value through core.JudgementOfTheCrusaderAura, which still lasts 10 sec (refreshed by every melee hit).",
+		"source": "forever",
+		"tooltip": "Increases Holy damage done to the target by up to 161. Lasts 40 sec."
+	},
+	"20424": {
+		"ability": "Seal of Command",
+		"file": "sim/paladin/soc.go",
+		"note": "Beta client 1.60.1.69893 matches Classic: 70% weapon damage, 0.29 coefficient. Every rank of the seal triggers this one proc in both clients, so the sim uses it for all five.",
+		"source": "classic"
+	},
+	"20467": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"note": "Beta client 1.60.1.69893 matches Classic, 0.429 coefficient.",
+		"source": "classic"
+	},
+	"20473": {
+		"ability": "Holy Shock",
+		"file": "sim/paladin/holy_shock.go",
+		"note": "Beta client 1.60.1.69893: a new level 30 rank makes Classic's rank 1 rank 2; damage 204-220 -> 175-189, and the cooldown drops from 30 sec to 10. The 0.429 coefficient is unchanged.",
+		"source": "forever",
+		"tooltip": "225 Mana\n20 yd range\nInstant\n10 sec cooldown\nBlasts the target with Holy energy, causing 175 to 189 Holy damage to an enemy."
+	},
+	"20911": {
+		"ability": "Blessing of Sanctuary",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"note": "Classic's numbers. The Beta client 1.60.1.69893 has no Blessing of Sanctuary, so the sim only registers it outside the Forever ruleset.",
+		"source": "classic"
+	},
+	"20912": {
+		"ability": "Blessing of Sanctuary",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"note": "Classic's numbers. The Beta client 1.60.1.69893 has no Blessing of Sanctuary, so the sim only registers it outside the Forever ruleset.",
+		"source": "classic"
+	},
+	"20913": {
+		"ability": "Blessing of Sanctuary",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"note": "Classic's numbers. The Beta client 1.60.1.69893 has no Blessing of Sanctuary, so the sim only registers it outside the Forever ruleset.",
+		"source": "classic"
+	},
+	"20914": {
+		"ability": "Blessing of Sanctuary",
+		"file": "sim/paladin/blessing_of_sanctuary.go",
+		"note": "Classic's numbers. The Beta client 1.60.1.69893 has no Blessing of Sanctuary, so the sim only registers it outside the Forever ruleset.",
+		"source": "classic"
+	},
+	"20922": {
+		"ability": "Consecration",
+		"file": "sim/paladin/consecration.go",
+		"note": "Beta client 1.60.1.69893: baseline, and each tick now casts a damage spell (1280345-1280349) in two parts. Classic's 192 over 8 sec at 0.042 a tick becomes 48 to every enemy plus 88 at 0.095 a tick to the first 4. ",
+		"source": "forever",
+		"tooltip": "320 Mana\nInstant\n8 sec cooldown\nConsecrates the land beneath the Paladin, doing 48 Holy damage over 8 sec to enemies who enter the area. The first 4 enemies who enter the area will take an additional 88 damage over 8 sec."
+	},
+	"20923": {
+		"ability": "Consecration",
+		"file": "sim/paladin/consecration.go",
+		"note": "Beta client 1.60.1.69893: baseline, and each tick now casts a damage spell (1280345-1280349) in two parts. Classic's 280 over 8 sec at 0.042 a tick becomes 64 to every enemy plus 160 at 0.095 a tick to the first 4. ",
+		"source": "forever",
+		"tooltip": "435 Mana\nInstant\n8 sec cooldown\nConsecrates the land beneath the Paladin, doing 64 Holy damage over 8 sec to enemies who enter the area. The first 4 enemies who enter the area will take an additional 160 damage over 8 sec."
+	},
+	"20924": {
+		"ability": "Consecration",
+		"file": "sim/paladin/consecration.go",
+		"note": "Beta client 1.60.1.69893: baseline, and each tick now casts a damage spell (1280345-1280349) in two parts. Classic's 384 over 8 sec at 0.042 a tick becomes 96 to every enemy plus 216 at 0.095 a tick to the first 4. ",
+		"source": "forever",
+		"tooltip": "565 Mana\nInstant\n8 sec cooldown\nConsecrates the land beneath the Paladin, doing 96 Holy damage over 8 sec to enemies who enter the area. The first 4 enemies who enter the area will take an additional 216 damage over 8 sec."
+	},
+	"20925": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"note": "Beta client 1.60.1.69893: 65 -> 110 damage a block at 0.08 (Classic 0.05), block chance 30% -> 20%.",
+		"source": "forever",
+		"tooltip": "150 Mana\nInstant\n10 sec cooldown\nIncreases chance to block by 20% for 10 sec and deals 110 Holy damage for each attack blocked while active. Damage caused by Holy Shield causes 20% additional threat. Each block expends a charge. 4 charges."
+	},
+	"20927": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"note": "Beta client 1.60.1.69893: 95 -> 153 damage a block at 0.08 (Classic 0.05), block chance 30% -> 20%.",
+		"source": "forever",
+		"tooltip": "195 Mana\nInstant\n10 sec cooldown\nIncreases chance to block by 20% for 10 sec and deals 153 Holy damage for each attack blocked while active. Damage caused by Holy Shield causes 20% additional threat. Each block expends a charge. 4 charges."
+	},
+	"20928": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"note": "Beta client 1.60.1.69893: 130 -> 221 damage a block at 0.08 (Classic 0.05), block chance 30% -> 20%.",
+		"source": "forever",
+		"tooltip": "240 Mana\nInstant\n10 sec cooldown\nIncreases chance to block by 20% for 10 sec and deals 221 Holy damage for each attack blocked while active. Damage caused by Holy Shield causes 20% additional threat. Each block expends a charge. 4 charges."
+	},
+	"20929": {
+		"ability": "Holy Shock",
+		"file": "sim/paladin/holy_shock.go",
+		"note": "Beta client 1.60.1.69893: a new level 30 rank makes Classic's rank 2 rank 3; damage 279-301 -> 248-268, and the cooldown drops from 30 sec to 10. The 0.429 coefficient is unchanged.",
+		"source": "forever",
+		"tooltip": "275 Mana\n20 yd range\nInstant\n10 sec cooldown\nBlasts the target with Holy energy, causing 248 to 268 Holy damage to an enemy."
+	},
+	"20930": {
+		"ability": "Holy Shock",
+		"file": "sim/paladin/holy_shock.go",
+		"note": "Beta client 1.60.1.69893: a new level 30 rank makes Classic's rank 3 rank 4; damage 365-395 -> 334-362, and the cooldown drops from 30 sec to 10. The 0.429 coefficient is unchanged.",
+		"source": "forever",
+		"tooltip": "325 Mana\n20 yd range\nInstant\n10 sec cooldown\nBlasts the target with Holy energy, causing 334 to 362 Holy damage to an enemy."
+	},
+	"20955": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"note": "Classic's learn-spell dummy for Holy Shield, absent from the Beta client 1.60.1.69893; the sim uses it only to give the block damage (110 at 0.08) its own metrics line.",
+		"source": "forever",
+		"tooltip": "Deals 110 Holy damage to an attacker whose melee attack you block."
+	},
+	"20956": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"note": "Classic's learn-spell dummy for Holy Shield, absent from the Beta client 1.60.1.69893; the sim uses it only to give the block damage (153 at 0.08) its own metrics line.",
+		"source": "forever",
+		"tooltip": "Deals 153 Holy damage to an attacker whose melee attack you block."
+	},
+	"20957": {
+		"ability": "Holy Shield",
+		"file": "sim/paladin/holy_shield.go",
+		"note": "Classic's learn-spell dummy for Holy Shield, absent from the Beta client 1.60.1.69893; the sim uses it only to give the block damage (221 at 0.08) its own metrics line.",
+		"source": "forever",
+		"tooltip": "Deals 221 Holy damage to an attacker whose melee attack you block."
+	},
+	"20963": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"note": "Beta client 1.60.1.69893 matches Classic, 0.429 coefficient.",
+		"source": "classic"
+	},
+	"20964": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"note": "Beta client 1.60.1.69893 matches Classic, 0.429 coefficient.",
+		"source": "classic"
+	},
+	"20965": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"note": "Beta client 1.60.1.69893 matches Classic, 0.429 coefficient.",
+		"source": "classic"
+	},
+	"20966": {
+		"ability": "Judgement of Command",
+		"file": "sim/paladin/soc.go",
+		"note": "Beta client 1.60.1.69893 matches Classic, 0.429 coefficient.",
+		"source": "classic"
+	},
+	"21183": {
+		"ability": "Judgement of the Crusader",
+		"file": "sim/paladin/sotc.go",
+		"note": "Beta client 1.60.1.69893: 20 -> 23, Improved Seal of the Crusader's 15% folded in, and 10 sec -> 40 sec. The sim reads the rank 6 value through core.JudgementOfTheCrusaderAura, which still lasts 10 sec (refreshed by every melee hit).",
+		"source": "forever",
+		"tooltip": "Increases Holy damage done to the target by up to 23. Lasts 40 sec."
+	},
+	"24239": {
+		"ability": "Hammer of Wrath",
+		"file": "sim/paladin/hammer_of_wrath.go",
+		"note": "Beta client 1.60.1.69893: rank 3 damage 504-556 -> 473-523 at its top level; cost, cast, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "425 Mana\n30 yd range\n1 sec cast\n6 sec cooldown\nHurls a hammer that strikes an enemy for 473 to 523 Holy damage. Only usable on enemies that have 20% or less health."
+	},
+	"24274": {
+		"ability": "Hammer of Wrath",
+		"file": "sim/paladin/hammer_of_wrath.go",
+		"note": "Beta client 1.60.1.69893: rank 2 damage 412-455 -> 382-421 at its top level; cost, cast, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "360 Mana\n30 yd range\n1 sec cast\n6 sec cooldown\nHurls a hammer that strikes an enemy for 382 to 421 Holy damage. Only usable on enemies that have 20% or less health."
+	},
+	"24275": {
+		"ability": "Hammer of Wrath",
+		"file": "sim/paladin/hammer_of_wrath.go",
+		"note": "Beta client 1.60.1.69893: rank 1 damage 316-348 -> 285-315 at its top level; cost, cast, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "295 Mana\n30 yd range\n1 sec cast\n6 sec cooldown\nHurls a hammer that strikes an enemy for 285 to 315 Holy damage. Only usable on enemies that have 20% or less health."
+	},
+	"2495": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Beta client 1.60.1.69893: Holy Strike rank 5 of 8, baseline for every paladin. Classic used this id for an NPC spell, so its Wowhead entry describes something else. The client multiplies the flat amount by the weapon percentage, as it does for Backstab, so the sim deals that percentage of (normalized weapon damage + the flat roll), plus 0.429 of spell power.",
+		"source": "forever",
+		"tooltip": "16 Mana\nMelee Range\nInstant\n12 sec cooldown\nAn instant strike that causes 35% weapon damage plus an additional 32 to 40 as Holy damage."
+	},
+	"25713": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic: 0.1 coefficient and the same damage.",
+		"source": "classic"
+	},
+	"25735": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic: 0.1 coefficient and the same damage.",
+		"source": "classic"
+	},
+	"25736": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic: 0.1 coefficient and the same damage.",
+		"source": "classic"
+	},
+	"25737": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic: 0.1 coefficient and the same damage.",
+		"source": "classic"
+	},
+	"25738": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893 matches Classic: 0.1 coefficient and the same damage.",
+		"source": "classic"
+	},
+	"25739": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893: rank 3's spell power coefficient 0.093 -> 0.1, the same as every higher rank; Forever has no downranking penalty. The base damage is Classic's.",
+		"source": "forever",
+		"tooltip": "Holy damage on each melee hit, based on weapon speed."
+	},
+	"25740": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Beta client 1.60.1.69893: rank 2's spell power coefficient 0.063 -> 0.1, the same as every higher rank; Forever has no downranking penalty. The base damage is Classic's.",
+		"source": "forever",
+		"tooltip": "Holy damage on each melee hit, based on weapon speed."
+	},
+	"25741": {
+		"ability": "Seal of Righteousness",
+		"file": "sim/paladin/sor.go",
+		"note": "Rank 1's proc under seal 21084 (the rank 1 the beta log casts; 20154/25742 never appear). Beta client 1.60.1.69893: spell power coefficient 0.029 -> 0.1, the same as every higher rank; Forever has no downranking penalty. The base damage is Classic's.",
+		"source": "forever",
+		"tooltip": "Holy damage on each melee hit, based on weapon speed."
+	},
+	"25771": {
+		"ability": "Forbearance",
+		"file": "sim/paladin/forbearance.go",
+		"note": "sim/paladin/forbearance.go is byte for byte upstream wowsims/classic; Forever's new Templar's Bulwark applies the same 1 minute Forbearance that Divine Shield and Divine Protection do.",
+		"source": "classic"
+	},
+	"25780": {
+		"ability": "Righteous Fury",
+		"file": "sim/paladin/righteous_fury.go",
+		"note": "Beta client 1.60.1.69893: Holy threat +60% -> +90%. Improved Righteous Fury now cuts damage taken by 2% a point instead of adding threat.",
+		"source": "forever",
+		"tooltip": "30% of base mana\nInstant\nIncreases the threat generated by your Holy spells by 90%. Lasts 30 min."
+	},
+	"26021": {
+		"ability": "Vindication",
+		"file": "sim/paladin/talents.go",
+		"note": "Beta client 1.60.1.69893: 1/2/3% attack power for 30 sec, on every damaging melee attack (100% proc chance). The attack power the target loses is not modelled, because nothing in the sim reads an enemy's attack power.",
+		"source": "forever",
+		"tooltip": "Your damaging melee attacks reduce the target's Attack Power and increase your Attack Power by 1% per talent point for 30 sec."
+	},
+	"26573": {
+		"ability": "Consecration",
+		"file": "sim/paladin/consecration.go",
+		"note": "Beta client 1.60.1.69893: baseline, and each tick now casts a damage spell (1280345-1280349) in two parts. Classic's 64 over 8 sec at 0.042 a tick becomes 16 to every enemy plus 32 at 0.095 a tick to the first 4. 26573 also labels the Consecrated Ground buff in sim/paladin/talents.go.",
+		"source": "forever",
+		"tooltip": "135 Mana\nInstant\n8 sec cooldown\nConsecrates the land beneath the Paladin, doing 16 Holy damage over 8 sec to enemies who enter the area. The first 4 enemies who enter the area will take an additional 32 damage over 8 sec."
+	},
+	"2800": {
+		"ability": "Lay on Hands",
+		"file": "sim/paladin/lay_on_hands.go",
+		"note": "Beta client 1.60.1.69893: the cooldown is 20 min at every rank, down from Classic's hour.",
+		"source": "forever",
+		"tooltip": "40 yd range\nInstant\n20 min cooldown\nHeals a friendly target for an amount equal to the Paladin's maximum health and restores 250 of their mana."
+	},
+	"31850": {
+		"ability": "Iron Creed",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Iron Creed is new in Forever and has no spell of its own in Classic's database, so Ardent Defender's id 31850 stands in for the buff. Beta client 1.60.1.69893: 5/10/15/20/25% threat and 2/4/6/8/10% damage taken.",
+		"source": "forever",
+		"tooltip": "Increases the threat generated by your Holy Strike ability by 5% per talent point.\nWhile Righteous Fury is active, Holy Strike also reduces your damage taken by 2% per talent point for 6 sec."
+	},
+	"31876": {
+		"ability": "Sanctified Judgement",
+		"file": "sim/paladin/talents.go",
+		"note": "31876 is the Burning Crusade Sanctified Judgement, which Classic's database does not carry, so nothing resolves for it and the sim uses it only to label the mana the talent returns.",
+		"source": "forever",
+		"tooltip": "Gives your Judgement ability a 33% chance per talent point to return 20% per talent point of the Mana cost of the judged seal."
+	},
+	"407632": {
+		"ability": "Hammer of the Righteous",
+		"file": "sim/paladin/hammer_of_the_righteous.go",
+		"note": "New in Forever, trained on the Protection line at 40. Beta client 1.60.1.69893: Holy damage 3x main hand DPS, 6 sec cooldown, 6% base mana, melee table, no spell power coefficient. Shares client cooldown category 2404 with Holy Strike. Measured: taking it before Holy Strike costs protection 6.5% DPS, so the default rotation does not.",
+		"source": "forever",
+		"tooltip": "6% of base mana\nInstant\n6 sec cooldown\nHammer the current target and up to 3 additional nearby targets, causing Holy damage to each equal to 3 times the damage per second of your main hand weapon."
+	},
+	"53601": {
+		"ability": "Templar's Bulwark",
+		"assumptions": [
+			"The sim has no absorb model, so the shield is modelled as damage taken dropping to 1% for the whole 8 seconds rather than as a pool that can be spent early."
+		],
+		"file": "sim/paladin/templars_bulwark.go",
+		"foreverId": 1311015,
+		"note": "Templar's Bulwark is new in Forever and borrows Sacred Shield's id 53601, which Classic's database does not carry. Beta client 1.60.1.69893 (1311015) confirms 110 mana, the 5 min cooldown, 8 sec and 100% of maximum health, and Sacred Duty's 30 sec a rank.",
+		"source": "assumed",
+		"tooltip": "110 Mana\nInstant\n5 min cooldown\nGrants you an absorb shield equal to 100% of your maximum health for 8 sec.\nApplies Forbearance for 1 min. Cannot be cast while Forbearance is active."
+	},
+	"53671": {
+		"ability": "Swift Judgement",
+		"file": "sim/paladin/swift_judgement.go",
+		"foreverId": 1310994,
+		"note": "Swift Judgement is new in Forever and borrows Judgements of the Pure's id 53671, which Classic's database does not carry. Beta client 1.60.1.69893 (1310994) confirms the 1 min cooldown and the 100%.",
+		"source": "forever",
+		"tooltip": "Instant\n1 min cooldown\nFinishes the remaining cooldown on your Judgement ability and reduces the Mana cost of your next Judgement by 100%."
+	},
+	"5569": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Beta client 1.60.1.69893: Holy Strike rank 6 of 8, baseline for every paladin. Classic used this id for an NPC spell, so its Wowhead entry describes something else. The client multiplies the flat amount by the weapon percentage, as it does for Backstab, so the sim deals that percentage of (normalized weapon damage + the flat roll), plus 0.429 of spell power.",
+		"source": "forever",
+		"tooltip": "17 Mana\nMelee Range\nInstant\n12 sec cooldown\nAn instant strike that causes 35% weapon damage plus an additional 53 to 68 as Holy damage."
+	},
+	"5614": {
+		"ability": "Exorcism",
+		"file": "sim/paladin/exorcism.go",
+		"note": "Beta client 1.60.1.69893: rank 2 damage 160-180 -> 140-158 at its top level; cost, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "135 Mana\n30 yd range\nInstant\n15 sec cooldown\nCauses 140 to 158 Holy damage to an Undead or Demon target."
+	},
+	"5615": {
+		"ability": "Exorcism",
+		"file": "sim/paladin/exorcism.go",
+		"note": "Beta client 1.60.1.69893: rank 3 damage 227-255 -> 199-225 at its top level; cost, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "180 Mana\n30 yd range\nInstant\n15 sec cooldown\nCauses 199 to 225 Holy damage to an Undead or Demon target."
+	},
+	"633": {
+		"ability": "Lay on Hands",
+		"file": "sim/paladin/lay_on_hands.go",
+		"note": "Beta client 1.60.1.69893: the cooldown is 20 min at every rank, down from Classic's hour.",
+		"source": "forever",
+		"tooltip": "40 yd range\nInstant\n20 min cooldown\nHeals a friendly target for an amount equal to the Paladin's maximum health."
+	},
+	"678": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Beta client 1.60.1.69893: Holy Strike rank 2 of 8, baseline for every paladin. Classic used this id for an NPC spell, so its Wowhead entry describes something else. The client multiplies the flat amount by the weapon percentage, as it does for Backstab, so the sim deals that percentage of (normalized weapon damage + the flat roll), plus 0.429 of spell power.",
+		"source": "forever",
+		"tooltip": "9 Mana\nMelee Range\nInstant\n12 sec cooldown\nAn instant strike that causes 25% weapon damage plus an additional 15 to 20 as Holy damage."
+	},
+	"679": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Beta client 1.60.1.69893: Holy Strike rank 1 of 8, baseline for every paladin. Classic used this id for an NPC spell, so its Wowhead entry describes something else. The client multiplies the flat amount by the weapon percentage, as it does for Backstab, so the sim deals that percentage of (normalized weapon damage + the flat roll), plus 0.429 of spell power.",
+		"source": "forever",
+		"tooltip": "5 Mana\nMelee Range\nInstant\n12 sec cooldown\nAn instant strike that causes 25% weapon damage plus an additional 11 to 14 as Holy damage."
+	},
+	"680": {
+		"ability": "Holy Strike",
+		"file": "sim/paladin/holy_strike.go",
+		"note": "Beta client 1.60.1.69893: Holy Strike rank 4 of 8, baseline for every paladin. Classic used this id for an NPC spell, so its Wowhead entry describes something else. The client multiplies the flat amount by the weapon percentage, as it does for Backstab, so the sim deals that percentage of (normalized weapon damage + the flat roll), plus 0.429 of spell power.",
+		"source": "forever",
+		"tooltip": "14 Mana\nMelee Range\nInstant\n12 sec cooldown\nAn instant strike that causes 30% weapon damage plus an additional 22 to 29 as Holy damage."
+	},
+	"77485": {
+		"ability": "Twist of Light",
+		"file": "sim/paladin/twist_of_light.go",
+		"foreverId": 1310735,
+		"note": "Twist of Light is new in Forever and borrows Echo of Light's id 77485, which Classic's database does not carry; only Seal of Righteousness and Seal of Command bank an Echo here, because the other two seals are not in the sim and Seal of the Crusader has no on-hit proc to echo.",
+		"source": "forever",
+		"tooltip": "When you replace your Seal of Command, Seal of Righteousness, Seal of Fury, or Seal of Justice with a different Seal, gain an Echo.\nYour next melee attack applies the replaced Seal's effects, consuming the Echo."
+	},
+	"879": {
+		"ability": "Exorcism",
+		"file": "sim/paladin/exorcism.go",
+		"note": "Beta client 1.60.1.69893: rank 1 damage 90-102 -> 79-91 at its top level; cost, cooldown and the 0.429 coefficient are Classic's.",
+		"source": "forever",
+		"tooltip": "85 Mana\n30 yd range\nInstant\n15 sec cooldown\nCauses 79 to 91 Holy damage to an Undead or Demon target."
+	}
+}

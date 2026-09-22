@@ -1,0 +1,295 @@
+{
+	"sim": "forever-next",
+	"commit": "d6cded9bd31d40c3cb3fa93303752d44b301f113",
+	"generated": "2026-09-22T05:14:31Z",
+	"iterations": 2000,
+	"host": "Tonberry",
+	"builds": [
+		{
+			"spec": "shadow_priest",
+			"build": "parity build",
+			"talents": "0253000311--550022501201302251",
+			"gear": "parity caster profile",
+			"rotation": "shadow",
+			"consumables": "No consumables",
+			"dps": 450.68700169791157,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0123,
+				"forever": 0.9877,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "mage",
+			"build": "parity build",
+			"talents": "050005013--0555003301001301251",
+			"gear": "parity caster profile",
+			"rotation": "frost",
+			"consumables": "No consumables",
+			"dps": 436.70567400271705,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 0.7293,
+				"measured": 0,
+				"unknown": 0.2707
+			},
+			"ilvl": 0,
+			"slots": 0,
+			"points": 49
+		},
+		{
+			"spec": "warlock",
+			"build": "parity build",
+			"talents": "2535002013521105--05000551",
+			"gear": "parity caster profile",
+			"rotation": "affliction",
+			"consumables": "No consumables",
+			"dps": 412.38558074994745,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.0814,
+				"forever": 0.9186,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "feral_druid",
+			"build": "parity build",
+			"talents": "-5521002023132213051-05503",
+			"gear": "parity melee profile",
+			"rotation": "default",
+			"consumables": "No consumables",
+			"dps": 373.88296236877085,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.0183,
+				"core": 0.3809,
+				"forever": 0.6008,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "feral_tank_druid",
+			"build": "parity build",
+			"talents": "-5003232120132010501-0550325",
+			"gear": "parity melee profile",
+			"rotation": "default",
+			"consumables": "No consumables",
+			"dps": 365.13179738755815,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.4996,
+				"core": 0.0142,
+				"forever": 0,
+				"measured": 0,
+				"unknown": 0.4862
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "rogue",
+			"build": "parity build",
+			"talents": "00530310501-32003311201515231",
+			"gear": "parity melee profile",
+			"rotation": "combat_sinister_strike",
+			"consumables": "No consumables+class",
+			"dps": 349.0159564437348,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.2328,
+				"core": 0.5629,
+				"forever": 0.0386,
+				"measured": 0,
+				"unknown": 0.1656
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "enhancement_shaman",
+			"build": "parity build",
+			"talents": "5505301-053030031005112251",
+			"gear": "parity melee profile",
+			"rotation": "forever",
+			"consumables": "No consumables",
+			"dps": 345.29222996672644,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0.4732,
+				"forever": 0.3027,
+				"measured": 0,
+				"unknown": 0.2241
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "retribution_paladin",
+			"build": "parity build",
+			"talents": "250003--552250312012331321",
+			"gear": "parity melee profile",
+			"rotation": "default",
+			"consumables": "No consumables",
+			"dps": 336.4058715718483,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.3176,
+				"core": 0.3908,
+				"forever": 0.1841,
+				"measured": 0,
+				"unknown": 0.1074
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "balance_druid",
+			"build": "parity build",
+			"talents": "5532220115001351--505302",
+			"gear": "parity caster profile",
+			"rotation": "launch",
+			"consumables": "No consumables",
+			"dps": 331.22824417961255,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1936,
+				"core": 0,
+				"forever": 0.8064,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "warrior",
+			"build": "parity build",
+			"talents": "30305213-550501015050010051",
+			"gear": "parity melee profile",
+			"rotation": "dps_reck",
+			"consumables": "No consumables",
+			"dps": 285.6447856425149,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.236,
+				"core": 0.4999,
+				"forever": 0.1696,
+				"measured": 0,
+				"unknown": 0.0945
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "hunter",
+			"build": "parity build",
+			"talents": "-3050552301503151-50024001",
+			"gear": "parity hunter profile",
+			"rotation": "mm",
+			"consumables": "No consumables",
+			"dps": 263.38868341140244,
+			"rests": {
+				"assumed": 0.0407,
+				"classic": 0.0318,
+				"core": 0.6632,
+				"forever": 0.2644,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "elemental_shaman",
+			"build": "parity build",
+			"talents": "5505301500103031--503352001",
+			"gear": "parity caster profile",
+			"rotation": "forever",
+			"consumables": "No consumables",
+			"dps": 259.73562534045425,
+			"rests": {
+				"assumed": 0,
+				"classic": 0,
+				"core": 0,
+				"forever": 1,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "smite_priest",
+			"build": "parity build",
+			"talents": "515030031305001031-00505023002-003",
+			"gear": "parity caster profile",
+			"rotation": "smite",
+			"consumables": "No consumables",
+			"dps": 216.73272419190374,
+			"rests": {
+				"assumed": 0.1497,
+				"classic": 0,
+				"core": 0.0257,
+				"forever": 0.8247,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "tank_warrior",
+			"build": "parity build",
+			"talents": "1--552531233331212531",
+			"gear": "parity melee profile",
+			"rotation": "protection",
+			"consumables": "No consumables",
+			"dps": 196.46580501705103,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.8288,
+				"core": 0.0215,
+				"forever": 0.1497,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		},
+		{
+			"spec": "protection_paladin",
+			"build": "parity build",
+			"talents": "-5532513321301551-15",
+			"gear": "parity melee profile",
+			"rotation": "default",
+			"consumables": "No consumables",
+			"dps": 181.6402641969086,
+			"rests": {
+				"assumed": 0,
+				"classic": 0.1907,
+				"core": 0.5742,
+				"forever": 0.235,
+				"measured": 0,
+				"unknown": 0
+			},
+			"ilvl": 0,
+			"slots": 0
+		}
+	]
+}

@@ -99,7 +99,7 @@ func (shaman *Shaman) applyElementalDevastation() {
 		Duration: time.Second * 10,
 	}).AttachSpellMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.ElementalDevastation.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).ValueAt(shaman.Talents.ElementalDevastation),
+		FloatValue: spellData.ElementalDevastation.Effect(shared.A_DUMMY, 0).ValueAt(shaman.Talents.ElementalDevastation),
 		ProcMask:   core.ProcMaskMelee,
 	})
 	shaman.MakeProcTriggerAura(core.ProcTrigger{

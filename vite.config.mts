@@ -17,6 +17,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const BASE_PATH = path.resolve(__dirname, 'ui');
+// Every ui/<page>/index.html besides the landing page and the spec pages.
+export const PRODUCT_PAGES = ['arena', 'bis', 'changelog', 'dps_rankings', 'evidence', 'scrub', 'stat_weights'];
 export const OUT_DIR = path.join(__dirname, 'dist', 'forever');
 
 // The ui/ path aliases. Mirrored by `compilerOptions.paths` in tsconfig.json and by the
@@ -177,6 +179,8 @@ export default defineConfig(({ command, mode }) => {
 				// The per-spec pages are added by the specPages plugin.
 				input: {
 					'ui/index.html': path.resolve(BASE_PATH, 'index.html'),
+					// Forever's product pages, each a React tree mounted by app/<page>_entry.tsx.
+					...Object.fromEntries(PRODUCT_PAGES.map(page => [`ui/${page}/index.html`, path.resolve(BASE_PATH, page, 'index.html')])),
 					// The single spec page. `specPages` copies the processed result to
 					// `<class>/<spec>/index.html` and drops this path from the bundle; the key only
 					// names the page's js/css ([name] in the *FileNames below), not its html output.
