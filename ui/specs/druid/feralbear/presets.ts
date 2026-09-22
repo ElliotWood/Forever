@@ -1,11 +1,11 @@
 import * as PresetUtils from '@app/preset_utils';
-import { SavedTalents } from '@generated/proto/ui';
 import { ConsumesSpec, HealingModel, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	FeralBearDruid_Options as DruidOptions,
 	FeralBearDruid_Rotation as DruidRotation,
 	FeralBearDruid_Rotation_SwipeUsage as SwipeUsage,
 } from '@generated/proto/druid';
+import { SavedTalents } from '@generated/proto/ui';
 import { OtherDefaults as SimUIOtherDefaults } from '@sim/spec_config';
 import LaunchGear from './gear_sets/launch.gear.json';
 

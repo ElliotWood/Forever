@@ -3,6 +3,15 @@ on:
     push:
         branches:
             - master
+    workflow_dispatch:
+
+# Upstream deploys to wowsims/pages-deploy with a token this fork does not have, so this publishes to the
+# repository's own GitHub Pages under /<repo>/forever/ (tools/site_base.sh moves the build there), with a
+# root page that redirects to it.
+concurrency:
+    group: pages
+    cancel-in-progress: true
+
 jobs:
     tests:
         uses: ./.github/workflows/run_tests.yml
@@ -17,6 +26,11 @@ jobs:
         permissions:
             contents: write
             pull-requests: write
+            pages: write
+            id-token: write
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - name: Checkout 🛎️
               uses: actions/checkout@v5
@@ -50,8 +64,11 @@ jobs:
               run: sudo apt-get update && sudo apt-get install -y binaryen
 
             - name: Build 🔧
+              env:
+                  SITE_BASE: /${{ github.event.repository.name }}/forever/
               run: |
                   make dist/forever/.dirstamp
+                  tools/site_base.sh
 
             - name: Update proto version file
               run: |
@@ -73,12 +90,17 @@ jobs:
               env:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Deploy 🚀
-              uses: JamesIves/github-pages-deploy-action@v4
+            - name: Add the root redirect
+              run: printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./forever/"><a href="./forever/">Continue to the simulator</a>' > dist/index.html
+
+            - name: Configure Pages
+              uses: actions/configure-pages@v5
+
+            - name: Upload the site
+              uses: actions/upload-pages-artifact@v3
               with:
-                  repository-name: wowsims/pages-deploy
-                  branch: main
-                  folder: dist/forever
-                  target-folder: forever
-                  single-commit: true
-                  token: ${{ secrets.DEPLOY_REPO_TOKEN }}
+                  path: dist
+
+            - name: Deploy to GitHub Pages 🚀
+              id: deployment
+              uses: actions/deploy-pages@v4
