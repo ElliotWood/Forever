@@ -404,10 +404,13 @@ func (druid *Druid) RegisterMoonkinFormSpell() {
 // Gains or removes depending on which way max health moved rather than assuming: a second stamina
 // multiplier can make leaving Bear Form raise max health, and RemoveHealth panics on a negative.
 func (druid *Druid) restoreHealthFraction(sim *core.Simulation, fraction float64, metrics *core.ResourceMetrics) {
+	// Max health is rebuilt from stat changes on every shift, so its last bits depend on the
+	// iteration's history: a zero delta can come out as +-1e-12 and log a phantom health event,
+	// which made single- and multi-threaded runs disagree on the event count.
 	delta := fraction*druid.MaxHealth() - druid.CurrentHealth()
-	if delta > 0 {
+	if delta > 1e-6 {
 		druid.GainHealth(sim, delta, metrics)
-	} else if delta < 0 {
+	} else if delta < -1e-6 {
 		druid.RemoveHealth(sim, -delta)
 	}
 }
