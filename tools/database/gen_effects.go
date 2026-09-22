@@ -133,7 +133,7 @@ func routeProc(triggerSpellID int, buffSpellID int, isWeaponProc bool) *ProcRout
 
 	trigger := spelldata.Find(int32(triggerSpellID))
 	routing.Unsupported = spelldata.ItemProcUnsupported(trigger, isWeaponProc)
-	routing.Summary = procSummary(trigger, buffSpellID)
+	routing.Summary = procSummary(triggerSpellID, trigger, buffSpellID)
 
 	return routing
 }
@@ -150,7 +150,7 @@ func (r *ProcRouting) asDamage(damageSpellID int32) {
 		r.Unsupported = append(r.Unsupported, "the damage spell's row states no damage")
 	}
 
-	r.Summary = procSummary(spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
 }
 
 // The buff the proc applies has to last for something: an aura of no duration is one the sim
@@ -174,9 +174,9 @@ func (r *ProcRouting) requireABuffDuration() {
 
 // What the rows resolve to, as the sim's own constants, so the generated file states the reading
 // rather than leaving it to be looked up.
-func procSummary(trigger *spelldata.Spell, buffSpellID int) string {
+func procSummary(triggerSpellID int, trigger *spelldata.Spell, buffSpellID int) string {
 	if trigger == spelldata.Nil {
-		return fmt.Sprintf("trigger %d is not in the store", buffSpellID)
+		return fmt.Sprintf("trigger %d is not in the store", triggerSpellID)
 	}
 
 	decoded := core.DecodeProcTypeMask(trigger.ProcFlags, trigger.ProcHint)
