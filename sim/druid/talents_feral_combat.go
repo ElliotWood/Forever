@@ -320,9 +320,10 @@ func (druid *Druid) applyBerserk() {
 	}
 
 	actionID := core.ActionID{SpellID: 417141}
+	// Effect 0's class mask is Claw/Rake, Shred, Ravage and Pounce (233472); Mangle is not in it.
 	critMod := druid.AddDynamicMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		ClassMask:  DruidSpellBuilder,
+		ClassMask:  DruidSpellShred | DruidSpellRake | DruidSpellRavage,
 		FloatValue: 100,
 	})
 

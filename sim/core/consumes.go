@@ -552,6 +552,7 @@ var SuperSapperActionID = ActionID{ItemID: 23827}
 var GoblinSapperActionID = ActionID{ItemID: 10646}
 var EzThroDynamiteTwoActionID = ActionID{ItemID: 18588}
 var CrystalChargeActionID = ActionID{ItemID: 11566}
+var DenseDynamiteActionID = ActionID{ItemID: 18641}
 var FelIronBombActionID = ActionID{ItemID: 23736}
 var AdamantiteGrenadeActionID = ActionID{ItemID: 23737}
 var GnomishFlameTurretActionID = ActionID{ItemID: 23841}
@@ -586,6 +587,8 @@ func registerExplosivesCD(agent Agent, consumes *proto.ConsumesSpec, sharedTimer
 			filler = character.newEzThroDynamiteTwoSpell(sharedTimer)
 		case 15239:
 			filler = character.newCrystalChargeSpell(sharedTimer)
+		case 18641:
+			filler = character.newDenseDynamiteSpell(sharedTimer)
 		case 30217:
 			filler = character.newAdamantiteGrenadeSpell(sharedTimer)
 		case 30216:
@@ -662,6 +665,10 @@ func (character *Character) newFelIronBombSpell(sharedTimer *Timer) *Spell {
 }
 func (character *Character) newCrystalChargeSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, CrystalChargeActionID, SpellSchoolFire, 383, 517, 0, 0, Cooldown{}))
+}
+// Dense Dynamite (item 18641, spell 23063): 400 Fire, variance 0.3 (340-460), 1s cast, missile speed 14.
+func (character *Character) newDenseDynamiteSpell(sharedTimer *Timer) *Spell {
+	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, DenseDynamiteActionID, SpellSchoolFire, 340, 460, 14, time.Second, Cooldown{}))
 }
 func (character *Character) newEzThroDynamiteTwoSpell(sharedTimer *Timer) *Spell {
 	return character.GetOrRegisterSpell(character.newBasicExplosiveSpellConfig(sharedTimer, EzThroDynamiteTwoActionID, SpellSchoolFire, 213, 287, 14, time.Second, Cooldown{}))
