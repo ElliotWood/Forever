@@ -907,8 +907,11 @@ func (unit *Unit) GetTotalParryChanceAsDefender(spell *Spell, atkTable *AttackTa
 
 func (unit *Unit) GetTotalChanceToBeMissedAsDefender(atkTable *AttackTable) float64 {
 	// ReducedPhysicalHitTakenChance is stored in percent points, BaseMissChance as a fraction.
+	// Defense above the attacker's weapon skill adds 0.04% a point, as it does to dodge, parry and
+	// block (Classic: 5% + (defense - attack skill) * 0.04%).
 	chance := atkTable.BaseMissChance +
-		unit.PseudoStats.ReducedPhysicalHitTakenChance/100
+		unit.PseudoStats.ReducedPhysicalHitTakenChance/100 +
+		unit.GetDefenseReduction()
 	return math.Max(chance, 0.0)
 }
 

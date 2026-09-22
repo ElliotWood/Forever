@@ -80,7 +80,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 4.28202
-  weights: 0.32115
+  weights: 0.59024
   weights: 0
   weights: 0
   weights: 0.60284
@@ -333,9 +333,9 @@ dps_results: {
 dps_results: {
  key: "TestFeralBear-AllItems-FeralheartRaiment"
  value: {
-  dps: 184.61088
-  tps: 196.72765
-  dtps: 918.90161
+  dps: 183.64918
+  tps: 195.5987
+  dtps: 887.03564
  }
 }
 dps_results: {
