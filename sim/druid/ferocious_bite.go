@@ -5,7 +5,7 @@ import (
 )
 
 var ferociousBiteRank = spellData.FerociousBite.Highest()
-var ferociousBiteMin = ferociousBiteRank.DamageEffect().Average(core.CharacterLevel)
+var ferociousBiteBase = ferociousBiteRank.DamageEffect().Average(core.CharacterLevel)
 
 // TODO: To be implemented.
 func (druid *Druid) registerFerociousBiteSpell() {
@@ -49,7 +49,7 @@ func (druid *Druid) registerFerociousBiteSpell() {
 	// 		}
 	//
 	// 		dmgPerCP := 169.0
-	// 		baseDamage := ferociousBiteMin + dmgPerCP*cp + 4.1*excessEnergy + 0.05*cp*ap
+	// 		baseDamage := ferociousBiteBase + dmgPerCP*cp + 4.1*excessEnergy + 0.05*cp*ap
 	//
 	// 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 	//
@@ -62,7 +62,7 @@ func (druid *Druid) registerFerociousBiteSpell() {
 	// 		cp := float64(druid.ComboPoints())
 	// 		ap := spell.MeleeAttackPower(target)
 	// 		dmgPerCP := 169.0
-	// 		baseDamage := ferociousBiteMin + dmgPerCP*cp + 0.05*cp*ap
+	// 		baseDamage := ferociousBiteBase + dmgPerCP*cp + 0.05*cp*ap
 	// 		return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
 	// 	},
 	// })
