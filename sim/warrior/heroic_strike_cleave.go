@@ -12,10 +12,7 @@ var cleaveRank = spellData.Cleave.Highest()
 var cleaveBaseDamage = cleaveRank.DamageEffect().Average(core.CharacterLevel)
 
 func (warrior *Warrior) registerHeroicStrike() {
-	config := spelldata.SpellConfig(&warrior.Unit, heroicStrikeRank, spelldata.Flags(core.SpellFlagMeleeMetrics|core.SpellFlagAPL))
-	config.ProcMask = core.ProcMaskMeleeMHSpecial
-	config.DamageMultiplier = 1
-	config.ThreatMultiplier = 1
+	config := spelldata.SpellConfig(&warrior.Unit, heroicStrikeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
 	// TODO: Ingame research needed if this adds flat threat
 	config.FlatThreatBonus = 0
 
@@ -34,10 +31,7 @@ func (warrior *Warrior) registerHeroicStrike() {
 func (warrior *Warrior) registerCleave() {
 	const maxTargets int32 = 2
 
-	config := spelldata.SpellConfig(&warrior.Unit, cleaveRank, spelldata.Flags(core.SpellFlagMeleeMetrics|core.SpellFlagAPL))
-	config.ProcMask = core.ProcMaskMeleeMHSpecial
-	config.DamageMultiplier = 1
-	config.ThreatMultiplier = 1
+	config := spelldata.SpellConfig(&warrior.Unit, cleaveRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
 	// TODO: Ingame research needed if this adds flat threat
 	config.FlatThreatBonus = 0
 
