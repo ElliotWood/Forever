@@ -25,11 +25,9 @@ const (
 	E_LEARN_SPELL           SpellDataEffectKind = 36
 	E_DISPEL                SpellDataEffectKind = 38
 	E_TRADE_SKILL           SpellDataEffectKind = 47
-	E_TRANS_DOOR            SpellDataEffectKind = 50
 	E_SUMMON_PET            SpellDataEffectKind = 56
 	E_WEAPON_DAMAGE         SpellDataEffectKind = 58
 	E_PROFICIENCY           SpellDataEffectKind = 60
-	E_POWER_BURN            SpellDataEffectKind = 62
 	E_THREAT                SpellDataEffectKind = 63
 	E_TRIGGER_SPELL         SpellDataEffectKind = 64
 	E_APPLY_AREA_AURA_RAID  SpellDataEffectKind = 65
@@ -58,8 +56,6 @@ const (
 // Which aura it applies, when the effect is E_APPLY_AURA.
 const (
 	A_NONE                               SpellDataAura = 0
-	A_BIND_SIGHT                         SpellDataAura = 1
-	A_MOD_POSSESS                        SpellDataAura = 2
 	A_PERIODIC_DAMAGE                    SpellDataAura = 3
 	A_DUMMY                              SpellDataAura = 4
 	A_MOD_CONFUSE                        SpellDataAura = 5
@@ -80,7 +76,6 @@ const (
 	A_PERIODIC_ENERGIZE                  SpellDataAura = 24
 	A_MOD_PACIFY                         SpellDataAura = 25
 	A_MOD_ROOT                           SpellDataAura = 26
-	A_MOD_SILENCE                        SpellDataAura = 27
 	A_MOD_STAT                           SpellDataAura = 29
 	A_MOD_SKILL                          SpellDataAura = 30
 	A_MOD_INCREASE_SPEED                 SpellDataAura = 31
@@ -97,7 +92,6 @@ const (
 	A_MOD_DODGE_PERCENT                  SpellDataAura = 49
 	A_MOD_BLOCK_PERCENT                  SpellDataAura = 51
 	A_MOD_WEAPON_CRIT_PERCENT            SpellDataAura = 52
-	A_PERIODIC_LEECH                     SpellDataAura = 53
 	A_MOD_HIT_CHANCE                     SpellDataAura = 54
 	A_MOD_SPELL_HIT_CHANCE               SpellDataAura = 55
 	A_MOD_SPELL_CRIT_CHANCE              SpellDataAura = 57
@@ -108,25 +102,19 @@ const (
 	A_MOD_DISARM                         SpellDataAura = 67
 	A_MOD_STALKED                        SpellDataAura = 68
 	A_SCHOOL_ABSORB                      SpellDataAura = 69
-	A_MOD_POWER_COST_SCHOOL_PCT          SpellDataAura = 72
 	A_MECHANIC_IMMUNITY                  SpellDataAura = 77
 	A_MOD_DAMAGE_PERCENT_DONE            SpellDataAura = 79
 	A_WATER_BREATHING                    SpellDataAura = 82
 	A_MOD_DAMAGE_PERCENT_TAKEN           SpellDataAura = 87
-	A_MOD_DETECT_RANGE                   SpellDataAura = 91
 	A_PREVENTS_FLEEING                   SpellDataAura = 92
 	A_MOD_UNATTACKABLE                   SpellDataAura = 93
 	A_MOD_ATTACK_POWER                   SpellDataAura = 99
 	A_MOD_RESISTANCE_PCT                 SpellDataAura = 101
-	A_MOD_TOTAL_THREAT                   SpellDataAura = 103
 	A_WATER_WALK                         SpellDataAura = 104
-	A_FEATHER_FALL                       SpellDataAura = 105
-	A_HOVER                              SpellDataAura = 106
 	A_ADD_FLAT_MODIFIER                  SpellDataAura = 107
 	A_ADD_PCT_MODIFIER                   SpellDataAura = 108
 	A_MOD_POWER_REGEN_PERCENT            SpellDataAura = 110
 	A_MOD_RANGED_DAMAGE_TAKEN            SpellDataAura = 113
-	A_MOD_MECHANIC_RESISTANCE            SpellDataAura = 117
 	A_MOD_HEALING_PCT                    SpellDataAura = 118
 	A_UNTRACKABLE                        SpellDataAura = 120
 	A_EMPATHY                            SpellDataAura = 121
@@ -135,7 +123,6 @@ const (
 	A_RANGED_ATTACK_POWER_ATTACKER_BONUS SpellDataAura = 127
 	A_MOD_INCREASE_HEALTH_PERCENT        SpellDataAura = 133
 	A_MOD_MANA_REGEN_INTERRUPT           SpellDataAura = 134
-	A_MOD_HEALING_DONE_PERCENT           SpellDataAura = 136
 	A_MOD_TOTAL_STAT_PERCENTAGE          SpellDataAura = 137
 	A_MOD_RANGED_HASTE                   SpellDataAura = 140
 	A_MOD_BASE_RESISTANCE_PCT            SpellDataAura = 142
@@ -145,13 +132,10 @@ const (
 	A_MOD_MOUNTED_SPEED_NOT_STACK        SpellDataAura = 172
 	A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT   SpellDataAura = 174
 	A_MOD_SPELL_HEALING_OF_STAT_PERCENT  SpellDataAura = 175
-	A_MOD_ATTACKER_MELEE_HIT_CHANCE      SpellDataAura = 184
-	A_MOD_ATTACKER_RANGED_HIT_CHANCE     SpellDataAura = 185
 	A_HASTE_SPELLS                       SpellDataAura = 216
 	A_PERIODIC_DUMMY                     SpellDataAura = 226
 	A_PROC_TRIGGER_SPELL_WITH_VALUE      SpellDataAura = 231
 	A_MECHANIC_DURATION_MOD              SpellDataAura = 232
-	A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER SpellDataAura = 270
 	A_MOD_SPELL_DAMAGE_FROM_CASTER       SpellDataAura = 271
 	A_MOD_BLOCK_VALUE_PCT                SpellDataAura = 272
 	A_MOD_CRIT_PCT                       SpellDataAura = 290
