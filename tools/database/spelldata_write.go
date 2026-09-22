@@ -16,7 +16,8 @@ import (
 // all and a stale one prints the paths alone.
 var progress io.Writer = os.Stderr
 
-// Writes the rendered files, but only once the sim compiles against them.
+// Writes the rendered files, but only once the sim compiles against them - unless unchecked skips
+// that.
 //
 // The generated files are the sim's data: one that does not compile takes the whole repository down
 // with it, gen_db included, and gen_db is what rebuilds the database the generator reads. So the
@@ -24,7 +25,20 @@ var progress io.Writer = os.Stderr
 // which lets the compiler read the staged bytes in the place of the committed ones without any of
 // them being in the tree. A failure leaves the tree exactly as it was and prints what the compiler
 // said.
-func writeSpellDataFiles(files map[string][]byte) error {
+//
+// unchecked skips the staging build: a class just flipped to the store does not compile until its
+// call sites move off the family table, so nothing would ever write for it otherwise. -check is what
+// closes the loop once they have.
+func writeSpellDataFiles(files map[string][]byte, unchecked bool) error {
+	if unchecked {
+		for path, out := range files {
+			if err := os.WriteFile(path, out, 0644); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
 	staging, err := os.MkdirTemp("", "spelldata-")
 	if err != nil {
 		return err
@@ -134,16 +148,16 @@ func goTool() string {
 	return "go"
 }
 
-// Regenerates every spell data file, once the sim compiles against all of them, and writes the
-// client rows the store was built from beside them: they are what lets the store be regenerated and
-// checked without the client database, so they are written from the same pass that wrote it and
-// only once that pass has landed.
-func GenerateSpellDataFiles(helper *DBHelper) error {
+// Regenerates every spell data file, once the sim compiles against all of them - or without that
+// check when unchecked is set - and writes the client rows the store was built from beside them:
+// they are what lets the store be regenerated and checked without the client database, so they are
+// written from the same pass that wrote it and only once that pass has landed.
+func GenerateSpellDataFiles(helper *DBHelper, unchecked bool) error {
 	files, inputs, err := renderSpellDataFiles(helper)
 	if err != nil {
 		return err
 	}
-	if err := writeSpellDataFiles(files); err != nil {
+	if err := writeSpellDataFiles(files, unchecked); err != nil {
 		return err
 	}
 	return writeStoreInputs(inputs)

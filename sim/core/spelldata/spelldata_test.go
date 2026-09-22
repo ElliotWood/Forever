@@ -199,6 +199,41 @@ func TestPowerCost(t *testing.T) {
 	}
 }
 
+func TestCost(t *testing.T) {
+	cases := []struct {
+		name string
+		s    *Spell
+		want float64
+	}{
+		{"no power row", &Spell{}, 0},
+		{"first of several powers, mana", &Spell{Powers: []Power{{Type: 0, Cost: 25}, {Type: 1, Cost: 300}}}, 25},
+		{"first of several powers, rage", &Spell{Powers: []Power{{Type: 1, Cost: 300}, {Type: 0, Cost: 25}}}, 30},
+	}
+	for _, c := range cases {
+		if got := c.s.Cost(); got != c.want {
+			t.Errorf("%s: Cost() = %v, want %v", c.name, got, c.want)
+		}
+	}
+}
+
+func TestRankNumber(t *testing.T) {
+	cases := []struct {
+		rank string
+		want int32
+	}{
+		{"Rank 1", 1},
+		{"Rank 12", 12},
+		{"", 0},
+		{"Passive", 0},
+	}
+	for _, c := range cases {
+		s := &Spell{Rank: c.rank}
+		if got := s.RankNumber(); got != c.want {
+			t.Errorf("RankNumber() of %q = %d, want %d", c.rank, got, c.want)
+		}
+	}
+}
+
 func TestRankedLadder(t *testing.T) {
 	ladder := Ranked(116)
 	if got := ladder.Highest().ID; got != 116 {

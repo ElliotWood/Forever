@@ -1073,9 +1073,10 @@ every constructed row against the literals it replaced.
 ## Regenerating and checking
 
 ```
-go run ./tools/database/gen_spelldata           # rewrite every generated spell data file
-go run ./tools/database/gen_spelldata -check    # name the ones that are stale, write nothing
-make spelldata-check                            # the same check
+go run ./tools/database/gen_spelldata              # rewrite every generated spell data file
+go run ./tools/database/gen_spelldata -check       # name the ones that are stale, write nothing
+go run ./tools/database/gen_spelldata -unchecked   # write without the type-check below
+make spelldata-check                               # the same check
 ```
 
 The generator reads `tools/database/wowsims.db` and writes all of it in one pass:
@@ -1086,7 +1087,10 @@ the family tables for the rest. It is its own binary rather than a mode of `gen_
 fixes it from compiling. For the same reason nothing is written until all of it type-checks: the
 rendered bytes go to a staging directory first and are compiled through `go build -overlay` in the
 place of the committed files, and a failure leaves the tree exactly as it was and prints what the
-compiler said. `make db` runs the store before `gen_db` for the same ordering reason - `gen_db`
+compiler said. `-unchecked` skips that build, for a class just flipped to the store whose call sites
+have not moved off the family table yet and so cannot type-check until they have - the reference file
+is written first and the ports follow; `-check` closes the loop once the package builds again. `make
+db` runs the store before `gen_db` for the same ordering reason - `gen_db`
 classifies every item and enchant proc out of the store compiled into it.
 
 Nothing lists which spells to generate. The class files walk `dbc.Classes`, take each class's own skill
@@ -1126,8 +1130,10 @@ was meant to be mechanical and moves a golden is a wrong port, not a new baselin
 
 ## Porting a class to the store
 
-1. **Flip the class** in `storeBackedClasses` (`tools/database/gen_spell_data.go`) and regenerate. The
-   class file becomes one ladder per family; nothing else changes until the call sites move. Run
+1. **Flip the class** in `storeBackedClasses` (`tools/database/gen_spell_data.go`) and regenerate with
+   `-unchecked`: the class file becomes one ladder per family, and nothing else changes until the call
+   sites move, so the package cannot type-check until they have - the reference file is written first
+   and the ports follow; `-check` closes the loop once the package builds again. Run
    `sim/<class>/spell_data_parity_test.go` first: every value the family table states has to match the
    store's before the class reads the store instead.
 2. **Dump the rows before touching a call site**, three ways: the effects at the rank taken, which

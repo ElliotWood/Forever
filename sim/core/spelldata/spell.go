@@ -170,6 +170,21 @@ func (s *Spell) PowerCost(t int8) float64 {
 	return cost
 }
 
+// The cost of the bar the spell spends - the first SpellPower row - in the units PowerCost converts
+// to. 0 for a spell with no SpellPower row.
+func (s *Spell) Cost() float64 {
+	if len(s.Powers) == 0 {
+		return 0
+	}
+	return s.PowerCost(s.Powers[0].Type)
+}
+
+// Spell.NameSubtext_lang's "Rank N" as a number; 0 for a spell the client shows no rank on, whose
+// subtext is "Passive" or empty.
+func (s *Spell) RankNumber() int32 {
+	return rankOf(s)
+}
+
 func (s *Spell) HasLabel(id int16) bool {
 	return slices.Contains(s.Labels, id)
 }
