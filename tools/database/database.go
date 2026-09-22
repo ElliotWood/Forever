@@ -96,6 +96,10 @@ func (db *WowDatabase) MergeItem(src *proto.UIItem) {
 			dst.Stats = src.Stats
 			src.Stats = nil
 		}
+		if src.PseudoStats != nil {
+			dst.PseudoStats = src.PseudoStats
+			src.PseudoStats = nil
+		}
 		if src.SocketBonus != nil {
 			dst.SocketBonus = src.SocketBonus
 			src.SocketBonus = nil
