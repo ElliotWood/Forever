@@ -12,6 +12,8 @@
 # PARITY_ONLY=a,b limits the run to those specs. PARITY_DETAIL=1 adds per-action DPS, crit
 # and partial-resist rates, damage per hit, aura uptimes and resource gains. PARITY_LOG=<dir>
 # writes both engines' combat logs there (use with PARITY_ITERATIONS=1).
+# PARITY_STAGES=1 prints each spec's stats per stage (base, gear, talents, buffs, consumes,
+# final) and its active set bonuses on both engines, for chasing a stat gap.
 set -euo pipefail
 
 next=$(git rev-parse --show-toplevel)
@@ -31,7 +33,7 @@ fi
 
 cp "$next/tools/parity/master_parity_test.go.in" "$master/sim/zz_parity_test.go"
 (cd "$master" && PARITY_OUT="$out/master.json" PARITY_SPECS="$next/tools/parity/specs.json" \
-	PARITY_ITERATIONS=$iterations go test --tags=with_db ./sim -run '^TestParity$' -count=1 -timeout 60m) || true
+	PARITY_ITERATIONS=$iterations go test --tags=with_db ./sim -run '^TestParity$' -count=1 -timeout 60m -v | grep -v -e '^=== ' -e '^--- PASS' -e '^PASS' -e '^ok') || true
 rm -f "$master/sim/zz_parity_test.go"
 
 cd "$next" && PARITY_MASTER="$out/master.json" PARITY_ITERATIONS=$iterations \
