@@ -1,5 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, HandType, ItemSlot, Profession, Race, Spec } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
 import {
 	DpsWarrior_Options as WarriorOptions,
 	DpsWarrior_Rotation,
@@ -8,16 +9,15 @@ import {
 	WarriorStance,
 	WarriorSunder,
 } from '@generated/proto/warrior';
-import { SavedTalents } from '@generated/proto/ui';
 import { Player } from '@sim/player/player';
 
 import * as WarriorPresets from '../shared/presets';
 import DefaultArmsApl from './apls/arms.apl.json';
-import DefaultFuryApl from './apls/fury.apl.json';
 import ForeverNoReckApl from './apls/dps_no_reck.apl.json';
 import ForeverReckApl from './apls/dps_reck.apl.json';
-import LaunchGear from './gear_sets/launch.gear.json';
+import DefaultFuryApl from './apls/fury.apl.json';
 import ArmsLaunchGear from './gear_sets/arms_launch.gear.json';
+import LaunchGear from './gear_sets/launch.gear.json';
 import P0BisGear from './gear_sets/p0.bis.gear.json';
 import Phase1Gear from './gear_sets/phase_1.gear.json';
 import Phase2Gear from './gear_sets/phase_2.gear.json';

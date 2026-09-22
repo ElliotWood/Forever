@@ -7,6 +7,7 @@ import {
 } from '@generated/proto/druid';
 import { SavedTalents } from '@generated/proto/ui';
 import { OtherDefaults as SimUIOtherDefaults } from '@sim/spec_config';
+
 import LaunchGear from './gear_sets/launch.gear.json';
 
 export const DefaultSimpleRotation = DruidRotation.create({
