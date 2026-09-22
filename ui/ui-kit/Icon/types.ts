@@ -21,6 +21,7 @@ export type IconName =
 	| 'chevron-right'
 	| 'circle-exclamation'
 	| 'circle-question'
+	| 'clipboard-check'
 	| 'cog'
 	| 'copy'
 	| 'discord'
@@ -34,10 +35,13 @@ export type IconName =
 	| 'gauge-high'
 	| 'github'
 	| 'globe'
+	| 'hand-holding-heart'
 	| 'info-circle'
+	| 'magnifying-glass'
 	| 'magnifying-glass-minus'
 	| 'magnifying-glass-plus'
 	| 'map-pin'
+	| 'paper-plane'
 	| 'patreon'
 	| 'pause'
 	| 'paw'
@@ -52,6 +56,8 @@ export type IconName =
 	| 'star'
 	| 'times'
 	| 'triangle-exclamation'
+	| 'trophy'
+	| 'upload'
 	| 'user';
 
 /** FA5 spellings mapped to FA6. rotate-left and arrow-right-from-bracket are deliberately absent: different glyphs, not aliases. */

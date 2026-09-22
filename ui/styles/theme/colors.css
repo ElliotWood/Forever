@@ -41,6 +41,12 @@
 	--color-brand: #e0a335;
 	--color-expansion: #23c88c;
 
+	--color-evidence-measured: #6dbf6d;
+	--color-evidence-forever: #4a7fb5;
+	--color-evidence-classic: var(--color-gray-600);
+	--color-evidence-core: #8a7f6d;
+	--color-evidence-assumed: var(--color-brand);
+
 	--color-muted: #212529bf;
 	--color-link: #a5b1d6;
 	--color-link-hover: var(--color-white);
