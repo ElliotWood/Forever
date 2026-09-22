@@ -227,8 +227,29 @@ var ClassBaseScaling = map[proto.Class]float64{
 	proto.Class_ClassDruid:   282.633330,
 }
 
+// Base melee and spell crit at level 60, before agility and intellect: the Classic client's
+// gtChanceToMeleeCritBase / gtChanceToSpellCritBase, as master carries them. The generated
+// ExtraClassBaseStats hold TBC's level 70 fits (hunter -1.53%, warrior +1.14% melee), which a
+// level 60 Forever character has no business with. The Forever client ships no gt tables;
+// its PlayerExpectedStat level 60 CritPerAgility/SpellCritPerIntellect rows equal both
+// engines' per-point rates, so only these constants differed.
+var ClassBaseCritPercent = map[proto.Class]struct{ Physical, Spell float64 }{
+	proto.Class_ClassWarrior: {0, 0},
+	proto.Class_ClassPaladin: {0.7, 3.5},
+	proto.Class_ClassHunter:  {0, 3.6},
+	proto.Class_ClassRogue:   {0, 0},
+	proto.Class_ClassPriest:  {3.0, 0.8},
+	proto.Class_ClassShaman:  {1.7, 2.3},
+	proto.Class_ClassMage:    {3.2, 0.2},
+	proto.Class_ClassWarlock: {2.0, 1.7},
+	proto.Class_ClassDruid:   {0.9, 1.8},
+}
+
 func AddBaseStatsCombo(r proto.Race, c proto.Class) {
-	BaseStats[BaseStatsKey{Race: r, Class: c}] = ClassBaseStats[c].Add(RaceOffsets[r]).Add(ExtraClassBaseStats[c])
+	s := ClassBaseStats[c].Add(RaceOffsets[r]).Add(ExtraClassBaseStats[c])
+	s[stats.PhysicalCritPercent] = ClassBaseCritPercent[c].Physical
+	s[stats.SpellCritPercent] = ClassBaseCritPercent[c].Spell
+	BaseStats[BaseStatsKey{Race: r, Class: c}] = s
 }
 
 func init() {
