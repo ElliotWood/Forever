@@ -125,7 +125,8 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 			spelldata.ParseEffects(&warrior.Character, parry, wrathParryBuff)
 
 			// The attack that spends the buff is the one it parries, which is an outcome no proc
-			// mask states and one that deals no damage: both of the row's defaults go.
+			// mask states and one that deals no damage. 23547 ships no tooltip, so there is nothing
+			// for the row to have read that from and both of its defaults go here.
 			consume := spelldata.ProcTrigger(&warrior.Character, wrathParryBuff,
 				func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 					parry.Deactivate(sim)
@@ -137,14 +138,14 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 			parry.AttachProcTrigger(consume)
 
 			// The rate is the proc chance column, which the tooltip's $h% says is a real roll; the
-			// block it fires on is an outcome no proc mask states.
+			// block it fires on is an outcome no proc mask states, so the row states only that the
+			// hit it hears carries no damage.
 			trigger := spelldata.ProcTrigger(&warrior.Character, wrathParryProc,
 				func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 					parry.Activate(sim)
 				})
 			trigger.Name = "Battlegear of Wrath - 8PC"
 			trigger.Outcome = core.OutcomeBlock
-			trigger.RequireDamageDealt = false
 
 			setBonusAura.AttachProcTrigger(trigger)
 		},
@@ -213,10 +214,8 @@ var ItemSetDreadnaughtsBattlegear = core.NewItemSet(core.ItemSet{
 					cheatDeath.Activate(sim)
 				})
 			trigger.Name = "Cheat Death - Trigger"
-			// 28845 sits in class family 5 and its proc effect names a spell mask there, which
-			// would restrict the listener to another class's spells; the tooltip restricts it to
-			// nothing but the health threshold, which the row does not state either.
-			trigger.ClassFlags = core.ClassFlags{}
+			// The health threshold is the whole of the tooltip's condition and the row states none
+			// of it.
 			trigger.ExtraCondition = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {
 				return warrior.CurrentHealthPercent() < 0.2
 			}

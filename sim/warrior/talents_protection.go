@@ -69,8 +69,8 @@ func (warrior *Warrior) registerShieldSpecialization() {
 // effect ladder the tooltip's $m names, and the 100 in the proc chance column is noise; the
 // energize the triggered spell states is on the client's 0-1000 rage bar.
 //
-// No proc mask states an outcome, so the block, dodge or parry is the caller's, and the row's
-// RequireDamageDealt goes with it: a dodge or a parry deals none.
+// No proc mask states an outcome, so which of the three it is stays the caller's; that the hit
+// carries no damage is the row's, off its outcome hint.
 func (warrior *Warrior) registerRageOnAvoid(driver *spelldata.Spell, energize *spelldata.Spell, outcome core.HitOutcome, extra func() bool) {
 	rage := energize.EnergizeEffect().Tenths()
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: energize.ID})
@@ -80,7 +80,6 @@ func (warrior *Warrior) registerRageOnAvoid(driver *spelldata.Spell, energize *s
 			warrior.AddRage(sim, rage, rageMetrics)
 		})
 	trigger.Outcome = outcome
-	trigger.RequireDamageDealt = false
 	trigger.TriggerImmediately = true
 	if extra != nil {
 		trigger.ExtraCondition = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool { return extra() }

@@ -153,16 +153,14 @@ func (warrior *Warrior) registerDeepWounds() {
 
 	warrior.DeepWounds = warrior.RegisterSpell(config)
 
-	// The proc shape with no roll: 12834 states its rate as "always" and the tooltip's critical
-	// strike is the condition. No proc mask can state an outcome, so the crit is the caller's, and
-	// so is the physical school the tooltip's melee weapon means.
+	// The proc shape with no roll: 12834 states its rate as "always" and its crit hint carries the
+	// tooltip's condition. The physical school the tooltip's melee weapon means is the caller's.
 	trigger := spelldata.ProcTrigger(&warrior.Character,
 		spellData.DeepWounds.Rank(warrior.Talents.DeepWounds),
 		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.DeepWounds.Cast(sim, result.Target)
 		})
 	trigger.Name = "Deep Wounds - Trigger"
-	trigger.Outcome = core.OutcomeCrit
 	trigger.TriggerImmediately = true
 	trigger.ExtraCondition = func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
 		return spell.SpellSchool.Matches(core.SpellSchoolPhysical)
