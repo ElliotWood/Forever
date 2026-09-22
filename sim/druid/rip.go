@@ -1,11 +1,7 @@
 package druid
 
-import (
-	"github.com/wowsims/forever/sim/common/shared"
-)
-
-var ripRank = spellData.Rip.HighestRank()
-var ripTick = ripRank.Periodic.(shared.SpellDataPeriodic)
+var ripRank = spellData.Rip.Highest()
+var ripTick = ripRank.PeriodicEffect()
 
 // TODO: To be implemented.
 func (druid *Druid) registerRipSpell() {
@@ -13,19 +9,19 @@ func (druid *Druid) registerRipSpell() {
 
 	// The TBC implementation, kept for the port:
 	// druid.Rip = druid.RegisterSpell(Cat, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: ripRank.SpellID},
-	// 	SpellSchool:    ripRank.SpellSchool,
-	// 	DefenseType:    ripRank.DefenseType,
+	// 	ActionID:       core.ActionID{SpellID: ripRank.ID},
+	// 	SpellSchool:    ripRank.SpellSchool(),
+	// 	DefenseType:    ripRank.DefenseTypeCore(),
 	// 	ProcMask:       core.ProcMaskMeleeMHSpecial,
 	// 	ClassSpellMask: DruidSpellRip,
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: ripRank.Cost,
+	// 		Cost: ripRank.Cost(),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
-	// 			GCD: ripRank.GCD,
+	// 			GCD: ripRank.GCD(),
 	// 		},
 	// 		IgnoreHaste: true,
 	// 	},
@@ -41,10 +37,13 @@ func (druid *Druid) registerRipSpell() {
 	// 		Aura: core.Aura{
 	// 			Label: "Rip",
 	// 		},
-	// 		NumberOfTicks: ripTick.NumberOfTicks,
-	// 		TickLength:    ripTick.TickLength,
+	// 		NumberOfTicks: int32(ripRank.Duration() / ripTick.Period()),
+	// 		TickLength:    ripTick.Period(),
 	//
 	// 		OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+	// 			druid.UpdateBleedPower(druid.Rip, sim, target, true, true)
+	// 		},
+	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 	// 			cp := druid.ComboPoints()
 	// 			ap := dot.Spell.MeleeAttackPower(target)
 	//
@@ -59,11 +58,7 @@ func (druid *Druid) registerRipSpell() {
 	// 			}
 	// 			tickDamage = tickDamage / 6
 	//
-	// 			dot.SnapshotPhysical(target, tickDamage)
-	// 			druid.UpdateBleedPower(druid.Rip, sim, target, true, true)
-	// 		},
-	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+	// 			dot.Spell.CalcAndDealPeriodicDamage(sim, target, tickDamage, dot.OutcomeTick)
 	// 		},
 	// 	},
 	//
@@ -77,10 +72,6 @@ func (druid *Druid) registerRipSpell() {
 	// 	},
 	//
 	// 	ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
-	// 		if useSnapshot {
-	// 			dot := spell.Dot(target)
-	// 			return dot.CalcSnapshotDamage(sim, target, dot.OutcomeTick)
-	// 		}
 	// 		// Assume 5 CP for projections.
 	// 		ap := spell.MeleeAttackPower(target)
 	// 		tickDamage := (1554 + 0.24*ap) / 6
