@@ -341,3 +341,38 @@ func TestSpellDataDamageProcAppliesToACharacter(t *testing.T) {
 		t.Errorf("listener action = %v, want the item's", triggerAura.ActionIDForProc)
 	}
 }
+
+// Which unit a proc's damage lands on, per callback. The self-hit case is the one the sapper charges
+// created: a character deals that hit to itself, and a proc reading the result answered it by
+// hitting its own wearer.
+func TestProcDamageTarget(t *testing.T) {
+	character := &core.Character{Unit: core.Unit{Label: "Wearer"}}
+	enemy := &core.Unit{Label: "Enemy"}
+	attacker := &core.Unit{Label: "Attacker"}
+	character.CurrentTarget = enemy
+
+	for _, tc := range []struct {
+		callback core.AuraCallback
+		spell    *core.Spell
+		result   *core.SpellResult
+		want     *core.Unit
+		why      string
+	}{
+		{core.CallbackOnSpellHitTaken, &core.Spell{Unit: attacker}, &core.SpellResult{Target: &character.Unit},
+			attacker, "a hit taken answers the attacker, not the wearer the result names"},
+		{core.CallbackOnSpellHitDealt, &core.Spell{Unit: &character.Unit}, &core.SpellResult{Target: attacker},
+			attacker, "a hit dealt answers whatever was hit"},
+		{core.CallbackOnSpellHitDealt, &core.Spell{Unit: &character.Unit}, &core.SpellResult{Target: &character.Unit},
+			enemy, "a hit the character dealt to itself answers the current target"},
+		{core.CallbackOnPeriodicDamageDealt, &core.Spell{Unit: &character.Unit}, &core.SpellResult{Target: &character.Unit},
+			enemy, "the same for a tick"},
+		{core.CallbackOnHealDealt, &core.Spell{Unit: &character.Unit}, &core.SpellResult{Target: attacker},
+			enemy, "a heal names an ally, so nothing there says what to damage"},
+		{core.CallbackOnCastComplete, &core.Spell{Unit: &character.Unit}, nil,
+			enemy, "a cast carries no result at all"},
+	} {
+		if got := procDamageTarget(character, tc.callback, tc.spell, tc.result); got != tc.want {
+			t.Errorf("target = %v, want %v: %s", got.Label, tc.want.Label, tc.why)
+		}
+	}
+}

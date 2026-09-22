@@ -694,7 +694,7 @@ func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effect
 		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil))
 	config.Name = cfg.Name
 	config.ActionID = source.actionID()
-	config.Handler = spellDataDamageHandler(character, damageSpell, config.Callback)
+	config.Handler = procDamageHandler(character, damageSpell, config.Callback)
 
 	// The proc's damage lands on the hit that caused it rather than on the next one, which is what
 	// the callback is called from.
@@ -750,37 +750,43 @@ func damageShape(damage *spelldata.Spell) spelldata.SpellOpt {
 	return spelldata.Magic(core.ProcMaskEmpty)
 }
 
-// What the proc's damage lands on. What the result names depends on the callback, so the callback
-// decides whether it may be read at all.
-func spellDataDamageHandler(character *core.Character, damageSpell *core.Spell, callback core.AuraCallback) core.ProcHandler {
+// What a proc's damage lands on, for both damage constructors.
+func procDamageHandler(character *core.Character, damageSpell *core.Spell, callback core.AuraCallback) core.ProcHandler {
 	return func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-		target := character.CurrentTarget
+		damageSpell.Cast(sim, procDamageTarget(character, callback, spell, result))
+	}
+}
 
-		switch {
-		case callback.Matches(core.CallbackOnSpellHitTaken):
-			// Here result.Target is the wearer - core dispatches hit-taken through
-			// result.Target.OnSpellHitTaken - so the retaliation goes to the attacker instead of
-			// into the wearer's own health. This is the shield spike shape.
-			if spell != nil && spell.Unit != nil {
-				target = spell.Unit
-			}
+// Which unit the proc answers. What the result names depends on the callback, so the callback
+// decides whether it may be read at all.
+func procDamageTarget(character *core.Character, callback core.AuraCallback, spell *core.Spell, result *core.SpellResult) *core.Unit {
+	target := character.CurrentTarget
 
-		case callback.Matches(core.CallbackOnSpellHitDealt | core.CallbackOnPeriodicDamageDealt):
-			// Land the extra damage on whatever was hit, not on the primary target - unless that is
-			// the wearer. A sapper charge is a hit the character deals to itself, and "chance on hit
-			// to deal damage" means the enemy it is fighting, not its own health.
-			if result != nil && result.Target != nil && result.Target != &character.Unit {
-				target = result.Target
-			}
-
-		default:
-			// The heal callbacks, cast complete and apply effects carry either no result or one
-			// whose target is an ally, so nothing there can name what to damage and the current
-			// target stands.
+	switch {
+	case callback.Matches(core.CallbackOnSpellHitTaken):
+		// Here result.Target is the wearer - core dispatches hit-taken through
+		// result.Target.OnSpellHitTaken - so the retaliation goes to the attacker instead of
+		// into the wearer's own health. This is the shield spike shape.
+		if spell != nil && spell.Unit != nil {
+			target = spell.Unit
 		}
 
-		damageSpell.Cast(sim, target)
+	case callback.Matches(core.CallbackOnSpellHitDealt | core.CallbackOnPeriodicDamageDealt):
+		// Land the extra damage on whatever was hit, not on the primary target - unless that is
+		// the wearer. A sapper charge is a hit the character deals to itself, and "chance on hit
+		// to deal damage" means the enemy it is fighting, not its own health.
+		if result != nil && result.Target != nil && result.Target != &character.Unit {
+			target = result.Target
+		}
+
+	default:
+		// The heal callbacks, cast complete and apply effects carry either no result or one
+		// whose target is an ally, so nothing there can name what to damage and the current
+		// target stands. Reading result.Target regardless is what would have a heal-triggered
+		// damage proc hit the healed ally.
 	}
+
+	return target
 }
 
 func decodedCallback(s *spelldata.Spell) core.AuraCallback {
@@ -1205,38 +1211,7 @@ func NewProcDamageEffect(config ProcDamageEffect) {
 		})
 
 		triggerConfig.TriggerImmediately = true
-
-		// What result.Target means depends on the callback, so the callback has to decide whether it
-		// may be read at all.
-		callback := triggerConfig.Callback
-
-		triggerConfig.Handler = func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			target := character.CurrentTarget
-
-			switch {
-			case callback.Matches(core.CallbackOnSpellHitTaken):
-				// Here result.Target is the wearer - core dispatches hit-taken through
-				// result.Target.OnSpellHitTaken - so the retaliation goes to the attacker instead of
-				// into the wearer's own health. This is the shield spike shape.
-				if spell != nil && spell.Unit != nil {
-					target = spell.Unit
-				}
-
-			case callback.Matches(core.CallbackOnSpellHitDealt | core.CallbackOnPeriodicDamageDealt):
-				// Land the extra damage on whatever was hit, not on the primary target.
-				if result != nil && result.Target != nil {
-					target = result.Target
-				}
-
-			default:
-				// The heal callbacks, cast complete and apply effects carry either no result or one
-				// whose target is an ally, so nothing there can name what to damage and the current
-				// target stands. Reading result.Target regardless is what would have a heal-triggered
-				// damage proc hit the healed ally.
-			}
-
-			damageSpell.Cast(sim, target)
-		}
+		triggerConfig.Handler = procDamageHandler(character, damageSpell, triggerConfig.Callback)
 		triggerAura := character.MakeProcTriggerAura(triggerConfig)
 
 		if isEnchant {
