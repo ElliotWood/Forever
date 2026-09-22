@@ -2,7 +2,7 @@
 
 Hover a spell id in Go, JSON or TypeScript and read the client's row: what the spell is, a table of
 the header columns, and a table of the effects - each worded where the shape is known and always
-beside the client's own literal.
+over the client's own literal.
 
 The ids it recognises are the ones hand-written code states: `spelldata.MustFind(11574)`,
 `spelldata.Find(116)`, `spellData.Rend.ByID(11574)`, `core.ActionID{SpellID: 11574}`, an APL file's

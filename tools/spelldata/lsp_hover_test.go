@@ -80,7 +80,7 @@ func TestHoverSpellIDShapes(t *testing.T) {
 	}
 	for _, c := range cases {
 		markdown, trace, ok := hoverOn(t, newWorkspace(), c.line, "file:///tmp/"+c.uri, c.needle, len(c.needle))
-		if !ok || !strings.HasPrefix(markdown, fmt.Sprintf("**%d ", c.id)) {
+		if !ok || !strings.HasPrefix(markdown, fmt.Sprintf("### %d ", c.id)) {
 			t.Errorf("%s answered %v %q:\n%s", c.line, ok, markdown, strings.Join(trace, "\n"))
 		}
 		if trace[1] != fmt.Sprintf("id %d", c.id) {
@@ -100,38 +100,58 @@ func TestHoverSpellIDShapes(t *testing.T) {
 func TestHoverColumnIsUTF16(t *testing.T) {
 	line := "// — spelldata.MustFind(11574)"
 	col := len([]rune(line[:strings.Index(line, "11574")]))
-	if markdown, _, ok := Hover(line, 0, col, "file:///tmp/a.go"); !ok || !strings.HasPrefix(markdown, "**11574 ") {
+	if markdown, _, ok := Hover(line, 0, col, "file:///tmp/a.go"); !ok || !strings.HasPrefix(markdown, "### 11574 ") {
 		t.Errorf("the id after a dash answered %v %q", ok, markdown)
 	}
 }
 
 func TestHoverFamily(t *testing.T) {
 	markdown := wantHover(t, executeGo, "Execute.Highest", 3,
-		"**warrior/Execute**",
-		"| id | name | rank | call |",
+		"### warrior/Execute\n\n| id | name | rank | call |\n|--:|:--|:--|:--|\n",
 		"| 20662 | Execute | Rank 5 | `Highest()` |",
-		"**20662 Execute (Rank 5)**")
-	if !strings.Contains(markdown, "| school | physical |") {
+		"### 20662 Execute · Rank 5\n")
+	if !strings.Contains(markdown, "| **school** | physical |") {
 		t.Errorf("the family's highest rank states no header table:\n%s", markdown)
 	}
 }
 
+// The card a rank pick hovers as: a heading, the ladder call, the row's columns under its name, and the
+// effects below a rule with each wording over its client row.
+const executeCard = "### 20662 Execute · Rank 5\n" +
+	"`warrior spellData.Execute.Highest()`  \n" +
+	"\n" +
+	"| | Execute (Rank 5) |\n" +
+	"|--:|:--|\n" +
+	"| **school** | physical |\n" +
+	"| **defense** | melee |\n" +
+	"| **gcd** | 1.5 s |\n" +
+	"| **cost** | 15 rage |\n" +
+	"| **range** | 5 yd |\n" +
+	"| **stance** | Battle, Berserker |\n" +
+	"| **equip** | needs a melee weapon |\n" +
+	"| **attrs** | refund on miss |\n" +
+	"| **labels** | 25 |\n" +
+	"\n" +
+	"---\n" +
+	"| # | effect |\n" +
+	"|--:|:--|\n" +
+	"| 1 | a dummy effect holding 600 to the enemy<br>`E_DUMMY base=600 sp=1 target=[6,0]` |\n" +
+	"| 2 | casts 26651 Execute to the caster<br>`E_TRIGGER_SPELL base=0 trigger=26651 target=[1,0]` |\n" +
+	"\n" +
+	"[Wowhead](https://www.wowhead.com/forever/spell=20662)\n"
+
 func TestHoverRankPick(t *testing.T) {
-	wantHover(t, executeGo, "executeRank =", 4,
-		"`executeRank` = 20662 Execute (Rank 5)",
-		"`warrior spellData.Execute.Highest()`",
-		"| | |\n|---|---|\n| school | physical |",
-		"| # | effect | client row |",
-		"| 1 | a dummy effect holding 600 to the enemy | `E_DUMMY base=600 sp=1 target=[6,0]` |",
-		"[Wowhead](https://www.wowhead.com/forever/spell=20662)")
+	if got := wantHover(t, executeGo, "executeRank =", 4); got != executeCard {
+		t.Errorf("the rank pick hovers as\n%s\nwant\n%s", got, executeCard)
+	}
 }
 
 func TestHoverValue(t *testing.T) {
 	markdown := wantHover(t, executeGo, "executeBaseDamage =", 4,
 		"`executeBaseDamage` = **600**\n\n`spellData.Execute.Highest().EffectN(1).Average(60)`",
-		"**20662 Execute (Rank 5)**",
-		"| 1 ▶ | a dummy effect holding 600 to the enemy |",
-		"| 2 | casts 26651 Execute to the caster |")
+		"`spellData.Execute.Highest().EffectN(1).Average(60)`\n\n### 20662 Execute · Rank 5\n",
+		"| 1 ▶ | a dummy effect holding 600 to the enemy<br>",
+		"| 2 | casts 26651 Execute to the caster<br>")
 	if strings.Contains(markdown, "The amount at a caster level") {
 		t.Errorf("the name's hover states the accessor's doc:\n%s", markdown)
 	}
@@ -150,23 +170,24 @@ func (warrior *Warrior) applyCruelty() {
 // A talent rank hovers as the rank Talent builds from the curve, titled with its rank.
 func TestHoverTalentRank(t *testing.T) {
 	wantHover(t, crueltyGo, "crueltyRank :=", 4,
-		"`crueltyRank` = 12320 Cruelty (rank 3 of 5)",
-		"| 1 | +3% physical crit | `E_APPLY_AURA A_MOD_WEAPON_CRIT_PERCENT base=3 target=[1,0]` |")
+		"### 12320 Cruelty · rank 3 of 5\n",
+		"| | Cruelty (rank 3 of 5) |",
+		"| 1 | +3% physical crit<br>`E_APPLY_AURA A_MOD_WEAPON_CRIT_PERCENT base=3 target=[1,0]` |")
 	wantHover(t, crueltyGo, "crueltyCrit :=", 4,
 		"`crueltyCrit` = **3**\n\n`spellData.Cruelty.Rank(3).EffectN(1).BaseValue()`",
-		"**12320 Cruelty (rank 3 of 5)**",
-		"| 1 ▶ | +3% physical crit |")
+		"### 12320 Cruelty · rank 3 of 5\n",
+		"| 1 ▶ | +3% physical crit<br>")
 	wantHover(t, crueltyGo, "Cruelty.Rank", 3,
-		"**warrior/Cruelty**",
+		"### warrior/Cruelty\n",
 		"| 12320 | Cruelty | rank 3 of 5 | `Rank(3)` | effect 1 = 3 |",
-		"**12320 Cruelty (rank 5 of 5)**")
+		"### 12320 Cruelty · rank 5 of 5\n")
 }
 
 func TestHoverSegments(t *testing.T) {
 	wantHover(t, executeGo, "EffectN(1).Average", 2,
 		"`EffectN(1)` = **effect 1** of 20662 Execute (Rank 5)",
 		"`spellData.Execute.Highest().EffectN(1)`",
-		"| 1 ▶ | a dummy effect holding 600 to the enemy |",
+		"---\n| # | effect |\n|--:|:--|\n| 1 ▶ | a dummy effect holding 600 to the enemy<br>`E_DUMMY base=600 sp=1 target=[6,0]` |\n",
 		"`Average(60) = 600`  \n")
 
 	markdown := wantHover(t, executeGo, "Average(core", 2,
@@ -178,8 +199,8 @@ func TestHoverSegments(t *testing.T) {
 		t.Errorf("the argument hovers differently from its call:\n%s", again)
 	}
 
-	wantHover(t, executeGo, "executeRank.EffectN(1).Average", 4, "`executeRank` = 20662 Execute (Rank 5)")
-	wantHover(t, executeGo, "executeRank.EffectN(1).ChainAmp", 4, "`executeRank` = 20662 Execute (Rank 5)")
+	wantHover(t, executeGo, "executeRank.EffectN(1).Average", 4, executeCard)
+	wantHover(t, executeGo, "executeRank.EffectN(1).ChainAmp", 4, executeCard)
 }
 
 func TestHoverTrace(t *testing.T) {
@@ -339,7 +360,7 @@ func TestWorkspaceBuffers(t *testing.T) {
 	use := "package warrior\n\nvar x = hoverTestRank\n"
 	uri := warriorURI(t, "execute.go")
 	markdown, trace, ok := hoverOn(t, ws, use, uri, "hoverTestRank", 2)
-	if !ok || !strings.HasPrefix(markdown, "`hoverTestRank` = 11574 Rend (Rank 7)") {
+	if !ok || !strings.HasPrefix(markdown, "### 11574 Rend · Rank 7\n") {
 		t.Fatalf("the buffer's declaration was not read:\n%s\n%s", markdown, strings.Join(trace, "\n"))
 	}
 
@@ -350,7 +371,7 @@ func TestWorkspaceBuffers(t *testing.T) {
 
 	ws.setBuffer(other, "package warrior\n\nvar hoverTestRank = spellData.Execute.Highest()\n")
 	markdown, trace, _ = hoverOn(t, ws, use, uri, "hoverTestRank", 2)
-	if !strings.HasPrefix(trace[1], "declarations sim/warrior: cache miss") || !strings.HasPrefix(markdown, "`hoverTestRank` = 20662 Execute") {
+	if !strings.HasPrefix(trace[1], "declarations sim/warrior: cache miss") || !strings.HasPrefix(markdown, "### 20662 Execute") {
 		t.Errorf("the edit did not reach the hover:\n%s\n%s", markdown, strings.Join(trace, "\n"))
 	}
 

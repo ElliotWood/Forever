@@ -464,9 +464,9 @@ func configMarkdown(result *configResult) string {
 	if result.pick != "" {
 		fmt.Fprintf(&md, "`%s`\n\n", result.pick)
 	}
-	md.WriteString("| field | value | from |\n|---|---|---|\n")
+	md.WriteString("---\n| field | value | from |\n|---|---|---|\n")
 	for _, row := range result.rows {
-		fmt.Fprintf(&md, "| %s | %s | %s |\n", row.field, codeCell(row.value), cell(row.from))
+		fmt.Fprintf(&md, "| **%s** | %s | %s |\n", row.field, codeCell(row.value), cell(row.from))
 	}
 	for _, option := range result.skipped {
 		fmt.Fprintf(&md, "\nunevaluated: `%s` (%s)\n", option.source, option.err)

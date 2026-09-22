@@ -136,6 +136,14 @@ func (p pick) title() string {
 	return rankTitle(p.spell, p.rank, p.family.talentRanks)
 }
 
+// The rank a row a ladder reached is: the talent rank where it is one, else the store's rank column.
+func rankLabel(s *spelldata.Spell, rank, ranks int32) string {
+	if rank == 0 {
+		return s.Rank
+	}
+	return fmt.Sprintf("rank %d of %d", rank, ranks)
+}
+
 // The heading of a row a ladder reached: a talent's rank is not the store's rank column, so it is
 // stated here. A rank of 0 is a row that is not a talent's rank.
 func rankTitle(s *spelldata.Spell, rank, ranks int32) string {

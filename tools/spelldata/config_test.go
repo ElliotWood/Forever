@@ -75,16 +75,16 @@ func TestHoverSpellConfig(t *testing.T) {
 	}
 	for _, want := range []string{
 		"`SpellConfig` of 20662 Execute (Rank 5)\n\n`spellData.Execute.Highest()`",
-		"| field | value | from |",
-		"| ActionID | `SpellID 20662` | row |",
-		"| Rank | `5` | row |",
-		"| SpellSchool | `SpellSchoolPhysical` | row |",
-		"| DefenseType | `DefenseTypeMelee` | row |",
-		"| ProcMask | `ProcMaskMeleeMHSpecial` | Melee(ProcMaskMeleeMHSpecial) |",
-		"| Cast.DefaultCast.GCD | `1.5s` | row |",
-		"| RageCost.Cost | `15` | row |",
-		"| DamageMultiplier | `1` | Melee(ProcMaskMeleeMHSpecial) |",
-		"| MaxRange | `5` | row |",
+		"---\n| field | value | from |",
+		"| **ActionID** | `SpellID 20662` | row |",
+		"| **Rank** | `5` | row |",
+		"| **SpellSchool** | `SpellSchoolPhysical` | row |",
+		"| **DefenseType** | `DefenseTypeMelee` | row |",
+		"| **ProcMask** | `ProcMaskMeleeMHSpecial` | Melee(ProcMaskMeleeMHSpecial) |",
+		"| **Cast.DefaultCast.GCD** | `1.5s` | row |",
+		"| **RageCost.Cost** | `15` | row |",
+		"| **DamageMultiplier** | `1` | Melee(ProcMaskMeleeMHSpecial) |",
+		"| **MaxRange** | `5` | row |",
 		"Assignments to the config after the call are not folded in.",
 	} {
 		if !strings.Contains(markdown, want) {
@@ -94,7 +94,7 @@ func TestHoverSpellConfig(t *testing.T) {
 
 	flags := ""
 	for _, line := range strings.Split(markdown, "\n") {
-		if strings.HasPrefix(line, "| Flags |") {
+		if strings.HasPrefix(line, "| **Flags** |") {
 			flags = line
 		}
 	}
@@ -119,8 +119,8 @@ func TestHoverSpellConfigAcrossLines(t *testing.T) {
 		t.Fatalf("no hover:\n%s", strings.Join(trace, "\n"))
 	}
 	for _, want := range []string{
-		"| ActionID | `SpellID 1680, Tag 2` | row, Tag(2) |",
-		"| ProcMask | `ProcMaskMeleeOHSpecial` | Melee(ProcMaskMeleeOHSpecial) |",
+		"| **ActionID** | `SpellID 1680, Tag 2` | row, Tag(2) |",
+		"| **ProcMask** | `ProcMaskMeleeOHSpecial` | Melee(ProcMaskMeleeOHSpecial) |",
 		"SpellFlagPassiveSpell",
 		"Proc()",
 	} {
