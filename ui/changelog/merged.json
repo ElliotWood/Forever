@@ -1,5 +1,23 @@
 [
 	{
+		"number": 354,
+		"title": "data: old Classic PvP pieces are in no set on Forever",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/354"
+	},
+	{
+		"number": 351,
+		"title": "core: let an off-GCD evaluation cast GCD spells during the 50ms idle wait",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/351"
+	},
+	{
+		"number": 348,
+		"title": "shaman: own totems give the client's 89 Agi / 53 Str, instant Lightning Bolt keeps the swing timer",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/348"
+	},
+	{
 		"number": 337,
 		"title": "db: items keep their school spell power (84 items); parse raceMask -1",
 		"mergedAt": "2026-09-22",
