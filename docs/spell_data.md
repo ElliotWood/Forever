@@ -1171,7 +1171,7 @@ was meant to be mechanical and moves a golden is a wrong port, not a new baselin
 14. **A gear proc is three calls, not one.** `ProcTrigger` for the listener, `AuraConfig` for the buff
     it applies and `ParseEffects` for what that buff does - the idiom `sim/warrior/items.go` uses for
     every set bonus and item buff the class owns.
-15. **`Melee` and `Magic` put the spell in the rotation; `Flags` does not.** A queued or stance-gated
+15. **`Melee` and `Magic` put the spell in the rotation; `Flags` does not.** A stance-gated
     ability takes `Flags` so the APL editor does not offer it, and a config that writes
     `ThreatMultiplier = 1` or `FlatThreatBonus = 0` after the resolver is writing what the resolver
     already wrote - keep it only where its review marker says the number is still to be measured.
