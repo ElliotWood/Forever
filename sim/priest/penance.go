@@ -16,6 +16,9 @@ const PenanceTicks = 3
 func (priest *Priest) registerPenanceSpell() {
 	rank := spellData.Penance.HighestRank()
 	bolt := spellData.PenanceTriggered.BySpellID(1316993)
+	// Each bolt is its own direct Holy hit (1316993, School Damage), so every one can crit.
+	boltCrits := bolt
+	boltCrits.PeriodicCanCrit = true
 
 	priest.RegisterSpell(core.SpellConfig{
 		ActionID:       core.ActionID{SpellID: rank.SpellID},
@@ -56,7 +59,7 @@ func (priest *Priest) registerPenanceSpell() {
 				dot.Snapshot(target, bolt.Direct.Damage(sim))
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, priestTickOutcome(boltCrits, dot))
 			},
 		},
 
