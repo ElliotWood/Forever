@@ -313,7 +313,7 @@ func (druid *Druid) IsBleeding(target *core.Unit) bool {
 
 // Berserk, new in Forever (client 417141): 3 minute cooldown (SpellCooldowns), and for 15 seconds
 // +100% critical strike chance on the Combo Point builders (effect 0). Its Mangle half (no
-// cooldown, up to 3 targets) is not modelled.
+// cooldown, up to 3 targets): the cooldown reset is in mangle.go, the cleave is not modelled.
 func (druid *Druid) applyBerserk() {
 	if !druid.Talents.Berserk {
 		return
@@ -326,7 +326,7 @@ func (druid *Druid) applyBerserk() {
 		FloatValue: 100,
 	})
 
-	aura := druid.RegisterAura(core.Aura{
+	druid.BerserkAura = druid.RegisterAura(core.Aura{
 		Label:    "Berserk",
 		ActionID: actionID,
 		Duration: time.Second * 15,
@@ -348,9 +348,9 @@ func (druid *Druid) applyBerserk() {
 			},
 		},
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
-			aura.Activate(sim)
+			druid.BerserkAura.Activate(sim)
 		},
-		RelatedSelfBuff: aura,
+		RelatedSelfBuff: druid.BerserkAura,
 	})
 
 	druid.AddMajorCooldown(core.MajorCooldown{

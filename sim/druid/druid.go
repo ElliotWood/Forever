@@ -64,7 +64,8 @@ type Druid struct {
 	FrenziedRegenerationAura *core.Aura
 	DemoralizingRoarAuras    core.AuraArray
 	FaerieFireAuras          core.AuraArray
-	MangleAuras              core.AuraArray
+	MangleAuras              core.AuraArray // never applied: Forever's Mangle has no debuff; the legacy cat rotation reads it
+	BerserkAura              *core.Aura
 	MoonkinFormAura          *core.Aura
 	EclipseAura              *core.Aura
 	ProwlAura                *core.Aura
