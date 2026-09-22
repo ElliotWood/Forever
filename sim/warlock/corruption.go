@@ -58,7 +58,7 @@ func (warlock *Warlock) registerCorruption() *core.Spell {
 	// 	},
 	// 	ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
 	// 		dot := spell.Dot(target)
-	// 		result := dot.Spell.CalcPeriodicDamage(sim, target, warlock.CorruptionTickBaseDamage, spell.OutcomeExpectedMagicHit)
+	// 		result := dot.Spell.CalcPeriodicDamage(sim, target, warlock.CorruptionTickBaseDamage*float64(tickCount), spell.OutcomeExpectedMagicHit)
 	// 		result.Damage /= dot.CalcTickPeriod().Round(time.Millisecond).Seconds()
 	// 		return result
 	// 	},

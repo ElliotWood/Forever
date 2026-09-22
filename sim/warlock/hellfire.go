@@ -6,8 +6,8 @@ import (
 
 var hellfireRank = spellData.Hellfire.Highest()
 
-// The dump's Periodic role for this family sits at effect position 2: position 1 is the
-// A_PERIODIC_TRIGGER_SPELL that fires the Hellfire Effect spell each tick, not the damage tick.
+// Effect 1 is the periodic trigger that fires the Hellfire Effect spell each tick; effect 2 is
+// the damage tick.
 var hellfireTick = hellfireRank.EffectN(2)
 var hellFireCoeff = hellfireTick.Coeff()
 
@@ -50,7 +50,6 @@ func (warlock *Warlock) registerHellfire() *core.Spell {
 	// 		BonusCoefficient:     hellFireCoeff,
 	//
 	// 		OnTick: func(sim *core.Simulation, _ *core.Unit, dot *core.Dot) {
-	// 			// Rolled once: the warlock burns exactly what it deals.
 	// 			tickDamage := hellfireTick.Average(core.CharacterLevel)
 	//
 	// 			resultSlice := dot.Spell.CalcPeriodicAoeDamage(sim, tickDamage, dot.Spell.OutcomeTickMagicHitNoHitCounter)
