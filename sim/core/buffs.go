@@ -1,7 +1,6 @@
 package core
 
 import (
-	"slices"
 	"time"
 
 	googleProto "google.golang.org/protobuf/proto"
@@ -22,14 +21,6 @@ const (
 // Exclusive category for flat stat buffs which don't stack with each other
 // e.g. Arcane Brilliance vs Scroll of Intellect.
 const StatBuffCategory = "StatBuff"
-
-type BuffConfig struct {
-	Label             string
-	ActionID          ActionID
-	Duration          time.Duration
-	Stats             []StatConfig
-	ExclusiveCategory string
-}
 
 type StatConfig struct {
 	Stat             stats.Stat
@@ -99,31 +90,6 @@ func registerExlusiveEffects(aura *Aura, config []StatConfig, exclusiveCategory 
 	}
 }
 
-// The caller states the action tag: -1 for a copy the build phase measures.
-func makeStatBuff(char *Character, config BuffConfig) *Aura {
-	if config.Label == "" {
-		panic("Buff without label.")
-	}
-
-	if ActionID.IsEmptyAction(config.ActionID) {
-		panic("Buff without ActionID")
-	}
-
-	baseAura := char.GetOrRegisterAura(Aura{
-		Label:      config.Label,
-		ActionID:   config.ActionID,
-		Duration:   TernaryDuration(config.Duration > 0, config.Duration, NeverExpires),
-		BuildPhase: Ternary(config.ActionID.Tag == -1, CharacterBuildPhaseBuffs, CharacterBuildPhaseNone),
-	})
-
-	if config.ExclusiveCategory != "" {
-		registerExlusiveEffects(baseAura, config.Stats, config.ExclusiveCategory)
-	} else {
-		registerStatEffect(baseAura, config.Stats)
-	}
-	return baseAura
-}
-
 // Applies buffs that affect individual players.
 func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto.PartyBuffs, individual *proto.IndividualBuffs) {
 	char := agent.GetCharacter()
@@ -171,41 +137,6 @@ func ApplyFixedShoutAura(char *Character, aura *Aura, category string) {
 	})
 
 	ApplyFixedUptimeAura(aura, 1, aura.Duration+1, -1)
-}
-
-func DraneiRacialAura(char *Character, caster bool) *Aura {
-	alliance := []proto.Race{
-		proto.Race_RaceDraenei,
-		proto.Race_RaceDwarf,
-		proto.Race_RaceGnome,
-		proto.Race_RaceHuman,
-		proto.Race_RaceNightElf,
-	}
-	if !slices.Contains(alliance, char.Race) {
-		return nil
-	}
-	var aura *Aura
-	if caster {
-		aura = makeStatBuff(char, BuffConfig{
-			Label:    "Inspiring Presence",
-			ActionID: ActionID{SpellID: 28878}.WithTag(-1),
-			Stats: []StatConfig{
-				{stats.SpellHitPercent, 1, false},
-			},
-			ExclusiveCategory: "Inspiring Presence",
-		})
-	} else {
-		aura = makeStatBuff(char, BuffConfig{
-			Label:    "Heroic Presence",
-			ActionID: ActionID{SpellID: 6562}.WithTag(-1),
-			Stats: []StatConfig{
-				{stats.PhysicalHitPercent, 1, false},
-			},
-			ExclusiveCategory: "Heroic Presence",
-		})
-	}
-
-	return MakePermanent(aura)
 }
 
 // func BlessingOfLight(char *Character) *Aura {

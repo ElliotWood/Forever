@@ -64,13 +64,6 @@ func applyRaceEffects(agent Agent) {
 	case proto.Race_RaceDraenei:
 		character.stats[stats.ShadowResistance] += 10
 
-		switch character.Class {
-		case proto.Class_ClassHunter, proto.Class_ClassPaladin, proto.Class_ClassWarrior:
-			MakePermanent(DraneiRacialAura(character, false))
-		case proto.Class_ClassMage, proto.Class_ClassPriest, proto.Class_ClassShaman:
-			MakePermanent(DraneiRacialAura(character, true))
-		}
-
 		character.RegisterSpell(SpellConfig{
 			ActionID:    ActionID{SpellID: 28880},
 			Flags:       SpellFlagAPL | SpellFlagHelpful | SpellFlagIgnoreModifiers,
