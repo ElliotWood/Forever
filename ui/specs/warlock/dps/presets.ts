@@ -1,99 +1,93 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
-import { defaultExposeWeaknessSettings, defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import AfflictionRot from './apls/affliction.apl.json';
 import BlankAPL from './apls/blank.apl.json';
-import DemoRot from './apls/demonology.apl.json';
-import DestroFireRot from './apls/destro_fire.apl.json';
-import DestroRot from './apls/destruction.apl.json';
+import DemonicPactRot from './apls/demonic_pact.apl.json';
+import ShadowAndFlameRot from './apls/destruction.apl.json';
+import DSRuinRot from './apls/ds_ruin.apl.json';
 import LaunchGear from './gear_sets/launch.gear.json';
 import McGear from './gear_sets/mc.gear.json';
 import PrebisGear from './gear_sets/prebis.gear.json';
 
-// Preset options for this spec.
-// Eventually we will import these values for the raid sim too, so its good to
-// keep them in a separate file.
+// Defaults are master's ui/warlock (the Forever site before the switch), on our Forever APLs.
 
 export const BLANK_APL = PresetUtils.makePresetAPLRotation('Blank', BlankAPL);
 
-// Rotations
-export const AfflictionAPL = PresetUtils.makePresetAPLRotation('Affliction', AfflictionRot);
-export const DemoAPL = PresetUtils.makePresetAPLRotation('Demonology', DemoRot);
-export const DestroAPL = PresetUtils.makePresetAPLRotation('Destruction', DestroRot);
-export const DestroFireAPL = PresetUtils.makePresetAPLRotation('Destruction (Fire)', DestroFireRot);
+// Rotations, in master's order. Summoning and sacrificing the demon is the sacrificeSummon
+// option here, not a prepull cast.
+export const RotationDemonicPact = PresetUtils.makePresetAPLRotation('Demonic Pact', DemonicPactRot);
+export const RotationAffliction = PresetUtils.makePresetAPLRotation('Affliction', AfflictionRot);
+export const RotationDSRuin = PresetUtils.makePresetAPLRotation('DS/Ruin', DSRuinRot);
+export const RotationShadowAndFlame = PresetUtils.makePresetAPLRotation('Shadow and Flame', ShadowAndFlameRot);
+export const APLPresets = [RotationDemonicPact, RotationAffliction, RotationDSRuin, RotationShadowAndFlame];
 
-// Defaults
+// The Imp, sacrificed by the DS/Ruin default build (master's DS/Ruin rotation sacrifices it).
 export const DefaultOptions = WarlockOptions.create({
 	classOptions: {
-		armor: WarlockOptions_Armor.FelArmor,
-		curseOptions: WarlockOptions_CurseOptions.Recklessness,
+		armor: WarlockOptions_Armor.DemonArmor,
+		curseOptions: WarlockOptions_CurseOptions.Elements,
 		sacrificeSummon: true,
+		summon: WarlockOptions_Summon.Imp,
+	},
+});
+
+// Without pet talents the Succubus out-damages the Imp, so the Affliction builds run one.
+export const AfflictionOptions = WarlockOptions.create({
+	classOptions: {
+		armor: WarlockOptions_Armor.DemonArmor,
+		curseOptions: WarlockOptions_CurseOptions.Elements,
 		summon: WarlockOptions_Summon.Succubus,
 	},
 });
 
+// Demonic Pact keeps the Succubus out for Master Demonologist and Soul Link. Master also
+// sacrifices a Voidwalker beside it; one demon is all this engine models.
+export const DemonicPactOptions = AfflictionOptions;
+
 export const DefaultConsumables = ConsumesSpec.create({
-	flaskId: 22866, // Flask of Pure Death
-	foodId: 27657, // Blackened Basilisk
+	flaskId: 13512, // Flask of Supreme Power
+	battleElixirId: 13454, // Greater Arcane Elixir
+	guardianElixirId: 20007, // Mageblood Elixir
+	foodId: 18254, // Runn Tum Tuber Surprise
+	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune
-	mhImbueId: 25122, // Brilliant Wizard Oil
-	potId: 22839, // Destruction Potion
-	explosiveId: 30217,
-	petScrollAgi: true,
-	petScrollStr: true,
 });
 
 export const OtherDefaults = {
-	distanceFromTarget: 20,
-	profession1: Profession.Engineering,
+	reactionTime: 200, // master's default
+	distanceFromTarget: 25,
+	profession1: Profession.Enchanting,
 	profession2: Profession.Tailoring,
+	channelClipDelay: 150,
+	race: Race.RaceGnome,
 };
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(),
 	arcaneBrilliance: true,
+	divineSpirit: TristateEffect.TristateEffectRegular,
 	giftOfTheWild: TristateEffect.TristateEffectImproved,
 	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	divineSpirit: TristateEffect.TristateEffectImproved,
 });
 
+// Master opens as Alliance, so the Horde totems its presets name are not applied.
 export const DefaultPartyBuffs = PartyBuffs.create({
-	manaSpringTotem: TristateEffect.TristateEffectRegular,
+	fireResistanceAura: true,
 	moonkinAura: TristateEffect.TristateEffectRegular,
-	totemOfWrath: 1,
-	wrathOfAirTotem: TristateEffect.TristateEffectImproved,
-	eyeOfTheNight: true,
-	chainOfTheTwilightOwl: true,
-	drums: Drums.LesserDrumsOfBattle,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	shadowPriestDps: 0,
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	...defaultExposeWeaknessSettings(),
-	...defaultImprovedShadowBoltSettings(),
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
-	judgementOfWisdom: true,
-	misery: true,
-	shadowWeaving: true,
-	sunderArmor: true,
-	screech: true,
-	faerieFire: TristateEffect.TristateEffectImproved,
-	curseOfRecklessness: true,
-	shadowEmbrace: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
-	bloodFrenzy: true,
-	giftOfArthas: true,
-	mangle: true,
 	exposeArmor: TristateEffect.TristateEffectImproved,
-	huntersMark: TristateEffect.TristateEffectImproved,
+	faerieFire: TristateEffect.TristateEffectRegular,
+	judgementOfWisdom: true,
+	sunderArmor: true,
 });
 
 // Talent presets, from master's ui/warlock spec.
@@ -125,6 +119,31 @@ export const TalentPresets = [
 	TalentsDSRuinPandemic,
 	TalentsShadowAndFlame,
 ];
+export const DefaultTalents = TalentsDSRuin;
+
+// The community builds with the pet setup and rotation each one is measured with.
+const buildOptions = (name: string, specOptions: WarlockOptions) => ({ settings: { name, specOptions } });
+export const BuildDemonicPact = PresetUtils.makePresetBuild('Demonic Pact 2/31/18', {
+	talents: TalentsPactOptimised,
+	rotation: RotationDemonicPact,
+	...buildOptions('Demonic Pact 2/31/18', DemonicPactOptions),
+});
+export const BuildDeepAffliction = PresetUtils.makePresetBuild('Deep Affliction 35/0/16', {
+	talents: TalentsDeepAffliction,
+	rotation: RotationAffliction,
+	...buildOptions('Deep Affliction 35/0/16', AfflictionOptions),
+});
+export const BuildDSRuinPandemic = PresetUtils.makePresetBuild('DS/Ruin Pandemic 24/11/16', {
+	talents: TalentsDSRuinPandemic,
+	rotation: RotationDSRuin,
+	...buildOptions('DS/Ruin Pandemic 24/11/16', DefaultOptions),
+});
+export const BuildShadowAndFlame = PresetUtils.makePresetBuild('Shadow and Flame 13/11/27', {
+	talents: TalentsShadowAndFlame,
+	rotation: RotationShadowAndFlame,
+	...buildOptions('Shadow and Flame 13/11/27', DefaultOptions),
+});
+export const BuildPresets = [BuildDemonicPact, BuildDeepAffliction, BuildDSRuinPandemic, BuildShadowAndFlame];
 
 // Our Forever sim's gear presets (master ui/<spec>/gear_sets).
 export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);

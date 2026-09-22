@@ -1,8 +1,7 @@
 import * as other_inputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
-import { APLRotation, APLRotation_Type } from '@generated/proto/apl';
+import { APLRotation } from '@generated/proto/apl';
 import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
-import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
@@ -81,14 +80,11 @@ export default defineSpec<Spec.SpecHunter>({
 				postCapEPs: [0],
 			}),
 		],
-		rotationType: APLRotation_Type.TypeAPL,
 		other: Presets.OtherDefaults,
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: SavedTalents.create({
-			talentsString: '-3050552301503151-50024001',
-		}),
+		talents: Presets.TalentsP1.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -126,19 +122,13 @@ export default defineSpec<Spec.SpecHunter>({
 		// Preset talents that the user can quickly select.
 		talents: Presets.TalentPresets,
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.BeastMasteryRotation, Presets.MarksmanshipRotation, Presets.SurvivalRotation],
+		rotations: [Presets.MarksmanshipRotation],
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GEAR_PRESETS,
 	},
 
-	// The build decides the rotation: Sniper Shot is Marksmanship's capstone and Summon Hawk is
-	// Beast Mastery's, so each tree gets the list that uses its own.
-	autoRotation: (player: Player<Spec.SpecHunter>): APLRotation => {
-		const talents = player.getTalents();
-		if (talents.sniperShot) return APLRotation.clone(Presets.MarksmanshipRotation.rotation.rotation!);
-		if (talents.summonHawk) return APLRotation.clone(Presets.BeastMasteryRotation.rotation.rotation!);
-		return APLRotation.clone(Presets.SurvivalRotation.rotation.rotation!);
-	},
+	// Master's one hunter rotation, whatever the talents.
+	autoRotation: (_player: Player<Spec.SpecHunter>): APLRotation => APLRotation.clone(Presets.MarksmanshipRotation.rotation.rotation!),
 
 	reforge: {},
 });

@@ -26,12 +26,13 @@ export interface SimShellProps {
 	sim: Sim;
 	className: string;
 	spec: PlayerSpec<any>;
+	title?: string;
 	noticeText?: string;
 	knownIssues: ReadonlyArray<ReactNode>;
 	onOpenSettings: () => void;
 }
 
-export const SimShell = ({ domRef, host, sim, className, spec, noticeText, knownIssues, onOpenSettings }: SimShellProps) => {
+export const SimShell = ({ domRef, host, sim, className, spec, title, noticeText, knownIssues, onOpenSettings }: SimShellProps) => {
 	const root = useRef<HTMLDivElement>(null);
 	const sidebarActions = useRef<HTMLDivElement>(null);
 	const main = useRef<HTMLElement>(null);
@@ -77,7 +78,7 @@ export const SimShell = ({ domRef, host, sim, className, spec, noticeText, known
 							className="sticky -top-px z-sidebar flex h-dvh flex-1 flex-col items-stretch bg-background max-lg:relative max-lg:top-0 max-lg:h-auto max-lg:min-h-auto max-lg:w-full"
 							data-testid="sim-sidebar">
 							<div className="z-sim-title h-sim-header-plus border-b border-b-border max-lg:sticky max-lg:-top-px" data-testid="sim-title">
-								<SimTitleDropdown currentSpec={spec} />
+								<SimTitleDropdown currentSpec={spec} title={title} />
 							</div>
 							<div
 								className="flex flex-1 flex-col overflow-y-auto p-6 max-xxl:px-4 max-lg:min-h-0 max-lg:px-2 max-lg:py-4 [&>*:not(:last-child)]:mb-6"

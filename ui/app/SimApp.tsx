@@ -46,6 +46,7 @@ export const SimApp = <SpecType extends Spec>({ player, def }: SimAppProps<SpecT
 						sim={player.sim}
 						className={def.className}
 						spec={player.getPlayerSpec()}
+						title={def.pageTitle}
 						knownIssues={knownIssuesFor(player.getPlayerSpec().launch, def.knownIssues)}
 						onOpenSettings={() => {
 							trackPageView('Options', '/settings-menu');

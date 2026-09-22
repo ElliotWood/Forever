@@ -68,7 +68,7 @@ export default defineSpec<Spec.SpecWarlock>({
 		consumables: Presets.DefaultConsumables,
 
 		// Default talents.
-		talents: Presets.TalentsDSRuin.data,
+		talents: Presets.DefaultTalents.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 
@@ -113,14 +113,25 @@ export default defineSpec<Spec.SpecWarlock>({
 		// Preset talents that the user can quickly select.
 		talents: Presets.TalentPresets,
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.AfflictionAPL, Presets.DemoAPL, Presets.DestroAPL, Presets.DestroFireAPL],
+		rotations: Presets.APLPresets,
 
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GEAR_PRESETS,
+		builds: Presets.BuildPresets,
 	},
 
-	autoRotation: (_player: Player<Spec.SpecWarlock>): APLRotation => {
-		return Presets.DestroAPL.rotation.rotation!;
+	// Master's rule: Demonic Pact keeps a demon out beside the sacrifice, so it has its own rotation.
+	// DS/Ruin is a rotation for a sacrificed pet, whatever tree the rest of the points sit in, and
+	// Shadow and Flame adds Shadowburn on cooldown to it; otherwise the deepest tree picks.
+	autoRotation: (player: Player<Spec.SpecWarlock>): APLRotation => {
+		const talents = player.getTalents();
+		if (talents.demonicPact) return Presets.RotationDemonicPact.rotation.rotation!;
+		if (talents.demonicSacrifice && talents.ruin) {
+			return (talents.shadowAndFlame ? Presets.RotationShadowAndFlame : Presets.RotationDSRuin).rotation.rotation!;
+		}
+		const points = player.getTalentTreePoints();
+		const tree = points.indexOf(Math.max(...points));
+		return [Presets.RotationAffliction, Presets.RotationDemonicPact, Presets.RotationDSRuin][tree].rotation.rotation!;
 	},
 	sections: [WarlockInputs.CursesSection],
 

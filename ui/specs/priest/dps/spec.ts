@@ -73,9 +73,9 @@ export default defineSpec<Spec.SpecDpsPriest>({
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSchoolHitPercentShadow, 16);
 		})(),
 		// Default consumes settings.
-		consumables: Presets.DefaultConsumables,
+		consumables: Presets.ShadowConsumables,
 		// Default talents.
-		talents: Presets.ShadowTalents.data,
+		talents: Presets.TalentsP1Shadow.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
@@ -87,7 +87,7 @@ export default defineSpec<Spec.SpecDpsPriest>({
 
 		debuffs: Presets.DefaultDebuffs,
 
-		other: Presets.OtherDefaults,
+		other: Presets.ShadowOtherDefaults,
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.
@@ -108,8 +108,8 @@ export default defineSpec<Spec.SpecDpsPriest>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [Presets.ShadowTalents, Presets.SmiteTalents],
-		rotations: [Presets.ROTATION_PRESET_SHADOW, Presets.ROTATION_PRESET_SMITE],
+		talents: [Presets.TalentsP1Shadow, Presets.ShadowTalents],
+		rotations: [Presets.ROTATION_PRESET_SHADOW],
 		// Preset gear configurations that the user can quickly select.
 		gear: Presets.GEAR_PRESETS,
 	},
