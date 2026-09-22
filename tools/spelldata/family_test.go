@@ -31,7 +31,8 @@ func TestFamilyIndex(t *testing.T) {
 	}
 }
 
-// A talent is one spell whose ranks are a curve, so the index is one line naming the rank count.
+// A talent is one spell whose ranks are a curve, so the index is one line per rank of the ladder
+// Talent builds, with the value the curve gives effect 1 at that rank.
 func TestFamilyIndexTalent(t *testing.T) {
 	var out bytes.Buffer
 	if err := run([]string{"-family", "warrior/Cruelty"}, &out); err != nil {
@@ -39,11 +40,42 @@ func TestFamilyIndexTalent(t *testing.T) {
 	}
 
 	lines := strings.Split(out.String(), "\n")
-	if lines[1] != "12320    Cruelty           Rank(n), n up to 5" {
-		t.Fatalf("the rank index is %q", lines[1])
+	want := []string{
+		"warrior spellData.Cruelty",
+		"12320    Cruelty  rank 1 of 5 Rank(1)   effect 1 = 1",
+		"12320    Cruelty  rank 2 of 5 Rank(2)   effect 1 = 2",
+		"12320    Cruelty  rank 3 of 5 Rank(3)   effect 1 = 3",
+		"12320    Cruelty  rank 4 of 5 Rank(4)   effect 1 = 4",
+		"12320    Cruelty  rank 5 of 5 Highest() effect 1 = 5",
+		"",
+		"12320 Cruelty (rank 5 of 5) warrior spellData.Cruelty.Rank(n), n up to 5",
 	}
-	if !strings.HasPrefix(lines[3], "12320 Cruelty ") {
-		t.Fatalf("the card is %q", lines[3])
+	for i, line := range want {
+		if i >= len(lines) || lines[i] != line {
+			t.Fatalf("line %d is %q, want %q", i+1, lines[i], line)
+		}
+	}
+}
+
+func TestFamilyTalentJSON(t *testing.T) {
+	var out bytes.Buffer
+	if err := run([]string{"-family", "warrior/ImprovedRend", "-json"}, &out); err != nil {
+		t.Fatal(err)
+	}
+
+	var got familyJSON
+	if err := json.Unmarshal(out.Bytes(), &got); err != nil {
+		t.Fatal(err)
+	}
+	values := make([]string, 0, len(got.Ranks))
+	for _, rank := range got.Ranks {
+		values = append(values, rank.Value)
+	}
+	if strings.Join(values, ", ") != "effect 1 = 12, effect 1 = 23, effect 1 = 35" {
+		t.Errorf("the ranks read %v", values)
+	}
+	if got.Highest.Title != "12286 Improved Rend (rank 3 of 3)" {
+		t.Errorf("the highest rank is titled %q", got.Highest.Title)
 	}
 }
 
@@ -115,6 +147,45 @@ func TestExpr(t *testing.T) {
 		}
 		if got.Expr != c.expr {
 			t.Errorf("%s echoes %q", c.expr, got.Expr)
+		}
+	}
+}
+
+// A talent rank is the rank Talent builds from the curve, so every accessor after it reads what the sim
+// reads at that rank rather than the store's base row. Improved Rend's curve is not linear, and its base
+// row states 15, which no rank has.
+func TestExprTalentRank(t *testing.T) {
+	cases := map[string]string{
+		"spellData.Cruelty.Rank(1).EffectN(1).BaseValue()":                 "1",
+		"spellData.Cruelty.Rank(3).EffectN(1).BaseValue()":                 "3",
+		"spellData.Cruelty.Rank(5).EffectN(1).BaseValue()":                 "5",
+		"spellData.Cruelty.ByID(12320).EffectN(1).BaseValue()":             "1",
+		"spellData.ImprovedRend.Rank(1).EffectN(1).BaseValue()":            "12",
+		"spellData.ImprovedRend.Rank(2).EffectN(1).BaseValue()":            "23",
+		"spellData.ImprovedRend.Highest().EffectN(1).BaseValue()":          "35",
+		"spellData.DualWieldSpecialization.Rank(2).EffectN(2).BaseValue()": "40",
+	}
+	for expr, want := range cases {
+		if got := evalJSON(t, expr); got.Value != want {
+			t.Errorf("%s = %s, want %s", expr, got.Value, want)
+		}
+	}
+
+	if got := evalJSON(t, "spellData.Cruelty.Rank(3)"); got.Title != "12320 Cruelty (rank 3 of 5)" {
+		t.Errorf("the rank is titled %q", got.Title)
+	}
+
+	var out bytes.Buffer
+	if err := run([]string{"-expr", "spellData.Cruelty.Rank(3).EffectN(1)", "-package", "warrior"}, &out); err != nil {
+		t.Fatal(err)
+	}
+	for _, want := range []string{
+		"spellData.Cruelty.Rank(3).EffectN(1) = effect 1 of 12320 Cruelty (rank 3 of 5)",
+		"12320 Cruelty (rank 3 of 5) warrior spellData.Cruelty.Rank(n), n up to 5",
+		"E_APPLY_AURA A_MOD_WEAPON_CRIT_PERCENT base=3 ",
+	} {
+		if !strings.Contains(out.String(), want) {
+			t.Errorf("the text lacks %q:\n%s", want, out.String())
 		}
 	}
 }

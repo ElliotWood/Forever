@@ -63,6 +63,10 @@ type exprResult struct {
 	spell      *spelldata.Spell
 	readEffect int
 
+	// The talent rank the spell is, and how many the talent has; 0 on a row that is not one.
+	rank  int32
+	ranks int32
+
 	value     string
 	doc       string
 	accessors []string
@@ -85,16 +89,14 @@ func evalExpr(index map[string]*ladderFamily, expr, pkg string) (result *exprRes
 	}
 
 	head, used := headExpr(root, segments)
-	_, id, err := resolveExpr(index, head, pkg)
+	picked, err := resolveExpr(index, head, pkg)
 	if err != nil {
 		return nil, err
 	}
-	s := spelldata.Find(id)
-	if s == spelldata.Nil {
-		return nil, fmt.Errorf("spell %d is not in the store", id)
-	}
+	s := picked.spell
 
-	res := &exprResult{kind: kindSpell, trail: head, spell: s, value: strconv.Itoa(int(id)), accessors: []string{}}
+	res := &exprResult{kind: kindSpell, trail: head, spell: s, value: strconv.Itoa(int(s.ID)),
+		rank: picked.rank, ranks: picked.family.talentRanks, accessors: []string{}}
 	current := reflect.ValueOf(s)
 
 	for _, seg := range segments[used:] {
@@ -110,6 +112,9 @@ func evalExpr(index map[string]*ladderFamily, expr, pkg string) (result *exprRes
 		case *spelldata.Spell:
 			if value == spelldata.Nil {
 				return nil, fmt.Errorf("%s answers a spell the store does not carry", res.trail)
+			}
+			if value != res.spell {
+				res.rank, res.ranks = 0, 0
 			}
 			res.kind, res.spell, res.readEffect = kindSpell, value, 0
 		case *spelldata.Effect:
@@ -361,6 +366,10 @@ func formatValue(v reflect.Value) (string, error) {
 		return number(v.Float()), nil
 	}
 	return "", fmt.Errorf("a %s is not a value to read", v.Type())
+}
+
+func (r *exprResult) title() string {
+	return rankTitle(r.spell, r.rank, r.ranks)
 }
 
 // Where an effect sits in the row the chain came through, counted the way EffectN counts. 0 for an

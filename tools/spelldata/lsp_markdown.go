@@ -67,14 +67,21 @@ func effectTable(md *strings.Builder, effects []Line, read, onlyEffect int) {
 func familyMarkdown(f *ladderFamily) string {
 	var md strings.Builder
 	fmt.Fprintf(&md, "**%s**\n\n", f.key())
-	md.WriteString("| id | name | rank | call |\n|---|---|---|---|\n")
-	for _, row := range familyRows(f) {
-		fmt.Fprintf(&md, "| %d | %s | %s | %s |\n", row.ID, cell(row.Name), cell(row.Rank), codeCell(row.Accessor))
+	rows := familyRows(f)
+	if len(rows) > 0 && rows[0].Value != "" {
+		md.WriteString("| id | name | rank | call | value |\n|---|---|---|---|---|\n")
+		for _, row := range rows {
+			fmt.Fprintf(&md, "| %d | %s | %s | %s | %s |\n", row.ID, cell(row.Name), cell(row.Rank), codeCell(row.Accessor), cell(row.Value))
+		}
+	} else {
+		md.WriteString("| id | name | rank | call |\n|---|---|---|---|\n")
+		for _, row := range rows {
+			fmt.Fprintf(&md, "| %d | %s | %s | %s |\n", row.ID, cell(row.Name), cell(row.Rank), codeCell(row.Accessor))
+		}
 	}
 	md.WriteString("\n")
-	s := spelldata.Find(f.highest())
-	if s != spelldata.Nil {
-		spellCard(&md, s, "**"+title(s)+"**", 0)
+	if highest, err := familyHighest(f); err == nil {
+		spellCard(&md, highest.spell, "**"+highest.title()+"**", 0)
 	}
 	return md.String()
 }
@@ -86,10 +93,10 @@ func exprMarkdown(result *exprResult, hover chainHover) string {
 
 	switch result.kind {
 	case kindSpell:
-		spellCard(&md, s, fmt.Sprintf("`%s` = %s", hover.label, title(s)), 0)
+		spellCard(&md, s, fmt.Sprintf("`%s` = %s", hover.label, result.title()), 0)
 
 	case kindEffect:
-		fmt.Fprintf(&md, "`%s` = **%s** of %s\n\n", called, result.value, title(s))
+		fmt.Fprintf(&md, "`%s` = **%s** of %s\n\n", called, result.value, result.title())
 		fmt.Fprintf(&md, "`%s`\n", result.trail)
 		if result.readEffect > 0 {
 			effectTable(&md, effectLines(s), result.readEffect, result.readEffect)
@@ -112,7 +119,7 @@ func exprMarkdown(result *exprResult, hover chainHover) string {
 		if hover.segment && result.doc != "" {
 			fmt.Fprintf(&md, "%s\n\n", result.doc)
 		}
-		spellCard(&md, s, "**"+title(s)+"**", result.readEffect)
+		spellCard(&md, s, "**"+result.title()+"**", result.readEffect)
 	}
 	return md.String()
 }

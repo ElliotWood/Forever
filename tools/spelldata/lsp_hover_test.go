@@ -139,6 +139,29 @@ func TestHoverValue(t *testing.T) {
 	wantHover(t, executeGo, "executeBaseDamage +", 4, "`executeBaseDamage` = **600**")
 }
 
+const crueltyGo = `package warrior
+
+func (warrior *Warrior) applyCruelty() {
+	crueltyRank := spellData.Cruelty.Rank(3)
+	crueltyCrit := crueltyRank.EffectN(1).BaseValue()
+}
+`
+
+// A talent rank hovers as the rank Talent builds from the curve, titled with its rank.
+func TestHoverTalentRank(t *testing.T) {
+	wantHover(t, crueltyGo, "crueltyRank :=", 4,
+		"`crueltyRank` = 12320 Cruelty (rank 3 of 5)",
+		"| 1 | +3% physical crit | `E_APPLY_AURA A_MOD_WEAPON_CRIT_PERCENT base=3 target=[1,0]` |")
+	wantHover(t, crueltyGo, "crueltyCrit :=", 4,
+		"`crueltyCrit` = **3**\n\n`spellData.Cruelty.Rank(3).EffectN(1).BaseValue()`",
+		"**12320 Cruelty (rank 3 of 5)**",
+		"| 1 ▶ | +3% physical crit |")
+	wantHover(t, crueltyGo, "Cruelty.Rank", 3,
+		"**warrior/Cruelty**",
+		"| 12320 | Cruelty | rank 3 of 5 | `Rank(3)` | effect 1 = 3 |",
+		"**12320 Cruelty (rank 5 of 5)**")
+}
+
 func TestHoverSegments(t *testing.T) {
 	wantHover(t, executeGo, "EffectN(1).Average", 2,
 		"`EffectN(1)` = **effect 1** of 20662 Execute (Rank 5)",

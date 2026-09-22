@@ -57,45 +57,92 @@ func findFamily(index map[string]*ladderFamily, spec, pkg string) (*ladderFamily
 // without the `spellData.` the class files write, and one of the three accessors that names a rank.
 var exprPattern = regexp.MustCompile(`^(?:spellData\.)?(\w+)\.(?:(Highest)\(\)|(Rank)\((\d+)\)|(ByID)\((\d+)\))$`)
 
-// The id a ladder call names.
-func resolveExpr(index map[string]*ladderFamily, expr, pkg string) (*ladderFamily, int32, error) {
+// The row a ladder call reaches, and for a talent the rank it reads, counted from 1. A talent's row is
+// the rank Talent builds from the curve, not the store's base row.
+type pick struct {
+	family *ladderFamily
+	spell  *spelldata.Spell
+	rank   int32
+}
+
+func resolveExpr(index map[string]*ladderFamily, expr, pkg string) (pick, error) {
 	match := exprPattern.FindStringSubmatch(strings.TrimSpace(expr))
 	if match == nil {
-		return nil, 0, fmt.Errorf("%q is not a ladder call: write spellData.<Family>.Highest(), .Rank(n) or .ByID(id)", expr)
+		return pick{}, fmt.Errorf("%q is not a ladder call: write spellData.<Family>.Highest(), .Rank(n) or .ByID(id)", expr)
 	}
 
 	family, err := findFamily(index, match[1], pkg)
 	if err != nil {
-		return nil, 0, err
+		return pick{}, err
 	}
 
+	var id, rank int32
 	switch {
 	case match[2] != "":
-		return family, family.ranks[len(family.ranks)-1].id, nil
+		id, rank = family.highest(), family.rankCount()
 
 	case match[3] != "":
 		n, err := strconv.ParseInt(match[4], 10, 32)
 		if err != nil {
-			return nil, 0, err
+			return pick{}, err
 		}
-		id, ok := family.rankID(int32(n))
+		found, ok := family.rankID(int32(n))
 		if !ok {
-			return nil, 0, fmt.Errorf("%s spellData.%s has %d ranks, not rank %d",
+			return pick{}, fmt.Errorf("%s spellData.%s has %d ranks, not rank %d",
 				family.pkg, family.field, family.rankCount(), n)
 		}
-		return family, id, nil
+		id, rank = found, int32(n)
 
 	default:
-		id, err := strconv.ParseInt(match[6], 10, 32)
+		n, err := strconv.ParseInt(match[6], 10, 32)
 		if err != nil {
-			return nil, 0, err
+			return pick{}, err
 		}
-		if !family.carries(int32(id)) {
-			return nil, 0, fmt.Errorf("%s spellData.%s has no rank with id %d",
-				family.pkg, family.field, id)
+		if !family.carries(int32(n)) {
+			return pick{}, fmt.Errorf("%s spellData.%s has no rank with id %d",
+				family.pkg, family.field, n)
 		}
-		return family, int32(id), nil
+		// Ladder.ByID answers the first rank that carries the id, which on a talent is rank 1.
+		id, rank = int32(n), 1
 	}
+
+	if family.talentRanks == 0 {
+		s := spelldata.Find(id)
+		if s == spelldata.Nil {
+			return pick{}, fmt.Errorf("spell %d is not in the store", id)
+		}
+		return pick{family: family, spell: s}, nil
+	}
+
+	ladder, err := family.talentLadder()
+	if err != nil {
+		return pick{}, err
+	}
+	return pick{family: family, spell: ladder.Rank(rank), rank: rank}, nil
+}
+
+// The ladder the class file builds for a talent. Talent panics on a spell the store does not carry and
+// on a curve whose rank count disagrees with the talent's, and that panic is answered as an error.
+func (f *ladderFamily) talentLadder() (ladder spelldata.Ladder, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+	return spelldata.Talent(f.ranks[0].id, f.talentRanks), nil
+}
+
+func (p pick) title() string {
+	return rankTitle(p.spell, p.rank, p.family.talentRanks)
+}
+
+// The heading of a row a ladder reached: a talent's rank is not the store's rank column, so it is
+// stated here. A rank of 0 is a row that is not a talent's rank.
+func rankTitle(s *spelldata.Spell, rank, ranks int32) string {
+	if rank == 0 {
+		return title(s)
+	}
+	return fmt.Sprintf("%s (rank %d of %d)", title(s), rank, ranks)
 }
 
 func (f *ladderFamily) rankCount() int32 {
@@ -134,6 +181,7 @@ type familyRankJSON struct {
 	Name     string `json:"name"`
 	Rank     string `json:"rank"`
 	Accessor string `json:"accessor"`
+	Value    string `json:"value,omitempty"`
 }
 
 type familyJSON struct {
@@ -145,6 +193,12 @@ type familyJSON struct {
 // The rank index, with each id's name and rank read out of the store. An id the store does not carry
 // says so in place of a name rather than stopping the listing, since the ladder is still worth reading.
 func familyRows(f *ladderFamily) []familyRankJSON {
+	if f.talentRanks > 0 {
+		if rows, err := talentRows(f); err == nil {
+			return rows
+		}
+	}
+
 	rows := make([]familyRankJSON, 0, len(f.ranks))
 	for _, rank := range f.ranks {
 		row := familyRankJSON{ID: rank.id, Accessor: rank.accessor, Name: "not in the store"}
@@ -156,17 +210,69 @@ func familyRows(f *ladderFamily) []familyRankJSON {
 	return rows
 }
 
+// One row per rank of the talent's ladder, with effect 1's value where the curve changes it by rank.
+func talentRows(f *ladderFamily) ([]familyRankJSON, error) {
+	ladder, err := f.talentLadder()
+	if err != nil {
+		return nil, err
+	}
+
+	varies := false
+	ladder.Each(func(rank int32, s *spelldata.Spell) {
+		varies = varies || s.EffectN(1).BasePoints != ladder.Rank(1).EffectN(1).BasePoints
+	})
+
+	rows := make([]familyRankJSON, 0, ladder.Len())
+	ladder.Each(func(rank int32, s *spelldata.Spell) {
+		row := familyRankJSON{
+			ID:       s.ID,
+			Name:     s.Name,
+			Rank:     fmt.Sprintf("rank %d of %d", rank, ladder.Len()),
+			Accessor: fmt.Sprintf("Rank(%d)", rank),
+		}
+		if rank == ladder.Len() {
+			row.Accessor = "Highest()"
+		}
+		if varies {
+			row.Value = "effect 1 = " + number(s.EffectN(1).BasePoints)
+		}
+		rows = append(rows, row)
+	})
+	return rows, nil
+}
+
+// The rank a bare Highest() reaches.
+func familyHighest(f *ladderFamily) (pick, error) {
+	if f.talentRanks == 0 {
+		s := spelldata.Find(f.highest())
+		if s == spelldata.Nil {
+			return pick{}, fmt.Errorf("spell %d is not in the store", f.highest())
+		}
+		return pick{family: f, spell: s}, nil
+	}
+	ladder, err := f.talentLadder()
+	if err != nil {
+		return pick{}, err
+	}
+	return pick{family: f, spell: ladder.Highest(), rank: ladder.Len()}, nil
+}
+
 func writeFamilyText(out io.Writer, f *ladderFamily) {
 	rows := familyRows(f)
 
-	width := 0
+	width, rankWidth := 0, 8
 	for _, row := range rows {
 		width = max(width, len(row.Name))
+		rankWidth = max(rankWidth, len(row.Rank))
 	}
 
 	fmt.Fprintf(out, "%s spellData.%s\n", f.pkg, f.field)
 	for _, row := range rows {
-		fmt.Fprintf(out, "%-8d %-*s  %-8s %s\n", row.ID, width, row.Name, row.Rank, row.Accessor)
+		if row.Value == "" {
+			fmt.Fprintf(out, "%-8d %-*s  %-*s %s\n", row.ID, width, row.Name, rankWidth, row.Rank, row.Accessor)
+			continue
+		}
+		fmt.Fprintf(out, "%-8d %-*s  %-*s %-9s %s\n", row.ID, width, row.Name, rankWidth, row.Rank, row.Accessor, row.Value)
 	}
 	fmt.Fprintln(out)
 }

@@ -202,21 +202,23 @@ func runFamily(out io.Writer, opts options) error {
 		return err
 	}
 
-	s := spelldata.Find(family.highest())
-	if s == spelldata.Nil {
-		return fmt.Errorf("spell %d is not in the store", family.highest())
+	highest, err := familyHighest(family)
+	if err != nil {
+		return err
 	}
 
 	if opts.json {
+		top := asJSON(highest.spell)
+		top.Title = highest.title()
 		return writeJSON(out, familyJSON{
 			Family:  family.key(),
 			Ranks:   familyRows(family),
-			Highest: asJSON(s),
+			Highest: top,
 		})
 	}
 
 	writeFamilyText(out, family)
-	writeText(out, s, 0)
+	writeTitledText(out, highest.title(), highest.spell, 0)
 	return nil
 }
 
@@ -227,8 +229,10 @@ func runExpr(out io.Writer, opts options) error {
 	}
 
 	if opts.json {
+		row := asJSON(result.spell)
+		row.Title = result.title()
 		return writeJSON(out, exprJSON{
-			spellJSON:  asJSON(result.spell),
+			spellJSON:  row,
 			Expr:       opts.expr,
 			Resolved:   result.spell.ID,
 			Kind:       result.kind,
@@ -291,7 +295,7 @@ func writeExprText(out io.Writer, result *exprResult, expr string) {
 	case kindSpell:
 		fmt.Fprintf(out, "%s = %s\n\n", expr, result.value)
 	case kindEffect:
-		fmt.Fprintf(out, "%s = %s of %s\n\n", result.trail, result.value, title(result.spell))
+		fmt.Fprintf(out, "%s = %s of %s\n\n", result.trail, result.value, result.title())
 	default:
 		fmt.Fprintf(out, "%s = %s\n\n", result.trail, result.value)
 	}
@@ -314,7 +318,7 @@ func writeExprText(out io.Writer, result *exprResult, expr string) {
 		fmt.Fprintln(out)
 	}
 
-	writeText(out, result.spell, result.readEffect)
+	writeTitledText(out, result.title(), result.spell, result.readEffect)
 }
 
 // The rank a caller means out of several rows with one name: the highest one the client states, and
@@ -331,7 +335,11 @@ func highestRank(matches []*spelldata.Spell) *spelldata.Spell {
 }
 
 func writeText(out io.Writer, s *spelldata.Spell, read int) {
-	fmt.Fprintln(out, join(title(s), strings.Join(ladderRefs(s.ID), "  ")))
+	writeTitledText(out, title(s), s, read)
+}
+
+func writeTitledText(out io.Writer, heading string, s *spelldata.Spell, read int) {
+	fmt.Fprintln(out, join(heading, strings.Join(ladderRefs(s.ID), "  ")))
 	for _, line := range header(s) {
 		fmt.Fprintln(out, line)
 	}
