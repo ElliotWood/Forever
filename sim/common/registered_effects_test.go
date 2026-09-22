@@ -73,7 +73,7 @@ func changedLines(committed string, registered string) []string {
 	now := map[string]bool{}
 	for _, line := range strings.Split(registered, "\n") {
 		now[line] = true
-		if !was[line] && line != "" {
+		if !was[line] && line != "" && !strings.HasPrefix(line, "#") {
 			changed = append(changed, "now registered: "+line)
 		}
 	}
