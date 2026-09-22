@@ -165,14 +165,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestProtectionWarrior-AllItems-EnchantWeapon-UnholyWeapon-1899"
- value: {
-  dps: 263.45374
-  tps: 352.51236
-  dtps: 4333.50778
- }
-}
-dps_results: {
  key: "TestProtectionWarrior-AllItems-EyeofMoam-21473"
  value: {
   dps: 263.45374
