@@ -81,7 +81,7 @@ const targetResult = (...targets: Array<Array<ActionMetrics>>) =>
 	({
 		filter: {},
 		result: {
-			getRaidIndexedPlayers: () => [{ unitIndex: 0 }],
+			getRaidIndexedPlayers: () => [{ unitIndex: 0, getDamageActions: () => [] }],
 			getTargets: () => targets.map(actions => ({ getDamageActions: () => actions })),
 		},
 	}) as unknown as SimResultData;

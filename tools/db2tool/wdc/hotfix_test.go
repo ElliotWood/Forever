@@ -2,6 +2,8 @@ package wdc
 
 import (
 	"encoding/binary"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -166,5 +168,37 @@ func TestCombineDedupsOnFullRecordIdentity(t *testing.T) {
 	base.Combine(otherBuild)
 	if len(base.records) != 2 {
 		t.Fatalf("record from another build was merged in: %d records", len(base.records))
+	}
+}
+
+// The WoW install is often reached through a symlink (the checked-in BaseDir
+// pointing into a wine prefix). WalkDir does not descend into a symlinked
+// root, so without resolving it first the scan finds nothing and the run is
+// silently hotfix-free.
+func TestLoadHotfixCachesFollowsSymlinkedRoots(t *testing.T) {
+	dir := t.TempDir()
+	install := filepath.Join(dir, "install")
+	cacheDir := filepath.Join(install, "_classic_beta_", "Cache", "ADB", "enUS")
+	if err := os.MkdirAll(cacheDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	file := xfthFile(9, 69913, xfthEntry(1, 0x919BE54E, 276631, 1, []byte{1, 2, 3}))
+	if err := os.WriteFile(filepath.Join(cacheDir, "DBCache.bin"), file, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	link := filepath.Join(dir, "link")
+	if err := os.Symlink(install, link); err != nil {
+		t.Skipf("symlinks unavailable: %v", err)
+	}
+
+	for _, root := range []string{install, link} {
+		readers, err := LoadHotfixCaches(filepath.Join(dir, "no-caches-dir"), root)
+		if err != nil {
+			t.Fatalf("LoadHotfixCaches(%s): %v", root, err)
+		}
+		r := readers[69913]
+		if r == nil || len(r.records) != 1 {
+			t.Errorf("LoadHotfixCaches(%s): want 1 record for build 69913, got %+v", root, readers)
+		}
 	}
 }

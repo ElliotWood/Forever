@@ -59,19 +59,21 @@ func (l *Listfile) Refresh() error {
 		}
 		// Stale or check failed: attempt a re-download, but keep the existing
 		// file if that fails.
-		if err := l.download(url); err != nil {
+		if err := downloadFile(url, l.Path); err != nil {
 			fmt.Fprintf(os.Stderr, "db2tool: listfile refresh failed (%v), using existing %s\n", err, l.Path)
 		}
 		return nil
 	}
 	// No local file: the download must succeed.
-	if err := l.download(url); err != nil {
+	if err := downloadFile(url, l.Path); err != nil {
 		return fmt.Errorf("downloading listfile: %w", err)
 	}
 	return nil
 }
 
-func (l *Listfile) download(url string) error {
+// downloadFile fetches url into path through a temp file, so a failed
+// transfer never leaves a truncated file behind.
+func downloadFile(url, path string) error {
 	resp, err := downloadClient.Get(url)
 	if err != nil {
 		return err
@@ -80,7 +82,7 @@ func (l *Listfile) download(url string) error {
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("HTTP %s", resp.Status)
 	}
-	tmp := l.Path + ".tmp"
+	tmp := path + ".tmp"
 	f, err := os.Create(tmp)
 	if err != nil {
 		return err
@@ -94,5 +96,5 @@ func (l *Listfile) download(url string) error {
 		os.Remove(tmp)
 		return err
 	}
-	return os.Rename(tmp, l.Path)
+	return os.Rename(tmp, path)
 }
