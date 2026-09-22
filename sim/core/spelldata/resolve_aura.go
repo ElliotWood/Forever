@@ -54,9 +54,9 @@ func Permanent() AuraOpt {
 }
 
 // What the client states about a periodic effect of a spell, as the dot core registers. The ticks are
-// the row's duration over the effect's period, and the default callbacks snapshot and deal the
-// effect's own damage at the caster's level; a caller that wants something else - a heal, a tick of a
-// value the client does not state - replaces OnSnapshot and OnTick on the returned value.
+// the row's duration over the effect's period. The default OnTick deals the effect's own Average at
+// the caster's level, on the stats and multipliers in force at the tick; a caller replaces OnTick for
+// a heal or a value the client does not state. OnSnapshot is nil.
 //
 // The aura's duration is the row's, which core recomputes from the ticks on every application.
 func DotConfig(s *Spell, e *Effect, opts ...AuraOpt) core.DotConfig {
@@ -75,11 +75,8 @@ func DotConfig(s *Spell, e *Effect, opts ...AuraOpt) core.DotConfig {
 		TickLength:       e.Period(),
 		NumberOfTicks:    int32(s.Duration() / e.Period()),
 		BonusCoefficient: e.Coeff(),
-		OnSnapshot: func(_ *core.Simulation, target *core.Unit, dot *core.Dot) {
-			dot.Snapshot(target, e.Average(dot.Spell.Unit.Level))
-		},
 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-			dot.CalcAndDealPeriodicSnapshotDamage(sim, target, s.TickOutcome(dot))
+			dot.Spell.CalcAndDealPeriodicDamage(sim, target, e.Average(dot.Spell.Unit.Level), s.TickOutcome(dot))
 		},
 	}
 }

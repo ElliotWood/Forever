@@ -245,11 +245,6 @@ func (warrior *Warrior) registerBloodCraze() {
 
 	config.Hot = spelldata.DotConfig(bloodCrazeHot, tick)
 	config.Hot.SelfOnly = true
-	// The resolver's callbacks snapshot the multipliers when the dot is applied and tick the
-	// effect's own damage; these ticks heal a share of maximum health with the multipliers in force
-	// at the tick. The tick count, the period and BonusCoefficient stay the row's, and this effect
-	// states no spell power coefficient - one that did would put spell power on every tick.
-	config.Hot.OnSnapshot = nil
 	config.Hot.OnTick = func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 		healPerTick := warrior.MaxHealth() * healthFraction / float64(dot.ExpectedTickCount())
 		dot.Spell.CalcAndDealPeriodicHealing(sim, target, healPerTick, dot.OutcomeTick)

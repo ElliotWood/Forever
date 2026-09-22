@@ -229,11 +229,6 @@ put there.
 
 ### When not to take a default
 
-- **A dot whose ticks take the multipliers in force at the tick** sets `Dot.OnSnapshot = nil` and
-  deals its own damage in `OnTick` (`sim/warrior/rend.go`). The tick count, the period and
-  `BonusCoefficient` stay the row's, and `BonusCoefficient` is the trap: `DotConfig` fills it from the
-  effect's spell power share, so an effect that states one would put spell power on every tick of a
-  dot that copies this shape. Rend's states none.
 - **A dot the client keeps on an `A_PERIODIC_DUMMY` stays hand-written.** `PeriodicEffect()` does not
   answer a dummy, and Deep Wounds' dummy states a spell power coefficient of 1 that `DotConfig` would
   put on a weapon-damage tick. Its spell config still resolves; only the dot is by hand
@@ -266,9 +261,10 @@ spelldata.ParseEffects(&warrior.Character, aura, shieldBlockRank)
 
 `spelldata.DotConfig(row, effect, opts...)` answers a `core.DotConfig`: that aura, `TickLength` from
 the effect's period, `NumberOfTicks` from the row's duration over that period, `BonusCoefficient` from
-the effect's spell power share, and callbacks that snapshot and deal the effect's own `Average` at the
-caster's level. It panics where the effect states no period or the row no duration, rather than
-resolving a permanent aura's -1 into an absurd number of ticks.
+the effect's spell power share, and an `OnTick` that deals the effect's own `Average` at the caster's
+level, on the stats and multipliers in force at the tick - `OnSnapshot` is nil. It panics where the
+effect states no period or the row no duration, rather than resolving a permanent aura's -1 into an
+absurd number of ticks. A caller replaces `OnTick` for a heal or a value the client does not state.
 
 `row.TickOutcome(dot)` picks the tick's outcome from the row: a tick that can crit where the client
 marks Periodic Can Crit, on the magic hit table where the row's defense type is magic. A dot's `OnTick`
