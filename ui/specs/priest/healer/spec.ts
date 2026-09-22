@@ -1,10 +1,9 @@
 import * as BuffDebuffInputs from '@features/settings/model/buffs_debuffs';
 import { APLRotation } from '@generated/proto/apl';
-import { Debuffs, EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { DEFAULT_HEALER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
-import { defaultHealerIndividualBuffs, defaultHealerPartyBuffs, defaultHealerRaidBuffs } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
 import * as PriestInputs from './inputs';
@@ -55,15 +54,15 @@ export default defineSpec<Spec.SpecHealerPriest>({
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.
-		talents: Presets.TalentsHolyHealer.data,
+		talents: Presets.TalentsDisciplineHealer.data,
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		other: Presets.OtherDefaults,
 		// Default raid/party buffs settings.
-		raidBuffs: defaultHealerRaidBuffs(),
-		partyBuffs: defaultHealerPartyBuffs(),
-		individualBuffs: defaultHealerIndividualBuffs(),
-		debuffs: Debuffs.create({}),
+		raidBuffs: Presets.DefaultRaidBuffs,
+		partyBuffs: Presets.DefaultPartyBuffs,
+		individualBuffs: Presets.DefaultIndividualBuffs,
+		debuffs: Presets.DefaultDebuffs,
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.
