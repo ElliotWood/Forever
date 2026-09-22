@@ -88,7 +88,7 @@ func (shaman *Shaman) registerFlameShockSpell(shockTimer *core.Timer) {
 				dot.Snapshot(target, tick.Tick)
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, shared.PeriodicTickOutcome(flameShockRank, dot)) // client: Periodic Can Crit
 			},
 		},
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
@@ -97,7 +97,7 @@ func (shaman *Shaman) registerFlameShockSpell(shockTimer *core.Timer) {
 		ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
 			dot := spell.Dot(target)
 			if useSnapshot {
-				result := dot.CalcSnapshotDamage(sim, target, dot.OutcomeTick)
+				result := dot.CalcSnapshotDamage(sim, target, shared.PeriodicTickOutcome(flameShockRank, dot))
 				result.Damage /= dot.TickPeriod().Seconds()
 				return result
 			} else {
