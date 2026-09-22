@@ -375,26 +375,7 @@ func GenerateMissingEffectsFile() error {
 
 func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 	groupMapProc := map[string]Group{}
-	enchantSpellEffects := map[int]*dbc.SpellEffect{}
-
-	// Several spells can grant the same enchant -- an enchant that was re-taught
-	// by a later expansion's recipe has one spell per version, up to five here.
-	// Map iteration order is randomized, so keep the lowest spell ID rather than
-	// letting whichever one is visited last win and churn the generated file.
-	for _, effect := range instance.SpellEffectsById {
-		if effect.EffectType == dbcenums.E_ENCHANT_ITEM {
-			enchantID := effect.EffectMiscValues[0]
-			if existing, ok := enchantSpellEffects[enchantID]; ok && existing.SpellID <= effect.SpellID {
-				continue
-			}
-			enchantSpellEffects[enchantID] = &effect
-		}
-		enchantID := effect.EffectMiscValues[0]
-		if existing, ok := enchantSpellEffects[enchantID]; ok && existing.SpellID <= effect.SpellID {
-			continue
-		}
-		enchantSpellEffects[enchantID] = &effect
-	}
+	enchantSpellEffects := enchantGrantEffects(instance.SpellEffectsById)
 
 	for _, enchant := range instance.Enchants {
 		parsed := enchant.ToProto()
@@ -413,6 +394,28 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 	}
 
 	GenerateEffectsFile(procGroups, "sim/common/forever/enchants_auto_gen.go", TmplStrEnchant)
+}
+
+// The E_ENCHANT_ITEM effect that grants each enchant, by enchant ID. Only that effect names an
+// enchant in its first misc value; any other effect's misc value is a school, a stat or a power.
+//
+// Several spells can grant the same enchant -- an enchant that was re-taught
+// by a later expansion's recipe has one spell per version, up to five here.
+// Map iteration order is randomized, so keep the lowest spell ID rather than
+// letting whichever one is visited last win and churn the generated file.
+func enchantGrantEffects(effects map[int]dbc.SpellEffect) map[int]*dbc.SpellEffect {
+	grants := map[int]*dbc.SpellEffect{}
+	for _, effect := range effects {
+		if effect.EffectType != dbcenums.E_ENCHANT_ITEM {
+			continue
+		}
+		enchantID := effect.EffectMiscValues[0]
+		if existing, ok := grants[enchantID]; ok && existing.SpellID <= effect.SpellID {
+			continue
+		}
+		grants[enchantID] = &effect
+	}
+	return grants
 }
 
 // Names the ignore-list rule that excluded an effect, for the comment emitted in the generated
