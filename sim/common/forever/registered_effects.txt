@@ -45,7 +45,6 @@
 
 # enchants
 963 Enchant 2H Weapon - Greater Impact
-1899 Enchant Weapon - Unholy Weapon
 1900 Enchant Weapon - Crusader
 2523 Biznicks 247x128 Accurascope
 2613 Enchant Gloves - Threat

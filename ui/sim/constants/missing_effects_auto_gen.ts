@@ -2745,4 +2745,10 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 ])
 
 export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
+	[
+		1899, // Enchant Weapon - Unholy Weapon
+		[
+			"Permanently enchant a melee weapon to often inflict a curse on the target reducing their melee damage.", // 20006 - https://www.wowhead.com/forever/spell=20006
+		]
+	],
 ])
