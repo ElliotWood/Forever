@@ -1,8 +1,6 @@
 package paladin
 
 import (
-	"time"
-
 	"github.com/wowsims/classic/sim/core"
 )
 
@@ -43,10 +41,11 @@ func (paladin *Paladin) registerSwiftJudgement() {
 		ActionID: actionID,
 		Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 
+		// The cooldown comes from the client table (1310994); the id stays ours.
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    paladin.NewTimer(),
-				Duration: time.Minute * 1,
+				Duration: spellData.SwiftJudgement.ByRank(1).Cooldown,
 			},
 		},
 

@@ -1,8 +1,6 @@
 package paladin
 
 import (
-	"time"
-
 	"github.com/wowsims/classic/sim/core"
 )
 
@@ -11,20 +9,23 @@ func (paladin *Paladin) registerDivineFavor() {
 		return
 	}
 
+	// Id, cooldown and the 100% crit come from the client table.
+	row := spellData.DivineFavor.ByRank(1)
+
 	critMod := paladin.AddDynamicMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
 		ClassMask:  SpellMaskHolyShock,
-		FloatValue: 100,
+		FloatValue: row.Effects[0].Value,
 	})
 
 	cd := core.Cooldown{
 		Timer:    paladin.NewTimer(),
-		Duration: time.Minute * 2,
+		Duration: row.Cooldown,
 	}
 
 	aura := paladin.RegisterAura(core.Aura{
 		Label:    "Divine Favor",
-		ActionID: core.ActionID{SpellID: 20216},
+		ActionID: core.ActionID{SpellID: row.SpellID},
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, sim *core.Simulation) {
 			critMod.Activate()
