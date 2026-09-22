@@ -29,9 +29,7 @@ func (priest *Priest) registerShadowfiendSpell() {
 		Flags:          core.SpellFlagAPL,
 		ClassSpellMask: PriestSpellShadowFiend,
 
-		ManaCost: core.ManaCostOptions{
-			BaseCostPercent: 6,
-		},
+		// Client 401977 has no power cost row: the summon is free.
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,
