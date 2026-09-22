@@ -2,7 +2,8 @@ package database
 
 // Every proc an item, an enchant or a set bonus can reach, and what the sim makes of it. A proc the
 // rows state enough for is registered; one they do not is named in unsupported_procs.txt with the
-// reason, so the list of what the sim cannot model is reviewed rather than discovered.
+// reason, so the list of what the sim cannot model is reviewed rather than discovered. That file is a
+// local baseline, not tracked: a checkout without it writes it on the first run.
 //
 // Reads the committed capture and the committed store, so it needs no client database: the roots are
 // the ones the item, enchant and set tables gave, and the rows are the ones the sim itself reads.
@@ -55,14 +56,14 @@ func TestEveryReachableProcIsSupportedOrListed(t *testing.T) {
 		t.Fatal("no reachable proc resolves at all, so this proves nothing")
 	}
 
-	if os.Getenv("UPDATE_UNSUPPORTED_PROCS") != "" {
+	committed, err := os.ReadFile(unsupportedProcsPath)
+	if os.IsNotExist(err) || os.Getenv("UPDATE_UNSUPPORTED_PROCS") != "" {
 		if err := os.WriteFile(unsupportedProcsPath, []byte(out.String()), 0644); err != nil {
 			t.Fatalf("%v", err)
 		}
+		t.Logf("wrote the baseline %s", unsupportedProcsPath)
 		return
 	}
-
-	committed, err := os.ReadFile(unsupportedProcsPath)
 	if err != nil {
 		t.Fatalf("%v", err)
 	}
@@ -73,7 +74,7 @@ func TestEveryReachableProcIsSupportedOrListed(t *testing.T) {
 	for _, line := range changedProcLines(string(committed), out.String()) {
 		t.Error(line)
 	}
-	t.Errorf("%s is not what the rows say; regenerate it in the commit that changed them:\n"+
+	t.Errorf("%s is not what the rows say; once the moves above are the intended ones, rewrite the baseline:\n"+
 		"  UPDATE_UNSUPPORTED_PROCS=1 go test ./tools/database/ -run TestEveryReachableProcIsSupportedOrListed -count=1",
 		unsupportedProcsPath)
 }

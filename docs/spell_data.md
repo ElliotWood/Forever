@@ -535,7 +535,8 @@ say enough. The generator calls it when it writes the item files, the audit call
 it, so a proc the generator emits is one the sim can build and a proc it comments out carries the
 reason in the comment. `tools/database/unsupported_procs.txt` is the audit's census of every proc an
 item, enchant or set can reach and what the rows refuse; `sim/common/forever/registered_effects.txt`
-lists the item and enchant effects that do register, and moves in it are reviewed line by line.
+lists the item and enchant effects that do register. Neither is tracked: each is a local baseline its
+test writes on the first run and then compares against, naming every line that moved.
 
 ## Overrides
 
