@@ -5,7 +5,6 @@ import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/prot
 import { Cooldowns, EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import { FeralCatDruid_Rotation as DruidRotation } from '@generated/proto/druid';
 import { SavedTalents } from '@generated/proto/ui';
-import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { Stats, UnitStat } from '@sim/proto/stats';
@@ -54,7 +53,6 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 			Stat.StatSpirit,
 			Stat.StatAttackPower,
 			Stat.StatMana,
-			Stat.StatExpertiseRating,
 			Stat.StatArmorPenetration,
 			Stat.StatArcaneResistance,
 			Stat.StatFireResistance,
@@ -62,7 +60,12 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 			Stat.StatNatureResistance,
 			Stat.StatShadowResistance,
 		],
-		[PseudoStat.PseudoStatMeleeHitPercent, PseudoStat.PseudoStatMeleeCritPercent, PseudoStat.PseudoStatMeleeHastePercent],
+		[
+			PseudoStat.PseudoStatMeleeHitPercent,
+			PseudoStat.PseudoStatMeleeCritPercent,
+			PseudoStat.PseudoStatMeleeHastePercent,
+			PseudoStat.PseudoStatExpertisePercent,
+		],
 	),
 
 	defaults: {
@@ -71,9 +74,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
 		statCaps: (() => {
-			return new Stats()
-				.withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9)
-				.withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
+			return new Stats().withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9).withPseudoStat(PseudoStat.PseudoStatExpertisePercent, 6.5);
 		})(),
 		other: Presets.OtherDefaults,
 		// Default consumes settings.

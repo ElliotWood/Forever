@@ -48,14 +48,18 @@ export default defineSpec<Spec.SpecRogue>({
 			Stat.StatStrength,
 			Stat.StatAttackPower,
 			Stat.StatArmorPenetration,
-			Stat.StatExpertiseRating,
 			Stat.StatArcaneResistance,
 			Stat.StatFireResistance,
 			Stat.StatFrostResistance,
 			Stat.StatNatureResistance,
 			Stat.StatShadowResistance,
 		],
-		[PseudoStat.PseudoStatMeleeHitPercent, PseudoStat.PseudoStatMeleeCritPercent, PseudoStat.PseudoStatMeleeHastePercent],
+		[
+			PseudoStat.PseudoStatMeleeHitPercent,
+			PseudoStat.PseudoStatMeleeCritPercent,
+			PseudoStat.PseudoStatMeleeHastePercent,
+			PseudoStat.PseudoStatExpertisePercent,
+		],
 	),
 
 	defaults: {
@@ -64,7 +68,7 @@ export default defineSpec<Spec.SpecRogue>({
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
 		statCaps: (() => {
-			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);
+			const expCap = new Stats().withPseudoStat(PseudoStat.PseudoStatExpertisePercent, 6.5);
 			return expCap;
 		})(),
 		softCapBreakpoints: (() => {

@@ -219,6 +219,7 @@
 			"melee_hit_rating": "Melee Hit Rating",
 			"melee_crit_rating": "Melee Crit Rating",
 			"melee_haste_rating": "Melee Haste Rating",
+			"expertise_rating": "Expertise Rating",
 			"armor_penetration": "Armor Penetration",
 			"all_hit_rating": "Hit Rating",
 			"all_crit_rating": "Crit Rating",

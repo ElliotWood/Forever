@@ -25,7 +25,7 @@ export const statI18nKeys: Record<Stat, string> = {
 	[Stat.StatStamina]: 'stamina',
 	[Stat.StatIntellect]: 'intellect',
 	[Stat.StatSpirit]: 'spirit',
-	[Stat.StatExpertiseRating]: 'expertise',
+	[Stat.StatExpertiseRating]: 'expertise_rating',
 	[Stat.StatDodgeRating]: 'dodge',
 	[Stat.StatParryRating]: 'parry',
 	[Stat.StatAttackPower]: 'attack_power',
@@ -145,6 +145,7 @@ export const pseudoStatI18nKeys: Record<PseudoStat, string> = {
 	[PseudoStat.PseudoStatBlockValuePerStrength]: 'block_per_strength',
 	[PseudoStat.PseudoStatRangedHitPercent]: 'ranged_hit',
 	[PseudoStat.PseudoStatRangedCritPercent]: 'ranged_crit',
+	[PseudoStat.PseudoStatExpertisePercent]: 'expertise',
 };
 
 export const spellSchoolI18nKeys: Record<SpellSchool, string> = {
