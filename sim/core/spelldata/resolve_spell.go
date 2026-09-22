@@ -49,6 +49,10 @@ func SpellConfig(unit *core.Unit, s *Spell, opts ...SpellOpt) core.SpellConfig {
 		Cast:         castConfig(unit, s),
 	}
 	applyCost(&config, s)
+	if s.IsBleed() {
+		config.DamageMultiplier = 1
+		config.ThreatMultiplier = 1
+	}
 
 	// The row first, the caller's options on top, so an option sees what the row filled.
 	for _, opt := range opts {

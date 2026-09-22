@@ -19,6 +19,10 @@ func (s *Spell) IsChanneled() bool {
 	return s.HasAttr(dbcenums.ATTR_INDEX_EX_1, dbcenums.ATTR_EX_1_IS_CHANNELLED|dbcenums.ATTR_EX_1_IS_SELF_CHANNELLED)
 }
 
+func (s *Spell) IsBleed() bool {
+	return dbcenums.Mechanic(s.Mechanic) == dbcenums.MECHANIC_BLEED
+}
+
 func (s *Spell) RefundsOnMiss() bool {
 	return s.HasAttr(dbcenums.ATTR_INDEX_EX_1, dbcenums.ATTR_EX_1_DISCOUNT_POWER_ON_MISS)
 }

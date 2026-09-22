@@ -85,6 +85,7 @@ func resolverRows() []Spell {
 		},
 		{
 			ID: 800, Name: "Bleed", School: 1, DefenseType: 2, SpellLevel: 50, DurationMs: 21000,
+			Mechanic:              uint8(dbcenums.MECHANIC_BLEED),
 			GCDMs:                 1500,
 			StartRecoveryCategory: 133,
 			MaxStack:              5,
@@ -169,6 +170,19 @@ func TestSpellConfigRank(t *testing.T) {
 	}
 	if got := SpellConfig(testUnit(), Find(600)).Rank; got != 0 {
 		t.Errorf("Rank of a spell with no subtext = %d, want 0", got)
+	}
+}
+
+func TestSpellConfigBleedMultipliers(t *testing.T) {
+	withResolverRows(t)
+
+	config := SpellConfig(testUnit(), Find(800))
+	if config.DamageMultiplier != 1 || config.ThreatMultiplier != 1 {
+		t.Errorf("multipliers = %v damage, %v threat, want 1 and 1 off the client's bleed mechanic",
+			config.DamageMultiplier, config.ThreatMultiplier)
+	}
+	if config := SpellConfig(testUnit(), Find(100)); config.DamageMultiplier != 0 {
+		t.Errorf("damage multiplier = %v, want none on a spell without the mechanic", config.DamageMultiplier)
 	}
 }
 

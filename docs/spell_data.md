@@ -121,7 +121,8 @@ not, so a call site never has to ask whether this particular spell's amount is a
 answers unset rather than panicking - and `sim/core/spelldata/attributes.go` names the ones the sim
 acts on: `IsPassive`, `IsChanneled`, `RefundsOnMiss` with `MissRefund()` (the 0.8 a
 `RageCostOptions.Refund` takes), `PeriodicCanCrit`, `CanProcFromProcs`, `ClassSpellsOnly`,
-`CannotCrit`, `IsAProc`, `SuppressesWeaponProcs` and `IsWeaponProcAura`.
+`CannotCrit`, `IsAProc`, `SuppressesWeaponProcs` and `IsWeaponProcAura`; `IsBleed` reads
+`SpellCategories.Mechanic` instead.
 
 |                        |                                                                                    |
 | ---------------------- | ---------------------------------------------------------------------------------- |
@@ -199,7 +200,9 @@ it shares - and the cost out of the first bar it states, with rage divided off t
 refund the Discount Power On Miss attribute states. `Flags` gets what the attributes and targets say:
 `SpellFlagPassiveSpell`, `SpellFlagChanneled`, `SpellFlagSuppressWeaponProcs` and `SpellFlagHelpful`.
 
-What it does not: `ApplyEffects`, `ProcMask`, the multipliers, `ClassSpellMask`, `ExtraCastCondition`,
+A bleed row also fills the damage and threat multipliers with 1.
+
+What it does not: `ApplyEffects`, `ProcMask`, the multipliers on any other row, `ClassSpellMask`, `ExtraCastCondition`,
 `Dot`, `RelatedSelfBuff`, the threat numbers the client does not carry - and `MaxTargets`, which has no
 `SpellConfig` field at all, so a caller that caps an area effect reads `row.MaxTargets` itself. A unit
 is needed for the cooldown timers, so a config is built where the sim has a character rather than at

@@ -12,10 +12,7 @@ func (warrior *Warrior) registerRend() {
 	tick := rendRank.PeriodicEffect()
 
 	config := spelldata.SpellConfig(&warrior.Unit, rendRank,
-		spelldata.Flags(core.SpellFlagNoOnCastComplete|core.SpellFlagAPL))
-	config.ProcMask = core.ProcMaskMeleeMHSpecial
-	config.DamageMultiplier = 1
-	config.ThreatMultiplier = 1
+		spelldata.Melee(core.ProcMaskMeleeMHSpecial), spelldata.Flags(core.SpellFlagNoOnCastComplete))
 
 	config.Dot = spelldata.DotConfig(rendRank, tick)
 
