@@ -1,5 +1,11 @@
 [
 	{
+		"number": 360,
+		"title": "paladin: Holy Shield damage can't crit; the PvP shields' Electrostatic Charge",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/360"
+	},
+	{
 		"number": 354,
 		"title": "data: old Classic PvP pieces are in no set on Forever",
 		"mergedAt": "2026-09-22",
