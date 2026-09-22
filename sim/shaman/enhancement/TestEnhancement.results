@@ -81,6 +81,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 573.34453
+  tps: 419.14895
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 401.78381
@@ -97,8 +104,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-DepletedEyeofInfluence-275630"
  value: {
-  dps: 389.90957
-  tps: 286.89225
+  dps: 391.45
+  tps: 287.97055
  }
 }
 dps_results: {
@@ -106,6 +113,13 @@ dps_results: {
  value: {
   dps: 397.1762
   tps: 291.9789
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 401.59088
+  tps: 295.06917
  }
 }
 dps_results: {
@@ -144,6 +158,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 397.1762
+  tps: 291.9789
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 397.1762
@@ -159,6 +180,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestEnhancement-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 397.1762
+  tps: 291.9789
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-FreezingBand-942"
  value: {
   dps: 397.1762
   tps: 291.9789
@@ -200,6 +228,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-IcebladeHacker-13952"
+ value: {
+  dps: 615.58202
+  tps: 447.66876
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-JomGabbar-23570"
  value: {
   dps: 408.8408
@@ -215,6 +250,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestEnhancement-AllItems-Loatheb'sReflection-23042"
+ value: {
+  dps: 397.1762
+  tps: 291.9789
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-MarkofTyranny-13966"
  value: {
   dps: 397.1762
   tps: 291.9789
@@ -242,6 +284,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-Prismcharm-15867"
+ value: {
+  dps: 397.1762
+  tps: 291.9789
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 394.43763
+  tps: 290.09308
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-SerenityField-272439"
  value: {
   dps: 399.14452
@@ -265,8 +321,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-StormGauntlets-12632"
  value: {
-  dps: 406.682
-  tps: 297.97532
+  dps: 409.06404
+  tps: 299.64274
  }
 }
 dps_results: {
@@ -284,10 +340,17 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 397.1762
+  tps: 291.9789
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 401.15002
-  tps: 294.76057
+  dps: 406.28479
+  tps: 298.35491
  }
 }
 dps_results: {

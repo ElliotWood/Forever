@@ -131,6 +131,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 186.5518
+  tps: 198.48271
+  dtps: 1053.64295
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 175.12753
@@ -152,6 +160,14 @@ dps_results: {
   dps: 171.41857
   tps: 183.59948
   dtps: 1086.83711
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 171.41857
+  tps: 183.59948
+  dtps: 1086.96779
  }
 }
 dps_results: {
@@ -195,6 +211,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 171.41857
+  tps: 183.59948
+  dtps: 1086.96779
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 171.41857
@@ -215,6 +239,14 @@ dps_results: {
  value: {
   dps: 171.41857
   tps: 183.59948
+  dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-FreezingBand-942"
+ value: {
+  dps: 171.50719
+  tps: 183.6881
   dtps: 1086.96779
  }
 }
@@ -283,6 +315,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 171.20988
+  tps: 183.33305
+  dtps: 1067.04341
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 171.41857
@@ -304,6 +344,22 @@ dps_results: {
   dps: 173.738
   tps: 185.94631
   dtps: 1086.83711
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-Prismcharm-15867"
+ value: {
+  dps: 171.41857
+  tps: 183.59948
+  dtps: 1086.25556
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 169.87166
+  tps: 182.09332
+  dtps: 1091.90354
  }
 }
 dps_results: {
@@ -331,6 +387,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 178.30271
+  tps: 190.05862
+  dtps: 1003.61504
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 169.48064
@@ -344,6 +408,14 @@ dps_results: {
   dps: 171.41857
   tps: 183.59948
   dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 171.41857
+  tps: 183.59948
+  dtps: 1059.59489
  }
 }
 dps_results: {

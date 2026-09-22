@@ -7,6 +7,9 @@ import { OtherDefaults as SimUIOtherDefaults } from '@sim/spec_config';
 import * as WarriorPresets from '../shared/presets';
 import GenericApl from './apls/default.apl.json';
 import ForeverProtectionApl from './apls/protection.apl.json';
+import LaunchGear from './gear_sets/launch.gear.json';
+import P0BisGear from './gear_sets/p0.bis.gear.json';
+import P1BisGear from './gear_sets/p1.bis.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -67,3 +70,10 @@ export const OtherDefaults: Partial<SimUIOtherDefaults> = {
 	// 	inspirationUptime: 0.12,
 	// }),
 };
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const GEAR_P0_BIS = PresetUtils.makePresetGear('Pre-BiS', P0BisGear);
+export const GEAR_P1_BIS = PresetUtils.makePresetGear('P1 BiS', P1BisGear);
+export const DEFAULT_GEAR = GEAR_LAUNCH;
+export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_P0_BIS, GEAR_P1_BIS];

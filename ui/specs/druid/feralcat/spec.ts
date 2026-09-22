@@ -4,7 +4,6 @@ import {
 	Cooldowns,
 	Debuffs,
 	Drums,
-	EquipmentSpec,
 	IndividualBuffs,
 	ItemSlot,
 	PartyBuffs,
@@ -79,7 +78,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
 		statCaps: (() => {
@@ -165,7 +164,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		talents: [Presets.FeralTalents, Presets.FeralCatTalents],
 		rotations: [Presets.SIMPLE, Presets.APL],
 		// Preset gear configurations that the user can quickly select.
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (_player: Player<Spec.SpecFeralCatDruid>): APLRotation => {

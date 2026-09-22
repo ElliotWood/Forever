@@ -76,8 +76,15 @@ dps_results: {
 dps_results: {
  key: "TestBeastMastery-AllItems-Biznicks247x128Accurascope-2523"
  value: {
-  dps: 1051.58648
-  tps: 453.91463
+  dps: 1074.00606
+  tps: 467.62
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 1039.61817
+  tps: 443.90595
  }
 }
 dps_results: {
@@ -92,6 +99,13 @@ dps_results: {
  value: {
   dps: 1048.98165
   tps: 450.38702
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 1043.75572
+  tps: 446.72886
  }
 }
 dps_results: {
@@ -110,6 +124,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBeastMastery-AllItems-DormantHeartoftheMountain-249473"
+ value: {
+  dps: 1039.58714
+  tps: 443.81086
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 1039.58714
   tps: 443.81086
@@ -151,6 +172,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 947.63023
+  tps: 377.4841
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 1026.65595
@@ -166,6 +194,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBeastMastery-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 1039.58714
+  tps: 443.81086
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-FreezingBand-942"
  value: {
   dps: 1039.58714
   tps: 443.81086
@@ -214,6 +249,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Hurricane-2824"
+ value: {
+  dps: 989.8455
+  tps: 402.16629
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-IcebladeHacker-13952"
+ value: {
+  dps: 1039.58714
+  tps: 443.81086
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-JomGabbar-23570"
  value: {
   dps: 1055.41663
@@ -229,6 +278,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBeastMastery-AllItems-Loatheb'sReflection-23042"
+ value: {
+  dps: 1039.58714
+  tps: 443.81086
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-MarkofTyranny-13966"
  value: {
   dps: 1039.58714
   tps: 443.81086
@@ -263,6 +319,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Prismcharm-15867"
+ value: {
+  dps: 1039.58714
+  tps: 443.81086
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 1036.0506
+  tps: 441.33528
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-SerenityField-272439"
  value: {
   dps: 1040.51702
@@ -284,10 +354,17 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 1042.57494
+  tps: 445.98293
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-StormGauntlets-12632"
  value: {
-  dps: 1045.9052
-  tps: 447.84641
+  dps: 1047.00057
+  tps: 448.61318
  }
 }
 dps_results: {
@@ -305,14 +382,28 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 1039.58714
+  tps: 443.81086
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 1042.13882
-  tps: 445.59704
+  dps: 1044.56424
+  tps: 447.29483
  }
 }
 dps_results: {
  key: "TestBeastMastery-AllItems-Thunderfury,BlessedBladeoftheWindseeker-19019"
+ value: {
+  dps: 1039.58714
+  tps: 443.81086
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-WarbladeofCaerDarrow-13982"
  value: {
   dps: 1039.58714
   tps: 443.81086

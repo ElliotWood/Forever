@@ -131,6 +131,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 190.45102
+  tps: 131.29604
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 173.11434
@@ -152,6 +160,14 @@ dps_results: {
   dps: 169.66864
   tps: 116.74838
   dtps: 7.38194
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.47288
  }
 }
 dps_results: {
@@ -195,6 +211,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 169.66864
@@ -212,6 +236,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestFeralCat-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-FreezingBand-942"
  value: {
   dps: 169.66864
   tps: 116.74838
@@ -283,6 +315,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 169.66864
@@ -304,6 +344,22 @@ dps_results: {
   dps: 172.45576
   tps: 118.69721
   dtps: 7.38194
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-Prismcharm-15867"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 6.86975
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 167.83803
+  tps: 115.46695
+  dtps: 7.47288
  }
 }
 dps_results: {
@@ -331,6 +387,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 187.1056
+  tps: 128.95425
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 169.66864
@@ -340,6 +404,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestFeralCat-AllItems-TalismanofEphemeralPower-18820"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 169.66864
   tps: 116.74838

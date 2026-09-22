@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 372.29862
+  tps: 203.47483
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 321.60119
@@ -90,8 +97,8 @@ dps_results: {
 dps_results: {
  key: "TestBalance-AllItems-DepletedEyeofInfluence-275630"
  value: {
-  dps: 321.60119
-  tps: 166.65005
+  dps: 328.1007
+  tps: 169.8348
  }
 }
 dps_results: {
@@ -99,6 +106,13 @@ dps_results: {
  value: {
   dps: 321.60119
   tps: 166.65005
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 340.24637
+  tps: 175.78618
  }
 }
 dps_results: {
@@ -137,6 +151,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 321.60119
+  tps: 166.65005
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 321.60119
@@ -152,6 +173,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestBalance-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 321.60119
+  tps: 166.65005
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-FreezingBand-942"
  value: {
   dps: 321.60119
   tps: 166.65005
@@ -221,6 +249,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 321.60119
+  tps: 166.65005
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 321.60119
@@ -236,6 +271,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestBalance-AllItems-MoltenHeartoftheMountain-249470"
+ value: {
+  dps: 321.60119
+  tps: 166.65005
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-Prismcharm-15867"
+ value: {
+  dps: 321.60119
+  tps: 166.65005
+ }
+}
+dps_results: {
+ key: "TestBalance-AllItems-RaggedJohn'sNeverendingCup-15873"
  value: {
   dps: 321.60119
   tps: 166.65005
@@ -263,6 +312,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 333.41589
+  tps: 172.85395
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 347.01976
@@ -277,10 +333,17 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBalance-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 321.60119
+  tps: 166.65005
+ }
+}
+dps_results: {
  key: "TestBalance-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 340.7047
-  tps: 176.01077
+  dps: 362.36972
+  tps: 186.62662
  }
 }
 dps_results: {

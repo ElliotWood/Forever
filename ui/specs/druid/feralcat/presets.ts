@@ -8,6 +8,10 @@ import {
 } from '@generated/proto/druid';
 
 import DefaultApl from './apls/default.apl.json';
+import LaunchGear from './gear_sets/launch.gear.json';
+import P0BisGear from './gear_sets/p0.bis.gear.json';
+import P2PreBisGear from './gear_sets/p2.pre-bis.gear.json';
+import P2BisGear from './gear_sets/p2.bis.gear.json';
 
 export const DefaultOptions = FeralDruidOptions.create({});
 
@@ -48,3 +52,11 @@ export const APL = PresetUtils.makePresetAPLRotation('APL', DefaultApl);
 
 export const FeralTalents = PresetUtils.makePresetTalents('Feral', SavedTalents.create({ talentsString: '-5521002023132213051-05503' }));
 export const FeralCatTalents = PresetUtils.makePresetTalents('Feral Cat 9/35/7', SavedTalents.create({ talentsString: '050022-5500002123032213051-052' }));
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const GEAR_P0_BIS = PresetUtils.makePresetGear('Pre-BiS', P0BisGear);
+export const GEAR_P2_PRE_BIS = PresetUtils.makePresetGear('P2 Pre-BiS', P2PreBisGear);
+export const GEAR_P2_BIS = PresetUtils.makePresetGear('P2 BiS', P2BisGear);
+export const DEFAULT_GEAR = GEAR_P0_BIS;
+export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_P0_BIS, GEAR_P2_PRE_BIS, GEAR_P2_BIS];

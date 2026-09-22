@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -168,6 +169,8 @@ func processEnchantmentEffects(
 					outStats[proto.Stat_StatFrostResistance] += float64(points)
 					outStats[proto.Stat_StatNatureResistance] += float64(points)
 					outStats[proto.Stat_StatShadowResistance] += float64(points)
+				} else if stat, perPoint := PercentAuraToRating(spellEffect.EffectAura, spellEffect.EffectMiscValues[0]); perPoint > 0 {
+					outStats[stat] += float64(points) * perPoint
 				} else {
 					stat := ConvertEffectAuraToStatIndex(spellEffect.EffectAura, spellEffect.EffectMiscValues[0])
 					if stat >= 0 || stat == -2 {
@@ -193,6 +196,38 @@ func processEnchantmentEffects(
 		}
 	}
 }
+
+// Forever's enchants and Classic-era equip spells still state hit, crit, dodge, parry, block,
+// haste and defense as percent (or skill) auras: Falcon's Call's "+1% Hit", Deflection's
+// "Defense +7", Counterweight's "+3% Attack Speed". This engine carries them as rating, at the
+// client's CombatRatings conversion. perPoint is 0 for any other aura.
+func PercentAuraToRating(effectAura EffectAuraType, effectMisc int) (stat proto.Stat, perPoint float64) {
+	switch effectAura {
+	case A_MOD_HIT_CHANCE:
+		return proto.Stat_StatMeleeHitRating, core.PhysicalHitRatingPerHitPercent
+	case A_MOD_SPELL_HIT_CHANCE:
+		return proto.Stat_StatSpellHitRating, core.SpellHitRatingPerHitPercent
+	case A_MOD_WEAPON_CRIT_PERCENT:
+		return proto.Stat_StatMeleeCritRating, core.PhysicalCritRatingPerCritPercent
+	case A_MOD_SPELL_CRIT_CHANCE:
+		return proto.Stat_StatSpellCritRating, core.SpellCritRatingPerCritPercent
+	case A_MOD_DODGE_PERCENT:
+		return proto.Stat_StatDodgeRating, core.DodgeRatingPerDodgePercent
+	case A_MOD_PARRY_PERCENT:
+		return proto.Stat_StatParryRating, core.ParryRatingPerParryPercent
+	case A_MOD_BLOCK_PERCENT:
+		return proto.Stat_StatBlockRating, core.BlockRatingPerBlockPercent
+	case A_MOD_MELEE_HASTE, A_MOD_MELEE_HASTE_3:
+		return proto.Stat_StatMeleeHasteRating, core.PhysicalHasteRatingPerHastePercent
+	case A_MOD_SKILL:
+		if effectMisc == skillLineDefense {
+			return proto.Stat_StatDefenseRating, core.DefenseRatingPerDefenseLevel
+		}
+	}
+	return 0, 0
+}
+
+const skillLineDefense = 95
 
 func ConvertEffectAuraToStatIndex(effectAura EffectAuraType, effectMisc int) proto.Stat {
 	switch effectAura {

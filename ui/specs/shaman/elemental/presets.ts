@@ -5,6 +5,9 @@ import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 import { SavedTalents } from '@generated/proto/ui';
+import LaunchGear from './gear_sets/launch.gear.json';
+import Phase1Gear from './gear_sets/phase_1.gear.json';
+import Phase2Gear from './gear_sets/phase_2.gear.json';
 
 export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
@@ -70,3 +73,10 @@ export const TalentsLevel60 = PresetUtils.makePresetTalents('Level 60', SavedTal
 export const TalentsElemental = PresetUtils.makePresetTalents('Elemental 31/6/14', SavedTalents.create({ talentsString: '2505301500123031-0500001-053050001' }));
 export const TalentsStormcaller = PresetUtils.makePresetTalents('Stormcaller 28/23/0', SavedTalents.create({ talentsString: '050433150010303-055030030004102' }));
 export const TalentPresets = [TalentsLevel60, TalentsElemental, TalentsStormcaller];
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const GEAR_PHASE_1 = PresetUtils.makePresetGear('Phase 1', Phase1Gear);
+export const GEAR_PHASE_2 = PresetUtils.makePresetGear('Phase 2', Phase2Gear);
+export const DEFAULT_GEAR = GEAR_LAUNCH;
+export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_PHASE_1, GEAR_PHASE_2];

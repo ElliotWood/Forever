@@ -9,6 +9,9 @@ import DemoRot from './apls/demonology.apl.json';
 import DestroFireRot from './apls/destro_fire.apl.json';
 import DestroRot from './apls/destruction.apl.json';
 import { SavedTalents } from '@generated/proto/ui';
+import LaunchGear from './gear_sets/launch.gear.json';
+import PrebisGear from './gear_sets/prebis.gear.json';
+import McGear from './gear_sets/mc.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -102,3 +105,10 @@ export const TalentsDeepAffliction = PresetUtils.makePresetTalents('Deep Afflict
 export const TalentsDSRuinPandemic = PresetUtils.makePresetTalents('DS/Ruin Pandemic 24/11/16', SavedTalents.create({ talentsString: '25220010135201-0025003001-05500051' }));
 export const TalentsShadowAndFlame = PresetUtils.makePresetTalents('Shadow and Flame 13/11/27', SavedTalents.create({ talentsString: '25501-0025003001-055035510010002' }));
 export const TalentPresets = [TalentsDemonicPact, TalentsAffliction, TalentsDSRuin, TalentsPactOptimised, TalentsDeepAffliction, TalentsDSRuinPandemic, TalentsShadowAndFlame];
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const GEAR_PREBIS = PresetUtils.makePresetGear('Pre-BiS', PrebisGear);
+export const GEAR_MC = PresetUtils.makePresetGear('MC', McGear);
+export const DEFAULT_GEAR = GEAR_PREBIS;
+export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_PREBIS, GEAR_MC];

@@ -30,6 +30,7 @@ type paritySpec struct {
 	Ranged   int32   `json:"ranged"`
 	Distance float64 `json:"distance"`
 	Tank     bool    `json:"tank"`
+	Gear     string  `json:"gear"` // the spec's default gear preset
 }
 
 type parityResult struct {
@@ -173,7 +174,18 @@ func statsLine(r parityResult) string {
 		s["mcrit"], s["scrit"], s["mhit"], s["shit"], s["str"], s["agi"], s["int"], r.Oom, r.Dtps)
 }
 
-func runSpec(spec paritySpec, profile map[string]float64, iterations int32) (res parityResult) {
+func runSpec(spec paritySpec, profile map[string]float64, iterations int32) parityResult {
+	items := make([]*proto.ItemSpec, len(proto.ItemSlot_name))
+	for i := range items {
+		items[i] = &proto.ItemSpec{}
+	}
+	items[proto.ItemSlot_ItemSlotMainHand].Id = spec.MH
+	items[proto.ItemSlot_ItemSlotOffHand].Id = spec.OH
+	items[proto.ItemSlot_ItemSlotRanged].Id = spec.Ranged
+	return runSpecWithGear(spec, profile, iterations, &proto.EquipmentSpec{Items: items})
+}
+
+func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int32, equipment *proto.EquipmentSpec) (res parityResult) {
 	defer func() {
 		if r := recover(); r != nil {
 			res = parityResult{Error: fmt.Sprintf("panic: %.160v", r)}
@@ -184,13 +196,6 @@ func runSpec(spec paritySpec, profile map[string]float64, iterations int32) (res
 	if _, err := os.Stat(aplPath + ".apl.json"); err != nil {
 		return parityResult{Error: "no APL " + spec.NextApl}
 	}
-	items := make([]*proto.ItemSpec, len(proto.ItemSlot_name))
-	for i := range items {
-		items[i] = &proto.ItemSpec{}
-	}
-	items[proto.ItemSlot_ItemSlotMainHand].Id = spec.MH
-	items[proto.ItemSlot_ItemSlotOffHand].Id = spec.OH
-	items[proto.ItemSlot_ItemSlotRanged].Id = spec.Ranged
 
 	distance := spec.Distance
 	if distance == 0 {
@@ -199,7 +204,7 @@ func runSpec(spec paritySpec, profile map[string]float64, iterations int32) (res
 	player := core.WithSpec(&proto.Player{
 		Class:              class,
 		Race:               proto.Race(proto.Race_value[spec.Race]),
-		Equipment:          &proto.EquipmentSpec{Items: items},
+		Equipment:          equipment,
 		Consumables:        consumables,
 		BonusStats:         &proto.UnitStats{Stats: bonusStats(profile).ToProtoArray()},
 		TalentsString:      spec.Talents,

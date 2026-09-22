@@ -49,10 +49,6 @@ export const eligibilityFor = ({ player, slot, equippedItem }: Omit<SelectorTabs
 });
 
 export const buildSelectorTabs = ({ player, slot, gearData, equippedItem }: SelectorTabsOptions): SelectorTab[] => {
-	// `equippedItem.item` clones the proto on every read, and `computeEP` runs once per sort
-	// comparison, so the suffix scale is read once here.
-	const randPropPoints = equippedItem?.item.randPropPoints ?? 0;
-
 	const tabs: Array<SelectorTab | null> = [
 		describe({
 			label: SelectorModalTabs.Items,
@@ -75,7 +71,7 @@ export const buildSelectorTabs = ({ player, slot, gearData, equippedItem }: Sele
 			? describe({
 					label: SelectorModalTabs.RandomSuffixes,
 					itemData: randomSuffixesTabData(player, gearData, equippedItem),
-					computeEP: randomSuffix => (player.computeRandomSuffixEP(randomSuffix) * randPropPoints) / 10000,
+					computeEP: randomSuffix => player.computeRandomSuffixEP(randomSuffix),
 					equippedToItem: item => item?.randomSuffix,
 					onRemove: () => {
 						const current = gearData.getEquippedItem();

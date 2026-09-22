@@ -7,6 +7,7 @@ import {
 	FeralBearDruid_Rotation_SwipeUsage as SwipeUsage,
 } from '@generated/proto/druid';
 import { OtherDefaults as SimUIOtherDefaults } from '@sim/spec_config';
+import LaunchGear from './gear_sets/launch.gear.json';
 
 export const DefaultSimpleRotation = DruidRotation.create({
 	maintainFaerieFire: true,
@@ -56,3 +57,8 @@ export const OtherDefaults: Partial<SimUIOtherDefaults> = {
 		inspirationUptime: 0.25,
 	}),
 };
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const DEFAULT_GEAR = GEAR_LAUNCH;
+export const GEAR_PRESETS = [GEAR_LAUNCH];

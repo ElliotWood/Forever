@@ -81,6 +81,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 366.9791
+  tps: 235.1768
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 283.90869
@@ -99,6 +106,13 @@ dps_results: {
  value: {
   dps: 283.90869
   tps: 176.88881
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 303.62417
+  tps: 188.28811
  }
 }
 dps_results: {
@@ -137,6 +151,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 283.90869
+  tps: 176.88881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 283.90869
@@ -159,6 +180,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestElemental-AllItems-ForceReactiveDisk-18168"
+ value: {
+  dps: 283.90869
+  tps: 176.88881
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-FreezingBand-942"
  value: {
   dps: 283.90869
   tps: 176.88881
@@ -228,6 +256,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-IcebladeHacker-13952"
+ value: {
+  dps: 283.90869
+  tps: 176.88881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-JomGabbar-23570"
  value: {
   dps: 283.90869
@@ -236,6 +271,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestElemental-AllItems-Loatheb'sReflection-23042"
+ value: {
+  dps: 283.90869
+  tps: 176.88881
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-MarkofTyranny-13966"
  value: {
   dps: 283.90869
   tps: 176.88881
@@ -277,10 +319,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-Prismcharm-15867"
+ value: {
+  dps: 283.90869
+  tps: 176.88881
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 283.90869
+  tps: 176.88881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-SerenityField-272439"
  value: {
   dps: 293.57671
   tps: 182.31887
+ }
+}
+dps_results: {
+ key: "TestElemental-AllItems-SkullflameShield-1168"
+ value: {
+  dps: 283.90869
+  tps: 176.88881
  }
 }
 dps_results: {
@@ -298,10 +361,17 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 288.75141
+  tps: 179.88347
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-StormGauntlets-12632"
  value: {
-  dps: 288.64462
-  tps: 179.80294
+  dps: 298.98812
+  tps: 185.78288
  }
 }
 dps_results: {
@@ -319,10 +389,17 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestElemental-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 283.90869
+  tps: 176.88881
+ }
+}
+dps_results: {
  key: "TestElemental-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 302.965
-  tps: 187.85194
+  dps: 325.69454
+  tps: 200.99179
  }
 }
 dps_results: {

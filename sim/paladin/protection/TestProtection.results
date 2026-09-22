@@ -147,6 +147,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-CloudkeeperLegplates-14554"
+ value: {
+  dps: 595.0287
+  tps: 616.91749
+  dtps: 987.51428
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 583.20699
@@ -159,6 +167,14 @@ dps_results: {
  value: {
   dps: 583.01607
   tps: 608.18806
+  dtps: 1103.14098
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 593.56076
+  tps: 622.27399
   dtps: 1103.14098
  }
 }
@@ -203,6 +219,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 506.43825
+  tps: 539.94001
+  dtps: 1089.9022
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 575.71848
@@ -235,11 +259,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-ForceImbuedGauntlets-18383"
+ value: {
+  dps: 581.4083
+  tps: 606.10919
+  dtps: 1001.39861
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-ForceReactiveDisk-18168"
  value: {
   dps: 581.763
   tps: 607.64355
   dtps: 1092.25997
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-FreezingBand-942"
+ value: {
+  dps: 583.20984
+  tps: 608.50287
+  dtps: 1103.14098
  }
 }
 dps_results: {
@@ -307,6 +347,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-IcebladeHacker-13952"
+ value: {
+  dps: 573.68223
+  tps: 612.56273
+  dtps: 1124.55187
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-JomGabbar-23570"
  value: {
   dps: 594.25845
@@ -320,6 +368,14 @@ dps_results: {
   dps: 583.01607
   tps: 608.18806
   dtps: 1103.14098
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 582.86063
+  tps: 606.5497
+  dtps: 1051.42553
  }
 }
 dps_results: {
@@ -363,11 +419,35 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-Prismcharm-15867"
+ value: {
+  dps: 583.01607
+  tps: 608.18806
+  dtps: 1103.14098
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 577.3586
+  tps: 602.86939
+  dtps: 1100.74805
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-SerenityField-272439"
  value: {
   dps: 587.90328
   tps: 614.71007
   dtps: 1103.14098
+ }
+}
+dps_results: {
+ key: "TestProtection-AllItems-SkullflameShield-1168"
+ value: {
+  dps: 582.54664
+  tps: 606.60269
+  dtps: 830.51733
  }
 }
 dps_results: {
@@ -389,8 +469,8 @@ dps_results: {
 dps_results: {
  key: "TestProtection-AllItems-StormGauntlets-12632"
  value: {
-  dps: 590.21905
-  tps: 613.33627
+  dps: 595.70526
+  tps: 620.6634
   dtps: 1100.61904
  }
 }
@@ -411,10 +491,18 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtection-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 583.01607
+  tps: 608.18806
+  dtps: 1071.38668
+ }
+}
+dps_results: {
  key: "TestProtection-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 591.80251
-  tps: 619.93277
+  dps: 603.89413
+  tps: 636.08721
   dtps: 1103.14098
  }
 }

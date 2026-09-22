@@ -8,7 +8,6 @@ import {
 } from "@generated/proto/apl";
 import {
 	Cooldowns,
-	EquipmentSpec,
 	HandType,
 	ItemSlot,
 	PseudoStat,
@@ -96,7 +95,7 @@ export default defineSpec<Spec.SpecHunter>({
 	],
 	defaults: {
 		// Default equipped gear.
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
 		softCapBreakpoints: [
@@ -165,7 +164,7 @@ export default defineSpec<Spec.SpecHunter>({
 			Presets.SurvivalRotation,
 		],
 		// Preset gear configurations that the user can quickly select.
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	// The build decides the rotation: Sniper Shot is Marksmanship's capstone and Summon Hawk is

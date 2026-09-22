@@ -5,6 +5,7 @@ import { SavedTalents } from '@generated/proto/ui';
 import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
+import LaunchGear from './gear_sets/launch.gear.json';
 
 // Our Forever sim's Seal of Command / Seal of Righteousness twist rotation.
 export const APL_PRESET = PresetUtils.makePresetAPLRotation('Basic Ret', DefaultApl);
@@ -83,3 +84,8 @@ export const OtherDefaults = {
 	iterationCount: 25000,
 	race: Race.RaceBloodElf,
 };
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const DEFAULT_GEAR = GEAR_LAUNCH;
+export const GEAR_PRESETS = [GEAR_LAUNCH];

@@ -606,9 +606,9 @@ func ItemEquipmentBaseStats(item Item) stats.Stats {
 
 	equipStats = equipStats.Add(item.Stats)
 
-	// Random suffix stats can be Reforged, so apply those prior to any Reforges
-	rawSuffixStats := item.RandomSuffix.Stats
-	equipStats = equipStats.Add(rawSuffixStats.Multiply(float64(item.RandPropPoints) / 10000.).Floor())
+	// Forever's random suffixes are flat enchantments, as in Classic: "of the Monkey" is the same
+	// +Agility/+Stamina on every item that rolls it, not a share of the item's stat budget.
+	equipStats = equipStats.Add(item.RandomSuffix.Stats)
 
 	return equipStats
 }

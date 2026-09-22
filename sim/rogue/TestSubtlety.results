@@ -67,6 +67,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 619.21793
+  tps: 307.75131
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 652.77372
@@ -88,10 +95,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Earthstrike-21180"
  value: {
   dps: 658.01548
   tps: 327.0337
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 556.2099
+  tps: 276.43632
  }
 }
 dps_results: {
@@ -103,6 +124,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSubtlety-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-FreezingBand-942"
  value: {
   dps: 642.04215
   tps: 319.09495
@@ -144,6 +172,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-Hurricane-2824"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-JomGabbar-23570"
  value: {
   dps: 661.82512
@@ -152,6 +187,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSubtlety-AllItems-Loatheb'sReflection-23042"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-MarkofTyranny-13966"
  value: {
   dps: 642.04215
   tps: 319.09495
@@ -176,6 +218,20 @@ dps_results: {
  value: {
   dps: 647.22222
   tps: 321.66944
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Prismcharm-15867"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 636.04205
+  tps: 316.1129
  }
 }
 dps_results: {
@@ -215,6 +271,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSubtlety-AllItems-TalismanofEphemeralPower-18820"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 642.04215
   tps: 319.09495

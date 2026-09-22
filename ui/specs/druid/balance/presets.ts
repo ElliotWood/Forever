@@ -18,6 +18,10 @@ import { defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
 import DefaultAPL from './apls/default.apl.json';
 import LaunchAPL from './apls/launch.apl.json';
+import LaunchGear from './gear_sets/launch.gear.json';
+import P0BisGear from './gear_sets/p0.bis.gear.json';
+import P1BisGear from './gear_sets/p1.bis.gear.json';
+import P2BisGear from './gear_sets/p2.bis.gear.json';
 
 export const StandardRotation = PresetUtils.makePresetAPLRotation('Default', DefaultAPL);
 // Master's Launch rotation (Wrath-led, Starfire on Eclipse), the one its arena ranks.
@@ -84,3 +88,11 @@ export const OtherDefaults = {
 	profession2: Profession.Tailoring,
 	race: Race.RaceNightElf,
 };
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const GEAR_P0_BIS = PresetUtils.makePresetGear('Pre-BiS', P0BisGear);
+export const GEAR_P1_BIS = PresetUtils.makePresetGear('P1 BiS', P1BisGear);
+export const GEAR_P2_BIS = PresetUtils.makePresetGear('P2 BiS', P2BisGear);
+export const DEFAULT_GEAR = GEAR_P0_BIS;
+export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_P0_BIS, GEAR_P1_BIS, GEAR_P2_BIS];

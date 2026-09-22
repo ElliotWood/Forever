@@ -85,6 +85,30 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-BattlegearofMight"
+ value: {
+  dps: 536.90115
+  tps: 1173.94127
+  dtps: 590.28447
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BattlegearofWrath"
+ value: {
+  dps: 504.96907
+  tps: 1122.87927
+  dtps: 821.35928
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 515.44224
+  tps: 1165.42074
+  dtps: 1083.77153
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 504.46495
@@ -98,6 +122,14 @@ dps_results: {
   dps: 533.79084
   tps: 1158.87276
   dtps: 1010.76996
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-CloudkeeperLegplates-14554"
+ value: {
+  dps: 506.02044
+  tps: 1120.56759
+  dtps: 939.96997
  }
 }
 dps_results: {
@@ -125,6 +157,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 502.45022
+  tps: 1113.14772
+  dtps: 1039.7338
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Dreadnaught'sBattlegear"
  value: {
   dps: 606.95918
@@ -138,6 +178,14 @@ dps_results: {
   dps: 508.70239
   tps: 1122.49471
   dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 429.9303
+  tps: 985.46487
+  dtps: 1028.81714
  }
 }
 dps_results: {
@@ -169,6 +217,22 @@ dps_results: {
  value: {
   dps: 504.76159
   tps: 1115.32512
+  dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-ForceImbuedGauntlets-18383"
+ value: {
+  dps: 498.60843
+  tps: 1110.9541
+  dtps: 950.50183
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-FreezingBand-942"
+ value: {
+  dps: 502.60216
+  tps: 1113.61667
   dtps: 1039.7338
  }
 }
@@ -245,6 +309,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Hurricane-2824"
+ value: {
+  dps: 502.45022
+  tps: 1113.14772
+  dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-IcebladeHacker-13952"
+ value: {
+  dps: 538.47403
+  tps: 1176.91893
+  dtps: 1050.91148
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-JomGabbar-23570"
  value: {
   dps: 510.53447
@@ -266,6 +346,14 @@ dps_results: {
   dps: 502.45022
   tps: 1113.14772
   dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 498.47683
+  tps: 1105.46745
+  dtps: 994.54092
  }
 }
 dps_results: {
@@ -309,6 +397,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Prismcharm-15867"
+ value: {
+  dps: 502.45022
+  tps: 1113.14772
+  dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 499.09078
+  tps: 1105.1297
+  dtps: 1046.55283
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-SatchelofDarkIronBombs-285278"
  value: {
   dps: 502.51852
@@ -322,6 +426,14 @@ dps_results: {
   dps: 502.45022
   tps: 1113.14772
   dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-SkullflameShield-1168"
+ value: {
+  dps: 493.55591
+  tps: 1097.67059
+  dtps: 796.07121
  }
 }
 dps_results: {
@@ -362,6 +474,14 @@ dps_results: {
   dps: 502.45022
   tps: 1113.14772
   dtps: 1039.7338
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 501.49887
+  tps: 1111.89913
+  dtps: 1011.06043
  }
 }
 dps_results: {

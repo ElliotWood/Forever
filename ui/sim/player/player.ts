@@ -1230,7 +1230,7 @@ export class Player<SpecType extends Spec> {
 		let maxSuffixEP = 0;
 		if (item.randomSuffixOptions.length) {
 			const suffixEPs = equippedItem.item.randomSuffixOptions.map(id => this.computeRandomSuffixEP(this.sim.db.getRandomSuffixById(id)! || 0));
-			maxSuffixEP = (Math.max(...suffixEPs) * equippedItem.item.randPropPoints) / 10000;
+			maxSuffixEP = Math.max(...suffixEPs);
 		}
 
 		let ep = itemStats.computeEP(this.getEpWeights()) + maxSuffixEP;

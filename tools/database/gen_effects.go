@@ -373,6 +373,10 @@ func GenerateItemEffects(instance *dbc.DBC, db *WowDatabase, itemSources map[int
 	for _, parsed := range db.Items {
 		parsed.ItemEffects = dbc.MergeItemEffectsForAllStates(parsed)
 
+		// core.NewItemEffect takes one effect per item and panics on a second, so only an
+		// item's first generated effect is written; the rest are listed as missing. Skullflame
+		// Shield carries two client effects (18815, 18816) that both resolve to 18817.
+		generated := false
 		for _, itemEffect := range parsed.ItemEffects {
 			if !ItemEffectIsSupported(instance, int(itemEffect.BuffId)) {
 				// Commented into the generated file rather than dropped. These are deliberately
@@ -387,10 +391,12 @@ func GenerateItemEffects(instance *dbc.DBC, db *WowDatabase, itemSources map[int
 				continue
 			}
 
-			if TryParseOnUseEffect(parsed, itemEffect, instance, groupMapOnUse) != EffectParseResultSuccess &&
-				TryParseProcEffect(parsed, itemEffect, instance, groupMapProc) != EffectParseResultSuccess {
-				ParseTooltipForMissingEffect(parsed, itemEffect, instance, groupMapProc, "Procs")
+			if !generated && (TryParseOnUseEffect(parsed, itemEffect, instance, groupMapOnUse) == EffectParseResultSuccess ||
+				TryParseProcEffect(parsed, itemEffect, instance, groupMapProc) == EffectParseResultSuccess) {
+				generated = true
+				continue
 			}
+			ParseTooltipForMissingEffect(parsed, itemEffect, instance, groupMapProc, "Procs")
 		}
 	}
 
