@@ -21,7 +21,7 @@ repository for the session.
 ## Build
 
 ```
-cd tools/vscode-spelldata
+cd .vscode/extensions/wowsims-spelldata
 npm install
 npm run compile      # tsc, writes out/extension.js
 npm test             # compiles, then runs the id-matching test under node --test
@@ -29,7 +29,12 @@ npm test             # compiles, then runs the id-matching test under node --tes
 
 ## Install
 
-For development, open the folder in VS Code and press F5, or from a shell:
+The folder lives under `.vscode/extensions/`, which VS Code (1.89 or later) treats as a workspace
+extension: opening the repository shows an *Install Workspace Extension* prompt once, and after that
+the hover loads for this workspace only. The compiled `out/extension.js` is committed so the prompt
+works from a fresh clone; rebuild it with `npm run compile` after changing `src/`.
+
+For development, open this folder in VS Code and press F5, or from a shell:
 
 ```
 code --extensionDevelopmentPath=$PWD

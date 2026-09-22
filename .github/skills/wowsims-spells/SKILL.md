@@ -125,6 +125,6 @@ go test --tags=with_db ./sim/<class>/ -count=1   # a class, parity test included
 git status --porcelain -- '*.results'            # empty unless a number was meant to move
 ```
 
-`tools/vscode-spelldata` is that printer as a VS Code hover over the ids Go, APL JSON and TS state; its README has the install.
+`.vscode/extensions/wowsims-spelldata` is that printer as a VS Code hover over the ids Go, APL JSON and TS state; VS Code offers to install it as a workspace extension when the repository is opened.
 
 Regenerating needs `tools/database/wowsims.db`, which is gitignored and built by `make db` from a local WoW client. The checks that do not need it — the store's tests, the regeneration from `assets/db_inputs/spell_store_inputs.json` — are the ones CI runs.

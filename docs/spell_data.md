@@ -88,10 +88,11 @@ which is the one shape that always needs the tooltip. An effect whose type or au
 wording for says `unrecognised shape`, and the literal beneath it is then the whole answer.
 
 A name instead of an id lists every row carrying it and then the highest rank, and
-`-json` is the same answer for a tool to read. `tools/vscode-spelldata` is that printer as a VS Code
+`-json` is the same answer for a tool to read. `.vscode/extensions/wowsims-spelldata` is that printer as a VS Code
 hover, over the ids Go, APL JSON and TS state - `MustFind(11574)`, `SpellID: 11574`, `"spellId": 11574`,
 `fromSpellId(23563)` - resolved by running the CLI in the checkout the file belongs to, so a hover
-matches the store being read. Its README has the install.
+matches the store being read. VS Code offers it as a workspace extension when the repository is
+opened; its README has the build.
 
 ### Reaching an effect
 
