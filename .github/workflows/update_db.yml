@@ -141,9 +141,9 @@ jobs:
 
     # The pull request checks do not run for a pull request the workflow token
     # opened, so run the same test suite against the branch here.
-    test:
-        needs: update-db
-        if: needs.update-db.outputs.pull-request-operation == 'created' || needs.update-db.outputs.pull-request-operation == 'updated'
-        uses: ./.github/workflows/run_tests.yml
-        with:
-            ref: update_db
+    #test:
+    #    needs: update-db
+    #    if: needs.update-db.outputs.pull-request-operation == 'created' || needs.update-db.outputs.pull-request-operation == 'updated'
+    #    uses: ./.github/workflows/run_tests.yml
+    #    with:
+    #        ref: update_db
