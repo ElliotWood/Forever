@@ -678,7 +678,7 @@ then run the generator, which writes the whole file back. Running it twice and s
 `go test ./tools/database/... ./tools/gen_buffs_proto/...` needs no client database and runs in CI.
 Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`,
 `TestScopeMatchesTheClientTargeting`, `TestGeneratedBuffsDebuffsTS` and
-`TestGeneratedRankTablesMatchTheDatabase` skip; the other 25 run.
+`TestGeneratedRankTablesMatchTheDatabase` skip; the other 23 run.
 
 | Test                                                                                                              | What it holds                                                                                                                   |
 | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -688,7 +688,6 @@ Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`,
 | `TestFieldNaming`, `TestFieldNamesRoundTrip`                                                                      | `GoField()` and `TSField()` reproduce protoc's and protobuf-ts's camel case                                                     |
 | `TestRenderMatchesCommittedFile`                                                                                  | `proto/buffs.proto` is what the manifest renders                                                                                |
 | `TestRenderNextIndex`                                                                                             | the next free number above each message                                                                                         |
-| `TestRetypedFieldsAreBool`, `TestRetypedFieldsMatchTheMigration`                                                  | the 23 fields api version 17 retyped are bool, and `ui/sim/proto/buff_field_migration.ts` names the same 23                     |
 | `TestRenderedBuffFilesMatchTheFixtures`, `TestRenderedBuffFilesCompile`                                           | synthetic rows render to the committed fixtures, and those fixtures compile against the real `sim/core` through a build overlay |
 | `TestRenderBuffsDebuffsTS*`                                                                                       | the settings inputs each proto type and kind renders                                                                            |
 | `TestGeneratedBuffFiles`, `TestGeneratedBuffsDebuffsTS`                                                           | with a database, the committed files are byte-for-byte what the generator emits                                                 |
@@ -703,10 +702,9 @@ Rewrite the fixtures with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`.
 goes away shifts every later number down by one and `TestScopeNumbersAreDense` holds that. Nothing is
 live, so no saved payload rides on the old numbers.
 
-**A proto change here is a UI migration too.** `ui/sim/proto/buff_field_migration.ts` runs on the raw
-JSON before `fromJson`, because the parser throws on an enum name in a bool field long before the
-version converters run. A retyped field goes in its list, and every `fromJson` of a settings envelope
-passes `ignoreUnknownFields`.
+**A proto change here breaks whatever a browser holds.** Nothing migrates a saved payload: a field the
+manifest retypes makes `fromJson` throw on the enum name an older save spells out. Every `fromJson` of
+a settings envelope passes `ignoreUnknownFields`, so a field that only goes away costs nothing.
 
 **Drums are not a Forever consumable.** The client describes no row for the TBC drums - 35476, 35475
 and 35478, Battle, War and Restoration, nor their Greater variants - so there is nothing to model and

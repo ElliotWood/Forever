@@ -92,8 +92,6 @@ make spelldata
 go run ./tools/gen_buffs_proto
 
 # Run one sim from a RaidSimRequest in protojson and print the RaidSimResult
-# An input file written before api version 17 spells the buff fields it retyped as enum names,
-# e.g. "TristateEffectImproved" where the proto now states a bool, and the parser rejects it:
-# export the settings from the UI again to get a file this reads
+# Nothing migrates an input file: export the settings from the UI again after a proto change
 go run ./cmd/wowsimcli sim --infile input.json
 ```

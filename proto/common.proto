@@ -16,16 +16,11 @@ extend google.protobuf.MessageOptions {
 }
 
 message ProtoVersion {
-	// This should be incremented by 1 whenever proto files are changed in a
-	// way that will break any saved browser data or old sim links. If you
-	// are incrementing this value, then it is assumed that you are also
-	// implementing the required conversion code within the
-	// updateProtoVersion() method of any affected classes in the UI (or
-	// adding this method if it does not exist yet). Likewise, any affected
-	// protos need to define an api_version field so that the UI code knows
-	// to up-convert these protos to the new format whenever api_version is
-	// missing (0) or lower than current_version_number.
-	option (current_version_number) = 17;
+	// The version the UI stamps every api_version field with. The sim is not
+	// deployed anywhere, so no saved browser data or sim link predates this
+	// number and nothing converts one: a breaking proto change simply breaks
+	// whatever a browser still holds.
+	option (current_version_number) = 1;
 
 	// The actual field value is only used within unit tests.
 	int32 saved_version_number = 1;
@@ -247,12 +242,6 @@ enum Stat {
 	//     old sim links will be broken on the UI side.
 	// (6) Increment the current_version_number option in the ProtoVersion
 	//     message at the top of this file.
-	// (7) Add a new entry to the ProtoConversionMap within the
-	//     migrateStatsArray() method of ui/core/proto_utils/stats.ts . If
-	//     the migration function for the new version works properly, then
-	//     you should see that stats arrays embedded in local storage data
-	//     and old links are automatically converted to new arrays that are
-	//     compatible with the new stats interpretation.
 }
 
 // Not all pseudostats are included here; just the ones we want to pass
@@ -301,8 +290,7 @@ message UnitStats {
 	// breaking changes to the size, ordering, or interpretation of the
 	// stats or pseudoStats arrays, then make sure to increment the
 	// current_version_number option in the ProtoVersion message at the top
-	// of this file, and also add a new entry to the data conversion map
-	// within the migrateStatsArray() method of ui/core/proto_utils/stats.ts
+	// of this file.
 	// A "breaking change" here is defined as anything that will break saved
 	// browser data or old sim links; the version need not be incremented if
 	// you simply append a new rarely-used PseudoStat to the end of the
@@ -525,8 +513,7 @@ message Encounter {
 	// Proto version at the time these encounter settings were saved. If you
 	// make any changes to this proto that will break saved browser data or
 	// old sim links, then make sure to increment the current_version_number
-	// option within the ProtoVersion message at the top of this file, and
-	// also modify the updateProtoVersion() method of ui/core/encounter.ts .
+	// option within the ProtoVersion message at the top of this file.
 	int32 api_version = 9;
 
 	double duration = 1;

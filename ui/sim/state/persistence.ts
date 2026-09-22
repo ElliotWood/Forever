@@ -10,10 +10,8 @@ import { IndividualSimSettings } from '@generated/proto/ui';
 
 import type { SimSettingCategories } from '../constants/sim_settings';
 import type { Player } from '../player/player';
-import { migrateRetypedBuffFields } from '../proto/buff_field_migration';
 import type { StatWeightActionSettings } from '../settings/stat_weight_settings';
 import { batch } from './batch';
-import { parseLegacySettingsJson } from './legacy_settings';
 import { tryParseUrlLocation } from './sim_links';
 import type { StoreSubscribe } from './subscriptions';
 
@@ -51,9 +49,7 @@ export function loadIndividualSettings(
 			const savedSettings = env.storage.getItem(opts.storageKey);
 			if (savedSettings != null) {
 				try {
-					const savedJson = parseLegacySettingsJson(savedSettings);
-					migrateRetypedBuffFields(savedJson);
-					const settings = IndividualSimSettings.fromJson(savedJson as never, { ignoreUnknownFields: true });
+					const settings = IndividualSimSettings.fromJsonString(savedSettings, { ignoreUnknownFields: true });
 					host.fromProto(settings);
 				} catch (e) {
 					console.warn('Failed to parse saved settings: ' + e);

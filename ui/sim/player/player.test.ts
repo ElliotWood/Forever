@@ -1,8 +1,5 @@
-import { Player as PlayerProto } from '@generated/proto/api';
-import { APLRotation_Type } from '@generated/proto/apl';
 import { Debuffs } from '@generated/proto/buffs';
 import { PseudoStat, Stat } from '@generated/proto/common';
-import { DpsWarrior_Rotation, DpsWarriorSpec, WarriorSunder } from '@generated/proto/warrior';
 import { describe, expect, it } from 'vitest';
 
 import { Stats } from '../proto/stats';
@@ -39,42 +36,5 @@ describe('Player.getDebuffStats', () => {
 	it("credits Hunter's Mark with the ranged attack power spell 14325 states", () => {
 		expect(debuffStats({ huntersMark: true }).getStat(Stat.StatRangedAttackPower)).toBe(71);
 		expect(debuffStats({ huntersMark: false }).getStat(Stat.StatRangedAttackPower)).toBe(0);
-	});
-});
-
-// The simple rotation travels as an opaque JSON string, and `DpsWarrior_Rotation.fromJson` reads it
-// without ignoreUnknownFields, so a reserved key left in a version-16 save costs the whole rotation.
-describe('Player.updateProtoVersion', () => {
-	const v16Warrior = (specRotationJson: string) =>
-		PlayerProto.create({
-			apiVersion: 16,
-			spec: { oneofKind: 'dpsWarrior', dpsWarrior: {} },
-			rotation: { type: APLRotation_Type.TypeSimple, simple: { specRotationJson } },
-		});
-
-	it('drops the warrior bloodlust timing a version-16 simple rotation still carries', () => {
-		const proto = v16Warrior('{"spec":"DpsWarriorSpecArms","sunderArmor":"WarriorSunderMaintain","bloodlustTiming":5}');
-
-		Player.updateProtoVersion(proto);
-		const rotation = DpsWarrior_Rotation.fromJson(JSON.parse(proto.rotation!.simple!.specRotationJson));
-
-		expect(rotation.spec).toBe(DpsWarriorSpec.DpsWarriorSpecArms);
-		expect(rotation.sunderArmor).toBe(WarriorSunder.WarriorSunderMaintain);
-	});
-
-	it('drops the field under the name a proto3 JSON payload spells it', () => {
-		const proto = v16Warrior('{"spec":"DpsWarriorSpecFury","bloodlust_timing":5}');
-
-		Player.updateProtoVersion(proto);
-
-		expect(() => DpsWarrior_Rotation.fromJson(JSON.parse(proto.rotation!.simple!.specRotationJson))).not.toThrow();
-	});
-
-	it('leaves a simple rotation it cannot parse alone', () => {
-		const proto = v16Warrior('not json');
-
-		Player.updateProtoVersion(proto);
-
-		expect(proto.rotation!.simple!.specRotationJson).toBe('not json');
 	});
 });

@@ -48,8 +48,6 @@ import { EquippedItem } from '../proto/equipped_item';
 import { Gear, ItemSwapGear } from '../proto/gear';
 import { gemMatchesSocket, isUnrestrictedGem } from '../proto/gems';
 import { canEquipEnchant, canEquipItem, enchantAppliesToItem, getMetaGemEffectEP, isPVPItem } from '../proto/items';
-import { migrateOldProto, ProtoConversionMap } from '../proto/proto_migration';
-import { dropRetiredRotationFields } from '../proto/rotation_field_migration';
 import { specTypeFunctions, withSpec } from '../proto/spec_functions';
 import type { ClassOptions, ClassSpecs, SpecClasses, SpecOptions, SpecRotation, SpecTalents, SpecTypeFunctions } from '../proto/spec_types';
 import { Stats, UnitStat } from '../proto/stats';
@@ -1500,9 +1498,7 @@ export class Player<SpecType extends Spec> {
 	}
 
 	fromProto(proto: PlayerProto, includeCategories?: Array<SimSettingCategories>) {
-		// Fix potential out-of-date protos before importing
 		batch(() => {
-			Player.updateProtoVersion(proto);
 			const loadCategory = (cat: SimSettingCategories) => !includeCategories || includeCategories.length == 0 || includeCategories.includes(cat);
 			if (loadCategory(SimSettingCategories.Gear)) {
 				this.setGear(proto.equipment ? this.sim.db.lookupEquipmentSpec(proto.equipment) : new Gear({}));
@@ -1573,68 +1569,6 @@ export class Player<SpecType extends Spec> {
 
 	getBaseDefense(): number {
 		return Mechanics.CHARACTER_LEVEL * 5;
-	}
-
-	static updateProtoVersion(playerProto: PlayerProto) {
-		if (!(playerProto.apiVersion < CURRENT_API_VERSION)) {
-			return;
-		}
-
-		const conversionMap: ProtoConversionMap<PlayerProto> = new Map([
-			[
-				12,
-				(oldProto: PlayerProto) => {
-					oldProto.apiVersion = 13;
-
-					// v12: ret paladin useConsecrate(bool) -> consecrationRank(int32).
-					if (playerProto.spec?.oneofKind === 'retributionPaladin') {
-						const jsonStr = playerProto.rotation?.simple?.specRotationJson;
-						if (jsonStr) {
-							try {
-								const parsed = JSON.parse(jsonStr);
-
-								if (!parsed.aura) {
-									parsed.aura = 'SanctityAura';
-								}
-
-								if (parsed.useConsecrate) {
-									parsed.consecrationRank = 6;
-								}
-
-								delete parsed.useConsecrate;
-
-								playerProto.rotation!.simple!.specRotationJson = JSON.stringify(parsed);
-							} catch {
-								// Malformed JSON - nothing to migrate.
-							}
-						}
-					}
-
-					return oldProto;
-				},
-			],
-			// v17 types the ghost-talent buff fields bool. A JSON payload is rewritten before it is
-			// parsed (`migrateRetypedBuffFields`) and a binary one decodes 1 or 2 as true, so the
-			// buff fields need nothing here.
-			[
-				17,
-				(oldProto: PlayerProto) => {
-					// v17 also reserves the warrior's bloodlust_timing, which a saved simple rotation
-					// still spells out; `dropRetiredRotationFields` says what leaving it in costs.
-					if (oldProto.rotation?.simple) {
-						oldProto.rotation.simple.specRotationJson = dropRetiredRotationFields(oldProto.rotation.simple.specRotationJson);
-					}
-
-					return oldProto;
-				},
-			],
-		]);
-
-		// Run the migration utility using the above map.
-		migrateOldProto<PlayerProto>(playerProto, playerProto.apiVersion, conversionMap);
-
-		// Flag the version as up-to-date once all migrations are done.
-		playerProto.apiVersion = CURRENT_API_VERSION;
 	}
 
 	getSpecConfig(): SpecConfigData<SpecType> {

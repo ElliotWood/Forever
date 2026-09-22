@@ -5,7 +5,6 @@ import { translatePseudoStat, translateStat } from '@i18n/localization';
 import * as Mechanics from '../constants/mechanics';
 import { CURRENT_API_VERSION } from '../constants/other';
 import { getEnumValues } from '../utils/collections';
-import { migrateOldProto, ProtoConversionMap } from './proto_migration';
 
 const STATS_LEN = getEnumValues(Stat).length;
 const PSEUDOSTATS_LEN = getEnumValues(PseudoStat).length;
@@ -286,21 +285,12 @@ export class UnitStat {
 	}
 
 	static fromProto(protoMessage: UnitStatProto): UnitStat {
-		if (protoMessage) {
-			UnitStat.updateProtoVersion(protoMessage);
-		}
 		if (protoMessage.unitStat.oneofKind == 'stat') {
 			return UnitStat.fromStat(protoMessage.unitStat.stat);
 		} else if (protoMessage.unitStat.oneofKind == 'pseudoStat') {
 			return UnitStat.fromPseudoStat(protoMessage.unitStat.pseudoStat);
 		} else {
 			return new UnitStat(null, null, null);
-		}
-	}
-
-	static updateProtoVersion(proto: UnitStatProto) {
-		if (!(proto.apiVersion < CURRENT_API_VERSION)) {
-			return;
 		}
 	}
 
@@ -639,30 +629,10 @@ export class Stats {
 
 	static fromProto(unitStats?: UnitStats): Stats {
 		if (unitStats) {
-			// Fix out of-date protos before importing
-			Stats.updateProtoVersion(unitStats);
-
 			return new Stats(unitStats.stats, unitStats.pseudoStats);
 		} else {
 			return new Stats();
 		}
-	}
-
-	static updateProtoVersion(proto: UnitStats) {
-		if (!(proto.apiVersion < CURRENT_API_VERSION)) {
-			return;
-		}
-	}
-
-	// Takes in a stats array that was generated from an out-of-date proto version, and converts it to an array that is consistent with the current proto version.
-	static migrateStatsArray(oldStats: number[], oldApiVersion: number, fallbackStats?: number[], targetApiVersion?: number): number[] {
-		const conversionMap: ProtoConversionMap<number[]> = new Map([]);
-		const migratedProto = migrateOldProto<number[]>(oldStats, oldApiVersion, conversionMap, targetApiVersion);
-
-		// If there is a fallback array, use it if the lengths don't match
-		if (fallbackStats && migratedProto.length !== fallbackStats.length) return fallbackStats;
-
-		return migratedProto;
 	}
 }
 

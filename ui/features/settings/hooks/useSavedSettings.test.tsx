@@ -34,27 +34,9 @@ describe('useSavedSettings', () => {
 		expect(entries[0].data.race).toBe(Race.RaceOrc);
 	});
 
-	// A save written while the field was a TristateEffect holds an enum name, which
-	// `SavedSettings.fromJson` throws on now that the field is a bool; `useSavedData` swallows that
-	// and the entry would be gone from the panel without a word.
-	it('keeps an entry whose improvedSealOfTheCrusader is a saved enum name', () => {
-		store({ Legacy: { race: 'RaceOrc', debuffs: { improvedSealOfTheCrusader: 'TristateEffectRegular', huntersMark: true } } });
+	it('reads every entry of the slot', () => {
+		store({ Raid: { debuffs: { improvedSealOfTheCrusader: true } }, Current: { race: 'RaceOrc' } });
 
-		const { entries } = load();
-		expect(entries.map(entry => entry.name)).toEqual(['Legacy']);
-		expect(entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(true);
-		expect(entries[0].data.debuffs?.huntersMark).toBe(true);
-	});
-
-	it('reads the missing state as off rather than as a set buff', () => {
-		store({ Current: { debuffs: { improvedSealOfTheCrusader: 'TristateEffectMissing' } } });
-
-		expect(load().entries[0].data.debuffs?.improvedSealOfTheCrusader).toBe(false);
-	});
-
-	it('does not drop the other entries of the slot', () => {
-		store({ Legacy: { debuffs: { improvedSealOfTheCrusader: 'TristateEffectImproved' } }, Current: { race: 'RaceOrc' } });
-
-		expect(load().entries.map(entry => entry.name)).toEqual(['Legacy', 'Current']);
+		expect(load().entries.map(entry => entry.name)).toEqual(['Raid', 'Current']);
 	});
 });

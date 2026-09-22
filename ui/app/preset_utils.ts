@@ -20,7 +20,6 @@ import type {
 	PresetTalents,
 	PresetTalentsOptions,
 } from '@sim/presets/types';
-import { migrateRetypedBuffFields } from '@sim/proto/buff_field_migration';
 import { specTypeFunctions } from '@sim/proto/spec_functions';
 import type { SpecRotation } from '@sim/proto/spec_types';
 import { Stats } from '@sim/proto/stats';
@@ -277,7 +276,6 @@ export const makePresetBuildFromJSON = (
 	{ settings: customSimSettings, ...customBuildOptions }: PresetBuildOptions = {},
 	options?: PresetOptionsBase,
 ): PresetBuild => {
-	migrateRetypedBuffFields(json);
 	const simSettings = IndividualSimSettings.fromJson(json, { ignoreUnknownFields: true });
 	const buildConfig: PresetBuildOptions = {};
 

@@ -49,7 +49,6 @@ import { createElement } from 'react';
 
 import { reportSimCrash } from './crash_report';
 import { CrashReportOpener } from './crash_report_opener';
-import { updateIndividualProtoVersion } from './proto_version';
 import { PRESET_FILTER_STORAGE_KEY } from './storage_keys';
 import type { ShellDom } from './types/shell_dom';
 
@@ -275,10 +274,6 @@ export class SimHostObject<SpecType extends Spec> implements IndividualSimHost<S
 		applyEmptyAplRotation(this.player);
 	}
 
-	static updateProtoVersion(settingsProto: IndividualSimSettings) {
-		updateIndividualProtoVersion(settingsProto);
-	}
-
 	applyDefaults() {
 		applyIndividualDefaults(this);
 	}
@@ -292,9 +287,6 @@ export class SimHostObject<SpecType extends Spec> implements IndividualSimHost<S
 	}
 
 	fromProto(settings: IndividualSimSettings, includeCategories?: Array<SimSettingCategories>) {
-		// Before `applyIndividualSimSettings`, which runs the shared migrations and then stamps the
-		// proto as current — after which the TBC-only converter would never see an old payload.
-		SimHostObject.updateProtoVersion(settings);
 		// A gear planner hides the encounter settings, so the default target applied by `applyDefaults`
 		// stays whatever the saved settings or the link carried: stats and the gem optimizer always
 		// have a full environment to build, without a second ComputeStats to put it back.

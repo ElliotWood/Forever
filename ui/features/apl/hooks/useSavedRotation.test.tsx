@@ -24,10 +24,10 @@ const withUuids = SavedRotation.create({
 	}),
 });
 
-const withRetiredField = SavedRotation.create({
+const simpleArms = SavedRotation.create({
 	rotation: APLRotation.create({
 		type: APLRotation_Type.TypeSimple,
-		simple: { specRotationJson: '{"spec":"DpsWarriorSpecArms","sunderArmor":"WarriorSunderMaintain","bloodlustTiming":5}' },
+		simple: { specRotationJson: '{"spec":"DpsWarriorSpecArms","sunderArmor":"WarriorSunderMaintain"}' },
 	}),
 });
 
@@ -62,11 +62,8 @@ describe('useSavedRotation', () => {
 		expect(getByTestId('json').textContent).not.toContain('minted-by-an-older-build');
 	});
 
-	// Nothing versions a saved rotation, so the reserved key survives to `DpsWarrior_Rotation.fromJson`,
-	// which throws over it; `Player.getSimpleRotation` catches and hands back a blank rotation, costing
-	// the spec, the sunder choice and both toggles.
-	it('drops the reserved field a stored simple rotation carries, so the spec parser keeps the rest', () => {
-		window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ Arms: SavedRotation.toJson(withRetiredField) }));
+	it('hands the simple rotation json to the spec parser as it was stored', () => {
+		window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ Arms: SavedRotation.toJson(simpleArms) }));
 
 		const { getByTestId } = mount();
 		const rotation = DpsWarrior_Rotation.fromJson(JSON.parse(getByTestId('spec-rotation-json').textContent!));
