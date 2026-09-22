@@ -407,7 +407,7 @@ dps_results: {
  value: {
   dps: 569.38286
   tps: 594.32591
-  dtps: 797.84571
+  dtps: 804.70246
  }
 }
 dps_results: {
@@ -767,7 +767,7 @@ dps_results: {
  value: {
   dps: 581.12636
   tps: 610.14532
-  dtps: 606.04787
+  dtps: 615.91227
  }
 }
 dps_results: {
@@ -837,9 +837,9 @@ dps_results: {
 dps_results: {
  key: "TestProtection-AllItems-VolcanicArmor"
  value: {
-  dps: 569.33652
-  tps: 595.11354
-  dtps: 723.54696
+  dps: 569.28134
+  tps: 594.97254
+  dtps: 743.96115
  }
 }
 dps_results: {
