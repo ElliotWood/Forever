@@ -637,26 +637,6 @@ func BuildItemDifficultyPostfix(itemSources map[int][]*proto.DropSource, itemId 
 	return difficultyPostfix
 }
 
-// Whether a proc's rate is actually in the spell data.
-//
-// A flat 100% is only believable when the tooltip agrees: DBC writes 100 on the chance-on-hit weapon
-// procs whose real rate lives outside the spell data, the same convention as the 101 sentinel, so
-// "Chance to strike your melee target with lightning" at 100% is an unstated rate rather than an
-// every-hit proc. Blazefury Medallion, which really does add its damage to every swing, claims no
-// chance and is believed.
-func procRateIsStated(proc *proto.ProcEffect, tooltip string) bool {
-	if proc.GetPpm() > 0 {
-		return true
-	}
-
-	chance := proc.GetProcChance()
-	if chance <= 0 {
-		return false
-	}
-
-	return chance < 1 || !statedChanceMatcher.MatchString(tooltip)
-}
-
 func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMapProc map[string]Group) EffectParseResult {
 	if itemEffect.GetProc() != nil && parsed.ScalingOptions[0].Ilvl > MIN_EFFECT_ILVL {
 		// Effect was already manually implemented
