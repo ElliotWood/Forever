@@ -255,22 +255,6 @@ export const makeOHImbueInput = makeConsumeInputFactory({
 });
 
 ///////////////////////////////////////////////////////////////////////////
-//                                   PET
-///////////////////////////////////////////////////////////////////////////
-
-export const PetScrollAgi = makeBooleanConsumeInput({
-	actionId: ActionId.fromItemId(10309),
-	fieldName: 'petScrollAgi',
-	showWhen: (player: Player<any>) => [Spec.SpecHunter, Spec.SpecWarlock, Spec.SpecDpsPriest].includes(player.getSpec()),
-});
-
-export const PetScrollStr = makeBooleanConsumeInput({
-	actionId: ActionId.fromItemId(10310),
-	fieldName: 'petScrollStr',
-	showWhen: (player: Player<any>) => [Spec.SpecHunter, Spec.SpecWarlock, Spec.SpecDpsPriest].includes(player.getSpec()),
-});
-
-///////////////////////////////////////////////////////////////////////////
 //                                 SCROLLS
 ///////////////////////////////////////////////////////////////////////////
 

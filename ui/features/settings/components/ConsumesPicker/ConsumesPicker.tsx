@@ -109,13 +109,6 @@ export const ConsumesPicker = ({
 					</PickerGroup>
 				</ConsumeRow>
 			)}
-			<ConsumeRow name="pet" hidden={!encounterConsumes}>
-				<PickerGroup variant="icons" className="justify-end" data-testid="consumes-pet">
-					<IconEnumPicker modObject={player} config={configs.petFood} />
-					<IconPicker modObject={player} config={ConsumablesInputs.PetScrollAgi} />
-					<IconPicker modObject={player} config={ConsumablesInputs.PetScrollStr} />
-				</PickerGroup>
-			</ConsumeRow>
 		</div>
 	);
 };

@@ -450,13 +450,10 @@ message ConsumesSpec {
 	bool scroll_int = 14;
 	bool scroll_spi = 15;
 	bool scroll_arm = 16;
-	bool pet_scroll_agi = 17;
-	bool pet_scroll_str = 18;
-	int32 pet_food_id = 19;
 	// Contains all available potions
-	repeated int32 potions = 20;
+	repeated int32 potions = 17;
 	// Contains all available conjured items
-	repeated int32 conjured_items = 21;
+	repeated int32 conjured_items = 18;
 }
 
 enum MobType {
@@ -602,9 +599,8 @@ enum ConsumableType {
 	ConsumableTypeBattleElixir = 6;
 	ConsumableTypeGuardianElixir = 7;
 	ConsumableTypeImbue = 8;
-	ConsumableTypePetFood = 9;
-	ConsumableTypeOther = 10;
-	ConsumableTypeHerb = 11;
+	ConsumableTypeOther = 9;
+	ConsumableTypeHerb = 10;
 }
 
 

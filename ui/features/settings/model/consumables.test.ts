@@ -66,13 +66,6 @@ describe('scroll consumable inputs', () => {
 		}
 	});
 
-	it('gives the pet scrolls their own fields, sharing the scroll items', () => {
-		const set = playerWith();
-		ConsumablesInputs.PetScrollAgi.setValue!(set.player, true);
-		expect(set.setConsumes).toHaveBeenCalledWith(expect.objectContaining({ petScrollAgi: true, scrollAgi: false }));
-		expect(ConsumablesInputs.PetScrollAgi.actionId!.itemId).toBe(10309);
-		expect(ConsumablesInputs.PetScrollStr.actionId!.itemId).toBe(10310);
-	});
 });
 
 describe('weapon stone imbue options', () => {

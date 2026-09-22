@@ -122,24 +122,6 @@ func applyConsumeEffects(agent Agent, partyBuffs *proto.PartyBuffs) {
 		character.AddStat(stats.PhysicalDamage, 1)
 	}
 
-	// Pet Consumes
-	for _, pet := range character.Pets {
-		if pet.isGuardian {
-			continue
-		}
-
-		if consumables.PetScrollAgi {
-			pet.AddStat(stats.Agility, 17)
-		}
-		if consumables.PetScrollStr {
-			pet.AddStat(stats.Strength, 17)
-		}
-		if consumables.PetFoodId != 0 {
-			petFood := GetConsumableByID(consumables.PetFoodId)
-			pet.AddStats(petFood.Stats)
-		}
-	}
-
 	explosivesSharedTimer := character.NewTimer()
 
 	registerPotionCD(agent, consumables)
