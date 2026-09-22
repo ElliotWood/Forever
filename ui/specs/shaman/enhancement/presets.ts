@@ -1,6 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Profession, Race } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race, TristateEffect } from '@generated/proto/common';
 import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, ShamanSyncType } from '@generated/proto/shaman';
 
 import DefaultApl from './apls/default.apl.json';
@@ -34,7 +34,7 @@ export const DefaultConsumables = ConsumesSpec.create({
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	leaderOfThePack: true,
-	battleShout: true,
+	battleShout: TristateEffect.TristateEffectRegular,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({

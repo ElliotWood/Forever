@@ -180,7 +180,7 @@ type BuffSpec struct {
 	Field          string // proto field name, snake_case, owns the number
 	Number         int32  // proto field number
 	Scope          BuffScope
-	Proto          BuffProtoType // bool when the improving talent is not in the live Trait tree
+	Proto          BuffProtoType // bool when nothing prices an improved state
 	Kind           BuffKind
 	Go             string      // identifier stem: "BattleShout"
 	Name           string      // SpellName.Name_lang of the castable family ("" for rows with no spell)
@@ -202,9 +202,12 @@ type BuffSpec struct {
 	// stats.
 	StatOverride []string
 	Stats        []proto.Stat // UI relevance tags
-	ImpAction    *ActionRef   // improved-icon override when it is an item
-	Label        string       // UI label override, "" = DB name
-	Notes        string       // reason for manual/absent rows; emitted as a comment
+	// ImpAction names the improved state's source when it is not a talent: an
+	// item, or the spell an item set grants at a piece threshold. It is the icon
+	// the improved state shows, and a tristate row states it or a Talent.
+	ImpAction *ActionRef
+	Label     string // UI label override, "" = DB name
+	Notes     string // reason for manual/absent rows; emitted as a comment
 }
 
 // GoField is the field name protoc-gen-go generates for Field. It ports

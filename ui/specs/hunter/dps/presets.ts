@@ -1,6 +1,6 @@
 import * as PresetUtils from '@app/preset_utils';
 import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/proto/buffs';
-import { ConsumesSpec, Profession, Race, Spec } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race, Spec, TristateEffect } from '@generated/proto/common';
 import {
 	Hunter_Options as HunterOptions,
 	Hunter_Rotation,
@@ -50,7 +50,7 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
-	battleShout: true,
+	battleShout: TristateEffect.TristateEffectRegular,
 	graceOfAirTotem: true,
 	leaderOfThePack: true,
 	strengthOfEarthTotem: true,

@@ -123,7 +123,6 @@ func TestFieldNaming(t *testing.T) {
 		{"battle_shout", "BattleShout", "battleShout"},
 		{"soe_enhancement_2pt4", "SoeEnhancement_2Pt4", "soeEnhancement2Pt4"},
 		{"joc_retribution_2pt4", "JocRetribution_2Pt4", "jocRetribution2Pt4"},
-		{"snapshot_bs_t2", "SnapshotBsT2", "snapshotBsT2"},
 		{"snapshot_bs_booming_voice_rank", "SnapshotBsBoomingVoiceRank", "snapshotBsBoomingVoiceRank"},
 		{"isb_uptime", "IsbUptime", "isbUptime"},
 		{"expose_weakness_hunter_agility", "ExposeWeaknessHunterAgility", "exposeWeaknessHunterAgility"},

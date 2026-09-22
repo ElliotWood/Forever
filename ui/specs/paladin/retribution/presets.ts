@@ -37,7 +37,7 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 export const DefaultPartyBuffs = PartyBuffs.create({
 	manaSpringTotem: TristateEffect.TristateEffectRegular,
 	leaderOfThePack: true,
-	battleShout: true,
+	battleShout: TristateEffect.TristateEffectRegular,
 	strengthOfEarthTotem: true,
 	totemTwisting: true,
 	windfuryTotem: true,

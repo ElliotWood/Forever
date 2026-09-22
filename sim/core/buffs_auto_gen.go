@@ -55,8 +55,6 @@ func BattleShoutAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// func SnapshotBsT2Aura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // snapshot_bs_t2, KindFlag: says the warrior who shouted for the party wears three pieces of Battlegear of Wrath, whose ItemSetSpell at three is 23563: +30 on every effect of the Battle Shout family. The resolver does not read ItemSetSpell, so driveBattleShout adds the amount; the UI input for it is hand-written next to Battle Shout.
-
 // Devotion Aura - https://www.wowhead.com/forever/spell=10293
 var DevotionAuraCategory = "DevotionAura"
 
@@ -794,7 +792,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	if party.BloodPact {
 		MakePermanent(BloodPactAura(&char.Unit, false, 0))
 	}
-	if party.BattleShout {
+	if party.BattleShout != proto.TristateEffect_TristateEffectMissing {
 		driveBattleShout(char, party)
 	}
 	if party.DevotionAura {

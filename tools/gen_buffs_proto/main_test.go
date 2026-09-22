@@ -61,13 +61,13 @@ func TestRenderNextIndex(t *testing.T) {
 	}
 }
 
-// The 24 fields api version 17 typed bool where they were a TristateEffect. The
+// The 23 fields api version 17 typed bool where they were a TristateEffect. The
 // list is the one ui/sim/proto/buff_field_migration.ts rewrites before parsing, so
 // the two are checked against each other: a name on one side only would leave a
 // saved payload either unconverted or converted into the wrong type.
 var retypedFields = map[string][]string{
 	"RaidBuffs":       {"prayer_of_fortitude", "prayer_of_spirit", "gift_of_the_wild", "thorns"},
-	"PartyBuffs":      {"blood_pact", "moonkin_aura", "leader_of_the_pack", "devotion_aura", "retribution_aura", "concentration_aura", "grace_of_air_totem", "strength_of_earth_totem", "windfury_totem", "battle_shout"},
+	"PartyBuffs":      {"blood_pact", "moonkin_aura", "leader_of_the_pack", "devotion_aura", "retribution_aura", "concentration_aura", "grace_of_air_totem", "strength_of_earth_totem", "windfury_totem"},
 	"IndividualBuffs": {"greater_blessing_of_wisdom", "greater_blessing_of_might"},
 	"Debuffs":         {"improved_seal_of_the_crusader", "curse_of_elements", "expose_armor", "faerie_fire", "hunters_mark", "demoralizing_roar", "demoralizing_shout", "thunder_clap"},
 }
@@ -90,8 +90,8 @@ func TestRetypedFieldsAreBool(t *testing.T) {
 			}
 		}
 	}
-	if count != 24 {
-		t.Errorf("the retyped list names %d fields, want the 24 api version 17 declares", count)
+	if count != 23 {
+		t.Errorf("the retyped list names %d fields, want the 23 api version 17 declares", count)
 	}
 }
 

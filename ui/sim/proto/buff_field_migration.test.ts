@@ -8,7 +8,7 @@ import { migrateRetypedBuffFields, retypedBuffFields } from './buff_field_migrat
 
 const v16Settings = () => ({
 	apiVersion: 16,
-	partyBuffs: { battleShout: 'TristateEffectImproved', manaSpringTotem: 'TristateEffectImproved' },
+	partyBuffs: { bloodPact: 'TristateEffectImproved', manaSpringTotem: 'TristateEffectImproved' },
 	debuffs: { faerieFire: 'TristateEffectMissing' },
 	player: { buffs: { greaterBlessingOfMight: 2, greaterBlessingOfKings: true } },
 });
@@ -20,7 +20,7 @@ describe('migrateRetypedBuffFields', () => {
 		migrateRetypedBuffFields(json);
 		const settings = IndividualSimSettings.fromJson(json as never);
 
-		expect(settings.partyBuffs?.battleShout).toBe(true);
+		expect(settings.partyBuffs?.bloodPact).toBe(true);
 		expect(settings.debuffs?.faerieFire).toBe(false);
 		expect(settings.player?.buffs?.greaterBlessingOfMight).toBe(true);
 	});
@@ -35,11 +35,11 @@ describe('migrateRetypedBuffFields', () => {
 	});
 
 	it('leaves a payload stamped with the current version untouched', () => {
-		const json = { apiVersion: 17, partyBuffs: { battleShout: 'TristateEffectImproved' } };
+		const json = { apiVersion: 17, partyBuffs: { bloodPact: 'TristateEffectImproved' } };
 
 		migrateRetypedBuffFields(json);
 
-		expect(json.partyBuffs.battleShout).toBe('TristateEffectImproved');
+		expect(json.partyBuffs.bloodPact).toBe('TristateEffectImproved');
 	});
 
 	// SavedSettings and the raid messages carry no api_version, so they are migrated on sight.
@@ -76,13 +76,13 @@ describe('migrateRetypedBuffFields', () => {
 	// reach the migration without the key that used to say which message they are.
 	it('rewrites a raid with no parties and a party with no players', () => {
 		const raid = { buffs: { giftOfTheWild: 'TristateEffectImproved' } };
-		const party = { buffs: { battleShout: 'TristateEffectImproved' } };
+		const party = { buffs: { bloodPact: 'TristateEffectImproved' } };
 
 		migrateRetypedBuffFields(raid, 'raid');
 		migrateRetypedBuffFields(party, 'party');
 
 		expect(raid.buffs.giftOfTheWild).toBe(true);
-		expect(party.buffs.battleShout).toBe(true);
+		expect(party.buffs.bloodPact).toBe(true);
 	});
 
 	it('survives a blob that is not a message', () => {
@@ -91,11 +91,11 @@ describe('migrateRetypedBuffFields', () => {
 		expect(() => migrateRetypedBuffFields({ partyBuffs: 7 })).not.toThrow();
 	});
 
-	it('names 24 fields, the ones the proto retyped', () => {
+	it('names 23 fields, the ones the proto retyped', () => {
 		const fields = Object.values(retypedBuffFields).flat();
 
-		expect(fields).toHaveLength(24);
-		expect(new Set(fields).size).toBe(24);
+		expect(fields).toHaveLength(23);
+		expect(new Set(fields).size).toBe(23);
 	});
 
 	// A share link is binary, and nothing rewrites it: a tristate's varint 2 decodes as the bool's

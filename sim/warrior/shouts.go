@@ -65,7 +65,7 @@ func (warrior *Warrior) registerShouts() {
 
 	// A warrior that shouts builds a copy of its own; one that shouts nothing
 	// gets the isPlayer=false constructor, whose aura is the party's external
-	// copy, and what that copy is worth is the party's snapshot flag's to say.
+	// copy, and what that copy is worth is the party's Battle Shout state's to say.
 	castsOwnShout := warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone
 
 	// Three pieces of Battlegear of Wrath add a flat 30 to the shout. HasBsT2 is
