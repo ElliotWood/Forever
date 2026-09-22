@@ -223,14 +223,31 @@ func TestThoriumGrenadeDealsItsClientDamage(t *testing.T) {
 }
 
 func TestMajorHealthstoneHeal(t *testing.T) {
-	t.Skip("Major Healthstone heals from the generated consumable database, and item 9421 reaches it only once assets/database is regenerated from its ConsumableAllowList entry")
+	sim, fw := setupConsumesSim(func(request *proto.RaidSimRequest) {
+		consumes := consumesOf(request)
+		consumes.ConjuredId = 9421
+		consumes.ConjuredItems = []int32{9421}
+	})
+
+	healthstone := fw.GetSpell(ActionID{ItemID: 9421})
+	if healthstone == nil {
+		t.Fatal("Major Healthstone is not registered")
+	}
+	fw.RemoveHealth(sim, 2000)
+	before := fw.CurrentHealth()
+	if !healthstone.Cast(sim, fw.CurrentTarget) {
+		t.Fatal("Major Healthstone could not be cast")
+	}
+	if healed := fw.CurrentHealth() - before; healed != 1440 {
+		t.Fatalf("Major Healthstone should heal 1440, healed %0.2f", healed)
+	}
 }
 
 func TestConjuredItemMissingFromTheDatabaseIsSkipped(t *testing.T) {
 	_, fw := setupConsumesSim(func(request *proto.RaidSimRequest) {
 		consumes := consumesOf(request)
-		consumes.ConjuredId = 9421
-		consumes.ConjuredItems = []int32{9421}
+		consumes.ConjuredId = 22105
+		consumes.ConjuredItems = []int32{22105}
 	})
 
 	for _, spell := range fw.Spellbook {

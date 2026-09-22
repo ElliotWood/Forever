@@ -418,7 +418,7 @@ func makeConjuredActivationSpellInternal(conjured Consumable, character *Charact
 	for _, effectID := range conjured.EffectIds {
 		e := GetSpellEffectByID(effectID)
 		resourceType := e.GetResourceType()
-		if e.Type == proto.EffectType_EffectTypeResourceGain && resourceType != 0 {
+		if (e.Type == proto.EffectType_EffectTypeResourceGain || e.Type == proto.EffectType_EffectTypeHeal) && resourceType != 0 {
 			if resourceType == proto.ResourceType_ResourceTypeMana && mcd.Type != CooldownTypeSurvival {
 				mcd.Type = CooldownTypeMana
 			} else if resourceType == proto.ResourceType_ResourceTypeHealth {
