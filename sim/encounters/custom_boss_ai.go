@@ -28,13 +28,13 @@ func createCustomBossPreset() {
 			TankIndex: 0,
 
 			Stats: stats.Stats{
-				stats.Armor:       7685,
+				stats.Armor:       3731,
 				stats.AttackPower: 320,
 			}.ToProtoArray(),
 
 			SpellSchool:   proto.SpellSchool_SpellSchoolPhysical,
 			SwingSpeed:    2.0,
-			MinBaseDamage: 15113,
+			MinBaseDamage: 4192.05,
 			DamageSpread:  0.413,
 			ParryHaste:    true,
 			CanCrush:      true,
