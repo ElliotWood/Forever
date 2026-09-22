@@ -71,9 +71,7 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 	ID:   218,
 	Bonuses: map[int32]core.ApplySetBonus{
 		3: func(agent core.Agent, setBonusAura *core.Aura) {
-			// Spell 23563 states 30 attack power on Battle Shout, which battle_shout.go adds through
-			// the same flag the HasBsT2 option sets. The set aura toggles it so an item swap
-			// that removes the pieces takes the bonus with them.
+			// Spell 23563 states 30 attack power on Battle Shout, through the flag the HasBsT2 option sets.
 			warrior := agent.(WarriorAgent).GetWarrior()
 			fromOptions := warrior.HasBsT2
 			setBonusAura.
@@ -166,13 +164,7 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 
 			// The one amount the row states raises the slow the tooltip names alongside the
 			// damage, which thunder_clap.go reads.
-			slow := conquerorThunderClap.EffectN(1).Percent()
-			setBonusAura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) {
-				warrior.thunderClapEffectBonus += slow
-			})
-			setBonusAura.ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) {
-				warrior.thunderClapEffectBonus -= slow
-			})
+			setBonusAura.AttachAdditivePseudoStatBuff(&warrior.thunderClapEffectBonus, conquerorThunderClap.EffectN(1).Percent())
 		},
 	},
 })
@@ -202,8 +194,9 @@ var ItemSetDreadnaughtsBattlegear = core.NewItemSet(core.ItemSet{
 		},
 		8: func(agent core.Agent, setBonusAura *core.Aura) {
 			// Spell 28845 states that below 20% health, healing spells cast on you gain up to 160
-			// healing (spell 28846) for 5 seconds. The modelled incoming healing of the tank sim
-			// bypasses the healing bonus; heals a healer unit casts on the warrior take it.
+			// healing (spell 28846) for 5 seconds.
+			// TODO: the tank sim's modelled incoming healing bypasses the bonus; only heals a healer
+			// unit casts take it.
 			warrior := agent.(WarriorAgent).GetWarrior()
 
 			cheatDeath := warrior.RegisterAura(spelldata.AuraConfig(dreadnaughtCheatDeathBuff))

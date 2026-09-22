@@ -24,8 +24,6 @@ type rageBar struct {
 	startingHitFactor float64
 	currentHitFactor  float64
 
-	// Scales the Rage an OH swing generates, on top of the half an OH swing
-	// already generates. Set by SetOffHandRageMultiplier().
 	offHandRageMultiplier float64
 
 	damageTakenRageMultiplier float64
@@ -147,10 +145,7 @@ func (rb *rageBar) MultiplyAutoAttackRageGen(multiplier float64) {
 	rb.currentHitFactor *= multiplier
 }
 
-// Sets how much Rage OH swings generate, e.g. the Warrior talent Dual Wield
-// Specialization, which increases off-hand Rage generation by a %. Unlike the
-// Multiply* calls this survives the iteration reset, so call it once at setup,
-// after EnableRageBar().
+// Survives the iteration reset, unlike the Multiply* calls: set it once, after EnableRageBar().
 func (rb *rageBar) SetOffHandRageMultiplier(multiplier float64) {
 	rb.offHandRageMultiplier = multiplier
 }

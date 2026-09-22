@@ -16,11 +16,8 @@ type WarriorInputs struct {
 	DefaultStance proto.WarriorStance
 
 	StartingRage   float64
-	QueueDelay     int32
 	StanceSnapshot bool
 	HasBsT2        bool
-
-	thunderClapEffectBonus float64
 }
 
 // What is left of the sim's own spell masks now that the client's spell class mask addresses the
@@ -56,8 +53,6 @@ var (
 	SpellFlagsWhirlwind       = spellData.Whirlwind.Highest().ClassFlags
 )
 
-const EnrageTag = "EnrageEffect"
-
 type Warrior struct {
 	core.Character
 
@@ -68,7 +63,8 @@ type Warrior struct {
 	WarriorInputs
 
 	// Current state
-	Stance Stance
+	Stance                 Stance
+	thunderClapEffectBonus float64
 
 	BattleShout       *core.Spell
 	DemoralizingShout *core.Spell
@@ -81,18 +77,14 @@ type Warrior struct {
 	MortalStrike                    *core.Spell
 	SweepingStrikesNormalizedAttack *core.Spell
 
-	HeroicStrike       *core.Spell
-	Cleave             *core.Spell
-	MockingBlow        *core.Spell
-	ChallengingShout   *core.Spell
-	IntimidatingShout  *core.Spell
-	Disarm             *core.Spell
-	Taunt              *core.Spell
-	VictoryRush        *core.Spell
-	curQueueAura       *core.Aura
-	curQueuedAutoSpell *core.Spell
-
-	queuedRealismICD *core.Cooldown
+	HeroicStrike      *core.Spell
+	Cleave            *core.Spell
+	MockingBlow       *core.Spell
+	ChallengingShout  *core.Spell
+	IntimidatingShout *core.Spell
+	Disarm            *core.Spell
+	Taunt             *core.Spell
+	VictoryRush       *core.Spell
 
 	EnrageAura *core.Aura
 
@@ -150,9 +142,6 @@ func (warrior *Warrior) Initialize() {
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {
-	warrior.curQueueAura = nil
-	warrior.curQueuedAutoSpell = nil
-
 	switch warrior.DefaultStance {
 	case proto.WarriorStance_WarriorStanceBattle:
 		warrior.Stance = BattleStance
@@ -184,7 +173,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	core.FillTalentsProto(warrior.Talents.ProtoReflect(), talents, TalentTreeSizes)
 
 	warrior.EnableRageBar(core.RageBarOptions{
-		// Boundless Rage (1310236) raises the cap by 10 per rank.
 		MaxRage:            100 + spellData.BoundlessRage.TenthsAt(warrior.Talents.BoundlessRage),
 		BaseRageMultiplier: 1,
 		StartingRage:       inputs.StartingRage,
@@ -194,11 +182,10 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 		MainHand:       warrior.WeaponFromMainHand(),
 		OffHand:        warrior.WeaponFromOffHand(),
 		AutoSwingMelee: true,
-		ReplaceMHSwing: warrior.TryHSOrCleave,
 	})
 
 	warrior.PseudoStats.CanParry = true
-	// TODO: Manual review needed -- the base dodge, parry, block and stat dependencies below are not read from the client's game tables.
+	// TODO: In-game testing required
 	warrior.PseudoStats.BaseDodgeChance += 0.0075
 	warrior.PseudoStats.BaseParryChance += 0.05
 	warrior.PseudoStats.BaseBlockChance += 0.05
@@ -208,13 +195,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
 	warrior.AddStatDependency(stats.Agility, stats.DodgeRating, 1/30.0*core.DodgeRatingPerDodgePercent)
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
-
-	// The sim often re-enables heroic strike in an unrealistic amount of time.
-	// This can cause an unrealistic immediate double-hit around wild strikes procs
-	warrior.queuedRealismICD = &core.Cooldown{
-		Timer:    warrior.NewTimer(),
-		Duration: time.Millisecond * time.Duration(warrior.WarriorInputs.QueueDelay),
-	}
 
 	return warrior
 }

@@ -21,8 +21,6 @@ type incapacitateKind struct {
 
 	isImmune func(unit *Unit) bool
 
-	// durationMultiplier reads the PseudoStats multiplier that scales how long
-	// this kind lasts on the unit it is applied to.
 	durationMultiplier func(unit *Unit) float64
 }
 
@@ -63,9 +61,6 @@ func (kind *incapacitateKind) registerAura(unit *Unit, label string, actionID Ac
 		Duration: baseDuration,
 
 		OnGain: func(aura *Aura, sim *Simulation) {
-			// The multiplier is read here rather than at registration, because
-			// encounter AIs register their crowd control on every ally before
-			// the players' talents have run.
 			aura.Duration = time.Duration(float64(baseDuration) * kind.durationMultiplier(aura.Unit))
 			aura.Refresh(sim)
 

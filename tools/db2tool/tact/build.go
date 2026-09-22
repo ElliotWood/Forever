@@ -19,6 +19,7 @@ import (
 type Build struct {
 	Entry       AvailableBuild
 	BuildNumber uint32
+	Keys        *KeyStore // TACT keys for encrypted BLTE chunks; nil leaves them zero-filled
 
 	store    *cascStore
 	encoding *encodingTable
@@ -106,7 +107,7 @@ func (b *Build) openEKey(eKey []byte, decodedSize uint64) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return blteDecode(raw, decodedSize)
+	return blteDecode(raw, decodedSize, b.Keys)
 }
 
 // OpenFileByCKey resolves a content key through encoding and opens the first

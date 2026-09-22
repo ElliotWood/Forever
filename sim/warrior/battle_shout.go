@@ -8,20 +8,23 @@ import (
 )
 
 var battleShoutRank = spellData.BattleShout.Highest()
-var battleShoutAttackPower = battleShoutRank.Effect(dbcenums.A_MOD_ATTACK_POWER, 0).Average(core.CharacterLevel)
-
-func (warrior *Warrior) battleShoutValue() float64 {
-	return battleShoutAttackPower + core.TernaryFloat64(warrior.HasBsT2, core.BattleShoutWrathBonus, 0)
-}
 
 func (warrior *Warrior) registerBattleShout() {
+	baseAttackPower := battleShoutRank.Effect(dbcenums.A_MOD_ATTACK_POWER, 0).Average(core.CharacterLevel)
+	attackPower := func() float64 {
+		return baseAttackPower + core.TernaryFloat64(warrior.HasBsT2, core.BattleShoutWrathBonus, 0)
+	}
+
 	auras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
-		aura := core.BattleShoutAura(unit, true, battleShoutAttackPower, battleShoutRank.Duration())
+		aura := core.BattleShoutAura(unit, true, baseAttackPower, battleShoutRank.Duration())
 		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
 		return aura.ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
-			aura.ExclusiveEffects[0].SetPriority(sim, warrior.battleShoutValue())
+			if ee := aura.ExclusiveEffects[0]; ee.Priority != attackPower() {
+				ee.SetPriority(sim, attackPower())
+			}
 		})
 	})
+	selfAura := auras.Get(&warrior.Unit)
 
 	config := spelldata.SpellConfig(&warrior.Unit, battleShoutRank, spelldata.Flags(core.SpellFlagAPL))
 	config.ProcMask = core.ProcMaskEmpty
@@ -31,8 +34,7 @@ func (warrior *Warrior) registerBattleShout() {
 	config.FlatThreatBonus = 0
 
 	config.ExtraCastCondition = func(sim *core.Simulation, _ *core.Unit) bool {
-		aura := auras.Get(&warrior.Unit)
-		return !aura.IsActive() || aura.ExclusiveEffects[0].Priority <= warrior.battleShoutValue()
+		return !selfAura.IsActive() || selfAura.ExclusiveEffects[0].Priority <= attackPower()
 	}
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

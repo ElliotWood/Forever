@@ -7,19 +7,15 @@ import (
 
 var victoryRushRank = spellData.VictoryRush.Highest()
 
-// Spell 402927 states ${1+$AP*$m3/100}: the dummy at effect index 2 is the attack power
-// coefficient as a percentage, and the heal at index 1 is a percentage of maximum health.
 var victoryRushAPCoef = victoryRushRank.EffectN(3).Percent()
 var victoryRushHealPercent = victoryRushRank.EffectN(2).Percent()
 
-// The window Victory Rush has to be used in is the Victorious buff the kill grants.
 var victoriousRank = spellData.VictoryRushTriggered.Highest()
 
+// This spell works but the Sim never kills a target
 func (warrior *Warrior) registerVictoryRush() {
 	healthMetrics := warrior.NewHealthMetrics(core.ActionID{SpellID: victoryRushRank.ID})
 
-	// TODO: spell 402974 grants this on a kill, which the sim never simulates, so nothing
-	// activates it and Victory Rush stays uncastable.
 	victoriousAura := warrior.RegisterAura(spelldata.AuraConfig(victoriousRank))
 
 	config := spelldata.SpellConfig(&warrior.Unit, victoryRushRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))

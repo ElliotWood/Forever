@@ -635,10 +635,10 @@ shared.SpellDataCoef(rank.Periodic)
 shared.SpellDataAPCoef(rank.Direct)
 ```
 
-Tick length and count live only on the periodic shape, so assert for them:
+Tick length and count live only on the periodic shape, so ask for that shape:
 
 ```go
-p := rank.Periodic.(shared.SpellDataPeriodic)
+p := rank.Periodic.AsPeriodic()
 p.TickLength     // time.Duration, feeds core.DotConfig.TickLength
 p.NumberOfTicks  // duration over the tick length, feeds core.DotConfig.NumberOfTicks
 ```
@@ -706,7 +706,7 @@ spell with the rank's name, and gives it the dummy's period, so it lands in `Per
 schedule the rank states. The tick says where it came from:
 
 ```go
-p := spellData.Consecration.BySpellID(20924).Periodic.(shared.SpellDataPeriodic)
+p := spellData.Consecration.BySpellID(20924).Periodic.AsPeriodic()
 p.SpellID   // 1280349; zero on a tick the rank's own effect states
 ```
 
@@ -738,7 +738,7 @@ effect of a spell one of its own dummies points at, a dummy at that index is the
 lands in `Direct`:
 
 ```go
-d := spellData.SealOfRighteousness.BySpellID(20293).Direct.(shared.SpellDataFlat)
+d := spellData.SealOfRighteousness.BySpellID(20293).Direct.AsFlat()
 d.Value   // 1880, which the seal's own effect 0 also says
 d.Coef    // 0.2, which only the judgement's dummy states
 ```
@@ -765,7 +765,7 @@ Seal of Wisdom generated with the judgement's spell ID in `Direct`, read off the
 last fallback.
 
 ```go
-d := spellData.SealOfFury.BySpellID(20423).Direct.(shared.SpellDataFlat)
+d := spellData.SealOfFury.BySpellID(20423).Direct.AsFlat()
 d.Value    // 35, the proc's school damage
 d.Coef     // 0.1, which only the proc states
 ```
@@ -935,7 +935,7 @@ hand-written:
 var swpRanks = spellData.ShadowWordPain.BySpellID(25368)
 
 func (priest *Priest) registerShadowWordPain() {
-	tick := swpRanks.Periodic.(shared.SpellDataPeriodic)
+	tick := swpRanks.Periodic.AsPeriodic()
 
 	priest.RegisterSpell(core.SpellConfig{
 		ActionID: core.ActionID{SpellID: swpRanks.SpellID},
@@ -962,8 +962,8 @@ than through the dot's coefficient:
 
 ```go
 func (paladin *Paladin) registerConsecration(rankConfig shared.SpellData) {
-	tick := rankConfig.Periodic.(shared.SpellDataPeriodic)
-	bonus := rankConfig.SecondaryPeriodic.(shared.SpellDataPeriodic)
+	tick := rankConfig.Periodic.AsPeriodic()
+	bonus := rankConfig.SecondaryPeriodic.AsPeriodic()
 	bonusTargets := int(rankConfig.Effect(shared.A_PERIODIC_DUMMY, 0).Value)
 
 	dealTick := func(sim *core.Simulation, dot *core.Dot) {
@@ -993,8 +993,8 @@ A restore that ticks is an `Energize` of the periodic shape, with the schedule a
 action wants: Bloodrage's 29131 ticks 10 rage-tenths every second for 10 ticks.
 
 ```go
-over := spellData.BloodrageTriggered.HighestRank().Energize.(shared.SpellDataPeriodic)
-over.Tick / 10, over.TickLength, over.NumberOfTicks   // 1 rage, 1 s, 10
+over := spellData.BloodrageTriggered.HighestRank().Energize.AsPeriodic()
+over.Tenths(), over.TickLength, over.NumberOfTicks   // 1 rage, 1 s, 10
 ```
 
 ### Registering several ranks

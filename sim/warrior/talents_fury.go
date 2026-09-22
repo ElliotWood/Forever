@@ -9,7 +9,7 @@ import (
 
 func (warrior *Warrior) registerFuryTalents() {
 	// Tier 1
-	// Booming Voice: shouts.go
+	// Booming Voice (12321) widens the shout radius only, which the sim does not model.
 	warrior.registerCruelty()
 
 	// Tier 2
@@ -51,7 +51,6 @@ func (warrior *Warrior) registerCruelty() {
 
 var unbridledWrathRank = spellData.UnbridledWrathTriggered.Highest()
 
-// The energize is on the client's 0-1000 rage bar.
 var unbridledWrathRage = unbridledWrathRank.EnergizeEffect().Tenths()
 
 func (warrior *Warrior) registerUnbridledWrath() {
@@ -61,22 +60,14 @@ func (warrior *Warrior) registerUnbridledWrath() {
 
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: unbridledWrathRank.ID})
 
-	// The tooltip of 12322 doubles the rage for a two-handed weapon.
-	rageGain := unbridledWrathRage
-	twoHanded := func() {
-		rageGain = unbridledWrathRage * core.TernaryFloat64(warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand, 2, 1)
-	}
-	twoHanded()
-	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		twoHanded()
-	})
-
 	// The rate is the effect ladder the tooltip's $m1 names - 12/24/36/48/60 by rank, where the
 	// proc chance column reads a flat 60 - and the row's mask is the white hits the tooltip means.
 	warrior.MakeProcTriggerAura(spelldata.ProcTrigger(&warrior.Character,
 		spellData.UnbridledWrath.Rank(warrior.Talents.UnbridledWrath),
 		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			warrior.AddRage(sim, rageGain, rageMetrics)
+			// The tooltip of 12322 doubles the rage for a two-handed weapon.
+			twoHanded := warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand
+			warrior.AddRage(sim, unbridledWrathRage*core.TernaryFloat64(twoHanded, 2, 1), rageMetrics)
 		}))
 }
 
@@ -102,8 +93,6 @@ func (warrior *Warrior) registerDualWieldSpecialization() {
 	warrior.SetOffHandRageMultiplier(1 + rank.EffectN(2).Percent())
 }
 
-// Iron Will (12962) shortens the stuns and fears the warrior suffers; the client files the fear
-// ladder under mechanic 1 and the stun ladder under mechanic 12.
 func (warrior *Warrior) registerIronWill() {
 	if warrior.Talents.IronWill == 0 {
 		return
@@ -208,7 +197,6 @@ func (warrior *Warrior) registerBloodthirst() {
 		return
 	}
 
-	// The attack power share sits on the second effect; the first is the flat damage added to it.
 	apShare := bloodthirstRank.EffectN(2).Percent()
 
 	config := spelldata.SpellConfig(&warrior.Unit, bloodthirstRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
@@ -227,8 +215,7 @@ func (warrior *Warrior) registerBloodthirst() {
 
 var piercingHowlRank = spellData.PiercingHowl.Highest()
 
-// TODO: The daze itself is not modelled; the encounter's targets do not move, so the -50% movement
-// speed 12323 applies for 6 seconds within 10 yards has nothing to act on.
+// TODO: In-game test required if there's any threat interaction
 func (warrior *Warrior) registerPiercingHowl() {
 	if !warrior.Talents.PiercingHowl {
 		return
@@ -296,7 +283,6 @@ func (warrior *Warrior) registerBloodCraze() {
 	warrior.MakeProcTriggerAura(dealt)
 }
 
-// Raging Blows (1310315): the Cleave discount here, the off-hand Whirlwind strike in whirlwind.go.
 func (warrior *Warrior) registerRagingBlows() {
 	if !warrior.Talents.RagingBlows {
 		return
@@ -312,7 +298,6 @@ func (warrior *Warrior) registerDeathWish() {
 		return
 	}
 
-	// The damage done effect carries the physical school mask, the damage taken one all schools.
 	deathWishAura := warrior.RegisterAura(spelldata.AuraConfig(deathWishRank))
 	spelldata.ParseEffects(&warrior.Character, deathWishAura, deathWishRank)
 
@@ -346,7 +331,6 @@ func (warrior *Warrior) registerImprovedIntercept() {
 	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedIntercept.Rank(warrior.Talents.ImprovedIntercept))
 }
 
-// Improved Cleave (12329) states only a rage discount on Cleave.
 func (warrior *Warrior) registerImprovedCleave() {
 	if warrior.Talents.ImprovedCleave == 0 {
 		return

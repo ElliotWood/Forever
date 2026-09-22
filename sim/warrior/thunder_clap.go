@@ -8,13 +8,15 @@ import (
 var thunderClapRank = spellData.ThunderClap.Highest()
 
 var thunderClapBaseDamage = thunderClapRank.DamageEffect().Average(core.CharacterLevel)
-var thunderClapSlow = -thunderClapRank.EffectN(2).Percent()
+var thunderClapSlow = thunderClapRank.EffectN(2).Percent()
 
 func (warrior *Warrior) registerThunderClap() {
 	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return core.ThunderClapAura(target).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
-			slow := thunderClapSlow * (1 + warrior.thunderClapEffectBonus)
-			aura.ExclusiveEffects[0].SetPriority(sim, 1/(1-slow))
+			speedMultiplier := 1 / (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus))
+			if ee := aura.ExclusiveEffects[0]; ee.Priority != speedMultiplier {
+				ee.SetPriority(sim, speedMultiplier)
+			}
 		})
 	})
 
@@ -27,11 +29,10 @@ func (warrior *Warrior) registerThunderClap() {
 	config.ClassSpellMask = SpellMaskThunderClap
 	config.ProcMask = core.ProcMaskRangedSpecial
 	config.DamageMultiplier = 1
-	// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+	// TODO: In-game verification needed for threat multiplier / flat threat.
 	config.ThreatMultiplier = 1
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
-		// Thunder Clap (11581) is usable in Battle and Defensive Stance.
 		return warrior.StanceMatches(BattleStance | DefensiveStance)
 	}
 

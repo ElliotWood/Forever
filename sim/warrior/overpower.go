@@ -40,7 +40,6 @@ func (warrior *Warrior) registerOverpower() {
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 		baseDamage := overpowerBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialNoBlockDodgeParry)
-		warrior.OverpowerAura.Duration = overpowerWindow.Duration()
 		warrior.OverpowerAura.Deactivate(sim)
 
 		if !result.Landed() {

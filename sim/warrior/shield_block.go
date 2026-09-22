@@ -9,7 +9,6 @@ import (
 var shieldBlockRank = spellData.ShieldBlock.Highest()
 
 func (warrior *Warrior) registerShieldBlock() {
-	var spell *core.Spell
 	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldBlockRank))
 	spelldata.ParseEffects(&warrior.Character, aura, shieldBlockRank)
 
@@ -21,7 +20,7 @@ func (warrior *Warrior) registerShieldBlock() {
 		Outcome:            core.OutcomeBlock,
 		Callback:           core.CallbackOnSpellHitTaken,
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-			spell.RelatedSelfBuff.RemoveStack(sim)
+			aura.RemoveStack(sim)
 		},
 	})
 
@@ -32,15 +31,19 @@ func (warrior *Warrior) registerShieldBlock() {
 	}
 
 	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-		spell.RelatedSelfBuff.Activate(sim)
-		spell.RelatedSelfBuff.SetStacks(sim, spell.RelatedSelfBuff.MaxStacks)
+		aura.Activate(sim)
+		aura.SetStacks(sim, aura.MaxStacks)
 	}
 
 	config.RelatedSelfBuff = aura
 
-	spell = warrior.RegisterSpell(config)
+	warrior.RegisterSpell(config)
 
-	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
+	warrior.deactivateWithoutShield(aura)
+}
+
+func (warrior *Warrior) deactivateWithoutShield(aura *core.Aura) {
+	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, _ proto.ItemSlot) {
 		if !warrior.PseudoStats.CanBlock {
 			aura.Deactivate(sim)
 		}

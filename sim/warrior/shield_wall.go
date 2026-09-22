@@ -26,11 +26,7 @@ func (warrior *Warrior) registerShieldWall() {
 
 	spell := warrior.RegisterSpell(config)
 
-	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
-		if !warrior.PseudoStats.CanBlock {
-			aura.Deactivate(sim)
-		}
-	})
+	warrior.deactivateWithoutShield(aura)
 
 	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,

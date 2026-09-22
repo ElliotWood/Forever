@@ -35,10 +35,7 @@ func (warrior *Warrior) StanceMatches(other Stance) bool {
 func (warrior *Warrior) makeStanceSpell(stance Stance, flags core.ClassFlags, rank *spelldata.Spell, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
 	actionID := aura.ActionID
 	rageMetrics := warrior.NewRageMetrics(actionID)
-	maxRetainedRage := spellData.TacticalMastery.ValueAt(1)
-	if warrior.Talents.ImprovedTacticalMastery > 0 {
-		maxRetainedRage += spellData.ImprovedTacticalMastery.ValueAt(warrior.Talents.ImprovedTacticalMastery)
-	}
+	maxRetainedRage := spellData.TacticalMastery.ValueAt(1) + spellData.ImprovedTacticalMastery.ValueAt(warrior.Talents.ImprovedTacticalMastery)
 
 	return warrior.RegisterSpell(core.SpellConfig{
 		ActionID:    actionID,

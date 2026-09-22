@@ -82,8 +82,6 @@ func (warrior *Warrior) registerImprovedOverpower() {
 
 var angerManagementRank = spellData.AngerManagement.Highest()
 
-// The tooltip reads "Generates $m2 Rage every $m3 sec", and the three dummies share an aura and misc
-// value, so the rage and its period are taken by effect index.
 var angerManagementRage = angerManagementRank.EffectN(2).Average(core.CharacterLevel)
 var angerManagementPeriod = time.Duration(angerManagementRank.EffectN(3).Average(core.CharacterLevel)) * time.Second
 
@@ -106,7 +104,6 @@ func (warrior *Warrior) registerAngerManagement() {
 	})
 }
 
-// The bleed the talent (12834) reaches through 12162.
 var deepWoundsBleed = spellData.DeepWoundsTriggered.ByID(412609)
 
 func (warrior *Warrior) registerDeepWounds() {
@@ -117,6 +114,7 @@ func (warrior *Warrior) registerDeepWounds() {
 	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
 	tick := deepWoundsBleed.EffectN(1)
 
+	// TODO: Test in-game for behavior
 	// A crit casts the bleed, but it does not take spelldata.Proc(): that marks the spell passive,
 	// and the metrics aggregator counts no cast for a passive spell, while the sim reports every
 	// application as a cast.
@@ -124,9 +122,6 @@ func (warrior *Warrior) registerDeepWounds() {
 		spelldata.Flags(core.SpellFlagNoOnCastComplete|core.SpellFlagIgnoreResists|core.SpellFlagProc)) // 12162 and 412609 lack Not a Proc.
 	config.ProcMask = core.ProcMaskEmpty
 
-	// 12162 and 412609 state DefenseType 0. It's a bleed that snapshots on proc; the
-	// application uses OutcomeAlwaysHitNoHitCounter and the DoT ticks with OutcomeTick, so it
-	// never rolls a crit and DefenseType is intentionally left unset.
 	config.DamageMultiplier = 1
 	config.ThreatMultiplier = 1
 
@@ -282,18 +277,18 @@ func (warrior *Warrior) registerWeaponmaster() {
 	rank := warrior.Talents.Weaponmaster
 	actionID := core.ActionID{SpellID: 1290261}
 
-	// The three branches share A_DUMMY and misc 0, so each is named by its effect index. Which
-	// branch applies follows the main hand, re-read on a weapon swap.
+	// The three branches share A_DUMMY and misc 0, so each is named by its effect index.
 	mainHandIs := func(weaponTypes ...proto.WeaponType) bool {
 		return warrior.GetProcMaskForTypes(weaponTypes...).Matches(core.ProcMaskMeleeMH)
 	}
-	var critOn, armorIgnoreOn, swordOn bool
-	readMainHand := func() {
+	var critOn, armorIgnoreOn bool
+	var swordMask core.ProcMask
+	readWeapons := func() {
 		critOn = mainHandIs(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypePolearm)
 		armorIgnoreOn = mainHandIs(proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff)
-		swordOn = mainHandIs(proto.WeaponType_WeaponTypeSword)
+		swordMask = warrior.GetProcMaskForTypes(proto.WeaponType_WeaponTypeSword)
 	}
-	readMainHand()
+	readWeapons()
 
 	critAura := warrior.RegisterAura(core.Aura{
 		Label:    "Weaponmaster (Axe/Polearm)",
@@ -304,16 +299,26 @@ func (warrior *Warrior) registerWeaponmaster() {
 		core.MakePermanent(critAura)
 	}
 
-	// The attack tables exist only once the environment is built, so the factor is written on reset.
 	armorIgnore := spellData.Weaponmaster.EffectAt(2).FractionAt(rank)
-	applyArmorIgnore := func() {
+	addArmorIgnore := func(delta float64) {
 		for _, attackTable := range warrior.AttackTables {
-			attackTable.ArmorIgnoreFactor = core.TernaryFloat64(armorIgnoreOn, armorIgnore, 0)
+			attackTable.ArmorIgnoreFactor += delta
 		}
 	}
-	warrior.RegisterResetEffect(func(sim *core.Simulation) {
-		applyArmorIgnore()
+	armorIgnoreAura := warrior.RegisterAura(core.Aura{
+		Label:    "Weaponmaster (Mace/Staff)",
+		ActionID: actionID.WithTag(2),
+		Duration: core.NeverExpires,
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			addArmorIgnore(armorIgnore)
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			addArmorIgnore(-armorIgnore)
+		},
 	})
+	if armorIgnoreOn {
+		core.MakePermanent(armorIgnoreAura)
+	}
 
 	// 1290261 states no proc flags at all, so the row decodes to a listener that hears nothing:
 	// the shape, the mask and the rate's effect are all the caller's.
@@ -321,14 +326,14 @@ func (warrior *Warrior) registerWeaponmaster() {
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Weaponmaster (Sword)",
 		ActionID:           actionID.WithTag(3),
+		MetricsActionID:    actionID.WithTag(3),
 		Callback:           core.CallbackOnSpellHitDealt,
 		ProcMask:           core.ProcMaskMelee,
 		Outcome:            core.OutcomeLanded,
 		ProcChance:         spellData.Weaponmaster.EffectAt(3).FractionAt(rank),
 		TriggerImmediately: true,
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
-			// An extra attack does not give another one.
-			return swordOn && spell != extraAttack
+			return spell.ProcMask.Matches(swordMask) && spell != extraAttack
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 			warrior.AutoAttacks.MaybeReplaceMHSwing(sim, extraAttack).Cast(sim, result.Target)
@@ -339,14 +344,17 @@ func (warrior *Warrior) registerWeaponmaster() {
 		extraAttack = warrior.GetOrRegisterSpell(config)
 	})
 
-	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		readMainHand()
-		if critOn {
-			critAura.Activate(sim)
+	setActive := func(sim *core.Simulation, aura *core.Aura, on bool) {
+		if on {
+			aura.Activate(sim)
 		} else {
-			critAura.Deactivate(sim)
+			aura.Deactivate(sim)
 		}
-		applyArmorIgnore()
+	}
+	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
+		readWeapons()
+		setActive(sim, critAura, critOn)
+		setActive(sim, armorIgnoreAura, armorIgnoreOn)
 	})
 }
 
@@ -357,8 +365,6 @@ func (warrior *Warrior) registerImprovedHamstring() {
 		return
 	}
 
-	// TODO: a stationary sim target does not feel the immobilize, so the aura only shows up in
-	// metrics.
 	immobilizeAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
 		return target.GetOrRegisterAura(core.Aura{
 			Label:    "Improved Hamstring-" + warrior.Label,
@@ -469,7 +475,6 @@ func (warrior *Warrior) registerSweepingStrikes() {
 	config.ActionID = actionID
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
-		// Sweeping Strikes (12292) is usable in Battle Stance only.
 		return warrior.StanceMatches(BattleStance)
 	}
 

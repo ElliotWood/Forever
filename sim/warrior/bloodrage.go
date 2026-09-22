@@ -15,6 +15,7 @@ func (warrior *Warrior) registerBloodrage() {
 	healthCost := warrior.GetBaseStats()[stats.Health] * float64(bloodrageRank.Powers[0].CostPct) / 100
 	improvedBloodrage := spellData.ImprovedBloodrage.MultiplierAt(warrior.Talents.ImprovedBloodrage)
 	instantRage := spellData.Bloodrage.EffectAt(1).TenthsAt(1) * improvedBloodrage
+	ragePerTick := bloodrageOverTimeTick.Tenths() * improvedBloodrage
 
 	config := spelldata.SpellConfig(&warrior.Unit, bloodrageRank)
 
@@ -26,7 +27,7 @@ func (warrior *Warrior) registerBloodrage() {
 			NumTicks: int(bloodrageOverTime.Duration() / bloodrageOverTimeTick.Period()),
 			Period:   bloodrageOverTimeTick.Period(),
 			OnAction: func(sim *core.Simulation) {
-				warrior.AddRage(sim, bloodrageOverTimeTick.Tenths()*improvedBloodrage, rageMetrics)
+				warrior.AddRage(sim, ragePerTick, rageMetrics)
 			},
 		})
 	}

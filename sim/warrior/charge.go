@@ -1,6 +1,8 @@
 package warrior
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
@@ -11,31 +13,11 @@ func (warrior *Warrior) registerCharge() {
 	actionID := core.ActionID{SpellID: chargeRank.ID}
 	metrics := warrior.NewRageMetrics(actionID)
 
-	chargeRage := chargeRank.EnergizeEffect().Tenths()
-	if warrior.Talents.ImprovedCharge > 0 {
-		chargeRage += spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
-	}
+	chargeRage := chargeRank.EnergizeEffect().Tenths() + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 
 	config := spelldata.SpellConfig(&warrior.Unit, chargeRank, spelldata.Flags(core.SpellFlagAPL))
 
-	aura := warrior.RegisterAura(core.Aura{
-		Label:    "Charge",
-		ActionID: actionID,
-		Duration: config.Cast.CD.Duration,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			// TODO: Manual review needed -- the run speed and the overshoot below are the sim's movement model.
-			warrior.MultiplyMovementSpeed(sim, 3.0)
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			warrior.MultiplyMovementSpeed(sim, 1.0/3.0)
-		},
-	})
-
-	warrior.RegisterMovementCallback(func(sim *core.Simulation, position float64, kind core.MovementUpdateType) {
-		if kind == core.MovementEnd && aura.IsActive() {
-			aura.Deactivate(sim)
-		}
-	})
+	aura := warrior.registerDashAura("Charge", actionID, config.Cast.CD.Duration, nil)
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
 		return sim.CurrentTime < 0 && (warrior.StanceMatches(BattleStance) || (warrior.Talents.Vanguard && warrior.StanceMatches(DefensiveStance)))
@@ -49,4 +31,30 @@ func (warrior *Warrior) registerCharge() {
 	}
 
 	warrior.RegisterSpell(config)
+}
+
+// TODO: Manual review needed -- the run speed and the callers' overshoot are the sim's movement model.
+func (warrior *Warrior) registerDashAura(label string, actionID core.ActionID, duration time.Duration, onEnd func(sim *core.Simulation)) *core.Aura {
+	aura := warrior.RegisterAura(core.Aura{
+		Label:    label,
+		ActionID: actionID,
+		Duration: duration,
+		OnGain: func(_ *core.Aura, sim *core.Simulation) {
+			warrior.MultiplyMovementSpeed(sim, 3.0)
+		},
+		OnExpire: func(_ *core.Aura, sim *core.Simulation) {
+			warrior.MultiplyMovementSpeed(sim, 1.0/3.0)
+			if onEnd != nil {
+				onEnd(sim)
+			}
+		},
+	})
+
+	warrior.RegisterMovementCallback(func(sim *core.Simulation, _ float64, kind core.MovementUpdateType) {
+		if kind == core.MovementEnd && aura.IsActive() {
+			aura.Deactivate(sim)
+		}
+	})
+
+	return aura
 }

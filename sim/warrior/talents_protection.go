@@ -71,7 +71,7 @@ func (warrior *Warrior) registerShieldSpecialization() {
 //
 // No proc mask states an outcome, so which of the three it is stays the caller's; that the hit
 // carries no damage is the row's, off its outcome hint.
-func (warrior *Warrior) registerRageOnAvoid(driver *spelldata.Spell, energize *spelldata.Spell, outcome core.HitOutcome, extra func() bool) {
+func (warrior *Warrior) registerRageOnAvoid(driver *spelldata.Spell, energize *spelldata.Spell, outcome core.HitOutcome, extra core.ProcExtraCondition) {
 	rage := energize.EnergizeEffect().Tenths()
 	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: energize.ID})
 
@@ -81,9 +81,7 @@ func (warrior *Warrior) registerRageOnAvoid(driver *spelldata.Spell, energize *s
 		})
 	trigger.Outcome = outcome
 	trigger.TriggerImmediately = true
-	if extra != nil {
-		trigger.ExtraCondition = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool { return extra() }
-	}
+	trigger.ExtraCondition = extra
 
 	warrior.MakeProcTriggerAura(trigger)
 }
@@ -162,6 +160,7 @@ func (warrior *Warrior) registerImprovedShieldWall() {
 
 var concussionBlowRank = spellData.ConcussionBlow.Highest()
 
+// TODO: In-game testing if this generates threat
 func (warrior *Warrior) registerConcussionBlow() {
 	if !warrior.Talents.ConcussionBlow {
 		return
@@ -182,8 +181,6 @@ func (warrior *Warrior) registerConcussionBlow() {
 	warrior.RegisterSpell(config)
 }
 
-// TODO: Manual review needed -- spell 23922 states only "a very high amount of threat"; none is
-// modelled until measured in game.
 var shieldSlamRank = spellData.ShieldSlam.Highest()
 
 func (warrior *Warrior) registerShieldSlam() {
@@ -192,6 +189,7 @@ func (warrior *Warrior) registerShieldSlam() {
 	}
 
 	config := spelldata.SpellConfig(&warrior.Unit, shieldSlamRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+	// TODO: In-game testing needed for threat multiplier / flat threat
 	config.FlatThreatBonus = 0
 
 	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
@@ -228,7 +226,9 @@ func (warrior *Warrior) registerMasterOfDefense() {
 	// A shield has to be equipped, which the row does not state.
 	warrior.registerRageOnAvoid(spellData.MasterOfDefense.Rank(warrior.Talents.MasterOfDefense),
 		masterOfDefenseEnergize, core.OutcomeDodge|core.OutcomeParry,
-		func() bool { return warrior.PseudoStats.CanBlock })
+		func(_ *core.Simulation, _ *core.Spell, _ *core.SpellResult) bool {
+			return warrior.PseudoStats.CanBlock
+		})
 }
 
 func (warrior *Warrior) registerImprovedRevenge() {
@@ -296,8 +296,6 @@ func (warrior *Warrior) registerImprovedThunderClap() {
 	if warrior.Talents.ImprovedThunderClap == 0 {
 		return
 	}
-
-	// Slowing effect implemented in core/debuffs.go
 
 	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedThunderClap.Rank(warrior.Talents.ImprovedThunderClap))
 }
