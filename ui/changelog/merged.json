@@ -1,5 +1,17 @@
 [
 	{
+		"number": 337,
+		"title": "db: items keep their school spell power (84 items); parse raceMask -1",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/337"
+	},
+	{
+		"number": 332,
+		"title": "priest: Shadowform's half cost multiplies after the spell mods",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/332"
+	},
+	{
 		"number": 330,
 		"title": "paladin: Echo of Command rolls the seal's chance; weapon specs stay Physical",
 		"mergedAt": "2026-09-22",
