@@ -91,8 +91,8 @@ dps_results: {
 dps_results: {
  key: "TestDpsWarrior-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 424.20727
-  tps: 244.04182
+  dps: 423.67042
+  tps: 243.74118
   dtps: 7.12565
   hps: 21.0628
  }
@@ -102,6 +102,15 @@ dps_results: {
  value: {
   dps: 417.21699
   tps: 240.22234
+  dtps: 7.38696
+  hps: 20.9723
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 424.41171
+  tps: 244.25138
   dtps: 7.38696
   hps: 20.9723
  }
@@ -217,9 +226,9 @@ dps_results: {
 dps_results: {
  key: "TestDpsWarrior-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 548.3612
-  tps: 313.6631
-  dtps: 7.87149
+  dps: 548.27393
+  tps: 313.61422
+  dtps: 7.8626
   hps: 20.9723
  }
 }

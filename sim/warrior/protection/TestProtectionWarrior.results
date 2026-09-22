@@ -87,8 +87,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 266.89269
-  tps: 356.98299
+  dps: 267.04664
+  tps: 357.18314
   dtps: 4311.94349
  }
 }
@@ -105,6 +105,14 @@ dps_results: {
  value: {
   dps: 263.45374
   tps: 352.51236
+  dtps: 4333.50778
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 266.88174
+  tps: 356.96876
   dtps: 4333.50778
  }
 }
@@ -183,8 +191,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-FieryPlateGauntlets-12631"
  value: {
-  dps: 267.24552
-  tps: 357.44168
+  dps: 267.52701
+  tps: 357.80762
   dtps: 4333.43763
  }
 }
@@ -207,16 +215,16 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-GrandMarshal'sAegis-18825"
  value: {
-  dps: 387.34171
-  tps: 594.42157
+  dps: 387.34931
+  tps: 594.43293
   dtps: 3615.77057
  }
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-GrandMarshal'sAegis-234588"
  value: {
-  dps: 386.92333
-  tps: 593.79614
+  dps: 389.58134
+  tps: 597.76987
   dtps: 3615.48891
  }
 }
@@ -247,25 +255,25 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-HighWarlord'sShieldWall-18826"
  value: {
-  dps: 387.73204
-  tps: 595.00512
+  dps: 387.73647
+  tps: 595.01173
   dtps: 3615.77057
  }
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-HighWarlord'sShieldWall-234562"
  value: {
-  dps: 387.53954
-  tps: 594.71737
+  dps: 389.78875
+  tps: 598.07995
   dtps: 3615.48891
  }
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 329.88974
-  tps: 438.87917
-  dtps: 4333.85793
+  dps: 329.83276
+  tps: 438.80508
+  dtps: 4333.85113
  }
 }
 dps_results: {
@@ -311,16 +319,16 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-PremierGrandMarshal'sAegis-272838"
  value: {
-  dps: 386.22164
-  tps: 592.74631
+  dps: 386.22468
+  tps: 592.75086
   dtps: 3620.00966
  }
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-PremierHighWarlord'sShieldWall-272591"
  value: {
-  dps: 386.22941
-  tps: 592.75793
+  dps: 386.19503
+  tps: 592.70654
   dtps: 3620.00966
  }
 }
@@ -359,8 +367,8 @@ dps_results: {
 dps_results: {
  key: "TestProtectionWarrior-AllItems-StormGauntlets-12632"
  value: {
-  dps: 270.03466
-  tps: 361.10005
+  dps: 270.44479
+  tps: 361.63323
   dtps: 4319.76905
  }
 }
