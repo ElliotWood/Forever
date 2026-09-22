@@ -13,20 +13,6 @@ var (
 	mightRageProc     = spelldata.MustFind(21838)
 	mightRageEnergize = spelldata.MustFind(29478)
 	mightSunderThreat = spelldata.MustFind(23561)
-
-	wrathDiscountProc = spelldata.MustFind(21890)
-	wrathDiscountBuff = spelldata.MustFind(21887)
-	wrathParryProc    = spelldata.MustFind(23548)
-	wrathParryBuff    = spelldata.MustFind(23547)
-
-	conquerorShoutCost   = spelldata.MustFind(26109)
-	conquerorThunderClap = spelldata.MustFind(26110)
-
-	dreadnaughtRevenge        = spelldata.MustFind(28844)
-	dreadnaughtTauntHit       = spelldata.MustFind(28843)
-	dreadnaughtAbilityHit     = spelldata.MustFind(28842)
-	dreadnaughtCheatDeath     = spelldata.MustFind(28845)
-	dreadnaughtCheatDeathBuff = spelldata.MustFind(28846)
 )
 
 var ItemSetBattlegearOfMight = core.NewItemSet(core.ItemSet{
@@ -65,6 +51,13 @@ var ItemSetBattlegearOfMight = core.NewItemSet(core.ItemSet{
 		},
 	},
 })
+
+var (
+	wrathDiscountProc = spelldata.MustFind(21890)
+	wrathDiscountBuff = spelldata.MustFind(21887)
+	wrathParryProc    = spelldata.MustFind(23548)
+	wrathParryBuff    = spelldata.MustFind(23547)
+)
 
 var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 	Name: "Battlegear of Wrath",
@@ -150,6 +143,11 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 	},
 })
 
+var (
+	conquerorShoutCost   = spelldata.MustFind(26109)
+	conquerorThunderClap = spelldata.MustFind(26110)
+)
+
 var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 	Name: "Conqueror's Battlegear",
 	ID:   496,
@@ -168,6 +166,14 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 		},
 	},
 })
+
+var (
+	dreadnaughtRevenge        = spelldata.MustFind(28844)
+	dreadnaughtTauntHit       = spelldata.MustFind(28843)
+	dreadnaughtAbilityHit     = spelldata.MustFind(28842)
+	dreadnaughtCheatDeath     = spelldata.MustFind(28845)
+	dreadnaughtCheatDeathBuff = spelldata.MustFind(28846)
+)
 
 var ItemSetDreadnaughtsBattlegear = core.NewItemSet(core.ItemSet{
 	Name: "Dreadnaught's Battlegear",
