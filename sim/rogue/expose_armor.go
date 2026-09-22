@@ -29,7 +29,7 @@ func (rogue *Rogue) registerExposeArmorSpell() {
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:          exposeArmorRank.Cost,
-			Refund:        0,
+			Refund:        exposeArmorRank.MissRefund(),
 			RefundMetrics: rogue.EnergyRefundMetrics,
 		},
 		Cast: core.CastConfig{

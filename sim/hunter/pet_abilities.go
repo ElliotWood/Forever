@@ -73,7 +73,7 @@ func (hp *HunterPet) newBite() *core.Spell {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealDamage(sim, target, sim.Roll(81, 91), spell.OutcomeMeleeSpecialHitAndCrit)
+			spell.CalcAndDealDamage(sim, target, sim.Roll(81, 99), spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})
 }

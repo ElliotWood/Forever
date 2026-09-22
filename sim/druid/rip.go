@@ -24,7 +24,8 @@ func (druid *Druid) registerRipSpell() {
 		Rank:           ripRank.Rank,
 
 		EnergyCost: core.EnergyCostOptions{
-			Cost: ripRank.Cost,
+			Cost:   ripRank.Cost,
+			Refund: ripRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{

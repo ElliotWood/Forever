@@ -27,7 +27,7 @@ func (rogue *Rogue) registerEviscerate() {
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:          eviscerateRank.Cost,
-			Refund:        0,
+			Refund:        eviscerateRank.MissRefund(),
 			RefundMetrics: rogue.EnergyRefundMetrics,
 		},
 		Cast: core.CastConfig{

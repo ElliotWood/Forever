@@ -30,7 +30,7 @@ func (rogue *Rogue) registerRupture() {
 
 		EnergyCost: core.EnergyCostOptions{
 			Cost:          ruptureRank.Cost,
-			Refund:        0,
+			Refund:        ruptureRank.MissRefund(),
 			RefundMetrics: rogue.EnergyRefundMetrics,
 		},
 		Cast: core.CastConfig{
