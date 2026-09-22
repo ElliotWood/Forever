@@ -107,6 +107,13 @@ stat_weights_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-AccurateScope-33"
+ value: {
+  dps: 789.53642
+  tps: 464.93646
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-AegisofPreservation-19345"
  value: {
   dps: 789.53642
@@ -226,10 +233,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-CrudeScope-30"
+ value: {
+  dps: 789.53642
+  tps: 464.93646
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 791.88417
   tps: 466.27746
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-DeadlyScope-663"
+ value: {
+  dps: 789.53642
+  tps: 464.93646
  }
 }
 dps_results: {
@@ -570,6 +591,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestRetribution-AllItems-SmokingHeartoftheMountain-11811"
+ value: {
+  dps: 789.53642
+  tps: 464.93646
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-SniperScope-664"
+ value: {
+  dps: 789.53642
+  tps: 464.93646
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-StandardScope-32"
  value: {
   dps: 789.53642
   tps: 464.93646

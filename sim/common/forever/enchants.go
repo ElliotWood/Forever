@@ -11,6 +11,15 @@ import (
 
 func init() {
 
+	// Scopes: flat ranged weapon damage (client SpellItemEnchantment effect 2, weapon damage).
+	for effectID, damage := range map[int32]float64{30: 1, 32: 2, 33: 3, 663: 5, 664: 7} {
+		core.NewEnchantEffect(effectID, func(agent core.Agent) {
+			ranged := agent.GetCharacter().AutoAttacks.Ranged()
+			ranged.BaseDamageMin += damage
+			ranged.BaseDamageMax += damage
+		})
+	}
+
 	// Felsteel Shield Spike
 	// EffectID: 2714, Proc SpellID: 29455
 	// Permanently attaches a felsteel spike to your shield that deals 26 to 38 damage to attackers whose melee attacks you block.

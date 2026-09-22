@@ -39,7 +39,7 @@ func (hunter *Hunter) registerSerpentStingSpell() {
 				dot.Snapshot(target, tick.Damage(sim))
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
+				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, shared.PeriodicTickOutcome(rank, dot))
 			},
 		},
 

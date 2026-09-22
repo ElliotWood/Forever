@@ -53,6 +53,13 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-AccurateScope-33"
+ value: {
+  dps: 672.64027
+  tps: 334.30221
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-AegisofPreservation-19345"
  value: {
   dps: 672.64027
@@ -116,6 +123,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-CrudeScope-30"
+ value: {
+  dps: 672.64027
+  tps: 334.30221
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Dal'Rend'sArms"
  value: {
   dps: 293.81266
@@ -131,6 +145,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestAssassination-AllItems-DarkmoonCard:BlueDragon-19288"
+ value: {
+  dps: 672.64027
+  tps: 334.30221
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-DeadlyScope-663"
  value: {
   dps: 672.64027
   tps: 334.30221
@@ -424,6 +445,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-SniperScope-664"
+ value: {
+  dps: 672.64027
+  tps: 334.30221
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Spider'sKiss"
  value: {
   dps: 672.64027
@@ -435,6 +463,13 @@ dps_results: {
  value: {
   dps: 333.44463
   tps: 165.72198
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-StandardScope-32"
+ value: {
+  dps: 672.64027
+  tps: 334.30221
  }
 }
 dps_results: {
