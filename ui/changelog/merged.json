@@ -1,5 +1,65 @@
 [
 	{
+		"number": 310,
+		"title": "core: Touch of the Grave at the client's ids; rage from damage taken at the character's level",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/310"
+	},
+	{
+		"number": 302,
+		"title": "converge(data): client batch: Blizzard level scaling, Feint threat, JoR melee crits, Might of the Scourge RAP, SS/Shield Block/trap client values",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/302"
+	},
+	{
+		"number": 300,
+		"title": "converge(data): client-verified fixes: pet Bite r8, Starshards cd, finisher refunds, missile speeds, Rain of Fire ticks",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/300"
+	},
+	{
+		"number": 299,
+		"title": "Enchants and the Thunder Clap debuff follow the Forever client",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/299"
+	},
+	{
+		"number": 298,
+		"title": "converge(data): the paladin's spells read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/298"
+	},
+	{
+		"number": 297,
+		"title": "converge(data): the warrior's abilities read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/297"
+	},
+	{
+		"number": 296,
+		"title": "converge(core): take upstream's runtime fixes (Track A step 3)",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/296"
+	},
+	{
+		"number": 295,
+		"title": "converge(data): the druid's spells read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/295"
+	},
+	{
+		"number": 294,
+		"title": "converge(data): the hunter's spells read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/294"
+	},
+	{
+		"number": 293,
+		"title": "converge(data): the shaman's spells read from the client tables",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/293"
+	},
+	{
 		"number": 292,
 		"title": "converge(data): the rogue's abilities read from the client tables",
 		"mergedAt": "2026-09-21",
