@@ -1,5 +1,17 @@
 [
 	{
+		"number": 375,
+		"title": "druid: Moonglow on damaging spells only (client mask)",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/375"
+	},
+	{
+		"number": 374,
+		"title": "shaman: Elemental Focus proc no longer also frees an instant cast in the same moment",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/374"
+	},
+	{
 		"number": 368,
 		"title": "warlock: Improved Bane of Agony scales the whole tick",
 		"mergedAt": "2026-09-22",
