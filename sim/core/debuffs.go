@@ -734,10 +734,6 @@ func FaerieFireAura(target *Unit) *Aura {
 	return faerieFireAuraInternal(target, "Faerie Fire", 9907)
 }
 
-func FaerieFireFeralAura(target *Unit) *Aura {
-	return faerieFireAuraInternal(target, "Faerie Fire (Feral)", 17392)
-}
-
 func faerieFireAuraInternal(target *Unit, label string, spellID int32) *Aura {
 	arPen := float64(505)
 

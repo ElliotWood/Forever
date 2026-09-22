@@ -260,7 +260,8 @@ func (druid *Druid) applyMoonfury() {
 	}
 
 	druid.AddStaticMod(core.SpellModConfig{
-		Kind:       core.SpellMod_BaseDamageDone_Flat,
+		// Client 16896: aura 79 (mod damage done %), Arcane and Nature: the whole hit, not just the base damage.
+		Kind:       core.SpellMod_DamageDone_Flat,
 		ClassMask:  SpellMaskBalance,
 		FloatValue: 0.02 * float64(druid.Talents.Moonfury),
 	})
