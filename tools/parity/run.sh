@@ -9,6 +9,8 @@
 # Go protos). Run from a forever-next checkout whose own Go protos are generated.
 # PARITY_ITERATIONS (default 2000) sets the iterations per spec. PARITY_GEAR=1 runs each
 # spec in its default gear preset (specs.json "gear") on both engines instead of the profile.
+# PARITY_ONLY=a,b limits the run to those specs. PARITY_DETAIL=1 adds per-action DPS, aura
+# uptimes and resource gains.
 set -euo pipefail
 
 next=$(git rev-parse --show-toplevel)
