@@ -50,7 +50,7 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestP1TankWarrior-Phase1-StatWeights-Default"
  value: {
-  weights: 0.26122
+  weights: 0.26143
   weights: 0
   weights: 0
   weights: 0
@@ -67,7 +67,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.11358
+  weights: 0.11368
   weights: 0
   weights: 0
   weights: 0
@@ -76,13 +76,13 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.00474
+  weights: -0.00315
   weights: 0
-  weights: -0.1044
+  weights: -0.07609
   weights: 0
-  weights: 0.20143
-  weights: -0.26981
-  weights: 1.21443
+  weights: 0.20301
+  weights: 0.38778
+  weights: 1.55881
   weights: 0
   weights: 0
   weights: 0
@@ -162,8 +162,8 @@ dps_results: {
 dps_results: {
  key: "TestP1TankWarrior-Phase1-Average-Default"
  value: {
-  dps: 583.40156
-  tps: 1227.16634
+  dps: 586.55035
+  tps: 1234.82034
   dtps: 534.36705
  }
 }
@@ -254,8 +254,8 @@ dps_results: {
 dps_results: {
  key: "TestP1TankWarrior-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 499.89499
-  tps: 1067.99627
+  dps: 500.4696
+  tps: 1070.57299
   dtps: 587.40242
  }
 }
