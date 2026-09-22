@@ -79,6 +79,7 @@ export const ComboBox = <T,>({
 					key={itemKey(item)}
 					active
 					label={renderSelected(item)}
+					nameAs="span"
 					confirmDelete={false}
 					onDelete={onSelectedRemove && (() => onSelectedRemove(item))}
 					deleteLabel={removeLabel}
