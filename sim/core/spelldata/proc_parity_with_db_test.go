@@ -37,9 +37,11 @@ type liveProc struct {
 	ppm    float64
 	icdMs  int32
 
-	// Why the resolved listener is deliberately not the one the generated call stated. A registration
-	// with no note has to resolve to exactly its literals.
-	differs string
+	// What the generated call stated for the chance where the client contradicts it, and why. The
+	// table carries the resolved value, so every field is asserted either way; the note is what a
+	// reader of this row needs, not a licence for the other fields to drift.
+	statedChance float64
+	chanceNote   string
 	// Set where the rows refuse the proc, which is why the item registers no effect any more.
 	unsupported string
 }
@@ -116,8 +118,9 @@ func liveProcs() []liveProc {
 
 	for i := range procs {
 		if procs[i].triggerSpellID == 1216968 {
+			procs[i].statedChance = procs[i].chance
 			procs[i].chance = 0.2
-			procs[i].differs = reissue
+			procs[i].chanceNote = reissue
 		}
 	}
 
@@ -152,12 +155,12 @@ func TestTheItemProcsResolveAsTheyWereRegistered(t *testing.T) {
 
 		report := func(field string, got any, want any) {
 			t.Helper()
-			if live.differs != "" {
-				t.Logf("%s (%d) %s: %v, the generated call stated %v - %s",
-					live.name, live.itemID, field, got, want, live.differs)
-				return
-			}
 			t.Errorf("%s (%d) %s: %v, the generated call stated %v", live.name, live.itemID, field, got, want)
+		}
+
+		if live.chanceNote != "" {
+			t.Logf("%s (%d) ProcChance: %v, where the generated call stated %v - %s",
+				live.name, live.itemID, live.chance, live.statedChance, live.chanceNote)
 		}
 
 		if trigger.Callback != live.callback {
