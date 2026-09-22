@@ -33,7 +33,7 @@ type FakeRageWarrior struct {
 
 func (fw *FakeRageWarrior) GetCharacter() *Character { return &fw.Character }
 
-func (fw *FakeRageWarrior) Initialize()                    {}
+func (fw *FakeRageWarrior) Initialize()                    { fw.registerFakeThreatSpell() }
 func (fw *FakeRageWarrior) ApplyTalents()                  {}
 func (fw *FakeRageWarrior) Reset(_ *Simulation)            {}
 func (fw *FakeRageWarrior) OnGCDReady(_ *Simulation)       {}

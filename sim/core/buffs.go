@@ -181,17 +181,8 @@ func applyBuffEffects(agent Agent, raidBuffs *proto.RaidBuffs, partyBuffs *proto
 	}
 
 	if partyBuffs.BattleShout != proto.TristateEffect_TristateEffectMissing {
-		boomingVoicePoints := int32(0)
-		aura := BattleShoutAura(
-			char,
-			false,
-			boomingVoicePoints,
-			GetTristateValueFloat(partyBuffs.BattleShout, 1.0, 1.25),
-			partyBuffs.BsSolarianSapphire,
-			false,
-		)
-
-		ApplyFixedShoutAura(char, aura, BattleShoutCategory)
+		attackPower := GetTristateValueFloat(partyBuffs.BattleShout, BattleShoutAttackPower, BattleShoutAttackPower+BattleShoutWrathBonus)
+		ApplyFixedShoutAura(char, BattleShoutAura(&char.Unit, false, attackPower, BattleShoutDuration), BattleShoutCategory)
 	}
 
 	if partyBuffs.BloodPact != proto.TristateEffect_TristateEffectMissing {
@@ -624,39 +615,25 @@ func ShadowResistanceAura(char *Character, isPlayer bool) *Aura {
 // /////////////////////////////////////////////////////////////////////////
 var BattleShoutCategory = "BattleShout"
 
-func GetBattleShoutValue(boomingVoicePoints int32, commandingPresenceMultiplier float64, hasSolarianSapphire bool, hasT2 bool, isPrepull bool) float64 {
-	baseApBuff := 306.0
-	apBuff := baseApBuff
-	if isPrepull {
-		if hasSolarianSapphire {
-			apBuff += 70
-		}
-		if hasT2 {
-			apBuff += 30
-		}
-	}
-	// Truncated like the game: 306*1.25=382.5 -> 382.
-	return math.Floor(apBuff * commandingPresenceMultiplier)
-}
+// Spell 25289: 139 attack power for 3 minutes. Battlegear of Wrath's three pieces (23563) add 30.
+const (
+	BattleShoutAttackPower = 139.0
+	BattleShoutWrathBonus  = 30.0
+	BattleShoutDuration    = 3 * time.Minute
+)
 
-func BattleShoutAura(char *Character, isPlayer bool, boomingVoicePoints int32, commandingPresenceMultiplier float64, hasSolarianSapphire bool, hasT2 bool) *Aura {
-	prepullApBuff := GetBattleShoutValue(boomingVoicePoints, commandingPresenceMultiplier, hasSolarianSapphire, hasT2, true)
-	apBuff := GetBattleShoutValue(boomingVoicePoints, commandingPresenceMultiplier, hasSolarianSapphire, hasT2, false)
-
-	var ee *ExclusiveEffect
-	aura := char.GetOrRegisterAura(Aura{
+// The attack power is the exclusive effect's priority, so a caller can SetPriority it on gain.
+func BattleShoutAura(unit *Unit, isPlayer bool, attackPower float64, duration time.Duration) *Aura {
+	aura := unit.GetOrRegisterAura(Aura{
 		Label:      fmt.Sprintf("Battle Shout (%s)", Ternary(isPlayer, "Player", "External")),
 		Tag:        BattleShoutCategory,
-		ActionID:   ActionID{SpellID: 2048}.WithTag(TernaryInt32(isPlayer, 0, 1)),
-		Duration:   time.Duration(float64(time.Minute*2) * (1 + 0.1*float64(boomingVoicePoints))),
+		ActionID:   ActionID{SpellID: 25289}.WithTag(TernaryInt32(isPlayer, 0, 1)),
+		Duration:   duration,
 		BuildPhase: CharacterBuildPhaseBuffs,
-		OnGain: func(aura *Aura, sim *Simulation) {
-			ee.SetPriority(sim, TernaryFloat64(sim.CurrentTime > 0, apBuff, prepullApBuff))
-		},
 	})
 
-	ee = aura.NewExclusiveEffect(BattleShoutCategory, true, ExclusiveEffect{
-		Priority: 0,
+	aura.NewExclusiveEffect(BattleShoutCategory, true, ExclusiveEffect{
+		Priority: attackPower,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
 			ee.Aura.Unit.AddStatDynamic(sim, stats.AttackPower, ee.Priority)
 		},

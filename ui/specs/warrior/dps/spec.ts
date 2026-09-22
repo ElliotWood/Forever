@@ -89,7 +89,7 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 	// IconInputs to include in the 'Player' section on the settings tab.
 	// The two Battle Shout icon toggles used to sit in `otherInputs`; icon pickers are not part
 	// of the `InputConfig` union any more, so they join the player icon row.
-	playerIconInputs: [WarriorInputs.ShoutPicker(), WarriorInputs.StancePicker()],
+	playerIconInputs: [WarriorInputs.ShoutPicker(), WarriorInputs.StancePicker(), WarriorInputs.BattleShoutT2()],
 	// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
 	includeBuffDebuffInputs: [],
 	excludeBuffDebuffInputs: [],
@@ -99,8 +99,8 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 			OtherInputs.TotemTwisting,
 			WarriorInputs.StartingRage(),
 			WarriorInputs.StanceSnapshot(),
-			OtherInputs.DistanceFromTarget,
 			WarriorInputs.QueueDelay(),
+			OtherInputs.DistanceFromTarget,
 			OtherInputs.InputDelay,
 			OtherInputs.TankAssignment,
 			OtherInputs.InFrontOfTarget,

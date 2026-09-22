@@ -60,14 +60,13 @@ export const rotationCategoryOverrides: Record<number, number> = {
 	[12536]: SPELL_ACTION_CATEGORY + 0.61, // Clearcasting
 
 	// Warrior
-	[23881]: MELEE_ACTION_CATEGORY + 0.1, // Bloodthirst
-	[30356]: MELEE_ACTION_CATEGORY + 0.1, // Shield Slam
+	[23894]: MELEE_ACTION_CATEGORY + 0.1, // Bloodthirst
+	[23925]: MELEE_ACTION_CATEGORY + 0.1, // Shield Slam
 	[1680]: MELEE_ACTION_CATEGORY + 0.24, // Whirlwind
-	[12867]: SPELL_ACTION_CATEGORY + 0.51, // Deep Wounds
+	[412609]: SPELL_ACTION_CATEGORY + 0.51, // Deep Wounds
 	[2565]: SPELL_ACTION_CATEGORY + 0.62, // Shield Block
 	[71]: DEFAULT_ACTION_CATEGORY + 0.1, // Defensive Stance
 	[2457]: DEFAULT_ACTION_CATEGORY + 0.1, // Battle Stance
-	[469]: DEFAULT_ACTION_CATEGORY + 0.1, // Commanding Shout
 };
 
 export function actionCategory(actionId: ActionId, meleeKeys: ReadonlySet<string>, spellKeys: ReadonlySet<string>): number {

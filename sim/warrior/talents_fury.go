@@ -279,9 +279,7 @@ func (warrior *Warrior) registerBloodCraze() {
 
 	bloodCrazeHot := spellData.BloodCrazeTriggered.HighestRank()
 	healthFraction := spellData.BloodCraze.EffectAt(0).FractionAt(warrior.Talents.BloodCraze)
-	// 16487's second effect, the 20% of maximum health one hit has to take, has no rank curve and the
-	// generator on forever-next leaves it out.
-	hitThreshold := 0.2
+	hitThreshold := spellData.BloodCraze.EffectAt(1).FractionAt(warrior.Talents.BloodCraze)
 	tick := bloodCrazeHot.Periodic.AsPeriodic()
 
 	bloodCraze := warrior.RegisterSpell(core.SpellConfig{
@@ -338,9 +336,7 @@ func (warrior *Warrior) registerRagingBlows() {
 	warrior.AddStaticMod(core.SpellModConfig{
 		ClassMask: SpellMaskCleave,
 		Kind:      core.SpellMod_PowerCost_Flat,
-		// 1310315's second effect: -20 on the 0-1000 bar, 2 rage off Cleave. The generator on
-		// forever-next has no row for the talent yet.
-		IntValue: -2,
+		IntValue:  int32(spellData.RagingBlows.EffectAt(1).TenthsAt(1)),
 	})
 }
 

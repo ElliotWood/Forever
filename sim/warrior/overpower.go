@@ -1,26 +1,22 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
 func (warrior *Warrior) registerOverpower() {
 	overpowerRank := spellData.Overpower.BySpellID(11585)
 	overpowerBaseDamage, _ := overpowerRank.Direct.Range()
-	// The window a dodge opens: the aura Offensive State (DND) fires on the hit, 1282733 for 5 sec.
-	// The generator on forever-next has no row for it yet.
-	overpowerWindowID := int32(1282733)
-	overpowerWindowDuration := 5 * time.Second
+	// The window a dodge opens: the aura Offensive State (DND) fires on the hit.
+	overpowerWindow := spellData.OffensiveStateTriggered.HighestRank()
 
 	actionID := core.ActionID{SpellID: overpowerRank.SpellID}
 	overpowerCD := overpowerRank.Cooldown
 
 	warrior.OverpowerAura = warrior.RegisterAura(core.Aura{
-		ActionID: core.ActionID{SpellID: overpowerWindowID},
+		ActionID: core.ActionID{SpellID: overpowerWindow.SpellID},
 		Label:    "Overpower Aura",
-		Duration: overpowerWindowDuration,
+		Duration: overpowerWindow.Duration,
 	})
 
 	warrior.MakeProcTriggerAura(core.ProcTrigger{
