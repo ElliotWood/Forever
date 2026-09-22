@@ -1,40 +1,26 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 )
 
-var interceptRank = spellData.Intercept.HighestRank()
+func (warrior *Warrior) registerIntercept() {
+	interceptRank := spellData.Intercept.HighestRank()
+	// The damage sits on the stun the charge triggers, which the generator follows onto the row.
+	interceptStunDamage, _ := interceptRank.Direct.Range()
 
-func (war *Warrior) registerIntercept() {
 	actionID := core.ActionID{SpellID: interceptRank.SpellID}
 	chargeMinRange := interceptRank.MinRange
+	interceptCD := interceptRank.Cooldown
 
 	var spell *core.Spell
 	var interceptTarget *core.Unit
 
-	aura := war.RegisterAura(core.Aura{
-		Label:    "Intercept",
-		ActionID: actionID,
-		Duration: 15 * time.Second,
-		OnGain: func(aura *core.Aura, sim *core.Simulation) {
-			war.MultiplyMovementSpeed(sim, 3.0)
-		},
-		OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-			war.MultiplyMovementSpeed(sim, 1.0/3.0)
-			spell.CalcAndDealDamage(sim, interceptTarget, 105, spell.OutcomeAlwaysHit)
-		},
+	aura := warrior.registerDashAura("Intercept", actionID, interceptCD, func(sim *core.Simulation) {
+		spell.CalcAndDealDamage(sim, interceptTarget, interceptStunDamage, spell.OutcomeAlwaysHit)
 	})
 
-	war.RegisterMovementCallback(func(sim *core.Simulation, position float64, kind core.MovementUpdateType) {
-		if kind == core.MovementEnd && aura.IsActive() {
-			aura.Deactivate(sim)
-		}
-	})
-
-	spell = war.RegisterSpell(core.SpellConfig{
+	spell = warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		SpellSchool:    core.SpellSchoolPhysical,
 		Flags:          core.SpellFlagAPL,
@@ -42,22 +28,26 @@ func (war *Warrior) registerIntercept() {
 		MinRange:       chargeMinRange,
 		MaxRange:       interceptRank.MaxRange,
 
+		RageCost: core.RageCostOptions{
+			Cost: interceptRank.Cost,
+		},
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: interceptRank.Cooldown,
+				Timer:    warrior.NewTimer(),
+				Duration: interceptCD,
 			},
 			IgnoreHaste: true,
 		},
 
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
+			return warrior.StanceMatches(BerserkerStance)
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			interceptTarget = target
+			aura.Duration = spell.CD.Duration
 			aura.Activate(sim)
-			war.MoveTo(chargeMinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
+			warrior.MoveTo(chargeMinRange-3.5, sim) // movement aura is discretized in 1 yard intervals, so need to overshoot to guarantee melee range
 		},
 	})
 }

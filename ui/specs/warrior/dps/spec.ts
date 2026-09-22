@@ -124,19 +124,21 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 	presets: {
 		epWeights: [],
 		// Preset talents that the user can quickly select.
-		talents: [],
+		talents: [Presets.DpsTalents, Presets.FuryTalents, Presets.ArmsTalents],
 		// Preset rotations that the user can quickly select.
-		rotations: [Presets.SIMPLE_DEFAULT_ROTATION, Presets.FURY_DEFAULT_ROTATION, Presets.ARMS_DEFAULT_ROTATION],
+		rotations: [
+			Presets.SIMPLE_DEFAULT_ROTATION,
+			Presets.ROTATION_PRESET_NO_RECK,
+			Presets.ROTATION_PRESET_RECK,
+			Presets.FURY_DEFAULT_ROTATION,
+			Presets.ARMS_DEFAULT_ROTATION,
+		],
 		// Preset gear configurations that the user can quickly select.
 		gear: [],
 	},
 
-	autoRotation: (player: Player<Spec.SpecDpsWarrior>): APLRotation => {
-		if (Presets.isArmsSpec(player) || Presets.isArmsKebabSpec(player)) {
-			return Presets.ARMS_DEFAULT_ROTATION.rotation.rotation!;
-		}
-
-		return Presets.FURY_DEFAULT_ROTATION.rotation.rotation!;
+	autoRotation: (_player: Player<Spec.SpecDpsWarrior>): APLRotation => {
+		return Presets.ROTATION_PRESET_NO_RECK.rotation.rotation!;
 	},
 
 	simpleRotation: (player: Player<Spec.SpecDpsWarrior>, simple: SpecRotation<Spec.SpecDpsWarrior>, _: Cooldowns): APLRotation => {

@@ -1,70 +1,39 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 )
 
-// Forever's client supplies Sunder Armor's flat threat per rank (405/608/810/1013 for
-// ranks 2-5), so the hand-applied 301.5 is gone -- WithSpellDataFlatThreat panics rather
-// than silently overriding client data.
-//
-// TODO: rank 1 reads a flat threat of 1, which looks like placeholder data next to the
-// rest of the ladder. Harmless while this pins the highest rank, but worth confirming.
-var sunderArmorRank = spellData.SunderArmor.HighestRank()
+func (warrior *Warrior) registerSunderArmor() {
+	// The client supplies Sunder Armor's flat threat per rank: 405/608/810/1013 for ranks 2-5.
+	//
+	// TODO: rank 1 reads a flat threat of 1, which looks like placeholder data next to the
+	// rest of the ladder. Harmless while this pins the highest rank, but worth confirming.
+	sunderArmorRank := spellData.SunderArmor.HighestRank()
 
-func (war *Warrior) registerSunderArmor() {
 	actionId := core.ActionID{SpellID: sunderArmorRank.SpellID}
 
-	war.SunderArmorAuras = war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.SunderArmorAura(target)
+	// core.SunderArmorAura still carries TBC's id (25225) and 520 armor a stack where the client's
+	// rank 5 states 450; the shared debuff is left to their #39. The id is set to the rank's so an APL
+	// can watch the stacks by the spell it casts.
+	warrior.SunderArmorAuras = warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		aura := core.SunderArmorAura(target)
+		aura.ActionID = actionId
+		return aura
 	})
 
-	getSunderArmorConfig := func(config core.SpellConfig, outcome shared.OutcomeType) core.SpellConfig {
-		return core.SpellConfig{
-			ActionID:       config.ActionID,
-			SpellSchool:    core.SpellSchoolPhysical,
-			DefenseType:    core.DefenseTypeMelee,
-			ProcMask:       core.ProcMaskMeleeMHSpecial,
-			Flags:          config.Flags,
-			ClassSpellMask: SpellMaskSunderArmor,
-			MaxRange:       core.MaxMeleeRange,
-
-			RageCost: config.RageCost,
-			Cast:     config.Cast,
-			ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-				return war.CanApplySunderAura(target)
-			},
-
-			DamageMultiplier: 1,
-			ThreatMultiplier: 1,
-			FlatThreatBonus:  sunderArmorRank.FlatThreatBonus,
-
-			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				result := spell.CalcOutcome(sim, target, shared.GetOutcome(spell, outcome))
-
-				if result.Landed() {
-					aura := war.SunderArmorAuras.Get(target)
-					aura.Activate(sim)
-					aura.AddStack(sim)
-				} else if spell.Cost != nil {
-					spell.IssueRefund(sim)
-				}
-
-				spell.DealOutcome(sim, result)
-			},
-
-			RelatedAuraArrays: war.SunderArmorAuras.ToMap(),
-		}
-	}
-
-	war.RegisterSpell(getSunderArmorConfig(core.SpellConfig{
-		ActionID: actionId,
-		Flags:    core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+	warrior.RegisterSpell(core.SpellConfig{
+		ActionID:       actionId,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeMHSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
+		ClassSpellMask: SpellMaskSunderArmor,
+		MaxRange:       core.MaxMeleeRange,
 
 		RageCost: core.RageCostOptions{
 			Cost:   sunderArmorRank.Cost,
-			Refund: 0.8,
+			Refund: sunderArmorRank.MissRefund(),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
@@ -72,11 +41,30 @@ func (war *Warrior) registerSunderArmor() {
 			},
 			IgnoreHaste: true,
 		},
-	}, shared.OutcomeMeleeNoCrit))
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return warrior.CanApplySunderAura(target)
+		},
 
-	war.SunderArmorDevastate = war.RegisterSpell(getSunderArmorConfig(core.SpellConfig{
-		ActionID: actionId.WithTag(1),
-	}, shared.OutcomeAlwaysHit))
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
+		FlatThreatBonus:  sunderArmorRank.FlatThreatBonus,
+
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			result := spell.CalcOutcome(sim, target, spell.OutcomeMeleeSpecialHit)
+
+			if result.Landed() {
+				aura := warrior.SunderArmorAuras.Get(target)
+				aura.Activate(sim)
+				aura.AddStack(sim)
+			} else {
+				spell.IssueRefund(sim)
+			}
+
+			spell.DealOutcome(sim, result)
+		},
+
+		RelatedAuraArrays: warrior.SunderArmorAuras.ToMap(),
+	})
 }
 
 func (warrior *Warrior) CanApplySunderAura(target *core.Unit) bool {

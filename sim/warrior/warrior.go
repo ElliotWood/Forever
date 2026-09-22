@@ -14,16 +14,11 @@ type WarriorInputs struct {
 	DefaultShout  proto.WarriorShout
 	DefaultStance proto.WarriorStance
 
-	StartingRage          float64
-	QueueDelay            int32
-	StanceSnapshot        bool
-	HasBsSolarianSapphire bool
-	HasBsT2               bool
+	StartingRage   float64
+	QueueDelay     int32
+	StanceSnapshot bool
+	HasBsT2        bool
 }
-
-const (
-	SpellFlagBleed = core.SpellFlagAgentReserved1
-)
 
 const (
 	SpellMaskNone int64 = 0
@@ -34,7 +29,6 @@ const (
 	SpellMaskDeathWish
 	SpellMaskRetaliation
 	SpellMaskRetaliationHit
-	SpellMaskRampage
 	SpellMaskShieldWall
 	SpellMaskLastStand
 	SpellMaskCharge
@@ -54,7 +48,6 @@ const (
 	SpellMaskSweepingStrikesNormalizedHit
 	SpellMaskHeroicStrike
 	SpellMaskCleave
-	SpellMaskDevastate
 	SpellMaskExecute
 	SpellMaskOverpower
 	SpellMaskRevenge
@@ -71,21 +64,34 @@ const (
 	SpellMaskShieldBlock
 	SpellMaskHamstring
 	SpellMaskPummel
+	SpellMaskMockingBlow
+	SpellMaskChallengingShout
+	SpellMaskIntimidatingShout
+	SpellMaskDisarm
+	SpellMaskTaunt
+	SpellMaskVictoryRush
+	SpellMaskSpearingStrike
 
 	WarriorSpellLast
 	WarriorSpellsAll = WarriorSpellLast<<1 - 1
 
-	SpellMaskShouts             = SpellMaskBattleShout | SpellMaskDemoralizingShout
 	SpellMaskDirectDamageSpells = SpellMaskSweepingStrikesHit | SpellMaskSweepingStrikesNormalizedHit |
 		SpellMaskCleave | SpellMaskExecute | SpellMaskHeroicStrike | SpellMaskOverpower |
 		SpellMaskRevenge | SpellMaskSlam | SpellMaskShieldBash | SpellMaskSunderArmor |
 		SpellMaskThunderClap | SpellMaskWhirlwind | SpellMaskWhirlwindOh | SpellMaskShieldSlam |
-		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskDevastate | SpellMaskRetaliationHit
+		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskRetaliationHit |
+		SpellMaskMockingBlow | SpellMaskVictoryRush | SpellMaskSpearingStrike |
+		SpellMaskHamstring | SpellMaskPummel
 
 	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
-)
 
-const EnrageTag = "EnrageEffect"
+	SpellMaskOffensiveAbilities = SpellMaskHeroicStrike | SpellMaskRend | SpellMaskShieldBash |
+		SpellMaskCleave | SpellMaskDisarm | SpellMaskWhirlwind | SpellMaskSunderArmor | SpellMaskSlam |
+		SpellMaskHamstring | SpellMaskExecute | SpellMaskPummel | SpellMaskRevenge | SpellMaskOverpower |
+		SpellMaskThunderClap | SpellMaskMockingBlow | SpellMaskMortalStrike | SpellMaskConcussionBlow |
+		SpellMaskShieldSlam | SpellMaskRetaliation | SpellMaskIntercept | SpellMaskBloodthirst
+	SpellMaskShouts = SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout
+)
 
 type Warrior struct {
 	core.Character
@@ -97,9 +103,8 @@ type Warrior struct {
 	WarriorInputs
 
 	// Current state
-	Stance                Stance
-	ChargeRageGain        float64
-	BerserkerRageRageGain float64
+	Stance                 Stance
+	thunderClapEffectBonus float64
 
 	BattleShout       *core.Spell
 	DemoralizingShout *core.Spell
@@ -110,28 +115,31 @@ type Warrior struct {
 	Rend                            *core.Spell
 	DeepWounds                      *core.Spell
 	MortalStrike                    *core.Spell
-	DevastateSunder                 *core.Spell
 	SweepingStrikesNormalizedAttack *core.Spell
-	SunderArmorDevastate            *core.Spell
 
-	HeroicStrike       *core.Spell
-	Cleave             *core.Spell
+	HeroicStrike *core.Spell
+	Cleave       *core.Spell
+
 	curQueueAura       *core.Aura
 	curQueuedAutoSpell *core.Spell
-
-	sharedMCD        *core.Timer // Recklessness, Shield Wall & Retaliation
-	sharedShoutsCD   *core.Timer
+	// The sim often re-enables Heroic Strike in an unrealistic amount of time, which can cause an
+	// unrealistic immediate double hit around extra attacks.
 	queuedRealismICD *core.Cooldown
+
+	MockingBlow       *core.Spell
+	ChallengingShout  *core.Spell
+	IntimidatingShout *core.Spell
+	Disarm            *core.Spell
+	Taunt             *core.Spell
+	VictoryRush       *core.Spell
 
 	EnrageAura *core.Aura
 
 	SweepingStrikesAura *core.Aura
+	OverpowerAura       *core.Aura
 
 	DemoralizingShoutAuras core.AuraArray
 	SunderArmorAuras       core.AuraArray
-
-	// Set bonuses
-	T6Tank2P *core.Aura
 }
 
 func (warrior *Warrior) GetCharacter() *core.Character {
@@ -145,40 +153,44 @@ func (warrior *Warrior) AddPartyBuffs(_ *proto.PartyBuffs) {
 }
 
 func (warrior *Warrior) Initialize() {
-	// warrior.registerRecklessness()
-	// warrior.registerShieldWall()
-	// warrior.registerRetaliation()
+	warrior.registerRecklessness()
+	warrior.registerShieldWall()
+	warrior.registerRetaliation()
 
-	// warrior.registerBerserkerRage()
-	// warrior.registerBloodrage()
-	// warrior.registerCharge()
-	// warrior.registerIntercept()
-	// warrior.registerPummel()
-	// warrior.registerHamstring()
+	warrior.registerBerserkerRage()
+	warrior.registerBloodrage()
+	warrior.registerCharge()
+	warrior.registerIntercept()
+	warrior.registerPummel()
+	warrior.registerHamstring()
+	warrior.registerDisarm()
+	warrior.registerTaunt()
 
-	// warrior.registerRend()
-	// warrior.registerSunderArmor()
-	// warrior.registerHeroicStrike()
-	// warrior.registerCleave()
-	// warrior.registerOverpower()
-	// warrior.registerSlam()
-	// warrior.registerWhirlwind()
-	// warrior.registerExecute()
-	// warrior.registerThunderClap()
-	// warrior.registerRevenge()
-	// warrior.registerShieldBlock()
-	// warrior.registerShieldBash()
+	warrior.registerRend()
+	warrior.registerSunderArmor()
+	warrior.registerHeroicStrike()
+	warrior.registerCleave()
+	warrior.registerOverpower()
+	warrior.registerSlam()
+	warrior.registerWhirlwind()
+	warrior.registerExecute()
+	warrior.registerThunderClap()
+	warrior.registerRevenge()
+	warrior.registerShieldBlock()
+	warrior.registerShieldBash()
+	warrior.registerMockingBlow()
+	warrior.registerVictoryRush()
 
-	// warrior.registerStances()
-	// warrior.registerShouts()
+	warrior.registerStances()
+	warrior.registerBattleShout()
+	warrior.registerDemoralizingShout()
+	warrior.registerChallengingShout()
+	warrior.registerIntimidatingShout()
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {
 	warrior.curQueueAura = nil
 	warrior.curQueuedAutoSpell = nil
-
-	warrior.ChargeRageGain = 15
-	warrior.BerserkerRageRageGain = 0
 
 	switch warrior.DefaultStance {
 	case proto.WarriorStance_WarriorStanceBattle:
@@ -192,8 +204,8 @@ func (warrior *Warrior) Reset(_ *core.Simulation) {
 
 func (warrior *Warrior) OnEncounterStart(sim *core.Simulation) {}
 
-func (war *Warrior) GetMainHandType() proto.HandType {
-	mh := war.GetMHWeapon()
+func (warrior *Warrior) GetMainHandType() proto.HandType {
+	mh := warrior.GetMHWeapon()
 
 	if mh != nil && (mh.HandType == proto.HandType_HandTypeTwoHand) {
 		return proto.HandType_HandTypeTwoHand
@@ -211,7 +223,7 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	core.FillTalentsProto(warrior.Talents.ProtoReflect(), talents, TalentTreeSizes)
 
 	warrior.EnableRageBar(core.RageBarOptions{
-		MaxRage:            100,
+		MaxRage:            100 + spellData.BoundlessRage.TenthsAt(warrior.Talents.BoundlessRage),
 		BaseRageMultiplier: 1,
 		StartingRage:       inputs.StartingRage,
 	})
@@ -224,6 +236,7 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	})
 
 	warrior.PseudoStats.CanParry = true
+	// TODO: In-game testing required
 	warrior.PseudoStats.BaseDodgeChance += 0.0075
 	warrior.PseudoStats.BaseParryChance += 0.05
 	warrior.PseudoStats.BaseBlockChance += 0.05
@@ -234,15 +247,9 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.Agility, stats.DodgeRating, 1/30.0*core.DodgeRatingPerDodgePercent)
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 
-	warrior.sharedShoutsCD = warrior.NewTimer()
-	warrior.sharedMCD = warrior.NewTimer()
-	warrior.ChargeRageGain = 15
-	warrior.BerserkerRageRageGain = 0
-	// The sim often re-enables heroic strike in an unrealistic amount of time.
-	// This can cause an unrealistic immediate double-hit around wild strikes procs
 	warrior.queuedRealismICD = &core.Cooldown{
 		Timer:    warrior.NewTimer(),
-		Duration: time.Millisecond * time.Duration(warrior.WarriorInputs.QueueDelay),
+		Duration: time.Millisecond * time.Duration(inputs.QueueDelay),
 	}
 
 	return warrior

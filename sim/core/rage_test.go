@@ -175,3 +175,17 @@ func TestOffHandAutoAttackRageGeneration(t *testing.T) {
 		t.Fatalf("Dodged OH swing generated %0.3f Rage, expected none", dodgeRage)
 	}
 }
+
+func TestOffHandRageMultiplier(t *testing.T) {
+	// Dual Wield Specialization scales only the OH swing's flat rage: 1.8 * 3.5 * 2 = 12.6.
+	sim := SetupFakeRageSim()
+	fw := sim.Raid.Parties[0].Players[0].(*FakeRageWarrior)
+	fw.SetOffHandRageMultiplier(2)
+
+	if gained := rageFromAutoAttack(sim, fw, fw.AutoAttacks.OHAuto(), OutcomeHit, 500); !WithinToleranceFloat64(12.6, gained, 0.01) {
+		t.Fatalf("Multiplied OH hit: Expected: 12.600, Actual: %0.3f", gained)
+	}
+	if gained := rageFromAutoAttack(sim, fw, fw.AutoAttacks.MHAuto(), OutcomeHit, 500); !WithinToleranceFloat64(9.1, gained, 0.01) {
+		t.Fatalf("MH hit changed with the OH multiplier: Expected: 9.100, Actual: %0.3f", gained)
+	}
+}

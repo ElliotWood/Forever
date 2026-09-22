@@ -4,15 +4,23 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var thunderClapRank = spellData.ThunderClap.HighestRank()
-var thunderClapBaseDamage, _ = thunderClapRank.Direct.Range()
+func (warrior *Warrior) registerThunderClap() {
+	thunderClapRank := spellData.ThunderClap.HighestRank()
+	thunderClapBaseDamage, _ := thunderClapRank.Direct.Range()
+	thunderClapSlow := thunderClapRank.Effects[1].Fraction()
 
-func (war *Warrior) registerThunderClap() {
-	auras := war.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		return core.ThunderClapAura(target, war.Talents.ImprovedThunderClap)
+	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		// core.ThunderClapAura still takes TBC's Improved Thunder Clap points; 3 picks its 20% row,
+		// and the priority below sets the client's value on top.
+		return core.ThunderClapAura(target, 3).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
+			speedMultiplier := 1 / (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus))
+			if ee := aura.ExclusiveEffects[0]; ee.Priority != speedMultiplier {
+				ee.SetPriority(sim, speedMultiplier)
+			}
+		})
 	})
 
-	war.RegisterSpell(core.SpellConfig{
+	warrior.RegisterSpell(core.SpellConfig{
 		ActionID:    core.ActionID{SpellID: thunderClapRank.SpellID},
 		SpellSchool: thunderClapRank.SpellSchool,
 		// Thunder Clap is Physical but Magic in SpellCategories: it rolls on the spell hit table
@@ -33,17 +41,22 @@ func (war *Warrior) registerThunderClap() {
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
+				Timer:    warrior.NewTimer(),
 				Duration: thunderClapRank.Cooldown,
 			},
 		},
 
 		DamageMultiplier: 1,
-		ThreatMultiplier: 1.75,
+		// Not in the client table; our Classic value until measured in game.
+		ThreatMultiplier: 2.5,
+
+		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+			return warrior.StanceMatches(BattleStance | DefensiveStance)
+		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			results := spell.CalcCleaveDamage(sim, target, 4, thunderClapBaseDamage, spell.OutcomeMagicHitAndCrit)
-			war.CastNormalizedSweepingStrikesAttack(results, sim)
+			results := spell.CalcCleaveDamage(sim, target, thunderClapRank.MaxTargets, thunderClapBaseDamage, spell.OutcomeMagicHitAndCrit)
+			warrior.CastNormalizedSweepingStrikesAttack(results, sim)
 
 			for _, result := range results {
 				if result.Landed() {

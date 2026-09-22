@@ -3,6 +3,7 @@ package warrior
 import (
 	"time"
 
+	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -19,30 +20,29 @@ const (
 
 const stanceEffectCategory = "Stance"
 
+var battleStanceRank = spellData.BattleStance.HighestRank()
+var defensiveStanceRank = spellData.DefensiveStance.HighestRank()
+var berserkerStanceRank = spellData.BerserkerStance.HighestRank()
+
 func (warrior *Warrior) StanceMatches(other Stance) bool {
 	return (warrior.Stance & other) != 0
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
-func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, defenseType core.DefenseType, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
-	// TODO: Forever drops Tactical Mastery and adds Improved Tactical Mastery, which is
-	// probably its replacement -- but the new talent's effect is not modelled yet, so
-	// this is the untalented base only.
-	maxRetainedRage := 10.0
+func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, rank shared.SpellData, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
 	actionID := aura.ActionID
 	rageMetrics := warrior.NewRageMetrics(actionID)
+	maxRetainedRage := spellData.TacticalMastery.ValueAt(1) + spellData.ImprovedTacticalMastery.ValueAt(warrior.Talents.ImprovedTacticalMastery)
 
 	return warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
-		DefenseType:    defenseType,
+		DefenseType:    rank.DefenseType,
 		ClassSpellMask: mask,
 		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 
 		Cast: core.CastConfig{
 			CD: core.Cooldown{
 				Timer:    stanceCD,
-				Duration: time.Second * 1,
+				Duration: rank.Cooldown,
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
@@ -73,34 +73,16 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, mask int64, defenseType c
 }
 
 func (warrior *Warrior) registerBattleStanceAura() *core.Aura {
-	actionID := core.ActionID{SpellID: 2457}
+	actionID := core.ActionID{SpellID: battleStanceRank.SpellID}
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:      "Battle Stance",
 		ActionID:   actionID,
 		Duration:   core.NeverExpires,
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
-	}).AttachMultiplicativePseudoStatBuff(&warrior.PseudoStats.ThreatMultiplier, 0.8)
-
-	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
-
-	return aura
-}
-
-func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
-	actionID := core.ActionID{SpellID: 71}
-
-	aura := warrior.RegisterAura(core.Aura{
-		Label:      "Defensive Stance",
-		ActionID:   actionID,
-		Duration:   core.NeverExpires,
-		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceDefensive, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
 	}).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.ThreatMultiplier, 1.3,
-	).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.DamageTakenMultiplier, 0.9,
-	).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.DamageDealtMultiplier, 0.9,
+		&warrior.PseudoStats.ThreatMultiplier,
+		spellData.BattleStancePassive.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(1),
 	)
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
@@ -108,12 +90,50 @@ func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
 	return aura
 }
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
+func (warrior *Warrior) registerDefensiveStanceAura() *core.Aura {
+	actionID := core.ActionID{SpellID: defensiveStanceRank.SpellID}
+
+	aura := warrior.RegisterAura(core.Aura{
+		Label:      "Defensive Stance",
+		ActionID:   actionID,
+		Duration:   core.NeverExpires,
+		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceDefensive, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
+	}).AttachMultiplicativePseudoStatBuff(
+		&warrior.PseudoStats.ThreatMultiplier,
+		spellData.DefensiveStancePassive.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(1),
+	).AttachMultiplicativePseudoStatBuff(
+		&warrior.PseudoStats.DamageTakenMultiplier,
+		spellData.DefensiveStancePassive.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).MultiplierAt(1),
+	).AttachMultiplicativePseudoStatBuff(
+		&warrior.PseudoStats.DamageDealtMultiplier,
+		spellData.DefensiveStancePassive.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 127).MultiplierAt(1),
+	)
+	if warrior.Talents.Defiance > 0 {
+		defiance := spellData.Defiance.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(warrior.Talents.Defiance)
+		applied := false
+		refresh := func(inStance bool) {
+			want := inStance && warrior.PseudoStats.CanBlock
+			if want && !applied {
+				warrior.PseudoStats.ThreatMultiplier *= defiance
+			} else if !want && applied {
+				warrior.PseudoStats.ThreatMultiplier /= defiance
+			}
+			applied = want
+		}
+		aura.ApplyOnGain(func(_ *core.Aura, _ *core.Simulation) { refresh(true) })
+		aura.ApplyOnExpire(func(_ *core.Aura, _ *core.Simulation) { refresh(false) })
+		warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(_ *core.Simulation, _ proto.ItemSlot) {
+			refresh(aura.IsActive())
+		})
+	}
+
+	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
+
+	return aura
+}
+
 func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
-	actionId := core.ActionID{SpellID: 2458}
-	// TODO: Forever drops Improved Berserker Stance; untalented threat modifier only.
-	threatMultiplier := 0.8
+	actionId := core.ActionID{SpellID: berserkerStanceRank.SpellID}
 
 	aura := warrior.RegisterAura(core.Aura{
 		Label:      "Berserker Stance",
@@ -121,8 +141,12 @@ func (warrior *Warrior) registerBerserkerStanceAura() *core.Aura {
 		Duration:   core.NeverExpires,
 		BuildPhase: core.Ternary(warrior.DefaultStance == proto.WarriorStance_WarriorStanceBerserker, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone),
 	}).AttachMultiplicativePseudoStatBuff(
-		&warrior.PseudoStats.ThreatMultiplier, threatMultiplier,
-	).AttachStatBuff(stats.PhysicalCritPercent, 3)
+		&warrior.PseudoStats.ThreatMultiplier,
+		spellData.BerserkerStancePassive.Effect(shared.A_MOD_THREAT, 127).MultiplierAt(1),
+	).AttachMultiplicativePseudoStatBuff(
+		&warrior.PseudoStats.DamageTakenMultiplier,
+		spellData.BerserkerStancePassive.Effect(shared.A_MOD_DAMAGE_PERCENT_TAKEN, 127).MultiplierAt(1),
+	).AttachStatBuff(stats.PhysicalCritPercent, spellData.BerserkerStancePassive.Effect(shared.A_MOD_CRIT_PCT, 0).ValueAt(1))
 
 	aura.NewExclusiveEffect(stanceEffectCategory, true, core.ExclusiveEffect{})
 
@@ -134,11 +158,9 @@ func (warrior *Warrior) registerStances() {
 	battleStanceAura := warrior.registerBattleStanceAura()
 	defensiveStanceAura := warrior.registerDefensiveStanceAura()
 	berserkerStanceAura := warrior.registerBerserkerStanceAura()
-	// DefenseType per stance's SpellCategories row: Battle Stance (2457) and Berserker Stance (2458)
-	// are Melee; Defensive Stance (71) has no row (None).
-	warrior.BattleStance = warrior.makeStanceSpell(BattleStance, SpellMaskBattleStance, core.DefenseTypeMelee, battleStanceAura, stanceCD)
-	warrior.DefensiveStance = warrior.makeStanceSpell(DefensiveStance, SpellMaskDefensiveStance, core.DefenseTypeNone, defensiveStanceAura, stanceCD)
-	warrior.BerserkerStance = warrior.makeStanceSpell(BerserkerStance, SpellMaskBerserkerStance, core.DefenseTypeMelee, berserkerStanceAura, stanceCD)
+	warrior.BattleStance = warrior.makeStanceSpell(BattleStance, SpellMaskBattleStance, battleStanceRank, battleStanceAura, stanceCD)
+	warrior.DefensiveStance = warrior.makeStanceSpell(DefensiveStance, SpellMaskDefensiveStance, defensiveStanceRank, defensiveStanceAura, stanceCD)
+	warrior.BerserkerStance = warrior.makeStanceSpell(BerserkerStance, SpellMaskBerserkerStance, berserkerStanceRank, berserkerStanceAura, stanceCD)
 
 	switch warrior.DefaultStance {
 	case proto.WarriorStance_WarriorStanceBattle:

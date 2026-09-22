@@ -1,16 +1,23 @@
 import * as PresetUtils from '@app/preset_utils';
 import { ConsumesSpec, HealingModel, Profession, Race } from '@generated/proto/common';
+import { SavedTalents } from '@generated/proto/ui';
 import { ProtectionWarrior_Options as ProtectionWarriorOptions, WarriorShout, WarriorStance } from '@generated/proto/warrior';
 import { OtherDefaults as SimUIOtherDefaults } from '@sim/spec_config';
 
 import * as WarriorPresets from '../shared/presets';
 import GenericApl from './apls/default.apl.json';
+import ForeverProtectionApl from './apls/protection.apl.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
 // keep them in a separate file.
 
 export const ROTATION_DEFAULT = PresetUtils.makePresetAPLRotation('Generic', GenericApl);
+export const ROTATION_PRESET_PROTECTION = PresetUtils.makePresetAPLRotation('Protection', ForeverProtectionApl);
+
+// The two builds our Forever sim ships for the tank.
+export const ProtectionTalents = PresetUtils.makePresetTalents('Protection', SavedTalents.create({ talentsString: '31--552531233330012531' }));
+export const DeepProtectionTalents = PresetUtils.makePresetTalents('Protection 1/0/50', SavedTalents.create({ talentsString: '1--552531233331212531' }));
 
 export const DefaultOptions = ProtectionWarriorOptions.create({
 	classOptions: {

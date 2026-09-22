@@ -20,6 +20,10 @@ type incapacitateKind struct {
 	setImmune func(unit *Unit, immune bool)
 
 	isImmune func(unit *Unit) bool
+
+	// durationMultiplier reads the PseudoStats multiplier that scales how long
+	// this kind lasts on the unit it is applied to.
+	durationMultiplier func(unit *Unit) float64
 }
 
 // Several effects can own the same PseudoStats flag at once: two fears, a fear
@@ -47,7 +51,7 @@ func (kind *incapacitateKind) refreshImmunity(unit *Unit) {
 	kind.setImmune(unit, false)
 }
 
-func (kind *incapacitateKind) registerAura(unit *Unit, label string, actionID ActionID, duration time.Duration) *Aura {
+func (kind *incapacitateKind) registerAura(unit *Unit, label string, actionID ActionID, baseDuration time.Duration) *Aura {
 	// Cache swing from just before the pause.
 	var mhAt, ohAt, rangedAt time.Duration
 	var pausedUntil time.Duration
@@ -56,9 +60,15 @@ func (kind *incapacitateKind) registerAura(unit *Unit, label string, actionID Ac
 		Label:    label,
 		ActionID: actionID,
 		Tag:      kind.tag,
-		Duration: duration,
+		Duration: baseDuration,
 
 		OnGain: func(aura *Aura, sim *Simulation) {
+			// The multiplier is read here rather than at registration, because
+			// encounter AIs register their crowd control on every ally before
+			// the players' talents have run.
+			aura.Duration = time.Duration(float64(baseDuration) * kind.durationMultiplier(aura.Unit))
+			aura.Refresh(sim)
+
 			// Interrupt first: cancelling a hardcast drops the tank avoidance
 			// aura, which has to settle before the flags are recomputed.
 			aura.Unit.Interrupt(sim)
@@ -66,8 +76,8 @@ func (kind *incapacitateKind) registerAura(unit *Unit, label string, actionID Ac
 
 			// The swing timer keeps running while incapacitated
 			mhAt, ohAt, rangedAt = aura.Unit.AutoAttacks.SwingAt()
-			pausedUntil = sim.CurrentTime + duration
-			aura.Unit.AutoAttacks.PauseMeleeBy(sim, duration)
+			pausedUntil = sim.CurrentTime + aura.Duration
+			aura.Unit.AutoAttacks.PauseMeleeBy(sim, aura.Duration)
 			aura.Unit.AutoAttacks.DelayRangedUntil(sim, pausedUntil)
 		},
 
@@ -133,9 +143,10 @@ func (kind *incapacitateKind) breakAll(unit *Unit, sim *Simulation) {
 }
 
 var fearKind = &incapacitateKind{
-	tag:       FearAuraTag,
-	isImmune:  func(unit *Unit) bool { return unit.PseudoStats.FearImmune },
-	setImmune: func(unit *Unit, immune bool) { unit.PseudoStats.FearImmune = immune },
+	tag:                FearAuraTag,
+	isImmune:           func(unit *Unit) bool { return unit.PseudoStats.FearImmune },
+	setImmune:          func(unit *Unit, immune bool) { unit.PseudoStats.FearImmune = immune },
+	durationMultiplier: func(unit *Unit) float64 { return unit.PseudoStats.FearDurationMultiplier },
 }
 
 func (unit *Unit) RegisterFearAura(label string, actionID ActionID, duration time.Duration) *Aura {
@@ -159,9 +170,10 @@ func (unit *Unit) BreakFear(sim *Simulation) {
 }
 
 var stunKind = &incapacitateKind{
-	tag:       StunAuraTag,
-	isImmune:  func(unit *Unit) bool { return unit.PseudoStats.StunImmune },
-	setImmune: func(unit *Unit, immune bool) { unit.PseudoStats.StunImmune = immune },
+	tag:                StunAuraTag,
+	isImmune:           func(unit *Unit) bool { return unit.PseudoStats.StunImmune },
+	setImmune:          func(unit *Unit, immune bool) { unit.PseudoStats.StunImmune = immune },
+	durationMultiplier: func(unit *Unit) float64 { return unit.PseudoStats.StunDurationMultiplier },
 }
 
 func (unit *Unit) RegisterStunAura(label string, actionID ActionID, duration time.Duration) *Aura {
