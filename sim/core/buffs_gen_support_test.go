@@ -162,9 +162,9 @@ func TestGeneratedBuffCompetesPerSchoolForItsResistances(t *testing.T) {
 	}))
 
 	shadowProtection := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
-		Label:    "Generated Shadow Protection",
-		ActionID: ActionID{SpellID: 10958},
-		Duration: time.Minute * 10,
+		Label:    "Generated Prayer of Shadow Protection",
+		ActionID: ActionID{SpellID: 27683},
+		Duration: time.Minute * 20,
 		Stats:    []StatConfig{{stats.ShadowResistance, 60, false}},
 	}))
 

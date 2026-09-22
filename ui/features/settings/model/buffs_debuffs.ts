@@ -29,7 +29,7 @@ export const EnhancedBattleShout = makeBooleanPartyBuffInput({
 export const BlessingOfSalvation = makeBooleanIndividualBuffInput({
 	actionId: ActionId.fromSpellId(25895),
 	fieldName: 'blessingOfSalvation',
-	label: 'Blessing of Salvation',
+	label: 'Greater Blessing of Salvation',
 	showWhen: player => !player.getPlayerSpec().isTankSpec && !player.getPlayerSpec().isHealingSpec,
 });
 

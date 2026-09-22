@@ -125,15 +125,15 @@ export const ArcaneBrilliance = makeBooleanRaidBuffInput({
 });
 
 export const BlessingOfKings = makeBooleanIndividualBuffInput({
-	actionId: ActionId.fromSpellId(20217),
+	actionId: ActionId.fromSpellId(25898),
 	fieldName: 'blessingOfKings',
-	label: 'Blessing of Kings',
+	label: 'Greater Blessing of Kings',
 });
 
 export const DivineSpirit = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(27841),
+	actionId: ActionId.fromSpellId(27681),
 	fieldName: 'divineSpirit',
-	label: 'Divine Spirit',
+	label: 'Prayer of Spirit',
 });
 
 export const GiftOfTheWild = makeBooleanRaidBuffInput({
@@ -149,29 +149,29 @@ export const Thorns = makeBooleanRaidBuffInput({
 });
 
 export const PowerWordFortitude = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(10938),
+	actionId: ActionId.fromSpellId(21564),
 	fieldName: 'powerWordFortitude',
-	label: 'Power Word: Fortitude',
+	label: 'Prayer of Fortitude',
 });
 
 export const BlessingOfMight = makeBooleanIndividualBuffInput({
-	actionId: ActionId.fromSpellId(25291),
+	actionId: ActionId.fromSpellId(25916),
 	fieldName: 'blessingOfMight',
-	label: 'Blessing of Might',
+	label: 'Greater Blessing of Might',
 });
 
 export const BlessingOfWisdom = makeBooleanIndividualBuffInput({
-	actionId: ActionId.fromSpellId(25290),
+	actionId: ActionId.fromSpellId(25918),
 	fieldName: 'blessingOfWisdom',
-	label: 'Blessing of Wisdom',
+	label: 'Greater Blessing of Wisdom',
 });
 
 // blessing_of_salvation: the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.
 
 export const ShadowProtection = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(10958),
+	actionId: ActionId.fromSpellId(27683),
 	fieldName: 'shadowProtection',
-	label: 'Shadow Protection',
+	label: 'Prayer of Shadow Protection',
 });
 
 export const FireResistanceAura = makeBooleanRaidBuffInput({
