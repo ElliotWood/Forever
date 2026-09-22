@@ -64,6 +64,14 @@ func procRows() []Spell {
 					TriggerID: 2900, ClassFlags: core.ClassFlags{Family: 5, Mask: [4]uint32{0: 0x8}}},
 			},
 		},
+		{
+			ID: 2800, Name: "Potion Family", ProcChance: 100, ProcChanceSource: ProcChanceAlways,
+			ProcFlags: [2]uint32{0: dbcenums.PROC_FLAG_DEAL_MELEE_SWING},
+			Effects: []Effect{
+				{SpellID: 2800, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL,
+					TriggerID: 2900, ClassFlags: core.ClassFlags{Family: 13, Mask: [4]uint32{0: 0x1}}},
+			},
+		},
 	}
 }
 
@@ -263,6 +271,20 @@ func TestProcTriggerDropsAClassMaskOfAnotherFamily(t *testing.T) {
 	// A class the client states no family for is no evidence that the mask is somebody else's.
 	if got := ProcTrigger(testCharacter(), Find(2700), noopHandler).ClassFlags; got.IsZero() {
 		t.Error("class flags were dropped for a character whose class states no family")
+	}
+}
+
+// A family no class files its spells under names spells everyone can use - 13 is the potions - so
+// the mask stays whatever the wearer's class is.
+func TestProcTriggerKeepsAMaskOutsideEveryClassFamily(t *testing.T) {
+	withProcRows(t)
+
+	warrior := &core.Character{Class: proto.Class_ClassWarrior}
+	if got := ProcTrigger(warrior, Find(2800), noopHandler).ClassFlags; got != (core.ClassFlags{Family: 13, Mask: [4]uint32{0: 0x1}}) {
+		t.Errorf("class flags = %v, want the row's: family 13 is nobody's class family", got)
+	}
+	if got := ProcTriggerUnsupported(warrior, Find(2800)); len(got) != 0 {
+		t.Errorf("unsupported = %v, want none for a mask outside every class family", got)
 	}
 }
 

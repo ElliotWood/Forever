@@ -138,9 +138,23 @@ func rowClassFlags(s *Spell) core.ClassFlags {
 // 8pc 28845 names family 5, the warlock's, and on a warrior that mask matches nothing and silences
 // the listener rather than narrowing it. A class the client states no family for - and the empty
 // mask every non-class spell carries - is no evidence of anything, so both are left alone.
+//
+// Only another class's family counts. The client files the potions under family 13 and a good deal
+// of generic content under 0 or 1, and a mask in one of those names spells every class can use, so
+// dropping it would silence a listener the wearer really does hear.
 func othersFamily(character *core.Character, flags core.ClassFlags) bool {
 	family, stated := classSpellFamilies[character.Class]
-	return stated && !flags.IsZero() && flags.Family != family
+	return stated && !flags.IsZero() && flags.Family != family && isClassFamily(flags.Family)
+}
+
+// Whether the family is the one some class files its own spells under.
+func isClassFamily(family int32) bool {
+	for _, classFamily := range classSpellFamilies {
+		if classFamily == family {
+			return true
+		}
+	}
+	return false
 }
 
 // The client's SpellClassSet per class: the family every one of that class's spells files its class
