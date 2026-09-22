@@ -14,13 +14,13 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 79.25
-  final_stats: 8.6
-  final_stats: 17
+  final_stats: 5.3
+  final_stats: 14
   final_stats: 0
   final_stats: 0
   final_stats: 1403.5
-  final_stats: 8.6
-  final_stats: 36.34315
+  final_stats: 5.3
+  final_stats: 33.34315
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -50,8 +50,8 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestSubtletyHemorrhage-Phase1-StatWeights-Default"
  value: {
-  weights: 0.25293
-  weights: 0.42229
+  weights: 0.24055
+  weights: 0.3962
   weights: 0
   weights: 0
   weights: 0
@@ -67,9 +67,9 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.22994
-  weights: 3.76785
-  weights: 4.43126
+  weights: 0.21869
+  weights: 4.41989
+  weights: 4.65701
   weights: 0
   weights: 0
   weights: 0
@@ -99,168 +99,168 @@ stat_weights_results: {
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-BloodfangArmor"
  value: {
-  dps: 555.62392
-  tps: 394.49299
+  dps: 528.08353
+  tps: 374.93931
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-Champion'sGuard"
  value: {
-  dps: 551.22517
-  tps: 391.36987
+  dps: 507.05252
+  tps: 360.00729
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-DarkmantleArmor"
  value: {
-  dps: 555.7072
-  tps: 394.55211
+  dps: 534.98839
+  tps: 379.84176
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-Deathdealer'sEmbrace"
  value: {
-  dps: 537.79675
-  tps: 381.83569
+  dps: 514.96087
+  tps: 365.62222
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-EmblemsofVeiledShadows"
  value: {
-  dps: 540.62827
-  tps: 383.84607
+  dps: 511.28212
+  tps: 363.01031
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-FieldMarshal'sVestments"
  value: {
-  dps: 569.47518
-  tps: 404.32738
+  dps: 525.60011
+  tps: 373.17608
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-LieutenantCommander'sGuard"
  value: {
-  dps: 551.22517
-  tps: 391.36987
+  dps: 507.05252
+  tps: 360.00729
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-Madcap'sOutfit"
  value: {
-  dps: 540.20229
-  tps: 383.54363
+  dps: 517.6635
+  tps: 367.54108
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-NightslayerArmor"
  value: {
-  dps: 533.41548
-  tps: 378.72499
+  dps: 524.4049
+  tps: 372.32748
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-AllItems-Warlord'sVestments"
  value: {
-  dps: 569.47518
-  tps: 404.32738
+  dps: 525.60011
+  tps: 373.17608
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Average-Default"
  value: {
-  dps: 536.08854
-  tps: 380.62286
+  dps: 510.06636
+  tps: 362.14711
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Human-combat_backstab_prebis-Poisons-forever_hemorrhage-FullBuffs-P1-Poison-Consumes-LongMultiTarget"
  value: {
-  dps: 203.13169
-  tps: 144.2235
+  dps: 198.84105
+  tps: 141.17715
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Human-combat_backstab_prebis-Poisons-forever_hemorrhage-FullBuffs-P1-Poison-Consumes-LongSingleTarget"
  value: {
-  dps: 203.13169
-  tps: 144.2235
+  dps: 198.84105
+  tps: 141.17715
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Human-combat_backstab_prebis-Poisons-forever_hemorrhage-FullBuffs-P1-Poison-Consumes-ShortSingleTarget"
  value: {
-  dps: 237.75545
-  tps: 168.80637
+  dps: 232.86277
+  tps: 165.33257
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Human-combat_backstab_prebis-Poisons-forever_hemorrhage-NoBuffs-P1-Poison-Consumes-LongMultiTarget"
  value: {
-  dps: 127.71534
-  tps: 90.67789
+  dps: 124.31191
+  tps: 88.26146
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Human-combat_backstab_prebis-Poisons-forever_hemorrhage-NoBuffs-P1-Poison-Consumes-LongSingleTarget"
  value: {
-  dps: 127.71534
-  tps: 90.67789
+  dps: 124.31191
+  tps: 88.26146
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Human-combat_backstab_prebis-Poisons-forever_hemorrhage-NoBuffs-P1-Poison-Consumes-ShortSingleTarget"
  value: {
-  dps: 150.38155
-  tps: 106.7709
+  dps: 146.90964
+  tps: 104.30584
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Orc-combat_backstab_prebis-Poisons-forever_hemorrhage-FullBuffs-P1-Poison-Consumes-LongMultiTarget"
  value: {
-  dps: 206.25341
-  tps: 146.43992
+  dps: 201.16141
+  tps: 142.8246
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Orc-combat_backstab_prebis-Poisons-forever_hemorrhage-FullBuffs-P1-Poison-Consumes-LongSingleTarget"
  value: {
-  dps: 206.25341
-  tps: 146.43992
+  dps: 201.16141
+  tps: 142.8246
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Orc-combat_backstab_prebis-Poisons-forever_hemorrhage-FullBuffs-P1-Poison-Consumes-ShortSingleTarget"
  value: {
-  dps: 244.85394
-  tps: 173.8463
+  dps: 239.65971
+  tps: 170.15839
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Orc-combat_backstab_prebis-Poisons-forever_hemorrhage-NoBuffs-P1-Poison-Consumes-LongMultiTarget"
  value: {
-  dps: 129.27531
-  tps: 91.78547
+  dps: 125.51806
+  tps: 89.11782
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Orc-combat_backstab_prebis-Poisons-forever_hemorrhage-NoBuffs-P1-Poison-Consumes-LongSingleTarget"
  value: {
-  dps: 129.27531
-  tps: 91.78547
+  dps: 125.51806
+  tps: 89.11782
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-Settings-Orc-combat_backstab_prebis-Poisons-forever_hemorrhage-NoBuffs-P1-Poison-Consumes-ShortSingleTarget"
  value: {
-  dps: 153.97791
-  tps: 109.32432
+  dps: 149.60756
+  tps: 106.22137
  }
 }
 dps_results: {
  key: "TestSubtletyHemorrhage-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 442.60516
-  tps: 314.24967
+  dps: 413.80958
+  tps: 293.8048
  }
 }

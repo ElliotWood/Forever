@@ -106,8 +106,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-Champion'sRefuge"
  value: {
-  dps: 326.96824
-  tps: 241.4031
+  dps: 320.06939
+  tps: 236.37754
  }
 }
 dps_results: {
@@ -120,15 +120,15 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-FieldMarshal'sSanctuary"
  value: {
-  dps: 327.01667
-  tps: 241.53357
+  dps: 323.41227
+  tps: 238.99116
  }
 }
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-LieutenantCommander'sRefuge"
  value: {
-  dps: 326.96824
-  tps: 241.4031
+  dps: 320.06939
+  tps: 236.37754
  }
 }
 dps_results: {
@@ -148,8 +148,8 @@ dps_results: {
 dps_results: {
  key: "TestP1Balance-Phase1-AllItems-Warlord'sSanctuary"
  value: {
-  dps: 327.01667
-  tps: 241.53357
+  dps: 323.41227
+  tps: 238.99116
  }
 }
 dps_results: {

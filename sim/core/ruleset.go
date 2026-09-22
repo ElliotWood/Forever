@@ -41,9 +41,19 @@ func (character *Character) addHealingSpellDamage(equipStats stats.Stats) stats.
 // Forever pays out hit and critical strike from gear against every kind of attack
 // rather than splitting them into a melee and a spell pool. Attribute conversions are
 // untouched: only the hit and crit an item spells out become universal.
+//
+// The database already pays Forever's generic hit and crit rating into both pools (a
+// Classic ruleset needs that), so an item, suffix or enchant that carries it in both is
+// counted once here: Bloodvine Vest's "+2% hit" is 2%, not 4%.
 func (character *Character) unifyEquipHitAndCrit(equipStats stats.Stats) stats.Stats {
 	hit := equipStats[stats.MeleeHit] + equipStats[stats.SpellHit]
 	crit := equipStats[stats.MeleeCrit] + equipStats[stats.SpellCrit]
+	for _, item := range character.Equipment {
+		for _, s := range []stats.Stats{item.Stats, item.RandomSuffix.Stats, item.Enchant.Stats} {
+			hit -= min(s[stats.MeleeHit], s[stats.SpellHit])
+			crit -= min(s[stats.MeleeCrit], s[stats.SpellCrit])
+		}
+	}
 
 	equipStats[stats.MeleeHit] = hit
 	equipStats[stats.SpellHit] = hit
