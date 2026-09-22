@@ -1,6 +1,6 @@
 ---
 name: wowsims-spells
-description: 'Use when working on WoWSims Forever spell data: registering a spell, talent, aura, dot or proc from the client rows, porting a class to the sim/core/spelldata store, reading the generated family tables the unported classes still use, regenerating either from the client database, or reconciling a sim number against what the DBC says.'
+description: 'Use when working on WoWSims Forever spell data: registering a spell, talent, aura, dot or proc from the client rows, porting a class to the sim/core/spelldata store, reading a row by hand off the store or through the resolvers, reading the generated family table paladin still uses, regenerating either from the client database, or reconciling a sim number against what the DBC says.'
 argument-hint: 'Describe the spell, talent, proc or generated-data task to work on.'
 ---
 
@@ -8,8 +8,8 @@ argument-hint: 'Describe the spell, talent, proc or generated-data task to work 
 
 ## Scope
 
-- The spell store, `sim/core/spelldata`: one generated row per spell id, and the resolvers that turn a row into a spell config, an aura, a dot, a talent's modifiers or a proc listener. The warrior reads it.
-- The generated family tables in `sim/<class>/spell_data_auto_gen.go`, read through `sim/common/shared`. The other eight classes read them, and each retires as its class ports.
+- The spell store, `sim/core/spelldata`: one generated row per spell id, and the resolvers that turn a row into a spell config, an aura, a dot, a talent's modifiers or a proc listener. The warrior reads it through the resolvers; rogue, warlock, mage, druid, priest, shaman and hunter read its rows by hand instead, with no resolver in between.
+- The generated family table in `sim/paladin/spell_data_auto_gen.go`, read through `sim/common/shared`. Paladin reads it, and it retires when paladin ports.
 - Regenerating both: `tools/database/gen_spelldata`, `tools/database/gen_spell_data.go`, `tools/database/gen_spell_store.go`, `tools/database/spelldata.go`.
 - Reconciling a sim number that disagrees with the client data.
 
@@ -21,7 +21,7 @@ The full guide is `docs/spell_data.md`; this is the map.
 
 - `sim/core/spelldata/spells_auto_gen.go` — generated, checked in: every spell the sim can reach, in the client's own units. 7035 rows, 9636 effects, pinned by `snapshot_test.go`.
 - `sim/core/spelldata/*.go` — hand-written: the accessors (`store.go`, `spell.go`, `effect.go`, `attributes.go`, `ladder.go`) and the resolvers (`resolve_spell.go`, `resolve_aura.go`, `resolve_proc.go`, `parse_effects.go`, `item_proc.go`). `sim/core` must not import this package: the store imports core, and the import back would be a cycle.
-- `sim/<class>/spell_data_auto_gen.go` — generated. A `spelldata.Ladder` per family for a store-backed class, a `shared.SpellDataTable` of rows for the rest. `storeBackedClasses` in `tools/database/gen_spell_data.go` decides which.
+- `sim/<class>/spell_data_auto_gen.go` — generated. A `spelldata.Ladder` per family for a store-backed class, a `shared.SpellDataTable` of rows for paladin. `storeBackedClasses` in `tools/database/gen_spell_data.go` decides which.
 - `sim/common/shared/spell_data.go`, `spell_data_talents.go` — hand-written, the family tables' accessors.
 - `sim/common/shared/spell_data_enums_auto_gen.go` — generated: the `A_` and `E_` names the family tables reference, parsed out of `sim/core/dbcenums` and emitted into `shared` because that is the package the tables read. It retires with them.
 - `tools/database/overrides/spell_overrides.go` — the numbers the client does not state, each with a reason, a source and a rule that makes the generator refuse it once the client catches up.

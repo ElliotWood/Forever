@@ -5,13 +5,13 @@ it. Which one a spell uses is a property of its class:
 
 - **The store**, `sim/core/spelldata`: one generated file holding every spell the sim can reach, and
   resolvers that turn a row into a spell config, an aura, a dot, a talent's modifiers or a proc
-  listener. The warrior reads it.
-- **The family tables**, `sim/<class>/spell_data_auto_gen.go`: one generated table per spell family,
-  read through `sim/common/shared`. The other eight classes read them, and a class leaves them behind
-  when it ports.
+  listener. The warrior reads it through the resolvers; rogue, warlock, mage, druid, priest, shaman
+  and hunter read its rows by hand instead, one value at a time, with no resolver in between.
+- **The family tables**, `sim/paladin/spell_data_auto_gen.go`: one generated table per spell family,
+  read through `sim/common/shared`. Paladin reads them, and the section retires when paladin ports.
 
-A new port uses the store. The family-table sections are kept because eight classes still depend on
-them, and one of them retires with each class that moves over.
+A new port uses the store. The family-table section is kept because paladin still depends on it, and
+it retires when paladin ports.
 
 The store:
 
@@ -21,6 +21,7 @@ The store:
 - [Talents and auras: ParseStatic and ParseEffects](#talents-and-auras-parsestatic-and-parseeffects)
 - [Procs](#procs)
 - [Overrides](#overrides)
+- [Reading a row by hand](#reading-a-row-by-hand)
 
 The family tables:
 
@@ -555,13 +556,279 @@ although no class, item, enchant or set reaches them. It is empty today, and eac
 says why. The generator re-reads that file from source while it renders, so adding an id without
 regenerating fails the check rather than shipping a store that does not match its own source.
 
+## Reading a row by hand
+
+Rogue, warlock, mage, druid, priest, shaman and hunter read the store the same way paladin reads its
+family tables: a class file names the ladder it needs, picks a rank, and reads every field the
+registration wants straight into a plain expression, with no resolver in between. **A row is a
+source of numbers only** in these seven classes' files - no `spelldata.SpellConfig`, `AuraConfig`,
+`DotConfig`, `ProcTrigger`, `ParseEffects` or `ParseStatic`. `core.SpellConfig` and `core.DotConfig`
+are built by hand, field by field, the same shapes [Building an ability](#building-an-ability) and
+[Auras and dots](#auras-and-dots) describe for the resolvers, just filled without one.
+
+The generated file is still ladders (see [A class file is ladders](#a-class-file-is-ladders)):
+`spellData.ShadowWordPain` is a `spelldata.Ladder`, `.Highest()`/`.ByID(id)`/`.Rank(n)` answer a
+`*spelldata.Spell`, and `.Each(fn)` walks every rank in declaration order, the family tables'
+`RegisterAll` under a new name:
+
+```go
+MindBlastRankMap.Each(func(_ int32, rank *spelldata.Spell) {
+	priest.registerMindBlastSpell(rank, mindblastCDTimer)
+})
+```
+
+What a registration reads off the row, since there is no resolver to read it for the caller:
+
+|                                            |                                                                                |
+| ------------------------------------------ | ------------------------------------------------------------------------------ |
+| `rank.ID`, `rank.RankNumber()`              | the `ActionID` and the `Rank` field a `core.SpellConfig` wants; `RankNumber()` is `NameSubtext_lang`'s "Rank N", 0 where the client states none |
+| `rank.Cost()`                               | the cost off the first power the row states, in the sim's units - rage already divided by ten |
+| `rank.GCD()`, `rank.CastTime()`             | the global cooldown and the cast time                                          |
+| `max(rank.Cooldown(), rank.CategoryCooldown())` | the row's own cooldown, or the one it shares with a category               |
+| `rank.Duration()`                           | an aura or dot's length; the client's -1 becomes `core.NeverExpires`           |
+| `rank.SpellSchool()`, `rank.DefenseTypeCore()` | core's own enums, unconverted                                               |
+| `float64(rank.MaxRange)`, `float64(rank.MinRange)` | the plain fields, in yards                                              |
+
+Straight off `sim/shaman/shocks.go`:
+
+```go
+func (shaman *Shaman) newShockSpellConfig(rank *spelldata.Spell, spellSchool core.SpellSchool, shockTimer *core.Timer) core.SpellConfig {
+	return core.SpellConfig{
+		ActionID:    core.ActionID{SpellID: rank.ID},
+		SpellSchool: spellSchool,
+		DefenseType: core.DefenseTypeMagic,
+		ProcMask:    core.ProcMaskSpellDamage,
+		Flags:       SpellFlagShamanSpell | SpellFlagShock | core.SpellFlagAPL | SpellFlagInstant,
+		MaxRange:    float64(rank.MaxRange),
+
+		ManaCost: core.ManaCostOptions{
+			FlatCost: int32(rank.Cost()),
+		},
+		Cast: core.CastConfig{
+			DefaultCast: core.Cast{GCD: rank.GCD()},
+			CD: core.Cooldown{
+				Timer:    shockTimer,
+				Duration: max(rank.Cooldown(), rank.CategoryCooldown()),
+			},
+		},
+
+		DamageMultiplier: 1,
+		BonusCoefficient: rank.DamageEffect().Coeff(),
+		ThreatMultiplier: 1,
+	}
+}
+```
+
+**Every amount is `Average(core.CharacterLevel)`.** The tables carried no spread, so a value read as
+`(low, high)` against a family table becomes one `Average` call, read for both ends, here. `Min`,
+`Max` and `Roll` answer a spread the client rolls at cast time, which these rows do not carry, so
+they do not appear in these seven classes' files.
+
+**Name the effect by role where one applies; by position where the row hides it behind another
+effect.** `DamageEffect()`, `HealEffect()`, `EnergizeEffect()` and `PeriodicEffect()` answer the first
+effect of their kind, which is right wherever a spell has only one. Hellfire's tick is not:
+`PeriodicEffect()` would find the `A_PERIODIC_TRIGGER_SPELL` at position 1, the trigger that fires
+the Hellfire Effect spell each tick, rather than the damage tick itself at position 2:
+
+```go
+var hellfireRank = spellData.Hellfire.Highest()
+
+// The tick sits at effect position 2: position 1 is the A_PERIODIC_TRIGGER_SPELL that fires the
+// Hellfire Effect spell each tick, not the damage tick.
+var hellfireTick = hellfireRank.EffectN(2)
+var hellFireCoeff = hellfireTick.Coeff()
+```
+
+**A tick the description keeps on another spell is read off that spell, not the row that names it.**
+Where the family has its own `XTriggered` ladder for the spell the trigger fires, that ladder is the
+edge; failing that, `row.Triggered()[0]` (an actual `TriggerID` edge) or `row.Refs()[0]` (a tooltip
+reference) reach the same spell, and a bare `spelldata.MustFind(id)` is the last resort, with a
+comment naming why no other edge is unique. Hurricane's periodic damage sits on the spell its aura
+triggers each tick, which the family's own `HurricaneTriggered` ladder names; the tick length still
+comes off Hurricane's own row - the periodic dummy that carries no damage of its own:
+
+```go
+tickLength := hurricaneRank.Effect(dbcenums.A_PERIODIC_DUMMY, 0).Period()
+
+// Hurricane's periodic damage is the spell HurricaneTriggered casts each tick.
+hurricaneTickSpell := spellData.HurricaneTriggered.Highest()
+hurricaneTick := hurricaneTickSpell.DamageEffect()
+```
+
+**A `Ranked` family's rank can carry a per-level gain a `Ladder`'s per-rank readers do not add in.**
+`EffectAt(n)` and `Effect(aura, misc)` answer base points across the ranks, which is right for a
+`Talent`, whose curve states base points outright. A `Ranked` family - one spell per rank - can still
+carry `EffectRealPointsPerLevel` on that effect, so `ValueAt`/`FractionAt`/`MultiplierAt`/`TenthsAt`
+read low wherever the client scales it past the rank's own `SpellLevel`. Read the rank's own effect
+through `Average` instead of the ladder's per-rank reader:
+
+```go
+X.Rank(rank).EffectN(1).Average(core.CharacterLevel)   // not X.EffectAt(1).ValueAt(rank)
+```
+
+**A dot ticks on current stats, so there is no `OnSnapshot`.** `OnTick` reads the effect's own
+`Average` straight into `CalcAndDealPeriodicDamage` (or `CalcAndDealPeriodicHealing`) every time it
+fires, on whatever stats and multipliers are in force then. An input the cast fixes - combo points
+about to be spent, a stack about to be consumed - is read where the cast reads it and kept in a
+variable the `OnTick` closure captures, never re-read at the tick. Rip's combo points are read in
+`ApplyEffects`, before `SpendComboPoints` runs them to zero - not in `OnTick` after, where the count
+would already be gone:
+
+```go
+var cp int32
+
+// ...
+	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		result := spell.CalcOutcome(sim, target, spell.OutcomeMeleeSpecialHitNoHitCounter)
+		if result.Landed() {
+			cp = druid.ComboPoints()
+			spell.Dot(target).Apply(sim)
+			druid.SpendComboPoints(sim, spell.ComboPointMetrics())
+		}
+		spell.DealOutcome(sim, result)
+	},
+	OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+		ap := dot.Spell.MeleeAttackPower(target)
+		var tickDamage float64
+		switch {
+		case cp <= 3:
+			tickDamage = 990 + 0.18*ap
+		case cp == 4:
+			tickDamage = 1272 + 0.24*ap
+		default: // 5
+			tickDamage = 1554 + 0.24*ap
+		}
+		dot.Spell.CalcAndDealPeriodicDamage(sim, target, tickDamage/6, dot.OutcomeTick)
+	},
+```
+
+**Hand numbers stay hand numbers - Go literals with the same review comment a family-table wrapper
+carried, not a `WithSpellDataPPM`/`WithSpellDataFlatThreat`/`WithSpellDataAPCoef` call.** A
+hand-supplied threat number, PPM or coefficient keeps the same marker a resolver-built config
+carries - `sim/warrior/hamstring.go` writes it this way for `core.SpellConfig.ThreatMultiplier`, and
+a hand-built config carries the identical comment on the identical literal:
+
+```go
+// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+ThreatMultiplier: 1,
+```
+
+### Worked examples
+
+#### Shadow Word: Pain's tick
+
+`sim/priest/shadow_word_pain.go`:
+
+```go
+tick := rank.PeriodicEffect()
+tickLength := tick.Period()
+
+priest.RegisterSpell(core.SpellConfig{
+	ActionID:       core.ActionID{SpellID: rank.ID},
+	SpellSchool:    core.SpellSchoolShadow,
+	DefenseType:    core.DefenseTypeMagic,
+	ProcMask:       core.ProcMaskSpellDamage,
+	Flags:          core.SpellFlagAPL,
+	ClassSpellMask: PriestSpellShadowWordPain,
+	Rank:           rank.RankNumber(),
+	MaxRange:       float64(rank.MaxRange),
+
+	ManaCost: core.ManaCostOptions{
+		FlatCost: rank.Cost(),
+	},
+
+	Cast: core.CastConfig{
+		DefaultCast: core.Cast{GCD: rank.GCD()},
+	},
+
+	Dot: core.DotConfig{
+		Aura: core.Aura{
+			Label: fmt.Sprintf("ShadowWordPain-%d", rank.RankNumber()),
+		},
+		NumberOfTicks:       int32(rank.Duration() / tickLength),
+		TickLength:          tickLength,
+		AffectedByCastSpeed: false,
+		BonusCoefficient:    tick.Coeff(),
+
+		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+			dot.Spell.CalcAndDealPeriodicDamage(sim, target, tick.Average(core.CharacterLevel), dot.OutcomeTick)
+		},
+	},
+
+	ExpectedTickDamage: func(sim *core.Simulation, target *core.Unit, spell *core.Spell, useSnapshot bool) *core.SpellResult {
+		return spell.CalcPeriodicDamage(sim, target, tick.Average(core.CharacterLevel), spell.OutcomeExpectedMagicHit)
+	},
+})
+```
+
+No `OnSnapshot`, no `useSnapshot` branch: the tick is `tick.Average(core.CharacterLevel)` wherever it
+is asked for, cast or projected.
+
+#### Consecration's borrowed tick
+
+The same shape as [A tick the client keeps on another spell](#a-tick-the-client-keeps-on-another-spell),
+read off the store instead of a family table. Consecration's tooltip names one spell for both ticks -
+`Refs()[0]` reaches it - and the two sit on its first two effects by position, since both are school
+damage and `DamageEffect()` cannot tell them apart: the base tick on effect 1, the bonus its first
+four targets take, with its own spell power share, on effect 2. The periodic dummy on Consecration's
+own row states the target count, not a tick:
+
+```go
+consecrationRank := spelldata.Consecration.Highest()
+tickSpell := consecrationRank.Refs()[0]
+
+tick := tickSpell.EffectN(1)
+bonus := tickSpell.EffectN(2)
+bonusTargets := int(consecrationRank.Effect(dbcenums.A_PERIODIC_DUMMY, 0).Average(core.CharacterLevel))
+
+dealTick := func(sim *core.Simulation, dot *core.Dot) {
+	for i, target := range sim.Encounter.ActiveTargetUnits {
+		damage := tick.Average(core.CharacterLevel)
+		if i < bonusTargets {
+			damage += bonus.Average(core.CharacterLevel) + bonus.Coeff()*dot.Spell.BonusDamage(dot.Spell.Unit.AttackTables[target.UnitIndex])
+		}
+		dot.Spell.CalcAndDealPeriodicDamage(sim, target, damage, dot.OutcomeTickMagicHit)
+	}
+}
+```
+
+#### A heal and a mana restore
+
+```go
+heal := rank.HealEffect().Average(core.CharacterLevel)      // both ends: the tables carry no spread
+mana := rank.EnergizeEffect().Average(core.CharacterLevel)  // 0 on a rank with no Energize effect at all
+```
+
+#### Registering several ranks
+
+Forever's Starfire tops out at rank 7, so the spec's own subset ladder names ranks 6 and 7 by their
+ids rather than a rank the table does not carry, `sim/druid/starfire.go`:
+
+```go
+var StarfireRankMap = spelldata.Ranked(spellData.Starfire.Rank(6).ID, spellData.Starfire.Rank(7).ID)
+```
+
+#### An attack power coefficient
+
+Nothing in the client states an attack power coefficient per combo point, so Rupture's sits as a
+literal table indexed by combo points, right beside the number it scales, `sim/rogue/rupture.go`:
+
+```go
+func (rogue *Rogue) ruptureDamage(target *core.Unit, comboPoints int32, baseDamage float64, damagePerComboPoint float64) float64 {
+	return baseDamage +
+		damagePerComboPoint*float64(comboPoints) +
+		[]float64{0, 0.01, 0.02, 0.03, 0.03, 0.03}[comboPoints]*rogue.Rupture.MeleeAttackPower(target)
+}
+```
+
 ## The family tables
 
 The sections from here to [A row that is more than one spell](#a-row-that-is-more-than-one-spell)
-describe the generated tables the eight classes that have not ported yet read: one table per spell
-family in `sim/<class>/spell_data_auto_gen.go`, with the accessors in `sim/common/shared`. A
-store-backed class has none of this - its generated file is ladders into the store - so a new port
-reads [The store](#the-store) instead.
+describe the generated tables paladin reads: one table per spell family in
+`sim/paladin/spell_data_auto_gen.go`, with the accessors in `sim/common/shared`. A store-backed class
+has none of this - its generated file is ladders into the store - so a new port reads
+[The store](#the-store) instead, either through the resolvers or, per
+[Reading a row by hand](#reading-a-row-by-hand), directly.
 
 ## Using a rank
 
@@ -1117,7 +1384,8 @@ make spelldata-check                               # the same check
 The generator reads `tools/database/wowsims.db` and writes all of it in one pass:
 `sim/core/spelldata/spells_auto_gen.go`, `sim/common/shared/spell_data_enums_auto_gen.go`, and a
 `sim/<class>/spell_data_auto_gen.go` for every class - ladders into the store for a store-backed class,
-the family tables for the rest. It is its own binary rather than a mode of `gen_db` on purpose:
+the family tables for the rest. `storeBackedClasses` in `tools/database/gen_spell_data.go` lists eight
+classes; paladin is the one it does not. It is its own binary rather than a mode of `gen_db` on purpose:
 `gen_db` imports the sim and the sim reads these files, so a stale one would stop the generator that
 fixes it from compiling. For the same reason nothing is written until all of it type-checks: the
 rendered bytes go to a staging directory first and are compiled through `go build -overlay` in the
@@ -1149,12 +1417,13 @@ What guards the outputs:
 - `sim/core/spelldata/snapshot_test.go` pins the shape and the counts of the committed store, and a
   handful of rows read out of the client by hand, so a regeneration that moves a number says so there
   instead of in a sim result.
-- `sim/<class>/spell_data_parity_test.go` compares every value a class's family table states with the
+- `sim/paladin/spell_data_parity_test.go` compares every value paladin's family table states with the
   same spell as the store carries it, through `sim/core/spelldata/parity`. That is what has to stay
-  green for a class before it ports.
+  green for paladin before it ports; the eight store-backed classes carry no parity test of their
+  own - it retires with the family table it checked.
 - `go test ./tools/database/ -run GeneratedRankTables` re-derives amounts and coefficients for the 20
   families listed in `tools/database/spelldata_regen_test.go` from the database itself - 405 values out
-  of the 3,435 rows the eight family tables hold, so it is no substitute for regenerating and finding
+  of the rows paladin's family tables hold, so it is no substitute for regenerating and finding
   the diff empty. It skips when `wowsims.db` is absent.
 - The repository's `pre-commit` hook runs `-check` when the database is present and the commit touches
   the generator or one of its outputs.
@@ -1170,7 +1439,12 @@ was meant to be mechanical and moves a golden is a wrong port, not a new baselin
    sites move, so the package cannot type-check until they have - the reference file is written first
    and the ports follow; `-check` closes the loop once the package builds again. Run
    `sim/<class>/spell_data_parity_test.go` first: every value the family table states has to match the
-   store's before the class reads the store instead.
+   store's before the class reads the store instead. The move from there forks in two: from the table
+   to the same reads by hand, off a `spelldata.Ladder` instead of a `shared.SpellDataTable`, is what
+   [Reading a row by hand](#reading-a-row-by-hand) describes, and it is the whole job for a class that
+   stops there. From hand reads onto the resolvers - `SpellConfig`, `AuraConfig`, `DotConfig`,
+   `ParseEffects`, `ProcTrigger` - is the warrior's move, and the rest of this checklist is written
+   for it.
 2. **Dump the rows before touching a call site**, three ways: the effects at the rank taken, which
    registered spells each modifier's `EffectSpellClassMask` names, and the whole `ProcTrigger` the row
    decodes to. The mask dump is what turns a golden move into something you knew before you ran it.
