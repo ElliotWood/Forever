@@ -1,6 +1,8 @@
 package druid
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -309,12 +311,50 @@ func (druid *Druid) IsBleeding(target *core.Unit) bool {
 		(druid.Lacerate != nil && druid.Lacerate.Dot(target).IsActive())
 }
 
-// applyBerserk implements Berserk, new in Forever.
-//
-// TODO: To be implemented. The client ships no generated ladder for it, so there is nothing to
-// model yet.
+// Berserk, new in Forever (client 417141): 3 minute cooldown (SpellCooldowns), and for 15 seconds
+// +100% critical strike chance on the Combo Point builders (effect 0). Its Mangle half (no
+// cooldown, up to 3 targets) is not modelled.
 func (druid *Druid) applyBerserk() {
 	if !druid.Talents.Berserk {
 		return
 	}
+
+	actionID := core.ActionID{SpellID: 417141}
+	critMod := druid.AddDynamicMod(core.SpellModConfig{
+		Kind:       core.SpellMod_BonusCrit_Percent,
+		ClassMask:  DruidSpellBuilder,
+		FloatValue: 100,
+	})
+
+	aura := druid.RegisterAura(core.Aura{
+		Label:    "Berserk",
+		ActionID: actionID,
+		Duration: time.Second * 15,
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			critMod.Activate()
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			critMod.Deactivate()
+		},
+	})
+
+	spell := druid.RegisterSpell(Cat|Bear, core.SpellConfig{
+		ActionID: actionID,
+		Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+		Cast: core.CastConfig{
+			CD: core.Cooldown{
+				Timer:    druid.NewTimer(),
+				Duration: time.Minute * 3,
+			},
+		},
+		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+			aura.Activate(sim)
+		},
+		RelatedSelfBuff: aura,
+	})
+
+	druid.AddMajorCooldown(core.MajorCooldown{
+		Spell: spell.Spell,
+		Type:  core.CooldownTypeDPS,
+	})
 }

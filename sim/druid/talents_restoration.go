@@ -99,6 +99,12 @@ func (druid *Druid) applyFuror() {
 
 	// Both dummy effects carry the same ladder, one per form, so either answers the chance.
 	druid.FurorProcChance = spellData.Furor.EffectAt(0).FractionAt(druid.Talents.Furor)
+
+	// A permanent aura so an APL can check for Furor before powershifting (auraIsKnown 17056).
+	core.MakePermanent(druid.RegisterAura(core.Aura{
+		Label:    "Furor",
+		ActionID: core.ActionID{SpellID: spellData.Furor.HighestRank().SpellID},
+	}))
 }
 
 // Reflection, new in Forever: a share of Spirit regeneration continues while casting.
