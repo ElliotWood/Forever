@@ -541,13 +541,10 @@ func resistanceName(misc int32) string {
 
 // EffectMiscValue_0 on A_MECHANIC_DURATION_MOD, of which the parse table acts on two.
 func mechanicName(misc int32) string {
-	switch misc {
-	case 1:
-		return "fear"
-	case 12:
-		return "stun"
-	case int32(dbcenums.MECHANIC_BLEED):
-		return "bleed"
+	if misc >= 0 && misc <= 0xff {
+		if name, ok := strings.CutPrefix(dbcenums.Mechanic(misc).String(), "MECHANIC_"); ok {
+			return strings.ToLower(strings.ReplaceAll(name, "_", " "))
+		}
 	}
 	return fmt.Sprintf("mechanic %d", misc)
 }

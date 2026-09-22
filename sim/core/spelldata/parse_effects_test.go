@@ -528,8 +528,8 @@ func TestEveryTableRow(t *testing.T) {
 		{dbcenums.A_MOD_OFFHAND_DAMAGE_PCT, 0, 25, "SpellMod_DamageDone_Pct", 0.25, false},
 		{dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE, -1, 10,
 			"multiply-stat Strength+Agility+Stamina+Intellect+Spirit", 1.1, false},
-		{dbcenums.A_MECHANIC_DURATION_MOD, 1, -20, "fear-duration", 0.8, false},
-		{dbcenums.A_MECHANIC_DURATION_MOD, 12, -20, "stun-duration", 0.8, false},
+		{dbcenums.A_MECHANIC_DURATION_MOD, int32(dbcenums.MECHANIC_FEAR), -20, "fear-duration", 0.8, false},
+		{dbcenums.A_MECHANIC_DURATION_MOD, int32(dbcenums.MECHANIC_STUN), -20, "stun-duration", 0.8, false},
 		{dbcenums.A_MOD_EXPERTISE, 0, 5, "stat ExpertiseRating", 5 * core.ExpertisePerQuarterPercentReduction, false},
 		{dbcenums.A_MOD_MELEE_HASTE_3, 0, 25, "melee-speed", 1.25, true},
 	}
