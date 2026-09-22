@@ -335,7 +335,10 @@ may state a percentage now, and the other way round.
    rank on its effect while the column reads a flat 60.
 3. **No chance in the tooltip and the column reads 100 or 101.** The aura fires on its own condition
    and there is no roll: Flurry and Deep Wounds on a crit, Dual Wield Specialization on every hit. A
-   101 on something that is not a proc at all (Sunder Armor, Demoralizing Shout) means nothing.
+   101 on something that is not a proc at all (Sunder Armor, Demoralizing Shout) means nothing. A
+   tooltip whose *trigger clause* says the effect only happens sometimes - "Chance to strike your
+   ranged target", "your melee swings have a chance to" - is shape 4 rather than this one, and on a
+   chance-on-hit weapon, where the game consults no condition at all, the 100 and 101 always are.
 4. **No chance in the tooltip, no condition, and a value the tooltip contradicts.** A procs-per-minute
    proc the client does not carry (`SpellProcsPerMinuteID` is 0 on every row). The PPM is
    hand-supplied the way threat and attack power coefficients are, with the manual-review TODO
