@@ -57,12 +57,21 @@ func (warrior *Warrior) registerBattleShout() {
 		// TODO: spell 25289 carries no threat effect; none is modelled until measured in game.
 		FlatThreatBonus: battleShoutRank.FlatThreatBonus,
 
+		// Battle Shout is a single-aura exclusive category: a stronger one from another source (the
+		// party buff) blocks ours, so casting would only burn rage every GCD.
 		ExtraCastCondition: func(sim *core.Simulation, _ *core.Unit) bool {
-			return !selfAura.IsActive() || selfAura.ExclusiveEffects[0].Priority <= attackPower()
+			active := selfAura.ExclusiveEffects[0].Category.GetActiveEffect()
+			return active == nil || active.Priority <= attackPower()
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
+			// The exclusive check runs before OnGain sets the value, so give it the real one first.
+			for _, aura := range auras {
+				if aura != nil {
+					aura.ExclusiveEffects[0].SetPriority(sim, attackPower())
+				}
+			}
 			auras.ActivateAllPlayers(sim)
 		},
 

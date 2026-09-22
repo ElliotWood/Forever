@@ -226,7 +226,7 @@ func runParitySpec(spec paritySpec, profile map[string]float64, iterations int32
 		SimOptions: &proto.SimOptions{
 			Iterations: iterations,
 			IsTest:     true,
-			RandomSeed: 101,
+			RandomSeed: int64(envInt("PARITY_SEED", 101)),
 			Debug:      os.Getenv("PARITY_LOG") != "",
 			Ruleset:    proto.Ruleset_RulesetForever,
 		},
@@ -346,4 +346,12 @@ func auraUptimes(unit *proto.UnitMetrics) map[string]float64 {
 		out[fmt.Sprintf("res %v %v gain", r.Type, r.Id)] += r.ActualGain
 	}
 	return out
+}
+
+// envInt reads an integer knob (PARITY_SEED, PARITY_REACTION) with a default.
+func envInt(k string, d int) int {
+	if v, err := strconv.Atoi(os.Getenv(k)); err == nil {
+		return v
+	}
+	return d
 }

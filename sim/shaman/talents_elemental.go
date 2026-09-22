@@ -72,7 +72,8 @@ func (shaman *Shaman) applyConcussion() {
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.Concussion.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(shaman.Talents.Concussion),
-		ClassMask:  SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskOverload | SpellMaskShock,
+		// Client 16035's mask is Lightning Bolt, Chain Lightning and Earth Shock: not Flame or Frost Shock.
+		ClassMask: SpellMaskLightningBolt | SpellMaskChainLightning | SpellMaskOverload | SpellMaskEarthShock,
 	})
 }
 
@@ -147,17 +148,21 @@ func (shaman *Shaman) applyElementalFocus() {
 		FloatValue: clearcasting.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).Value / 100,
 	})
 
+	// Client 16164: "a chance to enter a Clearcasting state after casting any Fire, Frost, or Nature
+	// damage spell", so it rolls when the cast completes, hit or miss, and a proc off a Lightning Bolt
+	// is there for the next cast to see instead of arriving mid-cast with the missile.
 	shaman.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Elemental Focus",
 		ProcChance:         spellData.ElementalFocus.ProcChanceAt(1),
-		Callback:           core.CallbackOnSpellHitDealt,
-		CanProcFromProcs:   true, // 16164 carries the bit: Lightning Overload crits count.
-		Outcome:            core.OutcomeLanded,
+		Callback:           core.CallbackOnCastComplete,
+		ProcMask:           core.ProcMaskSpellDamage,
+		CanProcFromProcs:   true, // 16164 carries the bit.
 		TriggerImmediately: true,
 
-		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+		Handler: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) {
 			// Searing and Magma Totem attacks are the totem's, not the shaman's: they never proc the shaman's talents.
-			if !spell.SpellSchool.Matches(core.SpellSchoolElemental) || spell.Matches(SpellMaskFireTotem) {
+			// Flame Shock's periodic half is cast alongside its hit, one cast of the spell.
+			if !spell.SpellSchool.Matches(core.SpellSchoolElemental) || spell.Matches(SpellMaskFireTotem|SpellMaskFlameShockDot) {
 				return
 			}
 			triggeringSpell = spell

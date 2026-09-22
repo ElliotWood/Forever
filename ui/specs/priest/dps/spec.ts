@@ -91,7 +91,7 @@ export default defineSpec<Spec.SpecDpsPriest>({
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.
-	playerIconInputs: [PriestInputs.ShadowformInput()],
+	playerIconInputs: [PriestInputs.ShadowformInput(), PriestInputs.ShadowfiendInput()],
 	// Buff and Debuff inputs to include/exclude, overriding the EP-based defaults.
 	includeBuffDebuffInputs: [],
 	excludeBuffDebuffInputs: [],

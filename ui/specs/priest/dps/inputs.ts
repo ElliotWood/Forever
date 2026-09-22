@@ -14,3 +14,12 @@ export const ShadowformInput = <SpecType extends PriestSpecs>() =>
 		storeField: ['specOptions', 'talentsString'] as const,
 		showWhen: player => player.getTalents().shadowform,
 	});
+
+// Off by default, as on master: whether a level 60 Forever priest trains Shadowfiend (401977, the
+// Season of Discovery rune spell) is open until a beta log shows it.
+export const ShadowfiendInput = <SpecType extends PriestSpecs>() =>
+	InputHelpers.makeClassOptionsBooleanIconInput<SpecType>({
+		fieldName: 'useShadowfiend',
+		label: 'Shadowfiend',
+		id: ActionId.fromSpellId(401977),
+	});

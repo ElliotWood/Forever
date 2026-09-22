@@ -82,6 +82,10 @@ func (paladin *Paladin) applyRedoubt() {
 		ProcMask:           core.ProcMaskMelee,
 		Outcome:            core.OutcomeLanded,
 		RequireDamageDealt: true,
+		// Up with the hit that procs it, like Shield Specialization. One batch window later it
+		// outlived its 10 sec by 10 ms and caught a fifth 2.0 sec boss swing that master's never
+		// sees: +12% blocks, behind Protection's +1.6% parity gap.
+		TriggerImmediately: true,
 		// The row carries the rank 5 chance, 10%, on every rank; the beta client's talent curve on
 		// effect index 1 (which the row has no effect for) is 2% a rank.
 		ProcChance: 0.02 * float64(paladin.Talents.Redoubt),

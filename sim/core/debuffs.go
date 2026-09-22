@@ -145,7 +145,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	}
 
 	if debuffs.ExposeArmor != proto.TristateEffect_TristateEffectMissing {
-		aura := MakePermanent(ExposeArmorAura(target, func() int32 { return 5 }, GetTristateValueInt32(debuffs.ExposeArmor, 0, 2)))
+		aura := MakePermanent(ExposeArmorAura(target, func() int32 { return 5 }))
 
 		ScheduledAura(aura, PeriodicActionOptions{
 			Period:   time.Second * 10,
@@ -238,11 +238,11 @@ func CurseOfRecklessnessAura(target *Unit, casterIndex int32) *Aura {
 		casterIndex,
 		// Tagged by caster past raid slot 0, so two warlocks in one raid do not register one label twice.
 		fmt.Sprintf("Curse of Recklessness (%s)", Ternary(casterIndex == -1, "External", Ternary(casterIndex == 0, "Self", fmt.Sprintf("Self %d", casterIndex)))),
-		// Forever client, rank 4 (11717): -505 armor, +90 attack power. TBC's rank 5 was -800/+135.
+		// Forever client, rank 4 (11717): -505 armor. Its 90 attack power row is a dummy aura (4) now,
+		// not TBC's attack power (99), so the target gains none, as master. TBC's rank 5 was -800/+135.
 		11717,
 		stats.Stats{
-			stats.Armor:       -505,
-			stats.AttackPower: 90,
+			stats.Armor: -505,
 		},
 		time.Minute*2,
 	)
@@ -590,8 +590,9 @@ func JudgementOfLightAura(target *Unit) *Aura {
 	})
 }
 
+// Forever client, rank 3 (20355): its proc (20353) restores 59 mana, as master. TBC's rank 4 (27164) was 74.
 func JudgementOfWisdomAura(target *Unit) *Aura {
-	actionId := ActionID{SpellID: 27164}
+	actionId := ActionID{SpellID: 20355}
 	var aura *Aura
 	aura = target.MakeProcTriggerAura(ProcTrigger{
 		Name:            "Judgement of Wisdom",
@@ -612,7 +613,7 @@ func JudgementOfWisdomAura(target *Unit) *Aura {
 				if unit.JowManaMetrics == nil {
 					unit.JowManaMetrics = unit.NewManaMetrics(actionId)
 				}
-				unit.AddMana(sim, 74.0, unit.JowManaMetrics)
+				unit.AddMana(sim, 59.0, unit.JowManaMetrics)
 			}
 
 			if spell.ActionID.SameAction(ActionID{SpellID: 35395}) {
@@ -733,7 +734,7 @@ var MajorArmorReductionEffectCategory = "MajorArmorReduction"
 // reduction debuffs (Screech, Curse of Recklessness, ...) stack with them.
 var DemoralizingEffectCategory = "Demoralizing"
 
-func ExposeArmorAura(target *Unit, getComboPoints func() int32, talents int32) *Aura {
+func ExposeArmorAura(target *Unit, getComboPoints func() int32) *Aura {
 
 	var effect *ExclusiveEffect
 	aura := target.GetOrRegisterAura(Aura{
@@ -742,8 +743,9 @@ func ExposeArmorAura(target *Unit, getComboPoints func() int32, talents int32) *
 		Duration: time.Second * 30,
 		OnGain: func(aura *Aura, sim *Simulation) {
 			// Forever client, rank 5 (11198): -450 armor a combo point. TBC's rank 6 was 410.
+			// Forever's Improved Expose Armor (14168) cuts the cost and refunds combo points; it adds
+			// no armor reduction, so the Improved raid debuff is master's 2250 too.
 			eaValue := 450.0 * float64(getComboPoints())
-			eaValue *= 1.0 + 0.25*float64(talents)
 			effect.SetPriority(sim, eaValue)
 		},
 	})

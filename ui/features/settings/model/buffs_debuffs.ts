@@ -402,7 +402,7 @@ export const ImprovedSealOfTheCrusader = makeQuadstateDebuffInput({
 	label: 'Seal of the Crusader',
 });
 export const JudgementOfWisdom = makeBooleanDebuffInput({
-	actionId: ActionId.fromSpellId(27164),
+	actionId: ActionId.fromSpellId(20355),
 	fieldName: 'judgementOfWisdom',
 	label: 'Judgement of Wisdom',
 });
