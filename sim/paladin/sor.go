@@ -130,7 +130,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 
 			//BonusCritRating: paladin.holyCrit(), // TODO to be tested, but unlikely
 
-			DamageMultiplier: improvedSeals * paladin.getWeaponSpecializationModifier(),
+			DamageMultiplier: improvedSeals,
 			ThreatMultiplier: 1,
 
 			BonusCoefficient: coeff,
@@ -158,7 +158,7 @@ func (paladin *Paladin) registerSealOfRighteousness() {
 		})
 
 		paladin.aurasSoR = append(paladin.aurasSoR, aura)
-		paladin.registerSealProc(aura, procSpell)
+		paladin.registerSealProc(aura, func(sim *core.Simulation, target *core.Unit) { procSpell.Cast(sim, target) })
 
 		paladin.sealOfRighteousness = paladin.RegisterSpell(core.SpellConfig{
 			ActionID:    aura.ActionID,

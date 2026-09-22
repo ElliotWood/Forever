@@ -45,7 +45,7 @@ func (paladin *Paladin) registerHolyStrike() {
 	// Sacred Arbiter also refreshes the paladin's Judgement effects. Judgement of the Crusader
 	// is the only Judgement that leaves anything behind, and it already refreshes off every
 	// melee attack the paladin lands, so that half of the talent needs nothing here.
-	damageMultiplier := paladin.getWeaponSpecializationModifier()
+	damageMultiplier := 1.0
 	if paladin.Talents.SacredArbiter {
 		damageMultiplier *= 1.1
 	}
