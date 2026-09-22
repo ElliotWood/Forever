@@ -15,7 +15,6 @@ const (
 	E_POWER_DRAIN           SpellDataEffectKind = 8
 	E_HEAL                  SpellDataEffectKind = 10
 	E_ADD_EXTRA_ATTACKS     SpellDataEffectKind = 19
-	E_WEAPON                SpellDataEffectKind = 25
 	E_PERSISTENT_AREA_AURA  SpellDataEffectKind = 27
 	E_SUMMON                SpellDataEffectKind = 28
 	E_ENERGIZE              SpellDataEffectKind = 30
@@ -27,30 +26,23 @@ const (
 	E_TRADE_SKILL           SpellDataEffectKind = 47
 	E_SUMMON_PET            SpellDataEffectKind = 56
 	E_WEAPON_DAMAGE         SpellDataEffectKind = 58
-	E_PROFICIENCY           SpellDataEffectKind = 60
 	E_THREAT                SpellDataEffectKind = 63
 	E_TRIGGER_SPELL         SpellDataEffectKind = 64
 	E_APPLY_AREA_AURA_RAID  SpellDataEffectKind = 65
 	E_HEAL_MAX_HEALTH       SpellDataEffectKind = 67
-	E_INTERRUPT_CAST        SpellDataEffectKind = 68
 	E_ADD_FARSIGHT          SpellDataEffectKind = 72
 	E_SCRIPT_EFFECT         SpellDataEffectKind = 77
 	E_SANCTUARY             SpellDataEffectKind = 79
-	E_SELF_RESURRECT        SpellDataEffectKind = 94
 	E_CHARGE                SpellDataEffectKind = 96
-	E_CAST_BUTTON           SpellDataEffectKind = 97
 	E_FEED_PET              SpellDataEffectKind = 101
 	E_DISMISS_PET           SpellDataEffectKind = 102
 	E_SUMMON_OBJECT_SLOT1   SpellDataEffectKind = 104
-	E_DISPEL_MECHANIC       SpellDataEffectKind = 108
 	E_RESURRECT_PET         SpellDataEffectKind = 109
-	E_DESTROY_ALL_TOTEMS    SpellDataEffectKind = 110
 	E_ATTACK_ME             SpellDataEffectKind = 114
 	E_NORMALIZED_WEAPON_DMG SpellDataEffectKind = 121
 	E_ENERGIZE_PCT          SpellDataEffectKind = 137
 	E_UPDATE_PLAYER_PHASE   SpellDataEffectKind = 167
 	E_CREATE_AREATRIGGER    SpellDataEffectKind = 179
-	E_TELEPORT_UNITS        SpellDataEffectKind = 252
 )
 
 // Which aura it applies, when the effect is E_APPLY_AURA.
@@ -81,7 +73,6 @@ const (
 	A_MOD_INCREASE_SPEED                 SpellDataAura = 31
 	A_MOD_DECREASE_SPEED                 SpellDataAura = 33
 	A_MOD_INCREASE_HEALTH                SpellDataAura = 34
-	A_MOD_SHAPESHIFT                     SpellDataAura = 36
 	A_SCHOOL_IMMUNITY                    SpellDataAura = 39
 	A_DISPEL_IMMUNITY                    SpellDataAura = 41
 	A_PROC_TRIGGER_SPELL                 SpellDataAura = 42
@@ -97,24 +88,20 @@ const (
 	A_MOD_SPELL_CRIT_CHANCE              SpellDataAura = 57
 	A_MOD_SCALE                          SpellDataAura = 61
 	A_PERIODIC_MANA_LEECH                SpellDataAura = 64
-	A_MOD_CASTING_SPEED_NOT_STACK        SpellDataAura = 65
 	A_FEIGN_DEATH                        SpellDataAura = 66
 	A_MOD_DISARM                         SpellDataAura = 67
 	A_MOD_STALKED                        SpellDataAura = 68
 	A_SCHOOL_ABSORB                      SpellDataAura = 69
 	A_MECHANIC_IMMUNITY                  SpellDataAura = 77
 	A_MOD_DAMAGE_PERCENT_DONE            SpellDataAura = 79
-	A_WATER_BREATHING                    SpellDataAura = 82
 	A_MOD_DAMAGE_PERCENT_TAKEN           SpellDataAura = 87
 	A_PREVENTS_FLEEING                   SpellDataAura = 92
 	A_MOD_UNATTACKABLE                   SpellDataAura = 93
 	A_MOD_ATTACK_POWER                   SpellDataAura = 99
 	A_MOD_RESISTANCE_PCT                 SpellDataAura = 101
-	A_WATER_WALK                         SpellDataAura = 104
 	A_ADD_FLAT_MODIFIER                  SpellDataAura = 107
 	A_ADD_PCT_MODIFIER                   SpellDataAura = 108
 	A_MOD_POWER_REGEN_PERCENT            SpellDataAura = 110
-	A_MOD_RANGED_DAMAGE_TAKEN            SpellDataAura = 113
 	A_MOD_HEALING_PCT                    SpellDataAura = 118
 	A_UNTRACKABLE                        SpellDataAura = 120
 	A_EMPATHY                            SpellDataAura = 121
@@ -136,12 +123,10 @@ const (
 	A_PERIODIC_DUMMY                     SpellDataAura = 226
 	A_PROC_TRIGGER_SPELL_WITH_VALUE      SpellDataAura = 231
 	A_MECHANIC_DURATION_MOD              SpellDataAura = 232
-	A_MOD_SPELL_DAMAGE_FROM_CASTER       SpellDataAura = 271
 	A_MOD_BLOCK_VALUE_PCT                SpellDataAura = 272
 	A_MOD_CRIT_PCT                       SpellDataAura = 290
 	A_MOD_MELEE_HASTE_3                  SpellDataAura = 319
 	A_OVERRIDE_ACTIONBAR_SPELLS          SpellDataAura = 332
-	A_MOD_MELEE_RANGED_HASTE_2           SpellDataAura = 342
 	A_MOD_POSSESS_PET                    SpellDataAura = 378
 	A_MOD_BONUS_ARMOR_PCT                SpellDataAura = 466
 	A_MOD_CRIT_PERCENT_VERSUS            SpellDataAura = 547
