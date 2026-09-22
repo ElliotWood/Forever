@@ -25,7 +25,7 @@ func (warrior *Warrior) applyDeepWounds() {
 		SpellSchool:    core.SpellSchoolPhysical,
 		DefenseType:    core.DefenseTypeMelee,
 		ProcMask:       core.ProcMaskEmpty,
-		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell,
+		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagPassiveSpell | core.SpellFlagNoPeriodicCrit, // client 12162/412609: no Periodic Can Crit
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
