@@ -339,6 +339,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-HandofJustice-11815"
+ value: {
+  dps: 170.39876
+  tps: 182.59909
+  dtps: 1093.74057
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-HeartoftheScale-13164"
  value: {
   dps: 167.674

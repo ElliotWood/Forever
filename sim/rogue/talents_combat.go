@@ -1,6 +1,8 @@
 package rogue
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
@@ -204,14 +206,29 @@ func (rogue *Rogue) registerBladeFlurry() {
 // effect from the weapons equipped: 1% extra attack per rank on axes and swords, 1% crit per
 // rank on daggers and fists, 3% of the target's armor ignored per rank on maces.
 //
-// The extra attack is not modelled: this engine has no extra-attack hook (MoP dropped them),
-// so an axe or sword rogue is short that share of its damage. Logged in the PR.
+// The extra attack has a 200 ms internal cooldown, as on master.
 func (rogue *Rogue) registerHackAndSlash() {
 	if rogue.Talents.HackAndSlash == 0 {
 		return
 	}
 
 	points := rogue.Talents.HackAndSlash
+
+	// Axes and swords: extra attack.
+	if mask := rogue.GetProcMaskForTypes(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypeSword); mask != core.ProcMaskUnknown {
+		rogue.MakeProcTriggerAura(core.ProcTrigger{
+			Name:               "Hack and Slash",
+			Callback:           core.CallbackOnSpellHitDealt,
+			ProcMask:           mask,
+			Outcome:            core.OutcomeLanded,
+			ProcChance:         spellData.HackAndSlash.EffectAt(0).ValueAt(points) / 100,
+			ICD:                time.Millisecond * 200,
+			TriggerImmediately: true,
+			Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+				rogue.AutoAttacks.ExtraMHAttack(sim)
+			},
+		})
+	}
 	crit := spellData.HackAndSlash.EffectAt(2).ValueAt(points)
 	armorIgnore := spellData.HackAndSlash.EffectAt(1).ValueAt(points) / 100
 

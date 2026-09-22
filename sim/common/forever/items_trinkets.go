@@ -17,6 +17,25 @@ func init() {
 	shared.NewSimpleStatActive(35700) // Figurine - Crimson Serpent - https://www.wowhead.com/forever/spell=46783
 	shared.NewSimpleStatActive(35702) // Figurine - Shadowsong Panther - https://www.wowhead.com/forever/spell=46784
 
+	// Hand of Justice: "${$h/3}% chance on Melee hit to gain $s1 extra attack", ProcChance 3 and
+	// a 2 sec proc cooldown in the client's SpellAuraOptions for 15600, so 1%.
+	core.NewItemEffect(11815, func(agent core.Agent) {
+		character := agent.GetCharacter()
+		character.MakeProcTriggerAura(core.ProcTrigger{
+			Name:               "Hand of Justice",
+			ActionID:           core.ActionID{SpellID: 15600},
+			Callback:           core.CallbackOnSpellHitDealt,
+			ProcMask:           core.ProcMaskMelee,
+			Outcome:            core.OutcomeLanded,
+			ProcChance:         0.01,
+			ICD:                time.Second * 2,
+			TriggerImmediately: true,
+			Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+				character.AutoAttacks.ExtraMHAttack(sim)
+			},
+		})
+	})
+
 	// Jom Gabbar
 	// Use: Increases attack power by 65 and an additional 65 every 2 sec. Lasts 20 sec. (2 Min Cooldown)
 	core.NewItemEffect(23570, func(agent core.Agent) {

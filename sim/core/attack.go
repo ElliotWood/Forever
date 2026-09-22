@@ -910,6 +910,17 @@ func (aa *AutoAttacks) StopRangedUntil(sim *Simulation, readyAt time.Duration) {
 	sim.rescheduleWeaponAttack(aa.ranged.swingAt)
 }
 
+// ExtraMHAttack is the Classic extra attack (Hand of Justice, Hack and Slash, Thrash Blade):
+// it doesn't add a swing, it pulls the next main-hand swing to now, which resets the timer.
+// ponytail: extra attacks granted in the same instant collapse into one swing.
+func (aa *AutoAttacks) ExtraMHAttack(sim *Simulation) {
+	if !aa.AutoSwingMelee || !aa.mh.enabled {
+		return
+	}
+	aa.mh.swingAt = sim.CurrentTime
+	sim.rescheduleWeaponAttack(aa.mh.swingAt)
+}
+
 // Delays all swing timers for the specified amount.
 func (aa *AutoAttacks) DelayMeleeBy(sim *Simulation, delay time.Duration) {
 	if delay <= 0 {

@@ -405,6 +405,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-HandofJustice-11815"
+ value: {
+  dps: 488.6474
+  tps: 1087.05539
+  dtps: 762.85214
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-HeartoftheScale-13164"
  value: {
   dps: 481.25648

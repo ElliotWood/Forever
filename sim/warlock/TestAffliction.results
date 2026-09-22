@@ -221,6 +221,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-HandofJustice-11815"
+ value: {
+  dps: 670.26766
+  tps: 312.45898
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-HeartoftheScale-13164"
  value: {
   dps: 670.26766

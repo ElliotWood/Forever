@@ -214,6 +214,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-HandofJustice-11815"
+ value: {
+  dps: 340.414
+  tps: 232.748
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-HeartoftheScale-13164"
  value: {
   dps: 340.414

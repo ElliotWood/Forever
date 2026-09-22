@@ -354,6 +354,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-HandofJustice-11815"
+ value: {
+  dps: 736.25061
+  tps: 357.39678
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-HeartoftheScale-13164"
  value: {
   dps: 733.34011

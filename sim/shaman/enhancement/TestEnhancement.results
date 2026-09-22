@@ -312,6 +312,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-HandofJustice-11815"
+ value: {
+  dps: 395.87355
+  tps: 292.874
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-HeartoftheScale-13164"
  value: {
   dps: 390.80023

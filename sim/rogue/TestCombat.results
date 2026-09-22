@@ -111,8 +111,8 @@ dps_results: {
 dps_results: {
  key: "TestCombat-AllItems-Dal'Rend'sArms"
  value: {
-  dps: 685.64933
-  tps: 340.76772
+  dps: 702.87146
+  tps: 349.32712
  }
 }
 dps_results: {
@@ -225,6 +225,13 @@ dps_results: {
  value: {
   dps: 685.48002
   tps: 340.68357
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-HandofJustice-11815"
+ value: {
+  dps: 694.10113
+  tps: 344.96826
  }
 }
 dps_results: {
