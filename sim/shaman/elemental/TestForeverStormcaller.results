@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.23539
+  weights: 0.26197
   weights: 0
-  weights: 0.4294
+  weights: 0.41235
   weights: 0
-  weights: 0.07249
-  weights: 0
-  weights: 0
-  weights: 0.35132
+  weights: 0.07226
   weights: 0
   weights: 0
-  weights: 4.03733
-  weights: 3.3595
+  weights: 0.33519
+  weights: 0
+  weights: 0
+  weights: 3.89406
+  weights: 3.56185
   weights: 0
   weights: 0
   weights: 0
@@ -99,64 +99,64 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 318.47568
-  tps: 299.34823
+  dps: 317.1251
+  tps: 297.94769
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 323.13021
-  tps: 303.37867
+  dps: 321.47898
+  tps: 301.54849
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 366.95196
-  tps: 343.14979
+  dps: 372.40077
+  tps: 350.22323
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 369.5957
-  tps: 345.91656
+  dps: 367.84705
+  tps: 344.04021
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 314.27086
-  tps: 294.92505
+  dps: 313.61889
+  tps: 294.80972
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 333.1252
-  tps: 311.99701
+  dps: 332.23332
+  tps: 310.91662
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 362.92169
-  tps: 339.68784
+  dps: 361.12852
+  tps: 337.44552
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 343.16192
-  tps: 322.26044
+  dps: 342.7202
+  tps: 322.25253
  }
 }
 dps_results: {
  key: "TestForeverStormcaller-Phase1-Average-Default"
  value: {
-  dps: 371.97441
-  tps: 348.29526
+  dps: 369.31037
+  tps: 345.39334
  }
 }
 dps_results: {
@@ -204,7 +204,7 @@ dps_results: {
 dps_results: {
  key: "TestForeverStormcaller-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 367.72493
-  tps: 343.65624
+  dps: 364.4325
+  tps: 341.48808
  }
 }

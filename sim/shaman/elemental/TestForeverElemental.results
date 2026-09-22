@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.05689
+  weights: 0.09299
   weights: 0
-  weights: 0.47001
+  weights: 0.25569
   weights: 0
-  weights: 0.15951
-  weights: 0
-  weights: 0
-  weights: 0.3045
+  weights: 0.12864
   weights: 0
   weights: 0
-  weights: 3.97013
-  weights: 3.07929
+  weights: 0.12376
+  weights: 0
+  weights: 0
+  weights: 1.96796
+  weights: 2.68733
   weights: 0
   weights: 0
   weights: 0
@@ -99,64 +99,64 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 320.74801
-  tps: 301.68477
+  dps: 275.72306
+  tps: 257.86436
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 323.86582
-  tps: 304.26254
+  dps: 283.1946
+  tps: 264.76635
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 373.11075
-  tps: 350.99006
+  dps: 390.61326
+  tps: 368.40054
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 381.99931
-  tps: 358.81608
+  dps: 304.87044
+  tps: 283.90295
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 311.37611
-  tps: 290.99495
+  dps: 263.98351
+  tps: 245.54316
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 336.3813
-  tps: 314.70412
+  dps: 283.23187
+  tps: 263.56985
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 369.21823
-  tps: 346.05
+  dps: 301.13184
+  tps: 280.40956
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 339.76757
-  tps: 319.29923
+  dps: 293.70706
+  tps: 275.55354
  }
 }
 dps_results: {
  key: "TestForeverElemental-Phase1-Average-Default"
  value: {
-  dps: 383.22476
-  tps: 360.1721
+  dps: 307.08996
+  tps: 286.13701
  }
 }
 dps_results: {
@@ -204,7 +204,7 @@ dps_results: {
 dps_results: {
  key: "TestForeverElemental-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 379.13809
-  tps: 356.33318
+  dps: 291.93977
+  tps: 270.73038
  }
 }
