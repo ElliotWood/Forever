@@ -10,6 +10,7 @@
 //	go run ./tools/spelldata -family warrior/Execute   # the ladder's ranks, then its highest in full
 //	go run ./tools/spelldata -expr 'spellData.Execute.Rank(3)' -package warrior   # the row that reaches
 //	go run ./tools/spelldata -expr 'spellData.Execute.Highest().EffectN(1).Average(core.CharacterLevel)' -package warrior   # the value that reads
+//	go run ./tools/spelldata -config 'spelldata.SpellConfig(&warrior.Unit, executeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))' -package warrior   # the config the resolver builds
 //	go run ./tools/spelldata -hover sim/warrior/execute.go 12:40   # the markdown an editor hover shows at line:column, 1-based
 //	go run ./tools/spelldata -lsp            # a language server on stdio answering those hovers
 package main
@@ -19,6 +20,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -48,6 +50,7 @@ type options struct {
 	expr   string
 	pkg    string
 	hover  string
+	config string
 	json   bool
 	all    bool
 }
@@ -57,7 +60,7 @@ type options struct {
 // the next argument or after an `=`.
 func parseArgs(args []string) (options, error) {
 	var opts options
-	valued := map[string]*string{"family": &opts.family, "expr": &opts.expr, "package": &opts.pkg, "hover": &opts.hover}
+	valued := map[string]*string{"family": &opts.family, "expr": &opts.expr, "package": &opts.pkg, "hover": &opts.hover, "config": &opts.config}
 
 	for i := 0; i < len(args); i++ {
 		arg := args[i]
@@ -97,7 +100,7 @@ func parseArgs(args []string) (options, error) {
 	}
 
 	asked := 0
-	for _, mode := range []string{opts.family, opts.expr, opts.hover} {
+	for _, mode := range []string{opts.family, opts.expr, opts.hover, opts.config} {
 		if mode != "" {
 			asked++
 		}
@@ -106,10 +109,10 @@ func parseArgs(args []string) (options, error) {
 		return opts, fmt.Errorf("-hover takes a file and a position: -hover <file> <line>:<column>")
 	}
 	if asked > 1 || asked == 1 && opts.query != "" && opts.hover == "" {
-		return opts, fmt.Errorf("ask for one thing: a spell, -family, -expr or -hover")
+		return opts, fmt.Errorf("ask for one thing: a spell, -family, -expr, -config or -hover")
 	}
 	if opts.query == "" && asked == 0 {
-		return opts, fmt.Errorf("usage: go run ./tools/spelldata <id | name> [-all] [-json] | -family <class>/<Family> | -expr <call> [-package <class>] | -hover <file> <line>:<column> | -lsp")
+		return opts, fmt.Errorf("usage: go run ./tools/spelldata <id | name> [-all] [-json] | -family <class>/<Family> | -expr <call> [-package <class>] | -config <SpellConfig call> [-package <class>] | -hover <file> <line>:<column> | -lsp")
 	}
 	return opts, nil
 }
@@ -128,6 +131,9 @@ func run(args []string, out io.Writer) error {
 	}
 	if opts.hover != "" {
 		return runHover(out, opts)
+	}
+	if opts.config != "" {
+		return runConfig(out, opts)
 	}
 
 	if id, err := strconv.ParseInt(opts.query, 10, 32); err == nil {
@@ -223,6 +229,22 @@ func runExpr(out io.Writer, opts options) error {
 
 	writeExprText(out, result, opts.expr)
 	return nil
+}
+
+func runConfig(out io.Writer, opts options) error {
+	trace := &tracer{}
+	var declarations map[string]declaration
+	if root, err := moduleRoot(); err == nil && opts.pkg != "" {
+		declarations = defaultWorkspace.declarations(filepath.Join(root, "sim", opts.pkg), "", "", trace)
+	}
+	result, err := evalSpellConfig(opts.config, declarations, opts.pkg, trace)
+	if err != nil {
+		return err
+	}
+	var text strings.Builder
+	writeConfigText(&text, result)
+	_, err = io.WriteString(out, text.String())
+	return err
 }
 
 // The trace goes to stderr, so stdout is the markdown alone.

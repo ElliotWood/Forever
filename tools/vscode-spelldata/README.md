@@ -15,7 +15,8 @@ wherever the package uses it; a name bound to a value read off a rank, `executeB
 (**600**), the chain with every name substituted, and the row with the effect it read marked `▶`. On a
 declaration line each accessor answers for itself: `EffectN(1)` the effect and every accessor that reads
 something off it, `Average(core.CharacterLevel)` the value and the doc comment `sim/core/spelldata`
-writes on that accessor.
+writes on that accessor. The cursor on `SpellConfig` in a `spelldata.SpellConfig(...)` call shows the
+config the resolver builds from the row and the options, each field with the step that filled it.
 
 ## How it answers
 

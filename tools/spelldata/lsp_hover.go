@@ -341,6 +341,24 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 	folder := filepath.Dir(path)
 	pkg := filepath.Base(folder)
 
+	if match := matchCovering([]*regexp.Regexp{spellConfigPattern}, lineText, column); match != nil {
+		trace.add("SpellConfig")
+		start := match[0]
+		for _, previous := range lines[:line] {
+			start += len(previous) + 1
+		}
+		call, err := callText(text, start)
+		if err != nil {
+			return trace.fail("%v", err)
+		}
+		result, err := evalSpellConfig(call, w.declarations(folder, path, text, trace), pkg, trace)
+		if err != nil {
+			return trace.fail("%v", err)
+		}
+		trace.add("✓ %s → %d fields", title(result.spell), len(result.rows))
+		return configMarkdown(result), trace.lines, true
+	}
+
 	if match := matchCovering([]*regexp.Regexp{familyPattern}, lineText, column); match != nil {
 		field := lineText[match[2]:match[3]]
 		trace.add("family %s/%s", pkg, field)
