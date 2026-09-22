@@ -598,11 +598,11 @@ What a registration reads off the row, since there is no resolver to read it for
 |                                            |                                                                                |
 | ------------------------------------------ | ------------------------------------------------------------------------------ |
 | `rank.ID`, `rank.RankNumber()`              | the `ActionID` and the `Rank` field a `core.SpellConfig` wants; `RankNumber()` is `NameSubtext_lang`'s "Rank N", 0 where the client states none |
-| `rank.Cost()`                               | the cost off the first power the row states, in the sim's units - rage already divided by ten |
+| `rank.Cost()`                               | the cost off the first power the row states, in the sim's units - rage already divided by ten; it answers a `float64`, so an `int32` field like `ManaCostOptions.FlatCost` needs a cast |
 | `rank.GCD()`, `rank.CastTime()`             | the global cooldown and the cast time                                          |
 | `max(rank.Cooldown(), rank.CategoryCooldown())` | the row's own cooldown, or the one it shares with a category               |
 | `rank.Duration()`                           | an aura or dot's length; the client's -1 becomes `core.NeverExpires`           |
-| `rank.SpellSchool()`, `rank.DefenseTypeCore()` | core's own enums, unconverted                                               |
+| `rank.SpellSchool()`, `rank.DefenseTypeCore()` | already in core's enums - the accessor converts the client's byte           |
 | `float64(rank.MaxRange)`, `float64(rank.MinRange)` | the plain fields, in yards                                              |
 
 Straight off `sim/shaman/shocks.go`:
@@ -635,10 +635,12 @@ func (shaman *Shaman) newShockSpellConfig(rank *spelldata.Spell, spellSchool cor
 }
 ```
 
-**Every amount is `Average(core.CharacterLevel)`.** The tables carried no spread, so a value read as
-`(low, high)` against a family table becomes one `Average` call, read for both ends, here. `Min`,
-`Max` and `Roll` answer a spread the client rolls at cast time, which these rows do not carry, so
-they do not appear in these seven classes' files.
+**Every amount is `Average(core.CharacterLevel)`.** The family tables the seven classes replaced never
+rolled - every value is `BasePoints`-derived and read once per rank - so a value read as `(low, high)`
+there becomes one `Average` call, read for both ends, here too. A row can still carry a
+spread (Frostbolt's `Variance` is 0.105) and `Roll(sim, level)`/`Min`/`Max` read it where a
+store-backed class asks for one; `Average` is what keeps a ported number equal to the one it
+replaces, not an absence of spread in the data.
 
 **Name the effect by role where one applies; by position where the row hides it behind another
 effect.** `DamageEffect()`, `HealEffect()`, `EnergizeEffect()` and `PeriodicEffect()` answer the first
@@ -669,6 +671,18 @@ tickLength := hurricaneRank.Effect(dbcenums.A_PERIODIC_DUMMY, 0).Period()
 // Hurricane's periodic damage is the spell HurricaneTriggered casts each tick.
 hurricaneTickSpell := spellData.HurricaneTriggered.Highest()
 hurricaneTick := hurricaneTickSpell.DamageEffect()
+```
+
+**`EffectAt(n)` counts from 1 by position, like `EffectN` - not the client's `EffectIndex`.**
+`EffectAt(n+1)` lines up with client index `n` only where the row's indices run contiguously from 0;
+where they do not, `Effect(aura, misc)` names the effect instead. Rogue's `PuncturingWounds` talent
+needs it: effect 1 is the proc trigger, at client index 0, and the crit bonus it reads is the second
+of two crit modifiers that share an aura and misc, at client index 2 - position 3:
+
+```go
+// Effect 1 is the proc trigger; the Mutilate crit bonus is the second of the two
+// crit modifiers, which share an aura and misc and so have to be indexed.
+FloatValue: spellData.PuncturingWounds.EffectAt(3).ValueAt(rogue.Talents.PuncturingWounds),
 ```
 
 **A `Ranked` family's rank can carry a per-level gain a `Ladder`'s per-rank readers do not add in.**
@@ -719,10 +733,18 @@ var cp int32
 ```
 
 **Hand numbers stay hand numbers - Go literals with the same review comment a family-table wrapper
-carried, not a `WithSpellDataPPM`/`WithSpellDataFlatThreat`/`WithSpellDataAPCoef` call.** A
+carries, not a `WithSpellDataPPM`/`WithSpellDataFlatThreat`/`WithSpellDataAPCoef` call.** A
 hand-supplied threat number, PPM or coefficient keeps the same marker a resolver-built config
-carries - `sim/warrior/hamstring.go` writes it this way for `core.SpellConfig.ThreatMultiplier`, and
-a hand-built config carries the identical comment on the identical literal:
+carries. `sim/warrior/hamstring.go` writes it as an assignment on the config the resolver already
+built:
+
+```go
+// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+config.ThreatMultiplier = 1
+```
+
+A hand-built `core.SpellConfig`, with no resolver to build it first, carries the identical comment on
+the identical field, as a struct-literal line instead:
 
 ```go
 // TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
@@ -750,7 +772,7 @@ priest.RegisterSpell(core.SpellConfig{
 	MaxRange:       float64(rank.MaxRange),
 
 	ManaCost: core.ManaCostOptions{
-		FlatCost: rank.Cost(),
+		FlatCost: int32(rank.Cost()),
 	},
 
 	Cast: core.CastConfig{
@@ -783,14 +805,16 @@ is asked for, cast or projected.
 #### Consecration's borrowed tick
 
 The same shape as [A tick the client keeps on another spell](#a-tick-the-client-keeps-on-another-spell),
-read off the store instead of a family table. Consecration's tooltip names one spell for both ticks -
-`Refs()[0]` reaches it - and the two sit on its first two effects by position, since both are school
-damage and `DamageEffect()` cannot tell them apart: the base tick on effect 1, the bonus its first
-four targets take, with its own spell power share, on effect 2. The periodic dummy on Consecration's
-own row states the target count, not a tick:
+read off the store instead of a family table. Paladin has not ported, so there is no
+`spellData.Consecration` ladder to reach it through yet; the row itself is already in the store -
+every class family seeds it, ported or not - and reads by id in the meantime. Consecration rank 5's
+tooltip names one spell for both ticks - `Refs()[0]` reaches it - and the two sit on its first two
+effects by position, since both are school damage and `DamageEffect()` cannot tell them apart: the
+base tick on effect 1, the bonus its first four targets take, with its own spell power share, on
+effect 2. The periodic dummy on Consecration's own row states the target count, not a tick:
 
 ```go
-consecrationRank := spelldata.Consecration.Highest()
+consecrationRank := spelldata.MustFind(20924) // Consecration, rank 5
 tickSpell := consecrationRank.Refs()[0]
 
 tick := tickSpell.EffectN(1)
