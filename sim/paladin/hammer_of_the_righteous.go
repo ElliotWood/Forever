@@ -1,8 +1,6 @@
 package paladin
 
 import (
-	"time"
-
 	"github.com/wowsims/classic/sim/core"
 )
 
@@ -17,24 +15,30 @@ import (
 // Crusader Strike, and the category is what the client actually enforces.
 //
 // Not modelled: the other three targets it can hit. The arena and the tests are single target.
+//
+// Id, cost, cooldown, school, defense type and the weapon DPS multiple come from the client table.
+// The client's missile speed (35) is not applied, as before.
 func (paladin *Paladin) registerHammerOfTheRighteous() {
 	if !paladin.Env.IsForever() || paladin.Level < 40 {
 		return
 	}
 
+	row := spellData.HammerOfTheRighteous.ByRank(1)
+	weaponDPS := row.Effects[2].Value
+
 	paladin.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 407632},
+		ActionID:       core.ActionID{SpellID: row.SpellID},
 		SpellCode:      SpellCode_PaladinHammerOfTheRighteous,
 		ClassSpellMask: SpellMaskHammerOfTheRighteous,
-		SpellSchool:    core.SpellSchoolHoly,
-		DefenseType:    core.DefenseTypeMelee,
+		SpellSchool:    row.SpellSchool,
+		DefenseType:    row.DefenseType,
 		ProcMask:       core.ProcMaskMeleeMHSpecial,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 
 		RequiredLevel: 40,
 
 		ManaCost: core.ManaCostOptions{
-			BaseCost:   0.06,
+			BaseCost:   row.PowerCostPct / 100,
 			Multiplier: paladin.benediction(),
 		},
 		Cast: core.CastConfig{
@@ -44,7 +48,7 @@ func (paladin *Paladin) registerHammerOfTheRighteous() {
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    paladin.strikeTimer(),
-				Duration: time.Second * 6,
+				Duration: row.Cooldown,
 			},
 		},
 
@@ -52,7 +56,7 @@ func (paladin *Paladin) registerHammerOfTheRighteous() {
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := 3 * paladin.AutoAttacks.MH().DPS()
+			baseDamage := weaponDPS * paladin.AutoAttacks.MH().DPS()
 			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 		},
 	})
