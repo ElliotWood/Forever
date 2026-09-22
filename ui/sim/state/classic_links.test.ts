@@ -65,7 +65,14 @@ describe('classic-engine share links', () => {
 
 	it('carries the consumables, buffs and a percent stat across', () => {
 		const settings = tryParseUrlLocation({ hash: '#' + (LINKS as Record<string, string>).hunter, search: '' })!.settings;
-		expect(settings.player!.consumables).toMatchObject({ flaskId: 13512, foodId: 20452, potId: 13444, conjuredId: 12662, battleElixirId: 13452, guardianElixirId: 20007 });
+		expect(settings.player!.consumables).toMatchObject({
+			flaskId: 13512,
+			foodId: 20452,
+			potId: 13444,
+			conjuredId: 12662,
+			battleElixirId: 13452,
+			guardianElixirId: 20007,
+		});
 		// A master RaidBuffs field that lives in our PartyBuffs.
 		expect(settings.partyBuffs!.battleShout).toBeGreaterThan(0);
 		expect(settings.raidBuffs!.giftOfTheWild).toBeGreaterThan(0);

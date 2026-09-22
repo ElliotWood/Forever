@@ -35,6 +35,7 @@
 		"assets/**",
 		"**/test-fixtures/*.json",
 		"docs/**",
+		"ui/sim/proto/legacy_classic/**",
 		"tools/data_watch/**",
 		"tools/forever_talents/**",
 		"tools/parity/**"
