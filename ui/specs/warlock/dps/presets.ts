@@ -3,23 +3,13 @@ import { Debuffs, IndividualBuffs, PartyBuffs, RaidBuffs } from '@generated/prot
 import { ConsumesSpec, Profession, TristateEffect } from '@generated/proto/common';
 import { Warlock_Options as WarlockOptions, WarlockOptions_Armor, WarlockOptions_CurseOptions, WarlockOptions_Summon } from '@generated/proto/warlock';
 
-import AfflictionRot from './apls/affliction.apl.json';
-import BlankAPL from './apls/blank.apl.json';
-import DemoRot from './apls/demonology.apl.json';
-import DestroFireRot from './apls/destro_fire.apl.json';
-import DestroRot from './apls/destruction.apl.json';
+import DefaultApl from './apls/default.apl.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
 // keep them in a separate file.
 
-export const BLANK_APL = PresetUtils.makePresetAPLRotation('Blank', BlankAPL);
-
-// Rotations
-export const AfflictionAPL = PresetUtils.makePresetAPLRotation('Affliction', AfflictionRot);
-export const DemoAPL = PresetUtils.makePresetAPLRotation('Demonology', DemoRot);
-export const DestroAPL = PresetUtils.makePresetAPLRotation('Destruction', DestroRot);
-export const DestroFireAPL = PresetUtils.makePresetAPLRotation('Destruction (Fire)', DestroFireRot);
+export const DEFAULT_APL = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
 
 // Defaults
 export const DefaultOptions = WarlockOptions.create({
@@ -32,14 +22,8 @@ export const DefaultOptions = WarlockOptions.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	flaskId: 22866, // Flask of Pure Death
-	foodId: 27657, // Blackened Basilisk
 	conjuredId: 12662, // Demonic Rune
 	mhImbueId: 25122, // Brilliant Wizard Oil
-	potId: 22839, // Destruction Potion
-	explosiveId: 30217,
-	petScrollAgi: true,
-	petScrollStr: true,
 });
 
 export const OtherDefaults = {

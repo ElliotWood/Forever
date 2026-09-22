@@ -11,16 +11,8 @@ import DefaultApl from './apls/default.apl.json';
 export const DefaultOptions = FeralDruidOptions.create({});
 
 export const DefaultConsumables = ConsumesSpec.create({
-	potId: 22838, // Haste Potion
-	battleElixirId: 22831, // Elixir of Major Agility
-	guardianElixirId: 32067, // Elixir of Draenic Wisdom
-	foodId: 27664, // Grilled Mudfish (+20 Agility)
-	mhImbueId: 34340, // Adamantite Weightstone
 	conjuredId: 12662, // Demonic Rune
-	superSapper: true,
 	goblinSapper: true,
-	scrollAgi: true,
-	scrollStr: true,
 });
 
 export const OtherDefaults = {

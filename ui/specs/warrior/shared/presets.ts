@@ -31,14 +31,5 @@ export const DefaultDebuffs = Debuffs.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	potId: 22838,
-	flaskId: 22854,
-	foodId: 27658,
-	conjuredId: 22788,
-	explosiveId: 30217,
-	superSapper: true,
 	goblinSapper: true,
-	ohImbueId: 29453,
-	scrollAgi: true,
-	scrollStr: true,
 });

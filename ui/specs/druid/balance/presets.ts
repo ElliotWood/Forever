@@ -41,10 +41,7 @@ export const DefaultDebuffs = Debuffs.create({
 
 export const DefaultConsumables = ConsumesSpec.create({
 	conjuredId: 12662, // Demonic Rune
-	flaskId: 22861, // Flask of Blinding Light
-	foodId: 27657, // Blackened Basilisk
 	mhImbueId: 25122, // Brilliant Wizard Oil
-	potId: 22832, // Super Mana Potion
 });
 
 export const OtherDefaults = {

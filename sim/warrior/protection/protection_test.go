@@ -74,16 +74,5 @@ var DefaultOptions = &proto.Player_ProtectionWarrior{
 var DefaultProtectionTalents = "35000301302-03-0055511033001101501351"
 
 var DefaultConsumables = &proto.ConsumesSpec{
-	PotId:            22849,
-	FoodId:           27667,
-	ConjuredId:       22105,
-	ExplosiveId:      30217,
-	SuperSapper:      true,
-	OhImbueId:        29453,
-	ScrollAgi:        true,
-	ScrollStr:        true,
-	ScrollArm:        true,
-	BattleElixirId:   22831,
 	GuardianElixirId: 9088,
-	NightmareSeed:    true,
 }

@@ -30,18 +30,8 @@ export const DefaultOptions = ProtectionPaladinOptions.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	flaskId: 22861, // Flask of Blinding Light
-	foodId: 27657, // Blackened Basilisk
-	potId: 22849, // Ironshield Potion
 	conjuredId: 12662, // Dark Rune
-	mhImbueId: 28017,
-	explosiveId: 30217,
-	superSapper: true,
 	goblinSapper: true,
-	nightmareSeed: true,
-	scrollStr: true,
-	scrollAgi: true,
-	scrollArm: true,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({

@@ -19,8 +19,8 @@ export interface ConsumesPickerProps {
 	explosiveOptions: ReadonlyArray<ConsumableStatOption<number>>;
 	imbueMHOptions: ReadonlyArray<ConsumableStatOption<number>>;
 	imbueOHOptions: ReadonlyArray<ConsumableStatOption<number>>;
-	// Potions, explosives, pet consumables and the combat-only miscellany matter inside an
-	// encounter; a gear planner never runs one and passes false.
+	// Potions, explosives and the combat-only miscellany matter inside an encounter; a gear
+	// planner never runs one and passes false.
 	encounterConsumes?: boolean;
 }
 
@@ -68,11 +68,10 @@ export const ConsumesPicker = ({
 				</PickerGroup>
 			</ConsumeRow>
 			{encounterConsumes && (
-				<ConsumeRow name="engineering" configs={[configs.explosive, ConsumablesInputs.GoblinSapper, ConsumablesInputs.SuperSapper]}>
+				<ConsumeRow name="engineering" configs={[configs.explosive, ConsumablesInputs.GoblinSapper]}>
 					<PickerGroup variant="icons" className="justify-end" data-testid="consumes-engi">
 						<IconEnumPicker modObject={player} config={configs.explosive} />
 						<IconPicker modObject={player} config={ConsumablesInputs.GoblinSapper} />
-						<IconPicker modObject={player} config={ConsumablesInputs.SuperSapper} />
 					</PickerGroup>
 				</ConsumeRow>
 			)}
@@ -104,21 +103,12 @@ export const ConsumesPicker = ({
 				</PickerGroup>
 			</ConsumeRow>
 			{encounterConsumes && (
-				<ConsumeRow name="miscellaneous" configs={[ConsumablesInputs.NightmareSeed, ConsumablesInputs.Bloodthistle, ConsumablesInputs.BoglingRoot]}>
+				<ConsumeRow name="miscellaneous" configs={[ConsumablesInputs.BoglingRoot]}>
 					<PickerGroup variant="icons" className="justify-end" data-testid="consumes-misc">
-						<IconPicker modObject={player} config={ConsumablesInputs.NightmareSeed} />
-						<IconPicker modObject={player} config={ConsumablesInputs.Bloodthistle} />
 						<IconPicker modObject={player} config={ConsumablesInputs.BoglingRoot} />
 					</PickerGroup>
 				</ConsumeRow>
 			)}
-			<ConsumeRow name="pet" hidden={!encounterConsumes}>
-				<PickerGroup variant="icons" className="justify-end" data-testid="consumes-pet">
-					<IconEnumPicker modObject={player} config={configs.petFood} />
-					<IconPicker modObject={player} config={ConsumablesInputs.PetScrollAgi} />
-					<IconPicker modObject={player} config={ConsumablesInputs.PetScrollStr} />
-				</PickerGroup>
-			</ConsumeRow>
 		</div>
 	);
 };

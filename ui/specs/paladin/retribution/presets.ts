@@ -21,15 +21,8 @@ export const DefaultOptions = RetributionPaladinOptions.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	potId: 22838,
-	flaskId: 22854,
-	foodId: 27658,
 	conjuredId: 12662,
-	superSapper: true,
 	goblinSapper: true,
-	scrollAgi: true,
-	scrollStr: true,
-	explosiveId: 30217,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
@@ -73,5 +66,5 @@ export const OtherDefaults = {
 	profession2: Profession.Blacksmithing,
 	distanceFromTarget: 5,
 	iterationCount: 25000,
-	race: Race.RaceBloodElf,
+	race: Race.RaceHuman,
 };

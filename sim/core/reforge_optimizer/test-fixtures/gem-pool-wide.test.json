@@ -94,16 +94,10 @@
 							]
 						},
 						"consumables": {
-							"potId": 22839,
-							"flaskId": 22866,
-							"foodId": 27657,
 							"conjuredId": 12662,
-							"explosiveId": 30217,
 							"mhImbueId": 25122,
-							"petScrollAgi": true,
-							"petScrollStr": true,
-							"potions": [18253, 22832, 22837, 22839, 22850, 28101, 31677, 32948, 33935, 34440],
-							"conjuredItems": [22105, 12662, 22788, 23334, 23381]
+							"potions": [18253],
+							"conjuredItems": [12662]
 						},
 						"bonusStats": {
 							"stats": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

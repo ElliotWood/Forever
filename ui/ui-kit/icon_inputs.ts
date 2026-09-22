@@ -71,9 +71,7 @@ export const makeBooleanPartyBuffInput = <SpecType extends Spec>(
 			enableWhen: config.enableWhen,
 			getValue: (party: Party) => party.getBuffs(),
 			setValue: (party: Party, newVal: PartyBuffs) => party.setBuffs(newVal),
-			// `race` too: the Draenei racials gate their showWhen on the party leader's race, and race
-			// lives in the player slice, so a party-buff subscription alone never sees a race change.
-			storeField: ['raid:partyBuffs', 'race'],
+			storeField: ['raid:partyBuffs'],
 		},
 		config.actionId,
 		config.fieldName,

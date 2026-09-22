@@ -19,7 +19,7 @@ const (
 )
 
 // Exclusive category for flat stat buffs which don't stack with each other
-// e.g. Arcane Brilliance vs Scroll of Intellect.
+// e.g. Arcane Brilliance vs Greater Arcane Elixir.
 const StatBuffCategory = "StatBuff"
 
 type StatConfig struct {

@@ -18,7 +18,6 @@ export interface ConsumeConfigs {
 	explosive: ConsumeConfig;
 	mhImbue: ConsumeConfig;
 	ohImbue: ConsumeConfig;
-	petFood: ConsumeConfig;
 }
 
 const potionsFor = (player: Player<any>, db: Database, stats: Array<Stat>) => {
@@ -54,10 +53,5 @@ export const consumeConfigs = (
 		explosive: ConsumablesInputs.makeExplosivesInput([...explosiveOptions], i18n.t('settings_tab.consumables.engineering.explosives')),
 		mhImbue: ConsumablesInputs.makeMHImbueInput([...imbueMHOptions], i18n.t('settings_tab.consumables.imbue.mhImbue')),
 		ohImbue: ConsumablesInputs.makeOHImbueInput([...imbueOHOptions], i18n.t('settings_tab.consumables.imbue.ohImbue')),
-		petFood: ConsumablesInputs.makeConsumableInput(
-			byType(ConsumableType.ConsumableTypePetFood),
-			{ consumesFieldName: 'petFoodId', showWhen: p => [Spec.SpecHunter, Spec.SpecWarlock, Spec.SpecDpsPriest].includes(p.getSpec()) },
-			'',
-		),
 	};
 };

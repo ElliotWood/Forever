@@ -263,7 +263,6 @@ export const mobTypeI18nKeys: Record<MobType, string> = {
 export const raceI18nKeys: Record<Race, string> = {
 	[Race.RaceUnknown]: 'unknown',
 	[Race.RaceBloodElf]: 'blood_elf',
-	[Race.RaceDraenei]: 'draenei',
 	[Race.RaceDwarf]: 'dwarf',
 	[Race.RaceGnome]: 'gnome',
 	[Race.RaceHuman]: 'human',
@@ -272,6 +271,8 @@ export const raceI18nKeys: Record<Race, string> = {
 	[Race.RaceTauren]: 'tauren',
 	[Race.RaceTroll]: 'troll',
 	[Race.RaceUndead]: 'undead',
+	[Race.RaceHighOrderSkyborne]: 'high_order_skyborne',
+	[Race.RaceWindshaperSkyborne]: 'windshaper_skyborne',
 };
 
 export const professionI18nKeys: Record<Profession, string> = {

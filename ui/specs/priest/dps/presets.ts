@@ -14,12 +14,7 @@ export const DefaultOptions = Options.create({
 });
 
 export const DefaultConsumables = ConsumesSpec.create({
-	flaskId: 22866, // Flask of Pure Death
-	foodId: 27657, // Blackened Basilisk
 	conjuredId: 12662, // Demonic Rune
-	mhImbueId: 22522, // Superior Wizard Oil
-	potId: 22839, // Destruction Potion
-	explosiveId: 30217,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
