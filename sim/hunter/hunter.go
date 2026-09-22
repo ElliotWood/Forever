@@ -163,6 +163,10 @@ func (hunter *Hunter) GetHunter() *Hunter {
 }
 
 func (hunter *Hunter) AddRaidBuffs(raidBuffs *proto.RaidBuffs) {
+	// Talent 1361 (client) teaches Trueshot Aura 19506, a party aura the hunter keeps on itself.
+	if hunter.Talents.TrueshotAura {
+		raidBuffs.TrueshotAura = true
+	}
 }
 
 func (hunter *Hunter) AddPartyBuffs(_ *proto.PartyBuffs) {

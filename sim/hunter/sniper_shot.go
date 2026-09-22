@@ -42,8 +42,8 @@ func (hunter *Hunter) registerSniperShotSpell() {
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,
-				// The client's 4 sec plus the sim's 0.5 sec shot wind-up, as for Aimed Shot.
-				CastTime: row.CastTime + time.Millisecond*500,
+				// The client's 4 sec, no extra wind-up (the client has none, as for Multi-Shot).
+				CastTime: row.CastTime,
 			},
 			CD: core.Cooldown{
 				Timer:    hunter.NewTimer(),

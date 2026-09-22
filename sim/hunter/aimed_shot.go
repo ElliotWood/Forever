@@ -45,8 +45,8 @@ func (hunter *Hunter) getAimedShotConfig(rank int, timer *core.Timer) core.Spell
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
 				GCD: core.GCDDefault,
-				// The client casts 2 sec, down from Classic's 3; the sim keeps its 0.5 sec shot wind-up on top.
-				CastTime: row.CastTime + time.Millisecond*500,
+				// The client casts 2 sec, down from Classic's 3. No extra wind-up: the client has none, as for Multi-Shot.
+				CastTime: row.CastTime,
 			},
 			CD: core.Cooldown{
 				Timer:    timer,
