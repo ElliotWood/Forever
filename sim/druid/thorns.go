@@ -28,7 +28,7 @@ func (druid *Druid) registerThornsSpell() {
 	// 	MaxRange:       float64(thornsRank.MaxRange),
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: thornsRank.Cost(),
+	// 		FlatCost: int32(thornsRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

@@ -17,7 +17,7 @@ func (druid *Druid) registerWrathSpell() {
 	// 	MissileSpeed:   float64(wrathRank.Speed),
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: wrathRank.Cost(),
+	// 		FlatCost: int32(wrathRank.Cost()),
 	// 	},
 	//
 	// 	Cast: core.CastConfig{

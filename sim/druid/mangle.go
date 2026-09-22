@@ -43,7 +43,7 @@ func (druid *Druid) registerMangleBearSpell() {
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	RageCost: core.RageCostOptions{
-	// 		Cost:   mangleBearRank.Cost(),
+	// 		Cost:   int32(mangleBearRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	// 	Cast: core.CastConfig{

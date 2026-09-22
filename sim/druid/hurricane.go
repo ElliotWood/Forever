@@ -25,7 +25,7 @@ func (druid *Druid) registerHurricaneSpell() {
 	// 	MaxRange:       float64(hurricaneRank.MaxRange),
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: hurricaneRank.Cost(),
+	// 		FlatCost: int32(hurricaneRank.Cost()),
 	// 	},
 	// 	// TODO: Forever states no cooldown on Hurricane (the client rows carry none), so the
 	// 	// spell is registered without one rather than with an invented duration.

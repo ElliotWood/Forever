@@ -16,7 +16,7 @@ func (druid *Druid) registerSwipeBearSpell() {
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	RageCost: core.RageCostOptions{
-	// 		Cost:   swipeRank.Cost(),
+	// 		Cost:   int32(swipeRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	// 	Cast: core.CastConfig{

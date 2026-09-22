@@ -32,7 +32,7 @@ func (druid *Druid) registerTigersFurySpell() {
 	// 	Flags:          core.SpellFlagAPL,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: tigersFuryRank.Cost(),
+	// 		Cost: int32(tigersFuryRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		IgnoreHaste: true,

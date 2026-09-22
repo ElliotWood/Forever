@@ -61,7 +61,7 @@ func (druid *Druid) registerMoonfireImpactSpell() {
 	// 	Flags:          core.SpellFlagAPL,
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: moonfireRank.Cost(),
+	// 		FlatCost: int32(moonfireRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

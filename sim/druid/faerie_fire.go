@@ -25,7 +25,7 @@ func (druid *Druid) registerFaerieFireSpell() {
 	// 	Flags:          core.SpellFlagAPL,
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: faerieFireRank.Cost(),
+	// 		FlatCost: int32(faerieFireRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

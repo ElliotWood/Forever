@@ -24,7 +24,7 @@ func (druid *Druid) registerStarfireSpell(rankConfig *spelldata.Spell) {
 	// 	MaxRange:       float64(rankConfig.MaxRange),
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: rankConfig.Cost(),
+	// 		FlatCost: int32(rankConfig.Cost()),
 	// 	},
 	//
 	// 	Cast: core.CastConfig{

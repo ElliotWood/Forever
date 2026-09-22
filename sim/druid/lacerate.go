@@ -19,7 +19,7 @@ func (druid *Druid) registerLacerateSpell() {
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	RageCost: core.RageCostOptions{
-	// 		Cost:   lacerateRank.Cost(),
+	// 		Cost:   int32(lacerateRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	// 	Cast: core.CastConfig{

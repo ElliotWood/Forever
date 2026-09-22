@@ -23,7 +23,7 @@ func (druid *Druid) registerMaulSpell() {
 	// 	Flags:          core.SpellFlagMeleeMetrics,
 	//
 	// 	RageCost: core.RageCostOptions{
-	// 		Cost:   maulRank.Cost(),
+	// 		Cost:   int32(maulRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	//

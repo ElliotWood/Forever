@@ -17,7 +17,7 @@ func (druid *Druid) registerRakeSpell() {
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost:   rakeRank.Cost(),
+	// 		Cost:   int32(rakeRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	// 	Cast: core.CastConfig{

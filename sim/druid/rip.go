@@ -19,7 +19,7 @@ func (druid *Druid) registerRipSpell() {
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: ripRank.Cost(),
+	// 		Cost: int32(ripRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

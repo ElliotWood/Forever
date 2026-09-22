@@ -16,7 +16,7 @@ func (druid *Druid) registerShredSpell() {
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost:   shredRank.Cost(),
+	// 		Cost:   int32(shredRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	// 	Cast: core.CastConfig{

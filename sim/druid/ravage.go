@@ -30,7 +30,7 @@ func (druid *Druid) registerRavageSpell() {
 	// 	MaxRange:         core.MaxMeleeRange,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost:   ravageRank.Cost(),
+	// 		Cost:   int32(ravageRank.Cost()),
 	// 		Refund: 0.8,
 	// 	},
 	//

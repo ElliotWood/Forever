@@ -21,7 +21,7 @@ func (druid *Druid) registerInsectSwarmSpell() {
 	// 	MaxRange:         float64(insectSwarmRank.MaxRange),
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: insectSwarmRank.Cost(),
+	// 		FlatCost: int32(insectSwarmRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

@@ -18,7 +18,7 @@ func (druid *Druid) registerDemoralizingRoarSpell() {
 	// 	Flags:          core.SpellFlagAPL,
 	//
 	// 	RageCost: core.RageCostOptions{
-	// 		Cost: demoralizingRoarRank.Cost(),
+	// 		Cost: int32(demoralizingRoarRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{

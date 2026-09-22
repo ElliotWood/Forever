@@ -23,7 +23,7 @@ func (druid *Druid) registerFerociousBiteSpell() {
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: ferociousBiteRank.Cost(),
+	// 		Cost: int32(ferociousBiteRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
