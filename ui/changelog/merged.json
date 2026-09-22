@@ -1,5 +1,11 @@
 [
 	{
+		"number": 368,
+		"title": "warlock: Improved Bane of Agony scales the whole tick",
+		"mergedAt": "2026-09-22",
+		"url": "https://github.com/ElliotWood/Forever/pull/368"
+	},
+	{
 		"number": 360,
 		"title": "paladin: Holy Shield damage can't crit; the PvP shields' Electrostatic Charge",
 		"mergedAt": "2026-09-22",
