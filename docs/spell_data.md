@@ -1224,6 +1224,11 @@ float64 gives a different answer on those rows.
 read the first of several, and `Effect(aura, misc)` panics when two effects match. Both are the same
 rule: `EffectAt(n)` or `EffectN(n)` is how a caller says which.
 
+**A hand-built `Effect` scales from its own `SpellLevel` and `MaxLevel`.** The generator stamps both onto
+every effect so `Average(level)` needs no lookup; an `Effect` literal in a test or a hand-written config
+that leaves them zero scales `PPL` from level 0 up to the caster's level. Copy them from the spell's row,
+or set `PPL` to 0.
+
 **`MustFind` at package init fails at startup, not at the call site.** That is the point - a
 regeneration that drops or renumbers an id stops the sim with the id in the message - but it means a
 package-level `var` reaching for a spell this build does not carry takes the whole package down,
