@@ -153,7 +153,7 @@ func priestTickOutcome(row shared.SpellData, dot *core.Dot) core.OutcomeApplier 
 func NewPriest(character *core.Character, options *proto.Player) *Priest {
 	classOptions := options.GetDpsPriest().GetOptions().GetClassOptions()
 	selfBuffs := SelfBuffs{
-		UseShadowfiend: true,
+		UseShadowfiend: classOptions.GetUseShadowfiend(),
 		PreShadowform:  classOptions.GetPreShadowform(),
 		Armor:          classOptions.GetArmor(),
 	}

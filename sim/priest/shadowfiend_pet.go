@@ -32,13 +32,18 @@ func (priest *Priest) NewShadowfiend() *Shadowfiend {
 		Priest: priest,
 	}
 
-	manaMetric := priest.NewManaMetrics(core.ActionID{SpellID: 34433}.WithTag(1))
+	// Client 401977: "Caster receives $401988s1% mana when the Shadowfiend attacks"; 401988 is an
+	// energize-percent effect of 5, i.e. 5% of the priest's maximum mana per landed attack
+	// (TBC's 34433 gave 250% of the damage dealt).
+	manaMetric := priest.NewManaMetrics(core.ActionID{SpellID: 401988})
 	shadowfiend.ManaRestoreAura = shadowfiend.MakeProcTriggerAura(core.ProcTrigger{
 		Name:     "Shadowfiend Mana Restore",
 		Duration: core.NeverExpires,
 		Callback: core.CallbackOnSpellHitDealt,
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			priest.AddMana(sim, result.Damage*2.5, manaMetric)
+			if result.Landed() {
+				priest.AddMana(sim, priest.MaxMana()*0.05, manaMetric)
+			}
 		},
 	})
 

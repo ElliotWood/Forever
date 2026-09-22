@@ -42,6 +42,8 @@ func priestSuite(apl string, talents string, preShadowform bool) core.CharacterS
 					Options: &proto.DpsPriest_Options{
 						ClassOptions: &proto.PriestOptions{
 							Armor: proto.PriestOptions_InnerFire,
+							// Off by default in the UI; on here so the pet stays covered.
+							UseShadowfiend: true,
 							// Begin the sim already in Shadowform so the opener does not spend a
 							// GCD casting it.
 							PreShadowform: preShadowform,
