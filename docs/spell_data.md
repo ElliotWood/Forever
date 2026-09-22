@@ -676,12 +676,14 @@ hurricaneTick := hurricaneTickSpell.DamageEffect()
 **`EffectAt(n)` counts from 1 by position, like `EffectN` - not the client's `EffectIndex`.**
 `EffectAt(n+1)` lines up with client index `n` only where the row's indices run contiguously from 0;
 where they do not, `Effect(aura, misc)` names the effect instead. Rogue's `PuncturingWounds` talent
-needs it: effect 1 is the proc trigger, at client index 0, and the crit bonus it reads is the second
-of two crit modifiers that share an aura and misc, at client index 2 - position 3:
+needs it: its two crit modifiers share an aura and misc, so `Effect(aura, misc)` cannot tell them
+apart, and sit at positions 1 and 3 around the proc trigger at position 2 (client index 1);
+`EffectAt(3)` is the one Mutilate reads:
 
 ```go
-// Effect 1 is the proc trigger; the Mutilate crit bonus is the second of the two
-// crit modifiers, which share an aura and misc and so have to be indexed.
+// The proc trigger sits between the two crit modifiers, at effect position 2; the Mutilate
+// crit bonus is the second of the two, at position 3, and they share an aura and misc so have
+// to be indexed rather than named.
 FloatValue: spellData.PuncturingWounds.EffectAt(3).ValueAt(rogue.Talents.PuncturingWounds),
 ```
 
