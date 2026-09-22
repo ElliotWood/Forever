@@ -241,7 +241,7 @@ type WowheadItem struct {
 	RequiresLevel int32 `json:"requiredLevel"`
 	// uint32, not uint16: Classic's masks fit in sixteen bits but Forever's do not - it has races
 	// Classic never had, and 2097229 on item 4982 is what made the Forever dump fail to parse.
-	RaceMask  uint32 `json:"raceMask"`
+	RaceMask  uint64 `json:"raceMask"`
 	ClassMask uint16 `json:"classMask"`
 
 	Stats               WowheadStats `json:"stats"`
