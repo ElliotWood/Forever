@@ -162,8 +162,8 @@ const Row = ({ id, s, hidden }: { id: number; s: SpellSource; hidden: boolean })
 				{s.tooltip && <p className="m-0 whitespace-pre-line text-gray-300">{s.tooltip}</p>}
 				{s.measured && (
 					<p className="m-0 text-evidence-measured/80">
-						Client says <strong>{s.measured.client}</strong>; the game&apos;s own meter recorded a largest hit of <strong>{s.measured.biggest}</strong>,
-						via {s.measured.how}.
+						Client says <strong>{s.measured.client}</strong>; the game&apos;s own meter recorded a largest hit of{' '}
+						<strong>{s.measured.biggest}</strong>, via {s.measured.how}.
 					</p>
 				)}
 				{(s.assumptions ?? []).map(a => (

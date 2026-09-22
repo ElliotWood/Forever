@@ -48,7 +48,13 @@ async function runSpecStatWeights(def: SpecDefinition<any>, onProgress: (percent
 	if (def.enableHealing) player.enableHealing();
 	sim.raid.setPlayer(0, player);
 	// ponytail: a stand-in host; the reforger and saved stat weight settings do not affect a run.
-	applyIndividualDefaults({ player, sim, individualConfig: def, reforger: null, statWeightActionSettings: { applyDefaults() {} } } as unknown as DefaultsHost<Spec>);
+	applyIndividualDefaults({
+		player,
+		sim,
+		individualConfig: def,
+		reforger: null,
+		statWeightActionSettings: { applyDefaults() {} },
+	} as unknown as DefaultsHost<Spec>);
 	def.derivedSettings?.forEach(derived => derived.apply(player, sim));
 	// applyDefaults resets the iteration count.
 	sim.setIterations(iterations);
@@ -136,8 +142,8 @@ export const StatWeightsPage = () => {
 			<PageSection title="Which stats matter for which spec">
 				<p className="m-0">
 					Each row is one simulated spec, run on the gear, talents, consumables, buffs, debuffs and encounter its own sim starts you on, with its
-					default rotation. Nothing is hand-tuned, and no spec is geared for the stats it is being asked about, so these weights describe that
-					default build and nothing else. Re-run them on your own gear in the spec&apos;s sim before acting on them.
+					default rotation. Nothing is hand-tuned, and no spec is geared for the stats it is being asked about, so these weights describe that default
+					build and nothing else. Re-run them on your own gear in the spec&apos;s sim before acting on them.
 				</p>
 				<p className="m-0">
 					{metric === WeightsMetric.Dtps
@@ -145,18 +151,18 @@ export const StatWeightsPage = () => {
 						: `Values are EP normalised against each spec's own reference stat, named in the second column (${referenceNames.join(', ')}): 1.00 is one point of that stat, 2.00 is worth twice as much per point. Reading down a column compares how much each spec wants a stat relative to its own reference, not how much raw output it gets, because every row is divided by a different number.`}
 				</p>
 				<p className="m-0">
-					Hit, crit, haste and the other secondary stats are ratings, as they are on gear, so a weight is per point of rating, not per percent.
-					A weight is only as good as the sample behind it: at low iteration counts a small weight is mostly noise, so hover a value for its 90%
+					Hit, crit, haste and the other secondary stats are ratings, as they are on gear, so a weight is per point of rating, not per percent. A
+					weight is only as good as the sample behind it: at low iteration counts a small weight is mostly noise, so hover a value for its 90%
 					confidence interval before reading anything into a difference of a few hundredths. Values smaller than their own confidence interval are
 					greyed out, and each row&apos;s strongest stat is highlighted.
 				</p>
 				<p className="m-0">
-					Forever pays hit and crit rating from gear into both the melee and the spell pool. A weight is measured by adding the one stat on its
-					own, outside that rule, so the melee and spell columns show each rating separately and need not match.
+					Forever pays hit and crit rating from gear into both the melee and the spell pool. A weight is measured by adding the one stat on its own,
+					outside that rule, so the melee and spell columns show each rating separately and need not match.
 				</p>
 				<p className="m-0">
-					Nothing runs until asked. A stat weights run is two sims per stat plus a baseline, so filling all {rowDefs.length} rows is several
-					hundred sims.{' '}
+					Nothing runs until asked. A stat weights run is two sims per stat plus a baseline, so filling all {rowDefs.length} rows is several hundred
+					sims.{' '}
 					{measured.length
 						? `At ${sim.getIterations()} iterations this browser is averaging ${perSpec.toFixed(1)}s per spec, putting all ${rowDefs.length} at roughly ${Math.max(1, Math.round((perSpec * rowDefs.length) / 60))} minutes. ${completed.length} of ${rowDefs.length} filled in so far.`
 						: `Run a single spec first to see what this browser does before committing to all ${rowDefs.length}.`}
@@ -202,7 +208,10 @@ export const StatWeightsPage = () => {
 						data-testid="stat-weights-run-all"
 						disabled={cancelling}
 						onClick={() => (running ? void cancel() : void runSpecs(rowDefs.filter(def => !rows[def.spec]?.result)))}
-						{...tooltipAnchorProps(TOOLTIP_ID, 'Runs every spec that has no result yet, one after another. Specs already filled in are left alone.')}>
+						{...tooltipAnchorProps(
+							TOOLTIP_ID,
+							'Runs every spec that has no result yet, one after another. Specs already filled in are left alone.',
+						)}>
 						{cancelling ? 'Cancelling' : running ? 'Cancel' : 'Run all specs'}
 					</Button>
 				</div>
@@ -227,10 +236,18 @@ export const StatWeightsPage = () => {
 								return (
 									<tr key={def.spec} className="odd:bg-table-odd even:bg-table-even" data-testid="stat-weights-row" data-state={row?.state}>
 										<th className="sticky left-0 z-1 border-r border-surface-border bg-inherit p-1 text-left font-normal whitespace-normal sm:p-2 sm:whitespace-nowrap">
-											<Button size="sm" className="mb-1 block sm:mr-2 sm:mb-0 sm:inline-block" disabled={running} onClick={() => void runSpecs([def])}>
+											<Button
+												size="sm"
+												className="mb-1 block sm:mr-2 sm:mb-0 sm:inline-block"
+												disabled={running}
+												onClick={() => void runSpecs([def])}>
 												Run
 											</Button>
-											<a className={`font-bold ${textClassNameForSpec(playerSpecOf(def))}`} href={playerSpecOf(def).simLink} target="_blank" rel="noreferrer">
+											<a
+												className={`font-bold ${textClassNameForSpec(playerSpecOf(def))}`}
+												href={playerSpecOf(def).simLink}
+												target="_blank"
+												rel="noreferrer">
 												{specName(def)}
 											</a>
 											<span
@@ -247,7 +264,10 @@ export const StatWeightsPage = () => {
 													<td
 														key={stat}
 														className="p-2 text-right opacity-40"
-														{...tooltipAnchorProps(TOOLTIP_ID, `The ${specName(def)} sim does not ask for this stat to be weighed.`)}>
+														{...tooltipAnchorProps(
+															TOOLTIP_ID,
+															`The ${specName(def)} sim does not ask for this stat to be weighed.`,
+														)}>
 														—
 													</td>
 												);

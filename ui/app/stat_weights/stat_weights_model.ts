@@ -73,12 +73,7 @@ export function metricValues(result: StatWeightsResult, metric: WeightsMetric): 
 
 export type Cell = { kind: 'not-weighed' } | { kind: 'empty' } | { kind: 'value'; ep: number; conf90: number; best: boolean; noise: boolean };
 
-export function rowCells(
-	stats: ReadonlyArray<Stat>,
-	epStats: ReadonlyArray<Stat>,
-	values: StatWeightValues | undefined,
-	iterations: number,
-): Array<Cell> {
+export function rowCells(stats: ReadonlyArray<Stat>, epStats: ReadonlyArray<Stat>, values: StatWeightValues | undefined, iterations: number): Array<Cell> {
 	const epOf = (stat: Stat) => (values?.epValues ? UnitStat.fromStat(stat).getProtoValue(values.epValues) : 0);
 	const best = Math.max(0, ...stats.filter(stat => epStats.includes(stat)).map(epOf));
 	return stats.map(stat => {

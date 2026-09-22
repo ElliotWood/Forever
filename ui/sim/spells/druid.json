@@ -232,9 +232,7 @@
 	},
 	"33878": {
 		"ability": "Mangle (Bear)",
-		"assumptions": [
-			"The 1.5x threat is Season of Discovery's; the client tables do not carry threat."
-		],
+		"assumptions": ["The 1.5x threat is Season of Discovery's; the client tables do not carry threat."],
 		"file": "sim/druid/mangle.go",
 		"note": "Beta client 1.60.1.69893: 20 Rage, 6 sec cooldown, 100% weapon damage plus 26 / 38 / 59 / 77 at ranks learned at 25 / 36 / 48 / 60 (407995, 1238069, 1238070, 1238073). The sim carries the Burning Crusade 33878, which the Classic database does not hold. While Berserk is up the cooldown is lifted and the strike hits 3 targets.",
 		"source": "assumed",
@@ -250,9 +248,7 @@
 	},
 	"414644": {
 		"ability": "Lacerate",
-		"assumptions": [
-			"The 3.33x threat is Season of Discovery's; the client tables do not carry threat."
-		],
+		"assumptions": ["The 3.33x threat is Season of Discovery's; the client tables do not carry threat."],
 		"file": "sim/druid/lacerate.go",
 		"note": "Beta client 1.60.1.69893: Lacerate is trained at 42, 50 and 58 (414644, 1235826, 1235827), 15 Rage, 10% weapon damage per stack, 5 stacks. The sim keeps rank 1's id at every level; the bleed it applies is 414647.",
 		"source": "assumed",
@@ -521,9 +517,7 @@
 	},
 	"9634": {
 		"ability": "Dire Bear Form",
-		"assumptions": [
-			"The 1.3x threat is Classic's; the client tables do not carry threat."
-		],
+		"assumptions": ["The 1.3x threat is Classic's; the client tables do not carry threat."],
 		"file": "sim/druid/forms.go",
 		"note": "Beta client 1.60.1.69893: the passive (9635) gives 360% item armor, 600 health plus 32 a level and 120 attack power plus 3 a level, 1240 and 180 at 60, as the sim has; Furor's Bear half is 20% a point at 10 Rage. Forever moves Feral Instinct onto Swipe, so the form's threat is the flat 1.3x it carries here.",
 		"source": "assumed",

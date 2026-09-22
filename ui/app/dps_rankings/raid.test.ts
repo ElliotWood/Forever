@@ -57,8 +57,19 @@ describe('communityBuilds', () => {
 
 	it("wears the spec's own Launch preset, else its default gear", () => {
 		const gear = (presets: Array<[string, number]>) => gearFor({ key: 'warrior/dps', def: def(Spec.SpecDpsWarrior, [], '', presets) }).items;
-		expect(gear([['P1 BiS', 1], ['Launch (Arms)', 2], ['Launch', 3]])).toEqual([{ id: 3 }]);
-		expect(gear([['P1 BiS', 1], ['Backstab Launch', 2]])).toEqual([{ id: 2 }]);
+		expect(
+			gear([
+				['P1 BiS', 1],
+				['Launch (Arms)', 2],
+				['Launch', 3],
+			]),
+		).toEqual([{ id: 3 }]);
+		expect(
+			gear([
+				['P1 BiS', 1],
+				['Backstab Launch', 2],
+			]),
+		).toEqual([{ id: 2 }]);
 		expect(gear([['P1 BiS', 1]])).toEqual([]);
 	});
 });

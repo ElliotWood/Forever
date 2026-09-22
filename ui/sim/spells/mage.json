@@ -545,9 +545,7 @@
 	},
 	"30455": {
 		"ability": "Ice Lance",
-		"assumptions": [
-			"Spell power coefficient .143. The beta client carries no coefficient on the damage effect at all, so it cannot confirm one."
-		],
+		"assumptions": ["Spell power coefficient .143. The beta client carries no coefficient on the damage effect at all, so it cannot confirm one."],
 		"file": "sim/mage/ice_lance.go",
 		"foreverId": 1240047,
 		"note": "Ice Lance is a later expansion spell, so the Classic database has no entry for 30455. Beta client 1.60.1.69893 gives it six ranks; the sim casts rank 6 (1240047), 133-157 plus its growth to level 60 = 136-161, 160 mana, 300% against frozen targets.",

@@ -15,9 +15,7 @@
 		"ability": "Hateful Strike (Patchwerk)",
 		"file": "sim/encounters/naxxramas/patchwerk10_ai.go",
 		"source": "assumed",
-		"assumptions": [
-			"Damage of 27750 to 32250 carried over from the upstream Classic sim; the id is not in either client."
-		],
+		"assumptions": ["Damage of 27750 to 32250 carried over from the upstream Classic sim; the id is not in either client."],
 		"note": "Spell 59192 is in neither the Forever beta client nor Classic Era - it is a Wrath era id the upstream sim used for Naxxramas. Nothing here can be checked against client data.",
 		"tooltip": "A heavy melee strike on the highest health target in melee range, every 2 sec."
 	}

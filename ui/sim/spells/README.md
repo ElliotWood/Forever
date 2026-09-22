@@ -32,13 +32,13 @@ keyed by the spell id the sim registers.
 - `ability` — what Forever calls it.
 - `file` — the Go file that registers it.
 - `source` — one of:
-  - `classic`, Forever did not change the ability, so Wowhead's tooltip describes it and the
-    site keeps showing it.
-  - `forever`, Forever changed it and a published Forever source gave the numbers. `tooltip`
-    is what should describe it.
-  - `assumed`, Forever changed it or it is new, and at least one number is a guess. As above,
-    and the number is unconfirmed.
-  - `unreviewed`, not classified yet.
+    - `classic`, Forever did not change the ability, so Wowhead's tooltip describes it and the
+      site keeps showing it.
+    - `forever`, Forever changed it and a published Forever source gave the numbers. `tooltip`
+      is what should describe it.
+    - `assumed`, Forever changed it or it is new, and at least one number is a guess. As above,
+      and the number is unconfirmed.
+    - `unreviewed`, not classified yet.
 
 ## What the site reads, and what it does not
 
@@ -50,6 +50,7 @@ and Spearing Strike among them. Those arrived in the damage table as a blank row
 Wowhead's Classic entry, with Classic's numbers in it, which is the thing these files were
 written to stop. The data is here and the test keeps it true to the sim; what is missing is
 the hook into the tooltip markup.
+
 - `foreverId` — Forever's own spell id, when it is known and differs from the one the sim
   carries.
 - `tooltip` — required for `forever` and `assumed`, and rejected for `classic`. Written from

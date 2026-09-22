@@ -245,9 +245,7 @@
 		"ability": "Fang of the Crystal Spider",
 		"file": "sim/common/item_effects.go",
 		"source": "assumed",
-		"assumptions": [
-			"The slow is applied as 1.10 on attack speed, taken from the Classic tooltip reading \"increases the time between attacks by 10%\"."
-		],
+		"assumptions": ["The slow is applied as 1.10 on attack speed, taken from the Classic tooltip reading \"increases the time between attacks by 10%\"."],
 		"note": "Beta client 1.60.1 (spell 17331): the three slows all read -9 where Era reads -10, -11 and -11. Era stored -11 behind a tooltip saying 10%, so the stored number and the wording do not map onto each other cleanly and the Forever figure cannot be converted without knowing which of the two the server uses. Left as the Classic behaviour rather than guessed.",
 		"tooltip": "Slows the target’s casting speed and increases the time between its melee and ranged attacks for 10 sec."
 	},

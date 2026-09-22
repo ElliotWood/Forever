@@ -11,7 +11,10 @@ describe('displayedStats', () => {
 	});
 
 	it('shows the union of weighed stats in enum order when showing all', () => {
-		const rows = [[Stat.StatSpirit, Stat.StatAgility], [Stat.StatAgility, Stat.StatStrength]];
+		const rows = [
+			[Stat.StatSpirit, Stat.StatAgility],
+			[Stat.StatAgility, Stat.StatStrength],
+		];
 		expect(displayedStats(WeightsMetric.Dps, true, rows)).toEqual([Stat.StatStrength, Stat.StatAgility, Stat.StatSpirit]);
 	});
 });

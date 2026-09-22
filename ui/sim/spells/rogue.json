@@ -326,9 +326,7 @@
 	},
 	"457437": {
 		"ability": "Vanish (stealth aura)",
-		"assumptions": [
-			"The aura's 10 sec duration is Classic Vanish's improved stealth window; the sim gives the aura no effect of its own"
-		],
+		"assumptions": ["The aura's 10 sec duration is Classic Vanish's improved stealth window; the sim gives the aura no effect of its own"],
 		"file": "sim/rogue/vanish.go",
 		"note": "Only the Vanish spell's id 1856 is Classic's; 457437 is a stand-in for the buff, and its Classic database entry ('reduces all Magic damage taken by 50% for 10 sec') describes an effect the sim never applies, so the UI must not show it.",
 		"source": "assumed",

@@ -311,8 +311,8 @@ const SimSource = () => {
 			{data.host ? `, on ${data.host}` : ''}.{' '}
 			{data.sim === 'master' ? (
 				<strong className="text-brand" data-testid="arena-sim">
-					These are the old master sim&apos;s numbers (the Classic Era engine this site used to run), not the forever-next engine the rest of
-					this site now runs on. They move to forever-next&apos;s once the arena is rerun on it.
+					These are the old master sim&apos;s numbers (the Classic Era engine this site used to run), not the forever-next engine the rest of this
+					site now runs on. They move to forever-next&apos;s once the arena is rerun on it.
 				</strong>
 			) : (
 				<span data-testid="arena-sim">
@@ -332,14 +332,14 @@ export const ArenaPage = () => (
 		<div className="grid grid-cols-[repeat(auto-fit,minmax(min(26rem,100%),1fr))] gap-4">
 			<PageSection title="How a number gets onto this page">
 				<p className="m-0">
-					Every build here was simulated: a character is assembled, given a talent build, a gear set and a rotation, and run against the same
-					target for {formatToNumber(data.iterations)} iterations. What comes out is the average damage per second of those runs. Nothing is
-					estimated, interpolated or predicted - each row is the outcome of that build being played out {formatToNumber(data.iterations)} times.
+					Every build here was simulated: a character is assembled, given a talent build, a gear set and a rotation, and run against the same target
+					for {formatToNumber(data.iterations)} iterations. What comes out is the average damage per second of those runs. Nothing is estimated,
+					interpolated or predicted - each row is the outcome of that build being played out {formatToNumber(data.iterations)} times.
 				</p>
 				<p className="m-0">
-					The gear sets and rotations are files in the repository, written by people. The talent builds are the community ones from each
-					spec&apos;s own page, plus whatever a search found on top of them. All of it runs headless when the sim changes, and the site ships the
-					results, which is why the table is instant and why nothing is simulated in your browser.
+					The gear sets and rotations are files in the repository, written by people. The talent builds are the community ones from each spec&apos;s
+					own page, plus whatever a search found on top of them. All of it runs headless when the sim changes, and the site ships the results, which
+					is why the table is instant and why nothing is simulated in your browser.
 				</p>
 			</PageSection>
 			<PageSection title="Where AI comes into it, and where it does not">
@@ -352,14 +352,14 @@ export const ArenaPage = () => (
 					produces, adjusts or estimates a DPS figure, and the talent search is a hill climb that measures builds rather than reasons about them.
 				</p>
 				<p className="m-0">
-					<strong>Into the code, heavily.</strong> This sim&apos;s Forever changes, the talent search, this page and most of what surrounds them
-					were written by an AI assistant working to one person&apos;s direction. That is worth saying plainly, because it is exactly the
-					situation where confident-sounding output is cheap and being wrong is easy.
+					<strong>Into the code, heavily.</strong> This sim&apos;s Forever changes, the talent search, this page and most of what surrounds them were
+					written by an AI assistant working to one person&apos;s direction. That is worth saying plainly, because it is exactly the situation where
+					confident-sounding output is cheap and being wrong is easy.
 				</p>
 				<p className="m-0">
 					So the checking is the point rather than an afterthought. <a href={`${SITE_BASE}evidence/`}>Every ability the sim registers</a> records
-					where its numbers came from, and a test refuses to let one be added without that. The <strong>rests on a guess</strong> column carries
-					it through to here: it is how much of a build&apos;s damage depends on something nobody has confirmed.
+					where its numbers came from, and a test refuses to let one be added without that. The <strong>rests on a guess</strong> column carries it
+					through to here: it is how much of a build&apos;s damage depends on something nobody has confirmed.
 				</p>
 			</PageSection>
 		</div>
@@ -371,64 +371,64 @@ export const ArenaPage = () => (
 				<SimSource />
 			</li>
 			<li>
-				<strong>Every build meets the same conditions.</strong> One target, one encounter length, one buff set, one consumable list for its role.
-				That is what makes two numbers comparable - the live <a href={`${SITE_BASE}dps_rankings/`}>rankings page</a> achieves the same thing by
-				putting everyone in one raid, which stops being possible at this count.
+				<strong>Every build meets the same conditions.</strong> One target, one encounter length, one buff set, one consumable list for its role. That
+				is what makes two numbers comparable - the live <a href={`${SITE_BASE}dps_rankings/`}>rankings page</a> achieves the same thing by putting
+				everyone in one raid, which stops being possible at this count.
 			</li>
 			<li>
-				<strong>The consumables are the arena&apos;s, and they did not used to be.</strong> Every spec brought its own list from its own test file,
-				and the gaps were not small ones: both paladins and the feral tank had their weapon imbue commented out entirely, while warrior, hunter,
-				rogue and tank warrior carried Windfury. Stripping the warrior&apos;s imbues costs it 14.2% - so this table was reporting a 19.6% gap
-				between warrior and retribution while handing one of them a weapon buff and the other a bare weapon. It is 2.3% now, and the difference
-				was never about the specs. Each row says which list it drank.
+				<strong>The consumables are the arena&apos;s, and they did not used to be.</strong> Every spec brought its own list from its own test file, and
+				the gaps were not small ones: both paladins and the feral tank had their weapon imbue commented out entirely, while warrior, hunter, rogue and
+				tank warrior carried Windfury. Stripping the warrior&apos;s imbues costs it 14.2% - so this table was reporting a 19.6% gap between warrior and
+				retribution while handing one of them a weapon buff and the other a bare weapon. It is 2.3% now, and the difference was never about the specs.
+				Each row says which list it drank.
 			</li>
 			<li>
 				<strong>Three lists, not one.</strong> Elemental Sharpening Stone is +2% melee crit and -2% <em>ranged</em> crit, so a single list for all
-				fifteen would equalise the shopping and quietly tax the only spec that shoots. Within a role the list is identical - the same shopping
-				list, not the same benefit, which is why Mighty Rage Potion stays in the melee list even though only warriors can spend it. What a class
-				grants itself is not a consumable and is left alone: an enhancement shaman keeps Windfury Weapon and a rogue keeps its poisons.
-				Equalising those took 23.6% off the shaman, which is not a shaman measured fairly, it is a shaman disarmed.
+				fifteen would equalise the shopping and quietly tax the only spec that shoots. Within a role the list is identical - the same shopping list, not
+				the same benefit, which is why Mighty Rage Potion stays in the melee list even though only warriors can spend it. What a class grants itself is
+				not a consumable and is left alone: an enhancement shaman keeps Windfury Weapon and a rogue keeps its poisons. Equalising those took 23.6% off
+				the shaman, which is not a shaman measured fairly, it is a shaman disarmed.
 			</li>
 			<li>
-				<strong>Item level is the filter, not the file name.</strong> This table used to compare every spec on its &quot;launch&quot; gear set, on
-				the grounds that launch is the one tier they all have. Those sets run from item level 63.1 to 70.0, which is most of a tier of difference
-				sitting inside a table claiming to compare specs. So gear is a number on every row and a bracket above them, and the line under the
-				filter says how far apart the rows you are looking at actually are. A <code>?</code> is a gear set the item database could not price.
+				<strong>Item level is the filter, not the file name.</strong> This table used to compare every spec on its &quot;launch&quot; gear set, on the
+				grounds that launch is the one tier they all have. Those sets run from item level 63.1 to 70.0, which is most of a tier of difference sitting
+				inside a table claiming to compare specs. So gear is a number on every row and a bracket above them, and the line under the filter says how far
+				apart the rows you are looking at actually are. A <code>?</code> is a gear set the item database could not price.
 			</li>
 			<li>
-				<strong>Rests on a guess</strong> is what the build&apos;s damage is made of, not a verdict on it. Each ability is weighted by its share of
-				that build&apos;s damage and looked up in the <a href={`${SITE_BASE}evidence/`}>evidence manifest</a>. A build ten DPS ahead means
-				something different if a quarter of it is unconfirmed. Hover the bar for the breakdown.
+				<strong>Rests on a guess</strong> is what the build&apos;s damage is made of, not a verdict on it. Each ability is weighted by its share of that
+				build&apos;s damage and looked up in the <a href={`${SITE_BASE}evidence/`}>evidence manifest</a>. A build ten DPS ahead means something
+				different if a quarter of it is unconfirmed. Hover the bar for the breakdown.
 			</li>
 			<li>
-				<strong>Gear and rotations come from what is already here</strong> - the sets and priority lists on each spec&apos;s page. Nothing invents
-				a better rotation than the ones people have written down, so a spec with one rotation on file gets one rotation ranked. That is a gap in
-				the data, not a finding about the spec.
+				<strong>Gear and rotations come from what is already here</strong> - the sets and priority lists on each spec&apos;s page. Nothing invents a
+				better rotation than the ones people have written down, so a spec with one rotation on file gets one rotation ranked. That is a gap in the data,
+				not a finding about the spec.
 			</li>
 			<li>
-				<strong>Talents are searched, because they cannot be enumerated.</strong> A warrior has <strong>89,776,730,783,606,094</strong> builds it
-				could actually spend - counted from the trees, enforcing rank caps, row gates and the prerequisite arrows. Count only the all-or-nothing
-				ones, every talent maxed or untouched, and a warrior still has 57,341,667 and a mage 1,261,940,421 - eighteen months and forty years at a
-				second a build. So each spec&apos;s best known build is improved one point at a time instead: price every point that could come out,
-				price every point that could go in, make the best trade, repeat until no single move helps. Rows marked{' '}
-				<span className="rounded-full border border-brand px-1.5 text-xs text-brand">found by search</span> came out of that, and hovering one
-				shows its talent string.
+				<strong>Talents are searched, because they cannot be enumerated.</strong> A warrior has <strong>89,776,730,783,606,094</strong> builds it could
+				actually spend - counted from the trees, enforcing rank caps, row gates and the prerequisite arrows. Count only the all-or-nothing ones, every
+				talent maxed or untouched, and a warrior still has 57,341,667 and a mage 1,261,940,421 - eighteen months and forty years at a second a build. So
+				each spec&apos;s best known build is improved one point at a time instead: price every point that could come out, price every point that could
+				go in, make the best trade, repeat until no single move helps. Rows marked{' '}
+				<span className="rounded-full border border-brand px-1.5 text-xs text-brand">found by search</span> came out of that, and hovering one shows its
+				talent string.
 			</li>
 			<li>
-				<strong>What that does and does not promise.</strong> It climbs from every distinct build the spec has on file rather than only its best
-				one, because a climb goes to the nearest peak. Several starts agreeing is the cheapest evidence available that the peak is not merely
-				nearby - it is still not proof that nothing higher exists. It also only knows what this sim models: a talent flagged as unimplemented is
-				worth zero here, so the search will happily empty it, and that is a fact about the sim rather than advice. Every build it reaches is
-				checked against rank caps, row gates and prerequisites first.
+				<strong>What that does and does not promise.</strong> It climbs from every distinct build the spec has on file rather than only its best one,
+				because a climb goes to the nearest peak. Several starts agreeing is the cheapest evidence available that the peak is not merely nearby - it is
+				still not proof that nothing higher exists. It also only knows what this sim models: a talent flagged as unimplemented is worth zero here, so
+				the search will happily empty it, and that is a fact about the sim rather than advice. Every build it reaches is checked against rank caps, row
+				gates and prerequisites first.
 			</li>
 			<li>
-				<strong>A build that does not spend 51 points says so.</strong> The mage Frost community build spends 49. It is left as written rather
-				than quietly corrected - it is somebody else&apos;s build - but the searched row beside it shows what those two points are worth.
+				<strong>A build that does not spend 51 points says so.</strong> The mage Frost community build spends 49. It is left as written rather than
+				quietly corrected - it is somebody else&apos;s build - but the searched row beside it shows what those two points are worth.
 			</li>
 			<li>
-				Tank specs are measured on damage alone and healing specs are absent, because damage is the only axis this table has. A protection
-				paladin at the bottom is not a bad tank - and a searched tank build is a tank build with the mitigation optimised out of it, so read those
-				rows as what the spec can do to a target dummy and nothing else.
+				Tank specs are measured on damage alone and healing specs are absent, because damage is the only axis this table has. A protection paladin at
+				the bottom is not a bad tank - and a searched tank build is a tank build with the mitigation optimised out of it, so read those rows as what the
+				spec can do to a target dummy and nothing else.
 			</li>
 		</ul>
 	</ProductPage>

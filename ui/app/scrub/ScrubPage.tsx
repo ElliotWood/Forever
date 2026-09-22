@@ -41,7 +41,8 @@ const Message = ({ warn, children }: { warn?: boolean; children: ReactNode }) =>
 const Sent = ({ result }: { result: UploadResult }) =>
 	result.ok ? (
 		<p className="m-0 mt-2 flex items-center gap-2 text-white">
-			<Icon name="check" className="text-brand" /> Sent, thank you. Reference <code className="wrap-anywhere">{result.receipt.split('/').pop()!.slice(0, 8)}</code>.
+			<Icon name="check" className="text-brand" /> Sent, thank you. Reference{' '}
+			<code className="wrap-anywhere">{result.receipt.split('/').pop()!.slice(0, 8)}</code>.
 		</p>
 	) : (
 		<Message warn>{result.error}</Message>
@@ -121,7 +122,11 @@ const MeterReport = ({
 			<p className={NOTE}>The {shown} records whose numbers read cleanly are below, exactly as they would arrive.</p>
 			<ul className="m-0 mb-4 list-none p-0">
 				{[...byActor.entries()].map(([actor, row]) => (
-					<SummaryRow key={actor} label={actor} cells={[row.className, `${row.damage.toLocaleString()} damage`, `${row.hits.toLocaleString()} hits`]} />
+					<SummaryRow
+						key={actor}
+						label={actor}
+						cells={[row.className, `${row.damage.toLocaleString()} damage`, `${row.hits.toLocaleString()} hits`]}
+					/>
 				))}
 			</ul>
 			<ul className="m-0 mb-4 list-none p-0">
@@ -139,7 +144,19 @@ const MeterReport = ({
 	);
 };
 
-const DropZone = ({ id, title, hint, accept, onFile }: { id: string; title: string; hint: string; accept?: string; onFile: (file: File | undefined) => void }) => {
+const DropZone = ({
+	id,
+	title,
+	hint,
+	accept,
+	onFile,
+}: {
+	id: string;
+	title: string;
+	hint: string;
+	accept?: string;
+	onFile: (file: File | undefined) => void;
+}) => {
 	const [over, setOver] = useState(false);
 	return (
 		<label
@@ -268,8 +285,8 @@ export const ScrubPage = () => {
 						</p>
 						<code className={PATH}>World of Warcraft\_classic_beta_\Cache\ADB\enUS\</code>
 						<p className={NOTE}>
-							Carries no character name, account, realm or Battle.net tag &mdash; it is NPC dialogue, item names and tuning rows &mdash; so it goes
-							straight up.
+							Carries no character name, account, realm or Battle.net tag &mdash; it is NPC dialogue, item names and tuning rows &mdash; so it
+							goes straight up.
 						</p>
 						<DropZone id="hotfix-drop" title="Choose DBCache.bin" hint="or drag it here" onFile={file => void sendHotfix(file)} />
 						{hotfixResult}
@@ -281,9 +298,9 @@ export const ScrubPage = () => {
 						</FileTitle>
 						<FileSub>What the server actually paid out</FileSub>
 						<p className="m-0">
-							Forever blocks addons from reading damage, so the client&apos;s own meter is the only measurement there will be. It is the only thing
-							that can show a number here is wrong rather than merely unverified. Twelve abilities have been confirmed this way so far, out of 996
-							&mdash; they are on the <a href={`${SITE_BASE}evidence/`}>evidence page</a>.
+							Forever blocks addons from reading damage, so the client&apos;s own meter is the only measurement there will be. It is the only
+							thing that can show a number here is wrong rather than merely unverified. Twelve abilities have been confirmed this way so far, out
+							of 996 &mdash; they are on the <a href={`${SITE_BASE}evidence/`}>evidence page</a>.
 						</p>
 						<code className={PATH}>World of Warcraft\_classic_beta_\Cache\</code>
 						<div className={HINT}>
@@ -292,8 +309,8 @@ export const ScrubPage = () => {
 								<li>Open the damage meter and leave it open. It records nothing while it is closed.</li>
 								<li>Fight things.</li>
 								<li>
-									Log out to character select. The file is only written when the meter flushes, and it flushes on logout &mdash; which is why the
-									folder looks empty while you are still playing.
+									Log out to character select. The file is only written when the meter flushes, and it flushes on logout &mdash; which is why
+									the folder looks empty while you are still playing.
 								</li>
 								<li>
 									<strong>Copy it out before logging back in.</strong> Logging in deletes it and starts again.
@@ -317,13 +334,13 @@ export const ScrubPage = () => {
 							settles it, and a spellbook page settles an ability nobody has found at all.
 						</p>
 						<div className={HINT}>
-							<strong>Most wanted right now:</strong> hunter abilities, anything a Sky Elf has that nobody else does, and any tooltip that disagrees
-							with what this sim shows. The <a href={`${SITE_BASE}evidence/`}>evidence page</a> keeps the running list.
+							<strong>Most wanted right now:</strong> hunter abilities, anything a Sky Elf has that nobody else does, and any tooltip that
+							disagrees with what this sim shows. The <a href={`${SITE_BASE}evidence/`}>evidence page</a> keeps the running list.
 						</div>
 						<p className={`${WARN} text-sm`}>
 							<strong>Crop it to the tooltip.</strong> A name in a picture is pixels, and no scrubber can honestly promise to have found it.
-							Everything the file carries around the picture &mdash; EXIF, GPS, camera, editor history &mdash; is dropped in your browser, but what is
-							in frame is up to you.
+							Everything the file carries around the picture &mdash; EXIF, GPS, camera, editor history &mdash; is dropped in your browser, but
+							what is in frame is up to you.
 						</p>
 						<DropZone id="shot-drop" title="Choose a screenshot" hint="or drag it here" accept="image/*" onFile={file => void sendShot(file)} />
 						{shotResult}
@@ -342,7 +359,8 @@ export const ScrubPage = () => {
 						/>
 					</label>
 					<p className={NOTE}>
-						Files land in a private bucket, are read and thrown away, and are never committed to the repository. If you would rather send it yourself,{' '}
+						Files land in a private bucket, are read and thrown away, and are never committed to the repository. If you would rather send it
+						yourself,{' '}
 						<a href={ISSUE_URL} target="_blank" rel="noreferrer">
 							open an issue
 						</a>{' '}
