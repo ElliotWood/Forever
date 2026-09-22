@@ -35,6 +35,17 @@ func (s *Spell) ClassSpellsOnly() bool {
 	return s.HasAttr(dbcenums.ATTR_INDEX_EX_12, dbcenums.ATTR_EX_12_ONLY_PROC_FROM_CLASS_ABILITIES)
 }
 
+// Whether the client bars the spell from critting, which picks the no-crit hit table.
+func (s *Spell) CannotCrit() bool {
+	return s.HasAttr(dbcenums.ATTR_INDEX_EX_2, dbcenums.ATTR_EX_2_CANT_CRIT)
+}
+
+// Whether the spell's hits count as a proc, which is what a listener that cannot proc from procs
+// skips. The client states the negative, so this answers it as the sim's SpellFlagProc reads.
+func (s *Spell) IsAProc() bool {
+	return !s.HasAttr(dbcenums.ATTR_INDEX_EX_3, dbcenums.ATTR_EX_3_NOT_A_PROC)
+}
+
 func (s *Spell) SuppressesWeaponProcs() bool {
 	return s.HasAttr(dbcenums.ATTR_INDEX_EX_4, dbcenums.ATTR_EX_4_SUPPRESS_WEAPON_PROCS)
 }

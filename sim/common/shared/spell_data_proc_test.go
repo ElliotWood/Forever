@@ -282,3 +282,62 @@ func TestSpellDataProcAppliesToACharacter(t *testing.T) {
 		t.Error("the buff was not handed the listener's cooldown, which is what the ICD-aware APL values read")
 	}
 }
+
+// A damage proc has no buff at all: the row it names is a spell that deals damage, and what the
+// client states about that spell is its school, its hit table and the amount it rolls. What it does
+// not state is that the game casts it off a hit, which is the GCD, the cost and the cast time this
+// has to strip.
+func TestSpellDataDamageProcAppliesToACharacter(t *testing.T) {
+	const itemID int32 = 990301
+
+	core.AddToDatabase(&proto.SimDatabase{Items: []*proto.SimItem{{Id: itemID, Name: "Test Spike"}}})
+
+	trigger := &spelldata.Spell{
+		ID: 990310, Name: "Test Spike Trigger", ProcChance: 5,
+		ProcChanceSource: spelldata.ProcChanceColumn,
+		ProcFlags:        [2]uint32{0: dbcenums.PROC_FLAG_TAKE_MELEE_SWING},
+	}
+	damage := &spelldata.Spell{
+		ID: 990311, Name: "Test Spike Bolt", School: 8, DefenseType: 1,
+		GCDMs: 1500, StartRecoveryCategory: 133,
+		Powers:  []spelldata.Power{{Type: 0, Cost: 100}},
+		Effects: []spelldata.Effect{{SpellID: 990311, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 50}},
+	}
+
+	cfg := SpellDataProc{Name: "Test Spike", ItemID: itemID,
+		TriggerSpellID: trigger.ID, BuffSpellID: damage.ID}
+
+	agent := newTestAgent()
+	applySpellDataDamageProc(agent, cfg, cfg.effectSource(), trigger, damage)
+
+	spell := agent.character.GetSpell(core.ActionID{SpellID: damage.ID})
+	if spell == nil {
+		t.Fatal("the spell the proc casts was not registered")
+	}
+	if spell.SpellSchool != core.SpellSchoolNature {
+		t.Errorf("school = %v, want the row's Nature", spell.SpellSchool)
+	}
+	if spell.DefenseType != core.DefenseTypeMagic {
+		t.Errorf("defense type = %v, want the row's magic", spell.DefenseType)
+	}
+	for _, flag := range []core.SpellFlag{core.SpellFlagPassiveSpell, core.SpellFlagNoOnCastComplete,
+		core.SpellFlagNoOnDamageDealt, core.SpellFlagProc} {
+		if !spell.Flags.Matches(flag) {
+			t.Errorf("flags = %b, want %b set", spell.Flags, flag)
+		}
+	}
+	if spell.ProcMask != core.ProcMaskEmpty {
+		t.Errorf("proc mask = %v, want none: a proc's damage is heard through its flags", spell.ProcMask)
+	}
+	if spell.DefaultCast.GCD != 0 || spell.DefaultCast.CastTime != 0 || spell.DefaultCast.Cost != 0 {
+		t.Errorf("cast = %+v, want no global cooldown, no cast time and no cost", spell.DefaultCast)
+	}
+
+	triggerAura := auraByLabel(agent.character, cfg.Name)
+	if triggerAura == nil {
+		t.Fatal("the listener was not registered")
+	}
+	if triggerAura.ActionIDForProc != (core.ActionID{ItemID: itemID}) {
+		t.Errorf("listener action = %v, want the item's", triggerAura.ActionIDForProc)
+	}
+}

@@ -405,8 +405,18 @@ type SpellDataProc struct {
 // Registers the same effect once per item that carries it. Only the highest ID is added to the test
 // suite, the way the stat-bonus constructors do it.
 func NewSpellDataProc(cfg SpellDataProc, variants []ItemVariant) {
+	forEachSpellDataVariant(cfg, variants, registerSpellDataProc)
+}
+
+// An item or enchant proc whose "buff" is a damage spell: the client applies no aura at all, it
+// casts a spell that deals damage. BuffSpellID names that spell.
+func NewSpellDataDamageProc(cfg SpellDataProc, variants []ItemVariant) {
+	forEachSpellDataVariant(cfg, variants, registerSpellDataDamageProc)
+}
+
+func forEachSpellDataVariant(cfg SpellDataProc, variants []ItemVariant, register func(SpellDataProc)) {
 	if len(variants) == 0 {
-		registerSpellDataProc(cfg)
+		register(cfg)
 		return
 	}
 
@@ -419,7 +429,7 @@ func NewSpellDataProc(cfg SpellDataProc, variants []ItemVariant) {
 		cfg.Name = variant.ItemName
 		cfg.ItemID = variant.ItemID
 		core.AddEffectsToTest = cfg.ItemID == maxItemID
-		registerSpellDataProc(cfg)
+		register(cfg)
 	}
 
 	core.AddEffectsToTest = true
@@ -649,6 +659,125 @@ func statesATrigger(s *spelldata.Spell) bool {
 		return s.EffectN(int(s.ProcChanceEffect)).Percent() != 0
 	default:
 		return true
+	}
+}
+
+func registerSpellDataDamageProc(cfg SpellDataProc) {
+	source := cfg.effectSource()
+
+	// Soft fail to allow for overrides for bad effects
+	if source.isAlreadyImplemented() {
+		return
+	}
+
+	trigger := spelldata.MustFind(cfg.TriggerSpellID)
+	damage := spelldata.MustFind(cfg.BuffSpellID)
+
+	// A listener with no callback never fires, and the row says so before any character exists.
+	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
+		return
+	}
+
+	source.registerEffect(func(agent core.Agent) {
+		applySpellDataDamageProc(agent, cfg, source, trigger, damage)
+	})
+}
+
+// The effect on one character: the spell the proc casts, and the listener that casts it.
+func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, damage *spelldata.Spell) {
+	character := agent.GetCharacter()
+	damageSpell := character.RegisterSpell(spellDataProcDamageSpell(character, damage))
+
+	// The handler is attached after the options, since which unit the damage lands on depends on the
+	// callback the trigger ends up with and a weapon proc's shape rewrites it.
+	config := spelldata.ProcTrigger(character, trigger, nil,
+		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil))
+	config.Name = cfg.Name
+	config.ActionID = source.actionID()
+	config.Handler = spellDataDamageHandler(character, damageSpell, config.Callback)
+
+	// The proc's damage lands on the hit that caused it rather than on the next one, which is what
+	// the callback is called from.
+	config.TriggerImmediately = true
+
+	source.registerProc(character, character.MakeProcTriggerAura(config), source.eligibleSlots(character))
+}
+
+// The spell the proc casts, as its row states it: school, defense type, spell power share, travel
+// time and the amount it rolls. What the row cannot state is that it is a proc's spell - out of the
+// rotation, not a cast of its own, and its hits do not feed the damage-dealt listeners, which is
+// what would have a weapon's own proc answer itself.
+func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell) core.SpellConfig {
+	config := spelldata.SpellConfig(&character.Unit, damage, damageShape(damage), spelldata.Proc())
+
+	// The proc's own hits carry no mask: what hears them is the flags below, not a hit kind.
+	config.ProcMask = core.ProcMaskEmpty
+
+	// The game casts a proc's spell off the hit that caused it. It spends neither the player's
+	// global cooldown nor the resource bar the row prices the spell at, both of which belong to
+	// casting it from the bar, and it has no cast time to spend either.
+	config.Cast.DefaultCast.GCD = 0
+	config.Cast.DefaultCast.CastTime = 0
+	config.Cast.DefaultCast.NonEmpty = false
+	config.ManaCost = core.ManaCostOptions{}
+	config.RageCost = core.RageCostOptions{}
+	config.EnergyCost = core.EnergyCostOptions{}
+	config.FocusCost = core.FocusCostOptions{}
+	config.Flags |= core.SpellFlagNoOnDamageDealt
+	if damage.IsAProc() {
+		config.Flags |= core.SpellFlagProc
+	}
+
+	defenseType := damageDefenseType(config.DefenseType, config.SpellSchool, false)
+	config.DefenseType = defenseType
+	outcome := damageOutcome(defenseType, damage.CannotCrit(), OutcomeDefault)
+	effect := damage.DamageEffect()
+
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		spell.CalcAndDealDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+	}
+
+	return config
+}
+
+// Which multipliers and metrics bucket the damage belongs in. The row's defense type decides, since
+// that is what picks its hit table: a physical proc is a melee one whatever cast it in.
+func damageShape(damage *spelldata.Spell) spelldata.SpellOpt {
+	if damageDefenseType(damage.DefenseTypeCore(), damage.SpellSchool(), false) == core.DefenseTypeMelee {
+		return spelldata.Melee(core.ProcMaskEmpty)
+	}
+
+	return spelldata.Magic(core.ProcMaskEmpty)
+}
+
+// What the proc's damage lands on. What the result names depends on the callback, so the callback
+// decides whether it may be read at all.
+func spellDataDamageHandler(character *core.Character, damageSpell *core.Spell, callback core.AuraCallback) core.ProcHandler {
+	return func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+		target := character.CurrentTarget
+
+		switch {
+		case callback.Matches(core.CallbackOnSpellHitTaken):
+			// Here result.Target is the wearer - core dispatches hit-taken through
+			// result.Target.OnSpellHitTaken - so the retaliation goes to the attacker instead of
+			// into the wearer's own health. This is the shield spike shape.
+			if spell != nil && spell.Unit != nil {
+				target = spell.Unit
+			}
+
+		case callback.Matches(core.CallbackOnSpellHitDealt | core.CallbackOnPeriodicDamageDealt):
+			// Land the extra damage on whatever was hit, not on the primary target.
+			if result != nil && result.Target != nil {
+				target = result.Target
+			}
+
+		default:
+			// The heal callbacks, cast complete and apply effects carry either no result or one
+			// whose target is an ally, so nothing there can name what to damage and the current
+			// target stands.
+		}
+
+		damageSpell.Cast(sim, target)
 	}
 }
 
