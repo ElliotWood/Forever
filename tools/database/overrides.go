@@ -307,31 +307,16 @@ var EnchantDenyListSpells = map[int32]struct{}{}
 var EnchantDenyListItems = map[int32]struct{}{}
 var GemDenyList = map[int32]struct{}{}
 
-var EnchantDenyList = map[int32]struct{}{
-	3269: {}, // Truesilver Fishing Line
-	3289: {}, // Skybreaker Whip/Riding Crop
-	3315: {}, // Carrot on a Stick
-	4671: {}, // Kyle's Test Enchantment
-	4687: {}, // Enchant Weapon - Ninja (TEST VERSION)
-	4717: {}, // Enchant Weapon - Pandamonium (DNT)
-	5029: {}, // Custom - Jaina - Crackling Lightning
-	5110: {}, // Lightweave Embroidery - Junk
-}
+var EnchantDenyList = map[int32]struct{}{}
 
 var EnchantAllowList = []int32{
-	368,  // Enchant Cloak - Greater Agility
 	804,  // Enchant Cloak - Lesser Shadow Resistance
-	369,  // Enchant Bracer - Major Intellect
 	684,  // Enchant Gloves - Major Strength
 	963,  // Enchant Weapon - Major Striking
-	1593, // Bracer 24 AP
-	1594, // Gloves 26 AP
 	1900, // Enchant Weapon - Crusader
 	2564, // Weapon 15 Agi
 	2583, // Presence of Might
 	2588, // Presence of Sight
-	2647, // Enchant Bracer - Brawn
-	2659, // Enchant Chest - Exceptional Health
 }
 
 // Note: EffectId is required for all enchants, because they are

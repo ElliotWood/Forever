@@ -35,7 +35,8 @@ CREATE TABLE ItemSparse (ID INTEGER PRIMARY KEY, Display_lang TEXT, OverallQuali
 
 // Scourge shoulder enchant 2717 (grant 29467, a profession ability) and its re-issue 7884 (grant
 // 1219512, on an item without an ItemSparse row) share a name. Enchant 8203 is granted by a bracer
-// and a boots recipe under two names; the bracer spell is taught by two items.
+// and a boots recipe under two names; each is taught by two items, and the boots' lower item has no
+// ItemSparse row.
 const rawEnchantFixture = `
 INSERT INTO SpellItemEnchantment (ID, Name_lang, Flags, RequiredSkillID, RequiredSkillRank, Effect, EffectPointsMin, EffectArg) VALUES
 	(2717, 'Attack Power +26', 0, 0, 0, '[5,0,0]', '[26,0,0]', '[38,0,0]'),
@@ -48,9 +49,9 @@ INSERT INTO SpellName (ID, Name_lang) VALUES
 INSERT INTO SpellEffect (SpellID, Effect, EffectMiscValue_0) VALUES
 	(29467, 53, 2717), (1219512, 53, 7884), (1248001, 53, 8203), (1248002, 53, 8203);
 INSERT INTO SkillLineAbility (Spell, ClassMask, SkillLine) VALUES (29467, 0, 0);
-INSERT INTO ItemEffect (ID, SpellID) VALUES (1, 1219512), (2, 1248001), (3, 1248001), (4, 1248002);
-INSERT INTO ItemXItemEffect (ItemID, ItemEffectID) VALUES (236326, 1), (273601, 2), (249500, 3), (249501, 4);
-INSERT INTO Item (ID, IconFileDataID) VALUES (236326, 10), (273601, 463531), (249500, 134327), (249501, 134327);
+INSERT INTO ItemEffect (ID, SpellID) VALUES (1, 1219512), (2, 1248001), (3, 1248001), (4, 1248002), (5, 1248002);
+INSERT INTO ItemXItemEffect (ItemID, ItemEffectID) VALUES (236326, 1), (273601, 2), (249500, 3), (249501, 4), (249499, 5);
+INSERT INTO Item (ID, IconFileDataID) VALUES (236326, 10), (273601, 463531), (249500, 134327), (249501, 134327), (249499, 134327);
 INSERT INTO ItemSparse (ID, Display_lang, OverallQualityID) VALUES (273601, 'Enchant Bracer - Lesser Spirit', 1), (249500, 'Formula', 2), (249501, 'Formula', 2);
 `
 
@@ -113,5 +114,21 @@ func TestRawEnchantNamesItsLowestItem(t *testing.T) {
 	if bracer.ItemId != 249500 || bracer.FDID != 134327 || bracer.Quality != 2 {
 		t.Errorf("item %d, icon %d, quality %d; want item 249500, icon 134327, quality 2",
 			bracer.ItemId, bracer.FDID, bracer.Quality)
+	}
+}
+
+// A grant is live when a profession teaches it or any item using it has an ItemSparse row.
+func TestRawEnchantIsLiveWhenTaughtOrOnAShippedItem(t *testing.T) {
+	byKey := rawEnchantsByKey(loadRawEnchantFixture(t))
+
+	for key, want := range map[rawEnchantKey]bool{
+		{2717, "Might of the Scourge"}:           true,
+		{7884, "Might of the Scourge"}:           false,
+		{8203, "Enchant Bracer - Lesser Spirit"}: true,
+		{8203, "Enchant Boots - Lesser Spirit"}:  true,
+	} {
+		if got := byKey[key].IsLive; got != want {
+			t.Errorf("enchant %d %q reads live %v, want %v", key.id, key.name, got, want)
+		}
 	}
 }

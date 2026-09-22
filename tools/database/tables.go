@@ -496,6 +496,7 @@ func ScanEnchantsTable(rows *sql.Rows) (dbc.Enchant, error) {
 		&raw.RequiredProfession,
 		&raw.EffectName,
 		&spellItemEnchantmentFlags,
+		&raw.IsLive,
 	)
 	if err != nil {
 		return raw, fmt.Errorf("scanning enchant data for effect ID %d: %w", raw.EffectId, err)
@@ -564,7 +565,15 @@ func LoadAndWriteRawEnchants(dbHelper *DBHelper, inputsDir string) ([]dbc.Enchan
 			COALESCE(isp.OverallQualityID, 1),
 			COALESCE(sla.SkillLine, 0) as RequiredProfession,
 			COALESCE(sie.Name_lang, ""),
-			COALESCE(sie.Flags, 0) AS SpellItemEnchantmentFlags
+			COALESCE(sie.Flags, 0) AS SpellItemEnchantmentFlags,
+			-- A grant is live when a profession teaches it or an item the client ships uses it.
+			EXISTS (SELECT 1 FROM SkillLineAbility WHERE Spell = se.SpellID)
+				OR EXISTS (
+					SELECT 1 FROM ItemEffect lie
+						JOIN ItemXItemEffect lixie ON lixie.ItemEffectID = lie.ID
+						JOIN ItemSparse lisp ON lisp.ID = lixie.ItemID
+					WHERE lie.SpellID = se.SpellID
+				) AS IsLive
 		FROM SpellEffect se
 			JOIN Spell s ON se.SpellID = s.ID
 			JOIN SpellName sn ON se.SpellID = sn.ID

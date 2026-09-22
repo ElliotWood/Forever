@@ -25,6 +25,7 @@ type Enchant struct {
 	Quality            ItemQuality
 	RequiredProfession int
 	EffectName         string
+	IsLive             bool
 }
 
 // Reports whether spellID is cast by this enchant as a combat spell (Effect 1), which the game
