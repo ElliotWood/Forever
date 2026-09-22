@@ -13,7 +13,6 @@ const (
 	E_DUMMY                 SpellDataEffectKind = 3
 	E_APPLY_AURA            SpellDataEffectKind = 6
 	E_POWER_DRAIN           SpellDataEffectKind = 8
-	E_HEALTH_LEECH          SpellDataEffectKind = 9
 	E_HEAL                  SpellDataEffectKind = 10
 	E_ADD_EXTRA_ATTACKS     SpellDataEffectKind = 19
 	E_CREATE_ITEM           SpellDataEffectKind = 24
@@ -51,7 +50,6 @@ const (
 	E_RESURRECT_PET         SpellDataEffectKind = 109
 	E_DESTROY_ALL_TOTEMS    SpellDataEffectKind = 110
 	E_ATTACK_ME             SpellDataEffectKind = 114
-	E_APPLY_AREA_AURA_PET   SpellDataEffectKind = 119
 	E_NORMALIZED_WEAPON_DMG SpellDataEffectKind = 121
 	E_PLAY_SOUND            SpellDataEffectKind = 131
 	E_ENERGIZE_PCT          SpellDataEffectKind = 137
@@ -68,7 +66,6 @@ const (
 	A_PERIODIC_DAMAGE                           SpellDataAura = 3
 	A_DUMMY                                     SpellDataAura = 4
 	A_MOD_CONFUSE                               SpellDataAura = 5
-	A_MOD_CHARM                                 SpellDataAura = 6
 	A_MOD_FEAR                                  SpellDataAura = 7
 	A_PERIODIC_HEAL                             SpellDataAura = 8
 	A_MOD_ATTACKSPEED                           SpellDataAura = 9
@@ -80,8 +77,6 @@ const (
 	A_DAMAGE_SHIELD                             SpellDataAura = 15
 	A_MOD_STEALTH                               SpellDataAura = 16
 	A_MOD_STEALTH_DETECT                        SpellDataAura = 17
-	A_MOD_INVISIBILITY_DETECT                   SpellDataAura = 19
-	A_OBS_MOD_HEALTH                            SpellDataAura = 20
 	A_OBS_MOD_POWER                             SpellDataAura = 21
 	A_MOD_RESISTANCE                            SpellDataAura = 22
 	A_PERIODIC_TRIGGER_SPELL                    SpellDataAura = 23
@@ -119,14 +114,10 @@ const (
 	A_SCHOOL_ABSORB                             SpellDataAura = 69
 	A_MOD_POWER_COST_SCHOOL_PCT                 SpellDataAura = 72
 	A_REFLECT_SPELLS_SCHOOL                     SpellDataAura = 74
-	A_MOD_LANGUAGE                              SpellDataAura = 75
 	A_MECHANIC_IMMUNITY                         SpellDataAura = 77
 	A_MOD_DAMAGE_PERCENT_DONE                   SpellDataAura = 79
-	A_SPLIT_DAMAGE_PCT                          SpellDataAura = 81
 	A_WATER_BREATHING                           SpellDataAura = 82
-	A_CHANNEL_DEATH_ITEM                        SpellDataAura = 86
 	A_MOD_DAMAGE_PERCENT_TAKEN                  SpellDataAura = 87
-	A_MOD_HEALTH_REGEN_PERCENT                  SpellDataAura = 88
 	A_MOD_DETECT_RANGE                          SpellDataAura = 91
 	A_PREVENTS_FLEEING                          SpellDataAura = 92
 	A_MOD_UNATTACKABLE                          SpellDataAura = 93
@@ -142,7 +133,6 @@ const (
 	A_ADD_PCT_MODIFIER                          SpellDataAura = 108
 	A_ADD_TARGET_TRIGGER                        SpellDataAura = 109
 	A_MOD_POWER_REGEN_PERCENT                   SpellDataAura = 110
-	A_OVERRIDE_CLASS_SCRIPTS                    SpellDataAura = 112
 	A_MOD_RANGED_DAMAGE_TAKEN                   SpellDataAura = 113
 	A_MOD_HEALING                               SpellDataAura = 115
 	A_MOD_MECHANIC_RESISTANCE                   SpellDataAura = 117
@@ -161,19 +151,16 @@ const (
 	A_MOD_BASE_RESISTANCE_PCT                   SpellDataAura = 142
 	A_REDUCE_PUSHBACK                           SpellDataAura = 149
 	A_TRACK_STEALTHED                           SpellDataAura = 151
-	A_MOD_HEALTH_REGEN_IN_COMBAT                SpellDataAura = 161
 	A_MOD_DAMAGE_DONE_VERSUS                    SpellDataAura = 168
 	A_MOD_MOUNTED_SPEED_NOT_STACK               SpellDataAura = 172
 	A_MOD_SPELL_DAMAGE_OF_STAT_PERCENT          SpellDataAura = 174
 	A_MOD_SPELL_HEALING_OF_STAT_PERCENT         SpellDataAura = 175
-	A_MOD_MAX_POWER_PCT                         SpellDataAura = 178
 	A_MOD_ATTACKER_MELEE_HIT_CHANCE             SpellDataAura = 184
 	A_MOD_ATTACKER_RANGED_HIT_CHANCE            SpellDataAura = 185
 	A_HASTE_SPELLS                              SpellDataAura = 216
 	A_PERIODIC_DUMMY                            SpellDataAura = 226
 	A_PROC_TRIGGER_SPELL_WITH_VALUE             SpellDataAura = 231
 	A_MECHANIC_DURATION_MOD                     SpellDataAura = 232
-	A_NO_REAGENT_USE                            SpellDataAura = 256
 	A_ABILITY_IGNORE_AURASTATE                  SpellDataAura = 262
 	A_MOD_ARMOR_PCT_FROM_STAT                   SpellDataAura = 268
 	A_MOD_SCHOOL_MASK_DAMAGE_FROM_CASTER        SpellDataAura = 270
@@ -185,7 +172,6 @@ const (
 	A_OVERRIDE_ACTIONBAR_SPELLS                 SpellDataAura = 332
 	A_MOD_MELEE_RANGED_HASTE_2                  SpellDataAura = 342
 	A_MOD_POSSESS_PET                           SpellDataAura = 378
-	A_MOD_MANA_REGEN_PCT                        SpellDataAura = 379
 	A_MOD_BONUS_ARMOR_PCT                       SpellDataAura = 466
 	A_MOD_CRIT_PERCENT_VERSUS                   SpellDataAura = 547
 	A_SPLIT_DAMAGE_FLAT                         SpellDataAura = 562
