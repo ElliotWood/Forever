@@ -236,15 +236,15 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	})
 
 	warrior.PseudoStats.CanParry = true
-	// TODO: In-game testing required
-	warrior.PseudoStats.BaseDodgeChance += 0.0075
-	warrior.PseudoStats.BaseParryChance += 0.05
-	warrior.PseudoStats.BaseBlockChance += 0.05
+	// Base parry and block (5%, less 0.04% a level of attacker skill above the defense) come from
+	// the attack table (core/target.go); adding 5% here counted them twice. Dodge is Classic's at
+	// level 60, as on master: no base dodge, 20 Agility a percent. Worth a check on a beta
+	// character sheet.
 
 	warrior.AddStatDependency(stats.Strength, stats.AttackPower, 2)
 	warrior.AddStatDependency(stats.Strength, stats.BlockValue, 1/20.0)
 	warrior.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
-	warrior.AddStatDependency(stats.Agility, stats.DodgeRating, 1/30.0*core.DodgeRatingPerDodgePercent)
+	warrior.AddStatDependency(stats.Agility, stats.DodgeRating, core.CritPerAgiMaxLevel[character.Class]*core.DodgeRatingPerDodgePercent)
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
 
 	warrior.queuedRealismICD = &core.Cooldown{
