@@ -34,7 +34,6 @@ func NewShaman(character *core.Character, talents string, selfBuffs SelfBuffs) *
 	shaman.EnableManaBarWithModifier()
 
 	shaman.AddStatDependency(stats.Strength, stats.AttackPower, 2.0)
-	shaman.AddStat(stats.AttackPower, -20)
 
 	shaman.WindfuryAPBonus = 333.0 // 16361, Windfury Weapon rank 4
 
