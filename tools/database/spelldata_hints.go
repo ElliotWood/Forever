@@ -58,7 +58,15 @@ func procChanceSource(description string, s *storeSpell) (storeProcChanceSource,
 
 	// 100 and 101 are both the client's "no roll here": the aura fires whenever its own condition
 	// is met, and on a spell that is not a proc at all they mean nothing.
+	//
+	// Except where the tooltip says the effect only happens sometimes. A proc whose text reads
+	// "Chance to strike your ranged target" next to a column of 100 is the same convention as the
+	// 101 sentinel - the rate lives outside the spell data - so it is a rate somebody owes rather
+	// than a proc on every hit.
 	if s.ProcChance == 100 || s.ProcChance == 101 {
+		if s.triggersAProc() && statedChanceMatcher.MatchString(description) {
+			return procChancePPM, 0
+		}
 		return procChanceAlways, 0
 	}
 

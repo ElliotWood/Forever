@@ -59,6 +59,8 @@ func TestProcShapeOfNamedSpells(t *testing.T) {
 			core.ProcHintOutcomeTaken, `"after a block" is an outcome no ProcTypeMask has a bit for`},
 		{23547, "Battlegear of Wrath, the parry buff", procChanceAlways, 0, "the 100 in the column is the client's no-roll",
 			0, "the row ships no tooltip, so the parry it is spent on stays the caller's"},
+		{29626, "Shadowbolt Volley", procChancePPM, 0, `a column of 100 next to "Chance to strike" is a rate the client keeps elsewhere`,
+			0, "the wording states a rate, not a trigger the mask cannot carry"},
 	} {
 		t.Run(want.name, func(t *testing.T) {
 			rows := []storeSpell{tables.row(want.id)}
