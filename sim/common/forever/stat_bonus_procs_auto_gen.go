@@ -3962,6 +3962,20 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
+	// Your casts of Greater Heal in combat grant up to 40 increased healing and up to 13 increased damage for
+	// 15s.
+	// https://www.wowhead.com/forever/spell=1249119
+	// unsupported: named ability
+	// trigger 1249118 (every time, core.CallbackOnHealDealt, core.ProcMaskSpellHealing) -> buff 1249119
+	// shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 1249118, BuffSpellID: 1249119},
+	//	[]shared.ItemVariant{
+	//	{ItemID: 249473, ItemName: "Dormant Heart of the Mountain"},
+	// })
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
 	// Safely transport yourself to Gadgetzan in Tanaris! Emphasis on Safe! Yup, nothing bad could ever happen
 	// while using this device!
 	// https://www.wowhead.com/forever/spell=23453
@@ -5261,15 +5275,11 @@ func RegisterAllProcs() {
 
 	// Reduces an enemy's armor by 165. Stacks up to 3 times.
 	// https://www.wowhead.com/forever/spell=16928
-	shared.NewStackingStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-		Callback:           core.CallbackOnSpellHitDealt,
-		ProcMask:           core.ProcMaskUnknown,
-		Outcome:            core.OutcomeLanded,
-		RequireDamageDealt: true,
-		IsWeaponProc:       true,
-	}, []shared.ItemVariant{
-		{ItemID: 12798, ItemName: "Annihilator"},
-	})
+	// trigger 16928 (1 ppm, core.CallbackEmpty, core.ProcMaskUnknown)
+	shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 16928, IsWeaponProc: true},
+		[]shared.ItemVariant{
+			{ItemID: 12798, ItemName: "Annihilator"},
+		})
 
 	// Adds 2 fire damage to your melee attacks.
 	// https://www.wowhead.com/forever/spell=7712
@@ -5372,40 +5382,20 @@ func RegisterAllProcs() {
 
 	// 2% chance on successful spellcast to increase your Spirit by 150 for 15s.
 	// https://www.wowhead.com/forever/spell=23684
-	shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-		Callback:           core.CallbackOnCastComplete,
-		ProcMask:           core.ProcMaskSpellDamage,
-		Outcome:            core.OutcomeEmpty,
-		RequireDamageDealt: false,
-	}, []shared.ItemVariant{
-		{ItemID: 19288, ItemName: "Darkmoon Card: Blue Dragon"},
-	})
+	// trigger 23688 (2%, core.CallbackOnCastComplete, core.ProcMaskSpellDamage) -> buff 23684
+	shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 23688, BuffSpellID: 23684},
+		[]shared.ItemVariant{
+			{ItemID: 19288, ItemName: "Darkmoon Card: Blue Dragon"},
+		})
 
 	// Gives a chance when your harmful spells land to increase the damage of your spells and effects by 132
 	// for 10s.
 	// https://www.wowhead.com/forever/spell=25907
-	shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-		Callback:           core.CallbackOnCastComplete,
-		ProcMask:           core.ProcMaskSpellDamage,
-		Outcome:            core.OutcomeEmpty,
-		RequireDamageDealt: false,
-		CanProcFromProcs:   true,
-	}, []shared.ItemVariant{
-		{ItemID: 21190, ItemName: "Wrath of Cenarius"},
-	})
-
-	// Your casts of Greater Heal in combat grant up to 40 increased healing and up to 13 increased damage for
-	// 15s.
-	// https://www.wowhead.com/forever/spell=1249119
-	shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-		Callback:           core.CallbackOnHealDealt,
-		ProcMask:           core.ProcMaskSpellHealing,
-		Outcome:            core.OutcomeLanded,
-		RequireDamageDealt: false,
-		CanProcFromProcs:   true,
-	}, []shared.ItemVariant{
-		{ItemID: 249473, ItemName: "Dormant Heart of the Mountain"},
-	})
+	// trigger 25906 (5%, core.CallbackOnCastComplete, core.ProcMaskSpellDamage) -> buff 25907
+	shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 25906, BuffSpellID: 25907},
+		[]shared.ItemVariant{
+			{ItemID: 21190, ItemName: "Wrath of Cenarius"},
+		})
 
 	// Chance on hit to deal 75 Arcane damage. Deals 2 times as much damage to Naga and Satyrs.
 	// https://www.wowhead.com/forever/spell=1265634
@@ -5473,14 +5463,11 @@ func RegisterAllProcs() {
 	// Chance on harmful spell cast to reduce target enemy's attack power by 60 for 30s.
 	//
 	// https://www.wowhead.com/forever/spell=1297082
-	shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-		Callback:           core.CallbackOnCastComplete,
-		ProcMask:           core.ProcMaskSpellDamage,
-		Outcome:            core.OutcomeEmpty,
-		RequireDamageDealt: false,
-	}, []shared.ItemVariant{
-		{ItemID: 275630, ItemName: "Depleted Eye of Influence"},
-	})
+	// trigger 1297085 (every time, core.CallbackOnCastComplete, core.ProcMaskSpellDamage) -> buff 1297082
+	shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 1297085, BuffSpellID: 1297082},
+		[]shared.ItemVariant{
+			{ItemID: 275630, ItemName: "Depleted Eye of Influence"},
+		})
 
 	// Thrown attacks explode on impact, causing 21 Fire damage to nearby enemies.
 	// https://www.wowhead.com/forever/spell=1318121

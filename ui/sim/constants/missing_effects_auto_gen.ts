@@ -1978,6 +1978,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		249473, // Dormant Heart of the Mountain
+		[
+			"Your casts of Greater Heal in combat grant up to 40 increased healing and up to 13 increased damage for 15s.", // 1249119 - https://www.wowhead.com/forever/spell=1249119
+		]
+	],
+	[
 		260819, // EZ-Thro Field Transporter: Gadgetzan
 		[
 			"Safely transport yourself to Gadgetzan in Tanaris! Emphasis on Safe! Yup, nothing bad could ever happen while using this device!", // 23453 - https://www.wowhead.com/forever/spell=23453
