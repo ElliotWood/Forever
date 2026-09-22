@@ -267,6 +267,12 @@ func RegisterAllEnchants() {
 		//	EnchantID:      {{ .ID }},
 		{{- end}}
 		//	TriggerSpellID: {{ .Proc.TriggerSpellID }},
+		{{- if .Proc.BuffSpellID }}
+		//	BuffSpellID:    {{ .Proc.BuffSpellID }},
+		{{- end}}
+		{{- if .Proc.IsWeaponProc }}
+		//	IsWeaponProc:   true,
+		{{- end}}
 		// }, nil)
 		{{- end}}
 	{{- else if .Supported}}

@@ -16,5 +16,6 @@ func RegisterAllEnchants() {
 	//	Name:           "Enchant Weapon - Unholy Weapon",
 	//	EnchantID:      1899,
 	//	TriggerSpellID: 20006,
+	//	IsWeaponProc:   true,
 	// }, nil)
 }
