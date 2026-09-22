@@ -9,10 +9,10 @@ import (
 // The rows ItemSetSpell names for each set's thresholds, and the buffs those rows grant. None of
 // them is a warrior class spell, so the generated table carries no reference to them.
 var (
-	mightBlockValue   = spelldata.MustFind(23562)
-	mightRageProc     = spelldata.MustFind(21838)
-	mightRageEnergize = spelldata.MustFind(29478)
-	mightSunderThreat = spelldata.MustFind(23561)
+	mightBlockValue   = spelldata.MustFind(23562) // 3pc: Block Value 30
+	mightRageProc     = spelldata.MustFind(21838) // 5pc: Battlegear of Might, the proc
+	mightRageEnergize = spelldata.MustFind(29478) // 5pc: Battlegear of Might, the rage it grants
+	mightSunderThreat = spelldata.MustFind(23561) // 8pc: Enhanced Sunder Armor
 )
 
 var ItemSetBattlegearOfMight = core.NewItemSet(core.ItemSet{
@@ -53,10 +53,10 @@ var ItemSetBattlegearOfMight = core.NewItemSet(core.ItemSet{
 })
 
 var (
-	wrathDiscountProc = spelldata.MustFind(21890)
-	wrathDiscountBuff = spelldata.MustFind(21887)
-	wrathParryProc    = spelldata.MustFind(23548)
-	wrathParryBuff    = spelldata.MustFind(23547)
+	wrathDiscountProc = spelldata.MustFind(21890) // 5pc: Warrior's Wrath, the proc
+	wrathDiscountBuff = spelldata.MustFind(21887) // 5pc: Warrior's Wrath, the discount
+	wrathParryProc    = spelldata.MustFind(23548) // 8pc: Parry, the proc
+	wrathParryBuff    = spelldata.MustFind(23547) // 8pc: Parry, the buff
 )
 
 var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
@@ -144,8 +144,8 @@ var ItemSetBattlegearOfWrath = core.NewItemSet(core.ItemSet{
 })
 
 var (
-	conquerorShoutCost   = spelldata.MustFind(26109)
-	conquerorThunderClap = spelldata.MustFind(26110)
+	conquerorShoutCost   = spelldata.MustFind(26109) // 3pc: Conqueror Shout Bonus
+	conquerorThunderClap = spelldata.MustFind(26110) // 5pc: Conqueror Thunder Clap Bonus
 )
 
 var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
@@ -168,11 +168,11 @@ var ItemSetConquerorsBattlegear = core.NewItemSet(core.ItemSet{
 })
 
 var (
-	dreadnaughtRevenge        = spelldata.MustFind(28844)
-	dreadnaughtTauntHit       = spelldata.MustFind(28843)
-	dreadnaughtAbilityHit     = spelldata.MustFind(28842)
-	dreadnaughtCheatDeath     = spelldata.MustFind(28845)
-	dreadnaughtCheatDeathBuff = spelldata.MustFind(28846)
+	dreadnaughtRevenge        = spelldata.MustFind(28844) // 2pc: Revenge
+	dreadnaughtTauntHit       = spelldata.MustFind(28843) // 4pc: Increased Spell Hit Chance
+	dreadnaughtAbilityHit     = spelldata.MustFind(28842) // 6pc: Increased Hit Chance
+	dreadnaughtCheatDeath     = spelldata.MustFind(28845) // 8pc: Cheat Death, the proc
+	dreadnaughtCheatDeathBuff = spelldata.MustFind(28846) // 8pc: Cheat Death, the healing buff
 )
 
 var ItemSetDreadnaughtsBattlegear = core.NewItemSet(core.ItemSet{
