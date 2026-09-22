@@ -1,15 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import {
-	ConsumesSpec,
-	Debuffs,
-	IndividualBuffs,
-	PartyBuffs,
-	Profession,
-	Race,
-	RaidBuffs,
-	TristateEffect,
-	UnitReference,
-} from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect, UnitReference } from '@generated/proto/common';
 import { BalanceDruid_Options as BalanceDruidOptions } from '@generated/proto/druid';
 import { SavedTalents } from '@generated/proto/ui';
 
