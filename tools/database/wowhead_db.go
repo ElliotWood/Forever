@@ -102,6 +102,7 @@ type WowheadRandomSuffix struct {
 }
 
 type WowheadStats struct {
+	ItemSet           int32 `json:"itemset"`
 	Armor             int32 `json:"armor"`
 	ArmorBonus        int32 `json:"armorbonus"`
 	Strength          int32 `json:"str"`
