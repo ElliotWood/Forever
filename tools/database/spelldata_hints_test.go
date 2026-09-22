@@ -11,6 +11,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/tools/database/overrides"
 )
 
@@ -32,19 +33,32 @@ func TestProcShapeOfNamedSpells(t *testing.T) {
 	}
 
 	for _, want := range []struct {
-		id     int32
-		name   string
-		source storeProcChanceSource
-		effect int8
-		why    string
+		id      int32
+		name    string
+		source  storeProcChanceSource
+		effect  int8
+		why     string
+		hint    core.ProcHint
+		hintWhy string
 	}{
-		{12317, "Enrage", procChanceColumn, 0, `the tooltip's "$h%" is the ProcChance column`},
-		{12322, "Unbridled Wrath", procChanceEffectN, 1, `"$m1% chance to generate Rage" is effect 1's ladder`},
-		{12298, "Shield Specialization", procChanceEffectN, 2, `"$m2% chance to generate Rage", past the "$s1%" block value`},
-		{12319, "Flurry", procChanceAlways, 0, `"$m1%" is the attack speed, and a crit is the condition`},
-		{12834, "Deep Wounds", procChanceAlways, 0, `"$m1%" is the share of weapon damage, and a crit is the condition`},
-		{16928, "Armor Shatter", procChancePPM, 0, "the 101 sentinel, answered by an override into RPPM"},
-		{1308935, "Striking", procChanceColumn, 0, "no tooltip at all, so the column is all there is"},
+		{12317, "Enrage", procChanceColumn, 0, `the tooltip's "$h%" is the ProcChance column`,
+			0, `"the victim of any damaging attack" states no outcome and no wording any hint reads`},
+		{12322, "Unbridled Wrath", procChanceEffectN, 1, `"$m1% chance to generate Rage" is effect 1's ladder`,
+			0, `"when you deal melee damage with a weapon" is the mask's own shape`},
+		{12298, "Shield Specialization", procChanceEffectN, 2, `"$m2% chance to generate Rage", past the "$s1%" block value`,
+			core.ProcHintOutcomeTaken, `"when you Block" is an outcome no ProcTypeMask has a bit for`},
+		{12319, "Flurry", procChanceAlways, 0, `"$m1%" is the attack speed, and a crit is the condition`,
+			0, `"after dealing a melee critical strike" is the crit the caller reads off the result, since the same listener has to see the white hits that spend a charge`},
+		{12834, "Deep Wounds", procChanceAlways, 0, `"$m1%" is the share of weapon damage, and a crit is the condition`,
+			0, `"Your critical strikes" names the trigger`},
+		{16928, "Armor Shatter", procChancePPM, 0, "the 101 sentinel, answered by an override into RPPM",
+			0, "the tooltip is the armor reduction, not a trigger"},
+		{1308935, "Striking", procChanceColumn, 0, "no tooltip at all, so the column is all there is",
+			0, "no tooltip to read a hint off"},
+		{23548, "Battlegear of Wrath, the parry grant", procChanceColumn, 0, `the tooltip's "$h%" is the ProcChance column`,
+			core.ProcHintOutcomeTaken, `"after a block" is an outcome no ProcTypeMask has a bit for`},
+		{23547, "Battlegear of Wrath, the parry buff", procChanceAlways, 0, "the 100 in the column is the client's no-roll",
+			0, "the row ships no tooltip, so the parry it is spent on stays the caller's"},
 	} {
 		t.Run(want.name, func(t *testing.T) {
 			rows := []storeSpell{tables.row(want.id)}
@@ -57,6 +71,11 @@ func TestProcShapeOfNamedSpells(t *testing.T) {
 			if row.ProcChanceSource != want.source || row.ProcChanceEffect != want.effect {
 				t.Errorf("spell %d reads %s effect %d, and %s, so it is %s effect %d",
 					want.id, row.ProcChanceSource, row.ProcChanceEffect, want.why, want.source, want.effect)
+			}
+
+			if row.ProcHint != want.hint {
+				t.Errorf("spell %d reads hint %d, and %s, so it is %d",
+					want.id, row.ProcHint, want.hintWhy, want.hint)
 			}
 
 			// An effect the chance sits on has to be one the sim can reach by that number, since

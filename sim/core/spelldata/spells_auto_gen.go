@@ -17179,7 +17179,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 700395, SpellID: 23547, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_PARRY_PERCENT, BasePoints: 100, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 23548, Name: "Parry", School: 1, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 4, ProcFlags: [2]uint32{0: 0x2a8},
+	{ID: 23548, Name: "Parry", School: 1, Attr: [17]uint32{0: 0x40, 15: 0x2000}, SpellLevel: 60, DurationMs: -1, ProcChance: 4, ProcFlags: [2]uint32{0: 0x2a8}, ProcHint: core.ProcHintOutcomeTaken,
 		Effects: []Effect{
 			{ID: 700396, SpellID: 23548, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PROC_TRIGGER_SPELL, BasePoints: 1, SPCoef: 1, PvpMult: 1, TriggerID: 23547, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
@@ -23527,7 +23527,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1120672, SpellID: 432271, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},
-	{ID: 432273, Name: "Unfair Advantage", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x2028}, ICDMs: 1000, ClassFlags: core.ClassFlags{Family: 8}, Labels: []int16{3096, 3100}, RefIDs: []int32{432274}, ProcChanceSource: ProcChanceAlways,
+	{ID: 432273, Name: "Unfair Advantage", School: 1, Attr: [17]uint32{0: 0x1d0, 15: 0x2000}, SpellLevel: 60, ProcChance: 100, ProcFlags: [2]uint32{0: 0x2028}, ICDMs: 1000, ClassFlags: core.ClassFlags{Family: 8}, Labels: []int16{3096, 3100}, RefIDs: []int32{432274}, ProcChanceSource: ProcChanceAlways, ProcHint: core.ProcHintOutcomeTaken,
 		Effects: []Effect{
 			{ID: 1120678, SpellID: 432273, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, SPCoef: 1, PvpMult: 1, TriggerID: 432274, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		}},

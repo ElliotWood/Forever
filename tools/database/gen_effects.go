@@ -766,8 +766,12 @@ var hasGenericMatcher = regexp.MustCompile(`a spell`)
 
 // A trigger condition stated as an attack outcome. Deliberately matches the condition clause rather
 // than the words themselves: "increases your dodge rating" is a stat on hundreds of items, while
-// "when one of your spells is resisted" is a trigger.
-var outcomeConditionMatcher = regexp.MustCompile(`(?i)when .{0,60}?(is|are) resisted|((each|every) time|when) you (block|dodge|parry)`)
+// "when one of your spells is resisted" is a trigger. "After a block" is the third clause the
+// client uses, on the Battlegear of Wrath parry (23548); "after you dodge" is not in here because
+// the only rows wording it that way are Counterattack's, where it gates the button rather than a
+// proc. A miss is not in here either: the one row naming one, 456394, means its own attack missing
+// rather than an attack on it.
+var outcomeConditionMatcher = regexp.MustCompile(`(?i)when .{0,60}?(is|are) resisted|((each|every) time|when|whenever) you (block|dodge|parry)|after a (block|dodge|parry)`)
 
 // A tooltip stating that the effect only happens sometimes. Where the data pairs that with a 100%
 // rate, the real rate is the one thing the data does not carry.
