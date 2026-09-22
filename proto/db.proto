@@ -26,6 +26,7 @@ message SimEnchant {
 	EnchantType enchant_type = 6;
 	repeated ItemType extra_types = 7;
 	repeated double pseudo_stats = 8; // Indexed by PseudoStat.
+	double weapon_damage = 9; // Flat damage on the enchanted weapon's minimum and maximum.
 }
 
 // Contains only the Item info needed by the sim.

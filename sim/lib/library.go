@@ -137,6 +137,7 @@ func getDatabase(itemIds *int32, numItems int32, enchantIds *int32, numEnchants 
 			EffectId:       enchant.EffectID,
 			Stats:          enchant.Stats[:],
 			PseudoStats:    enchant.PseudoStats,
+			WeaponDamage:   enchant.WeaponDamage,
 			EnchantEffects: enchant.EnchantEffects,
 			Name:           enchant.Name,
 			Type:           enchant.Type,

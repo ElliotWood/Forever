@@ -208,6 +208,7 @@ message UIEnchant {
 
 	repeated double stats = 8;
 	repeated double pseudo_stats = 15; // Indexed by PseudoStat.
+	double weapon_damage = 16; // Flat damage on the enchanted weapon's minimum and maximum.
 
 	ItemQuality quality = 9;
 	int32 phase = 10;

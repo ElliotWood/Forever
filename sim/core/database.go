@@ -232,6 +232,7 @@ type Enchant struct {
 	EffectID       int32 // Used by UI to apply effect to tooltip
 	Stats          stats.Stats
 	PseudoStats    []float64 // Indexed by proto.PseudoStat; applied through stats.FromPseudoStatsProto
+	WeaponDamage   float64   // Applied by newWeaponFromItem
 	EnchantEffects []*proto.ItemEffect
 	Name           string         // Only needed for unit tests
 	Type           proto.ItemType // Only needed for unit tests
@@ -244,6 +245,7 @@ func EnchantFromProto(pData *proto.SimEnchant) Enchant {
 		EffectID:       pData.EffectId,
 		Stats:          stats.FromProtoArray(pData.Stats),
 		PseudoStats:    pData.PseudoStats,
+		WeaponDamage:   pData.WeaponDamage,
 		EnchantEffects: pData.EnchantEffects,
 		Name:           pData.Name,
 		Type:           pData.Type,
