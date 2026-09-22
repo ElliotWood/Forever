@@ -4,9 +4,6 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
-	battleformounthyjal "github.com/wowsims/forever/sim/encounters/battle_for_mount_hyjal"
-	magtheridonslair "github.com/wowsims/forever/sim/encounters/magtheridons_lair"
-	serpentshrinecavern "github.com/wowsims/forever/sim/encounters/serpent_shrine_cavern"
 )
 
 func init() {
@@ -14,9 +11,9 @@ func init() {
 	addMovementAI()
 	addDynamicAddsAI()
 	addCustomBossAI()
-	magtheridonslair.Register()
-	serpentshrinecavern.Register()
-	battleformounthyjal.Register()
+	addForeverRaids()
+	// Magtheridon, Serpentshrine and Mount Hyjal are TBC raids Forever does not have: their
+	// packages stay (upstream's, they keep merging) but are not registered.
 }
 
 func AddSingleTargetBossEncounter(presetTarget *core.PresetTarget) {
@@ -38,13 +35,13 @@ func AddDefaultPresetEncounter() {
 
 			Stats: stats.Stats{
 				stats.Health:      6_070_400,
-				stats.Armor:       7685,
+				stats.Armor:       3731,
 				stats.AttackPower: 320,
 			}.ToProtoArray(),
 
 			SpellSchool:      proto.SpellSchool_SpellSchoolPhysical,
 			SwingSpeed:       2,
-			MinBaseDamage:    15113,
+			MinBaseDamage:    4192.05,
 			DamageSpread:     0.5,
 			SuppressDodge:    false,
 			ParryHaste:       true,

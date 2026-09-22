@@ -27,7 +27,7 @@ import (
 // go run ./tools/database/gen_db -outDir=assets -gen=db
 
 var outDir = flag.String("outDir", "assets", "Path to output directory for writing generated .go files.")
-var genAsset = flag.String("gen", "", "Asset to generate. Valid values are 'db', 'atlasloot' and 'go-to-ts'")
+var genAsset = flag.String("gen", "", "Asset to generate. Valid values are 'db', 'encounters', 'atlasloot' and 'go-to-ts'")
 var dbPath = flag.String("dbPath", "./tools/database/wowsims.db", "Location of the wowsims.db file produced by tools/db2tool")
 
 func main() {
@@ -63,6 +63,13 @@ func main() {
 
 		db := database.ReadAtlasLootData(helper)
 		db.WriteJson(fmt.Sprintf("%s/atlasloot_db.json", inputsDir))
+		return
+	} else if *genAsset == "encounters" {
+		// Refreshes only the preset encounters in the committed database, for when
+		// sim/encounters changes and the client database (-dbPath) is not at hand.
+		db := database.ReadDatabaseFromJson(tools.ReadFile(fmt.Sprintf("%s/db.json", dbDir)))
+		db.Encounters = core.PresetEncounters
+		db.WriteBinaryAndJson(fmt.Sprintf("%s/db.bin", dbDir), fmt.Sprintf("%s/db.json", dbDir))
 		return
 	} else if *genAsset != "db" {
 		panic("Invalid gen value")
