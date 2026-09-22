@@ -150,6 +150,35 @@ func init() {
 	newSpeedInfusionWeaponEffect(30311, "Warp Slicer")
 	newSpeedInfusionWeaponEffect(30316, "Devastation")
 
+	// Bashguuder, Rivenspike: chance on hit, Puncture Armor (client 17315: -100 armor, 3 stacks,
+	// 30s). The client has no proc rate; 2 PPM is master's (Armaments Discord).
+	for itemID, name := range map[int32]string{13204: "Bashguuder", 13286: "Rivenspike"} {
+		itemhelpers.CreateWeaponProcTrigger(itemhelpers.WeaponProcTrigger{
+			ItemID: itemID,
+			Name:   name,
+			PPM:    2,
+			Handler: func(character *core.Character) core.ProcHandler {
+				auras := character.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+					return target.GetOrRegisterAura(core.Aura{
+						Label:     "Puncture Armor",
+						ActionID:  core.ActionID{SpellID: 17315},
+						Duration:  time.Second * 30,
+						MaxStacks: 3,
+						OnStacksChange: func(aura *core.Aura, sim *core.Simulation, oldStacks int32, newStacks int32) {
+							aura.Unit.AddStatDynamic(sim, stats.Armor, -100*float64(newStacks-oldStacks))
+						},
+					})
+				})
+
+				return func(sim *core.Simulation, _ *core.Spell, result *core.SpellResult) {
+					aura := auras.Get(result.Target)
+					aura.Activate(sim)
+					aura.AddStack(sim)
+				}
+			},
+		})
+	}
+
 	// Infinity Blade
 	itemhelpers.CreateWeaponProcTrigger(itemhelpers.WeaponProcTrigger{
 		ItemID: 30312,

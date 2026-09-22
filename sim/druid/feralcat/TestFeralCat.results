@@ -123,6 +123,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-Bashguuder-13204"
+ value: {
+  dps: 670.19203
+  tps: 364.21636
+  dtps: 11.67916
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-Biznicks247x128Accurascope-2523"
  value: {
   dps: 667.49296

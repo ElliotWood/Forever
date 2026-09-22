@@ -522,6 +522,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Rivenspike-13286"
+ value: {
+  dps: 733.34011
+  tps: 355.35943
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-SerenityField-272439"
  value: {
   dps: 734.30849
