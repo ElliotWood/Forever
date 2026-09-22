@@ -81,7 +81,7 @@ describe('the buff registries', () => {
 
 	it('puts the hand-written inputs themselves at those positions, not lookalikes', () => {
 		expect(BuffDebuffInputs.PARTY_BUFFS_CONFIG[2].config).toBe(BuffDebuffInputs.EnhancedBattleShout);
-		expect(BuffDebuffInputs.BUFFS_CONFIG[8].config).toBe(BuffDebuffInputs.BlessingOfSalvation);
+		expect(BuffDebuffInputs.BUFFS_CONFIG[8].config).toBe(BuffDebuffInputs.GreaterBlessingOfSalvation);
 	});
 
 	it('gives the generated rows their owner class, so the settings tab can mark them external', () => {

@@ -145,8 +145,8 @@
 							}
 						},
 						"buffs": {
-							"blessingOfKings": true,
-							"blessingOfMight": 2
+							"greaterBlessingOfKings": true,
+							"greaterBlessingOfMight": 2
 						},
 						"cooldowns": {},
 						"healingModel": {
@@ -267,8 +267,8 @@
 			}
 		],
 		"buffs": {
-			"powerWordFortitude": 2,
-			"shadowProtection": true,
+			"prayerOfFortitude": 2,
+			"prayerOfShadowProtection": true,
 			"giftOfTheWild": 2,
 			"thorns": 1
 		},

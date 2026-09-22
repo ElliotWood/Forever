@@ -10,7 +10,7 @@ const v16Settings = () => ({
 	apiVersion: 16,
 	partyBuffs: { battleShout: 'TristateEffectImproved', manaSpringTotem: 'TristateEffectImproved' },
 	debuffs: { faerieFire: 'TristateEffectMissing' },
-	player: { buffs: { blessingOfMight: 2, blessingOfKings: true } },
+	player: { buffs: { greaterBlessingOfMight: 2, greaterBlessingOfKings: true } },
 });
 
 describe('migrateRetypedBuffFields', () => {
@@ -22,7 +22,7 @@ describe('migrateRetypedBuffFields', () => {
 
 		expect(settings.partyBuffs?.battleShout).toBe(true);
 		expect(settings.debuffs?.faerieFire).toBe(false);
-		expect(settings.player?.buffs?.blessingOfMight).toBe(true);
+		expect(settings.player?.buffs?.greaterBlessingOfMight).toBe(true);
 	});
 
 	it('leaves the fields that are still a tristate, and every other field, alone', () => {
@@ -31,7 +31,7 @@ describe('migrateRetypedBuffFields', () => {
 		migrateRetypedBuffFields(json);
 
 		expect(json.partyBuffs.manaSpringTotem).toBe('TristateEffectImproved');
-		expect(json.player.buffs.blessingOfKings).toBe(true);
+		expect(json.player.buffs.greaterBlessingOfKings).toBe(true);
 	});
 
 	it('leaves a payload stamped with the current version untouched', () => {
@@ -44,23 +44,23 @@ describe('migrateRetypedBuffFields', () => {
 
 	// SavedSettings and the raid messages carry no api_version, so they are migrated on sight.
 	it('rewrites a message that carries no version, under either name for the individual buffs', () => {
-		const savedSettings = { debuffs: { thunderClap: 1 }, playerBuffs: { blessingOfWisdom: 'TristateEffectRegular' } };
-		const raidSettings = { raid: { buffs: { thorns: 2 }, parties: [{ buffs: { devotionAura: 1 }, players: [{ buffs: { blessingOfMight: 0 } }] }] } };
+		const savedSettings = { debuffs: { thunderClap: 1 }, playerBuffs: { greaterBlessingOfWisdom: 'TristateEffectRegular' } };
+		const raidSettings = { raid: { buffs: { thorns: 2 }, parties: [{ buffs: { devotionAura: 1 }, players: [{ buffs: { greaterBlessingOfMight: 0 } }] }] } };
 
 		migrateRetypedBuffFields(savedSettings);
 		migrateRetypedBuffFields(raidSettings);
 
 		expect(savedSettings.debuffs.thunderClap).toBe(true);
-		expect(savedSettings.playerBuffs.blessingOfWisdom).toBe(true);
+		expect(savedSettings.playerBuffs.greaterBlessingOfWisdom).toBe(true);
 		expect(raidSettings.raid.buffs.thorns).toBe(true);
 		expect(raidSettings.raid.parties[0].buffs.devotionAura).toBe(true);
-		expect(raidSettings.raid.parties[0].players[0].buffs.blessingOfMight).toBe(false);
+		expect(raidSettings.raid.parties[0].players[0].buffs.greaterBlessingOfMight).toBe(false);
 	});
 
 	it('rewrites a raid, a party or a player handed over on its own', () => {
 		const raid = { buffs: { thorns: 2 }, debuffs: { thunderClap: 1 } };
 		const party = { buffs: { devotionAura: 1 } };
-		const player = { buffs: { blessingOfWisdom: 'TristateEffectImproved' } };
+		const player = { buffs: { greaterBlessingOfWisdom: 'TristateEffectImproved' } };
 
 		migrateRetypedBuffFields(raid, 'raid');
 		migrateRetypedBuffFields(party, 'party');
@@ -69,7 +69,7 @@ describe('migrateRetypedBuffFields', () => {
 		expect(raid.buffs.thorns).toBe(true);
 		expect(raid.debuffs.thunderClap).toBe(true);
 		expect(party.buffs.devotionAura).toBe(true);
-		expect(Player.fromJson(player as never).buffs?.blessingOfWisdom).toBe(true);
+		expect(Player.fromJson(player as never).buffs?.greaterBlessingOfWisdom).toBe(true);
 	});
 
 	// `toJson` omits an empty repeated field, so a raid with no parties and a party with no players

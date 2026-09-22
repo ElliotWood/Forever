@@ -37,9 +37,9 @@ var buffInputNumStates = map[string]int{
 // The rows whose settings input stays hand-written: it needs something no manifest
 // row carries, or the field has no input at all.
 var manualBuffInputs = map[string]string{
-	"blessing_of_salvation": "the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.",
-	"atiesh_druid":          "no settings input over this field.",
-	"atiesh_priest":         "no settings input over this field.",
+	"greater_blessing_of_salvation": "the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.",
+	"atiesh_druid":                  "no settings input over this field.",
+	"atiesh_priest":                 "no settings input over this field.",
 }
 
 type tsBuffInput struct {

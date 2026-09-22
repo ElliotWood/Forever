@@ -66,9 +66,9 @@ func TestRenderNextIndex(t *testing.T) {
 // the two are checked against each other: a name on one side only would leave a
 // saved payload either unconverted or converted into the wrong type.
 var retypedFields = map[string][]string{
-	"RaidBuffs":       {"power_word_fortitude", "divine_spirit", "gift_of_the_wild", "thorns"},
+	"RaidBuffs":       {"prayer_of_fortitude", "prayer_of_spirit", "gift_of_the_wild", "thorns"},
 	"PartyBuffs":      {"blood_pact", "moonkin_aura", "leader_of_the_pack", "devotion_aura", "retribution_aura", "concentration_aura", "grace_of_air_totem", "strength_of_earth_totem", "windfury_totem", "battle_shout"},
-	"IndividualBuffs": {"blessing_of_wisdom", "blessing_of_might"},
+	"IndividualBuffs": {"greater_blessing_of_wisdom", "greater_blessing_of_might"},
 	"Debuffs":         {"improved_seal_of_the_crusader", "curse_of_elements", "expose_armor", "faerie_fire", "hunters_mark", "demoralizing_roar", "demoralizing_shout", "thunder_clap"},
 }
 

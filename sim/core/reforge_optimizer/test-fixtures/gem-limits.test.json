@@ -128,8 +128,8 @@
 							}
 						},
 						"buffs": {
-							"blessingOfKings": true,
-							"blessingOfMight": 2
+							"greaterBlessingOfKings": true,
+							"greaterBlessingOfMight": 2
 						},
 						"cooldowns": {},
 						"healingModel": {}

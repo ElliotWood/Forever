@@ -100,7 +100,7 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 		raidBuffs: RaidBuffs.create({
 			...WarriorPresets.DefaultRaidBuffs,
 			thorns: true,
-			shadowProtection: true,
+			prayerOfShadowProtection: true,
 		}),
 		partyBuffs: PartyBuffs.create({
 			graceOfAirTotem: true,

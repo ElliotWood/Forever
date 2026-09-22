@@ -124,8 +124,8 @@ export const defaultHealerRaidBuffs = (): RaidBuffs =>
 	RaidBuffs.create({
 		arcaneBrilliance: true,
 		giftOfTheWild: true,
-		powerWordFortitude: true,
-		divineSpirit: true,
+		prayerOfFortitude: true,
+		prayerOfSpirit: true,
 	});
 
 export const defaultHealerPartyBuffs = (): PartyBuffs =>
@@ -135,6 +135,6 @@ export const defaultHealerPartyBuffs = (): PartyBuffs =>
 
 export const defaultHealerIndividualBuffs = (): IndividualBuffs =>
 	IndividualBuffs.create({
-		blessingOfKings: true,
-		blessingOfWisdom: true,
+		greaterBlessingOfKings: true,
+		greaterBlessingOfWisdom: true,
 	});

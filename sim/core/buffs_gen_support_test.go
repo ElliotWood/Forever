@@ -161,7 +161,7 @@ func TestGeneratedBuffCompetesPerSchoolForItsResistances(t *testing.T) {
 		},
 	}))
 
-	shadowProtection := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
+	prayerOfShadowProtection := MakePermanent(newGeneratedStatAura(target, GeneratedBuff{
 		Label:    "Generated Prayer of Shadow Protection",
 		ActionID: ActionID{SpellID: 27683},
 		Duration: time.Minute * 20,
@@ -169,7 +169,7 @@ func TestGeneratedBuffCompetesPerSchoolForItsResistances(t *testing.T) {
 	}))
 
 	giftOfTheWild.Activate(sim)
-	shadowProtection.Activate(sim)
+	prayerOfShadowProtection.Activate(sim)
 
 	if got := target.stats[stats.ShadowResistance]; got != 60 {
 		t.Errorf("shadow resistance is %v, want only the stronger source's 60", got)

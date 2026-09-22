@@ -26,9 +26,9 @@ export const EnhancedBattleShout = makeBooleanPartyBuffInput({
 });
 
 // Individual Buffs
-export const BlessingOfSalvation = makeBooleanIndividualBuffInput({
+export const GreaterBlessingOfSalvation = makeBooleanIndividualBuffInput({
 	actionId: ActionId.fromSpellId(25895),
-	fieldName: 'blessingOfSalvation',
+	fieldName: 'greaterBlessingOfSalvation',
 	label: 'Greater Blessing of Salvation',
 	showWhen: player => !player.getPlayerSpec().isTankSpec && !player.getPlayerSpec().isHealingSpec,
 });
@@ -56,15 +56,15 @@ export const BUFFS_CONFIG = inDisplayOrder(
 	[...Generated.GENERATED_RAID_BUFFS_CONFIG, ...Generated.GENERATED_INDIVIDUAL_BUFFS_CONFIG],
 	[
 		Generated.ArcaneBrilliance,
-		Generated.BlessingOfKings,
-		Generated.DivineSpirit,
+		Generated.GreaterBlessingOfKings,
+		Generated.PrayerOfSpirit,
 		Generated.GiftOfTheWild,
 		Generated.Thorns,
-		Generated.PowerWordFortitude,
-		Generated.BlessingOfMight,
-		Generated.BlessingOfWisdom,
-		{ config: BlessingOfSalvation, stats: [] },
-		Generated.ShadowProtection,
+		Generated.PrayerOfFortitude,
+		Generated.GreaterBlessingOfMight,
+		Generated.GreaterBlessingOfWisdom,
+		{ config: GreaterBlessingOfSalvation, stats: [] },
+		Generated.PrayerOfShadowProtection,
 		Generated.FireResistanceAura,
 		Generated.FrostResistanceAura,
 		Generated.ShadowResistanceAura,

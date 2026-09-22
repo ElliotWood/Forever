@@ -92,10 +92,10 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 		raidBuffs: RaidBuffs.create({
 			arcaneBrilliance: true,
 			giftOfTheWild: true,
-			powerWordFortitude: true,
-			shadowProtection: true,
+			prayerOfFortitude: true,
+			prayerOfShadowProtection: true,
 			thorns: true,
-			divineSpirit: true,
+			prayerOfSpirit: true,
 		}),
 		partyBuffs: PartyBuffs.create({
 			battleShout: true,
@@ -106,8 +106,8 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 			totemTwisting: true,
 		}),
 		individualBuffs: IndividualBuffs.create({
-			blessingOfKings: true,
-			blessingOfMight: true,
+			greaterBlessingOfKings: true,
+			greaterBlessingOfMight: true,
 		}),
 		debuffs: Debuffs.create({
 			exposeArmor: true,

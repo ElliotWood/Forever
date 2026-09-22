@@ -45,11 +45,11 @@ func TestRenderBuffsDebuffsTSShapes(t *testing.T) {
 	rows := []ResolvedBuff{
 		{
 			BuffSpec: buffmanifest.BuffSpec{
-				Field: "shadow_protection", Scope: buffmanifest.ScopeRaid, Proto: buffmanifest.ProtoBool,
-				Kind: buffmanifest.KindResistance, Go: "ShadowProtection", Owner: proto.Class_ClassPriest,
+				Field: "prayer_of_shadow_protection", Scope: buffmanifest.ScopeRaid, Proto: buffmanifest.ProtoBool,
+				Kind: buffmanifest.KindResistance, Go: "PrayerOfShadowProtection", Owner: proto.Class_ClassPriest,
 				Stats: []proto.Stat{proto.Stat_StatShadowResistance, proto.Stat_StatStamina},
 			},
-			SpellID: 10958, DBName: "Shadow Protection",
+			SpellID: 27683, DBName: "Prayer of Shadow Protection",
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
@@ -77,10 +77,10 @@ func TestRenderBuffsDebuffsTSShapes(t *testing.T) {
 	out := string(rendered)
 
 	want := []string{
-		`export const ShadowProtection = makeBooleanRaidBuffInput({
-	actionId: ActionId.fromSpellId(10958),
-	fieldName: 'shadowProtection',
-	label: 'Shadow Protection',
+		`export const PrayerOfShadowProtection = makeBooleanRaidBuffInput({
+	actionId: ActionId.fromSpellId(27683),
+	fieldName: 'prayerOfShadowProtection',
+	label: 'Prayer of Shadow Protection',
 });`,
 		`export const HuntersMark = makeTristateDebuffInput({
 	actionId: ActionId.fromSpellId(14325),
@@ -96,7 +96,7 @@ func TestRenderBuffsDebuffsTSShapes(t *testing.T) {
 });`,
 		`export const GENERATED_RAID_BUFFS_CONFIG: RenderableStatOptions[] = [
 	{
-		config: ShadowProtection,
+		config: PrayerOfShadowProtection,
 		stats: [Stat.StatShadowResistance, Stat.StatStamina],
 		ownerClass: Class.ClassPriest,
 	},
@@ -136,10 +136,10 @@ func TestRenderBuffsDebuffsTSSkips(t *testing.T) {
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{
-				Field: "blessing_of_salvation", Scope: buffmanifest.ScopeIndividual, Proto: buffmanifest.ProtoBool,
-				Kind: buffmanifest.KindPseudoMult, Go: "BlessingOfSalvation", Owner: proto.Class_ClassPaladin,
+				Field: "greater_blessing_of_salvation", Scope: buffmanifest.ScopeIndividual, Proto: buffmanifest.ProtoBool,
+				Kind: buffmanifest.KindPseudoMult, Go: "GreaterBlessingOfSalvation", Owner: proto.Class_ClassPaladin,
 			},
-			SpellID: 1038, DBName: "Blessing of Salvation",
+			SpellID: 25895, DBName: "Greater Blessing of Salvation",
 		},
 	}
 
@@ -149,14 +149,14 @@ func TestRenderBuffsDebuffsTSSkips(t *testing.T) {
 	}
 	out := string(rendered)
 
-	for _, name := range []string{"Misery", "BlessingOfSalvation"} {
+	for _, name := range []string{"Misery", "GreaterBlessingOfSalvation"} {
 		if strings.Contains(out, "export const "+name+" ") {
 			t.Errorf("%s has no settings input but rendered one:\n%s", name, out)
 		}
 	}
 	for _, comment := range []string{
 		"// misery: no SpellName row for Misery.",
-		"// blessing_of_salvation: " + manualBuffInputs["blessing_of_salvation"],
+		"// greater_blessing_of_salvation: " + manualBuffInputs["greater_blessing_of_salvation"],
 	} {
 		if !strings.Contains(out, comment) {
 			t.Errorf("the rendered file is missing %q:\n%s", comment, out)
