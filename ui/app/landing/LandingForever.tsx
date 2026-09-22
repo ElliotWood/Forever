@@ -104,9 +104,9 @@ export const LandingForever = () => (
 		</div>
 		<Panel summary="Where the numbers come from">
 			<p className="m-0">
-				Since the beta client was datamined on 17 September the numbers come from the client&apos;s own data tables rather than BlizzCon tooltips:
-				build <code>1.60.1.69913</code> on wago.tools, read against Classic Era and diffed spell by spell. Talent values come from the client&apos;s
-				rank curves, coefficients from <code>SpellEffect.EffectBonusCoefficient</code>, and each rank&apos;s damage is scaled to level 60 by the
+				Since the beta client was datamined on 17 September the numbers come from the client&apos;s own data tables rather than BlizzCon tooltips: build{' '}
+				<code>1.60.1.69913</code> on wago.tools, read against Classic Era and diffed spell by spell. Talent values come from the client&apos;s rank
+				curves, coefficients from <code>SpellEffect.EffectBonusCoefficient</code>, and each rank&apos;s damage is scaled to level 60 by the
 				client&apos;s own per-level points.
 			</p>
 			<p className="m-0">Most of it is settled from data, a little of it has been seen happen, and it is worth being plain about which is which:</p>
@@ -155,8 +155,8 @@ export const LandingForever = () => (
 					Holy damage partially resists are in no table.
 				</li>
 				<li>
-					No healing sim runs, tank specs are measured on damage alone, and rotations are hand-written priority lists that nothing has re-tuned
-					around the cooldowns Forever changed.
+					No healing sim runs, tank specs are measured on damage alone, and rotations are hand-written priority lists that nothing has re-tuned around
+					the cooldowns Forever changed.
 				</li>
 			</ul>
 		</Panel>

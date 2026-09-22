@@ -60,8 +60,8 @@ export const ChangelogPage = () => (
 		<PageSection title="Read this first">
 			<p className="m-0">
 				<strong className="text-brand">Sources.</strong> Forever is not out. What is modelled here was read from Blizzard&apos;s BlizzCon 2026
-				announcements and panel, Wowhead&apos;s Forever guides, the community talent calculators rebuilt from the demo&apos;s tooltips, and reports
-				from people who played the demo. Each entry below links the source it came from; where the source was a demo tooltip the sim carries a{' '}
+				announcements and panel, Wowhead&apos;s Forever guides, the community talent calculators rebuilt from the demo&apos;s tooltips, and reports from
+				people who played the demo. Each entry below links the source it came from; where the source was a demo tooltip the sim carries a{' '}
 				<code>TODO</code> for the beta pass, all of them listed in{' '}
 				<a href={`${SITE_REPO_URL}/blob/master/docs/forever_beta_checklist.md`} target="_blank" rel="noreferrer">
 					the beta checklist
@@ -69,8 +69,8 @@ export const ChangelogPage = () => (
 				. The beta opens on 17 September; expect numbers to move.
 			</p>
 			<p className="m-0">
-				<strong className="text-brand">Where to read more.</strong> Each change links its pull request, which carries the full reasoning and the
-				before and after numbers. The one-line rules are collected in{' '}
+				<strong className="text-brand">Where to read more.</strong> Each change links its pull request, which carries the full reasoning and the before
+				and after numbers. The one-line rules are collected in{' '}
 				<a href={`${SITE_REPO_URL}/blob/master/docs/forever_rules.md`} target="_blank" rel="noreferrer">
 					the rules sheet
 				</a>
@@ -87,8 +87,8 @@ export const ChangelogPage = () => (
 		))}
 		<PageSection title={`Every merged pull request (${mergedPullRequests.length})`}>
 			<p className="m-0 opacity-75">
-				The sections above are written by hand and group the work by what it did. This list is the raw record, newest first, refreshed by the
-				build every time a pull request is merged.
+				The sections above are written by hand and group the work by what it did. This list is the raw record, newest first, refreshed by the build
+				every time a pull request is merged.
 			</p>
 			<ol className="m-0 flex list-none flex-col gap-1 p-0">
 				{mergedPullRequests.map(pull => (

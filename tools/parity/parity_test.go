@@ -1,6 +1,11 @@
 // Package parity is the switch gate's DPS check: every arena spec on master and on
 // forever-next with the same talents, bonus stats, weapons and target. Run it through
 // run.sh, which produces master's numbers first; on its own the test skips.
+//
+// With ARENA_OUT=<dir> it also writes forever-next's result for each spec as the arena's
+// rawResult (tools/arena), one <spec>.json per spec, and runs without master's numbers:
+//
+//	ARENA_OUT=<dir> PARITY_ITERATIONS=2000 go test --tags=with_db ./tools/parity -run '^TestParity$' -count=1 -v
 package parity
 
 import (
@@ -41,6 +46,22 @@ type parityResult struct {
 	Oom     float64            `json:"oom"`
 	Dtps    float64            `json:"dtps"`
 	Error   string             `json:"error,omitempty"`
+	// For ARENA_OUT only: damage per spell id, and auto attacks.
+	Damage       map[string]float64 `json:"-"`
+	WeaponDamage float64            `json:"-"`
+}
+
+// tools/arena's rawResult, the shape master's sim/arenalib writes.
+type arenaResult struct {
+	Spec         string             `json:"spec"`
+	Talents      string             `json:"talents"`
+	Build        string             `json:"build"`
+	Gear         string             `json:"gear"`
+	Rotation     string             `json:"rotation"`
+	Consumables  string             `json:"consumables"`
+	Dps          float64            `json:"dps"`
+	Damage       map[string]float64 `json:"damage"`
+	WeaponDamage float64            `json:"weaponDamage"`
 }
 
 func specOptions(name string) (proto.Class, interface{}, *proto.ConsumesSpec) {
@@ -114,7 +135,8 @@ func bonusStats(p map[string]float64) stats.Stats {
 
 func TestParity(t *testing.T) {
 	masterFile := os.Getenv("PARITY_MASTER")
-	if masterFile == "" {
+	arenaOut := os.Getenv("ARENA_OUT")
+	if masterFile == "" && arenaOut == "" {
 		t.Skip("run through tools/parity/run.sh")
 	}
 	sim.RegisterAll()
@@ -124,13 +146,18 @@ func TestParity(t *testing.T) {
 	}
 	mustReadJSON(t, "specs.json", &file)
 	master := map[string]parityResult{}
-	mustReadJSON(t, masterFile, &master)
+	if masterFile != "" {
+		mustReadJSON(t, masterFile, &master)
+	}
 	iterations, _ := strconv.Atoi(os.Getenv("PARITY_ITERATIONS"))
 
 	fmt.Printf("\n%-20s %9s %9s %8s   %s\n", "spec", "master", "next", "gap", "final stats master | next: ap sd crit%(melee/spell) hit% str/agi/int")
 	for _, spec := range file.Specs {
 		m := master[spec.Name]
 		n := runSpec(spec, file.Profiles[spec.Profile], int32(iterations))
+		if arenaOut != "" {
+			writeArena(t, arenaOut, spec, n)
+		}
 		gap := "-"
 		if m.Error == "" && n.Error == "" && m.Dps > 0 {
 			gap = fmt.Sprintf("%+.1f%%", (n.Dps/m.Dps-1)*100)
@@ -256,12 +283,15 @@ func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int
 		debugHook(result)
 	}
 	actions, casts := actionDps(result.RaidMetrics.Parties[0].Players[0], result.RaidMetrics.Dps.Avg, iterations)
+	damage, weapon := spellDamage(result.RaidMetrics.Parties[0].Players[0])
 	return parityResult{
-		Dps:     result.RaidMetrics.Dps.Avg,
-		Actions: actions,
-		Casts:   casts,
-		Oom:     result.RaidMetrics.Parties[0].Players[0].SecondsOomAvg,
-		Dtps:    result.RaidMetrics.Parties[0].Players[0].Dtps.Avg,
+		Damage:       damage,
+		WeaponDamage: weapon,
+		Dps:          result.RaidMetrics.Dps.Avg,
+		Actions:      actions,
+		Casts:        casts,
+		Oom:          result.RaidMetrics.Parties[0].Players[0].SecondsOomAvg,
+		Dtps:         result.RaidMetrics.Parties[0].Players[0].Dtps.Avg,
 		Stats: map[string]float64{
 			"ap": s[stats.AttackPower], "rap": s[stats.RangedAttackPower], "sd": s[stats.SpellDamage],
 			"mcrit": s[stats.PhysicalCritPercent], "scrit": s[stats.SpellCritPercent],
@@ -272,6 +302,64 @@ func runSpecWithGear(spec paritySpec, profile map[string]float64, iterations int
 }
 
 var debugHook func(*proto.RaidSimResult)
+
+// One spec's result as the arena merger reads it. The build is the parity profile, not a gear
+// set: bonus stats and statless weapons, no consumables beyond what the class grants itself.
+func writeArena(t *testing.T, dir string, spec paritySpec, r parityResult) {
+	consumables := "No consumables"
+	if spec.Name == "rogue" {
+		consumables += "+class"
+	}
+	row := arenaResult{
+		Spec:         spec.Name,
+		Talents:      spec.Talents,
+		Build:        "parity build",
+		Gear:         "parity " + spec.Profile + " profile",
+		Rotation:     filepath.Base(spec.NextApl),
+		Consumables:  consumables,
+		Dps:          r.Dps,
+		Damage:       r.Damage,
+		WeaponDamage: r.WeaponDamage,
+	}
+	if row.Damage == nil {
+		row.Damage = map[string]float64{}
+	}
+	body, err := json.MarshalIndent([]arenaResult{row}, "", "	")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(dir, spec.Name+".json"), body, 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// Damage per spell, summed over targets, the player's and its pets', as master's arenalib
+// collects it: auto attacks are weapon damage, a spell-less item effect is spell "0".
+func spellDamage(unit *proto.UnitMetrics) (map[string]float64, float64) {
+	damage, weapon := map[string]float64{}, 0.0
+	for _, u := range append([]*proto.UnitMetrics{unit}, unit.Pets...) {
+		for _, action := range u.Actions {
+			total := 0.0
+			for _, target := range action.Targets {
+				total += target.Damage
+			}
+			if total <= 0 {
+				continue
+			}
+			if id := action.Id.GetSpellId(); id != 0 {
+				damage[fmt.Sprint(id)] += total
+			} else if action.Id.GetOtherId() != proto.OtherAction_OtherActionNone {
+				weapon += total
+			} else {
+				damage["0"] += total
+			}
+		}
+	}
+	return damage, weapon
+}
 
 func mustReadJSON(t *testing.T, path string, v interface{}) {
 	raw, err := os.ReadFile(path)

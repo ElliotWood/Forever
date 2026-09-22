@@ -1,5 +1,4 @@
-import { ProductPage } from './ProductPage';
+import { BisPage } from './bis/BisPage';
 import { mountPage } from './mount_page';
 
-// Placeholder until the page is ported.
-mountPage(<ProductPage title="bis">{null}</ProductPage>);
+mountPage(<BisPage />);

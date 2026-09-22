@@ -1,4 +1,4 @@
-import { type Composition, TIER_LABELS, TIER_ORDER, type Tier, unsettledShare } from '@sim/spells/rests';
+import { type Composition, type Tier, TIER_LABELS, TIER_ORDER, unsettledShare } from '@sim/spells/rests';
 import { formatToPercent } from '@sim/utils/format';
 import clsx from 'clsx';
 

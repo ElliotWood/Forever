@@ -1,5 +1,4 @@
-import { ProductPage } from './ProductPage';
 import { mountPage } from './mount_page';
+import { StatWeightsPage } from './stat_weights/StatWeightsPage';
 
-// Placeholder until the page is ported.
-mountPage(<ProductPage title="stat_weights">{null}</ProductPage>);
+mountPage(<StatWeightsPage />);

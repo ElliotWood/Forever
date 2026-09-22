@@ -1,5 +1,4 @@
-import { ProductPage } from './ProductPage';
 import { mountPage } from './mount_page';
+import { ScrubPage } from './scrub/ScrubPage';
 
-// Placeholder until the page is ported.
-mountPage(<ProductPage title="scrub">{null}</ProductPage>);
+mountPage(<ScrubPage />);
