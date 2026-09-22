@@ -766,8 +766,10 @@ func spellDataDamageHandler(character *core.Character, damageSpell *core.Spell, 
 			}
 
 		case callback.Matches(core.CallbackOnSpellHitDealt | core.CallbackOnPeriodicDamageDealt):
-			// Land the extra damage on whatever was hit, not on the primary target.
-			if result != nil && result.Target != nil {
+			// Land the extra damage on whatever was hit, not on the primary target - unless that is
+			// the wearer. A sapper charge is a hit the character deals to itself, and "chance on hit
+			// to deal damage" means the enemy it is fighting, not its own health.
+			if result != nil && result.Target != nil && result.Target != &character.Unit {
 				target = result.Target
 			}
 
