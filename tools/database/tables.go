@@ -549,7 +549,9 @@ func LoadAndWriteRawEnchants(dbHelper *DBHelper, inputsDir string) ([]dbc.Enchan
 				WHEN sie.Effect_2 IN (1, 3) THEN sie.EffectArg_2
 				ELSE se.SpellID
 			END AS spellId,
-			COALESCE(MIN(ixie.ItemID), 0) as ItemId,
+			-- The lowest item the client ships (it has an ItemSparse row), else the lowest item. This is the
+			-- query's only aggregate, so the bare columns (icon and quality among them) come from its row.
+			COALESCE(MIN(CASE WHEN isp.ID IS NULL THEN ixie.ItemID + 1000000000 ELSE ixie.ItemID END) % 1000000000, 0) as ItemId,
 			sie.RequiredSkillID as professionId,
 			sie.Effect as Effect,
 			sie.EffectPointsMin as EffectPoints,

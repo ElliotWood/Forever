@@ -106,14 +106,21 @@ func TestRawEnchantsKeepOneRowPerEnchantAndName(t *testing.T) {
 	}
 }
 
-// A grant taught by several items names the lowest item id, and the icon and quality are that
-// item's.
+// A grant taught by several items names the lowest item id the client ships, or the lowest item id
+// where it ships none, and the icon and quality are that item's.
 func TestRawEnchantNamesItsLowestItem(t *testing.T) {
-	bracer := rawEnchantsByKey(loadRawEnchantFixture(t))[rawEnchantKey{8203, "Enchant Bracer - Lesser Spirit"}]
+	byKey := rawEnchantsByKey(loadRawEnchantFixture(t))
 
-	if bracer.ItemId != 249500 || bracer.FDID != 134327 || bracer.Quality != 2 {
-		t.Errorf("item %d, icon %d, quality %d; want item 249500, icon 134327, quality 2",
-			bracer.ItemId, bracer.FDID, bracer.Quality)
+	for key, want := range map[rawEnchantKey]struct{ item, icon, quality int }{
+		{8203, "Enchant Bracer - Lesser Spirit"}: {249500, 134327, 2},
+		{8203, "Enchant Boots - Lesser Spirit"}:  {249501, 134327, 2},
+		{7884, "Might of the Scourge"}:           {236326, 10, 1},
+	} {
+		got := byKey[key]
+		if got.ItemId != want.item || got.FDID != want.icon || int(got.Quality) != want.quality {
+			t.Errorf("enchant %d %q: item %d, icon %d, quality %d; want item %d, icon %d, quality %d",
+				key.id, key.name, got.ItemId, got.FDID, got.Quality, want.item, want.icon, want.quality)
+		}
 	}
 }
 
