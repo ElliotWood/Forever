@@ -81,10 +81,45 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-BloodTigerHarness"
+ value: {
+  dps: 711.29438
+  tps: 353.5133
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-BloodvineGarb"
+ value: {
+  dps: 720.88221
+  tps: 358.27846
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-CadaverousGarb"
+ value: {
+  dps: 775.62859
+  tps: 385.48741
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Dal'Rend'sArms"
+ value: {
+  dps: 697.47488
+  tps: 346.64502
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 696.29366
   tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-DevilsaurArmor"
+ value: {
+  dps: 743.38413
+  tps: 369.46191
  }
 }
 dps_results: {
@@ -99,6 +134,13 @@ dps_results: {
  value: {
   dps: 696.29366
   tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-DreadmistRaiment"
+ value: {
+  dps: 704.42097
+  tps: 350.09722
  }
 }
 dps_results: {
@@ -179,6 +221,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-IronfeatherArmor"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-JomGabbar-23570"
  value: {
   dps: 720.44253
@@ -190,6 +246,13 @@ dps_results: {
  value: {
   dps: 696.29366
   tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Magister'sRegalia"
+ value: {
+  dps: 703.25062
+  tps: 349.51556
  }
 }
 dps_results: {
@@ -221,6 +284,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-NecropileRaiment"
+ value: {
+  dps: 700.92967
+  tps: 348.36205
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-Prismcharm-15867"
  value: {
   dps: 696.29366
@@ -232,6 +302,13 @@ dps_results: {
  value: {
   dps: 690.54418
   tps: 343.20046
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
  }
 }
 dps_results: {
@@ -249,6 +326,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 830.4463
+  tps: 412.73181
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-ShardoftheGods"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-Slayer'sCrest-23041"
  value: {
   dps: 729.61262
@@ -260,6 +351,27 @@ dps_results: {
  value: {
   dps: 696.29366
   tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Spider'sKiss"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 763.31894
+  tps: 379.36951
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-StormshroudArmor"
+ value: {
+  dps: 777.27167
+  tps: 386.30402
  }
 }
 dps_results: {
@@ -284,6 +396,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-ThePostmaster"
+ value: {
+  dps: 704.42097
+  tps: 350.09722
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 696.29366
@@ -295,6 +414,34 @@ dps_results: {
  value: {
   dps: 696.29366
   tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 703.68326
+  tps: 349.73058
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-VolcanicArmor"
+ value: {
+  dps: 701.5467
+  tps: 348.66871
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-WildheartRaiment"
+ value: {
+  dps: 709.84125
+  tps: 352.7911
  }
 }
 dps_results: {

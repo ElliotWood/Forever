@@ -88,7 +88,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-BloodvineGarb"
+ value: {
+  dps: 658.00644
+  tps: 403.98295
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 522.82228
+  tps: 324.14348
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Dal'Rend'sArms"
  value: {
   dps: 522.82228
   tps: 324.14348
@@ -120,6 +134,13 @@ dps_results: {
  value: {
   dps: 547.8529
   tps: 338.4307
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-DreadmistRaiment"
+ value: {
+  dps: 730.62785
+  tps: 447.85529
  }
 }
 dps_results: {
@@ -228,6 +249,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 620.85068
+  tps: 384.23168
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-JomGabbar-23570"
  value: {
   dps: 516.62944
@@ -246,6 +274,13 @@ dps_results: {
  value: {
   dps: 516.62944
   tps: 320.41989
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Magister'sRegalia"
+ value: {
+  dps: 765.57962
+  tps: 471.52056
  }
 }
 dps_results: {
@@ -277,6 +312,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-NecropileRaiment"
+ value: {
+  dps: 629.41273
+  tps: 388.18555
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-Prismcharm-15867"
  value: {
   dps: 516.62944
@@ -291,10 +333,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 558.37991
+  tps: 345.51482
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-SerenityField-272439"
  value: {
   dps: 538.73066
   tps: 333.66564
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-ShardoftheGods"
+ value: {
+  dps: 531.04702
+  tps: 328.99369
  }
 }
 dps_results: {
@@ -340,6 +396,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-ThePostmaster"
+ value: {
+  dps: 672.1063
+  tps: 412.95423
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 588.68025
@@ -351,6 +414,13 @@ dps_results: {
  value: {
   dps: 516.62944
   tps: 320.41989
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 736.7393
+  tps: 453.97159
  }
 }
 dps_results: {

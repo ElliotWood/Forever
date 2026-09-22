@@ -74,10 +74,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-BeaststalkerArmor"
+ value: {
+  dps: 820.52432
+  tps: 413.02334
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-Biznicks247x128Accurascope-2523"
  value: {
   dps: 751.17277
   tps: 363.00125
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-BlackDragonMail"
+ value: {
+  dps: 751.99444
+  tps: 364.27141
  }
 }
 dps_results: {
@@ -102,10 +116,52 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-BloodTigerHarness"
+ value: {
+  dps: 748.07135
+  tps: 361.39117
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-BloodmailRegalia"
+ value: {
+  dps: 780.32369
+  tps: 384.11102
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-BloodsoulEmbrace"
+ value: {
+  dps: 771.63092
+  tps: 377.60833
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-BloodvineGarb"
+ value: {
+  dps: 762.10679
+  tps: 370.6769
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-BlueDragonMail"
+ value: {
+  dps: 755.24937
+  tps: 366.4993
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-Bonereaver'sEdge-17076"
  value: {
   dps: 743.50448
   tps: 358.22987
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-CadaverousGarb"
+ value: {
+  dps: 785.63506
+  tps: 387.31007
  }
 }
 dps_results: {
@@ -116,10 +172,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Dal'Rend'sArms"
+ value: {
+  dps: 750.85247
+  tps: 363.37346
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 740.30849
   tps: 355.99268
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-DevilsaurArmor"
+ value: {
+  dps: 757.46765
+  tps: 367.59288
  }
 }
 dps_results: {
@@ -134,6 +204,13 @@ dps_results: {
  value: {
   dps: 740.30849
   tps: 355.99268
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-DreadmistRaiment"
+ value: {
+  dps: 767.36171
+  tps: 374.75845
  }
 }
 dps_results: {
@@ -214,10 +291,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-GarboftheUndeadSlayer"
+ value: {
+  dps: 740.30849
+  tps: 355.99268
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-General'sChainGloves-16571"
  value: {
   dps: 754.47725
   tps: 365.91431
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-GreenDragonMail"
+ value: {
+  dps: 743.59649
+  tps: 357.87212
  }
 }
 dps_results: {
@@ -263,6 +354,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-IronfeatherArmor"
+ value: {
+  dps: 749.20039
+  tps: 362.15174
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 757.22178
+  tps: 367.91374
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-JomGabbar-23570"
  value: {
   dps: 753.50545
@@ -281,6 +386,13 @@ dps_results: {
  value: {
   dps: 740.30849
   tps: 355.99268
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Magister'sRegalia"
+ value: {
+  dps: 773.50405
+  tps: 379.12263
  }
 }
 dps_results: {
@@ -319,6 +431,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-NecropileRaiment"
+ value: {
+  dps: 755.43602
+  tps: 366.61961
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-Prismcharm-15867"
  value: {
   dps: 740.30849
@@ -333,10 +452,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 746.25934
+  tps: 360.1801
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-SerenityField-272439"
  value: {
   dps: 741.27687
   tps: 355.74646
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 825.69844
+  tps: 415.81458
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-ShardoftheGods"
+ value: {
+  dps: 740.30849
+  tps: 355.58901
  }
 }
 dps_results: {
@@ -361,10 +501,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 755.45984
+  tps: 366.59862
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-StormGauntlets-12632"
  value: {
   dps: 744.63481
   tps: 359.11967
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-StormshroudArmor"
+ value: {
+  dps: 768.76458
+  tps: 376.01051
  }
 }
 dps_results: {
@@ -382,10 +536,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-TheElements"
+ value: {
+  dps: 772.18829
+  tps: 378.22761
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-TheHighlander'sFortitude"
+ value: {
+  dps: 762.03843
+  tps: 371.11468
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 740.30849
   tps: 355.99268
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-ThePostmaster"
+ value: {
+  dps: 761.03714
+  tps: 370.51175
  }
 }
 dps_results: {
@@ -403,10 +578,38 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 740.30849
+  tps: 355.99268
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 766.10899
+  tps: 373.73408
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-VolcanicArmor"
+ value: {
+  dps: 740.30849
+  tps: 355.99268
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-WarbladeofCaerDarrow-13982"
  value: {
   dps: 740.30849
   tps: 355.99268
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-WildheartRaiment"
+ value: {
+  dps: 768.5954
+  tps: 375.47822
  }
 }
 dps_results: {

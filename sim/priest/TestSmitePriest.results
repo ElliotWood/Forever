@@ -88,6 +88,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-BloodvineGarb"
+ value: {
+  dps: 387.98497
+  tps: 264.483
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 331.52726
@@ -113,6 +120,13 @@ dps_results: {
  value: {
   dps: 342.70233
   tps: 232.31773
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-DreadmistRaiment"
+ value: {
+  dps: 446.85567
+  tps: 307.46957
  }
 }
 dps_results: {
@@ -221,6 +235,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 385.02578
+  tps: 263.77065
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-JomGabbar-23570"
  value: {
   dps: 328.02056
@@ -239,6 +260,13 @@ dps_results: {
  value: {
   dps: 328.02056
   tps: 222.04049
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-Magister'sRegalia"
+ value: {
+  dps: 482.86963
+  tps: 336.2503
  }
 }
 dps_results: {
@@ -270,6 +298,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-NecropileRaiment"
+ value: {
+  dps: 389.2708
+  tps: 266.15345
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-Prismcharm-15867"
  value: {
   dps: 328.02056
@@ -284,10 +319,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 353.028
+  tps: 240.06721
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-SerenityField-272439"
  value: {
   dps: 336.51602
   tps: 227.87094
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-ShardoftheGods"
+ value: {
+  dps: 339.0441
+  tps: 229.88885
  }
 }
 dps_results: {
@@ -299,6 +348,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-SmokingHeartoftheMountain-11811"
+ value: {
+  dps: 328.02056
+  tps: 222.04049
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-Spider'sKiss"
  value: {
   dps: 328.02056
   tps: 222.04049
@@ -333,10 +389,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-ThePostmaster"
+ value: {
+  dps: 411.24848
+  tps: 281.92567
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 359.78976
   tps: 243.67414
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 470.92906
+  tps: 327.46813
  }
 }
 dps_results: {

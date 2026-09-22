@@ -88,7 +88,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-BloodvineGarb"
+ value: {
+  dps: 598.839
+  tps: 427.16913
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 524.54658
+  tps: 375.64479
+ }
+}
+dps_results: {
+ key: "TestArcane-AllItems-Dal'Rend'sArms"
  value: {
   dps: 524.54658
   tps: 375.64479
@@ -120,6 +134,13 @@ dps_results: {
  value: {
   dps: 541.09293
   tps: 386.9484
+ }
+}
+dps_results: {
+ key: "TestArcane-AllItems-DreadmistRaiment"
+ value: {
+  dps: 593.48434
+  tps: 426.63105
  }
 }
 dps_results: {
@@ -228,6 +249,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 545.17228
+  tps: 394.10252
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-JomGabbar-23570"
  value: {
   dps: 520.09187
@@ -246,6 +274,13 @@ dps_results: {
  value: {
   dps: 520.09187
   tps: 372.7679
+ }
+}
+dps_results: {
+ key: "TestArcane-AllItems-Magister'sRegalia"
+ value: {
+  dps: 595.73177
+  tps: 430.08372
  }
 }
 dps_results: {
@@ -277,6 +312,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-NecropileRaiment"
+ value: {
+  dps: 559.13926
+  tps: 403.65304
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-Prismcharm-15867"
  value: {
   dps: 520.09187
@@ -291,10 +333,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 534.90283
+  tps: 383.64777
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-SerenityField-272439"
  value: {
   dps: 531.22245
   tps: 380.59749
+ }
+}
+dps_results: {
+ key: "TestArcane-AllItems-ShardoftheGods"
+ value: {
+  dps: 522.01734
+  tps: 374.58967
  }
 }
 dps_results: {
@@ -340,6 +396,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestArcane-AllItems-ThePostmaster"
+ value: {
+  dps: 576.86911
+  tps: 415.1048
+ }
+}
+dps_results: {
  key: "TestArcane-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 565.22547
@@ -351,6 +414,13 @@ dps_results: {
  value: {
   dps: 520.09187
   tps: 372.7679
+ }
+}
+dps_results: {
+ key: "TestArcane-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 580.76653
+  tps: 418.62011
  }
 }
 dps_results: {

@@ -147,10 +147,42 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-BloodTigerHarness"
+ value: {
+  dps: 177.19547
+  tps: 122.01716
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-BloodvineGarb"
+ value: {
+  dps: 177.52081
+  tps: 122.22409
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-CadaverousGarb"
+ value: {
+  dps: 198.17817
+  tps: 136.70505
+  dtps: 7.38194
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 169.66864
   tps: 116.74838
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-DevilsaurArmor"
+ value: {
+  dps: 184.07523
+  tps: 126.83299
   dtps: 7.47288
  }
 }
@@ -168,6 +200,14 @@ dps_results: {
   dps: 169.66864
   tps: 116.74838
   dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-DreadmistRaiment"
+ value: {
+  dps: 172.37498
+  tps: 118.64282
+  dtps: 7.38194
  }
 }
 dps_results: {
@@ -299,6 +339,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-IronfeatherArmor"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.56008
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-JomGabbar-23570"
  value: {
   dps: 174.10291
@@ -312,6 +368,14 @@ dps_results: {
   dps: 169.66864
   tps: 116.74838
   dtps: 6.62607
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-Magister'sRegalia"
+ value: {
+  dps: 172.43134
+  tps: 118.64035
+  dtps: 7.38194
  }
 }
 dps_results: {
@@ -347,6 +411,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-NecropileRaiment"
+ value: {
+  dps: 171.0322
+  tps: 117.70287
+  dtps: 7.38194
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-Prismcharm-15867"
  value: {
   dps: 169.66864
@@ -363,11 +435,35 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-SerenityField-272439"
  value: {
   dps: 169.66864
   tps: 116.74838
   dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 195.92226
+  tps: 135.12111
+  dtps: 7.38194
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-ShardoftheGods"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.22345
  }
 }
 dps_results: {
@@ -387,11 +483,35 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-Spider'sKiss"
+ value: {
+  dps: 189.51565
+  tps: 130.64129
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-SpireoftheStoneshaper-12532"
  value: {
   dps: 187.1056
   tps: 128.95425
   dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 213.54997
+  tps: 147.42339
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-StormshroudArmor"
+ value: {
+  dps: 184.58146
+  tps: 127.11217
+  dtps: 7.61869
  }
 }
 dps_results: {
@@ -419,11 +539,51 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralCat-AllItems-ThePostmaster"
+ value: {
+  dps: 172.37498
+  tps: 118.64282
+  dtps: 7.47288
+ }
+}
+dps_results: {
  key: "TestFeralCat-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 169.66864
   tps: 116.74838
   dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 172.37966
+  tps: 118.64609
+  dtps: 7.47288
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 169.66864
+  tps: 116.74838
+  dtps: 7.38194
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-VolcanicArmor"
+ value: {
+  dps: 172.92698
+  tps: 119.02922
+  dtps: 6.86975
+ }
+}
+dps_results: {
+ key: "TestFeralCat-AllItems-WildheartRaiment"
+ value: {
+  dps: 177.07876
+  tps: 121.93547
+  dtps: 7.38194
  }
 }
 dps_results: {

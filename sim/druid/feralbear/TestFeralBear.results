@@ -147,11 +147,43 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-BloodTigerHarness"
+ value: {
+  dps: 177.90083
+  tps: 190.10948
+  dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-BloodvineGarb"
+ value: {
+  dps: 178.99296
+  tps: 191.2973
+  dtps: 1079.71718
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-CadaverousGarb"
+ value: {
+  dps: 195.10055
+  tps: 207.42341
+  dtps: 1003.00673
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 171.41857
   tps: 183.59948
   dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-DevilsaurArmor"
+ value: {
+  dps: 184.56838
+  tps: 196.87431
+  dtps: 1078.14329
  }
 }
 dps_results: {
@@ -168,6 +200,14 @@ dps_results: {
   dps: 171.41857
   tps: 183.59948
   dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-DreadmistRaiment"
+ value: {
+  dps: 173.13966
+  tps: 185.29557
+  dtps: 1080.17827
  }
 }
 dps_results: {
@@ -299,6 +339,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-IronfeatherArmor"
+ value: {
+  dps: 171.41857
+  tps: 183.59948
+  dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 171.41857
+  tps: 183.60225
+  dtps: 924.65018
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-JomGabbar-23570"
  value: {
   dps: 175.8959
@@ -312,6 +368,14 @@ dps_results: {
   dps: 171.41857
   tps: 183.59948
   dtps: 1085.97214
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-Magister'sRegalia"
+ value: {
+  dps: 172.77981
+  tps: 184.93572
+  dtps: 1081.66701
  }
 }
 dps_results: {
@@ -347,6 +411,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-NecropileRaiment"
+ value: {
+  dps: 172.33024
+  tps: 184.46115
+  dtps: 1037.80002
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-Prismcharm-15867"
  value: {
   dps: 171.41857
@@ -363,11 +435,35 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 171.41857
+  tps: 183.59948
+  dtps: 1070.80127
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-SerenityField-272439"
  value: {
   dps: 171.41857
   tps: 183.59948
   dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 190.24014
+  tps: 201.54544
+  dtps: 920.3069
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-ShardoftheGods"
+ value: {
+  dps: 171.41857
+  tps: 183.59948
+  dtps: 1086.56952
  }
 }
 dps_results: {
@@ -387,11 +483,35 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-Spider'sKiss"
+ value: {
+  dps: 184.1914
+  tps: 196.09731
+  dtps: 1045.53923
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-SpireoftheStoneshaper-12532"
  value: {
   dps: 178.30271
   tps: 190.05862
   dtps: 1003.61504
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 205.33359
+  tps: 217.17978
+  dtps: 1038.80205
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-StormshroudArmor"
+ value: {
+  dps: 183.56207
+  tps: 195.60019
+  dtps: 1056.35265
  }
 }
 dps_results: {
@@ -419,11 +539,51 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFeralBear-AllItems-ThePostmaster"
+ value: {
+  dps: 173.13966
+  tps: 185.29557
+  dtps: 1044.33343
+ }
+}
+dps_results: {
  key: "TestFeralBear-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 171.41857
   tps: 183.59948
   dtps: 1086.96779
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 173.7139
+  tps: 185.90742
+  dtps: 1055.55489
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 171.41857
+  tps: 183.59948
+  dtps: 1086.83711
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-VolcanicArmor"
+ value: {
+  dps: 174.6177
+  tps: 186.95415
+  dtps: 1054.89847
+ }
+}
+dps_results: {
+ key: "TestFeralBear-AllItems-WildheartRaiment"
+ value: {
+  dps: 177.69248
+  tps: 190.11177
+  dtps: 1086.83711
  }
 }
 dps_results: {

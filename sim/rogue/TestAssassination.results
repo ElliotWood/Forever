@@ -81,10 +81,45 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-BloodTigerHarness"
+ value: {
+  dps: 698.21307
+  tps: 347.01189
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-BloodvineGarb"
+ value: {
+  dps: 707.97005
+  tps: 351.86112
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-CadaverousGarb"
+ value: {
+  dps: 757.19073
+  tps: 376.32379
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Dal'Rend'sArms"
+ value: {
+  dps: 299.85214
+  tps: 149.02651
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 681.11593
   tps: 338.51462
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-DevilsaurArmor"
+ value: {
+  dps: 732.34321
+  tps: 363.97457
  }
 }
 dps_results: {
@@ -99,6 +134,13 @@ dps_results: {
  value: {
   dps: 681.11593
   tps: 338.51462
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-DreadmistRaiment"
+ value: {
+  dps: 691.84899
+  tps: 343.84895
  }
 }
 dps_results: {
@@ -179,6 +221,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-IronfeatherArmor"
+ value: {
+  dps: 681.11593
+  tps: 338.51462
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 681.11593
+  tps: 338.51462
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-JomGabbar-23570"
  value: {
   dps: 700.13009
@@ -190,6 +246,13 @@ dps_results: {
  value: {
   dps: 681.11593
   tps: 338.51462
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Magister'sRegalia"
+ value: {
+  dps: 690.31848
+  tps: 343.08829
  }
 }
 dps_results: {
@@ -221,6 +284,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-NecropileRaiment"
+ value: {
+  dps: 685.43568
+  tps: 340.66153
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Prismcharm-15867"
  value: {
   dps: 681.11593
@@ -232,6 +302,13 @@ dps_results: {
  value: {
   dps: 674.99261
   tps: 335.47133
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 681.11593
+  tps: 338.51462
  }
 }
 dps_results: {
@@ -249,6 +326,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 812.80265
+  tps: 403.96292
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-ShardoftheGods"
+ value: {
+  dps: 681.11593
+  tps: 338.51462
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-Slayer'sCrest-23041"
  value: {
   dps: 708.69929
@@ -260,6 +351,27 @@ dps_results: {
  value: {
   dps: 681.11593
   tps: 338.51462
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-Spider'sKiss"
+ value: {
+  dps: 681.11593
+  tps: 338.51462
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 339.19309
+  tps: 168.57896
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-StormshroudArmor"
+ value: {
+  dps: 766.95691
+  tps: 381.17758
  }
 }
 dps_results: {
@@ -284,6 +396,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-ThePostmaster"
+ value: {
+  dps: 691.84899
+  tps: 343.84895
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 681.11593
@@ -295,6 +414,34 @@ dps_results: {
  value: {
   dps: 681.11593
   tps: 338.51462
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 687.6214
+  tps: 341.74784
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 681.11593
+  tps: 338.51462
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-VolcanicArmor"
+ value: {
+  dps: 684.85881
+  tps: 340.37483
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-WildheartRaiment"
+ value: {
+  dps: 693.04263
+  tps: 344.44219
  }
 }
 dps_results: {

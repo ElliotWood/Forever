@@ -88,10 +88,38 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-BattlegearofUndeadSlaying"
+ value: {
+  dps: 759.33806
+  tps: 467.32868
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BattlegearofValor"
+ value: {
+  dps: 877.58492
+  tps: 541.7815
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-BattlegearofWrath"
  value: {
   dps: 773.0296
   tps: 475.15234
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BeaststalkerArmor"
+ value: {
+  dps: 826.85629
+  tps: 507.50886
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BlackDragonMail"
+ value: {
+  dps: 822.16154
+  tps: 503.88009
  }
 }
 dps_results: {
@@ -109,10 +137,52 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-BloodTigerHarness"
+ value: {
+  dps: 785.41292
+  tps: 483.25196
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BloodmailRegalia"
+ value: {
+  dps: 834.38963
+  tps: 512.41106
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BloodsoulEmbrace"
+ value: {
+  dps: 794.63974
+  tps: 489.32154
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BloodvineGarb"
+ value: {
+  dps: 785.79485
+  tps: 484.63137
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BlueDragonMail"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Bonereaver'sEdge-17076"
  value: {
   dps: 751.12313
   tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-CadaverousGarb"
+ value: {
+  dps: 849.28301
+  tps: 520.01531
  }
 }
 dps_results: {
@@ -137,10 +207,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-Dal'Rend'sArms"
+ value: {
+  dps: 760.48512
+  tps: 464.87861
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 751.12313
   tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-DeathboneGuardian"
+ value: {
+  dps: 772.21242
+  tps: 475.76242
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-DevilsaurArmor"
+ value: {
+  dps: 808.76236
+  tps: 496.37856
  }
 }
 dps_results: {
@@ -155,6 +246,13 @@ dps_results: {
  value: {
   dps: 751.12313
   tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-DreadmistRaiment"
+ value: {
+  dps: 764.73168
+  tps: 471.39975
  }
 }
 dps_results: {
@@ -228,6 +326,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-GarboftheUndeadSlayer"
+ value: {
+  dps: 759.33806
+  tps: 467.32868
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-GreenDragonMail"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
   dps: 751.12313
@@ -270,6 +382,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-ImperialPlate"
+ value: {
+  dps: 856.58981
+  tps: 523.64925
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-IronfeatherArmor"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-JomGabbar-23570"
  value: {
   dps: 774.26546
@@ -284,10 +417,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-LightforgeArmor"
+ value: {
+  dps: 853.22675
+  tps: 522.73351
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Loatheb'sReflection-23042"
  value: {
   dps: 751.12313
   tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-Magister'sRegalia"
+ value: {
+  dps: 765.71326
+  tps: 472.21126
  }
 }
 dps_results: {
@@ -319,6 +466,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-NecropileRaiment"
+ value: {
+  dps: 763.69944
+  tps: 470.84684
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Prismcharm-15867"
  value: {
   dps: 751.12313
@@ -333,6 +487,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-SatchelofDarkIronBombs-285278"
  value: {
   dps: 751.12313
@@ -341,6 +502,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestFury-AllItems-SerenityField-272439"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 852.24031
+  tps: 523.48172
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-ShardoftheGods"
  value: {
   dps: 751.12313
   tps: 462.63448
@@ -361,10 +536,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-Spider'sKiss"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 786.35867
+  tps: 483.04504
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-StormGauntlets-12632"
  value: {
   dps: 768.68709
   tps: 473.61478
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-StormshroudArmor"
+ value: {
+  dps: 821.54465
+  tps: 506.08902
  }
 }
 dps_results: {
@@ -382,10 +578,38 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-TheDarksoul"
+ value: {
+  dps: 785.79485
+  tps: 484.63137
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-TheElements"
+ value: {
+  dps: 787.20296
+  tps: 484.50747
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-TheHighlander'sFortitude"
+ value: {
+  dps: 788.11605
+  tps: 484.74163
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 751.12313
   tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-ThePostmaster"
+ value: {
+  dps: 764.73168
+  tps: 471.39975
  }
 }
 dps_results: {
@@ -403,10 +627,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 759.33806
+  tps: 467.32868
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Vindicator'sBattlegear"
  value: {
   dps: 829.13013
   tps: 511.16679
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-VolcanicArmor"
+ value: {
+  dps: 754.96415
+  tps: 464.78545
  }
 }
 dps_results: {
@@ -421,6 +666,13 @@ dps_results: {
  value: {
   dps: 874.88618
   tps: 535.66585
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-WildheartRaiment"
+ value: {
+  dps: 773.57726
+  tps: 475.46529
  }
 }
 dps_results: {

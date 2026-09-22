@@ -74,10 +74,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-BeaststalkerArmor"
+ value: {
+  dps: 450.74446
+  tps: 329.51573
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-Biznicks247x128Accurascope-2523"
  value: {
   dps: 395.27455
   tps: 290.64957
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-BlackDragonMail"
+ value: {
+  dps: 426.77242
+  tps: 312.26802
  }
 }
 dps_results: {
@@ -95,6 +109,48 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-BloodTigerHarness"
+ value: {
+  dps: 414.6301
+  tps: 304.11336
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-BloodmailRegalia"
+ value: {
+  dps: 446.49596
+  tps: 326.1744
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-BloodsoulEmbrace"
+ value: {
+  dps: 418.84924
+  tps: 306.49211
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-BloodvineGarb"
+ value: {
+  dps: 432.70191
+  tps: 316.52168
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-BlueDragonMail"
+ value: {
+  dps: 417.02181
+  tps: 305.87265
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-CadaverousGarb"
+ value: {
+  dps: 438.43626
+  tps: 320.3177
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 395.39697
@@ -109,6 +165,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-DevilsaurArmor"
+ value: {
+  dps: 422.7528
+  tps: 309.72782
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-DormantHeartoftheMountain-249473"
  value: {
   dps: 395.27455
@@ -120,6 +183,13 @@ dps_results: {
  value: {
   dps: 399.68262
   tps: 293.73523
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-DreadmistRaiment"
+ value: {
+  dps: 433.91572
+  tps: 317.07874
  }
 }
 dps_results: {
@@ -200,6 +270,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-GarboftheUndeadSlayer"
+ value: {
+  dps: 398.91055
+  tps: 293.19477
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-GreenDragonMail"
+ value: {
+  dps: 401.93993
+  tps: 294.69181
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
   dps: 395.81309
@@ -235,6 +319,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-IronfeatherArmor"
+ value: {
+  dps: 409.4449
+  tps: 300.56215
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 417.76741
+  tps: 306.39457
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-JomGabbar-23570"
  value: {
   dps: 406.93914
@@ -253,6 +351,13 @@ dps_results: {
  value: {
   dps: 395.27455
   tps: 290.64957
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-Magister'sRegalia"
+ value: {
+  dps: 442.75157
+  tps: 323.67713
  }
 }
 dps_results: {
@@ -284,6 +389,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-NecropileRaiment"
+ value: {
+  dps: 415.01883
+  tps: 304.289
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-Prismcharm-15867"
  value: {
   dps: 395.27455
@@ -298,10 +410,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 403.65328
+  tps: 296.51469
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-SerenityField-272439"
  value: {
   dps: 397.23931
   tps: 292.01157
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 449.04088
+  tps: 328.22807
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-ShardoftheGods"
+ value: {
+  dps: 395.27455
+  tps: 290.18534
  }
 }
 dps_results: {
@@ -319,10 +452,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-Spider'sKiss"
+ value: {
+  dps: 658.10637
+  tps: 480.80021
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 694.72809
+  tps: 507.3709
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-StormGauntlets-12632"
  value: {
   dps: 407.11753
   tps: 298.28172
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-StormshroudArmor"
+ value: {
+  dps: 429.71268
+  tps: 314.25533
  }
 }
 dps_results: {
@@ -340,10 +494,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-TheElements"
+ value: {
+  dps: 443.45444
+  tps: 323.59315
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-TheHighlander'sFortitude"
+ value: {
+  dps: 417.37868
+  tps: 305.65949
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 395.27455
   tps: 290.64957
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-ThePostmaster"
+ value: {
+  dps: 425.02387
+  tps: 311.07465
  }
 }
 dps_results: {
@@ -358,6 +533,34 @@ dps_results: {
  value: {
   dps: 396.33683
   tps: 291.39317
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 398.91055
+  tps: 293.19477
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 431.54683
+  tps: 316.06698
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-VolcanicArmor"
+ value: {
+  dps: 398.06802
+  tps: 292.08455
+ }
+}
+dps_results: {
+ key: "TestEnhancement-AllItems-WildheartRaiment"
+ value: {
+  dps: 438.43289
+  tps: 320.6052
  }
 }
 dps_results: {

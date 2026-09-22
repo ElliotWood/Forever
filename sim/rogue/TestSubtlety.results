@@ -81,10 +81,45 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-BloodTigerHarness"
+ value: {
+  dps: 655.41363
+  tps: 325.74058
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-BloodvineGarb"
+ value: {
+  dps: 674.80891
+  tps: 335.38003
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-CadaverousGarb"
+ value: {
+  dps: 724.1276
+  tps: 359.89142
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Dal'Rend'sArms"
+ value: {
+  dps: 635.90709
+  tps: 316.04582
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 642.04215
   tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-DevilsaurArmor"
+ value: {
+  dps: 692.40597
+  tps: 344.12577
  }
 }
 dps_results: {
@@ -99,6 +134,13 @@ dps_results: {
  value: {
   dps: 642.04215
   tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-DreadmistRaiment"
+ value: {
+  dps: 652.48949
+  tps: 324.28727
  }
 }
 dps_results: {
@@ -179,6 +221,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-IronfeatherArmor"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-IronweaveBattlesuit"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-JomGabbar-23570"
  value: {
   dps: 661.82512
@@ -190,6 +246,13 @@ dps_results: {
  value: {
   dps: 642.04215
   tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Magister'sRegalia"
+ value: {
+  dps: 651.29892
+  tps: 323.69556
  }
 }
 dps_results: {
@@ -221,6 +284,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-NecropileRaiment"
+ value: {
+  dps: 643.59999
+  tps: 319.8692
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Prismcharm-15867"
  value: {
   dps: 642.04215
@@ -232,6 +302,13 @@ dps_results: {
  value: {
   dps: 636.04205
   tps: 316.1129
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-RegaliaofUndeadCleansing"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
  }
 }
 dps_results: {
@@ -249,6 +326,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-ShadowcraftArmor"
+ value: {
+  dps: 780.95557
+  tps: 388.13492
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-ShardoftheGods"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Slayer'sCrest-23041"
  value: {
   dps: 672.21907
@@ -260,6 +351,27 @@ dps_results: {
  value: {
   dps: 642.04215
   tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-Spider'sKiss"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-SpiritofEskhandar"
+ value: {
+  dps: 658.04007
+  tps: 327.04591
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-StormshroudArmor"
+ value: {
+  dps: 733.70369
+  tps: 364.65073
  }
 }
 dps_results: {
@@ -284,6 +396,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-ThePostmaster"
+ value: {
+  dps: 652.48949
+  tps: 324.28727
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 642.04215
@@ -295,6 +414,34 @@ dps_results: {
  value: {
   dps: 642.04215
   tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-UndeadSlayer'sArmor"
+ value: {
+  dps: 649.2349
+  tps: 322.66975
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-VestmentsoftheDevout"
+ value: {
+  dps: 642.04215
+  tps: 319.09495
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-VolcanicArmor"
+ value: {
+  dps: 646.91328
+  tps: 321.5159
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-WildheartRaiment"
+ value: {
+  dps: 655.22886
+  tps: 325.64875
  }
 }
 dps_results: {
