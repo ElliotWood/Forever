@@ -60,8 +60,9 @@ func (druid *Druid) applyMoonglow() {
 	}
 
 	druid.AddStaticMod(core.SpellModConfig{
-		// The client's mask (7340807) takes in Insect Swarm, not Moonkin Form.
-		ClassMask:  DruidSpellMoonfire | DruidSpellStarfire | DruidSpellWrath | DruidSpellInsectSwarm | DruidHealingSpells,
+		// The client's mask (7340807) is Wrath, Moonfire, Starfire, Insect Swarm, Hurricane and Nature's
+		// Grasp ("your damaging spells"): not Moonkin Form, Innervate or the heals.
+		ClassMask:  DruidSpellMoonfire | DruidSpellStarfire | DruidSpellWrath | DruidSpellInsectSwarm | DruidSpellHurricane,
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
 		FloatValue: spellData.Moonglow.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).FractionAt(druid.Talents.Moonglow),
 	})
