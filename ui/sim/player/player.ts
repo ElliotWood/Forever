@@ -46,7 +46,7 @@ import { SimSettingCategories } from '../constants/sim_settings';
 import type { PresetEpWeights } from '../presets/types';
 import { ActionId } from '../proto/action_id';
 import { Database } from '../proto/database';
-import { EquippedItem } from '../proto/equipped_item';
+import { EquippedItem, getWeaponDpsStatsBySlot } from '../proto/equipped_item';
 import { Gear, ItemSwapGear } from '../proto/gear';
 import { gemMatchesSocket, isUnrestrictedGem } from '../proto/gems';
 import { canEquipEnchant, canEquipItem, enchantAppliesToItem, getMetaGemEffectEP, isPVPItem } from '../proto/items';
@@ -1189,13 +1189,17 @@ export class Player<SpecType extends Spec> {
 		return ep;
 	}
 
-	computeEnchantEP(enchant: Enchant): number {
-		if (this.enchantEPCache.has(enchant.effectId)) {
-			return this.enchantEPCache.get(enchant.effectId)!;
+	computeEnchantEP(enchant: Enchant, slot?: ItemSlot, weapon?: Item | null): number {
+		let ep = this.enchantEPCache.get(enchant.effectId);
+		if (ep === undefined) {
+			ep = this.computeStatsEP(new Stats(enchant.stats, enchant.pseudoStats));
+			this.enchantEPCache.set(enchant.effectId, ep);
 		}
 
-		const ep = this.computeStatsEP(new Stats(enchant.stats, enchant.pseudoStats));
-		this.enchantEPCache.set(enchant.effectId, ep);
+		// Flat weapon damage is worth the DPS it adds at the enchanted weapon's speed, as a weapon's own damage is.
+		if (enchant.weaponDamage && slot !== undefined && weapon?.weaponSpeed) {
+			ep += this.computeStatsEP(getWeaponDpsStatsBySlot(enchant.weaponDamage / weapon.weaponSpeed, slot));
+		}
 		return ep;
 	}
 
