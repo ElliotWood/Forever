@@ -47,7 +47,8 @@ func (e *Effect) Trigger() *Spell {
 }
 
 // The amount at a caster level: the base points plus the per-level gain over the spell's own level,
-// stopping at the level the spell stops scaling at.
+// stopping at the level the spell stops scaling at. Both levels are the owning spell's, stamped onto
+// the effect at generation, so an effect answers the same amount however the caller reached it.
 //
 // The base is read as an integer, so the store answers what the generated rank tables answer for the
 // same effect: DeriveRankAmount in tools/database/spelldata.go is fed a base that SQL already cast to
@@ -58,15 +59,13 @@ func (e *Effect) Trigger() *Spell {
 // (3.79999995231628), and multiplying in float64 moves the result off the tooltip on six rows. The
 // client resolves the amount to a whole number, which is the floor below.
 func (e *Effect) Average(level int32) float64 {
-	owner := Find(e.SpellID)
-
 	// MaxLevel 0 is the client's "no cap", which a spell with no SpellLevels row carries.
 	lvl := level
-	if owner.MaxLevel > 0 && int32(owner.MaxLevel) < lvl {
-		lvl = int32(owner.MaxLevel)
+	if e.MaxLevel > 0 && int32(e.MaxLevel) < lvl {
+		lvl = int32(e.MaxLevel)
 	}
 
-	delta := lvl - int32(owner.SpellLevel)
+	delta := lvl - int32(e.SpellLevel)
 	if delta < 0 {
 		delta = 0
 	}

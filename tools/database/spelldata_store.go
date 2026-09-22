@@ -99,9 +99,14 @@ type storeEffect struct {
 	BasePoints float64
 	PPL        float64
 	Variance   float64
-	SPCoef     float64
-	APCoef     float64
-	PvpMult    float64
+
+	// The owning spell's SpellLevels, stamped on while the row is built so that the store's Average
+	// does not look its owner up. Never captured: it is derived from the captured Levels row.
+	SpellLevel, MaxLevel int16 `json:"-"`
+
+	SPCoef  float64
+	APCoef  float64
+	PvpMult float64
 
 	Amplitude float64
 	PeriodMs  int32
@@ -320,12 +325,16 @@ func (t *spellTables) row(id int32) storeSpell {
 	// nothing, since the same bit is a different spell in each family. The family is carried only
 	// where the effect states a mask, because Matches needs an overlapping mask word as well and a
 	// family on its own can never produce one.
+	//
+	// The spell's levels go onto every effect for the same reason the family does: the amount an
+	// effect scales to is priced from them, and the effect is what the caller holds.
 	s.Effects = make([]storeEffect, len(t.effects[id]))
 	copy(s.Effects, t.effects[id])
 	for i := range s.Effects {
 		if !s.Effects[i].ClassFlags.isZero() {
 			s.Effects[i].ClassFlags.Family = s.ClassFlags.Family
 		}
+		s.Effects[i].SpellLevel, s.Effects[i].MaxLevel = s.SpellLevel, s.MaxLevel
 	}
 
 	return s

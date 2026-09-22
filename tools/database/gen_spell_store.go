@@ -245,6 +245,12 @@ func formatStoreEffect(e storeEffect, namer *rankEnumNamer) string {
 	if e.PPL != 0 {
 		add("PPL: %s", num(e.PPL))
 	}
+	if e.SpellLevel != 0 {
+		add("SpellLevel: %d", e.SpellLevel)
+	}
+	if e.MaxLevel != 0 {
+		add("MaxLevel: %d", e.MaxLevel)
+	}
 	if e.Variance != 0 {
 		add("Variance: %s", num(e.Variance))
 	}

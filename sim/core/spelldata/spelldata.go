@@ -166,6 +166,11 @@ type Effect struct {
 	// the caster's.
 	PPL float64
 
+	// The owning spell's SpellLevels, copied onto the effect at generation: Average() prices the
+	// per-level gain off them, and reading them here rather than looking the owner up in the store
+	// keeps the answer the same for an effect whose spell the store does not carry.
+	SpellLevel, MaxLevel int16
+
 	// EffectVariance: the spread the server rolls the amount over, as min/max = average * (1 -/+
 	// Variance/2). Zero on an effect that does not roll.
 	Variance float64
