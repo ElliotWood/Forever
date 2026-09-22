@@ -1,5 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, HealingModel, Profession, Race, Spec } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	FeralBearDruid_Options as DruidOptions,
 	FeralBearDruid_Rotation as DruidRotation,
@@ -28,35 +28,21 @@ export const DefaultOptions = DruidOptions.create({
 	startingRage: 0,
 });
 
+// Master's consumables; Juju Power/Might, R.O.I.D.S., Dragonbreath Chili, Rumsey Rum and Elixir of
+// Fortitude have no field here, Dumplings, Greater Stoneshield and Superior Defense are not in this db.
 export const DefaultConsumables = ConsumesSpec.create({
-	battleElixirId: 22831, // Elixir of Major Agility
-	guardianElixirId: 9088, // Gift of Arthas
-	foodId: 27667, // Spicy Crawdad
-	potId: 22849, // Ironshield Potion
-	conjuredId: 22105, // Healthstone
-	mhImbueId: 34340, // Adamantite Weightstone
-	goblinSapper: true,
-	superSapper: true,
-	scrollAgi: true,
-	scrollStr: true,
-	scrollArm: true,
-	nightmareSeed: true,
+	flaskId: 13510, // Flask of the Titans
+	battleElixirId: 13452, // Elixir of the Mongoose
+	guardianElixirId: 13445, // Elixir of Superior Defense
+	foodId: 20452, // Smoked Desert Dumplings
+	potId: 13455, // Greater Stoneshield Potion
 });
 
 export const OtherDefaults: Partial<SimUIOtherDefaults> = {
 	profession1: Profession.Engineering,
-	profession2: Profession.Enchanting,
-	race: Race.RaceNightElf,
+	race: Race.RaceTauren,
 	distanceFromTarget: 0,
-	reactionTime: 250,
-	healingModel: HealingModel.create({
-		hps: 2200,
-		cadenceSeconds: 0.4,
-		cadenceVariation: 1.2,
-		absorbFrac: 0.02,
-		burstWindow: 6,
-		inspirationUptime: 0.25,
-	}),
+	reactionTime: 200, // master's default
 };
 
 // Our Forever sim's gear presets (master ui/<spec>/gear_sets).

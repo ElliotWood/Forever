@@ -1,8 +1,7 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { RetributionPaladin_Options as RetributionPaladinOptions } from '@generated/proto/paladin';
 import { SavedTalents } from '@generated/proto/ui';
-import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 import LaunchGear from './gear_sets/launch.gear.json';
@@ -21,37 +20,29 @@ export const DefaultOptions = RetributionPaladinOptions.create({
 	classOptions: {},
 });
 
+// Defaults below are what master's ui/retribution_paladin opens with (currentSettings on a fresh
+// profile); its raid-wide Battle Shout, Leader of the Pack, Moonkin and Fire Resistance Aura are
+// party buffs here. Juju Power/Might, R.O.I.D.S., Dragonbreath Chili and Greater Arcane Elixir have
+// no slot here; Blessed Sunfruit and Major Mana Potion are not in this db.
 export const DefaultConsumables = ConsumesSpec.create({
-	potId: 22838,
-	flaskId: 22854,
-	foodId: 27658,
-	conjuredId: 12662,
-	superSapper: true,
-	goblinSapper: true,
-	scrollAgi: true,
-	scrollStr: true,
-	explosiveId: 30217,
+	flaskId: 13512, // Flask of Supreme Power
+	battleElixirId: 13452, // Elixir of the Mongoose
+	foodId: 13810, // Blessed Sunfruit
+	potId: 13444, // Major Mana Potion
+	conjuredId: 12662, // Demonic Rune
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	bloodlust: true,
-	divineSpirit: TristateEffect.TristateEffectImproved,
 	arcaneBrilliance: true,
+	divineSpirit: TristateEffect.TristateEffectRegular,
 	giftOfTheWild: TristateEffect.TristateEffectImproved,
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	shadowProtection: true,
-	thorns: TristateEffect.TristateEffectImproved,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
-	manaSpringTotem: TristateEffect.TristateEffectRegular,
-	leaderOfThePack: TristateEffect.TristateEffectImproved,
 	battleShout: TristateEffect.TristateEffectImproved,
-	strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
-	totemTwisting: true,
-	windfuryTotem: TristateEffect.TristateEffectImproved,
-	graceOfAirTotem: TristateEffect.TristateEffectImproved,
-	drums: Drums.LesserDrumsOfBattle,
+	fireResistanceAura: true,
+	leaderOfThePack: TristateEffect.TristateEffectRegular,
+	moonkinAura: TristateEffect.TristateEffectRegular,
 	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
@@ -59,30 +50,23 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
 	blessingOfMight: TristateEffect.TristateEffectImproved,
-	unleashedRage: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	misery: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
-	jocRetribution2Pt4: true,
-	judgementOfWisdom: true,
-	bloodFrenzy: true,
-	huntersMark: TristateEffect.TristateEffectImproved,
 	curseOfRecklessness: true,
+	faerieFire: TristateEffect.TristateEffectRegular,
+	giftOfArthas: true,
+	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
+	judgementOfWisdom: true,
 	sunderArmor: true,
-	faerieFire: TristateEffect.TristateEffectImproved,
-	exposeArmor: TristateEffect.TristateEffectImproved,
-	...defaultExposeWeaknessSettings(),
 });
 
 export const OtherDefaults = {
-	profession1: Profession.Engineering,
-	profession2: Profession.Blacksmithing,
+	reactionTime: 200, // master's default
+	profession1: Profession.Blacksmithing,
+	profession2: Profession.Enchanting,
 	distanceFromTarget: 5,
-	iterationCount: 25000,
-	race: Race.RaceBloodElf,
+	race: Race.RaceHuman,
 };
 
 // Our Forever sim's gear presets (master ui/<spec>/gear_sets).

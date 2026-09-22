@@ -1,12 +1,11 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLAction, APLListItem, APLRotation, APLRotation_Type as APLRotationType } from '@generated/proto/apl';
-import { Cooldowns, Debuffs, Drums, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
+import { Cooldowns, Debuffs, IndividualBuffs, ItemSlot, PartyBuffs, PseudoStat, RaidBuffs, Spec, Stat, TristateEffect } from '@generated/proto/common';
 import { FeralCatDruid_Rotation as DruidRotation } from '@generated/proto/druid';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { Stats, UnitStat } from '@sim/proto/stats';
-import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 import { defineSpec } from '@sim/spec_config';
 
 import * as FeralInputs from './inputs';
@@ -83,41 +82,25 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		// Default spec-specific settings.
 		specOptions: Presets.DefaultOptions,
 		// Default raid/party buffs settings.
+		// Master's page (currentSettings on a fresh profile); its raid-wide Strength of Earth,
+		// Battle Shout, Leader of the Pack and Mana Spring are party buffs here.
 		raidBuffs: RaidBuffs.create({
-			...defaultRaidBuffMajorDamageCooldowns(),
 			arcaneBrilliance: true,
-			divineSpirit: TristateEffect.TristateEffectImproved,
+			divineSpirit: TristateEffect.TristateEffectRegular,
 			giftOfTheWild: TristateEffect.TristateEffectImproved,
 			powerWordFortitude: TristateEffect.TristateEffectImproved,
-			shadowProtection: true,
 		}),
 		partyBuffs: PartyBuffs.create({
-			drums: Drums.LesserDrumsOfBattle,
-			ferociousInspiration: 2,
 			battleShout: TristateEffect.TristateEffectImproved,
-			graceOfAirTotem: TristateEffect.TristateEffectImproved,
-			windfuryTotem: TristateEffect.TristateEffectImproved,
+			leaderOfThePack: TristateEffect.TristateEffectRegular,
 			manaSpringTotem: TristateEffect.TristateEffectRegular,
 			strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
-			totemTwisting: true,
 		}),
-		individualBuffs: IndividualBuffs.create({
-			blessingOfKings: true,
-			blessingOfMight: TristateEffect.TristateEffectImproved,
-			unleashedRage: true,
-		}),
+		individualBuffs: IndividualBuffs.create({}),
 		debuffs: Debuffs.create({
-			...defaultExposeWeaknessSettings(),
-			bloodFrenzy: true,
 			exposeArmor: TristateEffect.TristateEffectImproved,
-			huntersMark: TristateEffect.TristateEffectImproved,
-			improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
-			judgementOfWisdom: true,
-			misery: true,
 			curseOfRecklessness: true,
-			faerieFire: TristateEffect.TristateEffectImproved,
 			sunderArmor: true,
-			giftOfArthas: true,
 		}),
 	},
 

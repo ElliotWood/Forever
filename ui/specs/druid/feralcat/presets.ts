@@ -1,5 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Drums, Profession, Race, Spec } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race, Spec } from '@generated/proto/common';
 import {
 	FeralCatDruid_Options as FeralDruidOptions,
 	FeralCatDruid_Rotation as FeralCatDruidRotation,
@@ -15,26 +15,23 @@ import P2PreBisGear from './gear_sets/p2.pre-bis.gear.json';
 
 export const DefaultOptions = FeralDruidOptions.create({});
 
+// Master's consumables; Juju Power/Might, Dragonbreath Chili and Ground Scorpok Assay have no field
+// here, Flask of Distilled Wisdom, Grilled Squid and Major Mana Potion are not in this db. No Goblin
+// Sapper: here it drops Cat Form and the APL never shifts back (53 DPS).
 export const DefaultConsumables = ConsumesSpec.create({
-	potId: 22838, // Haste Potion
-	battleElixirId: 22831, // Elixir of Major Agility
-	guardianElixirId: 32067, // Elixir of Draenic Wisdom
-	foodId: 27664, // Grilled Mudfish (+20 Agility)
-	mhImbueId: 34340, // Adamantite Weightstone
+	flaskId: 13511, // Flask of Distilled Wisdom
+	battleElixirId: 13452, // Elixir of the Mongoose
+	foodId: 13928, // Grilled Squid
+	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune
-	drumsId: Drums.GreaterDrumsOfBattle,
-	superSapper: true,
-	goblinSapper: true,
-	scrollAgi: true,
-	scrollStr: true,
 });
 
 export const OtherDefaults = {
 	distanceFromTarget: 0,
 	profession1: Profession.Engineering,
-	profession2: Profession.Enchanting,
-	race: Race.RaceNightElf,
-	reactionTime: 250,
+	profession2: Profession.Leatherworking,
+	race: Race.RaceTauren,
+	reactionTime: 200, // master's default
 };
 
 export const DefaultRotation = FeralCatDruidRotation.create({

@@ -1,20 +1,20 @@
 import * as PresetUtils from '@app/preset_utils';
-import { Class, ConsumesSpec, Debuffs, Drums, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { EnhancementShaman_Options as EnhancementShamanOptions, ShamanImbue, ShamanSyncType } from '@generated/proto/shaman';
 import { SavedTalents } from '@generated/proto/ui';
-import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } from '@sim/proto/utils';
 
-import DefaultApl from './apls/default.apl.json';
+import ForeverApl from './apls/forever.apl.json';
 import LaunchGear from './gear_sets/launch.gear.json';
 import Phase1Gear from './gear_sets/phase_1.gear.json';
 import Phase2Gear from './gear_sets/phase_2.gear.json';
 
-export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
+// Our Forever APL (the parity tool's nextApl). The TBC default.apl.json it replaces never cast
+// Earth Shock or Lightning Bolt (459 DPS at defaults, master 576).
+export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Default', ForeverApl);
 
-export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
-});
+// Defaults below are what master's ui/enhancement_shaman opens with (currentSettings on a fresh
+// profile); its raid-wide Battle Shout, Leader of the Pack and totems are party buffs here.
+export const DefaultIndividualBuffs = IndividualBuffs.create({});
 
 export const DefaultOptions = EnhancementShamanOptions.create({
 	classOptions: {
@@ -22,58 +22,48 @@ export const DefaultOptions = EnhancementShamanOptions.create({
 		imbueMh: ShamanImbue.WindfuryWeapon,
 	},
 	imbueOh: ShamanImbue.WindfuryWeapon,
-	syncType: ShamanSyncType.DelayOffhandSwings,
+	syncType: ShamanSyncType.Auto,
 });
 
 export const OtherDefaults = {
+	reactionTime: 200, // master's default
 	distanceFromTarget: 5,
-	profession1: Profession.Engineering,
-	profession2: Profession.Leatherworking,
+	profession1: Profession.Alchemy,
+	profession2: Profession.Enchanting,
 	race: Race.RaceOrc,
 };
 
+// Master's consumables; Juju Power/Might, R.O.I.D.S., Dragonbreath Chili, Greater Arcane Elixir and
+// Elixir of Firepower have no slot here (one battle elixir), Blessed Sunfruit, Mageblood and Major
+// Mana Potion are not in this db.
 export const DefaultConsumables = ConsumesSpec.create({
-	potId: 22838, // Haste Potion
-	flaskId: 22854, // Flask of Relentless Assault
-	foodId: 27658, // Roasted Clefthoof
-	drumsId: Drums.LesserDrumsOfBattle,
-	conjuredId: 22788,
-	explosiveId: 30217,
-	superSapper: true,
-	goblinSapper: true,
-	scrollAgi: true,
-	scrollStr: true,
+	flaskId: 13512, // Flask of Supreme Power
+	battleElixirId: 13452, // Elixir of the Mongoose
+	guardianElixirId: 20007, // Mageblood Elixir
+	foodId: 13810, // Blessed Sunfruit
+	potId: 13444, // Major Mana Potion
+	conjuredId: 12662, // Demonic Rune
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
-	ferociousInspiration: 2,
-	braidedEterniumChain: true,
-	leaderOfThePack: TristateEffect.TristateEffectRegular,
 	battleShout: TristateEffect.TristateEffectImproved,
+	fireResistanceTotem: true,
+	leaderOfThePack: TristateEffect.TristateEffectRegular,
+	manaSpringTotem: TristateEffect.TristateEffectRegular,
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	...defaultRaidBuffMajorDamageCooldowns(Class.ClassShaman),
-	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	giftOfTheWild: TristateEffect.TristateEffectImproved,
 	arcaneBrilliance: true,
+	divineSpirit: TristateEffect.TristateEffectRegular,
+	giftOfTheWild: TristateEffect.TristateEffectImproved,
+	powerWordFortitude: TristateEffect.TristateEffectImproved,
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	...defaultExposeWeaknessSettings(),
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
-	judgementOfWisdom: true,
-	screech: true,
-	misery: true,
-	bloodFrenzy: true,
-	giftOfArthas: true,
-	mangle: true,
-	exposeArmor: TristateEffect.TristateEffectImproved,
-	faerieFire: TristateEffect.TristateEffectImproved,
-	sunderArmor: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
 	curseOfRecklessness: true,
-	huntersMark: TristateEffect.TristateEffectImproved,
+	exposeArmor: TristateEffect.TristateEffectImproved,
+	faerieFire: TristateEffect.TristateEffectRegular,
+	sunderArmor: true,
 });
 
 // Talent presets, from master's ui/shaman spec.

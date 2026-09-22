@@ -1,5 +1,5 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
-import { APLRotation, APLRotation_Type } from '@generated/proto/apl';
+import { APLRotation } from '@generated/proto/apl';
 import { PseudoStat, Spec, Stat } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -86,8 +86,6 @@ export default defineSpec<Spec.SpecRetributionPaladin>({
 		partyBuffs: Presets.DefaultPartyBuffs,
 		individualBuffs: Presets.DefaultIndividualBuffs,
 		debuffs: Presets.DefaultDebuffs,
-
-		rotationType: APLRotation_Type.TypeAPL,
 	},
 
 	// IconInputs to include in the 'Player' section on the settings tab.

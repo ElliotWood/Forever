@@ -712,6 +712,9 @@ func registerStaticImbue(agent Agent, imbueId int32) {
 	case 20749, 25122: // Brilliant Wizard Oil (20749 is the Classic item Forever ships)
 		character.AddStat(stats.SpellDamage, 36)
 		character.AddStat(stats.SpellCritRating, 14)
+	case 18262: // Elemental Sharpening Stone: 2% melee crit (master: ranged crit unchanged)
+		character.AddStat(stats.PhysicalCritPercent, 2)
+		character.AddStat(stats.RangedCritPercent, -2)
 	case 28017: // Superior Wizard Oil
 		character.AddStat(stats.SpellDamage, 42)
 	case 29453, 34340: // Adamantite Sharpening Stone / Adamantite Weightstone

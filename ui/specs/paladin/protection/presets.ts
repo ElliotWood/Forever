@@ -1,8 +1,7 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec, Debuffs, Drums, HealingModel, IndividualBuffs, PartyBuffs, Profession, RaidBuffs, TristateEffect } from '@generated/proto/common';
+import { ConsumesSpec, Debuffs, IndividualBuffs, PartyBuffs, Profession, Race, RaidBuffs, TristateEffect } from '@generated/proto/common';
 import { ProtectionPaladin_Options as ProtectionPaladinOptions } from '@generated/proto/paladin';
 import { SavedTalents } from '@generated/proto/ui';
-import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 import P5Apl from './apls/p5.apl.json';
@@ -24,78 +23,53 @@ export const DefaultOptions = ProtectionPaladinOptions.create({
 	classOptions: {},
 });
 
+// Defaults below are what master's ui/protection_paladin opens with (currentSettings on a fresh
+// profile); its raid-wide Battle Shout is a party buff here, its personal Blessing of Sanctuary
+// the individual one. Juju Power/Might, R.O.I.D.S., Dragonbreath Chili, Rumsey Rum, Greater Arcane
+// Elixir and Elixir of Fortitude have no slot here; Tender Wolf Steak, Greater Stoneshield, Superior
+// Defense are not in this db. Dense Dynamite is left out: this sim has no such explosive (it
+// panics on the id).
 export const DefaultConsumables = ConsumesSpec.create({
-	flaskId: 22861, // Flask of Blinding Light
-	foodId: 27657, // Blackened Basilisk
-	potId: 22849, // Ironshield Potion
-	conjuredId: 12662, // Dark Rune
-	mhImbueId: 28017,
-	explosiveId: 30217,
-	superSapper: true,
-	goblinSapper: true,
-	nightmareSeed: true,
-	scrollStr: true,
-	scrollAgi: true,
-	scrollArm: true,
+	flaskId: 13510, // Flask of the Titans
+	battleElixirId: 13452, // Elixir of the Mongoose
+	guardianElixirId: 13445, // Elixir of Superior Defense
+	foodId: 18045, // Tender Wolf Steak
+	potId: 13455, // Greater Stoneshield Potion
+	conjuredId: 12662, // Demonic Rune
 });
 
 export const DefaultRaidBuffs = RaidBuffs.create({
-	bloodlust: true,
-	divineSpirit: TristateEffect.TristateEffectImproved,
 	arcaneBrilliance: true,
+	divineSpirit: TristateEffect.TristateEffectRegular,
 	giftOfTheWild: TristateEffect.TristateEffectImproved,
 	powerWordFortitude: TristateEffect.TristateEffectImproved,
-	shadowProtection: true,
-	thorns: TristateEffect.TristateEffectImproved,
 });
 
 export const DefaultPartyBuffs = PartyBuffs.create({
-	manaSpringTotem: TristateEffect.TristateEffectRegular,
-	wrathOfAirTotem: TristateEffect.TristateEffectRegular,
-	graceOfAirTotem: TristateEffect.TristateEffectMissing,
-	strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
-	windfuryTotem: TristateEffect.TristateEffectMissing,
-	battleShout: TristateEffect.TristateEffectMissing,
-	drums: Drums.LesserDrumsOfBattle,
+	battleShout: TristateEffect.TristateEffectImproved,
 	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
-	blessingOfKings: true,
 	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
 	blessingOfSanctuary: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	misery: true,
-	curseOfElements: TristateEffect.TristateEffectImproved,
+	curseOfRecklessness: true,
+	exposeArmor: TristateEffect.TristateEffectImproved,
+	faerieFire: TristateEffect.TristateEffectRegular,
+	giftOfArthas: true,
 	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
 	judgementOfWisdom: true,
-	judgementOfLight: true,
-	bloodFrenzy: true,
-	huntersMark: TristateEffect.TristateEffectImproved,
-	curseOfRecklessness: true,
-	sunderArmor: true,
-	faerieFire: TristateEffect.TristateEffectImproved,
-	exposeArmor: TristateEffect.TristateEffectImproved,
-	insectSwarm: true,
-	...defaultExposeWeaknessSettings(),
 });
 
 export const OtherDefaults = {
-	profession1: Profession.Engineering,
-	profession2: Profession.Enchanting,
+	reactionTime: 200, // master's default
+	profession1: Profession.Blacksmithing,
+	profession2: Profession.Engineering,
 	distanceFromTarget: 5,
-	iterationCount: 25000,
-	healingModel: HealingModel.create({
-		hps: 2200,
-		cadenceSeconds: 0.4,
-		cadenceVariation: 1.2,
-		absorbFrac: 0.02,
-		burstWindow: 6,
-		inspirationUptime: 0.25,
-	}),
+	race: Race.RaceHuman,
 };
 
 // Our Forever sim's gear presets (master ui/<spec>/gear_sets).

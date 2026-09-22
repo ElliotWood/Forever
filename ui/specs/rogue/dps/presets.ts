@@ -1,5 +1,5 @@
 import * as PresetUtils from '@app/preset_utils';
-import { ConsumesSpec } from '@generated/proto/common';
+import { ConsumesSpec, Profession, Race } from '@generated/proto/common';
 import { Rogue_Options as RogueOptions } from '@generated/proto/rogue';
 import { SavedTalents } from '@generated/proto/ui';
 
@@ -35,18 +35,23 @@ export const DefaultOptions = RogueOptions.create({
 	classOptions: {},
 });
 
+// Master's consumables; Juju Power/Might, Dragonbreath Chili and Ground Scorpok Assay have no field
+// here, Grilled Squid is not in this db. Instant/Deadly are this sim's Forever poison ids.
 export const DefaultConsumables = ConsumesSpec.create({
-	battleElixirId: 22831,
-	guardianElixirId: 32062,
-	foodId: 33872,
-	potId: 22838,
-	conjuredId: 7676,
+	flaskId: 13512, // Flask of Supreme Power
+	battleElixirId: 13452, // Elixir of the Mongoose
+	foodId: 13928, // Grilled Squid
+	conjuredId: 7676, // Thistle Tea
 	mhImbueId: 26891, // Instant Poison
 	ohImbueId: 27186, // Deadly Poison
+	goblinSapper: true,
 });
 
 export const OtherDefaults = {
+	reactionTime: 200, // master's default
 	distanceFromTarget: 5,
+	profession1: Profession.Engineering,
+	race: Race.RaceDwarf,
 };
 
 // Our Forever sim's gear presets (master ui/<spec>/gear_sets).
