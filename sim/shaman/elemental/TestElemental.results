@@ -53,18 +53,18 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.08929
+  weights: 0.05952
   weights: 0
-  weights: 0.45816
+  weights: 0.24755
   weights: 0
-  weights: 0.15658
-  weights: 0
-  weights: 0
-  weights: 0.30159
+  weights: 0.12003
   weights: 0
   weights: 0
-  weights: 3.71713
-  weights: 3.28568
+  weights: 0.12751
+  weights: 0
+  weights: 0
+  weights: 2.26834
+  weights: 2.56089
   weights: 0
   weights: 0
   weights: 0
@@ -99,64 +99,64 @@ stat_weights_results: {
 dps_results: {
  key: "TestElemental-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 314.9363
-  tps: 255.43866
+  dps: 266.75983
+  tps: 224.18474
  }
 }
 dps_results: {
  key: "TestElemental-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 316.76743
-  tps: 256.517
+  dps: 272.71131
+  tps: 229.48335
  }
 }
 dps_results: {
  key: "TestElemental-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 368.672
-  tps: 298.81031
+  dps: 385.01737
+  tps: 315.61887
  }
 }
 dps_results: {
  key: "TestElemental-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 373.17464
-  tps: 301.76258
+  dps: 292.475
+  tps: 242.97156
  }
 }
 dps_results: {
  key: "TestElemental-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 305.55955
-  tps: 246.25963
+  dps: 254.47909
+  tps: 211.17176
  }
 }
 dps_results: {
  key: "TestElemental-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 330.0914
-  tps: 265.95749
+  dps: 272.81878
+  tps: 227.72561
  }
 }
 dps_results: {
  key: "TestElemental-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 361.81088
-  tps: 292.64849
+  dps: 289.71546
+  tps: 241.51233
  }
 }
 dps_results: {
  key: "TestElemental-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 333.67433
-  tps: 270.30302
+  dps: 282.99316
+  tps: 237.83983
  }
 }
 dps_results: {
  key: "TestElemental-Phase1-Average-Default"
  value: {
-  dps: 372.09308
-  tps: 300.81867
+  dps: 293.87292
+  tps: 244.21477
  }
 }
 dps_results: {
@@ -246,7 +246,7 @@ dps_results: {
 dps_results: {
  key: "TestElemental-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 373.88963
-  tps: 302.69389
+  dps: 281.1565
+  tps: 231.99039
  }
 }

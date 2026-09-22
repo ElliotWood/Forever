@@ -50,16 +50,12 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestForeverEnhancement-Phase1-StatWeights-Default"
  value: {
-  weights: 0.47725
-  weights: 0.27639
+  weights: 0.49479
+  weights: 0.31475
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.2081
-  weights: 0
-  weights: 0
-  weights: 0
-  weights: 0
+  weights: 0.21161
   weights: 0
   weights: 0
   weights: 0
@@ -67,9 +63,13 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.21693
-  weights: 5.61552
-  weights: 6.89846
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0
+  weights: 0.22491
+  weights: 6.01272
+  weights: 6.59805
   weights: 0
   weights: 0
   weights: 0
@@ -99,64 +99,64 @@ stat_weights_results: {
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Champion'sEarthshaker"
  value: {
-  dps: 617.60047
-  tps: 496.88043
+  dps: 630.44894
+  tps: 507.60133
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Champion'sStormcaller"
  value: {
-  dps: 634.95514
-  tps: 509.08577
+  dps: 651.29876
+  tps: 522.54159
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-GiftoftheGatheringStorm"
  value: {
-  dps: 591.64169
-  tps: 479.82164
+  dps: 614.25959
+  tps: 495.27863
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Stormcaller'sGarb"
  value: {
-  dps: 671.11684
-  tps: 534.95024
+  dps: 686.40025
+  tps: 545.32537
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheEarthfury"
  value: {
-  dps: 597.28603
-  tps: 482.29992
+  dps: 611.49507
+  tps: 493.39524
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheFiveThunders"
  value: {
-  dps: 622.90826
-  tps: 502.62846
+  dps: 637.7601
+  tps: 514.06931
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-TheTenStorms"
  value: {
-  dps: 671.40121
-  tps: 536.4433
+  dps: 687.86007
+  tps: 547.31843
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-AllItems-Warlord'sEarthshaker"
  value: {
-  dps: 654.73586
-  tps: 525.07335
+  dps: 669.91276
+  tps: 537.50975
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Average-Default"
  value: {
-  dps: 672.68803
-  tps: 534.60488
+  dps: 692.444
+  tps: 548.8306
  }
 }
 dps_results: {
@@ -183,28 +183,28 @@ dps_results: {
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-LongMultiTarget"
  value: {
-  dps: 139.55268
-  tps: 315.79803
+  dps: 140.41604
+  tps: 316.40238
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-LongSingleTarget"
  value: {
-  dps: 107.94257
-  tps: 96.7993
+  dps: 108.80593
+  tps: 97.40365
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-Settings-Dwarf-launch-Sync Auto-default-NoBuffs-P1-Consumes-ShortSingleTarget"
  value: {
-  dps: 175.74179
-  tps: 180.58
+  dps: 177.0322
+  tps: 181.48329
  }
 }
 dps_results: {
  key: "TestForeverEnhancement-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 502.79655
-  tps: 413.69116
+  dps: 518.24878
+  tps: 425.48006
  }
 }
