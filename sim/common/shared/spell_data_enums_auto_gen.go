@@ -49,7 +49,6 @@ const (
 	E_DESTROY_ALL_TOTEMS    SpellDataEffectKind = 110
 	E_ATTACK_ME             SpellDataEffectKind = 114
 	E_NORMALIZED_WEAPON_DMG SpellDataEffectKind = 121
-	E_PLAY_SOUND            SpellDataEffectKind = 131
 	E_ENERGIZE_PCT          SpellDataEffectKind = 137
 	E_UPDATE_PLAYER_PHASE   SpellDataEffectKind = 167
 	E_CREATE_AREATRIGGER    SpellDataEffectKind = 179
@@ -117,7 +116,6 @@ const (
 	A_MOD_DETECT_RANGE                   SpellDataAura = 91
 	A_PREVENTS_FLEEING                   SpellDataAura = 92
 	A_MOD_UNATTACKABLE                   SpellDataAura = 93
-	A_INTERRUPT_REGEN                    SpellDataAura = 94
 	A_MOD_ATTACK_POWER                   SpellDataAura = 99
 	A_MOD_RESISTANCE_PCT                 SpellDataAura = 101
 	A_MOD_TOTAL_THREAT                   SpellDataAura = 103

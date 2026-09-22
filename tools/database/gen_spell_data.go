@@ -1343,6 +1343,7 @@ var storeBackedClasses = map[string]bool{
 	"rogue":   true,
 	"warlock": true,
 	"mage":    true,
+	"druid":   true,
 }
 
 // A class file as references into the store: the same struct, the same field names, and a ladder per
