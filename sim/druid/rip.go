@@ -8,6 +8,8 @@ func (druid *Druid) registerRipSpell() {
 	panic("To be implemented")
 
 	// The TBC implementation, kept for the port:
+	// var cp int32
+	//
 	// druid.Rip = druid.RegisterSpell(Cat, core.SpellConfig{
 	// 	ActionID:       core.ActionID{SpellID: ripRank.ID},
 	// 	SpellSchool:    ripRank.SpellSchool(),
@@ -44,7 +46,6 @@ func (druid *Druid) registerRipSpell() {
 	// 			druid.UpdateBleedPower(druid.Rip, sim, target, true, true)
 	// 		},
 	// 		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-	// 			cp := druid.ComboPoints()
 	// 			ap := dot.Spell.MeleeAttackPower(target)
 	//
 	// 			var tickDamage float64
@@ -65,6 +66,7 @@ func (druid *Druid) registerRipSpell() {
 	// 	ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 	// 		result := spell.CalcOutcome(sim, target, spell.OutcomeMeleeSpecialHitNoHitCounter)
 	// 		if result.Landed() {
+	// 			cp = druid.ComboPoints()
 	// 			spell.Dot(target).Apply(sim)
 	// 			druid.SpendComboPoints(sim, spell.ComboPointMetrics())
 	// 		}

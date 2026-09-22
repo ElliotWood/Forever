@@ -4,17 +4,16 @@ package druid
 
 var hurricaneRank = spellData.Hurricane.Highest()
 
-// The dump's Periodic role borrows HurricaneTriggered's own Direct effect (via=other), the spell
-// Hurricane casts each tick.
-var hurricaneTickSpell = spellData.HurricaneTriggered.Highest()
-var hurricaneTick = hurricaneTickSpell.DamageEffect()
-
 // TODO: To be implemented.
 func (druid *Druid) registerHurricaneSpell() {
 	panic("To be implemented")
 
 	// The ported implementation, kept until this class is done:
 	// tickLength := hurricaneRank.Effect(dbcenums.A_PERIODIC_DUMMY, 0).Period()
+	//
+	// // Hurricane's periodic damage is the spell HurricaneTriggered casts each tick.
+	// hurricaneTickSpell := spellData.HurricaneTriggered.Highest()
+	// hurricaneTick := hurricaneTickSpell.DamageEffect()
 	//
 	// druid.Hurricane = druid.RegisterSpell(Humanoid|Moonkin, core.SpellConfig{
 	// 	ActionID:       core.ActionID{SpellID: hurricaneRank.ID},
