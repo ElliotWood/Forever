@@ -105,8 +105,10 @@ func MapBonusStatIndexToStat(index int) (proto.Stat, bool) {
 		return proto.Stat_StatHealingPower, true
 	case ITEM_MOD_SPELL_DAMAGE_DONE:
 		return proto.Stat_StatSpellDamage, true
+	// Forever items state their spell damage as generic spell power (1,451 items, Robe of the
+	// Magi's +22 among them). Heals read SpellDamage too (Spell.HealingPower).
 	case ITEM_MOD_SPELL_POWER:
-		return 0, false
+		return proto.Stat_StatSpellDamage, true
 	case ITEM_MOD_EXTRA_ARMOR: // ExtraArmor maps to BonusArmor (green armor)
 		return proto.Stat_StatBonusArmor, true
 

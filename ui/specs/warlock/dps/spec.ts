@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
-import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -57,7 +57,7 @@ export default defineSpec<Spec.SpecWarlock>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
@@ -117,7 +117,7 @@ export default defineSpec<Spec.SpecWarlock>({
 		rotations: [Presets.AfflictionAPL, Presets.DemoAPL, Presets.DestroAPL, Presets.DestroFireAPL],
 
 		// Preset gear configurations that the user can quickly select.
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (_player: Player<Spec.SpecWarlock>): APLRotation => {

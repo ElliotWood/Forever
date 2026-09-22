@@ -135,6 +135,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 813.64558
+  tps: 478.60648
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-CloudkeeperLegplates-14554"
+ value: {
+  dps: 826.36212
+  tps: 485.72775
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-DarkmoonCard:BlueDragon-19288"
  value: {
   dps: 807.72935
@@ -146,6 +160,13 @@ dps_results: {
  value: {
   dps: 807.33443
   tps: 475.07224
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 818.41156
+  tps: 481.27543
  }
 }
 dps_results: {
@@ -184,6 +205,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 696.86279
+  tps: 411.59203
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 801.244
@@ -209,6 +237,20 @@ dps_results: {
  value: {
   dps: 811.96324
   tps: 477.67473
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-ForceImbuedGauntlets-18383"
+ value: {
+  dps: 810.2376
+  tps: 476.70837
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-FreezingBand-942"
+ value: {
+  dps: 807.33443
+  tps: 475.07224
  }
 }
 dps_results: {
@@ -261,6 +303,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 807.33443
+  tps: 475.07224
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 807.33443
@@ -279,6 +328,20 @@ dps_results: {
  value: {
   dps: 809.13241
   tps: 476.07911
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-Prismcharm-15867"
+ value: {
+  dps: 807.33443
+  tps: 475.07224
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 801.71147
+  tps: 471.92338
  }
 }
 dps_results: {
@@ -305,8 +368,8 @@ dps_results: {
 dps_results: {
  key: "TestRetribution-AllItems-StormGauntlets-12632"
  value: {
-  dps: 819.86365
-  tps: 482.16263
+  dps: 827.23219
+  tps: 486.28901
  }
 }
 dps_results: {
@@ -324,10 +387,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestRetribution-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 807.33443
+  tps: 475.07224
+ }
+}
+dps_results: {
  key: "TestRetribution-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 820.18073
-  tps: 482.26616
+  dps: 836.42728
+  tps: 491.36424
+ }
+}
+dps_results: {
+ key: "TestRetribution-AllItems-WarbladeofCaerDarrow-13982"
+ value: {
+  dps: 820.71722
+  tps: 482.72977
  }
 }
 dps_results: {

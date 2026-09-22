@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 794.52035
+  tps: 545.18623
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 745.98779
@@ -90,8 +97,8 @@ dps_results: {
 dps_results: {
  key: "TestShadowPriest-AllItems-DepletedEyeofInfluence-275630"
  value: {
-  dps: 745.98779
-  tps: 511.31537
+  dps: 754.29868
+  tps: 517.08949
  }
 }
 dps_results: {
@@ -99,6 +106,13 @@ dps_results: {
  value: {
   dps: 745.98779
   tps: 511.31537
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 769.39772
+  tps: 527.70232
  }
 }
 dps_results: {
@@ -137,6 +151,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 745.98779
+  tps: 511.31537
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 745.98779
@@ -152,6 +173,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestShadowPriest-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 745.98779
+  tps: 511.31537
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-FreezingBand-942"
  value: {
   dps: 745.98779
   tps: 511.31537
@@ -214,6 +242,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 745.98779
+  tps: 511.31537
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 745.98779
@@ -229,6 +264,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestShadowPriest-AllItems-MoltenHeartoftheMountain-249470"
+ value: {
+  dps: 745.98779
+  tps: 511.31537
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-Prismcharm-15867"
+ value: {
+  dps: 745.98779
+  tps: 511.31537
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-RaggedJohn'sNeverendingCup-15873"
  value: {
   dps: 745.98779
   tps: 511.31537
@@ -256,6 +305,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 748.63165
+  tps: 513.20616
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 778.63693
@@ -270,10 +326,17 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestShadowPriest-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 745.98779
+  tps: 511.31537
+ }
+}
+dps_results: {
  key: "TestShadowPriest-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 769.10476
-  tps: 527.02603
+  dps: 796.8077
+  tps: 546.27309
  }
 }
 dps_results: {

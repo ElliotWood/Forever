@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation, APLRotation_Type } from '@generated/proto/apl';
-import { EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
 import { StatCap, Stats, UnitStat } from '@sim/proto/stats';
@@ -83,7 +83,7 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 		softCapBreakpoints: [
 			StatCap.fromPseudoStat(PseudoStat.PseudoStatReducedCritTakenPercent, {
 				breakpoints: [5.6],
@@ -142,7 +142,7 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.APL_P5, Presets.APL_PRESET],
 		// Preset gear configurations that the user can quickly select.
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (_player: Player<Spec.SpecProtectionPaladin>): APLRotation => {

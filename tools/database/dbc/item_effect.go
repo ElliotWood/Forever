@@ -244,6 +244,10 @@ func buildBaseStatScalingProps(spellID int, itemSpellID int) *proto.ScalingItemE
 		for _, se := range effects {
 			// TBC ANNI: Items can have "static" ItemEffects that don't have a duration.
 			// We need to parse these into stats just as is done for ItemSparse data.
+			if stat, perPoint := PercentAuraToRating(se.EffectAura, se.EffectMiscValues[0]); perPoint > 0 {
+				total[stat] += float64(se.EffectBasePoints+1) * perPoint
+				continue
+			}
 			stat := ConvertEffectAuraToStatIndex(se.EffectAura, se.EffectMiscValues[0])
 			if stat >= 0 || stat == -2 {
 				value := float64(se.EffectBasePoints + 1)
@@ -431,6 +435,11 @@ func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 		hasStats := len(props.Stats) > 0
 
 		if e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && hasStats {
+			// An item the client ships no stat row for came from our sim's database
+			// (forever_sim_db.json), whose stats already include its equip spells.
+			if _, fromClient := dbcInstance.Items[int(parsed.Id)]; !fromClient {
+				continue
+			}
 			for stat, value := range props.Stats {
 				parsed.ScalingOptions[0].Stats[int32(stat)] += value
 			}

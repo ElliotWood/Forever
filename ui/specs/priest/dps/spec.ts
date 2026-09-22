@@ -1,6 +1,6 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { APLRotation } from '@generated/proto/apl';
-import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
@@ -67,7 +67,7 @@ export default defineSpec<Spec.SpecDpsPriest>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
 		statCaps: (() => {
@@ -112,7 +112,7 @@ export default defineSpec<Spec.SpecDpsPriest>({
 		talents: [Presets.ShadowTalents, Presets.SmiteTalents],
 		rotations: [Presets.ROTATION_PRESET_SHADOW, Presets.ROTATION_PRESET_SMITE],
 		// Preset gear configurations that the user can quickly select.
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (player: Player<Spec.SpecDpsPriest>): APLRotation => {

@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation, APLRotation_Type, SimpleRotation } from '@generated/proto/apl';
-import { Cooldowns, EquipmentSpec, HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { Cooldowns, HandType, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import { DpsWarriorSpec, WarriorSunder } from '@generated/proto/warrior';
 import * as Mechanics from '@sim/constants/mechanics';
@@ -60,7 +60,7 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
 		statCaps: (() => {
@@ -134,7 +134,7 @@ export default defineSpec<Spec.SpecDpsWarrior>({
 			Presets.ARMS_DEFAULT_ROTATION,
 		],
 		// Preset gear configurations that the user can quickly select.
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (_player: Player<Spec.SpecDpsWarrior>): APLRotation => {

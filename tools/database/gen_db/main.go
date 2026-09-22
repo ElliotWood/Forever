@@ -200,6 +200,8 @@ func main() {
 	db.MergeGems(database.GemOverrides)
 	db.MergeEnchants(database.EnchantOverrides)
 	ApplyGlobalFilters(db)
+	// After the global filters: those are for the client's rows, ours were filtered on master.
+	mergeForeverSimDB(db, fmt.Sprintf("%s/forever_sim_db.json", inputsDir))
 	leftovers := db.Clone()
 	ApplyNonSimmableFilters(leftovers)
 	leftovers.WriteBinaryAndJson(fmt.Sprintf("%s/leftover_db.bin", dbDir), fmt.Sprintf("%s/leftover_db.json", dbDir))
@@ -352,6 +354,43 @@ func processItems(instance *dbc.DBC,
 		}
 	}
 	db.MergeItems(parsedItems)
+}
+
+// Our Forever sim's items, enchants and random suffixes (tools/database/import_forever_sim_db.py).
+// The client wins wherever it has the row; this fills in what it does not ship: the Classic-era
+// items our gear presets use that the beta client lacks (Hand of Justice, the Tier 1 sets), the
+// Lesser Arcanums, and the random suffixes, which the client no longer carries at all.
+func mergeForeverSimDB(db *database.WowDatabase, path string) {
+	ours := database.ReadDatabaseFromJson(tools.ReadFile(path))
+	for id, item := range ours.Items {
+		if _, ok := db.Items[id]; !ok {
+			db.Items[id] = item
+		}
+	}
+	effectIDs := map[int32]bool{}
+	for key := range db.Enchants {
+		effectIDs[key.EffectID] = true
+	}
+	for key, enchant := range ours.Enchants {
+		if !effectIDs[key.EffectID] {
+			db.Enchants[key] = enchant
+		}
+	}
+	for id, suffix := range ours.RandomSuffixes {
+		if _, ok := db.RandomSuffixes[id]; !ok {
+			db.RandomSuffixes[id] = suffix
+		}
+	}
+	for id, zone := range ours.Zones {
+		if _, ok := db.Zones[id]; !ok {
+			db.Zones[id] = zone
+		}
+	}
+	for id, npc := range ours.Npcs {
+		if _, ok := db.Npcs[id]; !ok {
+			db.Npcs[id] = npc
+		}
+	}
 }
 
 // Filters out entities which shouldn't be included anywhere.

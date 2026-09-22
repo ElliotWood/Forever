@@ -4,7 +4,6 @@ import { APLRotation } from '@generated/proto/apl';
 import {
 	Debuffs,
 	Drums,
-	EquipmentSpec,
 	IndividualBuffs,
 	ItemSlot,
 	PartyBuffs,
@@ -72,7 +71,7 @@ export default defineSpec<Spec.SpecRogue>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
 		statCaps: (() => {
@@ -154,7 +153,7 @@ export default defineSpec<Spec.SpecRogue>({
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_COMBAT, Presets.ROTATION_PRESET_MUTILATE, Presets.ROTATION_PRESET_HEMORRHAGE],
 		// Preset gear configurations that the user can quickly select.
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (_player: Player<Spec.SpecRogue>): APLRotation => {

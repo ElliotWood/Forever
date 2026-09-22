@@ -4,7 +4,6 @@ import {
 	Cooldowns,
 	Debuffs,
 	Drums,
-	EquipmentSpec,
 	IndividualBuffs,
 	ItemSlot,
 	PartyBuffs,
@@ -87,7 +86,7 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 	),
 
 	defaults: {
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 		epWeights: new Stats(),
 		statCaps: (() => {
 			const hitCap = new Stats().withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9);
@@ -177,7 +176,7 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 		// the APL rotation is more user-friendly and handles CDs, re-shifting, and
 		// on-use items more easily.
 		rotations: [Presets.ROTATION_DEFAULT],
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (_player: Player<Spec.SpecFeralBearDruid>): APLRotation => {

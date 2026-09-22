@@ -16,6 +16,11 @@ import DefaultArmsApl from './apls/arms.apl.json';
 import DefaultFuryApl from './apls/fury.apl.json';
 import ForeverNoReckApl from './apls/dps_no_reck.apl.json';
 import ForeverReckApl from './apls/dps_reck.apl.json';
+import LaunchGear from './gear_sets/launch.gear.json';
+import ArmsLaunchGear from './gear_sets/arms_launch.gear.json';
+import P0BisGear from './gear_sets/p0.bis.gear.json';
+import Phase1Gear from './gear_sets/phase_1.gear.json';
+import Phase2Gear from './gear_sets/phase_2.gear.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -75,3 +80,12 @@ export const OtherDefaults = {
 	profession2: Profession.Blacksmithing,
 	distanceFromTarget: 25,
 };
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const GEAR_ARMS_LAUNCH = PresetUtils.makePresetGear('Launch (Arms)', ArmsLaunchGear);
+export const GEAR_P0_BIS = PresetUtils.makePresetGear('Pre-BiS', P0BisGear);
+export const GEAR_PHASE_1 = PresetUtils.makePresetGear('P1 BiS', Phase1Gear);
+export const GEAR_PHASE_2 = PresetUtils.makePresetGear('P2 BiS', Phase2Gear);
+export const DEFAULT_GEAR = GEAR_P0_BIS;
+export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_ARMS_LAUNCH, GEAR_P0_BIS, GEAR_PHASE_1, GEAR_PHASE_2];

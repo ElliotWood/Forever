@@ -244,10 +244,9 @@ export class EquippedItem {
 		item.weaponDamageMax = scalingOptions.weaponDamageMax;
 		item.randPropPoints = scalingOptions.randPropPoints;
 
+		// Forever's random suffixes are flat enchantments, as in Classic (sim/core/database.go).
 		if (this._randomSuffix) {
-			item.stats = item.stats.map((stat, index) =>
-				this._randomSuffix!.stats[index] > 0 ? Math.floor((this._randomSuffix!.stats[index] * item.randPropPoints) / 10000) : stat,
-			);
+			item.stats = item.stats.map((stat, index) => stat + (this._randomSuffix!.stats[index] || 0));
 		}
 
 		return new EquippedItem({

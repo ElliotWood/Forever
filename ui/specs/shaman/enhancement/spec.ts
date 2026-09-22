@@ -1,7 +1,7 @@
 import * as OtherInputs from '@features/settings/model/other_inputs';
 import { StatCapType } from '@generated/proto/api';
 import { APLRotation } from '@generated/proto/apl';
-import { EquipmentSpec, ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
+import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { SavedTalents } from '@generated/proto/ui';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
@@ -74,7 +74,7 @@ export default defineSpec<Spec.SpecEnhancementShaman>({
 
 	defaults: {
 		// Default equipped gear.
-		gear: EquipmentSpec.create(),
+		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
 		epWeights: new Stats(),
 		statCaps: (() => {
@@ -132,7 +132,7 @@ export default defineSpec<Spec.SpecEnhancementShaman>({
 		// Preset rotations that the user can quickly select.
 		rotations: [Presets.ROTATION_PRESET_DEFAULT],
 		// Preset gear configurations that the user can quickly select.
-		gear: [],
+		gear: Presets.GEAR_PRESETS,
 	},
 
 	autoRotation: (_: Player<Spec.SpecEnhancementShaman>): APLRotation => {

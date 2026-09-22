@@ -81,6 +81,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 741.83644
+  tps: 357.04449
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 747.38999
@@ -92,6 +99,13 @@ dps_results: {
  value: {
   dps: 751.1043
   tps: 363.532
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 745.04363
+  tps: 359.28952
  }
 }
 dps_results: {
@@ -110,6 +124,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSurvival-AllItems-DormantHeartoftheMountain-249473"
+ value: {
+  dps: 741.83644
+  tps: 357.04449
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 741.83644
   tps: 357.04449
@@ -151,6 +172,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 653.46648
+  tps: 292.84685
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 731.9042
@@ -166,6 +194,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSurvival-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 741.83644
+  tps: 357.04449
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-FreezingBand-942"
  value: {
   dps: 741.83644
   tps: 357.04449
@@ -214,6 +249,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Hurricane-2824"
+ value: {
+  dps: 715.94614
+  tps: 338.90749
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-IcebladeHacker-13952"
+ value: {
+  dps: 741.83644
+  tps: 357.04449
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-JomGabbar-23570"
  value: {
   dps: 755.0334
@@ -229,6 +278,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSurvival-AllItems-Loatheb'sReflection-23042"
+ value: {
+  dps: 741.83644
+  tps: 357.04449
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-MarkofTyranny-13966"
  value: {
   dps: 741.83644
   tps: 357.04449
@@ -263,6 +319,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Prismcharm-15867"
+ value: {
+  dps: 741.83644
+  tps: 357.04449
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 738.74939
+  tps: 354.88356
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-SerenityField-272439"
  value: {
   dps: 742.80482
@@ -284,10 +354,17 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 744.46155
+  tps: 358.89514
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-StormGauntlets-12632"
  value: {
-  dps: 745.03583
-  tps: 359.38264
+  dps: 746.17399
+  tps: 360.17935
  }
 }
 dps_results: {
@@ -305,14 +382,28 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 741.83644
+  tps: 357.04449
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 744.53727
-  tps: 358.93507
+  dps: 747.0665
+  tps: 360.70553
  }
 }
 dps_results: {
  key: "TestSurvival-AllItems-Thunderfury,BlessedBladeoftheWindseeker-19019"
+ value: {
+  dps: 741.83644
+  tps: 357.04449
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-WarbladeofCaerDarrow-13982"
  value: {
   dps: 741.83644
   tps: 357.04449

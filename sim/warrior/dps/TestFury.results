@@ -81,6 +81,27 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-BattlegearofMight"
+ value: {
+  dps: 852.40175
+  tps: 521.48916
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BattlegearofWrath"
+ value: {
+  dps: 773.0296
+  tps: 475.15234
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 710.5609
+  tps: 438.62109
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 768.8703
@@ -88,10 +109,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Champion'sBattlegear"
  value: {
   dps: 846.4236
   tps: 518.18422
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-CloudkeeperLegplates-14554"
+ value: {
+  dps: 791.02996
+  tps: 486.66977
  }
 }
 dps_results: {
@@ -116,6 +151,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-Dreadnaught'sBattlegear"
  value: {
   dps: 874.19626
@@ -127,6 +169,13 @@ dps_results: {
  value: {
   dps: 768.99052
   tps: 472.80067
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 570.42302
+  tps: 347.20311
  }
 }
 dps_results: {
@@ -155,6 +204,20 @@ dps_results: {
  value: {
   dps: 757.75793
   tps: 466.34996
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-ForceImbuedGauntlets-18383"
+ value: {
+  dps: 754.01622
+  tps: 464.25461
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-FreezingBand-942"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
  }
 }
 dps_results: {
@@ -193,6 +256,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-Hurricane-2824"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-IcebladeHacker-13952"
+ value: {
+  dps: 834.00432
+  tps: 510.55626
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-JomGabbar-23570"
  value: {
   dps: 774.26546
@@ -208,6 +285,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFury-AllItems-Loatheb'sReflection-23042"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-MarkofTyranny-13966"
  value: {
   dps: 751.12313
   tps: 462.63448
@@ -232,6 +316,20 @@ dps_results: {
  value: {
   dps: 756.483
   tps: 465.75249
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-Prismcharm-15867"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 735.68057
+  tps: 453.14742
  }
 }
 dps_results: {
@@ -284,6 +382,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFury-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
+ }
+}
+dps_results: {
  key: "TestFury-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 751.12313
@@ -302,6 +407,13 @@ dps_results: {
  value: {
   dps: 829.13013
   tps: 511.16679
+ }
+}
+dps_results: {
+ key: "TestFury-AllItems-WarbladeofCaerDarrow-13982"
+ value: {
+  dps: 751.12313
+  tps: 462.63448
  }
 }
 dps_results: {

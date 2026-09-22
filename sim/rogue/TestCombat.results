@@ -67,6 +67,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 675.29607
+  tps: 335.62215
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 707.98265
@@ -88,10 +95,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-Earthstrike-21180"
  value: {
   dps: 715.19851
   tps: 355.45366
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 582.36149
+  tps: 289.43366
  }
 }
 dps_results: {
@@ -103,6 +124,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestCombat-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-FreezingBand-942"
  value: {
   dps: 696.29366
   tps: 346.05795
@@ -144,6 +172,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-Hurricane-2824"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-JomGabbar-23570"
  value: {
   dps: 720.44253
@@ -152,6 +187,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestCombat-AllItems-Loatheb'sReflection-23042"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-MarkofTyranny-13966"
  value: {
   dps: 696.29366
   tps: 346.05795
@@ -176,6 +218,20 @@ dps_results: {
  value: {
   dps: 702.60432
   tps: 349.19435
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-Prismcharm-15867"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-RaggedJohn'sNeverendingCup-15873"
+ value: {
+  dps: 690.54418
+  tps: 343.20046
  }
 }
 dps_results: {
@@ -215,6 +271,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestCombat-AllItems-TalismanofEphemeralPower-18820"
+ value: {
+  dps: 696.29366
+  tps: 346.05795
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-TheLionHornofStormwind-14557"
  value: {
   dps: 696.29366
   tps: 346.05795

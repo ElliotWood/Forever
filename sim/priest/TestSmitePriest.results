@@ -74,6 +74,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 394.1017
+  tps: 268.6197
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 336.48983
@@ -90,8 +97,8 @@ dps_results: {
 dps_results: {
  key: "TestSmitePriest-AllItems-DepletedEyeofInfluence-275630"
  value: {
-  dps: 336.48983
-  tps: 228.21262
+  dps: 341.81478
+  tps: 231.89739
  }
 }
 dps_results: {
@@ -99,6 +106,13 @@ dps_results: {
  value: {
   dps: 336.48983
   tps: 228.21262
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 351.58361
+  tps: 238.77827
  }
 }
 dps_results: {
@@ -137,6 +151,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 336.48983
+  tps: 228.21262
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 336.48983
@@ -152,6 +173,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 336.48983
+  tps: 228.21262
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-FreezingBand-942"
  value: {
   dps: 336.48983
   tps: 228.21262
@@ -214,6 +242,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 336.48983
+  tps: 228.21262
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 336.48983
@@ -229,6 +264,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestSmitePriest-AllItems-MoltenHeartoftheMountain-249470"
+ value: {
+  dps: 336.48983
+  tps: 228.21262
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-Prismcharm-15867"
+ value: {
+  dps: 336.48983
+  tps: 228.21262
+ }
+}
+dps_results: {
+ key: "TestSmitePriest-AllItems-RaggedJohn'sNeverendingCup-15873"
  value: {
   dps: 336.48983
   tps: 228.21262
@@ -256,6 +305,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 344.75408
+  tps: 234.31037
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 356.05979
@@ -270,10 +326,17 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSmitePriest-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 336.48983
+  tps: 228.21262
+ }
+}
+dps_results: {
  key: "TestSmitePriest-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 351.04988
-  tps: 237.94217
+  dps: 368.79969
+  tps: 250.22474
  }
 }
 dps_results: {

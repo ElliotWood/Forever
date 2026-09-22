@@ -4,6 +4,24 @@
 
 export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
+		833, // Lifestone
+		[
+			"Restores 800 Health, increased by 1% for each 1% of your Health missing.", // 17712 - https://www.wowhead.com/forever/spell=17712
+		]
+	],
+	[
+		1168, // Skullflame Shield
+		[
+			"When struck in combat has a 2% chance of dealing 115 Fire damage to all targets around you.", // 18818 - https://www.wowhead.com/forever/spell=18818
+		]
+	],
+	[
+		3475, // Cloak of Flames
+		[
+			"Deals 5 Fire damage to anyone who strikes you with a melee attack.", // 21142 - https://www.wowhead.com/forever/spell=21142
+		]
+	],
+	[
 		7734, // Six Demon Bag
 		[
 			"Blasts enemies in front of you with the power of wind, fire, all that kind of thing!", // 14537 - https://www.wowhead.com/forever/spell=14537
@@ -16,15 +34,99 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		10844, // Spire of Hakkar
+		[
+			"Harmful spell casts have a chance to steal 112 life from target enemy over 8s.", // 1299943 - https://www.wowhead.com/forever/spell=1299943
+		]
+	],
+	[
+		10847, // Dragon's Call
+		[
+			"", // 1318108 - https://www.wowhead.com/forever/spell=1318108
+		]
+	],
+	[
 		11302, // Uther's Strength
 		[
 			"2% chance when struck in melee to gain a holy shield, absorbing 216 damage for 15s. This chance is doubled in Wasteland and Haunted areas.", // 10368 - https://www.wowhead.com/forever/spell=10368
 		]
 	],
 	[
+		11625, // Enthralled Sphere
+		[
+			"Charm target Dark Iron Dwarf for 20s.", // 1300754 - https://www.wowhead.com/forever/spell=1300754
+		]
+	],
+	[
+		11669, // Naglering
+		[
+			"When struck in combat inflicts 3 Arcane damage to the attacker.", // 15438 - https://www.wowhead.com/forever/spell=15438
+		]
+	],
+	[
+		11684, // Ironfoe
+		[
+			"Attacks have a chance to grant 2 extra attacks on your next swing. Attacks against Orcs are 2 times as likely to activate this effect.", // 15494 - https://www.wowhead.com/forever/spell=15494
+		]
+	],
+	[
+		11702, // Grizzle's Skinner
+		[
+			"Skin a Humanoid target.", // 1300763 - https://www.wowhead.com/forever/spell=1300763
+		]
+	],
+	[
+		11750, // Kindling Stave
+		[
+			"Harmful spell casts have a chance to deal 70 Fire damage. Deals 3 times as much damage to Plants.", // 1300782 - https://www.wowhead.com/forever/spell=1300782
+		]
+	],
+	[
+		11808, // Circle of Flame
+		[
+			"Channels 79 health into mana every 1.0 sec for 10s.", // 17447 - https://www.wowhead.com/forever/spell=17447
+		]
+	],
+	[
+		11810, // Force of Will
+		[
+			"When struck in combat has a chance to reduce all damage taken by 51 for 10s.", // 15595 - https://www.wowhead.com/forever/spell=15595
+		]
+	],
+	[
+		11815, // Hand of Justice
+		[
+			"1% chance on Melee hit to gain 1 extra attack. Attacks against Dwarves are 3 times as likely to activate this effect.", // 15601 - https://www.wowhead.com/forever/spell=15601
+		]
+	],
+	[
+		11819, // Second Wind
+		[
+			"Restores 63 Mana every 1.0 sec for 10s. This effect is doubled in Mountainous areas.", // 15604 - https://www.wowhead.com/forever/spell=15604
+		]
+	],
+	[
+		11832, // Burst of Knowledge
+		[
+			"Reduces the Mana cost of all spells by 150 for 10s.", // 15646 - https://www.wowhead.com/forever/spell=15646
+		]
+	],
+	[
 		11905, // Linken's Boomerang
 		[
 			"Flings a magical boomerang towards target enemy dealing 150 Physical damage and has a chance to Stun for 2s or Disarm for 10s.", // 15712 - https://www.wowhead.com/forever/spell=15712
+		]
+	],
+	[
+		11923, // The Hammer of Grace
+		[
+			"Dying heals all party members within 40 yards for 1176.", // 1300891 - https://www.wowhead.com/forever/spell=1300891
+		]
+	],
+	[
+		12588, // Bonespike Shoulder
+		[
+			"Deals 75 damage when you are the victim of a critical melee strike.", // 16550 - https://www.wowhead.com/forever/spell=16550
 		]
 	],
 	[
@@ -46,9 +148,125 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		12930, // Briarwood Reed
+		[
+			"Unable to be tracked.", // 1301707 - https://www.wowhead.com/forever/spell=1301707
+		]
+	],
+	[
 		13040, // Heartseeking Crossbow
 		[
 			"Chance to strike your ranged target with a Shadowbolt for 16 Shadow damage.", // 29640 - https://www.wowhead.com/forever/spell=29640
+		]
+	],
+	[
+		13143, // Mark of the Dragon Lord
+		[
+			"A protective mana shield surrounds the caster absorbing 500 damage. While the shield holds, increases mana regeneration by 22 every 5.0 sec for 30min.", // 17252 - https://www.wowhead.com/forever/spell=17252
+		]
+	],
+	[
+		13171, // Smokey's Lighter
+		[
+			"Flick the lighter, dealing 210 Fire damage to all enemies in a cone in front of you. Deals 2 times as much damage to Plants.", // 17283 - https://www.wowhead.com/forever/spell=17283
+		]
+	],
+	[
+		13213, // Smolderweb's Eye
+		[
+			"Remove 1 Disarm effect from target ally.", // 1308917 - https://www.wowhead.com/forever/spell=1308917
+		]
+	],
+	[
+		13243, // Argent Defender
+		[
+			"Has a chance when struck in combat to increase your chance to block by 18% for 10s. Undead that strike you are 2 times as likely to activate this effect.", // 17351 - https://www.wowhead.com/forever/spell=17351
+		]
+	],
+	[
+		13353, // Book of the Dead
+		[
+			"", // 1298517 - https://www.wowhead.com/forever/spell=1298517
+		]
+	],
+	[
+		13375, // Crest of Retribution
+		[
+			"Deals 22 Physical damage every time you block.", // 17496 - https://www.wowhead.com/forever/spell=17496
+		]
+	],
+	[
+		13379, // Piccolo of the Flaming Fire
+		[
+			"Causes nearby players to dance.", // 18400 - https://www.wowhead.com/forever/spell=18400
+		]
+	],
+	[
+		13382, // Cannonball Runner
+		[
+			"", // 1300668 - https://www.wowhead.com/forever/spell=1300668
+		]
+	],
+	[
+		13505, // Runeblade of Baron Rivendare
+		[
+			"Increases movement speed by 8% and restores 60 health every 5.0.", // 17625 - https://www.wowhead.com/forever/spell=17625
+		]
+	],
+	[
+		13515, // Ramstein's Lightning Bolts
+		[
+			"Harness the power of lightning to strike the target, stunning them for 2s. Stuns players in water for 2 times as long.", // 1299443 - https://www.wowhead.com/forever/spell=1299443
+		]
+	],
+	[
+		13544, // Spectral Essence
+		[
+			"Releases the spirit from an Undead corpse within 10 yds, laying it to rest and restoring 933 Health.", // 1298497 - https://www.wowhead.com/forever/spell=1298497
+		]
+	],
+	[
+		13937, // Headmaster's Charge
+		[
+			"Gives 20 additional intellect to party members within 30 yards.", // 18264 - https://www.wowhead.com/forever/spell=18264
+		]
+	],
+	[
+		13955, // Stoneform Shoulders
+		[
+			"After entering combat, reduce the next instance of physical damage taken within 20s by 60.", // 1298231 - https://www.wowhead.com/forever/spell=1298231
+		]
+	],
+	[
+		13959, // Omokk's Girth Restrainer
+		[
+			"Decreases all threat generated by 1%.", // 1298501 - https://www.wowhead.com/forever/spell=1298501
+		]
+	],
+	[
+		13965, // Blackhand's Breadth
+		[
+			"Marks your target, increasing your Critical Strike chance against them by 5% for 20s. This effect is doubled against Orcs and Ogres.", // 1318944 - https://www.wowhead.com/forever/spell=1318944
+			"", // 1318945 - https://www.wowhead.com/forever/spell=1318945
+		]
+	],
+	[
+		13968, // Eye of the Beast
+		[
+			"Increases your Spell Hit chance by 7% for 20s.", // 1287840 - https://www.wowhead.com/forever/spell=1287840
+			"", // 1318846 - https://www.wowhead.com/forever/spell=1318846
+		]
+	],
+	[
+		14022, // Barov Peasant Caller
+		[
+			"", // 1298508 - https://www.wowhead.com/forever/spell=1298508
+		]
+	],
+	[
+		14023, // Barov Peasant Caller
+		[
+			"", // 1298508 - https://www.wowhead.com/forever/spell=1298508
 		]
 	],
 	[
@@ -73,6 +291,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		14154, // Truefaith Vestments
 		[
 			"Reduces the cooldown of your Fade ability by -2.0 sec.", // 18388 - https://www.wowhead.com/forever/spell=18388
+		]
+	],
+	[
+		14576, // Ebon Hilt of Marduk
+		[
+			"Decreases all threat generated by 1%.", // 1298501 - https://www.wowhead.com/forever/spell=1298501
 		]
 	],
 	[
@@ -136,12 +360,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		16484, // Marshal's Plate Gauntlets
-		[
-			"Hamstring Rage cost reduced by -3.0.", // 22778 - https://www.wowhead.com/forever/spell=22778
-		]
-	],
-	[
 		16487, // Blood Guard's Silk Gloves
 		[
 			"Increases the damage absorbed by your Mana Shield by 285.", // 23037 - https://www.wowhead.com/forever/spell=23037
@@ -178,12 +396,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		16548, // General's Plate Gauntlets
-		[
-			"Hamstring Rage cost reduced by -3.0.", // 22778 - https://www.wowhead.com/forever/spell=22778
-		]
-	],
-	[
 		16558, // General's Leather Treads
 		[
 			"Increases the duration of your Sprint ability by 3.0 sec.", // 23049 - https://www.wowhead.com/forever/spell=23049
@@ -199,6 +411,30 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		16768, // Furbolg Medicine Pouch
 		[
 			"Restores 100 health every 1.0 sec for 10s.", // 20631 - https://www.wowhead.com/forever/spell=20631
+		]
+	],
+	[
+		17064, // Shard of the Scale
+		[
+			"Restores 235 Mana when you kill a Dragonkin that gives experience. This effect cannot occur more than once every 10 sec.", // 1305426 - https://www.wowhead.com/forever/spell=1305426
+		]
+	],
+	[
+		17066, // Drillborer Disk
+		[
+			"When struck in combat inflicts 3 Arcane damage to the attacker.", // 15438 - https://www.wowhead.com/forever/spell=15438
+		]
+	],
+	[
+		17067, // Ancient Cornerstone Grimoire
+		[
+			"", // 1305405 - https://www.wowhead.com/forever/spell=1305405
+		]
+	],
+	[
+		17104, // Spinal Reaper
+		[
+			"Restores 150 mana or 20 rage when you kill a target that gives experience; this effect cannot occur more than once every 10 seconds.", // 21186 - https://www.wowhead.com/forever/spell=21186
 		]
 	],
 	[
@@ -256,9 +492,64 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		17744, // Heart of Noxxion
+		[
+			"Reduces the duration of all poison effects applied to you by 10%.", // 1294777 - https://www.wowhead.com/forever/spell=1294777
+			"Removes 1 poison effect.", // 21954 - https://www.wowhead.com/forever/spell=21954
+		]
+	],
+	[
 		17759, // Mark of Resolution
 		[
 			"Absorbs 780 Physical damage. Lasts 10s.", // 21956 - https://www.wowhead.com/forever/spell=21956
+		]
+	],
+	[
+		17943, // Fist of Stone
+		[
+			"Chance on hit to restore 32 mana. Restore 3 times as much if attacking an Earth Elemental, Golem, or Titan-forged enemy. ", // 1294794 - https://www.wowhead.com/forever/spell=1294794
+		]
+	],
+	[
+		18047, // Flame Walkers
+		[
+			"Ignore all damage taken from standing or swimming in Lava for 15s.", // 1301625 - https://www.wowhead.com/forever/spell=1301625
+		]
+	],
+	[
+		18308, // Clever Hat
+		[
+			"Decreases all threat generated by 4%.", // 1298505 - https://www.wowhead.com/forever/spell=1298505
+		]
+	],
+	[
+		18321, // Energetic Rod
+		[
+			"Chance on landing a damaging spell to restore 48 mana to you.", // 1302191 - https://www.wowhead.com/forever/spell=1302191
+		]
+	],
+	[
+		18326, // Razor Gauntlets
+		[
+			"When struck in combat inflicts 7 Nature damage to the attacker.", // 1302193 - https://www.wowhead.com/forever/spell=1302193
+		]
+	],
+	[
+		18340, // Eidolon Talisman
+		[
+			"Absorbs 1176 Shadow damage. Lasts 30s.", // 1302362 - https://www.wowhead.com/forever/spell=1302362
+		]
+	],
+	[
+		18351, // Magically Sealed Bracers
+		[
+			"Spell Damage received is reduced by 5.", // 1292692 - https://www.wowhead.com/forever/spell=1292692
+		]
+	],
+	[
+		18354, // Pimgib's Collar
+		[
+			"Restores 9 mana per 5 sec to your Imp.", // 22855 - https://www.wowhead.com/forever/spell=22855
 		]
 	],
 	[
@@ -268,9 +559,63 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		18370, // Vigilance Charm
+		[
+			"Increases your chance to Dodge by 20% for 20s or until you Dodge 3 attacks.", // 1302264 - https://www.wowhead.com/forever/spell=1302264
+		]
+	],
+	[
+		18371, // Mindtap Talisman
+		[
+			"Tap your mind, restoring 1250 mana over for 10s, but reducing Intellect by 60 for 2min.", // 1302205 - https://www.wowhead.com/forever/spell=1302205
+		]
+	],
+	[
+		18396, // Mind Carver
+		[
+			"Chance on landing a damaging spell to assault the target's mind, increasing the casting time of all spells by 10% for 30s. Stacks up to 5 times.", // 1302342 - https://www.wowhead.com/forever/spell=1302342
+		]
+	],
+	[
 		18406, // Onyxia Blood Talisman
 		[
 			"Reduces your magic damage taken from Dragon Breath spells by 33% for 15s.", // 1287808 - https://www.wowhead.com/forever/spell=1287808
+		]
+	],
+	[
+		18411, // Spry Boots
+		[
+			"Minor increase to running and swimming speed. Does not stack with similar effects.", // 24090 - https://www.wowhead.com/forever/spell=24090
+		]
+	],
+	[
+		18463, // Ogre Pocket Knife
+		[
+			"Increases the chance your Pick Pocket and Distract abilities are successful by 2%", // 1302345 - https://www.wowhead.com/forever/spell=1302345
+		]
+	],
+	[
+		18469, // Royal Seal of Eldre'Thalas
+		[
+			"Increases Spirit by 16 in Cavernous or Underground areas.", // 1318480 - https://www.wowhead.com/forever/spell=1318480
+		]
+	],
+	[
+		18470, // Royal Seal of Eldre'Thalas
+		[
+			"Increases Spirit by 16 in Forest and Grassland areas.", // 1318478 - https://www.wowhead.com/forever/spell=1318478
+		]
+	],
+	[
+		18483, // Mana Channeling Wand
+		[
+			"Chance on hit to restore 65 mana.", // 1302350 - https://www.wowhead.com/forever/spell=1302350
+		]
+	],
+	[
+		18537, // Counterattack Lodestone
+		[
+			"Energize the lodestone for 10s, heightening its magnetic pull. Drawing in the weapon of the next melee attacker that strikes you, Disarming them for 8s.", // 1302356 - https://www.wowhead.com/forever/spell=1302356
 		]
 	],
 	[
@@ -383,12 +728,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		19577, // Rage of Mugamba
-		[
-			"Reduces the cost of your Hamstring ability by -2.0 rage points.", // 24428 - https://www.wowhead.com/forever/spell=24428
-		]
-	],
-	[
 		19588, // Hero's Brand
 		[
 			"Increases the duration of Hammer of Justice by 0.5 sec.", // 24188 - https://www.wowhead.com/forever/spell=24188
@@ -455,12 +794,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		19951, // Gri'lek's Charm of Might
-		[
-			"Instantly increases your rage by 30.0.", // 24571 - https://www.wowhead.com/forever/spell=24571
-		]
-	],
-	[
 		19953, // Renataki's Charm of Beasts
 		[
 			"Instantly clears the cooldowns of Aimed Shot, Multishot, Volley, and Arcane Shot.", // 24531 - https://www.wowhead.com/forever/spell=24531
@@ -503,9 +836,45 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		19982, // Duskbat Drape
+		[
+			"Reduces damage from falling.", // 1300663 - https://www.wowhead.com/forever/spell=1300663
+		]
+	],
+	[
+		19990, // Blessed Prayer Beads
+		[
+			"Heal your target for 648. Usable while Silenced.", // 24354 - https://www.wowhead.com/forever/spell=24354
+		]
+	],
+	[
+		19991, // Devilsaur Eye
+		[
+			"Your next melee or ranged attack within 10s will Root the target for 2s. The duration of this effect is doubled if the target was moving. Only works against Beasts.", // 24352 - https://www.wowhead.com/forever/spell=24352
+		]
+	],
+	[
+		19992, // Devilsaur Tooth
+		[
+			"Reduces the Mana cost of your next Revive Pet cast within 30s by 100%.", // 24353 - https://www.wowhead.com/forever/spell=24353
+		]
+	],
+	[
 		20005, // Devilsaur Claws
 		[
 			"Increased Fist Weapons +4.", // 24362 - https://www.wowhead.com/forever/spell=24362
+		]
+	],
+	[
+		20035, // Glacial Spike
+		[
+			"Your Frostbolt spells have a 6% chance to restore 50 mana when cast.", // 24392 - https://www.wowhead.com/forever/spell=24392
+		]
+	],
+	[
+		20036, // Fire Ruby
+		[
+			"Refreshes the cooldown of Fire Ward and causes Fire damage absorbed by it to increase the damage of your next Fire Blast cast within 1min by 50% of the damage absorbed.", // 24389 - https://www.wowhead.com/forever/spell=24389
 		]
 	],
 	[
@@ -563,6 +932,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		20084, // Hunting Net
+		[
+			"Renders a target unable to move for 10s.", // 8312 - https://www.wowhead.com/forever/spell=8312
+		]
+	],
+	[
 		20091, // Highlander's Chain Greaves
 		[
 			"Run speed increased slightly.", // 23990 - https://www.wowhead.com/forever/spell=23990
@@ -602,6 +977,13 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		20127, // Highlander's Plate Greaves
 		[
 			"Run speed increased slightly.", // 23990 - https://www.wowhead.com/forever/spell=23990
+		]
+	],
+	[
+		20130, // Diamond Flask
+		[
+			"Restores 1120 Health over 5s. This healing is strongest at first. If finished, gain 20 Strength for 5s.", // 363881 - https://www.wowhead.com/forever/spell=363881
+			"", // 1318073 - https://www.wowhead.com/forever/spell=1318073
 		]
 	],
 	[
@@ -689,9 +1071,33 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		20503, // Enamored Water Spirit
+		[
+			"", // 1300667 - https://www.wowhead.com/forever/spell=1300667
+		]
+	],
+	[
+		20512, // Sanctified Orb
+		[
+			"Restores 340 Mana. This effect is doubled in Wasteland and Haunted areas.", // 24865 - https://www.wowhead.com/forever/spell=24865
+		]
+	],
+	[
+		20517, // Razorsteel Shoulders
+		[
+			"When struck in combat inflicts 3 Physical damage to the attacker.", // 1300680 - https://www.wowhead.com/forever/spell=1300680
+		]
+	],
+	[
 		20525, // Earthen Sigil
 		[
 			"Restores 400 mana over 10s.", // 24884 - https://www.wowhead.com/forever/spell=24884
+		]
+	],
+	[
+		20534, // Abyss Shard
+		[
+			"Casts your Summon Voidwalker spell with no mana or Soul Shard requirements.", // 25112 - https://www.wowhead.com/forever/spell=25112
 		]
 	],
 	[
@@ -803,9 +1209,27 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		22321, // Heart of Wyrmthalak
+		[
+			"Melee and Ranged attacks have a chance to deal 140 Fire damage. Deals 3 times as much damage to Orcs.", // 27655 - https://www.wowhead.com/forever/spell=27655
+		]
+	],
+	[
 		22396, // Totem of Life
 		[
 			"Increases healing done by Lesser Healing Wave by up to 80.", // 27855 - https://www.wowhead.com/forever/spell=27855
+		]
+	],
+	[
+		22397, // Idol of Ferocity
+		[
+			"Reduces the energy cost of Claw, Rake, and Mangle by 2.", // 27851 - https://www.wowhead.com/forever/spell=27851
+		]
+	],
+	[
+		22398, // Idol of Rejuvenation
+		[
+			"Increases the initial healing of Regrowth by 5% when cast on a target affected by your Rejuvenation.", // 27853 - https://www.wowhead.com/forever/spell=27853
 		]
 	],
 	[
@@ -815,15 +1239,27 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		22400, // Libram of Truth
+		[
+			"Reduces the Mana cost of Purify and Cleanse by 10%.", // 27850 - https://www.wowhead.com/forever/spell=27850
+		]
+	],
+	[
+		22401, // Libram of Hope
+		[
+			"Increases the duration of your Seal spells by 4 sec.", // 27848 - https://www.wowhead.com/forever/spell=27848
+		]
+	],
+	[
 		22402, // Libram of Grace
 		[
 			"Reduces the mana cost of your Cleanse spell by 25.", // 27847 - https://www.wowhead.com/forever/spell=27847
 		]
 	],
 	[
-		22589, // Atiesh, Greatstaff of the Guardian
+		22458, // Moonshadow Stave
 		[
-			"Increases the spell critical chance of all party members within 30 yards by 2%.", // 28142 - https://www.wowhead.com/forever/spell=28142
+			"Harmful spell casts have a chance to deal 91 Arcane or Shadow damage.", // 1300435 - https://www.wowhead.com/forever/spell=1300435
 		]
 	],
 	[
@@ -902,6 +1338,24 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		23040, // Glyph of Deflection
 		[
 			"Increases the block value of your shield by 235 for 20s.", // 28773 - https://www.wowhead.com/forever/spell=28773
+		]
+	],
+	[
+		23198, // Idol of Brutality
+		[
+			"Reduces the Rage cost of Maul and Swipe by -2.0.", // 28855 - https://www.wowhead.com/forever/spell=28855
+		]
+	],
+	[
+		23201, // Libram of Divinity
+		[
+			"Causes Judgement to heal all nearby party members for 25.", // 1302540 - https://www.wowhead.com/forever/spell=1302540
+		]
+	],
+	[
+		23202, // Libram of Divinity
+		[
+			"Causes Judgement to heal all nearby party members for 25.", // 1302540 - https://www.wowhead.com/forever/spell=1302540
 		]
 	],
 	[

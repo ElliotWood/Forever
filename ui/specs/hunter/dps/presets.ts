@@ -28,6 +28,9 @@ import BeastMasteryAPL from "./apls/bm.apl.json";
 import MarksmanshipAPL from "./apls/mm.apl.json";
 import SurvivalAPL from "./apls/sv.apl.json";
 import { SavedTalents } from '@generated/proto/ui';
+import LaunchGear from './gear_sets/launch.gear.json';
+import P0BisGear from './gear_sets/p0.bis.gear.json';
+import P1BisGear from './gear_sets/p1.bis.gear.json';
 
 export const BeastMasteryRotation = PresetUtils.makePresetAPLRotation(
 	"Beast Mastery",
@@ -130,3 +133,10 @@ export const TalentsBeastMastery = PresetUtils.makePresetTalents('Beast Mastery 
 export const TalentsMarksmanship = PresetUtils.makePresetTalents('Marksmanship 0/39/12', SavedTalents.create({ talentsString: '-3050552301503151-50024001' }));
 export const TalentsSurvival = PresetUtils.makePresetTalents('Survival 0/15/36', SavedTalents.create({ talentsString: '-005055-550230031051220151' }));
 export const TalentPresets = [TalentsP1, TalentsBeastMastery, TalentsMarksmanship, TalentsSurvival];
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const GEAR_P0_BIS = PresetUtils.makePresetGear('Pre-BiS', P0BisGear);
+export const GEAR_P1_BIS = PresetUtils.makePresetGear('P1 BiS', P1BisGear);
+export const DEFAULT_GEAR = GEAR_P0_BIS;
+export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_P0_BIS, GEAR_P1_BIS];

@@ -74,10 +74,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 635.9709
+  tps: 403.07067
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 538.33599
   tps: 333.86565
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 540.21633
+  tps: 334.92391
  }
 }
 dps_results: {
@@ -90,8 +104,8 @@ dps_results: {
 dps_results: {
  key: "TestFire-AllItems-DepletedEyeofInfluence-275630"
  value: {
-  dps: 538.33599
-  tps: 333.86565
+  dps: 549.4038
+  tps: 340.25929
  }
 }
 dps_results: {
@@ -99,6 +113,13 @@ dps_results: {
  value: {
   dps: 538.33599
   tps: 333.86565
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 570.47028
+  tps: 352.42821
  }
 }
 dps_results: {
@@ -137,6 +158,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 538.33599
+  tps: 333.86565
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 538.33599
@@ -152,6 +180,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestFire-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 538.33599
+  tps: 333.86565
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-FreezingBand-942"
  value: {
   dps: 538.33599
   tps: 333.86565
@@ -214,6 +249,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 538.33599
+  tps: 333.86565
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 538.33599
@@ -229,6 +271,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestFire-AllItems-MoltenHeartoftheMountain-249470"
+ value: {
+  dps: 538.33599
+  tps: 333.86565
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Prismcharm-15867"
+ value: {
+  dps: 538.33599
+  tps: 333.86565
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-RaggedJohn'sNeverendingCup-15873"
  value: {
   dps: 538.33599
   tps: 333.86565
@@ -256,6 +312,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 539.52383
+  tps: 334.36862
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 600.7747
@@ -270,14 +333,28 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 538.33599
+  tps: 333.86565
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 573.97284
-  tps: 354.53791
+  dps: 610.86555
+  tps: 375.85005
  }
 }
 dps_results: {
  key: "TestFire-AllItems-Thunderfury,BlessedBladeoftheWindseeker-19019"
+ value: {
+  dps: 538.33599
+  tps: 333.86565
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-WarbladeofCaerDarrow-13982"
  value: {
   dps: 538.33599
   tps: 333.86565

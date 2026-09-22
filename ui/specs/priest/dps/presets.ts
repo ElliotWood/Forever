@@ -6,6 +6,10 @@ import { defaultImprovedShadowBoltSettings, defaultRaidBuffMajorDamageCooldowns 
 
 import ShadowApl from './apls/shadow.apl.json';
 import SmiteApl from './apls/smite.apl.json';
+import LaunchGear from './gear_sets/launch.gear.json';
+import P0BisGear from './gear_sets/p0.bis.gear.json';
+import P1BisGear from './gear_sets/p1.bis.gear.json';
+import SmiteLaunchGear from './gear_sets/smite_launch.gear.json';
 
 export const ROTATION_PRESET_SHADOW = PresetUtils.makePresetAPLRotation('Shadow', ShadowApl);
 export const ROTATION_PRESET_SMITE = PresetUtils.makePresetAPLRotation('Smite', SmiteApl);
@@ -70,3 +74,11 @@ export const OtherDefaults = {
 	profession1: Profession.Enchanting,
 	profession2: Profession.Tailoring,
 };
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const GEAR_P0_BIS = PresetUtils.makePresetGear('Pre-BiS', P0BisGear);
+export const GEAR_P1_BIS = PresetUtils.makePresetGear('P1 BiS', P1BisGear);
+export const GEAR_SMITE_LAUNCH = PresetUtils.makePresetGear('Smite Launch', SmiteLaunchGear);
+export const DEFAULT_GEAR = GEAR_P0_BIS;
+export const GEAR_PRESETS = [GEAR_LAUNCH, GEAR_P0_BIS, GEAR_P1_BIS, GEAR_SMITE_LAUNCH];

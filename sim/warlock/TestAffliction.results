@@ -74,10 +74,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-BladeofEternalDarkness-17780"
+ value: {
+  dps: 760.70546
+  tps: 371.07264
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-BlazefuryMedallion-17111"
  value: {
   dps: 678.01233
   tps: 314.28264
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Bonereaver'sEdge-17076"
+ value: {
+  dps: 684.14478
+  tps: 317.71681
  }
 }
 dps_results: {
@@ -92,6 +106,13 @@ dps_results: {
  value: {
   dps: 678.01233
   tps: 314.28264
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-DraconicInfusedEmblem-22268"
+ value: {
+  dps: 706.89898
+  tps: 330.79305
  }
 }
 dps_results: {
@@ -130,6 +151,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-EnchantWeapon-IcyChill-1894"
+ value: {
+  dps: 678.01233
+  tps: 314.28264
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 678.01233
@@ -145,6 +173,13 @@ dps_results: {
 }
 dps_results: {
  key: "TestAffliction-AllItems-EyeoftheDead-23047"
+ value: {
+  dps: 678.01233
+  tps: 314.28264
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-FreezingBand-942"
  value: {
   dps: 678.01233
   tps: 314.28264
@@ -200,6 +235,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-MarkofTyranny-13966"
+ value: {
+  dps: 678.01233
+  tps: 314.28264
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 678.01233
@@ -215,6 +257,20 @@ dps_results: {
 }
 dps_results: {
  key: "TestAffliction-AllItems-MoltenHeartoftheMountain-249470"
+ value: {
+  dps: 678.01233
+  tps: 314.28264
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Prismcharm-15867"
+ value: {
+  dps: 678.01233
+  tps: 314.28264
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-RaggedJohn'sNeverendingCup-15873"
  value: {
   dps: 678.01233
   tps: 314.28264
@@ -242,6 +298,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-SpireoftheStoneshaper-12532"
+ value: {
+  dps: 682.73003
+  tps: 316.23319
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 715.80452
@@ -263,14 +326,28 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-TheLionHornofStormwind-14557"
+ value: {
+  dps: 678.01233
+  tps: 314.28264
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
-  dps: 705.14885
-  tps: 329.10205
+  dps: 741.36234
+  tps: 350.05301
  }
 }
 dps_results: {
  key: "TestAffliction-AllItems-Thunderfury,BlessedBladeoftheWindseeker-19019"
+ value: {
+  dps: 678.01233
+  tps: 314.28264
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-WarbladeofCaerDarrow-13982"
  value: {
   dps: 678.01233
   tps: 314.28264

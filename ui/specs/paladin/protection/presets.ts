@@ -6,6 +6,7 @@ import { defaultExposeWeaknessSettings } from '@sim/proto/utils';
 
 import DefaultApl from './apls/default.apl.json';
 import P5Apl from './apls/p5.apl.json';
+import LaunchGear from './gear_sets/launch.gear.json';
 
 // Our Forever sim's rotations.
 export const APL_PRESET = PresetUtils.makePresetAPLRotation('Basic Prot', DefaultApl);
@@ -96,3 +97,8 @@ export const OtherDefaults = {
 		inspirationUptime: 0.25,
 	}),
 };
+
+// Our Forever sim's gear presets (master ui/<spec>/gear_sets).
+export const GEAR_LAUNCH = PresetUtils.makePresetGear('Launch', LaunchGear);
+export const DEFAULT_GEAR = GEAR_LAUNCH;
+export const GEAR_PRESETS = [GEAR_LAUNCH];
