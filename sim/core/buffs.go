@@ -1642,20 +1642,21 @@ func PowerInfusionAura(char *Character, actionTag int32) *Aura {
 		Duration: PowerInfusionDuration,
 	})
 
-	aura.NewExclusiveEffect("ManaCost", true, ExclusiveEffect{
-		Priority: -20,
-		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			if ee.Aura.Unit.HasManaBar() {
-				ee.Aura.Unit.PseudoStats.SpellCostPercentModifier -= 20
-			}
-		},
-		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			if ee.Aura.Unit.HasManaBar() {
-				ee.Aura.Unit.PseudoStats.SpellCostPercentModifier += 20
-			}
-		},
+	// Client 10060: +20% damage done to all magic schools (aura 79, mask 126) and +20% healing
+	// (aura 136), the Classic effect; TBC's haste and cost cut are not in it. Their #39
+	// generates the same.
+	aura.ApplyOnGain(func(aura *Aura, _ *Simulation) {
+		for school := stats.SchoolIndexArcane; school <= stats.SchoolIndexShadow; school++ {
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[school] *= 1.2
+		}
+		aura.Unit.PseudoStats.HealingDealtMultiplier *= 1.2
 	})
-	multiplyCastSpeedEffect(aura, 1.2)
+	aura.ApplyOnExpire(func(aura *Aura, _ *Simulation) {
+		for school := stats.SchoolIndexArcane; school <= stats.SchoolIndexShadow; school++ {
+			aura.Unit.PseudoStats.SchoolDamageDealtMultiplier[school] /= 1.2
+		}
+		aura.Unit.PseudoStats.HealingDealtMultiplier /= 1.2
+	})
 	return aura
 }
 
@@ -1951,8 +1952,7 @@ func registerBloodlustCD(character *Character) {
 		Priority: CooldownPriorityBloodlust,
 		Type:     CooldownTypeDPS,
 		ShouldActivate: func(sim *Simulation, character *Character) bool {
-			// Haste portion doesn't stack with Power Infusion, so prefer to wait.
-			return !character.HasActiveAuraWithTag(PowerInfusionAuraTag) && !character.HasActiveAura(SatedAuraLabel)
+			return !character.HasActiveAura(SatedAuraLabel)
 		},
 	})
 }
