@@ -17,6 +17,53 @@ go run ./tools/spelldata -lsp                   # a language server on stdio
 `-hover` prints the hover's markdown on stdout and its trace on stderr, and exits 1 where there is no
 hover. `-config` resolves a `spelldata.SpellConfig` call - the row pick substituted through the
 package's declarations, each option applied - and states each field with the step that filled it.
+`-expr` reads a chain the way a class file writes it: a family's `spelldata.Ladder`, then any accessor
+of the store (`Highest()`, `Rank(n)`, `EffectAt(1).TenthsAt(1)`, `Effect(dbcenums.A_X, misc)`, ...),
+with arguments that are literals or constants of `sim/core`, `dbcenums` or `spelldata`.
+
+## JSON output
+
+`-json` states the same reading as data, for a script or an AI agent that calls the tool. A row is one
+object:
+
+```json
+{
+	"id": 11574,
+	"name": "Rend",
+	"rank": "Rank 7",
+	"ladder": ["warrior spellData.Rend.Highest()"],
+	"header": [
+		{ "key": "school", "value": "physical" },
+		{ "key": "cost", "value": "10 rage" }
+	],
+	"effects": [
+		{
+			"human": "21 physical damage every 3 s to the enemy (7 ticks)",
+			"literal": "E_APPLY_AURA A_PERIODIC_DAMAGE base=21 period=3000ms target=[6,0]"
+		}
+	],
+	"wowhead": "https://www.wowhead.com/forever/spell=11574"
+}
+```
+
+- `rank` is the store's rank column, or `rank n of N` on a talent's rank.
+- `ladder` holds the class-file calls that reach the id; empty where no class file names it.
+- `header` holds the columns the row states, in the order the text form prints them. It is a list
+  because a key can repeat (`cost`, `cooldown`); `proc` and `refs` are keys like the rest.
+- `effects[].human` is `unrecognised shape` where no wording applies, and `literal` is always the
+  client's own columns. `read: true` marks the effect an `-expr` chain read.
+
+By mode:
+
+- `<id> -json`: one row.
+- `<name> -json [-all]`: an array of rows, the highest rank or every match.
+- `-family <class>/<Family> -json`: `{"family", "ranks": [{"id", "name", "rank", "accessor", "value"}], "highest": <row>}`.
+  `value` (`effect 1 = 600`) is there only where effect 1 changes by rank.
+- `-expr <chain> -json`: the row the chain reached, plus `kind` (`spell`, `effect` or `value`), `trail`
+  (the chain with every constant resolved), `value`, `doc` (the doc comment of the accessor that
+  answered, where it has one) and, on an effect, `accessors` (`Name(args) = value` for each accessor
+  that reads something off it).
+- `-config` and `-hover` have no JSON form.
 
 ## The language server
 

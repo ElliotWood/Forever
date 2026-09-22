@@ -9,45 +9,17 @@ import (
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-// One effect as both readings: what it does in words, and the client's own columns, which is what a
-// developer checks the words against. Human is "unrecognised shape" on an effect no branch covers,
-// and the literal is then all there is to read.
-type Line struct {
-	Human   string `json:"human"`
-	Literal string `json:"literal"`
-}
-
-func title(s *spelldata.Spell) string {
-	if s.Rank == "" {
-		return fmt.Sprintf("%d %s", s.ID, s.Name)
-	}
-	return fmt.Sprintf("%d %s (%s)", s.ID, s.Name, s.Rank)
-}
-
-// The spell's own columns, one label per line, leaving out what the row does not state.
-func header(s *spelldata.Spell) []string {
-	var out []string
-	for _, field := range headerFields(s) {
-		out = append(out, fmt.Sprintf("%-9s %s", field.label, field.value))
-	}
-	return out
-}
-
-type headerField struct {
-	label string
-	value string
-}
-
-func headerFields(s *spelldata.Spell) []headerField {
-	var out []headerField
-	add := func(label, value string) {
+// The spell's own columns, leaving out what the row does not state.
+func headerFields(s *spelldata.Spell) []field {
+	out := []field{}
+	add := func(key, value string) {
 		if value != "" {
-			out = append(out, headerField{label, value})
+			out = append(out, field{key, value})
 		}
 	}
 
-	add("school", schoolName(s.School))
-	add("defense", defenseName(s.DefenseType))
+	add("school", schoolName(s.SpellSchool()))
+	add("defense", defenseName(s.DefenseTypeCore()))
 	if s.IsBleed() {
 		add("mechanic", "bleed")
 	} else if s.Mechanic != 0 {
@@ -186,10 +158,6 @@ func labelList(s *spelldata.Spell) string {
 		out = append(out, strconv.Itoa(int(label)))
 	}
 	return strings.Join(out, ", ")
-}
-
-func wowheadURL(id int32) string {
-	return fmt.Sprintf("https://www.wowhead.com/forever/spell=%d", id)
 }
 
 func seconds(ms int32) string {

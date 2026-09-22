@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"net/textproto"
-	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -198,21 +197,20 @@ func TestHoverLadderAccessor(t *testing.T) {
 	wantHover(t, bloodrageGo, "TenthsAt(1)", 2, "`TenthsAt(1)` = **10**")
 }
 
-// A class file as it stands on disk, whose argument is a dbcenums constant.
-func TestHoverClassFile(t *testing.T) {
-	root, err := moduleRoot()
-	if err != nil {
-		t.Fatal(err)
-	}
-	path := filepath.Join(root, "sim", "warrior", "battle_shout.go")
-	text, err := os.ReadFile(path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	markdown, trace, ok := hoverOn(t, newWorkspace(), string(text), pathURI(path), "baseAttackPower :=", 4)
-	if !ok || !strings.HasPrefix(markdown, "`baseAttackPower` = **139**\n\n`spellData.BattleShout.Highest().Effect(99, 0).Average(60)`") {
-		t.Errorf("battle_shout.go hovers as\n%s\n%s", markdown, strings.Join(trace, "\n"))
-	}
+// Two lines of sim/warrior/battle_shout.go, whose finder names its aura by a dbcenums constant.
+const battleShoutGo = `package warrior
+
+var battleShoutRank = spellData.BattleShout.Highest()
+
+func (warrior *Warrior) registerBattleShout() {
+	baseAttackPower := battleShoutRank.Effect(dbcenums.A_MOD_ATTACK_POWER, 0).Average(core.CharacterLevel)
+}
+`
+
+func TestHoverEnumArgument(t *testing.T) {
+	wantHover(t, battleShoutGo, "baseAttackPower :=", 4,
+		"`baseAttackPower` = **139**\n\n`spellData.BattleShout.Highest().Effect(99, 0).Average(60)`",
+		"| 1 ▶ | +139 attack power to the party around the caster")
 }
 
 func TestHoverSegments(t *testing.T) {

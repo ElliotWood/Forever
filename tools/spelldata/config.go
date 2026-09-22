@@ -7,7 +7,6 @@ import (
 	"go/parser"
 	"go/scanner"
 	"go/token"
-	"math/bits"
 	"regexp"
 	"strconv"
 	"strings"
@@ -18,32 +17,6 @@ import (
 )
 
 var spellConfigPattern = regexp.MustCompile(`\bspelldata\.SpellConfig\b`)
-
-func exactName(typeName string, value uint64) string {
-	for _, c := range coreConstants(typeName) {
-		if c.value == value && !strings.HasSuffix(c.name, "Len") {
-			return c.name
-		}
-	}
-	return strconv.FormatUint(value, 10)
-}
-
-func bitNames(typeName string, value uint64) []string {
-	var out []string
-	for value != 0 {
-		bit := value & -value
-		value &^= bit
-		name := fmt.Sprintf("bit %d", bits.TrailingZeros64(bit))
-		for _, c := range coreConstants(typeName) {
-			if c.value == bit {
-				name = c.name
-				break
-			}
-		}
-		out = append(out, name)
-	}
-	return out
-}
 
 type configOption struct {
 	label  string
@@ -242,10 +215,10 @@ func findCall(arg ast.Expr) (int32, bool) {
 }
 
 type configField struct {
-	name  string
-	read  func(*core.SpellConfig) string
-	flags string
-	bits  func(*core.SpellConfig) uint64
+	name    string
+	read    func(*core.SpellConfig) string
+	bits    func(*core.SpellConfig) uint64
+	bitName func(bit uint64) (string, bool)
 }
 
 func nonZero[T comparable](v T, format func(T) string) string {
@@ -269,14 +242,12 @@ var configFields = []configField{
 		return nonZero(c.ActionID.SpellID, func(id int32) string { return fmt.Sprintf("SpellID %d", id) })
 	}},
 	{name: "Rank", read: func(c *core.SpellConfig) string { return nonZero(c.Rank, intText[int32]) }},
-	{name: "SpellSchool", read: func(c *core.SpellConfig) string {
-		return nonZero(c.SpellSchool, func(v core.SpellSchool) string { return exactName("SpellSchool", uint64(v)) })
-	}},
-	{name: "DefenseType", read: func(c *core.SpellConfig) string {
-		return nonZero(c.DefenseType, func(v core.DefenseType) string { return exactName("DefenseType", uint64(v)) })
-	}},
-	{name: "Flags", flags: "SpellFlag", bits: func(c *core.SpellConfig) uint64 { return uint64(c.Flags) }},
-	{name: "ProcMask", flags: "ProcMask", bits: func(c *core.SpellConfig) uint64 { return uint64(c.ProcMask) }},
+	{name: "SpellSchool", read: func(c *core.SpellConfig) string { return nonZero(c.SpellSchool, core.SpellSchool.String) }},
+	{name: "DefenseType", read: func(c *core.SpellConfig) string { return nonZero(c.DefenseType, core.DefenseType.String) }},
+	{name: "Flags", bits: func(c *core.SpellConfig) uint64 { return uint64(c.Flags) },
+		bitName: func(bit uint64) (string, bool) { return stringerName(core.SpellFlag(bit)) }},
+	{name: "ProcMask", bits: func(c *core.SpellConfig) uint64 { return uint64(c.ProcMask) },
+		bitName: func(bit uint64) (string, bool) { return stringerName(core.ProcMask(bit)) }},
 	{name: "Cast.DefaultCast.CastTime", read: func(c *core.SpellConfig) string { return nonZero(c.Cast.DefaultCast.CastTime, durationText) }},
 	{name: "Cast.DefaultCast.GCD", read: func(c *core.SpellConfig) string { return nonZero(c.Cast.DefaultCast.GCD, durationText) }},
 	{name: "Cast.DefaultCast.NonEmpty", read: func(c *core.SpellConfig) string { return nonZero(c.Cast.DefaultCast.NonEmpty, boolText) }},
@@ -317,7 +288,7 @@ func attribute(stages []core.SpellConfig, labels []string) []configRow {
 					from = append(from, labels[i])
 				}
 			}
-			rows = append(rows, configRow{field.name, strings.Join(bitNames(field.flags, value), " | "), strings.Join(from, ", ")})
+			rows = append(rows, configRow{field.name, strings.Join(setBits(value, field.bitName), " | "), strings.Join(from, ", ")})
 			continue
 		}
 

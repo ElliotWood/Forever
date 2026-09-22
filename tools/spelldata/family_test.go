@@ -74,8 +74,8 @@ func TestFamilyTalentJSON(t *testing.T) {
 	if strings.Join(values, ", ") != "effect 1 = 12, effect 1 = 23, effect 1 = 35" {
 		t.Errorf("the ranks read %v", values)
 	}
-	if got.Highest.Title != "12286 Improved Rend (rank 3 of 3)" {
-		t.Errorf("the highest rank is titled %q", got.Highest.Title)
+	if got.Highest.heading() != "12286 Improved Rend (rank 3 of 3)" {
+		t.Errorf("the highest rank is titled %q", got.Highest.heading())
 	}
 }
 
@@ -105,7 +105,7 @@ func TestFamilyJSON(t *testing.T) {
 	if len(got.Ranks) != 5 {
 		t.Fatalf("%d ranks", len(got.Ranks))
 	}
-	if got.Ranks[0] != (familyRankJSON{ID: 5308, Name: "Execute", Rank: "Rank 1", Accessor: "Rank(1)", Value: "effect 1 = 125"}) {
+	if got.Ranks[0] != (familyRow{ID: 5308, Name: "Execute", Rank: "Rank 1", Accessor: "Rank(1)", Value: "effect 1 = 125"}) {
 		t.Errorf("rank 1 is %+v", got.Ranks[0])
 	}
 	if got.Ranks[4].Accessor != "Highest()" {
@@ -142,11 +142,8 @@ func TestExpr(t *testing.T) {
 			t.Errorf("%s: %v", c.expr, err)
 			continue
 		}
-		if got.Resolved != c.id || got.ID != c.id {
-			t.Errorf("%s resolves to %d and prints %d, want %d", c.expr, got.Resolved, got.ID, c.id)
-		}
-		if got.Expr != c.expr {
-			t.Errorf("%s echoes %q", c.expr, got.Expr)
+		if got.ID != c.id {
+			t.Errorf("%s resolves to %d, want %d", c.expr, got.ID, c.id)
 		}
 	}
 }
@@ -171,8 +168,8 @@ func TestExprTalentRank(t *testing.T) {
 		}
 	}
 
-	if got := evalJSON(t, "spellData.Cruelty.Rank(3)"); got.Title != "12320 Cruelty (rank 3 of 5)" {
-		t.Errorf("the rank is titled %q", got.Title)
+	if got := evalJSON(t, "spellData.Cruelty.Rank(3)"); got.Rank != "rank 3 of 5" {
+		t.Errorf("the rank is %q", got.Rank)
 	}
 
 	var out bytes.Buffer

@@ -14,7 +14,7 @@ import (
 const unrecognised = "unrecognised shape"
 
 func effectLines(s *spelldata.Spell) []Line {
-	var out []Line
+	out := []Line{}
 	for i := range s.Effects {
 		e := &s.Effects[i]
 		human := humanise(s, e)
@@ -57,7 +57,7 @@ func tenths(e *spelldata.Effect) float64 {
 func humanise(s *spelldata.Spell, e *spelldata.Effect) string {
 	switch e.Type {
 	case dbcenums.E_SCHOOL_DAMAGE:
-		return sentence(join(amount(e), schoolName(s.School), "damage", targetPhrase(e)),
+		return sentence(join(amount(e), schoolName(s.SpellSchool()), "damage", targetPhrase(e)),
 			scaling(e), coefficients(e))
 	case dbcenums.E_HEAL:
 		return sentence(join(amount(e), "healing", targetPhrase(e)), scaling(e), coefficients(e))
@@ -137,13 +137,11 @@ func humaniseAura(s *spelldata.Spell, e *spelldata.Effect) string {
 // An aura on the caster is the ordinary case and says nothing worth a clause, so only an aura
 // reaching somebody else names who.
 func auraTarget(e *spelldata.Effect) string {
-	if e.Target[0] == targetCaster {
+	if dbcenums.ImplicitTarget(e.Target[0]) == dbcenums.TARGET_UNIT_CASTER {
 		return ""
 	}
 	return targetPhrase(e)
 }
-
-const targetCaster uint8 = 1
 
 // The spell power and attack power shares, for the auras whose amount those columns really add to. On
 // a modifier or a proc row the coefficient column carries a 1 that means nothing.
@@ -163,7 +161,7 @@ func auraCoefficients(e *spelldata.Effect) string {
 func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 	switch e.Aura {
 	case dbcenums.A_PERIODIC_DAMAGE:
-		return join(amount(e), schoolName(s.School), "damage", every(e))
+		return join(amount(e), schoolName(s.SpellSchool()), "damage", every(e))
 	case dbcenums.A_PERIODIC_HEAL:
 		return join(amount(e), "healing", every(e))
 	case dbcenums.A_PERIODIC_LEECH:
@@ -192,13 +190,13 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 		return "taunts"
 
 	case dbcenums.A_SCHOOL_ABSORB:
-		return join("absorbs", amount(e), schoolName(uint8(e.Misc)), "damage")
+		return join("absorbs", amount(e), schoolName(core.SpellSchool(e.Misc)), "damage")
 	case dbcenums.A_SCHOOL_IMMUNITY:
-		return join("immune to", schoolName(uint8(e.Misc)))
+		return join("immune to", schoolName(core.SpellSchool(e.Misc)))
 	case dbcenums.A_MECHANIC_IMMUNITY:
 		return join("immune to", mechanicName(e.Misc))
 	case dbcenums.A_DAMAGE_SHIELD:
-		return sentence(join(amount(e), schoolName(s.School), "damage back to melee attackers"), scaling(e))
+		return sentence(join(amount(e), schoolName(s.SpellSchool()), "damage back to melee attackers"), scaling(e))
 
 	case dbcenums.A_MOD_SKILL:
 		return fmt.Sprintf("%s to skill %d", signed(value(e)), e.Misc)
@@ -213,7 +211,7 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.A_MOD_SHAPESHIFT:
 		return join("shifts into", formName(int(e.Misc)))
 	case dbcenums.A_REFLECT_SPELLS_SCHOOL:
-		return join("reflects", percent(e), "of", schoolName(uint8(e.Misc)), "damage")
+		return join("reflects", percent(e), "of", schoolName(core.SpellSchool(e.Misc)), "damage")
 
 	case dbcenums.A_ADD_FLAT_MODIFIER:
 		return join(spellModOpName(e.Misc), flatModAmount(e), modTargets(s, e))
@@ -236,18 +234,18 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 		return join(signed(value(e)), "ranged attack power")
 
 	case dbcenums.A_MOD_DAMAGE_DONE:
-		return join(signed(value(e)), schoolName(uint8(e.Misc)), "damage done")
+		return join(signed(value(e)), schoolName(core.SpellSchool(e.Misc)), "damage done")
 	case dbcenums.A_MOD_DAMAGE_PERCENT_DONE:
-		return join(signedPercent(e), schoolName(uint8(e.Misc)), "damage done")
+		return join(signedPercent(e), schoolName(core.SpellSchool(e.Misc)), "damage done")
 	case dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN:
-		return join(signedPercent(e), schoolName(uint8(e.Misc)), "damage taken")
+		return join(signedPercent(e), schoolName(core.SpellSchool(e.Misc)), "damage taken")
 	case dbcenums.A_MOD_DAMAGE_TAKEN:
-		return join(signed(value(e)), schoolName(uint8(e.Misc)), "damage taken")
+		return join(signed(value(e)), schoolName(core.SpellSchool(e.Misc)), "damage taken")
 
 	case dbcenums.A_MOD_THREAT:
 		return join(signedPercent(e), "threat")
 	case dbcenums.A_MOD_POWER_COST_SCHOOL_PCT:
-		return join(signedPercent(e), schoolName(uint8(e.Misc)), "power cost")
+		return join(signedPercent(e), schoolName(core.SpellSchool(e.Misc)), "power cost")
 	case dbcenums.A_MOD_ADDITIONAL_POWER_COST:
 		return join(signed(value(e)), "extra", powerName(int8(e.Misc)), "per cast")
 
@@ -517,7 +515,7 @@ func targetWord(t uint8, named implicitTarget) string {
 // the way a cost is.
 func powerAmount(e *spelldata.Effect) string {
 	amount := value(e)
-	if int8(e.Misc) == powerTypeRage {
+	if dbcenums.PowerType(e.Misc) == dbcenums.POWER_RAGE {
 		amount = tenths(e)
 	}
 	bar := powerName(int8(e.Misc))
@@ -529,12 +527,13 @@ func powerAmount(e *spelldata.Effect) string {
 
 // A_MOD_RESISTANCE and A_MOD_BASE_RESISTANCE_PCT state armor as school 1 and a magic resistance as
 // that school's own bit.
-func resistanceName(mask int32) string {
-	if mask == int32(core.SpellSchoolPhysical) {
+func resistanceName(misc int32) string {
+	mask := core.SpellSchool(misc)
+	if mask == core.SpellSchoolPhysical {
 		return "armor"
 	}
-	names := schoolName(uint8(mask))
-	if mask&int32(core.SpellSchoolPhysical) != 0 {
+	names := schoolName(mask)
+	if mask.Matches(core.SpellSchoolPhysical) {
 		return strings.Replace(names, "physical", "armor", 1) + " resistance"
 	}
 	return names + " resistance"

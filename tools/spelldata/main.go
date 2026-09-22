@@ -6,7 +6,7 @@
 //	go run ./tools/spelldata 11574           # the row, humanised and with the client's own literal
 //	go run ./tools/spelldata Whirlwind       # every row with that name, then the highest rank
 //	go run ./tools/spelldata Rend -all       # every match in full
-//	go run ./tools/spelldata 11574 -json     # the same as JSON, which tools/vscode-spelldata reads
+//	go run ./tools/spelldata 11574 -json     # the same as JSON, for a script or an agent: see README.md
 //	go run ./tools/spelldata -family warrior/Execute   # the ladder's ranks, then its highest in full
 //	go run ./tools/spelldata -expr 'spellData.Execute.Rank(3)' -package warrior   # the row that reaches
 //	go run ./tools/spelldata -expr 'spellData.Execute.Highest().EffectN(1).Average(core.CharacterLevel)' -package warrior   # the value that reads
@@ -154,10 +154,11 @@ func run(args []string, out io.Writer) error {
 		if s == spelldata.Nil {
 			return fmt.Errorf("spell %d is not in the store", id)
 		}
+		c := newCard(s, s.Rank, 0)
 		if opts.json {
-			return writeJSON(out, asJSON(s))
+			return writeJSON(out, c)
 		}
-		writeText(out, s, 0)
+		c.writeText(out)
 		return nil
 	}
 
@@ -171,12 +172,12 @@ func run(args []string, out io.Writer) error {
 		picked = []*spelldata.Spell{highestRank(matches)}
 	}
 
+	cards := make([]card, 0, len(picked))
+	for _, s := range picked {
+		cards = append(cards, newCard(s, s.Rank, 0))
+	}
 	if opts.json {
-		rows := make([]spellJSON, 0, len(picked))
-		for _, s := range picked {
-			rows = append(rows, asJSON(s))
-		}
-		return writeJSON(out, rows)
+		return writeJSON(out, cards)
 	}
 
 	if len(matches) > 1 {
@@ -185,11 +186,11 @@ func run(args []string, out io.Writer) error {
 		}
 		fmt.Fprintln(out)
 	}
-	for i, s := range picked {
+	for i, c := range cards {
 		if i > 0 {
 			fmt.Fprintln(out)
 		}
-		writeText(out, s, 0)
+		c.writeText(out)
 	}
 	return nil
 }
@@ -206,19 +207,14 @@ func runFamily(out io.Writer, opts options) error {
 		return family.err
 	}
 	highest := family.ladder.Highest()
+	top := newCard(highest, rankLabel(family, highest), 0)
 
 	if opts.json {
-		top := asJSON(highest)
-		top.Title = rankTitle(family, highest)
-		return writeJSON(out, familyJSON{
-			Family:  family.key(),
-			Ranks:   familyRows(family),
-			Highest: top,
-		})
+		return writeJSON(out, familyJSON{Family: family.key(), Ranks: familyRows(family), Highest: top})
 	}
 
 	writeFamilyText(out, family)
-	writeTitledText(out, rankTitle(family, highest), highest, 0)
+	top.writeText(out)
 	return nil
 }
 
@@ -233,18 +229,13 @@ func runExpr(out io.Writer, opts options) error {
 	}
 
 	if opts.json {
-		row := asJSON(result.spell)
-		row.Title = result.title()
 		return writeJSON(out, exprJSON{
-			spellJSON:  row,
-			Expr:       opts.expr,
-			Resolved:   result.spell.ID,
-			Kind:       result.kind,
-			Trail:      result.trail,
-			Value:      result.value,
-			Doc:        result.doc,
-			ReadEffect: result.readEffect,
-			Accessors:  result.accessors,
+			card:      result.card(),
+			Kind:      result.kind,
+			Trail:     result.trail,
+			Value:     result.value,
+			Doc:       result.doc,
+			Accessors: result.accessors,
 		})
 	}
 
@@ -295,11 +286,12 @@ func runHover(out io.Writer, opts options) error {
 // since nothing in it was substituted; a longer chain states the trail, which is that call with every
 // name resolved to the number it stands for.
 func writeExprText(out io.Writer, result *exprResult, expr string) {
+	c := result.card()
 	switch result.kind {
 	case kindSpell:
 		fmt.Fprintf(out, "%s = %s\n\n", expr, result.value)
 	case kindEffect:
-		fmt.Fprintf(out, "%s = %s of %s\n\n", result.trail, result.value, result.title())
+		fmt.Fprintf(out, "%s = %s of %s\n\n", result.trail, result.value, c.heading())
 	default:
 		fmt.Fprintf(out, "%s = %s\n\n", result.trail, result.value)
 	}
@@ -322,7 +314,7 @@ func writeExprText(out io.Writer, result *exprResult, expr string) {
 		fmt.Fprintln(out)
 	}
 
-	writeTitledText(out, result.title(), result.spell, result.readEffect)
+	c.writeText(out)
 }
 
 // The rank a caller means out of several rows with one name: the highest one the client states, and
@@ -338,95 +330,16 @@ func highestRank(matches []*spelldata.Spell) *spelldata.Spell {
 	return best
 }
 
-func writeText(out io.Writer, s *spelldata.Spell, read int) {
-	writeTitledText(out, title(s), s, read)
-}
-
-func writeTitledText(out io.Writer, heading string, s *spelldata.Spell, read int) {
-	fmt.Fprintln(out, join(heading, strings.Join(ladderRefs(s.ID), "  ")))
-	for _, line := range header(s) {
-		fmt.Fprintln(out, line)
-	}
-	if proc := procSummary(s); proc != "" {
-		fmt.Fprintf(out, "%-9s %s\n", "proc", proc)
-	}
-	if refs := refList(s); len(refs) > 0 {
-		fmt.Fprintf(out, "%-9s %s\n", "refs", strings.Join(refs, ", "))
-	}
-
-	effects := effectLines(s)
-	if len(effects) > 0 {
-		fmt.Fprintln(out)
-	}
-	for i, line := range effects {
-		label := fmt.Sprintf("effect %-2d", i+1)
-		if i+1 == read {
-			label = fmt.Sprintf("effect %d (read)", i+1)
-		}
-		fmt.Fprintf(out, "%s %s\n", label, line.Human)
-		fmt.Fprintf(out, "%9s %s\n", "", line.Literal)
-	}
-
-	fmt.Fprintln(out)
-	fmt.Fprintln(out, wowheadURL(s.ID))
-}
-
-type spellJSON struct {
-	ID   int32  `json:"id"`
-	Name string `json:"name"`
-	Rank string `json:"rank"`
-
-	// The heading the text form prints, and the ladder calls a class file reaches this id through.
-	Title  string   `json:"title"`
-	Ladder []string `json:"ladder"`
-
-	Header  []string `json:"header"`
-	Effects []Line   `json:"effects"`
-
-	// Empty on a row that is not a proc and on one the tooltip names no spell from.
-	Proc string   `json:"proc"`
-	Refs []string `json:"refs"`
-
-	Wowhead string `json:"wowhead"`
-}
-
-// The row the chain reached, and what the chain itself answered: the kind of value, the chain with
-// every name substituted, the value as it prints, the doc comment of the accessor that answered it, the
-// effect the chain read and, where it stopped on an effect, the accessors that read something off it.
+// The row a chain reached, and what the chain answered: the kind of value, the chain with every name
+// resolved, the value as it prints, the doc comment of the accessor that answered it and, where it
+// stopped on an effect, the accessors that read something off it.
 type exprJSON struct {
-	spellJSON
-	Expr     string `json:"expr"`
-	Resolved int32  `json:"resolved"`
-
-	Kind       string   `json:"kind"`
-	Trail      string   `json:"trail"`
-	Value      string   `json:"value"`
-	Doc        string   `json:"doc"`
-	ReadEffect int      `json:"read_effect"`
-	Accessors  []string `json:"accessors"`
-}
-
-func asJSON(s *spelldata.Spell) spellJSON {
-	effects := effectLines(s)
-	if effects == nil {
-		effects = []Line{}
-	}
-	ladder := ladderRefs(s.ID)
-	if ladder == nil {
-		ladder = []string{}
-	}
-	return spellJSON{
-		ID:      s.ID,
-		Name:    s.Name,
-		Rank:    s.Rank,
-		Title:   title(s),
-		Ladder:  ladder,
-		Header:  header(s),
-		Effects: effects,
-		Proc:    procSummary(s),
-		Refs:    refList(s),
-		Wowhead: wowheadURL(s.ID),
-	}
+	card
+	Kind      string   `json:"kind"`
+	Trail     string   `json:"trail"`
+	Value     string   `json:"value"`
+	Doc       string   `json:"doc,omitempty"`
+	Accessors []string `json:"accessors,omitempty"`
 }
 
 func writeJSON(out io.Writer, v any) error {

@@ -305,7 +305,7 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 }
 
 func resultSummary(result *exprResult) string {
-	parts := []string{result.title()}
+	parts := []string{result.card().heading()}
 	if result.readEffect > 0 {
 		parts = append(parts, fmt.Sprintf("effect %d", result.readEffect))
 	}

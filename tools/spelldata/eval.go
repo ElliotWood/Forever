@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/constant"
+	"go/doc"
 	"go/parser"
 	"go/printer"
 	"go/token"
@@ -258,7 +259,8 @@ func spellEffect(seg segment) func(*spelldata.Spell) *spelldata.Effect {
 	}
 }
 
-// The rank a value read off a ladder is at: the one argument of a ...At(rank).
+// The rank a value read off a ladder is at: the one argument of a ...At(rank). Rank 0 is untaken and
+// reads no rank.
 func rankArgument(recv reflect.Value, seg segment) (int32, bool) {
 	switch recv.Interface().(type) {
 	case spelldata.Ladder, spelldata.LadderEffect:
@@ -269,7 +271,7 @@ func rankArgument(recv reflect.Value, seg segment) (int32, bool) {
 		return 0, false
 	}
 	n, exact := constant.Int64Val(constant.ToInt(seg.args[0].value))
-	return int32(n), exact
+	return int32(n), exact && n > 0
 }
 
 func callSegment(recv reflect.Value, seg segment) (reflect.Value, error) {
@@ -372,8 +374,8 @@ func formatValue(v reflect.Value) (string, error) {
 	return "", fmt.Errorf("a %s is not a value to read", v.Type())
 }
 
-func (r *exprResult) title() string {
-	return rankTitle(r.family, r.spell)
+func (r *exprResult) card() card {
+	return newCard(r.spell, rankLabel(r.family, r.spell), r.readEffect)
 }
 
 // Where an effect sits in the row the chain came through, counted the way EffectN counts. 0 for an
@@ -439,42 +441,36 @@ func scanMethodDocs() {
 	if err != nil {
 		return
 	}
-	files, err := filepath.Glob(filepath.Join(root, "sim", "core", "spelldata", "*.go"))
+	paths, err := filepath.Glob(filepath.Join(root, "sim", "core", "spelldata", "*.go"))
 	if err != nil {
 		return
 	}
 
-	for _, path := range files {
+	fset := token.NewFileSet()
+	var files []*ast.File
+	for _, path := range paths {
 		name := filepath.Base(path)
 		// The generated table is one long literal and states no accessor, and a test file's helpers are
 		// not what a caller reads.
 		if name == "spells_auto_gen.go" || strings.HasSuffix(name, "_test.go") {
 			continue
 		}
-		file, err := parser.ParseFile(token.NewFileSet(), path, nil, parser.ParseComments|parser.SkipObjectResolution)
+		file, err := parser.ParseFile(fset, path, nil, parser.ParseComments|parser.SkipObjectResolution)
 		if err != nil {
 			continue
 		}
-		for _, decl := range file.Decls {
-			fn, ok := decl.(*ast.FuncDecl)
-			if !ok || fn.Doc == nil || fn.Recv == nil || len(fn.Recv.List) == 0 {
-				continue
-			}
-			if owner := receiverTypeName(fn.Recv.List[0].Type); owner != "" {
-				methodDocs[owner+"."+fn.Name.Name] = strings.TrimSpace(fn.Doc.Text())
-			}
+		files = append(files, file)
+	}
+
+	pkg, err := doc.NewFromFiles(fset, files, "github.com/wowsims/forever/sim/core/spelldata")
+	if err != nil {
+		return
+	}
+	for _, t := range pkg.Types {
+		for _, m := range t.Methods {
+			methodDocs[t.Name+"."+m.Name] = strings.TrimSpace(m.Doc)
 		}
 	}
-}
-
-func receiverTypeName(expr ast.Expr) string {
-	if star, ok := expr.(*ast.StarExpr); ok {
-		expr = star.X
-	}
-	if ident, ok := expr.(*ast.Ident); ok {
-		return ident.Name
-	}
-	return ""
 }
 
 // The type name the doc comments are keyed by: `*spelldata.Effect` is written on `Effect`.
