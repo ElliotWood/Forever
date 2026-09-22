@@ -93,6 +93,10 @@ func (paladin *Paladin) registerHolyShield() {
 					Duration: row.Cooldown,
 				},
 			},
+			// Client 20925/20927/20928 (SpellEquippedItems): item class 4, subclass mask 64, a shield.
+			ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
+				return paladin.PseudoStats.CanBlock
+			},
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 				paladin.holyShieldAura[i].Activate(sim)
 			},
