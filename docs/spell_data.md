@@ -341,13 +341,13 @@ may state a percentage now, and the other way round.
    hand-supplied the way threat and attack power coefficients are, with the manual-review TODO
    quoting the raw column on the line:
 
-   ```go
-   var imbue = shared.WithSpellDataPPM(spellData.Imbue, 2)                          // one PPM, every rank
-   var strike = shared.WithSpellDataPPMs(spellData.Strike, map[int32]float64{1: 1, 2: 1.5})
-   dpm := character.NewLegacyPPMManager(imbue.PPMAt(rank), core.ProcMaskMelee)
-   ```
+    ```go
+    var imbue = shared.WithSpellDataPPM(spellData.Imbue, 2)                          // one PPM, every rank
+    var strike = shared.WithSpellDataPPMs(spellData.Strike, map[int32]float64{1: 1, 2: 1.5})
+    dpm := character.NewLegacyPPMManager(imbue.PPMAt(rank), core.ProcMaskMelee)
+    ```
 
-   The per-rank form has to name every rank, and both panic on a table that already carries a PPM.
+    The per-rank form has to name every rank, and both panic on a table that already carries a PPM.
 
 A `$<id>h` in a tooltip reads another spell's column, so the chance sits on that spell's table, not on
 the one the tooltip belongs to.
