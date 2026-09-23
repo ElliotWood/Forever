@@ -25,12 +25,12 @@ func (e *Effect) Tenths() float64 {
 
 // The value read as a time, which is the unit a duration or delay modifier states it in.
 func (e *Effect) TimeValue() time.Duration {
-	return millis(e.BasePoints)
+	return core.DurationFromMillis(e.BasePoints)
 }
 
 // EffectAuraPeriod: how long one tick of the aura lasts.
 func (e *Effect) Period() time.Duration {
-	return millis(e.PeriodMs)
+	return core.DurationFromMillis(e.PeriodMs)
 }
 
 func (e *Effect) Coeff() float64 {

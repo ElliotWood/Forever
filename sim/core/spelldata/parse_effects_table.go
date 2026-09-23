@@ -376,9 +376,9 @@ func (p *parser) modInt(kind string, cfg core.SpellModConfig, v float64) *attach
 
 // The client states a time modifier in milliseconds, which is also what Value reports.
 func (p *parser) modTime(kind string, cfg core.SpellModConfig, ms float64) *attachment {
-	cfg.TimeValue = millis(ms)
+	cfg.TimeValue = core.DurationFromMillis(ms)
 	return p.mod(kind, cfg, ms, func(mod *core.SpellMod, level float64) {
-		mod.UpdateTimeValue(millis(ms * level))
+		mod.UpdateTimeValue(core.DurationFromMillis(ms * level))
 	})
 }
 

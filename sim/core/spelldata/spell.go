@@ -14,21 +14,21 @@ import (
 var nilPower = &Power{}
 
 func (s *Spell) CastTime() time.Duration {
-	return millis(s.CastTimeMs)
+	return core.DurationFromMillis(s.CastTimeMs)
 }
 
 // SpellCooldowns.RecoveryTime. A spell gated by its category instead - Fire Blast and Cone of Cold
 // share one - states that in CategoryCooldown.
 func (s *Spell) Cooldown() time.Duration {
-	return millis(s.CooldownMs)
+	return core.DurationFromMillis(s.CooldownMs)
 }
 
 func (s *Spell) CategoryCooldown() time.Duration {
-	return millis(s.CategoryCooldownMs)
+	return core.DurationFromMillis(s.CategoryCooldownMs)
 }
 
 func (s *Spell) GCD() time.Duration {
-	return millis(s.GCDMs)
+	return core.DurationFromMillis(s.GCDMs)
 }
 
 // The client states a permanent aura as -1, which is core.NeverExpires here.
@@ -36,12 +36,12 @@ func (s *Spell) Duration() time.Duration {
 	if s.DurationMs == -1 {
 		return core.NeverExpires
 	}
-	return millis(s.DurationMs)
+	return core.DurationFromMillis(s.DurationMs)
 }
 
 // SpellAuraOptions.ProcCategoryRecovery: the internal cooldown between two procs.
 func (s *Spell) ICD() time.Duration {
-	return millis(s.ICDMs)
+	return core.DurationFromMillis(s.ICDMs)
 }
 
 func (s *Spell) SpellSchool() core.SpellSchool {
@@ -246,8 +246,4 @@ func resolve(ids []int32) []*Spell {
 		}
 	}
 	return out
-}
-
-func millis[T int32 | float64](ms T) time.Duration {
-	return time.Duration(ms) * time.Millisecond
 }
