@@ -444,6 +444,9 @@ func resolveFrom(c *chain, declarations map[string]declaration, depth int, seen 
 		}
 		return c, nil
 	}
+	if _, ok := rowByID(c); ok {
+		return c, nil
+	}
 
 	bound, ok := declarations[c.head]
 	if !ok {

@@ -153,24 +153,36 @@ func evalExpr(index map[string]*ladderFamily, c *chain, pkg string) (result *exp
 		}
 	}()
 
-	field, qualified := strings.CutPrefix(c.head, "spellData.")
-	family, err := findFamily(index, field, pkg)
-	if err != nil && !qualified {
-		return nil, fmt.Errorf("%q is not a ladder call: write spellData.<Family> and the accessors on it", c.text(false))
-	}
-	if err != nil {
-		return nil, err
-	}
-	if family.err != nil {
-		return nil, family.err
-	}
+	var family *ladderFamily
+	var res *exprResult
+	var current reflect.Value
+	segments := c.segments
 
-	res := &exprResult{trail: "spellData." + field, family: family, spell: family.ladder.Highest()}
-	current := reflect.ValueOf(family.ladder)
+	if row, ok := rowByID(c); ok {
+		if row == spelldata.Nil {
+			return nil, fmt.Errorf("%s.%s names a spell the store does not carry", c.head, c.segments[0].text(true))
+		}
+		res = &exprResult{trail: c.head + "." + c.segments[0].text(true), spell: row}
+		current, segments = reflect.ValueOf(row), c.segments[1:]
+	} else {
+		field, qualified := strings.CutPrefix(c.head, "spellData.")
+		family, err = findFamily(index, field, pkg)
+		if err != nil && !qualified {
+			return nil, fmt.Errorf("%q is not a ladder call: write spellData.<Family> and the accessors on it", c.text(false))
+		}
+		if err != nil {
+			return nil, err
+		}
+		if family.err != nil {
+			return nil, family.err
+		}
+		res = &exprResult{trail: "spellData." + field, family: family, spell: family.ladder.Highest()}
+		current = reflect.ValueOf(family.ladder)
+	}
 	var effectOf func(*spelldata.Spell) *spelldata.Effect
 
-	for _, seg := range c.segments {
-		if current.Type() == reflect.TypeOf(family.ladder) {
+	for _, seg := range segments {
+		if family != nil && current.Type() == reflect.TypeOf(family.ladder) {
 			if err := family.checkPick(seg); err != nil {
 				return nil, err
 			}
@@ -245,6 +257,23 @@ func (f *ladderFamily) checkPick(seg segment) error {
 		}
 	}
 	return nil
+}
+
+// The row a chain opens on when it starts at spelldata.MustFind(id) or spelldata.Find(id) instead of a
+// ladder, as item and set-bonus spells do.
+func rowByID(c *chain) (*spelldata.Spell, bool) {
+	if c.head != "spelldata" || len(c.segments) == 0 {
+		return nil, false
+	}
+	first := c.segments[0]
+	if first.name != "MustFind" && first.name != "Find" || len(first.args) != 1 {
+		return nil, false
+	}
+	id, exact := constant.Int64Val(constant.ToInt(first.args[0].value))
+	if !exact {
+		return nil, false
+	}
+	return spelldata.Find(int32(id)), true
 }
 
 // The effect of a rank that a LadderEffect reads, found the way the store finds it.

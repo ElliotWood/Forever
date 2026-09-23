@@ -667,3 +667,24 @@ func TestLSPInvocation(t *testing.T) {
 		}
 	}
 }
+
+// Item and set-bonus spells are named by id rather than through a ladder.
+const itemsGo = `package warrior
+
+var mightBlockValue = spelldata.MustFind(23562)
+
+func apply() {
+	setBonusAura.AttachStatBuff(stats.BlockValue, mightBlockValue.EffectN(1).BaseValue())
+}
+`
+
+func TestHoverRowByID(t *testing.T) {
+	wantHover(t, itemsGo, "mightBlockValue =", 4, "### 23562 Block Value 30\n")
+	wantHover(t, itemsGo, "EffectN(1).Base", 2,
+		"`EffectN(1)` = **effect 1** of 23562 Block Value 30",
+		"`spelldata.MustFind(23562).EffectN(1)`")
+	wantHover(t, itemsGo, "BaseValue()", 2,
+		"`BaseValue()` = **30**",
+		"`spelldata.MustFind(23562).EffectN(1).BaseValue()`",
+		"| 1 ▶ |")
+}
