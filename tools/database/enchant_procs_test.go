@@ -37,7 +37,7 @@ func TestEnchantProcRouting(t *testing.T) {
 			{442206, true, 0, "mechanicals"},
 		}},
 		{7223, "Retricutioner: a damage shield", []want{{435901, false, 0, "A_DAMAGE_SHIELD"}}},
-		{7941, "Grand Arcanist: spell power next to mana", []want{{1231152, false, 0, "E_ENERGIZE"}}},
+		{7941, "Grand Arcanist: spell power and healing register, the mana beside them is not a stat", []want{{1231152, false, 0, ""}}},
 		{8217, "Revelation: 100 beside 'a chance to trigger'", []want{{1248806, false, 0, spelldata.ReasonStatesNoRate}}},
 		{8721, "Recovery: 100 beside a cooldown, which is a rate; the heal is not a buff", []want{{1248761, false, 0, "E_HEAL_PCT"}}},
 	} {

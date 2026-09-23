@@ -2866,18 +2866,6 @@ export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		7941, // Enchant 2H Weapon - Grand Arcanist
-		[
-			"Permanently enchant a two-handed melee weapon so that often when striking with a spell it restores 400 mana and increases Spell Power by 140 for 20s.", // 1231152 - https://www.wowhead.com/forever/spell=1231152
-		]
-	],
-	[
-		7942, // Enchant Weapon - Grand Sorcerer
-		[
-			"Permanently enchant a melee weapon so that often when striking with a spell it restores 400 mana and increases Spell Power by 70 for 20s.", // 1231163 - https://www.wowhead.com/forever/spell=1231163
-		]
-	],
-	[
 		7943, // Enchant 2H Weapon - Grand Inquisitor
 		[
 			"Permanently enchant a two-handed melee weapon so that often when attacking in melee it heals for 400 and increases Strength by 200 for 20s.", // 1232169 - https://www.wowhead.com/forever/spell=1232169

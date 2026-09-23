@@ -231,7 +231,7 @@ func RegisterAllEnchants() {
 	// Permanently enchant a melee weapon so that often when attacking in melee it heals for 400 and increases
 	// Strength by 120 for 20s.
 	// https://www.wowhead.com/forever/spell=1231128
-	// unsupported: states no rate; the enchant's effect entry resolves no stats from 1231124 (A_MOD_STAT, E_HEAL)
+	// unsupported: states no rate
 	// trigger 1231124 (0%, core.CallbackEmpty, core.ProcMaskUnknown); slot spell 1231126 applies the same spell and is not registered
 	// shared.NewSpellDataProc(shared.SpellDataProc{
 	//	Name:           "Enchant Weapon - Grand Crusader",
@@ -244,40 +244,10 @@ func RegisterAllEnchants() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Permanently enchant a two-handed melee weapon so that often when striking with a spell it restores 400
-	// mana and increases Spell Power by 140 for 20s.
-	// https://www.wowhead.com/forever/spell=1231139
-	// unsupported: the enchant's effect entry resolves no stats from 1231138 (A_MOD_DAMAGE_DONE, E_ENERGIZE, A_MOD_HEALING_DONE)
-	// trigger 1231152 (7%, core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing)
-	// shared.NewSpellDataProc(shared.SpellDataProc{
-	//	Name:           "Enchant 2H Weapon - Grand Arcanist",
-	//	EnchantID:      7941,
-	//	TriggerSpellID: 1231152,
-	// }, nil)
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Permanently enchant a melee weapon so that often when striking with a spell it restores 400 mana and increases
-	// Spell Power by 70 for 20s.
-	// https://www.wowhead.com/forever/spell=1231164
-	// unsupported: the enchant's effect entry resolves no stats from 1231162 (A_MOD_DAMAGE_DONE, E_ENERGIZE, A_MOD_HEALING_DONE)
-	// trigger 1231163 (7%, core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing)
-	// shared.NewSpellDataProc(shared.SpellDataProc{
-	//	Name:           "Enchant Weapon - Grand Sorcerer",
-	//	EnchantID:      7942,
-	//	TriggerSpellID: 1231163,
-	// }, nil)
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Permanently enchant a two-handed melee weapon so that often when attacking in melee it heals for 400 and
 	// increases Strength by 200 for 20s.
 	// https://www.wowhead.com/forever/spell=1232172
-	// unsupported: states no rate; the enchant's effect entry resolves no stats from 1232169 (A_MOD_STAT, E_HEAL)
+	// unsupported: states no rate
 	// trigger 1232169 (0%, core.CallbackEmpty, core.ProcMaskUnknown); slot spell 1232170 applies the same spell and is not registered
 	// shared.NewSpellDataProc(shared.SpellDataProc{
 	//	Name:           "Enchant 2H Weapon - Grand Inquisitor",
@@ -372,5 +342,27 @@ func RegisterAllEnchants() {
 		BuffSpellID:    6297,
 		IsWeaponProc:   true,
 		ProcChancePct:  15,
+	}, nil)
+
+	// Permanently enchant a two-handed melee weapon so that often when striking with a spell it restores 400
+	// mana and increases Spell Power by 140 for 20s.
+	// https://www.wowhead.com/forever/spell=1231139
+	// trigger 1231152 (7%, core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing) -> buff 1231138
+	shared.NewSpellDataProc(shared.SpellDataProc{
+		Name:           "Enchant 2H Weapon - Grand Arcanist",
+		EnchantID:      7941,
+		TriggerSpellID: 1231152,
+		BuffSpellID:    1231138,
+	}, nil)
+
+	// Permanently enchant a melee weapon so that often when striking with a spell it restores 400 mana and increases
+	// Spell Power by 70 for 20s.
+	// https://www.wowhead.com/forever/spell=1231164
+	// trigger 1231163 (7%, core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt, core.ProcMaskSpellDamage | core.ProcMaskSpellHealing) -> buff 1231162
+	shared.NewSpellDataProc(shared.SpellDataProc{
+		Name:           "Enchant Weapon - Grand Sorcerer",
+		EnchantID:      7942,
+		TriggerSpellID: 1231163,
+		BuffSpellID:    1231162,
 	}, nil)
 }

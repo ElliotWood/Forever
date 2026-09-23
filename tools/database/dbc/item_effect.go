@@ -174,7 +174,7 @@ func (e *ItemEffect) ToProto(itemLevel int) (*proto.ItemEffect, bool) {
 	pe := makeBaseProto(e, statsSpellID)
 	assignTrigger(e, statsSpellID, pe)
 
-	pe.ScalingOptions[int32(0)] = buildBaseStatScalingProps(statsSpellID, e.SpellID)
+	pe.ScalingOptions[int32(0)] = buildItemEffectScalingProps(e.SpellID, itemLevel)
 
 	// The stats may live on the accumulating aura rather than on the one the trigger applies, in
 	// which case the effect is real even though the scaling options above resolved to nothing.
