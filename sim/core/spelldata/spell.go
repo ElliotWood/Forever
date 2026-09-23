@@ -260,6 +260,19 @@ func (s *Spell) TickOutcome(dot *core.Dot) core.OutcomeApplier {
 	}
 }
 
+// A tick of a damage over time whose hit was rolled when it was applied: a crit only where the row
+// states Periodic Can Crit, on the crit of the dot spell's defense type.
+func (s *Spell) TickOutcomeHitRolled(dot *core.Dot) core.OutcomeApplier {
+	switch tickOutcomeKind(s.PeriodicCanCrit(), dot.Spell.DefenseType == core.DefenseTypeMagic) {
+	case tickOutcomeMagicCrit:
+		return dot.Spell.OutcomeTickMagicCrit
+	case tickOutcomePhysicalCrit:
+		return dot.Spell.OutcomeTickPhysicalCrit
+	default:
+		return dot.OutcomeTick
+	}
+}
+
 // Which of the four ticks the two flags pick. Split out so the choice can be asserted without a Dot.
 const (
 	tickOutcomeMagicCrit = iota

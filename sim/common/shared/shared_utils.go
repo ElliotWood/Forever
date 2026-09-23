@@ -1100,43 +1100,19 @@ func spellDataOnUseDamageSpell(character *core.Character, damage *spelldata.Spel
 		return config
 	}
 
-	config.Dot.OnTick = func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-		dot.Spell.CalcAndDealPeriodicDamage(sim, target, periodic.Average(dot.Spell.Unit.Level), onUseTickOutcome(damage, dot))
-	}
+	config.Dot.OnTick = spelldata.PeriodicDamageTick(periodic, damage.TickOutcomeHitRolled)
 	if damage.DamageEffect() != spelldata.NilEffect {
 		return config
 	}
 
+	// The hit table of the spell's defense type, without the crit an application cannot deal.
+	application := damageOutcome(config.DefenseType, true, OutcomeDefault)
 	single := make(core.SpellResultSlice, 1)
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		single[0] = spell.CalcOutcome(sim, target, applicationOutcome(spell))
+		single[0] = spell.CalcOutcome(sim, target, GetOutcome(spell, application))
 		dealOnArrival(sim, spell, target, single, applyDotIfLanded)
 	}
 	return config
-}
-
-// The hit table of the spell's defense type, without the crit an application cannot deal.
-func applicationOutcome(spell *core.Spell) core.OutcomeApplier {
-	switch spell.DefenseType {
-	case core.DefenseTypeMelee:
-		return spell.OutcomeMeleeSpecialHit
-	case core.DefenseTypeRanged:
-		return spell.OutcomeRangedHit
-	default:
-		return spell.OutcomeMagicHit
-	}
-}
-
-// A tick crits only where the row states Periodic Can Crit, on the crit of the spell's defense type.
-func onUseTickOutcome(damage *spelldata.Spell, dot *core.Dot) core.OutcomeApplier {
-	switch {
-	case !damage.PeriodicCanCrit():
-		return dot.OutcomeTick
-	case dot.Spell.DefenseType == core.DefenseTypeMagic:
-		return dot.Spell.OutcomeTickMagicCrit
-	default:
-		return dot.Spell.OutcomeTickPhysicalCrit
-	}
 }
 
 // An on-use item whose spell heals the wearer, at once or over time.
@@ -1586,6 +1562,8 @@ func GetOutcome(spell *core.Spell, outcome OutcomeType) core.OutcomeApplier {
 		return spell.OutcomeMagicHit
 	case OutcomeRangedCanCrit:
 		return spell.OutcomeRangedHitAndCrit
+	case OutcomeRangedNoCrit:
+		return spell.OutcomeRangedHit
 	case OutcomeAlwaysHit:
 		return spell.OutcomeAlwaysHit
 	default:
