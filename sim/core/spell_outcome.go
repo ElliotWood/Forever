@@ -168,6 +168,18 @@ func (spell *Spell) OutcomeTickPhysicalCrit(sim *Simulation, result *SpellResult
 	}
 }
 
+// A heal tick rolls no hit, only the healing crit.
+func (spell *Spell) OutcomeTickHealingCrit(sim *Simulation, result *SpellResult, attackTable *AttackTable) {
+	if spell.HealingCritCheck(sim) {
+		result.Outcome = OutcomeCrit
+		result.Damage *= spell.CritDamageMultiplier(attackTable)
+		spell.SpellMetrics[result.Target.UnitIndex].CritTicks++
+	} else {
+		result.Outcome = OutcomeHit
+		spell.SpellMetrics[result.Target.UnitIndex].Ticks++
+	}
+}
+
 func (spell *Spell) OutcomeTickMagicHitAndCrit(sim *Simulation, result *SpellResult, attackTable *AttackTable) {
 	if spell.MagicHitCheck(sim, attackTable) {
 		isPartialResist := result.DidResist()
