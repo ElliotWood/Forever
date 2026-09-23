@@ -186,7 +186,8 @@ func (druid *Druid) RegisterSpell(formMask DruidForm, config core.SpellConfig) *
 }
 
 func (druid *Druid) Initialize() {
-	druid.form = druid.StartingForm
+	druid.setForm(druid.StartingForm)
+	druid.AutoUnshift = druid.ClearForm
 
 	druid.Env.RegisterPostFinalizeEffect(func() {
 		druid.MHAutoSpell = druid.AutoAttacks.MHAuto()
@@ -270,7 +271,7 @@ func (druid *Druid) RegisterFeralTankSpells() {
 }
 
 func (druid *Druid) Reset(_ *core.Simulation) {
-	druid.form = druid.StartingForm
+	druid.setForm(druid.StartingForm)
 }
 
 func (druid *Druid) OnEncounterStart(sim *core.Simulation) {
@@ -282,8 +283,8 @@ func New(char *core.Character, form DruidForm, selfBuffs SelfBuffs, talents stri
 		SelfBuffs:    selfBuffs,
 		Talents:      &proto.DruidTalents{},
 		StartingForm: form,
-		form:         form,
 	}
+	druid.setForm(form)
 
 	core.FillTalentsProto(druid.Talents.ProtoReflect(), talents, TalentTreeSizes)
 	druid.EnableManaBar()

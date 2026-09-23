@@ -2,6 +2,7 @@ package druid
 
 import (
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 type DruidForm uint8
@@ -30,6 +31,18 @@ func (form DruidForm) Matches(other DruidForm) bool {
 // 	return druid.form
 // }
 
+var formShapeshifts = map[DruidForm]dbcenums.ShapeshiftForm{
+	Bear:    dbcenums.FORM_DIRE_BEAR_FORM,
+	Cat:     dbcenums.FORM_CAT_FORM,
+	Moonkin: dbcenums.FORM_MOONKIN_FORM,
+	Tree:    dbcenums.FORM_TREE_FORM,
+}
+
+func (druid *Druid) setForm(form DruidForm) {
+	druid.form = form
+	druid.ShapeshiftForm = formShapeshifts[form]
+}
+
 func (druid *Druid) InForm(form DruidForm) bool {
 	return druid.form.Matches(form)
 }
@@ -43,7 +56,7 @@ func (druid *Druid) ClearForm(sim *core.Simulation) {
 		druid.MoonkinFormAura.Deactivate(sim)
 	}
 
-	druid.form = Humanoid
+	druid.setForm(Humanoid)
 	druid.SetCurrentPowerBar(core.ManaBar)
 }
 
@@ -117,7 +130,7 @@ func (druid *Druid) RegisterCatFormAura() {
 	// if !druid.Env.MeasuringStats && druid.form != Humanoid {
 	// druid.ClearForm(sim)
 	// }
-	// druid.form = Cat
+	// druid.setForm(Cat)
 	// druid.SetCurrentPowerBar(core.EnergyBar)
 	//
 	// druid.PseudoStats.ThreatMultiplier *= 0.71
@@ -154,7 +167,7 @@ func (druid *Druid) RegisterCatFormAura() {
 	// }
 	// },
 	// OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-	// druid.form = Humanoid
+	// druid.setForm(Humanoid)
 	//
 	// druid.PseudoStats.ThreatMultiplier /= 0.71
 	// druid.PseudoStats.SpiritRegenMultiplier /= AnimalSpiritRegenSuppression
@@ -246,7 +259,7 @@ func (druid *Druid) RegisterBearFormAura() {
 	// if !druid.Env.MeasuringStats && druid.form != Humanoid {
 	// druid.ClearForm(sim)
 	// }
-	// druid.form = Bear
+	// druid.setForm(Bear)
 	// druid.SetCurrentPowerBar(core.RageBar)
 	//
 	// druid.PseudoStats.ThreatMultiplier *= 1.3
@@ -273,7 +286,7 @@ func (druid *Druid) RegisterBearFormAura() {
 	// }
 	// },
 	// OnExpire: func(aura *core.Aura, sim *core.Simulation) {
-	// druid.form = Humanoid
+	// druid.setForm(Humanoid)
 	//
 	// druid.PseudoStats.ThreatMultiplier /= 1.3
 	// druid.PseudoStats.SpiritRegenMultiplier /= AnimalSpiritRegenSuppression
@@ -363,12 +376,12 @@ func (druid *Druid) RegisterMoonkinFormAura() {
 	//
 	// druid.ApplyDynamicEquipScaling(sim, stats.Armor, 4)
 	//
-	// druid.form = Moonkin
+	// druid.setForm(Moonkin)
 	// druid.SetCurrentPowerBar(core.ManaBar)
 	// },
 	// OnExpire: func(aura *core.Aura, sim *core.Simulation) {
 	// druid.RemoveDynamicEquipScaling(sim, stats.Armor, 4)
-	// druid.form = Humanoid
+	// druid.setForm(Humanoid)
 	// },
 	// })
 	//
