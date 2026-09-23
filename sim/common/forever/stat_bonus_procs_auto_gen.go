@@ -1182,12 +1182,10 @@ func RegisterAllProcs() {
 	//
 	// Spell damage taken by target increased by 15% for 5s.
 	// https://www.wowhead.com/forever/spell=23605
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
+	// unsupported: states no rate
+	// trigger 23605 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
+	// shared.NewSpellDataAuraProc(shared.SpellDataProc{TriggerSpellID: 23605, IsWeaponProc: true},
+	//	[]shared.ItemVariant{
 	//	{ItemID: 19169, ItemName: "Nightfall"},
 	// })
 
