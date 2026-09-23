@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"go/format"
 	"maps"
+	"reflect"
 	"slices"
 	"strconv"
 	"strings"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/tools/database/overrides"
 )
 
@@ -65,158 +68,22 @@ func renderStoreFile(rows []storeSpell, curves map[int32][][]float64, hand map[i
 }
 
 // One row per line, with its effects and powers under it: a field the client leaves at zero is left
-// out, so what the row states is what the client states.
+// out, so what the row states is what the client states. The fields are the mirror's, in the order
+// it declares them, which spelldata_mirror_test.go holds to the store's own.
 func formatStoreRow(s storeSpell, namer *rankEnumNamer) string {
-	parts := []string{fmt.Sprintf("ID: %d", s.ID), fmt.Sprintf("Name: %q", s.Name)}
-	add := func(format string, args ...any) {
-		parts = append(parts, fmt.Sprintf(format, args...))
-	}
-
-	if s.Rank != "" {
-		add("Rank: %q", s.Rank)
-	}
-	if s.School != 0 {
-		add("School: %d", s.School)
-	}
-	if s.Speed != 0 {
-		add("Speed: %s", num32(s.Speed))
-	}
-	if words := hexWords(s.Attr[:]); words != "" {
-		add("Attr: [17]uint32{%s}", words)
-	}
-	if s.SpellLevel != 0 {
-		add("SpellLevel: %d", s.SpellLevel)
-	}
-	if s.BaseLevel != 0 {
-		add("BaseLevel: %d", s.BaseLevel)
-	}
-	if s.MaxLevel != 0 {
-		add("MaxLevel: %d", s.MaxLevel)
-	}
-	if s.CastTimeMs != 0 {
-		add("CastTimeMs: %d", s.CastTimeMs)
-	}
-	if s.DurationMs != 0 {
-		add("DurationMs: %d", s.DurationMs)
-	}
-	if s.MinRange != 0 {
-		add("MinRange: %s", num32(s.MinRange))
-	}
-	if s.MaxRange != 0 {
-		add("MaxRange: %s", num32(s.MaxRange))
-	}
-	if s.CooldownMs != 0 {
-		add("CooldownMs: %d", s.CooldownMs)
-	}
-	if s.CategoryCooldownMs != 0 {
-		add("CategoryCooldownMs: %d", s.CategoryCooldownMs)
-	}
-	if s.GCDMs != 0 {
-		add("GCDMs: %d", s.GCDMs)
-	}
-	if s.Category != 0 {
-		add("Category: %d", s.Category)
-	}
-	if s.StartRecoveryCategory != 0 {
-		add("StartRecoveryCategory: %d", s.StartRecoveryCategory)
-	}
-	if s.ChargeCategory != 0 {
-		add("ChargeCategory: %d", s.ChargeCategory)
-	}
-	if s.DefenseType != 0 {
-		add("DefenseType: %d", s.DefenseType)
-	}
-	if s.DispelType != 0 {
-		add("DispelType: %d", s.DispelType)
-	}
-	if s.Mechanic != 0 {
-		add("Mechanic: %d", s.Mechanic)
-	}
-	if s.PreventionType != 0 {
-		add("PreventionType: %d", s.PreventionType)
-	}
-	if s.MaxStack != 0 {
-		add("MaxStack: %d", s.MaxStack)
-	}
-	if s.ProcChance != 0 {
-		add("ProcChance: %d", s.ProcChance)
-	}
-	if s.ProcCharges != 0 {
-		add("ProcCharges: %d", s.ProcCharges)
-	}
-	if words := hexWords(s.ProcFlags[:]); words != "" {
-		add("ProcFlags: [2]uint32{%s}", words)
-	}
-	if s.ICDMs != 0 {
-		add("ICDMs: %d", s.ICDMs)
-	}
-	if s.RPPM != 0 {
-		add("RPPM: %s", num32(s.RPPM))
-	}
-	if s.FlatThreat != 0 {
-		add("FlatThreat: %s", num32(s.FlatThreat))
-	}
-	if !s.ClassFlags.IsZero() {
-		add("ClassFlags: %s", formatClassFlags(s.ClassFlags))
-	}
-	if words := hexWords(s.AuraInterrupt[:]); words != "" {
-		add("AuraInterrupt: [2]uint32{%s}", words)
-	}
-	if words := hexWords(s.ChannelInterrupt[:]); words != "" {
-		add("ChannelInterrupt: [2]uint32{%s}", words)
-	}
-	if s.StanceMask != 0 {
-		add("StanceMask: %#x", s.StanceMask)
-	}
-	if s.MaxTargets != 0 {
-		add("MaxTargets: %d", s.MaxTargets)
-	}
-	if s.EquipClass != 0 {
-		add("EquipClass: %d", s.EquipClass)
-	}
-	if s.EquipSubclass != 0 {
-		add("EquipSubclass: %d", s.EquipSubclass)
-	}
-	if s.EquipInvType != 0 {
-		add("EquipInvType: %d", s.EquipInvType)
-	}
-	if len(s.Labels) > 0 {
-		labels := make([]string, len(s.Labels))
-		for i, label := range s.Labels {
-			labels[i] = strconv.Itoa(int(label))
-		}
-		add("Labels: []int16{%s}", strings.Join(labels, ", "))
-	}
-	if len(s.RefIDs) > 0 {
-		refs := make([]string, len(s.RefIDs))
-		for i, ref := range s.RefIDs {
-			refs[i] = strconv.Itoa(int(ref))
-		}
-		add("RefIDs: []int32{%s}", strings.Join(refs, ", "))
-	}
-	if s.ProcChanceSource != procChanceColumn {
-		add("ProcChanceSource: %s", s.ProcChanceSource)
-	}
-	if s.ProcChanceEffect != 0 {
-		add("ProcChanceEffect: %d", s.ProcChanceEffect)
-	}
-	if s.ProcHint != 0 {
-		add("ProcHint: %s", formatProcHint(s.ProcHint))
-	}
-
 	var b strings.Builder
-	fmt.Fprintf(&b, "{%s", strings.Join(parts, ", "))
+	fmt.Fprintf(&b, "{%s", storeFields(reflect.ValueOf(s), namer))
 	if len(s.Effects) > 0 {
 		b.WriteString(",\nEffects: []Effect{\n")
 		for _, e := range s.Effects {
-			b.WriteString(formatStoreEffect(e, namer))
+			fmt.Fprintf(&b, "{%s},\n", storeFields(reflect.ValueOf(e), namer))
 		}
 		b.WriteString("}")
 	}
 	if len(s.Powers) > 0 {
 		powers := make([]string, len(s.Powers))
 		for i, p := range s.Powers {
-			powers[i] = formatStorePower(p)
+			powers[i] = "{" + storeFields(reflect.ValueOf(p), namer) + "}"
 		}
 		fmt.Fprintf(&b, ",\nPowers: []Power{%s}", strings.Join(powers, ", "))
 	}
@@ -228,107 +95,67 @@ func formatStoreRow(s storeSpell, namer *rankEnumNamer) string {
 	return b.String()
 }
 
-func formatStoreEffect(e storeEffect, namer *rankEnumNamer) string {
-	parts := []string{
-		fmt.Sprintf("ID: %d", e.ID),
-		fmt.Sprintf("SpellID: %d", e.SpellID),
-		fmt.Sprintf("Index: %d", e.Index),
-	}
-	add := func(format string, args ...any) {
-		parts = append(parts, fmt.Sprintf(format, args...))
-	}
-
-	if e.Type != 0 {
-		add("Type: %s", namer.storeEffect(e.Type))
-	}
-	if e.Aura != 0 {
-		add("Aura: %s", namer.storeAura(e.Aura))
-	}
-	if e.BasePoints != 0 {
-		add("BasePoints: %s", num(e.BasePoints))
-	}
-	if e.PPL != 0 {
-		add("PPL: %s", num(e.PPL))
-	}
-	if e.SpellLevel != 0 {
-		add("SpellLevel: %d", e.SpellLevel)
-	}
-	if e.MaxLevel != 0 {
-		add("MaxLevel: %d", e.MaxLevel)
-	}
-	if e.Variance != 0 {
-		add("Variance: %s", num(e.Variance))
-	}
-	if e.SPCoef != 0 {
-		add("SPCoef: %s", num(e.SPCoef))
-	}
-	if e.APCoef != 0 {
-		add("APCoef: %s", num(e.APCoef))
-	}
-	if e.PvpMult != 0 {
-		add("PvpMult: %s", num32(e.PvpMult))
-	}
-	if e.Amplitude != 0 {
-		add("Amplitude: %s", num32(e.Amplitude))
-	}
-	if e.PeriodMs != 0 {
-		add("PeriodMs: %d", e.PeriodMs)
-	}
-	if e.RadiusMin != 0 {
-		add("RadiusMin: %s", num32(e.RadiusMin))
-	}
-	if e.RadiusMax != 0 {
-		add("RadiusMax: %s", num32(e.RadiusMax))
-	}
-	if e.Misc != 0 {
-		add("Misc: %d", e.Misc)
-	}
-	if e.Misc2 != 0 {
-		add("Misc2: %d", e.Misc2)
-	}
-	if !e.ClassFlags.IsZero() {
-		add("ClassFlags: %s", formatClassFlags(e.ClassFlags))
-	}
-	if e.TriggerID != 0 {
-		add("TriggerID: %d", e.TriggerID)
-	}
-	if e.ChainTargets != 0 {
-		add("ChainTargets: %d", e.ChainTargets)
-	}
-	if e.ChainAmp != 0 {
-		add("ChainAmp: %s", num32(e.ChainAmp))
-	}
-	if e.Mechanic != 0 {
-		add("Mechanic: %d", e.Mechanic)
-	}
-	if e.PointsPerResource != 0 {
-		add("PointsPerResource: %s", num32(e.PointsPerResource))
-	}
-	if e.Target != [2]uint8{} {
-		add("Target: [2]uint8{%d, %d}", e.Target[0], e.Target[1])
-	}
-	if e.Attributes != 0 {
-		add("Attributes: %d", e.Attributes)
-	}
-
-	return "{" + strings.Join(parts, ", ") + "},\n"
+// The store type each mirror fills, which says how its float fields are printed.
+var storeTypes = map[reflect.Type]reflect.Type{
+	reflect.TypeOf(storeSpell{}):  reflect.TypeOf(spelldata.Spell{}),
+	reflect.TypeOf(storeEffect{}): reflect.TypeOf(spelldata.Effect{}),
+	reflect.TypeOf(storePower{}):  reflect.TypeOf(spelldata.Power{}),
 }
 
-func formatStorePower(p storePower) string {
-	parts := []string{fmt.Sprintf("Type: %d", p.Type)}
-	if p.Cost != 0 {
-		parts = append(parts, fmt.Sprintf("Cost: %d", p.Cost))
+// The exported fields a row states, as "Name: value". The effects and the powers are lists of rows
+// of their own, which formatStoreRow writes under the row.
+func storeFields(row reflect.Value, namer *rankEnumNamer) string {
+	store := storeTypes[row.Type()]
+	var parts []string
+	for i := 0; i < row.NumField(); i++ {
+		field, value := row.Type().Field(i), row.Field(i)
+		if !field.IsExported() || value.IsZero() || field.Name == "Effects" || field.Name == "Powers" {
+			continue
+		}
+		storeField, _ := store.FieldByName(field.Name)
+		parts = append(parts, field.Name+": "+storeValue(value, storeField.Type, namer))
 	}
-	if p.CostPerLevel != 0 {
-		parts = append(parts, fmt.Sprintf("CostPerLevel: %d", p.CostPerLevel))
+	return strings.Join(parts, ", ")
+}
+
+// A value as the store's literal states it. The enums are written by name, a bit field as hex, and a
+// float at the precision of the store's field: the mirror keeps every float as a float64.
+func storeValue(v reflect.Value, store reflect.Type, namer *rankEnumNamer) string {
+	switch x := v.Interface().(type) {
+	case string:
+		return strconv.Quote(x)
+	case dbcenums.SpellEffectType:
+		return namer.storeEffect(x)
+	case dbcenums.EffectAuraType:
+		return namer.storeAura(x)
+	case storeProcChanceSource:
+		return x.String()
+	case core.ProcHint:
+		return formatProcHint(x)
+	case core.ClassFlags:
+		return formatClassFlags(x)
 	}
-	if p.CostPct != 0 {
-		parts = append(parts, fmt.Sprintf("CostPct: %s", num32(p.CostPct)))
+
+	switch v.Kind() {
+	case reflect.Float32, reflect.Float64:
+		if store.Kind() == reflect.Float32 {
+			return num32(v.Float())
+		}
+		return num(v.Float())
+	case reflect.Uint64:
+		return fmt.Sprintf("%#x", v.Uint())
+	case reflect.Array, reflect.Slice:
+		if v.Type().Elem().Kind() == reflect.Uint32 {
+			return fmt.Sprintf("%s{%s}", v.Type(), hexWords(v))
+		}
+		elems := make([]string, v.Len())
+		for i := range elems {
+			elems[i] = fmt.Sprintf("%d", v.Index(i).Interface())
+		}
+		return fmt.Sprintf("%s{%s}", v.Type(), strings.Join(elems, ", "))
 	}
-	if p.PerSecond != 0 {
-		parts = append(parts, fmt.Sprintf("PerSecond: %d", p.PerSecond))
-	}
-	return "{" + strings.Join(parts, ", ") + "}"
+	// %d rather than %v, so an integer type with a String method is still written as its number.
+	return fmt.Sprintf("%d", v.Interface())
 }
 
 // The family is the namespace the mask words are read in, so a mask alone is never emitted without
@@ -348,10 +175,10 @@ func formatClassFlags(f core.ClassFlags) string {
 
 // A bit field is written as the words that carry bits, by index: most of the 17 attribute words are
 // empty on any one spell, and hex is how the client's flag names read.
-func hexWords(words []uint32) string {
+func hexWords(words reflect.Value) string {
 	var set []string
-	for i, word := range words {
-		if word != 0 {
+	for i := 0; i < words.Len(); i++ {
+		if word := words.Index(i).Uint(); word != 0 {
 			set = append(set, fmt.Sprintf("%d: %#x", i, word))
 		}
 	}
