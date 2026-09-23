@@ -443,14 +443,14 @@ func GiftOfTheWildAura(char *Character, improved bool) *Aura {
 		mod = 1.35
 	}
 
-	// The game truncates talent-modified aura amounts to integers, so
-	// improved GotW grants 18 stats (14*1.35=18.9), not 18.9.
-	statMod := math.Floor(14 * mod)
+	// Client 21850: 385 armor, 16 stats, 27 resistances (TBC's were 340/14/25). The game truncates
+	// talent-modified aura amounts, so improved GotW grants 21 stats (16*1.35=21.6).
+	statMod := math.Floor(16 * mod)
 	aura := makeStatBuff(char, BuffConfig{
 		Label:    "Gift of the Wild",
-		ActionID: ActionID{SpellID: 26991},
+		ActionID: ActionID{SpellID: 21850},
 		Stats: []StatConfig{
-			{stats.Armor, math.Floor(340 * mod), false},
+			{stats.Armor, math.Floor(385 * mod), false},
 			{stats.Stamina, statMod, false},
 			{stats.Strength, statMod, false},
 			{stats.Agility, statMod, false},
@@ -461,7 +461,7 @@ func GiftOfTheWildAura(char *Character, improved bool) *Aura {
 	// Resistance stats use exclusive categories so they don't stack with
 	// dedicated resistance buffs (Shadow Protection, Frost/Nature Resistance
 	// Aura/Totem). Only the highest value applies per school.
-	resistMod := math.Floor(25 * mod)
+	resistMod := math.Floor(27 * mod)
 	makeExclusiveFlatStatBuff(aura, stats.ArcaneResistance, resistMod, ResistanceCategoryArcane)
 	makeExclusiveFlatStatBuff(aura, stats.FireResistance, resistMod, ResistanceCategoryFire)
 	makeExclusiveFlatStatBuff(aura, stats.FrostResistance, resistMod, ResistanceCategoryFrost)
@@ -471,15 +471,15 @@ func GiftOfTheWildAura(char *Character, improved bool) *Aura {
 }
 
 func PowerWordFortitudeAura(char *Character, improved bool) *Aura {
-	stat := 79.0
+	// Client 10938: 70 Stamina (TBC's rank was 79). Truncated like the game: 70*1.3=91.
+	stat := 70.0
 	if improved {
-		// Truncated like the game: 79*1.3=102.7 -> 102.
 		stat = math.Floor(stat * 1.3)
 	}
 
 	return makeStatBuff(char, BuffConfig{
 		Label:    "Power Word: Fortitude",
-		ActionID: ActionID{SpellID: 25389},
+		ActionID: ActionID{SpellID: 10938},
 		Stats: []StatConfig{
 			{stats.Stamina, stat, false},
 		},
@@ -557,7 +557,7 @@ func FireResistanceTotemAura(char *Character) *Aura {
 		ActionID:          ActionID{SpellID: 10538},
 		ExclusiveCategory: ResistanceCategoryFire,
 		Stats: []StatConfig{
-			{stats.FireResistance, 70, false},
+			{stats.FireResistance, 60, false}, // Classic rank 3, as master (TBC's was 70)
 		},
 	})
 }
@@ -678,14 +678,15 @@ func ApplyFixedShoutAura(char *Character, aura *Aura, category string) {
 }
 
 func BloodPactAura(char *Character, improved bool) *Aura {
-	stamBuff := 70.0
+	// Client 11767: 49 Stamina (TBC's rank was 70).
+	stamBuff := 49.0
 	if improved {
-		stamBuff *= 1.3
+		stamBuff = math.Floor(stamBuff * 1.3)
 	}
 
 	return makeStatBuff(char, BuffConfig{
 		Label:    "Blood Pact",
-		ActionID: ActionID{SpellID: 27268},
+		ActionID: ActionID{SpellID: 11767},
 		Stats: []StatConfig{
 			{stats.Stamina, stamBuff, false},
 		},
@@ -977,9 +978,9 @@ func UnleashedRageAura(char *Character, casterIdx int32, points int32) *Aura {
 var GraceOfAirTotemCategory = "GraceOfAirTotem"
 
 func GraceOfAirTotemAura(char *Character, improved bool, wfActive bool) *Aura {
-	agiBuff := 77.0
+	// Client 25360: 89 Agility (rank 3). Truncated like the game: 89*1.15=102.35 -> 102.
+	agiBuff := 89.0
 	if improved {
-		// Truncated like the game: 77*1.15=88.55 -> 88.
 		agiBuff = math.Floor(agiBuff * 1.15)
 	}
 
@@ -1014,16 +1015,15 @@ func GraceOfAirTotemAura(char *Character, improved bool, wfActive bool) *Aura {
 var ManaSpringTotemCategory = "ManaSpringTotem"
 
 func ManaSpringTotemAura(char *Character, improved bool) *Aura {
-	mp5Buff := 50.0
+	// Client 10494: 10 mana every 2 s = 25 MP5 (TBC's rank was 50). Improved: 12.5 a tick.
+	mp5Buff := 25.0
 	if improved {
-		// No truncation here: the aura's native amount is mana per 2-sec tick
-		// (20*1.25=25, an exact integer), so the effective 62.5 MP5 is real.
 		mp5Buff *= 1.25
 	}
 
 	return makeStatBuff(char, BuffConfig{
 		Label:    "Mana Spring Totem",
-		ActionID: ActionID{SpellID: 25570},
+		ActionID: ActionID{SpellID: 10497},
 		Stats: []StatConfig{
 			{stats.MP5, mp5Buff, false},
 		},
@@ -1033,21 +1033,21 @@ func ManaSpringTotemAura(char *Character, improved bool) *Aura {
 
 const (
 	StrengthOfEarthTotemCategory      = "StrengthOfEarthTotem"
-	StrengthOfEarthTotemBaseValue     = 86.0
+	StrengthOfEarthTotemBaseValue     = 53.0 // client 25362 (TBC's rank was 86)
 	StrengthOfEarthTotemImprovedValue = 12.0
 )
 
 var StrengthOfEarthMultipliers = []float64{1, 1.08, 1.15}
 
 func StrengthOfEarthTotemValue(enhancingTotemsPoints int32, hasEnh2pT4 bool) float64 {
-	// Truncated like the game: e.g. 86*1.15=98.9 -> 98.
-	return math.Floor((86.0 + TernaryFloat64(hasEnh2pT4, StrengthOfEarthTotemImprovedValue, 0)) * StrengthOfEarthMultipliers[enhancingTotemsPoints])
+	// Truncated like the game: e.g. 53*1.15=60.95 -> 60.
+	return math.Floor((StrengthOfEarthTotemBaseValue + TernaryFloat64(hasEnh2pT4, StrengthOfEarthTotemImprovedValue, 0)) * StrengthOfEarthMultipliers[enhancingTotemsPoints])
 }
 
 func StrengthOfEarthTotemAura(char *Character, enhancingTotemsPoints int32, hasEnh2pT4 bool) *Aura {
 	return makeStatBuff(char, BuffConfig{
 		Label:    "Strength of Earth Totem",
-		ActionID: ActionID{SpellID: 25528},
+		ActionID: ActionID{SpellID: 25361},
 		Stats: []StatConfig{
 			{stats.Strength, StrengthOfEarthTotemValue(enhancingTotemsPoints, hasEnh2pT4), false},
 		},

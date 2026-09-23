@@ -1,12 +1,12 @@
 character_stats_results: {
  key: "TestRestorationDruid-restoration-10-0-41"
  value: {
-  final_stats: 204
-  final_stats: 177
-  final_stats: 311
-  final_stats: 158
-  final_stats: 237.5
-  final_stats: 224.5
+  final_stats: 166
+  final_stats: 195
+  final_stats: 271
+  final_stats: 161
+  final_stats: 237.8
+  final_stats: 224.8
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -17,8 +17,8 @@ character_stats_results: {
   final_stats: 48
   final_stats: 0
   final_stats: 0
-  final_stats: 215
-  final_stats: 759
+  final_stats: 218
+  final_stats: 675.4
   final_stats: 50
   final_stats: 0
   final_stats: 0
@@ -29,24 +29,24 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 106.2
+  final_stats: 117
   final_stats: 0
   final_stats: 0
-  final_stats: 1548
+  final_stats: 1644
   final_stats: 0
-  final_stats: 6051.15
-  final_stats: 3334
-  final_stats: 113.5
-  final_stats: 33
-  final_stats: 33
-  final_stats: 33
-  final_stats: 43
+  final_stats: 5631.15
+  final_stats: 3379
+  final_stats: 82.25
+  final_stats: 36
+  final_stats: 36
+  final_stats: 36
+  final_stats: 46
   final_stats: 70
   final_stats: 0
   final_stats: 0
   final_stats: 3
-  final_stats: 20.17857
-  final_stats: 19.86717
+  final_stats: 21.07857
+  final_stats: 19.91727
   final_stats: 0
   final_stats: 0
   final_stats: 0

@@ -53,20 +53,7 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	}
 
 	if debuffs.HuntersMark != proto.TristateEffect_TristateEffectMissing {
-		aura := HuntersMarkAura(target, GetTristateValueInt32(debuffs.HuntersMark, 0, 5))
-		ApplyFixedUptimeAura(aura, 1, aura.Duration, 1)
-
-		ScheduledAura(aura, PeriodicActionOptions{
-			Period:   time.Second * 1,
-			NumTicks: 5,
-			Priority: ActionPriorityDOT,
-			OnAction: func(sim *Simulation) {
-				aura.Activate(sim)
-				if aura.IsActive() {
-					aura.SetStacks(sim, aura.GetStacks()+6)
-				}
-			},
-		}, raid)
+		MakePermanent(HuntersMarkAura(target, GetTristateValueInt32(debuffs.HuntersMark, 0, 5)))
 	}
 
 	if debuffs.ImprovedScorch {
@@ -422,35 +409,25 @@ func HemorrhageAura(target *Unit, uptime float64) *Aura {
 	return aura
 }
 
-func HuntersMarkAura(target *Unit, improved int32) *Aura {
-	initialBonus := 110.0
-	bonusPerStack := 11.0
-	meleeBonus := initialBonus * 0.2 * float64(improved)
+// Hunter's Mark (14325): the Forever client's rank is a flat 71 ranged attack power for every
+// attacker (effect 1, aura 127), no stacks and no melee part - those are TBC's. Improved Hunter's
+// Mark adds 3% a point, as on master.
+func HuntersMarkAura(target *Unit, points int32) *Aura {
+	bonus := 71.0 * (1 + 0.03*float64(points))
 
-	var effect *ExclusiveEffect
-	aura := target.RegisterAura(Aura{
-		Label:     "Hunters Mark",
-		Tag:       "HuntersMark",
-		ActionID:  ActionID{SpellID: 14325},
-		Duration:  time.Minute * 2,
-		MaxStacks: 30,
-		OnStacksChange: func(aura *Aura, sim *Simulation, oldStacks int32, newStacks int32) {
-			effect.SetPriority(sim, initialBonus+bonusPerStack*float64(newStacks))
-		},
+	aura := target.GetOrRegisterAura(Aura{
+		Label:    "Hunters Mark",
+		Tag:      "HuntersMark",
+		ActionID: ActionID{SpellID: 14325},
+		Duration: time.Minute * 2,
 	})
 
-	effect = aura.NewExclusiveEffect("HuntersMark", true, ExclusiveEffect{
-		Priority: initialBonus,
+	aura.NewExclusiveEffect("HuntersMark", true, ExclusiveEffect{
+		Priority: bonus,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			if improved > 0 {
-				target.PseudoStats.BonusAttackPower += meleeBonus
-			}
 			target.PseudoStats.BonusRangedAttackPower += ee.Priority
 		},
 		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			if improved > 0 {
-				target.PseudoStats.BonusAttackPower -= meleeBonus
-			}
 			target.PseudoStats.BonusRangedAttackPower -= ee.Priority
 		},
 	})

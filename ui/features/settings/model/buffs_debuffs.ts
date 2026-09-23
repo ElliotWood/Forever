@@ -37,7 +37,7 @@ export const DivineSpirit = makeTristateRaidBuffInput({
 	label: 'Divine Spirit',
 });
 export const GiftOfTheWild = makeTristateRaidBuffInput({
-	actionId: ActionId.fromSpellId(26991),
+	actionId: ActionId.fromSpellId(21850),
 	impId: ActionId.fromSpellId(17055),
 	fieldName: 'giftOfTheWild',
 	label: 'Gift of the Wild',
@@ -49,7 +49,7 @@ export const Thorns = makeTristateRaidBuffInput({
 	label: 'Thorns',
 });
 export const PowerWordFortitude = makeTristateRaidBuffInput({
-	actionId: ActionId.fromSpellId(25389),
+	actionId: ActionId.fromSpellId(10938),
 	impId: ActionId.fromSpellId(14767),
 	fieldName: 'powerWordFortitude',
 	label: 'Power Word: Fortitude',
@@ -155,7 +155,7 @@ export const LeaderOfThePack = makeTristatePartyBuffInput({
 	label: 'Leader of the Pack',
 });
 export const ManaSpringTotem = makeTristatePartyBuffInput({
-	actionId: ActionId.fromSpellId(25570),
+	actionId: ActionId.fromSpellId(10497),
 	impId: ActionId.fromSpellId(16208),
 	fieldName: 'manaSpringTotem',
 	label: 'Mana Spring Totem',
@@ -186,7 +186,7 @@ export const ConcentrationAura = makeBooleanPartyBuffInput({
 	label: 'Concentration Aura',
 });
 export const StrengthOfEarthTotem = makeQuadstatePartyBuffInput({
-	actionId: ActionId.fromSpellId(25528),
+	actionId: ActionId.fromSpellId(25361),
 	impId: ActionId.fromSpellId(16295),
 	impId2: ActionId.fromSpellId(37223),
 	fieldName: 'strengthOfEarthTotem',
@@ -227,7 +227,7 @@ export const WrathOfAirTotem = makeTristatePartyBuffInput({
 	label: 'Wrath of Air Totem',
 });
 export const BloodPact = makeTristatePartyBuffInput({
-	actionId: ActionId.fromSpellId(27268),
+	actionId: ActionId.fromSpellId(11767),
 	impId: ActionId.fromSpellId(18696),
 	fieldName: 'bloodPact',
 	label: 'Bloodpact',
@@ -450,7 +450,7 @@ export const ShadowEmbrace = makeBooleanDebuffInput({ actionId: ActionId.fromSpe
 
 export const DEBUFFS_CONFIG = [
 	{ config: BloodFrenzy, stats: [Stat.StatAttackPower] },
-	{ config: HuntersMark, stats: [Stat.StatRangedAttackPower, Stat.StatAttackPower] },
+	{ config: HuntersMark, stats: [Stat.StatRangedAttackPower] },
 	{ config: ImprovedScorch, stats: [Stat.StatFireDamage] },
 	{ config: JudgementOfTheCrusader, stats: [Stat.StatHolyDamage, Stat.StatSpellDamage] },
 	{ config: JudgementOfLight, stats: [Stat.StatResilienceRating] },

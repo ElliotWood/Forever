@@ -801,12 +801,9 @@ export class Player<SpecType extends Spec> {
 			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, agi * 0.25);
 		}
 
+		// Forever's Hunter's Mark: a flat 71 ranged attack power, +15% improved (sim/core/debuffs.go).
 		if (debuffs.huntersMark != TristateEffect.TristateEffectMissing) {
-			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, 440);
-
-			if (debuffs.huntersMark == TristateEffect.TristateEffectImproved) {
-				debuffStats = debuffStats.addStat(Stat.StatAttackPower, 110);
-			}
+			debuffStats = debuffStats.addStat(Stat.StatRangedAttackPower, debuffs.huntersMark == TristateEffect.TristateEffectImproved ? 71 * 1.15 : 71);
 		}
 
 		return debuffStats;

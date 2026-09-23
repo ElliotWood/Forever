@@ -1,10 +1,10 @@
 character_stats_results: {
  key: "TestHealerPriest-discipline-35-16-0"
  value: {
-  final_stats: 168
-  final_stats: 156
-  final_stats: 290
-  final_stats: 212
+  final_stats: 129
+  final_stats: 174
+  final_stats: 250
+  final_stats: 216
   final_stats: 216
   final_stats: 203
   final_stats: 0
@@ -17,7 +17,7 @@ character_stats_results: {
   final_stats: 48
   final_stats: 0
   final_stats: 0
-  final_stats: 200
+  final_stats: 203
   final_stats: 321.2
   final_stats: 50
   final_stats: 0
@@ -32,21 +32,21 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 1506
+  final_stats: 1602
   final_stats: 0
-  final_stats: 5467
-  final_stats: 4276
-  final_stats: 113.5
-  final_stats: 33
-  final_stats: 33
-  final_stats: 43
-  final_stats: 33
+  final_stats: 5067
+  final_stats: 4336
+  final_stats: 82.25
+  final_stats: 36
+  final_stats: 36
+  final_stats: 46
+  final_stats: 36
   final_stats: 70
   final_stats: 0
   final_stats: 1
   final_stats: 4
-  final_stats: 17.22857
-  final_stats: 15.79017
+  final_stats: 18.12857
+  final_stats: 15.85737
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -55,12 +55,12 @@ character_stats_results: {
 character_stats_results: {
  key: "TestHealerPriest-holy-19-32-0"
  value: {
-  final_stats: 168
-  final_stats: 156
-  final_stats: 290
-  final_stats: 195
-  final_stats: 266
-  final_stats: 219
+  final_stats: 129
+  final_stats: 174
+  final_stats: 250
+  final_stats: 199
+  final_stats: 266.75
+  final_stats: 219.24
   final_stats: 0
   final_stats: 0
   final_stats: 0
@@ -71,7 +71,7 @@ character_stats_results: {
   final_stats: 48
   final_stats: 0
   final_stats: 0
-  final_stats: 200
+  final_stats: 203
   final_stats: 321.2
   final_stats: 50
   final_stats: 0
@@ -86,21 +86,21 @@ character_stats_results: {
   final_stats: 0
   final_stats: 0
   final_stats: 0
-  final_stats: 1506
+  final_stats: 1602
   final_stats: 0
-  final_stats: 5467
-  final_stats: 4021
-  final_stats: 113.5
-  final_stats: 33
-  final_stats: 33
-  final_stats: 43
-  final_stats: 33
+  final_stats: 5067
+  final_stats: 4081
+  final_stats: 82.25
+  final_stats: 36
+  final_stats: 36
+  final_stats: 46
+  final_stats: 36
   final_stats: 70
   final_stats: 0
   final_stats: 1
   final_stats: 4
-  final_stats: 17.22857
-  final_stats: 15.50457
+  final_stats: 18.12857
+  final_stats: 15.57177
   final_stats: 0
   final_stats: 0
   final_stats: 0
