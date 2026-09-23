@@ -184,6 +184,8 @@ func TestTouchOfTheGraveUsesTheMeleeVariant(t *testing.T) {
 
 	if aura := fw.GetAura("Touch of the Grave"); aura == nil || aura.ActionIDForProc.SpellID != 1260189 {
 		t.Fatalf("An undead warrior should carry the 5%% Touch of the Grave")
+	} else if aura.OnSpellHitDealt == nil {
+		t.Fatalf("Touch of the Grave listens for no hit, so it never procs")
 	}
 	if fw.GetSpell(ActionID{SpellID: 1260198}) == nil {
 		t.Fatalf("Touch of the Grave's drain is not registered")

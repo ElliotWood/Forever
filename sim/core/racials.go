@@ -434,6 +434,7 @@ func applyTouchOfTheGrave(character *Character) {
 	character.MakeProcTriggerAura(ProcTrigger{
 		Name:       "Touch of the Grave",
 		ActionID:   ActionID{SpellID: auraID},
+		Callback:   CallbackOnSpellHitDealt,
 		ProcMask:   ProcMaskMelee | ProcMaskRanged | ProcMaskSpellDamage,
 		Outcome:    OutcomeLanded,
 		ProcChance: procChance,
