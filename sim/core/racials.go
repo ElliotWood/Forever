@@ -193,43 +193,37 @@ func applyRaceEffects(agent Agent) {
 		}
 
 		// Blood Fury
-		actionID := ActionID{SpellID: 33697}
-		apFormula := float64(character.Level)*4 + 2
-		spFormula := float64(character.Level)*2 + 3
-		apBonus := 0.0
-		spBonus := 0.0
-
-		switch character.Class {
-		case proto.Class_ClassWarrior,
-			proto.Class_ClassRogue,
-			proto.Class_ClassHunter:
-			apBonus = apFormula
-		case proto.Class_ClassShaman:
-			spBonus = spFormula
-			apBonus = apFormula
-		case proto.Class_ClassWarlock:
-			spBonus = spFormula
+		actionID := ActionID{SpellID: 20572}
+		bloodFuryStats := []stats.Stat{stats.AttackPower, stats.RangedAttackPower, stats.SpellDamage, stats.HealingPower}
+		bloodFuryAura := character.RegisterAura(Aura{
+			Label:    "Blood Fury",
+			ActionID: actionID,
+			Duration: time.Second * 15,
+		})
+		for _, stat := range bloodFuryStats {
+			bloodFuryAura.AttachStatDependency(character.NewDynamicMultiplyStat(stat, 1.1))
 		}
 
-		buffStats := stats.Stats{
-			stats.AttackPower:       apBonus,
-			stats.RangedAttackPower: apBonus,
-			stats.SpellDamage:       spBonus,
-		}
-
-		RegisterTemporaryStatsOnUseCD(character,
-			"Blood Fury",
-			buffStats,
-			time.Second*15,
-			SpellConfig{
-				ActionID: actionID,
-				Cast: CastConfig{
-					CD: Cooldown{
-						Timer:    character.NewTimer(),
-						Duration: time.Minute * 2,
-					},
+		bloodFurySpell := character.RegisterSpell(SpellConfig{
+			ActionID: actionID,
+			Flags:    SpellFlagNoOnCastComplete,
+			Cast: CastConfig{
+				CD: Cooldown{
+					Timer:    character.NewTimer(),
+					Duration: time.Minute * 2,
 				},
-			})
+			},
+			ApplyEffects: func(sim *Simulation, _ *Unit, _ *Spell) {
+				bloodFuryAura.Activate(sim)
+			},
+			RelatedSelfBuff: bloodFuryAura,
+		})
+
+		character.AddMajorCooldown(MajorCooldown{
+			Spell:    bloodFurySpell,
+			Type:     CooldownTypeDPS,
+			BuffAura: &StatBuffAura{Aura: bloodFuryAura, BuffedStatTypes: bloodFuryStats},
+		})
 
 		applyWeaponSpecialization(character, "Axe Specialization", 20574, false, proto.WeaponType_WeaponTypeAxe)
 	case proto.Race_RaceTauren:
