@@ -917,14 +917,15 @@ func ThunderfuryASAura(target *Unit) *Aura {
 	return aura
 }
 
+// The priority is the slow, so SetPriority from an aura's OnGain rescales it too (wowsims/forever 808aaa2ef0).
 func AtkSpeedReductionEffect(aura *Aura, speedMultiplier float64) *ExclusiveEffect {
 	return aura.NewExclusiveEffect("AtkSpdReduction", false, ExclusiveEffect{
 		Priority: speedMultiplier,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.MultiplyAttackSpeed(sim, 1/speedMultiplier)
+			ee.Aura.Unit.MultiplyAttackSpeed(sim, 1/ee.Priority)
 		},
 		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.MultiplyAttackSpeed(sim, speedMultiplier)
+			ee.Aura.Unit.MultiplyAttackSpeed(sim, ee.Priority)
 		},
 	})
 }
