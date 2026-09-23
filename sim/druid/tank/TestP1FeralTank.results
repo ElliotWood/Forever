@@ -50,9 +50,9 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestP1FeralTank-Phase1-StatWeights-Default"
  value: {
-  weights: 0.34801
-  weights: 0.40185
-  weights: -0.06053
+  weights: 0.34785
+  weights: -0.14203
+  weights: -0.8627
   weights: 0
   weights: 0
   weights: 0
@@ -67,7 +67,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.15819
+  weights: 0.15811
   weights: 0
   weights: 0
   weights: 0
@@ -78,10 +78,10 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: -0.01867
+  weights: -0.17219
   weights: 0
   weights: 0
-  weights: -0.79364
+  weights: -0.64396
   weights: 0
   weights: 0
   weights: 0
@@ -127,9 +127,9 @@ dps_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-Average-Default"
  value: {
-  dps: 453.74098
-  tps: 1030.70181
-  dtps: 575.4267
+  dps: 453.79039
+  tps: 1031.53399
+  dtps: 581.89523
  }
 }
 dps_results: {
@@ -219,8 +219,8 @@ dps_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 399.1289
-  tps: 915.8228
-  dtps: 626.11193
+  dps: 397.97639
+  tps: 918.70743
+  dtps: 634.45079
  }
 }

@@ -107,7 +107,12 @@ func (weapon *Weapon) EnemyWeaponDamage(sim *Simulation, attackPower float64, da
 
 	rand := 1 + damageSpread*sim.RandomFloat("Enemy Weapon Damage")
 
-	return weapon.BaseDamageMin * (rand + attackPower*EnemyAutoAttackAPCoefficient)
+	apCoefficient := EnemyAutoAttackAPCoefficient
+	if sim.IsForever() {
+		apCoefficient = ForeverEnemyAutoAttackAPCoefficient
+	}
+
+	return weapon.BaseDamageMin * (rand + attackPower*apCoefficient)
 }
 
 func (weapon *Weapon) BaseDamage(sim *Simulation) float64 {
