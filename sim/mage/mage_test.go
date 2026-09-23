@@ -2,11 +2,13 @@ package mage
 
 import (
 	"testing"
+	"time"
 
 	"github.com/wowsims/forever/sim/common"
 	_ "github.com/wowsims/forever/sim/common"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/simsignals"
 )
 
 func init() {
@@ -63,5 +65,40 @@ func mageSuite(apl string, talents string) core.CharacterSuiteConfig {
 			},
 			EnchantBlacklist: []int32{2673, 3225, 3273},
 		},
+	}
+}
+
+// Hot Streak (400625) has one charge: the Pyroblast its stacks speed up spends all of them.
+func TestHotStreakSpentByPyroblast(t *testing.T) {
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
+			Name: "Mage", Class: proto.Class_ClassMage, Race: proto.Race_RaceGnome, TalentsString: FireTalents,
+			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
+			Spec:     &proto.Player_Mage{Mage: &proto.Mage{Options: &proto.Mage_Options{ClassOptions: &proto.MageOptions{}}}},
+			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}}}}},
+		Encounter: core.MakeSingleTargetEncounter(0),
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	mage := sim.Raid.Parties[0].Players[0].(MageAgent).GetMage()
+	pyroblastRank := spellData.Pyroblast.Highest()
+	pyroblast := mage.GetSpell(core.ActionID{SpellID: pyroblastRank.ID})
+
+	mage.HotStreakAura.Activate(sim)
+	mage.HotStreakAura.SetStacks(sim, 3)
+	if !pyroblast.Cast(sim, mage.CurrentTarget) {
+		t.Fatal("Pyroblast did not cast")
+	}
+	if want := pyroblastRank.CastTime() / 4; mage.Hardcast.Expires != want {
+		t.Errorf("Pyroblast cast ends at %v, want %v with 3 stacks", mage.Hardcast.Expires, want)
+	}
+
+	for sim.CurrentTime < 5*time.Second && mage.HotStreakAura.IsActive() {
+		sim.Step()
+	}
+	if mage.HotStreakAura.IsActive() {
+		t.Errorf("Hot Streak still up at %v after Pyroblast finished", sim.CurrentTime)
 	}
 }

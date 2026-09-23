@@ -133,13 +133,15 @@ func (mage *Mage) registerArcaneConcentration() {
 	})
 
 	// Forever states a flat SpellAuraOptions.ProcChance of 100 on the talent spell and puts the
-	// real per-rank chance on the effect, so ProcChanceAt would read 100% at every rank.
+	// real per-rank chance on the effect, so ProcChanceAt would read 100% at every rank. 11213's
+	// ProcCategoryRecovery holds it to one proc a second.
 	mage.MakeProcTriggerAura(core.ProcTrigger{
 		Name:               "Arcane Concentration",
 		Callback:           core.CallbackOnSpellHitDealt,
 		ClassSpellMask:     MageSpellsAllDamaging,
 		Outcome:            core.OutcomeLanded,
 		ProcChance:         spellData.ArcaneConcentration.EffectAt(1).FractionAt(mage.Talents.ArcaneConcentration),
+		ICD:                spellData.ArcaneConcentration.Highest().ICD(),
 		TriggerImmediately: true,
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 			mage.ClearcastingAura.Activate(sim)

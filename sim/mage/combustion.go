@@ -33,7 +33,7 @@ func (mage *Mage) registerCombustionSpell() {
 		Label:     "Combustion",
 		ActionID:  actionID,
 		Duration:  core.NeverExpires,
-		MaxStacks: 20,
+		MaxStacks: int32(spellData.CombustionTriggered.Highest().MaxStack), // 10 on 28682
 		OnGain: func(_ *core.Aura, _ *core.Simulation) {
 			numCrits = 0
 			critMod.Activate()
