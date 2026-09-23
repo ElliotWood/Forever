@@ -24,7 +24,7 @@ func (paladin *Paladin) registerSealOfJustice(row shared.SpellData) {
 		return target.GetOrRegisterAura(core.Aura{
 			Label:    "Judgement of Justice",
 			ActionID: core.ActionID{SpellID: judgementRow.SpellID},
-			Tag:      judgementAuraTag,
+			Tag:      core.JudgementAuraTag,
 			Duration: judgementRow.Duration,
 		})
 	})

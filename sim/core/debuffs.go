@@ -87,8 +87,8 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 
 	}
 
-	if debuffs.ImprovedSealOfTheCrusader != proto.TristateEffect_TristateEffectMissing {
-		MakePermanent(ImprovedSealOfTheCrusaderAura(target, -1, GetTristateValueInt32(debuffs.ImprovedSealOfTheCrusader, 0, 3), 0.0, Ternary(debuffs.JocRetribution_2Pt4, 1.15, 1.0)))
+	if debuffs.JudgementOfTheCrusader {
+		MakePermanent(JudgementOfTheCrusaderAura(target, JudgementOfTheCrusaderMaxRank))
 	}
 
 	if debuffs.InsectSwarm {
@@ -100,11 +100,11 @@ func applyDebuffEffects(target *Unit, targetIdx int, debuffs *proto.Debuffs, rai
 	}
 
 	if debuffs.JudgementOfLight {
-		MakePermanent(JudgementOfLightAura(target))
+		MakePermanent(JudgementOfLightAura(target, JudgementOfLightMaxRank))
 	}
 
 	if debuffs.JudgementOfWisdom {
-		MakePermanent(JudgementOfWisdomAura(target))
+		MakePermanent(JudgementOfWisdomAura(target, JudgementOfWisdomMaxRank))
 	}
 
 	if debuffs.Mangle {
@@ -485,36 +485,62 @@ func ImprovedScorchAura(target *Unit) *Aura {
 	return aura
 }
 
-// points is number of talent points in improved seal of the crusader
-//
-// flatBonus is used when the character has a flat bonus to the holy damage taken
-//
-// percentBonus is used when the character has a percent bonus to the holy damage taken
-func ImprovedSealOfTheCrusaderAura(target *Unit, casterIndex, points int32, flatBonus, percentBonus float64) *Aura {
-	holySpellDamageBonus := 219.0*percentBonus + flatBonus //assumed Max Rank Seal Of Crusader (Rank 7)
+// One rank of a judgement debuff: the spell the target shows and the number its row states. The
+// paladin registers a rank per row; the debuff panel applies the max rank, carried by the *MaxRank
+// values with Rank 0.
+type JudgementRank struct {
+	SpellID int32
+	Rank    int32
+	Value   float64
+}
 
-	auraLabel := fmt.Sprintf("Improved Seal of the Crusader (%s)", Ternary(casterIndex == -1, "External", "Self"))
+var (
+	JudgementOfTheCrusaderMaxRank = JudgementRank{SpellID: 20303, Value: 161}
+	JudgementOfLightMaxRank       = JudgementRank{SpellID: 20346, Value: 61}
+	JudgementOfWisdomMaxRank      = JudgementRank{SpellID: 20355, Value: 59}
+)
 
-	actionID := ActionID{SpellID: 20337}
-	if casterIndex != 0 {
-		actionID = actionID.WithTag(casterIndex)
+const JudgementDuration = time.Second * 40
+
+// Every judgement debuff carries the tag, so an effect that refreshes "all Judgement effects on the
+// target" can find them whoever put them up.
+const JudgementAuraTag = "JudgementAura"
+
+// The client says the judgements proc on a chance; the sim keeps the 50% the TBC sim settled on
+// until Forever testing says otherwise.
+const judgementProcChance = 0.5
+
+func judgementLabel(name string, rank JudgementRank) string {
+	if rank.Rank > 0 {
+		return fmt.Sprintf("%s Rank %d", name, rank.Rank)
+	}
+	return name
+}
+
+// Judgement of the Crusader raises the Holy damage the target takes by a flat amount. Every rank
+// and every paladin share one exclusive category, so the strongest active one is the one that
+// counts.
+func JudgementOfTheCrusaderAura(target *Unit, rank JudgementRank) *Aura {
+	bonus := rank.Value
+	label := judgementLabel("Judgement of the Crusader", rank)
+	if target.HasAura(label) {
+		return target.GetAura(label)
 	}
 
 	aura := target.GetOrRegisterAura(Aura{
-		Label:    auraLabel,
-		ActionID: actionID,
-		Duration: time.Second * 20,
+		Label:    label,
+		ActionID: ActionID{SpellID: rank.SpellID},
+		Tag:      JudgementAuraTag,
+		Duration: JudgementDuration,
 	})
 
-	aura.NewExclusiveEffect("Improved Seal of the Crusader", true, ExclusiveEffect{
-		Priority: holySpellDamageBonus + float64(casterIndex),
+	aura.NewExclusiveEffect("Judgement of the Crusader", true, ExclusiveEffect{
+		Priority: bonus,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			target.AddReducedCritTakenPercent(float64(-1 * points))
-			target.PseudoStats.SchoolBonusSpellDamage[stats.SchoolIndexHoly] += holySpellDamageBonus
+			target.PseudoStats.SchoolBonusSpellDamage[stats.SchoolIndexHoly] += bonus
 		},
 		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			target.AddReducedCritTakenPercent(float64(1 * points))
-			target.PseudoStats.SchoolBonusSpellDamage[stats.SchoolIndexHoly] -= holySpellDamageBonus
+			target.PseudoStats.SchoolBonusSpellDamage[stats.SchoolIndexHoly] -= bonus
 		},
 	})
 
@@ -566,42 +592,46 @@ func InsectSwarmAura(target *Unit) *Aura {
 	)
 }
 
-func JudgementOfLightAura(target *Unit) *Aura {
-	healthMetrics := target.NewHealthMetrics(ActionID{SpellID: 27163})
+// Judgement of Light heals whoever lands a melee hit on the target.
+func JudgementOfLightAura(target *Unit, rank JudgementRank) *Aura {
+	healthMetrics := target.NewHealthMetrics(ActionID{SpellID: rank.SpellID})
+	heal := rank.Value
 
 	return target.GetOrRegisterAura(Aura{
-		Label:    "Judgement of Light",
-		ActionID: ActionID{SpellID: 27162},
-		Duration: time.Second * 20,
+		Label:    judgementLabel("Judgement of Light", rank),
+		ActionID: ActionID{SpellID: rank.SpellID},
+		Tag:      JudgementAuraTag,
+		Duration: JudgementDuration,
 		OnSpellHitTaken: func(aura *Aura, sim *Simulation, spell *Spell, result *SpellResult) {
-
 			if !spell.ProcMask.Matches(ProcMaskMelee) || !result.Landed() {
 				return
 			}
 
-			if spell.ActionID.SameAction(ActionID{SpellID: 35395}) {
-				aura.Refresh(sim)
-			}
-
-			if sim.Proc(0.5, "Judgement of Light - Heal") {
-				spell.Unit.GainHealth(sim, 95.0, healthMetrics)
+			if sim.Proc(judgementProcChance, "Judgement of Light - Heal") {
+				spell.Unit.GainHealth(sim, heal, healthMetrics)
 			}
 		},
 	})
 }
 
-// Forever client, rank 3 (20355): its proc (20353) restores 59 mana, as master. TBC's rank 4 (27164) was 74.
-func JudgementOfWisdomAura(target *Unit) *Aura {
-	actionId := ActionID{SpellID: 20355}
-	var aura *Aura
-	aura = target.MakeProcTriggerAura(ProcTrigger{
-		Name:            "Judgement of Wisdom",
-		ActionID:        actionId,
-		MetricsActionID: actionId,
-		Duration:        time.Second * 20,
-		ProcChance:      0.5,
-		ProcMask:        ProcMaskDirect,
-		Callback:        CallbackOnSpellHitTaken,
+// Judgement of Wisdom restores mana to whoever lands an attack or spell on the target.
+func JudgementOfWisdomAura(target *Unit, rank JudgementRank) *Aura {
+	actionID := ActionID{SpellID: rank.SpellID}
+	mana := rank.Value
+	label := judgementLabel("Judgement of Wisdom", rank)
+	if target.HasAura(label) {
+		return target.GetAura(label)
+	}
+
+	return target.GetOrRegisterAura(Aura{
+		Label:    label,
+		ActionID: actionID,
+		Tag:      JudgementAuraTag,
+		Duration: JudgementDuration,
+	}).AttachProcTrigger(ProcTrigger{
+		ProcChance: judgementProcChance,
+		ProcMask:   ProcMaskDirect,
+		Callback:   CallbackOnSpellHitTaken,
 		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
 			// Melee claim that wisdom can proc on misses.
 			if !spell.ProcMask.Matches(ProcMaskMeleeOrRanged) && !result.Landed() {
@@ -611,18 +641,12 @@ func JudgementOfWisdomAura(target *Unit) *Aura {
 			unit := spell.Unit
 			if unit.HasManaBar() {
 				if unit.JowManaMetrics == nil {
-					unit.JowManaMetrics = unit.NewManaMetrics(actionId)
+					unit.JowManaMetrics = unit.NewManaMetrics(actionID)
 				}
-				unit.AddMana(sim, 59.0, unit.JowManaMetrics)
-			}
-
-			if spell.ActionID.SameAction(ActionID{SpellID: 35395}) {
-				aura.Refresh(sim)
+				unit.AddMana(sim, mana, unit.JowManaMetrics)
 			}
 		},
 	})
-
-	return aura
 }
 
 func MangleAura(target *Unit) *Aura {

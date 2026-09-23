@@ -185,24 +185,6 @@ var ItemSetGreenDragonMail = core.NewItemSet(core.ItemSet{
 	},
 })
 
-var ItemSetImperialPlate = core.NewItemSet(core.ItemSet{
-	Name: "Imperial Plate",
-	// Rebuilt in Forever: 2/4/6 became 2/3/4/5/6 and every bonus changed (ItemSetSpell, beta client
-	// 1.60.1.69893). Classic's armour, attack power and stamina are all gone.
-	Bonuses: map[int32]core.ApplySetBonus{
-		// Increased Defense +7 (13385).
-		2: setStats(stats.Stats{stats.DefenseRating: 7 * core.DefenseRatingPerDefenseLevel}),
-		// Improves your chance to hit by 1% (1251990).
-		3: setStats(setHitPercent(1)),
-		// Imperial March: movement speed cannot drop below 80%.
-		4: setNoop,
-		// +20 Strength (1251984).
-		5: setStats(stats.Stats{stats.Strength: 20}),
-		// Improves your chance to crit by 1% (1251991).
-		6: setStats(setCritPercent(1)),
-	},
-})
-
 var ItemSetIronfeatherArmor = core.NewItemSet(core.ItemSet{
 	Name: "Ironfeather Armor",
 	Bonuses: map[int32]core.ApplySetBonus{

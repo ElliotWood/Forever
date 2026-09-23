@@ -241,22 +241,6 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// 1% chance on Melee hit to gain 1 extra attack. Attacks against Dwarves are 3 times as likely to activate
-	// this effect.
-	// https://www.wowhead.com/forever/spell=15601
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 11815, ItemName: "Hand of Justice"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Restores 63 Mana every 1.0 sec for 10s. This effect is doubled in Mountainous areas.
 	// https://www.wowhead.com/forever/spell=15604
 	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
@@ -3109,21 +3093,6 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Increases healing done by Flash of Light by up to 83.
-	// https://www.wowhead.com/forever/spell=28851
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 23006, ItemName: "Libram of Light"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Restores 500 mana.
 	// https://www.wowhead.com/forever/spell=28760
 	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
@@ -3179,22 +3148,6 @@ func RegisterAllProcs() {
 	// }, []shared.ItemVariant{
 	//	{ItemID: 23201, ItemName: "Libram of Divinity"},
 	//	{ItemID: 23202, ItemName: "Libram of Divinity"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Increases the melee attack power bonus of your Seal of the Crusader by 48 and the Holy damage increase
-	// of your Judgement of the Crusader by 33.
-	// https://www.wowhead.com/forever/spell=28852
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 23203, ItemName: "Libram of Fervor"},
 	// })
 
 	// TODO: Manual implementation required
@@ -3710,21 +3663,6 @@ func RegisterAllProcs() {
 	// }, []shared.ItemVariant{
 	//	{ItemID: 227444, ItemName: "Idol of the Huntress"},
 	//	{ItemID: 227444, ItemName: "Idol of the Huntress"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Causes Holy Shock to reduce the cast time of your next Holy Light cast within 10s by 0.2 sec.
-	// https://www.wowhead.com/forever/spell=449982
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 228175, ItemName: "Libram of Holy Alacrity"},
 	// })
 
 	// TODO: Manual implementation required
@@ -5302,51 +5240,6 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Reduces the cooldown of your Swift Judgement talent by 10 sec.
-	// https://www.wowhead.com/forever/spell=1291083
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 272434, ItemName: "Sentinel's Libram"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Increases the damage of your Judgement ability by 4%.
-	// https://www.wowhead.com/forever/spell=1291086
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 272435, ItemName: "Libram of Law"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Reduces the Mana cost of your Holy Light ability by 5%.
-	// https://www.wowhead.com/forever/spell=1291089
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 272436, ItemName: "Libram of Economy"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Absorbs 450 damage for 15s. If this shield expires before 15s, 100 Nature damage will be dealt to all
 	// enemies in melee range.
 	// https://www.wowhead.com/forever/spell=1291097
@@ -6271,36 +6164,6 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Increases the Block Value of your shield by 30% while Holy Shield is active.
-	// https://www.wowhead.com/forever/spell=1306433
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 279247, ItemName: "Steadfast Libram"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Increases the critical strike chance of your Holy Shock spell by 6%.
-	// https://www.wowhead.com/forever/spell=1306429
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 279248, ItemName: "Libram of Infusion"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Increases the critical strike chance of your Lessing Healing Wave spell by 4%.
 	// https://www.wowhead.com/forever/spell=1306448
 	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
@@ -6932,8 +6795,12 @@ func RegisterAllProcs() {
 	// https://www.wowhead.com/forever/spell=1292268
 	// Not simulated: Nightskulker Ring: "Resist Fear 04" (1292574) - ignored aura type 117
 	// https://www.wowhead.com/forever/spell=1292574
+	// Not simulated: Skullduggery Belt: "Stealth 05" (1293068) - ignored aura type 154
+	// https://www.wowhead.com/forever/spell=1293068
 	// Not simulated: Field Agent Beverage: "Resist Charm 06" (1297455) - ignored aura type 117
 	// https://www.wowhead.com/forever/spell=1297455
+	// Not simulated: Wintersaber Hide Lined Gloves: "Mount Speed" (1315778) - ignored aura type 130
+	// https://www.wowhead.com/forever/spell=1315778
 	// Not simulated: Mithril Blacksmith Hammer: "Concussed" (1318163) - ignored aura type 33
 	// https://www.wowhead.com/forever/spell=1318163
 }

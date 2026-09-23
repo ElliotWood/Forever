@@ -53,6 +53,11 @@ func (paladin *Paladin) registerHolyShield(row shared.SpellData) {
 		},
 	}).AttachStatBuff(stats.BlockPercent, blockPercent)
 
+	// Steadfast Libram: more block value while the shield is up.
+	if paladin.holyShieldBlockValueMultiplier != 1 {
+		holyShieldAura.AttachMultiplicativePseudoStatBuff(&paladin.PseudoStats.BlockValueMultiplier, paladin.holyShieldBlockValueMultiplier)
+	}
+
 	paladin.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
 		SpellSchool:    row.SpellSchool,

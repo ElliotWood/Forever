@@ -1,6 +1,8 @@
 package paladin
 
 import (
+	"time"
+
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
@@ -33,6 +35,14 @@ type Paladin struct {
 
 	// Light's Vigil: one entry per rank, so Holy Shock can find the vigil it consumes.
 	lightsVigils []*lightsVigil
+
+	// What gear adds to numbers the spells read as they register. Item effects and set bonuses
+	// apply before Initialize, so the spells pick these up.
+	sealOfTheCrusaderBonusAttackPower float64
+	judgementOfTheCrusaderBonus       float64
+	flashOfLightBonusHealing          float64
+	holyShieldBlockValueMultiplier    float64
+	forbearanceReduction              time.Duration
 
 	// Timers shared by the ranks of one ability.
 	judgementTimer     *core.Timer
@@ -115,19 +125,10 @@ func (paladin *Paladin) sharedTimer(timer **core.Timer) *core.Timer {
 // The cost a row states: a flat number, or a share of base mana for the spells the client prices
 // that way (Judgement, Righteous Fury, Seal of Justice).
 func manaCost(row shared.SpellData) core.ManaCostOptions {
-	if pct := powerCostPct[row.SpellID]; pct > 0 {
-		return core.ManaCostOptions{BaseCostPercent: pct}
+	if row.PowerCostPct > 0 {
+		return core.ManaCostOptions{BaseCostPercent: row.PowerCostPct}
 	}
 	return core.ManaCostOptions{FlatCost: row.Cost}
-}
-
-// SpellPower.PowerCostPct for the paladin spells priced as a share of base mana. forever-next's
-// generator does not carry the column yet (master's and their #48 stack's do), so the rows read
-// Cost 0; these are the values those generators emit.
-// ponytail: delete once gen_spelldata writes PowerCostPct into spell_data_auto_gen.go.
-var powerCostPct = map[int32]float64{
-	1044: 10, 20217: 8, 10278: 7, 1038: 8, 4987: 8, 20216: 4, 25895: 16, 407632: 6, 20271: 6,
-	1152: 8, 7328: 80, 10322: 80, 10324: 80, 20772: 80, 20773: 80, 25780: 30, 20164: 13,
 }
 
 // A direct-damage row's roll. The client rolls these between a min and a max, and forever-next's
@@ -173,6 +174,8 @@ func NewPaladin(character *core.Character, talentsStr string, _ *proto.PaladinOp
 	paladin := &Paladin{
 		Character: *character,
 		Talents:   &proto.PaladinTalents{},
+
+		holyShieldBlockValueMultiplier: 1,
 	}
 
 	core.FillTalentsProto(paladin.Talents.ProtoReflect(), talentsStr, TalentTreeSizes)

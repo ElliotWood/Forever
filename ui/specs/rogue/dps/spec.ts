@@ -95,7 +95,7 @@ export default defineSpec<Spec.SpecRogue>({
 		}),
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
-			blessingOfMight: TristateEffect.TristateEffectImproved,
+			blessingOfMight: true,
 		}),
 		debuffs: Debuffs.create({
 			faerieFire: TristateEffect.TristateEffectRegular,

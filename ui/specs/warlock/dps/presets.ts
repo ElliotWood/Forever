@@ -80,7 +80,7 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
+	blessingOfWisdom: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({

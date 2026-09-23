@@ -16,8 +16,8 @@ func (paladin *Paladin) registerAuras() {
 
 // The rank of a paladin aura as core wants it: the spell the paladin cast, its rank, and the number
 // its row states.
-func auraRank(row shared.SpellData) paladinAuraRank {
-	return paladinAuraRank{SpellID: row.SpellID, Rank: row.Rank, Value: shared.SpellDataMin(row.Direct)}
+func auraRank(row shared.SpellData) core.PaladinAuraRank {
+	return core.PaladinAuraRank{SpellID: row.SpellID, Rank: row.Rank, Value: shared.SpellDataMin(row.Direct)}
 }
 
 // The castable aura spell: instant, on the GCD, free. The aura it turns on is one of core's

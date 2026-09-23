@@ -50,7 +50,7 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultPartyBuffs = PartyBuffs.create({
 	...WarriorPresets.DefaultPartyBuffs,
-	devotionAura: TristateEffect.TristateEffectRegular,
+	devotionAura: true,
 	fireResistanceAura: true,
 });
 

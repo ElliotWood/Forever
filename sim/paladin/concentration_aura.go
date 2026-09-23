@@ -2,6 +2,7 @@ package paladin
 
 import (
 	"github.com/wowsims/forever/sim/common/shared"
+	"github.com/wowsims/forever/sim/core"
 )
 
 var ConcentrationAuraRankMap = spellData.ConcentrationAura
@@ -13,7 +14,7 @@ var ConcentrationAuraRankMap = spellData.ConcentrationAura
 // yards. Players may only have one Aura on them per Paladin at any one time.
 func (paladin *Paladin) registerConcentrationAura() {
 	ConcentrationAuraRankMap.RegisterAll(func(row shared.SpellData) {
-		aura := concentrationAura(&paladin.Character, auraRank(row))
+		aura := core.ConcentrationAura(&paladin.Character, true, auraRank(row))
 		paladin.registerAuraSpell(row, aura, SpellMaskConcentrationAura)
 	})
 }

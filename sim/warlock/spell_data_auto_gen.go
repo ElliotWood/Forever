@@ -261,7 +261,7 @@ var spellData = generatedSpellData{
 		{Rank: 3, SpellID: 1237165, SpellSchool: core.SpellSchoolPhysical, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DAMAGE_DONE, Misc: 36, Value: 21}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_CASTING_SPEED_NOT_STACK, Misc: 0, Value: 2}}, Direct: shared.SpellDataFlat{Value: 21, Coef: 0}},
 	},
 	CurseOfExhaustion: shared.SpellDataTable{
-		{Rank: 1, SpellID: 18223, GCD: 1500 * time.Millisecond, Duration: 12000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -30}}},
+		{Rank: 1, SpellID: 18223, PowerCostPct: 8, GCD: 1500 * time.Millisecond, Duration: 12000 * time.Millisecond, MaxRange: 30, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_DECREASE_SPEED, Misc: 0, Value: -30}}},
 	},
 	CurseOfIdiocy: shared.SpellDataTable{
 		{Rank: 1, SpellID: 1010, Cost: 110, GCD: 1500 * time.Millisecond, Duration: 120000 * time.Millisecond, MaxRange: 30, ProcChance: 101, SpellSchool: core.SpellSchoolShadow, DefenseType: core.DefenseTypeMagic, Effects: []shared.SpellDataEffect{{Index: 0, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STAT, Misc: 3, Value: -6}, {Index: 1, Effect: shared.E_APPLY_AURA, Aura: shared.A_MOD_STAT, Misc: 4, Value: -6}, {Index: 2, Effect: shared.E_APPLY_AURA, Aura: shared.A_PERIODIC_TRIGGER_SPELL, Misc: 0, Value: 0}}},
