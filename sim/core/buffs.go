@@ -85,18 +85,6 @@ func ApplyFixedShoutAura(char *Character, aura *Aura, category string) {
 //  Cooldowns
 ////////////////////////////
 
-func multiplyCastSpeedEffect(aura *Aura, multiplier float64) *ExclusiveEffect {
-	return aura.NewExclusiveEffect("MultiplyCastSpeed", false, ExclusiveEffect{
-		Priority: multiplier,
-		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.MultiplyCastSpeed(sim, multiplier)
-		},
-		OnExpire: func(ee *ExclusiveEffect, sim *Simulation) {
-			ee.Aura.Unit.MultiplyCastSpeed(sim, 1/multiplier)
-		},
-	})
-}
-
 func InspirationAura(unit *Unit, points int32) *Aura {
 	multiplier := 1 + []float64{0, .08, .16, .25}[points]
 
