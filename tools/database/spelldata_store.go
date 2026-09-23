@@ -145,18 +145,17 @@ type spellTables struct {
 	Subtexts     map[int32]string
 	Descriptions map[int32]string
 
-	Misc              map[int32]miscRow
-	Levels            map[int32]levelsRow
-	Cooldowns         map[int32]cooldownRow
-	Categories        map[int32]categoryRow
-	AuraOptions       map[int32]auraOptionRow
-	ClassOptions      map[int32]core.ClassFlags
-	Interrupts        map[int32]interruptRow
-	Shapeshift        map[int32]uint64
-	ShapeshiftExclude map[int32]uint64
-	AuraRestrictions  map[int32]auraRestrictionRow
-	Targets           map[int32]int16
-	Equipped          map[int32]equippedRow
+	Misc             map[int32]miscRow
+	Levels           map[int32]levelsRow
+	Cooldowns        map[int32]cooldownRow
+	Categories       map[int32]categoryRow
+	AuraOptions      map[int32]auraOptionRow
+	ClassOptions     map[int32]core.ClassFlags
+	Interrupts       map[int32]interruptRow
+	Shapeshift       map[int32]shapeshiftRow
+	AuraRestrictions map[int32]auraRestrictionRow
+	Targets          map[int32]int16
+	Equipped         map[int32]equippedRow
 
 	Labels  map[int32][]int16
 	Powers  map[int32][]storePower
@@ -201,6 +200,10 @@ type interruptRow struct {
 	AuraInterrupt, ChannelInterrupt [2]uint32
 }
 
+type shapeshiftRow struct {
+	Mask, Exclude uint64
+}
+
 type auraRestrictionRow struct {
 	CasterAura, ExcludeCasterAura int32
 }
@@ -214,24 +217,23 @@ type equippedRow struct {
 // difficulty 0 and 10 at 186 - and difficulty 0 is the one the sim plays.
 func loadSpellTables(db *sql.DB) (*spellTables, error) {
 	t := &spellTables{
-		Names:             map[int32]string{},
-		Subtexts:          map[int32]string{},
-		Descriptions:      map[int32]string{},
-		Misc:              map[int32]miscRow{},
-		Levels:            map[int32]levelsRow{},
-		Cooldowns:         map[int32]cooldownRow{},
-		Categories:        map[int32]categoryRow{},
-		AuraOptions:       map[int32]auraOptionRow{},
-		ClassOptions:      map[int32]core.ClassFlags{},
-		Interrupts:        map[int32]interruptRow{},
-		Shapeshift:        map[int32]uint64{},
-		ShapeshiftExclude: map[int32]uint64{},
-		AuraRestrictions:  map[int32]auraRestrictionRow{},
-		Targets:           map[int32]int16{},
-		Equipped:          map[int32]equippedRow{},
-		Labels:            map[int32][]int16{},
-		Powers:            map[int32][]storePower{},
-		Effects:           map[int32][]storeEffect{},
+		Names:            map[int32]string{},
+		Subtexts:         map[int32]string{},
+		Descriptions:     map[int32]string{},
+		Misc:             map[int32]miscRow{},
+		Levels:           map[int32]levelsRow{},
+		Cooldowns:        map[int32]cooldownRow{},
+		Categories:       map[int32]categoryRow{},
+		AuraOptions:      map[int32]auraOptionRow{},
+		ClassOptions:     map[int32]core.ClassFlags{},
+		Interrupts:       map[int32]interruptRow{},
+		Shapeshift:       map[int32]shapeshiftRow{},
+		AuraRestrictions: map[int32]auraRestrictionRow{},
+		Targets:          map[int32]int16{},
+		Equipped:         map[int32]equippedRow{},
+		Labels:           map[int32][]int16{},
+		Powers:           map[int32][]storePower{},
+		Effects:          map[int32][]storeEffect{},
 	}
 
 	for _, load := range []func(*sql.DB) error{
@@ -283,8 +285,8 @@ func (t *spellTables) row(id int32) storeSpell {
 	i := t.Interrupts[id]
 	s.AuraInterrupt, s.ChannelInterrupt = i.AuraInterrupt, i.ChannelInterrupt
 
-	s.StanceMask = t.Shapeshift[id]
-	s.StanceExclude = t.ShapeshiftExclude[id]
+	ss := t.Shapeshift[id]
+	s.StanceMask, s.StanceExclude = ss.Mask, ss.Exclude
 
 	ar := t.AuraRestrictions[id]
 	s.CasterAura, s.ExcludeCasterAura = ar.CasterAura, ar.ExcludeCasterAura
@@ -503,10 +505,10 @@ func (t *spellTables) loadShapeshift(db *sql.DB) error {
 		if err := rows.Scan(&id, &low, &high, &excludeLow, &excludeHigh); err != nil {
 			return err
 		}
-		if err := putOnce(t.Shapeshift, id, uint64(uint32(low))|uint64(uint32(high))<<32, "SpellShapeshift rows"); err != nil {
-			return err
-		}
-		return putOnce(t.ShapeshiftExclude, id, uint64(uint32(excludeLow))|uint64(uint32(excludeHigh))<<32, "SpellShapeshift rows")
+		return putOnce(t.Shapeshift, id, shapeshiftRow{
+			Mask:    uint64(uint32(low)) | uint64(uint32(high))<<32,
+			Exclude: uint64(uint32(excludeLow)) | uint64(uint32(excludeHigh))<<32,
+		}, "SpellShapeshift rows")
 	})
 }
 

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"go/format"
 	"strings"
+
+	"github.com/wowsims/forever/sim/core/dbcenums"
 )
 
 type formRow struct {
@@ -53,22 +55,13 @@ func renderFormsFile(rows []formRow) ([]byte, error) {
 	b.WriteString(")\n\n")
 
 	b.WriteString("// The forms whose SpellShapeshiftForm.Flags set bit 1.\n")
-	b.WriteString("const stanceForms uint64 = ")
-	first := true
+	var stances uint64
 	for _, row := range rows {
-		if row.Flags&1 == 0 {
-			continue
+		if row.Flags&1 != 0 {
+			stances |= dbcenums.ShapeshiftForm(row.ID).Mask()
 		}
-		if !first {
-			b.WriteString(" | ")
-		}
-		first = false
-		fmt.Fprintf(&b, "1<<(%d-1)", row.ID)
 	}
-	if first {
-		b.WriteString("0")
-	}
-	b.WriteString("\n")
+	fmt.Fprintf(&b, "const stanceForms uint64 = %#x\n", stances)
 
 	out, err := format.Source([]byte(b.String()))
 	if err != nil {

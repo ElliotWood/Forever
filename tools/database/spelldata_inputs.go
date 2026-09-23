@@ -78,24 +78,23 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 	nodes []traitNode, points map[int32]map[int32]map[int32]float64) *storeInputs {
 	in := &storeInputs{
 		spellTables: spellTables{
-			Names:             t.Names,
-			Subtexts:          map[int32]string{},
-			Descriptions:      map[int32]string{},
-			Misc:              map[int32]miscRow{},
-			Levels:            map[int32]levelsRow{},
-			Cooldowns:         map[int32]cooldownRow{},
-			Categories:        map[int32]categoryRow{},
-			AuraOptions:       map[int32]auraOptionRow{},
-			ClassOptions:      map[int32]core.ClassFlags{},
-			Interrupts:        map[int32]interruptRow{},
-			Shapeshift:        map[int32]uint64{},
-			ShapeshiftExclude: map[int32]uint64{},
-			AuraRestrictions:  map[int32]auraRestrictionRow{},
-			Targets:           map[int32]int16{},
-			Equipped:          map[int32]equippedRow{},
-			Labels:            map[int32][]int16{},
-			Powers:            map[int32][]storePower{},
-			Effects:           map[int32][]storeEffect{},
+			Names:            t.Names,
+			Subtexts:         map[int32]string{},
+			Descriptions:     map[int32]string{},
+			Misc:             map[int32]miscRow{},
+			Levels:           map[int32]levelsRow{},
+			Cooldowns:        map[int32]cooldownRow{},
+			Categories:       map[int32]categoryRow{},
+			AuraOptions:      map[int32]auraOptionRow{},
+			ClassOptions:     map[int32]core.ClassFlags{},
+			Interrupts:       map[int32]interruptRow{},
+			Shapeshift:       map[int32]shapeshiftRow{},
+			AuraRestrictions: map[int32]auraRestrictionRow{},
+			Targets:          map[int32]int16{},
+			Equipped:         map[int32]equippedRow{},
+			Labels:           map[int32][]int16{},
+			Powers:           map[int32][]storePower{},
+			Effects:          map[int32][]storeEffect{},
 		},
 		Roots:       roots,
 		TraitNodes:  nodes,
@@ -114,7 +113,6 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 		keepValue(in.ClassOptions, id, t.ClassOptions)
 		keepValue(in.Interrupts, id, t.Interrupts)
 		keepValue(in.Shapeshift, id, t.Shapeshift)
-		keepValue(in.ShapeshiftExclude, id, t.ShapeshiftExclude)
 		keepValue(in.AuraRestrictions, id, t.AuraRestrictions)
 		keepValue(in.Targets, id, t.Targets)
 		keepValue(in.Equipped, id, t.Equipped)
