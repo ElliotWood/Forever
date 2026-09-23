@@ -88,6 +88,8 @@ type Entry struct {
 	DealsDamage bool
 	// The same for an effect that heals the wearer.
 	Heals bool
+	// The same for an effect that shields the wearer with an absorb.
+	Absorbs bool
 	// What a registered on-use leaves out, stated beside its call.
 	NotSimulated string
 }
@@ -118,6 +120,8 @@ type ProcRouting struct {
 	Damage bool
 	// The same for a spell that heals the wearer.
 	Heal bool
+	// The same for a spell that shields the wearer with an absorb.
+	Absorb bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -184,27 +188,64 @@ func healUnsupported(heal *spelldata.Spell) []string {
 	return unsupported
 }
 
-// The heal spell a proc casts: the spell itself, or one it triggers.
-func procHealSpell(spellID int32) int32 {
-	return findProcHealSpell(spellID, map[int32]bool{})
+// A proc whose spell shields the wearer with the A_SCHOOL_ABSORB aura the client hangs below the
+// trigger.
+func (r *ProcRouting) asAbsorb(absorbSpellID int32) {
+	r.Absorb = true
+	r.BuffSpellID = int(absorbSpellID)
+	r.Unsupported = append(r.Unsupported, absorbUnsupported(spelldata.Find(absorbSpellID))...)
+	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
 }
 
-func findProcHealSpell(spellID int32, seen map[int32]bool) int32 {
+// An absorb of at least this much beside an A_DUMMY effect is a script's: the dummy stands for the
+// spells it absorbs, which the client does not list. Blood of the Broodmother 1287808 states
+// 10000000000 beside the dummy that names Dragon Breath spells.
+const scriptedAbsorbAmount = 1e9
+
+func absorbUnsupported(absorb *spelldata.Spell) []string {
+	var unsupported []string
+	effect := absorb.AbsorbEffect()
+	if effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
+		unsupported = append(unsupported, fmt.Sprintf("the absorb lands on implicit target %d, not the wearer", effect.Target[0]))
+	}
+	if effect.BasePoints >= scriptedAbsorbAmount && slices.ContainsFunc(absorb.Effects, func(e spelldata.Effect) bool {
+		return e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_DUMMY
+	}) {
+		unsupported = append(unsupported, fmt.Sprintf(
+			"the absorb of %.0f beside an A_DUMMY absorbs only the spells a script names, which the client does not list", effect.BasePoints))
+	}
+	if absorb.DurationMs == 0 {
+		unsupported = append(unsupported, "the absorb states no duration")
+	}
+	return unsupported
+}
+
+// The heal spell a proc casts: the spell itself, or one it triggers.
+func procHealSpell(spellID int32) int32 {
+	return findProcSpell(spellID, func(s *spelldata.Spell) bool { return s.ProcHealEffect() != spelldata.NilEffect }, map[int32]bool{})
+}
+
+// The same for the spell applying an absorb.
+func procAbsorbSpell(spellID int32) int32 {
+	return findProcSpell(spellID, func(s *spelldata.Spell) bool { return s.AbsorbEffect() != spelldata.NilEffect }, map[int32]bool{})
+}
+
+func findProcSpell(spellID int32, casts func(*spelldata.Spell) bool, seen map[int32]bool) int32 {
 	s := spelldata.Find(spellID)
 	if s == spelldata.Nil || seen[spellID] {
 		return 0
 	}
 	seen[spellID] = true
 
-	if s.ProcHealEffect() != spelldata.NilEffect {
+	if casts(s) {
 		return spellID
 	}
 	for i := range s.Effects {
 		if s.Effects[i].TriggerID == 0 {
 			continue
 		}
-		if heal := findProcHealSpell(s.Effects[i].TriggerID, seen); heal != 0 {
-			return heal
+		if found := findProcSpell(s.Effects[i].TriggerID, casts, seen); found != 0 {
+			return found
 		}
 	}
 	return 0
@@ -806,7 +847,19 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 				}
 			}
 
-			if (len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals) || !entry.Supported {
+			// The same for an effect that shields the wearer.
+			if len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals {
+				if absorb := procAbsorbSpell(itemEffect.BuffId); absorb != 0 {
+					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
+					if entry.Proc != nil {
+						entry.Proc.asAbsorb(absorb)
+						entry.Supported = entry.Proc.Supported()
+						entry.Absorbs = true
+					}
+				}
+			}
+
+			if (len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals && !entry.Absorbs) || !entry.Supported {
 				StoreMissingEffect("ItemEffects", parsed.Name, Variant{
 					ID:      int(parsed.Id),
 					Name:    renderedTooltip,
@@ -941,6 +994,7 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 		Supported:   routing.Supported(),
 		DealsDamage: routing.Damage,
 		Heals:       routing.Heal,
+		Absorbs:     routing.Absorb,
 	}
 
 	groupName := ""
@@ -950,6 +1004,8 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 		groupName = "Damage"
 	case routing.Heal:
 		groupName = "Heals"
+	case routing.Absorb:
+		groupName = "Absorbs"
 	}
 	grp := groupMap[groupName]
 	grp.Name = groupName
@@ -971,13 +1027,13 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 }
 
 // The spell an on-use casts, read from the store the way the sim reads it: damage on the enemy it is
-// used on, or a heal on the wearer. What else the row does - a root, a stun - is left out, and the
-// summary names it.
+// used on, or a heal or an absorb on the wearer. What else the row does - a root, a stun - is left
+// out, and the summary names it.
 func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC) *ProcRouting {
 	spellID := int(itemEffect.BuffId)
 	routing := &ProcRouting{TriggerSpellID: spellID}
 	s := spelldata.Find(itemEffect.BuffId)
-	direct, periodic, heal := s.DamageEffect(), s.PeriodicDamageEffect(), s.ProcHealEffect()
+	direct, periodic, heal, absorb := s.DamageEffect(), s.PeriodicDamageEffect(), s.ProcHealEffect(), s.AbsorbEffect()
 
 	switch {
 	case !castsOnUse(parsed, spellID, instance):
@@ -1002,6 +1058,10 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 		routing.Heal = true
 		routing.Summary = onUseSummary(s, heal)
 		routing.Unsupported = append(routing.Unsupported, healUnsupported(s)...)
+	case absorb != spelldata.NilEffect:
+		routing.Absorb = true
+		routing.Summary = onUseSummary(s, absorb)
+		routing.Unsupported = append(routing.Unsupported, absorbUnsupported(s)...)
 	default:
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("%d deals no damage and heals no one (%s)", spellID, spellEffectKinds(instance, spellID)))
@@ -1058,8 +1118,24 @@ func (r *ProcRouting) OnUseConstructor() string {
 		return "NewSpellDataDamageOnUse"
 	case r.Heal:
 		return "NewSpellDataHealOnUse"
+	case r.Absorb:
+		return "NewSpellDataAbsorbOnUse"
 	default:
 		return "NewSimpleStatActive"
+	}
+}
+
+// The constructor an item or enchant proc registers through.
+func (r *ProcRouting) ProcConstructor() string {
+	switch {
+	case r.Damage:
+		return "NewSpellDataDamageProc"
+	case r.Heal:
+		return "NewSpellDataHealProc"
+	case r.Absorb:
+		return "NewSpellDataAbsorbProc"
+	default:
+		return "NewSpellDataProc"
 	}
 }
 
@@ -1195,6 +1271,7 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 
 	damage := dbc.ResolveDamageEffect(slot.SpellID)
 	heal := procHealSpell(int32(slot.SpellID))
+	absorb := procAbsorbSpell(int32(slot.SpellID))
 	switch {
 	case hasStats, multipliesStats:
 		routing.requireABuffDuration()
@@ -1206,6 +1283,8 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 		}
 	case heal != 0:
 		routing.asHeal(heal)
+	case absorb != 0:
+		routing.asAbsorb(absorb)
 	default:
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))

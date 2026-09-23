@@ -135,6 +135,17 @@ func (s *Spell) PeriodicDamageEffect() *Effect {
 	return NilEffect
 }
 
+// The A_SCHOOL_ABSORB aura the spell applies, or NilEffect where it applies none. Its Misc is the mask
+// of the schools it absorbs, in core.SpellSchool's bits.
+func (s *Spell) AbsorbEffect() *Effect {
+	for i := range s.Effects {
+		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_SCHOOL_ABSORB {
+			return e
+		}
+	}
+	return NilEffect
+}
+
 func (s *Spell) EnergizeEffect() *Effect {
 	return s.firstOfType(dbcenums.E_ENERGIZE)
 }

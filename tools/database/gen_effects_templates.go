@@ -116,7 +116,7 @@ func RegisterAllProcs() {
 	{{- if .Supported}}
 		{{- if .Proc}}
 			// {{ .Proc.Summary }}
-			shared.{{ if .Proc.Damage }}NewSpellDataDamageProc{{ else if .Proc.Heal }}NewSpellDataHealProc{{ else }}NewSpellDataProc{{ end }}(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
+			shared.{{ .Proc.ProcConstructor }}(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
 				[]shared.ItemVariant{
 				{{- range .Variants }}
 				{ItemID: {{.ID}}, ItemName: "{{.Name}}"},
@@ -183,7 +183,7 @@ func RegisterAllProcs() {
 		{{- if .Proc}}
 			// unsupported: {{ .Proc.Reason }}
 			// {{ .Proc.Summary }}
-			// shared.{{ if .Proc.Damage }}NewSpellDataDamageProc{{ else if .Proc.Heal }}NewSpellDataHealProc{{ else }}NewSpellDataProc{{ end }}(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
+			// shared.{{ .Proc.ProcConstructor }}(shared.SpellDataProc{TriggerSpellID: {{ .Proc.TriggerSpellID }}{{ if .Proc.BuffSpellID }}, BuffSpellID: {{ .Proc.BuffSpellID }}{{ end }}{{ if .Proc.IsWeaponProc }}, IsWeaponProc: true{{ end }}},
 			//	[]shared.ItemVariant{
 			{{- range .Variants }}
 			//	{ItemID: {{.ID}}, ItemName: "{{.Name}}"},
@@ -263,7 +263,7 @@ func RegisterAllEnchants() {
 	{{- if .Proc}}
 		{{- if .Supported}}
 		// {{ .Proc.Summary }}
-		shared.{{ if .Proc.Damage }}NewSpellDataDamageProc{{ else if .Proc.Heal }}NewSpellDataHealProc{{ else }}NewSpellDataProc{{ end }}(shared.SpellDataProc{
+		shared.{{ .Proc.ProcConstructor }}(shared.SpellDataProc{
 			{{- with index .Variants 0 }}
 			Name:           "{{ .Name }}",
 			EnchantID:      {{ .ID }},
@@ -285,7 +285,7 @@ func RegisterAllEnchants() {
 		{{- else}}
 		// unsupported: {{ .Proc.Reason }}
 		// {{ .Proc.Summary }}
-		// shared.{{ if .Proc.Damage }}NewSpellDataDamageProc{{ else if .Proc.Heal }}NewSpellDataHealProc{{ else }}NewSpellDataProc{{ end }}(shared.SpellDataProc{
+		// shared.{{ .Proc.ProcConstructor }}(shared.SpellDataProc{
 		{{- with index .Variants 0 }}
 		//	Name:           "{{ .Name }}",
 		//	EnchantID:      {{ .ID }},

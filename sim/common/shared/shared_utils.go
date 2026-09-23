@@ -957,6 +957,24 @@ func procDamageTarget(character *core.Character, callback core.AuraCallback, spe
 }
 
 func registerSpellDataHealProc(cfg SpellDataProc) {
+	registerSpellDataSelfProc(cfg, spellDataProcHealSpell)
+}
+
+// An item or enchant proc whose spell shields the wearer with an A_SCHOOL_ABSORB aura. BuffSpellID
+// names that spell.
+func NewSpellDataAbsorbProc(cfg SpellDataProc, variants []ItemVariant) {
+	forEachSpellDataVariant(cfg, variants, registerSpellDataAbsorbProc)
+}
+
+func registerSpellDataAbsorbProc(cfg SpellDataProc) {
+	sourceID := cfg.effectSource().id
+	registerSpellDataSelfProc(cfg, func(character *core.Character, absorb *spelldata.Spell) core.SpellConfig {
+		return spellDataAbsorbSpell(character, absorb, sourceID)
+	})
+}
+
+// A proc that casts BuffSpellID's spell on the wearer, as spellConfig builds it.
+func registerSpellDataSelfProc(cfg SpellDataProc, spellConfig func(*core.Character, *spelldata.Spell) core.SpellConfig) {
 	source := cfg.effectSource()
 
 	// Soft fail to allow for overrides for bad effects
@@ -965,7 +983,7 @@ func registerSpellDataHealProc(cfg SpellDataProc) {
 	}
 
 	trigger := cfg.trigger()
-	heal := spelldata.MustFind(cfg.BuffSpellID)
+	row := spelldata.MustFind(cfg.BuffSpellID)
 
 	// A listener with no callback never fires, and the row says so before any character exists.
 	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
@@ -973,17 +991,17 @@ func registerSpellDataHealProc(cfg SpellDataProc) {
 	}
 
 	source.registerEffect(func(agent core.Agent) {
-		applySpellDataHealProc(agent, cfg, source, trigger, heal)
+		applySpellDataSelfProc(agent, cfg, source, trigger, spellConfig(agent.GetCharacter(), row))
 	})
 }
 
-func applySpellDataHealProc(agent core.Agent, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, heal *spelldata.Spell) {
+func applySpellDataSelfProc(agent core.Agent, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, spellConfig core.SpellConfig) {
 	character := agent.GetCharacter()
-	healSpell := character.RegisterSpell(spellDataProcHealSpell(character, heal))
+	selfSpell := character.RegisterSpell(spellConfig)
 
 	config := spellDataDamageTrigger(character, cfg, source, trigger)
 	config.Handler = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-		healSpell.Cast(sim, &character.Unit)
+		selfSpell.Cast(sim, &character.Unit)
 	}
 	config.TriggerImmediately = true
 
@@ -1153,6 +1171,45 @@ func onUseTickOutcome(damage *spelldata.Spell, dot *core.Dot) core.OutcomeApplie
 // An on-use item whose spell heals the wearer, at once or over time.
 func NewSpellDataHealOnUse(itemID int32) {
 	registerSpellDataOnUse(itemID, core.CooldownTypeSurvival, spellDataProcHealSpell)
+}
+
+// An on-use item whose spell shields the wearer with an A_SCHOOL_ABSORB aura.
+func NewSpellDataAbsorbOnUse(itemID int32) {
+	registerSpellDataOnUse(itemID, core.CooldownTypeSurvival, func(character *core.Character, absorb *spelldata.Spell) core.SpellConfig {
+		return spellDataAbsorbSpell(character, absorb, itemID)
+	})
+}
+
+// The shield the row applies to the caster: the amount its absorb effect rolls, taken off the damage
+// of the schools the effect's Misc masks, for the row's duration. A second cast replaces the shield
+// left. The label carries the item or enchant, since two of them may apply the same row.
+func spellDataAbsorbSpell(character *core.Character, absorb *spelldata.Spell, sourceID int32) core.SpellConfig {
+	effect := absorb.AbsorbEffect()
+	schools := core.SpellSchool(effect.Misc)
+
+	var amount float64
+	shield := character.NewDamageAbsorptionAura(core.AbsorptionAuraConfig{
+		Aura: spelldata.AuraConfig(absorb, spelldata.Label(fmt.Sprintf("%s %d", absorb.Name, sourceID))),
+		ShieldStrengthCalculator: func(_ *core.Unit) float64 {
+			return amount
+		},
+		ShouldApplyToResult: func(_ *core.Simulation, spell *core.Spell, _ *core.SpellResult, _ bool) bool {
+			return spell.SpellSchool.Matches(schools)
+		},
+	})
+
+	config := spelldata.SpellConfig(&character.Unit, absorb, spelldata.Proc())
+	config.ProcMask = core.ProcMaskEmpty
+	if absorb.IsAProc() {
+		config.Flags |= core.SpellFlagProc
+	}
+	config.RelatedSelfBuff = shield.Aura
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+		amount = effect.Roll(sim, character.Level)
+		shield.Activate(sim)
+	}
+
+	return config
 }
 
 // The spell a proc of the same row would cast, used from the item instead: it is the item's action,
