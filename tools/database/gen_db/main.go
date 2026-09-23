@@ -878,6 +878,7 @@ func addSpellIcons(db *database.WowDatabase, spellIds []int32, icons map[int]dat
 // item, so ours fills that too.
 func FillArmorFromOurs(db *database.WowDatabase, ours *database.WowDatabase) {
 	armor, bonus, feral := int32(proto.Stat_StatArmor), int32(proto.Stat_StatBonusArmor), int32(proto.Stat_StatFeralAttackPower)
+	block := int32(proto.Stat_StatBlockValue)
 	for id, item := range db.Items {
 		our, ok := ours.Items[id]
 		if !ok || our == item {
@@ -893,6 +894,11 @@ func FillArmorFromOurs(db *database.WowDatabase, ours *database.WowDatabase) {
 			}
 			if opt.Stats[armor] == 0 && ourOpt.Stats[armor] > opt.Stats[bonus] {
 				opt.Stats[armor] = ourOpt.Stats[armor] - opt.Stats[bonus]
+			}
+			// The client ships no block value; the generator's comes from a TBC game table (73 for an
+			// item level 78 epic shield). Ours is Wowhead Forever's: Grand Marshal's Aegis shows 55.
+			if ourOpt.Stats[block] != 0 {
+				opt.Stats[block] = ourOpt.Stats[block]
 			}
 			if opt.Stats[feral] == 0 && ourOpt.Stats[feral] != 0 {
 				opt.Stats[feral] = ourOpt.Stats[feral]
