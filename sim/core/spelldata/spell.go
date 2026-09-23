@@ -150,6 +150,21 @@ func (s *Spell) EnergizeEffect() *Effect {
 	return s.firstOfType(dbcenums.E_ENERGIZE)
 }
 
+// The effect a resource gain lands through: E_ENERGIZE, an amount into the bar its misc value names
+// (Burst of Energy 24532 reads 60 energy), or an A_PERIODIC_ENERGIZE aura that restores the amount
+// every period (Earthen Sigil 24884 reads 40 mana every 1 s).
+func (s *Spell) ProcEnergizeEffect() *Effect {
+	if e := s.EnergizeEffect(); e != NilEffect {
+		return e
+	}
+	for i := range s.Effects {
+		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_PERIODIC_ENERGIZE {
+			return e
+		}
+	}
+	return NilEffect
+}
+
 // The effect that ticks: an aura application whose aura carries a per-tick value, which is damage,
 // healing, mana or a spell fired each tick.
 func (s *Spell) PeriodicEffect() *Effect {
