@@ -33,12 +33,18 @@ func (warrior *Warrior) registerBattleShout() {
 	}
 
 	auras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
+		// The party's Battle Shout registers the external copy before this runs, and that copy
+		// keeps the build phase it was registered with.
+		partyShout := !castsOwnShout && unit.GetAuraByID(core.ActionID{SpellID: battleShoutRank.ID}.WithTag(-1)) != nil
+
 		// Booming Voice widens the radius only, so the aura takes no talent points.
 		aura := buffs.BattleShoutAura(unit, castsOwnShout, 0)
 		if shoutsWithTheSet {
 			core.AddGeneratedFlatBonus(aura, stats.AttackPower, battleShoutBase, buffs.BattleShoutT2Bonus)
 		}
-		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
+		if !partyShout {
+			aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
+		}
 		return aura
 	})
 
