@@ -31,6 +31,15 @@ const (
 	increasedPetDamage int32 = 27206
 	increasedPetArmor  int32 = 27225
 
+	// Nightfall 19169's chance on hit: 23605, A_MOD_DAMAGE_PERCENT_TAKEN +15% misc 126 on the target
+	// for 5 s. The row states no chance, so the tests hand the proc one.
+	spellVulnerability int32 = 23605
+
+	// Sword of Zeal 6622's chance on hit: 8191, +10 physical damage done (A_MOD_DAMAGE_DONE misc 1) and
+	// +150 armor (A_MOD_RESISTANCE misc 1) for 15 s, which the item effect carries as its stats. The row
+	// states no chance either.
+	zeal int32 = 8191
+
 	petClawID int32 = 992004
 )
 
@@ -39,7 +48,12 @@ func init() {
 		proto.Player_RestorationShaman{},
 		proto.Spec_SpecRestorationShaman,
 		func(character *core.Character, _ *proto.Player, _ *proto.Raid) core.Agent {
-			return &auraTester{Character: *character}
+			tester := &auraTester{Character: *character}
+			tester.EnableAutoAttacks(tester, core.AutoAttackOptions{
+				MainHand:       tester.WeaponFromMainHand(),
+				AutoSwingMelee: true,
+			})
+			return tester
 		},
 		func(player *proto.Player, spec interface{}) {
 			player.Spec = spec.(*proto.Player_RestorationShaman)
@@ -174,6 +188,9 @@ func newAuraSimIn(areas []proto.AreaType, players ...*proto.Player) *core.Simula
 		},
 	}, simsignals.CreateSignals())
 	sim.Reset()
+	for _, player := range sim.Raid.Parties[0].Players {
+		player.GetCharacter().AutoAttacks.CancelAutoSwing(sim)
+	}
 	return sim
 }
 
@@ -322,5 +339,103 @@ func TestBeastmastersBootsRaiseThePetsDamage(t *testing.T) {
 	}
 	if got := owner.pet.GetStat(stats.Armor); got != bare.pet.GetStat(stats.Armor) {
 		t.Errorf("the tunic changed the pet's armor to %v", got)
+	}
+}
+
+// Lands the wielder's strike on the target, then steps past the batch window a proc's handler waits.
+func strikeAndStep(t *testing.T, sim *core.Simulation, wielder *auraTester, target *core.Unit) {
+	t.Helper()
+	wielder.strike.Cast(sim, target)
+	stepPast(t, sim, sim.CurrentTime+core.SpellBatchWindow+time.Millisecond)
+}
+
+// Nightfall's debuff raises the spell damage the target takes by 15% for 5 s, whoever casts at it,
+// and leaves physical hits alone.
+func TestNightfallRaisesTheTargetsSpellDamageTaken(t *testing.T) {
+	const itemID int32 = 992301
+	withAuraItem(itemID, proto.ItemType_ItemTypeWeapon,
+		&proto.ItemEffect{BuffId: spellVulnerability, Effect: &proto.ItemEffect_Proc{Proc: &proto.ProcEffect{}}})
+	NewSpellDataAuraProc(SpellDataProc{TriggerSpellID: spellVulnerability, IsWeaponProc: true, ProcChancePct: 100},
+		[]ItemVariant{{ItemID: itemID, ItemName: "Test Nightfall"}})
+
+	sim := newAuraSim(
+		shaman("Wielder", map[proto.ItemSlot]int32{proto.ItemSlot_ItemSlotMainHand: itemID}),
+		shaman("Caster", nil),
+	)
+	wielder, caster := auraTesterAt(sim, 0), auraTesterAt(sim, 1)
+	target := sim.Encounter.ActiveTargetUnits[0]
+
+	if got := dealt(sim, caster.bolt, target); !near(got, 100) {
+		t.Fatalf("before the proc a second caster's bolt dealt %v, want 100", got)
+	}
+
+	strikeAndStep(t, sim, wielder, target)
+	procTime := sim.CurrentTime
+	debuff := target.GetAura("Spell Vulnerability")
+	if !debuff.IsActive() {
+		t.Fatalf("a strike at 100%% chance put no Spell Vulnerability on the target")
+	}
+
+	if got := dealt(sim, caster.bolt, target); !near(got, 115) {
+		t.Errorf("with the debuff up a second caster's bolt dealt %v, want 115", got)
+	}
+	if got := dealt(sim, wielder.bolt, target); !near(got, 115) {
+		t.Errorf("with the debuff up the wielder's bolt dealt %v, want 115", got)
+	}
+	if got := dealt(sim, caster.strike, target); !near(got, 100) {
+		t.Errorf("with the debuff up a physical strike dealt %v, want 100", got)
+	}
+
+	stepPast(t, sim, procTime+5*time.Second+time.Millisecond)
+	if debuff.IsActive() {
+		t.Errorf("Spell Vulnerability is still up after its 5 s")
+	}
+	if got := dealt(sim, caster.bolt, target); !near(got, 100) {
+		t.Errorf("after the debuff a second caster's bolt dealt %v, want 100", got)
+	}
+}
+
+// Sword of Zeal's buff adds 10 to each physical hit and 150 armor for its 15 s.
+func TestSwordOfZealAddsPhysicalDamageAndArmor(t *testing.T) {
+	const itemID int32 = 992302
+	withAuraItem(itemID, proto.ItemType_ItemTypeWeapon, &proto.ItemEffect{
+		BuffId:           zeal,
+		EffectDurationMs: 15000,
+		Effect:           &proto.ItemEffect_Proc{Proc: &proto.ProcEffect{}},
+		ScalingOptions: map[int32]*proto.ScalingItemEffectProperties{0: {Stats: map[int32]float64{
+			int32(proto.Stat_StatArmor): 150, int32(proto.Stat_StatPhysicalDamage): 10,
+		}}},
+	})
+	NewSpellDataProc(SpellDataProc{TriggerSpellID: zeal, IsWeaponProc: true, ProcChancePct: 100},
+		[]ItemVariant{{ItemID: itemID, ItemName: "Test Sword of Zeal"}})
+
+	sim := newAuraSim(shaman("Wielder", map[proto.ItemSlot]int32{proto.ItemSlot_ItemSlotMainHand: itemID}))
+	wielder := auraTesterAt(sim, 0)
+	target := sim.Encounter.ActiveTargetUnits[0]
+	armor := wielder.GetStat(stats.Armor)
+
+	strikeAndStep(t, sim, wielder, target)
+	procTime := sim.CurrentTime
+	if got := wielder.GetStat(stats.Armor) - armor; !near(got, 150) {
+		t.Errorf("Zeal added %v armor, want 150", got)
+	}
+	if got := dealt(sim, wielder.strike, target); !near(got, 110) {
+		t.Errorf("with Zeal up a physical strike dealt %v, want 110", got)
+	}
+	if got := dealt(sim, wielder.bolt, target); !near(got, 100) {
+		t.Errorf("with Zeal up an arcane bolt dealt %v, want 100", got)
+	}
+
+	stepPast(t, sim, procTime+15*time.Second-time.Millisecond)
+	if got := wielder.GetStat(stats.Armor) - armor; !near(got, 150) {
+		t.Errorf("Zeal's armor is %v just before its 15 s run out, want 150", got)
+	}
+	// The strike above procced again, a batch window after it landed.
+	stepPast(t, sim, procTime+15*time.Second+core.SpellBatchWindow+time.Millisecond)
+	if got := wielder.GetStat(stats.Armor) - armor; got != 0 {
+		t.Errorf("Zeal's armor is %v after its 15 s, want none", got)
+	}
+	if got := dealt(sim, wielder.bolt, target); !near(got, 100) {
+		t.Errorf("after Zeal an arcane bolt dealt %v, want 100", got)
 	}
 }

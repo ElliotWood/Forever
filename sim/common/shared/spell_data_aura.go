@@ -64,6 +64,51 @@ func (auras *spellDataAuras) activate(sim *core.Simulation, target *core.Unit) {
 	auras.enemies.Get(target).Activate(sim)
 }
 
+// An item or enchant proc whose buff applies auras: the wearer's, its pets' and the debuff on the unit
+// the proc answers, for the buff's duration.
+func NewSpellDataAuraProc(cfg SpellDataProc, variants []ItemVariant) {
+	forEachSpellDataVariant(cfg, variants, registerSpellDataAuraProc)
+}
+
+func registerSpellDataAuraProc(cfg SpellDataProc) {
+	source := cfg.effectSource()
+
+	// Soft fail to allow for overrides for bad effects
+	if source.isAlreadyImplemented() {
+		return
+	}
+
+	trigger := cfg.trigger()
+	buff := trigger
+	if cfg.BuffSpellID != 0 {
+		buff = spelldata.MustFind(cfg.BuffSpellID)
+	}
+
+	// A listener with no callback never fires, and the row says so before any character exists.
+	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
+		return
+	}
+
+	source.registerEffect(func(agent core.Agent) {
+		character := agent.GetCharacter()
+
+		config := spelldata.AuraConfig(buff, spelldata.Label(cfg.Name+" Proc"))
+		config.Duration = procBuffDuration(cfg, trigger, buff)
+		auras := newSpellDataAuras(character, buff, config)
+
+		proc := spellDataDamageTrigger(character, cfg, source, trigger)
+		if proc.ICD == 0 && buff.ID != trigger.ID {
+			proc.ICD = buff.CategoryCooldown()
+		}
+		callback := proc.Callback
+		proc.Handler = func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			auras.activate(sim, procDamageTarget(character, callback, spell, result))
+		}
+
+		source.registerProc(character, character.MakeProcTriggerAura(proc), source.eligibleSlots(character))
+	})
+}
+
 // An item whose equip spell applies auras: the row's auras on the wearer and on each summoned pet for
 // as long as the item is worn. An equip spell that only re-applies another aura on a period is read as
 // that aura.

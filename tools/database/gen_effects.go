@@ -92,6 +92,8 @@ type Entry struct {
 	Absorbs bool
 	// The same for an effect that puts a debuff on the enemy it lands on.
 	Debuffs bool
+	// The same for an effect that applies auras.
+	AppliesAuras bool
 	// What a registered on-use leaves out, stated beside its call.
 	NotSimulated string
 }
@@ -204,6 +206,12 @@ func (r *ProcRouting) asDebuff(debuffSpellID int32) {
 
 func debuffsTheTarget(spellID int32) bool {
 	return spelldata.Find(spellID).DebuffsTheTarget()
+}
+
+// A proc whose buff applies auras the stat path cannot state, read from that buff's own row.
+func (r *ProcRouting) asAura(buff *spelldata.Spell) {
+	r.Aura = true
+	r.Unsupported = append(r.Unsupported, spelldata.ItemAuraUnsupported(buff, false)...)
 }
 
 func healUnsupported(heal *spelldata.Spell) []string {
@@ -964,7 +972,20 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 				}
 			}
 
-			if (!grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && !entry.Debuffs) || !entry.Supported {
+			// The same for an effect whose spell applies auras the stat path cannot state: on the
+			// wearer, its pets, or the enemy the proc answers.
+			if !grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && !entry.Debuffs {
+				if buff := spelldata.Find(itemEffect.BuffId); appliesAnItemAura(buff) {
+					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
+					if entry.Proc != nil {
+						entry.Proc.asAura(buff)
+						entry.Supported = entry.Proc.Supported()
+						entry.AppliesAuras = true
+					}
+				}
+			}
+
+			if (!grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && !entry.Debuffs && !entry.AppliesAuras) || !entry.Supported {
 				StoreMissingEffect("ItemEffects", parsed.Name, Variant{
 					ID:      int(parsed.Id),
 					Name:    renderedTooltip,
