@@ -1739,7 +1739,8 @@ the manifest, for the one moment the sim cannot build: before protoc has seen a 
 ### The guard tests
 
 `go test ./tools/database/...` needs no client database and runs in CI; only
-`TestManifestAnchorsMatchTheClient` and `TestGeneratedRankTablesMatchTheDatabase` skip without one.
+`TestManifestAnchorsMatchTheClient`, `TestGeneratedRankTablesMatchTheDatabase` and
+`TestProcShapeOfNamedSpells` skip without one.
 
 | Test                                                                                                              | What it holds                                                                                                                                        |
 | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
