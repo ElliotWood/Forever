@@ -599,12 +599,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		19344, // Natural Alignment Crystal
-		[
-			"Aligns the Shaman with nature, increasing spell damage by 20%, improving heal effects by 20%, and increasing mana cost of spells by 20% for 20s.", // 23734 - https://www.wowhead.com/forever/spell=23734
-		]
-	],
-	[
 		19345, // Aegis of Preservation
 		[
 			"Increases armor by 500, and heals 35 damage every time you take ranged or melee damage for 20s.", // 23780 - https://www.wowhead.com/forever/spell=23780
