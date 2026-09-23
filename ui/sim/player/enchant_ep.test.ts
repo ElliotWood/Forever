@@ -13,13 +13,11 @@ import { Player } from './player';
 
 const weights = Stats.fromMap({ [Stat.StatStrength]: 2 }, { [PseudoStat.PseudoStatMainHandDps]: 10, [PseudoStat.PseudoStatOffHandDps]: 4 });
 
-const computeEnchantEP = (enchant: Enchant, slot?: ItemSlot, weapon?: Item | null, epWeights: Stats = weights) =>
-	Player.prototype.computeEnchantEP.call(
-		{ enchantEPCache: new Map<number, number>(), computeStatsEP: (stats: Stats) => stats.computeEP(epWeights) } as unknown as Player<any>,
-		enchant,
-		slot,
-		weapon,
-	);
+const computeEnchantEP = (enchant: Enchant, slot?: ItemSlot, weapon?: Item | null, epWeights: Stats = weights) => {
+	const player = { enchantEPCache: new Map<number, number>(), computeStatsEP: (stats: Stats) => stats.computeEP(epWeights) } as unknown as Player<any>;
+	const epPerWeaponDps = slot === undefined ? 0 : Player.prototype.computeWeaponDpsEP.call(player, slot);
+	return Player.prototype.computeEnchantEP.call(player, enchant, weapon?.weaponSpeed ?? 0, epPerWeaponDps);
+};
 
 const striking = Enchant.create({ effectId: 1897, weaponDamage: 5 });
 const sword = Item.create({ id: 1, weaponSpeed: 2.5 });
