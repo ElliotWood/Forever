@@ -376,8 +376,8 @@ func loadStoreInputs(db *sql.DB, ladderIDs []int32, trees map[int]int) (*storeIn
 		return nil, err
 	}
 
-	// The store's extra ids are captured as rows but not as roots: the rendering re-reads them from
-	// extra_ids.go, so what is captured has to be everything that rendering will reach - or an extra
+	// The extra spells are captured as rows but not as roots: the rendering adds them again from
+	// overrides.ExtraSpells, so what is captured has to be everything that rendering will reach - or an extra
 	// id would render as a row with a name and nothing else, whether or not the store was
 	// regenerated - while the roots stay what the client alone says they are.
 	withExtras, err := withExtraIDs(tables, roots)

@@ -114,7 +114,7 @@ func Find(id int32) *Spell {
 func MustFind(id int32) *Spell {
 	s := Find(id)
 	if s == Nil {
-		panic(fmt.Sprintf("spelldata: spell %d is not in the store (regenerate or add it to extra_ids.go)", id))
+		panic(fmt.Sprintf("spelldata: spell %d is not in the store (regenerate or add it to tools/database/overrides/extra_spells.go)", id))
 	}
 	return s
 }

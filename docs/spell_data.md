@@ -568,10 +568,11 @@ carry, and two overrides of the same field on one spell. Every one that is appli
 `// override: <field> <value> -- <reason>` comment on the row it wrote to, so reading the generated
 store says which numbers are not the client's.
 
-`sim/core/spelldata/extra_ids.go` is the other hand-kept list: spells the generator force-includes
-although no class, item, enchant or set reaches them. It is empty today, and each entry that joins it
-says why. The generator re-reads that file from source while it renders, so adding an id without
-regenerating fails the check rather than shipping a store that does not match its own source.
+`tools/database/overrides/extra_spells.go` is the other hand-kept list: spells the generator
+force-includes although no class, item, enchant or set reaches them. It is empty today. Each entry
+states a reason and a source like an override, and the generator refuses one without a reason. The
+extras are added while the store renders, so adding one without regenerating fails the check rather
+than shipping a store that does not match its source.
 
 ## Reading a row by hand
 
