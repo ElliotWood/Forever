@@ -137,7 +137,7 @@ func humaniseAura(s *spelldata.Spell, e *spelldata.Effect) string {
 // An aura on the caster is the ordinary case and says nothing worth a clause, so only an aura
 // reaching somebody else names who.
 func auraTarget(e *spelldata.Effect) string {
-	if dbcenums.ImplicitTarget(e.Target[0]) == dbcenums.TARGET_UNIT_CASTER {
+	if e.Target[0] == dbcenums.TARGET_UNIT_CASTER {
 		return ""
 	}
 	return targetPhrase(e)
@@ -501,7 +501,7 @@ func targetPhrase(e *spelldata.Effect) string {
 	return targetWord(e.Target[0], first)
 }
 
-func targetWord(t uint8, named implicitTarget) string {
+func targetWord(t dbcenums.ImplicitTarget, named implicitTarget) string {
 	if named.phrase != "" {
 		return named.phrase
 	}

@@ -18,6 +18,7 @@ func generatedStore() func() {
 	return func() {
 		setSpells(fixture())
 		curves = map[int32][][]float64{}
+		handTriggers = map[int32][]int32{}
 	}
 }
 

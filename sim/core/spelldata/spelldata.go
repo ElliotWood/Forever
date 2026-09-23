@@ -214,7 +214,7 @@ type Effect struct {
 	PointsPerResource float32
 
 	// ImplicitTarget_0/_1.
-	Target [2]uint8
+	Target [2]dbcenums.ImplicitTarget
 
 	// EffectAttributes.
 	Attributes int32

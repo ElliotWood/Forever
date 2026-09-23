@@ -69,7 +69,7 @@ func renderStoreFile(rows []storeSpell, curves map[int32][][]float64, hand map[i
 
 // One row per line, with its effects and powers under it: a field the client leaves at zero is left
 // out, so what the row states is what the client states. The fields are the mirror's, in the order
-// it declares them, which spelldata_mirror_test.go holds to the store's own.
+// it declares them; spelldata_mirror_test.go holds their names to the store's own.
 func formatStoreRow(s storeSpell, namer *rankEnumNamer) string {
 	var b strings.Builder
 	fmt.Fprintf(&b, "{%s", storeFields(reflect.ValueOf(s), namer))

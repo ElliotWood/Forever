@@ -77,6 +77,7 @@ func fixture() []Spell {
 }
 
 func TestMain(m *testing.M) {
+	handTriggers = map[int32][]int32{}
 	setSpells(fixture())
 	curves = map[int32][][]float64{}
 	os.Exit(m.Run())

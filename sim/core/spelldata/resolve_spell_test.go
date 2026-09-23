@@ -21,46 +21,46 @@ func resolverRows() []Spell {
 			CooldownMs: 6000, GCDMs: 1500, StartRecoveryCategory: 133, MaxRange: 5,
 			ClassFlags: core.ClassFlags{Family: 4, Mask: [4]uint32{0: 0x20}},
 			Effects: []Effect{
-				{SpellID: 100, Type: dbcenums.E_WEAPON_PERCENT_DAMAGE, BasePoints: 100, Target: [2]uint8{6, 0}},
+				{SpellID: 100, Type: dbcenums.E_WEAPON_PERCENT_DAMAGE, BasePoints: 100, Target: [2]dbcenums.ImplicitTarget{6, 0}},
 			},
 			Powers: []Power{{Type: 1, Cost: 300}},
 		},
 		{
 			ID: 200, Name: "Category Only", School: 1, DefenseType: 2,
 			CategoryCooldownMs: 6000, GCDMs: 1500, StartRecoveryCategory: 133, Category: testCategory,
-			Effects: []Effect{{SpellID: 200, Type: dbcenums.E_SCHOOL_DAMAGE, Target: [2]uint8{6, 0}}},
+			Effects: []Effect{{SpellID: 200, Type: dbcenums.E_SCHOOL_DAMAGE, Target: [2]dbcenums.ImplicitTarget{6, 0}}},
 			Powers:  []Power{{Type: 1, Cost: 150}},
 		},
 		{
 			ID: 250, Name: "Physical Shout", School: 1, DefenseType: 1,
 			GCDMs: 1500, StartRecoveryCategory: 133,
-			Effects: []Effect{{SpellID: 250, Type: dbcenums.E_APPLY_AURA, Target: [2]uint8{20, 0}}},
+			Effects: []Effect{{SpellID: 250, Type: dbcenums.E_APPLY_AURA, Target: [2]dbcenums.ImplicitTarget{20, 0}}},
 			Powers:  []Power{{Type: 1, Cost: 100}},
 		},
 		{
 			ID: 300, Name: "Own And Category", School: 1, DefenseType: 2,
 			CooldownMs: 30000, CategoryCooldownMs: 6000, GCDMs: 1500, StartRecoveryCategory: 133,
 			Category: testCategory,
-			Effects:  []Effect{{SpellID: 300, Type: dbcenums.E_SCHOOL_DAMAGE, Target: [2]uint8{6, 0}}},
+			Effects:  []Effect{{SpellID: 300, Type: dbcenums.E_SCHOOL_DAMAGE, Target: [2]dbcenums.ImplicitTarget{6, 0}}},
 		},
 		{
 			ID: 350, Name: "Categoryless Cooldown", School: 1, DefenseType: 2,
 			CategoryCooldownMs: 8000, GCDMs: 1500, StartRecoveryCategory: 133,
-			Effects: []Effect{{SpellID: 350, Type: dbcenums.E_SCHOOL_DAMAGE, Target: [2]uint8{6, 0}}},
+			Effects: []Effect{{SpellID: 350, Type: dbcenums.E_SCHOOL_DAMAGE, Target: [2]dbcenums.ImplicitTarget{6, 0}}},
 		},
 		{
 			ID: 400, Name: "Mana Caster", Rank: "Rank 7", School: 16, DefenseType: 1, Speed: 24,
 			CastTimeMs: 2500, GCDMs: 1500, StartRecoveryCategory: 133, MinRange: 8, MaxRange: 30,
 			Effects: []Effect{
 				{SpellID: 400, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 500, SPCoef: 0.814,
-					Target: [2]uint8{6, 0}},
+					Target: [2]dbcenums.ImplicitTarget{6, 0}},
 			},
 			Powers: []Power{{Type: 0, Cost: 425, CostPct: 19}},
 		},
 		{
 			ID: 500, Name: "Passive Aura", Rank: "Passive",
 			Attr:    [17]uint32{dbcenums.ATTR_INDEX_BASE: dbcenums.ATTR_PASSIVE},
-			Effects: []Effect{{SpellID: 500, Type: dbcenums.E_APPLY_AURA, Target: [2]uint8{1, 0}}},
+			Effects: []Effect{{SpellID: 500, Type: dbcenums.E_APPLY_AURA, Target: [2]dbcenums.ImplicitTarget{1, 0}}},
 		},
 		{
 			ID: 600, Name: "Energy Channel", School: 8, DefenseType: 1,
@@ -69,18 +69,18 @@ func resolverRows() []Spell {
 				dbcenums.ATTR_INDEX_EX_4: dbcenums.ATTR_EX_4_SUPPRESS_WEAPON_PROCS,
 			},
 			DurationMs: 6000, GCDMs: 1000, StartRecoveryCategory: 133,
-			Effects: []Effect{{SpellID: 600, Type: dbcenums.E_APPLY_AURA, Target: [2]uint8{6, 0}}},
+			Effects: []Effect{{SpellID: 600, Type: dbcenums.E_APPLY_AURA, Target: [2]dbcenums.ImplicitTarget{6, 0}}},
 			Powers:  []Power{{Type: 3, Cost: 60}},
 		},
 		{
 			ID: 700, Name: "Raid Heal", School: 2, DefenseType: 1,
 			Effects: []Effect{{SpellID: 700, Type: dbcenums.E_HEAL, BasePoints: 900, SPCoef: 0.6,
-				Target: [2]uint8{57, 0}}},
+				Target: [2]dbcenums.ImplicitTarget{57, 0}}},
 			Powers: []Power{{Type: 2, Cost: 40}},
 		},
 		{
 			ID: 750, Name: "Percent Cost Form", School: 1,
-			Effects: []Effect{{SpellID: 750, Type: dbcenums.E_APPLY_AURA, Target: [2]uint8{1, 0}}},
+			Effects: []Effect{{SpellID: 750, Type: dbcenums.E_APPLY_AURA, Target: [2]dbcenums.ImplicitTarget{1, 0}}},
 			Powers:  []Power{{Type: 0, CostPct: 4}},
 		},
 		{
@@ -91,17 +91,17 @@ func resolverRows() []Spell {
 			MaxStack:              5,
 			Effects: []Effect{
 				{SpellID: 800, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_DAMAGE,
-					BasePoints: 70, PPL: 1, SpellLevel: 50, PeriodMs: 3000, SPCoef: 0.1, Target: [2]uint8{6, 0}},
+					BasePoints: 70, PPL: 1, SpellLevel: 50, PeriodMs: 3000, SPCoef: 0.1, Target: [2]dbcenums.ImplicitTarget{6, 0}},
 			},
 			Powers: []Power{{Type: 1, Cost: 100}},
 		},
 		{
 			ID: 900, Name: "Permanent Charge Aura", DurationMs: -1, ProcCharges: 3,
-			Effects: []Effect{{SpellID: 900, Type: dbcenums.E_APPLY_AURA, Target: [2]uint8{1, 0}}},
+			Effects: []Effect{{SpellID: 900, Type: dbcenums.E_APPLY_AURA, Target: [2]dbcenums.ImplicitTarget{1, 0}}},
 		},
 		{
 			ID: 1000, Name: "Tickless Aura", DurationMs: 10000,
-			Effects: []Effect{{SpellID: 1000, Type: dbcenums.E_APPLY_AURA, Target: [2]uint8{1, 0}}},
+			Effects: []Effect{{SpellID: 1000, Type: dbcenums.E_APPLY_AURA, Target: [2]dbcenums.ImplicitTarget{1, 0}}},
 		},
 	}
 }

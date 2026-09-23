@@ -121,7 +121,7 @@ type storeEffect struct {
 
 	PointsPerResource float64
 
-	Target [2]uint8
+	Target [2]dbcenums.ImplicitTarget
 
 	Attributes int32
 }
@@ -591,7 +591,7 @@ func (t *spellTables) loadEffects(db *sql.DB) error {
 			e.ClassFlags.Mask[i] = uint32(word)
 		}
 		e.Mechanic = uint8(mechanic)
-		e.Target = [2]uint8{uint8(target0), uint8(target1)}
+		e.Target = [2]dbcenums.ImplicitTarget{dbcenums.ImplicitTarget(target0), dbcenums.ImplicitTarget(target1)}
 
 		// The rows arrive in index order, so a second row at one index is the one just read. The
 		// store would carry both, and the position EffectN counts by would answer the first.

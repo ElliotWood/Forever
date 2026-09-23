@@ -90,7 +90,7 @@ type implicitTarget struct {
 // The ImplicitTarget values the store's rows carry, under the client's own numbering. The ones this
 // table leaves out read as "target N": naming a value the store carries only a handful of times, on
 // no evidence beyond its number, would put a guess where the literal already states the fact.
-var implicitTargets = map[uint8]implicitTarget{
+var implicitTargets = map[dbcenums.ImplicitTarget]implicitTarget{
 	1:  {phrase: "to the caster"},
 	2:  {phrase: "to a nearby enemy"},
 	3:  {phrase: "to a nearby party member"},
