@@ -28,6 +28,11 @@ const ResilienceRatingPerCritDamageReductionPercent = ResilienceRatingPerCritRed
 // Updated based on formulas supplied by InDebt on WoWSims Discord
 const EnemyAutoAttackAPCoefficient = 1.0 / (14.0 * 177.0)
 
+// Forever bosses take upstream wowsims/forever's value (their 62695f774). Neither number comes
+// from the client; the tie-breaker (client > beta logs > their code > ours) picks theirs.
+// Against 1/(14 x 177) a boss auto attack lands ~5.6% harder.
+const ForeverEnemyAutoAttackAPCoefficient = 0.00052
+
 const AverageMagicPartialResistPerLevelMultiplier = 0.02
 
 // IDs for items used in core
