@@ -312,7 +312,7 @@ func flatModAmount(e *spelldata.Effect) string {
 	case dbcenums.SPELLMOD_COST:
 		// Which conversion applies is the caster's bar, not the row's: the flat table divides by ten
 		// only for a unit with a rage bar, so both readings are stated.
-		return fmt.Sprintf("%s (%s on a rage or energy bar)", signed(value(e)), signed(tenths(e)))
+		return fmt.Sprintf("%s (%s on a rage bar)", signed(value(e)), signed(tenths(e)))
 	case dbcenums.SPELLMOD_CRITICAL_CHANCE, dbcenums.SPELLMOD_RESIST_MISS_CHANCE,
 		dbcenums.SPELLMOD_CHANCE_OF_SUCCESS:
 		return signedPercent(e)

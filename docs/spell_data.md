@@ -1231,15 +1231,11 @@ spellData.SealOfTheCrusader.ByRank(rank).Effects[0].High()   // 41 at rank 1, 18
 under `A_ADD_PCT_MODIFIER` and `A_ADD_FLAT_MODIFIER`, a stat under `A_MOD_TOTAL_STAT_PERCENTAGE`, a
 school mask under `A_MOD_DAMAGE_DONE`. There is no single enum for it, so it stays an int.
 
-For the two modifier auras the `SPELLMOD_*` constants name it. Those are the `SpellModOp` values
-hand-written in `sim/core/dbcenums/spellmods.go`, because the client ships no name list - each carries
-what it modifies and the talents it was read off. All 23 were then checked against [TrinityCore's `SpellModOp`][tc] (3.3.5) and
-[cmangos-tbc's][cm] (2.4.3), which agree with every value, and with every name except 24 and 27 where
-cmangos says `SPELL_BONUS_DAMAGE` and `MULTIPLE_VALUE`. No modifier effect in the tables uses a value
-outside those 23; the ones the cores name and TBC does not use are 13, 17, 20, 21 and 26.
+For the two modifier auras the `SPELLMOD_*` constants name it. Those are the `SpellModOp` values in
+`sim/core/dbcenums/spellmods.go`, written by hand because the client ships no name list; each says
+what it modifies. Ops 0 to 30 carry [TrinityCore's 3.3.5 names][tc], 31 to 40 its current ones.
 
 [tc]: https://github.com/TrinityCore/TrinityCore/blob/3.3.5/src/server/game/Spells/SpellDefines.h
-[cm]: https://github.com/cmangos/mangos-tbc/blob/master/src/game/Spells/SpellDefines.h
 
 ## Worked examples
 
