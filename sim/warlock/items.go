@@ -255,4 +255,51 @@ func init() {
 		})
 	})
 
+	// Hazza'rah's Charm of Destruction
+	// https://www.wowhead.com/forever/item=19957/hazzarahs-charm-of-destruction
+	//
+	// Use: Increases the critical hit chance of your Destruction spells by 10% for 20 sec (24543).
+	// 3 min cooldown, 20 sec on the burst trinket category. The client's class mask leaves out
+	// Incinerate, which Classic's Destruction flag took in.
+	core.NewItemEffect(19957, func(agent core.Agent) {
+		warlock := agent.(WarlockAgent).GetWarlock()
+		duration := time.Second * 20
+
+		aura := warlock.RegisterAura(core.Aura{
+			Label:    "Massive Destruction",
+			ActionID: core.ActionID{SpellID: 24543},
+			Duration: duration,
+		}).AttachSpellMod(core.SpellModConfig{
+			Kind:       core.SpellMod_BonusCrit_Percent,
+			FloatValue: 10,
+			ClassMask:  WarlockDestructionSpells &^ WarlockSpellIncinerate,
+		})
+
+		spell := warlock.RegisterSpell(core.SpellConfig{
+			ActionID:    core.ActionID{ItemID: 19957},
+			SpellSchool: core.SpellSchoolFire,
+			Flags:       core.SpellFlagNoOnCastComplete,
+
+			Cast: core.CastConfig{
+				CD: core.Cooldown{
+					Timer:    warlock.NewTimer(),
+					Duration: time.Minute * 3,
+				},
+				SharedCD: core.Cooldown{
+					Timer:    warlock.GetOffensiveTrinketCD(),
+					Duration: duration,
+				},
+			},
+
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+				aura.Activate(sim)
+			},
+		})
+
+		warlock.AddMajorCooldown(core.MajorCooldown{
+			Spell:    spell,
+			Priority: core.CooldownPriorityBloodlust,
+			Type:     core.CooldownTypeDPS,
+		})
+	})
 }

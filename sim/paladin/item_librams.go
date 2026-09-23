@@ -24,6 +24,18 @@ func init() {
 		paladin.judgementOfTheCrusaderBonus += 33
 	})
 
+	// Libram of Hope
+	// https://www.wowhead.com/forever/item=22401/libram-of-hope
+	//
+	// Increases the duration of your Seal spells by 4 sec (27848). Classic's took 20 mana off them.
+	core.NewItemEffect(22401, func(agent core.Agent) {
+		agent.GetCharacter().AddStaticMod(core.SpellModConfig{
+			ClassMask: SpellMaskAllSeals,
+			Kind:      core.SpellMod_BuffDuration_Flat,
+			TimeValue: time.Second * 4,
+		})
+	})
+
 	// Libram of Light
 	// https://www.wowhead.com/forever/item=23006/libram-of-light
 	//
@@ -161,6 +173,44 @@ func init() {
 			ClassMask:  SpellMaskHolyShock | SpellMaskHolyShockHeal,
 			Kind:       core.SpellMod_BonusCrit_Percent,
 			FloatValue: 6,
+		})
+	})
+
+	// Sanctified Orb
+	// https://www.wowhead.com/forever/item=20512/sanctified-orb
+	//
+	// Not a libram, but the paladin's. Use: Restores 340 Mana (24865), doubled in Wasteland and
+	// Haunted areas, which no encounter is. 5 min cooldown. Classic's gave 3% crit for 25 sec.
+	core.NewItemEffect(20512, func(agent core.Agent) {
+		character := agent.GetCharacter()
+		actionID := core.ActionID{ItemID: 20512}
+		manaMetrics := character.NewManaMetrics(actionID)
+		manaGain := 340.0
+
+		spell := character.RegisterSpell(core.SpellConfig{
+			ActionID:    actionID,
+			SpellSchool: core.SpellSchoolHoly,
+			ProcMask:    core.ProcMaskEmpty,
+			Flags:       core.SpellFlagNoOnCastComplete | core.SpellFlagHelpful,
+
+			Cast: core.CastConfig{
+				CD: core.Cooldown{
+					Timer:    character.NewTimer(),
+					Duration: time.Minute * 5,
+				},
+			},
+
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+				character.AddMana(sim, manaGain, manaMetrics)
+			},
+		})
+
+		character.AddMajorCooldown(core.MajorCooldown{
+			Spell: spell,
+			Type:  core.CooldownTypeMana,
+			ShouldActivate: func(_ *core.Simulation, character *core.Character) bool {
+				return character.MaxMana()-character.CurrentMana() >= manaGain
+			},
 		})
 	})
 }

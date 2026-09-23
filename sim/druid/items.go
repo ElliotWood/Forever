@@ -21,6 +21,32 @@ func init() {
 		character.ItemSwap.RegisterProc(32330, aura)
 	})
 
+	// Idol of Ferocity
+	// https://www.wowhead.com/forever/item=22397/idol-of-ferocity
+	//
+	// Reduces the energy cost of Claw and Rake by 2 (27851); Classic's took 3. The sim has no Claw.
+	core.NewItemEffect(22397, func(agent core.Agent) {
+		agent.GetCharacter().AddStaticMod(core.SpellModConfig{
+			ClassMask: DruidSpellRake,
+			Kind:      core.SpellMod_PowerCost_Flat,
+			IntValue:  -2,
+		})
+	})
+
+	// Idol of Brutality
+	// https://www.wowhead.com/forever/item=23198/idol-of-brutality
+	//
+	// Reduces the rage cost of Maul and Swipe by 2 (28855: -20 in the client's tenths of rage, the
+	// scale Ferocity's -10 a rank is on); Classic's took 3. The client's mask also names Mangle, as
+	// Ferocity's does.
+	core.NewItemEffect(23198, func(agent core.Agent) {
+		agent.GetCharacter().AddStaticMod(core.SpellModConfig{
+			ClassMask: DruidSpellMaul | DruidSpellSwipe | DruidSpellMangleBear,
+			Kind:      core.SpellMod_PowerCost_Flat,
+			IntValue:  -2,
+		})
+	})
+
 	// Wolfshead Helm (8345): When shapeshifting into Cat form the Druid gains 20 energy,
 	// when shapeshifting into Bear form the Druid gains 5 rage.
 	core.NewItemEffect(8345, func(agent core.Agent) {

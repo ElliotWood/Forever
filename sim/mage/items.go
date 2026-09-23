@@ -88,3 +88,67 @@ var ItemSetTempestRegalia = core.NewItemSet(core.ItemSet{
 		},
 	},
 })
+
+// Jewel of Kajaro (19601) takes 2 sec off Counterspell, which the sim does not cast. Fire Ruby
+// (20036) is Forever's Chaos Fire (24389): it refreshes Fire Ward and feeds the Fire damage it
+// absorbed into the next Fire Blast, neither of which the sim models; Classic's mana and Fire power
+// are gone from the client.
+func init() {
+	// Hazza'rah's Charm of Magic
+	// https://www.wowhead.com/forever/item=19959/hazzarahs-charm-of-magic
+	//
+	// Use: Increases the critical hit chance of your Arcane spells by 5%, and increases the critical
+	// hit damage of your Arcane spells by 50% for 20 sec (24544). 3 min cooldown, 20 sec on the burst
+	// trinket category. The client's class mask names Arcane Explosion and Arcane Missiles only,
+	// where Classic's took every Arcane spell.
+	core.NewItemEffect(19959, func(agent core.Agent) {
+		// The warlock tests pull the mage package in, and with it this mage-only charm.
+		mageAgent, ok := agent.(MageAgent)
+		if !ok {
+			return
+		}
+		mage := mageAgent.GetMage()
+		duration := time.Second * 20
+
+		aura := mage.RegisterAura(core.Aura{
+			Label:    "Arcane Potency",
+			ActionID: core.ActionID{SpellID: 24544},
+			Duration: duration,
+		}).AttachSpellMod(core.SpellModConfig{
+			Kind:       core.SpellMod_BonusCrit_Percent,
+			FloatValue: 5,
+			ClassMask:  MageSpellArcaneExplosion | MageSpellArcaneMissiles,
+		}).AttachSpellMod(core.SpellModConfig{
+			Kind:       core.SpellMod_CritMultiplier_Flat,
+			FloatValue: 0.5,
+			ClassMask:  MageSpellArcaneExplosion | MageSpellArcaneMissiles,
+		})
+
+		spell := mage.RegisterSpell(core.SpellConfig{
+			ActionID:    core.ActionID{ItemID: 19959},
+			SpellSchool: core.SpellSchoolArcane,
+			Flags:       core.SpellFlagNoOnCastComplete,
+
+			Cast: core.CastConfig{
+				CD: core.Cooldown{
+					Timer:    mage.NewTimer(),
+					Duration: time.Minute * 3,
+				},
+				SharedCD: core.Cooldown{
+					Timer:    mage.GetOffensiveTrinketCD(),
+					Duration: duration,
+				},
+			},
+
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+				aura.Activate(sim)
+			},
+		})
+
+		mage.AddMajorCooldown(core.MajorCooldown{
+			Spell:    spell,
+			Priority: core.CooldownPriorityBloodlust,
+			Type:     core.CooldownTypeDPS,
+		})
+	})
+}
