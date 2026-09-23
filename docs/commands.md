@@ -87,13 +87,13 @@ make ptrdb
 # The "Update DB" GitHub workflow runs this with raidbots' mirror of the live DBCache.bin.
 make db DB2TOOL_FLAGS="--cdn --dbcache tools/db2tool/caches/DBCache.bin"
 
-# Regenerate the sim/<class>/spell_data_auto_gen.go tables from the client data
-# Also rewrites the generated buff and debuff files, in sim/core and in the settings UI
+# Regenerate the spell store and the sim/<class>/spell_data_auto_gen.go tables from the client data
+# Also rewrites the buff and debuff files in sim/core/buffs, their settings inputs and proto/buffs.proto
 # Needs tools/database/wowsims.db, so run make db at least once first
 make spelldata
 
-# Rewrite proto/buffs.proto from tools/database/buffmanifest
-# Needs no client database; make sim/core/proto/api.pb.go runs it before protoc
+# Rewrite proto/buffs.proto alone from tools/database/buffmanifest
+# Needs no client database and no sim that builds; make sim/core/proto/api.pb.go runs it before protoc
 go run ./tools/gen_buffs_proto
 
 # Run one sim from a RaidSimRequest in protojson and print the RaidSimResult

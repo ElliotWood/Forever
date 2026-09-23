@@ -58,7 +58,8 @@ says so there.
 Every field is the client's column in the client's units: a percentage is the integer 16, rage is on a
 0-1000 bar, times are milliseconds. The conversion is in the accessors, so a row always matches what
 the DBC says. `sim/core` must not import the package: the store imports core, and the import back
-would be a cycle.
+would be a cycle. That is why the raid buffs live in `sim/core/buffs` - see
+[Buffs and debuffs](#buffs-and-debuffs).
 
 ### Finding a row
 
@@ -1423,9 +1424,10 @@ make spelldata-check                               # the same check
 ```
 
 The generator reads `tools/database/wowsims.db` and writes all of it in one pass:
-`sim/core/spelldata/spells_auto_gen.go`, `sim/common/shared/spell_data_enums_auto_gen.go`, and a
+`sim/core/spelldata/spells_auto_gen.go`, `sim/common/shared/spell_data_enums_auto_gen.go`, a
 `sim/<class>/spell_data_auto_gen.go` for every class - ladders into the store for a store-backed class,
-the family tables for the rest. `storeBackedClasses` in `tools/database/gen_spell_data.go` lists eight
+the family tables for the rest - and the raid buffs, which [Buffs and debuffs](#buffs-and-debuffs)
+describes. `storeBackedClasses` in `tools/database/gen_spell_data.go` lists eight
 classes; paladin is the one it does not. It is its own binary rather than a mode of `gen_db` on purpose:
 `gen_db` imports the sim and the sim reads these files, so a stale one would stop the generator that
 fixes it from compiling. For the same reason nothing is written until all of it type-checks: the
@@ -1455,6 +1457,7 @@ What guards the outputs:
 - `TestStoreRegeneratesFromTheCommittedInputs` in `tools/database` re-derives the closure, the hand
   links, the curves, the tooltip hints, the overrides and the emitter from that capture and asserts the
   committed store is what comes out. No build tag and no database, so it runs everywhere.
+  `TestBuffFilesRegenerateFromTheCommittedInputs` does the same for the buff files.
 - `sim/core/spelldata/snapshot_test.go` pins the shape and the counts of the committed store, and a
   handful of rows read out of the client by hand, so a regeneration that moves a number says so there
   instead of in a sim result.
@@ -1602,11 +1605,70 @@ than build a listener that fires on every hit.
 ## Buffs and debuffs
 
 Every raid, party, individual and enemy-debuff proto field has one row in
-`tools/database/buffmanifest`, and `tools/database/gen_spelldata` turns those rows into
-`sim/core/buffs_auto_gen.go`, `sim/core/debuffs_auto_gen.go` and
-`ui/features/settings/model/buffs_debuffs_auto_gen.ts`. `tools/gen_buffs_proto` renders
-`proto/buffs.proto` from the same rows. The manifest owns the field numbers; the client database owns
-the values.
+`tools/database/buffmanifest`. The manifest owns the field numbers and names the spell each row reads;
+the store owns the values. The same `gen_spelldata` pass that renders the store renders, from the same
+captured inputs:
+
+- `sim/core/buffs/buffs_auto_gen.go` and `sim/core/buffs/debuffs_auto_gen.go`, a constructor per row;
+- `ui/features/settings/model/buffs_debuffs_auto_gen.ts`, the settings inputs;
+- `proto/buffs.proto`, the four messages.
+
+They go through the same staging type-check and the same `-check` as the store, and regenerate without
+the client database.
+
+### How a buff reads the store
+
+The generated constructors live in `sim/core/buffs`, above core, because the store imports core. Each
+supported row holds its row in a package variable and reads every number off it at runtime:
+
+```go
+var battleShoutSpell = spelldata.MustFind(25289)
+
+func BattleShoutValue(talentPoints int32) float64 {
+	return amount(battleShoutSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
+}
+func BattleShoutDuration(talentPoints int32) time.Duration {
+	return auraDuration(battleShoutSpell)
+}
+```
+
+The generator decides which effect is which stat, and names it by `Effect(aura, misc)` where no other
+effect of the row shares both, by `EffectN(n)` where one does; the value is read at the caster's level
+through the helpers in `sim/core/buffs/amounts.go`. `amount` is `Average(core.CharacterLevel)`, a
+percentage aura is `1 + amount/100` on the stat or pseudo-stat, `A_PERIODIC_ENERGIZE` becomes mana per
+five seconds with `manaPerFive`, a combo-point finisher is `fullComboPoints`, a duration is
+`auraDuration` (the client's -1 and 0 are `core.NeverExpires`) and an external cooldown is
+`cooldown`, read off the cast where the manifest pins one. A talent that improves the buff is a
+`spelldata.Talent` ladder, and `talentScaled` applies `Rank(talentPoints)` of it, so rank 0 reads
+`NilEffect` and adds nothing.
+
+What the row then does goes through `core.NewGeneratedStatAura`, `NewGeneratedDebuff` and
+`NewGeneratedDamageShield` in `sim/core/buffs_gen_support.go`, not through `ParseEffects`. Nearly every
+row bids in an exclusive category - `StatBuff` against the scrolls, a resistance school against every
+other source of it, a `SingleAura` category between the player's copy and the raid's - and the parse
+attaches its stats outright, with no category to bid in. The support API also carries what the parse
+has no word for: the player and external copies, the shared category the paladin auras join, stack
+pricing and the tier 2 flat bonus.
+
+Core applies the buffs through `core.BuffHooks`, which `sim/core/buffs` registers from its `init`:
+`ApplyBuffs`, `StripPetBuffs`, `ApplyDebuffs` and the Gift of Arthas elixir's debuff. A sim that
+never imported the package panics naming the import. `sim/common` imports it, which links it into every
+sim and every class test; core's own tests reach it through the generated-buff tests, which sit in
+`package core_test` beside `sim/core/export_test.go`.
+
+### Adding a buff
+
+1. Add the proto field's row to `buffmanifest.Manifest`: field, number, scope, proto type, kind, Go stem,
+   and the `SpellID` its numbers are read from. Pin a `CastID` where the cast states the timing the
+   aura does not, and a `Talent` with its `SpellID` where a talent improves it.
+2. `go run ./tools/gen_buffs_proto` and `make proto`, so the compiled protos carry the field. The pass
+   below type-checks against them and writes nothing while the field is missing.
+3. `go run ./tools/database/gen_spelldata`. The spell becomes a root of the store, and the constructor,
+   the apply block and the settings input are written.
+4. A row the kind cannot express outright states `Driver: true`, and `sim/core/buffs/drivers.go`
+   declares `drive<Go>`.
+5. With a database, `TestManifestAnchorsMatchTheClient` checks the pin is the top rank the owner's skill
+   lines grant.
 
 ### The manifest row
 
@@ -1615,14 +1677,14 @@ the values.
 | Field                      | What it is                                                                                                                                                                                                                                                             |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Field`, `Number`, `Scope` | the proto field, its number and the message it lives on. Each scope's numbers are dense from 1, so a row that goes away is a renumber of the rows after it                                                                                                             |
-| `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32` or `ProtoDouble`. Declared, not derived, so the emitter runs while the compiled protos are stale; the resolver checks it against the live trait tree                                                                        |
+| `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32` or `ProtoDouble`. Declared, not derived, so the emitter runs while the compiled protos are stale; the generator checks it against the compiled message                                                                      |
 | `Kind`                     | what the generator emits, below                                                                                                                                                                                                                                        |
-| `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory`                                                                                                                                           |
-| `Name`                     | the castable family's `SpellName.Name_lang`, resolved through `SkillLineAbility` for the owning class                                                                                                                                                                  |
-| `AuraName`                 | the aura family, when the cast is a summon or a dummy: the totem cast names `Strength of Earth Totem` and the aura `Strength of Earth`                                                                                                                                 |
-| `Anchor`                   | an explicit spell id, for a row with no castable name at all (the Atiesh staves)                                                                                                                                                                                       |
-| `Owner`                    | the class that casts it, which narrows the `SkillLineAbility` lookup and marks the row "(External)" on that class's settings tab                                                                                                                                       |
-| `Talent`                   | the improving talent family, its effect index, and whether it scales the value, the duration or adds a stat. Only a `ProtoTristate` row may state one                                                                                                                  |
+| `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory` and `battleShoutSpell`                                                                                                                    |
+| `SpellID`                  | the spell the numbers are read from, and a root of the store: the top rank of the castable family, or the aura that family's cast applies when the cast is a summon or a dummy                                                                                         |
+| `CastID`                   | the cast, for a row whose timing only the cast states: Mana Tide's aura 17360 carries the mana, the cast 17359 the 13 seconds and the 5 minutes                                                                                                                        |
+| `Name`, `AuraName`         | the castable family's `SpellName.Name_lang` and, for a summon or a dummy, the aura family's. `Name` is the label's default; both are what `TestManifestAnchorsMatchTheClient` resolves the pins from                                                                   |
+| `Owner`                    | the class that casts it, which narrows the rank lookup and marks the row "(External)" on that class's settings tab                                                                                                                                                     |
+| `Talent`                   | the improving talent's `SpellID`, name, effect index, and whether it scales the value, the duration or adds a stat. Only a `ProtoTristate` row may state one, and its effect has to be a modifier whose class mask reaches the row's spell                             |
 | `Category`                 | the exclusive-effect category the aura bids in, `""` for none                                                                                                                                                                                                          |
 | `SharedCategory`           | a second category the aura joins without an effect of its own, which is how the paladin auras exclude each other across schools. Applied to the player's copy only, and declared once in the generated file as `<Name>Category`                                        |
 | `SingleAura`               | the category holds one aura at a time, so the loser is deactivated rather than outbid                                                                                                                                                                                  |
@@ -1630,7 +1692,7 @@ the values.
 | `Pet`                      | `PetNormal`, `PetStrip`, `PetInheritOwnerAura`, `PetCapAtRegular` or `PetStripWhenSummonedLate`                                                                                                                                                                        |
 | `StatOverride`             | the sim stats the value lands on, for an aura the client states without naming one: `A_MOD_CRIT_PCT` carries no school, so Leader of the Pack and Moonkin Aura both say `PhysicalCritPercent`, `SpellCritPercent`. A row that states one may have only one aura effect |
 | `Stats`                    | the UI relevance tags a spec's `epStats` and `displayStats` are matched against                                                                                                                                                                                        |
-| `ImpAction`                | the improved state's source when it is not a talent - an item, or the spell an item set grants at a piece threshold - and the icon that state shows. A `ProtoTristate` row states this or a `Talent`                                                                    |
+| `ImpAction`                | the improved state's source when it is not a talent - an item, or the spell an item set grants at a piece threshold - and the icon that state shows. A `ProtoTristate` row states this or a `Talent`                                                                   |
 | `Label`                    | a UI label override; the client's name is the default                                                                                                                                                                                                                  |
 | `Notes`                    | why a `KindManual`, `KindAbsent` or `KindFlag` row is one. Required for those three                                                                                                                                                                                    |
 
@@ -1641,33 +1703,23 @@ pseudo-stat; `KindDamageShield` is a retaliation proc; `KindProc` and `KindExter
 for the trigger or the cooldown; `KindItemCount` takes a count and applies its amounts per item;
 `KindDebuffStat`, `KindDebuffStacking`, `KindDebuffDamageTaken`, `KindDebuffAtkSpeed` and
 `KindDebuffUptime` are the debuff shapes. `KindManual` is a row the sim models by hand, `KindFlag`
-is a sim input rather than a buff (a toggle, or a number such as `retribution_aura_spell_power`), and `KindAbsent` is a field the Forever client describes no
-spell for. The last three resolve to a commented shell naming the reason. No `Proto` value is an
-enum, and a field that wants one would add its own value and a name for it in both emitters.
-
-### Resolving a row
-
-An `Anchor` is taken as it stands. Otherwise `Name` is looked up in `SkillLineAbility` for the owner's
-class, the highest rank is taken, and a non-monotonic ladder is warned about and recorded above the
-constructor, together with a TODO to confirm in game which rank the client grants. Trueshot Aura is
-the row this applies to: it follows rank 5 (20906), worth 50 ranged attack power, where rank 4 (20905)
-states 75. `AuraName` then hops from the cast to the aura family member with the same rank subtext.
-A spell an engraving rune grants is refused: those are class runes, not raid buffs. A `Talent` is
-matched in the owner's live trait tree and priced per point into a curve; declaring one for a talent
-that is not in the tree is an error, and not declaring one where a value-scaling talent exists is a
-warning.
+is a sim input rather than a buff (a toggle, or a number such as `retribution_aura_spell_power`), and
+`KindAbsent` is a field the Forever client describes no spell for. The last two resolve to a commented
+shell naming the reason, as does a row whose spell states no aura the generator maps. No `Proto` value
+is an enum, and a field that wants one would add its own value and a name for it in both emitters.
 
 ### What stays hand-written
 
-The generator emits a real constructor only when `sim/core` declares none: it parses the non-generated
-files and treats a row as hand-written if `<Go>Aura` is declared there **or** if an apply block still
-reads the row's proto field. Either way the row renders as a commented shell, so migrating one means
-deleting both the constructor and the apply-block branch and regenerating.
+Judgement of the Crusader and Mangle state their effect in a shape no manifest row can carry - a holy
+school alone, and dummies - so their rows are shells and `applyDebuffs` in `sim/core/buffs/debuffs.go`
+applies the hand-written auras after the generated ones. The paladin's own aura and judgement ranks
+(`PaladinAuraRank`, `JudgementRank`) live in `sim/core/buffs/paladin.go` beside the generated
+categories they join.
 
 ### Drivers
 
 A row the generator cannot express outright states `Driver: true`, or is a kind that always needs one,
-and the apply block calls `drive<Go>` instead. The contract is in `sim/core/buffs_manual.go`: a buff
+and the apply block calls `drive<Go>` instead. The contract is in `sim/core/buffs/drivers.go`: a buff
 row's driver takes the `*Character` and the whole scope message, a debuff row's takes the `*Unit`, the
 debuffs and the raid. Handing over the message rather than the one field is what lets Grace of Air read
 `party.TotemTwisting`. The driver builds the generated aura with `<Go>Aura(...)` and adds what the
@@ -1676,41 +1728,43 @@ makes the row compile.
 
 ### Regenerating
 
-```
-go run ./tools/database/gen_spelldata
-```
-
-writes all three generated files. `tools/database` imports `sim/core`, so the generator cannot run
-while the tree it generates into does not compile. A change that breaks it - retiring a proto field,
-deleting a hand-written constructor the generated file still references - needs the generated file cut
-by hand first: delete the lines that name the field or symbol that is going away, `go build ./...`,
-then run the generator, which writes the whole file back. Running it twice and seeing an empty
-`git status` is the check that it converged.
+`go run ./tools/database/gen_spelldata` writes the buff files with everything else, and `-check` names
+them when they are stale. `tools/database` imports `sim/core`, so the generator cannot run while the
+tree it generates into does not compile. A change that breaks it - retiring a proto field, deleting a
+driver the generated file still calls - needs the generated file cut by hand first: delete the lines
+that name the field or symbol that is going away, `go build ./...`, then run the generator, which
+writes the whole file back. `tools/gen_buffs_proto` renders `proto/buffs.proto` alone, with nothing but
+the manifest, for the one moment the sim cannot build: before protoc has seen a new field.
 
 ### The guard tests
 
-`go test ./tools/database/... ./tools/gen_buffs_proto/...` needs no client database and runs in CI.
-Without one, `TestGeneratedBuffFiles`, `TestResolvedBuffInvariants`,
-`TestScopeMatchesTheClientTargeting`, `TestGeneratedBuffsDebuffsTS` and
-`TestGeneratedRankTablesMatchTheDatabase` skip; the other 23 run.
+`go test ./tools/database/...` needs no client database and runs in CI; only
+`TestManifestAnchorsMatchTheClient` and `TestGeneratedRankTablesMatchTheDatabase` skip without one.
 
-| Test                                                                                                              | What it holds                                                                                                                   |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `TestUniqueScopeField`, `TestUniqueScopeNumber`, `TestUniqueGoStem`                                               | no two rows collide                                                                                                             |
-| `TestScopeNumbersAreDense`                                                                                        | every scope's field numbers are 1..N with no gap                                                                                |
-| `TestProtoTypeMatchesKind`, `TestTalentImpliesTristate`, `TestShellRowsHaveNotes`, `TestResolvableRowsHaveAnchor` | the schema rules above                                                                                                          |
-| `TestFieldNaming`, `TestFieldNamesRoundTrip`                                                                      | `GoField()` and `TSField()` reproduce protoc's and protobuf-ts's camel case                                                     |
-| `TestRenderMatchesCommittedFile`                                                                                  | `proto/buffs.proto` is what the manifest renders                                                                                |
-| `TestRenderNextIndex`                                                                                             | the next free number above each message                                                                                         |
-| `TestRenderedBuffFilesMatchTheFixtures`, `TestRenderedBuffFilesCompile`                                           | synthetic rows render to the committed fixtures, and those fixtures compile against the real `sim/core` through a build overlay |
-| `TestRenderBuffsDebuffsTS*`                                                                                       | the settings inputs each proto type and kind renders                                                                            |
-| `TestGeneratedBuffFiles`, `TestGeneratedBuffsDebuffsTS`                                                           | with a database, the committed files are byte-for-byte what the generator emits                                                 |
-| `TestResolvedBuffInvariants`                                                                                      | with a database, the pinned talent curves, categories and stat amounts                                                          |
-| `TestScopeMatchesTheClientTargeting`                                                                              | with a database, a row whose spell states an area aura, or an aura aimed over an area, sits in the scope that targeting names   |
+| Test                                                                                                              | What it holds                                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TestUniqueScopeField`, `TestUniqueScopeNumber`, `TestUniqueGoStem`                                               | no two rows collide                                                                                                                                  |
+| `TestScopeNumbersAreDense`                                                                                        | every scope's field numbers are 1..N with no gap                                                                                                     |
+| `TestProtoTypeMatchesKind`, `TestTalentImpliesTristate`, `TestShellRowsHaveNotes`, `TestResolvableRowsNameASpell` | the schema rules above                                                                                                                               |
+| `TestFieldNaming`, `TestFieldNamesRoundTrip`                                                                      | `GoField()` and `TSField()` reproduce protoc's and protobuf-ts's camel case                                                                          |
+| `TestRenderProtoNextIndex`, `TestRenderProtoHeader`                                                               | the next free number above each message, and the header protoc reads                                                                                 |
+| `TestBuffFilesRegenerateFromTheCommittedInputs`                                                                   | the two Go files, the settings inputs and `proto/buffs.proto` are what the committed store inputs render                                             |
+| `TestRenderedBuffFilesMatchTheFixtures`, `TestRenderedBuffFilesCompile`                                           | synthetic rows of every shape render to the committed fixtures, and those fixtures compile against the real `sim/core/buffs` through a build overlay |
+| `TestRenderBuffsDebuffsTS*`                                                                                       | the settings inputs each proto type and kind renders                                                                                                 |
+| `TestResolvedBuffInvariants`                                                                                      | the pinned talent, categories and stat amounts                                                                                                       |
+| `TestScopeMatchesTheClientTargeting`                                                                              | a row whose spell states an area aura, or an aura aimed over an area, sits in the scope that targeting names                                         |
+| `TestManifestAnchorsMatchTheClient`                                                                               | with a database, each pinned spell is still the top rank, aura or cast the client's skill lines grant                                                |
 
-Rewrite the fixtures with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`.
+The generated constructors' behaviour - categories, stacks, drivers, pet policies - is held by
+`sim/core/buffs_generated_test.go` and `sim/core/debuffs_generated_test.go`. Rewrite the synthetic
+fixtures with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`.
 
 ### Traps
+
+**A negative amount that scales by level floors away from zero.** `Average` floors the folded amount,
+so Demoralizing Shout's -196 and -1.4 a level read -205 at 60, and Demoralizing Roar's -193 does too;
+a client that truncated the per-level part toward zero would state -204. The store's reading is the one
+the sim takes until the game says otherwise.
 
 **Dropping a row renumbers the ones after it.** Each scope's numbers are dense from 1, so a field that
 goes away shifts every later number down by one and `TestScopeNumbersAreDense` holds that. Nothing is
@@ -1746,7 +1800,7 @@ applies and what it bids for its category together, so the stronger of the two c
 character sheet shows. It is told what the buff is worth without the bonus, because the aura belongs
 to the unit rather than to whoever raised it: two warriors in a party wearing the same set ask for
 the same total and the second call does nothing. The 30 itself lives in
-`core.BattleShoutT2Bonus`, with the set and the spell it came from written next to it.
+`buffs.BattleShoutT2Bonus`, with the set and the spell it came from written next to it.
 
 **A party or raid flag means an external caster provides the buff.** The generated apply block builds
 the row's `isPlayer=false` copy whenever the proto field is set, so a class port that registers its own
