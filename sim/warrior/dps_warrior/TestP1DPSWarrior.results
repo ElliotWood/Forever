@@ -50,8 +50,8 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestP1DPSWarrior-Phase1-StatWeights-Default"
  value: {
-  weights: 0.63404
-  weights: 0.59764
+  weights: 0.59928
+  weights: 0.5475
   weights: 0
   weights: 0
   weights: 0
@@ -67,9 +67,9 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.2882
-  weights: 8.51279
-  weights: 3.93969
+  weights: 0.2724
+  weights: 8.73135
+  weights: 5.0156
   weights: 0
   weights: 0
   weights: 0
@@ -99,57 +99,57 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-AllItems-BattlegearofHeroism"
  value: {
-  dps: 748.52849
-  tps: 682.53122
+  dps: 672.33929
+  tps: 598.47775
  }
 }
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-AllItems-BattlegearofMight"
  value: {
-  dps: 683.9887
-  tps: 622.00388
+  dps: 616.53992
+  tps: 545.73151
  }
 }
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-AllItems-BattlegearofWrath"
  value: {
-  dps: 731.83102
-  tps: 663.17006
+  dps: 661.38259
+  tps: 584.35623
  }
 }
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-AllItems-Champion'sBattlearmor"
  value: {
-  dps: 721.76016
-  tps: 653.94758
+  dps: 656.92763
+  tps: 579.39988
  }
 }
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-AllItems-Conqueror'sBattlegear"
  value: {
-  dps: 808.61677
-  tps: 729.20019
+  dps: 718.20184
+  tps: 633.17095
  }
 }
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-AllItems-LieutenantCommander'sBattlearmor"
  value: {
-  dps: 721.76016
-  tps: 653.94758
+  dps: 656.92763
+  tps: 579.39988
  }
 }
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-AllItems-Vindicator'sBattlegear"
  value: {
-  dps: 783.54436
-  tps: 712.80852
+  dps: 704.25055
+  tps: 624.4013
  }
 }
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-Average-Default"
  value: {
-  dps: 800.82645
-  tps: 724.54222
+  dps: 715.71569
+  tps: 631.37046
  }
 }
 dps_results: {
@@ -323,7 +323,7 @@ dps_results: {
 dps_results: {
  key: "TestP1DPSWarrior-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 605.01552
-  tps: 549.81561
+  dps: 526.56381
+  tps: 468.74423
  }
 }
