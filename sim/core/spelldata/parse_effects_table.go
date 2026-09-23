@@ -1,9 +1,6 @@
 package spelldata
 
 import (
-	"math"
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -62,13 +59,14 @@ type attachment struct {
 type row func(p *parser, e *Effect, v float64) *attachment
 
 // The auras the parser knows, keyed the way the client files them. A_ADD_FLAT_MODIFIER and
-// A_ADD_PCT_MODIFIER name a spell property in their misc value and read the two tables below it.
+// A_ADD_PCT_MODIFIER name a spell property in their misc value and read the two tables below it;
+// the percentage table is handed its value as a fraction.
 var auraTable = map[dbcenums.EffectAuraType]row{
 	dbcenums.A_ADD_FLAT_MODIFIER: func(p *parser, e *Effect, v float64) *attachment {
 		return lookup(flatModTable, dbcenums.SpellModOp(e.Misc))(p, e, v)
 	},
 	dbcenums.A_ADD_PCT_MODIFIER: func(p *parser, e *Effect, v float64) *attachment {
-		return lookup(pctModTable, dbcenums.SpellModOp(e.Misc))(p, e, v)
+		return lookup(pctModTable, dbcenums.SpellModOp(e.Misc))(p, e, v/100)
 	},
 
 	// The damage the unit deals and takes, by school mask.
@@ -259,33 +257,32 @@ var flatModTable = map[dbcenums.SpellModOp]row{
 	dbcenums.SPELLMOD_EFFECT3: flatEffectAmount,
 }
 
-// A_ADD_PCT_MODIFIER: a percentage the client states as an integer.
+// A_ADD_PCT_MODIFIER: a percentage the client states as an integer, handed over as a fraction.
 var pctModTable = map[dbcenums.SpellModOp]row{
 	dbcenums.SPELLMOD_DAMAGE:      pctDamageDone,
 	dbcenums.SPELLMOD_ALL_EFFECTS: pctDamageDone,
 	dbcenums.SPELLMOD_DOT: func(p *parser, e *Effect, v float64) *attachment {
-		return p.modFloat("SpellMod_DotDamageDone_Pct", p.modConfig(e, core.SpellMod_DotDamageDone_Pct), v/100)
+		return p.modFloat("SpellMod_DotDamageDone_Pct", p.modConfig(e, core.SpellMod_DotDamageDone_Pct), v)
 	},
 	dbcenums.SPELLMOD_COST: func(p *parser, e *Effect, v float64) *attachment {
 		// The additive bucket, which is where sim/core/spell_mod.go files a 108 with misc 14.
-		return p.modFloat("SpellMod_PowerCost_Pct_Add", p.modConfig(e, core.SpellMod_PowerCost_Pct_Add), v/100)
+		return p.modFloat("SpellMod_PowerCost_Pct_Add", p.modConfig(e, core.SpellMod_PowerCost_Pct_Add), v)
 	},
 	dbcenums.SPELLMOD_CASTING_TIME: func(p *parser, e *Effect, v float64) *attachment {
-		return p.modFloat("SpellMod_CastTime_Pct", p.modConfig(e, core.SpellMod_CastTime_Pct), v/100)
+		return p.modFloat("SpellMod_CastTime_Pct", p.modConfig(e, core.SpellMod_CastTime_Pct), v)
 	},
 	dbcenums.SPELLMOD_COOLDOWN: func(p *parser, e *Effect, v float64) *attachment {
 		// The field is the multiplier itself, not a bonus on top of one.
-		return p.modMultiplier("SpellMod_Cooldown_Multiplier", p.modConfig(e, core.SpellMod_Cooldown_Multiplier),
-			percentMultiplier(v))
+		return p.modMultiplier("SpellMod_Cooldown_Multiplier", p.modConfig(e, core.SpellMod_Cooldown_Multiplier), 1+v)
 	},
 	dbcenums.SPELLMOD_CRIT_DAMAGE_BONUS: func(p *parser, e *Effect, v float64) *attachment {
-		return p.modFloat("SpellMod_CritMultiplier_Flat", p.modConfig(e, core.SpellMod_CritMultiplier_Flat), v/100)
+		return p.modFloat("SpellMod_CritMultiplier_Flat", p.modConfig(e, core.SpellMod_CritMultiplier_Flat), v)
 	},
 	dbcenums.SPELLMOD_THREAT: func(p *parser, e *Effect, v float64) *attachment {
-		return p.modFloat("SpellMod_ThreatMultiplier_Pct", p.modConfig(e, core.SpellMod_ThreatMultiplier_Pct), v/100)
+		return p.modFloat("SpellMod_ThreatMultiplier_Pct", p.modConfig(e, core.SpellMod_ThreatMultiplier_Pct), v)
 	},
 	dbcenums.SPELLMOD_DURATION: func(p *parser, e *Effect, v float64) *attachment {
-		return p.modFloat("SpellMod_DotBaseDuration_Pct", p.modConfig(e, core.SpellMod_DotBaseDuration_Pct), v/100)
+		return p.modFloat("SpellMod_DotBaseDuration_Pct", p.modConfig(e, core.SpellMod_DotBaseDuration_Pct), v)
 	},
 	dbcenums.SPELLMOD_EFFECT1: pctEffectAmount,
 	dbcenums.SPELLMOD_EFFECT2: pctEffectAmount,
@@ -295,7 +292,7 @@ var pctModTable = map[dbcenums.SpellModOp]row{
 // SPELLMOD_DAMAGE and SPELLMOD_ALL_EFFECTS both raise every hit the spell deals, which the sim
 // sums into spell.DamageMultiplierAdditive.
 func pctDamageDone(p *parser, e *Effect, v float64) *attachment {
-	return p.modFloat("SpellMod_DamageDone_Flat", p.modConfig(e, core.SpellMod_DamageDone_Flat), v/100)
+	return p.modFloat("SpellMod_DamageDone_Flat", p.modConfig(e, core.SpellMod_DamageDone_Flat), v)
 }
 
 // SPELLMOD_EFFECT1/2/3 name one effect of the target spell, and which effect carries the damage is a
@@ -303,13 +300,13 @@ func pctDamageDone(p *parser, e *Effect, v float64) *attachment {
 // class mask names, so the parser assumes the named effect is the damage and says so in the kind: a
 // caller whose spell states something else there has to wire that effect by hand.
 func flatEffectAmount(p *parser, e *Effect, v float64) *attachment {
-	a := p.modFloat("SpellMod_BaseDamage_Flat", p.modConfig(e, core.SpellMod_BaseDamage_Flat), v)
-	return rename(a, effectAssumedKind(e.Misc, "SpellMod_BaseDamage_Flat"))
+	return p.modFloat(effectAssumedKind(e.Misc, "SpellMod_BaseDamage_Flat"),
+		p.modConfig(e, core.SpellMod_BaseDamage_Flat), v)
 }
 
 func pctEffectAmount(p *parser, e *Effect, v float64) *attachment {
-	a := p.modFloat("SpellMod_DamageDone_Flat", p.modConfig(e, core.SpellMod_DamageDone_Flat), v/100)
-	return rename(a, effectAssumedKind(e.Misc, "SpellMod_DamageDone_Flat"))
+	return p.modFloat(effectAssumedKind(e.Misc, "SpellMod_DamageDone_Flat"),
+		p.modConfig(e, core.SpellMod_DamageDone_Flat), v)
 }
 
 func effectAssumedKind(misc int32, kind string) string {
@@ -321,13 +318,6 @@ func effectAssumedKind(misc int32, kind string) string {
 		n = 3
 	}
 	return "effect" + string(rune('0'+n)) + "-assumed-damage " + kind
-}
-
-func rename(a *attachment, kind string) *attachment {
-	if a != nil {
-		a.kind = kind
-	}
-	return a
 }
 
 // The row for a misc value, or one that skips: a modifier op the table does not know is reported the
@@ -386,9 +376,9 @@ func (p *parser) modInt(kind string, cfg core.SpellModConfig, v float64) *attach
 
 // The client states a time modifier in milliseconds, which is also what Value reports.
 func (p *parser) modTime(kind string, cfg core.SpellModConfig, ms float64) *attachment {
-	cfg.TimeValue = millisFloat(ms)
+	cfg.TimeValue = millis(ms)
 	return p.mod(kind, cfg, ms, func(mod *core.SpellMod, level float64) {
-		mod.UpdateTimeValue(millisFloat(ms * level))
+		mod.UpdateTimeValue(millis(ms * level))
 	})
 }
 
@@ -417,14 +407,7 @@ func (p *parser) statsBuff(sts []stats.Stat, v float64) *attachment {
 		return nil
 	}
 
-	current := 0.0
-	return &attachment{kind: "stat " + statNames(sts), value: v, set: func(sim *core.Simulation, level float64) {
-		delta := v*level - current
-		if delta == 0 {
-			return
-		}
-		current = v * level
-
+	return additive("stat "+statNames(sts), v, func(sim *core.Simulation, delta float64) {
 		bonus := stats.Stats{}
 		for _, stat := range sts {
 			bonus[stat] = delta
@@ -434,7 +417,7 @@ func (p *parser) statsBuff(sts []stats.Stat, v float64) *attachment {
 		} else {
 			p.unit.AddStatsDynamic(sim, bonus)
 		}
-	}}
+	})
 }
 
 // A multiplier on a stat. The sim states it as a dependency, which cannot carry a per-stack value, so
@@ -495,61 +478,38 @@ func (p *parser) equipScaling(stat stats.Stat, mult float64) *attachment {
 		return nil
 	}
 
-	applied := false
-	return &attachment{kind: "equip-scaling " + stat.StatName(), value: mult,
-		set: func(sim *core.Simulation, level float64) {
-			if (level > 0) == applied {
-				return
-			}
-			applied = level > 0
-
-			factor := mult
-			if !applied {
-				factor = 1 / mult
-			}
-			if sim == nil {
-				p.character.ApplyEquipScaling(stat, factor)
-			} else {
-				p.character.ApplyDynamicEquipScaling(sim, stat, factor)
-			}
-		}}
+	return multiplier("equip-scaling "+stat.StatName(), mult, func(sim *core.Simulation, factor float64) {
+		if sim == nil {
+			p.character.ApplyEquipScaling(stat, factor)
+		} else {
+			p.character.ApplyDynamicEquipScaling(sim, stat, factor)
+		}
+	})
 }
 
 // A pseudo-stat the sim multiplies rather than adds. A stack multiplies again, which the parser
 // refuses to assume: a stacking row is skipped unless the caller says the value does not follow the
 // stacks.
 //
-// Expiry raises the multiplier to a negative power, so a row that states -100% or worse leaves the
-// field at zero or at an infinity and is reported rather than applied.
+// Expiry divides the multiplier back out, so a row that states -100% or worse leaves the field at
+// zero or at an infinity and is reported rather than applied.
 func (p *parser) pseudoMultiplier(kind string, fields []*float64, mult float64) *attachment {
 	if p.stacking || mult <= 0 {
 		return nil
 	}
 
-	current := 0.0
-	return &attachment{kind: kind, value: mult, set: func(_ *core.Simulation, level float64) {
-		if level == current {
-			return
-		}
-		factor := math.Pow(mult, level-current)
-		current = level
+	return multiplier(kind, mult, func(_ *core.Simulation, factor float64) {
 		for _, field := range fields {
 			*field *= factor
 		}
-	}}
+	})
 }
 
 // A pseudo-stat the sim adds to, which follows the stacks the way a flat stat does.
 func (p *parser) pseudoAdd(kind string, field *float64, v float64) *attachment {
-	current := 0.0
-	return &attachment{kind: kind, value: v, set: func(_ *core.Simulation, level float64) {
-		delta := v*level - current
-		if delta == 0 {
-			return
-		}
-		current = v * level
+	return additive(kind, v, func(_ *core.Simulation, delta float64) {
 		*field += delta
-	}}
+	})
 }
 
 // One of the speeds the unit recomputes on every change. They take the Simulation the aura's gain
@@ -560,14 +520,42 @@ func (p *parser) speed(kind string, apply func(*core.Unit, *core.Simulation, flo
 		return nil
 	}
 
+	a := multiplier(kind, mult, func(sim *core.Simulation, factor float64) {
+		apply(p.unit, sim, factor)
+	})
+	a.needsSim = true
+	return a
+}
+
+// A value added once per level: the attachment keeps what it has handed out and passes on the
+// difference.
+func additive(kind string, v float64, apply func(sim *core.Simulation, delta float64)) *attachment {
 	current := 0.0
-	return &attachment{kind: kind, value: mult, needsSim: true, set: func(sim *core.Simulation, level float64) {
-		if level == current {
+	return &attachment{kind: kind, value: v, set: func(sim *core.Simulation, level float64) {
+		delta := v*level - current
+		if delta == 0 {
 			return
 		}
-		factor := math.Pow(mult, level-current)
-		current = level
-		apply(p.unit, sim, factor)
+		current = v * level
+		apply(sim, delta)
+	}}
+}
+
+// A multiplier applied while the level is up and divided back out when it drops. Only a row that does
+// not stack reaches one, so the level is 0 or 1.
+func multiplier(kind string, mult float64, apply func(sim *core.Simulation, factor float64)) *attachment {
+	active := false
+	return &attachment{kind: kind, value: mult, set: func(sim *core.Simulation, level float64) {
+		if (level > 0) == active {
+			return
+		}
+		active = level > 0
+
+		factor := mult
+		if !active {
+			factor = 1 / mult
+		}
+		apply(sim, factor)
 	}}
 }
 
@@ -591,10 +579,6 @@ func (p *parser) schoolMultiplier(kind string, mask int32, mult float64, all *fl
 // The client states a percentage as an integer, and its sign comes from the data: a -6 is 0.94.
 func percentMultiplier(v float64) float64 {
 	return 1 + v/100
-}
-
-func millisFloat(ms float64) time.Duration {
-	return time.Duration(ms) * time.Millisecond
 }
 
 // The stats a client stat index names: -1 is all five, and 0 through 4 are one of them.

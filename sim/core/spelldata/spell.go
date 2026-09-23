@@ -264,6 +264,6 @@ func resolve(ids []int32) []*Spell {
 	return out
 }
 
-func millis(ms int32) time.Duration {
+func millis[T int32 | float64](ms T) time.Duration {
 	return time.Duration(ms) * time.Millisecond
 }
