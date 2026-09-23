@@ -146,14 +146,16 @@ func (druid *Druid) applyFerocity() {
 	})
 }
 
-// Forever's Savage Fury names Shred, which Classic's did not.
+// Forever's Savage Fury names Shred, which Classic's did not. Its class masks (16998: 38912 on the
+// damage effect, 4096 on the periodic one) hold Claw/Rake/Shred and Maul/Swipe; Mangle (word 1, 64)
+// is not in them.
 func (druid *Druid) applySavageFury() {
 	if druid.Talents.SavageFury == 0 {
 		return
 	}
 
 	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellRake | DruidSpellShred | DruidSpellMaul | DruidSpellSwipe | DruidSpellMangleBear,
+		ClassMask:  DruidSpellRake | DruidSpellShred | DruidSpellMaul | DruidSpellSwipe,
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.SavageFury.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_DAMAGE).FractionAt(druid.Talents.SavageFury),
 	})
