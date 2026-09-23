@@ -139,10 +139,7 @@ func processEnchantmentEffects(
 				}
 			}
 		case ITEM_ENCHANTMENT_EQUIP_SPELL: //Buff
-			if outPseudoStats != nil {
-				AddEquipSpellPseudoStats(outPseudoStats, effectArgs[i])
-			}
-			AddEquipSpellStats(outStats, effectArgs[i])
+			AddEquipSpellStats(outStats, outPseudoStats, effectArgs[i])
 			spellEffects := dbcInstance.SpellEffects[effectArgs[i]]
 			for _, spellEffect := range spellEffects {
 				points := spellEffect.EffectBasePoints + spellEffect.EffectDieSides
@@ -198,9 +195,14 @@ func processEnchantmentEffects(
 
 const rangedWeaponSubclassMask = rangedMask | ITEM_SUBCLASS_BIT_WEAPON_THROWN | ITEM_SUBCLASS_BIT_WEAPON_WAND
 
-// Adds the percents an equip spell states for hit, crit, block, dodge, parry and attack and cast speed
-// to pseudoStats, which is indexed by proto.PseudoStat, and reports whether it added any. Only auras on
-// the wearer count: Atiesh's 28142 is a party aura and reaches the sim as a raid buff.
+const SkillLineDefense = 95
+
+// Adds what an equip spell states that no stat index carries, and reports whether it added to each of
+// the two: to outStats the defense skill and flat block value - 24148 (Presence of Might) states
+// A_MOD_SKILL 7 on the Defense skill line and A_MOD_BLOCK_VALUE_FLAT 15 - and to pseudoStats, indexed by
+// proto.PseudoStat and skipped where nil, the percents for hit, crit, block, dodge, parry and attack and
+// cast speed. Only auras on the wearer count: Atiesh's 28142 is a party aura and reaches the sim as a
+// raid buff.
 //
 // A spell that names weapons applies its hit and weapon crit only to attacks with them. Melee is
 // credited when it names no weapon or a melee one and ranged when it names no weapon or a ranged one,
@@ -208,16 +210,15 @@ const rangedWeaponSubclassMask = rangedMask | ITEM_SUBCLASS_BIT_WEAPON_THROWN | 
 // stats.FromPseudoStatsProto takes back out. So 22780 (Biznicks 247x128 Accurascope, hit restricted to
 // bows, guns and crossbows) is ranged hit alone, and 1310308 (SAF-T Ultra Precision Scope, the all-crit
 // aura under the same restriction) is ranged crit alone, with no spell crit.
-func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
+func AddEquipSpellStats(outStats *stats.Stats, pseudoStats []float64, spellID int) (addedStats bool, addedPseudoStats bool) {
 	spell := dbcInstance.Spells[spellID]
 	namesWeapons := spell.EquippedItemClass == ITEM_CLASS_WEAPON && spell.EquippedItemSubclass != 0
 	melee := !namesWeapons || spell.EquippedItemSubclass&^rangedWeaponSubclassMask != 0
 	ranged := !namesWeapons || spell.EquippedItemSubclass&rangedWeaponSubclassMask != 0
 
-	added := false
 	add := func(pseudoStat proto.PseudoStat, value float64) {
 		pseudoStats[pseudoStat] += value
-		added = true
+		addedPseudoStats = true
 	}
 	addWeapon := func(meleeStat, rangedStat proto.PseudoStat, value float64) {
 		if melee {
@@ -233,8 +234,20 @@ func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
 			continue
 		}
 		value := effect.EffectBasePoints + effect.EffectDieSides
+
+		switch {
+		case effect.EffectAura == dbcenums.A_MOD_SKILL && effect.EffectMiscValues[0] == SkillLineDefense:
+			outStats[proto.Stat_StatDefenseRating] += value * core.DefenseRatingPerDefenseLevel
+			addedStats = true
+			continue
+		case effect.EffectAura == dbcenums.A_MOD_BLOCK_VALUE_FLAT:
+			outStats[proto.Stat_StatBlockValue] += value
+			addedStats = true
+			continue
+		}
+
 		// 1293881 (Pendulum of Doom) states a zero melee haste and changes the speed through its procs.
-		if value == 0 {
+		if pseudoStats == nil || value == 0 {
 			continue
 		}
 
@@ -265,34 +278,7 @@ func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
 		}
 	}
 
-	return added
-}
-
-const skillLineDefense = 95
-
-// Adds the defense skill and flat block value an equip spell states to outStats, and reports whether it
-// added any. 24148 (Presence of Might) states A_MOD_SKILL 7 on the Defense skill line and
-// A_MOD_BLOCK_VALUE_FLAT 15.
-func AddEquipSpellStats(outStats *stats.Stats, spellID int) bool {
-	added := false
-	for _, effect := range dbcInstance.SpellEffectsInOrder(spellID) {
-		if effect.EffectType != dbcenums.E_APPLY_AURA {
-			continue
-		}
-		value := effect.EffectBasePoints + effect.EffectDieSides
-
-		switch {
-		case effect.EffectAura == dbcenums.A_MOD_SKILL && effect.EffectMiscValues[0] == skillLineDefense:
-			outStats[proto.Stat_StatDefenseRating] += value * core.DefenseRatingPerDefenseLevel
-		case effect.EffectAura == dbcenums.A_MOD_BLOCK_VALUE_FLAT:
-			outStats[proto.Stat_StatBlockValue] += value
-		default:
-			continue
-		}
-		added = true
-	}
-
-	return added
+	return addedStats, addedPseudoStats
 }
 
 func ConvertEffectAuraToStatIndex(effectAura EffectAuraType, effectMisc int) proto.Stat {

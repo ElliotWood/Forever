@@ -435,45 +435,30 @@ func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 	var effects []*proto.ItemEffect
 	pseudoStats := make([]float64, stats.PseudoStatsLen)
 
-	for i := range dbcInstance.ItemEffectsByParentID[int(parsed.Id)] {
-		// pick a base effect that has stats if there is more than one effect on the item
-		var baseEff *ItemEffect
+	itemEffects := dbcInstance.ItemEffectsByParentID[int(parsed.Id)]
+	for idx := range itemEffects {
+		baseEff := &itemEffects[idx]
 
-		e := &dbcInstance.ItemEffectsByParentID[int(parsed.Id)][i]
-		statsSpell := resolveStatsSpell(e.SpellID)
-		props := buildBaseStatScalingProps(statsSpell, e.SpellID)
+		if baseEff.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP {
+			props := buildBaseStatScalingProps(resolveStatsSpell(baseEff.SpellID), baseEff.SpellID)
+			equipStats := stats.FromProtoMap(props.Stats)
+			equipPseudoStats := make([]float64, stats.PseudoStatsLen)
+			addedStats, addedPseudoStats := AddEquipSpellStats(&equipStats, equipPseudoStats, baseEff.SpellID)
 
-		hasStats := len(props.Stats) > 0
-		equipPseudoStats := make([]float64, stats.PseudoStatsLen)
-		hasPseudoStats := e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && AddEquipSpellPseudoStats(equipPseudoStats, e.SpellID)
-		equipStats := stats.Stats{}
-		hasEquipStats := e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && AddEquipSpellStats(&equipStats, e.SpellID)
-
-		if e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && (hasStats || hasPseudoStats || hasEquipStats) {
-			if areaType := spelldata.AreaTypeOfGroup(dbcInstance.Spells[e.SpellID].RequiredAreasID); areaType != proto.AreaType_AreaTypeUnknown {
-				areaStats := map[int32]float64{}
-				maps.Copy(areaStats, props.Stats)
-				for stat, value := range equipStats.ToProtoMap() {
-					areaStats[stat] += value
+			if len(props.Stats) > 0 || addedStats || addedPseudoStats {
+				if areaType := spelldata.AreaTypeOfGroup(dbcInstance.Spells[baseEff.SpellID].RequiredAreasID); areaType != proto.AreaType_AreaTypeUnknown {
+					addAreaStats(parsed.ScalingOptions[0], areaType, equipStats.ToProtoMap())
+					continue
 				}
-				addAreaStats(parsed.ScalingOptions[0], areaType, areaStats)
+				for pseudoStat, value := range equipPseudoStats {
+					pseudoStats[pseudoStat] += value
+				}
+				for stat, value := range equipStats.ToProtoMap() {
+					parsed.ScalingOptions[0].Stats[stat] += value
+				}
 				continue
 			}
-			for i, value := range equipPseudoStats {
-				pseudoStats[i] += value
-			}
-			for stat, value := range props.Stats {
-				parsed.ScalingOptions[0].Stats[int32(stat)] += value
-			}
-			for stat, value := range equipStats {
-				if value != 0 {
-					parsed.ScalingOptions[0].Stats[int32(stat)] += value
-				}
-			}
-			continue
-		} else if (e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP) || (e.TriggerType == ITEM_SPELLTRIGGER_CHANCE_ON_HIT) || e.CoolDownMSec > 0 {
-			baseEff = e
-		} else {
+		} else if baseEff.TriggerType != ITEM_SPELLTRIGGER_CHANCE_ON_HIT && baseEff.CoolDownMSec <= 0 {
 			continue
 		}
 
