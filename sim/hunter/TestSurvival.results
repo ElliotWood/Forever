@@ -123,6 +123,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-BloodGuard'sChainGauntlets-16530"
+ value: {
+  dps: 536.41217
+  tps: 269.88819
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-BloodGuard'sChainVices-22862"
  value: {
   dps: 540.99712
@@ -169,6 +176,13 @@ dps_results: {
  value: {
   dps: 535.25993
   tps: 269.08162
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 532.52985
+  tps: 266.90889
  }
 }
 dps_results: {
@@ -221,6 +235,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 531.78434
+  tps: 266.64871
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 531.78434
+  tps: 266.64871
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-DeadlyScope-663"
  value: {
   dps: 534.96424
@@ -249,6 +277,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Dragon'sCall-10847"
+ value: {
+  dps: 531.78434
+  tps: 266.64871
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-DreadmistRaiment"
  value: {
   dps: 555.60453
@@ -260,6 +295,13 @@ dps_results: {
  value: {
   dps: 541.0936
   tps: 273.16519
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-EbonHiltofMarduk-14576"
+ value: {
+  dps: 531.78434
+  tps: 264.09875
  }
 }
 dps_results: {
@@ -302,6 +344,13 @@ dps_results: {
  value: {
   dps: 522.88339
   tps: 260.41804
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 531.78434
+  tps: 266.64871
  }
 }
 dps_results: {
@@ -382,6 +431,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Headmaster'sCharge-13937"
+ value: {
+  dps: 534.77742
+  tps: 269.25838
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-HeartofWyrmthalak-22321"
+ value: {
+  dps: 534.69935
+  tps: 268.71312
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-HeartoftheScale-13164"
  value: {
   dps: 531.78434
@@ -435,6 +498,13 @@ dps_results: {
  value: {
   dps: 544.8551
   tps: 275.79824
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-Knight-Lieutenant'sChainGauntlets-16403"
+ value: {
+  dps: 536.41217
+  tps: 269.88819
  }
 }
 dps_results: {
@@ -508,6 +578,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Naglering-11669"
+ value: {
+  dps: 531.78434
+  tps: 266.64871
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-NecropileRaiment"
  value: {
   dps: 544.13343
@@ -517,8 +594,8 @@ dps_results: {
 dps_results: {
  key: "TestSurvival-AllItems-Predator'sArmor"
  value: {
-  dps: 570.69521
-  tps: 291.9714
+  dps: 578.23832
+  tps: 296.06477
  }
 }
 dps_results: {
@@ -543,10 +620,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSurvival-AllItems-Renataki'sCharmofBeasts-19953"
+ value: {
+  dps: 536.81763
+  tps: 268.98047
+ }
+}
+dps_results: {
  key: "TestSurvival-AllItems-Rivenspike-13286"
  value: {
   dps: 531.78434
   tps: 266.64871
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-RunebladeofBaronRivendare-13505"
+ value: {
+  dps: 531.78434
+  tps: 266.64871
+ }
+}
+dps_results: {
+ key: "TestSurvival-AllItems-SecondWind-11819"
+ value: {
+  dps: 531.78434
+  tps: 267.36742
  }
 }
 dps_results: {

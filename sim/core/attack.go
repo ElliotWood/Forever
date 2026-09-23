@@ -320,6 +320,9 @@ type WeaponAttack struct {
 	curSwingSpeed    float64
 	curSwingDuration time.Duration
 	enabled          bool
+
+	// Extra attacks still owed after the one ExtraMHAttacks pulled to now.
+	extraAttacks int32
 }
 
 func (wa *WeaponAttack) getWeapon() *Weapon {
@@ -366,6 +369,10 @@ func (wa *WeaponAttack) swing(sim *Simulation) time.Duration {
 	// if the attack causes APL evaluations (e.g. from rage gain).
 	wa.previousSwing = wa.swingAt
 	wa.swingAt = sim.CurrentTime + wa.curSwingDuration
+	if wa.extraAttacks > 0 {
+		wa.extraAttacks--
+		wa.swingAt = sim.CurrentTime
+	}
 
 	// Capture how late this swing is vs. when it would have been ready in an
 	// uncontested rotation, then advance naturalReadyAt for the next cycle.
@@ -594,6 +601,7 @@ func (aa *AutoAttacks) reset(_ *Simulation) {
 
 	aa.mh.previousSwing = -NeverExpires
 	aa.mh.swingAt = NeverExpires
+	aa.mh.extraAttacks = 0
 	aa.oh.previousSwing = -NeverExpires
 	aa.oh.swingAt = NeverExpires
 
@@ -913,6 +921,15 @@ func (aa *AutoAttacks) ExtraMHAttack(sim *Simulation) {
 	}
 	aa.mh.swingAt = sim.CurrentTime
 	sim.rescheduleWeaponAttack(aa.mh.swingAt)
+}
+
+// ExtraMHAttacks grants count extra attacks that go off back to back (Ironfoe's "2 extra attacks").
+func (aa *AutoAttacks) ExtraMHAttacks(sim *Simulation, count int32) {
+	if count <= 0 || !aa.AutoSwingMelee || !aa.mh.enabled {
+		return
+	}
+	aa.mh.extraAttacks += count - 1
+	aa.ExtraMHAttack(sim)
 }
 
 // Delays all swing timers for the specified amount.

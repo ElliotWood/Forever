@@ -116,6 +116,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 520.18422
+  tps: 258.53156
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-CadaverousGarb"
  value: {
   dps: 584.21783
@@ -148,6 +155,20 @@ dps_results: {
  value: {
   dps: 520.18422
   tps: 258.53156
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 520.37599
+  tps: 258.62687
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 533.03279
+  tps: 264.9173
  }
 }
 dps_results: {
@@ -186,6 +207,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-Dragon'sCall-10847"
+ value: {
+  dps: 520.18422
+  tps: 258.53156
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-DreadmistRaiment"
  value: {
   dps: 529.27224
@@ -200,6 +228,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-EbonHiltofMarduk-14576"
+ value: {
+  dps: 219.00481
+  tps: 107.75694
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-EmblemsofVeiledShadows"
  value: {
   dps: 548.997
@@ -211,6 +246,13 @@ dps_results: {
  value: {
   dps: 448.36833
   tps: 222.83906
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 520.18422
+  tps: 258.53156
  }
 }
 dps_results: {
@@ -263,6 +305,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-HeartofWyrmthalak-22321"
+ value: {
+  dps: 525.00049
+  tps: 260.92524
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-HeartoftheScale-13164"
  value: {
   dps: 520.18422
@@ -298,6 +347,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-Ironfoe-11684"
+ value: {
+  dps: 246.15133
+  tps: 122.33721
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-IronweaveBattlesuit"
  value: {
   dps: 520.18422
@@ -328,8 +384,8 @@ dps_results: {
 dps_results: {
  key: "TestAssassination-AllItems-Madcap'sOutfit"
  value: {
-  dps: 586.74733
-  tps: 291.61342
+  dps: 593.68819
+  tps: 295.06303
  }
 }
 dps_results: {
@@ -368,6 +424,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-Naglering-11669"
+ value: {
+  dps: 520.18422
+  tps: 258.53156
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-NecropileRaiment"
  value: {
   dps: 523.69821
@@ -403,7 +466,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAssassination-AllItems-Renataki'sCharmofTrickery-19954"
+ value: {
+  dps: 528.59148
+  tps: 262.70997
+ }
+}
+dps_results: {
  key: "TestAssassination-AllItems-SatchelofDarkIronBombs-285278"
+ value: {
+  dps: 520.18422
+  tps: 258.53156
+ }
+}
+dps_results: {
+ key: "TestAssassination-AllItems-SecondWind-11819"
  value: {
   dps: 520.18422
   tps: 258.53156

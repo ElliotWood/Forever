@@ -116,6 +116,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 483.52425
+  tps: 240.31155
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-CadaverousGarb"
  value: {
   dps: 551.93629
@@ -148,6 +155,20 @@ dps_results: {
  value: {
   dps: 483.52425
   tps: 240.31155
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 483.62757
+  tps: 240.3629
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 494.58164
+  tps: 245.80708
  }
 }
 dps_results: {
@@ -186,6 +207,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-Dragon'sCall-10847"
+ value: {
+  dps: 483.52425
+  tps: 240.31155
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-DreadmistRaiment"
  value: {
   dps: 491.53162
@@ -200,6 +228,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-EbonHiltofMarduk-14576"
+ value: {
+  dps: 457.23422
+  tps: 224.97295
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-EmblemsofVeiledShadows"
  value: {
   dps: 509.45426
@@ -211,6 +246,13 @@ dps_results: {
  value: {
   dps: 419.87051
   tps: 208.67564
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 483.52425
+  tps: 240.31155
  }
 }
 dps_results: {
@@ -263,6 +305,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-HeartofWyrmthalak-22321"
+ value: {
+  dps: 487.3106
+  tps: 242.19337
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-HeartoftheScale-13164"
  value: {
   dps: 483.52425
@@ -298,6 +347,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-Ironfoe-11684"
+ value: {
+  dps: 495.77127
+  tps: 246.39832
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-IronweaveBattlesuit"
  value: {
   dps: 483.52425
@@ -328,8 +384,8 @@ dps_results: {
 dps_results: {
  key: "TestSubtlety-AllItems-Madcap'sOutfit"
  value: {
-  dps: 552.17998
-  tps: 274.43345
+  dps: 564.33981
+  tps: 280.47688
  }
 }
 dps_results: {
@@ -368,6 +424,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-Naglering-11669"
+ value: {
+  dps: 483.52425
+  tps: 240.31155
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-NecropileRaiment"
  value: {
   dps: 485.16794
@@ -403,7 +466,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-Renataki'sCharmofTrickery-19954"
+ value: {
+  dps: 495.32345
+  tps: 246.17575
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-SatchelofDarkIronBombs-285278"
+ value: {
+  dps: 483.52425
+  tps: 240.31155
+ }
+}
+dps_results: {
+ key: "TestSubtlety-AllItems-SecondWind-11819"
  value: {
   dps: 483.52425
   tps: 240.31155

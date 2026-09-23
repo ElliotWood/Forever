@@ -116,6 +116,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 525.20483
+  tps: 261.0268
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-CadaverousGarb"
  value: {
   dps: 591.73013
@@ -148,6 +155,20 @@ dps_results: {
  value: {
   dps: 525.20483
   tps: 261.0268
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 525.25221
+  tps: 261.05035
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 536.48116
+  tps: 266.63114
  }
 }
 dps_results: {
@@ -186,6 +207,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-Dragon'sCall-10847"
+ value: {
+  dps: 525.20483
+  tps: 261.0268
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-DreadmistRaiment"
  value: {
   dps: 530.86709
@@ -200,6 +228,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-EbonHiltofMarduk-14576"
+ value: {
+  dps: 513.33985
+  tps: 252.57861
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-EmblemsofVeiledShadows"
  value: {
   dps: 550.26441
@@ -211,6 +246,13 @@ dps_results: {
  value: {
   dps: 438.2407
   tps: 217.80563
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 525.20483
+  tps: 261.0268
  }
 }
 dps_results: {
@@ -263,6 +305,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-HeartofWyrmthalak-22321"
+ value: {
+  dps: 527.87085
+  tps: 262.35181
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-HeartoftheScale-13164"
  value: {
   dps: 525.20483
@@ -298,6 +347,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-Ironfoe-11684"
+ value: {
+  dps: 556.37308
+  tps: 276.51742
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-IronweaveBattlesuit"
  value: {
   dps: 525.20483
@@ -328,8 +384,8 @@ dps_results: {
 dps_results: {
  key: "TestCombat-AllItems-Madcap'sOutfit"
  value: {
-  dps: 588.31544
-  tps: 292.39277
+  dps: 592.8951
+  tps: 294.66886
  }
 }
 dps_results: {
@@ -368,6 +424,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-Naglering-11669"
+ value: {
+  dps: 525.20483
+  tps: 261.0268
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-NecropileRaiment"
  value: {
   dps: 527.06699
@@ -403,7 +466,21 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestCombat-AllItems-Renataki'sCharmofTrickery-19954"
+ value: {
+  dps: 525.7804
+  tps: 261.31286
+ }
+}
+dps_results: {
  key: "TestCombat-AllItems-SatchelofDarkIronBombs-285278"
+ value: {
+  dps: 525.20483
+  tps: 261.0268
+ }
+}
+dps_results: {
+ key: "TestCombat-AllItems-SecondWind-11819"
  value: {
   dps: 525.20483
   tps: 261.0268

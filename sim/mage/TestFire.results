@@ -109,6 +109,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 470.0024
+  tps: 289.21994
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-CrudeScope-30"
  value: {
   dps: 449.70946
@@ -127,6 +134,20 @@ dps_results: {
  value: {
   dps: 457.76999
   tps: 282.75073
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 449.70946
+  tps: 278.10407
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 449.70946
+  tps: 278.10407
  }
 }
 dps_results: {
@@ -158,6 +179,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-Dragon'sCall-10847"
+ value: {
+  dps: 449.70946
+  tps: 278.10407
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-DreadmistRaiment"
  value: {
   dps: 654.73508
@@ -169,6 +197,13 @@ dps_results: {
  value: {
   dps: 449.70946
   tps: 278.10407
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-EbonHiltofMarduk-14576"
+ value: {
+  dps: 449.70946
+  tps: 275.51701
  }
 }
 dps_results: {
@@ -214,6 +249,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 449.70946
+  tps: 278.10407
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-EyeofMoam-21473"
  value: {
   dps: 458.58413
@@ -250,6 +292,27 @@ dps_results: {
 }
 dps_results: {
  key: "TestFire-AllItems-HandofJustice-11815"
+ value: {
+  dps: 449.70946
+  tps: 278.10407
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Hazza'rah'sCharmofMagic-19959"
+ value: {
+  dps: 449.70946
+  tps: 278.10407
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-Headmaster'sCharge-13937"
+ value: {
+  dps: 462.7527
+  tps: 286.30237
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-HeartofWyrmthalak-22321"
  value: {
   dps: 449.70946
   tps: 278.10407
@@ -340,6 +403,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestFire-AllItems-Naglering-11669"
+ value: {
+  dps: 449.70946
+  tps: 278.10407
+ }
+}
+dps_results: {
  key: "TestFire-AllItems-NecropileRaiment"
  value: {
   dps: 548.66303
@@ -365,6 +435,20 @@ dps_results: {
  value: {
   dps: 491.2851
   tps: 303.50494
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-RunebladeofBaronRivendare-13505"
+ value: {
+  dps: 449.70946
+  tps: 278.10407
+ }
+}
+dps_results: {
+ key: "TestFire-AllItems-SecondWind-11819"
+ value: {
+  dps: 455.21477
+  tps: 282.67186
  }
 }
 dps_results: {

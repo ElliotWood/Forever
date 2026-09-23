@@ -123,6 +123,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-BloodGuard'sChainGauntlets-16530"
+ value: {
+  dps: 742.6808
+  tps: 332.86412
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-BloodGuard'sChainVices-22862"
  value: {
   dps: 746.82707
@@ -169,6 +176,13 @@ dps_results: {
  value: {
   dps: 741.41167
   tps: 331.97572
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 740.37055
+  tps: 330.79096
  }
 }
 dps_results: {
@@ -221,6 +235,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 737.51562
+  tps: 329.24849
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 737.51562
+  tps: 329.24849
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-DeadlyScope-663"
  value: {
   dps: 740.9516
@@ -249,6 +277,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Dragon'sCall-10847"
+ value: {
+  dps: 737.51562
+  tps: 329.24849
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-DreadmistRaiment"
  value: {
   dps: 780.53534
@@ -260,6 +295,13 @@ dps_results: {
  value: {
   dps: 747.28271
   tps: 336.08545
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-EbonHiltofMarduk-14576"
+ value: {
+  dps: 736.98681
+  tps: 326.11839
  }
 }
 dps_results: {
@@ -302,6 +344,13 @@ dps_results: {
  value: {
   dps: 726.6105
   tps: 322.07407
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 737.51562
+  tps: 329.24849
  }
 }
 dps_results: {
@@ -382,6 +431,20 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Headmaster'sCharge-13937"
+ value: {
+  dps: 743.16497
+  tps: 333.48506
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-HeartofWyrmthalak-22321"
+ value: {
+  dps: 740.33158
+  tps: 331.28905
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-HeartoftheScale-13164"
  value: {
   dps: 737.51562
@@ -435,6 +498,13 @@ dps_results: {
  value: {
   dps: 751.01271
   tps: 338.69645
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-Knight-Lieutenant'sChainGauntlets-16403"
+ value: {
+  dps: 742.6808
+  tps: 332.86412
  }
 }
 dps_results: {
@@ -508,6 +578,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Naglering-11669"
+ value: {
+  dps: 737.51562
+  tps: 329.24849
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-NecropileRaiment"
  value: {
   dps: 768.13673
@@ -517,8 +594,8 @@ dps_results: {
 dps_results: {
  key: "TestBeastMastery-AllItems-Predator'sArmor"
  value: {
-  dps: 793.8429
-  tps: 372.65598
+  dps: 797.76951
+  tps: 374.49053
  }
 }
 dps_results: {
@@ -543,10 +620,31 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestBeastMastery-AllItems-Renataki'sCharmofBeasts-19953"
+ value: {
+  dps: 731.74387
+  tps: 328.22286
+ }
+}
+dps_results: {
  key: "TestBeastMastery-AllItems-Rivenspike-13286"
  value: {
   dps: 737.51562
   tps: 329.24849
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-RunebladeofBaronRivendare-13505"
+ value: {
+  dps: 737.51562
+  tps: 329.24849
+ }
+}
+dps_results: {
+ key: "TestBeastMastery-AllItems-SecondWind-11819"
+ value: {
+  dps: 743.53671
+  tps: 335.01721
  }
 }
 dps_results: {

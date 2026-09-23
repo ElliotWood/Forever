@@ -109,6 +109,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-BurstofKnowledge-11832"
+ value: {
+  dps: 599.40677
+  tps: 305.70775
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-CrudeScope-30"
  value: {
   dps: 591.69216
@@ -127,6 +134,20 @@ dps_results: {
  value: {
   dps: 593.21729
   tps: 304.23834
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-DarkmoonCard:Heroism-19287"
+ value: {
+  dps: 591.69216
+  tps: 303.4777
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-DarkmoonCard:Maelstrom-19289"
+ value: {
+  dps: 591.69216
+  tps: 303.4777
  }
 }
 dps_results: {
@@ -151,6 +172,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-Dragon'sCall-10847"
+ value: {
+  dps: 591.69216
+  tps: 303.4777
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-DreadmistRaiment"
  value: {
   dps: 677.65669
@@ -162,6 +190,13 @@ dps_results: {
  value: {
   dps: 591.69216
   tps: 303.4777
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-EbonHiltofMarduk-14576"
+ value: {
+  dps: 591.69216
+  tps: 300.98652
  }
 }
 dps_results: {
@@ -207,6 +242,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-EssenceofthePureFlame-18815"
+ value: {
+  dps: 591.69216
+  tps: 303.4777
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-EyeofMoam-21473"
  value: {
   dps: 600.62746
@@ -243,6 +285,34 @@ dps_results: {
 }
 dps_results: {
  key: "TestAffliction-AllItems-HandofJustice-11815"
+ value: {
+  dps: 591.69216
+  tps: 303.4777
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Hazza'rah'sCharmofDestruction-19957"
+ value: {
+  dps: 596.18155
+  tps: 305.99176
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Hazza'rah'sCharmofMagic-19959"
+ value: {
+  dps: 591.69216
+  tps: 303.4777
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-Headmaster'sCharge-13937"
+ value: {
+  dps: 598.07831
+  tps: 306.80815
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-HeartofWyrmthalak-22321"
  value: {
   dps: 591.69216
   tps: 303.4777
@@ -326,6 +396,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestAffliction-AllItems-Naglering-11669"
+ value: {
+  dps: 591.69216
+  tps: 303.4777
+ }
+}
+dps_results: {
  key: "TestAffliction-AllItems-NecropileRaiment"
  value: {
   dps: 634.94758
@@ -351,6 +428,20 @@ dps_results: {
  value: {
   dps: 608.64219
   tps: 312.23698
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-RunebladeofBaronRivendare-13505"
+ value: {
+  dps: 591.69216
+  tps: 303.4777
+ }
+}
+dps_results: {
+ key: "TestAffliction-AllItems-SecondWind-11819"
+ value: {
+  dps: 585.64083
+  tps: 300.19334
  }
 }
 dps_results: {

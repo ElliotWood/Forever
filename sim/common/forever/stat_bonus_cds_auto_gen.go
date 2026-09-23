@@ -16,8 +16,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(11625) // Enthralled Sphere - https://www.wowhead.com/forever/spell=1300754
 	// shared.NewSimpleStatActive(11702) // Grizzle's Skinner - https://www.wowhead.com/forever/spell=1300763
 	// shared.NewSimpleStatActive(11808) // Circle of Flame - https://www.wowhead.com/forever/spell=17447
-	// shared.NewSimpleStatActive(11819) // Second Wind - https://www.wowhead.com/forever/spell=15604
-	// shared.NewSimpleStatActive(11832) // Burst of Knowledge - https://www.wowhead.com/forever/spell=15646
 	// shared.NewSimpleStatActive(11905) // Linken's Boomerang - https://www.wowhead.com/forever/spell=15712
 	// shared.NewSimpleStatActive(13143) // Mark of the Dragon Lord - https://www.wowhead.com/forever/spell=17252
 	// shared.NewSimpleStatActive(13171) // Smokey's Lighter - https://www.wowhead.com/forever/spell=17283
@@ -25,7 +23,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(13379) // Piccolo of the Flaming Fire - https://www.wowhead.com/forever/spell=18400
 	// shared.NewSimpleStatActive(13515) // Ramstein's Lightning Bolts - https://www.wowhead.com/forever/spell=1299443
 	// shared.NewSimpleStatActive(13544) // Spectral Essence - https://www.wowhead.com/forever/spell=1298497
-	// shared.NewSimpleStatActive(13937) // Headmaster's Charge - https://www.wowhead.com/forever/spell=18264
 	// shared.NewSimpleStatActive(13965) // Blackhand's Breadth - https://www.wowhead.com/forever/spell=1318944
 	// shared.NewSimpleStatActive(13968) // Eye of the Beast - https://www.wowhead.com/forever/spell=1287840
 	// shared.NewSimpleStatActive(14134) // Cloak of Fire - https://www.wowhead.com/forever/spell=18364
@@ -56,13 +53,8 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(19948) // Zandalarian Hero Badge - https://www.wowhead.com/forever/spell=24574
 	// shared.NewSimpleStatActive(19949) // Zandalarian Hero Medallion - https://www.wowhead.com/forever/spell=24661
 	// shared.NewSimpleStatActive(19950) // Zandalarian Hero Charm - https://www.wowhead.com/forever/spell=24658
-	// shared.NewSimpleStatActive(19953) // Renataki's Charm of Beasts - https://www.wowhead.com/forever/spell=24531
-	// shared.NewSimpleStatActive(19954) // Renataki's Charm of Trickery - https://www.wowhead.com/forever/spell=24532
 	// shared.NewSimpleStatActive(19955) // Wushoolay's Charm of Nature - https://www.wowhead.com/forever/spell=24542
-	// shared.NewSimpleStatActive(19956) // Wushoolay's Charm of Spirits - https://www.wowhead.com/forever/spell=24499
-	// shared.NewSimpleStatActive(19957) // Hazza'rah's Charm of Destruction - https://www.wowhead.com/forever/spell=24543
 	// shared.NewSimpleStatActive(19958) // Hazza'rah's Charm of Healing - https://www.wowhead.com/forever/spell=24546
-	// shared.NewSimpleStatActive(19959) // Hazza'rah's Charm of Magic - https://www.wowhead.com/forever/spell=24544
 	// shared.NewSimpleStatActive(19990) // Blessed Prayer Beads - https://www.wowhead.com/forever/spell=24354
 	// shared.NewSimpleStatActive(19991) // Devilsaur Eye - https://www.wowhead.com/forever/spell=24352
 	// shared.NewSimpleStatActive(19992) // Devilsaur Tooth - https://www.wowhead.com/forever/spell=24353
@@ -70,8 +62,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(20071) // Talisman of Arathor - https://www.wowhead.com/forever/spell=23991
 	// shared.NewSimpleStatActive(20072) // Defiler's Talisman - https://www.wowhead.com/forever/spell=23991
 	// shared.NewSimpleStatActive(20084) // Hunting Net - https://www.wowhead.com/forever/spell=8312
-	// shared.NewSimpleStatActive(20130) // Diamond Flask - https://www.wowhead.com/forever/spell=363881
-	// shared.NewSimpleStatActive(20512) // Sanctified Orb - https://www.wowhead.com/forever/spell=24865
 	// shared.NewSimpleStatActive(20525) // Earthen Sigil - https://www.wowhead.com/forever/spell=24884
 	// shared.NewSimpleStatActive(20534) // Abyss Shard - https://www.wowhead.com/forever/spell=25112
 	// shared.NewSimpleStatActive(21115) // Defiler's Talisman - https://www.wowhead.com/forever/spell=25746
