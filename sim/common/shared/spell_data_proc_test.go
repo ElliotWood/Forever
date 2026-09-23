@@ -607,3 +607,66 @@ func TestEnchantAuraPPMFollowsItsWeapon(t *testing.T) {
 		})
 	}
 }
+
+// A stacking trigger's procs-per-minute rate is measured the way its opener's is: a weapon enchant's
+// on the hand carrying it and never on spells, an item's off the main hand for everything but the
+// off hand's and the ranged hits.
+func TestStackTriggerPPMFollowsTheEffect(t *testing.T) {
+	const slowID, fastID, itemID, weaponEnchantID int32 = 990901, 990902, 990903, 990904
+	const slow, fast, ppm = 2.6, 1.8, 2.0
+	fastOneHander := testOneHander(fastID)
+	fastOneHander.WeaponSpeed = fast
+	core.AddToDatabase(&proto.SimDatabase{
+		Items: []*proto.SimItem{testOneHander(slowID), fastOneHander},
+		Enchants: []*proto.SimEnchant{
+			{EffectId: weaponEnchantID, Name: "Test Weapon Enchant", Type: proto.ItemType_ItemTypeWeapon},
+		},
+	})
+	chance := func(speed float64) float64 { return speed * (ppm / 60) }
+
+	items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotOffHand+1)
+	for i := range items {
+		items[i] = &proto.ItemSpec{}
+	}
+	items[proto.ItemSlot_ItemSlotMainHand] = &proto.ItemSpec{Id: slowID}
+	items[proto.ItemSlot_ItemSlotOffHand] = &proto.ItemSpec{Id: fastID, Enchant: weaponEnchantID}
+
+	agent := newTestAgent()
+	character := agent.character
+	character.Equipment = core.ProtoToEquipment(&proto.EquipmentSpec{Items: items})
+	character.EnableAutoAttacks(agent, core.AutoAttackOptions{
+		MainHand:       character.WeaponFromMainHand(),
+		OffHand:        character.WeaponFromOffHand(),
+		AutoSwingMelee: true,
+	})
+
+	stackProc := &proto.ProcEffect{ProcRate: &proto.ProcEffect_Ppm{Ppm: ppm}}
+	for _, tc := range []struct {
+		name                     string
+		source                   effectSource
+		mainHand, offHand, spell float64
+	}{
+		{"weapon enchant on the off hand", effectSource{id: weaponEnchantID, isEnchant: true}, 0, chance(fast), 0},
+		{"item", effectSource{id: itemID}, chance(slow), chance(fast), chance(slow)},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			dpm := stackTriggerDPM(character, tc.source, stackProc, core.ProcMaskMelee|core.ProcMaskSpellDamage)
+			if dpm == nil {
+				t.Fatal("no procs-per-minute manager")
+			}
+			for _, hit := range []struct {
+				name string
+				mask core.ProcMask
+				want float64
+			}{
+				{"main hand", core.ProcMaskMeleeMHAuto, tc.mainHand},
+				{"off hand", core.ProcMaskMeleeOHAuto, tc.offHand},
+				{"spell", core.ProcMaskSpellDamage, tc.spell},
+			} {
+				if got := dpm.Chance(hit.mask, nil); got != hit.want {
+					t.Errorf("%s chance = %v, want %v", hit.name, got, hit.want)
+				}
+			}
+		})
+	}
+}

@@ -346,7 +346,7 @@ func attachStackTrigger(character *core.Character, config ProcStatBonusEffect, e
 		CanProcFromProcs:  config.CanProcFromProcs,
 		IsWeaponProc:      config.IsWeaponProc,
 		ProcChance:        stackProc.GetProcChance(),
-		DPM:               stackTriggerDPM(character, stackProc, config.StackProcMask),
+		DPM:               stackTriggerDPM(character, config.effectSource(), stackProc, config.StackProcMask),
 		ICD:               time.Millisecond * time.Duration(stackProc.IcdMs),
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 			if !statAura.IsActive() {
@@ -953,7 +953,7 @@ func attachStackingCDTrigger(character *core.Character, config StackingStatBonus
 
 	var stackDPM *core.DynamicProcManager
 	if stackProc != nil {
-		stackDPM = stackTriggerDPM(character, stackProc, config.ProcMask)
+		stackDPM = stackTriggerDPM(character, effectSource{id: config.ID}, stackProc, config.ProcMask)
 	}
 
 	windowAura.AttachProcTriggerCallback(&character.Unit, core.ProcTrigger{
@@ -1246,16 +1246,11 @@ func NewProcDamageEffect(config ProcDamageEffect) {
 }
 
 // A stack rate given as PPM needs a proc manager rather than a flat chance; a chance-based rate
-// needs none. The mask has to be a concrete one: a PPM manager built on ProcMaskUnknown matches
-// nothing and would silently never proc. Every stack trigger the generator emits carries the mask
-// it derived from the container's own proc flags, so that does not arise today - unlike procDPM,
-// which handles the unknown case because a weapon or enchant proc can legitimately lack a mask.
-func stackTriggerDPM(character *core.Character, stackProc *proto.ProcEffect, mask core.ProcMask) *core.DynamicProcManager {
-	if stackProc.GetPpm() <= 0 {
-		return nil
-	}
-
-	return character.NewLegacyPPMManager(stackProc.GetPpm(), mask)
+// needs none. It is measured the way the opener's is, so a weapon enchant's stacks roll on the weapon
+// carrying it. Every stack trigger the generator emits carries the mask it derived from the
+// container's own proc flags, so the unknown-mask routing in dpmForMask is not reached from here.
+func stackTriggerDPM(character *core.Character, source effectSource, stackProc *proto.ProcEffect, mask core.ProcMask) *core.DynamicProcManager {
+	return dpmForMask(character, source, stackProc.GetPpm(), mask)
 }
 
 ///////////////////////////////////////////////////////////////////////////
