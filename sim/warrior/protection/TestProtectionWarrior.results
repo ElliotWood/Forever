@@ -151,6 +151,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-EarthenSigil-20525"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Earthstrike-21180"
  value: {
   dps: 501.64811
@@ -317,6 +325,14 @@ dps_results: {
   dps: 506.60905
   tps: 778.00666
   dtps: 3440.79481
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Gri'lek'sCharmofMight-19951"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
  }
 }
 dps_results: {
@@ -573,6 +589,14 @@ dps_results: {
   dps: 501.64811
   tps: 770.90621
   dtps: 3478.97646
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-WarmthofForgiveness-23027"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
  }
 }
 dps_results: {

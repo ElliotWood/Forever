@@ -127,6 +127,15 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-EarthenSigil-20525"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-Earthstrike-21180"
  value: {
   dps: 549.82306
@@ -272,6 +281,15 @@ dps_results: {
 }
 dps_results: {
  key: "TestDpsWarrior-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-Gri'lek'sCharmofMight-19951"
  value: {
   dps: 549.82306
   tps: 314.258
@@ -506,6 +524,15 @@ dps_results: {
 }
 dps_results: {
  key: "TestDpsWarrior-AllItems-Uther'sStrength-11302"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-WarmthofForgiveness-23027"
  value: {
   dps: 549.82306
   tps: 314.258
