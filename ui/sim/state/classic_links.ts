@@ -198,6 +198,10 @@ const CONSUMABLE_ITEMS: Record<string, number> = {
 	SolidWeightstone: 7965,
 	ShadowOil: 3824,
 	FrostOil: 3829,
+	// Master's rogue imbues; ours are the poison items sim/rogue/poisons.go reads.
+	InstantPoison: 26891,
+	DeadlyPoison: 27186,
+	WoundPoison: 27188,
 };
 
 const convertConsumes = (c: Json): Json => {
@@ -209,7 +213,8 @@ const convertConsumes = (c: Json): Json => {
 		conjuredId: item('defaultConjured'),
 		explosiveId: item('fillerExplosive'),
 		goblinSapper: c.sapperExplosive === 'SapperGoblinSapper' || undefined,
-		battleElixirId: item('agilityElixir', 'strengthBuff', 'spellPowerBuff', 'firePowerBuff', 'frostPowerBuff', 'shadowPowerBuff', 'attackPowerBuff'),
+		// Elixirs before jujus: master's caster defaults also carry Juju Power, which is no use to them.
+		battleElixirId: item('agilityElixir', 'spellPowerBuff', 'firePowerBuff', 'frostPowerBuff', 'shadowPowerBuff', 'strengthBuff', 'attackPowerBuff'),
 		guardianElixirId: item('manaRegenElixir', 'healthElixir', 'armorElixir'),
 		mhImbueId: item('mainHandImbue'),
 		ohImbueId: item('offHandImbue'),

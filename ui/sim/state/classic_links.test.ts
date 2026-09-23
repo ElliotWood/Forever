@@ -90,6 +90,13 @@ describe('classic-engine share links', () => {
 		expect(converted.epWeightsStats!.stats[Stat.StatMeleeHitRating]).toBe(2);
 	});
 
+	it("keeps a rogue's poisons and a caster's spell power elixir", () => {
+		const consumables = (spec: string) => tryParseUrlLocation({ hash: '#' + (LINKS as Record<string, string>)[spec], search: '' })!.settings.player!.consumables!;
+		expect(consumables('rogue')).toMatchObject({ mhImbueId: 26891, ohImbueId: 27186 });
+		// Master's elemental default also has Juju Power; Greater Arcane Elixir is the one that counts.
+		expect(consumables('elemental_shaman').battleElixirId).toBe(13454);
+	});
+
 	for (const [key, expected] of [
 		['healingPriest', 'healerPriest'],
 		['restorationDruid', 'restorationDruid'],
