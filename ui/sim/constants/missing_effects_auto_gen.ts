@@ -887,12 +887,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		23006, // Libram of Light
-		[
-			"Increases healing done by Flash of Light by up to 83.", // 28851 - https://www.wowhead.com/forever/spell=28851
-		]
-	],
-	[
 		23027, // Warmth of Forgiveness
 		[
 			"Restores 500 mana.", // 28760 - https://www.wowhead.com/forever/spell=28760
@@ -902,12 +896,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		23040, // Glyph of Deflection
 		[
 			"Increases the block value of your shield by 235 for 20s.", // 28773 - https://www.wowhead.com/forever/spell=28773
-		]
-	],
-	[
-		23203, // Libram of Fervor
-		[
-			"Increases the melee attack power bonus of your Seal of the Crusader by 48 and the Holy damage increase of your Judgement of the Crusader by 33.", // 28852 - https://www.wowhead.com/forever/spell=28852
 		]
 	],
 	[
@@ -1209,12 +1197,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		[
 			"", // 408953 - https://www.wowhead.com/forever/spell=408953
 			"", // 461643 - https://www.wowhead.com/forever/spell=461643
-		]
-	],
-	[
-		228175, // Libram of Holy Alacrity
-		[
-			"Causes Holy Shock to reduce the cast time of your next Holy Light cast within 10s by 0.2 sec.", // 449982 - https://www.wowhead.com/forever/spell=449982
 		]
 	],
 	[
@@ -2057,24 +2039,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		272434, // Sentinel's Libram
-		[
-			"Reduces the cooldown of your Swift Judgement talent by 10 sec.", // 1291083 - https://www.wowhead.com/forever/spell=1291083
-		]
-	],
-	[
-		272435, // Libram of Law
-		[
-			"Increases the damage of your Judgement ability by 4%.", // 1291086 - https://www.wowhead.com/forever/spell=1291086
-		]
-	],
-	[
-		272436, // Libram of Economy
-		[
-			"Reduces the Mana cost of your Holy Light ability by 5%.", // 1291089 - https://www.wowhead.com/forever/spell=1291089
-		]
-	],
-	[
 		272437, // Adaptive Combat Assistant
 		[
 			"Absorbs 450 damage for 15s. If this shield expires before 15s, 100 Nature damage will be dealt to all enemies in melee range.", // 1291097 - https://www.wowhead.com/forever/spell=1291097
@@ -2439,18 +2403,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		276337, // Thaelemaches' Talisman
 		[
 			"Fear all Demons within 15 yards for 6s.", // 1299440 - https://www.wowhead.com/forever/spell=1299440
-		]
-	],
-	[
-		279247, // Steadfast Libram
-		[
-			"Increases the Block Value of your shield by 30% while Holy Shield is active.", // 1306433 - https://www.wowhead.com/forever/spell=1306433
-		]
-	],
-	[
-		279248, // Libram of Infusion
-		[
-			"Increases the critical strike chance of your Holy Shock spell by 6%.", // 1306429 - https://www.wowhead.com/forever/spell=1306429
 		]
 	],
 	[
