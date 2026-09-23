@@ -13,7 +13,6 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-	"time"
 	"unicode/utf16"
 	"unicode/utf8"
 )
@@ -134,22 +133,23 @@ func (f *parsedFile) enclosing(pos token.Pos) []ast.Node {
 
 type workspace struct {
 	buffers map[string]string
-	folders map[string]map[string][]declaration
-	// The files of a cached folder that changed since it was read.
-	dirty map[string]bool
-	// The modification time of each file as it was read from disk, which is how a change the editor
-	// does not report - a checkout, a generator, another session - reaches the cache.
-	stamps  map[string]time.Time
+	// The declarations of each Go file read, by folder.
+	folders map[string]map[string]cachedFile
+	root    string
 	current *parsedFile
 }
 
+// A file's declarations and what they were read at: the editor's text for a file it holds, else the
+// modification time on disk, which is how a change the editor does not report - a checkout, a
+// generator, another session - reaches the cache.
+type cachedFile struct {
+	key   any
+	decls []declaration
+}
+
 func newWorkspace() *workspace {
-	return &workspace{
-		buffers: map[string]string{},
-		folders: map[string]map[string][]declaration{},
-		dirty:   map[string]bool{},
-		stamps:  map[string]time.Time{},
-	}
+	root, _ := moduleRoot()
+	return &workspace{buffers: map[string]string{}, folders: map[string]map[string]cachedFile{}, root: root}
 }
 
 // The text an editor holds for a file, or with open false, the file as it stands on disk again.
@@ -160,9 +160,15 @@ func (w *workspace) update(uri, text string, open bool) {
 	} else {
 		delete(w.buffers, path)
 	}
-	if _, cached := w.folders[filepath.Dir(path)]; cached {
-		w.dirty[path] = true
+}
+
+// A file as the editor holds it, else as it stands on disk.
+func (w *workspace) text(path string) (string, error) {
+	if text, open := w.buffers[path]; open {
+		return text, nil
 	}
+	data, err := os.ReadFile(path)
+	return string(data), err
 }
 
 // The file being hovered, parsed once per text.
@@ -173,47 +179,16 @@ func (w *workspace) parse(path, text string) *parsedFile {
 	return w.current
 }
 
-// The declarations of a file as the editor holds it or as it stands on disk; false where it is neither.
-func (w *workspace) read(path string) ([]declaration, bool) {
-	text, open := w.buffers[path]
-	if !open {
-		info, err := os.Stat(path)
-		if err != nil {
-			return nil, false
-		}
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return nil, false
-		}
-		w.stamps[path] = info.ModTime()
-		text = string(data)
-	}
-	return parseGo(path, text).decls, true
-}
-
 // Every name the package folder binds at package level, and the names the current file binds in the
 // function around the offset at, the last binding before at winning. With no current file there is
 // no position to scope by, and every binding of the folder is read.
 func (w *workspace) declarations(folder string, current *parsedFile, at int, trace *tracer) map[string]declaration {
 	files, cached := w.folders[folder]
 	if !cached {
-		files = map[string][]declaration{}
+		files = map[string]cachedFile{}
 		w.folders[folder] = files
 	}
-	w.markChanged(folder, files, trace)
-	read := 0
-	for path := range w.dirty {
-		if filepath.Dir(path) != folder {
-			continue
-		}
-		delete(w.dirty, path)
-		read++
-		if decls, ok := w.read(path); ok {
-			files[path] = decls
-		} else {
-			delete(files, path)
-		}
-	}
+	read := w.refresh(folder, files, trace)
 	if cached && read == 0 {
 		trace.add("declarations %s: cache hit", trace.rel(folder))
 	} else {
@@ -229,7 +204,7 @@ func (w *workspace) declarations(folder string, current *parsedFile, at int, tra
 
 	out := map[string]declaration{}
 	for _, path := range paths {
-		decls := files[path]
+		decls := files[path].decls
 		if path == own {
 			decls = current.decls
 		}
@@ -249,35 +224,53 @@ func (w *workspace) declarations(folder string, current *parsedFile, at int, tra
 	return out
 }
 
-// A file the editor does not hold is read again when its modification time moved or it is gone.
-func (w *workspace) markChanged(folder string, files map[string][]declaration, trace *tracer) {
+// Reads again each Go file of the folder whose text or modification time moved since it was read, and
+// drops the ones that are gone. Answers how many files it read or dropped.
+func (w *workspace) refresh(folder string, files map[string]cachedFile, trace *tracer) int {
+	keys := map[string]any{}
+	for path, text := range w.buffers {
+		if filepath.Dir(path) == folder && strings.HasSuffix(path, ".go") {
+			keys[path] = text
+		}
+	}
 	entries, err := os.ReadDir(folder)
 	if err != nil {
 		trace.add("declarations %s: %v", trace.rel(folder), err)
 	}
-	onDisk := map[string]bool{}
 	for _, entry := range entries {
-		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".go") {
+		path := filepath.Join(folder, entry.Name())
+		if _, open := keys[path]; open || entry.IsDir() || !strings.HasSuffix(entry.Name(), ".go") {
 			continue
 		}
-		path := filepath.Join(folder, entry.Name())
-		onDisk[path] = true
-		_, read := files[path]
-		_, open := w.buffers[path]
-		if info, err := entry.Info(); !read || !open && (err != nil || !info.ModTime().Equal(w.stamps[path])) {
-			w.dirty[path] = true
+		if info, err := entry.Info(); err == nil {
+			keys[path] = info.ModTime().UnixNano()
 		}
 	}
-	for path := range w.buffers {
-		if _, read := files[path]; !read && filepath.Dir(path) == folder && strings.HasSuffix(path, ".go") {
-			w.dirty[path] = true
-		}
-	}
+
+	read := 0
 	for path := range files {
-		if _, open := w.buffers[path]; !open && !onDisk[path] {
-			w.dirty[path] = true
+		if _, ok := keys[path]; !ok {
+			delete(files, path)
+			read++
 		}
 	}
+	for path, key := range keys {
+		if file, ok := files[path]; ok && file.key == key {
+			continue
+		}
+		read++
+		text, err := w.text(path)
+		if err != nil {
+			delete(files, path)
+			continue
+		}
+		file := w.current
+		if file == nil || file.path != path || file.text != text {
+			file = parseGo(path, text)
+		}
+		files[path] = cachedFile{key: key, decls: file.decls}
+	}
+	return read
 }
 
 func (f *parsedFile) pathIn(folder string) string {
@@ -321,8 +314,7 @@ func (t *tracer) fail(format string, args ...any) (string, []string, bool) {
 // line and column are 0-based and the column counts UTF-16 code units, as LSP positions do.
 func (w *workspace) hover(text string, line, col int, uri string) (string, []string, bool) {
 	path := uriPath(uri)
-	trace := &tracer{}
-	trace.root, _ = moduleRoot()
+	trace := &tracer{root: w.root}
 
 	start, end, ok := lineBounds(text, line)
 	if !ok {

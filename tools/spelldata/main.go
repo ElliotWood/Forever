@@ -239,8 +239,8 @@ func runConfig(out io.Writer, opts options) error {
 	}
 	trace := &tracer{}
 	var declarations map[string]declaration
-	if root, err := moduleRoot(); err == nil && opts.pkg != "" {
-		declarations = newWorkspace().declarations(filepath.Join(root, "sim", opts.pkg), nil, 0, trace)
+	if ws := newWorkspace(); ws.root != "" && opts.pkg != "" {
+		declarations = ws.declarations(filepath.Join(ws.root, "sim", opts.pkg), nil, 0, trace)
 	}
 	result, err := evalSpellConfig(call, declarations, opts.pkg, trace)
 	if err != nil {

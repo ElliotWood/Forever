@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"net/textproto"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -177,14 +176,10 @@ func (s *lspServer) handle(msg rpcMessage) {
 }
 
 func (s *lspServer) hover(uri string, at position) any {
-	text, open := s.ws.buffers[uriPath(uri)]
-	if !open {
-		data, err := os.ReadFile(uriPath(uri))
-		if err != nil {
-			s.log("✗ " + err.Error())
-			return nil
-		}
-		text = string(data)
+	text, err := s.ws.text(uriPath(uri))
+	if err != nil {
+		s.log("✗ " + err.Error())
+		return nil
 	}
 
 	markdown, trace, ok := s.ws.hover(text, at.Line, at.Character, uri)
