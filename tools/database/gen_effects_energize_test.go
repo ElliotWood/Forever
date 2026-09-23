@@ -44,7 +44,7 @@ func TestOnUseEnergizeRoutesFromTheSpellItCasts(t *testing.T) {
 			continue
 		}
 		r := entries[0].Proc
-		if r == nil || r.TriggerSpellID != int(tc.spellID) || !r.Energize || r.Damage || r.Heal || !entries[0].Supported {
+		if r == nil || r.TriggerSpellID != int(tc.spellID) || r.Shape != ShapeEnergize || !entries[0].Supported {
 			t.Errorf("item %d: routing %+v, supported %v; want an energize on %d", tc.itemID, r, entries[0].Supported, tc.spellID)
 			continue
 		}

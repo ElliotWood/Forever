@@ -63,10 +63,13 @@ func TestChanceOnHitDebuffsRouteAndStateNoRate(t *testing.T) {
 		}
 		entry := groups["Procs"].Entries[0]
 		r := entry.Proc
-		if r.Damage != tc.damage || r.Debuff == tc.damage || entry.Debuffs == tc.damage || !r.IsWeaponProc ||
-			r.TriggerSpellID != int(tc.spellID) {
-			t.Errorf("item %d: damage %v, debuff %v/%v, weapon proc %v, trigger %d; want a weapon proc on %d, damage %v",
-				tc.itemID, r.Damage, entry.Debuffs, r.Debuff, r.IsWeaponProc, r.TriggerSpellID, tc.spellID, tc.damage)
+		wantShape := ShapeDebuff
+		if tc.damage {
+			wantShape = ShapeDamage
+		}
+		if r.Shape != wantShape || !r.IsWeaponProc || r.TriggerSpellID != int(tc.spellID) {
+			t.Errorf("item %d: shape %v, weapon proc %v, trigger %d; want a weapon proc on %d, shape %v",
+				tc.itemID, r.Shape, r.IsWeaponProc, r.TriggerSpellID, tc.spellID, wantShape)
 		}
 		if want := []string{spelldata.ReasonStatesNoRate}; !slices.Equal(r.Unsupported, want) {
 			t.Errorf("item %d refused for %q, want %q", tc.itemID, r.Unsupported, want)

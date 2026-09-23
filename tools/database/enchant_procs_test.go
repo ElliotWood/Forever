@@ -64,9 +64,9 @@ func TestEnchantProcRouting(t *testing.T) {
 
 			for i, w := range tc.want {
 				r := got[i]
-				if r.TriggerSpellID != w.trigger || r.Damage != w.damage || r.ProcChancePct != w.chancePct {
+				if damage := r.Shape == ShapeDamage; r.TriggerSpellID != w.trigger || damage != w.damage || r.ProcChancePct != w.chancePct {
 					t.Errorf("routing %d: trigger %d, damage %v, chance %d%%; want %d, %v, %d%%",
-						i, r.TriggerSpellID, r.Damage, r.ProcChancePct, w.trigger, w.damage, w.chancePct)
+						i, r.TriggerSpellID, damage, r.ProcChancePct, w.trigger, w.damage, w.chancePct)
 				}
 				if w.reason == "" && !r.Supported() {
 					t.Errorf("routing %d is refused (%s), want it registered", i, r.Reason())
@@ -171,9 +171,9 @@ func TestRecoveryHealsOnTheWearersAttackDodgedOrParried(t *testing.T) {
 	if !r.Supported() {
 		t.Fatalf("refused (%s), want it registered", r.Reason())
 	}
-	if !r.Heal || r.Damage || r.TriggerSpellID != 1248761 || r.BuffSpellID != 1248759 {
-		t.Errorf("heal %v, damage %v, trigger %d, buff %d; want a heal from 1248761 casting 1248759",
-			r.Heal, r.Damage, r.TriggerSpellID, r.BuffSpellID)
+	if r.Shape != ShapeHeal || r.TriggerSpellID != 1248761 || r.BuffSpellID != 1248759 {
+		t.Errorf("shape %v, trigger %d, buff %d; want a heal from 1248761 casting 1248759",
+			r.Shape, r.TriggerSpellID, r.BuffSpellID)
 	}
 	if want := core.ProcHintAttackDodged | core.ProcHintAttackParried; r.ProcHint != want {
 		t.Errorf("hint %q, want %q", formatProcHint(r.ProcHint), formatProcHint(want))

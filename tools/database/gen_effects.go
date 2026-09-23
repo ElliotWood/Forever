@@ -83,17 +83,6 @@ type Entry struct {
 	// but the two shapes that need more than the rows state: a window that accumulates a second
 	// aura, and an effect a hand-written constructor already covers.
 	Proc *ProcRouting
-	// Set when the effect deals flat damage instead of granting stats. Those resolve no stats, so
-	// without this they are dropped before they are ever emitted.
-	DealsDamage bool
-	// The same for an effect that heals the wearer.
-	Heals bool
-	// The same for an effect that shields the wearer with an absorb.
-	Absorbs bool
-	// The same for an effect that puts a debuff on the enemy it lands on.
-	Debuffs bool
-	// The same for an effect that applies auras.
-	AppliesAuras bool
 	// What a registered on-use leaves out, stated beside its call.
 	NotSimulated string
 }
@@ -119,27 +108,52 @@ type ProcRouting struct {
 	ProcChancePct int
 	// The trigger's outcome where the enchant's grant states it rather than the aura's own row.
 	ProcHint core.ProcHint
-	// Set where the spell the proc applies deals damage instead of granting an aura, which is a
-	// constructor of its own: there is no buff to build.
-	Damage bool
-	// The same for a spell that heals the wearer.
-	Heal bool
-	// The same for a spell that shields the wearer with an absorb.
-	Absorb bool
-	// The same for an on-use spell that raises the wearer's speeds.
-	Speed bool
-	// The same for a spell that restores the wearer's mana, rage or energy.
-	Energize bool
-	// The same for a spell that puts a debuff on the enemy it lands on.
-	Debuff bool
-	// The same for a spell whose effects are auras on the wearer, its pets or an enemy.
-	Aura bool
-	// An equip spell's auras, kept up for as long as the item is worn rather than applied by a proc.
-	Equip bool
+	Shape    ProcShape
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
 	Summary string
+}
+
+type ProcShape uint8
+
+const (
+	// A buff granting stats, or on an on-use none of the shapes below.
+	ShapeStats ProcShape = iota
+	// Deals damage instead of granting an aura: there is no buff to build.
+	ShapeDamage
+	// Heals the wearer.
+	ShapeHeal
+	// Shields the wearer with an absorb.
+	ShapeAbsorb
+	// An on-use that raises the wearer's speeds.
+	ShapeSpeed
+	// Restores the wearer's mana, rage or energy.
+	ShapeEnergize
+	// Puts a debuff on the enemy it lands on.
+	ShapeDebuff
+	// Applies auras on the wearer, its pets or an enemy.
+	ShapeAura
+	// An equip spell's auras, kept up for as long as the item is worn rather than applied by a proc.
+	ShapeEquip
+)
+
+var procShapes = [...]struct {
+	procConstructor  string
+	onUseConstructor string
+	onUseGroup       string
+	unsupported      func(*spelldata.Spell) []string
+	alwaysNamesBuff  bool
+}{
+	ShapeStats:    {"NewSpellDataProc", "NewSimpleStatActive", "", nil, false},
+	ShapeDamage:   {"NewSpellDataDamageProc", "NewSpellDataDamageOnUse", "Damage", damageUnsupported, true},
+	ShapeHeal:     {"NewSpellDataHealProc", "NewSpellDataHealOnUse", "Heals", healUnsupported, true},
+	ShapeAbsorb:   {"NewSpellDataAbsorbProc", "NewSpellDataAbsorbOnUse", "Absorbs", absorbUnsupported, true},
+	ShapeSpeed:    {"NewSpellDataProc", "NewSpellDataSpeedOnUse", "Speed", nil, false},
+	ShapeEnergize: {"NewSpellDataProc", "NewSpellDataEnergizeOnUse", "Resources", nil, false},
+	ShapeDebuff:   {"NewSpellDataDebuffProc", "NewSimpleStatActive", "", debuffUnsupported, false},
+	ShapeAura:     {"NewSpellDataAuraProc", "NewSpellDataAuraOnUse", "Auras", procAuraUnsupported, false},
+	ShapeEquip:    {"NewSpellDataEquipAura", "NewSimpleStatActive", "", nil, false},
 }
 
 func (r *ProcRouting) Supported() bool {
@@ -166,48 +180,53 @@ func routeProc(triggerSpellID int, buffSpellID int, isWeaponProc bool) *ProcRout
 	return routing
 }
 
-// A proc whose spell deals damage rather than granting an aura. The spell is named separately
-// because the client hangs it below the trigger rather than on it.
-func (r *ProcRouting) asDamage(damageSpellID int32) {
-	r.Damage = true
-	r.BuffSpellID = int(damageSpellID)
-
-	if damage := spelldata.Find(damageSpellID); damage == spelldata.Nil {
-		r.Unsupported = append(r.Unsupported, "the damage spell has no row in the store")
-	} else if damage.DamageEffect() == spelldata.NilEffect {
-		r.Unsupported = append(r.Unsupported, "the damage spell's row states no damage")
+// A proc that grants no stats: it casts or applies spellID, which the client hangs below the trigger
+// or states on it, and whose row says what the sim cannot model.
+func (r *ProcRouting) as(shape ProcShape, spellID int32) {
+	r.Shape = shape
+	r.BuffSpellID = int(spellID)
+	if !procShapes[shape].alwaysNamesBuff && r.BuffSpellID == r.TriggerSpellID {
+		r.BuffSpellID = 0
 	}
-
-	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+	r.Unsupported = append(r.Unsupported, procShapes[shape].unsupported(spelldata.Find(spellID))...)
+	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), int(spellID))
 }
 
-// A proc whose spell heals the wearer, the E_HEAL_PCT, E_HEAL or A_PERIODIC_HEAL spell the client
-// hangs below the trigger.
-func (r *ProcRouting) asHeal(healSpellID int32) {
-	r.Heal = true
-	r.BuffSpellID = int(healSpellID)
-	r.Unsupported = append(r.Unsupported, healUnsupported(spelldata.Find(healSpellID))...)
-	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+func pickNoStatShape(spellID int, debuffID int32) (ProcShape, int32) {
+	if damage := dbc.ResolveDamageEffect(spellID); damage != nil {
+		return ShapeDamage, int32(damage.SpellID)
+	}
+	if heal := dbc.ResolveTriggered(spellID, heals); heal != 0 {
+		return ShapeHeal, heal
+	}
+	if absorb := dbc.ResolveTriggered(spellID, absorbs); absorb != 0 {
+		return ShapeAbsorb, absorb
+	}
+	if spelldata.Find(debuffID).DebuffsTheTarget() {
+		return ShapeDebuff, debuffID
+	}
+	return ShapeStats, 0
 }
 
-// A proc whose spell puts a debuff on the enemy it lands on, for as long as its row states.
-func (r *ProcRouting) asDebuff(debuffSpellID int32) {
-	r.Debuff = true
-	r.BuffSpellID = 0
-	if int(debuffSpellID) != r.TriggerSpellID {
-		r.BuffSpellID = int(debuffSpellID)
+func damageUnsupported(damage *spelldata.Spell) []string {
+	switch {
+	case damage == spelldata.Nil:
+		return []string{"the damage spell has no row in the store"}
+	case damage.DamageEffect() == spelldata.NilEffect:
+		return []string{"the damage spell's row states no damage"}
 	}
-
-	if spelldata.Find(debuffSpellID).DurationMs <= 0 {
-		r.Unsupported = append(r.Unsupported, "the debuff states no duration")
-	}
-	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), int(debuffSpellID))
+	return nil
 }
 
-// A proc whose buff applies auras the stat path cannot state, read from that buff's own row.
-func (r *ProcRouting) asAura(buff *spelldata.Spell) {
-	r.Aura = true
-	r.Unsupported = append(r.Unsupported, spelldata.ItemAuraUnsupported(buff, false)...)
+func debuffUnsupported(debuff *spelldata.Spell) []string {
+	if debuff.DurationMs <= 0 {
+		return []string{"the debuff states no duration"}
+	}
+	return nil
+}
+
+func procAuraUnsupported(buff *spelldata.Spell) []string {
+	return spelldata.ItemAuraUnsupported(buff, false)
 }
 
 func healUnsupported(heal *spelldata.Spell) []string {
@@ -231,15 +250,6 @@ func tickUnsupported(what string, s *spelldata.Spell, effect *spelldata.Effect) 
 		return nil
 	}
 	return []string{fmt.Sprintf("the %s over time states no period or no duration to tick over", what)}
-}
-
-// A proc whose spell shields the wearer with the A_SCHOOL_ABSORB aura the client hangs below the
-// trigger.
-func (r *ProcRouting) asAbsorb(absorbSpellID int32) {
-	r.Absorb = true
-	r.BuffSpellID = int(absorbSpellID)
-	r.Unsupported = append(r.Unsupported, absorbUnsupported(spelldata.Find(absorbSpellID))...)
-	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
 }
 
 func energizeUnsupported(s *spelldata.Spell, effect *spelldata.Effect) []string {
@@ -895,68 +905,25 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 				}
 			}
 
-			// An effect that resolves no stats may still deal flat damage, which is a shape of its
-			// own rather than a reason to refuse: there is no buff, so the proc casts the spell the
+			// An effect that resolves no stats may still deal flat damage, heal or shield the wearer,
+			// debuff the enemy it lands on, or apply auras the stat path cannot state, each a shape of
+			// its own rather than a reason to refuse: there is no buff, so the proc casts the spell the
 			// client hangs below its trigger, read from that spell's own row.
 			if !grantsStats {
-				if damage := dbc.ResolveDamageEffect(int(itemEffect.BuffId)); damage != nil {
+				shape, spellID := pickNoStatShape(int(itemEffect.BuffId), itemEffect.BuffId)
+				if shape == ShapeStats && appliesAnItemAura(spelldata.Find(itemEffect.BuffId)) {
+					shape, spellID = ShapeAura, itemEffect.BuffId
+				}
+				if shape != ShapeStats {
 					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 					if entry.Proc != nil {
-						entry.Proc.asDamage(int32(damage.SpellID))
+						entry.Proc.as(shape, spellID)
 						entry.Supported = entry.Proc.Supported()
-						entry.DealsDamage = true
 					}
 				}
 			}
 
-			// The same for an effect that heals the wearer.
-			if !grantsStats && !entry.DealsDamage {
-				if heal := dbc.ResolveTriggered(int(itemEffect.BuffId), heals); heal != 0 {
-					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
-					if entry.Proc != nil {
-						entry.Proc.asHeal(heal)
-						entry.Supported = entry.Proc.Supported()
-						entry.Heals = true
-					}
-				}
-			}
-
-			// The same for an effect that shields the wearer.
-			if !grantsStats && !entry.DealsDamage && !entry.Heals {
-				if absorb := dbc.ResolveTriggered(int(itemEffect.BuffId), absorbs); absorb != 0 {
-					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
-					if entry.Proc != nil {
-						entry.Proc.asAbsorb(absorb)
-						entry.Supported = entry.Proc.Supported()
-						entry.Absorbs = true
-					}
-				}
-			}
-
-			// The same for an effect that puts a debuff on the enemy it lands on.
-			if !grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && spelldata.Find(itemEffect.BuffId).DebuffsTheTarget() {
-				entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
-				if entry.Proc != nil {
-					entry.Proc.asDebuff(itemEffect.BuffId)
-					entry.Supported = entry.Proc.Supported()
-					entry.Debuffs = true
-				}
-			}
-
-			// The same for an effect whose spell applies auras the stat path cannot state: on the
-			// wearer, its pets, or the enemy the proc answers.
-			if !grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && !entry.Debuffs {
-				if buff := spelldata.Find(itemEffect.BuffId); appliesAnItemAura(buff) {
-					entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
-					if entry.Proc != nil {
-						entry.Proc.asAura(buff)
-						entry.Supported = entry.Proc.Supported()
-						entry.AppliesAuras = true
-					}
-				}
-			}
-
-			if (!grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && !entry.Debuffs && !entry.AppliesAuras) || !entry.Supported {
+			if (!grantsStats && entry.Proc == nil) || !entry.Supported {
 				StoreMissingEffect("ItemEffects", parsed.Name, Variant{
 					ID:      int(parsed.Id),
 					Name:    renderedTooltip,
@@ -1030,7 +997,7 @@ func TryParseEquipAuraEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect,
 
 	routing := &ProcRouting{
 		TriggerSpellID: int(itemEffect.BuffId),
-		Equip:          true,
+		Shape:          ShapeEquip,
 		Unsupported:    spelldata.ItemAuraUnsupported(row, true),
 		Summary:        fmt.Sprintf("equip: %d", equip.ID),
 	}
@@ -1127,29 +1094,14 @@ func buffProcTrigger(buffID int32) int32 {
 func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMap map[string]Group) EffectParseResult {
 	routing := routeOnUse(parsed, itemEffect, instance)
 	entry := &Entry{
-		Variants:    []*Variant{{ID: int(parsed.Id), Name: parsed.Name, SpellID: int(itemEffect.BuffId)}},
-		Proc:        routing,
-		Supported:   routing.Supported(),
-		DealsDamage: routing.Damage,
-		Heals:       routing.Heal,
-		Absorbs:     routing.Absorb,
+		Variants:  []*Variant{{ID: int(parsed.Id), Name: parsed.Name, SpellID: int(itemEffect.BuffId)}},
+		Proc:      routing,
+		Supported: routing.Supported(),
 	}
 
 	groupName := ""
-	switch {
-	case !entry.Supported:
-	case routing.Damage:
-		groupName = "Damage"
-	case routing.Heal:
-		groupName = "Heals"
-	case routing.Absorb:
-		groupName = "Absorbs"
-	case routing.Speed:
-		groupName = "Speed"
-	case routing.Energize:
-		groupName = "Resources"
-	case routing.Aura:
-		groupName = "Auras"
+	if entry.Supported {
+		groupName = procShapes[routing.Shape].onUseGroup
 	}
 	grp := groupMap[groupName]
 	grp.Name = groupName
@@ -1185,7 +1137,7 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 	case s == spelldata.Nil:
 		routing.Unsupported = append(routing.Unsupported, "the spell has no row in the store")
 	case direct != spelldata.NilEffect || periodic != spelldata.NilEffect:
-		routing.Damage = true
+		routing.Shape = ShapeDamage
 		routing.Summary = onUseSummary(s, direct, periodic)
 		if direct != spelldata.NilEffect && direct.Type != dbcenums.E_SCHOOL_DAMAGE {
 			routing.Unsupported = append(routing.Unsupported, fmt.Sprintf("the direct damage is %v rather than an amount", direct.Type))
@@ -1199,27 +1151,27 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 			routing.Unsupported = append(routing.Unsupported, tickUnsupported("damage", s, periodic)...)
 		}
 	case heal != spelldata.NilEffect:
-		routing.Heal = true
+		routing.Shape = ShapeHeal
 		routing.Summary = onUseSummary(s, heal)
 		routing.Unsupported = append(routing.Unsupported, healUnsupported(s)...)
 	case absorb != spelldata.NilEffect:
-		routing.Absorb = true
+		routing.Shape = ShapeAbsorb
 		routing.Summary = onUseSummary(s, absorb)
 		routing.Unsupported = append(routing.Unsupported, absorbUnsupported(s)...)
 	case energize != spelldata.NilEffect:
-		routing.Energize = true
+		routing.Shape = ShapeEnergize
 		routing.Summary = onUseSummary(s, energize)
 		routing.Unsupported = append(routing.Unsupported, energizeUnsupported(s, energize)...)
 	case len(s.SpeedEffects()) > 0:
-		routing.Speed = true
+		routing.Shape = ShapeSpeed
 		routing.Summary = onUseSummary(s, s.SpeedEffects()...)
 		if s.DurationMs <= 0 {
 			routing.Unsupported = append(routing.Unsupported, "the speed buff states no duration")
 		}
 	case appliesAnItemAura(s):
-		routing.Aura = true
+		routing.Shape = ShapeAura
 		routing.Summary = onUseSummary(s, allEffects(s)...)
-		routing.Unsupported = append(routing.Unsupported, spelldata.ItemAuraUnsupported(s, false)...)
+		routing.Unsupported = append(routing.Unsupported, procAuraUnsupported(s)...)
 	default:
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("%d deals no damage and heals no one (%s)", spellID, spellEffectKinds(instance, spellID)))
@@ -1276,42 +1228,12 @@ func renderItemEffectTooltip(parsed *proto.UIItem, itemEffect *proto.ItemEffect,
 // The constructor an on-use routed from its spell registers through. A refused one that is neither
 // damage nor a heal names the stat constructor in its commented call.
 func (r *ProcRouting) OnUseConstructor() string {
-	switch {
-	case r.Damage:
-		return "NewSpellDataDamageOnUse"
-	case r.Heal:
-		return "NewSpellDataHealOnUse"
-	case r.Absorb:
-		return "NewSpellDataAbsorbOnUse"
-	case r.Speed:
-		return "NewSpellDataSpeedOnUse"
-	case r.Energize:
-		return "NewSpellDataEnergizeOnUse"
-	case r.Aura:
-		return "NewSpellDataAuraOnUse"
-	default:
-		return "NewSimpleStatActive"
-	}
+	return procShapes[r.Shape].onUseConstructor
 }
 
 // The constructor an item or enchant proc registers through.
 func (r *ProcRouting) ProcConstructor() string {
-	switch {
-	case r.Damage:
-		return "NewSpellDataDamageProc"
-	case r.Heal:
-		return "NewSpellDataHealProc"
-	case r.Absorb:
-		return "NewSpellDataAbsorbProc"
-	case r.Debuff:
-		return "NewSpellDataDebuffProc"
-	case r.Equip:
-		return "NewSpellDataEquipAura"
-	case r.Aura:
-		return "NewSpellDataAuraProc"
-	default:
-		return "NewSpellDataProc"
-	}
+	return procShapes[r.Shape].procConstructor
 }
 
 // The auras the item aura shape is emitted for: the damage, healing, cost and armor multipliers and
@@ -1465,25 +1387,15 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 		routing.readEnchantTooltip(grantTooltip)
 	}
 
-	damage := dbc.ResolveDamageEffect(slot.SpellID)
-	heal := dbc.ResolveTriggered(slot.SpellID, heals)
-	absorb := dbc.ResolveTriggered(slot.SpellID, absorbs)
-	switch {
-	case hasStats, multipliesStats:
+	if hasStats || multipliesStats {
 		routing.requireABuffDuration()
-	case damage != nil:
-		routing.asDamage(int32(damage.SpellID))
-		if mask := spelldata.Find(int32(damage.SpellID)).TargetCreatureType; mask != 0 {
+	} else if shape, spellID := pickNoStatShape(slot.SpellID, int32(applied)); shape != ShapeStats {
+		routing.as(shape, spellID)
+		if mask := spelldata.Find(spellID).TargetCreatureType; shape == ShapeDamage && mask != 0 {
 			routing.Unsupported = append(routing.Unsupported,
 				fmt.Sprintf("the damage spell hits %s (TargetCreatureType %d) only", creatureTypeNames(mask), mask))
 		}
-	case heal != 0:
-		routing.asHeal(heal)
-	case absorb != 0:
-		routing.asAbsorb(absorb)
-	case appliedRow.DebuffsTheTarget():
-		routing.asDebuff(int32(applied))
-	default:
+	} else {
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))
 	}
