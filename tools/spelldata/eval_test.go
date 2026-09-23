@@ -92,6 +92,15 @@ func TestExprValue(t *testing.T) {
 			read:  0,
 			id:    20662,
 		},
+		{
+			// core.SpellSchool is a byte.
+			expr:  "spelldata.MustFind(11574).SpellSchool()",
+			kind:  kindValue,
+			trail: "spelldata.MustFind(11574).SpellSchool()",
+			value: "1",
+			read:  0,
+			id:    11574,
+		},
 	}
 
 	for _, c := range cases {
@@ -172,6 +181,7 @@ func TestExprChainRefused(t *testing.T) {
 		{"spellData.Execute.Highest().EffectN(1, 2)", "*spelldata.Spell.EffectN takes 1 argument, not 2"},
 		{"spellData.Execute.Highest().EffectN(1).Average(level)", "level is not a literal"},
 		{"spellData.Execute.Highest().EffectN(1).Average(60.5)", "60.5 is not the int32 it takes"},
+		{"spellData.Execute.Highest().EffectN(1).Average(4294967356)", "4294967356 is not the int32 it takes"},
 		{"spellData.Execute.Highest().Refs()", "a []*spelldata.Spell is not a value to read"},
 		{"spellData.Execute.Highest().ChainAmp", `"ChainAmp" is not a field of *spelldata.Spell`},
 		{"spellData.Execute.Highest() + 1", "is not a chain of accessor calls"},

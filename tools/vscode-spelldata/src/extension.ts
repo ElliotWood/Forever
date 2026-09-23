@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { delimiter, join } from 'node:path';
 import * as vscode from 'vscode';
@@ -25,7 +25,15 @@ function findGo(configured: string): string | undefined {
 		join(homedir(), 'go', 'bin', exe),
 		'C:\\Program Files\\Go\\bin\\go.exe',
 	];
-	return candidates.find(path => path !== exe && existsSync(path));
+	return candidates.find(path => path !== exe && isFile(path));
+}
+
+function isFile(path: string): boolean {
+	try {
+		return statSync(path).isFile();
+	} catch {
+		return false;
+	}
 }
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
@@ -72,5 +80,5 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 }
 
 export function deactivate(): Promise<void> | undefined {
-	return client?.stop();
+	return client?.needsStop() ? client.stop() : undefined;
 }

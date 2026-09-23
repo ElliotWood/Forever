@@ -19,7 +19,8 @@ hover. `-config` resolves a `spelldata.SpellConfig` call - the row pick substitu
 package's declarations, each option applied - and states each field with the step that filled it.
 `-expr` reads a chain the way a class file writes it: a family's `spelldata.Ladder`, then any accessor
 of the store (`Highest()`, `Rank(n)`, `EffectAt(1).TenthsAt(1)`, `Effect(dbcenums.A_X, misc)`, ...),
-with arguments that are literals or constants of `sim/core`, `dbcenums` or `spelldata`.
+with arguments that are literals or constants of `dbcenums` or of `sim/core`'s `flags.go` and
+`constants.go`.
 
 ## JSON output
 
@@ -87,9 +88,11 @@ it stopped (`✗ ...`).
 What a hover reads: a spell id in the shapes hand-written code states (`MustFind(n)`, `Find(n)`,
 `.ByID(n)`, `SpellID: n`, `"spellId": n`, `fromSpellId(n)`, `spellId: n`) in any file; in a Go file
 also a `spellData.<Family>` token, a name the package folder binds to a ladder chain with `var`, `=` or
-`:=` (substituted through at most four names, cycles refused), one accessor of a chain anywhere in an
-expression, and `spelldata.SpellConfig`. A package whose class file states no ladder is not read for
-names. The server compiles the store in; restart it after regenerating.
+`:=` at package level, or the hovered function binds before the cursor (substituted through at most
+four names, cycles refused), one accessor of a chain anywhere in an expression, and
+`spelldata.SpellConfig`. A package whose class file states no ladder is not read for names. A file the
+editor does not hold is read again when its modification time moves. The server compiles the store
+in; restart it after regenerating.
 
 ## Editors
 

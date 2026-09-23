@@ -27,6 +27,9 @@ var (
 	constPackages = map[string]*types.Package{}
 	evalPackage   *types.Package
 	evalPos       token.Pos
+	// Each text once: types.Eval parses into constFset for good, which a long-lived server would grow
+	// on every hover. Nil is a text that is not a constant.
+	constValues = map[string]constant.Value{}
 
 	procFlagConsts  = map[int64]string{}
 	procFlag2Consts = map[int64]string{}
@@ -114,11 +117,18 @@ func evalConst(expr ast.Expr) (constant.Value, error) {
 	if evalPackage == nil {
 		return nil, fmt.Errorf("sim/core's constants did not load")
 	}
-	tv, err := types.Eval(constFset, evalPackage, evalPos, nodeText(expr))
-	if err != nil || tv.Value == nil {
-		return nil, fmt.Errorf("%s is not a literal or a constant of sim/core or dbcenums", nodeText(expr))
+	text := nodeText(expr)
+	value, seen := constValues[text]
+	if !seen {
+		if tv, err := types.Eval(constFset, evalPackage, evalPos, text); err == nil {
+			value = tv.Value
+		}
+		constValues[text] = value
 	}
-	return tv.Value, nil
+	if value == nil {
+		return nil, fmt.Errorf("%s is not a literal or a constant of sim/core or dbcenums", text)
+	}
+	return value, nil
 }
 
 func evalInt(expr ast.Expr) (int64, error) {

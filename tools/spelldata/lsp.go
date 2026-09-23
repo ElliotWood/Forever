@@ -94,7 +94,7 @@ func readFrame(reader *textproto.Reader) ([]byte, error) {
 		return nil, err
 	}
 	length, err := strconv.Atoi(header.Get("Content-Length"))
-	if err != nil {
+	if err != nil || length < 0 {
 		return nil, fmt.Errorf("a frame without a Content-Length: %v", header)
 	}
 	body := make([]byte, length)

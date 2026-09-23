@@ -29,9 +29,8 @@ const (
 // A name followed by selectors and calls, with where each part sits in the text it was read from.
 // `spellData.<Family>` is one head.
 type chain struct {
-	head       string
-	start, end int
-	segments   []segment
+	head     string
+	segments []segment
 }
 
 // One `.Name(args)` of a chain, or a bare `.Name` where the caller wrote no call.
@@ -90,13 +89,13 @@ type exprResult struct {
 	accessors []string
 }
 
-// The chain a text states, its offsets counted from base.
-func parseChain(text string, base int) (*chain, error) {
+// The chain a text states, its offsets counted from the start of the text.
+func parseChain(text string) (*chain, error) {
 	node, err := parser.ParseExpr(text)
 	if err != nil {
 		return nil, fmt.Errorf("%q is not a chain of accessor calls", text)
 	}
-	return walkChain(node, func(pos token.Pos) int { return base + int(pos) - 1 })
+	return walkChain(node, func(pos token.Pos) int { return int(pos) - 1 })
 }
 
 // The chain an expression states, with offset turning a node's position into the caller's offsets.
@@ -105,7 +104,7 @@ func parseChain(text string, base int) (*chain, error) {
 func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 	switch n := node.(type) {
 	case *ast.Ident:
-		return &chain{head: n.Name, start: offset(n.Pos()), end: offset(n.End())}, nil
+		return &chain{head: n.Name}, nil
 
 	case *ast.SelectorExpr:
 		c, err := walkChain(n.X, offset)
@@ -113,7 +112,7 @@ func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 			return nil, err
 		}
 		if c.head == "spellData" && len(c.segments) == 0 {
-			c.head, c.end = "spellData."+n.Sel.Name, offset(n.End())
+			c.head = "spellData." + n.Sel.Name
 			return c, nil
 		}
 		c.segments = append(c.segments, segment{name: n.Sel.Name, start: offset(n.X.End()), end: offset(n.End())})
@@ -344,11 +343,15 @@ func callSegment(recv reflect.Value, seg segment) (reflect.Value, error) {
 }
 
 // A constant as the parameter's own type. An integer widens into a float, a fractional number does not
-// narrow into an integer: truncating it silently is the reading a caller would not notice.
+// narrow into an integer, and an integer the type cannot hold does not wrap: truncating it silently is
+// the reading a caller would not notice.
 func convertArg(arg argument, want reflect.Type) (reflect.Value, error) {
 	switch {
 	case isInteger(want):
-		if n, exact := constant.Int64Val(constant.ToInt(arg.value)); exact {
+		n, exact := constant.Int64Val(constant.ToInt(arg.value))
+		zero := reflect.Zero(want)
+		fits := zero.CanInt() && !zero.OverflowInt(n) || zero.CanUint() && n >= 0 && !zero.OverflowUint(uint64(n))
+		if exact && fits {
 			return reflect.ValueOf(n).Convert(want), nil
 		}
 	case isFloat(want):
@@ -397,9 +400,11 @@ func formatValue(v reflect.Value) (string, error) {
 	}
 
 	switch {
-	case isInteger(v.Type()):
+	case v.CanInt():
 		return strconv.FormatInt(v.Int(), 10), nil
-	case isFloat(v.Type()):
+	case v.CanUint():
+		return strconv.FormatUint(v.Uint(), 10), nil
+	case v.CanFloat():
 		return number(v.Float()), nil
 	}
 	return "", fmt.Errorf("a %s is not a value to read", v.Type())

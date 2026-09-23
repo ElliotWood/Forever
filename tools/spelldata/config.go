@@ -140,11 +140,6 @@ func evalSpellConfig(expr *ast.CallExpr, declarations map[string]declaration, pk
 }
 
 func configPick(arg ast.Expr, declarations map[string]declaration, pkg string, trace *tracer) (*spelldata.Spell, string, error) {
-	if id, ok := findCall(arg); ok {
-		s, err := findSpell(id)
-		return s, nodeText(arg), err
-	}
-
 	trace.add("  row %s", nodeText(arg))
 	c, err := walkChain(arg, func(token.Pos) int { return 0 })
 	if err != nil {
@@ -162,23 +157,6 @@ func configPick(arg ast.Expr, declarations map[string]declaration, pkg string, t
 		return nil, "", fmt.Errorf("%s reads a %s, not a row", nodeText(arg), result.kind)
 	}
 	return result.spell, c.text(false), nil
-}
-
-// The id of a `spelldata.MustFind(id)` or `spelldata.Find(id)`.
-func findCall(arg ast.Expr) (int32, bool) {
-	call, ok := arg.(*ast.CallExpr)
-	if !ok || len(call.Args) != 1 {
-		return 0, false
-	}
-	sel, ok := call.Fun.(*ast.SelectorExpr)
-	if !ok || sel.Sel.Name != "MustFind" && sel.Sel.Name != "Find" {
-		return 0, false
-	}
-	if pkg, ok := sel.X.(*ast.Ident); !ok || pkg.Name != "spelldata" {
-		return 0, false
-	}
-	id, err := evalInt(call.Args[0])
-	return int32(id), err == nil
 }
 
 type configField struct {

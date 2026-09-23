@@ -203,7 +203,7 @@ func runFamily(out io.Writer, opts options) error {
 }
 
 func runExpr(out io.Writer, opts options) error {
-	c, err := parseChain(opts.arg, 0)
+	c, err := parseChain(opts.arg)
 	if err != nil {
 		return err
 	}
@@ -236,7 +236,7 @@ func runConfig(out io.Writer, opts options) error {
 	trace := &tracer{}
 	var declarations map[string]declaration
 	if root, err := moduleRoot(); err == nil && opts.pkg != "" {
-		declarations = newWorkspace().declarations(filepath.Join(root, "sim", opts.pkg), nil, trace)
+		declarations = newWorkspace().declarations(filepath.Join(root, "sim", opts.pkg), nil, 0, trace)
 	}
 	result, err := evalSpellConfig(call, declarations, opts.pkg, trace)
 	if err != nil {

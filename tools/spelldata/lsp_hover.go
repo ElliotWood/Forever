@@ -13,6 +13,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"time"
 	"unicode/utf16"
 	"unicode/utf8"
 )
@@ -30,12 +31,15 @@ var spellIDPatterns = []*regexp.Regexp{
 
 const maxSubstitutions = 4
 
-// A name a Go file binds to a chain, with `var`, `=` or `:=`.
+// A name a Go file binds to a chain, with `var`, `=` or `:=`. A name bound inside a function is seen
+// from its binding to the end of that function's body, as offsets in its file; to is 0 on a name
+// bound at package level, which every file of the package sees.
 type declaration struct {
-	name  string
-	chain *chain
-	file  string
-	line  int
+	name     string
+	chain    *chain
+	file     string
+	line     int
+	from, to int
 }
 
 // A Go file as the hover reads it. The AST is partial where the text does not parse, and nil where it
@@ -53,12 +57,14 @@ type parsedFile struct {
 func parseGo(path, text string) *parsedFile {
 	fset := token.NewFileSet()
 	file, _ := parser.ParseFile(fset, path, text, parser.SkipObjectResolution)
-	f := &parsedFile{path: path, text: text, file: file, unread: map[*ast.Ident]error{}}
-	if file == nil {
+	f := &parsedFile{path: path, text: text, unread: map[*ast.Ident]error{}}
+	// ParseFile answers an empty file, not nil, where the text states no package clause.
+	if file == nil || !file.Package.IsValid() {
 		return f
 	}
-	f.tok = fset.File(file.Pos())
+	f.file, f.tok = file, fset.File(file.Pos())
 
+	var around []ast.Node
 	bind := func(name ast.Expr, value ast.Expr) {
 		ident, ok := name.(*ast.Ident)
 		if !ok || ident.Name == "_" {
@@ -69,9 +75,18 @@ func parseGo(path, text string) *parsedFile {
 			f.unread[ident] = err
 			return
 		}
-		f.decls = append(f.decls, declaration{name: ident.Name, chain: c, file: path, line: f.tok.Line(ident.Pos())})
+		d := declaration{name: ident.Name, chain: c, file: path, line: f.tok.Line(ident.Pos())}
+		if body := enclosingBody(around); body != nil {
+			d.from, d.to = f.tok.Offset(ident.Pos()), f.tok.Offset(body.End())
+		}
+		f.decls = append(f.decls, d)
 	}
 	ast.Inspect(file, func(node ast.Node) bool {
+		if node == nil {
+			around = around[:len(around)-1]
+			return true
+		}
+		around = append(around, node)
 		switch n := node.(type) {
 		case *ast.ValueSpec:
 			if len(n.Names) == len(n.Values) {
@@ -89,6 +104,18 @@ func parseGo(path, text string) *parsedFile {
 		return true
 	})
 	return f
+}
+
+func enclosingBody(nodes []ast.Node) *ast.BlockStmt {
+	for i := len(nodes) - 1; i >= 0; i-- {
+		switch fn := nodes[i].(type) {
+		case *ast.FuncDecl:
+			return fn.Body
+		case *ast.FuncLit:
+			return fn.Body
+		}
+	}
+	return nil
 }
 
 // The nodes that hold pos, outermost first. An end counts as inside, so the cursor just past a name
@@ -109,12 +136,20 @@ type workspace struct {
 	buffers map[string]string
 	folders map[string]map[string][]declaration
 	// The files of a cached folder that changed since it was read.
-	dirty   map[string]bool
+	dirty map[string]bool
+	// The modification time of each file as it was read from disk, which is how a change the editor
+	// does not report - a checkout, a generator, another session - reaches the cache.
+	stamps  map[string]time.Time
 	current *parsedFile
 }
 
 func newWorkspace() *workspace {
-	return &workspace{buffers: map[string]string{}, folders: map[string]map[string][]declaration{}, dirty: map[string]bool{}}
+	return &workspace{
+		buffers: map[string]string{},
+		folders: map[string]map[string][]declaration{},
+		dirty:   map[string]bool{},
+		stamps:  map[string]time.Time{},
+	}
 }
 
 // The text an editor holds for a file, or with open false, the file as it stands on disk again.
@@ -142,63 +177,52 @@ func (w *workspace) parse(path, text string) *parsedFile {
 func (w *workspace) read(path string) ([]declaration, bool) {
 	text, open := w.buffers[path]
 	if !open {
+		info, err := os.Stat(path)
+		if err != nil {
+			return nil, false
+		}
 		data, err := os.ReadFile(path)
 		if err != nil {
 			return nil, false
 		}
+		w.stamps[path] = info.ModTime()
 		text = string(data)
 	}
 	return parseGo(path, text).decls, true
 }
 
-// Every name the package folder binds, the current file's own from its text. A package whose class
-// file states no ladder is not read: a chain there has no family to resolve to.
-func (w *workspace) declarations(folder string, current *parsedFile, trace *tracer) map[string]declaration {
+// Every name the package folder binds at package level, and the names the current file binds in the
+// function around the offset at, the last binding before at winning. With no current file there is
+// no position to scope by, and every binding of the folder is read. A package whose class file states
+// no ladder is not read: a chain there has no family to resolve to.
+func (w *workspace) declarations(folder string, current *parsedFile, at int, trace *tracer) map[string]declaration {
 	if !hasFamilies(filepath.Base(folder)) {
 		return map[string]declaration{}
 	}
 
 	files, cached := w.folders[folder]
-	if cached {
-		read := 0
-		for path := range w.dirty {
-			if filepath.Dir(path) != folder {
-				continue
-			}
-			delete(w.dirty, path)
-			read++
-			if decls, ok := w.read(path); ok {
-				files[path] = decls
-			} else {
-				delete(files, path)
-			}
-		}
-		if read == 0 {
-			trace.add("declarations %s: cache hit", trace.rel(folder))
-		} else {
-			trace.add("declarations %s: cache miss, read %d files", trace.rel(folder), read)
-		}
-	} else {
+	if !cached {
 		files = map[string][]declaration{}
-		entries, err := os.ReadDir(folder)
-		if err != nil {
-			trace.add("declarations %s: %v", trace.rel(folder), err)
-		}
-		for _, entry := range entries {
-			if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".go") {
-				path := filepath.Join(folder, entry.Name())
-				if decls, ok := w.read(path); ok {
-					files[path] = decls
-				}
-			}
-		}
-		for path := range w.buffers {
-			if _, read := files[path]; !read && filepath.Dir(path) == folder && strings.HasSuffix(path, ".go") {
-				files[path], _ = w.read(path)
-			}
-		}
 		w.folders[folder] = files
-		trace.add("declarations %s: cache miss, read %d files", trace.rel(folder), len(files))
+	}
+	w.markChanged(folder, files, trace)
+	read := 0
+	for path := range w.dirty {
+		if filepath.Dir(path) != folder {
+			continue
+		}
+		delete(w.dirty, path)
+		read++
+		if decls, ok := w.read(path); ok {
+			files[path] = decls
+		} else {
+			delete(files, path)
+		}
+	}
+	if cached && read == 0 {
+		trace.add("declarations %s: cache hit", trace.rel(folder))
+	} else {
+		trace.add("declarations %s: cache miss, read %d files", trace.rel(folder), read)
 	}
 
 	own := current.pathIn(folder)
@@ -215,10 +239,50 @@ func (w *workspace) declarations(folder string, current *parsedFile, trace *trac
 			decls = current.decls
 		}
 		for _, d := range decls {
-			out[d.name] = d
+			if d.to == 0 || current == nil {
+				out[d.name] = d
+			}
+		}
+	}
+	if own != "" {
+		for _, d := range current.decls {
+			if d.to != 0 && d.from <= at && at <= d.to {
+				out[d.name] = d
+			}
 		}
 	}
 	return out
+}
+
+// A file the editor does not hold is read again when its modification time moved or it is gone.
+func (w *workspace) markChanged(folder string, files map[string][]declaration, trace *tracer) {
+	entries, err := os.ReadDir(folder)
+	if err != nil {
+		trace.add("declarations %s: %v", trace.rel(folder), err)
+	}
+	onDisk := map[string]bool{}
+	for _, entry := range entries {
+		if entry.IsDir() || !strings.HasSuffix(entry.Name(), ".go") {
+			continue
+		}
+		path := filepath.Join(folder, entry.Name())
+		onDisk[path] = true
+		_, read := files[path]
+		_, open := w.buffers[path]
+		if info, err := entry.Info(); !read || !open && (err != nil || !info.ModTime().Equal(w.stamps[path])) {
+			w.dirty[path] = true
+		}
+	}
+	for path := range w.buffers {
+		if _, read := files[path]; !read && filepath.Dir(path) == folder && strings.HasSuffix(path, ".go") {
+			w.dirty[path] = true
+		}
+	}
+	for path := range files {
+		if _, open := w.buffers[path]; !open && !onDisk[path] {
+			w.dirty[path] = true
+		}
+	}
 }
 
 func (f *parsedFile) pathIn(folder string) string {
@@ -237,7 +301,6 @@ type chainHover struct {
 
 type tracer struct {
 	root  string
-	here  string
 	lines []string
 }
 
@@ -272,8 +335,7 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 	}
 	lineText := strings.TrimSuffix(text[start:end], "\r")
 	column := byteOffsetOfUTF16Column(lineText, col)
-	trace.here = fmt.Sprintf("%s:%d", trace.rel(path), line+1)
-	trace.add("%s:%d", trace.here, col+1)
+	trace.add("%s:%d:%d", trace.rel(path), line+1, col+1)
 
 	if match := matchCovering(lineText, column, spellIDPatterns...); match != nil {
 		id, _ := strconv.ParseInt(lineText[match[2]:match[3]], 10, 32)
@@ -300,7 +362,7 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 
 	if call := spellConfigAt(nodes, f.tok.Pos(at)); call != nil {
 		trace.add("SpellConfig")
-		result, err := evalSpellConfig(call, w.declarations(folder, f, trace), pkg, trace)
+		result, err := evalSpellConfig(call, w.declarations(folder, f, at, trace), pkg, trace)
 		if err != nil {
 			return trace.fail("%v", err)
 		}
@@ -321,7 +383,7 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 		return familyMarkdown(family), trace.lines, true
 	}
 
-	declarations := w.declarations(folder, f, trace)
+	declarations := w.declarations(folder, f, at, trace)
 	hover, ok := chainHoverAt(f, nodes, at, declarations, trace.rel(folder), trace)
 	if !ok {
 		return "", trace.lines, false
@@ -521,9 +583,14 @@ func byteOffsetOfUTF16Column(lineText string, units int) int {
 	return offset
 }
 
+// A Windows URI states the drive after the path's leading slash, file:///c:/x.
 func uriPath(uri string) string {
 	if u, err := url.Parse(uri); err == nil && u.Scheme == "file" {
-		return filepath.Clean(u.Path)
+		path := u.Path
+		if filepath.VolumeName(strings.TrimPrefix(path, "/")) != "" {
+			path = strings.TrimPrefix(path, "/")
+		}
+		return filepath.Clean(filepath.FromSlash(path))
 	}
 	return filepath.Clean(uri)
 }
@@ -532,6 +599,10 @@ func pathURI(path string) string {
 	abs, err := filepath.Abs(path)
 	if err != nil {
 		abs = path
+	}
+	abs = filepath.ToSlash(abs)
+	if !strings.HasPrefix(abs, "/") {
+		abs = "/" + abs
 	}
 	return (&url.URL{Scheme: "file", Path: abs}).String()
 }
