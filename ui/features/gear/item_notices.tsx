@@ -129,6 +129,10 @@ export const registerSetBonusNotices = (db: Database) => {
 	});
 };
 
+// Notices that inform rather than warn: the item works, and part of it depends on the encounter.
+// Kept apart from ITEM_NOTICES so the picker can show them behind an info icon.
+export const ITEM_INFO_NOTICES = new Map<number, ReactNode>();
+
 // The Wowhead tooltip an item shows is the client's, which folds an area-restricted bonus into the
 // item's stats; this is where the sim says which part of it only counts in some kind of area.
 export const registerAreaStatsNotices = (db: Database) => {
@@ -136,10 +140,9 @@ export const registerAreaStatsNotices = (db: Database) => {
 		const areaStats = item.scalingOptions?.[0]?.areaStats ?? [];
 		if (!areaStats.length) continue;
 
-		const existing = ITEM_NOTICES.get(item.id)?.[Spec.SpecUnknown];
-		const noticeContent = (
+		ITEM_INFO_NOTICES.set(
+			item.id,
 			<>
-				{existing}
 				<p className="mb-1">Only while the encounter is in one of these areas:</p>
 				<ul className="mb-0">
 					{areaStats.map(bonus => (
@@ -151,8 +154,7 @@ export const registerAreaStatsNotices = (db: Database) => {
 						</li>
 					))}
 				</ul>
-			</>
+			</>,
 		);
-		ITEM_NOTICES.set(item.id, { [Spec.SpecUnknown]: noticeContent });
 	}
 };

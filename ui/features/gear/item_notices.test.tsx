@@ -4,7 +4,14 @@ import { render } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { ITEM_NOTICES, MISSING_RANDOM_SUFFIX_WARNING, registerAreaStatsNotices, registerSetBonusNotices, SET_BONUS_NOTICES } from './item_notices';
+import {
+	ITEM_INFO_NOTICES,
+	ITEM_NOTICES,
+	MISSING_RANDOM_SUFFIX_WARNING,
+	registerAreaStatsNotices,
+	registerSetBonusNotices,
+	SET_BONUS_NOTICES,
+} from './item_notices';
 
 vi.mock('@i18n/localization', () => ({
 	translateAreaType: (value: number) => `area-${value}`,
@@ -95,23 +102,19 @@ describe('registerAreaStatsNotices', () => {
 	} as unknown as Database;
 
 	afterEach(() => {
-		ITEM_NOTICES.delete(RUNE);
-		ITEM_NOTICES.delete(PLAIN);
+		ITEM_INFO_NOTICES.delete(RUNE);
+		ITEM_INFO_NOTICES.delete(PLAIN);
 	});
 
-	it('writes a notice naming each area and the stats it adds, and none for an item without any', () => {
+	// An info notice, not a warning: the item works, and the table it goes into is the one the
+	// picker shows behind the info icon.
+	it('writes an info notice naming each area and the stats it adds, and none for an item without any', () => {
 		registerAreaStatsNotices(db);
 
-		expect(markup(RUNE)).toBe(
+		expect(renderToStaticMarkup(ITEM_INFO_NOTICES.get(RUNE))).toBe(
 			'<p class="mb-1">Only while the encounter is in one of these areas:</p>' + '<ul class="mb-0"><li>area-1: +29 stat-17, +29 stat-18</li></ul>',
 		);
-		expect(ITEM_NOTICES.has(PLAIN)).toBe(false);
-	});
-
-	it('keeps a notice the item already carries in front of the area lines', () => {
-		ITEM_NOTICES.set(RUNE, { [Spec.SpecUnknown]: <p>existing</p> });
-		registerAreaStatsNotices(db);
-
-		expect(markup(RUNE).startsWith('<p>existing</p><p class="mb-1">Only while')).toBe(true);
+		expect(ITEM_INFO_NOTICES.has(PLAIN)).toBe(false);
+		expect(ITEM_NOTICES.has(RUNE)).toBe(false);
 	});
 });

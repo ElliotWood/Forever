@@ -4,7 +4,7 @@ import { usePlayer } from '@sim/context/SimHostContext';
 import { Tooltip, tooltipAnchorProps } from '@ui-kit/Tooltip';
 import { type ReactNode, useId } from 'react';
 
-import { ITEM_NOTICES } from '../../item_notices';
+import { ITEM_INFO_NOTICES, ITEM_NOTICES } from '../../item_notices';
 
 export interface ItemNoticeIconProps {
 	itemId: number;
@@ -18,15 +18,20 @@ export const ItemNoticeIcon = ({ itemId, additionalNotice }: ItemNoticeIconProps
 
 	const itemNotice = ITEM_NOTICES.get(itemId);
 	const ownNotice = itemNotice?.[spec] || itemNotice?.[Spec.SpecUnknown];
+	const infoNotice = ITEM_INFO_NOTICES.get(itemId);
 
-	if (!ownNotice && !additionalNotice) return null;
+	if (!ownNotice && !additionalNotice && !infoNotice) return null;
+
+	const warns = !!ownNotice || !!additionalNotice;
 
 	return (
 		<div className="relative z-1 inline">
 			<button
 				type="button"
-				aria-label={i18n.t('common.list_picker.warnings')}
-				className="fa fa-exclamation-triangle fa-xl mr-2 text-damage-partial text-shadow-glow-danger"
+				aria-label={i18n.t(warns ? 'common.list_picker.warnings' : 'common.list_picker.additional_information')}
+				className={
+					warns ? 'fa fa-exclamation-triangle fa-xl mr-2 text-damage-partial text-shadow-glow-danger' : 'fa fa-info-circle fa-xl mr-2 text-brand'
+				}
 				{...tooltipAnchorProps(tooltipId)}
 			/>
 			<Tooltip
@@ -35,6 +40,7 @@ export const ItemNoticeIcon = ({ itemId, additionalNotice }: ItemNoticeIconProps
 					<div>
 						{ownNotice}
 						{additionalNotice}
+						{infoNotice}
 					</div>
 				}
 				clickable
