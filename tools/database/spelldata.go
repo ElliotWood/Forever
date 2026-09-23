@@ -17,10 +17,8 @@ import (
 const RankLevel = 60
 
 // Rage is stored in tenths: Heroic Strike costs 150, not 15. Mana, energy and focus are not.
-const powerTypeRage = 1
-
 func NormalizePowerCost(cost int32, powerType int32) int32 {
-	if powerType == powerTypeRage {
+	if dbcenums.PowerType(powerType) == dbcenums.POWER_RAGE {
 		return cost / 10
 	}
 	return cost

@@ -375,8 +375,8 @@ func procHintNames(hint core.ProcHint) []string {
 }
 
 // SpellPower.PowerType, of which the store's rows carry six.
-func powerName(t int8) string {
-	switch dbcenums.PowerType(t) {
+func powerName(t dbcenums.PowerType) string {
+	switch t {
 	case dbcenums.POWER_HEALTH:
 		return "health"
 	case dbcenums.POWER_MANA:

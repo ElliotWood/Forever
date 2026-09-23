@@ -48,10 +48,8 @@ func (s *Spell) SpellSchool() core.SpellSchool {
 	return s.School
 }
 
-// SpellCategories.DefenseType counts none, magic, melee, ranged in that order, which is the order
-// core.DefenseType is declared in.
 func (s *Spell) DefenseTypeCore() core.DefenseType {
-	return core.DefenseType(s.DefenseType)
+	return s.DefenseType
 }
 
 // The i-th effect the row carries, counted from 1 by position rather than by the client's
@@ -146,7 +144,7 @@ func (s *Spell) firstOfType(types ...dbcenums.SpellEffectType) *Effect {
 
 // The cost out of this bar, or a zero Power where the spell does not use it. Both the row's own and
 // the shared zero one are the store's, so a caller must not write through what it gets back.
-func (s *Spell) Power(t int8) *Power {
+func (s *Spell) Power(t dbcenums.PowerType) *Power {
 	for i := range s.Powers {
 		if s.Powers[i].Type == t {
 			return &s.Powers[i]
@@ -156,9 +154,9 @@ func (s *Spell) Power(t int8) *Power {
 }
 
 // The cost in the units the sim spends: rage off the client's 0-1000 bar, everything else as stated.
-func (s *Spell) PowerCost(t int8) float64 {
+func (s *Spell) PowerCost(t dbcenums.PowerType) float64 {
 	cost := float64(s.Power(t).Cost)
-	if dbcenums.PowerType(t) == dbcenums.POWER_RAGE {
+	if t == dbcenums.POWER_RAGE {
 		return cost / 10
 	}
 	return cost

@@ -85,7 +85,7 @@ func resolverRows() []Spell {
 		},
 		{
 			ID: 800, Name: "Bleed", School: 1, DefenseType: 2, SpellLevel: 50, DurationMs: 21000,
-			Mechanic:              uint8(dbcenums.MECHANIC_BLEED),
+			Mechanic:              dbcenums.MECHANIC_BLEED,
 			GCDMs:                 1500,
 			StartRecoveryCategory: 133,
 			MaxStack:              5,

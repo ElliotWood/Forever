@@ -214,7 +214,7 @@ func applyCost(config *core.SpellConfig, s *Spell) {
 	cost := int32(s.PowerCost(powerType))
 	costPct := float64(s.Powers[0].CostPct)
 
-	switch dbcenums.PowerType(powerType) {
+	switch powerType {
 	case dbcenums.POWER_MANA:
 		config.ManaCost = core.ManaCostOptions{FlatCost: cost}
 		if costPct > 0 {

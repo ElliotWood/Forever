@@ -75,7 +75,7 @@ func humanise(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.E_ENERGIZE:
 		return sentence(join("restores", powerAmount(e), targetPhrase(e)), scaling(e))
 	case dbcenums.E_ENERGIZE_PCT:
-		return join("restores", percent(e), "of maximum", powerName(int8(e.Misc)), targetPhrase(e))
+		return join("restores", percent(e), "of maximum", powerName(dbcenums.PowerType(e.Misc)), targetPhrase(e))
 
 	case dbcenums.E_TRIGGER_SPELL, dbcenums.E_TRIGGER_SPELL_2:
 		return join("casts", triggerPhrase(e), targetPhrase(e))
@@ -201,7 +201,7 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.A_MOD_SKILL:
 		return fmt.Sprintf("%s to skill %d", signed(value(e)), e.Misc)
 	case dbcenums.A_MOD_INCREASE_ENERGY:
-		return join(signed(value(e)), "maximum", powerName(int8(e.Misc)))
+		return join(signed(value(e)), "maximum", powerName(dbcenums.PowerType(e.Misc)))
 	case dbcenums.A_MOD_MANA_REGEN_INTERRUPT:
 		return join(signedPercent(e), "mana regen while casting")
 	case dbcenums.A_ADD_TARGET_TRIGGER:
@@ -247,7 +247,7 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.A_MOD_POWER_COST_SCHOOL_PCT:
 		return join(signedPercent(e), schoolName(core.SpellSchool(e.Misc)), "power cost")
 	case dbcenums.A_MOD_ADDITIONAL_POWER_COST:
-		return join(signed(value(e)), "extra", powerName(int8(e.Misc)), "per cast")
+		return join(signed(value(e)), "extra", powerName(dbcenums.PowerType(e.Misc)), "per cast")
 
 	case dbcenums.A_MOD_HIT_CHANCE:
 		return join(signedPercent(e), "physical hit")
@@ -279,7 +279,7 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 		return join(signed(value(e)), "healing taken")
 
 	case dbcenums.A_MOD_POWER_REGEN:
-		return join(signed(value(e)), powerName(int8(e.Misc)), "per 5 s")
+		return join(signed(value(e)), powerName(dbcenums.PowerType(e.Misc)), "per 5 s")
 	case dbcenums.A_MOD_INCREASE_HEALTH:
 		return join(signed(value(e)), "health")
 	case dbcenums.A_MOD_INCREASE_HEALTH_PERCENT:
@@ -518,7 +518,7 @@ func powerAmount(e *spelldata.Effect) string {
 	if dbcenums.PowerType(e.Misc) == dbcenums.POWER_RAGE {
 		amount = tenths(e)
 	}
-	bar := powerName(int8(e.Misc))
+	bar := powerName(dbcenums.PowerType(e.Misc))
 	if amount == 1 {
 		bar = strings.TrimSuffix(bar, "s")
 	}
