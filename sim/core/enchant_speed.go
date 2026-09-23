@@ -34,16 +34,7 @@ func (character *Character) registerEquipSpeedAuras() {
 }
 
 func (character *Character) registerSpeedAura(label string, pseudoStats []float64, activeAtStart bool) *Aura {
-	pseudoStat := func(pseudoStat proto.PseudoStat) float64 {
-		if int(pseudoStat) < len(pseudoStats) {
-			return pseudoStats[pseudoStat]
-		}
-		return 0
-	}
-	melee := pseudoStat(proto.PseudoStat_PseudoStatMeleeHastePercent)
-	ranged := pseudoStat(proto.PseudoStat_PseudoStatRangedHastePercent)
-	cast := pseudoStat(proto.PseudoStat_PseudoStatSpellHastePercent)
-	if melee == 0 && ranged == 0 && cast == 0 {
+	if melee, ranged, cast := hastePercents(pseudoStats); melee == 0 && ranged == 0 && cast == 0 {
 		return nil
 	}
 
@@ -55,6 +46,25 @@ func (character *Character) registerSpeedAura(label string, pseudoStats []float6
 	if activeAtStart {
 		aura = MakePermanent(aura)
 	}
+	return aura.AttachHastePseudoStats(pseudoStats)
+}
+
+func hastePercents(pseudoStats []float64) (melee, ranged, cast float64) {
+	pseudoStat := func(pseudoStat proto.PseudoStat) float64 {
+		if int(pseudoStat) < len(pseudoStats) {
+			return pseudoStats[pseudoStat]
+		}
+		return 0
+	}
+	return pseudoStat(proto.PseudoStat_PseudoStatMeleeHastePercent),
+		pseudoStat(proto.PseudoStat_PseudoStatRangedHastePercent),
+		pseudoStat(proto.PseudoStat_PseudoStatSpellHastePercent)
+}
+
+// Multiplies the unit's melee, ranged and cast speed by the haste percents pseudoStats states, indexed
+// by proto.PseudoStat, while the aura is up.
+func (aura *Aura) AttachHastePseudoStats(pseudoStats []float64) *Aura {
+	melee, ranged, cast := hastePercents(pseudoStats)
 	if melee != 0 {
 		aura.AttachMultiplyMeleeSpeed(1 + melee/100)
 	}

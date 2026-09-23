@@ -14,6 +14,7 @@ import (
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -257,22 +258,13 @@ func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
 
 		// 1293881 (Pendulum of Doom) states a zero melee haste and changes the speed through its procs.
 		if value != 0 {
-			for _, pseudoStat := range equipSpellHasteAuras[effect.EffectAura] {
+			for _, pseudoStat := range spelldata.SpeedAuraPseudoStats[effect.EffectAura] {
 				add(pseudoStat, value)
 			}
 		}
 	}
 
 	return added
-}
-
-// Unlike ranged hit and crit, ranged haste is not a total including melee: the sim applies melee,
-// ranged and cast speed each on its own.
-var equipSpellHasteAuras = map[EffectAuraType][]proto.PseudoStat{
-	dbcenums.A_MOD_MELEE_HASTE_3:           {proto.PseudoStat_PseudoStatMeleeHastePercent},
-	dbcenums.A_MOD_RANGED_HASTE:            {proto.PseudoStat_PseudoStatRangedHastePercent},
-	dbcenums.A_MOD_MELEE_RANGED_HASTE_2:    {proto.PseudoStat_PseudoStatMeleeHastePercent, proto.PseudoStat_PseudoStatRangedHastePercent},
-	dbcenums.A_MOD_CASTING_SPEED_NOT_STACK: {proto.PseudoStat_PseudoStatSpellHastePercent},
 }
 
 const skillLineDefense = 95
