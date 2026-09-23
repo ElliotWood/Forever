@@ -104,8 +104,8 @@ export class UnitStat {
 			return ratingValue / Mechanics.PHYSICAL_CRIT_RATING_PER_CRIT_PERCENT;
 		} else if (this.linkedToStat(Stat.StatMeleeHasteRating)) {
 			return ratingValue / Mechanics.PHYSICAL_HASTE_RATING_PER_HASTE_PERCENT;
-		} else if (this.equalsStat(Stat.StatExpertiseRating)) {
-			return Math.floor(ratingValue / Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION) / 4;
+		} else if (this.linkedToStat(Stat.StatExpertiseRating)) {
+			return ratingValue / Mechanics.EXPERTISE_RATING_PER_EXPERTISE_PERCENT;
 		} else if (this.linkedToStat(Stat.StatDefenseRating)) {
 			return ratingValue / Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL;
 		} else if (this.linkedToStat(Stat.StatDodgeRating)) {
@@ -148,8 +148,8 @@ export class UnitStat {
 			return percentOrPointsValue * Mechanics.PHYSICAL_CRIT_RATING_PER_CRIT_PERCENT;
 		} else if (this.linkedToStat(Stat.StatMeleeHasteRating)) {
 			return percentOrPointsValue * Mechanics.PHYSICAL_HASTE_RATING_PER_HASTE_PERCENT;
-		} else if (this.equalsStat(Stat.StatExpertiseRating)) {
-			return percentOrPointsValue * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION * 4;
+		} else if (this.linkedToStat(Stat.StatExpertiseRating)) {
+			return percentOrPointsValue * Mechanics.EXPERTISE_RATING_PER_EXPERTISE_PERCENT;
 		} else if (this.linkedToStat(Stat.StatDefenseRating)) {
 			return percentOrPointsValue * Mechanics.DEFENSE_RATING_PER_DEFENSE_LEVEL;
 		} else if (this.linkedToStat(Stat.StatDodgeRating)) {
@@ -319,7 +319,9 @@ export class UnitStat {
 	static getRootStat(pseudoStat: PseudoStat): Stat | null {
 		const pseudoStatName = PseudoStat[pseudoStat];
 
-		if (pseudoStatName.includes('Dodge')) {
+		if (pseudoStatName.includes('Expertise')) {
+			return Stat.StatExpertiseRating;
+		} else if (pseudoStatName.includes('Dodge')) {
 			return Stat.StatDodgeRating;
 		} else if (pseudoStatName.includes('Parry')) {
 			return Stat.StatParryRating;
@@ -375,6 +377,8 @@ export class UnitStat {
 				return [PseudoStat.PseudoStatReducedCritTakenPercent];
 			case Stat.StatDefenseRating:
 				return [PseudoStat.PseudoStatReducedCritTakenPercent];
+			case Stat.StatExpertiseRating:
+				return [PseudoStat.PseudoStatExpertisePercent];
 			default:
 				return [];
 		}
@@ -419,7 +423,7 @@ export const displayStatOrder: Array<UnitStat> = [
 	UnitStat.fromStat(Stat.StatMP5),
 	UnitStat.fromStat(Stat.StatAttackPower),
 	UnitStat.fromStat(Stat.StatRangedAttackPower),
-	UnitStat.fromStat(Stat.StatExpertiseRating),
+	UnitStat.fromPseudoStat(PseudoStat.PseudoStatExpertisePercent),
 	UnitStat.fromStat(Stat.StatArmorPenetration),
 	UnitStat.fromStat(Stat.StatSpellPiercing),
 	UnitStat.fromPseudoStat(PseudoStat.PseudoStatMeleeHitPercent),

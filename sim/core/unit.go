@@ -680,6 +680,7 @@ func (unit *Unit) addUniversalStatDependencies() {
 	unit.AddStatDependency(stats.SpellHitRating, stats.SpellHitPercent, 1/SpellHitRatingPerHitPercent)
 	unit.AddStatDependency(stats.MeleeCritRating, stats.PhysicalCritPercent, 1/PhysicalCritRatingPerCritPercent)
 	unit.AddStatDependency(stats.SpellCritRating, stats.SpellCritPercent, 1/SpellCritRatingPerCritPercent)
+	unit.AddStatDependency(stats.ExpertiseRating, stats.ExpertisePercent, 1/ExpertiseRatingPerExpertisePercent)
 }
 
 func (unit *Unit) finalize() {

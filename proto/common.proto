@@ -283,6 +283,11 @@ enum PseudoStat {
 	PseudoStatRangedCritPercent = 25;
 
 	PseudoStatReducedCritTakenPercent = 26;
+
+	// Dodge/parry reduction in percent. Forever's sources are mostly flat percentages
+	// (talents, the Hyjal flask); ExpertiseRating covers the few rating-denominated ones
+	// (the tier 1 4P bonuses) and converts into this at 10 rating per percent.
+	PseudoStatExpertisePercent = 27;
 }
 
 message UnitStats {

@@ -123,7 +123,6 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 			Stat.StatFrostResistance,
 			Stat.StatNatureResistance,
 			Stat.StatShadowResistance,
-			Stat.StatExpertiseRating,
 		],
 		[
 			PseudoStat.PseudoStatMeleeHitPercent,
@@ -134,6 +133,7 @@ export default defineSpec<Spec.SpecProtectionPaladin>({
 			PseudoStat.PseudoStatBlockPercent,
 			PseudoStat.PseudoStatDodgePercent,
 			PseudoStat.PseudoStatParryPercent,
+			PseudoStat.PseudoStatExpertisePercent,
 		],
 	),
 
