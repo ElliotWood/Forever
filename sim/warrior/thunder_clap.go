@@ -10,6 +10,7 @@ var thunderClapRank = spellData.ThunderClap.Highest()
 
 var thunderClapBaseDamage = thunderClapRank.DamageEffect().Average(core.CharacterLevel)
 var thunderClapSlow = thunderClapRank.EffectN(2).Percent()
+var thunderClapGeneratedSlow = buffs.ThunderClapValue(0)
 
 func (warrior *Warrior) registerThunderClap() {
 	auras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
@@ -17,7 +18,7 @@ func (warrior *Warrior) registerThunderClap() {
 		// part past the client's amount rides on the aura for as long as it is up.
 		extraSlow := 1.0
 		return buffs.ThunderClapAura(target, true, 0).ApplyOnGain(func(aura *core.Aura, sim *core.Simulation) {
-			extraSlow = (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus)) / buffs.ThunderClapValue(0)
+			extraSlow = (1 + thunderClapSlow*(1+warrior.thunderClapEffectBonus)) / thunderClapGeneratedSlow
 			if extraSlow != 1 {
 				aura.Unit.MultiplyMeleeSpeed(sim, extraSlow)
 			}
