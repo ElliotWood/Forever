@@ -242,7 +242,9 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	// character sheet.
 
 	warrior.AddStatDependency(stats.Strength, stats.AttackPower, 2)
+	// Block value from Strength is Classic's Str/20 - 1, as master (vmangos GetShieldBlockValue).
 	warrior.AddStatDependency(stats.Strength, stats.BlockValue, 1/20.0)
+	warrior.AddStat(stats.BlockValue, -1)
 	warrior.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
 	warrior.AddStatDependency(stats.Agility, stats.DodgeRating, core.CritPerAgiMaxLevel[character.Class]*core.DodgeRatingPerDodgePercent)
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
