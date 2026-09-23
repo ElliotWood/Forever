@@ -108,9 +108,7 @@
         },
         "castSpell": {
           "spellId": {
-            "spellId": 25286,
-            "tag": 1,
-            "rank": 8
+            "spellId": 25286
           }
         }
       }
