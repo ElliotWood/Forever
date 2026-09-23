@@ -893,10 +893,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			// reads here - and that decision is the whole of it, rather than the tooltip reading
 			// BuildProcInfo does for the shapes below. The two that need more than the rows state
 			// stay where they are: a window accumulating a second aura, and an effect with no stats.
-			// The stats of an aura the row applies to an enemy are the enemy's to lose, never a buff on
-			// the wearer: Annihilator's Armor Shatter 16928 resolves Armor -165.
-			onAnEnemy := spelldata.Find(itemEffect.BuffId).AppliesAnAuraToAnEnemy()
-			grantsStats := len(dbc.EffectStats(itemEffect)) > 0 && !onAnEnemy
+			grantsStats := len(dbc.EffectStats(itemEffect)) > 0
 			if itemEffect.StackingAura == nil && grantsStats {
 				entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 				if entry.Proc != nil {
@@ -1366,9 +1363,9 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 	// A buff stated as a percentage of a stat resolves no flat stats: the sim reads the multipliers
 	// off the buff's own row.
 	effect := slot.Effect
-	hasStats := effect != nil && !spelldata.Find(effect.BuffId).AppliesAnAuraToAnEnemy()
+	hasStats := effect != nil
 	appliedRow := spelldata.Find(int32(applied))
-	multipliesStats := !hasStats && !appliedRow.AppliesAnAuraToAnEnemy() && len(spelldata.PercentStats(appliedRow, 0)) > 0
+	multipliesStats := !hasStats && len(spelldata.PercentStats(appliedRow, 0)) > 0
 
 	buffSpellID := slot.SpellID
 	switch {
