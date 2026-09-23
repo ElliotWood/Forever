@@ -162,7 +162,7 @@ func JudgementOfTheCrusaderAura(target *core.Unit, rank JudgementRank) *core.Aur
 		Label:    label,
 		ActionID: core.ActionID{SpellID: rank.SpellID},
 		Tag:      JudgementAuraTag,
-		Duration: JudgementOfLightDuration(0),
+		Duration: auraDuration(judgementOfTheCrusaderSpell),
 	})
 
 	aura.NewExclusiveEffect("Judgement of the Crusader", true, core.ExclusiveEffect{
