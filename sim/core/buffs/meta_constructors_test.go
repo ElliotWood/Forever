@@ -169,108 +169,118 @@ func pseudoDiff(before, after stats.PseudoStats) map[string]float64 {
 	return diff
 }
 
-// A Meta's constructor builds what the constructor generated for the same row builds, on both
-// copies: the player's own and the external caster's.
-func TestMetaConstructorsBuildWhatTheGeneratedRowsBuild(t *testing.T) {
-	find := spelldata.MustFind
+// One row of each shape a generated constructor builds, as the external caster's copy unless the
+// row says otherwise. The rows a test beside the drivers already pins are left to it.
+func TestGeneratedRowsBuildTheirShapes(t *testing.T) {
 	type ctor func(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura
-
-	itemCount := func(m *Meta) ctor {
-		return func(unit *core.Unit, isPlayer bool, _ int32) *core.Aura {
-			return newItemCountBuff(unit, m, isPlayer, 2)
-		}
-	}
-	generatedItemCount := func(f func(*core.Unit, bool, int32, float64) *core.Aura) ctor {
-		return func(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
-			return f(unit, isPlayer, talentPoints, 2)
-		}
-	}
-	buff := func(m *Meta) ctor {
-		return func(unit *core.Unit, isPlayer bool, tp int32) *core.Aura { return newBuff(unit, m, isPlayer, tp) }
-	}
-	debuff := func(m *Meta) ctor {
-		return func(unit *core.Unit, isPlayer bool, tp int32) *core.Aura { return newDebuff(unit, m, isPlayer, tp) }
-	}
-	shield := func(m *Meta) ctor {
-		return func(unit *core.Unit, isPlayer bool, tp int32) *core.Aura {
-			return newDamageShield(unit, m, isPlayer, tp)
-		}
-	}
+	statsOnly := func(s map[string]float64) []unitDelta { return []unitDelta{{Stats: s}} }
+	pseudoOnly := func(p map[string]float64) []unitDelta { return []unitDelta{{Pseudo: p}} }
+	external := func(spellID int32) core.ActionID { return core.ActionID{SpellID: spellID, Tag: -1} }
 
 	cases := []struct {
-		name      string
-		onTarget  bool
-		ranks     int32
-		meta      ctor
-		generated ctor
+		name     string
+		onTarget bool
+		isPlayer bool
+		build    ctor
+		want     auraShape
 	}{
-		{"BloodPact", false, 0,
-			buff(&Meta{Label: "Blood Pact", Spell: find(11767)}), BloodPactAura},
-		{"BattleShout", false, 0,
-			buff(&Meta{Label: "Battle Shout", Spell: find(25289), Category: "BattleShout", SingleAura: true}),
-			BattleShoutAura},
-		{"LeaderOfThePack", false, 0,
-			buff(&Meta{Label: "Leader of the Pack", Spell: find(24932), Category: "DruidCritAura", SingleAura: true}),
-			LeaderOfThePackAura},
-		{"ManaSpringTotem", false, 5,
-			buff(&Meta{Label: "Mana Spring Totem", Spell: find(10494), Category: "ManaSpringTotem",
-				Talent: spelldata.Talent(16187, 5), TalentEffect: 1}),
-			ManaSpringTotemAura},
-		{"ArcaneBrilliance", false, 0,
-			buff(&Meta{Label: "Arcane Brilliance", Spell: find(23028), Category: "StatBuff"}), ArcaneBrillianceAura},
-		{"GreaterBlessingOfKings", false, 0,
-			buff(&Meta{Label: "Greater Blessing of Kings", Spell: find(25898)}), GreaterBlessingOfKingsAura},
-		{"GiftOfTheWild", false, 0,
-			buff(&Meta{Label: "Gift of the Wild", Spell: find(21850)}), GiftOfTheWildAura},
-		{"FireResistanceAura", false, 0,
-			buff(&Meta{Label: "Fire Resistance Aura", Spell: find(19900), Category: "FireResistanceAura",
-				SharedCategory: "PaladinAura", SingleAura: true, SkipAuras: paladinAuraSkips}),
-			FireResistanceAuraAura},
-		{"ConcentrationAura", false, 0,
-			buff(&Meta{Label: "Concentration Aura", Spell: find(19746), Category: "ConcentrationAura",
-				SharedCategory: "PaladinAura", SingleAura: true, SkipAuras: paladinAuraSkips}),
-			ConcentrationAuraAura},
-		{"GreaterBlessingOfSalvation", false, 0,
-			buff(&Meta{Label: "Greater Blessing of Salvation", Spell: find(25895)}), GreaterBlessingOfSalvationAura},
-		{"AtieshWarlock", false, 0,
-			itemCount(&Meta{Label: "Atiesh - Warlock", Spell: find(28143)}), generatedItemCount(AtieshWarlockAura)},
-		{"RetributionAura", false, 0,
-			shield(&Meta{Label: "Retribution Aura", Spell: find(10301), Category: "RetributionAura",
-				SharedCategory: "PaladinAura", SingleAura: true, SkipAuras: paladinAuraSkips}),
-			RetributionAuraAura},
-		{"Thorns", false, 0,
-			shield(&Meta{Label: "Thorns", Spell: find(9910), Category: "Thorns", SingleAura: true}), ThornsAura},
-		{"CurseOfElements", true, 0,
-			debuff(&Meta{Label: "Curse of the Elements", Spell: find(1311680), Category: "CurseOfElements", SingleAura: true}),
-			CurseOfElementsAura},
-		{"SunderArmor", true, 0,
-			debuff(&Meta{Label: "Sunder Armor", Spell: find(11597), Category: "MajorArmorReduction", SingleAura: true}),
-			SunderArmorAura},
-		{"ExposeArmor", true, 0,
-			debuff(&Meta{Label: "Expose Armor", Spell: find(11198), Category: "MajorArmorReduction", SingleAura: true,
-				FullComboPoints: true}),
-			ExposeArmorAura},
-		{"ThunderClap", true, 0,
-			debuff(&Meta{Label: "Thunder Clap", Spell: find(11581), Category: "AtkSpdReduction"}), ThunderClapAura},
-		{"InsectSwarm", true, 0,
-			debuff(&Meta{Label: "Insect Swarm", Spell: find(24977)}), InsectSwarmAura},
+		{"BloodPact", false, false, BloodPactAura, auraShape{
+			Label: "Blood Pact (External)", ActionID: external(11767), Duration: core.NeverExpires,
+			BuildPhase: core.CharacterBuildPhaseBuffs,
+			Stacks:     statsOnly(map[string]float64{"Stamina": 54, "Health": 540}),
+		}},
+		{"ArcaneBrilliance", false, false, ArcaneBrillianceAura, auraShape{
+			Label: "Arcane Brilliance (External)", ActionID: external(23028), Tag: "StatBuff", Duration: time.Hour,
+			BuildPhase: core.CharacterBuildPhaseBuffs,
+			Bids:       []string{"StatBuffIntellectAdd single=false priority=31"},
+			Stacks:     statsOnly(map[string]float64{"Intellect": 31}),
+		}},
+		{"GiftOfTheWild", false, false, GiftOfTheWildAura, auraShape{
+			Label: "Gift of the Wild (External)", ActionID: external(21850), Duration: time.Hour,
+			BuildPhase: core.CharacterBuildPhaseBuffs,
+			Bids: []string{
+				"ResistanceArcaneArcaneResistanceAdd single=false priority=27",
+				"ResistanceFireFireResistanceAdd single=false priority=27",
+				"ResistanceFrostFrostResistanceAdd single=false priority=27",
+				"ResistanceNatureNatureResistanceAdd single=false priority=27",
+				"ResistanceShadowShadowResistanceAdd single=false priority=27",
+			},
+			Stacks: statsOnly(map[string]float64{
+				"Strength": 16, "Agility": 16, "Stamina": 16, "Intellect": 16, "Spirit": 16,
+				"Armor": 417, "Health": 160, "ArcaneResistance": 27, "FireResistance": 27,
+				"FrostResistance": 27, "NatureResistance": 27, "ShadowResistance": 27,
+			}),
+		}},
+		{"FireResistanceAura", false, true, FireResistanceAuraAura, auraShape{
+			Label: "Fire Resistance Aura (Player)", ActionID: core.ActionID{SpellID: 19900}, Tag: "FireResistanceAura",
+			Duration: core.NeverExpires,
+			Bids: []string{
+				"FireResistanceAura single=true priority=60",
+				"PaladinAura single=true priority=0",
+				"ResistanceFireFireResistanceAdd single=false priority=60",
+			},
+			Stacks: statsOnly(map[string]float64{"FireResistance": 60}),
+		}},
+		{"ConcentrationAura", false, false, ConcentrationAuraAura, auraShape{
+			Label: "Concentration Aura (External)", ActionID: external(19746), Tag: "ConcentrationAura",
+			Duration: core.NeverExpires, BuildPhase: core.CharacterBuildPhaseBuffs,
+			Bids:   []string{"ConcentrationAura single=true priority=0.35"},
+			Stacks: pseudoOnly(map[string]float64{"PushbackChance": -0.35}),
+		}},
+		{"PowerInfusions", false, false, PowerInfusionsAura, auraShape{
+			Label: "Power Infusions (External)", ActionID: external(10060), Tag: "PowerInfusion",
+			Duration: 15 * time.Second, BuildPhase: core.CharacterBuildPhaseBuffs,
+			Bids: []string{
+				"PowerInfusionHealingDealtMultiplierMul single=false priority=0.2",
+				"PowerInfusionSchoolDamageDealtMultiplierMul single=false priority=0.2",
+			},
+			Stacks: pseudoOnly(map[string]float64{
+				"HealingDealtMultiplier":         0.2,
+				"SchoolDamageDealtMultiplier[2]": 0.2, "SchoolDamageDealtMultiplier[3]": 0.2,
+				"SchoolDamageDealtMultiplier[4]": 0.2, "SchoolDamageDealtMultiplier[5]": 0.2,
+				"SchoolDamageDealtMultiplier[6]": 0.2, "SchoolDamageDealtMultiplier[7]": 0.2,
+			}),
+		}},
+		{"Thorns", false, false, ThornsAura, auraShape{
+			Label: "Thorns (External)", ActionID: external(9910), Duration: 10 * time.Minute,
+			BuildPhase: core.CharacterBuildPhaseBuffs,
+			Bids:       []string{"Thorns single=true priority=22"},
+			Stacks:     []unitDelta{{}},
+			Shield:     "{SpellID: 9910, Tag: 1} school SpellSchoolNature",
+		}},
+		{"CurseOfElements", true, false, CurseOfElementsAura, auraShape{
+			Label: "Curse of the Elements (External)", ActionID: external(1311680), Tag: "CurseOfElements",
+			Duration: 5 * time.Minute,
+			Bids:     []string{"CurseOfElements single=true priority=75"},
+			Stacks: []unitDelta{{
+				Stats: map[string]float64{
+					"ArcaneResistance": -75, "FireResistance": -75, "FrostResistance": -75,
+					"NatureResistance": -75, "ShadowResistance": -75,
+				},
+				Pseudo: map[string]float64{
+					"SchoolDamageTakenMultiplier[2]": 0.1, "SchoolDamageTakenMultiplier[3]": 0.1,
+					"SchoolDamageTakenMultiplier[4]": 0.1, "SchoolDamageTakenMultiplier[5]": 0.1,
+					"SchoolDamageTakenMultiplier[6]": 0.1, "SchoolDamageTakenMultiplier[7]": 0.1,
+				},
+			}},
+		}},
+		{"ThunderClap", true, false, ThunderClapAura, auraShape{
+			Label: "Thunder Clap (External)", ActionID: external(11581), Tag: "AtkSpdReduction",
+			Duration: 30 * time.Second,
+			Bids:     []string{"AtkSpdReduction single=false priority=0.2"},
+			Stacks:   pseudoOnly(map[string]float64{"MeleeSpeedMultiplier": -0.2}),
+		}},
+		{"InsectSwarm", true, false, InsectSwarmAura, auraShape{
+			Label: "Insect Swarm (External)", ActionID: external(24977), Duration: 12 * time.Second,
+			Stacks: statsOnly(map[string]float64{"PhysicalHitPercent": -2}),
+		}},
 	}
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			for points := int32(0); points <= c.ranks; points++ {
-				for _, isPlayer := range []bool{true, false} {
-					got := shapeOf(t, c.onTarget, func(u *core.Unit) *core.Aura { return c.meta(u, isPlayer, points) })
-					want := shapeOf(t, c.onTarget, func(u *core.Unit) *core.Aura { return c.generated(u, isPlayer, points) })
-
-					// The generated debuffs register without a tag; a Meta's aura carries its category.
-					if c.onTarget {
-						want.Tag = got.Tag
-					}
-					if !reflect.DeepEqual(got, want) {
-						t.Errorf("isPlayer %v, %d points:\n got %+v\nwant %+v", isPlayer, points, got, want)
-					}
-				}
+			got := shapeOf(t, c.onTarget, func(u *core.Unit) *core.Aura { return c.build(u, c.isPlayer, 0) })
+			if !reflect.DeepEqual(got, c.want) {
+				t.Errorf("\n got %+v\nwant %+v", got, c.want)
 			}
 		})
 	}
