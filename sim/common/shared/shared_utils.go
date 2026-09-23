@@ -1366,17 +1366,11 @@ func (s effectSource) procEffects() map[int32]*proto.ItemEffect {
 	return procEffects
 }
 
-// A weapon enchant's buff has to drop when the weapon carrying it is swapped out. AddStatProcBuff
-// only flips IsSwapped, which gates the next proc but leaves a running buff up for the rest of its
-// duration. Gated on the enchant being a weapon enchant: RegisterWeaponEnchantBuff watches the
-// weapon slots, so handing it a cloak or shield enchant would deactivate that buff on any weapon
-// swap.
+// A weapon enchant's buff drops when the weapon carrying it is swapped out. Any other enchant's,
+// a shield or held-in-off-hand one included, runs out its duration: AddStatProcBuff only flips
+// IsSwapped, which gates the next proc.
 func (s effectSource) registerWeaponEnchantBuff(character *core.Character, procAura *core.StatBuffAura) {
-	if !s.isEnchant {
-		return
-	}
-
-	if ench := core.GetEnchantByEffectID(s.id); ench == nil || ench.Type != proto.ItemType_ItemTypeWeapon {
+	if !s.isWeaponEnchant() {
 		return
 	}
 

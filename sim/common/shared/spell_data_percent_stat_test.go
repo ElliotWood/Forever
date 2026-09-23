@@ -54,6 +54,95 @@ func (c *testCaster) Initialize() {
 	})
 }
 
+func testHands(mainHand, offHand *proto.ItemSpec) []*proto.ItemSpec {
+	items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotOffHand+1)
+	for i := range items {
+		items[i] = &proto.ItemSpec{}
+	}
+	items[proto.ItemSlot_ItemSlotMainHand] = mainHand
+	items[proto.ItemSlot_ItemSlotOffHand] = offHand
+	return items
+}
+
+func newTestCasterSim(equipped, swapped []*proto.ItemSpec) *core.Simulation {
+	player := &proto.Player{
+		Name:      "Caster",
+		Class:     proto.Class_ClassShaman,
+		Race:      proto.Race_RaceTroll,
+		Buffs:     &proto.IndividualBuffs{},
+		Spec:      &proto.Player_ElementalShaman{},
+		Equipment: &proto.EquipmentSpec{Items: equipped},
+	}
+	if swapped != nil {
+		player.EnableItemSwap = true
+		player.ItemSwap = &proto.ItemSwap{Items: swapped}
+	}
+
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: &proto.Raid{Parties: []*proto.Party{{
+			Players: []*proto.Player{player},
+			Buffs:   &proto.PartyBuffs{},
+		}}},
+		Encounter: &proto.Encounter{
+			Targets:  []*proto.Target{{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}},
+			Duration: 180,
+		},
+	}, simsignals.CreateSignals())
+	sim.Reset()
+	return sim
+}
+
+// A weapon enchant's buff drops when an item swap takes the weapon away; a shield enchant's runs out
+// its duration.
+func TestShieldEnchantBuffOutlivesASwap(t *testing.T) {
+	const enchantedWeaponID, plainWeaponID, enchantedShieldID, plainShieldID int32 = 990961, 990962, 990963, 990964
+	const weaponEnchantID, shieldEnchantID int32 = 990965, 990966
+
+	shield := func(id int32) *proto.SimItem {
+		return &proto.SimItem{Id: id, Name: "Test Shield", Type: proto.ItemType_ItemTypeWeapon,
+			WeaponType: proto.WeaponType_WeaponTypeShield, HandType: proto.HandType_HandTypeOffHand,
+			ScalingOptions: map[int32]*proto.ScalingItemProperties{0: {}}}
+	}
+	core.AddToDatabase(&proto.SimDatabase{
+		Items: []*proto.SimItem{testOneHander(enchantedWeaponID), testOneHander(plainWeaponID),
+			shield(enchantedShieldID), shield(plainShieldID)},
+		Enchants: []*proto.SimEnchant{
+			{EffectId: weaponEnchantID, Name: "Test Weapon Enchant", Type: proto.ItemType_ItemTypeWeapon},
+			{EffectId: shieldEnchantID, Name: "Test Shield Enchant", Type: proto.ItemType_ItemTypeWeapon,
+				EnchantType: proto.EnchantType_EnchantTypeShield},
+		},
+	})
+	for name, id := range map[string]int32{"Test Weapon Enchant": weaponEnchantID, "Test Shield Enchant": shieldEnchantID} {
+		registerSpellDataProc(SpellDataProc{Name: name, EnchantID: id, TriggerSpellID: 1248758, BuffSpellID: 1299796})
+	}
+
+	sim := newTestCasterSim(
+		testHands(&proto.ItemSpec{Id: enchantedWeaponID, Enchant: weaponEnchantID},
+			&proto.ItemSpec{Id: enchantedShieldID, Enchant: shieldEnchantID}),
+		testHands(&proto.ItemSpec{Id: plainWeaponID}, &proto.ItemSpec{Id: plainShieldID}))
+	caster := sim.Raid.Parties[0].Players[0].(*testCaster)
+
+	weaponBuff := caster.GetAura("Test Weapon Enchant Proc")
+	shieldBuff := caster.GetAura("Test Shield Enchant Proc")
+	if weaponBuff == nil || shieldBuff == nil {
+		t.Fatalf("buffs registered: weapon %v, shield %v", weaponBuff != nil, shieldBuff != nil)
+	}
+	weaponBuff.Activate(sim)
+	shieldBuff.Activate(sim)
+
+	caster.ItemSwap.SwapItems(sim, proto.APLActionItemSwap_Swap1, false)
+	if caster.OffHand().ID != plainShieldID {
+		t.Fatalf("off hand after the swap = %d, want the plain shield %d", caster.OffHand().ID, plainShieldID)
+	}
+	if weaponBuff.IsActive() {
+		t.Error("the weapon enchant's buff is still up after its weapon was swapped out")
+	}
+	if !shieldBuff.IsActive() {
+		t.Error("the shield enchant's buff dropped on the swap, want it to run out its duration")
+	}
+}
+
 // Insight 8216's rows on a weapon enchant: trigger 1248758 hears spell damage and heals at 35% with a
 // 45 s lockout, and its buff 1299796 doubles Spirit for 10 s, on top of whatever Spirit the caster
 // gains while it is up.
@@ -81,32 +170,7 @@ func TestInsightMultipliesSpirit(t *testing.T) {
 		t.Errorf("chance = %v with manager %v, want a stated 0.35 and no rate", listener.ProcChance, listener.DPM)
 	}
 
-	items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotMainHand+1)
-	for i := range items {
-		items[i] = &proto.ItemSpec{}
-	}
-	items[proto.ItemSlot_ItemSlotMainHand] = &proto.ItemSpec{Id: insightWeaponID, Enchant: insightEnchantID}
-
-	sim := core.NewSim(&proto.RaidSimRequest{
-		SimOptions: &proto.SimOptions{RandomSeed: 1},
-		Raid: &proto.Raid{Parties: []*proto.Party{{
-			Players: []*proto.Player{{
-				Name:      "Caster",
-				Class:     proto.Class_ClassShaman,
-				Race:      proto.Race_RaceTroll,
-				Buffs:     &proto.IndividualBuffs{},
-				Spec:      &proto.Player_ElementalShaman{},
-				Equipment: &proto.EquipmentSpec{Items: items},
-			}},
-			Buffs: &proto.PartyBuffs{},
-		}}},
-		Encounter: &proto.Encounter{
-			Targets:  []*proto.Target{{Name: "target", Level: 60, MobType: proto.MobType_MobTypeDemon}},
-			Duration: 180,
-		},
-	}, simsignals.CreateSignals())
-	sim.Reset()
-
+	sim := newTestCasterSim(testHands(&proto.ItemSpec{Id: insightWeaponID, Enchant: insightEnchantID}, &proto.ItemSpec{}), nil)
 	caster := sim.Raid.Parties[0].Players[0].(*testCaster)
 	target := sim.Encounter.ActiveTargetUnits[0]
 	insight := caster.GetAura("Test Insight Proc")
