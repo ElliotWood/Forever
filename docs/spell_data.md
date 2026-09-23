@@ -1686,22 +1686,23 @@ func BattleShoutAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.A
 }
 ```
 
-`Meta.Options(talentPoints)` states the `spelldata.ParseOpt`s every row needs: `Level` (the row's own,
-or `core.CharacterLevel`), `BuffAuras`, `SkipAuras` where the row states any, `ScaledBy` the improving
-talent (left out where the talent scales the duration instead, since `Duration` reads that
-separately), and `FullComboPoints` for a finisher. `newBuff` adds `SchoolResistances` and, where
+`Meta.Options(talentPoints)` states the `spelldata.ParseOpt`s every row needs:
+`spelldata.RaidBuffOptions` - `Level(core.CharacterLevel)`, `BuffAuras`, `SkipAuras` where the row
+states any and `FullComboPoints` for a finisher, which the generator parses with too - and `ScaledBy`
+the improving talent (left out where the talent scales the duration instead, since `Duration` reads
+that separately). `newBuff` adds `SchoolResistances` and, where
 `Category` is set, `Exclusive(Category, true)` for a `SingleAura` row or `ExclusivePerStat(Category)`
 for any other, so a generated buff and a hand-written scroll of the same stat or resistance bid
 against each other under the categories core's own exclusive stat buffs use. `newDebuff` adds only
 `Exclusive(Category, SingleAura)`, since a debuff never carries a resistance of its own;
 `newItemCountBuff` adds `Count` so that a party with several of the same item is worth that many
-copies of the amount. `Value` is the first thing `spelldata.DryRun` attaches for those options, or a
-damage shield's own effect where the row states one. `Duration` reads the spell, or `Cast` where the
+copies of the amount. `Value` is a damage shield's own effect where the row states one, and otherwise
+the first thing `spelldata.DryRun` attaches for those options. `Duration` reads the spell, or `Cast` where the
 spell states no duration of its own; `Cooldown` reads `Cast` where the row pins one, else the spell
 itself; both go through the helpers in `sim/core/buffs/amounts.go`, and a talent that scales the
 duration truncates it the way `talentScaled` truncates an amount everywhere else. A row whose aura is
-a damage shield skips the parse outright: `newDamageShield` is `core.NewGeneratedDamageShield`, built
-from the spell's school and `Value`.
+a damage shield skips the parse outright: `newDamageShield` calls `core.NewDamageShield` with the
+spell's school and `Value`.
 
 `sim/core/spelldata/buff.go` holds a second table, read only when a parse states `BuffAuras()`:
 `A_PERIODIC_ENERGIZE` on a mana row becomes MP5 there, and `A_MOD_ATTACK_POWER_PCT` a percentage on
@@ -1710,9 +1711,9 @@ class wires itself - Bloodrage's rage tick is an `A_PERIODIC_ENERGIZE`, Berserke
 `A_MOD_ATTACK_POWER_PCT` of 0 - and reading either off the shared table would change what those rows
 mean there.
 
-The generator asks the same parse for every manifest row: `spelldata.DryRun` and
-`spelldata.BuffUnsupported`, given the row's options and no unit, answer what it attaches and what it
-leaves out, so a row the generator writes is one the sim builds the same way. A row a driver decides
+The generator asks the same parse for every manifest row: `spelldata.DryRun`, given the row's options
+and no character, answers what it attaches, and `SkippedNotes` on that answer what it leaves out, so a
+row the generator writes is one the sim builds the same way. A row a driver decides
 the meaning of - `KindExternalCD`, `KindProc`, `KindManual`, `KindDebuffUptime` - is written whatever
 the parse attaches; every other kind needs an amount, or for `KindDamageShield` the shield effect
 itself. A row the parse attaches nothing of renders as a commented shell naming the reason, and a row

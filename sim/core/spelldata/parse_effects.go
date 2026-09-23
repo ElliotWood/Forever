@@ -144,17 +144,23 @@ func SchoolResistances() ParseOpt {
 // became and the value it carries in the sim's own units. A time value is stated in milliseconds,
 // and a multiplier as the factor itself.
 type Applied struct {
-	Effect         *Effect
-	Kind           string
-	Value          float64
-	Multiplicative bool
+	Effect *Effect
+	Kind   string
+	Value  float64
+}
+
+// An aura effect the parse left out, and its position on the row, counted from 1 the way EffectN
+// counts.
+type SkippedEffect struct {
+	*Effect
+	Position int
 }
 
 // What one parse did. Skipped holds the aura effects the table does not know, which are the ones a
 // port still has to wire by hand.
 type Parsed struct {
 	Applied []Applied
-	Skipped []*Effect
+	Skipped []SkippedEffect
 
 	attachments []*attachment
 	aura        *core.Aura
@@ -196,18 +202,11 @@ func ParseStatic(character *core.Character, s *Spell, opts ...ParseOpt) *Parsed 
 }
 
 // What ParseEffects would attach and skip for the row, with nothing registered anywhere: the answer a
-// generator reads before it writes the call. onCharacter says the aura sits on a player, which the
-// rows that act through a character need; a debuff on an enemy has none. The amounts are priced at
-// core.CharacterLevel unless Level says otherwise.
-func DryRun(s *Spell, onCharacter bool, opts ...ParseOpt) *Parsed {
-	unit := &core.Unit{Level: core.CharacterLevel}
-	var character *core.Character
-	if onCharacter {
-		character = &core.Character{}
-		character.Level = core.CharacterLevel
-		unit = &character.Unit
-	}
-	return parse(unit, character, nil, s, opts, true)
+// generator reads before it writes the call. The aura sits on a unit with no character, so the rows
+// that act through a character are skipped. The amounts are priced at core.CharacterLevel unless
+// Level says otherwise.
+func DryRun(s *Spell, opts ...ParseOpt) *Parsed {
+	return parse(&core.Unit{Level: core.CharacterLevel}, nil, nil, s, opts, true)
 }
 
 func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell, opts []ParseOpt, dry bool) *Parsed {
@@ -247,7 +246,7 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 	scale := o.scale
 	for i := range s.Effects {
 		e := &s.Effects[i]
-		if !o.reads(int32(i+1)) || slices.Contains(o.skipAuras, e.Aura) || !appliesAura(e.Type) {
+		if !o.reads(int32(i+1)) || slices.Contains(o.skipAuras, e.Aura) || !AppliesAura(e.Type) {
 			continue
 		}
 
@@ -287,8 +286,7 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 		if a.key == "" {
 			a.key = a.kind
 		}
-		parsed.Applied = append(parsed.Applied, Applied{Effect: e, Kind: a.kind, Value: a.value,
-			Multiplicative: a.multiplicative})
+		parsed.Applied = append(parsed.Applied, Applied{Effect: e, Kind: a.kind, Value: a.value})
 		parsed.attachments = append(parsed.attachments, a)
 	}
 
@@ -395,7 +393,7 @@ func (p *Parsed) attached() []*attachment {
 }
 
 func (p *Parsed) skip(s *Spell, i int, e *Effect) {
-	p.Skipped = append(p.Skipped, e)
+	p.Skipped = append(p.Skipped, SkippedEffect{Effect: e, Position: i + 1})
 	if !p.quiet {
 		report(s, i+1, e)
 	}
@@ -411,7 +409,7 @@ func (o *parseOptions) reads(pos int32) bool {
 
 // The effect types that put an aura on someone: the plain application and the area auras, which
 // carry the same aura and misc values.
-func appliesAura(t dbcenums.SpellEffectType) bool {
+func AppliesAura(t dbcenums.SpellEffectType) bool {
 	return t == dbcenums.E_APPLY_AURA || t == dbcenums.E_APPLY_AREA_AURA_PARTY ||
 		t == dbcenums.E_APPLY_AREA_AURA_RAID
 }
@@ -431,7 +429,7 @@ func foldedDotEffects(s *Spell, o *parseOptions) []*Effect {
 
 		for j := range s.Effects {
 			hit := &s.Effects[j]
-			if hit.Aura != dbcenums.A_ADD_PCT_MODIFIER || !appliesAura(hit.Type) ||
+			if hit.Aura != dbcenums.A_ADD_PCT_MODIFIER || !AppliesAura(hit.Type) ||
 				!o.reads(int32(j+1)) ||
 				(dbcenums.SpellModOp(hit.Misc) != dbcenums.SPELLMOD_DAMAGE &&
 					dbcenums.SpellModOp(hit.Misc) != dbcenums.SPELLMOD_ALL_EFFECTS) {
@@ -451,8 +449,11 @@ func report(s *Spell, pos int, e *Effect) {
 	if os.Getenv("SPELLDATA_REPORT") == "" {
 		return
 	}
-	fmt.Printf("spelldata: unparsed %d %s effect %d %s(%d) misc %d value %v\n",
-		s.ID, s.Name, pos, auraName(e.Aura), e.Aura, e.Misc, e.BasePoints)
+	fmt.Printf("spelldata: unparsed %d %s %s value %v\n", s.ID, s.Name, effectNote(pos, e), e.BasePoints)
+}
+
+func effectNote(pos int, e *Effect) string {
+	return fmt.Sprintf("effect %d %s(%d) misc %d", pos, auraName(e.Aura), e.Aura, e.Misc)
 }
 
 // The client's name for an aura the parser skipped, or its number where the client names none.

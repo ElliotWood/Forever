@@ -267,9 +267,9 @@ func parseBuff(row *ResolvedBuff) {
 	}
 
 	// The constructors parse a buff with no character, as they do a debuff.
-	opts := row.parseOptions()
-	row.Applied = spelldata.DryRun(row.Spell, false, opts...).Applied
-	row.LeftOut = spelldata.BuffUnsupported(row.Spell, false, opts...)
+	parsed := spelldata.DryRun(row.Spell, row.parseOptions()...)
+	row.Applied = parsed.Applied
+	row.LeftOut = parsed.SkippedNotes(row.Spell)
 
 	switch row.Kind {
 	case buffmanifest.KindDamageShield:
@@ -297,18 +297,11 @@ func parseBuff(row *ResolvedBuff) {
 // own effect is left to newDamageShield, and an item-count row counts its
 // amounts, which is what a multiplier cannot be read through.
 func (row *ResolvedBuff) parseOptions() []spelldata.ParseOpt {
-	opts := []spelldata.ParseOpt{spelldata.Level(core.CharacterLevel), spelldata.BuffAuras()}
-
 	skip := row.SkipAuraTypes
 	if row.Kind == buffmanifest.KindDamageShield {
 		skip = append(slices.Clone(skip), dbcenums.A_DAMAGE_SHIELD)
 	}
-	if len(skip) > 0 {
-		opts = append(opts, spelldata.SkipAuras(skip...))
-	}
-	if row.FullComboPoints {
-		opts = append(opts, spelldata.FullComboPoints())
-	}
+	opts := spelldata.RaidBuffOptions(skip, row.FullComboPoints)
 	if row.Kind == buffmanifest.KindItemCount {
 		opts = append(opts, spelldata.Count(1))
 	}
@@ -317,7 +310,7 @@ func (row *ResolvedBuff) parseOptions() []spelldata.ParseOpt {
 
 func (row *ResolvedBuff) hasDamageShield() bool {
 	return slices.ContainsFunc(row.Spell.Effects, func(e spelldata.Effect) bool {
-		return e.Aura == dbcenums.A_DAMAGE_SHIELD && appliesAura(e.Type)
+		return e.Aura == dbcenums.A_DAMAGE_SHIELD && spelldata.AppliesAura(e.Type)
 	})
 }
 
@@ -472,13 +465,6 @@ func compiledProtoType(spec buffmanifest.BuffSpec) (string, error) {
 		return "int32", nil
 	}
 	return field.Type.String(), nil
-}
-
-// The effect types that put an aura on someone: the plain application and the
-// area auras, which carry the same aura and misc values.
-func appliesAura(effect dbcenums.SpellEffectType) bool {
-	return effect == dbcenums.E_APPLY_AURA || effect == dbcenums.E_APPLY_AREA_AURA_PARTY ||
-		effect == dbcenums.E_APPLY_AREA_AURA_RAID
 }
 
 // Whether a manifest category names a resistance school, which is the category

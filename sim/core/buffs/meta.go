@@ -41,15 +41,9 @@ type Meta struct {
 
 // The parse options the row states, for a caster with these talent points.
 func (m *Meta) Options(talentPoints int32) []spelldata.ParseOpt {
-	opts := []spelldata.ParseOpt{spelldata.Level(core.CharacterLevel), spelldata.BuffAuras()}
-	if len(m.SkipAuras) > 0 {
-		opts = append(opts, spelldata.SkipAuras(m.SkipAuras...))
-	}
+	opts := spelldata.RaidBuffOptions(m.SkipAuras, m.FullComboPoints)
 	if !m.TalentScalesDuration {
 		opts = append(opts, spelldata.ScaledBy(m.talentMod(talentPoints)))
-	}
-	if m.FullComboPoints {
-		opts = append(opts, spelldata.FullComboPoints())
 	}
 	return opts
 }
@@ -67,7 +61,7 @@ func (m *Meta) Value(talentPoints int32) float64 {
 		}
 	}
 
-	if applied := spelldata.DryRun(m.Spell, false, m.Options(talentPoints)...).Applied; len(applied) > 0 {
+	if applied := spelldata.DryRun(m.Spell, m.Options(talentPoints)...).Applied; len(applied) > 0 {
 		return applied[0].Value
 	}
 	return 0

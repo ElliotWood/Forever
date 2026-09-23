@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -26,28 +27,35 @@ var buffAuraTable = map[dbcenums.EffectAuraType]row{
 	},
 }
 
-// What a buff built from the row with these options leaves out, one note per aura effect the parse
-// skips. An empty answer means every aura effect the row states is attached. The notes come from
-// DryRun, so a buff the generator writes is one the sim builds the same way.
-func BuffUnsupported(s *Spell, onCharacter bool, opts ...ParseOpt) []string {
+// The options every raid buff and debuff is parsed with: priced at core.CharacterLevel, with the
+// buff table's rows, less the auras skip names, and a finisher at full combo points where
+// fullComboPoints says so.
+func RaidBuffOptions(skip []dbcenums.EffectAuraType, fullComboPoints bool) []ParseOpt {
+	opts := []ParseOpt{Level(core.CharacterLevel), BuffAuras()}
+	if len(skip) > 0 {
+		opts = append(opts, SkipAuras(skip...))
+	}
+	if fullComboPoints {
+		opts = append(opts, FullComboPoints())
+	}
+	return opts
+}
+
+// What a buff built from row s leaves out, one note per aura effect the parse skipped. An empty answer
+// means every aura effect the row states is attached. A generator reads the notes off DryRun, so a
+// buff it writes is one the sim builds the same way.
+func (p *Parsed) SkippedNotes(s *Spell) []string {
 	if s == nil || s == Nil || s.ID == 0 {
 		return []string{"no row in the store"}
 	}
 
 	var notes []string
-	for _, e := range DryRun(s, onCharacter, opts...).Skipped {
-		pos := 0
-		for i := range s.Effects {
-			if &s.Effects[i] == e {
-				pos = i + 1
-			}
-		}
-
+	for _, e := range p.Skipped {
 		if e.PointsPerResource != 0 && e.BasePoints == 0 {
-			notes = append(notes, fmt.Sprintf("effect %d is worth %v per combo point", pos, e.PointsPerResource))
+			notes = append(notes, fmt.Sprintf("effect %d is worth %v per combo point", e.Position, e.PointsPerResource))
 			continue
 		}
-		notes = append(notes, fmt.Sprintf("effect %d %s(%d) misc %d", pos, auraName(e.Aura), e.Aura, e.Misc))
+		notes = append(notes, effectNote(e.Position, e.Effect))
 	}
 	return notes
 }

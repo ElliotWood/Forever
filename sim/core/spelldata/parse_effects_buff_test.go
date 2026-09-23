@@ -69,12 +69,12 @@ func TestBuffAuraRows(t *testing.T) {
 		t.Run(auraName(c.aura), func(t *testing.T) {
 			row := buffRow(7000, c.effect)
 
-			without := DryRun(row, true)
+			without := DryRun(row)
 			if len(without.Applied) != 0 || len(without.Skipped) != 1 {
 				t.Errorf("without BuffAuras the row attached %v", appliedKinds(without))
 			}
 
-			with := DryRun(row, true, BuffAuras())
+			with := DryRun(row, BuffAuras())
 			if len(with.Applied) != 1 {
 				t.Fatalf("with BuffAuras the row attached %v", appliedKinds(with))
 			}
@@ -89,12 +89,12 @@ func TestBuffAuraRows(t *testing.T) {
 func TestBuffManaTicksAreManaOnly(t *testing.T) {
 	rage := buffRow(7010, Effect{Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_ENERGIZE,
 		Misc: int32(dbcenums.POWER_RAGE), BasePoints: 10, PeriodMs: 1000})
-	if parsed := DryRun(rage, true, BuffAuras()); len(parsed.Applied) != 0 {
+	if parsed := DryRun(rage, BuffAuras()); len(parsed.Applied) != 0 {
 		t.Errorf("a rage tick attached %v", appliedKinds(parsed))
 	}
 
 	untimed := buffRow(7011, Effect{Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_ENERGIZE, BasePoints: 10})
-	if parsed := DryRun(untimed, true, BuffAuras()); len(parsed.Applied) != 0 {
+	if parsed := DryRun(untimed, BuffAuras()); len(parsed.Applied) != 0 {
 		t.Errorf("a tick with no period attached %v", appliedKinds(parsed))
 	}
 }
@@ -102,7 +102,7 @@ func TestBuffManaTicksAreManaOnly(t *testing.T) {
 // Flat damage taken has a field for physical and one for every spell school together, and nothing for
 // a mask of some spell schools: Judgement of the Crusader's holy-only row is left out.
 func TestFlatDamageTakenNeedsAField(t *testing.T) {
-	if parsed := DryRun(buffRow(7020, auraEffect(dbcenums.A_MOD_DAMAGE_TAKEN, 2, 161)), false); len(parsed.Applied) != 0 {
+	if parsed := DryRun(buffRow(7020, auraEffect(dbcenums.A_MOD_DAMAGE_TAKEN, 2, 161))); len(parsed.Applied) != 0 {
 		t.Errorf("a holy-only flat damage taken row attached %v", appliedKinds(parsed))
 	}
 }
@@ -122,7 +122,7 @@ func TestLevelPricesADebuffOnABoss(t *testing.T) {
 	if got := ParseEffects(nil, &core.Aura{Unit: boss}, row, Level(60)).Applied[0].Value; got != -205 {
 		t.Errorf("Level(60) reads %v on a level 63 boss, want -205", got)
 	}
-	if got := DryRun(row, false).Applied[0].Value; got != -205 {
+	if got := DryRun(row).Applied[0].Value; got != -205 {
 		t.Errorf("the dry run reads %v, want the -205 of core.CharacterLevel", got)
 	}
 }
@@ -146,7 +146,7 @@ func TestScaledByTruncatesTheClientAmount(t *testing.T) {
 		{&Effect{Aura: dbcenums.A_ADD_FLAT_MODIFIER, BasePoints: 2}, 30},
 	}
 	for _, c := range cases {
-		if got := DryRun(row, true, BuffAuras(), ScaledBy(c.mod)).Applied[0].Value; got != c.want {
+		if got := DryRun(row, BuffAuras(), ScaledBy(c.mod)).Applied[0].Value; got != c.want {
 			t.Errorf("ScaledBy(%v %v) reads %v, want %v", c.mod.Aura, c.mod.BasePoints, got, c.want)
 		}
 	}
@@ -159,7 +159,7 @@ func TestScaledByPricesTheFirstAttachedEffect(t *testing.T) {
 		auraEffect(dbcenums.A_MOD_ATTACK_POWER, 0, 100),
 		auraEffect(dbcenums.A_MOD_RANGED_ATTACK_POWER, 0, 100))
 
-	parsed := DryRun(row, true, ScaledBy(&Effect{Aura: dbcenums.A_ADD_PCT_MODIFIER, BasePoints: 10}))
+	parsed := DryRun(row, ScaledBy(&Effect{Aura: dbcenums.A_ADD_PCT_MODIFIER, BasePoints: 10}))
 	if len(parsed.Applied) != 2 || parsed.Applied[0].Value != 110 || parsed.Applied[1].Value != 100 {
 		t.Errorf("attached %v, want the melee attack power alone at 110", parsed.Applied)
 	}
@@ -170,15 +170,15 @@ func TestFullComboPoints(t *testing.T) {
 	row := buffRow(11198, Effect{Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_RESISTANCE,
 		Misc: miscArmor, PointsPerResource: -450})
 
-	without := DryRun(row, false)
+	without := DryRun(row)
 	if len(without.Applied) != 0 || len(without.Skipped) != 1 {
 		t.Errorf("without FullComboPoints the row attached %v", appliedKinds(without))
 	}
-	if notes := BuffUnsupported(row, false); len(notes) != 1 || !strings.Contains(notes[0], "per combo point") {
+	if notes := without.SkippedNotes(row); len(notes) != 1 || !strings.Contains(notes[0], "per combo point") {
 		t.Errorf("the note for the per-point row: %v", notes)
 	}
 
-	if got := DryRun(row, false, FullComboPoints()).Applied[0].Value; got != -2250 {
+	if got := DryRun(row, FullComboPoints()).Applied[0].Value; got != -2250 {
 		t.Errorf("the finisher at full combo points reads %v, want -2250", got)
 	}
 }
@@ -218,16 +218,16 @@ func TestSkipAuras(t *testing.T) {
 		auraEffect(dbcenums.A_MECHANIC_DURATION_MOD, 26, 0),
 		auraEffect(dbcenums.A_MECHANIC_DURATION_MOD, 9, 0))
 
-	all := DryRun(row, true)
+	all := DryRun(row)
 	if kinds := appliedKinds(all); !slices.Equal(kinds, []string{"pushback", "healing-taken"}) {
 		t.Errorf("without SkipAuras the row attached %v", kinds)
 	}
 
-	skipped := DryRun(row, true, SkipAuras(dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD))
+	skipped := DryRun(row, SkipAuras(dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD))
 	if kinds := appliedKinds(skipped); !slices.Equal(kinds, []string{"pushback"}) || len(skipped.Skipped) != 0 {
 		t.Errorf("with SkipAuras the row attached %v and reported %d", kinds, len(skipped.Skipped))
 	}
-	if notes := BuffUnsupported(row, true, SkipAuras(dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD)); len(notes) != 0 {
+	if notes := skipped.SkippedNotes(row); len(notes) != 0 {
 		t.Errorf("the skipped auras are noted as left out: %v", notes)
 	}
 }
@@ -414,7 +414,7 @@ func TestDryRunMatchesTheParse(t *testing.T) {
 		character := parseWarrior()
 		aura := character.RegisterAura(AuraConfig(Find(id)))
 		parsed := ParseEffects(character, aura, Find(id))
-		dry := DryRun(Find(id), true)
+		dry := DryRun(Find(id))
 
 		if !slices.Equal(appliedKinds(dry), appliedKinds(parsed)) || len(dry.Skipped) != len(parsed.Skipped) {
 			t.Errorf("spell %d: the dry run attached %v and skipped %d, the parse %v and %d",
@@ -424,16 +424,16 @@ func TestDryRunMatchesTheParse(t *testing.T) {
 }
 
 // Hunter's Mark states the mark itself as an aura the sim has nothing for, beside the attack power.
-func TestBuffUnsupportedNamesWhatIsLeftOut(t *testing.T) {
+func TestSkippedNotesNameWhatIsLeftOut(t *testing.T) {
 	row := buffRow(14325,
 		auraEffect(dbcenums.A_MOD_STALKED, 0, 0),
 		auraEffect(dbcenums.A_RANGED_ATTACK_POWER_ATTACKER_BONUS, 0, 71))
 
-	notes := BuffUnsupported(row, false)
+	notes := DryRun(row).SkippedNotes(row)
 	if len(notes) != 1 || notes[0] != "effect 1 A_MOD_STALKED(68) misc 0" {
 		t.Errorf("notes %q, want the stalked effect alone", notes)
 	}
-	if notes := BuffUnsupported(Nil, false); len(notes) != 1 {
+	if notes := DryRun(Nil).SkippedNotes(Nil); len(notes) != 1 {
 		t.Errorf("a missing row answered %q", notes)
 	}
 }
