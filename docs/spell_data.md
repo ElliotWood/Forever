@@ -588,16 +588,24 @@ the spell it is routed through - the `TriggerSpellID` of its commented-out regis
   hits of the weapon carrying it (`NewDynamicLegacyProcForEnchant(id, ppm, 0)`, or `...ForWeapon` for an
   item).
 - An equip aura (Effect 3): the aura carrying the proc trigger - Revelation's 1248806 - not the spell it
-  triggers (1248808) nor the grant (1248805). Revelation stays refused all the same: its effect entry
-  resolves no stats. The rate is measured on the aura's own proc mask, so an aura whose flags decode to
-  no mask stays refused as `no proc mask to measure its rate on`.
+  triggers (1248808) nor the grant (1248805). The rate is measured on the aura's own proc mask, so an
+  aura whose flags decode to no mask stays refused as `no proc mask to measure its rate on`.
+
+A procs-per-minute enchant proc rolls on weapon hits only: its mask keeps its melee and ranged bits,
+and a spell or heal hit never procs it. `dpmForMask` strips the rest for every enchant, so an equip
+aura that hears only spells registers and never fires. An enchant the game does let spells proc is an
+exception to state there, by enchant; there is none today. A stated chance (Fiery Blaze 36's 15%,
+Insight 8216's 35%) is not a rate and hears what its row says.
+
+Revelation 8217 stays listed. Its rate is scripted and the client does not state it: trigger 1248806's
+`ProcChance` 100 is the sentinel beside the tooltip's "a chance", and its effect entry resolves no stats
+from 1248808.
 
 A rate follows the weapon the enchant sits on. A weapon enchant, ranged ones included
-(`NewDynamicLegacyProcForEnchantWithMask`), rolls its melee and ranged hits only on the hand carrying
-it, at that weapon's speed, and its spell hits at the enchanted weapon's speed - the main hand's where
-both hands carry it; an item swap moves all of it with the weapon. An enchant on no weapon - armor, a
-cloak, a shield or a held-in-off-hand item - is priced off the main hand (`NewLegacyPPMManager`, which
-prices every mask but the off hand's and the ranged one's at the main hand's speed).
+(`NewDynamicLegacyProcForEnchantWithMask`), rolls only on the hand carrying it, at that weapon's speed;
+an item swap moves it with the weapon. An enchant on no weapon - armor, a cloak, a shield or a
+held-in-off-hand item - is priced off the main hand (`NewLegacyPPMManager`, which prices every mask but
+the off hand's and the ranged one's at the main hand's speed).
 
 Where a combat spell and an aura apply the same spell (Crusader), the slot whose row states a rate is
 the one kept, so the override goes on the combat spell to keep it the combat spell. After adding a row,

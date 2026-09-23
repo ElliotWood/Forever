@@ -75,42 +75,11 @@ func (character *Character) NewDynamicLegacyProcForEnchant(effectID int32, ppm f
 }
 
 // Dynamic Proc Manager for a weapon enchant heard on its own ProcMask: the mask's weapon hits roll
-// on the hands carrying the enchant at their own speeds, and its other hits at the enchanted
-// weapon's speed, the main hand's where both hands carry it.
+// on the hands carrying the enchant at their own speeds, and nothing else rolls.
 func (character *Character) NewDynamicLegacyProcForEnchantWithMask(effectID int32, ppm float64, procMask ProcMask) *DynamicProcManager {
-	build := func() DynamicProcManager {
-		hands := character.getCurrentProcMaskForWeaponEnchant(effectID)
-		dpm := character.newDynamicWeaponProcManager(ppm, 0, procMask&hands)
-
-		aa := character.AutoAttacks
-		other := procMask &^ ProcMaskMeleeOrRanged
-		if other == 0 || (!aa.AutoSwingMelee && !aa.AutoSwingRanged) {
-			return dpm
-		}
-
-		var speed float64
-		switch {
-		case hands.Matches(ProcMaskMeleeMH):
-			speed = aa.mh.SwingSpeed
-		case hands.Matches(ProcMaskMeleeOH):
-			speed = aa.oh.SwingSpeed
-		case hands.Matches(ProcMaskRanged):
-			speed = aa.ranged.SwingSpeed
-		}
-		if speed != 0 {
-			dpm.procMasks = append(dpm.procMasks, other)
-			dpm.procChances = append(dpm.procChances, staticProc{chance: speed * (ppm / 60)})
-		}
-
-		return dpm
-	}
-
-	dpm := build()
-	character.RegisterItemSwapCallback(AllWeaponSlots(), func(sim *Simulation, slot proto.ItemSlot) {
-		dpm = build()
+	return character.newDynamicProcManagerWithDynamicProcMask(ppm, 0, func() ProcMask {
+		return procMask & character.getCurrentProcMaskForWeaponEnchant(effectID)
 	})
-
-	return &dpm
 }
 
 // Dynamic Proc Manager for dynamic ProcMasks on weapon temp enchants

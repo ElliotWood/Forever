@@ -436,8 +436,7 @@ func TestStatedEnchantChanceRollsOnTheEnchantedWeaponOnly(t *testing.T) {
 }
 
 // A PPM override on a rate-less enchant proc's row clears its refusal, and the registration measures
-// the rate: on the enchanted weapon's hits for a combat spell, on the aura's own mask at the enchanted
-// weapon's speed for an equip aura.
+// the rate on the enchanted weapon's hits. An equip aura that hears only spells never rolls.
 func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 	const mainHandID, offHandID, enchantID int32 = 990501, 990502, 990503
 	const ppm = 2.0
@@ -471,10 +470,11 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 		isWeaponProc bool
 		damage       bool
 		heard        core.ProcMask
+		want         float64
 	}{
-		{"Fiery Weapon's combat spell 13897", 13897, true, true, core.ProcMaskMeleeMHAuto},
-		{"Unholy Weapon's combat spell 20006", 20006, true, false, core.ProcMaskMeleeMHAuto},
-		{"Revelation's equip aura 1248806", 1248806, false, false, core.ProcMaskSpellDamage},
+		{"Fiery Weapon's combat spell 13897", 13897, true, true, core.ProcMaskMeleeMHAuto, mainHandChance},
+		{"Unholy Weapon's combat spell 20006", 20006, true, false, core.ProcMaskMeleeMHAuto, mainHandChance},
+		{"Revelation's equip aura 1248806", 1248806, false, false, core.ProcMaskSpellDamage, 0},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			row := *spelldata.MustFind(tc.spellID)
@@ -511,8 +511,8 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 			if config.DPM == nil {
 				t.Fatal("no procs-per-minute manager")
 			}
-			if got := config.DPM.Chance(tc.heard, nil); math.Abs(got-mainHandChance) > 1e-12 {
-				t.Errorf("chance = %v, want %v ppm on the main hand's %v s, %v", got, ppm, mainHandSpeed, mainHandChance)
+			if got := config.DPM.Chance(tc.heard, nil); math.Abs(got-tc.want) > 1e-12 {
+				t.Errorf("chance = %v, want %v (%v ppm, main hand %v s)", got, tc.want, ppm, mainHandSpeed)
 			}
 			if got := config.DPM.Chance(core.ProcMaskMeleeOHAuto, nil); got != 0 {
 				t.Errorf("off hand chance = %v, want 0", got)
@@ -522,8 +522,8 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 }
 
 // An enchant aura's procs-per-minute rate follows its weapon: a weapon enchant's melee hits roll only
-// on the hand carrying it and its spell hits at that weapon's speed, while an enchant on no weapon
-// keeps the main hand's pricing. Recovery's 1248761 hears melee hits and Revelation's 1248806 spells.
+// on the hand carrying it, while an enchant on no weapon keeps the main hand's pricing, and no enchant's
+// spell or heal hits roll. Recovery's 1248761 hears melee hits and Revelation's 1248806 spells.
 func TestEnchantAuraPPMFollowsItsWeapon(t *testing.T) {
 	const slowID, fastID int32 = 990801, 990802
 	const weaponEnchantID, cloakEnchantID, shieldEnchantID int32 = 990803, 990804, 990805
@@ -555,13 +555,13 @@ func TestEnchantAuraPPMFollowsItsWeapon(t *testing.T) {
 		{"weapon enchant on both hands, melee aura", weaponEnchantID, weaponEnchantID, weaponEnchantID, 1248761,
 			chance(slow), chance(fast), 0},
 		{"weapon enchant on the off hand, spell aura", weaponEnchantID, 0, weaponEnchantID, 1248806,
-			0, 0, chance(fast)},
+			0, 0, 0},
 		{"cloak enchant, melee aura", cloakEnchantID, 0, 0, 1248761,
 			chance(slow), chance(fast), 0},
 		{"cloak enchant, spell aura", cloakEnchantID, 0, 0, 1248806,
-			0, 0, chance(slow)},
+			0, 0, 0},
 		{"shield enchant, spell aura", shieldEnchantID, 0, 0, 1248806,
-			0, 0, chance(slow)},
+			0, 0, 0},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotOffHand+1)
@@ -598,6 +598,7 @@ func TestEnchantAuraPPMFollowsItsWeapon(t *testing.T) {
 				{"main hand", core.ProcMaskMeleeMHAuto, tc.mainHand},
 				{"off hand", core.ProcMaskMeleeOHAuto, tc.offHand},
 				{"spell", core.ProcMaskSpellDamage, tc.spell},
+				{"heal", core.ProcMaskSpellHealing, tc.spell},
 			} {
 				if got := config.DPM.Chance(hit.mask, nil); got != hit.want {
 					t.Errorf("%s chance = %v, want %v", hit.name, got, hit.want)

@@ -84,8 +84,7 @@ func TestEnchantProcChanceFollowsTheEnchantedWeapon(t *testing.T) {
 }
 
 // A procs-per-minute rate bound to a weapon enchant heard on melee and spell damage: a melee hit rolls
-// only on a hand carrying the enchant, at that weapon's speed, and a spell hit at the enchanted
-// weapon's speed, the main hand's where both carry it.
+// only on a hand carrying the enchant, at that weapon's speed, and a spell hit never rolls.
 func TestEnchantPPMFollowsTheEnchantedWeapon(t *testing.T) {
 	const slowID, fastID, enchantID int32 = 990701, 990702, 990703
 	const slow, fast, ppm = 2.6, 1.8, 2.0
@@ -136,23 +135,23 @@ func TestEnchantPPMFollowsTheEnchantedWeapon(t *testing.T) {
 			name:        "main hand only",
 			equipped:    hands(spec(slowID, true), spec(fastID, false)),
 			swapped:     hands(spec(fastID, false), spec(slowID, true)),
-			before:      chances{chance(slow), 0, chance(slow)},
-			afterSwap:   chances{0, chance(slow), chance(slow)},
+			before:      chances{chance(slow), 0, 0},
+			afterSwap:   chances{0, chance(slow), 0},
 			swapSummary: "the enchanted weapon swapped to the off hand",
 		},
 		{
 			name:        "off hand only",
 			equipped:    hands(spec(slowID, false), spec(fastID, true)),
 			swapped:     hands(spec(fastID, true), spec(slowID, false)),
-			before:      chances{0, chance(fast), chance(fast)},
-			afterSwap:   chances{chance(fast), 0, chance(fast)},
+			before:      chances{0, chance(fast), 0},
+			afterSwap:   chances{chance(fast), 0, 0},
 			swapSummary: "the enchanted weapon swapped to the main hand",
 		},
 		{
 			name:        "both hands",
 			equipped:    hands(spec(slowID, true), spec(fastID, true)),
 			swapped:     hands(spec(slowID, false), spec(fastID, false)),
-			before:      chances{chance(slow), chance(fast), chance(slow)},
+			before:      chances{chance(slow), chance(fast), 0},
 			afterSwap:   chances{0, 0, 0},
 			swapSummary: "both swapped for unenchanted weapons",
 		},

@@ -305,6 +305,10 @@ func dpmForMask(character *core.Character, source effectSource, ppm float64, mas
 	}
 
 	if mask != core.ProcMaskUnknown {
+		// A procs-per-minute enchant rolls on weapon hits only: spells and heals never proc it.
+		if source.isEnchant {
+			mask &= core.ProcMaskMeleeOrRanged
+		}
 		if source.isWeaponEnchant() {
 			return character.NewDynamicLegacyProcForEnchantWithMask(source.id, ppm, mask)
 		}
