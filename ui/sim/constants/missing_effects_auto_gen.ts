@@ -2764,6 +2764,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 
 export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 	[
+		34, // Weapon Counterweight
+		[
+			"Attaches a counterweight to a two-handed sword, mace, axe or polearm making it 3% faster. (an attack or cast speed aura, which no enchant stat carries)", // 7217 - https://www.wowhead.com/forever/spell=7217
+		]
+	],
+	[
 		43, // Iron Shield Spike
 		[
 			"Attaches an Iron Spike to your shield that deals damage every time you block with it.", // 9784 - https://www.wowhead.com/forever/spell=9784
@@ -2800,6 +2806,12 @@ export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
+		931, // Enchant Gloves - Minor Haste
+		[
+			"Permanently enchant gloves to grant a +1% attack and casting speed bonus. (an attack or cast speed aura, which no enchant stat carries)", // 13928 - https://www.wowhead.com/forever/spell=13928
+		]
+	],
+	[
 		1704, // Thorium Shield Spike
 		[
 			"Attaches a Thorium Spike to your shield that deals damage every time you block with it.", // 16624 - https://www.wowhead.com/forever/spell=16624
@@ -2821,6 +2833,12 @@ export const MISSING_ENCHANT_EFFECTS = new Map<number, string[]>([
 		1899, // Enchant Weapon - Unholy Weapon
 		[
 			"Permanently enchant a melee weapon to often inflict a curse on the target reducing their melee damage.", // 20006 - https://www.wowhead.com/forever/spell=20006
+		]
+	],
+	[
+		2543, // Arcanum of Rapidity
+		[
+			"Permanently adds 1% haste to a leg or head slot item. Does not stack with other enchantments for the selected equipment slot. (an attack or cast speed aura, which no enchant stat carries)", // 22841 - https://www.wowhead.com/forever/spell=22841
 		]
 	],
 	[

@@ -392,6 +392,7 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 		generated[parsed.EffectId] = true
 
 		TryParseEnchantEffect(parsed, enchant.ProcSlots(), groupMapProc, instance, enchantSpellEffects)
+		storeUnmappedSpeedEnchant(instance, enchant, parsed, enchantSpellEffects)
 	}
 
 	var procGroups []*Group
@@ -400,6 +401,39 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 	}
 
 	GenerateEffectsFile(procGroups, "sim/common/forever/enchants_auto_gen.go", TmplStrEnchant)
+}
+
+var speedAuras = []dbcenums.EffectAuraType{
+	dbcenums.A_MOD_ATTACKSPEED, dbcenums.A_MOD_CASTING_SPEED_NOT_STACK, dbcenums.A_MOD_MELEE_HASTE,
+	dbcenums.A_MOD_RANGED_HASTE, dbcenums.A_MOD_MELEE_RANGED_HASTE, dbcenums.A_HASTE_SPELLS,
+	dbcenums.A_MOD_MELEE_HASTE_2, dbcenums.A_MOD_MELEE_HASTE_3, dbcenums.A_MOD_RANGED_HASTE_2,
+	dbcenums.A_MOD_MELEE_RANGED_HASTE_2,
+}
+
+// An equip spell's attack or cast speed aura reaches no enchant field, so an enchant stating one is
+// listed as missing its effect unless it is implemented by hand.
+func storeUnmappedSpeedEnchant(instance *dbc.DBC, enchant dbc.Enchant, parsed *proto.UIEnchant, enchantSpellEffects map[int]*dbc.SpellEffect) {
+	grant, ok := enchantSpellEffects[int(parsed.EffectId)]
+	if !ok || core.HasEnchantEffect(parsed.EffectId) {
+		return
+	}
+
+	for idx, effect := range enchant.Effects {
+		if effect != dbc.ITEM_ENCHANTMENT_EQUIP_SPELL || idx >= len(enchant.EffectArgs) {
+			continue
+		}
+		spellID := enchant.EffectArgs[idx]
+		for _, spellEffect := range instance.SpellEffectsInOrder(spellID) {
+			if spellEffect.EffectType == dbcenums.E_APPLY_AURA && slices.Contains(speedAuras, spellEffect.EffectAura) {
+				StoreMissingEffect("EnchantEffects", parsed.Name, Variant{
+					ID:      int(parsed.EffectId),
+					Name:    renderSpellTooltip(instance, grant.SpellID) + " (an attack or cast speed aura, which no enchant stat carries)",
+					SpellID: spellID,
+				})
+				return
+			}
+		}
+	}
 }
 
 // The E_ENCHANT_ITEM effect that grants each enchant, by enchant ID. Only that effect names an
