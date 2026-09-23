@@ -3,7 +3,11 @@ import { ConsumesSpec, Profession, Race } from '@generated/proto/common';
 import { Rogue_Options as RogueOptions } from '@generated/proto/rogue';
 import { SavedTalents } from '@generated/proto/ui';
 
-import CombatSinisterStrikeAPL from './apls/combat_sinister_strike.apl.json';
+import BackstabAPL from './apls/combat_backstab.apl.json';
+import BackstabSweatyAPL from './apls/combat_backstab_sweaty.apl.json';
+import SinisterStrikeAPL from './apls/combat_sinister_strike.apl.json';
+import SinisterStrikeIEAAPL from './apls/combat_sinister_strike_iea.apl.json';
+import SinisterStrikeSweatyAPL from './apls/combat_sinister_strike_sweaty.apl.json';
 import HemorrhageAPL from './apls/forever_hemorrhage.apl.json';
 import MutilateAPL from './apls/forever_mutilate.apl.json';
 import BackstabLaunchGear from './gear_sets/backstab_launch.gear.json';
@@ -19,17 +23,54 @@ import SinisterStrikeLaunchGear from './gear_sets/sinister_strike_launch.gear.js
 // Eventually we will import these values for the raid sim too, so its good to
 // keep them in a separate file.
 
-export const ROTATION_PRESET_COMBAT = PresetUtils.makePresetAPLRotation('Combat (Sinister Strike)', CombatSinisterStrikeAPL);
-export const ROTATION_PRESET_MUTILATE = PresetUtils.makePresetAPLRotation('Assassination (Mutilate)', MutilateAPL);
-export const ROTATION_PRESET_HEMORRHAGE = PresetUtils.makePresetAPLRotation('Subtlety (Hemorrhage)', HemorrhageAPL);
+// Master's rotations, talents and builds, same names and order (master ui/rogue/presets.ts).
+export const ROTATION_PRESET_BACKSTAB = PresetUtils.makePresetAPLRotation('Backstab', BackstabAPL);
+export const ROTATION_PRESET_SINISTER_STRIKE = PresetUtils.makePresetAPLRotation('Sinister Strike', SinisterStrikeAPL);
+export const ROTATION_PRESET_BACKSTAB_SWEATY = PresetUtils.makePresetAPLRotation('Backstab (Sweaty)', BackstabSweatyAPL);
+export const ROTATION_PRESET_SINISTER_STRIKE_SWEATY = PresetUtils.makePresetAPLRotation('Sinister Strike (Sweaty)', SinisterStrikeSweatyAPL);
+export const ROTATION_PRESET_SINISTER_STRIKE_IEA = PresetUtils.makePresetAPLRotation('Improved Expose Armor (SS)', SinisterStrikeIEAAPL);
+export const ROTATION_PRESET_MUTILATE = PresetUtils.makePresetAPLRotation('Mutilate', MutilateAPL);
+export const ROTATION_PRESET_HEMORRHAGE = PresetUtils.makePresetAPLRotation('Hemorrhage', HemorrhageAPL);
+export const ROTATION_PRESETS = [
+	ROTATION_PRESET_BACKSTAB,
+	ROTATION_PRESET_SINISTER_STRIKE,
+	ROTATION_PRESET_BACKSTAB_SWEATY,
+	ROTATION_PRESET_SINISTER_STRIKE_SWEATY,
+	ROTATION_PRESET_SINISTER_STRIKE_IEA,
+	ROTATION_PRESET_MUTILATE,
+	ROTATION_PRESET_HEMORRHAGE,
+];
 
-// The three builds our Forever sim ranks.
-export const CombatTalents = PresetUtils.makePresetTalents('Combat (Sinister Strike)', SavedTalents.create({ talentsString: '00530310501-32003311201515231' }));
-export const AssassinationTalents = PresetUtils.makePresetTalents(
-	'Assassination (Mutilate)',
-	SavedTalents.create({ talentsString: '00530310551021051-302303202004' }),
+export const BackstabTalents = PresetUtils.makePresetTalents('Backstab', SavedTalents.create({ talentsString: '005302005-30230320201515231-102' }));
+export const SinisterStrikeTalents = PresetUtils.makePresetTalents('Sinister Strike', SavedTalents.create({ talentsString: '00530310501-32003311201515231' }));
+export const SinisterStrikeIEATalents = PresetUtils.makePresetTalents(
+	'Improved Expose Armor (SS)',
+	SavedTalents.create({ talentsString: '005303125-32003311201515131' }),
 );
-export const SubtletyTalents = PresetUtils.makePresetTalents('Subtlety (Hemorrhage)', SavedTalents.create({ talentsString: '125320101--5320003310013211551' }));
+export const MutilateTalents = PresetUtils.makePresetTalents('Mutilate', SavedTalents.create({ talentsString: '00530310551021051-302303202004' }));
+// The community builds (named with their point split, so the rankings page runs them).
+export const CombatDualWieldTalents = PresetUtils.makePresetTalents(
+	'Combat Dual-Wield 15/33/3',
+	SavedTalents.create({ talentsString: '1053231-22530300001515231-012' }),
+);
+export const AssassinationMutilateTalents = PresetUtils.makePresetTalents(
+	'Assassination Mutilate 31/20/0',
+	SavedTalents.create({ talentsString: '02532010531201051-225303000005' }),
+);
+export const SubtletyHemoTalents = PresetUtils.makePresetTalents(
+	'Subtlety Hemo 15/0/36',
+	SavedTalents.create({ talentsString: '125320101--5320003310013211551' }),
+);
+export const TALENT_PRESETS = [
+	BackstabTalents,
+	SinisterStrikeTalents,
+	SinisterStrikeIEATalents,
+	MutilateTalents,
+	CombatDualWieldTalents,
+	AssassinationMutilateTalents,
+	SubtletyHemoTalents,
+];
+export const DefaultTalents = SinisterStrikeTalents;
 
 export const DefaultOptions = RogueOptions.create({
 	classOptions: {},
@@ -74,3 +115,25 @@ export const GEAR_PRESETS = [
 	GEAR_COMBAT_BACKSTAB_P2_BIS,
 	GEAR_COMBAT_SINISTER_STRIKE_P2_BIS,
 ];
+
+export const BuildBackstab = PresetUtils.makePresetBuild('Backstab', {
+	gear: GEAR_COMBAT_BACKSTAB_P2_BIS,
+	talents: BackstabTalents,
+	rotation: ROTATION_PRESET_BACKSTAB,
+});
+export const BuildSinisterStrike = PresetUtils.makePresetBuild('Sinister Strike', {
+	gear: GEAR_COMBAT_SINISTER_STRIKE_P2_BIS,
+	talents: SinisterStrikeTalents,
+	rotation: ROTATION_PRESET_SINISTER_STRIKE,
+});
+export const BuildIEA = PresetUtils.makePresetBuild('IEA', {
+	gear: GEAR_COMBAT_SINISTER_STRIKE_P2_BIS,
+	talents: SinisterStrikeIEATalents,
+	rotation: ROTATION_PRESET_SINISTER_STRIKE_IEA,
+});
+export const BuildMutilate = PresetUtils.makePresetBuild('Mutilate', {
+	gear: GEAR_COMBAT_BACKSTAB_P2_BIS,
+	talents: MutilateTalents,
+	rotation: ROTATION_PRESET_MUTILATE,
+});
+export const BUILD_PRESETS = [BuildBackstab, BuildSinisterStrike, BuildIEA, BuildMutilate];

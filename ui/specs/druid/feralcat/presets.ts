@@ -8,6 +8,7 @@ import {
 import { SavedTalents } from '@generated/proto/ui';
 
 import DefaultApl from './apls/default.apl.json';
+import SimpleVaelApl from './apls/simple_vael.apl.json';
 import LaunchGear from './gear_sets/launch.gear.json';
 import P0BisGear from './gear_sets/p0.bis.gear.json';
 import P2BisGear from './gear_sets/p2.bis.gear.json';
@@ -46,7 +47,8 @@ export const DefaultRotation = FeralCatDruidRotation.create({
 
 export const SIMPLE = PresetUtils.makePresetSimpleRotation('Simple', Spec.SpecFeralCatDruid, DefaultRotation);
 
-export const APL = PresetUtils.makePresetAPLRotation('APL', DefaultApl);
+export const APL = PresetUtils.makePresetAPLRotation('Feral', DefaultApl);
+export const APL_SIMPLE_VAEL = PresetUtils.makePresetAPLRotation('Simple Vaelastrasz', SimpleVaelApl);
 
 export const FeralTalents = PresetUtils.makePresetTalents('Feral', SavedTalents.create({ talentsString: '-5521002023132213051-05503' }));
 export const FeralCatTalents = PresetUtils.makePresetTalents('Feral Cat 9/35/7', SavedTalents.create({ talentsString: '050022-5500002123032213051-052' }));
