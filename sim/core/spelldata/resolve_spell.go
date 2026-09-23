@@ -156,7 +156,9 @@ func rowFlags(s *Spell) core.SpellFlag {
 	return flags
 }
 
-func castConfig(unit *core.Unit, s *Spell) core.CastConfig {
+// The cast time and global cooldown the row states and whether haste shortens them, without the
+// cooldowns: for a caller that runs the spell on cooldowns of its own.
+func Cast(s *Spell) core.CastConfig {
 	// Haste shortens a cast and the GCD it spends, which is the school's business rather than the hit
 	// table's: the shouts, Taunt, Piercing Howl and Thunder Clap are physical spells the client files
 	// under the magic defense type, and they ignore haste like every other ability.
@@ -168,6 +170,11 @@ func castConfig(unit *core.Unit, s *Spell) core.CastConfig {
 	if s.StartRecoveryCategory == globalCooldownCategory {
 		cast.DefaultCast.GCD = s.GCD()
 	}
+	return cast
+}
+
+func castConfig(unit *core.Unit, s *Spell) core.CastConfig {
+	cast := Cast(s)
 
 	switch {
 	case s.CooldownMs > 0:

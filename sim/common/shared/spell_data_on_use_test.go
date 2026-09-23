@@ -306,6 +306,49 @@ func TestOnUseDotTicksCritWithoutAHitRoll(t *testing.T) {
 	}
 }
 
+// Linken's Boomerang 11905's on-use, 15712, thrown from 8 to 30 yards, states a 0.5 s cast and no
+// global cooldown: it lands when the cast completes. The lasso's 443265 states neither and lands at once.
+func TestOnUseCastsForTheCastTimeItsRowStates(t *testing.T) {
+	const boomerangID, lassoID int32 = 991018, 991019
+	sim, caster := newOnUseSim(t, NewSpellDataDamageOnUse, map[int32]*proto.ItemEffect{
+		boomerangID: testOnUse(15712, 180000, 0, 0),
+		lassoID:     lassoOnUse(),
+	})
+	target := sim.Encounter.ActiveTargetUnits[0]
+
+	lasso := onUseSpell(t, caster, lassoID)
+	start := sim.CurrentTime
+	lasso.Cast(sim, target)
+	if lasso.SpellMetrics[target.UnitIndex].Casts != 1 || caster.Hardcast.Expires > start || caster.NextGCDAt() > start {
+		t.Errorf("the lasso cast %d times, casting until %v, GCD until %v; want it used at once at %v",
+			lasso.SpellMetrics[target.UnitIndex].Casts, caster.Hardcast.Expires, caster.NextGCDAt(), start)
+	}
+
+	boomerang := onUseSpell(t, caster, boomerangID)
+	caster.DistanceFromTarget = 20
+	boomerang.Cast(sim, target)
+	if caster.Hardcast.Expires != start+500*time.Millisecond || boomerang.SpellMetrics[target.UnitIndex].Casts != 0 {
+		t.Errorf("the boomerang casts until %v with %d casts done, want a 0.5 s cast from %v",
+			caster.Hardcast.Expires, boomerang.SpellMetrics[target.UnitIndex].Casts, start)
+	}
+	stepPast(t, sim, start+500*time.Millisecond+time.Millisecond)
+	if boomerang.SpellMetrics[target.UnitIndex].Casts != 1 {
+		t.Errorf("the boomerang's cast had not completed 0.5 s after it began")
+	}
+}
+
+// The heal of 9163 states a 1.5 s global cooldown, in the global cooldown's category 133.
+func TestOnUseSpendsTheGlobalCooldownItsRowStates(t *testing.T) {
+	const itemID int32 = 991020
+	sim, caster := newOnUseSim(t, NewSpellDataHealOnUse, map[int32]*proto.ItemEffect{itemID: testOnUse(9163, 300000, 0, 0)})
+
+	start := sim.CurrentTime
+	onUseSpell(t, caster, itemID).Cast(sim, &caster.Unit)
+	if got := caster.NextGCDAt(); got != start+1500*time.Millisecond {
+		t.Errorf("the global cooldown runs until %v, want 1.5 s after the use at %v", got, start)
+	}
+}
+
 // A neck whose effect puts a listener on the wearer for the callback, counting what it hears, and
 // registers the spell a damage proc of procRow would cast, where procRow is not 0.
 func listeningNeck(neckID int32, callback core.AuraCallback, procRow int32) (*proto.ItemSpec, *int) {
