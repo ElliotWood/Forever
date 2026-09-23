@@ -23,8 +23,7 @@ type Encounter struct {
 	ExecuteProportion_45 float64
 	ExecuteProportion_90 float64
 
-	// Every kind of area the fight's zone counts as, from proto.Encounter.AreaTypes with the
-	// duplicates and the Unknown value dropped.
+	// Every kind of area the fight is in, deduplicated.
 	AreaTypes []proto.AreaType
 
 	EndFightAtHealth float64

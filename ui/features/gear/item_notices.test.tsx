@@ -107,8 +107,6 @@ describe('registerAreaStatsNotices', () => {
 		ITEM_INFO_NOTICES.delete(PLAIN);
 	});
 
-	// An info notice, not a warning: the item works, and the table it goes into is the one the
-	// picker shows behind the info icon.
 	it('writes an info notice naming each area and the stats it adds, and none for an item without any', () => {
 		registerAreaStatsNotices(db);
 

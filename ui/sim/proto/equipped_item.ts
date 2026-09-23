@@ -235,8 +235,7 @@ export class EquippedItem {
 		});
 	}
 
-	// The item's stats for the given areas: what it grants everywhere plus what it grants only in an
-	// area the encounter is in, the same fold the sim makes while it builds the raid.
+	// Folds in the stats of the given areas, as the sim does.
 	withDynamicStats(areaTypes: readonly AreaType[] = []) {
 		const item = this.item;
 		const scalingOptions = item.scalingOptions[0];

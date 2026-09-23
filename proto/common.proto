@@ -627,8 +627,7 @@ enum MobType {
 	MobTypeUndead = 8;
 }
 
-// The kinds of area the client groups its zones into for spells that only work "in Forest and
-// Grassland areas" and the like. Each value is one AreaGroup id in SpellCastingRequirements.
+// The client's terrain area groups (SpellCastingRequirements.RequiredAreasID).
 enum AreaType {
 	AreaTypeUnknown = 0;
 	AreaTypeForestGrassland = 1;
@@ -732,13 +731,10 @@ message Encounter {
 	// If type != Simple or Custom, then this may be empty.
 	repeated Target targets = 6;
 
-	// Every kind of area the fight's zone counts as. A zone is in more than one of the client's
-	// area groups when it fits more than one (Redridge is Forest and Mountainous), so this is a
-	// set rather than a single value. Empty means no area-restricted effect applies.
+	// Every kind of area the fight is in; a zone can count as several. Empty is none.
 	repeated AreaType area_types = 11;
 
-	// The UIZone the area set was taken from, for the UI to show which zone is picked; zero once
-	// the set is edited by hand. The sim reads area_types only.
+	// The zone the area set came from, for the UI only; 0 once edited by hand.
 	int32 zone_id = 12;
 }
 

@@ -153,9 +153,7 @@ func TestGeneratedLightningShield(t *testing.T) {
 	}
 }
 
-// Stolen Power's hidden companion row (Jewel of the Guard Captain) is the one restricted to Forest
-// and Grassland areas; the visible row carries no requirement, and Staff of Westfall's group is a
-// single zone, not a terrain.
+// Stolen Power's companion row requires Forest and Grassland; Staff of Westfall's group is a single zone.
 func TestGeneratedRequiredAreas(t *testing.T) {
 	withGeneratedStore(t)
 
@@ -170,8 +168,7 @@ func TestGeneratedRequiredAreas(t *testing.T) {
 	}
 }
 
-// Molten Fury's "doubled in Volcanic areas" is an override, since the client states no companion
-// row; Monkey Business doubles its duration too.
+// Area bonuses come from the override table, not the client.
 func TestGeneratedAreaBonus(t *testing.T) {
 	withGeneratedStore(t)
 

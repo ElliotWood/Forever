@@ -13,8 +13,7 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// An area-restricted on-equip spell's stats go beside the item's stats, keyed by the area, rather
-// than into them: the sim adds them only in a matching encounter.
+// Kept apart from the item's stats so the sim can apply them per encounter.
 func addAreaStats(opts *proto.ScalingItemProperties, areaType proto.AreaType, statMap map[int32]float64) {
 	for _, existing := range opts.AreaStats {
 		if existing.AreaType == areaType {

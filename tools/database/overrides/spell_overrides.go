@@ -70,10 +70,7 @@ type Override struct {
 	Source  string // "tbc-carryover", "tooltip", "wcl:<report>/<fight>", "issue #N"
 }
 
-// An effect the tooltip says is doubled or tripled in some kind of area while the client states no
-// companion row for it: the whole reading is the tooltip's wording, so each row cites it. Groups are
-// the client's AreaGroup ids, any of which counts, the same ids Spell.RequiredAreas carries; the
-// multipliers apply to the effect's amounts and, where the tooltip says so, its duration.
+// Tooltip-only area bonuses ("doubled in X areas"). Groups are AreaGroup ids; any counts.
 type AreaBonus struct {
 	SpellID            int32
 	Groups             []int32

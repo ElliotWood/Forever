@@ -9,8 +9,7 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// Molten Fury (1249113) carries the "doubled in Volcanic areas" bonus and Monkey Business (1287571)
-// doubles its duration too, both from the override table the generated store bakes in.
+// Both buffs carry area bonuses from the override table.
 func TestOnUseStatBuffScalesByTheEncounterArea(t *testing.T) {
 	ap := int32(proto.Stat_StatAttackPower)
 	moltenFury := &proto.ItemEffect{

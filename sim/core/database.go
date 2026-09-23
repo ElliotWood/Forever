@@ -558,8 +558,7 @@ func ProtoToEquipment(es *proto.EquipmentSpec) Equipment {
 	return NewEquipmentSet(ProtoToEquipmentSpec(es))
 }
 
-// The item with the stats it grants in any of the given areas folded into Stats, so everything
-// that prices equipment reads one number.
+// Folds the stats of every matching area into Stats.
 func (item Item) inArea(areaTypes []proto.AreaType) Item {
 	if item.ID == 0 {
 		return item

@@ -833,8 +833,7 @@ func NewSimpleStatActive(itemID int32) {
 	})
 }
 
-// The stats and duration an on-use buff grants this character: the item's, scaled by the buff
-// row's area bonus where the encounter is in one of its areas.
+// The on-use buff's stats and duration, scaled by its area bonus.
 func onUseStatBuff(character *core.Character, itemEffect *proto.ItemEffect) (stats.Stats, time.Duration) {
 	amount, duration := spelldata.Find(itemEffect.BuffId).AreaBonus(&character.Env.Encounter)
 	buffStats := stats.FromProtoMap(itemEffect.GetScalingOptions()[int32(0)].GetStats()).Multiply(amount)

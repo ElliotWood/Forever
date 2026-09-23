@@ -141,9 +141,7 @@ func (s *storeSpell) directEffect() *storeEffect {
 	return nil
 }
 
-// Writes the area bonuses onto their rows under the same refusals as applyOverrides. The bonus is
-// stale once the row itself states a RequiredAreasID: then the client has moved the restriction
-// onto the row, and the sim reads it from there.
+// Stale once the row states its own RequiredAreasID.
 func applyAreaBonuses(rows []storeSpell, list []overrides.AreaBonus) error {
 	byID := map[int32]*storeSpell{}
 	for i := range rows {

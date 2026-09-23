@@ -158,8 +158,7 @@ export class Encounter {
 	getZoneId(): number {
 		return this.enc.zoneId;
 	}
-	// A zone the database knows sets the whole area set; an unknown one (0 is "custom") leaves the
-	// set alone and only drops the zone.
+	// An unknown zone (0 is Custom) keeps the set and clears the zone.
 	setZone(zoneId: number) {
 		const zone = zoneId ? this.sim.db.getZone(zoneId) : null;
 		this.setAreaTypes(zone ? zone.areaTypes : this.enc.areaTypes, zone ? zoneId : 0);

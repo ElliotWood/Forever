@@ -123,8 +123,7 @@ func (party *Party) GetMetrics() *proto.PartyMetrics {
 type Raid struct {
 	Parties []*Party
 
-	// The encounter's area set, held here because equipment is priced while the raid is built
-	// and an item's area-restricted stats count only in a matching area.
+	// The encounter's areas, needed while equipment is built.
 	AreaTypes []proto.AreaType
 
 	dpsMetrics DistributionMetrics

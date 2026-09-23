@@ -20,10 +20,7 @@ type areaTableRow struct {
 	ParentID int32
 }
 
-// Writes each zone's kinds of area onto the database's zones from the client's AreaGroupMember rows,
-// adding a zone for every open-world area the groups name that the item sources did not. Where the
-// client lists the same name more than once (Redridge Mountains as a zone and as a sub-area), the
-// top-level row is the one added, and a sub-area of a zone already present folds its groups into it.
+// Adds each zone's kinds of area from AreaGroupMember. A repeated name folds into the zone already listed.
 func LoadZoneAreas(db *WowDatabase, dbHelper *DBHelper) error {
 	members, err := LoadRows(dbHelper.db, `SELECT AreaGroupID, AreaID FROM AreaGroupMember ORDER BY AreaGroupID, AreaID`,
 		func(rows *sql.Rows) (areaGroupMember, error) {

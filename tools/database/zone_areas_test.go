@@ -7,8 +7,7 @@ import (
 	"github.com/wowsims/forever/sim/core/proto"
 )
 
-// The groups are the client's: 9161 Forest and Grassland, 9165 Mountainous, 9203 Volcanic, 9324
-// Cavernous; 9071 is Staff of Westfall's single-zone group and names no kind of area.
+// 9161 Forest, 9165 Mountainous, 9203 Volcanic, 9324 Cavernous; 9071 is a single zone.
 func TestApplyZoneAreas(t *testing.T) {
 	zones := map[int32]*proto.UIZone{
 		2677: {Id: 2677, Name: "Blackwing Lair"},

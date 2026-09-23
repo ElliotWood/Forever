@@ -16,8 +16,7 @@ export interface MultiComboBoxProps<ModObject> {
 	testId?: string;
 }
 
-// base-ui's multi-select combobox: clicking the field or the chevron lists every option, typing
-// narrows the list, and the picks sit below the field as removable chips.
+// base-ui's multi-select combobox, with the picks as chips below the field.
 export const MultiComboBox = <ModObject,>({ modObject, config, className, testId }: MultiComboBoxProps<ModObject>) => {
 	const { value, setValue, hidden, disabled } = useInput(modObject, config);
 	const portalContainer = usePortalContainer();

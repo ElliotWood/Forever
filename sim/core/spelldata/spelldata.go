@@ -87,10 +87,7 @@ type Spell struct {
 	// effect, so this is zero unless an override fills it.
 	FlatThreat float32
 
-	// An effect the tooltip says is doubled in some kind of area while the client states no
-	// companion row: the AreaGroup ids any of which counts, and the factors on the effect's amounts
-	// and its duration there. Empty unless an override fills it; AreaBonus reads it against an
-	// encounter.
+	// An area bonus from an override: AreaGroup ids (any counts), amount and duration factors.
 	AreaBonusGroups                        []int32
 	AreaMultiplier, AreaDurationMultiplier float32
 
@@ -107,8 +104,7 @@ type Spell struct {
 	// SpellTargetRestrictions.MaxTargets for an area effect. Zero is unlimited.
 	MaxTargets int16
 
-	// SpellCastingRequirements.RequiredAreasID: the AreaGroup the spell only works in. Zero is
-	// anywhere. AreaType() reads the terrain groups; a single-zone group reads as Unknown.
+	// SpellCastingRequirements.RequiredAreasID. Zero is anywhere.
 	RequiredAreas int32
 
 	// SpellEquippedItems: the item class, subclass mask and inventory-type mask the spell requires,

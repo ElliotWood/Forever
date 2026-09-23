@@ -53,7 +53,7 @@ type storeSpell struct {
 	// A flat threat bonus for a spell the client states no E_THREAT effect on, from an override.
 	FlatThreat float64
 
-	// An area bonus the tooltip words and no companion row states, from an override.
+	// An area bonus, from an override.
 	AreaBonusGroups                        []int32
 	AreaMultiplier, AreaDurationMultiplier float64
 
