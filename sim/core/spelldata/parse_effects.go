@@ -16,8 +16,21 @@ type ParseOpt func(*parseOptions)
 type parseOptions struct {
 	only         []int32
 	skip         []int32
+	skipAuras    []dbcenums.EffectAuraType
 	cond         func() bool
 	ignoreStacks bool
+
+	level       int32
+	scale       *Effect
+	comboPoints bool
+	count       float64
+	buffAuras   bool
+
+	exclusive         bool
+	category          string
+	singleAura        bool
+	perStatCategory   string
+	schoolResistances bool
 }
 
 // Only these effects, counted from 1 by position the way EffectN counts.
@@ -30,6 +43,13 @@ func Effects(idx ...int32) ParseOpt {
 func SkipEffects(idx ...int32) ParseOpt {
 	return func(o *parseOptions) {
 		o.skip = append(o.skip, idx...)
+	}
+}
+
+// No effect of these auras is read, wherever the row states it.
+func SkipAuras(auras ...dbcenums.EffectAuraType) ParseOpt {
+	return func(o *parseOptions) {
+		o.skipAuras = append(o.skipAuras, auras...)
 	}
 }
 
@@ -49,12 +69,85 @@ func IgnoreStacks() ParseOpt {
 	}
 }
 
+// The amounts are priced at this level rather than the caster's. A raid's buff or debuff is cast by
+// a player of the sim's own level whatever unit it lands on, and a debuff on a level 63 boss has no
+// character to read that level from.
+func Level(n int32) ParseOpt {
+	return func(o *parseOptions) {
+		o.level = n
+	}
+}
+
+// An improving talent's modifier on the amount, truncated the way the client resolves one: a
+// percentage of it for A_ADD_PCT_MODIFIER, a flat addition otherwise. It prices the first effect the
+// table attaches, in the client's units before the row converts them. An untaken talent is
+// NilEffect, which changes nothing.
+func ScaledBy(mod *Effect) ParseOpt {
+	return func(o *parseOptions) {
+		if mod != nil && mod != NilEffect {
+			o.scale = mod
+		}
+	}
+}
+
+// The finisher at full combo points: an effect the client states per combo point spent is worth
+// five of them. A parse without it skips an effect whose amount is its per-point value alone.
+func FullComboPoints() ParseOpt {
+	return func(o *parseOptions) {
+		o.comboPoints = true
+	}
+}
+
+// The amounts are counted n times over, for one aura that stands for several sources of it. A
+// multiplier cannot be counted, so those rows are skipped the way a stacking row skips them.
+func Count(n float64) ParseOpt {
+	return func(o *parseOptions) {
+		o.count = n
+	}
+}
+
+// The rows only a raid buff reads, on top of the table: see buffAuraTable.
+func BuffAuras() ParseOpt {
+	return func(o *parseOptions) {
+		o.buffAuras = true
+	}
+}
+
+// Everything the parse attaches bids under one exclusive category, priced at how strong the first
+// attachment is: a multiplier by how far it is from 1, and a stacking row once per stack. Only the
+// strongest member of the category applies, and with singleAura it deactivates the others outright.
+func Exclusive(category string, singleAura bool) ParseOpt {
+	return func(o *parseOptions) {
+		o.exclusive, o.category, o.singleAura = true, category, singleAura
+	}
+}
+
+// Every stat and pseudo-stat the parse attaches bids alone, under the category name core's own
+// exclusive stat buffs build: category + the stat or PseudoStats field + "Add" or "Mul". A generated
+// buff and a hand-written scroll of the same stat compete that way. The stacks are not followed.
+func ExclusivePerStat(category string) ParseOpt {
+	return func(o *parseOptions) {
+		o.perStatCategory = category
+	}
+}
+
+// Every flat school resistance the parse attaches bids alone under its school's category, whatever
+// else the parse does with the rest, so that only the strongest source of each school applies.
+// Armor is not a school.
+func SchoolResistances() ParseOpt {
+	return func(o *parseOptions) {
+		o.schoolResistances = true
+	}
+}
+
 // One attachment the parse made, for a log or a test: the effect it came from, the sim kind it
-// became and the value it carries in the sim's own units. A time value is stated in milliseconds.
+// became and the value it carries in the sim's own units. A time value is stated in milliseconds,
+// and a multiplier as the factor itself.
 type Applied struct {
-	Effect *Effect
-	Kind   string
-	Value  float64
+	Effect         *Effect
+	Kind           string
+	Value          float64
+	Multiplicative bool
 }
 
 // What one parse did. Skipped holds the aura effects the table does not know, which are the ones a
@@ -67,6 +160,12 @@ type Parsed struct {
 	aura        *core.Aura
 	cond        func() bool
 	stacking    bool
+	count       float64
+	quiet       bool
+
+	// The attachments the aura's own gain and expiry drive, which is all of them unless a category
+	// holds some.
+	live []*attachment
 }
 
 // Everything the row's aura effects say, attached to an aura: the mods, stat buffs and pseudo-stat
@@ -79,12 +178,12 @@ type Parsed struct {
 //
 // An aura that is already up when it is parsed is caught up the way core's Attach helpers catch one
 // up, except for the rows that need a Simulation to act: the haste multipliers stay off until the
-// aura is applied again.
+// aura is applied again. What a category holds waits for the aura's next application too.
 func ParseEffects(character *core.Character, aura *core.Aura, s *Spell, opts ...ParseOpt) *Parsed {
 	if aura == nil {
 		return &Parsed{}
 	}
-	return parse(aura.Unit, character, aura, s, opts)
+	return parse(aura.Unit, character, aura, s, opts, false)
 }
 
 // Everything the row's aura effects say, applied to the character now: a talent or a passive, which
@@ -93,11 +192,26 @@ func ParseStatic(character *core.Character, s *Spell, opts ...ParseOpt) *Parsed 
 	if character == nil {
 		return &Parsed{}
 	}
-	return parse(&character.Unit, character, nil, s, opts)
+	return parse(&character.Unit, character, nil, s, opts, false)
 }
 
-func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell, opts []ParseOpt) *Parsed {
-	parsed := &Parsed{}
+// What ParseEffects would attach and skip for the row, with nothing registered anywhere: the answer a
+// generator reads before it writes the call. onCharacter says the aura sits on a player, which the
+// rows that act through a character need; a debuff on an enemy has none. The amounts are priced at
+// core.CharacterLevel unless Level says otherwise.
+func DryRun(s *Spell, onCharacter bool, opts ...ParseOpt) *Parsed {
+	unit := &core.Unit{Level: core.CharacterLevel}
+	var character *core.Character
+	if onCharacter {
+		character = &core.Character{}
+		character.Level = core.CharacterLevel
+		unit = &character.Unit
+	}
+	return parse(unit, character, nil, s, opts, true)
+}
+
+func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell, opts []ParseOpt, dry bool) *Parsed {
+	parsed := &Parsed{quiet: dry}
 	if unit == nil || s == nil || s == Nil || len(s.Effects) == 0 {
 		return parsed
 	}
@@ -107,13 +221,15 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 		opt(o)
 	}
 
+	stacking := s.MaxStack > 0 && !o.ignoreStacks
 	p := &parser{
 		unit:        unit,
 		character:   character,
 		spell:       s,
-		static:      aura == nil,
+		static:      aura == nil && !dry,
 		conditional: o.cond != nil,
-		stacking:    s.MaxStack > 0 && !o.ignoreStacks,
+		stacking:    stacking || o.count != 0,
+		dry:         dry,
 	}
 
 	folded := foldedDotEffects(s, o)
@@ -124,14 +240,26 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 	if character != nil {
 		level = character.Level
 	}
+	if o.level != 0 {
+		level = o.level
+	}
 
+	scale := o.scale
 	for i := range s.Effects {
 		e := &s.Effects[i]
-		if !o.reads(int32(i+1)) || !appliesAura(e.Type) {
+		if !o.reads(int32(i+1)) || slices.Contains(o.skipAuras, e.Aura) || !appliesAura(e.Type) {
 			continue
 		}
 
 		value := e.Average(level)
+
+		if e.PointsPerResource != 0 && value == 0 {
+			if !o.comboPoints {
+				parsed.skip(s, i, e)
+				continue
+			}
+			value = float64(e.PointsPerResource) * fullComboPoints
+		}
 
 		if slices.Contains(folded, e) {
 			parsed.Applied = append(parsed.Applied, Applied{Effect: e,
@@ -140,30 +268,49 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 			continue
 		}
 
-		attached := auraTable[e.Aura]
+		attached := o.row(e.Aura)
 		if attached == nil {
 			parsed.skip(s, i, e)
 			continue
 		}
 
+		if scale != nil {
+			value = scaled(value, scale)
+		}
 		a := attached(p, e, value)
 		if a == nil {
 			parsed.skip(s, i, e)
 			continue
 		}
+		scale = nil
 
-		parsed.Applied = append(parsed.Applied, Applied{Effect: e, Kind: a.kind, Value: a.value})
+		if a.key == "" {
+			a.key = a.kind
+		}
+		parsed.Applied = append(parsed.Applied, Applied{Effect: e, Kind: a.kind, Value: a.value,
+			Multiplicative: a.multiplicative})
 		parsed.attachments = append(parsed.attachments, a)
 	}
 
 	parsed.aura = aura
 	parsed.cond = o.cond
-	parsed.stacking = p.stacking
+	parsed.stacking = stacking
+	parsed.count = 1
+	if o.count != 0 {
+		parsed.count = o.count
+	}
+
+	if dry {
+		return parsed
+	}
 
 	if aura == nil {
+		parsed.live = parsed.attached()
 		parsed.set(nil, parsed.level())
 		return parsed
 	}
+
+	parsed.live = parsed.bid(aura, o)
 
 	aura.ApplyOnGain(func(_ *core.Aura, sim *core.Simulation) {
 		parsed.set(sim, parsed.level())
@@ -171,7 +318,7 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 		parsed.set(sim, 0)
 	})
 
-	if p.stacking {
+	if stacking {
 		aura.ApplyOnStacksChange(func(_ *core.Aura, sim *core.Simulation, _ int32, _ int32) {
 			parsed.set(sim, parsed.level())
 		})
@@ -184,6 +331,19 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 	return parsed
 }
 
+// The finisher the raid config has on the target is cast at the most combo points there are.
+const fullComboPoints = 5
+
+// The row the parse reads an aura with: a buff's own rows first where the caller asked for them.
+func (o *parseOptions) row(aura dbcenums.EffectAuraType) row {
+	if o.buffAuras {
+		if r, ok := buffAuraTable[aura]; ok {
+			return r
+		}
+	}
+	return auraTable[aura]
+}
+
 // Reads the condition again and turns the attachments on or off accordingly, for a caller whose
 // condition changed under a parse that is already in place.
 func (p *Parsed) Refresh(sim *core.Simulation) {
@@ -191,7 +351,8 @@ func (p *Parsed) Refresh(sim *core.Simulation) {
 }
 
 // What the attachments are worth right now: nothing while the condition answers false or the aura is
-// down, the plain value where the row does not stack, and once per stack where it does.
+// down, the plain value where the row does not stack, and once per stack where it does, each of
+// those counted as often as Count says.
 func (p *Parsed) level() float64 {
 	if p.cond != nil && !p.cond() {
 		return 0
@@ -201,33 +362,43 @@ func (p *Parsed) level() float64 {
 	}
 	if p.stacking && p.aura != nil {
 		if stacks := p.aura.GetStacks(); stacks > 0 {
-			return float64(stacks)
+			return float64(stacks) * p.count
 		}
 	}
-	return 1
+	return p.count
 }
 
 func (p *Parsed) set(sim *core.Simulation, level float64) {
-	for _, a := range p.attachments {
-		if a != nil {
-			a.set(sim, level)
-		}
+	for _, a := range p.live {
+		a.set(sim, level)
 	}
 }
 
 // What core's Attach helpers do for an aura that is already up when they are attached: apply now,
 // with no Simulation in hand. The rows that read one are left for the aura's next application.
 func (p *Parsed) catchUp(level float64) {
-	for _, a := range p.attachments {
-		if a != nil && !a.needsSim {
+	for _, a := range p.live {
+		if !a.needsSim {
 			a.set(nil, level)
 		}
 	}
 }
 
+func (p *Parsed) attached() []*attachment {
+	var out []*attachment
+	for _, a := range p.attachments {
+		if a != nil {
+			out = append(out, a)
+		}
+	}
+	return out
+}
+
 func (p *Parsed) skip(s *Spell, i int, e *Effect) {
 	p.Skipped = append(p.Skipped, e)
-	report(s, i+1, e)
+	if !p.quiet {
+		report(s, i+1, e)
+	}
 }
 
 // Whether the parse reads the effect at this position.
