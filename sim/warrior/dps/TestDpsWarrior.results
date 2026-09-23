@@ -156,8 +156,8 @@ dps_results: {
 dps_results: {
  key: "TestDpsWarrior-AllItems-EnchantWeapon-Crusader-1900"
  value: {
-  dps: 561.16598
-  tps: 320.61004
+  dps: 566.45669
+  tps: 323.57284
   dtps: 6.98593
   hps: 23.89281
  }
