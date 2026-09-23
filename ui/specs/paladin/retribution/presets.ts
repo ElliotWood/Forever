@@ -22,11 +22,16 @@ export const DefaultOptions = RetributionPaladinOptions.create({
 
 // Defaults below are what master's ui/retribution_paladin opens with (currentSettings on a fresh
 // profile); its raid-wide Battle Shout, Leader of the Pack, Moonkin and Fire Resistance Aura are
-// party buffs here. Juju Power/Might, R.O.I.D.S., Dragonbreath Chili and Greater Arcane Elixir have
-// no slot here; Blessed Sunfruit and Major Mana Potion are not in this db.
+// party buffs here. Master's Greater Firepower (21546) is Forever's Elixir of Holy Power.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
 	battleElixirId: 13452, // Elixir of the Mongoose
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
+	schoolElixirId: 21546, // Elixir of Holy Power
+	strengthBuffId: 12451, // Juju Power
+	attackPowerBuffId: 12460, // Juju Might
+	zanzaId: 8410, // R.O.I.D.S.
+	dragonbreathChili: true,
 	foodId: 13810, // Blessed Sunfruit
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune

@@ -33,13 +33,17 @@ export const OtherDefaults = {
 	race: Race.RaceOrc,
 };
 
-// Master's consumables; Juju Power/Might, R.O.I.D.S., Dragonbreath Chili, Greater Arcane Elixir and
-// Elixir of Firepower have no slot here (one battle elixir), Blessed Sunfruit, Mageblood and Major
-// Mana Potion are not in this db.
+// Master's consumables, as the Forever client's items.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
 	battleElixirId: 13452, // Elixir of the Mongoose
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
+	schoolElixirId: 6373, // Elixir of Fire Power
 	guardianElixirId: 20007, // Mageblood Elixir
+	strengthBuffId: 12451, // Juju Power
+	attackPowerBuffId: 12460, // Juju Might
+	zanzaId: 8410, // R.O.I.D.S.
+	dragonbreathChili: true,
 	foodId: 13810, // Blessed Sunfruit
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune

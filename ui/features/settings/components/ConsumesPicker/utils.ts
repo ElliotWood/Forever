@@ -15,6 +15,13 @@ export interface ConsumeConfigs {
 	battleElixir: ConsumeConfig;
 	guardianElixir: ConsumeConfig;
 	food: ConsumeConfig;
+	spellPowerElixir: ConsumeConfig;
+	schoolElixir: ConsumeConfig;
+	defenseElixir: ConsumeConfig;
+	strengthBuff: ConsumeConfig;
+	attackPowerBuff: ConsumeConfig;
+	zanza: ConsumeConfig;
+	alcohol: ConsumeConfig;
 	explosive: ConsumeConfig;
 	mhImbue: ConsumeConfig;
 	ohImbue: ConsumeConfig;
@@ -53,6 +60,21 @@ export const consumeConfigs = (
 			'',
 		),
 		food: ConsumablesInputs.makeConsumableInput(byType(ConsumableType.ConsumableTypeFood), { consumesFieldName: 'foodId' }, ''),
+		spellPowerElixir: ConsumablesInputs.makeConsumableInput(
+			byType(ConsumableType.ConsumableTypeSpellPowerElixir),
+			{ consumesFieldName: 'spellPowerElixirId' },
+			'',
+		),
+		schoolElixir: ConsumablesInputs.makeConsumableInput(byType(ConsumableType.ConsumableTypeSchoolElixir), { consumesFieldName: 'schoolElixirId' }, ''),
+		defenseElixir: ConsumablesInputs.makeConsumableInput(byType(ConsumableType.ConsumableTypeDefenseElixir), { consumesFieldName: 'defenseElixirId' }, ''),
+		strengthBuff: ConsumablesInputs.makeConsumableInput(byType(ConsumableType.ConsumableTypeStrengthBuff), { consumesFieldName: 'strengthBuffId' }, ''),
+		attackPowerBuff: ConsumablesInputs.makeConsumableInput(
+			byType(ConsumableType.ConsumableTypeAttackPowerBuff),
+			{ consumesFieldName: 'attackPowerBuffId' },
+			'',
+		),
+		zanza: ConsumablesInputs.makeConsumableInput(byType(ConsumableType.ConsumableTypeZanza), { consumesFieldName: 'zanzaId' }, ''),
+		alcohol: ConsumablesInputs.makeConsumableInput(byType(ConsumableType.ConsumableTypeAlcohol), { consumesFieldName: 'alcoholId' }, ''),
 		explosive: ConsumablesInputs.makeExplosivesInput([...explosiveOptions], i18n.t('settings_tab.consumables.engineering.explosives')),
 		mhImbue: ConsumablesInputs.makeMHImbueInput([...imbueMHOptions], i18n.t('settings_tab.consumables.imbue.mhImbue')),
 		ohImbue: ConsumablesInputs.makeOHImbueInput([...imbueOHOptions], i18n.t('settings_tab.consumables.imbue.ohImbue')),

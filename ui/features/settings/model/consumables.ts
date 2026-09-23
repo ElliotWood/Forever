@@ -390,6 +390,12 @@ export const Bloodthistle = makeBooleanConsumeInput({
 	showWhen: (player: Player<any>) => player.getRace() === Race.RaceBloodElf,
 });
 
+export const DragonbreathChili = makeBooleanConsumeInput({
+	actionId: ActionId.fromItemId(12217),
+	fieldName: 'dragonbreathChili',
+	showWhen: (player: Player<any>) => player.getEpWeights().getStat(Stat.StatAttackPower) > 0,
+});
+
 export const BoglingRoot = makeBooleanConsumeInput({
 	actionId: ActionId.fromItemId(5206),
 	fieldName: 'boglingRoot',
@@ -435,14 +441,7 @@ export function makeConsumableInput(
 				[options.consumesFieldName]: newValue,
 			};
 
-			if (options.consumesFieldName === 'flaskId') {
-				newConsumes.guardianElixirId = 0;
-				newConsumes.battleElixirId = 0;
-			}
-
-			if ((options.consumesFieldName === 'battleElixirId' || options.consumesFieldName === 'guardianElixirId') && newValue != 0) {
-				newConsumes.flaskId = 0;
-			}
+			// No flask-or-elixirs rule: that is TBC's. Classic (and Forever) flasks stack with elixirs.
 			player.setConsumes(newConsumes);
 		},
 	};

@@ -38,7 +38,13 @@ export const DefaultOptions = ProtectionWarriorOptions.create({
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13510, // Flask of the Titans
 	battleElixirId: 13452, // Elixir of the Mongoose
-	guardianElixirId: 13445, // Elixir of Superior Defense
+	guardianElixirId: 3825, // Elixir of Lesser Fortitude
+	defenseElixirId: 13445, // Elixir of Greater Defense
+	strengthBuffId: 12451, // Juju Power
+	attackPowerBuffId: 12460, // Juju Might
+	zanzaId: 8410, // R.O.I.D.S.
+	alcoholId: 21151, // Rumsey Rum Black Label
+	dragonbreathChili: true,
 	foodId: 20452, // Smoked Desert Dumplings
 	potId: 13442, // Mighty Rage Potion
 });

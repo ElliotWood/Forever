@@ -16,12 +16,15 @@ import P2PreBisGear from './gear_sets/p2.pre-bis.gear.json';
 
 export const DefaultOptions = FeralDruidOptions.create({});
 
-// Master's consumables; Juju Power/Might, Dragonbreath Chili and Ground Scorpok Assay have no field
-// here, Flask of Distilled Wisdom, Grilled Squid and Major Mana Potion are not in this db. Goblin
-// Sapper drops Cat Form; the APL shifts back.
+// Master's consumables, as the Forever client's items. Goblin Sapper drops Cat Form; the APL
+// shifts back.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13511, // Flask of Distilled Wisdom
 	battleElixirId: 13452, // Elixir of the Mongoose
+	strengthBuffId: 12451, // Juju Power
+	attackPowerBuffId: 12460, // Juju Might
+	zanzaId: 8412, // Ground Scorpok Assay
+	dragonbreathChili: true,
 	foodId: 13928, // Grilled Squid
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune

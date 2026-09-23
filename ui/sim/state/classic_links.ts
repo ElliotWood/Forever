@@ -113,8 +113,7 @@ const convertUnitStats = (classic: { stats?: number[]; pseudoStats?: number[] } 
 const convertStatName = (name: string | undefined) => (name ? (STAT_MAP[name]?.[0][0] ?? name) : undefined);
 
 // Master's enum consumables, by the item each one is (from master's consumables picker). Our
-// ConsumesSpec is TBC-shaped: one battle and one guardian elixir, so master's stack of elixirs keeps
-// the first of each kind.
+// ConsumesSpec keeps one item per kind, so of master's school elixirs only the first counts.
 const CONSUMABLE_ITEMS: Record<string, number> = {
 	ConjuredHealthstone: 5509,
 	ConjuredGreaterHealthstone: 5510,
@@ -198,6 +197,17 @@ const CONSUMABLE_ITEMS: Record<string, number> = {
 	SolidWeightstone: 7965,
 	ShadowOil: 3824,
 	FrostOil: 3829,
+	SpiritOfZanza: 20079,
+	ROIDS: 8410,
+	GroundScorpokAssay: 8412,
+	CerebralCortexCompound: 8423,
+	GizzardGum: 8424,
+	LungJuiceCocktail: 8411,
+	AlcoholRumseyRumBlackLabel: 21151,
+	AlcoholRumseyRumDark: 21114,
+	AlcoholRumseyRumLight: 20709,
+	AlcoholGordokGreenGrog: 18269,
+	AlcoholKreegsStoutBeatdown: 18284,
 	// Master's rogue imbues; ours are the poison items sim/rogue/poisons.go reads.
 	InstantPoison: 26891,
 	DeadlyPoison: 27186,
@@ -213,9 +223,17 @@ const convertConsumes = (c: Json): Json => {
 		conjuredId: item('defaultConjured'),
 		explosiveId: item('fillerExplosive'),
 		goblinSapper: c.sapperExplosive === 'SapperGoblinSapper' || undefined,
-		// Elixirs before jujus: master's caster defaults also carry Juju Power, which is no use to them.
-		battleElixirId: item('agilityElixir', 'spellPowerBuff', 'firePowerBuff', 'frostPowerBuff', 'shadowPowerBuff', 'strengthBuff', 'attackPowerBuff'),
-		guardianElixirId: item('manaRegenElixir', 'healthElixir', 'armorElixir'),
+		battleElixirId: item('agilityElixir'),
+		spellPowerElixirId: item('spellPowerBuff'),
+		// One school elixir here; master's mage and elemental carry Fire and Frost Power, its warlock Fire and Shadow.
+		schoolElixirId: item('shadowPowerBuff', 'frostPowerBuff', 'firePowerBuff'),
+		guardianElixirId: item('manaRegenElixir', 'healthElixir'),
+		defenseElixirId: item('armorElixir'),
+		strengthBuffId: item('strengthBuff'),
+		attackPowerBuffId: item('attackPowerBuff'),
+		zanzaId: item('zanzaBuff'),
+		alcoholId: item('alcohol'),
+		dragonbreathChili: c.dragonBreathChili || undefined,
 		mhImbueId: item('mainHandImbue'),
 		ohImbueId: item('offHandImbue'),
 	};
@@ -294,7 +312,12 @@ export const convertClassicSettingsJson = (classic: Json): IndividualSimSettings
 	for (const target of c.encounter?.targets ?? []) target.stats = convertUnitStats({ stats: target.stats }).stats;
 	// Master's fight had no 45% and 90% phases. Left at 0 the fight never passes 90%, so it never
 	// reaches execute range either (no Execute, no below-20% effects): take the defaults.
-	if (c.encounter) c.encounter = { executeProportion45: ENCOUNTER_DEFAULTS.executeProportion45, executeProportion90: ENCOUNTER_DEFAULTS.executeProportion90, ...c.encounter };
+	if (c.encounter)
+		c.encounter = {
+			executeProportion45: ENCOUNTER_DEFAULTS.executeProportion45,
+			executeProportion90: ENCOUNTER_DEFAULTS.executeProportion90,
+			...c.encounter,
+		};
 
 	if (player.consumes) player.consumables = convertConsumes(player.consumes);
 	delete player.consumes;

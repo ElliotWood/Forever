@@ -713,6 +713,9 @@
 			"drums": {
 				"title": "Drums"
 			},
+			"buffs": {
+				"title": "Buffs"
+			},
 			"scrolls": {
 				"title": "Scrolls"
 			},

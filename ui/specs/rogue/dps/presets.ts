@@ -76,11 +76,15 @@ export const DefaultOptions = RogueOptions.create({
 	classOptions: {},
 });
 
-// Master's consumables; Juju Power/Might, Dragonbreath Chili and Ground Scorpok Assay have no field
-// here, Grilled Squid is not in this db. Instant/Deadly are this sim's Forever poison ids.
+// Master's consumables, as the Forever client's items (master's Greater Arcane Elixir does nothing
+// for a rogue and is left off). Instant/Deadly are this sim's Forever poison ids.
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
 	battleElixirId: 13452, // Elixir of the Mongoose
+	strengthBuffId: 12451, // Juju Power
+	attackPowerBuffId: 12460, // Juju Might
+	zanzaId: 8412, // Ground Scorpok Assay
+	dragonbreathChili: true,
 	foodId: 13928, // Grilled Squid
 	conjuredId: 7676, // Thistle Tea
 	mhImbueId: 26891, // Instant Poison

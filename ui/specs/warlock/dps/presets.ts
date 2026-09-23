@@ -49,8 +49,11 @@ export const DemonicPactOptions = AfflictionOptions;
 
 export const DefaultConsumables = ConsumesSpec.create({
 	flaskId: 13512, // Flask of Supreme Power
-	battleElixirId: 13454, // Greater Arcane Elixir
+	spellPowerElixirId: 13454, // Greater Arcane Elixir
+	schoolElixirId: 9264, // Elixir of Shadow Power
 	guardianElixirId: 20007, // Mageblood Elixir
+	zanzaId: 8423, // Cerebral Cortex Compound
+	alcoholId: 21151, // Rumsey Rum Black Label
 	foodId: 18254, // Runn Tum Tuber Surprise
 	potId: 13444, // Major Mana Potion
 	conjuredId: 12662, // Demonic Rune
