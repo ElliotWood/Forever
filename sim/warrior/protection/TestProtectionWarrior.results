@@ -200,6 +200,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-EverlookPathcarver-274759"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-EyeofMoam-21473"
  value: {
   dps: 501.64811
@@ -280,6 +288,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-HelmofFire-8348"
+ value: {
+  dps: 505.60029
+  tps: 776.80247
+  dtps: 3399.16738
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-HibernationCrystal-20636"
  value: {
   dps: 501.64811
@@ -320,7 +336,23 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-InfernalLasso-219345"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-JomGabbar-23570"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Linken'sBoomerang-11905"
  value: {
   dps: 501.64811
   tps: 770.90621
@@ -385,6 +417,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-SerenityField-272439"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-ShardoftheFallenStar-21891"
  value: {
   dps: 501.64811
   tps: 770.90621
