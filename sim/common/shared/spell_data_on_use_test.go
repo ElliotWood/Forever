@@ -31,10 +31,16 @@ func testOnUse(spellID int32, cooldownMs int32, categoryID int32, categoryCooldo
 // half health, with its spells certain to hit and never to crit.
 func newOnUseSim(t *testing.T, register func(int32), trinkets map[int32]*proto.ItemEffect) (*core.Simulation, *testCaster) {
 	t.Helper()
+	return newOnUseSimWearing(t, register, trinkets, &proto.ItemSpec{})
+}
+
+func newOnUseSimWearing(t *testing.T, register func(int32), trinkets map[int32]*proto.ItemEffect, neck *proto.ItemSpec) (*core.Simulation, *testCaster) {
+	t.Helper()
 	items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotTrinket2+1)
 	for i := range items {
 		items[i] = &proto.ItemSpec{}
 	}
+	items[proto.ItemSlot_ItemSlotNeck] = neck
 
 	slot := proto.ItemSlot_ItemSlotTrinket1
 	for id, effect := range trinkets {
@@ -232,5 +238,78 @@ func TestOnUseDealsItsDirectDamageAndItsDamageOverTime(t *testing.T) {
 	}
 	if got := dealtUntil(t, sim, spell, start, 8*time.Second); math.Abs(got-4*33) > 1e-6 {
 		t.Errorf("the damage over time dealt %v over its 8 s, want four ticks of 33", got)
+	}
+}
+
+// A neck whose effect puts a listener on the wearer for the callback, counting what it hears, and
+// registers the spell a damage proc of procRow would cast, where procRow is not 0.
+func listeningNeck(neckID int32, callback core.AuraCallback, procRow int32) (*proto.ItemSpec, *int) {
+	core.AddToDatabase(&proto.SimDatabase{Items: []*proto.SimItem{{Id: neckID, Name: "Test Neck",
+		Type: proto.ItemType_ItemTypeNeck, ScalingOptions: map[int32]*proto.ScalingItemProperties{0: {}}}}})
+
+	heard := new(int)
+	core.NewItemEffect(neckID, func(agent core.Agent) {
+		character := agent.GetCharacter()
+		character.MakeProcTriggerAura(core.ProcTrigger{
+			Name:               "Test Listener",
+			Callback:           callback,
+			Outcome:            core.OutcomeLanded,
+			TriggerImmediately: true,
+			Handler:            func(*core.Simulation, *core.Spell, *core.SpellResult) { *heard++ },
+		})
+		if procRow != 0 {
+			character.RegisterSpell(spellDataProcDamageSpell(character, spelldata.MustFind(procRow)))
+		}
+	})
+	return &proto.ItemSpec{Id: neckID}, heard
+}
+
+// Each of the lasso's six ticks reaches a listener on the damage over time the wearer deals.
+func TestOnUseDotTicksReachTheDamageDealtListeners(t *testing.T) {
+	const neckID, itemID int32 = 991010, 991011
+	neck, heard := listeningNeck(neckID, core.CallbackOnPeriodicDamageDealt, 0)
+	sim, caster := newOnUseSimWearing(t, NewSpellDataDamageOnUse, map[int32]*proto.ItemEffect{itemID: lassoOnUse()}, neck)
+	lasso := onUseSpell(t, caster, itemID)
+
+	lasso.Cast(sim, sim.Encounter.ActiveTargetUnits[0])
+	dealtUntil(t, sim, lasso, sim.CurrentTime, 12*time.Second)
+	if *heard != 6 {
+		t.Errorf("the listener heard %d of the lasso's ticks, want all 6", *heard)
+	}
+}
+
+// Shard of the Fallen Star 21891's on-use, 26789, reaches a listener on the hits the wearer deals.
+// The same row cast as a damage proc's spell does not.
+func TestOnUseHitReachesTheDamageDealtListenersAndAProcsHitDoesNot(t *testing.T) {
+	const neckID, itemID int32 = 991012, 991013
+	const shard int32 = 26789
+	neck, heard := listeningNeck(neckID, core.CallbackOnSpellHitDealt, shard)
+	sim, caster := newOnUseSimWearing(t, NewSpellDataDamageOnUse, map[int32]*proto.ItemEffect{itemID: testOnUse(shard, 600000, 0, 0)}, neck)
+	target := sim.Encounter.ActiveTargetUnits[0]
+
+	onUse := onUseSpell(t, caster, itemID)
+	onUse.Cast(sim, target)
+	if onUse.SpellMetrics[target.UnitIndex].TotalDamage == 0 || *heard != 1 {
+		t.Errorf("the on-use dealt %v and the listener heard %d hits, want its hit heard once",
+			onUse.SpellMetrics[target.UnitIndex].TotalDamage, *heard)
+	}
+
+	proc := caster.GetSpell(core.ActionID{SpellID: shard})
+	proc.Cast(sim, target)
+	if proc.SpellMetrics[target.UnitIndex].TotalDamage == 0 || *heard != 1 {
+		t.Errorf("the proc's spell dealt %v and the listener heard %d hits in all, want the proc's hit unheard",
+			proc.SpellMetrics[target.UnitIndex].TotalDamage, *heard)
+	}
+}
+
+// Gem-studded Leather Belt 4262's heal, 9163, reaches a listener on the healing the wearer does.
+func TestOnUseHealReachesTheHealingListeners(t *testing.T) {
+	const neckID, itemID int32 = 991014, 991015
+	neck, heard := listeningNeck(neckID, core.CallbackOnHealDealt, 0)
+	sim, caster := newOnUseSimWearing(t, NewSpellDataHealOnUse, map[int32]*proto.ItemEffect{itemID: testOnUse(9163, 300000, 0, 0)}, neck)
+
+	onUseSpell(t, caster, itemID).Cast(sim, &caster.Unit)
+	if *heard != 1 {
+		t.Errorf("the listener heard %d heals, want the on-use's heal once", *heard)
 	}
 }

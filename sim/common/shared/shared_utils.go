@@ -1021,7 +1021,8 @@ func NewSpellDataHealOnUse(itemID int32) {
 }
 
 // The spell a proc of the same row would cast, used from the item instead: it is the item's action,
-// counts its casts, and runs on the item's cooldowns rather than the row's.
+// counts its casts, and runs on the item's cooldowns rather than the row's. The player casts it, so
+// it is not a proc: its hits and heals reach the listeners and its cast completes like any other.
 func registerSpellDataOnUse(itemID int32, cdType core.CooldownType, spellConfig func(*core.Character, *spelldata.Spell) core.SpellConfig) {
 	// Soft fail to allow for overrides for bad effects
 	if core.HasItemEffect(itemID) {
@@ -1035,7 +1036,8 @@ func registerSpellDataOnUse(itemID int32, cdType core.CooldownType, spellConfig 
 			config := spellConfig(character, spelldata.MustFind(itemEffect.BuffId))
 			config.ActionID = core.ActionID{ItemID: itemID}
 			config.Cast = onUseCast(character, itemEffect)
-			config.Flags &^= core.SpellFlagPassiveSpell
+			config.Flags &^= core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete |
+				core.SpellFlagNoOnDamageDealt | core.SpellFlagProc
 
 			character.AddMajorCooldown(core.MajorCooldown{
 				Spell: character.RegisterSpell(config),
