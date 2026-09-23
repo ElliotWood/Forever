@@ -151,10 +151,6 @@ export const BrilWizardOil = {
 	actionId: ActionId.fromItemId(20749),
 	value: 25122,
 };
-export const SupWizardOil = {
-	actionId: ActionId.fromItemId(22522),
-	value: 28017,
-};
 // Stones
 export const AdamantiteSharpeningStoneMH = {
 	actionId: ActionId.fromItemId(23529),
@@ -231,7 +227,6 @@ export const ShamanImbueRockbiter = {
 export const IMBUE_CONFIG_MH = [
 	{ config: ManaOil, stats: [Stat.StatHealingPower] },
 	{ config: BrilWizardOil, stats: [Stat.StatSpellDamage, Stat.StatHealingPower] },
-	{ config: SupWizardOil, stats: [Stat.StatSpellDamage] },
 	{ config: AdamantiteSharpeningStoneMH, stats: [Stat.StatAttackPower] },
 	{ config: AdamantiteWeightstoneMH, stats: [Stat.StatAttackPower] },
 	{ config: ConsecratedSharpeningStoneMH, stats: [Stat.StatAttackPower] },
@@ -247,7 +242,6 @@ export const IMBUE_CONFIG_MH = [
 export const IMBUE_CONFIG_OH = [
 	{ config: ManaOil, stats: [Stat.StatHealingPower] },
 	{ config: BrilWizardOil, stats: [Stat.StatSpellDamage, Stat.StatHealingPower] },
-	{ config: SupWizardOil, stats: [Stat.StatSpellDamage] },
 	{ config: AdamantiteSharpeningStoneOH, stats: [Stat.StatAttackPower] },
 	{ config: AdamantiteWeightstoneOH, stats: [Stat.StatAttackPower] },
 	{ config: ConsecratedSharpeningStoneOH, stats: [Stat.StatAttackPower] },

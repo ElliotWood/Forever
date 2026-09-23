@@ -726,8 +726,6 @@ func registerStaticImbue(agent Agent, imbueId int32) {
 		character.AddStat(stats.SpellDamage, 36)
 		character.AddStat(stats.HealingPower, 36)
 		character.AddStat(stats.SpellCritPercent, 1)
-	case 28017: // Superior Wizard Oil
-		character.AddStat(stats.SpellDamage, 42)
 	case 29453, 34340: // Adamantite Sharpening Stone / Adamantite Weightstone
 		character.AddStat(stats.MeleeCritRating, 14)
 		for _, weapon := range []*Weapon{character.AutoAttacks.MH(), character.AutoAttacks.OH(), character.AutoAttacks.Ranged()} {
