@@ -41,16 +41,12 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(19141) // Luffa - https://www.wowhead.com/forever/spell=23595
 	// unsupported: 23721 deals no damage and heals no one (A_PROC_TRIGGER_SPELL)
 	// shared.NewSimpleStatActive(19336) // Arcane Infused Gem - https://www.wowhead.com/forever/spell=23721
-	// unsupported: 23723 deals no damage and heals no one (A_MOD_CASTING_SPEED_NOT_STACK)
-	// shared.NewSimpleStatActive(19339) // Mind Quickening Gem - https://www.wowhead.com/forever/spell=23723
 	// unsupported: 23724 deals no damage and heals no one (A_ADD_PCT_MODIFIER)
 	// shared.NewSimpleStatActive(19340) // Rune of Metamorphosis - https://www.wowhead.com/forever/spell=23724
 	// unsupported: 23725 deals no damage and heals no one (E_DUMMY)
 	// shared.NewSimpleStatActive(19341) // Lifegiving Gem - https://www.wowhead.com/forever/spell=23725
 	// unsupported: 23726 deals no damage and heals no one (A_ADD_FLAT_MODIFIER)
 	// shared.NewSimpleStatActive(19342) // Venomous Totem - https://www.wowhead.com/forever/spell=23726
-	// unsupported: 23733 deals no damage and heals no one (A_MOD_CASTING_SPEED_NOT_STACK, A_MOD_MELEE_HASTE_3)
-	// shared.NewSimpleStatActive(19343) // Scrolls of Blinding Light - https://www.wowhead.com/forever/spell=23733
 	// unsupported: 23734 deals no damage and heals no one (A_MOD_DAMAGE_PERCENT_DONE, A_MOD_HEALING_DONE_PERCENT, A_MOD_POWER_COST_SCHOOL_PCT)
 	// shared.NewSimpleStatActive(19344) // Natural Alignment Crystal - https://www.wowhead.com/forever/spell=23734
 	// unsupported: 24574 deals no damage and heals no one (A_PROC_TRIGGER_SPELL, E_TRIGGER_SPELL)
@@ -87,8 +83,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(21647) // Fetish of the Sand Reaver - https://www.wowhead.com/forever/spell=26400
 	// unsupported: 26463 deals no damage and heals no one (A_PROC_TRIGGER_SPELL, E_TRIGGER_SPELL)
 	// shared.NewSimpleStatActive(21685) // Petrified Scarab - https://www.wowhead.com/forever/spell=26463
-	// unsupported: 28866 deals no damage and heals no one (A_MOD_MELEE_HASTE_3, A_MOD_RANGED_HASTE)
-	// shared.NewSimpleStatActive(22954) // Kiss of the Spider - https://www.wowhead.com/forever/spell=28866
 	// unsupported: 28862 deals no damage and heals no one (A_MOD_THREAT)
 	// shared.NewSimpleStatActive(23001) // Eye of Diminution - https://www.wowhead.com/forever/spell=28862
 	// unsupported: 28760 deals no damage and heals no one (E_ENERGIZE)
@@ -317,6 +311,14 @@ func RegisterAllOnUseCds() {
 	// https://www.wowhead.com/forever/spell=438273
 	// Not simulated: Field Agent Beverage: "Field Agent Beverage" (1297448) - ignored aura type 17
 	// https://www.wowhead.com/forever/spell=1297448
+
+	// Speed
+	// on use: 23723 (A_MOD_CASTING_SPEED_NOT_STACK)
+	shared.NewSpellDataSpeedOnUse(19339) // Mind Quickening Gem - https://www.wowhead.com/forever/spell=23723
+	// on use: 23733 (A_MOD_CASTING_SPEED_NOT_STACK, A_MOD_MELEE_HASTE_3)
+	shared.NewSpellDataSpeedOnUse(19343) // Scrolls of Blinding Light - https://www.wowhead.com/forever/spell=23733
+	// on use: 28866 (A_MOD_MELEE_HASTE_3, A_MOD_RANGED_HASTE)
+	shared.NewSpellDataSpeedOnUse(22954) // Kiss of the Spider - https://www.wowhead.com/forever/spell=28866
 
 	// SpellCritRating
 	shared.NewSimpleStatActive(19952) // Gri'lek's Charm of Valor - https://www.wowhead.com/forever/spell=24498

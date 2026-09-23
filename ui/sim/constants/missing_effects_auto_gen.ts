@@ -575,12 +575,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		19339, // Mind Quickening Gem
-		[
-			"Quickens the mind, increasing the Mage's casting speed by 33% for 20s.", // 23723 - https://www.wowhead.com/forever/spell=23723
-		]
-	],
-	[
 		19340, // Rune of Metamorphosis
 		[
 			"Decreases the mana cost of all Druid shapeshifting forms by 100% for 20s.", // 23724 - https://www.wowhead.com/forever/spell=23724
@@ -596,12 +590,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		19342, // Venomous Totem
 		[
 			"Increases the chance to apply Rogue poisons to your target by 30% for 20s.", // 23726 - https://www.wowhead.com/forever/spell=23726
-		]
-	],
-	[
-		19343, // Scrolls of Blinding Light
-		[
-			"Energizes a Paladin with light, increasing melee attack speed by 25% and spell casting speed by 33% for 20s.", // 23733 - https://www.wowhead.com/forever/spell=23733
 		]
 	],
 	[
@@ -1070,12 +1058,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		22870, // Blood Guard's Silk Handwraps
 		[
 			"Increases the damage absorbed by your Mana Shield by 285.", // 23037 - https://www.wowhead.com/forever/spell=23037
-		]
-	],
-	[
-		22954, // Kiss of the Spider
-		[
-			"Increases your attack speed by 20% for 15s.", // 28866 - https://www.wowhead.com/forever/spell=28866
 		]
 	],
 	[
