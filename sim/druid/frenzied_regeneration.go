@@ -68,8 +68,5 @@ func (druid *Druid) registerFrenziedRegenerationSpell() {
 	druid.AddMajorCooldown(core.MajorCooldown{
 		Spell: druid.FrenziedRegeneration.Spell,
 		Type:  core.CooldownTypeSurvival,
-		// Manual only, as upstream's Barkskin: on cooldown it burns up to 100 Rage at full health
-		// (master never auto-uses survival cooldowns either).
-		ShouldActivate: func(_ *core.Simulation, _ *core.Character) bool { return false },
 	})
 }

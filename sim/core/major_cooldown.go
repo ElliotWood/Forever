@@ -138,10 +138,12 @@ func (mcd *MajorCooldown) shouldActivateHelper(sim *Simulation, character *Chara
 		return sim.CurrentTime >= mcd.timings[mcd.numUsages]
 	}
 
-	if mcd.Type.Matches(CooldownTypeSurvival) && character.cooldownConfigs.HpPercentForDefensives != 0 {
-		if character.CurrentHealthPercent() > character.cooldownConfigs.HpPercentForDefensives {
-			return false
-		}
+	// Survival cooldowns wait for health to fall to the threshold, as on master. At 0 (the default
+	// outside the tank UIs) they never fire on their own, as on master, where health without a
+	// healing model never drops; here it does, and would fire them all once it hit 0.
+	hpThreshold := character.cooldownConfigs.HpPercentForDefensives
+	if mcd.Type.Matches(CooldownTypeSurvival) && (hpThreshold == 0 || character.CurrentHealthPercent() > hpThreshold) {
+		return false
 	}
 
 	return mcd.ShouldActivate(sim, character)
