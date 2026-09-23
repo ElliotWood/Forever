@@ -219,8 +219,8 @@ dps_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 403.19372
-  tps: 929.95364
-  dtps: 648.94048
+  dps: 399.1289
+  tps: 915.8228
+  dtps: 626.11193
  }
 }
