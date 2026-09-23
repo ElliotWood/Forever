@@ -223,7 +223,8 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 // A_ADD_FLAT_MODIFIER: the client's own amount, in the property's units.
 var flatModTable = map[dbcenums.SpellModOp]row{
 	dbcenums.SPELLMOD_COST: func(p *parser, e *Effect, v float64) *attachment {
-		// The client states rage on a 0-1000 bar, so a -30 here is 3 rage.
+		// The client states rage on a 0-1000 bar, so a -30 here is 3 rage. The caster's bar stands in
+		// for the power type of the spells the modifier reaches, which the effect does not state.
 		if p.unit.HasRageBar() {
 			v /= 10
 		}

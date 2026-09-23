@@ -107,7 +107,7 @@ func (l Ladder) MultiplierAt(rank int32) float64 {
 	return 1 + l.FractionAt(rank)
 }
 
-// The client states rage and energy on a 0-1000 bar.
+// The client states rage on a 0-1000 bar.
 func (l Ladder) TenthsAt(rank int32) float64 {
 	return l.ValueAt(rank) / 10
 }

@@ -307,13 +307,13 @@ func TestClassSpellFamilies(t *testing.T) {
 		{proto.Class_ClassPaladin, 20271, "Judgement"},
 		{proto.Class_ClassShaman, 403, "Lightning Bolt"},
 	} {
-		if got := MustFind(row.spellID).ClassFlags.Family; got != classSpellFamilies[row.class] {
+		if got := MustFind(row.spellID).ClassFlags.Family; got != core.ClassSpellFamilies[row.class] {
 			t.Errorf("%s (%d) files under family %d, and the table says class %v is family %d",
-				row.name, row.spellID, got, row.class, classSpellFamilies[row.class])
+				row.name, row.spellID, got, row.class, core.ClassSpellFamilies[row.class])
 		}
 	}
 
-	if len(classSpellFamilies) != 9 {
-		t.Errorf("the table holds %d classes, and this client has 9", len(classSpellFamilies))
+	if len(core.ClassSpellFamilies) != 9 {
+		t.Errorf("the table holds %d classes, and this client has 9", len(core.ClassSpellFamilies))
 	}
 }

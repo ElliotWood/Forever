@@ -3,6 +3,11 @@ package dbcenums
 // EffectAuraType defines the custom type for aura effects.
 type EffectAuraType int
 
+// The two auras that cast their trigger spell when the proc fires.
+func (a EffectAuraType) IsProcTrigger() bool {
+	return a == A_PROC_TRIGGER_SPELL || a == A_PROC_TRIGGER_SPELL_WITH_VALUE
+}
+
 // Enum constants defined using the A_ naming convention. Every id is listed: one with no known name
 // is A_<id>, and one that is neither named nor read is commented out.
 const (

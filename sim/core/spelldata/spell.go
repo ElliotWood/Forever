@@ -156,7 +156,7 @@ func (s *Spell) Power(t dbcenums.PowerType) *Power {
 // The cost in the units the sim spends: rage off the client's 0-1000 bar, everything else as stated.
 func (s *Spell) PowerCost(t dbcenums.PowerType) float64 {
 	cost := float64(s.Power(t).Cost)
-	if t == dbcenums.POWER_RAGE {
+	if t.InTenths() {
 		return cost / 10
 	}
 	return cost

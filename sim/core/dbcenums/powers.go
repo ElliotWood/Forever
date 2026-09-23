@@ -1,7 +1,13 @@
 package dbcenums
 
-// SpellPower.PowerType, under TrinityCore's names. One no code reads is commented out.
+// SpellPower.PowerType, under TrinityCore's names. A type no code reads is commented out.
 type PowerType int8
+
+// Whether the client states the bar in tenths: rage runs 0-1000 where the sim counts 0-100, so a cost
+// of 150 is 15 rage. Every other bar is stated in whole points.
+func (t PowerType) InTenths() bool {
+	return t == POWER_RAGE
+}
 
 const (
 	POWER_HEALTH       PowerType = -2

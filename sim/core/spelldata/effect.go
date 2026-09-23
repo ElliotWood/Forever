@@ -17,8 +17,8 @@ func (e *Effect) Percent() float64 {
 	return e.BasePoints / 100
 }
 
-// The client states rage and energy on a 0-1000 bar: a -30 cost modifier is 3 rage, Charge's energize
-// of 150 is 15.
+// The client states rage on a 0-1000 bar: a -30 cost modifier is 3 rage, Charge's energize of 150 is
+// 15.
 func (e *Effect) Tenths() float64 {
 	return e.BasePoints / 10
 }
