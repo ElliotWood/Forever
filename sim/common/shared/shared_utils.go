@@ -752,16 +752,15 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 		var batchSpell *core.Spell
 		var batchOutcome core.OutcomeApplier
 		config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			results := single
 			if multiTarget {
 				if batchSpell != spell {
 					batchSpell, batchOutcome = spell, GetOutcome(spell, outcome)
 				}
-				results = calcMultiTargetDamage(sim, spell, target, damage, effect, character.Level, batchOutcome)
-			} else {
-				results[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+				dealOnArrival(sim, spell, target, calcMultiTargetDamage(sim, spell, target, damage, effect, character.Level, batchOutcome), debuff)
+				return
 			}
-			dealOnArrival(sim, spell, target, results, debuff)
+			single[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+			dealOneOnArrival(sim, spell, target, single, debuff)
 		}
 		return config
 	}
@@ -778,12 +777,12 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	// on unrolled, and each tick rolls the outcome the row states for it.
 	config.Dot = spelldata.DotConfig(damage, periodic)
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		var results core.SpellResultSlice
-		if effect != spelldata.NilEffect {
-			results = single
-			results[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+		if effect == spelldata.NilEffect {
+			dealOnArrival(sim, spell, target, nil, after)
+			return
 		}
-		dealOnArrival(sim, spell, target, results, after)
+		single[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+		dealOneOnArrival(sim, spell, target, single, after)
 	}
 
 	return config
@@ -802,6 +801,20 @@ func dealOnArrival(sim *core.Simulation, spell *core.Spell, target *core.Unit, r
 	results = slices.Clone(results)
 	spell.WaitTravelTime(sim, func(sim *core.Simulation) {
 		dealResults(sim, spell, target, results, after)
+	})
+}
+
+// The same for the one result the cast calculated into single, which the spell's next cast calculates
+// into again: the flight carries the result itself and puts it back into single when it lands.
+func dealOneOnArrival(sim *core.Simulation, spell *core.Spell, target *core.Unit, single core.SpellResultSlice, after afterDealt) {
+	if spell.MissileSpeed == 0 {
+		dealResults(sim, spell, target, single, after)
+		return
+	}
+	result := single[0]
+	spell.WaitTravelTime(sim, func(sim *core.Simulation) {
+		single[0] = result
+		dealResults(sim, spell, target, single, after)
 	})
 }
 
@@ -1110,7 +1123,7 @@ func spellDataOnUseDamageSpell(character *core.Character, damage *spelldata.Spel
 	single := make(core.SpellResultSlice, 1)
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
 		single[0] = spell.CalcOutcome(sim, target, GetOutcome(spell, application))
-		dealOnArrival(sim, spell, target, single, applyDotIfLanded)
+		dealOneOnArrival(sim, spell, target, single, applyDotIfLanded)
 	}
 	return config
 }
