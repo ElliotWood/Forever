@@ -204,10 +204,6 @@ func (r *ProcRouting) asDebuff(debuffSpellID int32) {
 	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), int(debuffSpellID))
 }
 
-func debuffsTheTarget(spellID int32) bool {
-	return spelldata.Find(spellID).DebuffsTheTarget()
-}
-
 // A proc whose buff applies auras the stat path cannot state, read from that buff's own row.
 func (r *ProcRouting) asAura(buff *spelldata.Spell) {
 	r.Aura = true
@@ -215,15 +211,26 @@ func (r *ProcRouting) asAura(buff *spelldata.Spell) {
 }
 
 func healUnsupported(heal *spelldata.Spell) []string {
-	var unsupported []string
 	effect := heal.ProcHealEffect()
-	if effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
-		unsupported = append(unsupported, fmt.Sprintf("the heal lands on implicit target %d, not the wearer", effect.Target[0]))
-	}
-	if effect.Aura == dbcenums.A_PERIODIC_HEAL && (effect.PeriodMs <= 0 || heal.DurationMs <= 0) {
-		unsupported = append(unsupported, "the heal over time states no period or no duration to tick over")
+	unsupported := wearerTarget("heal", effect)
+	if effect.Aura == dbcenums.A_PERIODIC_HEAL {
+		unsupported = append(unsupported, tickUnsupported("heal", heal, effect)...)
 	}
 	return unsupported
+}
+
+func wearerTarget(what string, effect *spelldata.Effect) []string {
+	if effect.Target[0] == dbcenums.TARGET_UNIT_CASTER {
+		return nil
+	}
+	return []string{fmt.Sprintf("the %s lands on implicit target %d, not the wearer", what, effect.Target[0])}
+}
+
+func tickUnsupported(what string, s *spelldata.Spell, effect *spelldata.Effect) []string {
+	if effect.PeriodMs > 0 && s.DurationMs > 0 {
+		return nil
+	}
+	return []string{fmt.Sprintf("the %s over time states no period or no duration to tick over", what)}
 }
 
 // A proc whose spell shields the wearer with the A_SCHOOL_ABSORB aura the client hangs below the
@@ -236,17 +243,14 @@ func (r *ProcRouting) asAbsorb(absorbSpellID int32) {
 }
 
 func energizeUnsupported(s *spelldata.Spell, effect *spelldata.Effect) []string {
-	var unsupported []string
-	if effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
-		unsupported = append(unsupported, fmt.Sprintf("the gain lands on implicit target %d, not the wearer", effect.Target[0]))
-	}
+	unsupported := wearerTarget("gain", effect)
 	switch dbcenums.PowerType(effect.Misc) {
 	case dbcenums.POWER_MANA, dbcenums.POWER_RAGE, dbcenums.POWER_ENERGY:
 	default:
 		unsupported = append(unsupported, fmt.Sprintf("the gain fills power type %d, not mana, rage or energy", effect.Misc))
 	}
-	if effect.Aura == dbcenums.A_PERIODIC_ENERGIZE && (effect.PeriodMs <= 0 || s.DurationMs <= 0) {
-		unsupported = append(unsupported, "the gain over time states no period or no duration to tick over")
+	if effect.Aura == dbcenums.A_PERIODIC_ENERGIZE {
+		unsupported = append(unsupported, tickUnsupported("gain", s, effect)...)
 	}
 	return unsupported
 }
@@ -257,11 +261,8 @@ func energizeUnsupported(s *spelldata.Spell, effect *spelldata.Effect) []string 
 const scriptedAbsorbAmount = 1e9
 
 func absorbUnsupported(absorb *spelldata.Spell) []string {
-	var unsupported []string
 	effect := absorb.AbsorbEffect()
-	if effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
-		unsupported = append(unsupported, fmt.Sprintf("the absorb lands on implicit target %d, not the wearer", effect.Target[0]))
-	}
+	unsupported := wearerTarget("absorb", effect)
 	if effect.BasePoints >= scriptedAbsorbAmount && absorb.FirstAura(dbcenums.A_DUMMY) != spelldata.NilEffect {
 		unsupported = append(unsupported, fmt.Sprintf(
 			"the absorb of %.0f beside an A_DUMMY absorbs only the spells a script names, which the client does not list", effect.BasePoints))
@@ -880,16 +881,14 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			return EffectParseResultSuccess
 		}
 
-		tooltipString, id := dbc.GetItemEffectSpellTooltip(int(parsed.Id), int(itemEffect.BuffId))
-		tooltip, _ := tooltip.ParseTooltip(tooltipString, tooltip.DBCTooltipDataProvider{DBC: instance}, int64(id))
+		renderedTooltip, rendered := renderItemEffectTooltip(parsed, itemEffect, instance)
 
 		grp, exists := groupMapProc["Procs"]
 		if !exists {
 			grp = Group{Name: "Procs"}
 		}
 
-		if tooltip != nil {
-			renderedTooltip := tooltip.String()
+		if rendered {
 			entry := Entry{Tooltip: strings.Split(renderedTooltip, "\n"), Variants: []*Variant{{ID: int(parsed.Id), Name: parsed.Name, SpellID: int(itemEffect.BuffId)}}}
 			entry.ProcInfo, entry.Supported = BuildProcInfo(parsed, int(itemEffect.BuffId), instance, renderedTooltip)
 
@@ -961,7 +960,7 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 			}
 
 			// The same for an effect that puts a debuff on the enemy it lands on.
-			if !grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && debuffsTheTarget(itemEffect.BuffId) {
+			if !grantsStats && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && spelldata.Find(itemEffect.BuffId).DebuffsTheTarget() {
 				entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
 				if entry.Proc != nil {
 					entry.Proc.asDebuff(itemEffect.BuffId)
@@ -1222,8 +1221,8 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 				routing.Unsupported = append(routing.Unsupported, fmt.Sprintf("the damage lands on implicit target %d, not an enemy", e.Target[0]))
 			}
 		}
-		if periodic != spelldata.NilEffect && (periodic.PeriodMs <= 0 || s.DurationMs <= 0) {
-			routing.Unsupported = append(routing.Unsupported, "the damage over time states no period or no duration to tick over")
+		if periodic != spelldata.NilEffect {
+			routing.Unsupported = append(routing.Unsupported, tickUnsupported("damage", s, periodic)...)
 		}
 	case heal != spelldata.NilEffect:
 		routing.Heal = true
@@ -1267,10 +1266,7 @@ func onUseSummary(s *spelldata.Spell, modelled ...*spelldata.Effect) string {
 	var cast, left []string
 	for i := range s.Effects {
 		e := &s.Effects[i]
-		kind := e.Type.String()
-		if e.Type == dbcenums.E_APPLY_AURA {
-			kind = e.Aura.String()
-		}
+		kind := effectKind(e.Type, e.Aura)
 		if slices.Contains(modelled, e) {
 			cast = append(cast, kind)
 		} else {
@@ -1288,11 +1284,19 @@ func onUseSummary(s *spelldata.Spell, modelled ...*spelldata.Effect) string {
 // The item effect's tooltip as the missing-effects list shows it, or the spell's name where the
 // tooltip does not render.
 func itemEffectTooltip(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC) string {
-	tooltipString, id := dbc.GetItemEffectSpellTooltip(int(parsed.Id), int(itemEffect.BuffId))
-	if rendered, _ := tooltip.ParseTooltip(tooltipString, tooltip.DBCTooltipDataProvider{DBC: instance}, int64(id)); rendered != nil {
-		return rendered.String()
+	if rendered, ok := renderItemEffectTooltip(parsed, itemEffect, instance); ok {
+		return rendered
 	}
 	return instance.Spells[int(itemEffect.BuffId)].NameLang
+}
+
+func renderItemEffectTooltip(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC) (string, bool) {
+	tooltipString, id := dbc.GetItemEffectSpellTooltip(int(parsed.Id), int(itemEffect.BuffId))
+	rendered, _ := tooltip.ParseTooltip(tooltipString, tooltip.DBCTooltipDataProvider{DBC: instance}, int64(id))
+	if rendered == nil {
+		return "", false
+	}
+	return rendered.String(), true
 }
 
 // The constructor an on-use routed from its spell registers through. A refused one that is neither
@@ -1359,19 +1363,19 @@ func allEffects(s *spelldata.Spell) []*spelldata.Effect {
 	return effects
 }
 
-func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot, groupMapProc map[string]Group, instance *dbc.DBC, enchantSpellEffects map[int]*dbc.SpellEffect) EffectParseResult {
+func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot, groupMapProc map[string]Group, instance *dbc.DBC, enchantSpellEffects map[int]*dbc.SpellEffect) {
 	if len(slots) == 0 || !isGeneratableEnchant(enchant.EffectId) {
-		return EffectParseResultInvalid
+		return
 	}
 
 	// Effect was already manually implemented
 	if core.HasEnchantEffect(enchant.EffectId) {
-		return EffectParseResultSuccess
+		return
 	}
 
 	enchantingSpell, ok := enchantSpellEffects[int(enchant.EffectId)]
 	if !ok {
-		return EffectParseResultInvalid
+		return
 	}
 
 	renderedTooltip := renderSpellTooltip(instance, enchantingSpell.SpellID)
@@ -1381,7 +1385,6 @@ func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot
 		grp = Group{Name: "Enchants"}
 	}
 
-	result := EffectParseResultSuccess
 	for _, routing := range routeEnchantProcs(slots, instance, renderedTooltip) {
 		grp.Entries = append(grp.Entries, &Entry{
 			Tooltip:   strings.Split(renderedTooltip, "\n"),
@@ -1396,12 +1399,9 @@ func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot
 				Name:    renderedTooltip,
 				SpellID: int(enchant.SpellId),
 			})
-			result = EffectParseResultUnsupported
 		}
 	}
 	groupMapProc["Enchants"] = grp
-
-	return result
 }
 
 // The rows an enchant's procs are resolved from, one per slot. A combat spell and an equip aura that
@@ -1509,7 +1509,7 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 		routing.asHeal(heal)
 	case absorb != 0:
 		routing.asAbsorb(absorb)
-	case debuffsTheTarget(int32(applied)):
+	case appliedRow.DebuffsTheTarget():
 		routing.asDebuff(int32(applied))
 	default:
 		routing.Unsupported = append(routing.Unsupported,
@@ -1552,13 +1552,16 @@ func creatureTypeNames(mask int32) string {
 func spellEffectKinds(instance *dbc.DBC, spellID int) string {
 	var kinds []string
 	for _, effect := range instance.SpellEffectsInOrder(spellID) {
-		if effect.EffectType == dbcenums.E_APPLY_AURA {
-			kinds = append(kinds, effect.EffectAura.String())
-		} else {
-			kinds = append(kinds, effect.EffectType.String())
-		}
+		kinds = append(kinds, effectKind(effect.EffectType, effect.EffectAura))
 	}
 	return strings.Join(kinds, ", ")
+}
+
+func effectKind(typ dbcenums.SpellEffectType, aura dbcenums.EffectAuraType) string {
+	if typ == dbcenums.E_APPLY_AURA {
+		return aura.String()
+	}
+	return typ.String()
 }
 
 // An equip aura's trigger and rate as the enchant's tooltip states them. The store reads both off the
@@ -1606,16 +1609,14 @@ func ParseTooltipForMissingEffect(parsed *proto.UIItem, itemEffect *proto.ItemEf
 			return
 		}
 
-		tooltipString, id := dbc.GetItemEffectSpellTooltip(int(parsed.Id), int(itemEffect.BuffId))
-		tooltip, _ := tooltip.ParseTooltip(tooltipString, tooltip.DBCTooltipDataProvider{DBC: instance}, int64(id))
+		renderedTooltip, rendered := renderItemEffectTooltip(parsed, itemEffect, instance)
 
 		grp, exists := groupMap[groupMapName]
 		if !exists {
 			grp = Group{Name: groupMapName}
 		}
 
-		if tooltip != nil {
-			renderedTooltip := tooltip.String()
+		if rendered {
 			entry := Entry{
 				Tooltip:   strings.Split(renderedTooltip, "\n"),
 				Supported: false,
