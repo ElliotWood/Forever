@@ -26,10 +26,11 @@ func (druid *Druid) registerTigersFurySpell() {
 	// 	},
 	// })
 	//
-	// druid.TigersFury = druid.RegisterSpell(Cat, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: tigersFuryRank.ID},
-	// 	ClassSpellMask: DruidSpellTigersFury,
-	// 	Flags:          core.SpellFlagAPL,
+	// druid.TigersFury = druid.RegisterSpell(core.SpellConfig{
+	// 	ActionID:        core.ActionID{SpellID: tigersFuryRank.ID},
+	// 	CastRequirement: tigersFuryRank.CastRequirement(),
+	// 	ClassSpellMask:  DruidSpellTigersFury,
+	// 	Flags:           core.SpellFlagAPL,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
 	// 		Cost: int32(tigersFuryRank.Cost()),

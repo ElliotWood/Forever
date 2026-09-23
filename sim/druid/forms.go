@@ -13,7 +13,6 @@ const (
 	Cat
 	Moonkin
 	Tree
-	Any = Humanoid | Bear | Cat | Moonkin | Tree
 )
 
 // Converts from 0.009327 to 0.0085
@@ -200,10 +199,11 @@ func (druid *Druid) registerCatFormSpell() {
 	panic("To be implemented")
 
 	// The TBC implementation, kept for the port:
-	// druid.CatForm = druid.RegisterSpell(Any, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: 768},
-	// 	ClassSpellMask: DruidSpellCatForm,
-	// 	Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	// druid.CatForm = druid.RegisterSpell(core.SpellConfig{
+	// 	ActionID:        core.ActionID{SpellID: 768},
+	// 	CastRequirement: core.CastRequirement{NotShapeshifted: true}.Excluding(dbcenums.FORM_MOONKIN_FORM),
+	// 	ClassSpellMask:  DruidSpellCatForm,
+	// 	Flags:           core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 	//
 	// 	ManaCost: core.ManaCostOptions{
 	// 		BaseCostPercent: 35,
@@ -321,10 +321,11 @@ func (druid *Druid) registerBearFormSpell() {
 	// actionID := core.ActionID{SpellID: 9634} // Dire Bear Form
 	// rageMetrics := druid.NewRageMetrics(actionID)
 	//
-	// druid.BearForm = druid.RegisterSpell(Any, core.SpellConfig{
-	// 	ActionID:       actionID,
-	// 	ClassSpellMask: DruidSpellBearForm,
-	// 	Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	// druid.BearForm = druid.RegisterSpell(core.SpellConfig{
+	// 	ActionID:        actionID,
+	// 	CastRequirement: core.CastRequirement{NotShapeshifted: true}.Excluding(dbcenums.FORM_MOONKIN_FORM),
+	// 	ClassSpellMask:  DruidSpellBearForm,
+	// 	Flags:           core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 	//
 	// 	ManaCost: core.ManaCostOptions{
 	// 		BaseCostPercent: 35,
@@ -411,9 +412,10 @@ func (druid *Druid) RegisterMoonkinFormSpell() {
 	// return
 	// }
 	//
-	// druid.MoonkinForm = druid.RegisterSpell(Any, core.SpellConfig{
-	// ActionID: core.ActionID{SpellID: 24858},
-	// Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
+	// druid.MoonkinForm = druid.RegisterSpell(core.SpellConfig{
+	// ActionID:        core.ActionID{SpellID: 24858},
+	// CastRequirement: spelldata.MustFind(24858).CastRequirement(),
+	// Flags:           core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 	//
 	// ManaCost: core.ManaCostOptions{
 	// BaseCostPercent: 9.3,

@@ -155,34 +155,8 @@ func (druid *Druid) AddPartyBuffs(partyBuffs *proto.PartyBuffs) {
 	}
 }
 
-func (druid *Druid) RegisterSpell(formMask DruidForm, config core.SpellConfig) *DruidSpell {
-	prev := config.ExtraCastCondition
-	prevModify := config.Cast.ModifyCast
-
-	ds := &DruidSpell{FormMask: formMask}
-	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
-		// Check if we're in allowed form to cast
-		// Allow 'humanoid' auto unshift casts
-		if (ds.FormMask != Any && !druid.InForm(ds.FormMask)) && !ds.FormMask.Matches(Humanoid) {
-			if sim.Log != nil {
-				sim.Log("Failed cast to spell %s, wrong form", ds.ActionID)
-			}
-			return false
-		}
-		return prev == nil || prev(sim, target)
-	}
-	config.Cast.ModifyCast = func(sim *core.Simulation, s *core.Spell, c *core.Cast) {
-		if !druid.InForm(ds.FormMask) && ds.FormMask.Matches(Humanoid) {
-			druid.ClearForm(sim)
-		}
-		if prevModify != nil {
-			prevModify(sim, s, c)
-		}
-	}
-
-	ds.Spell = druid.Unit.RegisterSpell(config)
-
-	return ds
+func (druid *Druid) RegisterSpell(config core.SpellConfig) *DruidSpell {
+	return &DruidSpell{Spell: druid.Unit.RegisterSpell(config)}
 }
 
 func (druid *Druid) Initialize() {
@@ -302,7 +276,6 @@ func New(char *core.Character, form DruidForm, selfBuffs SelfBuffs, talents stri
 
 type DruidSpell struct {
 	*core.Spell
-	FormMask DruidForm
 
 	// Optional fields used in snapshotting calculations
 	CurrentSnapshotPower float64

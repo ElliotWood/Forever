@@ -27,9 +27,10 @@ func (druid *Druid) registerInnervateCD() {
 	//
 	// var innervateAura = core.InnervateAura(innervateTargetChar, amount, actionID.Tag)
 	//
-	// innervateSpell = druid.RegisterSpell(Humanoid|Moonkin|Tree, core.SpellConfig{
-	// 	ActionID:    actionID,
-	// 	DefenseType: core.DefenseTypeMagic,
+	// innervateSpell = druid.RegisterSpell(core.SpellConfig{
+	// 	ActionID:        actionID,
+	// 	CastRequirement: spellData.Innervate.Highest().CastRequirement(),
+	// 	DefenseType:     core.DefenseTypeMagic,
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
 	// 			GCD: core.GCDDefault,

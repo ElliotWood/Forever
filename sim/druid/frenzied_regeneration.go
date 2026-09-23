@@ -24,8 +24,9 @@ func (druid *Druid) registerFrenziedRegenerationSpell() {
 	// 	druid.FrenziedRegenerationAura.Deactivate(sim)
 	// })
 	//
-	// druid.FrenziedRegeneration = druid.RegisterSpell(Bear, core.SpellConfig{
+	// druid.FrenziedRegeneration = druid.RegisterSpell(core.SpellConfig{
 	// 	ActionID:         actionID,
+	// 	CastRequirement:  frenziedRegenerationRank.CastRequirement(),
 	// 	SpellSchool:      core.SpellSchoolPhysical,
 	// 	ProcMask:         core.ProcMaskEmpty,
 	// 	ClassSpellMask:   DruidSpellFrenziedRegeneration,
