@@ -470,6 +470,12 @@ func registerSpellDataProc(cfg SpellDataProc) {
 		buff = spelldata.MustFind(cfg.BuffSpellID)
 	}
 
+	// An aura the row applies to an enemy is NewSpellDataDebuffProc's to build, never a buff on the
+	// wearer, so the effect is left unregistered rather than handed to the wrong unit.
+	if buff.AppliesAnAuraToAnEnemy() {
+		return
+	}
+
 	// A listener with no callback never fires. The row says so before any character exists, so the
 	// effect is left unregistered rather than added as an aura that does nothing.
 	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
@@ -799,7 +805,7 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	effect := damage.DamageEffect()
 
 	single := make(core.SpellResultSlice, 1)
-	slow := slowOnLanding(character, damage)
+	debuff := debuffOnLanding(character, damage)
 	periodic := damage.PeriodicDamageEffect()
 	if periodic == spelldata.NilEffect {
 		multiTarget := effect.HitsAnArea() || effect.ChainTargets > 1
@@ -816,16 +822,16 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 			} else {
 				results[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
 			}
-			dealOnArrival(sim, spell, target, results, slow)
+			dealOnArrival(sim, spell, target, results, debuff)
 		}
 		return config
 	}
 
 	after := afterDealt(applyDotIfLanded)
-	if slow != nil {
+	if debuff != nil {
 		after = func(sim *core.Simulation, spell *core.Spell, target *core.Unit, results core.SpellResultSlice) {
 			applyDotIfLanded(sim, spell, target, results)
-			slow(sim, spell, target, results)
+			debuff(sim, spell, target, results)
 		}
 	}
 

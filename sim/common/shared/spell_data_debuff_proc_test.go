@@ -83,7 +83,7 @@ func expectSpeeds(t *testing.T, when string, target *core.Unit, melee float64, c
 // later runs the slow to 5 s from then rather than slowing it twice, and it lifts when that runs out.
 func TestFrostguardSlowsTheTargetsMeleeAttacks(t *testing.T) {
 	editRow(t, frostguardChilled, alwaysProcs)
-	sim, caster, target := newSlowProcSim(t, 991400, registerSpellDataSlowProc, frostguardChilled, nil)
+	sim, caster, target := newSlowProcSim(t, 991400, registerSpellDataDebuffProc, frostguardChilled, nil)
 	expectSpeeds(t, "before the proc", target, 1, 1)
 
 	start := sim.CurrentTime
@@ -108,7 +108,7 @@ func TestFrostguardSlowsTheTargetsMeleeAttacks(t *testing.T) {
 func TestFrostguardsSlowSharesThunderClapsSlot(t *testing.T) {
 	editRow(t, frostguardChilled, alwaysProcs)
 	neck := permanentSlowNeck(991402, core.ThunderClapAura)
-	sim, caster, target := newSlowProcSim(t, 991403, registerSpellDataSlowProc, frostguardChilled, neck)
+	sim, caster, target := newSlowProcSim(t, 991403, registerSpellDataDebuffProc, frostguardChilled, neck)
 	expectSpeeds(t, "under Thunder Clap", target, 1/1.2, 1)
 
 	start := sim.CurrentTime
@@ -152,4 +152,81 @@ func TestLobotomizersSlowSharesSlowsSlot(t *testing.T) {
 
 	landMainHandSwing(sim, caster, target)
 	expectSpeeds(t, "after the proc", target, 1, 1/1.5)
+}
+
+// Annihilator 12798's Armor Shatter 16928 states A_MOD_RESISTANCE -165 on armor, on the enemy, for
+// 45 s, stacking to 3. Three procs leave the target 495 armor down and the wearer's armor untouched;
+// a fourth keeps 3 stacks and runs the 45 s from itself; the armor comes back when that runs out.
+// The row's 1 PPM is set aside for a chance of 100%.
+func TestAnnihilatorShattersTheTargetsArmor(t *testing.T) {
+	const armorShatter int32 = 16928
+	editRow(t, armorShatter, func(s *spelldata.Spell) {
+		alwaysProcs(s)
+		s.RPPM = 0
+	})
+	sim, caster, target := newSlowProcSim(t, 991406, registerSpellDataDebuffProc, armorShatter, nil)
+	wearerArmor, targetArmor := caster.GetStat(stats.Armor), target.GetStat(stats.Armor)
+	expectArmor := func(when string, want float64) {
+		t.Helper()
+		if got := target.GetStat(stats.Armor); got != want {
+			t.Errorf("%s: the target's armor is %v, want %v", when, got, want)
+		}
+		if got := caster.GetStat(stats.Armor); got != wearerArmor {
+			t.Errorf("%s: the wearer's armor is %v, want its own %v", when, got, wearerArmor)
+		}
+	}
+
+	for i := 1; i <= 3; i++ {
+		landMainHandSwing(sim, caster, target)
+		expectArmor("after a proc", targetArmor-165*float64(i))
+	}
+
+	stepPast(t, sim, sim.CurrentTime+10*time.Second)
+	landMainHandSwing(sim, caster, target)
+	expectArmor("after a fourth proc", targetArmor-495)
+	refreshed := sim.CurrentTime
+
+	stepPast(t, sim, refreshed+45*time.Second-time.Millisecond)
+	expectArmor("inside the refreshed 45 s", targetArmor-495)
+
+	stepPast(t, sim, refreshed+45*time.Second+time.Millisecond)
+	expectArmor("past the refreshed 45 s", targetArmor)
+}
+
+// Depleted Eye of Influence 275630's Eye of Influence 1297082 states A_MOD_ATTACK_POWER and
+// A_MOD_RANGED_ATTACK_POWER -60 on the enemy for 30 s, off the harmful spells its wearer casts.
+func TestEyeOfInfluenceLowersTheTargetsAttackPower(t *testing.T) {
+	const itemID, trigger, debuff int32 = 991408, 1297085, 1297082
+	core.AddToDatabase(&proto.SimDatabase{Items: []*proto.SimItem{{Id: itemID, Name: "Test Eye",
+		Type: proto.ItemType_ItemTypeNeck, ScalingOptions: map[int32]*proto.ScalingItemProperties{0: {}}}}})
+	registerSpellDataDebuffProc(SpellDataProc{Name: "Test Eye", ItemID: itemID, TriggerSpellID: trigger,
+		BuffSpellID: debuff})
+
+	items := testHands(&proto.ItemSpec{}, &proto.ItemSpec{})
+	items[proto.ItemSlot_ItemSlotNeck] = &proto.ItemSpec{Id: itemID}
+	sim := newTestCasterSim(items, nil)
+	caster := sim.Raid.Parties[0].Players[0].(*testCaster)
+	target := sim.Encounter.ActiveTargetUnits[0]
+	ap, rap, wearerAP := target.GetStat(stats.AttackPower), target.GetStat(stats.RangedAttackPower), caster.GetStat(stats.AttackPower)
+
+	caster.bolt.Cast(sim, target)
+	if got := target.GetStat(stats.AttackPower); got != ap-60 {
+		t.Errorf("the target's attack power is %v, want %v", got, ap-60)
+	}
+	if got := target.GetStat(stats.RangedAttackPower); got != rap-60 {
+		t.Errorf("the target's ranged attack power is %v, want %v", got, rap-60)
+	}
+	if got := caster.GetStat(stats.AttackPower); got != wearerAP {
+		t.Errorf("the wearer's attack power is %v, want its own %v", got, wearerAP)
+	}
+}
+
+// A row whose aura lands on an enemy is never registered as a buff on the wearer.
+func TestAnEnemyAuraIsNeverAWearerBuff(t *testing.T) {
+	withTestItems(991407)
+	registerSpellDataProc(SpellDataProc{Name: "Test Annihilator", ItemID: 991407, TriggerSpellID: 16928,
+		IsWeaponProc: true})
+	if core.HasItemEffect(991407) {
+		t.Error("Armor Shatter 16928 registered as a stat buff on the wearer")
+	}
 }
