@@ -134,7 +134,7 @@ func RegisterAllProcs() {
 	// https://www.wowhead.com/forever/spell=15280
 	// unsupported: states no rate
 	// trigger 15280 (every time, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 15280, IsWeaponProc: true},
+	// shared.NewSpellDataDebuffProc(shared.SpellDataProc{TriggerSpellID: 15280, IsWeaponProc: true},
 	//	[]shared.ItemVariant{
 	//	{ItemID: 11607, ItemName: "Dark Iron Sunderer"},
 	// })
@@ -208,7 +208,7 @@ func RegisterAllProcs() {
 	// https://www.wowhead.com/forever/spell=16871
 	// unsupported: states no rate
 	// trigger 16871 (every time, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 16871, IsWeaponProc: true},
+	// shared.NewSpellDataDebuffProc(shared.SpellDataProc{TriggerSpellID: 16871, IsWeaponProc: true},
 	//	[]shared.ItemVariant{
 	//	{ItemID: 12769, ItemName: "Bleakwood Hew"},
 	// })
@@ -320,7 +320,7 @@ func RegisterAllProcs() {
 	// https://www.wowhead.com/forever/spell=16927
 	// unsupported: states no rate
 	// trigger 16927 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataSlowProc(shared.SpellDataProc{TriggerSpellID: 16927, IsWeaponProc: true},
+	// shared.NewSpellDataDebuffProc(shared.SpellDataProc{TriggerSpellID: 16927, IsWeaponProc: true},
 	//	[]shared.ItemVariant{
 	//	{ItemID: 12797, ItemName: "Frostguard"},
 	// })
@@ -4853,7 +4853,7 @@ func RegisterAllProcs() {
 	// https://www.wowhead.com/forever/spell=1315767
 	// unsupported: states no rate
 	// trigger 1315767 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 1315767, IsWeaponProc: true},
+	// shared.NewSpellDataDebuffProc(shared.SpellDataProc{TriggerSpellID: 1315767, IsWeaponProc: true},
 	//	[]shared.ItemVariant{
 	//	{ItemID: 284262, ItemName: "Howling Hide"},
 	// })
@@ -4901,7 +4901,7 @@ func RegisterAllProcs() {
 	// Reduces an enemy's armor by 165. Stacks up to 3 times.
 	// https://www.wowhead.com/forever/spell=16928
 	// trigger 16928 (1 ppm, core.CallbackEmpty, core.ProcMaskUnknown)
-	shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 16928, IsWeaponProc: true},
+	shared.NewSpellDataDebuffProc(shared.SpellDataProc{TriggerSpellID: 16928, IsWeaponProc: true},
 		[]shared.ItemVariant{
 			{ItemID: 12798, ItemName: "Annihilator"},
 		})
@@ -4999,7 +4999,7 @@ func RegisterAllProcs() {
 	//
 	// https://www.wowhead.com/forever/spell=1297082
 	// trigger 1297085 (every time, core.CallbackOnCastComplete, core.ProcMaskSpellDamage) -> buff 1297082
-	shared.NewSpellDataProc(shared.SpellDataProc{TriggerSpellID: 1297085, BuffSpellID: 1297082},
+	shared.NewSpellDataDebuffProc(shared.SpellDataProc{TriggerSpellID: 1297085, BuffSpellID: 1297082},
 		[]shared.ItemVariant{
 			{ItemID: 275630, ItemName: "Depleted Eye of Influence"},
 		})

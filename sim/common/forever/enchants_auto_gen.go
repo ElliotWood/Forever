@@ -94,7 +94,7 @@ func RegisterAllEnchants() {
 	// https://www.wowhead.com/forever/spell=20029
 	// unsupported: states no rate
 	// trigger 20005 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataSlowProc(shared.SpellDataProc{
+	// shared.NewSpellDataDebuffProc(shared.SpellDataProc{
 	//	Name:           "Enchant Weapon - Icy Chill",
 	//	EnchantID:      1894,
 	//	TriggerSpellID: 20005,
@@ -125,7 +125,7 @@ func RegisterAllEnchants() {
 	// https://www.wowhead.com/forever/spell=20033
 	// unsupported: states no rate
 	// trigger 20006 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataProc(shared.SpellDataProc{
+	// shared.NewSpellDataDebuffProc(shared.SpellDataProc{
 	//	Name:           "Enchant Weapon - Unholy Weapon",
 	//	EnchantID:      1899,
 	//	TriggerSpellID: 20006,
