@@ -394,7 +394,6 @@ func TestResolveChain(t *testing.T) {
 
 	refuses := map[string]string{
 		"warrior.MaximumRage()":  "no ladder-shaped declaration of warrior",
-		"spellData.Execute":      "names a family, not a rank",
 		"executeRank.EffectN(n)": "n is not a literal",
 	}
 	for chain, want := range refuses {

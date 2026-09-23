@@ -193,13 +193,8 @@ func (w *workspace) read(path string) ([]declaration, bool) {
 
 // Every name the package folder binds at package level, and the names the current file binds in the
 // function around the offset at, the last binding before at winning. With no current file there is
-// no position to scope by, and every binding of the folder is read. A package whose class file states
-// no ladder is not read: a chain there has no family to resolve to.
+// no position to scope by, and every binding of the folder is read.
 func (w *workspace) declarations(folder string, current *parsedFile, at int, trace *tracer) map[string]declaration {
-	if !hasFamilies(filepath.Base(folder)) {
-		return map[string]declaration{}
-	}
-
 	files, cached := w.folders[folder]
 	if !cached {
 		files = map[string][]declaration{}
@@ -449,17 +444,21 @@ func chainHoverAt(f *parsedFile, nodes []ast.Node, at int, declarations map[stri
 		if err != nil {
 			continue
 		}
-		if len(c.segments) == 0 {
-			break
+		if row := c.root.byID; row != nil && row.covers(at) {
+			trace.add("segment %s", row.text(false))
+			return resolved(&chain{root: c.root}, "", declarations, trace)
 		}
 		for i, seg := range c.segments {
-			if at >= seg.start && at <= seg.end {
+			if seg.covers(at) {
 				trace.add("segment %s", seg.text(false))
-				return resolved(&chain{head: c.head, segments: c.segments[:i+1]}, "", declarations, trace)
+				return resolved(&chain{root: c.root, segments: c.segments[:i+1]}, "", declarations, trace)
 			}
 		}
-		trace.add("ident %s", c.head)
-		return resolved(&chain{head: c.head}, "", declarations, trace)
+		if c.root.name == "" || len(c.segments) == 0 {
+			break
+		}
+		trace.add("ident %s", c.root.name)
+		return resolved(&chain{root: c.root}, "", declarations, trace)
 	}
 
 	var ident *ast.Ident
@@ -474,7 +473,7 @@ func chainHoverAt(f *parsedFile, nodes []ast.Node, at int, declarations map[stri
 	}
 	trace.add("ident %s", ident.Name)
 	if _, bound := declarations[ident.Name]; bound {
-		return resolved(&chain{head: ident.Name}, ident.Name, declarations, trace)
+		return resolved(&chain{root: root{name: ident.Name}}, ident.Name, declarations, trace)
 	}
 	if err, ok := f.unread[ident]; ok {
 		trace.add("✗ %s is bound to no chain the evaluator reads: %v", ident.Name, err)
@@ -500,37 +499,32 @@ func resolveChain(c *chain, declarations map[string]declaration, trace *tracer) 
 }
 
 func resolveFrom(c *chain, declarations map[string]declaration, depth int, seen map[string]bool, trace *tracer) (*chain, error) {
-	if strings.HasPrefix(c.head, "spellData.") {
-		if len(c.segments) == 0 {
-			return nil, fmt.Errorf("%s names a family, not a rank: follow it with Highest(), Rank(n) or ByID(id)", c.text(false))
-		}
-		return c, nil
-	}
-	if _, ok := rowByID(c); ok {
+	if c.rooted() {
 		return c, nil
 	}
 
-	bound, ok := declarations[c.head]
+	name := c.root.name
+	bound, ok := declarations[name]
 	if !ok {
-		if len(c.segments) > 0 && isFamilyName(c.head) {
-			return &chain{head: "spellData." + c.head, segments: c.segments}, nil
+		if isFamilyName(name) {
+			return &chain{root: root{family: name}, segments: c.segments}, nil
 		}
-		return nil, fmt.Errorf("no ladder-shaped declaration of %s in the package", c.head)
+		return nil, fmt.Errorf("no ladder-shaped declaration of %s in the package", name)
 	}
-	if seen[c.head] {
-		return nil, fmt.Errorf("%s stands on itself", c.head)
+	if seen[name] {
+		return nil, fmt.Errorf("%s stands on itself", name)
 	}
 	if depth <= 0 {
 		return nil, fmt.Errorf("%s stands on more than %d names", c.text(false), maxSubstitutions)
 	}
 
-	seen[c.head] = true
-	trace.add("  %s = %s  (%s:%d)", c.head, bound.chain.text(false), trace.rel(bound.file), bound.line)
+	seen[name] = true
+	trace.add("  %s = %s  (%s:%d)", name, bound.chain.text(false), trace.rel(bound.file), bound.line)
 	head, err := resolveFrom(bound.chain, declarations, depth-1, seen, trace)
 	if err != nil {
 		return nil, err
 	}
-	return &chain{head: head.head, segments: append(slices.Clip(head.segments), c.segments...)}, nil
+	return &chain{root: head.root, segments: append(slices.Clip(head.segments), c.segments...)}, nil
 }
 
 // The byte offsets of a line, counted from 0, without its newline.

@@ -90,9 +90,8 @@ What a hover reads: a spell id in the shapes hand-written code states (`MustFind
 also a `spellData.<Family>` token, a name the package folder binds to a ladder chain with `var`, `=` or
 `:=` at package level, or the hovered function binds before the cursor (substituted through at most
 four names, cycles refused), one accessor of a chain anywhere in an expression, and
-`spelldata.SpellConfig`. A package whose class file states no ladder is not read for names. A file the
-editor does not hold is read again when its modification time moves. The server compiles the store
-in; restart it after regenerating.
+`spelldata.SpellConfig`. A file the editor does not hold is read again when its modification time
+moves. The server compiles the store in; restart it after regenerating.
 
 ## Editors
 

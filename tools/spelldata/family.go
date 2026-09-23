@@ -62,15 +62,6 @@ func isFamilyName(name string) bool {
 	return false
 }
 
-func hasFamilies(pkg string) bool {
-	for _, family := range ladderFamilies() {
-		if family.pkg == pkg {
-			return true
-		}
-	}
-	return false
-}
-
 // The rank of a talent's ladder a row is, counted from 1, or 0 on a row that is not one of them: a
 // talent's rank is not the store's rank column, so it is stated by position.
 func (f *ladderFamily) talentRank(s *spelldata.Spell) int32 {

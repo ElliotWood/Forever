@@ -210,7 +210,7 @@ func TestExprRefused(t *testing.T) {
 		{[]string{"-expr", "spellData.Execute.Rank(9)", "-package", "warrior"}, "has 5 ranks, not rank 9"},
 		{[]string{"-expr", "spellData.Execute.ByID(25236)", "-package", "warrior"}, "no rank with id 25236"},
 		{[]string{"-expr", "spellData.Nope.Highest()", "-package", "warrior"}, `warrior states no ladder named "Nope"`},
-		{[]string{"-expr", "executeRank.EffectN(1)", "-package", "warrior"}, "is not a ladder call"},
+		{[]string{"-expr", "executeRank.EffectN(1)", "-package", "warrior"}, "no ladder-shaped declaration of executeRank"},
 		{[]string{"-family", "warrior/Nope"}, `warrior states no ladder named "Nope"`},
 		{[]string{"-family", "Execute", "-expr", "spellData.Execute.Highest()"}, "ask for one thing"},
 		{[]string{"-family"}, "-family takes a value"},

@@ -207,6 +207,10 @@ func runExpr(out io.Writer, opts options) error {
 	if err != nil {
 		return err
 	}
+	c, err = resolveChain(c, nil, &tracer{})
+	if err != nil {
+		return err
+	}
 	result, err := evalExpr(ladderFamilies(), c, opts.pkg)
 	if err != nil {
 		return err

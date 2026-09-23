@@ -26,11 +26,29 @@ const (
 	kindValue  = "value"
 )
 
-// A name followed by selectors and calls, with where each part sits in the text it was read from.
-// `spellData.<Family>` is one head.
+// A root followed by selectors and calls, with where each part sits in the text it was read from.
 type chain struct {
-	head     string
+	root     root
 	segments []segment
+}
+
+// Where a chain opens: a ladder, `spellData.<Family>`; a row named by id, `spelldata.MustFind(id)` or
+// `spelldata.Find(id)`, the way item and set-bonus spells are; or a name still to be resolved to one
+// of those.
+type root struct {
+	family string
+	byID   *segment
+	name   string
+}
+
+func (r root) text(resolved bool) string {
+	switch {
+	case r.family != "":
+		return "spellData." + r.family
+	case r.byID != nil:
+		return "spelldata." + r.byID.text(resolved)
+	}
+	return r.name
 }
 
 // One `.Name(args)` of a chain, or a bare `.Name` where the caller wrote no call.
@@ -64,9 +82,18 @@ func (s segment) text(resolved bool) string {
 	return s.name + "(" + strings.Join(parts, ", ") + ")"
 }
 
+func (s segment) covers(at int) bool {
+	return at >= s.start && at <= s.end
+}
+
+// Whether the chain opens on a ladder or a row rather than on a name.
+func (c *chain) rooted() bool {
+	return c.root.family != "" || c.root.byID != nil
+}
+
 func (c *chain) text(resolved bool) string {
 	var out strings.Builder
-	out.WriteString(c.head)
+	out.WriteString(c.root.text(resolved))
 	for _, seg := range c.segments {
 		out.WriteString("." + seg.text(resolved))
 	}
@@ -104,15 +131,15 @@ func parseChain(text string) (*chain, error) {
 func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 	switch n := node.(type) {
 	case *ast.Ident:
-		return &chain{head: n.Name}, nil
+		return &chain{root: root{name: n.Name}}, nil
 
 	case *ast.SelectorExpr:
 		c, err := walkChain(n.X, offset)
 		if err != nil {
 			return nil, err
 		}
-		if c.head == "spellData" && len(c.segments) == 0 {
-			c.head = "spellData." + n.Sel.Name
+		if c.root.name == "spellData" && len(c.segments) == 0 {
+			c.root = root{family: n.Sel.Name}
 			return c, nil
 		}
 		c.segments = append(c.segments, segment{name: n.Sel.Name, start: offset(n.X.End()), end: offset(n.End())})
@@ -135,6 +162,10 @@ func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 			}
 			seg.args = append(seg.args, argument{source: nodeText(arg), value: value})
 		}
+		if c.root.name == "spelldata" && len(c.segments) == 0 && (seg.name == "MustFind" || seg.name == "Find") && len(seg.args) == 1 {
+			c.root = root{byID: &seg}
+			return c, nil
+		}
 		c.segments = append(c.segments, seg)
 		return c, nil
 	}
@@ -155,37 +186,40 @@ func evalExpr(index map[string]*ladderFamily, c *chain, pkg string) (result *exp
 	var family *ladderFamily
 	var res *exprResult
 	var current reflect.Value
-	segments := c.segments
 
-	if row, ok := rowByID(c); ok {
+	switch {
+	case c.root.byID != nil:
+		id, err := convertArg(c.root.byID.args[0], reflect.TypeFor[int32]())
+		if err != nil {
+			return nil, err
+		}
+		row := spelldata.Find(int32(id.Int()))
 		if row == spelldata.Nil {
-			return nil, fmt.Errorf("%s.%s names a spell the store does not carry", c.head, c.segments[0].text(true))
+			return nil, fmt.Errorf("%s names a spell the store does not carry", c.root.text(true))
 		}
-		res = &exprResult{trail: c.head + "." + c.segments[0].text(true), spell: row}
-		current, segments = reflect.ValueOf(row), c.segments[1:]
-	} else {
-		field, qualified := strings.CutPrefix(c.head, "spellData.")
-		family, err = findFamily(index, field, pkg)
-		if err != nil && !qualified {
-			return nil, fmt.Errorf("%q is not a ladder call: write spellData.<Family> and the accessors on it", c.text(false))
-		}
+		res = &exprResult{trail: c.root.text(true), spell: row}
+		current = reflect.ValueOf(row)
+	case c.root.family != "":
+		family, err = findFamily(index, c.root.family, pkg)
 		if err != nil {
 			return nil, err
 		}
 		if family.err != nil {
 			return nil, family.err
 		}
-		res = &exprResult{trail: "spellData." + field, family: family, spell: family.ladder.Highest()}
-		current = reflect.ValueOf(family.ladder)
-	}
-	var effectOf func(*spelldata.Spell) *spelldata.Effect
-
-	for _, seg := range segments {
-		if family != nil && current.Type() == reflect.TypeOf(family.ladder) {
-			if err := family.checkPick(seg); err != nil {
+		if len(c.segments) > 0 {
+			if err := family.checkPick(c.segments[0]); err != nil {
 				return nil, err
 			}
 		}
+		res = &exprResult{trail: c.root.text(true), family: family, spell: family.ladder.Highest()}
+		current = reflect.ValueOf(family.ladder)
+	default:
+		return nil, fmt.Errorf("%q is not a ladder call: write spellData.<Family> and the accessors on it", c.text(false))
+	}
+	var effectOf func(*spelldata.Spell) *spelldata.Effect
+
+	for _, seg := range c.segments {
 		answer, err := callSegment(current, seg)
 		if err != nil {
 			return nil, err
@@ -256,23 +290,6 @@ func (f *ladderFamily) checkPick(seg segment) error {
 		}
 	}
 	return nil
-}
-
-// The row a chain opens on when it starts at spelldata.MustFind(id) or spelldata.Find(id) instead of a
-// ladder, as item and set-bonus spells do.
-func rowByID(c *chain) (*spelldata.Spell, bool) {
-	if c.head != "spelldata" || len(c.segments) == 0 {
-		return nil, false
-	}
-	first := c.segments[0]
-	if first.name != "MustFind" && first.name != "Find" || len(first.args) != 1 {
-		return nil, false
-	}
-	id, exact := constant.Int64Val(constant.ToInt(first.args[0].value))
-	if !exact {
-		return nil, false
-	}
-	return spelldata.Find(int32(id)), true
 }
 
 // The effect of a rank that a LadderEffect reads, found the way the store finds it.
