@@ -209,22 +209,8 @@ const (
 	PriestSpellDivineGrace
 
 	PriestSpellLast
-	PriestSpellsAll = PriestSpellLast<<1 - 1
-	PriestSpellDoT  = PriestSpellDevouringPlague | PriestSpellHolyFire | PriestSpellMindFlay | PriestSpellShadowWordPain | PriestSpellStarshards
-	// Everything the client gives a zero cast time, which is what the talents that name "instant
-	// spells" read: the channels start instantly too, so Mind Flay and Penance belong here.
-	PriestSpellInstant = PriestSpellDevouringPlague |
-		PriestSpellFade |
-		PriestSpellHolyNova |
-		PriestSpellMindFlay |
-		PriestSpellPenance |
-		PriestSpellPowerInfusion |
-		PriestSpellShadowWordDeath |
-		PriestSpellShadowWordPain |
-		PriestSpellVampiricEmbrace |
-		PriestSpellShadowFiend |
-		PriestSpellStarshards |
-		PriestSpellShadowform
+	PriestSpellsAll    = PriestSpellLast<<1 - 1
+	PriestSpellDoT     = PriestSpellDevouringPlague | PriestSpellHolyFire | PriestSpellMindFlay | PriestSpellShadowWordPain | PriestSpellStarshards
 	PriestShadowSpells = PriestSpellDevouringPlague |
 		PriestSpellShadowWordDeath |
 		PriestSpellShadowform |

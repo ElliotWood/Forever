@@ -386,7 +386,8 @@ func (priest *Priest) applyDarkness() {
 
 // The beta client's 15473: +10% Shadow damage, -50% Shadow mana cost, +100% Shadow critical strike
 // damage bonus, -15% Physical damage taken. Only healing is blocked, so Smite and Holy Fire stay
-// castable inside it and do not break it.
+// castable inside it and do not break it. The crit bonus is not school-wide: its mask (41984016)
+// names Mind Blast, Mind Flay, Shadow Word: Pain, Devouring Plague and Mana Burn.
 func (priest *Priest) applyShadowform() {
 	if !priest.Talents.Shadowform {
 		return
@@ -419,8 +420,7 @@ func (priest *Priest) applyShadowform() {
 		FloatValue: rank.Effect(dbcenums.A_MOD_POWER_COST_SCHOOL_PCT, 32).Average(core.CharacterLevel) / 100,
 		Kind:       core.SpellMod_PowerCost_Pct,
 	}).AttachSpellMod(core.SpellModConfig{
-		ClassMask:  PriestSpellsAll,
-		School:     core.SpellSchoolShadow,
+		ClassMask:  PriestSpellMindBlast | PriestSpellMindFlay | PriestSpellShadowWordPain | PriestSpellDevouringPlague,
 		FloatValue: rank.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_CRIT_DAMAGE_BONUS)).Average(core.CharacterLevel) / 100,
 		Kind:       core.SpellMod_CritMultiplier_Flat,
 	}).AttachMultiplicativePseudoStatBuff(
