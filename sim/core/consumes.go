@@ -725,7 +725,7 @@ func registerStaticImbue(agent Agent, imbueId int32) {
 	case 25122: // Briliant Wizard Oil
 		character.AddStat(stats.SpellDamage, 36)
 		character.AddStat(stats.HealingPower, 36)
-		character.AddStat(stats.SpellCritRating, 14)
+		character.AddStat(stats.SpellCritPercent, 1)
 	case 28017: // Superior Wizard Oil
 		character.AddStat(stats.SpellDamage, 42)
 	case 29453, 34340: // Adamantite Sharpening Stone / Adamantite Weightstone
