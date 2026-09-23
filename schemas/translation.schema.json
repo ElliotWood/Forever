@@ -47,13 +47,10 @@
 						},
 						"expansion": {
 							"type": "string"
-						},
-						"supportDevs": {
-							"type": "string"
 						}
 					},
 					"additionalProperties": false,
-					"required": ["wowsims", "expansion", "supportDevs"]
+					"required": ["wowsims", "expansion"]
 				}
 			},
 			"additionalProperties": false,
@@ -1105,15 +1102,12 @@
 						"contribute_message": {
 							"type": "string"
 						},
-						"discord_message": {
-							"type": "string"
-						},
 						"old_sim_message": {
 							"type": "string"
 						}
 					},
 					"additionalProperties": false,
-					"required": ["title", "contribute_message", "discord_message", "old_sim_message"]
+					"required": ["title", "contribute_message", "old_sim_message"]
 				},
 				"notifications": {
 					"type": "object",
@@ -8191,12 +8185,6 @@
 				"sim_options": {
 					"type": "string"
 				},
-				"discord": {
-					"type": "string"
-				},
-				"patreon": {
-					"type": "string"
-				},
 				"github": {
 					"type": "string"
 				},
@@ -8302,7 +8290,7 @@
 				}
 			},
 			"additionalProperties": false,
-			"required": ["known_issues", "bug_report", "sim_options", "discord", "patreon", "github", "status", "options"]
+			"required": ["known_issues", "bug_report", "sim_options", "github", "status", "options"]
 		},
 		"sidebar": {
 			"type": "object",
