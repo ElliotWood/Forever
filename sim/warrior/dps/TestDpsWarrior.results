@@ -181,6 +181,15 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-EnchantWeapon-Recovery-8721"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 51.37968
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-EyeofMoam-21473"
  value: {
   dps: 549.82306
