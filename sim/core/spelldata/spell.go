@@ -111,9 +111,18 @@ func (s *Spell) HealEffect() *Effect {
 }
 
 // The effect a proc's heal lands through: E_HEAL_PCT, a percentage of the target's maximum health
-// (Recovery 1248759 reads 5), or E_HEAL, an amount the effect rolls.
+// (Recovery 1248759 reads 5), E_HEAL, an amount the effect rolls, or an A_PERIODIC_HEAL aura that
+// heals the amount it rolls every period (Julie's Blessing 8348 reads 13 every 2 s).
 func (s *Spell) ProcHealEffect() *Effect {
-	return s.firstOfType(dbcenums.E_HEAL_PCT, dbcenums.E_HEAL)
+	if e := s.firstOfType(dbcenums.E_HEAL_PCT, dbcenums.E_HEAL); e != NilEffect {
+		return e
+	}
+	for i := range s.Effects {
+		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_PERIODIC_HEAL {
+			return e
+		}
+	}
+	return NilEffect
 }
 
 func (s *Spell) EnergizeEffect() *Effect {

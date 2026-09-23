@@ -57,12 +57,10 @@ func RegisterAllProcs() {
 	//
 	// Heals wielder of 78 damage over 12s.
 	// https://www.wowhead.com/forever/spell=8348
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
+	// unsupported: states no rate
+	// trigger 8348 (every time, core.CallbackEmpty, core.ProcMaskUnknown)
+	// shared.NewSpellDataHealProc(shared.SpellDataProc{TriggerSpellID: 8348, BuffSpellID: 8348, IsWeaponProc: true},
+	//	[]shared.ItemVariant{
 	//	{ItemID: 6660, ItemName: "Julie's Dagger"},
 	// })
 
@@ -5715,12 +5713,10 @@ func RegisterAllProcs() {
 	//
 	// Heals wielder of 182 damage over 14s.
 	// https://www.wowhead.com/forever/spell=1297357
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
+	// unsupported: states no rate
+	// trigger 1297357 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
+	// shared.NewSpellDataHealProc(shared.SpellDataProc{TriggerSpellID: 1297357, BuffSpellID: 1297357, IsWeaponProc: true},
+	//	[]shared.ItemVariant{
 	//	{ItemID: 275645, ItemName: "Reforged Spear"},
 	// })
 

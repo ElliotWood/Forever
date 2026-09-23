@@ -1,10 +1,65 @@
 package database
 
 import (
+	"slices"
 	"testing"
+	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
+	"github.com/wowsims/forever/tools/database/dbc"
 )
+
+// A chance-on-hit item whose spell is a heal over time on the wearer routes to the heal shape. Neither
+// states a rate: 8348's ProcChance is the 100 that means no roll, 1297357 carries no aura options at
+// all, and "Chance on hit" beside neither names a percentage, so both stay commented out.
+func TestChanceOnHitHotRoutesAsAHealAndStatesNoRate(t *testing.T) {
+	inRepositoryRoot(t)
+	instance := dbc.GetDBC()
+
+	for _, tc := range []struct {
+		itemID   int
+		spellID  int32
+		perTick  float64
+		duration time.Duration
+	}{
+		{6660, 8348, 13, 12 * time.Second},      // Julie's Dagger: Julie's Blessing
+		{275645, 1297357, 26, 14 * time.Second}, // Reforged Spear
+	} {
+		item := instance.Items[tc.itemID]
+		parsed := item.ToUIItem()
+		parsed.ItemEffects = dbc.MergeItemEffectsForAllStates(parsed)
+		i := slices.IndexFunc(parsed.ItemEffects, func(e *proto.ItemEffect) bool { return e.BuffId == tc.spellID })
+		if i < 0 {
+			t.Fatalf("item %d carries no effect on %d", tc.itemID, tc.spellID)
+		}
+
+		groups := map[string]Group{}
+		if got := TryParseProcEffect(parsed, parsed.ItemEffects[i], instance, groups); got != EffectParseResultRefused {
+			t.Errorf("item %d parsed as %v, want refused with a reason", tc.itemID, got)
+			continue
+		}
+		entry := groups["Procs"].Entries[0]
+		r := entry.Proc
+		if !entry.Heals || !r.Heal || r.Damage || !r.IsWeaponProc || r.TriggerSpellID != int(tc.spellID) || r.BuffSpellID != int(tc.spellID) {
+			t.Errorf("item %d: heal %v/%v, damage %v, weapon proc %v, trigger %d, buff %d; want a weapon proc healing through %d",
+				tc.itemID, entry.Heals, r.Heal, r.Damage, r.IsWeaponProc, r.TriggerSpellID, r.BuffSpellID, tc.spellID)
+		}
+		if want := []string{spelldata.ReasonStatesNoRate}; !slices.Equal(r.Unsupported, want) {
+			t.Errorf("item %d refused for %q, want %q", tc.itemID, r.Unsupported, want)
+		}
+
+		heal := spelldata.Find(tc.spellID)
+		e := heal.ProcHealEffect()
+		if e.Aura != dbcenums.A_PERIODIC_HEAL || e.Target[0] != dbcenums.TARGET_UNIT_CASTER ||
+			e.Average(core.CharacterLevel) != tc.perTick || e.Period() != 2*time.Second || heal.Duration() != tc.duration {
+			t.Errorf("%d heals through aura %v on target %d, %v every %v for %v; want A_PERIODIC_HEAL on the caster, %v every 2s for %v",
+				tc.spellID, e.Aura, e.Target[0], e.Average(core.CharacterLevel), e.Period(), heal.Duration(), tc.perTick, tc.duration)
+		}
+	}
+}
 
 // A trigger restricted to one named ability is a shape no ProcTypeMask states, so the wording is the
 // only evidence there is. The rows below are the client's own, raw and rendered: the store reads the

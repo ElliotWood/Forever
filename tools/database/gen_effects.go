@@ -161,14 +161,19 @@ func (r *ProcRouting) asDamage(damageSpellID int32) {
 	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
 }
 
-// A proc whose spell heals the wearer, the E_HEAL_PCT or E_HEAL spell the client hangs below the
-// trigger.
+// A proc whose spell heals the wearer, the E_HEAL_PCT, E_HEAL or A_PERIODIC_HEAL spell the client
+// hangs below the trigger.
 func (r *ProcRouting) asHeal(healSpellID int32) {
 	r.Heal = true
 	r.BuffSpellID = int(healSpellID)
 
-	if effect := spelldata.Find(healSpellID).ProcHealEffect(); effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
+	heal := spelldata.Find(healSpellID)
+	effect := heal.ProcHealEffect()
+	if effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
 		r.Unsupported = append(r.Unsupported, fmt.Sprintf("the heal lands on implicit target %d, not the wearer", effect.Target[0]))
+	}
+	if effect.Aura == dbcenums.A_PERIODIC_HEAL && (effect.PeriodMs <= 0 || heal.DurationMs <= 0) {
+		r.Unsupported = append(r.Unsupported, "the heal over time states no period or no duration to tick over")
 	}
 
 	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)

@@ -428,8 +428,8 @@ func NewSpellDataDamageProc(cfg SpellDataProc, variants []ItemVariant) {
 	forEachSpellDataVariant(cfg, variants, registerSpellDataDamageProc)
 }
 
-// An item or enchant proc whose "buff" heals the wearer: the client applies no aura, it casts an
-// E_HEAL_PCT or E_HEAL spell. BuffSpellID names that spell.
+// An item or enchant proc whose "buff" heals the wearer: it casts an E_HEAL_PCT or E_HEAL spell, or
+// one applying an A_PERIODIC_HEAL aura to the wearer. BuffSpellID names that spell.
 func NewSpellDataHealProc(cfg SpellDataProc, variants []ItemVariant) {
 	forEachSpellDataVariant(cfg, variants, registerSpellDataHealProc)
 }
@@ -888,8 +888,8 @@ func applySpellDataHealProc(agent core.Agent, cfg SpellDataProc, source effectSo
 }
 
 // The heal the proc casts, as its row states it: a share of the target's maximum health or an amount
-// the effect rolls, the spell power share the row states, and a crit unless the row rules one out.
-// It goes through the healing path so it is measured as healing. Like the damage shape it is a
+// the effect rolls, the spell power share the row states, and a crit unless the row rules one out;
+// or a heal over time where the row's heal is a periodic aura. It goes through the healing path so it is measured as healing. Like the damage shape it is a
 // proc's spell, out of the rotation and not a cast of its own.
 func spellDataProcHealSpell(character *core.Character, heal *spelldata.Spell) core.SpellConfig {
 	config := spelldata.SpellConfig(&character.Unit, heal, spelldata.Magic(core.ProcMaskSpellHealing), spelldata.Proc())
@@ -901,6 +901,10 @@ func spellDataProcHealSpell(character *core.Character, heal *spelldata.Spell) co
 	}
 
 	effect := heal.ProcHealEffect()
+	if effect.Aura == dbcenums.A_PERIODIC_HEAL {
+		return spellDataProcHotSpell(character, heal, effect, config)
+	}
+
 	amount := func(sim *core.Simulation, target *core.Unit) float64 {
 		if effect.Type == dbcenums.E_HEAL_PCT {
 			return target.MaxHealth() * effect.Percent()
@@ -915,6 +919,30 @@ func spellDataProcHealSpell(character *core.Character, heal *spelldata.Spell) co
 			outcome = spell.OutcomeHealing
 		}
 		spell.CalcAndDealHealing(sim, target, amount(sim, target), outcome)
+	}
+
+	return config
+}
+
+// A heal over time on the wearer: the amount the effect rolls every period for the row's duration,
+// on the spell power share of the ticking effect. A tick crits only where the row states Periodic
+// Can Crit and does not rule crits out. A second proc while it runs starts it over.
+func spellDataProcHotSpell(character *core.Character, heal *spelldata.Spell, effect *spelldata.Effect, config core.SpellConfig) core.SpellConfig {
+	config.BonusCoefficient = effect.Coeff()
+
+	canCrit := heal.PeriodicCanCrit() && !heal.CannotCrit()
+	config.Hot = spelldata.DotConfig(heal, effect, spelldata.Label(heal.Name+" HoT"))
+	config.Hot.SelfOnly = true
+	config.Hot.OnTick = func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+		outcome := dot.OutcomeTick
+		if canCrit {
+			outcome = dot.Spell.OutcomeTickHealingCrit
+		}
+		dot.Spell.CalcAndDealPeriodicHealing(sim, target, effect.Roll(sim, character.Level), outcome)
+	}
+
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		spell.SelfHot().Apply(sim)
 	}
 
 	return config
