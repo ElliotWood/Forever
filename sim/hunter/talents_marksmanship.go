@@ -86,10 +86,18 @@ func (hunter *Hunter) registerMortalShots() {
 		return
 	}
 
+	// Client 19485's class mask: Auto Shot, Aimed, Arcane and Multi-Shot, Serpent Sting and Volley.
+	// Not Sniper Shot (its bit sits in mask word 3, which the mod leaves empty).
+	bonus := spellData.MortalShots.FractionAt(hunter.Talents.MortalShots)
 	hunter.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_CritMultiplier_Flat,
-		ProcMask:   core.ProcMaskRanged,
-		FloatValue: spellData.MortalShots.FractionAt(hunter.Talents.MortalShots),
+		ProcMask:   core.ProcMaskRangedAuto,
+		FloatValue: bonus,
+	})
+	hunter.AddStaticMod(core.SpellModConfig{
+		Kind:       core.SpellMod_CritMultiplier_Flat,
+		ClassMask:  HunterSpellAimedShot | HunterSpellArcaneShot | HunterSpellMultiShot | HunterSpellSerpentSting | HunterSpellVolley,
+		FloatValue: bonus,
 	})
 }
 
