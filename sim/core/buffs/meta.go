@@ -72,7 +72,7 @@ func (m *Meta) Value(talentPoints int32) float64 {
 		if e := &m.Spell.Effects[i]; e.Aura == dbcenums.A_DAMAGE_SHIELD {
 			value := e.Average(m.level())
 			if mod := m.talentMod(talentPoints); mod != spelldata.NilEffect && !m.TalentScalesDuration {
-				value = talentScaled(value, mod)
+				value = spelldata.Scaled(value, mod)
 			}
 			return value
 		}

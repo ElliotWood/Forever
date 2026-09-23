@@ -1,11 +1,9 @@
 package buffs
 
 import (
-	"math"
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
@@ -28,18 +26,9 @@ func cooldown(s *spelldata.Spell) time.Duration {
 	return max(s.Cooldown(), s.CategoryCooldown())
 }
 
-// An improving talent's modifier on the buff's amount, truncated the way the client resolves one: a
-// percentage of it, or a flat addition. An untaken talent is NilEffect, which adds nothing.
-func talentScaled(amount float64, mod *spelldata.Effect) float64 {
-	if mod.Aura == dbcenums.A_ADD_PCT_MODIFIER {
-		return math.Trunc(amount * (1 + mod.BaseValue()/100))
-	}
-	return math.Trunc(amount + mod.BaseValue())
-}
-
 func talentScaledDuration(s *spelldata.Spell, mod *spelldata.Effect) time.Duration {
 	if s.DurationMs <= 0 {
 		return core.NeverExpires
 	}
-	return time.Duration(talentScaled(float64(s.DurationMs), mod)) * time.Millisecond
+	return time.Duration(spelldata.Scaled(float64(s.DurationMs), mod)) * time.Millisecond
 }

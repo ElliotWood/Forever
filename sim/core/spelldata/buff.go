@@ -52,8 +52,9 @@ func BuffUnsupported(s *Spell, onCharacter bool, opts ...ParseOpt) []string {
 	return notes
 }
 
-// An improving talent's modifier on an amount, truncated the way the client resolves one.
-func scaled(amount float64, mod *Effect) float64 {
+// An improving talent's modifier on an amount, truncated the way the client resolves one: a
+// percentage of it, or a flat addition. An untaken talent is NilEffect, which adds nothing.
+func Scaled(amount float64, mod *Effect) float64 {
 	if mod.Aura == dbcenums.A_ADD_PCT_MODIFIER {
 		return math.Trunc(amount * (1 + mod.BaseValue()/100))
 	}

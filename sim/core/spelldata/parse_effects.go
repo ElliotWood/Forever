@@ -275,7 +275,7 @@ func parse(unit *core.Unit, character *core.Character, aura *core.Aura, s *Spell
 		}
 
 		if scale != nil {
-			value = scaled(value, scale)
+			value = Scaled(value, scale)
 		}
 		a := attached(p, e, value)
 		if a == nil {
