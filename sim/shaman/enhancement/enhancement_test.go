@@ -6,6 +6,9 @@ import (
 	"github.com/wowsims/forever/sim/common"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/simsignals"
+	"github.com/wowsims/forever/sim/core/stats"
+	"github.com/wowsims/forever/sim/shaman"
 )
 
 func init() {
@@ -56,3 +59,45 @@ func TestEnhancement(t *testing.T) {
 
 // The community build our Forever sim ranks Enhancement with.
 const DefaultTalents = "5505301-053030031005112251"
+
+// Stormstrike (17364, aura 271) raises only its caster's Lightning Bolt, Chain Lightning and Earth
+// Shock, and only one of those spends the charge.
+func TestStormstrikeOnlyBoostsCastersBoltsAndEarthShock(t *testing.T) {
+	sim := core.NewSim(&proto.RaidSimRequest{
+		SimOptions: &proto.SimOptions{RandomSeed: 1},
+		Raid: &proto.Raid{Parties: []*proto.Party{{Buffs: &proto.PartyBuffs{}, Players: []*proto.Player{{
+			Name: "Shaman", Class: proto.Class_ClassShaman, Race: proto.Race_RaceOrc, TalentsString: DefaultTalents,
+			Equipment: &proto.EquipmentSpec{}, Buffs: &proto.IndividualBuffs{},
+			Spec: &proto.Player_EnhancementShaman{EnhancementShaman: &proto.EnhancementShaman{
+				Options: &proto.EnhancementShaman_Options{ClassOptions: &proto.ShamanOptions{}},
+			}},
+			Rotation: &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
+		}}}}},
+		Encounter: core.MakeSingleTargetEncounter(0),
+	}, simsignals.CreateSignals())
+	sim.Reset()
+
+	sham := sim.Raid.Parties[0].Players[0].(shaman.ShamanAgent).GetShaman()
+	target := sham.CurrentTarget
+	table := sham.AttackTables[target.UnitIndex]
+	debuff := sham.StormStrikeDebuffAuras.Get(target)
+	earthShockBase := sham.EarthShock.TargetDamageMultiplier(sim, table, false)
+
+	debuff.Activate(sim)
+	debuff.SetStacks(sim, debuff.MaxStacks)
+	if got := sham.EarthShock.TargetDamageMultiplier(sim, table, false) / earthShockBase; got != 1.2 {
+		t.Errorf("Earth Shock multiplier under Stormstrike = %v, want 1.2", got)
+	}
+	if got := target.PseudoStats.SchoolDamageTakenMultiplier[stats.SchoolIndexNature]; got != 1 {
+		t.Errorf("target takes %v Nature damage from everyone, want 1", got)
+	}
+
+	sham.FrostShock.CalcAndDealDamage(sim, target, 100, sham.FrostShock.OutcomeAlwaysHit)
+	if !debuff.IsActive() {
+		t.Fatal("Frost Shock spent the Stormstrike charge")
+	}
+	sham.EarthShock.CalcAndDealDamage(sim, target, 100, sham.EarthShock.OutcomeAlwaysHit)
+	if debuff.IsActive() {
+		t.Error("Earth Shock did not spend the Stormstrike charge")
+	}
+}

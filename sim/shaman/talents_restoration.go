@@ -89,10 +89,11 @@ func (shaman *Shaman) applyTidalMastery() {
 		return
 	}
 
+	// Client 16194's mask is the heals, Lightning Shield and Rolling Thunder - no Lightning Bolt or Chain Lightning.
 	shaman.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,
 		FloatValue: spellData.TidalMastery.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).ValueAt(shaman.Talents.TidalMastery),
-		ClassMask:  SpellMaskChainLightning | SpellMaskLightningBolt | SpellMaskLightningShield | SpellMaskOverload,
+		ClassMask:  SpellMaskLightningShield,
 	})
 }
 
