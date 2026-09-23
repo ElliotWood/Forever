@@ -64,7 +64,7 @@ func (m *Meta) Options(talentPoints int32) []spelldata.ParseOpt {
 // The first amount the aura applies, in the sim's units: the stat, the multiplier or the pseudo-stat
 // change it attaches. A damage shield's amount is the damage it deals.
 func (m *Meta) Value(talentPoints int32) float64 {
-	if applied := spelldata.DryRun(m.Spell, true, m.Options(talentPoints)...).Applied; len(applied) > 0 {
+	if applied := spelldata.DryRun(m.Spell, false, m.Options(talentPoints)...).Applied; len(applied) > 0 {
 		return applied[0].Value
 	}
 
