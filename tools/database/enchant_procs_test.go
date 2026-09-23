@@ -147,7 +147,7 @@ func TestEnchantPercentStatBuffIsTheAppliedSpell(t *testing.T) {
 		t.Fatalf("routings %v, want one from 1248758 to 1299796", got)
 	}
 
-	want := []spelldata.StatMultiplier{{Stat: stats.Spirit, Multiplier: 2}}
+	want := []core.StatMultiplier{{Stat: stats.Spirit, Multiplier: 2}}
 	if got := spelldata.PercentStats(spelldata.Find(1299796), 60); !slices.Equal(got, want) {
 		t.Errorf("multipliers %v, want %v", got, want)
 	}

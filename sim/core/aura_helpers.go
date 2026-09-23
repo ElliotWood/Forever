@@ -488,10 +488,31 @@ func (character *Character) NewTemporaryStatsAuraWrapped(auraLabel string, actio
 	}
 }
 
-// Gain and expire handlers that turn the dependencies on and off. The temporary stats listeners hear
-// the stats the dependencies add on gain and remove on expire, measured at that moment.
-func (character *Character) TemporaryStatDepHandlers(deps []*stats.StatDependency) (OnGain, OnExpire) {
+// A stat an aura multiplies and the factor it multiplies it by.
+type StatMultiplier struct {
+	Stat       stats.Stat
+	Multiplier float64
+}
+
+// A buff that multiplies stats through dynamic stat dependencies, turned on and off with the aura. The
+// temporary stats listeners hear the stats the dependencies add on gain and remove on expire, measured
+// at that moment.
+func (character *Character) NewTemporaryStatMultiplierAura(config Aura, multipliers []StatMultiplier) *StatBuffAura {
+	deps := make([]*stats.StatDependency, len(multipliers))
+	buffed := make([]stats.Stat, len(multipliers))
+	for i, m := range multipliers {
+		deps[i] = character.NewDynamicMultiplyStat(m.Stat, m.Multiplier)
+		buffed[i] = m.Stat
+	}
+
 	toggle := func(aura *Aura, sim *Simulation, set func(*Simulation, *stats.StatDependency)) {
+		if len(character.OnTemporaryStatsChanges) == 0 {
+			for _, dep := range deps {
+				set(sim, dep)
+			}
+			return
+		}
+
 		before := character.GetStats()
 		for _, dep := range deps {
 			set(sim, dep)
@@ -502,12 +523,14 @@ func (character *Character) TemporaryStatDepHandlers(deps []*stats.StatDependenc
 			onChange(sim, aura, change)
 		}
 	}
+	config.OnGain = func(aura *Aura, sim *Simulation) {
+		toggle(aura, sim, character.EnableBuildPhaseStatDep)
+	}
+	config.OnExpire = func(aura *Aura, sim *Simulation) {
+		toggle(aura, sim, character.DisableBuildPhaseStatDep)
+	}
 
-	return func(aura *Aura, sim *Simulation) {
-			toggle(aura, sim, character.EnableBuildPhaseStatDep)
-		}, func(aura *Aura, sim *Simulation) {
-			toggle(aura, sim, character.DisableBuildPhaseStatDep)
-		}
+	return &StatBuffAura{Aura: character.GetOrRegisterAura(config), BuffedStatTypes: buffed}
 }
 
 // Creates a new ProcTriggerAura that is dependent on a parent Aura being active

@@ -5,7 +5,6 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
-	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // An addition to the resolved aura for what the client does not state: the label the sim keys the
@@ -41,23 +40,17 @@ func maxStacks(s *Spell) int32 {
 	return int32(s.ProcCharges)
 }
 
-// A stat an aura multiplies and the factor it multiplies it by.
-type StatMultiplier struct {
-	Stat       stats.Stat
-	Multiplier float64
-}
-
 // The stats a spell's A_MOD_PERCENT_STAT effects multiply, in effect order, at a caster level. A misc
 // value of -1 names all five.
-func PercentStats(s *Spell, level int32) []StatMultiplier {
-	var multipliers []StatMultiplier
+func PercentStats(s *Spell, level int32) []core.StatMultiplier {
+	var multipliers []core.StatMultiplier
 	for i := range s.Effects {
 		e := &s.Effects[i]
 		if !appliesAura(e.Type) || e.Aura != dbcenums.A_MOD_PERCENT_STAT {
 			continue
 		}
 		for _, stat := range clientStatList(e.Misc) {
-			multipliers = append(multipliers, StatMultiplier{Stat: stat, Multiplier: percentMultiplier(e.Average(level))})
+			multipliers = append(multipliers, core.StatMultiplier{Stat: stat, Multiplier: percentMultiplier(e.Average(level))})
 		}
 	}
 	return multipliers
