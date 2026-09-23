@@ -392,6 +392,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-KissoftheSpider-22954"
+ value: {
+  dps: 520.72108
+  tps: 799.4107
+  dtps: 3451.15796
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Linken'sBoomerang-11905"
  value: {
   dps: 501.64811
