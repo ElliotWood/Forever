@@ -27,6 +27,7 @@ export const DeepProtectionTalents = PresetUtils.makePresetTalents('Protection 1
 
 export const DefaultOptions = ProtectionWarriorOptions.create({
 	classOptions: {
+		queueDelay: 250,
 		startingRage: 0,
 		defaultShout: WarriorShout.WarriorShoutBattle,
 		defaultStance: WarriorStance.WarriorStanceDefensive,

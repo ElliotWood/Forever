@@ -39,6 +39,14 @@ export const StanceSnapshot = <SpecType extends WarriorSpecs>() =>
 		labelTooltip: i18n.t('settings_tab.other.stance_snapshot.tooltip'),
 	});
 
+// Forever: the delay before a queued Heroic Strike or Cleave is re-armed (sim/warrior).
+export const QueueDelay = <SpecType extends WarriorSpecs>() =>
+	InputHelpers.makeClassOptionsNumberInput<SpecType>({
+		fieldName: 'queueDelay',
+		label: i18n.t('settings_tab.other.queue_delay.label'),
+		labelTooltip: i18n.t('settings_tab.other.queue_delay.tooltip'),
+	});
+
 export const BattleShoutT2 = <SpecType extends WarriorSpecs>() =>
 	InputHelpers.makeClassOptionsBooleanIconInput<SpecType>({
 		fieldName: 'hasBsT2',

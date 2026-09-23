@@ -90,6 +90,7 @@ var DefaultOptions = &proto.Player_DpsWarrior{
 		Options: &proto.DpsWarrior_Options{
 			ClassOptions: &proto.WarriorOptions{
 				StartingRage:  50,
+				QueueDelay:    250,
 				DefaultShout:  proto.WarriorShout_WarriorShoutBattle,
 				DefaultStance: proto.WarriorStance_WarriorStanceBerserker,
 			},
