@@ -16,8 +16,8 @@ import (
 func TestOverridesBakeOntoTheRow(t *testing.T) {
 	rows := []storeSpell{
 		{ID: 10, Effects: []storeEffect{
-			{Index: 0, Type: int32(dbcenums.E_SCHOOL_DAMAGE)},
-			{Index: 1, Type: int32(dbcenums.E_APPLY_AURA), Aura: int32(dbcenums.A_PERIODIC_DAMAGE)},
+			{Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE},
+			{Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_DAMAGE},
 		}},
 	}
 
@@ -102,14 +102,14 @@ func TestOverridesRefuseWhatTheClientNowStates(t *testing.T) {
 		},
 		{
 			name:  "a client threat effect",
-			rows:  []storeSpell{{ID: 10, Effects: []storeEffect{{Index: 1, Type: int32(dbcenums.E_THREAT)}}}},
+			rows:  []storeSpell{{ID: 10, Effects: []storeEffect{{Index: 1, Type: dbcenums.E_THREAT}}}},
 			list:  []overrides.Override{{SpellID: 10, Field: overrides.FlatThreat, Value: 200, Reason: "measured"}},
 			wants: "now states threat on effect 1",
 		},
 		{
 			name: "a client attack-power coefficient",
 			rows: []storeSpell{{ID: 10, Effects: []storeEffect{
-				{Index: 0, Type: int32(dbcenums.E_SCHOOL_DAMAGE), APCoef: 0.5},
+				{Index: 0, Type: dbcenums.E_SCHOOL_DAMAGE, APCoef: 0.5},
 			}}},
 			list:  []overrides.Override{{SpellID: 10, Field: overrides.APCoefDirect, Value: 0.2, Reason: "measured"}},
 			wants: "now states 0.5 attack power on its direct effect",
@@ -171,6 +171,13 @@ func TestShippedOverridesAreWellFormed(t *testing.T) {
 	for _, extra := range overrides.ExtraSpells {
 		if extra.Reason == "" || extra.Source == "" {
 			t.Errorf("extra spell %d states reason %q and source %q", extra.SpellID, extra.Reason, extra.Source)
+		}
+	}
+
+	for _, link := range overrides.HandTriggers {
+		if link.Reason == "" || link.Source == "" {
+			t.Errorf("the hand trigger %d -> %d states reason %q and source %q",
+				link.Spell, link.Triggers, link.Reason, link.Source)
 		}
 	}
 }

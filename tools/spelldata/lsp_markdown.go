@@ -45,7 +45,10 @@ func familyMarkdown(f *ladderFamily) string {
 func exprMarkdown(result *exprResult, hover chainHover) string {
 	var md strings.Builder
 	c := result.card()
-	called := result.called
+	called := ""
+	if n := len(hover.chain.segments); n > 0 {
+		called = hover.chain.segments[n-1].text(true)
+	}
 
 	switch result.kind {
 	case kindSpell:
@@ -72,9 +75,6 @@ func exprMarkdown(result *exprResult, hover chainHover) string {
 		}
 		fmt.Fprintf(&md, "`%s` = **%s**\n\n", label, result.value)
 		fmt.Fprintf(&md, "`%s`\n\n", result.trail)
-		if hover.name == "" && result.doc != "" {
-			fmt.Fprintf(&md, "%s\n\n", result.doc)
-		}
 		c.writeMarkdown(&md)
 	}
 	return md.String()

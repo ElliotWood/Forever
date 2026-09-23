@@ -129,9 +129,9 @@ func reachableProcs(roots []int32) []*spelldata.Spell {
 // spikes state their retaliation that way rather than through a spell of their own.
 func triggersAProcEffect(row *spelldata.Spell) bool {
 	for i := range row.Effects {
-		switch row.Effects[i].Aura {
-		case dbcenums.A_PROC_TRIGGER_SPELL, dbcenums.A_PROC_TRIGGER_SPELL_WITH_VALUE,
-			dbcenums.A_PROC_TRIGGER_SPELL_COPY, dbcenums.A_PROC_TRIGGER_DAMAGE:
+		aura := row.Effects[i].Aura
+		if aura.IsProcTrigger() || aura == dbcenums.A_PROC_TRIGGER_SPELL_COPY ||
+			aura == dbcenums.A_PROC_TRIGGER_DAMAGE {
 			return true
 		}
 	}

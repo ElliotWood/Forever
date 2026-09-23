@@ -7,13 +7,12 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
-	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 // Every name the printer states for a constant: the stringer's for a typed enum, the declaration's for
 // the PROC_FLAG_ bits and SPELLMOD_ ops, and a number where neither has one.
 func TestConstantNames(t *testing.T) {
-	spellFlag := func(bit uint64) (string, bool) { return stringerName(core.SpellFlag(bit)) }
+	spellFlag := func(bit uint64) (string, bool) { return dbcenums.Named(core.SpellFlag(bit)) }
 	if got := strings.Join(setBits(uint64(core.SpellFlagAPL|core.SpellFlagMeleeMetrics), spellFlag), " | "); got != "SpellFlagMeleeMetrics | SpellFlagAPL" {
 		t.Errorf("the flag bits read %q", got)
 	}
@@ -27,12 +26,12 @@ func TestConstantNames(t *testing.T) {
 	}
 
 	for got, want := range map[string]string{
-		spellModOpName(spelldata.SPELLMOD_COST):  "SPELLMOD_COST",
-		spellModOpName(99):                       "op 99",
-		effectTypeName(dbcenums.E_SCHOOL_DAMAGE): "E_SCHOOL_DAMAGE",
-		effectTypeName(9999):                     "E_9999",
-		auraName(dbcenums.A_DUMMY):               "A_DUMMY",
-		auraName(9999):                           "A_9999",
+		namedOr(dbcenums.SPELLMOD_COST, "op %d"):        "SPELLMOD_COST",
+		namedOr(dbcenums.SpellModOp(99), "op %d"):       "op 99",
+		namedOr(dbcenums.E_SCHOOL_DAMAGE, "E_%d"):       "E_SCHOOL_DAMAGE",
+		namedOr(dbcenums.SpellEffectType(9999), "E_%d"): "E_9999",
+		namedOr(dbcenums.A_DUMMY, "A_%d"):               "A_DUMMY",
+		namedOr(dbcenums.EffectAuraType(9999), "A_%d"):  "A_9999",
 	} {
 		if got != want {
 			t.Errorf("named %q, want %q", got, want)
@@ -52,7 +51,7 @@ func (warrior *Warrior) registerExecute() {
 		spelldata.Melee(core.ProcMaskMeleeOHSpecial), // the off hand
 		spelldata.Proc(), spelldata.Tag(2))
 
-	odd := spelldata.SpellConfig(&warrior.Unit, executeRank, spelldata.Flags(flags), spelldata.Label(3), spelldata.Flags(core.SpellFlagAPL|core.SpellFlagHelpful))
+	odd := spelldata.SpellConfig(&warrior.Unit, executeRank, spelldata.Flags(flags), spelldata.Label(3), spelldata.Flags(core.SpellFlagAPL|core.SpellFlagHelpful), spelldata.Tag(1<<40))
 }
 `
 
@@ -129,6 +128,7 @@ func TestHoverSpellConfigUnevaluated(t *testing.T) {
 	for _, want := range []string{
 		"unevaluated: `spelldata.Flags(flags)`",
 		"unevaluated: `spelldata.Label(3)` (spelldata.Label is not an option this reads)",
+		"unevaluated: `spelldata.Tag(1 << 40)` (1 << 40 is not the int32 it takes)",
 		"Flags(SpellFlagAPL \\| SpellFlagHelpful)",
 	} {
 		if !strings.Contains(markdown, want) {

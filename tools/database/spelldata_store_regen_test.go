@@ -3,7 +3,7 @@ package database
 // Rebuilds sim/core/spelldata/spells_auto_gen.go from the client rows committed in
 // assets/db_inputs/spell_store_inputs.json and asserts the committed file is what comes out, so a
 // hand-edited or stale store fails here. No client database and no build tag: this is the one gate
-// over the store's 7035 rows that CI can run, since tools/database/wowsims.db is gitignored.
+// over the store that CI can run, since tools/database/wowsims.db is gitignored.
 //
 // It re-runs everything the generator derives - the closure over triggers, overrides and tooltip
 // references, the hand links, the talent curves, the tooltip hints, the overrides and the emitter -
@@ -15,13 +15,12 @@ import (
 	"bytes"
 	"io"
 	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 )
 
-// The generator reads its paths from the repository root - the enum names out of sim/core/dbcenums,
-// the extra ids out of the store's own source - and a test runs in its own package's directory.
+// The generator reads its paths from the repository root - the captured inputs, and the proc audit's
+// list beside this file - and a test runs in its own package's directory.
 const repositoryRoot = "../.."
 
 func TestStoreRegeneratesFromTheCommittedInputs(t *testing.T) {
@@ -32,12 +31,7 @@ func TestStoreRegeneratesFromTheCommittedInputs(t *testing.T) {
 		t.Fatalf("%v", err)
 	}
 
-	namer, err := newRankEnumNamer()
-	if err != nil {
-		t.Fatalf("reading the spell enum names: %v", err)
-	}
-
-	rendered, err := renderStore(inputs, namer)
+	rendered, err := renderStore(inputs, newRankEnumNamer())
 	if err != nil {
 		t.Fatalf("rendering the store: %v", err)
 	}
@@ -62,21 +56,9 @@ func TestStoreRegeneratesFromTheCommittedInputs(t *testing.T) {
 func inRepositoryRoot(t *testing.T) {
 	t.Helper()
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		t.Fatalf("%v", err)
-	}
-	if err := os.Chdir(filepath.Join(cwd, repositoryRoot)); err != nil {
-		t.Fatalf("%v", err)
-	}
-
+	t.Chdir(repositoryRoot)
 	progress = io.Discard
-	t.Cleanup(func() {
-		progress = os.Stderr
-		if err := os.Chdir(cwd); err != nil {
-			t.Fatalf("%v", err)
-		}
-	})
+	t.Cleanup(func() { progress = os.Stderr })
 }
 
 // The first line the two differ on, so a diff of megabytes reports as one row.

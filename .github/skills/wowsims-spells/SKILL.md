@@ -38,23 +38,23 @@ spelldata.Find(id)                               // Nil where the store does not
 spelldata.MustFind(id)                           // panics instead, for a spell the caller depends on
 ```
 
-| on a `*Spell` | |
-| --- | --- |
-| `EffectN(n)` | the n-th effect **by position**, counted from 1. `Effect.Index` is the client's own number, which has gaps |
-| `Effect(aura, misc)` | the one effect with that aura and misc value; panics on none and on two |
-| `DamageEffect()`, `HealEffect()`, `EnergizeEffect()`, `PeriodicEffect()` | the first effect of that role, or `NilEffect` |
-| `CastTime()`, `Cooldown()`, `CategoryCooldown()`, `GCD()`, `Duration()`, `ICD()` | times; the client's -1 duration becomes `core.NeverExpires` |
-| `PowerCost(t)` | the cost in the units the sim spends — rage off the 0-1000 bar |
-| `SpellSchool()`, `DefenseTypeCore()`, `MissRefund()`, `TickOutcome(dot)` | core's own forms |
-| `Refs()`, `Triggered()`, `Drivers()` | the tooltip's spells, the ones the effects fire, the ones that fire this |
+| on a `*Spell`                                                                    |                                                                                                            |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `EffectN(n)`                                                                     | the n-th effect **by position**, counted from 1. `Effect.Index` is the client's own number, which has gaps |
+| `Effect(aura, misc)`                                                             | the one effect with that aura and misc value; panics on none and on two                                    |
+| `DamageEffect()`, `HealEffect()`, `EnergizeEffect()`, `PeriodicEffect()`         | the first effect of that role, or `NilEffect`                                                              |
+| `CastTime()`, `Cooldown()`, `CategoryCooldown()`, `GCD()`, `Duration()`, `ICD()` | times; the client's -1 duration becomes `core.NeverExpires`                                                |
+| `PowerCost(t)`                                                                   | the cost in the units the sim spends — rage off the 0-1000 bar                                             |
+| `SpellSchool()`, `DefenseTypeCore()`, `MissRefund()`, `TickOutcome(dot)`         | core's own forms                                                                                           |
+| `Refs()`, `Triggered()`, `Drivers()`                                             | the tooltip's spells, the ones the effects fire, the ones that fire this                                   |
 
-| on an `*Effect` | |
-| --- | --- |
-| `BaseValue()` | the client's number, unconverted |
-| `Percent()`, `Tenths()`, `TimeValue()`, `Period()` | over 100, over 10, as milliseconds, the tick interval |
+| on an `*Effect`                                                  |                                                                |
+| ---------------------------------------------------------------- | -------------------------------------------------------------- |
+| `BaseValue()`                                                    | the client's number, unconverted                               |
+| `Percent()`, `Tenths()`, `TimeValue()`, `Period()`               | over 100, over 10, as milliseconds, the tick interval          |
 | `Average(level)`, `Min(level)`, `Max(level)`, `Roll(sim, level)` | the folded amount, the ends of the spread, and one cast's roll |
-| `Coeff()`, `APCoeff()` | the spell power and attack power shares |
-| `Trigger()` | the spell the effect fires |
+| `Coeff()`, `APCoeff()`                                           | the spell power and attack power shares                        |
+| `Trigger()`                                                      | the spell the effect fires                                     |
 
 A `Ladder` reads per rank: `ValueAt`, `FractionAt`, `MultiplierAt`, `TenthsAt`, and `EffectAt(n)` / `Effect(aura, misc)` for a rank with more than one effect. Rank 0 answers 0, so no `if rank > 0` guard.
 

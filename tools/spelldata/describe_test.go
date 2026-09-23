@@ -62,7 +62,7 @@ func TestEffectLines(t *testing.T) {
 			name:    "a flat cost modifier, which the client states on a 0-1000 bar",
 			id:      12282,
 			effect:  1,
-			human:   "SPELLMOD_COST -10 (-1 on a rage or energy bar) on family 4 mask 0x40",
+			human:   "SPELLMOD_COST -10 (-1 on a rage bar) on family 4 mask 0x40",
 			literal: "E_APPLY_AURA A_ADD_FLAT_MODIFIER base=-10 misc=14 family=4 mask=0x40 target=[1,0]",
 		},
 		{

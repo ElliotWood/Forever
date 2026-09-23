@@ -33,6 +33,7 @@
 		"ui/**/presets/**/*.json",
 		"ui/sim/talents/trees/*.json",
 		"assets/**",
-		"**/test-fixtures/*.json"
+		"**/test-fixtures/*.json",
+		".vscode/extensions/*/out/**"
 	]
 }

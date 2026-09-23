@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"maps"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"sort"
 )
 
@@ -30,15 +32,22 @@ var progress io.Writer = os.Stderr
 // call sites move off the family table, so nothing would ever write for it otherwise. -check is what
 // closes the loop once they have.
 func writeSpellDataFiles(files map[string][]byte, unchecked bool) error {
-	if unchecked {
-		for path, out := range files {
-			if err := os.WriteFile(path, out, 0644); err != nil {
-				return err
-			}
+	if !unchecked {
+		if err := buildAgainst(files); err != nil {
+			return err
 		}
-		return nil
 	}
 
+	for path, out := range files {
+		if err := os.WriteFile(path, out, 0644); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// Type-checks the sim with the files staged in place of the committed ones.
+func buildAgainst(files map[string][]byte) error {
 	staging, err := os.MkdirTemp("", "spelldata-")
 	if err != nil {
 		return err
@@ -61,16 +70,7 @@ func writeSpellDataFiles(files map[string][]byte, unchecked bool) error {
 		overlay[absolute] = staged
 	}
 
-	if err := buildStaged(staging, overlay, packagesOf(files)); err != nil {
-		return err
-	}
-
-	for path, out := range files {
-		if err := os.WriteFile(path, out, 0644); err != nil {
-			return err
-		}
-	}
-	return nil
+	return buildStaged(staging, overlay, packagesOf(files))
 }
 
 // The committed files that are not what the generator writes today. Named rather than rewritten:
@@ -124,13 +124,7 @@ func packagesOf(files map[string][]byte) []string {
 	for path := range files {
 		seen["./"+filepath.ToSlash(filepath.Dir(path))+"/"] = true
 	}
-
-	packages := make([]string, 0, len(seen))
-	for pkg := range seen {
-		packages = append(packages, pkg)
-	}
-	sort.Strings(packages)
-	return packages
+	return slices.Sorted(maps.Keys(seen))
 }
 
 // The go binary of the toolchain this generator was built with, so the check reads the same

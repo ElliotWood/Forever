@@ -14,21 +14,21 @@ import (
 var nilPower = &Power{}
 
 func (s *Spell) CastTime() time.Duration {
-	return millis(s.CastTimeMs)
+	return core.DurationFromMillis(s.CastTimeMs)
 }
 
 // SpellCooldowns.RecoveryTime. A spell gated by its category instead - Fire Blast and Cone of Cold
 // share one - states that in CategoryCooldown.
 func (s *Spell) Cooldown() time.Duration {
-	return millis(s.CooldownMs)
+	return core.DurationFromMillis(s.CooldownMs)
 }
 
 func (s *Spell) CategoryCooldown() time.Duration {
-	return millis(s.CategoryCooldownMs)
+	return core.DurationFromMillis(s.CategoryCooldownMs)
 }
 
 func (s *Spell) GCD() time.Duration {
-	return millis(s.GCDMs)
+	return core.DurationFromMillis(s.GCDMs)
 }
 
 // The client states a permanent aura as -1, which is core.NeverExpires here.
@@ -36,22 +36,20 @@ func (s *Spell) Duration() time.Duration {
 	if s.DurationMs == -1 {
 		return core.NeverExpires
 	}
-	return millis(s.DurationMs)
+	return core.DurationFromMillis(s.DurationMs)
 }
 
 // SpellAuraOptions.ProcCategoryRecovery: the internal cooldown between two procs.
 func (s *Spell) ICD() time.Duration {
-	return millis(s.ICDMs)
+	return core.DurationFromMillis(s.ICDMs)
 }
 
 func (s *Spell) SpellSchool() core.SpellSchool {
 	return s.School
 }
 
-// SpellCategories.DefenseType counts none, magic, melee, ranged in that order, which is the order
-// core.DefenseType is declared in.
 func (s *Spell) DefenseTypeCore() core.DefenseType {
-	return core.DefenseType(s.DefenseType)
+	return s.DefenseType
 }
 
 // The i-th effect the row carries, counted from 1 by position rather than by the client's
@@ -146,7 +144,7 @@ func (s *Spell) firstOfType(types ...dbcenums.SpellEffectType) *Effect {
 
 // The cost out of this bar, or a zero Power where the spell does not use it. Both the row's own and
 // the shared zero one are the store's, so a caller must not write through what it gets back.
-func (s *Spell) Power(t int8) *Power {
+func (s *Spell) Power(t dbcenums.PowerType) *Power {
 	for i := range s.Powers {
 		if s.Powers[i].Type == t {
 			return &s.Powers[i]
@@ -156,9 +154,9 @@ func (s *Spell) Power(t int8) *Power {
 }
 
 // The cost in the units the sim spends: rage off the client's 0-1000 bar, everything else as stated.
-func (s *Spell) PowerCost(t int8) float64 {
+func (s *Spell) PowerCost(t dbcenums.PowerType) float64 {
 	cost := float64(s.Power(t).Cost)
-	if dbcenums.PowerType(t) == dbcenums.POWER_RAGE {
+	if t.InTenths() {
 		return cost / 10
 	}
 	return cost
@@ -179,22 +177,6 @@ func (s *Spell) RankNumber() int32 {
 	return rankOf(s)
 }
 
-func (s *Spell) HasLabel(id int16) bool {
-	return slices.Contains(s.Labels, id)
-}
-
-// Whether the modifier effect names this spell. A label-keyed modifier aura names its spells through
-// SpellLabel instead of through a class mask; matching those means keying on the aura, since the label
-// sits in the effect's misc value only for that family of auras.
-// TODO: match e.Misc against s.Labels for the auras that name their targets by label, once the sim
-// registers a talent that uses one: A_MOD_RECOVERY_RATE_BY_SPELL_LABEL 143,
-// A_SUPPRESS_ITEM_PASSIVE_EFFECT_BY_SPELL_LABEL 182, A_ADD_PCT_MODIFIER_BY_SPELL_LABEL 218,
-// A_ADD_FLAT_MODIFIER_BY_SPELL_LABEL 219, A_CAST_WHILE_WALKING_BY_SPELL_LABEL 307,
-// A_MOD_AURA_TIME_RATE_BY_SPELL_LABEL 470 and A_MOD_DAMAGE_TAKEN_FROM_CASTER_BY_LABEL 507.
-func (s *Spell) AffectedBy(e *Effect) bool {
-	return s.ClassFlags.Matches(e.ClassFlags)
-}
-
 // The spells the tooltip names, in the order it names them. An id the store does not carry is left
 // out rather than answered as Nil.
 func (s *Spell) Refs() []*Spell {
@@ -206,15 +188,18 @@ func (s *Spell) Drivers() []*Spell {
 	return resolve(drivers[s.ID])
 }
 
-// Every spell this one's effects fire, deduped, in effect order.
+// Every spell this one's effects fire, deduped, in effect order, and then the ones a server-side
+// handler casts off it.
 func (s *Spell) Triggered() []*Spell {
 	var ids []int32
 	for _, e := range s.Effects {
-		if e.TriggerID == 0 {
-			continue
-		}
-		if !slices.Contains(ids, e.TriggerID) {
+		if e.TriggerID != 0 && !slices.Contains(ids, e.TriggerID) {
 			ids = append(ids, e.TriggerID)
+		}
+	}
+	for _, id := range handTriggers[s.ID] {
+		if !slices.Contains(ids, id) {
+			ids = append(ids, id)
 		}
 	}
 	return resolve(ids)
@@ -264,8 +249,4 @@ func resolve(ids []int32) []*Spell {
 		}
 	}
 	return out
-}
-
-func millis(ms int32) time.Duration {
-	return time.Duration(ms) * time.Millisecond
 }

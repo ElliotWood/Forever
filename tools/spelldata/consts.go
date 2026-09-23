@@ -19,7 +19,6 @@ var constantSources = []struct {
 }{
 	{"github.com/wowsims/forever/sim/core", []string{"sim/core/flags.go", "sim/core/constants.go"}},
 	{"github.com/wowsims/forever/sim/core/dbcenums", []string{"sim/core/dbcenums/*.go"}},
-	{"github.com/wowsims/forever/sim/core/spelldata", []string{"sim/core/spelldata/parse_effects_table.go"}},
 }
 
 var (
@@ -28,10 +27,12 @@ var (
 	constPackages = map[string]*types.Package{}
 	evalPackage   *types.Package
 	evalPos       token.Pos
+	// Each text once: types.Eval parses into constFset for good, which a long-lived server would grow
+	// on every hover. Nil is a text that is not a constant.
+	constValues = map[string]constant.Value{}
 
 	procFlagConsts  = map[int64]string{}
 	procFlag2Consts = map[int64]string{}
-	spellModConsts  = map[int64]string{}
 )
 
 // Only the packages above are imported, and only by each other: type-checking proto and stats from
@@ -82,24 +83,28 @@ func scanConstants() {
 	evalPackage, _ = conf.Check("eval", constFset, []*ast.File{file}, nil)
 	evalPos = file.Name.Pos()
 
-	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/dbcenums"], "PROC_FLAG_", procFlagConsts)
-	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/dbcenums"], "PROC_FLAG_2_", procFlag2Consts)
-	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/spelldata"], "SPELLMOD_", spellModConsts)
+	scanProcFlags(constPackages["github.com/wowsims/forever/sim/core/dbcenums"])
 }
 
-// The constants a package names by prefix, by value. A zero is left out: PROC_FLAG_NONE would
-// claim every unset bit.
-func namesByPrefix(pkg *types.Package, prefix string, into map[int64]string) {
+// The PROC_FLAG_ and PROC_FLAG_2_ constants dbcenums states, by value, each word's in its own map. A
+// zero is left out: PROC_FLAG_NONE would claim every unset bit.
+func scanProcFlags(pkg *types.Package) {
 	if pkg == nil {
 		return
 	}
 	scope := pkg.Scope()
 	for _, name := range scope.Names() {
 		c, ok := scope.Lookup(name).(*types.Const)
-		if !ok || !strings.HasPrefix(name, prefix) || prefix == "PROC_FLAG_" && strings.HasPrefix(name, "PROC_FLAG_2_") {
+		into := procFlagConsts
+		switch {
+		case !ok:
+			continue
+		case strings.HasPrefix(name, "PROC_FLAG_2_"):
+			into = procFlag2Consts
+		case !strings.HasPrefix(name, "PROC_FLAG_"):
 			continue
 		}
-		if value, exact := constant.Int64Val(constant.ToInt(c.Val())); exact && value != 0 {
+		if value, exact := intValue(c.Val()); exact && value != 0 {
 			into[value] = name
 		}
 	}
@@ -111,17 +116,28 @@ func constName(names map[int64]string, value int64) (string, bool) {
 	return name, ok
 }
 
-// A variable or a call is refused: this reads, it does not run the package around it.
+// A variable or a call is refused: this reads, it does not run the package around it. A composite or
+// function literal is never a constant, and is refused before its text reaches the cache.
 func evalConst(expr ast.Expr) (constant.Value, error) {
 	loadConstants.Do(scanConstants)
 	if evalPackage == nil {
 		return nil, fmt.Errorf("sim/core's constants did not load")
 	}
-	tv, err := types.Eval(constFset, evalPackage, evalPos, nodeText(expr))
-	if err != nil || tv.Value == nil {
-		return nil, fmt.Errorf("%s is not a literal or a constant of sim/core, dbcenums or spelldata", nodeText(expr))
+	text := types.ExprString(expr)
+	if holdsLiteral(expr) {
+		return nil, fmt.Errorf("%s is not a literal or a constant of sim/core or dbcenums", text)
 	}
-	return tv.Value, nil
+	value, seen := constValues[text]
+	if !seen {
+		if tv, err := types.Eval(constFset, evalPackage, evalPos, text); err == nil {
+			value = tv.Value
+		}
+		constValues[text] = value
+	}
+	if value == nil {
+		return nil, fmt.Errorf("%s is not a literal or a constant of sim/core or dbcenums", text)
+	}
+	return value, nil
 }
 
 func evalInt(expr ast.Expr) (int64, error) {
@@ -129,9 +145,26 @@ func evalInt(expr ast.Expr) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	n, exact := constant.Int64Val(constant.ToInt(value))
+	n, exact := intValue(value)
 	if !exact {
-		return 0, fmt.Errorf("%s is not an integer", nodeText(expr))
+		return 0, fmt.Errorf("%s is not an integer", types.ExprString(expr))
 	}
 	return n, nil
+}
+
+// A constant as an integer, where it is one exactly: 2.0 is 2, and 2.5 is none.
+func intValue(v constant.Value) (int64, bool) {
+	return constant.Int64Val(constant.ToInt(v))
+}
+
+func holdsLiteral(expr ast.Expr) bool {
+	found := false
+	ast.Inspect(expr, func(node ast.Node) bool {
+		switch node.(type) {
+		case *ast.CompositeLit, *ast.FuncLit:
+			found = true
+		}
+		return !found
+	})
+	return found
 }

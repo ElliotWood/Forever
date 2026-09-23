@@ -6,10 +6,11 @@ import (
 	"go/constant"
 	"go/doc"
 	"go/parser"
-	"go/printer"
 	"go/token"
+	"go/types"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -26,12 +27,29 @@ const (
 	kindValue  = "value"
 )
 
-// A name followed by selectors and calls, with where each part sits in the text it was read from.
-// `spellData.<Family>` is one head.
+// A root followed by selectors and calls, with where each part sits in the text it was read from.
 type chain struct {
-	head       string
-	start, end int
-	segments   []segment
+	root     root
+	segments []segment
+}
+
+// Where a chain opens: a ladder, `spellData.<Family>`; a row named by id, `spelldata.MustFind(id)` or
+// `spelldata.Find(id)`, the way item and set-bonus spells are; or a name still to be resolved to one
+// of those.
+type root struct {
+	family string
+	byID   *segment
+	name   string
+}
+
+func (r root) text(resolved bool) string {
+	switch {
+	case r.family != "":
+		return "spellData." + r.family
+	case r.byID != nil:
+		return "spelldata." + r.byID.text(resolved)
+	}
+	return r.name
 }
 
 // One `.Name(args)` of a chain, or a bare `.Name` where the caller wrote no call.
@@ -65,9 +83,18 @@ func (s segment) text(resolved bool) string {
 	return s.name + "(" + strings.Join(parts, ", ") + ")"
 }
 
+func (s segment) covers(at int) bool {
+	return at >= s.start && at <= s.end
+}
+
+// Whether the chain opens on a ladder or a row rather than on a name.
+func (c *chain) rooted() bool {
+	return c.root.family != "" || c.root.byID != nil
+}
+
 func (c *chain) text(resolved bool) string {
 	var out strings.Builder
-	out.WriteString(c.head)
+	out.WriteString(c.root.text(resolved))
 	for _, seg := range c.segments {
 		out.WriteString("." + seg.text(resolved))
 	}
@@ -75,28 +102,27 @@ func (c *chain) text(resolved bool) string {
 }
 
 // A chain read to the end: the row the card states, the effect the chain went through, and the value
-// the last accessor answered, with that accessor's own doc comment.
+// the last accessor answered, with the type it was called on.
 type exprResult struct {
-	kind   string
-	trail  string
-	called string
+	kind  string
+	trail string
+	owner string
 
 	family     *ladderFamily
 	spell      *spelldata.Spell
 	readEffect int
 
 	value     string
-	doc       string
 	accessors []string
 }
 
-// The chain a text states, its offsets counted from base.
-func parseChain(text string, base int) (*chain, error) {
+// The chain a text states, its offsets counted from the start of the text.
+func parseChain(text string) (*chain, error) {
 	node, err := parser.ParseExpr(text)
 	if err != nil {
 		return nil, fmt.Errorf("%q is not a chain of accessor calls", text)
 	}
-	return walkChain(node, func(pos token.Pos) int { return base + int(pos) - 1 })
+	return walkChain(node, func(pos token.Pos) int { return int(pos) - 1 })
 }
 
 // The chain an expression states, with offset turning a node's position into the caller's offsets.
@@ -105,15 +131,15 @@ func parseChain(text string, base int) (*chain, error) {
 func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 	switch n := node.(type) {
 	case *ast.Ident:
-		return &chain{head: n.Name, start: offset(n.Pos()), end: offset(n.End())}, nil
+		return &chain{root: root{name: n.Name}}, nil
 
 	case *ast.SelectorExpr:
 		c, err := walkChain(n.X, offset)
 		if err != nil {
 			return nil, err
 		}
-		if c.head == "spellData" && len(c.segments) == 0 {
-			c.head, c.end = "spellData."+n.Sel.Name, offset(n.End())
+		if c.root.name == "spellData" && len(c.segments) == 0 {
+			c.root = root{family: n.Sel.Name}
 			return c, nil
 		}
 		c.segments = append(c.segments, segment{name: n.Sel.Name, start: offset(n.X.End()), end: offset(n.End())})
@@ -122,7 +148,7 @@ func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 	case *ast.CallExpr:
 		sel, ok := n.Fun.(*ast.SelectorExpr)
 		if !ok {
-			return nil, fmt.Errorf("%s is not an accessor call", nodeText(n.Fun))
+			return nil, fmt.Errorf("%s is not an accessor call", types.ExprString(n.Fun))
 		}
 		c, err := walkChain(sel.X, offset)
 		if err != nil {
@@ -134,12 +160,16 @@ func walkChain(node ast.Expr, offset func(token.Pos) int) (*chain, error) {
 			if err != nil {
 				return nil, err
 			}
-			seg.args = append(seg.args, argument{source: nodeText(arg), value: value})
+			seg.args = append(seg.args, argument{source: types.ExprString(arg), value: value})
+		}
+		if c.root.name == "spelldata" && len(c.segments) == 0 && (seg.name == "MustFind" || seg.name == "Find") && len(seg.args) == 1 {
+			c.root = root{byID: &seg}
+			return c, nil
 		}
 		c.segments = append(c.segments, seg)
 		return c, nil
 	}
-	return nil, fmt.Errorf("%s is not a chain of accessor calls: write spellData.<Family> and the accessors on it", nodeText(node))
+	return nil, fmt.Errorf("%s is not a chain of accessor calls: write spellData.<Family> and the accessors on it", types.ExprString(node))
 }
 
 // A ladder followed by the store's own accessors, evaluated by name over the exported method set: an
@@ -153,35 +183,49 @@ func evalExpr(index map[string]*ladderFamily, c *chain, pkg string) (result *exp
 		}
 	}()
 
-	field, qualified := strings.CutPrefix(c.head, "spellData.")
-	family, err := findFamily(index, field, pkg)
-	if err != nil && !qualified {
-		return nil, fmt.Errorf("%q is not a ladder call: write spellData.<Family> and the accessors on it", c.text(false))
-	}
-	if err != nil {
-		return nil, err
-	}
-	if family.err != nil {
-		return nil, family.err
-	}
+	var family *ladderFamily
+	var res *exprResult
+	var current reflect.Value
 
-	res := &exprResult{trail: "spellData." + field, family: family, spell: family.ladder.Highest()}
-	current := reflect.ValueOf(family.ladder)
-	var effectOf func(*spelldata.Spell) *spelldata.Effect
-
-	for _, seg := range c.segments {
-		if current.Type() == reflect.TypeOf(family.ladder) {
-			if err := family.checkPick(seg); err != nil {
+	switch {
+	case c.root.byID != nil:
+		id, err := convertArg(c.root.byID.args[0], reflect.TypeFor[int32]())
+		if err != nil {
+			return nil, err
+		}
+		row := spelldata.Find(int32(id.Int()))
+		if row == spelldata.Nil {
+			return nil, fmt.Errorf("%s names a spell the store does not carry", c.root.text(true))
+		}
+		res = &exprResult{trail: c.root.text(true), spell: row}
+		current = reflect.ValueOf(row)
+	case c.root.family != "":
+		family, err = findFamily(index, c.root.family, pkg)
+		if err != nil {
+			return nil, err
+		}
+		if family.err != nil {
+			return nil, family.err
+		}
+		if len(c.segments) > 0 {
+			if err := family.checkPick(c.segments[0]); err != nil {
 				return nil, err
 			}
 		}
+		res = &exprResult{trail: c.root.text(true), family: family, spell: family.ladder.Highest()}
+		current = reflect.ValueOf(family.ladder)
+	default:
+		return nil, fmt.Errorf("%q is not a ladder call: write spellData.<Family> and the accessors on it", c.text(false))
+	}
+	var effectOf func(*spelldata.Spell) *spelldata.Effect
+
+	for _, seg := range c.segments {
 		answer, err := callSegment(current, seg)
 		if err != nil {
 			return nil, err
 		}
 		res.trail += "." + seg.text(true)
-		res.called = seg.text(true)
-		res.doc = methodDoc(baseTypeName(current.Type()), seg.name)
+		res.owner = baseTypeName(current.Type())
 
 		switch value := answer.Interface().(type) {
 		case *spelldata.Spell:
@@ -228,19 +272,20 @@ func evalExpr(index map[string]*ladderFamily, c *chain, pkg string) (result *exp
 
 // Rank and ByID refused in the ladder's own terms, where the store would answer Nil or panic.
 func (f *ladderFamily) checkPick(seg segment) error {
-	if len(seg.args) != 1 || seg.args[0].value.Kind() != constant.Int {
+	if len(seg.args) != 1 {
 		return nil
 	}
-	n, _ := constant.Int64Val(seg.args[0].value)
+	n, ok := intValue(seg.args[0].value)
+	if !ok {
+		return nil
+	}
 	switch seg.name {
 	case "Rank":
 		if n < 1 || n > int64(f.ladder.Len()) {
 			return fmt.Errorf("%s spellData.%s has %d ranks, not rank %d", f.pkg, f.field, f.ladder.Len(), n)
 		}
 	case "ByID":
-		carried := false
-		f.ladder.Each(func(_ int32, s *spelldata.Spell) { carried = carried || int64(s.ID) == n })
-		if !carried {
+		if int64(int32(n)) != n || !slices.Contains(f.ids, int32(n)) {
 			return fmt.Errorf("%s spellData.%s has no rank with id %d", f.pkg, f.field, n)
 		}
 	}
@@ -270,14 +315,20 @@ func rankArgument(recv reflect.Value, seg segment) (int32, bool) {
 	if len(seg.args) != 1 || !strings.HasSuffix(seg.name, "At") {
 		return 0, false
 	}
-	n, exact := constant.Int64Val(constant.ToInt(seg.args[0].value))
+	n, exact := intValue(seg.args[0].value)
 	return int32(n), exact && n > 0
 }
 
 func callSegment(recv reflect.Value, seg segment) (reflect.Value, error) {
 	owner := recv.Type().String()
 	if !seg.call {
-		return reflect.Value{}, fmt.Errorf("%q is not a method of %s: write the accessor as a call", seg.name, owner)
+		row := reflect.Indirect(recv)
+		if row.Kind() == reflect.Struct {
+			if field, ok := row.Type().FieldByName(seg.name); ok && field.IsExported() {
+				return row.FieldByIndex(field.Index), nil
+			}
+		}
+		return reflect.Value{}, fmt.Errorf("%q is not a field of %s", seg.name, owner)
 	}
 
 	method := recv.MethodByName(seg.name)
@@ -309,14 +360,20 @@ func callSegment(recv reflect.Value, seg segment) (reflect.Value, error) {
 }
 
 // A constant as the parameter's own type. An integer widens into a float, a fractional number does not
-// narrow into an integer: truncating it silently is the reading a caller would not notice.
+// narrow into an integer, and an integer the type cannot hold does not wrap: truncating it silently is
+// the reading a caller would not notice.
 func convertArg(arg argument, want reflect.Type) (reflect.Value, error) {
+	zero := reflect.Zero(want)
 	switch {
-	case isInteger(want):
-		if n, exact := constant.Int64Val(constant.ToInt(arg.value)); exact {
+	case zero.CanUint():
+		if n, exact := constant.Uint64Val(constant.ToInt(arg.value)); exact && !zero.OverflowUint(n) {
 			return reflect.ValueOf(n).Convert(want), nil
 		}
-	case isFloat(want):
+	case zero.CanInt():
+		if n, exact := intValue(arg.value); exact && !zero.OverflowInt(n) {
+			return reflect.ValueOf(n).Convert(want), nil
+		}
+	case zero.CanFloat():
 		if v := constant.ToFloat(arg.value); v.Kind() == constant.Float {
 			f, _ := constant.Float64Val(v)
 			return reflect.ValueOf(f).Convert(want), nil
@@ -329,24 +386,16 @@ func convertArg(arg argument, want reflect.Type) (reflect.Value, error) {
 	return reflect.Value{}, fmt.Errorf("%s is not the %s it takes", arg.source, want)
 }
 
+func isInteger(t reflect.Type) bool {
+	zero := reflect.Zero(t)
+	return zero.CanInt() || zero.CanUint()
+}
+
 func arguments(n int) string {
 	if n == 1 {
 		return "1 argument"
 	}
 	return fmt.Sprintf("%d arguments", n)
-}
-
-func isInteger(t reflect.Type) bool {
-	switch t.Kind() {
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
-		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		return true
-	}
-	return false
-}
-
-func isFloat(t reflect.Type) bool {
-	return t.Kind() == reflect.Float32 || t.Kind() == reflect.Float64
 }
 
 // The value the last accessor answered, in the units the text form states elsewhere: a time as the
@@ -362,9 +411,11 @@ func formatValue(v reflect.Value) (string, error) {
 	}
 
 	switch {
-	case isInteger(v.Type()):
+	case v.CanInt():
 		return strconv.FormatInt(v.Int(), 10), nil
-	case isFloat(v.Type()):
+	case v.CanUint():
+		return strconv.FormatUint(v.Uint(), 10), nil
+	case v.CanFloat():
 		return number(v.Float()), nil
 	}
 	return "", fmt.Errorf("a %s is not a value to read", v.Type())
@@ -476,12 +527,4 @@ func baseTypeName(t reflect.Type) string {
 		return after
 	}
 	return name
-}
-
-func nodeText(node ast.Expr) string {
-	var out strings.Builder
-	if err := printer.Fprint(&out, token.NewFileSet(), node); err != nil {
-		return "the expression"
-	}
-	return out.String()
 }

@@ -56,9 +56,12 @@ type Spell struct {
 	// SpellCategories.Category, StartRecoveryCategory and ChargeCategory.
 	Category, StartRecoveryCategory, ChargeCategory int16
 
-	// SpellCategories.DefenseType (0 none, 1 magic, 2 melee, 3 ranged), DispelType, Mechanic and
-	// PreventionType.
-	DefenseType, DispelType, Mechanic, PreventionType uint8
+	// SpellCategories.DefenseType, DispelType, Mechanic and PreventionType. The client counts defense
+	// types none, magic, melee, ranged, which is the order core.DefenseType is declared in.
+	DefenseType    core.DefenseType
+	DispelType     uint8
+	Mechanic       dbcenums.Mechanic
+	PreventionType uint8
 
 	// SpellAuraOptions.CumulativeAura: how high the aura stacks. Zero is one application.
 	MaxStack int16
@@ -212,13 +215,13 @@ type Effect struct {
 	ChainAmp     float32
 
 	// EffectMechanic.
-	Mechanic uint8
+	Mechanic dbcenums.Mechanic
 
 	// EffectPointsPerResource: what the amount gains per point of the resource spent.
 	PointsPerResource float32
 
 	// ImplicitTarget_0/_1.
-	Target [2]uint8
+	Target [2]dbcenums.ImplicitTarget
 
 	// EffectAttributes.
 	Attributes int32
@@ -226,9 +229,9 @@ type Effect struct {
 
 // One SpellPower row: what the spell costs and out of which bar.
 type Power struct {
-	// SpellPower.PowerType: 0 mana, 1 rage, 2 focus, 3 energy. Rage is on a 0-1000 bar, so PowerCost
-	// divides it; the rest are stated in whole points.
-	Type int8
+	// SpellPower.PowerType. Rage is on a 0-1000 bar, so PowerCost divides it; the rest are stated in
+	// whole points.
+	Type dbcenums.PowerType
 
 	// ManaCost and ManaCostPerLevel, in the bar's own units.
 	Cost, CostPerLevel int32

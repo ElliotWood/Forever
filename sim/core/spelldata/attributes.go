@@ -19,7 +19,7 @@ func (s *Spell) IsChanneled() bool {
 }
 
 func (s *Spell) IsBleed() bool {
-	return dbcenums.Mechanic(s.Mechanic) == dbcenums.MECHANIC_BLEED
+	return s.Mechanic == dbcenums.MECHANIC_BLEED
 }
 
 func (s *Spell) RefundsOnMiss() bool {

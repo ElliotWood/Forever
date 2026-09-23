@@ -150,7 +150,7 @@ func rowFlags(s *Spell) core.SpellFlag {
 	}
 	// Helpful decides who the APL casts the spell on, so it follows the first effect's target. An
 	// attack whose first effect is a self side-effect reads as helpful here and the caller clears it.
-	if slices.Contains(helpfulTargets, dbcenums.ImplicitTarget(s.EffectN(1).Target[0])) {
+	if slices.Contains(helpfulTargets, s.EffectN(1).Target[0]) {
 		flags |= core.SpellFlagHelpful
 	}
 	return flags
@@ -170,11 +170,11 @@ func castConfig(unit *core.Unit, s *Spell) core.CastConfig {
 	}
 
 	switch {
-	case s.CooldownMs > 0 && s.CategoryCooldownMs > 0:
-		cast.CD = core.Cooldown{Timer: unit.NewTimer(), Duration: s.Cooldown()}
-		cast.SharedCD = core.Cooldown{Timer: categoryTimer(unit, s), Duration: s.CategoryCooldown()}
 	case s.CooldownMs > 0:
 		cast.CD = core.Cooldown{Timer: unit.NewTimer(), Duration: s.Cooldown()}
+		if s.CategoryCooldownMs > 0 {
+			cast.SharedCD = core.Cooldown{Timer: categoryTimer(unit, s), Duration: s.CategoryCooldown()}
+		}
 	case s.CategoryCooldownMs > 0:
 		cast.CD = core.Cooldown{Timer: categoryTimer(unit, s), Duration: s.CategoryCooldown()}
 	}
@@ -214,7 +214,7 @@ func applyCost(config *core.SpellConfig, s *Spell) {
 	cost := int32(s.PowerCost(powerType))
 	costPct := float64(s.Powers[0].CostPct)
 
-	switch dbcenums.PowerType(powerType) {
+	switch powerType {
 	case dbcenums.POWER_MANA:
 		config.ManaCost = core.ManaCostOptions{FlatCost: cost}
 		if costPct > 0 {

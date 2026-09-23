@@ -59,7 +59,7 @@ func (mage *Mage) registerImprovedFrostbolt() {
 	//
 	// mage.AddStaticMod(core.SpellModConfig{
 	// 	ClassMask: MageSpellFrostbolt,
-	// 	TimeValue: time.Millisecond * time.Duration(spellData.ImprovedFrostbolt.Effect(dbcenums.A_ADD_FLAT_MODIFIER, spelldata.SPELLMOD_CASTING_TIME).ValueAt(mage.Talents.ImprovedFrostbolt)),
+	// 	TimeValue: time.Millisecond * time.Duration(spellData.ImprovedFrostbolt.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CASTING_TIME)).ValueAt(mage.Talents.ImprovedFrostbolt)),
 	// 	Kind:      core.SpellMod_CastTime_Flat,
 	// })
 }
@@ -74,7 +74,7 @@ func (mage *Mage) registerElementalPrecision() {
 	// if mage.Talents.ElementalPrecision == 0 {
 	// 	return
 	// }
-	// percent := spellData.ElementalPrecision.Effect(dbcenums.A_ADD_FLAT_MODIFIER, spelldata.SPELLMOD_RESIST_MISS_CHANCE).ValueAt(mage.Talents.ElementalPrecision)
+	// percent := spellData.ElementalPrecision.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_RESIST_MISS_CHANCE)).ValueAt(mage.Talents.ElementalPrecision)
 	// mage.AddStaticMod(core.SpellModConfig{
 	// 	School:     core.SpellSchoolFrostfire,
 	// 	FloatValue: -percent / 100,
@@ -156,7 +156,7 @@ func (mage *Mage) registerPiercingIce() {
 	//
 	// mage.AddStaticMod(core.SpellModConfig{
 	// 	ClassMask:  MageSpellFrost,
-	// 	FloatValue: spellData.PiercingIce.Effect(dbcenums.A_ADD_PCT_MODIFIER, spelldata.SPELLMOD_DAMAGE).FractionAt(mage.Talents.PiercingIce),
+	// 	FloatValue: spellData.PiercingIce.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(mage.Talents.PiercingIce),
 	// 	Kind:       core.SpellMod_DamageDone_Flat,
 	// })
 }

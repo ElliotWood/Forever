@@ -12,34 +12,12 @@ import (
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-func effectTypeName(t dbcenums.SpellEffectType) string {
-	if name, ok := stringerName(t); ok {
+// The name dbcenums gives a value, or its number in format where it gives none.
+func namedOr[T fmt.Stringer](v T, format string) string {
+	if name, ok := dbcenums.Named(v); ok {
 		return name
 	}
-	return fmt.Sprintf("E_%d", t)
-}
-
-func auraName(a dbcenums.EffectAuraType) string {
-	if name, ok := stringerName(a); ok {
-		return name
-	}
-	return fmt.Sprintf("A_%d", a)
-}
-
-// A stringer names a value it has no constant for as `Type(n)`, which no constant name contains.
-func stringerName(v fmt.Stringer) (string, bool) {
-	name := v.String()
-	return name, !strings.Contains(name, "(")
-}
-
-// The op an A_ADD_FLAT_MODIFIER or A_ADD_PCT_MODIFIER names in its misc value. Only the ops the
-// parse table declares have a name; the rest read as their number, which is also what the parser
-// does with them.
-func spellModOpName(misc int32) string {
-	if name, ok := constName(spellModConsts, int64(misc)); ok {
-		return name
-	}
-	return fmt.Sprintf("op %d", misc)
+	return fmt.Sprintf(format, v)
 }
 
 // The bits of SpellAuraOptions.ProcTypeMask by name, word 0 then word 1.
@@ -97,7 +75,7 @@ type implicitTarget struct {
 // The ImplicitTarget values the store's rows carry, under the client's own numbering. The ones this
 // table leaves out read as "target N": naming a value the store carries only a handful of times, on
 // no evidence beyond its number, would put a guess where the literal already states the fact.
-var implicitTargets = map[uint8]implicitTarget{
+var implicitTargets = map[dbcenums.ImplicitTarget]implicitTarget{
 	1:  {phrase: "to the caster"},
 	2:  {phrase: "to a nearby enemy"},
 	3:  {phrase: "to a nearby party member"},
@@ -375,8 +353,8 @@ func procHintNames(hint core.ProcHint) []string {
 }
 
 // SpellPower.PowerType, of which the store's rows carry six.
-func powerName(t int8) string {
-	switch dbcenums.PowerType(t) {
+func powerName(t dbcenums.PowerType) string {
+	switch t {
 	case dbcenums.POWER_HEALTH:
 		return "health"
 	case dbcenums.POWER_MANA:

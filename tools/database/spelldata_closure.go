@@ -3,7 +3,8 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"sort"
+	"maps"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -22,12 +23,7 @@ import (
 // The gear half is returned on its own as well: it is the universe the proc audit asks its question
 // over, and which query a root came from cannot be recovered from the merged list.
 func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) (roots []int32, gear []int32, err error) {
-	all := map[int32]bool{}
-	for _, id := range ladderIDs {
-		all[id] = true
-	}
-
-	gearRoots := map[int32]bool{}
+	roots = slices.Clone(ladderIDs)
 	for _, source := range []struct {
 		name  string
 		query string
@@ -41,25 +37,15 @@ func storeRoots(db *sql.DB, t *spellTables, ladderIDs []int32) (roots []int32, g
 			if err := rows.Scan(&id); err != nil {
 				return err
 			}
-			all[id] = true
-			gearRoots[id] = true
+			roots = append(roots, id)
+			gear = append(gear, id)
 			return nil
 		}); err != nil {
 			return nil, nil, fmt.Errorf("%s: %w", source.name, err)
 		}
 	}
 
-	ids := make([]int32, 0, len(all))
-	for id := range all {
-		ids = append(ids, id)
-	}
-
-	gearIDs := make([]int32, 0, len(gearRoots))
-	for id := range gearRoots {
-		gearIDs = append(gearIDs, id)
-	}
-
-	return namedIDs(t, ids), namedIDs(t, gearIDs), nil
+	return namedIDs(t, roots), namedIDs(t, gear), nil
 }
 
 // The spells a rank reads its numbers off by name. The class-table generator falls back to them
@@ -107,7 +93,7 @@ func withExtraIDs(t *spellTables, roots []int32) ([]int32, error) {
 			return nil, fmt.Errorf("the extra spell %d states no reason", extra.SpellID)
 		}
 		// Dropped like any other unnamed id, but said out loud: it was written down on purpose.
-		if _, named := t.names[extra.SpellID]; !named {
+		if _, named := t.Names[extra.SpellID]; !named {
 			fmt.Fprintf(progress, "spelldata: extra spell %d is no spell in this client, so the store does not carry it\n",
 				extra.SpellID)
 		}
@@ -124,12 +110,12 @@ func namedIDs(t *spellTables, lists ...[]int32) []int32 {
 	set := map[int32]bool{}
 	for _, list := range lists {
 		for _, id := range list {
-			if _, named := t.names[id]; named {
+			if _, named := t.Names[id]; named {
 				set[id] = true
 			}
 		}
 	}
-	return sortedIDs(set)
+	return slices.Sorted(maps.Keys(set))
 }
 
 // The gear and consumables gen_db ships, which is where the item procs the sim registers come from.
@@ -163,12 +149,8 @@ func itemEffectSpellQuery() string {
 // this build, which is why the join to it above is a left one: an allowlisted item is taken by id,
 // whatever the sparse table says about it.
 func allowListedItemIDs() string {
-	ids := make([]int32, 0, len(ItemAllowList)+len(ConsumableAllowList))
-	for id := range ItemAllowList {
-		ids = append(ids, id)
-	}
-	ids = append(ids, ConsumableAllowList...)
-	sort.Slice(ids, func(i, j int) bool { return ids[i] < ids[j] })
+	ids := append(slices.Collect(maps.Keys(ItemAllowList)), ConsumableAllowList...)
+	slices.Sort(ids)
 
 	list := make([]string, len(ids))
 	for i, id := range ids {
@@ -208,30 +190,41 @@ func reachableSpells(t *spellTables, roots []int32) []int32 {
 			if seen[next] {
 				continue
 			}
-			if _, named := t.names[next]; !named {
+			if _, named := t.Names[next]; !named {
 				continue
 			}
 			seen[next] = true
 			queue = append(queue, next)
 		}
 	}
-	return sortedIDs(seen)
+	return slices.Sorted(maps.Keys(seen))
 }
 
 // A_OVERRIDE_ACTIONBAR_SPELLS states the spell it swaps in as its base points, the way
 // overrideReplacements reads it.
 func spellEdges(t *spellTables, id int32) []int32 {
 	var next []int32
-	for _, e := range t.effects[id] {
+	for _, e := range t.Effects[id] {
 		if e.TriggerID > 0 {
 			next = append(next, e.TriggerID)
 		}
-		if e.Aura == int32(dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS) && e.BasePoints > 0 {
+		if e.Aura == dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS && e.BasePoints > 0 {
 			next = append(next, int32(e.BasePoints))
 		}
 	}
-	next = append(next, handTriggers[id]...)
+	next = append(next, handTriggered(id)...)
 	return append(next, t.referencedIDs(id)...)
+}
+
+// The spells a server-side handler casts off this one, which no client row states.
+func handTriggered(id int32) []int32 {
+	var ids []int32
+	for _, link := range overrides.HandTriggers {
+		if link.Spell == id {
+			ids = append(ids, link.Triggers)
+		}
+	}
+	return ids
 }
 
 func parseSpellID(s string) int32 {

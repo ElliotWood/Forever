@@ -5,6 +5,7 @@ import (
 
 	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -240,6 +241,6 @@ func (paladin *Paladin) applyHolyPower() {
 	paladin.AddStaticMod(core.SpellModConfig{
 		ClassMask:  SpellMaskHolyShock | SpellMaskHolyShockHeal,
 		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.HolyPower.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).ValueAt(paladin.Talents.HolyPower),
+		FloatValue: spellData.HolyPower.Effect(shared.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).ValueAt(paladin.Talents.HolyPower),
 	})
 }

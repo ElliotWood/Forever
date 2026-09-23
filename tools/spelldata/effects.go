@@ -75,7 +75,7 @@ func humanise(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.E_ENERGIZE:
 		return sentence(join("restores", powerAmount(e), targetPhrase(e)), scaling(e))
 	case dbcenums.E_ENERGIZE_PCT:
-		return join("restores", percent(e), "of maximum", powerName(int8(e.Misc)), targetPhrase(e))
+		return join("restores", percent(e), "of maximum", powerName(dbcenums.PowerType(e.Misc)), targetPhrase(e))
 
 	case dbcenums.E_TRIGGER_SPELL, dbcenums.E_TRIGGER_SPELL_2:
 		return join("casts", triggerPhrase(e), targetPhrase(e))
@@ -137,7 +137,7 @@ func humaniseAura(s *spelldata.Spell, e *spelldata.Effect) string {
 // An aura on the caster is the ordinary case and says nothing worth a clause, so only an aura
 // reaching somebody else names who.
 func auraTarget(e *spelldata.Effect) string {
-	if dbcenums.ImplicitTarget(e.Target[0]) == dbcenums.TARGET_UNIT_CASTER {
+	if e.Target[0] == dbcenums.TARGET_UNIT_CASTER {
 		return ""
 	}
 	return targetPhrase(e)
@@ -201,7 +201,7 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.A_MOD_SKILL:
 		return fmt.Sprintf("%s to skill %d", signed(value(e)), e.Misc)
 	case dbcenums.A_MOD_INCREASE_ENERGY:
-		return join(signed(value(e)), "maximum", powerName(int8(e.Misc)))
+		return join(signed(value(e)), "maximum", powerName(dbcenums.PowerType(e.Misc)))
 	case dbcenums.A_MOD_MANA_REGEN_INTERRUPT:
 		return join(signedPercent(e), "mana regen while casting")
 	case dbcenums.A_ADD_TARGET_TRIGGER:
@@ -214,9 +214,9 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 		return join("reflects", percent(e), "of", schoolName(core.SpellSchool(e.Misc)), "damage")
 
 	case dbcenums.A_ADD_FLAT_MODIFIER:
-		return join(spellModOpName(e.Misc), flatModAmount(e), modTargets(s, e))
+		return join(namedOr(dbcenums.SpellModOp(e.Misc), "op %d"), flatModAmount(e), modTargets(s, e))
 	case dbcenums.A_ADD_PCT_MODIFIER:
-		return join(spellModOpName(e.Misc), signedPercent(e), modTargets(s, e))
+		return join(namedOr(dbcenums.SpellModOp(e.Misc), "op %d"), signedPercent(e), modTargets(s, e))
 
 	case dbcenums.A_MOD_STAT:
 		return join(signed(value(e)), statName(e.Misc))
@@ -247,7 +247,7 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 	case dbcenums.A_MOD_POWER_COST_SCHOOL_PCT:
 		return join(signedPercent(e), schoolName(core.SpellSchool(e.Misc)), "power cost")
 	case dbcenums.A_MOD_ADDITIONAL_POWER_COST:
-		return join(signed(value(e)), "extra", powerName(int8(e.Misc)), "per cast")
+		return join(signed(value(e)), "extra", powerName(dbcenums.PowerType(e.Misc)), "per cast")
 
 	case dbcenums.A_MOD_HIT_CHANCE:
 		return join(signedPercent(e), "physical hit")
@@ -279,7 +279,7 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 		return join(signed(value(e)), "healing taken")
 
 	case dbcenums.A_MOD_POWER_REGEN:
-		return join(signed(value(e)), powerName(int8(e.Misc)), "per 5 s")
+		return join(signed(value(e)), powerName(dbcenums.PowerType(e.Misc)), "per 5 s")
 	case dbcenums.A_MOD_INCREASE_HEALTH:
 		return join(signed(value(e)), "health")
 	case dbcenums.A_MOD_INCREASE_HEALTH_PERCENT:
@@ -305,16 +305,16 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 // A_ADD_FLAT_MODIFIER states its amount in the units of the property it names, which is what the
 // flat table in parse_effects_table.go converts by op.
 func flatModAmount(e *spelldata.Effect) string {
-	switch e.Misc {
-	case spelldata.SPELLMOD_CASTING_TIME, spelldata.SPELLMOD_COOLDOWN,
-		spelldata.SPELLMOD_GLOBAL_COOLDOWN, spelldata.SPELLMOD_DURATION:
+	switch dbcenums.SpellModOp(e.Misc) {
+	case dbcenums.SPELLMOD_CASTING_TIME, dbcenums.SPELLMOD_COOLDOWN,
+		dbcenums.SPELLMOD_GLOBAL_COOLDOWN, dbcenums.SPELLMOD_DURATION:
 		return signed(value(e)/1000) + " s"
-	case spelldata.SPELLMOD_COST:
+	case dbcenums.SPELLMOD_COST:
 		// Which conversion applies is the caster's bar, not the row's: the flat table divides by ten
 		// only for a unit with a rage bar, so both readings are stated.
-		return fmt.Sprintf("%s (%s on a rage or energy bar)", signed(value(e)), signed(tenths(e)))
-	case spelldata.SPELLMOD_CRITICAL_CHANCE, spelldata.SPELLMOD_RESIST_MISS_CHANCE,
-		spelldata.SPELLMOD_CHANCE_OF_SUCCESS:
+		return fmt.Sprintf("%s (%s on a rage bar)", signed(value(e)), signed(tenths(e)))
+	case dbcenums.SPELLMOD_CRITICAL_CHANCE, dbcenums.SPELLMOD_RESIST_MISS_CHANCE,
+		dbcenums.SPELLMOD_CHANCE_OF_SUCCESS:
 		return signedPercent(e)
 	}
 	return signed(value(e))
@@ -406,9 +406,9 @@ func share(coeff float64, of string) string {
 // The effect as the client states it: the columns it fills, in the units the row keeps them in, so the
 // words above can be checked against them.
 func literal(e *spelldata.Effect, pos int) string {
-	parts := []string{effectTypeName(e.Type)}
+	parts := []string{namedOr(e.Type, "E_%d")}
 	if e.Aura != 0 {
-		parts = append(parts, auraName(e.Aura))
+		parts = append(parts, namedOr(e.Aura, "A_%d"))
 	}
 	parts = append(parts, "base="+number(e.BasePoints))
 
@@ -501,7 +501,7 @@ func targetPhrase(e *spelldata.Effect) string {
 	return targetWord(e.Target[0], first)
 }
 
-func targetWord(t uint8, named implicitTarget) string {
+func targetWord(t dbcenums.ImplicitTarget, named implicitTarget) string {
 	if named.phrase != "" {
 		return named.phrase
 	}
@@ -518,7 +518,7 @@ func powerAmount(e *spelldata.Effect) string {
 	if dbcenums.PowerType(e.Misc) == dbcenums.POWER_RAGE {
 		amount = tenths(e)
 	}
-	bar := powerName(int8(e.Misc))
+	bar := powerName(dbcenums.PowerType(e.Misc))
 	if amount == 1 {
 		bar = strings.TrimSuffix(bar, "s")
 	}

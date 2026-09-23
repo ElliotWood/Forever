@@ -203,13 +203,21 @@ func runFamily(out io.Writer, opts options) error {
 }
 
 func runExpr(out io.Writer, opts options) error {
-	c, err := parseChain(opts.arg, 0)
+	c, err := parseChain(opts.arg)
+	if err != nil {
+		return err
+	}
+	c, err = resolveChain(c, nil, &tracer{})
 	if err != nil {
 		return err
 	}
 	result, err := evalExpr(ladderFamilies(), c, opts.pkg)
 	if err != nil {
 		return err
+	}
+	doc := ""
+	if n := len(c.segments); n > 0 {
+		doc = methodDoc(result.owner, c.segments[n-1].name)
 	}
 
 	if opts.json {
@@ -218,12 +226,12 @@ func runExpr(out io.Writer, opts options) error {
 			Kind:      result.kind,
 			Trail:     result.trail,
 			Value:     result.value,
-			Doc:       result.doc,
+			Doc:       doc,
 			Accessors: result.accessors,
 		})
 	}
 
-	writeExprText(out, result, opts.arg)
+	writeExprText(out, result, opts.arg, doc)
 	return nil
 }
 
@@ -235,8 +243,8 @@ func runConfig(out io.Writer, opts options) error {
 	}
 	trace := &tracer{}
 	var declarations map[string]declaration
-	if root, err := moduleRoot(); err == nil && opts.pkg != "" {
-		declarations = newWorkspace().declarations(filepath.Join(root, "sim", opts.pkg), nil, trace)
+	if ws := newWorkspace(); ws.root != "" && opts.pkg != "" {
+		declarations = ws.declarations(filepath.Join(ws.root, "sim", opts.pkg), nil, 0, trace)
 	}
 	result, err := evalSpellConfig(call, declarations, opts.pkg, trace)
 	if err != nil {
@@ -280,7 +288,7 @@ func runLSP(in io.Reader, out io.Writer) error {
 // What the chain answered, then the row it was read off. A pick states the call as the caller wrote it,
 // since nothing in it was substituted; a longer chain states the trail, which is that call with every
 // name resolved to the number it stands for.
-func writeExprText(out io.Writer, result *exprResult, expr string) {
+func writeExprText(out io.Writer, result *exprResult, expr, doc string) {
 	c := result.card()
 	switch result.kind {
 	case kindSpell:
@@ -291,8 +299,8 @@ func writeExprText(out io.Writer, result *exprResult, expr string) {
 		fmt.Fprintf(out, "%s = %s\n\n", result.trail, result.value)
 	}
 
-	if result.doc != "" {
-		for _, line := range strings.Split(result.doc, "\n") {
+	if doc != "" {
+		for _, line := range strings.Split(doc, "\n") {
 			fmt.Fprintln(out, strings.TrimRight("    "+line, " "))
 		}
 		fmt.Fprintln(out)

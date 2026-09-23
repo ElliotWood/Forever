@@ -152,7 +152,11 @@ func TestTheItemProcsResolveAsTheyWereRegistered(t *testing.T) {
 		}
 
 		character := &core.Character{}
-		trigger := ProcTrigger(character, row, nil, weaponProcShapeForTest(live.isWeaponProc), procRateForTest(row))
+		var opts []ProcOpt
+		if live.isWeaponProc {
+			opts = append(opts, WeaponProc())
+		}
+		trigger := ProcTrigger(character, row, nil, append(opts, procRateForTest(row))...)
 
 		report := func(field string, got any, want any) {
 			t.Helper()
@@ -200,26 +204,10 @@ func TestTheItemProcsResolveAsTheyWereRegistered(t *testing.T) {
 	}
 }
 
-// The two options sim/common/shared gives the resolver, copied rather than called: shared imports
-// this package, so a test inside it cannot import shared back. Their rules are pinned by the shared
-// package's own tests; what this file pins is the numbers the pair of them produces.
-func weaponProcShapeForTest(isWeaponProc bool) ProcOpt {
-	return func(_ *core.Character, trigger *core.ProcTrigger) {
-		if !isWeaponProc {
-			return
-		}
-
-		trigger.Callback = core.CallbackOnSpellHitDealt
-		trigger.ProcMask = core.ProcMaskUnknown
-		trigger.RequireDamageDealt = true
-		trigger.CanProcFromProcs = false
-		trigger.SpellFlagsExclude &^= core.SpellFlagSuppressWeaponProcs
-		trigger.IsWeaponProc = true
-	}
-}
-
-// A weapon's rate is measured on the weapon carrying it, so the manager is the dynamic one and the
-// item is named to it - Annihilator is the only row here that has one.
+// The rate option sim/common/shared gives the resolver, copied rather than called: shared imports
+// this package, so a test inside it cannot import shared back. A weapon's rate is measured on the
+// weapon carrying it, so the manager is the dynamic one and the item is named to it - Annihilator is
+// the only row here that has one.
 func procRateForTest(row *Spell) ProcOpt {
 	return func(character *core.Character, trigger *core.ProcTrigger) {
 		if row.RPPM <= 0 {
