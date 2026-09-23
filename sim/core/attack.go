@@ -1036,17 +1036,21 @@ func (unit *Unit) applyParryHaste() {
 				return
 			}
 
-			currentSwingTime := aura.Unit.AutoAttacks.mh.swingAt - aura.Unit.AutoAttacks.mh.lastSwingAt
+			// Classic rule, as upstream (wowsims/forever) has it: with more than 60% of the swing
+			// left it loses 40% of the swing speed, otherwise it drops to 20% left, and with 20% or
+			// less left it is untouched. Measured from now, so a parry never pulls a swing into
+			// the past.
+			remainingTime := aura.Unit.AutoAttacks.mh.swingAt - sim.CurrentTime
 			swingSpeed := aura.Unit.AutoAttacks.mh.curSwingDuration
 			minRemainingTime := time.Duration(float64(swingSpeed) * 0.2) // 20% of Swing Speed
 			defaultReduction := minRemainingTime * 2                     // 40% of Swing Speed
 
-			if currentSwingTime <= minRemainingTime {
+			if remainingTime <= minRemainingTime {
 				return
 			}
 
-			newReadyAt := max(aura.Unit.AutoAttacks.mh.swingAt-defaultReduction, aura.Unit.AutoAttacks.mh.lastSwingAt+minRemainingTime)
-			parryHasteReduction := newReadyAt - aura.Unit.AutoAttacks.mh.swingAt
+			parryHasteReduction := min(defaultReduction, remainingTime-minRemainingTime)
+			newReadyAt := aura.Unit.AutoAttacks.mh.swingAt - parryHasteReduction
 			if sim.Log != nil {
 				aura.Unit.Log(sim, "MH Swing reduced by %s due to parry haste, will now occur at %s", parryHasteReduction, newReadyAt)
 			}
