@@ -35,6 +35,9 @@ message UIZone {
 	int32 id = 1;
 	string name = 2;
 	Expansion expansion = 3;
+	// Every kind of area the zone counts as, from the client's AreaGroupMember rows for the
+	// groups AreaType names. Empty for a zone in none of them.
+	repeated AreaType area_types = 4;
 }
 message UINPC {
 	int32 id = 1;

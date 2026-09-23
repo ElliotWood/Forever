@@ -738,6 +738,10 @@ message Encounter {
 	// area groups when it fits more than one (Redridge is Forest and Mountainous), so this is a
 	// set rather than a single value. Empty means no area-restricted effect applies.
 	repeated AreaType area_types = 11;
+
+	// The UIZone the area set was taken from, for the UI to show which zone is picked; zero once
+	// the set is edited by hand. The sim reads area_types only.
+	int32 zone_id = 12;
 }
 
 message PresetTarget {

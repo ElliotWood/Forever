@@ -76,6 +76,7 @@
 		"JournalEncounter",
 		"JournalEncounterItem",
 		"AreaTable",
+		"AreaGroupMember",
 		"TraitDefinition",
 		"TraitDefinitionEffectPoints",
 		"TraitNodeEntry",
