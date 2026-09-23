@@ -32,11 +32,10 @@ func stringerName(v fmt.Stringer) (string, bool) {
 	return name, !strings.Contains(name, "(")
 }
 
-// The op an A_ADD_FLAT_MODIFIER or A_ADD_PCT_MODIFIER names in its misc value. Only the ops the
-// parse table declares have a name; the rest read as their number, which is also what the parser
-// does with them.
+// The op an A_ADD_FLAT_MODIFIER or A_ADD_PCT_MODIFIER names in its misc value, or its number where
+// dbcenums names none.
 func spellModOpName(misc int32) string {
-	if name, ok := constName(spellModConsts, int64(misc)); ok {
+	if name, ok := stringerName(dbcenums.SpellModOp(misc)); ok {
 		return name
 	}
 	return fmt.Sprintf("op %d", misc)

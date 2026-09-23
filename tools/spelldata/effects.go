@@ -305,16 +305,16 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 // A_ADD_FLAT_MODIFIER states its amount in the units of the property it names, which is what the
 // flat table in parse_effects_table.go converts by op.
 func flatModAmount(e *spelldata.Effect) string {
-	switch e.Misc {
-	case spelldata.SPELLMOD_CASTING_TIME, spelldata.SPELLMOD_COOLDOWN,
-		spelldata.SPELLMOD_GLOBAL_COOLDOWN, spelldata.SPELLMOD_DURATION:
+	switch dbcenums.SpellModOp(e.Misc) {
+	case dbcenums.SPELLMOD_CASTING_TIME, dbcenums.SPELLMOD_COOLDOWN,
+		dbcenums.SPELLMOD_GLOBAL_COOLDOWN, dbcenums.SPELLMOD_DURATION:
 		return signed(value(e)/1000) + " s"
-	case spelldata.SPELLMOD_COST:
+	case dbcenums.SPELLMOD_COST:
 		// Which conversion applies is the caster's bar, not the row's: the flat table divides by ten
 		// only for a unit with a rage bar, so both readings are stated.
 		return fmt.Sprintf("%s (%s on a rage or energy bar)", signed(value(e)), signed(tenths(e)))
-	case spelldata.SPELLMOD_CRITICAL_CHANCE, spelldata.SPELLMOD_RESIST_MISS_CHANCE,
-		spelldata.SPELLMOD_CHANCE_OF_SUCCESS:
+	case dbcenums.SPELLMOD_CRITICAL_CHANCE, dbcenums.SPELLMOD_RESIST_MISS_CHANCE,
+		dbcenums.SPELLMOD_CHANCE_OF_SUCCESS:
 		return signedPercent(e)
 	}
 	return signed(value(e))

@@ -1156,9 +1156,9 @@ rather than guess:
 
 ```go
 spellData.ImprovedRighteousFury.
-    Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_ALL_EFFECTS).MultiplierAt(rank)   // 1.50 threat
+    Effect(shared.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_ALL_EFFECTS)).MultiplierAt(rank)   // 1.50 threat
 spellData.ImprovedRighteousFury.
-    Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_EFFECT2).MultiplierAt(rank)      // 0.94 taken
+    Effect(shared.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_EFFECT2)).MultiplierAt(rank)      // 0.94 taken
 ```
 
 **Do not pick the effect by which one matches the number.** Survival of the Fittest states +1/2/3% to
@@ -1231,9 +1231,9 @@ spellData.SealOfTheCrusader.ByRank(rank).Effects[0].High()   // 41 at rank 1, 18
 under `A_ADD_PCT_MODIFIER` and `A_ADD_FLAT_MODIFIER`, a stat under `A_MOD_TOTAL_STAT_PERCENTAGE`, a
 school mask under `A_MOD_DAMAGE_DONE`. There is no single enum for it, so it stays an int.
 
-For the two modifier auras the `SPELLMOD_*` constants name it. Those are hand-written in
-`sim/common/shared/spell_data_talents.go`, because the client ships no name list - each carries the
-talents it was read off. All 23 were then checked against [TrinityCore's `SpellModOp`][tc] (3.3.5) and
+For the two modifier auras the `SPELLMOD_*` constants name it. Those are the `SpellModOp` values
+hand-written in `sim/core/dbcenums/spellmods.go`, because the client ships no name list - each carries
+what it modifies and the talents it was read off. All 23 were then checked against [TrinityCore's `SpellModOp`][tc] (3.3.5) and
 [cmangos-tbc's][cm] (2.4.3), which agree with every value, and with every name except 24 and 27 where
 cmangos says `SPELL_BONUS_DAMAGE` and `MULTIPLE_VALUE`. No modifier effect in the tables uses a value
 outside those 23; the ones the cores name and TBC does not use are 13, 17, 20, 21 and 26.

@@ -255,7 +255,7 @@ func foldedDotEffects(s *Spell, o *parseOptions) []*Effect {
 	var folded []*Effect
 	for i := range s.Effects {
 		dot := &s.Effects[i]
-		if dot.Aura != dbcenums.A_ADD_PCT_MODIFIER || dot.Misc != SPELLMOD_DOT {
+		if dot.Aura != dbcenums.A_ADD_PCT_MODIFIER || dbcenums.SpellModOp(dot.Misc) != dbcenums.SPELLMOD_DOT {
 			continue
 		}
 
@@ -263,7 +263,8 @@ func foldedDotEffects(s *Spell, o *parseOptions) []*Effect {
 			hit := &s.Effects[j]
 			if hit.Aura != dbcenums.A_ADD_PCT_MODIFIER || !appliesAura(hit.Type) ||
 				!o.reads(int32(j+1)) ||
-				(hit.Misc != SPELLMOD_DAMAGE && hit.Misc != SPELLMOD_ALL_EFFECTS) {
+				(dbcenums.SpellModOp(hit.Misc) != dbcenums.SPELLMOD_DAMAGE &&
+					dbcenums.SpellModOp(hit.Misc) != dbcenums.SPELLMOD_ALL_EFFECTS) {
 				continue
 			}
 			if hit.ClassFlags == dot.ClassFlags && hit.BasePoints == dot.BasePoints {

@@ -27,11 +27,11 @@ func parseRows() []Spell {
 			ID: 1000, Name: "Mod Talent", ClassFlags: parseFamily,
 			Effects: []Effect{
 				{SpellID: 1000, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_PCT_MODIFIER,
-					Misc: SPELLMOD_DAMAGE, BasePoints: 15, ClassFlags: parseTargetMask},
+					Misc: int32(dbcenums.SPELLMOD_DAMAGE), BasePoints: 15, ClassFlags: parseTargetMask},
 				{SpellID: 1000, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_FLAT_MODIFIER,
-					Misc: SPELLMOD_COST, BasePoints: -30, ClassFlags: parseTargetMask},
+					Misc: int32(dbcenums.SPELLMOD_COST), BasePoints: -30, ClassFlags: parseTargetMask},
 				{SpellID: 1000, Index: 2, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_FLAT_MODIFIER,
-					Misc: SPELLMOD_CASTING_TIME, BasePoints: -500, ClassFlags: parseTargetMask},
+					Misc: int32(dbcenums.SPELLMOD_CASTING_TIME), BasePoints: -500, ClassFlags: parseTargetMask},
 				{SpellID: 1000, Index: 3, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY,
 					BasePoints: 7},
 			},
@@ -40,16 +40,16 @@ func parseRows() []Spell {
 			ID: 1100, Name: "Dot Talent", ClassFlags: parseFamily,
 			Effects: []Effect{
 				{SpellID: 1100, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_PCT_MODIFIER,
-					Misc: SPELLMOD_DAMAGE, BasePoints: 10, ClassFlags: parseTargetMask},
+					Misc: int32(dbcenums.SPELLMOD_DAMAGE), BasePoints: 10, ClassFlags: parseTargetMask},
 				{SpellID: 1100, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_PCT_MODIFIER,
-					Misc: SPELLMOD_DOT, BasePoints: 10, ClassFlags: parseTargetMask},
+					Misc: int32(dbcenums.SPELLMOD_DOT), BasePoints: 10, ClassFlags: parseTargetMask},
 			},
 		},
 		{
 			ID: 1200, Name: "Stacking Buff", DurationMs: 12000, MaxStack: 3, ClassFlags: parseFamily,
 			Effects: []Effect{
 				{SpellID: 1200, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_PCT_MODIFIER,
-					Misc: SPELLMOD_DAMAGE, BasePoints: 5, ClassFlags: parseTargetMask},
+					Misc: int32(dbcenums.SPELLMOD_DAMAGE), BasePoints: 5, ClassFlags: parseTargetMask},
 				{SpellID: 1200, Index: 1, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_THREAT,
 					Misc: 127, BasePoints: 30},
 			},
@@ -199,7 +199,7 @@ func TestParseStaticFallsBackToTheWholeFamily(t *testing.T) {
 
 	row := *Find(1100)
 	row.Effects = []Effect{{SpellID: 1100, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_PCT_MODIFIER,
-		Misc: SPELLMOD_DAMAGE, BasePoints: 10}}
+		Misc: int32(dbcenums.SPELLMOD_DAMAGE), BasePoints: 10}}
 
 	ParseStatic(character, &row)
 
@@ -435,7 +435,7 @@ func TestParseStaticDurationModOnASharedAura(t *testing.T) {
 	row := Spell{
 		ID: 3000, Name: "Duration Talent", ClassFlags: parseFamily,
 		Effects: []Effect{{SpellID: 3000, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_ADD_FLAT_MODIFIER,
-			Misc: SPELLMOD_DURATION, BasePoints: 5000, ClassFlags: parseTargetMask}},
+			Misc: int32(dbcenums.SPELLMOD_DURATION), BasePoints: 5000, ClassFlags: parseTargetMask}},
 	}
 
 	ParseStatic(character, &row)
@@ -464,31 +464,31 @@ func TestEveryTableRow(t *testing.T) {
 		value  float64
 		onAura bool
 	}{
-		{flat, SPELLMOD_DURATION, 5000, "SpellMod_Duration_Flat", 5000, false},
-		{flat, SPELLMOD_CHARGES, 1, "SpellMod_BuffMaxStacks_Flat", 1, false},
-		{flat, SPELLMOD_RANGE, 5, "SpellMod_Range_Flat", 5, false},
-		{flat, SPELLMOD_CRITICAL_CHANCE, 6, "SpellMod_BonusCrit_Percent", 6, false},
-		{flat, SPELLMOD_CASTING_TIME, -500, "SpellMod_CastTime_Flat", -500, false},
-		{flat, SPELLMOD_COOLDOWN, -2000, "SpellMod_Cooldown_Flat", -2000, false},
-		{flat, SPELLMOD_COST, -30, "SpellMod_PowerCost_Flat", -30, false},
-		{flat, SPELLMOD_RESIST_MISS_CHANCE, 3, "SpellMod_BonusHit_Percent", 3, false},
-		{flat, SPELLMOD_GLOBAL_COOLDOWN, -500, "SpellMod_GlobalCooldown_Flat", -500, false},
-		{flat, SPELLMOD_EFFECT1, 20, "effect1-assumed-damage SpellMod_BaseDamage_Flat", 20, false},
-		{flat, SPELLMOD_EFFECT2, 20, "effect2-assumed-damage SpellMod_BaseDamage_Flat", 20, false},
-		{flat, SPELLMOD_EFFECT3, 20, "effect3-assumed-damage SpellMod_BaseDamage_Flat", 20, false},
+		{flat, int32(dbcenums.SPELLMOD_DURATION), 5000, "SpellMod_Duration_Flat", 5000, false},
+		{flat, int32(dbcenums.SPELLMOD_CHARGES), 1, "SpellMod_BuffMaxStacks_Flat", 1, false},
+		{flat, int32(dbcenums.SPELLMOD_RANGE), 5, "SpellMod_Range_Flat", 5, false},
+		{flat, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE), 6, "SpellMod_BonusCrit_Percent", 6, false},
+		{flat, int32(dbcenums.SPELLMOD_CASTING_TIME), -500, "SpellMod_CastTime_Flat", -500, false},
+		{flat, int32(dbcenums.SPELLMOD_COOLDOWN), -2000, "SpellMod_Cooldown_Flat", -2000, false},
+		{flat, int32(dbcenums.SPELLMOD_COST), -30, "SpellMod_PowerCost_Flat", -30, false},
+		{flat, int32(dbcenums.SPELLMOD_RESIST_MISS_CHANCE), 3, "SpellMod_BonusHit_Percent", 3, false},
+		{flat, int32(dbcenums.SPELLMOD_GLOBAL_COOLDOWN), -500, "SpellMod_GlobalCooldown_Flat", -500, false},
+		{flat, int32(dbcenums.SPELLMOD_EFFECT1), 20, "effect1-assumed-damage SpellMod_BaseDamage_Flat", 20, false},
+		{flat, int32(dbcenums.SPELLMOD_EFFECT2), 20, "effect2-assumed-damage SpellMod_BaseDamage_Flat", 20, false},
+		{flat, int32(dbcenums.SPELLMOD_EFFECT3), 20, "effect3-assumed-damage SpellMod_BaseDamage_Flat", 20, false},
 
-		{pct, SPELLMOD_DAMAGE, 15, "SpellMod_DamageDone_Flat", 0.15, false},
-		{pct, SPELLMOD_ALL_EFFECTS, 15, "SpellMod_DamageDone_Flat", 0.15, false},
-		{pct, SPELLMOD_DURATION, 20, "SpellMod_DotBaseDuration_Pct", 0.2, false},
-		{pct, SPELLMOD_THREAT, -20, "SpellMod_ThreatMultiplier_Pct", -0.2, false},
-		{pct, SPELLMOD_CASTING_TIME, -10, "SpellMod_CastTime_Pct", -0.1, false},
-		{pct, SPELLMOD_COOLDOWN, -20, "SpellMod_Cooldown_Multiplier", 0.8, false},
-		{pct, SPELLMOD_COST, -20, "SpellMod_PowerCost_Pct_Add", -0.2, false},
-		{pct, SPELLMOD_CRIT_DAMAGE_BONUS, 20, "SpellMod_CritMultiplier_Flat", 0.2, false},
-		{pct, SPELLMOD_DOT, 10, "SpellMod_DotDamageDone_Pct", 0.1, false},
-		{pct, SPELLMOD_EFFECT1, 10, "effect1-assumed-damage SpellMod_DamageDone_Flat", 0.1, false},
-		{pct, SPELLMOD_EFFECT2, 10, "effect2-assumed-damage SpellMod_DamageDone_Flat", 0.1, false},
-		{pct, SPELLMOD_EFFECT3, 10, "effect3-assumed-damage SpellMod_DamageDone_Flat", 0.1, false},
+		{pct, int32(dbcenums.SPELLMOD_DAMAGE), 15, "SpellMod_DamageDone_Flat", 0.15, false},
+		{pct, int32(dbcenums.SPELLMOD_ALL_EFFECTS), 15, "SpellMod_DamageDone_Flat", 0.15, false},
+		{pct, int32(dbcenums.SPELLMOD_DURATION), 20, "SpellMod_DotBaseDuration_Pct", 0.2, false},
+		{pct, int32(dbcenums.SPELLMOD_THREAT), -20, "SpellMod_ThreatMultiplier_Pct", -0.2, false},
+		{pct, int32(dbcenums.SPELLMOD_CASTING_TIME), -10, "SpellMod_CastTime_Pct", -0.1, false},
+		{pct, int32(dbcenums.SPELLMOD_COOLDOWN), -20, "SpellMod_Cooldown_Multiplier", 0.8, false},
+		{pct, int32(dbcenums.SPELLMOD_COST), -20, "SpellMod_PowerCost_Pct_Add", -0.2, false},
+		{pct, int32(dbcenums.SPELLMOD_CRIT_DAMAGE_BONUS), 20, "SpellMod_CritMultiplier_Flat", 0.2, false},
+		{pct, int32(dbcenums.SPELLMOD_DOT), 10, "SpellMod_DotDamageDone_Pct", 0.1, false},
+		{pct, int32(dbcenums.SPELLMOD_EFFECT1), 10, "effect1-assumed-damage SpellMod_DamageDone_Flat", 0.1, false},
+		{pct, int32(dbcenums.SPELLMOD_EFFECT2), 10, "effect2-assumed-damage SpellMod_DamageDone_Flat", 0.1, false},
+		{pct, int32(dbcenums.SPELLMOD_EFFECT3), 10, "effect3-assumed-damage SpellMod_DamageDone_Flat", 0.1, false},
 
 		{dbcenums.A_MOD_ATTACKSPEED, 0, 20, "attack-speed", 1.2, true},
 		{dbcenums.A_MOD_THREAT, 127, 30, "threat", 1.3, false},
@@ -537,14 +537,14 @@ func TestEveryTableRow(t *testing.T) {
 	// A row added to one of the three tables and to no case here would be invisible, so the cases
 	// are read back as the coverage they are.
 	auras := map[dbcenums.EffectAuraType]bool{}
-	flatMods, pctMods := map[int32]bool{}, map[int32]bool{}
+	flatMods, pctMods := map[dbcenums.SpellModOp]bool{}, map[dbcenums.SpellModOp]bool{}
 	for _, c := range cases {
 		auras[c.aura] = true
 		switch c.aura {
 		case flat:
-			flatMods[c.misc] = true
+			flatMods[dbcenums.SpellModOp(c.misc)] = true
 		case pct:
-			pctMods[c.misc] = true
+			pctMods[dbcenums.SpellModOp(c.misc)] = true
 		}
 	}
 	for aura := range auraTable {
@@ -681,7 +681,7 @@ func TestParseSkipsACooldownMultiplierOnAStackingRow(t *testing.T) {
 	withParseRows(t)
 	character := parseWarrior()
 
-	row := oneEffectRow(dbcenums.A_ADD_PCT_MODIFIER, SPELLMOD_COOLDOWN, -20)
+	row := oneEffectRow(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN), -20)
 	row.MaxStack = 3
 
 	parsed := ParseEffects(character, character.RegisterAura(AuraConfig(row)), row)

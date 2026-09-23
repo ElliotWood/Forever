@@ -7,7 +7,6 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/dbcenums"
-	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
 // Every name the printer states for a constant: the stringer's for a typed enum, the declaration's for
@@ -27,12 +26,12 @@ func TestConstantNames(t *testing.T) {
 	}
 
 	for got, want := range map[string]string{
-		spellModOpName(spelldata.SPELLMOD_COST):  "SPELLMOD_COST",
-		spellModOpName(99):                       "op 99",
-		effectTypeName(dbcenums.E_SCHOOL_DAMAGE): "E_SCHOOL_DAMAGE",
-		effectTypeName(9999):                     "E_9999",
-		auraName(dbcenums.A_DUMMY):               "A_DUMMY",
-		auraName(9999):                           "A_9999",
+		spellModOpName(int32(dbcenums.SPELLMOD_COST)): "SPELLMOD_COST",
+		spellModOpName(99):                            "op 99",
+		effectTypeName(dbcenums.E_SCHOOL_DAMAGE):      "E_SCHOOL_DAMAGE",
+		effectTypeName(9999):                          "E_9999",
+		auraName(dbcenums.A_DUMMY):                    "A_DUMMY",
+		auraName(9999):                                "A_9999",
 	} {
 		if got != want {
 			t.Errorf("named %q, want %q", got, want)

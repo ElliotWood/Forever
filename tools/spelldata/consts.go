@@ -19,7 +19,6 @@ var constantSources = []struct {
 }{
 	{"github.com/wowsims/forever/sim/core", []string{"sim/core/flags.go", "sim/core/constants.go"}},
 	{"github.com/wowsims/forever/sim/core/dbcenums", []string{"sim/core/dbcenums/*.go"}},
-	{"github.com/wowsims/forever/sim/core/spelldata", []string{"sim/core/spelldata/parse_effects_table.go"}},
 }
 
 var (
@@ -31,7 +30,6 @@ var (
 
 	procFlagConsts  = map[int64]string{}
 	procFlag2Consts = map[int64]string{}
-	spellModConsts  = map[int64]string{}
 )
 
 // Only the packages above are imported, and only by each other: type-checking proto and stats from
@@ -84,7 +82,6 @@ func scanConstants() {
 
 	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/dbcenums"], "PROC_FLAG_", procFlagConsts)
 	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/dbcenums"], "PROC_FLAG_2_", procFlag2Consts)
-	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/spelldata"], "SPELLMOD_", spellModConsts)
 }
 
 // The constants a package names by prefix, by value. A zero is left out: PROC_FLAG_NONE would
@@ -119,7 +116,7 @@ func evalConst(expr ast.Expr) (constant.Value, error) {
 	}
 	tv, err := types.Eval(constFset, evalPackage, evalPos, nodeText(expr))
 	if err != nil || tv.Value == nil {
-		return nil, fmt.Errorf("%s is not a literal or a constant of sim/core, dbcenums or spelldata", nodeText(expr))
+		return nil, fmt.Errorf("%s is not a literal or a constant of sim/core or dbcenums", nodeText(expr))
 	}
 	return tv.Value, nil
 }
