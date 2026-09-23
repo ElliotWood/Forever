@@ -196,12 +196,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		14152, // Robe of the Archmage
-		[
-			"Restores 500 mana.", // 18385 - https://www.wowhead.com/forever/spell=18385
-		]
-	],
-	[
 		14153, // Robe of the Void
 		[
 			"Heal your pet for 600.", // 18386 - https://www.wowhead.com/forever/spell=18386
@@ -677,21 +671,9 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		19951, // Gri'lek's Charm of Might
-		[
-			"Instantly increases your rage by 30.0.", // 24571 - https://www.wowhead.com/forever/spell=24571
-		]
-	],
-	[
 		19953, // Renataki's Charm of Beasts
 		[
 			"Instantly clears the cooldowns of Aimed Shot, Multishot, Volley, and Arcane Shot.", // 24531 - https://www.wowhead.com/forever/spell=24531
-		]
-	],
-	[
-		19954, // Renataki's Charm of Trickery
-		[
-			"Instantly increases your energy by 60.", // 24532 - https://www.wowhead.com/forever/spell=24532
 		]
 	],
 	[
@@ -899,12 +881,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		20525, // Earthen Sigil
-		[
-			"Restores 400 mana over 10s.", // 24884 - https://www.wowhead.com/forever/spell=24884
-		]
-	],
-	[
 		21134, // Dark Edge of Insanity
 		[
 			"Disorients the target, causing it to wander aimlessly for up to 3s.", // 26108 - https://www.wowhead.com/forever/spell=26108
@@ -1076,12 +1052,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		23005, // Totem of Flowing Water
 		[
 			"Regain up to 10 mana each time you cast Lesser Healing Wave.", // 28849 - https://www.wowhead.com/forever/spell=28849
-		]
-	],
-	[
-		23027, // Warmth of Forgiveness
-		[
-			"Restores 500 mana.", // 28760 - https://www.wowhead.com/forever/spell=28760
 		]
 	],
 	[

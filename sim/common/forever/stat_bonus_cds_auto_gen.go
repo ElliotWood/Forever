@@ -18,8 +18,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(7734) // Six Demon Bag - https://www.wowhead.com/forever/spell=14537
 	// unsupported: 18364 deals no damage and heals no one (A_PERIODIC_TRIGGER_SPELL)
 	// shared.NewSimpleStatActive(14134) // Cloak of Fire - https://www.wowhead.com/forever/spell=18364
-	// unsupported: 18385 deals no damage and heals no one (E_ENERGIZE)
-	// shared.NewSimpleStatActive(14152) // Robe of the Archmage - https://www.wowhead.com/forever/spell=18385
 	// on use: 18386 (E_HEAL)
 	// unsupported: the heal lands on implicit target 5, not the wearer
 	// shared.NewSpellDataHealOnUse(14153) // Robe of the Void - https://www.wowhead.com/forever/spell=18386
@@ -55,12 +53,8 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(19949) // Zandalarian Hero Medallion - https://www.wowhead.com/forever/spell=24661
 	// unsupported: 24658 deals no damage and heals no one (A_DUMMY, E_TRIGGER_SPELL)
 	// shared.NewSimpleStatActive(19950) // Zandalarian Hero Charm - https://www.wowhead.com/forever/spell=24658
-	// unsupported: 24571 deals no damage and heals no one (E_ENERGIZE)
-	// shared.NewSimpleStatActive(19951) // Gri'lek's Charm of Might - https://www.wowhead.com/forever/spell=24571
 	// unsupported: 24531 deals no damage and heals no one (E_DUMMY)
 	// shared.NewSimpleStatActive(19953) // Renataki's Charm of Beasts - https://www.wowhead.com/forever/spell=24531
-	// unsupported: 24532 deals no damage and heals no one (E_ENERGIZE)
-	// shared.NewSimpleStatActive(19954) // Renataki's Charm of Trickery - https://www.wowhead.com/forever/spell=24532
 	// unsupported: 24542 deals no damage and heals no one (A_ADD_PCT_MODIFIER, A_ADD_PCT_MODIFIER)
 	// shared.NewSimpleStatActive(19955) // Wushoolay's Charm of Nature - https://www.wowhead.com/forever/spell=24542
 	// unsupported: 24499 deals no damage and heals no one (A_ADD_PCT_MODIFIER)
@@ -71,8 +65,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(19958) // Hazza'rah's Charm of Healing - https://www.wowhead.com/forever/spell=24546
 	// unsupported: 24544 deals no damage and heals no one (A_ADD_FLAT_MODIFIER, A_ADD_PCT_MODIFIER)
 	// shared.NewSimpleStatActive(19959) // Hazza'rah's Charm of Magic - https://www.wowhead.com/forever/spell=24544
-	// unsupported: 24884 deals no damage and heals no one (A_PERIODIC_ENERGIZE)
-	// shared.NewSimpleStatActive(20525) // Earthen Sigil - https://www.wowhead.com/forever/spell=24884
 	// unsupported: 25892 deals no damage and heals no one (E_THREAT)
 	// shared.NewSimpleStatActive(21181) // Grace of Earth - https://www.wowhead.com/forever/spell=25892
 	// unsupported: 26168 deals no damage and heals no one (A_DAMAGE_SHIELD)
@@ -85,8 +77,6 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(21685) // Petrified Scarab - https://www.wowhead.com/forever/spell=26463
 	// unsupported: 28862 deals no damage and heals no one (A_MOD_THREAT)
 	// shared.NewSimpleStatActive(23001) // Eye of Diminution - https://www.wowhead.com/forever/spell=28862
-	// unsupported: 28760 deals no damage and heals no one (E_ENERGIZE)
-	// shared.NewSimpleStatActive(23027) // Warmth of Forgiveness - https://www.wowhead.com/forever/spell=28760
 	// unsupported: 28773 deals no damage and heals no one (A_MOD_BLOCK_VALUE_FLAT)
 	// shared.NewSimpleStatActive(23040) // Glyph of Deflection - https://www.wowhead.com/forever/spell=28773
 	// unsupported: 1306267 deals no damage and heals no one (E_FORCE_CAST_2)
@@ -211,6 +201,18 @@ func RegisterAllOnUseCds() {
 
 	// MP5
 	shared.NewSimpleStatActive(4696) // Lapidis Tankard of Tidesippe - https://www.wowhead.com/forever/spell=1135
+
+	// Resources
+	// on use: 18385 (E_ENERGIZE)
+	shared.NewSpellDataEnergizeOnUse(14152) // Robe of the Archmage - https://www.wowhead.com/forever/spell=18385
+	// on use: 24571 (E_ENERGIZE)
+	shared.NewSpellDataEnergizeOnUse(19951) // Gri'lek's Charm of Might - https://www.wowhead.com/forever/spell=24571
+	// on use: 24532 (E_ENERGIZE)
+	shared.NewSpellDataEnergizeOnUse(19954) // Renataki's Charm of Trickery - https://www.wowhead.com/forever/spell=24532
+	// on use: 24884 (A_PERIODIC_ENERGIZE)
+	shared.NewSpellDataEnergizeOnUse(20525) // Earthen Sigil - https://www.wowhead.com/forever/spell=24884
+	// on use: 28760 (E_ENERGIZE)
+	shared.NewSpellDataEnergizeOnUse(23027) // Warmth of Forgiveness - https://www.wowhead.com/forever/spell=28760
 
 	// Skipped
 	// Not simulated: Staff of Conjuring: "Conjure Food" (8736) - ignored effect type 24
