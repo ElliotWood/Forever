@@ -165,7 +165,10 @@ func (p PetPolicy) String() string {
 }
 
 type TalentMod struct {
-	Name string
+	// SpellID is the spell of the trait node that prices the improvement, which the store carries as
+	// a talent ladder.
+	SpellID int32
+	Name    string
 	// Effect is the index of the modifying effect inside the talent spell.
 	Effect  int32
 	Applies TalentApplies
@@ -177,12 +180,17 @@ type ActionRef struct {
 }
 
 type BuffSpec struct {
-	Field          string // proto field name, snake_case, owns the number
-	Number         int32  // proto field number
-	Scope          BuffScope
-	Proto          BuffProtoType // bool when nothing prices an improved state
-	Kind           BuffKind
-	Go             string      // identifier stem: "BattleShout"
+	Field  string // proto field name, snake_case, owns the number
+	Number int32  // proto field number
+	Scope  BuffScope
+	Proto  BuffProtoType // bool when nothing prices an improved state
+	Kind   BuffKind
+	Go     string // identifier stem: "BattleShout"
+	// SpellID is the spell the aura's numbers are read from: the top rank of the castable family, or
+	// the aura that family's cast applies when the cast is a summon or a dummy. CastID is the cast
+	// itself, for a row whose timing only the cast states. Both are roots of the spell store.
+	SpellID        int32
+	CastID         int32
 	Name           string      // SpellName.Name_lang of the castable family ("" for rows with no spell)
 	AuraName       string      // aura family when the cast is a summon or dummy (totems: "Strength of Earth")
 	Anchor         int32       // explicit spell id; 0 = resolve Name via SkillLineAbility

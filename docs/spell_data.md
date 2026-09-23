@@ -52,7 +52,7 @@ character - the parses, the proc triggers - are read off the warrior files they 
 `sim/core/spelldata/spells_auto_gen.go` holds every spell the sim can reach: the ones the class files
 name, the ones items, enchants and set bonuses cast, and everything those reach in turn through a
 trigger effect, an actionbar override or a tooltip reference. `sim/core/spelldata/snapshot_test.go`
-pins what that comes to - 7035 rows carrying 9636 effects - so a regeneration that moves the universe
+pins what that comes to - 7048 rows carrying 9651 effects - so a regeneration that moves the universe
 says so there.
 
 Every field is the client's column in the client's units: a percentage is the integer 16, rage is on a
@@ -1585,7 +1585,7 @@ regeneration that drops or renumbers an id stops the sim with the id in the mess
 package-level `var` reaching for a spell this build does not carry takes the whole package down,
 including tests that never touch that spell.
 
-**`SPCoef` of exactly 1 is the column's filler.** 2,112 of the store's 9,636 effects carry it, on
+**`SPCoef` of exactly 1 is the column's filler.** 2,113 of the store's 9,651 effects carry it, on
 weapon-damage effects, speed auras and shapeshifts among them, and no physical-school row in this
 client states a fractional coefficient at all. `Magic()` and `DotConfig` hand the row's coefficient
 to core as it stands, so a physical row read through either would take spell power per hit or per

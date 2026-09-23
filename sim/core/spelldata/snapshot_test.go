@@ -14,8 +14,8 @@ import (
 // What the committed spells_auto_gen.go holds today. The bounds are wide enough that adding a class
 // or a patch's spells does not fail the gate, and the exact numbers are here so drift is visible.
 const (
-	generatedSpellCount  = 7047
-	generatedEffectCount = 9650
+	generatedSpellCount  = 7048
+	generatedEffectCount = 9651
 )
 
 // The client's EffectIndex has gaps: 46 of the store's rows state an index that is not the
