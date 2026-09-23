@@ -32,8 +32,8 @@ func HuntersMarkAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	})
 }
 
-// Seal of the Crusader - https://www.wowhead.com/forever/spell=20303
-// func ImprovedSealOfTheCrusaderAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // improved_seal_of_the_crusader, KindDebuffStat: spell 20303 states no aura effect this generator maps (auras 14)
+// Judgement of the Crusader - https://www.wowhead.com/forever/spell=20303
+// func JudgementOfTheCrusaderAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // judgement_of_the_crusader, KindDebuffStat: spell 20303 states no aura effect this generator maps (auras 14)
 
 // Judgement of Light - https://www.wowhead.com/forever/spell=20346
 func JudgementOfLightDuration(talentPoints int32) time.Duration {

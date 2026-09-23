@@ -82,6 +82,11 @@ make db
 # Uses tools/database/ptr-generator-settings.json for settings
 make ptrdb
 
+# Same as make db but without a WoW install: reads the current build off Blizzard's CDN
+# and applies the hotfix cache you point it at (see tools/db2tool/README.md).
+# The "Update DB" GitHub workflow runs this with raidbots' mirror of the live DBCache.bin.
+make db DB2TOOL_FLAGS="--cdn --dbcache tools/db2tool/caches/DBCache.bin"
+
 # Regenerate the sim/<class>/spell_data_auto_gen.go tables from the client data
 # Also rewrites the generated buff and debuff files, in sim/core and in the settings UI
 # Needs tools/database/wowsims.db, so run make db at least once first

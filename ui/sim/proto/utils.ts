@@ -137,4 +137,5 @@ export const defaultHealerIndividualBuffs = (): IndividualBuffs =>
 	IndividualBuffs.create({
 		greaterBlessingOfKings: true,
 		greaterBlessingOfWisdom: true,
+		greaterBlessingOfLight: true,
 	});

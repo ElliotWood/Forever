@@ -18,9 +18,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
-	"github.com/wowsims/forever/tools/database/dbc"
 )
 
 // One row per shape the templates have a branch for. The proto field of each row
@@ -198,7 +198,7 @@ func syntheticBuffRows() []ResolvedBuff {
 // on that number instead of on the client's -20 would price the buff at 0.9 + n.
 func TestTalentCurveScalesTheClientAmount(t *testing.T) {
 	row := ResolvedBuff{Effects: []ResolvedEffect{
-		{Effect: dbc.E_APPLY_AURA, Aura: dbc.A_MOD_MELEE_HASTE_3, Value: -20},
+		{Effect: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_MELEE_HASTE_3, Value: -20},
 	}}
 
 	target, onPseudo, ok := row.talentTarget()
@@ -211,7 +211,7 @@ func TestTalentCurveScalesTheClientAmount(t *testing.T) {
 	}
 
 	scaled := target
-	scaled.Value = math.Trunc(applyTalentPoints(target.Value, 10, dbc.A_ADD_PCT_MODIFIER))
+	scaled.Value = math.Trunc(applyTalentPoints(target.Value, 10, dbcenums.A_ADD_PCT_MODIFIER))
 	if scaled.Value != -22 {
 		t.Errorf("scaled client amount = %v, want -22", scaled.Value)
 	}
@@ -225,17 +225,17 @@ func TestTalentCurveScalesTheClientAmount(t *testing.T) {
 // schools and not others - Judgement of the Crusader is holy alone - fits
 // neither, and the spell field would raise what every school does to the target.
 func TestSchoolMaskedDamageTakenHasNoFieldToLandOn(t *testing.T) {
-	physical := ResolvedEffect{Aura: dbc.A_MOD_DAMAGE_TAKEN, Misc: 1, Value: 8}
+	physical := ResolvedEffect{Aura: dbcenums.A_MOD_DAMAGE_TAKEN, Misc: 1, Value: 8}
 	if mods, ok := pseudoModsOf(physical); !ok || mods[0].Kind != "BonusPhysicalDamageTaken" || mods[0].Amount != 8 {
 		t.Errorf("a physical mask maps to %v, ok %v; want 8 BonusPhysicalDamageTaken", mods, ok)
 	}
 
-	everySchool := ResolvedEffect{Aura: dbc.A_MOD_DAMAGE_TAKEN, Misc: 126, Value: 40}
+	everySchool := ResolvedEffect{Aura: dbcenums.A_MOD_DAMAGE_TAKEN, Misc: 126, Value: 40}
 	if mods, ok := pseudoModsOf(everySchool); !ok || mods[0].Kind != "BonusSpellDamageTaken" || mods[0].Amount != 40 {
 		t.Errorf("a mask of every spell school maps to %v, ok %v; want 40 BonusSpellDamageTaken", mods, ok)
 	}
 
-	holy := ResolvedEffect{Aura: dbc.A_MOD_DAMAGE_TAKEN, Misc: 2, Value: 161}
+	holy := ResolvedEffect{Aura: dbcenums.A_MOD_DAMAGE_TAKEN, Misc: 2, Value: 161}
 	if mods, ok := pseudoModsOf(holy); ok {
 		t.Errorf("a holy-only mask maps to %v, want the row to stay a shell", mods)
 	}

@@ -1,65 +1,42 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-func (war *Warrior) registerShieldWall() {
-	actionID := core.ActionID{SpellID: 871}
-	aura := war.RegisterAura(core.Aura{
-		Label:    "Shield Wall",
-		ActionID: actionID,
-		Duration: time.Second * 10,
-	}).AttachMultiplicativePseudoStatBuff(
-		&war.PseudoStats.DamageTakenMultiplier, 0.25,
-	)
+var shieldWallRank = spellData.ShieldWall.Highest()
 
-	spell := war.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		DefenseType:    core.DefenseTypeMelee,
-		ClassSpellMask: SpellMaskShieldWall,
+func (warrior *Warrior) registerShieldWall() {
+	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldWallRank))
+	spelldata.ParseEffects(&warrior.Character, aura, shieldWallRank)
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Minute * 30,
-			},
-			SharedCD: core.Cooldown{
-				Timer:    war.sharedMCD,
-				Duration: time.Minute * 30,
-			},
-		},
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(DefensiveStance) && war.PseudoStats.CanBlock
-		},
+	config := spelldata.SpellConfig(&warrior.Unit, shieldWallRank)
 
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			aura.Activate(sim)
-		},
-		RelatedSelfBuff: aura,
-	})
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.StanceMatches(DefensiveStance) && warrior.PseudoStats.CanBlock
+	}
 
-	war.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
-		if !war.PseudoStats.CanBlock {
-			aura.Deactivate(sim)
-		}
-	})
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		aura.Activate(sim)
+	}
 
-	war.AddMajorCooldown(core.MajorCooldown{
+	config.RelatedSelfBuff = aura
+
+	spell := warrior.RegisterSpell(config)
+
+	warrior.deactivateWithoutShield(aura)
+
+	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
 		Type:  core.CooldownTypeSurvival,
 		ShouldActivate: func(s *core.Simulation, c *core.Character) bool {
-			if war.Spec == proto.Spec_SpecDpsWarrior {
+			if warrior.Spec == proto.Spec_SpecDpsWarrior {
 				return false
 			}
-			return war.CurrentHealthPercent() < 0.4
+
+			return warrior.CurrentHealthPercent() < 0.4
 		},
 	})
 }

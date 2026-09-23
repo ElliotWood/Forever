@@ -29,7 +29,7 @@ func TestHunter(t *testing.T) {
 			},
 			Consumables:      DefaultConsumables,
 			SpecOptions:      core.SpecOptionsCombo{Label: "Default", SpecOptions: DefaultOptions},
-			StartingDistance: 7,
+			StartingDistance: 8,
 			Profession1:      proto.Profession_Engineering,
 			Profession2:      proto.Profession_Blacksmithing,
 

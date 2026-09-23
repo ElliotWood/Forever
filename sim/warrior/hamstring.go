@@ -1,48 +1,33 @@
 package warrior
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-var hamstringRank = shared.WithSpellDataFlatThreat(spellData.Hamstring, 167.5).HighestRank()
-var hamstringBaseDamage, _ = hamstringRank.Direct.Range()
+var hamstringRank = spellData.Hamstring.Highest()
+var hamstringBaseDamage = hamstringRank.DamageEffect().Average(core.CharacterLevel)
 
-func (war *Warrior) registerHamstring() {
-	war.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: hamstringRank.SpellID},
-		SpellSchool:    hamstringRank.SpellSchool,
-		DefenseType:    hamstringRank.DefenseType,
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		ClassSpellMask: SpellMaskHamstring,
-		MaxRange:       core.MaxMeleeRange,
+func (warrior *Warrior) registerHamstring() {
+	config := spelldata.SpellConfig(&warrior.Unit, hamstringRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+	config.ClassSpellMask = SpellMaskHamstring
 
-		RageCost: core.RageCostOptions{
-			Cost:   hamstringRank.Cost,
-			Refund: 0.8,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: hamstringRank.GCD,
-			},
-			IgnoreHaste: true,
-		},
+	// TODO: Manual review needed -- the client states no threat coefficient; 1 until measured in game.
+	config.ThreatMultiplier = 1
+	// TODO: Ingame research needed if this adds flat threat
+	config.FlatThreatBonus = 0
 
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1.25,
-		FlatThreatBonus:  hamstringRank.FlatThreatBonus,
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.StanceMatches(BattleStance | BerserkerStance)
+	}
 
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
-		},
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		result := spell.CalcAndDealDamage(sim, target, hamstringBaseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			result := spell.CalcAndDealDamage(sim, target, hamstringBaseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
 
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
-		},
-	})
+	warrior.RegisterSpell(config)
 }

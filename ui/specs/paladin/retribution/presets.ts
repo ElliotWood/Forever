@@ -10,7 +10,7 @@ export const DefaultSimpleRotation = PaladinRotation.create({
 	consecrationRank: 0,
 	delayMajorCDs: 11,
 	prepullSotC: true,
-	aura: PaladinAura.SanctityAura,
+	aura: PaladinAura.RetributionAura,
 });
 
 export const APL_PRESET = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
@@ -52,7 +52,6 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 
 export const DefaultDebuffs = Debuffs.create({
 	curseOfElements: true,
-	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	huntersMark: true,
 	curseOfRecklessness: true,

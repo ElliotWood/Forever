@@ -65,9 +65,14 @@ var Manifest = []BuffSpec{
 	{
 		Field: "retribution_aura", Number: 5, Scope: ScopeParty, Proto: ProtoBool, Kind: KindDamageShield,
 		Go: "RetributionAura", Name: "Retribution Aura", Owner: proto.Class_ClassPaladin,
-		Category: "RetributionAura", SharedCategory: "PaladinAura", SingleAura: true,
+		Category: "RetributionAura", SharedCategory: "PaladinAura", SingleAura: true, Driver: true,
 		Stats: []proto.Stat{proto.Stat_StatResilienceRating, proto.Stat_StatArmor, proto.Stat_StatDefenseRating},
-		Notes: "the only paladin trait matching Retribution Aura is Benediction (20101), which modifies cost (misc 14).",
+		Notes: "the only paladin trait matching Retribution Aura is Benediction (20101), which modifies cost (misc 14). Driven because the damage scales with the providing paladin's Holy spell power, which retribution_aura_spell_power states.",
+	},
+	{
+		Field: "retribution_aura_spell_power", Number: 19, Scope: ScopeParty, Proto: ProtoDouble, Kind: KindFlag,
+		Go:    "RetributionAuraSpellPower",
+		Notes: "the Holy spell power of the paladin providing Retribution Aura, which driveRetributionAura scales the damage with; a sim input with no spell source, rendered under Other Inputs.",
 	},
 	{
 		Field: "concentration_aura", Number: 18, Scope: ScopeParty, Proto: ProtoBool, Kind: KindPseudoMult,
@@ -193,6 +198,13 @@ var Manifest = []BuffSpec{
 		Notes: "the greater blessing is the raid's copy: 25895 reaches every ally of the target's class, where the single-target Blessing of Salvation of the same -30% threat reaches one.",
 	},
 	{
+		Field: "greater_blessing_of_light", Number: 7, Scope: ScopeIndividual, Proto: ProtoBool, Kind: KindManual,
+		Go: "GreaterBlessingOfLight", Name: "Greater Blessing of Light", Owner: proto.Class_ClassPaladin,
+		Category: "BlessingOfLight", Pet: PetStripWhenSummonedLate,
+		Stats: []proto.Stat{proto.Stat_StatHealingPower},
+		Notes: "25890 raises the healing the target receives from Holy Light and Flash of Light through flat modifiers on those spell families; the paladin's heals read the bonus off their own rows and only look for the aura, which the category tags.",
+	},
+	{
 		Field: "prayer_of_shadow_protection", Number: 3, Scope: ScopeRaid, Proto: ProtoBool, Kind: KindResistance,
 		Go: "PrayerOfShadowProtection", Name: "Prayer of Shadow Protection", Owner: proto.Class_ClassPriest,
 		Category: "ResistanceShadow", Pet: PetStripWhenSummonedLate,
@@ -263,12 +275,11 @@ var Manifest = []BuffSpec{
 		Notes: "no Improved Hunter's Mark node in hunter tree 1091; CumulativeAura is 0, so rank 4 (14325) is a flat value.",
 	},
 	{
-		Field: "improved_seal_of_the_crusader", Number: 3, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStat,
-		Go: "ImprovedSealOfTheCrusader", Name: "Judgement of the Crusader", Owner: proto.Class_ClassPaladin,
-		Category: "Improved Seal of the Crusader", SingleAura: true,
-		Stats: []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
-		Label: "Seal of the Crusader",
-		Notes: "Improved Seal of the Crusader (20337) exists as a spell but has no node in paladin tree 1100.",
+		Field: "judgement_of_the_crusader", Number: 3, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffStat,
+		Go: "JudgementOfTheCrusader", Name: "Judgement of the Crusader", Owner: proto.Class_ClassPaladin,
+		Category: "Judgement of the Crusader", SingleAura: true,
+		Stats: []proto.Stat{proto.Stat_StatHolyDamage, proto.Stat_StatSpellDamage},
+		Notes: "the Holy damage taken the judgement adds is applied by JudgementOfTheCrusaderAura in debuffs.go, which the paladin's own ranks share. Improved Seal of the Crusader (20337) exists as a spell but has no node in paladin tree 1100.",
 	},
 	{
 		Field: "judgement_of_light", Number: 2, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindProc,

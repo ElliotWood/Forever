@@ -87,9 +87,8 @@ message WarriorOptions {
 	WarriorStance default_stance = 2;
 
 	double starting_rage = 3;
-	int32 queue_delay = 4;
-	bool stance_snapshot = 5;
-	bool has_bs_t2 = 6;
+	bool stance_snapshot = 4;
+	bool has_bs_t2 = 5;
 }
 
 enum DpsWarriorSpec {

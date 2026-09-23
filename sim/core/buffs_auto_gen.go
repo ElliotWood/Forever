@@ -195,6 +195,8 @@ func RetributionAuraAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
 	}, SpellSchoolHoly, RetributionAuraValue(talentPoints))
 }
 
+// func RetributionAuraSpellPowerAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura // retribution_aura_spell_power, KindFlag: the Holy spell power of the paladin providing Retribution Aura, which driveRetributionAura scales the damage with; a sim input with no spell source, rendered under Other Inputs.
+
 // Concentration Aura - https://www.wowhead.com/forever/spell=19746
 var ConcentrationAuraCategory = "ConcentrationAura"
 
@@ -576,6 +578,22 @@ func GreaterBlessingOfSalvationAura(unit *Unit, isPlayer bool, talentPoints int3
 	})
 }
 
+// Greater Blessing of Light - https://www.wowhead.com/forever/spell=25890
+var GreaterBlessingOfLightCategory = "BlessingOfLight"
+
+func GreaterBlessingOfLightDuration(talentPoints int32) time.Duration {
+	return 3600000 * time.Millisecond
+}
+func GreaterBlessingOfLightAura(unit *Unit, isPlayer bool, talentPoints int32) *Aura {
+	return newGeneratedStatAura(unit, GeneratedBuff{
+		Label:    "Greater Blessing of Light (" + Ternary(isPlayer, "Player", "External") + ")",
+		ActionID: ActionID{SpellID: 25890}.WithTag(TernaryInt32(isPlayer, 0, -1)),
+		Duration: GreaterBlessingOfLightDuration(talentPoints),
+		Category: GreaterBlessingOfLightCategory,
+		IsPlayer: isPlayer,
+	})
+}
+
 // Prayer of Shadow Protection - https://www.wowhead.com/forever/spell=27683
 func PrayerOfShadowProtectionValue(talentPoints int32) float64 {
 	return 60.0
@@ -811,7 +829,7 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 		MakePermanent(MoonkinAuraAura(&char.Unit, false, 0))
 	}
 	if party.RetributionAura {
-		MakePermanent(RetributionAuraAura(&char.Unit, false, 0))
+		driveRetributionAura(char, party)
 	}
 	if party.ConcentrationAura {
 		MakePermanent(ConcentrationAuraAura(&char.Unit, false, 0))
@@ -866,6 +884,9 @@ func applyGeneratedBuffs(char *Character, raid *proto.RaidBuffs, party *proto.Pa
 	}
 	if individual.GreaterBlessingOfSalvation {
 		MakePermanent(GreaterBlessingOfSalvationAura(&char.Unit, false, 0))
+	}
+	if individual.GreaterBlessingOfLight {
+		driveGreaterBlessingOfLight(char, individual)
 	}
 	if raid.PrayerOfShadowProtection {
 		MakePermanent(PrayerOfShadowProtectionAura(&char.Unit, false, 0))
@@ -922,6 +943,7 @@ func applyGeneratedPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyB
 		individual.GreaterBlessingOfMight = false
 		individual.GreaterBlessingOfWisdom = false
 		individual.GreaterBlessingOfSalvation = false
+		individual.GreaterBlessingOfLight = false
 		raid.PrayerOfShadowProtection = false
 	}
 }

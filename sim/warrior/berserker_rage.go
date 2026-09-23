@@ -1,55 +1,52 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-func (war *Warrior) registerBerserkerRage() {
-	actionID := core.ActionID{SpellID: 18499}
-	rageMetrics := war.NewRageMetrics(actionID)
+// TODO: Ingame test needed -- the client states no amount for the extra rage a hit taken
+// generates while Berserker Rage is up; doubled.
+const berserkerRageDamageTakenRageMultiplier = 2.0
 
-	aura := war.RegisterAura(core.Aura{
-		Label:    "Berserker Rage",
-		ActionID: actionID,
-		Duration: time.Second * 10,
-	}).
-		// Grants immunity to Fear, Sap and Incapacitate effects.
-		AttachFearImmunity()
+var berserkerRageRank = spellData.BerserkerRage.Highest()
 
-	spell := war.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		ClassSpellMask: SpellMaskBerserkerRage,
-		Flags:          core.SpellFlagAPL | core.SpellFlagCastWhileIncapacitated,
+func (warrior *Warrior) registerBerserkerRage() {
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: berserkerRageRank.ID})
+	rageGain := spellData.ImprovedBerserkerRage.EffectAt(1).TenthsAt(warrior.Talents.ImprovedBerserkerRage)
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Second * 30,
-			},
-		},
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
-		},
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			if war.BerserkerRageRageGain > 0 {
-				war.AddRage(sim, war.BerserkerRageRageGain, rageMetrics)
-			}
-			aura.Activate(sim)
-		},
-		RelatedSelfBuff: aura,
-	})
+	auraConfig := spelldata.AuraConfig(berserkerRageRank)
+	auraConfig.OnGain = func(aura *core.Aura, sim *core.Simulation) {
+		warrior.MultiplyDamageTakenRageGen(berserkerRageDamageTakenRageMultiplier)
+	}
+	auraConfig.OnExpire = func(aura *core.Aura, sim *core.Simulation) {
+		warrior.MultiplyDamageTakenRageGen(1 / berserkerRageDamageTakenRageMultiplier)
+	}
+	aura := warrior.RegisterAura(auraConfig).AttachFearImmunity()
 
-	war.AddMajorCooldown(core.MajorCooldown{
+	config := spelldata.SpellConfig(&warrior.Unit, berserkerRageRank,
+		spelldata.Flags(core.SpellFlagAPL|core.SpellFlagCastWhileIncapacitated))
+
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.StanceMatches(BerserkerStance)
+	}
+
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		if rageGain > 0 {
+			warrior.AddRage(sim, rageGain, rageMetrics)
+		}
+		aura.Activate(sim)
+	}
+
+	config.RelatedSelfBuff = aura
+
+	spell := warrior.RegisterSpell(config)
+
+	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
 		Type:  core.CooldownTypeSurvival,
 		ShouldActivate: func(s *core.Simulation, c *core.Character) bool {
-			return war.BerserkerRageRageGain > 0 && war.CurrentRage()+war.BerserkerRageRageGain <= war.MaximumRage()
+			return rageGain > 0 && warrior.CurrentRage()+rageGain <= warrior.MaximumRage()
 		},
 	})
 }

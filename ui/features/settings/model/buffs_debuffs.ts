@@ -1,5 +1,7 @@
+import { Class, Stat } from '@generated/proto/common';
 import { ActionId } from '@sim/proto/action_id';
-import { makeBooleanIndividualBuffInput } from '@ui-kit/icon_inputs';
+import { Party } from '@sim/raid/party';
+import { makeBooleanIndividualBuffInput, makeBooleanPartyBuffInput } from '@ui-kit/icon_inputs';
 
 import * as Generated from './buffs_debuffs_auto_gen';
 import { IconPickerStatOption, inDisplayOrder } from './stat_options';
@@ -21,6 +23,22 @@ export const GreaterBlessingOfSalvation = makeBooleanIndividualBuffInput({
 	label: 'Greater Blessing of Salvation',
 	showWhen: player => !player.getPlayerSpec().isTankSpec && !player.getPlayerSpec().isHealingSpec,
 });
+export const GreaterBlessingOfLight = makeBooleanIndividualBuffInput({
+	actionId: ActionId.fromSpellId(25890),
+	fieldName: 'greaterBlessingOfLight',
+	label: 'Greater Blessing of Light',
+	showWhen: player => player.getPlayerSpec().isHealingSpec || player.getPlayerSpec().isTankSpec,
+});
+
+// Party Buffs
+export const RetributionAura = makeBooleanPartyBuffInput({
+	actionId: ActionId.fromSpellId(10301),
+	fieldName: 'retributionAura',
+	label: 'Retribution Aura',
+	// A damage shield only matters on the unit being hit, so only tanks get to pick it. The spell
+	// power it scales with is the RetributionAuraSpellPower other-input, shown under the same rule.
+	showWhen: (party: Party) => !!party.getPlayer(0)?.getPlayerSpec().isTankSpec,
+});
 
 export const PARTY_BUFFS_CONFIG = inDisplayOrder(Generated.GENERATED_PARTY_BUFFS_CONFIG, [
 	Generated.BloodPact,
@@ -30,7 +48,11 @@ export const PARTY_BUFFS_CONFIG = inDisplayOrder(Generated.GENERATED_PARTY_BUFFS
 	Generated.ManaSpringTotem,
 	Generated.ManaTideTotems,
 	Generated.MoonkinAura,
-	Generated.RetributionAura,
+	{
+		config: RetributionAura,
+		stats: [Stat.StatResilienceRating, Stat.StatArmor, Stat.StatDefenseRating],
+		ownerClass: Class.ClassPaladin,
+	},
 	Generated.ConcentrationAura,
 	Generated.TrueshotAura,
 	Generated.AtieshMage,
@@ -52,6 +74,7 @@ export const BUFFS_CONFIG = inDisplayOrder(
 		Generated.GreaterBlessingOfMight,
 		Generated.GreaterBlessingOfWisdom,
 		{ config: GreaterBlessingOfSalvation, stats: [] },
+		{ config: GreaterBlessingOfLight, stats: [Stat.StatHealingPower], ownerClass: Class.ClassPaladin },
 		Generated.PrayerOfShadowProtection,
 		Generated.FireResistanceAura,
 		Generated.FrostResistanceAura,
@@ -67,7 +90,7 @@ export const BUFFS_CONFIG = inDisplayOrder(
 
 export const DEBUFFS_CONFIG = inDisplayOrder(Generated.GENERATED_DEBUFFS_CONFIG, [
 	Generated.HuntersMark,
-	Generated.ImprovedSealOfTheCrusader,
+	Generated.JudgementOfTheCrusader,
 	Generated.JudgementOfLight,
 	Generated.JudgementOfWisdom,
 	Generated.Mangle,

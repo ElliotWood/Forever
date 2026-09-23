@@ -6,10 +6,10 @@ import (
 	"github.com/wowsims/forever/sim/core"
 )
 
-var windfuryTotemRank = spellData.WindfuryTotem.HighestRank()
-var strengthOfEarthTotemRank = spellData.StrengthOfEarthTotem.HighestRank()
-var graceOfAirTotemRank = spellData.GraceOfAirTotem.BySpellID(25359)
-var manaSpringTotemRank = spellData.ManaSpringTotem.HighestRank()
+var windfuryTotemRank = spellData.WindfuryTotem.Highest()
+var strengthOfEarthTotemRank = spellData.StrengthOfEarthTotem.Highest()
+var graceOfAirTotemRank = spellData.GraceOfAirTotem.ByID(25359)
+var manaSpringTotemRank = spellData.ManaSpringTotem.Highest()
 
 func (shaman *Shaman) newTotemSpellConfig(flatCost int32, spellID int32, spellMask int64, gcd time.Duration) core.SpellConfig {
 	return core.SpellConfig{
@@ -55,7 +55,7 @@ func (shaman *Shaman) registerWindfuryTotemSpell() {
 	// 	},
 	// })
 	//
-	// config := shaman.newTotemSpellConfig(windfuryTotemRank.Cost, windfuryTotemRank.SpellID, SpellMaskBasicTotem, windfuryTotemRank.GCD)
+	// config := shaman.newTotemSpellConfig(int32(windfuryTotemRank.Cost()), windfuryTotemRank.ID, SpellMaskBasicTotem, windfuryTotemRank.GCD())
 	//
 	// var windfurySpell *core.Spell
 	// wfProcTrigger := shaman.MakeProcTriggerAura(core.ProcTrigger{
@@ -143,7 +143,7 @@ func (shaman *Shaman) registerStrengthOfEarthTotemSpell() {
 
 	// The implementation, kept for the port:
 	// duration := time.Second * 120
-	// config := shaman.newTotemSpellConfig(strengthOfEarthTotemRank.Cost, strengthOfEarthTotemRank.SpellID, SpellMaskBasicTotem, strengthOfEarthTotemRank.GCD)
+	// config := shaman.newTotemSpellConfig(int32(strengthOfEarthTotemRank.Cost()), strengthOfEarthTotemRank.ID, SpellMaskBasicTotem, strengthOfEarthTotemRank.GCD())
 	// // Enhancing Totems (16295) has no node in shaman tree 1082, so the aura is untalented.
 	// buffAura := core.StrengthOfEarthTotemAura(&shaman.Unit, true, 0)
 	// buffAura.Duration = duration
@@ -166,7 +166,7 @@ func (shaman *Shaman) registerGraceOfAirTotemSpell() {
 
 	// The body the port needs:
 	// duration := time.Second * 120
-	// config := shaman.newTotemSpellConfig(graceOfAirTotemRank.Cost, graceOfAirTotemRank.SpellID, SpellMaskBasicTotem, graceOfAirTotemRank.GCD)
+	// config := shaman.newTotemSpellConfig(int32(graceOfAirTotemRank.Cost()), graceOfAirTotemRank.ID, SpellMaskBasicTotem, graceOfAirTotemRank.GCD())
 	// buffAura := core.GraceOfAirTotemAura(&shaman.Unit, true, 0)
 	// buffAura.Duration = duration
 	// config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
@@ -187,7 +187,7 @@ func (shaman *Shaman) registerManaSpringTotemSpell() {
 
 	// The implementation, kept for the port:
 	// duration := time.Second * 120
-	// config := shaman.newTotemSpellConfig(manaSpringTotemRank.Cost, manaSpringTotemRank.SpellID, SpellMaskBasicTotem, manaSpringTotemRank.GCD)
+	// config := shaman.newTotemSpellConfig(int32(manaSpringTotemRank.Cost()), manaSpringTotemRank.ID, SpellMaskBasicTotem, manaSpringTotemRank.GCD())
 	// buffAura := core.ManaSpringTotemAura(&shaman.Unit, true, shaman.Talents.RestorativeTotems)
 	// buffAura.Duration = duration
 	// config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {

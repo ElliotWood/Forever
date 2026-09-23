@@ -1,0 +1,78 @@
+package warrior
+
+import (
+	"time"
+
+	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
+	"github.com/wowsims/forever/sim/core/stats"
+)
+
+// How close to running out the warrior's own shout has to be before recasting it is worth a global.
+const ShoutExpirationThreshold = time.Second * 3
+
+var battleShoutRank = spellData.BattleShout.Highest()
+
+func (warrior *Warrior) registerBattleShout() {
+	// A warrior that shouts builds a copy of its own; one that shouts nothing
+	// gets the isPlayer=false constructor, whose aura is the party's external
+	// copy, and what that copy is worth is the party's Battle Shout state's to say.
+	castsOwnShout := warrior.DefaultShout != proto.WarriorShout_WarriorShoutNone
+
+	// Three pieces of Battlegear of Wrath add a flat 30 to the shout. HasBsT2 is
+	// the user saying this warrior wears them; the equipped set is not read. The
+	// set is worth the 30 on the shout this warrior makes, so it raises what that
+	// copy applies and what the cast is worth to the category together.
+	battleShoutBase := core.BattleShoutValue(0)
+	battleShoutValue := battleShoutBase
+	shoutsWithTheSet := castsOwnShout && warrior.HasBsT2
+	if shoutsWithTheSet {
+		battleShoutValue += core.BattleShoutT2Bonus
+	}
+
+	auras := warrior.NewAllyAuraArray(func(unit *core.Unit) *core.Aura {
+		// Booming Voice widens the radius only, so the aura takes no talent points.
+		aura := core.BattleShoutAura(unit, castsOwnShout, 0)
+		if shoutsWithTheSet {
+			core.AddGeneratedFlatBonus(aura, stats.AttackPower, battleShoutBase, core.BattleShoutT2Bonus)
+		}
+		aura.BuildPhase = core.Ternary(warrior.DefaultShout == proto.WarriorShout_WarriorShoutBattle, core.CharacterBuildPhaseBuffs, core.CharacterBuildPhaseNone)
+		return aura
+	})
+
+	// What holds the Battle Shout category decides whether shouting is worth a
+	// global. Nothing there and the cast puts the buff up. This warrior's own
+	// copy there and the cast only refreshes it, which is worth a global once it
+	// is about to run out. Anything else has to be outbid first - a warrior
+	// without the set would otherwise keep recasting a 139 shout the category
+	// turns away while an external 169 one is up.
+	battleShoutCategory := warrior.GetExclusiveEffectCategory(core.BattleShoutCategory)
+
+	config := spelldata.SpellConfig(&warrior.Unit, battleShoutRank, spelldata.Flags(core.SpellFlagAPL))
+	config.ProcMask = core.ProcMaskEmpty
+	config.ThreatMultiplier = 1
+	// TODO: Manual review needed -- spell 25289 carries no threat effect; none is modelled until
+	// measured in game.
+	config.FlatThreatBonus = 0
+
+	config.ExtraCastCondition = func(sim *core.Simulation, _ *core.Unit) bool {
+		active := battleShoutCategory.GetActiveEffect()
+		if active == nil {
+			return true
+		}
+		if active.Aura == auras.Get(&warrior.Unit) {
+			return active.Aura.RemainingDuration(sim) <= ShoutExpirationThreshold
+		}
+		return battleShoutValue >= active.Priority
+	}
+
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHit)
+		auras.ActivateAllPlayers(sim)
+	}
+
+	config.RelatedAuraArrays = auras.ToMap()
+
+	warrior.BattleShout = warrior.RegisterSpell(config)
+}

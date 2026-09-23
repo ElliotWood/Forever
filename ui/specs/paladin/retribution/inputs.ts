@@ -36,7 +36,5 @@ export const PaladinRotationConfig = {
 // Icon-enum pickers cannot sit in an `inputs` array any more; they go in the spec's
 // `rotationIconInputs`, which the simple-rotation pane renders as an icon row.
 export const PaladinRotationIconInputs = [
-	SharedPaladinInputs.AuraInput<Spec.SpecRetributionPaladin>(
-		'Which paladin aura to activate in the prepull. <b>Sanctity Aura</b> requires the talent. Pick <b>None</b> to skip casting an aura.',
-	),
+	SharedPaladinInputs.AuraInput<Spec.SpecRetributionPaladin>('Which paladin aura to activate in the prepull. Pick <b>None</b> to skip casting an aura.'),
 ];

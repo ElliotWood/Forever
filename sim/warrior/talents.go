@@ -1,7 +1,7 @@
 package warrior
 
-func (war *Warrior) ApplyTalents() {
-	war.registerArmsTalents()
-	war.registerFuryTalents()
-	war.registerProtectionTalents()
+func (warrior *Warrior) ApplyTalents() {
+	warrior.registerArmsTalents()
+	warrior.registerFuryTalents()
+	warrior.registerProtectionTalents()
 }

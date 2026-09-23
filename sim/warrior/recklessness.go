@@ -1,60 +1,36 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-func (war *Warrior) registerRecklessness() {
-	actionID := core.ActionID{SpellID: 1719}
+var recklessnessRank = spellData.Recklessness.Highest()
 
-	aura := war.RegisterAura(core.Aura{
-		Label:    "Recklessness",
-		ActionID: actionID,
-		Duration: time.Second * 15,
-	}).AttachSpellMod(core.SpellModConfig{
-		ProcMask:   core.ProcMaskMeleeSpecial,
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: 100,
-	}).AttachMultiplicativePseudoStatBuff(
-		&war.PseudoStats.DamageTakenMultiplier, 1.2,
-	).
-		// Grants immunity to Fear effects.
-		AttachFearImmunity()
+func (warrior *Warrior) registerRecklessness() {
+	aura := warrior.RegisterAura(spelldata.AuraConfig(recklessnessRank))
+	spelldata.ParseEffects(&warrior.Character, aura, recklessnessRank)
 
-	spell := war.RegisterSpell(core.SpellConfig{
-		ActionID:       actionID,
-		DefenseType:    core.DefenseTypeMelee,
-		Flags:          core.SpellFlagAPL | core.SpellFlagCastWhileIncapacitated,
-		ClassSpellMask: SpellMaskRecklessness,
+	// Grants immunity to Fear effects, which the row states as A_MECHANIC_IMMUNITY and the parse
+	// skips.
+	aura.AttachFearImmunity()
 
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Minute * 30,
-			},
-			SharedCD: core.Cooldown{
-				Timer:    war.sharedMCD,
-				Duration: time.Minute * 30,
-			},
-		},
+	config := spelldata.SpellConfig(&warrior.Unit, recklessnessRank,
+		spelldata.Flags(core.SpellFlagAPL|core.SpellFlagCastWhileIncapacitated))
 
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.StanceMatches(BerserkerStance)
-		},
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.StanceMatches(BerserkerStance)
+	}
 
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			aura.Activate(sim)
-		},
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		aura.Activate(sim)
+	}
 
-		RelatedSelfBuff: aura,
-	})
+	config.RelatedSelfBuff = aura
 
-	war.AddMajorCooldown(core.MajorCooldown{
+	spell := warrior.RegisterSpell(config)
+
+	warrior.AddMajorCooldown(core.MajorCooldown{
 		Spell: spell,
 		Type:  core.CooldownTypeDPS,
 	})

@@ -1,6 +1,6 @@
 package warlock
 
-var curseOfElementsRank = spellData.CurseOfTheElements.HighestRank()
+var curseOfElementsRank = spellData.CurseOfTheElements.Highest()
 
 // TODO: To be implemented. The body below builds the spell around the generated
 // aura and has not been checked against the client past the aura itself.
@@ -14,19 +14,19 @@ func (warlock *Warlock) registerCurseOfElements() {
 	// 	return core.CurseOfElementsAura(target, true, 0)
 	// })
 	// warlock.CurseOfElements = warlock.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: curseOfElementsRank.SpellID},
-	// 	SpellSchool:    curseOfElementsRank.SpellSchool,
-	// 	DefenseType:    curseOfElementsRank.DefenseType,
+	// 	ActionID:       core.ActionID{SpellID: curseOfElementsRank.ID},
+	// 	SpellSchool:    curseOfElementsRank.SpellSchool(),
+	// 	DefenseType:    curseOfElementsRank.DefenseTypeCore(),
 	// 	ProcMask:       core.ProcMaskEmpty,
 	// 	Flags:          core.SpellFlagAPL,
 	// 	ClassSpellMask: WarlockSpellCurseOfElements,
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: curseOfElementsRank.Cost,
+	// 		FlatCost: int32(curseOfElementsRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
-	// 			GCD: curseOfElementsRank.GCD,
+	// 			GCD: curseOfElementsRank.GCD(),
 	// 		},
 	// 	},
 	//

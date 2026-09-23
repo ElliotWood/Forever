@@ -44,7 +44,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	giftOfArthas: true,
 	mangle: true,

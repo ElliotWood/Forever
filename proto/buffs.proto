@@ -24,7 +24,7 @@ message RaidBuffs {
 }
 
 // Buffs that affect a single party.
-// Next index: 19
+// Next index: 20
 message PartyBuffs {
 	bool blood_pact = 1;
 	bool moonkin_aura = 2;
@@ -44,10 +44,11 @@ message PartyBuffs {
 	int32 atiesh_druid = 16;
 	int32 atiesh_priest = 17;
 	bool concentration_aura = 18;
+	double retribution_aura_spell_power = 19;
 }
 
 // These are usually individual actions taken by other Characters.
-// Next index: 7
+// Next index: 8
 message IndividualBuffs {
 	bool greater_blessing_of_kings = 1;
 	bool greater_blessing_of_salvation = 2;
@@ -55,13 +56,14 @@ message IndividualBuffs {
 	bool greater_blessing_of_might = 4;
 	int32 innervates = 5;
 	int32 power_infusions = 6;
+	bool greater_blessing_of_light = 7;
 }
 
 // Next index: 17
 message Debuffs {
 	bool judgement_of_wisdom = 1;
 	bool judgement_of_light = 2;
-	bool improved_seal_of_the_crusader = 3;
+	bool judgement_of_the_crusader = 3;
 	bool curse_of_elements = 4;
 	bool gift_of_arthas = 5;
 	bool mangle = 6;

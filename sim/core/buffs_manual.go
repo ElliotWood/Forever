@@ -206,6 +206,18 @@ func driveGraceOfAirTotem(char *Character, party *proto.PartyBuffs) {
 	})
 }
 
+// The party's Retribution Aura is the top rank, and its damage carries the
+// providing paladin's Holy spell power, which the party states alongside it.
+func driveRetributionAura(char *Character, party *proto.PartyBuffs) {
+	MakePermanent(RetributionAuraBuff(char, false, RetributionAuraMaxRank, party.RetributionAuraSpellPower))
+}
+
+// The blessing does nothing on its own: the paladin's Holy Light and Flash of
+// Light read their bonus off their own rows when the target carries it.
+func driveGreaterBlessingOfLight(char *Character, _ *proto.IndividualBuffs) {
+	MakePermanent(GreaterBlessingOfLightAura(&char.Unit, false, 0))
+}
+
 // The staff's aura is worth its amounts once per Atiesh in the party.
 func driveAtieshDruid(char *Character, party *proto.PartyBuffs) {
 	MakePermanent(AtieshDruidAura(&char.Unit, false, 0, float64(party.AtieshDruid)))
@@ -225,51 +237,16 @@ func driveAtieshWarlock(char *Character, party *proto.PartyBuffs) {
 
 // The judgement the paladin leaves on the target heals whoever strikes it; the
 // client's trigger spell 5373 is a dummy, so how much and how often is the
-// driver's.
+// driver's. The raid's copy is the top rank the paladin's own judgement states.
 func driveJudgementOfLight(target *Unit, _ *proto.Debuffs, _ *proto.Raid) {
-	healthMetrics := target.NewHealthMetrics(ActionID{SpellID: 20346})
-
-	MakePermanent(JudgementOfLightAura(target, false, 0)).AttachProcTrigger(ProcTrigger{
-		Name:     "Judgement of Light - Heal",
-		Callback: CallbackOnSpellHitTaken,
-		ProcMask: ProcMaskMelee,
-		Outcome:  OutcomeLanded,
-		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
-			if sim.Proc(0.5, "Judgement of Light - Heal") {
-				spell.Unit.GainHealth(sim, 95.0, healthMetrics)
-			}
-		},
-	})
+	AttachJudgementOfLightHeal(MakePermanent(JudgementOfLightAura(target, false, 0)), JudgementOfLightMaxRank)
 }
 
 // Judgement of Wisdom returns mana to whoever strikes the target, on the same
-// terms: 1826 is a dummy, so the amount and the chance stay here. Melee claim
-// it returns mana on a miss as well.
+// terms: 1826 is a dummy, so the amount and the chance stay with the paladin's
+// top rank.
 func driveJudgementOfWisdom(target *Unit, _ *proto.Debuffs, _ *proto.Raid) {
-	actionID := ActionID{SpellID: 20355}
-
-	MakePermanent(JudgementOfWisdomAura(target, false, 0)).AttachProcTrigger(ProcTrigger{
-		Name:            "Judgement of Wisdom",
-		ActionID:        actionID,
-		MetricsActionID: actionID,
-		ProcChance:      0.5,
-		ProcMask:        ProcMaskDirect,
-		Callback:        CallbackOnSpellHitTaken,
-		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
-			if !spell.ProcMask.Matches(ProcMaskMeleeOrRanged) && !result.Landed() {
-				return
-			}
-
-			unit := spell.Unit
-			if !unit.HasManaBar() {
-				return
-			}
-			if unit.JowManaMetrics == nil {
-				unit.JowManaMetrics = unit.NewManaMetrics(actionID)
-			}
-			unit.AddMana(sim, 74.0, unit.JowManaMetrics)
-		},
-	})
+	AttachJudgementOfWisdomMana(MakePermanent(JudgementOfWisdomAura(target, false, 0)), JudgementOfWisdomMaxRank)
 }
 
 // A stack of Sunder Armor is worth nothing until it is on the target, so the

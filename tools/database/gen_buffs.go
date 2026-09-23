@@ -30,6 +30,7 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
@@ -737,8 +738,8 @@ func (res *buffResolver) primaryValue(spellID int32) (float64, bool, error) {
 }
 
 func isAuraApplication(effect dbc.SpellEffectType) bool {
-	return effect == dbc.E_APPLY_AURA || effect == dbc.E_APPLY_AREA_AURA_PARTY ||
-		effect == dbc.E_APPLY_AREA_AURA_RAID
+	return effect == dbcenums.E_APPLY_AURA || effect == dbcenums.E_APPLY_AREA_AURA_PARTY ||
+		effect == dbcenums.E_APPLY_AREA_AURA_RAID
 }
 
 // The aura of a totem or of a dummy passive, which the client only ties to the
@@ -754,7 +755,7 @@ func (res *buffResolver) resolveAuraFamily(name string, subtext string) (int32, 
 		JOIN SpellEffect e ON e.SpellID = n.ID
 		WHERE n.Name_lang = ? AND e.Effect IN (?, ?, ?)
 		ORDER BY n.ID, e.EffectIndex`,
-		name, dbc.E_APPLY_AURA, dbc.E_APPLY_AREA_AURA_PARTY, dbc.E_APPLY_AREA_AURA_RAID)
+		name, dbcenums.E_APPLY_AURA, dbcenums.E_APPLY_AREA_AURA_PARTY, dbcenums.E_APPLY_AREA_AURA_RAID)
 	if err != nil {
 		return 0, "", fmt.Errorf("aura family %q: %w", name, err)
 	}
@@ -774,7 +775,7 @@ func (res *buffResolver) resolveAuraFamily(name string, subtext string) (int32, 
 		if err := rows.Scan(&id, &sub, &effect, &target); err != nil {
 			return 0, "", err
 		}
-		shared := effect == dbc.E_APPLY_AREA_AURA_PARTY || effect == dbc.E_APPLY_AREA_AURA_RAID ||
+		shared := effect == dbcenums.E_APPLY_AREA_AURA_PARTY || effect == dbcenums.E_APPLY_AREA_AURA_RAID ||
 			isSharedTarget(dbc.ImplicitTarget(target))
 		if index, ok := seen[id]; ok {
 			cands[index].Shared = cands[index].Shared || shared
@@ -922,7 +923,7 @@ func (res *buffResolver) mapEffects(row *ResolvedBuff) {
 		if !isAuraApplication(e.Effect) {
 			continue
 		}
-		if e.Aura == dbc.A_DAMAGE_SHIELD {
+		if e.Aura == dbcenums.A_DAMAGE_SHIELD {
 			damageShield = true
 			continue
 		}
@@ -1058,7 +1059,7 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 	}
 
 	switch e.Aura {
-	case dbc.A_MOD_STAT:
+	case dbcenums.A_MOD_STAT:
 		if e.Misc == -1 {
 			var out []StatAmount
 			for _, stat := range []stats.Stat{stats.Strength, stats.Agility, stats.Stamina, stats.Intellect, stats.Spirit} {
@@ -1071,18 +1072,18 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 			return nil, false
 		}
 		return flat(stats.Stat(stat), e.Value)
-	case dbc.A_MOD_ATTACK_POWER:
+	case dbcenums.A_MOD_ATTACK_POWER:
 		return flat(stats.AttackPower, e.Value)
-	case dbc.A_MOD_RANGED_ATTACK_POWER:
+	case dbcenums.A_MOD_RANGED_ATTACK_POWER:
 		return flat(stats.RangedAttackPower, e.Value)
-	case dbc.A_MOD_INCREASE_HEALTH:
+	case dbcenums.A_MOD_INCREASE_HEALTH:
 		return flat(stats.Health, e.Value)
-	case dbc.A_MOD_HEALING_DONE:
+	case dbcenums.A_MOD_HEALING_DONE:
 		return flat(stats.HealingPower, e.Value)
-	case dbc.A_MOD_POWER_REGEN:
+	case dbcenums.A_MOD_POWER_REGEN:
 		// The client states mana per 5 seconds directly on this aura.
 		return flat(stats.MP5, e.Value)
-	case dbc.A_PERIODIC_ENERGIZE:
+	case dbcenums.A_PERIODIC_ENERGIZE:
 		// The client's amount is already whole; what the conversion to mana per
 		// five seconds produces is not, and truncating it would lose part of a
 		// tick the aura really restores.
@@ -1090,13 +1091,13 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 			return nil, false
 		}
 		return flat(stats.MP5, e.Value*5000/float64(e.PeriodMs))
-	case dbc.A_MOD_SPELL_CRIT_CHANCE:
+	case dbcenums.A_MOD_SPELL_CRIT_CHANCE:
 		return flat(stats.SpellCritPercent, e.Value)
-	case dbc.A_MOD_HIT_CHANCE:
+	case dbcenums.A_MOD_HIT_CHANCE:
 		return flat(stats.PhysicalHitPercent, e.Value)
-	case dbc.A_MOD_EXPERTISE:
+	case dbcenums.A_MOD_EXPERTISE:
 		return flat(stats.ExpertisePercent, e.Value)
-	case dbc.A_MOD_RESISTANCE:
+	case dbcenums.A_MOD_RESISTANCE:
 		var out []StatAmount
 		for bit, stat := range resistanceBits {
 			if e.Misc&bit != 0 {
@@ -1107,19 +1108,19 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 		// Bit 2 is Holy, which has no resistance stat in the sim; a mask of only
 		// that bit resolves to nothing rather than to a wrong stat.
 		return out, len(out) > 0
-	case dbc.A_MOD_DAMAGE_DONE:
+	case dbcenums.A_MOD_DAMAGE_DONE:
 		stat := dbc.ConvertEffectAuraToStatIndex(e.Aura, int(e.Misc))
 		if stat < 0 {
 			return nil, false
 		}
 		return flat(stats.Stat(stat), e.Value)
-	case dbc.A_MOD_RATING:
+	case dbcenums.A_MOD_RATING:
 		stat := dbc.ConvertEffectAuraToStatIndex(e.Aura, int(e.Misc))
 		if stat < 0 {
 			return nil, false
 		}
 		return flat(stats.Stat(stat), e.Value)
-	case dbc.A_MOD_TOTAL_STAT_PERCENTAGE:
+	case dbcenums.A_MOD_TOTAL_STAT_PERCENTAGE:
 		multiplier := 1 + e.Value/100
 		if e.Misc == -1 {
 			var out []StatAmount
@@ -1133,7 +1134,7 @@ func statAmountsOf(e ResolvedEffect) ([]StatAmount, bool) {
 			return nil, false
 		}
 		return []StatAmount{{Stat: stats.Stat(stat), Amount: multiplier, Multiplicative: true}}, true
-	case dbc.A_MOD_ATTACK_POWER_PCT:
+	case dbcenums.A_MOD_ATTACK_POWER_PCT:
 		return []StatAmount{{Stat: stats.AttackPower, Amount: 1 + e.Value/100, Multiplicative: true}}, true
 	}
 	return nil, false
@@ -1168,9 +1169,9 @@ var resistanceBits = map[int32]stats.Stat{
 
 func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
 	switch e.Aura {
-	case dbc.A_MOD_THREAT:
+	case dbcenums.A_MOD_THREAT:
 		return []PseudoMod{{Kind: "ThreatMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
-	case dbc.A_MOD_DAMAGE_PERCENT_DONE:
+	case dbcenums.A_MOD_DAMAGE_PERCENT_DONE:
 		// A mask of every school, physical included, raises everything the unit
 		// deals; anything narrower is per school, so a buff the client states
 		// for the magic schools does not raise a melee swing.
@@ -1186,22 +1187,22 @@ func pseudoModsOf(e ResolvedEffect) ([]PseudoMod, bool) {
 			Kind: "SchoolDamageDealtMultiplier", Amount: 1 + e.Value/100,
 			Multiplicative: true, SchoolMask: e.Misc,
 		}}, true
-	case dbc.A_MOD_HEALING_DONE_PERCENT:
+	case dbcenums.A_MOD_HEALING_DONE_PERCENT:
 		return []PseudoMod{{Kind: "HealingDealtMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
-	case dbc.A_REDUCE_PUSHBACK:
+	case dbcenums.A_REDUCE_PUSHBACK:
 		// PseudoStats.PushbackChance is the chance of being pushed back and
 		// starts at 1, so the client's "35% less pushback" is -0.35 there.
 		return []PseudoMod{{Kind: "PushbackChance", Amount: -e.Value / 100}}, true
-	case dbc.A_MOD_MELEE_HASTE_3, dbc.A_MOD_ATTACKSPEED:
+	case dbcenums.A_MOD_MELEE_HASTE_3, dbcenums.A_MOD_ATTACKSPEED:
 		return []PseudoMod{{Kind: "MeleeSpeedMultiplier", Amount: 1 + e.Value/100, Multiplicative: true}}, true
-	case dbc.A_MOD_DAMAGE_PERCENT_TAKEN:
+	case dbcenums.A_MOD_DAMAGE_PERCENT_TAKEN:
 		return []PseudoMod{{
 			Kind: "SchoolDamageTakenMultiplier", Amount: 1 + e.Value/100,
 			Multiplicative: true, SchoolMask: e.Misc,
 		}}, true
-	case dbc.A_RANGED_ATTACK_POWER_ATTACKER_BONUS:
+	case dbcenums.A_RANGED_ATTACK_POWER_ATTACKER_BONUS:
 		return []PseudoMod{{Kind: "BonusRangedAttackPower", Amount: e.Value}}, true
-	case dbc.A_MOD_DAMAGE_TAKEN:
+	case dbcenums.A_MOD_DAMAGE_TAKEN:
 		// The sim splits flat damage taken into a physical and a spell field,
 		// so the school mask picks which one the effect is. A mask that names
 		// some spell schools and not others has neither: the spell field would
@@ -1341,7 +1342,7 @@ func (row ResolvedBuff) talentTarget() (ResolvedEffect, bool, bool) {
 		if !isAuraApplication(e.Effect) {
 			continue
 		}
-		if e.Aura == dbc.A_DAMAGE_SHIELD {
+		if e.Aura == dbcenums.A_DAMAGE_SHIELD {
 			if !shielded {
 				shield, shielded = e, true
 			}
@@ -1374,7 +1375,7 @@ func (row ResolvedBuff) convertedAmount(e ResolvedEffect, onPseudo bool) float64
 // A_ADD_PCT_MODIFIER states a percentage of the spell's own number;
 // A_ADD_FLAT_MODIFIER states an amount to add to it.
 func applyTalentPoints(base float64, points float64, aura dbc.EffectAuraType) float64 {
-	if aura == dbc.A_ADD_PCT_MODIFIER {
+	if aura == dbcenums.A_ADD_PCT_MODIFIER {
 		return base * (1 + points/100)
 	}
 	return base + points
@@ -1435,7 +1436,7 @@ func (res *buffResolver) talentMatches(treeID int, family spellFamily) ([]talent
 			FROM SpellEffect
 			WHERE SpellID = ? AND EffectAura IN (?, ?)
 			ORDER BY EffectIndex`,
-			t.SpellID, dbc.A_ADD_FLAT_MODIFIER, dbc.A_ADD_PCT_MODIFIER)
+			t.SpellID, dbcenums.A_ADD_FLAT_MODIFIER, dbcenums.A_ADD_PCT_MODIFIER)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -1520,9 +1521,9 @@ func (res *buffResolver) validateScope(row *ResolvedBuff) {
 	scope, known := buffmanifest.ScopeIndividual, false
 	for _, e := range row.Effects {
 		switch {
-		case e.Effect == dbc.E_APPLY_AREA_AURA_RAID:
+		case e.Effect == dbcenums.E_APPLY_AREA_AURA_RAID:
 			scope, known = buffmanifest.ScopeRaid, true
-		case e.Effect == dbc.E_APPLY_AREA_AURA_PARTY:
+		case e.Effect == dbcenums.E_APPLY_AREA_AURA_PARTY:
 			scope, known = buffmanifest.ScopeParty, true
 		case !isAuraApplication(e.Effect):
 			continue
@@ -1887,7 +1888,7 @@ func buffValueExpr(row ResolvedBuff) (string, bool, bool) {
 		return formatFloat(row.Pseudo[0].Amount), true, true
 	}
 	for _, e := range row.Effects {
-		if e.Aura == dbc.A_DAMAGE_SHIELD {
+		if e.Aura == dbcenums.A_DAMAGE_SHIELD {
 			return formatFloat(e.Value), false, true
 		}
 	}

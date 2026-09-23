@@ -3,410 +3,492 @@ package warrior
 import (
 	"time"
 
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// TODO: Manual review needed -- this was modelled during the Forever port, not carried
-// over unchanged, so its numbers and shape want checking against the client.
-func (war *Warrior) registerArmsTalents() {
+func (warrior *Warrior) registerArmsTalents() {
 	// Tier 1
-	war.registerImprovedHeroicStrike()
-	war.registerDeflection()
-	war.registerImprovedRend()
+	warrior.registerImprovedHeroicStrike()
+	warrior.registerDeflection()
+	warrior.registerImprovedRend()
 
 	// Tier 2
-	war.registerImprovedCharge()
-	// Iron Will not implemented
-	war.registerImprovedThunderClap()
+	// Improved Charge: charge.go
+	// Improved Tactical Mastery: stances.go
+	warrior.registerImprovedOverpower()
 
 	// Tier 3
-	war.registerImprovedOverpower()
-	war.registerAngerManagement()
-	war.registerDeepWounds()
+	warrior.registerAngerManagement()
+	warrior.registerDeepWounds()
 
 	// Tier 4
-	war.registerTwoHandedWeaponSpecialization()
-	war.registerImpale()
+	warrior.registerSpearingStrike()
+	warrior.registerTwoHandedWeaponSpecialization()
+	warrior.registerImpale()
 
 	// Tier 5
-	war.registerDeathWish()
+	warrior.registerBloodthrill()
+	warrior.registerSweepingStrikes()
+	warrior.registerWeaponmaster()
 
 	// Tier 6
-	war.registerImprovedIntercept()
-	// Improved Hamstring not implemented
+	warrior.registerImprovedSlam()
+	warrior.registerImprovedHamstring()
 
 	// Tier 7
-	war.registerMortalStrike()
-	// Second Wind not implemented
-
-	// Tier 8
-
-	// Tier 9
-
-	// Forever additions, not yet implemented.
-	war.registerImprovedTacticalMastery()
-	war.registerSpearingStrike()
-	war.registerBloodthrill()
-	war.registerWeaponmaster()
-	war.registerImprovedHamstring()
+	warrior.registerMortalStrike()
 }
 
 /*
  * Arms
  */
-func (war *Warrior) registerImprovedHeroicStrike() {
-	if war.Talents.ImprovedHeroicStrike == 0 {
+func (warrior *Warrior) registerImprovedHeroicStrike() {
+	if warrior.Talents.ImprovedHeroicStrike == 0 {
 		return
 	}
 
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskHeroicStrike,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  -war.Talents.ImprovedHeroicStrike,
-	})
+	spelldata.ParseStatic(&warrior.Character,
+		spellData.ImprovedHeroicStrike.Rank(warrior.Talents.ImprovedHeroicStrike))
 }
-func (war *Warrior) registerDeflection() {
-	if war.Talents.Deflection == 0 {
+func (warrior *Warrior) registerDeflection() {
+	if warrior.Talents.Deflection == 0 {
 		return
 	}
 
-	war.PseudoStats.BaseParryChance += spellData.Deflection.FractionAt(war.Talents.Deflection)
-}
-
-func (war *Warrior) registerImprovedRend() {
-	if war.Talents.ImprovedRend == 0 {
-		return
-	}
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskRend,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedRend.FractionAt(war.Talents.ImprovedRend),
-	})
+	// The row states parry as a percentage, which the parse stores as the rating the sim sums with
+	// the base chance.
+	spelldata.ParseStatic(&warrior.Character, spellData.Deflection.Rank(warrior.Talents.Deflection))
 }
 
-func (war *Warrior) registerImprovedCharge() {
-	if war.Talents.ImprovedCharge == 0 {
+func (warrior *Warrior) registerImprovedRend() {
+	if warrior.Talents.ImprovedRend == 0 {
 		return
 	}
 
-	war.ChargeRageGain += 3.0 + float64(war.Talents.ImprovedCharge)
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedRend.Rank(warrior.Talents.ImprovedRend))
 }
 
-func (war *Warrior) registerImprovedThunderClap() {
-	if war.Talents.ImprovedThunderClap == 0 {
+func (warrior *Warrior) registerImprovedOverpower() {
+	if warrior.Talents.ImprovedOverpower == 0 {
 		return
 	}
 
-	// Slowing effect implemented in core/debuffs.go
-
-	rageCostReduction := []int32{0, 1, 2, 4}[war.Talents.ImprovedThunderClap]
-	damageGain := []float64{0, 0.4, 0.7, 1.0}[war.Talents.ImprovedThunderClap]
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskThunderClap,
-		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: damageGain,
-	})
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskThunderClap,
-		Kind:      core.SpellMod_PowerCost_Flat,
-		IntValue:  -rageCostReduction,
-	})
+	spelldata.ParseStatic(&warrior.Character,
+		spellData.ImprovedOverpower.Rank(warrior.Talents.ImprovedOverpower))
 }
 
-func (war *Warrior) registerImprovedOverpower() {
-	if war.Talents.ImprovedOverpower == 0 {
+var angerManagementRank = spellData.AngerManagement.Highest()
+
+var angerManagementRage = angerManagementRank.EffectN(2).Average(core.CharacterLevel)
+var angerManagementPeriod = time.Duration(angerManagementRank.EffectN(3).Average(core.CharacterLevel)) * time.Second
+
+func (warrior *Warrior) registerAngerManagement() {
+	if !warrior.Talents.AngerManagement {
 		return
 	}
 
-	core.MakePermanent(war.RegisterAura(core.Aura{
-		Label:    "Improved Overpower",
-		ActionID: core.ActionID{SpellID: 12963}.WithTag(war.Talents.ImprovedOverpower),
-	})).AttachSpellMod(core.SpellModConfig{
-		ClassMask:  SpellMaskOverpower,
-		Kind:       core.SpellMod_BonusCrit_Percent,
-		FloatValue: spellData.ImprovedOverpower.ValueAt(war.Talents.ImprovedOverpower),
-	})
-}
+	rageMetrics := warrior.NewRageMetrics(core.ActionID{SpellID: angerManagementRank.ID})
 
-func (war *Warrior) registerAngerManagement() {
-	if !war.Talents.AngerManagement {
-		return
-	}
-
-	rageMetrics := war.NewRageMetrics(core.ActionID{SpellID: 12296})
-
-	war.RegisterResetEffect(func(sim *core.Simulation) {
+	warrior.RegisterResetEffect(func(sim *core.Simulation) {
 		core.StartPeriodicAction(sim, core.PeriodicActionOptions{
-			Period: time.Second * 3,
+			Period: angerManagementPeriod,
 			OnAction: func(sim *core.Simulation) {
 				if sim.CurrentTime > 0 {
-					war.AddRage(sim, 1, rageMetrics)
+					warrior.AddRage(sim, angerManagementRage, rageMetrics)
 				}
 			},
 		})
 	})
 }
 
-func (war *Warrior) registerDeepWounds() {
-	if war.Talents.DeepWounds == 0 {
+var deepWoundsBleed = spellData.DeepWoundsTriggered.ByID(412609)
+
+func (warrior *Warrior) registerDeepWounds() {
+	if warrior.Talents.DeepWounds == 0 {
 		return
 	}
 
-	war.DeepWounds = war.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: 12867},
-		SpellSchool:    core.SpellSchoolPhysical,
-		ProcMask:       core.ProcMaskEmpty,
-		ClassSpellMask: SpellMaskDeepWounds,
-		Flags:          core.SpellFlagNoOnCastComplete | core.SpellFlagIgnoreResists | core.SpellFlagProc, // 12867 lacks Not a Proc.
+	share := spellData.DeepWounds.FractionAt(warrior.Talents.DeepWounds)
+	tick := deepWoundsBleed.EffectN(1)
 
-		// Deep Wounds (12867) has no SpellCategories row in the client DB. It's a bleed that
-		// snapshots on proc; the application uses OutcomeAlwaysHitNoHitCounter and the DoT ticks
-		// with OutcomeTick, so it never rolls a crit and DefenseType is intentionally left unset.
-		DamageMultiplier: 1,
-		ThreatMultiplier: 1,
+	// TODO: Test in-game for behavior
+	// A crit casts the bleed, but it does not take spelldata.Proc(): that marks the spell passive,
+	// and the metrics aggregator counts no cast for a passive spell, while the sim reports every
+	// application as a cast.
+	config := spelldata.SpellConfig(&warrior.Unit, deepWoundsBleed,
+		spelldata.Flags(core.SpellFlagNoOnCastComplete|core.SpellFlagIgnoreResists|core.SpellFlagProc)) // 12162 and 412609 lack Not a Proc.
+	config.ProcMask = core.ProcMaskEmpty
 
-		Dot: core.DotConfig{
-			Aura: core.Aura{
-				Label: "DeepWounds",
-			},
-			NumberOfTicks: 6,
-			TickLength:    time.Second * 3,
+	config.DamageMultiplier = 1
+	config.ThreatMultiplier = 1
 
-			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				baseDamage := war.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
-				dot.SnapshotPhysical(target, baseDamage/float64(dot.HastedTickCount())*0.2*float64(war.Talents.DeepWounds))
-			},
-
-			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
-			},
+	// The tick is a share of weapon damage, not the row's amount or its coefficient, which is why the
+	// dot is written out rather than taken from spelldata.DotConfig: 412609's periodic effect is a
+	// dummy of one base point carrying a spell power coefficient of 1, and the resolver would tick
+	// that amount with spell power on top of it.
+	config.Dot = core.DotConfig{
+		Aura: core.Aura{
+			Label: "DeepWounds",
 		},
+		NumberOfTicks: int32(deepWoundsBleed.Duration() / tick.Period()),
+		TickLength:    tick.Period(),
 
-		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHitNoHitCounter)
-			spell.Dot(target).Deactivate(sim)
-			spell.Dot(target).Apply(sim)
+		OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+			baseDamage := warrior.AutoAttacks.MH().CalculateAverageWeaponDamage(dot.Spell.MeleeAttackPower(target))
+			dot.Spell.CalcAndDealPeriodicDamage(sim, target, baseDamage/float64(dot.HastedTickCount())*share, deepWoundsBleed.TickOutcome(dot))
+		},
+	}
+
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		spell.CalcAndDealOutcome(sim, target, spell.OutcomeAlwaysHitNoHitCounter)
+		dot := spell.Dot(target)
+		dot.Deactivate(sim)
+		dot.Apply(sim)
+	}
+
+	warrior.DeepWounds = warrior.RegisterSpell(config)
+
+	// The proc shape with no roll: 12834 states its rate as "always" and its crit hint carries the
+	// tooltip's condition. The physical school the tooltip's melee weapon means is the caller's.
+	trigger := spelldata.ProcTrigger(&warrior.Character,
+		spellData.DeepWounds.Rank(warrior.Talents.DeepWounds),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			warrior.DeepWounds.Cast(sim, result.Target)
+		})
+	trigger.Name = "Deep Wounds - Trigger"
+	trigger.TriggerImmediately = true
+	trigger.ExtraCondition = func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
+		return spell.SpellSchool.Matches(core.SpellSchoolPhysical)
+	}
+
+	warrior.MakeProcTriggerAura(trigger)
+}
+
+func (warrior *Warrior) registerTwoHandedWeaponSpecialization() {
+	if warrior.Talents.TwoHandedWeaponSpecialization == 0 {
+		return
+	}
+
+	// The row raises the physical school, auto attacks included, and states no weapon of its own:
+	// the tooltip's two-handed requirement is the caller's condition, re-read on a weapon swap.
+	parsed := spelldata.ParseStatic(&warrior.Character,
+		spellData.TwoHandedWeaponSpecialization.Rank(warrior.Talents.TwoHandedWeaponSpecialization),
+		spelldata.Conditional(func() bool {
+			return warrior.GetMainHandType() == proto.HandType_HandTypeTwoHand
+		}))
+
+	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
+		parsed.Refresh(sim)
+	})
+}
+
+func (warrior *Warrior) registerImpale() {
+	if warrior.Talents.Impale == 0 {
+		return
+	}
+
+	spelldata.ParseStatic(&warrior.Character, spellData.Impale.Rank(warrior.Talents.Impale))
+}
+
+var mortalStrikeRank = spellData.MortalStrike.Highest()
+var mortalStrikeBaseDamage = mortalStrikeRank.DamageEffect().Average(core.CharacterLevel)
+
+func (warrior *Warrior) registerMortalStrike() {
+	if !warrior.Talents.MortalStrike {
+		return
+	}
+
+	config := spelldata.SpellConfig(&warrior.Unit, mortalStrikeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := mortalStrikeBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
+
+	warrior.MortalStrike = warrior.RegisterSpell(config)
+}
+
+var spearingStrikeRank = spellData.SpearingStrike.Highest()
+
+// The tooltip reads "deals $s2% weapon damage" and "an additional ${$s2*$s3}%" against Giants and
+// Dragonkin, and the effects share an aura and misc value, so both are taken by effect index.
+var spearingStrikeWeaponShare = spearingStrikeRank.EffectN(2).Percent()
+var spearingStrikeGiantMultiplier = 1 + spearingStrikeRank.EffectN(3).Average(core.CharacterLevel)
+
+func (warrior *Warrior) registerSpearingStrike() {
+	if !warrior.Talents.SpearingStrike {
+		return
+	}
+
+	config := spelldata.SpellConfig(&warrior.Unit, spearingStrikeRank, spelldata.Melee(core.ProcMaskMeleeMHSpecial))
+
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		baseDamage := spearingStrikeWeaponShare * spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+		if target.MobType == proto.MobType_MobTypeGiant || target.MobType == proto.MobType_MobTypeDragonkin {
+			baseDamage *= spearingStrikeGiantMultiplier
+		}
+
+		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
+
+		if !result.Landed() {
+			spell.IssueRefund(sim)
+		}
+	}
+
+	warrior.RegisterSpell(config)
+}
+
+var bloodthrillProc = spellData.BloodthrillTriggered.Highest()
+
+func (warrior *Warrior) registerBloodthrill() {
+	if warrior.Talents.Bloodthrill == 0 {
+		return
+	}
+
+	// The proc makes Overpower usable for the buff's duration; the cast consumes it like a dodge
+	// would. The rate is the shape where the tooltip's $s1 names an effect, so the row's own
+	// ProcChanceEffectN reads the ladder; the Rend the tooltip asks for is the caller's.
+	trigger := spelldata.ProcTrigger(&warrior.Character,
+		spellData.Bloodthrill.Rank(warrior.Talents.Bloodthrill),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			warrior.OverpowerAura.Activate(sim)
+			warrior.OverpowerAura.UpdateExpires(sim.CurrentTime + bloodthrillProc.Duration())
+		})
+	trigger.Name = "Bloodthrill - Trigger"
+	trigger.ExtraCondition = func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
+		return warrior.Rend.Dot(result.Target).IsActive()
+	}
+
+	warrior.MakeProcTriggerAura(trigger)
+}
+
+func (warrior *Warrior) registerWeaponmaster() {
+	if warrior.Talents.Weaponmaster == 0 {
+		return
+	}
+
+	rank := warrior.Talents.Weaponmaster
+	actionID := core.ActionID{SpellID: 1290261}
+
+	// The three branches share A_DUMMY and misc 0, so each is named by its effect index.
+	mainHandIs := func(weaponTypes ...proto.WeaponType) bool {
+		return warrior.GetProcMaskForTypes(weaponTypes...).Matches(core.ProcMaskMeleeMH)
+	}
+	var critOn, armorIgnoreOn bool
+	var swordMask core.ProcMask
+	readWeapons := func() {
+		critOn = mainHandIs(proto.WeaponType_WeaponTypeAxe, proto.WeaponType_WeaponTypePolearm)
+		armorIgnoreOn = mainHandIs(proto.WeaponType_WeaponTypeMace, proto.WeaponType_WeaponTypeStaff)
+		swordMask = warrior.GetProcMaskForTypes(proto.WeaponType_WeaponTypeSword)
+	}
+	readWeapons()
+
+	critAura := warrior.RegisterAura(core.Aura{
+		Label:    "Weaponmaster (Axe/Polearm)",
+		ActionID: actionID.WithTag(1),
+		Duration: core.NeverExpires,
+	}).AttachStatBuff(stats.PhysicalCritPercent, spellData.Weaponmaster.EffectAt(1).ValueAt(rank))
+	if critOn {
+		core.MakePermanent(critAura)
+	}
+
+	armorIgnore := spellData.Weaponmaster.EffectAt(2).FractionAt(rank)
+	addArmorIgnore := func(delta float64) {
+		for _, attackTable := range warrior.AttackTables {
+			attackTable.ArmorIgnoreFactor += delta
+		}
+	}
+	armorIgnoreAura := warrior.RegisterAura(core.Aura{
+		Label:    "Weaponmaster (Mace/Staff)",
+		ActionID: actionID.WithTag(2),
+		Duration: core.NeverExpires,
+		OnGain: func(_ *core.Aura, _ *core.Simulation) {
+			addArmorIgnore(armorIgnore)
+		},
+		OnExpire: func(_ *core.Aura, _ *core.Simulation) {
+			addArmorIgnore(-armorIgnore)
 		},
 	})
+	if armorIgnoreOn {
+		core.MakePermanent(armorIgnoreAura)
+	}
 
-	war.MakeProcTriggerAura(core.ProcTrigger{
-		Name:               "Deep Wounds - Trigger",
-		TriggerImmediately: true,
-		ProcMaskExclude:    core.ProcMaskEmpty,
-		Outcome:            core.OutcomeCrit,
+	// 1290261 states no proc flags at all, so the row decodes to a listener that hears nothing:
+	// the shape, the mask and the rate's effect are all the caller's.
+	var extraAttack *core.Spell
+	warrior.MakeProcTriggerAura(core.ProcTrigger{
+		Name:               "Weaponmaster (Sword)",
+		ActionID:           actionID.WithTag(3),
+		MetricsActionID:    actionID.WithTag(3),
 		Callback:           core.CallbackOnSpellHitDealt,
+		ProcMask:           core.ProcMaskMelee,
+		Outcome:            core.OutcomeLanded,
+		ProcChance:         spellData.Weaponmaster.EffectAt(3).FractionAt(rank),
+		TriggerImmediately: true,
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, _ *core.SpellResult) bool {
-			return spell.SpellSchool.Matches(core.SpellSchoolPhysical)
+			return spell.ProcMask.Matches(swordMask) && spell != extraAttack
 		},
 		Handler: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
-			war.DeepWounds.Cast(sim, result.Target)
+			warrior.AutoAttacks.MaybeReplaceMHSwing(sim, extraAttack).Cast(sim, result.Target)
 		},
+	}).ApplyOnInit(func(aura *core.Aura, sim *core.Simulation) {
+		config := *warrior.AutoAttacks.MHConfig()
+		config.ActionID = config.ActionID.WithTag(actionID.SpellID)
+		extraAttack = warrior.GetOrRegisterSpell(config)
 	})
 
-}
-
-func (war *Warrior) registerTwoHandedWeaponSpecialization() {
-	if war.Talents.TwoHandedWeaponSpecialization == 0 {
-		return
-	}
-
-	weaponMod := war.AddDynamicMod(core.SpellModConfig{
-		ClassMask:  SpellMaskDirectDamageSpells,
-		School:     core.SpellSchoolPhysical,
-		Kind:       core.SpellMod_DamageDone_Pct,
-		FloatValue: spellData.TwoHandedWeaponSpecialization.Effect(shared.A_MOD_DAMAGE_PERCENT_DONE, 1).FractionAt(war.Talents.TwoHandedWeaponSpecialization),
-	})
-
-	if war.GetMainHandType() == proto.HandType_HandTypeTwoHand {
-		weaponMod.Activate()
-	}
-
-	war.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
-		if war.GetMainHandType() == proto.HandType_HandTypeTwoHand {
-			weaponMod.Activate()
+	setActive := func(sim *core.Simulation, aura *core.Aura, on bool) {
+		if on {
+			aura.Activate(sim)
 		} else {
-			weaponMod.Deactivate()
+			aura.Deactivate(sim)
 		}
+	}
+	warrior.RegisterItemSwapCallback(core.AllMeleeWeaponSlots(), func(sim *core.Simulation, slot proto.ItemSlot) {
+		readWeapons()
+		setActive(sim, critAura, critOn)
+		setActive(sim, armorIgnoreAura, armorIgnoreOn)
 	})
 }
 
-func (war *Warrior) registerImpale() {
-	if war.Talents.Impale == 0 {
+var improvedHamstringRoot = spellData.ImprovedHamstringTriggered.Highest()
+
+func (warrior *Warrior) registerImprovedHamstring() {
+	if warrior.Talents.ImprovedHamstring == 0 {
 		return
 	}
 
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskDamageSpells,
-		Kind:       core.SpellMod_CritMultiplier_Flat,
-		FloatValue: spellData.Impale.FractionAt(war.Talents.Impale),
+	immobilizeAuras := warrior.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
+		return target.GetOrRegisterAura(core.Aura{
+			Label:    "Improved Hamstring-" + warrior.Label,
+			ActionID: core.ActionID{SpellID: improvedHamstringRoot.ID},
+			Duration: improvedHamstringRoot.Duration(),
+		})
 	})
+
+	// The rate is the effect ladder the tooltip's $m1 names. The one ability it fires on is a
+	// shape no proc mask states, so the row's listener is narrowed to Hamstring by hand.
+	trigger := spelldata.ProcTrigger(&warrior.Character,
+		spellData.ImprovedHamstring.Rank(warrior.Talents.ImprovedHamstring),
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			immobilizeAuras.Get(result.Target).Activate(sim)
+		})
+	trigger.Name = "Improved Hamstring - Trigger"
+	trigger.ClassSpellMask = SpellMaskHamstring
+
+	warrior.MakeProcTriggerAura(trigger)
 }
 
-func (war *Warrior) registerDeathWish() {
-	if !war.Talents.DeathWish {
+func (warrior *Warrior) registerImprovedSlam() {
+	if warrior.Talents.ImprovedSlam == 0 {
 		return
 	}
 
-	actionID := core.ActionID{SpellID: 12292}
+	// The five rank-swap effects the row states past the cast time and the global cooldown have no
+	// sim kind and are reported as skipped.
+	spelldata.ParseStatic(&warrior.Character, spellData.ImprovedSlam.Rank(warrior.Talents.ImprovedSlam))
+}
 
-	deathWishAura := war.RegisterAura(core.Aura{
-		Label:    "Death Wish",
-		ActionID: actionID,
-		Duration: time.Second * 30,
-	}).
-		AttachMultiplicativePseudoStatBuff(
-			&war.PseudoStats.SchoolDamageDealtMultiplier[stats.SchoolIndexPhysical], 1.2,
-		).
-		AttachMultiplicativePseudoStatBuff(
-			&war.PseudoStats.DamageTakenMultiplier, 1.05,
-		).
-		// Grants immunity to Fear effects.
-		AttachFearImmunity()
+var sweepingStrikesRank = spellData.SweepingStrikes.Highest()
 
-	deathWishSpell := war.RegisterSpell(core.SpellConfig{
+func (warrior *Warrior) registerSweepingStrikes() {
+	if !warrior.Talents.SweepingStrikes {
+		return
+	}
+
+	actionID := core.ActionID{SpellID: 12723}
+
+	var copyDamage float64
+	hitSpell := warrior.RegisterSpell(core.SpellConfig{
 		ActionID:       actionID,
-		ClassSpellMask: SpellMaskDeathWish,
-		Flags:          core.SpellFlagCastWhileIncapacitated,
-
-		RageCost: core.RageCostOptions{
-			Cost: 10,
-		},
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: core.GCDDefault,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Minute * 3,
-			},
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			deathWishAura.Activate(sim)
-			war.WaitUntil(sim, sim.CurrentTime+core.GCDDefault)
-		},
-
-		RelatedSelfBuff: deathWishAura,
-	})
-
-	war.AddMajorCooldown(core.MajorCooldown{
-		Spell: deathWishSpell,
-		Type:  core.CooldownTypeDPS,
-	})
-}
-
-func (war *Warrior) registerImprovedIntercept() {
-	if war.Talents.ImprovedIntercept == 0 {
-		return
-	}
-
-	war.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskIntercept,
-		Kind:      core.SpellMod_Cooldown_Flat,
-		TimeValue: -time.Second * time.Duration(5*war.Talents.ImprovedIntercept),
-	})
-}
-
-var mortalStrikeRank = spellData.MortalStrike.HighestRank()
-var mortalStrikeBaseDamage, _ = mortalStrikeRank.Direct.Range()
-
-func (war *Warrior) registerMortalStrike() {
-	if !war.Talents.MortalStrike {
-		return
-	}
-
-	war.MortalStrike = war.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: mortalStrikeRank.SpellID},
-		SpellSchool:    mortalStrikeRank.SpellSchool,
-		DefenseType:    mortalStrikeRank.DefenseType,
-		ProcMask:       core.ProcMaskMeleeMHSpecial,
-		Flags:          core.SpellFlagAPL | core.SpellFlagMeleeMetrics,
-		ClassSpellMask: SpellMaskMortalStrike,
-		MaxRange:       core.MaxMeleeRange,
-
-		RageCost: core.RageCostOptions{
-			Cost:   mortalStrikeRank.Cost,
-			Refund: 0.8,
-		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				GCD: mortalStrikeRank.GCD,
-			},
-			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: mortalStrikeRank.Cooldown,
-			},
-			IgnoreHaste: true,
-		},
+		ClassSpellMask: SpellMaskSweepingStrikesHit,
+		ClassFlags:     SpellFlagsSweepingStrikes,
+		SpellSchool:    core.SpellSchoolPhysical,
+		ProcMask:       core.ProcMaskMeleeSpecial,
+		Flags:          core.SpellFlagIgnoreModifiers | core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			baseDamage := mortalStrikeBaseDamage + spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
-			result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
-
-			if !result.Landed() {
-				spell.IssueRefund(sim)
-			}
+			spell.CalcAndDealDamage(sim, target, copyDamage, spell.OutcomeAlwaysHit)
 		},
 	})
-}
 
-// registerImprovedTacticalMastery implements Improved Tactical Mastery, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerImprovedTacticalMastery() {
-	if war.Talents.ImprovedTacticalMastery == 0 {
-		return
-	}
-}
+	warrior.SweepingStrikesNormalizedAttack = warrior.RegisterSpell(core.SpellConfig{
+		ActionID:       actionID.WithTag(1), // Real SpellID: 26654
+		ClassSpellMask: SpellMaskSweepingStrikesNormalizedHit,
+		ClassFlags:     SpellFlagsSweepingStrikes,
+		SpellSchool:    core.SpellSchoolPhysical,
+		DefenseType:    core.DefenseTypeMelee,
+		ProcMask:       core.ProcMaskMeleeSpecial,
+		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete,
 
-// registerSpearingStrike implements Spearing Strike, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerSpearingStrike() {
-	if !war.Talents.SpearingStrike {
-		return
-	}
-}
+		DamageMultiplier: 1,
+		ThreatMultiplier: 1,
 
-// registerBloodthrill implements Bloodthrill, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerBloodthrill() {
-	if war.Talents.Bloodthrill == 0 {
-		return
-	}
-}
+		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			baseDamage := spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target))
+			spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeAlwaysHit)
+		},
+	})
 
-// registerWeaponmaster implements Weaponmaster, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerWeaponmaster() {
-	if war.Talents.Weaponmaster == 0 {
-		return
-	}
-}
+	// The proc shape with no roll: 12292 states its rate as "always" and the buff's charges are
+	// what run out. The duration and the charge count are the row's; which hits spend a charge is
+	// the handler's.
+	sweepingStrikes := spelldata.ProcTrigger(&warrior.Character, sweepingStrikesRank,
+		func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
+			if warrior.Env.ActiveTargetCount() < 2 || warrior.SweepingStrikesAura.GetStacks() == 0 || result.PostOutcomeDamage <= 0 {
+				return
+			}
 
-// registerImprovedHamstring implements Improved Hamstring, new in Forever.
-//
-// TODO: To be implemented. Needs the Forever tooltip and a spellData ladder before
-// the effect can be modelled; there is no TBC equivalent to port.
-func (war *Warrior) registerImprovedHamstring() {
-	if war.Talents.ImprovedHamstring == 0 {
-		return
+			if spell.Matches(SpellMaskSweepingStrikesHit | SpellMaskSweepingStrikesNormalizedHit | SpellMaskThunderClap | SpellMaskWhirlwind | SpellMaskWhirlwindOh) {
+				return
+			}
+
+			nextTarget := warrior.Env.NextActiveTargetUnit(result.Target)
+			if spell.Matches(SpellMaskExecute) && sim.IsExecutePhase20() {
+				warrior.SweepingStrikesNormalizedAttack.Cast(sim, nextTarget)
+			} else {
+				copyDamage = result.Damage / result.ArmorAndResistanceMultiplier
+				hitSpell.Cast(sim, nextTarget)
+			}
+
+			warrior.SweepingStrikesAura.RemoveStack(sim)
+		})
+	sweepingStrikes.MetricsActionID = actionID
+	sweepingStrikes.Duration = sweepingStrikesRank.Duration()
+	sweepingStrikes.TriggerImmediately = true
+
+	warrior.SweepingStrikesAura = warrior.MakeProcTriggerAura(sweepingStrikes)
+	warrior.SweepingStrikesAura.MaxStacks = int32(sweepingStrikesRank.ProcCharges)
+
+	config := spelldata.SpellConfig(&warrior.Unit, sweepingStrikesRank)
+	// The sim casts the ability under the id of the strike it grants, which is what the APL names.
+	config.ActionID = actionID
+
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.StanceMatches(BattleStance)
 	}
+
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		spell.RelatedSelfBuff.Activate(sim)
+		warrior.SweepingStrikesAura.SetStacks(sim, int32(sweepingStrikesRank.ProcCharges))
+	}
+
+	config.RelatedSelfBuff = warrior.SweepingStrikesAura
+
+	ssCD := warrior.RegisterSpell(config)
+
+	warrior.AddMajorCooldown(core.MajorCooldown{
+		Spell: ssCD,
+		Type:  core.CooldownTypeDPS,
+	})
 }

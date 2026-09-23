@@ -59,11 +59,11 @@ export const MoonkinAura = makeBooleanPartyBuffInput({
 	label: 'Moonkin Aura',
 });
 
-export const RetributionAura = makeBooleanPartyBuffInput({
-	actionId: ActionId.fromSpellId(10301),
-	fieldName: 'retributionAura',
-	label: 'Retribution Aura',
-});
+// retribution_aura: the hand-written input shows itself for tank specs only, since a damage shield only matters on the unit being hit; a role gate no manifest
+// row carries.
+
+// retribution_aura_spell_power: the Holy spell power of the paladin providing Retribution Aura, which driveRetributionAura scales the damage with; a sim input
+// with no spell source, rendered under Other Inputs.
 
 export const ConcentrationAura = makeBooleanPartyBuffInput({
 	actionId: ActionId.fromSpellId(19746),
@@ -165,6 +165,8 @@ export const GreaterBlessingOfWisdom = makeBooleanIndividualBuffInput({
 
 // greater_blessing_of_salvation: the hand-written input hides itself for tank and healing specs, a role gate no manifest row carries.
 
+// greater_blessing_of_light: the hand-written input shows itself for tank and healing specs only, a role gate no manifest row carries.
+
 export const PrayerOfShadowProtection = makeBooleanRaidBuffInput({
 	actionId: ActionId.fromSpellId(27683),
 	fieldName: 'prayerOfShadowProtection',
@@ -233,10 +235,10 @@ export const HuntersMark = makeBooleanDebuffInput({
 	label: "Hunter's Mark",
 });
 
-export const ImprovedSealOfTheCrusader = makeBooleanDebuffInput({
+export const JudgementOfTheCrusader = makeBooleanDebuffInput({
 	actionId: ActionId.fromSpellId(20303),
-	fieldName: 'improvedSealOfTheCrusader',
-	label: 'Seal of the Crusader',
+	fieldName: 'judgementOfTheCrusader',
+	label: 'Judgement of the Crusader',
 });
 
 export const JudgementOfLight = makeBooleanDebuffInput({
@@ -428,11 +430,6 @@ export const GENERATED_PARTY_BUFFS_CONFIG: RenderableStatOptions[] = [
 		ownerClass: Class.ClassDruid,
 	},
 	{
-		config: RetributionAura,
-		stats: [Stat.StatResilienceRating, Stat.StatArmor, Stat.StatDefenseRating],
-		ownerClass: Class.ClassPaladin,
-	},
-	{
 		config: ConcentrationAura,
 		stats: [Stat.StatDefenseRating],
 		ownerClass: Class.ClassPaladin,
@@ -504,8 +501,8 @@ export const GENERATED_DEBUFFS_CONFIG: RenderableStatOptions[] = [
 		ownerClass: Class.ClassHunter,
 	},
 	{
-		config: ImprovedSealOfTheCrusader,
-		stats: [Stat.StatMeleeCritRating, Stat.StatSpellCritRating],
+		config: JudgementOfTheCrusader,
+		stats: [Stat.StatHolyDamage, Stat.StatSpellDamage],
 		ownerClass: Class.ClassPaladin,
 	},
 	{

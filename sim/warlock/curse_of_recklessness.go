@@ -1,6 +1,6 @@
 package warlock
 
-var curseOfRecklessnessRank = spellData.CurseOfRecklessness.HighestRank()
+var curseOfRecklessnessRank = spellData.CurseOfRecklessness.Highest()
 
 // TODO: To be implemented. The body below builds the spell around the generated
 // aura and has not been checked against the client past the aura itself.
@@ -12,19 +12,19 @@ func (warlock *Warlock) registerCurseOfRecklessness() {
 	// 	return core.CurseOfRecklessnessAura(target, true, 0)
 	// })
 	// warlock.CurseOfRecklessness = warlock.RegisterSpell(core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: curseOfRecklessnessRank.SpellID},
-	// 	SpellSchool:    curseOfRecklessnessRank.SpellSchool,
-	// 	DefenseType:    curseOfRecklessnessRank.DefenseType,
+	// 	ActionID:       core.ActionID{SpellID: curseOfRecklessnessRank.ID},
+	// 	SpellSchool:    curseOfRecklessnessRank.SpellSchool(),
+	// 	DefenseType:    curseOfRecklessnessRank.DefenseTypeCore(),
 	// 	ProcMask:       core.ProcMaskEmpty,
 	// 	Flags:          core.SpellFlagAPL,
 	// 	ClassSpellMask: WarlockSpellCurseOfRecklessness,
 	//
 	// 	ManaCost: core.ManaCostOptions{
-	// 		FlatCost: curseOfRecklessnessRank.Cost,
+	// 		FlatCost: int32(curseOfRecklessnessRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
-	// 			GCD: curseOfRecklessnessRank.GCD,
+	// 			GCD: curseOfRecklessnessRank.GCD(),
 	// 		},
 	// 	},
 	//

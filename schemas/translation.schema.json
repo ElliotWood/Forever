@@ -1783,6 +1783,19 @@
 							"additionalProperties": false,
 							"required": ["label", "tooltip"]
 						},
+						"retribution_aura_spell_power": {
+							"type": "object",
+							"properties": {
+								"label": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false,
+							"required": ["label", "tooltip"]
+						},
 						"totem_twisting": {
 							"type": "object",
 							"properties": {
@@ -2021,19 +2034,6 @@
 							"additionalProperties": false,
 							"required": ["label", "tooltip"]
 						},
-						"queue_delay": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
 						"assume_bleed_active": {
 							"type": "object",
 							"properties": {
@@ -2251,6 +2251,7 @@
 						"absorb_frac",
 						"burst_window",
 						"hp_percent_for_defensives",
+						"retribution_aura_spell_power",
 						"totem_twisting",
 						"pet_uptime",
 						"pet_single_ability",
@@ -2263,7 +2264,6 @@
 						"starting_rage",
 						"stance_snapshot",
 						"has_bs_tier_2",
-						"queue_delay",
 						"assume_bleed_active",
 						"cannot_shred_target",
 						"okf_uptime",

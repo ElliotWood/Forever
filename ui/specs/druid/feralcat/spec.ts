@@ -108,7 +108,6 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		debuffs: Debuffs.create({
 			exposeArmor: true,
 			huntersMark: true,
-			improvedSealOfTheCrusader: true,
 			judgementOfWisdom: true,
 			curseOfRecklessness: true,
 			faerieFire: true,

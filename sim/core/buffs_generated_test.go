@@ -716,6 +716,26 @@ func TestGeneratedRetributionAuraHoldsThePaladinSlot(t *testing.T) {
 	}
 }
 
+// The party's copy cannot see the providing paladin, so the spell power the party states is folded
+// into the damage it bids and deals.
+func TestRetributionAuraCarriesThePartysSpellPower(t *testing.T) {
+	char := newGeneratedBuffTestCharacter()
+
+	applyBuffEffects(generatedBuffTestAgent{char},
+		&proto.RaidBuffs{}, &proto.PartyBuffs{RetributionAura: true, RetributionAuraSpellPower: 450}, &proto.IndividualBuffs{})
+
+	if char.GetAura("Retribution Aura (External)") == nil {
+		t.Fatalf("no aura is labelled %q; the unit has %v", "Retribution Aura (External)", auraLabels(char))
+	}
+
+	want := RetributionAuraValue(0) + RetributionAuraSpellPowerCoefficient*450
+	category := char.ExclusiveEffectManager.GetExclusiveEffectCategory(RetributionAuraCategory)
+	if len(category.effects) != 1 || category.effects[0].Priority != want {
+		t.Errorf("the category has %d effects, first bid %v; want one bidding %v",
+			len(category.effects), category.effects[0].Priority, want)
+	}
+}
+
 // A whole environment, because an external cooldown registers a spell, a timer
 // per source and a major cooldown, none of which a bare Character has.
 func setupFakeSimWithBuffs(raid *proto.RaidBuffs, party *proto.PartyBuffs, individual *proto.IndividualBuffs) *Simulation {

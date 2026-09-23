@@ -50,7 +50,6 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 });
 
 export const DefaultDebuffs = Debuffs.create({
-	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	sunderArmor: true,
 	faerieFire: true,

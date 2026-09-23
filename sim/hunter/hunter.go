@@ -211,7 +211,7 @@ func (hunter *Hunter) RegisterRangedSpell(config core.SpellConfig) *core.Spell {
 		config.MissileSpeed = 40
 	}
 
-	config.MinRange = core.MaxMeleeRange + 0.01
+	config.MinRange = core.MinRangedRange
 	config.MaxRange = HunterBaseMaxRange
 	config.Cast.DefaultCast.GCD = core.GCDDefault
 	config.Cast.IgnoreHaste = true
@@ -220,7 +220,6 @@ func (hunter *Hunter) RegisterRangedSpell(config core.SpellConfig) *core.Spell {
 		if config.Cast.ModifyCast == nil {
 			config.Cast.ModifyCast = func(sim *core.Simulation, spell *core.Spell, cast *core.Cast) {
 				cast.CastTime = spell.CastTime()
-				hunter.AutoAttacks.DelayRangedUntil(sim, sim.CurrentTime+cast.CastTime+1)
 			}
 		}
 

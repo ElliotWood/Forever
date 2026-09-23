@@ -93,8 +93,8 @@ func TestProtoTypeMatchesKind(t *testing.T) {
 	for _, spec := range Manifest {
 		switch spec.Kind {
 		case KindFlag:
-			if spec.Proto != ProtoBool {
-				t.Errorf("%s is KindFlag and must be %s, got %s", spec.Field, ProtoBool, spec.Proto)
+			if spec.Proto != ProtoBool && spec.Proto != ProtoDouble {
+				t.Errorf("%s is KindFlag and must be %s or %s, got %s", spec.Field, ProtoBool, ProtoDouble, spec.Proto)
 			}
 		case KindDebuffUptime:
 			if spec.Proto != ProtoDouble {

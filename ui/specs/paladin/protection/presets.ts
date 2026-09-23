@@ -16,9 +16,7 @@ export const DefaultSimpleRotation = ProtectionPaladinRotation.create({
 	prioritizeHolyShield: true,
 	consecrationRank: 6,
 	useExorcism: true,
-	useAvengersShield: false,
 	useHammerOfWrath: false,
-	precastAvengersShield: true,
 	maintainJudgement: PaladinJudgement.JudgementNone,
 	aura: PaladinAura.DevotionAura,
 });
@@ -59,7 +57,6 @@ export const DefaultIndividualBuffs = IndividualBuffs.create({
 
 export const DefaultDebuffs = Debuffs.create({
 	curseOfElements: true,
-	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	judgementOfLight: true,
 	huntersMark: true,

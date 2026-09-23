@@ -41,6 +41,7 @@ describe('the buff registries', () => {
 			'Greater Blessing of Might',
 			'Greater Blessing of Wisdom',
 			'Greater Blessing of Salvation',
+			'Greater Blessing of Light',
 			'Prayer of Shadow Protection',
 			'Fire Resistance Aura',
 			'Frost Resistance Aura',
@@ -57,7 +58,7 @@ describe('the buff registries', () => {
 	it('shows the debuffs in their settled order', () => {
 		expect(labelsOf(BuffDebuffInputs.DEBUFFS_CONFIG)).toEqual([
 			"Hunter's Mark",
-			'Seal of the Crusader',
+			'Judgement of the Crusader',
 			'Judgement of Light',
 			'Judgement of Wisdom',
 			'Mangle',

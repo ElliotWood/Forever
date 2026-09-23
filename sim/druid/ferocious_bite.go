@@ -1,7 +1,11 @@
 package druid
 
-var ferociousBiteRank = spellData.FerociousBite.HighestRank()
-var ferociousBiteMin, ferociousBiteMax = ferociousBiteRank.Direct.Range()
+import (
+	"github.com/wowsims/forever/sim/core"
+)
+
+var ferociousBiteRank = spellData.FerociousBite.Highest()
+var ferociousBiteBase = ferociousBiteRank.DamageEffect().Average(core.CharacterLevel)
 
 // TODO: To be implemented.
 func (druid *Druid) registerFerociousBiteSpell() {
@@ -11,19 +15,19 @@ func (druid *Druid) registerFerociousBiteSpell() {
 	// var energyMetrics *core.ResourceMetrics
 	//
 	// druid.FerociousBite = druid.RegisterSpell(Cat, core.SpellConfig{
-	// 	ActionID:       core.ActionID{SpellID: ferociousBiteRank.SpellID},
-	// 	SpellSchool:    ferociousBiteRank.SpellSchool,
-	// 	DefenseType:    ferociousBiteRank.DefenseType,
+	// 	ActionID:       core.ActionID{SpellID: ferociousBiteRank.ID},
+	// 	SpellSchool:    ferociousBiteRank.SpellSchool(),
+	// 	DefenseType:    ferociousBiteRank.DefenseTypeCore(),
 	// 	ProcMask:       core.ProcMaskMeleeMHSpecial,
 	// 	ClassSpellMask: DruidSpellFerociousBite,
 	// 	Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
 	//
 	// 	EnergyCost: core.EnergyCostOptions{
-	// 		Cost: ferociousBiteRank.Cost,
+	// 		Cost: int32(ferociousBiteRank.Cost()),
 	// 	},
 	// 	Cast: core.CastConfig{
 	// 		DefaultCast: core.Cast{
-	// 			GCD: ferociousBiteRank.GCD,
+	// 			GCD: ferociousBiteRank.GCD(),
 	// 		},
 	// 		IgnoreHaste: true,
 	// 	},
@@ -45,8 +49,7 @@ func (druid *Druid) registerFerociousBiteSpell() {
 	// 		}
 	//
 	// 		dmgPerCP := 169.0
-	// 		baseDamage := ferociousBiteMin + dmgPerCP*cp + 4.1*excessEnergy + 0.05*cp*ap
-	// 		baseDamage += sim.RandomFloat("Ferocious Bite") * (ferociousBiteMax - ferociousBiteMin)
+	// 		baseDamage := ferociousBiteBase + dmgPerCP*cp + 4.1*excessEnergy + 0.05*cp*ap
 	//
 	// 		result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeWeaponSpecialHitAndCrit)
 	//
@@ -59,7 +62,7 @@ func (druid *Druid) registerFerociousBiteSpell() {
 	// 		cp := float64(druid.ComboPoints())
 	// 		ap := spell.MeleeAttackPower(target)
 	// 		dmgPerCP := 169.0
-	// 		baseDamage := ferociousBiteMin + dmgPerCP*cp + (ferociousBiteMax-ferociousBiteMin)/2 + 0.05*cp*ap
+	// 		baseDamage := ferociousBiteBase + dmgPerCP*cp + 0.05*cp*ap
 	// 		return spell.CalcDamage(sim, target, baseDamage, spell.OutcomeExpectedMeleeWeaponSpecialHitAndCrit)
 	// 	},
 	// })

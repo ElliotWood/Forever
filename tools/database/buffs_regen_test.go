@@ -25,6 +25,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
 	"github.com/wowsims/forever/tools/database/dbc"
 )
@@ -196,11 +197,11 @@ func scopeComplaint(row ResolvedBuff) string {
 func clientScope(row ResolvedBuff) (buffmanifest.BuffScope, bool) {
 	for _, effect := range row.Effects {
 		switch effect.Effect {
-		case dbc.E_APPLY_AREA_AURA_RAID:
+		case dbcenums.E_APPLY_AREA_AURA_RAID:
 			return buffmanifest.ScopeRaid, true
-		case dbc.E_APPLY_AREA_AURA_PARTY:
+		case dbcenums.E_APPLY_AREA_AURA_PARTY:
 			return buffmanifest.ScopeParty, true
-		case dbc.E_APPLY_AURA:
+		case dbcenums.E_APPLY_AURA:
 			switch effect.ImplicitTarget {
 			case dbc.TARGET_UNIT_CASTER_AREA_RAID:
 				return buffmanifest.ScopeRaid, true

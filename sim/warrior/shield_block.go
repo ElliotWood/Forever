@@ -1,69 +1,50 @@
 package warrior
 
 import (
-	"time"
-
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
-	"github.com/wowsims/forever/sim/core/stats"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-func (war *Warrior) registerShieldBlock() {
-	actionId := core.ActionID{SpellID: 2565}
+var shieldBlockRank = spellData.ShieldBlock.Highest()
 
-	var spell *core.Spell
-	aura := war.RegisterAura(core.Aura{
-		Label:     "Shield Block",
-		ActionID:  actionId,
-		Duration:  time.Second * 5,
-		MaxStacks: 1,
-	}).
-		AttachStatBuff(stats.BlockPercent, 0.75).
-		AttachProcTrigger(core.ProcTrigger{
-			Name:               "Shield Block - Consume",
-			TriggerImmediately: true,
-			Outcome:            core.OutcomeBlock,
-			Callback:           core.CallbackOnSpellHitTaken,
-			Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
-				spell.RelatedSelfBuff.RemoveStack(sim)
-			},
-		})
+func (warrior *Warrior) registerShieldBlock() {
+	aura := warrior.RegisterAura(spelldata.AuraConfig(shieldBlockRank))
+	spelldata.ParseEffects(&warrior.Character, aura, shieldBlockRank)
 
-	spell = war.RegisterSpell(core.SpellConfig{
-		ActionID:       actionId,
-		SpellSchool:    core.SpellSchoolPhysical,
-		ClassSpellMask: SpellMaskShieldBlock,
-		Flags:          core.SpellFlagAPL | core.SpellFlagHelpful,
-
-		RageCost: core.RageCostOptions{
-			Cost: 10,
+	// The block that spends a charge is an outcome no proc mask states, so the listener is the
+	// caller's; the row states the two charges the aura starts with.
+	aura.AttachProcTrigger(core.ProcTrigger{
+		Name:               "Shield Block - Consume",
+		TriggerImmediately: true,
+		Outcome:            core.OutcomeBlock,
+		Callback:           core.CallbackOnSpellHitTaken,
+		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
+			aura.RemoveStack(sim)
 		},
-
-		Cast: core.CastConfig{
-			DefaultCast: core.Cast{
-				NonEmpty: true,
-			},
-			IgnoreHaste: true,
-			CD: core.Cooldown{
-				Timer:    war.NewTimer(),
-				Duration: time.Second * 5,
-			},
-		},
-
-		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return war.PseudoStats.CanBlock && war.StanceMatches(DefensiveStance)
-		},
-
-		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
-			spell.RelatedSelfBuff.Activate(sim)
-			spell.RelatedSelfBuff.SetStacks(sim, spell.RelatedSelfBuff.MaxStacks)
-		},
-
-		RelatedSelfBuff: aura,
 	})
 
-	war.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, slot proto.ItemSlot) {
-		if !war.PseudoStats.CanBlock {
+	config := spelldata.SpellConfig(&warrior.Unit, shieldBlockRank, spelldata.Flags(core.SpellFlagAPL))
+
+	config.ExtraCastCondition = func(sim *core.Simulation, target *core.Unit) bool {
+		return warrior.PseudoStats.CanBlock && warrior.StanceMatches(DefensiveStance)
+	}
+
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+		aura.Activate(sim)
+		aura.SetStacks(sim, aura.MaxStacks)
+	}
+
+	config.RelatedSelfBuff = aura
+
+	warrior.RegisterSpell(config)
+
+	warrior.deactivateWithoutShield(aura)
+}
+
+func (warrior *Warrior) deactivateWithoutShield(aura *core.Aura) {
+	warrior.RegisterItemSwapCallback([]proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand}, func(sim *core.Simulation, _ proto.ItemSlot) {
+		if !warrior.PseudoStats.CanBlock {
 			aura.Deactivate(sim)
 		}
 	})

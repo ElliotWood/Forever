@@ -11,7 +11,8 @@ import {
 import { Player } from '@sim/player/player';
 
 import * as WarriorPresets from '../shared/presets';
-import DefaultApl from './apls/default.apl.json';
+import DefaultArmsApl from './apls/arms.apl.json';
+import DefaultFuryApl from './apls/fury.apl.json';
 
 // Preset options for this spec.
 // Eventually we will import these values for the raid sim too, so its good to
@@ -27,7 +28,8 @@ export const isFurySpec = (player: Player<Spec.SpecDpsWarrior>) =>
 	player.getEquippedItem(ItemSlot.ItemSlotMainHand)?.item.handType === HandType.HandTypeMainHand ||
 	player.getEquippedItem(ItemSlot.ItemSlotMainHand)?.item.handType === HandType.HandTypeOneHand;
 
-export const DEFAULT_APL = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
+export const FURY_DEFAULT_ROTATION = PresetUtils.makePresetAPLRotation('Fury', DefaultFuryApl);
+export const ARMS_DEFAULT_ROTATION = PresetUtils.makePresetAPLRotation('Arms', DefaultArmsApl);
 
 export const SIMPLE_ROTATION = DpsWarrior_Rotation.create({
 	spec: DpsWarriorSpec.DpsWarriorSpecFury,
@@ -43,7 +45,6 @@ export const SIMPLE_ARMS_DEFAULT_ROTATION = PresetUtils.makePresetSimpleRotation
 
 export const DefaultOptions = WarriorOptions.create({
 	classOptions: {
-		queueDelay: 250,
 		startingRage: 50,
 		defaultShout: WarriorShout.WarriorShoutBattle,
 		defaultStance: WarriorStance.WarriorStanceBerserker,

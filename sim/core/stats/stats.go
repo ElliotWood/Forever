@@ -525,6 +525,10 @@ type PseudoStats struct {
 	FearImmune    bool // Fear effects cannot be applied to this unit. (ie. Berserker Rage)
 	StunImmune    bool // Stun effects cannot be applied to this unit.
 
+	// Scale how long a Fear/Stun lasts on this unit, e.g. the Warrior talent Iron Will.
+	FearDurationMultiplier float64
+	StunDurationMultiplier float64
+
 	///////////////////////////////////////////////////
 	// Effects that apply when this unit is the target.
 	///////////////////////////////////////////////////
@@ -612,6 +616,8 @@ func NewPseudoStats() PseudoStats {
 		ExternalHealingTakenMultiplier: 1,
 		MovementSpeedMultiplier:        1,
 		PushbackChance:                 1,
+		FearDurationMultiplier:         1,
+		StunDurationMultiplier:         1,
 	}
 }
 

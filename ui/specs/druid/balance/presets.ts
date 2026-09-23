@@ -33,7 +33,6 @@ export const DefaultDebuffs = Debuffs.create({
 	exposeArmor: true,
 	giftOfArthas: true,
 	huntersMark: true,
-	improvedSealOfTheCrusader: true,
 	judgementOfWisdom: true,
 	mangle: true,
 	sunderArmor: true,

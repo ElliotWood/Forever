@@ -9,7 +9,6 @@ import "buffs.proto";
 import "common.proto";
 import "db.proto";
 import "spell.proto";
-import "paladin.proto";
 
 // Holds all WoW data for the UI.
 message UIDatabase {
@@ -384,16 +383,6 @@ message SavedEPWeights {
 	UnitStats ep_weights = 1;
 }
 
-message BlessingsAssignment {
-	// Index corresponds to Spec that the blessing should be applied to.
-	repeated Blessings blessings = 1;
-}
-
-message BlessingsAssignments {
-	// Assignments for each paladin.
-	repeated BlessingsAssignment paladins = 1;
-}
-
 // Local storage data for a saved encounter.
 message SavedEncounter {
 	Encounter encounter = 1;
@@ -402,7 +391,6 @@ message SavedEncounter {
 // Local storage data for raid sim settings.
 message SavedRaid {
 	Raid raid = 1;
-	BlessingsAssignments blessings = 3;
 	Faction faction = 4;
 	int32 phase = 5;
 }
@@ -411,7 +399,6 @@ message SavedRaid {
 message RaidSimSettings {
 	SimSettings settings = 5;
 	Raid raid = 1;
-	BlessingsAssignments blessings = 3;
 	Encounter encounter = 4;
 }
 

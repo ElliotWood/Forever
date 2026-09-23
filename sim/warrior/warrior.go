@@ -5,6 +5,7 @@ import (
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -15,76 +16,42 @@ type WarriorInputs struct {
 	DefaultStance proto.WarriorStance
 
 	StartingRage   float64
-	QueueDelay     int32
 	StanceSnapshot bool
 	HasBsT2        bool
 }
 
-const (
-	SpellFlagBleed = core.SpellFlagAgentReserved1
-)
-
+// What is left of the sim's own spell masks now that the client's spell class mask addresses the
+// rest: the two Sweeping Strikes copies and the Whirlwind off-hand strike, which have no client row
+// to be named by, and the six abilities a handler or a listener singles out by hand.
 const (
 	SpellMaskNone int64 = 0
-	// Abilities that don't cost rage and aren't attacks
-	SpellMaskBattleShout int64 = 1 << iota
-	SpellMaskBerserkerRage
-	SpellMaskRecklessness
-	SpellMaskDeathWish
-	SpellMaskRetaliation
-	SpellMaskRetaliationHit
-	SpellMaskRampage
-	SpellMaskShieldWall
-	SpellMaskLastStand
-	SpellMaskCharge
-	SpellMaskIntercept
-	SpellMaskDemoralizingShout
 
-	// Stances
-	SpellMaskBattleStance
-	SpellMaskBerserkerStance
-	SpellMaskDefensiveStance
-
-	// Special attacks
-	SpellMaskRend
-	SpellMaskDeepWounds
-	SpellMaskSweepingStrikes
-	SpellMaskSweepingStrikesHit
+	SpellMaskSweepingStrikesHit int64 = 1 << iota
 	SpellMaskSweepingStrikesNormalizedHit
-	SpellMaskHeroicStrike
-	SpellMaskCleave
-	SpellMaskDevastate
+	SpellMaskWhirlwindOh
+
 	SpellMaskExecute
-	SpellMaskOverpower
-	SpellMaskRevenge
-	SpellMaskSlam
-	SpellMaskSunderArmor
 	SpellMaskThunderClap
 	SpellMaskWhirlwind
-	SpellMaskWhirlwindOh
-	SpellMaskShieldSlam
-	SpellMaskConcussionBlow
 	SpellMaskShieldBash
 	SpellMaskBloodthirst
-	SpellMaskMortalStrike
-	SpellMaskShieldBlock
 	SpellMaskHamstring
-	SpellMaskPummel
 
 	WarriorSpellLast
 	WarriorSpellsAll = WarriorSpellLast<<1 - 1
-
-	SpellMaskShouts             = SpellMaskBattleShout | SpellMaskDemoralizingShout
-	SpellMaskDirectDamageSpells = SpellMaskSweepingStrikesHit | SpellMaskSweepingStrikesNormalizedHit |
-		SpellMaskCleave | SpellMaskExecute | SpellMaskHeroicStrike | SpellMaskOverpower |
-		SpellMaskRevenge | SpellMaskSlam | SpellMaskShieldBash | SpellMaskSunderArmor |
-		SpellMaskThunderClap | SpellMaskWhirlwind | SpellMaskWhirlwindOh | SpellMaskShieldSlam |
-		SpellMaskBloodthirst | SpellMaskMortalStrike | SpellMaskIntercept | SpellMaskDevastate | SpellMaskRetaliationHit
-
-	SpellMaskDamageSpells = SpellMaskDirectDamageSpells | SpellMaskDeepWounds | SpellMaskRend
 )
 
-const EnrageTag = "EnrageEffect"
+// The client's SpellClassOptions for the registrations that do not resolve a row of their own: the
+// stance spells, and the sim-only sub-spells that take their parent's flags, the client having no
+// row for a Whirlwind off-hand strike or a Sweeping Strikes copy.
+var (
+	SpellFlagsBattleStance    = spellData.BattleStance.Highest().ClassFlags
+	SpellFlagsBerserkerStance = spellData.BerserkerStance.Highest().ClassFlags
+	SpellFlagsDefensiveStance = spellData.DefensiveStance.Highest().ClassFlags
+
+	SpellFlagsSweepingStrikes = spellData.SweepingStrikes.Highest().ClassFlags
+	SpellFlagsWhirlwind       = spellData.Whirlwind.Highest().ClassFlags
+)
 
 type Warrior struct {
 	core.Character
@@ -96,9 +63,8 @@ type Warrior struct {
 	WarriorInputs
 
 	// Current state
-	Stance                Stance
-	ChargeRageGain        float64
-	BerserkerRageRageGain float64
+	Stance                 Stance
+	thunderClapEffectBonus float64
 
 	BattleShout       *core.Spell
 	DemoralizingShout *core.Spell
@@ -109,28 +75,24 @@ type Warrior struct {
 	Rend                            *core.Spell
 	DeepWounds                      *core.Spell
 	MortalStrike                    *core.Spell
-	DevastateSunder                 *core.Spell
 	SweepingStrikesNormalizedAttack *core.Spell
-	SunderArmorDevastate            *core.Spell
 
-	HeroicStrike       *core.Spell
-	Cleave             *core.Spell
-	curQueueAura       *core.Aura
-	curQueuedAutoSpell *core.Spell
-
-	sharedMCD        *core.Timer // Recklessness, Shield Wall & Retaliation
-	sharedShoutsCD   *core.Timer
-	queuedRealismICD *core.Cooldown
+	HeroicStrike      *core.Spell
+	Cleave            *core.Spell
+	MockingBlow       *core.Spell
+	ChallengingShout  *core.Spell
+	IntimidatingShout *core.Spell
+	Disarm            *core.Spell
+	Taunt             *core.Spell
+	VictoryRush       *core.Spell
 
 	EnrageAura *core.Aura
 
 	SweepingStrikesAura *core.Aura
+	OverpowerAura       *core.Aura
 
 	DemoralizingShoutAuras core.AuraArray
 	SunderArmorAuras       core.AuraArray
-
-	// Set bonuses
-	T6Tank2P *core.Aura
 }
 
 func (warrior *Warrior) GetCharacter() *core.Character {
@@ -144,41 +106,42 @@ func (warrior *Warrior) AddPartyBuffs(_ *proto.PartyBuffs) {
 }
 
 func (warrior *Warrior) Initialize() {
-	// warrior.registerRecklessness()
-	// warrior.registerShieldWall()
-	// warrior.registerRetaliation()
+	warrior.registerRecklessness()
+	warrior.registerShieldWall()
+	warrior.registerRetaliation()
 
-	// warrior.registerBerserkerRage()
-	// warrior.registerBloodrage()
-	// warrior.registerCharge()
-	// warrior.registerIntercept()
-	// warrior.registerPummel()
-	// warrior.registerHamstring()
+	warrior.registerBerserkerRage()
+	warrior.registerBloodrage()
+	warrior.registerCharge()
+	warrior.registerIntercept()
+	warrior.registerPummel()
+	warrior.registerHamstring()
+	warrior.registerDisarm()
+	warrior.registerTaunt()
 
-	// warrior.registerRend()
-	// warrior.registerSunderArmor()
-	// warrior.registerHeroicStrike()
-	// warrior.registerCleave()
-	// warrior.registerOverpower()
-	// warrior.registerSlam()
-	// warrior.registerWhirlwind()
-	// warrior.registerExecute()
-	// warrior.registerThunderClap()
-	// warrior.registerRevenge()
-	// warrior.registerShieldBlock()
-	// warrior.registerShieldBash()
+	warrior.registerRend()
+	warrior.registerSunderArmor()
+	warrior.registerHeroicStrike()
+	warrior.registerCleave()
+	warrior.registerOverpower()
+	warrior.registerSlam()
+	warrior.registerWhirlwind()
+	warrior.registerExecute()
+	warrior.registerThunderClap()
+	warrior.registerRevenge()
+	warrior.registerShieldBlock()
+	warrior.registerShieldBash()
+	warrior.registerMockingBlow()
+	warrior.registerVictoryRush()
 
-	// warrior.registerStances()
-	warrior.registerShouts()
+	warrior.registerStances()
+	warrior.registerBattleShout()
+	warrior.registerDemoralizingShout()
+	warrior.registerChallengingShout()
+	warrior.registerIntimidatingShout()
 }
 
 func (warrior *Warrior) Reset(_ *core.Simulation) {
-	warrior.curQueueAura = nil
-	warrior.curQueuedAutoSpell = nil
-
-	warrior.ChargeRageGain = 15
-	warrior.BerserkerRageRageGain = 0
-
 	switch warrior.DefaultStance {
 	case proto.WarriorStance_WarriorStanceBattle:
 		warrior.Stance = BattleStance
@@ -191,8 +154,8 @@ func (warrior *Warrior) Reset(_ *core.Simulation) {
 
 func (warrior *Warrior) OnEncounterStart(sim *core.Simulation) {}
 
-func (war *Warrior) GetMainHandType() proto.HandType {
-	mh := war.GetMHWeapon()
+func (warrior *Warrior) GetMainHandType() proto.HandType {
+	mh := warrior.GetMHWeapon()
 
 	if mh != nil && (mh.HandType == proto.HandType_HandTypeTwoHand) {
 		return proto.HandType_HandTypeTwoHand
@@ -210,7 +173,7 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	core.FillTalentsProto(warrior.Talents.ProtoReflect(), talents, TalentTreeSizes)
 
 	warrior.EnableRageBar(core.RageBarOptions{
-		MaxRage:            100,
+		MaxRage:            100 + spellData.BoundlessRage.TenthsAt(warrior.Talents.BoundlessRage),
 		BaseRageMultiplier: 1,
 		StartingRage:       inputs.StartingRage,
 	})
@@ -219,10 +182,10 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 		MainHand:       warrior.WeaponFromMainHand(),
 		OffHand:        warrior.WeaponFromOffHand(),
 		AutoSwingMelee: true,
-		ReplaceMHSwing: warrior.TryHSOrCleave,
 	})
 
 	warrior.PseudoStats.CanParry = true
+	// TODO: In-game testing required
 	warrior.PseudoStats.BaseDodgeChance += 0.0075
 	warrior.PseudoStats.BaseParryChance += 0.05
 	warrior.PseudoStats.BaseBlockChance += 0.05
@@ -232,17 +195,6 @@ func NewWarrior(character *core.Character, options *proto.WarriorOptions, talent
 	warrior.AddStatDependency(stats.Agility, stats.PhysicalCritPercent, core.CritPerAgiMaxLevel[character.Class])
 	warrior.AddStatDependency(stats.Agility, stats.DodgeRating, 1/30.0*core.DodgeRatingPerDodgePercent)
 	warrior.AddStatDependency(stats.BonusArmor, stats.Armor, 1)
-
-	warrior.sharedShoutsCD = warrior.NewTimer()
-	warrior.sharedMCD = warrior.NewTimer()
-	warrior.ChargeRageGain = 15
-	warrior.BerserkerRageRageGain = 0
-	// The sim often re-enables heroic strike in an unrealistic amount of time.
-	// This can cause an unrealistic immediate double-hit around wild strikes procs
-	warrior.queuedRealismICD = &core.Cooldown{
-		Timer:    warrior.NewTimer(),
-		Duration: time.Millisecond * time.Duration(warrior.WarriorInputs.QueueDelay),
-	}
 
 	return warrior
 }
@@ -262,4 +214,15 @@ func (warrior *Warrior) CastNormalizedSweepingStrikesAttack(results core.SpellRe
 // Agent is a generic way to access underlying warrior on any of the agents.
 type WarriorAgent interface {
 	GetWarrior() *Warrior
+}
+
+// The recovery the ability waits out. A warrior ability states it on a shared category - Bloodthirst
+// and Mortal Strike both run off category 971 - and leaves its own column at zero, so the cooldown
+// is whichever of the two the client filled in.
+//
+// The category is a timer as well as a number, and spelldata.SpellConfig puts every spell naming one
+// on the unit's timer for it: Revenge and Overpower share category 65, Shield Bash and Pummel share
+// 88, and Mortal Strike, Bloodthirst and Shield Slam share 971.
+func cooldownOf(s *spelldata.Spell) time.Duration {
+	return max(s.Cooldown(), s.CategoryCooldown())
 }

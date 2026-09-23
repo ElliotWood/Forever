@@ -13,10 +13,10 @@ const debuffStats = (debuffs: Partial<Debuffs>): Stats =>
 	} as unknown as Player<any>);
 
 describe('Player.getDebuffStats', () => {
-	// The crit the target loses comes from Improved Seal of the Crusader, which has no node in
-	// any Forever trait tree, so sim/core's aura applies none of it and the sheet credits none.
-	it('credits Seal of the Crusader with no crit', () => {
-		const stats = debuffStats({ improvedSealOfTheCrusader: true });
+	// Judgement of the Crusader raises Holy damage taken and nothing else: Improved Seal of the
+	// Crusader, the crit half, has no node in any Forever trait tree, so the sheet credits no crit.
+	it('credits Judgement of the Crusader with no crit', () => {
+		const stats = debuffStats({ judgementOfTheCrusader: true });
 
 		expect(stats.getPseudoStat(PseudoStat.PseudoStatMeleeCritPercent)).toBe(0);
 		expect(stats.getPseudoStat(PseudoStat.PseudoStatRangedCritPercent)).toBe(0);

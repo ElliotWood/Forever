@@ -256,6 +256,12 @@ func registerGeneratedCategoryEffect(aura *Aura, config GeneratedBuff, perStack 
 
 // The damage a generated damage shield deals back to whoever lands a melee hit.
 func newGeneratedDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damage float64) *Aura {
+	return newDamageShield(unit, config, school, damage, 0)
+}
+
+// A damage shield whose damage also scales with the wearer's spell power by
+// bonusCoefficient; the generated shields state none.
+func newDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damage float64, bonusCoefficient float64) *Aura {
 	procSpell := unit.RegisterSpell(SpellConfig{
 		ActionID:    config.ActionID.WithTag(config.ActionID.Tag + 2),
 		SpellSchool: school,
@@ -264,6 +270,7 @@ func newGeneratedDamageShield(unit *Unit, config GeneratedBuff, school SpellScho
 
 		DamageMultiplier: 1,
 		ThreatMultiplier: 1,
+		BonusCoefficient: bonusCoefficient,
 
 		ApplyEffects: func(sim *Simulation, target *Unit, spell *Spell) {
 			spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMagicHit)

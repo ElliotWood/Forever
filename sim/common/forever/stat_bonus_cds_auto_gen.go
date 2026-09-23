@@ -64,7 +64,7 @@ func RegisterAllOnUseCds() {
 	// shared.NewSimpleStatActive(260821) // EZ and SAF Field Transporter: Mt. Hyjal - https://www.wowhead.com/forever/spell=1269339
 	// shared.NewSimpleStatActive(260823) // Dimensional Transporter - Mt. Hyjal - https://www.wowhead.com/forever/spell=1269339
 	// shared.NewSimpleStatActive(260824) // Gnomish Poultryizer - https://www.wowhead.com/forever/spell=1270941
-	// shared.NewSimpleStatActive(269741) // Scented Runewood Brooch - https://www.wowhead.com/forever/spell=1296664
+	// shared.NewSimpleStatActive(269741) // Scented Runewood Brooch -  -  - https://www.wowhead.com/forever/spell=1296664
 	// shared.NewSimpleStatActive(272437) // Adaptive Combat Assistant - https://www.wowhead.com/forever/spell=1291097
 	// shared.NewSimpleStatActive(272438) // Weakness Analyzer - https://www.wowhead.com/forever/spell=1291101
 	// shared.NewSimpleStatActive(272440) // Defender's Grip Stabilizer - https://www.wowhead.com/forever/spell=1291105
@@ -118,8 +118,8 @@ func RegisterAllOnUseCds() {
 		Name:                  "Talisman of Ascendance",
 		ID:                    22678,
 		CD:                    time.Millisecond * 60000,
-		Callback:              core.CallbackOnSpellHitDealt,
-		ProcMask:              core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial | core.ProcMaskRangedAuto | core.ProcMaskRangedSpecial | core.ProcMaskSpellDamage,
+		Callback:              core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt,
+		ProcMask:              core.ProcMaskMeleeMHSpecial | core.ProcMaskMeleeOHSpecial | core.ProcMaskRangedAuto | core.ProcMaskRangedSpecial | core.ProcMaskSpellDamage | core.ProcMaskSpellHealing,
 		Outcome:               core.OutcomeLanded,
 		RequireDamageDealt:    false,
 		TrinketLimitsDuration: true,
