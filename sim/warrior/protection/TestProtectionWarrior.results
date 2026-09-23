@@ -55,6 +55,14 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-AdaptiveCombatAssistant-272437"
+ value: {
+  dps: 513.92991
+  tps: 788.81144
+  dtps: 3384.61195
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-AegisofPreservation-19345"
  value: {
   dps: 501.64811
@@ -68,6 +76,14 @@ dps_results: {
   dps: 498.32356
   tps: 765.76568
   dtps: 3429.05461
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-ArenaGrandMaster-19024"
+ value: {
+  dps: 502.49435
+  tps: 771.90012
+  dtps: 3396.05963
  }
 }
 dps_results: {
@@ -119,6 +135,30 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-Defiler'sTalisman-20072"
+ value: {
+  dps: 492.33131
+  tps: 756.80726
+  dtps: 3426.35547
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 497.56237
+  tps: 764.73288
+  dtps: 3440.21468
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-DragonscaleBreastplate-8367"
+ value: {
+  dps: 502.27433
+  tps: 771.7356
+  dtps: 3528.67489
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-Dreadnaught'sBattlegear"
  value: {
   dps: 521.48477
@@ -148,6 +188,30 @@ dps_results: {
   dps: 500.14863
   tps: 768.49417
   dtps: 3429.05461
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-EnchantChest-Absorption-8220"
+ value: {
+  dps: 498.32356
+  tps: 765.76568
+  dtps: 3426.17961
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-EnchantChest-LesserAbsorption-63"
+ value: {
+  dps: 498.32356
+  tps: 765.76568
+  dtps: 3428.72822
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-EnchantChest-MinorAbsorption-44"
+ value: {
+  dps: 498.32356
+  tps: 765.76568
+  dtps: 3428.99072
  }
 }
 dps_results: {
@@ -368,6 +432,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-MarkofResolution-17759"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 501.64811
@@ -456,6 +528,22 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-TalismanofArathor-20071"
+ value: {
+  dps: 492.33131
+  tps: 756.80726
+  dtps: 3426.35547
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-TalismanofArathor-21117"
+ value: {
+  dps: 497.56237
+  tps: 764.73288
+  dtps: 3440.21468
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 501.64811
@@ -465,6 +553,14 @@ dps_results: {
 }
 dps_results: {
  key: "TestProtectionWarrior-AllItems-TalismanofEphemeralPower-18820"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3480.89646
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-TheBurrower'sShell-23558"
  value: {
   dps: 501.64811
   tps: 770.90621
@@ -485,6 +581,14 @@ dps_results: {
   dps: 498.32356
   tps: 765.76568
   dtps: 3429.05461
+ }
+}
+dps_results: {
+ key: "TestProtectionWarrior-AllItems-Uther'sStrength-11302"
+ value: {
+  dps: 501.64811
+  tps: 770.90621
+  dtps: 3479.93646
  }
 }
 dps_results: {

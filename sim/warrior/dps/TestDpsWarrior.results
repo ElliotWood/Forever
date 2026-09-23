@@ -55,6 +55,15 @@ character_stats_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-AdaptiveCombatAssistant-272437"
+ value: {
+  dps: 562.25487
+  tps: 320.92827
+  dtps: 6.98593
+  hps: 25.55316
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-AegisofPreservation-19345"
  value: {
   dps: 549.82306
@@ -65,6 +74,15 @@ dps_results: {
 }
 dps_results: {
  key: "TestDpsWarrior-AllItems-Annihilator-12798"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-ArenaGrandMaster-19024"
  value: {
   dps: 549.82306
   tps: 314.258
@@ -109,6 +127,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-Defiler'sTalisman-20072"
+ value: {
+  dps: 549.82783
+  tps: 314.26067
+  dtps: 6.98593
+  hps: 24.17689
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-Defiler'sTalisman-21115"
+ value: {
+  dps: 549.82785
+  tps: 314.26069
+  dtps: 6.98593
+  hps: 24.13319
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-Earthstrike-21180"
  value: {
   dps: 549.82306
@@ -131,6 +167,33 @@ dps_results: {
  value: {
   dps: 551.76887
   tps: 315.34766
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-EnchantChest-Absorption-8220"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-EnchantChest-LesserAbsorption-63"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-EnchantChest-MinorAbsorption-44"
+ value: {
+  dps: 549.82306
+  tps: 314.258
   dtps: 6.98593
   hps: 23.89281
  }
@@ -316,6 +379,15 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-MarkofResolution-17759"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-MarkoftheChampion-23206"
  value: {
   dps: 549.82306
@@ -388,6 +460,24 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-TalismanofArathor-20071"
+ value: {
+  dps: 549.82783
+  tps: 314.26067
+  dtps: 6.98593
+  hps: 24.17689
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-TalismanofArathor-21117"
+ value: {
+  dps: 549.82785
+  tps: 314.26069
+  dtps: 6.98593
+  hps: 24.13319
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-TalismanofAscendance-22678"
  value: {
   dps: 549.82306
@@ -406,6 +496,15 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-TheBurrower'sShell-23558"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-TheRestrainedEssenceofSapphiron-23046"
  value: {
   dps: 549.82306
@@ -416,6 +515,15 @@ dps_results: {
 }
 dps_results: {
  key: "TestDpsWarrior-AllItems-Thunderfury,BlessedBladeoftheWindseeker-19019"
+ value: {
+  dps: 549.82306
+  tps: 314.258
+  dtps: 6.98593
+  hps: 23.89281
+ }
+}
+dps_results: {
+ key: "TestDpsWarrior-AllItems-Uther'sStrength-11302"
  value: {
   dps: 549.82306
   tps: 314.258
