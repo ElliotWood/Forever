@@ -10,7 +10,6 @@ package database
 // after a deliberate change.
 
 import (
-	"math"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -39,8 +38,8 @@ func syntheticBuffRows() []ResolvedBuff {
 				Go: "SynthManaSpring", Name: "Mana Spring Totem", Category: "ManaSpringTotem",
 			},
 			SpellID: 10494, CastSpellID: 10494, Supported: true,
-			Effects: []ResolvedEffect{{Effect: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_ENERGIZE, Value: 10, PeriodMs: 2000}},
-			TalentCurve:   []float64{25, 26, 27, 28, 30, 31},
+			Effects:       []ResolvedEffect{{Effect: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_PERIODIC_ENERGIZE, Value: 10, PeriodMs: 2000}},
+			TalentRanks:   5,
 			TalentApplies: buffmanifest.TalentScalesValue,
 			TalentSpellID: 16187, TalentPosition: 1,
 		},
@@ -76,7 +75,7 @@ func syntheticBuffRows() []ResolvedBuff {
 			},
 			SpellID: 10293, CastSpellID: 10293, DurationMs: 600000, Supported: true,
 			Effects:       []ResolvedEffect{aura(dbcenums.A_MOD_RESISTANCE, 1, 735)},
-			TalentCurve:   []float64{600000, 900000, 1200000},
+			TalentRanks:   2,
 			TalentApplies: buffmanifest.TalentScalesDuration,
 			TalentSpellID: 20140, TalentPosition: 2,
 		},
@@ -98,7 +97,7 @@ func syntheticBuffRows() []ResolvedBuff {
 			},
 			SpellID: 11581, CastSpellID: 11581, DurationMs: 30000, Supported: true,
 			Effects:        []ResolvedEffect{aura(dbcenums.A_MOD_MELEE_HASTE_3, 0, -20)},
-			TalentCurve:    []float64{0.8, 0.78, 0.76},
+			TalentRanks:    2,
 			TalentApplies:  buffmanifest.TalentScalesValue,
 			TalentOnPseudo: true,
 			TalentSpellID:  12287, TalentPosition: 1,
@@ -138,7 +137,7 @@ func syntheticBuffRows() []ResolvedBuff {
 			BuffSpec: buffmanifest.BuffSpec{
 				Field: "atiesh_mage", Scope: buffmanifest.ScopeParty,
 				Proto: buffmanifest.ProtoInt32, Kind: buffmanifest.KindItemCount,
-				Go: "SynthAtieshMage", Anchor: 28142, Label: "Atiesh - Mage",
+				Go: "SynthAtieshMage", Label: "Atiesh - Mage",
 			},
 			SpellID: 28142, CastSpellID: 28142, Supported: true,
 			Effects: []ResolvedEffect{aura(dbcenums.A_MOD_SPELL_CRIT_CHANCE, 0, 2)},
@@ -152,7 +151,7 @@ func syntheticBuffRows() []ResolvedBuff {
 			},
 			SpellID: 9910, CastSpellID: 9910, DurationMs: 600000, SchoolMask: 8, Supported: true,
 			Effects:       []ResolvedEffect{aura(dbcenums.A_DAMAGE_SHIELD, 0, 22)},
-			TalentCurve:   []float64{22, 27, 33},
+			TalentRanks:   2,
 			TalentApplies: buffmanifest.TalentScalesValue,
 			TalentSpellID: 16836, TalentPosition: 1,
 		},
@@ -193,37 +192,10 @@ func syntheticBuffRows() []ResolvedBuff {
 	for i := range rows {
 		if rows[i].Supported {
 			setEffectRefs(&rows[i])
-			(&buffResolver{}).mapEffects(&rows[i])
+			mapEffects(&rows[i])
 		}
 	}
 	return rows
-}
-
-// The curve has to scale the amount the client states and convert afterwards: a
-// percentage aura reaches the sim as 1 + value/100, and spending talent points
-// on that number instead of on the client's -20 would price the buff at 0.9 + n.
-func TestTalentCurveScalesTheClientAmount(t *testing.T) {
-	row := ResolvedBuff{Effects: []ResolvedEffect{
-		{Effect: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_MOD_MELEE_HASTE_3, Value: -20},
-	}}
-
-	target, onPseudo, ok := row.talentTarget()
-	if !ok || !onPseudo {
-		t.Fatalf("talentTarget() = %v, onPseudo %v, ok %v; want the pseudo-stat effect", target, onPseudo, ok)
-	}
-
-	if got := row.convertedAmount(target, onPseudo); math.Abs(got-0.8) > 1e-9 {
-		t.Errorf("untalented amount = %v, want 0.8", got)
-	}
-
-	scaled := target
-	scaled.Value = math.Trunc(applyTalentPoints(target.Value, 10, dbcenums.A_ADD_PCT_MODIFIER))
-	if scaled.Value != -22 {
-		t.Errorf("scaled client amount = %v, want -22", scaled.Value)
-	}
-	if got := row.convertedAmount(scaled, onPseudo); math.Abs(got-0.78) > 1e-9 {
-		t.Errorf("talented amount = %v, want 0.78", got)
-	}
 }
 
 // The sim holds flat damage taken in a physical field and a spell field, and

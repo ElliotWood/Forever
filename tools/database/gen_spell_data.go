@@ -1208,10 +1208,14 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, *storeInputs, er
 		return nil, nil, err
 	}
 
-	files := map[string][]byte{
-		"sim/common/shared/spell_data_enums_auto_gen.go": enums,
-		"sim/core/spelldata/spells_auto_gen.go":          store,
+	// The buffs read the store's rows, so they are rendered from the same inputs, and checked and
+	// type-checked with the rest.
+	files, err := renderBuffOutputs(inputs)
+	if err != nil {
+		return nil, nil, fmt.Errorf("buffs: %w", err)
 	}
+	files["sim/common/shared/spell_data_enums_auto_gen.go"] = enums
+	files["sim/core/spelldata/spells_auto_gen.go"] = store
 	for pkg, out := range rendered {
 		files[fmt.Sprintf("sim/%s/spell_data_auto_gen.go", pkg)] = out
 	}

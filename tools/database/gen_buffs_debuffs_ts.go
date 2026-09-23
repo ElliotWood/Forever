@@ -3,15 +3,12 @@ package database
 // Renders the settings-UI buff and debuff inputs from the resolved manifest into
 // ui/features/settings/model/buffs_debuffs_auto_gen.ts.
 //
-// The file needs the client database for its spell ids and labels, and CI has no
-// database, so it is written by gen_spelldata in the same run as the Go buff files
-// and committed rather than gitignored.
+// It is rendered in the same pass as the Go buff files, from the same resolved
+// rows, and committed like them.
 
 import (
 	"bytes"
 	"fmt"
-	"os"
-	"path/filepath"
 	"slices"
 	"strings"
 	"text/template"
@@ -115,28 +112,6 @@ export const {{ .Name }}: RenderableStatOptions[] = [
 {{ end -}}
 ];
 {{ end }}`
-
-// GenerateBuffsDebuffsTSFile writes the settings-UI inputs for every manifest row
-// the client database describes.
-func GenerateBuffsDebuffsTSFile(helper *DBHelper) error {
-	rows, err := ResolveBuffManifest(helper)
-	if err != nil {
-		return err
-	}
-	out, err := RenderBuffsDebuffsTS(rows)
-	if err != nil {
-		return err
-	}
-
-	root, err := repoRoot()
-	if err != nil {
-		return err
-	}
-	if err := os.WriteFile(filepath.Join(root, buffsDebuffsTSFile), out, 0644); err != nil {
-		return fmt.Errorf("writing %s: %w", buffsDebuffsTSFile, err)
-	}
-	return nil
-}
 
 // RenderBuffsDebuffsTS renders one input per resolved row that has one, plus the
 // four registries the settings tab reads.

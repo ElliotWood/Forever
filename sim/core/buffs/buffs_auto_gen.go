@@ -237,7 +237,6 @@ func ConcentrationAuraAura(unit *core.Unit, isPlayer bool, talentPoints int32) *
 }
 
 // Trueshot Aura
-// the rank ladder is not monotonic: rank 5 (20906) is worth 50 where rank 4 (20905) is worth 75, and the top rank is what the constructor states. TODO: confirm in game which rank the client grants
 var trueshotAuraSpell = spelldata.MustFind(20906)
 
 func TrueshotAuraValue(talentPoints int32) float64 {

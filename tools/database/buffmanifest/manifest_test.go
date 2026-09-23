@@ -77,14 +77,14 @@ func TestShellRowsHaveNotes(t *testing.T) {
 	}
 }
 
-func TestResolvableRowsHaveAnchor(t *testing.T) {
+func TestResolvableRowsNameASpell(t *testing.T) {
 	for _, spec := range Manifest {
 		switch spec.Kind {
-		case KindAbsent, KindFlag, KindManual:
+		case KindAbsent, KindFlag:
 			continue
 		}
-		if spec.Name == "" && spec.Anchor == 0 {
-			t.Errorf("%s (%s) has neither Name nor Anchor", spec.Field, spec.Kind)
+		if spec.SpellID == 0 {
+			t.Errorf("%s (%s) names no spell", spec.Field, spec.Kind)
 		}
 	}
 }

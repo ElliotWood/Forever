@@ -40,7 +40,7 @@ var Manifest = []BuffSpec{
 		Category: "DruidCritAura", SingleAura: true,
 		StatOverride: []string{"PhysicalCritPercent", "SpellCritPercent"},
 		Stats:        []proto.Stat{proto.Stat_StatMeleeCritRating, proto.Stat_StatSpellCritRating},
-		Notes:        "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule cannot separate them: the generator must prefer the party aura 24932 or this row needs an explicit Anchor. No improving talent in druid tree 1089. Spell 24932 reads \"Increases critical strike chance by $s1%\" and names no school, so the 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. Spell 17007 calls it exclusive with Moonkin Aura, which is the DruidCritAura category the two rows share.",
+		Notes:        "SkillLineAbility resolves the name to the talent passive 17007; the party aura is the second spell of the same name, 24932. Neither carries a rank subtext, so the aura-family rule takes the one that applies a party aura, 24932, which the row pins. No improving talent in druid tree 1089. Spell 24932 reads \"Increases critical strike chance by $s1%\" and names no school, so the 3 goes on every kind of crit: PhysicalCritPercent is melee and ranged, SpellCritPercent the rest. Spell 17007 calls it exclusive with Moonkin Aura, which is the DruidCritAura category the two rows share.",
 	},
 	{
 		Field: "mana_spring_totem", Number: 9, Scope: ScopeParty, Proto: ProtoTristate, Kind: KindStatFlat,
@@ -100,14 +100,14 @@ var Manifest = []BuffSpec{
 	{
 		Field: "atiesh_mage", Number: 7, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
 		SpellID: 28142,
-		Go:      "AtieshMage", Anchor: 28142, Owner: proto.Class_ClassMage,
+		Go:      "AtieshMage", Owner: proto.Class_ClassMage,
 		Stats: []proto.Stat{proto.Stat_StatSpellDamage, proto.Stat_StatHealingPower}, Label: "Atiesh - Mage",
 		Notes: "aura-only spell; 28142 is named Power of the Guardian.",
 	},
 	{
 		Field: "atiesh_warlock", Number: 8, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
 		SpellID: 28143,
-		Go:      "AtieshWarlock", Anchor: 28143, Owner: proto.Class_ClassWarlock,
+		Go:      "AtieshWarlock", Owner: proto.Class_ClassWarlock,
 		Stats: []proto.Stat{proto.Stat_StatSpellDamage, proto.Stat_StatHealingPower}, Label: "Atiesh - Warlock",
 		Notes: "aura-only spell; 28143 is named Power of the Guardian.",
 	},
@@ -138,13 +138,13 @@ var Manifest = []BuffSpec{
 	{
 		Field: "atiesh_druid", Number: 16, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
 		SpellID: 28145,
-		Go:      "AtieshDruid", Anchor: 28145, Owner: proto.Class_ClassDruid, Label: "Atiesh - Druid",
+		Go:      "AtieshDruid", Owner: proto.Class_ClassDruid, Label: "Atiesh - Druid",
 		Notes: "no UI input today; aura-only spell 28145 is named Power of the Guardian.",
 	},
 	{
 		Field: "atiesh_priest", Number: 17, Scope: ScopeParty, Proto: ProtoInt32, Kind: KindItemCount,
 		SpellID: 28144,
-		Go:      "AtieshPriest", Anchor: 28144, Owner: proto.Class_ClassPriest, Label: "Atiesh - Priest",
+		Go:      "AtieshPriest", Owner: proto.Class_ClassPriest, Label: "Atiesh - Priest",
 		Notes: "no UI input today; aura-only spell 28144 is named Power of the Guardian.",
 	},
 	{
@@ -381,7 +381,7 @@ var Manifest = []BuffSpec{
 	{
 		Field: "gift_of_arthas", Number: 5, Scope: ScopeDebuff, Proto: ProtoBool, Kind: KindDebuffDamageTaken,
 		SpellID: 11374,
-		Go:      "GiftOfArthas", Anchor: 11374, Category: "GiftOfArthasAura", SingleAura: true,
+		Go:      "GiftOfArthas", Category: "GiftOfArthasAura", SingleAura: true,
 		Stats: []proto.Stat{proto.Stat_StatAttackPower, proto.Stat_StatResilienceRating},
 		Notes: "applied by an elixir, so 11374 has no SkillLineAbility row and the anchor is explicit.",
 	},

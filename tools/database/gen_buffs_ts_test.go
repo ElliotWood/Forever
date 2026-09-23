@@ -1,45 +1,15 @@
 package database
 
-// Re-renders the settings-UI buff inputs from the client database and asserts the
-// committed file agrees, plus a database-free check of the shapes the renderer
-// chooses per proto type and scope.
+// The shapes the settings-input renderer chooses per proto type and scope. That
+// the committed file is what the manifest renders is buffs_regen_test.go's.
 
 import (
-	"bytes"
-	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
 )
-
-func TestGeneratedBuffsDebuffsTS(t *testing.T) {
-	helper := openBuffTestDB(t)
-
-	rows, err := ResolveBuffManifest(helper)
-	if err != nil {
-		t.Fatalf("resolving the manifest: %v", err)
-	}
-	rendered, err := RenderBuffsDebuffsTS(rows)
-	if err != nil {
-		t.Fatalf("rendering %s: %v", buffsDebuffsTSFile, err)
-	}
-
-	root, err := repoRoot()
-	if err != nil {
-		t.Fatalf("finding the repository root: %v", err)
-	}
-	committed, err := os.ReadFile(filepath.Join(root, buffsDebuffsTSFile))
-	if err != nil {
-		t.Fatalf("reading %s: %v", buffsDebuffsTSFile, err)
-	}
-	if !bytes.Equal(committed, rendered) {
-		t.Errorf("%s does not match the client database, regenerate with `make spelldata`:\n%s",
-			buffsDebuffsTSFile, unifiedBuffDiff(string(committed), string(rendered)))
-	}
-}
 
 func TestRenderBuffsDebuffsTSShapes(t *testing.T) {
 	rows := []ResolvedBuff{
@@ -58,7 +28,7 @@ func TestRenderBuffsDebuffsTSShapes(t *testing.T) {
 				Stats: []proto.Stat{proto.Stat_StatRangedAttackPower},
 			},
 			SpellID: 14325, DBName: "Hunter's Mark",
-			TalentCurve: []float64{71, 110}, TalentSpellID: 19425,
+			TalentRanks: 1, TalentSpellID: 19425,
 		},
 		{
 			BuffSpec: buffmanifest.BuffSpec{

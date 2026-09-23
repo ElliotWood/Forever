@@ -2,7 +2,8 @@
 //
 // It imports nothing but the standard library and the manifest, so it runs while
 // sim/core/proto and the generated buff files are stale: protoc needs buffs.proto
-// before anything that reads the compiled protos can build.
+// before anything that reads the compiled protos can build. The spell data pass
+// renders the same file and names it in -check when it is stale.
 //
 //	go run ./tools/gen_buffs_proto
 package main
@@ -39,7 +40,7 @@ func run() error {
 		path = filepath.Join(repoRoot, destPath)
 	}
 
-	rendered := Render(buffmanifest.Manifest)
+	rendered := buffmanifest.RenderProto(buffmanifest.Manifest)
 	if err := os.WriteFile(path, rendered, 0o644); err != nil {
 		return fmt.Errorf("writing %s: %w", path, err)
 	}

@@ -1,4 +1,5 @@
-// Regenerates sim/<class>/spell_data_auto_gen.go from the client database.
+// Regenerates the spell store, sim/<class>/spell_data_auto_gen.go and the raid buffs from the client
+// database.
 //
 // Its own binary, not a mode of gen_db: gen_db imports every class package, so a class file that
 // does not compile stops it. This binary imports sim/core, sim/core/spelldata and sim/common - the
@@ -53,13 +54,5 @@ func main() {
 
 	if err := database.GenerateSpellDataFiles(helper, *unchecked); err != nil {
 		log.Fatalf("failed to generate spell data tables: %v", err)
-	}
-
-	if err := database.GenerateBuffFiles(helper); err != nil {
-		log.Fatalf("failed to generate buff files: %v", err)
-	}
-
-	if err := database.GenerateBuffsDebuffsTSFile(helper); err != nil {
-		log.Fatalf("failed to generate the settings buff inputs: %v", err)
 	}
 }

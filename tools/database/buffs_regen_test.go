@@ -1,92 +1,65 @@
 package database
 
-// Re-renders the two generated buff files from the client database and asserts
-// the committed ones agree, plus the resolver invariants that cannot be checked
-// without a database.
-//
-// Skips when tools/database/wowsims.db is absent, which is why CI is unaffected.
-//
-// RenderBuffFiles reads the live sim/core tree to decide which rows sim/core
-// still implements by hand, so declaring any func named <Something>Aura there,
-// or reading a buff's proto field in applyBuffEffects or applyDebuffEffects,
-// changes what this test expects. That is the migration switch working, not a
-// broken test: regenerate.
+// Re-renders the buff files from the client rows committed in assets/db_inputs/spell_store_inputs.json
+// and asserts the committed ones agree, plus the resolver invariants the rendered code cannot show.
+// No client database: the buffs render from the same capture the store does, so this runs in CI.
 
 import (
 	"bytes"
-	"database/sql"
-	"errors"
 	"fmt"
 	"maps"
 	"os"
-	"path/filepath"
-	"slices"
 	"strconv"
 	"strings"
 	"testing"
 
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/tools/database/buffmanifest"
-	"github.com/wowsims/forever/tools/database/dbc"
 )
 
-func openBuffTestDB(t *testing.T) *DBHelper {
+func resolveCommittedBuffs(t *testing.T) []ResolvedBuff {
 	t.Helper()
+	inRepositoryRoot(t)
 
-	DatabasePath = "wowsims.db"
-	if _, err := os.Stat(DatabasePath); err != nil {
-		t.Skipf("no client database at %s - run `make db` from a local WoW install to enable this gate", DatabasePath)
-	}
-
-	helper, err := NewDBHelper()
+	inputs, err := readStoreInputs(spellStoreInputsPath)
 	if err != nil {
-		t.Fatalf("opening %s: %v", DatabasePath, err)
+		t.Fatalf("%v", err)
 	}
-	t.Cleanup(func() { helper.Close() })
-	return helper
+	rows, err := resolveBuffManifest(inputs)
+	if err != nil {
+		t.Fatalf("resolving the manifest: %v", err)
+	}
+	return rows
 }
 
-func TestGeneratedBuffFiles(t *testing.T) {
-	helper := openBuffTestDB(t)
+func TestBuffFilesRegenerateFromTheCommittedInputs(t *testing.T) {
+	inRepositoryRoot(t)
 
-	files, err := RenderBuffFiles(helper)
+	inputs, err := readStoreInputs(spellStoreInputsPath)
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+	files, err := renderBuffOutputs(inputs)
 	if err != nil {
 		t.Fatalf("rendering the buff files: %v", err)
 	}
 
-	root, err := repoRoot()
-	if err != nil {
-		t.Fatalf("finding the repository root: %v", err)
-	}
-
 	for name, rendered := range files {
-		committed, err := os.ReadFile(filepath.Join(root, name))
+		committed, err := os.ReadFile(name)
 		if err != nil {
 			t.Errorf("reading %s: %v", name, err)
 			continue
 		}
-		if bytes.Equal(committed, rendered) {
-			continue
+		if !bytes.Equal(committed, rendered) {
+			t.Errorf("%s is not what the committed inputs render, regenerate with `go run ./tools/database/gen_spelldata`:\n%s",
+				name, unifiedBuffDiff(string(committed), string(rendered)))
 		}
-		t.Errorf("%s does not match the client database, regenerate with `make spelldata`:\n%s",
-			name, unifiedBuffDiff(string(committed), string(rendered)))
 	}
 }
 
 func TestResolvedBuffInvariants(t *testing.T) {
-	helper := openBuffTestDB(t)
-
-	rows, err := ResolveBuffManifest(helper)
-	if err != nil {
-		t.Fatalf("resolving the manifest: %v", err)
-	}
+	rows := resolveCommittedBuffs(t)
 	if len(rows) != len(buffmanifest.Manifest) {
 		t.Fatalf("resolved %d rows for a manifest of %d", len(rows), len(buffmanifest.Manifest))
-	}
-
-	runes, err := loadRuneGrantedSpells(helper.db)
-	if err != nil {
-		t.Fatalf("loading the rune-granted spells: %v", err)
 	}
 
 	for _, row := range rows {
@@ -96,33 +69,11 @@ func TestResolvedBuffInvariants(t *testing.T) {
 			}
 			continue
 		}
-
-		if row.SpellID == 0 {
-			// A row the client has no spell for states why in its reason; that
-			// is the shell the generator emits rather than an invariant break.
-			if row.Supported {
-				t.Errorf("%s: generated without a spell", row.Field)
-			}
-			continue
+		if row.Proto == buffmanifest.ProtoTristate && row.TalentRanks == 0 && row.ImpAction == nil {
+			t.Errorf("%s: declared ProtoTristate but neither a talent nor an ImpAction prices it", row.Field)
 		}
-
-		var name string
-		err := helper.db.QueryRow(`SELECT Name_lang FROM SpellName WHERE ID = ?`, row.SpellID).Scan(&name)
-		if errors.Is(err, sql.ErrNoRows) {
-			t.Errorf("%s: resolved to spell %d, which has no SpellName row", row.Field, row.SpellID)
-			continue
-		}
-		if err != nil {
-			t.Fatalf("%s: reading spell %d: %v", row.Field, row.SpellID, err)
-		}
-		if runes[row.SpellID] {
-			t.Errorf("%s: resolved to spell %d, which a rune grants", row.Field, row.SpellID)
-		}
-		if row.Proto == buffmanifest.ProtoTristate && len(row.TalentCurve) == 0 && row.ImpAction == nil {
-			t.Errorf("%s: declared ProtoTristate but neither a talent in the owner's tree nor an ImpAction prices it", row.Field)
-		}
-		if want, pinned := pinnedTalentCurves[row.Field]; pinned && !slices.Equal(row.TalentCurve, want) {
-			t.Errorf("%s: talent curve is %v, want %v", row.Field, row.TalentCurve, want)
+		if want, pinned := pinnedTalentRanks[row.Field]; pinned && row.TalentRanks != want {
+			t.Errorf("%s: the talent takes %d points, want %d", row.Field, row.TalentRanks, want)
 		}
 		if want, pinned := pinnedCategories[row.Field]; pinned && row.Category != want {
 			t.Errorf("%s: the aura competes under %q, want %q", row.Field, row.Category, want)
@@ -139,23 +90,13 @@ func TestResolvedBuffInvariants(t *testing.T) {
 	}
 }
 
-// The group the client states a buff reaches: an area aura names it in the
-// effect itself, and an aura the client applies over an area or on one ally
-// names it in the effect's target. Every raid and individual row names one, so
-// each is checked two ways: that the client agrees with the scope, and that it
-// states a group at all. A party or debuff row the client states nothing for is
-// exempt, because its scope is then the sim's grouping rather than a game fact:
-// the buff Windfury's proc lands on its wielder, a debuff the client reaches by
-// the area around its caster.
+// Every raid and individual row names the group it reaches, so each is checked two ways: that the
+// client agrees with the scope, and that it states a group at all. A party or debuff row the client
+// states nothing for is exempt, because its scope is then the sim's grouping rather than a game
+// fact: the buff Windfury's proc lands on its wielder, a debuff the client reaches by the area around
+// its caster.
 func TestScopeMatchesTheClientTargeting(t *testing.T) {
-	helper := openBuffTestDB(t)
-
-	rows, err := ResolveBuffManifest(helper)
-	if err != nil {
-		t.Fatalf("resolving the manifest: %v", err)
-	}
-
-	for _, row := range rows {
+	for _, row := range resolveCommittedBuffs(t) {
 		if row.SpellID == 0 {
 			continue
 		}
@@ -194,31 +135,9 @@ func scopeComplaint(row ResolvedBuff) string {
 	return ""
 }
 
-func clientScope(row ResolvedBuff) (buffmanifest.BuffScope, bool) {
-	for _, effect := range row.Effects {
-		switch effect.Effect {
-		case dbcenums.E_APPLY_AREA_AURA_RAID:
-			return buffmanifest.ScopeRaid, true
-		case dbcenums.E_APPLY_AREA_AURA_PARTY:
-			return buffmanifest.ScopeParty, true
-		case dbcenums.E_APPLY_AURA:
-			switch effect.ImplicitTarget {
-			case dbc.TARGET_UNIT_CASTER_AREA_RAID:
-				return buffmanifest.ScopeRaid, true
-			case dbc.TARGET_UNIT_CASTER_AREA_PARTY:
-				return buffmanifest.ScopeParty, true
-			case dbc.TARGET_UNIT_TARGET_ALLY, dbc.TARGET_UNIT_TARGET_ALLY_OR_RAID:
-				return buffmanifest.ScopeIndividual, true
-			}
-		}
-	}
-	return buffmanifest.ScopeIndividual, false
-}
-
 // The two auras the client states as a bare A_MOD_CRIT_PCT, which carries no
 // school: what they are worth is the client's 3, and it lands on every kind of
-// crit, which is what the manifest's StatOverride says. Nothing else can see
-// that mapping while both rows render as shells.
+// crit, which is what the manifest's StatOverride says.
 //
 // Expose Armor states nothing on the effect itself: its -450 armor is per combo
 // point, and the raid config's debuff is the five-point finisher.
@@ -228,23 +147,16 @@ var pinnedStatAmounts = map[string]map[string]float64{
 	"expose_armor":       {"Armor": -2250},
 }
 
-// Mana Spring is the only buff an improving talent still prices, so it is the
-// only place the curve can be checked against the client. Restorative Totems
-// modifies the aura's own number - 10 mana per 2 seconds - by 5% a point, and
-// the client states that number as a whole one, so ranks 1 and 2 both come out
-// at 10 per tick; the conversion to mana per 5 seconds keeps the half the 11 of
-// ranks 3 and 4 is worth.
-var pinnedTalentCurves = map[string][]float64{
-	"mana_spring_totem": {25, 25, 27.5, 27.5, 30, 30},
+// Mana Spring is the only buff an improving talent prices: Restorative Totems, five points.
+var pinnedTalentRanks = map[string]int32{
+	"mana_spring_totem": 5,
 }
 
 // What a resistance row competes under, as (stats, own aura). A source that has
 // no exclusivity beyond the school itself keeps no category of its own, which is
 // how every totem, Aspect of the Wild and Shadow Protection read; a paladin aura
 // also holds its own slot. Armor is not a school, so Devotion Aura has only the
-// slot. Nothing else can see this while every row renders as a shell.
-// A row whose manifest category is the resistance school itself keeps none of its
-// own: the school category the sim puts the stat into is the whole competition.
+// slot.
 var pinnedCategories = map[string]string{
 	"frost_resistance_totem":      "",
 	"aspect_of_the_wild":          "",

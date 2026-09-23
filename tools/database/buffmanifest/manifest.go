@@ -193,7 +193,6 @@ type BuffSpec struct {
 	CastID         int32
 	Name           string      // SpellName.Name_lang of the castable family ("" for rows with no spell)
 	AuraName       string      // aura family when the cast is a summon or dummy (totems: "Strength of Earth")
-	Anchor         int32       // explicit spell id; 0 = resolve Name via SkillLineAbility
 	Owner          proto.Class // class that casts it; ClassUnknown for none
 	Talent         *TalentMod  // improving talent family, nil when none
 	Category       string      // exclusive-effect category value, "" = none
