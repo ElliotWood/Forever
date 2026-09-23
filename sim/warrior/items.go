@@ -365,5 +365,55 @@ func init() {
 		})
 	})
 
+	// Diamond Flask
+	// https://www.wowhead.com/forever/item=20130/diamond-flask
+	//
+	// Forever's flask is a 5 sec channel (363881) that heals and, if it runs to the end, grants 20
+	// Strength for 60 sec (1318070); Classic's gave 75 Strength outright. 6 min cooldown, 1 min on
+	// its own consumable category rather than the burst trinket one. The heal is left out.
+	core.NewItemEffect(20130, func(agent core.Agent) {
+		character := agent.GetCharacter()
+		strengthAura := character.NewTemporaryStatsAura("Diamond Flask", core.ActionID{SpellID: 1318070}, stats.Stats{stats.Strength: 20}, time.Minute)
+
+		spell := character.RegisterSpell(core.SpellConfig{
+			ActionID: core.ActionID{ItemID: 20130},
+			ProcMask: core.ProcMaskEmpty,
+			Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagChanneled | core.SpellFlagHelpful,
+
+			Cast: core.CastConfig{
+				CD: core.Cooldown{
+					Timer:    character.NewTimer(),
+					Duration: time.Minute * 6,
+				},
+			},
+
+			Hot: core.DotConfig{
+				SelfOnly: true,
+				Aura: core.Aura{
+					Label: "CHUG! CHUG! CHUG! CHUG!",
+				},
+				NumberOfTicks: 5,
+				TickLength:    time.Second,
+				OnTick: func(sim *core.Simulation, _ *core.Unit, dot *core.Dot) {
+					if dot.RemainingTicks() == 0 {
+						strengthAura.Activate(sim)
+					}
+				},
+			},
+
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, spell *core.Spell) {
+				spell.SelfHot().Apply(sim)
+			},
+		})
+
+		character.AddMajorCooldown(core.MajorCooldown{
+			Spell: spell,
+			Type:  core.CooldownTypeDPS,
+			ShouldActivate: func(_ *core.Simulation, _ *core.Character) bool {
+				return false // Five seconds of channel belong before the pull; left to the APL.
+			},
+		})
+	})
+
 	core.AddEffectsToTest = true
 }

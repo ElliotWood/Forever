@@ -353,3 +353,45 @@ var ItemSetChampionsGuard = roguePvPSet("Champion's Guard", 2, 6)
 var ItemSetLieutenantCommandersGuard = roguePvPSet("Lieutenant Commander's Guard", 2, 6)
 var ItemSetWarlordsVestments = roguePvPSet("Warlord's Vestments", 6, 2)
 var ItemSetFieldMarshalsVestments = roguePvPSet("Field Marshal's Vestments", 6, 2)
+
+func init() {
+	// Renataki's Charm of Trickery
+	// https://www.wowhead.com/forever/item=19954/renatakis-charm-of-trickery
+	//
+	// Use: Instantly increases your energy by 60 (24532). 3 min cooldown, 10 sec on the burst
+	// trinket category.
+	core.NewItemEffect(19954, func(agent core.Agent) {
+		rogue := agent.(RogueAgent).GetRogue()
+		energyMetrics := rogue.NewEnergyMetrics(core.ActionID{SpellID: 24532})
+
+		spell := rogue.RegisterSpell(core.SpellConfig{
+			ActionID: core.ActionID{ItemID: 19954},
+			ProcMask: core.ProcMaskEmpty,
+			Flags:    core.SpellFlagNoOnCastComplete,
+
+			Cast: core.CastConfig{
+				CD: core.Cooldown{
+					Timer:    rogue.NewTimer(),
+					Duration: time.Minute * 3,
+				},
+				SharedCD: core.Cooldown{
+					Timer:    rogue.GetOffensiveTrinketCD(),
+					Duration: time.Second * 10,
+				},
+			},
+
+			ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+				rogue.AddEnergy(sim, 60, energyMetrics)
+			},
+		})
+
+		rogue.AddMajorCooldown(core.MajorCooldown{
+			Spell: spell,
+			Type:  core.CooldownTypeDPS,
+			ShouldActivate: func(_ *core.Simulation, _ *core.Character) bool {
+				// Room for all 60, so none of it is lost to the cap.
+				return rogue.CurrentEnergy() <= rogue.MaximumEnergy()-60
+			},
+		})
+	})
+}
