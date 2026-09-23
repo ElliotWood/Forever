@@ -292,7 +292,7 @@ func getCritChances(rawChance float64, target *Unit) critChances {
 }
 
 func (spell *Spell) HealingPower(target *Unit) float64 {
-	return spell.SpellDamage(target) + target.PseudoStats.BonusHealingTaken
+	return spell.Unit.GetStat(stats.HealingPower) + target.PseudoStats.BonusHealingTaken
 }
 func (spell *Spell) HealingCritChance() float64 {
 	return (spell.Unit.GetStat(stats.SpellCritPercent) + spell.BonusCritPercent) / 100
