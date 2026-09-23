@@ -49,12 +49,10 @@ func (hunter *Hunter) registerSerpentStingSpell() {
 			spell.WaitTravelTime(sim, func(sim *core.Simulation) {
 				spell.DealOutcome(sim, result)
 
+				// Serpent Sting is our only sting, so there is no other sting of ours to knock off; another
+				// hunter's stays up beside it (it used to be removed, and two hunters kept undoing each other).
 				if result.Landed() {
-					dot := spell.Dot(target)
-					if activeSting := target.GetActiveAuraWithTag("Sting"); activeSting != nil && activeSting != dot.Aura {
-						activeSting.Deactivate(sim)
-					}
-					dot.Apply(sim)
+					spell.Dot(target).Apply(sim)
 				}
 			})
 		},
