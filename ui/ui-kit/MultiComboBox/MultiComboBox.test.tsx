@@ -46,7 +46,7 @@ beforeEach(() => {
 });
 
 describe('MultiComboBox', () => {
-	it('labels its input and shows the placeholder only while nothing is picked', () => {
+	it('labels its input, keeps its placeholder, and shows the picks as chips below the field', () => {
 		mount();
 
 		expect(screen.getByText('Fruit').closest('label')!.getAttribute('for')).toBe('fruit');
@@ -56,7 +56,11 @@ describe('MultiComboBox', () => {
 
 		act(() => model.set([2]));
 		expect(chips()).toEqual(['Banana']);
-		expect(input().placeholder).toBe('');
+		expect(input().placeholder).toBe('Pick fruit');
+		const field = screen.getByTestId('multi-combo-box-field');
+		const chipRow = screen.getByTestId('multi-combo-box-chips');
+		expect(field.contains(chipRow)).toBe(false);
+		expect(field.compareDocumentPosition(chipRow) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 	});
 
 	it('lists every option from the chevron, picked ones included, and toggles one per click', async () => {

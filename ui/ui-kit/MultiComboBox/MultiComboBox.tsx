@@ -16,8 +16,8 @@ export interface MultiComboBoxProps<ModObject> {
 	testId?: string;
 }
 
-// base-ui's multi-select combobox: the picks sit in the field as removable chips, clicking the field
-// or the chevron lists every option, and typing narrows the list.
+// base-ui's multi-select combobox: clicking the field or the chevron lists every option, typing
+// narrows the list, and the picks sit below the field as removable chips.
 export const MultiComboBox = <ModObject,>({ modObject, config, className, testId }: MultiComboBoxProps<ModObject>) => {
 	const { value, setValue, hidden, disabled } = useInput(modObject, config);
 	const portalContainer = usePortalContainer();
@@ -35,39 +35,34 @@ export const MultiComboBox = <ModObject,>({ modObject, config, className, testId
 				itemToStringLabel={(entry: EnumValueConfig) => entry.name}
 				isItemEqualToValue={(a: EnumValueConfig, b: EnumValueConfig) => a.value === b.value}
 				disabled={disabled}>
-				<Combobox.Chips ref={anchor} className="ui-multi-combo-box-field" data-testid="multi-combo-box-field">
-					<Combobox.Value>
-						{(picks: Array<EnumValueConfig>) => (
-							<>
-								{picks.map(entry => (
-									<Combobox.Chip
-										key={entry.value}
-										aria-label={entry.name}
-										render={props => (
-											<Chip
-												label={entry.name}
-												nameAs="span"
-												rootProps={{ ...props }}
-												confirmDelete={false}
-												deleteLabel={config.removeLabel}
-												onDelete={() => setValue((value ?? []).filter(picked => picked !== entry.value))}
-												testId="multi-combo-box-chip"
-											/>
-										)}
-									/>
-								))}
-								<Combobox.Input
-									id={config.id}
-									className="ui-multi-combo-box-input"
-									placeholder={picks.length ? '' : config.placeholder}
-									data-testid="multi-combo-box-input"
-								/>
-							</>
-						)}
-					</Combobox.Value>
+				<Combobox.InputGroup ref={anchor} className="ui-multi-combo-box-field" data-testid="multi-combo-box-field">
+					<Combobox.Input id={config.id} className="ui-multi-combo-box-input" placeholder={config.placeholder} data-testid="multi-combo-box-input" />
 					<Combobox.Trigger className="ui-multi-combo-box-trigger" aria-label={config.openLabel} data-testid="multi-combo-box-trigger">
 						<Icon name="chevron-down" />
 					</Combobox.Trigger>
+				</Combobox.InputGroup>
+				<Combobox.Chips className="ui-multi-combo-box-chips" data-testid="multi-combo-box-chips">
+					<Combobox.Value>
+						{(picks: Array<EnumValueConfig>) =>
+							picks.map(entry => (
+								<Combobox.Chip
+									key={entry.value}
+									aria-label={entry.name}
+									render={props => (
+										<Chip
+											label={entry.name}
+											nameAs="span"
+											rootProps={{ ...props }}
+											confirmDelete={false}
+											deleteLabel={config.removeLabel}
+											onDelete={() => setValue((value ?? []).filter(picked => picked !== entry.value))}
+											testId="multi-combo-box-chip"
+										/>
+									)}
+								/>
+							))
+						}
+					</Combobox.Value>
 				</Combobox.Chips>
 				<Combobox.Portal container={portalContainer ?? undefined}>
 					<Combobox.Positioner className="ui-multi-combo-box-positioner" anchor={anchor} align="start" sideOffset={2}>

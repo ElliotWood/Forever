@@ -800,7 +800,7 @@
 			},
 			"area_types": {
 				"label": "Area",
-				"placeholder": "Pick the kinds of area",
+				"placeholder": "Select area type(s)",
 				"empty": "No kind of area matches",
 				"open": "Show all kinds of area",
 				"remove": "Remove area",

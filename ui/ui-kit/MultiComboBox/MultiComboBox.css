@@ -1,6 +1,6 @@
 @layer components {
 	.ui-multi-combo-box-field {
-		@apply relative flex w-full min-w-0 flex-wrap items-center gap-1 rounded-none border border-surface-border bg-surface py-1 pr-8 pl-1 text-ui leading-normal text-foreground transition-colors duration-150 ease-in-out;
+		@apply relative flex w-full min-w-0 items-center rounded-none border border-surface-border bg-surface pr-8 text-ui leading-normal text-foreground transition-colors duration-150 ease-in-out;
 
 		&:focus-within {
 			@apply border-input-focus-border shadow-focus-input;
@@ -8,10 +8,18 @@
 	}
 
 	.ui-multi-combo-box-input {
-		@apply min-w-16 flex-1 border-none bg-transparent px-2 py-0.5 text-ui text-foreground outline-none;
+		@apply w-full min-w-0 flex-1 border-none bg-transparent px-3 py-1.5 text-ui text-foreground outline-none;
 
 		&::placeholder {
 			@apply text-secondary;
+		}
+	}
+
+	.ui-multi-combo-box-chips {
+		@apply mt-2 flex flex-wrap gap-1;
+
+		&:empty {
+			@apply hidden;
 		}
 	}
 
