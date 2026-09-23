@@ -19,9 +19,11 @@ func (dot *Dot) canCrit(sim *Simulation) bool {
 // Ticks roll against the caster's crit chance at the time of the tick instead of the
 // chance snapshotted when the dot went up. Dots that are applied by hand, like Deep
 // Wounds, never snapshot one at all, so rolling live is also the only way for them to
-// crit at the right rate.
+// crit at the right rate. The crit table follows the spell's defense type, not its school:
+// Serpent Sting is Nature but the client files it Ranged (SpellCategories.DefenseType 3),
+// so its ticks roll ranged crit, suppression and all, like the shot that applied it.
 func (dot *Dot) critCheck(sim *Simulation, target *Unit, attackTable *AttackTable) bool {
-	if dot.Spell.SchoolIndex == stats.SchoolIndexPhysical {
+	if dot.Spell.SchoolIndex == stats.SchoolIndexPhysical || dot.Spell.DefenseType == DefenseTypeMelee || dot.Spell.DefenseType == DefenseTypeRanged {
 		return dot.Spell.PhysicalCritCheck(sim, attackTable)
 	}
 	return dot.Spell.MagicCritCheck(sim, target)
