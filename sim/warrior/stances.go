@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
@@ -28,8 +29,15 @@ var battleStancePassive = spellData.BattleStancePassive.Highest()
 var defensiveStancePassive = spellData.DefensiveStancePassive.Highest()
 var berserkerStancePassive = spellData.BerserkerStancePassive.Highest()
 
-func (warrior *Warrior) StanceMatches(other Stance) bool {
-	return (warrior.Stance & other) != 0
+var stanceForms = map[Stance]dbcenums.ShapeshiftForm{
+	BattleStance:    dbcenums.FORM_BATTLE_STANCE,
+	DefensiveStance: dbcenums.FORM_DEFENSIVE_STANCE,
+	BerserkerStance: dbcenums.FORM_BERSERKER_STANCE,
+}
+
+func (warrior *Warrior) setStance(stance Stance) {
+	warrior.Stance = stance
+	warrior.ShapeshiftForm = stanceForms[stance]
 }
 
 func (warrior *Warrior) makeStanceSpell(stance Stance, flags core.ClassFlags, rank *spelldata.Spell, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
@@ -69,7 +77,7 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, flags core.ClassFlags, ra
 				warrior.SpendRage(sim, warrior.CurrentRage()-maxRetainedRage, rageMetrics)
 			}
 
-			warrior.Stance = stance
+			warrior.setStance(stance)
 		},
 
 		RelatedSelfBuff: aura,
