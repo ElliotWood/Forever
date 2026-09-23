@@ -78,6 +78,7 @@ func TestEnchantProcRouting(t *testing.T) {
 
 // A PPM override answers "states no rate" on the spell the slot is routed through - the combat spell
 // of an Effect 1 slot, the equip aura of an Effect 3 one - and leaves every other refusal in place.
+// On an equip aura that hears only spells the rate is refused in turn: it would never roll.
 func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
 	inRepositoryRoot(t)
 	instance := dbc.GetDBC()
@@ -87,10 +88,12 @@ func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
 		effectID   int
 		name       string
 		overrideOn int32
+		refusedFor string
 	}{
-		{803, "Fiery Weapon: Effect 1, a damage combat spell", 13897},
-		{1899, "Unholy Weapon: Effect 1, a combat spell granting a buff", 20006},
-		{8217, "Revelation: Effect 3, the aura's 100 beside 'a chance to trigger'", 1248806},
+		{803, "Fiery Weapon: Effect 1, a damage combat spell", 13897, ""},
+		{1899, "Unholy Weapon: Effect 1, a combat spell granting a buff", 20006, ""},
+		{8217, "Revelation: Effect 3, the aura's 100 beside 'a chance to trigger', heard on spells only", 1248806,
+			spelldata.ReasonPPMHearsNoWeaponHits},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			enchant := instance.EnchantsByEffectId[tc.effectID]
@@ -112,11 +115,17 @@ func TestEnchantProcRoutingTakesAPPMOverride(t *testing.T) {
 			withPPMOverride(t, tc.overrideOn, 2)
 
 			after := route()
+			if tc.refusedFor != "" && !slices.Contains(after.Unsupported, tc.refusedFor) {
+				t.Errorf("unsupported = %v with the override, want it to name %q", after.Unsupported, tc.refusedFor)
+			}
 			want := slices.DeleteFunc(slices.Clone(before.Unsupported), func(reason string) bool {
 				return reason == spelldata.ReasonStatesNoRate
 			})
-			if !slices.Equal(after.Unsupported, want) {
-				t.Errorf("unsupported = %v with the override, want %v", after.Unsupported, want)
+			got := slices.DeleteFunc(slices.Clone(after.Unsupported), func(reason string) bool {
+				return reason == tc.refusedFor
+			})
+			if !slices.Equal(got, want) {
+				t.Errorf("unsupported = %v with the override, want %v beside %q", after.Unsupported, want, tc.refusedFor)
 			}
 		})
 	}

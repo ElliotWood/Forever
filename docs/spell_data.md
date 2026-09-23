@@ -599,10 +599,12 @@ the spell it is routed through - the `TriggerSpellID` of its commented-out regis
   aura whose flags decode to no mask stays refused as `no proc mask to measure its rate on`.
 
 A procs-per-minute enchant proc rolls on weapon hits only: its mask keeps its melee and ranged bits,
-and a spell or heal hit never procs it. `dpmForMask` strips the rest for every enchant, so an equip
-aura that hears only spells registers and never fires. An enchant the game does let spells proc is an
-exception to state there, by enchant; there is none today. A stated chance (Fiery Blaze 36's 15%,
-Insight 8216's 35%) is not a rate and hears what its row says.
+and a spell or heal hit never procs it. `dpmForMask` strips the rest for every enchant, and
+`spelldata.EnchantAuraUnsupported` refuses a rate on an equip aura that hears only spells as
+`a procs-per-minute rate hears no weapon hits in this mask`, so it stays listed rather than
+registering to never fire. An enchant the game does let spells proc is an exception to state there,
+by enchant; there is none today. A stated chance (Fiery Blaze 36's 15%, Insight 8216's 35%) is not a
+rate and hears what its row says.
 
 Revelation 8217 stays listed. Its rate is scripted and the client does not state it: trigger 1248806's
 `ProcChance` 100 is the sentinel beside the tooltip's "a chance", and its effect entry resolves no stats

@@ -436,7 +436,8 @@ func TestStatedEnchantChanceRollsOnTheEnchantedWeaponOnly(t *testing.T) {
 }
 
 // A PPM override on a rate-less enchant proc's row clears its refusal, and the registration measures
-// the rate on the enchanted weapon's hits. An equip aura that hears only spells never rolls.
+// the rate on the enchanted weapon's hits. An equip aura that hears only spells never rolls, which is
+// the refusal its rate gets.
 func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 	const mainHandID, offHandID, enchantID int32 = 990501, 990502, 990503
 	const ppm = 2.0
@@ -471,10 +472,12 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 		damage       bool
 		heard        core.ProcMask
 		want         float64
+		refusedFor   string
 	}{
-		{"Fiery Weapon's combat spell 13897", 13897, true, true, core.ProcMaskMeleeMHAuto, mainHandChance},
-		{"Unholy Weapon's combat spell 20006", 20006, true, false, core.ProcMaskMeleeMHAuto, mainHandChance},
-		{"Revelation's equip aura 1248806", 1248806, false, false, core.ProcMaskSpellDamage, 0},
+		{"Fiery Weapon's combat spell 13897", 13897, true, true, core.ProcMaskMeleeMHAuto, mainHandChance, ""},
+		{"Unholy Weapon's combat spell 20006", 20006, true, false, core.ProcMaskMeleeMHAuto, mainHandChance, ""},
+		{"Revelation's equip aura 1248806", 1248806, false, false, core.ProcMaskSpellDamage, 0,
+			spelldata.ReasonPPMHearsNoWeaponHits},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			row := *spelldata.MustFind(tc.spellID)
@@ -482,7 +485,7 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 				if tc.isWeaponProc {
 					return spelldata.CombatEnchantUnsupported(&row, false)
 				}
-				return spelldata.ItemProcUnsupported(&row, false)
+				return spelldata.EnchantAuraUnsupported(&row)
 			}
 
 			// An equip aura's missing rate is read off the enchant's tooltip, by the generator.
@@ -492,8 +495,12 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 
 			row.RPPM = ppm
 			row.ProcChanceSource, row.ProcChanceEffect = spelldata.ProcChancePPM, 0
-			if got := unsupported(); len(got) != 0 {
-				t.Errorf("unsupported = %v with the override, want none", got)
+			var want []string
+			if tc.refusedFor != "" {
+				want = []string{tc.refusedFor}
+			}
+			if got := unsupported(); !slices.Equal(got, want) {
+				t.Errorf("unsupported = %v with the override, want %v", got, want)
 			}
 
 			cfg := SpellDataProc{Name: "Test " + tc.name, EnchantID: enchantID, TriggerSpellID: row.ID,
