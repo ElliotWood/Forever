@@ -1012,7 +1012,55 @@ func NewSimpleStatActive(itemID int32) {
 // An on-use item whose spell deals damage to its target: the direct damage its row rolls, the damage
 // over time it applies, or both.
 func NewSpellDataDamageOnUse(itemID int32) {
-	registerSpellDataOnUse(itemID, core.CooldownTypeDPS, spellDataProcDamageSpell)
+	registerSpellDataOnUse(itemID, core.CooldownTypeDPS, spellDataOnUseDamageSpell)
+}
+
+// The proc's damage spell with the hit of its damage over time rolled once, when it is applied: the
+// direct hit where the row deals one, a hit roll of its own where it does not. The ticks roll no hit.
+func spellDataOnUseDamageSpell(character *core.Character, damage *spelldata.Spell) core.SpellConfig {
+	config := spellDataProcDamageSpell(character, damage)
+	periodic := damage.PeriodicDamageEffect()
+	if periodic == spelldata.NilEffect {
+		return config
+	}
+
+	config.Dot.OnTick = func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
+		dot.Spell.CalcAndDealPeriodicDamage(sim, target, periodic.Average(dot.Spell.Unit.Level), onUseTickOutcome(damage, dot))
+	}
+	if damage.DamageEffect() != spelldata.NilEffect {
+		return config
+	}
+
+	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		if spell.CalcAndDealOutcome(sim, target, applicationOutcome(spell)).Landed() {
+			spell.Dot(target).Apply(sim)
+		}
+	}
+	return config
+}
+
+// The hit table of the spell's defense type, without the crit an application cannot deal.
+func applicationOutcome(spell *core.Spell) core.OutcomeApplier {
+	switch spell.DefenseType {
+	case core.DefenseTypeMelee:
+		return spell.OutcomeMeleeSpecialHit
+	case core.DefenseTypeRanged:
+		return spell.OutcomeRangedHit
+	default:
+		return spell.OutcomeMagicHit
+	}
+}
+
+// The crit spelldata.TickOutcome rolls for the row, without its hit.
+func onUseTickOutcome(damage *spelldata.Spell, dot *core.Dot) core.OutcomeApplier {
+	switch {
+	case !damage.PeriodicCanCrit():
+		return dot.OutcomeTick
+	case damage.DefenseTypeCore() == core.DefenseTypeMagic:
+		return dot.Spell.OutcomeTickMagicCrit
+	default:
+		return dot.Spell.OutcomeTickPhysicalCrit
+	}
 }
 
 // An on-use item whose spell heals the wearer, at once or over time.

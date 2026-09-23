@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
 	"github.com/wowsims/forever/sim/core/stats"
@@ -238,6 +239,70 @@ func TestOnUseDealsItsDirectDamageAndItsDamageOverTime(t *testing.T) {
 	}
 	if got := dealtUntil(t, sim, spell, start, 8*time.Second); math.Abs(got-4*33) > 1e-6 {
 		t.Errorf("the damage over time dealt %v over its 8 s, want four ticks of 33", got)
+	}
+}
+
+// At no spell hit, against a target it misses half the time, a use of the lasso that misses applies no
+// damage over time, and one that lands ticks all six times: the hit is rolled once, when it is applied.
+func TestOnUseDotRollsItsHitOnceWhenApplied(t *testing.T) {
+	const itemID int32 = 991016
+	sim, caster := newOnUseSim(t, NewSpellDataDamageOnUse, map[int32]*proto.ItemEffect{itemID: lassoOnUse()})
+	caster.AddStatsDynamic(sim, stats.Stats{stats.SpellHitPercent: -caster.GetStat(stats.SpellHitPercent)})
+	lasso := onUseSpell(t, caster, itemID)
+	target := sim.Encounter.ActiveTargetUnits[0]
+	caster.AttackTables[target.UnitIndex].BaseSpellMissChance = 0.5
+	metrics := &lasso.SpellMetrics[target.UnitIndex]
+
+	missedUses, landedUses := 0, 0
+	for use := 1; use <= 14; use++ {
+		lasso.CD.Reset()
+		lasso.SharedCD.Reset()
+		misses, ticks := metrics.Misses, metrics.Ticks
+
+		lasso.Cast(sim, target)
+		missed := metrics.Misses > misses
+		if missed == lasso.Dot(target).IsActive() {
+			t.Errorf("use %d: missed %v, damage over time up %v", use, missed, lasso.Dot(target).IsActive())
+		}
+
+		stepPast(t, sim, sim.CurrentTime+12*time.Second+time.Millisecond)
+		wantTicks := int32(6)
+		if missed {
+			missedUses++
+			wantTicks = 0
+		} else {
+			landedUses++
+		}
+		if got := metrics.Ticks - ticks; got != wantTicks {
+			t.Errorf("use %d (missed %v) ticked %d times, want %d", use, missed, got, wantTicks)
+		}
+		if got := metrics.Misses - misses; missed && got != 1 || !missed && got != 0 {
+			t.Errorf("use %d (missed %v) counted %d misses, want only the application's", use, missed, got)
+		}
+	}
+	if missedUses == 0 || landedUses == 0 {
+		t.Fatalf("%d of 14 uses missed and %d landed; the test needs both", missedUses, landedUses)
+	}
+}
+
+// Where the row states Periodic Can Crit, a landed lasso's ticks roll the spell crit and still no hit.
+// 443265 states no such attribute, so a copy stating it stands in for the rows that do.
+func TestOnUseDotTicksCritWithoutAHitRoll(t *testing.T) {
+	const itemID int32 = 991017
+	editRow(t, lassoSpell, func(s *spelldata.Spell) { s.Attr[dbcenums.ATTR_INDEX_EX_8] |= dbcenums.ATTR_EX_8_PERIODIC_CAN_CRIT })
+	sim, caster := newOnUseSim(t, NewSpellDataDamageOnUse, map[int32]*proto.ItemEffect{itemID: lassoOnUse()})
+	caster.AddStatsDynamic(sim, stats.Stats{stats.SpellCritPercent: 100})
+	lasso := onUseSpell(t, caster, itemID)
+	target := sim.Encounter.ActiveTargetUnits[0]
+
+	lasso.Cast(sim, target)
+	caster.AttackTables[target.UnitIndex].BaseSpellMissChance = 1
+	caster.AddStatsDynamic(sim, stats.Stats{stats.SpellHitPercent: -caster.GetStat(stats.SpellHitPercent)})
+	stepPast(t, sim, sim.CurrentTime+12*time.Second+time.Millisecond)
+
+	metrics := lasso.SpellMetrics[target.UnitIndex]
+	if metrics.CritTicks != 6 || metrics.Ticks != 0 || metrics.Misses != 0 {
+		t.Errorf("metrics = %d crit ticks, %d ticks, %d misses; want 6, 0, 0", metrics.CritTicks, metrics.Ticks, metrics.Misses)
 	}
 }
 
