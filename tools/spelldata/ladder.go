@@ -43,6 +43,8 @@ var (
 	loadLadders sync.Once
 	ladderIndex = map[int32][]ladderRef{}
 	familyIndex = map[string]*ladderFamily{}
+	// The field names every class states a ladder under.
+	familyFields = map[string]bool{}
 )
 
 // The ladder calls that reach this id, in package and field order. A class whose generated file is
@@ -105,6 +107,7 @@ func collectLadders(file *ast.File) {
 			return true
 		}
 		familyIndex[family.key()] = family
+		familyFields[family.field] = true
 		for id, call := range family.refs() {
 			ladderIndex[id] = append(ladderIndex[id], ladderRef{pkg: pkg, field: field.Name, call: call})
 		}
@@ -119,11 +122,8 @@ func newLadderFamily(pkg, field string, value ast.Expr) *ladderFamily {
 	if !ok {
 		return nil
 	}
-	sel, ok := call.Fun.(*ast.SelectorExpr)
+	constructor, ok := pkgSelector(call.Fun, "spelldata")
 	if !ok {
-		return nil
-	}
-	if ident, ok := sel.X.(*ast.Ident); !ok || ident.Name != "spelldata" {
 		return nil
 	}
 
@@ -138,10 +138,10 @@ func newLadderFamily(pkg, field string, value ast.Expr) *ladderFamily {
 
 	family := &ladderFamily{pkg: pkg, field: field}
 	switch {
-	case sel.Sel.Name == "Talent" && len(args) == 2 && args[1] > 0:
+	case constructor == "Talent" && len(args) == 2 && args[1] > 0:
 		family.talent, family.ids = true, args[:1]
 		family.ladder, family.err = buildLadder(func() spelldata.Ladder { return spelldata.Talent(args[0], args[1]) })
-	case sel.Sel.Name == "Ranked" && len(args) > 0:
+	case constructor == "Ranked" && len(args) > 0:
 		family.ids = args
 		family.ladder, family.err = buildLadder(func() spelldata.Ladder { return spelldata.Ranked(args...) })
 	default:

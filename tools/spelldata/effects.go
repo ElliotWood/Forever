@@ -214,9 +214,9 @@ func auraPhrase(s *spelldata.Spell, e *spelldata.Effect) string {
 		return join("reflects", percent(e), "of", schoolName(core.SpellSchool(e.Misc)), "damage")
 
 	case dbcenums.A_ADD_FLAT_MODIFIER:
-		return join(spellModOpName(e.Misc), flatModAmount(e), modTargets(s, e))
+		return join(namedOr(dbcenums.SpellModOp(e.Misc), "op %d"), flatModAmount(e), modTargets(s, e))
 	case dbcenums.A_ADD_PCT_MODIFIER:
-		return join(spellModOpName(e.Misc), signedPercent(e), modTargets(s, e))
+		return join(namedOr(dbcenums.SpellModOp(e.Misc), "op %d"), signedPercent(e), modTargets(s, e))
 
 	case dbcenums.A_MOD_STAT:
 		return join(signed(value(e)), statName(e.Misc))
@@ -406,9 +406,9 @@ func share(coeff float64, of string) string {
 // The effect as the client states it: the columns it fills, in the units the row keeps them in, so the
 // words above can be checked against them.
 func literal(e *spelldata.Effect, pos int) string {
-	parts := []string{effectTypeName(e.Type)}
+	parts := []string{namedOr(e.Type, "E_%d")}
 	if e.Aura != 0 {
-		parts = append(parts, auraName(e.Aura))
+		parts = append(parts, namedOr(e.Aura, "A_%d"))
 	}
 	parts = append(parts, "base="+number(e.BasePoints))
 

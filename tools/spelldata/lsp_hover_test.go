@@ -7,9 +7,11 @@ import (
 	"fmt"
 	"io"
 	"net/textproto"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 	"unicode/utf16"
 )
 
@@ -350,7 +352,7 @@ func TestDeclarations(t *testing.T) {
 func declared(chains map[string]string) map[string]declaration {
 	out := map[string]declaration{}
 	for name, text := range chains {
-		c, err := parseChain(text, 0)
+		c, err := parseChain(text)
 		if err != nil {
 			panic(err)
 		}
@@ -360,7 +362,7 @@ func declared(chains map[string]string) map[string]declaration {
 }
 
 func resolveText(text string, decls map[string]declaration) (string, error) {
-	c, err := parseChain(text, 0)
+	c, err := parseChain(text)
 	if err != nil {
 		return "", err
 	}
@@ -392,7 +394,6 @@ func TestResolveChain(t *testing.T) {
 
 	refuses := map[string]string{
 		"warrior.MaximumRage()":  "no ladder-shaped declaration of warrior",
-		"spellData.Execute":      "names a family, not a rank",
 		"executeRank.EffectN(n)": "n is not a literal",
 	}
 	for chain, want := range refuses {
@@ -455,6 +456,76 @@ func TestWorkspaceBuffers(t *testing.T) {
 	ws.update(other, "", false)
 	if _, _, ok := hoverOn(t, ws, use, uri, "hoverTestRank", 2); ok {
 		t.Error("a closed buffer's declaration is still read")
+	}
+}
+
+const scopedGo = `package warrior
+
+func (warrior *Warrior) registerRend() {
+	tick := spellData.Rend.Highest().PeriodicEffect()
+	rendUse(tick)
+}
+
+func (warrior *Warrior) registerBloodCraze() {
+	earlyUse(tick)
+	tick := spellData.BloodCrazeTriggered.Highest().PeriodicEffect()
+	lateUse(tick)
+}
+`
+
+// A name bound inside a function answers only there and only after its binding, whatever another
+// function or file binds to the same name.
+func TestHoverLocalScope(t *testing.T) {
+	uri := warriorURI(t, "zz_scope_test.go")
+	wantHover(t, scopedGo, "rendUse(tick", 8, "of 11574 Rend")
+	wantHover(t, scopedGo, "lateUse(tick", 8, "of 16488 Blood Craze")
+	if markdown, _, ok := hoverOn(t, newWorkspace(), scopedGo, uri, "earlyUse(tick", 9); ok {
+		t.Errorf("a name used before its binding answered:\n%s", markdown)
+	}
+}
+
+func TestHoverWithoutPackageClause(t *testing.T) {
+	if _, _, ok := newWorkspace().hover("x := spellData.Execute.Highest()\n", 0, 2, "file:///tmp/a.go"); ok {
+		t.Error("a file with no package clause answered a hover")
+	}
+}
+
+// A file the editor does not hold is read again when it changes on disk, and dropped when it is gone.
+func TestWorkspaceDiskChanges(t *testing.T) {
+	folder := filepath.Join(t.TempDir(), "warrior")
+	if err := os.Mkdir(folder, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	other := filepath.Join(folder, "other.go")
+	write := func(family string, stamp time.Time) {
+		t.Helper()
+		if err := os.WriteFile(other, []byte("package warrior\n\nvar diskRank = spellData."+family+".Highest()\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.Chtimes(other, stamp, stamp); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	ws := newWorkspace()
+	use := "package warrior\n\nvar x = diskRank\n"
+	uri := pathURI(filepath.Join(folder, "use.go"))
+	write("Rend", time.Unix(1, 0))
+	if markdown, trace, _ := hoverOn(t, ws, use, uri, "diskRank", 2); !strings.HasPrefix(markdown, "### 11574 Rend") {
+		t.Fatalf("the file on disk was not read:\n%s\n%s", markdown, strings.Join(trace, "\n"))
+	}
+
+	write("Execute", time.Unix(2, 0))
+	markdown, trace, _ := hoverOn(t, ws, use, uri, "diskRank", 2)
+	if !strings.HasPrefix(markdown, "### 20662 Execute") || !strings.HasPrefix(trace[1], "declarations") || !strings.Contains(trace[1], "cache miss, read 1 files") {
+		t.Errorf("the change on disk did not reach the hover:\n%s\n%s", markdown, strings.Join(trace, "\n"))
+	}
+
+	if err := os.Remove(other); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, ok := hoverOn(t, ws, use, uri, "diskRank", 2); ok {
+		t.Error("a file removed from disk is still read")
 	}
 }
 

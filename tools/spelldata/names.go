@@ -12,27 +12,12 @@ import (
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-func effectTypeName(t dbcenums.SpellEffectType) string {
-	if name, ok := dbcenums.Named(t); ok {
+// The name dbcenums gives a value, or its number in format where it gives none.
+func namedOr[T fmt.Stringer](v T, format string) string {
+	if name, ok := dbcenums.Named(v); ok {
 		return name
 	}
-	return fmt.Sprintf("E_%d", t)
-}
-
-func auraName(a dbcenums.EffectAuraType) string {
-	if name, ok := dbcenums.Named(a); ok {
-		return name
-	}
-	return fmt.Sprintf("A_%d", a)
-}
-
-// The op an A_ADD_FLAT_MODIFIER or A_ADD_PCT_MODIFIER names in its misc value, or its number where
-// dbcenums names none.
-func spellModOpName(misc int32) string {
-	if name, ok := dbcenums.Named(dbcenums.SpellModOp(misc)); ok {
-		return name
-	}
-	return fmt.Sprintf("op %d", misc)
+	return fmt.Sprintf(format, v)
 }
 
 // The bits of SpellAuraOptions.ProcTypeMask by name, word 0 then word 1.
