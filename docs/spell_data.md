@@ -579,18 +579,19 @@ carry, and two overrides of the same field on one spell. Every one that is appli
 `// override: <field> <value> -- <reason>` comment on the row it wrote to, so reading the generated
 store says which numbers are not the client's.
 
-An item or enchant proc refused as `states no rate` registers once a `PPM` override sits on the spell
-it is routed through - the `TriggerSpellID` of its commented-out registration, the id on its
-`// trigger N` line:
+An item or enchant proc refused as `states no rate` loses that refusal once a `PPM` override sits on
+the spell it is routed through - the `TriggerSpellID` of its commented-out registration, the id on its
+`// trigger N` line - and registers where it was the only one:
 
 - A combat enchant (Effect 1) or a chance-on-hit item effect: the combat spell itself - Fiery Weapon's
   13897, Unholy Weapon's 20006 - not the spell that grants the enchant. The rate is measured on the
   hits of the weapon carrying it (`NewDynamicLegacyProcForEnchant(id, ppm, 0)`, or `...ForWeapon` for an
   item).
 - An equip aura (Effect 3): the aura carrying the proc trigger - Revelation's 1248806 - not the spell it
-  triggers (1248808) nor the grant (1248805). The rate is measured on the aura's own proc mask
-  (`NewLegacyPPMManager`), so an aura whose flags decode to no mask stays refused as `no proc mask to
-  measure its rate on`.
+  triggers (1248808) nor the grant (1248805). Revelation stays refused all the same: its effect entry
+  resolves no stats. The rate is measured on the aura's own proc mask (`NewLegacyPPMManager`, which
+  prices every mask but the off hand's and the ranged one's off the main hand's speed), so an aura whose
+  flags decode to no mask stays refused as `no proc mask to measure its rate on`.
 
 Where a combat spell and an aura apply the same spell (Crusader), the slot whose row states a rate is
 the one kept, so the override goes on the combat spell to keep it the combat spell. After adding a row,
