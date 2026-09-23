@@ -82,3 +82,132 @@ func TestEnchantProcChanceFollowsTheEnchantedWeapon(t *testing.T) {
 	}
 	check("enchant swapped to the off hand", 0, 0.15)
 }
+
+// A procs-per-minute rate bound to a weapon enchant heard on melee and spell damage: a melee hit rolls
+// only on a hand carrying the enchant, at that weapon's speed, and a spell hit at the enchanted
+// weapon's speed, the main hand's where both carry it.
+func TestEnchantPPMFollowsTheEnchantedWeapon(t *testing.T) {
+	const slowID, fastID, enchantID int32 = 990701, 990702, 990703
+	const slow, fast, ppm = 2.6, 1.8, 2.0
+
+	weapon := func(id int32, speed float64) *proto.SimItem {
+		return &proto.SimItem{
+			Id:             id,
+			Name:           "Test Sword",
+			Type:           proto.ItemType_ItemTypeWeapon,
+			WeaponType:     proto.WeaponType_WeaponTypeSword,
+			HandType:       proto.HandType_HandTypeOneHand,
+			WeaponSpeed:    speed,
+			ScalingOptions: map[int32]*proto.ScalingItemProperties{0: {WeaponDamageMin: 50, WeaponDamageMax: 90}},
+		}
+	}
+	addToDatabase(&proto.SimDatabase{
+		Items:    []*proto.SimItem{weapon(slowID, slow), weapon(fastID, fast)},
+		Enchants: []*proto.SimEnchant{{EffectId: enchantID, Name: "Test Rate Enchant", Type: proto.ItemType_ItemTypeWeapon}},
+	})
+
+	spec := func(id int32, enchanted bool) *proto.ItemSpec {
+		if enchanted {
+			return &proto.ItemSpec{Id: id, Enchant: enchantID}
+		}
+		return &proto.ItemSpec{Id: id}
+	}
+	hands := func(mainHand, offHand *proto.ItemSpec) []*proto.ItemSpec {
+		items := make([]*proto.ItemSpec, proto.ItemSlot_ItemSlotOffHand+1)
+		for i := range items {
+			items[i] = &proto.ItemSpec{}
+		}
+		items[proto.ItemSlot_ItemSlotMainHand] = mainHand
+		items[proto.ItemSlot_ItemSlotOffHand] = offHand
+		return items
+	}
+	chance := func(speed float64) float64 { return speed * (ppm / 60) }
+
+	type chances struct{ mainHand, offHand, spell float64 }
+	for _, tc := range []struct {
+		name        string
+		equipped    []*proto.ItemSpec
+		swapped     []*proto.ItemSpec
+		before      chances
+		afterSwap   chances
+		swapSummary string
+	}{
+		{
+			name:        "main hand only",
+			equipped:    hands(spec(slowID, true), spec(fastID, false)),
+			swapped:     hands(spec(fastID, false), spec(slowID, true)),
+			before:      chances{chance(slow), 0, chance(slow)},
+			afterSwap:   chances{0, chance(slow), chance(slow)},
+			swapSummary: "the enchanted weapon swapped to the off hand",
+		},
+		{
+			name:        "off hand only",
+			equipped:    hands(spec(slowID, false), spec(fastID, true)),
+			swapped:     hands(spec(fastID, true), spec(slowID, false)),
+			before:      chances{0, chance(fast), chance(fast)},
+			afterSwap:   chances{chance(fast), 0, chance(fast)},
+			swapSummary: "the enchanted weapon swapped to the main hand",
+		},
+		{
+			name:        "both hands",
+			equipped:    hands(spec(slowID, true), spec(fastID, true)),
+			swapped:     hands(spec(slowID, false), spec(fastID, false)),
+			before:      chances{chance(slow), chance(fast), chance(slow)},
+			afterSwap:   chances{0, 0, 0},
+			swapSummary: "both swapped for unenchanted weapons",
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			agent := &FakeAgent{Character: NewCharacter(&Party{}, 0, &proto.Player{
+				Name:           "Rate Tester",
+				Class:          proto.Class_ClassWarrior,
+				Race:           proto.Race_RaceHuman,
+				Spec:           &proto.Player_ProtectionWarrior{ProtectionWarrior: &proto.ProtectionWarrior{}},
+				Equipment:      &proto.EquipmentSpec{Items: tc.equipped},
+				EnableItemSwap: true,
+				ItemSwap:       &proto.ItemSwap{Items: tc.swapped},
+			})}
+			character := &agent.Character
+			character.ItemSwap.initialize(character)
+			character.EnableAutoAttacks(agent, AutoAttackOptions{
+				MainHand:       character.WeaponFromMainHand(),
+				OffHand:        character.WeaponFromOffHand(),
+				AutoSwingMelee: true,
+			})
+
+			dpm := character.NewDynamicLegacyProcForEnchantWithMask(enchantID, ppm, ProcMaskMelee|ProcMaskSpellDamage)
+
+			check := func(when string, want chances) {
+				t.Helper()
+				for _, hit := range []struct {
+					name string
+					mask ProcMask
+					want float64
+				}{
+					{"main hand", ProcMaskMeleeMHAuto, want.mainHand},
+					{"off hand", ProcMaskMeleeOHAuto, want.offHand},
+					{"spell", ProcMaskSpellDamage, want.spell},
+				} {
+					if got := dpm.Chance(hit.mask, nil); got != hit.want {
+						t.Errorf("%s: %s chance = %v, want %v", when, hit.name, got, hit.want)
+					}
+				}
+			}
+			check("as equipped", tc.before)
+
+			// SwapItems' per-slot step. A prepull swap exchanges the items without a sim and leaves
+			// the weapons to the rest of it, so they are set here as a swap in combat sets them.
+			for _, slot := range character.ItemSwap.slots {
+				character.ItemSwap.swapItem(nil, slot, true, false)
+			}
+			character.AutoAttacks.SetMH(character.WeaponFromMainHand())
+			character.AutoAttacks.SetOH(character.WeaponFromOffHand())
+			for _, slot := range character.ItemSwap.slots {
+				for _, onSwap := range character.ItemSwap.onItemSwapCallbacks[slot] {
+					onSwap(nil, slot)
+				}
+			}
+			check(tc.swapSummary, tc.afterSwap)
+		})
+	}
+}
