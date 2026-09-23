@@ -1,7 +1,8 @@
 // What the item procs the sim registered before it read them off the rows resolve to. The table is
 // the sixteen registrations sim/common/forever/stat_bonus_procs_auto_gen.go carried at 60266be6f7,
 // transcribed by hand, and every field is what that generated call stated. Two of them state a
-// number the client contradicts, and one is no longer registered at all; both say so here.
+// number the client contradicts, one a mask that leaves out the heals the client's mask names, and
+// one is no longer registered at all; each says so here.
 //
 // A pin rather than a comparison: the generated file carries spell ids now, so there are no literals
 // left to compare against, and what this guards is that resolving those ids still produces the
@@ -92,8 +93,10 @@ func liveProcs() []liveProc {
 			outcome: core.OutcomeLanded, requireDamageDealt: true, ppm: 1,
 		},
 		{
+			// The generated call stated ProcMaskSpellDamage alone. 23688's mask 0x14000 names helpful
+			// spells beside harmful ones, so heal casts roll it too.
 			itemID: 19288, name: "Darkmoon Card: Blue Dragon", triggerSpellID: 23688,
-			callback: core.CallbackOnCastComplete, procMask: core.ProcMaskSpellDamage,
+			callback: core.CallbackOnCastComplete, procMask: core.ProcMaskSpellDamage | core.ProcMaskSpellHealing,
 			outcome: core.OutcomeEmpty, chance: 0.02,
 		},
 		{
