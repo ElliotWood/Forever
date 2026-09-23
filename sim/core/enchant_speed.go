@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/wowsims/forever/sim/core/proto"
+	"github.com/wowsims/forever/sim/core/stats"
 )
 
 // The haste pseudo stats of an item and of its enchant multiply the wearer's melee, ranged and cast
@@ -50,15 +51,9 @@ func (character *Character) registerSpeedAura(label string, pseudoStats []float6
 }
 
 func hastePercents(pseudoStats []float64) (melee, ranged, cast float64) {
-	pseudoStat := func(pseudoStat proto.PseudoStat) float64 {
-		if int(pseudoStat) < len(pseudoStats) {
-			return pseudoStats[pseudoStat]
-		}
-		return 0
-	}
-	return pseudoStat(proto.PseudoStat_PseudoStatMeleeHastePercent),
-		pseudoStat(proto.PseudoStat_PseudoStatRangedHastePercent),
-		pseudoStat(proto.PseudoStat_PseudoStatSpellHastePercent)
+	return stats.PseudoStatValue(pseudoStats, proto.PseudoStat_PseudoStatMeleeHastePercent),
+		stats.PseudoStatValue(pseudoStats, proto.PseudoStat_PseudoStatRangedHastePercent),
+		stats.PseudoStatValue(pseudoStats, proto.PseudoStat_PseudoStatSpellHastePercent)
 }
 
 // Multiplies the unit's melee, ranged and cast speed by the haste percents pseudoStats states, indexed
