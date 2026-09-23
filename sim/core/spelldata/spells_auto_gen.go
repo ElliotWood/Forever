@@ -18984,7 +18984,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 704641, SpellID: 26651, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, BasePoints: 1, SpellLevel: 60, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 26789, Name: "Shard of the Fallen Star", School: 4, Attr: [17]uint32{15: 0x2000}, SpellLevel: 60, MaxRange: 30, ProcChance: 101, ProcChanceSource: ProcChanceAlways,
+	{ID: 26789, Name: "Shard of the Fallen Star", School: 4, Attr: [17]uint32{15: 0x2000}, SpellLevel: 60, MaxRange: 30, ProcChance: 101, ProcChanceSource: ProcChanceAlways, SplitsDamage: true,
 		Effects: []Effect{
 			{ID: 704682, SpellID: 26789, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 421, Variance: 0.09976246953010559, SpellLevel: 60, PvpMult: 1, RadiusMax: 5, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{53, 16}},
 		}},
@@ -30822,7 +30822,7 @@ var generatedSpells = []Spell{
 		Effects: []Effect{
 			{ID: 1317197, SpellID: 1295267, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{1, 0}},
 		}},
-	{ID: 1295270, Name: "Prototype Pathcarver", School: 1, Attr: [17]uint32{15: 0x2000}, SpellLevel: 60, MaxRange: 8, DefenseType: 1, PreventionType: 1, MaxTargets: 5,
+	{ID: 1295270, Name: "Prototype Pathcarver", School: 1, Attr: [17]uint32{15: 0x2000}, SpellLevel: 60, MaxRange: 8, DefenseType: 1, PreventionType: 1, MaxTargets: 5, SplitsDamage: true,
 		Effects: []Effect{
 			{ID: 1317202, SpellID: 1295270, Type: dbcenums.E_SCHOOL_DAMAGE, BasePoints: 607, SpellLevel: 60, PvpMult: 1, ChainAmp: 1, Target: [2]dbcenums.ImplicitTarget{53, 16}},
 			{ID: 1317763, SpellID: 1295270, Index: 1, BasePoints: 2, SpellLevel: 60, PvpMult: 1, ChainAmp: 1},
