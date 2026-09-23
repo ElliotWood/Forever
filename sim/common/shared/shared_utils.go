@@ -640,8 +640,7 @@ func spellDataProcAura(character *core.Character, cfg SpellDataProc, trigger *sp
 	})
 }
 
-// A buff that multiplies stats through dynamic stat dependencies. The temporary stats listeners hear
-// the stats the multipliers add on gain and remove on expire, measured at that moment.
+// A buff that multiplies stats through dynamic stat dependencies.
 func statMultiplierAura(character *core.Character, config core.Aura, multipliers []spelldata.StatMultiplier) *core.StatBuffAura {
 	deps := make([]*stats.StatDependency, len(multipliers))
 	buffed := make([]stats.Stat, len(multipliers))
@@ -650,24 +649,7 @@ func statMultiplierAura(character *core.Character, config core.Aura, multipliers
 		buffed[i] = m.Stat
 	}
 
-	toggle := func(aura *core.Aura, sim *core.Simulation, set func(*core.Simulation, *stats.StatDependency)) {
-		before := character.GetStats()
-		for _, dep := range deps {
-			set(sim, dep)
-		}
-
-		change := character.GetStats().Subtract(before)
-		for _, onChange := range character.OnTemporaryStatsChanges {
-			onChange(sim, aura, change)
-		}
-	}
-
-	config.OnGain = func(aura *core.Aura, sim *core.Simulation) {
-		toggle(aura, sim, character.EnableBuildPhaseStatDep)
-	}
-	config.OnExpire = func(aura *core.Aura, sim *core.Simulation) {
-		toggle(aura, sim, character.DisableBuildPhaseStatDep)
-	}
+	config.OnGain, config.OnExpire = character.TemporaryStatDepHandlers(deps)
 
 	return &core.StatBuffAura{Aura: character.GetOrRegisterAura(config), BuffedStatTypes: buffed}
 }
