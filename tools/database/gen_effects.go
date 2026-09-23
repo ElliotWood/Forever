@@ -124,6 +124,8 @@ type ProcRouting struct {
 	Absorb bool
 	// The same for an on-use spell that raises the wearer's speeds.
 	Speed bool
+	// The same for a spell that restores the wearer's mana, rage or energy.
+	Energize bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -197,6 +199,22 @@ func (r *ProcRouting) asAbsorb(absorbSpellID int32) {
 	r.BuffSpellID = int(absorbSpellID)
 	r.Unsupported = append(r.Unsupported, absorbUnsupported(spelldata.Find(absorbSpellID))...)
 	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+}
+
+func energizeUnsupported(s *spelldata.Spell, effect *spelldata.Effect) []string {
+	var unsupported []string
+	if effect.Target[0] != dbcenums.TARGET_UNIT_CASTER {
+		unsupported = append(unsupported, fmt.Sprintf("the gain lands on implicit target %d, not the wearer", effect.Target[0]))
+	}
+	switch dbcenums.PowerType(effect.Misc) {
+	case dbcenums.POWER_MANA, dbcenums.POWER_RAGE, dbcenums.POWER_ENERGY:
+	default:
+		unsupported = append(unsupported, fmt.Sprintf("the gain fills power type %d, not mana, rage or energy", effect.Misc))
+	}
+	if effect.Aura == dbcenums.A_PERIODIC_ENERGIZE && (effect.PeriodMs <= 0 || s.DurationMs <= 0) {
+		unsupported = append(unsupported, "the gain over time states no period or no duration to tick over")
+	}
+	return unsupported
 }
 
 // An absorb of at least this much beside an A_DUMMY effect is a script's: the dummy stands for the
@@ -1037,6 +1055,8 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 		groupName = "Absorbs"
 	case routing.Speed:
 		groupName = "Speed"
+	case routing.Energize:
+		groupName = "Resources"
 	}
 	grp := groupMap[groupName]
 	grp.Name = groupName
@@ -1058,13 +1078,13 @@ func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instanc
 }
 
 // The spell an on-use casts, read from the store the way the sim reads it: damage on the enemy it is
-// used on, a heal or an absorb on the wearer, or a buff raising the wearer's speeds. What else the row
-// does - a root, a stun - is left out, and the summary names it.
+// used on, a heal, an absorb, mana, rage or energy for the wearer, or a buff raising the wearer's
+// speeds. What else the row does - a root, a stun - is left out, and the summary names it.
 func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC) *ProcRouting {
 	spellID := int(itemEffect.BuffId)
 	routing := &ProcRouting{TriggerSpellID: spellID}
 	s := spelldata.Find(itemEffect.BuffId)
-	direct, periodic, heal, absorb := s.DamageEffect(), s.PeriodicDamageEffect(), s.ProcHealEffect(), s.AbsorbEffect()
+	direct, periodic, heal, absorb, energize := s.DamageEffect(), s.PeriodicDamageEffect(), s.ProcHealEffect(), s.AbsorbEffect(), s.ProcEnergizeEffect()
 
 	switch {
 	case !castsOnUse(parsed, spellID, instance):
@@ -1093,6 +1113,10 @@ func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *db
 		routing.Absorb = true
 		routing.Summary = onUseSummary(s, absorb)
 		routing.Unsupported = append(routing.Unsupported, absorbUnsupported(s)...)
+	case energize != spelldata.NilEffect:
+		routing.Energize = true
+		routing.Summary = onUseSummary(s, energize)
+		routing.Unsupported = append(routing.Unsupported, energizeUnsupported(s, energize)...)
 	case len(s.SpeedEffects()) > 0:
 		routing.Speed = true
 		routing.Summary = onUseSummary(s, s.SpeedEffects()...)
@@ -1159,6 +1183,8 @@ func (r *ProcRouting) OnUseConstructor() string {
 		return "NewSpellDataAbsorbOnUse"
 	case r.Speed:
 		return "NewSpellDataSpeedOnUse"
+	case r.Energize:
+		return "NewSpellDataEnergizeOnUse"
 	default:
 		return "NewSimpleStatActive"
 	}
