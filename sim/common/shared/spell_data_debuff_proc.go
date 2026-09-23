@@ -24,7 +24,7 @@ func registerSpellDataDebuffProc(cfg SpellDataProc) {
 
 func applySpellDataDebuffProc(agent core.Agent, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, debuff *spelldata.Spell) {
 	character := agent.GetCharacter()
-	debuffs := debuffAuras(character, debuff)
+	debuffs := enemyDebuffAuras(character, debuff, debuff.Duration(), debuff.DebuffEffects())
 
 	config := spellDataDamageTrigger(character, cfg, source, trigger)
 	callback := config.Callback
@@ -81,19 +81,15 @@ func enemyDebuffAuras(character *core.Character, row *spelldata.Spell, duration 
 	})
 }
 
-// The debuff a debuff proc puts on the enemy: the row's slows and stat changes, for its duration.
-func debuffAuras(character *core.Character, row *spelldata.Spell) core.AuraArray {
-	return enemyDebuffAuras(character, row, row.Duration(), row.DebuffEffects())
-}
-
 // The debuff a proc's damage spell puts on each enemy its hit lands on, or nil where the row states
 // none. A spell that deals only damage over time has no hit, and its target takes the debuff with it.
 func debuffOnLanding(character *core.Character, row *spelldata.Spell) afterDealt {
-	if !row.DebuffsTheTarget() {
+	effects := row.DebuffEffects()
+	if len(effects) == 0 {
 		return nil
 	}
 
-	debuffs := debuffAuras(character, row)
+	debuffs := enemyDebuffAuras(character, row, row.Duration(), effects)
 	return func(sim *core.Simulation, _ *core.Spell, target *core.Unit, results core.SpellResultSlice) {
 		if len(results) == 0 {
 			applyDebuff(sim, debuffs.Get(target))

@@ -657,7 +657,7 @@ func TestStackTriggerPPMFollowsTheEffect(t *testing.T) {
 		{"item", effectSource{id: itemID}, chance(slow), chance(fast), chance(slow)},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			dpm := stackTriggerDPM(character, tc.source, stackProc, core.ProcMaskMelee|core.ProcMaskSpellDamage)
+			dpm := dpmForMask(character, tc.source, stackProc.GetPpm(), core.ProcMaskMelee|core.ProcMaskSpellDamage)
 			if dpm == nil {
 				t.Fatal("no procs-per-minute manager")
 			}

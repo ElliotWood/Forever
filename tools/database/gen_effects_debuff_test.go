@@ -32,10 +32,10 @@ func TestChanceOnHitDebuffsRouteAndStateNoRate(t *testing.T) {
 		spellID int32
 		damage  bool
 		slows   []int32
-		stats   []int32
+		debuffs []int32
 	}{
-		{12797, 16927, false, []int32{1}, nil},
-		{19324, 1290950, true, []int32{2}, nil},
+		{12797, 16927, false, []int32{1}, []int32{1}},
+		{19324, 1290950, true, []int32{2}, []int32{2}},
 		{11607, 15280, false, nil, []int32{1}},
 		{12769, 16871, false, nil, []int32{1}},
 		{284262, 1315767, false, nil, []int32{1, 2}},
@@ -44,8 +44,8 @@ func TestChanceOnHitDebuffsRouteAndStateNoRate(t *testing.T) {
 		if got := row.SlowEffects(); !slices.Equal(got, tc.slows) {
 			t.Errorf("%d slows the target through effects %v, want %v", tc.spellID, got, tc.slows)
 		}
-		if got := row.StatDebuffEffects(); !slices.Equal(got, tc.stats) {
-			t.Errorf("%d changes the target's stats through effects %v, want %v", tc.spellID, got, tc.stats)
+		if got := row.DebuffEffects(); !slices.Equal(got, tc.debuffs) {
+			t.Errorf("%d debuffs the target through effects %v, want %v", tc.spellID, got, tc.debuffs)
 		}
 
 		item := instance.Items[tc.itemID]

@@ -11,33 +11,25 @@ import (
 // as Frostguard's Chilled 16927 states. A row that stacks answers none, since an exclusive slow cannot
 // follow stacks.
 func (s *Spell) SlowEffects() []int32 {
-	if s.MaxStack > 0 {
-		return nil
-	}
-	return s.enemyEffects(func(e *Effect) bool {
-		return (e.ChangesAttackSpeed() || e.ChangesCastSpeed()) && e.BasePoints < 0
-	})
-}
-
-// The positions of the effects that change a stat of the enemy the spell lands on, in the stats
-// ParseEffects applies to a unit: armor and resistances, attack power, flat damage done. Annihilator's
-// Armor Shatter 16928 takes 165 armor per stack.
-func (s *Spell) StatDebuffEffects() []int32 {
-	return s.enemyEffects(debuffsAStat)
+	return s.enemyEffects(s.slows)
 }
 
 // The positions of the slows and stat changes the spell puts on the enemy it lands on, in order.
 func (s *Spell) DebuffEffects() []int32 {
-	slows := s.SlowEffects()
-	return slices.DeleteFunc(EffectsOn(s, AuraOnEnemy), func(i int32) bool {
-		return !slices.Contains(slows, i) && !debuffsAStat(s.EffectN(int(i)))
-	})
+	return s.enemyEffects(func(e *Effect) bool { return s.slows(e) || debuffsAStat(e) })
 }
 
 func (s *Spell) enemyEffects(matches func(*Effect) bool) []int32 {
 	return slices.DeleteFunc(EffectsOn(s, AuraOnEnemy), func(i int32) bool { return !matches(s.EffectN(int(i))) })
 }
 
+func (s *Spell) slows(e *Effect) bool {
+	return s.MaxStack <= 0 && (e.ChangesAttackSpeed() || e.ChangesCastSpeed()) && e.BasePoints < 0
+}
+
+// Whether the effect changes a stat of the enemy the spell lands on, in the stats ParseEffects applies
+// to a unit: armor and resistances, attack power, flat damage done. Annihilator's Armor Shatter 16928
+// takes 165 armor per stack.
 func debuffsAStat(e *Effect) bool {
 	switch e.Aura {
 	case dbcenums.A_MOD_RESISTANCE:

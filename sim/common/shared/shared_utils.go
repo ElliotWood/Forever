@@ -311,7 +311,7 @@ func dpmForMask(character *core.Character, source effectSource, ppm float64, mas
 		if source.isEnchant {
 			mask &= core.ProcMaskMeleeOrRanged
 		}
-		if source.isWeaponEnchant() {
+		if source.enchantPlacement() == enchantOnWeapon {
 			return character.NewDynamicLegacyProcForEnchantWithMask(source.id, ppm, mask)
 		}
 		return character.NewLegacyPPMManager(ppm, mask)
@@ -348,7 +348,7 @@ func attachStackTrigger(character *core.Character, config ProcStatBonusEffect, e
 		CanProcFromProcs:  config.CanProcFromProcs,
 		IsWeaponProc:      config.IsWeaponProc,
 		ProcChance:        stackProc.GetProcChance(),
-		DPM:               stackTriggerDPM(character, config.effectSource(), stackProc, config.StackProcMask),
+		DPM:               dpmForMask(character, config.effectSource(), stackProc.GetPpm(), config.StackProcMask),
 		ICD:               time.Millisecond * time.Duration(stackProc.IcdMs),
 		Handler: func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 			if !statAura.IsActive() {
@@ -494,11 +494,15 @@ func applySpellDataProc(agent core.Agent, cfg SpellDataProc, source effectSource
 	eligibleSlots := source.eligibleSlots(character)
 
 	effect := source.procEffects()[buff.ID]
-	if effect == nil && len(spelldata.PercentStats(buff, character.Level)) == 0 {
-		panic(fmt.Sprintf("Error getting proc effects for item/enchant %v", source.id))
+	var percentStats []spelldata.StatMultiplier
+	if effect == nil {
+		percentStats = spelldata.PercentStats(buff, character.Level)
+		if len(percentStats) == 0 {
+			panic(fmt.Sprintf("Error getting proc effects for item/enchant %v", source.id))
+		}
 	}
 
-	procAura := spellDataProcAura(character, cfg, trigger, buff, effect)
+	procAura := spellDataProcAura(character, cfg, trigger, buff, effect, percentStats)
 	triggerAura := character.MakeProcTriggerAura(spellDataTrigger(character, cfg, source, trigger, buff, effect, procAura))
 
 	attachChargeSpender(character, cfg, trigger, buff, procAura)
@@ -603,7 +607,7 @@ func spellDataProcHandler(buff *spelldata.Spell, procAura *core.StatBuffAura) co
 // The buff the proc applies. Which shape it takes is the client's to say, and the two counts it
 // keeps in one field are not the same thing: a CumulativeAura count is stacks that each add their
 // own stats, a ProcCharges count is one buff at full stats that the game spends by uses.
-func spellDataProcAura(character *core.Character, cfg SpellDataProc, trigger *spelldata.Spell, buff *spelldata.Spell, effect *proto.ItemEffect) *core.StatBuffAura {
+func spellDataProcAura(character *core.Character, cfg SpellDataProc, trigger *spelldata.Spell, buff *spelldata.Spell, effect *proto.ItemEffect, percentStats []spelldata.StatMultiplier) *core.StatBuffAura {
 	// A trinket whose trigger opens a window and whose stats accumulate on a second aura inside it
 	// resolves no stats on the aura the trigger applies, so building one here would grant nothing at
 	// all. That shape needs the window machinery in factory_StatBonusEffect.
@@ -617,7 +621,7 @@ func spellDataProcAura(character *core.Character, cfg SpellDataProc, trigger *sp
 	// An effect entry states flat stats only, so a buff the client states as a percentage of a stat
 	// has none and multiplies instead.
 	if effect == nil {
-		return statMultiplierAura(character, aura, spelldata.PercentStats(buff, character.Level))
+		return statMultiplierAura(character, aura, percentStats)
 	}
 
 	buffStats := stats.FromProtoMap(effect.GetScalingOptions()[int32(0)].GetStats())
@@ -1406,7 +1410,7 @@ func attachStackingCDTrigger(character *core.Character, config StackingStatBonus
 
 	var stackDPM *core.DynamicProcManager
 	if stackProc != nil {
-		stackDPM = stackTriggerDPM(character, effectSource{id: config.ID}, stackProc, config.ProcMask)
+		stackDPM = dpmForMask(character, effectSource{id: config.ID}, stackProc.GetPpm(), config.ProcMask)
 	}
 
 	windowAura.AttachProcTriggerCallback(&character.Unit, core.ProcTrigger{
@@ -1698,14 +1702,6 @@ func NewProcDamageEffect(config ProcDamageEffect) {
 	})
 }
 
-// A stack rate given as PPM needs a proc manager rather than a flat chance; a chance-based rate
-// needs none. It is measured the way the opener's is, so a weapon enchant's stacks roll on the weapon
-// carrying it. Every stack trigger the generator emits carries the mask it derived from the
-// container's own proc flags, so the unknown-mask routing in dpmForMask is not reached from here.
-func stackTriggerDPM(character *core.Character, source effectSource, stackProc *proto.ProcEffect, mask core.ProcMask) *core.DynamicProcManager {
-	return dpmForMask(character, source, stackProc.GetPpm(), mask)
-}
-
 ///////////////////////////////////////////////////////////////////////////
 //							Item and enchant plumbing
 ///////////////////////////////////////////////////////////////////////////
@@ -1784,42 +1780,43 @@ func (s effectSource) procEffects() map[int32]*proto.ItemEffect {
 // held-in-off-hand enchant's when its item leaves the off hand. Any other enchant's runs out its
 // duration: AddStatProcBuff only flips IsSwapped, which gates the next proc.
 func (s effectSource) registerWeaponEnchantBuff(character *core.Character, procAura *core.StatBuffAura) {
-	switch {
-	case s.isWeaponEnchant():
+	switch s.enchantPlacement() {
+	case enchantOnWeapon:
 		character.ItemSwap.RegisterWeaponEnchantBuff(procAura.Aura, s.id)
-	case s.isOffHandEnchant():
+	case enchantInOffHand:
 		character.ItemSwap.RegisterEnchantBuffWithSlots(procAura.Aura, s.id, []proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand})
 	}
 }
 
-func (s effectSource) isOffHandEnchant() bool {
-	if !s.isEnchant {
-		return false
-	}
+type enchantPlacement byte
 
-	ench := core.GetEnchantByEffectID(s.id)
-	return ench != nil && ench.Type == proto.ItemType_ItemTypeWeapon &&
-		(ench.EnchantType == proto.EnchantType_EnchantTypeShield || ench.EnchantType == proto.EnchantType_EnchantTypeOffHand)
-}
+const (
+	enchantElsewhere enchantPlacement = iota
+	enchantOnWeapon
+	enchantInOffHand
+)
 
 // A shield or held-in-off-hand enchant shares the weapon type but sits on no weapon.
-func (s effectSource) isWeaponEnchant() bool {
+func (s effectSource) enchantPlacement() enchantPlacement {
 	if !s.isEnchant {
-		return false
+		return enchantElsewhere
 	}
 
 	ench := core.GetEnchantByEffectID(s.id)
 	if ench == nil {
-		return false
+		return enchantElsewhere
 	}
 
 	switch ench.Type {
 	case proto.ItemType_ItemTypeRanged:
-		return true
+		return enchantOnWeapon
 	case proto.ItemType_ItemTypeWeapon:
-		return ench.EnchantType != proto.EnchantType_EnchantTypeShield && ench.EnchantType != proto.EnchantType_EnchantTypeOffHand
+		if ench.EnchantType == proto.EnchantType_EnchantTypeShield || ench.EnchantType == proto.EnchantType_EnchantTypeOffHand {
+			return enchantInOffHand
+		}
+		return enchantOnWeapon
 	}
-	return false
+	return enchantElsewhere
 }
 
 func (s effectSource) registerProc(character *core.Character, triggerAura *core.Aura, slots []proto.ItemSlot) {
