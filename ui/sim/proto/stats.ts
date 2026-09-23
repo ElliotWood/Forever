@@ -10,7 +10,7 @@ import { migrateOldProto, ProtoConversionMap } from './proto_migration';
 const STATS_LEN = getEnumValues(Stat).length;
 const PSEUDOSTATS_LEN = getEnumValues(PseudoStat).length;
 
-const RATING_WEIGHTED_PERCENT_PSEUDO_STATS = [
+const RATING_WEIGHTED_PERCENT_PSEUDO_STATS = new Set<PseudoStat>([
 	PseudoStat.PseudoStatMeleeHitPercent,
 	PseudoStat.PseudoStatMeleeCritPercent,
 	PseudoStat.PseudoStatSpellHitPercent,
@@ -23,7 +23,7 @@ const RATING_WEIGHTED_PERCENT_PSEUDO_STATS = [
 	PseudoStat.PseudoStatMeleeHastePercent,
 	PseudoStat.PseudoStatRangedHastePercent,
 	PseudoStat.PseudoStatSpellHastePercent,
-];
+]);
 
 // A ranged percent is the total the character sheet shows, melee share included. Valued at a rating's
 // weight, the share is counted once: by the melee pseudo stat, unless the ranged total has a weight of
@@ -578,14 +578,14 @@ export class Stats {
 		});
 		this.pseudoStats.forEach((value, idx) => {
 			const weight = epWeights.pseudoStats[idx];
-			if (weight !== 0 || !RATING_WEIGHTED_PERCENT_PSEUDO_STATS.includes(idx)) {
+			if (weight !== 0 || !RATING_WEIGHTED_PERCENT_PSEUDO_STATS.has(idx)) {
 				total += value * weight;
 				return;
 			}
 
 			const meleeShare = RANGED_TOTAL_MELEE_SHARE.get(idx);
 			if (meleeShare !== undefined) {
-				value -= this.pseudoStats[meleeShare];
+				value = Math.max(0, value - this.pseudoStats[meleeShare]);
 			}
 			// Melee and ranged haste are separate speeds, but one haste rating raises both.
 			if (idx === PseudoStat.PseudoStatRangedHastePercent) {

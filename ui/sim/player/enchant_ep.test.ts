@@ -60,6 +60,10 @@ describe('Player.computeEnchantEP on percent pseudo stats', () => {
 		expect(enchantEP(2523, { [PseudoStat.PseudoStatRangedHitPercent]: 3 })).toBeCloseTo(3 * Mechanics.PHYSICAL_HIT_RATING_PER_HIT_PERCENT * 5);
 	});
 
+	it('values a melee-only hit percent at the hit rating weight, with no ranged total to take it back', () => {
+		expect(enchantEP(1, { [PseudoStat.PseudoStatMeleeHitPercent]: 1 })).toBeCloseTo(Mechanics.PHYSICAL_HIT_RATING_PER_HIT_PERCENT * 5);
+	});
+
 	it("uses a percent pseudo stat's own weight where it has one", () => {
 		const ownWeight = Stats.fromMap({ [Stat.StatMeleeCritRating]: 3 }, { [PseudoStat.PseudoStatMeleeCritPercent]: 7 });
 		expect(enchantEP(2717, { [PseudoStat.PseudoStatMeleeCritPercent]: 1, [PseudoStat.PseudoStatRangedCritPercent]: 1 }, ownWeight)).toBeCloseTo(7);
