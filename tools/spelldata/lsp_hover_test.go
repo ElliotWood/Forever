@@ -253,7 +253,7 @@ func TestHoverSegments(t *testing.T) {
 
 	wantHover(t, executeGo, "executeRank.EffectN(1).Average", 4, executeCard)
 	wantHover(t, executeGo, "executeRank.EffectN(1).ChainAmp", 4, executeCard)
-	wantHover(t, executeGo, "ChainAmp)", 2, "`ChainAmp` = **1.5**", executeCard)
+	wantHover(t, executeGo, "ChainAmp)", 2, "`ChainAmp` = **1.5**", "| 1 ▶ |")
 }
 
 func TestHoverTrace(t *testing.T) {
