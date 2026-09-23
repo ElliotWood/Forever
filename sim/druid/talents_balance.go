@@ -178,8 +178,9 @@ func (druid *Druid) applyGenesis() {
 		return
 	}
 
+	// Client 1223081's mask includes the bleeds (Rake, Rip, Lacerate) and not Lifebloom.
 	druid.AddStaticMod(core.SpellModConfig{
-		ClassMask:  DruidSpellDoT | DruidSpellHoT,
+		ClassMask:  DruidSpellDoT | DruidSpellRake | DruidSpellRip | DruidSpellLacerate | DruidSpellRejuvenation | DruidSpellRegrowth,
 		Kind:       core.SpellMod_DotDamageDone_Pct,
 		FloatValue: spellData.Genesis.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DOT)).FractionAt(druid.Talents.Genesis),
 	})
