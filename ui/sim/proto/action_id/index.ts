@@ -432,9 +432,6 @@ export class ActionId {
 			case 'Stormlash Totem':
 			case 'Unholy Frenzy':
 			case 'Power Infusion':
-			case 'Curse of the Elements':
-			case 'Curse of Recklessness':
-			case 'Improved Seal of the Crusader':
 				if (tag != -1) {
 					if (tag === playerIndex || playerIndex == undefined) {
 						name += ` (self)`;
