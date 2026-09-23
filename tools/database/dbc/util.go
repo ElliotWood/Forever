@@ -233,6 +233,10 @@ func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
 			continue
 		}
 		value := effect.EffectBasePoints + effect.EffectDieSides
+		// 1293881 (Pendulum of Doom) states a zero melee haste and changes the speed through its procs.
+		if value == 0 {
+			continue
+		}
 
 		switch effect.EffectAura {
 		case dbcenums.A_MOD_HIT_CHANCE:
@@ -256,11 +260,8 @@ func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
 			add(proto.PseudoStat_PseudoStatParryPercent, value)
 		}
 
-		// 1293881 (Pendulum of Doom) states a zero melee haste and changes the speed through its procs.
-		if value != 0 {
-			for _, pseudoStat := range spelldata.SpeedAuraPseudoStats[effect.EffectAura] {
-				add(pseudoStat, value)
-			}
+		for _, pseudoStat := range spelldata.SpeedAuraPseudoStats[effect.EffectAura] {
+			add(pseudoStat, value)
 		}
 	}
 

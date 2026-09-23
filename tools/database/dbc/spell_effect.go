@@ -237,7 +237,6 @@ var statAuraTypes = map[EffectAuraType]bool{
 	dbcenums.A_PERIODIC_TRIGGER_SPELL:  true,
 }
 
-// Reports whether the effect's aura is one of the types that can carry stats.
 // Whether either implicit target is an enemy. What such an aura changes is the enemy's, never a stat
 // of the wearer.
 func (effect *SpellEffect) HitsAnEnemy() bool {
@@ -246,6 +245,7 @@ func (effect *SpellEffect) HitsAnEnemy() bool {
 	})
 }
 
+// Reports whether the effect's aura is one of the types that can carry stats.
 func (effect *SpellEffect) GrantsStats() bool {
 	return statAuraTypes[effect.EffectAura]
 }

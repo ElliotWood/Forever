@@ -444,14 +444,23 @@ func MergeItemEffectsForAllStates(parsed *proto.UIItem) []*proto.ItemEffect {
 		props := buildBaseStatScalingProps(statsSpell, e.SpellID)
 
 		hasStats := len(props.Stats) > 0
-		hasPseudoStats := e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && AddEquipSpellPseudoStats(pseudoStats, e.SpellID)
+		equipPseudoStats := make([]float64, stats.PseudoStatsLen)
+		hasPseudoStats := e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && AddEquipSpellPseudoStats(equipPseudoStats, e.SpellID)
 		equipStats := stats.Stats{}
 		hasEquipStats := e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && AddEquipSpellStats(&equipStats, e.SpellID)
 
 		if e.TriggerType == ITEM_SPELLTRIGGER_ON_EQUIP && (hasStats || hasPseudoStats || hasEquipStats) {
 			if areaType := spelldata.AreaTypeOfGroup(dbcInstance.Spells[e.SpellID].RequiredAreasID); areaType != proto.AreaType_AreaTypeUnknown {
-				addAreaStats(parsed.ScalingOptions[0], areaType, props.Stats)
+				areaStats := map[int32]float64{}
+				maps.Copy(areaStats, props.Stats)
+				for stat, value := range equipStats.ToProtoMap() {
+					areaStats[stat] += value
+				}
+				addAreaStats(parsed.ScalingOptions[0], areaType, areaStats)
 				continue
+			}
+			for i, value := range equipPseudoStats {
+				pseudoStats[i] += value
 			}
 			for stat, value := range props.Stats {
 				parsed.ScalingOptions[0].Stats[int32(stat)] += value

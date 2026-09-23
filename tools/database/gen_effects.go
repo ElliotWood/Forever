@@ -1034,11 +1034,7 @@ func routeItemProc(parsed *proto.UIItem, itemEffect *proto.ItemEffect, tooltip s
 	}
 
 	routing := routeProc(effect.SpellID, int(itemEffect.BuffId), effect.TriggerType == dbc.ITEM_SPELLTRIGGER_CHANCE_ON_HIT)
-	trigger := spelldata.Find(int32(effect.SpellID))
-	if trigger.ProcChanceSource == spelldata.ProcChanceAlways && trigger.RPPM == 0 &&
-		enchantTooltipStatesAnUnknownRate(tooltip) && !statesNoRate(routing) {
-		routing.Unsupported = append(routing.Unsupported, spelldata.ReasonStatesNoRate)
-	}
+	routing.refuseASentinelRate(tooltip)
 
 	return routing
 }
@@ -1587,12 +1583,19 @@ func (r *ProcRouting) readEnchantTooltip(tooltip string) {
 	if hints.Matches(core.ProcHintOutcomeTaken) && !trigger.ProcHint.Matches(core.ProcHintOutcomeTaken) {
 		r.Unsupported = append(r.Unsupported, "an outcome the proc mask has no bit for")
 	}
+	r.refuseASentinelRate(tooltip)
+
+	r.ProcHint = hints & (core.ProcHintAttackDodged | core.ProcHintAttackParried) &^ trigger.ProcHint
+}
+
+// A trigger's 100 beside wording that says the proc happens only sometimes is a rate the rows do not
+// carry.
+func (r *ProcRouting) refuseASentinelRate(tooltip string) {
+	trigger := spelldata.Find(int32(r.TriggerSpellID))
 	if trigger.ProcChanceSource == spelldata.ProcChanceAlways && trigger.RPPM == 0 &&
 		enchantTooltipStatesAnUnknownRate(tooltip) && !statesNoRate(r) {
 		r.Unsupported = append(r.Unsupported, spelldata.ReasonStatesNoRate)
 	}
-
-	r.ProcHint = hints & (core.ProcHintAttackDodged | core.ProcHintAttackParried) &^ trigger.ProcHint
 }
 
 // "Often", "sometimes" and "occasionally" are how an enchant's tooltip says its proc has a rate the
