@@ -15,10 +15,9 @@ func (paladin *Paladin) registerAuras() {
 	paladin.registerShadowResistanceAura()
 }
 
-// The rank of a paladin aura as sim/core/buffs wants it: the spell the paladin cast, its rank, and
-// the number its row states.
+// The rank of a paladin aura as sim/core/buffs wants it: the spell the paladin cast and its rank.
 func auraRank(row shared.SpellData) buffs.PaladinAuraRank {
-	return buffs.PaladinAuraRank{SpellID: row.SpellID, Rank: row.Rank, Value: shared.SpellDataMin(row.Direct)}
+	return buffs.PaladinAuraRank{SpellID: row.SpellID, Rank: row.Rank}
 }
 
 // The castable aura spell: instant, on the GCD, free. The aura it turns on is one of the self-cast

@@ -11,32 +11,14 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-type GeneratedBuff struct {
-	Label    string
-	ActionID ActionID
-	Duration time.Duration
-
-	// Category is the aura's own, which decides whether a second copy of this
-	// buff can sit next to it. SharedCategory is one it joins as a member without
-	// an effect of its own, which is how the paladin auras exclude each other
-	// across schools.
-	Category       string
-	SharedCategory string
-	SingleAura     bool
-
-	IsPlayer bool
-}
-
-// The damage a generated damage shield deals back to whoever lands a melee hit.
-func NewGeneratedDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damage float64) *Aura {
-	return NewDamageShield(unit, config, school, damage, 0)
-}
-
-// A damage shield whose damage also scales with the wearer's spell power by
-// bonusCoefficient; the generated shields state none.
-func NewDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damage float64, bonusCoefficient float64) *Aura {
+// The damage a damage shield deals back to whoever lands a melee hit, which
+// also scales with the wearer's spell power by bonusCoefficient; the generated
+// shields state none. category is the aura's own, which decides whether a
+// second copy of the shield can sit next to it.
+func NewDamageShield(unit *Unit, label string, actionID ActionID, duration time.Duration, category string, singleAura bool,
+	school SpellSchool, damage float64, bonusCoefficient float64) *Aura {
 	procSpell := unit.RegisterSpell(SpellConfig{
-		ActionID:    config.ActionID.WithTag(config.ActionID.Tag + 2),
+		ActionID:    actionID.WithTag(actionID.Tag + 2),
 		SpellSchool: school,
 		ProcMask:    ProcMaskEmpty,
 		Flags:       SpellFlagBinary | SpellFlagPassiveSpell,
@@ -51,12 +33,12 @@ func NewDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damag
 	})
 
 	aura := unit.GetOrRegisterAura(Aura{
-		Label:      config.Label,
-		ActionID:   config.ActionID,
-		Duration:   TernaryDuration(config.Duration > 0, config.Duration, NeverExpires),
-		BuildPhase: Ternary(config.ActionID.Tag == -1, CharacterBuildPhaseBuffs, CharacterBuildPhaseNone),
+		Label:      label,
+		ActionID:   actionID,
+		Duration:   TernaryDuration(duration > 0, duration, NeverExpires),
+		BuildPhase: Ternary(actionID.Tag == -1, CharacterBuildPhaseBuffs, CharacterBuildPhaseNone),
 	}).AttachProcTrigger(ProcTrigger{
-		Name:     config.Label + " Damage",
+		Name:     label + " Damage",
 		Callback: CallbackOnSpellHitTaken,
 		Outcome:  OutcomeLanded,
 		Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
@@ -68,10 +50,9 @@ func NewDamageShield(unit *Unit, config GeneratedBuff, school SpellSchool, damag
 
 	// The shield has no stat to apply or remove: what the category decides is
 	// which aura keeps its proc trigger, so the damage is the whole bid.
-	if config.Category != "" {
-		aura.NewExclusiveEffect(config.Category, config.SingleAura, ExclusiveEffect{Priority: damage})
+	if category != "" {
+		aura.NewExclusiveEffect(category, singleAura, ExclusiveEffect{Priority: damage})
 	}
-	joinSharedCategory(aura, config)
 	return aura
 }
 
@@ -113,14 +94,15 @@ func NewGeneratedExternalCD(char *Character, aura *Aura, config GeneratedExterna
 	}, config.NumSources)
 }
 
-// The second category the aura joins without an effect of its own. Only the
-// player's own copy joins it: the external copy has to be able to sit next to
-// the one the player casts.
-func joinSharedCategory(aura *Aura, config GeneratedBuff) {
-	if config.SharedCategory == "" || !config.IsPlayer {
+// The second category the aura joins without an effect of its own, which is how
+// the paladin auras exclude each other across schools. Only the player's own
+// copy joins it: the external copy has to be able to sit next to the one the
+// player casts.
+func JoinSharedCategory(aura *Aura, shared string, isPlayer bool) {
+	if shared == "" || !isPlayer {
 		return
 	}
-	aura.NewExclusiveEffect(config.SharedCategory, true, ExclusiveEffect{})
+	aura.NewExclusiveEffect(shared, true, ExclusiveEffect{})
 }
 
 // AddGeneratedFlatBonus raises a generated buff the client states as worth base

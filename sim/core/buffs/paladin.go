@@ -21,62 +21,40 @@ type PaladinAuraRank struct {
 
 var RetributionAuraMaxRank = PaladinAuraRank{SpellID: 10301, Value: RetributionAuraValue(0)}
 
-func paladinAuraLabel(name string, isPlayer bool, rank PaladinAuraRank) string {
-	if rank.Rank > 0 {
-		name += fmt.Sprintf(" Rank %d", rank.Rank)
+// A name with the rank the paladin cast; the max rank the raid config applies carries none.
+func paladinRankName(name string, rank int32) string {
+	if rank > 0 {
+		return fmt.Sprintf("%s Rank %d", name, rank)
 	}
-	return fmt.Sprintf("%s (%s)", name, core.Ternary(isPlayer, "Player", "External"))
+	return name
 }
-
-func paladinAuraBuff(name string, category string, isPlayer bool, rank PaladinAuraRank) core.GeneratedBuff {
-	return core.GeneratedBuff{
-		Label:          paladinAuraLabel(name, isPlayer, rank),
-		ActionID:       core.ActionID{SpellID: rank.SpellID}.WithTag(core.TernaryInt32(isPlayer, 0, -1)),
-		Duration:       core.NeverExpires,
-		Category:       category,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		IsPlayer:       isPlayer,
-	}
-}
-
-// The paladin auras state a healing-taken row of 0, and Concentration Aura two mechanic rows of 0,
-// none of which the aura applies.
-var paladinAuraSkips = []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD}
 
 // A rank the paladin casts is the party-buff row on the rank's own spell, labelled with the rank.
-func paladinAuraMeta(name string, category string, rank PaladinAuraRank) *Meta {
-	if rank.Rank > 0 {
-		name += fmt.Sprintf(" Rank %d", rank.Rank)
-	}
-	return &Meta{
-		Label:          name,
-		Spell:          spelldata.MustFind(rank.SpellID),
-		Category:       category,
-		SharedCategory: PaladinAuraCategory,
-		SingleAura:     true,
-		SkipAuras:      paladinAuraSkips,
-	}
+func paladinAuraMeta(base *Meta, rank PaladinAuraRank) *Meta {
+	m := *base
+	m.Label = paladinRankName(base.Label, rank.Rank)
+	m.Spell = spelldata.MustFind(rank.SpellID)
+	return &m
 }
 
 func DevotionAuraBuff(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	return newBuff(&char.Unit, paladinAuraMeta("Devotion Aura", DevotionAuraCategory, rank), isPlayer, 0)
+	return newBuff(&char.Unit, paladinAuraMeta(devotionAuraMeta, rank), isPlayer, 0)
 }
 
 func ConcentrationAura(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	return newBuff(&char.Unit, paladinAuraMeta("Concentration Aura", ConcentrationAuraCategory, rank), isPlayer, 0)
+	return newBuff(&char.Unit, paladinAuraMeta(concentrationAuraMeta, rank), isPlayer, 0)
 }
 
 func FireResistanceAura(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	return newBuff(&char.Unit, paladinAuraMeta("Fire Resistance Aura", FireResistanceAuraCategory, rank), isPlayer, 0)
+	return newBuff(&char.Unit, paladinAuraMeta(fireResistanceAuraMeta, rank), isPlayer, 0)
 }
 
 func FrostResistanceAura(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	return newBuff(&char.Unit, paladinAuraMeta("Frost Resistance Aura", FrostResistanceAuraCategory, rank), isPlayer, 0)
+	return newBuff(&char.Unit, paladinAuraMeta(frostResistanceAuraMeta, rank), isPlayer, 0)
 }
 
 func ShadowResistanceAura(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	return newBuff(&char.Unit, paladinAuraMeta("Shadow Resistance Aura", ShadowResistanceAuraCategory, rank), isPlayer, 0)
+	return newBuff(&char.Unit, paladinAuraMeta(shadowResistanceAuraMeta, rank), isPlayer, 0)
 }
 
 // Retribution Aura scales with the casting paladin's Holy spell power in Forever even though its
@@ -93,15 +71,20 @@ const RetributionAuraSpellPowerCoefficient = 1.5 / 3.5 / 3 * 0.95
 // cannot see the providing paladin, so externalSpellPower stands in for it and the recipient's
 // own stats stay out of the damage.
 func RetributionAuraBuff(char *core.Character, isPlayer bool, rank PaladinAuraRank, externalSpellPower float64) *core.Aura {
-	config := paladinAuraBuff("Retribution Aura", RetributionAuraCategory, isPlayer, rank)
-	if char.HasAura(config.Label) {
-		return char.GetAura(config.Label)
+	m := paladinAuraMeta(retributionAuraMeta, rank)
+	label := m.label(isPlayer)
+	if char.HasAura(label) {
+		return char.GetAura(label)
 	}
 
-	if isPlayer {
-		return core.NewDamageShield(&char.Unit, config, core.SpellSchoolHoly, rank.Value, RetributionAuraSpellPowerCoefficient)
+	damage, coefficient := rank.Value, RetributionAuraSpellPowerCoefficient
+	if !isPlayer {
+		damage, coefficient = rank.Value+RetributionAuraSpellPowerCoefficient*externalSpellPower, 0
 	}
-	return core.NewDamageShield(&char.Unit, config, core.SpellSchoolHoly, rank.Value+RetributionAuraSpellPowerCoefficient*externalSpellPower, 0)
+	aura := core.NewDamageShield(&char.Unit, label, m.actionID(isPlayer), core.NeverExpires, m.Category, m.SingleAura,
+		core.SpellSchoolHoly, damage, coefficient)
+	core.JoinSharedCategory(aura, m.SharedCategory, isPlayer)
+	return aura
 }
 
 // One rank of a judgement debuff: the spell the target shows and the number its row states. The
@@ -141,19 +124,12 @@ const JudgementAuraTag = "JudgementAura"
 // in-game testing says otherwise.
 const judgementProcChance = 0.5
 
-func judgementLabel(name string, rank JudgementRank) string {
-	if rank.Rank > 0 {
-		return fmt.Sprintf("%s Rank %d", name, rank.Rank)
-	}
-	return name
-}
-
 // Judgement of the Crusader raises the Holy damage the target takes by a flat amount. Every rank
 // and every paladin share one exclusive category, so the strongest active one is the one that
 // counts.
 func JudgementOfTheCrusaderAura(target *core.Unit, rank JudgementRank) *core.Aura {
 	bonus := rank.Value
-	label := judgementLabel("Judgement of the Crusader", rank)
+	label := paladinRankName("Judgement of the Crusader", rank.Rank)
 	if target.HasAura(label) {
 		return target.GetAura(label)
 	}
@@ -181,7 +157,7 @@ func JudgementOfTheCrusaderAura(target *core.Unit, rank JudgementRank) *core.Aur
 // The paladin's own Judgement of Light at one rank: the bare 40-second debuff, plus the heal it
 // grants whoever strikes the target.
 func JudgementOfLightRankAura(target *core.Unit, rank JudgementRank) *core.Aura {
-	label := judgementLabel("Judgement of Light", rank)
+	label := paladinRankName("Judgement of Light", rank.Rank)
 	if target.HasAura(label) {
 		return target.GetAura(label)
 	}
@@ -214,7 +190,7 @@ func AttachJudgementOfLightHeal(aura *core.Aura, rank JudgementRank) *core.Aura 
 
 // The paladin's own Judgement of Wisdom at one rank.
 func JudgementOfWisdomRankAura(target *core.Unit, rank JudgementRank) *core.Aura {
-	label := judgementLabel("Judgement of Wisdom", rank)
+	label := paladinRankName("Judgement of Wisdom", rank.Rank)
 	if target.HasAura(label) {
 		return target.GetAura(label)
 	}

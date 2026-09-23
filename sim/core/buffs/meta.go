@@ -33,8 +33,6 @@ type Meta struct {
 	TalentEffect         int32
 	TalentScalesDuration bool
 
-	// The level the amounts are priced at; 0 is core.CharacterLevel.
-	Level int32
 	// The aura effects the buff leaves out, by aura.
 	SkipAuras []dbcenums.EffectAuraType
 	// The finisher the raid config puts on the target is cast at full combo points.
@@ -43,12 +41,7 @@ type Meta struct {
 
 // The parse options the row states, for a caster with these talent points.
 func (m *Meta) Options(talentPoints int32) []spelldata.ParseOpt {
-	level := m.Level
-	if level == 0 {
-		level = core.CharacterLevel
-	}
-
-	opts := []spelldata.ParseOpt{spelldata.Level(level), spelldata.BuffAuras()}
+	opts := []spelldata.ParseOpt{spelldata.Level(core.CharacterLevel), spelldata.BuffAuras()}
 	if len(m.SkipAuras) > 0 {
 		opts = append(opts, spelldata.SkipAuras(m.SkipAuras...))
 	}
@@ -64,18 +57,18 @@ func (m *Meta) Options(talentPoints int32) []spelldata.ParseOpt {
 // The first amount the aura applies, in the sim's units: the stat, the multiplier or the pseudo-stat
 // change it attaches. A damage shield's amount is the damage it deals.
 func (m *Meta) Value(talentPoints int32) float64 {
-	if applied := spelldata.DryRun(m.Spell, false, m.Options(talentPoints)...).Applied; len(applied) > 0 {
-		return applied[0].Value
-	}
-
 	for i := range m.Spell.Effects {
 		if e := &m.Spell.Effects[i]; e.Aura == dbcenums.A_DAMAGE_SHIELD {
-			value := e.Average(m.level())
+			value := amount(e)
 			if mod := m.talentMod(talentPoints); mod != spelldata.NilEffect && !m.TalentScalesDuration {
 				value = spelldata.Scaled(value, mod)
 			}
 			return value
 		}
+	}
+
+	if applied := spelldata.DryRun(m.Spell, false, m.Options(talentPoints)...).Applied; len(applied) > 0 {
+		return applied[0].Value
 	}
 	return 0
 }
@@ -95,13 +88,6 @@ func (m *Meta) Cooldown() time.Duration {
 		return cooldown(m.Cast)
 	}
 	return cooldown(m.Spell)
-}
-
-func (m *Meta) level() int32 {
-	if m.Level == 0 {
-		return core.CharacterLevel
-	}
-	return m.Level
 }
 
 // The talent's modifier at a rank, NilEffect for an untaken talent or a row no talent prices.
@@ -134,15 +120,6 @@ func newItemCountBuff(unit *core.Unit, m *Meta, isPlayer bool, count float64) *c
 }
 
 func (m *Meta) buff(unit *core.Unit, isPlayer bool, talentPoints int32, opts []spelldata.ParseOpt) *core.Aura {
-	aura := unit.GetOrRegisterAura(core.Aura{
-		Label:      m.label(isPlayer),
-		Tag:        m.Category,
-		ActionID:   m.actionID(isPlayer),
-		Duration:   m.Duration(talentPoints),
-		MaxStacks:  int32(m.Spell.MaxStack),
-		BuildPhase: core.Ternary(isPlayer, core.CharacterBuildPhaseNone, core.CharacterBuildPhaseBuffs),
-	})
-
 	opts = append(opts, spelldata.SchoolResistances())
 	if m.Category != "" {
 		if m.SingleAura {
@@ -152,52 +129,43 @@ func (m *Meta) buff(unit *core.Unit, isPlayer bool, talentPoints int32, opts []s
 		}
 	}
 
-	// No row a raid buff states acts through a character rather than its unit.
-	spelldata.ParseEffects(nil, aura, m.Spell, opts...)
-	m.joinSharedCategory(aura, isPlayer)
-	return aura
+	buildPhase := core.Ternary(isPlayer, core.CharacterBuildPhaseNone, core.CharacterBuildPhaseBuffs)
+	return m.parsedAura(unit, isPlayer, talentPoints, buildPhase, opts)
 }
 
 // The aura a generated debuff registers on the target: labelled and tagged like newBuff, never in a
 // build phase, with Exclusive(Category, SingleAura) where it names a category and no school
 // resistance categories of its own.
 func newDebuff(target *core.Unit, m *Meta, isPlayer bool, talentPoints int32) *core.Aura {
-	aura := target.GetOrRegisterAura(core.Aura{
-		Label:     m.label(isPlayer),
-		Tag:       m.Category,
-		ActionID:  m.actionID(isPlayer),
-		Duration:  m.Duration(talentPoints),
-		MaxStacks: int32(m.Spell.MaxStack),
-	})
-
 	opts := m.Options(talentPoints)
 	if m.Category != "" {
 		opts = append(opts, spelldata.Exclusive(m.Category, m.SingleAura))
 	}
+	return m.parsedAura(target, isPlayer, talentPoints, core.CharacterBuildPhaseNone, opts)
+}
 
+func (m *Meta) parsedAura(unit *core.Unit, isPlayer bool, talentPoints int32, buildPhase core.CharacterBuildPhase,
+	opts []spelldata.ParseOpt) *core.Aura {
+	aura := unit.GetOrRegisterAura(core.Aura{
+		Label:      m.label(isPlayer),
+		Tag:        m.Category,
+		ActionID:   m.actionID(isPlayer),
+		Duration:   m.Duration(talentPoints),
+		MaxStacks:  int32(m.Spell.MaxStack),
+		BuildPhase: buildPhase,
+	})
+
+	// No row a raid buff states acts through a character rather than its unit.
 	spelldata.ParseEffects(nil, aura, m.Spell, opts...)
-	m.joinSharedCategory(aura, isPlayer)
+	core.JoinSharedCategory(aura, m.SharedCategory, isPlayer)
 	return aura
 }
 
-// A damage shield, which the parse does not read: core.NewGeneratedDamageShield with the spell's
-// school and Value as its damage.
+// A damage shield, which the parse does not read: core.NewDamageShield with the spell's school and
+// Value as its damage.
 func newDamageShield(unit *core.Unit, m *Meta, isPlayer bool, talentPoints int32) *core.Aura {
-	return core.NewGeneratedDamageShield(unit, core.GeneratedBuff{
-		Label:          m.label(isPlayer),
-		ActionID:       m.actionID(isPlayer),
-		Duration:       m.Duration(talentPoints),
-		Category:       m.Category,
-		SharedCategory: m.SharedCategory,
-		SingleAura:     m.SingleAura,
-		IsPlayer:       isPlayer,
-	}, m.Spell.School, m.Value(talentPoints))
-}
-
-// The second category the player's own copy joins without an effect of its own. The external copy
-// stays out of it, so that it can sit next to the one the player casts.
-func (m *Meta) joinSharedCategory(aura *core.Aura, isPlayer bool) {
-	if isPlayer && m.SharedCategory != "" {
-		aura.NewExclusiveEffect(m.SharedCategory, true, core.ExclusiveEffect{})
-	}
+	aura := core.NewDamageShield(unit, m.label(isPlayer), m.actionID(isPlayer), m.Duration(talentPoints),
+		m.Category, m.SingleAura, m.Spell.School, m.Value(talentPoints), 0)
+	core.JoinSharedCategory(aura, m.SharedCategory, isPlayer)
+	return aura
 }

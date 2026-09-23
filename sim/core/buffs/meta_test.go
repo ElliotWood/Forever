@@ -80,10 +80,10 @@ func TestGeneratedRowsReadTheClientsNumbers(t *testing.T) {
 	}
 }
 
-// The raid's Retribution Aura is a damage shield and a healing-taken row of 0: left in, the 0 would be
-// the first amount the parse attaches, a multiplier of 1.
-func TestMetaValueNeedsThePaladinSkips(t *testing.T) {
-	if got := (&Meta{Spell: spelldata.MustFind(10301)}).Value(0); got != 1 {
-		t.Errorf("Retribution Aura without the skips reads %v, want the healing-taken row's 1", got)
+// The raid's Retribution Aura is a damage shield and a healing-taken row of 0. Its value is the damage
+// the shield deals, whatever else the row states: the parse would attach the 0 as a multiplier of 1.
+func TestMetaValueOfADamageShieldIsItsDamage(t *testing.T) {
+	if got := (&Meta{Spell: spelldata.MustFind(10301)}).Value(0); got != 30 {
+		t.Errorf("Retribution Aura without the skips reads %v, want the shield's 30", got)
 	}
 }
