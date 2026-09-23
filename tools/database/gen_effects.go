@@ -959,8 +959,9 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 		routing.requireABuffDuration()
 	case damage != nil:
 		routing.asDamage(int32(damage.SpellID))
-		if restriction, ok := creatureTypeDamage[int32(damage.SpellID)]; ok {
-			routing.Unsupported = append(routing.Unsupported, "the damage spell hits "+restriction+" only")
+		if mask := spelldata.Find(int32(damage.SpellID)).TargetCreatureType; mask != 0 {
+			routing.Unsupported = append(routing.Unsupported,
+				fmt.Sprintf("the damage spell hits %s (TargetCreatureType %d) only", creatureTypeNames(mask), mask))
 		}
 	default:
 		applied := slot.AppliesSpellID
@@ -978,11 +979,24 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 	return routing
 }
 
-// Damage spells the client restricts to one creature type in SpellTargetRestrictions, which neither
-// the store nor the damage proc reads.
-var creatureTypeDamage = map[int32]string{
-	13907:  "demons (TargetCreatureType 4)",
-	439164: "mechanicals (TargetCreatureType 256)",
+// The client's CreatureType ids, which TargetCreatureType names as 1 << (id - 1). The damage proc does
+// not read the restriction.
+var creatureTypes = []string{1: "beasts", 2: "dragonkin", 3: "demons", 4: "elementals", 5: "giants",
+	6: "undead", 7: "humanoids", 8: "critters", 9: "mechanicals"}
+
+func creatureTypeNames(mask int32) string {
+	var names []string
+	for id := 1; id <= 32; id++ {
+		if mask&(1<<(id-1)) == 0 {
+			continue
+		}
+		if id < len(creatureTypes) {
+			names = append(names, creatureTypes[id])
+		} else {
+			names = append(names, fmt.Sprintf("creature type %d", id))
+		}
+	}
+	return strings.Join(names, " and ")
 }
 
 func spellEffectKinds(instance *dbc.DBC, spellID int) string {
