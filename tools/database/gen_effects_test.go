@@ -61,6 +61,77 @@ func TestChanceOnHitHotRoutesAsAHealAndStatesNoRate(t *testing.T) {
 	}
 }
 
+// An on-use with no stats routes from the spell it casts: damage on the enemy it is used on
+// registers, a spell that deals none is refused with the reason and listed.
+func TestOnUseRoutesFromTheSpellItCasts(t *testing.T) {
+	inRepositoryRoot(t)
+	instance := dbc.GetDBC()
+
+	for _, tc := range []struct {
+		itemID  int
+		spellID int32
+		want    EffectParseResult
+		damage  bool
+		heal    bool
+		reasons []string
+	}{
+		{219345, 443265, EffectParseResultSuccess, true, false, nil}, // Infernal Lasso: A_PERIODIC_DAMAGE, and a root it leaves out
+		{7734, 14537, EffectParseResultRefused, false, false,
+			[]string{"14537 deals no damage (E_DUMMY)"}}, // Six Demon Bag
+	} {
+		item := instance.Items[tc.itemID]
+		parsed := item.ToUIItem()
+		parsed.ItemEffects = dbc.MergeItemEffectsForAllStates(parsed)
+		i := slices.IndexFunc(parsed.ItemEffects, func(e *proto.ItemEffect) bool { return e.BuffId == tc.spellID && e.GetOnUse() != nil })
+		if i < 0 {
+			t.Fatalf("item %d carries no on-use effect on %d", tc.itemID, tc.spellID)
+		}
+
+		groups := map[string]Group{}
+		if got := TryParseOnUseEffect(parsed, parsed.ItemEffects[i], instance, groups); got != tc.want {
+			t.Errorf("item %d parsed as %v, want %v", tc.itemID, got, tc.want)
+			continue
+		}
+
+		var entry *Entry
+		for _, grp := range groups {
+			entry = grp.Entries[0]
+		}
+		r := entry.Proc
+		if r == nil || r.TriggerSpellID != int(tc.spellID) || r.Damage != tc.damage || r.Heal != tc.heal ||
+			entry.DealsDamage != tc.damage || entry.Heals != tc.heal || entry.Supported != (tc.want == EffectParseResultSuccess) {
+			t.Errorf("item %d: routing %+v, supported %v; want spell %d, damage %v, heal %v", tc.itemID, r, entry.Supported, tc.spellID, tc.damage, tc.heal)
+			continue
+		}
+		if !slices.Equal(r.Unsupported, tc.reasons) {
+			t.Errorf("item %d refused for %q, want %q", tc.itemID, r.Unsupported, tc.reasons)
+		}
+	}
+}
+
+// Aegis of Preservation 19345 registers its 500 armor and lists the heal on every hit taken, 23781,
+// that its buff 23780 procs.
+func TestOnUseStatBuffListsTheProcItCarries(t *testing.T) {
+	inRepositoryRoot(t)
+	instance := dbc.GetDBC()
+
+	item := instance.Items[19345]
+	parsed := item.ToUIItem()
+	parsed.ItemEffects = dbc.MergeItemEffectsForAllStates(parsed)
+	groups := map[string]Group{}
+	if got := TryParseOnUseEffect(parsed, parsed.ItemEffects[0], instance, groups); got != EffectParseResultSuccess {
+		t.Fatalf("parsed as %v, want the stat on-use registered", got)
+	}
+
+	entry := groups["Armor"].Entries[0]
+	if want := "the proc the buff carries, 23781 (E_HEAL)"; !entry.Supported || entry.NotSimulated != want {
+		t.Errorf("supported %v, not simulated %q; want registered with %q", entry.Supported, entry.NotSimulated, want)
+	}
+	if _, listed := missingEffectsMap["ItemEffects"][19345]; !listed {
+		t.Errorf("19345 is not listed as missing an effect")
+	}
+}
+
 // A trigger restricted to one named ability is a shape no ProcTypeMask states, so the wording is the
 // only evidence there is. The rows below are the client's own, raw and rendered: the store reads the
 // raw description and the item generator the rendered tooltip, and both go through this matcher.

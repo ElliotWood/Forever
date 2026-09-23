@@ -46,11 +46,29 @@ func RegisterAllOnUseCds() {
 		{{- end}}
 		TrinketLimitsDuration: true,
 	})
+	{{- else if .Proc}}
+	{{- $call := .Proc.OnUseConstructor }}
+	{{- if .Proc.Summary }}
+	// {{ .Proc.Summary }}
+	{{- end}}
+	{{- if .Supported}}
+  	{{- with index .Variants 0}}
+	shared.{{ $call }}({{ .ID }}) // {{ .Name }} - https://www.wowhead.com/forever/spell={{.SpellID}}
+	{{- end}}
+	{{- else}}
+	// unsupported: {{ .Proc.Reason }}
+  	{{- with index .Variants 0}}
+	// shared.{{ $call }}({{ .ID }}) // {{ .Name }} - https://www.wowhead.com/forever/spell={{.SpellID}}
+	{{- end}}
+	{{- end}}
 	{{- else if not .Supported}}
   	{{- with index .Variants 0}}
 	// shared.NewSimpleStatActive({{ .ID }}) // {{ .Name }} - https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}
 	{{- else}}
+	{{- if .NotSimulated}}
+	// not simulated: {{ .NotSimulated }}
+	{{- end}}
   	{{- with index .Variants 0}}
 	shared.NewSimpleStatActive({{ .ID }}) // {{ .Name }} - https://www.wowhead.com/forever/spell={{.SpellID}}
 	{{- end}}

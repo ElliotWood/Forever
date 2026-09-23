@@ -88,6 +88,8 @@ type Entry struct {
 	DealsDamage bool
 	// The same for an effect that heals the wearer.
 	Heals bool
+	// What a registered on-use leaves out, stated beside its call.
+	NotSimulated string
 }
 
 // The literals a stacking on-use needs in the generated call. Everything else - stacks,
@@ -598,7 +600,8 @@ func GenerateItemEffects(instance *dbc.DBC, db *WowDatabase, itemSources map[int
 				continue
 			}
 
-			if TryParseOnUseEffect(parsed, itemEffect, instance, groupMapOnUse) == EffectParseResultSuccess {
+			switch TryParseOnUseEffect(parsed, itemEffect, instance, groupMapOnUse) {
+			case EffectParseResultSuccess, EffectParseResultRefused:
 				continue
 			}
 
@@ -869,6 +872,10 @@ func TryParseOnUseEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, ins
 			return EffectParseResultUnsupported
 		}
 
+		if len(dbc.EffectStats(itemEffect)) == 0 {
+			return parseOnUseSpell(parsed, itemEffect, instance, groupMap)
+		}
+
 		groupName := GetEffectStatString(itemEffect)
 		grp, exists := groupMap[groupName]
 		if !exists {
@@ -895,15 +902,152 @@ func TryParseOnUseEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, ins
 			return EffectParseResultSuccess
 		}
 
-		if len(dbc.EffectStats(itemEffect)) == 0 {
-			entry.Supported = false
-			return EffectParseResultUnsupported
+		if trigger := buffProcTrigger(itemEffect.BuffId); trigger != 0 {
+			entry.NotSimulated = fmt.Sprintf("the proc the buff carries, %d (%s)", trigger, spellEffectKinds(instance, int(trigger)))
+			StoreMissingEffect("ItemEffects", parsed.Name, Variant{
+				ID:      int(parsed.Id),
+				Name:    itemEffectTooltip(parsed, itemEffect, instance),
+				SpellID: int(itemEffect.BuffId),
+			})
 		}
 
 		return EffectParseResultSuccess
 	}
 
 	return EffectParseResultInvalid
+}
+
+// The spell an A_PROC_TRIGGER_SPELL on the buff casts, or 0. The flat on-use grants the buff's stats
+// and nothing it procs: Aegis of Preservation 23780's heal on every hit taken, 23781.
+func buffProcTrigger(buffID int32) int32 {
+	for _, e := range spelldata.Find(buffID).Effects {
+		if e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_PROC_TRIGGER_SPELL {
+			return e.TriggerID
+		}
+	}
+	return 0
+}
+
+// An on-use with no stats to grant, resolved from the spell it casts. One the sim cannot build from
+// that is refused in an entry of its own, with the reason, and listed as missing.
+func parseOnUseSpell(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC, groupMap map[string]Group) EffectParseResult {
+	routing := routeOnUse(parsed, itemEffect, instance)
+	entry := &Entry{
+		Variants:    []*Variant{{ID: int(parsed.Id), Name: parsed.Name, SpellID: int(itemEffect.BuffId)}},
+		Proc:        routing,
+		Supported:   routing.Supported(),
+		DealsDamage: routing.Damage,
+	}
+
+	groupName := ""
+	if entry.Supported {
+		groupName = "Damage"
+	}
+	grp := groupMap[groupName]
+	grp.Name = groupName
+	grp.Entries = append(grp.Entries, entry)
+	groupMap[groupName] = grp
+
+	if entry.Supported {
+		return EffectParseResultSuccess
+	}
+
+	if _, ignored := IgnoreMissingEffectBySpellID[int(itemEffect.BuffId)]; !ignored {
+		StoreMissingEffect("ItemEffects", parsed.Name, Variant{
+			ID:      int(parsed.Id),
+			Name:    itemEffectTooltip(parsed, itemEffect, instance),
+			SpellID: int(itemEffect.BuffId),
+		})
+	}
+	return EffectParseResultRefused
+}
+
+// The spell an on-use casts, read from the store the way the sim reads it: damage on the enemy it is
+// used on. What else the row does - a root, a stun - is left out, and the summary names it.
+func routeOnUse(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC) *ProcRouting {
+	spellID := int(itemEffect.BuffId)
+	routing := &ProcRouting{TriggerSpellID: spellID}
+	s := spelldata.Find(itemEffect.BuffId)
+	direct, periodic := s.DamageEffect(), s.PeriodicDamageEffect()
+
+	switch {
+	case !castsOnUse(parsed, spellID, instance):
+		routing.Unsupported = append(routing.Unsupported, fmt.Sprintf("the item's on-use row does not cast %d itself", spellID))
+	case s == spelldata.Nil:
+		routing.Unsupported = append(routing.Unsupported, "the spell has no row in the store")
+	case direct != spelldata.NilEffect || periodic != spelldata.NilEffect:
+		routing.Damage = true
+		routing.Summary = onUseSummary(s, direct, periodic)
+		if direct != spelldata.NilEffect && direct.Type != dbcenums.E_SCHOOL_DAMAGE {
+			routing.Unsupported = append(routing.Unsupported, fmt.Sprintf("the direct damage is %v rather than an amount", direct.Type))
+		}
+		for _, e := range []*spelldata.Effect{direct, periodic} {
+			if e != spelldata.NilEffect && !hitsAnEnemy(e) {
+				routing.Unsupported = append(routing.Unsupported, fmt.Sprintf("the damage lands on implicit target %d, not an enemy", e.Target[0]))
+			}
+		}
+		if periodic != spelldata.NilEffect && (periodic.PeriodMs <= 0 || s.DurationMs <= 0) {
+			routing.Unsupported = append(routing.Unsupported, "the damage over time states no period or no duration to tick over")
+		}
+	default:
+		routing.Unsupported = append(routing.Unsupported,
+			fmt.Sprintf("%d deals no damage (%s)", spellID, spellEffectKinds(instance, spellID)))
+	}
+
+	return routing
+}
+
+// Whether the item's own on-use row names the spell, rather than a spell that reaches it through a
+// trigger: the sim casts the spell the effect names.
+func castsOnUse(parsed *proto.UIItem, spellID int, instance *dbc.DBC) bool {
+	return slices.ContainsFunc(instance.ItemEffectsByParentID[int(parsed.Id)], func(e dbc.ItemEffect) bool {
+		return e.TriggerType == dbc.ITEM_SPELLTRIGGER_ON_USE && e.SpellID == spellID
+	})
+}
+
+func hitsAnEnemy(e *spelldata.Effect) bool {
+	return strings.Contains(e.Target[0].String(), "ENEMY") || strings.Contains(e.Target[1].String(), "ENEMY")
+}
+
+func onUseSummary(s *spelldata.Spell, modelled ...*spelldata.Effect) string {
+	var cast, left []string
+	for i := range s.Effects {
+		e := &s.Effects[i]
+		kind := e.Type.String()
+		if e.Type == dbcenums.E_APPLY_AURA {
+			kind = e.Aura.String()
+		}
+		if slices.Contains(modelled, e) {
+			cast = append(cast, kind)
+		} else {
+			left = append(left, kind)
+		}
+	}
+
+	summary := fmt.Sprintf("on use: %d (%s)", s.ID, strings.Join(cast, ", "))
+	if len(left) > 0 {
+		summary += fmt.Sprintf("; not simulated: %s", strings.Join(left, ", "))
+	}
+	return summary
+}
+
+// The item effect's tooltip as the missing-effects list shows it, or the spell's name where the
+// tooltip does not render.
+func itemEffectTooltip(parsed *proto.UIItem, itemEffect *proto.ItemEffect, instance *dbc.DBC) string {
+	tooltipString, id := dbc.GetItemEffectSpellTooltip(int(parsed.Id), int(itemEffect.BuffId))
+	if rendered, _ := tooltip.ParseTooltip(tooltipString, tooltip.DBCTooltipDataProvider{DBC: instance}, int64(id)); rendered != nil {
+		return rendered.String()
+	}
+	return instance.Spells[int(itemEffect.BuffId)].NameLang
+}
+
+// The constructor an on-use routed from its spell registers through. A refused one that deals no
+// damage names the stat constructor in its commented call.
+func (r *ProcRouting) OnUseConstructor() string {
+	if r.Damage {
+		return "NewSpellDataDamageOnUse"
+	}
+	return "NewSimpleStatActive"
 }
 
 func TryParseEnchantEffect(enchant *proto.UIEnchant, slots []dbc.EnchantProcSlot, groupMapProc map[string]Group, instance *dbc.DBC, enchantSpellEffects map[int]*dbc.SpellEffect) EffectParseResult {

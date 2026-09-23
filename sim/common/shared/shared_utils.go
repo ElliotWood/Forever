@@ -797,8 +797,24 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	outcome := damageOutcome(defenseType, damage.CannotCrit(), OutcomeDefault)
 	effect := damage.DamageEffect()
 
+	periodic := damage.PeriodicDamageEffect()
+	if periodic == spelldata.NilEffect {
+		config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+			spell.CalcAndDealDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+		}
+		return config
+	}
+
+	// Where the row also deals direct damage, the damage over time lands only with it. Alone it goes
+	// on unrolled, and each tick rolls the outcome the row states for it.
+	config.Dot = spelldata.DotConfig(damage, periodic)
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		spell.CalcAndDealDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
+		if effect != spelldata.NilEffect {
+			if !spell.CalcAndDealDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome)).Landed() {
+				return
+			}
+		}
+		spell.Dot(target).Apply(sim)
 	}
 
 	return config
@@ -981,27 +997,68 @@ func NewSimpleStatActive(itemID int32) {
 	core.NewItemEffect(itemID, func(agent core.Agent) {
 		character := agent.GetCharacter()
 
-		onUseEffects := core.FilterSlice(itemEffectsFor(itemID), func(effect *proto.ItemEffect) bool {
-			return effect.GetOnUse() != nil
-		})
-		if len(onUseEffects) == 0 {
-			panic(fmt.Sprintf("No active effects found for item with ID: %d!", itemID))
-		}
-
-		for _, itemEffect := range onUseEffects {
+		for _, itemEffect := range onUseEffectsFor(itemID) {
 			spellConfig := core.SpellConfig{
 				ActionID: core.ActionID{ItemID: itemID},
+				Cast:     onUseCast(character, itemEffect),
 			}
-			spellConfig.Cast.CD = core.Cooldown{
-				Timer:    character.NewTimer(),
-				Duration: time.Duration(itemEffect.GetOnUse().CooldownMs) * time.Millisecond,
-			}
-			spellConfig.Cast.SharedCD = sharedCooldown(character, itemEffect)
 
 			buffStats, buffDuration := onUseStatBuff(character, itemEffect)
 			core.RegisterTemporaryStatsOnUseCD(character, itemEffect.BuffName, buffStats, buffDuration, spellConfig)
 		}
 	})
+}
+
+// An on-use item whose spell deals damage to its target: the direct damage its row rolls, the damage
+// over time it applies, or both.
+func NewSpellDataDamageOnUse(itemID int32) {
+	registerSpellDataOnUse(itemID, core.CooldownTypeDPS, spellDataProcDamageSpell)
+}
+
+// The spell a proc of the same row would cast, used from the item instead: it is the item's action,
+// counts its casts, and runs on the item's cooldowns rather than the row's.
+func registerSpellDataOnUse(itemID int32, cdType core.CooldownType, spellConfig func(*core.Character, *spelldata.Spell) core.SpellConfig) {
+	// Soft fail to allow for overrides for bad effects
+	if core.HasItemEffect(itemID) {
+		return
+	}
+
+	core.NewItemEffect(itemID, func(agent core.Agent) {
+		character := agent.GetCharacter()
+
+		for _, itemEffect := range onUseEffectsFor(itemID) {
+			config := spellConfig(character, spelldata.MustFind(itemEffect.BuffId))
+			config.ActionID = core.ActionID{ItemID: itemID}
+			config.Cast = onUseCast(character, itemEffect)
+			config.Flags &^= core.SpellFlagPassiveSpell
+
+			character.AddMajorCooldown(core.MajorCooldown{
+				Spell: character.RegisterSpell(config),
+				Type:  cdType,
+			})
+		}
+	})
+}
+
+func onUseEffectsFor(itemID int32) []*proto.ItemEffect {
+	onUseEffects := core.FilterSlice(itemEffectsFor(itemID), func(effect *proto.ItemEffect) bool {
+		return effect.GetOnUse() != nil
+	})
+	if len(onUseEffects) == 0 {
+		panic(fmt.Sprintf("No active effects found for item with ID: %d!", itemID))
+	}
+	return onUseEffects
+}
+
+// The item effect's own cooldown and the category cooldown it shares, whatever the spell's row states.
+func onUseCast(character *core.Character, itemEffect *proto.ItemEffect) core.CastConfig {
+	return core.CastConfig{
+		CD: core.Cooldown{
+			Timer:    character.NewTimer(),
+			Duration: time.Duration(itemEffect.GetOnUse().CooldownMs) * time.Millisecond,
+		},
+		SharedCD: sharedCooldown(character, itemEffect),
+	}
 }
 
 // The on-use buff's stats and duration, scaled by its area bonus.

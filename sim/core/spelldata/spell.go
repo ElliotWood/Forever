@@ -125,6 +125,16 @@ func (s *Spell) ProcHealEffect() *Effect {
 	return NilEffect
 }
 
+// The A_PERIODIC_DAMAGE aura the spell applies, or NilEffect where it applies none.
+func (s *Spell) PeriodicDamageEffect() *Effect {
+	for i := range s.Effects {
+		if e := &s.Effects[i]; e.Type == dbcenums.E_APPLY_AURA && e.Aura == dbcenums.A_PERIODIC_DAMAGE {
+			return e
+		}
+	}
+	return NilEffect
+}
+
 func (s *Spell) EnergizeEffect() *Effect {
 	return s.firstOfType(dbcenums.E_ENERGIZE)
 }
