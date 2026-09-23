@@ -22,12 +22,14 @@ const RATING_WEIGHTED_PERCENT_PSEUDO_STATS = [
 	PseudoStat.PseudoStatBlockPercent,
 ];
 
-// A ranged percent is the total the character sheet shows, melee share included, and the melee
-// pseudo stat already counts that share.
+// A ranged percent is the total the character sheet shows, melee share included. Valued at a rating's
+// weight, the share is counted once: by the melee pseudo stat, unless the ranged total has a weight of
+// its own and counts it there.
 const RANGED_TOTAL_MELEE_SHARE = new Map<PseudoStat, PseudoStat>([
 	[PseudoStat.PseudoStatRangedHitPercent, PseudoStat.PseudoStatMeleeHitPercent],
 	[PseudoStat.PseudoStatRangedCritPercent, PseudoStat.PseudoStatMeleeCritPercent],
 ]);
+const MELEE_SHARE_RANGED_TOTAL = new Map([...RANGED_TOTAL_MELEE_SHARE].map(([ranged, melee]) => [melee, ranged]));
 
 export class UnitStat {
 	private readonly stat: Stat | null;
@@ -564,20 +566,26 @@ export class Stats {
 		);
 	}
 
-	// A percent pseudo stat the weights leave at 0 is worth its linked rating's weight.
+	// A percent pseudo stat with a weight of its own is worth that weight, and one the weights leave at
+	// 0 is worth its linked rating's weight.
 	computeEP(epWeights: Stats): number {
 		let total = 0;
 		this.stats.forEach((stat, idx) => {
 			total += stat * epWeights.stats[idx];
 		});
 		this.pseudoStats.forEach((value, idx) => {
+			const weight = epWeights.pseudoStats[idx];
+			if (weight !== 0 || !RATING_WEIGHTED_PERCENT_PSEUDO_STATS.includes(idx)) {
+				total += value * weight;
+				return;
+			}
+
 			const meleeShare = RANGED_TOTAL_MELEE_SHARE.get(idx);
 			if (meleeShare !== undefined) {
 				value -= this.pseudoStats[meleeShare];
 			}
-
-			if (epWeights.pseudoStats[idx] !== 0 || value === 0 || !RATING_WEIGHTED_PERCENT_PSEUDO_STATS.includes(idx)) {
-				total += value * epWeights.pseudoStats[idx];
+			const rangedTotal = MELEE_SHARE_RANGED_TOTAL.get(idx);
+			if (value === 0 || (rangedTotal !== undefined && epWeights.pseudoStats[rangedTotal] !== 0)) {
 				return;
 			}
 			const unitStat = UnitStat.fromPseudoStat(idx);

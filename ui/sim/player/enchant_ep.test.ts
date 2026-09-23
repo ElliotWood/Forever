@@ -64,4 +64,9 @@ describe('Player.computeEnchantEP on percent pseudo stats', () => {
 		const ownWeight = Stats.fromMap({ [Stat.StatMeleeCritRating]: 3 }, { [PseudoStat.PseudoStatMeleeCritPercent]: 7 });
 		expect(enchantEP(2717, { [PseudoStat.PseudoStatMeleeCritPercent]: 1, [PseudoStat.PseudoStatRangedCritPercent]: 1 }, ownWeight)).toBeCloseTo(7);
 	});
+
+	it("values 2586 Falcon's Call's hit at a weighted ranged total alone, which carries the melee share", () => {
+		const hunterWeights = Stats.fromMap({ [Stat.StatMeleeHitRating]: 5 }, { [PseudoStat.PseudoStatRangedHitPercent]: 5 });
+		expect(enchantEP(2586, { [PseudoStat.PseudoStatMeleeHitPercent]: 1, [PseudoStat.PseudoStatRangedHitPercent]: 1 }, hunterWeights)).toBeCloseTo(5);
+	});
 });
