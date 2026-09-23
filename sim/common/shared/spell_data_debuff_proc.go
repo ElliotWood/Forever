@@ -17,22 +17,7 @@ func NewSpellDataDebuffProc(cfg SpellDataProc, variants []ItemVariant) {
 }
 
 func registerSpellDataDebuffProc(cfg SpellDataProc) {
-	source := cfg.effectSource()
-	if source.isAlreadyImplemented() {
-		return
-	}
-
-	trigger := cfg.trigger()
-	debuff := trigger
-	if cfg.BuffSpellID != 0 {
-		debuff = spelldata.MustFind(cfg.BuffSpellID)
-	}
-
-	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
-		return
-	}
-
-	source.registerEffect(func(agent core.Agent) {
+	registerSpellDataRowProc(cfg, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, debuff *spelldata.Spell) {
 		applySpellDataDebuffProc(agent, cfg, source, trigger, debuff)
 	})
 }

@@ -990,6 +990,16 @@ func registerSpellDataAbsorbProc(cfg SpellDataProc) {
 
 // A proc that casts BuffSpellID's spell on the wearer, as spellConfig builds it.
 func registerSpellDataSelfProc(cfg SpellDataProc, spellConfig func(*core.Character, *spelldata.Spell) core.SpellConfig) {
+	registerSpellDataRowProc(cfg, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, row *spelldata.Spell) {
+		applySpellDataSelfProc(agent, cfg, source, trigger, spellConfig(agent.GetCharacter(), row))
+	})
+}
+
+// A proc read from its trigger's row and the row it applies, BuffSpellID's or the trigger's own. It is
+// left unregistered where the item or enchant is implemented by hand, and where the trigger's row
+// names no callback: a listener with no callback never fires, and the row says so before any
+// character exists.
+func registerSpellDataRowProc(cfg SpellDataProc, apply func(agent core.Agent, source effectSource, trigger *spelldata.Spell, row *spelldata.Spell)) {
 	source := cfg.effectSource()
 
 	// Soft fail to allow for overrides for bad effects
@@ -998,15 +1008,17 @@ func registerSpellDataSelfProc(cfg SpellDataProc, spellConfig func(*core.Charact
 	}
 
 	trigger := cfg.trigger()
-	row := spelldata.MustFind(cfg.BuffSpellID)
+	row := trigger
+	if cfg.BuffSpellID != 0 {
+		row = spelldata.MustFind(cfg.BuffSpellID)
+	}
 
-	// A listener with no callback never fires, and the row says so before any character exists.
 	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
 		return
 	}
 
 	source.registerEffect(func(agent core.Agent) {
-		applySpellDataSelfProc(agent, cfg, source, trigger, spellConfig(agent.GetCharacter(), row))
+		apply(agent, source, trigger, row)
 	})
 }
 

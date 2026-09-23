@@ -64,25 +64,7 @@ func NewSpellDataAuraProc(cfg SpellDataProc, variants []ItemVariant) {
 }
 
 func registerSpellDataAuraProc(cfg SpellDataProc) {
-	source := cfg.effectSource()
-
-	// Soft fail to allow for overrides for bad effects
-	if source.isAlreadyImplemented() {
-		return
-	}
-
-	trigger := cfg.trigger()
-	buff := trigger
-	if cfg.BuffSpellID != 0 {
-		buff = spelldata.MustFind(cfg.BuffSpellID)
-	}
-
-	// A listener with no callback never fires, and the row says so before any character exists.
-	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
-		return
-	}
-
-	source.registerEffect(func(agent core.Agent) {
+	registerSpellDataRowProc(cfg, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell) {
 		character := agent.GetCharacter()
 
 		config := spelldata.AuraConfig(buff, spelldata.Label(cfg.Name+" Proc"))
