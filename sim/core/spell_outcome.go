@@ -158,13 +158,22 @@ func (spell *Spell) OutcomeTickMagicHitNoHitCounter(sim *Simulation, result *Spe
 }
 
 func (spell *Spell) OutcomeTickPhysicalCrit(sim *Simulation, result *SpellResult, attackTable *AttackTable) {
+	// Serpent Sting is Nature on the ranged table: its ticks roll physical crit but can still be
+	// partially resisted, so count those like the magic ticks do.
+	isPartialResist := result.DidResist()
 	if spell.PhysicalCritCheck(sim, attackTable) {
 		result.Outcome = OutcomeCrit
 		result.Damage *= spell.CritDamageMultiplier(attackTable)
 		spell.SpellMetrics[result.Target.UnitIndex].CritTicks++
+		if isPartialResist {
+			spell.SpellMetrics[result.Target.UnitIndex].ResistedCritTicks++
+		}
 	} else {
 		result.Outcome = OutcomeHit
 		spell.SpellMetrics[result.Target.UnitIndex].Ticks++
+		if isPartialResist {
+			spell.SpellMetrics[result.Target.UnitIndex].ResistedTicks++
+		}
 	}
 }
 
