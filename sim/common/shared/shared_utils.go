@@ -699,7 +699,7 @@ func registerSpellDataDamageProc(cfg SpellDataProc) {
 // The effect on one character: the spell the proc casts, and the listener that casts it.
 func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, damage *spelldata.Spell) {
 	character := agent.GetCharacter()
-	damageSpell := character.RegisterSpell(spellDataProcDamageSpell(character, damage))
+	damageSpell := character.RegisterSpell(spellDataProcDamageSpell(character, damage, true))
 
 	// The handler is attached after the options, since which unit the damage lands on depends on the
 	// callback the trigger ends up with and a weapon proc's shape rewrites it.
@@ -717,25 +717,13 @@ func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effect
 // time and the amount it rolls. What the row cannot state is that it is a proc's spell - out of the
 // rotation, not a cast of its own, and its hits do not feed the damage-dealt listeners, which is
 // what would have a weapon's own proc answer itself.
-func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell) core.SpellConfig {
-	config := spelldata.SpellConfig(&character.Unit, damage, damageShape(damage), spelldata.Proc())
+func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell, asProc bool) core.SpellConfig {
+	config := spelldata.SpellConfig(&character.Unit, damage, damageShape(damage), castBy(asProc))
 
 	// The proc's own hits carry no mask: what hears them is the flags below, not a hit kind.
 	config.ProcMask = core.ProcMaskEmpty
-
-	// The game casts a proc's spell off the hit that caused it. It spends neither the player's
-	// global cooldown nor the resource bar the row prices the spell at, both of which belong to
-	// casting it from the bar, and it has no cast time to spend either.
-	config.Cast.DefaultCast.GCD = 0
-	config.Cast.DefaultCast.CastTime = 0
-	config.Cast.DefaultCast.NonEmpty = false
-	config.ManaCost = core.ManaCostOptions{}
-	config.RageCost = core.RageCostOptions{}
-	config.EnergyCost = core.EnergyCostOptions{}
-	config.FocusCost = core.FocusCostOptions{}
-	config.Flags |= core.SpellFlagNoOnDamageDealt
-	if damage.IsAProc() {
-		config.Flags |= core.SpellFlagProc
+	if asProc {
+		config.Flags |= core.SpellFlagNoOnDamageDealt
 	}
 
 	defenseType := damageDefenseType(config.DefenseType, config.SpellSchool, false)
@@ -924,7 +912,9 @@ func procDamageTarget(character *core.Character, callback core.AuraCallback, spe
 }
 
 func registerSpellDataHealProc(cfg SpellDataProc) {
-	registerSpellDataSelfProc(cfg, spellDataProcHealSpell)
+	registerSpellDataSelfProc(cfg, func(character *core.Character, heal *spelldata.Spell) core.SpellConfig {
+		return spellDataProcHealSpell(character, heal, true)
+	})
 }
 
 // An item or enchant proc whose spell shields the wearer with an A_SCHOOL_ABSORB aura. BuffSpellID
@@ -936,7 +926,7 @@ func NewSpellDataAbsorbProc(cfg SpellDataProc, variants []ItemVariant) {
 func registerSpellDataAbsorbProc(cfg SpellDataProc) {
 	sourceID := cfg.effectSource().id
 	registerSpellDataSelfProc(cfg, func(character *core.Character, absorb *spelldata.Spell) core.SpellConfig {
-		return spellDataAbsorbSpell(character, absorb, sourceID)
+		return spellDataAbsorbSpell(character, absorb, sourceID, true)
 	})
 }
 
@@ -996,14 +986,11 @@ func applySpellDataSelfProc(agent core.Agent, cfg SpellDataProc, source effectSo
 // the effect rolls, the spell power share the row states, and a crit unless the row rules one out;
 // or a heal over time where the row's heal is a periodic aura. It goes through the healing path so it is measured as healing. Like the damage shape it is a
 // proc's spell, out of the rotation and not a cast of its own.
-func spellDataProcHealSpell(character *core.Character, heal *spelldata.Spell) core.SpellConfig {
-	config := spelldata.SpellConfig(&character.Unit, heal, spelldata.Magic(core.ProcMaskSpellHealing), spelldata.Proc())
+func spellDataProcHealSpell(character *core.Character, heal *spelldata.Spell, asProc bool) core.SpellConfig {
+	config := spelldata.SpellConfig(&character.Unit, heal, spelldata.Magic(core.ProcMaskSpellHealing), castBy(asProc))
 	// A heal crits for the magic multiplier whatever the row files it under: 1248759 states no
 	// defense type at all.
 	config.DefenseType = core.DefenseTypeMagic
-	if heal.IsAProc() {
-		config.Flags |= core.SpellFlagProc
-	}
 
 	effect := heal.ProcHealEffect()
 	if effect.Aura == dbcenums.A_PERIODIC_HEAL {
@@ -1107,7 +1094,7 @@ func NewSpellDataDamageOnUse(itemID int32) {
 // The proc's damage spell with the hit of its damage over time rolled once, when it is applied: the
 // direct hit where the row deals one, a hit roll of its own where it does not. The ticks roll no hit.
 func spellDataOnUseDamageSpell(character *core.Character, damage *spelldata.Spell) core.SpellConfig {
-	config := spellDataProcDamageSpell(character, damage)
+	config := spellDataProcDamageSpell(character, damage, false)
 	periodic := damage.PeriodicDamageEffect()
 	if periodic == spelldata.NilEffect {
 		return config
@@ -1130,20 +1117,22 @@ func spellDataOnUseDamageSpell(character *core.Character, damage *spelldata.Spel
 
 // An on-use item whose spell heals the wearer, at once or over time.
 func NewSpellDataHealOnUse(itemID int32) {
-	registerSpellDataOnUse(itemID, core.CooldownTypeSurvival, spellDataProcHealSpell)
+	registerSpellDataOnUse(itemID, core.CooldownTypeSurvival, func(character *core.Character, heal *spelldata.Spell) core.SpellConfig {
+		return spellDataProcHealSpell(character, heal, false)
+	})
 }
 
 // An on-use item whose spell shields the wearer with an A_SCHOOL_ABSORB aura.
 func NewSpellDataAbsorbOnUse(itemID int32) {
 	registerSpellDataOnUse(itemID, core.CooldownTypeSurvival, func(character *core.Character, absorb *spelldata.Spell) core.SpellConfig {
-		return spellDataAbsorbSpell(character, absorb, itemID)
+		return spellDataAbsorbSpell(character, absorb, itemID, false)
 	})
 }
 
 // The shield the row applies to the caster: the amount its absorb effect rolls, taken off the damage
 // of the schools the effect's Misc masks, for the row's duration. A second cast replaces the shield
 // left. The label carries the item or enchant, since two of them may apply the same row.
-func spellDataAbsorbSpell(character *core.Character, absorb *spelldata.Spell, sourceID int32) core.SpellConfig {
+func spellDataAbsorbSpell(character *core.Character, absorb *spelldata.Spell, sourceID int32, asProc bool) core.SpellConfig {
 	effect := absorb.AbsorbEffect()
 	schools := core.SpellSchool(effect.Misc)
 
@@ -1158,11 +1147,8 @@ func spellDataAbsorbSpell(character *core.Character, absorb *spelldata.Spell, so
 		},
 	})
 
-	config := spelldata.SpellConfig(&character.Unit, absorb, spelldata.Proc())
+	config := spelldata.SpellConfig(&character.Unit, absorb, castBy(asProc))
 	config.ProcMask = core.ProcMaskEmpty
-	if absorb.IsAProc() {
-		config.Flags |= core.SpellFlagProc
-	}
 	config.RelatedSelfBuff = shield.Aura
 	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
 		amount = effect.Roll(sim, character.Level)
@@ -1188,6 +1174,31 @@ func spellDataOnUseSpeedSpell(character *core.Character, row *spelldata.Spell) c
 		aura.Activate(sim)
 	}
 	return config
+}
+
+func castBy(asProc bool) spelldata.SpellOpt {
+	if asProc {
+		return procSpell
+	}
+	return itemUseSpell
+}
+
+// The game casts a proc's spell off the hit that caused it. It spends neither the player's global
+// cooldown nor the resource bar the row prices the spell at, both of which belong to casting it from
+// the bar, it has no cast time to spend either, and it is a proc unless the row says it is not.
+func procSpell(config *core.SpellConfig, row *spelldata.Spell) {
+	spelldata.Proc()(config, row)
+	if row.IsAProc() {
+		config.Flags |= core.SpellFlagProc
+	}
+}
+
+func itemUseSpell(config *core.SpellConfig, _ *spelldata.Spell) {
+	config.Flags &^= core.SpellFlagAPL | core.SpellFlagPassiveSpell
+	config.ManaCost = core.ManaCostOptions{}
+	config.RageCost = core.RageCostOptions{}
+	config.EnergyCost = core.EnergyCostOptions{}
+	config.FocusCost = core.FocusCostOptions{}
 }
 
 // The spell a proc of the same row would cast, used from the item instead: it is the item's action,
@@ -1222,8 +1233,6 @@ func registerSpellDataOnUseCooldown(itemID int32, onUse func(*core.Character, *s
 			itemCast := onUseCast(character, itemEffect)
 			config.Cast = spelldata.Cast(row)
 			config.Cast.CD, config.Cast.SharedCD = itemCast.CD, itemCast.SharedCD
-			config.Flags &^= core.SpellFlagPassiveSpell | core.SpellFlagNoOnCastComplete |
-				core.SpellFlagNoOnDamageDealt | core.SpellFlagProc
 
 			cooldown.Spell = character.RegisterSpell(config)
 			character.AddMajorCooldown(cooldown)
