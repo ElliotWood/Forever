@@ -1208,11 +1208,7 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, *storeInputs, er
 		return nil, nil, err
 	}
 
-	forms, err := loadShapeshiftForms(helper.db)
-	if err != nil {
-		return nil, nil, err
-	}
-	formsFile, err := renderFormsFile(forms)
+	formsFile, err := renderFormsFile(inputs.Forms)
 	if err != nil {
 		return nil, nil, err
 	}
