@@ -40,6 +40,8 @@ type EnchantProcSlot struct {
 	ChancePct int
 	// What the slot applies: the combat spell itself, or the spell its equip aura triggers.
 	AppliesSpellID int
+	// The effect entry the slot's spell resolves to, where it resolves stats.
+	Effect *proto.ItemEffect
 }
 
 // The auras through which an equip spell answers a hit: the proc triggers, the retaliation of a
@@ -75,13 +77,12 @@ func (enchant *Enchant) ProcSlots() []EnchantProcSlot {
 		}
 	}
 
-	return slots
-}
+	for i := range slots {
+		eff := ItemEffect{TriggerType: ITEM_SPELLTRIGGER_CHANCE_ON_HIT, SpellID: slots[i].SpellID}
+		slots[i].Effect, _ = eff.ToProto(0)
+	}
 
-// The effect entry an enchant slot's spell resolves to, where it resolves stats.
-func EnchantSlotEffect(spellID int) (*proto.ItemEffect, bool) {
-	eff := ItemEffect{TriggerType: ITEM_SPELLTRIGGER_CHANCE_ON_HIT, SpellID: spellID}
-	return eff.ToProto(0)
+	return slots
 }
 
 // SpellItemEnchantment 8203 is "Spirit +$k1", applied by Enchant Bracer/Boots - Lesser Spirit, but
@@ -92,6 +93,11 @@ var enchantEffectArgFixes = map[int]map[int]int{
 }
 
 func (enchant *Enchant) ToProto() *proto.UIEnchant {
+	uiEnchant, _ := enchant.ToProtoWithSlots()
+	return uiEnchant
+}
+
+func (enchant *Enchant) ToProtoWithSlots() (*proto.UIEnchant, []EnchantProcSlot) {
 	uiEnchant := &proto.UIEnchant{
 		Name:               enchant.Name,
 		ItemId:             int32(enchant.ItemId),
@@ -104,10 +110,10 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 		RequiredProfession: GetProfession(enchant.RequiredProfession),
 	}
 
-	for _, slot := range enchant.ProcSlots() {
-		parsedEffect, hasStats := EnchantSlotEffect(slot.SpellID)
-		if hasStats && !slices.ContainsFunc(uiEnchant.EnchantEffects, func(e *proto.ItemEffect) bool { return e.BuffId == parsedEffect.BuffId }) {
-			uiEnchant.EnchantEffects = append(uiEnchant.EnchantEffects, parsedEffect)
+	slots := enchant.ProcSlots()
+	for _, slot := range slots {
+		if slot.Effect != nil && !slices.ContainsFunc(uiEnchant.EnchantEffects, func(e *proto.ItemEffect) bool { return e.BuffId == slot.Effect.BuffId }) {
+			uiEnchant.EnchantEffects = append(uiEnchant.EnchantEffects, slot.Effect)
 		}
 	}
 
@@ -178,5 +184,5 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 			uiEnchant.WeaponDamage += float64(enchant.EffectPoints[i])
 		}
 	}
-	return uiEnchant
+	return uiEnchant, slots
 }

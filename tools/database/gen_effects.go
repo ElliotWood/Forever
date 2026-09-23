@@ -539,13 +539,16 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 	// The raw rows repeat an enchant once per recipe name, and an enchant registers once.
 	generated := map[int32]bool{}
 	for _, enchant := range instance.Enchants {
-		parsed := enchant.ToProto()
-		if _, ok := db.Enchants[EnchantToDBKey(parsed)]; !ok || generated[parsed.EffectId] {
+		if generated[int32(enchant.EffectId)] {
+			continue
+		}
+		parsed, slots := enchant.ToProtoWithSlots()
+		if _, ok := db.Enchants[EnchantToDBKey(parsed)]; !ok {
 			continue
 		}
 		generated[parsed.EffectId] = true
 
-		TryParseEnchantEffect(parsed, enchant.ProcSlots(), groupMapProc, instance, enchantSpellEffects)
+		TryParseEnchantEffect(parsed, slots, groupMapProc, instance, enchantSpellEffects)
 		storeUnmappedSpeedEnchant(instance, enchant, parsed, enchantSpellEffects)
 	}
 
@@ -1446,10 +1449,8 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 
 	// A buff stated as a percentage of a stat resolves no flat stats: the sim reads the multipliers
 	// off the buff's own row.
-	effect, hasStats := dbc.EnchantSlotEffect(slot.SpellID)
-	if hasStats && spelldata.Find(effect.BuffId).AppliesAnAuraToAnEnemy() {
-		hasStats = false
-	}
+	effect := slot.Effect
+	hasStats := effect != nil && !spelldata.Find(effect.BuffId).AppliesAnAuraToAnEnemy()
 	appliedRow := spelldata.Find(int32(applied))
 	multipliesStats := !hasStats && !appliedRow.AppliesAnAuraToAnEnemy() && len(spelldata.PercentStats(appliedRow, 0)) > 0
 
