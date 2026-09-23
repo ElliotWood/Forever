@@ -582,8 +582,8 @@ func GenerateEnchantEffects(instance *dbc.DBC, db *WowDatabase) {
 }
 
 var speedAuras = []dbcenums.EffectAuraType{
-	dbcenums.A_MOD_ATTACKSPEED, dbcenums.A_MOD_MELEE_HASTE, dbcenums.A_MOD_MELEE_RANGED_HASTE,
-	dbcenums.A_HASTE_SPELLS, dbcenums.A_MOD_MELEE_HASTE_2, dbcenums.A_MOD_RANGED_HASTE_2,
+	dbcenums.A_MOD_MELEE_HASTE, dbcenums.A_MOD_MELEE_RANGED_HASTE, dbcenums.A_HASTE_SPELLS,
+	dbcenums.A_MOD_MELEE_HASTE_2, dbcenums.A_MOD_RANGED_HASTE_2,
 }
 
 // These attack and cast speed auras reach no enchant field, so an enchant whose equip spell states
