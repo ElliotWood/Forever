@@ -21,8 +21,8 @@ func TestConstantNames(t *testing.T) {
 		t.Errorf("an unnamed flag bit reads %q", got)
 	}
 
-	flags := procFlagNames([2]uint32{dbcenums.PROC_FLAG_KILL | 1<<31, 2})
-	if strings.Join(flags, ", ") != "PROC_FLAG_KILL, bit 0x80000000, word1 0x2" {
+	flags := procFlagNames([2]uint32{dbcenums.PROC_FLAG_KILL, dbcenums.PROC_FLAG_2_KNOCKBACK | 1<<3})
+	if strings.Join(flags, ", ") != "PROC_FLAG_KILL, PROC_FLAG_2_KNOCKBACK, bit 0x8" {
 		t.Errorf("the proc flags read %q", flags)
 	}
 

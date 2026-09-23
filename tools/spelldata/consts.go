@@ -29,8 +29,9 @@ var (
 	evalPackage   *types.Package
 	evalPos       token.Pos
 
-	procFlagConsts = map[int64]string{}
-	spellModConsts = map[int64]string{}
+	procFlagConsts  = map[int64]string{}
+	procFlag2Consts = map[int64]string{}
+	spellModConsts  = map[int64]string{}
 )
 
 // Only the packages above are imported, and only by each other: type-checking proto and stats from
@@ -82,6 +83,7 @@ func scanConstants() {
 	evalPos = file.Name.Pos()
 
 	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/dbcenums"], "PROC_FLAG_", procFlagConsts)
+	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/dbcenums"], "PROC_FLAG_2_", procFlag2Consts)
 	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/spelldata"], "SPELLMOD_", spellModConsts)
 }
 
@@ -94,7 +96,7 @@ func namesByPrefix(pkg *types.Package, prefix string, into map[int64]string) {
 	scope := pkg.Scope()
 	for _, name := range scope.Names() {
 		c, ok := scope.Lookup(name).(*types.Const)
-		if !ok || !strings.HasPrefix(name, prefix) {
+		if !ok || !strings.HasPrefix(name, prefix) || prefix == "PROC_FLAG_" && strings.HasPrefix(name, "PROC_FLAG_2_") {
 			continue
 		}
 		if value, exact := constant.Int64Val(constant.ToInt(c.Val())); exact && value != 0 {
