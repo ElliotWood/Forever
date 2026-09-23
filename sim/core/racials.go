@@ -204,14 +204,17 @@ func applyRaceEffects(agent Agent) {
 			bloodFuryAura.AttachStatDependency(character.NewDynamicMultiplyStat(stat, 1.1))
 		}
 
+		bloodFuryCD := Cooldown{
+			Timer:    character.NewTimer(),
+			Duration: time.Minute * 2,
+		}
+		bloodFuryAura.Icd = &bloodFuryCD
+
 		bloodFurySpell := character.RegisterSpell(SpellConfig{
 			ActionID: actionID,
 			Flags:    SpellFlagNoOnCastComplete,
 			Cast: CastConfig{
-				CD: Cooldown{
-					Timer:    character.NewTimer(),
-					Duration: time.Minute * 2,
-				},
+				CD: bloodFuryCD,
 			},
 			ApplyEffects: func(sim *Simulation, _ *Unit, _ *Spell) {
 				bloodFuryAura.Activate(sim)
