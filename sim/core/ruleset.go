@@ -72,21 +72,26 @@ func (character *Character) unifyEquipHitAndCrit(equipStats stats.Stats) stats.S
 // with no ability used and no damage taken between them. Damage in the sample ran from 15 to
 // 64 a hit, crits included, with no effect on the rage gained.
 //
-//	~2.1s one-hand   7.2-7.3      2.1 x 3.5 = 7.35
-//	~2.5s one-hand   8.6-8.7      2.5 x 3.5 = 8.75
-//	~3.2s two-hand  14.4          3.2 x 4.5 = 14.4
-//	~3.3s two-hand  14.9          3.3 x 4.5 = 14.85
-//	~3.5s two-hand  15.7          3.5 x 4.5 = 15.75
+//	~2.1s one-hand   7.2-7.3      2.1 x 3.46 = 7.27
+//	~2.5s one-hand   8.6-8.7      2.5 x 3.46 = 8.65
+//	~3.2s two-hand  14.4          3.2 x 4.5  = 14.4
+//	~3.3s two-hand  14.9          3.3 x 4.5  = 14.85
+//	~3.5s two-hand  15.7          3.5 x 4.5  = 15.75
 //
-// The two-hand column lands on 4.5 x speed to within a tenth. The one-hand column sits about
-// 1.5% under 3.5 x speed at both speeds, which is either a slightly lower multiplier or
-// weapon speeds that were not exactly the round numbers they were bucketed as. 3.5 is used
-// because the report's stated rule is the thing being modelled, and a second decimal place
-// invented from two buckets would be worse than the honest round number.
+// wowsims/forever f9f9f21883 ("Rage follows the Forever combat logs") pins the one-hand factor
+// to 3.46 from six more level 8-9 logs; it lands on the middle of both one-hand buckets above,
+// where 3.5 sat 1.5% high. An off-hand swing pays half, before any off-hand multiplier (same
+// commit).
 const (
-	ForeverRagePerSecondOneHand = 3.5
+	ForeverRagePerSecondOneHand = 3.46
 	ForeverRagePerSecondTwoHand = 4.5
+	ForeverOffHandRageFactor    = 0.5
 )
+
+// Rage from a hit taken on Forever: its pre-armor damage x 10 / maximum health
+// (wowsims/forever f9f9f21883). They fit the 10 to geared logs and flag it for an in-game
+// test at higher levels (naked logs gave double) - re-measure it first if tank rage looks off.
+const ForeverDamageTakenRageFactor = 10.0
 
 // What a landed swing is worth. Base weapon speed, not the hasted interval: otherwise haste
 // would buy swings and lose exactly as much rage per swing, which would make it rage-neutral.
@@ -100,4 +105,11 @@ func ForeverWhiteHitRage(weapon *Weapon) float64 {
 		return weapon.SwingSpeed * ForeverRagePerSecondTwoHand
 	}
 	return weapon.SwingSpeed * ForeverRagePerSecondOneHand
+}
+
+func ForeverDamageTakenRage(preArmorDamage, maxHealth float64) float64 {
+	if maxHealth <= 0 {
+		return 0
+	}
+	return preArmorDamage * ForeverDamageTakenRageFactor / maxHealth
 }

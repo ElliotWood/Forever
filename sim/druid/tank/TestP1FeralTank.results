@@ -50,8 +50,9 @@ character_stats_results: {
 stat_weights_results: {
  key: "TestP1FeralTank-Phase1-StatWeights-Default"
  value: {
-  weights: 0.40558
-  weights: -0.40554
+  weights: 0.34801
+  weights: 0.40185
+  weights: -0.06053
   weights: 0
   weights: 0
   weights: 0
@@ -66,9 +67,7 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0
-  weights: 0.18435
-  weights: 0
+  weights: 0.15819
   weights: 0
   weights: 0
   weights: 0
@@ -76,12 +75,13 @@ stat_weights_results: {
   weights: 0
   weights: 0
   weights: 0
-  weights: 0.01674
-  weights: 0
-  weights: -0.11559
   weights: 0
   weights: 0
-  weights: -1.43725
+  weights: 0
+  weights: -0.01867
+  weights: 0
+  weights: 0
+  weights: -0.79364
   weights: 0
   weights: 0
   weights: 0
@@ -99,37 +99,37 @@ stat_weights_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-CenarionRaiment"
  value: {
-  dps: 297.42225
-  tps: 624.57472
+  dps: 295.30149
+  tps: 617.82151
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-FeralheartRaiment"
  value: {
-  dps: 340.13019
-  tps: 705.37964
+  dps: 335.5206
+  tps: 696.25541
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-StormrageRaiment"
  value: {
-  dps: 343.71371
-  tps: 721.66321
+  dps: 343.94049
+  tps: 721.05299
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-AllItems-SymbolsofUnendingLife"
  value: {
-  dps: 367.34768
-  tps: 772.07092
+  dps: 366.18483
+  tps: 769.72372
  }
 }
 dps_results: {
  key: "TestP1FeralTank-Phase1-Average-Default"
  value: {
-  dps: 559.02518
-  tps: 1429.00053
-  dtps: 575.37378
+  dps: 453.74098
+  tps: 1030.70181
+  dtps: 575.4267
  }
 }
 dps_results: {
@@ -219,8 +219,8 @@ dps_results: {
 dps_results: {
  key: "TestP1FeralTank-Phase1-SwitchInFrontOfTarget-Default"
  value: {
-  dps: 509.91787
-  tps: 1342.4932
-  dtps: 652.06207
+  dps: 403.19372
+  tps: 929.95364
+  dtps: 648.94048
  }
 }
