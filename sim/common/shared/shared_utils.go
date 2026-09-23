@@ -1212,6 +1212,24 @@ func spellDataAbsorbSpell(character *core.Character, absorb *spelldata.Spell, so
 	return config
 }
 
+// An on-use item whose spell raises the wearer's melee, ranged or cast speed. Every speed the row
+// states is on one aura, up for the row's duration.
+func NewSpellDataSpeedOnUse(itemID int32) {
+	registerSpellDataOnUse(itemID, core.CooldownTypeDPS, spellDataOnUseSpeedSpell)
+}
+
+func spellDataOnUseSpeedSpell(character *core.Character, row *spelldata.Spell) core.SpellConfig {
+	aura := character.RegisterAura(spelldata.AuraConfig(row)).AttachHastePseudoStats(row.SpeedPseudoStats())
+
+	config := spelldata.SpellConfig(&character.Unit, row)
+	config.ProcMask = core.ProcMaskEmpty
+	config.RelatedSelfBuff = aura
+	config.ApplyEffects = func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
+		aura.Activate(sim)
+	}
+	return config
+}
+
 // The spell a proc of the same row would cast, used from the item instead: it is the item's action,
 // counts its casts, and runs on the item's cooldowns rather than the row's, with the cast time and
 // global cooldown the row states. The player casts it, so it is not a proc: its hits and heals reach
