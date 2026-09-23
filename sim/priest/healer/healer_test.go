@@ -18,18 +18,18 @@ func init() {
 // rotation and the fake prepull (no SkipRotation) make it exercise a full environment reset, the
 // path the UI's stats request takes.
 func TestHealerPriest(t *testing.T) {
-	t.Skip("class talents and abilities are stubbed pending their Forever implementations; " +
-		"the golden numbers cannot be meaningful until then")
 	var generators []core.TestGenerator
-	for _, gearSet := range []string{"preraid", "p3_t5", "p3"} {
+	// Naked and one talent build per preset: the generated item database does not carry the Forever
+	// gear our sim plans with, and gives the rest TBC-shaped stats.
+	for _, build := range []struct{ name, talents string }{{"holy-19-32-0", HolyTalents}, {"discipline-35-16-0", DisciplineTalents}} {
 		player := core.WithSpec(
 			&proto.Player{
 				Class:         proto.Class_ClassPriest,
 				Race:          proto.Race_RaceDwarf,
-				Equipment:     core.GetGearSet("../../../ui/specs/priest/healer/gear_sets", gearSet).GearSet,
+				Equipment:     &proto.EquipmentSpec{},
 				Consumables:   FullConsumes,
 				Buffs:         core.FullIndividualBuffs,
-				TalentsString: StandardTalents,
+				TalentsString: build.talents,
 				Profession1:   proto.Profession_Tailoring,
 				Profession2:   proto.Profession_Enchanting,
 				Rotation:      &proto.APLRotation{Type: proto.APLRotation_TypeAPL},
@@ -37,7 +37,7 @@ func TestHealerPriest(t *testing.T) {
 			PlayerOptions,
 		)
 		generators = append(generators, &core.SingleCharacterStatsTestGenerator{
-			Name: gearSet,
+			Name: build.name,
 			Request: &proto.ComputeStatsRequest{
 				Raid: core.SinglePlayerRaidProto(player, core.FullPartyBuffs, core.FullRaidBuffs, core.FullDebuffs),
 			},
@@ -46,14 +46,12 @@ func TestHealerPriest(t *testing.T) {
 	core.RunTestSuite(t, t.Name(), generators)
 }
 
-// Circle of Healing 20/41/0, wowhead's TBC raid build.
-var StandardTalents = "50023011305-235050032002150520051"
+// ui/specs/priest/healer/presets.ts.
+var HolyTalents = "005203031302-2350510323000053"
+var DisciplineTalents = "005203031325101531-03505003"
 
-var FullConsumes = &proto.ConsumesSpec{
-	FlaskId: 22853, // Flask of Mighty Restoration
-	FoodId:  27666, // Golden Fish Sticks
-	PotId:   22832, // Super Mana Potion
-}
+// The UI sets no consumables for this spec (the TBC flask, food and potion are not in the Forever client).
+var FullConsumes = &proto.ConsumesSpec{}
 
 var PlayerOptions = &proto.Player_HealerPriest{
 	HealerPriest: &proto.HealerPriest{
