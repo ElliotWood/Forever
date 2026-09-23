@@ -197,9 +197,9 @@ func processEnchantmentEffects(
 
 const rangedWeaponSubclassMask = rangedMask | ITEM_SUBCLASS_BIT_WEAPON_THROWN | ITEM_SUBCLASS_BIT_WEAPON_WAND
 
-// Adds the percents an equip spell states for hit, crit, block, dodge and parry to pseudoStats, which
-// is indexed by proto.PseudoStat, and reports whether it added any. Only auras on the wearer count:
-// Atiesh's 28142 is a party aura and reaches the sim as a raid buff.
+// Adds the percents an equip spell states for hit, crit, block, dodge, parry and attack and cast speed
+// to pseudoStats, which is indexed by proto.PseudoStat, and reports whether it added any. Only auras on
+// the wearer count: Atiesh's 28142 is a party aura and reaches the sim as a raid buff.
 //
 // A spell that names weapons applies its hit and weapon crit only to attacks with them. Melee is
 // credited when it names no weapon or a melee one and ranged when it names no weapon or a ranged one,
@@ -254,9 +254,25 @@ func AddEquipSpellPseudoStats(pseudoStats []float64, spellID int) bool {
 		case dbcenums.A_MOD_PARRY_PERCENT:
 			add(proto.PseudoStat_PseudoStatParryPercent, value)
 		}
+
+		// 1293881 (Pendulum of Doom) states a zero melee haste and changes the speed through its procs.
+		if value != 0 {
+			for _, pseudoStat := range equipSpellHasteAuras[effect.EffectAura] {
+				add(pseudoStat, value)
+			}
+		}
 	}
 
 	return added
+}
+
+// Unlike ranged hit and crit, ranged haste is not a total including melee: the sim applies melee,
+// ranged and cast speed each on its own.
+var equipSpellHasteAuras = map[EffectAuraType][]proto.PseudoStat{
+	dbcenums.A_MOD_MELEE_HASTE_3:           {proto.PseudoStat_PseudoStatMeleeHastePercent},
+	dbcenums.A_MOD_RANGED_HASTE:            {proto.PseudoStat_PseudoStatRangedHastePercent},
+	dbcenums.A_MOD_MELEE_RANGED_HASTE_2:    {proto.PseudoStat_PseudoStatMeleeHastePercent, proto.PseudoStat_PseudoStatRangedHastePercent},
+	dbcenums.A_MOD_CASTING_SPEED_NOT_STACK: {proto.PseudoStat_PseudoStatSpellHastePercent},
 }
 
 const skillLineDefense = 95

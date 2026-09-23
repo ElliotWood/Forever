@@ -38,6 +38,20 @@ func TestEquipSpellPseudoStats(t *testing.T) {
 		{"13690 Enchant Shield - Lesser Block", 13690,
 			map[pseudo]float64{proto.PseudoStat_PseudoStatBlockPercent: 2}},
 		{"28142 Power of the Guardian, a party aura", 28142, map[pseudo]float64{}},
+		{"7217 Weapon Counterweight, melee speed", 7217,
+			map[pseudo]float64{proto.PseudoStat_PseudoStatMeleeHastePercent: 3}},
+		{"13928 Enchant Gloves - Minor Haste, attack and cast speed", 13928,
+			map[pseudo]float64{
+				proto.PseudoStat_PseudoStatMeleeHastePercent:  1,
+				proto.PseudoStat_PseudoStatRangedHastePercent: 1,
+				proto.PseudoStat_PseudoStatSpellHastePercent:  1,
+			}},
+		{"22841 Arcanum of Rapidity, melee and ranged speed", 22841,
+			map[pseudo]float64{
+				proto.PseudoStat_PseudoStatMeleeHastePercent:  1,
+				proto.PseudoStat_PseudoStatRangedHastePercent: 1,
+			}},
+		{"1293881 Pendulum of Doom, a zero melee speed aura", 1293881, map[pseudo]float64{}},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			got := make([]float64, stats.PseudoStatsLen)
