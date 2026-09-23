@@ -724,6 +724,7 @@ func registerStaticImbue(agent Agent, imbueId int32) {
 		character.AddStat(stats.MP5, 12)
 	case 25122: // Briliant Wizard Oil
 		character.AddStat(stats.SpellDamage, 36)
+		character.AddStat(stats.HealingPower, 36)
 		character.AddStat(stats.SpellCritRating, 14)
 	case 28017: // Superior Wizard Oil
 		character.AddStat(stats.SpellDamage, 42)

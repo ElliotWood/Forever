@@ -230,7 +230,7 @@ export const ShamanImbueRockbiter = {
 
 export const IMBUE_CONFIG_MH = [
 	{ config: ManaOil, stats: [Stat.StatHealingPower] },
-	{ config: BrilWizardOil, stats: [Stat.StatSpellDamage] },
+	{ config: BrilWizardOil, stats: [Stat.StatSpellDamage, Stat.StatHealingPower] },
 	{ config: SupWizardOil, stats: [Stat.StatSpellDamage] },
 	{ config: AdamantiteSharpeningStoneMH, stats: [Stat.StatAttackPower] },
 	{ config: AdamantiteWeightstoneMH, stats: [Stat.StatAttackPower] },
@@ -246,7 +246,7 @@ export const IMBUE_CONFIG_MH = [
 
 export const IMBUE_CONFIG_OH = [
 	{ config: ManaOil, stats: [Stat.StatHealingPower] },
-	{ config: BrilWizardOil, stats: [Stat.StatSpellDamage] },
+	{ config: BrilWizardOil, stats: [Stat.StatSpellDamage, Stat.StatHealingPower] },
 	{ config: SupWizardOil, stats: [Stat.StatSpellDamage] },
 	{ config: AdamantiteSharpeningStoneOH, stats: [Stat.StatAttackPower] },
 	{ config: AdamantiteWeightstoneOH, stats: [Stat.StatAttackPower] },
