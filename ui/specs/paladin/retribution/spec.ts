@@ -4,6 +4,7 @@ import { PseudoStat, Spec, Stat } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -67,7 +68,22 @@ export default defineSpec<Spec.SpecRetributionPaladin>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Strength: 2.53,
+			Agility: 1.13,
+			Intellect: 0.15,
+			SpellPower: 0.32,
+			SpellHit: 0.41,
+			SpellCrit: 0.01,
+			MP5: 0.05,
+			AttackPower: 1,
+			MeleeHit: 1.96,
+			MeleeCrit: 1.16,
+			FireResistance: 0.5,
+			MainHandDps: 7.33,
+			MeleeSpeedMultiplier: 7.33,
+		}),
 		statCaps: (() => {
 			const hitCap = new Stats().withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9);
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);

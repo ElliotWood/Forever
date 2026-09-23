@@ -3,6 +3,7 @@ import { APLRotation, APLRotation_Type } from '@generated/proto/apl';
 import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { DEFAULT_HYBRID_CASTER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -57,7 +58,17 @@ export default defineSpec<Spec.SpecBalanceDruid>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Intellect: 0.16,
+			SpellPower: 1,
+			ArcanePower: 0.62,
+			NaturePower: 0.38,
+			SpellHit: 11.75,
+			SpellCrit: 7.5,
+			SpellHaste: 0.8,
+			FireResistance: 0.5,
+		}),
 		// Default stat caps for stat weights tab. (also needed for reforging since we don't want to reforge above stat caps)
 		statCaps: (() => {
 			return new Stats().withPseudoStat(PseudoStat.PseudoStatSpellHitPercent, 16);

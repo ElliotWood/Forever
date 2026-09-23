@@ -3,7 +3,8 @@ import { APLRotation } from '@generated/proto/apl';
 import { EquipmentSpec, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
-import { DEFAULT_HEALER_GEM_STATS, Stats, UnitStat } from '@sim/proto/stats';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
+import { DEFAULT_HEALER_GEM_STATS, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
 import * as Presets from './presets';
@@ -49,7 +50,8 @@ export default defineSpec<Spec.SpecRestorationShaman>({
 		// Default equipped gear.
 		gear: EquipmentSpec.create(),
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({ Intellect: 0.22, Spirit: 0.05, SpellPower: 1, SpellCrit: 0.67, SpellHaste: 1.29, MP5: 0.08 }),
 		// Default consumes settings.
 		consumables: Presets.DefaultConsumables,
 		// Default talents.

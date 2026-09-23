@@ -4,6 +4,7 @@ import { ItemSlot, PseudoStat, Spec, Stat } from '@generated/proto/common';
 import * as Mechanics from '@sim/constants/mechanics';
 import { PlayerClasses } from '@sim/player/classes';
 import { Player } from '@sim/player/player';
+import { masterEpWeights } from '@sim/proto/master_ep_weights';
 import { Stats, UnitStat } from '@sim/proto/stats';
 import { defineSpec } from '@sim/spec_config';
 
@@ -79,7 +80,25 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 		// Default equipped gear.
 		gear: Presets.DEFAULT_GEAR.gear,
 		// Default EP weights for sorting gear in the gear picker.
-		epWeights: new Stats(),
+		// Master's weights (percent stats per 1%), in our ratings.
+		epWeights: masterEpWeights({
+			Armor: 0.174,
+			BonusArmor: 0.155,
+			Stamina: 2.336,
+			Strength: 1.555,
+			Agility: 2.771,
+			AttackPower: 0.32,
+			MeleeHit: 1.432,
+			MeleeCrit: 0.925,
+			Block: 1.32,
+			BlockValue: 1.373,
+			Dodge: 2.606,
+			Parry: 2.649,
+			Defense: 3.305,
+			MainHandDps: 11.92,
+			OffHandDps: 4.69,
+			MeleeSpeedMultiplier: 4.69,
+		}),
 		statCaps: (() => {
 			const hitCap = new Stats().withPseudoStat(PseudoStat.PseudoStatMeleeHitPercent, 9);
 			const expCap = new Stats().withStat(Stat.StatExpertiseRating, 6.5 * 4 * Mechanics.EXPERTISE_PER_QUARTER_PERCENT_REDUCTION);

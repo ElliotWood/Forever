@@ -14,6 +14,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { type LoadedSpec, loadSpecDefinitions, specLaunch } from '../dps_rankings/spec_definitions';
 import { PageSection, ProductPage } from '../ProductPage';
 import { itemLevel, type RankedItem, rankGear, type SlotRanking } from './gear';
+import LAUNCH_ITEM_IDS from './launch_items.json';
+
+// Forever's launch pool: the items of the launch-content database our Classic sim was built on
+// (assets/db_inputs/forever_sim_db.json, ids only). The client's database also carries the raids
+// Forever does not open at launch, with nothing on the row to tell them apart.
+const launchItems = new Set<number>(LAUNCH_ITEM_IDS);
 
 type ItemDb = { items: Array<Item>; randomSuffix: (id: number) => ItemRandomSuffix | undefined };
 
@@ -166,7 +172,9 @@ export const BisPage = () => {
 			})
 			.catch(() => setError('The spec list could not be loaded. Reload the page and try again.'));
 		Database.get()
-			.then(database => setDb({ items: database.getAllItems(), randomSuffix: id => database.getRandomSuffixById(id) }))
+			.then(database =>
+				setDb({ items: database.getAllItems().filter(item => launchItems.has(item.id)), randomSuffix: id => database.getRandomSuffixById(id) }),
+			)
 			.catch(() => setError('The item database could not be loaded. Reload the page and try again.'));
 	}, []);
 
@@ -218,10 +226,10 @@ export const BisPage = () => {
 					)}
 				</p>
 				<p className="m-0">
-					<strong>What the item pool is.</strong> Whatever this site&apos;s item database holds. The Forever launch pool - Onyxia and Molten Core,
-					alongside the dungeon, crafted, reputation and PvP gear available at launch - is being moved into it now. Until that lands the database is
-					the one this sim was built on: it has items from raids Forever does not open at launch and is missing some that it does, so a pick here can
-					be something you cannot get on day one.
+					<strong>What the item pool is.</strong> Forever launch content only: Onyxia and Molten Core, alongside the dungeon, crafted, reputation and
+					PvP gear available at launch. The site&apos;s item database also holds the raids Forever does not open at launch (it comes from the game
+					client, which ships them); this page leaves those out, so nothing from Blackwing Lair, Zul&apos;Gurub, Ahn&apos;Qiraj or Naxxramas can
+					appear.
 				</p>
 				<p className="m-0">
 					<strong>What EP cannot see.</strong> An EP score reads an item&apos;s stat line and its weapon damage, and nothing else. Set bonuses, on-use
