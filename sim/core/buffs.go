@@ -22,8 +22,14 @@ const (
 // e.g. Arcane Brilliance vs Greater Arcane Elixir.
 const StatBuffCategory = "StatBuff"
 
+// The category one stat or pseudo-stat of a buff bids in alone: the buff's category, then the stat's
+// name or its PseudoStats field, then whether the buff adds to it or multiplies it.
+func ExclusiveStatCategory(category string, key string, multiplicative bool) string {
+	return category + key + Ternary(multiplicative, "Mul", "Add")
+}
+
 func makeExclusiveFlatStatBuff(aura *Aura, stat stats.Stat, value float64, exclusiveCategory string) {
-	aura.NewExclusiveEffect(exclusiveCategory+stat.StatName()+"Add", false, ExclusiveEffect{
+	aura.NewExclusiveEffect(ExclusiveStatCategory(exclusiveCategory, stat.StatName(), false), false, ExclusiveEffect{
 		Priority: value,
 		OnGain: func(ee *ExclusiveEffect, sim *Simulation) {
 			ee.Aura.Unit.AddStatDynamic(sim, stat, value)

@@ -58,7 +58,7 @@ func (p *Parsed) bidSchoolResistances(aura *core.Aura, a *attachment, o *parseOp
 			rest = append(rest, part)
 			continue
 		}
-		p.bidAlone(aura, category+part.key+"Add", part.value, part)
+		p.bidAlone(aura, core.ExclusiveStatCategory(category, part.key, false), part.value, part)
 	}
 
 	if len(rest) == len(a.parts) {
@@ -70,16 +70,11 @@ func (p *Parsed) bidSchoolResistances(aura *core.Aura, a *attachment, o *parseOp
 // A stat bids its own value, the scale core's exclusive stat buffs bid on, and a pseudo-stat how far
 // it moves the field.
 func (p *Parsed) bidPerStat(aura *core.Aura, category string, part *attachment) {
-	suffix := "Add"
-	if part.multiplicative {
-		suffix = "Mul"
-	}
-
 	priority := magnitude(part)
 	if part.statBid {
 		priority = part.value
 	}
-	p.bidAlone(aura, category+part.key+suffix, priority, part)
+	p.bidAlone(aura, core.ExclusiveStatCategory(category, part.key, part.multiplicative), priority, part)
 }
 
 func (p *Parsed) bidAlone(aura *core.Aura, category string, priority float64, a *attachment) {
@@ -101,8 +96,11 @@ func (p *Parsed) bidAlone(aura *core.Aura, category string, priority float64, a 
 // single-aura category needs to shut the other copy off.
 func (p *Parsed) bidWhole(aura *core.Aura, o *parseOptions, whole []*attachment) {
 	perStack := 0.0
-	if attached := p.attached(); len(attached) > 0 {
-		perStack = magnitude(attached[0])
+	for _, a := range p.attachments {
+		if a != nil {
+			perStack = magnitude(a)
+			break
+		}
 	}
 
 	priority := perStack
