@@ -68,7 +68,9 @@ func (paladin *Paladin) registerConsecration(row shared.SpellData) {
 				ActionID: core.ActionID{SpellID: row.SpellID},
 				Label:    "Consecration" + paladin.Label + " " + row.GetRankLabel(),
 			},
-			NumberOfTicks:    tick.NumberOfTicks - 1, // the sim adds an immediate tick below
+			// The client ticks on a 1 sec period with no tick-on-apply attribute (20924: aura 226,
+			// 1000 ms, SpellMisc Attributes[5] 0), so the first tick lands 1 sec in, as on master.
+			NumberOfTicks:    tick.NumberOfTicks,
 			TickLength:       tick.TickLength,
 			BonusCoefficient: tick.Coef,
 			OnTick: func(sim *core.Simulation, _ *core.Unit, dot *core.Dot) {
@@ -81,9 +83,7 @@ func (paladin *Paladin) registerConsecration(row shared.SpellData) {
 			// meaning it's only needed to proc things like Eye of Magtheridon (procs on resist)
 			spell.CalcAndDealOutcome(sim, target, spell.OutcomeMagicHit)
 
-			dot := spell.AOEDot()
-			dot.Apply(sim)
-			dealTick(sim, dot)
+			spell.AOEDot().Apply(sim)
 		},
 	})
 }
