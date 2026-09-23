@@ -1,6 +1,7 @@
 import { ItemRandomSuffix } from '@generated/proto/common';
 import { UIEnchant as Enchant, UIGem as Gem, UIItem as Item } from '@generated/proto/ui';
 import { translateProtoStatName } from '@i18n/localization';
+import { Phase } from '@sim/constants/other';
 import { Player } from '@sim/player/player';
 import { ActionId } from '@sim/proto/action_id';
 import { EquippedItem } from '@sim/proto/equipped_item';
@@ -19,7 +20,9 @@ export const itemsTabData = (gearData: GearData, items: Item[]): ItemData<Item, 
 			searchText: item.name,
 			quality: item.quality,
 			nameDescription: item.nameDescription,
-			phase: item.phase,
+			// The db's item phases are Classic Era release phases (master's ClassicPhase). Everything in it
+			// exists at Forever's launch, and master's picker shows it all by default, so it is all Launch.
+			phase: Phase.Launch,
 			ignoreEPFilter: false,
 			onEquip: item => {
 				const equippedItem = gearData.getEquippedItem();
@@ -90,7 +93,7 @@ export const randomSuffixesTabData = (player: Player<any>, gearData: GearData, e
 			name: label,
 			searchText: label,
 			quality: itemProto.quality,
-			phase: itemProto.phase,
+			phase: Phase.Launch,
 			nameDescription: '',
 			ignoreEPFilter: true,
 			onEquip: randomSuffix => {

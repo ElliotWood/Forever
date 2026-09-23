@@ -1,7 +1,7 @@
 import { Class, ItemSlot } from '@generated/proto/common';
 import { UIEnchant as Enchant, UIGem as Gem, UIItem as Item } from '@generated/proto/ui';
 import i18n from '@i18n/config';
-import { SortDirection } from '@sim/constants/other';
+import { Phase, SortDirection } from '@sim/constants/other';
 import { useSimHost } from '@sim/context/SimHostContext';
 import { useSimStore } from '@sim/hooks/useSimStore';
 import { useStoreSubscribe } from '@sim/hooks/useStoreSubscribe';
@@ -128,13 +128,7 @@ export const ItemList = ({ tab, slot, equippedItem }: ItemListProps) => {
 						config={{
 							id: phaseId,
 							extraClassNames: ['mb-0'],
-							values: [
-								{ name: i18n.t('common.phases.1'), value: 1 },
-								{ name: i18n.t('common.phases.2'), value: 2 },
-								{ name: i18n.t('common.phases.3'), value: 3 },
-								{ name: i18n.t('common.phases.4'), value: 4 },
-								{ name: i18n.t('common.phases.5'), value: 5 },
-							],
+							values: [Phase.Launch, Phase.Tier1, Phase.Tier2, Phase.Tier3].map(value => ({ name: i18n.t(`common.phases.${value}`), value })),
 							storeField: 'sim:phase',
 							getValue: subject => subject.getPhase(),
 							setValue: (subject, newValue) => subject.setPhase(newValue),

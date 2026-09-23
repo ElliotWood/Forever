@@ -596,7 +596,7 @@ export class ActionId {
 			case 'Drums of War':
 			case 'Drums of Battle':
 			case 'Drums of Restoration':
-				if (CURRENT_PHASE >= Phase.Phase4) {
+				if (CURRENT_PHASE >= Phase.Tier3) {
 					name = 'Greater ' + name;
 				}
 				if (tag === -1) {

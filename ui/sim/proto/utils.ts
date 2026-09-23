@@ -1,20 +1,7 @@
 import { Player } from '@generated/proto/api';
-import {
-	Class,
-	Debuffs,
-	Faction,
-	IndividualBuffs,
-	PartyBuffs,
-	Race,
-	RaidBuffs,
-	Spec,
-	TristateEffect,
-	UnitReference,
-	UnitReference_Type,
-} from '@generated/proto/common';
+import { Class, Faction, IndividualBuffs, PartyBuffs, Race, RaidBuffs, Spec, TristateEffect, UnitReference, UnitReference_Type } from '@generated/proto/common';
 import { ResourceType } from '@generated/proto/spell';
 
-import { CURRENT_PHASE, Phase } from '../constants/other';
 import { PlayerClasses } from '../player/classes';
 import { PlayerClass } from '../player/player_class';
 import { PlayerSpec } from '../player/player_spec';
@@ -159,21 +146,3 @@ export const defaultHealerIndividualBuffs = (): IndividualBuffs =>
 		blessingOfWisdom: true,
 		blessingOfLight: true,
 	});
-
-const exposeWeaknessPhaseSettings: Map<Phase, Pick<Debuffs, 'exposeWeaknessUptime' | 'exposeWeaknessHunterAgility'>> = new Map([
-	[Phase.Phase1, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1080 }],
-	[Phase.Phase2, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1150 }],
-	[Phase.Phase3, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1210 }],
-	[Phase.Phase4, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1150 }],
-	[Phase.Phase5, { exposeWeaknessUptime: 0.9, exposeWeaknessHunterAgility: 1250 }],
-]);
-export const defaultExposeWeaknessSettings = (phase?: Phase) => exposeWeaknessPhaseSettings.get(phase || CURRENT_PHASE);
-
-const improvedShadowBoltPhaseSettings: Map<Phase, Pick<Debuffs, 'isbUptime'>> = new Map([
-	[Phase.Phase1, { isbUptime: 0.52 }],
-	[Phase.Phase2, { isbUptime: 0.59 }],
-	[Phase.Phase3, { isbUptime: 0.72 }],
-	[Phase.Phase4, { isbUptime: 0.72 }],
-	[Phase.Phase5, { isbUptime: 0.8 }],
-]);
-export const defaultImprovedShadowBoltSettings = (phase?: Phase) => improvedShadowBoltPhaseSettings.get(phase || CURRENT_PHASE);

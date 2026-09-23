@@ -1,15 +1,17 @@
 import { ProtoVersion } from '@generated/proto/common';
 import { readMessageOption } from '@protobuf-ts/runtime';
 
+// Forever's content tiers (as master): it launches 4 November 2026 with no raids, Tier 1
+// (Barrow Deeps, Hyjal Summit, Onyxia) opens 9 December 2026, Tiers 2 and 3 follow in 2027.
+// Labels live in common.phases / common.phase_names.
 export enum Phase {
-	Phase1 = 1,
-	Phase2,
-	Phase3,
-	Phase4,
-	Phase5,
+	Launch = 1,
+	Tier1,
+	Tier2,
+	Tier3,
 }
 
-export const CURRENT_PHASE = Phase.Phase3;
+export const CURRENT_PHASE = Phase.Launch;
 
 export enum LaunchStatus {
 	Unlaunched,

@@ -287,7 +287,7 @@ export const makeOHImbueInput = makeConsumeInputFactory({
 ///////////////////////////////////////////////////////////////////////////
 
 export const DrumsBattle = {
-	...(CURRENT_PHASE >= Phase.Phase4
+	...(CURRENT_PHASE >= Phase.Tier3
 		? { actionId: ActionId.fromItemId(185848), value: Drums.GreaterDrumsOfBattle }
 		: {
 				actionId: ActionId.fromItemId(29529),
@@ -296,7 +296,7 @@ export const DrumsBattle = {
 };
 
 export const DrumsRestoration = {
-	...(CURRENT_PHASE >= Phase.Phase4
+	...(CURRENT_PHASE >= Phase.Tier3
 		? { actionId: ActionId.fromItemId(185850), value: Drums.GreaterDrumsOfRestoration }
 		: {
 				actionId: ActionId.fromItemId(29531),
@@ -305,7 +305,7 @@ export const DrumsRestoration = {
 };
 
 export const DrumsWar = {
-	...(CURRENT_PHASE >= Phase.Phase4
+	...(CURRENT_PHASE >= Phase.Tier3
 		? { actionId: ActionId.fromItemId(185852), value: Drums.GreaterDrumsOfWar }
 		: {
 				actionId: ActionId.fromItemId(29528),

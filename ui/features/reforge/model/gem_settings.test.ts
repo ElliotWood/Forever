@@ -21,13 +21,13 @@ describe('gem optimizer settings', () => {
 
 	it('serializes the gem knobs and the spec’s gemmable stats onto ReforgeSettings', () => {
 		const settings = makeSettings();
-		settings.setMaxGemPhase(Phase.Phase2);
+		settings.setMaxGemPhase(Phase.Tier1);
 		settings.setMaxGemQuality(ItemQuality.ItemQualityRare);
 		settings.setDisableUniqueGems(true);
 
 		const proto = settings.toProto();
 
-		expect(proto.maxGemPhase).toBe(Phase.Phase2);
+		expect(proto.maxGemPhase).toBe(Phase.Tier1);
 		expect(proto.maxGemQuality).toBe(ItemQuality.ItemQualityRare);
 		expect(proto.disableUniqueGems).toBe(true);
 		expect(proto.epStats).toEqual(EP_STATS);
@@ -44,14 +44,14 @@ describe('gem optimizer settings', () => {
 
 	it('round-trips the gem knobs back out of a proto', () => {
 		const source = makeSettings();
-		source.setMaxGemPhase(Phase.Phase5);
+		source.setMaxGemPhase(Phase.Tier3);
 		source.setMaxGemQuality(ItemQuality.ItemQualityUncommon);
 		source.setDisableUniqueGems(true);
 
 		const restored = makeSettings();
 		restored.fromProto(source.toProto());
 
-		expect(restored.getMaxGemPhase()).toBe(Phase.Phase5);
+		expect(restored.getMaxGemPhase()).toBe(Phase.Tier3);
 		expect(restored.getMaxGemQuality()).toBe(ItemQuality.ItemQualityUncommon);
 		expect(restored.disableUniqueGems).toBe(true);
 	});
@@ -60,20 +60,20 @@ describe('gem optimizer settings', () => {
 		const settings = makeSettings();
 		settings.fromProto({ ...settings.toProto(), maxGemPhase: 0, maxGemQuality: 0 });
 
-		expect(settings.getMaxGemPhase()).toBe(Phase.Phase1);
+		expect(settings.getMaxGemPhase()).toBe(Phase.Launch);
 		expect(settings.getMaxGemQuality()).toBe(ItemQuality.ItemQualityEpic);
 	});
 
 	it('applies the sim’s current phase, not the compiled-in one, when defaults are reapplied', () => {
-		const settings = makeSettings(Phase.Phase4);
-		settings.setMaxGemPhase(Phase.Phase1);
+		const settings = makeSettings(Phase.Tier3);
+		settings.setMaxGemPhase(Phase.Launch);
 		settings.setDisableUniqueGems(true);
 		settings.setFreezeItemSlots(true);
 		settings.setFrozenItemSlots([ItemSlot.ItemSlotHead]);
 
 		settings.applyDefaults();
 
-		expect(settings.getMaxGemPhase()).toBe(Phase.Phase4);
+		expect(settings.getMaxGemPhase()).toBe(Phase.Tier3);
 		expect(settings.disableUniqueGems).toBe(false);
 		expect(settings.freezeItemSlots).toBe(false);
 		expect(settings.statCaps).toEqual(new Stats());
