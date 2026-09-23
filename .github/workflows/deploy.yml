@@ -93,6 +93,11 @@ jobs:
             - name: Add the root redirect
               run: printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./forever/"><a href="./forever/">Continue to the simulator</a>' > dist/index.html
 
+            # The site used to live at /<repo>/classic/ (master's pages) with a preview at /<repo>/next/.
+            # Every one of those URLs, share links included, redirects to its page here.
+            - name: Add the old URL redirects
+              run: node tools/old_url_redirects.mjs dist
+
             - name: Configure Pages
               uses: actions/configure-pages@v5
 
