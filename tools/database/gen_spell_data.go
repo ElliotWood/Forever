@@ -1208,9 +1208,19 @@ func renderSpellDataFiles(helper *DBHelper) (map[string][]byte, *storeInputs, er
 		return nil, nil, err
 	}
 
+	forms, err := loadShapeshiftForms(helper.db)
+	if err != nil {
+		return nil, nil, err
+	}
+	formsFile, err := renderFormsFile(forms)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	files := map[string][]byte{
 		"sim/common/shared/spell_data_enums_auto_gen.go": enums,
 		"sim/core/spelldata/spells_auto_gen.go":          store,
+		"sim/core/dbcenums/forms_auto_gen.go":            formsFile,
 	}
 	for pkg, out := range rendered {
 		files[fmt.Sprintf("sim/%s/spell_data_auto_gen.go", pkg)] = out

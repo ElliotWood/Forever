@@ -57,7 +57,10 @@ type storeSpell struct {
 
 	AuraInterrupt, ChannelInterrupt [2]uint32
 
-	StanceMask uint64
+	StanceMask    uint64
+	StanceExclude uint64
+
+	CasterAura, ExcludeCasterAura int32
 
 	MaxTargets int16
 
@@ -142,16 +145,18 @@ type spellTables struct {
 	Subtexts     map[int32]string
 	Descriptions map[int32]string
 
-	Misc         map[int32]miscRow
-	Levels       map[int32]levelsRow
-	Cooldowns    map[int32]cooldownRow
-	Categories   map[int32]categoryRow
-	AuraOptions  map[int32]auraOptionRow
-	ClassOptions map[int32]core.ClassFlags
-	Interrupts   map[int32]interruptRow
-	Shapeshift   map[int32]uint64
-	Targets      map[int32]int16
-	Equipped     map[int32]equippedRow
+	Misc              map[int32]miscRow
+	Levels            map[int32]levelsRow
+	Cooldowns         map[int32]cooldownRow
+	Categories        map[int32]categoryRow
+	AuraOptions       map[int32]auraOptionRow
+	ClassOptions      map[int32]core.ClassFlags
+	Interrupts        map[int32]interruptRow
+	Shapeshift        map[int32]uint64
+	ShapeshiftExclude map[int32]uint64
+	AuraRestrictions  map[int32]auraRestrictionRow
+	Targets           map[int32]int16
+	Equipped          map[int32]equippedRow
 
 	Labels  map[int32][]int16
 	Powers  map[int32][]storePower
@@ -196,6 +201,10 @@ type interruptRow struct {
 	AuraInterrupt, ChannelInterrupt [2]uint32
 }
 
+type auraRestrictionRow struct {
+	CasterAura, ExcludeCasterAura int32
+}
+
 type equippedRow struct {
 	Class              int8
 	Subclass, InvTypes int32
@@ -205,27 +214,29 @@ type equippedRow struct {
 // difficulty 0 and 10 at 186 - and difficulty 0 is the one the sim plays.
 func loadSpellTables(db *sql.DB) (*spellTables, error) {
 	t := &spellTables{
-		Names:        map[int32]string{},
-		Subtexts:     map[int32]string{},
-		Descriptions: map[int32]string{},
-		Misc:         map[int32]miscRow{},
-		Levels:       map[int32]levelsRow{},
-		Cooldowns:    map[int32]cooldownRow{},
-		Categories:   map[int32]categoryRow{},
-		AuraOptions:  map[int32]auraOptionRow{},
-		ClassOptions: map[int32]core.ClassFlags{},
-		Interrupts:   map[int32]interruptRow{},
-		Shapeshift:   map[int32]uint64{},
-		Targets:      map[int32]int16{},
-		Equipped:     map[int32]equippedRow{},
-		Labels:       map[int32][]int16{},
-		Powers:       map[int32][]storePower{},
-		Effects:      map[int32][]storeEffect{},
+		Names:             map[int32]string{},
+		Subtexts:          map[int32]string{},
+		Descriptions:      map[int32]string{},
+		Misc:              map[int32]miscRow{},
+		Levels:            map[int32]levelsRow{},
+		Cooldowns:         map[int32]cooldownRow{},
+		Categories:        map[int32]categoryRow{},
+		AuraOptions:       map[int32]auraOptionRow{},
+		ClassOptions:      map[int32]core.ClassFlags{},
+		Interrupts:        map[int32]interruptRow{},
+		Shapeshift:        map[int32]uint64{},
+		ShapeshiftExclude: map[int32]uint64{},
+		AuraRestrictions:  map[int32]auraRestrictionRow{},
+		Targets:           map[int32]int16{},
+		Equipped:          map[int32]equippedRow{},
+		Labels:            map[int32][]int16{},
+		Powers:            map[int32][]storePower{},
+		Effects:           map[int32][]storeEffect{},
 	}
 
 	for _, load := range []func(*sql.DB) error{
 		t.loadNames, t.loadMisc, t.loadLevels, t.loadCooldowns, t.loadCategories, t.loadAuraOptions,
-		t.loadClassOptions, t.loadInterrupts, t.loadShapeshift, t.loadTargetRestrictions,
+		t.loadClassOptions, t.loadInterrupts, t.loadShapeshift, t.loadAuraRestrictions, t.loadTargetRestrictions,
 		t.loadEquippedItems, t.loadLabels, t.loadPowers, t.loadEffects,
 	} {
 		if err := load(db); err != nil {
@@ -273,6 +284,11 @@ func (t *spellTables) row(id int32) storeSpell {
 	s.AuraInterrupt, s.ChannelInterrupt = i.AuraInterrupt, i.ChannelInterrupt
 
 	s.StanceMask = t.Shapeshift[id]
+	s.StanceExclude = t.ShapeshiftExclude[id]
+
+	ar := t.AuraRestrictions[id]
+	s.CasterAura, s.ExcludeCasterAura = ar.CasterAura, ar.ExcludeCasterAura
+
 	s.MaxTargets = t.Targets[id]
 
 	e := t.Equipped[id]
@@ -479,14 +495,34 @@ func (t *spellTables) loadInterrupts(db *sql.DB) error {
 // The two mask words are one 64-bit set of forms, which is how core reads a stance mask.
 func (t *spellTables) loadShapeshift(db *sql.DB) error {
 	return eachRow(db, `
-		SELECT SpellID, COALESCE(ShapeshiftMask_0, 0), COALESCE(ShapeshiftMask_1, 0)
+		SELECT SpellID, COALESCE(ShapeshiftMask_0, 0), COALESCE(ShapeshiftMask_1, 0),
+		       COALESCE(ShapeshiftExclude_0, 0), COALESCE(ShapeshiftExclude_1, 0)
 		FROM SpellShapeshift ORDER BY SpellID`, func(rows *sql.Rows) error {
 		var id int32
-		var low, high int64
-		if err := rows.Scan(&id, &low, &high); err != nil {
+		var low, high, excludeLow, excludeHigh int64
+		if err := rows.Scan(&id, &low, &high, &excludeLow, &excludeHigh); err != nil {
 			return err
 		}
-		return putOnce(t.Shapeshift, id, uint64(uint32(low))|uint64(uint32(high))<<32, "SpellShapeshift rows")
+		if err := putOnce(t.Shapeshift, id, uint64(uint32(low))|uint64(uint32(high))<<32, "SpellShapeshift rows"); err != nil {
+			return err
+		}
+		return putOnce(t.ShapeshiftExclude, id, uint64(uint32(excludeLow))|uint64(uint32(excludeHigh))<<32, "SpellShapeshift rows")
+	})
+}
+
+// The aura a spell needs on its caster to be cast, and the one that bars it, where the client states
+// neither as a form: Tiger's Fury names Cat Form here rather than in SpellShapeshift, whose row for
+// it is empty.
+func (t *spellTables) loadAuraRestrictions(db *sql.DB) error {
+	return eachRow(db, `
+		SELECT SpellID, COALESCE(CasterAuraSpell, 0), COALESCE(ExcludeCasterAuraSpell, 0)
+		FROM SpellAuraRestrictions WHERE DifficultyID = 0 ORDER BY SpellID`, func(rows *sql.Rows) error {
+		var id int32
+		var r auraRestrictionRow
+		if err := rows.Scan(&id, &r.CasterAura, &r.ExcludeCasterAura); err != nil {
+			return err
+		}
+		return putOnce(t.AuraRestrictions, id, r, "SpellAuraRestrictions rows at difficulty 0")
 	})
 }
 
