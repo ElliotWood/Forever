@@ -122,7 +122,7 @@ func (m *Meta) actionID(isPlayer bool) core.ActionID {
 // The aura a generated buff registers on a player: labelled and tagged by label and actionID, with
 // Tag set to the category, MaxStacks the row's own stacks (not its charges), the external copy in
 // CharacterBuildPhaseBuffs, and the effects read by spelldata.ParseEffects with Options plus
-// SchoolResistances, and Exclusive(Category, true) for a single-aura category or
+// SchoolResistances, and where Category is set, Exclusive(Category, true) for a single-aura one or
 // ExclusivePerStat(Category) for any other. Only the player's own copy joins SharedCategory.
 func newBuff(unit *core.Unit, m *Meta, isPlayer bool, talentPoints int32) *core.Aura {
 	panic("not implemented")
