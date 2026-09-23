@@ -2167,19 +2167,6 @@
 							"additionalProperties": false,
 							"required": ["label", "tooltip"]
 						},
-						"queue_delay": {
-							"type": "object",
-							"properties": {
-								"label": {
-									"type": "string"
-								},
-								"tooltip": {
-									"type": "string"
-								}
-							},
-							"additionalProperties": false,
-							"required": ["label", "tooltip"]
-						},
 						"assume_bleed_active": {
 							"type": "object",
 							"properties": {
@@ -2428,7 +2415,6 @@
 						"starting_rage",
 						"stance_snapshot",
 						"has_bs_tier_2",
-						"queue_delay",
 						"assume_bleed_active",
 						"cannot_shred_target",
 						"okf_uptime",

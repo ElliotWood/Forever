@@ -89,9 +89,6 @@ message WarriorOptions {
 	double starting_rage = 3;
 	bool stance_snapshot = 4;
 	bool has_bs_t2 = 5;
-
-	// Forever: ms before a queued Heroic Strike or Cleave is re-armed (sim/warrior).
-	int32 queue_delay = 6;
 }
 
 enum DpsWarriorSpec {

@@ -595,9 +595,7 @@
         },
         "castSpell": {
           "spellId": {
-            "spellId": 25286,
-            "tag": 1,
-            "rank": 8
+            "spellId": 25286
           }
         }
       }
@@ -649,9 +647,7 @@
         },
         "castSpell": {
           "spellId": {
-            "spellId": 20569,
-            "tag": 1,
-            "rank": 5
+            "spellId": 20569
           }
         }
       }

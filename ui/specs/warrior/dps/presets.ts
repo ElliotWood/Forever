@@ -38,7 +38,6 @@ export const ArmsTalents = PresetUtils.makePresetTalents('Arms 39/12/0', SavedTa
 
 export const DefaultOptions = WarriorOptions.create({
 	classOptions: {
-		queueDelay: 250,
 		startingRage: 0,
 		defaultShout: WarriorShout.WarriorShoutBattle,
 		defaultStance: WarriorStance.WarriorStanceBerserker,
