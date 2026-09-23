@@ -482,8 +482,8 @@ func appliesAura(effect dbcenums.SpellEffectType) bool {
 }
 
 // Whether a manifest category names a resistance school, which is the category
-// registerGeneratedSchoolResistances puts that school's stat into anyway. The
-// names are sim/core's ResistanceCategory* constants.
+// spelldata.SchoolResistances puts that school's stat into anyway. The names
+// are sim/core's ResistanceCategory* constants.
 func isSchoolResistanceCategory(category string) bool {
 	switch category {
 	case "ResistanceArcane", "ResistanceFire", "ResistanceFrost", "ResistanceNature", "ResistanceShadow":

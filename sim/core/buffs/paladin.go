@@ -9,10 +9,10 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-// One rank of a paladin aura: the spell the caster used and the number its row states (armor for
-// Devotion, damage for Retribution, a percentage for Concentration, resistance for the three
-// resistance auras). The paladin registers an aura per rank; each joins the same categories as the
-// generated party-buff copy, which is the top rank.
+// One rank of a paladin aura: the spell the caster used and the number its row states. Retribution
+// Aura's damage shield deals Value; every other aura reads its amount off the spell. The paladin
+// registers an aura per rank; each joins the same categories as the generated party-buff copy, which
+// is the top rank.
 type PaladinAuraRank struct {
 	SpellID int32
 	Rank    int32
@@ -41,34 +41,43 @@ func paladinAuraBuff(name string, category string, isPlayer bool, rank PaladinAu
 	}
 }
 
+// The paladin auras state a healing-taken row of 0, and Concentration Aura two mechanic rows of 0,
+// none of which the aura applies.
+var paladinAuraSkips = []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD}
+
+// A rank the paladin casts is the party-buff row on the rank's own spell, labelled with the rank.
+func paladinAuraMeta(name string, category string, rank PaladinAuraRank) *Meta {
+	if rank.Rank > 0 {
+		name += fmt.Sprintf(" Rank %d", rank.Rank)
+	}
+	return &Meta{
+		Label:          name,
+		Spell:          spelldata.MustFind(rank.SpellID),
+		Category:       category,
+		SharedCategory: PaladinAuraCategory,
+		SingleAura:     true,
+		SkipAuras:      paladinAuraSkips,
+	}
+}
+
 func DevotionAuraBuff(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	config := paladinAuraBuff("Devotion Aura", DevotionAuraCategory, isPlayer, rank)
-	config.Stats = []core.StatConfig{{Stat: stats.Armor, Amount: rank.Value}}
-	return core.NewGeneratedStatAura(&char.Unit, config)
+	return newBuff(&char.Unit, paladinAuraMeta("Devotion Aura", DevotionAuraCategory, rank), isPlayer, 0)
 }
 
 func ConcentrationAura(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	config := paladinAuraBuff("Concentration Aura", ConcentrationAuraCategory, isPlayer, rank)
-	config.Pseudo = []core.PseudoConfig{{Kind: core.PseudoStatPushbackChance, Amount: -rank.Value / 100}}
-	return core.NewGeneratedStatAura(&char.Unit, config)
+	return newBuff(&char.Unit, paladinAuraMeta("Concentration Aura", ConcentrationAuraCategory, rank), isPlayer, 0)
 }
 
 func FireResistanceAura(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	config := paladinAuraBuff("Fire Resistance Aura", FireResistanceAuraCategory, isPlayer, rank)
-	config.Stats = []core.StatConfig{{Stat: stats.FireResistance, Amount: rank.Value}}
-	return core.NewGeneratedStatAura(&char.Unit, config)
+	return newBuff(&char.Unit, paladinAuraMeta("Fire Resistance Aura", FireResistanceAuraCategory, rank), isPlayer, 0)
 }
 
 func FrostResistanceAura(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	config := paladinAuraBuff("Frost Resistance Aura", FrostResistanceAuraCategory, isPlayer, rank)
-	config.Stats = []core.StatConfig{{Stat: stats.FrostResistance, Amount: rank.Value}}
-	return core.NewGeneratedStatAura(&char.Unit, config)
+	return newBuff(&char.Unit, paladinAuraMeta("Frost Resistance Aura", FrostResistanceAuraCategory, rank), isPlayer, 0)
 }
 
 func ShadowResistanceAura(char *core.Character, isPlayer bool, rank PaladinAuraRank) *core.Aura {
-	config := paladinAuraBuff("Shadow Resistance Aura", ShadowResistanceAuraCategory, isPlayer, rank)
-	config.Stats = []core.StatConfig{{Stat: stats.ShadowResistance, Amount: rank.Value}}
-	return core.NewGeneratedStatAura(&char.Unit, config)
+	return newBuff(&char.Unit, paladinAuraMeta("Shadow Resistance Aura", ShadowResistanceAuraCategory, rank), isPlayer, 0)
 }
 
 // Retribution Aura scales with the casting paladin's Holy spell power in Forever even though its

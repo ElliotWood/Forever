@@ -836,13 +836,13 @@ func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
 	}
 
 	healing := char.PseudoStats.HealingDealtMultiplier
-	physical := core.GeneratedSchoolIndexes(1)[0]
+	physical := stats.SchoolIndexPhysical
 	before := char.PseudoStats.SchoolDamageDealtMultiplier[physical]
 
 	aura.Activate(sim)
 	// Spell 10060 states mask 126, which is every school but physical, so a
 	// melee swing is not part of what the infusion raises.
-	for _, school := range core.GeneratedSchoolIndexes(126) {
+	for _, school := range magicSchools {
 		if got := char.PseudoStats.SchoolDamageDealtMultiplier[school]; got != 1.2 {
 			t.Errorf("school %d deals %v times the damage, want the client's 1.2", school, got)
 		}
@@ -855,7 +855,7 @@ func TestGeneratedPowerInfusionRaisesDamageAndHealingDone(t *testing.T) {
 	}
 
 	aura.Deactivate(sim)
-	for _, school := range core.GeneratedSchoolIndexes(126) {
+	for _, school := range magicSchools {
 		if got := char.PseudoStats.SchoolDamageDealtMultiplier[school]; got != 1 {
 			t.Errorf("school %d still deals %v times the damage once the infusion expired", school, got)
 		}

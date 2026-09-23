@@ -6,13 +6,8 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
-
-// The paladin auras state a healing-taken row of 0, and Concentration Aura two mechanic rows of 0, none
-// of which the raid buff applies.
-var paladinAuraSkips = []dbcenums.EffectAuraType{dbcenums.A_MOD_HEALING_PCT, dbcenums.A_MECHANIC_DURATION_MOD}
 
 // What each generated row reads off the store at every talent point it prices: the first amount the
 // aura applies in the sim's units, how long it lasts and, for a driven cooldown, how long the caster

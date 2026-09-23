@@ -9,23 +9,11 @@ import (
 	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-// The readers the generated constructors turn a store row into a buff with. An amount is the
-// caster's at core.CharacterLevel, in the client's units until the constructor converts it.
+// The readers a Meta and the judgement ranks turn a store row into a buff's numbers with. An amount
+// is the caster's at core.CharacterLevel, in the client's units.
 
 func amount(e *spelldata.Effect) float64 {
 	return e.Average(core.CharacterLevel)
-}
-
-func manaPerFive(tick *spelldata.Effect, amount float64) float64 {
-	return amount * 5000 / float64(tick.PeriodMs)
-}
-
-// The raid config puts a finisher on the target at full combo points; the client states the amount
-// per point spent.
-const maxComboPoints = 5
-
-func fullComboPoints(e *spelldata.Effect) float64 {
-	return float64(e.PointsPerResource) * maxComboPoints
 }
 
 // The client states a permanent aura as -1 and an aura with no duration of its own, a totem's, as 0.

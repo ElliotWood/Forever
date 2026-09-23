@@ -50,8 +50,6 @@ func StripPetBuffs(pet *Pet, raid *proto.RaidBuffs, party *proto.PartyBuffs, ind
 	registeredBuffs().StripPetBuffs(pet, raid, party, individual)
 }
 
-var GeneratedSchoolIndexes = generatedSchoolIndexes
-
 func (character *Character) ApplyBuildPhaseAuras(phase CharacterBuildPhase) {
 	character.applyBuildPhaseAuras(phase)
 }

@@ -22,52 +22,6 @@ const (
 // e.g. Arcane Brilliance vs Greater Arcane Elixir.
 const StatBuffCategory = "StatBuff"
 
-type StatConfig struct {
-	Stat             stats.Stat
-	Amount           float64
-	IsMultiplicative bool
-}
-
-func makeMultiplierBuff(aura *Aura, stat stats.Stat, value float64) {
-	dep := aura.Unit.NewDynamicMultiplyStat(stat, value)
-	aura.ApplyOnGain(func(aura *Aura, sim *Simulation) {
-		aura.Unit.EnableBuildPhaseStatDep(sim, dep)
-	}).ApplyOnExpire(func(aura *Aura, sim *Simulation) {
-		aura.Unit.DisableBuildPhaseStatDep(sim, dep)
-	})
-}
-
-func makeFlatStatBuff(aura *Aura, stat stats.Stat, value float64) {
-	aura.ApplyOnGain(func(aura *Aura, sim *Simulation) {
-		aura.Unit.AddStatDynamic(sim, stat, value)
-	}).ApplyOnExpire(func(aura *Aura, sim *Simulation) {
-		aura.Unit.AddStatDynamic(sim, stat, -value)
-	})
-}
-
-func registerStatEffect(aura *Aura, config []StatConfig) {
-	for _, statConfig := range config {
-		if statConfig.IsMultiplicative {
-			makeMultiplierBuff(aura, statConfig.Stat, statConfig.Amount)
-		} else {
-			makeFlatStatBuff(aura, statConfig.Stat, statConfig.Amount)
-		}
-	}
-}
-
-func makeExclusiveMultiplierBuff(aura *Aura, stat stats.Stat, value float64, exclusiveCategory string) {
-	dep := aura.Unit.NewDynamicMultiplyStat(stat, value)
-	aura.NewExclusiveEffect(exclusiveCategory+stat.StatName()+"Mul", false, ExclusiveEffect{
-		Priority: value,
-		OnGain: func(ee *ExclusiveEffect, s *Simulation) {
-			ee.Aura.Unit.EnableBuildPhaseStatDep(s, dep)
-		},
-		OnExpire: func(ee *ExclusiveEffect, s *Simulation) {
-			ee.Aura.Unit.DisableBuildPhaseStatDep(s, dep)
-		},
-	})
-}
-
 func makeExclusiveFlatStatBuff(aura *Aura, stat stats.Stat, value float64, exclusiveCategory string) {
 	aura.NewExclusiveEffect(exclusiveCategory+stat.StatName()+"Add", false, ExclusiveEffect{
 		Priority: value,
@@ -78,16 +32,6 @@ func makeExclusiveFlatStatBuff(aura *Aura, stat stats.Stat, value float64, exclu
 			ee.Aura.Unit.AddStatDynamic(sim, stat, -value)
 		},
 	})
-}
-
-func registerExlusiveEffects(aura *Aura, config []StatConfig, exclusiveCategory string) {
-	for _, statConfig := range config {
-		if statConfig.IsMultiplicative {
-			makeExclusiveMultiplierBuff(aura, statConfig.Stat, statConfig.Amount, exclusiveCategory)
-		} else {
-			makeExclusiveFlatStatBuff(aura, statConfig.Stat, statConfig.Amount, exclusiveCategory)
-		}
-	}
 }
 
 // Applies buffs that affect individual players.
