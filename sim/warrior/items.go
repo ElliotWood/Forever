@@ -333,6 +333,7 @@ func init() {
 	hamstringCostReduction(16484, 3) // Marshal's Plate Gauntlets
 	hamstringCostReduction(16548, 3) // General's Plate Gauntlets
 	hamstringCostReduction(19577, 2) // Rage of Mugamba
+	hamstringCostReduction(16406, 3) // Knight-Lieutenant's Plate Gauntlets (22778)
 
 	// Gri'lek's Charm of Might: 30 rage, 3 min cooldown.
 	core.NewItemEffect(19951, func(agent core.Agent) {
