@@ -93,15 +93,16 @@ func (paladin *Paladin) registerHolyStrike() {
 			BonusCoefficient: roundCoef(row.Direct.BonusCoefficient()),
 
 			ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-				if ironCreedAura != nil {
-					ironCreedAura.Activate(sim)
-				}
-
 				// A share of weapon damage, so it takes the normalized swing the way every other
 				// percentage-of-weapon strike in the sim does.
 				baseDamage := weapon * (spell.Unit.MHNormalizedWeaponDamage(sim, spell.MeleeAttackPower(target)) +
 					sim.Roll(rank.minDamage, rank.maxDamage))
-				spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+				result := spell.CalcAndDealDamage(sim, target, baseDamage, spell.OutcomeMeleeSpecialHitAndCrit)
+				// Client 1311034 procs on a done melee ability (ProcTypeMask 16), which takes a hit or a
+				// crit: a missed, dodged or parried Holy Strike gives no Iron Creed (as upstream).
+				if ironCreedAura != nil && result.Landed() {
+					ironCreedAura.Activate(sim)
+				}
 			},
 		})
 	}
