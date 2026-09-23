@@ -122,8 +122,7 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 		}),
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
-			blessingOfMight: TristateEffect.TristateEffectImproved,
-			blessingOfSanctuary: true,
+			blessingOfMight: true,
 			unleashedRage: true,
 		}),
 		debuffs: Debuffs.create({
@@ -133,7 +132,6 @@ export default defineSpec<Spec.SpecFeralBearDruid>({
 			faerieFire: TristateEffect.TristateEffectImproved,
 			giftOfArthas: false,
 			huntersMark: TristateEffect.TristateEffectImproved,
-			improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
 			curseOfRecklessness: true,
 			insectSwarm: true,
 			judgementOfWisdom: true,

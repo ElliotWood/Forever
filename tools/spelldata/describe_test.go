@@ -137,69 +137,69 @@ func TestHeader(t *testing.T) {
 	cases := []struct {
 		name string
 		id   int32
-		want []string
+		want []field
 	}{
 		{
 			name: "a bleed with a stance and a weapon requirement",
 			id:   11574,
-			want: []string{
-				"school    physical",
-				"defense   melee",
-				"mechanic  bleed",
-				"duration  21 s",
-				"gcd       1.5 s",
-				"cost      10 rage",
-				"range     5 yd",
-				"stance    Battle, Defensive",
-				"equip     needs a melee weapon",
-				"attrs     refund on miss, periodic can crit",
-				"labels    25",
+			want: []field{
+				{"school", "physical"},
+				{"defense", "melee"},
+				{"mechanic", "bleed"},
+				{"duration", "21 s"},
+				{"gcd", "1.5 s"},
+				{"cost", "10 rage"},
+				{"range", "5 yd"},
+				{"stance", "Battle, Defensive"},
+				{"equip", "needs a melee weapon"},
+				{"attrs", "refund on miss, periodic can crit"},
+				{"labels", "25"},
 			},
 		},
 		{
 			name: "an area ability with a target cap",
 			id:   1680,
-			want: []string{
-				"school    physical",
-				"defense   melee",
-				"cooldown  10 s (category)",
-				"gcd       1.5 s",
-				"cost      25 rage",
-				"stance    Berserker",
-				"equip     needs a melee weapon",
-				"targets   up to 4",
-				"labels    25",
+			want: []field{
+				{"school", "physical"},
+				{"defense", "melee"},
+				{"cooldown", "10 s (category)"},
+				{"gcd", "1.5 s"},
+				{"cost", "25 rage"},
+				{"stance", "Berserker"},
+				{"equip", "needs a melee weapon"},
+				{"targets", "up to 4"},
+				{"labels", "25"},
 			},
 		},
 		{
 			name: "charges and a shield",
 			id:   2565,
-			want: []string{
-				"school    physical",
-				"duration  7 s",
-				"cooldown  5 s",
-				"cost      10 rage",
-				"stance    Defensive",
-				"equip     needs a shield",
-				"charges   2",
-				"labels    25",
+			want: []field{
+				{"school", "physical"},
+				{"duration", "7 s"},
+				{"cooldown", "5 s"},
+				{"cost", "10 rage"},
+				{"stance", "Defensive"},
+				{"equip", "needs a shield"},
+				{"charges", "2"},
+				{"labels", "25"},
 			},
 		},
 		{
 			name: "an enchant naming the slots it takes",
 			id:   410021,
-			want: []string{
-				"school    physical",
-				"cast      3 s",
-				"equip     needs cloth, leather, mail or plate in the chest or robe",
-				"labels    3071",
+			want: []field{
+				{"school", "physical"},
+				{"cast", "3 s"},
+				{"equip", "needs cloth, leather, mail or plate in the chest or robe"},
+				{"labels", "3071"},
 			},
 		},
 	}
 
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
-			got := header(spelldata.MustFind(c.id))
+			got := headerFields(spelldata.MustFind(c.id))
 			if !slices.Equal(got, c.want) {
 				t.Errorf("header =\n%q\nwant\n%q", got, c.want)
 			}
@@ -335,7 +335,7 @@ func TestParseArgs(t *testing.T) {
 		if err != nil {
 			t.Fatalf("parseArgs(%q): %v", args, err)
 		}
-		if opts.query != "11574" || !opts.json {
+		if opts.mode != "spell" || opts.arg != "11574" || !opts.json {
 			t.Errorf("parseArgs(%q) = %+v", args, opts)
 		}
 	}

@@ -117,7 +117,7 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 		}),
 		individualBuffs: IndividualBuffs.create({
 			blessingOfKings: true,
-			blessingOfMight: TristateEffect.TristateEffectImproved,
+			blessingOfMight: true,
 			unleashedRage: true,
 		}),
 		debuffs: Debuffs.create({
@@ -125,7 +125,6 @@ export default defineSpec<Spec.SpecFeralCatDruid>({
 			bloodFrenzy: true,
 			exposeArmor: TristateEffect.TristateEffectImproved,
 			huntersMark: TristateEffect.TristateEffectImproved,
-			improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
 			judgementOfWisdom: true,
 			misery: true,
 			curseOfRecklessness: true,

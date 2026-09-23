@@ -233,8 +233,7 @@ var auraTable = map[dbcenums.EffectAuraType]row{
 	// How long a crowd control effect lasts on the unit, by the mechanic the misc value names.
 	dbcenums.A_MECHANIC_DURATION_MOD: func(p *parser, e *Effect, v float64) *attachment {
 		switch e.Misc {
-		// Iron Will, the one row naming charm, states fear in its tooltip. The rows naming fear are not read.
-		case int32(dbcenums.MECHANIC_CHARM):
+		case int32(dbcenums.MECHANIC_FEAR):
 			return p.pseudoMultiplier("fear-duration",
 				[]*float64{&p.unit.PseudoStats.FearDurationMultiplier}, percentMultiplier(v))
 		case int32(dbcenums.MECHANIC_STUN):

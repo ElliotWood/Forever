@@ -62,6 +62,15 @@ func isFamilyName(name string) bool {
 	return false
 }
 
+func hasFamilies(pkg string) bool {
+	for _, family := range ladderFamilies() {
+		if family.pkg == pkg {
+			return true
+		}
+	}
+	return false
+}
+
 // The rank of a talent's ladder a row is, counted from 1, or 0 on a row that is not one of them: a
 // talent's rank is not the store's rank column, so it is stated by position.
 func (f *ladderFamily) talentRank(s *spelldata.Spell) int32 {
@@ -84,15 +93,7 @@ func rankLabel(f *ladderFamily, s *spelldata.Spell) string {
 	return s.Rank
 }
 
-// The heading of a row a ladder reached.
-func rankTitle(f *ladderFamily, s *spelldata.Spell) string {
-	if rank := f.talentRank(s); rank > 0 {
-		return fmt.Sprintf("%s (%s)", title(s), rankLabel(f, s))
-	}
-	return title(s)
-}
-
-type familyRankJSON struct {
+type familyRow struct {
 	ID       int32  `json:"id"`
 	Name     string `json:"name"`
 	Rank     string `json:"rank"`
@@ -101,22 +102,22 @@ type familyRankJSON struct {
 }
 
 type familyJSON struct {
-	Family  string           `json:"family"`
-	Ranks   []familyRankJSON `json:"ranks"`
-	Highest spellJSON        `json:"highest"`
+	Family  string      `json:"family"`
+	Ranks   []familyRow `json:"ranks"`
+	Highest card        `json:"highest"`
 }
 
 // One row per rank of the ladder, with effect 1's value where it changes by rank.
-func familyRows(f *ladderFamily) []familyRankJSON {
+func familyRows(f *ladderFamily) []familyRow {
 	first := f.ladder.Rank(1).EffectN(1).BasePoints
 	varies := false
 	f.ladder.Each(func(_ int32, s *spelldata.Spell) {
 		varies = varies || s.EffectN(1).BasePoints != first
 	})
 
-	rows := make([]familyRankJSON, 0, f.ladder.Len())
+	rows := make([]familyRow, 0, f.ladder.Len())
 	f.ladder.Each(func(rank int32, s *spelldata.Spell) {
-		row := familyRankJSON{ID: s.ID, Name: s.Name, Rank: rankLabel(f, s), Accessor: fmt.Sprintf("Rank(%d)", rank)}
+		row := familyRow{ID: s.ID, Name: s.Name, Rank: rankLabel(f, s), Accessor: fmt.Sprintf("Rank(%d)", rank)}
 		if rank == f.ladder.Len() {
 			row.Accessor = "Highest()"
 		}

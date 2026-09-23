@@ -6,49 +6,37 @@ import (
 	"testing"
 
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
+	"github.com/wowsims/forever/sim/core/spelldata"
 )
 
-func TestCoreConstantsMatchCore(t *testing.T) {
-	cases := []struct {
-		typeName string
-		name     string
-		want     uint64
-	}{
-		{"SpellFlag", "SpellFlagAPL", uint64(core.SpellFlagAPL)},
-		{"SpellFlag", "SpellFlagMeleeMetrics", uint64(core.SpellFlagMeleeMetrics)},
-		{"SpellFlag", "SpellFlagNoOnCastComplete", uint64(core.SpellFlagNoOnCastComplete)},
-		{"SpellFlag", "SpellFlagPassiveSpell", uint64(core.SpellFlagPassiveSpell)},
-		{"SpellFlag", "SpellFlagHelpful", uint64(core.SpellFlagHelpful)},
-		{"ProcMask", "ProcMaskMeleeMHSpecial", uint64(core.ProcMaskMeleeMHSpecial)},
-		{"ProcMask", "ProcMaskMeleeOHSpecial", uint64(core.ProcMaskMeleeOHSpecial)},
-		{"ProcMask", "ProcMaskMelee", uint64(core.ProcMaskMelee)},
-		{"ProcMask", "ProcMaskSpellDamage", uint64(core.ProcMaskSpellDamage)},
-		{"SpellSchool", "SpellSchoolPhysical", uint64(core.SpellSchoolPhysical)},
-		{"SpellSchool", "SpellSchoolFrostfire", uint64(core.SpellSchoolFrostfire)},
-		{"DefenseType", "DefenseTypeMelee", uint64(core.DefenseTypeMelee)},
-		{"DefenseType", "DefenseTypeRanged", uint64(core.DefenseTypeRanged)},
+// Every name the printer states for a constant: the stringer's for a typed enum, the declaration's for
+// the PROC_FLAG_ bits and SPELLMOD_ ops, and a number where neither has one.
+func TestConstantNames(t *testing.T) {
+	spellFlag := func(bit uint64) (string, bool) { return stringerName(core.SpellFlag(bit)) }
+	if got := strings.Join(setBits(uint64(core.SpellFlagAPL|core.SpellFlagMeleeMetrics), spellFlag), " | "); got != "SpellFlagMeleeMetrics | SpellFlagAPL" {
+		t.Errorf("the flag bits read %q", got)
 	}
-	for _, c := range cases {
-		found := false
-		for _, named := range coreConstants(c.typeName) {
-			if named.name == c.name {
-				found = true
-				if named.value != c.want {
-					t.Errorf("%s resolved to %d, core states %d", c.name, named.value, c.want)
-				}
-			}
-		}
-		if !found {
-			t.Errorf("%s is not among the %s constants", c.name, c.typeName)
-		}
+	if got := setBits(1<<63, spellFlag); len(got) != 1 || got[0] != "bit 0x8000000000000000" {
+		t.Errorf("an unnamed flag bit reads %q", got)
 	}
 
-	if got := strings.Join(bitNames("SpellFlag", uint64(core.SpellFlagAPL|core.SpellFlagMeleeMetrics)), " | "); got != "SpellFlagMeleeMetrics | SpellFlagAPL" &&
-		got != "SpellFlagAPL | SpellFlagMeleeMetrics" {
-		t.Errorf("the bits read %q", got)
+	flags := procFlagNames([2]uint32{dbcenums.PROC_FLAG_KILL | 1<<31, 2})
+	if strings.Join(flags, ", ") != "PROC_FLAG_KILL, bit 0x80000000, word1 0x2" {
+		t.Errorf("the proc flags read %q", flags)
 	}
-	if got := exactName("DefenseType", uint64(core.DefenseTypeMelee)); got != "DefenseTypeMelee" {
-		t.Errorf("DefenseTypeMelee reads %q", got)
+
+	for got, want := range map[string]string{
+		spellModOpName(spelldata.SPELLMOD_COST):  "SPELLMOD_COST",
+		spellModOpName(99):                       "op 99",
+		effectTypeName(dbcenums.E_SCHOOL_DAMAGE): "E_SCHOOL_DAMAGE",
+		effectTypeName(9999):                     "E_9999",
+		auraName(dbcenums.A_DUMMY):               "A_DUMMY",
+		auraName(9999):                           "A_9999",
+	} {
+		if got != want {
+			t.Errorf("named %q, want %q", got, want)
+		}
 	}
 }
 

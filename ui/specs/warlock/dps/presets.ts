@@ -68,14 +68,13 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
+	blessingOfWisdom: true,
 	shadowPriestDps: 0,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	...defaultExposeWeaknessSettings(),
 	...defaultImprovedShadowBoltSettings(),
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
 	judgementOfWisdom: true,
 	misery: true,
 	shadowWeaving: true,

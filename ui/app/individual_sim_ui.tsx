@@ -267,6 +267,7 @@ export class SimHostObject<SpecType extends Spec> implements IndividualSimHost<S
 		config.otherInputs.inputs = [
 			...(hasAttackPowerScaling ? [OtherInputs.ExposeWeaknessHunterAgility, OtherInputs.ExposeWeaknessUptime] : []),
 			...(hasSpellDamageScaling ? [OtherInputs.ShadowPriestDPS] : []),
+			...(this.player.getPlayerSpec().isTankSpec ? [OtherInputs.RetributionAuraSpellPower] : []),
 			...config.otherInputs.inputs,
 		];
 

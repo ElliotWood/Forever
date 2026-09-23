@@ -9,7 +9,7 @@ export const ROTATION_PRESET_DEFAULT = PresetUtils.makePresetAPLRotation('Defaul
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
+	blessingOfMight: true,
 });
 
 export const DefaultOptions = EnhancementShamanOptions.create({
@@ -57,7 +57,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultDebuffs = Debuffs.create({
 	...defaultExposeWeaknessSettings(),
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
 	judgementOfWisdom: true,
 	screech: true,
 	misery: true,

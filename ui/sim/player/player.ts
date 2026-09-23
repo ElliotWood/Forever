@@ -790,12 +790,6 @@ export class Player<SpecType extends Spec> {
 			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatRangedHitPercent, 3);
 		}
 
-		if (debuffs.improvedSealOfTheCrusader) {
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatMeleeCritPercent, 3);
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatRangedCritPercent, 3);
-			debuffStats = debuffStats.addPseudoStat(PseudoStat.PseudoStatSpellCritPercent, 3);
-		}
-
 		if (debuffs.exposeWeaknessUptime && debuffs.exposeWeaknessHunterAgility) {
 			let agi = debuffs.exposeWeaknessHunterAgility;
 
@@ -1643,10 +1637,6 @@ export class Player<SpecType extends Spec> {
 						if (jsonStr) {
 							try {
 								const parsed = JSON.parse(jsonStr);
-
-								if (!parsed.aura) {
-									parsed.aura = 'SanctityAura';
-								}
 
 								if (parsed.useConsecrate) {
 									parsed.consecrationRank = 6;

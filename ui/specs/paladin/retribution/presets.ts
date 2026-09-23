@@ -10,7 +10,7 @@ export const DefaultSimpleRotation = PaladinRotation.create({
 	consecrationRank: 0,
 	delayMajorCDs: 11,
 	prepullSotC: true,
-	aura: PaladinAura.SanctityAura,
+	aura: PaladinAura.RetributionAura,
 });
 
 export const APL_PRESET = PresetUtils.makePresetAPLRotation('Default', DefaultApl);
@@ -51,21 +51,18 @@ export const DefaultPartyBuffs = PartyBuffs.create({
 	windfuryTotem: TristateEffect.TristateEffectImproved,
 	graceOfAirTotem: TristateEffect.TristateEffectImproved,
 	drums: Drums.LesserDrumsOfBattle,
-	sanctityAura: TristateEffect.TristateEffectMissing,
 });
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
+	blessingOfWisdom: true,
+	blessingOfMight: true,
 	unleashedRage: true,
 });
 
 export const DefaultDebuffs = Debuffs.create({
 	misery: true,
 	curseOfElements: TristateEffect.TristateEffectImproved,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
-	jocRetribution2Pt4: true,
 	judgementOfWisdom: true,
 	bloodFrenzy: true,
 	huntersMark: TristateEffect.TristateEffectImproved,

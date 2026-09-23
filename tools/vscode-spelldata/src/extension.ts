@@ -4,6 +4,7 @@ import { delimiter, join } from 'node:path';
 import * as vscode from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 
+// The languages package.json activates the extension on.
 const LANGUAGES = ['go', 'json', 'typescript', 'typescriptreact'];
 
 let client: LanguageClient | undefined;

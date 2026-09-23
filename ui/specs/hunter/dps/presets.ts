@@ -45,8 +45,8 @@ export const DefaultOptions = HunterOptions.create({
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
-	blessingOfWisdom: TristateEffect.TristateEffectImproved,
+	blessingOfMight: true,
+	blessingOfWisdom: true,
 	unleashedRage: true,
 });
 
@@ -80,7 +80,6 @@ export const DefaultDebuffs = Debuffs.create({
 	faerieFire: TristateEffect.TristateEffectImproved,
 	giftOfArthas: true,
 	huntersMark: TristateEffect.TristateEffectImproved,
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
 	insectSwarm: true,
 	judgementOfLight: true,
 	judgementOfWisdom: true,

@@ -23,6 +23,16 @@ func evalJSON(t *testing.T, expr string) exprJSON {
 	return got
 }
 
+// The effect the chain read, counted from 1, or 0 where it read none.
+func readEffect(got exprJSON) int {
+	for i, line := range got.Effects {
+		if line.Read {
+			return i + 1
+		}
+	}
+	return 0
+}
+
 func TestExprValue(t *testing.T) {
 	cases := []struct {
 		expr  string
@@ -87,9 +97,9 @@ func TestExprValue(t *testing.T) {
 	for _, c := range cases {
 		got := evalJSON(t, c.expr)
 		if got.Kind != c.kind || got.Trail != c.trail || got.Value != c.value ||
-			got.ReadEffect != c.read || got.Resolved != c.id {
+			readEffect(got) != c.read || got.ID != c.id {
 			t.Errorf("%s answered kind %q trail %q value %q effect %d of %d",
-				c.expr, got.Kind, got.Trail, got.Value, got.ReadEffect, got.Resolved)
+				c.expr, got.Kind, got.Trail, got.Value, readEffect(got), got.ID)
 		}
 	}
 }
@@ -215,9 +225,9 @@ func TestExprLadderAccessors(t *testing.T) {
 	}
 	for _, c := range cases {
 		got := evalJSON(t, c.expr)
-		if got.Kind != kindValue || got.Trail != c.trail || got.Value != c.value || got.Title != c.title || got.ReadEffect != c.read {
+		if got.Kind != kindValue || got.Trail != c.trail || got.Value != c.value || got.heading() != c.title || readEffect(got) != c.read {
 			t.Errorf("%s answered kind %q trail %q value %q on %q effect %d",
-				c.expr, got.Kind, got.Trail, got.Value, got.Title, got.ReadEffect)
+				c.expr, got.Kind, got.Trail, got.Value, got.heading(), readEffect(got))
 		}
 	}
 

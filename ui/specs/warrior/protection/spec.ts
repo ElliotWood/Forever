@@ -102,7 +102,6 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 			shadowProtection: true,
 		}),
 		partyBuffs: PartyBuffs.create({
-			sanctityAura: TristateEffect.TristateEffectImproved,
 			braidedEterniumChain: true,
 			graceOfAirTotem: TristateEffect.TristateEffectImproved,
 			strengthOfEarthTotem: TristateEffect.TristateEffectImproved,
@@ -112,7 +111,6 @@ export default defineSpec<Spec.SpecProtectionWarrior>({
 		}),
 		individualBuffs: IndividualBuffs.create({
 			...WarriorPresets.DefaultIndividualBuffs,
-			blessingOfSanctuary: true,
 		}),
 		debuffs: Debuffs.create({
 			...WarriorPresets.DefaultDebuffs,

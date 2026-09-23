@@ -16,7 +16,7 @@ import * as Presets from './presets';
 
 // Fixed indices into the default APL (apls/default.apl.json). simpleRotation
 // relies on these — if you reorder the APL, update these too.
-const PREPULL_AURA_INDEX = 0; // Sanctity Aura at -18.5s
+const PREPULL_AURA_INDEX = 0; // The paladin aura at -18.5s
 const EXO_OR_CONSEC_CONSEC_INDEX = 1; // Consecration is the 2nd action inside the ExoOrConsec group
 
 // Spell IDs for each rank of Consecration.
@@ -32,13 +32,12 @@ const CONSECRATION_RANK_SPELL_IDS: Record<number, number> = {
 // SpellIDs for each paladin aura option.
 const AURA_SPELL_IDS: Record<PaladinAura, number | null> = {
 	[PaladinAura.AuraNone]: null,
-	[PaladinAura.DevotionAura]: 27149,
-	[PaladinAura.RetributionAura]: 27150,
+	[PaladinAura.DevotionAura]: 10293,
+	[PaladinAura.RetributionAura]: 10301,
 	[PaladinAura.ConcentrationAura]: 19746,
-	[PaladinAura.FireResistanceAura]: 27153,
-	[PaladinAura.FrostResistanceAura]: 27152,
-	[PaladinAura.ShadowResistanceAura]: 27151,
-	[PaladinAura.SanctityAura]: 20218,
+	[PaladinAura.FireResistanceAura]: 19900,
+	[PaladinAura.FrostResistanceAura]: 19898,
+	[PaladinAura.ShadowResistanceAura]: 19896,
 };
 
 export default defineSpec<Spec.SpecRetributionPaladin>({
@@ -156,12 +155,7 @@ export default defineSpec<Spec.SpecRetributionPaladin>({
 		const actions = AplUtils.simpleCooldownActions(cooldowns);
 		const rotation = APLRotation.clone(Presets.APL_PRESET.rotation.rotation!);
 
-		const { useExorcism = false, consecrationRank = 0, delayMajorCDs = 11, prepullSotC = true, aura: rawAura = PaladinAura.SanctityAura } = simple;
-
-		// Sanctity Aura requires the talent. If the user picked it without the
-		// talent (e.g. dropped the point after selecting), fall back to None.
-		// TODO: Forever drops the Sanctity Aura talent, so the pick always falls back.
-		const aura = rawAura === PaladinAura.SanctityAura ? PaladinAura.AuraNone : rawAura;
+		const { useExorcism = false, consecrationRank = 0, delayMajorCDs = 11, prepullSotC = true, aura = PaladinAura.RetributionAura } = simple;
 
 		const useExorcismBool = APLValueVariable.fromJson({
 			name: 'Use Exorcism',

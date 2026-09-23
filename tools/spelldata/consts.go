@@ -8,7 +8,6 @@ import (
 	"go/token"
 	"go/types"
 	"path/filepath"
-	"sort"
 	"strings"
 	"sync"
 )
@@ -29,13 +28,10 @@ var (
 	constPackages = map[string]*types.Package{}
 	evalPackage   *types.Package
 	evalPos       token.Pos
-	coreNames     = map[string][]namedConstant{}
-)
 
-type namedConstant struct {
-	name  string
-	value uint64
-}
+	procFlagConsts = map[int64]string{}
+	spellModConsts = map[int64]string{}
+)
 
 // Only the packages above are imported, and only by each other: type-checking proto and stats from
 // source takes seconds, and the constants do not use them. The errors that leaves behind are ignored;
@@ -85,31 +81,32 @@ func scanConstants() {
 	evalPackage, _ = conf.Check("eval", constFset, []*ast.File{file}, nil)
 	evalPos = file.Name.Pos()
 
-	scope := constPackages["github.com/wowsims/forever/sim/core"].Scope()
+	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/dbcenums"], "PROC_FLAG_", procFlagConsts)
+	namesByPrefix(constPackages["github.com/wowsims/forever/sim/core/spelldata"], "SPELLMOD_", spellModConsts)
+}
+
+// The constants a package names by prefix, by value. A zero is left out: PROC_FLAG_NONE would
+// claim every unset bit.
+func namesByPrefix(pkg *types.Package, prefix string, into map[int64]string) {
+	if pkg == nil {
+		return
+	}
+	scope := pkg.Scope()
 	for _, name := range scope.Names() {
 		c, ok := scope.Lookup(name).(*types.Const)
-		if !ok {
+		if !ok || !strings.HasPrefix(name, prefix) {
 			continue
 		}
-		named, ok := c.Type().(*types.Named)
-		if !ok {
-			continue
+		if value, exact := constant.Int64Val(constant.ToInt(c.Val())); exact && value != 0 {
+			into[value] = name
 		}
-		value, exact := constant.Uint64Val(constant.ToInt(c.Val()))
-		if !exact {
-			continue
-		}
-		typeName := named.Obj().Name()
-		coreNames[typeName] = append(coreNames[typeName], namedConstant{name: name, value: value})
-	}
-	for _, names := range coreNames {
-		sort.SliceStable(names, func(i, j int) bool { return names[i].value < names[j].value })
 	}
 }
 
-func coreConstants(typeName string) []namedConstant {
+func constName(names map[int64]string, value int64) (string, bool) {
 	loadConstants.Do(scanConstants)
-	return coreNames[typeName]
+	name, ok := names[value]
+	return name, ok
 }
 
 // A variable or a call is refused: this reads, it does not run the package around it.
