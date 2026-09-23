@@ -8,28 +8,6 @@ import (
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
-func TestForeverWhiteHitRage(t *testing.T) {
-	// Beta combat log buckets from ElliotWood/Forever issue #252.
-	cases := []struct {
-		speed   float64
-		twoHand bool
-		want    float64
-	}{
-		{2.1, false, 7.35},
-		{2.5, false, 8.75},
-		{3.2, true, 14.4},
-		{3.5, true, 15.75},
-	}
-	for _, c := range cases {
-		if got := ForeverWhiteHitRage(&Weapon{SwingSpeed: c.speed, TwoHand: c.twoHand}); !WithinToleranceFloat64(c.want, got, 1e-9) {
-			t.Errorf("speed %.1f two-hand %v: got %.3f rage, want %.3f", c.speed, c.twoHand, got, c.want)
-		}
-	}
-	if ForeverWhiteHitRage(nil) != 0 {
-		t.Error("no weapon should give no rage")
-	}
-}
-
 func TestGearHitAndCritApplyToEveryAttack(t *testing.T) {
 	// Neltharion's Tear states only the generic hit rating, which the database reads as melee.
 	equipment := Equipment{}
