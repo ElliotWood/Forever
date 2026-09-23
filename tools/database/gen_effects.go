@@ -292,6 +292,8 @@ func procRateSummary(trigger *spelldata.Spell) string {
 	switch {
 	case trigger.RPPM > 0:
 		return fmt.Sprintf("%v ppm", trigger.RPPM)
+	case trigger.ItemProcRollsTheColumn():
+		return fmt.Sprintf("%d%%, the column over effect %d's %v%%", trigger.ProcChance, trigger.ProcChanceEffect, trigger.StatedChance()*100)
 	case trigger.ProcChanceSource == spelldata.ProcChanceEffectN:
 		return fmt.Sprintf("effect %d's chance", trigger.ProcChanceEffect)
 	case trigger.ProcChanceSource == spelldata.ProcChanceAlways:

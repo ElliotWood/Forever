@@ -195,3 +195,25 @@ func TestAbsorbProcShieldsTheWearerOnAMeleeHitTaken(t *testing.T) {
 		t.Errorf("a hit after the lockout put up no shield")
 	}
 }
+
+// Uther's Strength 11302's equip aura 8397 states 2% on effect 1 and 4 in its ProcChance column. The
+// item's proc rolls the column; a class spell stating both, Hack and Slash 13960 (5% on its effect, 1
+// in the column), is not an item proc and keeps the effect's.
+func TestItemProcRollsTheColumnOverAnEffectsChance(t *testing.T) {
+	_, caster := newOnUseSim(t, NewSpellDataAbsorbOnUse, nil)
+	uther := spelldata.MustFind(8397)
+	if got := uther.StatedChance(); got != 0.02 {
+		t.Fatalf("8397 states %v on its effect, want 0.02", got)
+	}
+
+	config := spellDataDamageTrigger(&caster.Character, SpellDataProc{Name: "Uther's Strength", ItemID: 11302, TriggerSpellID: 8397},
+		effectSource{id: 11302}, uther)
+	if config.ProcChance != 0.04 || config.DPM != nil {
+		t.Errorf("the proc rolls %v (manager %v), want the column's 0.04", config.ProcChance, config.DPM != nil)
+	}
+
+	hackAndSlash := spelldata.MustFind(13960)
+	if got := spelldata.ProcTrigger(&caster.Character, hackAndSlash, nil).ProcChance; got != 0.05 {
+		t.Errorf("a class spell's trigger rolls %v, want its effect's 0.05 over its column's 1", got)
+	}
+}

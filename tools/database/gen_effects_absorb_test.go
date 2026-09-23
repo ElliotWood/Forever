@@ -2,6 +2,7 @@ package database
 
 import (
 	"slices"
+	"strings"
 	"testing"
 
 	"github.com/wowsims/forever/sim/core/proto"
@@ -66,8 +67,9 @@ func TestOnUseAbsorbRoutesFromTheSpellItCasts(t *testing.T) {
 }
 
 // An item proc whose spell, or one its trigger casts, puts an absorb on the wearer routes to the absorb
-// shape. Uther's Strength 11302's equip aura 8397 states its 2% on effect 1 and casts 10368;
-// Jang'thraze the Protector 9380's chance on hit states no rate.
+// shape. Uther's Strength 11302's equip aura 8397 casts 10368 and rolls the 4 in its ProcChance
+// column over the 2% its tooltip states on effect 1; Jang'thraze the Protector 9380's chance on hit
+// states no rate.
 func TestItemProcAbsorbRoutes(t *testing.T) {
 	inRepositoryRoot(t)
 	instance := dbc.GetDBC()
@@ -78,9 +80,10 @@ func TestItemProcAbsorbRoutes(t *testing.T) {
 		trigger int
 		want    EffectParseResult
 		reasons []string
+		rate    string
 	}{
-		{11302, 10368, 8397, EffectParseResultSuccess, nil},
-		{9380, 11657, 11657, EffectParseResultRefused, []string{spelldata.ReasonStatesNoRate}},
+		{11302, 10368, 8397, EffectParseResultSuccess, nil, "trigger 8397 (4%, the column over effect 1's 2%,"},
+		{9380, 11657, 11657, EffectParseResultRefused, []string{spelldata.ReasonStatesNoRate}, "trigger 11657 (0%,"},
 	} {
 		parsed, effect := parsedItem(t, instance, tc.itemID, tc.buffID)
 		groups := map[string]Group{}
@@ -98,6 +101,9 @@ func TestItemProcAbsorbRoutes(t *testing.T) {
 		}
 		if !slices.Equal(r.Unsupported, tc.reasons) {
 			t.Errorf("item %d refused for %q, want %q", tc.itemID, r.Unsupported, tc.reasons)
+		}
+		if !strings.HasPrefix(r.Summary, tc.rate) {
+			t.Errorf("item %d summary %q, want it to start %q", tc.itemID, r.Summary, tc.rate)
 		}
 	}
 }

@@ -512,7 +512,7 @@ func applySpellDataProc(agent core.Agent, cfg SpellDataProc, source effectSource
 // own name and action, which are what the sim keys the rolls and the metrics by, and the internal
 // cooldown a handful of procs state through the buff's spell category instead.
 func spellDataTrigger(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell, effect *proto.ItemEffect, procAura *core.StatBuffAura) core.ProcTrigger {
-	config := spelldata.ProcTrigger(character, trigger, spellDataProcHandler(buff, procAura),
+	config := spelldata.ProcTrigger(character, trigger, spellDataProcHandler(buff, procAura), spelldata.ItemProcChance(trigger),
 		weaponProcShape(cfg), spellDataProcRate(source, trigger, effect.GetProc()), statedWeaponProcChance(cfg, source))
 
 	config.Name = cfg.Name
@@ -760,7 +760,7 @@ func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effect
 
 // A damage or heal proc's listener as the trigger's row and the effect state it, without the handler.
 func spellDataDamageTrigger(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell) core.ProcTrigger {
-	config := spelldata.ProcTrigger(character, trigger, nil,
+	config := spelldata.ProcTrigger(character, trigger, nil, spelldata.ItemProcChance(trigger),
 		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil), statedWeaponProcChance(cfg, source))
 	config.Name = cfg.Name
 	config.ActionID = source.actionID()
