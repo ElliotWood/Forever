@@ -11,6 +11,7 @@ import { PseudoStat, Spec, Stat } from '@generated/proto/common';
 import { IndividualSimSettings } from '@generated/proto/ui';
 import type { IMessageType } from '@protobuf-ts/runtime';
 
+import { ENCOUNTER_DEFAULTS } from '../constants/encounter';
 import {
 	BLOCK_RATING_PER_BLOCK_PERCENT,
 	DEFENSE_RATING_PER_DEFENSE_LEVEL,
@@ -24,7 +25,6 @@ import {
 	SPELL_HASTE_RATING_PER_HASTE_PERCENT,
 	SPELL_HIT_RATING_PER_HIT_PERCENT,
 } from '../constants/mechanics';
-import { ENCOUNTER_DEFAULTS } from '../constants/encounter';
 import { CURRENT_API_VERSION } from '../constants/other';
 import { getSpecConfig } from '../player/player';
 import { PseudoStat as ClassicPseudoStat, Stat as ClassicStat } from '../proto/legacy_classic/common';
