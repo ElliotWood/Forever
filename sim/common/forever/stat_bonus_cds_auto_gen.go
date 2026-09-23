@@ -221,8 +221,6 @@ func RegisterAllOnUseCds() {
 	// https://www.wowhead.com/forever/spell=16739
 	// Not simulated: Spider Belt: "Immune Root" (9774) - ignored aura type 77
 	// https://www.wowhead.com/forever/spell=9774
-	// Not simulated: Cold Basilisk Eye: "Cold Eye" (1139) - ignored aura type 33
-	// https://www.wowhead.com/forever/spell=1139
 	// Not simulated: Enchanted Moonstalker Cloak: "Form of the Moonstalker" (6298) - ignored aura type 56
 	// https://www.wowhead.com/forever/spell=6298
 	// Not simulated: Ornate Mithril Boots: "Immune Root" (9774) - ignored aura type 77

@@ -92,9 +92,9 @@ func RegisterAllEnchants() {
 	//
 	// Permanently enchant a melee weapon to often chill the target reducing their movement and attack speed.
 	// https://www.wowhead.com/forever/spell=20029
-	// unsupported: states no rate; the enchant's effect entry resolves no stats from 20005 (A_MOD_MELEE_HASTE_3, A_MOD_DECREASE_SPEED)
+	// unsupported: states no rate
 	// trigger 20005 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
-	// shared.NewSpellDataProc(shared.SpellDataProc{
+	// shared.NewSpellDataSlowProc(shared.SpellDataProc{
 	//	Name:           "Enchant Weapon - Icy Chill",
 	//	EnchantID:      1894,
 	//	TriggerSpellID: 20005,

@@ -12,6 +12,19 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
+	// Launches a bolt of frost at the enemy causing 50 Frost damage and slowing movement speed by 50% for 5s.
+	// https://www.wowhead.com/forever/spell=13439
+	// unsupported: states no rate
+	// trigger 13439 (every time, core.CallbackEmpty, core.ProcMaskUnknown)
+	// shared.NewSpellDataDamageProc(shared.SpellDataProc{TriggerSpellID: 13439, BuffSpellID: 13439, IsWeaponProc: true},
+	//	[]shared.ItemVariant{
+	//	{ItemID: 810, ItemName: "Hammer of the Northern Wind"},
+	// })
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
 	// A burst of energy fills the caster, increasing his damage by 10 and armor by 150 for 15s.
 	// https://www.wowhead.com/forever/spell=8191
 	// unsupported: states no rate
@@ -297,6 +310,19 @@ func RegisterAllProcs() {
 	//	RequireDamageDealt: false
 	// }, []shared.ItemVariant{
 	//	{ItemID: 12796, ItemName: "Hammer of the Titans"},
+	// })
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
+	// Target's movement slowed by 30% and increasing the time between attacks by 25% for 5s.
+	// https://www.wowhead.com/forever/spell=16927
+	// unsupported: states no rate
+	// trigger 16927 (0%, core.CallbackEmpty, core.ProcMaskUnknown)
+	// shared.NewSpellDataSlowProc(shared.SpellDataProc{TriggerSpellID: 16927, IsWeaponProc: true},
+	//	[]shared.ItemVariant{
+	//	{ItemID: 12797, ItemName: "Frostguard"},
 	// })
 
 	// TODO: Manual implementation required
@@ -4987,12 +5013,8 @@ func RegisterAllProcs() {
 		})
 
 	// Skipped
-	// Not simulated: Hammer of the Northern Wind: "Frostbolt" (13439) - ignored aura type 33
-	// https://www.wowhead.com/forever/spell=13439
 	// Not simulated: Rod of the Sleepwalker: "Resist Sleep 05" (1292652) - ignored aura type 117
 	// https://www.wowhead.com/forever/spell=1292652
-	// Not simulated: Frost Tiger Blade: "Frostbolt" (13439) - ignored aura type 33
-	// https://www.wowhead.com/forever/spell=13439
 	// Not simulated: Mug O' Hurt: "Dazed" (13496) - ignored aura type 33
 	// https://www.wowhead.com/forever/spell=13496
 	// Not simulated: Girdle of the Blindwatcher: "Stealth Detection 05" (1292149) - ignored aura type 17
@@ -5007,8 +5029,6 @@ func RegisterAllProcs() {
 	// https://www.wowhead.com/forever/spell=13587
 	// Not simulated: Stronghold Gauntlets: "Immune to Disarm" (7219) - ignored aura type 77
 	// https://www.wowhead.com/forever/spell=7219
-	// Not simulated: Frostguard: "Chilled" (16927) - ignored aura type 33
-	// https://www.wowhead.com/forever/spell=16927
 	// Not simulated: Voice Amplification Modulator: "Resist Silence 07" (19786) - ignored aura type 117
 	// https://www.wowhead.com/forever/spell=19786
 	// Not simulated: Knight-Lieutenant's Dragonhide Gloves: "Stealth Detection 10" (23217) - ignored aura type 17

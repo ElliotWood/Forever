@@ -4,6 +4,12 @@
 
 export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 	[
+		810, // Hammer of the Northern Wind
+		[
+			"Launches a bolt of frost at the enemy causing 50 Frost damage and slowing movement speed by 50% for 5s.", // 13439 - https://www.wowhead.com/forever/spell=13439
+		]
+	],
+	[
 		2820, // Nifty Stopwatch
 		[
 			"Increases run speed by 40% for 10s.", // 14530 - https://www.wowhead.com/forever/spell=14530
@@ -145,6 +151,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		12796, // Hammer of the Titans
 		[
 			"Stuns target for 3s.", // 56 - https://www.wowhead.com/forever/spell=56
+		]
+	],
+	[
+		12797, // Frostguard
+		[
+			"Target's movement slowed by 30% and increasing the time between attacks by 25% for 5s.", // 16927 - https://www.wowhead.com/forever/spell=16927
 		]
 	],
 	[
