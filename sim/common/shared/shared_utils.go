@@ -799,6 +799,7 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	effect := damage.DamageEffect()
 
 	single := make(core.SpellResultSlice, 1)
+	slow := slowOnLanding(character, damage)
 	periodic := damage.PeriodicDamageEffect()
 	if periodic == spelldata.NilEffect {
 		multiTarget := effect.HitsAnArea() || effect.ChainTargets > 1
@@ -815,9 +816,17 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 			} else {
 				results[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
 			}
-			dealOnArrival(sim, spell, target, results, nil)
+			dealOnArrival(sim, spell, target, results, slow)
 		}
 		return config
+	}
+
+	after := afterDealt(applyDotIfLanded)
+	if slow != nil {
+		after = func(sim *core.Simulation, spell *core.Spell, target *core.Unit, results core.SpellResultSlice) {
+			applyDotIfLanded(sim, spell, target, results)
+			slow(sim, spell, target, results)
+		}
 	}
 
 	// Where the row also deals direct damage, the damage over time lands only with it. Alone it goes
@@ -829,7 +838,7 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 			results = single
 			results[0] = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
 		}
-		dealOnArrival(sim, spell, target, results, applyDotIfLanded)
+		dealOnArrival(sim, spell, target, results, after)
 	}
 
 	return config
