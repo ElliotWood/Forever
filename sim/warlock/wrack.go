@@ -5,8 +5,8 @@ import (
 )
 
 // Wrack is the Forever Affliction capstone (1316697): a six second shadow channel that also makes
-// the warlock's other shadow dots on the target tick 10% harder while it runs - the second effect
-// on the client's row.
+// the warlock's Corruption and Bane of Agony on the target tick 10% harder while it runs - the
+// second effect on the client's row, whose mask (1026) names those two only.
 func (warlock *Warlock) registerWrack() {
 	if !warlock.Talents.Wrack {
 		return
@@ -60,11 +60,11 @@ func (warlock *Warlock) registerWrack() {
 
 	for _, target := range warlock.Env.Encounter.AllTargetUnits {
 		target.AddDynamicDamageTakenModifier(func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult, isPeriodic bool) {
-			if spell.Unit != &warlock.Unit || spell == warlock.Wrack {
+			if spell.Unit != &warlock.Unit {
 				return
 			}
 
-			if isPeriodic && spell.SpellSchool.Matches(core.SpellSchoolShadow) && warlock.Wrack.Dot(result.Target).IsActive() {
+			if isPeriodic && spell.Matches(WarlockSpellCorruption|WarlockSpellCurseOfAgony) && warlock.Wrack.Dot(result.Target).IsActive() {
 				result.Damage *= dotBonus
 			}
 		})

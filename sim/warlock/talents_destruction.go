@@ -211,7 +211,9 @@ func (warlock *Warlock) applyAftermath() {
 	})
 }
 
-// 3/7/10% more Destruction damage, and the same again as Searing Pain crit (17927).
+// 3/7/10% more Destruction damage, and the same again as Searing Pain crit (17927). The direct
+// half (mask 421/8388800) leaves out Immolate's dot and Hellfire; the dot half (mask 36) is
+// Immolate's dot alone of what the sim casts, so its ticks take the bonus once.
 func (warlock *Warlock) applyAgonizingFlames() {
 	if warlock.Talents.AgonizingFlames == 0 {
 		return
@@ -222,12 +224,12 @@ func (warlock *Warlock) applyAgonizingFlames() {
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
 		FloatValue: spellData.AgonizingFlames.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DAMAGE)).FractionAt(points),
-		ClassMask:  WarlockDestructionSpells,
+		ClassMask:  WarlockDestructionSpells &^ (WarlockSpellImmolateDot | WarlockSpellHellfire),
 	})
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DotDamageDone_Pct,
 		FloatValue: spellData.AgonizingFlames.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_DOT)).FractionAt(points),
-		ClassMask:  WarlockDestructionSpells,
+		ClassMask:  WarlockSpellImmolateDot,
 	})
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_BonusCrit_Percent,

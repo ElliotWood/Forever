@@ -194,7 +194,8 @@ func (warlock *Warlock) applyNightfall() {
 }
 
 // Shadow Mastery is 1% a point on both damage and dot damage in Forever: 18271 kept its op 0 and
-// op 22 modifiers and dropped Classic's op 8, so every shadow spell takes it the same way.
+// op 22 modifiers and dropped Classic's op 8, so every shadow spell takes it the same way. Neither
+// mask names Life Tap, so its mana is left alone.
 func (warlock *Warlock) applyShadowMastery() {
 	if warlock.Talents.ShadowMastery == 0 {
 		return
@@ -218,7 +219,7 @@ func (warlock *Warlock) registerAmplifyCurse() {
 	rank := spellData.AmplifyCurse.Highest()
 	actionID := core.ActionID{SpellID: rank.ID}
 
-	// Spent by the bane that takes it; see agony.go and doom.go.
+	// Spent by Bane of Agony, the only spell in 18288's mask the sim casts; see agony.go.
 	warlock.AmplifyCurseAura = warlock.GetOrRegisterAura(core.Aura{
 		Label:    "Amplify Curse",
 		ActionID: actionID,

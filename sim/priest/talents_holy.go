@@ -266,13 +266,12 @@ func (priest *Priest) applyLitanyOfLight() {
 	}
 }
 
-// Spirit of Redemption's passive half: +5% total Spirit. The on-death form is not modelled.
+// Spirit of Redemption is only the on-death form (27827), which is not modelled. Classic's +5%
+// Spirit is gone: Forever's 20711 carries one dummy effect and no stat modifier.
 func (priest *Priest) applySpiritOfRedemption() {
 	if !priest.Talents.SpiritOfRedemption {
 		return
 	}
-
-	priest.MultiplyStat(stats.Spirit, 1.05)
 }
 
 // The beta client's curves: damage 1/3/5/6/8% of Spirit, healing 5% per point.
