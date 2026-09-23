@@ -6,25 +6,28 @@ import { Tooltip, tooltipAnchorProps } from '@ui-kit/Tooltip';
 import clsx from 'clsx';
 import { type ReactNode, useId } from 'react';
 
-import { ITEM_INFO_NOTICES, ITEM_NOTICES } from '../../item_notices';
+import { ENCHANT_NOTICES, ITEM_INFO_NOTICES, ITEM_NOTICES } from '../../item_notices';
 
 export interface ItemNoticeIconProps {
 	itemId: number;
+	enchantId?: number;
 	additionalNotice?: ReactNode;
 }
 
-export const ItemNoticeIcon = ({ itemId, additionalNotice }: ItemNoticeIconProps) => {
+export const ItemNoticeIcon = ({ itemId, enchantId, additionalNotice }: ItemNoticeIconProps) => {
 	const player = usePlayer();
 	const tooltipId = useId();
 	const spec = player.getSpec();
 
 	const itemNotice = ITEM_NOTICES.get(itemId);
 	const ownNotice = itemNotice?.[spec] || itemNotice?.[Spec.SpecUnknown];
+	const enchantNotice = enchantId ? ENCHANT_NOTICES.get(enchantId) : undefined;
+	const ownEnchantNotice = enchantNotice?.[spec] || enchantNotice?.[Spec.SpecUnknown];
 	const infoNotice = ITEM_INFO_NOTICES.get(itemId);
 
-	if (!ownNotice && !additionalNotice && !infoNotice) return null;
+	if (!ownNotice && !ownEnchantNotice && !additionalNotice && !infoNotice) return null;
 
-	const warns = !!ownNotice || !!additionalNotice;
+	const warns = !!ownNotice || !!ownEnchantNotice || !!additionalNotice;
 	const level: NoticeLevel = warns ? 'warning' : 'info';
 
 	return (
@@ -40,6 +43,7 @@ export const ItemNoticeIcon = ({ itemId, additionalNotice }: ItemNoticeIconProps
 				content={
 					<div>
 						{ownNotice}
+						{ownEnchantNotice}
 						{additionalNotice}
 						{infoNotice}
 					</div>
