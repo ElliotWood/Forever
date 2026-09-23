@@ -4,18 +4,8 @@ import (
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
-	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/spelldata"
-)
-
-type Stance uint8
-
-const (
-	StanceNone          = 0
-	BattleStance Stance = 1 << iota
-	DefensiveStance
-	BerserkerStance
 )
 
 const stanceEffectCategory = "Stance"
@@ -29,18 +19,8 @@ var battleStancePassive = spellData.BattleStancePassive.Highest()
 var defensiveStancePassive = spellData.DefensiveStancePassive.Highest()
 var berserkerStancePassive = spellData.BerserkerStancePassive.Highest()
 
-var stanceForms = map[Stance]dbcenums.ShapeshiftForm{
-	BattleStance:    dbcenums.FORM_BATTLE_STANCE,
-	DefensiveStance: dbcenums.FORM_DEFENSIVE_STANCE,
-	BerserkerStance: dbcenums.FORM_BERSERKER_STANCE,
-}
-
-func (warrior *Warrior) setStance(stance Stance) {
-	warrior.Stance = stance
-	warrior.ShapeshiftForm = stanceForms[stance]
-}
-
-func (warrior *Warrior) makeStanceSpell(stance Stance, flags core.ClassFlags, rank *spelldata.Spell, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
+func (warrior *Warrior) makeStanceSpell(flags core.ClassFlags, rank *spelldata.Spell, aura *core.Aura, stanceCD *core.Timer) *core.Spell {
+	form := rank.ShapeshiftForm()
 	actionID := aura.ActionID
 	rageMetrics := warrior.NewRageMetrics(actionID)
 	maxRetainedRage := spellData.TacticalMastery.ValueAt(1) + spellData.ImprovedTacticalMastery.ValueAt(warrior.Talents.ImprovedTacticalMastery)
@@ -58,7 +38,7 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, flags core.ClassFlags, ra
 			},
 		},
 		ExtraCastCondition: func(sim *core.Simulation, target *core.Unit) bool {
-			return warrior.Stance != stance
+			return warrior.ShapeshiftForm != form
 		},
 
 		ApplyEffects: func(sim *core.Simulation, _ *core.Unit, _ *core.Spell) {
@@ -77,7 +57,7 @@ func (warrior *Warrior) makeStanceSpell(stance Stance, flags core.ClassFlags, ra
 				warrior.SpendRage(sim, warrior.CurrentRage()-maxRetainedRage, rageMetrics)
 			}
 
-			warrior.setStance(stance)
+			warrior.ShapeshiftForm = form
 		},
 
 		RelatedSelfBuff: aura,
@@ -152,9 +132,9 @@ func (warrior *Warrior) registerStances() {
 	battleStanceAura := warrior.registerBattleStanceAura()
 	defensiveStanceAura := warrior.registerDefensiveStanceAura()
 	berserkerStanceAura := warrior.registerBerserkerStanceAura()
-	warrior.BattleStance = warrior.makeStanceSpell(BattleStance, SpellFlagsBattleStance, battleStanceRank, battleStanceAura, stanceCD)
-	warrior.DefensiveStance = warrior.makeStanceSpell(DefensiveStance, SpellFlagsDefensiveStance, defensiveStanceRank, defensiveStanceAura, stanceCD)
-	warrior.BerserkerStance = warrior.makeStanceSpell(BerserkerStance, SpellFlagsBerserkerStance, berserkerStanceRank, berserkerStanceAura, stanceCD)
+	warrior.BattleStance = warrior.makeStanceSpell(SpellFlagsBattleStance, battleStanceRank, battleStanceAura, stanceCD)
+	warrior.DefensiveStance = warrior.makeStanceSpell(SpellFlagsDefensiveStance, defensiveStanceRank, defensiveStanceAura, stanceCD)
+	warrior.BerserkerStance = warrior.makeStanceSpell(SpellFlagsBerserkerStance, berserkerStanceRank, berserkerStanceAura, stanceCD)
 
 	switch warrior.DefaultStance {
 	case proto.WarriorStance_WarriorStanceBattle:

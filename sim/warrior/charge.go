@@ -12,15 +12,15 @@ var chargeRank = spellData.Charge.ByID(11578)
 var vanguardChargeRank = chargeRank.OverriddenBy(spellData.Vanguard.Highest())
 
 func (warrior *Warrior) registerCharge() {
+	rank := core.Ternary(warrior.Talents.Vanguard, vanguardChargeRank, chargeRank)
 	actionID := core.ActionID{SpellID: chargeRank.ID}
 	metrics := warrior.NewRageMetrics(actionID)
 
-	chargeRage := chargeRank.EnergizeEffect().Tenths() + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
+	chargeRage := rank.EnergizeEffect().Tenths() + spellData.ImprovedCharge.TenthsAt(warrior.Talents.ImprovedCharge)
 
-	config := spelldata.SpellConfig(&warrior.Unit, chargeRank, spelldata.Flags(core.SpellFlagAPL))
-	if warrior.Talents.Vanguard {
-		config.CastRequirement = vanguardChargeRank.CastRequirement()
-	}
+	config := spelldata.SpellConfig(&warrior.Unit, rank, spelldata.Flags(core.SpellFlagAPL))
+	// The APL names Charge by the spell the talent replaces.
+	config.ActionID = actionID
 
 	aura := warrior.registerDashAura("Charge", actionID, config.Cast.CD.Duration, nil)
 

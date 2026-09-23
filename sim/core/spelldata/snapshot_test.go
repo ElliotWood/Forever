@@ -6,6 +6,7 @@ package spelldata
 // number says so here instead of in a sim result.
 
 import (
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"slices"
 	"strings"
 	"testing"
@@ -231,6 +232,15 @@ func TestGeneratedStanceAndAuraRestriction(t *testing.T) {
 	tigersFury := MustFind(5217)
 	if tigersFury.CasterAura != 768 {
 		t.Errorf("Tiger's Fury's caster aura is %d, want 768", tigersFury.CasterAura)
+	}
+
+	for id, want := range map[int32]dbcenums.ShapeshiftForm{
+		2457: dbcenums.FORM_BATTLE_STANCE, 71: dbcenums.FORM_DEFENSIVE_STANCE, 2458: dbcenums.FORM_BERSERKER_STANCE,
+		768: dbcenums.FORM_CAT_FORM, 9634: dbcenums.FORM_DIRE_BEAR_FORM, 24858: dbcenums.FORM_MOONKIN_FORM,
+	} {
+		if got := MustFind(id).ShapeshiftForm(); got != want {
+			t.Errorf("spell %d puts the caster in form %d, want %d", id, got, want)
+		}
 	}
 }
 
