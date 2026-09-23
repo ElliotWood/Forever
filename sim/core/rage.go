@@ -92,6 +92,11 @@ func (unit *Unit) EnableRageBar(options RageBarOptions) {
 			if unit.GetCurrentPowerBar() != RageBar {
 				return
 			}
+			// "A hit taken" (f9f9f21883): a missed, dodged or parried swing pays nothing, though its
+			// PostArmorAndResistanceMultiplier is still filled in.
+			if !result.Landed() {
+				return
+			}
 
 			preArmorDamage := result.PostArmorAndResistanceMultiplier
 			if result.ArmorAndResistanceMultiplier > 0 {
