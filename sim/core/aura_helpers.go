@@ -665,6 +665,18 @@ func (parentAura *Aura) AttachMultiplyAttackSpeed(multiplier float64) *Aura {
 	return parentAura
 }
 
+func (parentAura *Aura) AttachMultiplyRangedSpeed(multiplier float64) *Aura {
+	parentAura.ApplyOnGain(func(_ *Aura, sim *Simulation) {
+		parentAura.Unit.MultiplyRangedSpeed(sim, multiplier)
+	})
+
+	parentAura.ApplyOnExpire(func(_ *Aura, sim *Simulation) {
+		parentAura.Unit.MultiplyRangedSpeed(sim, 1/multiplier)
+	})
+
+	return parentAura
+}
+
 func (parentAura *Aura) AttachMultiplyRangedHaste(multiplier float64) *Aura {
 	parentAura.ApplyOnGain(func(_ *Aura, sim *Simulation) {
 		parentAura.Unit.MultiplyRangedHaste(sim, multiplier)
