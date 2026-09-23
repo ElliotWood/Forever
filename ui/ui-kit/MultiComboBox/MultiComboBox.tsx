@@ -71,10 +71,10 @@ export const MultiComboBox = <ModObject,>({ modObject, config, className, testId
 							<Combobox.List className="ui-multi-combo-box-list" data-testid="multi-combo-box-list">
 								{(entry: EnumValueConfig) => (
 									<Combobox.Item key={entry.value} value={entry} className="ui-multi-combo-box-item" title={entry.tooltip}>
+										<span>{entry.name}</span>
 										<Combobox.ItemIndicator className="ui-multi-combo-box-indicator">
 											<Icon name="check" />
 										</Combobox.ItemIndicator>
-										<span>{entry.name}</span>
 									</Combobox.Item>
 								)}
 							</Combobox.List>
