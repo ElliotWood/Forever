@@ -237,6 +237,9 @@ simdb: sim/core/items/all_items.go sim/core/proto/api.pb.go
 CLIENTDATA_SETTINGS := $(abspath ./tools/database/generator-settings.json)
 CLIENTDATAPTR_SETTINGS := $(abspath ./tools/database/ptr-generator-settings.json)
 CLIENTDATA_OUTPUT   := $(abspath ./tools/database/wowsims.db)
+# Extra db2tool flags. `make db DB2TOOL_FLAGS="--cdn --dbcache path/to/DBCache.bin"`
+# reads the build off Blizzard's CDN instead of BaseDir (no install needed).
+DB2TOOL_FLAGS ?=
 
 # The spell store is regenerated before the item database, and the order is load-bearing: gen_db
 # classifies every item and enchant proc from the store compiled into it, so running it against a
@@ -245,7 +248,7 @@ CLIENTDATA_OUTPUT   := $(abspath ./tools/database/wowsims.db)
 .PHONY: db
 db:
 	@echo "Extracting client data"
-	go run ./tools/db2tool -s $(CLIENTDATA_SETTINGS) --output $(CLIENTDATA_OUTPUT)
+	go run ./tools/db2tool -s $(CLIENTDATA_SETTINGS) --output $(CLIENTDATA_OUTPUT) $(DB2TOOL_FLAGS)
 	@echo "Regenerating the spell store"
 	go run ./tools/database/gen_spelldata
 	@echo "Running DBC generation tool"
@@ -262,7 +265,7 @@ basestats:
 .PHONY: ptrdb
 ptrdb:
 	@echo "Extracting client data"
-	go run ./tools/db2tool -s $(CLIENTDATAPTR_SETTINGS) --output $(CLIENTDATA_OUTPUT)
+	go run ./tools/db2tool -s $(CLIENTDATAPTR_SETTINGS) --output $(CLIENTDATA_OUTPUT) $(DB2TOOL_FLAGS)
 	@echo "Regenerating the spell store"
 	go run ./tools/database/gen_spelldata
 	@echo "Running DBC generation tool"

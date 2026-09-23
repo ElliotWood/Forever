@@ -3,7 +3,7 @@ import { defaultExposeWeaknessSettings, defaultRaidBuffMajorDamageCooldowns } fr
 
 export const DefaultIndividualBuffs = IndividualBuffs.create({
 	blessingOfKings: true,
-	blessingOfMight: TristateEffect.TristateEffectImproved,
+	blessingOfMight: true,
 	unleashedRage: true,
 });
 
@@ -26,7 +26,6 @@ export const DefaultRaidBuffs = RaidBuffs.create({
 
 export const DefaultDebuffs = Debuffs.create({
 	...defaultExposeWeaknessSettings(),
-	improvedSealOfTheCrusader: TristateEffect.TristateEffectImproved,
 	misery: true,
 	bloodFrenzy: true,
 	giftOfArthas: true,

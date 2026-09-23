@@ -17,7 +17,11 @@ const MaxSpellQueueWindow = time.Millisecond * 400
 const SpellBatchWindow = time.Millisecond * 10
 const PetUpdateInterval = time.Millisecond * 5250
 const SpellPushbackDuration = time.Millisecond * 500
-const MaxMeleeRange = 5.0 // in yards
+
+// How often a ranged auto that came due while moving checks whether it can fire.
+const RangedAutoRetryInterval = time.Millisecond * 500
+const MaxMeleeRange = 5.0  // in yards
+const MinRangedRange = 8.0 // in yards; bows, guns and crossbows cannot fire inside this, leaving a deadzone above melee range
 
 const DefaultAttackPowerPerDPS = 14.0
 

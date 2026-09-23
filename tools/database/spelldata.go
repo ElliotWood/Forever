@@ -201,11 +201,7 @@ func spellHasAttribute(db *sql.DB, spellID int32, attrIndex int, flag uint32) (b
 func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 	s := RankSpell{SpellID: spellID}
 	err := db.QueryRow(`
-		SELECT l.SpellLevel, l.MaxLevel,
-		       (SELECT ManaCost FROM SpellPower WHERE SpellID = l.SpellID ORDER BY OrderIndex LIMIT 1),
-		       COALESCE((SELECT PowerType FROM SpellPower WHERE SpellID = l.SpellID ORDER BY OrderIndex LIMIT 1), 0),
-		       COALESCE((SELECT PowerCostPct FROM SpellPower WHERE SpellID = l.SpellID ORDER BY OrderIndex LIMIT 1), 0)
-		FROM SpellLevels l WHERE l.SpellID = ?`, spellID).Scan(&s.SpellLevel, &s.MaxLevel, &s.ManaCost, &s.PowerType, &s.PowerCostPct)
+		SELECT SpellLevel, MaxLevel FROM SpellLevels WHERE SpellID = ?`, spellID).Scan(&s.SpellLevel, &s.MaxLevel)
 	switch {
 	case errors.Is(err, sql.ErrNoRows):
 		// Passive talents such as the warrior's Blood Craze have no SpellLevels row at all. No level
@@ -213,6 +209,14 @@ func LoadRankSpell(db *sql.DB, spellID int32) (RankSpell, error) {
 		s.SpellLevel = RankLevel
 	case err != nil:
 		return s, fmt.Errorf("levels for spell %d: %w", spellID, err)
+	}
+
+	// The cost stands on its own: Divine Favor has no SpellLevels row and still costs 4% of base
+	// mana, so it cannot ride on the level query.
+	if err := scanOptional(db, `
+		SELECT ManaCost, COALESCE(PowerType, 0), COALESCE(PowerCostPct, 0)
+		FROM SpellPower WHERE SpellID = ? ORDER BY OrderIndex LIMIT 1`, spellID, &s.ManaCost, &s.PowerType, &s.PowerCostPct); err != nil {
+		return s, fmt.Errorf("power for spell %d: %w", spellID, err)
 	}
 
 	// Duration and its period are what a DoT's NumberOfTicks and TickLength are derived from.

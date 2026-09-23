@@ -175,13 +175,25 @@ func CombineHotfixFiles(files []string) (map[uint32]*HotfixReader, error) {
 
 // LoadHotfixCaches scans for cache files: if cachesDir exists, every *.bin
 // under it (recursively) loads first, then every file named DBCache.bin
-// anywhere under baseDir. Finding no cache file is not an error; a malformed
-// or unsupported-version file fails loud. Files are visited in WalkDir's
-// deterministic lexical order.
+// anywhere under baseDir (skipped when baseDir is empty, as in CDN mode).
+// Finding no cache file is not an error; a malformed or unsupported-version
+// file fails loud. Files are visited in WalkDir's deterministic lexical
+// order.
+//
+// Both roots are resolved through any symlinks before the walk. WalkDir never
+// follows symlinks, and that includes a root that is itself one: it stats the
+// root, sees a link rather than a directory, and stops without descending. An
+// install reached through a linked path (a wine prefix exposed at the
+// checked-in BaseDir, say) would otherwise scan clean and silently run
+// hotfix-free.
 func LoadHotfixCaches(cachesDir, baseDir string) (map[uint32]*HotfixReader, error) {
 	var files []string
 	if st, err := os.Stat(cachesDir); err == nil && st.IsDir() {
-		err := filepath.WalkDir(cachesDir, func(path string, d fs.DirEntry, err error) error {
+		root, err := filepath.EvalSymlinks(cachesDir)
+		if err != nil {
+			return nil, err
+		}
+		err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
@@ -194,7 +206,14 @@ func LoadHotfixCaches(cachesDir, baseDir string) (map[uint32]*HotfixReader, erro
 			return nil, err
 		}
 	}
-	err := filepath.WalkDir(baseDir, func(path string, d fs.DirEntry, err error) error {
+	if baseDir == "" { // CDN mode: no install to scan
+		return CombineHotfixFiles(files)
+	}
+	root, err := filepath.EvalSymlinks(baseDir)
+	if err != nil {
+		return nil, err
+	}
+	err = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}

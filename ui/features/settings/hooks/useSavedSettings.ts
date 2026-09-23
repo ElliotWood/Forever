@@ -1,20 +1,20 @@
-import { TristateEffect } from '@generated/proto/common';
 import { SavedSettings } from '@generated/proto/ui';
 import { useSimHost } from '@sim/context/SimHostContext';
 import type { SavedDataCodec } from '@ui-kit/hooks/useSavedData';
 import { useSavedData } from '@ui-kit/hooks/useSavedData';
 
-// `debuffs.improvedSealOfTheCrusader` was a bool before e4d97302e6 made it a TristateEffect, and
-// `fromJson` asserts on a bool where an enum belongs. `useSavedData` drops any entry whose codec
-// throws, so without this an old save would disappear from the panel with only a console warning.
+// `debuffs.improvedSealOfTheCrusader` held the TBC talent as a bool, then as a TristateEffect;
+// Forever has no talent and the field is `judgementOfTheCrusader`. `fromJson` throws on a field it
+// does not know, and `useSavedData` drops any entry whose codec throws, so an old save would
+// disappear from the panel with only a console warning.
 const migrateLegacyDebuffs = (json: any): any => {
-	const legacy = json?.debuffs?.improvedSealOfTheCrusader;
-	if (typeof legacy !== 'boolean') return json;
+	if (!json?.debuffs || !('improvedSealOfTheCrusader' in json.debuffs)) return json;
+	const { improvedSealOfTheCrusader: legacy, jocRetribution2Pt4: _joc, ...debuffs } = json.debuffs;
 	return {
 		...json,
 		debuffs: {
-			...json.debuffs,
-			improvedSealOfTheCrusader: legacy ? TristateEffect.TristateEffectImproved : TristateEffect.TristateEffectMissing,
+			...debuffs,
+			judgementOfTheCrusader: legacy === true || (typeof legacy === 'string' && legacy !== 'TristateEffectMissing'),
 		},
 	};
 };

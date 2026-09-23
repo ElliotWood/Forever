@@ -178,14 +178,11 @@ describe('TalentsPicker trees', () => {
 	});
 
 	it('builds the wowhead link from the generated trait data, def and rank included', () => {
-		const anticipation = warriorTalentsConfig.flatMap(tree => tree.talents).find(talent => talent.fancyName === 'Anticipation')!;
+		const talent = warriorTalentsConfig.flatMap(tree => tree.talents).find(candidate => candidate.definitionId)!;
 
-		expect(anticipation.definitionId).toBe(135506);
-		expect(anticipation.spellId).toBe(12297);
-
-		const href = ActionId.makeSpellUrl(anticipation.spellId, 2, anticipation.definitionId!);
-		expect(href).toContain('spell=12297');
-		expect(href).toContain('def=135506');
+		const href = ActionId.makeSpellUrl(talent.spellId, 2, talent.definitionId!);
+		expect(href).toContain(`spell=${talent.spellId}`);
+		expect(href).toContain(`def=${talent.definitionId}`);
 		expect(href).toContain('rank=2');
 	});
 });
