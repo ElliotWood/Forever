@@ -313,6 +313,15 @@ func (wa *WeaponAttack) castExtraAttacks(sim *Simulation, numExtraAttacks int32,
 }
 
 func (wa *WeaponAttack) swing(sim *Simulation) time.Duration {
+	isRanged := wa == &wa.unit.AutoAttacks.ranged
+
+	// A ranged auto can't fire while moving. The hidden retry timer then checks every 500ms and the
+	// shot goes off at the first check after the move ends (wowsims/forever e4fd251171).
+	if isRanged && wa.unit.IsMoving() {
+		wa.swingAt = sim.CurrentTime + RangedAutoRetryInterval
+		return wa.swingAt
+	}
+
 	isExtraAttack := wa.extraAttacksPending > 0
 
 	if isExtraAttack {
@@ -350,6 +359,11 @@ func (wa *WeaponAttack) swing(sim *Simulation) time.Duration {
 			wa.spell.SetMetricsSplit(1)
 		} else {
 			wa.spell.SetMetricsSplit(0)
+		}
+
+		// A melee swing resets the ranged auto timer, as if the shot had just fired.
+		if !isRanged {
+			wa.unit.AutoAttacks.StopRangedUntil(sim, sim.CurrentTime)
 		}
 
 		attackSpell.Cast(sim, wa.unit.CurrentTarget)

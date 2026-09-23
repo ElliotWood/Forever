@@ -16,6 +16,9 @@ const ArmorPenPerPercentArmor = 13.99
 const MaxMeleeAttackDistance = 5
 const MinRangedAttackDistance = 12
 
+// How often a ranged auto that came due while moving checks whether it can fire.
+const RangedAutoRetryInterval = time.Millisecond * 500
+
 const MissDodgeParryBlockCritChancePerDefense = 0.04
 
 const DefenseRatingToChanceReduction = (1.0 / DefenseRatingPerDefense) * MissDodgeParryBlockCritChancePerDefense / 100
