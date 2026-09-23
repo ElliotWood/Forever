@@ -1366,15 +1366,26 @@ func (s effectSource) procEffects() map[int32]*proto.ItemEffect {
 	return procEffects
 }
 
-// A weapon enchant's buff drops when the weapon carrying it is swapped out. Any other enchant's,
-// a shield or held-in-off-hand one included, runs out its duration: AddStatProcBuff only flips
-// IsSwapped, which gates the next proc.
+// A weapon enchant's buff drops when the weapon carrying it is swapped out, and a shield or
+// held-in-off-hand enchant's when its item leaves the off hand. Any other enchant's runs out its
+// duration: AddStatProcBuff only flips IsSwapped, which gates the next proc.
 func (s effectSource) registerWeaponEnchantBuff(character *core.Character, procAura *core.StatBuffAura) {
-	if !s.isWeaponEnchant() {
-		return
+	switch {
+	case s.isWeaponEnchant():
+		character.ItemSwap.RegisterWeaponEnchantBuff(procAura.Aura, s.id)
+	case s.isOffHandEnchant():
+		character.ItemSwap.RegisterEnchantBuffWithSlots(procAura.Aura, s.id, []proto.ItemSlot{proto.ItemSlot_ItemSlotOffHand})
+	}
+}
+
+func (s effectSource) isOffHandEnchant() bool {
+	if !s.isEnchant {
+		return false
 	}
 
-	character.ItemSwap.RegisterWeaponEnchantBuff(procAura.Aura, s.id)
+	ench := core.GetEnchantByEffectID(s.id)
+	return ench != nil && ench.Type == proto.ItemType_ItemTypeWeapon &&
+		(ench.EnchantType == proto.EnchantType_EnchantTypeShield || ench.EnchantType == proto.EnchantType_EnchantTypeOffHand)
 }
 
 // A shield or held-in-off-hand enchant shares the weapon type but sits on no weapon.

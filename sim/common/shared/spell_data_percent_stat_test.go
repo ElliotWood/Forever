@@ -93,9 +93,9 @@ func newTestCasterSim(equipped, swapped []*proto.ItemSpec) *core.Simulation {
 	return sim
 }
 
-// A weapon enchant's buff drops when an item swap takes the weapon away; a shield enchant's runs out
-// its duration.
-func TestShieldEnchantBuffOutlivesASwap(t *testing.T) {
+// A shield enchant's buff drops when an item swap takes the shield out of the off hand, and stays up
+// when the swap moves only the main hand, whose weapon enchant's buff drops either way.
+func TestShieldEnchantBuffDropsWithItsShield(t *testing.T) {
 	const enchantedWeaponID, plainWeaponID, enchantedShieldID, plainShieldID int32 = 990961, 990962, 990963, 990964
 	const weaponEnchantID, shieldEnchantID int32 = 990965, 990966
 
@@ -117,29 +117,42 @@ func TestShieldEnchantBuffOutlivesASwap(t *testing.T) {
 		registerSpellDataProc(SpellDataProc{Name: name, EnchantID: id, TriggerSpellID: 1248758, BuffSpellID: 1299796})
 	}
 
-	sim := newTestCasterSim(
-		testHands(&proto.ItemSpec{Id: enchantedWeaponID, Enchant: weaponEnchantID},
-			&proto.ItemSpec{Id: enchantedShieldID, Enchant: shieldEnchantID}),
-		testHands(&proto.ItemSpec{Id: plainWeaponID}, &proto.ItemSpec{Id: plainShieldID}))
-	caster := sim.Raid.Parties[0].Players[0].(*testCaster)
+	for _, tc := range []struct {
+		name         string
+		swapOffHand  *proto.ItemSpec
+		wantOffHand  int32
+		wantShieldUp bool
+	}{
+		{"both hands swapped", &proto.ItemSpec{Id: plainShieldID}, plainShieldID, false},
+		{"only the main hand swapped", &proto.ItemSpec{}, enchantedShieldID, true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			sim := newTestCasterSim(
+				testHands(&proto.ItemSpec{Id: enchantedWeaponID, Enchant: weaponEnchantID},
+					&proto.ItemSpec{Id: enchantedShieldID, Enchant: shieldEnchantID}),
+				testHands(&proto.ItemSpec{Id: plainWeaponID}, tc.swapOffHand))
+			caster := sim.Raid.Parties[0].Players[0].(*testCaster)
 
-	weaponBuff := caster.GetAura("Test Weapon Enchant Proc")
-	shieldBuff := caster.GetAura("Test Shield Enchant Proc")
-	if weaponBuff == nil || shieldBuff == nil {
-		t.Fatalf("buffs registered: weapon %v, shield %v", weaponBuff != nil, shieldBuff != nil)
-	}
-	weaponBuff.Activate(sim)
-	shieldBuff.Activate(sim)
+			weaponBuff := caster.GetAura("Test Weapon Enchant Proc")
+			shieldBuff := caster.GetAura("Test Shield Enchant Proc")
+			if weaponBuff == nil || shieldBuff == nil {
+				t.Fatalf("buffs registered: weapon %v, shield %v", weaponBuff != nil, shieldBuff != nil)
+			}
+			weaponBuff.Activate(sim)
+			shieldBuff.Activate(sim)
 
-	caster.ItemSwap.SwapItems(sim, proto.APLActionItemSwap_Swap1, false)
-	if caster.OffHand().ID != plainShieldID {
-		t.Fatalf("off hand after the swap = %d, want the plain shield %d", caster.OffHand().ID, plainShieldID)
-	}
-	if weaponBuff.IsActive() {
-		t.Error("the weapon enchant's buff is still up after its weapon was swapped out")
-	}
-	if !shieldBuff.IsActive() {
-		t.Error("the shield enchant's buff dropped on the swap, want it to run out its duration")
+			caster.ItemSwap.SwapItems(sim, proto.APLActionItemSwap_Swap1, false)
+			if caster.MainHand().ID != plainWeaponID || caster.OffHand().ID != tc.wantOffHand {
+				t.Fatalf("hands after the swap = %d / %d, want %d / %d",
+					caster.MainHand().ID, caster.OffHand().ID, plainWeaponID, tc.wantOffHand)
+			}
+			if weaponBuff.IsActive() {
+				t.Error("the weapon enchant's buff is still up after its weapon was swapped out")
+			}
+			if shieldBuff.IsActive() != tc.wantShieldUp {
+				t.Errorf("shield enchant's buff up = %v after the swap, want %v", shieldBuff.IsActive(), tc.wantShieldUp)
+			}
+		})
 	}
 }
 
