@@ -44,11 +44,11 @@
 	}
 
 	.ui-multi-combo-box-list {
-		@apply m-0 list-none p-0;
+		@apply m-0 list-none p-0 ps-0;
 	}
 
 	.ui-multi-combo-box-item {
-		@apply grid cursor-default grid-cols-[1rem_1fr] items-center gap-2 px-2 py-1 outline-none select-none;
+		@apply m-0 flex cursor-pointer flex-row items-center gap-2 px-2 py-1 outline-none select-none;
 
 		&[data-highlighted] {
 			@apply bg-surface-hover;
@@ -56,11 +56,7 @@
 	}
 
 	.ui-multi-combo-box-indicator {
-		@apply col-start-1 text-primary;
-	}
-
-	.ui-multi-combo-box-item > span {
-		@apply col-start-2;
+		@apply flex shrink-0 items-center text-primary;
 	}
 
 	.ui-multi-combo-box-empty {
