@@ -39,16 +39,7 @@ func newSpellDataAuras(character *core.Character, row *spelldata.Spell, config c
 	}
 
 	if effects := spelldata.EffectsOn(row, spelldata.AuraOnEnemy); len(effects) > 0 {
-		debuff := spelldata.AuraConfig(row)
-		debuff.Duration = config.Duration
-		auras.enemies = character.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-			if aura := target.GetAura(debuff.Label); aura != nil {
-				return aura
-			}
-			aura := target.RegisterAura(debuff)
-			spelldata.ParseEffects(nil, aura, row, spelldata.Effects(effects...))
-			return aura
-		})
+		auras.enemies = enemyDebuffAuras(character, row, config.Duration, effects)
 	}
 
 	return auras
@@ -61,7 +52,9 @@ func (auras *spellDataAuras) activate(sim *core.Simulation, target *core.Unit) {
 			aura.Activate(sim)
 		}
 	}
-	auras.enemies.Get(target).Activate(sim)
+	if auras.enemies != nil {
+		applyDebuff(sim, auras.enemies.Get(target))
+	}
 }
 
 // An item or enchant proc whose buff applies auras: the wearer's, its pets' and the debuff on the unit

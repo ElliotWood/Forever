@@ -14,29 +14,28 @@ func (s *Spell) SlowEffects() []int32 {
 	if s.MaxStack > 0 {
 		return nil
 	}
-
-	var slows []int32
-	for i := range s.Effects {
-		e := &s.Effects[i]
-		if appliesAura(e.Type) && (e.ChangesAttackSpeed() || e.ChangesCastSpeed()) && e.BasePoints < 0 && e.HitsAnEnemy() {
-			slows = append(slows, int32(i+1))
-		}
-	}
-	return slows
+	return s.enemyEffects(func(e *Effect) bool {
+		return (e.ChangesAttackSpeed() || e.ChangesCastSpeed()) && e.BasePoints < 0
+	})
 }
 
 // The positions of the effects that change a stat of the enemy the spell lands on, in the stats
 // ParseEffects applies to a unit: armor and resistances, attack power, flat damage done. Annihilator's
 // Armor Shatter 16928 takes 165 armor per stack.
 func (s *Spell) StatDebuffEffects() []int32 {
-	var debuffs []int32
-	for i := range s.Effects {
-		e := &s.Effects[i]
-		if appliesAura(e.Type) && e.HitsAnEnemy() && debuffsAStat(e) {
-			debuffs = append(debuffs, int32(i+1))
-		}
-	}
-	return debuffs
+	return s.enemyEffects(debuffsAStat)
+}
+
+// The positions of the slows and stat changes the spell puts on the enemy it lands on, in order.
+func (s *Spell) DebuffEffects() []int32 {
+	slows := s.SlowEffects()
+	return slices.DeleteFunc(EffectsOn(s, AuraOnEnemy), func(i int32) bool {
+		return !slices.Contains(slows, i) && !debuffsAStat(s.EffectN(int(i)))
+	})
+}
+
+func (s *Spell) enemyEffects(matches func(*Effect) bool) []int32 {
+	return slices.DeleteFunc(EffectsOn(s, AuraOnEnemy), func(i int32) bool { return !matches(s.EffectN(int(i))) })
 }
 
 func debuffsAStat(e *Effect) bool {
@@ -53,10 +52,10 @@ func debuffsAStat(e *Effect) bool {
 
 // Whether the row puts a debuff the sim models on the enemy it lands on.
 func (s *Spell) DebuffsTheTarget() bool {
-	return len(s.SlowEffects()) > 0 || len(s.StatDebuffEffects()) > 0
+	return len(s.DebuffEffects()) > 0
 }
 
 // Whether any aura the row applies lands on an enemy. Such a row is never a buff on the wearer.
 func (s *Spell) AppliesAnAuraToAnEnemy() bool {
-	return slices.ContainsFunc(s.Effects, func(e Effect) bool { return appliesAura(e.Type) && e.HitsAnEnemy() })
+	return len(EffectsOn(s, AuraOnEnemy)) > 0
 }

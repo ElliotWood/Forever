@@ -2,6 +2,8 @@ package shared
 
 import (
 	"fmt"
+	"slices"
+	"time"
 
 	"github.com/wowsims/forever/sim/core"
 	"github.com/wowsims/forever/sim/core/spelldata"
@@ -57,19 +59,28 @@ func applyDebuff(sim *core.Simulation, aura *core.Aura) {
 	}
 }
 
-// The row's debuff on each enemy, for its duration. The aura is the row's rather than the wearer's, so
-// two wearers of one proc refresh a single debuff on the target instead of applying two. Each slow
-// takes its exclusive category, attacks Thunder Clap's and casts Slow's, where only the strongest
-// applies; a stat change applies to the target as the row states it, per stack.
-func debuffAuras(character *core.Character, row *spelldata.Spell) core.AuraArray {
-	label := fmt.Sprintf("%s %d", row.Name, row.ID)
+// The row's debuff on each enemy, carrying the effects at the given positions, for the duration given.
+// The aura is the row's rather than the wearer's, so every character applying the row refreshes one
+// debuff on the target, and the first to register it parses it. Each slow takes its exclusive
+// category, attacks Thunder Clap's and casts Slow's, where only the strongest applies; every other
+// effect applies to the target as the row states it, per stack.
+func enemyDebuffAuras(character *core.Character, row *spelldata.Spell, duration time.Duration, effects []int32) core.AuraArray {
+	config := spelldata.AuraConfig(row, spelldata.Label(fmt.Sprintf("%s %d", row.Name, row.ID)))
+	config.Duration = duration
+	slows := row.SlowEffects()
+
 	return character.NewEnemyAuraArray(func(target *core.Unit) *core.Aura {
-		if aura := target.GetAura(label); aura != nil {
+		if aura := target.GetAura(config.Label); aura != nil {
 			return aura
 		}
 
-		aura := target.RegisterAura(spelldata.AuraConfig(row, spelldata.Label(label)))
-		for _, i := range row.SlowEffects() {
+		aura := target.RegisterAura(config)
+		var parsed []int32
+		for _, i := range effects {
+			if !slices.Contains(slows, i) {
+				parsed = append(parsed, i)
+				continue
+			}
 			effect := row.EffectN(int(i))
 			slowedTime := core.SlowedTimeMultiplier(effect.Average(character.Level))
 			if effect.ChangesCastSpeed() {
@@ -78,11 +89,16 @@ func debuffAuras(character *core.Character, row *spelldata.Spell) core.AuraArray
 				core.AtkSpeedReductionEffect(aura, slowedTime)
 			}
 		}
-		if stats := row.StatDebuffEffects(); len(stats) > 0 {
-			spelldata.ParseEffects(nil, aura, row, spelldata.Effects(stats...))
+		if len(parsed) > 0 {
+			spelldata.ParseEffects(nil, aura, row, spelldata.Effects(parsed...))
 		}
 		return aura
 	})
+}
+
+// The debuff a debuff proc puts on the enemy: the row's slows and stat changes, for its duration.
+func debuffAuras(character *core.Character, row *spelldata.Spell) core.AuraArray {
+	return enemyDebuffAuras(character, row, row.Duration(), row.DebuffEffects())
 }
 
 // The debuff a proc's damage spell puts on each enemy its hit lands on, or nil where the row states

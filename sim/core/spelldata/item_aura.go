@@ -18,15 +18,18 @@ const (
 )
 
 var auraTargets = map[dbcenums.ImplicitTarget]AuraTarget{
-	dbcenums.TARGET_UNIT_CASTER:       AuraOnWearer,
-	dbcenums.TARGET_UNIT_PET:          AuraOnPet,
-	dbcenums.TARGET_UNIT_TARGET_ENEMY: AuraOnEnemy,
+	dbcenums.TARGET_UNIT_CASTER: AuraOnWearer,
+	dbcenums.TARGET_UNIT_PET:    AuraOnPet,
 }
 
 var auraTargetNames = map[AuraTarget]string{AuraOnWearer: "the wearer", AuraOnPet: "a pet", AuraOnEnemy: "an enemy"}
 
-// Where the effect's aura lands, or 0 for an implicit target an item's aura does not reach.
+// Where the effect's aura lands, or 0 for an implicit target an item's aura does not reach. Any enemy
+// target is the enemy the item answers or is used on.
 func (e *Effect) AuraTarget() AuraTarget {
+	if e.HitsAnEnemy() {
+		return AuraOnEnemy
+	}
 	return auraTargets[e.Target[0]]
 }
 

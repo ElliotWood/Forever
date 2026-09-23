@@ -371,7 +371,7 @@ func TestNightfallRaisesTheTargetsSpellDamageTaken(t *testing.T) {
 
 	strikeAndStep(t, sim, wielder, target)
 	procTime := sim.CurrentTime
-	debuff := target.GetAura("Spell Vulnerability")
+	debuff := target.GetAuraByID(core.ActionID{SpellID: spellVulnerability})
 	if !debuff.IsActive() {
 		t.Fatalf("a strike at 100%% chance put no Spell Vulnerability on the target")
 	}
