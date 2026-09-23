@@ -8,7 +8,7 @@ import (
 )
 
 // Biznicks 247x128 Accurascope is enchant 2523, granted by 22779. Searing Totem's 3599 carries the
-// same number in the misc value of an effect that is not E_ENCHANT_ITEM, and used to take its place.
+// same number in the misc value of an effect that is not E_ENCHANT_ITEM, and must not take its place.
 func TestEnchantGrantEffectsReadOnlyEnchantItemEffects(t *testing.T) {
 	effects := map[int]dbc.SpellEffect{
 		1: {SpellID: 3599, EffectType: dbcenums.E_SUMMON, EffectMiscValues: []int{2523, 0}},
