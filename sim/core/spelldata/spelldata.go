@@ -90,6 +90,10 @@ type Spell struct {
 	// effect, so this is zero unless an override fills it.
 	FlatThreat float32
 
+	// An area bonus from an override: AreaGroup ids (any counts), amount and duration factors.
+	AreaBonusGroups                        []int32
+	AreaMultiplier, AreaDurationMultiplier float32
+
 	// SpellClassOptions.SpellClassSet and SpellClassMask_0..3: the set of spells a talent effect
 	// naming this family reaches.
 	ClassFlags core.ClassFlags
@@ -102,6 +106,9 @@ type Spell struct {
 
 	// SpellTargetRestrictions.MaxTargets for an area effect. Zero is unlimited.
 	MaxTargets int16
+
+	// SpellCastingRequirements.RequiredAreasID. Zero is anywhere.
+	RequiredAreas int32
 
 	// SpellEquippedItems: the item class, subclass mask and inventory-type mask the spell requires,
 	// which is how a weapon-specific proc states the weapons it fires from.

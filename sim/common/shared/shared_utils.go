@@ -807,9 +807,17 @@ func NewSimpleStatActive(itemID int32) {
 			}
 			spellConfig.Cast.SharedCD = sharedCooldown(character, itemEffect)
 
-			core.RegisterTemporaryStatsOnUseCD(character, itemEffect.BuffName, stats.FromProtoMap(itemEffect.GetScalingOptions()[int32(0)].GetStats()), time.Millisecond*time.Duration(itemEffect.EffectDurationMs), spellConfig)
+			buffStats, buffDuration := onUseStatBuff(character, itemEffect)
+			core.RegisterTemporaryStatsOnUseCD(character, itemEffect.BuffName, buffStats, buffDuration, spellConfig)
 		}
 	})
+}
+
+// The on-use buff's stats and duration, scaled by its area bonus.
+func onUseStatBuff(character *core.Character, itemEffect *proto.ItemEffect) (stats.Stats, time.Duration) {
+	amount, duration := spelldata.Find(itemEffect.BuffId).AreaBonus(&character.Env.Encounter)
+	buffStats := stats.FromProtoMap(itemEffect.GetScalingOptions()[int32(0)].GetStats()).Multiply(amount)
+	return buffStats, time.Duration(float64(itemEffect.EffectDurationMs)*duration) * time.Millisecond
 }
 
 type StackingStatBonusCD struct {

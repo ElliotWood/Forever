@@ -53,6 +53,10 @@ type storeSpell struct {
 	// A flat threat bonus for a spell the client states no E_THREAT effect on, from an override.
 	FlatThreat float64
 
+	// An area bonus, from an override.
+	AreaBonusGroups                        []int32
+	AreaMultiplier, AreaDurationMultiplier float64
+
 	ClassFlags core.ClassFlags
 
 	AuraInterrupt, ChannelInterrupt [2]uint32
@@ -60,6 +64,8 @@ type storeSpell struct {
 	StanceMask uint64
 
 	MaxTargets int16
+
+	RequiredAreas int32
 
 	EquipClass                  int8
 	EquipSubclass, EquipInvType int32
@@ -151,6 +157,7 @@ type spellTables struct {
 	Interrupts   map[int32]interruptRow
 	Shapeshift   map[int32]uint64
 	Targets      map[int32]int16
+	Requirements map[int32]int32
 	Equipped     map[int32]equippedRow
 
 	Labels  map[int32][]int16
@@ -217,6 +224,7 @@ func loadSpellTables(db *sql.DB) (*spellTables, error) {
 		Interrupts:   map[int32]interruptRow{},
 		Shapeshift:   map[int32]uint64{},
 		Targets:      map[int32]int16{},
+		Requirements: map[int32]int32{},
 		Equipped:     map[int32]equippedRow{},
 		Labels:       map[int32][]int16{},
 		Powers:       map[int32][]storePower{},
@@ -226,7 +234,7 @@ func loadSpellTables(db *sql.DB) (*spellTables, error) {
 	for _, load := range []func(*sql.DB) error{
 		t.loadNames, t.loadMisc, t.loadLevels, t.loadCooldowns, t.loadCategories, t.loadAuraOptions,
 		t.loadClassOptions, t.loadInterrupts, t.loadShapeshift, t.loadTargetRestrictions,
-		t.loadEquippedItems, t.loadLabels, t.loadPowers, t.loadEffects,
+		t.loadCastingRequirements, t.loadEquippedItems, t.loadLabels, t.loadPowers, t.loadEffects,
 	} {
 		if err := load(db); err != nil {
 			return nil, err
@@ -274,6 +282,7 @@ func (t *spellTables) row(id int32) storeSpell {
 
 	s.StanceMask = t.Shapeshift[id]
 	s.MaxTargets = t.Targets[id]
+	s.RequiredAreas = t.Requirements[id]
 
 	e := t.Equipped[id]
 	s.EquipClass, s.EquipSubclass, s.EquipInvType = e.Class, e.Subclass, e.InvTypes
@@ -500,6 +509,22 @@ func (t *spellTables) loadTargetRestrictions(db *sql.DB) error {
 			return err
 		}
 		return putOnce(t.Targets, id, maxTargets, "SpellTargetRestrictions rows at difficulty 0")
+	})
+}
+
+func (t *spellTables) loadCastingRequirements(db *sql.DB) error {
+	return eachRow(db, `
+		SELECT SpellID, COALESCE(RequiredAreasID, 0)
+		FROM SpellCastingRequirements WHERE RequiredAreasID != 0 ORDER BY SpellID`, func(rows *sql.Rows) error {
+		var id, areas int32
+		if err := rows.Scan(&id, &areas); err != nil {
+			return err
+		}
+		if _, dup := t.Requirements[id]; dup {
+			return fmt.Errorf("spell %d has two SpellCastingRequirements rows naming an area group", id)
+		}
+		t.Requirements[id] = areas
+		return nil
 	})
 }
 
