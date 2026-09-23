@@ -91,6 +91,7 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 			Shapeshift:       map[int32]shapeshiftRow{},
 			AuraRestrictions: map[int32]auraRestrictionRow{},
 			Targets:          map[int32]int16{},
+			Requirements:     map[int32]int32{},
 			Equipped:         map[int32]equippedRow{},
 			Labels:           map[int32][]int16{},
 			Powers:           map[int32][]storePower{},
@@ -115,6 +116,7 @@ func captureStoreInputs(t *spellTables, roots []int32, ids []int32,
 		keepValue(in.Shapeshift, id, t.Shapeshift)
 		keepValue(in.AuraRestrictions, id, t.AuraRestrictions)
 		keepValue(in.Targets, id, t.Targets)
+		keepValue(in.Requirements, id, t.Requirements)
 		keepValue(in.Equipped, id, t.Equipped)
 
 		keepSlice(in.Labels, id, t.Labels)
