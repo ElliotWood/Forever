@@ -157,8 +157,8 @@ func TestGeneratedTriggerResolves(t *testing.T) {
 	}
 }
 
-// Retaliation's counterattack is a link the client does not state and handTriggers supplies, so it
-// has to come back out of Triggered().
+// Retaliation's counterattack is a link the client does not state and overrides.HandTriggers
+// supplies, so it has to come back out of Triggered() and Drivers().
 func TestGeneratedHandLink(t *testing.T) {
 	withGeneratedStore(t)
 
@@ -168,6 +168,14 @@ func TestGeneratedHandLink(t *testing.T) {
 	}
 	if !slices.Contains(ids, 20240) {
 		t.Errorf("Retaliation triggers %v, want the counterattack 20240 among them", ids)
+	}
+
+	ids = nil
+	for _, s := range MustFind(20240).Drivers() {
+		ids = append(ids, s.ID)
+	}
+	if !slices.Contains(ids, 20230) {
+		t.Errorf("the counterattack is driven by %v, want Retaliation 20230 among them", ids)
 	}
 }
 

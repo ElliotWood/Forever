@@ -173,4 +173,11 @@ func TestShippedOverridesAreWellFormed(t *testing.T) {
 			t.Errorf("extra spell %d states reason %q and source %q", extra.SpellID, extra.Reason, extra.Source)
 		}
 	}
+
+	for _, link := range overrides.HandTriggers {
+		if link.Reason == "" || link.Source == "" {
+			t.Errorf("the hand trigger %d -> %d states reason %q and source %q",
+				link.Spell, link.Triggers, link.Reason, link.Source)
+		}
+	}
 }

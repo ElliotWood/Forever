@@ -188,15 +188,18 @@ func (s *Spell) Drivers() []*Spell {
 	return resolve(drivers[s.ID])
 }
 
-// Every spell this one's effects fire, deduped, in effect order.
+// Every spell this one's effects fire, deduped, in effect order, and then the ones a server-side
+// handler casts off it.
 func (s *Spell) Triggered() []*Spell {
 	var ids []int32
 	for _, e := range s.Effects {
-		if e.TriggerID == 0 {
-			continue
-		}
-		if !slices.Contains(ids, e.TriggerID) {
+		if e.TriggerID != 0 && !slices.Contains(ids, e.TriggerID) {
 			ids = append(ids, e.TriggerID)
+		}
+	}
+	for _, id := range handTriggers[s.ID] {
+		if !slices.Contains(ids, id) {
+			ids = append(ids, id)
 		}
 	}
 	return resolve(ids)

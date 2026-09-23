@@ -15,7 +15,8 @@ import (
 //
 //	var generatedSpells = []Spell{...}                  // every row, by strictly increasing ID
 //	var generatedCurves = map[int32][][]float64{...}     // talent curve values, [effect position][rank - 1]
-//	func init() { install(generatedSpells, generatedCurves) }
+//	var generatedHandTriggers = map[int32][]int32{...}   // spells a server-side handler casts, by caster
+//	func init() { install(generatedSpells, generatedCurves, generatedHandTriggers) }
 //
 // Calling install from the generated file's own init is what keeps the order right: package-level
 // variables are initialised before any init runs, so the data is complete when install indexes it,
@@ -34,17 +35,22 @@ var curves = map[int32][][]float64{}
 // Every row as a pointer, in the same order as spells, so All hands out a view without rebuilding it.
 var all []*Spell
 
-// Which spells reach a given spell: every effect that triggers it, and every actionbar override that
-// replaces a spell with it.
+// The spells a server-side handler casts off a given spell, which no effect of it states. The
+// client's own columns are left as it states them, and Drivers and Triggered read these beside them.
+var handTriggers = map[int32][]int32{}
+
+// Which spells reach a given spell: every effect that triggers it, every handler that casts it, and
+// every actionbar override that replaces a spell with it.
 var drivers = map[int32][]int32{}
 
-func install(rows []Spell, rowCurves map[int32][][]float64) {
+func install(rows []Spell, rowCurves map[int32][][]float64, rowHandTriggers map[int32][]int32) {
 	curves = rowCurves
+	handTriggers = rowHandTriggers
 	setSpells(rows)
 }
 
-// Tests build their rows by hand and swap them in here too. The indices are rebuilt, the curves are
-// left alone so a test can state its own.
+// Tests build their rows by hand and swap them in here too. The indices are rebuilt, the curves and
+// the hand triggers are left alone so a test can state its own.
 func setSpells(rows []Spell) {
 	spells = rows
 
@@ -71,6 +77,9 @@ func setSpells(rows []Spell) {
 			if e.Aura == dbcenums.A_OVERRIDE_ACTIONBAR_SPELLS && e.BasePoints > 0 {
 				addDriver(int32(e.BasePoints), s.ID)
 			}
+		}
+		for _, triggered := range handTriggers[s.ID] {
+			addDriver(triggered, s.ID)
 		}
 	}
 }

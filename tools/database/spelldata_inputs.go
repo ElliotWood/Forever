@@ -60,9 +60,8 @@ type storeInputs struct {
 
 // The tables the generator reads, from the captured rows.
 //
-// The effects are cloned because two passes write into them: linkHandTriggers adds the client's
-// missing trigger edges, and storeCurves bakes a one-rank talent's value into its base points.
-// Sharing the slices would put both back into what is written out, and the regeneration would then
+// The effects are cloned because storeCurves bakes a one-rank talent's value into its base points:
+// sharing the slices would put that back into what is written out, and the regeneration would then
 // read an answer it is supposed to re-derive. Nothing else is written through.
 func (in *storeInputs) tables() *spellTables {
 	t := in.spellTables

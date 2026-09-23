@@ -15015,7 +15015,7 @@ var generatedSpells = []Spell{
 		}},
 	{ID: 20230, Name: "Retaliation", School: 1, Attr: [17]uint32{0: 0x50010, 1: 0x20000, 3: 0x200, 15: 0x2000}, SpellLevel: 20, BaseLevel: 20, DurationMs: 15000, CooldownMs: 900000, GCDMs: 1500, StartRecoveryCategory: 133, DefenseType: 2, PreventionType: 2, ProcChance: 100, ProcCharges: 30, ProcFlags: [2]uint32{0: 0x28}, ClassFlags: core.ClassFlags{Family: 4, Mask: [4]uint32{0: 2147483648, 1: 8}}, StanceMask: 0x10000, Labels: []int16{25}, ProcChanceSource: ProcChanceAlways,
 		Effects: []Effect{
-			{ID: 698947, SpellID: 20230, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, SpellLevel: 20, SPCoef: 1, PvpMult: 1, TriggerID: 20240, ChainAmp: 1, Target: [2]uint8{1, 0}}, // the client states no trigger here, handTriggers does
+			{ID: 698947, SpellID: 20230, Index: 0, Type: dbcenums.E_APPLY_AURA, Aura: dbcenums.A_DUMMY, SpellLevel: 20, SPCoef: 1, PvpMult: 1, ChainAmp: 1, Target: [2]uint8{1, 0}},
 		},
 		Powers: []Power{{Type: 1}}},
 	{ID: 20231, Name: "Seal of Fury", Rank: "Rank 3", School: 2, Attr: [17]uint32{0: 0x240000, 3: 0x40000, 15: 0x2000}, SpellLevel: 1, BaseLevel: 1, MaxRange: 100, DefenseType: 2, ClassFlags: core.ClassFlags{Family: 10, Mask: [4]uint32{1: 2048}}, Labels: []int16{26},
@@ -32918,4 +32918,8 @@ var generatedCurves = map[int32][][]float64{
 	1317006: {{5, 10}},
 }
 
-func init() { install(generatedSpells, generatedCurves) }
+var generatedHandTriggers = map[int32][]int32{
+	20230: {20240}, // Retaliation's dummy aura (aura 4) casts the counterattack 20240: same name, class set and icon, weapon damage with no base, a cost of 1 in SpellPower that is a tenth of a rage
+}
+
+func init() { install(generatedSpells, generatedCurves, generatedHandTriggers) }

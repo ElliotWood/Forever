@@ -212,8 +212,19 @@ func spellEdges(t *spellTables, id int32) []int32 {
 			next = append(next, int32(e.BasePoints))
 		}
 	}
-	next = append(next, handTriggers[id]...)
+	next = append(next, handTriggered(id)...)
 	return append(next, t.referencedIDs(id)...)
+}
+
+// The spells a server-side handler casts off this one, which no client row states.
+func handTriggered(id int32) []int32 {
+	var ids []int32
+	for _, link := range overrides.HandTriggers {
+		if link.Spell == id {
+			ids = append(ids, link.Triggers)
+		}
+	}
+	return ids
 }
 
 func parseSpellID(s string) int32 {

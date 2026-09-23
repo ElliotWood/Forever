@@ -27,9 +27,8 @@ var mirroredTypes = []struct {
 		mirror: storeSpell{},
 	},
 	{
-		store:         spelldata.Effect{},
-		mirror:        storeEffect{},
-		generatorOnly: []string{"HandLinked"},
+		store:  spelldata.Effect{},
+		mirror: storeEffect{},
 	},
 	{
 		store:  spelldata.Power{},
