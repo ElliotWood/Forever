@@ -1466,8 +1466,9 @@ make spelldata-check                               # the same check
 The generator reads `tools/database/wowsims.db` and writes all of it in one pass:
 `sim/core/spelldata/spells_auto_gen.go`, `sim/common/shared/spell_data_enums_auto_gen.go`, a
 `sim/<class>/spell_data_auto_gen.go` for every class - ladders into the store for a store-backed class,
-the family tables for the rest - and the raid buffs, which [Buffs and debuffs](#buffs-and-debuffs)
-describes. `storeBackedClasses` in `tools/database/gen_spell_data.go` lists eight
+the family tables for the rest - `sim/core/dbcenums/forms_auto_gen.go`, and the raid buffs, which
+[Buffs and debuffs](#buffs-and-debuffs) describes. `storeBackedClasses` in
+`tools/database/gen_spell_data.go` lists eight
 classes; paladin is the one it does not. It is its own binary rather than a mode of `gen_db` on purpose:
 `gen_db` imports the sim and the sim reads these files, so a stale one would stop the generator that
 fixes it from compiling. For the same reason nothing is written until all of it type-checks: the
@@ -1486,18 +1487,20 @@ everything those reach. A family that could not be resolved is named in the `// 
 at the head of the class file.
 
 `assets/db_inputs/spell_store_inputs.json` is the client rows the store was built from, committed
-beside it. It is gzip-compressed JSON despite the name, like everything under `assets/db_inputs/dbc` -
-`zcat` it to read it. It exists so the store can be rebuilt without the client database, which is
-gitignored and comes from a local WoW install, and `-check` compares it too: a capture that no longer
-matches the database would render the committed store all the same, so nothing else would notice it
-going stale.
+beside it, and every `SpellShapeshiftForm` row whole alongside them, since a form names no spell for
+the store's closure to reach it by. It is gzip-compressed JSON despite the name, like everything under
+`assets/db_inputs/dbc` - `zcat` it to read it. It exists so the store, the buffs and the shapeshift
+forms can all be rebuilt without the client database, which is gitignored and comes from a local WoW
+install, and `-check` compares it too: a capture that no longer matches the database would render the
+committed files all the same, so nothing else would notice it going stale.
 
 What guards the outputs:
 
 - `TestStoreRegeneratesFromTheCommittedInputs` in `tools/database` re-derives the closure, the hand
   links, the curves, the tooltip hints, the overrides and the emitter from that capture and asserts the
   committed store is what comes out. No build tag and no database, so it runs everywhere.
-  `TestBuffFilesRegenerateFromTheCommittedInputs` does the same for the buff files.
+  `TestBuffFilesRegenerateFromTheCommittedInputs` does the same for the buff files, and
+  `TestFormsRegenerateFromTheCommittedInputs` for `sim/core/dbcenums/forms_auto_gen.go`.
 - `sim/core/spelldata/snapshot_test.go` pins the shape and the counts of the committed store, and a
   handful of rows read out of the client by hand, so a regeneration that moves a number says so there
   instead of in a sim result.
@@ -1659,36 +1662,62 @@ the client database.
 ### How a buff reads the store
 
 The generated constructors live in `sim/core/buffs`, above core, because the store imports core. Each
-supported row holds its row in a package variable and reads every number off it at runtime:
+supported row holds a package-level `*Meta` and reads every number off it at runtime, through the same
+`spelldata.ParseEffects` a class's own aura reads its stats through - a generated buff carries no effect
+routing of its own:
 
 ```go
 var battleShoutSpell = spelldata.MustFind(25289)
+var battleShoutMeta = &Meta{
+	Label:      "Battle Shout",
+	Spell:      battleShoutSpell,
+	Category:   BattleShoutCategory,
+	SingleAura: true,
+}
 
 func BattleShoutValue(talentPoints int32) float64 {
-	return amount(battleShoutSpell.Effect(dbcenums.A_MOD_ATTACK_POWER, 0))
+	return battleShoutMeta.Value(talentPoints)
 }
 func BattleShoutDuration(talentPoints int32) time.Duration {
-	return auraDuration(battleShoutSpell)
+	return battleShoutMeta.Duration(talentPoints)
+}
+func BattleShoutAura(unit *core.Unit, isPlayer bool, talentPoints int32) *core.Aura {
+	return newBuff(unit, battleShoutMeta, isPlayer, talentPoints)
 }
 ```
 
-The generator decides which effect is which stat, and names it by `Effect(aura, misc)` where no other
-effect of the row shares both, by `EffectN(n)` where one does; the value is read at the caster's level
-through the helpers in `sim/core/buffs/amounts.go`. `amount` is `Average(core.CharacterLevel)`, a
-percentage aura is `1 + amount/100` on the stat or pseudo-stat, `A_PERIODIC_ENERGIZE` becomes mana per
-five seconds with `manaPerFive`, a combo-point finisher is `fullComboPoints`, a duration is
-`auraDuration` (the client's -1 and 0 are `core.NeverExpires`) and an external cooldown is
-`cooldown`, read off the cast where the manifest pins one. A talent that improves the buff is a
-`spelldata.Talent` ladder, and `talentScaled` applies `Rank(talentPoints)` of it, so rank 0 reads
-`NilEffect` and adds nothing.
+`Meta.Options(talentPoints)` states the `spelldata.ParseOpt`s every row needs: `Level` (the row's own,
+or `core.CharacterLevel`), `BuffAuras`, `SkipAuras` where the row states any, `ScaledBy` the improving
+talent (left out where the talent scales the duration instead, since `Duration` reads that
+separately), and `FullComboPoints` for a finisher. `newBuff` adds `SchoolResistances` and, where
+`Category` is set, `Exclusive(Category, true)` for a `SingleAura` row or `ExclusivePerStat(Category)`
+for any other, so a generated buff and a hand-written scroll of the same stat or resistance bid
+against each other under the categories core's own exclusive stat buffs use. `newDebuff` adds only
+`Exclusive(Category, SingleAura)`, since a debuff never carries a resistance of its own;
+`newItemCountBuff` adds `Count` so that a party with several of the same item is worth that many
+copies of the amount. `Value` is the first thing `spelldata.DryRun` attaches for those options, or a
+damage shield's own effect where the row states one. `Duration` reads the spell, or `Cast` where the
+spell states no duration of its own; `Cooldown` reads `Cast` where the row pins one, else the spell
+itself; both go through the helpers in `sim/core/buffs/amounts.go`, and a talent that scales the
+duration truncates it the way `talentScaled` truncates an amount everywhere else. A row whose aura is
+a damage shield skips the parse outright: `newDamageShield` is `core.NewGeneratedDamageShield`, built
+from the spell's school and `Value`.
 
-What the row then does goes through `core.NewGeneratedStatAura`, `NewGeneratedDebuff` and
-`NewGeneratedDamageShield` in `sim/core/buffs_gen_support.go`, not through `ParseEffects`. Nearly every
-row bids in an exclusive category - `StatBuff` against the scrolls, a resistance school against every
-other source of it, a `SingleAura` category between the player's copy and the raid's - and the parse
-attaches its stats outright, with no category to bid in. The support API also carries what the parse
-has no word for: the player and external copies, the shared category the paladin auras join, stack
-pricing and the tier 2 flat bonus.
+`sim/core/spelldata/buff.go` holds a second table, read only when a parse states `BuffAuras()`:
+`A_PERIODIC_ENERGIZE` on a mana row becomes MP5 there, and `A_MOD_ATTACK_POWER_PCT` a percentage on
+attack power. Neither sits in the parse's shared table, because warrior rows carry them for a value the
+class wires itself - Bloodrage's rage tick is an `A_PERIODIC_ENERGIZE`, Berserker Stance Passive an
+`A_MOD_ATTACK_POWER_PCT` of 0 - and reading either off the shared table would change what those rows
+mean there.
+
+The generator asks the same parse for every manifest row: `spelldata.DryRun` and
+`spelldata.BuffUnsupported`, given the row's options and no unit, answer what it attaches and what it
+leaves out, so a row the generator writes is one the sim builds the same way. A row a driver decides
+the meaning of - `KindExternalCD`, `KindProc`, `KindManual`, `KindDebuffUptime` - is written whatever
+the parse attaches; every other kind needs an amount, or for `KindDamageShield` the shield effect
+itself. A row the parse attaches nothing of renders as a commented shell naming the reason, and a row
+it does write states what it could not read as a `// Left out:` note above it in the generated file,
+one per aura effect the parse has no row for.
 
 Core applies the buffs through `core.BuffHooks`, which `sim/core/buffs` registers from its `init`:
 `ApplyBuffs`, `StripPetBuffs`, `ApplyDebuffs` and the Gift of Arthas elixir's debuff. A sim that
@@ -1719,18 +1748,18 @@ sim and every class test; core's own tests reach it through the generated-buff t
 | `Field`, `Number`, `Scope` | the proto field, its number and the message it lives on. Each scope's numbers are dense from 1, so a row that goes away is a renumber of the rows after it                                                                                                             |
 | `Proto`                    | `ProtoBool`, `ProtoTristate`, `ProtoInt32` or `ProtoDouble`. Declared, not derived, so the emitter runs while the compiled protos are stale; the generator checks it against the compiled message                                                                      |
 | `Kind`                     | what the generator emits, below                                                                                                                                                                                                                                        |
-| `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory` and `battleShoutSpell`                                                                                                                    |
+| `Go`                       | the identifier stem: `BattleShout` gives `BattleShoutAura`, `BattleShoutValue`, `BattleShoutDuration`, `BattleShoutCategory`, `battleShoutSpell` and `battleShoutMeta`                                                                                                                    |
 | `SpellID`                  | the spell the numbers are read from, and a root of the store: the top rank of the castable family, or the aura that family's cast applies when the cast is a summon or a dummy                                                                                         |
 | `CastID`                   | the cast, for a row whose timing only the cast states: Mana Tide's aura 17360 carries the mana, the cast 17359 the 13 seconds and the 5 minutes                                                                                                                        |
 | `Name`, `AuraName`         | the castable family's `SpellName.Name_lang` and, for a summon or a dummy, the aura family's. `Name` is the label's default; both are what `TestManifestAnchorsMatchTheClient` resolves the pins from                                                                   |
 | `Owner`                    | the class that casts it, which narrows the rank lookup and marks the row "(External)" on that class's settings tab                                                                                                                                                     |
-| `Talent`                   | the improving talent's `SpellID`, name, effect index, and whether it scales the value, the duration or adds a stat. Only a `ProtoTristate` row may state one, and its effect has to be a modifier whose class mask reaches the row's spell                             |
+| `Talent`                   | the improving talent's `SpellID`, name, effect index, and whether it scales the value, the duration or adds a stat. Only a `ProtoTristate` row may state one, and its effect has to be a modifier whose class mask reaches the row's spell. The generated `Meta.TalentEffect` names the same effect by its `EffectN` position rather than by this index                             |
 | `Category`                 | the exclusive-effect category the aura bids in, `""` for none                                                                                                                                                                                                          |
 | `SharedCategory`           | a second category the aura joins without an effect of its own, which is how the paladin auras exclude each other across schools. Applied to the player's copy only, and declared once in the generated file as `<Name>Category`                                        |
 | `SingleAura`               | the category holds one aura at a time, so the loser is deactivated rather than outbid                                                                                                                                                                                  |
 | `Driver`                   | the apply block hands the row to `drive<Go>` instead of activating the aura outright                                                                                                                                                                                   |
 | `Pet`                      | `PetNormal`, `PetStrip`, `PetInheritOwnerAura`, `PetCapAtRegular` or `PetStripWhenSummonedLate`                                                                                                                                                                        |
-| `StatOverride`             | the sim stats the value lands on, for an aura the client states without naming one: `A_MOD_CRIT_PCT` carries no school, so Leader of the Pack and Moonkin Aura both say `PhysicalCritPercent`, `SpellCritPercent`. A row that states one may have only one aura effect |
+| `SkipAuras`                | aura names, spelled the way `sim/core/dbcenums` spells them, for an effect of the row's spell that sits beside the buff and that the raid's copy does not apply. Resolved to `dbcenums.EffectAuraType`s while the row is built; the six paladin auras skip `A_MOD_HEALING_PCT`, which each states as a healing-taken row of 0, and `A_MECHANIC_DURATION_MOD`, which only Concentration Aura states, as two mechanic rows of 0                |
 | `Stats`                    | the UI relevance tags a spec's `epStats` and `displayStats` are matched against                                                                                                                                                                                        |
 | `ImpAction`                | the improved state's source when it is not a talent - an item, or the spell an item set grants at a piece threshold - and the icon that state shows. A `ProtoTristate` row states this or a `Talent`                                                                   |
 | `Label`                    | a UI label override; the client's name is the default                                                                                                                                                                                                                  |
@@ -1745,8 +1774,8 @@ for the trigger or the cooldown; `KindItemCount` takes a count and applies its a
 `KindDebuffUptime` are the debuff shapes. `KindManual` is a row the sim models by hand, `KindFlag`
 is a sim input rather than a buff (a toggle, or a number such as `retribution_aura_spell_power`), and
 `KindAbsent` is a field the Forever client describes no spell for. The last two resolve to a commented
-shell naming the reason, as does a row whose spell states no aura the generator maps. No `Proto` value
-is an enum, and a field that wants one would add its own value and a name for it in both emitters.
+shell naming the reason, as does a row whose spell states no aura effect the parse attaches. No `Proto`
+value is an enum, and a field that wants one would add its own value and a name for it in both emitters.
 
 ### What stays hand-written
 
@@ -1806,6 +1835,20 @@ fixtures with `UPDATE_BUFF_FIXTURES=1 go test ./tools/database/`.
 so Demoralizing Shout's -196 and -1.4 a level read -205 at 60, and Demoralizing Roar's -193 does too;
 a client that truncated the per-level part toward zero would state -204. The store's reading is the one
 the sim takes until the game says otherwise.
+
+**A debuff prices at the character's level, not the target's.** `Meta.Options` states `Level`
+unconditionally, so `newDebuff` reads the row at `core.CharacterLevel` (60) whatever level the target
+carries. Demoralizing Shout's -196 and -1.4 a level reads -205 against a level 60 target and -205 still
+against a level 63 raid boss, not the -209 pricing the boss's own level would give: a raid's debuff is
+cast by a player of the sim's level, and the target has no character for the parse to read a level off
+in the first place.
+
+**`A_PERIODIC_ENERGIZE` and `A_MOD_ATTACK_POWER_PCT` read only for a buff.** Both sit in the table
+`BuffAuras()` adds rather than the shared one. Bloodrage reads its rage tick by hand
+(`sim/warrior/bloodrage.go`); Berserker Stance Passive's own `A_MOD_ATTACK_POWER_PCT` of 0 is already
+parsed onto the stance aura through the shared table (`sim/warrior/stances.go`), which skips and
+reports it today because the shared table names no row for it. A shared-table entry for either aura
+would start attaching a stat change there instead, changing what the class's own row means.
 
 **Dropping a row renumbers the ones after it.** Each scope's numbers are dense from 1, so a field that
 goes away shifts every later number down by one and `TestScopeNumbersAreDense` holds that. Nothing is
