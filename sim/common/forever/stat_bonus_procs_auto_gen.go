@@ -6,6 +6,59 @@ import (
 
 func RegisterAllProcs() {
 
+	// Equip
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
+	// Reduces your damage taken by 6% in the Battle Ring and The Maul.
+	// https://www.wowhead.com/forever/spell=1318318
+	// unsupported: the row applies only in area group 9337, which names no area type
+	// equip: 1318318 (A_MOD_DAMAGE_PERCENT_TAKEN)
+	// shared.NewSpellDataEquipAura(shared.SpellDataProc{TriggerSpellID: 1318318},
+	//	[]shared.ItemVariant{
+	//	{ItemID: 19024, ItemName: "Arena Grand Master"},
+	// })
+
+	// TODO: Manual implementation required
+	//       This can be ignored if the effect has already been implemented.
+	//       With next db run the item will be removed if implemented.
+	//
+	// Increases your pet's armor by 10%.
+	// https://www.wowhead.com/forever/spell=27225
+	// unsupported: effect 1 A_MOD_BASE_RESISTANCE_PCT misc 1 is not parsed on a pet
+	// equip: 27225 keeps 27208 up (A_MOD_BASE_RESISTANCE_PCT)
+	// shared.NewSpellDataEquipAura(shared.SpellDataProc{TriggerSpellID: 27225},
+	//	[]shared.ItemVariant{
+	//	{ItemID: 22060, ItemName: "Beastmaster's Tunic"},
+	//	{ItemID: 226886, ItemName: "Beastmaster's Tunic"},
+	// })
+
+	// Increases damage dealt by your pet by 3%.
+	// https://www.wowhead.com/forever/spell=27206
+	// equip: 27206 keeps 27205 up (A_MOD_DAMAGE_PERCENT_DONE)
+	shared.NewSpellDataEquipAura(shared.SpellDataProc{TriggerSpellID: 27206},
+		[]shared.ItemVariant{
+			{ItemID: 22061, ItemName: "Beastmaster's Boots"},
+		})
+
+	// Spell Damage received is reduced by 10.
+	// https://www.wowhead.com/forever/spell=27518
+	// equip: 27518 (A_MOD_DAMAGE_TAKEN)
+	shared.NewSpellDataEquipAura(shared.SpellDataProc{TriggerSpellID: 27518},
+		[]shared.ItemVariant{
+			{ItemID: 22191, ItemName: "Obsidian Mail Tunic"},
+		})
+
+	// Increases damage dealt by your pet by 3%.
+	// https://www.wowhead.com/forever/spell=27206
+	// equip: 27206 keeps 27205 up (A_MOD_DAMAGE_PERCENT_DONE)
+	shared.NewSpellDataEquipAura(shared.SpellDataProc{TriggerSpellID: 27206},
+		[]shared.ItemVariant{
+			{ItemID: 226881, ItemName: "Beastmaster's Treads"},
+		})
+
 	// Procs
 
 	// TODO: Manual implementation required
@@ -1086,21 +1139,6 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Reduces your damage taken by 6% in the Battle Ring and The Maul.
-	// https://www.wowhead.com/forever/spell=1318318
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 19024, ItemName: "Arena Grand Master"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// Blasts a target for 45 Frost damage.
 	// https://www.wowhead.com/forever/spell=18398
 	// unsupported: states no rate
@@ -1675,52 +1713,6 @@ func RegisterAllProcs() {
 	//       This can be ignored if the effect has already been implemented.
 	//       With next db run the item will be removed if implemented.
 	//
-	// Increases your pet's armor by 10%.
-	// https://www.wowhead.com/forever/spell=27225
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 22060, ItemName: "Beastmaster's Tunic"},
-	//	{ItemID: 226886, ItemName: "Beastmaster's Tunic"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Increases damage dealt by your pet by 3%.
-	// https://www.wowhead.com/forever/spell=27206
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 22061, ItemName: "Beastmaster's Boots"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Spell Damage received is reduced by 10.
-	// https://www.wowhead.com/forever/spell=27518
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 22191, ItemName: "Obsidian Mail Tunic"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
 	// On successful melee or ranged attack gain 8 mana and if possible drain 8 mana from the target.
 	// https://www.wowhead.com/forever/spell=18350
 	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
@@ -2160,21 +2152,6 @@ func RegisterAllProcs() {
 	//	RequireDamageDealt: false
 	// }, []shared.ItemVariant{
 	//	{ItemID: 223077, ItemName: "Sergeant Major's Mail Sabatons"},
-	// })
-
-	// TODO: Manual implementation required
-	//       This can be ignored if the effect has already been implemented.
-	//       With next db run the item will be removed if implemented.
-	//
-	// Increases damage dealt by your pet by 3%.
-	// https://www.wowhead.com/forever/spell=27206
-	// shared.NewProcStatBonusEffectWithVariants(shared.ProcStatBonusEffect{
-	//	Callback:           core.CallbackEmpty,
-	//	ProcMask:           core.ProcMaskUnknown,
-	//	Outcome:            core.OutcomeEmpty,
-	//	RequireDamageDealt: false
-	// }, []shared.ItemVariant{
-	//	{ItemID: 226881, ItemName: "Beastmaster's Treads"},
 	// })
 
 	// TODO: Manual implementation required

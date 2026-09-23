@@ -953,18 +953,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		22061, // Beastmaster's Boots
-		[
-			"Increases damage dealt by your pet by 3%.", // 27206 - https://www.wowhead.com/forever/spell=27206
-		]
-	],
-	[
-		22191, // Obsidian Mail Tunic
-		[
-			"Spell Damage received is reduced by 10.", // 27518 - https://www.wowhead.com/forever/spell=27518
-		]
-	],
-	[
 		22194, // Black Grasp of the Destroyer
 		[
 			"On successful melee or ranged attack gain 8 mana and if possible drain 8 mana from the target.", // 18350 - https://www.wowhead.com/forever/spell=18350
@@ -1166,12 +1154,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		223077, // Sergeant Major's Mail Sabatons
 		[
 			"Minor increase to running and swimming speed. Does not stack with similar effects.", // 24090 - https://www.wowhead.com/forever/spell=24090
-		]
-	],
-	[
-		226881, // Beastmaster's Treads
-		[
-			"Increases damage dealt by your pet by 3%.", // 27206 - https://www.wowhead.com/forever/spell=27206
 		]
 	],
 	[
