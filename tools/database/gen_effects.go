@@ -217,7 +217,32 @@ func absorbUnsupported(absorb *spelldata.Spell) []string {
 	if absorb.DurationMs == 0 {
 		unsupported = append(unsupported, "the absorb states no duration")
 	}
+	for _, id := range absorbLinkedDamage(absorb) {
+		unsupported = append(unsupported, fmt.Sprintf("the damage of %d (%s) the absorb's row names is not simulated", id, spelldata.Find(id).Name))
+	}
 	return unsupported
+}
+
+// The spells dealing damage that an absorb's row triggers or its tooltip references, which the shield
+// alone does not deal: Adaptive Combat Assistant's 1291097 names 1291099, Nature damage when the
+// shield breaks early. Registering the shield without it would model half the item.
+func absorbLinkedDamage(absorb *spelldata.Spell) []int32 {
+	linked := slices.Clone(absorb.RefIDs)
+	for _, e := range absorb.Effects {
+		if e.TriggerID != 0 {
+			linked = append(linked, e.TriggerID)
+		}
+	}
+
+	var damage []int32
+	for _, id := range linked {
+		s := spelldata.Find(id)
+		if id != absorb.ID && s != spelldata.Nil && !slices.Contains(damage, id) &&
+			(s.DamageEffect() != spelldata.NilEffect || s.PeriodicDamageEffect() != spelldata.NilEffect) {
+			damage = append(damage, id)
+		}
+	}
+	return damage
 }
 
 // The heal spell a proc casts: the spell itself, or one it triggers.
