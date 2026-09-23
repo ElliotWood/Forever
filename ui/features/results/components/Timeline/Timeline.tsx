@@ -19,6 +19,8 @@ export interface TimelineProps {
 	active: boolean;
 }
 
+const WARNING_ICON = noticeIconClass('warning');
+
 export const Timeline = ({ active }: TimelineProps) => {
 	const live = useSimResult();
 	const [shown, setShown] = useState<ReturnType<typeof useSimResult>>(null);
@@ -66,7 +68,7 @@ export const Timeline = ({ active }: TimelineProps) => {
 			<div className="flex flex-wrap items-start gap-2">
 				<div className="flex flex-col max-lg:shrink max-lg:grow max-lg:basis-full">
 					<p>
-						<i className={clsx(noticeIconClass('warning'), 'fa-xl mr-2')} />
+						<i className={clsx(WARNING_ICON, 'fa-xl mr-2')} />
 						{i18n.t('results_tab.details.timeline.disclaimer')}
 					</p>
 					<p>{i18n.t('results_tab.details.timeline.note')}</p>

@@ -274,7 +274,19 @@
 						}
 					},
 					"additionalProperties": false,
-					"required": ["unknown", "forest_grassland", "mountainous", "snowy", "desert", "swamp", "wasteland", "haunted", "cavernous", "volcanic", "strongholds_cities"]
+					"required": [
+						"unknown",
+						"forest_grassland",
+						"mountainous",
+						"snowy",
+						"desert",
+						"swamp",
+						"wasteland",
+						"haunted",
+						"cavernous",
+						"volcanic",
+						"strongholds_cities"
+					]
 				},
 				"sources": {
 					"type": "object",

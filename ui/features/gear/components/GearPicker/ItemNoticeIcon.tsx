@@ -1,7 +1,7 @@
 import { Spec } from '@generated/proto/common';
 import i18n from '@i18n/config';
 import { usePlayer } from '@sim/context/SimHostContext';
-import { noticeIconClass } from '@ui-kit/NoticeLevel';
+import { noticeIconClass, type NoticeLevel } from '@ui-kit/NoticeLevel';
 import { Tooltip, tooltipAnchorProps } from '@ui-kit/Tooltip';
 import clsx from 'clsx';
 import { type ReactNode, useId } from 'react';
@@ -25,13 +25,14 @@ export const ItemNoticeIcon = ({ itemId, additionalNotice }: ItemNoticeIconProps
 	if (!ownNotice && !additionalNotice && !infoNotice) return null;
 
 	const warns = !!ownNotice || !!additionalNotice;
+	const level: NoticeLevel = warns ? 'warning' : 'info';
 
 	return (
 		<div className="relative z-1 inline">
 			<button
 				type="button"
 				aria-label={i18n.t(warns ? 'common.list_picker.warnings' : 'common.list_picker.additional_information')}
-				className={clsx(noticeIconClass(warns ? 'warning' : 'info'), 'fa-xl fa-fw mr-2')}
+				className={clsx(noticeIconClass(level), 'fa-xl fa-fw mr-2')}
 				{...tooltipAnchorProps(tooltipId)}
 			/>
 			<Tooltip

@@ -9,7 +9,6 @@ import { subscribePlayerField } from '@sim/state/subscriptions';
 import { ListItemAction } from '@ui-kit/ListPicker';
 import { NOTICE_COLOR, NOTICE_ICON, type NoticeLevel } from '@ui-kit/NoticeLevel';
 import { Tooltip } from '@ui-kit/Tooltip';
-import clsx from 'clsx';
 import { Fragment, useEffect, useId, useRef, useState } from 'react';
 
 export interface AplValidationsProps {
@@ -32,9 +31,9 @@ const HEADER = new Map<LogLevel, string>([
 /** Written out rather than derived: `LogLevel` is a numeric enum, so iterating it yields the reverse mappings too. */
 const LEVEL_CLASS = new Map<LogLevel, string>([
 	[LogLevel.Undefined, 'apl-validation-undefined'],
-	[LogLevel.Information, clsx('apl-validation-information', NOTICE_COLOR.info)],
-	[LogLevel.Warning, clsx('apl-validation-warning', NOTICE_COLOR.warning)],
-	[LogLevel.Error, clsx('apl-validation-error', NOTICE_COLOR.error)],
+	[LogLevel.Information, `apl-validation-information ${NOTICE_COLOR.info}`],
+	[LogLevel.Warning, `apl-validation-warning ${NOTICE_COLOR.warning}`],
+	[LogLevel.Error, `apl-validation-error ${NOTICE_COLOR.error}`],
 ]);
 
 const sameValidations = (a: Array<APLValidation>, b: Array<APLValidation>) =>
