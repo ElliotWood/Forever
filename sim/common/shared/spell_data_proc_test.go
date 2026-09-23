@@ -419,7 +419,7 @@ func TestStatedEnchantChanceRollsOnTheEnchantedWeaponOnly(t *testing.T) {
 	trigger := &spelldata.Spell{ID: 990410, Name: "Test Fiery Blaze"}
 	cfg := SpellDataProc{Name: "Test Fiery Blaze", EnchantID: enchantID, TriggerSpellID: trigger.ID,
 		BuffSpellID: trigger.ID, IsWeaponProc: true, ProcChancePct: 15}
-	config := spellDataDamageTrigger(character, cfg, cfg.effectSource(), trigger)
+	config := spellDataProcListener(character, cfg, cfg.effectSource(), trigger, nil)
 
 	if config.ProcChance != 0 {
 		t.Errorf("flat chance = %v, want none: it would roll on the off hand's hits too", config.ProcChance)
@@ -469,14 +469,13 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 		name         string
 		spellID      int32
 		isWeaponProc bool
-		damage       bool
 		heard        core.ProcMask
 		want         float64
 		refusedFor   string
 	}{
-		{"Fiery Weapon's combat spell 13897", 13897, true, true, core.ProcMaskMeleeMHAuto, mainHandChance, ""},
-		{"Unholy Weapon's combat spell 20006", 20006, true, false, core.ProcMaskMeleeMHAuto, mainHandChance, ""},
-		{"Revelation's equip aura 1248806", 1248806, false, false, core.ProcMaskSpellDamage, 0,
+		{"Fiery Weapon's combat spell 13897", 13897, true, core.ProcMaskMeleeMHAuto, mainHandChance, ""},
+		{"Unholy Weapon's combat spell 20006", 20006, true, core.ProcMaskMeleeMHAuto, mainHandChance, ""},
+		{"Revelation's equip aura 1248806", 1248806, false, core.ProcMaskSpellDamage, 0,
 			spelldata.ReasonPPMHearsNoWeaponHits},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -505,12 +504,7 @@ func TestSpellDataProcTakesAPPMOverride(t *testing.T) {
 
 			cfg := SpellDataProc{Name: "Test " + tc.name, EnchantID: enchantID, TriggerSpellID: row.ID,
 				BuffSpellID: row.ID, IsWeaponProc: tc.isWeaponProc}
-			var config core.ProcTrigger
-			if tc.damage {
-				config = spellDataDamageTrigger(character, cfg, cfg.effectSource(), &row)
-			} else {
-				config = spellDataTrigger(character, cfg, cfg.effectSource(), &row, &row, &proto.ItemEffect{}, nil)
-			}
+			config := spellDataProcListener(character, cfg, cfg.effectSource(), &row, nil)
 
 			if config.ProcChance != 0 {
 				t.Errorf("flat chance = %v, want none beside the rate", config.ProcChance)
@@ -592,7 +586,7 @@ func TestEnchantAuraPPMFollowsItsWeapon(t *testing.T) {
 			row.ProcChanceSource, row.ProcChanceEffect = spelldata.ProcChancePPM, 0
 			cfg := SpellDataProc{Name: "Test " + tc.name, EnchantID: tc.enchantID, TriggerSpellID: row.ID,
 				BuffSpellID: row.ID}
-			config := spellDataTrigger(character, cfg, cfg.effectSource(), &row, &row, &proto.ItemEffect{}, nil)
+			config := spellDataProcListener(character, cfg, cfg.effectSource(), &row, nil)
 
 			if config.DPM == nil {
 				t.Fatal("no procs-per-minute manager")

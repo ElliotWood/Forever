@@ -183,8 +183,7 @@ func TestInsightMultipliesSpirit(t *testing.T) {
 
 	cfg := SpellDataProc{Name: "Test Insight", EnchantID: insightEnchantID, TriggerSpellID: 1248758,
 		BuffSpellID: 1299796}
-	listener := spellDataTrigger(newTestAgent().character, cfg, cfg.effectSource(),
-		spelldata.MustFind(1248758), spelldata.MustFind(1299796), nil, nil)
+	listener := spellDataProcListener(newTestAgent().character, cfg, cfg.effectSource(), spelldata.MustFind(1248758), nil)
 	if want := core.CallbackOnSpellHitDealt | core.CallbackOnHealDealt; listener.Callback != want {
 		t.Errorf("callback = %v, want %v", listener.Callback, want)
 	}

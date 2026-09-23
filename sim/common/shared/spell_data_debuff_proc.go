@@ -17,7 +17,7 @@ func NewSpellDataDebuffProc(cfg SpellDataProc, variants []ItemVariant) {
 }
 
 func registerSpellDataDebuffProc(cfg SpellDataProc) {
-	registerSpellDataRowProc(cfg, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, debuff *spelldata.Spell) {
+	registerSpellDataRowProc(cfg, nil, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, debuff *spelldata.Spell) {
 		applySpellDataDebuffProc(agent, cfg, source, trigger, debuff)
 	})
 }
@@ -26,14 +26,14 @@ func applySpellDataDebuffProc(agent core.Agent, cfg SpellDataProc, source effect
 	character := agent.GetCharacter()
 	debuffs := enemyDebuffAuras(character, debuff, debuff.Duration(), debuff.DebuffEffects())
 
-	config := spellDataDamageTrigger(character, cfg, source, trigger)
+	config := spellDataProcListener(character, cfg, source, trigger, nil)
 	callback := config.Callback
 	config.Handler = func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 		applyDebuff(sim, debuffs.Get(procDamageTarget(character, callback, spell, result)))
 	}
 	config.TriggerImmediately = true
 
-	source.registerProc(character, character.MakeProcTriggerAura(config), source.eligibleSlots(character))
+	source.registerTrigger(character, config)
 }
 
 // A re-application refreshes the duration and, on a row that stacks, adds a stack up to its count.

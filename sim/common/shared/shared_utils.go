@@ -456,33 +456,10 @@ func forEachSpellDataVariant(cfg SpellDataProc, variants []ItemVariant, register
 	core.AddEffectsToTest = true
 }
 
+// An aura the row applies to an enemy is NewSpellDataDebuffProc's to build, never a buff on the
+// wearer, so the effect is left unregistered rather than handed to the wrong unit.
 func registerSpellDataProc(cfg SpellDataProc) {
-	source := cfg.effectSource()
-
-	// Soft fail to allow for overrides for bad effects
-	if source.isAlreadyImplemented() {
-		return
-	}
-
-	trigger := cfg.trigger()
-	buff := trigger
-	if cfg.BuffSpellID != 0 {
-		buff = spelldata.MustFind(cfg.BuffSpellID)
-	}
-
-	// An aura the row applies to an enemy is NewSpellDataDebuffProc's to build, never a buff on the
-	// wearer, so the effect is left unregistered rather than handed to the wrong unit.
-	if buff.AppliesAnAuraToAnEnemy() {
-		return
-	}
-
-	// A listener with no callback never fires. The row says so before any character exists, so the
-	// effect is left unregistered rather than added as an aura that does nothing.
-	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
-		return
-	}
-
-	source.registerEffect(func(agent core.Agent) {
+	registerSpellDataRowProc(cfg, (*spelldata.Spell).AppliesAnAuraToAnEnemy, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell) {
 		applySpellDataProc(agent, cfg, source, trigger, buff)
 	})
 }
@@ -503,7 +480,18 @@ func applySpellDataProc(agent core.Agent, cfg SpellDataProc, source effectSource
 	}
 
 	procAura := spellDataProcAura(character, cfg, trigger, buff, effect, percentStats)
-	triggerAura := character.MakeProcTriggerAura(spellDataTrigger(character, cfg, source, trigger, buff, effect, procAura))
+
+	listener := spellDataProcListener(character, cfg, source, trigger, effect.GetProc())
+	listener.Handler = spellDataProcHandler(buff, procAura)
+
+	// The same fallback the database layer applies: Bulwark of Azzinoth's armor buff sits in a
+	// spell category with a 60s recovery while its trigger states nothing. Only a buff that is a
+	// spell of its own counts - where the two are one spell the recovery is that spell's own cast
+	// throttle rather than a gate on re-applying the buff.
+	if listener.ICD == 0 && buff.ID != trigger.ID {
+		listener.ICD = buff.CategoryCooldown()
+	}
+	triggerAura := source.registerTrigger(character, listener)
 
 	attachChargeSpender(character, cfg, trigger, buff, procAura)
 
@@ -513,28 +501,18 @@ func applySpellDataProc(agent core.Agent, cfg SpellDataProc, source effectSource
 	// two charges, which attaching the spender would otherwise leave here.
 	procAura.Icd = triggerAura.Icd
 
-	source.registerProc(character, triggerAura, eligibleSlots)
 	source.registerWeaponEnchantBuff(character, procAura)
 	character.AddStatProcBuff(source.id, procAura, source.isEnchant, eligibleSlots)
 }
 
-// The listener the trigger's row describes, plus the three things the row cannot state: the item's
-// own name and action, which are what the sim keys the rolls and the metrics by, and the internal
-// cooldown a handful of procs state through the buff's spell category instead.
-func spellDataTrigger(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell, effect *proto.ItemEffect, procAura *core.StatBuffAura) core.ProcTrigger {
-	config := spelldata.ProcTrigger(character, trigger, spellDataProcHandler(buff, procAura), spelldata.ItemProcChance(trigger),
-		weaponProcShape(cfg), spellDataProcRate(source, trigger, effect.GetProc()), statedWeaponProcChance(cfg, source))
-
+// The listener the trigger's row describes, without the handler, plus what the row cannot state: the
+// item's own name and action, which are what the sim keys the rolls and the metrics by, and the rate
+// the effect entry states.
+func spellDataProcListener(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell, proc *proto.ProcEffect) core.ProcTrigger {
+	config := spelldata.ProcTrigger(character, trigger, nil, spelldata.ItemProcChance(trigger),
+		weaponProcShape(cfg), spellDataProcRate(source, trigger, proc), statedWeaponProcChance(cfg, source))
 	config.Name = cfg.Name
 	config.ActionID = source.actionID()
-
-	// The same fallback the database layer applies: Bulwark of Azzinoth's armor buff sits in a
-	// spell category with a 60s recovery while its trigger states nothing. Only a buff that is a
-	// spell of its own counts - where the two are one spell the recovery is that spell's own cast
-	// throttle rather than a gate on re-applying the buff.
-	if config.ICD == 0 && buff.ID != trigger.ID {
-		config.ICD = buff.CategoryCooldown()
-	}
 
 	return config
 }
@@ -713,22 +691,7 @@ func statesATrigger(s *spelldata.Spell) bool {
 }
 
 func registerSpellDataDamageProc(cfg SpellDataProc) {
-	source := cfg.effectSource()
-
-	// Soft fail to allow for overrides for bad effects
-	if source.isAlreadyImplemented() {
-		return
-	}
-
-	trigger := cfg.trigger()
-	damage := spelldata.MustFind(cfg.BuffSpellID)
-
-	// A listener with no callback never fires, and the row says so before any character exists.
-	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
-		return
-	}
-
-	source.registerEffect(func(agent core.Agent) {
+	registerSpellDataRowProc(cfg, nil, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, damage *spelldata.Spell) {
 		applySpellDataDamageProc(agent, cfg, source, trigger, damage)
 	})
 }
@@ -740,24 +703,14 @@ func applySpellDataDamageProc(agent core.Agent, cfg SpellDataProc, source effect
 
 	// The handler is attached after the options, since which unit the damage lands on depends on the
 	// callback the trigger ends up with and a weapon proc's shape rewrites it.
-	config := spellDataDamageTrigger(character, cfg, source, trigger)
+	config := spellDataProcListener(character, cfg, source, trigger, nil)
 	config.Handler = procDamageHandler(character, damageSpell, config.Callback)
 
 	// The proc's damage lands on the hit that caused it rather than on the next one, which is what
 	// the callback is called from.
 	config.TriggerImmediately = true
 
-	source.registerProc(character, character.MakeProcTriggerAura(config), source.eligibleSlots(character))
-}
-
-// A damage or heal proc's listener as the trigger's row and the effect state it, without the handler.
-func spellDataDamageTrigger(character *core.Character, cfg SpellDataProc, source effectSource, trigger *spelldata.Spell) core.ProcTrigger {
-	config := spelldata.ProcTrigger(character, trigger, nil, spelldata.ItemProcChance(trigger),
-		weaponProcShape(cfg), spellDataProcRate(source, trigger, nil), statedWeaponProcChance(cfg, source))
-	config.Name = cfg.Name
-	config.ActionID = source.actionID()
-
-	return config
+	source.registerTrigger(character, config)
 }
 
 // The spell the proc casts, as its row states it: school, defense type, spell power share, travel
@@ -976,16 +929,17 @@ func registerSpellDataAbsorbProc(cfg SpellDataProc) {
 
 // A proc that casts BuffSpellID's spell on the wearer, as spellConfig builds it.
 func registerSpellDataSelfProc(cfg SpellDataProc, spellConfig func(*core.Character, *spelldata.Spell) core.SpellConfig) {
-	registerSpellDataRowProc(cfg, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, row *spelldata.Spell) {
+	registerSpellDataRowProc(cfg, nil, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, row *spelldata.Spell) {
 		applySpellDataSelfProc(agent, cfg, source, trigger, spellConfig(agent.GetCharacter(), row))
 	})
 }
 
 // A proc read from its trigger's row and the row it applies, BuffSpellID's or the trigger's own. It is
-// left unregistered where the item or enchant is implemented by hand, and where the trigger's row
-// names no callback: a listener with no callback never fires, and the row says so before any
-// character exists.
-func registerSpellDataRowProc(cfg SpellDataProc, apply func(agent core.Agent, source effectSource, trigger *spelldata.Spell, row *spelldata.Spell)) {
+// left unregistered where the item or enchant is implemented by hand, where refuses (if set) refuses
+// the row, and where the trigger's row names no callback: a listener with no callback never fires,
+// and the row says so before any character exists.
+func registerSpellDataRowProc(cfg SpellDataProc, refuses func(row *spelldata.Spell) bool,
+	apply func(agent core.Agent, source effectSource, trigger *spelldata.Spell, row *spelldata.Spell)) {
 	source := cfg.effectSource()
 
 	// Soft fail to allow for overrides for bad effects
@@ -997,6 +951,10 @@ func registerSpellDataRowProc(cfg SpellDataProc, apply func(agent core.Agent, so
 	row := trigger
 	if cfg.BuffSpellID != 0 {
 		row = spelldata.MustFind(cfg.BuffSpellID)
+	}
+
+	if refuses != nil && refuses(row) {
+		return
 	}
 
 	if !cfg.IsWeaponProc && decodedCallback(trigger) == core.CallbackEmpty {
@@ -1012,13 +970,13 @@ func applySpellDataSelfProc(agent core.Agent, cfg SpellDataProc, source effectSo
 	character := agent.GetCharacter()
 	selfSpell := character.RegisterSpell(spellConfig)
 
-	config := spellDataDamageTrigger(character, cfg, source, trigger)
+	config := spellDataProcListener(character, cfg, source, trigger, nil)
 	config.Handler = func(sim *core.Simulation, _ *core.Spell, _ *core.SpellResult) {
 		selfSpell.Cast(sim, &character.Unit)
 	}
 	config.TriggerImmediately = true
 
-	source.registerProc(character, character.MakeProcTriggerAura(config), source.eligibleSlots(character))
+	source.registerTrigger(character, config)
 }
 
 // The heal the proc casts, as its row states it: a share of the target's maximum health or an amount
@@ -1817,6 +1775,12 @@ func (s effectSource) enchantPlacement() enchantPlacement {
 		return enchantOnWeapon
 	}
 	return enchantElsewhere
+}
+
+func (s effectSource) registerTrigger(character *core.Character, config core.ProcTrigger) *core.Aura {
+	triggerAura := character.MakeProcTriggerAura(config)
+	s.registerProc(character, triggerAura, s.eligibleSlots(character))
+	return triggerAura
 }
 
 func (s effectSource) registerProc(character *core.Character, triggerAura *core.Aura, slots []proto.ItemSlot) {

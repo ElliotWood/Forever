@@ -64,14 +64,14 @@ func NewSpellDataAuraProc(cfg SpellDataProc, variants []ItemVariant) {
 }
 
 func registerSpellDataAuraProc(cfg SpellDataProc) {
-	registerSpellDataRowProc(cfg, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell) {
+	registerSpellDataRowProc(cfg, nil, func(agent core.Agent, source effectSource, trigger *spelldata.Spell, buff *spelldata.Spell) {
 		character := agent.GetCharacter()
 
 		config := spelldata.AuraConfig(buff, spelldata.Label(cfg.Name+" Proc"))
 		config.Duration = procBuffDuration(cfg, trigger, buff)
 		auras := newSpellDataAuras(character, buff, config)
 
-		proc := spellDataDamageTrigger(character, cfg, source, trigger)
+		proc := spellDataProcListener(character, cfg, source, trigger, nil)
 		if proc.ICD == 0 && buff.ID != trigger.ID {
 			proc.ICD = buff.CategoryCooldown()
 		}
@@ -80,7 +80,7 @@ func registerSpellDataAuraProc(cfg SpellDataProc) {
 			auras.activate(sim, procDamageTarget(character, callback, spell, result))
 		}
 
-		source.registerProc(character, character.MakeProcTriggerAura(proc), source.eligibleSlots(character))
+		source.registerTrigger(character, proc)
 	})
 }
 
