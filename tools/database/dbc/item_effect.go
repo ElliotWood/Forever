@@ -250,6 +250,9 @@ func buildBaseStatScalingProps(spellID int, itemSpellID int) *proto.ScalingItemE
 	// check if spell is procced by a SPELL_WITH_VALUE
 	if effects := dbcInstance.SpellEffectsInOrder(itemSpellID); len(effects) > 0 {
 		for _, se := range effects {
+			if se.HitsAnEnemy() {
+				continue
+			}
 			// TBC ANNI: Items can have "static" ItemEffects that don't have a duration.
 			// We need to parse these into stats just as is done for ItemSparse data.
 			stat := ConvertEffectAuraToStatIndex(se.EffectAura, se.EffectMiscValues[0])
@@ -302,6 +305,9 @@ func collectStats(spellID, itemLevel int) stats.Stats {
 func (w *chainWalker) collectStats(spellID, itemLevel int, total *stats.Stats) {
 	sp := dbcInstance.Spells[spellID]
 	for _, se := range w.effects(spellID) {
+		if se.HitsAnEnemy() {
+			continue
+		}
 		if s, resolved := se.ParseStatEffect(sp.ScalesWithItemLevel(), itemLevel); resolved {
 			total.AddInplace(&s)
 		} else if se.EffectAura == dbcenums.A_PROC_TRIGGER_SPELL {
