@@ -26,12 +26,12 @@ func TestConstantNames(t *testing.T) {
 	}
 
 	for got, want := range map[string]string{
-		spellModOpName(int32(dbcenums.SPELLMOD_COST)): "SPELLMOD_COST",
-		spellModOpName(99):                            "op 99",
-		effectTypeName(dbcenums.E_SCHOOL_DAMAGE):      "E_SCHOOL_DAMAGE",
-		effectTypeName(9999):                          "E_9999",
-		auraName(dbcenums.A_DUMMY):                    "A_DUMMY",
-		auraName(9999):                                "A_9999",
+		namedOr(dbcenums.SPELLMOD_COST, "op %d"):        "SPELLMOD_COST",
+		namedOr(dbcenums.SpellModOp(99), "op %d"):       "op 99",
+		namedOr(dbcenums.E_SCHOOL_DAMAGE, "E_%d"):       "E_SCHOOL_DAMAGE",
+		namedOr(dbcenums.SpellEffectType(9999), "E_%d"): "E_9999",
+		namedOr(dbcenums.A_DUMMY, "A_%d"):               "A_DUMMY",
+		namedOr(dbcenums.EffectAuraType(9999), "A_%d"):  "A_9999",
 	} {
 		if got != want {
 			t.Errorf("named %q, want %q", got, want)

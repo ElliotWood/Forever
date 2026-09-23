@@ -38,13 +38,9 @@ func readOption(expr ast.Expr) configOption {
 	option := configOption{label: source, source: source}
 
 	call, ok := expr.(*ast.CallExpr)
-	var sel *ast.SelectorExpr
+	var name string
 	if ok {
-		sel, ok = call.Fun.(*ast.SelectorExpr)
-	}
-	if ok {
-		pkg, isIdent := sel.X.(*ast.Ident)
-		ok = isIdent && pkg.Name == "spelldata"
+		name, ok = pkgSelector(call.Fun, "spelldata")
 	}
 	if !ok {
 		option.err = fmt.Errorf("not a spelldata option call")
@@ -55,19 +51,19 @@ func readOption(expr ast.Expr) configOption {
 	for _, arg := range call.Args {
 		args = append(args, strings.ReplaceAll(types.ExprString(arg), "core.", ""))
 	}
-	option.label = sel.Sel.Name + "(" + strings.Join(args, " | ") + ")"
+	option.label = name + "(" + strings.Join(args, " | ") + ")"
 	if len(option.label) > 48 {
-		option.label = sel.Sel.Name + "(…)"
+		option.label = name + "(…)"
 	}
 
-	builder, known := optionBuilders[sel.Sel.Name]
+	builder, known := optionBuilders[name]
 	if !known {
-		option.err = fmt.Errorf("spelldata.%s is not an option this reads", sel.Sel.Name)
+		option.err = fmt.Errorf("spelldata.%s is not an option this reads", name)
 		return option
 	}
 	build := reflect.ValueOf(builder)
 	if len(call.Args) != build.Type().NumIn() {
-		option.err = fmt.Errorf("spelldata.%s takes %s", sel.Sel.Name, arguments(build.Type().NumIn()))
+		option.err = fmt.Errorf("spelldata.%s takes %s", name, arguments(build.Type().NumIn()))
 		return option
 	}
 

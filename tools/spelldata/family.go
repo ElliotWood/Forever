@@ -54,12 +54,8 @@ func findFamily(index map[string]*ladderFamily, spec, pkg string) (*ladderFamily
 // Whether any class file states a ladder by this name, which is what makes a bare `Execute.Highest()`
 // a ladder call rather than a name the package has yet to bind.
 func isFamilyName(name string) bool {
-	for _, family := range ladderFamilies() {
-		if family.field == name {
-			return true
-		}
-	}
-	return false
+	loadLadders.Do(scanLadders)
+	return familyFields[name]
 }
 
 // The rank of a talent's ladder a row is, counted from 1, or 0 on a row that is not one of them: a

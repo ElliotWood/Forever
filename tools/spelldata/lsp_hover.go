@@ -19,8 +19,7 @@ import (
 
 // Each pattern captures the id in group 1.
 var spellIDPatterns = []*regexp.Regexp{
-	regexp.MustCompile(`\bMustFind\(\s*(\d+)\s*\)`),
-	regexp.MustCompile(`\bFind\(\s*(\d+)\s*\)`),
+	regexp.MustCompile(`\b(?:Must)?Find\(\s*(\d+)\s*\)`),
 	regexp.MustCompile(`\.ByID\(\s*(\d+)\s*\)`),
 	regexp.MustCompile(`\bSpellID:\s*(\d+)`),
 	regexp.MustCompile(`"spellId":\s*(\d+)`),
@@ -63,7 +62,6 @@ func parseGo(path, text string) *parsedFile {
 	}
 	f.file, f.tok = file, fset.File(file.Pos())
 
-	var around []ast.Node
 	bind := func(name ast.Expr, value ast.Expr) {
 		ident, ok := name.(*ast.Ident)
 		if !ok || ident.Name == "_" {
@@ -75,17 +73,12 @@ func parseGo(path, text string) *parsedFile {
 			return
 		}
 		d := declaration{name: ident.Name, chain: c, file: path, line: f.tok.Line(ident.Pos())}
-		if body := enclosingBody(around); body != nil {
+		if body := enclosingBody(f.enclosing(ident.Pos())); body != nil {
 			d.from, d.to = f.tok.Offset(ident.Pos()), f.tok.Offset(body.End())
 		}
 		f.decls = append(f.decls, d)
 	}
 	ast.Inspect(file, func(node ast.Node) bool {
-		if node == nil {
-			around = around[:len(around)-1]
-			return true
-		}
-		around = append(around, node)
 		switch n := node.(type) {
 		case *ast.ValueSpec:
 			if len(n.Names) == len(n.Values) {
@@ -316,11 +309,10 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 	path := uriPath(uri)
 	trace := &tracer{root: w.root}
 
-	start, end, ok := lineBounds(text, line)
+	lineText, start, ok := lineAt(text, line)
 	if !ok {
 		return trace.fail("%s:%d is past the end of the document", trace.rel(path), line+1)
 	}
-	lineText := strings.TrimSuffix(text[start:end], "\r")
 	column := byteOffsetOfUTF16Column(lineText, col)
 	trace.add("%s:%d:%d", trace.rel(path), line+1, col+1)
 
@@ -388,7 +380,10 @@ func (w *workspace) hover(text string, line, col int, uri string) (string, []str
 func spellConfigAt(nodes []ast.Node, pos token.Pos) *ast.CallExpr {
 	for _, node := range nodes {
 		call, ok := node.(*ast.CallExpr)
-		if ok && isSelector(call.Fun, "spelldata", "SpellConfig") && pos >= call.Fun.Pos() && pos <= call.Fun.End() {
+		if !ok {
+			continue
+		}
+		if name, ok := pkgSelector(call.Fun, "spelldata"); ok && name == "SpellConfig" && pos >= call.Fun.Pos() && pos <= call.Fun.End() {
 			return call
 		}
 	}
@@ -397,20 +392,25 @@ func spellConfigAt(nodes []ast.Node, pos token.Pos) *ast.CallExpr {
 
 func familyAt(nodes []ast.Node) string {
 	for _, node := range nodes {
-		if sel, ok := node.(*ast.SelectorExpr); ok && isSelector(sel, "spellData", sel.Sel.Name) {
-			return sel.Sel.Name
+		if expr, ok := node.(ast.Expr); ok {
+			if field, ok := pkgSelector(expr, "spellData"); ok {
+				return field
+			}
 		}
 	}
 	return ""
 }
 
-func isSelector(expr ast.Expr, pkg, name string) bool {
+// The name a `<pkg>.<Name>` selector picks, where expr is one.
+func pkgSelector(expr ast.Expr, pkg string) (string, bool) {
 	sel, ok := expr.(*ast.SelectorExpr)
 	if !ok {
-		return false
+		return "", false
 	}
-	ident, ok := sel.X.(*ast.Ident)
-	return ok && ident.Name == pkg && sel.Sel.Name == name
+	if ident, ok := sel.X.(*ast.Ident); !ok || ident.Name != pkg {
+		return "", false
+	}
+	return sel.Sel.Name, true
 }
 
 func resultSummary(result *exprResult) string {
@@ -519,33 +519,30 @@ func resolveFrom(c *chain, declarations map[string]declaration, depth int, seen 
 	return &chain{root: head.root, segments: append(slices.Clip(head.segments), c.segments...)}, nil
 }
 
-// The byte offsets of a line, counted from 0, without its newline.
-func lineBounds(text string, line int) (int, int, bool) {
+// A line of the text, counted from 0, without its line ending, and the byte offset it starts at.
+func lineAt(text string, line int) (string, int, bool) {
 	if line < 0 {
-		return 0, 0, false
+		return "", 0, false
 	}
 	start := 0
 	for ; line > 0; line-- {
 		next := strings.IndexByte(text[start:], '\n')
 		if next < 0 {
-			return 0, 0, false
+			return "", 0, false
 		}
 		start += next + 1
 	}
-	end := strings.IndexByte(text[start:], '\n')
-	if end < 0 {
-		return start, len(text), true
-	}
-	return start, start + end, true
+	lineText, _, _ := strings.Cut(text[start:], "\n")
+	return strings.TrimSuffix(lineText, "\r"), start, true
 }
 
 // The byte offset of an LSP position, clamped to the end of its line and of the text.
 func offsetOf(text string, line, col int) int {
-	start, end, ok := lineBounds(text, line)
+	lineText, start, ok := lineAt(text, line)
 	if !ok {
 		return len(text)
 	}
-	return start + byteOffsetOfUTF16Column(strings.TrimSuffix(text[start:end], "\r"), col)
+	return start + byteOffsetOfUTF16Column(lineText, col)
 }
 
 func matchCovering(lineText string, column int, patterns ...*regexp.Regexp) []int {

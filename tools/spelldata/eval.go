@@ -10,6 +10,7 @@ import (
 	"go/types"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -101,18 +102,17 @@ func (c *chain) text(resolved bool) string {
 }
 
 // A chain read to the end: the row the card states, the effect the chain went through, and the value
-// the last accessor answered, with that accessor's own doc comment.
+// the last accessor answered, with the type it was called on.
 type exprResult struct {
-	kind   string
-	trail  string
-	called string
+	kind  string
+	trail string
+	owner string
 
 	family     *ladderFamily
 	spell      *spelldata.Spell
 	readEffect int
 
 	value     string
-	doc       string
 	accessors []string
 }
 
@@ -225,8 +225,7 @@ func evalExpr(index map[string]*ladderFamily, c *chain, pkg string) (result *exp
 			return nil, err
 		}
 		res.trail += "." + seg.text(true)
-		res.called = seg.text(true)
-		res.doc = methodDoc(baseTypeName(current.Type()), seg.name)
+		res.owner = baseTypeName(current.Type())
 
 		switch value := answer.Interface().(type) {
 		case *spelldata.Spell:
@@ -286,9 +285,7 @@ func (f *ladderFamily) checkPick(seg segment) error {
 			return fmt.Errorf("%s spellData.%s has %d ranks, not rank %d", f.pkg, f.field, f.ladder.Len(), n)
 		}
 	case "ByID":
-		carried := false
-		f.ladder.Each(func(_ int32, s *spelldata.Spell) { carried = carried || int64(s.ID) == n })
-		if !carried {
+		if int64(int32(n)) != n || !slices.Contains(f.ids, int32(n)) {
 			return fmt.Errorf("%s spellData.%s has no rank with id %d", f.pkg, f.field, n)
 		}
 	}
