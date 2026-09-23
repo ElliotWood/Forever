@@ -22,11 +22,10 @@ type PaladinAuraRank struct {
 var RetributionAuraMaxRank = PaladinAuraRank{SpellID: 10301, Value: RetributionAuraValue(0)}
 
 func paladinAuraLabel(name string, isPlayer bool, rank PaladinAuraRank) string {
-	label := fmt.Sprintf("%s (%s)", name, core.Ternary(isPlayer, "Player", "External"))
 	if rank.Rank > 0 {
-		label += fmt.Sprintf(" Rank %d", rank.Rank)
+		name += fmt.Sprintf(" Rank %d", rank.Rank)
 	}
-	return label
+	return fmt.Sprintf("%s (%s)", name, core.Ternary(isPlayer, "Player", "External"))
 }
 
 func paladinAuraBuff(name string, category string, isPlayer bool, rank PaladinAuraRank) core.GeneratedBuff {
