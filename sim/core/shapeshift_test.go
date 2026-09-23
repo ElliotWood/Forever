@@ -9,12 +9,12 @@ import (
 )
 
 var (
-	wrathRequirement  = CastRequirement{Forms: 0x40000000, ExcludedForms: 0x2, CasterForm: true, NotShapeshifted: true}
-	chargeRequirement = CastRequirement{Forms: 0x10000}
+	wrathRequirement    = CastRequirement{Forms: 0x40000000, ExcludedForms: 0x2, CasterForm: true, NotShapeshifted: true}
+	regrowthRequirement = CastRequirement{Forms: 0x2, ExcludedForms: 0x40000000, CasterForm: true, NotShapeshifted: true}
+	chargeRequirement   = CastRequirement{Forms: 0x10000}
 )
 
 func TestShapeshiftFormRule(t *testing.T) {
-	regrowth := CastRequirement{Forms: 0x2, ExcludedForms: 0x40000000, CasterForm: true, NotShapeshifted: true}
 
 	tests := []struct {
 		name    string
@@ -30,7 +30,7 @@ func TestShapeshiftFormRule(t *testing.T) {
 		},
 		{
 			name:    "Regrowth",
-			req:     regrowth,
+			req:     regrowthRequirement,
 			allowed: []dbcenums.ShapeshiftForm{0, dbcenums.FORM_TREE_FORM},
 			refused: []dbcenums.ShapeshiftForm{dbcenums.FORM_MOONKIN_FORM, dbcenums.FORM_CAT_FORM},
 		},
@@ -90,6 +90,17 @@ func TestCastRequirementAutoUnshift(t *testing.T) {
 	unit.AutoUnshift = func(*Simulation) {}
 	if reason, unshift := spell.castRequirementFailure(); reason != "" || !unshift {
 		t.Errorf("Wrath in Cat Form with AutoUnshift: (%q, %v), want (\"\", true)", reason, unshift)
+	}
+
+	unit.ShapeshiftForm = dbcenums.FORM_TREE_FORM
+	if reason, unshift := spell.castRequirementFailure(); reason != "" || !unshift {
+		t.Errorf("Wrath in Tree of Life with AutoUnshift: (%q, %v), want (\"\", true)", reason, unshift)
+	}
+
+	unit.ShapeshiftForm = dbcenums.FORM_MOONKIN_FORM
+	spell.CastRequirement = regrowthRequirement
+	if reason, unshift := spell.castRequirementFailure(); reason != "" || !unshift {
+		t.Errorf("Regrowth in Moonkin Form with AutoUnshift: (%q, %v), want (\"\", true)", reason, unshift)
 	}
 
 	unit.ShapeshiftForm = dbcenums.FORM_DEFENSIVE_STANCE

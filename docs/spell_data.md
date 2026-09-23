@@ -280,7 +280,8 @@ form. A required caster aura must then be active on the caster, matched by `Acti
 
 The class reports its form in `Unit.ShapeshiftForm` - the warrior's `setStance`, the druid's `setForm` -
 and nothing else. A unit that sets `Unit.AutoUnshift` (the druid, to `ClearForm`) casts a spell its form
-refuses but no form allows by leaving the form first, once, after every other check passed.
+refuses but no form allows by leaving the form first, once, after every other check passed. That
+holds in a stance-type form too: Healing Touch in Moonkin Form and Wrath in Tree of Life leave the form.
 
 - A class that reads the store by hand takes `row.CastRequirement()`.
 - A hand-built spell with no row states it by hand: `core.InForms(dbcenums.FORM_BATTLE_STANCE)`, with
