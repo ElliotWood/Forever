@@ -52,12 +52,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		8348, // Helm of Fire
-		[
-			"Hurls a fiery ball that causes 331 Fire damage and an additional 132 damage over 8s.", // 10578 - https://www.wowhead.com/forever/spell=10578
-		]
-	],
-	[
 		8367, // Dragonscale Breastplate
 		[
 			"Absorbs 600 magical damage. Lasts 2min.", // 10618 - https://www.wowhead.com/forever/spell=10618
@@ -103,12 +97,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		11902, // Linken's Sword of Mastery
 		[
 			"Blasts a target for 60 Nature damage.", // 18089 - https://www.wowhead.com/forever/spell=18089
-		]
-	],
-	[
-		11905, // Linken's Boomerang
-		[
-			"Flings a magical boomerang towards target enemy dealing 150 Physical damage and has a chance to Stun for 2s or Disarm for 10s.", // 15712 - https://www.wowhead.com/forever/spell=15712
 		]
 	],
 	[
@@ -367,12 +355,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		16573, // General's Mail Boots
 		[
 			"Increases the speed of your Ghost Wolf ability by 15%.", // 22801 - https://www.wowhead.com/forever/spell=22801
-		]
-	],
-	[
-		16768, // Furbolg Medicine Pouch
-		[
-			"Restores 100 health every 1.0 sec for 10s.", // 20631 - https://www.wowhead.com/forever/spell=20631
 		]
 	],
 	[
@@ -645,6 +627,12 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		19344, // Natural Alignment Crystal
 		[
 			"Aligns the Shaman with nature, increasing spell damage by 20%, improving heal effects by 20%, and increasing mana cost of spells by 20% for 20s.", // 23734 - https://www.wowhead.com/forever/spell=23734
+		]
+	],
+	[
+		19345, // Aegis of Preservation
+		[
+			"Increases armor by 500, and heals 35 damage every time you take ranged or melee damage for 20s.", // 23780 - https://www.wowhead.com/forever/spell=23780
 		]
 	],
 	[
@@ -1020,12 +1008,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		]
 	],
 	[
-		21891, // Shard of the Fallen Star
-		[
-			"Calls down a meteor, burning all enemies within the area for 421 total Fire damage.", // 26789 - https://www.wowhead.com/forever/spell=26789
-		]
-	],
-	[
 		22013, // Beastmaster's Cap
 		[
 			"Increases your pet's maximum health by 3%.", // 27038 - https://www.wowhead.com/forever/spell=27038
@@ -1233,12 +1215,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		211941, // Windwalker's Yari
 		[
 			"Blasts enemies in front of you with the power of wind, fire, all that kind of thing!", // 14537 - https://www.wowhead.com/forever/spell=14537
-		]
-	],
-	[
-		219345, // Infernal Lasso
-		[
-			"Deals 504 Fire damage over 12s. Demons and Beasts are Rooted in place for 6s.", // 443265 - https://www.wowhead.com/forever/spell=443265
 		]
 	],
 	[
@@ -2649,12 +2625,6 @@ export const MISSING_ITEM_EFFECTS = new Map<number, string[]>([
 		274386, // Toy Soldier
 		[
 			"Increases your chance to Dodge by 3% for 20s. This effect is doubled in Strongholds and Cities.", // 1293820 - https://www.wowhead.com/forever/spell=1293820
-		]
-	],
-	[
-		274759, // Everlook Pathcarver
-		[
-			"Deal 607 Physical damage split between up to 4 nearby enemies. Deals 2 times as much damage to Plants.", // 1295270 - https://www.wowhead.com/forever/spell=1295270
 		]
 	],
 	[
