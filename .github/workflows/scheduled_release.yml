@@ -3,7 +3,7 @@ name: Scheduled Release
 on:
     workflow_dispatch:
     schedule:
-        - cron: '0 10 * * *'
+        - cron: '0 10 * * 1'
 
 jobs:
     schedule:
@@ -14,19 +14,17 @@ jobs:
               with:
                   fetch-depth: 0
 
+            # Release tags only: the newest tag of any kind (official-mixed-2026-09-21) is not a
+            # version, and failed every run. No release yet means v0.0.0 and a release now.
             - name: 'Get Previous tag'
               id: previoustag
-              uses: 'WyriHaximus/github-action-get-previous-tag@v1'
-              env:
-                  GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+              run: echo "tag=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || echo v0.0.0)" >> $GITHUB_OUTPUT
 
             - name: 'Get Commit Hashes'
               id: getcommithashes
               run: |
-                  git rev-parse HEAD
-                  git rev-parse ${{ steps.previoustag.outputs.tag }}
                   echo "current=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-                  echo "last=$(git rev-parse ${{ steps.previoustag.outputs.tag }})" >> $GITHUB_OUTPUT
+                  echo "last=$(git rev-parse -q --verify '${{ steps.previoustag.outputs.tag }}^{commit}' || true)" >> $GITHUB_OUTPUT
 
             - name: 'Get next version'
               if: steps.getcommithashes.outputs.current != steps.getcommithashes.outputs.last
