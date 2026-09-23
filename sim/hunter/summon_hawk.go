@@ -18,29 +18,29 @@ func (hunter *Hunter) registerSummonHawkSpell(timer *core.Timer) {
 		return
 	}
 
-	rank := spellData.SummonHawk.HighestRank()
-	baseDamage := rank.Direct.Damage
+	rank := spellData.SummonHawk.Highest()
+	baseDamage := rank.DamageEffect().Average(core.CharacterLevel)
 
 	hunter.SummonHawk = hunter.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: rank.SpellID},
-		SpellSchool:    rank.SpellSchool,
+		ActionID:       core.ActionID{SpellID: rank.ID},
+		SpellSchool:    rank.SpellSchool(),
 		DefenseType:    core.DefenseTypeMelee,
 		ClassSpellMask: HunterSpellSummonHawk,
 		ProcMask:       core.ProcMaskEmpty,
 		Flags:          core.SpellFlagMeleeMetrics | core.SpellFlagAPL,
-		MaxRange:       rank.MaxRange,
+		MaxRange:       float64(rank.MaxRange),
 
 		ManaCost: core.ManaCostOptions{
-			FlatCost: rank.Cost,
+			FlatCost: int32(rank.Cost()),
 		},
 		Cast: core.CastConfig{
 			DefaultCast: core.Cast{
-				GCD: rank.GCD,
+				GCD: rank.GCD(),
 			},
 			IgnoreHaste: true,
 			CD: core.Cooldown{
 				Timer:    timer,
-				Duration: rank.Cooldown,
+				Duration: max(rank.Cooldown(), rank.CategoryCooldown()),
 			},
 		},
 
@@ -55,7 +55,7 @@ func (hunter *Hunter) registerSummonHawkSpell(timer *core.Timer) {
 			TickLength:    time.Second * 3,
 
 			OnSnapshot: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
-				dot.Snapshot(target, baseDamage(sim))
+				dot.Snapshot(target, baseDamage)
 			},
 			OnTick: func(sim *core.Simulation, target *core.Unit, dot *core.Dot) {
 				dot.CalcAndDealPeriodicSnapshotDamage(sim, target, dot.OutcomeTick)
@@ -63,7 +63,7 @@ func (hunter *Hunter) registerSummonHawkSpell(timer *core.Timer) {
 		},
 
 		ApplyEffects: func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			damage := baseDamage(sim) + 0.05*spell.RangedAttackPower(target)
+			damage := baseDamage + 0.05*spell.RangedAttackPower(target)
 			result := spell.CalcAndDealDamage(sim, target, damage, spell.OutcomeMeleeSpecialHitAndCrit)
 
 			if result.Landed() {

@@ -235,13 +235,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestEnhancement-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 308.78598
-  tps: 232.51873
- }
-}
-dps_results: {
  key: "TestEnhancement-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 313.07801
@@ -285,20 +278,6 @@ dps_results: {
 }
 dps_results: {
  key: "TestEnhancement-AllItems-EnchantWeapon-Crusader-1900"
- value: {
-  dps: 308.78598
-  tps: 232.51873
- }
-}
-dps_results: {
- key: "TestEnhancement-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 308.78598
-  tps: 232.51873
- }
-}
-dps_results: {
- key: "TestEnhancement-AllItems-EnchantWeapon-UnholyWeapon-1899"
  value: {
   dps: 308.78598
   tps: 232.51873
@@ -354,6 +333,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestEnhancement-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 310.23618
+  tps: 233.78199
+ }
+}
+dps_results: {
  key: "TestEnhancement-AllItems-GreenDragonMail"
  value: {
   dps: 315.27351
@@ -398,8 +384,8 @@ dps_results: {
 dps_results: {
  key: "TestEnhancement-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 430.13214
-  tps: 317.44978
+  dps: 430.08952
+  tps: 317.41994
  }
 }
 dps_results: {

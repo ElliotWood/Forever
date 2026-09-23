@@ -90,8 +90,8 @@ dps_results: {
 dps_results: {
  key: "TestSubtlety-AllItems-BlazefuryMedallion-17111"
  value: {
-  dps: 492.98027
-  tps: 245.0112
+  dps: 492.97944
+  tps: 245.01078
  }
 }
 dps_results: {
@@ -193,13 +193,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestSubtlety-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 483.52425
-  tps: 240.31155
- }
-}
-dps_results: {
  key: "TestSubtlety-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 483.52425
@@ -239,13 +232,6 @@ dps_results: {
  value: {
   dps: 509.45426
   tps: 253.19877
- }
-}
-dps_results: {
- key: "TestSubtlety-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 419.87051
-  tps: 208.67564
  }
 }
 dps_results: {
@@ -291,6 +277,13 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestSubtlety-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 484.61862
+  tps: 240.85546
+ }
+}
+dps_results: {
  key: "TestSubtlety-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
   dps: 483.82892
@@ -328,8 +321,8 @@ dps_results: {
 dps_results: {
  key: "TestSubtlety-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 607.06236
-  tps: 301.70999
+  dps: 607.0849
+  tps: 301.7212
  }
 }
 dps_results: {

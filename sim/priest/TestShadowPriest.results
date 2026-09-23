@@ -158,13 +158,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestShadowPriest-AllItems-DormantHeartoftheMountain-249473"
- value: {
-  dps: 702.12398
-  tps: 484.48151
- }
-}
-dps_results: {
  key: "TestShadowPriest-AllItems-DraconicInfusedEmblem-22268"
  value: {
   dps: 724.32161
@@ -214,20 +207,6 @@ dps_results: {
  }
 }
 dps_results: {
- key: "TestShadowPriest-AllItems-EnchantWeapon-IcyChill-1894"
- value: {
-  dps: 702.12398
-  tps: 484.48151
- }
-}
-dps_results: {
- key: "TestShadowPriest-AllItems-EnchantWeapon-UnholyWeapon-1899"
- value: {
-  dps: 702.12398
-  tps: 484.48151
- }
-}
-dps_results: {
  key: "TestShadowPriest-AllItems-EssenceofthePureFlame-18815"
  value: {
   dps: 702.12398
@@ -260,6 +239,13 @@ dps_results: {
  value: {
   dps: 707.77582
   tps: 488.38313
+ }
+}
+dps_results: {
+ key: "TestShadowPriest-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 702.31481
+  tps: 485.11913
  }
 }
 dps_results: {
@@ -307,8 +293,8 @@ dps_results: {
 dps_results: {
  key: "TestShadowPriest-AllItems-HighborneResearchTablet-260205"
  value: {
-  dps: 734.76156
-  tps: 507.5797
+  dps: 734.78031
+  tps: 507.59282
  }
 }
 dps_results: {

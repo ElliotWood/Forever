@@ -1,8 +1,8 @@
 package warlock
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/proto"
 	"github.com/wowsims/forever/sim/core/stats"
 )
@@ -51,7 +51,7 @@ func (warlock *Warlock) applyImprovedImp() {
 
 	warlock.Imp.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedImp.EffectAt(1).FractionAt(warlock.Talents.ImprovedImp),
+		FloatValue: spellData.ImprovedImp.EffectAt(2).FractionAt(warlock.Talents.ImprovedImp),
 		ClassMask:  WarlockSpellImpFireBolt,
 	})
 }
@@ -62,7 +62,7 @@ func (warlock *Warlock) applyDemonicEmbrace() {
 		return
 	}
 
-	warlock.MultiplyStat(stats.Stamina, spellData.DemonicEmbrace.EffectAt(0).MultiplierAt(warlock.Talents.DemonicEmbrace))
+	warlock.MultiplyStat(stats.Stamina, spellData.DemonicEmbrace.EffectAt(1).MultiplierAt(warlock.Talents.DemonicEmbrace))
 }
 
 // 2% more pet damage a point (18769).
@@ -83,7 +83,7 @@ func (warlock *Warlock) applyFelVitality() {
 		return
 	}
 
-	multiplier := spellData.FelVitality.EffectAt(0).MultiplierAt(warlock.Talents.FelVitality)
+	multiplier := spellData.FelVitality.EffectAt(1).MultiplierAt(warlock.Talents.FelVitality)
 	warlock.MultiplyStat(stats.Mana, multiplier)
 	for _, pet := range warlock.BasePets {
 		pet.MultiplyStat(stats.Health, multiplier)
@@ -99,7 +99,7 @@ func (warlock *Warlock) applyImprovedSayaad() {
 
 	warlock.Succubus.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.ImprovedSayaad.EffectAt(1).FractionAt(warlock.Talents.ImprovedSayaad),
+		FloatValue: spellData.ImprovedSayaad.EffectAt(2).FractionAt(warlock.Talents.ImprovedSayaad),
 		ClassMask:  WarlockSpellSuccubusLashOfPain,
 	})
 }
@@ -126,13 +126,13 @@ func (warlock *Warlock) applyDemonicSacrifice() {
 		return
 	}
 
-	row := spellData.DemonicSacrificeTriggered.BySpellID(spellID)
-	multiplier := 1 + row.Effects[0].Value/100
+	row := spellData.DemonicSacrificeTriggered.ByID(spellID)
+	multiplier := 1 + row.EffectN(1).Percent()
 
 	core.MakePermanent(warlock.RegisterAura(core.Aura{
 		Label:    "Demonic Sacrifice",
 		ActionID: core.ActionID{SpellID: spellID},
-		Duration: row.Duration,
+		Duration: row.Duration(),
 	}).AttachMultiplicativePseudoStatBuff(&warlock.PseudoStats.SchoolDamageDealtMultiplier[school], multiplier))
 }
 
@@ -144,25 +144,25 @@ func (warlock *Warlock) applyDecimation() {
 	}
 
 	points := warlock.Talents.Decimation
-	triggered := spellData.DecimationTriggered.HighestRank()
+	triggered := spellData.DecimationTriggered.Highest()
 
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_Cooldown_Multiplier,
-		FloatValue: 1 + spellData.Decimation.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COOLDOWN).FractionAt(points),
+		FloatValue: 1 + spellData.Decimation.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COOLDOWN)).FractionAt(points),
 		ClassMask:  WarlockSpellSoulFire,
 	})
 
 	warlock.DecimationAura = warlock.RegisterAura(core.Aura{
 		Label:    "Decimation",
-		ActionID: core.ActionID{SpellID: triggered.SpellID},
-		Duration: triggered.Duration,
+		ActionID: core.ActionID{SpellID: triggered.ID},
+		Duration: triggered.Duration(),
 	}).AttachSpellMod(core.SpellModConfig{
 		Kind:       core.SpellMod_DamageDone_Flat,
-		FloatValue: spellData.Decimation.EffectAt(3).FractionAt(points),
+		FloatValue: spellData.Decimation.EffectAt(4).FractionAt(points),
 		ClassMask:  WarlockSpellShadowBolt | WarlockSpellSearingPain,
 	}).AttachSpellMod(core.SpellModConfig{
 		Kind:       core.SpellMod_CastTime_Pct,
-		FloatValue: spellData.Decimation.EffectAt(0).FractionAt(points),
+		FloatValue: spellData.Decimation.EffectAt(1).FractionAt(points),
 		ClassMask:  WarlockSpellSoulFire,
 	})
 
@@ -192,12 +192,12 @@ func (warlock *Warlock) applyDemonicBrand() {
 	}
 
 	points := warlock.Talents.DemonicBrand
-	triggered := spellData.DemonicBrandTriggered.HighestRank()
-	actionID := core.ActionID{SpellID: triggered.SpellID}
+	triggered := spellData.DemonicBrandTriggered.Highest()
+	actionID := core.ActionID{SpellID: triggered.ID}
 
 	warlock.AddStaticMod(core.SpellModConfig{
 		Kind:       core.SpellMod_ThreatMultiplier_Pct,
-		FloatValue: spellData.DemonicBrand.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_THREAT).FractionAt(points),
+		FloatValue: spellData.DemonicBrand.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_THREAT)).FractionAt(points),
 		ClassMask:  WarlockSpellSearingPain,
 	})
 
@@ -205,7 +205,7 @@ func (warlock *Warlock) applyDemonicBrand() {
 		return
 	}
 
-	charges := int32(spellData.DemonicBrand.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CHARGES).ValueAt(points))
+	charges := int32(spellData.DemonicBrand.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CHARGES)).ValueAt(points))
 
 	for _, pet := range warlock.BasePets {
 		brandSpell := pet.RegisterSpell(core.SpellConfig{
@@ -226,7 +226,7 @@ func (warlock *Warlock) applyDemonicBrand() {
 		pet.DemonicBrandAura = pet.RegisterAura(core.Aura{
 			Label:     "Demonic Brand",
 			ActionID:  actionID,
-			Duration:  triggered.Duration,
+			Duration:  triggered.Duration(),
 			MaxStacks: charges,
 			OnSpellHitDealt: func(aura *core.Aura, sim *core.Simulation, spell *core.Spell, result *core.SpellResult) {
 				if result.Landed() && spell.ProcMask.Matches(core.ProcMaskMelee) {
@@ -260,9 +260,9 @@ func (warlock *Warlock) applySoulLink() {
 		return
 	}
 
-	row := spellData.SoulLinkTriggered.BySpellID(25228)
-	damageDealt := 1 + row.Effects[0].Value/100
-	damageTaken := 1 - row.Effects[1].Value/100
+	row := spellData.SoulLinkTriggered.ByID(25228)
+	damageDealt := 1 + row.EffectN(1).Percent()
+	damageTaken := 1 - row.EffectN(2).Percent()
 
 	config := func(unit *core.Unit) core.Aura {
 		return core.Aura{
@@ -308,7 +308,7 @@ func (warlock *Warlock) applyMasterDemonologist() {
 		return
 	}
 
-	fraction := spellData.MasterDemonologist.EffectAt(0).FractionAt(warlock.Talents.MasterDemonologist)
+	fraction := spellData.MasterDemonologist.EffectAt(1).FractionAt(warlock.Talents.MasterDemonologist)
 
 	var buff *core.Aura
 	switch warlock.Options.Summon {

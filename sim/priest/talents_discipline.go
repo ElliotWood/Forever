@@ -1,8 +1,8 @@
 package priest
 
 import (
-	"github.com/wowsims/forever/sim/common/shared"
 	"github.com/wowsims/forever/sim/core"
+	"github.com/wowsims/forever/sim/core/dbcenums"
 	"github.com/wowsims/forever/sim/core/stats"
 )
 
@@ -79,7 +79,7 @@ func (priest *Priest) applyTwinDisciplines() {
 
 	priest.AddStaticMod(core.SpellModConfig{
 		ClassMask:  PriestSpellInstant,
-		FloatValue: spellData.TwinDisciplines.EffectAt(0).FractionAt(priest.Talents.TwinDisciplines),
+		FloatValue: spellData.TwinDisciplines.EffectAt(1).FractionAt(priest.Talents.TwinDisciplines),
 		Kind:       core.SpellMod_DamageDone_Flat,
 	})
 }
@@ -92,7 +92,7 @@ func (priest *Priest) applySilentResolve() {
 	priest.AddStaticMod(core.SpellModConfig{
 		ClassMask:  PriestSpellsAll,
 		School:     core.SpellSchoolHoly,
-		FloatValue: spellData.SilentResolve.Effect(shared.A_MOD_THREAT, 2).FractionAt(priest.Talents.SilentResolve),
+		FloatValue: spellData.SilentResolve.Effect(dbcenums.A_MOD_THREAT, 2).FractionAt(priest.Talents.SilentResolve),
 		Kind:       core.SpellMod_ThreatMultiplier_Pct,
 	})
 }
@@ -105,7 +105,7 @@ func (priest *Priest) applyHolyPrecision() {
 	}
 
 	priest.PseudoStats.SchoolBonusHitChance[stats.SchoolIndexHoly] +=
-		spellData.HolyPrecision.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_RESIST_MISS_CHANCE).ValueAt(priest.Talents.HolyPrecision)
+		spellData.HolyPrecision.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_RESIST_MISS_CHANCE)).ValueAt(priest.Talents.HolyPrecision)
 }
 
 // applyImprovedPowerWordShield implements Improved Power Word: Shield, new in Forever.
@@ -145,19 +145,19 @@ func (priest *Priest) applyInnerFocus() {
 		return
 	}
 
-	rank := spellData.InnerFocus.HighestRank()
+	rank := spellData.InnerFocus.Highest()
 	critMod := priest.AddDynamicMod(core.SpellModConfig{
 		ClassMask:  PriestSpellsAll,
-		FloatValue: rank.Effect(shared.A_ADD_FLAT_MODIFIER, shared.SPELLMOD_CRITICAL_CHANCE).Value,
+		FloatValue: rank.Effect(dbcenums.A_ADD_FLAT_MODIFIER, int32(dbcenums.SPELLMOD_CRITICAL_CHANCE)).Average(core.CharacterLevel),
 		Kind:       core.SpellMod_BonusCrit_Percent,
 	})
 
 	var innerFocusSpell *core.Spell
-	costPercent := int32(rank.Effect(shared.A_ADD_PCT_MODIFIER, shared.SPELLMOD_COST).Value)
+	costPercent := int32(rank.Effect(dbcenums.A_ADD_PCT_MODIFIER, int32(dbcenums.SPELLMOD_COST)).Average(core.CharacterLevel))
 
 	priest.InnerFocusAura = priest.RegisterAura(core.Aura{
 		Label:    "Inner Focus",
-		ActionID: core.ActionID{SpellID: rank.SpellID},
+		ActionID: core.ActionID{SpellID: rank.ID},
 		Duration: core.NeverExpires,
 		OnGain: func(aura *core.Aura, _ *core.Simulation) {
 			aura.Unit.PseudoStats.SpellCostPercentModifier += costPercent
@@ -177,7 +177,7 @@ func (priest *Priest) applyInnerFocus() {
 	})
 
 	innerFocusSpell = priest.RegisterSpell(core.SpellConfig{
-		ActionID: core.ActionID{SpellID: rank.SpellID},
+		ActionID: core.ActionID{SpellID: rank.ID},
 		Flags:    core.SpellFlagNoOnCastComplete | core.SpellFlagAPL,
 
 		Cast: core.CastConfig{
@@ -186,7 +186,7 @@ func (priest *Priest) applyInnerFocus() {
 			},
 			CD: core.Cooldown{
 				Timer:    priest.NewTimer(),
-				Duration: rank.Cooldown,
+				Duration: max(rank.Cooldown(), rank.CategoryCooldown()),
 			},
 		},
 
@@ -285,11 +285,11 @@ func (priest *Priest) applyPowerInfusion() {
 		return
 	}
 
-	rank := spellData.PowerInfusion.HighestRank()
+	rank := spellData.PowerInfusion.Highest()
 	piAura := core.PowerInfusionAura(priest.GetCharacter(), priest.Index)
 
 	piSpell := priest.RegisterSpell(core.SpellConfig{
-		ActionID:       core.ActionID{SpellID: rank.SpellID, Tag: priest.Index},
+		ActionID:       core.ActionID{SpellID: rank.ID, Tag: priest.Index},
 		SpellSchool:    core.SpellSchoolHoly,
 		Flags:          core.SpellFlagHelpful | core.SpellFlagAPL,
 		ClassSpellMask: PriestSpellPowerInfusion,
@@ -304,7 +304,7 @@ func (priest *Priest) applyPowerInfusion() {
 			},
 			CD: core.Cooldown{
 				Timer:    priest.NewTimer(),
-				Duration: rank.Cooldown,
+				Duration: max(rank.Cooldown(), rank.CategoryCooldown()),
 			},
 		},
 
