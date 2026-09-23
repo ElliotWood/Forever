@@ -257,7 +257,7 @@ func buildBaseStatScalingProps(spellID int, itemSpellID int) *proto.ScalingItemE
 			// We need to parse these into stats just as is done for ItemSparse data.
 			stat := ConvertEffectAuraToStatIndex(se.EffectAura, se.EffectMiscValues[0])
 			if stat >= 0 || stat == -2 {
-				value := float64(se.EffectBasePoints + 1)
+				value := float64(se.EffectBasePoints)
 				// Make sure it's not Feral AP
 				if strings.Contains(dbcInstance.Spells[se.SpellID].Description, "forms only") {
 					stat = proto.Stat_StatFeralAttackPower
