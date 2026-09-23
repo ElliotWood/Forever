@@ -1230,7 +1230,7 @@
 "enchants":[
 {"effectId":1,"spellId":15568,"name":"Sharpen Blade","icon":"trade_engraving","type":13,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,88,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
 {"effectId":924,"spellId":7427,"name":"Runecarve Bracer - Minor Deflect","icon":"trade_engraving","type":6,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
-{"effectId":7123,"itemId":212546,"spellId":432137,"name":"Automatic Crowd Pummeler","icon":"inv_misc_armorkit_06","type":3,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
+{"effectId":7123,"itemId":212546,"spellId":432137,"name":"Automatic Crowd Pummeler","icon":"inv_misc_armorkit_06","type":3,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"pseudoStats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,50,0,0,0,0,0,0],"quality":1},
 {"effectId":7325,"itemId":221322,"spellId":446458,"name":"Atal'ai Signet of Mojo","icon":"inv_misc_armorkit_19","type":3,"stats":[0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
 {"effectId":7326,"itemId":221323,"spellId":446470,"name":"Atal'ai Signet of Serenity","icon":"spell_holy_powerwordshield","type":3,"stats":[0,0,0,0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},
 {"effectId":7328,"itemId":221321,"spellId":446450,"name":"Atal'ai Signet of Might","icon":"inv_misc_armorkit_18","type":3,"stats":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"quality":1},

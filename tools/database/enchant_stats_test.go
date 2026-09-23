@@ -71,6 +71,47 @@ func TestEnchantWeaponDamage(t *testing.T) {
 	}
 }
 
+func TestEnchantHaste(t *testing.T) {
+	inRepositoryRoot(t)
+
+	for _, tc := range []struct {
+		effectID             int
+		name                 string
+		melee, ranged, spell float64
+	}{
+		{34, "Weapon Counterweight", 3, 0, 0},
+		{931, "Enchant Gloves - Minor Haste", 1, 1, 1},
+		{2543, "Arcanum of Rapidity", 1, 1, 0},
+		{7123, "Automatic Crowd Pummeler", 50, 0, 0},
+		{7655, "Enchant Bracer - Spell Power", 0, 0, 0},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			enchant := enchantByName(t, tc.effectID, tc.name)
+			pseudoStat := func(pseudoStat proto.PseudoStat) float64 {
+				if int(pseudoStat) < len(enchant.PseudoStats) {
+					return enchant.PseudoStats[pseudoStat]
+				}
+				return 0
+			}
+			for _, haste := range []struct {
+				pseudoStat proto.PseudoStat
+				want       float64
+			}{
+				{proto.PseudoStat_PseudoStatMeleeHastePercent, tc.melee},
+				{proto.PseudoStat_PseudoStatRangedHastePercent, tc.ranged},
+				{proto.PseudoStat_PseudoStatSpellHastePercent, tc.spell},
+			} {
+				if got := pseudoStat(haste.pseudoStat); got != haste.want {
+					t.Errorf("%s %v, want %v", haste.pseudoStat, got, haste.want)
+				}
+			}
+			if tc.melee != 0 && stats.FromProtoArray(enchant.Stats) != (stats.Stats{}) {
+				t.Errorf("stats %v, want none", enchant.Stats)
+			}
+		})
+	}
+}
+
 func TestEnchantSlot(t *testing.T) {
 	inRepositoryRoot(t)
 

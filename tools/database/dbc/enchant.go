@@ -172,6 +172,11 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 	enchantStats := stats.Stats{}
 	pseudoStats := make([]float64, stats.PseudoStatsLen)
 	processEnchantmentEffects(enchant.Effects, effectArgs, enchant.EffectPoints, &enchantStats, pseudoStats, true)
+	for i, effect := range enchant.Effects {
+		if effect == ITEM_ENCHANTMENT_EQUIP_SPELL {
+			addEquipSpellHaste(pseudoStats, effectArgs[i])
+		}
+	}
 	uiEnchant.Stats = enchantStats.ToProtoArray()
 	uiEnchant.PseudoStats = NullFloat(pseudoStats)
 	for i, effect := range enchant.Effects {
@@ -180,4 +185,24 @@ func (enchant *Enchant) ToProto() *proto.UIEnchant {
 		}
 	}
 	return uiEnchant
+}
+
+// Unlike ranged hit and crit, ranged haste is not a total including melee: the sim applies melee,
+// ranged and cast speed each on its own.
+var enchantHasteAuras = map[EffectAuraType][]proto.PseudoStat{
+	dbcenums.A_MOD_MELEE_HASTE_3:           {proto.PseudoStat_PseudoStatMeleeHastePercent},
+	dbcenums.A_MOD_RANGED_HASTE:            {proto.PseudoStat_PseudoStatRangedHastePercent},
+	dbcenums.A_MOD_MELEE_RANGED_HASTE_2:    {proto.PseudoStat_PseudoStatMeleeHastePercent, proto.PseudoStat_PseudoStatRangedHastePercent},
+	dbcenums.A_MOD_CASTING_SPEED_NOT_STACK: {proto.PseudoStat_PseudoStatSpellHastePercent},
+}
+
+func addEquipSpellHaste(pseudoStats []float64, spellID int) {
+	for _, effect := range dbcInstance.SpellEffectsInOrder(spellID) {
+		if effect.EffectType != dbcenums.E_APPLY_AURA {
+			continue
+		}
+		for _, pseudoStat := range enchantHasteAuras[effect.EffectAura] {
+			pseudoStats[pseudoStat] += float64(effect.EffectBasePoints + effect.EffectDieSides)
+		}
+	}
 }
