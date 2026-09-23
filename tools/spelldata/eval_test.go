@@ -173,7 +173,7 @@ func TestExprChainRefused(t *testing.T) {
 		{"spellData.Execute.Highest().EffectN(1).Average(level)", "level is not a literal"},
 		{"spellData.Execute.Highest().EffectN(1).Average(60.5)", "60.5 is not the int32 it takes"},
 		{"spellData.Execute.Highest().Refs()", "a []*spelldata.Spell is not a value to read"},
-		{"spellData.Execute.Highest().ChainAmp", `"ChainAmp" is not a method of *spelldata.Spell`},
+		{"spellData.Execute.Highest().ChainAmp", `"ChainAmp" is not a field of *spelldata.Spell`},
 		{"spellData.Execute.Highest() + 1", "is not a chain of accessor calls"},
 		// The store panics where the row states no effect the finder names, and the panic is the answer.
 		{"spellData.Execute.Highest().Effect(6, 0)", "has no effect with aura 6 misc 0"},

@@ -277,7 +277,13 @@ func rankArgument(recv reflect.Value, seg segment) (int32, bool) {
 func callSegment(recv reflect.Value, seg segment) (reflect.Value, error) {
 	owner := recv.Type().String()
 	if !seg.call {
-		return reflect.Value{}, fmt.Errorf("%q is not a method of %s: write the accessor as a call", seg.name, owner)
+		row := reflect.Indirect(recv)
+		if row.Kind() == reflect.Struct {
+			if field, ok := row.Type().FieldByName(seg.name); ok && field.IsExported() {
+				return row.FieldByIndex(field.Index), nil
+			}
+		}
+		return reflect.Value{}, fmt.Errorf("%q is not a field of %s", seg.name, owner)
 	}
 
 	method := recv.MethodByName(seg.name)
