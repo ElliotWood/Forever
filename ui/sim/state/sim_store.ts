@@ -59,6 +59,7 @@ export interface EncounterSlice {
 	executeProportion90: number;
 	useHealth: boolean;
 	areaTypes: Array<AreaType>;
+	zoneId: number;
 	targets: Array<TargetProto>;
 }
 
@@ -288,6 +289,7 @@ const initialState = (): SimState => ({
 		...ENCOUNTER_DEFAULTS,
 		useHealth: false,
 		areaTypes: [],
+		zoneId: 0,
 		targets: [],
 	},
 	players: {},

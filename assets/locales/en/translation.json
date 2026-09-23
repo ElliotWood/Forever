@@ -790,6 +790,10 @@
 				"label": "Encounter",
 				"tooltip": "Selects a preset encounter configuration."
 			},
+			"zone": {
+				"label": "Zone",
+				"tooltip": "Picks every kind of area the zone counts as; picking a preset boss fills it in from the boss's zone. Custom means the areas below were set by hand."
+			},
 			"area_types": {
 				"label": "Area",
 				"placeholder": "Add a kind of area",

@@ -10,7 +10,7 @@ import { useMemo, useState } from 'react';
 import { AdvancedEncounterModal } from '../AdvancedEncounterModal';
 import { TargetInputsPicker } from '../TargetsPicker';
 import { AreaTypesPicker } from './AreaTypesPicker';
-import { durationConfigs, executeConfigs, minBaseDamageConfig, numAlliesConfig, presetEncounterConfig } from './utils/configs';
+import { durationConfigs, executeConfigs, minBaseDamageConfig, numAlliesConfig, presetEncounterConfig, zoneConfig } from './utils/configs';
 
 export interface EncounterPickerProps {
 	showExecuteProportion: boolean;
@@ -27,6 +27,7 @@ export const EncounterPicker = ({ showExecuteProportion }: EncounterPickerProps)
 	const preset = useMemo(() => presetEncounterConfig(encounter), [encounter]);
 	const allies = useMemo(() => numAlliesConfig(player), [player]);
 	const minBaseDamage = useMemo(() => minBaseDamageConfig(), []);
+	const zone = useMemo(() => zoneConfig(encounter), [encounter]);
 
 	const [advancedOpen, setAdvancedOpen] = useState(false);
 
@@ -44,6 +45,7 @@ export const EncounterPicker = ({ showExecuteProportion }: EncounterPickerProps)
 					))}
 				</PickerGroup>
 			)}
+			<EnumPicker modObject={encounter} config={zone} />
 			<AreaTypesPicker encounter={encounter} />
 			{showDamage && <EnumPicker modObject={encounter} config={preset} />}
 			{player.canEnableTargetDummies() && <NumberPicker modObject={host.sim.raid} config={allies} />}

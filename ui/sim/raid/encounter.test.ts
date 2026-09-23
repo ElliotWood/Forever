@@ -5,7 +5,17 @@ import type { Sim } from '../sim';
 import { createSimStore } from '../state/sim_store';
 import { Encounter } from './encounter';
 
-const makeEncounter = () => new Encounter({ store: createSimStore() } as unknown as Sim);
+const ZONES: Record<number, { id: number; name: string; areaTypes: Array<AreaType> }> = {
+	2677: { id: 2677, name: 'Blackwing Lair', areaTypes: [AreaType.AreaTypeCavernous, AreaType.AreaTypeVolcanic] },
+	44: { id: 44, name: 'Redridge Mountains', areaTypes: [AreaType.AreaTypeForestGrassland, AreaType.AreaTypeMountainous] },
+	1: { id: 1, name: 'Nowhere', areaTypes: [] },
+};
+const NPC_ZONES: Record<number, number> = { 11583: 2677, 71543: 1 };
+const db = {
+	getZone: (id: number) => ZONES[id] ?? null,
+	getNpc: (id: number) => (NPC_ZONES[id] ? { id, name: '', zoneId: NPC_ZONES[id] } : null),
+};
+const makeEncounter = () => new Encounter({ store: createSimStore(), db } as unknown as Sim);
 
 const presetEncounter = () =>
 	PresetEncounter.create({
@@ -77,16 +87,51 @@ describe('Encounter', () => {
 			expect(encounter.getAreaTypes()).toEqual([AreaType.AreaTypeSnowy]);
 		});
 
+		it('takes its set from a zone, and forgets the zone once the set is edited by hand', () => {
+			const encounter = makeEncounter();
+
+			encounter.setZone(2677);
+			expect(encounter.getZoneId()).toBe(2677);
+			expect(encounter.getAreaTypes()).toEqual([AreaType.AreaTypeCavernous, AreaType.AreaTypeVolcanic]);
+
+			encounter.setInArea(AreaType.AreaTypeSnowy, true);
+			expect(encounter.getZoneId()).toBe(0);
+			expect(encounter.getAreaTypes()).toEqual([AreaType.AreaTypeSnowy, AreaType.AreaTypeCavernous, AreaType.AreaTypeVolcanic]);
+
+			encounter.setZone(0);
+			expect(encounter.getAreaTypes()).toEqual([AreaType.AreaTypeSnowy, AreaType.AreaTypeCavernous, AreaType.AreaTypeVolcanic]);
+			encounter.setZone(999999);
+			expect(encounter.getZoneId()).toBe(0);
+		});
+
+		it('fills the zone in from a preset boss whose zone the database knows, and leaves it for one it does not', () => {
+			const encounter = makeEncounter();
+			encounter.setZone(44);
+
+			encounter.applyPreset(PresetEncounter.create({ targets: [PresetTarget.create({ target: TargetProto.create({ id: 11583 }) })] }));
+			expect(encounter.getZoneId()).toBe(2677);
+			expect(encounter.getAreaTypes()).toEqual([AreaType.AreaTypeCavernous, AreaType.AreaTypeVolcanic]);
+
+			encounter.applyPreset(presetEncounter());
+			expect(encounter.getZoneId()).toBe(2677);
+		});
+
 		it('survives the proto round trip and clears on a proto without any', () => {
 			const encounter = makeEncounter();
 			encounter.setAreaTypes([AreaType.AreaTypeDesert, AreaType.AreaTypeCavernous]);
 
 			const proto = encounter.toProto();
 			expect(proto.areaTypes).toEqual([AreaType.AreaTypeDesert, AreaType.AreaTypeCavernous]);
+			expect(proto.zoneId).toBe(0);
 
 			const other = makeEncounter();
 			other.fromProto(proto);
 			expect(other.getAreaTypes()).toEqual([AreaType.AreaTypeDesert, AreaType.AreaTypeCavernous]);
+
+			encounter.setZone(44);
+			other.fromProto(encounter.toProto());
+			expect(other.getZoneId()).toBe(44);
+			expect(other.getAreaTypes()).toEqual([AreaType.AreaTypeForestGrassland, AreaType.AreaTypeMountainous]);
 
 			other.fromProto(EncounterProto.create({ targets: [Encounter.defaultTargetProto()] }));
 			expect(other.getAreaTypes()).toEqual([]);
