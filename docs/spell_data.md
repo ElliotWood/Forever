@@ -249,7 +249,10 @@ A bleed row also fills the damage and threat multipliers with 1.
 
 What it does not: `ApplyEffects`, `ProcMask`, the multipliers on any other row, `ClassSpellMask`, `ExtraCastCondition`,
 `Dot`, `RelatedSelfBuff`, the threat numbers the client does not carry - and `MaxTargets`, which has no
-`SpellConfig` field at all, so a caller that caps an area effect reads `row.MaxTargets` itself. A unit
+`SpellConfig` field at all, so a caller that caps an area effect reads `row.MaxTargets` itself. The same
+goes for `RequiredAreas`, the area group a spell only works in: `row.AreaType()` names the kind of
+terrain it stands for (Forest and Grassland, Mountainous, ...) and a caller gates on
+`sim.Encounter.InArea(row.AreaType())`; a group that is a single zone reads as `AreaTypeUnknown`. A unit
 is needed for the cooldown timers, so a config is built where the sim has a character rather than at
 package init.
 
@@ -567,6 +570,15 @@ Two more refusals have nothing to do with the field: an override naming a spell 
 carry, and two overrides of the same field on one spell. Every one that is applied leaves an
 `// override: <field> <value> -- <reason>` comment on the row it wrote to, so reading the generated
 store says which numbers are not the client's.
+
+`overrides.AreaBonuses` is the second table in the same file, for an effect whose tooltip says it is
+doubled in some kind of area while the client states no companion row for it ("This effect is doubled
+in Volcanic areas" on Molten Fury). A row names the AreaGroup ids any of which counts, the factor on
+the effect's amounts and the factor on its duration, onto `Spell.AreaBonusGroups`, `AreaMultiplier`
+and `AreaDurationMultiplier`; `row.AreaBonus(&character.Env.Encounter)` reads them against the
+encounter's area set, and is stale once the row states a `RequiredAreasID` of its own. The on-use stat
+actives `shared.NewSimpleStatActive` registers read it; a proc chance the tooltip says is doubled has
+no reader yet.
 
 `tools/database/overrides/extra_spells.go` is the other hand-kept list: spells the generator
 force-includes although no class, item, enchant or set reaches them. It is empty today. Each entry

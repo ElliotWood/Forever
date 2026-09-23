@@ -188,6 +188,15 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestDpsWarrior-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 351.11033
+  tps: 202.19539
+  dtps: 7.24211
+  hps: 18.11323
+ }
+}
+dps_results: {
  key: "TestDpsWarrior-AllItems-Gri'lek'sCharmofValor-19952"
  value: {
   dps: 351.11033

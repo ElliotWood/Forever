@@ -213,6 +213,14 @@ dps_results: {
  }
 }
 dps_results: {
+ key: "TestProtectionWarrior-AllItems-GoldenBanana-270226"
+ value: {
+  dps: 333.85854
+  tps: 444.7261
+  dtps: 5058.04837
+ }
+}
+dps_results: {
  key: "TestProtectionWarrior-AllItems-GrandMarshal'sAegis-18825"
  value: {
   dps: 435.05849

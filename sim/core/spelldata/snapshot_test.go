@@ -9,6 +9,8 @@ import (
 	"slices"
 	"strings"
 	"testing"
+
+	"github.com/wowsims/forever/sim/core/proto"
 )
 
 // What the committed spells_auto_gen.go holds today. The bounds are wide enough that adding a class
@@ -145,6 +147,33 @@ func TestGeneratedLightningShield(t *testing.T) {
 
 	if !drives(MustFind(26545), 324) {
 		t.Errorf("spell 324 does not drive 26545, so a rank's dispatcher cannot be reached from it")
+	}
+}
+
+// Stolen Power's companion row requires Forest and Grassland; Staff of Westfall's group is a single zone.
+func TestGeneratedRequiredAreas(t *testing.T) {
+	withGeneratedStore(t)
+
+	if s := MustFind(1318002); s.RequiredAreas != 9161 || s.AreaType() != proto.AreaType_AreaTypeForestGrassland {
+		t.Errorf("Stolen Power 1318002 requires area group %d (%v), want 9161 (ForestGrassland)", s.RequiredAreas, s.AreaType())
+	}
+	if s := MustFind(1287561); s.RequiredAreas != 0 || s.AreaType() != proto.AreaType_AreaTypeUnknown {
+		t.Errorf("Stolen Power 1287561 requires area group %d, want none", s.RequiredAreas)
+	}
+	if s := MustFind(1292011); s.RequiredAreas != 9071 || s.AreaType() != proto.AreaType_AreaTypeUnknown {
+		t.Errorf("Staff of Westfall requires area group %d (%v), want 9071 (Unknown)", s.RequiredAreas, s.AreaType())
+	}
+}
+
+// Area bonuses come from the override table, not the client.
+func TestGeneratedAreaBonus(t *testing.T) {
+	withGeneratedStore(t)
+
+	if s := MustFind(1249113); len(s.AreaBonusGroups) != 1 || s.AreaBonusGroups[0] != 9203 || s.AreaMultiplier != 2 || s.AreaDurationMultiplier != 1 {
+		t.Errorf("Molten Fury's area bonus reads %v x%v (duration x%v), want [9203] x2 (duration x1)", s.AreaBonusGroups, s.AreaMultiplier, s.AreaDurationMultiplier)
+	}
+	if s := MustFind(1287571); s.AreaMultiplier != 2 || s.AreaDurationMultiplier != 2 {
+		t.Errorf("Monkey Business's area bonus reads x%v (duration x%v), want x2 (duration x2)", s.AreaMultiplier, s.AreaDurationMultiplier)
 	}
 }
 
