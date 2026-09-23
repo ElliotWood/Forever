@@ -19,7 +19,6 @@ var IgnoreSpellEffectByAuraType = map[dbc.EffectAuraType][]int{
 	dbcenums.A_MOD_STEALTH:             {},
 	dbcenums.A_MOD_STEALTH_DETECT:      {},
 	dbcenums.A_MOD_STEALTH_LEVEL:       {},
-	dbcenums.A_MOD_DECREASE_SPEED:      {},
 	dbcenums.A_MOD_INVISIBILITY:        {},
 	dbcenums.A_MOD_INVISIBILITY_DETECT: {},
 	dbcenums.A_MOD_SKILL: {
@@ -36,6 +35,12 @@ var IgnoreSpellEffectByAuraType = map[dbc.EffectAuraType][]int{
 	dbcenums.A_TRACK_CREATURES:                   {},
 	dbcenums.A_TRACK_RESOURCES:                   {},
 	dbcenums.A_FAR_SIGHT:                         {},
+}
+
+// Auras the sim has nothing to simulate for, which put a spell out of scope only where they are all
+// it carries: Frostguard's Chilled 16927 slows movement beside a melee slow.
+var IgnoreSpellEffectAloneByAuraType = []dbc.EffectAuraType{
+	dbcenums.A_MOD_DECREASE_SPEED,
 }
 
 var IgnoreSpellEffectBySpellEffectType = map[dbc.SpellEffectType][]int{

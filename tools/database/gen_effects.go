@@ -90,6 +90,8 @@ type Entry struct {
 	Heals bool
 	// The same for an effect that shields the wearer with an absorb.
 	Absorbs bool
+	// The same for an effect that slows the enemy it lands on.
+	Slows bool
 	// What a registered on-use leaves out, stated beside its call.
 	NotSimulated string
 }
@@ -126,6 +128,8 @@ type ProcRouting struct {
 	Speed bool
 	// The same for a spell that restores the wearer's mana, rage or energy.
 	Energize bool
+	// The same for a spell that slows the enemy it lands on.
+	Slow bool
 	// Empty when the rows state enough to build the listener.
 	Unsupported []string
 	// What the rows resolve to, for the reader of the generated file.
@@ -178,6 +182,23 @@ func (r *ProcRouting) asHeal(healSpellID int32) {
 	r.BuffSpellID = int(healSpellID)
 	r.Unsupported = append(r.Unsupported, healUnsupported(spelldata.Find(healSpellID))...)
 	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), r.BuffSpellID)
+}
+
+// A proc whose spell slows the enemy it lands on, for as long as its row states.
+func (r *ProcRouting) asSlow(slowSpellID int32) {
+	r.Slow = true
+	if int(slowSpellID) != r.TriggerSpellID {
+		r.BuffSpellID = int(slowSpellID)
+	}
+
+	if spelldata.Find(slowSpellID).DurationMs <= 0 {
+		r.Unsupported = append(r.Unsupported, "the slow states no duration")
+	}
+	r.Summary = procSummary(r.TriggerSpellID, spelldata.Find(int32(r.TriggerSpellID)), int(slowSpellID))
+}
+
+func slowsTheTarget(spellID int32) bool {
+	return len(spelldata.Find(spellID).SlowEffects()) > 0
 }
 
 func healUnsupported(heal *spelldata.Spell) []string {
@@ -617,7 +638,20 @@ func ignoredEffectReason(instance *dbc.DBC, effectID int) string {
 		}
 	}
 
+	if effects := instance.SpellEffectsInOrder(effectID); carriesOnlyAloneIgnoredAuras(effects) {
+		return fmt.Sprintf("ignored aura type %d", effects[0].EffectAura)
+	}
+
 	return ""
+}
+
+func carriesOnlyAloneIgnoredAuras(effects []dbc.SpellEffect) bool {
+	for _, effect := range effects {
+		if !slices.Contains(IgnoreSpellEffectAloneByAuraType, effect.EffectAura) {
+			return false
+		}
+	}
+	return len(effects) > 0
 }
 
 // Records an effect excluded by an ignore list so the generated file documents it. Kept in its
@@ -666,7 +700,7 @@ func ItemEffectIsSupported(instance *dbc.DBC, effectID int) bool {
 			}
 		}
 	}
-	return supported
+	return supported && !carriesOnlyAloneIgnoredAuras(instance.SpellEffectsInOrder(effectID))
 }
 
 func GenerateItemEffects(instance *dbc.DBC, db *WowDatabase, itemSources map[int][]*proto.DropSource) {
@@ -906,7 +940,17 @@ func TryParseProcEffect(parsed *proto.UIItem, itemEffect *proto.ItemEffect, inst
 				}
 			}
 
-			if (len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals && !entry.Absorbs) || !entry.Supported {
+			// The same for an effect that slows the enemy it lands on.
+			if len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && slowsTheTarget(itemEffect.BuffId) {
+				entry.Proc = routeItemProc(parsed, itemEffect, renderedTooltip)
+				if entry.Proc != nil {
+					entry.Proc.asSlow(itemEffect.BuffId)
+					entry.Supported = entry.Proc.Supported()
+					entry.Slows = true
+				}
+			}
+
+			if (len(dbc.EffectStats(itemEffect)) == 0 && !entry.DealsDamage && !entry.Heals && !entry.Absorbs && !entry.Slows) || !entry.Supported {
 				StoreMissingEffect("ItemEffects", parsed.Name, Variant{
 					ID:      int(parsed.Id),
 					Name:    renderedTooltip,
@@ -1199,6 +1243,8 @@ func (r *ProcRouting) ProcConstructor() string {
 		return "NewSpellDataHealProc"
 	case r.Absorb:
 		return "NewSpellDataAbsorbProc"
+	case r.Slow:
+		return "NewSpellDataSlowProc"
 	default:
 		return "NewSpellDataProc"
 	}
@@ -1350,6 +1396,8 @@ func routeEnchantSlot(slot dbc.EnchantProcSlot, instance *dbc.DBC, grantTooltip 
 		routing.asHeal(heal)
 	case absorb != 0:
 		routing.asAbsorb(absorb)
+	case slowsTheTarget(int32(applied)):
+		routing.asSlow(int32(applied))
 	default:
 		routing.Unsupported = append(routing.Unsupported,
 			fmt.Sprintf("the enchant's effect entry resolves no stats from %d (%s)", applied, spellEffectKinds(instance, applied)))
