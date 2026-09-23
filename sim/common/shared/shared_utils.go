@@ -2,6 +2,7 @@ package shared
 
 import (
 	"fmt"
+	"slices"
 	"time"
 
 	"github.com/wowsims/forever/sim/core"
@@ -801,12 +802,17 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	if periodic == spelldata.NilEffect {
 		multiTarget := effect.HitsAnArea() || effect.ChainTargets > 1
 		config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-			if !multiTarget {
-				spell.CalcAndDealDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
-				return
+			var results []*core.SpellResult
+			if multiTarget {
+				results = slices.Clone(calcMultiTargetDamage(sim, spell, target, damage, effect, character.Level, GetOutcome(spell, outcome)))
+			} else {
+				results = []*core.SpellResult{spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))}
 			}
-			calcMultiTargetDamage(sim, spell, target, damage, effect, character.Level, GetOutcome(spell, outcome))
-			spell.DealBatchedAoeDamage(sim)
+			afterTravel(sim, spell, func(sim *core.Simulation) {
+				for _, result := range results {
+					spell.DealDamage(sim, result)
+				}
+			})
 		}
 		return config
 	}
@@ -815,35 +821,51 @@ func spellDataProcDamageSpell(character *core.Character, damage *spelldata.Spell
 	// on unrolled, and each tick rolls the outcome the row states for it.
 	config.Dot = spelldata.DotConfig(damage, periodic)
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
+		var result *core.SpellResult
 		if effect != spelldata.NilEffect {
-			if !spell.CalcAndDealDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome)).Landed() {
-				return
-			}
+			result = spell.CalcDamage(sim, target, effect.Roll(sim, character.Level), GetOutcome(spell, outcome))
 		}
-		spell.Dot(target).Apply(sim)
+		afterTravel(sim, spell, func(sim *core.Simulation) {
+			if result != nil {
+				spell.DealDamage(sim, result)
+				if !result.Landed() {
+					return
+				}
+			}
+			spell.Dot(target).Apply(sim)
+		})
 	}
 
 	return config
 }
 
-// The damage of an effect that reaches more than its target, for DealBatchedAoeDamage: every enemy in
+// The damage is calculated on cast and lands once the missile the row states has flown the caster's
+// distance to the target. A row without a missile speed lands at once.
+func afterTravel(sim *core.Simulation, spell *core.Spell, land func(*core.Simulation)) {
+	if spell.MissileSpeed == 0 {
+		land(sim)
+		return
+	}
+	spell.WaitTravelTime(sim, land)
+}
+
+// The damage of an effect that reaches more than its target, dealt as a batch: every enemy in
 // its area, or the row's MaxTargets of them from the target out; or a chain of ChainTargets keeping
 // ChainAmp of the damage at each jump. A split row rolls once and divides the roll evenly among the
 // targets it reaches. Otherwise each target rolls its own, and an uncapped area takes the encounter's
 // AoE cap the way an explosive does.
-func calcMultiTargetDamage(sim *core.Simulation, spell *core.Spell, target *core.Unit, row *spelldata.Spell, effect *spelldata.Effect, level int32, outcome core.OutcomeApplier) {
+func calcMultiTargetDamage(sim *core.Simulation, spell *core.Spell, target *core.Unit, row *spelldata.Spell, effect *spelldata.Effect, level int32, outcome core.OutcomeApplier) core.SpellResultSlice {
 	roll := func(sim *core.Simulation, _ *core.Spell) float64 {
 		return effect.Roll(sim, level)
 	}
 
 	if !effect.HitsAnArea() {
 		keep := 1.0
-		spell.CalcCleaveDamageWithVariance(sim, target, int32(effect.ChainTargets), outcome, func(sim *core.Simulation, spell *core.Spell) float64 {
+		return spell.CalcCleaveDamageWithVariance(sim, target, int32(effect.ChainTargets), outcome, func(sim *core.Simulation, spell *core.Spell) float64 {
 			damage := roll(sim, spell) * keep
 			keep *= float64(effect.ChainAmp)
 			return damage
 		})
-		return
 	}
 
 	capped := row.MaxTargets > 0
@@ -854,18 +876,15 @@ func calcMultiTargetDamage(sim *core.Simulation, spell *core.Spell, target *core
 		}
 		share := roll(sim, spell) / float64(reached)
 		if capped {
-			spell.CalcCleaveDamage(sim, target, int32(row.MaxTargets), share, outcome)
-		} else {
-			spell.CalcAoeDamage(sim, share, outcome)
+			return spell.CalcCleaveDamage(sim, target, int32(row.MaxTargets), share, outcome)
 		}
-		return
+		return spell.CalcAoeDamage(sim, share, outcome)
 	}
 
 	if capped {
-		spell.CalcCleaveDamageWithVariance(sim, target, int32(row.MaxTargets), outcome, roll)
-		return
+		return spell.CalcCleaveDamageWithVariance(sim, target, int32(row.MaxTargets), outcome, roll)
 	}
-	spell.CalcAoeDamageWithVariance(sim, outcome, func(sim *core.Simulation, spell *core.Spell) float64 {
+	return spell.CalcAoeDamageWithVariance(sim, outcome, func(sim *core.Simulation, spell *core.Spell) float64 {
 		return roll(sim, spell) * sim.Encounter.AOECapMultiplier()
 	})
 }
@@ -1082,9 +1101,13 @@ func spellDataOnUseDamageSpell(character *core.Character, damage *spelldata.Spel
 	}
 
 	config.ApplyEffects = func(sim *core.Simulation, target *core.Unit, spell *core.Spell) {
-		if spell.CalcAndDealOutcome(sim, target, applicationOutcome(spell)).Landed() {
-			spell.Dot(target).Apply(sim)
-		}
+		result := spell.CalcOutcome(sim, target, applicationOutcome(spell))
+		afterTravel(sim, spell, func(sim *core.Simulation) {
+			spell.DealOutcome(sim, result)
+			if result.Landed() {
+				spell.Dot(target).Apply(sim)
+			}
+		})
 	}
 	return config
 }
