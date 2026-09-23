@@ -60,7 +60,7 @@ func (paladin *Paladin) applyBenediction() {
 	}
 
 	paladin.AddStaticMod(core.SpellModConfig{
-		ClassMask:  SpellMaskInstantSpells,
+		ClassMask:  SpellMaskBenediction,
 		Kind:       core.SpellMod_PowerCost_Pct_Add,
 		FloatValue: spellData.Benediction.FractionAt(paladin.Talents.Benediction),
 	})

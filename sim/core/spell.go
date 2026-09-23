@@ -151,6 +151,10 @@ type Spell struct {
 	// The current or most recent cast data.
 	CurCast Cast
 
+	// The client's SPELLMOD_NOT_LOSE_CASTING_TIME: a chance, on top of the caster's own, that a hit
+	// taken does not push this spell's cast back.
+	PushbackResist float64
+
 	BonusHitPercent          float64
 	BonusCritPercent         float64
 	BonusSpellDamage         float64

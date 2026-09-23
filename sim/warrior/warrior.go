@@ -91,6 +91,10 @@ const (
 		SpellMaskHamstring | SpellMaskExecute | SpellMaskPummel | SpellMaskRevenge | SpellMaskOverpower |
 		SpellMaskThunderClap | SpellMaskMockingBlow | SpellMaskMortalStrike | SpellMaskConcussionBlow |
 		SpellMaskShieldSlam | SpellMaskRetaliation | SpellMaskIntercept | SpellMaskBloodthirst
+	// Focused Rage's class mask (29787) adds these to the offensive abilities and leaves out Retaliation.
+	SpellMaskFocusedRage = SpellMaskOffensiveAbilities&^SpellMaskRetaliation | SpellMaskDemoralizingShout |
+		SpellMaskDeathWish | SpellMaskSweepingStrikes | SpellMaskSpearingStrike | SpellMaskChallengingShout |
+		SpellMaskIntimidatingShout
 	SpellMaskShouts = SpellMaskBattleShout | SpellMaskDemoralizingShout | SpellMaskIntimidatingShout | SpellMaskChallengingShout
 )
 

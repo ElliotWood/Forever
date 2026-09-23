@@ -273,7 +273,7 @@ func (warrior *Warrior) registerFocusedRage() {
 	}
 
 	warrior.AddStaticMod(core.SpellModConfig{
-		ClassMask: SpellMaskOffensiveAbilities,
+		ClassMask: SpellMaskFocusedRage,
 		Kind:      core.SpellMod_PowerCost_Flat,
 		IntValue:  int32(spellData.FocusedRage.TenthsAt(warrior.Talents.FocusedRage)),
 	})

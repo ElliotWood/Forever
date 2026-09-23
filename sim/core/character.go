@@ -434,7 +434,7 @@ func (character *Character) Finalize() {
 			},
 
 			Handler: func(sim *Simulation, spell *Spell, result *SpellResult) {
-				if !sim.Proc(character.PseudoStats.PushbackChance, "Pushback") {
+				if !sim.Proc(character.PseudoStats.PushbackChance-character.Hardcast.Spell.PushbackResist, "Pushback") {
 					return
 				}
 

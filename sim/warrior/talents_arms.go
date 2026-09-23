@@ -323,8 +323,8 @@ func (warrior *Warrior) registerBloodthrill() {
 		Name:     "Bloodthrill - Trigger",
 		ActionID: core.ActionID{SpellID: 1289682},
 		Callback: core.CallbackOnSpellHitDealt,
-		// The tooltip reads "your melee attacks", special attacks included.
-		ProcMask:   core.ProcMaskMelee,
+		// 1289682's proc flags are 0x4, melee auto attacks: white swings only.
+		ProcMask:   core.ProcMaskMeleeWhiteHit,
 		Outcome:    core.OutcomeLanded,
 		ProcChance: spellData.Bloodthrill.FractionAt(warrior.Talents.Bloodthrill),
 		ExtraCondition: func(sim *core.Simulation, spell *core.Spell, result *core.SpellResult) bool {
